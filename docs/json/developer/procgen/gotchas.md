@@ -163,7 +163,7 @@ Each of these is enforced by name; a new op or page should follow the same rules
 
 ### `level_58` is unreachable over the room data alone
 
-No entity in the vanilla rooms targets region `level_58` (`Dungeon5_DeadBoss`); the game reaches it through the manifest's `named_rooms.tentacle_beast_mouth`, the room the tentacle beast swallows the player into. `deriveAtlas` takes an optional `deps.namedRooms` and derives that arrival from the entry's trigger element. `make-seedling-playthrough-rules.mjs` passes none, on purpose, so the committed playthrough atlas is unchanged; under its `NEVER_ENTER_LEVELS` the only source room (57) is excluded anyway.
+No entity in the vanilla rooms targets region `level_58` (`Dungeon5_DeadBoss`); the game reaches it through the manifest's `named_rooms.tentacle_beast_mouth`, the door the tentacle beast's death creates in L57. `deriveAtlas` takes an optional `deps.namedRooms` and derives that arrival from the entry's trigger element, at the trigger's position plus the entry's `exitOffset` when it has one. `make-seedling-playthrough-rules.mjs` passes only the death exits of the arenas in `seedlingPlaythroughOverlay.DEATH_EXIT_ARENAS` (today L57's mouth), so the playthrough reaches `level_58`, and every connection into or out of L57 costs the tentacle kill. The rest of the manifest (the Moonrock's, the Oracle's and the Watcher's warps) stays out of the playthrough; the set editor reads all of it.
 
 ### A maze room session opened from a set lives inside the set arm's lifetime
 

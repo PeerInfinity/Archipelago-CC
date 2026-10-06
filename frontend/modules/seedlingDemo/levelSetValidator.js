@@ -176,6 +176,10 @@ export const NAMED_ROOMS = Object.freeze({
         kind: 'warp', position: true, cite: 'Enemies/TentacleBeast.as:213', vanilla: 58,
         trigger: 'tentaclebeast',
         via: 'Game.as:2173 builds every TentacleBeast from <tentaclebeast>',
+        // ⛓ RULES game-truth-gaps — WHERE the warp stands, from the trigger's OEL x/y: the ctor centres the
+        // beast at (+24, +24) (`TentacleBeast.as:38`) and the mouth is `new Teleporter(x - Tile.w / 2,
+        // y - Tile.h / 2)` (`:213`), so the door is at (+16, +16) — where L58's doors back land the player.
+        exitOffset: { x: 16, y: 16 },
     },
 });
 

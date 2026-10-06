@@ -603,8 +603,12 @@ export function deriveAtlas(rooms, overlay = {}, deps = {}) {
                 + `arrives in a trap room, never-enter (${neverEnterCite[row.to]})`);
             continue;
         }
+        // ⛓ RULES game-truth-gaps — the warp's door stands at the trigger's position plus the manifest
+        //    row's `exitOffset` (the AS3's own arithmetic; none = on the trigger, the old answer).
+        const offset = NAMED_ROOMS[row.key].exitOffset ?? { x: 0, y: 0 };
         session.addExit(regionIdFor(row.from), {
-            exit_id: outId, tiles: [tileOf(row.entity, tileSize)], kind: 'teleporter',
+            exit_id: outId, tiles: [tileOf({ x: row.entity.x + offset.x, y: row.entity.y + offset.y }, tileSize)],
+            kind: 'teleporter',
         });
         const inId = namedInExitId(row.key, row.from, row.arrival.x, row.arrival.y);
         const key = `${row.to}/${inId}`;

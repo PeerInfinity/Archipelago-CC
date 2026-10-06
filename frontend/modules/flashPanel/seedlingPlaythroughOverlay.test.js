@@ -37,6 +37,8 @@ import {
     IGNEOUS_IS_FREE,
     LAVATRAP_PULL,
     LAVABOSS_ARENA,
+    TENTACLE_ARENA,
+    DEATH_EXIT_ARENAS,
     LOCATION_GUARDS,
     PLAYTHROUGH_TILE_OVERLAY,
     isRefutation,
@@ -380,7 +382,8 @@ describe('the charged doors and the completion condition', () => {
     // sends a player into the LavaBoss arena unable to leave it.
     it('L82 is no longer never-enter; its arena is gated BOTH ways on the Dark Suit and a weapon', () => {
         expect(NEVER_ENTER_LEVELS).not.toContain(LAVABOSS_ARENA.level);
-        expect(NEVER_ENTER_LEVELS).toEqual([57, 69]);
+        // ⛓ RULES game-truth-gaps: L57 lifted too (⚖ the user, 2026-10-06), the row below.
+        expect(NEVER_ENTER_LEVELS).toEqual([69]);
         expect(LAVABOSS_ARENA.condition).toEqual({ all: [{ flag: 'hasDarkSuit' }, A_WEAPON] });
         for (const door of CHARGED_DOORS.filter((d) => d.condition === LAVABOSS_ARENA.condition)) {
             expect(door.cite).toMatch(/LavaBoss\.as:53,143-165/);
@@ -405,6 +408,26 @@ describe('the charged doors and the completion condition', () => {
         expect(exitsOf('level_71__r14c12').find((e) => e.connected_region === 'level_82').access_rule).toEqual({ rule: 'True_' });
         expect(JSON.stringify(exitsOf('level_71__r0c6').find((e) => e.connected_region === 'level_71__r14c12').access_rule))
             .toContain('Dark Suit');
+    });
+
+    // ⛓ RULES game-truth-gaps — L57 is wired (⚖ "lift L57 like L82"): its exit is the death-spawned mouth
+    // (the manifest's `tentacle_beast_mouth`), and every connection into or out of it costs the kill.
+    it('L57 is no longer never-enter; its arena is gated BOTH ways on the tentacle kill (sword, spear or wand)', () => {
+        expect(NEVER_ENTER_LEVELS).not.toContain(TENTACLE_ARENA.level);
+        expect(TENTACLE_ARENA.condition).toEqual({ any: [{ flag: 'hasSword' }, { flag: 'hasSpear' }, { flag: 'hasWand' }] });
+        expect(DEATH_EXIT_ARENAS.map((a) => [a.level, a.namedRoom])).toEqual([[57, 'tentacle_beast_mouth']]);
+        const rules = JSON.parse(readFileSync(fileURLToPath(new URL(
+            '../../presets/seedling_playthrough/AP_1/AP_1_rules.json', import.meta.url)), 'utf8'));
+        const kill = { rule: 'Or', children: ['Progressive Sword', 'Ghost Spear', 'Wand']
+            .map((item_name) => ({ rule: 'Has', args: { item_name } })) };
+        const has = (rule) => JSON.stringify(rule).includes(JSON.stringify(kill));
+        const R = rules.regions['1'];
+        const into = Object.entries(R).flatMap(([from, r]) => r.exits.filter((e) => e.connected_region === 'level_57')
+            .map((e) => ({ from, ...e })));
+        expect(into.map((e) => e.from).sort()).toEqual(['level_56', 'level_58__r4c1', 'level_58__r6c5']);
+        for (const e of into) expect(has(e.access_rule), e.name).toBe(true);
+        expect(R.level_57.exits.map((e) => e.connected_region)).toEqual(['level_58__r4c1']);
+        expect(R.level_57.exits[0].access_rule).toEqual(kill);
     });
 
     it('states the goal as the BLOODLESS seed and names the other ending a non-goal', () => {

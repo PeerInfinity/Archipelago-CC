@@ -367,6 +367,20 @@ export function playthroughAnalyzerOptionsFor(level) {
  * this function owns and the overlay never touches. Passing the rooms in is what
  * makes that a difference of ONE variable instead of a second derivation.
  */
+/**
+ * ⛓ RULES game-truth-gaps — the `named_rooms` warps this generator wires: ONLY the exits created on an
+ * arena boss's death (`OV.DEATH_EXIT_ARENAS`), each read off the vanilla set's manifest (the runtime-exit
+ * census as data). The rest of the manifest (the Moonrock's, the Oracle's, the Watcher's warps) stays out:
+ * none is an arena's exit.
+ */
+const VANILLA_NAMED_ROOMS = JSON.parse(fs.readFileSync(
+    path.join(repoRoot, 'frontend/modules/seedlingDemo/fixtures/seedling-vanilla-set.json'), 'utf8')).named_rooms;
+export const ARENA_NAMED_ROOMS = Object.freeze(Object.fromEntries(OV.DEATH_EXIT_ARENAS.map((a) => {
+    const entry = VANILLA_NAMED_ROOMS[a.namedRoom];
+    if (!entry) throw new Error(`death-exit arena L${a.level}: the vanilla manifest has no ${a.namedRoom}`);
+    return [a.namedRoom, entry];
+})));
+
 export function derivePlaythroughLayer(rooms = LEVELS, { quiet = false } = {}) {
     // `quiet` (the re-closing locks' arrival tiles) takes the chains' outcome WITHOUT the notes/records.
     const { pitOutcome: loud, pure } = pitChainsFor(rooms);
@@ -382,6 +396,7 @@ export function derivePlaythroughLayer(rooms = LEVELS, { quiet = false } = {}) {
         note: quiet ? () => {} : note,
         onGuard: quiet ? () => {} : (loc, guard) => locationGuards.push(`${loc.name} — ${guard.cite}`),
         pitOutcome,
+        namedRooms: ARENA_NAMED_ROOMS,
         atlas: {
             game: 'seedling',
             name: 'Seedling — the honest playthrough (rules v1)',
@@ -778,6 +793,29 @@ function applyHandRulings(atlas) {
         crossingCharged.push(`${regionIdFor(door.level)}/${door.exitId}`);
         note(`${regionIdFor(door.level)}: ${door.exitId} CHARGED its approach by hand — `
             + `${door.why} (${door.cite})`);
+    }
+
+    // ── ⛓ RULES game-truth-gaps: the arenas whose exit is created on death (`OV.DEATH_EXIT_ARENAS`) — every
+    //    connection INTO or OUT OF the arena's level costs the arena (the L82 precedent: gated both ways).
+    for (const arena of OV.DEATH_EXIT_ARENAS) {
+        const arenaRegion = regionIdFor(arena.level);
+        const rule = analyzerOptions.resolveCondition(arena.condition);
+        if (!rule) throw new Error(`death-exit arena L${arena.level} does not resolve to a rule`);
+        const conns = (atlas.vanilla_layout?.connections ?? [])
+            .filter((c) => c.from[0] === arenaRegion || c.to[0] === arenaRegion);
+        const out = conns.filter((c) => c.from[0] === arenaRegion && c.to[1].startsWith(`in_${arena.namedRoom}_`));
+        if (out.length === 0) {
+            throw new Error(`death-exit arena L${arena.level}: the atlas wires no ${arena.namedRoom} warp out of it`);
+        }
+        for (const c of conns) {
+            const region = atlas.regions.find((r) => r.region_id === c.from[0]);
+            const exit = (region?.exits ?? []).find((e) => e.exit_id === c.from[1]);
+            if (!exit) throw new Error(`death-exit arena L${arena.level}: ${c.from.join('/')} is not in the atlas`);
+            exit.access_rule = exit.access_rule === undefined ? rule : { rule: 'And', children: [exit.access_rule, rule] };
+            region.annotations.rules_source = derivedRulesSource(region) ?? 'mixed';
+            crossingCharged.push(`${c.from[0]}/${c.from[1]}`);
+            note(`${c.from[0]}: ${c.from[1]} -> ${c.to.join('/')} CHARGED the L${arena.level} arena — ${arena.why} (${arena.cite})`);
+        }
     }
 
     note(`igneous tiles: ruled OPEN everywhere — ${OV.IGNEOUS_IS_FREE.why} `

@@ -32,8 +32,9 @@ const requires = (rule, gate) => JSON.stringify(rule) === JSON.stringify(gate)
     || (rule?.rule === 'And' && rule.children.some((c) => requires(c, gate)));
 
 let gates;
+let atlas;
 beforeAll(() => {
-    const atlas = buildPlaythroughAtlas();
+    atlas = buildPlaythroughAtlas();
     setPlaythroughLandingAtlas(atlas);
     gates = playthroughLandingGates(atlas);
 }, 300_000);
@@ -61,13 +62,41 @@ describe('landings on lethal terrain', () => {
         }
     });
 
-    it('the two exemptions hold by name: a shore the body walks off, a departure that already asks for the item', () => {
+    it('the exemptions hold by name: a shore the body walks off, a departure that already asks for the item', () => {
         const row = (prefix) => lethalLandings.find((l) => l.where.startsWith(prefix));
         expect(row('level_53/out_teleporter_144_240 ')).toMatchObject({ gated: false });
         expect(row('level_53/out_teleporter_144_240 ').why).toMatch(/walks off/);
         expect(row('level_96/out_teleporter_32_64 ')).toMatchObject({ gated: false });
         expect(row('level_96/out_teleporter_32_64 ').why).toMatch(/already requires/);
-        expect(lethalLandings.filter((l) => !l.gated).length).toBe(2);
+        // ⛓ the L57 lift: the mouth's landing in L58 is a shore too (the body walks west onto land).
+        expect(row('level_57/out_tentaclebeast_80_48 ')).toMatchObject({ gated: false });
+        expect(row('level_57/out_tentaclebeast_80_48 ').why).toMatch(/walks off/);
+        expect(lethalLandings.filter((l) => !l.gated).map((l) => l.where.split(' ')[0]).sort()).toEqual([
+            'level_53/out_teleporter_144_240', 'level_57/out_tentaclebeast_80_48', 'level_96/out_teleporter_32_64']);
+    });
+});
+
+/**
+ * ⛓ RULES game-truth-gaps — the L57 lift (⚖ the user, 2026-10-06: "lift L57 like L82"), on the FRESH derivation:
+ * the death-spawned mouth is wired from the manifest at the AS3's own door, and every connection into or out of
+ * the arena carries the kill.
+ */
+describe('the L57 arena (a fresh derivation)', () => {
+    const KILL = { rule: 'Or', children: ['Progressive Sword', 'Ghost Spear', 'Wand'].map((item_name) => ({ rule: 'Has', args: { item_name } })) };
+    it('wires L56\'s pit, L58\'s two doors and the mouth, each charged the kill', () => {
+        const conns = atlas.vanilla_layout.connections.filter((c) => c.from[0] === 'level_57' || c.to[0] === 'level_57');
+        expect(conns.map((c) => `${c.from.join('/')} -> ${c.to[0]}`).sort()).toEqual([
+            'level_56/out_pit_6_10 -> level_57', 'level_57/out_tentaclebeast_80_48 -> level_58',
+            'level_58/out_teleporter_48_112 -> level_57', 'level_58/out_teleporter_64_112 -> level_57']);
+        for (const c of conns) {
+            const exit = atlas.regions.find((r) => r.region_id === c.from[0]).exits.find((e) => e.exit_id === c.from[1]);
+            expect(requires(exit.access_rule, KILL), c.from.join('/')).toBe(true);
+        }
+    });
+
+    it('the mouth stands where the AS3 puts it: the beast\'s (80,48) + (16,16) = tile (6,4)', () => {
+        const mouth = atlas.regions.find((r) => r.region_id === 'level_57').exits.find((e) => e.exit_id === 'out_tentaclebeast_80_48');
+        expect(mouth.entrance_tile).toEqual([6, 4]);
     });
 });
 

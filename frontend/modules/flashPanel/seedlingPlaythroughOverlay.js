@@ -672,7 +672,7 @@ export function overlayEntitySemantics(entity, base, ctx = null) {
 }
 
 /**
- * ⛔ THE TWO TRAP ROOMS — never-enter, and the ruling is §6.1's.
+ * ⛔ THE TRAP ROOM — never-enter, and the ruling is §6.1's (it named TWO; L57 is lifted, below).
  *
  * L57 (TentacleBeast) and L69 (LightBoss) have NO EXIT until their boss dies
  * (`TentacleBeast.as:213`, `LightBossController.as:104` create the exit
@@ -696,13 +696,57 @@ export function overlayEntitySemantics(entity, base, ctx = null) {
  * three sites (Moonrock.as:134, TentacleBeast.as:213,
  * LightBossController.as:104), none in L71-L85. So L82 is wired, and the
  * arena is gated in BOTH directions by `LAVABOSS_ARENA` below.
+ *
+ * ⛓ RULES game-truth-gaps — L57 (TentacleBeast) IS LIFTED TOO (⚖ the user, 2026-10-06: "lift L57 like
+ * L82"). The L49 pocket (L48 r4c3 back to r2c10 only through `bosslock@48,144`, which `BossLock.as`
+ * tests from the SOUTH only) has a second way out in the game: L56's pit falls into L57, the beast's
+ * death spawns the mouth teleporter (`TentacleBeast.as:213`, the manifest's `tentacle_beast_mouth`) to
+ * L58, and L58's `teleporter@80,16 {to 46}` leaves. Its exit is a RUNTIME exit, so it is wired from the
+ * runtime-exit census as data (`DEATH_EXIT_ARENAS` below), and the arena is gated both ways
+ * (`TENTACLE_ARENA`). L69 is unchanged.
  */
-export const NEVER_ENTER_LEVELS = Object.freeze([57, 69]);
+export const NEVER_ENTER_LEVELS = Object.freeze([69]);
 
 export const NEVER_ENTER_CITE = Object.freeze({
-    57: 'Enemies/TentacleBeast.as:213 — the exit teleporter is created on death',
     69: 'Enemies/LightBossController.as:104 — the exit teleporter is created on death',
 });
+
+/**
+ * ⛓ RULES game-truth-gaps — WHAT THE TENTACLE BEAST'S ARENA COSTS, charged on every connection INTO
+ * or OUT OF L57 (the L82 precedent: "gate both ways", so the logic never sends a player in who cannot
+ * get out).
+ *
+ * - The way out is the mouth, created when the beast dies (`TentacleBeast.as:93-103`): it dies once
+ *   `maxTentacles` reaches 0, and each Tentacle that is CUT decrements it (`Tentacle.as:77-88`), eight
+ *   in all (`maxTentacles = 8`).
+ * - A Tentacle is an `Enemy` with `hitsMax = 1` that takes a hit only while it SITS (`canHit`,
+ *   `Tentacle.as:66`); `Enemy.hit` counts any type but `"Fire"` (`hitByFire` false, `Enemy.as:149-151`).
+ *   So it is cut by `Player.genericHit` (the sword slash, the spear thrust: `Player.as:1085`) and by a
+ *   wand shot (`WandShot.checkEntity` -> `Enemy.hit(…, "Wand")`, `WandShot.as:116`). The Dark Suit's
+ *   answer to a blow (`Player.as:1385-1387`) lands while the tentacle is HITTING, when it cannot be hit:
+ *   not a way.
+ * - The arena is water (the R2 landing gates charge Swim on its landings; not repeated here).
+ */
+export const TENTACLE_ARENA = Object.freeze({
+    level: 57,
+    condition: anyOf(flag('hasSword'), flag('hasSpear'), flag('hasWand')),
+    cite: 'Enemies/TentacleBeast.as:29,93-103,213 + Enemies/Tentacle.as:52,66,77-88 + Enemies/Enemy.as:141-160 '
+        + '+ Player.as:1085 + Projectiles/WandShot.as:116 + ⚖ the user 2026-10-06 (lift L57 like L82)',
+    why: 'the arena is left only by the mouth the beast\'s death creates, and it dies when eight '
+        + 'tentacles are cut — by the sword, the spear or a wand shot, while each sits.',
+});
+
+/**
+ * ⛓ RULES game-truth-gaps — **ARENAS WHOSE EXIT IS CREATED ON DEATH**, one row per arena: the level,
+ * its `named_rooms` manifest key (`levelSetValidator.NAMED_ROOMS`, the runtime-exit census as DATA:
+ * the trigger element, the AS3 site, the vanilla destination) and what the arena costs. The playthrough
+ * generator wires exactly these manifest warps (never the rest of the manifest: the Oracle's and the
+ * Watcher's are not exits of an arena) and gates every connection into or out of the arena. L69's
+ * `light_boss_exit` would be one more row, once it is lifted.
+ */
+export const DEATH_EXIT_ARENAS = Object.freeze([
+    Object.freeze({ level: TENTACLE_ARENA.level, namedRoom: 'tentacle_beast_mouth', ...TENTACLE_ARENA }),
+]);
 
 /**
  * ⛓ RULES (B) — WHAT LEAVING THE LAVABOSS ARENA COSTS, charged on BOTH of its

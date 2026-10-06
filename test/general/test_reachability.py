@@ -48,15 +48,9 @@ class TestBase(unittest.TestCase):
         # locations, and their exits are one-way OUT, so the transcription records them faithfully
         # rather than dropping them. See docs/json/developer/procgen/seedling-bot.md.
         "Seedling Playthrough": {
-            # L58 is Dungeon5_DeadBoss: entered only by the boss-death level swap, which is not an
-            # edge a player can traverse. The seven rooms form a closed clique with one exit to L46.
-            "level_58__r1c2",
-            "level_58__r1c4",
-            "level_58__r2c1",
-            "level_58__r2c5",
-            "level_58__r3c3",
-            "level_58__r4c1",
-            "level_58__r6c5",
+            # L58 (Dungeon5_DeadBoss) is NOT here since RULES game-truth-gaps (2026-10-06): L57 is lifted
+            # from never-enter, and the TentacleBeast's death-spawned mouth (the manifest's
+            # `tentacle_beast_mouth`) is wired into it, the arena gated both ways on the kill.
             # L82 is NOT here since RULES (B) (2026-10-04): `71 ⇓ 82` is wired (L82 was never-enter
             # by ruling, which stranded all of Dungeon 7) and the LavaBoss arena is gated both ways.
             # L84 is a pass-through: the 83 -> 84 fall lands on pit with no walkable neighbour, so
