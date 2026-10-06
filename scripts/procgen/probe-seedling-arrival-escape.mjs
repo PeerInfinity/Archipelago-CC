@@ -247,11 +247,15 @@ async function main() {
 
             // the first leg is refused BY NAME (`arrival-inside-solid`, a Restart in its wayOut)
             const t0 = Date.now();
+            // ⚠ ON THE OBSTACLE (or a stop), never on the words: on W the first decline can be a CONTINUATION's, whose
+            // forced re-arrival note already names `arrival-inside-solid` before the arrival's own refusal fails the
+            // leg (measured: the first run read `lastObstacle` in that window). A tree without the consumer (the
+            // CONTROL) has no `lastObstacle`: its stop is the `error:` status.
             const refused = await waitFor('the first leg refused `arrival-inside-solid`', async () => {
                 const b = await botState();
                 if (b.obstacle?.kind === 'arrival-inside-solid') return b;
-                return /arrival-inside-solid/.test(b.status) || b.log.some((l) => /arrival-inside-solid/.test(l)) ? b : null;
-            }, 120000).catch(() => null);
+                return /^error/.test(b.status) ? b : null;
+            }, 150000).catch(() => null);
             out('refused', { ms: Date.now() - t0, obstacle: refused?.obstacle ?? null, status: refused?.status ?? null,
                 log: refused?.log?.slice(-4) ?? null });
 
