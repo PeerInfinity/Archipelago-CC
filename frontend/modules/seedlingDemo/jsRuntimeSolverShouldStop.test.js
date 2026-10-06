@@ -38,8 +38,8 @@ import { fileURLToPath } from 'node:url';
 
 import { createJsRuntime } from './jsRuntimeCore.js';
 import {
-    ANYTIME_PASSES, betterAnswer, budgetCut, createInPlaceSolveService, createWorkClock, deadlineOf, liveOf, passNote,
-    passShouldStop, solveAnytime, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK, upgradeWindowWork,
+    ANYTIME_PASSES, betterAnswer, budgetCut, createInPlaceSolveService, createWorkClock, deadlineOf, FINE_CHECKPOINTS, liveOf,
+    passNote, passShouldStop, solveAnytime, solveFromTape, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK, upgradeWindowWork,
 } from './jsRuntimeSolver.js';
 import { DEADLINE_SITES } from './solverBot.js';
 import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
@@ -49,13 +49,17 @@ const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atla
 const SRC = levelSourceFromAtlas(indexLevels(MAP));
 const [DASHLESS, FULL] = ANYTIME_PASSES;
 
-/** L4 from (16,16) with the sword → its stairs down (teleporter 0, to L5). */
-function l4StairsSword() {
+/**
+ * L4 from (16,16) with the sword → its stairs down (teleporter 0, to L5). `prefix` = key sets the session
+ * plays first, so the request is a CONTINUATION (a solve from a held room, `perTick` non-empty).
+ */
+function l4StairsSword({ prefix = [] } = {}) {
     const rt = createJsRuntime();
     rt.setVanilla(MAP);
     rt.queueItems([{ class: 'Main', property: 'hasSword', value: true }]);
     rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [4, 16, 16] }]);
     rt.tick();
+    for (const keys of prefix) rt.tick(new Set(keys));
     const s = rt.session;
     const tp = rt.run.world.teleporters[0];
     return { staging: s.staging, perTick: s.perTick, live: liveOf(rt.run), levelSource: SRC, name: 'should-stop-L4',
@@ -163,11 +167,13 @@ describe('⛓ SHOULD-STOP — L4 stairs with the sword (dashless 255 t, full 219
         expect(passNote(r.plan)).toBe('pass dashless, full stopped at its deadline (sword-dash)');
     }, 60000);
 
-    it('L4: a 1-unit BUDGET — the dashless pass refuses BY NAME at block-route (⏱), and so does the full pass (no plan in hand: the budget still bounds it) — a budget CUT', () => {
+    it('L4: a 1-unit BUDGET — the dashless pass refuses BY NAME at the `walk` site (⏱; ⛓ RECALIBRATE: the FINE checkpoints ask `walk` before the first block-route), and so does the full pass (no plan in hand: the budget still bounds it) — a budget CUT', () => {
         const heard = [];
         const r = solveAnytime({ ...l4StairsSword(), budgetWork: 1, upgradeWindowWork: null }, { clock: counter(), onPass: (a) => heard.push(a) });
-        expect(heard[0]).toMatchObject({ ok: false, kind: 'refusal', pass: 'dashless', deadline: { tripped: true, first: 'block-route' } });
-        expect(heard[0].message).toMatch(/hit `deadline`.*⏱ DEADLINE/s);
+        expect(heard[0]).toMatchObject({ ok: false, kind: 'refusal', pass: 'dashless', deadline: { tripped: true, first: 'walk' } });
+        expect(heard[0].message).toMatch(/at the `walk` site.*⏱ DEADLINE/s);
+        expect(heard[0].obstacle ?? null).toBeNull(); // a `walk` trip names no obstacle (fidelity CHECKPOINTS)
+        expect(heard[1]).toMatchObject({ ok: false, pass: 'full', deadline: { first: 'walk' } });
         expect(r.ok).toBe(false);
         expect(r.deadline).toBeTruthy();
         expect(rows(r).map(({ work, ...x }) => ({ pass: x.pass, ok: x.ok, limit: x.limit }))).toEqual([
@@ -187,6 +193,51 @@ describe('⛓ SHOULD-STOP — L4 stairs with the sword (dashless 255 t, full 219
         const h = createInPlaceSolveService({ clock: counter() }).start({ ...l4StairsSword(), budgetWork: 1, upgradeWindowWork: 1 });
         expect(h.result.plan.pass).toBe('full');
         expect(h.result.passes.map((p) => p.deadline ?? null)).toEqual([null, null]);
+        expect(h.result.passes.map((p) => p.work ?? null)).toEqual([null, null]);
+    }, 60000);
+});
+
+describe('⛓ RECALIBRATE — every budgeted path asks the FINE checkpoints (`time`, `walk`, the via-set `detour`): the unit the constants are counted in', () => {
+    /** One pass's asks under a never-true hook, coarse or fine — what the work clock would count. */
+    const asks = (req, fine) => {
+        const sites = {};
+        const shouldStop = (site) => { sites[site] = (sites[site] ?? 0) + 1; return false; };
+        solveFromTape({ ...req, dashMode: DASHLESS.dashMode, shouldStop, fineCheckpoints: fine });
+        return sites;
+    };
+    const CONT = Array.from({ length: 8 }, () => ['down']);
+
+    it('the switch is ON, and the work clock counts fine units: the dashless pass asks `walk` too (coarse it asks block-route only)', () => {
+        expect(FINE_CHECKPOINTS).toBe(true);
+        const coarse = asks(l4StairsSword(), false);
+        const fine = asks(l4StairsSword(), true);
+        expect(coarse.walk).toBeUndefined();
+        expect(fine.walk).toBeGreaterThan(0);
+        const total = (o) => Object.values(o).reduce((a, b) => a + b, 0);
+        const r = solveAnytime({ ...l4StairsSword(), budgetWork: 1e9, upgradeWindowWork: null }, { clock: counter() });
+        expect(r.passes[0].work).toBe(total(fine));
+    }, 60000);
+
+    it('a CONTINUATION (a request with a prefix — the wasm engine\'s held room, the JS page mid-room) is fine too: a 1-unit budget trips at `walk`', () => {
+        const req = l4StairsSword({ prefix: CONT });
+        expect(req.perTick.length).toBe(CONT.length + 1);
+        const r = solveAnytime({ ...req, budgetWork: 1, upgradeWindowWork: null }, { clock: counter() });
+        expect(r.ok).toBe(false);
+        expect(r.passes.map((p) => [p.pass, p.deadline, p.limit])).toEqual([['dashless', 'walk', 'budget'], ['full', 'walk', 'budget']]);
+        // untripped, the continuation's units are the fine count of its own segment
+        const u = solveAnytime({ ...l4StairsSword({ prefix: CONT }), budgetWork: 1e9, upgradeWindowWork: null }, { clock: counter() });
+        expect(u.ok).toBe(true);
+        expect(u.passes[0].work).toBe(Object.values(asks(l4StairsSword({ prefix: CONT }), true)).reduce((a, b) => a + b, 0));
+    }, 90000);
+
+    it('a HELD RETRY (the passes not yet answered — full alone) is fine too: a 1-unit budget trips at `walk`', () => {
+        const r = solveAnytime({ ...l4StairsSword(), budgetWork: 1, upgradeWindowWork: null }, { passes: [FULL], clock: counter() });
+        expect(r.passes.map((p) => [p.pass, p.deadline, p.limit])).toEqual([['full', 'walk', 'budget']]);
+    }, 60000);
+
+    it('in place (no budget) asks nothing — the fine sites ride on the hook, and there is none', () => {
+        const h = createInPlaceSolveService({ clock: counter() }).start({ ...l4StairsSword({ prefix: CONT }), budgetWork: 1, upgradeWindowWork: 1 });
+        expect(h.result.ok).toBe(true);
         expect(h.result.passes.map((p) => p.work ?? null)).toEqual([null, null]);
     }, 60000);
 });

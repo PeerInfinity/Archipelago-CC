@@ -190,6 +190,11 @@ describe('jsRuntimeSolveService — the budget, the retry, and no stale plan', (
         const s = rt.playback.solverStats;
         expect(s).toMatchObject({ solves: 0, declines: 1, expiries: 1, played: 0, backstops: 0 });
         expect(s.lastDecline).toMatch(/⏱ DEADLINE/);
+        // ⛓ RECALIBRATE — the WORKER asks the fine sites too: the first trip is the core `walk` site, and that
+        // refusal is a NAMED DECLINE (no obstacle; not a divergence, not a failure) — the walker takes the goal.
+        expect(s.lastDecline).toMatch(/was reached at the `walk` site/);
+        expect(s.lastDeclineObstacle).toBeNull();
+        expect(s.lastSolve ?? null).toBeNull();
         expect(rt.playback.reason).toMatch(/^the solver declined — .*⏱ DEADLINE.*; walking instead$/s);
         expect(workers[0].terminated).toBe(false);
         expect(service.stats).toMatchObject({ terminated: 0 });
@@ -492,6 +497,12 @@ describe('⛓ ANYTIME — the worker posts each pass; the page plays the provisi
         expect(h.passes).toEqual([{ pass: 'dashless', ok: false, kind: 'refusal', deadline: 'block-route' }]);
         post(h, { type: 'pass', index: 1, pass: 'full', answer: { ok: false, kind: 'refusal', pass: 'full', message: 'no' }, best: cut });
         expect(h.answered).toBe(0); // the cut pass still leads: nothing after it counts as answered
+        // ⛓ RECALIBRATE — a `walk` trip (the core site: the segment REFUSES by name, no obstacle) is a cut too
+        const walkCut = { ok: false, kind: 'refusal', pass: 'dashless', message: '… at the `walk` site … ⏱ DEADLINE: …', deadline: { tripped: true, first: 'walk', sites: { walk: 1 } } };
+        h = service.start({ source: { records: null } });
+        post(h, { type: 'pass', index: 0, pass: 'dashless', answer: walkCut, best: walkCut });
+        expect(h.answered).toBe(0);
+        expect(h.passes).toEqual([{ pass: 'dashless', ok: false, kind: 'refusal', deadline: 'walk' }]);
         h = service.start({ source: { records: null } });
         post(h, { type: 'pass', index: 0, pass: 'dashless', answer: { ok: false, kind: 'refusal', pass: 'dashless', message: 'no' }, best: null });
         expect(h.answered).toBe(1);

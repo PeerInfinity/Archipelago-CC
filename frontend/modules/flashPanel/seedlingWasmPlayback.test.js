@@ -19,8 +19,8 @@ import { fileURLToPath } from 'node:url';
 
 import { ADOPT_WAIT_MS, createWasmPlayback, loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
 import { SOLVE_RETRY_BUDGET_FACTOR, TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
-import { ANYTIME_PASSES, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK } from '../seedlingDemo/jsRuntimeSolver.js';
-import { indexLevels } from '../seedlingDemo/atlasSource.js';
+import { ANYTIME_PASSES, solveAnytime, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK } from '../seedlingDemo/jsRuntimeSolver.js';
+import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService, mountedRecordsOf } from '../seedlingDemo/wasmWalkTape.js';
 import { assembleGeneratedSeedlingSet } from '../seedlingDemo/seedlingGeneratedSet.js';
 
@@ -693,6 +693,41 @@ describe('W7 — continuations from a held room, and their named fallbacks', () 
         expect(e.engine.stats.history.map((h) => [h.outcome, h.kind ?? null])).toEqual([['done', null], ['fallback', 'continuation-declined'], ['done', null]]);
         expect(e.engine.stats.fallbacks[0].why).toMatch(/declined .*\(refusal\)/);
         expect(e.engine.stats.forced).toBe(2);
+    });
+
+    it('⛓ RECALIBRATE — a CONTINUATION solved under its work budget (the worker\'s own `solveAnytime`) asks the FINE sites: at 1 unit it is cut at `walk`, named, not answered — the held retry runs it again (4 units: its 2 `walk` asks) and its plan is served; never a divergence', () => {
+        let knob = null;
+        const e = engineOver(A, { getBudgetWork: () => knob });
+        // A BUDGETED in-process service for the continuation: the worker's call (`solveAnytime` keeps the request's
+        // budget) and the service's `answered` rule (a pass cut by its deadline is not answered).
+        const inner = e.service.start;
+        e.service.start = (request) => {
+            if (knob === null) return inner(request);
+            const { passes = ANYTIME_PASSES, source, ...tape } = request;
+            const result = solveAnytime({ ...tape, levelSource: tape.levelSource ?? levelSourceFromAtlas(source.records) }, { passes });
+            e.service.seen.push({ request, result });
+            let answered = 0;
+            for (const r of result.passes) { if (!r.ok && r.deadline) break; answered += 1; }
+            if (result.ok) e.game.drainRows = result.plan.expected.map((r, t) => ({ t, level: r.level, x: r.x, y: r.y }));
+            return { settled: true, started: true, startedAt: 0, result, provisional: result, answered, passes: result.passes, cancel() {} };
+        };
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        knob = 1;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0, 80000);
+        const cont = e.service.seen.slice(1);
+        expect(cont[0].request.perTick.length).toBeGreaterThan(0); // a continuation: the held room's shipped keys
+        expect(cont[0].request.budgetWork).toBe(1);
+        expect(cont[0].result.passes[0]).toMatchObject({ pass: 'dashless', ok: false, deadline: 'walk', limit: 'budget' });
+        expect(cont[0].result.message).toMatch(/was reached at the `walk` site/);
+        expect(cont[1].request).toMatchObject({ budgetWork: SOLVE_RETRY_BUDGET_FACTOR, perTick: cont[0].request.perTick });
+        expect(cont[1].request.passes.map((p) => p.pass)).toEqual(['dashless', 'full']); // the cut pass was not answered
+        expect(cont[1].result.passes[0]).toMatchObject({ pass: 'dashless', ok: true, work: 2 });
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks).toEqual([]);
+        expect(e.dones[1]).toMatchObject({ continuation: true, retries: 1, budgets: [1, SOLVE_RETRY_BUDGET_FACTOR] });
+        expect(e.engine.stats.divergences ?? 0).toBe(0);
     });
 
     it('a continuation CUT at its work budget — ⛓ O2 and on its held retry too — falls back (continuation-budget)', () => {
