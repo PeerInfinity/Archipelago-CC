@@ -1,0 +1,64 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 30,
+        "x": 96,
+        "y": 112
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 169,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 67,
+            "to": 68
+        },
+        {
+            "key": "primary",
+            "from": 98,
+            "to": 99
+        },
+        {
+            "key": "primary",
+            "from": 148,
+            "to": 149
+        }
+    ],
+    "name": "bobsoldier-corpse",
+    "description": "⛓⛓⛓ seedling-fidelity-bobsoldier — THE CORPSE STILL SWINGS. The `bobsoldier-kill` boot and strategy with the THIRD press held 19 ticks past the 31-tick cadence: the body dies (billed t 150) with its blade mid-spin a few ticks short of the player's quarter. `BobSoldier.update` runs `super.update()` (where `Mobile.death` fades the alpha) and then its tail with NO `destroy` test, so the spin keeps turning and `swordHitting` keeps testing: the model bills the CORPSE's blade at t 155, 5 ticks into the 11-tick fade. Authored by scripts/procgen/plan-seedling-bobsoldier.mjs.",
+    "note": ""
+}

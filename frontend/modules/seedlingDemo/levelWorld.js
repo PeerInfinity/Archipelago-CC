@@ -195,6 +195,7 @@ export const SOLIDS_BY_MOVER = Object.freeze({
      * the table that recorded it: solidity is per MOVER, and "the subclasses
      * add nothing" is per SUBCLASS.
      */
+    // ⛓ fidelity-bobsoldier: and the BobSoldier's — `BobSoldier.as`'s ctor pushes nothing either.
     enemy: Object.freeze([...SOLID_ENTITY_TYPES]),
     /**
      * ⛓⛓⛓ R8 SLICE 1 — THE CHASER, AND THE ONE TYPE THAT SEPARATES IT.

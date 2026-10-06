@@ -162,8 +162,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity FRONTIER3: +2 (238 with AXE + PROXIMITY) — `frontier3-l62-door-niche`, `frontier3-l87-pocket`, inert.
         // ⛓ fidelity STANCE: +5 (243) — `stance-l46-chest`, `stance-l48-chest`, `stance-l48-keylock-open`, `stance-l48-keylock-south`, `stance-l48-keylock-north`, inert.
         // ⛓ fidelity LADDER2: +2 (245) — `ladder2-l59-grenade`, `ladder2-l104-beam`, inert.
-        expect(rows).toHaveLength(245);
-        expect(rows.length - parted.length).toBe(244);
+        // ⛓ fidelity BOBSOLDIER: +3 (248) — `bobsoldier-sword`, `bobsoldier-kill`, `bobsoldier-corpse`, inert.
+        expect(rows).toHaveLength(248);
+        expect(rows.length - parted.length).toBe(247);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

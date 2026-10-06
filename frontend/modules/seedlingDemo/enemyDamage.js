@@ -321,7 +321,23 @@ export const KILL_ARM_POLICY = Object.freeze({
             + 'is shoved by `swordForce` 5 from the PLAYER\'s entity point, which is '
             + '`Enemy.as`\'s own ordering.',
     }),
-    BobSoldier: Object.freeze({ policy: 'refused', why: 'the Bob cost plus a shield state nobody has transcribed' }),
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bobsoldier D2 — THE BOB COST, PAID THE BOB WAY, and the "shield state" this row used to
+     * cite does not exist: `BobSoldier.as` declares no shield, no `hit` override and no `knockback` override (its
+     * only extra state is the SWORD, `bobSoldier.js`). What a kill needs:
+     *   · the five gates — `enemyHit`, class-agnostic, against the LIVE chaser state (`levelRun.chaserStateFor`);
+     *   · the death — `Enemy.startDeath`: `destroy` on the killing blow (a `fade` corpse, NO die animation), then
+     *     `Mobile.death`'s eleven-tick fade, staged by `stepChasersNow`'s destroy branch — where the corpse keeps
+     *     CHASING and SWINGING (the tail has no `destroy` gate) until `FP.world.remove`;
+     *   · the `classCount(BobSoldier)` move — `killLockLedger`, computed at the removal like every chaser's.
+     */
+    BobSoldier: Object.freeze({
+        policy: 'modelled',
+        why: '⛓ fidelity-bobsoldier: `Enemy.hit` unoverridden (the sword\'s `{d, f, t}`, a knockback from the '
+            + 'PLAYER\'s point, none on the killing hit); `Enemy.startDeath` sets `destroy` at the blow (no "die"), '
+            + 'and the corpse fades for eleven ticks while its tail keeps chasing and swinging. The `classCount` '
+            + 'move is ledgered at the removal.',
+    }),
     BobBoss: Object.freeze({ policy: 'refused', why: 'boss damage — the encounter SCRIPT owns it (`bobBoss.js`), not a press arm' }),
     Flyer: Object.freeze({ policy: 'refused', why: 'the Bob cost, plus the LOS exemption (`v[i] is Flyer` skips the collideLine)' }),
     /**
@@ -608,6 +624,14 @@ export const CORPSE_COUNTING = Object.freeze({
         why: 'Bob\'s two-stage shape (inherited), with `add("die", [10..18], 15)`.',
         src: 'Enemies/Bob.as:84-97, Enemies/LavaRunner.as:34',
     }),
+    // ⛓ fidelity-bobsoldier D2: NOT Bob's shape — no `startDeath` override, so `destroy` at the blow.
+    BobSoldier: Object.freeze({
+        shape: 'fade', removesBody: true, chaserTag: 'bobsoldier',
+        why: '`BobSoldier` does NOT override `startDeath` (its Spritemap has no "die"), so `Enemy.startDeath` sets '
+            + '`destroy` on the killing blow and `Mobile.death`\'s fade starts the next update. ⛔ The tail keeps '
+            + 'running on the corpse (no `destroy` gate): it chases and its sword still hits until the removal.',
+        src: 'Enemies/BobSoldier.as:72-82 (update), Enemies/Enemy.as:182-186 (startDeath)',
+    }),
     // ⛓ U7-swim D3: Bob's shape, with a ten-frame animation at rate 10.
     Puncher: Object.freeze({
         shape: 'anim+fade', removesBody: true, chaserTag: 'puncher',
@@ -706,7 +730,9 @@ export function removalTicksAfterHit(as3, deathAnimTicks = null) {
     }
     if (!row.removesBody) return null;
     if (row.shape === 'fade') {
-        if (deathAnimTicks !== null) {
+        // ⛓ fidelity-bobsoldier: `chasers.deathTicks` is 0 for a chaser with no die animation — a zero-length stage
+        // is no stage, and adds no wait.
+        if (deathAnimTicks !== null && deathAnimTicks !== 0) {
             fail(`removalTicksAfterHit: ${as3} is a \`fade\` row — it has no death `
                 + 'ANIMATION stage, so passing one would add a wait the game does not take.');
         }
@@ -762,6 +788,11 @@ export const KILL_SIDE_WRITES = Object.freeze({
     LavaRunner: Object.freeze({
         writes: 'none',
         why: '⛓ KILLLOCK K2: inherits `Bob.removed()`\'s empty override; no `setPersistence` in the class.',
+    }),
+    BobSoldier: Object.freeze({
+        writes: 'none',
+        why: '⛓ fidelity-bobsoldier: `removed()` is overridden EMPTY (its only line is the commented '
+            + '`//if(!fell) dropCoins();`, `BobSoldier.as:65-68`), and the class has no `setPersistence`.',
     }),
     Puncher: Object.freeze({
         writes: 'none',

@@ -31,6 +31,27 @@
       "noHazards": []
     },
     {
+      "file": "bobsoldier-corpse.json",
+      "tickCount": 169,
+      "bootLevel": 30,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "bobsoldier-kill.json",
+      "tickCount": 157,
+      "bootLevel": 30,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "bobsoldier-sword.json",
+      "tickCount": 127,
+      "bootLevel": 30,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "burn-l24-reach-exit.json",
       "tickCount": 124,
       "bootLevel": 24,

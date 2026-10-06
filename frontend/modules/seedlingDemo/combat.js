@@ -102,6 +102,7 @@
 import { PROFILE } from './seedlingProfile.js';
 import { defineRecord } from './entityRecords.js';
 import { TILE_TYPE_IDS } from '../flashPanel/seedlingSemantics.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 /**
  * The `Game.totalEnemies()` sum, VERBATIM and in source order
@@ -1296,7 +1297,7 @@ export function plannerContactFree(body, onScreenVerdict) {
  * null for them), which is what keeps the totem out of this arm until
  * slice 4 wires its own.
  */
-export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret', 'bob', 'puncher', 'wallflyer', 'grenade']);
+export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret', 'bob', 'puncher', 'wallflyer', 'grenade', 'bobsoldier']);
 
 /**
  * ⛓⛓⛓ R8 SLICE 1 — WHICH `stepped` FAMILIES PRICE THEIR OWN CONTACT, AND
@@ -1360,6 +1361,8 @@ export const CONTACT_STEPPED_PRICED_BY = Object.freeze({
     wallflyer: 'stepWallFlyersNow',
     // ⛓ SEEDLING FIDELITY LADDER2: `placedGrenade.js` — no contact, one blast.
     grenade: 'stepPlacedGrenadesNow',
+    // ⛓ fidelity-bobsoldier: the third bridged chaser — its body contact AND its sword, both in `stepChasersNow`.
+    bobsoldier: 'stepChasersNow',
 });
 
 /**
@@ -1400,6 +1403,10 @@ export const CONTACT_STEPPED_WHY = Object.freeze({
         + '(`placedGrenade.js`: dormant → armed inside 32 px → the fall → 60 → `"explode"`) and bills '
         + 'its one arm, the 20 px blast at `(x, endY)`, force 2 — 154 updates after the arming '
         + 'update, measured on the game (`probe-seedling-ladder2-phase.mjs`).',
+    bobsoldier: '⛓ fidelity-bobsoldier: bridged beside `bob` and walked by the same `stepChasersNow` at the position '
+        + 'this tick left. Two arms are billed there: `Enemy.hitPlayer`\'s 8x8 body (force 3, behind the body\'s own '
+        + '`hitsTimer` and `!destroy`) and `swordHitting`\'s `collideLine("Player", …)` from 8 to 16 px off the body '
+        + '(force `3 * damage`, NO enemy i-frame gate and NO `destroy` gate — a corpse swings through its fade).',
 });
 
 /**
@@ -1492,6 +1499,12 @@ export const CONTACT_BOSS_WHY = Object.freeze({
         + 'question for him at all: the one boss the shake band cannot make inactive.',
 });
 
+/**
+ * ⛓ fidelity-bobsoldier: the `stepped` families that are stepped only while a `contactFidelity` switch is on (their
+ * stepper is gated on the same switch — `chasers.CHASERS[tag].liveSwitch`).
+ */
+export const CONTACT_STEPPED_SWITCH = Object.freeze({ bobsoldier: 'bobSoldierLive' });
+
 export function contactPricing(tag) {
     const row = ENEMY_CLASSES[tag];
     if (!row) return { kind: 'unknown', why: `"${tag}" has no combat row` };
@@ -1502,7 +1515,9 @@ export function contactPricing(tag) {
                 + `override in its own step. ${CONTACT_BOSS_WHY[tag]}`,
         };
     }
-    if (CONTACT_STEPPED_FAMILIES.includes(tag)) {
+    // ⛓ fidelity-bobsoldier: a family stepped only under a `contactFidelity` switch is a `mover` while it is off.
+    if (CONTACT_STEPPED_FAMILIES.includes(tag)
+        && !(CONTACT_STEPPED_SWITCH[tag] && CONTACT_FIDELITY[CONTACT_STEPPED_SWITCH[tag]] !== true)) {
         return {
             kind: 'stepped',
             // ⛔ `pricedBy` IS THE LOAD-BEARING FIELD, not `kind`: a `stepped`

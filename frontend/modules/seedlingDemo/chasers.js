@@ -73,6 +73,8 @@ import { PROFILE } from './seedlingProfile.js';
 import { defineRecord } from './entityRecords.js';
 import { killLockBridged } from './killLockBodies.js';
 import { TILE_TYPE_IDS } from '../flashPanel/seedlingSemantics.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
+import { pointLength, pointNormalize } from './playerPhysicsV1.js';
 
 export class ChaserError extends Error {
     constructor(message) { super(message); this.name = 'ChaserError'; }
@@ -216,10 +218,14 @@ export const PUNCHER_PUNCH_FORCE = PROFILE.puncherPunchForce;
 /** `Puncher.as:201` — `const r:int = 8`, the punch box's depth off the body edge. */
 export const PUNCHER_PUNCH_REACH = PROFILE.puncherPunchReach;
 
-/** The "die" animation of a transcribed chaser, ready to step. */
+/**
+ * The "die" animation of a transcribed chaser, ready to step — or NULL for a class whose `startDeath` is
+ * `Enemy`'s (`destroy` at the blow, no animation: the BobSoldier).
+ */
 export function createDieAnim(tag) {
     const c = CHASERS[tag];
     if (!c) fail(`createDieAnim: "${tag}" is not a transcribed chaser`);
+    if (c.dieAnim === null) return null;
     return createSpriteAnim(c.dieAnim.frames, c.dieAnim.rate);
 }
 
@@ -329,6 +335,37 @@ export const CHASERS = defineRecord('chasers', {
         }),
         src: 'Enemies/Puncher.as:53-119',
     }),
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bobsoldier D1 — THE FOURTH ROW: the BobSoldier, a chaser with a spinning sword
+     * (`bobSoldier.js` holds the sword). `playerActions`' chase block is Bob's eleven lines with no `targetOffset`,
+     * so `chaseImpulse` is reused (moveSpeed 0.8, runRange 80 — the census row). What is NOT Bob's:
+     *
+     *   · the gate is the FREEZE alone (`BobSoldier.as:76-77`): no `destroy || "die"` return, so a killed body keeps
+     *     chasing (and swinging) through its fade — `chasesWhileDying`;
+     *   · `startDeath` is `Enemy`'s: `destroy` on the killing blow, NO die animation (`dieAnim: null`, a `fade`
+     *     corpse — `enemyDamage.CORPSE_COUNTING.BobSoldier`);
+     *   · its `solids` is `Mobile`'s base list — the ctor pushes nothing (`SOLIDS_BY_MOVER.enemy`), so other
+     *     "Enemy" bodies do NOT stop it.
+     */
+    bobsoldier: Object.freeze({
+        as3: 'BobSoldier',
+        targetOffset: Object.freeze({ x: 0, y: 0 }),
+        // `if (Game.freezeObjects) return;` right below `super.update()` (`BobSoldier.as:76-77`).
+        freezesOnGameFreeze: true,
+        // ⛔ `Enemy.startDeath` — `destroy = true` at the blow; the Spritemap has no "die" (`BobSoldier.as:51-62`).
+        dieAnim: null,
+        // ⛔ No `destroy` test anywhere in `update()` — the chase and the sword run on a corpse.
+        chasesWhileDying: true,
+        // ⛔ The ctor pushes nothing onto `Mobile.solids` (`BobSoldier.as:51-62`).
+        solidsMover: 'enemy',
+        // `Enemy.knockback`, inherited.
+        knocksBack: true,
+        /** ⛓ The sword: `bobSoldier.js` (`swordSpinningBeginCheck`/`Step`/`swordHitting`). */
+        sword: Object.freeze({ module: 'bobSoldier.js', src: 'Enemies/BobSoldier.as:111-170' }),
+        /** ⛓ Bridged only while `contactFidelity.CONTACT_FIDELITY.bobSoldierLive` is on (OFF = the BEFORE model). */
+        liveSwitch: 'bobSoldierLive',
+        src: 'Enemies/BobSoldier.as:72-170',
+    }),
 }, { doc: ['src'], src: 'chasers.js' });
 
 /**
@@ -353,7 +390,7 @@ export const CHASERS = defineRecord('chasers', {
  */
 export function bridgedChaserTags() {
     return Object.entries(CHASERS)
-        .filter(([tag, c]) => MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js' || killLockBridged(tag))
+        .filter(([tag, c]) => (MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js' && chaserSwitchOn(c)) || killLockBridged(tag))
         .map(([tag]) => tag)
         .sort();
 }
@@ -368,10 +405,18 @@ export function chaserKnocksBack(tag) {
     return c.knocksBack === true;
 }
 
+/**
+ * ⛓ fidelity-bobsoldier: a row may name a `contactFidelity` switch it is bridged under (`liveSwitch`), read at CALL
+ * time like every switch — so `SEEDLING_CONTACT_FIDELITY=none` (or `withContactFidelity`) is the BEFORE model.
+ */
+function chaserSwitchOn(c) {
+    return !c.liveSwitch || CONTACT_FIDELITY[c.liveSwitch] === true;
+}
+
 /** Is this census tag one the tick loop steps? */
 export function isBridgedChaser(tag) {
     const c = CHASERS[tag];
-    return !!c && (MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js' || killLockBridged(tag));
+    return !!c && ((MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js' && chaserSwitchOn(c)) || killLockBridged(tag));
 }
 
 /**
@@ -394,11 +439,27 @@ export function chaserSolids(tag) {
     return list;
 }
 
-/** Ticks from the killing blow to `destroy` — see header note 4. */
+/**
+ * Ticks from the killing blow to `destroy` — see header note 4. ZERO for a class with no die animation
+ * (`dieAnim: null`): `Enemy.startDeath` sets `destroy` on the blow itself.
+ */
 export function deathTicks(tag) {
     const c = CHASERS[tag];
     if (!c) fail(`deathTicks: "${tag}" is not a transcribed chaser (know ${Object.keys(CHASERS)})`);
+    if (c.dieAnim === null) return 0;
     return animTicks(c.dieAnim.frames, c.dieAnim.rate);
+}
+
+/** ⛓ fidelity-bobsoldier: does this class's own tail keep running after `destroy` (no `destroy` gate)? */
+export function chaserChasesWhileDying(tag) {
+    const c = CHASERS[tag];
+    if (!c) fail(`chaserChasesWhileDying: "${tag}" is not a transcribed chaser`);
+    return c.chasesWhileDying === true;
+}
+
+/** ⛓ fidelity-bobsoldier: does this class carry the BobSoldier's spinning sword (`bobSoldier.js`)? */
+export function chaserHasSword(tag) {
+    return !!CHASERS[tag]?.sword;
 }
 
 /**
@@ -434,8 +495,20 @@ export function chaserBoxAt(tag, cx, cy) {
     return rect(cx - ox, cy - oy, w, h);
 }
 
+/**
+ * ⛓⛓ fidelity-bobsoldier W5 (`contactFidelity.CONTACT_FIDELITY.chaserPointExact`) — `Point.length` and
+ * `FP.distance` are `Math.sqrt(x*x + y*y)`, and `Point.normalize(t)` MULTIPLIES by `t / length`
+ * (`playerPhysicsV1.pointNormalize`, the runtime's `point_normalize`). This file spelled both the refuted way
+ * (`Math.hypot`, `(x / m) * t`), which R9 slice 12e⁗ measured off the player's diagonals: 1-ulp velocity drift. The
+ * BobSoldier captures (L30 legs 308/309) read it off a chaser: the game's `vx` at t38 is `0.7884788477227912`, the
+ * refuted spelling's `…911`, and the one-ulp position it grows into moved the sword's knockback by 7e-15 px.
+ * OFF: the BEFORE arithmetic, byte-identical.
+ */
+const vlen = (x, y) => (CONTACT_FIDELITY.chaserPointExact ? pointLength(x, y) : Math.hypot(x, y));
+
 /** `flash.geom.Point.normalize(len)` — a no-op on the zero point. */
 function normalize(v, len) {
+    if (CONTACT_FIDELITY.chaserPointExact) return pointNormalize(v.x, v.y, len);
     const m = Math.hypot(v.x, v.y);
     if (m === 0) return v;
     return { x: (v.x / m) * len, y: (v.y / m) * len };
@@ -443,7 +516,7 @@ function normalize(v, len) {
 
 /** `Mobile.friction()`. */
 export function applyFriction(v, f = FRICTION) {
-    const m = Math.hypot(v.x, v.y);
+    const m = vlen(v.x, v.y);
     let out = normalize(v, Math.max(m - f, 0));
     out = { x: Math.abs(out.x) < VELOCITY_EPSILON ? 0 : out.x,
         y: Math.abs(out.y) < VELOCITY_EPSILON ? 0 : out.y };
@@ -476,7 +549,7 @@ export function chaseImpulse(tag, enemy, player) {
     const range = row.aggro.range;
     const tx = player.x + c.targetOffset.x;
     const ty = player.y + c.targetOffset.y;
-    const d = Math.hypot(tx - enemy.x, ty - enemy.y);
+    const d = vlen(tx - enemy.x, ty - enemy.y);
     if (d > range) return { ...enemy.v };
     const a = Math.atan2(ty - enemy.y, tx - enemy.x);
     const toV = { x: ms * Math.cos(a), y: ms * Math.sin(a) };
@@ -484,12 +557,12 @@ export function chaseImpulse(tag, enemy, player) {
     // knocked-back enemy from having its knockback cancelled by the
     // re-normalise on the very next tick, which is why a hit reads as a
     // knockback rather than as a wall.
-    const pushed = Math.hypot(enemy.v.x, enemy.v.y) > ms;
+    const pushed = vlen(enemy.v.x, enemy.v.y) > ms;
     let v = {
         x: enemy.v.x + sign(toV.x - enemy.v.x) * ms,
         y: enemy.v.y + sign(toV.y - enemy.v.y) * ms,
     };
-    if (!pushed && Math.hypot(v.x, v.y) > ms) v = normalize(v, ms);
+    if (!pushed && vlen(v.x, v.y) > ms) v = normalize(v, ms);
     return v;
 }
 
@@ -556,7 +629,8 @@ export function chaserStep(tag, enemy, player, {
     // freeze gate is PER CLASS (note 1).
     // ⛓ U7-swim: and a puncher mid-attack does not chase — `Puncher.update`'s
     // block is `if (player && getSprite() != "attack")` (`:60`).
-    const blocked = dying || (c.freezesOnGameFreeze && frozen)
+    // ⛓ fidelity-bobsoldier: a class with no `destroy`/"die" return (`chasesWhileDying`) chases on.
+    const blocked = (dying && c.chasesWhileDying !== true) || (c.freezesOnGameFreeze && frozen)
         || (enemy.attack !== null && enemy.attack !== undefined);
     if (!blocked) v = chaseImpulse(tag, { x, y, v, moveSpeed: enemy.moveSpeed }, player);
 
@@ -582,7 +656,7 @@ export function chaserAttackDecision(tag, enemy, player) {
     if (!a) return null;
     if (enemy.dying === true || enemy.destroy === true) return null;
     if (enemy.attack !== null && enemy.attack !== undefined) return null;
-    const d = Math.hypot(player.x - enemy.x, player.y - enemy.y);
+    const d = vlen(player.x - enemy.x, player.y - enemy.y);
     return d <= a.range ? createSpriteAnim(a.anim.frames, a.anim.rate) : null;
 }
 

@@ -1253,6 +1253,58 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'lock opens and the walk leaves by `teleporter@0,112`; the crossing\'s last tick is '
                 + 'the L53 arrival; no hit, no kill.',
         }),
+         * ⛓⛓⛓ seedling-fidelity-bobsoldier — THE FOUR TAPES `bobsoldier` EXPOSES, found BY THIS GUARD (the slice
+         * predicted zero; the guard named them on its first run with the class bridged — the fourth time it has
+         * caught the slice that followed it). Each enters L30 with `noDamage` false and never comes within the
+         * BobSoldier's 80 px leash (`bobsoldier@48,80`, constructed at (56,88)): measured, the closest approach is
+         * 110.8 px (`r9-solve-30`), and the body never moves, never spins and bills nothing. All four replay
+         * unchanged (tapeRunner, 8/8 rows). ⛔ Not folded into `exposedTapes`: a prediction edited after its
+         * measurement is not a prediction.
+         */
+        Object.freeze({
+            name: 'r9-solve-30', levels: Object.freeze([30]), bobs: 1, ticks: 210,
+            addedBy: 'Seedling fidelity BOBSOLDIER W4 (the guard found it)',
+            why: 'the campaign walks L30 for 210 ticks at >= 110.8 px from the BobSoldier: outside its leash, '
+                + 'so it never wakes and its sword stays at rest pointing down. No hit.',
+        }),
+        Object.freeze({
+            name: 'r9-solve-31', levels: Object.freeze([30]), bobs: 1, ticks: 1,
+            addedBy: 'Seedling fidelity BOBSOLDIER W4 (the guard found it)',
+            why: 'one boot tick in L30, 131.9 px from the BobSoldier. Nothing moves.',
+        }),
+        Object.freeze({
+            name: 'r9-solve-32', levels: Object.freeze([30]), bobs: 1, ticks: 81,
+            addedBy: 'Seedling fidelity BOBSOLDIER W4 (the guard found it)',
+            why: 'L30 for 81 ticks at >= 176 px from the BobSoldier — outside its leash. No hit.',
+        }),
+        Object.freeze({
+            name: 'swim-u5-bobboss-encounter', levels: Object.freeze([30]), bobs: 1, ticks: 81,
+            addedBy: 'Seedling fidelity BOBSOLDIER W4 (the guard found it)',
+            why: 'the walk into the BobBoss arena crosses L30 for 81 ticks at >= 176 px from the BobSoldier. '
+                + 'No hit.',
+        }),
+        /** ⛓⛓⛓ seedling-fidelity-bobsoldier — THE BOBSOLDIER'S WITNESSES, written before the roster measured them. */
+        Object.freeze({
+            name: 'bobsoldier-sword', levels: Object.freeze([30]), bobs: 1, ticks: 127,
+            addedBy: 'Seedling fidelity BOBSOLDIER D1 (the sword witness)',
+            why: 'the BobSoldier\'s chase and sword, driven: the player stands still south-east of '
+                + '`bobsoldier@48,80` with `noDamage` FALSE; the spin begins at t 49 inside `attackRange` 32 and the '
+                + 'blade knocks the player at t 80 and t 107 (force 3). The tape stops before the third hit.',
+        }),
+        Object.freeze({
+            name: 'bobsoldier-kill', levels: Object.freeze([30]), bobs: 1, ticks: 157,
+            addedBy: 'Seedling fidelity BOBSOLDIER D2 (the kill witness)',
+            why: 'the BobSoldier\'s death, driven: three landed presses (t 68, 99, 137), two of them shoving it, '
+                + '`destroy` at the third (no die animation) and the removal eleven ticks later; one sword hit on '
+                + 'the player (t 100).',
+        }),
+        Object.freeze({
+            name: 'bobsoldier-corpse', levels: Object.freeze([30]), bobs: 1, ticks: 169,
+            addedBy: 'Seedling fidelity BOBSOLDIER D2 (the corpse witness)',
+            why: 'the kill strategy with the third press held 19 ticks: the body dies at t 150 mid-spin and the '
+                + 'CORPSE\'s blade hits the player at t 155, five ticks into the fade — `BobSoldier.update` has no '
+                + '`destroy` gate. Recorded on the game, which agrees (player `hits` 2).',
+        }),
     ]),
 
     /**
@@ -1277,7 +1329,14 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
      * the synthetic `u7-puncher-*` tapes, which retire `noDamage` on purpose
      * and are declared in `exposedAdded`.
      */
-    bridgedClasses: Object.freeze(['bob', 'puncher']),
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bobsoldier — `bobsoldier` JOINS THE SCOPE (under `contactFidelity.bobSoldierLive`). Its
+     * rooms are L28, L30 and L40. ⛔ The slice PREDICTED zero new exposed tapes and the guard REFUTED it: four tapes
+     * that retire `noDamage` cross L30 (`r9-solve-30/31/32`, `swim-u5-bobboss-encounter`) — each outside the
+     * BobSoldier's leash the whole time, so byte-inert by geometry (measured; rows in `exposedAdded`). The witnesses
+     * are the TERRAIN captures (legs 308/309, `fixtures/contact-witness/`) and this slice's own tapes.
+     */
+    bridgedClasses: Object.freeze(['bob', 'bobsoldier', 'puncher']),
 
     /** The roster tally the exposure was derived from, at `153f5100b`. */
     rosterAtPrediction: Object.freeze({

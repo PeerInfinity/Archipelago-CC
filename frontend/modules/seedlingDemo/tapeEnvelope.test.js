@@ -83,7 +83,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ fidelity FRONTIER3: +2 (238 with AXE + PROXIMITY) — `frontier3-l62-door-niche`, `frontier3-l87-pocket`.
         // ⛓ fidelity STANCE: +5 (243) — `stance-l46-chest`, `stance-l48-chest`, `stance-l48-keylock-open`, `stance-l48-keylock-south`, `stance-l48-keylock-north`.
         // ⛓ fidelity LADDER2: +2 (245) — `ladder2-l59-grenade`, `ladder2-l104-beam`.
-        expect(names.length).toBe(245);
+        // ⛓ fidelity BOBSOLDIER: +3 (248) — `bobsoldier-sword`, `bobsoldier-kill`, `bobsoldier-corpse`.
+        expect(names.length).toBe(248);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);

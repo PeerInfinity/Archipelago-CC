@@ -181,7 +181,8 @@ describe('entityRecords — the dump and its md5', () => {
         // ⛓ swim U15: 143e37e6 → f1a4c74f, the `turret` and `turretSpit` records.
         // ⛓ swim R2 D1: 143e37e6 → abbcd286, the `wallFlyer` record.
         // ⛓ swim U15 + R2 (merged): all three records.
-        expect(entitiesMd5()).toBe('d10864a049d5f84c2bff1a018b230a66');
+        // ⛓ fidelity BOBSOLDIER: d10864a0 → 0655b315, the `chasers.bobsoldier` row (and the four rows' shape).
+        expect(entitiesMd5()).toBe('0655b315237cb63d79053e0b23eaf3fa');
         expect(entitiesStamp()).toEqual({ md5: entitiesMd5(), records: entityRecordNames().length });
     });
 });
