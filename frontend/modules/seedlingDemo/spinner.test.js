@@ -459,7 +459,8 @@ describe('the refusal predicate `runFire` narrows to', () => {
             expect(typeof row.wedgeVisible, `${as3} must answer wedgeVisible`).toBe('boolean');
         }
         // ⛓ R2-swim D1: `WallFlyer` (`wallFlyer.js`) is the fourth row.
-        expect(Object.keys(MODELLED_ENEMY_CLASSES).sort()).toEqual(['Bob', 'Puncher', 'Spinner', 'WallFlyer']);
+        // ⛓ fidelity-bobsoldier: `BobSoldier` (through `chasers.js`, its sword in `bobSoldier.js`) is the fifth.
+        expect(Object.keys(MODELLED_ENEMY_CLASSES).sort()).toEqual(['Bob', 'BobSoldier', 'Puncher', 'Spinner', 'WallFlyer']);
     });
 });
 

@@ -280,6 +280,13 @@ describe('the placements come from the census, not from here', () => {
 describe('R8 slice 3: `Spritemap.update` as the loop it is', () => {
     it('⛓ the LOOP and the closed form agree, for every transcribed class', () => {
         for (const [tag, c] of Object.entries(CHASERS)) {
+            // ⛓ fidelity-bobsoldier: a class with NO die animation (`Enemy.startDeath` sets `destroy` at the blow)
+            // has no loop to agree with — no anim, and zero ticks to `destroy`.
+            if (c.dieAnim === null) {
+                expect(createDieAnim(tag)).toBeNull();
+                expect(deathTicks(tag)).toBe(0);
+                continue;
+            }
             const anim = createDieAnim(tag);
             let n = 0;
             let fired = false;

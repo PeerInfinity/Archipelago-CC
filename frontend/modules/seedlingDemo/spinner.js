@@ -847,6 +847,20 @@ export const MODELLED_ENEMY_CLASSES = Object.freeze({
         // ⛔ FALSE: `pushableCtx().collides` sees spinners only.
         wedgeVisible: false,
     }),
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bobsoldier D1 — THE FIFTH ROW: the BobSoldier, bridged through `chasers.js` beside the
+     * Bob and the puncher, its sword stepped by `bobSoldier.js` from the same chaser loop. TERRAIN's held contact
+     * compare measured the game's sword knocking the player (L30 legs 308/309, t66/t67) where the model had no body.
+     */
+    BobSoldier: Object.freeze({
+        module: 'chasers.js',
+        why: '`playerActions`\' chase block is Bob\'s eleven lines with no target offset — `chaseImpulse` is '
+            + 'reused — plus a sword whose spin is a deterministic state machine (`bobSoldier.js`): π/10 a tick, '
+            + 'begun inside 32 px behind a 60-update reset, stopped pointing at the player',
+        stepped: 'levelRun.advance, in the chaser slot beside the Bobs',
+        // ⛔ FALSE for Bob's reason: `pushableCtx().collides` sees spinners only.
+        wedgeVisible: false,
+    }),
 });
 
 /**

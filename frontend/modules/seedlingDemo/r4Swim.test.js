@@ -56,11 +56,18 @@ describe('R4-swim D1: the Owl\'s stream opens only in the boot room, on its firs
 });
 
 describe('R4-swim D2: the IceTurret\'s flip is invisible to every bridged chaser', () => {
-    it('every bridged tag\'s solids carry BOTH "Enemy" (alive) and "Solid" (the corpse latch)', () => {
+    /**
+     * ⛓ fidelity BOBSOLDIER: NOT every bridged tag carries "Enemy" any more — `BobSoldier`'s list is `Mobile`'s base.
+     * For it the flip DOES decide whether the turret blocks, and the stepper answers it from the stepped turret's
+     * `solid` latch (`levelRun.enemyBoxStopsChaser`); so the invariant the refusal rests on is "Solid" for every tag.
+     */
+    it('every bridged tag\'s solids carry "Solid" (the corpse latch); every one but the BobSoldier\'s carries "Enemy" too', () => {
         const tags = bridgedChaserTags();
         expect(tags.length).toBeGreaterThan(0);
         for (const tag of tags) {
-            expect(chaserSolids(tag), tag).toEqual(expect.arrayContaining(['Enemy', 'Solid']));
+            expect(chaserSolids(tag), tag).toEqual(expect.arrayContaining(['Solid']));
+            if (tag === 'bobsoldier') expect(chaserSolids(tag)).not.toContain('Enemy');
+            else expect(chaserSolids(tag), tag).toEqual(expect.arrayContaining(['Enemy', 'Solid']));
         }
     });
 

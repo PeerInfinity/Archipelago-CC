@@ -1,0 +1,64 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 30,
+        "x": 96,
+        "y": 112
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 157,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 67,
+            "to": 68
+        },
+        {
+            "key": "primary",
+            "from": 98,
+            "to": 99
+        },
+        {
+            "key": "primary",
+            "from": 136,
+            "to": 137
+        }
+    ],
+    "name": "bobsoldier-kill",
+    "description": "⛓⛓⛓ seedling-fidelity-bobsoldier — THE DEATH, DRIVEN. `KILL_ARM_POLICY.BobSoldier` flipped `refused` -> `modelled` this slice; this is the witness. The `bobsoldier-sword` boot (L30, (104,120)) with a sword: one tick of `left` to face west, then a press whenever the body is in `slash()`'s reach and the 31-tick cadence allows. Three LANDED hits (t 68, 99, 137); the first two shove it by `swordForce` 5 from the player's point, the third sets `destroy` (BobSoldier plays no \"die\"), and `Mobile.death`'s fade removes it 11 ticks later — a corpse that keeps chasing and swinging until then. Sword hits on the player: 1 (t 100); body contacts: 0. Authored by scripts/procgen/plan-seedling-bobsoldier.mjs.",
+    "note": ""
+}

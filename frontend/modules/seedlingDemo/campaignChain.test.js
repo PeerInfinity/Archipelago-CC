@@ -223,6 +223,8 @@ describe('the campaign\'s bridged rooms all have a prediction row', () => {
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6',
             'r9-solve-13', 'r9-solve-14', 'r9-solve-15', 'r9-solve-16',
             'r9-solve-0-v3', 'r9-solve-12', 'r9-solve-21', 'r9-solve-22',
+            // ⛓ fidelity BOBSOLDIER: L30 (`bobsoldier@48,80`) joins — `r9-solve-31` arrives, `r9-solve-30` walks it.
+            'r9-solve-31', 'r9-solve-30',
         ]);
     });
 

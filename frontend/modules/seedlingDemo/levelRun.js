@@ -94,9 +94,13 @@ import {
 import {
     ENEMY_PIT_TILE, ENEMY_TERRAIN_DESTROYS, chaserAttackDecision, chaserBoxAt, chaserSolids,
     chaserKnocksBack, chaserStep, createDieAnim, createSpriteAnim, deathTicks, isBridgedChaser,
-    puncherPunchRect, stepSpriteAnim, CHASERS,
+    puncherPunchRect, stepSpriteAnim, CHASERS, chaseImpulse, chaserChasesWhileDying, chaserHasSword,
 } from './chasers.js';
-import { CRUSHER, alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
+import {
+    CRUSHER, alwaysArmed, crusherRect, scanCrusher, stepCrusher, collideLineSolid as collideLineBoxes,
+} from './crusher.js';
+// ⛓⛓⛓ seedling-fidelity-bobsoldier D1: the BobSoldier's sword, stepped from the chaser loop.
+import { BOB_SOLDIER, bobSoldierSwordTail, createBobSoldierSword } from './bobSoldier.js';
 import {
     createBossTotem, bossTotemClampY, bossTotemSolidRect, renderBossTotem, stepBossTotem,
     wandFadeFreezeTicks, wandFadeGateOpen, WAND_PICKUP,
@@ -3660,6 +3664,11 @@ export function createLevelRun({
                      */
                     attack: null,
                     /**
+                     * ⛓ fidelity-bobsoldier D1: the BobSoldier's sword state (`bobSoldier.js`), present ONLY on a
+                     * class that carries one, so every other chaser's record keeps its shape.
+                     */
+                    ...(chaserHasSword(e.tag) ? { sword: createBobSoldierSword() } : {}),
+                    /**
                      * `Enemy.fallInPit` — a LATCH, armed by the terrain
                      * switch's `case 6`, and `fell` is what `removed()`
                      * would read (`Bob.removed()` is an empty override, so
@@ -3749,9 +3758,16 @@ export function createLevelRun({
          * `FinalBoss` and `BossTotem` stay: their bodies MOVE, and a moving
          * "Enemy" is not a static box this sweep can read.
          */
+        /**
+         * ⛓ fidelity-bobsoldier: AND A TAG WHOSE LIST LACKS "Enemy" IS ANSWERED TOO, by the turret's own latch.
+         * `BobSoldier`'s list is `Mobile`'s base ("Solid", no "Enemy"), so which side of the flip the turret is on
+         * DOES decide whether it blocks — and `chaserStaticEnemyBoxesNow` carries that side (`solidLatch`, the
+         * stepped turret's `type == "Solid"` latch), which `enemyBoxStopsChaser` reads per mover. So the flip is
+         * answerable for every tag that carries "Solid"; one that carried neither would still refuse here.
+         */
         const flipBlind = [...new Set(census.filter((e) => isBridgedChaser(e.tag))
             .map((e) => e.tag))]
-            .every((tag) => ['Enemy', 'Solid'].every((ty) => chaserSolids(tag).includes(ty)));
+            .every((tag) => chaserSolids(tag).includes('Solid'));
         const shifty = census.filter((e) => TYPE_REWRITING_ENEMIES.includes(e.as3)
             && !(flipBlind && e.as3 === 'IceTurret'));
         if (shifty.length > 0) {
@@ -7104,8 +7120,11 @@ export function createLevelRun({
                             if (world.collidesSolid(r, solidOpts)) return true;
                             if (playerWall && rectsOverlap(r, playerWall)) return true;
                             for (const b of staticEnemyBoxes) {
+                                if (!enemyBoxStopsChaser(c.tag, b)) continue;
                                 if (rectsOverlap(r, b.rect)) return true;
                             }
+                            // ⛓ fidelity-bobsoldier: siblings are "Enemy" (`stepChaserEntity`'s rule).
+                            if (!chaserSolids(c.tag).includes('Enemy')) return false;
                             for (const o of bodies.values()) {
                                 if (o.id === c.id || o.removed) continue;
                                 if (rectsOverlap(r, chaserBoxAt(o.tag, o.x, o.y))) return true;
@@ -10196,9 +10215,56 @@ export function createLevelRun({
         }
         for (const t of turretStateFor(level).values()) {
             if (t.removed) continue;
-            out.push({ id: t.id, rect: iceTurretRect(t) });
+            // ⛓ fidelity-bobsoldier: the `type == "Solid"` latch rides along — a mover whose list lacks "Enemy"
+            // (the BobSoldier's) is stopped by the turret only once it is a Solid corpse.
+            out.push({ id: t.id, rect: iceTurretRect(t), solidLatch: t.solid === true });
         }
         return out;
+    }
+
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bobsoldier D1 — DOES THIS "Enemy"-ROSTER BOX STOP THIS CHASER?
+     *
+     * Every chaser bridged before the BobSoldier pushed "Enemy" onto its `solids` (`Bob.as:39`, `Puncher.as:48`), so
+     * the sweep could treat every static "Enemy" body and every sibling as a wall without asking. `BobSoldier`'s ctor
+     * pushes NOTHING (`Mobile`'s base list), so for it an "Enemy" body is no wall at all — and the one box in that
+     * roster whose `type` can be "Solid" (the IceTurret corpse, `IceTurret.as:94`) is a wall exactly when its latch
+     * says so. ⇒ asked per MOVER, from `chaserSolids`, never assumed.
+     */
+    function enemyBoxStopsChaser(tag, entry) {
+        if (chaserSolids(tag).includes('Enemy')) return true;
+        return entry?.solidLatch === true && chaserSolids(tag).includes('Solid');
+    }
+
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bobsoldier D1 — `BobSoldier.update`'s TAIL BELOW THE CHASE: `swordSpinningBeginCheck(d)`,
+     * `swordSpinningStep(player)` and `swordHitting()` (`bobSoldier.js`). The caller has already applied the freeze
+     * return (`if (Game.freezeObjects) return;` sits above all of it).
+     *
+     * ⛔ NO GATE BUT THE PLAYER'S OWN. The sword tests `collideLine("Player", …)` against the player's box where the
+     * previous tick left it (the player updates last), and every crossing is a `p.hit(this, 3 * damage, new Point(x,
+     * y), damage)` through the one `applyPlayerHit` funnel — `Player.hit`'s i-frames, the freeze and `noDamage`
+     * decide. Not the enemy's `hitsTimer`, not `destroy`, not the camera (`bobSoldier.js` notes 1-3).
+     *
+     * @returns {?string} `'player-died'` when the sword killed the player.
+     */
+    function bobSoldierSwordNow(c, playerPoint) {
+        const tail = bobSoldierSwordTail(c.sword, c, playerPoint);
+        const box = playerBoxAt(state.x, state.y);
+        for (const l of tail.lines) {
+            if (!collideLineBoxes([box], l.x0, l.y0, l.x1, l.y1)) continue;
+            applyPlayerHit({
+                source: 'sword',
+                id: c.id,
+                force: BOB_SOLDIER.swordForcePerDamage * c.damage,
+                damage: c.damage,
+                from: { x: c.x, y: c.y },
+                // `hitPlayer.hit(this, …)` — the BobSoldier is `e`, so the dark suit retaliates into it.
+                retaliate: (p) => retaliateIntoChaser(c, p, 'sword'),
+            });
+            if (pendingDeath) return 'player-died';
+        }
+        return null;
     }
 
     function stepChasersNow() {
@@ -10342,8 +10408,11 @@ export function createLevelRun({
                     if (world.collidesSolid(r, solidOpts)) return true;
                     if (playerWall && rectsOverlap(r, playerWall)) return true;
                     for (const b of staticEnemyBoxes) {
+                        if (!enemyBoxStopsChaser(c.tag, b)) continue;
                         if (rectsOverlap(r, b.rect)) return true;
                     }
+                    // ⛓ fidelity-bobsoldier: a sibling is an "Enemy" — no wall to a mover whose list lacks it.
+                    if (!chaserSolids(c.tag).includes('Enemy')) return false;
                     // ⛓ AND ITS SIBLINGS, read LIVE: this loop steps them one
                     // at a time and the game's update list does too, so a
                     // body that updates later must see the earlier one where
@@ -10495,6 +10564,15 @@ export function createLevelRun({
                     // branch too (it tests only `destroy` and "die").
                     c.attack = chaserAttackDecision(c.tag, c, playerPoint) ?? c.attack;
                 }
+                // ⛓ fidelity-bobsoldier: `BobSoldier.update`'s tail runs below the descent as well (it tests only
+                // the freeze) — a falling BobSoldier still swings. On the destroy tick too: the tail has no
+                // `destroy` gate, and the chase above already ran for it when it was alive this tick.
+                if (c.sword && ceremony === null) {
+                    if (c.destroy && chaserChasesWhileDying(c.tag)) {
+                        c.v = chaseImpulse(c.tag, { x: c.x, y: c.y, v: c.v }, playerPoint);
+                    }
+                    return bobSoldierSwordNow(c, playerPoint);
+                }
                 return null;
             }
             /**
@@ -10555,6 +10633,17 @@ export function createLevelRun({
                         assertChaserRemovalIsDeclared(c, cause);
                     }
                 }
+                /**
+                 * ⛓⛓ fidelity-bobsoldier D2 — A BOBSOLDIER'S CORPSE STILL CHASES AND STILL SWINGS. `BobSoldier.update`
+                 * calls `super.update()` (where `Mobile.death` fades the alpha) and then runs its tail with no
+                 * `destroy` test, so `v` keeps taking the chase impulse (nothing moves it: `mobileUpdate`'s move is
+                 * inside `if (!destroy)`) and the sword keeps hitting — on the removing tick as well, because
+                 * `FP.world.remove` is deferred to the end of the frame. Off screen too (note 2).
+                 */
+                if (chaserChasesWhileDying(c.tag) && ceremony === null) {
+                    c.v = chaseImpulse(c.tag, { x: c.x, y: c.y, v: c.v }, playerPoint);
+                    if (c.sword) return bobSoldierSwordNow(c, playerPoint);
+                }
                 return null;
             }
             /**
@@ -10598,6 +10687,11 @@ export function createLevelRun({
              * reads `dying`).
              */
             c.attack = chaserAttackDecision(c.tag, c, playerPoint) ?? c.attack;
+            // ⛓ fidelity-bobsoldier D1: the sword, below the chase in `BobSoldier.update` and behind its freeze
+            // return. A contact that already killed the player ends the family's tick as before.
+            if (c.sword && ceremony === null && contact !== 'player-died') {
+                contact = bobSoldierSwordNow(c, playerPoint);
+            }
             assertSteppedChaserLifetime(c);
             if (before.x !== c.x || before.y !== c.y) {
                 chaserWalks.push({
@@ -13020,6 +13114,9 @@ export function createLevelRun({
                 // "will the lock open" wants the third.
                 destroy: c.destroy,
                 alpha: c.alpha,
+                // ⛓ fidelity-bobsoldier: the sword's angle and phase, on a class that carries one.
+                ...(c.sword ? { swordSpin: c.sword.swordSpin[0], swordSpinning: c.sword.swordSpinning,
+                    swordSpinResetTimer: c.sword.swordSpinResetTimer } : {}),
             });
         }
         return out;

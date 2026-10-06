@@ -462,7 +462,8 @@ describe('who takes the box', () => {
          * RETURN TO MENU the Playback Bot's Restart-route witness, `probe-seedling-restart-route.mjs`;
          * WAVE-6 CONSUMER Restart keeps the held items, `probe-seedling-restart-held-items.mjs`, and the
          * arrival-inside-a-solid escape, `probe-seedling-arrival-escape.mjs`;
-         * OBSTACLE EVENTS the break-before-first-use witness, `probe-seedling-obstacle-events.mjs`.)
+         * OBSTACLE EVENTS the break-before-first-use witness, `probe-seedling-obstacle-events.mjs`;
+         * fidelity BOBSOLDIER the body-per-tick witness, `probe-seedling-bobsoldier-mobiles.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -485,7 +486,7 @@ describe('who takes the box', () => {
             'probe-seedling-restart-warp.mjs', 'probe-seedling-divergence-sweep.mjs', 'probe-seedling-slot-order.mjs',
             'probe-seedling-contact-divergence.mjs', 'probe-seedling-axe-phase.mjs', 'probe-seedling-arrival-solid.mjs',
             'probe-seedling-restart-route.mjs', 'probe-seedling-restart-held-items.mjs', 'probe-seedling-arrival-escape.mjs',
-            'probe-seedling-obstacle-events.mjs'];
+            'probe-seedling-obstacle-events.mjs', 'probe-seedling-bobsoldier-mobiles.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

@@ -372,6 +372,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'return-l15-walkin', 'return-l15-conch',
             // ⛓⛓⛓ Seedling fidelity ROBUST's D2 / D3 witnesses.
             'robust-l16-sword-idle1', 'robust-l16-l18-sword-conch',
+            // ⛓⛓⛓ Seedling fidelity BOBSOLDIER: the four L30 crossers the guard named, then the two witnesses.
+            'r9-solve-30', 'r9-solve-31', 'r9-solve-32', 'swim-u5-bobboss-encounter',
+            'bobsoldier-sword', 'bobsoldier-kill', 'bobsoldier-corpse',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -410,8 +413,11 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity SLOTS adds five — `slots-l24-fire-first`, `slots-l24-burn-fire-first`,
         // `slots-l24-burn-cut-80`, `slots-l24-burn-cut-110`, `slots-l24-burn-fencepost` (L24 → L12).
         // ⛓ Seedling fidelity PROXIMITY adds three — `prox-l29-key-return` (L29 → L22), `prox-l40-turret-volley` and `prox-l40-turret-contact` (L40).
-        expect(out.exposed).toBe(62);
+        // ⛓ Seedling fidelity BOBSOLDIER adds six — the L30 crossers `r9-solve-30/31/32` and
+        // `swim-u5-bobboss-encounter` (never inside the leash), and `bobsoldier-sword` / `-kill` / `-corpse`.
+        expect(out.exposed).toBe(69);
         expect(out.tapes).toEqual([
+            'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
             'burn-l24-reach-exit', 'cancross-l16-sword-none', 'dash-l16-sword-all', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
@@ -420,8 +426,10 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
             'r9-l6-harmless-control', 'r9-l6-harmless-press', 'r9-l6-sword-dash-hit', 'r9-solve-0-v3',
             'r9-solve-12', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'r9-solve-21',
-            'r9-solve-22', 'return-l15-conch', 'return-l15-walkin', 'robust-l16-l18-sword-conch', 'robust-l16-sword-idle1',
+            'r9-solve-22', 'r9-solve-30', 'r9-solve-31', 'r9-solve-32',
+            'return-l15-conch', 'return-l15-walkin', 'robust-l16-l18-sword-conch', 'robust-l16-sword-idle1',
             'slots-l24-burn-cut-110', 'slots-l24-burn-cut-80', 'slots-l24-burn-fencepost', 'slots-l24-burn-fire-first', 'slots-l24-fire-first',
+            'swim-u5-bobboss-encounter',
             'u10-puncher-dwell',
             'u10-puncher-dwell-refused', 'u11-dark-shield-bob', 'u11-dark-shield-puncher',
             'u11-facing-knockback', 'u11-facing-puncher',
@@ -567,6 +575,14 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'prox-l29-key-return': { tape: {}, levels: [22] },
             'prox-l40-turret-volley': { tape: {}, levels: [40] },
             'prox-l40-turret-contact': { tape: {}, levels: [40] },
+            // ⛓ fidelity BOBSOLDIER's four L30 crossers and its two witnesses — the mirror rule.
+            'r9-solve-30': { tape: {}, levels: [30] },
+            'r9-solve-31': { tape: {}, levels: [30] },
+            'r9-solve-32': { tape: {}, levels: [30] },
+            'swim-u5-bobboss-encounter': { tape: {}, levels: [30] },
+            'bobsoldier-sword': { tape: {}, levels: [30] },
+            'bobsoldier-kill': { tape: {}, levels: [30] },
+            'bobsoldier-corpse': { tape: {}, levels: [30] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
@@ -599,7 +615,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
  */
 describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () => {
     it('the DECLARED scope and the DERIVED roster are the same claim', () => {
-        expect(assertBridgeRosterMatchesScope(bridgedChaserTags)).toEqual({ classes: ['bob', 'puncher'] });
+        // ⛓ fidelity-bobsoldier: the BobSoldier joins (W4 `bobSoldierLive`, ON by default).
+        expect(assertBridgeRosterMatchesScope(bridgedChaserTags)).toEqual({ classes: ['bob', 'bobsoldier', 'puncher'] });
     });
 
     it('⛔ MUTATION: a roster that drifts from the declaration reds by name', () => {
@@ -617,9 +634,9 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
      * as the pair's control.
      */
     it('a transcribed class with no roster row is NOT bridged — the control exists', () => {
-        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'jellyfish', 'puncher']);
+        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
         expect(MODELLED_ENEMY_CLASSES.Jellyfish).toBeUndefined();
-        expect(bridgedChaserTags()).toEqual(['bob', 'puncher']);
+        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'puncher']);
         expect(contactPricing('jellyfish').kind).toBe('mover');
     });
 
@@ -642,7 +659,7 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
             // ⛓ Seedling fidelity PROXIMITY: the ice turret is stepped AND now billed
             // (`stepIceTurretsNow`'s contact arm), so it joins — and no family is refused.
             bridged: [...bridgedChaserTags(), 'spinner', 'wallflyer', 'iceturret'],
-        })).toEqual({ families: 5, bridged: ['bob', 'puncher', 'spinner', 'wallflyer', 'iceturret'],
+        })).toEqual({ families: 6, bridged: ['bob', 'bobsoldier', 'puncher', 'spinner', 'wallflyer', 'iceturret'],
             refused: [] });
     });
 
@@ -751,7 +768,8 @@ function syntheticExposureIo(rows) {
         // ⛓ R1-swim: L22 joins — `r1-dark-shield-kill` is declared exposed there.
         // ⛓ R4-swim: L40 joins — `r4-iceturret-bobs` is declared exposed there.
         // ⛓ Seedling fidelity F6: L17 joins — `f6-l17-reentry` is declared exposed there.
-        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 40]),
+        // ⛓ Seedling fidelity BOBSOLDIER: L30 joins — its six exposed tapes are declared there.
+        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 30, 40]),
     };
 }
 

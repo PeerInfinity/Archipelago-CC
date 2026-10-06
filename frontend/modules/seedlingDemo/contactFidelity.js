@@ -59,6 +59,37 @@
 //   → `CONTACT_FIDELITY.drillLive`
 
 /**
+ * W4 — THE BOBSOLDIER IS A LIVE BODY (slice `seedling-fidelity-bobsoldier`; `bobSoldier.js`, `Enemies/BobSoldier.as`).
+ *
+ *     BobSoldier.as:72-82    update(): super.update(); if (Game.freezeObjects) return; playerActions(player);
+ *                            swordSpinningStep(player); swordHitting();
+ *     BobSoldier.as:160-170  swordHitting(): collideLine("Player", x + 8cos(-s), y + 8sin(-s), x + 16cos(-s), …)
+ *                            → p.hit(this, 3 * damage, new Point(x, y), damage)
+ *
+ * TERRAIN's residue: the model had no BobSoldier (`contactPricing('bobsoldier')` a `mover`, priced nowhere), and the
+ * game's sword knocked the player at L30 leg 309 t66 and leg 308 t67 (`hits` 0 → 1, the body at (50.8,92.6)). Flag
+ * ON: the class is a bridged chaser (`chasers.CHASERS.bobsoldier`, `spinner.MODELLED_ENEMY_CLASSES.BobSoldier`) —
+ * walked by `chaserStep`, its body contact billed by `chaserContactNow`, and its sword stepped and billed by
+ * `levelRun.bobSoldierSwordNow` — and a kill is staged (`KILL_ARM_POLICY.BobSoldier` modelled: `destroy` at the blow,
+ * the fade, a corpse that still swings). OFF: the class is the `mover` it was, byte-identical.
+ */
+//   → `CONTACT_FIDELITY.bobSoldierLive`
+
+/**
+ * W5 — A CHASER'S `Point` ARITHMETIC IS THE RUNTIME'S (slice `seedling-fidelity-bobsoldier`).
+ *
+ *     Point.length      Math.sqrt(x*x + y*y)                    (FP.distance the same)
+ *     Point.normalize   norm = thickness / length; x *= norm; y *= norm      (avm2_globals.c point_normalize)
+ *
+ * `chasers.js` spelled both the way R9 slice 12e⁗ refuted for the PLAYER (`Math.hypot`, `(x / m) * t`), so every
+ * chaser's friction and chase normalise drifted by an ulp on diagonals. Measured on the BobSoldier captures: the
+ * game's `vx` at L30 leg 309 t38 is `0.7884788477227912`, the model's `…911`; it grows into a 1-ulp position and a
+ * 7e-15 px player knockback at the sword's hit (t66). ON: `playerPhysicsV1.pointLength` / `pointNormalize`, and
+ * both captures are bit-exact on the player AND the body at every tick. OFF: the BEFORE arithmetic.
+ */
+//   → `CONTACT_FIDELITY.chaserPointExact`
+
+/**
  * THE SWITCHES. They are read at CALL time, so a measurement can turn any of them on without editing this file:
  *   - node: `SEEDLING_CONTACT_FIDELITY=all` (or a comma list of the keys) in the environment, read once at import;
  *   - a test: `withContactFidelity({ drillLive: true }, () => …)`, which restores the previous values.
@@ -79,6 +110,10 @@ export const CONTACT_FIDELITY = {
     wallFlyerSwordHits: true,
     /** ON by default (fidelity TERRAIN D3): with it on, no committed tape, producer `--check` or bounded pin moved. */
     drillLive: true,
+    /** fidelity BOBSOLDIER W4 — see its paragraph above. */
+    bobSoldierLive: true,
+    /** fidelity BOBSOLDIER W5 — see its paragraph above. */
+    chaserPointExact: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

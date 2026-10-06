@@ -1681,6 +1681,41 @@ frontend/modules/seedlingDemo/iceTurret.js|(module)|h379c4c3e|1|0,rule,magnitude
 frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|he88721a0|0|0,rule,bound,Enemies/Enemy.as:hitPlayer,hitsTimer <= 0 gate on the live body's contact (Enemy.hitPlayer)
 frontend/modules/seedlingDemo/levelRun.js|terrainAt|hb402bd13|0|0,rule,sentinel,,tile type default when no walkable tile
 frontend/modules/seedlingDemo/iceTurret.js|(module)|h4f0b044e|3|0,rule,magnitude,Enemies/Enemy.as:hitPlayer,ICE_TURRET_CONTACT: the live body's contact force (p.hit(this; 3; ...))
+frontend/modules/seedlingDemo/bobSoldier.js|(module)|hbe0a6d16|16|0,physics,magnitude,,weaponLength = sprLameSword.width 16 (BobSoldier.as:37)
+frontend/modules/seedlingDemo/bobSoldier.js|(module)|h94189274|32|0,rule,bound,,attackRange 32: the spin begins inside it (BobSoldier.as:30)
+frontend/modules/seedlingDemo/bobSoldier.js|(module)|ha9800354|10|0,physics,magnitude,,swordSpinRate = PI / 10 (BobSoldier.as:43)
+frontend/modules/seedlingDemo/bobSoldier.js|(module)|h00a5fb8e|60|0,rule,count,,swordSpinResetTimerMax 60 (BobSoldier.as:44)
+frontend/modules/seedlingDemo/bobSoldier.js|(module)|h9de66998|1|0,rule,count,,swords 1: one blade (BobSoldier.as:40)
+frontend/modules/seedlingDemo/bobSoldier.js|(module)|hcab8e053|3|0,physics,magnitude,,swordHitting p.hit force 3 * damage (BobSoldier.as:165)
+frontend/modules/seedlingDemo/bobSoldier.js|(module)|h30a15e0f|3|0,physics,derivation,,swordSpin initial 3PI/2 (BobSoldier.as:42)
+frontend/modules/seedlingDemo/bobSoldier.js|(module)|h30a15e0f|2|0,physics,derivation,,swordSpin initial 3PI/2 (BobSoldier.as:42)
+frontend/modules/seedlingDemo/bobSoldier.js|(module)|h30a15e0f|2|1,physics,derivation,,swordSpin initial PI/2 (BobSoldier.as:42)
+frontend/modules/seedlingDemo/bobSoldier.js|(module)|h30a15e0f|0|0,physics,derivation,,swordSpin initial 0 (BobSoldier.as:42)
+frontend/modules/seedlingDemo/bobSoldier.js|(module)|hc997f767|0|0,structural,,,swordSpinBegin initial (0; 0) (BobSoldier.as:41)
+frontend/modules/seedlingDemo/bobSoldier.js|(module)|hc997f767|0|1,structural,,,swordSpinBegin initial (0; 0) (BobSoldier.as:41)
+frontend/modules/seedlingDemo/bobSoldier.js|createBobSoldierSword|h937217df|0|0,structural,,,swordIndex initial 0
+frontend/modules/seedlingDemo/bobSoldier.js|createBobSoldierSword|h937217df|0|1,structural,,,swordSpinResetTimer initial 0
+frontend/modules/seedlingDemo/bobSoldier.js|angleDifference|h866d8017|2|0,structural,,,FP.angle_difference one 2PI wrap (FP.as:233)
+frontend/modules/seedlingDemo/bobSoldier.js|angleDifference|h10f96948|2|0,structural,,,FP.angle_difference one 2PI wrap (FP.as:233)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierBeginCheck|h64b6d499|0|0,rule,bound,,swordSpinResetTimer > 0 (BobSoldier.as:117)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierBeginCheck|h92753734|1|0,rule,count,,swordSpinResetTimer-- one per update (BobSoldier.as:119)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierBeginCheck|hff1ea310|2|0,structural,,,(spin + 2PI) % 2PI (BobSoldier.as:131)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierBeginCheck|hff1ea310|2|1,structural,,,(spin + 2PI) % 2PI (BobSoldier.as:131)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierSpinStep|h5c6c6508|2|0,structural,,,(-atan2 + 2PI) % 2PI (BobSoldier.as:140)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierSpinStep|h5c6c6508|2|1,structural,,,(-atan2 + 2PI) % 2PI (BobSoldier.as:140)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierSpinStep|haf4e4e37|2|0,rule,bound,,a full turn 2PI before the stop test (BobSoldier.as:141)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierSpinStep|h3e234b40|2|0,structural,,,(spin + 2PI) % 2PI (BobSoldier.as:143)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierSpinStep|h3e234b40|2|1,structural,,,(spin + 2PI) % 2PI (BobSoldier.as:143)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierSpinStep|h957f6729|1|0,structural,,,swordIndex + 1 (BobSoldier.as:154)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierSwordLine|h9881bd21|0|0,structural,,,blade index default 0
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierSwordLine|h9de1bf3f|2|0,physics,derivation,,weaponLength / 2: the line starts 8 px off the body (BobSoldier.as:163)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierSwordLine|h9de1bf3f|2|1,physics,derivation,,weaponLength / 2: the line starts 8 px off the body (BobSoldier.as:163)
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierSwordTail|h60d0f44f|0|0,structural,,,for each sword from 0
+frontend/modules/seedlingDemo/bobSoldier.js|bobSoldierSwordTail|h5fca09a7|1|0,structural,,,loop step 1
+frontend/modules/seedlingDemo/chasers.js|(module)|h628063d2|0|0,physics,magnitude,,targetOffset leash centre (BobSoldier: none)
+frontend/modules/seedlingDemo/chasers.js|(module)|hf3d441fc|0|0,physics,magnitude,,targetOffset leash centre (BobSoldier: none)
+frontend/modules/seedlingDemo/chasers.js|deathTicks|h05bb1004|0|0,rule,count,,no die animation: Enemy.startDeath sets destroy at the blow (0 ticks)
+frontend/modules/seedlingDemo/levelRun.js|step|hee10ba2a|0|0,rule,bound,,a forecast corpse is removed at alpha <= 0 (Mobile.death)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,
