@@ -360,11 +360,13 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
         });
         expect(out.verdict).not.toBe('SOLVED');
         expect(out.verbs.has('chest')).toBe(true);
-        expect(out.reasonText).toMatch(/applied 4 strategies for one goal/);
-        expect(out.reasonText).toMatch(/the corridor still does not plan/);
+        // ⛓ Seedling fidelity STANCE: the 4-strategy loop is a named re-entry now — the
+        // chest's stance is below it, on the side the player is trying to reach.
+        expect(out.reasonText).toMatch(/STANCE_REENTRY — the walk to chest@64,80's `chest` stance \(72,98\)/);
+        expect(out.reasonText).not.toMatch(/applied 4 strategies/);
         // The row's own text is this measurement, not a paraphrase of it.
         expect(excludedNamed('chest-in-the-gap').refusalText)
-            .toMatch(/applied 4 strategies for one goal/);
+            .toMatch(/STANCE_REENTRY — the walk to chest@64,80's `chest` stance \(72,98\)/);
     });
 
     /**
@@ -387,12 +389,14 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
 
         const keyed = attempt('keylock-keyed', spec, POST_SWORD_ITEMS, { keys: [0] });
         expect(keyed.verdict).not.toBe('SOLVED');
-        expect(keyed.verbs.has('keylock')).toBe(true);
-        expect(keyed.reasonText).toMatch(/the corridor still does not plan/);
-        // ⚠ The row must NOT read as understood.
-        expect(excludedNamed('key-keylock-pair').cause).toMatch(/UNDIAGNOSED/);
-        expect(excludedNamed('key-keylock-pair').measured)
-            .toMatch(/THE DECIDING CAUSE IS NOT NAMED/);
+        // ⛓ Seedling fidelity STANCE — THE CAUSE IS NAMED: the key line is the row UNDER the
+        // lock, the crossing runs north→south, and the lock is no longer its own
+        // prerequisite, so the derivation refuses before any `keylock` is applied.
+        expect(keyed.verbs.has('keylock')).toBe(false);
+        expect(keyed.reasonText).toMatch(/SEALED BEHIND ITSELF: the key line is the row y=97 under bosslock@64,80/);
+        expect(keyed.reasonText).toMatch(/The save still holds its flag \{900,1\}/);
+        expect(excludedNamed('key-keylock-pair').cause).toMatch(/^DIAGNOSED/);
+        expect(excludedNamed('key-keylock-pair').refusalText).toMatch(/SEALED BEHIND ITSELF/);
     });
 
     /**
@@ -514,7 +518,8 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
         const blocked = attempt('shieldboss-door-ty5', boss(5));
         expect(blocked.verdict).not.toBe('SOLVED');
         expect(blocked.verbs.has('fight')).toBe(true);
-        expect(blocked.reasonText).toMatch(/the corridor still does not plan/);
+        // ⛓ Seedling fidelity STANCE: the loop after the fight is a named re-entry now.
+        expect(blocked.reasonText).toMatch(/STANCE_REENTRY — the walk to shieldboss@64,80's `fight` stance/);
         // (ii) ⛔ THE DECIDING CLASS, and it is not about the fight: v1's ONLY
         // goal is collecting a `torchpickup`, and a live ShieldBoss refuses
         // that ceremony BY NAME — so the family is incompatible with the goal
