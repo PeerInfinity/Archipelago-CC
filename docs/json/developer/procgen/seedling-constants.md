@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**61 files, 5327 literals.** Class × position:
+**62 files, 5359 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 5 | 1541 | 353 | 1899 |
-| rule | 6 | 932 | 448 | 1386 |
+| physics | 5 | 1542 | 355 | 1902 |
+| rule | 6 | 934 | 448 | 1388 |
 | cosmetic | 0 | 49 | 14 | 63 |
-| structural | 10 | 356 | 1613 | 1979 |
+| structural | 10 | 357 | 1639 | 2006 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2878 | 2428 | 5327 |
+| total | 21 | 2882 | 2456 | 5359 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1638 | 0 | 88 | 118 | 4 | 51 | 1899 |
-| rule | 423 | 125 | 219 | 22 | 510 | 87 | 1386 |
+| physics | 1641 | 0 | 88 | 118 | 4 | 51 | 1902 |
+| rule | 424 | 126 | 219 | 22 | 510 | 87 | 1388 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -507,7 +507,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **139 small tables** (at most 16 literals) hold at least one (87 with an AS3 reference).
+**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **140 small tables** (at most 16 literals) hold at least one (88 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -654,6 +654,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `ITEM_PROPERTIES` | seedlingDemo/tapeFormat.js | 2 | 2 | rule | count/magnitude | Player.as:hitsMaxDef |
 | `INVENTORY_ITEM_IDS` | seedlingDemo/tapeFormat.js | 6 | 6 | rule | sentinel | Inventory.as:277-318 |
 | `SAVE_SLOTS` | seedlingDemo/tapeFormat.js | 3 | 3 | rule | count | Player.as:totemParts Player.as:totalKeys SealController.as:SEALS |
+| `PLACED_GRENADE` | seedlingDemo/placedGrenade.js | 4 | 3 | physics/rule | count/magnitude | Enemies/Grenade.as:21 Enemies/Grenade.as:22 Enemies/Grenade.as:32 |
 | `BLACK_COVER` | seedlingDemo/gameClock.js | 2 | 2 | rule | magnitude | Game.as:blackCover Game.as:blackCoverRate |
 | `LOAD_FADE_FRAMES` | seedlingDemo/gameClock.js | 7 | 1 | rule | bound | Game.as:blackCover |
 | `PICKUP_HELP_DEAD_FRAMES` | seedlingDemo/gameClock.js | 1 | 1 | rule | magnitude | Pickups/Sword.as:42-49 Inventory.as:174 Game.as:961 |

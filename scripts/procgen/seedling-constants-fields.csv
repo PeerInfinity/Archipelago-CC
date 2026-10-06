@@ -1819,3 +1819,9 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2478e7e0|60|0,rule,ma
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9065cb5b|0|0,rule,sentinel,,Ground state 0 (Player.as:297)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb348a44c|116|0,rule,count,,Game.levels.length
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h4254a394|3|0,physics,magnitude,Player.as:wandSpeed,
+frontend/modules/seedlingDemo/placedGrenade.js|*|*,structural,,,default: initial state / update counters / loop bounds (LADDER2 placed grenade)
+frontend/modules/seedlingDemo/placedGrenade.js|(module)|h79f1aaf5|32|0,rule,magnitude,Enemies/Grenade.as:21,fallTriggerDistance: the player's entity point within 32 px of (x; endY) arms it
+frontend/modules/seedlingDemo/placedGrenade.js|(module)|h097576a2|0.1|0,physics,magnitude,Enemies/Grenade.as:22,g: the fall's v.y += 0.1 per update
+frontend/modules/seedlingDemo/placedGrenade.js|(module)|h98e729fc|60|0,rule,count,Enemies/Grenade.as:32,_exTime default 60: the resting count before play("explode")
+frontend/modules/seedlingDemo/placedGrenade.js|mobileUpdate|hcbf6b0c2|0.05|0,physics,magnitude,Mobile.as:friction,|v.x| < 0.05 clamps to 0
+frontend/modules/seedlingDemo/placedGrenade.js|mobileUpdate|h12f606ed|0.05|0,physics,magnitude,Mobile.as:friction,|v.y| < 0.05 clamps to 0

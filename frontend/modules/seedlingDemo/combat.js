@@ -1296,7 +1296,7 @@ export function plannerContactFree(body, onScreenVerdict) {
  * null for them), which is what keeps the totem out of this arm until
  * slice 4 wires its own.
  */
-export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret', 'bob', 'puncher', 'wallflyer']);
+export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret', 'bob', 'puncher', 'wallflyer', 'grenade']);
 
 /**
  * ⛓⛓⛓ R8 SLICE 1 — WHICH `stepped` FAMILIES PRICE THEIR OWN CONTACT, AND
@@ -1358,6 +1358,8 @@ export const CONTACT_STEPPED_PRICED_BY = Object.freeze({
     puncher: 'stepChasersNow',
     // ⛓ R2-swim D1: `wallFlyer.js`, stepped and billed at its live position.
     wallflyer: 'stepWallFlyersNow',
+    // ⛓ SEEDLING FIDELITY LADDER2: `placedGrenade.js` — no contact, one blast.
+    grenade: 'stepPlacedGrenadesNow',
 });
 
 /**
@@ -1392,6 +1394,12 @@ export const CONTACT_STEPPED_WHY = Object.freeze({
         + '`stepWallFlyersNow` bills `Enemy.hitPlayer` at the position this tick left '
         + '(force 3, `e = this`, so the dark suit retaliates — `knockback` is `v = -v`). '
         + 'The census rect is the `.oel` cell, which a launched body has left.',
+    grenade: '⛓ SEEDLING FIDELITY LADDER2: `Grenade.update` never calls `super.update()`, so '
+        + '`Enemy.hitPlayer` never runs — a placed grenade has NO contact, and the census scan\'s '
+        + 'old `mover` verdict threw on a box the game never tests. `stepPlacedGrenadesNow` steps it '
+        + '(`placedGrenade.js`: dormant → armed inside 32 px → the fall → 60 → `"explode"`) and bills '
+        + 'its one arm, the 20 px blast at `(x, endY)`, force 2 — 154 updates after the arming '
+        + 'update, measured on the game (`probe-seedling-ladder2-phase.mjs`).',
 });
 
 /**

@@ -228,6 +228,10 @@ import {
     seamFieldsFromBlock,
 } from './tapeFormat.js';
 import { clampFor, spawnFromBoot } from './playerPhysicsV1.js';
+// ⛓⛓⛓ SEEDLING FIDELITY LADDER2: a placed `Grenade` is a body with a fuse.
+import {
+    PLACED_GRENADE, blastReaches, createPlacedGrenade, stepPlacedGrenade,
+} from './placedGrenade.js';
 import {
     CEREMONY_FREEZE_FRAMES, LOAD_DEAD_FRAMES, stepChannel,
 } from './swimSoundClock.js';
@@ -1069,6 +1073,8 @@ export function createLevelRun({
         owlGrenades = [];
         owlPendingRocks = [];
         owlPendingGrenades = [];
+        // ⛓ LADDER2: a rebuild re-runs `new Grenade(…)` — dormant, 48 px up.
+        placedGrenadeStates.delete(n);
         // ⛓ R6 slice 6c: and the watcher, whose rebuild re-arms `talked` —
         // see `watcherStateFor`. Nothing an item grants adds or removes one;
         // dropped anyway, for the reason the spinner's is.
@@ -1826,6 +1832,14 @@ export function createLevelRun({
         }
         return owlStream;
     };
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY LADDER2 — THE PLACED GRENADES, per level and per
+     * visit (`placedGrenade.js`). Built on the first tick of a visit from the
+     * census, dropped on every rebuild. `{t, level, id, what, dist, hitPlayer}`
+     * per arming, blast and removal in `placedGrenadeEvents`.
+     */
+    const placedGrenadeStates = new Map();
+    const placedGrenadeEvents = [];
     /** The rocks and grenades this visit has spawned — RUNTIME bodies. */
     let owlRocks = [];
     let owlGrenades = [];
@@ -4032,6 +4046,8 @@ export function createLevelRun({
         owlGrenades = [];
         owlPendingRocks = [];
         owlPendingGrenades = [];
+        // ⛓ LADDER2: a rebuild re-runs `new Grenade(…)` — dormant, 48 px up.
+        placedGrenadeStates.delete(n);
         // ⛓ R6 slice 6c. `new Game` rebuilds the NPC with `talked` false, and
         // the CLEARED tag is what keeps `talk()` from running again — the
         // flag, not the roster, is the memory. See `watcherStateFor`.
@@ -9544,6 +9560,63 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ SEEDLING FIDELITY LADDER2 — `Grenade.update()` FOR EVERY PLACED
+     * GRENADE IN THE ROOM, and its ONE damage arm: the `"explode"` callback's
+     * `FP.distance(x, endY, p.x, p.y) <= 20` → `p.hit(null, 2, (x, endY), 1)`.
+     *
+     * A grenade has NO contact (`Grenade.update` never calls `super.update()`,
+     * so `Enemy.hitPlayer` never runs — `finalBossFight.GRENADE`), which is why
+     * `combat.contactPricing('grenade')` is `stepped` with this pricer and the
+     * census scan skips it. The fuse is the game's: 154 updates from the
+     * arming update to the blast, measured on four arms by
+     * `probe-seedling-ladder2-phase.mjs` (L59 and L63 spawn inside a wall and
+     * blast on the same schedule — the fall is not collidable).
+     *
+     * ⚠ The grenade's removal is NOT fed to the room's roster: no model
+     * consumer counts a placed grenade out today, and that is unchanged.
+     */
+    function stepPlacedGrenadesNow() {
+        const census = world.combat?.enemies;
+        if (!census) return;
+        let list = placedGrenadeStates.get(level);
+        if (!list) {
+            list = census.filter((inst) => inst.tag === 'grenade')
+                .map((inst) => createPlacedGrenade(inst.cx, inst.cy,
+                    { id: `${inst.tag}@${inst.x},${inst.y}` }));
+            placedGrenadeStates.set(level, list);
+        }
+        if (list.length === 0) return;
+        const solidAt = (box) => !!world.collidesSolid(box);
+        for (const g of list) {
+            if (g.removed) continue;
+            const armedBefore = g.armedAt;
+            const ev = stepPlacedGrenade(g, state.x, state.y, { solidAt });
+            if (armedBefore === null && g.armedAt !== null) {
+                placedGrenadeEvents.push({ t: ticksCompleted, level, id: g.id, what: 'armed',
+                    dist: null, hitPlayer: false });
+            }
+            if (ev === 'blast') {
+                const reaches = blastReaches(g, state.x, state.y);
+                placedGrenadeEvents.push({ t: ticksCompleted, level, id: g.id, what: 'blast',
+                    dist: Math.sqrt((g.x - state.x) ** 2 + (g.endY - state.y) ** 2), hitPlayer: reaches });
+                if (reaches && !noclip) {
+                    applyPlayerHit({
+                        source: 'placedGrenade',
+                        id: g.id,
+                        force: PLACED_GRENADE.force,
+                        damage: PLACED_GRENADE.damage,
+                        from: { x: g.x, y: g.endY },
+                        retaliate: null, // `Grenade.as:133` — `hit(null, …)`
+                    });
+                }
+            } else if (ev === 'removed') {
+                placedGrenadeEvents.push({ t: ticksCompleted, level, id: g.id, what: 'removed',
+                    dist: null, hitPlayer: false });
+            }
+        }
+    }
+
+    /**
      * ⛓⛓⛓ R6 SLICE 3: `Enemy.hitPlayer()` FOR EVERY STATIC BODY IN THE ROOM.
      *
      * ⛔ ONLY WHEN THE TAPE HAS RETIRED `noDamage`, and that is not an
@@ -9614,6 +9687,9 @@ export function createLevelRun({
                 if (pricing.pricedBy === 'stepWallFlyersNow') continue;
                 // ⛓ FIDELITY PROXIMITY: an IceTurret is billed at its live body.
                 if (pricing.pricedBy === 'stepIceTurretsNow') continue;
+                // ⛓ FIDELITY LADDER2: a placed grenade has no contact; its blast is
+                // billed by `stepPlacedGrenadesNow`.
+                if (pricing.pricedBy === 'stepPlacedGrenadesNow') continue;
                 const verdict = chaserRoomVerdict(level);
                 if (verdict.stepped) continue;
                 throw new Error(`levelRun: the player is standing inside ${id} in level `
@@ -15096,6 +15172,37 @@ export function createLevelRun({
         spitForecast() {
             return spitForecastNow();
         },
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY LADDER2: THE PLACED GRENADES, FORECAST — copies
+         * of this visit's grenades (fresh ones before the visit's first tick),
+         * stepped one update per `step(st)` against the previewed PRE-move
+         * point, the pairing `stepPlacedGrenadesNow` uses. Returns the blasts
+         * that fire on that update, `[{id, x, endY, updates, armedAt}]`.
+         * `null` when the room holds no grenade, and under `noclip`.
+         */
+        grenadeForecast() {
+            if (noclip) return null;
+            const census = (world.combat?.enemies ?? []).filter((inst) => inst.tag === 'grenade');
+            if (census.length === 0) return null;
+            const live = placedGrenadeStates.get(level)
+                ?? census.map((inst) => createPlacedGrenade(inst.cx, inst.cy,
+                    { id: `${inst.tag}@${inst.x},${inst.y}` }));
+            const copies = live.map((g) => ({ ...g }));
+            const w = world;
+            const solidAt = (box) => !!w.collidesSolid(box);
+            return {
+                step(st) {
+                    const out = [];
+                    for (const g of copies) {
+                        if (g.removed) continue;
+                        if (stepPlacedGrenade(g, st.x, st.y, { solidAt }) === 'blast') {
+                            out.push({ id: g.id, x: g.x, endY: g.endY, updates: g.updates, armedAt: g.armedAt });
+                        }
+                    }
+                    return out;
+                },
+            };
+        },
         get arrowFlights() { return arrowFlightsNow(); },
         /**
          * ⛓ THE ARROW'S OWN COVER QUERY, as `stepArrowTrapsNow` builds it.
@@ -15330,6 +15437,15 @@ export function createLevelRun({
         get owlRockLandings() { return owlRockLandings.map((r) => ({ ...r })); },
         /** One per grenade event — `spawned`, `exploded` (with its radius), `removed`. */
         get owlGrenadeEvents() { return owlGrenadeEvents.map((r) => ({ ...r })); },
+        /** ⛓ LADDER2: one per placed grenade's arming, blast and removal. */
+        get placedGrenadeEvents() { return placedGrenadeEvents.map((r) => ({ ...r })); },
+        /**
+         * ⛓ LADDER2: the placed grenades of the CURRENT visit, as copies —
+         * `armedAt`/`blastAt` are the grenade's own update counts.
+         */
+        get placedGrenades() {
+            return (placedGrenadeStates.get(level) ?? []).map((g) => ({ ...g }));
+        },
         /**
          * EVERY TICK of the Owl room: the phase, its draw cost, the shake, the
          * stream's absolute position and the boss's own state.
@@ -16860,6 +16976,9 @@ export function createLevelRun({
             // a `contactsSuppressed` row, and `applyPlayerHit` still
             // carries `frozen` for the sources that DO run above the return
             // (the blast, the ring and the crusher).
+            // ⛓⛓⛓ LADDER2: the placed grenades — added after the Player
+            // (`Game.as:2298`), so updated before it, reading the pre-move point.
+            stepPlacedGrenadesNow();
             stepContactsNow();
             // ── ⛓⛓⛓ R8 SLICE 1: THE CHASERS, AND THEY ARE **LAST** ────
             //
