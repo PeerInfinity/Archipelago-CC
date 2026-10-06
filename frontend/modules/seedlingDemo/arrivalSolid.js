@@ -22,9 +22,9 @@
  * 0 px, on every one of those arms.
  */
 
-import { rectsOverlap } from './levelWorld.js';
-import { playerBoxAt } from './playerPhysicsV2.js';
-import { PROFILE } from './seedlingProfile.js';
+// ⛔ A SOLVER-FAMILY FILE (`solverBot.js` imports it): simulation symbols come
+// through the import door, never from their defining modules.
+import { LEVEL_COUNT, playerBoxAt, rectsOverlap } from './solverView.js';
 
 /**
  * ⛓ WHAT WRITES EACH CLASS'S FLAG — the action that removes the solid, read
@@ -120,7 +120,7 @@ export function modelStuck(run, ticks = STUCK_TICKS) {
  * world builder (`run.worldFor`, so each level is built under the run's
  * clears): `{from, door, at}` with `at` the landing in state coordinates.
  */
-export function arrivalsInto(run, level, levelCount = PROFILE.levelCount) {
+export function arrivalsInto(run, level, levelCount = LEVEL_COUNT) {
     const out = [];
     for (let n = 0; n < levelCount; n += 1) {
         let w;

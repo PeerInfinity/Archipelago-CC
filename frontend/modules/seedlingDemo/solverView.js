@@ -113,5 +113,5 @@ export {
 // tapeFormat.js — botDriverV1, botDriverV2, decisionTrace · seedling 1, physics 7
 export {
     assertTapeWithinRuntimeBudget, coerceTerrainState, GAME_VISIBLE_DROPS, heldKeysAt, INVENTORY_ITEM_IDS,
-    KEY_CODES, KEY_NAMES, requiredTapeVersion, serializeTape,
+    KEY_CODES, KEY_NAMES, LEVEL_COUNT, requiredTapeVersion, serializeTape,
 } from './tapeFormat.js';
