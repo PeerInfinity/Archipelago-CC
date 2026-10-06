@@ -11,7 +11,8 @@
  *     of that tick carries `hits` 0 → 1 or a body the model's run lacks (it is a CONTACT, not terrain);
  *   - each switch alone fixes exactly its own rows (W1 the two ray rows, W2 the three struck-flyer rows, W3 the
  *     four L88 rows), which is also the mutation: switch one off and its rows come back at their tick;
- *   - all ON: the nine reproduce the game at 0 px; the four residue rows still leave at their named tick.
+ *   - all ON (the shipped default since LINEFLIP): the nine reproduce the game at 0 px; the four residue rows still
+ *     leave at their named tick.
  */
 import { describe, expect, it } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -48,9 +49,17 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     });
 
     // ⛓ a measuring run sets SEEDLING_CONTACT_FIDELITY on purpose; the default is what this pins
-    // ⛓ D3: W2 and W3 ship ON (nothing measured moved); W1 ships OFF (it moves r9-campaign and two pins — stopped for a licence)
-    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('the shipped defaults: W1 OFF, W2 and W3 ON', () => {
-        expect(CONTACT_FIDELITY).toEqual({ collideLinePointsExact: false, wallFlyerSwordHits: true, drillLive: true });
+    // ⛓ TERRAIN D3 shipped W2 and W3 ON; LINEFLIP turned W1 ON (licensed: r9-solve-18 re-recorded on the game, 510 → 519 t)
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('the shipped defaults: all three ON', () => {
+        expect(CONTACT_FIDELITY).toEqual({ collideLinePointsExact: true, wallFlyerSwordHits: true, drillLive: true });
+    });
+
+    // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY).each(Object.entries(ROWS))('leg %s — the shipped defaults: fixed rows at 0 px, residue at its tick', async (id, [t, sw]) => {
+        const r = await replayCapture(load(id));
+        expect(r.error).toBeNull();
+        if (sw) expect(r.worst).toBe(0);
+        else expect(r.firstDiff?.t).toBe(t);
     });
 
     it.each(Object.entries(ROWS))('leg %s — switches OFF, the model leaves the game at the named tick, on a contact', async (id, [t]) => {

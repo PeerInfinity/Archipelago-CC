@@ -413,9 +413,10 @@ export const SPINNING_AXE = Object.freeze({
  * which is the same answer against integer edges and a DIFFERENT one against a
  * player standing at a fractional x: MEASURED on the game, the AXE report's D1
  * door arm (player at x 63.3, box edges 61.3/65.3) is hit on frame 57; the
- * truncating test says 58, this one says 57. ⚠ That shared function is the
- * crusher's and the spinner hammer's too, and is left as it is (residue, the
- * AXE report).
+ * truncating test says 58, this one says 57. ⛓ That shared function is the
+ * crusher's and the spinner hammer's too; it samples untruncated as well since
+ * fidelity LINEFLIP (`contactFidelity.CONTACT_FIDELITY.collideLinePointsExact`
+ * ON), so the two now agree.
  */
 export function collideLinePlayer(box, fromX, fromY, toX, toY) {
     const fx = Math.trunc(fromX);
