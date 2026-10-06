@@ -7,7 +7,7 @@
  * session on a FRESH page (the wasm game runs out of memory after ~150–170 swaps).
  *
  *   V  WASM — the playthrough loaded by `?rules=` (the `?game=` form resolves another seed with no
- *      flash_panel). The map is BOUND (arm `vanilla`, one entry per table entry, entity = the delivered
+ *      flash_panel). The map is BOUND (arm `vanilla`, one entry per table entry + the rules' game-state events, entity = the delivered
  *      room's), the controller's engine STAGES THE DELIVERED SET (not the map document), and the Playback
  *      Bot walks from the explicit start (skip-intro: no ceremony), the cold start ADOPTED — through the
  *      first rooms and checks: **0 forced re-arrivals**. The sphere log is DERIVED from the rules
@@ -528,14 +528,20 @@ async function main() {
                     const s = p.seedlingPlaybackSurface();
                     const a = s.atlas;
                     return { arm: a?.arm ?? null, entries: a?.entries?.length ?? null, refused: (a?.refused ?? []).map((r) => r.location),
+                        events: (a?.events ?? []).map((e) => e.location),
                         types: [...new Set((a?.entries ?? []).map((e) => e.entityType))], links: a?.links?.length ?? null,
                         delivered: !!s.wasm?.deliveredSet, deliveredRooms: s.wasm?.deliveredSet?.rooms?.length ?? null,
                         apRefusal: s.apRefusal };
                 });
                 out('V map', map);
                 const locCount = Object.values(REGIONS).reduce((n, r) => n + (r.locations ?? []).length, 0);
-                check(`${S}: the vanilla arm's map is BOUND — every location a goal or a named refusal, goals at the delivered entity`,
-                    map.arm === 'vanilla' && map.entries + map.refused.length === locCount && map.entries > 0 && map.types.length === 1
+                // ⛓ OBSTACLE EVENTS — a game-state event is the map's third class: neither a pickup nor a refusal, a goal
+                // whose check is the game's flag. Exactly the rules' `event_kind: 'game_state'` locations, no more.
+                const gameState = Object.values(REGIONS).flatMap((r) => (r.locations ?? []).filter((l) => l.event_kind === 'game_state')
+                    .map((l) => l.name)).sort();
+                check(`${S}: the vanilla arm's map is BOUND — every location a goal, a named refusal or a game-state event, goals at the delivered entity`,
+                    map.arm === 'vanilla' && map.entries + map.refused.length + map.events.length === locCount && map.entries > 0
+                        && map.types.length === 1 && JSON.stringify([...map.events].sort()) === JSON.stringify(gameState)
                         && map.delivered && map.apRefusal === null, JSON.stringify(map));
 
                 if (S === 'D') await runDirected();
