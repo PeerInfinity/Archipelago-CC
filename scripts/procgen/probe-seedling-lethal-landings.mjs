@@ -8,8 +8,14 @@
  * Each landing is booted on the bare wasm game exactly as a door does it, `new Game(level, x, y)` (the tape's
  * `boot`), with water, lava and pits ARMED and no items:
  *   - idle, and under each held direction (up/down/left/right), for `--ticks`: does the GAME kill the arrival
- *     (the position snaps back to the landing after the drown spiral: `die()` -> `restartLevel()` ->
- *     `new Game(level, playerPosition)`), leave the level (`level` changes), or let it live?
+ *     (`die()` -> `restartLevel()` -> `new Game(level, playerPosition)`), leave the level (`level` changes),
+ *     or let it live?
+ *     ⛔ A DEATH IS READ OFF `botStatus.dead_frames`, NEVER OFF THE POSITION. The drown spiral holds the player
+ *     still and the restart re-places it at the same landing, so the x/y/level ticks of an idle drown are one
+ *     point from first to last (measured: L50 (32,16), 180 ticks, 1 distinct position, 5 restarts). Each
+ *     restart is a ~20-frame fade the tape does not advance through: `dead_frames` read at the first live
+ *     tick (the boot's own fade) and at the end; with no level change, any growth is a restart. With the
+ *     conch the same boot stays at the boot's count.
  *   - CONTROL: idle with the item the terrain's transcription row names (`canSwim` -> conch,
  *     `hasDarkSuit` -> darksuit): no death.
  * Each row is compared with the physics model's verdict (`arrivalIsLethal`) and the generator's gate (the
@@ -81,18 +87,6 @@ export async function lethalLandingsOfRules(rules, mapDoc) {
     return [...out.values()];
 }
 
-/** Respawns in a tick stream: a tick back ON the boot point after one away from it, same level. */
-export function respawnsOf(ticks, origin) {
-    let n = 0;
-    for (let i = 1; i < ticks.length; i += 1) {
-        const a = ticks[i - 1];
-        const b = ticks[i];
-        if (b.level !== origin.level || a.level !== origin.level) continue;
-        if (b.x === origin.x && b.y === origin.y && (a.x !== origin.x || a.y !== origin.y)) n += 1;
-    }
-    return n;
-}
-
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
 if (isEntryPoint(import.meta.url)) await main();
 
@@ -145,12 +139,12 @@ async function main() {
         if (!ok) failed += 1;
     };
 
-    const tapeOf = (name, boot, { items = [], key = null } = {}) => parseTape({
+    const tapeOf = (name, boot, { items = [], key = null, ticks = TICKS } = {}) => parseTape({
         tape_version: 8, game: 'seedling', name, description: 'probe-seedling-lethal-landings', boot,
         noclip: false, noDamage: false, noHazards: [], grants: items.length ? [{ level: boot.level, items }] : [],
         persistence: [], equips: [], pins: [...PIN_NAMES],
         save: { totem_parts: [], keys: [], seal_parts: [] }, rng: { seed: 1, split: false }, seam: {},
-        tick_count: TICKS, inputs: key ? [{ key, from: 0, to: TICKS }] : [],
+        tick_count: ticks, inputs: key ? [{ key, from: 0, to: ticks }] : [],
     });
 
     /** Run tapes on ONE fresh page (the wasm game runs out of memory after ~100 world swaps). */
@@ -172,14 +166,24 @@ async function main() {
                 if (loaded !== 'ok') throw new Error(`botLoadTape ${tape.name}: ${loaded}`);
                 if (await bot('botStart') !== 'ok') throw new Error(`botStart ${tape.name} refused`);
                 const deadline = Date.now() + 10 * 60 * 1000;
+                let base = null;
+                let last = null;
+                const samples = [];
                 for (;;) {
                     const st = await botJson('botStatus');
+                    samples.push({ tick: st.tick, level: st.level, dead: st.dead_frames });
+                    // the boot's own fade is over at the first live tick; read the baseline there
+                    if (base === null && st.tick >= 1) base = st.dead_frames;
+                    last = st;
                     if (st.finished) break;
                     if (st.error) throw new Error(`${tape.name}: ${st.error}`);
                     if (Date.now() > deadline) throw new Error(`${tape.name}: deadline`);
-                    await page.waitForTimeout(500);
+                    await page.waitForTimeout(base === null ? 50 : 200);
                 }
-                out.push((await botJson('botDrain')).ticks ?? []);
+                const ticks = (await botJson('botDrain')).ticks ?? [];
+                ticks.deadFrames = { base, end: last?.dead_frames ?? null };
+                ticks.samples = samples;
+                out.push(ticks);
             }
             return out;
         } catch (e) {
@@ -191,11 +195,11 @@ async function main() {
     }
 
     const verdictOf = (ticks, boot) => {
-        const origin = { level: boot.level, ...spawnFromBoot(boot) };
         const left = ticks.find((o) => o.level !== boot.level);
-        const respawns = respawnsOf(ticks, origin);
-        if (left) return { verdict: `left->L${left.level}@${left.t}`, respawns };
-        return { verdict: respawns > 0 ? 'dies' : 'alive', respawns };
+        const { base, end } = ticks.deadFrames ?? {};
+        if (left) return { verdict: `left->L${left.level}@${left.t}`, deadFrames: { base, end } };
+        if (!Number.isFinite(base) || !Number.isFinite(end)) return { verdict: 'unread', deadFrames: { base, end } };
+        return { verdict: end > base ? 'dies' : 'alive', deadFrames: { base, end } };
     };
 
     for (const L of landings) {
@@ -212,6 +216,7 @@ async function main() {
             continue;
         }
         const game = INPUTS.map((k, i) => `${k ?? 'idle'}:${verdictOf(streams[i], boot).verdict}`);
+        const dead = INPUTS.map((k, i) => verdictOf(streams[i], boot).deadFrames);
         const control = verdictOf(streams[INPUTS.length], boot);
         const cameFrom = [...new Set(L.regions.map((x) => {
             const [reg, exitId] = x.split('/');
@@ -223,7 +228,7 @@ async function main() {
         const gameLethal = game.every((g) => g.endsWith(':dies') || cameFrom.some((c) => g.includes(`left->L${c}@`)));
         const edges = gatesOf(L, apItemFor(L.flag));
         console.log(`ROW ${JSON.stringify({ level: L.level, x: L.x, y: L.y, terrain: L.label, game, control: control.verdict,
-            gameLethal, modelLethal: model.lethal, model: model.tries, edges })}`);
+            gameLethal, modelLethal: model.lethal, model: model.tries, deadFrames: dead, edges })}`);
         check(`L${L.level} (${L.x},${L.y}) ${L.label}: the game ${gameLethal ? 'kills' : 'does NOT kill'} an item-less arrival; `
             + `the model agrees`, gameLethal === model.lethal, `game ${game.join(' ')} | model ${model.tries.join(' ')}`);
         check(`L${L.level} (${L.x},${L.y}): the ${item} saves it (idle, no death)`, control.verdict === 'alive', control.verdict);
@@ -234,19 +239,23 @@ async function main() {
 
     if (CROSS && (!ONLY || ONLY.includes(CROSSING.to))) {
         const boot = CROSSING.boot;
-        const [ticks] = await runTapes([tapeOf('cross-L53-L48', boot, { key: CROSSING.key })]);
+        const [ticks] = await runTapes([tapeOf('cross-L53-L48', boot, { key: CROSSING.key, ticks: 2 * TICKS })]);
         const firstIn = ticks.find((o) => o.level === CROSSING.to);
         const after = firstIn ? ticks.filter((o) => o.level === CROSSING.to) : [];
         const landing = firstIn ? { x: firstIn.x, y: firstIn.y } : null;
         const door = MAP.levels.find((l) => l.level === boot.level).entities
             .find((e) => /teleporter/.test(e.type) && Number(e.attrs?.to) === CROSSING.to);
         const want = door ? spawnFromBoot({ x: Number(door.attrs.playerx), y: Number(door.attrs.playery) }) : null;
-        const respawns = landing ? respawnsOf(after, { level: CROSSING.to, ...landing }) : 0;
+        // ⛔ by `dead_frames`, as above: the crossing's own fade is over at the first live L48 tick (a sample in
+        //    L48 with a tick past the crossing's); any growth after it, still in L48, is a restart.
+        const live = firstIn ? ticks.samples.find((x) => x.level === CROSSING.to && x.tick > firstIn.t) : null;
+        const endS = ticks.samples.at(-1);
+        const respawns = live && endS.level === CROSSING.to ? endS.dead - live.dead : 0;
         console.log(`ROW ${JSON.stringify({ crossing: `L${boot.level}->L${CROSSING.to}`, landing, door: door && { playerx: door.attrs.playerx, playery: door.attrs.playery }, respawns, ticksInL48: after.length })}`);
         check(`the game crosses L${boot.level} -> L${CROSSING.to} through its door`, !!firstIn);
         check('it lands where the door says (playerx/playery)', !!landing && !!want && landing.x === want.x && landing.y === want.y,
             JSON.stringify({ landing, want }));
-        check('and the item-less arrival is killed there (respawned at the landing at least once)', respawns > 0, `respawns ${respawns}`);
+        check('and the item-less arrival is killed there (restart fades after the arrival)', respawns > 0, `dead frames after the arrival: ${respawns}`);
     }
 
     await browser.close();
