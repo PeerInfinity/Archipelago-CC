@@ -142,7 +142,7 @@ import {
     DEFAULT_FRICTION, MOVE_SPEEDS, WALK_SPEED, applyFriction, applyInput,
     knockbackImpulse,
     plannerContactFree,
-    KILL_ARM_POLICY, MODELLED_KILL_ARMS,
+    KILL_ARM_POLICY, killArmModelled,
     SLASH_HIT_TICKS, distanceRectPoint, slashReachFor, slashRect,
     rectsOverlap,
     // ⛓ R9 slice 12e‴ (⚖ ruling 53): the talk radius, from the module that
@@ -188,7 +188,7 @@ export const STRIKE_PRESS = 'press';
  */
 export function armIsModelled(body) {
     if (body.as3 === 'Enemy') {
-        return MODELLED_KILL_ARMS.includes(body.enemyClass);
+        return killArmModelled(body.enemyClass);
     }
     return KILL_ARM_POLICY[body.as3]?.policy === 'modelled';
 }

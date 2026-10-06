@@ -110,6 +110,7 @@ import {
     fireRect, INVENTORY_ITEM_IDS, auditFire,
     pullModelled, pullsDrainingInto,
     PULSER, pulsePushes, pulserCycle, newPushable,
+    KILLLOCK_BODIES,
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -7225,11 +7226,48 @@ function countedBodiesLeft(run) {
     const stepped = (run.chaserRoomVerdict?.(run.level)?.stepped) === true;
     const live = new Set((run.entities('chasers') ?? []).map((c) => c.id));
     const bridged = new Set(bridgedChaserTags());
+    // ⛓ KILLLOCK K4: a turret corpse the run has REMOVED (drowned, fallen) has left the count.
+    const turrets = KILLLOCK_BODIES.turretRemovalLedger ? run.entities('turrets') : null;
     return census.filter((e) => {
         const id = `${e.tag}@${e.x},${e.y}`;
         if (stepped && bridged.has(e.tag)) return live.has(id);
+        if (turrets?.get?.(id)?.removed === true) return false;
         return true;
     });
+}
+
+/**
+ * ⛓ KILLLOCK K3 — can the kill work order's CHASER arm take this count? Every counted body left must be a live
+ * body the run steps as a strike target (`run.entities('strikeBodies')`) whose class `KILL_ARM_POLICY` calls
+ * `modelled`, and the run must hold a sword. Returns the ids, or the first reason it cannot.
+ */
+function deriveChaserKillOrder(run, bodies) {
+    const strike = new Map((run.entities('strikeBodies') ?? []).map((b) => [b.id, b]));
+    const ids = [];
+    for (const e of bodies) {
+        const id = `${e.tag}@${e.x},${e.y}`;
+        // ⛓ K4: a stepped ice turret is killed in place (`killIceTurretInPlace`), not hunted.
+        if (e.tag === 'iceturret' && KILLLOCK_BODIES.turretRemovalLedger
+            && run.entities('turrets')?.get?.(id) && KILL_ARM_POLICY.IceTurret?.policy === 'modelled') {
+            ids.push(id);
+            continue;
+        }
+        const b = strike.get(id);
+        if (!b) {
+            return { ok: false, why: `${id} is counted and is not a live body this run steps — the chaser arm `
+                + 'needs every counted body\'s live position (a static or unstepped body is another arm\'s)' };
+        }
+        if (!armIsModelled(b)) {
+            return { ok: false, why: `KILL_ARM_POLICY.${b.enemyClass ?? b.as3} is not \`modelled\`, so a press `
+                + `against ${id} is not something this model may claim` };
+        }
+        ids.push(id);
+    }
+    const inv = run.progress('inventory') ?? {};
+    if (!(inv.hasSword || inv.hasGhostSword)) {
+        return { ok: false, why: 'this run holds no sword, so `set slashing`\'s outer gate refuses every press' };
+    }
+    return { ok: true, ids };
 }
 
 /** A census row's own persistence tag — `attrs.tag`, the `.oel` attribute. */
@@ -7317,6 +7355,39 @@ export function resolveKillStrategy(run, obstacle, contacts) {
         };
     }
     const weapon = deriveCeilingWeapon(run, contacts);
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY KILLLOCK K3 — **THE CHASER ARM OF THE KILL WORK ORDER**, asked only when the room's
+     * own ceiling has nothing to arm (so every room the ceiling already solves keeps its arm) and only under
+     * `KILLLOCK_BODIES.chaserKillArm`. L60, L71, L98 and L99 hold no spinner and no arrow trap: their count is
+     * chasers (jellyfish, lavarunners). When EVERY counted body left is a live body this run steps and a
+     * `modelled` press target, the weapon is the player's own press and the stance is the combat ladder's
+     * chaser arm (`deriveKillByChaser`): stand where the body comes, let the one strike policy press it.
+     */
+    if (!weapon.presser && KILLLOCK_BODIES.chaserKillArm) {
+        const chaser = deriveChaserKillOrder(run, bodies);
+        if (chaser.ok) {
+            return {
+                strategy: 'kill',
+                arm: 'chaser',
+                postCondition: 'kill-lock',
+                target: { x: row.x ?? obstacle.x, y: row.y ?? obstacle.y },
+                lock: row,
+                stance: null,
+                contacts,
+                bodies: chaser.ids,
+                rejected: [{
+                    option: 'kill by the room\'s own ceiling',
+                    why: weapon.why,
+                }, {
+                    option: 'hold',
+                    why: `${obstacle.id} carries \`tset == ${KILL_LOCK_TSET}\`, so NO button `
+                        + 'in the game answers it — `checkEnemies()` opens it when '
+                        + '`Game.totalEnemies()` reaches zero (§12.8).',
+                }, ...press.rejected],
+            };
+        }
+        press.rejected.push({ option: 'kill the chasers by press (KILLLOCK K3)', why: chaser.why });
+    }
     if (!weapon.presser) {
         return {
             strategy: 'kill',
@@ -8887,6 +8958,7 @@ function censusRowFor(run, id) {
  */
 function execKill(run, perTick, resolved, ctx) {
     if (resolved.arm === 'press') return execKillByPress(run, perTick, resolved, ctx);
+    if (resolved.arm === 'chaser') return execKillByChaser(run, perTick, resolved, ctx);
     if (!resolved.presser) {
         throw new SolverRefusal(`${ctx.what}: the kill work order has no weapon — `
             + `${resolved.rejected?.[0]?.why ?? 'no reason recorded'}`,
@@ -9152,6 +9224,466 @@ function execKill(run, perTick, resolved, ctx) {
                 + `world) at ${last.t}, and \`activators.opensOnTick(${RESPONDERS[resolved.lock.tag]?.fade
                     ?? RESPONDERS.lock.fade})\` is ${fadeTicks}, which a declared v9 row spells `
                 + `${declaredFade}`,
+        } });
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY KILLLOCK K3 — THE KILL WORK ORDER'S **CHASER** ARM.
+ *
+ * One body at a time, each by the combat ladder's own chaser arm: `deriveKillByChaser` scores a stance the body
+ * comes to (inside its leash, danger-free for the whole wait, forecast with the bodies stepped against it),
+ * `ctx.walkTo` walks there through the loop's own ladder, and `runDwell` stands armed with the one strike policy
+ * until the body has LEFT the world (`strikeBodies`, i.e. the removal, after the die anim and the fade). Then the
+ * lock's tail is the ceiling arm's: the run's own `chaserKillLockOpens` ledger plus the responder's fade is a
+ * MODEL-sourced declaration, and pass 2 waits the fade out and finds the lock gone.
+ */
+/**
+ * The dwell's CEILING for one chaser kill, from where the walk now stands: the body's straight-line travel at its
+ * own `moveSpeed`, three kill windows (`combatVerbs.killWindowTicks`) and the slack — `deriveKillByChaser`'s own
+ * `ceilingFor`, asked of the live position rather than of a candidate the walk may have reached differently.
+ */
+/**
+ * ⛓ KILLLOCK K3 — THE CHASER KILL'S DWELL, GUARDED AT THE I-FRAME'S LAPSE.
+ *
+ * `Enemy.update` runs `hitUpdate(); hitPlayer();` in that order and the enemy updates BEFORE the player, so the
+ * tick a struck body's `hitsTimer` reaches 0 is a contact tick if its box overlaps the player's — and the player's
+ * press that tick lands only after. A Bob (0.5 px/tick) knocked back by the sword's force 5 is still clear when
+ * its 30-tick i-frame lapses; a jellyfish (0.8) is already back (measured: L60 step 112, the second body hit the
+ * standing player on its third approach), and in water the player (0.45) cannot outrun one.
+ *
+ * So the one strike policy decides every tick, and when it does not press and the hunted body is within
+ * `CHASER_GUARD_RADIUS` px:
+ *   · WITH A SHIELD, the player steps TOWARD it: `Player.shieldBump` (`levelRun.shieldBumpNow`) shoves a stepped
+ *     chaser its shield box touches while the player moves (`knockback(5)`, no damage, no i-frame), which keeps the
+ *     body off the player's box through the lapse, and the step leaves the player FACING it for the press;
+ *   · without one, in the last `CHASER_LAPSE_GUARD` ticks of its i-frame it steps AWAY onto plannable floor.
+ * The run stays the oracle: any hit refuses by name.
+ */
+const CHASER_LAPSE_GUARD = 8;
+const CHASER_GUARD_RADIUS = 18;
+
+function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, ctx, lockId }) {
+    const opts = solverPlanOpts(run, contacts);
+    const hitsBefore = run.ledger('playerHits').length;
+    const deathsBefore = run.ledger('playerDeaths').length;
+    const gone = () => !(run.entities('strikeBodies') ?? []).some((c) => c.id === id);
+    const shielded = run.progress('inventory')?.hasShield === true;
+    let guardSteps = 0;
+    /**
+     * ⛓ THE TURRETS' RANGE IS A KEEP-OUT FOR A DWELL THAT STARTED OUTSIDE IT: no movement (the policy's aim step or
+     * the guard's) may project the player within `attackRange` + the projection of a live ice turret (L98).
+     */
+    const liveTurrets = () => [...(run.entities('turrets')?.values?.() ?? [])].filter((t) => !t.dead && !t.removed);
+    const inRange = (x, y, pad = 0) => liveTurrets()
+        .some((t) => Math.trunc(Math.hypot(t.x - x, t.y - y)) <= 128 + pad);
+    const keepOut = !inRange(run.state.x, run.state.y);
+    const has = (keys, k) => (keys.has ? keys.has(k) : keys.includes(k));
+    const project = (keys, d) => ({
+        x: run.state.x + (has(keys, 'right') ? d : (has(keys, 'left') ? -d : 0)),
+        y: run.state.y + (has(keys, 'down') ? d : (has(keys, 'up') ? -d : 0)),
+    });
+    const clearAt = (keys) => {
+        const ahead = project(keys, 2);
+        if (keepOut && inRange(ahead.x, ahead.y)) return false;
+        const { x: px, y: py } = project(keys, 6);
+        return plannerObstacleAt(run.world, px, py, null, opts) === null;
+    };
+    const toward = (b) => {
+        const dx = b.x - run.state.x;
+        const dy = b.y - run.state.y;
+        const key = Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+        return clearAt([key]) ? new Set([key]) : null;
+    };
+    const away = (b) => {
+        const dx = Math.sign(run.state.x - b.x) || 1;
+        const dy = Math.sign(run.state.y - b.y);
+        const kx = dx > 0 ? 'right' : 'left';
+        const ky = dy > 0 ? 'down' : (dy < 0 ? 'up' : null);
+        for (const keys of [[kx, ky], [kx, null], [null, ky]].map((k) => k.filter(Boolean))) {
+            if (keys.length > 0 && clearAt(keys)) return new Set(keys);
+        }
+        return null;
+    };
+    for (let i = 1; i <= bound; i += 1) {
+        let held = strike && !run.state.fall
+            ? strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, new Set(),
+                { slash: run.progress('slashInfo') }).held
+            : new Set();
+        if (keepOut && held.size > 0) {
+            const pr = project(held, 2);
+            if (inRange(pr.x, pr.y)) held = new Set([...held].filter((k) => k === 'primary'));
+        }
+        if (!held.has('primary')) {
+            // The NEAREST live body, not only the hunted one: in a room of several, any of them can close
+            // (measured: L98, `jellyfish@56,48` contacted the player while `jellyfish@72,104` was hunted).
+            const b = (run.entities('chasers') ?? []).filter((c) => !c.dying && !c.destroy)
+                .sort((p, q) => Math.hypot(p.x - run.state.x, p.y - run.state.y)
+                    - Math.hypot(q.x - run.state.x, q.y - run.state.y))[0] ?? null;
+            const near = b && Math.hypot(b.x - run.state.x, b.y - run.state.y) < CHASER_GUARD_RADIUS;
+            const k = !near ? null
+                : (shielded ? toward(b)
+                    : (b.hitsTimer > 0 && b.hitsTimer <= CHASER_LAPSE_GUARD ? away(b) : null));
+            if (k) { held = k; guardSteps += 1; }
+        }
+        perTick.push(held);
+        const { transition } = run.advance(held);
+        if (transition) {
+            throw new SolverRefusal(`${what}: dwell tick ${i} crossed from level ${transition.from_level} to `
+                + `${transition.to_level} — leaving respawns every counted body (trap 150).`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: lockId }, perTick: [...perTick] });
+        }
+        if (run.ledger('playerHits').length !== hitsBefore || run.ledger('playerDeaths').length !== deathsBefore) {
+            const h = run.ledger('playerHits').at(-1);
+            throw new SolverRefusal(`${what}: the dwell was HIT at dwell tick ${i} (run tick ${run.ticksCompleted}; `
+                + `source ${h?.source ?? '?'}${h?.id ? ` ${h.id}` : ''}; `
+                + `${guardSteps} guard step(s) so far). The run is the oracle; the stance and the lapse guard were `
+                + 'a heuristic.',
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: lockId }, perTick: [...perTick] });
+        }
+        if (gone()) return { ticks: i, strikes: strike ? strike.strikes : 0, guardSteps };
+    }
+    /**
+     * ⛓ THE BOUND RAN OUT — SAY WHERE THE BODY IS AND WHAT STANDS BETWEEN. A chaser walks a STRAIGHT line at the
+     * player (no path-finding), so a solid on that line pins it: measured on L60's east arrivals, where
+     * `jellyfish@56,64` stops on `lock@128,80`'s west face and the one-tile corridor between pits puts no cell on
+     * the east side within the sword's reach of it.
+     */
+    const b = (run.entities('chasers') ?? []).find((c) => c.id === id);
+    const blocker = b && typeof run.collideLineSolid === 'function'
+        ? run.collideLineSolid(b.x, b.y, run.state.x, run.state.y) : null;
+    const blockerId = blocker ? (blocker.id ?? blocker.tag ?? JSON.stringify(blocker).slice(0, 60)) : null;
+    throw new SolverRefusal(`${what}: ${id} is still in the world after the whole ${bound}-tick bound `
+        + `(${guardSteps} guard step(s)); it stands at (${b ? `${b.x.toFixed(1)},${b.y.toFixed(1)}` : '?'}), `
+        + `${Math.hypot((b?.x ?? 0) - run.state.x, (b?.y ?? 0) - run.state.y).toFixed(1)} px from the player`
+        + `${blockerId ? `, and its straight chase line to the player is blocked by ${blockerId} — the body is `
+            + 'PINNED on the solid between them (a chaser does not path-find)' : ''}.`,
+    { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: lockId }, perTick: [...perTick] });
+}
+
+/**
+ * ⛓⛓ KILLLOCK K4 — AN ICE TURRET THE LOCK COUNTS, KILLED WHERE IT STANDS.
+ *
+ * `IceTurret` takes three sword hits (`hitsMax` 3, a 30-tick i-frame, NO knockback) and `death()` turns the first
+ * `destroy` into a corpse; the corpse leaves `classCount` only through a fatal tile under it. So this is: a stance
+ * beside the LIVE 32x32 box (outside it — the body's contact is force 3) within `SLASH_REACH` of it, reached
+ * through the loop's own walk with the range braved; then, per press, one tick holding the facing key toward
+ * the body (a press swings the facing the tick STARTED with) and one press, at `KILL_PRESS_CADENCE` (31, past the
+ * i-frame). A faced shield stops the volleys (`IceTurretBlast` dies on `"Shield"`). The end is OBSERVED: the run's
+ * own turret is `dead`, and — on a fatal tile — `removed`. A turret that dies on dry floor stays counted and the
+ * arm refuses by name (a `burn`/`Pulse` slide is another order's).
+ */
+function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
+    const from = perTick.length;
+    const turret = () => run.entities('turrets')?.get?.(id) ?? null;
+    const t0 = turret();
+    if (!t0) {
+        throw new SolverRefusal(`${ctx.what}: the count waits on ${id} and this run does not step it`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+    }
+    const r = t0.rect;
+    const opts = solverPlanOpts(run, resolved.contacts ?? new Set());
+    const sides = [
+        // ⚠ THE MARGIN IS MEASURED, NOT A TIDY 1 px: a live turret's `input()` oscillates its box by 0.5 px
+        // (`iceTurretInput`'s snap), and each facing tap drifts the player ~0.7 px toward it (L98).
+        { key: 'up', x: (r.x + r.right) / 2, y: r.bottom + 2 + ICE_TURRET_STANCE_MARGIN, back: 'down' },
+        { key: 'down', x: (r.x + r.right) / 2, y: r.y - 3 - ICE_TURRET_STANCE_MARGIN, back: 'up' },
+        { key: 'left', x: r.right + 2 + ICE_TURRET_STANCE_MARGIN, y: (r.y + r.bottom) / 2, back: 'right' },
+        { key: 'right', x: r.x - 2 - ICE_TURRET_STANCE_MARGIN, y: (r.y + r.bottom) / 2, back: 'left' },
+    ].filter((c) => plannerObstacleAt(run.world, c.x, c.y, null, opts) === null)
+        /**
+         * ⛔ A stance the player WAITS in for three press cadences must be outside every spinning axe's blade disc
+         * (`SPINNING_AXE` 32 px from its hub, plus the box) — the axe's exact blade is a transit question, and a
+         * ninety-tick wait meets every angle (measured: L98's below-side stance is 20.6 px from both hubs).
+         */
+        .filter((c) => (run.world.combat?.hazards ?? []).filter((h) => h.tag === 'spinningaxe')
+            .every((h) => Math.hypot(h.cx - c.x, h.cy - c.y) > 32 + 4))
+        .filter((c) => planWaypointsOrNull(run.world, run.state, { x: c.x, y: c.y }, null, opts) !== null)
+        .map((c) => ({ ...c, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) }))
+        .sort((a, b) => a.d - b.d);
+    if (sides.length === 0) {
+        throw new SolverRefusal(`${ctx.what}: no side of ${id}'s live box is plannable floor within the sword's reach`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+    }
+    /**
+     * Each side in turn, nearest first; a side whose walk refuses AT PLAN TIME (no tick spent) gives way to the
+     * next (measured: L98's below-side stance is inside both spinning axes' blades; the side above is not).
+     */
+    let side = null;
+    const sideWhys = [];
+    for (const c of sides) {
+        const before = perTick.length;
+        if (hasArrived(run.state, c, DEFAULT_TOLERANCE)) { side = c; break; }
+        try {
+            ctx.walkTo(ctx.goal, { x: c.x, y: c.y }, {
+                what: `${ctx.what} -> ${id} stance (${c.key})`,
+                contactsOverride: new Set([...(resolved.contacts ?? []), `proximity-hazard:${id}`]),
+            });
+            side = c;
+            break;
+        } catch (e) {
+            if (!(e instanceof SolverRefusal) || perTick.length !== before) throw e;
+            sideWhys.push(`${c.key}: ${e.message.split('\n')[0].slice(0, 200)}`);
+        }
+    }
+    if (!side) {
+        throw new SolverRefusal(`${ctx.what}: no side of ${id} is reachable — ${sideWhys.join(' | ')}`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+    }
+    const hitsBefore = run.ledger('playerHits').length;
+    const step = (keys) => {
+        perTick.push(keys);
+        const { transition } = run.advance(keys);
+        if (transition) {
+            throw new SolverRefusal(`${ctx.what}: the turret kill crossed a door (trap 150)`,
+                { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+        }
+        if (run.ledger('playerHits').length !== hitsBefore) {
+            const h = run.ledger('playerHits').at(-1);
+            throw new SolverRefusal(`${ctx.what}: the player was HIT while killing ${id} at run tick `
+                + `${run.ticksCompleted} (source ${h?.source ?? '?'}${h?.id ? ` ${h.id}` : ''}) from the `
+                + `${side?.key ?? '?'} side at (${run.state.x.toFixed(1)},${run.state.y.toFixed(1)})`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+        }
+    };
+    const FACE = new Set([side.key]);
+    const PRESS = new Set(['primary']);
+    const NO_KEYS = new Set();
+    let presses = 0;
+    const drift = () => (side.key === 'up' ? side.y - run.state.y : side.key === 'down' ? run.state.y - side.y
+        : side.key === 'left' ? side.x - run.state.x : run.state.x - side.x);
+    for (let n = 0; n < ICE_TURRET_PRESS_BOUND && !(turret()?.dead); n += 1) {
+        // Back to the stance first: the previous cycle's facing tap drifted the player toward the body.
+        for (let b = 0; b < 4 && drift() > 0.5; b += 1) step(new Set([side.back]));
+        step(FACE);
+        step(PRESS);
+        presses += 1;
+        for (let w = 2; w < KILL_PRESS_CADENCE && !(turret()?.dead); w += 1) step(NO_KEYS);
+    }
+    if (!turret()?.dead) {
+        throw new SolverRefusal(`${ctx.what}: ${presses} press(es) from the ${side.key} side and ${id} is not dead`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+    }
+    for (let w = 0; w < ICE_TURRET_DROWN_BOUND && !(turret()?.removed); w += 1) step(NO_KEYS);
+    if (!turret()?.removed) {
+        throw new SolverRefusal(`${ctx.what}: ${id} is a CORPSE and still counted after ${ICE_TURRET_DROWN_BOUND} `
+            + 'ticks — it died on floor that does not destroy it, and `classCount(IceTurret)` moves only when a '
+            + 'fatal tile does (a `Fire`/`Pulse` bump slides a corpse; that is another order\'s)',
+        { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+    }
+    return { phase: 'turret-kill', target: id, side: side.key, stance: { x: side.x, y: side.y }, presses,
+        ticks: perTick.length - from };
+}
+/** The stance's clearance from the live box, px (see `killIceTurretInPlace`). */
+const ICE_TURRET_STANCE_MARGIN = 3;
+/** Five presses: three landed hits with room for two whiffs. */
+const ICE_TURRET_PRESS_BOUND = 5;
+/** The drown (one update) plus `Mobile.death`'s eleven-call fade, with slack. */
+const ICE_TURRET_DROWN_BOUND = 40;
+
+const CHASER_KILL_REDERIVE = 3;
+
+function chaserKillCeiling(run, body) {
+    const row = ENEMY_CLASSES[body.tag];
+    const travel = Math.hypot(body.x - run.state.x, body.y - run.state.y) / (row?.speed || 0.5);
+    return Math.ceil(travel) + killWindowTicks(body.tag) * 3 + HOLD_SLACK;
+}
+
+function execKillByChaser(run, perTick, resolved, ctx) {
+    const from = perTick.length;
+    const phases = [];
+    /**
+     * ⛓ K4: a live counted turret whose range the player already stands in is shooting NOW, so it is the first
+     * body (measured: a stance in L98's water pocket above the turret took a blast on t52 while waiting on a
+     * jellyfish).
+     */
+    if (KILLLOCK_BODIES.turretRemovalLedger) {
+        for (const e of countedBodiesLeft(run)) {
+            if (e.tag !== 'iceturret') continue;
+            const t = run.entities('turrets')?.get?.(`${e.tag}@${e.x},${e.y}`);
+            if (!t || t.dead || t.removed) continue;
+            if (Math.trunc(Math.hypot(t.x - run.state.x, t.y - run.state.y)) > 128) continue;
+            phases.push(killIceTurretInPlace(run, perTick, t.id ?? `${e.tag}@${e.x},${e.y}`, resolved, ctx));
+        }
+    }
+    const started = countedBodiesLeft(run).length;
+    for (let turn = 0; turn < started; turn += 1) {
+        const left = countedBodiesLeft(run);
+        if (left.length === 0) break;
+        const ids = new Set(left.map((b) => `${b.tag}@${b.x},${b.y}`));
+        const dying = new Set((run.entities('chasers') ?? []).filter((c) => c.dying).map((c) => c.id));
+        const live = (run.entities('strikeBodies') ?? []).filter((b) => ids.has(b.id) && !dying.has(b.id));
+        if (live.length === 0) break;
+        // Nearest first (to the player's live point), then id, so the order is total.
+        live.sort((a, b) => Math.hypot(a.x - run.state.x, a.y - run.state.y)
+            - Math.hypot(b.x - run.state.x, b.y - run.state.y) || (a.id < b.id ? -1 : 1));
+        const tried = [];
+        let hunted = null;
+        let hunt = null;
+        /**
+         * ⛓ STAND HERE FIRST when here is outside every live ice turret's range (`IceTurret.attackRange` 128, a
+         * truncated distance from the body centre) and the nearest body is inside its own leash of here: it comes,
+         * and no volley reaches the wait (measured: L98, a derived stance inside the range took a blast at t299).
+         */
+        const turretsLive = [...(run.entities('turrets')?.values?.() ?? [])].filter((t) => !t.dead && !t.removed);
+        const outOfRange = turretsLive.every((t) => Math.trunc(Math.hypot(t.x - run.state.x, t.y - run.state.y)) > 128);
+        if (turretsLive.length > 0 && outOfRange) {
+            const b = live[0];
+            const leash = ENEMY_CLASSES[b.tag]?.aggro?.range ?? 0;
+            if (Math.hypot(b.x - run.state.x, b.y - run.state.y) <= leash) {
+                hunted = b;
+                hunt = { stance: { x: run.state.x, y: run.state.y }, ticks: chaserKillCeiling(run, b), clears: [b.id],
+                    why: `${b.id} is inside its ${leash} px leash of where the walk stands, and here is outside `
+                        + `every live ice turret's range [${turretsLive.map((t) => t.id).join(', ')}], so it comes `
+                        + 'and no volley reaches the wait' };
+            }
+        }
+        for (const b of hunt ? [] : live) {
+            const h = deriveKillByChaser(run, b, resolved.contacts ?? new Set(),
+                { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE });
+            if (h.stance) { hunted = b; hunt = h; break; }
+            tried.push({ option: `kill ${b.id} by press`, why: h.why });
+        }
+        /**
+         * ⛓ THE FALLBACK STANCE IS WHERE THE WALK STANDS, when the nearest body is inside its own leash of it: a
+         * chaser comes, and the guarded dwell below is the run deciding, tick by tick, with any hit a refusal.
+         * Measured: after L60's first kill `deriveKillByChaser`'s previews never settle (*"the preview spent 400
+         * tick(s) without arriving"*) from the cell the player already stands in.
+         */
+        if (!hunt && live.length > 0) {
+            const b = live[0];
+            const leash = ENEMY_CLASSES[b.tag]?.aggro?.range ?? 0;
+            if (Math.hypot(b.x - run.state.x, b.y - run.state.y) <= leash) {
+                hunted = b;
+                hunt = { stance: { x: run.state.x, y: run.state.y }, ticks: chaserKillCeiling(run, b), clears: [b.id],
+                    why: `${b.id} is inside its ${leash} px leash of where the walk stands, so it comes; no derived `
+                        + `stance previewed (${tried.map((t) => t.why.slice(0, 80)).join(' | ')})` };
+                tried.push({ option: 'stand here', why: hunt.why });
+            }
+        }
+        if (!hunt) {
+            throw new SolverRefusal(`${ctx.what}: the count is still waiting on [${[...ids].join(', ')}] and no `
+                + `stance derives for any of them — ${tried.map((t) => t.why).join(' | ') || 'none is a live strike body'}`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null },
+                considered: tried, perTick: [...perTick] });
+        }
+        /**
+         * ⛔ THE FORECAST IS RE-ASKED FROM WHERE THE WALK ARRIVED. `walkTo` re-enters the ladder and may reach the
+         * stance by another corridor, at another tick and velocity, with the bodies elsewhere; a dwell certified
+         * from the candidate's preview is then a wait nobody priced (measured: L60 step 112, hit at t101 on the
+         * second body). So walk, re-derive, and dwell only on a stance asked from here (bounded).
+         */
+        for (let a = 0; a < CHASER_KILL_REDERIVE && hunt.stance
+            && !hasArrived(run.state, hunt.stance, DEFAULT_TOLERANCE); a += 1) {
+            ctx.walkTo(ctx.goal, hunt.stance, { what: `${ctx.what} -> chaser kill (${hunted.id}) stance` });
+            if (!(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)) break;
+            if (hasArrived(run.state, hunt.stance, DEFAULT_TOLERANCE)) break;
+            hunt = deriveKillByChaser(run, hunted, resolved.contacts ?? new Set(),
+                { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE });
+        }
+        if (!hunt.stance) {
+            throw new SolverRefusal(`${ctx.what}: arrived for ${hunted.id} and no stance derives from here — ${hunt.why}`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+        }
+        const strike = strikePolicyFor(run, { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE });
+        /**
+         * ⚠ `hunt.ticks` is `(deathTick − arrival) + HOLD_SLACK` and goes NEGATIVE when the forecast's own
+         * strikes kill the body during the APPROACH (measured: L60 step 112, −180). The walk carries the same
+         * strike policy, so the body may already be gone; the dwell's bound is then the slack alone.
+         */
+        if (!(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)) {
+            phases.push({ phase: 'chaser-kill', target: hunted.id, stance: hunt.stance, ticks: 0,
+                clears: hunt.clears, killedOnApproach: true });
+            continue;
+        }
+        const rec = guardedChaserDwell(run, perTick, {
+            id: hunted.id,
+            bound: Math.max(hunt.ticks, chaserKillCeiling(run, hunted)),
+            strike,
+            contacts: resolved.contacts ?? new Set(),
+            what: `${ctx.what} -> chaser kill (${hunted.id}) by press`,
+            ctx,
+            lockId: resolved.lock?.id ?? null,
+        });
+        phases.push({ phase: 'chaser-kill', target: hunted.id, stance: hunt.stance,
+            ticks: rec.ticks, strikes: rec.strikes, guardSteps: rec.guardSteps, clears: hunt.clears });
+    }
+    // The killed chasers fade (`Mobile.death`) before the world lets go of them; wait that out before any further
+    // walk, so no ladder rung plans against a corpse (measured: L98's turret approach tried to BAIT a fading body).
+    {
+        const NO = new Set();
+        for (let i = 0; i <= MOBILE_DEATH_FADE.ticks + HOLD_SLACK
+            && (run.entities('chasers') ?? []).some((c) => c.dying || c.destroy); i += 1) {
+            perTick.push(NO);
+            run.advance(NO);
+        }
+    }
+    // ⛓ KILLLOCK K4 — an IceTurret still counted is killed by press and left to drown (`killIceTurretInPlace`).
+    if (KILLLOCK_BODIES.turretRemovalLedger) {
+        for (const e of countedBodiesLeft(run)) {
+            if (e.tag !== 'iceturret') continue;
+            phases.push(killIceTurretInPlace(run, perTick, `${e.tag}@${e.x},${e.y}`, resolved, ctx));
+        }
+    }
+    // `strikeBodies` drops a body at `destroy`; `totalEnemies()` drops it at the REMOVAL, after `Mobile.death`'s
+    // fade. Stand that out (the bodies are dying, nothing is left to strike).
+    const NO_KEYS = new Set();
+    for (let i = 0; i <= MOBILE_DEATH_FADE.ticks + HOLD_SLACK && countedBodiesLeft(run).length > 0
+        && (run.entities('strikeBodies') ?? []).length === 0
+        && !countedBodiesLeft(run).some((e) => e.tag === 'iceturret' && !run.entities('turrets')?.get?.(`${e.tag}@${e.x},${e.y}`)?.dead); i += 1) {
+        perTick.push(NO_KEYS);
+        run.advance(NO_KEYS);
+    }
+    const left = countedBodiesLeft(run);
+    if (left.length > 0) {
+        throw new SolverRefusal(`${ctx.what}: the chaser arm removed every body it could and `
+            + `[${left.map((b) => `${b.tag}@${b.x},${b.y}`).join(', ')}] remain, so `
+            + '`Game.totalEnemies()` never reaches zero and the kill-lock never arms.',
+        { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null },
+            perTick: [...perTick] });
+    }
+    const fadeTicks = opensOnTick(RESPONDERS[resolved.lock.tag]?.fade ?? RESPONDERS.lock.fade);
+    const declaredFade = fadeTicks - 1;
+    const opens = (run.ledger('chaserKillLockOpens') ?? []).filter((o) => !o.nil && o.level === run.level);
+    const mine = opens.filter((o) => o.opens.some((x) => x.at === resolved.lock.id));
+    const last = mine[mine.length - 1] ?? opens[opens.length - 1] ?? null;
+    if (!last) {
+        throw new SolverRefusal(`${ctx.what}: every counted body is gone and the run's own kill-lock ledger `
+            + '(`chaserKillLockOpens`) recorded NOTHING — so nothing computed the consequence and there is no '
+            + 'tick to declare (trap 119).',
+        { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null },
+            perTick: [...perTick] });
+    }
+    // The fade is a wait: stand (the bodies are gone) until the lock leaves the world or the fade has run.
+    const clearTick = last.t + fadeTicks;
+    /**
+     * ⚠ BOTH CLOCKS. The ledger and a declared v9 `at` are the RUN's clock (`ticksCompleted`, dead frames
+     * included); `twoPassSolve` refuses a declaration beyond the TAPE the measuring pass spent. So the measuring
+     * pass stands until both have passed the clear tick (measured: L60 step 112's run clock led its tape by 35).
+     */
+    const waitBound = Math.max(0, clearTick - perTick.length) + HOLD_SLACK;
+    for (let i = 0; i <= waitBound; i += 1) {
+        if (!(run.world.activators ?? []).some((a) => a.id === resolved.lock.id)) {
+            return { kind: 'kill', verb: 'kill', arm: 'chaser', lock: resolved.lock.id, phases,
+                removedAt: last.t, fade: fadeTicks, openedAt: run.ticksCompleted,
+                from, ticks: perTick.length - from };
+        }
+        if (run.ticksCompleted >= clearTick && perTick.length >= clearTick) break;
+        perTick.push(NO_KEYS);
+        run.advance(NO_KEYS);
+    }
+    throw new PendingDeclaration(`${ctx.what}: \`Game.totalEnemies()\` reached zero at tick `
+        + `${last.t} (${last.id}, ${last.cause}) and ${resolved.lock.id} is ARMING — the run's own ledger plus `
+        + `the responder's ${fadeTicks}-step fade, in the v9 \`at\` spelling: ${last.t} + ${declaredFade} = `
+        + `${last.t + declaredFade}.`,
+    { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock.id },
+        perTick: [...perTick],
+        pending: {
+            level: run.level, tag: resolved.lock.persistTag ?? null,
+            source: 'model', at: last.t + declaredFade, removedAt: last.t, fade: declaredFade,
+            lock: resolved.lock.id, phases,
+            why: `\`chaserKillLockOpens\` computed the removal (the last body leaves the world) at ${last.t}, `
+                + `and \`activators.opensOnTick\` is ${fadeTicks}, which a declared v9 row spells ${declaredFade} `
+                + '(KILLLOCK K3, the chaser arm)',
         } });
 }
 

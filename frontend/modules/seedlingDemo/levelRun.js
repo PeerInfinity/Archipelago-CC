@@ -96,6 +96,7 @@ import {
     chaserKnocksBack, chaserStep, createDieAnim, createSpriteAnim, deathTicks, isBridgedChaser,
     puncherPunchRect, stepSpriteAnim, CHASERS,
 } from './chasers.js';
+import { KILLLOCK_BODIES, killLockBridged } from './killLockBodies.js';
 import { CRUSHER, alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
 import {
     createBossTotem, bossTotemClampY, bossTotemSolidRect, renderBossTotem, stepBossTotem,
@@ -194,7 +195,7 @@ import {
 // tSet == -1 locks" — from a blanket policy into an arithmetic the run
 // computes at every kill.
 import {
-    ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, MODELLED_KILL_ARMS, PIT_FADE, STATIC_ARROW_DEATH,
+    ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, killArmModelled, PIT_FADE, STATIC_ARROW_DEATH,
     createStaticBodyDamage, enemyHit, enemyHitUpdate, killLockLedger, removalTicksAfterHit,
 } from './enemyDamage.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
@@ -3616,6 +3617,9 @@ export function createLevelRun({
                     x: e.cx,
                     y: e.cy,
                     v: { x: 0, y: 0 },
+                    // ⛓ KILLLOCK K2: the ctor's `moveSpeed` for a class whose update re-chooses it
+                    // (`CHASERS[tag].speedByTerrain`); absent for every other class.
+                    ...(CHASERS[e.tag]?.speedByTerrain ? { moveSpeed: CHASERS[e.tag].speedByTerrain.walk } : {}),
                     /**
                      * ⛓⛓⛓ R8 SLICE 3 — `Enemy`'s OWN FIELDS, SPREAD FROM THE
                      * ONE TABLE THAT TRANSCRIBES THEM, because an arrow now
@@ -3647,6 +3651,10 @@ export function createLevelRun({
                     // spread, which is where key order makes it bind (the
                     // `beforeTypeFlip` lesson, slice 0 §8.3.3).
                     damage: e.row.damage,
+                    // ⛓ KILLLOCK K2: `LavaRunner` writes `hitsMax = 2` (`LavaRunner.as:39`); the census row's
+                    // `kill.hits` is that field. Only for a switch-bridged class, so Bob and the puncher keep
+                    // the spread's value byte for byte.
+                    ...(killLockBridged(e.tag) ? { hitsMax: ENEMY_CLASSES[e.tag].kill.hits } : {}),
                     /**
                      * The "die" Spritemap, once `startDeath` has played it.
                      * `null` while the body is alive — an animation nobody
@@ -5475,7 +5483,7 @@ export function createLevelRun({
          * modelled, and refused with that row's own reason when it does not.
          */
         const enemyClassModelled = (r) => r.as3 === 'Enemy'
-            && (MODELLED_KILL_ARMS.includes(r.enemyClass)
+            && (killArmModelled(r.enemyClass)
                 || (CONTACT_FIDELITY.wallFlyerSwordHits && r.family === 'wallflyer')
                 || (CONTACT_FIDELITY.drillLive && r.family === 'drill'));
         const refused = audit.live.filter(
@@ -9901,6 +9909,10 @@ export function createLevelRun({
         // which opened L5's lock 35 ticks early: `f1-l5-lock-removal`.)
         const goneIds = new Set([...st.values()]
             .filter((o) => o.removed).map((o) => o.id));
+        // ⛓ KILLLOCK K4: a removed IceTurret corpse has left `classCount(IceTurret)` too.
+        if (KILLLOCK_BODIES.turretRemovalLedger) {
+            for (const t of turretStateFor(level).values()) if (t.removed) goneIds.add(t.id);
+        }
         goneIds.add(c.id);
         const after = (census ?? []).filter((e) => !goneIds.has(`${e.tag}@${e.x},${e.y}`))
             .map((e) => ({ as3: e.as3 }));
@@ -10372,7 +10384,23 @@ export function createLevelRun({
                 sweep(dy, 'y');
                 return { x, y };
             };
+            /**
+             * ⛓ SEEDLING FIDELITY KILLLOCK K2 — `LavaRunner.update` opens with `if (Game.freezeObjects)
+             * return;` ABOVE `super.update()`, so a frozen lavarunner runs NOTHING of the entity half: no
+             * terrain switch, no move, no i-frame tick, no contact, no fade. (The graphic half is the
+             * caller's and still runs.)
+             */
+            if (CHASERS[c.tag]?.freezeSkipsUpdate && ceremony !== null) return null;
             const onScreen = onScreenNow(box, `${c.tag} ${c.id}`);
+            /**
+             * ⛓ KILLLOCK K1/K2 — the switch's three arms are the CLASS's flags (`dieInWater`, `dieInLava`,
+             * `canFallInPit`), read from `combat.ENEMY_CLASSES[tag].terrain` for a class a KILLLOCK switch
+             * bridges; Bob and the puncher keep the base class's `true`s exactly as before.
+             */
+            const terr = killLockBridged(c.tag) ? ENEMY_CLASSES[c.tag].terrain : null;
+            const diesIn = (t) => (terr === null ? true
+                : (t === ENEMY_TERRAIN_DESTROYS.water ? terr.water === 'dies' : terr.lava === 'dies'));
+            const fallsInPit = terr === null || terr.pit === 'falls';
             /**
              * ⛓⛓⛓ `Enemy.update`'s TERRAIN SWITCH, AND IT RUNS *ABOVE*
              * `super.update()` — so it is the first thing this tick, and it
@@ -10391,7 +10419,7 @@ export function createLevelRun({
              */
             if (onScreen && !c.destroy) {
                 const t = world.nearestWalkableTile(c.x, c.y)?.t ?? 0;
-                if (t === ENEMY_TERRAIN_DESTROYS.water || t === ENEMY_TERRAIN_DESTROYS.lava) {
+                if ((t === ENEMY_TERRAIN_DESTROYS.water || t === ENEMY_TERRAIN_DESTROYS.lava) && diesIn(t)) {
                     c.destroy = true;
                     c.alpha = 1;
                     chaserTerrainDeaths.push({
@@ -10424,7 +10452,7 @@ export function createLevelRun({
                  * The descent itself is below, because it REPLACES
                  * `super.update()` rather than following it.
                  */
-                if (t === ENEMY_PIT_TILE && !c.destroy && !c.fallInPit) c.fallInPit = true;
+                if (t === ENEMY_PIT_TILE && fallsInPit && !c.destroy && !c.fallInPit) c.fallInPit = true;
             }
             /**
              * ⛔⛔⛔ THE DESCENT IS A SCHEDULE, AND IT RUNS *INSTEAD OF*
@@ -10570,7 +10598,7 @@ export function createLevelRun({
              */
             let contact = null;
             const r = chaserStep(c.tag, {
-                x: c.x, y: c.y, v: c.v, dying: c.dying, attack: c.attack,
+                x: c.x, y: c.y, v: c.v, dying: c.dying, attack: c.attack, moveSpeed: c.moveSpeed,
             }, playerPoint, {
                 onScreen,
                 frozen: ceremony !== null,
@@ -10598,6 +10626,16 @@ export function createLevelRun({
              * reads `dying`).
              */
             c.attack = chaserAttackDecision(c.tag, c, playerPoint) ?? c.attack;
+            /**
+             * ⛓ KILLLOCK K2 — `LavaRunner.update`'s tail below `super.update()`: `switch(getState())` picks
+             * `swim()` (1) on water or lava and `walk()` (1.5) otherwise, for the NEXT tick's chase. Only on
+             * the live branch (a dying body returned above `:57`). `getState` is `Enemy`'s nearest tile.
+             */
+            const sbt = CHASERS[c.tag]?.speedByTerrain;
+            if (sbt && !c.dying && !c.destroy) {
+                const here = world.nearestWalkableTile(c.x, c.y)?.t ?? 0;
+                c.moveSpeed = sbt.swimTiles.includes(here) ? sbt.swim : sbt.walk;
+            }
             assertSteppedChaserLifetime(c);
             if (before.x !== c.x || before.y !== c.y) {
                 chaserWalks.push({
@@ -10820,6 +10858,14 @@ export function createLevelRun({
             // `add` is DEFERRED to `updateLists()` at the end of the frame:
             // a blast spawned this tick first updates on the NEXT one. The
             // unshift is `addUpdate`'s prepend.
+            /**
+             * ⛓ KILLLOCK K4 — THE CORPSE'S REMOVAL MOVES `classCount(IceTurret)`, and the kill-lock ledger runs
+             * here, at the removal, exactly as a chaser's does (`assertChaserRemovalIsDeclared`).
+             */
+            if (KILLLOCK_BODIES.turretRemovalLedger && t.removed && !t.removalLedgered) {
+                t.removalLedgered = true;
+                assertChaserRemovalIsDeclared({ id }, t.fell ? 'a turret corpse fell' : 'a turret corpse drowned');
+            }
             if (t.spawned) {
                 blastsFor(level).unshift(...t.spawned);
                 for (const b of t.spawned) b.spawnedAt = ticksCompleted + 1;
@@ -12869,6 +12915,31 @@ export function createLevelRun({
             const v = enemyKnockbackV(s, { x: s.vx, y: s.vy }, SHIELD_FORCE, p);
             sp.byId.set(id, { ...s, vx: v.x, vy: v.y });
             row({ family: 'spinner', id, shoved: true, v });
+        }
+        /**
+         * ⛓ SEEDLING FIDELITY KILLLOCK K5 (`KILLLOCK_BODIES.darkShieldIceTurret`) — `Player.shieldBump` hits EVERY
+         * `"Enemy"` its shield box touches (`collideTypesInto(enemies, …)`), and an `IceTurret` is one. With the dark
+         * shield and the body's `hitsTimer <= 0` it is `o.hit(shieldForce, p, darkShieldDamage, "Shield")` —
+         * `IceTurret.hit` forwards while `currentAnim != "dead"` — so 0.5 damage, the 30-tick i-frame and the
+         * `hitByDarkStuff` latch the next sword hit lands through. The plain shield's `knockback` is the class's
+         * EMPTY override, so it does nothing. MEASURED on the game (`killlock-l98-turret`): hits 0 → 0.5 on the
+         * facing tap, → 2.5 on the sword through the i-frame, → 3 (the kill) on the next facing tap.
+         */
+        if (KILLLOCK_BODIES.darkShieldIceTurret && dark && !noDamage) {
+            for (const t of turretStateFor(level).values()) {
+                if (t.removed || t.dead || t.dying || t.hitsTimer > 0) continue;
+                if (!shieldBumpTouches(state, slashing, iceTurretRect(t), rendered)) continue;
+                const verdict = hitIceTurret(t, { d: DARK_SHIELD_DAMAGE, f: SHIELD_FORCE, t: 'Shield',
+                    frozen: ceremony !== null });
+                row({ family: 'iceturret', id: t.id, hit: true, landed: verdict.landed, hits: t.hits,
+                    hitsTimer: t.hitsTimer, ...(verdict.killed ? { killed: true } : {}),
+                    ...(verdict.landed ? {} : { why: verdict.refusedAt }) });
+                if (verdict.killed) {
+                    turretKills.push({ t: ticksCompleted, level, id: t.id, weapon: 'dark-shield',
+                        killLocks: null, killLocksOpened: null, totalEnemies: null, censusAsked: false,
+                        writes: null });
+                }
+            }
         }
     }
 
