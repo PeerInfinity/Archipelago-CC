@@ -1605,3 +1605,121 @@ describe('PlaybackBotUI — an arrival inside a solid escapes by its wayOut', ()
         expect(t.bot.isActive()).toBe(false);
     });
 });
+
+/**
+ * ⛓ OBSTACLE EVENTS (procgenCore/eventRoute.js) — BREAK BEFORE FIRST USE in the bot. A game-state event is never a
+ * queue row (the game breaks it; walking to it would break it eagerly); where the graph's walk has none, the route
+ * meets the event by CROSSING CREDIT (a hop through the obstacle at its own cost — remembered until the collector
+ * sees the flag) or by a goal-first BREAK step, before any Restart.
+ */
+describe('PlaybackBotUI — obstacle events (break before first use)', () => {
+    const SWORD = { rule: 'Has', args: { item_name: 'Sword' } };
+    const ROCK = 'L9 flag 1: breakablerock@16,16 cleared';
+    const WALL = 'L9 flag 2: breakablerock@64,16 cleared';
+    const ev = (name, tag, across) => ({ name, id: null, event: true, event_kind: 'game_state', event_id: `flag:L9:${tag}`,
+        access_rule: SWORD, item: { name }, obstacle: { level: 9, tag, class: 'breakablerock', x: tag === 1 ? 16 : 64, y: 16 },
+        action: { verb: 'broken by a sword strike', item: 'hasSword' }, side: 'Start', across });
+    const x = (name, to, rule = null) => ({ name, connected_region: to, ...(rule ? { access_rule: rule } : {}) });
+    const has = (item) => ({ rule: 'Has', args: { item_name: item } });
+    const RULES = {
+        start_regions: { 1: ['Menu'] },
+        exporter: { 1: {} },
+        regions: { 1: {
+            Menu: { exits: [x('GameStart', 'Start')], locations: [] },
+            Start: { exits: [x('Start -> Pocket', 'Pocket', SWORD), x('Start -> Far2', 'Far2')],
+                locations: [ev(ROCK, 1, ['Pocket']), ev(WALL, 2, []),
+                    { name: 'Odd', id: null, event: true, event_kind: 'future_kind', item: { name: 'Odd' } }] },
+            Pocket: { exits: [x('Pocket -> Gem', 'Gem')], locations: [] },
+            Gem: { exits: [x('Gem -> Lander', 'Lander')], locations: [] },
+            Lander: { exits: [x('Lander -> Vault2', 'Vault2', has(ROCK))], locations: [] },
+            Vault2: { exits: [], locations: [{ name: 'Loc V2', id: 2 }] },
+            Far2: { exits: [x('Far2 -> Vault', 'Vault', has(WALL)), x('Far2 -> Start', 'Start')], locations: [] },
+            Vault: { exits: [], locations: [{ name: 'Loc V', id: 1 }] },
+        } },
+    };
+    const REGIONS = RULES.regions[1];
+    const staticData = { regions: new Map(Object.entries(REGIONS)) };
+
+    function makeBot({ sphere, inventory = { Sword: 1 }, proxy = true } = {}) {
+        const controller = makeFakeController();
+        const snapshot = { inventory: { ...inventory } };
+        // The graph's own walk (PathFinder's role): only exits whose rule the SNAPSHOT satisfies.
+        const findPathWithExits = (from, to) => {
+            const ok = (rule) => !rule || (snapshot.inventory[rule.args.item_name] ?? 0) > 0;
+            const seen = new Set([from]);
+            const queue = [[{ region: from, exitUsed: null }]];
+            while (queue.length) {
+                const path = queue.shift();
+                const here = path[path.length - 1].region;
+                if (here === to) return { steps: path, length: path.length - 1 };
+                for (const e of REGIONS[here]?.exits ?? []) {
+                    if (!seen.has(e.connected_region) && ok(e.access_rule)) {
+                        seen.add(e.connected_region);
+                        queue.push([...path, { region: e.connected_region, exitUsed: e.name }]);
+                    }
+                }
+            }
+            return null;
+        };
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphere,
+            getStaticData: () => staticData,
+            getRulesJson: () => RULES,
+            getActiveController: () => controller,
+            pathFinder: { findPathWithExits },
+            stateManagerProxy: proxy ? { getLatestStateSnapshot: () => snapshot } : null,
+        });
+        return { bot, controller, snapshot };
+    }
+    const walkTos = (controller) => controller.calls.filter((c) => c.method === 'walkTo').map((c) => c.args[0]);
+    const sphereOf = (...locations) => [{ sphereIndex: 1, fractionalIndex: 1, locations }];
+
+    it('the queue LEAVES game-state events to the game (never walked eagerly); an unknown kind stays a row (refused by name)', async () => {
+        const { bot } = makeBot({ sphere: sphereOf(ROCK, 'Loc V2', WALL, 'Odd') });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        bot._ensureQueueBuilt();
+        expect(bot._queue.map((q) => q.locationName)).toEqual(['Loc V2', 'Odd']);
+        expect(bot.getEventState().leftToGame).toEqual([ROCK, WALL]);
+    });
+
+    it('GOAL FIRST: the graph has no walk to the Vault (its landing is inside the wall) → the bot walks to the wall to break it', async () => {
+        const { bot, controller } = makeBot({ sphere: sphereOf('Loc V') });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        expect(walkTos(controller)).toEqual([{ kind: 'location', name: WALL }]);
+        expect(bot.getStatus()).toMatch(/breaking breakablerock@64,16 first \(flag:L9:2\) — the route to Vault/);
+    });
+
+    it('CROSSING CREDIT: Start → Pocket passes through the rock at its own cost — walked, credited, and the gated landing is taken later', async () => {
+        const { bot, controller } = makeBot({ sphere: sphereOf('Loc V2') });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        expect(walkTos(controller)).toEqual([{ kind: 'exit', name: 'Start -> Pocket' }]);
+        expect(bot.getEventState().credited).toEqual([ROCK]);
+        bot.onRegionMove({ targetRegion: 'Pocket', exitName: 'Start -> Pocket' });
+        await Promise.resolve();
+        bot.onRegionMove({ targetRegion: 'Gem', exitName: 'Pocket -> Gem' });
+        await Promise.resolve();
+        bot.onRegionMove({ targetRegion: 'Lander', exitName: 'Gem -> Lander' });
+        await Promise.resolve();
+        // the snapshot still lacks the event (the collector has not seen the flag): the credit routes the gated landing
+        expect(walkTos(controller).at(-1)).toEqual({ kind: 'exit', name: 'Lander -> Vault2' });
+        expect(bot.getLog().some((l) => /credits "L9 flag 1: breakablerock@16,16 cleared"/.test(l))).toBe(true);
+        bot.reset();
+        expect(bot.getEventState().credited).toEqual([]);
+    });
+
+    it('no snapshot (no state manager) → no event path: today\'s named refusal', async () => {
+        const { bot } = makeBot({ sphere: sphereOf('Loc V'), proxy: false });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        expect(bot.getStatus()).toBe('error: no path from Start to Vault');
+    });
+
+    it('without the breaking item no event route exists: today\'s refusal', async () => {
+        const { bot } = makeBot({ sphere: sphereOf('Loc V'), inventory: {} });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        expect(bot.getStatus()).toBe('error: no path from Start to Vault');
+    });
+});

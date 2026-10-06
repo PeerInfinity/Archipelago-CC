@@ -162,6 +162,26 @@ describe('jsRuntimeCore J3 — the atlas check and the atlas crossing, field for
         expect(liveClears(rt.run)).toEqual([{ level: 86, tag }]);
     });
 
+    it('⛓ OBSTACLE EVENTS — EVERY JS BOOT carries the run\'s clears: a teleport away and back stages the chest\'s slot, '
+        + 'and botStatus.persistence_cleared reports it (the collector\'s load read)', () => {
+        const { rt } = vanillaRuntime();
+        teleport(rt, { level: HOUSE.level, ...HOME });
+        const tag = Number(CHEST.attrs.tag);
+        rt.playback.walkTo({ kind: 'location', level: 86, tag, entityType: 'chest' });
+        rt.playback.play();
+        settle(rt);
+        expect(liveClears(rt.run)).toEqual([{ level: 86, tag }]);
+        // a teleport (the region binding's arrival, a Restart's warp) is a new boot: the clear is STAGED into it
+        teleport(rt, { level: 0, x: 16, y: 128 });
+        expect(rt.run.level).toBe(0);
+        expect(rt.session.staging.persistence).toEqual([{ level: 86, tag }]);
+        expect(JSON.parse(rt.game.botStatus()).persistence_cleared).toEqual([{ level: 86, tag }]);
+        // …and back in the house, the staged clear holds: the chest is not offered again
+        teleport(rt, { level: HOUSE.level, ...HOME });
+        expect(rt.session.staging.persistence).toEqual([{ level: 86, tag }]);
+        expect(JSON.parse(rt.game.botStatus()).persistence_cleared).toEqual([{ level: 86, tag }]);
+    });
+
     it('the house door reports pendingExit "<seq>|86|teleporter|48|64|0" → the binding\'s departure is the '
         + 'atlas exit (external, to the maze child)', () => {
         const { rt, reports } = vanillaRuntime();

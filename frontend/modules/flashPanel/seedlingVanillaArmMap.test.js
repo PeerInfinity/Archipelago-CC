@@ -14,6 +14,8 @@ import { describe, expect, it } from 'vitest';
 
 import {
     ENCOUNTER_REFUSAL,
+    EVENT_GOAL_REFUSAL,
+    runtimeEventsOf,
     SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
     SeedlingPlaybackController,
     realRoomLinks,
@@ -131,6 +133,44 @@ describe('the vanilla arm\'s map — seedling_playthrough, every name accounted 
             expect(DOOR_NAMES.has(l.name)).toBe(false);
         }
         expect(realRoomLinks(PT, regions)).toEqual(MAP.links);
+    });
+});
+
+describe('⛓ OBSTACLE EVENTS — a game-state event is the map\'s THIRD class (neither a pickup nor a refusal)', () => {
+    const gameState = [...locationsOf(PT).values()].filter((l) => l.event_kind === 'game_state').map((l) => l.name).sort();
+
+    it('BOUND: entries + refusals + events = every location; the events are exactly the rules\' game_state ones', () => {
+        expect(gameState.length).toBeGreaterThan(0);
+        expect(MAP.events.map((e) => e.location).sort()).toEqual(gameState);
+        expect(MAP.entries.length + MAP.refused.length + MAP.events.length).toBe(locationsOf(PT).size);
+        for (const e of MAP.events) {
+            const loc = locationsOf(PT).get(e.location);
+            expect(e).toMatchObject({ eventId: loc.event_id, level: loc.obstacle.level, tag: loc.obstacle.tag, side: loc.side });
+        }
+    });
+
+    it('a walk to an event is refused BY NAME: its check is the game\'s flag; breaking it on purpose is clear-tag (not executed)', () => {
+        const ev = MAP.events.find((e) => e.eventId === 'flag:L0:1');
+        const r = resolveSeedlingAtlasGoal({ kind: 'location', name: ev.location }, MAP, { region: ev.side });
+        expect(r).toEqual({ refused: EVENT_GOAL_REFUSAL(ev) });
+        expect(r.refused).toContain('clear-tag {tag: {level: 0, tag: 1}, at: {x: 288, y: 176}}');
+        expect(r.refused).toContain('breakablerock@288,176');
+    });
+
+    it('⛔ FAIL-CLOSED: an UNKNOWN event_kind is refused by name, never bound as a pickup (nor listed as an event)', () => {
+        const rules = structuredClone(PT);
+        const loc = Object.values(rules.regions['1']).flatMap((r) => r.locations ?? []).find((l) => l.event_id === 'flag:L0:4');
+        loc.event_kind = 'some_future_kind';
+        const map = vanillaArmPlaybackMap({ entries: LOADED.entries, encounters: LOADED.encounters, set: LOADED.set,
+            regions: MAP.regions, rules });
+        expect(map.events.map((e) => e.location)).not.toContain(loc.name);
+        expect(map.entries.map((e) => e.location)).not.toContain(loc.name);
+        expect(map.refused.find((r) => r.location === loc.name)?.why).toMatch(/kind "some_future_kind".*not bound as a pickup/);
+        expect(resolveSeedlingAtlasGoal({ kind: 'location', name: loc.name }, map, {}).goal).toBeUndefined();
+        expect(map.entries.length + map.refused.length + map.events.length).toBe(locationsOf(rules).size);
+        // and a kindless event is not the playback map's at all
+        expect(runtimeEventsOf({ regions: { 1: { R: { locations: [{ name: 'logic', id: null, event: true }] } } } }))
+            .toEqual({ events: [], refused: [] });
     });
 });
 

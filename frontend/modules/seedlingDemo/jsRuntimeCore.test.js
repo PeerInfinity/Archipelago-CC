@@ -173,6 +173,21 @@ describe('jsRuntimeCore — the check and the crossing', () => {
         expect(door.exit_id).toBe(`out_${exit.type}_${exit.x}_${exit.y}`);
         expect(reports.find(([p]) => p === 'level')).toEqual(['level', 1]);
     });
+
+    it('⛓ OBSTACLE EVENTS — botStatus.persistence_cleared reports the cleared slots, across the next boot', () => {
+        const { rt } = started();
+        const cleared = () => JSON.parse(rt.game.botStatus()).persistence_cleared;
+        expect(cleared()).toEqual([]);
+        walkTo(rt, AP_CELL);
+        rt.tick();
+        expect(cleared()).toEqual([{ level: 0, tag: 0 }]);
+        walkTo(rt, { tx: 8, ty: 3 });
+        const out = walkTo(rt, DOOR_ABOVE_START, { allow: [DOOR_ABOVE_START] });
+        expect(out.crossing).toMatchObject({ from: 0, to: 1 });
+        // a new boot (level 1): the slot is still reported — the collector's load read on the JS page
+        expect(JSON.parse(rt.game.botStatus()).level).toBe(1);
+        expect(cleared()).toEqual([{ level: 0, tag: 0 }]);
+    });
 });
 
 describe('jsRuntimeCore — ⚖ death = respawn at the arrival, and only death', () => {
