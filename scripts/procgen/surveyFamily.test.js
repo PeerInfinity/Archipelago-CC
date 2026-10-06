@@ -42,6 +42,15 @@ describe('familyOf — the text arm, unchanged by the extraction', () => {
             .toMatch(/^ITEM-GATE — the 'break' verb is registered and breakablerockghost@224,96/);
     });
 
+    it('⛓ fidelity ARRIVAL: an arrival inside a solid is its own family, named by the solid', () => {
+        expect(familyOf('survey-step-42: arrival-inside-solid — the run\'s box at (296,184) in level 0 is '
+            + 'INSIDE breakablerock@288,176 and no cardinal hold moves it'))
+            .toMatch(/^ARRIVAL-INSIDE-SOLID — the arrival box is inside breakablerock@288,176, whose saved flag/);
+        expect(familyOf('x: arrival-inside-solid — the run\'s box at (40,872) in level 12 is INSIDE '
+            + 'magicallock@32,864, bosslock@32,864 and no cardinal hold moves it'))
+            .toMatch(/inside magicallock@32,864, bosslock@32,864, whose/);
+    });
+
     it('⛓ a refusal matching nothing is NAMED as unclassified, never swallowed', () => {
         expect(familyOf('something nobody has a rule for')).toBe(
             'unclassified — see the refusal text');
