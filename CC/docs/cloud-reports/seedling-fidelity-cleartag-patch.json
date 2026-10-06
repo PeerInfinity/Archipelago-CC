@@ -1,0 +1,647 @@
+{
+ "source": "measure-seedling-cleartag-patch.mjs",
+ "rows": [
+  {
+   "events": [
+    "flag:L0:1"
+   ],
+   "level": 0,
+   "backDoor": "304,176->L12",
+   "patches": [
+    {
+     "level": 0,
+     "op": "move",
+     "match": {
+      "type": "breakablerock",
+      "x": 288,
+      "y": 176,
+      "attrs": {
+       "tag": "1"
+      }
+     },
+     "to": {
+      "x": 272,
+      "y": 176
+     },
+     "why": "away from the back door",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L12 teleporter@0,80 -> (288,176)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 2,
+    "doors": [
+     "tp@304,176->L12"
+    ]
+   },
+   "opened": {
+    "tiles": 110,
+    "doors": [
+     "stairs@256,272->L2",
+     "stairs@32,192->L13",
+     "tp@0,128->L94",
+     "tp@0,144->L94",
+     "tp@160,272->L86",
+     "tp@304,176->L12"
+    ]
+   },
+   "gates": true,
+   "fromPocket": [
+    {
+     "event": "flag:L0:1",
+     "verdict": "SOLVES",
+     "ticks": 21,
+     "verb": "break"
+    }
+   ],
+   "others": [],
+   "tapes": {
+    "count": 38,
+    "files": [
+     "collide-up-rock.json",
+     "cross-level-leg.json",
+     "diagonal-run.json",
+     "direction-flip.json",
+     "friction-stop.json",
+     "grant-sword-room.json",
+     "hazard-walk-water.json",
+     "r2-walk-1-sword-shield.json",
+     "r2-walk-2-feather.json",
+     "r2-walk-3-darksword-torch.json",
+     "r2-walk-full.json",
+     "r3-walk-1-sword.json",
+     "r3-walk-2-feather.json",
+     "r3-walk-full.json",
+     "r4-walk-1-sword.json",
+     "r4-walk-2-feather.json",
+     "r4-walk-full.json",
+     "r5-waterfall-climb.json",
+     "r5-waterfall-shut.json",
+     "r7-act2-full.json",
+     "r7-ends-meet-1.json",
+     "r7-ends-meet-2.json",
+     "r7-ends-meet-full.json",
+     "r8-solve-1.json",
+     "r9-l0-sword-dash-rest.json",
+     "r9-l0-sword-dash.json",
+     "r9-solve-0-v3.json",
+     "r9-solve-0.json",
+     "r9-solve-13-v2.json",
+     "r9-solve-2.json",
+     "shuffle-stop.json",
+     "statue-press.json",
+     "straight-run.json",
+     "thread-the-gap.json",
+     "transition-west-return.json",
+     "u14-moonrock-beam.json",
+     "u14-moonrock-set.json",
+     "wall-slide.json"
+    ]
+   }
+  },
+  {
+   "events": [
+    "flag:L0:4"
+   ],
+   "level": 0,
+   "backDoor": "80,96->L1",
+   "patches": [
+    {
+     "level": 0,
+     "op": "move",
+     "match": {
+      "type": "breakablerock",
+      "x": 80,
+      "y": 112,
+      "attrs": {
+       "tag": "4"
+      }
+     },
+     "to": {
+      "x": 80,
+      "y": 128
+     },
+     "why": "away from the back door",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L1 teleporter@64,112 -> (80,112)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 109,
+    "doors": [
+     "stairs@256,272->L2",
+     "stairs@32,192->L13",
+     "tp@0,128->L94",
+     "tp@0,144->L94",
+     "tp@160,272->L86",
+     "tp@80,96->L1"
+    ]
+   },
+   "opened": {
+    "tiles": 110,
+    "doors": [
+     "stairs@256,272->L2",
+     "stairs@32,192->L13",
+     "tp@0,128->L94",
+     "tp@0,144->L94",
+     "tp@160,272->L86",
+     "tp@80,96->L1"
+    ]
+   },
+   "gates": false,
+   "fromPocket": [
+    {
+     "event": "flag:L0:4",
+     "verdict": "SOLVES",
+     "ticks": 20,
+     "verb": "break"
+    }
+   ],
+   "others": [],
+   "tapes": {
+    "count": 38,
+    "files": [
+     "collide-up-rock.json",
+     "cross-level-leg.json",
+     "diagonal-run.json",
+     "direction-flip.json",
+     "friction-stop.json",
+     "grant-sword-room.json",
+     "hazard-walk-water.json",
+     "r2-walk-1-sword-shield.json",
+     "r2-walk-2-feather.json",
+     "r2-walk-3-darksword-torch.json",
+     "r2-walk-full.json",
+     "r3-walk-1-sword.json",
+     "r3-walk-2-feather.json",
+     "r3-walk-full.json",
+     "r4-walk-1-sword.json",
+     "r4-walk-2-feather.json",
+     "r4-walk-full.json",
+     "r5-waterfall-climb.json",
+     "r5-waterfall-shut.json",
+     "r7-act2-full.json",
+     "r7-ends-meet-1.json",
+     "r7-ends-meet-2.json",
+     "r7-ends-meet-full.json",
+     "r8-solve-1.json",
+     "r9-l0-sword-dash-rest.json",
+     "r9-l0-sword-dash.json",
+     "r9-solve-0-v3.json",
+     "r9-solve-0.json",
+     "r9-solve-13-v2.json",
+     "r9-solve-2.json",
+     "shuffle-stop.json",
+     "statue-press.json",
+     "straight-run.json",
+     "thread-the-gap.json",
+     "transition-west-return.json",
+     "u14-moonrock-beam.json",
+     "u14-moonrock-set.json",
+     "wall-slide.json"
+    ]
+   }
+  },
+  {
+   "events": [
+    "flag:L12:7",
+    "flag:L12:12"
+   ],
+   "level": 12,
+   "backDoor": "32,848->L83",
+   "patches": [
+    {
+     "level": 12,
+     "op": "move",
+     "match": {
+      "type": "magicallock",
+      "x": 32,
+      "y": 864,
+      "attrs": {
+       "tag": "7"
+      }
+     },
+     "to": {
+      "x": 32,
+      "y": 880
+     },
+     "why": "away from the back door",
+     "into": [
+      "open"
+     ]
+    },
+    {
+     "level": 12,
+     "op": "move",
+     "match": {
+      "type": "bosslock",
+      "x": 32,
+      "y": 864,
+      "attrs": {
+       "keyType": "4",
+       "tag": "12"
+      }
+     },
+     "to": {
+      "x": 32,
+      "y": 880
+     },
+     "why": "away from the back door",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L83 teleporter@32,64 -> (32,864)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 2,
+    "doors": [
+     "tp@32,848->L83"
+    ]
+   },
+   "opened": {
+    "tiles": 48,
+    "doors": [
+     "tp@32,848->L83"
+    ]
+   },
+   "gates": false,
+   "fromPocket": [
+    {
+     "event": "flag:L12:7",
+     "verdict": "REFUSES",
+     "kind": "clear-tag",
+     "reason": "unresolved",
+     "why": "solverBot(cleartag-patch-12-7) clear-tag {12,7} magicallock@32,880: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state"
+    },
+    {
+     "event": "flag:L12:12",
+     "verdict": "REFUSES",
+     "kind": "solid",
+     "reason": null,
+     "why": "solverBot(cleartag-patch-12-12) clear-tag {12,12} bosslock@32,880 -> keylock stance -> keylock stance (bosslock@32,880) -> keylock stance (bosslock@32,880) -> keylock stance (bosslock@32,880) -> keylock stance (bosslock@"
+    }
+   ],
+   "others": [],
+   "tapes": {
+    "count": 30,
+    "files": [
+     "burn-l24-reach-exit.json",
+     "r2-walk-3-darksword-torch.json",
+     "r2-walk-4-spear.json",
+     "r2-walk-5-darkshield.json",
+     "r2-walk-full.json",
+     "r3-walk-2-feather.json",
+     "r3-walk-3-torch.json",
+     "r3-walk-4-spear.json",
+     "r3-walk-5-darkshield.json",
+     "r3-walk-full.json",
+     "r4-walk-2-feather.json",
+     "r4-walk-3-torch.json",
+     "r4-walk-4-approach.json",
+     "r4-walk-full.json",
+     "r9-solve-0-v3.json",
+     "r9-solve-12.json",
+     "slots-l24-burn-cut-110.json",
+     "slots-l24-burn-cut-80.json",
+     "slots-l24-burn-fencepost.json",
+     "slots-l24-burn-fire-first.json",
+     "slots-l24-fire-first.json",
+     "u10-puncher-dwell-refused.json",
+     "u10-puncher-dwell.json",
+     "u11-dark-shield-puncher.json",
+     "u11-facing-puncher.json",
+     "u12-pull-carry.json",
+     "u12-pull-cross.json",
+     "u7-puncher-kill.json",
+     "u7-puncher-punch.json",
+     "u9-shield-puncher.json"
+    ]
+   }
+  },
+  {
+   "events": [
+    "flag:L24:0"
+   ],
+   "level": 24,
+   "backDoor": "48,144->L12",
+   "patches": [
+    {
+     "level": 24,
+     "op": "move",
+     "match": {
+      "type": "burnabletree",
+      "x": 32,
+      "y": 128,
+      "attrs": {
+       "tag": "0"
+      }
+     },
+     "to": {
+      "x": 32,
+      "y": 96
+     },
+     "why": "the back door is under the obstacle: away from the nearest level edge",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L12 teleporter@40,688 -> (48,128)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 4,
+    "doors": [
+     "tp@32,144->L12",
+     "tp@48,144->L12"
+    ]
+   },
+   "opened": {
+    "tiles": 35,
+    "doors": [
+     "stairs@96,96->L23",
+     "tp@32,144->L12",
+     "tp@48,144->L12"
+    ]
+   },
+   "gates": true,
+   "fromPocket": [
+    {
+     "event": "flag:L24:0",
+     "verdict": "SOLVES",
+     "ticks": 54,
+     "verb": "burn"
+    }
+   ],
+   "others": [],
+   "tapes": {
+    "count": 12,
+    "files": [
+     "burn-l24-reach-exit.json",
+     "r2-walk-3-darksword-torch.json",
+     "r2-walk-full.json",
+     "r3-walk-3-torch.json",
+     "r3-walk-full.json",
+     "r4-walk-3-torch.json",
+     "r4-walk-full.json",
+     "slots-l24-burn-cut-110.json",
+     "slots-l24-burn-cut-80.json",
+     "slots-l24-burn-fencepost.json",
+     "slots-l24-burn-fire-first.json",
+     "slots-l24-fire-first.json"
+    ]
+   }
+  },
+  {
+   "events": [
+    "flag:L71:2"
+   ],
+   "level": 71,
+   "backDoor": "304,256->L76",
+   "patches": [
+    {
+     "level": 71,
+     "op": "move",
+     "match": {
+      "type": "shieldlock",
+      "x": 288,
+      "y": 256,
+      "attrs": {
+       "tag": "2"
+      }
+     },
+     "to": {
+      "x": 272,
+      "y": 256
+     },
+     "why": "away from the back door",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L76 teleporter@0,80 -> (288,256)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 2,
+    "doors": [
+     "tp@304,256->L76"
+    ]
+   },
+   "opened": {
+    "tiles": 107,
+    "doors": [
+     "tp@224,304->L80",
+     "tp@304,256->L76",
+     "tp@304,96->L72",
+     "tp@96,0->L75"
+    ]
+   },
+   "gates": true,
+   "fromPocket": [
+    {
+     "event": "flag:L71:2",
+     "verdict": "REFUSES",
+     "kind": "solid",
+     "reason": null,
+     "why": "solverBot(cleartag-patch-71-2) clear-tag {71,2} shieldlock@272,256 -> touch stance -> touch stance (shieldlock@272,256) -> touch stance (shieldlock@272,256) -> touch stance (shieldlock@272,256) -> touch stance (shieldloc"
+    }
+   ],
+   "others": [],
+   "tapes": {
+    "count": 13,
+    "files": [
+     "axe-l71-reach-l76.json",
+     "l71-button-lock.json",
+     "l71-hold-101-shut.json",
+     "l71-hold-102-open.json",
+     "l71-lock-shut.json",
+     "l71-shieldlock-open.json",
+     "l71-shieldlock-shut.json",
+     "r2-walk-5-darkshield.json",
+     "r2-walk-6-darksuit.json",
+     "r2-walk-full.json",
+     "r3-walk-5-darkshield.json",
+     "r3-walk-6-darksuit.json",
+     "r3-walk-full.json"
+    ]
+   }
+  },
+  {
+   "events": [
+    "flag:L112:1"
+   ],
+   "level": 112,
+   "backDoor": "112,0->L113",
+   "patches": [
+    {
+     "level": 112,
+     "op": "move",
+     "match": {
+      "type": "rocklock",
+      "x": 112,
+      "y": 16,
+      "attrs": {
+       "tset": "0",
+       "tag": "1"
+      }
+     },
+     "to": {
+      "x": 112,
+      "y": 32
+     },
+     "why": "away from the back door",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L113 teleporter@64,144 -> (112,16)",
+     "inside": []
+    },
+    {
+     "landing": "L113 teleporter@80,144 -> (112,16)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 2,
+    "doors": [
+     "tp@112,0->L113"
+    ]
+   },
+   "opened": {
+    "tiles": 135,
+    "doors": [
+     "tp@112,0->L113",
+     "tp@32,224->L111"
+    ]
+   },
+   "gates": true,
+   "fromPocket": [
+    {
+     "event": "flag:L112:1",
+     "verdict": "REFUSES",
+     "kind": "clear-tag",
+     "reason": "no-verb",
+     "why": "solverBot(cleartag-patch-112-1) clear-tag {112,1} rocklock@112,32: no strategy row exists for solid:rocklock — the catalogue names no verb that clears it"
+    }
+   ],
+   "others": [],
+   "tapes": {
+    "count": 2,
+    "files": [
+     "r6-owl-control.json",
+     "r6-owl-kill.json"
+    ]
+   }
+  },
+  {
+   "events": [
+    "flag:L113:0"
+   ],
+   "level": 113,
+   "backDoor": "112,0->L115",
+   "patches": [
+    {
+     "level": 113,
+     "op": "move",
+     "match": {
+      "type": "finaldoor",
+      "x": 112,
+      "y": 0,
+      "attrs": {
+       "tag": "0"
+      }
+     },
+     "to": {
+      "x": 112,
+      "y": 32
+     },
+     "why": "the back door is under the obstacle: away from the nearest level edge",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L115 teleporter@64,144 -> (112,16)",
+     "inside": []
+    },
+    {
+     "landing": "L115 teleporter@80,144 -> (128,16)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 4,
+    "doors": [
+     "tp@112,0->L115",
+     "tp@128,0->L115"
+    ]
+   },
+   "opened": {
+    "tiles": 54,
+    "doors": [
+     "tp@112,0->L115",
+     "tp@128,0->L115",
+     "tp@16,0->L114",
+     "tp@32,0->L114",
+     "tp@64,144->L112",
+     "tp@80,144->L112"
+    ]
+   },
+   "gates": true,
+   "fromPocket": [
+    {
+     "event": "flag:L113:0",
+     "verdict": "REFUSES",
+     "kind": "clear-tag",
+     "reason": "no-verb",
+     "why": "solverBot(cleartag-patch-113-0) clear-tag {113,0} finaldoor@112,32: no strategy row exists for solid:finaldoor — the catalogue names no verb that clears it"
+    }
+   ],
+   "others": [],
+   "tapes": {
+    "count": 5,
+    "files": [
+     "r2-two-teleporters.json",
+     "r6-final-door-control.json",
+     "r6-final-door.json",
+     "watcher-l114-silent.json",
+     "watcher-l114-talk.json"
+    ]
+   }
+  }
+ ]
+}
