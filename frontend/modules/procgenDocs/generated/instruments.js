@@ -134,7 +134,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 58,
-            "count": 101,
+            "count": 102,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 360,
+        "blockStyle": 361,
         "browser": 123,
-        "cited": 174,
-        "files": 372,
+        "cited": 175,
+        "files": 373,
         "lineStyle": 12,
-        "withDocblock": 372,
-        "withFlags": 290
+        "withDocblock": 373,
+        "withFlags": 291
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12115,6 +12115,130 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-watch-page — does `watch.html` actually DRAW a tape, all the way through, without dying?",
             "path": "scripts/procgen/probe-seedling-watch-page.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "md5",
+                "nowMs"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget",
+                "dir",
+                "fine",
+                "gap-ms",
+                "ids",
+                "jobs",
+                "legs",
+                "no-hook",
+                "no-profile",
+                "one",
+                "out",
+                "sword",
+                "timeout",
+                "window"
+            ],
+            "file": "probe-solver-hook-gaps.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dir"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "fine"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "gap-ms"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ids"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "jobs"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "legs"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-hook"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-profile"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "one"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "sword"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "timeout"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "window"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Measure-only (fidelity CHECKPOINTS, planner `seedling-fidelity-planning-3`) — THE HOOK GAPS: every leg of `--legs=<jsonl>` (`seedling-divergence-legs.mjs`) solved BARE (no inventory) through the same request path `seedling-divergence-bare.mjs` stages (`arrivalSolverGoal` → `arrivalSolveRequest` → one `solveSegment` …",
+            "path": "scripts/procgen/probe-solver-hook-gaps.mjs"
         },
         {
             "argvHelpers": [
