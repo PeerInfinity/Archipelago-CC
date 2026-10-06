@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 49,
-            "count": 92,
+            "browser": 50,
+            "count": 93,
             "id": "probe"
         },
         {
@@ -161,6 +161,11 @@ export const INSTRUMENTS = frz({
             "browser": 0,
             "count": 5,
             "id": "region"
+        },
+        {
+            "browser": 0,
+            "count": 1,
+            "id": "replay"
         },
         {
             "browser": 0,
@@ -219,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 345,
-        "browser": 114,
-        "cited": 164,
-        "files": 356,
+        "blockStyle": 347,
+        "browser": 115,
+        "cited": 166,
+        "files": 358,
         "lineStyle": 11,
-        "withDocblock": 356,
-        "withFlags": 274
+        "withDocblock": 358,
+        "withFlags": 276
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8642,6 +8647,84 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-ceremony.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "around",
+                "host",
+                "ids",
+                "legs",
+                "out",
+                "page",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-contact-divergence.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "around"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "capture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ids"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "legs"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "page"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Measure-only (slice `seedling-fidelity-terrain` D1, planner `seedling-fidelity-planning-3`) — THE HELD PER-TICK COMPARE behind the divergence sweep's \"terrain\" rows: each leg of `--legs=<jsonl>` (`seedling-divergence-legs.mjs`) is served by the PRODUCTION wasm playback engine on the live `seedling_playthrough` page …",
+            "path": "scripts/procgen/probe-seedling-contact-divergence.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "probe",
@@ -12332,6 +12415,56 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Region-library validate/restamp CLI — the hand-authoring helper (region-library-plan.md ruling 2, F1).",
             "path": "scripts/procgen/region-library-validate.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "replay",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "dir"
+            ],
+            "file": "replay-seedling-contact-capture.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "bodies"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dir"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Measure-only (slice `seedling-fidelity-terrain` D1/D3) — REPLAY A CAPTURED GAME WITNESS ON THE MODEL, in node, no browser, no box.",
+            "path": "scripts/procgen/replay-seedling-contact-capture.mjs"
         },
         {
             "argvHelpers": [

@@ -13840,6 +13840,52 @@ a second row pins the full stop as a relation over the artifact. No tape moves.
   and nothing in the derivation reds. Only an alignment against a walked chain
   showed it.
 
+### Seedling fidelity TERRAIN — the "terrain" rows were contacts: two wallflyer rules and a live drill
+
+Planning-3's wave 6 (model coverage), on `main` `88a7e4d`. ⚖ The user, 2026-10-05: *"The first priority is to
+expand the model to include everything in the game."* The report is
+`CC/docs/cloud-reports/seedling-fidelity-terrain.md`.
+
+**D1 — the held compare.** `probe-seedling-contact-divergence.mjs` serves a sweep leg through the production
+engine while `seedlingContactLab.js` samples `botMobiles` + `botStatus` once per game tick. That gives the
+player's x, y, vx, vy, hits and hits_timer, plus every body. `--capture` keeps the request, the room, the plan and
+every tick, and `replay-seedling-contact-capture.mjs` replays that on the model in node. On every reproduced row
+the first differing field is at the divergence tick itself, and it is `hits` (0 → 1 on one side). The rows are
+**contact knockbacks**, not terrain. The bodies: wallflyers (L22, L25, L27), a drill (L88), a BobSoldier (L30),
+nothing within 40 px on L71 (the spinning axe), and an arrival frame on L74.
+
+**D2 — three rules** (`contactFidelity.js`, read at call time):
+
+- **W1 `collideLinePointsExact`.** `World.collideLine` casts only its end points to `int`; each stepped point is a
+  `Number` (`World.as:389,434`). `crusher.collideLineSolid` truncated every point. A horizontal wallflyer's
+  `vy = -4·sin(π)` makes `toY` cast to y − 1, so the game's ray falls across the room while the model's sits at
+  y − 1. Measured: L27 launches a tick early in the model, L25 a tick late.
+- **W2 `wallFlyerSwordHits`.** A slash reaches a wallflyer (type `"Enemy"`) through `Enemy.hit`, which arms
+  `hitsTimer` 30 and reverses `v`. The press census synthesized responders for bridged chasers only, so the model
+  silently reached no wallflyer. Measured: L22 t43 and L25 t51.
+- **W3 `drillLive`.** `drill.js` transcribes `Drill.as`: the 48 px hop toward the player with line of sight, the
+  drill/undrill/hit/die anims, the contact at force 3, `Enemy.hit` with an empty knockback, and the kill staged
+  with its ledger. It applies only in a room whose one census enemy is one drill (L88).
+
+**D3.** All three ON leave the tapeRunner roster (511, md5-identical), five producer `--check`s and the bounded
+47 files / 2,340 tests unchanged. Three movers belong to W1 alone: `r9-campaign` (`r9-solve-18` re-plans
+510 → 519 t), `solverSpinnerKill` F2 (241 → 221 t), and `seedlingCanCross` L22's cause. **W2 and W3 ship ON** (the
+identity block at the shipped defaults is byte-identical to W0). **W1 ships OFF**, stopped for a licence. Thirteen game captures
+are pinned (`fixtures/contact-witness/`, `contactFidelity.test.js`): each switch alone fixes exactly its rows, and
+with all three on, nine reproduce at 0 px. On the game at the shipped defaults, 7 of the 9 table legs that left their plans now play on plan.
+L25 #264 needs W1. L88 #663 is a named refusal, a stall beside the live drill.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A divergence's shape is not its cause.** "Δ ≈ 2 px on both axes, terrain 4/5/8" read as collision resolution.
+  The first `hits` read named a knockback. Read the damage fields before the geometry.
+- **A census that cannot see a responder passes.** The press census reached no wallflyer and no drill, so a swing
+  at either was a silent no-op. That is not even `KILL_ARM_POLICY`'s refusal: the row was never asked.
+- **`int` at the signature is not `int` inside.** FlashPunk's `collideLine` truncates four numbers, not every
+  sample. Against integer bounds the two agree, which is how the error hid; against the player's box they do not.
+- **A refusal can be worse than the event it refuses.** Refusing the drill kill turned two plans that crossed in
+  the model into solver refusals; staging the kill made them play on plan.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
