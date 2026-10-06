@@ -40,7 +40,7 @@
 //
 // Headless-safe: no top-level await, no literal node: imports.
 
-import { allOf, anyOf, flag, key } from './seedlingSemantics.js';
+import { allOf, anyOf, flag, key, tileTypeForPlacement } from './seedlingSemantics.js';
 
 /**
  * ⛔ THE WEAPON DISJUNCTION, and it is the ONE conservative approximation in
@@ -225,6 +225,239 @@ export const GROUPED_LOCK_EXCEPTIONS = Object.freeze({
     }),
 });
 
+/**
+ * ⛓⛓⛓ RULES kill-locks — **WHAT A KILL-LOCK ROOM REALLY COSTS, read from the
+ * game's own kill paths rather than assumed to be "a weapon".**
+ *
+ * A `tset == -1` lock opens when `Game.totalEnemies() == 0`
+ * (`Puzzlements/Lock.as:111`, `RockLock.as:51`). That sum is `classCount` over
+ * 25 EXACT classes (`Game.as:1855-1882`; FlashPunk's `World.classCount` keys by
+ * the instance's own class), so the rule for crossing one is the conjunction,
+ * over the room's COUNTED bodies, of each body's disjunction of ways to die.
+ *
+ * Three tables, each one source-cited, then one function that combines them:
+ *   · `KILL_ARM_ITEMS` — the player's item arms that reach `Enemy.hit`;
+ *   · `KILL_LOCK_BODY_CLASSES` — per placed tag: its counted class and the ways
+ *     the game lets it die with no item (tile deaths, self-removal), or why it
+ *     needs more than a hit (the IceTurret's corpse);
+ *   · `KILL_LOCK_MEASURED_ARMS` — a room whose environmental kill was WITNESSED.
+ * An environmental arm the room holds but nothing measured is UNDECIDED, and an
+ * undecided room keeps today's rule (`A_WEAPON`) — it is listed, never guessed.
+ */
+
+/**
+ * The player's item arms that kill a counted body through `Enemy.hit`
+ * (`Enemies/Enemy.as:138-176`: hits accumulate to `hitsMax`, then `startDeath`).
+ * Each row is a flag and the call site that hands the body to `hit()`.
+ */
+export const KILL_ARM_ITEMS = Object.freeze({
+    hasSword: Object.freeze({ cite: 'Player.as:924 (the slash → genericHit → Enemy.hit, t "Sword"; "Spear" with the Ghost Sword)' }),
+    hasSpear: Object.freeze({ cite: 'Player.as:989 (the thrust → genericHit, t "Spear", damage 2)' }),
+    hasWand: Object.freeze({
+        cite: 'Projectiles/WandShot.as:70 (`solids.push("Enemy")`) + :116 (`Enemy.hit(force, …, damage 0.5, "Wand")`); '
+            + 'the Fire Wand shot is the same class with damage 1 (:57)',
+    }),
+    hasDarkShield: Object.freeze({
+        cite: 'Player.as:1695-1701 (`shieldBump`: `hasDarkShield && o.hitsTimer <= 0` → `o.hit(…, 0.5, "Shield")`); '
+            + 'game-witnessed on L98\'s IceTurret by fidelity KILLLOCK (K5)',
+    }),
+});
+
+/**
+ * The item arms the AS3 offers that this rule does NOT count, each with why.
+ * Leaving one out makes a room STRICTER, so each is a named finding rather
+ * than a silent omission.
+ */
+export const KILL_ARM_EXCLUDED = Object.freeze({
+    hasDarkSuit: 'Player.as:1384-1386 — the suit hits a body only when that body HURTS the player (`hits += d` '
+        + 'on the same call), so a 3-hit body costs 3 player hits = the base `hitsMax`. Whether a kill is '
+        + 'survivable depends on the Health count: UNDECIDED, not counted.',
+    hasFire: 'Enemy.as:145 — `if (hitByFire || t != "Fire")`; every counted class read here keeps `hitByFire` '
+        + 'false, so fire only knocks back. Also `fireDamage` is 0 (Player.as:178).',
+    hasShield: 'Player.as:1703 — the plain shield only KNOCKS BACK (`o.knockback`). It can push a body into a '
+        + 'fatal tile, which is the tile-hazard arm below (geometry: undecided).',
+});
+
+/** The disjunction a body that dies to any player item arm costs. */
+export const KILL_ARM_CONDITION = anyOf(...Object.keys(KILL_ARM_ITEMS).map((f) => flag(f)));
+
+/**
+ * Per PLACED tag (`Game.as:2276-2416`): the counted class, and what the game
+ * lets kill it beyond the item arms. Only the classes that stand in a kill-lock
+ * room are READ; a counted tag missing here makes its room undecided.
+ *   `dies` — the fatal tile types (`Enemy.update`, Enemy.as:63-84: 1 water,
+ *            6 pit, 17 lava), from the class's `dieInWater`/`dieInLava`/
+ *            `canFallInPit` (defaults true, Enemy.as:32-38).
+ *   `self` — the body removes itself with no item (free).
+ *   `corpse` — `death()` keeps a counted corpse until it drowns: the kill
+ *            opens nothing unless the body stands on Water.
+ */
+export const KILL_LOCK_BODY_CLASSES = Object.freeze({
+    bob: Object.freeze({ class: 'Bob', dies: [1, 6, 17], cite: 'Enemies/Bob.as (no override of the three defaults)' }),
+    lavarunner: Object.freeze({
+        class: 'LavaRunner', dies: [1, 6], cite: 'Enemies/LavaRunner.as:38 (`dieInLava = false`), :41 (`hitsMax = 2`); extends Bob',
+    }),
+    spinner: Object.freeze({ class: 'Spinner', dies: [1, 6, 17], cite: 'Enemies/Spinner.as (no override of the three defaults)' }),
+    puncher: Object.freeze({ class: 'Puncher', dies: [1, 6, 17], cite: 'Enemies/Puncher.as (no override of the three defaults)' }),
+    jellyfish: Object.freeze({
+        class: 'Jellyfish', dies: [], cite: 'Enemies/Jellyfish.as:31-37 (`dieInWater`, `dieInLava`, `canFallInPit` all false)',
+    }),
+    iceturret: Object.freeze({
+        class: 'IceTurret', dies: [], corpse: true, centre: [16, 16],
+        cite: 'Enemies/IceTurret.as:135-150 (`death()` consumes the first destroy: the corpse stays counted) '
+            + '+ :56 (`dieInWater = hits >= hitsMax`: a corpse on Water drowns) + :32 (centre = x+16, y+16); '
+            + 'game-witnessed on L98 by fidelity KILLLOCK (corpse t39, removed t50)',
+    }),
+    grenade: Object.freeze({
+        class: 'Grenade', dies: [], self: true,
+        cite: 'Enemies/Grenade.as:70-71 (`hit()` is empty) + :90-104 (the fuse) + :146-148 (`animEnd` removes it): '
+            + 'it leaves once the player comes within 32 px, no item',
+    }),
+});
+
+/** The tags `Game.totalEnemies()` counts that this module has NOT read. A room holding one is undecided. */
+export const KILL_LOCK_UNREAD_COUNTED_TAGS = Object.freeze([
+    'bobsoldier', 'bobboss1', 'bobboss2', 'bobboss3', 'bosstotem', 'finalboss', 'flyer', 'bulb',
+    'tentaclebeast', 'drill', 'sandtrap', 'darktrap', 'turret', 'shieldboss', 'wallflyer',
+]);
+
+/** Entities that SPAWN a counted class at run time (a room holding one is undecided). */
+export const KILL_LOCK_SPAWNERS = Object.freeze({
+    lavaboss: 'Enemies/LavaBoss.as:231 (LavaRunner)',
+    tentaclebeast: 'Enemies/TentacleBeast.as:188 (Tentacle)',
+    lightbosscontroller: 'Enemies/LightBossController.as:79 (LightBoss)',
+    finalboss: 'Enemies/FinalBoss.as:160 (Grenade)',
+    fallrocklarge: 'Scenery/FallRockLarge.as:117 (BobBoss)',
+});
+
+/** Entities whose shots or sweeps HIT ENEMIES — an environmental kill arm. */
+export const KILL_LOCK_ENEMY_HITTERS = Object.freeze({
+    arrowtrap: 'Puzzlements/ArrowTrap.as:57-59 → Projectiles/Arrow.as:52',
+    pulser: 'Puzzlements/Pulser.as:110',
+    crusher: 'Puzzlements/Crusher.as:102',
+    lavachain: 'Puzzlements/LavaChain.as:86',
+    turret: 'Projectiles/TurretSpit.as:56',
+    iceturret: 'Enemies/IceTurret.as:160-163 → Projectiles/IceTurretBlast.as:56 (`hit(0, p)`: d defaults to 1)',
+    lavaboss: 'Enemies/LavaBoss.as:254 → Projectiles/LavaBall.as:72',
+});
+
+/**
+ * Rooms whose environmental kill was WITNESSED in the game. The arm makes the
+ * listed bodies free.
+ */
+export const KILL_LOCK_MEASURED_ARMS = Object.freeze({
+    5: Object.freeze({
+        arm: 'ceiling', bodies: ['bob'],
+        cite: 'tape `f1-l5-lock-removal` (grants [], noDamage false: the three bobs die to the arrow traps at '
+            + 't124/t127/t166, the last leaves the world at t201, the game crosses lock@48,112 to L6 on t303) + '
+            + 'the model\'s ceiling-kill arm (`resolveKillStrategy`, I50)',
+    }),
+});
+
+const tileTypesOf = (level) => {
+    const at = new Map();
+    for (const layer of level?.layers ?? []) {
+        if (layer.name === 'cliffsides') continue;
+        for (const p of layer.tiles ?? []) {
+            const t = tileTypeForPlacement(p);
+            if (t !== null) at.set(`${p[0]},${p[1]}`, t);
+        }
+    }
+    return at;
+};
+
+/** Is the disjunction `d` (flag names) implied by the conjunction `cnf` (an array of flag-name disjunctions)? */
+const impliedBy = (cnf, d) => cnf.some((c) => c.every((f) => d.includes(f)));
+
+/**
+ * ⛓ THE CENSUS AND THE RULING for one level's kill-lock room. Pure: the level
+ * record in, a row out —
+ * `{level, verdict: 'free'|'gated'|'undecided', condition, bodies, hazards, why}`,
+ * or null when the level holds no `tset == -1` lock.
+ *   free      — every counted body has a free arm (measured or self-removal);
+ *   gated     — the conjunction of the bodies' item disjunctions (`condition`);
+ *               a body with an unmeasured environmental arm is absorbed only when
+ *               the conjunction already implies its item disjunction;
+ *   undecided — anything else: today's rule (`A_WEAPON`) is kept and the reason
+ *               is listed.
+ */
+export function killLockRoomRuling(level) {
+    const entities = level?.entities ?? [];
+    const locks = entities.filter((e) => LOCK_FAMILY.has(e.type) && Number(e.attrs?.tset) === -1);
+    if (locks.length === 0) return null;
+    const id = level.level;
+    const tiles = tileTypesOf(level);
+    const present = new Set();
+    for (const t of tiles.values()) present.add(t);
+    const hitters = entities.filter((e) => KILL_LOCK_ENEMY_HITTERS[e.type]).map((e) => `${e.type}@${e.x},${e.y}`);
+    const spawners = entities.filter((e) => KILL_LOCK_SPAWNERS[e.type]).map((e) => `${e.type}@${e.x},${e.y}`);
+    const measured = KILL_LOCK_MEASURED_ARMS[id] ?? null;
+    const items = Object.keys(KILL_ARM_ITEMS);
+    const undecided = [];
+    const bodies = [];
+    for (const e of entities) {
+        const row = KILL_LOCK_BODY_CLASSES[e.type];
+        const at = `${e.type}@${e.x},${e.y}`;
+        if (!row) {
+            if (KILL_LOCK_UNREAD_COUNTED_TAGS.includes(e.type)) undecided.push(`${at}: a counted class this module has not read`);
+            continue;
+        }
+        const body = { at, class: row.class, items, env: 'none', free: false };
+        if (row.self) {
+            body.free = true;
+            body.env = 'self';
+        } else if (measured?.bodies.includes(e.type)) {
+            body.free = true;
+            body.env = `measured:${measured.arm}`;
+        } else if (row.corpse) {
+            const [ox, oy] = row.centre;
+            const t = tiles.get(`${Math.floor((e.x + ox) / 16)},${Math.floor((e.y + oy) / 16)}`);
+            if (t !== 1) {
+                body.items = [];
+                undecided.push(`${at}: its corpse stays counted unless it stands on Water (tile ${t ?? 'none'})`);
+            }
+        } else {
+            // A body standing on lava it survives is reached only across lava
+            // (fidelity KILLLOCK residue 3: L71/L99's lavarunners stay on their
+            // islands, out of their 80 px leash): whether an item arm reaches it
+            // is a REACH question this table cannot answer.
+            const on = tiles.get(`${Math.floor((e.x + 8) / 16)},${Math.floor((e.y + 8) / 16)}`);
+            if (on === 17 && !row.dies.includes(17)) undecided.push(`${at}: stands on lava it survives (reach undecided)`);
+            const fatal = row.dies.filter((t) => present.has(t));
+            const envHits = hitters.filter((h) => !h.startsWith(`${e.type}@${e.x},${e.y}`));
+            if (fatal.length > 0 || envHits.length > 0) {
+                body.env = `unmeasured:${[...fatal.map((t) => `tile${t}`), ...envHits].join('+')}`;
+            }
+        }
+        bodies.push(body);
+    }
+    if (spawners.length > 0) undecided.push(`spawns a counted class at run time: ${spawners.join(', ')}`);
+    const needed = bodies.filter((b) => !b.free && b.env === 'none');
+    const cnf = [];
+    for (const b of needed) {
+        const k = [...b.items].sort();
+        if (!cnf.some((c) => c.join() === k.join())) cnf.push(k);
+    }
+    for (const b of bodies.filter((x) => !x.free && x.env.startsWith('unmeasured:'))) {
+        if (!impliedBy(cnf, b.items)) undecided.push(`${b.at}: an environmental arm nothing measured (${b.env.slice(11)})`);
+    }
+    const base = { level: id, locks: locks.map((l) => `${l.type}@${l.x},${l.y}`), bodies, hazards: { tiles: [...present].filter((t) => [1, 6, 17].includes(t)).sort((a, b) => a - b), hitters, spawners } };
+    if (undecided.length > 0) return { ...base, verdict: 'undecided', condition: A_WEAPON, why: undecided };
+    if (cnf.length === 0) return { ...base, verdict: 'free', condition: null, why: measured ? [measured.cite] : ['every counted body removes itself'] };
+    const condition = allOf(...cnf.map((c) => anyOf(...c.map((f) => flag(f)))));
+    return { ...base, verdict: 'gated', condition, why: [] };
+}
+
+/** `"<level>"` → the room ruling, over every level of the map. */
+export function buildKillLockRulings(mapDoc) {
+    const out = new Map();
+    for (const level of mapDoc?.levels ?? []) {
+        const row = killLockRoomRuling(level);
+        if (row) out.set(level.level, row);
+    }
+    return out;
+}
+
 function lockRuling(entity, ctx) {
     const tSet = Number(entity.attrs?.tset);
     const tag = entity.attrs?.tag;
@@ -245,12 +478,26 @@ function lockRuling(entity, ctx) {
                 + 'makes the whole disjunction free. The census is '
                 + '`probe-seedling-r7-map-triggers.mjs`.');
         }
+        // ⛓ RULES kill-locks — the room's census decides when the caller
+        // supplies it (`buildKillLockRulings`); without one, today's rule.
+        const room = ctx?.killLocks?.get(ctx.level);
+        if (room?.verdict === 'free') {
+            return OPEN(`Puzzlements/Lock.as:111 + Game.as:1855-1882 + ${room.why.join('; ')}`,
+                'a KILL-LOCK whose every counted body dies with no item (`killLockRoomRuling`).');
+        }
+        if (room?.verdict === 'gated') {
+            return GATED(room.condition,
+                'Puzzlements/Lock.as:111 + Game.as:1855-1882 + `KILL_ARM_ITEMS` / `KILL_LOCK_BODY_CLASSES`',
+                `a KILL-LOCK: the conjunction over its counted bodies (${room.bodies.filter((b) => !b.free).map((b) => b.at).join(', ')}) `
+                + `of each one's item arms (\`killLockRoomRuling\`). DURABLE while tSet < 0 (tag ${tag}).`);
+        }
         return GATED(A_WEAPON,
             'Puzzlements/Lock.as:checkEnemies + Game.as:1811-1839 (totalEnemies) '
             + '+ Player.as:895,960 (genericHit\'s two callers)',
             'a KILL-LOCK: it opens when the room holds no enemy of the 25 counted '
             + 'classes, which needs a weapon. DURABLE — `Lock.check()` honours '
-            + `persistence while tSet < 0 (this one carries tag ${tag}).`);
+            + `persistence while tSet < 0 (this one carries tag ${tag}).`
+            + (room?.verdict === 'undecided' ? ` ⚠ UNDECIDED (kept): ${room.why.join('; ')}` : ''));
     }
     if (tSet >= 0) {
         // ⛔ THE PREMISE IS CHECKED BEFORE IT IS USED. See

@@ -186,6 +186,10 @@ const analyzerOptions = {
 
 const CROSS_LEVEL_OPENERS = OV.buildCrossLevelOpeners(MAP);
 const GROUP_OPENERS = OV.buildGroupOpeners(MAP);
+/** ⛓ RULES kill-locks — every kill-lock room's census and ruling (`OV.killLockRoomRuling`). */
+const KILL_LOCKS = OV.buildKillLockRulings(MAP);
+/** ⛓ RULES kill-locks — the census, for a reader that reports it. Additive. */
+export const playthroughKillLocks = KILL_LOCKS;
 const entityOverride = (entity, base, level) => {
     if (entity.type === MASK_TAG) {
         return {
@@ -195,7 +199,7 @@ const entityOverride = (entity, base, level) => {
         };
     }
     return OV.overlayEntitySemantics(entity, base, {
-        level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS, groupOpeners: GROUP_OPENERS,
+        level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS, groupOpeners: GROUP_OPENERS, killLocks: KILL_LOCKS,
     });
 };
 
@@ -293,12 +297,21 @@ export { modelFloodTiles, refuseUnboundMembers };
  * The overlay's puzzle-policy rulings are left out on purpose: a `lock` it prices
  * as a weapon is a POLICY about a room-clear puzzle, and charging a door under
  * one (L5's way to L6, before the Sword) seals the map — measured, this slice.
+ *
+ * ⛓ RULES kill-locks — EXCEPT a kill-lock whose room the census DECIDED
+ * (`OV.killLockRoomRuling` verdict `gated`): its rule is the game's own, read
+ * off the room's counted bodies, so a door under it costs it. L5 (the
+ * burnable-trees seal) is now decided FREE (the arrows kill its bobs), so it
+ * is never charged; an UNDECIDED room still keeps its door uncharged.
  */
 function gameGatedSolidTiles(level) {
     const tiles = new Set();
+    const room = KILL_LOCKS.get(level.level);
     for (const entity of level.entities ?? []) {
         const base = SEM.entitySemantics(entity);
-        if (base?.kind !== 'gated') continue;
+        const killLock = room?.verdict === 'gated' && Number(entity.attrs?.tset) === -1
+            && room.locks.includes(`${entity.type}@${entity.x},${entity.y}`);
+        if (base?.kind !== 'gated' && !killLock) continue;
         for (const [tx, ty] of SEM.entitySealedTiles(entity, base)) tiles.add(`${tx},${ty}`);
     }
     return tiles;
