@@ -30,6 +30,13 @@ A sphere-log-driven walker that auto-drives substrate panels through a recorded 
 - The live witness is `scripts/procgen/probe-seedling-arrival-escape.mjs` (W and J; `--flag=off` is the named stop, and `--expect=refusal` is the control).
 - `scripts/procgen/probe-seedling-restart-held-items.mjs` measures that a Restart keeps the game's items, slot order and keys, and the AP inventory.
 
+**A saved obstacle is broken before first use.** ⚖ The user ruled that a persisted obstacle is *"break before first use"*. The rules carry one event per saved obstacle flag (`event_kind: 'game_state'`, `flashPanel/seedlingObstacleEvents.js`): it sits on the obstacle's open side (`side`), names its far side (`across`), and gates every door whose landing is inside the obstacle.
+- The state manager never collects such an event when it becomes reachable (`stateManager/core/eventKinds.js`). The runtime collects it when the GAME's flag is set (`flashPanel/seedlingEventCollector.js`, in the region glue): a cleared `pendingCheck` of its `{level, tag}`, which both runtimes report, or `botStatus().persistence_cleared` at load. It is collected as a local event check, never a server check, because the location has no id.
+- ⚖ The direction is game → AP only. Nothing stages a flag the game did not set: the game is the authority for a broken rock. Every staged boot already carries the game's own clears (the wasm arrival staging, a continuation's declarations, the mid-room re-stage, and every JS boot).
+- The bot never queues a game-state event: walking to one would break the obstacle eagerly. Where the graph has no walk, `procgenCore/eventRoute.js` plans one (`planRoute`'s `eventPath`, before any Restart). A hop through the obstacle at its own cost CREDITS the event, and the bot remembers the credit until the collector sees the flag. An event the route still needs is a goal visited first (a BREAK step).
+- The playback map lists the events beside its entries and refusals; an unknown event kind is refused by name. A walk to an event stops by name: breaking an obstacle on purpose is the solver goal `clear-tag`, whose executor is not built.
+- The live witness is `scripts/procgen/probe-seedling-obstacle-events.mjs` (W and J): the walk breaks L0's rock, the event is collected live and at load, and L12's door into L0 then lands clear of it.
+
 When no sphere log is loaded, the bot acts as a plain remote control: it starts the substrate's own clock and leaves target choice to the substrate (the maze visualizer picks the alphabetically-first uncollected item or unvisited exit in the current region).
 
 ## The PlaybackController contract and iframe proxies

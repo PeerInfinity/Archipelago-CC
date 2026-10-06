@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 55,
-            "count": 98,
+            "browser": 56,
+            "count": 99,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 357,
-        "browser": 120,
-        "cited": 173,
-        "files": 369,
+        "blockStyle": 358,
+        "browser": 121,
+        "cited": 174,
+        "files": 370,
         "lineStyle": 12,
-        "withDocblock": 369,
-        "withFlags": 287
+        "withDocblock": 370,
+        "withFlags": 288
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9859,6 +9859,49 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-music-pair — the Music no-repeat pair, WITNESSED at last.",
             "path": "scripts/procgen/probe-seedling-music-pair.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/playback-and-debugging.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-obstacle-events.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling OBSTACLE EVENTS, LIVE — **break before first use** (⚖ the user, 2026-10-05) on both runtimes.",
+            "path": "scripts/procgen/probe-seedling-obstacle-events.mjs"
         },
         {
             "argvHelpers": [
