@@ -67,7 +67,7 @@
     30
   ],
   "sources": {
-    "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "2df805d2b66f5ac4b8fafe0d90d1c8b6",
+    "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "4c43e169254e37d6d8c861347238d33d",
     "frontend/modules/flashPanel/atlases/seedling-map.json": "647bd46a7ff6f1eacb0d956b81344a44",
     "frontend/modules/flashPanel/atlases/seedling-sphere-order.json": "f62307498ad05f08ad302df6015a7317"
   },
@@ -102,7 +102,7 @@
       "mode": "full",
       "through": "3.1",
       "survey": "through-3.1",
-      "routeSteps": 60,
+      "routeSteps": 51,
       "complete": false,
       "lastArrival": {
         "step": 17,
