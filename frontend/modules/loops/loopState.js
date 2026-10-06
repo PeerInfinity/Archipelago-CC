@@ -2696,6 +2696,15 @@ export class LoopState {
     gs.deductMana(cost);
     this._passManaSpent += cost;
     if (region) {
+      // bulletml N5: every spend, by region and substrate — a substrate whose
+      // resources come from the mana spent in its regions (Noiz2sa's training)
+      // earns from this one feed, whether live play, a Bot block or a Playback
+      // spent it. After the deduct, so it reports mana actually spent.
+      this.eventBus?.publish?.('loops:manaSpent', {
+        region,
+        substrate: this._lookupSubstrateId(region),
+        mana: cost,
+      });
       this.addRegionXP(region, cost);
       this._annotationTracker?.noteXp(cost);
       this.eventBus?.publish('gameState:xpChanged', {

@@ -1,17 +1,23 @@
 /**
- * Noiz2sa substrate — the bot's TRAINING on the host side (slice N4). Pure: no DOM, no eventBus; `index.js` wires it.
+ * Noiz2sa substrate — the bot's TRAINING on the host side (slice N4; N5: points from MANA). Pure: no DOM, no eventBus;
+ * `index.js` wires it.
  *
  * The trainer itself is the game repo's `src/game/tracks.js` (the submodule `frontend/modules/bulletml-dodge`): five
- * tracks (seeing, thinking, hands, focus, panic; 0–100, all 100 = the Expert), points earned from a visit's seconds
- * and score, spent on track steps by hand or by a strategy, a free respec, and surplus at the ceiling. This file is
- * the glue around it:
+ * tracks (seeing, thinking, hands, focus, panic; 0–100, all 100 = the Expert), points spent on track steps by hand or
+ * by a strategy, a free respec, and surplus at the ceiling. This file is the glue around it:
  *
+ *  - ⚖ N5 (2026-10-05): TRAINING = MANA. The points a visit earns are the mana it spent in the Noiz2sa region × the
+ *    pace `pointsPerMana` ("A higher mana drain also means faster conversion from mana to training points"); score
+ *    earns nothing (shown only). The pace is the WORLD's (`pricing.pointsPerMana` in its priced payloads, chosen at
+ *    generation so an Even-trained bot reaches ~skill 95 by the final spheres) unless the user's setting overrides it.
+ *    tracks.js prices points per SECOND and per score point; the glue feeds it the mana as the `seconds` of a visit with
+ *    the trainer's `pointsPerSecond` set to the pace and `pointsPerScore` to 0 (`trainingSettingsOf`, `earnMana`), so the
+ *    game repo's economy is used unchanged;
+ *  - every mana spend in a Noiz2sa region reaches the trainer through loops' `loops:manaSpent` — live play's drain, a
+ *    Bot block's drain and an instant Playback's replay price alike (⚖ "Instant playback should still accumulate
+ *    resources"), with no feed of its own per mode;
  *  - the trainer is plain JSON, kept in localStorage under `NOIZ2SA_TRAINER_STORAGE_KEY` (survives loop resets and
- *    reloads); the rates and prices are user SETTINGS (⚖ "a user configurable setting"), applied over the stored ones;
- *  - `createVisitMeter` turns the page's play-clock reports (cumulative `{gameSeconds, score}` of a visit) into the
- *    deltas `earn` takes, so live play and the Bot block earn as they play;
- *  - `playbackVisit` reads what an instant Playback earns from a summary recording (`summary.playStats`, the visit's
- *    last report — ⚖ "Instant playback should still accumulate resources");
+ *    reloads); the pace and prices are user SETTINGS (⚖ "a user configurable setting"), applied over the stored ones;
  *  - `botWalkOptions` is what the page's bot plays with: the knobs at the CURRENT tracks (no personality: ⚖ in
  *    incremental mode the personalities are replaced by the spending strategies), the bot seed, the speed, the cap;
  *  - `drawBotSeed` draws a visit's bot seed (N4b, ⚖ "a new bot seed per visit"): the host draws one per region load,
@@ -24,6 +30,7 @@ import {
     newTrainer, earn, buyStep, setStrategy, respec, takeSurplus, stepCost, autoSpend, atCeiling, trainerKnobs,
 } from '../bulletml-dodge/src/game/tracks.js';
 import { TRACKS } from '../bulletml-dodge/src/game/human.js';
+import { DEFAULT_POINTS_PER_MANA } from './noiz2saPricing.js';
 
 export { DEFAULT_TRAINING, STRATEGIES, STRATEGY_LABEL, TRACKS, TRACK_MAX };
 
@@ -46,11 +53,13 @@ export function drawBotSeed(rand = Math.random) {
 }
 
 /**
- * The module's settings, as the app's settings schema declares them (`moduleSettings.noiz2saSubstrate.*`). The
- * training defaults are tracks.js DEFAULT_TRAINING (placeholders until the segment sweep prices them).
+ * The module's settings, as the app's settings schema declares them (`moduleSettings.noiz2saSubstrate.*`). The step
+ * prices are tracks.js DEFAULT_TRAINING's; the pace (`pointsPerMana`) is 0 = the world's own.
  */
 export const NOIZ2SA_SETTINGS_DEFAULTS = Object.freeze({
-    ...DEFAULT_TRAINING,
+    pointsPerMana: 0,      // ⚖ N5: 0 = the world's pace (its priced payloads'); > 0 overrides it
+    stepBase: DEFAULT_TRAINING.stepBase,
+    stepGrowth: DEFAULT_TRAINING.stepGrowth,
     botRetryCap: 0,        // ⚖ default NONE: the bot retries until the mana runs out; N > 0 = give up after N failed attempts
     botSpeed: 1,           // ⚖ 1×; 2× and 4× play faster and cost the same mana per region (charged per game second)
     surplusXpPerPoint: 1,  // region XP per surplus point (⚖ "Surplus … points can be used to boost region XP")
@@ -59,10 +68,8 @@ export const NOIZ2SA_SETTINGS_DEFAULTS = Object.freeze({
 export const NOIZ2SA_SETTINGS_SCHEMA = Object.freeze({
     type: 'object',
     properties: {
-        pointsPerSecond: { type: 'number', minimum: 0, default: DEFAULT_TRAINING.pointsPerSecond, label: 'Training points per second',
-            description: 'Training points the bot earns per game second spent in a Noiz2sa region (live, by the bot, or by an instant Playback).' },
-        pointsPerScore: { type: 'number', minimum: 0, default: DEFAULT_TRAINING.pointsPerScore, label: 'Training points per score point',
-            description: 'Training points per point of score made from the region\'s start (every attempt\'s score counts).' },
+        pointsPerMana: { type: 'number', minimum: 0, default: 0, label: 'Training points per mana',
+            description: 'Training points the bot earns per mana spent in a Noiz2sa region (live, by the bot, or by an instant Playback). 0 = the world\'s own pace, chosen when it was generated so an Even-trained bot reaches about skill 95 by the final spheres.' },
         stepBase: { type: 'number', minimum: 0, default: DEFAULT_TRAINING.stepBase, label: 'Price of a track\'s first step',
             description: 'Training points for a track\'s step 0 → 1.' },
         stepGrowth: { type: 'number', minimum: 1, default: DEFAULT_TRAINING.stepGrowth, label: 'Step price growth',
@@ -83,8 +90,7 @@ export function normalizeSettings(s = {}) {
     const d = NOIZ2SA_SETTINGS_DEFAULTS;
     const speed = Math.trunc(num(s.botSpeed, d.botSpeed));
     return {
-        pointsPerSecond: Math.max(0, num(s.pointsPerSecond, d.pointsPerSecond)),
-        pointsPerScore: Math.max(0, num(s.pointsPerScore, d.pointsPerScore)),
+        pointsPerMana: Math.max(0, num(s.pointsPerMana, d.pointsPerMana)),
         stepBase: Math.max(0, num(s.stepBase, d.stepBase)),
         stepGrowth: Math.max(1, num(s.stepGrowth, d.stepGrowth)),
         botRetryCap: Math.max(0, Math.trunc(num(s.botRetryCap, d.botRetryCap))),
@@ -93,28 +99,41 @@ export function normalizeSettings(s = {}) {
     };
 }
 
-/** the part of the settings tracks.js keeps in the trainer */
-export const trainingSettingsOf = (s) => {
+/** the pace a trainer earns at: the user's `pointsPerMana` when set (> 0), else the world's, else DEFAULT_POINTS_PER_MANA */
+export function effectivePointsPerMana(settings = {}, worldPointsPerMana = null) {
+    const own = normalizeSettings(settings).pointsPerMana;
+    if (own > 0) return own;
+    const w = Number(worldPointsPerMana);
+    return Number.isFinite(w) && w > 0 ? w : DEFAULT_POINTS_PER_MANA;
+}
+
+/**
+ * The part of the settings tracks.js keeps in the trainer: its per-SECOND rate is the pace per MANA (the glue feeds a
+ * visit's mana as its seconds, `earnMana`) and its per-score rate 0 (⚖ N5: score earns nothing).
+ */
+export const trainingSettingsOf = (s, worldPointsPerMana = null) => {
     const n = normalizeSettings(s);
-    return { pointsPerSecond: n.pointsPerSecond, pointsPerScore: n.pointsPerScore, stepBase: n.stepBase, stepGrowth: n.stepGrowth };
+    return { pointsPerSecond: effectivePointsPerMana(n, worldPointsPerMana), pointsPerScore: 0, stepBase: n.stepBase, stepGrowth: n.stepGrowth };
 };
 
 /** a fresh trainer at the given settings (every track 0, strategy Even) */
-export const freshTrainer = (settings = {}, strategy = 'even') => newTrainer({ settings: trainingSettingsOf(settings), strategy });
+export const freshTrainer = (settings = {}, strategy = 'even', worldPointsPerMana = null) => newTrainer({
+    settings: trainingSettingsOf(settings, worldPointsPerMana), strategy,
+});
 
 /**
  * A stored trainer (JSON text, or null) → a trainer at the CURRENT settings. A missing or broken one is a fresh
  * trainer. What was paid stays paid (`spent`: a respec refunds it); only the rates and the next prices change.
  */
-export function restoreTrainer(json, settings = {}) {
+export function restoreTrainer(json, settings = {}, worldPointsPerMana = null) {
     let raw = null;
     try { raw = json ? JSON.parse(json) : null; } catch { raw = null; }
-    if (!raw || typeof raw !== 'object' || !raw.tracks) return freshTrainer(settings);
+    if (!raw || typeof raw !== 'object' || !raw.tracks) return freshTrainer(settings, 'even', worldPointsPerMana);
     let tr;
     try {
-        tr = newTrainer({ settings: trainingSettingsOf(settings), strategy: raw.strategy ?? 'even', tracks: raw.tracks });
+        tr = newTrainer({ settings: trainingSettingsOf(settings, worldPointsPerMana), strategy: raw.strategy ?? 'even', tracks: raw.tracks });
     } catch {
-        return freshTrainer(settings);
+        return freshTrainer(settings, 'even', worldPointsPerMana);
     }
     for (const k of ['earned', 'spent', 'unspent', 'surplus']) {
         if (Number.isFinite(raw[k]) && raw[k] >= 0) tr[k] = raw[k];
@@ -124,55 +143,25 @@ export function restoreTrainer(json, settings = {}) {
 
 export const serializeTrainer = (tr) => JSON.stringify(tr);
 
-/** the settings changed: the trainer earns and prices at the new ones from now on, and the strategy spends again */
-export function applyTrainingSettings(tr, settings) {
-    tr.settings = trainingSettingsOf(settings);
+/** the settings (or the world's pace) changed: the trainer earns and prices at the new ones from now on, and the strategy
+ *  spends again */
+export function applyTrainingSettings(tr, settings, worldPointsPerMana = null) {
+    tr.settings = trainingSettingsOf(settings, worldPointsPerMana);
     autoSpend(tr);
     return tr;
 }
 
-/**
- * Turns a page's play-clock stats into what a visit earned since the last report. The page reports the visit's
- * CUMULATIVE {gameSeconds, score} (both only grow on a visit; a hit keeps the attempt's score). A new region, or a
- * counter that went back (the page was configured again: a new visit), starts from zero.
- */
-export function createVisitMeter() {
-    let last = null;
-    return {
-        /** → {seconds, score} gained since the last report of this visit, or null when nothing was */
-        note(region, stats) {
-            const g = Number(stats?.gameSeconds), s = Number(stats?.score ?? 0);
-            if (typeof region !== 'string' || !region || !Number.isFinite(g) || g < 0) return null;
-            const score = Number.isFinite(s) && s > 0 ? s : 0;
-            if (!last || last.region !== region || g < last.gameSeconds || score < last.score) {
-                last = { region, gameSeconds: 0, score: 0 };
-            }
-            const d = { seconds: g - last.gameSeconds, score: score - last.score };
-            last = { region, gameSeconds: g, score };
-            return d.seconds > 0 || d.score > 0 ? d : null;
-        },
-        reset() { last = null; },
-        get last() { return last; },
-    };
+/** earn the points `mana` spent in a Noiz2sa region buys at the trainer's pace; → the points earned */
+export function earnMana(tr, mana) {
+    const m = Number(mana);
+    if (!Number.isFinite(m) || m <= 0) return 0;
+    return earn(tr, { seconds: m, score: 0 });
 }
 
-/**
- * What an instant Playback of a summary earns: its `playStats` (the recorded visit's game seconds and score), or,
- * for a recording made before N4, its drain seconds and no score.
- */
-export function playbackVisit(summary) {
-    const ps = summary?.playStats;
-    if (ps && Number.isFinite(ps.gameSeconds)) {
-        return { seconds: Math.max(0, ps.gameSeconds), score: Number.isFinite(ps.score) ? Math.max(0, ps.score) : 0 };
-    }
-    const d = Number(summary?.durationSeconds);
-    return { seconds: Number.isFinite(d) && d > 0 ? d : 0, score: 0 };
-}
-
-/** earn a visit (or part of one); → the points earned */
-export function earnVisit(tr, visit) {
-    if (!visit || (!(visit.seconds > 0) && !(visit.score > 0))) return 0;
-    return earn(tr, { seconds: Math.max(0, visit.seconds || 0), score: Math.max(0, visit.score || 0) });
+/** the world's pace from a region payload (`pricing.pointsPerMana`), or null for an unpriced one */
+export function worldPointsPerManaOf(payload) {
+    const v = Number(payload?.pricing?.pointsPerMana);
+    return Number.isFinite(v) && v > 0 ? v : null;
 }
 
 /** the price of a track's next step, or null at 100 */
@@ -209,8 +198,9 @@ export { buyStep, setStrategy, respec, atCeiling, trainerKnobs };
 export function createTrainerService({ storage = null, settings = {}, onChange = () => {} } = {}) {
     let s = normalizeSettings(settings);
     const read = () => { try { return storage?.getItem?.(NOIZ2SA_TRAINER_STORAGE_KEY) ?? null; } catch { return null; } };
-    let tr = restoreTrainer(read(), s);
-    const meter = createVisitMeter();
+    // the world's pace (`pricing.pointsPerMana` of its priced payloads; null: an unpriced world)
+    let world = null;
+    let tr = restoreTrainer(read(), s, world);
     const save = () => { try { storage?.setItem?.(NOIZ2SA_TRAINER_STORAGE_KEY, serializeTrainer(tr)); } catch { /* quota/private mode: in memory only */ } };
     const changed = (before) => {
         save();
@@ -220,15 +210,21 @@ export function createTrainerService({ storage = null, settings = {}, onChange =
     return {
         get trainer() { return tr; },
         get settings() { return s; },
-        /** a play-clock report of a Noiz2sa region: earn what the visit played since the last one; → points */
-        notePlayClock(region, stats) {
-            const d = meter.note(region, stats);
-            return d ? mutate(() => earnVisit(tr, d)) : 0;
+        /** the world's pace (a priced payload's `pricing.pointsPerMana`; null: none) */
+        get worldPointsPerMana() { return world; },
+        /** the pace the trainer earns at now */
+        get pointsPerMana() { return effectivePointsPerMana(s, world); },
+        /** mana spent in a Noiz2sa region (live play, a Bot block, an instant Playback): earn its points; → points */
+        noteManaSpent(mana) {
+            return Number(mana) > 0 ? mutate(() => earnMana(tr, mana)) : 0;
         },
-        /** an instant Playback of a Noiz2sa summary: earn the recorded visit; → points */
-        noteSummaryApplied(summary) {
-            const v = playbackVisit(summary);
-            return v.seconds > 0 || v.score > 0 ? mutate(() => earnVisit(tr, v)) : 0;
+        /** a region load names the world's pace (null: an unpriced world); the trainer earns at it unless the user's
+         *  setting overrides it */
+        setWorldPointsPerMana(v) {
+            const next = Number.isFinite(Number(v)) && Number(v) > 0 ? Number(v) : null;
+            if (next === world) return;
+            world = next;
+            mutate(() => applyTrainingSettings(tr, s, world));
         },
         buy: (track) => mutate(() => buyStep(tr, track)),
         setStrategy: (strategy) => mutate(() => setStrategy(tr, strategy)),
@@ -242,14 +238,14 @@ export function createTrainerService({ storage = null, settings = {}, onChange =
         },
         applySettings(next) {
             s = normalizeSettings({ ...s, ...next });
-            mutate(() => applyTrainingSettings(tr, s));
+            mutate(() => applyTrainingSettings(tr, s, world));
         },
         /** the bot's options at the current tracks and settings, for a visit's bot seed (the bridge's botWalkTo second
          *  argument, and the page's host state) */
         botOptions: (botSeed = BOT_SEED) => botWalkOptions(tr, s, botSeed),
-        /** a fresh trainer (every track 0, nothing earned); the visit meter forgets its visit too */
-        reset(strategy = 'even') { meter.reset(); mutate(() => { tr = freshTrainer(s, strategy); }); },
+        /** a fresh trainer (every track 0, nothing earned) */
+        reset(strategy = 'even') { mutate(() => { tr = freshTrainer(s, strategy, world); }); },
         /** reread the stored trainer (another tab, or a test restoring one) */
-        reload() { meter.reset(); mutate(() => { tr = restoreTrainer(read(), s); }); },
+        reload() { mutate(() => { tr = restoreTrainer(read(), s, world); }); },
     };
 }

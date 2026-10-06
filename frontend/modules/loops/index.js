@@ -467,6 +467,8 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('loops:clickIgnored');
   // N4: a summary Playback applied (a substrate that earns from play earns the recorded visit)
   registrationApi.registerEventBusPublisher('loops:summaryApplied');
+  // bulletml N5: every mana spend with its region and substrate (Noiz2sa trains from it)
+  registrationApi.registerEventBusPublisher('loops:manaSpent');
   registrationApi.registerEventBusPublisher('loopState:manualEntered');
   registrationApi.registerEventBusPublisher('loopState:manualResumed');
   registrationApi.registerEventBusPublisher('loopState:queuePausedUntilReset');

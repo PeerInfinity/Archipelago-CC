@@ -13,9 +13,10 @@
  *  - the BOT: the registry entry declares `executeVia: 'solver'`, and `getPlaybackController` returns this module's
  *    proxy (`Noiz2saBotProxy`), whose `walkTo` carries the bot's settings to the page (the bridge's
  *    `botWalkTo(goal, options)`): the knobs at the trainer's CURRENT tracks, the speed and the retry cap (settings);
- *  - the TRAINER (`noiz2saTraining.js`): kept in localStorage, it earns from every play-clock report of a Noiz2sa
- *    region (live play and the Bot block: the visit's game seconds and score) and from every instant Playback of a
- *    Noiz2sa summary (`loops:summaryApplied`, the summary's `playStats`). Only Noiz2sa regions train it (⚖);
+ *  - the TRAINER (`noiz2saTraining.js`): kept in localStorage, it earns from the MANA spent in Noiz2sa regions (N5,
+ *    ⚖ "Training = mana"): every `loops:manaSpent` of a Noiz2sa region — live play's drain, a Bot block's drain, an
+ *    instant Playback's replay price — at the world's pace (a region load names it: the payload's
+ *    `pricing.pointsPerMana`) unless the user's setting overrides it. Only Noiz2sa regions train it (⚖);
  *  - the TRAINING section of this panel (`noiz2saTrainingSection.js`), under the iframe (⚖ 2026-10-05).
  *
  * N4b/N4c:
@@ -51,7 +52,9 @@ import {
     NOIZ2SA_PLAYBACK_CONTROL_EVENT,
     NOIZ2SA_IFRAME_ID,
 } from './noiz2saSubstrateLibrary.js';
-import { createTrainerService, drawBotSeed, NOIZ2SA_SETTINGS_SCHEMA, NOIZ2SA_SETTINGS_DEFAULTS } from './noiz2saTraining.js';
+import {
+    createTrainerService, drawBotSeed, NOIZ2SA_SETTINGS_SCHEMA, NOIZ2SA_SETTINGS_DEFAULTS, worldPointsPerManaOf,
+} from './noiz2saTraining.js';
 import { createTrainingSection } from './noiz2saTrainingSection.js';
 import { exploresToFullyExplore, createFirstEntryWatcher, queuedNextFrom } from './noiz2saFirstEntry.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
@@ -351,8 +354,7 @@ export function register(registrationApi) {
     registrationApi.registerEventBusPublisher(NOIZ2SA_PLAYBACK_CONTROL_EVENT);
     registrationApi.registerEventBusPublisher('gameState:xpChanged');
     registrationApi.registerEventBusSubscriberIntent(NOIZ2SA_LOAD_REGION_EVENT);
-    registrationApi.registerEventBusSubscriberIntent('substrate:playClock');
-    registrationApi.registerEventBusSubscriberIntent('loops:summaryApplied');
+    registrationApi.registerEventBusSubscriberIntent('loops:manaSpent');
     registrationApi.registerEventBusSubscriberIntent('gameState:loopModeChanged');
     registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
     registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
@@ -400,6 +402,8 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         if (payload?.region_id) {
             _regions.add(payload.region_id);
             _lastRegion = payload.region_id;
+            // N5: the world's training pace (its priced payloads name it; an unpriced world has none)
+            service.setWorldPointsPerMana(worldPointsPerManaOf(payload.world));
             for (const s of _sections) s.render();
             // N4b: a new visit — its own bot seed; the page learns it (and loop mode) from the host state
             newVisitSeed();
@@ -413,10 +417,10 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         eventBus.publish('ui:activatePanel', { panelId: NOIZ2SA_PANEL_COMPONENT_TYPE });
     }, 'noiz2saSubstrate');
 
-    // Training: the page's play clock (live play and the bot) — a Noiz2sa region's visit stats only.
-    eventBus.subscribe('substrate:playClock', (data) => {
-        if (!data?.stats || !_regions.has(data.region)) return;
-        service.notePlayClock(data.region, data.stats);
+    // Training (N5): the mana spent in a Noiz2sa region — live play, the Bot block and an instant Playback alike.
+    eventBus.subscribe('loops:manaSpent', (data) => {
+        if (data?.substrate !== NOIZ2SA_SUBSTRATE_ID) return;
+        service.noteManaSpent(data.mana);
     }, 'noiz2saSubstrate');
     // N4b: loop mode decides when a region's exits open (the page's rule).
     eventBus.subscribe('gameState:loopModeChanged', (data) => {
@@ -437,11 +441,6 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     }
     // N4b/N4c: the page's requests (the player chose an exit or the check from the choice list)
     eventBus.subscribe('substrate:hostRequest', (data) => handleHostRequest(data), 'noiz2saSubstrate');
-    // …and an instant Playback of a Noiz2sa summary earns the recorded visit.
-    eventBus.subscribe('loops:summaryApplied', (data) => {
-        if (data?.substrate !== NOIZ2SA_SUBSTRATE_ID) return;
-        service.noteSummaryApplied(data.summary);
-    }, 'noiz2saSubstrate');
 }
 
 export function getInitApi() {
