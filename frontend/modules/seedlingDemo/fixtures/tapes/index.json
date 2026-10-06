@@ -306,6 +306,41 @@
       ]
     },
     {
+      "file": "prox-l29-key-return.json",
+      "tickCount": 596,
+      "bootLevel": 29,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "prox-l38-chest.json",
+      "tickCount": 358,
+      "bootLevel": 38,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "prox-l38-reach-l39.json",
+      "tickCount": 359,
+      "bootLevel": 38,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "prox-l40-turret-contact.json",
+      "tickCount": 48,
+      "bootLevel": 40,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "prox-l40-turret-volley.json",
+      "tickCount": 120,
+      "bootLevel": 40,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r1-dark-shield-bobboss.json",
       "tickCount": 703,
       "bootLevel": 32,

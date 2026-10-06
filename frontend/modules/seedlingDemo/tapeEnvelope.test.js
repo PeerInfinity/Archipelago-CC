@@ -79,7 +79,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ fidelity WATCHER: 222 — `watcher-l114-talk`.
         // ⛓ fidelity SLOTS: 227 — `slots-l24-fire-first`, `slots-l24-burn-fire-first`, `slots-l24-burn-cut-80`, `slots-l24-burn-cut-110`, `slots-l24-burn-fencepost`.
         // ⛓ fidelity AXE: 231 — `axe-l48-reach-l49`, `axe-l61-reach-l62`, `axe-l61-reach-l63`, `axe-l71-reach-l76`.
-        expect(names.length).toBe(231);
+        // ⛓ fidelity PROXIMITY: +5 (236 with AXE's four) — `prox-l38-chest`, `prox-l38-reach-l39`, `prox-l29-key-return`, `prox-l40-turret-volley`, `prox-l40-turret-contact`.
+        expect(names.length).toBe(236);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);
