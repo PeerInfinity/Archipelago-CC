@@ -1,9 +1,9 @@
 /**
  * seedlingDemo/contactFidelity — the switches for slice `seedling-fidelity-terrain` (planner
  * `seedling-fidelity-planning-3`, wave 6). With all of them false the model is byte-identical to the one before the
- * slice; W2 and W3 ship ON (nothing measured moved), W1 ships OFF (it moves a producer and two pins — see
- * `CONTACT_FIDELITY`). Each names the AS3 it transcribes and the game rows that measured it
- * (`probe-seedling-contact-divergence.mjs`, `replay-seedling-contact-capture.mjs`).
+ * slice; W2 and W3 ship ON (nothing measured moved); W1 ships ON since fidelity LINEFLIP (it moved a producer, which
+ * was re-recorded on the game, and two pins — see `CONTACT_FIDELITY`). Each names the AS3 it transcribes and the game
+ * rows that measured it (`probe-seedling-contact-divergence.mjs`, `replay-seedling-contact-capture.mjs`).
  *
  * ⛔ The divergence sweep filed these rows as "terrain": a 1.3–2.7 px jump on both axes. They are not terrain. The
  * held compare read the game's `hits` 0 → 1 at the divergence tick itself on every reproduced row: each one is a
@@ -66,13 +66,15 @@
  */
 export const CONTACT_FIDELITY = {
     /**
-     * ⛔ OFF, and STOPPED for a licence: ON, it moves three things nothing else does — the `r9-campaign`
-     * producer (`r9-solve-18` re-plans 510 → 519 t, and `r9-solve-19`'s declared `seam.time` follows),
-     * `solverSpinnerKill` F2 (a lock-less spinner, post-sword (5,5): 241 → 221 t), and `seedlingCanCross`'s
-     * L22-from-L25 `cannot` (its cause becomes a stall, not the wallflyer danger). The spinner's and the BobBoss's
-     * own `collideLine("Player", …)` rays go through the same function. No committed tape's replay moves.
+     * ON by default (fidelity LINEFLIP, licensed by the user 2026-10-05: *"Yes: flip + re-record"*). TERRAIN stopped
+     * it OFF because it moves three things nothing else does: the `r9-campaign` producer (`r9-solve-18` re-plans
+     * 510 → 519 t; re-recorded on the game, and `r9-solve-19`'s declared `seam.time` follows), `solverSpinnerKill`
+     * F2 (a lock-less spinner, post-sword (5,5): 241 → 221 t) and `seedlingCanCross`'s L22-from-L25 `cannot` (its
+     * cause becomes a corridor stall, not the wallflyer danger). The spinner's hammer and the BobBoss's own
+     * `collideLine("Player", …)` rays go through the same function. No committed tape's replay moves.
+     * `false` reproduces the BEFORE model (and the old `r9-solve-18` re-plans 510 t).
      */
-    collideLinePointsExact: false,
+    collideLinePointsExact: true,
     /** ON by default (fidelity TERRAIN D3): with it on, no committed tape, producer `--check` or bounded pin moved. */
     wallFlyerSwordHits: true,
     /** ON by default (fidelity TERRAIN D3): with it on, no committed tape, producer `--check` or bounded pin moved. */
