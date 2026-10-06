@@ -241,6 +241,7 @@
           "pricing": {
             "pointsPerMana": 45.95,
             "mana": 0,
+            "target": 1,
             "skill": 0,
             "p": 0.4688,
             "seconds": 25.78,
@@ -269,12 +270,12 @@
           "gameId": "noiz2sa",
           "move": {
             "start": {
-              "stage": 0,
-              "scene": 5
+              "stage": 4,
+              "scene": 0
             },
             "end": {
-              "stage": 0,
-              "scene": 7
+              "stage": 4,
+              "scene": 0
             }
           },
           "seed": 1,
@@ -300,13 +301,14 @@
           ],
           "manaEnabled": true,
           "fogEnabled": true,
-          "timeDrainPerSecond": 0.1364,
+          "timeDrainPerSecond": 0.8913,
           "pricing": {
             "pointsPerMana": 45.95,
             "mana": 16,
+            "target": 3,
             "skill": 34.8,
-            "p": 0.1293,
-            "seconds": 153.92,
+            "p": 0.515,
+            "seconds": 23.56,
             "cost": 21,
             "final": false,
             "reached": true,
@@ -382,6 +384,7 @@
           "pricing": {
             "pointsPerMana": 45.95,
             "mana": 53,
+            "target": 4,
             "skill": 60.4,
             "p": 0,
             "seconds": 323.87,
@@ -475,7 +478,7 @@
           "xpEffect": "cost"
         },
         "region_1_0": {
-          "timeDrainPerSecond": 0.1364,
+          "timeDrainPerSecond": 0.8913,
           "xpEffect": "cost"
         },
         "region_1_1": {

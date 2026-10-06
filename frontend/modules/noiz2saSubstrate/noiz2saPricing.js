@@ -22,13 +22,15 @@
  *     predicted SKILL is the mean of the five tracks (Even keeps them within one step of each other, and equal tracks
  *     are the skill slider the sweeps measured).
  *  3. THE MOVE SPAN, when the walk first prices a Noiz2sa region (the planner assigns its cost when the walk first
- *     reaches it). The ORDER is the walk's first-reach order, then the regions the sphere log never reaches (priced by
- *     the planner's defaults step after the walk, at the skill the walk ended on). Its NUMBER of scenes ramps linearly
- *     over that order from 1 (the first) to the final region's count; WHICH scenes is `noiz2saDifficulty.js` `pickSpan`
- *     at the predicted skill (the hardest span the bot clears deathless with chance ≥ 0.5). The FINAL region — the last
- *     in that order — plays the generation setting exactly (`noiz2saFinalSpan`). (Why the never-reached regions count:
- *     a spiral often leaves Noiz2sa regions off every planned path; ending the order on the last REACHED one priced the
- *     final span at whatever skill that region was reached with — skill 0 when it was the first region reached.)
+ *     reaches it; ⚖ priced at first reach). The ORDER is the walk's first-reach order, then the regions the sphere log
+ *     never reaches (priced by the planner's defaults step after the walk, at the skill the walk ended on). The FINAL
+ *     region (⚖ follow-up) is the region holding VICTORY — or, when Victory is not on a Noiz2sa region, the last Noiz2sa
+ *     region the walk reaches before it (`finalRegionOf`) — and plays the generation setting (`noiz2saFinalSpan`)
+ *     exactly, at the skill predicted there. Every other region's TARGET number of scenes ramps linearly over the order
+ *     from 1 (the first) to the final region's count (a region after the final one in the order targets that count);
+ *     ⚖ "the ramp is a target; the 50% rule wins": the length shrinks until some span reaches deathless chance 0.5 at
+ *     the predicted skill (`pickShrinking`; at one scene with none, the easiest), and WHICH scenes is
+ *     `noiz2saDifficulty.js` `pickSpan` (the hardest span the bot clears deathless with chance ≥ 0.5).
  *  4. THE RATE: the region's planned cost ÷ the move span's expected seconds at that skill, so a move run is expected
  *     to drain the planned cost. Written as the region's `timeDrainPerSecond` (the payload's; the shared cost writer
  *     passes it into `loop_costs`).
@@ -54,6 +56,8 @@ import { showSpan } from './noiz2saRegion.js';
  * ~95+ skill the default training pace (`TARGET_FINAL_SKILL`) reaches, and four scenes leave the ramp room to grow.
  */
 export const DEFAULT_FINAL_SPAN = '10:7–10:boss';
+/** the item whose location makes a region the FINAL one (the substrate's `victoryItem`, `NOIZ2SA_VICTORY_ITEM_NAME`) */
+export const VICTORY_ITEM = 'Victory';
 /** the generation-form setting's key (the procgen params bag) */
 export const FINAL_SPAN_PARAM = 'noiz2saFinalSpan';
 /** ⚖ "an Even-trained bot reaches ~skill 95+ by the final spheres" */
@@ -97,23 +101,25 @@ export function pointsPerManaFor(manaEnd, { target = TARGET_FINAL_SKILL, prices 
  */
 export function noiz2saWalkEvents(steps, { isNoiz2sa, regionOfLocation }) {
     const out = [];
-    for (const step of steps ?? []) {
+    (steps ?? []).forEach((step, stepIndex) => {
         const queue = step.queue ?? [];
         const unreached = step.phase === 'DEFAULTS';
+        // which step an event came from: the CHECK step of a location is where the walk checks it
+        const at = { stepIndex, checks: step.phase === 'CHECK' ? step.locationName : null };
         for (const q of queue) {
-            if (q.type === 'move' && isNoiz2sa(q.from) && q.cost > 0) out.push({ kind: 'spend', region: q.from, mana: q.cost });
+            if (q.type === 'move' && isNoiz2sa(q.from) && q.cost > 0) out.push({ kind: 'spend', region: q.from, mana: q.cost, ...at });
         }
         for (const ca of step.costAssignments ?? []) {
-            if (ca.type === 'region' && isNoiz2sa(ca.name)) out.push({ kind: 'region', region: ca.name, cost: ca.cost, unreached });
+            if (ca.type === 'region' && isNoiz2sa(ca.name)) out.push({ kind: 'region', region: ca.name, cost: ca.cost, unreached, ...at });
             if (ca.type === 'location') {
                 const region = regionOfLocation(ca.name);
-                if (region && isNoiz2sa(region)) out.push({ kind: 'location', location: ca.name, region, cost: ca.cost, unreached });
+                if (region && isNoiz2sa(region)) out.push({ kind: 'location', location: ca.name, region, cost: ca.cost, unreached, ...at });
             }
         }
         for (const q of queue) {
-            if (q.type === 'locationCheck' && isNoiz2sa(q.region) && q.cost > 0) out.push({ kind: 'spend', region: q.region, mana: q.cost });
+            if (q.type === 'locationCheck' && isNoiz2sa(q.region) && q.cost > 0) out.push({ kind: 'spend', region: q.region, mana: q.cost, ...at });
         }
-    }
+    });
     return out;
 }
 
@@ -148,7 +154,7 @@ export function checkSpanFor(start, { rate, cost, skill }) {
  */
 export function planNoiz2saPricing({
     steps, startRegion = null, isNoiz2sa, regionOfLocation, finalSpan = DEFAULT_FINAL_SPAN, pointsPerMana = null,
-    prices = PRICING_STEP_PRICES,
+    prices = PRICING_STEP_PRICES, victoryLocation = null,
 }) {
     const final = parseSpan(finalSpan);
     const finalScenes = spanLength(final);
@@ -158,8 +164,9 @@ export function planNoiz2saPricing({
     const ppm = Number.isFinite(pointsPerMana) && pointsPerMana > 0 ? pointsPerMana : pointsPerManaFor(manaEnd, { prices });
     // the walk's first-reach order, then the regions only the defaults step prices (after the walk)
     const reachedOrder = [...new Set(events.filter((e) => e.kind === 'region' && e.region !== startRegion).map((e) => e.region))];
-    const K = reachedOrder.length;
-    const finalRegion = K ? reachedOrder[K - 1] : null;
+    const finalRegion = finalRegionOf({ events, victoryLocation, regionOfLocation, isNoiz2sa, reachedOrder });
+    // ⚖ the ramp runs from the first region to the FINAL one; a region after it in the order targets the final count
+    const kF = finalRegion === null ? reachedOrder.length - 1 : reachedOrder.indexOf(finalRegion);
 
     const regions = new Map();
     const locations = [];
@@ -170,16 +177,18 @@ export function planNoiz2saPricing({
         const isStart = name === startRegion;
         const order = reachedOrder.indexOf(name);
         let pick;
+        let target;
         if (name === finalRegion) {
+            target = finalScenes;
             pick = { span: final, ...spanDifficulty(final, skill) };
         } else {
-            const n = isStart || K <= 1 ? 1 : Math.round(1 + (finalScenes - 1) * order / (K - 1));
-            pick = pickSpan(n, skill);
+            target = isStart ? 1 : (kF <= 0 || order < 0 ? finalScenes : Math.round(1 + (finalScenes - 1) * Math.min(order, kF) / kF));
+            pick = pickShrinking(target, skill);
         }
         const rate = isStart || !(cost > 0) ? null : Math.max(0.0001, round(cost / pick.seconds, 4));
         regions.set(name, {
             region: name, order, unreached: !!unreached, start: isStart, final: name === finalRegion, mana, skill,
-            scenes: spanLength(pick.span), span: pick.span, p: pick.p, seconds: pick.seconds, cost, rate,
+            target, scenes: spanLength(pick.span), span: pick.span, p: pick.p, seconds: pick.seconds, cost, rate,
             expected: rate === null ? null : rate * pick.seconds,
         });
     };
@@ -201,6 +210,35 @@ export function planNoiz2saPricing({
     return { pointsPerMana: ppm, manaEnd, finalRegion, finalSpan: final, regions: [...regions.values()], locations };
 }
 
+/**
+ * ⚖ (the user, N5 follow-up) "The ramp is a target; the 50% rule wins": of `target` scenes, or fewer, the first length
+ * (counting down) at which some span reaches 0.5 at `skill` — its hardest such span; at one scene with none, the
+ * easiest one-scene span.
+ */
+export function pickShrinking(target, skill) {
+    for (let n = Math.max(1, Math.round(target)); n >= 1; n--) {
+        const pick = pickSpan(n, skill);
+        if (pick.reached || n === 1) return pick;
+    }
+    return pickSpan(1, skill);
+}
+
+/**
+ * ⚖ (the user, N5 follow-up) The FINAL region — the one that plays the generation setting's span — is the region
+ * holding VICTORY. If Victory is not on a Noiz2sa region: the last Noiz2sa region the walk reaches before it (before
+ * the step that checks the Victory location; with no such step, the last one the walk reaches). null: no Noiz2sa
+ * region at all.
+ */
+export function finalRegionOf({ events, victoryLocation, regionOfLocation, isNoiz2sa, reachedOrder }) {
+    const own = victoryLocation ? regionOfLocation(victoryLocation) : null;
+    if (own && isNoiz2sa(own) && reachedOrder.includes(own)) return own;
+    const cut = victoryLocation ? events.findIndex((e) => e.checks === victoryLocation) : -1;
+    const before = (cut >= 0 ? events.slice(0, cut) : events).filter((e) => e.kind === 'region' && !e.unreached
+        && reachedOrder.includes(e.region));
+    if (before.length) return before[before.length - 1].region;
+    return reachedOrder.length ? reachedOrder[reachedOrder.length - 1] : null;
+}
+
 /** the noiz2sa regions of a rules.json slot: region name → its sidecar (`preset_sidecars[pid][name]`) */
 function noiz2saSidecars(rulesJson, playerId, substrateId) {
     const out = new Map();
@@ -214,7 +252,20 @@ function noiz2saSidecars(rulesJson, playerId, substrateId) {
  * Plan a rules.json's walk with the ONE cost model (the planner's defaults: those `generateLoopCosts` uses) and price
  * its Noiz2sa regions. → the plan, or null when the slot has no Noiz2sa region.
  */
-export function planNoiz2saWorld({ rulesJson, sphereLog, playerId, finalSpan = DEFAULT_FINAL_SPAN, substrateId = 'noiz2sa' }) {
+/** the location holding `victoryItem` in a rules.json slot, or null */
+export function victoryLocationOf(rulesJson, playerId, victoryItem = VICTORY_ITEM) {
+    for (const data of Object.values(rulesJson?.regions?.[playerId] ?? {})) {
+        for (const loc of data?.locations ?? []) {
+            const item = typeof loc?.item === 'string' ? loc.item : loc?.item?.name;
+            if (item === victoryItem && loc?.name) return loc.name;
+        }
+    }
+    return null;
+}
+
+export function planNoiz2saWorld({
+    rulesJson, sphereLog, playerId, finalSpan = DEFAULT_FINAL_SPAN, substrateId = 'noiz2sa', victoryItem = VICTORY_ITEM,
+}) {
     const pid = String(playerId);
     const sidecars = noiz2saSidecars(rulesJson, pid, substrateId);
     if (sidecars.size === 0) return null;
@@ -228,6 +279,7 @@ export function planNoiz2saWorld({ rulesJson, sphereLog, playerId, finalSpan = D
         isNoiz2sa: (r) => sidecars.has(r),
         regionOfLocation: (l) => topology.locations.get(l)?.region ?? null,
         finalSpan,
+        victoryLocation: victoryLocationOf(rulesJson, pid, victoryItem),
     });
 }
 
@@ -261,6 +313,7 @@ export function applyNoiz2saPricing(rulesJson, playerId, plan, { substrateId = '
         payload.pricing = {
             pointsPerMana: plan.pointsPerMana,
             mana: round(r.mana, 2),
+            target: r.target,
             skill: round(r.skill, 2),
             p: round(r.p, 4),
             seconds: round(r.seconds, 2),

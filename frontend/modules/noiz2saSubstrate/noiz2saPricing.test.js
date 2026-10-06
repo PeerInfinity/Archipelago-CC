@@ -9,12 +9,13 @@ import { describe, expect, it } from 'vitest';
 
 import {
     DEFAULT_FINAL_SPAN, TARGET_FINAL_SKILL, DEFAULT_POINTS_PER_MANA, FINAL_SPAN_PARAM,
-    skillForPoints, predictedSkill, pointsForSkill, pointsPerManaFor, noiz2saWalkEvents, checkSpanFor,
+    skillForPoints, predictedSkill, pointsForSkill, pointsPerManaFor, noiz2saWalkEvents, checkSpanFor, pickShrinking,
+    finalRegionOf, victoryLocationOf, VICTORY_ITEM,
     planNoiz2saWorld, applyNoiz2saPricing, priceNoiz2saRegions,
 } from './noiz2saPricing.js';
 import { spanDifficulty, parseSpan, spanLength, spanAt, sceneIndex, SCENE_TOTAL, pickSpan } from './noiz2saDifficulty.js';
 import { showSpan, regionSpansOf } from './noiz2saRegion.js';
-import { substrateRegistryEntry, zoneRulesOf } from './noiz2saSubstrateLibrary.js';
+import { substrateRegistryEntry, zoneRulesOf, NOIZ2SA_VICTORY_ITEM_NAME } from './noiz2saSubstrateLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import * as loopCostPlanner from '../shared/procgen/loopCostPlanner.js';
 import { generateLoopCosts, DEFAULT_TIME_DRAIN_PER_SECOND } from '../shared/procgen/loopCostGenerator.js';
@@ -108,13 +109,24 @@ describe('the walk over a planned world', () => {
         // the pace makes the walk end at the target skill
         expect(predictedSkill(plan.manaEnd, plan.pointsPerMana)).toBeGreaterThanOrEqual(TARGET_FINAL_SKILL);
     });
-    it('the length ramps from 1 to the final region\'s count; the final region is the setting exactly', () => {
-        const lengths = plan.regions.map((r) => r.scenes);
-        expect(lengths[0]).toBe(1);
-        expect(lengths.at(-1)).toBe(finalScenes);
-        for (let i = 1; i < lengths.length; i++) expect(lengths[i]).toBeGreaterThanOrEqual(lengths[i - 1]);
-        expect(lengths).toEqual(plan.regions.map((_, k) => Math.round(1 + (finalScenes - 1) * k / (N - 1))));
+    it('the TARGET length ramps from 1 to the final region\'s count; the final region (Victory\'s) is the setting exactly', () => {
+        expect(plan.regions.map((r) => r.target)).toEqual(plan.regions.map((_, k) => Math.round(1 + (finalScenes - 1) * k / (N - 1))));
+        expect(plan.regions.at(-1)).toMatchObject({ region: 'R5', final: true, scenes: finalScenes });
         expect(showSpan(plan.regions.at(-1).span)).toBe(DEFAULT_FINAL_SPAN);
+    });
+    it('⚖ the 50% rule wins: a region plays fewer scenes than its target only when no span of the longer lengths reaches 0.5', () => {
+        for (const r of plan.regions.filter((x) => !x.final)) {
+            expect(r.scenes).toBeLessThanOrEqual(r.target);
+            for (let n = r.scenes + 1; n <= r.target; n++) expect(pickSpan(n, r.skill).reached).toBe(false);
+            if (r.scenes > 1) expect(r.p).toBeGreaterThanOrEqual(0.5);
+        }
+    });
+    it('pickShrinking: the target when some span reaches 0.5; fewer scenes when none does; the easiest one-scene span at worst', () => {
+        expect(spanLength(pickShrinking(3, 94).span)).toBe(3);
+        const low = pickShrinking(4, 20);
+        expect(pickSpan(spanLength(low.span), 20).reached || spanLength(low.span) === 1).toBe(true);
+        expect(spanLength(low.span)).toBeLessThan(4);
+        expect(pickShrinking(4, 0)).toEqual(pickSpan(1, 0));
     });
     it('every other region\'s span: the hardest the predicted bot clears deathless with chance ≥ 0.5 (when one does)', () => {
         for (const r of plan.regions.filter((x) => !x.final)) {
@@ -169,14 +181,43 @@ describe('regions the sphere log never reaches', () => {
         return rules;
     };
     const plan = planNoiz2saWorld({ rulesJson: withDeadEnds(), sphereLog: sphereLog(), playerId: '1' });
-    it('come after the walk\'s order, at the skill the walk ended on; the last of them is the final region', () => {
+    it('come after the walk\'s order, at the skill the walk ended on, targeting the final count; Victory\'s region stays final', () => {
         expect(plan.regions.map((r) => r.region)).toEqual(['R0', 'R1', 'R2', 'R3', 'R4', 'R5', 'X0', 'X1']);
         expect(plan.regions.filter((r) => r.unreached).map((r) => r.region)).toEqual(['X0', 'X1']);
-        expect(plan.finalRegion).toBe('X1');
+        expect(plan.finalRegion).toBe('R5');
         const end = predictedSkill(plan.manaEnd, plan.pointsPerMana);
-        for (const r of plan.regions.filter((x) => x.unreached)) expect(r.skill).toBe(end);
-        expect(showSpan(plan.regions.at(-1).span)).toBe(DEFAULT_FINAL_SPAN);
-        expect(plan.regions.map((r) => r.scenes)).toEqual(plan.regions.map((_, k) => Math.round(1 + (finalScenesOf() - 1) * k / 7)));
+        for (const r of plan.regions.filter((x) => x.unreached)) expect(r).toMatchObject({ skill: end, target: finalScenesOf() });
+    });
+});
+
+describe('⚖ the FINAL region is Victory\'s (follow-up)', () => {
+    const ev = (kind, region, extra = {}) => ({ kind, region, cost: 10, mana: 5, unreached: false, ...extra });
+    const isN = (r) => r.startsWith('N');
+    const regionOfLocation = (l) => l.split('__')[0];
+    it('Victory on a Noiz2sa region: that region, wherever it falls in the order', () => {
+        const events = [ev('region', 'N1'), ev('region', 'N2'), ev('region', 'N3')];
+        expect(finalRegionOf({ events, victoryLocation: 'N2__check1', regionOfLocation, isNoiz2sa: isN, reachedOrder: ['N1', 'N2', 'N3'] })).toBe('N2');
+    });
+    it('Victory elsewhere: the last Noiz2sa region the walk reaches before the step that checks it', () => {
+        const events = [ev('region', 'N1'), ev('region', 'N2'), ev('spend', 'N2', { checks: 'M__v' }), ev('region', 'N3')];
+        expect(finalRegionOf({ events, victoryLocation: 'M__v', regionOfLocation, isNoiz2sa: isN, reachedOrder: ['N1', 'N2', 'N3'] })).toBe('N2');
+        // no step checks it (an event, or not on the walk): the last reached
+        expect(finalRegionOf({ events, victoryLocation: 'M__x', regionOfLocation, isNoiz2sa: isN, reachedOrder: ['N1', 'N2', 'N3'] })).toBe('N3');
+    });
+    it('VICTORY_ITEM is the substrate\'s victory item', () => {
+        expect(VICTORY_ITEM).toBe(NOIZ2SA_VICTORY_ITEM_NAME);
+        expect(substrateRegistryEntry.victoryItem).toBe(VICTORY_ITEM);
+    });
+    it('victoryLocationOf finds the location holding Victory; the ramp ends at the final region, later regions target its count', () => {
+        const rules = world();
+        expect(victoryLocationOf(rules, '1')).toBe('R5__check1');
+        // move Victory to R2
+        rules.regions[1].R5.locations[0].item = { name: 'Noiz2sa Star' };
+        rules.regions[1].R2.locations[0].item = { name: 'Victory' };
+        const p = planNoiz2saWorld({ rulesJson: rules, sphereLog: sphereLog(), playerId: '1' });
+        expect(p.finalRegion).toBe('R2');
+        expect(p.regions.map((r) => r.target)).toEqual([1, 3, 4, 4, 4, 4].map((n, k) => (k === 2 ? finalScenesOf() : n)));
+        expect(showSpan(p.regions[2].span)).toBe(DEFAULT_FINAL_SPAN);
     });
 });
 const finalScenesOf = () => spanLength(parseSpan(DEFAULT_FINAL_SPAN));
