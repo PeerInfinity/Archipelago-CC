@@ -59,6 +59,8 @@ argvHelp(import.meta.url);
 
 /** The preset, by its rules file (served path relative to `frontend/`). */
 export const RULES_PATH = './presets/seedling_playthrough/AP_1/AP_1_rules.json';
+/** V: a walk whose bot status changed within this many seconds of the budget's end is ADVANCING, not stalled. */
+const ADVANCING_WINDOW_S = 180;
 
 /**
  * D's next target, DERIVED: of `candidates` (the sphere queue's locations, in its order), the one whose
@@ -184,7 +186,7 @@ async function main() {
         const botStatus = () => page.evaluate(async () => {
             const { getActivePanel } = await import('./modules/playbackBot/index.js');
             const bot = getActivePanel()?.getBot?.();
-            return { status: bot?.getStatus?.() ?? '', region: bot?.getCurrentRegion?.() ?? null };
+            return { status: bot?.getStatus?.() ?? '', region: bot?.getCurrentRegion?.() ?? null, active: bot?.isActive?.() ?? null };
         });
 
         const engineStats = () => page.evaluate(async () => {
@@ -242,8 +244,16 @@ async function main() {
             out('V engine', eng);
             out('V reach', { seconds: w.seconds, checks, finalStatus: w.end?.status, region: w.end?.region, statuses: w.statuses.slice(-12) });
             out('V first refusal', { status: (w.end?.status ?? '').startsWith('error') ? w.end.status : null, engineRefusal: eng?.lastRefusal ?? null });
-            check('V: the walk ends FINISHED or with a NAMED refusal (never a silent stall)',
-                (w.end?.status ?? '').startsWith('finished') || (w.end?.status ?? '').startsWith('error'), w.end?.status ?? '');
+            // ⛓ RETURN TO MENU (procgenCore/restartRoute.js): the bot Restarts out of the pockets that used to end this
+            // walk by name at L17 (~180 s), so it can now still be WALKING when the budget ends. That is not a stall:
+            // a walk whose status changed within ADVANCING_WINDOW_S of the end is advancing (measured: the longest
+            // gap between two status changes on this walk is 113 s, the L19 boss-key room).
+            const quietS = w.seconds - (w.statuses.at(-1)?.s ?? 0);
+            const advancing = !!w.end?.active && quietS < ADVANCING_WINDOW_S;
+            out('V end', { quietS, advancing, windowS: ADVANCING_WINDOW_S });
+            check('V: the walk ends FINISHED, with a NAMED refusal, or still ADVANCING at the budget (never a silent stall)',
+                (w.end?.status ?? '').startsWith('finished') || (w.end?.status ?? '').startsWith('error') || advancing,
+                JSON.stringify({ status: w.end?.status ?? '', quietS, active: w.end?.active ?? null }));
             if (eng.engine) check('V: the controller\'s engine STAGES THE DELIVERED SET (the rooms the game plays)', eng.stagesDelivered === true, JSON.stringify(eng.stagesDelivered));
         }
 
