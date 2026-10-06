@@ -135,15 +135,22 @@ export function arrivalsInto(run, level, levelCount = LEVEL_COUNT) {
 }
 
 /**
- * ⛓ D3 — **IS THIS RUN'S ARRIVAL INSIDE A SOLID?** null unless the box
- * overlaps a solid AND no cardinal hold moves it (`modelStuck`): a box that
- * merely grazes a solid and can walk out is not this state. Otherwise the
- * solids (each with its flag `{level, tag}` and the action that clears it)
- * and the stuck test's reading.
+ * ⛓ D3 — **IS THIS RUN'S ARRIVAL INSIDE A SOLID A SAVED FLAG DECIDES?** null
+ * unless the box overlaps a solid of a flag-bearing class (`FLAG_ACTIONS`: a
+ * rock, tree, lock, magical lock, final door or fallen rock) AND no cardinal
+ * hold moves it (`modelStuck`): a box that merely grazes a solid and can walk
+ * out is not this state. Otherwise the solids under the box (each with its
+ * flag `{level, tag}` and the action that clears it) and the stuck test.
+ *
+ * ⚠ A BOX INSIDE A PERMANENT WALL ONLY IS NOT THIS STATE. No save state
+ * removes a `tile:Stone`, so there is no flag to name and no "out of order" to
+ * report: a staging that boots there (a generated room whose walls cover its
+ * start — `procgenCollectPath.test.js`'s sealed pickup) keeps the search's own
+ * refusal.
  */
 export function arrivalInsideSolid(run) {
     const under = solidsAt(run.world, run.state.x, run.state.y);
-    if (under.length === 0) return null;
+    if (!under.some((so) => FLAG_ACTIONS[so.tag] !== undefined)) return null;
     const stuck = modelStuck(run);
     if (!stuck.stuck) return null;
     const solids = under.map((so) => {
