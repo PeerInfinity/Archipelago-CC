@@ -22,10 +22,13 @@
  *     predicted SKILL is the mean of the five tracks (Even keeps them within one step of each other, and equal tracks
  *     are the skill slider the sweeps measured).
  *  3. THE MOVE SPAN, when the walk first prices a Noiz2sa region (the planner assigns its cost when the walk first
- *     reaches it). Its NUMBER of scenes ramps linearly from 1 (the first Noiz2sa region reached) to the final region's
- *     count; WHICH scenes is `noiz2saDifficulty.js` `pickSpan` at the predicted skill (the hardest span the bot clears
- *     deathless with chance ≥ 0.5). The FINAL region — the last Noiz2sa region the walk reaches — plays the generation
- *     setting exactly (`noiz2saFinalSpan`).
+ *     reaches it). The ORDER is the walk's first-reach order, then the regions the sphere log never reaches (priced by
+ *     the planner's defaults step after the walk, at the skill the walk ended on). Its NUMBER of scenes ramps linearly
+ *     over that order from 1 (the first) to the final region's count; WHICH scenes is `noiz2saDifficulty.js` `pickSpan`
+ *     at the predicted skill (the hardest span the bot clears deathless with chance ≥ 0.5). The FINAL region — the last
+ *     in that order — plays the generation setting exactly (`noiz2saFinalSpan`). (Why the never-reached regions count:
+ *     a spiral often leaves Noiz2sa regions off every planned path; ending the order on the last REACHED one priced the
+ *     final span at whatever skill that region was reached with — skill 0 when it was the first region reached.)
  *  4. THE RATE: the region's planned cost ÷ the move span's expected seconds at that skill, so a move run is expected
  *     to drain the planned cost. Written as the region's `timeDrainPerSecond` (the payload's; the shared cost writer
  *     passes it into `loop_costs`).
@@ -36,9 +39,8 @@
  *     entries are done (⚖ "an Even-trained bot reaches ~skill 95+ by the final spheres"). The planner's costs do not
  *     depend on the spans or the rates, so the total Noiz2sa mana is known before any span is picked: no iteration.
  *
- * A Noiz2sa region the sphere log never reaches is priced by the planner's defaults step (after the walk): it gets the
- * final region's number of scenes, picked at the skill the walk ended on. A Noiz2sa START region is free to leave (the
- * planner's rule) and so has no rate: its spans are picked as the first region's, and the default drain applies.
+ * A Noiz2sa START region is free to leave (the planner's rule) and so has no rate: its move span is one scene picked at
+ * skill 0, and the default drain applies.
  */
 import { CostPlanner, topologyFromRulesJson } from '../shared/procgen/loopCostPlanner.js';
 import { newTrainer, earn, DEFAULT_TRAINING } from '../bulletml-dodge/src/game/tracks.js';
@@ -84,7 +86,7 @@ export function pointsPerManaFor(manaEnd, { target = TARGET_FINAL_SKILL, prices 
     if (!(manaEnd > 0)) return DEFAULT_POINTS_PER_MANA;
     const exact = pointsForSkill(target, prices) / manaEnd;
     const mag = 10 ** (Math.floor(Math.log10(exact)) - 3);
-    return Math.ceil(exact / mag - 1e-9) * mag;
+    return Number((Math.ceil(exact / mag - 1e-9) * mag).toPrecision(6));
 }
 
 /**
@@ -154,7 +156,8 @@ export function planNoiz2saPricing({
     const reachedEvents = events.filter((e) => !e.unreached);
     const manaEnd = reachedEvents.filter((e) => e.kind === 'spend').reduce((a, e) => a + e.mana, 0);
     const ppm = Number.isFinite(pointsPerMana) && pointsPerMana > 0 ? pointsPerMana : pointsPerManaFor(manaEnd, { prices });
-    const reachedOrder = [...new Set(reachedEvents.filter((e) => e.kind === 'region' && e.region !== startRegion).map((e) => e.region))];
+    // the walk's first-reach order, then the regions only the defaults step prices (after the walk)
+    const reachedOrder = [...new Set(events.filter((e) => e.kind === 'region' && e.region !== startRegion).map((e) => e.region))];
     const K = reachedOrder.length;
     const finalRegion = K ? reachedOrder[K - 1] : null;
 
@@ -170,7 +173,7 @@ export function planNoiz2saPricing({
         if (name === finalRegion) {
             pick = { span: final, ...spanDifficulty(final, skill) };
         } else {
-            const n = isStart ? 1 : (order >= 0 && K > 1 ? Math.round(1 + (finalScenes - 1) * order / (K - 1)) : finalScenes);
+            const n = isStart || K <= 1 ? 1 : Math.round(1 + (finalScenes - 1) * order / (K - 1));
             pick = pickSpan(n, skill);
         }
         const rate = isStart || !(cost > 0) ? null : Math.max(0.0001, round(cost / pick.seconds, 4));
@@ -263,6 +266,7 @@ export function applyNoiz2saPricing(rulesJson, playerId, plan, { substrateId = '
             seconds: round(r.seconds, 2),
             cost: r.cost,
             final: r.final,
+            reached: !r.unreached,
             locations: Object.fromEntries([...priced].filter(([id]) => id).map(([id, l]) => [id, {
                 skill: round(l.skill, 2), p: round(l.p, 4), seconds: round(l.seconds, 2), cost: l.cost,
             }])),

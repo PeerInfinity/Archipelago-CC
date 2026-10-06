@@ -156,6 +156,31 @@ describe('the walk over a planned world', () => {
     });
 });
 
+describe('regions the sphere log never reaches', () => {
+    // R0 … R5 as above, plus two Noiz2sa dead ends hung off R1 that no sphere-log location needs
+    const withDeadEnds = () => {
+        const rules = world();
+        for (const name of ['X0', 'X1']) {
+            const zr = zoneRulesOf([{ start: '1:1', end: '1:1' }], 0, { region_id: name });
+            rules.regions[1][name] = { exits: [{ name: `${name} -> R1`, connected_region: 'R1' }], locations: [] };
+            rules.regions[1].R1.exits.push({ name: `R1 -> ${name}`, connected_region: name });
+            rules.preset_sidecars[1][name] = { substrate: 'noiz2sa', playable_payload: { ...zr.payload, exits: [], fogEnabled: false } };
+        }
+        return rules;
+    };
+    const plan = planNoiz2saWorld({ rulesJson: withDeadEnds(), sphereLog: sphereLog(), playerId: '1' });
+    it('come after the walk\'s order, at the skill the walk ended on; the last of them is the final region', () => {
+        expect(plan.regions.map((r) => r.region)).toEqual(['R0', 'R1', 'R2', 'R3', 'R4', 'R5', 'X0', 'X1']);
+        expect(plan.regions.filter((r) => r.unreached).map((r) => r.region)).toEqual(['X0', 'X1']);
+        expect(plan.finalRegion).toBe('X1');
+        const end = predictedSkill(plan.manaEnd, plan.pointsPerMana);
+        for (const r of plan.regions.filter((x) => x.unreached)) expect(r.skill).toBe(end);
+        expect(showSpan(plan.regions.at(-1).span)).toBe(DEFAULT_FINAL_SPAN);
+        expect(plan.regions.map((r) => r.scenes)).toEqual(plan.regions.map((_, k) => Math.round(1 + (finalScenesOf() - 1) * k / 7)));
+    });
+});
+const finalScenesOf = () => spanLength(parseSpan(DEFAULT_FINAL_SPAN));
+
 describe('the payloads and the pipeline hook', () => {
     it('applyNoiz2saPricing writes move, check, the rate and pricing; the payload still loads', () => {
         const rules = world();
@@ -165,7 +190,7 @@ describe('the payloads and the pipeline hook', () => {
             const p = rules.preset_sidecars[1][r.region].playable_payload;
             expect(p.move).toEqual(r.span);
             expect(p.timeDrainPerSecond).toBe(r.rate);
-            expect(p.pricing).toMatchObject({ pointsPerMana: plan.pointsPerMana, cost: r.cost, final: r.final });
+            expect(p.pricing).toMatchObject({ pointsPerMana: plan.pointsPerMana, cost: r.cost, final: r.final, reached: true });
             const l = plan.locations.find((x) => x.region === r.region);
             expect(p.locations[0].check).toEqual(l.span);
             expect(regionSpansOf(p).locations[0].check).toEqual(l.span);

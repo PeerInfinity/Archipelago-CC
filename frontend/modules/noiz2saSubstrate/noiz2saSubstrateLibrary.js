@@ -239,10 +239,11 @@ export const NOIZ2SA_SIDECAR_FIELDS = Object.freeze({
     pricing: Object.freeze({
         type: 'object', required: false, derived: true,
         description: 'N5: what the pricing walk predicted, for the panel and the tests: `{pointsPerMana, mana, skill, p, '
-            + 'seconds, cost, final, locations: {<id>: {skill, p, seconds, cost}}}` — the world\'s training pace (the same '
-            + 'in every region; the trainer\'s default), the Noiz2sa mana spent before the walk priced the region, the '
+            + 'seconds, cost, final, reached, locations: {<id>: {skill, p, seconds, cost}}}` — the world\'s training pace (the '
+            + 'same in every region; the trainer\'s default), the Noiz2sa mana spent before the walk priced the region, the '
             + 'predicted skill then, the move span\'s deathless chance and expected seconds, the planned cost, whether it is '
-            + 'the final region, and the same for each priced location\'s check span.',
+            + 'the final region, whether the sphere log reaches it (false: priced after the walk, by the planner\'s '
+            + 'defaults), and the same for each priced location\'s check span.',
         schema: Object.freeze({ additionalProperties: true }),
     }),
     ap_locations: Object.freeze({
