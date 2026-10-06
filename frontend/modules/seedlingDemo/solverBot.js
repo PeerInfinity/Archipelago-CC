@@ -1565,6 +1565,35 @@ export const ENCOUNTER_EXECUTORS = Object.freeze({ Fire: execBobBossEncounter })
 const MAX_STRATEGIES_PER_GOAL = 4;
 
 /**
+ * ⛓ SEEDLING FIDELITY CLEARTAG — how long `clear-tag` waits, after its verb
+ * returned, for the flag to land in the run's `earnedClears`. A POLICY bound:
+ * the verbs finish on the world (a rock gone, a lock open) and a `Lock`'s
+ * `turnOff()` writes its flag when its fade closes, so the wait covers a fade
+ * and says so by name (`reason: 'not-written'`) when it does not.
+ */
+const CLEAR_TAG_WRITE_TICKS = 120;
+
+/**
+ * ⛓ SEEDLING FIDELITY CLEARTAG — has the GAME written `flag` yet (its
+ * `setPersistence(tag, false)`)? `row` is the flag's `earnedClears` row and `id`
+ * the obstacle the goal names. The game's `persistence_cleared` holds the flag
+ * after `T + 1` ticks, T the family's write tick (p4f, held cuts):
+ *   · a broken rock writes at `endAnim`, the update that removes it — so the
+ *     run's `brokenRocks` holding it (NOT the row's `t`, the hit);
+ *   · a burned tree writes at `removed()` (`goneAt`) — so `burnedTrees`
+ *     holding it (NOT the row's `t`, the press);
+ *   · every other family stamps its row AT the write (a lock snap's `to` is
+ *     `turnOff`'s tick, a key open's `t` the fade's end) — so the run past it.
+ */
+function clearTagLanded(run, row, id) {
+    if (!row) return false;
+    const by = String(row.by ?? '');
+    if (by.startsWith('breakablerock')) return (run.entities('brokenRocks') ?? new Set()).has(id);
+    if (by.startsWith('burnabletree')) return (run.entities('burnedTrees') ?? new Set()).has(id);
+    return Number.isInteger(row.t) && run.ticksCompleted > row.t;
+}
+
+/**
  * ⛓⛓⛓ **PROCGEN ELEMENTS arc 3, SLICE S1 — HOW MANY OPENERS ONE ORDER MAY
  * NEST, AND IT IS A NUMBER RATHER THAN A LOOP.**
  *
@@ -5069,8 +5098,28 @@ export function assertGoal(goal, i) {
         }
         return goal;
     }
+    /**
+     * ⛓⛓ SEEDLING FIDELITY CLEARTAG — **`clear-tag`, A SAVED OBSTACLE BROKEN
+     * FROM ITS OPEN SIDE** (⚖ 2026-10-05, *"break before first use"*). The
+     * route survey's goal (`clearTagGoal`): `tag` is the persistence flag
+     * `{level, tag}` the game writes when the obstacle goes, `at` the solid's
+     * OEL cell, and `obstacle` (optional) its `<class>@<x>,<y>` id. The verb is
+     * NOT the goal's: the executor selects it from `OBSTACLE_STRATEGIES`, as the
+     * frontier does, and finishes on the run's `earnedClears` ledger.
+     */
+    if (goal.kind === 'clear-tag') {
+        if (!Number.isInteger(goal.tag?.level) || !Number.isInteger(goal.tag?.tag) || goal.tag.tag < 0
+            || !Number.isFinite(goal.at?.x) || !Number.isFinite(goal.at?.y)
+            || (goal.obstacle !== undefined
+                && !/^[a-z0-9_]+@-?\d+,-?\d+$/i.test(String(goal.obstacle)))) {
+            fail(`${at}: clear-tag needs tag {level, tag} (the persistence flag, integers, tag >= 0), `
+                + 'at {x, y} (the obstacle\'s OEL cell) and optionally obstacle \'<class>@<x>,<y>\', got '
+                + `${JSON.stringify(goal)}. The MACRO layer names WHICH flag; the solver owns HOW to clear it.`);
+        }
+        return goal;
+    }
     fail(`${at}: unknown goal kind ${JSON.stringify(goal.kind)}. The solver owns `
-        + '\'reach-exit\', \'reach-pit\', \'collect-placement\' and \'encounter\'; a new kind is a policy addition, '
+        + '\'reach-exit\', \'reach-pit\', \'collect-placement\', \'encounter\' and \'clear-tag\'; a new kind is a policy addition, '
         + 'not a free string here — the trace\'s vocabulary is open, the solver\'s '
         + 'is not.');
     return null;
@@ -15623,6 +15672,184 @@ function solveSegmentUnder({
         });
     }
 
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY CLEARTAG — **THE `clear-tag` EXECUTOR: A SAVED
+     * OBSTACLE BROKEN FROM ITS OPEN SIDE, FINISHED ON THE RUN'S LEDGER.**
+     *
+     * ⚖ The user (2026-10-05): *"break before first use"*. A door whose landing
+     * is inside a persistence-decided solid needs that solid's flag cleared first
+     * (the rules arc's event; ARRIVAL's `arrival-inside-solid` refusal is the
+     * backstop). This goal is the order to clear it ON PURPOSE, from the side the
+     * player can stand on — never from inside.
+     *
+     * ⛔ NO NEW VERB. The obstacle is named the way the frontier names it
+     * (`solid:<class>`, id `<class>@<x>,<y>`), the verb is `OBSTACLE_STRATEGIES`'s
+     * row (refined as the frontier refines it), the stance is the RESOLVER's own
+     * (which already asks "reachable from here"), and the act is the REGISTERED
+     * executor — `break`, `burn`, `touch`, `keylock`, `hold`, `pulse` … exactly
+     * as a frontier order runs it. What is new is only the ORDER and the FINISH:
+     *   · finished when the GAME's write has happened: `run.ledger('earnedClears')`
+     *     holds `{level, tag}` AND the family's write has landed in the run
+     *     (`clearTagLanded`). ⛔ The ledger row alone is not the write — it is
+     *     the model's PERMISSION for the next build and is stamped earlier: a
+     *     rock's at the hit (`endAnim` writes at `goneAt`), a tree's at the press
+     *     (`removed()` writes at `goneAt`). Measured on the game (p4f, held cuts,
+     *     `probe-seedling-cleartag.mjs --scan`): `persistence_cleared` first holds
+     *     the flag after `T + 1` ticks, T = rock `goneAt` 50 (row t43), tree
+     *     `goneAt` 105 (row t64), lock snap close 164 — and a solve that ended on
+     *     the row (the lock's, 164 t) ended one tick BEFORE the game's write;
+     *   · met before it was asked (`cleared-in-passing`) when the ledger already
+     *     names it — also when the walk to the stance struck it (the walk's own
+     *     strike policy) — and `already-clear` when the live world holds no such
+     *     solid and the ledger is silent: the BUILD left it out, which is the
+     *     game's own reading of a flag the boot's persistence holds cleared
+     *     (`check()`). Either state is known by name and neither is walked at;
+     *     a row whose write tick is still ahead is waited out (nothing held).
+     *
+     * Every refusal is `obstacle.kind: 'clear-tag'` with `flag`, `id` and a
+     * `reason` — `wrong-level`, `no-verb` (no row, or a row with no registered
+     * executor: the wand), `cannot-act` (the resolver's `held: false`, e.g. no
+     * sword), `unresolved` (the resolver could not bind, or no REACHABLE
+     * stance), `prerequisite`, `not-written` (the verb ran and the flag did not
+     * land within `CLEAR_TAG_WRITE_TICKS`).
+     */
+    const execClearTag = (goal) => {
+        const flag = { level: goal.tag.level, tag: goal.tag.tag };
+        const parsed = goal.obstacle ? /^([a-z0-9_]+)@(-?\d+),(-?\d+)$/i.exec(goal.obstacle) : null;
+        const solidAt = (s) => (s.x === goal.at.x && s.y === goal.at.y)
+            || (s.rect?.x === goal.at.x && s.rect?.y === goal.at.y);
+        const solid = (run.world.solids ?? []).find((s) => solidAt(s)
+            && (!parsed || s.tag === parsed[1])) ?? null;
+        const cls = parsed?.[1] ?? solid?.tag ?? null;
+        const id = `${cls ?? '?'}@${goal.at.x},${goal.at.y}`;
+        const whatCT = `solverBot(${name}) clear-tag {${flag.level},${flag.tag}} ${id}`;
+        const refuseCT = (reason, why, extra = {}) => refuse(`${whatCT}: ${why}`, {
+            goal, obstacle: { kind: 'clear-tag', id, flag: { ...flag }, reason }, ...extra,
+        });
+        if (run.level !== flag.level) {
+            refuseCT('wrong-level', `the run stands in level ${run.level}; the flag is level `
+                + `${flag.level}'s, and only that level's own world holds the obstacle. The macro layer `
+                + 'owes the crossing first.');
+        }
+        const written = () => run.ledger('earnedClears')
+            .find((c) => c.level === flag.level && c.tag === flag.tag) ?? null;
+        /** The game has written it (`clearTagLanded`). */
+        const landed = () => clearTagLanded(run, written(), id);
+        const done = (arm, extra = {}) => {
+            const row = written();
+            records.push({
+                ...extra, goal: 'clear-tag', arm, flag: { ...flag }, obstacle: id,
+                // ⛔ `ledgerAt` is the row's own stamp, which for a rock (the hit) and a tree
+                // (the press) is BEFORE the game's write; `confirmedAt` is the run's tick
+                // count when the write was seen landed (>= the write tick + 1).
+                ledgerAt: row?.t ?? null, confirmedAt: run.ticksCompleted, by: row?.by ?? null,
+            });
+        };
+        const IDLE = new Set();
+        /** Idle (nothing held) until the write lands; refuses by name past `CLEAR_TAG_WRITE_TICKS`. */
+        const waitForWrite = (after) => {
+            const from = perTick.length;
+            while (!landed() && perTick.length - from < CLEAR_TAG_WRITE_TICKS) {
+                perTick.push(IDLE);
+                const { transition } = run.advance(IDLE);
+                if (transition) {
+                    refuseCT('not-written', `the run crossed to level ${transition.to_level} while waiting for `
+                        + `the flag after ${after}`);
+                }
+            }
+            if (!landed()) {
+                refuseCT('not-written', `${after}, and the run's \`earnedClears\` `
+                    + `${written() ? `holds {${flag.level},${flag.tag}} and the game's write has not landed`
+                        : `still does not hold {${flag.level},${flag.tag}}`} ${CLEAR_TAG_WRITE_TICKS} ticks later — `
+                    + 'the way may be clear, but the flag is what the next arrival reads');
+            }
+            return perTick.length - from;
+        };
+        if (written()) {
+            const waited = waitForWrite('an earlier walk or verb cleared it');
+            done('cleared-in-passing', { waited, why: `the run's \`earnedClears\` already holds {${flag.level},`
+                + `${flag.tag}} — an earlier walk or verb cleared it, so the goal is met and not walked at` });
+            return;
+        }
+        if (!solid) {
+            done('already-clear', { why: `no ${cls ?? 'solid'} stands at (${goal.at.x},${goal.at.y}) in level `
+                + `${run.level}'s live world and the ledger is silent: the build left it out, which is the `
+                + 'game\'s own `check()` for a flag the boot\'s persistence holds cleared' });
+            return;
+        }
+        const obstacle = { kind: 'solid', tag: cls, id };
+        const key = `solid:${cls}`;
+        const strategy = refineStrategy(run, OBSTACLE_STRATEGIES[key] ?? null, obstacle);
+        if (!strategy || !STRATEGY_EXECUTORS[strategy]) {
+            refuseCT('no-verb', strategy
+                ? `${key} selects '${strategy}', which is NOT REGISTERED — no executor clears this flag `
+                    + 'yet (a later slice\'s row, computed rather than guessed)'
+                : `no strategy row exists for ${key} — the catalogue names no verb that clears it`);
+        }
+        const contacts = new Set([...senseContacts(run), ...exemptions]);
+        let resolved;
+        try {
+            resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts,
+                { x: goal.at.x, y: goal.at.y }, null, [...refusedOrders]);
+        } catch (e) {
+            if (!(e instanceof SolverRefusal)) throw e;
+            refuseCT('unresolved', `'${strategy}' could not be resolved from (${run.state.x},`
+                + `${run.state.y}): ${e.message}`);
+        }
+        if (!resolved) {
+            refuseCT('unresolved', `'${strategy}' is SELECTED and REGISTERED for ${key}, and the `
+                + 'resolver could not bind this obstacle against live state');
+        }
+        if (resolved.held === false) {
+            refuseCT('cannot-act', `'${strategy}' cannot act on ${id} with this run's bag — `
+                + `${resolved.rejected?.[0]?.why ?? 'the resolver said held: false'}`);
+        }
+        if (resolved.prerequisite) {
+            refuseCT('prerequisite', `'${strategy}''s stance is reachable only once `
+                + `${resolved.prerequisite.id} is discharged (${resolved.prerequisite.via}: `
+                + `${resolved.prerequisite.why}); a clear-tag order does not chain openers`);
+        }
+        const verb = resolved.strategy ?? strategy;
+        seeRow({
+            tick: perTick.length,
+            saw: saw(),
+            goal: { kind: goal.kind, tag: { ...flag }, at: { x: goal.at.x, y: goal.at.y } },
+            obstacle: { kind: obstacle.kind, id },
+            strategy: { verb },
+            rejected: resolved.rejected ?? [],
+            keys: [],
+        });
+        const before = {
+            open: run.entities('openActivators'),
+            armed: run.entities('armedPulsers') ?? new Set(),
+            trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
+            chests: run.entities('openChests'),
+        };
+        if (resolved.stance) {
+            walkTo(goal, resolved.stance, {
+                what: `${whatCT} -> ${verb} stance`,
+                contactsOverride: resolved.exempt,
+                axisAligned: resolved.approach === 'axis-aligned',
+            });
+        }
+        if (written()) {
+            // The walk to the stance struck it (its strike policy swings at what it passes).
+            const waited = waitForWrite('the walk to the stance cleared it');
+            done('cleared-in-passing', { waited, during: 'stance walk', strategy: verb,
+                why: `the walk to ${verb}'s stance cleared ${id} on its way — the verb is not run again` });
+            return;
+        }
+        const record = STRATEGY_EXECUTORS[verb](run, perTick, resolved, {
+            maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb}`,
+            before, walkTo, goal, equip,
+        });
+        for (const c of resolved.exempt ?? []) exemptions.add(c);
+        // The verb's own finish is the WORLD's (the solid gone, the lock open);
+        // the GAME's write can land later (a lock's `turnOff` closes its fade).
+        const waited = waitForWrite(`'${verb}' ran (${JSON.stringify(record).slice(0, 160)})`);
+        done('verb', { strategy: verb, waited, ...record });
+    };
+
     // ── the goals, in order ───────────────────────────────────────────
     for (const goal of goals) {
         // The bound is PER GOAL: clearing L4's button for the crossing says
@@ -15700,6 +15927,10 @@ function solveSegmentUnder({
         };
         if (goal.kind === 'reach-pit') {
             execReachPit(goal, goal);
+            continue;
+        }
+        if (goal.kind === 'clear-tag') {
+            execClearTag(goal);
             continue;
         }
         if (goal.kind === 'encounter') {
