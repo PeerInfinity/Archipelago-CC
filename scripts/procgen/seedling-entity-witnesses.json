@@ -3,7 +3,7 @@
   "head": "4438ad6e5aaf3648a21f178ba2c08cdd058117eb",
   "treeClean": true,
   "tier": "fast",
-  "entitiesMd5": "d10864a049d5f84c2bff1a018b230a66",
+  "entitiesMd5": "f38e195438ab2f533a33bd0aa8d1a5e2",
   "method": "per record number leaf x magnitude, a child process with the entity-records override installed runs every fast-tier tape through runTapeToStream; a tape moves when its stream md5 differs from the control run or it throws. ulp = +1 ULP; pct10 = x1.1, or +1 for an integer default. corpus-blind = neither magnitude moved any tape.",
   "jobs": 4,
   "wallSeconds": 6273,
@@ -3806,7 +3806,7 @@
         "movedTapes": [
           "r5-l40-part1"
         ],
-        "firstThrow": "r5-l40-part1: combatCensus: \"iceturret\" placement disagreement — the combat row says (16.000000000000004,16) from IceTurret.as `super("
+        "firstThrow": "r5-l40-part1: combatCensus: \"iceturret\" placement disagreement \u2014 the combat row says (16.000000000000004,16) from IceTurret.as `super("
       },
       "pct10": {
         "value": 17,
@@ -3816,7 +3816,7 @@
         "movedTapes": [
           "r5-l40-part1"
         ],
-        "firstThrow": "r5-l40-part1: combatCensus: \"iceturret\" placement disagreement — the combat row says (17,16) from IceTurret.as `super(_x + Tile.w, _y "
+        "firstThrow": "r5-l40-part1: combatCensus: \"iceturret\" placement disagreement \u2014 the combat row says (17,16) from IceTurret.as `super(_x + Tile.w, _y "
       },
       "verdict": "moves"
     },
@@ -3829,7 +3829,7 @@
         "movedTapes": [
           "r5-l40-part1"
         ],
-        "firstThrow": "r5-l40-part1: combatCensus: \"iceturret\" placement disagreement — the combat row says (16,16.000000000000004) from IceTurret.as `super("
+        "firstThrow": "r5-l40-part1: combatCensus: \"iceturret\" placement disagreement \u2014 the combat row says (16,16.000000000000004) from IceTurret.as `super("
       },
       "pct10": {
         "value": 17,
@@ -3839,7 +3839,7 @@
         "movedTapes": [
           "r5-l40-part1"
         ],
-        "firstThrow": "r5-l40-part1: combatCensus: \"iceturret\" placement disagreement — the combat row says (16,17) from IceTurret.as `super(_x + Tile.w, _y "
+        "firstThrow": "r5-l40-part1: combatCensus: \"iceturret\" placement disagreement \u2014 the combat row says (16,17) from IceTurret.as `super(_x + Tile.w, _y "
       },
       "verdict": "moves"
     },
@@ -4971,7 +4971,7 @@
         "movedTapes": [
           "r5-l40-part1"
         ],
-        "firstThrow": "r5-l40-part1: combatCensus: \"bombpusher\" placement disagreement — the combat row says (24.000000000000004,24) from BombPusher.as `supe"
+        "firstThrow": "r5-l40-part1: combatCensus: \"bombpusher\" placement disagreement \u2014 the combat row says (24.000000000000004,24) from BombPusher.as `supe"
       },
       "pct10": {
         "value": 25,
@@ -4981,7 +4981,7 @@
         "movedTapes": [
           "r5-l40-part1"
         ],
-        "firstThrow": "r5-l40-part1: combatCensus: \"bombpusher\" placement disagreement — the combat row says (25,24) from BombPusher.as `super(_x + Tile.w*3/"
+        "firstThrow": "r5-l40-part1: combatCensus: \"bombpusher\" placement disagreement \u2014 the combat row says (25,24) from BombPusher.as `super(_x + Tile.w*3/"
       },
       "verdict": "moves"
     },
@@ -4994,7 +4994,7 @@
         "movedTapes": [
           "r5-l40-part1"
         ],
-        "firstThrow": "r5-l40-part1: combatCensus: \"bombpusher\" placement disagreement — the combat row says (24,24.000000000000004) from BombPusher.as `supe"
+        "firstThrow": "r5-l40-part1: combatCensus: \"bombpusher\" placement disagreement \u2014 the combat row says (24,24.000000000000004) from BombPusher.as `supe"
       },
       "pct10": {
         "value": 25,
@@ -5004,7 +5004,7 @@
         "movedTapes": [
           "r5-l40-part1"
         ],
-        "firstThrow": "r5-l40-part1: combatCensus: \"bombpusher\" placement disagreement — the combat row says (24,25) from BombPusher.as `super(_x + Tile.w*3/"
+        "firstThrow": "r5-l40-part1: combatCensus: \"bombpusher\" placement disagreement \u2014 the combat row says (24,25) from BombPusher.as `super(_x + Tile.w*3/"
       },
       "verdict": "moves"
     },
@@ -5156,7 +5156,7 @@
           "r8-solve-20",
           "r9-solve-18"
         ],
-        "firstThrow": "r6-shield-control: combatCensus: \"shieldboss\" placement disagreement — the combat row says (24.000000000000004,32) from ShieldBoss.as `supe"
+        "firstThrow": "r6-shield-control: combatCensus: \"shieldboss\" placement disagreement \u2014 the combat row says (24.000000000000004,32) from ShieldBoss.as `supe"
       },
       "pct10": {
         "value": 25,
@@ -5169,7 +5169,7 @@
           "r8-solve-20",
           "r9-solve-18"
         ],
-        "firstThrow": "r6-shield-control: combatCensus: \"shieldboss\" placement disagreement — the combat row says (25,32) from ShieldBoss.as `super(_x + Tile.w*1."
+        "firstThrow": "r6-shield-control: combatCensus: \"shieldboss\" placement disagreement \u2014 the combat row says (25,32) from ShieldBoss.as `super(_x + Tile.w*1."
       },
       "verdict": "moves"
     },
@@ -5185,7 +5185,7 @@
           "r8-solve-20",
           "r9-solve-18"
         ],
-        "firstThrow": "r6-shield-control: combatCensus: \"shieldboss\" placement disagreement — the combat row says (24,32.00000000000001) from ShieldBoss.as `super"
+        "firstThrow": "r6-shield-control: combatCensus: \"shieldboss\" placement disagreement \u2014 the combat row says (24,32.00000000000001) from ShieldBoss.as `super"
       },
       "pct10": {
         "value": 33,
@@ -5198,7 +5198,7 @@
           "r8-solve-20",
           "r9-solve-18"
         ],
-        "firstThrow": "r6-shield-control: combatCensus: \"shieldboss\" placement disagreement — the combat row says (24,33) from ShieldBoss.as `super(_x + Tile.w*1."
+        "firstThrow": "r6-shield-control: combatCensus: \"shieldboss\" placement disagreement \u2014 the combat row says (24,33) from ShieldBoss.as `super(_x + Tile.w*1."
       },
       "verdict": "moves"
     },
@@ -5315,7 +5315,7 @@
           "r5-l43-wand-control",
           "r6-totem-control"
         ],
-        "firstThrow": "r5-l43-wand: combatCensus: \"bosstotem\" placement disagreement — the combat row says (5e-324,0) from BossTotem.as `super(_x, _y)` — no"
+        "firstThrow": "r5-l43-wand: combatCensus: \"bosstotem\" placement disagreement \u2014 the combat row says (5e-324,0) from BossTotem.as `super(_x, _y)` \u2014 no"
       },
       "pct10": {
         "value": 1,
@@ -5327,7 +5327,7 @@
           "r5-l43-wand-control",
           "r6-totem-control"
         ],
-        "firstThrow": "r5-l43-wand: combatCensus: \"bosstotem\" placement disagreement — the combat row says (1,0) from BossTotem.as `super(_x, _y)` — no offs"
+        "firstThrow": "r5-l43-wand: combatCensus: \"bosstotem\" placement disagreement \u2014 the combat row says (1,0) from BossTotem.as `super(_x, _y)` \u2014 no offs"
       },
       "verdict": "moves"
     },
@@ -5342,7 +5342,7 @@
           "r5-l43-wand-control",
           "r6-totem-control"
         ],
-        "firstThrow": "r5-l43-wand: combatCensus: \"bosstotem\" placement disagreement — the combat row says (0,5e-324) from BossTotem.as `super(_x, _y)` — no"
+        "firstThrow": "r5-l43-wand: combatCensus: \"bosstotem\" placement disagreement \u2014 the combat row says (0,5e-324) from BossTotem.as `super(_x, _y)` \u2014 no"
       },
       "pct10": {
         "value": 1,
@@ -5354,7 +5354,7 @@
           "r5-l43-wand-control",
           "r6-totem-control"
         ],
-        "firstThrow": "r5-l43-wand: combatCensus: \"bosstotem\" placement disagreement — the combat row says (0,1) from BossTotem.as `super(_x, _y)` — no offs"
+        "firstThrow": "r5-l43-wand: combatCensus: \"bosstotem\" placement disagreement \u2014 the combat row says (0,1) from BossTotem.as `super(_x, _y)` \u2014 no offs"
       },
       "verdict": "moves"
     },
@@ -6197,7 +6197,7 @@
           "r5-l43-wand",
           "r6-totem-control"
         ],
-        "firstThrow": "r6-totem-control: level 43: the tape clears tag 2, which is a \"fallrock\" at (96,336) — response \"arm\", and clearing it does not remove it "
+        "firstThrow": "r6-totem-control: level 43: the tape clears tag 2, which is a \"fallrock\" at (96,336) \u2014 response \"arm\", and clearing it does not remove it "
       },
       "pct10": {
         "value": 91,
@@ -7622,7 +7622,7 @@
           "r5-swim-cross",
           "r5-swim-drown"
         ],
-        "firstThrow": "l71-button-lock: combatCensus: \"spinningaxe\" placement disagreement — the combat row says (8.000000000000002,8) from SpinningAxe.as:36 `s"
+        "firstThrow": "l71-button-lock: combatCensus: \"spinningaxe\" placement disagreement \u2014 the combat row says (8.000000000000002,8) from SpinningAxe.as:36 `s"
       },
       "pct10": {
         "value": 9,
@@ -7641,7 +7641,7 @@
           "r5-swim-cross",
           "r5-swim-drown"
         ],
-        "firstThrow": "l71-button-lock: combatCensus: \"spinningaxe\" placement disagreement — the combat row says (9,8) from SpinningAxe.as:36 `super(_x + Tile.w"
+        "firstThrow": "l71-button-lock: combatCensus: \"spinningaxe\" placement disagreement \u2014 the combat row says (9,8) from SpinningAxe.as:36 `super(_x + Tile.w"
       },
       "verdict": "moves"
     },
@@ -7663,7 +7663,7 @@
           "r5-swim-cross",
           "r5-swim-drown"
         ],
-        "firstThrow": "l71-button-lock: combatCensus: \"spinningaxe\" placement disagreement — the combat row says (8,8.000000000000002) from SpinningAxe.as:36 `s"
+        "firstThrow": "l71-button-lock: combatCensus: \"spinningaxe\" placement disagreement \u2014 the combat row says (8,8.000000000000002) from SpinningAxe.as:36 `s"
       },
       "pct10": {
         "value": 9,
@@ -7682,7 +7682,7 @@
           "r5-swim-cross",
           "r5-swim-drown"
         ],
-        "firstThrow": "l71-button-lock: combatCensus: \"spinningaxe\" placement disagreement — the combat row says (8,9) from SpinningAxe.as:36 `super(_x + Tile.w"
+        "firstThrow": "l71-button-lock: combatCensus: \"spinningaxe\" placement disagreement \u2014 the combat row says (8,9) from SpinningAxe.as:36 `super(_x + Tile.w"
       },
       "verdict": "moves"
     },
@@ -7764,7 +7764,7 @@
           "l71-shieldlock-open",
           "r3-collect-darksuit"
         ],
-        "firstThrow": "l71-shieldlock-open: combatCensus: \"lavachain\" placement disagreement — the combat row says (8.000000000000002,8) from LavaChain.as:30 `super"
+        "firstThrow": "l71-shieldlock-open: combatCensus: \"lavachain\" placement disagreement \u2014 the combat row says (8.000000000000002,8) from LavaChain.as:30 `super"
       },
       "pct10": {
         "value": 9,
@@ -7775,7 +7775,7 @@
           "l71-shieldlock-open",
           "r3-collect-darksuit"
         ],
-        "firstThrow": "l71-shieldlock-open: combatCensus: \"lavachain\" placement disagreement — the combat row says (9,8) from LavaChain.as:30 `super(_x + Tile.w/2, "
+        "firstThrow": "l71-shieldlock-open: combatCensus: \"lavachain\" placement disagreement \u2014 the combat row says (9,8) from LavaChain.as:30 `super(_x + Tile.w/2, "
       },
       "verdict": "moves"
     },
@@ -7789,7 +7789,7 @@
           "l71-shieldlock-open",
           "r3-collect-darksuit"
         ],
-        "firstThrow": "l71-shieldlock-open: combatCensus: \"lavachain\" placement disagreement — the combat row says (8,8.000000000000002) from LavaChain.as:30 `super"
+        "firstThrow": "l71-shieldlock-open: combatCensus: \"lavachain\" placement disagreement \u2014 the combat row says (8,8.000000000000002) from LavaChain.as:30 `super"
       },
       "pct10": {
         "value": 9,
@@ -7800,7 +7800,7 @@
           "l71-shieldlock-open",
           "r3-collect-darksuit"
         ],
-        "firstThrow": "l71-shieldlock-open: combatCensus: \"lavachain\" placement disagreement — the combat row says (8,9) from LavaChain.as:30 `super(_x + Tile.w/2, "
+        "firstThrow": "l71-shieldlock-open: combatCensus: \"lavachain\" placement disagreement \u2014 the combat row says (8,9) from LavaChain.as:30 `super(_x + Tile.w/2, "
       },
       "verdict": "moves"
     },
@@ -7887,7 +7887,7 @@
           "r5-press-glide",
           "r5-press-repeat"
         ],
-        "firstThrow": "r5-l38-fade-boot: combatCensus: \"pulser\" placement disagreement — the combat row says (8.000000000000002,8) from Pulser.as:42 `super(_x + "
+        "firstThrow": "r5-l38-fade-boot: combatCensus: \"pulser\" placement disagreement \u2014 the combat row says (8.000000000000002,8) from Pulser.as:42 `super(_x + "
       },
       "pct10": {
         "value": 9,
@@ -7903,7 +7903,7 @@
           "r5-press-glide",
           "r5-press-repeat"
         ],
-        "firstThrow": "r5-l38-fade-boot: combatCensus: \"pulser\" placement disagreement — the combat row says (9,8) from Pulser.as:42 `super(_x + Tile.w/2, _y + T"
+        "firstThrow": "r5-l38-fade-boot: combatCensus: \"pulser\" placement disagreement \u2014 the combat row says (9,8) from Pulser.as:42 `super(_x + Tile.w/2, _y + T"
       },
       "verdict": "moves"
     },
@@ -7922,7 +7922,7 @@
           "r5-press-glide",
           "r5-press-repeat"
         ],
-        "firstThrow": "r5-l38-fade-boot: combatCensus: \"pulser\" placement disagreement — the combat row says (8,8.000000000000002) from Pulser.as:42 `super(_x + "
+        "firstThrow": "r5-l38-fade-boot: combatCensus: \"pulser\" placement disagreement \u2014 the combat row says (8,8.000000000000002) from Pulser.as:42 `super(_x + "
       },
       "pct10": {
         "value": 9,
@@ -7938,7 +7938,7 @@
           "r5-press-glide",
           "r5-press-repeat"
         ],
-        "firstThrow": "r5-l38-fade-boot: combatCensus: \"pulser\" placement disagreement — the combat row says (8,9) from Pulser.as:42 `super(_x + Tile.w/2, _y + T"
+        "firstThrow": "r5-l38-fade-boot: combatCensus: \"pulser\" placement disagreement \u2014 the combat row says (8,9) from Pulser.as:42 `super(_x + Tile.w/2, _y + T"
       },
       "verdict": "moves"
     },
@@ -9461,12 +9461,148 @@
         "movedTapes": []
       },
       "verdict": "corpus-blind"
+    },
+    "chasers.lavarunner.targetOffset.x": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.lavarunner.targetOffset.y": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.lavarunner.dieAnim.frames": {
+      "ulp": {
+        "value": 9.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 10,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.lavarunner.dieAnim.rate": {
+      "ulp": {
+        "value": 15.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 16,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.lavarunner.speedByTerrain.swim": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.lavarunner.speedByTerrain.walk": {
+      "ulp": {
+        "value": 1.5000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1.6500000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.lavarunner.speedByTerrain.swimTiles[0]": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.lavarunner.speedByTerrain.swimTiles[1]": {
+      "ulp": {
+        "value": 17.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 18,
+        "moved": 0,
+        "threw": 0,
+        "same": 139,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
     }
   },
   "summary": {
     "verdicts": {
       "moves": 86,
-      "corpus-blind": 432
+      "corpus-blind": 440
     },
     "byClass": {
       "arrow": {
@@ -9495,7 +9631,7 @@
       },
       "chasers": {
         "moves": 9,
-        "corpus-blind": 8
+        "corpus-blind": 16
       },
       "crusher": {
         "moves": 0,
@@ -9600,5 +9736,19 @@
       "turret.anims.startshot.frames",
       "turret.anims.finishshot.frames"
     ]
+  },
+  "partialRemeasure": {
+    "at": "2026-10-06",
+    "leaves": [
+      "chasers.lavarunner.targetOffset.x",
+      "chasers.lavarunner.targetOffset.y",
+      "chasers.lavarunner.dieAnim.frames",
+      "chasers.lavarunner.dieAnim.rate",
+      "chasers.lavarunner.speedByTerrain.swim",
+      "chasers.lavarunner.speedByTerrain.walk",
+      "chasers.lavarunner.speedByTerrain.swimTiles[0]",
+      "chasers.lavarunner.speedByTerrain.swimTiles[1]"
+    ],
+    "why": "seedling-fidelity-killlock added CHASERS.lavarunner; these 8 leaves were measured with --only over today's 180-tape fast tier (0 moved, 0 threw at both magnitudes), which contains every one of this file's 139 tapes, so the rows state 0 moved of those 139. CONTROL stable; its one expectation divergence (r5-l60-kill) is pre-existing at the base 0f952e9a9e. Every other row is the earlier full --write."
   }
 }
