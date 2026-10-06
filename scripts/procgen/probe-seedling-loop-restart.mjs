@@ -9,7 +9,7 @@
  * `seedling_playthrough` loaded by `?rules=`, headless logic-only, under the box lock; every session on a FRESH page.
  *
  *   W / J  (wasm / JS — the same rows):
- *     1. loop mode ON; the queue = `Menu` → GameStart → the start region, then the start region's WEST door
+ *     1. loop mode ON (the Loops panel's Accept Defaults: the preset carries no `loop_costs`); the queue = `Menu` → GameStart → the start region, then the start region's WEST door
  *        (a Seedling action: a live crossing), built with `gameState.updatePath` (the panel's own queue writer);
  *     2. Start: the first move lands the player in the start region at seedlingStartSpawn; the start block PARKS for
  *        live play (the default block mode), and the probe walks west — the game leaves L0 (gameState follows);
@@ -150,7 +150,13 @@ async function main() {
             }, panelId);
             await rp.waitFor(`${desc} is visible and enabled`, () => page.evaluate((sel) => {
                 const b = document.querySelector(sel);
-                return !!b && b.offsetParent !== null && !b.disabled;
+                if (!b) return false;
+                // ⛓ the Loops panel keeps most buttons in its collapsed "Controls" section: open it, as a person would
+                const content = b.closest('.controls-content');
+                if (content && content.style.display === 'none') {
+                    content.parentElement?.querySelector('.controls-header')?.click();
+                }
+                return b.offsetParent !== null && !b.disabled;
             }, selector), 20000);
             await page.click(selector);
         }
@@ -264,8 +270,10 @@ async function main() {
             check(`${S}: the new game stands at seedlingStartSpawn in "${START}"`, sameSpot(spawn, newGame.game.ctor),
                 JSON.stringify({ spawn, game: newGame.game }));
 
-            // 1. LOOP MODE + the queue.
-            await pressButton(LOOPS_PANEL, '#loop-ui-toggle-loop-mode', 'the Loops panel\'s Enter Loop Mode');
+            // 1. LOOP MODE + the queue. The playthrough carries no `loop_costs`, so the Loops panel offers "No cost data
+            // loaded" first; its Accept Defaults (regions 50, locations 100) is the person's way in, and enters loop mode.
+            await pressButton(LOOPS_PANEL, '#loop-ui-accept-defaults', 'the Loops panel\'s Accept Defaults');
+            await rp.waitFor('loop mode entered', async () => (await snap()).loopMode, 20000);
             const queue = await page.evaluate(async ({ start, menuExit, west }) => {
                 const { centralRegistry } = await import('./app/core/centralRegistry.js');
                 const getPub = (m, f) => centralRegistry.getPublicFunction(m, f);
@@ -312,7 +320,8 @@ async function main() {
             await afterRestart('menu Restart', before, spawn, {
                 start: () => pressButton(LOOPS_PANEL, '#loop-ui-toggle-pause', 'the Loops panel\'s Start'),
             });
-            console.log(`INFO: ${logs.filter((l) => l.startsWith('[pageerror]')).length} page error(s)`);
+            const pageErrors = logs.filter((l) => l.startsWith('[pageerror]'));
+            console.log(`INFO: ${pageErrors.length} page error(s)${pageErrors.length ? `:\n  ${pageErrors.slice(0, 5).join('\n  ')}` : ''}`);
         } catch (e) {
             check(`${S}: fatal: ${e.message}`, false, e.stack?.split('\n').slice(0, 4).join(' / '));
             console.log(`PAGE LOGS (last 30):\n${logs.slice(-30).join('\n')}`);
