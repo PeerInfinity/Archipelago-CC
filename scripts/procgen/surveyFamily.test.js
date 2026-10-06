@@ -145,3 +145,23 @@ describe('the arm\'s reach, named rather than assumed', () => {
         expect(src).toMatch(/if \(solved\) \{\n\s+const run = makeRun\(solved\.persistence\);/);
     });
 });
+
+/**
+ * ⛓ SEEDLING FIDELITY STANCE — the two sentences the stance slice added, each
+ * with the refusal it classifies (L48's shut bosslock; a stance re-entry).
+ */
+describe('familyOf — the STANCE rows', () => {
+    it('⛓ a key line on the lock\'s far side is KEYLOCK-SEALED, with the saved flag', () => {
+        const text = 'solverBot: no REACHABLE stance on bosslock@48,144\'s key line in level 48 — 2 cell(s) '
+            + 'put the player box on the line when walked into the lock, none with a corridor from (24,120). '
+            + '⛔ SEALED BEHIND ITSELF: the key line is the row y=161 under bosslock@48,144 (`BossLock.update`\'s '
+            + '`collideLine`, x 50..59), and from (24,120) a corridor reaches the stance (56,168) only through '
+            + 'the lock itself. The save still holds its flag {48,1}, so the game builds it SOLID';
+        expect(familyOf(text)).toMatch(/^KEYLOCK-SEALED — bosslock@48,144's key line is on its far side from this arrival and the save holds its flag \{48,1\} \(the SHUT state\)/);
+    });
+    it('⛓ a stance walk that re-enters its own order is STANCE-REENTRY', () => {
+        const text = 'solverBot(x) reach-exit (112,304)->L47 -> keylock stance (bosslock@48,144): STANCE_REENTRY — '
+            + 'the walk to bosslock@48,144\'s `keylock` stance (56,168) is itself blocked by bosslock@48,144';
+        expect(familyOf(text)).toMatch(/^STANCE-REENTRY — the `keylock` stance of bosslock@48,144 is behind/);
+    });
+});

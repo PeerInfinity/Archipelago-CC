@@ -157,6 +157,31 @@ export const FAMILY_RULES = [
         (m) => `MISSING-FIXTURE — the child died opening \`${m[1].split('/').pop()}\`, which `
             + `is not on disk (${m[1]}). This is not a solver refusal: nothing was solved, `
             + 'so the row is a BROKEN INPUT and its verdict says nothing about the room'],
+    /**
+     * ⛓ SEEDLING FIDELITY STANCE — A KEY LINE ON THE LOCK'S FAR SIDE. A bosslock
+     * opens only on a player box on the row UNDER it (`BossLock.update`'s
+     * `collideLine`), so an arrival north of it is sealed while the save holds its
+     * flag (the SHUT state); a cleared flag builds no lock. `deriveKeylockStance`
+     * says *"… ⛔ SEALED BEHIND ITSELF: the key line is the row y=… under <lock>"*.
+     * Witnesses: the route survey's steps 102 (L48) and 135, 155, 176, 186 (L12),
+     * which read `unclassified` ("applied 4 strategies … keylock(…)") before.
+     */
+    [/SEALED BEHIND ITSELF: the key line is the row y=\d+ under (\S+) /,
+        (m) => `KEYLOCK-SEALED — ${m[1]}'s key line is on its far side from this arrival${
+            ((f) => (f ? ` and the save holds its flag {${f[1]},${f[2]}}` : ''))(
+                /holds its flag \{(\d+),(\d+)\}/.exec(m.input))} (the SHUT state). `
+            + 'The work order is the route or the save (open it from its own side first), not the room'],
+    /**
+     * ⛓ SEEDLING FIDELITY STANCE — A STANCE WALK THAT RE-ENTERS ITS OWN ORDER and
+     * the 8 px lattice does not plan either (`walkTo`'s `STANCE_REENTRY`). Before
+     * the guard this was the 4-strategy loop. No route step reaches it at the
+     * slice's head (the two chest loops plan on the fine lattice, and the keylock
+     * loops refuse in the derivation); it is named so the next one is not
+     * `unclassified`.
+     */
+    [/STANCE_REENTRY — the walk to (\S+)'s `([a-z]+)` stance/,
+        (m) => `STANCE-REENTRY — the \`${m[2]}\` stance of ${m[1]} is behind ${m[1]} itself, on both `
+            + 'lattices; applying the verb again would be the same walk again'],
 ];
 
 /**
