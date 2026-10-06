@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 61,
+            "count": 64,
             "id": "plan"
         },
         {
-            "browser": 50,
-            "count": 93,
+            "browser": 51,
+            "count": 94,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 347,
-        "browser": 115,
-        "cited": 166,
-        "files": 358,
+        "blockStyle": 351,
+        "browser": 116,
+        "cited": 167,
+        "files": 362,
         "lineStyle": 11,
-        "withDocblock": 358,
-        "withFlags": 276
+        "withDocblock": 362,
+        "withFlags": 280
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6688,6 +6688,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-axe-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-axe-witness — ⛓⛓⛓ SEEDLING FIDELITY AXE: THE SOLVER CROSSES A SPINNING AXE BY ITS PHASE, AND THE GAME LETS IT THROUGH.",
+            "path": "scripts/procgen/plan-seedling-axe-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-burn-witness.mjs",
             "flags": [
                 {
@@ -6912,6 +6939,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-frontier3-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-frontier3-witness — ⛓⛓⛓ SEEDLING FIDELITY FRONTIER3: THE PLANNER ROUTES THROUGH WHAT THE PIXEL MASK LETS THROUGH.",
+            "path": "scripts/procgen/plan-seedling-frontier3-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-l14-swordless.mjs",
             "flags": [
                 {
@@ -6929,6 +6983,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-l14-swordless — ⛓⛓⛓ SEEDLING FIDELITY L14: THE SWORDLESS CROSSING OF L14, SOLVED BY THE DETOUR RUNG AND HANDED TO THE GAME.",
             "path": "scripts/procgen/plan-seedling-l14-swordless.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-proximity-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-proximity-witness — ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY: THE GAME WITNESSES FOR THE PROXIMITY-HAZARD ROWS.",
+            "path": "scripts/procgen/plan-seedling-proximity-witness.mjs"
         },
         {
             "argvHelpers": [],
@@ -8455,6 +8536,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-watcher-witness — ⛓⛓⛓ SEEDLING FIDELITY WATCHER: A SILENT WATCHER ON THE FRONTIER OF A REACH-EXIT IS NOT AN OBSTACLE, AND A SPEAKING ONE IS PASSED BY ITS DIALOGUE.",
             "path": "scripts/procgen/plan-seedling-watcher-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "record"
+            ],
+            "file": "probe-seedling-axe-phase.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "model-only"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-axe-phase — ⛓⛓⛓ SEEDLING FIDELITY AXE, D1: **WHICH UPDATE OF THE SPINNING AXE TESTS WHICH OBSERVATION, ASKED OF THE GAME.**",
+            "path": "scripts/procgen/probe-seedling-axe-phase.mjs"
         },
         {
             "argvHelpers": [],
