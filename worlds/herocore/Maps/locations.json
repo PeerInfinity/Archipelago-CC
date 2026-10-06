@@ -1,0 +1,2943 @@
+[
+  {
+    "name": "Normal",
+    "children": [
+      {
+        "name": "D,1",
+        "sections": [
+          { "name": "Obtain Ship Scan" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 180,
+            "y": 60
+          }
+        ]
+      },
+      {
+        "name": "E,1",
+        "sections": [
+          { "name": "Defeat Zero" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 220,
+            "y": 60
+          }
+        ]
+      },
+      {
+        "name": "L,1",
+        "sections": [
+          { "name": "Powerup from Plasma Hydra - (L,1)" },
+          { "name": "Level Up from Plasma Hydra - (L,1)" },
+          { "name": "Defeat all Enemies - (L,1)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 500,
+            "y": 60
+          }
+        ]
+      },
+      {
+        "name": "C,2",
+        "sections": [
+          { "name": "Obtain Speedrun Times Computer" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 140,
+            "y": 100
+          }
+        ]
+      },
+      {
+        "name": "D,2",
+        "sections": [
+          { "name": "Defeat all Enemies - (D,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 180,
+            "y": 100
+          }
+        ]
+      },
+      {
+        "name": "F,2",
+        "sections": [
+          { "name": "Save Point - (F,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 260,
+            "y": 100
+          }
+        ]
+      },
+      {
+        "name": "H,2",
+        "sections": [
+          { "name": "Defeat Battle Door - (H,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 340,
+            "y": 100
+          }
+        ]
+      },
+      {
+        "name": "I,2",
+        "sections": [
+          { "name": "Powerup from Grand Mother - (I,2)" },
+          { "name": "Level Up from Grand Mother - (I,2)" },
+          { "name": "Defeat all Enemies - (I,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 380,
+            "y": 100
+          }
+        ]
+      },
+      {
+        "name": "K,2",
+        "sections": [
+          { "name": "Defeat Battle Door - (K,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 460,
+            "y": 100
+          }
+        ]
+      },
+      {
+        "name": "L,2",
+        "sections": [
+          { "name": "Computer - (L,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 500,
+            "y": 100
+          }
+        ]
+      },
+      {
+        "name": "D,3",
+        "sections": [
+          { "name": "Computer - (D,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 180,
+            "y": 140
+          }
+        ]
+      },
+      {
+        "name": "E,3",
+        "sections": [
+          { "name": "Destroy Generator - (E,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 220,
+            "y": 140
+          }
+        ]
+      },
+      {
+        "name": "H,3",
+        "sections": [
+          { "name": "Defeat all Enemies - (H,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 340,
+            "y": 140
+          }
+        ]
+      },
+      {
+        "name": "I,3",
+        "sections": [
+          { "name": "Defeat all Enemies - (I,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 380,
+            "y": 140
+          }
+        ]
+      },
+      {
+        "name": "J,3",
+        "sections": [
+          { "name": "Save Point - (J,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 420,
+            "y": 140
+          }
+        ]
+      },
+      {
+        "name": "A,4",
+        "sections": [
+          { "name": "Powerup from Liquid Metal Processor - (A,4)" },
+          { "name": "Level Up from Liquid Metal Processor - (A,4)" },
+          { "name": "Defeat all Enemies - (A,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 60,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "B,4",
+        "sections": [
+          { "name": "Defeat all Enemies - (B,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 100,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "E,4",
+        "sections": [
+          { "name": "Defeat all Enemies - (E,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 220,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "I,4",
+        "sections": [
+          { "name": "Destroy Generator - (I,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 380,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "K,4",
+        "sections": [
+          { "name": "Destroy Generator - (K,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 460,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "M,4",
+        "sections": [
+          { "name": "Save Point - (M,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 540,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "N,4",
+        "sections": [
+          { "name": "Defeat all Enemies - (N,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 580,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "O,4",
+        "sections": [
+          { "name": "Computer - (O,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 620,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "D,5",
+        "sections": [
+          { "name": "Save Point - (D,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 180,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "G,5",
+        "sections": [
+          { "name": "Save Point - (G,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 300,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "I,5",
+        "sections": [
+          { "name": "Defeat all Enemies - (I,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 380,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "L,5",
+        "sections": [
+          { "name": "Powerup from Silencer - (L,5)" },
+          { "name": "Level Up from Silencer - (L,5)" },
+          { "name": "Defeat all Enemies - (L,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 500,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "N,5",
+        "sections": [
+          { "name": "Save Point - (N,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 580,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "B,6",
+        "sections": [
+          { "name": "Defeat Battle Door - (B,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 100,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "C,6",
+        "sections": [
+          { "name": "Destroy Generator - (C,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 140,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "G,6",
+        "sections": [
+          { "name": "Defeat all Enemies - (G,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 300,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "I,6",
+        "sections": [
+          { "name": "Computer - (I,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 380,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "J,6",
+        "sections": [
+          { "name": "Obtain Shapeshift Computer" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 420,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "M,6",
+        "sections": [
+          { "name": "Destroy Generator - (M,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 540,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "A,7",
+        "sections": [
+          { "name": "Defeat all Enemies - (A,7)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 60,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "B,7",
+        "sections": [
+          { "name": "Powerup from Guardian - (B,7)" },
+          { "name": "Level Up from Guardian - (B,7)" },
+          { "name": "Defeat all Enemies - (B,7)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 100,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "J,7",
+        "sections": [
+          { "name": "Powerup from Reaper Drone - (J,7)" },
+          { "name": "Level Up from Reaper Drone - (J,7)" },
+          { "name": "Defeat all Enemies - (J,7)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 420,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "K,7",
+        "sections": [
+          { "name": "Defeat all Enemies - (K,7)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 460,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "M,7",
+        "sections": [
+          { "name": "Defeat all Enemies - (M,7)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 540,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "A,8",
+        "sections": [
+          { "name": "Save Point - (A,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 60,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "B,8",
+        "sections": [
+          { "name": "Defeat all Enemies - (B,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 100,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "E,8",
+        "sections": [
+          { "name": "Defeat all Enemies - (E,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 220,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "F,8",
+        "sections": [
+          { "name": "Save Point - (F,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 260,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "H,8",
+        "sections": [
+          { "name": "Defeat Cruiser Tetron" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 340,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "L,8",
+        "sections": [
+          { "name": "Save Point - (L,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 500,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "B,9",
+        "sections": [
+          { "name": "Destroy Generator - (B,9)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 100,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "C,9",
+        "sections": [
+          { "name": "Defeat all Enemies - (C,9)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 140,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "D,9",
+        "sections": [
+          { "name": "Computer - (D,9)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 180,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "E,9",
+        "sections": [
+          { "name": "Defeat all Enemies - (E,9)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 220,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "G,9",
+        "sections": [
+          { "name": "Destroy Generator - (G,9)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 300,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "J,9",
+        "sections": [
+          { "name": "Computer - (J,9)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 420,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "K,9",
+        "sections": [
+          { "name": "Defeat all Enemies - (K,9)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 460,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "N,9",
+        "sections": [
+          { "name": "Save Point - (N,9)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 580,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "D,10",
+        "sections": [
+          { "name": "Defeat all Enemies - (D,10)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 180,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "name": "G,10",
+        "sections": [
+          { "name": "Powerup from Star Splitter - (G,10)" },
+          { "name": "Level Up from Star Splitter - (G,10)" },
+          { "name": "Defeat all Enemies - (G,10)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 300,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "name": "I,10",
+        "sections": [
+          { "name": "Save Point - (I,10)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 380,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "name": "J,10",
+        "sections": [
+          { "name": "Powerup from Rock Smasher - (J,10)" },
+          { "name": "Level Up from Rock Smasher - (J,10)" },
+          { "name": "Defeat all Enemies - (J,10)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 420,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "name": "M,10",
+        "sections": [
+          { "name": "Defeat all Enemies - (M,10)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 540,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "name": "C,11",
+        "sections": [
+          { "name": "Save Point - (C,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 140,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "D,11",
+        "sections": [
+          { "name": "Destroy Generator - (D,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 180,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "G,11",
+        "sections": [
+          { "name": "Save Point - (G,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 300,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "H,11",
+        "sections": [
+          { "name": "Destroy Generator - (H,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 340,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "I,11",
+        "sections": [
+          { "name": "Defeat all Enemies - (I,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 380,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "J,11",
+        "sections": [
+          { "name": "Defeat all Enemies - (J,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 420,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "L,11",
+        "sections": [
+          { "name": "Defeat all Enemies - (L,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 500,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "M,11",
+        "sections": [
+          { "name": "Destroy Generator - (M,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 540,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "A,12",
+        "sections": [
+          { "name": "Defeat all Enemies - (A,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 60,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "B,12",
+        "sections": [
+          { "name": "Computer - (B,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 100,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "F,12",
+        "sections": [
+          { "name": "Save Point - (F,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 260,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "H,12",
+        "sections": [
+          { "name": "Defeat all Enemies - (H,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 340,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "J,12",
+        "sections": [
+          { "name": "Computer - (J,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 420,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "L,12",
+        "sections": [
+          { "name": "Save Point - (L,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 500,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "O,12",
+        "sections": [
+          { "name": "Obtain Expel Computer" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 620,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "D,13",
+        "sections": [
+          { "name": "Computer - (D,13)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 180,
+            "y": 540
+          }
+        ]
+      },
+      {
+        "name": "E,13",
+        "sections": [
+          { "name": "Defeat all Enemies - (E,13)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 220,
+            "y": 540
+          }
+        ]
+      },
+      {
+        "name": "F,13",
+        "sections": [
+          { "name": "Defeat all Enemies - (F,13)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 260,
+            "y": 540
+          }
+        ]
+      },
+      {
+        "name": "I,13",
+        "sections": [
+          { "name": "Defeat all Enemies - (I,13)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 380,
+            "y": 540
+          }
+        ]
+      },
+      {
+        "name": "J,13",
+        "sections": [
+          { "name": "Defeat all Enemies - (J,13)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 420,
+            "y": 540
+          }
+        ]
+      },
+      {
+        "name": "L,13",
+        "sections": [
+          { "name": "Defeat all Enemies - (L,13)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 500,
+            "y": 540
+          }
+        ]
+      },
+      {
+        "name": "D,14",
+        "sections": [
+          { "name": "Defeat all Enemies - (D,14)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 180,
+            "y": 580
+          }
+        ]
+      },
+      {
+        "name": "E,14",
+        "sections": [
+          { "name": "Defeat all Enemies - (E,14)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 220,
+            "y": 580
+          }
+        ]
+      },
+      {
+        "name": "F,14",
+        "sections": [
+          { "name": "Powerup from Elites - (F,14)" },
+          { "name": "Level Up from Elites - (F,14)" },
+          { "name": "Defeat all Enemies - (F,14)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 260,
+            "y": 580
+          }
+        ]
+      },
+      {
+        "name": "H,14",
+        "sections": [
+          { "name": "Defeat all Enemies - (H,14)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 340,
+            "y": 580
+          }
+        ]
+      },
+      {
+        "name": "I,14",
+        "sections": [
+          { "name": "Computer - (I,14)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 380,
+            "y": 580
+          }
+        ]
+      },
+      {
+        "name": "D,15",
+        "sections": [
+          { "name": "Save Point - (D,15)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 180,
+            "y": 620
+          }
+        ]
+      },
+      {
+        "name": "E,15",
+        "sections": [
+          { "name": "Defeat all Enemies - (E,15)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 220,
+            "y": 620
+          }
+        ]
+      },
+      {
+        "name": "F,15",
+        "sections": [
+          { "name": "Defeat all Enemies - (F,15)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 260,
+            "y": 620
+          }
+        ]
+      },
+      {
+        "name": "H,15",
+        "sections": [
+          { "name": "Save Point - (H,15)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 340,
+            "y": 620
+          }
+        ]
+      },
+      {
+        "name": "I,15",
+        "sections": [
+          { "name": "Defeat all Enemies - (I,15)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 380,
+            "y": 620
+          }
+        ]
+      },
+      {
+        "name": "L,15",
+        "sections": [
+          { "name": "Save Point - (L,15)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 500,
+            "y": 620
+          }
+        ]
+      },
+      {
+        "name": "Eliminator",
+        "sections": [
+          { "name": "Level Up from Eliminator" }
+        ],
+        "map_locations": [
+          {
+            "map": "Normal",
+            "x": 580,
+            "y": 580
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Hard",
+    "children": [
+      {
+        "name": "D,1",
+        "sections": [
+          { "name": "Obtain Expel Computer" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 180,
+            "y": 60
+          }
+        ]
+      },
+      {
+        "name": "G,1",
+        "sections": [
+          { "name": "Save Point - (G,1)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 300,
+            "y": 60
+          }
+        ]
+      },
+      {
+        "name": "J,1",
+        "sections": [
+          { "name": "Defeat all Enemies - (J,1)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 420,
+            "y": 60
+          }
+        ]
+      },
+      {
+        "name": "K,1",
+        "sections": [
+          { "name": "Save Point - (K,1)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 460,
+            "y": 60
+          }
+        ]
+      },
+      {
+        "name": "L,1",
+        "sections": [
+          { "name": "Defeat all Enemies - (L,1)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 500,
+            "y": 60
+          }
+        ]
+      },
+      {
+        "name": "E,2",
+        "sections": [
+          { "name": "Save Point - (E,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 220,
+            "y": 100
+          }
+        ]
+      },
+      {
+        "name": "H,2",
+        "sections": [
+          { "name": "Defeat all Enemies - (H,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 340,
+            "y": 100
+          }
+        ]
+      },
+      {
+        "name": "J,2",
+        "sections": [
+          { "name": "Powerup from Elites - (J,2)" },
+          { "name": "Level Up from Elites - (J,2)" },
+          { "name": "Defeat all Enemies - (J,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 420,
+            "y": 100
+          }
+        ]
+      },
+      {
+        "name": "K,2",
+        "sections": [
+          { "name": "Defeat all Enemies - (K,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 460,
+            "y": 100
+          }
+        ]
+      },
+      {
+        "name": "L,2",
+        "sections": [
+          { "name": "Defeat all Enemies - (L,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 500,
+            "y": 100
+          }
+        ]
+      },
+      {
+        "name": "E,3",
+        "sections": [
+          { "name": "Destroy Generator - (E,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 220,
+            "y": 140
+          }
+        ]
+      },
+      {
+        "name": "G,3",
+        "sections": [
+          { "name": "Save Point - (G,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 300,
+            "y": 140
+          }
+        ]
+      },
+      {
+        "name": "J,3",
+        "sections": [
+          { "name": "Computer - (J,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 420,
+            "y": 140
+          }
+        ]
+      },
+      {
+        "name": "K,3",
+        "sections": [
+          { "name": "Defeat all Enemies - (K,3)" },
+          { "name": "Obtain Shapeshift Computer" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 460,
+            "y": 140
+          }
+        ]
+      },
+      {
+        "name": "B,4",
+        "sections": [
+          { "name": "Defeat all Enemies - (B,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 100,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "H,4",
+        "sections": [
+          { "name": "Destroy Generator - (H,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 340,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "I,4",
+        "sections": [
+          { "name": "Defeat all Enemies - (I,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 380,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "J,4",
+        "sections": [
+          { "name": "Save Point - (J,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 420,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "M,4",
+        "sections": [
+          { "name": "Destroy Generator - (M,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 540,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "N,4",
+        "sections": [
+          { "name": "Computer - (N,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 580,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "O,4",
+        "sections": [
+          { "name": "Defeat Battle Door - (O,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 620,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "name": "A,5",
+        "sections": [
+          { "name": "Defeat all Enemies - (A,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 60,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "B,5",
+        "sections": [
+          { "name": "Powerup from Reaper Drone - (B,5)" },
+          { "name": "Level Up from Reaper Drone - (B,5)" },
+          { "name": "Defeat all Enemies - (B,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 100,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "C,5",
+        "sections": [
+          { "name": "Save Point - (C,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 140,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "E,5",
+        "sections": [
+          { "name": "Defeat all Enemies - (E,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 220,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "F,5",
+        "sections": [
+          { "name": "Defeat all Enemies - (F,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 260,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "H,5",
+        "sections": [
+          { "name": "Powerup from Rock Smasher - (H,5)" },
+          { "name": "Level Up from Rock Smasher - (H,5)" },
+          { "name": "Defeat all Enemies - (H,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 340,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "I,5",
+        "sections": [
+          { "name": "Defeat all Enemies - (I,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 380,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "L,5",
+        "sections": [
+          { "name": "Defeat all Enemies - (L,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 500,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "N,5",
+        "sections": [
+          { "name": "Save Point - (N,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 580,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "B,6",
+        "sections": [
+          { "name": "Defeat all Enemies - (B,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 100,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "C,6",
+        "sections": [
+          { "name": "Destroy Generator - (C,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 140,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "F,6",
+        "sections": [
+          { "name": "Defeat all Enemies - (F,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 260,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "G,6",
+        "sections": [
+          { "name": "Defeat all Enemies - (G,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 300,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "H,6",
+        "sections": [
+          { "name": "Save Point - (H,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 340,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "I,6",
+        "sections": [
+          { "name": "Computer - (I,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 380,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "M,6",
+        "sections": [
+          { "name": "Defeat all Enemies - (M,6)" },
+          { "name": "Obtain Speedrun Times Computer" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 540,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "A,7",
+        "sections": [
+          { "name": "Defeat all Enemies - (A,7)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 60,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "F,7",
+        "sections": [
+          { "name": "Computer - (F,7)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 260,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "H,7",
+        "sections": [
+          { "name": "Defeat all Enemies - (H,7)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 340,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "I,7",
+        "sections": [
+          { "name": "Destroy Generator - (I,7)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 380,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "J,7",
+        "sections": [
+          { "name": "Defeat Battle Door - (J,7)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 420,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "L,7",
+        "sections": [
+          { "name": "Powerup from Plasma Hydra - (L,7)" },
+          { "name": "Level Up from Plasma Hydra - (L,7)" },
+          { "name": "Defeat all Enemies - (L,7)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 500,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "O,7",
+        "sections": [
+          { "name": "Defeat all Enemies - (O,7)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 620,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "A,8",
+        "sections": [
+          { "name": "Defeat all Enemies - (A,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 60,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "C,8",
+        "sections": [
+          { "name": "Defeat all Enemies - (C,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 140,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "E,8",
+        "sections": [
+          { "name": "Save Point - (E,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 220,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "H,8",
+        "sections": [
+          { "name": "Defeat Cruiser Tetron" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 340,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "J,8",
+        "sections": [
+          { "name": "Save Point - (J,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 420,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "K,8",
+        "sections": [
+          { "name": "Computer - (K,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 460,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "L,8",
+        "sections": [
+          { "name": "Defeat all Enemies - (L,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 500,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "N,8",
+        "sections": [
+          { "name": "Defeat all Enemies - (N,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 580,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "O,8",
+        "sections": [
+          { "name": "Save Point - (O,8)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 620,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "A,9",
+        "sections": [
+          { "name": "Destroy Generator - (A,9)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 60,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "F,9",
+        "sections": [
+          { "name": "Defeat all Enemies - (F,9)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 260,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "N,9",
+        "sections": [
+          { "name": "Powerup from Silencer - (N,9)" },
+          { "name": "Level Up from Silencer - (N,9)" },
+          { "name": "Defeat all Enemies - (N,9)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 580,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "O,9",
+        "sections": [
+          { "name": "Defeat all Enemies - (O,9)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 620,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "A,10",
+        "sections": [
+          { "name": "Touch Secret X Flower" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 60,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "name": "B,10",
+        "sections": [
+          { "name": "Save Point - (B,10)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 100,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "name": "C,10",
+        "sections": [
+          { "name": "Defeat all Enemies - (C,10)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 140,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "name": "L,10",
+        "sections": [
+          { "name": "Destroy Generator - (L,10)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 500,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "name": "M,10",
+        "sections": [
+          { "name": "Computer - (M,10)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 540,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "name": "O,10",
+        "sections": [
+          { "name": "Defeat all Enemies - (O,10)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 620,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "name": "B,11",
+        "sections": [
+          { "name": "Destroy Generator - (B,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 100,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "C,11",
+        "sections": [
+          { "name": "Defeat all Enemies - (C,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 140,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "E,11",
+        "sections": [
+          { "name": "Save Point - (E,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 220,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "J,11",
+        "sections": [
+          { "name": "Save Point - (J,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 420,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "M,11",
+        "sections": [
+          { "name": "Save Point - (M,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 540,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "N,11",
+        "sections": [
+          { "name": "Defeat all Enemies - (N,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 580,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "O,11",
+        "sections": [
+          { "name": "Defeat all Enemies - (O,11)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 620,
+            "y": 460
+          }
+        ]
+      },
+      {
+        "name": "A,12",
+        "sections": [
+          { "name": "Powerup from Star Splitter - (A,12)" },
+          { "name": "Level Up from Star Splitter - (A,12)" },
+          { "name": "Defeat all Enemies - (A,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 60,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "B,12",
+        "sections": [
+          { "name": "Computer - (B,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 100,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "C,12",
+        "sections": [
+          { "name": "Defeat all Enemies - (C,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 140,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "D,12",
+        "sections": [
+          { "name": "Defeat all Enemies - (D,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 180,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "E,12",
+        "sections": [
+          { "name": "Defeat all Enemies - (E,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 220,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "G,12",
+        "sections": [
+          { "name": "Save Point - (G,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 300,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "H,12",
+        "sections": [
+          { "name": "Defeat all Enemies - (H,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 340,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "I,12",
+        "sections": [
+          { "name": "Computer - (I,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 380,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "K,12",
+        "sections": [
+          { "name": "Computer - (K,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 460,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "N,12",
+        "sections": [
+          { "name": "Defeat all Enemies - (N,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 580,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "O,12",
+        "sections": [
+          { "name": "Powerup from Guardian - (O,12)" },
+          { "name": "Level Up from Guardian - (O,12)" },
+          { "name": "Defeat all Enemies - (O,12)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 620,
+            "y": 500
+          }
+        ]
+      },
+      {
+        "name": "E,13",
+        "sections": [
+          { "name": "Defeat all Enemies - (E,13)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 220,
+            "y": 540
+          }
+        ]
+      },
+      {
+        "name": "F,13",
+        "sections": [
+          { "name": "Computer - (F,13)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 260,
+            "y": 540
+          }
+        ]
+      },
+      {
+        "name": "I,13",
+        "sections": [
+          { "name": "Defeat all Enemies - (I,13)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 380,
+            "y": 540
+          }
+        ]
+      },
+      {
+        "name": "D,14",
+        "sections": [
+          { "name": "Save Point - (D,14)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 180,
+            "y": 580
+          }
+        ]
+      },
+      {
+        "name": "F,14",
+        "sections": [
+          { "name": "Defeat all Enemies - (F,14)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 260,
+            "y": 580
+          }
+        ]
+      },
+      {
+        "name": "G,14",
+        "sections": [
+          { "name": "Defeat Zero" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 300,
+            "y": 580
+          }
+        ]
+      },
+      {
+        "name": "H,14",
+        "sections": [
+          { "name": "Destroy Generator - (H,14)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 340,
+            "y": 580
+          }
+        ]
+      },
+      {
+        "name": "I,14",
+        "sections": [
+          { "name": "Powerup from Liquid Metal Processor - (I,14)" },
+          { "name": "Level Up from Liquid Metal Processor - (I,14)" },
+          { "name": "Defeat all Enemies - (I,14)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 380,
+            "y": 580
+          }
+        ]
+      },
+      {
+        "name": "K,14",
+        "sections": [
+          { "name": "Defeat all Enemies - (K,14)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 460,
+            "y": 580
+          }
+        ]
+      },
+      {
+        "name": "E,15",
+        "sections": [
+          { "name": "Defeat all Enemies - (E,15)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 220,
+            "y": 620
+          }
+        ]
+      },
+      {
+        "name": "F,15",
+        "sections": [
+          { "name": "Powerup from Grand Mother - (F,15)" },
+          { "name": "Level Up from Grand Mother - (F,15)" },
+          { "name": "Defeat all Enemies - (F,15)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 260,
+            "y": 620
+          }
+        ]
+      },
+      {
+        "name": "G,15",
+        "sections": [
+          { "name": "Obtain Ship Scan" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 300,
+            "y": 620
+          }
+        ]
+      },
+      {
+        "name": "J,15",
+        "sections": [
+          { "name": "Save Point - (J,15)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 420,
+            "y": 620
+          }
+        ]
+      },
+      {
+        "name": "K,15",
+        "sections": [
+          { "name": "Defeat all Enemies - (K,15)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 460,
+            "y": 620
+          }
+        ]
+      },
+      {
+        "name": "L,15",
+        "sections": [
+          { "name": "Destroy Generator - (L,15)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 500,
+            "y": 620
+          }
+        ]
+      },
+      {
+        "name": "Eliminator",
+        "sections": [
+          { "name": "Level Up from Eliminator" }
+        ],
+        "map_locations": [
+          {
+            "map": "Hard",
+            "x": 580,
+            "y": 580
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Annihilation",
+    "children": [
+      {
+        "name": "G,1",
+        "sections": [
+          { "name": "Defeat all Enemies - (G,1)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 340,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "H,1",
+        "sections": [
+          { "name": "Destroy Generator - (H,1)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 380,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "I,1",
+        "sections": [
+          { "name": "Save Point - (I,1)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 420,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "K,1",
+        "sections": [
+          { "name": "Computer - (K,1)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 500,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "L,1",
+        "sections": [
+          { "name": "Obtain Ship Scan" },
+          { "name": "Obtain Shapeshift Computer" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 540,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "name": "D,2",
+        "sections": [
+          { "name": "Computer - (D,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 220,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "F,2",
+        "sections": [
+          { "name": "Defeat all Enemies - (F,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 300,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "H,2",
+        "sections": [
+          { "name": "Computer - (H,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 380,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "J,2",
+        "sections": [
+          { "name": "Destroy Generator - (J,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 460,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "K,2",
+        "sections": [
+          { "name": "Defeat all Enemies - (K,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 500,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "M,2",
+        "sections": [
+          { "name": "Defeat all Enemies - (M,2)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 580,
+            "y": 260
+          }
+        ]
+      },
+      {
+        "name": "A,3",
+        "sections": [
+          { "name": "Save Point - (A,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 100,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "D,3",
+        "sections": [
+          { "name": "Defeat all Enemies - (D,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 220,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "E,3",
+        "sections": [
+          { "name": "Defeat Battle Door - (E,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 260,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "F,3",
+        "sections": [
+          { "name": "Computer - (F,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 300,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "G,3",
+        "sections": [
+          { "name": "Save Point - (G,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 340,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "H,3",
+        "sections": [
+          { "name": "Computer - (H,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 380,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "K,3",
+        "sections": [
+          { "name": "Defeat all Enemies - (K,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 500,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "L,3",
+        "sections": [
+          { "name": "Computer - (L,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 540,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "M,3",
+        "sections": [
+          { "name": "Defeat all Enemies - (M,3)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 580,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "name": "D,4",
+        "sections": [
+          { "name": "Computer - (D,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 220,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "E,4",
+        "sections": [
+          { "name": "Defeat all Enemies - (E,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 260,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "G,4",
+        "sections": [
+          { "name": "Destroy Generator - (G,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 340,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "H,4",
+        "sections": [
+          { "name": "Defeat all Enemies - (H,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 380,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "K,4",
+        "sections": [
+          { "name": "Computer - (K,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 500,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "L,4",
+        "sections": [
+          { "name": "Save Point - (L,4)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 540,
+            "y": 340
+          }
+        ]
+      },
+      {
+        "name": "F,5",
+        "sections": [
+          { "name": "Defeat all Enemies - (F,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 300,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "G,5",
+        "sections": [
+          { "name": "Defeat all Enemies - (G,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 340,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "H,5",
+        "sections": [
+          { "name": "Computer - (H,5)" },
+          { "name": "Touch Trollis' Grave" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 380,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "J,5",
+        "sections": [
+          { "name": "Save Point - (J,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 460,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "K,5",
+        "sections": [
+          { "name": "Computer - (K,5)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 500,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "L,5",
+        "sections": [
+          { "name": "Defeat the Living Warmachine" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 540,
+            "y": 380
+          }
+        ]
+      },
+      {
+        "name": "H,6",
+        "sections": [
+          { "name": "Defeat all Enemies - (H,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 380,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "name": "I,6",
+        "sections": [
+          { "name": "Defeat all Enemies - (I,6)" }
+        ],
+        "map_locations": [
+          {
+            "map": "Annihilation",
+            "x": 420,
+            "y": 420
+          }
+        ]
+      }
+    ]
+  }
+]

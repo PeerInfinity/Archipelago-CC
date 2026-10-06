@@ -1,0 +1,127 @@
+﻿Archipelago Version 0.6.8  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Hero Core
+Location Count:                  40
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Difficulty:                      Normal
+Goal Computers:                  0
+powerups:                        Yes
+Shuffle Level Ups:               No
+Shuffle Computers:               Yes
+generators:                      Yes
+Shuffle Saves:                   Off
+Shuffle Doors:                   No
+Miscellaneous Locations:         No
+Expel Skips:                     No
+Death Link:                      No
+
+
+Locations:
+
+Level Up from Eliminator: Level Up
+Powerup from Plasma Hydra - (L,1): Computer
+Level Up from Plasma Hydra - (L,1): Level Up
+Destroy Generator - (G,9): Computer
+Destroy Generator - (I,4): Suit Upgrade
+Destroy Generator - (B,9): Blade Upgrade
+Powerup from Guardian - (B,7): Computer
+Level Up from Guardian - (B,7): Level Up
+Computer - (B,12): Barrier Removal - (C,6)
+Computer - (D,3): Computer
+Powerup from Liquid Metal Processor - (A,4): Blaster Upgrade
+Level Up from Liquid Metal Processor - (A,4): Level Up
+Destroy Generator - (C,6): Suit Upgrade
+Computer - (D,9): Computer
+Destroy Generator - (D,11): Computer
+Destroy Generator - (E,3): Barrier Removal - (G,9)
+Computer - (D,13): Barrier Removal - (K,4)
+Powerup from Grand Mother - (I,2): Barrier Removal - (M,6)
+Level Up from Grand Mother - (I,2): Level Up
+Defeat Cruiser Tetron: Victory!
+Destroy Generator - (H,11): Computer
+Powerup from Star Splitter - (G,10): Barrier Removal - (B,9)
+Level Up from Star Splitter - (G,10): Level Up
+Computer - (I,6): Barrier Removal - (M,11)
+Destroy Generator - (K,4): Suit Upgrade
+Powerup from Silencer - (L,5): Computer
+Level Up from Silencer - (L,5): Level Up
+Destroy Generator - (M,11): Pattern Scanner
+Destroy Generator - (M,6): Blade Upgrade
+Computer - (I,14): Barrier Removal - (E,3)
+Powerup from Reaper Drone - (J,7): Computer
+Level Up from Reaper Drone - (J,7): Level Up
+Computer - (J,9): Barrier Removal - (H,11)
+Powerup from Rock Smasher - (J,10): Barrier Removal - (I,4)
+Level Up from Rock Smasher - (J,10): Level Up
+Computer - (J,12): Blaster Upgrade
+Computer - (L,2): Computer
+Powerup from Elites - (F,14): Barrier Removal - (D,11)
+Level Up from Elites - (F,14): Level Up
+Computer - (O,4): Blade Upgrade
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Destroy Generator - (M,11): Pattern Scanner
+}
+2: {
+  Computer - (I,14): Barrier Removal - (E,3)
+  Computer - (J,12): Blaster Upgrade
+  Computer - (J,9): Barrier Removal - (H,11)
+  Computer - (L,2): Computer
+  Computer - (O,4): Blade Upgrade
+  Destroy Generator - (B,9): Blade Upgrade
+  Destroy Generator - (D,11): Computer
+  Destroy Generator - (E,3): Barrier Removal - (G,9)
+  Destroy Generator - (G,9): Computer
+  Destroy Generator - (I,4): Suit Upgrade
+  Destroy Generator - (K,4): Suit Upgrade
+  Destroy Generator - (M,6): Blade Upgrade
+  Level Up from Elites - (F,14): Level Up
+  Level Up from Guardian - (B,7): Level Up
+  Level Up from Plasma Hydra - (L,1): Level Up
+  Level Up from Reaper Drone - (J,7): Level Up
+  Level Up from Rock Smasher - (J,10): Level Up
+  Level Up from Silencer - (L,5): Level Up
+  Level Up from Star Splitter - (G,10): Level Up
+  Powerup from Elites - (F,14): Barrier Removal - (D,11)
+  Powerup from Guardian - (B,7): Computer
+  Powerup from Plasma Hydra - (L,1): Computer
+  Powerup from Reaper Drone - (J,7): Computer
+  Powerup from Rock Smasher - (J,10): Barrier Removal - (I,4)
+  Powerup from Silencer - (L,5): Computer
+  Powerup from Star Splitter - (G,10): Barrier Removal - (B,9)
+}
+3: {
+  Computer - (B,12): Barrier Removal - (C,6)
+  Computer - (D,13): Barrier Removal - (K,4)
+  Computer - (D,3): Computer
+  Computer - (D,9): Computer
+  Computer - (I,6): Barrier Removal - (M,11)
+  Defeat Cruiser Tetron: Victory!
+  Destroy Generator - (H,11): Computer
+  Level Up from Grand Mother - (I,2): Level Up
+  Level Up from Liquid Metal Processor - (A,4): Level Up
+  Powerup from Grand Mother - (I,2): Barrier Removal - (M,6)
+  Powerup from Liquid Metal Processor - (A,4): Blaster Upgrade
+}
+4: {
+  Destroy Generator - (C,6): Suit Upgrade
+  Level Up from Eliminator: Level Up
+}

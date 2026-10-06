@@ -1,0 +1,20 @@
+﻿[
+    {
+        "name": "Normal",
+        "img": "Normal.png",
+        "location_size": 20,
+        "location_border_thickness": 2
+    },
+    {
+        "name": "Hard",
+        "img": "Hard.png",
+        "location_size": 20,
+        "location_border_thickness": 2
+    },
+    {
+        "name": "Annihilation",
+        "img": "Annihilation.png",
+        "location_size": 20,
+        "location_border_thickness": 2
+    }
+]

@@ -124,7 +124,7 @@
     "exporter_path": null,
     "exporter_size": 0,
     "game_logic_path": "frontend/modules/shared/gameLogic/generic/genericLogic.js",
-    "game_logic_size": 8898,
+    "game_logic_size": 16341,
     "game_name": "Archipelago",
     "has_custom_exporter": false,
     "has_custom_game_logic": true,
@@ -449,6 +449,17 @@
     "has_custom_game_logic": false,
     "template_file": "Heretic.yaml",
     "world_directory": "heretic"
+  },
+  "Hero Core": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Hero Core",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Hero Core.yaml",
+    "world_directory": "herocore"
   },
   "Hollow Knight": {
     "exporter_path": null,

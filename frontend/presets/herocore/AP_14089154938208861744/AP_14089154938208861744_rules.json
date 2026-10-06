@@ -1,0 +1,4529 @@
+{
+  "schema_version": 3,
+  "game_name": "Hero Core",
+  "game_directory": "herocore",
+  "archipelago_version": "0.6.8",
+  "generation_seed": 1,
+  "seed_name": "14089154938208861744",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Menu -> Normal Start",
+            "connected_region": "Normal Start",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Menu -> Normal (A,7)",
+            "connected_region": "Normal (A,7)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Pattern Scanner",
+                  "Warp Point (A,8)"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Menu -> Normal (B,9)",
+            "connected_region": "Normal (B,9)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Pattern Scanner",
+                  "Warp Point (C,11)"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Menu -> Normal Main Region",
+            "connected_region": "Normal Main Region",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Pattern Scanner",
+                  "Warp Point (F,12)",
+                  "Warp Point (F,2)",
+                  "Warp Point (F,8)",
+                  "Warp Point (G,5)",
+                  "Warp Point (H,15)",
+                  "Warp Point (I,10)",
+                  "Warp Point (J,3)",
+                  "Warp Point (L,8)"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Menu -> Normal (D,4)",
+            "connected_region": "Normal (D,4)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Pattern Scanner",
+                  "Warp Point (D,5)"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Menu -> Normal (D,15)",
+            "connected_region": "Normal (D,15)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Pattern Scanner",
+                  "Warp Point (D,15)"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Menu -> Normal (G,10)",
+            "connected_region": "Normal (G,10)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Pattern Scanner",
+                  "Warp Point (G,11)"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Menu -> Normal (L,11)",
+            "connected_region": "Normal (L,11)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Pattern Scanner",
+                  "Warp Point (L,12)"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Menu -> Normal (M,4)",
+            "connected_region": "Normal (M,4)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Pattern Scanner",
+                  "Warp Point (M,4)"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Menu -> Normal (M,5)",
+            "connected_region": "Normal (M,5)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Pattern Scanner",
+                  "Warp Point (N,5)"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Menu -> Normal (N,6)",
+            "connected_region": "Normal (N,6)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Pattern Scanner",
+                  "Warp Point (N,9)"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level Up from Eliminator",
+            "id": 1,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Level Up",
+                "count": 9
+              }
+            },
+            "item": {
+              "name": "Level Up",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Normal Start": {
+        "name": "Normal Start",
+        "exits": [
+          {
+            "name": "Normal Start -> Normal (J,14)",
+            "connected_region": "Normal (J,14)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "Normal Start -> Normal (L,11)",
+            "connected_region": "Normal (L,11)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (L,13)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (J,14)": {
+        "name": "Normal (J,14)",
+        "exits": [
+          {
+            "name": "Normal (J,14) -> Normal Main Region",
+            "connected_region": "Normal Main Region",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (I,15)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal Main Region": {
+        "name": "Normal Main Region",
+        "exits": [
+          {
+            "name": "Normal Main Region -> Normal (B,9)",
+            "connected_region": "Normal (B,9)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (D,11)"
+              }
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (C,7)",
+            "connected_region": "Normal (C,7)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade",
+                "count": 3
+              }
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (D,2)",
+            "connected_region": "Normal (D,2)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade"
+              }
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (D,4)",
+            "connected_region": "Normal (D,4)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (E,3)"
+              }
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (D,8)",
+            "connected_region": "Normal (D,8)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade",
+                "count": 3
+              }
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (D,11)",
+            "connected_region": "Normal (D,11)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (D,10)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (E,3)",
+            "connected_region": "Normal (E,3)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (E,4)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (F,13)",
+            "connected_region": "Normal (F,13)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade",
+                "count": 3
+              }
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (H,3)",
+            "connected_region": "Normal (H,3)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Blade Upgrade",
+                    "count": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Barrier Removal - (I,4)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal Main Region -> Tetron",
+            "connected_region": "Tetron",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "item_counts": {
+                  "Barrier Removal - (G,9)": 1,
+                  "Computer": 0
+                }
+              }
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (H,11)",
+            "connected_region": "Normal (H,11)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (H,11)"
+              }
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (H,12)",
+            "connected_region": "Normal (H,12)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade",
+                "count": 3
+              }
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (I,5)",
+            "connected_region": "Normal (I,5)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (I,14)",
+            "connected_region": "Normal (I,14)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (I,13)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (J,7)",
+            "connected_region": "Normal (J,7)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (K,7)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (J,9)",
+            "connected_region": "Normal (J,9)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (K,9)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (J,10)",
+            "connected_region": "Normal (J,10)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (J,11)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (J,12)",
+            "connected_region": "Normal (J,12)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (J,11)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (J,14)",
+            "connected_region": "Normal (J,14)",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (L,2)",
+            "connected_region": "Normal (L,2)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Battle Door Key (K,2)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (L,4)",
+            "connected_region": "Normal (L,4)",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (L,11)",
+            "connected_region": "Normal (L,11)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade"
+              }
+            }
+          },
+          {
+            "name": "Normal Main Region -> Normal (N,6)",
+            "connected_region": "Normal (N,6)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Blade Upgrade",
+                  "Door Key (M,10)"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Powerup from Plasma Hydra - (L,1)",
+            "id": 432,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Computer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Level Up from Plasma Hydra - (L,1)",
+            "id": 688,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Level Up",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Destroy Generator - (G,9)",
+            "id": 872,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Computer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Destroy Generator - (I,4)",
+            "id": 899,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Suit Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (B,9)": {
+        "name": "Normal (B,9)",
+        "exits": [
+          {
+            "name": "Normal (B,9) -> Normal (A,10)",
+            "connected_region": "Normal (A,10)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (B,9)"
+              }
+            }
+          },
+          {
+            "name": "Normal (B,9) -> Normal (C,9)",
+            "connected_region": "Normal (C,9)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (B,9)"
+              }
+            }
+          },
+          {
+            "name": "Normal (B,9) -> Normal Main Region",
+            "connected_region": "Normal Main Region",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (D,11)"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Destroy Generator - (B,9)",
+            "id": 792,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Blade Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (A,10)": {
+        "name": "Normal (A,10)",
+        "exits": [
+          {
+            "name": "Normal (A,10) -> Normal (A,7)",
+            "connected_region": "Normal (A,7)",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "item_counts": {
+                  "Blade Upgrade": 2,
+                  "Suit Upgrade": 2
+                }
+              }
+            }
+          },
+          {
+            "name": "Normal (A,10) -> Normal (B,9)",
+            "connected_region": "Normal (B,9)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (B,9)"
+              }
+            }
+          },
+          {
+            "name": "Normal (A,10) -> Normal (B,12)",
+            "connected_region": "Normal (B,12)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (A,12)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (A,7)": {
+        "name": "Normal (A,7)",
+        "exits": [
+          {
+            "name": "Normal (A,7) -> Normal (A,10)",
+            "connected_region": "Normal (A,10)",
+            "access_rule": {
+              "rule": "HasAllCounts",
+              "args": {
+                "item_counts": {
+                  "Blade Upgrade": 2,
+                  "Suit Upgrade": 2
+                }
+              }
+            }
+          },
+          {
+            "name": "Normal (A,7) -> Normal (B,7)",
+            "connected_region": "Normal (B,7)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (A,7)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (B,7)": {
+        "name": "Normal (B,7)",
+        "exits": [
+          {
+            "name": "Normal (B,7) -> Normal (A,7)",
+            "connected_region": "Normal (A,7)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (B,7)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal (B,7) -> Normal (C,7)",
+            "connected_region": "Normal (C,7)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (B,7)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Powerup from Guardian - (B,7)",
+            "id": 278,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Computer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Level Up from Guardian - (B,7)",
+            "id": 534,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Level Up",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Normal (C,7)": {
+        "name": "Normal (C,7)",
+        "exits": [
+          {
+            "name": "Normal (C,7) -> Normal (B,7)",
+            "connected_region": "Normal (B,7)",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Normal (C,7) -> Normal Main Region",
+            "connected_region": "Normal Main Region",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade",
+                "count": 3
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (B,12)": {
+        "name": "Normal (B,12)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Computer - (B,12)",
+            "id": 1051,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Barrier Removal - (C,6)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (C,9)": {
+        "name": "Normal (C,9)",
+        "exits": [
+          {
+            "name": "Normal (C,9) -> Normal (B,8)",
+            "connected_region": "Normal (B,8)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (C,9)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal (C,9) -> Normal (B,9)",
+            "connected_region": "Normal (B,9)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (B,9)"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (B,8)": {
+        "name": "Normal (B,8)",
+        "exits": [
+          {
+            "name": "Normal (B,8) -> Normal (A,7)",
+            "connected_region": "Normal (A,7)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (B,8)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (D,2)": {
+        "name": "Normal (D,2)",
+        "exits": [
+          {
+            "name": "Normal (D,2) -> Normal (D,3)",
+            "connected_region": "Normal (D,3)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (D,2)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (D,3)": {
+        "name": "Normal (D,3)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Computer - (D,3)",
+            "id": 1074,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Computer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (D,4)": {
+        "name": "Normal (D,4)",
+        "exits": [
+          {
+            "name": "Normal (D,4) -> Normal (B,4)",
+            "connected_region": "Normal (B,4)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Blade Upgrade",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Barrier Removal - (C,6)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal (D,4) -> Normal (C,6)",
+            "connected_region": "Normal (C,6)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Barrier Removal - (C,6)",
+                  "Battle Door Key (B,6)"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Normal (D,4) -> Normal Main Region",
+            "connected_region": "Normal Main Region",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (E,3)"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (B,4)": {
+        "name": "Normal (B,4)",
+        "exits": [
+          {
+            "name": "Normal (B,4) -> Normal (A,4)",
+            "connected_region": "Normal (A,4)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (B,4)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (A,4)": {
+        "name": "Normal (A,4)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Powerup from Liquid Metal Processor - (A,4)",
+            "id": 259,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Blaster Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Level Up from Liquid Metal Processor - (A,4)",
+            "id": 515,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Level Up",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Normal (C,6)": {
+        "name": "Normal (C,6)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Destroy Generator - (C,6)",
+            "id": 805,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Suit Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (D,8)": {
+        "name": "Normal (D,8)",
+        "exits": [
+          {
+            "name": "Normal (D,8) -> Normal (E,9)",
+            "connected_region": "Normal (E,9)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (E,8)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (E,9)": {
+        "name": "Normal (E,9)",
+        "exits": [
+          {
+            "name": "Normal (E,9) -> Normal (D,9)",
+            "connected_region": "Normal (D,9)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (E,9)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (D,9)": {
+        "name": "Normal (D,9)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Computer - (D,9)",
+            "id": 1080,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Computer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (D,11)": {
+        "name": "Normal (D,11)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Destroy Generator - (D,11)",
+            "id": 826,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Computer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (E,3)": {
+        "name": "Normal (E,3)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Destroy Generator - (E,3)",
+            "id": 834,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Barrier Removal - (G,9)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (F,13)": {
+        "name": "Normal (F,13)",
+        "exits": [
+          {
+            "name": "Normal (F,13) -> Normal (E,13)",
+            "connected_region": "Normal (E,13)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (F,13)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (E,13)": {
+        "name": "Normal (E,13)",
+        "exits": [
+          {
+            "name": "Normal (E,13) -> Normal (E,14)",
+            "connected_region": "Normal (E,14)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (E,13)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (E,14)": {
+        "name": "Normal (E,14)",
+        "exits": [
+          {
+            "name": "Normal (E,14) -> Normal (D,14)",
+            "connected_region": "Normal (D,14)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (E,14)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (D,14)": {
+        "name": "Normal (D,14)",
+        "exits": [
+          {
+            "name": "Normal (D,14) -> Normal (D,13)",
+            "connected_region": "Normal (D,13)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (D,14)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (D,13)": {
+        "name": "Normal (D,13)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Computer - (D,13)",
+            "id": 1084,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Barrier Removal - (K,4)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (H,3)": {
+        "name": "Normal (H,3)",
+        "exits": [
+          {
+            "name": "Normal (H,3) -> Normal (H,2)",
+            "connected_region": "Normal (H,2)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (H,3)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (H,2)": {
+        "name": "Normal (H,2)",
+        "exits": [
+          {
+            "name": "Normal (H,2) -> Normal (I,2)",
+            "connected_region": "Normal (I,2)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Battle Door Key (H,2)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (I,2)": {
+        "name": "Normal (I,2)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Powerup from Grand Mother - (I,2)",
+            "id": 385,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Barrier Removal - (M,6)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Level Up from Grand Mother - (I,2)",
+            "id": 641,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Level Up",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Tetron": {
+        "name": "Tetron",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Defeat Cruiser Tetron",
+            "id": 9,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Victory!",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Normal (H,11)": {
+        "name": "Normal (H,11)",
+        "exits": [
+          {
+            "name": "Normal (H,11) -> Normal Main Region",
+            "connected_region": "Normal Main Region",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (H,11)"
+              }
+            }
+          },
+          {
+            "name": "Normal (H,11) -> Normal (G,10)",
+            "connected_region": "Normal (G,10)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (H,11)"
+              }
+            }
+          },
+          {
+            "name": "Normal (H,11) -> Normal (I,11)",
+            "connected_region": "Normal (I,11)",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Destroy Generator - (H,11)",
+            "id": 890,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Computer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (G,10)": {
+        "name": "Normal (G,10)",
+        "exits": [
+          {
+            "name": "Normal (G,10) -> Normal (H,11)",
+            "connected_region": "Normal (H,11)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (H,11)"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Powerup from Star Splitter - (G,10)",
+            "id": 361,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Barrier Removal - (B,9)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Level Up from Star Splitter - (G,10)",
+            "id": 617,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Level Up",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Normal (I,11)": {
+        "name": "Normal (I,11)",
+        "exits": [
+          {
+            "name": "Normal (I,11) -> Normal (H,11)",
+            "connected_region": "Normal (H,11)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (I,11)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal (I,11) -> Normal (H,12)",
+            "connected_region": "Normal (H,12)",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (H,12)": {
+        "name": "Normal (H,12)",
+        "exits": [
+          {
+            "name": "Normal (H,12) -> Normal Main Region",
+            "connected_region": "Normal Main Region",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Normal (H,12) -> Normal (I,11)",
+            "connected_region": "Normal (I,11)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (H,12)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (I,5)": {
+        "name": "Normal (I,5)",
+        "exits": [
+          {
+            "name": "Normal (I,5) -> Normal Main Region",
+            "connected_region": "Normal Main Region",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "Normal (I,5) -> Normal (I,6)",
+            "connected_region": "Normal (I,6)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (I,5)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal (I,5) -> Normal (J,4)",
+            "connected_region": "Normal (J,4)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade",
+                "count": 2
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (I,6)": {
+        "name": "Normal (I,6)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Computer - (I,6)",
+            "id": 1157,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Barrier Removal - (M,11)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (J,4)": {
+        "name": "Normal (J,4)",
+        "exits": [
+          {
+            "name": "Normal (J,4) -> Normal (I,5)",
+            "connected_region": "Normal (I,5)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "Normal (J,4) -> Normal (J,6)",
+            "connected_region": "Normal (J,6)",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Normal (J,4) -> Normal (L,5)",
+            "connected_region": "Normal (L,5)",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Destroy Generator - (K,4)",
+            "id": 931,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Suit Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (J,6)": {
+        "name": "Normal (J,6)",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Normal (L,5)": {
+        "name": "Normal (L,5)",
+        "exits": [
+          {
+            "name": "Normal (L,5) -> Normal (J,4)",
+            "connected_region": "Normal (J,4)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (L,5)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal (L,5) -> Normal (L,4)",
+            "connected_region": "Normal (L,4)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (L,5)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal (L,5) -> Normal (M,5)",
+            "connected_region": "Normal (M,5)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (L,5)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Powerup from Silencer - (L,5)",
+            "id": 436,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Computer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Level Up from Silencer - (L,5)",
+            "id": 692,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Level Up",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Normal (L,4)": {
+        "name": "Normal (L,4)",
+        "exits": [
+          {
+            "name": "Normal (L,4) -> Normal Main Region",
+            "connected_region": "Normal Main Region",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Barrier Removal - (K,4)"
+              }
+            }
+          },
+          {
+            "name": "Normal (L,4) -> Normal (L,5)",
+            "connected_region": "Normal (L,5)",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (M,5)": {
+        "name": "Normal (M,5)",
+        "exits": [
+          {
+            "name": "Normal (M,5) -> Normal (L,5)",
+            "connected_region": "Normal (L,5)",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Normal (M,5) -> Normal (N,6)",
+            "connected_region": "Normal (N,6)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Blade Upgrade",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Barrier Removal - (M,6)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (N,6)": {
+        "name": "Normal (N,6)",
+        "exits": [
+          {
+            "name": "Normal (N,6) -> Normal Main Region",
+            "connected_region": "Normal Main Region",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Not",
+                      "args": {
+                        "condition": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "doors"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "expel_skips"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Suit Upgrade",
+                            "count": 2
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "item_names": [
+                      "Blade Upgrade",
+                      "Door Key (M,10)"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal (N,6) -> Normal (L,11)",
+            "connected_region": "Normal (L,11)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Barrier Removal - (M,11)",
+                  "Blade Upgrade"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Normal (N,6) -> Normal (M,5)",
+            "connected_region": "Normal (M,5)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Blade Upgrade",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Barrier Removal - (M,6)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal (N,6) -> Normal (M,6)",
+            "connected_region": "Normal (M,6)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (M,7)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal (N,6) -> Normal (O,12)",
+            "connected_region": "Normal (O,12)",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade",
+                "count": 3
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (L,11)": {
+        "name": "Normal (L,11)",
+        "exits": [
+          {
+            "name": "Normal (L,11) -> Normal Main Region",
+            "connected_region": "Normal Main Region",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blade Upgrade"
+              }
+            }
+          },
+          {
+            "name": "Normal (L,11) -> Normal (J,14)",
+            "connected_region": "Normal (J,14)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Not",
+                      "args": {
+                        "condition": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "doors"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "expel_skips"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Suit Upgrade",
+                            "count": 2
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (J,13)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Normal (L,11) -> Normal (N,6)",
+            "connected_region": "Normal (N,6)",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Barrier Removal - (M,11)",
+                  "Blade Upgrade"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Normal (L,11) -> Normal (M,11)",
+            "connected_region": "Normal (M,11)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (L,11)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (M,11)": {
+        "name": "Normal (M,11)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Destroy Generator - (M,11)",
+            "id": 970,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Pattern Scanner",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (M,6)": {
+        "name": "Normal (M,6)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Destroy Generator - (M,6)",
+            "id": 965,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Blade Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (O,12)": {
+        "name": "Normal (O,12)",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Normal (I,14)": {
+        "name": "Normal (I,14)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Computer - (I,14)",
+            "id": 1165,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Barrier Removal - (E,3)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (J,7)": {
+        "name": "Normal (J,7)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Powerup from Reaper Drone - (J,7)",
+            "id": 406,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Computer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Level Up from Reaper Drone - (J,7)",
+            "id": 662,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Level Up",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Normal (J,9)": {
+        "name": "Normal (J,9)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Computer - (J,9)",
+            "id": 1176,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Barrier Removal - (H,11)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (J,10)": {
+        "name": "Normal (J,10)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Powerup from Rock Smasher - (J,10)",
+            "id": 409,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Barrier Removal - (I,4)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Level Up from Rock Smasher - (J,10)",
+            "id": 665,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Level Up",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Normal (J,12)": {
+        "name": "Normal (J,12)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Computer - (J,12)",
+            "id": 1179,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Blaster Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (L,2)": {
+        "name": "Normal (L,2)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Computer - (L,2)",
+            "id": 1201,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Computer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Normal (D,15)": {
+        "name": "Normal (D,15)",
+        "exits": [
+          {
+            "name": "Normal (D,15) -> Normal (F,15)",
+            "connected_region": "Normal (F,15)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (E,15)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (F,15)": {
+        "name": "Normal (F,15)",
+        "exits": [
+          {
+            "name": "Normal (F,15) -> Normal (F,14)",
+            "connected_region": "Normal (F,14)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (F,15)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (F,14)": {
+        "name": "Normal (F,14)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Powerup from Elites - (F,14)",
+            "id": 349,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Barrier Removal - (D,11)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Level Up from Elites - (F,14)",
+            "id": 605,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Level Up",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Normal (M,4)": {
+        "name": "Normal (M,4)",
+        "exits": [
+          {
+            "name": "Normal (M,4) -> Normal (O,4)",
+            "connected_region": "Normal (O,4)",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "doors"
+                      }
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Door Key (N,4)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Normal (O,4)": {
+        "name": "Normal (O,4)",
+        "exits": [
+          {
+            "name": "Normal (O,4) -> Normal (M,5)",
+            "connected_region": "Normal (M,5)",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Computer - (O,4)",
+            "id": 1251,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Blade Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Victory!": {
+        "name": "Victory!",
+        "id": 1,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Level Up": {
+        "name": "Level Up",
+        "id": 2,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 10
+      },
+      "Blade Upgrade": {
+        "name": "Blade Upgrade",
+        "id": 3,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 3
+      },
+      "Suit Upgrade": {
+        "name": "Suit Upgrade",
+        "id": 4,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 3
+      },
+      "Blaster Upgrade": {
+        "name": "Blaster Upgrade",
+        "id": 5,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 2
+      },
+      "Pattern Scanner": {
+        "name": "Pattern Scanner",
+        "id": 6,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Computer": {
+        "name": "Computer",
+        "id": 7,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 10
+      },
+      "Health Restore": {
+        "name": "Health Restore",
+        "id": 8,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (A,9)": {
+        "name": "Barrier Removal - (A,9)",
+        "id": 776,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (B,9)": {
+        "name": "Barrier Removal - (B,9)",
+        "hint_text": "Barrier Removal   (B,9)",
+        "id": 792,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (B,11)": {
+        "name": "Barrier Removal - (B,11)",
+        "id": 794,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (C,6)": {
+        "name": "Barrier Removal - (C,6)",
+        "hint_text": "Barrier Removal   (C,6)",
+        "id": 805,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (D,11)": {
+        "name": "Barrier Removal - (D,11)",
+        "hint_text": "Barrier Removal   (D,11)",
+        "id": 826,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (E,3)": {
+        "name": "Barrier Removal - (E,3)",
+        "hint_text": "Barrier Removal   (E,3)",
+        "id": 834,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (G,4)": {
+        "name": "Barrier Removal - (G,4)",
+        "id": 867,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (G,9)": {
+        "name": "Barrier Removal - (G,9)",
+        "hint_text": "Barrier Removal   (G,9)",
+        "id": 872,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (H,1)": {
+        "name": "Barrier Removal - (H,1)",
+        "id": 880,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (H,4)": {
+        "name": "Barrier Removal - (H,4)",
+        "id": 883,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (H,11)": {
+        "name": "Barrier Removal - (H,11)",
+        "hint_text": "Barrier Removal   (H,11)",
+        "id": 890,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (H,14)": {
+        "name": "Barrier Removal - (H,14)",
+        "id": 893,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (I,4)": {
+        "name": "Barrier Removal - (I,4)",
+        "hint_text": "Barrier Removal   (I,4)",
+        "id": 899,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (I,7)": {
+        "name": "Barrier Removal - (I,7)",
+        "id": 902,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (J,2)": {
+        "name": "Barrier Removal - (J,2)",
+        "id": 913,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (K,4)": {
+        "name": "Barrier Removal - (K,4)",
+        "hint_text": "Barrier Removal   (K,4)",
+        "id": 931,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (L,10)": {
+        "name": "Barrier Removal - (L,10)",
+        "id": 953,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (L,15)": {
+        "name": "Barrier Removal - (L,15)",
+        "id": 958,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (M,4)": {
+        "name": "Barrier Removal - (M,4)",
+        "id": 963,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (M,6)": {
+        "name": "Barrier Removal - (M,6)",
+        "hint_text": "Barrier Removal   (M,6)",
+        "id": 965,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Barrier Removal - (M,11)": {
+        "name": "Barrier Removal - (M,11)",
+        "hint_text": "Barrier Removal   (M,11)",
+        "id": 970,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (A,3)": {
+        "name": "Warp Point (A,3)",
+        "id": 1282,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (A,8)": {
+        "name": "Warp Point (A,8)",
+        "id": 1287,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (B,10)": {
+        "name": "Warp Point (B,10)",
+        "id": 1305,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (C,5)": {
+        "name": "Warp Point (C,5)",
+        "id": 1316,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (C,11)": {
+        "name": "Warp Point (C,11)",
+        "id": 1322,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (D,5)": {
+        "name": "Warp Point (D,5)",
+        "id": 1332,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (D,14)": {
+        "name": "Warp Point (D,14)",
+        "id": 1341,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (D,15)": {
+        "name": "Warp Point (D,15)",
+        "id": 1342,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (E,2)": {
+        "name": "Warp Point (E,2)",
+        "id": 1345,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (E,8)": {
+        "name": "Warp Point (E,8)",
+        "id": 1351,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (E,11)": {
+        "name": "Warp Point (E,11)",
+        "id": 1354,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (F,2)": {
+        "name": "Warp Point (F,2)",
+        "id": 1361,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (F,8)": {
+        "name": "Warp Point (F,8)",
+        "id": 1367,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (F,12)": {
+        "name": "Warp Point (F,12)",
+        "id": 1371,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (G,1)": {
+        "name": "Warp Point (G,1)",
+        "id": 1376,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (G,3)": {
+        "name": "Warp Point (G,3)",
+        "id": 1378,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (G,5)": {
+        "name": "Warp Point (G,5)",
+        "id": 1380,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (G,11)": {
+        "name": "Warp Point (G,11)",
+        "id": 1386,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (G,12)": {
+        "name": "Warp Point (G,12)",
+        "id": 1387,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (H,6)": {
+        "name": "Warp Point (H,6)",
+        "id": 1397,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (H,15)": {
+        "name": "Warp Point (H,15)",
+        "id": 1406,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (I,1)": {
+        "name": "Warp Point (I,1)",
+        "id": 1408,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (I,10)": {
+        "name": "Warp Point (I,10)",
+        "id": 1417,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (J,3)": {
+        "name": "Warp Point (J,3)",
+        "id": 1426,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (J,4)": {
+        "name": "Warp Point (J,4)",
+        "id": 1427,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (J,5)": {
+        "name": "Warp Point (J,5)",
+        "id": 1428,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (J,8)": {
+        "name": "Warp Point (J,8)",
+        "id": 1431,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (J,11)": {
+        "name": "Warp Point (J,11)",
+        "id": 1434,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (J,15)": {
+        "name": "Warp Point (J,15)",
+        "id": 1438,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (K,1)": {
+        "name": "Warp Point (K,1)",
+        "id": 1440,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (L,4)": {
+        "name": "Warp Point (L,4)",
+        "id": 1459,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (L,8)": {
+        "name": "Warp Point (L,8)",
+        "id": 1463,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (L,12)": {
+        "name": "Warp Point (L,12)",
+        "id": 1467,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (L,15)": {
+        "name": "Warp Point (L,15)",
+        "id": 1470,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (M,4)": {
+        "name": "Warp Point (M,4)",
+        "id": 1475,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (M,11)": {
+        "name": "Warp Point (M,11)",
+        "id": 1482,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (N,5)": {
+        "name": "Warp Point (N,5)",
+        "id": 1492,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (N,9)": {
+        "name": "Warp Point (N,9)",
+        "id": 1496,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Warp Point (O,8)": {
+        "name": "Warp Point (O,8)",
+        "id": 1511,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (A,4)": {
+        "name": "Door Key (A,4)",
+        "id": 1539,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (A,5)": {
+        "name": "Door Key (A,5)",
+        "id": 1540,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (A,7)": {
+        "name": "Door Key (A,7)",
+        "id": 1542,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (A,8)": {
+        "name": "Door Key (A,8)",
+        "id": 1543,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (A,12)": {
+        "name": "Door Key (A,12)",
+        "id": 1547,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (B,4)": {
+        "name": "Door Key (B,4)",
+        "id": 1555,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (B,5)": {
+        "name": "Door Key (B,5)",
+        "id": 1556,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (B,6)": {
+        "name": "Door Key (B,6)",
+        "id": 1557,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (B,7)": {
+        "name": "Door Key (B,7)",
+        "id": 1558,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (B,8)": {
+        "name": "Door Key (B,8)",
+        "id": 1559,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (C,8)": {
+        "name": "Door Key (C,8)",
+        "id": 1575,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (C,9)": {
+        "name": "Door Key (C,9)",
+        "id": 1576,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (C,10)": {
+        "name": "Door Key (C,10)",
+        "id": 1577,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (C,11)": {
+        "name": "Door Key (C,11)",
+        "id": 1578,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (C,12)": {
+        "name": "Door Key (C,12)",
+        "id": 1579,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (D,2)": {
+        "name": "Door Key (D,2)",
+        "id": 1585,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (D,3)": {
+        "name": "Door Key (D,3)",
+        "id": 1586,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (D,10)": {
+        "name": "Door Key (D,10)",
+        "id": 1593,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (D,12)": {
+        "name": "Door Key (D,12)",
+        "id": 1595,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (D,14)": {
+        "name": "Door Key (D,14)",
+        "id": 1597,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (E,4)": {
+        "name": "Door Key (E,4)",
+        "id": 1603,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (E,5)": {
+        "name": "Door Key (E,5)",
+        "id": 1604,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (E,8)": {
+        "name": "Door Key (E,8)",
+        "id": 1607,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (E,9)": {
+        "name": "Door Key (E,9)",
+        "id": 1608,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (E,12)": {
+        "name": "Door Key (E,12)",
+        "id": 1611,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (E,13)": {
+        "name": "Door Key (E,13)",
+        "id": 1612,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (E,14)": {
+        "name": "Door Key (E,14)",
+        "id": 1613,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (E,15)": {
+        "name": "Door Key (E,15)",
+        "id": 1614,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (F,2)": {
+        "name": "Door Key (F,2)",
+        "id": 1617,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (F,5)": {
+        "name": "Door Key (F,5)",
+        "id": 1620,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (F,6)": {
+        "name": "Door Key (F,6)",
+        "id": 1621,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (F,9)": {
+        "name": "Door Key (F,9)",
+        "id": 1624,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (F,13)": {
+        "name": "Door Key (F,13)",
+        "id": 1628,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (F,14)": {
+        "name": "Door Key (F,14)",
+        "id": 1629,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (F,15)": {
+        "name": "Door Key (F,15)",
+        "id": 1630,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (G,1)": {
+        "name": "Door Key (G,1)",
+        "id": 1632,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (G,6)": {
+        "name": "Door Key (G,6)",
+        "id": 1637,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (G,10)": {
+        "name": "Door Key (G,10)",
+        "id": 1641,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (H,2)": {
+        "name": "Door Key (H,2)",
+        "id": 1649,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (H,3)": {
+        "name": "Door Key (H,3)",
+        "id": 1650,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (H,4)": {
+        "name": "Door Key (H,4)",
+        "id": 1651,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (H,5)": {
+        "name": "Door Key (H,5)",
+        "id": 1652,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (H,6)": {
+        "name": "Door Key (H,6)",
+        "id": 1653,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (H,7)": {
+        "name": "Door Key (H,7)",
+        "id": 1654,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (H,12)": {
+        "name": "Door Key (H,12)",
+        "id": 1659,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (H,14)": {
+        "name": "Door Key (H,14)",
+        "id": 1661,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (I,2)": {
+        "name": "Door Key (I,2)",
+        "id": 1665,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (I,3)": {
+        "name": "Door Key (I,3)",
+        "id": 1666,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (I,4)": {
+        "name": "Door Key (I,4)",
+        "id": 1667,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (I,5)": {
+        "name": "Door Key (I,5)",
+        "id": 1668,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (I,6)": {
+        "name": "Door Key (I,6)",
+        "id": 1669,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (I,11)": {
+        "name": "Door Key (I,11)",
+        "id": 1674,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (I,13)": {
+        "name": "Door Key (I,13)",
+        "id": 1676,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (I,14)": {
+        "name": "Door Key (I,14)",
+        "id": 1677,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (I,15)": {
+        "name": "Door Key (I,15)",
+        "id": 1678,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (J,1)": {
+        "name": "Door Key (J,1)",
+        "id": 1680,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (J,2)": {
+        "name": "Door Key (J,2)",
+        "id": 1681,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (J,7)": {
+        "name": "Door Key (J,7)",
+        "id": 1686,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (J,10)": {
+        "name": "Door Key (J,10)",
+        "id": 1689,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (J,11)": {
+        "name": "Door Key (J,11)",
+        "id": 1690,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (J,13)": {
+        "name": "Door Key (J,13)",
+        "id": 1692,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (K,2)": {
+        "name": "Door Key (K,2)",
+        "id": 1697,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (K,3)": {
+        "name": "Door Key (K,3)",
+        "id": 1698,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (K,7)": {
+        "name": "Door Key (K,7)",
+        "id": 1702,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (K,9)": {
+        "name": "Door Key (K,9)",
+        "id": 1704,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (K,14)": {
+        "name": "Door Key (K,14)",
+        "id": 1709,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (K,15)": {
+        "name": "Door Key (K,15)",
+        "id": 1710,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (L,1)": {
+        "name": "Door Key (L,1)",
+        "id": 1712,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (L,2)": {
+        "name": "Door Key (L,2)",
+        "id": 1713,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (L,5)": {
+        "name": "Door Key (L,5)",
+        "id": 1716,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (L,7)": {
+        "name": "Door Key (L,7)",
+        "id": 1718,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (L,8)": {
+        "name": "Door Key (L,8)",
+        "id": 1719,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (L,11)": {
+        "name": "Door Key (L,11)",
+        "id": 1722,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (L,13)": {
+        "name": "Door Key (L,13)",
+        "id": 1724,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (M,2)": {
+        "name": "Door Key (M,2)",
+        "id": 1729,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (M,3)": {
+        "name": "Door Key (M,3)",
+        "id": 1730,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (M,6)": {
+        "name": "Door Key (M,6)",
+        "id": 1733,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (M,7)": {
+        "name": "Door Key (M,7)",
+        "id": 1734,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (M,10)": {
+        "name": "Door Key (M,10)",
+        "id": 1737,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (N,4)": {
+        "name": "Door Key (N,4)",
+        "id": 1747,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (N,8)": {
+        "name": "Door Key (N,8)",
+        "id": 1751,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (N,9)": {
+        "name": "Door Key (N,9)",
+        "id": 1752,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (N,11)": {
+        "name": "Door Key (N,11)",
+        "id": 1754,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (N,12)": {
+        "name": "Door Key (N,12)",
+        "id": 1755,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (O,7)": {
+        "name": "Door Key (O,7)",
+        "id": 1766,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (O,9)": {
+        "name": "Door Key (O,9)",
+        "id": 1768,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (O,10)": {
+        "name": "Door Key (O,10)",
+        "id": 1769,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (O,11)": {
+        "name": "Door Key (O,11)",
+        "id": 1770,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Door Key (O,12)": {
+        "name": "Door Key (O,12)",
+        "id": 1771,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Battle Door Key (B,6)": {
+        "name": "Battle Door Key (B,6)",
+        "id": 1813,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Battle Door Key (E,3)": {
+        "name": "Battle Door Key (E,3)",
+        "id": 1858,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Battle Door Key (H,2)": {
+        "name": "Battle Door Key (H,2)",
+        "id": 1905,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Battle Door Key (J,7)": {
+        "name": "Battle Door Key (J,7)",
+        "id": 1942,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Battle Door Key (K,2)": {
+        "name": "Battle Door Key (K,2)",
+        "id": 1953,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Battle Door Key (O,4)": {
+        "name": "Battle Door Key (O,4)",
+        "id": 2019,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Barrier Removal - (B,9)": 1,
+      "Barrier Removal - (C,6)": 1,
+      "Barrier Removal - (D,11)": 1,
+      "Barrier Removal - (E,3)": 1,
+      "Barrier Removal - (G,9)": 1,
+      "Barrier Removal - (H,11)": 1,
+      "Barrier Removal - (I,4)": 1,
+      "Barrier Removal - (K,4)": 1,
+      "Barrier Removal - (M,11)": 1,
+      "Barrier Removal - (M,6)": 1,
+      "Blade Upgrade": 3,
+      "Blaster Upgrade": 2,
+      "Computer": 10,
+      "Level Up": 10,
+      "Pattern Scanner": 1,
+      "Suit Upgrade": 3,
+      "Victory!": 1
+    }
+  },
+  "canonical_placements": {
+    "1": {}
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "preset_sidecars": {},
+  "world": {
+    "1": {
+      "game": "Hero Core",
+      "world_class_name": "HeroCoreWorld",
+      "options": {
+        "accessibility": 0,
+        "computers": true,
+        "deathlink": false,
+        "difficulty": 1,
+        "doors": false,
+        "exclude_locations": [],
+        "expel_skips": false,
+        "generators": true,
+        "goal_computers": 0,
+        "item_links": [],
+        "level_ups": false,
+        "local_items": [],
+        "miscellaneous_locations": false,
+        "non_local_items": [],
+        "plando_items": [],
+        "powerups": true,
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "save_points": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "computers": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Shuffle Computers"
+        },
+        "deathlink": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Death Link"
+        },
+        "difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "normal",
+            "2": "hard",
+            "3": "annihilation"
+          },
+          "default": 1,
+          "display_name": "Difficulty"
+        },
+        "doors": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Shuffle Doors"
+        },
+        "expel_skips": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Expel Skips"
+        },
+        "generators": {
+          "type": "default_on_toggle",
+          "default": true
+        },
+        "goal_computers": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 0,
+          "display_name": "Goal Computers"
+        },
+        "level_ups": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Shuffle Level Ups"
+        },
+        "miscellaneous_locations": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Miscellaneous Locations"
+        },
+        "powerups": {
+          "type": "default_on_toggle",
+          "default": true
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "save_points": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "shuffle_saves",
+            "2": "shuffle_saves_no_scanner"
+          },
+          "default": 0,
+          "display_name": "Shuffle Saves"
+        }
+      },
+      "world_description": "Hero Core is a freeware action-exploration shooter developed by Daniel Remar, and released in 2010.",
+      "slot_data": {
+        "ModVersion": 2,
+        "ModSemantic": "1.0.0 prerelease",
+        "Difficulty": 1,
+        "GoalComputers": 0,
+        "PowerUps": 1,
+        "LevelUps": 0,
+        "Computers": 1,
+        "Generators": 1,
+        "SavePoints": 0,
+        "Doors": 0,
+        "Miscellaneous": 0,
+        "ExpelSkips": 0,
+        "DeathLink": 0
+      },
+      "web": {
+        "theme": "stone",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Hero Core randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Minish"
+            ]
+          }
+        ]
+      },
+      "world_directory": "herocore"
+    }
+  },
+  "exporter": {},
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory!"
+      }
+    }
+  },
+  "helpers": {}
+}
