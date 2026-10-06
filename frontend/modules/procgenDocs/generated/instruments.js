@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 61,
+            "count": 62,
             "id": "plan"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 345,
+        "blockStyle": 346,
         "browser": 114,
         "cited": 164,
-        "files": 356,
+        "files": 357,
         "lineStyle": 11,
-        "withDocblock": 356,
-        "withFlags": 274
+        "withDocblock": 357,
+        "withFlags": 275
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6897,6 +6897,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-f7-reentry — ⛓⛓⛓ SEEDLING FIDELITY F7 (D-A): L16 RE-ENTERED WITH ITS ROPE ALREADY PULLED.",
             "path": "scripts/procgen/plan-seedling-f7-reentry.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-frontier3-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-frontier3-witness — ⛓⛓⛓ SEEDLING FIDELITY FRONTIER3: THE PLANNER ROUTES THROUGH WHAT THE PIXEL MASK LETS THROUGH.",
+            "path": "scripts/procgen/plan-seedling-frontier3-witness.mjs"
         },
         {
             "argvHelpers": [],
