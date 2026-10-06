@@ -1369,10 +1369,10 @@ export function createWasmPlayback({
         try { g?.handle?.setItemGate?.(null); } catch { /* the panel is gone */ }
     }
 
-    // ⛓ KEY DELIVERY — a method-call write (a key) is told apart by its call, not by a property.
-    const writeId = (w) => [w.property ?? `${w.method}(${(w.args ?? []).join(',')})`, w.value ?? null];
+    // (⛓ KEY DELIVERY: a key's method-call write has no property; the held inventory is a sub-multiset of the
+    // live one, so a key it holds back still SHORTENS the list — visible without naming the call.)
     const sameWrites = (d, a, b) => {
-        const key = (inv) => JSON.stringify((d.writesOf(inv) ?? []).map(writeId).sort());
+        const key = (inv) => JSON.stringify((d.writesOf(inv) ?? []).map((w) => [w.property, w.value]).sort());
         return key(a) === key(b);
     };
 

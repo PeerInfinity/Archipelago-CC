@@ -458,6 +458,18 @@ describe('⛓ KEY DELIVERY — an AP key reaches the game: the gate, the staging
         expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, true]]);
     });
 
+    it('a KEY that never shows in `botStatus.save.keys` fails BY NAME after DELIVERY_LAND_MS (it is never taken as landed)', () => {
+        const e = setup({ keys: true, writeKeys: false });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.engine.status().phase).toBe('held');
+        e.delivery.receive('Red Key');
+        e.delivery.push();
+        e.timers.run(5000);
+        expect(e.engine.stats.deliveries[0]).toMatchObject({ phase: 'held', outcome: 'unlanded' });
+        expect(e.failures.join(' ')).toMatch(/did not show in the game within 3 s \(save\.keys\[0\]\)/);
+    });
+
     it('a KEY into the HELD room lands at once; the next goal is solved from a staging that holds it', () => {
         const e = setup({ keys: true });
         e.engine.walkTo(CHEST);
