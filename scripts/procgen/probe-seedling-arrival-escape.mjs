@@ -11,11 +11,12 @@
  *   W / J  (wasm / JS — the same rows):
  *     1. the new game; an AP move into `level_12__r0c19`, then the crossing `level_12__r0c19 -> level_0__r11c19`
  *        (the binding's arrival puts the game at the landing, (288,176), inside the rock);
- *     2. the bot plays the derived sphere queue from there: its first leg is refused `arrival-inside-solid` (the
- *        controller's `lastObstacle`, with a Restart in its `wayOut`);
+ *     2. the bot is asked the landing room's back door (`walkToExit`, no route asked — from here AP reachability
+ *        leaves the sphere queue no walk at all, so §5.29's planner would Restart before any solve): the leg is
+ *        refused `arrival-inside-solid` (the controller's `lastObstacle`, with a Restart in its `wayOut`);
  *     3. the bot ESCAPES: "escaping arrival-inside-solid (breakablerock@288,176 …) — Restart" in its log, the
  *        entrance avoided; the warp lands at `seedlingStartSpawn`; no check fired;
- *     4. the bot WALKS ON from the start within `--budget-s`.
+ *     4. the bot then plays the derived sphere queue and WALKS ON from the start within `--budget-s`.
  *
  *   `--flag=off` serves the same rules WITHOUT `return_to_menu`: the bot stops BY NAME (`arrival-inside-solid … this
  *   slot does not declare return_to_menu`), and no Restart is taken.
@@ -49,6 +50,8 @@ export const RULES_PATH = './presets/seedling_playthrough/AP_1/AP_1_rules.json';
 export const VIA = 'level_12__r0c19';
 export const INTO = 'level_0__r11c19';
 export const ENTRANCE = `${VIA} -> ${INTO}`;
+/** The leg asked from inside: the landing room's back door to L12 (`teleporter@304,176`, rule `True`). */
+export const BACK = `${INTO} -> ${VIA}`;
 export const LANDING = Object.freeze({ level: 0, x: 288, y: 176 });
 export const SOLID = 'breakablerock@288,176';
 /** The JS runtime's page (`flashPanelUI.JS_RUNTIME_PAGE`'s file name). */
@@ -214,9 +217,9 @@ async function main() {
             check(`${S}: the player entered ${INTO} by "${ENTRANCE}" — the game at the landing (${LANDING.x},${LANDING.y}), inside ${SOLID}`,
                 !!inside, JSON.stringify(at.game));
 
-            // 2. THE BOT PLAYS THE SPHERE QUEUE FROM THE LANDING.
+            // 2. THE BOT IS ASKED THE BACK DOOR FROM THE LANDING (the solver is asked from inside the rock).
             const before = await snap();
-            const booted = await page.evaluate(async ({ rulesPath, into, entrance }) => {
+            const booted = await page.evaluate(async ({ rulesPath, into, entrance, back }) => {
                 const rules = await (await fetch(rulesPath)).json();
                 const { generateSphereLog } = await import('./modules/shared/procgen/forwardSimulator.js');
                 const text = generateSphereLog(rules).map((e) => JSON.stringify(e)).join('\n');
@@ -235,11 +238,12 @@ async function main() {
                 bot.onRegionMove({ targetRegion: into, exitName: entrance });
                 bot.refresh();
                 bot._ensureQueueBuilt?.();
-                await bot.play();
+                bot.walkToExit(back);
                 return { ok: true, status: bot.getStatus?.() ?? '' };
-            }, { rulesPath: RULES_PATH, into: INTO, entrance: ENTRANCE });
+            }, { rulesPath: RULES_PATH, into: INTO, entrance: ENTRANCE, back: BACK });
             out('bot from the landing', booted);
-            check(`${S}: the Playback Bot is mounted and walking from ${INTO}`, booted.ok, JSON.stringify(booted));
+            check(`${S}: the Playback Bot is mounted and walking "${BACK}" from inside the rock`,
+                booted.ok && booted.status === `routing via "${BACK}"`, JSON.stringify(booted));
 
             // the first leg is refused BY NAME (`arrival-inside-solid`, a Restart in its wayOut)
             const t0 = Date.now();
@@ -290,7 +294,11 @@ async function main() {
                 check(`${S}: no location check fired by the escape`, (landed?.checks.length ?? -1) === before.checks.length,
                     JSON.stringify(landed?.checks.slice(before.checks.length)));
 
-                // 4. THE BOT WALKS ON FROM THE START (never back through the entrance).
+                // 4. THE BOT PLAYS ON FROM THE START (never back through the entrance).
+                await page.evaluate(async () => {
+                    const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                    await getActivePanel()?.getBot?.()?.play?.();
+                });
                 const t1 = Date.now();
                 const walkedOn = await waitFor('the bot walks on from the start (leaves it, or checks a location)', async () => {
                     const b = await botState();
