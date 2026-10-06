@@ -78,6 +78,7 @@ const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fideli
 const { playerBoxAt } = await imp('frontend/modules/seedlingDemo/playerPhysicsV2.js');
 const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
+const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seedlingDemo/seedlingLethalArrivals.js');
 
 const { patchedMapDocument, SEEDLING_SET_PATCHES } = await imp('frontend/modules/seedlingDemo/seedlingSetPatches.js');
 const { arrivalSolidCensus } = await imp('frontend/modules/seedlingDemo/fidelityArrival.js');
@@ -1054,19 +1055,98 @@ function landingTilesOf(regionId) {
  * analysis pass recorded each exit's component.
  */
 export function playthroughArrivalSpawn(region, exit, { entranceSpawn, landing }) {
-    const level = levelOf(region.map_ref);
-    const [tx, ty] = exit.entrance_tile;
-    const back = RETURN_SPAWNS.get(returnKey(region.map_ref, tx, ty)) ?? null;
-    const inComponent = exitComponents.get(region.region_id)?.get(exit.exit_id) ?? (() => false);
-    const landedOn = landingTilesOf(region.region_id).has(`${tx},${ty}`);
-    const spawn = seedlingArrivalSpawn(level, exit, entranceSpawn, {
-        landing, landedOn, returnSpawn: back, inComponent, tileSize: TILE,
-    });
+    const spawn = arrivalSpawnFor(region, exit, { entranceSpawn, landing });
     if (spawn.via !== 'entrance' && spawn.via !== 'landing') {
         movedArrivalSpawns.push(`${region.region_id}/${exit.exit_id}: (${entranceSpawn.x}, ${entranceSpawn.y}) is `
             + `${spawn.why} → ${spawn.via} (${spawn.x}, ${spawn.y})`);
     }
     return spawn;
+}
+
+/** `playthroughArrivalSpawn`'s answer without the bookkeeping (the landing gates ask it again). */
+function arrivalSpawnFor(region, exit, { entranceSpawn, landing }) {
+    const level = levelOf(region.map_ref);
+    const [tx, ty] = exit.entrance_tile;
+    const back = RETURN_SPAWNS.get(returnKey(region.map_ref, tx, ty)) ?? null;
+    const inComponent = exitComponents.get(region.region_id)?.get(exit.exit_id) ?? (() => false);
+    const landedOn = landingTilesOf(region.region_id).has(`${tx},${ty}`);
+    return seedlingArrivalSpawn(level, exit, entranceSpawn, {
+        landing, landedOn, returnSpawn: back, inComponent, tileSize: TILE,
+    });
+}
+
+/** Does `own` already require `gate` (equal, a conjunct of it, or the same item at a count at least as high)? */
+function ruleImplies(own, gate) {
+    if (!own) return false;
+    if (JSON.stringify(own) === JSON.stringify(gate)) return true;
+    if (own.rule === 'Has' && gate.rule === 'Has' && own.args.item_name === gate.args.item_name) {
+        return (own.args.count ?? 1) >= (gate.args.count ?? 1);
+    }
+    if (own.rule === 'And') return own.children.some((c) => ruleImplies(c, gate));
+    return false;
+}
+
+/** ⛓ RULES game-truth-gaps (R2) — the landings `playthroughLandingGates` measured, gated or not, and why. */
+export const lethalLandings = [];
+
+/**
+ * ⛓⛓ RULES game-truth-gaps (R2) — **A LANDING ON LETHAL TERRAIN COSTS THE ITEM THAT SURVIVES IT**
+ * (`seedlingDemo/seedlingLethalArrivals.js` holds the why and the game source). For every atlas connection,
+ * each direction the graph wires: the landing is where the runtime binding puts the player
+ * (`seedlingRegionBinding.resolveArrivalSpawn`: the game's return spawn for the landing tile, else this
+ * generator's arrival spawn). When the physics model says an item-less arrival there dies under every input
+ * on lethal terrain, the DEPARTURE door is gated (`exitGates`) on that terrain's own transcription cost. A
+ * gate the departure's own rule already requires is not written twice. The arrival-side mirror of
+ * `chargeSealedDoor`: never the whole approach path, only the cell the game puts the body on.
+ * Run after `buildPlaythroughAtlas(…)` and `setPlaythroughLandingAtlas(…)` on the document it returned.
+ */
+export function playthroughLandingGates(doc, { levelSource = levelSourceFromAtlas(MAP) } = {}) {
+    lethalLandings.length = 0;
+    const exitOf = new Map(doc.regions.flatMap((r) => (r.exits ?? []).map((e) => [`${r.region_id}|${e.exit_id}`, { region: r, exit: e }])));
+    const verdicts = new Map();
+    const gates = [];
+    const legs = [];
+    for (const c of doc.vanilla_layout?.connections ?? []) {
+        legs.push({ from: c.from, to: c.to, oneWay: c.one_way === true });
+        if (c.one_way !== true) legs.push({ from: c.to, to: c.from, oneWay: false });
+    }
+    for (const leg of legs) {
+        const dep = exitOf.get(`${leg.from[0]}|${leg.from[1]}`);
+        const arr = exitOf.get(`${leg.to[0]}|${leg.to[1]}`);
+        if (!dep || !arr) continue;
+        const level = levelOf(arr.region.map_ref);
+        const [tx, ty] = arr.exit.entrance_tile;
+        const back = RETURN_SPAWNS.get(returnKey(arr.region.map_ref, tx, ty)) ?? null;
+        const spawn = back ?? arrivalSpawnFor(arr.region, arr.exit, { entranceSpawn: { x: tx * TILE, y: ty * TILE }, landing: leg.oneWay });
+        const terrain = lethalTerrainUnder(level, spawn.x, spawn.y, { tileSize: TILE });
+        if (!terrain) continue;
+        const cameFrom = dep.region.map_ref;
+        const key = `${level.level},${spawn.x},${spawn.y},${cameFrom}`;
+        if (!verdicts.has(key)) verdicts.set(key, arrivalIsLethal(level, spawn.x, spawn.y, { levelSource, cameFrom }));
+        const { lethal, tries } = verdicts.get(key);
+        const where = `${dep.region.region_id}/${dep.exit.exit_id} -> L${level.level} (${spawn.x}, ${spawn.y})`;
+        if (!lethal) {
+            lethalLandings.push({ where, gated: false, why: `the model walks off it (${tries.join(' ')})` });
+            continue;
+        }
+        const placement = (level.layers ?? []).filter((l) => l.name !== 'cliffsides')
+            .flatMap((l) => l.tiles ?? []).find(([x, y]) => x === terrain.tile[0] && y === terrain.tile[1]);
+        const type = placement ? SEM.tileTypeForPlacement(placement) : null;
+        const base = type === null ? null : SEM.tileSemantics(type);
+        const ruled = base && (OV.overlayTileSemantics(type, base, level) ?? base);
+        const rule = ruled?.kind === 'gated' && ruled.condition != null ? analyzerOptions.resolveCondition(ruled.condition) : null;
+        if (!rule) {
+            throw new Error(`landing gates: ${where} is lethal terrain (model tile type ${terrain.type} at `
+                + `[${terrain.tile}]) whose transcription cost does not resolve to items`);
+        }
+        if (ruleImplies(dep.exit.access_rule, rule)) {
+            lethalLandings.push({ where, gated: false, why: `the departure already requires ${JSON.stringify(rule)}` });
+            continue;
+        }
+        gates.push({ region_id: dep.region.region_id, exit_id: dep.exit.exit_id, rule });
+        lethalLandings.push({ where, gated: true, rule, why: `${ruled.label} at [${terrain.tile}]; ${tries.join(' ')}` });
+    }
+    return gates;
 }
 
 export const analysisNotes = notes;
@@ -1111,6 +1191,7 @@ function main() {
     movedArrivalSpawns.length = 0;
     setPlaythroughLandingAtlas(doc);
     const obstacle = playthroughObstacleEvents(doc);
+    const landingGates = playthroughLandingGates(doc);
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
         gameName: GAME_NAME,
@@ -1128,7 +1209,8 @@ function main() {
         returnToMenu: Boolean(SEEDLING_ENTRY.restartWarp),
         // ⛓ RULES obstacle-events: the saved obstacles' events and the landing edges they gate.
         events: obstacle.events,
-        exitGates: obstacle.exitGates,
+        // ⛓ RULES game-truth-gaps (R2): and the landings on lethal terrain.
+        exitGates: [...obstacle.exitGates, ...landingGates],
     });
     const rulesText = stringifyRulesJson(rules);
 
@@ -1167,6 +1249,9 @@ function main() {
     console.log(`${obstacle.events.length} obstacle event(s), ${obstacle.exitGates.length} landing edge(s) gated`
         + `${quiet ? '' : obstacle.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side}`).join('')}`
         + `${obstacle.skipped.length ? `; ${obstacle.skipped.length} skipped: ${obstacle.skipped.join('; ')}` : ''}`);
+    console.log(`${landingGates.length} landing edge(s) gated on the lethal terrain they land on; `
+        + `${lethalLandings.filter((l) => !l.gated).length} lethal-terrain landing(s) not gated`
+        + `${quiet ? '' : lethalLandings.map((l) => `\n  ${l.gated ? 'GATED' : 'not gated'} ${l.where}: ${l.why}`).join('')}`);
     console.log(`${pocketDoorsCharged.length} departure(s) charged the solids that alone open their pocket`
         + `${quiet ? '' : pocketDoorsCharged.map((m) => `\n  ${m}`).join('')}`);
     console.log(`${notes.length} analysis note(s)${quiet ? ' (suppressed; drop --quiet to read them)' : ''}`);
