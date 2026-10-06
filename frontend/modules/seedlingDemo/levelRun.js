@@ -9605,6 +9605,10 @@ export function createLevelRun({
             // ⛓ seedling-fidelity-terrain W3: a LIVE drill is billed by
             // `stepDrillsNow` at the position it hopped to, not here.
             if (CONTACT_FIDELITY.drillLive && inst.tag === 'drill' && drillStateFor(level).has(id)) continue;
+            // ⛓ KILLLOCK K1/K2: a switch-bridged chaser (jellyfish, lavarunner) in a stepped room is billed by
+            // `stepChasersNow` at its live position — the `stepped` skip below, for a class `contactPricing` still
+            // calls a `mover` (measured: survey steps 169/191, the player standing in L77's/L80's `.oel` placement).
+            if (killLockBridged(inst.tag) && chaserRoomVerdict(level).stepped) continue;
             if (pricing.kind === 'stepped' && pricing.pricedBy) {
                 /**
                  * ⛓⛓⛓ R8 SLICE 6 — A SPINNER'S PRICER IS A REFUSAL AT THE
