@@ -16,6 +16,12 @@
  *  - every mana spend in a Noiz2sa region reaches the trainer through loops' `loops:manaSpent` — live play's drain, a
  *    Bot block's drain and an instant Playback's replay price alike (⚖ "Instant playback should still accumulate
  *    resources"), with no feed of its own per mode;
+ *  - ⚖ (follow-up) the points a visit earns APPLY WHEN THE VISIT ENDS: the service holds the visit's mana as PENDING
+ *    and earns it on `endVisit` (the host module calls it when the player leaves the region, a region loads, or the
+ *    loop resets), so the bot's knobs never change in the middle of a visit;
+ *  - ⚖ (follow-up) OUTSIDE LOOP MODE nothing drains, so the trainer earns by GAME TIME there: as if the default rate
+ *    (`DEFAULT_TIME_DRAIN_PER_SECOND`, one mana a game second) had been drained — floor(the visit's game seconds) × 1
+ *    × the pace — without spending any mana (`noteGameTime`, from the page's play-clock reports);
  *  - the trainer is plain JSON, kept in localStorage under `NOIZ2SA_TRAINER_STORAGE_KEY` (survives loop resets and
  *    reloads); the pace and prices are user SETTINGS (⚖ "a user configurable setting"), applied over the stored ones;
  *  - `botWalkOptions` is what the page's bot plays with: the knobs at the CURRENT tracks (no personality: ⚖ in
@@ -31,6 +37,7 @@ import {
 } from '../bulletml-dodge/src/game/tracks.js';
 import { TRACKS } from '../bulletml-dodge/src/game/human.js';
 import { DEFAULT_POINTS_PER_MANA } from './noiz2saPricing.js';
+import { DEFAULT_TIME_DRAIN_PER_SECOND } from '../shared/procgen/loopCostDefaults.js';
 
 export { DEFAULT_TRAINING, STRATEGIES, STRATEGY_LABEL, TRACKS, TRACK_MAX };
 
@@ -158,6 +165,29 @@ export function earnMana(tr, mana) {
     return earn(tr, { seconds: m, score: 0 });
 }
 
+/**
+ * Outside loop mode (⚖ follow-up): the game seconds a visit played, from the page's play-clock reports (the visit's
+ * CUMULATIVE `gameSeconds`). `note` → the seconds added since the last report; a new region, or a counter that went
+ * back (a new visit), starts from zero.
+ */
+export function createGameTimeMeter() {
+    let last = null;
+    return {
+        note(region, stats) {
+            const g = Number(stats?.gameSeconds);
+            if (typeof region !== 'string' || !region || !Number.isFinite(g) || g < 0) return 0;
+            if (!last || last.region !== region || g < last.gameSeconds) last = { region, gameSeconds: 0 };
+            const d = g - last.gameSeconds;
+            last = { region, gameSeconds: g };
+            return d > 0 ? d : 0;
+        },
+        reset() { last = null; },
+    };
+}
+
+/** the mana a visit outside loop mode trains as: floor(its game seconds) at the default drain rate */
+export const freePlayMana = (gameSeconds) => Math.floor(Math.max(0, Number(gameSeconds) || 0)) * DEFAULT_TIME_DRAIN_PER_SECOND;
+
 /** the world's pace from a region payload (`pricing.pointsPerMana`), or null for an unpriced one */
 export function worldPointsPerManaOf(payload) {
     const v = Number(payload?.pricing?.pointsPerMana);
@@ -201,6 +231,10 @@ export function createTrainerService({ storage = null, settings = {}, onChange =
     // the world's pace (`pricing.pointsPerMana` of its priced payloads; null: an unpriced world)
     let world = null;
     let tr = restoreTrainer(read(), s, world);
+    // ⚖ follow-up: this visit's mana (loop mode) and game seconds (outside it), earned when the visit ends
+    let pendingMana = 0;
+    let pendingSeconds = 0;
+    const gameTime = createGameTimeMeter();
     const save = () => { try { storage?.setItem?.(NOIZ2SA_TRAINER_STORAGE_KEY, serializeTrainer(tr)); } catch { /* quota/private mode: in memory only */ } };
     const changed = (before) => {
         save();
@@ -214,9 +248,27 @@ export function createTrainerService({ storage = null, settings = {}, onChange =
         get worldPointsPerMana() { return world; },
         /** the pace the trainer earns at now */
         get pointsPerMana() { return effectivePointsPerMana(s, world); },
-        /** mana spent in a Noiz2sa region (live play, a Bot block, an instant Playback): earn its points; → points */
+        /** mana spent in a Noiz2sa region (live play, a Bot block, an instant Playback): held until the visit ends */
         noteManaSpent(mana) {
-            return Number(mana) > 0 ? mutate(() => earnMana(tr, mana)) : 0;
+            const m = Number(mana);
+            if (!Number.isFinite(m) || m <= 0) return;
+            pendingMana += m;
+            onChange(tr, { tracksChanged: false });
+        },
+        /** a play-clock report OUTSIDE loop mode: the visit's game seconds, held until it ends */
+        noteGameTime(region, stats) {
+            const d = gameTime.note(region, stats);
+            if (d > 0) { pendingSeconds += d; onChange(tr, { tracksChanged: false }); }
+        },
+        /** the mana this visit will train as when it ends (loop mode's spend + outside loop mode's game time) */
+        get pendingMana() { return pendingMana + freePlayMana(pendingSeconds); },
+        /** the points this visit will earn when it ends */
+        get pendingPoints() { return (pendingMana + freePlayMana(pendingSeconds)) * effectivePointsPerMana(s, world); },
+        /** the visit ended (left the region, a region loaded, the loop reset): earn what it held; → points */
+        endVisit() {
+            const mana = pendingMana + freePlayMana(pendingSeconds);
+            pendingMana = 0; pendingSeconds = 0; gameTime.reset();
+            return mana > 0 ? mutate(() => earnMana(tr, mana)) : 0;
         },
         /** a region load names the world's pace (null: an unpriced world); the trainer earns at it unless the user's
          *  setting overrides it */
@@ -244,7 +296,10 @@ export function createTrainerService({ storage = null, settings = {}, onChange =
          *  argument, and the page's host state) */
         botOptions: (botSeed = BOT_SEED) => botWalkOptions(tr, s, botSeed),
         /** a fresh trainer (every track 0, nothing earned) */
-        reset(strategy = 'even') { mutate(() => { tr = freshTrainer(s, strategy, world); }); },
+        reset(strategy = 'even') {
+            pendingMana = 0; pendingSeconds = 0; gameTime.reset();
+            mutate(() => { tr = freshTrainer(s, strategy, world); });
+        },
         /** reread the stored trainer (another tab, or a test restoring one) */
         reload() { mutate(() => { tr = restoreTrainer(read(), s, world); }); },
     };

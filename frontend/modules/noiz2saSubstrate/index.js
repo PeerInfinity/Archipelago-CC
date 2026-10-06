@@ -16,7 +16,9 @@
  *  - the TRAINER (`noiz2saTraining.js`): kept in localStorage, it earns from the MANA spent in Noiz2sa regions (N5,
  *    ⚖ "Training = mana"): every `loops:manaSpent` of a Noiz2sa region — live play's drain, a Bot block's drain, an
  *    instant Playback's replay price — at the world's pace (a region load names it: the payload's
- *    `pricing.pointsPerMana`) unless the user's setting overrides it. Only Noiz2sa regions train it (⚖);
+ *    `pricing.pointsPerMana`) unless the user's setting overrides it; outside loop mode, by game time (one mana a game
+ *    second, nothing spent). A visit's points apply when it ENDS (leaving the region, a region load, a loop reset), so
+ *    the bot's knobs never change mid-visit. Only Noiz2sa regions train it (⚖);
  *  - the TRAINING section of this panel (`noiz2saTrainingSection.js`), under the iframe (⚖ 2026-10-05).
  *
  * N4b/N4c:
@@ -355,6 +357,7 @@ export function register(registrationApi) {
     registrationApi.registerEventBusPublisher('gameState:xpChanged');
     registrationApi.registerEventBusSubscriberIntent(NOIZ2SA_LOAD_REGION_EVENT);
     registrationApi.registerEventBusSubscriberIntent('loops:manaSpent');
+    registrationApi.registerEventBusSubscriberIntent('substrate:playClock');
     registrationApi.registerEventBusSubscriberIntent('gameState:loopModeChanged');
     registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
     registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
@@ -400,6 +403,8 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     // Bring the panel forward on a region load, unless loops is focus-locking another panel.
     eventBus.subscribe(NOIZ2SA_LOAD_REGION_EVENT, (payload) => {
         if (payload?.region_id) {
+            // a region load starts a new visit: the previous one ended (its points apply now)
+            service.endVisit();
             _regions.add(payload.region_id);
             _lastRegion = payload.region_id;
             // N5: the world's training pace (its priced payloads name it; an unpriced world has none)
@@ -422,6 +427,18 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         if (data?.substrate !== NOIZ2SA_SUBSTRATE_ID) return;
         service.noteManaSpent(data.mana);
     }, 'noiz2saSubstrate');
+    // …and outside loop mode, the game time a Noiz2sa region's visit played (⚖ follow-up: nothing drains there)
+    eventBus.subscribe('substrate:playClock', (data) => {
+        if (_loopMode || !data?.stats || !_regions.has(data.region)) return;
+        service.noteGameTime(data.region, data.stats);
+    }, 'noiz2saSubstrate');
+    // ⚖ follow-up: a visit's points apply when it ENDS — the player left the region, or the loop reset
+    eventBus.subscribe('gameState:regionChanged', (data) => {
+        if (data?.oldRegion && _regions.has(data.oldRegion)) service.endVisit();
+    }, 'noiz2saSubstrate');
+    for (const ev of ['loopState:loopReset', 'gameState:loopReset']) {
+        eventBus.subscribe(ev, () => service.endVisit(), 'noiz2saSubstrate');
+    }
     // N4b: loop mode decides when a region's exits open (the page's rule).
     eventBus.subscribe('gameState:loopModeChanged', (data) => {
         _loopMode = data?.active === true;

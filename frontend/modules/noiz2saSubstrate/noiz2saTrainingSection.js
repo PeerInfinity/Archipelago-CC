@@ -59,7 +59,10 @@ export function createTrainingSection(service, { xpTarget = () => null, addRegio
     function render() {
         const tr = service.trainer;
         // N5: points come from the mana spent in Noiz2sa regions, at this pace (the trainer's per-"second" rate is per mana)
-        $('points').textContent = `${fmt(tr.unspent)} points unspent · ${fmt(tr.earned)} earned · ${fmt(tr.settings.pointsPerSecond)} per mana`;
+        // ⚖ follow-up: a visit's points apply when the visit ends
+        const pending = service.pendingPoints ?? 0;
+        $('points').textContent = `${fmt(tr.unspent)} points unspent · ${fmt(tr.earned)} earned · ${fmt(tr.settings.pointsPerSecond)} per mana`
+            + (pending > 0 ? ` · +${fmt(pending)} when this visit ends` : '');
         select.value = tr.strategy;
         const manual = tr.strategy === 'manual';
         for (const k of TRACKS) {

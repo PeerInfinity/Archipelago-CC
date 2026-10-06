@@ -81,7 +81,7 @@ describe('the stored trainer', () => {
 });
 
 describe('the trainer service', () => {
-    it('earns the mana spent in Noiz2sa regions, the strategy spends, and it is saved', () => {
+    it('earns the mana spent in Noiz2sa regions when the visit ends, the strategy spends, and it is saved', () => {
         const storage = memoryStorage();
         const changes = [];
         const sv = createTrainerService({ storage, onChange: (_tr, info) => changes.push(info) });
@@ -89,6 +89,13 @@ describe('the trainer service', () => {
         expect(sv.pointsPerMana).toBe(DEFAULT_POINTS_PER_MANA);
         sv.noteManaSpent(10);
         sv.noteManaSpent(6);
+        // ⚖ follow-up: nothing applies until the visit ends — the knobs never change mid-visit
+        expect(sv.trainer.earned).toBe(0);
+        expect(sv.trainer.tracks).toEqual(zeros());
+        expect(sv.pendingMana).toBe(16);
+        expect(sv.pendingPoints).toBe(16);
+        expect(sv.endVisit()).toBe(16);
+        expect(sv.pendingMana).toBe(0);
         const tr = sv.trainer;
         expect(tr.earned).toBe(16);
         // Even, 2 a step then ×1.04: every track to 1 (10), then seeing and thinking to 2 (4.16), 1.84 left
@@ -103,20 +110,20 @@ describe('the trainer service', () => {
         sv.setStrategy('manual');
         sv.setWorldPointsPerMana(40);
         expect(sv.worldPointsPerMana).toBe(40);
-        sv.noteManaSpent(2);
+        sv.noteManaSpent(2); sv.endVisit();
         expect(sv.trainer.unspent).toBe(80);
         sv.applySettings({ pointsPerMana: 3 });
-        sv.noteManaSpent(2);
+        sv.noteManaSpent(2); sv.endVisit();
         expect(sv.trainer.unspent).toBe(86);
         sv.applySettings({ pointsPerMana: 0 });
         sv.setWorldPointsPerMana(null); // an unpriced world
-        sv.noteManaSpent(2);
+        sv.noteManaSpent(2); sv.endVisit();
         expect(sv.trainer.unspent).toBe(88);
     });
     it('By hand: the strategy spends nothing; buy, switch, respec (free), at any time', () => {
         const sv = createTrainerService();
         sv.setStrategy('manual');
-        sv.noteManaSpent(10);
+        sv.noteManaSpent(10); sv.endVisit();
         expect(sv.trainer.tracks).toEqual(zeros());
         expect(sv.trainer.unspent).toBe(10);
         expect(sv.buy('panic')).toBe(true);
@@ -133,7 +140,7 @@ describe('the trainer service', () => {
         const sv = createTrainerService({ settings: { surplusXpPerPoint: 3 } });
         expect(sv.boostXp(() => { throw new Error('not called'); })).toEqual({ points: 0, xp: 0 });
         sv.trainer.tracks = Object.fromEntries(TRACKS.map((k) => [k, 100]));
-        sv.noteManaSpent(5);
+        sv.noteManaSpent(5); sv.endVisit();
         expect(sv.trainer.surplus).toBe(5);
         let given = null;
         expect(sv.boostXp((xp) => { given = xp; })).toEqual({ points: 5, xp: 15 });
@@ -144,15 +151,39 @@ describe('the trainer service', () => {
         const sv = createTrainerService();
         sv.applySettings({ pointsPerMana: 3, botSpeed: 4, botRetryCap: 5 });
         sv.setStrategy('manual');
-        sv.noteManaSpent(2);
+        sv.noteManaSpent(2); sv.endVisit();
         expect(sv.trainer.unspent).toBe(6);
         expect(sv.botOptions()).toMatchObject({ speed: 4, retryCap: 5, botSeed: BOT_SEED });
     });
     it('reset() is a fresh trainer with the given strategy', () => {
         const sv = createTrainerService();
-        sv.noteManaSpent(30);
+        sv.noteManaSpent(30); sv.endVisit();
+        sv.noteManaSpent(7);
         sv.reset('manual');
         expect(sv.trainer).toMatchObject({ tracks: zeros(), earned: 0, unspent: 0, strategy: 'manual' });
+        expect(sv.pendingMana).toBe(0);
+    });
+    it('⚖ outside loop mode: the visit\'s game time trains as floor(seconds) × 1 mana × the pace, at the visit\'s end', () => {
+        const sv = createTrainerService();
+        sv.setStrategy('manual');
+        sv.setWorldPointsPerMana(10);
+        sv.noteGameTime('R', { gameSeconds: 0 });
+        sv.noteGameTime('R', { gameSeconds: 7.5 });
+        sv.noteGameTime('R', { gameSeconds: 16.032 });
+        expect(sv.pendingMana).toBe(16); // floor(16.032) at the default rate of 1 mana a second
+        expect(sv.trainer.earned).toBe(0);
+        expect(sv.endVisit()).toBe(160);
+        expect(sv.trainer.unspent).toBe(160);
+        // a counter that goes back is a new visit; junk is ignored
+        sv.noteGameTime('R', { gameSeconds: 3 });
+        sv.noteGameTime('R', { score: 5 });
+        sv.noteGameTime(null, { gameSeconds: 9 });
+        expect(sv.pendingMana).toBe(3);
+    });
+    it('an empty visit earns nothing and changes nothing', () => {
+        const sv = createTrainerService();
+        expect(sv.endVisit()).toBe(0);
+        expect(sv.trainer.earned).toBe(0);
     });
 });
 

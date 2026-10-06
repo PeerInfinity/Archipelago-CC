@@ -1167,6 +1167,11 @@ async function noiz2saChoiceListOutsideLoopMode(testController) {
         const requests = [];
         const onRequest = (d) => requests.push(d?.request?.kind);
         testController.eventBus.subscribe('substrate:hostRequest', onRequest);
+        // ⚖ N5 follow-up: outside loop mode the visit trains by GAME TIME (one mana a game second, none spent), at its end
+        const earned0 = service.trainer.earned;
+        let visitSeconds = 0;
+        const onClock = (d) => { if (d?.region === r.region && Number.isFinite(d?.stats?.gameSeconds)) visitSeconds = Math.max(visitSeconds, d.stats.gameSeconds); };
+        testController.eventBus.subscribe('substrate:playClock', onClock);
         try {
             gameWindow().__noiz2saTest.chooseCheck();
             testController.assertEqual(`[${label}] choosing the check starts the check run at once`, true,
@@ -1192,8 +1197,13 @@ async function noiz2saChoiceListOutsideLoopMode(testController) {
             testController.reportCondition(`[${label}] the move's clear left by ${r.exit.name} into ${r.target}`, !!crossed);
             testController.assertEqual(`[${label}] nothing drained (mana ${mana0} → ${currentMana()})`, mana0, currentMana());
             testController.assertEqual(`[${label}] the choices asked the host to queue nothing`, '[]', JSON.stringify(requests));
+            const wantPoints = Math.floor(visitSeconds) * service.pointsPerMana;
+            testController.log(`[${label}] the visit played ${visitSeconds} game seconds; it trained ${service.trainer.earned - earned0} points (want ${wantPoints})`);
+            testController.assertEqual(`[${label}] N5: leaving trained the bot by game time — floor(${visitSeconds}) × 1 mana × the pace, no mana spent`,
+                true, wantPoints > 0 && Math.abs((service.trainer.earned - earned0) - wantPoints) < 1e-6);
         } finally {
             testController.eventBus.unsubscribe?.('substrate:hostRequest', onRequest);
+            testController.eventBus.unsubscribe?.('substrate:playClock', onClock);
         }
     });
 }
