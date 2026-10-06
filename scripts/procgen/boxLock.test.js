@@ -458,7 +458,8 @@ describe('who takes the box', () => {
          * fidelity SLOTS the slot-array-is-session-state witness, `probe-seedling-slot-order.mjs`;
          * fidelity TERRAIN the held per-tick contact compare, `probe-seedling-contact-divergence.mjs`;
          * fidelity AXE the spinning axe's update-count witness, `probe-seedling-axe-phase.mjs`;
-         * fidelity ARRIVAL the arrival-inside-a-solid witness, `probe-seedling-arrival-solid.mjs`.)
+         * fidelity ARRIVAL the arrival-inside-a-solid witness, `probe-seedling-arrival-solid.mjs`;
+         * RETURN TO MENU the Playback Bot's Restart-route witness, `probe-seedling-restart-route.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -479,7 +480,8 @@ describe('who takes the box', () => {
             'probe-seedling-stepoff.mjs', 'probe-seedling-burn-write.mjs', 'probe-seedling-moonrock.mjs',
             'probe-seedling-descent.mjs', 'probe-seedling-wasm-midroom-replan.mjs', 'probe-seedling-dash-window.mjs',
             'probe-seedling-restart-warp.mjs', 'probe-seedling-divergence-sweep.mjs', 'probe-seedling-slot-order.mjs',
-            'probe-seedling-contact-divergence.mjs', 'probe-seedling-axe-phase.mjs', 'probe-seedling-arrival-solid.mjs'];
+            'probe-seedling-contact-divergence.mjs', 'probe-seedling-axe-phase.mjs', 'probe-seedling-arrival-solid.mjs',
+            'probe-seedling-restart-route.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
