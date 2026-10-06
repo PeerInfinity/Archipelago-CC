@@ -117,7 +117,7 @@ describe('the Restart lands where GameStart leads', () => {
         const start = rules.regions['1'].Menu.exits.find((e) => e.name === 'GameStart').connected_region;
         const sidecar = rules.preset_sidecars['1'][start];
         const world = OURS.get(sidecar.substrate).deserializeWorld(sidecar.playable_payload);
-        const mapPath = mapDocumentPath(rules)?.path;
+        const mapPath = mapDocumentPath(rules, '1')?.path;   // rules F2: region_atlas is per player
         const returnSpawns = mapPath && existsSync(`${FRONTEND}${mapPath}`)
             ? returnSpawnTable(JSON.parse(readFileSync(`${FRONTEND}${mapPath}`, 'utf8'))) : null;
         const spawn = seedlingStartSpawn({ world, returnSpawns, set: sidecar.playable_payload.start ? { start: sidecar.playable_payload.start } : null });
