@@ -47,10 +47,10 @@ const stagedRun = async (boot) => {
 };
 
 /** The refusal a goal draws from that boot (or `null` when it solves). */
-const refusalOf = async (boot, goal) => {
+const refusalOf = async (boot, goal, opts = {}) => {
     const { run, staging } = await stagedRun(boot);
     try {
-        solveSegment({ run, goals: [goal], name: 'frontier3-probe', boot: staging.boot });
+        solveSegment({ run, goals: [goal], name: 'frontier3-probe', boot: staging.boot, ...opts });
         return null;
     } catch (e) {
         if (!(e instanceof SolverRefusal)) throw e;
@@ -95,10 +95,10 @@ describe('fidelity FRONTIER3 D2 — a reach-exit aims where the pixel mask lets 
         expect(out.fineLatticeWalks).toBeUndefined();
     });
 
-    it('⛔ the fine-lattice retry is OFF on main: without the grant L87\'s pocket refuses as before', async () => {
-        expect(FINE_LATTICE_ROSTER_WIDE).toBe(false);
+    it('⛓ the fine-lattice retry is ON roster-wide (⚖ licensed at the wave-6 harvest); with the grant withheld L87\'s pocket refuses as before', async () => {
+        expect(FINE_LATTICE_ROSTER_WIDE).toBe(true);
         const w = witness('frontier3-l87-pocket');
-        const e = await refusalOf(w.boot, w.goal);
+        const e = await refusalOf(w.boot, w.goal, { fineLattice: false });
         // the frontier names the nearest cliffside (the sweep's `pixelmask:cliffside0/1` rows)
         expect(e.message).toMatch(/Obstacle: pixelmask:cliffside[01] \(cliffside[01]@\d+,\d+\)[^.]*\. No strategy row exists/);
     });

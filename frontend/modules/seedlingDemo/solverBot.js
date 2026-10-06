@@ -3418,21 +3418,21 @@ function solverPlanOpts(run, contacts, extra = {}) {
  * MASK blocks (which `planTilePath` refused by name), and the fine lattice is
  * tried only when the frontier found no verb to apply (the refusal path of
  * `identifyAndSelect`) — and only under its grant (`FINE_LATTICE_ROSTER_WIDE`,
- * off on `main`: turning a refusal into a solve still moves a census digest).
+ * on since the wave-6 harvest; `fineLattice: false` turns it off per call).
  */
 export const FINE_LATTICE = TILE_SIZE / 2;
 
 /**
- * ⛔ THE FINE-LATTICE RETRY IS OFF ON `main` UNTIL IT IS LICENSED. It moves
- * one row of the identity block: `census-seedling-enemies`' generated
- * `lavatrap@corridor` chamber row goes REFUSED → SOLVED (153 t), so the
- * `ENEMY census default` digest moves (`68466067…` → `d8c2f110…`, measured
- * with this `true`). No committed tape, expectation or producer `--check`
- * moves. `solveSegment`'s optional `fineLattice` is the per-call grant (the
- * witness `frontier3-l87-pocket` is planned with it), the way `economies`
- * is; flipping this constant is the roster-wide one.
+ * ⛓ THE FINE-LATTICE RETRY IS ON (⚖ licensed by the user, 2026-10-05, at the
+ * wave-6 harvest). It moved one row of the identity block:
+ * `census-seedling-enemies`' generated `lavatrap@corridor` chamber row went
+ * REFUSED → SOLVED (153 t), so the `ENEMY census default` digest moved
+ * (re-banked at the harvest). No committed tape, expectation or producer
+ * `--check` moved. `solveSegment`'s optional `fineLattice` is still the
+ * per-call grant (`false` turns the retry off for one call), the way
+ * `economies` is; this constant is the roster-wide default.
  */
-export const FINE_LATTICE_ROSTER_WIDE = false;
+export const FINE_LATTICE_ROSTER_WIDE = true;
 
 /**
  * The point a reach-exit walks at: the trigger's centre, or — when the player
