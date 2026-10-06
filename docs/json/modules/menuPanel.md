@@ -163,7 +163,7 @@ the run, not the save (the Loops panel's Hard Reset is what clears those).
 **In loop mode** it delegates to `loopState.restartFromStart({ autoStart: false })`
 — the same primitive the Loops panel's own Restart button calls, landing paused
 because a menu is not a "go" affordance. Nothing is duplicated here, and the path
-in loop mode stays the loops module's business.
+in loop mode stays the loops module's business. It moves nobody: the replay's first move does. On Seedling, that move (`Menu` → the start region) is the start hop, so the game lands at its start spawn; the glue's loop-reset fallback covers a declared start that is itself a Seedling room (see [Flash › Restart](../developer/procgen/flash.md)).
 
 A Restart does **not** re-fire the skip hop: the hop is a *load* event, and
 leaving the player at the start region with the exits showing is the point (⚖ the

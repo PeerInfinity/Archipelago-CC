@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 58,
-            "count": 102,
+            "browser": 59,
+            "count": 103,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 361,
-        "browser": 123,
-        "cited": 175,
-        "files": 373,
+        "blockStyle": 362,
+        "browser": 124,
+        "cited": 176,
+        "files": 374,
         "lineStyle": 12,
-        "withDocblock": 373,
-        "withFlags": 291
+        "withDocblock": 374,
+        "withFlags": 292
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9837,6 +9837,49 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-level-set-transport — the RECEIVER's half of the level-set delivery, driven in the built artifact.",
             "path": "scripts/procgen/probe-seedling-level-set-transport.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-loop-restart.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling LOOP-MODE RESTART (⚖ the user, 2026-10-06: *\"Loop mode has its own restart mechanic, which returns to the start region and also resets mana.\"* / *\"The start region should always be menu, not a Seedling region.\"*) — the loops' Restart moves nobody (`loopState.restartFromStart` → `_resetLoop`: mana, progress,…",
+            "path": "scripts/procgen/probe-seedling-loop-restart.mjs"
         },
         {
             "argvHelpers": [
