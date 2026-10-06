@@ -14284,6 +14284,56 @@ attempts 33 → 48). Also listed: `plan-seedling-f1c-l18-phase --check`'s stdout
   rung's stalled solve. A re-record of the window necessarily moved it, though no brief listed it. Grep the tests
   for every re-recorded tape's NAME, not only for the functions changed.
 
+### Seedling fidelity BOBSOLDIER — a chaser with a spinning sword, and a corpse that keeps swinging
+
+Wave 8 (model coverage). TERRAIN's residue: two L30 legs (a sword knockback at t66/t67) came from a BobSoldier that
+the model did not step at all (`contactPricing('bobsoldier')` was a `mover`, priced nowhere).
+
+**The body.** `CHASERS.bobsoldier` + `MODELLED_ENEMY_CLASSES.BobSoldier` bridge it through `chaserStep`, behind
+`contactFidelity` W4 `bobSoldierLive` (ON). It is Bob's chase at `moveSpeed` 0.8, but three things are not Bob's:
+the update returns on the FREEZE only (no `destroy || "die"` test), `startDeath` is `Enemy`'s (`destroy` at the blow,
+no die animation: a `fade` corpse), and `solids` is `Mobile`'s base list (no "Enemy"). The last one re-opened the
+IceTurret refusal in L40: a mover without "Enemy" is stopped by the turret only as a Solid corpse, so the stepper
+now reads the turret's `solid` latch per mover (`enemyBoxStopsChaser`) and the refusal asks only for "Solid".
+
+**The sword** (`bobSoldier.js`). `swordSpinningBeginCheck(d:int)` truncates `d`, so the spin begins at d < 33; the
+60-update reset counts down only inside that range with the sword at rest. The spin turns π/10 a tick and, after a
+full turn, stops within one step of the player's angle and SNAPS to it. `swordHitting` runs every tick, spinning or
+not: `collideLine("Player", …)` from 8 to 16 px off the body, `p.hit(this, 3 * damage, …)`. At rest the blade points
+DOWN until the first spin. It has no enemy i-frame gate and no `destroy` gate.
+
+**W5 `chaserPointExact` (ON).** `chasers.js` spelled `Point.length` as `Math.hypot` and `Point.normalize(t)` as
+`(x / m) * t`; the runtime is `sqrt(x*x + y*y)` and `x * (t / m)` (`playerPhysicsV1.pointNormalize`, R9 12e⁗). Read
+off the L30 capture: the game's `vx` at t38 is `…912`, the model's `…911`. It is not only an ulp: on a corpse's
+chase the `pushed` test (`|v| > 0.8`) flipped on a 1-ulp length, a 0.8 jump in `v` (mutant M5).
+
+**Witnesses, all on the game (p4f, headless):** `bobsoldier-sword` (spin begins t49, blade hits t80/t107),
+`bobsoldier-kill` (three presses, `destroy` at t138, removal 11 ticks later), `bobsoldier-corpse` (the third press
+held 19 ticks: the kill at t150, the CORPSE's blade hits at t155). `probe-seedling-bobsoldier-mobiles.mjs`: the body
+bit-exact (worst |Δ| 0) on all three. TERRAIN's captures 308/309 replay at 0 px.
+
+**The solver (D3).** The forecast steps the sword on its clone and reports each tick's lines; a corpse's lines ride
+beside the projection (`swordsOnCorpses`), because the kill arm reads a body's absence from the projection as its
+death. `chaserDanger` tests those lines against the sample's own box; WAIT and live bodies keep `threatPad` 16.
+
+**Moved, measured.** Live sweep L28 + L30 (24 legs): 6 plays left their plan before, 0 after; 310/312/316 now play
+on plan, and the three Torchpickup legs (the item stands beside the body) refuse by name. Route survey step 52
+(L30 → L22) went SOLVED 204 → REFUSED at the decision gate. The BEFORE walk, played on the game, is hit three times
+and DIES, and the AFTER model follows it tick for tick. The old SOLVED was false.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A sibling's "the subclasses add nothing" holds per subclass, and so does "every bridged chaser carries Enemy".**
+  The IceTurret refusal's derivation assumed every bridged tag's `solids` carried "Enemy". The first chaser that did
+  not made L40 throw on three committed tapes (the entity witness's control caught it, not a unit row).
+- **A gate that is missing is a transcription, not an omission.** `BobSoldier.update` has no `destroy` test, so its
+  corpse swings. Reading Bob's gate into it would have looked right on every witness but one (`bobsoldier-corpse`
+  was authored to reach it; mutant M3 is invisible to the other two tapes).
+- **Two spellings of `Point.normalize` again, one class over** (R9 12e⁗'s trap, in `chasers.js`). An ulp in a
+  length decides a `>` branch, so it is not bounded by an ulp.
+- **A measurement process imports the tree it runs on.** Mutants made while the entity witness and the identity
+  block were measuring can reach their children (U7 said so too). Measure, then mutate.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

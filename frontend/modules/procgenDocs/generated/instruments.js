@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 64,
+            "count": 65,
             "id": "plan"
         },
         {
-            "browser": 56,
-            "count": 100,
+            "browser": 57,
+            "count": 101,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 359,
-        "browser": 121,
-        "cited": 175,
-        "files": 371,
+        "blockStyle": 361,
+        "browser": 122,
+        "cited": 176,
+        "files": 373,
         "lineStyle": 12,
-        "withDocblock": 371,
-        "withFlags": 289
+        "withDocblock": 373,
+        "withFlags": 291
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6826,6 +6826,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-bobsoldier.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-bobsoldier — ⛓⛓⛓ seedling-fidelity-bobsoldier: THE BOBSOLDIER'S DRIVEN WITNESSES.",
+            "path": "scripts/procgen/plan-seedling-bobsoldier.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-burn-witness.mjs",
             "flags": [
                 {
@@ -8786,6 +8813,52 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-axe-phase — ⛓⛓⛓ SEEDLING FIDELITY AXE, D1: **WHICH UPDATE OF THE SPINNING AXE TESTS WHICH OBSERVATION, ASKED OF THE GAME.**",
             "path": "scripts/procgen/probe-seedling-axe-phase.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-bobsoldier-mobiles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "upto"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-bobsoldier-mobiles — ⛓⛓⛓ seedling-fidelity-bobsoldier: THE BOBSOLDIER'S OWN POSITION, ASKED OF THE GAME, TICK BY SAMPLED TICK (U7's `probe-seedling-u7-puncher-mobiles.mjs`, one class over).",
+            "path": "scripts/procgen/probe-seedling-bobsoldier-mobiles.mjs"
         },
         {
             "argvHelpers": [],
