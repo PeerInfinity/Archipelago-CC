@@ -13787,6 +13787,60 @@ via `walkTo`) 1/42. Instruments +1 (`census-seedling-stepoff.mjs`).
 - a probe's `hits` read after the tape's latch counts the NEXT room's hits:
   an arm that ends on a crossing is witnessed by its stream, not its status.
 
+### Seedling fidelity ARRIVAL — an arrival inside a solid: the state measured, known, and refused by name
+
+Planning-3's wave 6, on `main` `88a7e4daa4`. ⚖ The user, 2026-10-05: *"Arrival
+inside a solid should only happen if we play the game out of order. The proper
+fix for this might be to restart using the menu, or just take a different
+path. The broken state of some obstacles is saved in the save data."* The
+report is `CC/docs/cloud-reports/seedling-fidelity-arrival.md`.
+
+**D1 — the game.** `probe-seedling-arrival-solid.mjs` (p4f, 42 arms,
+`fixtures/arrival-solid-oracle.json`) boots four GAME landings with the
+obstacle's flag held and cleared:
+- L12 → L0 (288,176) `breakablerock@288,176` {0,1};
+- L1 → L0 (80,112) `breakablerock@80,112` {0,4};
+- L12 → L24 (48,128) `burnabletree@32,128` {24,0};
+- L115 → L113 (112,16) `finaldoor@112,0` {113,0}.
+
+With the flag held, every hold moves 0 px. With it cleared the player walks,
+and each landing crosses a door one way. The model's stream matches the game's
+at 0 px on all 40 non-press arms. One Sword press from inside **does** break
+the rock in the game. The model frees the box 2 ticks early (observation 8
+against 10); that is residue, and no strategy is built on it.
+
+**D1(c)/D2 — the census.** `census-seedling-arrival-solid.mjs` (node) has 10
+(landing, solid) rows over 8 landing positions:
+- the two L0 rocks;
+- L24's tree;
+- L71 `shieldlock@288,256`;
+- L12 (32,864) inside a stacked `magicallock` + `bosslock`, free only with both flags;
+- L112 `rocklock@112,16` (two doors);
+- L113's final door (two doors).
+
+Every row is inside and stuck with the flag held, and outside with it cleared:
+the build needed no fix.
+
+**D3 — the solver.** `arrivalInsideSolid` runs at `solveSegment`'s entry and
+refuses with `arrival-inside-solid`: the flags, and `wayOut` (the Restart, and
+the other arrivals into the level, e.g. six for L0). `perTick` is empty. With
+the flag cleared the arrival solves as before (L0 → L12, 5 t). STEPOFF2's
+latched `inside-solid` boots refuse here first with their words kept.
+
+**D4.** `fixtures/arrival-solid-edges.json`: the 10 edges whose passability
+depends on a saved obstacle state, the rules arc's input.
+
+**Trap candidates**, for the catalogue to number:
+
+- an arrival box inside a solid is not a planning problem: the box takes no
+  step, so every search refuses with whatever it met first. L0's sweep refusal
+  named the wrong rock (`breakablerock@80,112`) for a run standing in
+  `@288,176`. Ask the state at the entry;
+- "the walker refuses too" is model evidence. The game, poked, answered a
+  question the walker could not: a Sword press from inside breaks the rock;
+- a mutant on `clearedAwayByTag` misses the burnable tree, whose build goes
+  through `treeBuiltIn`. A "clear" has more than one reader.
+
 ### Seedling fidelity FRONTIER2 — the frontier reports both routes, and the route-only one is walked
 
 ⚖ The user (2026-10-05), on the frontier mismatch: *"Both, report separately."*
