@@ -112,7 +112,9 @@ import {
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
+    AXE_UPDATE_OFFSET, axeVisitClock,
 } from './dangerMap.js';
+import { axeCanReach, axeHitsPlayer } from './hazards.js';
 import { planDash } from './mover.js';
 import { createTraceBuilder } from './decisionTrace.js';
 import {
@@ -10343,6 +10345,16 @@ export const ESCALATION_LADDER = Object.freeze(['avoid', 'dodge', 'pull', 'time'
 const DODGE_RUNG = Object.freeze({ step: 4, maxTicks: 30, maxPerSegment: 12 });
 
 /**
+ * ⛓ SEEDLING FIDELITY AXE — THE DODGE RUNG's AXE ARM's bounds. The stall runs
+ * 1 … `period − 1` ticks (derived per axe: `dangerMap.axePeriod`, one revolution,
+ * so every other phase is reachable), at `offsets` walk-offsets `step` ticks
+ * apart from just before the hit backwards, and it shares the spit arm's
+ * per-segment count (`maxPerSegment`).
+ */
+export const AXE_DODGE_RUNG = Object.freeze({ step: 4, offsets: 8, detourOffsets: 2, detourPreviews: 60,
+    rest: 12, maxPerSegment: DODGE_RUNG.maxPerSegment });
+
+/**
  * ⛓ SEEDLING FIDELITY F1c — THE HAMMER-PHASE RUNG's bounds, beside DODGE's and
  * DERIVED, not tuned (`hammerPhaseRung`):
  *   · `horizon` = `SPINNER.hammerPeriod` (45): one revolution of the line. A
@@ -11246,13 +11258,16 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  *    `deadline` reason, and the climb ends EXHAUSTED by name. It is the rung's
  *    whole cost on a failing chaser-only climb (L16's pre-sword refusal ~10–14 s,
  *    the L14 report). CAN turn a solve into a refusal (L14 swordless).
+ *  - `axe-dodge` — the DODGE rung's AXE arm (fidelity AXE), before each stall
+ *    preview: the arm answers no stall, with a `deadline` reason, and the climb
+ *    goes on up the ladder. CAN turn a solve into a refusal.
  *
  * ⛔ IT IS NEVER SILENT: a segment that tripped returns `deadline` beside its
  * trace (the first site, and per-site counts), and a refusal raised after a
  * trip carries the same object and says so in its words.
  */
 export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
-    'block-route', 'kill-chaser', 'detour']);
+    'block-route', 'kill-chaser', 'detour', 'axe-dodge']);
 
 /** The deadline the segment being solved runs under — `null` is "none". */
 let activeDeadline = null;
@@ -12229,6 +12244,14 @@ function solveSegmentUnder({
          * Refused by name; DODGE below is the rung that asks the right one.
          */
         const spitOnly = hit.sources.length > 0 && hit.sources.every((s) => s.kind === 'spit');
+        /**
+         * ⛓ SEEDLING FIDELITY AXE — every reason is a SpinningAxe priced at its
+         * own update count (`dangerMap.hazardDanger`'s transit arm sets `axe`).
+         * The blade is the walk's TIMING too: the same corridor walked a few
+         * ticks later meets it at another angle. AVOID is still asked (it may
+         * route round the hub), and DODGE below gets the axe's own bounds.
+         */
+        const axeOnly = hit.sources.length > 0 && hit.sources.every((s) => s.kind === 'hazard' && s.axe);
         if (spitOnly && corridor) {
             refused = { rung: 'avoid', why: 'every reason the probe gave is a TurretSpit '
                 + `(${reasonsOf(hit).slice(0, 160)}); a spit is the walk's own timing, not a `
@@ -12315,6 +12338,197 @@ function solveSegmentUnder({
                     if (transition) break;
                 }
                 return { escalations };
+            }
+            rowFor('dodge', refused);
+            refused = { rung: 'dodge', why: dodgeWhy };
+        }
+
+        /**
+         * ── rung 1¼, the AXE arm: DODGE a spinning axe by its own phase ──────
+         * (SEEDLING FIDELITY AXE). CONDITIONAL like the spit arm: only when every
+         * reason the probe gave is a SpinningAxe priced at its update count. The
+         * blade's angle is a function of the visit's tick index alone (the AXE
+         * report's D1, six game arms), so a stall before the sweep moves the
+         * walk to another phase of every axe it then passes. The search is the
+         * spit arm's shape with the axe's bounds (`AXE_DODGE_RUNG`): walk-offsets
+         * from just before the hit backwards, stalls of 1 … period − 1 (every
+         * other phase of one revolution), each candidate certified by the probe's
+         * own predicate over the whole walk. Bounded, and a `shouldStop` site
+         * (`axe-dodge`).
+         */
+        if (axeOnly && corridor) {
+            let dodge = null;
+            let dodgeWhy = null;
+            let previews = 0;
+            let tripped = false;
+            /**
+             * One corridor's stall search: the doorstep (the last sample before
+             * the hit whose box no hit axe reaches at ANY angle — a stall inside
+             * the reach is hit by the blade it waits out), then `offsets`
+             * walk-offsets back from it, stalls of 1 … period − 1 at each, every
+             * candidate certified by the probe's own predicate over the walk.
+             */
+            const axeStall = (wps, h, offsets) => {
+                const period = Math.max(...h.sources.map((s) => s.axe.period));
+                const hitAt = Math.max(0, h.tick - run.ticksCompleted - 1);
+                const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
+                const optsFor = (stall) => (axisAligned
+                    ? { strike: null, axisAligned, stall, stopWhen: dangerous }
+                    : { strike: strikePolicyFor(run, { dashMode }), stall, stopWhen: dangerous });
+                const base = previewWalk(run, wps, tolerance, optsFor(null));
+                let door = Math.min(hitAt, base.samples.length - 1);
+                while (door > 0 && h.sources.some((s) => axeCanReach(s.axe,
+                    playerBoxAt(base.samples[door].x, base.samples[door].y)))) door -= 1;
+                const certified = (at, ticks) => {
+                    previews += 1;
+                    const walk = previewWalk(run, wps, tolerance, optsFor({ at, ticks }));
+                    if (walk.truncated && walk.truncated.kind !== 'crossed') return null;
+                    if (walk.samples.length < at + ticks) return null;
+                    if (probeSamples(walk.samples, dangerExcept)) return null;
+                    return { at, ticks, walk, door, wps };
+                };
+                /**
+                 * ⛓ THE SCREEN. Once the stall has brought the player to rest, a
+                 * longer stall is the same walk LATER: the standing samples
+                 * repeat and the resumed walk is the rest-length one shifted by
+                 * the extra ticks. So one preview of a `rest`-tick stall prices
+                 * every longer one against the room's axes by arithmetic
+                 * (`hazards.axeHitsPlayer` at the shifted tick, the same count
+                 * `dangerMap` uses), and only a stall that passes is previewed
+                 * for real and certified by the probe. A stall still sliding at
+                 * `rest` is previewed for real at every length, as before.
+                 */
+                const clock = axeVisitClock(run);
+                const roomAxes = (run.world.combat?.hazards ?? []).filter((x) => x.tag === 'spinningaxe')
+                    .map((x) => ({ cx: x.cx, cy: x.cy, rate: Number(x.attrs?.rate ?? 0) }));
+                const rest = AXE_DODGE_RUNG.rest;
+                const t0 = run.ticksCompleted;
+                const hitsAxe = (x, y, tick) => roomAxes.some((axe) => {
+                    const u = tick - clock.v + AXE_UPDATE_OFFSET;
+                    return u >= 1 && axeHitsPlayer(axe, u, playerBoxAt(x, y)) !== null;
+                });
+                for (let k = 0; k < offsets; k += 1) {
+                    const at = door - k * AXE_DODGE_RUNG.step;
+                    if (at < 0) break;
+                    let screen = null;
+                    for (let ticks = 1; ticks < period; ticks += 1) {
+                        if (deadlineReached('axe-dodge')) { tripped = true; return null; }
+                        if (ticks <= rest || screen === null) {
+                            const got = certified(at, ticks);
+                            if (got) return got;
+                            if (ticks === rest && clock.v !== null) {
+                                previews += 1;
+                                const full = previewWalk(run, wps, tolerance, axisAligned
+                                    ? { strike: null, axisAligned, stall: { at, ticks: rest } }
+                                    : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks: rest } });
+                                const sm = full.samples;
+                                const still = sm.length > at + rest && sm[at + rest - 1].x === sm[at + rest - 2]?.x
+                                    && sm[at + rest - 1].y === sm[at + rest - 2]?.y;
+                                screen = still ? sm : false;
+                            }
+                            continue;
+                        }
+                        if (screen === false) {
+                            const got = certified(at, ticks);
+                            if (got) return got;
+                            continue;
+                        }
+                        // ⛓ the stall of `ticks`: samples [0, at + rest) as previewed,
+                        // the rest position until at + ticks, then the walk shifted.
+                        const shift = ticks - rest;
+                        const still = screen[at + rest - 1];
+                        let clear = true;
+                        for (let i = at; i < screen.length + shift && clear; i += 1) {
+                            const s = i < at + rest ? screen[i] : (i < at + ticks ? still : screen[i - shift]);
+                            if (hitsAxe(s.x, s.y, t0 + i + 1)) clear = false;
+                        }
+                        if (!clear) continue;
+                        const got = certified(at, ticks);
+                        if (got) return got;
+                    }
+                }
+                return null;
+            };
+            const axes = hit.sources.map((s) => s.id).join(', ');
+            let viaWhy = null;
+            if (dodgesSpent >= AXE_DODGE_RUNG.maxPerSegment) {
+                dodgeWhy = `this segment has already stalled ${dodgesSpent} time(s) for a `
+                    + `clocked danger (AXE_DODGE_RUNG.maxPerSegment ${AXE_DODGE_RUNG.maxPerSegment}) — `
+                    + 'a walk that keeps meeting one is not converging';
+            } else {
+                dodge = axeStall(corridor, hit, AXE_DODGE_RUNG.offsets);
+                /**
+                 * ⛓ AND WHEN THE PLANNER'S CORRIDOR HAS NO STALL, A BENT ONE MAY.
+                 * Measured on L61: the shortest corridor from the L60 door climbs
+                 * past the hub's west side AGAINST the blade's turn, so it is
+                 * caught at every phase; the strip east under the hub turns WITH
+                 * the blade, and the walk outruns it. Which side is a property of
+                 * the motion, not of a distance, so no forbidden rect separates
+                 * them. The DETOUR rung's own search (`deriveChaserDetour`: via
+                 * cells, shortest first, bounded, the `detour` deadline site) is
+                 * asked with a certifier that admits a corridor clean as it is or
+                 * clean after an axe stall (`AXE_DODGE_RUNG.detourOffsets`).
+                 */
+                if (!dodge && !tripped) {
+                    const stalls = new Map();
+                    const detour = deriveChaserDetour(run, {
+                        aim, allowTeleporter,
+                        planOpts: solverPlanOpts(run, contacts, goalPlanExtra),
+                        maxPreviews: AXE_DODGE_RUNG.detourPreviews,
+                        certify: (wps) => {
+                            const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
+                            const walk = previewWalk(run, wps, tolerance, axisAligned
+                                ? { strike: null, axisAligned, stopWhen: dangerous }
+                                : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous });
+                            const h = probeSamples(walk.samples, dangerExcept);
+                            const out = { hit: h, hitWp: h ? walk.samples.at(-1).wp : null,
+                                truncated: h ? null : (walk.truncated ?? null), ticks: walk.samples.length };
+                            if (!h || !h.sources.every((s) => s.kind === 'hazard' && s.axe) || tripped) return out;
+                            const st = axeStall(wps, h, AXE_DODGE_RUNG.detourOffsets);
+                            if (!st) return out;
+                            stalls.set(wps, st);
+                            return { hit: null, hitWp: null, truncated: null, ticks: st.walk.samples.length };
+                        },
+                    });
+                    if (detour.wps) {
+                        dodge = stalls.get(detour.wps)
+                            ?? { at: null, ticks: 0, walk: null, door: null, wps: detour.wps };
+                        dodge.vias = detour.vias;
+                    } else {
+                        viaWhy = detour.why;
+                    }
+                }
+                if (!dodge) {
+                    dodgeWhy = tripped
+                        ? `the AXE arm's search stopped at the deadline after ${previews} preview(s) `
+                            + `(\`axe-dodge\`) without a stall that clears ${axes}`
+                        : `no stall of one revolution or less at the doorstep or ${AXE_DODGE_RUNG.offsets - 1} `
+                            + `earlier walk-offset(s) (step ${AXE_DODGE_RUNG.step}) clears the corridor of `
+                            + `${reasonsOf(hit)} (${previews} preview(s))`
+                            + `${viaWhy ? `; and bent through via cells: ${viaWhy}` : ''}`;
+                }
+            }
+            if (dodge) {
+                dodgesSpent += 1;
+                rowFor('dodge', refused, { stall: dodge.at === null ? null : { at: dodge.at, ticks: dodge.ticks },
+                    axe: hit.sources[0].id, previews, ...(dodge.vias ? { vias: dodge.vias } : {}) });
+                if (dodge.at === null) return { wps: dodge.wps, escalations };
+                /**
+                 * ⛔ THE STALL IS DRIVEN, AND THEN THE REST OF **THE SAME**
+                 * CORRIDOR IS WALKED — from the waypoint the preview stood on —
+                 * because the timing is the corridor's: a re-plan from the stall
+                 * would hand back the planner's shortest corridor, which is the
+                 * one that may have been the problem.
+                 */
+                const upto = dodge.at + dodge.ticks;
+                for (const s of dodge.walk.samples.slice(0, upto)) {
+                    const held = new Set(s.held);
+                    perTick.push(held);
+                    const { transition } = run.advance(held);
+                    if (transition) return { escalations };
+                }
+                const wpAt = dodge.walk.samples[upto - 1]?.wp ?? 0;
+                return { wps: dodge.wps.slice(Math.max(0, wpAt)), escalations };
             }
             rowFor('dodge', refused);
             refused = { rung: 'dodge', why: dodgeWhy };

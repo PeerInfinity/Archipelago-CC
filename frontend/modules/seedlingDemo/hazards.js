@@ -473,6 +473,18 @@ export function axeHitsPlayer(axe, updates, box) {
     return null;
 }
 
+/**
+ * Can the axe reach this box at ANY angle? The nearest point of the box within
+ * the blade's length (+1 for the line's integer endpoints) or touching the hub
+ * rect. ⚠ A conservative "yes" — it is the DOORSTEP test (where a walk may
+ * stand and wait out a phase), not a danger verdict.
+ */
+export function axeCanReach(axe, box) {
+    const nx = Math.max(box.x, Math.min(axe.cx, box.right));
+    const ny = Math.max(box.y, Math.min(axe.cy, box.bottom));
+    return Math.hypot(nx - axe.cx, ny - axe.cy) <= SPINNING_AXE.length + 1;
+}
+
 /** Does a player box overlap this volume? */
 export function volumeHitsBox(volume, box, { margin = 0 } = {}) {
     for (const r of volume.rects ?? []) {
