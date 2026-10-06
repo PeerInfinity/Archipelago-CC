@@ -427,7 +427,8 @@ describe('the charged doors and the completion condition', () => {
         expect(into.map((e) => e.from).sort()).toEqual(['level_56', 'level_58__r4c1', 'level_58__r6c5']);
         for (const e of into) expect(has(e.access_rule), e.name).toBe(true);
         expect(R.level_57.exits.map((e) => e.connected_region)).toEqual(['level_58__r4c1']);
-        expect(R.level_57.exits[0].access_rule).toEqual(kill);
+        // ⛓ ⚖ game truth first: the mouth's landing in L58 drowns an item-less arrival too, so the R2 gate adds Swim
+        expect(R.level_57.exits[0].access_rule).toEqual({ rule: 'And', children: [kill, { rule: 'Has', args: { item_name: 'Progressive Swim' } }] });
     });
 
     it('states the goal as the BLOODLESS seed and names the other ending a non-goal', () => {

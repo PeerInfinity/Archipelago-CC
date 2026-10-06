@@ -1132,8 +1132,8 @@ export const lethalLandings = [];
  * (`seedlingDemo/seedlingLethalArrivals.js` holds the why and the game source). For every atlas connection,
  * each direction the graph wires: the landing is where the runtime binding puts the player
  * (`seedlingRegionBinding.resolveArrivalSpawn`: the game's return spawn for the landing tile, else this
- * generator's arrival spawn). When the physics model says an item-less arrival there dies under every input
- * on lethal terrain, the DEPARTURE door is gated (`exitGates`) on that terrain's own transcription cost. A
+ * generator's arrival spawn). When the physics model says an item-less arrival there dies IDLE on lethal
+ * terrain (⚖ game truth first: no walk-off exemption), the DEPARTURE door is gated (`exitGates`) on that terrain's own transcription cost. A
  * gate the departure's own rule already requires is not written twice. The arrival-side mirror of
  * `chargeSealedDoor`: never the whole approach path, only the cell the game puts the body on.
  * Run after `buildPlaythroughAtlas(…)` and `setPlaythroughLandingAtlas(…)` on the document it returned.
@@ -1158,13 +1158,12 @@ export function playthroughLandingGates(doc, { levelSource = levelSourceFromAtla
         const spawn = back ?? arrivalSpawnFor(arr.region, arr.exit, { entranceSpawn: { x: tx * TILE, y: ty * TILE }, landing: leg.oneWay });
         const terrain = lethalTerrainUnder(level, spawn.x, spawn.y, { tileSize: TILE });
         if (!terrain) continue;
-        const cameFrom = dep.region.map_ref;
-        const key = `${level.level},${spawn.x},${spawn.y},${cameFrom}`;
-        if (!verdicts.has(key)) verdicts.set(key, arrivalIsLethal(level, spawn.x, spawn.y, { levelSource, cameFrom }));
-        const { lethal, tries } = verdicts.get(key);
+        const key = `${level.level},${spawn.x},${spawn.y}`;
+        if (!verdicts.has(key)) verdicts.set(key, arrivalIsLethal(level, spawn.x, spawn.y, { levelSource }));
+        const { lethal, outcome } = verdicts.get(key);
         const where = `${dep.region.region_id}/${dep.exit.exit_id} -> L${level.level} (${spawn.x}, ${spawn.y})`;
         if (!lethal) {
-            lethalLandings.push({ where, gated: false, why: `the model walks off it (${tries.join(' ')})` });
+            lethalLandings.push({ where, gated: false, why: `an idle item-less arrival lives (${outcome})` });
             continue;
         }
         const placement = (level.layers ?? []).filter((l) => l.name !== 'cliffsides')
@@ -1182,7 +1181,7 @@ export function playthroughLandingGates(doc, { levelSource = levelSourceFromAtla
             continue;
         }
         gates.push({ region_id: dep.region.region_id, exit_id: dep.exit.exit_id, rule });
-        lethalLandings.push({ where, gated: true, rule, why: `${ruled.label} at [${terrain.tile}]; ${tries.join(' ')}` });
+        lethalLandings.push({ where, gated: true, rule, why: `${ruled.label} at [${terrain.tile}]; idle ${outcome}` });
     }
     return gates;
 }

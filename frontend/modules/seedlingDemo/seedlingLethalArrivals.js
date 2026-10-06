@@ -12,10 +12,13 @@
 //   - TERRAIN: the tile under the player's probe point at the landing is one of the model's lethal tiles
 //     (`levelWorld.lethalTerrainTiles`: water and lava, the two `checkDrowning` arms). What it COSTS is the
 //     transcription's (`seedlingSemantics.TILE_TYPE_SEMANTICS` for that tile type), never typed here.
-//   - LETHAL: the physics model, booted at the landing with NO items, dies idle AND under every held
-//     direction within `ticks`, except by stepping back out through the door it came in by (that is no
-//     arrival: the player is back where they started). A landing the player can walk off before the drown
-//     latches (L54 (144,16), west onto land) is NOT charged.
+//   - LETHAL: the physics model, booted at the landing with NO items, dies IDLE within `ticks`.
+//     ⚖ GAME TRUTH FIRST (planner ruling on the user's terms, 2026-10-06): an earlier cut also asked the model
+//     whether a HELD direction walks off the landing, and exempted the two it said did (L54 (144,16) and the
+//     mouth's landing in L58, west onto land). The wasm game DROWNS both under the same input
+//     (`probe-seedling-lethal-landings.mjs`, tips e63912d970 / 43936cbff6), so that answer was a model-fidelity
+//     gap, not a way: it is dropped, and the walk-off defect is the fidelity arc's. The only arrival that is
+//     not charged is one that is not lethal idle; stepping back out of the door is no arrival and needs no rule.
 //
 // ⛓ The firewall's allowed direction (§6.3): an atlas producer reads the model; the model reads nothing
 // back. Imported by the generator only (the model's run is heavy; nothing in the browser asks this).
@@ -27,8 +30,6 @@ import { createLevelRun } from './levelRun.js';
 /** How long an arrival is watched, per input. The drown latch is 11 cumulative water ticks + 20 `drown()` ticks. */
 export const LETHAL_ARRIVAL_TICKS = 180;
 
-/** The inputs an arrival is tried under: idle, then each held direction. */
-export const LETHAL_ARRIVAL_INPUTS = Object.freeze([null, 'up', 'down', 'left', 'right']);
 
 const worlds = new WeakMap();
 const worldOf = (level) => {
@@ -51,29 +52,18 @@ export function lethalTerrainUnder(level, x, y, { tileSize = TILE_SIZE } = {}) {
 }
 
 /**
- * Does an item-less arrival at (x, y) in `level` die under every input? `cameFrom` is the level the arrival
- * came from: leaving to it is going back, not surviving. Returns `{lethal, tries}`; `tries` records each
- * input's outcome (`die@t`, `left->L<n>@t`, `alive`) so the generator prints what it measured.
+ * Does an item-less arrival at (x, y) in `level` die IDLE within `ticks`? Returns `{lethal, outcome}`
+ * (`die@t:<source>` or `alive`) so the generator prints what it measured.
  *
  * @param {object} level the map document's level record (the run reads it through `levelSource`)
  * @param {(id:number) => object} levelSource
  */
-export function arrivalIsLethal(level, x, y, { levelSource, cameFrom = null, ticks = LETHAL_ARRIVAL_TICKS } = {}) {
-    const tries = [];
-    let survived = false;
-    for (const key of LETHAL_ARRIVAL_INPUTS) {
-        const run = createLevelRun({ levelSource, boot: { level: level.level, x, y }, pins: ['sound', 'dead_frames'], grants: [] });
-        const held = new Set(key ? [key] : []);
-        let outcome = 'alive';
-        for (let t = 0; t < ticks; t += 1) {
-            run.advance(held);
-            if (run.level !== level.level) { outcome = `left->L${run.level}@${t}`; break; }
-            const deaths = run.playerDeaths ?? [];
-            if (deaths.length > 0) { outcome = `die@${deaths[0].t}:${deaths[0].source}`; break; }
-        }
-        tries.push(`${key ?? 'idle'}:${outcome}`);
-        const backOut = Number(/^left->L(\d+)@/.exec(outcome)?.[1]) === cameFrom;
-        if (!outcome.startsWith('die@') && !backOut) survived = true;
+export function arrivalIsLethal(level, x, y, { levelSource, ticks = LETHAL_ARRIVAL_TICKS } = {}) {
+    const run = createLevelRun({ levelSource, boot: { level: level.level, x, y }, pins: ['sound', 'dead_frames'], grants: [] });
+    for (let t = 0; t < ticks; t += 1) {
+        run.advance(new Set());
+        const deaths = run.playerDeaths ?? [];
+        if (deaths.length > 0) return { lethal: true, outcome: `die@${deaths[0].t}:${deaths[0].source}` };
     }
-    return { lethal: !survived, tries };
+    return { lethal: false, outcome: 'alive' };
 }

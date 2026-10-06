@@ -18,7 +18,9 @@
  *     start after tick 1, so a baseline read at "the first live tick" races it). With the conch the same
  *     boot has no episode past the boot's.
  *   - CONTROL: idle with the item the terrain's transcription row names (`canSwim` -> conch,
- *     `hasDarkSuit` -> darksuit): no death.
+ *     `hasDarkSuit` -> darksuit): no restart past the boot's own fade.
+ *   ⚖ LETHAL = the item-less IDLE arrival dies (the generator's rule, game truth first); the held directions
+ *     are evidence of whether any walks off.
  * Each row is compared with the physics model's verdict (`arrivalIsLethal`) and the generator's gate (the
  * committed rules: does the edge that lands there require the saving item?).
  *
@@ -236,15 +238,22 @@ async function main() {
             .filter((e) => into.has(e.connected_region)).map(() => Number(/^level_(\d+)/.exec(from)?.[1]))))]
             .filter((v) => Number.isInteger(v) && v !== L.level).sort((x, y) => x - y);
         const level = MAP.levels.find((l) => l.level === L.level);
-        const model = arrivalIsLethal(level, L.x, L.y, { levelSource, cameFrom: cameFrom[0] ?? null, ticks: TICKS });
-        const gameLethal = game.every((g) => g.endsWith(':dies') || cameFrom.some((c) => g.includes(`left->L${c}@`)));
+        // ⚖ game truth first: LETHAL = the item-less IDLE arrival dies (the generator's rule). The held
+        //   directions are evidence (does any walk off? the 2026-10-06 run: no landing's does in the game).
+        const model = arrivalIsLethal(level, L.x, L.y, { levelSource, ticks: TICKS });
+        const gameLethal = game[0] === 'idle:dies';
+        const walksOff = game.slice(1).filter((g) => g.endsWith(':alive')
+            || (/:left->L\d+@/.test(g) && !cameFrom.some((c) => g.includes(`left->L${c}@`))));
         const edges = gatesOf(L, apItemFor(L.flag));
         console.log(`ROW ${JSON.stringify({ level: L.level, x: L.x, y: L.y, terrain: L.label, game, control: control.verdict,
-            gameLethal, modelLethal: model.lethal, model: model.tries, cameFrom, deadFrames: dead,
+            gameLethal, modelLethal: model.lethal, model: model.outcome, walksOff, cameFrom, deadFrames: dead,
             controlRestarts: control.deadFrames.restarts, edges })}`);
         check(`L${L.level} (${L.x},${L.y}) ${L.label}: the game ${gameLethal ? 'kills' : 'does NOT kill'} an item-less arrival; `
-            + `the model agrees`, gameLethal === model.lethal, `game ${game.join(' ')} | model ${model.tries.join(' ')}`);
-        check(`L${L.level} (${L.x},${L.y}): the ${item} saves it (idle, no death)`, control.verdict === 'alive', control.verdict);
+            + `the model agrees`, gameLethal === model.lethal, `game ${game.join(' ')} | model idle ${model.outcome}`);
+        // the control: the boot's own fade is one episode on a reused page; a drowning run has one per ~31 ticks
+        const idleRestarts = dead[0].restarts;
+        check(`L${L.level} (${L.x},${L.y}): the ${item} saves it (idle: no restart beyond the boot's fade, vs ${idleRestarts} without it)`,
+            control.deadFrames.restarts <= 1 || control.deadFrames.restarts * 2 < idleRestarts, `${control.deadFrames.restarts} episode(s)`);
         if (gameLethal) {
             for (const e of edges) check(`L${L.level} (${L.x},${L.y}): the landing edge ${e.edge} requires ${apItemFor(L.flag)}`, e.charged);
         }

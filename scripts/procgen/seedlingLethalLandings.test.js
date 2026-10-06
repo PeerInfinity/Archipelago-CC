@@ -1,9 +1,10 @@
 /**
  * ⛓ RULES game-truth-gaps (R2) — a landing on LETHAL TERRAIN costs the item that survives it. The fresh
- * derivation (`playthroughLandingGates`) gates every landing edge the physics model kills an item-less arrival
- * on, and the committed rules carry exactly those gates; the model's two exemptions hold by name (a landing
- * the body walks off, a departure that already asks for the item); and the oracle's own verdicts on the two
- * shapes: the L49/L50 water doors (back out through the door is no survival) and L54's shore (left onto land).
+ * derivation (`playthroughLandingGates`) gates every landing edge the physics model kills an item-less IDLE
+ * arrival on, and the committed rules carry exactly those gates; the one exemption holds by name (a departure
+ * that already asks for the item); and the oracle's own verdicts. ⚖ Game truth first (2026-10-06): the
+ * walk-off exemption is gone — the wasm game drowns L54 (144,16) and the mouth's L58 landing under the input
+ * the model said walks off (`probe-seedling-lethal-landings.mjs`).
  */
 
 import { readFileSync } from 'node:fs';
@@ -62,17 +63,17 @@ describe('landings on lethal terrain', () => {
         }
     });
 
-    it('the exemptions hold by name: a shore the body walks off, a departure that already asks for the item', () => {
+    it('the one exemption holds by name: a departure that already asks for the item (L96 into the lava)', () => {
         const row = (prefix) => lethalLandings.find((l) => l.where.startsWith(prefix));
-        expect(row('level_53/out_teleporter_144_240 ')).toMatchObject({ gated: false });
-        expect(row('level_53/out_teleporter_144_240 ').why).toMatch(/walks off/);
         expect(row('level_96/out_teleporter_32_64 ')).toMatchObject({ gated: false });
         expect(row('level_96/out_teleporter_32_64 ').why).toMatch(/already requires/);
-        // ⛓ the L57 lift: the mouth's landing in L58 is a shore too (the body walks west onto land).
-        expect(row('level_57/out_tentaclebeast_80_48 ')).toMatchObject({ gated: false });
-        expect(row('level_57/out_tentaclebeast_80_48 ').why).toMatch(/walks off/);
-        expect(lethalLandings.filter((l) => !l.gated).map((l) => l.where.split(' ')[0]).sort()).toEqual([
-            'level_53/out_teleporter_144_240', 'level_57/out_tentaclebeast_80_48', 'level_96/out_teleporter_32_64']);
+        expect(lethalLandings.filter((l) => !l.gated).map((l) => l.where.split(' ')[0])).toEqual(['level_96/out_teleporter_32_64']);
+    });
+
+    it('⚖ game truth first: the shores the model walked off are gated (L53 -> L54 (144,16), the mouth -> L58)', () => {
+        const gated = new Set(gates.map((g) => `${g.region_id}/${g.exit_id}`));
+        expect(gated.has('level_53/out_teleporter_144_240')).toBe(true);
+        expect(gated.has('level_57/out_tentaclebeast_80_48')).toBe(true);
     });
 });
 
@@ -101,22 +102,14 @@ describe('the L57 arena (a fresh derivation)', () => {
 });
 
 describe('the oracle', () => {
-    it('L50 (32,16): water, and every input dies or goes back up to L49 — lethal', () => {
+    it('L50 (32,16): water, and an idle item-less arrival drowns (the model\'s die@31 = the game\'s ~31-tick restarts)', () => {
         expect(lethalTerrainUnder(levelOf(50), 32, 16)).toMatchObject({ tile: [2, 1] });
-        const v = arrivalIsLethal(levelOf(50), 32, 16, { levelSource, cameFrom: 49 });
-        expect(v.lethal).toBe(true);
-        expect(v.tries).toContain('up:left->L49@7');
+        expect(arrivalIsLethal(levelOf(50), 32, 16, { levelSource })).toEqual({ lethal: true, outcome: 'die@31:drown' });
     });
 
-    it('the same landing reached from ANOTHER level is not lethal: leaving to L49 is then an escape', () => {
-        expect(arrivalIsLethal(levelOf(50), 32, 16, { levelSource, cameFrom: 51 }).lethal).toBe(false);
-    });
-
-    it('L54 (144,16): water, but holding left walks onto land — not lethal', () => {
+    it('L54 (144,16): idle, it drowns too — the shore beside it is no exemption any more', () => {
         expect(lethalTerrainUnder(levelOf(54), 144, 16)).not.toBeNull();
-        const v = arrivalIsLethal(levelOf(54), 144, 16, { levelSource, cameFrom: 53 });
-        expect(v.lethal).toBe(false);
-        expect(v.tries).toContain('left:alive');
+        expect(arrivalIsLethal(levelOf(54), 144, 16, { levelSource }).lethal).toBe(true);
     });
 
     it('a dry landing is no lethal terrain at all (L0\'s start (80,128))', () => {
