@@ -14284,6 +14284,70 @@ attempts 33 → 48). Also listed: `plan-seedling-f1c-l18-phase --check`'s stdout
   rung's stalled solve. A re-record of the window necessarily moved it, though no brief listed it. Grep the tests
   for every re-recorded tape's NAME, not only for the functions changed.
 
+### Seedling fidelity STANCE — the stance walks that re-entered their own orders
+
+⚖ The user (2026-10-05): *"The first priority is to expand the model to include everything in the game."* Wave 8's
+STANCE slice. The report is `CC/docs/cloud-reports/seedling-fidelity-stance.md`.
+
+**The rows (D1, at the wave-7 harvest `0f952e9a9e`).** The route survey (`--through=end`) is 221 steps at this base,
+138 SOLVED / 80 REFUSED / 3 TIMEOUT. Its stance families are two loops, both `unclassified`:
+- `chest(...)` ×4, steps 91 (L46 `chest@424,40`) and 93 (L48 `chest@152,184`). These are the only two chests in the
+  atlas on a HALF tile. The stance is the chest's centre column, which is on no 16 px node, so the goal tile's centre
+  is inside the chest and the planner refuses it. The frontier names the chest again, and the walk to its stance
+  re-applies `chest` with nothing spent between.
+- `keylock(...)` ×4, steps 50 (L30), 102 (L48), 135, 155, 176 and 186 (L12). Every arrival is NORTH of the bosslock.
+  `BossLock.update` opens only on a player box on the row UNDER the lock (`collideLine`, y = bottom + 1), so the
+  stance is on the far side. `stanceHypothesis` listed the lock itself, and the far-side stance read as reachable
+  "once the lock is discharged".
+The brief's other families were not stance rows at this base: L15/L16's button stance and L0's swing stance SOLVE on
+the route, L71's chest (step 159) is the spinner kill, L12's three TIMEOUTs are the combat ladder on L12's puncher
+(step 63 answers in 850 s at the base), and L98's chest (step 200) is PROXIMITY's chest-volume sliver.
+
+**The fix (D2).**
+- `walkTo`'s `STANCE_REENTRY`: an order whose stance walk names the same order at the same tick (`stanceWalks`), or
+  whose stance IS the asking walk's aim under identical plan inputs, is the same walk again. It asks the 8 px lattice
+  axis-aligned (`manhattan` corners and `holdOneAxis`: the 8 px nodes are off the chest's column too, and a diagonal
+  last leg cycles at ±1.5 px because vector friction shares one quantum between the axes), else refuses by name.
+  Both chests SOLVE (1528 t, 1060 t), one `chest` record each.
+- `deriveKeylockStance`: the lock is not its own prerequisite, and a sibling bosslock is hypothesised only where its
+  own key line has a direct corridor (L12's twin `bosslock@416,240`/`@432,240`). A far-side arrival refuses
+  *"⛔ SEALED BEHIND ITSELF: … The save still holds its flag {L,tag}"* (the optional instance field `sealed`:
+  RETURN's shape with `self: true`). That is the SHUT state. With the flag cleared the game builds no lock and the
+  same arrival solves (the OPEN state: L48 454 t, L12 534 t).
+- `deriveCeilingWeapon`: a ceiling presser with no stance is the KILL rung's refusal, not the solve's (the sweep's
+  leg 85, below).
+
+**The game witnesses** (`plan-seedling-stance-witness.mjs`; recorded on p4f, headless, each reproduced by the model at
+0 px): `stance-l46-chest`, `stance-l48-chest`, `stance-l48-keylock-open`, `stance-l48-keylock-south` (the control:
+the shut lock from its own side opens) and `stance-l48-keylock-north` (140 ticks leaning into the shut lock from the
+north holding key 3: nothing opens; longer than the 60-tick `keyTimer` plus the fade, so the lean discriminates).
+
+**The census (D3).** The survey goes 138/80/3 → **140/78/3**. Steps 91 and 93 SOLVE, and 50, 102, 135, 155, 176 and
+186 refuse as KEYLOCK-SEALED, each naming its flag. Every other step's verdict, ticks and refusal text is unchanged.
+The JS arc's live sweep (`--mode=inv --page-legs=1`, the 46 legs of L8, L15, L16 and L71) has ONE stance row at
+this base: leg 85, L8 → L7 from the L9 door with no items, *"no REACHABLE stance inside button@64,48"*. That
+throw came from the KILL rung (`deriveCeilingWeapon` asking the arrow ceiling's presser for a hold stance) and
+escaped the whole ladder. It is now the rung's own reason, and the leg refuses as LADDER (`sandtrap@96,128` on the
+shove stance's corridor; the presser cut off by `pushableblock@96,112` and Water). The other 45 legs are identical
+(17 done before and after). The brief's 14 "button stance" legs at L15, L16 and L71 are gone at this base: they
+now read as the combat ladder, arrival-inside-solid, the budget, or done.
+
+**Beyond the route:** the generated-level probes in `procgenPostSword.test.js` carried the same two loops. Their
+`POST_SWORD_EXCLUDED_TEMPLATES` rows now read STANCE_REENTRY (`chest-in-the-gap`, `shieldboss-door` after its fight)
+and SEALED BEHIND ITSELF (`key-keylock-pair`). That row was `UNDIAGNOSED` ("THE DECIDING CAUSE IS NOT NAMED"), and
+its cause is the chest's: a single template's crossing runs north→south, and both open only from the south.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A hypothesis may not contain the thing it is a hypothesis for.** A stance search that lets "the rest of the
+  plan" discharge pending obstacles must exclude the obstacle whose stance it is. Otherwise the far side of a wall is
+  always "reachable once the wall is open", and the loop that follows looks like progress for four applications.
+- **A re-entry with nothing spent is not a retry.** Two applications of one verb at one tick, with no tick or world
+  change between, are one decision made twice. Key the in-flight set by `(verb, obstacle, tick)` and treat a hit as
+  a finding (the bait rung's `BAIT_REENTRY`, Swim R5, has the same shape).
+- **A one-sided trigger is two states, not one.** A lock that opens only from one side is passable from the other
+  exactly when the save says it was already opened. The refusal must name the flag; "no corridor" is the symptom.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

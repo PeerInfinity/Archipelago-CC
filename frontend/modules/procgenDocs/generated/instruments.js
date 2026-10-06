@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 64,
+            "count": 65,
             "id": "plan"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 359,
+        "blockStyle": 360,
         "browser": 121,
-        "cited": 175,
-        "files": 371,
+        "cited": 176,
+        "files": 372,
         "lineStyle": 12,
-        "withDocblock": 371,
-        "withFlags": 289
+        "withDocblock": 372,
+        "withFlags": 290
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8400,6 +8400,41 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-slots-witness — ⛓⛓⛓ SEEDLING FIDELITY SLOTS: THE SLOT ARRAY IN ARRIVAL ORDER, ON THE GAME.",
             "path": "scripts/procgen/plan-seedling-slots-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-stance-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dry"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-stance-witness — ⛓⛓⛓ SEEDLING FIDELITY STANCE: THE GAME WITNESSES FOR THE STANCES THE SOLVER USED TO LOOP ON.",
+            "path": "scripts/procgen/plan-seedling-stance-witness.mjs"
         },
         {
             "argvHelpers": [],
