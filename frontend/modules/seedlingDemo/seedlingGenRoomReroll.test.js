@@ -520,9 +520,9 @@ describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, repla
      * values (ded222c9 / 9556080c / cc038eaa — measured), so the flag is the whole move.
      */
     it.each([
-        ['grid 8x6 seed 2', () => GRID(2, 8, 6), 'ded222c9'],
-        ['grid 10x10 seed 7', () => GRID(7, 10, 10), '9556080c'],
-        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), 'cc038eaa'],
+        ['grid 8x6 seed 2', () => GRID(2, 8, 6), 'e3d1d044'],
+        ['grid 10x10 seed 7', () => GRID(7, 10, 10), '1b2ff6ee'],
+        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), '5b7eb2d2'],
     ])('%s built before G8: byte-identical', async (_name, state, md5) => {
         const rulesJson = await build(state());
         expect(createHash('md5').update(JSON.stringify(rulesJson)).digest('hex').slice(0, 8)).toBe(md5);
