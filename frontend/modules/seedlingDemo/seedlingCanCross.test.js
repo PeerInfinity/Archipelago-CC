@@ -68,12 +68,13 @@ describe('canCross — one real case per verdict', () => {
         expect(r.budget).toMatchObject({ kind: 'consults', limit: DEFAULT_CONSULT_BUDGET, deterministic: true });
     });
 
-    it('cannot: L22 from L25 toward L29, bare — EXHAUSTED on a static wallflyer, a true refusal', () => {
+    // ⛓ LINEFLIP (W1 `collideLinePointsExact` ON): the wallflyer's untruncated ray re-plans the walk, and the refusal is
+    // now the re-planned corridor's stall short of waypoint 0, not the wallflyer danger — still `cannot` (measured).
+    it('cannot: L22 from L25 toward L29, bare — the re-planned corridor stalls short of (88,88), a true refusal', () => {
         const r = canCross({ level: 22, exit: 29, arrival: { from: 25 }, dashMode: 'none', witness: false });
         expect(r.verdict).toBe('cannot');
-        expect(r.cause).toMatchObject({ kind: 'refusal', basis: 'field', name: 'SolverRefusal',
-            obstacle: { kind: 'danger', id: 'wallflyer@128,80' } });
-        expect(r.why).toMatch(/combat ladder is EXHAUSTED/);
+        expect(r.cause).toMatchObject({ kind: 'refusal', basis: 'field', name: 'SolverRefusal', obstacle: null });
+        expect(r.why).toMatch(/the re-planned corridor failed too — .* waypoint 0 \(88,88\): not reached within 400 ticks/);
         expect(r.witness).toBeUndefined();
     });
 
