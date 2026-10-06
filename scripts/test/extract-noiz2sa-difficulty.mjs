@@ -10,12 +10,11 @@
  * (0–80 step 10 from the scene and triple sweeps; 90, 92, 94, 96, 98, 99, 100 from the top sweep — its 90 and 100
  * are the same runs as the other two files' 90 and 100, checked here).
  *
- * The files are read out of the submodule's git objects at `--ref` (default `origin/main`), not its checkout: the
- * pinned submodule commit predates the top and triple sweeps, and this slice does not move the submodule.
+ * The files are read from the submodule's checkout (`frontend/modules/bulletml-dodge/results/`), pinned at a commit
+ * that carries all three sweeps (19e3de1); the table records the submodule's commit.
  *
  *   node scripts/test/extract-noiz2sa-difficulty.mjs                 # write the table
  *   node scripts/test/extract-noiz2sa-difficulty.mjs --check         # exit 1 when the committed table differs
- *   node scripts/test/extract-noiz2sa-difficulty.mjs --ref 19e3de1
  */
 
 import { execFileSync } from 'node:child_process';
@@ -28,14 +27,10 @@ const repoRoot = path.resolve(here, '../..');
 const SUBMODULE = path.join(repoRoot, 'frontend/modules/bulletml-dodge');
 const OUT = path.join(repoRoot, 'frontend/modules/noiz2saSubstrate/noiz2saDifficultyData.js');
 
-const argv = process.argv.slice(2);
-const check = argv.includes('--check');
-const refAt = argv.indexOf('--ref');
-const ref = refAt >= 0 ? argv[refAt + 1] : 'origin/main';
+const check = process.argv.slice(2).includes('--check');
 
-const git = (...args) => execFileSync('git', ['-C', SUBMODULE, ...args], { encoding: 'utf8', maxBuffer: 1 << 28 });
-const commit = git('rev-parse', '--short', `${ref}^{commit}`).trim();
-const read = (name) => JSON.parse(git('show', `${commit}:results/${name}`));
+const commit = execFileSync('git', ['-C', SUBMODULE, 'rev-parse', '--short=7', 'HEAD'], { encoding: 'utf8' }).trim();
+const read = (name) => JSON.parse(fs.readFileSync(path.join(SUBMODULE, 'results', name), 'utf8'));
 
 const scenes = read('segments-scenes.json');
 const top = read('segments-top.json');
@@ -107,8 +102,8 @@ ${body}
 
 if (check) {
     const now = fs.existsSync(OUT) ? fs.readFileSync(OUT, 'utf8') : '';
-    if (now !== text) { console.log(`FAIL: ${path.relative(repoRoot, OUT)} differs from ${ref} (${commit})`); process.exit(1); }
-    console.log(`PASS: ${path.relative(repoRoot, OUT)} matches ${ref} (${commit})`);
+    if (now !== text) { console.log(`FAIL: ${path.relative(repoRoot, OUT)} differs from the submodule's results (${commit})`); process.exit(1); }
+    console.log(`PASS: ${path.relative(repoRoot, OUT)} matches the submodule's results (${commit})`);
 } else {
     fs.writeFileSync(OUT, text);
     console.log(`wrote ${path.relative(repoRoot, OUT)}: ${sceneSpans.length} scenes, ${tripleSpans.length} triples × ${SKILLS.length} skills, from ${commit}`);
