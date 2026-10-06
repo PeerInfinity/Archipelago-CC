@@ -273,8 +273,9 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ RULES (B): 8,863 -> 9,819 B — the two LavaBoss arena door rules (L82, L96) lift.
         // ⛓ RULES burnable-trees: 9,819 -> 10,737 B — five doors inside an item-gated solid lift
         //   (L24 x2 and L32's two pits: Fire; L34: a wand).
-        expect(Buffer.byteLength(committed, 'utf8')).toBe(10737);
-        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-0072e253');
+        // ⛓ RULES kill-locks: 10,737 -> 11,173 B — L98's stairs under its kill-lock lift as a rule.
+        expect(Buffer.byteLength(committed, 'utf8')).toBe(11173);
+        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-83e8080f');
         // ⛔ AND THE SUFFIXES ARE GONE — the artifact, not the producer.
         expect(committed).not.toMatch(/Chest \(L\d/);
     });
@@ -285,7 +286,7 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         expect(Object.values(committed.rooms)
             .reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(41);
         expect(Object.values(committed.rooms)
-            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(12); // ⛓ RULES (B): +2 arena doors; burnable-trees: +5 sealed doors
+            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(13); // ⛓ RULES (B): +2 arena doors; burnable-trees: +5 sealed doors; kill-locks: +1 (L98's stairs)
         // ⛔ EVERY authored name is unique WITHIN ITS ROOM — `mark-location`'s
         //    own law since E6a, asserted on the artifact rather than only on the
         //    fold. ⛓ Across rooms it is NOT unique any more, and the row below
@@ -344,8 +345,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   splits r13c7 off (the L40 doors and the Wand), L94's pockets behind TreeLarge are pruned; no location moves.
         // ⛓ RULES obstacle-events (85ba46d2… -> d9578b1f): L0's door to L1 charged the rock its model pocket
         //   opens through — one exit rule; no location moves (the events live in the rules, not the atlas).
+        // ⛓ RULES kill-locks (d9578b1f… -> 5405098b): a decided kill-lock's rule is its room's bodies' — four
+        //   exit rules widen (Wand | Dark Shield) and L98's stairs under the lock are charged; no location moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('d9578b1f66b01e0935452f70837e810e');
+            .toBe('5405098b1bdfc23f892552ab00716a8d');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
@@ -387,13 +390,14 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
 
     // ⛓ RULES (B): 332 -> 330 — the LavaBoss arena's two doors (L82 out, L96 in) lift as rules too.
     // ⛓ RULES burnable-trees: 330 -> 325 — five doors inside an item-gated solid lift as rules (L24 x2, L32 x2, L34).
-    it('moves 334 free exits + 0 locations to 325 + 38, and the export stays ALLOWED', () => {
+    // ⛓ RULES kill-locks: 325 -> 324 — L98's stairs under its kill-lock lift as a rule.
+    it('moves 334 free exits + 0 locations to 324 + 38, and the export stays ALLOWED', () => {
         const before = freeEdgesOf(reportWith(emptyOverlay()).rules);
         const after = freeEdgesOf(reportWith(LIFT.overlay).rules);
 
         expect(before.filter((e) => e.kind === 'exit')).toHaveLength(334);
         expect(before.filter((e) => e.kind === 'location')).toHaveLength(0);
-        expect(after.filter((e) => e.kind === 'exit')).toHaveLength(325);
+        expect(after.filter((e) => e.kind === 'exit')).toHaveLength(324);
         expect(after.filter((e) => e.kind === 'location')).toHaveLength(38);
 
         /**
@@ -409,11 +413,11 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
          */
         const gone = before.filter((e) => e.kind === 'exit')
             .filter((e) => !after.some((a) => a.region === e.region && a.name === e.name));
-        expect(gone).toHaveLength(9);
+        expect(gone).toHaveLength(10); // ⛓ RULES kill-locks: + L98's stairs under its kill-lock
         expect(gone.map((e) => e.name).sort()).toEqual([
             'level_113 -> level_115', 'level_113 -> level_115 #2', 'level_24 -> level_12', 'level_24 -> level_12 #2',
             'level_32 -> level_30 #2', 'level_32 -> level_30 #3', 'level_34 -> level_12 #2',
-            'level_82 -> level_96', 'level_96 -> level_82',
+            'level_82 -> level_96', 'level_96 -> level_82', 'level_98 -> level_99',
         ]);
         const ruled = reportWith(LIFT.overlay).atlas.regions
             .flatMap((r) => (r.exits ?? []).filter((e) => e.access_rule)
@@ -422,7 +426,7 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
             .toEqual(['level_113 out_teleporter_112_0', 'level_113 out_teleporter_128_0',
                 'level_24 out_teleporter_32_144', 'level_24 out_teleporter_48_144',
                 'level_32 out_pit_14_5', 'level_32 out_pit_15_5', 'level_34 out_teleporter_128_0',
-                'level_82 out_teleporter_144_0', 'level_96 out_teleporter_32_64']);
+                'level_82 out_teleporter_144_0', 'level_96 out_teleporter_32_64', 'level_98 out_stairsup_112_112']);
         // …and the three locations that are NOT free are the three the
         //   playthrough guards.
         const guarded = LIFT.rows.filter((r) => r.atlasLoc.access_rule);

@@ -54,8 +54,10 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // 33 -> 28), and L94 is no swim level.
     // ⛓ RULES obstacle-events — restamped (5af7f784 -> ae491163): L0's door to L1 is charged the rock its model
     // pocket opens through (one boundary exit rule); every count holds.
+    // ⛓ RULES kill-locks — restamped (ae491163 -> 5c55890f): a decided kill-lock's rule is its room's bodies'
+    // (L18/L26/L53/L60 widen to Wand | Dark Shield; L98's stairs under the lock are charged); every count holds.
     it('54 regions carry a subgraph: 195 sub-regions, 286 internal exits, 200 of them need Progressive Swim', () => {
-        expect(c.atlasId).toBe('seedling-ae491163');
+        expect(c.atlasId).toBe('seedling-5c55890f');
         expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([113, 54, 195, 286, 200]);
         expect(c.swimLevels).toHaveLength(21);
         expect(c.byRule.slice(0, 2)).toEqual([
