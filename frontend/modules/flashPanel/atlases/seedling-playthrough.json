@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-5af7f784",
+  "atlas_id": "seedling-ae491163",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "5af7f784" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "ae491163" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -40,7 +40,14 @@
           "kind": "teleporter",
           "exit_tiles": [[5,6]],
           "entrance_tile": [5,6],
-          "sub_region": "r8c0"
+          "sub_region": "r8c0",
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+            ]
+          }
         },
         {
           "exit_id": "out_teleporter_160_272",

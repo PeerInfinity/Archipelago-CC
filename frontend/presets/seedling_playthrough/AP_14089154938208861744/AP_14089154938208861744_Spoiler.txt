@@ -22,14 +22,19 @@ Use Canonical Options:           Yes
 
 Locations:
 
+L0 flag 1: breakablerock@288,176 cleared: L0 flag 1: breakablerock@288,176 cleared
+L0 flag 4: breakablerock@80,112 cleared: L0 flag 4: breakablerock@80,112 cleared
 Level 010 - Sword: Progressive Sword
 Level 011 - Chest: Seal
 Level 012 - Witch: Progressive Sword
 Level 012 - Chest: Seal
+L12 flag 7: magicallock@32,864 cleared: L12 flag 7: magicallock@32,864 cleared
+L12 flag 12: bosslock@32,864 cleared: L12 flag 12: bosslock@32,864 cleared
 Level 015 - Chest: Seal
 Level 017 - Chest: Seal
 Level 019 - Boss Key 0: Red Key
 Level 020 - Shield: Progressive Shield
+L24 flag 0: burnabletree@32,128 cleared: L24 flag 0: burnabletree@32,128 cleared
 Level 025 - Chest: Seal
 Level 029 - Boss Key 1: Green Key
 Level 030 - Torchpickup: Light
@@ -53,6 +58,7 @@ Level 064 - Ghostspear: Ghost Spear
 Level 067 - Boss Key 4: Yellow Key
 Level 068 - Health: Health
 Level 071 - Chest: Seal
+L71 flag 2: shieldlock@288,256 cleared: L71 flag 2: shieldlock@288,256 cleared
 Level 074 - Darkshield: Progressive Shield
 Level 079 - Darksuit: Dark Suit
 Level 080 - Chest: Seal
@@ -62,6 +68,8 @@ Level 090 - Chest: Seal
 Level 098 - Chest: Seal
 Level 106 - Ghostsword: Ghost Sword Fusion
 Level 109 - Firewand: Fire Wand Fusion
+L112 flag 1: rocklock@112,16 cleared: L112 flag 1: rocklock@112,16 cleared
+L113 flag 0: finaldoor@112,0 cleared: L113 flag 0: finaldoor@112,0 cleared
 Level 115 - The Seed: The Seed
 
 Playthrough:
@@ -76,6 +84,8 @@ Playthrough:
   Level 086 - Chest: Seal
 }
 2: {
+  L0 flag 1: breakablerock@288,176 cleared: L0 flag 1: breakablerock@288,176 cleared
+  L0 flag 4: breakablerock@80,112 cleared: L0 flag 4: breakablerock@80,112 cleared
   Level 019 - Boss Key 0: Red Key
   Level 036 - Chest: Seal
 }
@@ -89,6 +99,7 @@ Playthrough:
   Level 032 - Bob Boss: Fire
 }
 5: {
+  L24 flag 0: burnabletree@32,128 cleared: L24 flag 0: burnabletree@32,128 cleared
   Level 012 - Chest: Seal
   Level 038 - Chest: Seal
   Level 039 - Totem Part 72,40: Totem Shard
@@ -114,12 +125,15 @@ Playthrough:
   Level 067 - Boss Key 4: Yellow Key
 }
 8: {
+  L12 flag 12: bosslock@32,864 cleared: L12 flag 12: bosslock@32,864 cleared
+  L12 flag 7: magicallock@32,864 cleared: L12 flag 7: magicallock@32,864 cleared
   Level 012 - Witch: Progressive Sword
   Level 068 - Health: Health
   Level 071 - Chest: Seal
   Level 074 - Darkshield: Progressive Shield
 }
 9: {
+  L71 flag 2: shieldlock@288,256 cleared: L71 flag 2: shieldlock@288,256 cleared
   Level 079 - Darksuit: Dark Suit
 }
 10: {
@@ -129,6 +143,8 @@ Playthrough:
   Level 106 - Ghostsword: Ghost Sword Fusion
 }
 11: {
+  L112 flag 1: rocklock@112,16 cleared: L112 flag 1: rocklock@112,16 cleared
+  L113 flag 0: finaldoor@112,0 cleared: L113 flag 0: finaldoor@112,0 cleared
   Level 109 - Firewand: Fire Wand Fusion
   Level 115 - The Seed: The Seed
 }

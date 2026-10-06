@@ -71,6 +71,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_0__r8c0 -> level_1", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_0__r11c19 -> level_0__r8c0", player),
         HasAny('Progressive Sword', 'Ghost Spear')
     )
@@ -78,6 +83,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_0__r14c0 -> level_0__r8c0", player),
         Has('Progressive Swim', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_1 -> level_0__r8c0", player),
+        Has('L0 flag 4: breakablerock@80,112 cleared', 1)
     )
 
     world.set_rule(
@@ -131,6 +141,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_12__r0c19 -> level_0__r11c19", player),
+        Has('L0 flag 1: breakablerock@288,176 cleared', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_12__r0c37 -> level_12__r0c19", player),
         And(CanReachRegion('level_12__r0c19'), Has('Red Key'))
     )
@@ -148,6 +163,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_12__r40c4 -> level_12__r0c19", player),
         Has('Green Key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_12__r40c4 -> level_24", player),
+        Has('L24 flag 0: burnabletree@32,128 cleared', 1)
     )
 
     world.set_rule(
@@ -1821,6 +1841,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_76 -> level_71__r0c6", player),
+        Has('L71 flag 2: shieldlock@288,256 cleared', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_78__r0c2 -> level_78__r0c16", player),
         HasAny('Dark Suit', 'Progressive Sword', 'Ghost Spear')
     )
@@ -1893,6 +1918,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_82 -> level_96", player),
         And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Dark Suit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_83 -> level_12__r42c29", player),
+        HasAll('L12 flag 7: magicallock@32,864 cleared', 'L12 flag 12: bosslock@32,864 cleared')
     )
 
     world.set_rule(
@@ -2236,6 +2266,16 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_113 -> level_112", player),
+        Has('L112 flag 1: rocklock@112,16 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_113 -> level_112 #2", player),
+        Has('L112 flag 1: rocklock@112,16 cleared', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_113 -> level_115__r9c4", player),
         Has('Seal', 16)
     )
@@ -2454,6 +2494,16 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("level_115__r9c4 -> level_115__r6c7", player),
         Has('Progressive Swim', 2)
     )
+
+    world.set_rule(
+        multiworld.get_entrance("level_115__r9c4 -> level_113", player),
+        Has('L113 flag 0: finaldoor@112,0 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_115__r9c4 -> level_113 #2", player),
+        Has('L113 flag 0: finaldoor@112,0 cleared', 1)
+    )
     # Register indirect conditions for proper sphere calculation
     multiworld.register_indirect_condition(
         world.get_region("level_12__r13c6"),
@@ -2497,8 +2547,33 @@ def set_rules(world: "World") -> None:
     )
     # Location rules
     world.set_rule(
+        multiworld.get_location("L0 flag 1: breakablerock@288,176 cleared", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_location("L0 flag 4: breakablerock@80,112 cleared", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
         multiworld.get_location("Level 012 - Witch", player),
         Has('Wand', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("L12 flag 7: magicallock@32,864 cleared", player),
+        Or(HasAll('Fire Wand Fusion', 'Wand', 'Fire'), Has('Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("L12 flag 12: bosslock@32,864 cleared", player),
+        Has('Yellow Key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("L24 flag 0: burnabletree@32,128 cleared", player),
+        Has('Fire', 1)
     )
 
     world.set_rule(
@@ -2509,4 +2584,14 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Level 043 - Wand", player),
         And(Has('Totem Shard', 5), HasAny('Progressive Sword', 'Ghost Spear'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("L71 flag 2: shieldlock@288,256 cleared", player),
+        Has('Progressive Shield', 2)
+    )
+
+    world.set_rule(
+        multiworld.get_location("L113 flag 0: finaldoor@112,0 cleared", player),
+        Has('Seal', 16)
     )

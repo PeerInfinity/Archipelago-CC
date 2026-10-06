@@ -61,6 +61,8 @@ function canonicalPlacement() {
     const placed = new Map();
     for (const region of Object.values(rules.regions[slot])) {
         for (const loc of region.locations ?? []) {
+            // ⛓ RULES obstacle-events: an AP event (a saved obstacle's flag) places no item in the game
+            if (loc.event === true) continue;
             placed.set(loc.name, { name: loc.item.name, player: loc.item.player });
         }
     }

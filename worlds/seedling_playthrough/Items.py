@@ -41,4 +41,12 @@ item_table: Dict[str, ItemData] = {
     "Totem Shard": ItemData(30000016, ItemClassification.progression),
     "Wand": ItemData(30000017, ItemClassification.progression),
     "Yellow Key": ItemData(30000018, ItemClassification.progression),
+    "L0 flag 1: breakablerock@288,176 cleared": ItemData(None, ItemClassification.progression),
+    "L0 flag 4: breakablerock@80,112 cleared": ItemData(None, ItemClassification.progression),
+    "L12 flag 7: magicallock@32,864 cleared": ItemData(None, ItemClassification.progression),
+    "L12 flag 12: bosslock@32,864 cleared": ItemData(None, ItemClassification.progression),
+    "L24 flag 0: burnabletree@32,128 cleared": ItemData(None, ItemClassification.progression),
+    "L71 flag 2: shieldlock@288,256 cleared": ItemData(None, ItemClassification.progression),
+    "L112 flag 1: rocklock@112,16 cleared": ItemData(None, ItemClassification.progression),
+    "L113 flag 0: finaldoor@112,0 cleared": ItemData(None, ItemClassification.progression),
 }

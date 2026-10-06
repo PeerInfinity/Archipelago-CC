@@ -69,7 +69,7 @@ const AMBIGUOUS = (() => {
 
 describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
     it(`expresses every one of the atlas's ${ATLAS_LOCATIONS.length} locations and `
-        + `${ATLAS_RULES.length - 3} of its ${ATLAS_RULES.length} authored rules, refusing none`, () => {
+        + `${ATLAS_RULES.length - 4} of its ${ATLAS_RULES.length} authored rules, refusing none`, () => {
         const atlasLocations = ATLAS_LOCATIONS;
         const atlasRules = ATLAS_RULES;
 
@@ -83,8 +83,10 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
         //   charged their solid, and both sit in a split level; L12's D7 door moved
         //   r0c37 -> r42c29 (the tree at 480,640 walls r42c29 off).
         expect(LIFT.expressed.filter((o) => o.op === 'set-access-rule'))
-            .toHaveLength(atlasRules.length - 3);
+            .toHaveLength(atlasRules.length - 4);
         expect(LIFT.cannotRules).toEqual([
+            // ⛓ RULES obstacle-events: L0's door to L1 is charged the rock under the house (split level)
+            { region: 'level_0', exit_id: 'out_teleporter_80_96', sub_region: 'r8c0' },
             { region: 'level_3', exit_id: 'out_teleporter_0_64', sub_region: 'r0c4' },
             { region: 'level_12', exit_id: 'out_teleporter_32_848', sub_region: 'r42c29' },
             { region: 'level_30', exit_id: 'out_pit_3_34', sub_region: 'r2c10' },
@@ -340,8 +342,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   internal exits and two location bindings (L39, L41 totem parts); no name changes.
         // ⛓ RULES footprints (ec818c86… -> 85ba46d2): every footprint is the model's hitbox — L43's BossTotem
         //   splits r13c7 off (the L40 doors and the Wand), L94's pockets behind TreeLarge are pruned; no location moves.
+        // ⛓ RULES obstacle-events (85ba46d2… -> d9578b1f): L0's door to L1 charged the rock its model pocket
+        //   opens through — one exit rule; no location moves (the events live in the rules, not the atlas).
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('85ba46d26c835d93e2968d070413f9d7');
+            .toBe('d9578b1f66b01e0935452f70837e810e');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

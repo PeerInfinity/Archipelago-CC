@@ -71,11 +71,16 @@ describe('the vanilla arm\'s map — seedling_playthrough, every name accounted 
         const locations = locationsOf(PT);
         const goals = [];
         const refused = [];
+        const events = [];
         for (const [name, loc] of locations) {
             const r = resolveSeedlingAtlasGoal({ kind: 'location', name }, MAP, { region: loc.region });
+            // ⛓ RULES obstacle-events: an AP EVENT (id-less, `event: true` — a saved obstacle's flag) is
+            //   no check: the map never binds it as a goal, so nothing on the check path ever sends it.
+            if (loc.event === true) { expect(r.goal, name).toBeFalsy(); events.push(name); continue; }
             (r.goal ? goals : refused).push({ name, ...r });
         }
-        expect(goals.length + refused.length).toBe(locations.size);
+        expect(events.length).toBe([...locations.values()].filter((l) => l.id === null).length);
+        expect(goals.length + refused.length + events.length).toBe(locations.size);
         expect(goals.map((g) => g.name).sort()).toEqual(LOADED.entries.map((e) => e.location).sort());
         // ⛔ The game plays the REWRITE: each goal names the entity the delivered room holds — the rewriter's
         // own type — at the table's (level, tag); the map document's vanilla type would not be found there.

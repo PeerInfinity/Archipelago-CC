@@ -174,7 +174,13 @@
             "name": "level_0__r8c0 -> level_1",
             "connected_region": "level_1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Ghost Spear",
+                  "Progressive Sword"
+                ]
+              }
             }
           },
           {
@@ -192,7 +198,82 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L0 flag 1: breakablerock@288,176 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Ghost Spear",
+                  "Progressive Sword"
+                ]
+              }
+            },
+            "item": {
+              "name": "L0 flag 1: breakablerock@288,176 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L0:1",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 0,
+              "tag": 1,
+              "class": "breakablerock",
+              "x": 288,
+              "y": 176
+            },
+            "action": {
+              "verb": "broken by a sword strike",
+              "item": "hasSword"
+            },
+            "side": "level_0__r8c0",
+            "across": [
+              "level_0__r11c19"
+            ]
+          },
+          {
+            "name": "L0 flag 4: breakablerock@80,112 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Ghost Spear",
+                  "Progressive Sword"
+                ]
+              }
+            },
+            "item": {
+              "name": "L0 flag 4: breakablerock@80,112 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L0:4",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 0,
+              "tag": 4,
+              "class": "breakablerock",
+              "x": 80,
+              "y": 112
+            },
+            "action": {
+              "verb": "broken by a sword strike",
+              "item": "hasSword"
+            },
+            "side": "level_0__r8c0",
+            "across": []
+          }
+        ]
       },
       "level_0__r11c19": {
         "name": "level_0__r11c19",
@@ -243,7 +324,10 @@
             "name": "level_1 -> level_0__r8c0",
             "connected_region": "level_0__r8c0",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "L0 flag 4: breakablerock@80,112 cleared"
+              }
             }
           }
         ],
@@ -644,7 +728,10 @@
             "name": "level_12__r0c19 -> level_0__r11c19",
             "connected_region": "level_0__r11c19",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "L0 flag 1: breakablerock@288,176 cleared"
+              }
             }
           },
           {
@@ -801,7 +888,10 @@
             "name": "level_12__r40c4 -> level_24",
             "connected_region": "level_24",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "L24 flag 0: burnabletree@32,128 cleared"
+              }
             }
           }
         ],
@@ -881,6 +971,87 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "L12 flag 7: magicallock@32,864 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "item_names": [
+                      "Fire",
+                      "Fire Wand Fusion",
+                      "Wand"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "L12 flag 7: magicallock@32,864 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L12:7",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 12,
+              "tag": 7,
+              "class": "magicallock",
+              "x": 32,
+              "y": 864
+            },
+            "action": {
+              "verb": "broken by a wand shot",
+              "item": "hasWand"
+            },
+            "side": "level_12__r42c29",
+            "across": []
+          },
+          {
+            "name": "L12 flag 12: bosslock@32,864 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Yellow Key"
+              }
+            },
+            "item": {
+              "name": "L12 flag 12: bosslock@32,864 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L12:12",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 12,
+              "tag": 12,
+              "class": "bosslock",
+              "x": 32,
+              "y": 864
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_12__r42c29",
+            "across": []
           }
         ]
       },
@@ -1570,7 +1741,41 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L24 flag 0: burnabletree@32,128 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire"
+              }
+            },
+            "item": {
+              "name": "L24 flag 0: burnabletree@32,128 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L24:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 24,
+              "tag": 0,
+              "class": "burnabletree",
+              "x": 32,
+              "y": 128
+            },
+            "action": {
+              "verb": "burned by fire",
+              "item": "hasFire"
+            },
+            "side": "level_24",
+            "across": []
+          }
+        ]
       },
       "level_25": {
         "name": "level_25",
@@ -7062,6 +7267,42 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "L71 flag 2: shieldlock@288,256 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Shield",
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "L71 flag 2: shieldlock@288,256 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L71:2",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 71,
+              "tag": 2,
+              "class": "shieldlock",
+              "x": 288,
+              "y": 256
+            },
+            "action": {
+              "verb": "opened by its activation group (turnOff; ShieldLock forces tSet = -2)",
+              "item": null
+            },
+            "side": "level_71__r0c6",
+            "across": [
+              "level_71__r16c19"
+            ]
           }
         ]
       },
@@ -7300,7 +7541,10 @@
             "name": "level_76 -> level_71__r0c6",
             "connected_region": "level_71__r0c6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "L71 flag 2: shieldlock@288,256 cleared"
+              }
             }
           },
           {
@@ -7657,7 +7901,13 @@
             "name": "level_83 -> level_12__r42c29",
             "connected_region": "level_12__r42c29",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "item_names": [
+                  "L12 flag 12: bosslock@32,864 cleared",
+                  "L12 flag 7: magicallock@32,864 cleared"
+                ]
+              }
             }
           },
           {
@@ -9348,7 +9598,38 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L112 flag 1: rocklock@112,16 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L112 flag 1: rocklock@112,16 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L112:1",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 112,
+              "tag": 1,
+              "class": "rocklock",
+              "x": 112,
+              "y": 16
+            },
+            "action": {
+              "verb": "opened by its activation group",
+              "item": null
+            },
+            "side": "level_112",
+            "across": []
+          }
+        ]
       },
       "level_113": {
         "name": "level_113",
@@ -9371,14 +9652,20 @@
             "name": "level_113 -> level_112",
             "connected_region": "level_112",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "L112 flag 1: rocklock@112,16 cleared"
+              }
             }
           },
           {
             "name": "level_113 -> level_112 #2",
             "connected_region": "level_112",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "L112 flag 1: rocklock@112,16 cleared"
+              }
             }
           },
           {
@@ -9404,7 +9691,42 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L113 flag 0: finaldoor@112,0 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Seal",
+                "count": 16
+              }
+            },
+            "item": {
+              "name": "L113 flag 0: finaldoor@112,0 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L113:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 113,
+              "tag": 0,
+              "class": "finaldoor",
+              "x": 112,
+              "y": 0
+            },
+            "action": {
+              "verb": "opened once the Watcher has spoken (its removal)",
+              "item": null
+            },
+            "side": "level_113",
+            "across": []
+          }
+        ]
       },
       "level_114": {
         "name": "level_114",
@@ -9916,14 +10238,20 @@
             "name": "level_115__r9c4 -> level_113",
             "connected_region": "level_113",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "L113 flag 0: finaldoor@112,0 cleared"
+              }
             }
           },
           {
             "name": "level_115__r9c4 -> level_113 #2",
             "connected_region": "level_113",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "L113 flag 0: finaldoor@112,0 cleared"
+              }
             }
           }
         ],
@@ -10143,6 +10471,94 @@
         "classification": "progression",
         "type": null,
         "max_count": 1
+      },
+      "L0 flag 1: breakablerock@288,176 cleared": {
+        "name": "L0 flag 1: breakablerock@288,176 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L0 flag 4: breakablerock@80,112 cleared": {
+        "name": "L0 flag 4: breakablerock@80,112 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L12 flag 7: magicallock@32,864 cleared": {
+        "name": "L12 flag 7: magicallock@32,864 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L12 flag 12: bosslock@32,864 cleared": {
+        "name": "L12 flag 12: bosslock@32,864 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L24 flag 0: burnabletree@32,128 cleared": {
+        "name": "L24 flag 0: burnabletree@32,128 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L71 flag 2: shieldlock@288,256 cleared": {
+        "name": "L71 flag 2: shieldlock@288,256 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L112 flag 1: rocklock@112,16 cleared": {
+        "name": "L112 flag 1: rocklock@112,16 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L113 flag 0: finaldoor@112,0 cleared": {
+        "name": "L113 flag 0: finaldoor@112,0 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       }
     }
   },
@@ -10161,6 +10577,14 @@
       "Ghost Sword Fusion": 1,
       "Green Key": 1,
       "Health": 1,
+      "L0 flag 1: breakablerock@288,176 cleared": 1,
+      "L0 flag 4: breakablerock@80,112 cleared": 1,
+      "L112 flag 1: rocklock@112,16 cleared": 1,
+      "L113 flag 0: finaldoor@112,0 cleared": 1,
+      "L12 flag 12: bosslock@32,864 cleared": 1,
+      "L12 flag 7: magicallock@32,864 cleared": 1,
+      "L24 flag 0: burnabletree@32,128 cleared": 1,
+      "L71 flag 2: shieldlock@288,256 cleared": 1,
       "Light": 1,
       "Progressive Shield": 2,
       "Progressive Swim": 2,
@@ -10176,6 +10600,8 @@
   },
   "canonical_placements": {
     "1": {
+      "L0 flag 1: breakablerock@288,176 cleared": "L0 flag 1: breakablerock@288,176 cleared",
+      "L0 flag 4: breakablerock@80,112 cleared": "L0 flag 4: breakablerock@80,112 cleared",
       "Level 010 - Sword": "Progressive Sword",
       "Level 012 - Witch": "Progressive Sword",
       "Level 011 - Chest": "Seal",
@@ -10194,9 +10620,12 @@
       "Level 086 - Chest": "Seal",
       "Level 090 - Chest": "Seal",
       "Level 098 - Chest": "Seal",
+      "L12 flag 7: magicallock@32,864 cleared": "L12 flag 7: magicallock@32,864 cleared",
+      "L12 flag 12: bosslock@32,864 cleared": "L12 flag 12: bosslock@32,864 cleared",
       "Level 019 - Boss Key 0": "Red Key",
       "Level 020 - Shield": "Progressive Shield",
       "Level 074 - Darkshield": "Progressive Shield",
+      "L24 flag 0: burnabletree@32,128 cleared": "L24 flag 0: burnabletree@32,128 cleared",
       "Level 029 - Boss Key 1": "Green Key",
       "Level 030 - Torchpickup": "Light",
       "Level 032 - Bob Boss": "Fire",
@@ -10213,9 +10642,12 @@
       "Level 064 - Ghostspear": "Ghost Spear",
       "Level 067 - Boss Key 4": "Yellow Key",
       "Level 068 - Health": "Health",
+      "L71 flag 2: shieldlock@288,256 cleared": "L71 flag 2: shieldlock@288,256 cleared",
       "Level 079 - Darksuit": "Dark Suit",
       "Level 106 - Ghostsword": "Ghost Sword Fusion",
       "Level 109 - Firewand": "Fire Wand Fusion",
+      "L112 flag 1: rocklock@112,16 cleared": "L112 flag 1: rocklock@112,16 cleared",
+      "L113 flag 0: finaldoor@112,0 cleared": "L113 flag 0: finaldoor@112,0 cleared",
       "Level 115 - The Seed": "The Seed"
     }
   },

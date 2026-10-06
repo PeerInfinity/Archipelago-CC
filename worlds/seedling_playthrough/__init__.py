@@ -46,7 +46,14 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-
+    "L0 flag 1: breakablerock@288,176 cleared": "L0 flag 1: breakablerock@288,176 cleared",
+    "L0 flag 4: breakablerock@80,112 cleared": "L0 flag 4: breakablerock@80,112 cleared",
+    "L12 flag 7: magicallock@32,864 cleared": "L12 flag 7: magicallock@32,864 cleared",
+    "L12 flag 12: bosslock@32,864 cleared": "L12 flag 12: bosslock@32,864 cleared",
+    "L24 flag 0: burnabletree@32,128 cleared": "L24 flag 0: burnabletree@32,128 cleared",
+    "L71 flag 2: shieldlock@288,256 cleared": "L71 flag 2: shieldlock@288,256 cleared",
+    "L112 flag 1: rocklock@112,16 cleared": "L112 flag 1: rocklock@112,16 cleared",
+    "L113 flag 0: finaldoor@112,0 cleared": "L113 flag 0: finaldoor@112,0 cleared",
 }
 
 # Starting items - items the player begins with (precollected)
@@ -114,6 +121,8 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
+        "L0 flag 1: breakablerock@288,176 cleared": "L0 flag 1: breakablerock@288,176 cleared",
+        "L0 flag 4: breakablerock@80,112 cleared": "L0 flag 4: breakablerock@80,112 cleared",
         "Level 010 - Sword": "Progressive Sword",
         "Level 012 - Witch": "Progressive Sword",
         "Level 011 - Chest": "Seal",
@@ -132,9 +141,12 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 086 - Chest": "Seal",
         "Level 090 - Chest": "Seal",
         "Level 098 - Chest": "Seal",
+        "L12 flag 7: magicallock@32,864 cleared": "L12 flag 7: magicallock@32,864 cleared",
+        "L12 flag 12: bosslock@32,864 cleared": "L12 flag 12: bosslock@32,864 cleared",
         "Level 019 - Boss Key 0": "Red Key",
         "Level 020 - Shield": "Progressive Shield",
         "Level 074 - Darkshield": "Progressive Shield",
+        "L24 flag 0: burnabletree@32,128 cleared": "L24 flag 0: burnabletree@32,128 cleared",
         "Level 029 - Boss Key 1": "Green Key",
         "Level 030 - Torchpickup": "Light",
         "Level 032 - Bob Boss": "Fire",
@@ -151,15 +163,20 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 064 - Ghostspear": "Ghost Spear",
         "Level 067 - Boss Key 4": "Yellow Key",
         "Level 068 - Health": "Health",
+        "L71 flag 2: shieldlock@288,256 cleared": "L71 flag 2: shieldlock@288,256 cleared",
         "Level 079 - Darksuit": "Dark Suit",
         "Level 106 - Ghostsword": "Ghost Sword Fusion",
         "Level 109 - Firewand": "Fire Wand Fusion",
+        "L112 flag 1: rocklock@112,16 cleared": "L112 flag 1: rocklock@112,16 cleared",
+        "L113 flag 0: finaldoor@112,0 cleared": "L113 flag 0: finaldoor@112,0 cleared",
         "Level 115 - The Seed": "The Seed",
     }
 
     # Original seed placements - actual item placements from the original seed generation
     # Used by _place_original_items() to reproduce exact original item placement
     original_seed_placements: ClassVar[Dict[str, str]] = {
+        "L0 flag 1: breakablerock@288,176 cleared": "L0 flag 1: breakablerock@288,176 cleared",
+        "L0 flag 4: breakablerock@80,112 cleared": "L0 flag 4: breakablerock@80,112 cleared",
         "Level 010 - Sword": "Progressive Sword",
         "Level 012 - Witch": "Progressive Sword",
         "Level 011 - Chest": "Seal",
@@ -178,9 +195,12 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 086 - Chest": "Seal",
         "Level 090 - Chest": "Seal",
         "Level 098 - Chest": "Seal",
+        "L12 flag 7: magicallock@32,864 cleared": "L12 flag 7: magicallock@32,864 cleared",
+        "L12 flag 12: bosslock@32,864 cleared": "L12 flag 12: bosslock@32,864 cleared",
         "Level 019 - Boss Key 0": "Red Key",
         "Level 020 - Shield": "Progressive Shield",
         "Level 074 - Darkshield": "Progressive Shield",
+        "L24 flag 0: burnabletree@32,128 cleared": "L24 flag 0: burnabletree@32,128 cleared",
         "Level 029 - Boss Key 1": "Green Key",
         "Level 030 - Torchpickup": "Light",
         "Level 032 - Bob Boss": "Fire",
@@ -197,23 +217,31 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 064 - Ghostspear": "Ghost Spear",
         "Level 067 - Boss Key 4": "Yellow Key",
         "Level 068 - Health": "Health",
+        "L71 flag 2: shieldlock@288,256 cleared": "L71 flag 2: shieldlock@288,256 cleared",
         "Level 079 - Darksuit": "Dark Suit",
         "Level 106 - Ghostsword": "Ghost Sword Fusion",
         "Level 109 - Firewand": "Fire Wand Fusion",
+        "L112 flag 1: rocklock@112,16 cleared": "L112 flag 1: rocklock@112,16 cleared",
+        "L113 flag 0: finaldoor@112,0 cleared": "L113 flag 0: finaldoor@112,0 cleared",
         "Level 115 - The Seed": "The Seed",
     }
 
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "L0 flag 1: breakablerock@288,176 cleared": True,
+        "L0 flag 4: breakablerock@80,112 cleared": True,
         "Level 010 - Sword": True,
         "Level 011 - Chest": True,
         "Level 012 - Witch": True,
         "Level 012 - Chest": True,
+        "L12 flag 7: magicallock@32,864 cleared": True,
+        "L12 flag 12: bosslock@32,864 cleared": True,
         "Level 015 - Chest": True,
         "Level 017 - Chest": True,
         "Level 019 - Boss Key 0": True,
         "Level 020 - Shield": True,
+        "L24 flag 0: burnabletree@32,128 cleared": True,
         "Level 025 - Chest": True,
         "Level 029 - Boss Key 1": True,
         "Level 030 - Torchpickup": True,
@@ -237,6 +265,7 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 067 - Boss Key 4": True,
         "Level 068 - Health": True,
         "Level 071 - Chest": True,
+        "L71 flag 2: shieldlock@288,256 cleared": True,
         "Level 074 - Darkshield": True,
         "Level 079 - Darksuit": True,
         "Level 080 - Chest": True,
@@ -246,6 +275,8 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 098 - Chest": True,
         "Level 106 - Ghostsword": True,
         "Level 109 - Firewand": True,
+        "L112 flag 1: rocklock@112,16 cleared": True,
+        "L113 flag 0: finaldoor@112,0 cleared": True,
         "Level 115 - The Seed": True,
     }
 

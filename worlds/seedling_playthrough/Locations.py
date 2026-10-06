@@ -30,14 +30,19 @@ class LocationData:
 
 
 location_table: Dict[str, LocationData] = {
+    "L0 flag 1: breakablerock@288,176 cleared": LocationData("level_0__r8c0", "L0 flag 1: breakablerock@288,176 cleared", None, True, extra_attributes={"event_id": "flag:L0:1", "event_kind": "game_state", "obstacle": {"level": 0, "tag": 1, "class": "breakablerock", "x": 288, "y": 176}, "action": {"verb": "broken by a sword strike", "item": "hasSword"}, "side": "level_0__r8c0", "across": ["level_0__r11c19"]}),
+    "L0 flag 4: breakablerock@80,112 cleared": LocationData("level_0__r8c0", "L0 flag 4: breakablerock@80,112 cleared", None, True, extra_attributes={"event_id": "flag:L0:4", "event_kind": "game_state", "obstacle": {"level": 0, "tag": 4, "class": "breakablerock", "x": 80, "y": 112}, "action": {"verb": "broken by a sword strike", "item": "hasSword"}, "side": "level_0__r8c0", "across": []}),
     "Level 010 - Sword": LocationData("level_10", "Level 010 - Sword", 30000000, False),
     "Level 011 - Chest": LocationData("level_11", "Level 011 - Chest", 30000001, False),
     "Level 012 - Witch": LocationData("level_12__r0c19", "Level 012 - Witch", 30000003, False),
     "Level 012 - Chest": LocationData("level_12__r42c29", "Level 012 - Chest", 30000002, False),
+    "L12 flag 7: magicallock@32,864 cleared": LocationData("level_12__r42c29", "L12 flag 7: magicallock@32,864 cleared", None, True, extra_attributes={"event_id": "flag:L12:7", "event_kind": "game_state", "obstacle": {"level": 12, "tag": 7, "class": "magicallock", "x": 32, "y": 864}, "action": {"verb": "broken by a wand shot", "item": "hasWand"}, "side": "level_12__r42c29", "across": []}),
+    "L12 flag 12: bosslock@32,864 cleared": LocationData("level_12__r42c29", "L12 flag 12: bosslock@32,864 cleared", None, True, extra_attributes={"event_id": "flag:L12:12", "event_kind": "game_state", "obstacle": {"level": 12, "tag": 12, "class": "bosslock", "x": 32, "y": 864}, "action": {"verb": "opened by walking its key line with the matching boss key", "item": "hasKey"}, "side": "level_12__r42c29", "across": []}),
     "Level 015 - Chest": LocationData("level_15__r6c8", "Level 015 - Chest", 30000004, False),
     "Level 017 - Chest": LocationData("level_17", "Level 017 - Chest", 30000005, False),
     "Level 019 - Boss Key 0": LocationData("level_19__r5c5", "Level 019 - Boss Key 0", 30000006, False),
     "Level 020 - Shield": LocationData("level_20__r1c4", "Level 020 - Shield", 30000007, False),
+    "L24 flag 0: burnabletree@32,128 cleared": LocationData("level_24", "L24 flag 0: burnabletree@32,128 cleared", None, True, extra_attributes={"event_id": "flag:L24:0", "event_kind": "game_state", "obstacle": {"level": 24, "tag": 0, "class": "burnabletree", "x": 32, "y": 128}, "action": {"verb": "burned by fire", "item": "hasFire"}, "side": "level_24", "across": []}),
     "Level 025 - Chest": LocationData("level_25", "Level 025 - Chest", 30000008, False),
     "Level 029 - Boss Key 1": LocationData("level_29__r2c2", "Level 029 - Boss Key 1", 30000009, False),
     "Level 030 - Torchpickup": LocationData("level_30__r2c10", "Level 030 - Torchpickup", 30000010, False),
@@ -61,6 +66,7 @@ location_table: Dict[str, LocationData] = {
     "Level 067 - Boss Key 4": LocationData("level_67__r3c2", "Level 067 - Boss Key 4", 30000028, False),
     "Level 068 - Health": LocationData("level_68__r1c1", "Level 068 - Health", 30000029, False),
     "Level 071 - Chest": LocationData("level_71__r0c6", "Level 071 - Chest", 30000030, False),
+    "L71 flag 2: shieldlock@288,256 cleared": LocationData("level_71__r0c6", "L71 flag 2: shieldlock@288,256 cleared", None, True, extra_attributes={"event_id": "flag:L71:2", "event_kind": "game_state", "obstacle": {"level": 71, "tag": 2, "class": "shieldlock", "x": 288, "y": 256}, "action": {"verb": "opened by its activation group (turnOff; ShieldLock forces tSet = -2)", "item": None}, "side": "level_71__r0c6", "across": ["level_71__r16c19"]}),
     "Level 074 - Darkshield": LocationData("level_74", "Level 074 - Darkshield", 30000031, False),
     "Level 079 - Darksuit": LocationData("level_79__r8c4", "Level 079 - Darksuit", 30000032, False),
     "Level 080 - Chest": LocationData("level_80__r8c1", "Level 080 - Chest", 30000033, False),
@@ -70,5 +76,7 @@ location_table: Dict[str, LocationData] = {
     "Level 098 - Chest": LocationData("level_98", "Level 098 - Chest", 30000037, False),
     "Level 106 - Ghostsword": LocationData("level_106", "Level 106 - Ghostsword", 30000038, False),
     "Level 109 - Firewand": LocationData("level_109", "Level 109 - Firewand", 30000039, False),
+    "L112 flag 1: rocklock@112,16 cleared": LocationData("level_112", "L112 flag 1: rocklock@112,16 cleared", None, True, extra_attributes={"event_id": "flag:L112:1", "event_kind": "game_state", "obstacle": {"level": 112, "tag": 1, "class": "rocklock", "x": 112, "y": 16}, "action": {"verb": "opened by its activation group", "item": None}, "side": "level_112", "across": []}),
+    "L113 flag 0: finaldoor@112,0 cleared": LocationData("level_113", "L113 flag 0: finaldoor@112,0 cleared", None, True, extra_attributes={"event_id": "flag:L113:0", "event_kind": "game_state", "obstacle": {"level": 113, "tag": 0, "class": "finaldoor", "x": 112, "y": 0}, "action": {"verb": "opened once the Watcher has spoken (its removal)", "item": None}, "side": "level_113", "across": []}),
     "Level 115 - The Seed": LocationData("level_115__r4c4", "Level 115 - The Seed", 30000040, False),
 }
