@@ -217,7 +217,7 @@
                 },
                 "end": {
                   "stage": 1,
-                  "scene": 0
+                  "scene": 1
                 }
               }
             }
@@ -239,7 +239,7 @@
           "fogEnabled": true,
           "timeDrainPerSecond": 0.6205,
           "pricing": {
-            "pointsPerMana": 45.95,
+            "pointsPerMana": 81.52,
             "mana": 0,
             "pricedAt": "first-reach",
             "target": 1,
@@ -251,9 +251,9 @@
             "reached": true,
             "locations": {
               "check1": {
-                "skill": 95,
-                "p": 0.9063,
-                "seconds": 43.62,
+                "skill": 100,
+                "p": 1,
+                "seconds": 57.2,
                 "cost": 32
               }
             }
@@ -271,12 +271,12 @@
           "gameId": "noiz2sa",
           "move": {
             "start": {
-              "stage": 4,
+              "stage": 0,
               "scene": 0
             },
             "end": {
-              "stage": 4,
-              "scene": 0
+              "stage": 0,
+              "scene": 1
             }
           },
           "seed": 1,
@@ -302,15 +302,15 @@
           ],
           "manaEnabled": true,
           "fogEnabled": true,
-          "timeDrainPerSecond": 0.8913,
+          "timeDrainPerSecond": 0.4665,
           "pricing": {
-            "pointsPerMana": 45.95,
+            "pointsPerMana": 81.52,
             "mana": 16,
             "pricedAt": "first-reach",
             "target": 3,
-            "skill": 34.8,
-            "p": 0.515,
-            "seconds": 23.56,
+            "skill": 46.4,
+            "p": 0.5348,
+            "seconds": 45.02,
             "cost": 21,
             "final": false,
             "reached": true,
@@ -382,29 +382,29 @@
           ],
           "manaEnabled": true,
           "fogEnabled": true,
-          "timeDrainPerSecond": 0.0859,
+          "timeDrainPerSecond": 0.2213,
           "pricing": {
-            "pointsPerMana": 45.95,
+            "pointsPerMana": 81.52,
             "mana": 124.24,
             "pricedAt": "victory",
             "target": 4,
-            "skill": 80.8,
-            "p": 0.0017,
-            "seconds": 360.82,
+            "skill": 95,
+            "p": 0.27,
+            "seconds": 140.05,
             "cost": 31,
             "final": true,
             "reached": true,
             "locations": {
               "check2": {
-                "skill": 86.8,
-                "p": 0.0146,
-                "seconds": 564.16,
+                "skill": 100,
+                "p": 1,
+                "seconds": 58.69,
                 "cost": 64
               },
               "check1": {
-                "skill": 95,
-                "p": 0.27,
-                "seconds": 140.05,
+                "skill": 100,
+                "p": 1,
+                "seconds": 58.69,
                 "cost": 62
               }
             }
@@ -481,11 +481,11 @@
           "xpEffect": "cost"
         },
         "region_1_0": {
-          "timeDrainPerSecond": 0.8913,
+          "timeDrainPerSecond": 0.4665,
           "xpEffect": "cost"
         },
         "region_1_1": {
-          "timeDrainPerSecond": 0.0859,
+          "timeDrainPerSecond": 0.2213,
           "xpEffect": "cost"
         }
       },

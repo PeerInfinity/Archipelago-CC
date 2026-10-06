@@ -40,9 +40,12 @@
  *  5. A LOCATION'S CHECK SPAN, when the walk prices the location: from the move span's start, the number of scenes
  *     whose expected seconds at the region's rate come closest to the location's planned cost (at the skill predicted
  *     then).
- *  6. The world's `pointsPerMana` is chosen so the predicted skill is `TARGET_FINAL_SKILL` when the walk's sphere
- *     entries are done (⚖ "an Even-trained bot reaches ~skill 95+ by the final spheres"). The planner's costs do not
- *     depend on the spans or the rates, so the total Noiz2sa mana is known before any span is picked: no iteration.
+ *  6. The world's `pointsPerMana` is chosen so the predicted skill is `TARGET_FINAL_SKILL` when VICTORY IS NEEDED (⚖ third
+ *     follow-up, "Pace targets the Victory step": the Noiz2sa mana spent before the step that checks the Victory location;
+ *     with no such step, the whole walk's). When no Noiz2sa mana is spent before Victory, no pace can reach it: the pace
+ *     targets the end of the walk instead (⚖ the original "by the final spheres"), and the final region falls back to
+ *     the 50% rule (`pickShrinking` up to the setting's length). The planner's costs do not depend on the spans or the
+ *     rates, so the mana is known before any span is picked: no iteration.
  *
  * A Noiz2sa START region is free to leave (the planner's rule) and so has no rate: its move span is one scene picked at
  * skill 0, and the default drain applies.
@@ -164,7 +167,6 @@ export function planNoiz2saPricing({
     const events = noiz2saWalkEvents(steps, { isNoiz2sa, regionOfLocation });
     const reachedEvents = events.filter((e) => !e.unreached);
     const manaEnd = reachedEvents.filter((e) => e.kind === 'spend').reduce((a, e) => a + e.mana, 0);
-    const ppm = Number.isFinite(pointsPerMana) && pointsPerMana > 0 ? pointsPerMana : pointsPerManaFor(manaEnd, { prices });
     // the walk's first-reach order, then the regions only the defaults step prices (after the walk)
     const reachedOrder = [...new Set(events.filter((e) => e.kind === 'region' && e.region !== startRegion).map((e) => e.region))];
     const finalRegion = finalRegionOf({ events, victoryLocation, regionOfLocation, isNoiz2sa, reachedOrder });
@@ -172,6 +174,12 @@ export function planNoiz2saPricing({
     // when Victory is needed — the Noiz2sa mana spent before the step that checks the Victory location (no such step:
     // the whole walk's)
     const finalMana = manaBeforeVictory(events, victoryLocation, manaEnd);
+    // ⚖ (third follow-up) "Pace targets the Victory step": the pace brings an Even bot to TARGET_FINAL_SKILL by the time
+    // Victory is needed (`finalMana`). When no Noiz2sa mana is spent before it, no pace can: the pace falls back to the
+    // end of the walk, and the final region falls back to the 50% rule (`finalFallback`).
+    const finalFallback = !(finalMana > 0);
+    const paceMana = finalFallback ? manaEnd : finalMana;
+    const ppm = Number.isFinite(pointsPerMana) && pointsPerMana > 0 ? pointsPerMana : pointsPerManaFor(paceMana, { prices });
     // ⚖ the ramp runs from the first region to the FINAL one; a region after it in the order targets the final count
     const kF = finalRegion === null ? reachedOrder.length - 1 : reachedOrder.indexOf(finalRegion);
 
@@ -187,9 +195,13 @@ export function planNoiz2saPricing({
         const order = reachedOrder.indexOf(name);
         let pick;
         let target;
-        if (name === finalRegion) {
+        if (name === finalRegion && !finalFallback) {
             target = finalScenes;
             pick = { span: final, ...spanDifficulty(final, skill) };
+        } else if (name === finalRegion) {
+            // ⚖ third follow-up: Victory needed before any Noiz2sa mana — the 50% rule, up to the setting's length
+            target = finalScenes;
+            pick = pickShrinking(finalScenes, skill);
         } else {
             target = isStart ? 1 : (kF <= 0 || order < 0 ? finalScenes : Math.round(1 + (finalScenes - 1) * Math.min(order, kF) / kF));
             pick = pickShrinking(target, skill);
@@ -217,7 +229,7 @@ export function planNoiz2saPricing({
             span: c.span, p: c.p, seconds: c.seconds, expected: c.mana,
         });
     }
-    return { pointsPerMana: ppm, manaEnd, finalRegion, finalSpan: final, regions: [...regions.values()], locations };
+    return { pointsPerMana: ppm, manaEnd, paceMana, finalFallback, finalRegion, finalSpan: final, regions: [...regions.values()], locations };
 }
 
 /**
@@ -337,6 +349,8 @@ export function applyNoiz2saPricing(rulesJson, playerId, plan, { substrateId = '
             seconds: round(r.seconds, 2),
             cost: r.cost,
             final: r.final,
+            // ⚖ third follow-up: Victory needed before any Noiz2sa mana — the final region played the 50% rule
+            ...(r.final && plan.finalFallback ? { finalFallback: true } : {}),
             reached: !r.unreached,
             locations: Object.fromEntries([...priced].filter(([id]) => id).map(([id, l]) => [id, {
                 skill: round(l.skill, 2), p: round(l.p, 4), seconds: round(l.seconds, 2), cost: l.cost,
@@ -359,7 +373,9 @@ export function priceNoiz2saRegions({ rulesJson, sphereLog, playerId, params = n
 /** one line per priced region, for logs and the report */
 export function describePricing(plan) {
     if (!plan) return ['no Noiz2sa region'];
-    const lines = [`pointsPerMana ${plan.pointsPerMana} (Noiz2sa mana over the walk ${round(plan.manaEnd, 2)})`];
+    const lines = [`pointsPerMana ${plan.pointsPerMana} (skill ${TARGET_FINAL_SKILL} at ${round(plan.paceMana, 2)} Noiz2sa mana — `
+        + `${plan.finalFallback ? 'the end of the walk: Victory is needed before any Noiz2sa mana, the final region plays the 50% rule' : 'when Victory is needed'}; `
+        + `the walk spends ${round(plan.manaEnd, 2)})`];
     for (const r of plan.regions) {
         lines.push(`${r.region}${r.final ? ' (final)' : ''}${r.unreached ? ' (unreached)' : ''}: mana ${round(r.mana, 1)} → skill ${round(r.skill, 1)}; `
             + `move ${showSpan(r.span)} (${r.scenes}) p ${round(r.p, 3)} E ${round(r.seconds, 1)} s; cost ${r.cost} → rate `

@@ -190,6 +190,37 @@ describe('regions the sphere log never reaches', () => {
     });
 });
 
+describe('⚖ "Pace targets the Victory step" (third follow-up)', () => {
+    const plan = planNoiz2saWorld({ rulesJson: world(), sphereLog: sphereLog(), playerId: '1' });
+    it('the pace reaches the target skill when Victory is needed; the final region is priced there, at the setting\'s span', () => {
+        const fin = plan.regions.find((r) => r.final);
+        expect(plan.finalFallback).toBe(false);
+        expect(plan.paceMana).toBe(fin.mana);
+        expect(plan.paceMana).toBeLessThan(plan.manaEnd);
+        expect(fin.skill).toBeGreaterThanOrEqual(TARGET_FINAL_SKILL);
+        expect(fin.skill).toBeLessThan(TARGET_FINAL_SKILL + 1);
+        expect(plan.pointsPerMana).toBe(pointsPerManaFor(plan.paceMana));
+        expect(showSpan(fin.span)).toBe(DEFAULT_FINAL_SPAN);
+    });
+    it('Victory needed before any Noiz2sa mana: the pace targets the end of the walk; the final region plays the 50% rule', () => {
+        // Victory on R0, the first region, in the first sphere: its check comes before any Noiz2sa spend
+        const rules = world();
+        rules.regions[1].R5.locations[0].item = { name: 'Noiz2sa Star' };
+        rules.regions[1].R0.locations[0].item = { name: 'Victory' };
+        const p = planNoiz2saWorld({ rulesJson: rules, sphereLog: sphereLog(), playerId: '1' });
+        const fin = p.regions.find((r) => r.final);
+        expect(fin.region).toBe('R0');
+        expect(p.finalFallback).toBe(true);
+        expect(p.paceMana).toBe(p.manaEnd);
+        expect(p.pointsPerMana).toBe(pointsPerManaFor(p.manaEnd));
+        expect(fin.mana).toBe(0);
+        expect(fin.target).toBe(finalScenesOf());
+        expect(showSpan(fin.span)).toBe(showSpan(pickShrinking(finalScenesOf(), fin.skill).span));
+        applyNoiz2saPricing(rules, '1', p);
+        expect(rules.preset_sidecars[1].R0.playable_payload.pricing).toMatchObject({ final: true, finalFallback: true });
+    });
+});
+
 describe('⚖ "Price the final at its last need" (second follow-up)', () => {
     const plan = planNoiz2saWorld({ rulesJson: world(), sphereLog: sphereLog(), playerId: '1' });
     it('the final region is priced at the skill when Victory is checked; every other region at first reach', () => {
