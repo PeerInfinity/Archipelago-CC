@@ -296,6 +296,20 @@
       ]
     },
     {
+      "file": "ladder2-l104-beam.json",
+      "tickCount": 278,
+      "bootLevel": 104,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "ladder2-l59-grenade.json",
+      "tickCount": 143,
+      "bootLevel": 59,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "pit-fall-83.json",
       "tickCount": 80,
       "bootLevel": 83,

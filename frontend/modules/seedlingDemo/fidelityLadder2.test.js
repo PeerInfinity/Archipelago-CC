@@ -29,6 +29,7 @@ import { fileURLToPath } from 'node:url';
 import { atlasLevelSource } from './levelSource.js';
 import { buildLevelWorld } from './levelWorld.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
+import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, runTape, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { contactPricing } from './combat.js';
 import {
@@ -54,14 +55,20 @@ const armRun = async (name) => {
 describe('fidelity LADDER2 D1 — the three clocks, as the game measured them', () => {
     it('every arm agrees on K = 0, and each class has a positive control', () => {
         expect(ORACLE.agreeingOffsets).toEqual({ grenade: [0], lavachain: [0], beamtower: [0] });
-        expect(ORACLE.arms).toHaveLength(12);
+        expect(ORACLE.arms).toHaveLength(13);
         const firsts = Object.fromEntries(ORACLE.arms.map((a) => [a.arm, a.gameFirstMove]));
         expect(firsts).toEqual({
             'l2-grenade-l59-walled': 155, 'l2-grenade-l75': 155, 'l2-grenade-l75-armed-clear': -1,
             'l2-grenade-l63-walled': 155,
             'l2-chain-l79': 34, 'l2-chain-l72': 34, 'l2-chain-l75-c': 34, 'l2-chain-l75-a': 34,
-            'l2-beam-l104': 5, 'l2-beam-l104-up': 19, 'l2-beam-l103-west': 79, 'l2-beam-l103-mid': 86,
+            'l2-beam-l104': 5, 'l2-beam-l104-up': 19, 'l2-beam-l103-west': 79, 'l2-beam-l103-east': 8,
+            'l2-beam-l103-mid': 86,
         });
+        // ⛓ the blast is the model's too: on the grenade arms the GAME's stream never leaves the
+        // model's (L63's first divergence is a second, non-grenade hit at f190).
+        const div = Object.fromEntries(ORACLE.arms.map((a) => [a.arm, a.modelDivergence]));
+        expect([div['l2-grenade-l59-walled'], div['l2-grenade-l75'], div['l2-grenade-l75-armed-clear'],
+            div['l2-grenade-l63-walled']]).toEqual([-1, -1, -1, 190]);
         expect(ORACLE.arms.every((a) => a.matches.includes(0))).toBe(true);
     });
 
@@ -91,10 +98,11 @@ describe('fidelity LADDER2 D1 — the three clocks, as the game measured them', 
         }
     });
 
-    it('a beam tower\'s fps is an int, its side turns by rate, and its right beam ends at x 160', () => {
+    it('a beam tower\'s fps is an int, its side turns by rate, and its beams end at the LEVEL\'s edge', () => {
         expect([0.25, 0.5, 1].map(beamAnimSpeed)).toEqual([2, 5, 10]);
         const sides = (rate) => {
-            const t = createBeamTower({ cx: 24, cy: 72, attrs: { direction: '0', rate: String(rate), speed: '1' } });
+            const t = createBeamTower({ cx: 24, cy: 72, attrs: { direction: '0', rate: String(rate), speed: '1' } },
+                { width: 160, height: 160 });
             const seen = [];
             for (let u = 0; u < 200; u += 1) if (stepBeamTower(t, null)) seen.push(t.direction);
             return [...new Set(seen)];
@@ -102,10 +110,14 @@ describe('fidelity LADDER2 D1 — the three clocks, as the game measured them', 
         expect(sides(1)).toEqual([0, 1, 2, 3]);
         expect(sides(2)).toEqual([0, 2]);
         expect(sides(4)).toEqual([0]);
-        // `getLine` ends at FP.width = 160, a screen size used as a world x.
-        const east = createBeamTower({ cx: 216, cy: 264, attrs: { direction: '0', rate: '4', speed: '1' } });
-        expect(beamRect(east, 0)).toEqual({ x: 160, y: 245, w: 62, h: 4 });
+        // `getLine` ends at FP.width/FP.height, which `loadlevel` sets to the level's size
+        // (L103 is 320 x 304) — the 160 px screen was the first cut's error, refuted on the game.
+        const east = createBeamTower({ cx: 216, cy: 264, attrs: { direction: '0', rate: '4', speed: '1' } },
+            { width: 320, height: 304 });
+        expect(beamRect(east, 0)).toEqual({ x: 222, y: 245, w: 98, h: 4 });
         expect(beamRect(east, 2)).toEqual({ x: 0, y: 245, w: 210, h: 4 });
+        expect(beamRect(east, 3)).toEqual({ x: 214, y: 251, w: 4, h: 53 });
+        expect(() => createBeamTower({ cx: 0, cy: 0, attrs: {} })).toThrow(/level size/);
     });
 
     it('a lava chain\'s arm is a 4 px rect, out from the frames whose Game.time % 90 < 1.5', () => {
@@ -151,7 +163,7 @@ describe('fidelity LADDER2 D2 — the pricing and the ladder', () => {
         expect(hit(24, 30, 18)).toEqual([]);
         // the doorstep test: the rate-1 tower reaches its up side, the far corner it never does
         const tower = run.world.combat.hazards.find((h) => h.tag === 'beamtower');
-        expect(phaseHazardCanReach(tower, playerBoxAt(24, 30))).toBe(true);
+        expect(phaseHazardCanReach(tower, playerBoxAt(24, 30), run.world.world)).toBe(true);
     });
 
     it('the grenade, TRANSIT: the walk\'s own forecast decides; without one, no blast before updates + 1 + 154', async () => {
@@ -171,5 +183,33 @@ describe('fidelity LADDER2 D2 — the pricing and the ladder', () => {
         expect(PHASE_DODGE_RUNG).toMatchObject({ step: 4, offsets: 8, detourOffsets: 2, detourPreviews: 60,
             period: 90 });
         expect(DEADLINE_SITES.at(-1)).toBe('phase-dodge');
+    });
+});
+
+describe('fidelity LADDER2 D3 — the witnesses, recorded on the game', () => {
+    const replayVsGame = (tapeJson, gameTicks) => {
+        const replay = runTape(parseTape(tapeJson), { levelSource: SRC });
+        let first = -1;
+        gameTicks.forEach((g, i) => {
+            const m = replay.ticks[i];
+            if (first < 0 && (!m || m.level !== g.level || m.x !== g.x || m.y !== g.y)) first = i;
+        });
+        return { first, rows: gameTicks.length, model: replay.ticks.length };
+    };
+    const fixture = (dir, name) => readFileSync(join(HERE, 'fixtures', dir, `${name}.json`), 'utf8');
+
+    it('ladder2-l59-grenade (step 137) and ladder2-l104-beam (step 206): the model IS the game, 0 px', () => {
+        for (const name of ['ladder2-l59-grenade', 'ladder2-l104-beam']) {
+            const got = replayVsGame(fixture('tapes', name), JSON.parse(fixture('expectations', name)).ticks);
+            expect([name, got.first]).toEqual([name, -1]);
+            expect(got.rows).toBe(got.model);
+        }
+    });
+
+    it('⛔ ladder2-l75-chain is EVIDENCE, not a witness: 0 px past all three chains, refuted at t161 by a LavaRunner', () => {
+        const E = join(REPO, 'CC', 'docs', 'cloud-reports', 'seedling-fidelity-ladder2-evidence');
+        const got = replayVsGame(readFileSync(join(E, 'ladder2-l75-chain-tape.json'), 'utf8'),
+            JSON.parse(readFileSync(join(E, 'ladder2-l75-chain-game.json'), 'utf8')).ticks);
+        expect(got.first).toBe(161);
     });
 });

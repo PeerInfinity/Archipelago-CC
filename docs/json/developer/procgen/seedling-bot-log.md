@@ -14442,6 +14442,64 @@ held back.
   the flag one tick early and looked like a model lag. Every write bracket plays `holdingWindowTape`.
 - **A goal's first walk can satisfy it.** The stance walk's strike policy breaks the rock it walks past; re-asking the
   ledger after the walk keeps the verb from swinging at air for 20 ticks.
+### Seedling fidelity LADDER2 — a grenade has a fuse, not a contact; a chain and a beam have clocks
+
+⚖ The user (2026-10-05): *"The first priority is to expand the model to include
+everything in the game."* Wave 8's LADDER2 slice: the combat ladder against
+`enemy:grenade`, `hazard:lavachain` and `hazard:beamtower`. The report is
+`CC/docs/cloud-reports/seedling-fidelity-ladder2.md`.
+
+**What the game does (D1, `probe-seedling-ladder2-phase.mjs`: 13 arms on p4f, K = 0
+for all three classes).**
+- A placed `Grenade` has NO contact (`update()` never calls `super.update()`). It
+  is dormant until the player's entity point is within 32 px of `(x, endY)`, then
+  falls (`collidable = false`, so the fall passes through walls: L59's and L63's
+  grenades spawn inside one), counts 60 at rest and plays `"explode"`. The
+  callback is the blast: 20 px, force 2, **154 updates after the arming update**.
+- `LavaChain`: the 48x4 arm is out while `extend`/`hit` plays, which starts on
+  the frames whose `Game.time % 90 < 1.5`. It hurts the player (`levelWorld`'s row
+  said "enemies only").
+- `BeamTower`: its own Spritemap at an INT `10 · speed` fps from the ctor, the
+  beam on each side's second frame, and the side TURNING by `rate` after each
+  `sit` (a rate-1 tower sweeps all four sides). The beam ends at the level's edge:
+  `loadlevel` sets `FP.width` to the level's width.
+
+**The model (D2).** `combat.contactPricing('grenade')` is `stepped`, and
+`levelRun.stepPlacedGrenadesNow` bills the blast (the model reproduces the game's
+knockback at 0 px). `dangerMap.grenadeDanger` prices the blast off the walk's own
+forecast (`run.grenadeForecast()`, stepped by `previewWalk`).
+`dangerMap.phaseHazardHit` prices a chain or a beam at its exact update in
+TRANSIT; WAIT keeps the volume. DODGE gains a PHASE arm (`PHASE_DODGE_RUNG`, site
+`phase-dodge`), which may keep a `partial` stall that leaves an axe to the next
+probe.
+
+**Survey** (`--through=end`, the 24 steps in the 13 rooms holding these
+classes): 137 and 139 (grenade), 162 and 164 (chain), 206 (beam) LADDER →
+SOLVED; 160 moves on to the L75 axe; 205 (L103) stays refused on the exact beam.
+Game witnesses at 0 px: `ladder2-l59-grenade` (step 137) and `ladder2-l104-beam`
+(step 206).
+
+**Refuted on the game, and kept as such.** L75's chain crossing (step 162) is
+0 px through t160 and is knocked at t161 by a `LavaRunner` the model does not
+step. L76's floor (tile 31, Igneous-to-Lava) crumbles under a standing player
+(a death and 20 dead frames every 46 ticks), which the model reads as plain
+floor. And the first cut's beam ended at x 160: the game's beam knocked that
+plan's L103 walk at x 200, which is how the level-edge rule was found.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A model that bills nothing makes a divergence probe a hit detector, until it
+  bills.** The D1 probe read "first divergence from the model" as the knock.
+  Once the grenade's blast was billed, the model agreed with the game, and the
+  positive controls read −1. Measure a knock against the standing position.
+- **A screen-sized constant may be a level-sized variable.** `FP.width` is 160
+  in `Main`'s ctor and the level's width after `loadlevel`. Every D1 beam arm
+  stood inside x 160, so none could tell the two apart. The first witness east
+  of it did.
+- **A room's clock can be broken by its floor.** L76's chain looked off-phase by
+  120 frames. The cause was the Igneous floor killing the standing player every
+  46 ticks, each death spending 20 dead frames of `Game.time`. Check
+  `dead_frames` against the loads before trusting a phase.
 
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
