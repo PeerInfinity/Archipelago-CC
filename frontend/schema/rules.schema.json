@@ -874,7 +874,6 @@
         }
       },
       "required": ["name", "id", "access_rule"],
-      "dependencies": { "event_kind": ["event", "event_id"] },
       "additionalProperties": true
     },
     "itemPlacement": {

@@ -1024,3 +1024,52 @@ describe('rules F2 — the compile writes slot maps', () => {
         }
     });
 });
+
+/**
+ * ⛓ RULES obstacle-events — derived EVENTS and EXIT GATES (`options.events`, `options.exitGates`): the
+ * event is the exporter's own shape (id-less, locked, `event: true`, group `Event`), the gate is ANDed
+ * onto the one wired departure it names, and a gate naming no wired exit throws.
+ */
+describe('compileRegionAtlas — derived events and exit gates', () => {
+    const conn = FIXTURE.vanilla_layout.connections[0];
+    const [regionId, exitId] = conn.from;
+    const has = (n) => ({ rule: 'Has', args: { item_name: n } });
+
+    it('an event location + item in the exporter\'s event shape, extra fields riding along', () => {
+        const { rules, report } = compileFixture({ events: [{
+            region_id: regionId, name: 'L9 flag 1: rock cleared', access_rule: has('Sword'),
+            fields: { event_id: 'flag:L9:1', event_kind: 'game_state' },
+        }] });
+        const target = apRegionNameForBinding(atlasRegion(FIXTURE, regionId), undefined);
+        const loc = regionsOf(rules)[target].locations.find((l) => l.name === 'L9 flag 1: rock cleared');
+        expect(loc).toEqual({
+            name: 'L9 flag 1: rock cleared', id: null, access_rule: has('Sword'),
+            item: { name: 'L9 flag 1: rock cleared', player: 1, advancement: true, type: 'Event' },
+            locked: true, event: true, event_id: 'flag:L9:1', event_kind: 'game_state',
+        });
+        expect(rules.items['1']['L9 flag 1: rock cleared']).toEqual({ name: 'L9 flag 1: rock cleared', id: null,
+            groups: ['Event'], classification: 'progression', event: true, type: 'Event', max_count: 1 });
+        expect(report.events).toBe(1);
+        expect(rulesJsonSchemaErrors(rules, loadRulesSchema())).toEqual([]);
+    });
+
+    it('a gate is ANDed onto exactly the departure it names; without options nothing moves', () => {
+        const plain = compileFixture().rules;
+        const gated = compileFixture({ exitGates: [{ region_id: regionId, exit_id: exitId, rule: has("E") }] }).rules;
+        const diff = [];
+        for (const [name, r] of Object.entries(regionsOf(plain))) {
+            r.exits.forEach((e, i) => {
+                const g = regionsOf(gated)[name].exits[i];
+                if (JSON.stringify(g) !== JSON.stringify(e)) diff.push([e.access_rule, g.access_rule]);
+            });
+        }
+        expect(diff).toHaveLength(1);
+        const [[before, after]] = diff;
+        expect(after).toEqual(before.rule === 'True_' ? has('E') : { rule: 'And', children: [before, has('E')] });
+    });
+
+    it('a gate whose exit vanished throws (a silent hole, not a no-op)', () => {
+        expect(() => compileFixture({ exitGates: [{ region_id: regionId, exit_id: 'out_nothing_0_0', rule: has('E') }] }))
+            .toThrow(/names no wired departure exit/);
+    });
+});

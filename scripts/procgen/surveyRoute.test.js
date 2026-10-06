@@ -7,8 +7,8 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    chainBound, deriveLegs, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath, ROUTE_MODES,
-    routeOnlyRows,
+    chainBound, deriveLegs, eventPrerequisites, eventsBrokenOnPath, gameStateEventsOf, keyItemsOf, makeRuleHolds,
+    pickupsThrough, regionPath, ROUTE_MODES, routeOnlyRows,
 } from './surveyRoute.js';
 
 const has = (item) => ({ rule: 'Has', args: { item_name: item } });
@@ -230,5 +230,140 @@ describe('chainBound — the frontier\'s bound is read off the chain\'s terminal
             .toThrow(/not a terminal segment/);
         expect(() => chainBound(ORDER, [{ name: 'y', level: 33, to: null, encounter: 'Fire' }]))
             .toThrow(/0 sphere-order rows grant 'Fire' in L33/);
+    });
+});
+
+/**
+ * ⛓ RULES obstacle-events — a landing gated on a saved obstacle's event (⚖ "break before first use",
+ * the planner's condition on option B): the walk takes it only once the obstacle is broken — on the way,
+ * where it crosses the obstacle at its own cost (what the game does), or goal-first, before the leg
+ * that needs it — and never walks the gated landing without its event.
+ */
+describe('obstacle events in the leg walk', () => {
+    const SWORD = has('Sword');
+    const EV = 'R flag 1: rock cleared';
+    const ev = (extra = {}) => ({
+        name: EV, id: null, event: true, event_kind: 'game_state', event_id: 'flag:L0:1', access_rule: SWORD,
+        obstacle: { level: 0, tag: 1, class: 'breakablerock', x: 0, y: 0 }, item: { name: EV },
+        side: 'Room', across: ['Pocket'], ...extra,
+    });
+    // Menu → Room (Sword) ; Room ─[Sword: through the rock]► Pocket ─► Far (the door on) ;
+    // Far ─[Has(EV): the landing INSIDE the rock]► Pocket ; Far ─► Hub ; Hub ─► Room is the only other way
+    const graph = ({ hubToRoom = true, roomEvent = ev() } = {}) => doc({
+        Menu: { exits: [{ name: 'go', connected_region: 'Room', access_rule: TRUE }] },
+        Room: {
+            exits: [{ name: 'room-pocket', connected_region: 'Pocket', access_rule: SWORD }],
+            locations: [{ name: 'Sword spot' }, roomEvent],
+        },
+        Pocket: { exits: [{ name: 'pocket-far', connected_region: 'Far', access_rule: TRUE }] },
+        Far: {
+            exits: [
+                { name: 'far-pocket', connected_region: 'Pocket', access_rule: has(EV) },
+                { name: 'far-hub', connected_region: 'Hub', access_rule: TRUE },
+            ],
+            locations: [{ name: 'Far chest' }],
+        },
+        Hub: { exits: hubToRoom ? [{ name: 'hub-room', connected_region: 'Room', access_rule: TRUE }] : [] },
+        Gem: { exits: [] },
+    });
+    const pocketGem = (rules) => {
+        rules.regions[1].Pocket.locations = [{ name: 'Pocket gem' }];
+        return rules;
+    };
+
+    it('gameStateEventsOf reads the export\'s game_state events, and nothing else', () => {
+        const rules = graph();
+        rules.regions[1].Room.locations.push({ name: 'logic', id: null, event: true, item: { name: 'logic' } });
+        const evs = gameStateEventsOf(rules.regions[1]);
+        expect(evs.map((e) => [e.name, e.region, e.eventId, e.across])).toEqual([[EV, 'Room', 'flag:L0:1', ['Pocket']]]);
+    });
+
+    it('a hop through the obstacle at its own cost breaks it on the way (and only that hop does)', () => {
+        const rules = graph();
+        const events = gameStateEventsOf(rules.regions[1]);
+        const R = rules.regions[1];
+        expect(eventsBrokenOnPath(R, ['Room', 'Pocket'], ['room-pocket'], events, {})).toHaveLength(1);
+        expect(eventsBrokenOnPath(R, ['Pocket', 'Far'], ['pocket-far'], events, {})).toHaveLength(0);
+        // a crossing priced differently is a different obstacle
+        R.Room.exits[0].access_rule = has('Hammer');
+        expect(eventsBrokenOnPath(R, ['Room', 'Pocket'], ['room-pocket'], events, {})).toHaveLength(0);
+    });
+
+    it('goal-first: the leg that needs the landing breaks the obstacle first, never eagerly', () => {
+        // the player is at Far holding the Sword; the Pocket gem needs the gated landing or the
+        // Hub → Room → (break) → Pocket way
+        const rules = pocketGem(graph());
+        const ruleHolds = makeRuleHolds(rules);
+        const events = gameStateEventsOf(rules.regions[1]);
+        const pre = eventPrerequisites({
+            regions: rules.regions[1], ruleHolds, here: 'Far', items: { Sword: 1 }, events, target: 'Pocket',
+        });
+        // Pocket is reachable from Far WITHOUT the landing (Far → Hub → Room → Pocket) — no prerequisite asked
+        expect(pre).toEqual([]);
+        // without the Hub way the only way in is the landing: the rock is broken first, from its open side
+        const sealed = pocketGem(graph({ hubToRoom: false }));
+        const noWayBack = eventPrerequisites({
+            regions: sealed.regions[1], ruleHolds: makeRuleHolds(sealed), here: 'Far', items: { Sword: 1 },
+            events: gameStateEventsOf(sealed.regions[1]), target: 'Pocket',
+        });
+        expect(noWayBack).toBeNull(); // the open side is behind the landing too: refused, never walked through
+    });
+
+    it('deriveLegs credits the crossing and never walks the gated landing without its event', () => {
+        const rules = graph();
+        rules.regions[1].Far.locations = [{ name: 'Far chest' }];
+        rules.regions[1].Pocket.locations = [{ name: 'Pocket gem' }];
+        const pickups = [
+            { sphere: '0.1', location: 'Sword spot', item: 'Sword' },
+            { sphere: '1.1', location: 'Far chest', item: 'Coin' },
+            { sphere: '1.2', location: 'Pocket gem', item: 'Gem' },
+        ];
+        const out = deriveLegs({
+            regions: rules.regions[1], ruleHolds: makeRuleHolds(rules), start: 'Room', pickups,
+            events: gameStateEventsOf(rules.regions[1]),
+        });
+        expect(out.legs[1].brokeOnTheWay).toEqual(['flag:L0:1']);
+        // with the event held the leg back into the pocket MAY use the landing (Far → Pocket)
+        expect(out.legs[2].regions).toEqual(['Far', 'Pocket']);
+        // the same walk WITHOUT the events wired cannot take the landing: it goes round by the Hub
+        const blind = deriveLegs({ regions: rules.regions[1], ruleHolds: makeRuleHolds(rules), start: 'Room', pickups });
+        expect(blind.legs[2].regions).toEqual(['Far', 'Hub', 'Room', 'Pocket']);
+    });
+
+    it('deriveLegs breaks goal-first when the walk never crossed the obstacle', () => {
+        // Sword lies in Far, reached by a side door; the Pocket gem is behind the rock or the landing
+        const rules = doc({
+            Menu: { exits: [{ name: 'go', connected_region: 'Room', access_rule: TRUE }] },
+            Room: {
+                exits: [
+                    { name: 'room-pocket', connected_region: 'Pocket', access_rule: SWORD },
+                    { name: 'room-far', connected_region: 'Far', access_rule: TRUE },
+                ],
+                locations: [ev()],
+            },
+            Pocket: { exits: [], locations: [{ name: 'Pocket gem' }] },
+            Far: {
+                exits: [{ name: 'far-pocket', connected_region: 'Pocket', access_rule: has(EV) }],
+                locations: [{ name: 'Sword spot' }],
+            },
+        });
+        // Far → Pocket needs the event; Far has no way back to Room — so the Room must be visited first:
+        // here Far → Room is absent, which makes the gem need the event at Room BEFORE leaving it. Give
+        // the walk a way back so the goal-first leg is walkable:
+        rules.regions[1].Far.exits.push({ name: 'far-room', connected_region: 'Room', access_rule: TRUE });
+        rules.regions[1].Room.exits[0].access_rule = has('Hammer'); // the rock can't be walked through
+        rules.regions[1].Room.locations[0].access_rule = SWORD;
+        const out = deriveLegs({
+            regions: rules.regions[1], ruleHolds: makeRuleHolds(rules), start: 'Room',
+            pickups: [{ sphere: '0.1', location: 'Sword spot', item: 'Sword' },
+                { sphere: '1.1', location: 'Pocket gem', item: 'Gem' }],
+            events: gameStateEventsOf(rules.regions[1]),
+        });
+        expect(out.legs.map((l) => [l.sphere, l.goal, l.regions.join('>')])).toEqual([
+            ['0.1', 'Sword spot', 'Room>Far'],
+            ['1.1<flag:L0:1', EV, 'Far>Room'],
+            ['1.1', 'Pocket gem', 'Room>Far>Pocket'],
+        ]);
+        expect(out.legs[1].event).toMatchObject({ id: 'flag:L0:1', prerequisiteFor: '1.1' });
     });
 });
