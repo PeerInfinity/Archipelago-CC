@@ -383,7 +383,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                     // ⛓ S2 — the room is HELD while the worker thinks: the run does not step, the give-up clock does not run.
                     solverHolding = true;
                     if (stepBudget === 0 && !playing) stepBudget = 1;
-                    const note = `solving… (budget ${Math.round((solver.budgetMs ?? 0) / 100) / 10} s)`;
+                    const note = `solving… (budget ${solver.budgetWork ?? 0} work units)`;
                     if (reason !== note) { reason = note; emit('solver', note); }
                     return null;
                 }

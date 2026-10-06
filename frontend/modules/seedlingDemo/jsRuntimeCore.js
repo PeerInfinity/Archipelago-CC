@@ -279,11 +279,12 @@ export function apItemsOf(record) {
  *   solver mode's solves run: the page passes its module Worker
  *   (`jsRuntimeSolveService.createWorkerSolveService`); null (node) solves in
  *   place, as S1 did.
- * @param {number} [opts.solverBudgetMs]  ⛓ S2 — one solve's wall-clock budget
- * @param {number} [opts.solverUpgradeWindowMs]  ⛓ SHOULD-STOP — the full pass's dash deadline (null = the budget)
+ * @param {number} [opts.solverBudgetWork]  ⛓ DETERMINISTIC BUDGET — one solve's budget, in work units
+ * @param {number} [opts.solverUpgradeWindowWork]  the full pass's dash deadline, in work units (null = the budget)
+ * @param {number} [opts.solverBackstopMs]  the wall-clock backstop (a named failure, never an answer)
  */
-export function createJsRuntime({ onStateChanged = null, log = () => {}, solveService = null, solverBudgetMs = undefined,
-    solverUpgradeWindowMs = undefined } = {}) {
+export function createJsRuntime({ onStateChanged = null, log = () => {}, solveService = null, solverBudgetWork = undefined,
+    solverUpgradeWindowWork = undefined, solverBackstopMs = undefined } = {}) {
     let config = null;
     /** alias -> AS3 class name, from `configure`'s `classes`. */
     let aliases = new Map();
@@ -350,8 +351,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
      */
     const solver = createRuntimeSolver({
         solveService,
-        ...(solverBudgetMs !== undefined ? { budgetMs: solverBudgetMs } : {}),
-        ...(solverUpgradeWindowMs !== undefined ? { upgradeWindowMs: solverUpgradeWindowMs } : {}),
+        ...(solverBudgetWork !== undefined ? { budgetWork: solverBudgetWork } : {}),
+        ...(solverUpgradeWindowWork !== undefined ? { upgradeWindowWork: solverUpgradeWindowWork } : {}),
+        ...(solverBackstopMs !== undefined ? { backstopMs: solverBackstopMs } : {}),
         getSession: () => session,
         getLevelSource: () => roomSource()?.source ?? null,
         getRecords: () => roomSource()?.records ?? null,
@@ -878,15 +880,18 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         get solverStats() { return solver.stats; },
         /** ⛓ S2 — true while a solve is in flight (the room is held). */
         get solving() { return solver.solving; },
-        /** ⛓ S2 — one solve's wall-clock budget, in ms (a test knob; the page reads `?solverBudgetMs=`). */
-        get solverBudgetMs() { return solver.budgetMs; },
-        setSolverBudgetMs(ms) { solver.budgetMs = Number(ms); },
+        /** ⛓ DETERMINISTIC BUDGET — one solve's budget, in work units (a test knob; the page reads `?solverBudgetWork=`). */
+        get solverBudgetWork() { return solver.budgetWork; },
+        setSolverBudgetWork(n) { solver.budgetWork = Number(n); },
         /**
-         * ⛓ SHOULD-STOP — the upgrade window, in ms (`flashPanel.seedlingSolverUpgradeWindowMs`, handed with
-         * every goal; the page reads `?solverUpgradeWindowMs=`): null / non-positive = the whole budget.
+         * The upgrade window, in work units (`flashPanel.seedlingSolverUpgradeWindowWork`, handed with every
+         * goal; the page reads `?solverUpgradeWindowWork=`): null / non-positive = the whole budget.
          */
-        get solverUpgradeWindowMs() { return solver.upgradeWindowMs; },
-        setSolverUpgradeWindowMs(ms) { solver.upgradeWindowMs = ms; },
+        get solverUpgradeWindowWork() { return solver.upgradeWindowWork; },
+        setSolverUpgradeWindowWork(n) { solver.upgradeWindowWork = n; },
+        /** The wall-clock backstop, in ms (a test knob; past it a goal FAILS by name, never plays). */
+        get solverBackstopMs() { return solver.backstopMs; },
+        setSolverBackstopMs(ms) { solver.backstopMs = Number(ms); },
         /** ⛓ S2 — the solve service (the page's worker; null = in place). */
         setSolveService(service) { solver.setSolveService(service); },
         get solveService() { return solver.solveService; },

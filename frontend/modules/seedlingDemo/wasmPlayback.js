@@ -769,38 +769,46 @@ export function isExactRepeat(prev, d) {
  * L16 pit, 14 s) twice as long and still lose L71 kit (68.7 s full — its
  * dashless pass is what plays there). Only the expired legs pay: L16 worst
  * case 5 + 20 s of a held room.
+ * ⛓ DETERMINISTIC BUDGET (slice `seedling-js-deterministic-budget`): the budget
+ * is now WORK units (`jsRuntimeSolver.SOLVER_BUDGET_WORK`) and the retry is
+ * triggered by the worker's ANSWER (a refusal whose cut pass did not answer),
+ * never by the clock; the factor is kept, in units.
  */
 export const SOLVE_RETRY_BUDGET_FACTOR = 4;
-/** ⛓ O2 — held retries per solve (each at `SOLVE_RETRY_BUDGET_FACTOR`× the one before); the next expiry is the failure. */
+/** ⛓ O2 — held retries per solve (each at `SOLVE_RETRY_BUDGET_FACTOR`× the units before); the next cut is the failure. */
 export const MAX_SOLVE_RETRIES = 1;
 
 /**
- * ⛓ ANYTIME / O2 — what a wasm solve past its budget does.
- *   'provisional'  a pass already landed a PLAN (`handle.provisional`): play
- *                  it — the later pass's search is the only thing given up;
- *   'retry'        no plan in hand and a held retry left: ask again, held;
- *   'give-up'      the retries are spent: the goal ends by name
- *                  (`expiryFailure`) — a continuation falls back (W7).
- * @param {{provisional?:object|null, retries:number}} o
+ * ⛓ ANYTIME / O2 → DETERMINISTIC BUDGET — what a wasm solve whose answer was CUT
+ * at its work budget (`jsRuntimeSolver.budgetCut`) does. The cut is the worker's
+ * answer, a pure function of the request — never the wall clock.
+ *   'provisional'  the answer is a PLAN (an earlier pass's, a later one cut):
+ *                  play it — the later pass's search is the only thing given up;
+ *   'retry'        a refusal with a pass left unanswered by the cut, and a held
+ *                  retry left: ask again, held, at `SOLVE_RETRY_BUDGET_FACTOR`×;
+ *   'give-up'      the retries are spent (or every pass answered): the goal ends
+ *                  by name (`expiryFailure`) — a continuation falls back (W7).
+ * @param {{provisional?:object|null, retries:number, unanswered?:boolean}} o
  * @returns {'provisional'|'retry'|'give-up'}
  */
-export function expiryAction({ provisional = null, retries = 0 }) {
+export function expiryAction({ provisional = null, retries = 0, unanswered = true }) {
     if (provisional?.ok) return 'provisional';
-    return retries < MAX_SOLVE_RETRIES ? 'retry' : 'give-up';
+    return unanswered && retries < MAX_SOLVE_RETRIES ? 'retry' : 'give-up';
 }
 
 /**
- * ⛓ O2 — the named failure of a solve that ran out of every budget. A pass
- * that DECLINED before the expiry is the solver's word and leads (the door-only
- * L14 decline races the budget): its reason, then the budgets spent.
+ * ⛓ O2 → DETERMINISTIC BUDGET — the named failure of a solve that ran out of
+ * every work budget. A pass that DECLINED (a refusal its deadline did not cut)
+ * is the solver's word and leads: its reason, then the budgets spent.
  */
 export function expiryFailure({ goal, budgets = [], refusal = null }) {
-    const spent = budgets.map((ms) => `${Math.round(ms / 100) / 10} s`).join(', then ');
-    const over = `the solver exceeded ${spent}${budgets.length > 1 ? ' on its held retry' : ''} on ${goal?.kind} in level ${goal?.level} (terminated)`;
-    if (refusal && refusal.kind === 'refusal') {
+    const spent = budgets.join(', then ');
+    const over = `the solver ran out of ${spent} work units${budgets.length > 1 ? ' on its held retry' : ''} on ${goal?.kind} in level ${goal?.level}`;
+    if (refusal && refusal.kind === 'refusal' && !refusal.deadline) {
         return `the solver declined ${goal?.name ?? goal?.kind} in level ${goal?.level} (pass ${refusal.pass ?? '?'}): `
             + `${String(refusal.message).split('\n')[0]} — and ${over}`;
     }
+    if (refusal && refusal.kind === 'refusal') return `${over}: ${String(refusal.message).split('\n')[0]}`;
     return over;
 }
 

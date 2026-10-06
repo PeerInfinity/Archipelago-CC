@@ -49,10 +49,10 @@ const RUNTIME_SETTING_KEY = 'moduleSettings.flashPanel.runtime';
  * changes how the bot picks keys, not which game page runs.
  */
 const SOLVER_WALK_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverWalk';
-/** ⛓ Seedling solver-walk O3 — the wasm engine's solve budget (read live by the engine at each solve). */
-const WASM_SOLVER_BUDGET_SETTING_KEY = 'moduleSettings.flashPanel.seedlingWasmSolverBudgetMs';
-/** ⛓ Seedling SHOULD-STOP — the solver's upgrade window, both runtimes (read at each solve's start; 0 = the budget). */
-const SOLVER_UPGRADE_WINDOW_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowMs';
+/** ⛓ Seedling solver-walk O3 → DETERMINISTIC BUDGET — the wasm engine's solve budget in WORK units (read at each solve). */
+const WASM_SOLVER_BUDGET_SETTING_KEY = 'moduleSettings.flashPanel.seedlingWasmSolverBudgetWork';
+/** ⛓ Seedling SHOULD-STOP → DETERMINISTIC BUDGET — the upgrade window in WORK units, both runtimes (0 = the budget). */
+const SOLVER_UPGRADE_WINDOW_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork';
 /**
  * ⛓ Seedling JS J1 — the JS runtime's page, document-relative like WASM_DIR.
  * ⛔ A PATH, never an import: the page's closure is the whole JS model, and a
@@ -312,8 +312,8 @@ export class FlashPanelUI {
         getWin: () => this.adapter?._getWin?.() ?? null,
         teleport: (p) => this.adapter?.teleport?.(p) ?? false,
         mapPath: this._atlasMapPath ?? null,
-        // ⛓ O3 — the solve budget knob (null until the setting is read: the engine's own default then).
-        solverBudgetMs: this._wasmSolverBudgetMs ?? null,
+        // ⛓ O3 — the solve budget knob, work units (null until the setting is read: the engine's own default then).
+        solverBudgetWork: this._wasmSolverBudgetWork ?? null,
         // ⛓ MID-ROOM REPLAN — the delivery gate (`FlashBridgeAdapter.itemGate`): the engine holds an item that
         // arrives while it drives, and lets it through where it can replan around it.
         delivery: {
@@ -323,9 +323,10 @@ export class FlashPanelUI {
           push: () => this.adapter?._pushTick?.(),
         },
       } : null,
-      // ⛓ SHOULD-STOP — the upgrade window, both runtimes: undefined until the setting is read, then a
-      // number or null (0 / unset = the whole budget). The JS page gets it with every goal.
-      solverUpgradeWindowMs: this._solverUpgradeWindowMs,
+      // ⛓ SHOULD-STOP — the upgrade window (work units), both runtimes: undefined until the setting is read,
+      // then a number (0 = the whole budget) or null (unset = the runtime's own default). The JS page gets it
+      // with every goal.
+      solverUpgradeWindowWork: this._solverUpgradeWindowWork,
     };
   }
 
@@ -345,24 +346,24 @@ export class FlashPanelUI {
     } catch { /* the page is not up yet — the next walkTo carries it */ }
   }
 
-  /** ⛓ O3 — cache `flashPanel.seedlingWasmSolverBudgetMs` (the engine reads it through the surface per solve). */
+  /** ⛓ O3 — cache `flashPanel.seedlingWasmSolverBudgetWork` (the engine reads it through the surface per solve). */
   async _refreshWasmSolverBudget(value) {
     let next = value;
     if (next === undefined) {
       try { next = await settingsManager.getSetting(WASM_SOLVER_BUDGET_SETTING_KEY, null); } catch { return; }
     }
     const n = Number(next);
-    this._wasmSolverBudgetMs = next !== null && next !== '' && Number.isFinite(n) && n > 0 ? n : null;
+    this._wasmSolverBudgetWork = next !== null && next !== '' && Number.isFinite(n) && n > 0 ? n : null;
   }
 
-  /** ⛓ SHOULD-STOP — cache `flashPanel.seedlingSolverUpgradeWindowMs` (null = the whole budget). */
+  /** ⛓ SHOULD-STOP — cache `flashPanel.seedlingSolverUpgradeWindowWork` (0 = the whole budget; null = unset). */
   async _refreshSolverUpgradeWindow(value) {
     let next = value;
     if (next === undefined) {
       try { next = await settingsManager.getSetting(SOLVER_UPGRADE_WINDOW_SETTING_KEY, null); } catch { return; }
     }
     const n = Number(next);
-    this._solverUpgradeWindowMs = next !== null && next !== '' && Number.isFinite(n) && n > 0 ? n : null;
+    this._solverUpgradeWindowWork = next !== null && next !== '' && Number.isFinite(n) && n >= 0 ? n : null;
   }
 
   _teardownForReinit() {

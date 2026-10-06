@@ -454,10 +454,10 @@ export class SeedlingPlaybackController {
             getCheckBinding: () => this._getSurface?.()?.checkBinding ?? null,
             // ⛓ W7 — the glue query: may the engine hold the arrival it just saw (no redirect in flight)?
             getSwapState: () => this._getSurface?.()?.swapState?.() ?? null,
-            // ⛓ O3 — the solve budget knob, read live at each solve's start (null = the engine's own).
-            getBudgetMs: () => this._getSurface?.()?.wasm?.solverBudgetMs ?? null,
-            // ⛓ SHOULD-STOP — the upgrade window, read live at each solve's start (null = the whole budget).
-            getUpgradeWindowMs: () => this._getSurface?.()?.solverUpgradeWindowMs ?? null,
+            // ⛓ O3 — the solve budget knob (work units), read live at each solve's start (null = the engine's own).
+            getBudgetWork: () => this._getSurface?.()?.wasm?.solverBudgetWork ?? null,
+            // ⛓ SHOULD-STOP — the upgrade window (work units), read live at each solve's start (null = the engine's own).
+            getUpgradeWindowWork: () => this._getSurface?.()?.solverUpgradeWindowWork ?? null,
             // ⛓ MID-ROOM REPLAN — the delivery gate's handle (re-read per call: a remount is a new adapter).
             getDelivery: () => this._getSurface?.()?.wasm?.delivery ?? null,
             log: this._log,
@@ -579,7 +579,9 @@ export class SeedlingPlaybackController {
         // ⛓ S1 — the solver mode travels with the goal (the page may be newer than the setting's last push).
         page.setSolverWalk?.(s.solverWalk === true);
         // ⛓ SHOULD-STOP — and the upgrade window, once the panel has read it (a page's own URL knob otherwise).
-        if (s.solverUpgradeWindowMs !== undefined) page.setSolverUpgradeWindowMs?.(s.solverUpgradeWindowMs);
+        if (s.solverUpgradeWindowWork !== undefined && s.solverUpgradeWindowWork !== null) {
+            page.setSolverUpgradeWindowWork?.(s.solverUpgradeWindowWork);
+        }
         const answer = page.walkTo(r.goal);
         if (!answer?.ok) return this._refuse(`the JS runtime refused ${JSON.stringify(r.goal)}: ${answer?.reason ?? 'no answer'}`);
         this.lastGoal = r.goal;

@@ -40,11 +40,12 @@
  * ⛓ solver-walk S2 — the page hands the core a module-Worker solve service
  * (`jsRuntimeSolveService.createWorkerSolveService`): the solver mode's
  * solves run off this thread, so the clock below keeps running (and painting
- * "solving…") while one is in flight, and a solve past its budget is
- * terminated. `?solverBudgetMs=<ms>` on this page's URL sets the budget (a
- * test knob; the default is `SOLVER_BUDGET_MS`); ⛓ SHOULD-STOP
- * `?solverUpgradeWindowMs=<ms>` the upgrade window (`jsRuntimeSolver.upgradeWindowMs`;
- * absent = the whole budget). A browser without module
+ * "solving…") while one is in flight. ⛓ DETERMINISTIC BUDGET: the budget is
+ * WORK, counted in the worker — `?solverBudgetWork=<units>` on this page's URL
+ * sets it (a test knob; the default is `SOLVER_BUDGET_WORK`) and
+ * `?solverUpgradeWindowWork=<units>` the upgrade window
+ * (`jsRuntimeSolver.upgradeWindowWork`); `?solverBackstopMs=<ms>` the wall-clock
+ * backstop, which only ever FAILS a goal by name. A browser without module
  * workers solves in place, as S1 did — said once on the console.
  */
 
@@ -96,8 +97,10 @@ export function mountJsRuntimePage(win = window) {
     } else {
         win.console?.warn?.('[js runtime] no Worker in this browser — the solver mode solves on the page thread (S1)');
     }
-    const budgetParam = Number(new URL(win.location.href).searchParams.get('solverBudgetMs'));
-    const windowParam = Number(new URL(win.location.href).searchParams.get('solverUpgradeWindowMs'));
+    const params = new URL(win.location.href).searchParams;
+    const budgetParam = Number(params.get('solverBudgetWork'));
+    const windowParam = Number(params.get('solverUpgradeWindowWork'));
+    const backstopParam = Number(params.get('solverBackstopMs'));
     const runtime = createJsRuntime({
         onStateChanged: (name, value) => {
             bridge.stateLog.push({ name, value });
@@ -105,8 +108,9 @@ export function mountJsRuntimePage(win = window) {
         },
         log: (msg) => win.console?.log?.(msg),
         solveService,
-        ...(Number.isFinite(budgetParam) && budgetParam > 0 ? { solverBudgetMs: budgetParam } : {}),
-        ...(Number.isFinite(windowParam) && windowParam > 0 ? { solverUpgradeWindowMs: windowParam } : {}),
+        ...(Number.isFinite(budgetParam) && budgetParam > 0 ? { solverBudgetWork: budgetParam } : {}),
+        ...(Number.isFinite(windowParam) && windowParam > 0 ? { solverUpgradeWindowWork: windowParam } : {}),
+        ...(Number.isFinite(backstopParam) && backstopParam > 0 ? { solverBackstopMs: backstopParam } : {}),
     });
     Object.assign(bridge.game, runtime.game);
     win.__swfBridge = bridge;

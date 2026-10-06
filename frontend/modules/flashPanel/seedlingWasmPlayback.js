@@ -22,22 +22,23 @@
  *      (`shippedTape`) is started: it waits out the fade and holds on the
  *      first live frame, before that frame steps (W0 i.3–i.6), so the room
  *      stands still while the worker thinks (⚖ W-Q2).
- *   4. SOLVE in the S2 Worker (`createWorkerSolveService`), budget
- *      `SOLVER_BUDGET_MS` from the worker's own start (a cold module load is
- *      not charged, `LOAD_BUDGET_MS` bounds it). ⛓ ANYTIME: the worker runs
- *      the solver's passes cheapest first (`ANYTIME_PASSES`: dashless, then
- *      full); past the budget a plan a pass already found PLAYS (the room is
- *      held, so it is from this very staging), else ⛓ O2 the room stays held
- *      and the solve is asked AGAIN once at `SOLVE_RETRY_BUDGET_FACTOR`× the
- *      budget, resuming at the first unanswered pass; only that retry's
- *      expiry ends the goal, by name (`expiryFailure`, a pass's decline
- *      first). ⛓ O3 the budget is the `flashPanel.seedlingWasmSolverBudgetMs`
- *      knob when set (`getBudgetMs`). ⛓ SHOULD-STOP every solver request
- *      carries its budget and the upgrade window (`getUpgradeWindowMs`,
- *      `flashPanel.seedlingSolverUpgradeWindowMs`; null = the whole budget):
- *      the worker bounds the dashless pass at the budget (a slow refusal
- *      refuses by name) and stops the full pass's dash search at the window
- *      once a plan is in hand (`jsRuntimeSolver.passShouldStop`).
+ *   4. SOLVE in the S2 Worker (`createWorkerSolveService`). ⛓ DETERMINISTIC
+ *      BUDGET: the budget is WORK (`SOLVER_BUDGET_WORK` units, counted in the
+ *      worker by `jsRuntimeSolver.passShouldStop`), so the answer is the same
+ *      on every machine and the engine only WAITS for it. ⛓ ANYTIME: the
+ *      worker runs the solver's passes cheapest first (`ANYTIME_PASSES`:
+ *      dashless, then full); a later pass cut at the work budget leaves the
+ *      plan an earlier pass found (`expired`; the room is held, so it is from
+ *      this very staging); a refusal whose cut pass did not answer keeps ⛓ O2
+ *      the room held and asks AGAIN once at `SOLVE_RETRY_BUDGET_FACTOR`× the
+ *      units, resuming at the first unanswered pass; only that retry's cut
+ *      ends the goal, by name (`expiryFailure`, a pass's decline first). The
+ *      budget is the `flashPanel.seedlingWasmSolverBudgetWork` knob when set
+ *      (`getBudgetWork`); the upgrade window `getUpgradeWindowWork`
+ *      (`flashPanel.seedlingSolverUpgradeWindowWork`; 0 = the whole budget).
+ *      ⛔ The wall clock is only a BACKSTOP (`SOLVE_BACKSTOP_MS`, and
+ *      `LOAD_BUDGET_MS` for a worker that never starts): past it the goal FAILS
+ *      by name, and a plan in hand is never played instead.
  *   5. SHIP the plan as ONE tape from the same staging, declarations re-checked
  *      against a fresh `botStatus` (`exactDeclarationRefusal`); `botLoadTape`
  *      keeps the hold, `botStart` releases it and arms on the SAME world.
@@ -104,7 +105,8 @@ import {
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
 } from '../seedlingDemo/wasmPlayback.js';
 import {
-    ANYTIME_PASSES, betterAnswer, LOAD_BUDGET_MS, passesAfter, replayTape, SOLVER_BUDGET_MS,
+    ANYTIME_PASSES, betterAnswer, budgetCut, LOAD_BUDGET_MS, passesAfter, replayTape, SOLVE_BACKSTOP_MS, SOLVER_BUDGET_WORK,
+    SOLVER_UPGRADE_WINDOW_WORK,
 } from '../seedlingDemo/jsRuntimeSolver.js';
 import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
@@ -154,11 +156,13 @@ const roomEquips = (r) => equipsMap(r?.equips);
  * @param {(reason:string) => void} [deps.onFailed]
  * @param {(e:object) => void} [deps.onDone]
  * @param {(msg:string, level?:string) => void} [deps.log]
- * @param {number} [deps.budgetMs]  one solve's budget (`SOLVER_BUDGET_MS`)
- * @param {() => number|null} [deps.getBudgetMs]  ⛓ O3 — the live knob (`flashPanel.seedlingWasmSolverBudgetMs`),
- *   read at each solve's start; a non-positive / non-finite answer = `budgetMs`
- * @param {() => number|null} [deps.getUpgradeWindowMs]  ⛓ SHOULD-STOP — the upgrade window
- *   (`flashPanel.seedlingSolverUpgradeWindowMs`), read at each solve's start; null = the whole budget
+ * @param {number} [deps.budgetWork]  one solve's budget, in work units (`SOLVER_BUDGET_WORK`)
+ * @param {() => number|null} [deps.getBudgetWork]  ⛓ O3 — the live knob (`flashPanel.seedlingWasmSolverBudgetWork`),
+ *   read at each solve's start; a non-positive / non-finite answer = `budgetWork`
+ * @param {() => number|null} [deps.getUpgradeWindowWork]  the upgrade window in work units
+ *   (`flashPanel.seedlingSolverUpgradeWindowWork`), read at each solve's start; null = the engine's own
+ *   (`SOLVER_UPGRADE_WINDOW_WORK`), 0 = the whole budget
+ * @param {number} [deps.backstopMs]  the wall-clock backstop (`SOLVE_BACKSTOP_MS`): a named failure, never an answer
  * @param {() => object|null} [deps.getDelivery]  ⛓ MID-ROOM REPLAN — the panel adapter's delivery gate
  *   (`{setItemGate, writesOf, inventory, push}`); absent = items reach the game as they arrive (no gate)
  */
@@ -166,23 +170,24 @@ export function createWasmPlayback({
     getGame, getWin = () => null, teleport, getCheckBinding = () => null, getSwapState = null, records, generated = false,
     solveService = null, timers = null,
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
-    onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetMs = SOLVER_BUDGET_MS,
-    getBudgetMs = null, getUpgradeWindowMs = null, getDelivery = null,
+    onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetWork = SOLVER_BUDGET_WORK,
+    getBudgetWork = null, getUpgradeWindowWork = null, getDelivery = null, backstopMs = SOLVE_BACKSTOP_MS,
 }) {
-    /** ⛓ O3 — the budget a solve starts with: the knob's live value, else the engine's own. */
-    let ownBudget = budgetMs;
+    /** ⛓ O3 — the budget (work units) a solve starts with: the knob's live value, else the engine's own. */
+    let ownBudget = budgetWork;
     const baseBudget = () => {
         let v = null;
-        try { v = getBudgetMs?.() ?? null; } catch { v = null; }
+        try { v = getBudgetWork?.() ?? null; } catch { v = null; }
         const n = Number(v);
         return v !== null && Number.isFinite(n) && n > 0 ? n : ownBudget;
     };
-    /** ⛓ SHOULD-STOP — the upgrade window a solve starts with (null = the whole budget, `upgradeWindowMs`). */
+    /** The upgrade window (work units) a solve starts with: the knob, else the engine's own; ≤ 0 = the whole budget. */
     const upgradeWindow = () => {
         let v = null;
-        try { v = getUpgradeWindowMs?.() ?? null; } catch { v = null; }
+        try { v = getUpgradeWindowWork?.() ?? null; } catch { v = null; }
         const n = Number(v);
-        return v !== null && Number.isFinite(n) && n > 0 ? n : null;
+        if (v === null || v === '' || !Number.isFinite(n)) return SOLVER_UPGRADE_WINDOW_WORK;
+        return n > 0 ? n : null;
     };
     const levelSource = levelSourceFromAtlas(records);
     let service = solveService;
@@ -262,7 +267,7 @@ export function createWasmPlayback({
         // ⛓ W8c — the new-game arm's ceremonies waited out, and the tutorial Helps dismissed (one arrow pair each)
         ceremonies: [], dismissed: [],
         // ⛓ ANYTIME / O2 — expiries, the provisional plans they played, the held retries, and each plan's pass
-        expiries: 0, provisionalPlays: 0, retries: 0, passes: {},
+        expiries: 0, provisionalPlays: 0, retries: 0, passes: {}, backstops: 0,
         // ⛓ MID-ROOM REPLAN — deliveries the gate held back, each one's outcome (freeze, land, replan), and the refused
         deliveries: [], deliveryDeferred: [], gateHeld: 0 };
     const history = [];
@@ -926,12 +931,12 @@ export function createWasmPlayback({
         // ⛓ ANYTIME — a solver request carries its passes (a held retry sends the ones not yet answered).
         // ⛓ SHOULD-STOP — and the deadlines its passes run under (`passShouldStop`).
         const req = request.producer ? request
-            : { ...request, passes: request.passes ?? ANYTIME_PASSES, budgetMs: budget, upgradeWindowMs: upgradeWindow() };
+            : { ...request, passes: request.passes ?? ANYTIME_PASSES, budgetWork: budget, upgradeWindowWork: upgradeWindow() };
         play = { ...playInit, t0: now(), request: req, budget, budgets: [budget], retries: 0, best: null };
         handle = svc().start(req);
         phase = 'solving';
         note(`${generated ? 'walking a tape' : playInit.continuation ? 'solving on from the held room' : 'solving'}… `
-            + `(budget ${secs(budget)})`);
+            + `(budget ${budget} work units)`);
         schedule(pollSolve, SOLVE_POLL_MS);
     }
 
@@ -948,16 +953,16 @@ export function createWasmPlayback({
         // ⛓ SHOULD-STOP — the retry's passes run under the RETRY's budget (a dashless pass cut by its deadline
         // was not answered: `answered` leaves it in, so it runs again with 4× the time).
         const req = play.request.producer ? play.request
-            : { ...play.request, passes: passesAfter(play.request.passes, cut.answered), budgetMs: budget };
+            : { ...play.request, passes: passesAfter(play.request.passes, cut.answered), budgetWork: budget };
         if (!req.producer && req.passes.length === 0) return false;
         play.request = req;
         play.budget = budget;
         play.budgets.push(play.budget);
         play.t0 = now();
         handle = svc().start(req);
-        log(`[wasm playback] ${goal.name ?? goal.kind}: the solver exceeded ${secs(play.budgets.at(-2))} in level ${goal.level} `
-            + `— asking again with ${secs(play.budget)}, the room held (retry ${play.retries})`, 'warn');
-        note(`solving again, the room held… (budget ${secs(play.budget)}, retry ${play.retries})`);
+        log(`[wasm playback] ${goal.name ?? goal.kind}: the solver ran out of ${play.budgets.at(-2)} work units in level ${goal.level} `
+            + `— asking again with ${play.budget}, the room held (retry ${play.retries})`, 'warn');
+        note(`solving again, the room held… (budget ${play.budget} work units, retry ${play.retries})`);
         schedule(pollSolve, SOLVE_POLL_MS);
         return true;
     }
@@ -1029,45 +1034,48 @@ export function createWasmPlayback({
         const t = now();
         // ⛓ W7 — the glue asked for a swap while we hold (a redirect that raced the hold): let it land.
         if (holds && room && releaseForSwap()) return;
-        let res;
         if (!handle.settled) {
-            if (!handle.started && t - play.t0 > LOAD_BUDGET_MS) {
-                handle.cancel();
-                const why = `the solver exceeded the ${LOAD_BUDGET_MS / 1000} s load budget on ${goal.kind} in level ${goal.level} (terminated)`;
-                if (play.continuation) { contFallback(why, 'continuation-budget'); return; }
-                fail(why);
-                return;
-            }
-            if (!(handle.started && t - (handle.startedAt ?? play.t0) > play.budget)) {
+            // ⛓ DETERMINISTIC BUDGET — the engine WAITS for the worker's answer (its budget is work, counted in the
+            // worker). The wall clock is only a BACKSTOP: past it the goal FAILS by name, and whatever a pass had
+            // already found is NOT played — a machine that is too slow ends the walk, it never changes the plan.
+            const why = !handle.started && t - play.t0 > LOAD_BUDGET_MS
+                ? `the solver did not start within the ${LOAD_BUDGET_MS / 1000} s load backstop on this machine on ${goal.kind} in level ${goal.level} (terminated)`
+                : handle.started && t - (handle.startedAt ?? play.t0) > backstopMs
+                    ? `the solve exceeded the backstop on this machine (${secs(backstopMs)}) on ${goal.kind} in level ${goal.level} `
+                        + `(terminated; the solve's own budget is ${play.budget} work units)`
+                    : null;
+            if (!why) {
                 schedule(pollSolve, SOLVE_POLL_MS);
                 return;
             }
-            // ⛓ ANYTIME / O2 — past the budget: a provisional plan plays, else a held retry, else the end by name.
-            const cut = { provisional: handle.provisional ?? null, answered: handle.answered ?? 0, passes: handle.passes ?? [] };
             handle.cancel();
+            stats.backstops += 1;
+            fail(why);
+            return;
+        }
+        let res = handle.result;
+        // ⛓ DETERMINISTIC BUDGET / O2 — the cut is the ANSWER's (a pass cut at the work budget), never the clock's.
+        if (!generated && !play.request.producer && budgetCut(res)) {
             stats.expiries += 1;
-            const action = expiryAction({ provisional: cut.provisional, retries: play.retries });
+            const cut = { provisional: res, answered: handle.answered ?? 0, passes: handle.passes ?? [] };
+            const unanswered = (handle.answered ?? 0) < (play.request.passes?.length ?? 0);
+            const action = expiryAction({ provisional: res, retries: play.retries, unanswered });
             if (action === 'retry' && retrySolve(cut)) return;
             if (action === 'provisional') {
                 stats.provisionalPlays += 1;
                 play.expired = true;
-                log(`[wasm playback] ${goal.name ?? goal.kind}: the solver exceeded ${secs(play.budget)} in level ${goal.level} `
-                    + `— playing the ${cut.provisional.pass} pass's plan it already had`, 'warn');
-                // the pass rows that landed, and the one cut at the budget
-                res = { ...cut.provisional, plan: { ...cut.provisional.plan,
-                    passes: [...cut.passes, ...passesAfter(play.request.passes ?? [], cut.answered).map((p) => ({ pass: p.pass, ok: false, kind: 'budget' }))] } };
+                log(`[wasm playback] ${goal.name ?? goal.kind}: a later pass ran out of ${play.budget} work units in level ${goal.level} `
+                    + `— playing the ${res.pass} pass's plan`, 'warn');
             } else {
-                const refusal = betterAnswer(play.best, cut.provisional) ? cut.provisional : play.best;
+                const refusal = betterAnswer(play.best, res) ? res : play.best;
                 const why = expiryFailure({ goal, budgets: play.budgets, refusal });
                 if (play.continuation) { contFallback(why, 'continuation-budget'); return; }
                 fail(why);
                 return;
             }
-        } else {
-            res = handle.result;
-            // ⛓ O2 — a retry's answer against what the cut attempt's passes had answered.
-            if (play.best && !betterAnswer(play.best, res)) res = play.best;
         }
+        // ⛓ O2 — a retry's answer against what the cut attempt's passes had answered.
+        if (play.best && !betterAnswer(play.best, res)) res = play.best;
         if (!res?.ok) {
             const why = `the ${generated ? 'walker producer' : 'solver'} declined ${goal.name ?? goal.kind} in level ${goal.level} `
                 + `(${res?.kind}): ${res?.message}`;
@@ -1596,12 +1604,14 @@ export function createWasmPlayback({
             note(null);
         },
         liveLevel() { const l = readState().level; return Number.isInteger(l) ? l : null; },
-        /** ⛓ O3 — the budget the next solve starts with (the knob's live value, else the engine's own), in ms. */
-        get budgetMs() { return baseBudget(); },
-        /** ⛓ SHOULD-STOP — the upgrade window the next solve starts with (null = the whole budget). */
-        get upgradeWindowMs() { return upgradeWindow(); },
-        /** ⛓ O3 — the engine's own budget (the twin of the JS page's `setSolverBudgetMs`); the knob, when set, wins. */
-        setBudgetMs(ms) { const n = Number(ms); if (Number.isFinite(n) && n > 0) ownBudget = n; },
+        /** ⛓ O3 — the budget the next solve starts with (the knob's live value, else the engine's own), in work units. */
+        get budgetWork() { return baseBudget(); },
+        /** The upgrade window the next solve starts with, in work units (null = the whole budget). */
+        get upgradeWindowWork() { return upgradeWindow(); },
+        /** ⛓ O3 — the engine's own budget (the twin of the JS page's `setSolverBudgetWork`); the knob, when set, wins. */
+        setBudgetWork(n) { const v = Number(n); if (Number.isFinite(v) && v > 0) ownBudget = v; },
+        /** The wall-clock backstop, in ms (a named failure, never an answer). */
+        get backstopMs() { return backstopMs; },
         /** ⛓ WG — whether this engine stages a mounted generated set. */
         get generated() { return generated; },
         status() {

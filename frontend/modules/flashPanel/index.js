@@ -162,37 +162,45 @@ export function register(registrationApi) {
           + "solver's reason in the bot's status (on by default). Off: the simple "
           + "walker only. The solve runs in a background worker: the room is HELD (the "
           + "game does not advance) while it plans — typically 0.01–3 s, shown as "
-          + "'solving…' in the bot's status — and a solve that takes more than 5 s "
-          + "is stopped and the walker takes over, saying so; a declined goal is "
+          + "'solving…' in the bot's status. The solve's budget is solver work, not "
+          + "time, so the plan is the same on every machine; a solve that runs out "
+          + "of it declines by name and the walker takes over; a declined goal is "
           + "offered to the solver again after a death, a crossing or 90 walked "
           + "ticks (at most 3 times). Generated rooms always use the simple walker.",
       },
-      // ⛓ Seedling solver-walk O3 — the wasm engine's solve budget (the twin of the JS page's ?solverBudgetMs=).
-      seedlingWasmSolverBudgetMs: {
+      // ⛓ Seedling solver-walk O3 → DETERMINISTIC BUDGET (⚖ the user, 2026-10-05: "I want plans to be identical
+      // on every machine") — the wasm engine's solve budget in WORK units (the twin of the JS page's
+      // ?solverBudgetWork=). MIGRATION: it replaces `seedlingWasmSolverBudgetMs` (milliseconds); a value saved
+      // under the old key is no longer read. ⛓ The default is `jsRuntimeSolver.SOLVER_BUDGET_WORK` (pinned by
+      // `flashPanelSolverBudgetSettings.test.js`).
+      seedlingWasmSolverBudgetWork: {
         type: 'number',
-        default: 5000,
-        minimum: 100,
-        label: 'Seedling wasm: solver budget (ms)',
-        description: "Runtime 'wasm', solver (atlas / vanilla) rooms. How long the Playback Bot's "
-          + "solver may think about one room before the budget runs out (the game is HELD meanwhile). "
-          + "The solver searches without sword dashes first and then with them; when the budget runs "
-          + "out and a plan is already in hand, that plan is played. Without one, the room stays held "
-          + "and the solver is asked once more with 4× this budget, and only then does the walk stop, "
-          + "saying why. Raise it on a busy machine. Read at the start of each solve.",
+        default: 500,
+        minimum: 1,
+        label: 'Seedling wasm: solver budget (work units)',
+        description: "Runtime 'wasm', solver (atlas / vanilla) rooms. How much the Playback Bot's solver may "
+          + "search for one room, counted in solver WORK (one unit per optional scan the solver starts), never in "
+          + "time — so the plan it plays is the same on every machine; a slow machine only takes longer to find "
+          + "it (the game is HELD meanwhile). The solver searches without sword dashes first and then with them; "
+          + "when the budget runs out and a plan is already in hand, that plan is played. Without one, the room "
+          + "stays held and the solver is asked once more with 4× this budget, and only then does the walk stop, "
+          + "saying why. Read at the start of each solve.",
       },
-      // ⛓ Seedling SHOULD-STOP — the anytime full pass's dash deadline (⚖ the user's "upgrade window", 2026-10-04:
-      // "Let's try 1000 ms for now."; 0 = the whole budget).
-      seedlingSolverUpgradeWindowMs: {
+      // ⛓ Seedling SHOULD-STOP → DETERMINISTIC BUDGET — the anytime full pass's dash deadline in WORK units
+      // (⚖ the user's "upgrade window", 2026-10-04: "Let's try 1000 ms for now." — carried over as its intent,
+      // "upgrade briefly, then ship"). MIGRATION: it replaces `seedlingSolverUpgradeWindowMs` (milliseconds);
+      // a value saved under the old key is no longer read. Default `jsRuntimeSolver.SOLVER_UPGRADE_WINDOW_WORK`.
+      seedlingSolverUpgradeWindowWork: {
         type: 'number',
-        default: 1000,
+        default: 40,
         minimum: 0,
-        label: 'Seedling: solver upgrade window (ms; 0 = the whole budget)',
+        label: 'Seedling: solver upgrade window (work units; 0 = the whole budget)',
         description: "Both runtimes, solver (atlas / vanilla) rooms. The Playback Bot's solver first "
-          + "searches without sword dashes, then with them. Once a plan is in hand, this is how long "
-          + "(from the start of the solve) the second search may keep looking for sword dashes that "
-          + "make the plan shorter; past it, that search stops looking for dashes and finishes, and "
-          + "the shorter of the two plans is played. Default 1000 ms; 0 gives it the whole solver budget. "
-          + "Read at the start of each solve.",
+          + "searches without sword dashes, then with them. Once a plan is in hand, this is how much solver "
+          + "WORK (from the start of the solve) the second search may spend looking for sword dashes that make "
+          + "the plan shorter; past it, that search stops looking for dashes and finishes, and the shorter of the "
+          + "two plans is played. Counted in work, not time, so the choice is the same on every machine. "
+          + "0 gives it the whole solver budget. Read at the start of each solve.",
       },
     },
   });
