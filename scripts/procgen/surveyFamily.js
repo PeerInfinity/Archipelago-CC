@@ -29,6 +29,21 @@ import { KILL_ARM_POLICY }
  */
 export const FAMILY_RULES = [
     /**
+     * ⛓ SEEDLING FIDELITY ARRIVAL — AN ARRIVAL INSIDE A SOLID IS A SAVE STATE,
+     * NOT A ROOM. `solveSegment`'s entry refuses *"<name>: arrival-inside-solid
+     * — the run's box at (x,y) in level L is INSIDE <solid> …"* when the box
+     * overlaps a solid no cardinal hold moves it out of: the obstacle's saved
+     * flag still holds, so the route reached this door out of order. Its
+     * witnesses: the route survey's steps 42 (L0 from L12, `breakablerock@288,176`)
+     * and 186 (L71 from L76, `shieldlock@288,256`), which read `unclassified`
+     * before this row. Asked FIRST: the sentence is unique, and the words that
+     * follow it (a rock, a lock, an item) are not the work order.
+     */
+    [/: arrival-inside-solid — the run's box at \([^)]*\) in level \d+ is INSIDE ([^ ]+(?:, [^ ]+)*) and/,
+        (m) => `ARRIVAL-INSIDE-SOLID — the arrival box is inside ${m[1]}, whose saved flag still holds: `
+            + 'the route crossed this door before the obstacle was cleared from its own side (out of '
+            + 'order). The work order is the route (or the rules: track the saved state), not the room'],
+    /**
      * ⛔⛔ R9 SLICE 12b — THIS ROW USED TO PUBLISH A CLAIM THE CODE HAD
      * ALREADY FALSIFIED, and the survey printed it on every run for a whole
      * slice without anybody reading it.
