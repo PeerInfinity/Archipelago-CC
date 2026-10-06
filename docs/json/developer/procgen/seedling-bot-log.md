@@ -13821,8 +13821,10 @@ against 10); that is residue, and no strategy is built on it.
 Every row is inside and stuck with the flag held, and outside with it cleared:
 the build needed no fix.
 
-**D3 — the solver.** `arrivalInsideSolid` runs at `solveSegment`'s entry and
-refuses with `arrival-inside-solid`: the flags, and `wayOut` (the Restart, and
+**D3 — the solver.** `arrivalInsideSolid` runs at `solveSegment`'s entry. It
+fires only for a solid of a flag-bearing class: a box inside a permanent wall
+(`procgenCollectPath`'s sealed pickup) keeps the search's refusal. It refuses
+with `arrival-inside-solid`: the flags, and `wayOut` (the Restart, and
 the other arrivals into the level, e.g. six for L0). `perTick` is empty. With
 the flag cleared the arrival solves as before (L0 → L12, 5 t). STEPOFF2's
 latched `inside-solid` boots refuse here first with their words kept.
