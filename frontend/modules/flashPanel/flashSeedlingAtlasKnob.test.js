@@ -131,7 +131,9 @@ describe('flash_seedling — the atlas install knob (S2 D1)', () => {
         //   L12 r42c29, L37 r12c6, L44 r6c4 (L40's r48c54 holds none).
         // ⛓ RULES re-closing locks: 171 -> 175 — the levels split at a button-only lock add zones with doors
         //   (L15's L16 arrival column, L16's L18-side pocket, L39's L40-side pocket and one more).
-        expect(entry.zoneCount).toBe(175);
+        // ⛓ RULES game-truth-gaps: 175 -> 178 — L57 is lifted from never-enter (⚖ 2026-10-06): `level_57` itself, and
+        //   L58's two sub-regions whose doors back into L57 are now wired (r4c1, r6c5).
+        expect(entry.zoneCount).toBe(178);
         entry.prepareSphereGrowth({ params: {} });
         expect(entry.rulesJsonBlocks().region_atlas.atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
     });
