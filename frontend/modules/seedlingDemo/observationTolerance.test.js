@@ -107,7 +107,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity WATCHER: 221 — `watcher-l37-reach-l38`, `watcher-l37-reach-l44`, `watcher-l37-silent-lean`, `watcher-l114-silent`.
         // ⛓ fidelity WATCHER: 222 — `watcher-l114-talk`.
         // ⛓ fidelity SLOTS: 227 — `slots-l24-fire-first`, `slots-l24-burn-fire-first`, `slots-l24-burn-cut-80`, `slots-l24-burn-cut-110`, `slots-l24-burn-fencepost`.
-        expect(names.length).toBe(227);
+        // ⛓ fidelity AXE: 231 — `axe-l48-reach-l49`, `axe-l61-reach-l62`, `axe-l61-reach-l63`, `axe-l71-reach-l76`.
+        expect(names.length).toBe(231);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -151,7 +152,8 @@ describe('exact mode IS diffObservationStreams', () => {
         expect(tally.pass).toBeGreaterThan(0);
         expect(tally.fail).toBeGreaterThan(0);
         expect(tally.late).toBeGreaterThan(0);
-        expect(tally.swapped).toBe(227);
+        // ⛓ fidelity AXE: 231 — every recording carries a transition to swap, the four axe witnesses included.
+        expect(tally.swapped).toBe(231);
     }, 600_000);
 });
 

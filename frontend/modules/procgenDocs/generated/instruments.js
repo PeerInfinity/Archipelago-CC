@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 49,
-            "count": 92,
+            "browser": 50,
+            "count": 93,
             "id": "probe"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 345,
-        "browser": 114,
-        "cited": 164,
-        "files": 356,
+        "blockStyle": 346,
+        "browser": 115,
+        "cited": 165,
+        "files": 357,
         "lineStyle": 11,
-        "withDocblock": 356,
-        "withFlags": 274
+        "withDocblock": 357,
+        "withFlags": 275
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8450,6 +8450,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-watcher-witness — ⛓⛓⛓ SEEDLING FIDELITY WATCHER: A SILENT WATCHER ON THE FRONTIER OF A REACH-EXIT IS NOT AN OBSTACLE, AND A SPEAKING ONE IS PASSED BY ITS DIALOGUE.",
             "path": "scripts/procgen/plan-seedling-watcher-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "record"
+            ],
+            "file": "probe-seedling-axe-phase.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "model-only"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-axe-phase — ⛓⛓⛓ SEEDLING FIDELITY AXE, D1: **WHICH UPDATE OF THE SPINNING AXE TESTS WHICH OBSERVATION, ASKED OF THE GAME.**",
+            "path": "scripts/procgen/probe-seedling-axe-phase.mjs"
         },
         {
             "argvHelpers": [],

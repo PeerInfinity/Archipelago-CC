@@ -13840,6 +13840,94 @@ a second row pins the full stop as a relation over the artifact. No tape moves.
   and nothing in the derivation reds. Only an alignment against a walked chain
   showed it.
 
+### Seedling fidelity AXE — the combat ladder crosses a spinning axe by its phase
+
+⚖ The user (2026-10-05): *"The first priority is to expand the model to include
+everything in the game."* The `--through=end` survey refused ten steps on
+`hazard:spinningaxe` (L48, L61 ×6, L71, L75, L101), each *"the combat ladder is
+EXHAUSTED"*. The report is `CC/docs/cloud-reports/seedling-fidelity-axe.md`.
+
+**Why every rung refused (D1).** The danger map priced each axe as the 32 px disc
+it sweeps, tested at the box centre, at every tick. AVOID re-plans round RECTS,
+and an axe's only rect is its 12x12 hub, so the re-plan hugged the hub and still
+probed dangerous. DODGE and PULL did not apply (no spit, no rope). TIME refused
+by arithmetic (aims 187–298 px against its 48 px reach). BAIT and KILL need a
+body. DETOUR is chaser-only.
+
+**The game's clock (D1, measured).** `SpinningAxe.update` adds `rate` degrees to
+its own sprite angle each update, from 0 at the ctor, and tests the Player with
+a 32 px `collideLine` and then an INCLUSIVE 12x12 `collideRect` at the hub
+(force 5, damage 1). The axe is added at `Game.as:2358`, after the Player at
+`:2250`, and `addUpdate` prepends, so it updates first: frame f tests the box of
+observation f − 1, at update f − V (V = the arrival observation).
+`probe-seedling-axe-phase.mjs` stood the player in the sweep on p4f, in six arms
+(four boots, two doors; rates 5, 5, 7, −5). Every first knock landed on the
+frame offset 0 predicts, and no other offset fits all six. Two findings came out
+of it:
+
+- **The raycast does not truncate the sample.** `Entity.collidePoint` compares
+  Numbers, while `crusher.collideLineSolid` truncates each sample first. On a
+  fractional box the game hit the door arm on f57, and the truncating test says
+  f58. The axe has its own raycast (`hazards.collideLinePlayer`). The shared
+  one, used by the crusher and the spinner hammer, is unchanged (residue).
+- **`botStatus.hits` is the final health, not a hit count**: a knocked arm
+  had healed to 0 by t160. Three first-cut arms stood INSIDE the walls of axe B's
+  pocket and could not be knocked, so the probe now asserts a clear box.
+
+**The crossing (D2).**
+
+- `dangerMap.hazardDanger` asks a TRANSIT query the exact blade and hub at
+  update `tick − V` (`axeVisitClock`, from the run's transitions). A WAIT query,
+  or a visit with a dead-frame span, a death or an ending reboot after V, keeps
+  the disc.
+- DODGE gains an AXE arm, conditional on every danger being an axe. It stalls at
+  the DOORSTEP, the last sample no axe can reach at any angle; a stall inside
+  the reach is hit by the blade it waits out. Stalls run 1 … period − 1 ticks,
+  longer ones screened by time shift (one preview at rest prices every longer
+  stall by arithmetic), each certified by the probe. It then walks the rest of
+  THAT corridor, not a re-plan.
+- When the planner's corridor has no stall, the arm asks `deriveChaserDetour`
+  for a bent corridor that is clean or stall-clean. L61 is a pit room whose only
+  floor is strips. Its shortest corridor climbs past axe A's west side AGAINST
+  the blade's turn and is caught at every phase. The strip east under the hub
+  turns WITH the blade, and the walk outruns it. No forbidden rect separates
+  the two (both pass 14–16 px from the hub), because the difference is the
+  direction of motion.
+- `AXE_DODGE_RUNG` bounds the search; `axe-dodge` joins `DEADLINE_SITES`.
+
+**Moved.**
+
+| | before | after |
+|---|---|---|
+| survey, the 10 axe steps | 0 solve | **6 solve** (78, 128, 132, 160, 178, 195), 0 hits; 175 → `grenade` alone; 166/197/218 refused |
+| the other 9 axe-room steps | — | identical |
+| bare pass, 73 axe-room legs | 33 solved / 40 refused, 16 on an axe | **40 / 33, 8 on an axe** |
+| `census-seedling-enemies` | chamber `spinningaxe` REFUSED | **SOLVED 155** (the control's own count) |
+
+Witnesses (game, p4f, 0 px against the model): `axe-l61-reach-l62` (a 26-tick
+stall on a corridor bent through (120,152)), `axe-l61-reach-l63`,
+`axe-l48-reach-l49`, and `axe-l71-reach-l76` (no rung: the exact pricing alone).
+No committed tape and no producer `--check` moves.
+
+**Residue.** 166/197 (L61, west under axe B): the corridor runs along the only
+east–west strip AGAINST the blade (rate 7), and no stall clears it; a dash, not
+a stall, is the open question. 218 (L101) and the bare pass's L54, L71 (r0c6 ×3)
+and L103 legs are still refused on an axe. A refused axe climb costs up to ~65 s
+in the bare pass (it was ~2 s), bounded by `AXE_DODGE_RUNG` and the `axe-dodge` /
+`detour` deadline sites.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A union over phases manufactures the obstacle.** The disc was "exact" in its
+  own label and still refused ten steps the game lets a player through. It was
+  the spinner hammer's lesson (§16.8), one class over.
+- **A shared transcription is a shared assumption.** `collideLineSolid`'s
+  truncation is invisible against integer edges, which is every place it was
+  witnessed, and wrong against a player standing at a fractional x.
+- **Which side of a hazard you pass is a property of the motion.** A rotating
+  blade is outrun turning with it and caught turning against it, at the same
+  distance; a distance-based volume cannot say which.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
