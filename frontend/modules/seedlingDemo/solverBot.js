@@ -11642,6 +11642,17 @@ export function deriveChaserDetour(run, {
     for (let ty = 0; ty < rows; ty += 1) {
         for (let tx = 0; tx < cols; tx += 1) {
             if (tx === home.tx && ty === home.ty) continue;
+            /**
+             * ⛓ FIDELITY CHECKPOINTS — the `detour` site, once per cell: the via
+             * set is the rung's longest stretch (L16 ~19 s here, L40 ~230 s), and
+             * a trip refuses the rung with the shape the loop's own trip has.
+             */
+            if (fineDeadlineReached('detour')) {
+                return { wps: null, previews: 0, planned, bound: { name: 'deadline', site: 'detour' },
+                    why: `deadline — the caller's anytime deadline (\`shouldStop\`) was reached while `
+                        + `the DETOUR search built its via set, after ${planned} leg(s), so the rest of `
+                        + 'the search was not run' };
+            }
             const c = nodeCentre(tx, ty, pitch);
             const wps = leg(from, c, null);
             if (wps && wps.length > 0) vias.push(c);
@@ -11902,15 +11913,59 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  *    preview: the arm answers no stall, with a `deadline` reason, and the climb
  *    goes on up the ladder. CAN turn a solve into a refusal.
  *
+ * ⛓⛓ FIDELITY CHECKPOINTS — THE FINE SITES ARE OPT-IN (`solveSegment`'s
+ * `fineCheckpoints: true`). The two below and the via-set asks of `detour` are
+ * asked only then: every existing consult-counting caller (the JS arc's work
+ * budget, `seedlingCanCross`'s consult budget, the SF witnesses) sees today's
+ * sequence exactly until it opts in — the unit's meaning moves in ONE commit,
+ * with the budget calibrated for it.
+ *  - `time` — the TIME rung (fidelity CHECKPOINTS): asked before the mover's
+ *    search and every `mover.DEFAULT_CHECK_EVERY` expansions inside it (one
+ *    search ran ~22 s with no ask on L8). A trip ends the search with a
+ *    NEGATIVE whose bound is `deadline`, and the ladder goes on to BAIT — FALLS
+ *    THROUGH to the next rung. CAN turn a solve into a refusal (or into a
+ *    different rung's plan) when TIME was the rung that solved.
+ *  - `walk` — THE CORE (fidelity CHECKPOINTS): asked at each `walkTo` attempt,
+ *    before its corridor is planned, and every `WALK_CHECK_TICKS` ticks the
+ *    segment drives. Not an optional scan: L40's dashless walks ran ~3 s (8–13 s
+ *    on a slower box) with no ask at all. Also asked between a walk's plan and
+ *    its danger probe, and every `WALK_CHECK_TICKS` samples of that probe. A
+ *    trip REFUSES THE SEGMENT BY NAME: a `SolverRefusal` with no obstacle, whose
+ *    words name the `walk` site and where, plus the ⏱ clause and `e.deadline`.
+ *    CAN turn any solve into a refusal — it is the bound on the whole solve's
+ *    work.
+ *
+ * ⛓ FIDELITY CHECKPOINTS also ask `detour` inside the DETOUR rung's via set
+ * (opt-in, as above), once per lattice cell it plans to (L16's ~225 legs ran
+ * ~19–50 s between the rung's first two asks; L40's thousands, ~230 s after
+ * its first).
+ *
  * ⛔ IT IS NEVER SILENT: a segment that tripped returns `deadline` beside its
  * trace (the first site, and per-site counts), and a refusal raised after a
  * trip carries the same object and says so in its words.
  */
 export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
-    'block-route', 'kill-chaser', 'detour', 'axe-dodge']);
+    'block-route', 'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk']);
+
+/**
+ * ⛓ FIDELITY CHECKPOINTS — the ticks a segment drives between two asks of the
+ * `walk` site. A tick of L40's dashless walk costs ~2–3 ms here (every spinner
+ * of the room is stepped), so 32 ticks keep the stretch near 0.1 s.
+ */
+export const WALK_CHECK_TICKS = 32;
 
 /** The deadline the segment being solved runs under — `null` is "none". */
 let activeDeadline = null;
+
+/**
+ * ⛓ FIDELITY CHECKPOINTS — is a deadline active that asked for the FINE sites
+ * (`fineCheckpoints: true`)? With none active, or one that did not opt in,
+ * every fine ask below answers false and calls nothing.
+ */
+const fineActive = () => activeDeadline !== null && activeDeadline.fine === true;
+
+/** ⛓ FIDELITY CHECKPOINTS — `deadlineReached`, for a FINE ask (opt-in). */
+const fineDeadlineReached = (site) => fineActive() && deadlineReached(site);
 
 /**
  * Has the active deadline been reached for `site`? Asked by a site, before its
@@ -11952,6 +12007,10 @@ const deadlineClause = (d) => ` ⏱ DEADLINE: the caller's \`shouldStop\` trippe
  *   optional scan, with the site's name (`DEADLINE_SITES`), and latched per site
  *   once true. Omitted or `null`: no deadline, today's search exactly — every
  *   committed solve passes none.
+ * @param {boolean} [o.fineCheckpoints] ⛓ FIDELITY CHECKPOINTS — also ask the
+ *   FINE sites (`time`, `walk`, and `detour` inside its via set), so no long
+ *   stretch of the solve runs without an ask. Default false: the consult
+ *   sequence of every existing caller, exactly. Meaningless without a hook.
  * @returns {{perTick: Array<Set>, trace: object, transitions: Array,
  *            waypointsPlanned: number, replans: number, records: Array,
  *            deadline?: {tripped: true, first: string, sites: object}}}
@@ -11968,7 +12027,11 @@ export function solveSegment(o) {
             + 'number of milliseconds this module would read a clock for.');
     }
     const outer = activeDeadline;
-    const deadline = { shouldStop, first: null, tripped: new Set(), sites: {} };
+    const fine = o.fineCheckpoints ?? false;
+    if (typeof fine !== 'boolean') {
+        fail(`solveSegment: fineCheckpoints must be a boolean, got ${typeof fine}`);
+    }
+    const deadline = { shouldStop, fine, first: null, tripped: new Set(), sites: {} };
     activeDeadline = deadline;
     try {
         const out = solveSegmentUnder(o);
@@ -12149,6 +12212,15 @@ function solveSegmentUnder({
                 deaths: inner.ledger('playerDeaths').length,
                 transitions: inner.transitions.length,
             };
+            /**
+             * ⛓ FIDELITY CHECKPOINTS — the `walk` site, every `WALK_CHECK_TICKS`
+             * ticks this segment drives (counted from its own first tick, so the
+             * asks are a function of the solve alone). A trip refuses by name.
+             */
+            if (activeDeadline !== null && tapeTick > prefix.length
+                && (tapeTick - prefix.length) % WALK_CHECK_TICKS === 0 && fineDeadlineReached('walk')) {
+                refuseWalkDeadline(`after ${tapeTick - prefix.length} tick(s) of the segment's drive`);
+            }
             const out = inner.advance(held);
             if (!dashedBefore && inner.progress('slashInfo').state.slashDashed === true) {
                 dashesPressed += 1;
@@ -12328,6 +12400,10 @@ function solveSegmentUnder({
             ...extra,
         });
     };
+    /** ⛓ FIDELITY CHECKPOINTS — the `walk` site's trip: the segment refuses by name. */
+    const refuseWalkDeadline = (where) => refuse(`solverBot(${name}): the caller's anytime deadline `
+        + `(\`shouldStop\`) was reached at the \`walk\` site ${where} — the segment's own work is `
+        + 'bounded there, so the solve stops here instead of overrunning.');
 
     /**
      * The danger gate at a decision point: slice 2 SENSES and REFUSES.
@@ -12693,8 +12769,15 @@ function solveSegmentUnder({
      * this rung refuses on. A second danger reading would be a probe better
      * informed (or worse) than the walk, which is trap 567 from either side.
      */
-    const probeSamples = (samples, except = null) => {
-        for (const s of samples) {
+    const probeSamples = (samples, except = null, { walkCheck = false } = {}) => {
+        for (let i = 0; i < samples.length; i += 1) {
+            const s = samples[i];
+            // ⛓ FIDELITY CHECKPOINTS — the `walk` site, every `WALK_CHECK_TICKS`
+            // samples of the WALK's own probe (`walkCheck`, `walkTo` alone): one
+            // probe of an L40 corridor ran ~0.8 s here.
+            if (walkCheck && i > 0 && i % WALK_CHECK_TICKS === 0 && fineDeadlineReached('walk')) {
+                refuseWalkDeadline(`after ${i} sample(s) of the corridor's danger probe`);
+            }
             const d = withoutSources(
                 dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows, s.chasers,
                     s.spits ?? null),
@@ -12704,7 +12787,7 @@ function solveSegmentUnder({
         return null;
     };
 
-    const probeCorridor = (wps, except = null, { axisAligned = false } = {}) => {
+    const probeCorridor = (wps, except = null, { axisAligned = false, walkCheck = false } = {}) => {
         // ⛔ THE SAME TOLERANCE `drive` WILL USE. A preview that arrived on a
         // different criterion would spend different ticks, and the ETAs are
         // the whole product.
@@ -12723,7 +12806,7 @@ function solveSegmentUnder({
         const walk = previewWalk(run, wps, tolerance, axisAligned
             ? { strike: null, axisAligned }
             : { strike: strikePolicyFor(run, { dashMode }) });
-        const hit = probeSamples(walk.samples, except);
+        const hit = probeSamples(walk.samples, except, { walkCheck });
         if (hit) return { ...hit, eta: hit.tick - walk.startTick };
         /**
          * ⛔ THE NON-VACUITY CHECK RUNS ON THE CLEAN PATH, not only on the
@@ -13322,6 +13405,11 @@ function solveSegmentUnder({
                 + `${TIME_RUNG.dwell}. TIME is the contested LAST-MILE tool (kickoff `
                 + '§3.1); it is not a room-crossing one, and the bound is named rather '
                 + 'than widened.';
+        } else if (fineDeadlineReached('time')) {
+            // ⛓ FIDELITY CHECKPOINTS — the `time` site, latched: the search is
+            // not run and the ladder falls through to the next rung.
+            timeWhy = 'deadline — the caller\'s anytime deadline (`shouldStop`) was reached '
+                + 'before the TIME rung\'s search, so it was not run.';
         } else {
             const dash = planDash({
                 start: {
@@ -13334,6 +13422,9 @@ function solveSegmentUnder({
                 heuristicTarget: aim,
                 dwell: TIME_RUNG.dwell,
                 limits: { maxExpansions: TIME_RUNG.maxExpansions },
+                // ⛓ FIDELITY CHECKPOINTS — the `time` site inside the search; with
+                // no deadline active the mover is handed nothing to ask.
+                shouldStop: fineActive() ? () => deadlineReached('time') : null,
             });
             if (dash.ok) {
                 rowFor('time', refused, {
@@ -13985,6 +14076,8 @@ function solveSegmentUnder({
          */
         let axisAligned = axisAlignedAsked;
         for (let attempt = 0; ; attempt += 1) {
+            // ⛓ FIDELITY CHECKPOINTS — the `walk` site, before each attempt plans.
+            if (fineDeadlineReached('walk')) refuseWalkDeadline(`before ${what}'s corridor (attempt ${attempt + 1})`);
             // Re-asked per attempt: a skirt applied by THIS walk's own ladder
             // turns the rest of it axis-aligned.
             axisAligned = axisAlignedAsked
@@ -14201,7 +14294,9 @@ function solveSegmentUnder({
              * `forbiddenByDanger`; the probe itself is the seam it plugs
              * into.
              */
-            const hit = probeCorridor(wps, except, { axisAligned });
+            // ⛓ FIDELITY CHECKPOINTS — the `walk` site between the plan and its probe.
+            if (fineDeadlineReached('walk')) refuseWalkDeadline(`after ${what}'s corridor was planned (attempt ${attempt + 1})`);
+            const hit = probeCorridor(wps, except, { axisAligned, walkCheck: true });
             if (hit) {
                 /**
                  * ⛓⛓⛓ ⚖ §11.8a RULING 2 — THE LADDER REPLACES SLICE 2's

@@ -178,6 +178,14 @@ export const DEFAULT_QUANT = Object.freeze({ pos: 0.25, vel: 0.05 });
 /** The default search bound. Every negative must name the one it hit. */
 export const DEFAULT_LIMITS = Object.freeze({ maxTicks: 600, maxExpansions: 200000 });
 
+/**
+ * ⛓ FIDELITY CHECKPOINTS — the expansions between two asks of a search's
+ * `shouldStop`. Measured (the checkpoints report, D1): L8's TIME rung spent
+ * ~22 s in one search with no ask; at ~0.3–0.6 ms an expansion, 250 keeps
+ * the stretch between two asks near 0.1 s.
+ */
+export const DEFAULT_CHECK_EVERY = 250;
+
 /** The merge key. Distinct states sharing one key are treated as one. */
 export function quantKey(s, quant = DEFAULT_QUANT) {
     const q = (v, g) => Math.round(v / g);
@@ -263,6 +271,14 @@ export function chebyshevHeuristic(target) {
  * @param {Function} [o.heuristic]  `(state) => ticks`, must UNDERSTATE
  * @param {object}   [o.quant]      the merge grid — A SEED
  * @param {object}   [o.limits]     `{maxTicks, maxExpansions}`
+ * @param {?Function} [o.shouldStop] ⛓ FIDELITY CHECKPOINTS — `() => boolean`,
+ *                                  asked once every `checkEvery` expansions
+ *                                  (never at expansion 0); `true` ends the
+ *                                  search with a NEGATIVE whose bound is
+ *                                  `deadline`. The caller owns it (the solver
+ *                                  hands its `time` deadline site); `null`, the
+ *                                  default, asks nothing — the search exactly.
+ * @param {number}   [o.checkEvery] the expansions between two asks
  *
  * @returns {object} a CERTIFICATE `{ok: true, ticks, path, keysPerTick,
  *   spans, quant, limits, expansions}` or a NEGATIVE `{ok: false, reason,
@@ -272,7 +288,7 @@ export function chebyshevHeuristic(target) {
 export function findEarliestArrival({
     start, accept, stepOpts = {}, forbiddenAt = null,
     heuristic = null, quant = DEFAULT_QUANT, limits = DEFAULT_LIMITS,
-    dwell = 1,
+    dwell = 1, shouldStop = null, checkEvery = DEFAULT_CHECK_EVERY,
 }) {
     if (!start || typeof accept !== 'function') {
         throw new MoverError('findEarliestArrival needs a start state and an accept()');
@@ -327,6 +343,17 @@ export function findEarliestArrival({
                 ok: false,
                 reason: 'expansion budget exhausted',
                 bound: `maxExpansions=${maxExpansions}, dwell=${dwell}`,
+                quant, limits: { maxTicks, maxExpansions, dwell }, expansions,
+                deepestTick, closest,
+            };
+        }
+        // ⛓ FIDELITY CHECKPOINTS — the caller's deadline, asked between
+        // expansions on a fixed count (deterministic: never a clock here).
+        if (shouldStop !== null && expansions > 0 && expansions % checkEvery === 0 && shouldStop()) {
+            return {
+                ok: false,
+                reason: 'the caller\'s deadline (`shouldStop`) was reached',
+                bound: `deadline after ${expansions} expansion(s), asked every ${checkEvery}`,
                 quant, limits: { maxTicks, maxExpansions, dwell }, expansions,
                 deepestTick, closest,
             };
@@ -648,7 +675,7 @@ export function earliestArrivalTable({
 export function planDash({
     start, endRegion, stepOpts = {}, forbiddenAt = null, timelineName = null,
     heuristicTarget = null, quant = DEFAULT_QUANT, limits = DEFAULT_LIMITS,
-    dwell = 1,
+    dwell = 1, shouldStop = null, checkEvery = DEFAULT_CHECK_EVERY,
 }) {
     if (forbiddenAt && !timelineName) {
         throw new MoverError('planDash: a timeline must be NAMED. A plan certified '
@@ -664,6 +691,8 @@ export function planDash({
         quant,
         limits,
         dwell,
+        shouldStop,
+        checkEvery,
     });
     if (!cert.ok) return { ...cert, certifiedAgainst: null };
     const replay = replayThroughStepper(cert, stepOpts);

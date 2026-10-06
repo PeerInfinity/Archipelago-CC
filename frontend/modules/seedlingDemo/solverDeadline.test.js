@@ -21,6 +21,11 @@
  *   REFUSAL, and it says so by name.
  * - SF3: two slow refusals proved before their scans — L16's pit `(13,4)`
  *   (relaxed reachability) and swordless L14's chaser arm (no sword).
+ * - fidelity CHECKPOINTS: the FINE sites (`time`, `walk`, `detour` in its via
+ *   set) are asked only under `fineCheckpoints: true`, change nothing when they
+ *   do not trip, and each trip does what its docblock says — `time` falls
+ *   through to the next rung, `walk` refuses the segment, the via set's
+ *   `detour` refuses the rung.
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -32,8 +37,9 @@ import { createLevelRun } from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
 import { ROLES } from './levelWorld.js';
 import {
-    DEADLINE_SITES, SolverRefusal, deriveBlockRoute, solveSegment,
+    DEADLINE_SITES, SolverRefusal, WALK_CHECK_TICKS, deriveBlockRoute, solveSegment,
 } from './solverBot.js';
+import { DEFAULT_CHECK_EVERY, chebyshevHeuristic, findEarliestArrival } from './mover.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const TAPES = join(HERE, 'fixtures', 'tapes');
@@ -127,7 +133,7 @@ describe('SF2: the anytime deadline — `sword-dash` is an UPGRADE, so a trip ke
         const got = solveRoom(...DASH_ROOM, { shouldStop: (site) => site !== 'sword-dash' });
         expect(got.json).toBe(bare.json);
         expect(DEADLINE_SITES).toEqual(['sword-dash', 'stance-hypothesis', 'block-route',
-            'kill-chaser', 'detour', 'axe-dodge']);
+            'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk']);
     });
 
     it('a deadline that is not a callback is refused by name', () => {
@@ -218,4 +224,128 @@ describe('the `detour` deadline site — the DETOUR rung is bounded by the same 
             shouldStop: (site) => site === 'block-route' });
         expect(run.level).toBe(15);
     });
+});
+
+describe('fidelity CHECKPOINTS — the FINE sites are opt-in, inert until they trip, and say what a trip does', () => {
+    const DASH_ROOM = ['r9-solve-2', 0];
+
+    it('opted in, a counter that never trips is byte-identical to no hook, and is asked `walk` too; opted out it never is', () => {
+        const bare = solveRoom(...DASH_ROOM);
+        const fine = counter(Number.MAX_SAFE_INTEGER);
+        const coarse = counter(Number.MAX_SAFE_INTEGER);
+        const a = solveRoom(...DASH_ROOM, { shouldStop: fine.shouldStop, fineCheckpoints: true });
+        const b = solveRoom(...DASH_ROOM, { shouldStop: coarse.shouldStop });
+        for (const other of [a, b]) {
+            expect(other.keys).toEqual(bare.keys);
+            expect(other.json).toBe(bare.json);
+            expect('deadline' in other.out).toBe(false);
+        }
+        expect(fine.asked).toContain('walk');
+        // the opt-out sequence is the opt-in one with the fine asks removed — nothing else moved
+        expect(fine.asked.filter((x) => x !== 'walk' && x !== 'time')).toEqual(coarse.asked);
+        expect(coarse.asked.every((x) => x === 'sword-dash')).toBe(true);
+        // the drive is asked every WALK_CHECK_TICKS ticks: at least once per that many ticks walked
+        expect(fine.asked.filter((x) => x === 'walk').length)
+            .toBeGreaterThanOrEqual(Math.floor(bare.keys.length / WALK_CHECK_TICKS));
+    });
+
+    it('`fineCheckpoints` that is not a boolean is refused by name', () => {
+        expect(() => solveRoom(...DASH_ROOM, { shouldStop: () => false, fineCheckpoints: 'yes' }))
+            .toThrow(/fineCheckpoints must be a boolean/);
+    });
+
+    it('`walk`: a trip REFUSES the segment by name — at a walk\'s first attempt, and inside the drive — and latches', () => {
+        const tripWalkAt = (n) => {
+            const asked = [];
+            try {
+                solveRoom(...DASH_ROOM, { fineCheckpoints: true, shouldStop: (site) => {
+                    asked.push(site);
+                    return site === 'walk' && asked.filter((x) => x === 'walk').length > n;
+                } });
+            } catch (e) { return { e, asked }; }
+            return { e: null, asked };
+        };
+        const first = tripWalkAt(0);
+        expect(first.e).toBeInstanceOf(SolverRefusal);
+        expect(first.e.message).toMatch(/at the `walk` site before .*corridor \(attempt 1\)/);
+        expect(first.e.message).toMatch(/⏱ DEADLINE/);
+        expect(first.e.deadline).toEqual({ tripped: true, first: 'walk', sites: { walk: 1 } });
+        // the drive's own ask: every walk ask up to the last one passes, the last trips mid-drive
+        const all = counter(Number.MAX_SAFE_INTEGER);
+        solveRoom(...DASH_ROOM, { shouldStop: all.shouldStop, fineCheckpoints: true });
+        const walks = all.asked.filter((x) => x === 'walk').length;
+        const late = tripWalkAt(walks - 1);
+        expect(late.e).toBeInstanceOf(SolverRefusal);
+        expect(late.e.message).toMatch(/at the `walk` site after \d+ (tick\(s\) of the segment's drive|sample\(s\) of the corridor's danger probe)/);
+        // latched: the tripping ask is the last `walk` ask the callback ever hears
+        expect(late.asked.filter((x) => x === 'walk').length).toBe(walks);
+    });
+
+    it('`time`: the mover asks every DEFAULT_CHECK_EVERY expansions, a never-true hook leaves the certificate alone, a trip is a NEGATIVE named `deadline`', () => {
+        const HOME = { x: 100000, y: 100000, vx: 0, vy: 0 };
+        const search = (shouldStop) => findEarliestArrival({
+            start: HOME, accept: (st) => st.x >= HOME.x + 8,
+            heuristic: chebyshevHeuristic({ x: HOME.x + 8, y: HOME.y }),
+            stepOpts: { terrainStateAt: () => 0, world: { width: 1e7, height: 1e7 } },
+            limits: { maxTicks: 200, maxExpansions: 60000 }, shouldStop,
+        });
+        const bare = search(null);
+        let asks = 0;
+        const never = search(() => { asks += 1; return false; });
+        expect(bare.ok).toBe(true);
+        expect(JSON.stringify(never)).toBe(JSON.stringify(bare));
+        expect(asks).toBe(Math.floor(bare.expansions / DEFAULT_CHECK_EVERY));
+        expect(asks).toBeGreaterThan(1);
+        let n = 0;
+        const cut = search(() => ++n >= 2);
+        expect(cut.ok).toBe(false);
+        expect(cut.expansions).toBe(2 * DEFAULT_CHECK_EVERY);
+        expect(cut.bound).toMatch(/^deadline after 500 expansion\(s\), asked every 250$/);
+    });
+
+    it('`time` in a solve: bare L6 from (208,32) runs the TIME rung\'s search; a trip there FALLS THROUGH to BAIT, and the climb says why', () => {
+        const boot = { level: 6, x: 208, y: 32 };
+        const goals = [{ kind: 'reach-exit', exit: { x: 32, y: 0 } }];
+        const tripTimeAt = (n) => {
+            const asked = [];
+            try {
+                solveSegment({ run: freshRun(boot), goals, name: 'time-deadline', boot, fineCheckpoints: true,
+                    shouldStop: (site) => {
+                        asked.push(site);
+                        return site === 'time' && asked.filter((x) => x === 'time').length > n;
+                    } });
+            } catch (e) { return { e, asked }; }
+            return { e: null, asked };
+        };
+        const entry = tripTimeAt(0);
+        expect(entry.e).toBeInstanceOf(SolverRefusal);
+        expect(entry.e.message).toMatch(/time: deadline — .*before the TIME rung's search, so it was not run/);
+        expect(entry.e.message).toMatch(/bait \(bob@112,48\)/); // the ladder went on past TIME
+        expect(entry.e.deadline).toEqual({ tripped: true, first: 'time', sites: { time: 1 } });
+        const inside = tripTimeAt(2);
+        expect(inside.e.message).toMatch(/time: the search returned a NEGATIVE.*deadline after 500 expansion\(s\), asked every 250/);
+        expect(inside.asked.filter((x) => x === 'time').length).toBe(3);
+        // (opted out, `time` is never asked: the first row of this block. Untripped, this search
+        // runs ~13 s with no ask — the stretch the site exists for, so it is not re-run here.)
+    }, 60000);
+
+    it('`detour` in its via set: opted in, the first ask after the rung\'s own refuses it with the legs it had planned', () => {
+        const boot = { level: 14, x: 160, y: 64 };
+        const exit = exitToward(14, 15);
+        const goals = [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }];
+        const tripAt = (n, fineCheckpoints) => {
+            let asked = 0;
+            try {
+                solveSegment({ run: freshRun(boot), goals, name: 'detour-via-deadline', boot, fineCheckpoints,
+                    shouldStop: (site) => site === 'detour' && ++asked > n });
+            } catch (e) { return e; }
+            return null;
+        };
+        const via = tripAt(5, true);
+        expect(via).toBeInstanceOf(SolverRefusal);
+        expect(via.message).toMatch(/while the DETOUR search built its via set, after 4 leg\(s\)/);
+        expect(via.deadline).toMatchObject({ tripped: true, first: 'detour' });
+        // opted out, the same counter is asked only by the loop (SF2's row above, unchanged)
+        expect(tripAt(3, false).message).toMatch(/DETOUR search after 2 preview\(s\)/);
+    }, 60000);
 });
