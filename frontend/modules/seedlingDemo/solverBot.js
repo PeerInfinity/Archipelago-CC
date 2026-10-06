@@ -118,6 +118,7 @@ import {
 import { axeCanReach, axeHitsPlayer } from './hazards.js';
 import { planDash } from './mover.js';
 import { createTraceBuilder } from './decisionTrace.js';
+import { arrivalInsideSolid, arrivalsInto, solidsAt, STUCK_TICKS } from './arrivalSolid.js';
 import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,
 } from './strikePolicy.js';
@@ -14654,6 +14655,76 @@ function solveSegmentUnder({
             + 'ticks — the preview said it would (a model/preview disagreement).', { goal });
         return null;
     };
+
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY ARRIVAL, D3 — **AN ARRIVAL INSIDE A SOLID IS
+     * REFUSED BY NAME, BEFORE ANY SEARCH, WITH THE WAY OUT.**
+     *
+     * ⚖ The user (2026-10-05): *"Arrival inside a solid should only happen if
+     * we play the game out of order. The proper fix for this might be to
+     * restart using the menu, or just take a different path."* A landing ON a
+     * breakable rock, a burnable tree, a lock or the final door's cell
+     * (L12 -> L0 at (288,176) on `breakablerock@288,176`) is inside it exactly
+     * when the save's flag still holds — the obstacle was never broken from
+     * its own room's side — and `Entity.moveBy` then takes no step in any
+     * direction (measured on the game: `probe-seedling-arrival-solid.mjs`,
+     * 0 px in each hold; the model's stream is the game's). The build already
+     * reads the save (`PERSISTENCE_RESPONSE`: a cleared flag builds no solid),
+     * so this state is KNOWN, not guessed, and with the flag cleared the same
+     * arrival solves as before.
+     *
+     * ⛔ NOTHING IS PRESSED FROM INSIDE. The game WOULD break a rock from
+     * inside on a sword press (measured), but the ruling is a refusal with the
+     * way out, not a strategy: the Menu's Restart (`seedlingStartSpawn`) or
+     * another route into the level (every door that lands here on a box
+     * outside any solid, named). A box that merely grazes a solid and can walk
+     * out is not this state (`arrivalInsideSolid` asks every cardinal hold).
+     *
+     * ⛓ STEPOFF2's `inside-solid` (a boot ON a door under a lock) is the same
+     * fact met later, inside `stepOffIfLatched`: it now refuses here first, and
+     * its words ride along word for word (`Latched: inside-solid — …`).
+     */
+    const insideSolid = arrivalInsideSolid(run);
+    if (insideSolid !== null) {
+        const ids = insideSolid.solids.map((so) => so.id);
+        const others = arrivalsInto(run, run.level)
+            .filter((a) => (a.at.x !== run.state.x || a.at.y !== run.state.y)
+                && solidsAt(run.world, a.at.x, a.at.y).length === 0);
+        const latchedOn = [...(run.state.latched ?? [])].map((i) => run.world.teleporters[i])
+            .filter(Boolean).map((tp) => `${tp.isStairs ? 'stairs' : 'teleporter'}@${tp.x},${tp.y}`);
+        const flagWords = insideSolid.solids.map((so) => (so.flag
+            ? `${so.id}: persistence {level ${so.flag.level}, tag ${so.flag.tag}} still holds — it is cleared `
+                + `when the obstacle is ${so.action ?? 'removed'}${so.item ? ` (${so.item})` : ''}`
+            : `${so.id}: its world row carries no persistence tag`)).join('; ');
+        const wayOut = [
+            { kind: 'restart', via: 'seedlingStartSpawn',
+                why: 'the Menu\'s Restart warps the player to a new game\'s start (the rules arc\'s Restart edge)' },
+            { kind: 'another-route', level: run.level, arrivals: others },
+        ];
+        refuse(`${name}: arrival-inside-solid — the run's box at (${run.state.x},${run.state.y}) in level `
+            + `${run.level} is INSIDE ${ids.join(', ')} and no cardinal hold moves it (the game's `
+            + '`Entity.moveBy` stops at the first collide). The save says the obstacle is still there '
+            + `(${flagWords}): an arrival here means the game was played out of order. The solver does `
+            + 'not act from inside a solid. Way out: Restart from the Menu (`seedlingStartSpawn`), or '
+            + `another route into level ${run.level}`
+            + (others.length ? ` (${others.map((a) => `L${a.from} ${a.door} -> (${a.at.x},${a.at.y})`)
+                .join(', ')})` : ' (no other door lands in this level outside a solid)') + '.'
+            + (latchedOn.length ? ` Latched: inside-solid — the run stands LATCHED on ${latchedOn[0]} in level `
+                + `${run.level} with its box INSIDE ${ids.join(', ')}: no direction moves it (every step-off `
+                + 'stalls where it started), so the door cannot be stepped off until that solid is gone.' : ''), {
+            goal: goals[0],
+            obstacle: {
+                kind: 'arrival-inside-solid', id: ids[0], solids: ids,
+                flags: insideSolid.solids.filter((so) => so.flag).map((so) => ({ solid: so.id, ...so.flag,
+                    action: so.action, item: so.item })),
+                at: { level: run.level, x: run.state.x, y: run.state.y },
+                ...(latchedOn.length ? { latchedOn: latchedOn[0] } : {}),
+                wayOut,
+            },
+            considered: Object.entries(insideSolid.moved).map(([dir, px]) => ({ option: `hold ${dir}`,
+                why: `moves ${px} px in ${STUCK_TICKS} ticks` })),
+        });
+    }
 
     // ── the goals, in order ───────────────────────────────────────────
     for (const goal of goals) {
