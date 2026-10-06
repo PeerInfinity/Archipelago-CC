@@ -12,6 +12,8 @@ import { describe, expect, it } from 'vitest';
 
 import { legPrice, orderLegs, partitionLegs } from './probe-seedling-divergence-sweep.mjs';
 import { triggersOf } from './seedlingFullTierWorkflow.test.js';
+import { slotBlockOf, withSlotBlock } from './seedlingRoomPlay.js';
+import { refuseRetiredTopLevelKeys } from '../../frontend/modules/stateManager/core/initialization.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -80,4 +82,41 @@ describe('seedling-divergence-sweep.yml', () => {
         expect(text).toMatch(/timeout-minutes: \$\{\{ fromJSON\(needs\.plan\.outputs\.timeout\) \}\}/);
         expect(text).toMatch(/LEGS: \$\{\{ needs\.plan\.outputs\.legs \}\}/);
     });
+});
+
+/**
+ * ⛓ F2 (the rules arc's per-player blocks): `--page=<build>` re-points the preset's `flash_panel.wasm` in the
+ * rules the page fetches. It must write INTO the one slot — a document-level `flash_panel` beside the slot map is
+ * the retired shape the loader refuses by name, so a non-preset `--page` run would fail to boot (found at the
+ * wave-6 harvest; both probes that route a build share `withSlotBlock`).
+ */
+describe('--page=<build> against an F2 document', () => {
+    const doc = JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8'));
+    const BUILD_PAGE = 'seedling_bot_ap_p4d/game.html';
+
+    it('the committed preset IS per player, and names another build than the routed one', () => {
+        expect(Object.keys(doc.player_names)).toHaveLength(1);
+        expect(slotBlockOf(doc, 'flash_panel').wasm).toBeTruthy();
+        expect(slotBlockOf(doc, 'flash_panel').wasm).not.toBe(BUILD_PAGE);
+    });
+
+    it('the routed document re-points the SLOT, keeps its other fields, adds no document-level block, and still loads', () => {
+        const routed = withSlotBlock(doc, 'flash_panel', { wasm: BUILD_PAGE });
+        expect(slotBlockOf(routed, 'flash_panel')).toEqual({ ...slotBlockOf(doc, 'flash_panel'), wasm: BUILD_PAGE });
+        expect(Object.keys(routed.flash_panel)).toEqual(Object.keys(doc.flash_panel));
+        expect(() => refuseRetiredTopLevelKeys(routed)).not.toThrow();
+        expect(slotBlockOf(doc, 'flash_panel').wasm).not.toBe(BUILD_PAGE); // the input is untouched
+    });
+
+    it('⛔ the CONTROL: the pre-F2 flat write is the shape the loader refuses by name', () => {
+        const flat = { ...doc, flash_panel: { ...doc.flash_panel, wasm: BUILD_PAGE } };
+        expect(() => refuseRetiredTopLevelKeys(flat)).toThrow(/document-level `flash_panel` block/);
+    });
+
+    it.each(['probe-seedling-divergence-sweep.mjs', 'probe-seedling-contact-divergence.mjs'])(
+        '%s routes its build through withSlotBlock, never a flat write', (file) => {
+            const src = readFileSync(join(REPO, 'scripts/procgen', file), 'utf8');
+            expect(src).toMatch(/withSlotBlock\(doc, 'flash_panel', \{ wasm: WASM_PAGE \}\)/);
+            expect(src).not.toMatch(/doc\.flash_panel\s*=/);
+        });
 });

@@ -31,7 +31,7 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf } from './seedlingRoomPlay.js';
+import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf, withSlotBlock } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -100,8 +100,7 @@ async function main() {
                 let doc = null;
                 try { doc = r.ok() ? JSON.parse(await r.text()) : null; } catch { doc = null; }
                 if (!doc) { await route.fulfill({ response: r }); return; }
-                doc.flash_panel = { ...(doc.flash_panel ?? {}), wasm: WASM_PAGE };
-                await route.fulfill({ response: r, json: doc });
+                await route.fulfill({ response: r, json: withSlotBlock(doc, 'flash_panel', { wasm: WASM_PAGE }) });
             });
         }
         await page.goto(`${HOST}/frontend/?rules=./presets/${GAME}/AP_1/AP_1_rules.json`, { waitUntil: 'domcontentloaded' });

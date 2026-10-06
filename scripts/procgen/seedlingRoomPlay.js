@@ -41,6 +41,23 @@ export function slotBlockOf(rules, key) {
     return rules?.[key]?.[slots[0]];
 }
 
+/**
+ * ⛓ F2's WRITE twin of `slotBlockOf`: a gate that re-points a per-player block
+ * (the probes' `--page=<build>` route handler re-points `flash_panel.wasm`)
+ * writes INTO the document's one slot, never a document-level block — the
+ * loader (`refuseRetiredTopLevelKeys`) refuses that shape by name. The same
+ * single-slot rule as the read; returns a NEW document, `rules` untouched.
+ */
+export function withSlotBlock(rules, key, patch) {
+    const slots = Object.keys(rules?.player_names ?? {});
+    if (slots.length !== 1) {
+        throw new Error(`withSlotBlock: the preset names ${slots.length} player slot(s) [${slots.join(', ')}] — `
+            + `\`${key}\` is per player, and a one-slot gate cannot choose`);
+    }
+    const block = rules[key] ?? {};
+    return { ...rules, [key]: { ...block, [slots[0]]: { ...(block[slots[0]] ?? {}), ...patch } } };
+}
+
 export const FLASH_PANEL = 'flashPanel';
 export const MAZE_ROOM_PANEL = 'mazeRoomPanel';
 /**
