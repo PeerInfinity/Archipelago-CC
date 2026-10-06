@@ -536,8 +536,9 @@ const PRICED_RULES_PATH =
  * walk's spans, drain rates and predictions (`pricing`). On the first region (the walk priced it at skill 0: one scene,
  * the easiest the beginner clears, 1:9 — p 0.47, E 25.8 s; planned cost 16 → 0.6205 mana a game second):
  *
- *  - the page plays the priced MOVE span; the loaded world, `getRegionInfo` and the live cost data carry its rate (the
- *    cost data only with the shared writer's payload-rate rule — feature-detected — else the default 1);
+ *  - the page plays the priced MOVE span; the loaded world (`getRegionInfo`), the shipped `loop_costs` block and the live
+ *    cost data carry its rate (the block was written with the shared writer's payload-rate rule; the live data is the
+ *    block's, whatever shared version the page runs);
  *  - the trainer earns at the world's pace (`pricing.pointsPerMana`, named on region load);
  *  - Bot blocks on the move out of it (fresh Even trainer, 4×, bot seeds 1–4): each visit costs floor(its game seconds)
  *    × the rate, and the mean of their mana is close to the planned cost (the rate was chosen so the EXPECTED mana of
@@ -548,8 +549,6 @@ const PRICED_RULES_PATH =
 async function noiz2saPricedWorld(testController) {
     return withTrainer(testController, async (mod, service, gs) => {
         const { predictedSkill } = await import('../../noiz2saSubstrate/noiz2saPricing.js');
-        const planner = await import('../../shared/procgen/loopCostPlanner.js');
-        const sharedRates = typeof planner.regionDrainRatesFromRulesJson === 'function';
         const doc = await (await fetch(PRICED_RULES_PATH)).json();
         const visits = [];
         for (const seed of [1, 2, 3, 4]) {
@@ -597,9 +596,10 @@ async function noiz2saPricedWorld(testController) {
                     JSON.stringify(payload.move), JSON.stringify({ start: spans?.move?.start, end: spans?.move?.end }));
                 const info = centralRegistryRegionInfo(region);
                 testController.assertEqual(`[${label}] getRegionInfo carries the payload's rate`, rate, info?.timeDrainPerSecond ?? null);
+                testController.assertEqual(`[${label}] the shipped loop_costs block carries the payload's rate`,
+                    rate, doc.loop_costs?.['1']?.regions?.[region]?.timeDrainPerSecond ?? null);
                 const live = loopStateSingleton.costDataManager?.getTimeDrainPerSecond?.(region) ?? null;
-                testController.assertEqual(`[${label}] the live loop_costs rate is the payload's${sharedRates ? '' : ' (no shared payload-rate rule: the default 1)'}`,
-                    sharedRates ? rate : 1, live);
+                testController.assertEqual(`[${label}] the live cost data drains at the payload's rate`, rate, live);
                 testController.assertEqual(`[${label}] the trainer earns at the world's pace (pricing.pointsPerMana)`,
                     pricing.pointsPerMana, service.pointsPerMana);
             }
@@ -613,24 +613,22 @@ async function noiz2saPricedWorld(testController) {
             if (!crossed) { testController.log(`DIAG: ${JSON.stringify(debugState())}`, 'error'); return; }
             loopStateSingleton.stopProcessing?.();
             const spent = manaBefore - currentMana();
-            const unit = rate; // XP level 0: the rate undiscounted
             const v = { seed, spent, visitSeconds: lb?.visitSeconds, attempts: lb?.attempts, failed: lb?.failed, earned: service.trainer.earned,
                 tracks: { ...service.trainer.tracks }, xpLevel };
             visits.push(v);
             testController.log(`[${label}] ${JSON.stringify(v)}`);
             testController.assertEqual(`[${label}] the region's XP level was 0 (the drain undiscounted)`, 0, xpLevel);
-            const liveRate = sharedRates ? unit : 1;
+            // XP level 0: the rate undiscounted
             testController.assertEqual(`[${label}] the visit cost floor(its game seconds) × the region's rate`, true,
-                Math.abs(spent - Math.floor(lb?.visitSeconds ?? 0) * liveRate) < 1e-6);
+                Math.abs(spent - Math.floor(lb?.visitSeconds ?? 0) * rate) < 1e-6);
             testController.assertEqual(`[${label}] the bot earned the visit's mana × the world's pace`, true,
                 Math.abs(service.trainer.earned - spent * pricing.pointsPerMana) < 1e-6);
             const mean = Object.values(service.trainer.tracks).reduce((a, b) => a + b, 0) / 5;
             testController.assertEqual(`[${label}] …to the skill the walk's prediction gives for that mana (Even)`,
                 predictedSkill(spent, pricing.pointsPerMana), mean);
-            if (!sharedRates) return; // the rest compares mana with the priced cost: needs the payload-rate rule
             visits.at(-1).planned = pricing.cost;
         }
-        if (!sharedRates || visits.length !== 4) return;
+        if (visits.length !== 4) return;
         const meanSpent = visits.reduce((a, x) => a + x.spent, 0) / visits.length;
         const planned = visits[0].planned;
         testController.log(`mana per move run over bot seeds 1–4: ${visits.map((x) => x.spent.toFixed(2)).join(', ')}; mean ${meanSpent.toFixed(2)}, planned ${planned}`);

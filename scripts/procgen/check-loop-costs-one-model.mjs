@@ -22,11 +22,14 @@
  *
  * ── WHAT IT COVERS ────────────────────────────────────────────────────
  *
- * Four documents, one per class the write-by-class rule distinguishes:
+ * Five documents, covering the classes the write-by-class rule distinguishes:
  *   procgen_maze        plain procgen world (coarse regions)
  *   jta_schedule_test   a NATIVE substrate (its own mana economy ⇒ no entries)
  *   omsi_substrate_test a second NATIVE substrate
  *   shapez              56 regions / 140 locations — the size case
+ *   noiz2sa_priced_test SUMMARY regions whose payloads name their own drain
+ *                       rates (bulletml N5: Noiz2sa priced at generation time),
+ *                       which both drivers must pass into the block alike
  *
  * ⛓ A fifth, `maze_loop_worldgen` (a maze fixture that ships a REAL block),
  * was an UNTRACKED preset, deleted 2026-09-16; the gate then read "4 … 1
@@ -91,12 +94,17 @@ let CostPlanner;
 let documentStateManager; let documentPlayerId; let documentSphereLog;
 
 
-/** The four documents, by preset directory. */
+/** The five documents, by preset directory. */
 const DOCUMENTS = [
     { preset: 'procgen_maze', required: true },
     { preset: 'jta_schedule_test', required: true },
     { preset: 'omsi_substrate_test', required: true },
     { preset: 'shapez', required: true },
+    // ⛓ needs the shared writer's payload-rate rule (bulletml N5, `regionDrainRatesFromRulesJson`):
+    //   without it the runtime planner writes the default rate while the pipeline's generator passes the
+    //   committed block's rates through as its input block — a submodule-version mismatch, not a second
+    //   model — so the entry SKIPs by name until the shared pointer carries the rule.
+    { preset: 'noiz2sa_priced_test', required: true, needs: 'payloadRates' },
 ];
 
 /**
@@ -170,16 +178,25 @@ async function main() {
     await import(join(MODULES, 'jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js'));
     await import(join(MODULES, 'omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js'));
     await import(join(MODULES, 'textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js'));
+    await import(join(MODULES, 'noiz2saSubstrate/noiz2saSubstrateLibrary.js'));
 
     ({ generateLoopCosts } = await import(join(MODULES, 'shared/procgen/loopCostGenerator.js')));
     ({ CostPlanner } = await import(join(MODULES, 'loopsCostDebugger/costPlanner.js')));
     ({ documentStateManager, documentPlayerId, documentSphereLog } =
         await import(join(MODULES, 'loopsCostDebugger/documentStateManager.js')));
 
+    const planner = await import(join(MODULES, 'shared/procgen/loopCostPlanner.js'));
+    const has = { payloadRates: typeof planner.regionDrainRatesFromRulesJson === 'function' };
+
     let checked = 0;
     let skipped = 0;
 
-    for (const { preset, required, note } of DOCUMENTS) {
+    for (const { preset, required, note, needs } of DOCUMENTS) {
+        if (needs && !has[needs]) {
+            skipped += 1;
+            console.log(`SKIP: ${preset} — the shared submodule predates the ${needs} rule this document needs`);
+            continue;
+        }
         const rulesPath = rulesPathFor(preset);
         if (!rulesPath) {
             if (required) fail(`${preset}: no rules.json on disk`);
