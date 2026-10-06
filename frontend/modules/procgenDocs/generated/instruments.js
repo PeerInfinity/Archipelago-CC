@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 52,
-            "count": 95,
+            "browser": 53,
+            "count": 96,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 354,
-        "browser": 117,
-        "cited": 170,
-        "files": 366,
+        "blockStyle": 355,
+        "browser": 118,
+        "cited": 171,
+        "files": 367,
         "lineStyle": 12,
-        "withDocblock": 366,
-        "withFlags": 284
+        "withDocblock": 367,
+        "withFlags": 285
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10699,6 +10699,76 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-rect-inputs — THE BOUNDED RECT-INPUT SWEEP.",
             "path": "scripts/procgen/probe-seedling-rect-inputs.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/playback-and-debugging.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget-s",
+                "expect",
+                "flag",
+                "host",
+                "only",
+                "pocket"
+            ],
+            "file": "probe-seedling-restart-route.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "expect"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "flag"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "pocket"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling RESTART ROUTE (⚖ the user, 2026-10-05: *\"I want the logic to be aware that returning to the menu at any point is always possible.\"*) — the Playback Bot's route planner takes the built-in RESTART move (`procgenCore/restartRoute.js`) when the slot declares `exporter[p].return_to_menu` and the player's region …",
+            "path": "scripts/procgen/probe-seedling-restart-route.mjs"
         },
         {
             "argvHelpers": [

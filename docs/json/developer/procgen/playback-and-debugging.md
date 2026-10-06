@@ -13,6 +13,14 @@ A sphere-log-driven walker that auto-drives substrate panels through a recorded 
 - The module owns the `playbackBotPanel` Golden Layout panel, registers the `playback:command` publisher, and subscribes to `user/system:locationCheck` and `user:regionMove` on the dispatcher, forwarding them to the active panel's bot. An active-panel singleton (`setActivePanel`/`getActivePanel`) lets those dispatcher receivers reach the bot without circular imports — the same pattern mazeRoom and procgenPipeline use.
 - A persisted click-intercept toggle (`playbackBot_intercept`, off by default) and a bounded dispatcher event log (last 200 events) live in the panel UI.
 
+**Restart as a route step (return to menu).** Where the slot declares `exporter[p].return_to_menu` (`procgenCore/restartWarp.js`), returning to the menu is always possible, and the bot's planner knows it without any edge into `Menu`. `procgenCore/restartRoute.js` `planRoute` answers the graph's walk from the player's region. Only when no walk exists, and the restart target (the Menu panel's `restartTargetOf`, `Menu`) has one, does it answer a route that BEGINS with a RESTART step (`steps[1].restart: true`). The tie-break is `ROUTE_TIE_BREAK` (`walk-before-restart`): a walk always wins, however long it is.
+- The bot executes the step by calling the Menu panel's own Restart (the `menuPanel.restart` public function, the button's path), never an exit `walkTo`.
+- It then waits on the restart target. The substrate takes the start hop (on Seedling the glue warps the game to `seedlingStartSpawn`), and the bot routes on from the arrival.
+- Without the flag (fail-closed), the refusal is the old one, word for word: `error: no path from <region> to <goal>`.
+- The bot also refuses by name when no Restart is wired, when Restart does not answer, or when Restart reports loop mode (loops' restart warps nobody).
+- The region graph's one-step move takes the same step. The path analyzer and `analyzePathToRegion` answer AP reachability from the start and never need it.
+- The live witness is `scripts/procgen/probe-seedling-restart-route.mjs` (a census RESTART-ONLY pocket, W and J; `--flag=off` is the fail-closed row).
+
 When no sphere log is loaded, the bot acts as a plain remote control: it starts the substrate's own clock and leaves target choice to the substrate (the maze visualizer picks the alphabetically-first uncollected item or unvisited exit in the current region).
 
 ## The PlaybackController contract and iframe proxies
