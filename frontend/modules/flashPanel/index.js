@@ -25,7 +25,7 @@ import {
 } from './seedlingPlaybackController.js';
 import { playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { PLAYBACK_WALK_FAILED_EVENT, PLAYBACK_WALK_NOTE_EVENT } from '../procgenCore/playbackEvents.js';
-import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
+import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, LOOP_RESET_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
 import { getLastRawJsonData, stateManagerProxySingleton } from '../stateManager/index.js';
 import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
@@ -217,6 +217,8 @@ export function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
   registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
   registrationApi.registerEventBusSubscriberIntent(FLASH_SEEDLING_LOAD_REGION_EVENT);
+  // ⛓ LOOP-MODE RESTART — the glue hears the loops' reset (`seedlingRegionGlue.handleLoopReset`).
+  registrationApi.registerEventBusSubscriberIntent(LOOP_RESET_EVENT);
 
   /**
    * ⛔⛔ **THE READOUT EVENT NEEDS A REGISTERED PUBLISHER, AND WITHOUT ONE THE
@@ -379,6 +381,13 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     // as a local event check (forced: the game is the truth, not the logic's reach), never a server check.
     getEvents: eventsOfLoadedSlot,
     collectEvent: (location) => stateManagerProxySingleton.checkLocation(location, true, true),
+    // ⛓ LOOP-MODE RESTART — the loops' reset warps the game only where the declared start is a Seedling room.
+    getLoop: () => ({
+      isLoopModeActive: () => initializationApi.getModuleFunction?.('loops', 'isLoopModeActive')?.() === true,
+      getCurrentRegion: () => initializationApi.getModuleFunction?.('gameState', 'getCurrentRegion')?.() ?? null,
+      getStartRegions: () => initializationApi.getModuleFunction?.('gameState', 'getState')?.()?.startRegions ?? [],
+      getActionQueue: () => initializationApi.getModuleFunction?.('loops', 'getLoopState')?.()?.getActionQueue?.() ?? [],
+    }),
   });
   seedlingRegionGlue.start();
 

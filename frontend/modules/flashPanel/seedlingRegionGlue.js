@@ -45,7 +45,7 @@
 import { FLASH_SEEDLING_SUBSTRATE_ID } from './flashSeedlingLibrary.js';
 import { FLASH_SEEDLING_GEN_SUBSTRATE_ID } from './flashSeedlingGenLibrary.js';
 import { SeedlingRegionBinding } from './seedlingRegionBinding.js';
-import { RESTARTED_EVENT } from '../menuPanel/menuPanelEngine.js';
+import { RESTARTED_EVENT, restartTargetOf } from '../menuPanel/menuPanelEngine.js';
 import { SeedlingEventCollector } from './seedlingEventCollector.js';
 
 /** procgenPlayer's own broadcast of "which substrate owns the player now". */
@@ -74,6 +74,15 @@ export const DOOR_LOCKED_EVENT = 'flashSeedling:doorLocked';
  */
 export const POSITION_POLL_MS = 250;
 
+/**
+ * ⛓ LOOP-MODE RESTART — the loops' reset (`loopState._resetLoop` and every caller: the Loops panel's Restart, the Menu
+ * panel's Restart in loop mode, an out-of-mana reset). It refills mana and rewinds the queue; it moves nobody.
+ */
+export const LOOP_RESET_EVENT = 'loopState:loopReset';
+
+/** The `source` of the move the loop-reset fallback publishes (`handleLoopReset`). */
+export const LOOP_RESET_MOVE_SOURCE = 'flashSeedling-loopReset';
+
 export class SeedlingRegionGlue {
     /**
      * @param {object} deps
@@ -91,7 +100,7 @@ export class SeedlingRegionGlue {
      *   every door passes, today's behaviour
      */
     constructor({ eventBus, getDispatcher, loadRegionEvent, substrateId, getPanel, now, canPass, isBotWalking,
-        timers, getProcgen, stopBotWalks, getEvents, collectEvent } = {}) {
+        timers, getProcgen, stopBotWalks, getEvents, collectEvent, getLoop } = {}) {
         this.eventBus = eventBus ?? null;
         this.getDispatcher = getDispatcher ?? (() => null);
         this.loadRegionEvent = loadRegionEvent;
@@ -119,6 +128,13 @@ export class SeedlingRegionGlue {
         this._handler = (payload) => this.handleLoadRegion(payload);
         this._activeHandler = (payload) => this.handleActiveSubstrateChanged(payload);
         this._restartHandler = (payload) => this.handleMenuRestart(payload);
+        this._loopResetHandler = (payload) => this.handleLoopReset(payload);
+        /**
+         * ⛓ LOOP-MODE RESTART — `{isLoopModeActive, getCurrentRegion, getStartRegions, getActionQueue}`, resolved at
+         * CALL time (gameState's and loops' public functions). Absent = the fallback never fires.
+         */
+        this.getLoop = getLoop ?? (() => null);
+        this.lastLoopReset = null;
         /**
          * ⛓ RESTART — procgenPlayer's public functions (`getResolvedStartRegion`, `getRegionInfo`,
          * `retakeStartHop`), resolved at CALL time; and the Playback Bot controllers' stop.
@@ -130,7 +146,7 @@ export class SeedlingRegionGlue {
         // behaviour from console text.
         this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, parks: 0,
             resumes: 0, setDeliveries: 0, locationChecks: 0, itemsFound: 0, doorsLocked: 0, bounces: 0,
-            logicalMoves: 0, positionReads: 0, restarts: 0, eventsCollected: 0 };
+            logicalMoves: 0, positionReads: 0, restarts: 0, eventsCollected: 0, loopResets: 0 };
         /** ⛓ LOGICAL LINKS — is a Playback Bot walk in flight (its route credits its own links)? */
         this.isBotWalking = isBotWalking ?? (() => false);
         this._timers = timers ?? { setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: (h) => clearInterval(h) };
@@ -222,6 +238,8 @@ export class SeedlingRegionGlue {
         this._unsubs.push(this._subscribe(ACTIVE_SUBSTRATE_EVENT, this._activeHandler));
         // ⛓ RESTART — the Menu panel's Restart (see handleMenuRestart).
         this._unsubs.push(this._subscribe(RESTARTED_EVENT, this._restartHandler));
+        // ⛓ LOOP-MODE RESTART — the loops' reset (see handleLoopReset).
+        this._unsubs.push(this._subscribe(LOOP_RESET_EVENT, this._loopResetHandler));
         this._startPositionWatch();
     }
 
@@ -391,6 +409,66 @@ export class SeedlingRegionGlue {
         const r = procgen?.retakeStartHop?.() ?? { taken: false, why: 'procgenPlayer has no retakeStartHop' };
         if (r.taken) this.stats.restarts += 1;
         return decide(r.taken, r.taken ? null : r.why, { start, substrate, stoppedWalks: stopped });
+    }
+
+    /**
+     * ⛓⛓ **LOOP-MODE RESTART — THE FALLBACK** (⚖ the user, 2026-10-06: *"The start region should always be menu, not a
+     * Seedling region. But we can go ahead and set up code to handle the case where it is a Seedling region, if that
+     * would be cheap and safe to implement."*).
+     *
+     * The loops' reset moves nobody: the REPLAY's first move does. With the declared start = `Menu` (every committed
+     * preset) that move is `Menu` → the start region, the start hop, so its arrival already teleports to
+     * `seedlingStartSpawn` — and this DECLINES (silently, `why: null`: nothing is wrong). Only when the declared start
+     * is itself one of OUR rooms is there no such move: the queue's first action happens IN that room, wherever the
+     * player stood. Then the player is moved there with the reset's own shape (`fromReset`, `updatePath: false`) and
+     * `restart: true`, which procgenPlayer marks `startHop` on a warehoused start — so the arrival is the binding's
+     * start-hop arrival (§5.25's path: `seedlingStartSpawn`, `new Game(level, x, y)`, persistence untouched).
+     *
+     * Declined BY NAME: loop mode off; a new-rules reset (`paused: true` — the load re-takes the start itself); the
+     * player not in one of our regions (another substrate's reset is not ours to move); the queue's first move
+     * entering the start room itself (it teleports there — a second warp would be a double teleport). Mana stays the
+     * loops'. `{mana, paused?}` → the decision, kept on `lastLoopReset` for a gate.
+     */
+    handleLoopReset(payload) {
+        const decide = (taken, why, extra = {}) => {
+            this.lastLoopReset = { taken, why, ...extra, at: Date.now() };
+            if (why) this._log(`[region atlas] loop reset: the Seedling player was NOT moved — ${why}`);
+            return this.lastLoopReset;
+        };
+        const loop = this.getLoop() ?? null;
+        if (payload?.paused === true) return decide(false, 'a new-rules reset (the load takes the start itself)');
+        if (loop?.isLoopModeActive?.() !== true) return decide(false, 'loop mode is off');
+        const procgen = this.getProcgen() ?? null;
+        const start = restartTargetOf(loop.getStartRegions?.() ?? []);
+        const substrate = start ? (procgen?.getRegionInfo?.(start)?.substrate ?? null) : null;
+        if (!start || !this.substrateIds.has(substrate)) {
+            // The hypothesis case (start = Menu): the replay's first move is the start hop, and its arrival teleports.
+            this.lastLoopReset = { taken: false, why: null, start, substrate, at: Date.now() };
+            return this.lastLoopReset;
+        }
+        const here = loop.getCurrentRegion?.() ?? null;
+        const hereSubstrate = here ? (procgen?.getRegionInfo?.(here)?.substrate ?? null) : null;
+        if (!this.substrateIds.has(hereSubstrate)) {
+            return decide(false, `the player is in "${here}", not a Seedling region`, { start, substrate, here });
+        }
+        const first = (loop.getActionQueue?.() ?? [])[0] ?? null;
+        if (first?.type === 'regionMove' && first.destinationRegion === start) {
+            return decide(false, `the queue's first move enters "${start}" itself (its arrival teleports)`, { start, substrate, here });
+        }
+        const dispatcher = this.getDispatcher();
+        if (!dispatcher?.publish) return decide(false, 'no dispatcher', { start, substrate, here });
+        const stopped = this.stopBotWalks();
+        dispatcher.publish('user:regionMove', {
+            sourceRegion: here,
+            targetRegion: start,
+            exitName: null,
+            fromReset: true,
+            updatePath: false,
+            restart: true,
+            source: LOOP_RESET_MOVE_SOURCE,
+        }, { initialTarget: 'bottom' });
+        this.stats.loopResets += 1;
+        return decide(true, null, { start, substrate, here, stoppedWalks: stopped });
     }
 
     /** ⛓ RESTART — the set a randomized load delivered; `seedlingStartSpawn` reads its `start`. */

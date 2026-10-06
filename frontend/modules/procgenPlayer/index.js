@@ -293,9 +293,13 @@ function handleRegionMove(data) {
         // (the load's hop, a Restart's re-take, or the Menu panel's own exit
         // button with skip off) — the arrival a NEW GAME makes, which a
         // substrate may place differently from an ordinary door. `restart`:
-        // a Restart re-took it.
-        const isStartHop = !!startHop?.sourceRegion
-            && data?.sourceRegion === startHop.sourceRegion && target === startHop.region;
+        // a Restart re-took it. A start that is itself warehoused has no hop to
+        // re-take (`sourceRegion` null), so there the RESET's move into it is
+        // the start arrival: `restart` AND `fromReset` (the loop-reset fallback,
+        // `flashPanel`'s `handleLoopReset`).
+        const isStartHop = target === startHop?.region && (startHop.sourceRegion
+            ? data?.sourceRegion === startHop.sourceRegion
+            : data?.restart === true && data?.fromReset === true);
         publishLoadRegion(target, arrivedFrom, isStartHop
             ? { startHop: true, ...(data?.restart === true ? { restart: true } : {}) } : null);
     } else if (warehouse) {
