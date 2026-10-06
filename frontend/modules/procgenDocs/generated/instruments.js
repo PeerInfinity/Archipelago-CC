@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 18,
+            "count": 19,
             "id": "census"
         },
         {
@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 49,
-            "count": 92,
+            "browser": 50,
+            "count": 93,
             "id": "probe"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 345,
-        "browser": 114,
-        "cited": 164,
-        "files": 356,
+        "blockStyle": 347,
+        "browser": 115,
+        "cited": 166,
+        "files": 358,
         "lineStyle": 11,
-        "withDocblock": 356,
-        "withFlags": 274
+        "withDocblock": 358,
+        "withFlags": 276
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -762,6 +762,38 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-areas — **THE AREA CENSUS**: how many AREAS a Seedling skeleton offers, per kind, per knob, per seed, per biome — and what a lock on every boundary cell would cost out of the 30 persistence tags.",
             "path": "scripts/procgen/census-seedling-areas.mjs"
+        },
+        {
+            "argvHelpers": [
+                "M"
+            ],
+            "browser": false,
+            "category": "census",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-arrival-solid.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "census-seedling-arrival-solid — **EVERY GAME LANDING WHOSE BOX IS INSIDE A SOLID A SAVED FLAG DECIDES** (Seedling fidelity ARRIVAL, D1(c)/D2/D4).",
+            "path": "scripts/procgen/census-seedling-arrival-solid.mjs"
         },
         {
             "argvHelpers": [
@@ -8450,6 +8482,45 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-watcher-witness — ⛓⛓⛓ SEEDLING FIDELITY WATCHER: A SILENT WATCHER ON THE FRONTIER OF A REACH-EXIT IS NOT AN OBSTACLE, AND A SPEAKING ONE IS PASSED BY ITS DIALOGUE.",
             "path": "scripts/procgen/plan-seedling-watcher-witness.mjs"
+        },
+        {
+            "argvHelpers": [
+                "travelOf"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "only",
+                "record"
+            ],
+            "file": "probe-seedling-arrival-solid.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity ARRIVAL (D1/D2): **A LANDING INSIDE A SOLID, ASKED OF THE GAME.** Every arm runs on a FRESH page of the headless game (default build p4f, logic-only), one arm per page.",
+            "path": "scripts/procgen/probe-seedling-arrival-solid.mjs"
         },
         {
             "argvHelpers": [],
