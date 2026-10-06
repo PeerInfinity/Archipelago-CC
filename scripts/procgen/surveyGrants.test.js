@@ -7,7 +7,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-import { deriveStagedGrant } from './surveyGrants.js';
+import { deriveStagedGrant, tapeCoversVisit } from './surveyGrants.js';
 
 const GAME = JSON.parse(readFileSync(
     new URL('../../frontend/modules/flashPanel/games/seedling.json', import.meta.url), 'utf8'));
@@ -95,5 +95,51 @@ describe('deriveStagedGrant — the route\'s own pickups', () => {
             unpresentable: 'report' });
         expect(g.keys).toEqual([2]);
         expect(g.unpresentable.map((u) => [u.step, u.item])).toEqual([[1, 'Seal'], [2, 'Health']]);
+    });
+
+    // ⛓ RULES survey-staging: a FUSION is the recipe's result, read off `fusion_items` — never a ladder.
+    const FUSE = [
+        { level: 10, item: 'Progressive Sword', location: 'L10 sword' },
+        { level: 50, item: 'Ghost Spear', location: 'L50 spear' },
+        { level: 60, item: 'Ghost Sword Fusion', location: 'L60 fusion' },
+        { level: 70, item: 'Wand', location: 'L70 wand' },
+        { level: 80, item: 'Fire Wand Fusion', location: 'L80 fusion' },
+        { level: 32, item: 'Fire', location: 'L32 fire' },
+    ];
+    const got = (locations, latchItems = {}) => deriveStagedGrant({ earlier: locations.map((l, i) => at(i + 1, 0, l)),
+        pickups: FUSE, game: GAME, latchItems, unpresentable: 'report' });
+
+    it('a fusion whose recipe holds grants its RESULT (hasGhostSword / hasFireWand), and is never unpresentable', () => {
+        const g = got(['L10 sword', 'L50 spear', 'L60 fusion', 'L70 wand', 'L32 fire', 'L80 fusion']);
+        expect(g.items).toEqual(['hasFire', 'hasFireWand', 'hasGhostSword', 'hasSpear', 'hasSword', 'hasWand']);
+        expect(g.unpresentable).toEqual([]);
+        expect(g.from.filter((f) => /Fusion/.test(f.item))).toEqual([
+            { step: 3, item: 'Ghost Sword Fusion', grants: 'seam.items.hasGhostSword' },
+            { step: 6, item: 'Fire Wand Fusion', grants: 'seam.items.hasFireWand' },
+        ]);
+        // the latch's Sword counts as held, the route's copy as the progressive requirement
+        expect(got(['L10 sword', 'L50 spear', 'L60 fusion'], { hasSword: true }).items).toEqual(['hasGhostSword', 'hasSpear']);
+    });
+
+    it('a fusion whose recipe does NOT hold grants nothing and is named pending', () => {
+        const g = got(['L10 sword', 'L60 fusion', 'L70 wand', 'L80 fusion']);
+        expect(g.items).toEqual(['hasSword', 'hasWand']);
+        expect(g.pendingFusions.map((p) => [p.result, p.missing])).toEqual([
+            ['ghostsword', ['spear']], ['firewand', ['fire']],
+        ]);
+        expect(got(['L50 spear', 'L60 fusion']).pendingFusions[0].missing).toEqual(['!sword×1']);
+    });
+
+    it('tapeCoversVisit: a committed tape boots a visit only while it presents everything the walk holds', () => {
+        expect(tapeCoversVisit(null)).toEqual({ covers: true, beyond: [] });
+        // the tape's own visit: the Sword latched in the tape, its own Boss Key in its save
+        expect(tapeCoversVisit({ keys: [0], items: [], latched: ['hasSword'], from: [], unpresentable: [{}] }, [0]))
+            .toEqual({ covers: true, beyond: [] });
+        // a LATE visit: the walk holds what the tape's early block does not
+        expect(tapeCoversVisit({ keys: [0, 1], items: ['hasShield', 'hasSword'], latched: [], from: [] }, [0]))
+            .toEqual({ covers: false, beyond: ['hasShield', 'hasSword', 'save.keys[1]'] });
+        // a Boss Key alone is enough (step 39: L19's second visit, after its Red Key)
+        expect(tapeCoversVisit({ keys: [0], items: [], latched: ['hasSword'], from: [] }, []))
+            .toEqual({ covers: false, beyond: ['save.keys[0]'] });
     });
 });

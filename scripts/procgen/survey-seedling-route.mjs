@@ -146,7 +146,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 
 import { fileURLToPath } from 'node:url';
 
 import { familyOf } from './surveyFamily.js';
-import { deriveStagedGrant } from './surveyGrants.js';
+import { deriveStagedGrant, tapeCoversVisit } from './surveyGrants.js';
 import {
     RESTART_TARGET, deriveLegs, gameStateEventsOf, stagedPersistence, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
     ROUTE_MODES, routeOnlyRows,
@@ -1095,7 +1095,8 @@ function bootFor(step) {
     }
     const key = bootKey(step.level, step.arrival.x, step.arrival.y);
     const tape = COMMITTED_BY_ARRIVAL.get(key);
-    if (tape) {
+    const late = tape ? lateVisitTo(step, tape) : null;
+    if (tape && !late) {
         return {
             // ⛓ R9 slice 7: was `r7-act2-1`, retired by ⚖ ruling 14.
             //   `r8-solve-1` is the same boot — `new Game(0, 80, 128)`,
@@ -1118,8 +1119,33 @@ function bootFor(step) {
             // descent the fall itself plays (`arriveFromFall`). Named, because
             // it is a bound on what a SOLVED row here claims.
             + (step.arrivalVia ? `; the arrival is a PIT landing (${step.arrivalVia}), staged `
-                + 'on the ground at the fall\'s ctor args rather than as the ceiling descent' : ''),
+                + 'on the ground at the fall\'s ctor args rather than as the ceiling descent' : '')
+            + (late ? `; a LATE visit to ${tape}'s door — the walk holds ${late.join(', ')}, which `
+                + `${tape} does not present, so its early block is not this visit's` : ''),
+        ...(late ? { lateVisitTo: tape, beyond: late } : {}),
     };
+}
+
+/**
+ * ⛓ RULES survey-staging (`surveyGrants.tapeCoversVisit`): null when the committed `tape` presents everything the
+ * walk holds at `step` (its own visit), else what the walk holds beyond it. Under `--through` only — the default
+ * survey grants nothing, so its boots cannot move. A late visit with no Sword would be handed the post-sword latch
+ * it never earned; that refuses by name rather than boot.
+ */
+function lateVisitTo(step, tape) {
+    if (!THROUGH || typeof step.step !== 'number') return null;
+    const raw = committedTape(tape);
+    const grant = deriveStagedGrant({
+        earlier: route.steps.filter((s) => typeof s.step === 'number' && s.step < step.step),
+        pickups: PICKUP_ROWS, game: GAME, latchItems: raw.seam?.items ?? {}, unpresentable: 'report',
+    });
+    const { covers, beyond } = tapeCoversVisit(grant, raw.save?.keys ?? []);
+    if (covers) return null;
+    if (!grant.from.some((f) => f.item === 'Progressive Sword')) {
+        throw new Error(`step ${step.step} is a late visit to ${tape}'s door (the walk holds ${beyond.join(', ')}) `
+            + `with no Sword — the staged boot is ${STAGED_BASE}'s post-sword latch, which this visit never earned.`);
+    }
+    return beyond;
 }
 
 // ─────────────────────────────────────────────────────────────────────

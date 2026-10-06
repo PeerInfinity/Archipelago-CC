@@ -35,6 +35,13 @@
  *    honour (a Seal or a Totem Shard has no `items` row, Health adds) into a
  *    named list on the grant instead of a throw. ⚠ A staged row past such a
  *    pickup is then solved WITHOUT it, and the grant says so.
+ *
+ * ⛓ RULES survey-staging — **A FUSION IS NOT A LADDER.** `Ghost Sword Fusion` (`!ghostsword`) and `Fire Wand
+ * Fusion` (`!firewand`) are `games/seedling.json` `fusion_items` FLAGS: the game holds the fusion's `result` once
+ * the flag AND its recipe hold (`requires_items` flash items held, `requires_progressive` copies counted) — the
+ * flash bridge's own reading (`flashBridgeAdapter._inventoryToFlashItems`). They were read as a progressive name,
+ * found no rung and dropped as `unpresentable`, so L101's staged boots lacked `hasGhostSword`. A flag whose recipe
+ * does not hold yet grants nothing and is named on the grant (`pendingFusions`).
  */
 
 /**
@@ -58,9 +65,23 @@ export function deriveStagedGrant({ earlier, pickups, game, latchItems, unpresen
     const from = [];
     const cannot = [];
     const copies = new Map();
+    /** flash names the walk holds (granted or latched), for a fusion's `requires_items` */
+    const heldFlash = new Set(game.items.filter((r) => latchItems?.[r.property] === true).map((r) => r.flash_name));
+    /** fusion flag → the step and AP item that delivered it */
+    const fusionFlags = new Map();
+    const isFusionFlag = (flash) => (game.fusion_items ?? []).some((f) => (f.requires_flags ?? []).includes(flash));
     const refuse = (step, item, message) => {
         if (unpresentable !== 'report') throw new Error(message);
         cannot.push({ step, item, why: message.replace(/^surveyGrants: /, '') });
+    };
+    const grantRow = (step, item, row) => {
+        if (latchItems?.[row.property] === true) {
+            latched.add(row.property);
+            from.push({ step, item, grants: `latched ${row.property}` });
+        } else {
+            items.add(row.property);
+            from.push({ step, item, grants: `seam.items.${row.property}` });
+        }
     };
     for (const s of earlier) {
         for (const g of s.goals) {
@@ -77,6 +98,10 @@ export function deriveStagedGrant({ earlier, pickups, game, latchItems, unpresen
             const ap = game.ap_items.find((r) => r.ap_name === pick.item);
             if (!ap) throw new Error(`surveyGrants: AP item '${pick.item}' is not in ap_items`);
             let flash = ap.flash_name;
+            if (isFusionFlag(flash)) {
+                if (!fusionFlags.has(flash)) fusionFlags.set(flash, { step: s.step, item: pick.item });
+                continue;
+            }
             if (flash.startsWith('!')) {
                 const n = (copies.get(flash) ?? 0) + 1;
                 copies.set(flash, n);
@@ -105,21 +130,61 @@ export function deriveStagedGrant({ earlier, pickups, game, latchItems, unpresen
                     + 'cannot add.');
                 continue;
             }
-            if (latchItems?.[row.property] === true) {
-                latched.add(row.property);
-                from.push({ step: s.step, item: pick.item, grants: `latched ${row.property}` });
-            } else {
-                items.add(row.property);
-                from.push({ step: s.step, item: pick.item, grants: `seam.items.${row.property}` });
-            }
+            heldFlash.add(flash);
+            grantRow(s.step, pick.item, row);
         }
     }
-    if (from.length === 0 && cannot.length === 0) return null;
+    const pending = [];
+    for (const fusion of game.fusion_items ?? []) {
+        const flags = fusion.requires_flags ?? [];
+        if (flags.length === 0 || !flags.every((f) => fusionFlags.has(f))) continue;
+        const via = fusionFlags.get(flags[flags.length - 1]);
+        const missing = [
+            ...(fusion.requires_items ?? []).filter((it) => !heldFlash.has(it)),
+            ...Object.entries(fusion.requires_progressive ?? {})
+                .filter(([group, need]) => (copies.get(group) ?? 0) < need).map(([group, need]) => `${group}×${need}`),
+        ];
+        if (missing.length > 0) {
+            pending.push({ step: via.step, item: via.item, result: fusion.result, missing });
+            continue;
+        }
+        const row = game.items.find((r) => r.flash_name === fusion.result);
+        if (!row || row.value !== true || row.op !== undefined) {
+            refuse(via.step, via.item, `surveyGrants: fusion result '${fusion.result}' is not a boolean item `
+                + `(${JSON.stringify(row ?? null)})`);
+            continue;
+        }
+        heldFlash.add(fusion.result);
+        grantRow(via.step, via.item, row);
+    }
+    if (from.length === 0 && cannot.length === 0 && pending.length === 0) return null;
     return {
         keys: [...keys].sort((x, y) => x - y),
         items: [...items].sort(),
         latched: [...latched].sort(),
         from,
         ...(unpresentable === 'report' ? { unpresentable: cannot } : {}),
+        ...(pending.length > 0 ? { pendingFusions: pending } : {}),
     };
+}
+
+/**
+ * ⛓ RULES survey-staging — **A COMMITTED TAPE BOOTS ONLY THE VISIT IT PRESENTS.** The survey matches a committed
+ * campaign tape by arrival position, so a LATE return to the same door (L3@64,16 at step 217, leg 10.2) booted the
+ * tape's early block verbatim: no sword. A tape boots a visit only while it presents everything the walk holds
+ * there — `grant` is `deriveStagedGrant` over the walk's earlier steps with the TAPE's own `seam.items` as the
+ * latch, so the tape covers the visit when the grant writes no item and every key it names is in the tape's own
+ * `save.keys`. Otherwise the visit is later than the tape's own (the caller boots it staged, with the derived grant)
+ * — never the tape's block with a late inventory grafted on, which no run ever recorded. What a boot can never
+ * present (`unpresentable`) does not count against the tape.
+ *
+ * @returns {{covers: boolean, beyond: string[]}} `beyond` names what the walk holds that the tape does not
+ */
+export function tapeCoversVisit(grant, tapeKeys = []) {
+    if (!grant) return { covers: true, beyond: [] };
+    const beyond = [
+        ...grant.items,
+        ...grant.keys.filter((k) => !tapeKeys.includes(k)).map((k) => `save.keys[${k}]`),
+    ];
+    return { covers: beyond.length === 0, beyond };
 }
