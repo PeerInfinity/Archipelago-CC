@@ -1011,31 +1011,30 @@ export async function seedlingJsRuntimeSolverBudgetFallsBack(tc) {
         const up = await slowRoomOnPage(tc);
         if (!up) return tc.getOverallResult();
         ({ rt } = up);
-        // A short budget (the test knob; the page also reads ?solverBudgetMs=) — the door solve needs ~5 s.
-        const budget = rt.playback.solverBudgetMs;
-        rt.playback.setSolverBudgetMs(300);
+        // ⛓ DETERMINISTIC BUDGET — the solve's budget is WORK (the same answer on every machine), so the only
+        // wall-clock cut left is the BACKSTOP, shortened here (the test knob; the page also reads
+        // ?solverBackstopMs=) — the door solve needs ~5 s. Past it the goal FAILS by name: nothing is played,
+        // nothing is walked instead (a slow machine never changes the outcome into a different one).
+        const backstop = rt.playback.solverBackstopMs;
+        rt.playback.setSolverBackstopMs(300);
         const solves0 = rt.playback.solveService.stats.terminated;
-        const ticks0 = rt.ticks;
+        const runTicks0 = rt.run.ticksCompleted;
         rt.playback.walkTo({ kind: 'exit', level: SLOW_ROOM.level, tiles: [up.exitTile] });
         rt.playback.play();
-        const declined = await tc.pollForCondition(() => rt.playback.solverStats.declines > 0,
-            'the solve was cut off at its budget and DECLINED', 15000, 50);
+        const failed = await tc.pollForCondition(() => rt.playback.state === 'failed',
+            'the solve was cut off at the backstop and the goal FAILED', 15000, 50);
         const s = rt.playback.solverStats;
-        tc.log(`decline after ${s.lastWaitMs} ms: ${s.lastDecline}; status: ${rt.playback.describe()}`);
-        tc.reportCondition('declined within the budget\'s reach', !!declined);
-        tc.assertEqual('the decline NAMES the budget', 'the solver exceeded 0.3 s on reach-exit in level 12 (terminated) — walking',
-            s.lastDecline);
-        tc.assertEqual('the status carries it (the walker took the goal, by name)',
-            'the solver declined — the solver exceeded 0.3 s on reach-exit in level 12 (terminated) — walking; walking instead',
-            rt.playback.reason);
-        tc.assertEqual('one expiry, no solve, nothing played', '1/0/0', `${s.expiries}/${s.solves}/${s.played}`);
+        tc.log(`failed after ${s.lastWaitMs} ms: ${rt.playback.reason}; status: ${rt.playback.describe()}`);
+        tc.reportCondition('failed within the backstop\'s reach', !!failed);
+        tc.assertEqual('the failure NAMES the backstop', true,
+            /^the solve exceeded the backstop on this machine \(0\.3 s\) on reach-exit in level 12 \(terminated; the solve's own budget is \d+ work units\)/
+                .test(rt.playback.reason ?? ''));
+        tc.assertEqual('one backstop, no solve, no decline, nothing played', '1/0/0/0', `${s.backstops}/${s.solves}/${s.declines}/${s.played}`);
         tc.assertEqual('the worker was TERMINATED', solves0 + 1, rt.playback.solveService.stats.terminated);
-        tc.assertEqual('cut off at the budget, not before it', true, s.lastWaitMs >= 300 && s.lastWaitMs < 3000);
-        const walking = await tc.pollForCondition(() => rt.playback.stats.plans > 0 && rt.ticks > ticks0 + 10,
-            'the J2 walker walks the goal now (its planner runs, the page ticks)', 5000, 50);
-        tc.reportCondition('the walker took the goal', !!walking);
+        tc.assertEqual('cut off at the backstop, not before it', true, s.lastWaitMs >= 300 && s.lastWaitMs < 3000);
+        tc.assertEqual('the page did not walk the goal instead (the run never stepped)', runTicks0, rt.run.ticksCompleted);
         tc.assertEqual('the room is no longer held', false, rt.playback.solving);
-        rt.playback.setSolverBudgetMs(budget);
+        rt.playback.setSolverBackstopMs(backstop);
         tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
     } finally {
         try { rt?.playback.reset(); } catch { /* best effort */ }
@@ -1047,11 +1046,13 @@ export async function seedlingJsRuntimeSolverBudgetFallsBack(tc) {
 
 registerTest({
     id: 'seedling-js-runtime-solver-budget-falls-back',
-    name: 'Seedling JS runtime: a solve past its budget is terminated and the walker takes the goal, by name',
+    // ⛓ DETERMINISTIC BUDGET — the id is kept (a rename would re-enrol the row); its subject is now the BACKSTOP.
+    name: 'Seedling JS runtime: a solve past the wall-clock backstop is terminated and the goal FAILS by name (never walked, never played)',
     description: 'With flashPanel.runtime = js and flashPanel.seedlingSolverWalk ON, on seedling_atlas: the page is '
-        + 'teleported to level 12\'s door (the slowest measured solve, ~5 s) and its budget shortened to 300 ms '
-        + '(playback.setSolverBudgetMs, the test knob). The worker is terminated at the budget, the goal DECLINES with '
-        + '"the solver exceeded 0.3 s … (terminated) — walking", and the J2 walker walks it; nothing of the solve is played.',
+        + 'teleported to level 12\'s door (the slowest measured solve, ~5 s) and its wall-clock backstop shortened to 300 ms '
+        + '(playback.setSolverBackstopMs, the test knob; the solve\'s own budget is work units, the same on every machine). '
+        + 'The worker is terminated at the backstop and the goal FAILS with "the solve exceeded the backstop on this machine '
+        + '(0.3 s) …"; nothing of the solve is played and the walker does not take the goal instead.',
     testFunction: seedlingJsRuntimeSolverBudgetFallsBack,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
@@ -1094,9 +1095,7 @@ export async function seedlingJsRuntimeSolverKeepsTheFrameClock(tc) {
         win.requestAnimationFrame(frame);
         let solveStart = null;
         let runTicksAtStart = null;
-        // ⛔ Not a budget row (that is the row above): a loaded box can push this ~2 s solve past 5 s.
-        const budget = rt.playback.solverBudgetMs;
-        rt.playback.setSolverBudgetMs(30000);
+        // ⛓ DETERMINISTIC BUDGET — no budget override: the work budget gives this solve the same answer under any load.
         try {
             rt.playback.setSolverWalk(true);
             rt.playback.walkTo(goal);
@@ -1115,7 +1114,6 @@ export async function seedlingJsRuntimeSolverKeepsTheFrameClock(tc) {
         } finally {
             raf = false;
             win.clearInterval(beat);
-            rt.playback.setSolverBudgetMs(budget);
         }
         const s = rt.playback.solverStats;
         tc.log(`solve ${s.lastSolve?.solveMs} ms in the worker (waited ${s.lastSolve?.waitMs} ms, observed ${Math.round(clock.solvingMs)} ms); `

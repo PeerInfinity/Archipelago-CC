@@ -502,7 +502,7 @@
             "id": "seedling-js-runtime-solver-budget-falls-back",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "Seedling solver-walk S2. Runtime js + the solver mode ON on seedling_atlas: level 12's door (the ~5 s solve) under a 300 ms budget (playback.setSolverBudgetMs) — the worker is terminated at the budget, the goal declines BY NAME (\"the solver exceeded 0.3 s … — walking\") and the J2 walker takes it; nothing of the solve is played."
+            "_comment": "Seedling solver-walk S2 → DETERMINISTIC BUDGET. Runtime js + the solver mode ON on seedling_atlas: level 12's door (the ~5 s solve) under a 300 ms wall-clock BACKSTOP (playback.setSolverBackstopMs; the solve's own budget is work units) — the worker is terminated at the backstop and the goal FAILS BY NAME (\"the solve exceeded the backstop on this machine (0.3 s) …\"); nothing of the solve is played, nothing walked instead."
         },
         {
             "id": "seedling-js-runtime-solver-keeps-the-frame-clock",
