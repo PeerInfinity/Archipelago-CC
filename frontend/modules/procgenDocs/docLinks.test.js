@@ -269,20 +269,25 @@ describe('the corpus census — printed, then pinned', () => {
          *              links removed by N4c): flash.md's host-state row → noiz2sa.md § Loop mode
          *              (`doc` 269 → 270); noiz2sa.md's configure and requestHost lines → its own
          *              § Loop mode (`same-doc` 17 → 19).
+         *   347 → 354  BULLETML N5 (2026-10-06): substrate-registry.md's `priceRegions` row and
+         *              loop-recording.md's drain paragraph → noiz2sa.md § Pricing (`doc` 270 → 272);
+         *              noiz2sa.md § Pricing and loop-recording.md → ../modules/loopsCostDebugger.md
+         *              (`repo` 36 → 38); noiz2sa.md's N5 ruling and payload lines → its own § Pricing,
+         *              and its training paragraph → § The bot (`same-doc` 19 → 22).
          */
         expect(by).toEqual({
-            'same-doc': 19,
-            doc: 270,
+            'same-doc': 22,
+            doc: 272,
             external: 22,
-            repo: 36,
+            repo: 38,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(347);
+        expect(CORPUS.length).toBe(354);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(270);
+        expect(docs).toHaveLength(272);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
@@ -291,7 +296,7 @@ describe('the corpus census — printed, then pinned', () => {
 
     it('sends every other repo path to GitHub, fragment kept', () => {
         const repo = RESOLVED.filter((r) => r.kind === 'repo');
-        expect(repo).toHaveLength(36);
+        expect(repo).toHaveLength(38);
         for (const r of repo) expect(r.href.startsWith(`${REPO_URL}/`), r.href).toBe(true);
         /** ⛓ The four families the corpus actually names. */
         const tops = [...new Set(repo.map((r) => r.repoPath.split('/')[0]))].sort();

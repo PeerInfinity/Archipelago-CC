@@ -554,87 +554,6 @@ export const CAPABILITIES = frz({
             ]
         },
         {
-            "id": "noiz2sa",
-            "label": "Noiz2sa",
-            "lines": [
-                {
-                    "group": "play",
-                    "statement": "You can play its regions by hand",
-                    "text": null
-                },
-                {
-                    "group": "play",
-                    "statement": "The Playback Bot can walk it (replaying a world's solution)",
-                    "text": null
-                },
-                {
-                    "group": "play",
-                    "statement": "It brings progression items of its own",
-                    "text": "Victory, Noiz2sa Star"
-                },
-                {
-                    "group": "play",
-                    "statement": "What the generator may do with it",
-                    "text": "locations placed anywhere"
-                },
-                {
-                    "group": "loop",
-                    "statement": "You can play it in loop mode",
-                    "text": null
-                },
-                {
-                    "group": "loop",
-                    "statement": "What you can queue for it",
-                    "text": "moves between regions, location checks"
-                },
-                {
-                    "group": "loop",
-                    "statement": "You can record a visit and replay it",
-                    "text": null
-                },
-                {
-                    "group": "loop",
-                    "statement": "How a replay works",
-                    "text": "applies the result instantly"
-                },
-                {
-                    "group": "loop",
-                    "statement": "Instant fast-forward",
-                    "text": "always — a replay is already instant"
-                },
-                {
-                    "group": "loop",
-                    "statement": "A Bot block can play it for you",
-                    "text": "the game's own automation walks it"
-                },
-                {
-                    "group": "loop",
-                    "statement": "You can play it outside loop mode",
-                    "text": null
-                },
-                {
-                    "group": "generate",
-                    "statement": "How many ready-made rooms / levels it brings",
-                    "text": "3 Noiz2sa segments"
-                },
-                {
-                    "group": "generate",
-                    "statement": "A world of it can start with an empty inventory",
-                    "text": null
-                },
-                {
-                    "group": "edit",
-                    "statement": "An exit can be moved to another side (and a side can hold more than one)",
-                    "text": "and a side can hold more than one"
-                },
-                {
-                    "group": "edit",
-                    "statement": "The editor's validity report checks its location and exit names",
-                    "text": null
-                }
-            ]
-        },
-        {
             "id": "omsi",
             "label": "Idle Loops",
             "lines": [
@@ -964,10 +883,6 @@ export const CAPABILITIES = frz({
             "label": "Maze"
         },
         {
-            "id": "noiz2sa",
-            "label": "Noiz2sa"
-        },
-        {
             "id": "omsi",
             "label": "Idle Loops"
         },
@@ -981,11 +896,11 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 87,
+        "fields": 86,
         "fieldsRead": 38,
-        "fieldsUnread": 46,
+        "fieldsUnread": 45,
         "statements": 29,
-        "substrates": 10
+        "substrates": 9
     },
     "fieldsRead": [
         "apExitNamesOf",
@@ -1176,21 +1091,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "panelComponentType",
-                            "value": "noiz2saSubstratePanel"
-                        },
-                        {
-                            "field": "deserializeWorld",
-                            "value": "fn"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "yes",
                     "text": null,
@@ -1337,21 +1237,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "getPlaybackController",
-                            "value": "fn"
-                        },
-                        {
-                            "field": "playbackScope",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "yes",
                     "text": null,
@@ -1470,17 +1355,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "compositeMap.drawRegion",
                             "value": "fn"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "compositeMap.drawRegion",
-                            "value": "—"
                         }
                     ]
                 },
@@ -1618,21 +1492,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": "Victory, Noiz2sa Star",
-                    "why": [
-                        {
-                            "field": "libraryItems",
-                            "value": "{Noiz2sa Star, Victory}"
-                        },
-                        {
-                            "field": "supportedFeatures",
-                            "value": "arbitrary_ap_locations"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "yes",
                     "text": "Victory",
@@ -1755,17 +1614,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": "locations placed anywhere",
-                    "why": [
-                        {
-                            "field": "supportedFeatures",
-                            "value": "arbitrary_ap_locations"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "yes",
                     "text": "its own map becomes the region graph, locations placed anywhere",
@@ -1877,17 +1725,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "conceptRealisations",
                             "value": "{guardian, swim, sword, water}"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "conceptRealisations",
-                            "value": "—"
                         }
                     ]
                 },
@@ -2007,17 +1844,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.manual",
-                            "value": "yes"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "yes",
                     "text": null,
@@ -2123,17 +1949,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.queueActions",
                             "value": "regionMove, locationCheck, explore"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": "moves between regions, location checks",
-                    "why": [
-                        {
-                            "field": "loopSupport.queueActions",
-                            "value": "regionMove, locationCheck"
                         }
                     ]
                 },
@@ -2257,21 +2072,6 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "maze",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.record",
-                            "value": "yes"
-                        },
-                        {
-                            "field": "loopSupport.playback",
-                            "value": "yes"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
                     "kind": "yes",
                     "text": null,
                     "why": [
@@ -2432,21 +2232,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": "applies the result instantly",
-                    "why": [
-                        {
-                            "field": "takeLastRecording",
-                            "value": "—"
-                        },
-                        {
-                            "field": "loopSupport.summaryRecording",
-                            "value": "yes"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "yes",
                     "text": "replays your exact moves",
@@ -2593,21 +2378,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": "always — a replay is already instant",
-                    "why": [
-                        {
-                            "field": "loopSupport.instant",
-                            "value": "yes"
-                        },
-                        {
-                            "field": "loopSupport.summaryRecording",
-                            "value": "yes"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "yes",
                     "text": "a per-block toggle",
@@ -2750,21 +2520,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "sharing.mana.loopActionDelegation",
                             "value": "yes"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": "the game's own automation walks it",
-                    "why": [
-                        {
-                            "field": "loopSupport.executeVia",
-                            "value": "solver"
-                        },
-                        {
-                            "field": "sharing.mana.loopActionDelegation",
-                            "value": "—"
                         }
                     ]
                 },
@@ -2963,29 +2718,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "na",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.instant",
-                            "value": "yes"
-                        },
-                        {
-                            "field": "loopSupport.executeVia",
-                            "value": "solver"
-                        },
-                        {
-                            "field": "takeLastRecording",
-                            "value": "—"
-                        },
-                        {
-                            "field": "loopSupport.summaryRecording",
-                            "value": "yes"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "yes",
                     "text": null,
@@ -3134,17 +2866,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.requiresLoopMode",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "no",
                     "text": "loop mode stays on — it declares `loopSupport.requiresLoopMode`",
@@ -3254,17 +2975,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "sharing.mana",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "yes",
                     "text": null,
@@ -3364,17 +3074,6 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "maze",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "sharing.items",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
                     "kind": "no",
                     "text": null,
                     "why": [
@@ -3510,17 +3209,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "describeAction",
                             "value": "fn"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "describeAction",
-                            "value": "—"
                         }
                     ]
                 },
@@ -3670,25 +3358,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "generateRegionCore",
                             "value": "fn"
-                        },
-                        {
-                            "field": "generateZoneForSpecs",
-                            "value": "—"
-                        },
-                        {
-                            "field": "generateZoneForSpecsGen",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
-                    "kind": "no",
-                    "text": "only as content from its own game",
-                    "why": [
-                        {
-                            "field": "generateRegionCore",
-                            "value": "—"
                         },
                         {
                             "field": "generateZoneForSpecs",
@@ -3884,25 +3553,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": "3 Noiz2sa segments",
-                    "why": [
-                        {
-                            "field": "zoneCount",
-                            "value": "3"
-                        },
-                        {
-                            "field": "zoneSourceLabel",
-                            "value": "Noiz2sa segment"
-                        },
-                        {
-                            "field": "generateRegionCore",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "yes",
                     "text": "1",
@@ -4029,17 +3679,6 @@ export const CAPABILITIES = frz({
                 {
                     "id": "maze",
                     "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "generationCost",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
-                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -4178,21 +3817,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "instantiateLibraryEntry",
                             "value": "fn"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "captureLibraryEntry",
-                            "value": "—"
-                        },
-                        {
-                            "field": "instantiateLibraryEntry",
-                            "value": "—"
                         }
                     ]
                 },
@@ -4343,21 +3967,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "canHostExitGates",
-                            "value": "—"
-                        },
-                        {
-                            "field": "supportedFeatures",
-                            "value": "arbitrary_ap_locations"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "no",
                     "text": null,
@@ -4480,17 +4089,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "renderProcgenParams",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "no",
                     "text": null,
@@ -4590,17 +4188,6 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "maze",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "startingInventory",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
                     "kind": "yes",
                     "text": null,
                     "why": [
@@ -4720,17 +4307,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "na",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "locationCapacity",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "na",
                     "text": null,
@@ -4836,17 +4412,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "roomEditor",
                             "value": "{arm, kind, page}"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "roomEditor",
-                            "value": "—"
                         }
                     ]
                 },
@@ -4960,17 +4525,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "regionRoundTrip",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "no",
                     "text": null,
@@ -5076,17 +4630,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "exitSides",
                             "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": "and a side can hold more than one",
-                    "why": [
-                        {
-                            "field": "exitSides",
-                            "value": "{keys, relabel}"
                         }
                     ]
                 },
@@ -5224,21 +4767,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "noiz2sa",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "apLocationNamesOf",
-                            "value": "fn"
-                        },
-                        {
-                            "field": "apExitNamesOf",
-                            "value": "fn"
-                        }
-                    ]
-                },
-                {
                     "id": "omsi",
                     "kind": "yes",
                     "text": null,
@@ -5320,7 +4848,6 @@ export const CAPABILITIES = frz({
         "libraryEntryRefusal",
         "loadRegionEvent",
         "loopSupport.customQueues",
-        "loopSupport.playClock",
         "onContentEdit",
         "pipelineConfigFromParams",
         "pipelineConfigKeys",

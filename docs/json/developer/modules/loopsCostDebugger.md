@@ -105,7 +105,17 @@ panel renders is labelled by two independent facts:
 |---|---|---|---|
 | COARSE | `{moveCost, xpEffect}` + location costs | the number | the block's number is the price |
 | NATIVE (jta, omsi) | *none* | **own economy** | the substrate runs its own mana pool; the loop queue charges nothing |
-| SUMMARY (runner, bounce) | `{timeDrainPerSecond, xpEffect}` | **time-priced** | priced by how long a visit takes; a per-action cost applies only where the input block named one |
+| SUMMARY (runner, bounce, noiz2sa) | `{timeDrainPerSecond, xpEffect}` | **time-priced** | priced by how long a visit takes; a per-action cost applies only where the input block named one |
+
+**A SUMMARY region's rate** is, in order: the input block's explicit `timeDrainPerSecond`, else the rate the region's
+PAYLOAD names (`playable_payload.timeDrainPerSecond`, carried by the topology as `regionDrainRates`), else the default
+1. A substrate that prices its regions at generation time writes the payload rate (Noiz2sa since bulletml N5: its
+`priceRegions` hook, [noiz2sa.md](../procgen/noiz2sa.md#pricing-n5)). Both drivers see it: the pipeline's topology
+reads it off the document (`regionDrainRatesFromRulesJson`), and this planner off the working copy
+(`documentStateManager.regionDrainRates`) or the applied state (`procgenPlayer.getRegionInfo(region).timeDrainPerSecond`),
+so Generate Costs stamps the rate the pipeline embedded. Runner and bounce payloads name none, so their regions keep
+the default. `check-loop-costs-one-model.mjs` holds the two drivers together on `noiz2sa_priced_test` (a document it
+skips by name while the shared submodule predates the rule).
 
 ⚠ **The two axes are not the same question, and maze is why.** Maze is COARSE
 (the block carries its `moveCost`) *and* FINE (`mazeRoomUI._perTileMoveCost`
