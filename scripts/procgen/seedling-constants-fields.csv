@@ -1240,6 +1240,10 @@ frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|4,rule,count,,Bob die 
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|5,rule,magnitude,,Bob die anim rate
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|8,rule,count,,Jellyfish die anim frames
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|7,rule,magnitude,,Jellyfish die anim rate
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|9,rule,count,,LavaRunner die anim frames (KILLLOCK K2)
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|15,rule,magnitude,,LavaRunner die anim rate (KILLLOCK K2)
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|1,physics,magnitude,Enemies/LavaRunner.as:swimSpeed,LavaRunner swimSpeed on water/lava (KILLLOCK K2)
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|1.5,physics,magnitude,Enemies/LavaRunner.as:normalSpeed,LavaRunner normalSpeed (KILLLOCK K2)
 frontend/modules/seedlingDemo/chasers.js|normalize|normalize,structural,,,
 frontend/modules/seedlingDemo/chasers.js|puncherPunchRect|puncherPunchRect,structural,,,Puncher.as direction codes (0 east 1 north 2 west 3 south) indexing the four punch boxes
 frontend/modules/seedlingDemo/chasers.js|applyFriction|applyFriction,structural,,,zero floor / zeroed components

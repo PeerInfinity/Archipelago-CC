@@ -71,6 +71,7 @@ import { rect, SOLIDS_BY_MOVER } from './levelWorld.js';
 import { MODELLED_ENEMY_CLASSES } from './spinner.js';
 import { PROFILE } from './seedlingProfile.js';
 import { defineRecord } from './entityRecords.js';
+import { killLockBridged } from './killLockBodies.js';
 import { TILE_TYPE_IDS } from '../flashPanel/seedlingSemantics.js';
 
 export class ChaserError extends Error {
@@ -258,6 +259,35 @@ export const CHASERS = defineRecord('chasers', {
         src: 'Enemies/Jellyfish.as:44-75',
     }),
     /**
+     * ⛓ SEEDLING FIDELITY KILLLOCK (K2, `killLockBodies.KILLLOCK_BODIES.lavaRunnerLive`) — `LavaRunner extends Bob`,
+     * so the chase block is Bob's (`chaseImpulse`, no target offset). What is its own:
+     *   · `update()` opens with `if (Game.freezeObjects) return;` (`LavaRunner.as:47-48`), ABOVE `super.update()` —
+     *     a frozen lavarunner runs nothing at all, not even `Enemy`'s terrain switch, `hitUpdate` or the fade
+     *     (`freezeSkipsUpdate`);
+     *   · `moveSpeed` is re-chosen AFTER `super.update()` by the tile under the body — `swim()` (1) on water or lava,
+     *     `walk()` (1.5) elsewhere (`:82-92`) — so the chase on tick N reads the speed tick N − 1 chose
+     *     (`speedByTerrain`; the ctor's `normalSpeed` on the first);
+     *   · the "die" anim is nine frames at rate 15 (`:34`).
+     * The `inAir` jump arm is reached only from `LavaBoss.as:234`; no placed lavarunner jumps.
+     */
+    lavarunner: Object.freeze({
+        as3: 'LavaRunner',
+        targetOffset: Object.freeze({ x: 0, y: 0 }),
+        freezesOnGameFreeze: true,
+        freezeSkipsUpdate: true,
+        dieAnim: Object.freeze({ frames: 9, rate: 15, src: 'LavaRunner.as:34 add("die", [10..18], 15)' }),
+        // ⚠ `solids.push("LavaBoss", "Enemy")` (`:41`): the chaser list plus "LavaBoss". A room with a LavaBoss is
+        // refused by `assertChaserSolidsBound` (the over-reach is computed from this mover); no lavarunner room
+        // holds one.
+        solidsMover: 'chaser',
+        knocksBack: true,
+        speedByTerrain: Object.freeze({
+            swim: 1, walk: 1.5, swimTiles: Object.freeze([TILE_TYPE_IDS.water, TILE_TYPE_IDS.lava]),
+            src: 'LavaRunner.as:17-18,82-92,103-117',
+        }),
+        src: 'Enemies/LavaRunner.as:45-93',
+    }),
+    /**
      * ⛓⛓⛓ U7-swim — THE THIRD ROW, AND THE SECOND BRIDGED ONE.
      *
      * `Puncher.update`'s chase block (`:62-73`) is Bob's eleven lines with no
@@ -323,7 +353,7 @@ export const CHASERS = defineRecord('chasers', {
  */
 export function bridgedChaserTags() {
     return Object.entries(CHASERS)
-        .filter(([, c]) => MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js')
+        .filter(([tag, c]) => MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js' || killLockBridged(tag))
         .map(([tag]) => tag)
         .sort();
 }
@@ -341,7 +371,7 @@ export function chaserKnocksBack(tag) {
 /** Is this census tag one the tick loop steps? */
 export function isBridgedChaser(tag) {
     const c = CHASERS[tag];
-    return !!c && MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js';
+    return !!c && (MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js' || killLockBridged(tag));
 }
 
 /**
@@ -440,7 +470,9 @@ export function chaseImpulse(tag, enemy, player) {
     const row = ENEMY_CLASSES[tag];
     const c = CHASERS[tag];
     if (!row || !c) fail(`chaseImpulse: "${tag}" is not a transcribed chaser`);
-    const ms = row.speed;
+    // ⛓ KILLLOCK K2: a body whose speed its own update re-chooses (`speedByTerrain`) carries it; every other reads
+    // the census row.
+    const ms = enemy.moveSpeed ?? row.speed;
     const range = row.aggro.range;
     const tx = player.x + c.targetOffset.x;
     const ty = player.y + c.targetOffset.y;
@@ -526,7 +558,7 @@ export function chaserStep(tag, enemy, player, {
     // block is `if (player && getSprite() != "attack")` (`:60`).
     const blocked = dying || (c.freezesOnGameFreeze && frozen)
         || (enemy.attack !== null && enemy.attack !== undefined);
-    if (!blocked) v = chaseImpulse(tag, { x, y, v }, player);
+    if (!blocked) v = chaseImpulse(tag, { x, y, v, moveSpeed: enemy.moveSpeed }, player);
 
     return { x, y, v, iframesTicked };
 }

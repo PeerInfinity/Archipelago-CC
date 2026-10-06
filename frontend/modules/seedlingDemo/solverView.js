@@ -74,7 +74,9 @@ export { scanCrusher } from './crusher.js';
 // endingChain.js — strikePolicy · seedling 1
 export { TALK_RANGE } from './endingChain.js';
 // enemyDamage.js — solverBot, strikePolicy · seedling 3
-export { KILL_ARM_POLICY, MOBILE_DEATH_FADE, MODELLED_KILL_ARMS, STATIC_ARROW_DEATH } from './enemyDamage.js';
+export { KILL_ARM_POLICY, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH, killArmModelled } from './enemyDamage.js';
+// killLockBodies.js — solverBot · seedling 1
+export { KILLLOCK_BODIES } from './killLockBodies.js';
 // fireVerb.js — botDriverV2 · seedling 2
 export { FIRE_WINDOW, fireRect } from './fireVerb.js';
 // iceTurret.js — botDriverV2 · seedling 2

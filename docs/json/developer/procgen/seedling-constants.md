@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**61 files, 5327 literals.** Class × position:
+**62 files, 5335 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 5 | 1541 | 353 | 1899 |
-| rule | 6 | 932 | 448 | 1386 |
+| physics | 5 | 1545 | 353 | 1903 |
+| rule | 6 | 934 | 450 | 1390 |
 | cosmetic | 0 | 49 | 14 | 63 |
 | structural | 10 | 356 | 1613 | 1979 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2878 | 2428 | 5327 |
+| total | 21 | 2884 | 2430 | 5335 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1638 | 0 | 88 | 118 | 4 | 51 | 1899 |
-| rule | 423 | 125 | 219 | 22 | 510 | 87 | 1386 |
+| physics | 1642 | 0 | 88 | 118 | 4 | 51 | 1903 |
+| rule | 424 | 126 | 221 | 22 | 510 | 87 | 1390 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -507,7 +507,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **139 small tables** (at most 16 literals) hold at least one (87 with an AS3 reference).
+**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **139 small tables** (at most 16 literals) hold at least one (88 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -566,7 +566,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `WAIT_AFTER_PRESS_TICKS` | seedlingDemo/burnableTree.js | 1 | 1 | rule | derivation |  |
 | `SPINNER_CTOR_RNG` | seedlingDemo/spinner.js | 2 | 2 | rule | count | Enemy.as:30 Enemy.as:35 Spinner.as:24 FP.as:404-422 |
 | `HAMMER_BILLING` | seedlingDemo/spinner.js | 2 | 2 | physics/rule | magnitude | Spinner.as:72-76 Player.as |
-| `CHASERS` | seedlingDemo/chasers.js | 10 | 10 | physics/rule | count/magnitude |  |
+| `CHASERS` | seedlingDemo/chasers.js | 16 | 16 | physics/rule | count/magnitude | Enemies/LavaRunner.as:swimSpeed Enemies/LavaRunner.as:normalSpeed |
 | `CRUSHER` | seedlingDemo/crusher.js | 9 | 8 | physics/rule | bound/magnitude | Puzzlements/Crusher.as:intDist Puzzlements/Crusher.as:speed Puzzlements/Crusher.as:damage Puzzlements/Crusher.as:force Puzzlements/Crusher.as:spinRate |
 | `DIRECTIONS` | seedlingDemo/crusher.js | 8 | 8 | physics | sign | Puzzlements/Crusher.as:directions |
 | `CEREMONY_RULE` | seedlingDemo/crusher.js | 1 | 1 | rule | magnitude |  |

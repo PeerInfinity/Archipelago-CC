@@ -617,8 +617,10 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
      * as the pair's control.
      */
     it('a transcribed class with no roster row is NOT bridged — the control exists', () => {
-        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'jellyfish', 'puncher']);
+        // ⛓ KILLLOCK K2: `lavarunner` is transcribed too, and bridged only under its switch (OFF by default).
+        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'jellyfish', 'lavarunner', 'puncher']);
         expect(MODELLED_ENEMY_CLASSES.Jellyfish).toBeUndefined();
+        expect(MODELLED_ENEMY_CLASSES.LavaRunner).toBeUndefined();
         expect(bridgedChaserTags()).toEqual(['bob', 'puncher']);
         expect(contactPricing('jellyfish').kind).toBe('mover');
     });

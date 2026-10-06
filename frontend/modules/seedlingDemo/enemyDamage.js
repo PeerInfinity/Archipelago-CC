@@ -95,6 +95,7 @@ import {
 // failure this arc keeps paying for.
 import { RESPONDERS, opensOnTick } from './activators.js';
 import { defineRecord } from './entityRecords.js';
+import { KILLLOCK_BODIES } from './killLockBodies.js';
 
 export class EnemyDamageError extends Error {
     constructor(message) { super(message); this.name = 'EnemyDamageError'; }
@@ -323,7 +324,21 @@ export const KILL_ARM_POLICY = Object.freeze({
     BobSoldier: Object.freeze({ policy: 'refused', why: 'the Bob cost plus a shield state nobody has transcribed' }),
     BobBoss: Object.freeze({ policy: 'refused', why: 'boss damage — the encounter SCRIPT owns it (`bobBoss.js`), not a press arm' }),
     Flyer: Object.freeze({ policy: 'refused', why: 'the Bob cost, plus the LOS exemption (`v[i] is Flyer` skips the collideLine)' }),
-    Jellyfish: Object.freeze({ policy: 'refused', why: 'the Bob cost with a 35-tick death anim; L60\'s pair drives two IN THE GAME' }),
+    /**
+     * ⛓ SEEDLING FIDELITY KILLLOCK K1 — `modelled` while `KILLLOCK_BODIES.jellyfishLive` is ON (the run then steps
+     * the body as a bridged chaser, stages its eight-frame "die" through `stageChaserKill` and ledgers its removal),
+     * `refused` with the old words while it is OFF. A getter, so the frozen row answers the switch at call time.
+     */
+    Jellyfish: Object.freeze({
+        get policy() { return KILLLOCK_BODIES.jellyfishLive ? 'modelled' : 'refused'; },
+        get why() {
+            return KILLLOCK_BODIES.jellyfishLive
+                ? '⛓ KILLLOCK K1: a bridged chaser (`CHASERS.jellyfish`) — the press lands through `enemyHit`, the '
+                    + 'death is `stageChaserKill`\'s "die" (8 frames at rate 7) then the fade, and the removal moves '
+                    + '`totalEnemies()` through `chaserKillLockOpens`'
+                : 'the Bob cost with a 35-tick death anim; L60\'s pair drives two IN THE GAME';
+        },
+    }),
     Cactus: Object.freeze({ policy: 'refused', why: 'the Bob cost; off every R5 route' }),
     SandTrap: Object.freeze({ policy: 'refused', why: 'the Bob cost; a static hazard whose volume `hazards.js` prices instead' }),
     // ⛓⛓⛓ R6 SLICE 5: THE SECOND `modelled` ROW, AND THE FIRST BOSS IN IT.
@@ -420,7 +435,15 @@ export const KILL_ARM_POLICY = Object.freeze({
     Tentacle: Object.freeze({ policy: 'refused', why: 'D8; off this rung' }),
     TentacleBeast: Object.freeze({ policy: 'refused', why: 'D8; off this rung' }),
     LightBoss: Object.freeze({ policy: 'refused', why: 'boss damage — R6' }),
-    LavaRunner: Object.freeze({ policy: 'refused', why: 'D7; the island stances are a slice-7 problem' }),
+    /** ⛓ SEEDLING FIDELITY KILLLOCK K2 — `modelled` while `KILLLOCK_BODIES.lavaRunnerLive` is ON (see Jellyfish). */
+    LavaRunner: Object.freeze({
+        get policy() { return KILLLOCK_BODIES.lavaRunnerLive ? 'modelled' : 'refused'; },
+        get why() {
+            return KILLLOCK_BODIES.lavaRunnerLive
+                ? '⛓ KILLLOCK K2: a bridged chaser (`CHASERS.lavarunner`, `hitsMax` 2, a 9-frame "die" at rate 15)'
+                : 'D7; the island stances are a slice-7 problem';
+        },
+    }),
     Bulb: Object.freeze({
         policy: 'refused',
         why: '⛔ ITS DEATH WRITES A TILE. `Bulb.endAnim` turns the cell it dies on into '
@@ -522,6 +545,14 @@ export const MODELLED_KILL_ARMS = Object.freeze(
 );
 
 /**
+ * ⛓ KILLLOCK — `MODELLED_KILL_ARMS` is frozen at import; a row whose policy reads a switch (`Jellyfish`,
+ * `LavaRunner`) is asked here at call time. With every switch OFF it is `MODELLED_KILL_ARMS.includes`.
+ */
+export function killArmModelled(as3) {
+    return MODELLED_KILL_ARMS.includes(as3) || KILL_ARM_POLICY[as3]?.policy === 'modelled';
+}
+
+/**
  * ⛔⛔⛔ DOES A DEATH MOVE `classCount`, AND WHEN — PER CLASS.
  *
  * The question the refusal's own reason turns on, and the three shapes are
@@ -570,6 +601,12 @@ export const CORPSE_COUNTING = Object.freeze({
         shape: 'anim+fade', removesBody: true, chaserTag: 'jellyfish',
         why: 'the same two-stage shape as Bob, with an eight-frame animation.',
         src: 'Enemies/Jellyfish.as:77-91',
+    }),
+    // ⛓ KILLLOCK K2: `LavaRunner extends Bob` and inherits `startDeath` / `endAnim` — nine frames at rate 15.
+    LavaRunner: Object.freeze({
+        shape: 'anim+fade', removesBody: true, chaserTag: 'lavarunner',
+        why: 'Bob\'s two-stage shape (inherited), with `add("die", [10..18], 15)`.',
+        src: 'Enemies/Bob.as:84-97, Enemies/LavaRunner.as:34',
     }),
     // ⛓ U7-swim D3: Bob's shape, with a ten-frame animation at rate 10.
     Puncher: Object.freeze({
@@ -721,6 +758,10 @@ export const KILL_SIDE_WRITES = Object.freeze({
     Jellyfish: Object.freeze({
         writes: 'none',
         why: 'the same empty override as Bob, same commented line.',
+    }),
+    LavaRunner: Object.freeze({
+        writes: 'none',
+        why: '⛓ KILLLOCK K2: inherits `Bob.removed()`\'s empty override; no `setPersistence` in the class.',
     }),
     Puncher: Object.freeze({
         writes: 'none',
