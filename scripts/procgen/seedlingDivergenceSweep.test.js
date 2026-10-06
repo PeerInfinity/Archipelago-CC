@@ -58,6 +58,11 @@ describe('orderLegs', () => {
         expect(pages.map((p) => p.map((l) => l.id))).toEqual([[0], [1, 3], [2]]);
     });
 
+    it('--page-legs=1 puts EVERY leg on its own page, location rounds included (one clean game per leg)', () => {
+        const pages = orderLegs([exit(0, 1), loc(1, 1, 'A'), loc(2, 2, 'B'), loc(3, 1, 'A')], 'inv', 1);
+        expect(pages.map((p) => p.map((l) => l.id))).toEqual([[0], [1], [2], [3]]);
+    });
+
     it('inv mode orders the exits by sphere (the grants only ever grow)', () => {
         const pages = orderLegs([exit(0, 1, 5), exit(1, 1, 0), exit(2, 1, 2)], 'inv', 60);
         expect(pages[0].map((l) => l.id)).toEqual([1, 2, 0]);

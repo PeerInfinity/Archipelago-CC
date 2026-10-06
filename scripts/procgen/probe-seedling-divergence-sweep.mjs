@@ -61,7 +61,9 @@ export function orderLegs(legs, mode, pageLegs) {
         seen.set(l.goal.name, k + 1);
         (rounds[k] ??= []).push(l);
     }
-    for (const r of rounds) pages.push(r);
+    // ⛔ a round is cut by `pageLegs` too: CI run 37387769158 put each round on ONE page whatever --page-legs said,
+    // and the clean-start assertion failed 50 location legs BY NAME (an earlier location's pickup, held)
+    for (const r of rounds) for (let i = 0; i < r.length; i += pageLegs) pages.push(r.slice(i, i + pageLegs));
     return pages;
 }
 
