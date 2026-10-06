@@ -48,7 +48,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { argvHelp } from './argvHelp.js';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
 
@@ -77,6 +77,8 @@ function routeArgs() {
 /** The six-hour GitHub job cap, less margin. */
 const JOB_CAP_MIN = 355;
 
+/** ⛔ A bare import is inert (check-procgen-help's IMPORT door): the modes run only as the entry point. */
+async function main() {
 if (process.argv.includes('--bound')) {
     const { chainBound } = await import('./surveyRoute.js');
     const { CAMPAIGN_SEGMENTS } = await import('../../frontend/modules/seedlingDemo/campaignChain.js');
@@ -194,3 +196,6 @@ if (process.argv.includes('--bound')) {
 } else {
     fail('one of --bound | --plan | --merge | --compare=<a> | --fetch=<run id> (see --help)');
 }
+}
+
+if (isEntryPoint(import.meta.url)) await main();
