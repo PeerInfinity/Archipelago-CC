@@ -14246,6 +14246,44 @@ work numbers to recalibrate from are in the report (D3).
   candidate; the TIME rung, never named, was the whole of two legs. Measure the
   silence before you place the ask.
 
+### Seedling fidelity LINEFLIP — collideLine's samples, untruncated, ON
+
+⚖ Licensed (user, 2026-10-05): *"Yes: flip + re-record"*. TERRAIN's W1, `contactFidelity.CONTACT_FIDELITY.collideLinePointsExact`,
+is now ON by default. `World.collideLine` casts only its four end points to `int`, and `collidePoint` tests each
+stepped sample as a `Number`. The one function (`crusher.collideLineSolid`) serves the wallflyer's trigger ray, the
+crusher's raycast, the BobBoss's sword lines and the **spinner's hammer** (`spinner.hammerHitsPlayer`, which
+`dangerMap`, `solverBot`'s strike pricing and `levelRun`'s billing all ask).
+
+**Re-recorded on the game.** `r9-solve-18` (L18, window 19) re-plans **510 → 519 t**: at the chain's hammer
+residue 40 no corner forms, and the press kill needs no HAMMER-PHASE stall. The chain is **10,932 t**. The 11 windows
+after it move `seam.time` +9 and their `tick0` block only; `rng`, `grass_cut` and `music` are unmoved. 12 recorded, 12
+*"the model reproduces the recording it just made"*; only `r9-solve-18`'s expectation moved. The whole-chain
+differential reads 879 PASS / 0 FAIL, and `r9-campaign --check` reads exit 0 at `a569eeec…`.
+
+**Pins moved and re-pinned:** `solverSpinnerKill` F2 (5,5) 241 → 221 t. `seedlingCanCross` L22-from-L25 stays
+`cannot`, now as a corridor stall (`obstacle: null`). `contactFidelity`'s defaults row reads all three ON, and #264
+and #283 replay at 0 px at the default. `fidelityF1c`'s window row now pins the stall-free solve. The rung's positive
+evidence moved to residue 42, where it still solves by a stall, and the F1c game witness `f1c-l18-phase42` is that
+solve key for key through its declared tick: a second game witness for the rule. Over all 45 residues, L18 solves
+37 → 35 (4 with a stall at both ends).
+
+**Beyond the licence, listed and not acted on:** the identity block's three kind-pair rows. Generating a level
+runs the certify solve, and the hammer prices through this function. `empty pairs c3`/`c6` move one row each
+(post-sword seed 33: the same level, certify ticks 416→440 → 313→353). `carved pairs c4` moves 8 rows; 6 are tick
+counts on the same levels, and **2 are a different generated level** (winding post-shield/post-swim seed 6:
+attempts 33 → 48). Also listed: `plan-seedling-f1c-l18-phase --check`'s stdout, where a stall's `corner` and
+`tried` diagnostics moved; its checks and witness are unchanged.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A licence's mover list is a list of what was MEASURED, not of what CAN move.** TERRAIN measured the six
+  producers, the roster and 47 test files with W1 ON, but not the identity block's census rows. The hammer is
+  priced in procgen's certify solve, so the flip reached generated levels. Before a flip, run the whole identity
+  block with the switch ON (the env hook makes that a no-edit run).
+- **A tape's name in a test is a pin on the tape.** `fidelityF1c` asserted that the committed `r9-solve-18` IS the
+  rung's stalled solve. A re-record of the window necessarily moved it, though no brief listed it. Grep the tests
+  for every re-recorded tape's NAME, not only for the functions changed.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
