@@ -57,6 +57,8 @@ const RESIDUE = ((STAGING.seam.time % PERIOD) + PERIOD) % PERIOD;
  * ⛓ SEEDLING FIDELITY DASHFLIP moved it 42 → 40: windows 16 and 18 re-derived (−20 + 63 t),
  * so `r9-solve-18`'s `seam.time` is 9897 → 9940. Measured: the solve at 40 is the committed
  * window key for key (510 t, the same keys the window had at 42), stalls and all.
+ * ⛓ LINEFLIP (W1 ON) kept the residue at 40 (window 19's own clock is upstream of the move) and re-solved the window
+ * 510 → 519 t with no stall; the 510 t walk is now the solve at 42 only.
  */
 const CHAIN_RESIDUE = 40;
 /** The residue `f1c-l18-phase42` was cut and game-recorded at: the chain's, F1c to DASH. */
@@ -101,13 +103,30 @@ describe('F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer\'s pha
         expect(pressRecords(r.out).every((p) => p.phaseStalls === undefined)).toBe(true);
     }, 120_000);
 
-    it('⛓⛓⛓ the committed window IS at the chain\'s residue, and IS the rung\'s solve, key for key: a stall meets the line at another phase, no hit, the crossing to L19', async () => {
+    /**
+     * ⛓ LINEFLIP (W1 `collideLinePointsExact` ON): the hammer's `collideLine` samples the player's fractional box
+     * untruncated, and at the chain's residue 40 no corner forms on the press kill's approach any more. The window
+     * re-solved 510 → 519 t (re-recorded on the game) with NO phase stall. Measured over all 45 residues: W1 OFF
+     * solves 37 (4 with a stall), W1 ON 35 (4 with a stall); the rung's own evidence is the next row.
+     */
+    it('⛓⛓⛓ the committed window IS at the chain\'s residue, and IS the solve, key for key: no stall is needed there, no hit, the crossing to L19', async () => {
         expect(RESIDUE).toBe(CHAIN_RESIDUE);
         const r = await solveAt(0);
         expect(r.out.perTick.length).toBe(TAPE.tick_count);
         for (let t = 0; t < TAPE.tick_count; t += 1) {
             expect([...r.out.perTick[t]].sort()).toEqual([...heldKeysAt(TAPE, t)].sort());
         }
+        expect(pressRecords(r.out).length).toBeGreaterThan(0);
+        expect(pressRecords(r.out).flatMap((p) => p.phaseStalls ?? [])).toEqual([]);
+        const run = createRunForStaging({ ...STAGING, persistence: r.persistence, equips: [] },
+            atlasLevelSource());
+        for (const held of r.out.perTick) run.advance(held);
+        expect(run.playerHits).toEqual([]);
+        expect(run.transitions.map((x) => x.to_level)).toEqual([TAPE.boot.level + 1]);
+    }, 300_000);
+
+    it('⛓⛓⛓ where a corner DOES form (the witness\'s residue 42) the rung solves: a stall meets the line at another phase, no hit, the crossing to L19', async () => {
+        const r = await solveAt(shiftTo(WITNESS_RESIDUE));
         const stalls = pressRecords(r.out).flatMap((p) => p.phaseStalls ?? []);
         expect(stalls.length).toBeGreaterThan(0);
         for (const s of stalls) {
@@ -116,7 +135,8 @@ describe('F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer\'s pha
             expect(s.ticks).toBeLessThanOrEqual(HAMMER_PHASE_RUNG.maxTicks);
             expect(s.corner - s.t).toBeLessThan(HAMMER_PHASE_RUNG.horizon);
         }
-        const run = createRunForStaging({ ...STAGING, persistence: r.persistence, equips: [] },
+        const seam = { ...STAGING.seam, time: STAGING.seam.time + shiftTo(WITNESS_RESIDUE) };
+        const run = createRunForStaging({ ...STAGING, seam, persistence: r.persistence, equips: [] },
             atlasLevelSource());
         for (const held of r.out.perTick) run.advance(held);
         expect(run.playerHits).toEqual([]);
@@ -160,21 +180,21 @@ describe('F1c D1 — the game witness of the chain-residue solve (f1c-l18-phase4
     });
 
     /**
-     * ⛓ F5: the window re-solved with the spinner ledger's fix (510 t,
-     * `{18,0}@450`), and the witness — game-recorded at F1c, declaring the
-     * F1c-era `@452` — was not re-cut (no licence covers a witness tape). The
-     * two walks are the same keys through the window's own declaration; after
-     * it the witness waits out its later one, two ticks longer.
+     * ⛓ F5: the window re-solved with the spinner ledger's fix (510 t, `{18,0}@450`), and the witness — game-recorded
+     * at F1c, declaring the F1c-era `@452` — was not re-cut (no licence covers a witness tape).
+     * ⛓ LINEFLIP: the window at residue 40 is now the rung-free 519 t walk, so the witness is no longer the window's
+     * keys. It IS the rung's solve at its OWN residue (42), key for key through its declared tick: the game recorded
+     * the walk the W1 model plans there. After that tick the witness waits out its later declaration.
      */
-    it('⛓⛓ the witness walks the committed window\'s keys through the window\'s declared tick: the solve depends on the residue, not the absolute clock', () => {
+    it('⛓⛓ the witness walks the rung\'s solve at its own residue through its declared tick: the solve depends on the residue, not the absolute clock', async () => {
         const w = loadTape(WITNESS);
-        const atOf = (tape) => tape.persistence.find((p) => p.level === 18 && p.tag === 0).at;
-        const windowAt = atOf(TAPE);
-        expect(atOf(w) - windowAt).toBe(w.tick_count - TAPE.tick_count);
-        for (let t = 0; t <= windowAt; t += 1) {
-            expect([...heldKeysAt(w, t)].sort()).toEqual([...heldKeysAt(TAPE, t)].sort());
+        const wAt = w.persistence.find((p) => p.level === 18 && p.tag === 0).at;
+        const r = await solveAt(shiftTo(WITNESS_RESIDUE));
+        expect(pressRecords(r.out).flatMap((p) => p.phaseStalls ?? []).length).toBeGreaterThan(0);
+        for (let t = 0; t <= wAt; t += 1) {
+            expect([...heldKeysAt(w, t)].sort()).toEqual([...r.out.perTick[t]].sort());
         }
-    });
+    }, 300_000);
 
     it('⛓⛓ replayed, no hammer and no body touches the player, and it crosses when the game did', () => {
         const run = replay(WITNESS);
