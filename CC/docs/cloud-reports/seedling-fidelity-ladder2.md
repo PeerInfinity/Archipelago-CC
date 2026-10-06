@@ -222,14 +222,14 @@ head, with a `--dump` from one leg of `probe-seedling-divergence-sweep.mjs --mod
 
 | row | before | after |
 |---|---|---|
-| identity block | `610dccf5…` (W0) | first AFTER (D2): two rows moved. The six `--check`s were identical. **`ENEMY census default` `d59f0c97…` → `6dba712c…`**: one row, the synthetic `grenade` CORRIDOR goes **REFUSED → SOLVED 138** (`CORRIDOR arm` 17/5/1 → 16/6/1). Reference 4 → 8 DIFFER, which was the new tracked scripts; regenerated, back to the same 4 environmental rows. The FINAL block (at `5964ef9`) is in *Rows to BANK* |
+| identity block | `610dccf5…` (W0) | first AFTER (D2): two rows moved. The six `--check`s were identical. **`ENEMY census default` `d59f0c97…` → `6dba712c…`**: one row, the synthetic `grenade` CORRIDOR goes **REFUSED → SOLVED 138** (`CORRIDOR arm` 17/5/1 → 16/6/1). Reference 4 → 8 DIFFER, which was the new tracked scripts; regenerated, back to the same 4 environmental rows. The FINAL block (at `5964ef9`, `a11df97e…`) differs from W0 in the ENEMY census row ONLY |
 | six `--check`s | `405d9c4b 8e7a43be 33d20889 35456fbc 6cd35fe1 a569eeec` | **identical** |
 | surface | GREEN 208 | **GREEN 216** (+ `run:gameTime`, `run:placedGrenades`, `run:grenadeForecast`, `placedGrenade.js` ×4, `r6AnimClock.js#FP_ELAPSED_CLAMPED`; all through `solverView.js`) |
 | constants | PASS 5,327 | **PASS 5,359** (`placedGrenade.js`: 32 rule, 0.1 physics, 60 rule, 0.05 ×2 physics, the rest structural) |
 | entities / profile | 518 · 138 | 518 · 138 |
 | roster | 238 | **240** |
 | tapeRunner pairs | 534, `5f76a855…` | **538**, `2997c25b…`. The diff is the 4 rows of the 2 new tapes, and every existing pair is unchanged |
-| bounded vitest | 48 files / 2,554 | **49 files / 2,572** (+ `fidelityLadder2`) — final run in *Rows to BANK* |
+| bounded vitest | 48 files / 2,554 | **49 files / 2,572, all green** (+ `fidelityLadder2`) |
 
 ## What the brief got wrong (measured)
 
@@ -281,4 +281,5 @@ head, with a `--dump` from one leg of `probe-seedling-divergence-sweep.mjs --mod
 - `probe-seedling-ladder2-phase.mjs` 13 arms, K = 0 ×3; `plan-seedling-ladder2-witness.mjs --check` 2/2 byte-identical
 - survey LADDER rows in these rooms **7 → 2** (137, 139, 162, 164, 206 solve; 160 → axe; 205 stays); bare legs
   **46 → 58 / 74 solved**
-- FINAL identity block and bounded vitest at head: FINAL_ROWS
+- FINAL identity block at `5964ef9`: log md5 `a11df97e11ba9c9c63b6b9717a564c04`. `diff` against W0 is **one row**, `ENEMY census default` (above). Six `--check`s identical, generated set OK, reference 4 DIFFER (the same environmental rows as W0)
+- bounded vitest AFTER, at head: **49 files / 2,572 tests, all green** (pairs md5 above)
