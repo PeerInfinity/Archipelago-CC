@@ -17,6 +17,7 @@
 
 import { PlaybackControlBar } from '../shared/playbackControlBar.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { planRoute, isRestartStep, restartTargetFor } from '../procgenCore/restartRoute.js';
 
 const DEFAULT_RATE_HZ = 4;
 // LS key for the click-intercept toggle. Persisted separately from
@@ -138,7 +139,16 @@ export class PlaybackBotUI {
         pathFinder = null,
         stateManagerProxy = null,
         getActiveController = null,
+        getPlayerId = null,
+        restart = null,
     } = {}) {
+        // ⛓ RETURN TO MENU (procgenCore/restartRoute.js): the slot's player id (default '1') and the Menu panel's
+        // Restart (`menuPanel.restart`, the button's own path). A route whose first step is RESTART calls it; the
+        // bot never walks an edge for it.
+        this._getPlayerId = getPlayerId;
+        this._restart = restart;
+        // `{from, target}` while a Restart the bot asked for has not yet landed past the restart target.
+        this._restartPending = null;
         this._getSphereData = getSphereData;
         this._getStaticData = getStaticData;
         // Returns the loaded rules.json (the panel caches it from
@@ -269,6 +279,7 @@ export class PlaybackBotUI {
         // Pause without clearing the cursor — calling play() again
         // resumes from the same head.
         this._isActive = false;
+        this._restartPending = null;
         this._dispatch('stop');
     }
 
@@ -307,6 +318,7 @@ export class PlaybackBotUI {
         this._walkNote = null;
         this._log = [];                 // start a fresh transition history
         this._pendingManualTarget = null;
+        this._restartPending = null;
         this._dispatcherLog = [];       // dispatcher event log is run-scoped
         this._dispatch('reset');
         this._render();
@@ -481,10 +493,21 @@ export class PlaybackBotUI {
             this._render();
             return;
         }
-        const path = this._pathFinder?.findPathWithExits?.(this._currentRegion, targetRegion);
-        if (!path || !Array.isArray(path.steps) || path.steps.length < 2) {
-            this._setStatus(`error: no path from ${this._currentRegion ?? '?'} to ${targetRegion}`);
+        const { route: path, why } = this._planRoute(this._currentRegion, targetRegion);
+        if (!path) {
+            this._setStatus(`error: ${why}`);
             this._pendingManualTarget = null;
+            this._render();
+            return;
+        }
+        const dest = target.kind === 'location'
+            ? `"${target.name}"`
+            : `(${targetRegion} ${target.x},${target.y})`;
+        if (isRestartStep(path.steps[1])) {
+            // The target stays pending: the arrival past the restart target re-enters this method.
+            if (!this._takeRestart(`restarting (no walk from ${this._currentRegion}) → ${dest}`)) {
+                this._pendingManualTarget = null;
+            }
             this._render();
             return;
         }
@@ -496,9 +519,6 @@ export class PlaybackBotUI {
             return;
         }
         this._publishWalkTo({ kind: 'exit', name: nextExit });
-        const dest = target.kind === 'location'
-            ? `"${target.name}"`
-            : `(${targetRegion} ${target.x},${target.y})`;
         this._setStatus(`routing via "${nextExit}" → ${dest}`);
         this._render();
     }
@@ -578,6 +598,17 @@ export class PlaybackBotUI {
             if (prevSubstrate && prevSubstrate !== newSubstrate) {
                 substrateRegistry.get(prevSubstrate)?.getPlaybackController?.()?.stop?.();
             }
+        }
+        // ⛓ RETURN TO MENU — the Restart the bot asked for: its reset move lands on the restart target (`Menu`) and
+        // the start hop carries the player on (procgenPlayer.retakeStartHop; the Seedling glue warps the game to
+        // seedlingStartSpawn). Plan nothing ON the restart target — route on from the arrival past it.
+        if (this._restartPending && target) {
+            if (target === this._restartPending.target) {
+                this._setStatus(`restarted at ${target} — waiting for the start hop`);
+                this._render();
+                return;
+            }
+            this._restartPending = null;
         }
         if (this._isActive) this._publishNextWalkTo();
         // Manual cross-region routes are progressed one exit at a
@@ -798,12 +829,21 @@ export class PlaybackBotUI {
             this._render();
             return;
         }
-        const path = this._pathFinder?.findPathWithExits?.(this._currentRegion, head.regionName);
-        if (!path || !Array.isArray(path.steps) || path.steps.length < 2) {
-            this._setStatus(`error: no path from ${this._currentRegion} to ${head.regionName}`);
+        const { route: path, why } = this._planRoute(this._currentRegion, head.regionName);
+        if (!path) {
+            this._setStatus(`error: ${why}`);
             this._isActive = false;
             this._lastPublishedTarget = null;
             this._dispatch('stop');
+            this._render();
+            return;
+        }
+        if (isRestartStep(path.steps[1])) {
+            // ⛓ RETURN TO MENU — no walk from here, one from the start: Restart, then route on from the arrival.
+            if (!this._takeRestart(`${sphereTag}restarting (no walk from ${this._currentRegion}) → ${head.regionName} ${progress}`)) {
+                this._isActive = false;
+                this._dispatch('stop');
+            }
             this._render();
             return;
         }
@@ -820,6 +860,70 @@ export class PlaybackBotUI {
         this._publishWalkTo({ kind: 'exit', name: nextExit });
         this._render();
     }
+
+    /**
+     * ⛓ RETURN TO MENU — the bot's route from `from` to `to` (procgenCore/restartRoute.js): the graph's walk, or,
+     * when the slot declares `return_to_menu` and no walk exists, a route that begins with RESTART. Without the
+     * flag the refusal is today's `no path from <from> to <to>`.
+     */
+    _planRoute(from, to) {
+        const rules = this._getRulesJson?.() ?? null;
+        const playerId = String(this._getPlayerId?.() ?? '1');
+        return planRoute({
+            from,
+            to,
+            findPath: (a, b) => this._pathFinder?.findPathWithExits?.(a, b) ?? null,
+            rules,
+            playerId,
+        });
+    }
+
+    /**
+     * Execute a RESTART step: the Menu panel's Restart (the button's own path — a reset move to the restart
+     * target, then `menuPanel:restarted`, which the substrate answers with the start hop). Never an exit walkTo.
+     * Returns false (with a named status) when no Restart is wired or it did not move the player.
+     */
+    _takeRestart(statusText) {
+        if (typeof this._restart !== 'function') {
+            this._setStatus(`error: ${this._currentRegion ?? '?'}: the route needs a Restart and no Restart is wired`);
+            return false;
+        }
+        const from = this._currentRegion;
+        const rules = this._getRulesJson?.() ?? null;
+        const target = restartTargetFor(rules, this._getPlayerId?.() ?? '1');
+        this._lastPublishedTarget = null;
+        this._walkNote = null;
+        this._setStatus(statusText);
+        // Pending BEFORE the call: the reset move and the start hop may be delivered synchronously inside it.
+        this._restartPending = { from, target };
+        let result = null;
+        try {
+            result = this._restart();
+        } catch (e) {
+            this._restartPending = null;
+            this._setStatus(`error: ${from ?? '?'}: Restart threw — ${e?.message ?? e}`);
+            return false;
+        }
+        if (!result) {
+            this._restartPending = null;
+            this._setStatus(`error: ${from ?? '?'}: the route needs a Restart and the Menu panel's Restart did not answer`);
+            return false;
+        }
+        if (result.mode === 'world' && !result.target) {
+            this._restartPending = null;
+            this._setStatus(`error: ${from ?? '?'}: Restart has no target (no declared start region)`);
+            return false;
+        }
+        if (result?.mode && result.mode !== 'world') {
+            this._restartPending = null;
+            this._setStatus(`error: ${from ?? '?'}: Restart answered mode "${result.mode}", which does not return to the menu`);
+            return false;
+        }
+        return true;
+    }
+
+    /** ⛓ RETURN TO MENU — the Restart the bot is waiting on (`{from, target}`), or null. */
+    getRestartPending() { return this._restartPending ? { ...this._restartPending } : null; }
 
     /**
      * Round-trip a ping through the stateManager worker so any pending

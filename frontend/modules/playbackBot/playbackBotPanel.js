@@ -24,6 +24,7 @@ import { PathFinder } from '../shared/pathfinder.js';
 // constructor runs before the module's initialize() has wired up
 // PlaybackBotPanel.moduleApis. Mirrors the workaround in mazeRoomUI.
 import eventBus from '../../app/core/eventBus.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 export class PlaybackBotPanel {
     static moduleApis = null;
@@ -40,6 +41,8 @@ export class PlaybackBotPanel {
         // getRulesJson injection to look up per-region substrate from
         // preset_sidecars.
         this._cachedRulesJson = null;
+        // The loaded slot's player id (rules.json's per-player blocks, e.g. `exporter[p].return_to_menu`).
+        this._cachedPlayerId = null;
 
         if (typeof document === 'undefined') {
             this.rootElement = null;
@@ -124,6 +127,7 @@ export class PlaybackBotPanel {
             // the parsed payload around — getRawJsonDataSource()
             // returns just the source filename.
             this._cachedRulesJson = data?.rawJsonData ?? null;
+            this._cachedPlayerId = data?.selectedPlayerInfo?.playerId ?? null;
             this._bot?.reset?.();
         };
         eventBus.subscribe('stateManager:rawJsonDataLoaded', onRawJsonLoaded, 'playbackBot');
@@ -138,7 +142,9 @@ export class PlaybackBotPanel {
         // substrate lookups silently come up empty. No reset() here:
         // the bot is freshly constructed, there's no stale state.
         if (!this._cachedRulesJson) {
-            this._cachedRulesJson = getLastRawJsonData()?.rawJsonData ?? null;
+            const last = getLastRawJsonData();
+            this._cachedRulesJson = last?.rawJsonData ?? null;
+            this._cachedPlayerId = last?.selectedPlayerInfo?.playerId ?? null;
         }
     }
 
@@ -192,6 +198,9 @@ export class PlaybackBotPanel {
             // stale snapshot and rejects routes through regions that
             // were just unlocked by the previous sphere's item.
             stateManagerProxy: stateManager,
+            getPlayerId: () => this._cachedPlayerId ?? '1',
+            // ⛓ RETURN TO MENU — a RESTART step takes the Menu panel's own Restart (the button's path).
+            restart: () => centralRegistry.getPublicFunction?.('menuPanel', 'restart')?.() ?? null,
         });
     }
 

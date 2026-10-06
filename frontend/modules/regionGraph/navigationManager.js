@@ -1,10 +1,12 @@
-import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { getRegionMovesFromPath } from '../shared/pathUtils.js';
 import { executeRegionMovePath, buildStepsFromRegionList } from '../shared/pathExecutor.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { planRoute, isRestartStep } from '../procgenCore/restartRoute.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -278,6 +280,11 @@ export class NavigationManager {
       return;
     }
 
+    // ⛓ RETURN TO MENU (procgenCore/restartRoute.js): one step toward the target from where the player stands.
+    // When no walk exists but the slot declares return_to_menu and the start has one, the step IS the Menu
+    // panel's Restart (its own path) — never an exit.
+    if (this.takeRestartStepToward(currentPlayerRegion, targetRegion)) return;
+
     // Find path to target region
     logger.debug(`Finding path from ${currentPlayerRegion} to ${targetRegion}`);
     const path = this.ui.pathFinder.findPath(currentPlayerRegion, targetRegion);
@@ -326,6 +333,29 @@ export class NavigationManager {
     } else {
       this.ui.updateStatus(`Moving to ${targetRegion} (${path.length} steps via ${path.steps[1]})`);
     }
+  }
+
+  /**
+   * ⛓ RETURN TO MENU — when the route from `from` to `to` begins with RESTART (`planRoute`: no walk, the flag set,
+   * a walk from the restart target), take the Menu panel's Restart and say so. Returns true when it did.
+   */
+  takeRestartStepToward(from, to, { restart = () => centralRegistry.getPublicFunction?.('menuPanel', 'restart')?.() } = {}) {
+    const last = getLastRawJsonData();
+    const rules = last?.rawJsonData ?? null;
+    const playerId = String(last?.selectedPlayerInfo?.playerId ?? '1');
+    const { route } = planRoute({
+      from,
+      to,
+      findPath: (a, b) => this.ui.pathFinder.findPathWithExits(a, b),
+      rules,
+      playerId,
+    });
+    if (!route || !isRestartStep(route.steps[1])) return false;
+    const result = restart();
+    if (!result) return false;
+    logger.info(`No walk from ${from} to ${to}: Restart (→ ${route.steps[1].region})`);
+    this.ui.updateStatus(`Restart → ${route.steps[1].region} (no walk from ${from} to ${to})`);
+    return true;
   }
 
   attemptMovePlayerDirectlyToRegion(targetRegion) {
