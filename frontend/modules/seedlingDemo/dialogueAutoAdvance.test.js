@@ -159,8 +159,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity SLOTS: 227 — `slots-l24-fire-first`, `slots-l24-burn-fire-first`, `slots-l24-burn-cut-80`, `slots-l24-burn-cut-110`, `slots-l24-burn-fencepost`, inert.
         // ⛓ fidelity AXE: 231 — `axe-l48-reach-l49`, `axe-l61-reach-l62`, `axe-l61-reach-l63`, `axe-l71-reach-l76`, inert.
         // ⛓ fidelity PROXIMITY: +5 (236 with AXE's four) — `prox-l38-chest`, `prox-l38-reach-l39`, `prox-l29-key-return`, `prox-l40-turret-volley`, `prox-l40-turret-contact`, inert.
-        expect(rows).toHaveLength(236);
-        expect(rows.length - parted.length).toBe(235);
+        // ⛓ fidelity FRONTIER3: +2 (238 with AXE + PROXIMITY) — `frontier3-l62-door-niche`, `frontier3-l87-pocket`, inert.
+        expect(rows).toHaveLength(238);
+        expect(rows.length - parted.length).toBe(237);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {
