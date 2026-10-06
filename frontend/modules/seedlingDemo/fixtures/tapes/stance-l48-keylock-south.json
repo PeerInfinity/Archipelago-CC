@@ -1,0 +1,378 @@
+{
+    "game": "seedling",
+    "name": "stance-l48-keylock-south",
+    "boot": {
+        "level": 48,
+        "x": 112,
+        "y": 288
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1,
+            2,
+            3
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 369,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 8,
+            "to": 9
+        },
+        {
+            "key": "primary",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "primary",
+            "from": 88,
+            "to": 89
+        },
+        {
+            "key": "up",
+            "from": 0,
+            "to": 101
+        },
+        {
+            "key": "primary",
+            "from": 102,
+            "to": 103
+        },
+        {
+            "key": "primary",
+            "from": 119,
+            "to": 120
+        },
+        {
+            "key": "up",
+            "from": 102,
+            "to": 134
+        },
+        {
+            "key": "primary",
+            "from": 133,
+            "to": 134
+        },
+        {
+            "key": "down",
+            "from": 134,
+            "to": 136
+        },
+        {
+            "key": "up",
+            "from": 136,
+            "to": 137
+        },
+        {
+            "key": "down",
+            "from": 137,
+            "to": 138
+        },
+        {
+            "key": "up",
+            "from": 138,
+            "to": 139
+        },
+        {
+            "key": "primary",
+            "from": 139,
+            "to": 140
+        },
+        {
+            "key": "primary",
+            "from": 141,
+            "to": 142
+        },
+        {
+            "key": "down",
+            "from": 142,
+            "to": 143
+        },
+        {
+            "key": "up",
+            "from": 143,
+            "to": 144
+        },
+        {
+            "key": "down",
+            "from": 144,
+            "to": 145
+        },
+        {
+            "key": "up",
+            "from": 145,
+            "to": 146
+        },
+        {
+            "key": "left",
+            "from": 102,
+            "to": 148
+        },
+        {
+            "key": "down",
+            "from": 146,
+            "to": 148
+        },
+        {
+            "key": "primary",
+            "from": 147,
+            "to": 148
+        },
+        {
+            "key": "right",
+            "from": 148,
+            "to": 151
+        },
+        {
+            "key": "left",
+            "from": 151,
+            "to": 152
+        },
+        {
+            "key": "up",
+            "from": 149,
+            "to": 153
+        },
+        {
+            "key": "down",
+            "from": 153,
+            "to": 154
+        },
+        {
+            "key": "up",
+            "from": 154,
+            "to": 155
+        },
+        {
+            "key": "right",
+            "from": 154,
+            "to": 156
+        },
+        {
+            "key": "down",
+            "from": 157,
+            "to": 159
+        },
+        {
+            "key": "left",
+            "from": 159,
+            "to": 160
+        },
+        {
+            "key": "up",
+            "from": 161,
+            "to": 162
+        },
+        {
+            "key": "up",
+            "from": 164,
+            "to": 169
+        },
+        {
+            "key": "primary",
+            "from": 248,
+            "to": 249
+        },
+        {
+            "key": "primary",
+            "from": 250,
+            "to": 251
+        },
+        {
+            "key": "up",
+            "from": 248,
+            "to": 259
+        },
+        {
+            "key": "down",
+            "from": 259,
+            "to": 260
+        },
+        {
+            "key": "up",
+            "from": 260,
+            "to": 263
+        },
+        {
+            "key": "down",
+            "from": 263,
+            "to": 264
+        },
+        {
+            "key": "up",
+            "from": 264,
+            "to": 265
+        },
+        {
+            "key": "down",
+            "from": 265,
+            "to": 266
+        },
+        {
+            "key": "up",
+            "from": 266,
+            "to": 267
+        },
+        {
+            "key": "down",
+            "from": 268,
+            "to": 271
+        },
+        {
+            "key": "up",
+            "from": 272,
+            "to": 274
+        },
+        {
+            "key": "down",
+            "from": 277,
+            "to": 278
+        },
+        {
+            "key": "up",
+            "from": 284,
+            "to": 285
+        },
+        {
+            "key": "down",
+            "from": 287,
+            "to": 289
+        },
+        {
+            "key": "up",
+            "from": 290,
+            "to": 292
+        },
+        {
+            "key": "down",
+            "from": 295,
+            "to": 297
+        },
+        {
+            "key": "up",
+            "from": 298,
+            "to": 300
+        },
+        {
+            "key": "down",
+            "from": 303,
+            "to": 305
+        },
+        {
+            "key": "primary",
+            "from": 305,
+            "to": 306
+        },
+        {
+            "key": "up",
+            "from": 306,
+            "to": 308
+        },
+        {
+            "key": "down",
+            "from": 310,
+            "to": 311
+        },
+        {
+            "key": "primary",
+            "from": 319,
+            "to": 320
+        },
+        {
+            "key": "left",
+            "from": 319,
+            "to": 369
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY STANCE — the CONTROL for the shut state: the same `bosslock@48,144`, flag held, approached from its OWN side (the L47 door south of it, route step 93's arrival). The solver's `keylock` stance lands on the key line (y 161), the lock opens (`keyTimer` 60, then the fade) and the walk goes north through its cell to the west door (L53). The survey's staging (`r8-solve-11`'s committed block re-pointed at L48 (112,288), keys [0, 1, 2, 3], items [hasShield, hasFire, canSwim, hasTorch]). The solver's own plan: 369 t, equips []. Authored by scripts/procgen/plan-seedling-stance-witness.mjs."
+}

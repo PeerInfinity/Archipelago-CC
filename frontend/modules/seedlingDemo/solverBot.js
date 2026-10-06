@@ -10094,6 +10094,52 @@ function resolveKeylockStrategy(run, obstacle, contacts, blocked = []) {
  * box on the line, tested at the PINNED position rather than at the centre.
  */
 function deriveKeylockStance(run, row, contacts, blocked = []) {
+    const candidates = keylockCandidates(run, row, contacts);
+    /**
+     * ⛓⛓ SEEDLING FIDELITY STANCE — **A LOCK IS NOT ITS OWN PREREQUISITE.**
+     * `stanceHypothesis` lists every shut activator with a registered verb, and
+     * that included THIS lock: a stance on the far side was "reachable once
+     * `bosslock@…` is discharged", the walk to it named the lock again, and the
+     * frontier re-applied `keylock` until `MAX_STRATEGIES_PER_GOAL` ran out
+     * (survey: L12, L48, *"keylock stance -> keylock stance -> …"*). The lock
+     * is excluded from its own hypothesis (no committed trace discharges an
+     * activator in a stance hypothesis, so nothing that solved leaned on it).
+     */
+    const base = lazyStanceHypothesis(run, [...blocked, row.id], contacts);
+    /**
+     * ⚠ AND A SIBLING BOSSLOCK ONLY WHERE ITS OWN KEY LINE IS IN REACH. L12's
+     * `bosslock@416,240` and `@432,240` stand side by side and the stance
+     * (424,264) is under both: with this lock excluded, the other one was still
+     * "pending", the walk named this one again, and the loop came back. A
+     * keylock that this run cannot stand under from where it is (no direct
+     * corridor to any of its candidates) is not something the rest of the plan
+     * will discharge, so it is a wall to this question (guard i's language).
+     */
+    let memo = null;
+    const hypothesis = () => (memo ??= base().filter((h) => !keylockOutOfReach(run, h, contacts)));
+    for (const c of candidates) {
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
+    }
+    const siblings = base().filter((h) => keylockOutOfReach(run, h, contacts));
+    const sealed = keyLineBehindLock(run, row, candidates, contacts, siblings);
+    const refusal = new SolverRefusal(
+        `solverBot: no REACHABLE stance on ${row.id}'s key line in level ${run.level} — `
+        + `${candidates.length} cell(s) put the player box on the line when walked into `
+        + `the lock, none with a corridor from (${run.state.x},${run.state.y}).`
+        + (sealed ? keyLineSealedClause(sealed) : ''),
+        { obstacle: { kind: 'solid', id: row.id } });
+    // ⛓ STANCE: an optional instance field (RETURN's `sealed` shape, `self: true`).
+    if (sealed) refusal.sealed = sealed;
+    throw refusal;
+}
+
+/**
+ * The keylock's candidate cells (`deriveKeylockStance`'s builder, hoisted so a
+ * sibling's reach can be asked with the same cells): a free lattice cell from
+ * which a walk into the lock pins the box on the key line, nearest first.
+ */
+function keylockCandidates(run, row, contacts) {
     const pitch = DEFAULT_LATTICE;
     const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
     const cell = nodeAt((row.rect.x + row.rect.right) / 2,
@@ -10112,16 +10158,95 @@ function deriveKeylockStance(run, row, contacts, blocked = []) {
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
-    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
-    for (const c of candidates) {
-        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
-        if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
+    return candidates;
+}
+
+/**
+ * Is `h` (a stance-hypothesis entry) a keylock whose key line this run cannot
+ * reach directly? `false` for every other entry, and for a keylock whose key the
+ * run lacks it is still asked by geometry only (`resolveKeylockStrategy` owns
+ * the key question).
+ */
+function keylockOutOfReach(run, h, contacts) {
+    if (h.kind !== 'activator' || h.strategy !== 'keylock') return false;
+    const row = (run.world.activators ?? []).find((a) => a.id === h.id);
+    if (!row?.keyLine) return false;
+    // Memoised per run, per tick, per contact set: nothing a tick does not move changes it.
+    let memo = KEYLOCK_REACH_MEMO.get(run);
+    const key = `${run.level}|${run.ticksCompleted}|${run.state.x},${run.state.y}|${[...contacts].sort().join(';')}|${h.id}`;
+    if (!memo || memo.tick !== run.ticksCompleted) {
+        memo = { tick: run.ticksCompleted, answers: new Map() };
+        KEYLOCK_REACH_MEMO.set(run, memo);
     }
-    throw new SolverRefusal(
-        `solverBot: no REACHABLE stance on ${row.id}'s key line in level ${run.level} — `
-        + `${candidates.length} cell(s) put the player box on the line when walked into `
-        + `the lock, none with a corridor from (${run.state.x},${run.state.y}).`,
-        { obstacle: { kind: 'solid', id: row.id } });
+    if (!memo.answers.has(key)) {
+        const opts = solverPlanOpts(run, contacts);
+        memo.answers.set(key, !keylockCandidates(run, row, contacts)
+            .some((c) => corridorPlans(run.world, run.state, { x: c.x, y: c.y }, null, opts)));
+    }
+    return memo.answers.get(key);
+}
+const KEYLOCK_REACH_MEMO = new WeakMap();
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY STANCE — **THE KEY LINE IS ON THE LOCK'S FAR SIDE.**
+ *
+ * `BossLock.update` opens on `collideLine("Player", x-originX+2, y-originY+height+1,
+ * …)`: the integer row one pixel BELOW the lock (`keyLine`). A player north of
+ * the lock cannot put a box on that row without passing the lock. So the game
+ * has exactly two states for a tagged bosslock (every one in the atlas carries a
+ * tag), and the solver must say which one it is in:
+ *   - the save still holds `{level, tag}`: the lock is built SOLID, and from the
+ *     far side it is sealed (this refusal);
+ *   - the flag is cleared (the lock was opened from its own side on an earlier
+ *     visit): `BossLock.check()` removes it on build and the corridor plans.
+ * Asked only on the throw path: is some candidate reachable with THIS lock open?
+ */
+function keyLineBehindLock(run, row, candidates, contacts, siblings = []) {
+    const self = { id: row.id, kind: 'activator', tag: row.tag };
+    const reaches = (c, withSet) => {
+        const opened = [self, ...withSet];
+        const through = new Set([...contacts, ...opened.map((h) => `proximity-hazard:${h.id}`)]);
+        return corridorPlans(run.world, run.state, { x: c.x, y: c.y }, null,
+            solverPlanOpts(run, through, { liveBag: bagWithDischarged(run, run.liveGeometryOpts(), opened) }));
+    };
+    for (const c of candidates) {
+        if (!reaches(c, siblings)) continue;
+        // Only the siblings this corridor needs are named (drop each one that is not).
+        let needed = [...siblings];
+        for (const h of siblings) {
+            const without = needed.filter((x) => x !== h);
+            if (reaches(c, without)) needed = without;
+        }
+        siblings = needed;
+        return {
+            wall: row.id,
+            presser: null,
+            self: true,
+            with: siblings.map((h) => h.id),
+            flag: Number.isInteger(row.persistTag) && row.persistTag >= 0
+                ? { level: run.level, tag: row.persistTag } : null,
+            keyLine: { ...row.keyLine },
+            from: { x: run.state.x, y: run.state.y },
+            stance: { x: c.x, y: c.y },
+        };
+    }
+    return null;
+}
+
+/** The sentence `keyLineBehindLock`'s answer owes the refusal. */
+function keyLineSealedClause(s) {
+    return ` ⛔ SEALED BEHIND ITSELF: the key line is the row y=${s.keyLine.y} under ${s.wall} `
+        + `(\`BossLock.update\`'s \`collideLine\`, x ${s.keyLine.x0}..${s.keyLine.x1}), and from `
+        + `(${s.from.x},${s.from.y}) a corridor reaches the stance (${s.stance.x},${s.stance.y}) `
+        + `only through the lock itself${s.with.length
+            ? ` (and ${s.with.join(', ')}, whose key line is out of reach the same way)` : ''}. `
+        + (s.flag
+            ? `The save still holds its flag {${s.flag.level},${s.flag.tag}}, so the game builds it `
+                + 'SOLID: this is the shut state, and from this side it does not open. Once the lock '
+                + 'has been opened from its own side the flag is cleared and `BossLock.check()` '
+                + 'removes it on every later build (the open state).'
+            : 'It carries no tag, so it is built solid on every visit.')
+        + ' That is a fact about the room and the save, not a rung the ladder lacks.';
 }
 
 /**
@@ -12925,6 +13050,12 @@ function solveSegmentUnder({
     const pullingRopes = new Set();
     /** ⛓ Swim R5, D1 — the bait walks in flight (`body@stance#tick`): a re-entry is refused. */
     const baitingBodies = new Set();
+    /**
+     * ⛓ Seedling fidelity STANCE — the frontier stance walks in flight
+     * (`verb(obstacle)#tick`). A stance walk whose own frontier names the same
+     * order at the same tick is a re-entry (`STANCE_REENTRY`, in `walkTo`).
+     */
+    const stanceWalks = new Set();
     /** ⛓ U15-swim D2 — the DODGE rung's stalls this segment (`DODGE_RUNG.maxPerSegment`). */
     let dodgesSpent = 0;
     const climbLadder = ({ goal, aim, contacts, allowTeleporter, what, hit,
@@ -14133,6 +14264,7 @@ function solveSegmentUnder({
                     fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
                         waypoints: wps.length, refused: String(refusal.message).slice(0, 200) });
                 }
+                let plan = null;
                 if (identified) {
                     /**
                      * ⛓⛓⛓ **THE PREREQUISITE IS CONSUMED HERE AND NOWHERE ELSE** —
@@ -14154,9 +14286,79 @@ function solveSegmentUnder({
                      * order that happened to be named by a derivation instead of by a
                      * flood.
                      */
-                    const plan = identified.resolved.prerequisite
+                    plan = identified.resolved.prerequisite
                         ? prerequisiteOrder(goal, aim, identified, contacts, allowTeleporter, what)
                         : identified;
+                    /**
+                     * ⛓⛓⛓ SEEDLING FIDELITY STANCE — **A STANCE WALK MAY NOT
+                     * RE-ENTER ITS OWN ORDER.** This walk may itself be the walk to
+                     * `plan`'s stance (below), and nothing between that call and
+                     * this plan spent a tick or changed the world. Applying the
+                     * same verb to the same obstacle again would walk to the same
+                     * stance and come back here, until `MAX_STRATEGIES_PER_GOAL`
+                     * ran out: the survey's *"chest stance -> chest stance -> …"*.
+                     *
+                     * Measured on L48 (`chest@152,184`) and L46 (`chest@424,40`):
+                     * the chest sits on a HALF tile, so its stance (160,202) is in
+                     * a 16 px A\* tile whose centre the chest's own box covers, and
+                     * the planner refuses the goal tile. The 8 px lattice plans it
+                     * (`FINE_LATTICE`, the FRONTIER3 grant). So the re-entry asks
+                     * that lattice for this aim first, and only then refuses by
+                     * name. A walk that does not re-enter never reaches this.
+                     */
+                    const stanceKey = `${plan.strategy}(${plan.obstacle.id})#${perTick.length}`;
+                    /**
+                     * ⚠ AND ONE LEVEL EARLIER: an order whose stance IS this walk's
+                     * aim, asked with the same plan inputs (no exemption of its own,
+                     * no axis-aligned approach, none here either, no teleporter), is
+                     * this walk again — its inner plan fails exactly as this one did.
+                     * A `collect-placement` chest goal walks to the chest's own
+                     * stance, so without this the goal, the order and the re-entry
+                     * each ran `runChest` (L48: three records, one opening).
+                     */
+                    const sameWalk = Boolean(plan.resolved.stance)
+                        && plan.resolved.stance.x === aim.x && plan.resolved.stance.y === aim.y
+                        && !plan.resolved.exempt && !contactsOverride && allowTeleporter === null
+                        && plan.resolved.approach !== 'axis-aligned' && !axisAligned;
+                    if (stanceWalks.has(stanceKey) || sameWalk) {
+                        let fineWps = null;
+                        if (fineLattice && !axisAligned
+                            && (solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) > FINE_LATTICE) {
+                            /**
+                             * ⚠ AXIS-ALIGNED, and L48 measured why: a half-tile
+                             * chest's centre column (x 160) is on no 8 px node
+                             * (x ≡ 4 mod 8), so the last leg is diagonal, and a
+                             * diagonal bang-bang approach to (160,202) cycles at
+                             * ±1.5 px for the whole budget (vector friction shares
+                             * one quantum between the axes). One axis at a time
+                             * (`manhattan` corners, `holdOneAxis`) settles, as every
+                             * committed chest approach does.
+                             */
+                            try {
+                                fineWps = planWaypoints(run.world, run.state, aim, allowTeleporter,
+                                    solverPlanOpts(run, contacts,
+                                        { ...goalPlanExtra, lattice: FINE_LATTICE, manhattan: true }));
+                            } catch (fineError) {
+                                if (!(fineError instanceof BotDriverV2Error)) throw fineError;
+                            }
+                        }
+                        if (!fineWps) {
+                            refuse(`${what}: STANCE_REENTRY — the walk to ${plan.obstacle.id}'s `
+                                + `\`${plan.strategy}\` stance (${aim.x},${aim.y}) is itself blocked by `
+                                + `${plan.obstacle.id} at tick ${perTick.length}, with nothing spent `
+                                + 'between, and the 8 px lattice plans no corridor to it either. '
+                                + `Applying \`${plan.strategy}\` again would be the same walk again: the `
+                                + 'stance is on the far side of the obstacle it is the stance of.',
+                            { goal, obstacle: plan.obstacle });
+                        }
+                        wps = fineWps;
+                        fine = true;
+                        axisAligned = true;
+                        fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
+                            waypoints: wps.length, refused: `STANCE_REENTRY ${stanceKey}` });
+                    }
+                }
+                if (plan && !fine) {
                     /**
                      * ⛔ THE APPLICATION IS BOUNDED, AND THE BOUND IS NAMED. A
                      * policy that re-identified for ever would look exactly like
@@ -14235,12 +14437,20 @@ function solveSegmentUnder({
                     // ADDS its presser to the exemptions, so the stance and the
                     // exemption are one decision).
                     if (plan.resolved.stance) {
-                        walkTo(goal, plan.resolved.stance, {
-                            what: `${what} -> ${plan.strategy} stance `
-                                + `(${plan.obstacle.id})`,
-                            contactsOverride: plan.resolved.exempt,
-                            axisAligned: plan.resolved.approach === 'axis-aligned',
-                        });
+                        // ⛓ STANCE: the walk is registered so its own frontier can
+                        // see a re-entry (`STANCE_REENTRY`, above).
+                        const walking = `${plan.strategy}(${plan.obstacle.id})#${perTick.length}`;
+                        stanceWalks.add(walking);
+                        try {
+                            walkTo(goal, plan.resolved.stance, {
+                                what: `${what} -> ${plan.strategy} stance `
+                                    + `(${plan.obstacle.id})`,
+                                contactsOverride: plan.resolved.exempt,
+                                axisAligned: plan.resolved.approach === 'axis-aligned',
+                            });
+                        } finally {
+                            stanceWalks.delete(walking);
+                        }
                     }
                     const record = STRATEGY_EXECUTORS[plan.strategy](run, perTick, plan.resolved, {
                         maxTicksPerTarget,

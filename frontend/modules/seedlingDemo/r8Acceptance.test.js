@@ -372,6 +372,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'return-l15-walkin', 'return-l15-conch',
             // ⛓⛓⛓ Seedling fidelity ROBUST's D2 / D3 witnesses.
             'robust-l16-sword-idle1', 'robust-l16-l18-sword-conch',
+            // ⛓⛓⛓ Seedling fidelity STANCE: the keylock control, ending on L53's arrival.
+            'stance-l48-keylock-south',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -410,7 +412,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity SLOTS adds five — `slots-l24-fire-first`, `slots-l24-burn-fire-first`,
         // `slots-l24-burn-cut-80`, `slots-l24-burn-cut-110`, `slots-l24-burn-fencepost` (L24 → L12).
         // ⛓ Seedling fidelity PROXIMITY adds three — `prox-l29-key-return` (L29 → L22), `prox-l40-turret-volley` and `prox-l40-turret-contact` (L40).
-        expect(out.exposed).toBe(62);
+        // ⛓ Seedling fidelity STANCE adds one — `stance-l48-keylock-south` (L48 → L53).
+        expect(out.exposed).toBe(63);
         expect(out.tapes).toEqual([
             'burn-l24-reach-exit', 'cancross-l16-sword-none', 'dash-l16-sword-all', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
@@ -422,6 +425,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r9-solve-12', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'r9-solve-21',
             'r9-solve-22', 'return-l15-conch', 'return-l15-walkin', 'robust-l16-l18-sword-conch', 'robust-l16-sword-idle1',
             'slots-l24-burn-cut-110', 'slots-l24-burn-cut-80', 'slots-l24-burn-fencepost', 'slots-l24-burn-fire-first', 'slots-l24-fire-first',
+            'stance-l48-keylock-south',
             'u10-puncher-dwell',
             'u10-puncher-dwell-refused', 'u11-dark-shield-bob', 'u11-dark-shield-puncher',
             'u11-facing-knockback', 'u11-facing-puncher',
@@ -567,6 +571,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'prox-l29-key-return': { tape: {}, levels: [22] },
             'prox-l40-turret-volley': { tape: {}, levels: [40] },
             'prox-l40-turret-contact': { tape: {}, levels: [40] },
+            'stance-l48-keylock-south': { tape: {}, levels: [53] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
@@ -751,7 +756,8 @@ function syntheticExposureIo(rows) {
         // ⛓ R1-swim: L22 joins — `r1-dark-shield-kill` is declared exposed there.
         // ⛓ R4-swim: L40 joins — `r4-iceturret-bobs` is declared exposed there.
         // ⛓ Seedling fidelity F6: L17 joins — `f6-l17-reentry` is declared exposed there.
-        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 40]),
+        // ⛓ Seedling fidelity STANCE: L53 joins — `stance-l48-keylock-south` is declared exposed there.
+        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 40, 53]),
     };
 }
 

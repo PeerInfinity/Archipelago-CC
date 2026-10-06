@@ -16,7 +16,7 @@
   ],
   "simulation": {
     "entry": "frontend/modules/seedlingDemo/levelRun.js",
-    "files": 60
+    "files": 61
   },
   "runObject": {
     "properties": 193,
@@ -651,9 +651,9 @@
         "botDriverV2.js": 30,
         "dangerMap.js": 10,
         "director.js": 1,
-        "solverBot.js": 76
+        "solverBot.js": 78
       },
-      "sites": 118,
+      "sites": 120,
       "seen": "both",
       "via": [
         "const-alias",
@@ -678,9 +678,9 @@
       "class": "physics",
       "form": "geometry-query",
       "files": {
-        "solverBot.js": 7
+        "solverBot.js": 8
       },
-      "sites": 7,
+      "sites": 8,
       "seen": "both",
       "via": [
         "direct"
@@ -901,9 +901,9 @@
       "files": {
         "arrivalSolid.js": 5,
         "botDriverV2.js": 114,
-        "solverBot.js": 246
+        "solverBot.js": 253
       },
-      "sites": 365,
+      "sites": 372,
       "seen": "both",
       "via": [
         "const-alias",
@@ -947,9 +947,9 @@
       "files": {
         "botDriverV2.js": 3,
         "dangerMap.js": 1,
-        "solverBot.js": 42
+        "solverBot.js": 45
       },
-      "sites": 46,
+      "sites": 49,
       "seen": "both",
       "via": [
         "direct"
@@ -1039,9 +1039,9 @@
       "files": {
         "arrivalSolid.js": 2,
         "botDriverV2.js": 56,
-        "solverBot.js": 159
+        "solverBot.js": 163
       },
-      "sites": 217,
+      "sites": 221,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1111,9 +1111,9 @@
       "files": {
         "arrivalSolid.js": 1,
         "botDriverV2.js": 10,
-        "solverBot.js": 18
+        "solverBot.js": 19
       },
-      "sites": 29,
+      "sites": 30,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2203,9 +2203,9 @@
         "arrivalSolid.js": 2,
         "botDriverV1.js": 2,
         "botDriverV2.js": 57,
-        "solverBot.js": 96
+        "solverBot.js": 98
       },
-      "sites": 157,
+      "sites": 159,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2235,9 +2235,9 @@
         "arrivalSolid.js": 2,
         "botDriverV1.js": 2,
         "botDriverV2.js": 60,
-        "solverBot.js": 100
+        "solverBot.js": 102
       },
-      "sites": 164,
+      "sites": 166,
       "seen": "both",
       "via": [
         "const-alias",

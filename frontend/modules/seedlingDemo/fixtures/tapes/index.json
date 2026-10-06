@@ -1759,6 +1759,41 @@
       "noHazards": []
     },
     {
+      "file": "stance-l46-chest.json",
+      "tickCount": 1044,
+      "bootLevel": 46,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "stance-l48-chest.json",
+      "tickCount": 540,
+      "bootLevel": 48,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "stance-l48-keylock-north.json",
+      "tickCount": 200,
+      "bootLevel": 48,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "stance-l48-keylock-open.json",
+      "tickCount": 454,
+      "bootLevel": 48,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "stance-l48-keylock-south.json",
+      "tickCount": 369,
+      "bootLevel": 48,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "statue-press.json",
       "tickCount": 150,
       "bootLevel": 0,
