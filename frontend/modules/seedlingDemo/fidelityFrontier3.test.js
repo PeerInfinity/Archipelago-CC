@@ -8,6 +8,10 @@
  *      lattice, under the `fineLattice` grant — off roster-wide on `main`,
  *      because it moves one census row). Witnesses `frontier3-l62-door-niche` and
  *      `frontier3-l87-pocket`, recorded on the game (model = game, 0 px).
+ *  D3  the rows and the gates: `grasslock` and `cover` are `hold`'s
+ *      responders, `crusher` names `bait` (selected, not registered), and a
+ *      wall whose opener is not in the room is named as a gate
+ *      (`obstacleGateFor`: the seal door's ITEM gate, L112's ENCOUNTER gate).
  */
 
 import { describe, expect, it } from 'vitest';
@@ -22,7 +26,8 @@ import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, runTape } from './tapeRunner.js';
 import { plannerObstacleAt } from './botDriverV2.js';
 import {
-    FINE_LATTICE, FINE_LATTICE_ROSTER_WIDE, SolverRefusal, exitAimFor, solveSegment,
+    FINE_LATTICE, FINE_LATTICE_ROSTER_WIDE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, SolverRefusal, exitAimFor, obstacleGateFor,
+    solveSegment,
 } from './solverBot.js';
 import { frontier3Staging, FRONTIER3_WITNESSES }
     from '../../../scripts/procgen/plan-seedling-frontier3-witness.mjs';
@@ -132,5 +137,44 @@ describe('fidelity FRONTIER3 D2 — a reach-exit aims where the pixel mask lets 
         expect(rectsOverlap(playerBoxAt(last.x, last.y), tp.rect)).toBe(true);
         expect(maskHitsBox(mask.mask, mask.maskX, mask.maskY, playerBoxAt(last.x, last.y))).toBe(false);
         expect(maskHitsBox(mask.mask, mask.maskX, mask.maskY, playerBoxAt(120, 72))).toBe(true);
+    });
+});
+
+describe('fidelity FRONTIER3 D3 — the rows, and the gates whose opener is not in the room', () => {
+    it('the table: grasslock and cover are hold\'s responders; crusher names bait, which is not registered', () => {
+        expect(OBSTACLE_STRATEGIES['solid:grasslock']).toBe('hold');
+        expect(OBSTACLE_STRATEGIES['solid:cover']).toBe('hold');
+        expect(OBSTACLE_STRATEGIES['solid:crusher']).toBe('bait');
+        expect(STRATEGY_EXECUTORS.bait).toBeUndefined();
+        // scenery with no verb in the game stays rowless: a wall, never a work order
+        for (const tag of ['planttorch', 'bonetorch', 'bonetorch2', 'dungeonspire', 'ruinedpillar', 'tree', 'rock',
+            'finaldoor', 'rocklock']) {
+            expect(OBSTACLE_STRATEGIES[`solid:${tag}`]).toBeUndefined();
+        }
+    });
+
+    it('L42 (route step 108): the crusher refuses as the computed work order `bait`', async () => {
+        const e = await refusalOf({ level: 42, x: 240, y: 320 }, { kind: 'collect-placement', placement: { x: 184, y: 152 } });
+        expect(e.message).toMatch(/Obstacle: solid:crusher \(crusher@96,144\)\. Strategy 'bait' is SELECTED but not registered/);
+    });
+
+    it('L112 (route step 234): the rocklock is an ENCOUNTER gate naming the Owl', async () => {
+        const e = await refusalOf({ level: 112, x: 32, y: 208 }, { kind: 'reach-exit', exit: { x: 112, y: 0 } });
+        expect(e.message).toMatch(/Obstacle: solid:rocklock \(rocklock@112,16\)/);
+        expect(e.message).toMatch(/ENCOUNTER-GATE \(rocklock@112,16\): no presser in level 112 publishes its group; its opener is finalboss@\d+,\d+'s death/);
+        expect(e.considered.at(-1).option).toBe('encounter-gate');
+    });
+
+    it('L113 (route step 235): the seal door is an ITEM gate', async () => {
+        const e = await refusalOf({ level: 113, x: 72, y: 128 }, { kind: 'reach-exit', exit: { x: 112, y: 0 } });
+        expect(e.message).toMatch(/Obstacle: solid:finaldoor \(finaldoor@112,0\)[^.]*\. ITEM-GATE \(finaldoor@112,0\): the seal door opens only on approach for a player holding all 16 Seal parts/);
+    });
+
+    it('obstacleGateFor answers only the two gates, and nothing for a verb-bearing or scenery solid', async () => {
+        const { run } = await stagedRun({ level: 112, x: 32, y: 208 });
+        expect(obstacleGateFor(run, { kind: 'solid', tag: 'planttorch', id: 'planttorch@80,32' })).toBeNull();
+        expect(obstacleGateFor(run, { kind: 'solid', tag: 'lock', id: 'lock@0,0' })).toBeNull();
+        expect(obstacleGateFor(run, { kind: 'pixelmask', tag: 'rocklock', id: 'x' })).toBeNull();
+        expect(obstacleGateFor(run, { kind: 'solid', tag: 'rocklock', id: 'rocklock@112,16' }).gate).toBe('ENCOUNTER');
     });
 });

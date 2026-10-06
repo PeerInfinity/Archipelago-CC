@@ -806,8 +806,13 @@ describe('the strategy catalog seam (slice 3 extends, never restructures)', () =
         // real verb — `botDriverV2.runFire` — and no solver executor), so the
         // claim "a strategy may be named by the table and absent from the
         // registry" still has something that can make it false.
+        //
+        // ⛓⛓ SEEDLING FIDELITY FRONTIER3 ADDED `bait` — `solid:crusher`'s verb
+        // (`crusher.CRUSHER_VERBS`), driven only as R5's hand-searched
+        // choreographies and never as a solver executor; L42's six-bait pursuit
+        // (`r5Totem.L42_PART4`) is the room that asks for it.
         const pending = [...selected].filter((v) => !STRATEGY_EXECUTORS[v]).sort();
-        expect(pending).toEqual(['wand']);
+        expect(pending).toEqual(['bait', 'wand']);
     });
 });
 

@@ -75,6 +75,18 @@ export const FAMILY_RULES = [
         (m) => `ITEM-GATE — the '${m[1]}' verb is registered and ${m[2]} is gated on an item `
             + 'this run does not hold (or on a press the model refuses); the work order is the '
             + 'item, not the room'],
+    /**
+     * ⛓ SEEDLING FIDELITY FRONTIER3 — A WALL WHOSE OPENER IS NOT IN THE ROOM.
+     * `solverBot.obstacleGateFor` names it for an obstacle with no strategy
+     * row: *"ITEM-GATE (finaldoor@112,0): …"* (the seal door, `Seal@16` and
+     * the Watcher's word) or *"ENCOUNTER-GATE (rocklock@112,16): …"* (L112's
+     * lock, opened by the Owl's death). Witnesses: the route survey's steps
+     * 235 (L113) and 234 (L112), which read VERB-MISSING before.
+     */
+    [/(ITEM|ENCOUNTER)-GATE \(([^)]+)\): /,
+        (m) => `${m[1]}-GATE — ${m[2]} has no strategy row and its opener is not in this room `
+            + `(${m[1] === 'ITEM' ? 'an item the run must hold' : 'an encounter the route must win'}); `
+            + 'the work order is the gate, not the room'],
     [/Strategy '([a-z]+)' failed to apply/,
         (m) => `VERB-APPLY — the '${m[1]}' strategy IS registered and did not apply here`],
     /**

@@ -431,6 +431,34 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
      * (`resolveBurnStrategy` / `execBurn`), gated on the Fire the game requires.
      */
     'solid:burnabletree': 'burn',
+    /**
+     * ⛓⛓ SEEDLING FIDELITY FRONTIER3 — `GrassLock extends Lock` with a bare
+     * `super(...)` (`GrassLock.as:13-16`): the same fade responder, group and
+     * kill arm as `lock`, and `activators.RESPONDERS` has carried its row since
+     * R2. L28's `grasslock@176,208 {t 0}` and its `button@112,240` are the
+     * only placement; a table that knew `lock` and not this refused the room
+     * with *"No strategy row exists"*.
+     */
+    'solid:grasslock': 'hold',
+    /**
+     * ⛓⛓ SEEDLING FIDELITY FRONTIER3 — **SELECTED, NOT REGISTERED, BY
+     * MEASUREMENT.** A crusher is passed by BAITING it (`crusher.CRUSHER_VERBS`
+     * — present in a lane, let it commit, sidestep, let it park), and the verb
+     * exists as R5's hand-searched choreographies (`r5Totem`), never as a
+     * solver executor. L42 is the room that asks: `r5Totem.L42_PART4` is a
+     * six-bait PURSUIT (each park re-arms a lane across the escape) of which
+     * only crusher A's three-charge chain was ever driven. So the row names the
+     * verb and the refusal is the computed work order, not *"no row"*.
+     */
+    'solid:crusher': 'bait',
+    /**
+     * ⛓⛓ SEEDLING FIDELITY FRONTIER3 — `Cover` is an `Activators` responder
+     * (`levelWorld.ACTIVATOR_RESPONDERS`): Solid until its group is held, then
+     * clear ten ticks into the fade, and Solid again the tick the group drops.
+     * Its opener is its group's presser, which is `hold`'s question (and
+     * `weigh`'s, when the presser republishes).
+     */
+    'solid:cover': 'hold',
     // A button guarding the frontier is L4's own shape: the room's answer
     // starts with HOLDING it (the hand-authored leg's `hold` mechanic).
     'proximity-hazard:button': 'hold',
@@ -3432,6 +3460,59 @@ export function exitAimFor(world, index, opts = {}) {
         }
     }
     return best ? { x: best.x, y: best.y } : centre;
+}
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY FRONTIER3 — **A WALL WITH NO VERB, WHOSE OPENER IS
+ * NOT IN THIS ROOM, IS A GATE AND IS NAMED AS ONE.** Asked only for an
+ * obstacle with no strategy row, so it changes the refusal's words and never
+ * a solve. `null` for everything else (it stays *"No strategy row exists"*).
+ *
+ *  · `finaldoor` — ITEM gate. `FinalDoor.update` opens only for a player
+ *    within `seeDistance` when `SealController.hasAllSealParts()` (the LAST
+ *    of the 16 Seal slots is filled) AND the Watcher's L114 tag-0 flag is
+ *    cleared; the model steps it (`levelRun.stepFinalDoorsNow`,
+ *    `r6-final-door`). The route's `Seal@16` rule is the same gate.
+ *  · `rocklock` — `RockLock` is an `Activators` lock outside the model's
+ *    activator roster (`activators.js`'s note: its `set activate` only stores
+ *    the flag). With a `FinalBoss` in the room and no presser, its only
+ *    opener is the boss's `dead` arm (`Button.activateAll(null, 0, true)` and
+ *    `setPersistence(tag + 1)`, `FinalBoss.as`): an ENCOUNTER gate (L112).
+ *    Without one (L26's kill-lock, `tset -1`) the opener is
+ *    `totalEnemies() == 0` (`RockLock.as:52`), which `kill`'s kill-lock arm
+ *    cannot reach because it reads the activator roster.
+ */
+export function obstacleGateFor(run, obstacle) {
+    if (obstacle?.kind !== 'solid') return null;
+    if (obstacle.tag === 'finaldoor') {
+        return {
+            gate: 'ITEM',
+            why: 'the seal door opens only on approach for a player holding all 16 Seal parts '
+                + '(`SealController.hasAllSealParts()`: the last slot filled) who has talked to the '
+                + 'Watcher (L114 tag 0 cleared) — `FinalDoor.update`; the route\'s `Seal@16` rule. '
+                + 'The work order is the item, not the room.',
+        };
+    }
+    if (obstacle.tag === 'rocklock') {
+        const bosses = run.world.finalBosses ?? [];
+        if (bosses.length > 0 && (run.world.pressers ?? []).length === 0) {
+            const boss = bosses[0];
+            return {
+                gate: 'ENCOUNTER',
+                why: `no presser in level ${run.level} publishes its group; its opener is `
+                    + `${boss.id ?? 'the FinalBoss'}'s death (the \`dead\` arm: `
+                    + '`Button.activateAll(null, 0, true)` and `setPersistence(tag + 1)`, '
+                    + '`FinalBoss.as`). The work order is the fight, not the room.',
+            };
+        }
+        return {
+            gate: 'ENCOUNTER',
+            why: 'a `RockLock` kill-lock opens when `totalEnemies() == 0` (`RockLock.as:52`), and '
+                + 'it is outside the model\'s activator roster, so the `kill` verb\'s kill-lock arm '
+                + 'cannot be asked about it. The work order is the room\'s enemies.',
+        };
+    }
+    return null;
 }
 
 /**
@@ -12492,6 +12573,7 @@ function solveSegmentUnder({
                     + 'executor row, computed rather than guessed',
             });
         }
+        const gate = strategy ? null : obstacleGateFor(run, obstacle);
         refuse(`solverBot(${name}): no corridor for goal ${goal.kind} toward `
             + `(${aim.x},${aim.y}) in level ${run.level}. Obstacle: ${key}`
             + `${obstacle.id ? ` (${obstacle.id})` : ''}`
@@ -12501,9 +12583,10 @@ function solveSegmentUnder({
             + `${strategy
                 ? `Strategy '${strategy}' ${STRATEGY_EXECUTORS[strategy]
                     ? 'failed to apply' : 'is SELECTED but not registered this slice'}.`
-                : 'No strategy row exists for this obstacle.'} `
+                : gate ? `${gate.gate}-GATE (${obstacle.id}): ${gate.why}`
+                    : 'No strategy row exists for this obstacle.'} `
             + `Planner said: ${planError.message.slice(0, 300)}`,
-        { goal, obstacle, considered });
+        { goal, obstacle, considered: gate ? [...considered, { option: `${gate.gate.toLowerCase()}-gate`, why: gate.why }] : considered });
     };
 
     /**
