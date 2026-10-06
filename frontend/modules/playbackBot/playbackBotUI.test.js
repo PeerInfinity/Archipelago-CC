@@ -1299,3 +1299,171 @@ describe('PlaybackBotUI — a substrate that declares no controller', () => {
         expect(statusText(bot)).toBe('Sphere 0.1 → walking to "Loc X" (1/1)');
     });
 });
+
+/**
+ * ⛓ RETURN TO MENU (procgenCore/restartRoute.js) — the bot's RESTART step. Where the slot declares
+ * `exporter[p].return_to_menu` and no walk leads from the player's region to the head's, the bot takes the Menu
+ * panel's Restart (stubbed here: the reset move to `Menu`, then the substrate's start hop) and routes on from the
+ * arrival. It never publishes an exit walkTo for it.
+ */
+describe('PlaybackBotUI — the RESTART step (return_to_menu)', () => {
+    // Menu -GameStart-> Start; Start -toB-> region_b; Start -drop-> Pit (one-way).
+    const ADJ = {
+        Menu: [['GameStart', 'Start']],
+        Start: [['toB', 'region_b'], ['drop', 'Pit']],
+        Pit: [],
+        region_b: [['backS', 'Start']],
+        region_c: [['cToB', 'region_b']],
+    };
+    const findPathWithExits = (from, to) => {
+        const seen = new Set([from]);
+        const queue = [[{ region: from, exitUsed: null }]];
+        while (queue.length) {
+            const path = queue.shift();
+            const here = path[path.length - 1].region;
+            if (here === to) return { steps: path, length: path.length - 1 };
+            for (const [exit, next] of ADJ[here] ?? []) {
+                if (!seen.has(next)) { seen.add(next); queue.push([...path, { region: next, exitUsed: exit }]); }
+            }
+        }
+        return null;
+    };
+    const staticData = {
+        regions: new Map([
+            ['Pit', { locations: [] }],
+            ['region_b', { locations: [{ name: 'Loc B' }] }],
+        ]),
+    };
+    const rulesWith = (flag) => ({ start_regions: { 1: ['Menu'] }, exporter: { 1: flag ? { return_to_menu: true } : {} } });
+
+    function makeBot({ flag = true, restart } = {}) {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc B'] }],
+            getStaticData: () => staticData,
+            getRulesJson: () => rulesWith(flag),
+            getActiveController: () => controller,
+            pathFinder: { findPathWithExits },
+            restart,
+        });
+        return { bot, controller };
+    }
+    /** The stubbed warp: the Menu panel's reset move, then (unless `hop: false`) the start hop. */
+    function stubRestart(botRef, { hop = true, answer = { mode: 'world', target: 'Menu' } } = {}) {
+        const calls = [];
+        const fn = () => {
+            calls.push(botRef.bot.getRestartPending());
+            botRef.bot.onRegionMove({ targetRegion: 'Menu' });
+            if (hop) botRef.bot.onRegionMove({ targetRegion: 'Start' });
+            return answer;
+        };
+        return { fn, calls };
+    }
+    const walkTos = (controller) => controller.calls.filter((c) => c.method === 'walkTo').map((c) => c.args[0]);
+
+    it('flag ON, stranded in the pit: Restart, land past Menu, then walk the start\'s exit', async () => {
+        const ref = {};
+        const r = stubRestart(ref);
+        Object.assign(ref, makeBot({ restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(r.calls).toEqual([{ from: 'Pit', target: 'Menu' }]);
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+        expect(ref.bot.getRestartPending()).toBeNull();
+        expect(ref.bot.isActive()).toBe(true);
+        expect(ref.bot.getLog().some((l) => /restarting \(no walk from Pit\) → region_b/.test(l))).toBe(true);
+    });
+
+    it('the bot WAITS on Menu for the start hop: no walkTo there, then routes on from the arrival', async () => {
+        const ref = {};
+        const r = stubRestart(ref, { hop: false });
+        Object.assign(ref, makeBot({ restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(walkTos(ref.controller)).toEqual([]);
+        expect(ref.bot.getStatus()).toBe('restarted at Menu — waiting for the start hop');
+        expect(ref.bot.getRestartPending()).toEqual({ from: 'Pit', target: 'Menu' });
+        ref.bot.onRegionMove({ targetRegion: 'Start' });   // the substrate's start hop lands
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+        expect(ref.bot.getRestartPending()).toBeNull();
+    });
+
+    it('⛔ a RESTART step is never an exit crossing: no walkTo names Menu, GameStart or a null exit', async () => {
+        const ref = {};
+        const r = stubRestart(ref);
+        Object.assign(ref, makeBot({ restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        for (const t of walkTos(ref.controller)) {
+            expect(t.name).not.toBeNull();
+            expect(['Menu', 'GameStart']).not.toContain(t.name);
+        }
+        expect(r.calls).toHaveLength(1);
+    });
+
+    it('flag OFF: today\'s refusal, and no Restart', async () => {
+        const ref = {};
+        const r = stubRestart(ref);
+        Object.assign(ref, makeBot({ flag: false, restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(ref.bot.getStatus()).toBe('error: no path from Pit to region_b');
+        expect(ref.bot.isActive()).toBe(false);
+        expect(r.calls).toEqual([]);
+    });
+
+    it('a walk is preferred: from region_c the bot walks, never restarts', async () => {
+        const ref = {};
+        const r = stubRestart(ref);
+        Object.assign(ref, makeBot({ restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'region_c' });
+        await ref.bot.play();
+        expect(r.calls).toEqual([]);
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'cToB' }]);
+    });
+
+    it('a manual target routes through the Restart too (walkToLocation)', async () => {
+        const ref = {};
+        const r = stubRestart(ref, { hop: false });
+        Object.assign(ref, makeBot({ restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        ref.bot.walkToLocation('Loc B');
+        await Promise.resolve();
+        expect(r.calls).toEqual([{ from: 'Pit', target: 'Menu' }]);
+        expect(walkTos(ref.controller)).toEqual([]);
+        ref.bot.onRegionMove({ targetRegion: 'Start' });
+        await Promise.resolve();
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+    });
+
+    it('named refusals: no Restart wired; a Restart that does not answer; a loop-mode Restart', async () => {
+        const none = makeBot({ restart: null });
+        none.bot.onRegionMove({ targetRegion: 'Pit' });
+        await none.bot.play();
+        expect(none.bot.getStatus()).toBe('error: Pit: the route needs a Restart and no Restart is wired');
+        expect(none.bot.isActive()).toBe(false);
+
+        const silent = makeBot({ restart: () => null });
+        silent.bot.onRegionMove({ targetRegion: 'Pit' });
+        await silent.bot.play();
+        expect(silent.bot.getStatus()).toMatch(/Menu panel's Restart did not answer/);
+        expect(silent.bot.getRestartPending()).toBeNull();
+
+        const loop = makeBot({ restart: () => ({ mode: 'loop', target: null }) });
+        loop.bot.onRegionMove({ targetRegion: 'Pit' });
+        await loop.bot.play();
+        expect(loop.bot.getStatus()).toMatch(/mode "loop", which does not return to the menu/);
+        expect(loop.bot.isActive()).toBe(false);
+    });
+
+    it('stop() and reset() drop a pending Restart', async () => {
+        const ref = {};
+        const r = stubRestart(ref, { hop: false });
+        Object.assign(ref, makeBot({ restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(ref.bot.getRestartPending()).not.toBeNull();
+        ref.bot.stop();
+        expect(ref.bot.getRestartPending()).toBeNull();
+    });
+});
