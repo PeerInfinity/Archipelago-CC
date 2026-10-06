@@ -90,10 +90,12 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      * strike it plans is a different (cell, tick): the one the old pairing took
      * was clear only against the NEXT tick's hammer.
      */
-    it('(5,5): was EXHAUSTED; now SOLVES in 241 t by a press kill whose end is OBSERVED', () => {
+    // ⛓ LINEFLIP — 241 → 221 t: the hammer's `collideLine` samples untruncated (W1 ON), so the strike plan prices a
+    // different (cell, tick) clear against the player's fractional box. Still one press kill, three landings, certified.
+    it('(5,5): was EXHAUSTED; now SOLVES in 221 t by a press kill whose end is OBSERVED', () => {
         const out = solveAt(5, 5, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(241);
+        expect(out.ticks).toBe(221);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
