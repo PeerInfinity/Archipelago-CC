@@ -489,6 +489,7 @@ function stepCompile(env) {
         } : {}),
         enableLoopMode: c.enableLoopMode,
         regionXpEffect: c.regionXpEffect,
+        procgenParams: c.procgenParams ?? null,
         completionConditionItem: c.victoryItem,
         procgenMetadata: {
             driver: 'sphere-growth',

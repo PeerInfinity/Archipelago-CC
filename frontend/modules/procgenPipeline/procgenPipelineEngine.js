@@ -6999,6 +6999,28 @@ export function sphereLogRefusal(rulesJson, playerId = '1') {
     }
 }
 
+/**
+ * ⛓ bulletml N5 — call every `priceRegions` registry hook of a substrate the slot
+ * uses (sorted by id): `hook({rulesJson, sphereLog, playerId, params})` writes its
+ * regions' payloads against the planned walk of the embedded sphere log. A hook
+ * that throws leaves its payloads as they were (the world still builds; the
+ * warning names the substrate). No substrate without the hook is touched.
+ */
+export function priceSubstrateRegions(scaffold, { playerId = '1', params = null } = {}) {
+    const pid = String(playerId);
+    const ids = new Set(Object.values(scaffold?.preset_sidecars?.[pid] ?? {})
+        .map((sc) => sc?.substrate).filter(Boolean));
+    for (const id of [...ids].sort()) {
+        const hook = substrateRegistry.get(id)?.priceRegions;
+        if (typeof hook !== 'function') continue;
+        try {
+            hook({ rulesJson: scaffold, sphereLog: scaffold.sphere_log, playerId: pid, params });
+        } catch (e) {
+            console.warn(`[procgenPipeline] ${id}.priceRegions failed: ${e?.message ?? e}`);
+        }
+    }
+}
+
 export function buildRulesJson(grid, opts = {}) {
     const {
         startCell,
@@ -7080,6 +7102,10 @@ export function buildRulesJson(grid, opts = {}) {
         // region's). null — grid-growth, sphere growth, a source with no Menu —
         // keeps the synthetic one, byte for byte.
         menuRegion = null,
+        // The panel's procgen params bag (or the part a driver kept of it), handed to a
+        // substrate's `priceRegions` hook when loop mode prices the world (bulletml N5:
+        // Noiz2sa's `noiz2saFinalSpan`). null — the hooks' defaults.
+        procgenParams = null,
     } = opts;
 
     if (!startCell) throw new Error('buildRulesJson: startCell required');
@@ -7389,6 +7415,11 @@ export function buildRulesJson(grid, opts = {}) {
     // optional. `version` and `generatedFrom` are deterministic and kept.
     // ⛓ P1a — the block is the SLOT's: `loop_costs[playerId]`.
     if (enableLoopMode && embedSphereLog && Array.isArray(scaffold.sphere_log)) {
+        // ⛓ bulletml N5 — a substrate that prices its regions against the walk
+        // (its registry `priceRegions` hook: Noiz2sa picks each region's spans and
+        // drain rate) writes its payloads FIRST, so the block below reads the
+        // rates they carry (`writeCostsByClass`, a SUMMARY region's payload rate).
+        priceSubstrateRegions(scaffold, { playerId, params: procgenParams });
         let block;
         try {
             block = generateLoopCosts({

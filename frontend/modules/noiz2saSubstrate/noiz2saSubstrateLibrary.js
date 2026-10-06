@@ -34,7 +34,14 @@
  * the region fully (`noiz2saFirstEntry.js`).
  *
  * Content source: a fixed zone table (`NOIZ2SA_ZONES`), one region per zone, for the test preset and the
- * shuffled-spiral driver (`zoneCount` / `extractZoneRules`). Pricing and the stat tracks are later slices.
+ * shuffled-spiral driver (`zoneCount` / `extractZoneRules`).
+ *
+ * Pricing (N5): when the pipeline builds a LOOP-MODE world, the `priceRegions` hook (`noiz2saPricing.js`) walks the one
+ * cost model's plan and rewrites each region's spans (`move`, every location's `check`) and drain rate
+ * (`timeDrainPerSecond`, which the shared cost writer passes into `loop_costs`), recording what it predicted in
+ * `pricing`. The final region's span is the generation-form setting `noiz2saFinalSpan`. The zone table's spans are what a
+ * world without loop mode (and the hand-built test preset) plays. The hook imports two leaf files of the game submodule
+ * (`tracks.js`, `human.js`: no engine), so this file still loads headless.
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -44,6 +51,9 @@ import {
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
 import { defaultCheckSpans, parsePosition, regionSpanOf, regionSpansOf, showSpan } from './noiz2saRegion.js';
+import { DEFAULT_FINAL_SPAN, FINAL_SPAN_PARAM, priceNoiz2saRegions } from './noiz2saPricing.js';
+import { parseSpan } from './noiz2saDifficulty.js';
+import { fieldRow } from '../procgenCore/regionGenerationForm.js';
 
 export const NOIZ2SA_SUBSTRATE_ID = 'noiz2sa';
 export const NOIZ2SA_GAME_ID = 'noiz2sa';
@@ -219,6 +229,22 @@ export const NOIZ2SA_SIDECAR_FIELDS = Object.freeze({
         type: 'integer', required: true, derived: true,
         description: `The game's C rand() seed for every game of the region (≥ 1), by ${ZONE_RULES}.`,
     }),
+    timeDrainPerSecond: Object.freeze({
+        type: 'number', required: false, derived: true,
+        description: 'N5: the region\'s mana drain per game second, priced by `priceRegions` (`noiz2saPricing.js`): the '
+            + 'planned cost of a move out of the region ÷ the move span\'s expected seconds at the predicted skill. The shared '
+            + 'cost writer passes it into `loop_costs` (a SUMMARY region\'s payload rate). Absent: the default drain (a world '
+            + 'built without loop mode, a start region, the test preset).',
+    }),
+    pricing: Object.freeze({
+        type: 'object', required: false, derived: true,
+        description: 'N5: what the pricing walk predicted, for the panel and the tests: `{pointsPerMana, mana, skill, p, '
+            + 'seconds, cost, final, locations: {<id>: {skill, p, seconds, cost}}}` — the world\'s training pace (the same '
+            + 'in every region; the trainer\'s default), the Noiz2sa mana spent before the walk priced the region, the '
+            + 'predicted skill then, the move span\'s deathless chance and expected seconds, the planned cost, whether it is '
+            + 'the final region, and the same for each priced location\'s check span.',
+        schema: Object.freeze({ additionalProperties: true }),
+    }),
     ap_locations: Object.freeze({
         type: 'object', required: true, derived: true,
         description: `Each location's id → its AP location name \`<region>__<id>\` (empty for a region with none), by `
@@ -250,6 +276,36 @@ export function zoneRulesOf(zones, zoneIdx, { region_id } = {}) {
 }
 /** the shipped zone table's zone-locations channel */
 const extractZoneRules = (zoneIdx, ctx) => zoneRulesOf(NOIZ2SA_ZONES, zoneIdx, ctx);
+
+/** N5: the generation form's Noiz2sa knobs (the procgen params bag) */
+export const NOIZ2SA_PROCGEN_PARAMS = Object.freeze({ [FINAL_SPAN_PARAM]: DEFAULT_FINAL_SPAN });
+
+/**
+ * The generation form's Noiz2sa section: the final region's span (⚖ "In the generation settings, there should be a
+ * control for the set of scenes to use for the final region"). A text box, STAGE:SCENE–STAGE:SCENE in stages 1–10; a
+ * span that does not parse is not stored (the box turns red and the bag keeps the last good one).
+ */
+function renderNoiz2saProcgenParams({ params, onChange = () => {} } = {}) {
+    const wrap = document.createElement('div');
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = String(params[FINAL_SPAN_PARAM] ?? DEFAULT_FINAL_SPAN);
+    input.dataset.param = FINAL_SPAN_PARAM;
+    input.addEventListener('change', () => {
+        try {
+            parseSpan(input.value);
+        } catch {
+            input.style.outline = '1px solid #c33';
+            return;
+        }
+        input.style.outline = '';
+        params[FINAL_SPAN_PARAM] = input.value.trim();
+        onChange();
+    });
+    wrap.appendChild(fieldRow('Final region span', 'The scenes the last Noiz2sa region reached plays (loop mode prices the '
+        + 'other regions toward it), e.g. 10:7–10:boss', input));
+    return wrap;
+}
 
 export const substrateRegistryEntry = Object.freeze({
     id: NOIZ2SA_SUBSTRATE_ID,
@@ -291,6 +347,12 @@ export const substrateRegistryEntry = Object.freeze({
         // `setPlayClock`, loopState._timeDrainTick
         playClock: true,
     }),
+
+    // N5: a loop-mode build prices the regions against the planned walk (spans + drain rate), the final region's span
+    // from the generation form (`noiz2saFinalSpan`).
+    priceRegions: priceNoiz2saRegions,
+    defaultProcgenParams: NOIZ2SA_PROCGEN_PARAMS,
+    renderProcgenParams: renderNoiz2saProcgenParams,
 
     victoryItem: NOIZ2SA_VICTORY_ITEM_NAME,
     libraryItems: NOIZ2SA_LIBRARY_ITEMS,

@@ -43,6 +43,24 @@ export function activeSubstrateIds(quotas, startSub) {
 }
 
 /**
+ * ⛓ bulletml N5 — the params the active substrates' `priceRegions` hooks read
+ * (each such entry's `defaultProcgenParams` keys, taken from the bag, the
+ * default where the bag has none), or null when no active substrate prices its
+ * regions: a driver adds `procgenParams` to its compile input only then, so a
+ * world without such a substrate keeps its bytes.
+ */
+export function pricingParamsOf(activeIds, params) {
+    let out = null;
+    for (const id of [...(activeIds ?? [])].sort()) {
+        const entry = substrateRegistry.get(id);
+        if (typeof entry?.priceRegions !== 'function') continue;
+        out ??= {};
+        for (const [k, v] of Object.entries(entry.defaultProcgenParams ?? {})) out[k] = params?.[k] ?? v;
+    }
+    return out;
+}
+
+/**
  * Gather each active substrate's pre-plan contributions via its optional
  * `prepareSphereGrowth` hook: starting items, sphere-1 reservations
  * (exclusiveSpheres), canonical-placement locks, item pool removals

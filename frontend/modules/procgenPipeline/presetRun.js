@@ -32,7 +32,7 @@ import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
 import { CONCEPTS, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js';
 import { GENERATION_COST, generationCostOf } from '../procgenCore/substratePredicates.js';
 import {
-    defaultProcgenParams, activeSubstrateIds,
+    defaultProcgenParams, activeSubstrateIds, pricingParamsOf,
     collectSphereGrowthPrep, assembleRegionParams, assembleLibraryRegionParams,
 } from './sphereConfigHooks.js';
 import { buildLibrarySpiralConfig } from './regionLibraryLoader.js';
@@ -196,6 +196,12 @@ export function panelDefaultParams() {
 }
 
 // ── Helpers the four builders share (pure over a panel-shaped state) ──────
+
+/** `{procgenParams}` for a compile input when an active substrate prices its regions, else `{}` (bulletml N5) */
+function withPricingParams(activeIds, params) {
+    const pp = pricingParamsOf(activeIds, params);
+    return pp ? { procgenParams: pp } : {};
+}
 
 /** Positive entries of a quota/mix dict, or null when none — null means "use
  *  the engine's default" to every engine entry that takes one. */
@@ -418,6 +424,8 @@ export function sphereRunConfig(cfg, prep, itemPool, { params, resolvedLibraries
         enableLoopMode: cfg.enableLoopMode,
         regionXpEffect: cfg.regionXpEffect ?? 'cost',
         itemPool,
+        // ⛓ bulletml N5: only when an active substrate prices its regions (bytes kept otherwise)
+        ...withPricingParams(cfg.activeIds, params),
     };
 }
 
@@ -494,6 +502,8 @@ export function buildSpiralRun(state, { resolvedLibraries = [] } = {}) {
         enableLoopMode: !!params.enableLoopMode,
         regionXpEffect: params.regionXpEffect ?? 'cost',
         completionConditionItem: resolveVictoryItemId(state),
+        // ⛓ bulletml N5: only when an in-quota substrate prices its regions (bytes kept otherwise)
+        ...withPricingParams(Object.keys(substrateQuotas), params),
     };
     return { config, compileIn };
 }

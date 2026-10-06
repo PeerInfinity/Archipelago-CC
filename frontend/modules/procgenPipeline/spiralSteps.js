@@ -211,6 +211,7 @@ function stepCompile(env) {
         enableLoopMode: !!c.enableLoopMode,
         regionXpEffect: c.regionXpEffect ?? 'cost',
         completionConditionItem: c.completionConditionItem ?? null,
+        procgenParams: c.procgenParams ?? null,
         procgenMetadata: {
             driver: 'shuffled-spiral',
             stop_reason: stats.stopReason,
