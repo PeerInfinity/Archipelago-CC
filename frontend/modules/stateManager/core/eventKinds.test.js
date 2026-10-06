@@ -94,7 +94,7 @@ describe('the committed events — measured and pinned', () => {
         }
     }
 
-    it('only the playthrough\'s two exports carry event_kind, and only game_state', () => {
+    it('only the playthrough\'s exports carry event_kind, and only game_state', () => {
         const carrying = files.filter((f) => readFileSync(f, 'utf8').includes('"event_kind"'))
             .map((f) => f.slice(PRESETS.length + 1)).sort();
         expect(carrying).toEqual([
