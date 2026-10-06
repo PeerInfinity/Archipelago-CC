@@ -58,7 +58,9 @@
  * identities across copies.
  */
 
-import { regionSubstratesFromRulesJson } from '../shared/procgen/loopCostPlanner.js';
+import * as loopCostPlanner from '../shared/procgen/loopCostPlanner.js';
+
+const { regionSubstratesFromRulesJson } = loopCostPlanner;
 
 /**
  * Build a `CostPlanner`-shaped state manager over a rules.json working copy.
@@ -66,7 +68,7 @@ import { regionSubstratesFromRulesJson } from '../shared/procgen/loopCostPlanner
  * @param {object} jsonData the working copy (`session.record()`), never applied
  * @param {string} playerId the slot to plan — the DOCUMENT's, not the app's
  * @returns {Promise<{getStaticData: function, getLatestStateSnapshot: function,
- *   regionSubstrates: Map<string,string>, playerId: string,
+ *   regionSubstrates: Map<string,string>, regionDrainRates: Map<string,number>, playerId: string,
  *   stats: {regions: number, locations: number, ms: number}}>}
  */
 export async function documentStateManager(jsonData, playerId) {
@@ -87,11 +89,17 @@ export async function documentStateManager(jsonData, playerId) {
     // path asks `procgenPlayer.getRegionInfo`; a working copy the app has never
     // applied has no such answer, so the map comes from the DOCUMENT itself.
     const regionSubstrates = regionSubstratesFromRulesJson(jsonData, String(playerId));
+    // ⛓ bulletml N5 — and the drain rate a region's payload names (Noiz2sa's priced
+    // regions), which static data does not carry either. Feature-detected: a shared
+    // submodule without `regionDrainRatesFromRulesJson` yields none, and its writer
+    // ignores the map anyway.
+    const regionDrainRates = loopCostPlanner.regionDrainRatesFromRulesJson?.(jsonData, String(playerId)) ?? new Map();
     const elapsed = (typeof performance !== 'undefined' ? performance : Date).now() - started;
     return {
         getStaticData: () => staticData,
         getLatestStateSnapshot: () => sm.getSnapshot(),
         regionSubstrates,
+        regionDrainRates,
         playerId: String(playerId),
         stats: {
             regions: staticData.regions?.size ?? 0,

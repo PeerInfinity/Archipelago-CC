@@ -85,7 +85,38 @@ export class CostPlanner extends SharedCostPlanner {
     const snapshot = this.stateManager?.getLatestStateSnapshot?.() ?? null;
     return topologyFromStaticData(staticData, snapshot, {
       regionSubstrates: this._resolveRegionSubstrates(staticData),
+      regionDrainRates: this._resolveRegionDrainRates(staticData),
     });
+  }
+
+  /**
+   * ⛓ bulletml N5 — **REGION → THE DRAIN RATE ITS PAYLOAD NAMES**, so the
+   * write-by-class rule writes a priced SUMMARY region's own rate (Noiz2sa) the
+   * way the pipeline's block does. A working copy hands the map over
+   * (`documentStateManager.regionDrainRates`); the applied state asks
+   * `procgenPlayer.getRegionInfo`, whose answer carries the loaded world's
+   * `timeDrainPerSecond`. Empty ⇒ every SUMMARY region gets the default drain,
+   * which is also what a shared writer without the payload-rate rule does.
+   * @private
+   */
+  _resolveRegionDrainRates(staticData) {
+    const supplied = this.stateManager?.regionDrainRates;
+    if (supplied instanceof Map) return supplied;
+
+    const out = new Map();
+    if (!staticData?.regions) return out;
+    let getRegionInfo = null;
+    try {
+      getRegionInfo = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
+    } catch { /* registry unavailable — no payload rates */ }
+    if (typeof getRegionInfo !== 'function') return out;
+    for (const regionName of staticData.regions.keys()) {
+      try {
+        const rate = getRegionInfo(regionName)?.timeDrainPerSecond;
+        if (typeof rate === 'number' && Number.isFinite(rate) && rate > 0) out.set(regionName, rate);
+      } catch { /* one bad region must not lose the rest */ }
+    }
+    return out;
   }
 
   /**

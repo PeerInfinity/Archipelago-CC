@@ -360,10 +360,15 @@ export function register(registrationApi) {
                 const registryEntry = entry.substrate
                     ? substrateRegistry.get(entry.substrate)
                     : null;
+                const rate = entry.world?.timeDrainPerSecond;
                 return {
                     substrate: entry.substrate,
                     label: registryEntry?.label ?? entry.substrate ?? null,
                     manaEnabled: entry.world?.manaEnabled === true,
+                    // ⛓ bulletml N5: the drain rate the payload names (Noiz2sa's
+                    // priced regions), for the runtime cost planner's write-by-class
+                    ...(typeof rate === 'number' && Number.isFinite(rate) && rate > 0
+                        ? { timeDrainPerSecond: rate } : {}),
                 };
             },
         );
