@@ -456,12 +456,12 @@ export function axeVisitClock(run) {
 const PHASE_TIMELINES = new Map();
 const PHASE_TIMELINE_CAP = 64;
 
-function phaseTimeline(h, v, timeAtV) {
+function phaseTimeline(h, v, timeAtV, size) {
     const key = `${h.tag}@${h.x},${h.y}|${v}|${timeAtV}`;
     let tl = PHASE_TIMELINES.get(key);
     if (!tl) {
         if (PHASE_TIMELINES.size >= PHASE_TIMELINE_CAP) PHASE_TIMELINES.clear();
-        tl = { rects: [null], state: h.tag === 'lavachain' ? createLavaChainState() : createBeamTower(h) };
+        tl = { rects: [null], state: h.tag === 'lavachain' ? createLavaChainState() : createBeamTower(h, size) };
         PHASE_TIMELINES.set(key, tl);
     }
     return tl;
@@ -491,7 +491,7 @@ export function phaseHazardHit(run, h, clock, tick, box) {
     if (u < 1) return { hit: null };
     // `Game.time` in frame V + 1, read off the run's clock now.
     const timeAtV = Number.isFinite(now) ? now + (clock.v + 1 - run.ticksCompleted - 1) : null;
-    const tl = phaseTimeline(h, clock.v, timeAtV);
+    const tl = phaseTimeline(h, clock.v, timeAtV, run.worldFor(run.level).world);
     let r = phaseRectAt(h, tl, u, timeAtV);
     if (!r) return { hit: null };
     if (timeAtV === null) r = { x: r.x, y: r.y - BEAM_BOB_SPAN, w: r.w, h: r.h + 2 * BEAM_BOB_SPAN };
@@ -516,9 +516,9 @@ export function phaseHazardHit(run, h, clock, tick, box) {
  * bob both ways. ⚠ A conservative "yes" — the DOORSTEP test of the ladder's
  * PHASE arm (where a walk may stand and wait), not a danger verdict.
  */
-export function phaseHazardCanReach(h, box) {
+export function phaseHazardCanReach(h, box, size) {
     if (h.tag === 'lavachain') return rectTouchesBox(lavaChainRect(h.cx, h.cy, h.attrs?.dir ?? 0), box);
-    const t = createBeamTower(h);
+    const t = createBeamTower(h, size);
     const sides = new Set();
     for (let d = t.direction, i = 0; i < 4; i += 1, d = (d + t.rate + 4) % 4) sides.add(d);
     for (const d of sides) {

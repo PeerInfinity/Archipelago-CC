@@ -13337,7 +13337,7 @@ function solveSegmentUnder({
                 const base = previewWalk(run, wps, tolerance, optsFor(null));
                 let door = Math.min(hitAt, base.samples.length - 1);
                 while (door > 0 && roomPhase.some((ph) => phaseHazardCanReach(ph,
-                    playerBoxAt(base.samples[door].x, base.samples[door].y)))) door -= 1;
+                    playerBoxAt(base.samples[door].x, base.samples[door].y), run.world.world))) door -= 1;
                 /**
                  * ⛓ PROGRESS, NOT ONLY A CLEAN WALK. Two of the arm's rooms (L75's
                  * chains, L103's beam) sit on corridors that then pass a
@@ -13354,7 +13354,7 @@ function solveSegmentUnder({
                 const lastReach = (() => {
                     let last = -1;
                     base.samples.forEach((sm, i) => {
-                        if (roomPhase.some((ph) => phaseHazardCanReach(ph, playerBoxAt(sm.x, sm.y)))) last = i;
+                        if (roomPhase.some((ph) => phaseHazardCanReach(ph, playerBoxAt(sm.x, sm.y), run.world.world))) last = i;
                     });
                     return last;
                 })();
