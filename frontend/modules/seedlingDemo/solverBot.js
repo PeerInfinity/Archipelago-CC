@@ -114,7 +114,7 @@ import {
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
-    AXE_UPDATE_OFFSET, axeVisitClock,
+    AXE_UPDATE_OFFSET, axeVisitClock, phaseHazardCanReach, phaseHazardHit,
 } from './dangerMap.js';
 import { axeCanReach, axeHitsPlayer } from './hazards.js';
 import { planDash } from './mover.js';
@@ -3912,6 +3912,13 @@ export function previewWalk(run, wps, tolerance = 0,
      */
     const spitForecast = run.spitForecast?.() ?? null;
     /**
+     * ⛓⛓⛓ SEEDLING FIDELITY LADDER2 — **AND THE PLACED GRENADES ADVANCE ON IT
+     * TOO**: a dormant grenade is armed by the PREVIEWED player coming within
+     * 32 px, and its blast lands a fixed fuse later, so whether a sample is
+     * blasted is a function of the walk. `null` in a room with no grenade.
+     */
+    const grenadeForecast = run.grenadeForecast?.() ?? null;
+    /**
      * ⛔⛔⛔ R9 SLICE 12b — **THE STRIKE POLICY SEES THE PREVIOUS TICK'S
      * BODIES, ON BOTH SIDES, AND THAT IS THE ONLY READING A DRIVER CAN HAVE.**
      *
@@ -4224,6 +4231,7 @@ export function previewWalk(run, wps, tolerance = 0,
             if (spitForecast) {
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
             }
+            if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
             samples.push(sample);
             let held = st.fall ? new Set() : NO_HELD_PREVIEW;
             const combat = combatBefore(st, tick - 1, held, chaserBodies);
@@ -4300,6 +4308,7 @@ export function previewWalk(run, wps, tolerance = 0,
             if (spitForecast) {
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
             }
+            if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
             samples.push(sample);
             if (stopWhen && stopWhen(sample)) {
                 truncated = { kind: 'stopped', at: { x: st.x, y: st.y },
@@ -4408,6 +4417,7 @@ export function previewWalk(run, wps, tolerance = 0,
             if (spitForecast) {
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
             }
+            if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
             samples.push(sample);
             let held = st.fall ? new Set() : NO_HELD_PREVIEW;
             const combat = combatBefore(st, tick - 1, held, chaserBodies);
@@ -8059,7 +8069,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
         if (!walk.truncated) {
             for (const sm of walk.samples) {
                 const d = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
-                    sm.arrows, sm.chasers, sm.spits ?? null);
+                    sm.arrows, sm.chasers, sm.spits ?? null, sm.grenades ?? null);
                 if (d.danger) { unsafe = { sm, d }; break; }
             }
         }
@@ -11720,6 +11730,16 @@ export const AXE_DODGE_RUNG = Object.freeze({ step: 4, offsets: 8, detourOffsets
     rest: 12, maxPerSegment: DODGE_RUNG.maxPerSegment });
 
 /**
+ * ⛓ SEEDLING FIDELITY LADDER2 — the DODGE rung's PHASE arm (a lava chain, a beam
+ * tower): AXE's shape and bounds, with the stall's length bounded by the
+ * longest period in the family, `period` = 90 — `Game.time % 90` is the chain's
+ * whole cycle (`LAVA_CHAIN.loops` x `TIME_PER_FRAME`), and every placed tower's
+ * pattern is shorter (4 anim frames per side, at most 4 sides: ≤ 60 updates on
+ * the map). So a stall of 1 … 89 reaches every phase of every member.
+ */
+export const PHASE_DODGE_RUNG = Object.freeze({ ...AXE_DODGE_RUNG, period: 90 });
+
+/**
  * ⛓ SEEDLING FIDELITY F1c — THE HAMMER-PHASE RUNG's bounds, beside DODGE's and
  * DERIVED, not tuned (`hammerPhaseRung`):
  *   · `horizon` = `SPINNER.hammerPeriod` (45): one revolution of the line. A
@@ -12174,7 +12194,7 @@ export function deriveKillByChaser(run, body, contacts,
                 && !sm.chasers.some((b) => b.id === target.id)) deathTick = sm.tick;
             if (danger !== null) continue;
             const dg = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
-                sm.arrows, sm.chasers, sm.spits ?? null);
+                sm.arrows, sm.chasers, sm.spits ?? null, sm.grenades ?? null);
             if (dg.danger) danger = { tick: sm.tick, phase: sm.phase ?? 'transit', ...dg };
         }
         if (danger) {
@@ -12661,6 +12681,11 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  *  - `axe-dodge` — the DODGE rung's AXE arm (fidelity AXE), before each stall
  *    preview: the arm answers no stall, with a `deadline` reason, and the climb
  *    goes on up the ladder. CAN turn a solve into a refusal.
+ *  - `phase-dodge` — the DODGE rung's PHASE arm (fidelity LADDER2: a lava chain
+ *    or a beam tower), asked exactly where `axe-dodge` is in its own arm, and
+ *    with the same effect. Coarse (always asked), like `axe-dodge`: the arm
+ *    exists only on a climb whose every reason is a clocked chain or beam,
+ *    which refused EXHAUSTED before it, so no existing solve's sequence moves.
  *
  * ⛓⛓ FIDELITY CHECKPOINTS — THE FINE SITES ARE OPT-IN (`solveSegment`'s
  * `fineCheckpoints: true`). The two below and the via-set asks of `detour` are
@@ -12694,7 +12719,7 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  * trip carries the same object and says so in its words.
  */
 export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
-    'block-route', 'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk']);
+    'block-route', 'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk', 'phase-dodge']);
 
 /**
  * ⛓ FIDELITY CHECKPOINTS — the ticks a segment drives between two asks of the
@@ -13546,7 +13571,7 @@ function solveSegmentUnder({
             }
             const d = withoutSources(
                 dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows, s.chasers,
-                    s.spits ?? null),
+                    s.spits ?? null, s.grenades ?? null),
                 except);
             if (d.danger) return { x: s.x, y: s.y, tick: s.tick, ...d };
         }
@@ -14033,6 +14058,191 @@ function solveSegmentUnder({
                 const upto = dodge.at + dodge.ticks;
                 for (const s of dodge.walk.samples.slice(0, upto)) {
                     const held = new Set(s.held);
+                    perTick.push(held);
+                    const { transition } = run.advance(held);
+                    if (transition) return { escalations };
+                }
+                const wpAt = dodge.walk.samples[upto - 1]?.wp ?? 0;
+                return { wps: dodge.wps.slice(Math.max(0, wpAt)), escalations };
+            }
+            rowFor('dodge', refused);
+            refused = { rung: 'dodge', why: dodgeWhy };
+        }
+
+        /**
+         * ── rung 1⅓, the PHASE arm: DODGE a lava chain or a beam tower by its
+         * own clock (SEEDLING FIDELITY LADDER2). CONDITIONAL like the AXE arm:
+         * only when every reason the probe gave is a chain or beam priced at its
+         * update (`dangerMap.phaseHazardHit` sets `phase`). The chain's arm is
+         * out ~20 of every 90 updates on `Game.time`; the beam is up on the
+         * second frame of each side, the side turning by `rate` — the game's
+         * clocks (`probe-seedling-ladder2-phase.mjs`, K = 0 on every arm). So a
+         * stall moves the walk to another phase of every one it then passes.
+         * AXE's search, its doorstep (`phaseHazardCanReach`: outside every rect
+         * the hazard makes at any phase), its rest screen (the shifted walk
+         * priced by `phaseHazardHit`) and its bent-corridor fallback, with
+         * `PHASE_DODGE_RUNG` and the `phase-dodge` deadline site. The axe arm
+         * above is untouched.
+         */
+        const phaseOnly = hit.sources.length > 0
+            && hit.sources.every((s) => s.kind === 'hazard' && s.phase);
+        if (phaseOnly && corridor) {
+            let dodge = null;
+            let dodgeWhy = null;
+            let previews = 0;
+            let tripped = false;
+            const clock = axeVisitClock(run);
+            const roomPhase = (run.world.combat?.hazards ?? [])
+                .filter((x) => x.tag === 'lavachain' || x.tag === 'beamtower');
+            const t0 = run.ticksCompleted;
+            const hitsPhase = (x, y, tick) => roomPhase.some((h) => {
+                const r = phaseHazardHit(run, h, clock, tick, playerBoxAt(x, y));
+                return r !== null && r.hit !== null;
+            });
+            const phaseStall = (wps, h, offsets) => {
+                const period = PHASE_DODGE_RUNG.period;
+                const hitAt = Math.max(0, h.tick - run.ticksCompleted - 1);
+                const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
+                const optsFor = (stall) => (axisAligned
+                    ? { strike: null, axisAligned, stall, stopWhen: dangerous }
+                    : { strike: strikePolicyFor(run, { dashMode }), stall, stopWhen: dangerous });
+                const base = previewWalk(run, wps, tolerance, optsFor(null));
+                let door = Math.min(hitAt, base.samples.length - 1);
+                while (door > 0 && roomPhase.some((ph) => phaseHazardCanReach(ph,
+                    playerBoxAt(base.samples[door].x, base.samples[door].y)))) door -= 1;
+                /**
+                 * ⛓ PROGRESS, NOT ONLY A CLEAN WALK. Two of the arm's rooms (L75's
+                 * chains, L103's beam) sit on corridors that then pass a
+                 * SpinningAxe, and no single stall clears both clocks (measured:
+                 * 1,110 of step 162's stalls clear the chains and meet
+                 * `spinningaxe@80,144`). So a stall whose walk's FIRST danger is
+                 * not a phase source, met past the last sample from which any
+                 * phase hazard can reach, is kept as `partial`: the walk is
+                 * driven through the stall, and the next probe meets the other
+                 * danger alone — the AXE arm's question. A clean stall is
+                 * preferred whenever one exists.
+                 */
+                let partial = null;
+                const lastReach = (() => {
+                    let last = -1;
+                    base.samples.forEach((sm, i) => {
+                        if (roomPhase.some((ph) => phaseHazardCanReach(ph, playerBoxAt(sm.x, sm.y)))) last = i;
+                    });
+                    return last;
+                })();
+                const certified = (at, ticks) => {
+                    previews += 1;
+                    const walk = previewWalk(run, wps, tolerance, optsFor({ at, ticks }));
+                    if (walk.truncated && walk.truncated.kind === 'stopped' && partial === null
+                        && walk.samples.length > at + ticks) {
+                        const i = walk.samples.length - 1;
+                        const next = probeSamples(walk.samples.slice(-1), dangerExcept);
+                        if (next && next.sources.every((x) => !x.phase) && i - ticks > lastReach) {
+                            partial = { at, ticks, walk, door, wps, partial: next.sources.map((x) => x.id) };
+                        }
+                    }
+                    if (walk.truncated && walk.truncated.kind !== 'crossed') return null;
+                    if (walk.samples.length < at + ticks) return null;
+                    if (probeSamples(walk.samples, dangerExcept)) return null;
+                    return { at, ticks, walk, door, wps };
+                };
+                const rest = PHASE_DODGE_RUNG.rest;
+                for (let k = 0; k < offsets; k += 1) {
+                    const at = door - k * PHASE_DODGE_RUNG.step;
+                    if (at < 0) break;
+                    let screen = null;
+                    for (let ticks = 1; ticks < period; ticks += 1) {
+                        if (deadlineReached('phase-dodge')) { tripped = true; return null; }
+                        if (ticks <= rest || screen === null) {
+                            const got = certified(at, ticks);
+                            if (got) return got;
+                            if (ticks === rest && clock.v !== null) {
+                                previews += 1;
+                                const full = previewWalk(run, wps, tolerance, axisAligned
+                                    ? { strike: null, axisAligned, stall: { at, ticks: rest } }
+                                    : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks: rest } });
+                                const sm = full.samples;
+                                const still = sm.length > at + rest && sm[at + rest - 1].x === sm[at + rest - 2]?.x
+                                    && sm[at + rest - 1].y === sm[at + rest - 2]?.y;
+                                screen = still ? sm : false;
+                            }
+                            continue;
+                        }
+                        if (screen === false) {
+                            const got = certified(at, ticks);
+                            if (got) return got;
+                            continue;
+                        }
+                        const shift = ticks - rest;
+                        const still = screen[at + rest - 1];
+                        let clear = true;
+                        for (let i = at; i < screen.length + shift && clear; i += 1) {
+                            const sm = i < at + rest ? screen[i] : (i < at + ticks ? still : screen[i - shift]);
+                            if (hitsPhase(sm.x, sm.y, t0 + i + 1)) clear = false;
+                        }
+                        if (!clear) continue;
+                        const got = certified(at, ticks);
+                        if (got) return got;
+                    }
+                }
+                return partial;
+            };
+            const phased = hit.sources.map((s) => s.id).join(', ');
+            let viaWhy = null;
+            if (dodgesSpent >= PHASE_DODGE_RUNG.maxPerSegment) {
+                dodgeWhy = `this segment has already stalled ${dodgesSpent} time(s) for a `
+                    + `clocked danger (PHASE_DODGE_RUNG.maxPerSegment ${PHASE_DODGE_RUNG.maxPerSegment}) — `
+                    + 'a walk that keeps meeting one is not converging';
+            } else {
+                dodge = phaseStall(corridor, hit, PHASE_DODGE_RUNG.offsets);
+                if (!dodge && !tripped) {
+                    const stalls = new Map();
+                    const detour = deriveChaserDetour(run, {
+                        aim, allowTeleporter,
+                        planOpts: solverPlanOpts(run, contacts, goalPlanExtra),
+                        maxPreviews: PHASE_DODGE_RUNG.detourPreviews,
+                        certify: (wps) => {
+                            const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
+                            const walk = previewWalk(run, wps, tolerance, axisAligned
+                                ? { strike: null, axisAligned, stopWhen: dangerous }
+                                : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous });
+                            const h = probeSamples(walk.samples, dangerExcept);
+                            const out = { hit: h, hitWp: h ? walk.samples.at(-1).wp : null,
+                                truncated: h ? null : (walk.truncated ?? null), ticks: walk.samples.length };
+                            if (!h || !h.sources.every((s) => s.kind === 'hazard' && s.phase) || tripped) return out;
+                            const st = phaseStall(wps, h, PHASE_DODGE_RUNG.detourOffsets);
+                            if (!st) return out;
+                            stalls.set(wps, st);
+                            return { hit: null, hitWp: null, truncated: null, ticks: st.walk.samples.length };
+                        },
+                    });
+                    if (detour.wps) {
+                        dodge = stalls.get(detour.wps)
+                            ?? { at: null, ticks: 0, walk: null, door: null, wps: detour.wps };
+                        dodge.vias = detour.vias;
+                    } else {
+                        viaWhy = detour.why;
+                    }
+                }
+                if (!dodge) {
+                    dodgeWhy = tripped
+                        ? `the PHASE arm's search stopped at the deadline after ${previews} preview(s) `
+                            + `(\`phase-dodge\`) without a stall that clears ${phased}`
+                        : `no stall of 1..${PHASE_DODGE_RUNG.period - 1} tick(s) at the doorstep or `
+                            + `${PHASE_DODGE_RUNG.offsets - 1} earlier walk-offset(s) (step `
+                            + `${PHASE_DODGE_RUNG.step}) clears the corridor of ${reasonsOf(hit)} `
+                            + `(${previews} preview(s))${viaWhy ? `; and bent through via cells: ${viaWhy}` : ''}`;
+                }
+            }
+            if (dodge) {
+                dodgesSpent += 1;
+                rowFor('dodge', refused, { stall: dodge.at === null ? null : { at: dodge.at, ticks: dodge.ticks },
+                    phase: hit.sources[0].id, previews, ...(dodge.vias ? { vias: dodge.vias } : {}),
+                    ...(dodge.partial ? { partial: dodge.partial } : {}) });
+                if (dodge.at === null) return { wps: dodge.wps, escalations };
+                const upto = dodge.at + dodge.ticks;
+                for (const sm of dodge.walk.samples.slice(0, upto)) {
+                    const held = new Set(sm.held);
                     perTick.push(held);
                     const { transition } = run.advance(held);
                     if (transition) return { escalations };

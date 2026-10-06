@@ -648,8 +648,10 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
             // ⛓ R2-swim D1: the wallflyer is stepped (`stepWallFlyersNow`) and joins.
             // ⛓ Seedling fidelity PROXIMITY: the ice turret is stepped AND now billed
             // (`stepIceTurretsNow`'s contact arm), so it joins — and no family is refused.
-            bridged: [...bridgedChaserTags(), 'spinner', 'wallflyer', 'iceturret'],
-        })).toEqual({ families: 5, bridged: ['bob', 'puncher', 'spinner', 'wallflyer', 'iceturret'],
+            // ⛓ Seedling fidelity LADDER2: the placed grenade is stepped (`stepPlacedGrenadesNow`,
+            // its blast billed) and has no contact, so it joins with that pricer.
+            bridged: [...bridgedChaserTags(), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+        })).toEqual({ families: 6, bridged: ['bob', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
             refused: [] });
     });
 

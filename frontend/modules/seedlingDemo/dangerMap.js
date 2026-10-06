@@ -70,9 +70,13 @@ import {
     rect, rectsOverlap,
     SPINNER, hammerHitsPlayer, spinnerRect,
     TURRET_SPIT,
+    // ⛓ LADDER2: the placed grenade, and the player's hitbox origin (its entity point).
+    HITBOX, PLACED_GRENADE, blastReaches, createPlacedGrenade, stepPlacedGrenade,
 } from './solverView.js';
 import {
     hazardVolume, volumeHitsBox, axeHitsPlayer, SPINNING_AXE,
+    BEAM_BOB_SPAN, beamRect as beamRectAt, createBeamTower, createLavaChainState, lavaChainRect,
+    rectTouchesBox, stepBeamTower, stepLavaChain,
 } from './hazards.js';
 
 export class DangerMapError extends Error {
@@ -422,6 +426,199 @@ export function axeVisitClock(run) {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING FIDELITY LADDER2 — **THE LAVA CHAIN AND THE BEAM TOWER ARE
+ * PRICED AT THEIR OWN UPDATE IN TRANSIT, NOT AS THE VOLUMES THEY SWEEP.**
+ *
+ * The census volumes (`hazardVolume`) are unions over every phase: the chain's
+ * whole 48 px arm widened to the body's 16 px, and the beam's band swept over
+ * the bob. Both are TRUE where the phase is unknowable and both forbid every
+ * corridor that crosses them. The game's answer is a function of the visit's
+ * clock (`probe-seedling-ladder2-phase.mjs`, K = 0 on every arm):
+ *
+ *   - LavaChain: the arm is out while its anim is `extend`/`hit`, which starts
+ *     on the frames with `Game.time % 90 < 1.5` (`hazards.stepLavaChain`) — a
+ *     4 px x 48 px rect for ~20 of every 90 updates.
+ *   - BeamTower: the beam is up on the second frame of each side's anim, its
+ *     side turning by `rate` (`hazards.stepBeamTower`), at the bob's y.
+ *
+ * ⇒ update `u = tick − V` of the visit (`axeVisitClock`, whose refusals are
+ * the right ones: a rebuild re-runs the ctor, and a dead frame spends a
+ * `Game.time` the tape does not count). Its `Game.time` is `run.gameTime +
+ * (tick − ticksCompleted − 1)`. The rect is tested INCLUSIVELY
+ * (`Entity.collideRect`) against the PRE-move box the sample carries — both
+ * are added after the Player. Where the visit clock is refused, `null`: the
+ * caller keeps the volume. A chain with no `Game.time` is refused too; a beam
+ * with none keeps its exact firing and widens its rect by the bob.
+ *
+ * Timelines are memoised per (level, id, V, Game.time at V) — the inputs
+ * that determine them — so a probe that asks hundreds of ticks pays once.
+ */
+const PHASE_TIMELINES = new Map();
+const PHASE_TIMELINE_CAP = 64;
+
+function phaseTimeline(h, v, timeAtV) {
+    const key = `${h.tag}@${h.x},${h.y}|${v}|${timeAtV}`;
+    let tl = PHASE_TIMELINES.get(key);
+    if (!tl) {
+        if (PHASE_TIMELINES.size >= PHASE_TIMELINE_CAP) PHASE_TIMELINES.clear();
+        tl = { rects: [null], state: h.tag === 'lavachain' ? createLavaChainState() : createBeamTower(h) };
+        PHASE_TIMELINES.set(key, tl);
+    }
+    return tl;
+}
+
+/** The rect the hazard tests on update `u` (1-based) of the visit, or null. */
+function phaseRectAt(h, tl, u, timeAtV) {
+    while (tl.rects.length <= u) {
+        const k = tl.rects.length; // the update being stepped
+        // Update k runs in frame V + k, whose `Game.time` is (time at V+1) + k − 1.
+        const time = timeAtV === null ? null : timeAtV + k - 1;
+        if (h.tag === 'lavachain') {
+            const reaching = stepLavaChain(tl.state, time);
+            tl.rects.push(reaching ? lavaChainRect(h.cx, h.cy, h.attrs?.dir ?? 0) : null);
+        } else {
+            tl.rects.push(stepBeamTower(tl.state, time));
+        }
+    }
+    return tl.rects[u];
+}
+
+export function phaseHazardHit(run, h, clock, tick, box) {
+    if (clock.v === null) return null;
+    const now = run.gameTime;
+    if (h.tag === 'lavachain' && !Number.isFinite(now)) return null;
+    const u = tick - clock.v;
+    if (u < 1) return { hit: null };
+    // `Game.time` in frame V + 1, read off the run's clock now.
+    const timeAtV = Number.isFinite(now) ? now + (clock.v + 1 - run.ticksCompleted - 1) : null;
+    const tl = phaseTimeline(h, clock.v, timeAtV);
+    let r = phaseRectAt(h, tl, u, timeAtV);
+    if (!r) return { hit: null };
+    if (timeAtV === null) r = { x: r.x, y: r.y - BEAM_BOB_SPAN, w: r.w, h: r.h + 2 * BEAM_BOB_SPAN };
+    if (!rectTouchesBox(r, box)) return { hit: null };
+    const what = h.tag === 'lavachain'
+        ? `a LavaChain's ${48}x4 arm, out on its update ${u} of this visit (Game.time `
+            + `${timeAtV + u - 1} — the extend starts where Game.time % 90 < 1.5)`
+        : `a BeamTower's beam on its update ${u} of this visit (side ${['right', 'up', 'left', 'down'][tl.state.direction] ?? '?'}`
+            + `${timeAtV === null ? ', no Game.time: the rect widened by the bob' : ''})`;
+    return {
+        hit: {
+            kind: 'hazard', id: `${h.tag}@${h.x},${h.y}`, arm: h.tag === 'lavachain' ? 'chain' : 'beam',
+            phase: { tag: h.tag, updates: u, v: clock.v, rect: { x: r.x, y: r.y, w: r.w, h: r.h } },
+            why: `${what} — the exact \`collideRect\` at THIS tick, not the volume`,
+        },
+    };
+}
+
+/**
+ * Can this chain or beam reach the box at ANY phase? The union of its rects:
+ * the chain's one arm; every side a tower's `rate` visits, each widened by the
+ * bob both ways. ⚠ A conservative "yes" — the DOORSTEP test of the ladder's
+ * PHASE arm (where a walk may stand and wait), not a danger verdict.
+ */
+export function phaseHazardCanReach(h, box) {
+    if (h.tag === 'lavachain') return rectTouchesBox(lavaChainRect(h.cx, h.cy, h.attrs?.dir ?? 0), box);
+    const t = createBeamTower(h);
+    const sides = new Set();
+    for (let d = t.direction, i = 0; i < 4; i += 1, d = (d + t.rate + 4) % 4) sides.add(d);
+    for (const d of sides) {
+        const r = beamRectAt(t, d);
+        if (rectTouchesBox({ x: r.x, y: r.y - BEAM_BOB_SPAN, w: r.w, h: r.h + 2 * BEAM_BOB_SPAN }, box)) return true;
+    }
+    return false;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY LADDER2 — INGREDIENT (g): THE PLACED GRENADES' BLAST.
+ *
+ * A placed grenade has no contact (`combat.contactPricing('grenade')` is
+ * `stepped` by `levelRun.stepPlacedGrenadesNow`), so `staticEnemyDanger`
+ * leaves it to this. Its one arm is the blast: the player's ENTITY point
+ * within 20 px of `(x, endY)` on the update the `"explode"` callback fires.
+ * The run steps it (`run.placedGrenades`, the current visit's), so:
+ *
+ *   - ARMED: the blast update B is the grenade's own, independent of the
+ *     player from here on (a clone stepped forward). Danger at `tick` iff its
+ *     update IS B (TRANSIT), or B lies in [next, its update] (WAIT).
+ *   - NOT ARMED: the walk itself may arm it on the very next update, so no
+ *     blast can come before `updates + 1 + fuse`; danger at or after that.
+ *     Exact-safe — it never misses a blast, and a walk that passes and leaves
+ *     before the earliest one is clean.
+ *   - REMOVED, or already blasted: nothing.
+ *
+ * The update at `tick` is `updates + (tick − ticksCompleted)`: one live update
+ * per frame, inside the visit (a dead frame would not step it).
+ */
+export function grenadeDanger(run, box, tick, mode = 'wait', blasts = null) {
+    const world = run.worldFor(run.level);
+    const census = (world.combat?.enemies ?? []).filter((inst) => inst.tag === 'grenade');
+    if (census.length === 0) return [];
+    const px = box.x + HITBOX.originX;
+    const py = box.y + HITBOX.originY;
+    const out = [];
+    /**
+     * ⛓ THE EXACT ARM: a TRANSIT sample from `previewWalk` carries the blasts
+     * its own walk set off on this update (`run.grenadeForecast()`, stepped
+     * against the previewed point). Then the question is only whether one of
+     * them reaches this box's entity point.
+     */
+    if (blasts !== null) {
+        for (const b of blasts) {
+            const g = { x: b.x, endY: b.endY };
+            if (!blastReaches(g, px, py)) continue;
+            out.push({
+                kind: 'enemy', id: b.id, arm: 'blast',
+                grenade: { cx: b.x, endY: b.endY, armed: true, updates: b.updates, blastAt: b.updates },
+                why: `a placed Grenade's ${PLACED_GRENADE.hitRadius} px blast on its update ${b.updates}, `
+                    + `armed by this walk ${b.armedAt !== null ? `on its update ${b.armedAt}` : ''} — the `
+                    + 'box\'s entity point is inside it (the walk\'s own forecast)',
+            });
+        }
+        return out;
+    }
+    const live = run.placedGrenades ?? [];
+    for (const inst of census) {
+        const id = `${inst.tag}@${inst.x},${inst.y}`;
+        const g = live.find((x) => x.id === id) ?? createPlacedGrenade(inst.cx, inst.cy, { id });
+        if (g.removed || g.blastAt !== null) continue;
+        if (!blastReaches(g, px, py)) continue;
+        const u = g.updates + Math.max(1, tick - run.ticksCompleted);
+        const fuse = grenadeFuseFrom(g, world);
+        const armed = g.armedAt !== null;
+        const earliest = armed ? g.updates + fuse : g.updates + 1 + fuse;
+        const hit = !Number.isFinite(earliest) ? false
+            : armed
+                ? (mode === 'transit' ? u === earliest : earliest <= u)
+                : earliest <= u;
+        if (!hit) continue;
+        out.push({
+            kind: 'enemy', id, arm: 'blast',
+            grenade: { cx: g.x, endY: g.endY, armed, updates: u, blastAt: earliest },
+            why: `a placed Grenade's ${PLACED_GRENADE.hitRadius} px blast ${armed
+                ? `on its update ${earliest} (armed at ${g.armedAt})`
+                : `no earlier than its update ${earliest} (not armed yet: the walk may arm it next update)`}`
+                + ` — the box's entity point is inside it at update ${u}`,
+        });
+    }
+    return out;
+}
+
+/**
+ * Updates from `g`'s current state to its blast when armed NOW (or on the next
+ * update, if it is not), simulated on a copy. `Infinity` if it never blasts.
+ */
+function grenadeFuseFrom(g, world) {
+    const c = { ...g };
+    const solidAt = (b) => !!world.collidesSolid(b);
+    const start = c.updates;
+    for (let i = 0; i < 2000; i += 1) {
+        const ev = stepPlacedGrenade(c, c.x, c.endY, { solidAt });
+        if (ev === 'blast') return c.blastAt - start - (g.armedAt !== null ? 0 : 1);
+    }
+    return Infinity;
+}
+
+/**
  * ⛓ INGREDIENT (b) — the placed puzzlement hazards' verdict volumes,
  * excluding the families `HAZARDS_PRICED_LIVE` names. ⛓ AXE: a spinning axe in
  * TRANSIT is its exact blade and hub at `tick` (see `AXE_UPDATE_OFFSET`).
@@ -448,6 +645,17 @@ export function hazardDanger(run, box, tick = null, mode = 'wait') {
                             + `${(((hit.line.deg % 360) + 360) % 360)}°) — the exact \`collideLine\`/`
                             + '`collideRect` at THIS tick, not the disc' });
                 }
+                continue;
+            }
+        }
+        // ⛓⛓⛓ LADDER2: a lava chain or a beam tower in TRANSIT is its own
+        // timeline at `tick` (`phaseHazardHit`), the volume where it cannot run.
+        if ((h.tag === 'lavachain' || h.tag === 'beamtower') && mode === 'transit'
+            && Number.isFinite(tick)) {
+            axeClock ??= axeVisitClock(run);
+            const at = phaseHazardHit(run, h, axeClock, tick, box);
+            if (at !== null) {
+                if (at.hit) out.push(at.hit);
                 continue;
             }
         }
@@ -691,6 +899,8 @@ export function staticEnemyDanger(run, box) {
         if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
         const pricing = contactPricing(inst.tag);
         if (pricing.kind === 'boss') continue;
+        // ⛓ LADDER2: a placed grenade has no contact — its blast is ingredient (g).
+        if (pricing.pricedBy === 'stepPlacedGrenadesNow') continue;
         const r = contactRect(inst);
         if (!r) continue;
         if (rectsOverlap(box, r)) {
@@ -957,6 +1167,8 @@ export function dangerVolumes(run, horizon = 0) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
         if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
         if (contactPricing(inst.tag).kind === 'boss') continue;
+        // ⛓ LADDER2: no contact rect for a placed grenade (`grenadeDanger`).
+        if (contactPricing(inst.tag).pricedBy === 'stepPlacedGrenadesNow') continue;
         const r = contactRect(inst);
         if (!r) continue;
         out.push({
@@ -1202,7 +1414,7 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
  * @returns {{danger: boolean, horizon: number, mode: string, sources: object[]}}
  */
 export function dangerAt(run, tick, box, {
-    mode = 'wait', arrows = null, chasers = null, spits = null,
+    mode = 'wait', arrows = null, chasers = null, spits = null, grenades = null,
 } = {}) {
     if (!run || typeof run.level !== 'number') {
         fail('dangerAt: needs a live run — the whole point is that the positions are the '
@@ -1239,6 +1451,8 @@ export function dangerAt(run, tick, box, {
         // carried to the cell's own ETA in transit mode exactly as an arrow is.
         ...spinnerDanger(run, box, horizon),
         ...staticEnemyDanger(run, box),
+        // ⛓ LADDER2: the placed grenades' blast, at its own update.
+        ...grenadeDanger(run, box, tick, mode, mode === 'transit' ? grenades : null),
         ...crusherDanger(run, box),
         // ⛓ U15-swim D2: the spits — the walk's own forecast in TRANSIT.
         ...spitDanger(run, box, horizon, mode === 'transit' ? spits : null),
@@ -1257,8 +1471,8 @@ export function dangerAt(run, tick, box, {
  * schedule nobody drives is a probe of nothing.
  */
 export function dangerDuringTransit(run, tick, box, arrows = null, chasers = null,
-    spits = null) {
-    return dangerAt(run, tick, box, { mode: 'transit', arrows, chasers, spits });
+    spits = null, grenades = null) {
+    return dangerAt(run, tick, box, { mode: 'transit', arrows, chasers, spits, grenades });
 }
 
 /**
