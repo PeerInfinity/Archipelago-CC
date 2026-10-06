@@ -9,6 +9,7 @@
  * (an inspector session a worker thread opens on the main thread, so a leg killed at `--timeout` still writes
  * what it sampled) attributes each gap over `--gap-ms` to the `frontend/modules` frames that ran in it.
  *
+ *   `--no-hook`        no `shouldStop` at all (the committed solves' configuration): the byte-inertia control.
  *   `--sword`          the arrival holds the sword (`Main.hasSword`), so the `full` pass runs as well.
  *   `--fine`           the solve opts in to the FINE checkpoints (`solveSegment`'s `fineCheckpoints: true`).
  *   `--budget=<work>`  the hook is the worker's own (`passShouldStop`, one work clock per leg, the upgrade
@@ -16,13 +17,13 @@
  *                      page would get. Omitted: the hook never trips — the unbounded search, which is what
  *                      exposes a stretch with no call.
  *
- * One jsonl row per leg (appended as each leg lands, in finishing order): `passes[]` = `{pass, outcome, ticks, ms, calls, sites, maxGapMs, maxGapAfter, lastGapMs,
- * deadline}`, `gaps[]` = the gaps over `--gap-ms` (`{pass, index, after, before, ms, frames}`; `frames` = the
+ * One jsonl row per leg (appended as each leg lands, in finishing order): `passes[]` = `{pass, outcome, ticks, ms, calls, sites, lastAt, maxGapMs, maxGapAfter,
+ * lastGapMs, deadline, hash}` (`lastAt[site]` = the pass's ask index of that site's last ask) (`hash` = md5 prefixes of the plan's keys / its trace, or of a refusal's message), `gaps[]` = the gaps over `--gap-ms` (`{pass, index, after, before, ms, frames}`; `frames` = the
  * top inclusive `frontend/modules` frames, `name:line share%`). A killed leg's row is `outcome: 'timeout'` with the
  * calls it streamed. No browser; nothing tracked changes.
  *
  * Run: node scripts/procgen/probe-solver-hook-gaps.mjs --legs=<jsonl> --ids=a,b --out=<jsonl> [--jobs=N] [--timeout=<s>] [--gap-ms=<ms>] [--budget=<work>] [--window=<work>]
- *        switches: --fine --sword --no-profile
+ *        switches: --fine --sword --no-hook --no-profile
  *        (the parent spawns one child per leg with --one=<leg json> --dir=<profile dir>; not for hand use)
  */
 import { readFileSync, writeFileSync, appendFileSync, mkdtempSync, existsSync } from 'node:fs';
@@ -30,12 +31,14 @@ import { join, dirname } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3) ?? fallback);
 const nowMs = () => Number(process.hrtime.bigint()) / 1e6;
+const md5 = (text) => createHash('md5').update(text).digest('hex');
 /** The profiler's worker thread (`startProfiler`). */
 let profilerWorker = null;
 
@@ -66,7 +69,7 @@ async function main() {
             // eslint-disable-next-line no-await-in-loop
             const row = await new Promise((resolve) => {
                 const p = spawn(process.execPath, [self, `--one=${JSON.stringify(leg)}`, `--dir=${dir}`, `--gap-ms=${gapMs}`,
-                    `--timeout=${timeoutS}`, ...(profile ? [] : ['--no-profile']), ...['--fine', '--sword'].filter((f) => process.argv.includes(f)),
+                    `--timeout=${timeoutS}`, ...(profile ? [] : ['--no-profile']), ...['--fine', '--sword', '--no-hook'].filter((f) => process.argv.includes(f)),
                     ...(budget ? [`--budget=${budget}`] : []), ...(window ? [`--window=${window}`] : [])],
                 { stdio: ['ignore', 'pipe', 'pipe'] });
                 let so = '';
@@ -129,15 +132,16 @@ function passesOf(ev) {
         cur = null;
     };
     for (const e of ev) {
-        if (e.e === 'start') { cur = { pass: e.pass, t0: e.t, calls: 0, sites: {}, maxGapMs: 0, maxGapAfter: null }; prev = e.t; }
+        if (e.e === 'start') { cur = { pass: e.pass, t0: e.t, calls: 0, sites: {}, lastAt: {}, maxGapMs: 0, maxGapAfter: null }; prev = e.t; }
         else if (e.e === 'call') {
             const g = e.t - prev;
             if (g > cur.maxGapMs) { cur.maxGapMs = g; cur.maxGapAfter = cur.calls ? `call ${cur.calls} (${cur.lastSite}) → ${e.site}` : `start → ${e.site}`; }
             cur.calls += 1;
             cur.sites[e.site] = (cur.sites[e.site] ?? 0) + 1;
+            cur.lastAt[e.site] = cur.calls;
             cur.lastSite = e.site;
             prev = e.t;
-        } else if (e.e === 'end') close(e.t, { outcome: e.outcome, ticks: e.ticks ?? null, deadline: e.deadline ?? null, err: e.err });
+        } else if (e.e === 'end') close(e.t, { outcome: e.outcome, ticks: e.ticks ?? null, deadline: e.deadline ?? null, hash: e.hash ?? null, err: e.err });
     }
     if (cur) close(ev.at(-1).t, { outcome: 'unfinished' });
     for (const r of rows) delete r.lastSite;
@@ -253,21 +257,26 @@ async function oneLeg(leg) {
         if (unusable) { const e = new Error(`${p.adds} is not available here: ${unusable}`); e.name = 'PassSkipped'; throw e; }
         const out = solveSegment({ run: shadow, goals: [req.solverGoal], name: req.name, boot: req.staging.boot,
             prefix: req.perTick, dashMode: p.dashMode, shouldStop, ...(fine ? { fineCheckpoints: true } : {}) });
-        return { ticks: out.perTick.length - req.perTick.length, deadline: out.deadline ?? null };
+        // the plan's keys and its trace, hashed: two configurations that plan alike agree here byte for byte
+        const keys = out.perTick.slice(req.perTick.length).map((h) => [...h].sort().join('+')).join('|');
+        return { ticks: out.perTick.length - req.perTick.length, deadline: out.deadline ?? null,
+            hash: `${md5(keys).slice(0, 10)}/${md5(JSON.stringify(out.trace)).slice(0, 10)}` };
     };
     if (!process.argv.includes('--no-profile')) startProfiler(dir, timeoutS);
     let planInHand = false;
     for (const p of ANYTIME_PASSES) {
+        const noHook = process.argv.includes('--no-hook');
         const inner = budget ? passShouldStop(p, { budgetWork: budget, windowWork, planInHand, work, limit: {} }) : () => false;
-        const shouldStop = (site) => { log({ e: 'call', pass: p.pass, site, t: nowMs() }); return inner(site); };
+        const shouldStop = noHook ? null : (site) => { log({ e: 'call', pass: p.pass, site, t: nowMs() }); return inner(site); };
         log({ e: 'start', pass: p.pass, t: nowMs() });
         try {
             const ans = solvePass(p, shouldStop);
             planInHand = true;
-            log({ e: 'end', pass: p.pass, t: nowMs(), outcome: 'solved', ticks: ans.ticks, deadline: ans.deadline?.first ?? null });
+            log({ e: 'end', pass: p.pass, t: nowMs(), outcome: 'solved', ticks: ans.ticks, deadline: ans.deadline?.first ?? null, hash: ans.hash });
         } catch (e) {
             log({ e: 'end', pass: p.pass, t: nowMs(), outcome: e.name === 'PassSkipped' ? 'skipped' : 'refused',
-                err: `${e.name}: ${String(e.message).split('\n')[0].slice(0, 200)}`, deadline: e.deadline?.first ?? null });
+                err: `${e.name}: ${String(e.message).split('\n')[0].slice(0, 200)}`, deadline: e.deadline?.first ?? null,
+                hash: md5(String(e.message)).slice(0, 10) });
         }
     }
     const profile = stopProfiler(dir);
