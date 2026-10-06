@@ -96,6 +96,8 @@
 // ⛓ VANILLA MAP — both import-free, so the controller still imports no model.
 import { RANDOMIZER_ARMS } from './seedlingRandomizerEligibility.js';
 import { ATLAS_CHECK_PLAYER, atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
+// ⛓ WAVE-6 CONSUMER — import-free too (an arrival-inside-solid's way out, translated to AP exits).
+import { arrivalEscape } from './seedlingArrivalEscape.js';
 
 /** The substrate this controller walks (the default instance; J3 builds a second for the atlas rooms). */
 export const SEEDLING_PLAYBACK_SUBSTRATE = 'flash_seedling_gen';
@@ -376,6 +378,8 @@ export class SeedlingPlaybackController {
         this._instant = false;
         this._retry = null;
         this.lastRefusal = null;
+        /** ⛓ WAVE-6 CONSUMER — the last failure's solver obstacle (plain data), or null. */
+        this.lastObstacle = null;
         this.lastGoal = null;
     }
 
@@ -462,7 +466,7 @@ export class SeedlingPlaybackController {
             getDelivery: () => this._getSurface?.()?.wasm?.delivery ?? null,
             log: this._log,
             onNote: (n) => this._relayNote(n),
-            onFailed: (reason) => this._fail(this._lastTarget, `the wasm playback failed: ${reason}`),
+            onFailed: (reason, extra) => this._fail(this._lastTarget, `the wasm playback failed: ${reason}`, extra?.obstacle ?? null),
         };
         Promise.resolve().then(() => this._loadWasmEngine(deps)).then((engine) => {
             if (this._wasmLoading !== loading) { try { engine?.dispose?.(); } catch { /* gone */ } return; }
@@ -610,14 +614,27 @@ export class SeedlingPlaybackController {
                 return;
             }
             if (e?.state !== 'failed') return;
-            this._fail(this._lastTarget, `the JS runtime's walk failed: ${e.message ?? page.reason ?? 'no reason given'}`);
+            this._fail(this._lastTarget, `the JS runtime's walk failed: ${e.message ?? page.reason ?? 'no reason given'}`, e.obstacle ?? null);
         }) : null;
     }
 
-    _fail(target, reason) {
+    /**
+     * ⛓ WAVE-6 CONSUMER — a failure that carries the solver's `obstacle` also carries, for an
+     * `arrival-inside-solid`, its way out in the AP's terms (`seedlingArrivalEscape.arrivalEscape`: the Restart
+     * offer and the other arrivals as AP exits, read off this instance's map `regions`). The bot decides.
+     */
+    _fail(target, reason, obstacle = null) {
         this.lastRefusal = reason;
+        this.lastObstacle = obstacle ?? null;
         this._log(`[playback] ${reason}`, 'warn');
-        try { this._onWalkFailed({ substrate: this.substrate, target, reason }); } catch { /* a listener's bug */ }
+        let escape = null;
+        if (obstacle) {
+            try { escape = arrivalEscape(obstacle, this._mapOf(this._getSurface?.() ?? null)?.regions ?? null); } catch { escape = null; }
+        }
+        try {
+            this._onWalkFailed({ substrate: this.substrate, target, reason,
+                ...(obstacle ? { obstacle } : {}), ...(escape ? { escape } : {}) });
+        } catch { /* a listener's bug */ }
     }
 
     _hold(target) {

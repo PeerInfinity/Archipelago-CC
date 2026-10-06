@@ -69,6 +69,8 @@ import { hasArrived } from './botDriverV1.js';
 import { TILE_SIZE } from './levelWorld.js';
 import { SOLVER_RETRY_AFTER_TICKS, SOLVER_RETRY_MAX } from './jsRuntimeSolver.js';
 
+/** ⛓ WAVE-6 CONSUMER — fidelity ARRIVAL's `SolverRefusal.obstacle.kind` for a box arrived inside a solid. */
+export const ARRIVAL_INSIDE_SOLID = 'arrival-inside-solid';
 /** Re-plan cadence, in ticks (J0(b)'s demo: 8 reached both targets from a live state). */
 export const REPLAN_EVERY = 8;
 /** Arrival tolerance at a waypoint (botDriverV1's default). */
@@ -231,16 +233,16 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
     let stepOff = null;
     let stepOffs = 0;
 
-    const emit = (type, message) => {
-        try { onEvent({ type, state, goal: goal ? { ...goal } : null, message }); } catch { /* a listener's bug is not the walk's */ }
+    const emit = (type, message, extra = null) => {
+        try { onEvent({ type, state, goal: goal ? { ...goal } : null, message, ...(extra ?? {}) }); } catch { /* a listener's bug is not the walk's */ }
     };
-    const settle = (next, why) => {
+    const settle = (next, why, extra = null) => {
         // ⛓ S2 — leaving the walk drops a solve in flight (its worker is terminated).
         if (next !== WALK_STATES.WALKING) solver?.cancel?.(`the walk is ${next}`);
         state = next;
         reason = why ?? null;
         waypoints = null;
-        emit(next, why);
+        emit(next, why, extra);
     };
 
     /** The point and the teleporter (if any) the goal names in the live run, or a refusal. */
@@ -393,6 +395,13 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                 }
                 if (s?.held) { driven += 1; solverDriving = true; return s.held; }
                 if (s?.failed) { settle(WALK_STATES.FAILED, s.failed); return null; }
+                if (s?.declined && s.obstacle?.kind === ARRIVAL_INSIDE_SOLID) {
+                    // ⛓ WAVE-6 CONSUMER — the box arrived INSIDE a solid a saved flag still holds: no cardinal hold
+                    // moves it, so "walking instead" (and every retry) is a stall to the give-up clock. The goal
+                    // FAILS now, by name, with the refusal's obstacle (its `wayOut`) for the host to act on.
+                    settle(WALK_STATES.FAILED, `the solver declined — ${s.declined}`, { obstacle: s.obstacle });
+                    return null;
+                }
                 if (s?.declined) {
                     declined = s.declined;
                     sinceDecline = 0;

@@ -596,7 +596,9 @@ export function createRuntimeSolver({
         stats.lastDecline = why;
         stats.lastDeclineObstacle = obstacle;
         emit({ type: 'declined', message: `[js runtime] the solver declined — ${why}` });
-        return { declined: why };
+        // ⛓ WAVE-6 CONSUMER — the refusal's obstacle rides with the decline, so the walker reads the NAME
+        // (`arrival-inside-solid` fails the goal at once: walking instead from inside a solid is a stall).
+        return obstacle ? { declined: why, obstacle } : { declined: why };
     }
 
     /** Start a solve of `solverGoal` from the session's live state (steps 2–3, behind the service). */

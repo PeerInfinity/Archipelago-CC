@@ -18,6 +18,7 @@
 import { PlaybackControlBar } from '../shared/playbackControlBar.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { planRoute, isRestartStep, restartTargetFor } from '../procgenCore/restartRoute.js';
+import { returnToMenu } from '../procgenCore/restartWarp.js';
 
 const DEFAULT_RATE_HZ = 4;
 // LS key for the click-intercept toggle. Persisted separately from
@@ -131,6 +132,22 @@ export function formatSphereTag(entry) {
 // owned by PlaybackBotPanel; dispatcher receivers in playbackBot/index.js
 // reach it via `getActivePanel()?.getBot()`.
 
+
+/**
+ * ⛓ WAVE-6 CONSUMER — the words a NAMED STOP adds for an `arrival-inside-solid` the bot does not escape: what the
+ * refusal offered and why it was not taken (no Restart offer, `return_to_menu` off, or the entrance landed inside
+ * twice), and the other arrivals by AP exit.
+ */
+export function escapeStopWords(escape, region, flag) {
+    const solids = (escape?.solids ?? []).join(', ') || 'a solid';
+    const others = (escape?.arrivals ?? []).map((a) => a.exit);
+    const why = !escape?.restart ? 'the refusal offers no Restart'
+        : !flag ? 'the way out is the Menu\'s Restart, and this slot does not declare return_to_menu'
+            : 'the route landed inside it again after a Restart';
+    return `arrival-inside-solid: the player's box in ${region ?? '?'} is inside ${solids} and no walk leaves it; `
+        + `${why}${others.length ? `; other arrivals: ${others.join(', ')}` : ''}`;
+}
+
 export class PlaybackBotUI {
     constructor({
         getSphereData,
@@ -149,6 +166,13 @@ export class PlaybackBotUI {
         this._restart = restart;
         // `{from, target}` while a Restart the bot asked for has not yet landed past the restart target.
         this._restartPending = null;
+        // ⛓ WAVE-6 CONSUMER — exits whose crossing LANDED INSIDE A SOLID (an `arrival-inside-solid` walk failure):
+        // exit name → the refusal's other arrivals as AP exits. Every route avoids them (`planRoute`'s `avoid`).
+        this._avoidExits = new Map();
+        // The exit the last region move came through (`user:regionMove.exitName`), or null (a teleport / Restart).
+        this._lastArrivalExit = null;
+        // ⛓ WAVE-6 CONSUMER — escapes taken (`{from, exit, solids, at}`), for readouts and rows.
+        this._escapes = [];
         this._getSphereData = getSphereData;
         this._getStaticData = getStaticData;
         // Returns the loaded rules.json (the panel caches it from
@@ -319,6 +343,9 @@ export class PlaybackBotUI {
         this._log = [];                 // start a fresh transition history
         this._pendingManualTarget = null;
         this._restartPending = null;
+        this._avoidExits = new Map();
+        this._lastArrivalExit = null;
+        this._escapes = [];
         this._dispatcherLog = [];       // dispatcher event log is run-scoped
         this._dispatch('reset');
         this._render();
@@ -594,6 +621,7 @@ export class PlaybackBotUI {
             // out so the only running clock is the active substrate's.
             const prevSubstrate = this._resolveSubstrateId(this._currentRegion);
             this._currentRegion = target;
+            this._lastArrivalExit = typeof data?.exitName === 'string' && data.exitName ? data.exitName : null;
             const newSubstrate = this._resolveSubstrateId(target);
             if (prevSubstrate && prevSubstrate !== newSubstrate) {
                 substrateRegistry.get(prevSubstrate)?.getPlaybackController?.()?.stop?.();
@@ -721,8 +749,49 @@ export class PlaybackBotUI {
         const t = data.target ?? {};
         const tail = t.kind === 'tile' ? `${t.x},${t.y}` : `${t.name}`;
         this._lastPublishedTarget = null;
-        this._setStatus(`error: ${this._currentRegion ?? '?'}: the bot cannot walk to ${t.kind ?? 'target'} "${tail}" — ${reason}`);
+        if (data.escape && this._escapeInsideSolid(data.escape)) { this._render(); return; }
+        this._setStatus(`error: ${this._currentRegion ?? '?'}: the bot cannot walk to ${t.kind ?? 'target'} "${tail}" — ${reason}`
+            + (data.escape ? ` — ${escapeStopWords(data.escape, this._currentRegion, this._escapeFlag())}` : ''));
         this._render();
+    }
+
+    /** ⛓ WAVE-6 CONSUMER — does the slot declare `return_to_menu` (the Restart a refusal's `wayOut` offers)? */
+    _escapeFlag() {
+        return returnToMenu(this._getRulesJson?.() ?? null, String(this._getPlayerId?.() ?? '1'));
+    }
+
+    /**
+     * ⛓ WAVE-6 CONSUMER — the walk failed because the player's box ARRIVED INSIDE A SOLID (fidelity ARRIVAL's
+     * `arrival-inside-solid`; ⚖ the user: no swing from inside). No walk leaves a solid, so the way out is the
+     * refusal's `wayOut`: when it offers the Menu's Restart and the slot declares `return_to_menu`, take the
+     * EXISTING Restart step (`_takeRestart`, §5.29) and remember the entrance that landed inside, so every later
+     * route avoids it and goes by one of the refusal's OTHER arrivals (`planRoute`'s `avoid`). Returns false
+     * (the caller's named stop) without the flag, without a Restart offer, or when the same entrance landed
+     * inside twice (a route that cannot avoid it is a loop, not a way out).
+     */
+    _escapeInsideSolid(escape) {
+        const from = this._currentRegion;
+        const entered = this._lastArrivalExit;
+        if (!escape.restart || !this._escapeFlag()) return false;
+        const at = escape.at ?? null;
+        const again = this._escapes.some((e) => (entered && e.exit === entered)
+            || (at && e.at && e.from === from && e.at.level === at.level && e.at.x === at.x && e.at.y === at.y));
+        if (again) return false;
+        if (entered) this._avoidExits.set(entered, (escape.arrivals ?? []).filter((a) => a.exit !== entered));
+        this._escapes.push({ from, exit: entered, solids: [...(escape.solids ?? [])], at });
+        const ok = this._takeRestart(`escaping arrival-inside-solid (${(escape.solids ?? []).join(', ') || 'a solid'}`
+            + `${escape.at ? ` at L${escape.at.level} (${escape.at.x},${escape.at.y})` : ''}) in ${from ?? '?'} — Restart`
+            + `${entered ? `, then routing around "${entered}"` : ''}`);
+        if (!ok) {
+            this._isActive = false;
+            this._dispatch('stop');
+        }
+        return true;
+    }
+
+    /** ⛓ WAVE-6 CONSUMER — the escapes taken (`{from, exit, solids, at}`) and the exits now avoided. */
+    getEscapes() {
+        return { escapes: this._escapes.map((e) => ({ ...e })), avoided: [...this._avoidExits.keys()] };
     }
 
     /**
@@ -875,6 +944,8 @@ export class PlaybackBotUI {
             findPath: (a, b) => this._pathFinder?.findPathWithExits?.(a, b) ?? null,
             rules,
             playerId,
+            // ⛓ WAVE-6 CONSUMER — never back through an entrance that landed inside a solid.
+            ...(this._avoidExits.size > 0 ? { avoid: this._avoidExits } : {}),
         });
     }
 

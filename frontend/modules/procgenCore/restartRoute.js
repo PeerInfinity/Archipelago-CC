@@ -58,10 +58,16 @@ export function isRestartStep(step) {
  * @param {object|null} args.rules the loaded rules.json
  * @param {string} [args.playerId='1']
  * @param {string|null} [args.restartTarget] where Restart puts the player; omitted = `restartTargetFor(rules, p)`
+ * @param {Map<string, Array<{region: string, exit: string, landing: string|null}>>|null} [args.avoid] ⛓ WAVE-6
+ *   CONSUMER — exits whose crossing LANDED INSIDE A SOLID (an `arrival-inside-solid` refusal), each with the
+ *   refusal's other arrivals as AP exits (`seedlingArrivalEscape`). Every walk this route asks for avoids them
+ *   (`avoidingFindPath`); omitted = the walks are `findPath`'s, unchanged.
  * @returns {{route: object|null, kind: 'walk'|'restart'|null, why: string|null}}
  *   `why` names the refusal when `route` is null; without the flag it is exactly `no path from <from> to <to>`.
  */
-export function planRoute({ from, to, findPath, rules, playerId = '1', restartTarget = restartTargetFor(rules, playerId) }) {
+export function planRoute({ from, to, findPath: walkPlanner, rules, playerId = '1', restartTarget = restartTargetFor(rules, playerId),
+    avoid = null }) {
+    const findPath = avoid && avoid.size > 0 && typeof walkPlanner === 'function' ? avoidingFindPath(walkPlanner, avoid) : walkPlanner;
     if (!from || !to || typeof findPath !== 'function') {
         return { route: null, kind: null, why: 'no route asked (a missing region or planner)' };
     }
@@ -96,6 +102,38 @@ function restartRoute(from, target, to, findPath) {
 }
 
 /** A walk that reaches somewhere (≥ 2 steps; `from === to` is the caller's case, not a route). */
+/**
+ * ⛓ WAVE-6 CONSUMER — `findPath`, never crossing an avoided exit. A walk that crosses none is `findPath`'s own. One
+ * that does is replaced by the shortest DETOUR through another arrival `d` of that exit's level: the walk to
+ * `d.region` (avoiding), the crossing `d.exit`, then the walk on from `d.landing` (avoiding). No detour → null.
+ * The detours are the refusal's own `wayOut` (the solver's other arrivals), so no graph search is added here.
+ */
+export function avoidingFindPath(findPath, avoid) {
+    const avoided = (p) => p.steps.some((st) => st.exitUsed && avoid.has(st.exitUsed));
+    const clean = (a, b) => {
+        if (a === b) return { steps: [{ region: a, exitUsed: null }], length: 0 };
+        const p = usable(findPath(a, b));
+        return p && !avoided(p) ? p : null;
+    };
+    return (a, b) => {
+        const direct = usable(findPath(a, b));
+        if (!direct || !avoided(direct)) return direct;
+        let best = null;
+        for (const [exit, detours] of avoid) {
+            if (!direct.steps.some((st) => st.exitUsed === exit)) continue;
+            for (const d of detours ?? []) {
+                if (!d?.region || !d.exit || !d.landing || avoid.has(d.exit)) continue;
+                const head = clean(a, d.region);
+                const tail = head ? clean(d.landing, b) : null;
+                if (!tail) continue;
+                const steps = [...head.steps, { region: d.landing, exitUsed: d.exit }, ...tail.steps.slice(1)];
+                if (!best || steps.length < best.steps.length) best = { steps, length: steps.length - 1 };
+            }
+        }
+        return best;
+    };
+}
+
 function usable(path) {
     return path && Array.isArray(path.steps) && path.steps.length >= 2 ? path : null;
 }

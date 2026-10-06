@@ -153,7 +153,8 @@ const roomEquips = (r) => equipsMap(r?.equips);
  * @param {object} [deps.timers]  `{setTimeout, clearTimeout}` — default the GAME window's
  * @param {() => number} [deps.now]
  * @param {(note:string|null) => void} [deps.onNote]
- * @param {(reason:string) => void} [deps.onFailed]
+ * @param {(reason:string, extra:({obstacle:object}|null)) => void} [deps.onFailed]  ⛓ WAVE-6 CONSUMER — `extra.obstacle`
+ *        = a solver decline's `SolverRefusal.obstacle` (plain data), when it carried one
  * @param {(e:object) => void} [deps.onDone]
  * @param {(msg:string, level?:string) => void} [deps.log]
  * @param {number} [deps.budgetWork]  one solve's budget, in work units (`SOLVER_BUDGET_WORK`)
@@ -360,7 +361,7 @@ export function createWasmPlayback({
         phase = 'idle';
     }
 
-    function fail(reason) {
+    function fail(reason, extra = null) {
         const g = goal;
         release();
         reset();
@@ -368,10 +369,10 @@ export function createWasmPlayback({
         arriving = false;
         goal = null;
         stats.failed += 1;
-        history.push({ goal: g, outcome: 'failed', reason, recoveries });
+        history.push({ goal: g, outcome: 'failed', reason, recoveries, ...(extra?.obstacle ? { obstacle: extra.obstacle } : {}) });
         log(`[wasm playback] ${reason}`, 'warn');
         note(null);
-        try { onFailed(reason); } catch { /* a listener's bug */ }
+        try { onFailed(reason, extra); } catch { /* a listener's bug */ }
     }
 
     /**
@@ -1080,7 +1081,9 @@ export function createWasmPlayback({
             const why = `the ${generated ? 'walker producer' : 'solver'} declined ${goal.name ?? goal.kind} in level ${goal.level} `
                 + `(${res?.kind}): ${res?.message}`;
             if (play.continuation) { contFallback(why, 'continuation-declined'); return; }
-            fail(why);
+            // ⛓ WAVE-6 CONSUMER — the refusal's `obstacle` (an `arrival-inside-solid` and its `wayOut`) goes with
+            // the failure, as data, so the host reads the NAME and the way out rather than the words.
+            fail(why, res?.obstacle ? { obstacle: res.obstacle } : null);
             return;
         }
         play.plan = res.plan;
