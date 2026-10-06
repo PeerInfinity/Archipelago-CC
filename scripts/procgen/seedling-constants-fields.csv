@@ -199,7 +199,6 @@ frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|hae45b85b|1|0,rule,ma
 frontend/modules/seedlingDemo/levelRun.js|hitPlayer|h89e67ab9|1|0,rule,magnitude,,timer decrements one per tick
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepChaserEntity|10,physics,magnitude,,pit fall pulls 1/10 of the way to tile centre per tick
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|assertNoCeremonyBesideLiveChaser,rule,bound,,i-frame timer gate
-frontend/modules/seedlingDemo/levelRun.js|createLevelRun|terrainAt,rule,sentinel,,tile type default when no walkable tile
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyLockEvents,rule,sentinel,,persistTag sign test: <0 means no tag
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyLockEvents|-1,rule,sentinel,,-1 = no persistTag
 frontend/modules/seedlingDemo/levelRun.js|applyLockEvents|h46837b97|0|0,structural,,,
@@ -1700,6 +1699,10 @@ frontend/modules/seedlingDemo/drill.js|newDrill|h6e0aab05|0|1,structural,,,initi
 frontend/modules/seedlingDemo/drill.js|newDrill|h6e0aab05|1|0,structural,,,initial alpha 1
 frontend/modules/seedlingDemo/drill.js|newDrill|h6e0aab05|0|2,structural,,,initial state zero
 frontend/modules/seedlingDemo/drill.js|stepDrill|h5b4e3662|0|0,structural,,,alpha <= 0 removal (Mobile.as:66)
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h379c4c3e|1|0,rule,magnitude,Enemies/Enemy.as:damage,ICE_TURRET_CONTACT: Enemy.damage = 1; the live turret body's contact damage (Enemy.hitPlayer)
+frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|he88721a0|0|0,rule,bound,Enemies/Enemy.as:hitPlayer,hitsTimer <= 0 gate on the live body's contact (Enemy.hitPlayer)
+frontend/modules/seedlingDemo/levelRun.js|terrainAt|hb402bd13|0|0,rule,sentinel,,tile type default when no walkable tile
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h4f0b044e|3|0,rule,magnitude,Enemies/Enemy.as:hitPlayer,ICE_TURRET_CONTACT: the live body's contact force (p.hit(this; 3; ...))
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

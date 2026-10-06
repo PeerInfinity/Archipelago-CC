@@ -300,10 +300,10 @@ The region below is rendered by `--write`; do not edit it by hand.
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1289 | 351 | 1645 |
-| rule | 6 | 949 | 448 | 1403 |
+| rule | 6 | 951 | 448 | 1405 |
 | cosmetic | 0 | 49 | 14 | 63 |
 | structural | 10 | 315 | 1602 | 1927 |
-| unclassified | 0 | 2 | 0 | 2 |
+| unclassified | 0 | 0 | 0 | 0 |
 | total | 21 | 2604 | 2415 | 5040 |
 
 Class × kind (physics and rule rows only):
@@ -311,7 +311,7 @@ Class × kind (physics and rule rows only):
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1382 | 0 | 90 | 118 | 4 | 51 | 1645 |
-| rule | 421 | 125 | 219 | 22 | 529 | 87 | 1403 |
+| rule | 423 | 125 | 219 | 22 | 529 | 87 | 1405 |
 
 Rows whose note starts `REVIEW:`: **103**.
 
@@ -507,7 +507,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **138 small tables** (at most 16 literals) hold at least one (86 with an AS3 reference).
+**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **139 small tables** (at most 16 literals) hold at least one (87 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -598,6 +598,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `ROCK_FALL` | seedlingDemo/finalBossFight.js | 5 | 5 | physics/rule | magnitude | Scenery/RockFall.as:fallHeight Scenery/RockFall.as:g Scenery/RockFall.as:startingSpeed Scenery/RockFall.as:force Scenery/RockFall.as:damage |
 | `GRENADE` | seedlingDemo/finalBossFight.js | 8 | 8 | physics/rule | bound/magnitude | Enemies/Grenade.as:hitRadius Enemies/Grenade.as:force |
 | `OWL_DRAW_SITES` | seedlingDemo/finalBossRng.js | 7 | 7 | rule | count |  |
+| `ICE_TURRET_CONTACT` | seedlingDemo/iceTurret.js | 2 | 2 | rule | magnitude | Enemies/Enemy.as:hitPlayer Enemies/Enemy.as:damage |
 | `ICE_TURRET_BLAST` | seedlingDemo/iceTurretBlast.js | 9 | 9 | physics/rule | count/magnitude | Enemies/IceTurret.as:shotSpeed Enemies/IceTurret.as:distBtwnShots |
 | `FREEZE_SPAN` | seedlingDemo/iceTurretBlast.js | 1 | 1 | rule | derivation |  |
 | `BLAST_DAMAGE` | seedlingDemo/iceTurretBlast.js | 4 | 4 | physics/rule | magnitude |  |
