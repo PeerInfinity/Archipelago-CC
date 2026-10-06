@@ -83,6 +83,9 @@ export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
 export { TURRET_SPIT } from './turret.js';
 // levelRun.js — botDriverV2 · physics 1
 export { createLevelRun } from './levelRun.js';
+
+// ⛓ LADDER2: the clamped `FP.elapsed` the chain's and the beam's Spritemaps step at (`hazards.js`).
+export { FP_ELAPSED_CLAMPED } from './r6AnimClock.js';
 // levelWorld.js — botDriverV2, dangerMap, hazards, solverBot, strikePolicy · seedling 3, physics 6
 export {
     assertRect, isNormalizedLiveOpts, LIVE_GEOMETRY_KEYS, normalizeLiveOpts, PRE_R5_ROLES, rect, rectsOverlap,
@@ -104,6 +107,9 @@ export {
 export { pullModelled, pullsDrainingInto } from './pull.js';
 // pulser.js — solverBot · seedling 3
 export { PULSER, pulsePushes, pulserCycle } from './pulser.js';
+
+// ⛓ SEEDLING FIDELITY LADDER2: the placed grenade's fuse and blast (`dangerMap.grenadeDanger`).
+export { PLACED_GRENADE, blastReaches, createPlacedGrenade, stepPlacedGrenade } from './placedGrenade.js';
 // pushables.js — solverBot · seedling 2
 export { DESTROYING_TILE_TYPES, newPushable } from './pushables.js';
 // shieldBossFight.js — solverBot · seedling 4

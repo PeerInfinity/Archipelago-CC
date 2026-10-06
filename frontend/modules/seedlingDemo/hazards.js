@@ -60,7 +60,7 @@
  * of these transcribes its exact cycle then, with the encounter named.
  */
 
-import { assertRect } from './solverView.js';
+import { assertRect, FP_ELAPSED_CLAMPED } from './solverView.js';
 
 /** `Engine.as:270` — the 30 fps clamp that makes `FP.elapsed` a constant. */
 export const MAX_ELAPSED = 0.0333;
@@ -502,4 +502,212 @@ export function volumeHitsBox(volume, box, { margin = 0 } = {}) {
         }
     }
     return null;
+}
+
+// ── ⛓⛓⛓ SEEDLING FIDELITY LADDER2 — THE LAVA CHAIN AND THE BEAM TOWER, AT ONE UPDATE ──
+
+/**
+ * `Spritemap.update` + `play` (`net/flashpunk/graphics/Spritemap.as`), for the
+ * two puzzlements below: `st = {anim, index, timer, frame, complete}`, `anims`
+ * maps a name to `{frames, rate, loop}`, and `onEnd(st)` is the class's
+ * `animEnd` (it may `play`). ⚠ SIMULATED at the clamped `FP.elapsed`, never
+ * divided — the same law as `r6AnimClock.animCallbackUpdate`.
+ */
+export function spritemapPlay(st, anims, name, reset = false) {
+    if (!reset && st.anim === name) return;
+    st.anim = name;
+    st.index = 0;
+    st.timer = 0;
+    st.frame = anims[name].frames[0];
+    st.complete = false;
+}
+
+export function spritemapUpdate(st, anims, onEnd) {
+    if (st.anim === null || st.complete) return;
+    const a = anims[st.anim];
+    st.timer += (a.rate * FP_ELAPSED_CLAMPED) * 1;
+    if (st.timer < 1) return;
+    while (st.timer >= 1) {
+        st.timer -= 1;
+        st.index += 1;
+        const cur = anims[st.anim];
+        if (st.index === cur.frames.length) {
+            if (cur.loop !== false) {
+                st.index = 0;
+                onEnd(st);
+            } else {
+                st.index = cur.frames.length - 1;
+                st.complete = true;
+                onEnd(st);
+                break;
+            }
+        }
+    }
+    if (st.anim !== null) st.frame = anims[st.anim].frames[st.index];
+}
+
+/**
+ * `Puzzlements/LavaChain.as`, transcribed. ⛔ `levelWorld`'s row says it
+ * *"Damages ENEMIES only (LavaChain.as:86) — no Player branch"*: `reach` walks
+ * `hitables = ["Player", "Enemy"]` and its `else if (hit is Player)` arm is
+ * `p.hit(null, force 5, (x, y), damage 1)` (`:86-91`). It hurts the player.
+ *
+ * The clock: `if (!Game.worldFrame(Main.FPS, loops 2)) play("extend")` (`:53`)
+ * — `Game.time % 90 < 1.5`, i.e. the two frames whose `Game.time % 90` is 0 or
+ * 1 (the second `play` is a no-op on the same anim). `reach()` runs while the
+ * anim is `extend` or `hit`, inside the same `update()`, BEFORE the graphic
+ * advances. The entity is added after the Player (`Game.as:2359` vs `:2250`),
+ * so it updates first and tests the PRE-move box. The ctor plays nothing: the
+ * anim is null (frame 0) until the first trigger of the visit.
+ */
+export const LAVA_CHAIN = Object.freeze({
+    reach: 48, thickness: 4, force: 5, damage: 1, loops: 2, fps: 60,
+    anims: Object.freeze({
+        sit: Object.freeze({ frames: [0], rate: 0 }),
+        extend: Object.freeze({ frames: [1, 2], rate: 15 }),
+        hit: Object.freeze({ frames: [3, 4, 5, 5, 5, 5, 4, 3], rate: 15 }),
+        retract: Object.freeze({ frames: [6, 7, 8, 9, 10, 11, 12], rate: 25 }),
+    }),
+    src: 'Puzzlements/LavaChain.as:21-27,49-60,78-119,136-152',
+});
+
+const LAVA_CHAIN_NEXT = Object.freeze({ extend: 'hit', hit: 'retract', retract: 'sit' });
+
+/** `LavaChain.getRect(dir)` (`:96-119`) for the chain at entity point (cx, cy). */
+export function lavaChainRect(cx, cy, dir) {
+    const w = 64 - 16;
+    const h = LAVA_CHAIN.thickness;
+    // originX = originY = 8, width = height = 16 (`setHitbox(16, 16, 8, 8)`).
+    switch (Number(dir)) {
+        case 0: return { x: cx - 8 + 16, y: cy - 8 + 8 - h / 2, w, h };
+        case 1: return { x: cx - 8 + 8 - h / 2, y: cy - 8 - w, w: h, h: w };
+        case 2: return { x: cx - 8 - w, y: cy - 8 + 8 - h / 2, w, h };
+        case 3: return { x: cx - 8 + 8 - h / 2, y: cy - 8 + 16, w: h, h: w };
+        default: return { x: 0, y: 0, w: 0, h: 0 };
+    }
+}
+
+/** `World.collideRect("Player", …)` → `Entity.collideRect`: INCLUSIVE on all four sides. */
+export function rectTouchesBox(r, box) {
+    return box.right >= r.x && box.bottom >= r.y && box.x <= r.x + r.w && box.y <= r.y + r.h;
+}
+
+export function createLavaChainState() {
+    return { anim: null, index: 0, timer: 0, frame: 0, complete: false };
+}
+
+/**
+ * One `LavaChain.update()` + its graphic's update, at `Game.time` = `time`.
+ * Returns `true` when `reach()` ran this update (the arm was out).
+ */
+export function stepLavaChain(st, time) {
+    if (worldFrame(time, LAVA_CHAIN.fps, LAVA_CHAIN.loops) === 0) {
+        spritemapPlay(st, LAVA_CHAIN.anims, 'extend');
+    }
+    const reaching = st.anim === 'hit' || st.anim === 'extend';
+    spritemapUpdate(st, LAVA_CHAIN.anims, (s) => {
+        const next = LAVA_CHAIN_NEXT[s.anim];
+        if (next) spritemapPlay(s, LAVA_CHAIN.anims, next);
+    });
+    return reaching;
+}
+
+/**
+ * `BeamTower.as`, transcribed (`:26-49,51-104,141-182,184-197`).
+ *
+ * ⛔ FOUR THINGS THE CENSUS VOLUME (`hazardVolume('beamtower')`) DOES NOT SAY:
+ *   1. `const animSpeed:int = 10 * speed` — an INT: speed 0.25 is 2 fps, not 2.5.
+ *   2. The direction TURNS. `animEnd` on `sit` is `direction = (direction +
+ *      rate + 4) % 4`, so a rate-1 tower sweeps all four sides and a rate-2 one
+ *      alternates; only rate 4 (or 0) holds its side.
+ *   3. The ctor plays `"right"` WHATEVER the start direction; the beam's side is
+ *      `direction`, the anim is cosmetic. Firing is the second frame of each
+ *      side anim: `(frame - 1) % 2 == 1`.
+ *   4. `getLine` ends at `FP.width`/`FP.height` = 160, a SCREEN size used as a
+ *      WORLD coordinate, and `getRect` takes min/abs, so a tower east of x 154
+ *      firing right sweeps [160, x + 6] — BEHIND it.
+ * The fire test runs before the bob (`y += 0.3·sin(worldFrame(100, 2)…)`), and
+ * the whole update is skipped under `Game.freezeObjects`.
+ */
+export const BEAM_TOWER = Object.freeze({
+    force: 5, damage: 1, screen: 160, bobRadius: 0.3, bobPhases: 100, bobLoops: 2,
+    sides: Object.freeze(['right', 'up', 'left', 'down']),
+    frames: Object.freeze({ right: [1, 2], up: [3, 4], left: [5, 6], down: [7, 8], sit: [0, 0] }),
+    src: 'Puzzlements/BeamTower.as:26-49,51-104,141-197',
+});
+
+export function beamAnimSpeed(speed) {
+    // AS3 `const animSpeed:int = 10 * speed` — `int()` truncates toward zero.
+    return Math.trunc(10 * Number(speed));
+}
+
+function beamAnims(animSpeed) {
+    const out = {};
+    for (const [k, frames] of Object.entries(BEAM_TOWER.frames)) out[k] = { frames, rate: animSpeed };
+    return out;
+}
+
+/** A tower at its census row (`cx`, `cy` = the entity point, attrs as strings). */
+export function createBeamTower(h) {
+    const a = h.attrs ?? {};
+    const animSpeed = beamAnimSpeed(a.speed ?? 1);
+    const st = {
+        cx: h.cx, y: h.cy, direction: Number(a.direction ?? 0), rate: Number(a.rate ?? 1),
+        animSpeed, anims: beamAnims(animSpeed),
+        anim: null, index: 0, timer: 0, frame: 0, complete: false,
+    };
+    spritemapPlay(st, st.anims, 'right');
+    return st;
+}
+
+/** `BeamTower.getRect(direction)` at the tower's CURRENT y (a Number). */
+export function beamRect(t, direction = t.direction) {
+    const x = t.cx;
+    const y = t.y;
+    const S = BEAM_TOWER.screen;
+    const line = (n) => {
+        const from = { x, y: y - 8 };
+        let to;
+        switch (direction) {
+            case 0: from.x += 6; from.y -= 11 - n; to = { x: S, y: from.y }; break;
+            case 1: from.x -= 2 - n; from.y -= 11; to = { x: from.x, y: 0 }; break;
+            case 2: from.x -= 6; from.y -= 11 - n; to = { x: 0, y: from.y }; break;
+            case 3: from.x -= 2 - n; from.y -= 5; to = { x: from.x, y: S }; break;
+            default: to = { ...from };
+        }
+        return [from, to];
+    };
+    const l0 = line(0);
+    const l4 = line(4);
+    return {
+        x: Math.min(l0[0].x, l4[1].x), y: Math.min(l0[0].y, l4[1].y),
+        w: Math.abs(l4[1].x - l0[0].x), h: Math.abs(l4[1].y - l0[0].y),
+    };
+}
+
+export function beamIsBeaming(t) {
+    return (t.frame - 1) % 2 === 1;
+}
+
+/**
+ * One `BeamTower.update()` + its graphic's update. `time` is `Game.time` for the
+ * bob, or `null` (the bob is then NOT applied — the caller widens instead).
+ * Returns the beam rect when it fired this update (tested at the pre-bob y),
+ * else null.
+ */
+export function stepBeamTower(t, time) {
+    const rect = beamIsBeaming(t) ? beamRect(t) : null;
+    if (time !== null) {
+        t.y += BEAM_TOWER.bobRadius * Math.sin(
+            worldFrame(time, BEAM_TOWER.bobPhases, BEAM_TOWER.bobLoops) / BEAM_TOWER.bobPhases * 2 * Math.PI);
+    }
+    spritemapUpdate(t, t.anims, (s) => {
+        if (s.anim === 'sit') {
+            s.direction = (s.direction + s.rate + 4) % 4;
+            spritemapPlay(s, s.anims, BEAM_TOWER.sides[s.direction]);
+        } else {
+            spritemapPlay(s, s.anims, 'sit');
+        }
+    });
+    return rect;
 }
