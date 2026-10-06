@@ -241,8 +241,14 @@ describe('`summary.require` — omitted when untyped, and NAMED on every refusal
          * press kill refused on HAMMER SAFETY; the HAMMER-PHASE rung certifies
          * it, and the first seed whose gate still refuses its certification is
          * past 12. The bound is widened, never the subject picked.
+         *
+         * ⛓ FIDELITY LINEFLIP (wave 7): `collideLine`'s untruncated samples move
+         * procgen's certify solves (the c3/c6/c4 identity rows, ⚖ accepted), and
+         * every gate in 1..120 now certifies; the first seed whose gate still does
+         * not is 240 (`the-goal-approach-is-b…`, measured at the wave-7 harvest).
+         * 1..240 costs ~356 s on the box alone, hence the timeout below.
          */
-        const SCAN = 120;
+        const SCAN = 240;
         let hit = null;
         for (let seed = 1; seed <= SCAN && !hit; seed += 1) {
             let out;
@@ -258,7 +264,7 @@ describe('`summary.require` — omitted when untyped, and NAMED on every refusal
             .not.toBe(null);
         expect(hit.r.refused.reason).toMatch(/^the-required-element-did-not-certify: /);
         expect(hit.r.grade).toBe(null);
-    }, 600_000);
+    }, 900_000);
 });
 
 
