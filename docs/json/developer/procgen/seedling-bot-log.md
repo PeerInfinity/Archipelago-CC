@@ -14284,6 +14284,57 @@ attempts 33 → 48). Also listed: `plan-seedling-f1c-l18-phase --check`'s stdout
   rung's stalled solve. A re-record of the window necessarily moved it, though no brief listed it. Grep the tests
   for every re-recorded tape's NAME, not only for the functions changed.
 
+### Seedling fidelity KILLLOCK — the bodies a kill-lock counts, stepped (five switches, OFF)
+
+The survey refused L60 ×6, L71 ×2 and L99 with *"the kill work order has no weapon — level N tracks NO live spinner
+bodies in this run"*. None of those rooms holds a spinner. A `tset = -1` lock opens when `Game.totalEnemies()` is 0
+(`Lock.as:111`), and that sum counts every enemy class. L60's count is two jellyfish, L71's five lavarunners, L99's
+three, and L98's three jellyfish plus an `IceTurret`. The run stepped none of them. The kill work order's only arm
+that asks for a live body is the spinner press, so it found nothing. Its ceiling arm needs arrow traps, and these
+rooms have none.
+
+**Five switches** (`killLockBodies.js`, all OFF; OFF is the BEFORE model, byte for byte):
+- **K1 / K2** bridge `CHASERS.jellyfish` (transcribed since R5, called by nothing) and a new `CHASERS.lavarunner`.
+  Their terrain switch reads `ENEMY_CLASSES[tag].terrain`: a jellyfish survives water and lava and never falls.
+- **K3** gives the kill work order a `chaser` arm. It kills the bodies one at a time and waits out each fade. The
+  lock then opens through the ceiling arm's model-sourced declaration.
+- **K4** ledgers an ice turret's corpse removal. L98's turret stands on Water, so its corpse drowns and leaves the
+  count.
+- **K5** lets the dark shield's bump hit an `IceTurret`.
+
+**K5 is the game's own correction.** The first L98 turret recording disagreed by one tick: the game removed the
+corpse on t50, the model on t51. Sampling `botMobiles`' `enemy.hits` per tick showed why. The turret's hits went 0 →
+**0.5** → 2.5 → **3**: the half-points are `Player.shieldBump`'s dark arm (`hit(5, p, 0.5, "Shield")`), applied on
+the facing tap before each press. The model's bump reached chasers, spinners and the BobBoss, and no ice turret. With
+K5 the kill lands on the game's tick, and every body's `hits`/`hitsTimer` matches at every sampled tick.
+
+**Three game witnesses** (p4f headless, `probe-seedling-killlock.mjs`, `fidelityKillLock.test.js`):
+- L60 from L59: both jellyfish killed, the lock opens, and the walk crosses to L61 on t483.
+- L98's three jellyfish, killed from the south.
+- L98's turret, killed from the water pocket above it.
+
+All three match at 0 px.
+
+**Census** (the 35 survey steps in jellyfish, lavarunner and ice-turret rooms, OFF → ON): **10 → 14 solved**. L60
+112/144/179 (the west arrivals) and L80 191 solve; L45 66, L77 169 and L78 168 re-plan. With every switch ON, no
+committed tape's replay moves (`tapeRunner` 533 pairs, the same md5).
+
+**Not solved:**
+- L60's east arrivals: the far jellyfish pins itself on the lock's west face. A chaser walks a straight line and
+  does not path-find.
+- L98 end to end: the turret's only reachable stances lie inside two spinning axes' sweeps, and the ladder's axe
+  rungs exhaust.
+- L71/L99: the lavarunners sit on lava islands out of leash, and the stance previews never settle.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A sample clock calibrated on a STANDING player calibrates nothing.** The turret arm's player stands for 70
+  ticks. "Every sampled x/y fits at shift 0" was true on those ticks and could not have failed. The calibration is
+  carried by the ticks where the player moves. Say which ticks those were, or read a body field that moves.
+- **A refusal that names the wrong family sends the reader to the wrong room.** *"Tracks NO live spinner bodies"*
+  was true, and it sent the reader looking for spinners. The arm that refused was the only one asked. The rooms
+  needed a chaser arm and a bridge.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
