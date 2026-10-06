@@ -3,6 +3,34 @@
   "dir": "frontend/modules/seedlingDemo/fixtures/tapes",
   "tapes": [
     {
+      "file": "axe-l48-reach-l49.json",
+      "tickCount": 368,
+      "bootLevel": 48,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "axe-l61-reach-l62.json",
+      "tickCount": 284,
+      "bootLevel": 61,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "axe-l61-reach-l63.json",
+      "tickCount": 296,
+      "bootLevel": 61,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "axe-l71-reach-l76.json",
+      "tickCount": 327,
+      "bootLevel": 71,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "burn-l24-reach-exit.json",
       "tickCount": 124,
       "bootLevel": 24,
