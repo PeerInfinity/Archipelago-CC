@@ -1681,9 +1681,6 @@ frontend/modules/seedlingDemo/drill.js|(module)|h335b3169|2|0,rule,magnitude,,sp
 frontend/modules/seedlingDemo/drill.js|(module)|hb7a73d4f|20|0,rule,magnitude,,sprDrill.add(hit; 2 frames; 20; loop) (Drill.as:30)
 frontend/modules/seedlingDemo/drill.js|(module)|hb99b86ca|6|0,rule,magnitude,,sprDrill.add(die; 6 frames; 10) (Drill.as:29)
 frontend/modules/seedlingDemo/drill.js|(module)|h104e5c29|10|0,rule,magnitude,,sprDrill.add(die; 6 frames; 10) (Drill.as:29)
-frontend/modules/seedlingDemo/drill.js|newDrill|hbe0ccea2|0|0,structural,,,initial state zero
-frontend/modules/seedlingDemo/drill.js|newDrill|hbe0ccea2|0|1,structural,,,initial state zero
-frontend/modules/seedlingDemo/drill.js|newDrill|hbe0ccea2|0|2,structural,,,initial state zero
 frontend/modules/seedlingDemo/drill.js|stepDrill|h622edb14|0|0,structural,,,hitUpdate decrement (Enemy.as:225)
 frontend/modules/seedlingDemo/drill.js|stepDrill|hf8fbda88|1|0,structural,,,hitUpdate decrement (Enemy.as:225)
 frontend/modules/seedlingDemo/drill.js|stepDrill|hf496ca65|0|0,structural,,,hitsTimer <= 0 gate (Enemy.as:213)
@@ -1697,6 +1694,12 @@ frontend/modules/seedlingDemo/drill.js|stepDrill|ha325a64f|-1|0,structural,,,sig
 frontend/modules/seedlingDemo/drill.js|stepDrill|hdd201702|1|0,structural,,,ledger counter
 frontend/modules/seedlingDemo/drill.js|hitDrill|h55a8f533|1|0,structural,,,Enemy.hit gates (Enemy.as:146)
 frontend/modules/seedlingDemo/drill.js|hitDrill|h0d1d9423|0|0,structural,,,Enemy.hit hits < hitsMax (Enemy.as:152)
+frontend/modules/seedlingDemo/drill.js|(module)|h86dfc887|0.1|0,physics,magnitude,,Mobile.death alpha -= 0.1 (Mobile.as:64)
+frontend/modules/seedlingDemo/drill.js|newDrill|h6e0aab05|0|0,structural,,,initial state zero
+frontend/modules/seedlingDemo/drill.js|newDrill|h6e0aab05|0|1,structural,,,initial state zero
+frontend/modules/seedlingDemo/drill.js|newDrill|h6e0aab05|1|0,structural,,,initial alpha 1
+frontend/modules/seedlingDemo/drill.js|newDrill|h6e0aab05|0|2,structural,,,initial state zero
+frontend/modules/seedlingDemo/drill.js|stepDrill|h5b4e3662|0|0,structural,,,alpha <= 0 removal (Mobile.as:66)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,
