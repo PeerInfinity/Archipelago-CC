@@ -26,6 +26,7 @@ import { PIN_NAMES } from './tapeFormat.js';
 import { loadTape } from './fixtures/index.js';
 import { heldKeysAt } from './tapeFormat.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
+import { chaserDanger } from './dangerMap.js';
 
 describe('bobSoldier.js — the sword state machine, as `BobSoldier.as` writes it', () => {
     it('the class numbers: weaponLength 16, attackRange 32, π/10 a tick, a 60-update reset, one blade', () => {
@@ -183,5 +184,48 @@ describe('the stepped body in L30 (the witnesses\' own boot)', () => {
         expect(spins.length).toBeGreaterThanOrEqual(10);
         expect(new Set(spins).size).toBeGreaterThan(1);
         expect(r.chasers.some((x) => x.id === 'bobsoldier@48,80')).toBe(false);
+    });
+});
+
+describe('D3 — `dangerMap.chaserDanger` prices the sword apart from the body', () => {
+    // A box 10 px east of the body: outside the 8x8 body, inside the blade's 8..16 px.
+    const body = { x: 100, y: 100 };
+    const box = { x: 110, y: 96, right: 118, bottom: 104 };
+    const east = createBobSoldierSword();
+    east.swordSpin[0] = 0; // the blade points east
+    const lines = [bobSoldierSwordLine(body, east)];
+    const fakeRun = { entities: () => [] };
+    const forecast = (extra) => [{ id: 'bobsoldier@48,80', tag: 'bobsoldier', x: body.x, y: body.y,
+        hits: 0, hitsTimer: 0, sword: { lines }, ...extra }];
+
+    it('a forecast blade crossing the box is DANGER, timed (no pad)', () => {
+        const out = chaserDanger(fakeRun, box, 0, forecast({}), { perTick: true });
+        expect(out).toHaveLength(1);
+        expect(out[0].why).toMatch(/the sword/);
+    });
+
+    it('⛔ the body\'s i-frame does NOT clear the sword (no `hitsTimer` gate in `swordHitting`)', () => {
+        const out = chaserDanger(fakeRun, box, 0, forecast({ hitsTimer: 20 }), { perTick: true });
+        expect(out).toHaveLength(1);
+    });
+
+    it('a blade pointing AWAY is calm with the forecast (the pad would have forbidden it)', () => {
+        const west = createBobSoldierSword();
+        west.swordSpin[0] = Math.PI;
+        const out = chaserDanger(fakeRun, box, 0,
+            forecast({ sword: { lines: [bobSoldierSwordLine(body, west)] } }), { perTick: true });
+        expect(out).toEqual([]);
+        // …and the untimed reading (no forecast lines) keeps the 16 px pad
+        const padded = chaserDanger({ entities: () => [{ id: 'b', tag: 'bobsoldier', ...body, hitsTimer: 0 }] },
+            box, 0, null, { perTick: false });
+        expect(padded).toHaveLength(1);
+    });
+
+    it('⛔⛔ a CORPSE\'s blade rides beside the projection and is still priced', () => {
+        const projection = [];
+        projection.swordsOnCorpses = [{ id: 'bobsoldier@48,80', tag: 'bobsoldier', lines }];
+        const out = chaserDanger(fakeRun, box, 0, projection, { perTick: true });
+        expect(out).toHaveLength(1);
+        expect(out[0].why).toMatch(/CORPSE/);
     });
 });
