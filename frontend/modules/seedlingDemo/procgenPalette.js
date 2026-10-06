@@ -1224,13 +1224,14 @@ export const POST_SWORD_EXCLUDED_TEMPLATES = Object.freeze([
             + 'wall itself. The verb IS selected in both — this is not slice 2\'s '
             + '"never reached" — and it is applied to `MAX_STRATEGIES_PER_GOAL` without a '
             + 'corridor ever appearing.',
-        refusalText: 'solverBot(chest: h-gap, goal beyond) collect (112,128) stance '
-            + '(ladder-routed: …) -> chest stance (chest@64,80) -> chest stance '
-            + '(chest@64,80) -> chest stance (chest@64,80) -> chest stance (chest@64,80): '
-            + 'applied 4 strategies for one goal [chest(chest@64,80), chest(chest@64,80), '
-            + 'chest(chest@64,80), chest(chest@64,80)] and the corridor still does not '
-            + 'plan. A policy that keeps clearing obstacles without a corridor appearing '
-            + 'is not making progress.',
+        refusalText: 'solverBot(chest-in-the-gap) collect (112,128) stance (ladder-routed: …) '
+            + '-> chest stance (chest@64,80): STANCE_REENTRY — the walk to chest@64,80\'s '
+            + '`chest` stance (72,98) is itself blocked by chest@64,80 at tick 0, with nothing '
+            + 'spent between, and the 8 px lattice plans no corridor to it either. Applying '
+            + '`chest` again would be the same walk again: the stance is on the far side of the '
+            + 'obstacle it is the stance of. (⛓ Seedling fidelity STANCE: before the re-entry '
+            + 'guard this was the "applied 4 strategies … chest(chest@64,80) ×4 … the corridor '
+            + 'still does not plan" loop.)',
         wouldNeed: '⛔ NOTHING — ⚖ the user ruled the family out of scope, so there is no '
             + 'work owed here. Recorded for completeness only: a chest DOOR would need a '
             + 'room whose route DOUBLES BACK so the crossing runs south→north, which '
@@ -1263,8 +1264,19 @@ export const POST_SWORD_EXCLUDED_TEMPLATES = Object.freeze([
     Object.freeze({
         name: 'key-keylock-pair',
         family: 'keylock',
-        cause: 'UNDIAGNOSED — the verb resolves and the corridor never opens',
-        measured: '⚠⚠ THE DECIDING CAUSE IS NOT NAMED, AND THIS ROW SAYS SO — the '
+        cause: 'DIAGNOSED (Seedling fidelity STANCE) — the key line is on the lock\'s FAR side: '
+            + '`BossLock.update` opens only on a player box on the row UNDER the lock, and every '
+            + 'crossing a single template makes runs north→south, so the lock is sealed from the '
+            + 'side the player stands on (the chest\'s shape exactly)',
+        measured: '⛓ SEEDLING FIDELITY STANCE — THE CAUSE IS NOW NAMED. `stanceHypothesis` listed '
+            + 'the lock ITSELF, so the far-side stance read as reachable "once the lock is '
+            + 'discharged", the walk to it named the lock again, and the frontier re-applied '
+            + '`keylock` until `MAX_STRATEGIES_PER_GOAL`. With the lock excluded from its own '
+            + 'hypothesis the derivation refuses by name: *"⛔ SEALED BEHIND ITSELF: the key line '
+            + 'is the row y=97 under bosslock@64,80"* — the SHUT state (the save holds its flag); '
+            + 'a cleared flag builds no lock. The route survey had the same loop at L12, L30 and '
+            + 'L48. What follows is the record as it stood before the diagnosis.\n'
+            + '⚠⚠ (BEFORE STANCE) THE DECIDING CAUSE IS NOT NAMED, AND THIS ROW SAYS SO — the '
             + '"applied 4 strategies and no corridor" line below is the SYMPTOM; the '
             + 'diagnosis is OPEN. Nobody should read this exclusion as understood. What '
             + 'IS established: `resolveKeylockStrategy` gates on the RUN\'s own key set '
@@ -1279,15 +1291,16 @@ export const POST_SWORD_EXCLUDED_TEMPLATES = Object.freeze([
             + 'IS collected (verbs `walk`, `collect`, `keylock`) and the door still never '
             + 'opens. ⇒ holding the key is NOT the missing piece, which is what makes the '
             + 'symptom worth recording separately from the guess.',
-        refusalText: 'solverBot(keylock: key granted, lock in h-gap) collect (112,128) '
-            + 'stance (ladder-routed: …) -> keylock stance (bosslock@64,80) -> keylock '
-            + 'stance (bosslock@64,80) -> keylock stance (bosslock@64,80) -> keylock '
-            + 'stance (bosslock@64,80): applied 4 strategies for one goal '
-            + '[keylock(bosslock@64,80), keylock(bosslock@64,80), keylock(bosslock@64,80), '
-            + 'keylock(bosslock@64,80)] and the corridor still does not plan. A policy '
-            + 'that keeps clearing obstacles without a corridor appearing is not making '
-            + 'progress.',
-        wouldNeed: 'FIRST a diagnosis — why the re-plan after a resolved `keylock` still '
+        refusalText: 'solverBot: no REACHABLE stance on bosslock@64,80\'s key line in level 900 '
+            + '— 2 cell(s) put the player box on the line when walked into the lock, none with a '
+            + 'corridor from (24,24). ⛔ SEALED BEHIND ITSELF: the key line is the row y=97 under '
+            + 'bosslock@64,80 (`BossLock.update`\'s `collideLine`, x 66..75), and from (24,24) a '
+            + 'corridor reaches the stance (72,104) only through the lock itself. The save still '
+            + 'holds its flag {900,1}, so the game builds it SOLID: this is the shut state, and '
+            + 'from this side it does not open.',
+        wouldNeed: '⛓ (Seedling fidelity STANCE) A crossing that reaches the lock from its SOUTH '
+            + 'side — the chest\'s doubled-back route, two cooperating templates — or a boot with '
+            + 'its flag cleared. ⚠ (BEFORE STANCE:) FIRST a diagnosis — why the re-plan after a resolved `keylock` still '
             + 'prices the lock as a wall — because until that is named, any template built '
             + 'here would be built against a guess. ⚠ Note the SHARED SHAPE with '
             + '`chest-in-the-gap`: both are verbs that RESOLVE, get applied to '
