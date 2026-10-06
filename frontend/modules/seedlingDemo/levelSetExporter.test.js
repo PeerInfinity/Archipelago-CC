@@ -870,12 +870,14 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         const fromXml = derivePlaythroughLayer(roomsOfXmlSet(set));
 
         // The counts, pinned — a comparison of two empty things is also equal.
-        expect(fromMap.atlas.regions).toHaveLength(113);
+        // ⛓ RULES game-truth-gaps: 113 -> 114 regions, 628 -> 636 exits, 314 -> 318 connections, 3 -> 2 dropped —
+        //   L57 is lifted (⚖ 2026-10-06): L56's pit, L58's two doors and the mouth, both ends.
+        expect(fromMap.atlas.regions).toHaveLength(114);
         // ⛓ RULES (B): 624 -> 628 exits, 312 -> 314 connections — L71's pit into L82
         //   and L96's door into it, both ends, now L82 is not never-enter.
-        expect(fromMap.atlas.regions.flatMap((r) => r.exits ?? [])).toHaveLength(628);
-        expect(fromMap.atlas.vanilla_layout.connections).toHaveLength(314);
-        expect(fromMap.dropped).toHaveLength(3);
+        expect(fromMap.atlas.regions.flatMap((r) => r.exits ?? [])).toHaveLength(636);
+        expect(fromMap.atlas.vanilla_layout.connections).toHaveLength(318);
+        expect(fromMap.dropped).toHaveLength(2);
 
         expect(stableStringify(derivedFacts(fromXml.atlas)))
             .toBe(stableStringify(derivedFacts(fromMap.atlas)));
@@ -910,7 +912,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             .flatMap((e) => Object.keys(e))));
         expect([...derivedExitKeys].sort()).toEqual(
             ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
-        expect(committed.atlas_id).toBe('seedling-5c55890f');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks restamps
+        expect(committed.atlas_id).toBe('seedling-db0a4f7f');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) restamps
         expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
     }, 60000);
 

@@ -212,9 +212,10 @@ describe('⛓ copy-on-write means STRUCTURAL SHARING', () => {
         expect(r.atlas.vanilla_layout).not.toBe(atlas.vanilla_layout);
     });
 
-    it('the real 113-region atlas rebuilds ONE region and shares the other 112', () => {
+    // ⛓ RULES game-truth-gaps: 113 -> 114 regions (L57 lifted from never-enter, ⚖ 2026-10-06).
+    it('the real 114-region atlas rebuilds ONE region and shares the other 113', () => {
         const doc = JSON.parse(readFileSync(PLAYTHROUGH, 'utf8'));
-        expect(doc.regions.length).toBe(113);
+        expect(doc.regions.length).toBe(114);
         const region = doc.regions[0];
         const exit = region.exits[0];
         const r = ok(doc, {

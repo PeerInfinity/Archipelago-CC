@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-5c55890f",
+  "atlas_id": "seedling-db0a4f7f",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "5c55890f" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "db0a4f7f" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -4606,10 +4606,73 @@
           "kind": "teleporter",
           "exit_tiles": [[0,7]],
           "entrance_tile": [0,7]
+        },
+        {
+          "exit_id": "out_pit_6_10",
+          "kind": "teleporter",
+          "exit_tiles": [[6,1]],
+          "entrance_tile": [6,1],
+          "access_rule": {
+            "rule": "And",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Blue Key" } },
+              {
+                "rule": "Or",
+                "children": [
+                  { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                  { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+                  { "rule": "Has", "args": { "item_name": "Wand" } }
+                ]
+              }
+            ]
+          }
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "manual" }
+      "annotations": { "rules_source": "mixed" }
+    },
+    {
+      "region_id": "level_57",
+      "name": "Level 057",
+      "bounds": { "x": 0, "y": 0, "w": 13, "h": 13 },
+      "map_ref": 57,
+      "substrate": "flash_seedling",
+      "exits": [
+        {
+          "exit_id": "in_pit_L56_6_10",
+          "kind": "teleporter",
+          "exit_tiles": [[6,10]],
+          "entrance_tile": [6,10]
+        },
+        {
+          "exit_id": "in_L58_48_112",
+          "kind": "teleporter",
+          "exit_tiles": [[6,4]],
+          "entrance_tile": [6,4]
+        },
+        {
+          "exit_id": "in_L58_64_112",
+          "kind": "teleporter",
+          "exit_tiles": [[6,4]],
+          "entrance_tile": [6,4]
+        },
+        {
+          "exit_id": "out_tentaclebeast_80_48",
+          "kind": "teleporter",
+          "exit_tiles": [[6,4]],
+          "entrance_tile": [6,4],
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+              { "rule": "Has", "args": { "item_name": "Wand" } }
+            ]
+          }
+        }
+      ],
+      "locations": [],
+      "annotations": { "rules_source": "mixed" }
     },
     {
       "region_id": "level_58",
@@ -4619,11 +4682,48 @@
       "substrate": "flash_seedling",
       "exits": [
         {
+          "exit_id": "out_teleporter_48_112",
+          "kind": "teleporter",
+          "exit_tiles": [[3,7]],
+          "entrance_tile": [3,7],
+          "sub_region": "r4c1",
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+              { "rule": "Has", "args": { "item_name": "Wand" } }
+            ]
+          }
+        },
+        {
+          "exit_id": "out_teleporter_64_112",
+          "kind": "teleporter",
+          "exit_tiles": [[4,7]],
+          "entrance_tile": [4,7],
+          "sub_region": "r6c5",
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+              { "rule": "Has", "args": { "item_name": "Wand" } }
+            ]
+          }
+        },
+        {
           "exit_id": "out_teleporter_80_16",
           "kind": "teleporter",
           "exit_tiles": [[5,1]],
           "entrance_tile": [5,1],
           "sub_region": "r1c4"
+        },
+        {
+          "exit_id": "in_tentacle_beast_mouth_L57_56_96",
+          "kind": "teleporter",
+          "exit_tiles": [[3,6]],
+          "entrance_tile": [3,6],
+          "sub_region": "r4c1"
         }
       ],
       "locations": [],
@@ -9033,6 +9133,17 @@
         "to": ["level_52","in_L56_0_112"],
         "one_way": true
       },
+      { "from": ["level_56","out_pit_6_10"], "to": ["level_57","in_pit_L56_6_10"], "one_way": true },
+      {
+        "from": ["level_58","out_teleporter_48_112"],
+        "to": ["level_57","in_L58_48_112"],
+        "one_way": true
+      },
+      {
+        "from": ["level_58","out_teleporter_64_112"],
+        "to": ["level_57","in_L58_64_112"],
+        "one_way": true
+      },
       {
         "from": ["level_58","out_teleporter_80_16"],
         "to": ["level_46","in_L58_80_16"],
@@ -9717,6 +9828,11 @@
       {
         "from": ["level_115","out_teleporter_80_144"],
         "to": ["level_113","in_L115_80_144"],
+        "one_way": true
+      },
+      {
+        "from": ["level_57","out_tentaclebeast_80_48"],
+        "to": ["level_58","in_tentacle_beast_mouth_L57_56_96"],
         "one_way": true
       }
     ],

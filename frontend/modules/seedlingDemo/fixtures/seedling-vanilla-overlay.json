@@ -254,6 +254,36 @@
         }
       ]
     },
+    "56": {
+      "rules": {
+        "exit:out_pit_6_10": {
+          "rule": "And",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Blue Key" } },
+            {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+                { "rule": "Has", "args": { "item_name": "Wand" } }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "57": {
+      "rules": {
+        "exit:out_tentaclebeast_80_48": {
+          "rule": "Or",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+            { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+            { "rule": "Has", "args": { "item_name": "Wand" } }
+          ]
+        }
+      }
+    },
     "63": {
       "locations": [
         {
@@ -433,6 +463,6 @@
       ]
     }
   },
-  "provenance": { "content_hash": "83e8080f" },
-  "overlay_id": "seedling-vanilla-overlay-83e8080f"
+  "provenance": { "content_hash": "c6a5f388" },
+  "overlay_id": "seedling-vanilla-overlay-c6a5f388"
 }

@@ -119,7 +119,8 @@ describe('the sixth fact — `atlas`, decided by (iii)\'s own count', () => {
         // ⛓ RULES burnable-trees: 247 -> 251, four sub-regions split off along the burnable trees (L12, L37, L40, L44).
         // ⛓ RULES re-closing locks: 251 -> 257, six levels split at a lock only a plain Button opens.
         // ⛓ RULES footprints: 257 -> 254, L94's five water pockets behind TreeLarge pruned, L43's r13c7 split off.
-        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(254);
+        // ⛓ RULES game-truth-gaps: 254 -> 255, L57 lifted from never-enter (⚖ 2026-10-06).
+        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(255);
         expect(atlasRoomRegions(rulesOf('seedling'))).toHaveLength(0);
         expect(atlasRoomRegions(rulesOf('seedling_generated_room'))).toHaveLength(0);
     });

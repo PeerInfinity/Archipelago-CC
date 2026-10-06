@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 56,
-            "count": 99,
+            "browser": 58,
+            "count": 101,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 358,
-        "browser": 121,
+        "blockStyle": 360,
+        "browser": 123,
         "cited": 174,
-        "files": 370,
+        "files": 372,
         "lineStyle": 12,
-        "withDocblock": 370,
-        "withFlags": 288
+        "withDocblock": 372,
+        "withFlags": 290
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9762,6 +9762,61 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-l67-reach2.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "cross",
+                "host",
+                "only",
+                "ticks",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-lethal-landings.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "cross"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ticks"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling LETHAL LANDINGS, THE GAME'S WAY (rules `rules-game-truth-gaps`, R2).",
+            "path": "scripts/procgen/probe-seedling-lethal-landings.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "probe",
@@ -11224,6 +11279,47 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-swim-sound — is the swim speed a function of WALL CLOCK?",
             "path": "scripts/procgen/probe-seedling-swim-sound.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "ticks",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-tentacle-mouth.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ticks"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling L57's DEATH-SPAWNED EXIT, THE GAME'S WAY (rules `rules-game-truth-gaps`, the L57 lift: ⚖ the user 2026-10-06, \"lift L57 like L82\").",
+            "path": "scripts/procgen/probe-seedling-tentacle-mouth.mjs"
         },
         {
             "argvHelpers": [],
