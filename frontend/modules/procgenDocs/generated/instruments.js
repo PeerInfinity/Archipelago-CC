@@ -209,7 +209,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "survey"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 362,
+        "blockStyle": 363,
         "browser": 124,
-        "cited": 176,
-        "files": 374,
+        "cited": 177,
+        "files": 375,
         "lineStyle": 12,
-        "withDocblock": 374,
-        "withFlags": 292
+        "withDocblock": 375,
+        "withFlags": 293
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -885,7 +885,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "census",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -14199,7 +14200,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "survey",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -14281,6 +14283,189 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "survey-seedling-route — THE ROUTE-ONLY SOLVER COVERAGE SURVEY.",
             "path": "scripts/procgen/survey-seedling-route.mjs"
+        },
+        {
+            "argvHelpers": [
+                "argOf",
+                "argsOf",
+                "fail",
+                "jobMinutes",
+                "readJson",
+                "walk"
+            ],
+            "browser": false,
+            "category": "survey",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "base",
+                "bound",
+                "compare",
+                "costs",
+                "fetch",
+                "force",
+                "json",
+                "md",
+                "merge",
+                "only",
+                "out-dir",
+                "partial",
+                "plan",
+                "repo",
+                "route",
+                "route-json",
+                "shard",
+                "shards",
+                "shards-dir",
+                "through",
+                "timeout",
+                "with"
+            ],
+            "file": "survey-seedling-shards.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "base"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "bound"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "compare"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "costs"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "fetch"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "force"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "md"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "merge"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "out-dir"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "partial"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "plan"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "repo"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "route"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "route-json"
+                },
+                {
+                    "how": [
+                        "argsOf"
+                    ],
+                    "name": "shard"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "shards"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "shards-dir"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "through"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "timeout"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "with"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "survey-seedling-shards — THE ROUTE SURVEY'S PLAN, MERGE, COMPARE AND FETCH, for running it SHARDED on CI runners (rules arc, slice `rules-survey-ci`; ⚖ user 2026-10-06: CPU-heavy work runs in CI, off the box).",
+            "path": "scripts/procgen/survey-seedling-shards.mjs"
         },
         {
             "argvHelpers": [

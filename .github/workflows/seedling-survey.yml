@@ -1,0 +1,334 @@
+name: Seedling route survey (manual)
+
+# ⛓ THE ROUTE SURVEY, ON RUNNERS, ON DEMAND ONLY (rules arc, slice `rules-survey-ci`).
+# `survey-seedling-route.mjs --through=<bound> --route=route-only|full --timeout=1500` solves the playthrough's route
+# one step at a time; the two routes ran for hours on the shared box, and every rules change that moves
+# seedling_playthrough's AP_1 rules owes both before `campaign-frontier.json` can be re-pinned.
+# ⚖ USER (2026-10-06): CPU-heavy work runs in CI or cloud sessions; the box is kept for merge gates.
+# ⇒ `workflow_dispatch:` and a `seedling-survey/**` push-ref trigger (a branch can run it before main has this
+#   file), and NOTHING ELSE — never push to main/PRs, never a schedule.
+#
+#   plan   the bound (`survey-seedling-shards.mjs --bound`, the frontier's own: read, never typed), each route's
+#          `route.json` (the survey's `--derive-only`, pure node) and a price-balanced partition of its steps
+#          (`--plan`: longest first, priced by a PRIOR run's own `ms` when one is found, else uniform — it says which).
+#   shard  one matrix entry per (route, shard): the survey itself, unchanged, `--only=<its steps> --out=<shard>`.
+#   merge  `--merge` assembles `route.json` + `survey.json` per route in EXACTLY the local cache format
+#          (`seedlingSurveyDir.js` `throughSurveyDir`), and fails BY NAME when a step is missing (a dead shard),
+#          duplicated, off the route, or from another route/derivation. Then `census-seedling-campaign.mjs
+#          --check-frontier` (its result is REPORTED, not a red job: a moved frontier is the survey's answer) and
+#          `--write-frontier` into the runner's tree, whose diff is an ARTIFACT, never a commit.
+#
+# ⚠ BUDGET-BOUND. The solver's budget is WALL-CLOCK (`--timeout`, per step). A runner's CPUs are not the box's, so a
+# step can TIMEOUT here and solve there (or the reverse). A TIMEOUT row is a fact about a machine, never a model gap:
+# re-run it (`only=` + `base_run=` re-runs those steps on top of a prior run) or raise `timeout` before reading it.
+#
+# Fetch the merged survey into a tree's `.cache/` (then `--check-frontier` / `--write-frontier` locally):
+#   node scripts/procgen/survey-seedling-shards.mjs --fetch=<run id> [--force]
+# Dispatch (once this file is on the default branch; before that, push a `seedling-survey/<name>` ref):
+#   gh workflow run seedling-survey.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f route=both -f shards=12
+
+on:
+  workflow_dispatch:
+    inputs:
+      through:
+        description: The survey bound (a sphere label or `end`). Empty = the frontier's bound (`--bound`, read off the chain).
+        type: string
+        default: ''
+      route:
+        description: route-only | full | both
+        type: string
+        default: both
+      timeout:
+        description: The survey's per-step wall-clock timeout, seconds (`--timeout`).
+        type: number
+        default: 1500
+      shards:
+        description: Shard jobs PER ROUTE (never more than the route has steps).
+        type: number
+        default: 12
+      only:
+        description: Comma-separated step ids to (re-)run (empty = every step). With one route only; pair with base_run.
+        type: string
+        default: ''
+      base_run:
+        description: A prior seedling-survey run id whose merged survey fills the steps `only` does not re-run.
+        type: string
+        default: ''
+      costs_run:
+        description: A prior run id whose merged survey prices the partition; `latest` = the newest successful run; `none` = uniform.
+        type: string
+        default: latest
+  push:
+    branches:
+      - 'seedling-survey/**'
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  # ⛓ the push-ref trigger has no inputs: these are its defaults (the dispatch defaults, spelled once more)
+  ROUTE_IN: ${{ inputs.route || 'both' }}
+  TIMEOUT_IN: ${{ inputs.timeout || 1500 }}
+  SHARDS_IN: ${{ inputs.shards || 12 }}
+  COSTS_IN: ${{ inputs.costs_run || 'latest' }}
+
+jobs:
+  plan:
+    name: Survey — plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      routes: ${{ steps.plan.outputs.routes }}
+      through: ${{ steps.plan.outputs.through }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      # ⛓ the route derivation imports `frontend/modules/shared/` (the rule engine), a submodule
+      - name: Initialise the shared submodule
+        run: git submodule update --init frontend/modules/shared
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Find the prior survey that prices the partition
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COSTS: ${{ env.COSTS_IN }}
+        run: |
+          mkdir -p costs
+          RUN=""
+          if [ "$COSTS" = "latest" ]; then
+            RUN=$(gh run list -R "$GITHUB_REPOSITORY" -w seedling-survey.yml --status success -L 1 --json databaseId -q '.[0].databaseId' 2>/dev/null || true)
+          elif [ "$COSTS" != "none" ]; then
+            RUN="$COSTS"
+          fi
+          if [ -n "$RUN" ]; then
+            gh run download "$RUN" -R "$GITHUB_REPOSITORY" -n seedling-survey-merged -D costs || echo "no merged survey in run $RUN — uniform"
+          fi
+          echo "COSTS: run ${RUN:-none}; $(find costs -name survey.json | tr '\n' ' ')"
+
+      - name: Derive the routes and the partition
+        id: plan
+        env:
+          THROUGH_IN: ${{ inputs.through }}
+          ONLY: ${{ inputs.only }}
+        run: |
+          set -euo pipefail
+          S=scripts/procgen
+          THROUGH="${THROUGH_IN:-$(node $S/survey-seedling-shards.mjs --bound)}"
+          case "$ROUTE_IN" in
+            both) ROUTES="route-only full" ;;
+            route-only|full) ROUTES="$ROUTE_IN" ;;
+            *) echo "::error::route=$ROUTE_IN — route-only | full | both"; exit 1 ;;
+          esac
+          if [ -n "$ONLY" ] && [ "$ROUTE_IN" = "both" ]; then echo "::error::only= names steps of ONE route; pick route-only or full"; exit 1; fi
+          mkdir -p plan
+          : > plan/plans.jsonl
+          for R in $ROUTES; do
+            D=".cache/seedling-survey/through-${THROUGH}$([ "$R" = full ] || echo "-$R")"
+            node $S/survey-seedling-route.mjs --through="$THROUGH" --route="$R" --derive-only --out="$D/survey.json" > "plan/derive-$R.log"
+            mkdir -p "plan/$R" && cp "$D/route.json" "plan/$R/route.json"
+            C="costs/$(basename "$D")/survey.json"
+            node $S/survey-seedling-shards.mjs --plan --through="$THROUGH" --route="$R" --shards="$SHARDS_IN" --timeout="$TIMEOUT_IN" \
+              ${ONLY:+--only="$ONLY"} $([ -f "$C" ] && echo "--costs=$C") | tee -a plan/plan.txt
+            node $S/survey-seedling-shards.mjs --plan --through="$THROUGH" --route="$R" --shards="$SHARDS_IN" --timeout="$TIMEOUT_IN" \
+              ${ONLY:+--only="$ONLY"} $([ -f "$C" ] && echo "--costs=$C") --json >> plan/plans.jsonl
+          done
+          MATRIX=$(node -e "const fs=require('fs');const m=[];for(const l of fs.readFileSync('plan/plans.jsonl','utf8').split('\n').filter(Boolean)){const p=JSON.parse(l);for(const s of p.shards)m.push({route:p.route,shard:s.shard,steps:s.steps.join(','),timeout:s.timeoutMinutes})}console.log(JSON.stringify(m))")
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+          echo "routes=$ROUTES" >> "$GITHUB_OUTPUT"
+          echo "through=$THROUGH" >> "$GITHUB_OUTPUT"
+          echo "MEASURED: plan through $THROUGH routes [$ROUTES] at ${GITHUB_SHA}"
+          { echo '```'; cat plan/plan.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the plan (each route's route.json)
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: seedling-survey-plan
+          path: plan/
+          retention-days: 90
+
+  shard:
+    name: Survey — ${{ matrix.route }} shard ${{ matrix.shard }}
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ matrix.timeout }}
+    strategy:
+      # ⛓ every shard reports; one red shard must not cancel the others' evidence
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Initialise the shared submodule
+        run: git submodule update --init frontend/modules/shared
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: 'Survey ${{ matrix.route }} through ${{ needs.plan.outputs.through }}: steps ${{ matrix.steps }}'
+        env:
+          R: ${{ matrix.route }}
+          I: ${{ matrix.shard }}
+          STEPS: ${{ matrix.steps }}
+          THROUGH: ${{ needs.plan.outputs.through }}
+        run: |
+          set -o pipefail
+          mkdir -p out
+          S=$(date +%s)
+          node scripts/procgen/survey-seedling-route.mjs --through="$THROUGH" --route="$R" --only="$STEPS" \
+            --out="out/shard-$R-$I.json" --timeout="$TIMEOUT_IN" 2>&1 | tee "out/shard-$R-$I.log"
+          RC=$?
+          echo "MEASURED: $R shard $I rc=$RC wall $(( $(date +%s) - S ))s steps [$STEPS] load $(cut -d' ' -f1-3 /proc/loadavg) nproc $(nproc) cpu '$(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | xargs)' at ${GITHUB_SHA}" | tee -a "out/shard-$R-$I.log"
+          D=".cache/seedling-survey/through-${THROUGH}$([ "$R" = full ] || echo "-$R")"
+          [ -d "$D/views" ] && cp -r "$D/views" out/views
+          exit $RC
+
+      - name: Summary
+        if: always()
+        env:
+          R: ${{ matrix.route }}
+          I: ${{ matrix.shard }}
+        run: |
+          {
+            echo "## $R shard $I"
+            echo '```'
+            grep -aE '^== step|^MEASURED|^## HEADLINE|^  step ' "out/shard-$R-$I.log" 2>/dev/null | cut -c1-300 || echo "(no log)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the shard
+        if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: seedling-survey-shard-${{ matrix.route }}-${{ matrix.shard }}
+          path: out/
+          retention-days: 90
+
+  merge:
+    name: Survey — merge
+    needs: [plan, shard]
+    # ⛓ ALWAYS, so a failed or missing shard is NAMED here
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Initialise the shared submodule
+        run: git submodule update --init frontend/modules/shared
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download the plan
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: seedling-survey-plan
+          path: plan
+
+      - name: Download every shard
+        uses: actions/download-artifact@v8.0.1
+        with:
+          pattern: seedling-survey-shard-*
+          path: shards
+
+      - name: Download the base survey (only= re-run)
+        if: inputs.base_run != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE: ${{ inputs.base_run }}
+        run: gh run download "$BASE" -R "$GITHUB_REPOSITORY" -n seedling-survey-merged -D base
+
+      - name: Merge each route, and refuse an incomplete survey BY NAME
+        env:
+          ROUTES: ${{ needs.plan.outputs.routes }}
+          THROUGH: ${{ needs.plan.outputs.through }}
+          ONLY: ${{ inputs.only }}
+        run: |
+          set -uo pipefail
+          FAIL=0
+          mkdir -p merged
+          for R in $ROUTES; do
+            N="through-${THROUGH}$([ "$R" = full ] || echo "-$R")"
+            D=".cache/seedling-survey/$N"
+            mkdir -p "$D/views"
+            cp "plan/$R/route.json" "$D/route.json"
+            # ⛓ a pattern that matches ONE artifact extracts straight into `shards/` (divergence sweep, run 37379605352)
+            ARGS=$(find shards -name "shard-$R-*.json" | sort | sed 's/^/--shard=/' | tr '\n' ' ')
+            find shards -path "*seedling-survey-shard-$R-*/views/*" -type f -exec cp {} "$D/views/" \; 2>/dev/null || true
+            BASE=""; [ -f "base/$N/survey.json" ] && BASE="--base=base/$N/survey.json"
+            PARTIAL=""; [ -n "$ONLY" ] && [ -z "$BASE" ] && PARTIAL="--partial"
+            echo "MERGE $R: $(echo "$ARGS" | wc -w) shard file(s) $BASE $PARTIAL"
+            node scripts/procgen/survey-seedling-shards.mjs --merge --through="$THROUGH" --route="$R" $ARGS $BASE $PARTIAL \
+              2>&1 | tee -a merged/merge.txt || FAIL=1
+            for f in $(find shards -name "shard-$R-*.log" | sort); do grep -aE '^MEASURED' "$f"; done | tee -a merged/wall.txt
+            cp -r "$D" merged/ 2>/dev/null || true
+          done
+          { echo '```'; cat merged/merge.txt merged/wall.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          if grep -q '^MERGE-FAIL' merged/merge.txt || [ "$FAIL" = 1 ]; then
+            echo "::error::$(grep '^MERGE-FAIL' merged/merge.txt | head -1)"
+            exit 1
+          fi
+
+      - name: The frontier — check, then write into the runner's tree (an artifact, never a commit)
+        if: always()
+        run: |
+          set +e
+          mkdir -p frontier
+          node scripts/procgen/census-seedling-campaign.mjs --check-frontier > frontier/check-frontier.txt 2>&1
+          echo "check-frontier rc=$?" | tee -a frontier/check-frontier.txt
+          node scripts/procgen/census-seedling-campaign.mjs --write-frontier > frontier/write-frontier.txt 2>&1
+          echo "write-frontier rc=$?" | tee -a frontier/write-frontier.txt
+          F=frontend/modules/seedlingDemo/fixtures/campaign-frontier.json
+          git diff -- "$F" > frontier/campaign-frontier.diff
+          cp "$F" frontier/
+          [ -d .cache/seedling-census ] && cp -r .cache/seedling-census frontier/
+          {
+            echo '## The frontier (reported, not gated)'
+            echo '```'
+            grep -aE '^(PASS|FAIL|SKIP) |pass, .* fail|rc=' frontier/check-frontier.txt | cut -c1-300
+            echo "campaign-frontier.json diff: $(wc -l < frontier/campaign-frontier.diff) line(s)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      - name: Upload the merged survey
+        if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: seedling-survey-merged
+          path: merged/
+          retention-days: 90
+
+      - name: Upload the frontier
+        if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: seedling-survey-frontier
+          path: frontier/
+          retention-days: 90
