@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 import {
     DEFAULT_FINAL_SPAN, TARGET_FINAL_SKILL, DEFAULT_POINTS_PER_MANA, FINAL_SPAN_PARAM,
     skillForPoints, predictedSkill, pointsForSkill, pointsPerManaFor, noiz2saWalkEvents, checkSpanFor, pickShrinking,
-    finalRegionOf, victoryLocationOf, VICTORY_ITEM,
+    finalRegionOf, victoryLocationOf, VICTORY_ITEM, manaBeforeVictory,
     planNoiz2saWorld, applyNoiz2saPricing, priceNoiz2saRegions,
 } from './noiz2saPricing.js';
 import { spanDifficulty, parseSpan, spanLength, spanAt, sceneIndex, SCENE_TOTAL, pickSpan } from './noiz2saDifficulty.js';
@@ -187,6 +187,29 @@ describe('regions the sphere log never reaches', () => {
         expect(plan.finalRegion).toBe('R5');
         const end = predictedSkill(plan.manaEnd, plan.pointsPerMana);
         for (const r of plan.regions.filter((x) => x.unreached)) expect(r).toMatchObject({ skill: end, target: finalScenesOf() });
+    });
+});
+
+describe('⚖ "Price the final at its last need" (second follow-up)', () => {
+    const plan = planNoiz2saWorld({ rulesJson: world(), sphereLog: sphereLog(), playerId: '1' });
+    it('the final region is priced at the skill when Victory is checked; every other region at first reach', () => {
+        const fin = plan.regions.find((r) => r.final);
+        expect(fin).toMatchObject({ region: 'R5', pricedAt: 'victory' });
+        for (const r of plan.regions.filter((x) => !x.final)) expect(r.pricedAt).toBe('first-reach');
+        // R5 is first reached long before its location (Victory) is checked: the walk spent more Noiz2sa mana by then
+        expect(fin.mana).toBeGreaterThan(plan.regions.find((r) => r.region === 'R4').mana);
+        expect(fin.skill).toBe(predictedSkill(fin.mana, plan.pointsPerMana));
+        expect(fin.rate).toBeCloseTo(fin.cost / spanDifficulty(fin.span, fin.skill).seconds, 4);
+        expect(showSpan(fin.span)).toBe(DEFAULT_FINAL_SPAN);
+    });
+    it('manaBeforeVictory: the reached spend before the Victory check\'s step; without one, the whole walk\'s', () => {
+        const events = [
+            { kind: 'spend', mana: 5 }, { kind: 'region', region: 'N1' }, { kind: 'spend', mana: 7 },
+            { kind: 'spend', mana: 3, checks: 'N1__v' }, { kind: 'spend', mana: 100, unreached: true },
+        ];
+        expect(manaBeforeVictory(events, 'N1__v', 999)).toBe(12);
+        expect(manaBeforeVictory(events, 'missing', 999)).toBe(999);
+        expect(manaBeforeVictory(events, null, 42)).toBe(42);
     });
 });
 

@@ -26,7 +26,10 @@
  *     never reaches (priced by the planner's defaults step after the walk, at the skill the walk ended on). The FINAL
  *     region (⚖ follow-up) is the region holding VICTORY — or, when Victory is not on a Noiz2sa region, the last Noiz2sa
  *     region the walk reaches before it (`finalRegionOf`) — and plays the generation setting (`noiz2saFinalSpan`)
- *     exactly, at the skill predicted there. Every other region's TARGET number of scenes ramps linearly over the order
+ *     exactly — ⚖ (second follow-up) "Price the final at its last need": at the skill the walk predicts when Victory is
+ *     needed (the Noiz2sa mana spent before the step that checks the Victory location; none: the whole walk's), not at
+ *     its first reach (`manaBeforeVictory`), so early visits there stay hard. Every other region is priced at first
+ *     reach. Every other region's TARGET number of scenes ramps linearly over the order
  *     from 1 (the first) to the final region's count (a region after the final one in the order targets that count);
  *     ⚖ "the ramp is a target; the 50% rule wins": the length shrinks until some span reaches deathless chance 0.5 at
  *     the predicted skill (`pickShrinking`; at one scene with none, the easiest), and WHICH scenes is
@@ -165,6 +168,10 @@ export function planNoiz2saPricing({
     // the walk's first-reach order, then the regions only the defaults step prices (after the walk)
     const reachedOrder = [...new Set(events.filter((e) => e.kind === 'region' && e.region !== startRegion).map((e) => e.region))];
     const finalRegion = finalRegionOf({ events, victoryLocation, regionOfLocation, isNoiz2sa, reachedOrder });
+    // ⚖ (second follow-up) "Price the final at its last need": the final region's skill is the one the walk predicts
+    // when Victory is needed — the Noiz2sa mana spent before the step that checks the Victory location (no such step:
+    // the whole walk's)
+    const finalMana = manaBeforeVictory(events, victoryLocation, manaEnd);
     // ⚖ the ramp runs from the first region to the FINAL one; a region after it in the order targets the final count
     const kF = finalRegion === null ? reachedOrder.length - 1 : reachedOrder.indexOf(finalRegion);
 
@@ -173,7 +180,9 @@ export function planNoiz2saPricing({
     let mana = 0;
     const priceRegion = (name, cost, unreached) => {
         if (regions.has(name)) return;
-        const skill = predictedSkill(mana, ppm, prices);
+        const atNeed = name === finalRegion;
+        const pricedMana = atNeed ? finalMana : mana;
+        const skill = predictedSkill(pricedMana, ppm, prices);
         const isStart = name === startRegion;
         const order = reachedOrder.indexOf(name);
         let pick;
@@ -187,7 +196,8 @@ export function planNoiz2saPricing({
         }
         const rate = isStart || !(cost > 0) ? null : Math.max(0.0001, round(cost / pick.seconds, 4));
         regions.set(name, {
-            region: name, order, unreached: !!unreached, start: isStart, final: name === finalRegion, mana, skill,
+            region: name, order, unreached: !!unreached, start: isStart, final: name === finalRegion, mana: pricedMana,
+            pricedAt: atNeed ? 'victory' : 'first-reach', skill,
             target, scenes: spanLength(pick.span), span: pick.span, p: pick.p, seconds: pick.seconds, cost, rate,
             expected: rate === null ? null : rate * pick.seconds,
         });
@@ -221,6 +231,13 @@ export function pickShrinking(target, skill) {
         if (pick.reached || n === 1) return pick;
     }
     return pickSpan(1, skill);
+}
+
+/** the reached Noiz2sa mana spent before the first event of the step that checks `victoryLocation` (none: `manaEnd`) */
+export function manaBeforeVictory(events, victoryLocation, manaEnd) {
+    const cut = victoryLocation ? events.findIndex((e) => e.checks === victoryLocation) : -1;
+    if (cut < 0) return manaEnd;
+    return events.slice(0, cut).filter((e) => e.kind === 'spend' && !e.unreached).reduce((a, e) => a + e.mana, 0);
 }
 
 /**
@@ -313,6 +330,7 @@ export function applyNoiz2saPricing(rulesJson, playerId, plan, { substrateId = '
         payload.pricing = {
             pointsPerMana: plan.pointsPerMana,
             mana: round(r.mana, 2),
+            pricedAt: r.pricedAt,
             target: r.target,
             skill: round(r.skill, 2),
             p: round(r.p, 4),

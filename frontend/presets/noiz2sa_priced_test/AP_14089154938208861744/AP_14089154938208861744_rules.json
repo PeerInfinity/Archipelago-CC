@@ -241,6 +241,7 @@
           "pricing": {
             "pointsPerMana": 45.95,
             "mana": 0,
+            "pricedAt": "first-reach",
             "target": 1,
             "skill": 0,
             "p": 0.4688,
@@ -305,6 +306,7 @@
           "pricing": {
             "pointsPerMana": 45.95,
             "mana": 16,
+            "pricedAt": "first-reach",
             "target": 3,
             "skill": 34.8,
             "p": 0.515,
@@ -380,14 +382,15 @@
           ],
           "manaEnabled": true,
           "fogEnabled": true,
-          "timeDrainPerSecond": 0.0957,
+          "timeDrainPerSecond": 0.0859,
           "pricing": {
             "pointsPerMana": 45.95,
-            "mana": 53,
+            "mana": 124.24,
+            "pricedAt": "victory",
             "target": 4,
-            "skill": 60.4,
-            "p": 0,
-            "seconds": 323.87,
+            "skill": 80.8,
+            "p": 0.0017,
+            "seconds": 360.82,
             "cost": 31,
             "final": true,
             "reached": true,
@@ -482,7 +485,7 @@
           "xpEffect": "cost"
         },
         "region_1_1": {
-          "timeDrainPerSecond": 0.0957,
+          "timeDrainPerSecond": 0.0859,
           "xpEffect": "cost"
         }
       },
