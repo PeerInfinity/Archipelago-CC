@@ -104,7 +104,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 8,
+            "count": 9,
             "id": "make"
         },
         {
@@ -227,10 +227,10 @@ export const INSTRUMENTS = frz({
         "blockStyle": 354,
         "browser": 117,
         "cited": 170,
-        "files": 365,
-        "lineStyle": 11,
-        "withDocblock": 365,
-        "withFlags": 283
+        "files": 366,
+        "lineStyle": 12,
+        "withDocblock": 366,
+        "withFlags": 284
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6371,6 +6371,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Generate the committed demo RUNNER region-library pack + register it in the region-libraries index (region-library F6c).",
             "path": "scripts/procgen/make-demo-runner-pack.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "make",
+            "citedBy": [],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "make-seedling-entity-colliders.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling entity colliders — the MODEL's hitbox of every entity tag, as a leaf module the traversal transcription can import (`frontend/modules/flashPanel/seedlingEntityColliders.js`).",
+            "path": "scripts/procgen/make-seedling-entity-colliders.mjs"
         },
         {
             "argvHelpers": [],

@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-b3ac708a",
+  "atlas_id": "seedling-5af7f784",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "b3ac708a" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "5af7f784" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -3086,91 +3086,91 @@
           "kind": "teleporter",
           "exit_tiles": [[11,28]],
           "entrance_tile": [11,28],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "in_pit_L40_4_20",
           "kind": "teleporter",
           "exit_tiles": [[4,20]],
           "entrance_tile": [4,20],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "in_pit_L40_5_20",
           "kind": "teleporter",
           "exit_tiles": [[5,20]],
           "entrance_tile": [5,20],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "in_pit_L40_13_20",
           "kind": "teleporter",
           "exit_tiles": [[13,20]],
           "entrance_tile": [13,20],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "in_pit_L40_14_20",
           "kind": "teleporter",
           "exit_tiles": [[14,20]],
           "entrance_tile": [14,20],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "in_pit_L40_4_21",
           "kind": "teleporter",
           "exit_tiles": [[4,21]],
           "entrance_tile": [4,21],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "in_pit_L40_5_21",
           "kind": "teleporter",
           "exit_tiles": [[5,21]],
           "entrance_tile": [5,21],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "in_pit_L40_13_21",
           "kind": "teleporter",
           "exit_tiles": [[13,21]],
           "entrance_tile": [13,21],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "in_pit_L40_14_21",
           "kind": "teleporter",
           "exit_tiles": [[14,21]],
           "entrance_tile": [14,21],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "in_pit_L40_4_22",
           "kind": "teleporter",
           "exit_tiles": [[4,22]],
           "entrance_tile": [4,22],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "in_pit_L40_5_22",
           "kind": "teleporter",
           "exit_tiles": [[5,22]],
           "entrance_tile": [5,22],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "in_pit_L40_4_23",
           "kind": "teleporter",
           "exit_tiles": [[4,23]],
           "entrance_tile": [4,23],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "in_pit_L40_5_23",
           "kind": "teleporter",
           "exit_tiles": [[5,23]],
           "entrance_tile": [5,23],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         },
         {
           "exit_id": "out_teleporter_144_64",
@@ -3184,7 +3184,7 @@
           "kind": "teleporter",
           "exit_tiles": [[11,29]],
           "entrance_tile": [11,29],
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         }
       ],
       "locations": [
@@ -3205,13 +3205,32 @@
               }
             ]
           },
-          "sub_region": "r8c7"
+          "sub_region": "r13c7"
         }
       ],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r3c8","r8c7"],
+        "sub_regions": ["r3c8","r8c7","r13c7"],
         "internal_exits": [
+          {
+            "from": "r13c7",
+            "to": "r8c7",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Totem Shard", "count": 5 } },
+                {
+                  "rule": "Or",
+                  "children": [
+                    { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                    { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+                  ]
+                }
+              ]
+            }
+          },
           {
             "from": "r3c8",
             "to": "r8c7",
@@ -7008,148 +7027,9 @@
       "locations": [],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r2c16","r14c0","r15c17","r16c6","r16c12","r16c16"],
+        "sub_regions": ["r2c16","r3c4"],
         "internal_exits": [
-          {
-            "from": "r14c0",
-            "to": "r15c17",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r14c0",
-            "to": "r16c12",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r14c0",
-            "to": "r16c16",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r14c0",
-            "to": "r16c6",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r14c0",
-            "to": "r2c16",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
-          },
-          {
-            "from": "r15c17",
-            "to": "r16c12",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r15c17",
-            "to": "r16c16",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r15c17",
-            "to": "r16c6",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r15c17",
-            "to": "r2c16",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
-          },
-          {
-            "from": "r16c12",
-            "to": "r16c16",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r16c12",
-            "to": "r16c6",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r16c12",
-            "to": "r2c16",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
-          },
-          {
-            "from": "r16c16",
-            "to": "r16c6",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r16c16",
-            "to": "r2c16",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
-          },
-          {
-            "from": "r16c6",
-            "to": "r2c16",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
-          },
-          {
-            "from": "r2c16",
-            "to": "r14c0",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c16",
-            "to": "r15c17",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c16",
-            "to": "r16c12",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c16",
-            "to": "r16c16",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          },
-          {
-            "from": "r2c16",
-            "to": "r16c6",
-            "bidirectional": false,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-          }
+          { "from": "r2c16", "to": "r3c4", "bidirectional": true, "source": "analyzer" }
         ]
       }
     },

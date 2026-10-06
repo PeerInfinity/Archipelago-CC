@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "pool_id": "seedling-atlas-pool-9c9d0607",
+  "pool_id": "seedling-atlas-pool-e7845aaf",
   "atlas_id": "seedling-9ff3df2a",
   "game": "seedling",
   "flavor": "maze",
@@ -2148,8 +2148,8 @@
           0,
           0,
           0,
-          0,
-          0,
+          1,
+          1,
           0,
           0,
           1,
@@ -4271,6 +4271,6 @@
     }
   ],
   "provenance": {
-    "content_hash": "9c9d0607"
+    "content_hash": "e7845aaf"
   }
 }

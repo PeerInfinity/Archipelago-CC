@@ -39,6 +39,11 @@ describe('a link the physics model cannot walk is NOT emitted as True_', () => {
             'level_66/r1c2->r5c4 SEALED', 'level_66/r5c4->r1c2 SEALED',
             'level_93/r10c7->r1c0 SEALED', 'level_93/r10c7->r1c13 SEALED',
             'level_93/r1c0->r10c7 SEALED', 'level_93/r1c13->r10c7 SEALED',
+            // ⛓ RULES footprints: TreeLarge's footprint became its mask's bounding box (10x12 tiles; it was a 1x1
+            // placeholder), so L94's crossings through it are the model's question too — two it walks, four it seals.
+            'level_94/r2c16->r3c4 WALKABLE [free]', 'level_94/r2c16->r9c4 SEALED',
+            'level_94/r3c4->r2c16 WALKABLE [free]', 'level_94/r3c4->r9c4 SEALED',
+            'level_94/r9c4->r2c16 SEALED', 'level_94/r9c4->r3c4 SEALED',
         ]);
     });
 
@@ -59,8 +64,14 @@ describe('a link the physics model cannot walk is NOT emitted as True_', () => {
             && groups.get(`${l.level}:${e.attrs.tset}`)?.holders.length)).map((l) => `level_${l.level}`));
         const ruleless = atlas.regions.flatMap((r) => (r.subgraph?.internal_exits ?? [])
             .filter((e) => e.access_rule === undefined).map((e) => ({ region: r.region_id, row: `${e.from}->${e.to}`, oneWay: !e.bidirectional })));
-        expect(ruleless.filter((x) => !reclosingLevels.has(x.region))).toEqual([]);
-        expect(ruleless.every((x) => x.oneWay)).toBe(true);
+        // ⛓ RULES footprints: and the model's own WALKABLE [free] verdict through a mask (L94, round TreeLarge) —
+        // a free analyzer row, not a hand row; read off `modelVerdicts`, never typed.
+        const modelFree = (x) => [x.row, x.row.split('->').reverse().join('->')]
+            .some((row) => modelVerdicts.includes(`${x.region}/${row} WALKABLE [free]`));
+        expect(ruleless.filter((x) => modelFree(x)).map((x) => `${x.region} ${x.row}`)).toEqual(['level_94 r2c16->r3c4']);
+        const rest = ruleless.filter((x) => !modelFree(x));
+        expect(rest.filter((x) => !reclosingLevels.has(x.region))).toEqual([]);
+        expect(rest.every((x) => x.oneWay)).toBe(true);
     });
 
     it('the pockets only a sealed row reached are pruned (L66 r1c2, L93 r1c0 / r1c13)', () => {

@@ -536,8 +536,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_43__r8c7 -> level_43__r13c7", player),
+        And(Has('Totem Shard', 5), HasAny('Progressive Sword', 'Ghost Spear'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_43__r8c7 -> level_43__r3c8", player),
         Or(HasAll('Fire Wand Fusion', 'Wand', 'Fire'), Has('Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_43__r13c7 -> level_43__r8c7", player),
+        And(Has('Totem Shard', 5), HasAny('Progressive Sword', 'Ghost Spear'))
     )
 
     world.set_rule(
@@ -2153,156 +2163,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_93__r14c7 -> level_93__r10c7", player),
         HasAll('Dark Suit', 'Ghost Spear')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r2c16 -> level_94__r14c0", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r2c16 -> level_94__r15c17", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r2c16 -> level_94__r16c12", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r2c16 -> level_94__r16c16", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r2c16 -> level_94__r16c6", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r14c0 -> level_94__r15c17", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r14c0 -> level_94__r16c12", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r14c0 -> level_94__r16c16", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r14c0 -> level_94__r16c6", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r14c0 -> level_94__r2c16", player),
-        Has('Progressive Swim', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r15c17 -> level_94__r14c0", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r15c17 -> level_94__r16c12", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r15c17 -> level_94__r16c16", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r15c17 -> level_94__r16c6", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r15c17 -> level_94__r2c16", player),
-        Has('Progressive Swim', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c6 -> level_94__r14c0", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c6 -> level_94__r15c17", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c6 -> level_94__r16c12", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c6 -> level_94__r16c16", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c6 -> level_94__r2c16", player),
-        Has('Progressive Swim', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c12 -> level_94__r14c0", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c12 -> level_94__r15c17", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c12 -> level_94__r16c16", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c12 -> level_94__r16c6", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c12 -> level_94__r2c16", player),
-        Has('Progressive Swim', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c16 -> level_94__r14c0", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c16 -> level_94__r15c17", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c16 -> level_94__r16c12", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c16 -> level_94__r16c6", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_94__r16c16 -> level_94__r2c16", player),
-        Has('Progressive Swim', 2)
     )
 
     world.set_rule(

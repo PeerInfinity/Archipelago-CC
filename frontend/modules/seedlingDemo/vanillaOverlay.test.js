@@ -338,8 +338,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   one exit pair and one connection; no location moves.
         // ⛓ RULES re-closing locks (81742e21… -> ec818c86): six levels split at a button-only lock — sub-regions,
         //   internal exits and two location bindings (L39, L41 totem parts); no name changes.
+        // ⛓ RULES footprints (ec818c86… -> 85ba46d2): every footprint is the model's hitbox — L43's BossTotem
+        //   splits r13c7 off (the L40 doors and the Wand), L94's pockets behind TreeLarge are pruned; no location moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('ec818c86c4bdd2e0943e7c5b5f48fe7f');
+            .toBe('85ba46d26c835d93e2968d070413f9d7');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

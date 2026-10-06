@@ -2664,8 +2664,8 @@
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
@@ -2678,85 +2678,85 @@
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7 #2",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7 #2",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7 #3",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7 #3",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7 #4",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7 #4",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7 #5",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7 #5",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7 #6",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7 #6",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7 #7",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7 #7",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7 #8",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7 #8",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7 #9",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7 #9",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7 #10",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7 #10",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7 #11",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7 #11",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7 #12",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7 #12",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_40__r23c29 -> level_43__r8c7 #13",
-            "connected_region": "level_43__r8c7",
+            "name": "level_40__r23c29 -> level_43__r13c7 #13",
+            "connected_region": "level_43__r13c7",
             "access_rule": {
               "rule": "True_"
             }
@@ -3228,6 +3228,31 @@
         "name": "level_43__r8c7",
         "exits": [
           {
+            "name": "level_43__r8c7 -> level_43__r13c7",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "item_names": [
+                      "Ghost Spear",
+                      "Progressive Sword"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Totem Shard",
+                    "count": 5
+                  }
+                }
+              ]
+            }
+          },
+          {
             "name": "level_43__r8c7 -> level_43__r3c8",
             "connected_region": "level_43__r3c8",
             "access_rule": {
@@ -3251,9 +3276,40 @@
                 }
               ]
             }
+          }
+        ],
+        "locations": []
+      },
+      "level_43__r13c7": {
+        "name": "level_43__r13c7",
+        "exits": [
+          {
+            "name": "level_43__r13c7 -> level_43__r8c7",
+            "connected_region": "level_43__r8c7",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "item_names": [
+                      "Ghost Spear",
+                      "Progressive Sword"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Totem Shard",
+                    "count": 5
+                  }
+                }
+              ]
+            }
           },
           {
-            "name": "level_43__r8c7 -> level_40__r23c29",
+            "name": "level_43__r13c7 -> level_40__r23c29",
             "connected_region": "level_40__r23c29",
             "access_rule": {
               "rule": "True_"
@@ -8596,53 +8652,10 @@
         "name": "level_94__r2c16",
         "exits": [
           {
-            "name": "level_94__r2c16 -> level_94__r14c0",
-            "connected_region": "level_94__r14c0",
+            "name": "level_94__r2c16 -> level_94__r3c4",
+            "connected_region": "level_94__r3c4",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r2c16 -> level_94__r15c17",
-            "connected_region": "level_94__r15c17",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r2c16 -> level_94__r16c12",
-            "connected_region": "level_94__r16c12",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r2c16 -> level_94__r16c16",
-            "connected_region": "level_94__r16c16",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r2c16 -> level_94__r16c6",
-            "connected_region": "level_94__r16c6",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
+              "rule": "True_"
             }
           },
           {
@@ -8662,286 +8675,14 @@
         ],
         "locations": []
       },
-      "level_94__r14c0": {
-        "name": "level_94__r14c0",
+      "level_94__r3c4": {
+        "name": "level_94__r3c4",
         "exits": [
           {
-            "name": "level_94__r14c0 -> level_94__r15c17",
-            "connected_region": "level_94__r15c17",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r14c0 -> level_94__r16c12",
-            "connected_region": "level_94__r16c12",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r14c0 -> level_94__r16c16",
-            "connected_region": "level_94__r16c16",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r14c0 -> level_94__r16c6",
-            "connected_region": "level_94__r16c6",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r14c0 -> level_94__r2c16",
+            "name": "level_94__r3c4 -> level_94__r2c16",
             "connected_region": "level_94__r2c16",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim",
-                "count": 2
-              }
-            }
-          }
-        ],
-        "locations": []
-      },
-      "level_94__r15c17": {
-        "name": "level_94__r15c17",
-        "exits": [
-          {
-            "name": "level_94__r15c17 -> level_94__r14c0",
-            "connected_region": "level_94__r14c0",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r15c17 -> level_94__r16c12",
-            "connected_region": "level_94__r16c12",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r15c17 -> level_94__r16c16",
-            "connected_region": "level_94__r16c16",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r15c17 -> level_94__r16c6",
-            "connected_region": "level_94__r16c6",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r15c17 -> level_94__r2c16",
-            "connected_region": "level_94__r2c16",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim",
-                "count": 2
-              }
-            }
-          }
-        ],
-        "locations": []
-      },
-      "level_94__r16c6": {
-        "name": "level_94__r16c6",
-        "exits": [
-          {
-            "name": "level_94__r16c6 -> level_94__r14c0",
-            "connected_region": "level_94__r14c0",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r16c6 -> level_94__r15c17",
-            "connected_region": "level_94__r15c17",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r16c6 -> level_94__r16c12",
-            "connected_region": "level_94__r16c12",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r16c6 -> level_94__r16c16",
-            "connected_region": "level_94__r16c16",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r16c6 -> level_94__r2c16",
-            "connected_region": "level_94__r2c16",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim",
-                "count": 2
-              }
-            }
-          }
-        ],
-        "locations": []
-      },
-      "level_94__r16c12": {
-        "name": "level_94__r16c12",
-        "exits": [
-          {
-            "name": "level_94__r16c12 -> level_94__r14c0",
-            "connected_region": "level_94__r14c0",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r16c12 -> level_94__r15c17",
-            "connected_region": "level_94__r15c17",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r16c12 -> level_94__r16c16",
-            "connected_region": "level_94__r16c16",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r16c12 -> level_94__r16c6",
-            "connected_region": "level_94__r16c6",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r16c12 -> level_94__r2c16",
-            "connected_region": "level_94__r2c16",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim",
-                "count": 2
-              }
-            }
-          }
-        ],
-        "locations": []
-      },
-      "level_94__r16c16": {
-        "name": "level_94__r16c16",
-        "exits": [
-          {
-            "name": "level_94__r16c16 -> level_94__r14c0",
-            "connected_region": "level_94__r14c0",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r16c16 -> level_94__r15c17",
-            "connected_region": "level_94__r15c17",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r16c16 -> level_94__r16c12",
-            "connected_region": "level_94__r16c12",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r16c16 -> level_94__r16c6",
-            "connected_region": "level_94__r16c6",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
-            "name": "level_94__r16c16 -> level_94__r2c16",
-            "connected_region": "level_94__r2c16",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim",
-                "count": 2
-              }
+              "rule": "True_"
             }
           }
         ],

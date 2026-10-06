@@ -199,8 +199,9 @@ describe('the COMMITTED Seedling pool, through the hook', () => {
         // The real geometry survives. Phase 5b measured 109 floor tiles on the
         // pool committed at e0fcce518; the pool regenerated at c8447dd56 (after
         // the sorter learned OR and counts, 5cfc715fe) projects 111 — this row
-        // pins the COMMITTED artifact, so it moves when the artifact does.
-        expect(region.playable_payload.tiles.filter((t) => t === 0)).toHaveLength(111);
+        // pins the COMMITTED artifact, so it moves when the artifact does. ⛓ RULES footprints: 111 -> 109, L0's
+        // statue2 now claims the model's 48x24 box, which fully covers two tiles the old 1x2 anchor left open.
+        expect(region.playable_payload.tiles.filter((t) => t === 0)).toHaveLength(109);
     });
 
     it('spawns on a walkable tile — the projection\'s own entrance', () => {

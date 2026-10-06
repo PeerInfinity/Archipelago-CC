@@ -47,20 +47,25 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // entered only from a side that can work the button this visit, so L15/L16/L28/L39/L41/L71 split at theirs:
     // 52 -> 54 regions with a subgraph, 190 -> 198 sub-regions, 295 -> 304 internal exits. L15's arrival column
     // reaches its button only by swimming: plain Has(Swim) 179 -> 181, swim 218 -> 220.
-    it('54 regions carry a subgraph: 198 sub-regions, 304 internal exits, 220 of them need Progressive Swim', () => {
-        expect(c.atlasId).toBe('seedling-b3ac708a');
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([113, 54, 198, 304, 220]);
-        expect(c.swimLevels).toHaveLength(22);
+    // ⛓ RULES footprints — restamped (b3ac708a -> 5af7f784): every footprint is the model's hitbox. TreeLarge's
+    // (L94) became its mask's 10x12 bounding box, the model seals the way past it, and the five water pockets behind
+    // it (no members) are pruned with their 20 swim rows; L43's BossTotem splits r13c7 off (+1 sub-region, +1 row):
+    // 198 -> 195 sub-regions, 304 -> 286 internal exits, swim 220 -> 200 (Has(Swim) 181 -> 166, Has(Swim, 2)
+    // 33 -> 28), and L94 is no swim level.
+    it('54 regions carry a subgraph: 195 sub-regions, 286 internal exits, 200 of them need Progressive Swim', () => {
+        expect(c.atlasId).toBe('seedling-5af7f784');
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([113, 54, 195, 286, 200]);
+        expect(c.swimLevels).toHaveLength(21);
         expect(c.byRule.slice(0, 2)).toEqual([
-            { rule: 'Has(Progressive Swim)', count: 181 },
-            { rule: 'Has(Progressive Swim, 2)', count: 33 },
+            { rule: 'Has(Progressive Swim)', count: 166 },
+            { rule: 'Has(Progressive Swim, 2)', count: 28 },
         ]);
     });
 
-    // ⛓ RULES logical-links: 18 -> 17, L93 has no swim row left (above).
-    it('the witnessed levels are derived from the tapes: 0, 37, 47, 87, 115 — the other 17 are BOT-UNCERTIFIED', () => {
+    // ⛓ RULES logical-links: 18 -> 17, L93 has no swim row left (above). ⛓ RULES footprints: 17 -> 16, L94 neither.
+    it('the witnessed levels are derived from the tapes: 0, 37, 47, 87, 115 — the other 16 are BOT-UNCERTIFIED', () => {
         expect([...c.witnessedLevels].sort((a, b) => a - b)).toEqual([0, 37, 47, 87, 115]);
-        expect(c.uncertifiedLevels).toHaveLength(17);
+        expect(c.uncertifiedLevels).toHaveLength(16);
         expect(c.swimLevels.find((r) => r.level === 47).witnesses).toEqual(['r5-swim-cross.json', 'r5-swim-latch.json']);
         // ⛓ swim R3: `r3-drown` (L47, no conch, the drowning death) joins `r5-swim-drown`.
         expect(c.swimLevels.find((r) => r.level === 47).noSwimTapes).toEqual(['r3-drown.json', 'r5-swim-drown.json']);
