@@ -53,8 +53,9 @@ describe('assertGoal — reach-pit', () => {
 
     it('the unknown-kind refusal lists the kinds the solver owns', () => {
         // ⛓ Swim U5 added `encounter` (`solverEncounter.test.js`).
+        // ⛓ Fidelity CLEARTAG added `clear-tag` (`fidelityClearTag.test.js`).
         expect(() => assertGoal({ kind: 'reach-cell' }, 0))
-            .toThrow(/'reach-exit', 'reach-pit', 'collect-placement' and 'encounter'/);
+            .toThrow(/'reach-exit', 'reach-pit', 'collect-placement', 'encounter' and 'clear-tag'/);
     });
 });
 

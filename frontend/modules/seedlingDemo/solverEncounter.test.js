@@ -47,8 +47,9 @@ describe('assertGoal — encounter', () => {
     });
 
     it('the unknown-kind refusal lists every kind the solver owns', () => {
+        // ⛓ Fidelity CLEARTAG added `clear-tag` (`fidelityClearTag.test.js`).
         expect(() => assertGoal({ kind: 'reach-cell' }, 0))
-            .toThrow(/'reach-exit', 'reach-pit', 'collect-placement' and 'encounter'/);
+            .toThrow(/'reach-exit', 'reach-pit', 'collect-placement', 'encounter' and 'clear-tag'/);
     });
 });
 

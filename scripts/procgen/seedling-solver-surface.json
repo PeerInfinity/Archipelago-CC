@@ -16,7 +16,7 @@
   ],
   "simulation": {
     "entry": "frontend/modules/seedlingDemo/levelRun.js",
-    "files": 60
+    "files": 61
   },
   "runObject": {
     "properties": 193,
@@ -127,9 +127,9 @@
       "form": "stepper",
       "files": {
         "botDriverV2.js": 26,
-        "solverBot.js": 24
+        "solverBot.js": 25
       },
-      "sites": 50,
+      "sites": 51,
       "seen": "both",
       "via": [
         "const-alias",
@@ -343,9 +343,9 @@
       "files": {
         "botDriverV2.js": 101,
         "dangerMap.js": 14,
-        "solverBot.js": 89
+        "solverBot.js": 95
       },
-      "sites": 204,
+      "sites": 210,
       "seen": "both",
       "via": [
         "direct"
@@ -364,11 +364,11 @@
         "armedArrowTraps": {
           "botDriverV2.js": 4,
           "dangerMap.js": 4,
-          "solverBot.js": 5
+          "solverBot.js": 6
         },
         "armedPulsers": {
           "botDriverV2.js": 4,
-          "solverBot.js": 4
+          "solverBot.js": 5
         },
         "arrowFlights": {
           "dangerMap.js": 1
@@ -385,11 +385,11 @@
         },
         "brokenRocks": {
           "botDriverV2.js": 3,
-          "solverBot.js": 3
+          "solverBot.js": 4
         },
         "burnedTrees": {
           "botDriverV2.js": 3,
-          "solverBot.js": 4
+          "solverBot.js": 5
         },
         "chasers": {
           "dangerMap.js": 2,
@@ -407,14 +407,14 @@
         },
         "openActivators": {
           "botDriverV2.js": 22,
-          "solverBot.js": 16
+          "solverBot.js": 17
         },
         "openBridges": {
           "botDriverV2.js": 4
         },
         "openChests": {
           "botDriverV2.js": 7,
-          "solverBot.js": 3
+          "solverBot.js": 4
         },
         "pulledRopes": {
           "botDriverV2.js": 3
@@ -520,9 +520,9 @@
         "botDriverV2.js": 49,
         "dangerMap.js": 2,
         "director.js": 4,
-        "solverBot.js": 26
+        "solverBot.js": 27
       },
-      "sites": 81,
+      "sites": 82,
       "seen": "both",
       "via": [
         "const-alias",
@@ -568,7 +568,8 @@
           "botDriverV2.js": 2
         },
         "earnedClears": {
-          "director.js": 1
+          "director.js": 1,
+          "solverBot.js": 1
         },
         "equipsFired": {
           "botDriverV2.js": 4
@@ -651,9 +652,9 @@
         "botDriverV2.js": 30,
         "dangerMap.js": 10,
         "director.js": 1,
-        "solverBot.js": 76
+        "solverBot.js": 79
       },
-      "sites": 118,
+      "sites": 121,
       "seen": "both",
       "via": [
         "const-alias",
@@ -901,9 +902,9 @@
       "files": {
         "arrivalSolid.js": 5,
         "botDriverV2.js": 114,
-        "solverBot.js": 246
+        "solverBot.js": 248
       },
-      "sites": 365,
+      "sites": 367,
       "seen": "both",
       "via": [
         "const-alias",
@@ -947,9 +948,9 @@
       "files": {
         "botDriverV2.js": 3,
         "dangerMap.js": 1,
-        "solverBot.js": 42
+        "solverBot.js": 44
       },
-      "sites": 46,
+      "sites": 48,
       "seen": "both",
       "via": [
         "direct"
@@ -1039,9 +1040,9 @@
       "files": {
         "arrivalSolid.js": 2,
         "botDriverV2.js": 56,
-        "solverBot.js": 159
+        "solverBot.js": 160
       },
-      "sites": 217,
+      "sites": 218,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1743,9 +1744,9 @@
       "files": {
         "arrivalSolid.js": 1,
         "botDriverV2.js": 2,
-        "solverBot.js": 6
+        "solverBot.js": 7
       },
-      "sites": 9,
+      "sites": 10,
       "seen": "both",
       "via": [
         "direct",
@@ -2203,9 +2204,9 @@
         "arrivalSolid.js": 2,
         "botDriverV1.js": 2,
         "botDriverV2.js": 57,
-        "solverBot.js": 96
+        "solverBot.js": 97
       },
-      "sites": 157,
+      "sites": 158,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2235,9 +2236,9 @@
         "arrivalSolid.js": 2,
         "botDriverV1.js": 2,
         "botDriverV2.js": 60,
-        "solverBot.js": 100
+        "solverBot.js": 101
       },
-      "sites": 164,
+      "sites": 165,
       "seen": "both",
       "via": [
         "const-alias",
