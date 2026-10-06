@@ -148,7 +148,7 @@ import { fileURLToPath } from 'node:url';
 import { familyOf } from './surveyFamily.js';
 import { deriveStagedGrant } from './surveyGrants.js';
 import {
-    RESTART_TARGET, deriveLegs, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
+    RESTART_TARGET, deriveLegs, gameStateEventsOf, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
     ROUTE_MODES, routeOnlyRows,
 } from './surveyRoute.js';
 import { seedlingStartSpawn } from '../../frontend/modules/flashPanel/seedlingRegionBinding.js';
@@ -714,6 +714,19 @@ function encounterGoal(level, pickup, then) {
         location: pickup.location,
     };
 }
+/** ⛓ RULES obstacle-events — an event leg's goal: clear the saved obstacle's flag (`clear-tag`). */
+function clearTagGoal(leg) {
+    const o = leg.event.obstacle;
+    return {
+        kind: 'clear-tag',
+        tag: { level: o.level, tag: o.tag },
+        at: { x: o.x, y: o.y },
+        obstacle: `${o.class}@${o.x},${o.y}`,
+        why: `${leg.goal} (${leg.event.id}) — broken before row ${leg.event.prerequisiteFor} walks its landing`,
+        location: leg.goal,
+    };
+}
+
 function pickupCoords(level) {
     const type = PICKUP_ENTITY[level];
     const hits = (levelsByNo.get(level)?.entities ?? []).filter((e) => e.type === type);
@@ -738,6 +751,9 @@ function deriveRoute() {
         walk: ROUTE_MODE === 'route-only',
         // ⛓ RETURN TO MENU: a leg may Restart only where the slot declares it (procgenCore/restartWarp.js).
         restart: returnToMenu(apRules),
+        // ⛓ RULES obstacle-events: a landing gated on a saved obstacle's event is walked only after
+        //   the obstacle is broken from its open side (goal-first legs; never eager, never silently)
+        events: gameStateEventsOf(REGIONS),
     });
     const legs = derived.legs.map((leg, i) => ({
         ...leg,
@@ -832,7 +848,8 @@ function buildSteps(visits, legs, id) {
         const next = visits[i + 1];
         const goals = [];
         const pickupsHere = legs.map((leg, k) => (endOf[k] === i
-            ? PICKUP_ROWS.find((p) => p.level === v.level && leg.goal === p.location) : null))
+            ? (leg.event ? { event: leg } : PICKUP_ROWS.find((p) => p.level === v.level && leg.goal === p.location))
+            : null))
             .filter(Boolean);
         // ⛓ `rules-route-survey`: under `--through` the crossing is the exit AP's
         //   own path took (`hopEdge`), resolved ONCE and used by both halves.
@@ -845,7 +862,11 @@ function buildSteps(visits, legs, id) {
             edge = crossing.edge;
         }
         for (const pickupHere of pickupsHere) {
-            if (THROUGH) {
+            if (pickupHere.event) {
+                // ⛓ RULES obstacle-events: BREAK the obstacle the next row's walk needs (its flag is the
+                //   game's; the solver owns HOW — a goal kind it does not have yet refuses by name).
+                goals.push(clearTagGoal(pickupHere.event));
+            } else if (THROUGH) {
                 goals.push(throughPickupGoal(v.level, pickupHere, next ? edge : undefined));
             } else {
                 goals.push({

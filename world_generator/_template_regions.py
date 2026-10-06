@@ -287,6 +287,9 @@ REGION_EXTRA_ATTRIBUTES: Dict[str, Dict[str, Any]] = {{
         # Apply extra attributes (game-specific, e.g., type_string, price)
         for attr_name, attr_value in location_data.extra_attributes.items():
             setattr(location, attr_name, attr_value)
+        # The keys the source rules.json carried, so the exporter writes them back verbatim
+        # (structured values included, e.g. an obstacle event's `obstacle`/`action`)
+        location._worldgen_extra_attributes = tuple(location_data.extra_attributes)
 '''
 
     # Build dungeon section (classes + data)

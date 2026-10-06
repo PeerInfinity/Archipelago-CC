@@ -333,8 +333,84 @@ export function blockedFrontier(regions, ruleHolds, src, items) {
  *          each leg's hops took (`regionPathHops`); throws by name on a leg AP's rules
  *          give no path for and no remaining row can replace
  */
+/**
+ * ⛓ RULES obstacle-events — the GAME-STATE events of a rules export: `{name, item, region, rule, eventId,
+ * obstacle}` per event location whose `event_kind` is `'game_state'` (a saved obstacle's flag). They are
+ * not pickups and never sphere-order rows; `deriveLegs` takes one only as a goal-first prerequisite.
+ */
+export function gameStateEventsOf(regions) {
+    const out = [];
+    for (const [region, reg] of Object.entries(regions)) {
+        for (const loc of reg.locations ?? []) {
+            if (loc.event_kind !== 'game_state') continue;
+            out.push({ name: loc.name, item: loc.item?.name ?? loc.name, region, rule: loc.access_rule ?? null,
+                eventId: loc.event_id ?? null, obstacle: loc.obstacle ?? null, across: loc.across ?? [] });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓ RULES obstacle-events — **BREAK BEFORE FIRST USE**, as the leg walk's rule (⚖ the user; the planner's
+ * condition on option B). The fewest pending game-state events, taken in order, each reachable from where
+ * the walk stands with its own rule held, after which `target` is reachable (and its rule holds when
+ * `targetRule` is given). null when no set of them opens the way. Greedy closure over the reachable events,
+ * then pruned one at a time, so an event is only ever broken because this leg NEEDS it — never eagerly —
+ * and a gated landing is never walked without its event.
+ */
+export function eventPrerequisites({ regions, ruleHolds, here, items, events, target, targetRule = null }) {
+    const pending = events.filter((e) => !(items[e.item] > 0));
+    const walkThrough = (seq) => {
+        const its = { ...items };
+        let cur = here;
+        for (const e of seq) {
+            if (!regionPathHops(regions, ruleHolds, cur, e.region, its) || !ruleHolds(e.rule, its)) return false;
+            its[e.item] = 1;
+            cur = e.region;
+        }
+        return !!regionPathHops(regions, ruleHolds, cur, target, its) && (!targetRule || ruleHolds(targetRule, its));
+    };
+    if (pending.length === 0) return null;
+    const seq = [];
+    const its = { ...items };
+    let cur = here;
+    while (!walkThrough(seq)) {
+        const next = pending.find((e) => !seq.includes(e)
+            && regionPathHops(regions, ruleHolds, cur, e.region, its) && ruleHolds(e.rule, its));
+        if (!next) return null;
+        seq.push(next);
+        its[next.item] = 1;
+        cur = next.region;
+    }
+    for (let i = seq.length - 1; i >= 0; i -= 1) {
+        const without = seq.filter((_, j) => j !== i);
+        if (walkThrough(without)) seq.splice(i, 1);
+    }
+    return seq;
+}
+
+/**
+ * ⛓ RULES obstacle-events — the events a walked path BREAKS ON THE WAY: a hop between an event's `side`
+ * and one of its `across` regions, through an exit priced exactly the event's own cost, passes through
+ * the obstacle, and in the game that crossing clears its flag (the in-order route breaks L0's rock
+ * walking from the room into the door pocket). Not eager: the walk was going there anyway.
+ */
+export function eventsBrokenOnPath(regions, path, exits, events, items) {
+    const out = [];
+    for (let i = 0; i + 1 < path.length; i += 1) {
+        const [a, b] = [path[i], path[i + 1]];
+        const exit = (regions[a]?.exits ?? []).find((x) => x.name === exits[i]);
+        for (const e of events) {
+            if (items[e.item] > 0 || out.includes(e)) continue;
+            const crosses = (a === e.region && e.across.includes(b)) || (b === e.region && e.across.includes(a));
+            if (crosses && JSON.stringify(exit?.access_rule ?? null) === JSON.stringify(e.rule)) out.push(e);
+        }
+    }
+    return out;
+}
+
 export function deriveLegs({
-    regions, ruleHolds: apHolds, start, pickups, spare = null, walk = false, restart = false,
+    regions, ruleHolds: apHolds, start, pickups, spare = null, walk = false, restart = false, events = [],
 }) {
     // ⛓ RETURN TO MENU: a Restart lands where `Menu -> GameStart` leads — not at `start`, which is only where this
     //   walk begins — and walks on from there under the LEG's own rule decider (FRONTIER2's `walk` mode included).
@@ -367,6 +443,7 @@ export function deriveLegs({
         const pool = spare === null ? [wanted[0]] : [...wanted, ...extra];
         let pick = null;
         let path = null;
+        let prereqs = [];
         for (const cand of pool) {
             const to = regionOfLocation(regions, cand.location);
             // ⛓ RETURN TO MENU (`procgenCore/restartWarp.js`): walk if a walk exists. Only where the slot declares
@@ -376,6 +453,17 @@ export function deriveLegs({
             if (p && (spare === null || ruleHolds(locationRule(cand.location), items))) {
                 pick = cand;
                 path = p;
+                break;
+            }
+            // ⛓ RULES obstacle-events: the row is not reachable as things stand — is it once the
+            //   obstacles it needs are broken first (goal-first, never eager)?
+            const pre = events.length === 0 ? null : eventPrerequisites({
+                regions, ruleHolds, here, items, events, target: to,
+                targetRule: spare === null ? null : locationRule(cand.location),
+            });
+            if (pre) {
+                pick = cand;
+                prereqs = pre;
                 break;
             }
         }
@@ -388,6 +476,28 @@ export function deriveLegs({
                     + `${here}: blocked ${blockedFrontier(regions, ruleHolds, here, items)
                         .map((b) => `${b.from} -> ${b.to} ${JSON.stringify(b.rule)}`).join('; ')})`));
         }
+        for (const e of prereqs) {
+            const p = regionPathHops(regions, ruleHolds, here, e.region, items);
+            legs.push({
+                sphere: `${pick.sphere}<${e.eventId ?? e.name}`,
+                goal: e.name,
+                item: e.item,
+                from: here,
+                to: e.region,
+                itemsHeld: Object.keys(items).slice(),
+                regions: p.path,
+                // the obstacle this leg breaks, and the row whose walk needs it (break before first use)
+                event: { id: e.eventId, obstacle: e.obstacle, prerequisiteFor: pick.sphere },
+            });
+            held.push({ ...items });
+            hops.push(p.exits);
+            legHolds.push(ruleHolds);
+            if (walk) stood = Object.freeze(new Set([...stood, ...p.path]));
+            for (const b of eventsBrokenOnPath(regions, p.path, p.exits, events, items)) items[b.item] = 1;
+            items[e.item] = 1;
+            here = e.region;
+        }
+        if (prereqs.length > 0) path = regionPathHops(regions, ruleHolds, here, regionOfLocation(regions, pick.location), items);
         const to = regionOfLocation(regions, pick.location);
         const fromWanted = wanted.indexOf(pick);
         const deferred = fromWanted < 0 ? wanted.slice() : wanted.slice(0, fromWanted);
@@ -416,6 +526,9 @@ export function deriveLegs({
         hops.push(path.exits);
         legHolds.push(ruleHolds);
         if (walk) stood = Object.freeze(new Set([...stood, ...path.path]));
+        const broken = eventsBrokenOnPath(regions, path.path, path.exits, events, items);
+        if (broken.length > 0) legs[legs.length - 1].brokeOnTheWay = broken.map((b) => b.eventId ?? b.name);
+        for (const b of broken) items[b.item] = 1;
         items[pick.item] = (items[pick.item] ?? 0) + 1;
         here = to;
         if (fromWanted >= 0) wanted.splice(fromWanted, 1);

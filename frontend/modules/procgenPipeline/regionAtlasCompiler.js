@@ -410,6 +410,12 @@ function deriveIdentifiers(atlas, options) {
  *   `exporter["1"].assume_bidirectional_exits`; omitted, the key is not written
  * @param {boolean} [options.returnToMenu] the rooms' runtime warps the player to the start on a Restart: write
  *   `exporter["1"].return_to_menu: true` (`procgenCore/restartWarp.js`). Omitted, nothing is written.
+ * @param {Array<object>} [options.events] RULES obstacle-events — derived AP EVENTS, each
+ *   `{region_id, sub_region?, name, item?, access_rule?, fields?}`: an id-less location in that
+ *   region's AP region holding a locked event item (`item` defaults to `name`). See the block below.
+ * @param {Array<object>} [options.exitGates] RULES obstacle-events — `{region_id, exit_id, rule}`:
+ *   the wired boundary exit leaving from that atlas endpoint carries `And(<its rule>, rule)` (just
+ *   `rule` when it has none). Several gates on one endpoint are ANDed; a gate naming no wired exit throws.
  * @param {boolean} [options.embedSphereLog] embed the forward simulator's
  *   `generateSphereLog` walk of the compiled graph as `sphere_log` (default
  *   false — opt-in, so every existing compile stays byte-identical). The same
@@ -418,6 +424,29 @@ function deriveIdentifiers(atlas, options) {
  *   this compile: the caller asked for a log, and a guessed one is never given.
  * @returns {{ rules: object, report: object }}
  */
+/** `options.exitGates` → endpoint key → `{rule, used}`, several gates on one endpoint ANDed in order. */
+function exitGatesOf(list = []) {
+    const out = new Map();
+    for (const g of list) {
+        if (!g?.region_id || !g?.exit_id || !g?.rule) throw new Error(`exit gate needs region_id, exit_id and rule: ${JSON.stringify(g)}`);
+        const key = endpointKey(g.region_id, g.exit_id);
+        const prev = out.get(key);
+        const rule = !prev ? g.rule
+            : { rule: 'And', children: [...(prev.rule.rule === 'And' ? prev.rule.children : [prev.rule]), g.rule] };
+        out.set(key, { rule, used: false });
+    }
+    return out;
+}
+
+/** The boundary exit's own rule with its gate ANDed on, if it has one. */
+function gatedRule(own, gates, regionId, exitId) {
+    const gate = gates.get(endpointKey(regionId, exitId));
+    if (!gate) return own;
+    gate.used = true;
+    if (own === undefined || own === null) return gate.rule;
+    return { rule: 'And', children: [own, ...(gate.rule.rule === 'And' ? gate.rule.children : [gate.rule])] };
+}
+
 export function compileRegionAtlas(atlas, options = {}) {
     const validation = validateRegionAtlas(
         atlas, options.mapDoc === undefined ? {} : { mapDoc: options.mapDoc },
@@ -513,6 +542,7 @@ export function compileRegionAtlas(atlas, options = {}) {
     // graph actually carries, suffix collisions and all.
     const wiredInfo = new Map();
     const connections = atlas.vanilla_layout?.connections ?? [];
+    const gates = exitGatesOf(options.exitGates);
     for (const conn of connections) {
         const a = exitIndex.get(endpointKey(conn.from?.[0], conn.from?.[1]));
         const b = exitIndex.get(endpointKey(conn.to?.[0], conn.to?.[1]));
@@ -530,7 +560,7 @@ export function compileRegionAtlas(atlas, options = {}) {
         //
         // Both endpoints still count as WIRED — the arrival exit is a real,
         // deliberately-authored target, not a crossing nobody covered.
-        const aExitName = addExit(aName, bName, a.exit.access_rule);
+        const aExitName = addExit(aName, bName, gatedRule(a.exit.access_rule, gates, a.region.region_id, a.exit.exit_id));
         wiredInfo.set(endpointKey(a.region.region_id, a.exit.exit_id),
             { apExitName: aExitName, targetApRegion: bName, target: b });
         if (conn.one_way === true) {
@@ -538,11 +568,17 @@ export function compileRegionAtlas(atlas, options = {}) {
                 { apExitName: null, targetApRegion: null, target: a, arrivalOnly: true });
             continue;
         }
-        const bExitName = addExit(bName, aName, b.exit.access_rule);
+        const bExitName = addExit(bName, aName, gatedRule(b.exit.access_rule, gates, b.region.region_id, b.exit.exit_id));
         wiredInfo.set(endpointKey(b.region.region_id, b.exit.exit_id),
             { apExitName: bExitName, targetApRegion: aName, target: a });
     }
     const wired = new Set(wiredInfo.keys());
+    for (const [key, gate] of gates) {
+        if (!gate.used) {
+            throw new Error(`exit gate on ${key} names no wired departure exit — a gate whose exit vanished is a `
+                + 'silent hole, not a no-op');
+        }
+    }
 
     // Unwired boundary exits are map crossings this atlas does not cover yet.
     // They are omitted from the graph and NAMED here — never silently dropped.
@@ -609,6 +645,37 @@ export function compileRegionAtlas(atlas, options = {}) {
             type: null,
             max_count: itempoolCounts[name] ?? 0,
         };
+    }
+
+    // --- derived EVENTS (RULES obstacle-events) ---------------------------
+    //
+    // An AP event in the shape the exporter writes for every game (ALTTP's
+    // `Open Floodgate`, Adventure's `Victory`): an id-less location holding a
+    // locked event item of its own name, the item `id: null`, `event: true`,
+    // group `Event`, counted once in `itempool_counts` as the exporter counts it
+    // (world_generator subtracts the locked placement, and an id-less item is
+    // never pooled). Whatever the caller adds in `fields` rides on the location.
+    const eventNames = new Set();
+    for (const ev of options.events ?? []) {
+        const region = atlasRegions.find((r) => r.region_id === ev.region_id);
+        if (!region) throw new Error(`event "${ev.name}" names atlas region "${ev.region_id}", which this atlas does not have`);
+        const target = apRegionNameForBinding(region, ev.sub_region);
+        if (!regions[target]) throw new Error(`event "${ev.name}" binds to AP region "${target}", which this compile did not make`);
+        if (locationIds.has(ev.name) || eventNames.has(ev.name)) throw new Error(`event "${ev.name}" collides with another location`);
+        const item = ev.item ?? ev.name;
+        if (items[item]) throw new Error(`event item "${item}" collides with another item`);
+        eventNames.add(ev.name);
+        regions[target].locations.push({
+            ...makeLocation(ev.name, null, ev.access_rule ?? null),
+            item: { name: item, player: Number(player), advancement: true, type: 'Event' },
+            locked: true,
+            event: true,
+            ...(ev.fields ?? {}),
+        });
+        items[item] = {
+            name: item, id: null, groups: ['Event'], classification: 'progression', event: true, type: 'Event', max_count: 1,
+        };
+        itempoolCounts[item] = 1;
     }
 
     // --- the start wiring ------------------------------------------------
@@ -829,6 +896,8 @@ export function compileRegionAtlas(atlas, options = {}) {
         exits: exitCount + menuExits.length,
         connections: connections.length,
         locations: placements.length,
+        events: eventNames.size,
+        exit_gates: gates.size,
         placed_items: placedItems,
         locations_without_item: unplacedLocations,
         distinct_items: itemNames.length,

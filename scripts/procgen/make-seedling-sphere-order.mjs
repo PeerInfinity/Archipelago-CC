@@ -56,17 +56,37 @@ const EQUIPMENT = new Set([
     'Ghost Spear', 'Dark Suit', 'Ghost Sword Fusion', 'Fire Wand Fusion', 'Light', 'Health',
 ]);
 
-function readOrder() {
-    const lines = fs.readFileSync(LOG, 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+/**
+ * ⛓ RULES obstacle-events (⚖ planner, option B) — **EVENTS NEVER NUMBER A LABEL.** The log writes each
+ * EVENT (`metadata.event_locations`: a saved obstacle's flag, `event_kind: 'game_state'`) as its own
+ * fractional step, as it does for every game. They are not collectibles, so they are skipped here, and a
+ * fractional label `<sphere>.<k>` counts the REAL steps of its sphere only: the artifact reads the same
+ * with or without events in the log (the labels the survey and the frontier key on do not move). A
+ * row's label is therefore NOT always the log's own `sphere_index` once events are present.
+ */
+export function orderRows(lines) {
     const meta = lines.find((l) => l.type === 'metadata');
+    const events = new Set(meta?.event_locations?.['1'] ?? []);
     const rows = [];
+    const realSteps = new Map();
     for (const line of lines) {
         if (line.type !== 'state_update') continue;
         const p = line.player_data?.['1'];
-        for (const name of p?.sphere_locations ?? []) {
-            const items = Object.entries(p.new_inventory_details?.base_items ?? {});
+        const names = (p?.sphere_locations ?? []).filter((n) => !events.has(n));
+        if (names.length === 0) continue;
+        const raw = String(line.sphere_index);
+        const [major, frac] = raw.split('.');
+        let sphere = raw;
+        if (frac !== undefined) {
+            const k = (realSteps.get(major) ?? 0) + 1;
+            realSteps.set(major, k);
+            sphere = `${major}.${k}`;
+        }
+        for (const name of names) {
+            const items = Object.entries(p.new_inventory_details?.base_items ?? {})
+                .filter(([item]) => !events.has(item) && !(meta?.event_items?.['1'] ?? []).includes(item));
             rows.push({
-                sphere: String(line.sphere_index),
+                sphere,
                 location: name,
                 item: items.length === 1 ? items[0][0] : items.map(([k]) => k).join(' + '),
                 level: Number(/^Level (\d+)/.exec(name)?.[1] ?? -1),
@@ -74,6 +94,10 @@ function readOrder() {
         }
     }
     return { seed: meta?.seed ?? null, seedName: meta?.seed_name ?? null, rows };
+}
+
+function readOrder() {
+    return orderRows(fs.readFileSync(LOG, 'utf8').trim().split('\n').map((l) => JSON.parse(l)));
 }
 
 /** Where AP's equipment order differs from the walkthrough's, and why. */

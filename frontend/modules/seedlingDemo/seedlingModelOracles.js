@@ -80,7 +80,7 @@ export function modelFloodTiles(level, seeds, enterable, { tileSize = TILE_SIZE 
  * The analyzer's two model oracles for ONE level and the grid the analyzer is
  * running on (atlas tiles = grid cell + `grid.origin`).
  *
- * @returns {{ manualCrossingVerdict:Function, modelReach:Function, tileSolid:Function }}
+ * @returns {{ manualCrossingVerdict:Function, modelReach:Function, tileSolid:Function, sealedPocket:Function }}
  */
 export function seedlingModelOracles(level, grid, { tileSize = TILE_SIZE } = {}) {
     const flood = (seeds, enterable) => modelFloodTiles(level, seeds, enterable, { tileSize });
@@ -123,6 +123,39 @@ export function seedlingModelOracles(level, grid, { tileSize = TILE_SIZE } = {})
         // RULES burnable-trees: no free pixel for the body on the tile, every
         // solid live, so a door there is used only once its solid is gone.
         tileSolid: ({ tile }) => tileSolidInModel(tile),
+        // ⛓ RULES obstacle-events — THE DOOR'S OWN POCKET. A door the analyzer binds only through
+        // material it cannot price (a building's sprite rect) is asked here what the model says: the
+        // box's flood from the door (from beside it when the tile has no free pixel, as `modelReach`),
+        // never entering gated material. When that pocket reaches no component (`inComponent`) and
+        // every gated cell on its border is SOLID in the model, the door is used only once one of
+        // those solids is gone: the answer is their conditions, one entry per border cell. Water is
+        // not solid, so a pocket left through water answers null (nothing is necessary).
+        // L0's door to L1 stands in the house's doorway with breakablerock@80,112 as its only way out.
+        sealedPocket: ({ tile, enterable, inComponent }) => {
+            const [tx, ty] = tile;
+            let pocket = flood([tile], enterable);
+            if (pocket.length === 0) {
+                pocket = flood([[tx, ty - 1], [tx - 1, ty], [tx + 1, ty], [tx, ty + 1]]
+                    .filter(([x, y]) => enterable(x, y)), enterable);
+            }
+            if (pocket.some((t) => inComponent(t))) return null;
+            const inPocket = new Set(pocket.map(([x, y]) => `${x},${y}`));
+            const border = new Map();
+            for (const [x, y] of [tile, ...pocket]) {
+                for (const n of [[x, y - 1], [x - 1, y], [x + 1, y], [x, y + 1]]) {
+                    const k = `${n[0]},${n[1]}`;
+                    if (inPocket.has(k) || border.has(k)) continue;
+                    const gx = n[0] - ox;
+                    const gy = n[1] - oy;
+                    if (gx < 0 || gy < 0 || gx >= grid.width || gy >= grid.height) continue;
+                    const c = grid.cells[gy * grid.width + gx];
+                    if ((c?.conditions?.length ?? 0) === 0) continue;
+                    if (!tileSolidInModel(n)) return null;
+                    border.set(k, { tile: n, conditions: c.conditions });
+                }
+            }
+            return border.size === 0 ? null : [...border.values()];
+        },
     };
 }
 

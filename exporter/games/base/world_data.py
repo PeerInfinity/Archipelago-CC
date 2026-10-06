@@ -681,6 +681,20 @@ class WorldDataMixin:
         """
         attributes = {}
 
+        # A world_generator world names the location keys its source rules.json carried
+        # (`_worldgen_extra_attributes`, RULES obstacle-events): those round-trip VERBATIM,
+        # structured values included — auto-discovery below keeps only scalars, which
+        # silently dropped e.g. an obstacle event's `obstacle` / `action` blocks.
+        for attr_name in getattr(location, '_worldgen_extra_attributes', ()) or ():
+            value = getattr(location, attr_name, None)
+            if value is None:
+                continue
+            try:
+                json.dumps(value)
+            except (TypeError, ValueError):
+                continue
+            attributes[attr_name] = value
+
         # Only do full auto-discovery if enabled
         if not self.AUTO_DISCOVER_LOCATION_ATTRIBUTES:
             return attributes
@@ -710,7 +724,7 @@ class WorldDataMixin:
         for attr_name in sorted(attrs_to_check):
             if attr_name.startswith('_'):
                 continue
-            if attr_name in skip_attrs:
+            if attr_name in skip_attrs or attr_name in attributes:
                 continue
 
             try:

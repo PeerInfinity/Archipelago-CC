@@ -72,7 +72,7 @@ const { R7_GOAL_LEDGER } = await imp('frontend/modules/seedlingDemo/r7Acceptance
 //   the atlas's regions, exits and connections are a FUNCTION of the rooms, and
 //   only the OVERLAY below is authored. The vanilla 116 and an edited level set
 //   now go through ONE `deriveAtlas`.
-const { deriveAtlas, regionIdFor, VICTORY_ITEM } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
+const { deriveAtlas, regionIdFor, outExitId, inExitId, LINK_TAGS, VICTORY_ITEM } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
 const { buildLevelWorld, ROLES, maskHitsBox } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
 const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fidelityDescent.js');
 const { playerBoxAt } = await imp('frontend/modules/seedlingDemo/playerPhysicsV2.js');
@@ -80,6 +80,10 @@ const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArr
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
 
 const { patchedMapDocument, SEEDLING_SET_PATCHES } = await imp('frontend/modules/seedlingDemo/seedlingSetPatches.js');
+const { arrivalSolidCensus } = await imp('frontend/modules/seedlingDemo/fidelityArrival.js');
+const { levelSourceFromAtlas } = await imp('frontend/modules/seedlingDemo/atlasSource.js');
+const { deriveObstacleEvents, parseSolidId } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
+const { apRegionName } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
 const { pitChainsFromCensus } = await import('./seedlingPitChains.js');
 
 /**
@@ -435,8 +439,10 @@ export function buildPlaythroughAtlas() {
     modelVerdicts.length = 0;
     crossingCharged.length = 0;
     sealedDoorsCharged.length = 0;
+    pocketDoorsCharged.length = 0;
     arrivalsUncharged.length = 0;
     exitComponents.clear();
+    regionAnalyses.clear();
     pitChains.length = 0;
     /**
      * ⛓⛓ THE ATLAS IS DERIVED; ONLY THE OVERLAY IS AUTHORED (plan §16.3, ⚖
@@ -459,7 +465,8 @@ export function buildPlaythroughAtlas() {
     for (const region of [...session.atlas.regions]) {
         const regionId = region.region_id;
         const level = levelOf(region.map_ref);
-        const analysis = analyzeRegion(region, gridFor(level), playthroughAnalyzerOptionsFor(level));
+        const levelOptions = playthroughAnalyzerOptionsFor(level);
+        const analysis = analyzeRegion(region, gridFor(level), levelOptions);
         const applied = applyRegionAnalysis(session.atlas, analysis, { stamp: false });
         for (const p of applied.problems) note(`${regionId}: ${p.message}`);
         for (const n of analysis.needs_authoring) {
@@ -480,7 +487,9 @@ export function buildPlaythroughAtlas() {
             if (b.model) note(`${regionId}: ${b.kind} "${b.id}" at [${b.tile}] bound to "${b.component.id}" by the physics model — ${b.reason}`);
         }
         exitComponents.set(regionId, componentTestsFor(level, analysis));
+        regionAnalyses.set(regionId, analysis);
         applyCrossingCostToBindings(session.atlas, regionId, analysis);
+        chargeSealedPockets(session.atlas, regionId, level, analysis, levelOptions);
         applyLavaTrapPulls(session.atlas, regionId, level, analysis);
         pruneUnreachableSubRegions(session.atlas, regionId);
         refuseUnboundMembers(session.atlas.regions.find((r) => r.region_id === regionId), unbound);
@@ -597,6 +606,60 @@ function chargeSealedDoor(region, regionId, b) {
     note(`${regionId}: exit "${b.id}" at [${b.tile}] sits INSIDE an item-gated solid (the physics model has no `
         + `place for the body on it) — CHARGED its own cell (${own.map((c) => SEM.conditionKey(c)).join(' + ')})`
         + (whole ? '' : '; the rest of its approach stays uncharged (permissive)'));
+}
+
+/**
+ * ⛓ RULES obstacle-events — **A DOOR WHOSE POCKET ONLY A SOLID OPENS COSTS THAT SOLID.**
+ *
+ * The same family as `chargeSealedDoor`, one step out: the door's own tile is free, but the analyzer
+ * binds it only THROUGH material it cannot price (a building's sprite rect), so `conditionSets` is
+ * empty and nothing was charged. The physics model is asked for the door's pocket
+ * (`seedlingModelOracles.sealedPocket`): when it reaches no component and every gated cell around it
+ * is a model SOLID, one of those solids must be gone first, so their conditions (Or over the cells)
+ * are necessary on every way in. L0's door to L1 stands in the house's doorway behind
+ * breakablerock@80,112 — the binding defect `rules-footprints` found ("binds through material, never
+ * charging the rock"). Departures only: an arrival is not charged (see `arrivalsUncharged`); one that
+ * lands inside a saved solid is the obstacle EVENTS' business.
+ */
+function chargeSealedPockets(atlas, regionId, level, analysis, options) {
+    if (typeof options.sealedPocket !== 'function') return;
+    const region = atlas.regions.find((r) => r.region_id === regionId);
+    const grid = gridFor(level);
+    const { indexOf } = analysis.componentsResult;
+    const ox = grid.origin?.x ?? 0;
+    const oy = grid.origin?.y ?? 0;
+    const cellAt = ([x, y]) => (x - ox < 0 || y - oy < 0 || x - ox >= grid.width || y - oy >= grid.height
+        ? null : (y - oy) * grid.width + (x - ox));
+    const enterable = (x, y) => {
+        const i = cellAt([x, y]);
+        return i !== null && ['open', 'wall', 'manual'].includes(grid.cells[i].kind);
+    };
+    const inComponent = (t) => {
+        const i = cellAt(t);
+        return i !== null && indexOf[i] >= 0;
+    };
+    for (const b of analysis.bindings) {
+        if (b.kind !== 'exit' || !b.manual || !b.id.startsWith('out_')) continue;
+        const border = options.sealedPocket({ tile: b.tile, enterable, inComponent });
+        if (!border) continue;
+        const ways = border.map((cell) => {
+            const parts = cell.conditions.map((c) => analyzerOptions.resolveCondition(c));
+            if (parts.some((p) => !p)) return null;
+            return parts.length === 1 ? parts[0] : { rule: 'And', children: parts };
+        });
+        const exit = (region.exits ?? []).find((e) => e.exit_id === b.id);
+        if (ways.some((w) => !w) || !exit) {
+            note(`${regionId}: exit "${b.id}" sits in a pocket only solids open, and they do NOT resolve to items — `
+                + 'left uncharged (permissive)');
+            continue;
+        }
+        const cost = ways.length === 1 ? ways[0] : { rule: 'Or', children: ways };
+        exit.access_rule = exit.access_rule === undefined ? cost : { rule: 'And', children: [exit.access_rule, cost] };
+        pocketDoorsCharged.push(`${regionId}/${b.id}`);
+        note(`${regionId}: exit "${b.id}" at [${b.tile}] is bound through material the transcription cannot price, `
+            + `and the physics model's pocket around it opens only through ${border.map((c) => `[${c.tile}]`).join(', ')} `
+            + `— CHARGED ${border.map((c) => c.conditions.map((x) => SEM.conditionKey(x)).join(' + ')).join(' OR ')}`);
+    }
 }
 
 /**
@@ -809,6 +872,9 @@ export const crossingCharged = [];
 /** ⛓ RULES burnable-trees — every departure charged its OWN cell because it sits inside an item-gated solid. */
 export const sealedDoorsCharged = [];
 
+/** ⛓ RULES obstacle-events — every departure charged the solids that alone open its model pocket. */
+export const pocketDoorsCharged = [];
+
 /**
  * Every ARRIVAL exit standing on gated material whose approach cost was NOT
  * charged. The analyzer measures reach-TO, an arrival needs reach-FROM, and the
@@ -841,6 +907,101 @@ function componentTestsFor(level, analysis) {
         });
     }
     return byExit;
+}
+
+/** ⛓ RULES obstacle-events — each region's analysis from the last `buildPlaythroughAtlas` (its components). */
+const regionAnalyses = new Map();
+
+/**
+ * ⛓⛓ RULES obstacle-events — **THE SAVED OBSTACLES AS AP EVENTS** (`flashPanel/seedlingObstacleEvents.js`
+ * holds the schema and the why). The rows are the fidelity ARRIVAL census over THESE rooms (the delivered
+ * set), so the set is derived, never typed; this function answers the three atlas-side questions:
+ *   - DEPARTURE: the landing's door is `out_<door>` in its own level, and the atlas must connect it to
+ *     `in_L<from>_<door>` in the landing's level (else a refusal by name);
+ *   - PLACE, the obstacle's OPEN side: the sub-regions touching the solid's footprint, less the pocket the
+ *     back door (the landing level's door to `from`, the in-order way on) stands in — the side the player
+ *     breaks it from before ever using the edge. One answer or a refusal by name; an unsplit level has one;
+ *   - RULE: the solid's own crossing cost as this generator prices it (the transcription + the overlay), so
+ *     the event costs what crossing the obstacle costs; none (a rock-placement puzzle) = True_.
+ * Run after `buildPlaythroughAtlas(…)` on the document it returned.
+ */
+export function playthroughObstacleEvents(doc, { rows = arrivalSolidCensus(MAP, levelSourceFromAtlas(MAP)) } = {}) {
+    const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
+    const conns = new Set((doc.vanilla_layout?.connections ?? [])
+        .map((c) => `${c.from[0]}/${c.from[1]}>${c.to[0]}/${c.to[1]}`));
+    const entityOf = (level, { cls, x, y }) => {
+        const e = (level.entities ?? []).find((en) => en.type === cls && en.x === x && en.y === y);
+        if (!e) throw new Error(`obstacle events: L${level.level} has no ${cls}@${x},${y}`);
+        return e;
+    };
+    const rowOf = (entity, level) => {
+        const base = SEM.entitySemantics(entity);
+        return entityOverride(entity, base, level) ?? base;
+    };
+    return deriveObstacleEvents(rows, {
+        departure: (L) => {
+            const door = parseSolidId(L.door);
+            const dep = { region_id: regionIdFor(L.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) };
+            const arr = `${regionIdFor(L.level)}/${inExitId(L.from, { x: door.x, y: door.y })}`;
+            if (!conns.has(`${dep.region_id}/${dep.exit_id}>${arr}`)) {
+                throw new Error(`obstacle events: the atlas has no connection ${dep.region_id}/${dep.exit_id} -> ${arr}`);
+            }
+            return dep;
+        },
+        place: (row, solid) => {
+            const regionId = regionIdFor(row.flag.level);
+            const region = regionOf(regionId);
+            if (!region) throw new Error(`obstacle events: ${regionId} is not in the atlas`);
+            const subs = region.subgraph?.sub_regions;
+            if (!subs) return { region_id: regionId, side: apRegionName(regionId), across: [] };
+            const level = levelOf(row.flag.level);
+            const grid = gridFor(level);
+            const analysis = regionAnalyses.get(regionId);
+            const { indexOf, components } = analysis.componentsResult;
+            const ox = grid.origin?.x ?? 0;
+            const oy = grid.origin?.y ?? 0;
+            const componentAt = ([x, y]) => {
+                const gx = x - ox;
+                const gy = y - oy;
+                if (gx < 0 || gy < 0 || gx >= grid.width || gy >= grid.height) return null;
+                const i = indexOf[gy * grid.width + gx];
+                return i >= 0 && subs.includes(components[i].id) ? components[i].id : null;
+            };
+            const entity = entityOf(level, solid);
+            const tiles = SEM.entitySealedTiles(entity, rowOf(entity, level));
+            const own = new Set(tiles.map(([x, y]) => `${x},${y}`));
+            const touching = new Set();
+            for (const [x, y] of tiles) {
+                for (const n of [[x, y - 1], [x - 1, y], [x + 1, y], [x, y + 1]]) {
+                    if (own.has(`${n[0]},${n[1]}`)) continue;
+                    const c = componentAt(n);
+                    if (c) touching.add(c);
+                }
+            }
+            const backDoors = (level.entities ?? []).filter((e) => LINK_TAGS.includes(e.type)
+                && Number(e.attrs?.to) === row.landing.from).map((e) => outExitId(e));
+            const behind = new Set(analysis.bindings.filter((b) => b.kind === 'exit' && backDoors.includes(b.id))
+                .map((b) => b.component?.id).filter(Boolean));
+            const open = [...touching].filter((c) => !behind.has(c));
+            const side = open.length > 0 ? open : [...touching];
+            if (side.length !== 1) {
+                throw new Error(`obstacle events: ${row.solid} in ${regionId} has ${side.length} open side(s) `
+                    + `[${side.join(', ')}] (touching [${[...touching].join(', ')}], back door pocket [${[...behind].join(', ')}])`);
+            }
+            return {
+                region_id: regionId, sub_region: side[0], side: apRegionName(regionId, side[0]),
+                across: [...touching].filter((c) => c !== side[0]).sort().map((c) => apRegionName(regionId, c)),
+            };
+        },
+        rule: (row, solid) => {
+            const level = levelOf(row.flag.level);
+            const r = rowOf(entityOf(level, solid), level);
+            if (r?.kind !== 'gated' || r.condition == null) return null;
+            const rule = analyzerOptions.resolveCondition(r.condition);
+            if (!rule) throw new Error(`obstacle events: ${row.solid}'s condition does not resolve to items`);
+            return rule;
+        },
+    });
 }
 
 /** Every exit whose arrival spawn is NOT its entrance tile, and why — derived, printed, never typed. */
@@ -936,6 +1097,7 @@ function main() {
 
     movedArrivalSpawns.length = 0;
     setPlaythroughLandingAtlas(doc);
+    const obstacle = playthroughObstacleEvents(doc);
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
         gameName: GAME_NAME,
@@ -951,6 +1113,9 @@ function main() {
         // ⛓ RETURN TO MENU (⚖ the user, 2026-10-05): the Menu panel's Restart warps to the start, so returning to
         // the menu is always possible — a per-player flag, never an edge. Read off the substrate's declaration.
         returnToMenu: Boolean(SEEDLING_ENTRY.restartWarp),
+        // ⛓ RULES obstacle-events: the saved obstacles' events and the landing edges they gate.
+        events: obstacle.events,
+        exitGates: obstacle.exitGates,
     });
     const rulesText = stringifyRulesJson(rules);
 
@@ -986,5 +1151,10 @@ function main() {
         + `${report.locations ?? s.locations} locations, ${report.unwired_exits?.length ?? 0} unwired exit(s)`);
     console.log(`${movedArrivalSpawns.length} departure-door spawn(s) moved off the door tile (no game link lands there, or the model cannot stand there)`
         + `${quiet ? '' : movedArrivalSpawns.map((m) => `\n  ${m}`).join('')}`);
+    console.log(`${obstacle.events.length} obstacle event(s), ${obstacle.exitGates.length} landing edge(s) gated`
+        + `${quiet ? '' : obstacle.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side}`).join('')}`
+        + `${obstacle.skipped.length ? `; ${obstacle.skipped.length} skipped: ${obstacle.skipped.join('; ')}` : ''}`);
+    console.log(`${pocketDoorsCharged.length} departure(s) charged the solids that alone open their pocket`
+        + `${quiet ? '' : pocketDoorsCharged.map((m) => `\n  ${m}`).join('')}`);
     console.log(`${notes.length} analysis note(s)${quiet ? ' (suppressed; drop --quiet to read them)' : ''}`);
 }

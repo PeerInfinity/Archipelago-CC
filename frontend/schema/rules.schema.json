@@ -831,9 +831,50 @@
         "pinned": {
           "type": "boolean",
           "description": "Authored always-place intent (procgen's, e.g. the bounce start-stack arrow, the jta round trip's Victory): world_generator places this location's item via place_locked_item on EVERY seed, even in multiworld fill, and the pin survives an export → re-derive (it is a Location attribute the exporter writes back). Producer: procgenPipelineEngine.js compileRegionGraph's `pinnedItems` (buildRulesJson's `pinnedCanonicalItems`). Replaces procgen's former use of `locked` for this (topdown-locked-items R1, 2026-10-01)."
+        },
+        "event_kind": {
+          "type": "string",
+          "enum": ["game_state"],
+          "description": "RULES obstacle-events: what an EVENT location (id null, event true) stands for. Absent = a logic event, which the frontend state manager auto-collects on reach (Archipelago's own sweep does the same). 'game_state' = state the GAME saves (a saved obstacle's persistence flag): the state manager NEVER auto-collects it (stateManager/core/eventKinds.js, fail-closed: an unknown kind is not auto-collected either); the runtime collects it on the game's own flag. Producer: scripts/procgen/make-seedling-playthrough-rules.mjs (flashPanel/seedlingObstacleEvents.js)."
+        },
+        "event_id": {
+          "type": "string",
+          "pattern": "^flag:L[0-9]+:[0-9]+$",
+          "description": "RULES obstacle-events: the stable id a runtime collector keys on, `flag:L<level>:<tag>` (the saved flag)."
+        },
+        "obstacle": {
+          "type": "object",
+          "description": "RULES obstacle-events: the solid entity the flag removes.",
+          "properties": {
+            "level": { "type": "integer" },
+            "tag": { "type": "integer" },
+            "class": { "type": "string" },
+            "x": { "type": "integer" },
+            "y": { "type": "integer" }
+          },
+          "required": ["level", "tag", "class", "x", "y"]
+        },
+        "action": {
+          "type": "object",
+          "description": "RULES obstacle-events: what clears the flag (`verb`, the fidelity census's FLAG_ACTIONS text) and the game inventory flag it needs (`item`, or null). The AP cost is the location's access_rule.",
+          "properties": {
+            "verb": { "type": ["string", "null"] },
+            "item": { "type": ["string", "null"] }
+          },
+          "required": ["verb", "item"]
+        },
+        "side": {
+          "type": "string",
+          "description": "RULES obstacle-events: the AP region the event sits in, on the obstacle's open side."
+        },
+        "across": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "RULES obstacle-events: the AP regions on the obstacle's FAR side from `side` (the other sub-regions its footprint touches; empty when none). A walk crossing between `side` and one of them at the event's own cost passes THROUGH the obstacle, which breaks it in the game (the survey's leg walk credits the event there)."
         }
       },
       "required": ["name", "id", "access_rule"],
+      "dependencies": { "event_kind": ["event", "event_id"] },
       "additionalProperties": true
     },
     "itemPlacement": {

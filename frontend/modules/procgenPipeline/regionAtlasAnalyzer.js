@@ -74,7 +74,8 @@
 //                    in a component binds; none = the old proximity
 //                    finding, then no component.
 //   tileSolid({ tile })  (RULES burnable-trees) asked only for an exit or
-//                    location tile on a GATED cell, or a SINK, with conditions:
+//                    location tile on a GATED cell, a SINK, or (RULES
+//                    obstacle-events) a MANUAL cell, with conditions:
 //                    true when the model has NO position on that tile for the
 //                    player's body, i.e. the door is INSIDE an item-gated solid
 //                    (two teleporters under a burnable tree; a pit under one,
@@ -791,6 +792,11 @@ function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
             const labelled = paretoMinimal(ways.filter((w) => !w.manual));
             const manualWays = ways.filter((w) => w.manual);
             const free = labelled.some((w) => w.mask === 0);
+            // ⛓ RULES obstacle-events — the conditions EVERY manual way charges. A way through material
+            // with no derivable rule still crosses the transcription's gated cells on its way, and what
+            // all of them share is necessary whatever the manual material turns out to be (L0's door to
+            // L1 sits inside the house mask and its only approach is the breakable rock under it).
+            const shared = manualWays.reduce((m, w) => m & w.mask, manualWays.length > 0 ? ~0 : 0);
             return {
                 component: components[index],
                 free,
@@ -800,6 +806,7 @@ function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
                     conditions: conditionOf.filter((_, bit) => (w.mask >> bit) & 1),
                 })),
                 manualReasons: labelled.length > 0 ? [] : [...new Set(manualWays.flatMap((w) => w.reasons))],
+                manualNecessary: labelled.length > 0 ? [] : conditionOf.filter((_, bit) => (shared >> bit) & 1),
             };
         })
         .sort((a, b) => (
@@ -864,7 +871,10 @@ function nearestComponent(grid, componentsResult, x, y) {
  *   - `exact`      the tile is walkable and IS in the component;
  *   - `reachable`  crossing material stands between them, and the conditions it
  *                  charges come back in `conditionSets` — a consumer that
- *                  ignores them is being PERMISSIVE and can count how often;
+ *                  ignores them is being PERMISSIVE and can count how often.
+ *                  When only MANUAL material reaches it, `conditionSets` is
+ *                  empty and `manualNecessary` (RULES obstacle-events) names
+ *                  the gated conditions every one of those ways charges;
  *   - neither      nothing can reach the tile. The proximity answer is kept as
  *                  a last resort (a lost binding seals a map, and a permissive
  *                  refusal beats an accurate wall), flagged as the finding it is.
@@ -898,6 +908,7 @@ export function componentForTile(grid, componentsResult, tile, options = {}) {
             manual: chosen.manual,
             conditionSets: chosen.conditionSets,
             manualReasons: chosen.manualReasons,
+            ...(chosen.manual && chosen.manualNecessary.length > 0 ? { manualNecessary: chosen.manualNecessary } : {}),
             reason: `tile is not walkable; assigned to the component that reaches it ${how}`
                 + ` (${reaching.length} candidate${reaching.length === 1 ? '' : 's'} at distance ${chosen.depth})`,
         };
@@ -1052,7 +1063,11 @@ function sealedInOf(grid, tile, options) {
     const y = tile[1] - (grid.origin?.y ?? 0);
     if (x < 0 || y < 0 || x >= grid.width || y >= grid.height) return {};
     const cell = grid.cells[y * grid.width + x];
-    if ((cell?.kind !== 'gated' && cell?.kind !== 'sink') || !(cell.conditions?.length > 0)) return {};
+    // ⛓ RULES obstacle-events — a `manual` cell counts too: an item-gated solid under material the
+    // transcription cannot price (L0's breakablerock@80,112 inside the house mask) keeps its own
+    // conditions, and the model, not the cell kind, says whether the body has a place there.
+    const kinds = ['gated', 'sink', 'manual'];
+    if (!kinds.includes(cell?.kind) || !(cell.conditions?.length > 0)) return {};
     if (options.tileSolid({ tile: [tile[0], tile[1]] }) !== true) return {};
     return { sealedIn: { conditions: cell.conditions } };
 }
