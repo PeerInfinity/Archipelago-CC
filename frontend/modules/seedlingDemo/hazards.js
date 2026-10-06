@@ -623,14 +623,16 @@ export function stepLavaChain(st, time) {
  *   3. The ctor plays `"right"` WHATEVER the start direction; the beam's side is
  *      `direction`, the anim is cosmetic. Firing is the second frame of each
  *      side anim: `(frame - 1) % 2 == 1`.
- *   4. `getLine` ends at `FP.width`/`FP.height` = 160, a SCREEN size used as a
- *      WORLD coordinate, and `getRect` takes min/abs, so a tower east of x 154
- *      firing right sweeps [160, x + 6] — BEHIND it.
+ *   4. `getLine` ends at `FP.width`/`FP.height`, which `Game.loadlevel` sets
+ *      to the LEVEL's size (`Game.as:2065-2066`, `FP.width = xml.width`) — not
+ *      the 160 px screen `Main` constructs. ⛔ Measured: a first cut that read
+ *      160 priced L103's right beam as [158, 160] and the game's beam knocked a
+ *      walk at x 200 (the `ladder2-l103-beam` recording, t112).
  * The fire test runs before the bob (`y += 0.3·sin(worldFrame(100, 2)…)`), and
  * the whole update is skipped under `Game.freezeObjects`.
  */
 export const BEAM_TOWER = Object.freeze({
-    force: 5, damage: 1, screen: 160, bobRadius: 0.3, bobPhases: 100, bobLoops: 2,
+    force: 5, damage: 1, bobRadius: 0.3, bobPhases: 100, bobLoops: 2,
     sides: Object.freeze(['right', 'up', 'left', 'down']),
     frames: Object.freeze({ right: [1, 2], up: [3, 4], left: [5, 6], down: [7, 8], sit: [0, 0] }),
     src: 'Puzzlements/BeamTower.as:26-49,51-104,141-197',
@@ -647,12 +649,21 @@ function beamAnims(animSpeed) {
     return out;
 }
 
-/** A tower at its census row (`cx`, `cy` = the entity point, attrs as strings). */
-export function createBeamTower(h) {
+/**
+ * A tower at its census row (`cx`, `cy` = the entity point, attrs as strings)
+ * in a level of `size` = `{width, height}` IN PIXELS — `FP.width`/`FP.height`
+ * while that level is loaded, where every beam ends.
+ */
+export function createBeamTower(h, size) {
+    if (!size || !Number.isFinite(size.width) || !Number.isFinite(size.height)) {
+        throw new Error('createBeamTower: pass the level size in pixels — the beam ends at '
+            + '`FP.width`/`FP.height`, which `Game.loadlevel` sets to the level\'s own size');
+    }
     const a = h.attrs ?? {};
     const animSpeed = beamAnimSpeed(a.speed ?? 1);
     const st = {
         cx: h.cx, y: h.cy, direction: Number(a.direction ?? 0), rate: Number(a.rate ?? 1),
+        width: size.width, height: size.height,
         animSpeed, anims: beamAnims(animSpeed),
         anim: null, index: 0, timer: 0, frame: 0, complete: false,
     };
@@ -664,15 +675,14 @@ export function createBeamTower(h) {
 export function beamRect(t, direction = t.direction) {
     const x = t.cx;
     const y = t.y;
-    const S = BEAM_TOWER.screen;
     const line = (n) => {
         const from = { x, y: y - 8 };
         let to;
         switch (direction) {
-            case 0: from.x += 6; from.y -= 11 - n; to = { x: S, y: from.y }; break;
+            case 0: from.x += 6; from.y -= 11 - n; to = { x: t.width, y: from.y }; break;
             case 1: from.x -= 2 - n; from.y -= 11; to = { x: from.x, y: 0 }; break;
             case 2: from.x -= 6; from.y -= 11 - n; to = { x: 0, y: from.y }; break;
-            case 3: from.x -= 2 - n; from.y -= 5; to = { x: from.x, y: S }; break;
+            case 3: from.x -= 2 - n; from.y -= 5; to = { x: from.x, y: t.height }; break;
             default: to = { ...from };
         }
         return [from, to];

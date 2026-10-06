@@ -101,6 +101,11 @@ export const LADDER2_ARMS = Object.freeze([
     { name: 'l2-beam-l103-west', kind: 'beamtower', level: 103,
         target: { tag: 'beamtower', x: 208, y: 248, cx: 216, cy: 264, attrs: { direction: '2', rate: '4', speed: '0.25' } },
         boot: { level: 103, x: 160, y: 240 } },
+    // ⛓ THE LEVEL'S EDGE: the right beam past x 160 — `FP.width` is the level's (320), not
+    // the screen's. A first cut ended it at 160 and the game knocked a witness at x 200.
+    { name: 'l2-beam-l103-east', kind: 'beamtower', level: 103,
+        target: { tag: 'beamtower', x: 144, y: 200, cx: 152, cy: 216, attrs: { direction: '0', rate: '2', speed: '0.5' } },
+        boot: { level: 103, x: 192, y: 191 } },
     { name: 'l2-beam-l103-mid', kind: 'beamtower', level: 103,
         target: { tag: 'beamtower', x: 144, y: 200, cx: 152, cy: 216, attrs: { direction: '0', rate: '2', speed: '0.5' } },
         boot: { level: 103, x: 100, y: 192 } },
@@ -125,7 +130,7 @@ export async function ladder2ArmTape(arm) {
  * and entity point), the class's update `f − V + K` (grenade, beam) and
  * `Game.time = T0 + f − 1 + (kind === 'lavachain' ? K : 0)`.
  */
-export async function predictFirstHit(arm, stream, K, { V = 0, T0 = null, solidAt = null } = {}) {
+export async function predictFirstHit(arm, stream, K, { V = 0, T0 = null, solidAt = null, size = null } = {}) {
     const H = await import(join(MODULE, 'hazards.js'));
     const G = await import(join(MODULE, 'placedGrenade.js'));
     const { playerBoxAt } = await import(join(MODULE, 'playerPhysicsV2.js'));
@@ -138,7 +143,7 @@ export async function predictFirstHit(arm, stream, K, { V = 0, T0 = null, solidA
     let tower = null;
     if (arm.kind === 'grenade') grenade = G.createPlacedGrenade(t.cx, t.cy);
     if (arm.kind === 'lavachain') chain = H.createLavaChainState();
-    if (arm.kind === 'beamtower') tower = H.createBeamTower(t);
+    if (arm.kind === 'beamtower') tower = H.createBeamTower(t, size);
     let u = 0;
     for (let f = 1; f < stream.length; f += 1) {
         const o = stream[f - 1];
@@ -198,18 +203,21 @@ async function main() {
         const V = (replay.transitions ?? []).filter((t) => t.to_level === arm.level).at(-1)?.t ?? 0;
         const T0 = createRunForStaging(solveStaging(stagingFromTape(tape)), levelSource).gameTime ?? null;
         const rest = model.at(-1);
-        const stand = model.slice((arm.inputs ?? []).reduce((n, [, k]) => n + k, 0));
-        const still = stand.every((o) => o.x === stand[0].x && o.y === stand[0].y && o.level === arm.level);
         const world = buildLevelWorld(levelSource(arm.level));
-        const clear = !world.collidesSolid(playerBoxAt(rest.x, rest.y));
         const solidAt = (b) => world.collidesSolid(b);
         const predictions = {};
-        for (const K of OFFSETS) predictions[K] = await predictFirstHit(arm, model, K, { V, T0, solidAt });
+        for (const K of OFFSETS) predictions[K] = await predictFirstHit(arm, model, K, { V, T0, solidAt, size: world.world });
+        // ⛓ The stand is asked up to the predicted hit: since LADDER2 D2 the model BILLS the
+        // grenade's blast (`stepPlacedGrenadesNow`), so a grenade arm's model moves there too.
+        const from = (arm.inputs ?? []).reduce((n, [, k]) => n + k, 0);
+        const stand = model.slice(from, predictions[0] ? predictions[0].f : model.length);
+        const still = stand.every((o) => o.x === stand[0].x && o.y === stand[0].y && o.level === arm.level);
+        const clear = !world.collidesSolid(playerBoxAt(stand[0].x, stand[0].y));
         console.log(`${arm.name}: model rests at (${rest.x},${rest.y}) ${still ? 'for the stand' : '⚠ but MOVES'}, `
             + `T0 ${T0}; first hit by K: `
             + OFFSETS.map((K) => `${K}→${predictions[K] ? `f${predictions[K].f}` : '—'}`).join(' '));
         check(`${arm.name}: the model stands still in L${arm.level} and the standing box is clear of solids`,
-            still && clear, `rests at (${rest.x},${rest.y})`);
+            still && clear, `stands at (${stand[0].x},${stand[0].y})`);
         if (arm.expect === 'none') {
             check(`${arm.name}: the model predicts NO hit at K = 0 (a negative arm)`, predictions[0] === null);
         } else {
@@ -285,7 +293,14 @@ async function main() {
     try {
         for (const { arm, tape, model, predictions, V, T0 } of prepared) {
             const game = await play(tape);
-            const first = game.ticks.findIndex((o, i) => model[i]
+            // The knock is the game's first move off the standing position. ⛓ Not the first
+            // divergence from the model: since LADDER2 D2 the model bills the grenade's blast,
+            // so on a grenade arm the two agree through the knock (`modelDivergence`).
+            const from = (arm.inputs ?? []).reduce((n, [, k]) => n + k, 0);
+            const ref = model[from];
+            const first = game.ticks.findIndex((o, i) => i > from
+                && (o.level !== ref.level || o.x !== ref.x || o.y !== ref.y));
+            const modelDivergence = game.ticks.findIndex((o, i) => model[i]
                 && (o.level !== model[i].level || o.x !== model[i].x || o.y !== model[i].y));
             const matches = OFFSETS.filter((K) => (arm.expect === 'none'
                 ? predictions[K] === null && first < 0 : predictions[K]?.f === first));
@@ -294,7 +309,7 @@ async function main() {
                 gameStream: game.ticks.map((o) => [o.t, o.level, o.x, o.y]),
                 arm: arm.name, kind: arm.kind, target: arm.target, boot: arm.boot, inputs: arm.inputs ?? [],
                 V, T0, stood: { x: model.at(-1).x, y: model.at(-1).y }, gameRows: game.ticks.length,
-                gameFirstMove: first, gameRowThen: game.ticks[first] ?? null, predictions, matches,
+                gameFirstMove: first, modelDivergence, gameRowThen: game.ticks[first] ?? null, predictions, matches,
                 status: game.status, error: game.status.error || '',
             });
             if (arm.expect === 'none') {
