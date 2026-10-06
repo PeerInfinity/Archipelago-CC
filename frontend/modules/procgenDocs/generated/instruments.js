@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 19,
+            "count": 20,
             "id": "census"
         },
         {
@@ -224,23 +224,17 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 353,
+        "blockStyle": 354,
         "browser": 117,
-        "cited": 169,
-        "files": 364,
+        "cited": 170,
+        "files": 365,
         "lineStyle": 11,
-        "withDocblock": 364,
-        "withFlags": 282
+        "withDocblock": 365,
+        "withFlags": 283
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
-    "findings": [
-        {
-            "name": "census-soft-locks.mjs",
-            "severity": "cited without a path; it lives elsewhere in the tree",
-            "what": "`census-soft-locks.mjs` is named in [docs/json/developer/procgen/substrate-registry.md] and there is no such file in `scripts/procgen/`. It IS in the tree, at [scripts/procgen/census-soft-locks.mjs] — so the citation is a bare file name whose directory the reader has to guess. ⛔ Reported, not fixed."
-        }
-    ],
+    "findings": [],
     "flagRule": "a flag is counted where the script READS ARGV for it. A `--x=` literal alone is not enough: `--enable-features=` and `--use-angle=` are the two commonest in this directory and both are Chrome launch arguments. What the file's own `Run:` block shows is published separately as `documentedFlags`.",
     "patterns": {
         "cite": "/(?<![\\w/*.-])(?:scripts\\/procgen\\/)?([a-z][a-zA-Z0-9-]*\\.mjs)\\b/g",
@@ -1592,6 +1586,58 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-skeleton-kinds — **THE FIRST MEASUREMENT OF THE CONSTRUCTIVE MODE AS BUILT.**",
             "path": "scripts/procgen/census-skeleton-kinds.mjs"
+        },
+        {
+            "argvHelpers": [
+                "argOf"
+            ],
+            "browser": false,
+            "category": "census",
+            "citedBy": [
+                "docs/json/developer/procgen/substrate-registry.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json",
+                "log",
+                "rules",
+                "strict"
+            ],
+            "file": "census-soft-locks.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "log"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "rules"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "strict"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "census-soft-locks — **THE RULE-AWARE STRAND CHECK.** For each sphere of AP's own sphere log, it lists the regions a player holding that sphere's cumulative inventory can reach from the start but cannot walk back from.",
+            "path": "scripts/procgen/census-soft-locks.mjs"
         },
         {
             "argvHelpers": [],
