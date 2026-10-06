@@ -16,7 +16,8 @@
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW {json}`, and `ALL CHECKS PASSED` / `N CHECK(S) FAILED`.
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build, or SKIP.
- * Takes the box lock.
+ * Takes the box lock. Headless LOGIC-ONLY (proved, `CHANNEL: headless logic-only`), so it runs in CI too
+ * (`.github/workflows/seedling-probe.yml`).
  *
  * Run: node scripts/procgen/probe-seedling-tentacle-mouth.mjs [--host=http://localhost:8000] [--ticks=240]
  *      [--wait-for-box=<sec>]
@@ -25,7 +26,8 @@ import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { headlessWebgpuArgs } from './headlessChromium.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
@@ -60,7 +62,7 @@ async function main() {
     const want = { level: manifest.level, ...spawnFromBoot({ x: manifest.x, y: manifest.y }) };
 
     takeBoxLockOrExit({ name: 'probe-seedling-tentacle-mouth.mjs', kind: 'browser' });
-    const browser = await chromium.launch({ args: headlessWebgpuArgs({ enableFeatures: ['WebAssemblyExperimentalJSPI'] }) });
+    const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
     let failed = 0;
     const check = (label, ok, detail = '') => {
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${label}${detail ? ` — ${detail}` : ''}`);
@@ -87,6 +89,8 @@ async function main() {
         for (let i = 0; i < 480 && !(await page.evaluate(() => !!window.__runtimeReady)); i += 1) await page.waitForTimeout(250);
         await page.click('#btn-start');
         for (let i = 0; i < 480 && !(await page.evaluate(() => !!(window.__swfBridge?.game?.botStatus))); i += 1) await page.waitForTimeout(250);
+        // ⛓ the logic-only channel, PROVED before anything is measured (`seedlingChannel.js`)
+        await assertLogicOnlyChannel(page);
         const run = async (tape) => {
             if (await bot('botLoadTape', JSON.stringify(tape)) !== 'ok') throw new Error(`botLoadTape ${tape.name}`);
             if (await bot('botStart') !== 'ok') throw new Error(`botStart ${tape.name}`);

@@ -1,0 +1,151 @@
+name: Seedling wasm probe (manual)
+
+# Runs one or more Seedling wasm probes (`scripts/procgen/probe-seedling-*.mjs`) headless, on the LOGIC-ONLY channel,
+# against the commit it was started on, one job per probe. The witnesses a slice owes ("the game says …") ran on
+# the local box until now, queued behind its box lock; on a runner nothing else holds it, and the run is pinned to
+# the pushed SHA (`MEASURED: … at <sha>`).
+#
+# Two ways in:
+#   - workflow_dispatch (once this file is on the default branch): `gh workflow run seedling-probe.yml
+#     --ref <branch> -f probes=probe-seedling-lethal-landings.mjs -f args='--only=50,54'`;
+#   - push to a ref named `seedling-probe/**`: runs the DEFAULT probe list at that SHA (a workflow_dispatch file
+#     must be on the default branch to be dispatched; a push trigger runs from the pushed commit's own file).
+#
+# Each probe prints PASS:/FAIL: rows and `ALL CHECKS PASSED` / `N CHECK(S) FAILED` and exits non-zero on a fail;
+# the job also requires its `CHANNEL: headless logic-only` line (a run that silently rasterised is not a
+# measurement — scripts/procgen/seedlingChannel.js).
+
+on:
+  workflow_dispatch:
+    inputs:
+      probes:
+        description: Comma-separated probe file names under scripts/procgen/ (probe-seedling-*.mjs).
+        type: string
+        default: probe-seedling-lethal-landings.mjs,probe-seedling-tentacle-mouth.mjs
+      args:
+        description: Extra arguments passed to EVERY probe (e.g. --only=50,54). --host is set by the job.
+        type: string
+        default: ''
+  push:
+    branches:
+      - 'seedling-probe/**'
+
+env:
+  DEFAULT_PROBES: probe-seedling-lethal-landings.mjs,probe-seedling-tentacle-mouth.mjs
+
+jobs:
+  plan:
+    name: Seedling probe — plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Resolve the probe list (names only; each must be a scripts/procgen/probe-seedling-*.mjs file)
+        id: plan
+        env:
+          PROBES: ${{ inputs.probes }}
+        run: |
+          set -euo pipefail
+          LIST="${PROBES:-$DEFAULT_PROBES}"
+          node -e '
+            const fs = require("fs");
+            const names = process.argv[1].split(",").map((s) => s.trim()).filter(Boolean);
+            const bad = names.filter((n) => !/^probe-seedling-[a-z0-9-]+\.mjs$/.test(n) || !fs.existsSync(`scripts/procgen/${n}`));
+            if (names.length === 0 || bad.length) { console.error(`refused: ${bad.join(", ") || "(empty list)"}`); process.exit(1); }
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `matrix=${JSON.stringify(names)}\n`);
+            console.log(names.join("\n"));
+          ' "$LIST"
+
+  probe:
+    name: ${{ matrix.probe }}
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        probe: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - name: Checkout repository (the wasm build is a submodule)
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Resolve the pinned Playwright version (the cache key)
+        id: pwver
+        run: |
+          V=$(node -p "require('./package-lock.json').packages['node_modules/playwright'].version")
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the Playwright browser
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ steps.pwver.outputs.version }}
+
+      - name: Install Chromium for Playwright
+        timeout-minutes: 12
+        run: node node_modules/playwright/cli.js install chromium
+
+      - name: Run ${{ matrix.probe }}
+        env:
+          PROBE: ${{ matrix.probe }}
+          ARGS: ${{ inputs.args }}
+        run: |
+          set -o pipefail
+          python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
+          echo $! > /tmp/httpd.pid
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
+            sleep 1
+          done
+          mkdir -p test-results/seedling-probe
+          L="test-results/seedling-probe/${PROBE%.mjs}.log"
+          S=$(date +%s)
+          set +e
+          # ARGS is word-split on purpose (several flags); it is never evaluated as shell.
+          # shellcheck disable=SC2086
+          node "scripts/procgen/$PROBE" --host=http://localhost:8000 $ARGS 2>&1 | tee "$L"
+          RC=$?
+          set -e
+          echo "MEASURED: $PROBE rc=$RC wall $(( $(date +%s) - S ))s nproc $(nproc) at ${GITHUB_SHA}" | tee -a "$L"
+          kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
+          if ! grep -aq '^SKIP' "$L" && ! grep -aq '^CHANNEL: headless logic-only' "$L"; then
+            echo "::error::$PROBE printed no 'CHANNEL: headless logic-only' line"
+            exit 1
+          fi
+          exit $RC
+
+      - name: Summary
+        if: always()
+        env:
+          PROBE: ${{ matrix.probe }}
+        run: |
+          L="test-results/seedling-probe/${PROBE%.mjs}.log"
+          {
+            echo "### $PROBE @ ${GITHUB_SHA}"
+            echo '```'
+            grep -aE '^(PASS|FAIL|SKIP|CHANNEL|MEASURED|ALL CHECKS|[0-9]+ CHECK)' "$L" 2>/dev/null | cut -c1-300 || echo "(no log)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the probe log
+        if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: ${{ matrix.probe }}-log
+          path: test-results/seedling-probe/
+          retention-days: 90

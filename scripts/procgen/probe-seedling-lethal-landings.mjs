@@ -31,7 +31,9 @@
  * Prints `PASS:`/`FAIL:` rows, `ROW {json}` measurement rows, and `ALL CHECKS PASSED` / `N CHECK(S) FAILED`.
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build
- * (`flashPanel/wasm`), or this SKIPs (exit 0). Takes the box lock.
+ * (`flashPanel/wasm`), or this SKIPs (exit 0). Takes the box lock. Headless LOGIC-ONLY (the channel is proved
+ * per page and printed as `CHANNEL: headless logic-only`), so it runs on a GPU-less CI runner too
+ * (`.github/workflows/seedling-probe.yml`).
  *
  * Run: node scripts/procgen/probe-seedling-lethal-landings.mjs [--host=http://localhost:8000]
  *      [--only=<level>,<level>] [--ticks=180] [--cross=on|off] [--wait-for-box=<sec>]
@@ -40,7 +42,8 @@ import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { headlessWebgpuArgs } from './headlessChromium.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
@@ -135,7 +138,7 @@ async function main() {
     console.log(`INFO: ${landings.length} lethal-terrain landing(s) in ${RULES_FILE}; page ${page0}`);
 
     takeBoxLockOrExit({ name: 'probe-seedling-lethal-landings.mjs', kind: 'browser' });
-    const browser = await chromium.launch({ args: headlessWebgpuArgs({ enableFeatures: ['WebAssemblyExperimentalJSPI'] }) });
+    const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
     let failed = 0;
     const check = (label, ok, detail = '') => {
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${label}${detail ? ` — ${detail}` : ''}`);
@@ -163,6 +166,9 @@ async function main() {
             for (let i = 0; i < 480 && !(await page.evaluate(() => !!window.__runtimeReady)); i += 1) await page.waitForTimeout(250);
             await page.click('#btn-start');
             for (let i = 0; i < 480 && !(await page.evaluate(() => !!(window.__swfBridge?.game?.botStatus))); i += 1) await page.waitForTimeout(250);
+            // ⛓ the logic-only channel, PROVED before anything is measured (`seedlingChannel.js`): headless, the
+            //   WebGPU device is lost and the game steps at full rate; a run that rasterises instead is refused.
+            await assertLogicOnlyChannel(page);
             const out = [];
             for (const tape of tapes) {
                 const loaded = await bot('botLoadTape', JSON.stringify(tape));
