@@ -1,0 +1,42 @@
+# census-seedling-enemies — ⚖ design ruling 19, and it asserts NOTHING
+
+room: 10x10, ONE route start (1,1) -> a 6x6 chamber (2,2)..(7,7) -> goal (8,8); the body stands at (4,4). Boot post-sword, budget maxTicksPerTarget=400.
+classes: every `levelWorld.ENTITY_CLASSES` row whose AS3 type is "Enemy", plus [crusher, spinningaxe, arrowtrap, lavachain] — **23** of them, read from the table.
+
+| class | AS3 | stepper? | palette can SPELL | danger kind (derived) | CHAMBER | ticks | CORRIDOR | ticks | strategies (corridor) | the corridor solve's own words |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `(control — empty chamber)` | - | - | - | - | **SOLVED** | 155 | - | - | collect | - |
+| `(control — empty corridor)` | - | - | - | - | **SOLVED** | 138 | - | - | collect | - |
+| `arrowtrap` | ArrowTrap | no | yes | arrow/arrowLane (dangerMap.arrowDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-arrowtrap@corridor) collect (128,128) stance: the combat ladder is  |
+| `bob` | Bob | yes | no | chaser (dangerMap.chaserDanger) | **SOLVED** | 155 | **SOLVED** | 141 | collect | - |
+| `bobsoldier` | BobSoldier | yes | no | enemy (dangerMap.staticEnemyDanger) | **REFUSED** | - | **REFUSED** | - | - | solverBot(enemy-census-bobsoldier@corridor) collect (128,128) stance: the combat ladder is |
+| `bosstotem` | BossTotem | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **SOLVED** | 138 | collect | - |
+| `bulb` | Bulb | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-bulb@corridor) collect (128,128) stance: the combat ladder is EXHAU |
+| `crusher` | Crusher | no | no | crusher (dangerMap.crusherDanger) | **REFUSED** | - | **REFUSED** | - | - | solverBot(enemy-census-crusher@corridor) collect (128,128) stance (ladder-routed: no corri |
+| `darktrap` | DarkTrap | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-darktrap@corridor) collect (128,128) stance: the combat ladder is E |
+| `drill` | Drill | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-drill@corridor) collect (128,128) stance: the combat ladder is EXHA |
+| `finalboss` | FinalBoss | no | no | enemy (dangerMap.staticEnemyDanger) | **THREW:Error** | - | **THREW:Error** | - | - | levelRun: level 900 holds a finalboss but no pod at (120, 56) — `FinalBoss.check()` walks  |
+| `flyer` | Flyer | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **SOLVED** | 138 | collect | - |
+| `grenade` | Grenade | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-grenade@corridor) collect (128,128) stance: the combat ladder is EX |
+| `icetrap` | IceTrap | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-icetrap@corridor) collect (128,128) stance: the combat ladder is EX |
+| `iceturret` | IceTurret | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-iceturret@corridor) collect (128,128) stance: the combat ladder is  |
+| `jellyfish` | Jellyfish | no | no | chaser (dangerMap.chaserDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-jellyfish@corridor) collect (128,128) stance: the combat ladder is  |
+| `lavachain` | LavaChain | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 148 | **REFUSED** | - | - | solverBot(enemy-census-lavachain@corridor): no corridor for goal collect-placement toward  |
+| `lavarunner` | LavaRunner | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-lavarunner@corridor) collect (128,128) stance: the combat ladder is |
+| `lavatrap` | LavaTrap | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 153 | **REFUSED** | - | - | solverBot(enemy-census-lavatrap@corridor): no corridor for goal collect-placement toward ( |
+| `puncher` | Puncher | yes | no | chaser (dangerMap.chaserDanger) | **SOLVED** | 166 | **SOLVED** | 151 | collect | - |
+| `sandtrap` | SandTrap | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-sandtrap@corridor) collect (128,128) stance: the combat ladder is E |
+| `spinner` | Spinner | yes | yes | spinner (dangerMap.spinnerDanger) | **THREW:Error** | - | **SOLVED** | 257 | kill, collect | - |
+| `spinningaxe` | SpinningAxe | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-spinningaxe@corridor): no corridor for goal collect-placement towar |
+| `turret` | Turret | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-turret@corridor) collect (128,128) stance: the combat ladder is EXH |
+| `wallflyer` | WallFlyer | yes | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 155 | **REFUSED** | - | - | solverBot(enemy-census-wallflyer@corridor) collect (128,128) stance: the combat ladder is  |
+| `spinner@nub` | Spinner | yes | yes | spinner (dangerMap.spinnerDanger) | **SOLVED** | 317 | - | - | kill, collect | - |
+
+## ROLL-UP
+
+CHAMBER arm:  {"SOLVED":22,"REFUSED":2,"THREW:Error":2}
+CORRIDOR arm: {"REFUSED":17,"SOLVED":5,"THREW:Error":1}
+
+⛓⛓ **16 of 23 CHAMBER rows solve at the CONTROL'S OWN TICK COUNT (155)** — the body was never on the route. A 6x6 chamber does not make a body an obstacle; the corridor arm is where the question is actually asked.
+
+⛔ Nothing here promotes a class. Design §5 marks several of these `?` or `R9+`; a row that SOLVED is reported as having solved THIS room at THIS budget, which is not the same claim as "the generator may place it".
