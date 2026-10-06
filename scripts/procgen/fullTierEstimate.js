@@ -65,8 +65,11 @@ export const FULL_TIER_CALIBRATION = Object.freeze({
  *     07:19:39Z, merge ended 07:20:38Z (59 s); per shard, job wall minus its
  *     checkpoint's replay secs = 31–54 s, median 38 s. ⛓ RE-CALIBRATED at the
  *     swim U15+R2 harvest (2026-10-02): the roster grew 150 → 195 tapes and H3's
- *     run 34734861224 (721 s; 17 / 36.5 / 66 s) drifted to 7.6 %. The single-job
- *     fit above (run 34729518557) is unchanged — it reproduces its own run.
+ *     run 34734861224 (721 s; 17 / 36.5 / 66 s) drifted to 7.6 %. ⛓ RE-CALIBRATED again at
+ *     the fidelity wave-7 harvest (2026-10-06): the roster grew 195 → 238 tapes and run
+ *     36976925360's row drifted to 5.0008 %; run 37494543740 (963 s): 27 s before the shards,
+ *     shard overhead median 57.5 s (38–80), merge 145 s. The single-job fit above (run
+ *     34729518557) is unchanged — it reproduces its own run.
  */
 export const CI_TIER_CALIBRATION = Object.freeze({
     single: Object.freeze({
@@ -85,19 +88,21 @@ export const CI_TIER_CALIBRATION = Object.freeze({
     sharded: Object.freeze({
         shards: 10,
         /** run creation → first shard job start (the plan job and the matrix queue). */
-        beforeShardsSec: 26,
-        /** per shard job: wall − its own replay secs (median of ten; range 31–54). */
-        shardOverheadSec: 38,
-        /** last shard end → merge end (the merge replays nothing: reuse 195/195). */
-        mergeSec: 59,
-        tapes: 195,
-        ticks: 142188,
-        wallSec: 795,
-        run: '36976925360',
-        measuredAt: '7a61d7b3d1',
-        why: 'RE-CALIBRATED at the swim U15+R2 harvest (the roster 150 → 195 tapes drifted the '
-            + 'H3 row to 7.6 %): seedling-full-tier.yml plan → 10 shard jobs → merge, tier=full, '
-            + 'on the harvest branch swim-harvest/u15-r2 — H3 was run 34734861224 (721 s, 150 tapes)',
+        beforeShardsSec: 27,
+        /** per shard job: wall − its own replay secs (median of ten; range 38–80). */
+        shardOverheadSec: 57.5,
+        /** last shard end → merge end. */
+        mergeSec: 145,
+        tapes: 238,
+        ticks: 152375,
+        wallSec: 963,
+        run: '37494543740',
+        measuredAt: '0f952e9a9e',
+        why: 'RE-CALIBRATED at the fidelity wave-7 harvest (the roster 195 → 238 tapes drifted the '
+            + 'row to 5.0008 %): seedling-full-tier.yml plan → 10 shard jobs → merge, tier=full, on '
+            + 'fidelity-harvest/wave7 — the previous calibration was run 36976925360 (795 s, 195 tapes); '
+            + 'components from the jobs API (created 16:17:35Z, shards 16:18:02Z, last shard end '
+            + '16:31:12Z, merge end 16:33:37Z) and each shard checkpoint\'s replay secs',
     }),
 });
 
