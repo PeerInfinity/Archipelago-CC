@@ -232,3 +232,81 @@ describe('jsRuntimeCore — ⚖ death = respawn at the arrival, and only death',
         expect(JSON.parse(rt.game.botStatus()).halted).toMatch(/unmodelled thing/);
     });
 });
+
+describe('⛓ KEY DELIVERY — the JS page keeps the session\'s KEYS and SLOT ORDER across every boot (§5.27)', () => {
+    const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
+    const keyCall = (i) => ({ invocation: 'method_call', path: [{ class: 'Main' }], method: 'hasKeySet', args: [i, true] });
+    const flag = (property) => ({ class: 'main', property, value: true });
+    const teleportTo = (level, x, y) => ({ invocation: 'new_instance', className: 'Game', args: [level, x, y] });
+    function vanillaAt(level, x, y, { log = () => {} } = {}) {
+        const rt = createJsRuntime({ log });
+        expect(rt.game.configure(BRIDGE_CONFIG)).toBe('ok');
+        rt.setVanilla(MAP);
+        rt.queueItems([{ class: 'game', property: 'menu', value: false }, teleportTo(level, x, y)]);
+        rt.tick();
+        return rt;
+    }
+    const keyMask = (rt) => JSON.parse(rt.game.readState()).keyMask;
+
+    it('`Main.hasKeySet(i, true)` is MODELLED: the run holds the key (a reboot in place), keyMask reports it — no "not modelled" note', () => {
+        const notes = [];
+        const rt = vanillaAt(86, 56, 56, { log: (m) => notes.push(m) });
+        expect([...rt.run.keys]).toEqual([]);
+        rt.queueItems([keyCall(0)]);
+        rt.tick();
+        expect([...rt.run.keys]).toEqual([0]);
+        expect(keyMask(rt)).toBe(1);
+        expect(notes.filter((m) => /not modelled/.test(m))).toEqual([]);
+        expect(notes.some((m) => /boot level 86/.test(m))).toBe(true);   // the log is the page's own (not vacuous)
+        rt.queueItems([keyCall(0)]);                    // a repeat changes nothing
+        rt.tick();
+        expect([...rt.run.keys]).toEqual([0]);
+    });
+
+    it('a host TELEPORT (an AP move, the Restart warp) keeps the keys', () => {
+        const rt = vanillaAt(86, 56, 56);
+        rt.queueItems([keyCall(0), keyCall(3)]);
+        rt.tick();
+        rt.queueItems([teleportTo(19, 16, 144)]);
+        rt.tick();
+        expect(rt.run.level).toBe(19);
+        expect([...rt.run.keys].sort()).toEqual([0, 3]);
+        rt.queueItems([teleportTo(0, 16, 128)]);       // the Restart warp: `new Game` at seedlingStartSpawn
+        rt.tick();
+        expect([...rt.run.keys].sort()).toEqual([0, 3]);
+        expect(keyMask(rt)).toBe(0b1001);
+    });
+
+    it('the SLOT ORDER is the acquisition order and survives an item-flag reboot, a teleport and a Restart: Fire, then the sword = [1, 0]', () => {
+        const rt = vanillaAt(86, 56, 56);
+        rt.queueItems([flag('hasFire')]);
+        rt.tick();
+        expect(rt.run.inventorySlots).toEqual([1]);
+        rt.queueItems([flag('hasSword')]);
+        rt.tick();
+        expect(rt.run.inventorySlots).toEqual([1, 0]);  // a fresh boot from the flags alone would be [0, 1]
+        rt.queueItems([teleportTo(19, 16, 144)]);
+        rt.tick();
+        expect(rt.run.inventorySlots).toEqual([1, 0]);
+        rt.queueItems([teleportTo(0, 16, 128)]);
+        rt.tick();
+        expect(rt.run.inventorySlots).toEqual([1, 0]);
+        rt.queueItems([keyCall(1)]);                     // a key reboot keeps it too
+        rt.tick();
+        expect(rt.run.inventorySlots).toEqual([1, 0]);
+    });
+
+    it('a slot whose item the flags no longer hold is dropped (the model refuses it); the rest keep their order', () => {
+        const rt = vanillaAt(86, 56, 56);
+        rt.queueItems([flag('hasFire')]);
+        rt.tick();
+        rt.queueItems([flag('hasSword')]);
+        rt.tick();
+        rt.queueItems([flag('hasWand')]);
+        rt.tick();
+        expect(rt.run.inventorySlots).toEqual([1, 0, 2]);
+        rt.queueItems([{ class: 'main', property: 'hasSword', value: false }]);
+        rt.tick();
+        expect(rt.run.inventorySlots).toEqual([1, 2]);
+    });
+});

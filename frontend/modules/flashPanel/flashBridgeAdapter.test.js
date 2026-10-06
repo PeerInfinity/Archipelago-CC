@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
+import { FlashBridgeAdapter, METHOD_RETRY_TICKS } from './flashBridgeAdapter.js';
 import { SeedlingCheckBinding } from './seedlingCheckBinding.js';
 import { SeedlingRegionBinding } from './seedlingRegionBinding.js';
 import { substrateRegistryEntry as seedlingEntry } from './flashSeedlingLibrary.js';
@@ -337,5 +337,72 @@ describe('⛓ MID-ROOM REPLAN — the delivery gate (`itemGate`): a driver decid
         const a = adapterWith({ 'Progressive Sword': 1 });
         a.setItemGate(() => { throw new Error('boom'); });
         expect(sword(a._buildItemWritesFromInventory())).toBe(true);
+    });
+});
+
+describe('⛓ KEY DELIVERY — a key is a METHOD-CALL item: `Main.hasKeySet(i, true)`, written only while the game lacks it', () => {
+    const adapterWith = (inventory) => {
+        const a = new FlashBridgeAdapter({
+            config: CONFIG, flashObjectId: `test-${Math.random()}`,
+            stateManager: { getLatestStateSnapshot: () => ({ inventory }) },
+            dispatcher: { publish: () => {} }, eventBus: { subscribe: () => () => {} }, log: () => {},
+        });
+        a.gameReady = true;
+        return a;
+    };
+    const calls = (queue) => queue.filter((w) => w.invocation === 'method_call');
+    /** The key items, derived from the shipped config: every `ap_items` row whose flash name has a method def. */
+    const KEY_ITEMS = CONFIG.ap_items.filter((i) => CONFIG.items.find((d) => d.flash_name === i.flash_name)?.method);
+
+    it('every key AP item maps to its own index, through the game\'s setter, declaring save.keys and the keyMask bit', () => {
+        expect(KEY_ITEMS.length).toBeGreaterThan(0);
+        const indices = new Set();
+        for (const item of KEY_ITEMS) {
+            const [w] = calls(adapterWith({})._itemWritesFor({ [item.ap_name]: 1 }, { quiet: true }));
+            expect(w, item.ap_name).toMatchObject({ path: [{ class: CONFIG.classes.main.name }], method: 'hasKeySet',
+                args: [w.index, true], save_array: 'keys', observed: { property: 'keyMask', bit: w.index } });
+            indices.add(w.index);
+        }
+        expect(indices.size).toBe(KEY_ITEMS.length);
+        // keyMask is a declared readout, so the adapter can SEE whether the game holds a key.
+        expect(CONFIG.state_properties.map((p) => p.property)).toContain('keyMask');
+    });
+
+    it('queued while the keyMask bit is clear — the bridge item is only path/method/args', () => {
+        const a = adapterWith({ 'Red Key': 1 });
+        a._onStateChanged('keyMask', 0);
+        expect(calls(a._buildQueue())).toEqual([{ invocation: 'method_call', path: [{ class: 'Main' }], method: 'hasKeySet', args: [0, true] }]);
+    });
+
+    it('⚖ SET_IF_MISSING: a key the game already holds is never written; a key the game holds that AP does not is never cleared', () => {
+        const a = adapterWith({ 'Red Key': 1 });
+        a._onStateChanged('keyMask', 0b1001);              // the game holds key 0 (AP) and key 3 (picked up in play)
+        expect(calls(a._buildQueue())).toEqual([]);
+        const none = adapterWith({});
+        none._onStateChanged('keyMask', 0b1000);
+        const q = none._buildQueue();
+        expect(calls(q)).toEqual([]);
+        expect(q.filter((w) => w.property === 'keyMask' || (w.args && w.args[1] === false))).toEqual([]);
+    });
+
+    it('one call per METHOD_RETRY_TICKS while the echo is outstanding; re-sent after; never again once the bit shows', () => {
+        const a = adapterWith({ 'Red Key': 1 });
+        a._onStateChanged('keyMask', 0);
+        expect(calls(a._buildQueue())).toHaveLength(1);
+        for (let i = 1; i < METHOD_RETRY_TICKS; i += 1) expect(calls(a._buildQueue())).toHaveLength(0);
+        expect(calls(a._buildQueue())).toHaveLength(1);    // the write did not land (a tape boot took it back): again
+        a._onStateChanged('keyMask', 1);
+        for (let i = 0; i < 2 * METHOD_RETRY_TICKS; i += 1) expect(calls(a._buildQueue())).toHaveLength(0);
+        a._onStateChanged('keyMask', 0);                   // a tape boot reset it: restored at once
+        expect(calls(a._buildQueue())).toHaveLength(1);
+    });
+
+    it('a held-back key (the delivery gate) writes nothing; the gate\'s question tells keys apart by their call', () => {
+        const a = adapterWith({ 'Red Key': 1, 'Green Key': 1 });
+        a._onStateChanged('keyMask', 0);
+        a.setItemGate(() => ({ 'Red Key': 1 }));
+        expect(calls(a._buildQueue()).map((w) => w.args[0])).toEqual([0]);
+        const ids = (inv) => calls(a._itemWritesFor(inv, { quiet: true })).map((w) => `${w.method}(${w.args})`);
+        expect(ids({ 'Red Key': 1 })).not.toEqual(ids({ 'Green Key': 1 }));
     });
 });

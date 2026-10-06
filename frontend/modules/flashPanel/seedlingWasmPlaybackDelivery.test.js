@@ -47,6 +47,12 @@ const DOOR = { kind: 'exit', level: HOUSE, tiles: [[3, 4]], name: 'exit_S' };
 const WRITES = { 'Progressive Sword': 'hasSword', 'Progressive Shield': 'hasShield', Fire: 'hasFire', 'Ghost Spear': 'hasSpear',
     'Ghost Sword': 'hasGhostSword' };
 const writesOf = (counts) => Object.entries(counts).filter(([n, c]) => c > 0 && WRITES[n]).map(([n]) => ({ property: WRITES[n], value: true }));
+/** ⛓ KEY DELIVERY — and the keys as the shipped config writes them: `Main.hasKeySet(i, true)`, declaring `save.keys`. */
+const KEY_INDEX = { 'Red Key': 0, 'Green Key': 1 };
+const keyWritesOf = (counts) => [...writesOf(counts), ...Object.entries(counts).filter(([n, c]) => c > 0 && n in KEY_INDEX)
+    .map(([n]) => ({ invocation: 'method_call', path: [{ class: 'Main' }], method: 'hasKeySet', args: [KEY_INDEX[n], true],
+        observed: { property: 'keyMask', bit: KEY_INDEX[n] }, save_array: 'keys', index: KEY_INDEX[n] }))];
+const boolKeys = (idx) => Array.from({ length: 5 }, (_, i) => (idx ?? []).includes(i));
 
 function manualTimers() {
     let q = [];
@@ -63,17 +69,18 @@ function manualTimers() {
 }
 
 /** A game over the recorded house arrival whose plan tapes drain `chunk` rows per read and stop while frozen. */
-function fakeGame({ chunk = 4, items = {}, slots = [], status = {} } = {}) {
+function fakeGame({ chunk = 4, items = {}, slots = [], status = {}, keys = [] } = {}) {
     const baseline = { ...A.seam.beginEntry, 'save.time': A.seam.beginEntry['save.time'] - 100, 'rng.gameplay': 1 };
     const g = {
         be: baseline, held: false, armed: false, finished: false, frozen: false, tape: null, rows: null, drained: 0, tick: 0,
         pos: null, seq: 0, calls: [], tapes: [],
-        items: { ...A.status.items, ...items }, slots: [...slots],
+        items: { ...A.status.items, ...items }, slots: [...slots], keys: boolKeys(keys),
         land() { g.be = A.seam.beginEntry; },
         botSeam() { return JSON.stringify({ beginEntry: g.be, latched: false }); },
         botStatus() {
             const keys = g.armed && g.tape && g.tick >= 1 ? heldAt(g.tape, g.tick - 1) : [];
             return JSON.stringify({ ...A.status, ...status, game_time: g.be['save.time'], items: { ...g.items }, inventory_slots: [...g.slots],
+                save: { ...A.status.save, keys: [...g.keys] },
                 ...(g.pos ? { level: g.pos.level, x: g.pos.x, y: g.pos.y } : {}),
                 input: { ...A.status.input, held: keys, t: g.tick - 1 },
                 held: g.held, armed: g.armed, finished: g.finished, frozen: g.frozen, tick: g.tick, error: '' });
@@ -86,6 +93,8 @@ function fakeGame({ chunk = 4, items = {}, slots = [], status = {} } = {}) {
         botStart() {
             g.calls.push('botStart');
             g.seq += g.tape.persistence.length;
+            // `Bot.as`'s R5 save-array block: every host tape boot RESETS the keys to the tape's declaration.
+            if (g.tape.save) g.keys = boolKeys(g.tape.save.keys);
             g.held = false;
             g.frozen = false;
             g.tick = 0;
@@ -118,17 +127,20 @@ function heldAt(tape, t) {
 }
 
 /** A fake panel adapter: the live AP inventory, the gate the engine installs, and the writes a push makes. */
-function fakeDelivery(game, live = {}) {
+function fakeDelivery(game, live = {}, { keys = false, writeKeys = true } = {}) {
+    const wo = keys ? keyWritesOf : writesOf;
     const d = {
         live: { ...live }, gate: null, gateCalls: 0, pushes: 0,
         setItemGate(fn) { d.gate = typeof fn === 'function' ? fn : null; },
-        writesOf,
+        writesOf: wo,
         inventory() { return { ...d.live }; },
         /** One adapter push: the gate's answer is what the game receives. */
         push() {
             d.pushes += 1;
             const inv = d.gate ? (d.gateCalls += 1, d.gate({ ...d.live })) : d.live;
-            for (const w of writesOf(inv)) game.items[w.property] = w.value;
+            for (const w of wo(inv)) {
+                if (w.method === 'hasKeySet') { if (writeKeys) game.keys[w.args[0]] = true; } else game.items[w.property] = w.value;
+            }
             // the frame's tail (`addItemsFromSave`): a slot item is APPENDED to the game's array
             game.slots = appendInventorySlots(game.slots, game.items).slots;
         },
@@ -137,10 +149,10 @@ function fakeDelivery(game, live = {}) {
     return d;
 }
 
-function setup({ game: gopts = {}, live = {}, decline = false, editPlan = null } = {}) {
+function setup({ game: gopts = {}, live = {}, decline = false, editPlan = null, keys = false, writeKeys = true } = {}) {
     const game = fakeGame(gopts);
     const timers = manualTimers();
-    const delivery = fakeDelivery(game, live);
+    const delivery = fakeDelivery(game, live, { keys, writeKeys });
     const inner = createInPlaceProduceService();
     const seen = [];
     const service = {
@@ -204,11 +216,11 @@ describe('⛓ MID-ROOM REPLAN — the delivery gate', () => {
         expect(e.engine.stats.history.map((h) => h.outcome)).toEqual(['interrupted', 'done']);
     });
 
-    it('a delivery the game cannot SEE (a key) is admitted at once: no freeze', () => {
+    it('a delivery the game cannot SEE (a Seal: no write) is admitted at once: no freeze', () => {
         const e = setup();
         e.engine.walkTo(CHEST);
         e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 12);
-        e.delivery.receive('Red Key');
+        e.delivery.receive('Seal');
         e.delivery.push();
         expect(e.engine.status().gate).toEqual({ pending: false, deferred: null });
         e.timers.run();
@@ -424,5 +436,77 @@ describe('⛓ WASM EQUIPS — the engine ships the solver\'s slot selections', (
         expect(e.failures).toHaveLength(1);
         expect(JSON.stringify(e.failures[0])).toMatch(/the plan tape was not shipped — the plan selects slot 2 at tick 5, and the game will hold 2 slot\(s\) \[1,0\] — an UNOWNED slot/);
         expect(e.game.tapes.filter((t) => t.tick_count > 0)).toEqual([]);
+    });
+});
+
+describe('⛓ KEY DELIVERY — an AP key reaches the game: the gate, the staging, the tape declaration', () => {
+    it('a KEY while a plan PLAYS: held back, the room FROZEN, `save.keys` lands, re-staged at the arrival, replanned', () => {
+        const e = setup({ keys: true });
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 24);
+        e.delivery.receive('Red Key');
+        e.delivery.push();
+        expect(e.game.keys[0]).toBe(false);                                 // a key is a delivery the game SEES now
+        expect(e.engine.status().gate).toEqual({ pending: true, deferred: null });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.game.keys[0]).toBe(true);
+        const row = e.engine.stats.deliveries[0];
+        expect(row).toMatchObject({ phase: 'playing', outcome: 'replanned', items: [], save: [{ array: 'keys', index: 0 }] });
+        expect(e.seen[1].request.staging.save.keys).toEqual([0]);           // the continuation's arrival holds it
+        expect(e.game.tapes.at(-1).save.keys).toEqual([0]);                 // and the shipped tape declares it
+        expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, true]]);
+    });
+
+    it('a KEY into the HELD room lands at once; the next goal is solved from a staging that holds it', () => {
+        const e = setup({ keys: true });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.engine.status().phase).toBe('held');
+        e.delivery.receive('Green Key');
+        e.delivery.push();
+        e.timers.run(200);
+        expect(e.game.keys[1]).toBe(true);
+        expect(e.engine.stats.deliveries[0]).toMatchObject({ phase: 'held', outcome: 'staged', save: [{ array: 'keys', index: 1 }] });
+        e.engine.walkTo(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.seen.at(-1).request.staging.save.keys).toEqual([1]);
+    });
+
+    it('an AP key the GAME does not hold at the arrival (the adapter has not written it): the arrival staging carries it, its tape hands it over', () => {
+        const e = setup({ keys: true, writeKeys: false, live: { 'Red Key': 1 } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.seen[0].request.staging.save.keys).toEqual([0]);
+        expect(e.game.tapes[0].save.keys).toEqual([0]);                     // the freeze tape: the host channel
+        expect(e.game.keys[0]).toBe(true);
+        expect(e.dones).toHaveLength(1);
+    });
+
+    it('⚖ MERGE: a key the GAME holds and AP does not (picked up in play) is kept on every tape; the AP key joins it', () => {
+        const e = setup({ keys: true, writeKeys: false, game: { keys: [3] }, live: { 'Red Key': 1 } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.seen[0].request.staging.save.keys).toEqual([0, 3]);
+        expect(e.game.tapes.map((t) => t.save.keys)).toEqual(e.game.tapes.map(() => [0, 3]));
+        expect(e.game.keys).toEqual(boolKeys([0, 3]));
+    });
+
+    it('a CONTINUATION re-declares the AP key: lost from the game between plans (a reset), the continuation tape restores it', () => {
+        const e = setup({ keys: true, writeKeys: false, live: { 'Red Key': 1 } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.engine.status().phase).toBe('held');
+        e.game.keys = boolKeys([]);                                          // the game lost it (nothing re-wrote it yet)
+        e.engine.walkTo(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, false], [DOOR.name, true]]);
+        expect(e.seen.at(-1).request.staging.save.keys).toEqual([0]);
+        expect(e.game.tapes.at(-1).save.keys).toEqual([0]);
+        expect(e.game.keys[0]).toBe(true);
     });
 });

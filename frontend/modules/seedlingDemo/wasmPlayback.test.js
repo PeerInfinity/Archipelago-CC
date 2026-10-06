@@ -433,3 +433,24 @@ describe('⛓ W8c — the new-game arm\'s cold start (seedling_playthrough): its
         expect(TUTORIAL_DISMISS_KEY).toBe('right'); // `Help.as:23` keys[2] = RIGHT, UP, LEFT, DOWN
     });
 });
+
+describe('⛓ KEY DELIVERY — a tape declares the game\'s keys ∪ the AP-granted ones (the host channel), never fewer', () => {
+    const bools = (idx) => Array.from({ length: 5 }, (_, i) => idx.includes(i));
+    const withKeys = (a, idx) => ({ ...structuredClone(a.status), save: { ...a.status.save, keys: bools(idx) } });
+
+    it('liveDeclarations: the game holds key 3 (picked up in play), AP granted key 0 → the tape declares [0, 3]', () => {
+        const st = withKeys(A, [3]);
+        expect(liveDeclarations(stage(A), st, { granted: { keys: [0] } }).save.keys).toEqual([0, 3]);
+        expect(liveDeclarations(stage(A), st).save.keys).toEqual([3]);          // nothing granted: exactly the game's, as before
+        expect(liveDeclarations(stage(A), st, { granted: { keys: [3] } }).save.keys).toEqual([3]);
+    });
+
+    it('exactDeclarationRefusal: the union passes WITH the grant, is refused without it, and dropping the game\'s own key is refused either way', () => {
+        const st = withKeys(A, [3]);
+        const tape = (keys) => ({ ...shippedTape({ staging: stage(A), keys: [], hold: true }), save: { ...stage(A).save, keys } });
+        expect(exactDeclarationRefusal(tape([0, 3]), st, { granted: { keys: [0] } })).toBeNull();
+        expect(exactDeclarationRefusal(tape([0, 3]), st)).toMatch(/save\.keys \[0,3\] is not the game's \[3\]/);
+        expect(exactDeclarationRefusal(tape([0]), st, { granted: { keys: [0] } })).toMatch(/save\.keys \[0\] is not the game's \[0,3\]/);
+        expect(exactDeclarationRefusal(tape([3]), st, { granted: { keys: [] } })).toBeNull();
+    });
+});

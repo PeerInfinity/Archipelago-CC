@@ -12,7 +12,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    DELIVERY_CLAUSES, deliveryRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites, slotItemAt, slotsAfterDelivery, stageItems,
+    DELIVERY_CLAUSES, deliveredSaveArrays, deliveryRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites, liveSaveArrays, mergeSaveArrays,
+    SAVE_ARRAY_MERGE, saveArraysOfWrites, saveDelta, slotItemAt, slotsAfterDelivery, stageItems, stageSaveArrays, UNION_SAVE_ARRAYS,
 } from './wasmDelivery.js';
 import { stagingFromWasmArrival } from './wasmArrival.js';
 import { createJsRuntime } from './jsRuntimeCore.js';
@@ -148,5 +149,57 @@ describe('wasmDelivery — deliveryRefusal, clause by clause', () => {
         const r = deliveryRefusal({ staging, shipped: plan.solution, items: dark, status: st, levelSource: SRC });
         expect(r).toMatchObject({ clause: 'prefix' });
         expect(Number(r.why.match(/tick (\d+)/)[1])).toBeGreaterThan(slash);
+    });
+});
+
+describe('⛓ KEY DELIVERY — the save-array channel (`save.keys`) and its merge rule', () => {
+    const keyWrite = (i) => ({ invocation: 'method_call', path: [{ class: 'Main' }], method: 'hasKeySet', args: [i, true],
+        observed: { property: 'keyMask', bit: i }, save_array: 'keys', index: i });
+    const bools = (idx) => Array.from({ length: 5 }, (_, i) => idx.includes(i));
+
+    it('⚖ the rule is named: UNION, never an overwrite, over the index sets only', () => {
+        expect(SAVE_ARRAY_MERGE).toBe('union');
+        expect(UNION_SAVE_ARRAYS).toEqual(['keys', 'totem_parts']);
+        expect(() => saveArraysOfWrites([{ save_array: 'seal_parts', index: 0 }])).toThrow(/positional/);
+    });
+
+    it('the writes declare what they reach; property writes declare nothing', () => {
+        expect(saveArraysOfWrites([keyWrite(3), { property: 'hasSword', value: true }, keyWrite(0)])).toEqual({ keys: [0, 3] });
+        expect(saveArraysOfWrites([{ property: 'hasSword', value: true }])).toEqual({});
+        expect(liveSaveArrays({ save: { keys: bools([1, 4]), totem_parts: bools([]) } })).toEqual({ keys: [1, 4], totem_parts: [] });
+    });
+
+    it('granted → staged; a key the GAME holds (picked up in play, AP does not hold it) is KEPT', () => {
+        const s = { ...houseStaging(), save: { ...houseStaging().save, keys: [3] } };
+        expect(stageSaveArrays(s, { keys: [0] }).save.keys).toEqual([0, 3]);
+        expect(stageSaveArrays(s, {}).save.keys).toEqual([3]);
+        expect(stageSaveArrays(s, { keys: [3] }).save.keys).toEqual([3]);
+        expect(stageItems(s, HOUSE.status.items, { save: { keys: [1] } }).save.keys).toEqual([1, 3]);
+        expect(mergeSaveArrays({ keys: [3] }, { keys: [0] }, { keys: [3, 2] })).toEqual({ keys: [0, 2, 3] });
+        // the model reads it
+        expect([...createRunForStaging(stageSaveArrays(s, { keys: [0] }), SRC, { scratchPersistence: true }).keys]).toEqual([0, 3]);
+    });
+
+    it('deliveredSaveArrays: only what is new to BOTH the staging and the game (a key the run picked up itself is not re-staged)', () => {
+        const staging = { ...houseStaging(), save: { ...houseStaging().save, keys: [3] } };
+        expect(deliveredSaveArrays({ staging, status: { save: { keys: bools([1]) } }, save: { keys: [0, 1, 3] } })).toEqual({ keys: [0] });
+        expect(deliveredSaveArrays({ staging, status: { save: { keys: bools([0]) } }, save: { keys: [0, 3] } })).toEqual({});
+        expect(saveDelta({ keys: [3] }, { keys: [0, 3] })).toEqual([{ array: 'keys', index: 0 }]);
+    });
+
+    it('deliveryRefusal: a key into the house, or into L19 at its arrival, is taken (null) — and the re-staged model holds it', () => {
+        const st = status({}, { save: { keys: bools([]) } });
+        expect(deliveryRefusal({ staging: houseStaging(), shipped: [], items: st.items, save: { keys: [0] }, status: st, levelSource: SRC })).toBeNull();
+        // L19: the Boss Key 0 room, its lock `bosslock@48,32` the walk's sphere-2.1 refusal. (The model's digest does not
+        // carry a pickup's presence, so the standing BossKey is no `build` difference; the lock is the live witness's.)
+        const rt = createJsRuntime();
+        rt.setVanilla(MAP);
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [19, 16, 144] }]);
+        rt.tick();
+        const l19 = rt.session.staging;
+        const at = { items: { ...l19.seam.items }, save: { keys: bools([]) } };
+        expect(deliveryRefusal({ staging: l19, shipped: [], items: at.items, save: { keys: [0] }, status: at, levelSource: SRC })).toBeNull();
+        expect([...createRunForStaging(stageItems(l19, at.items, { save: { keys: [0] } }), SRC, { scratchPersistence: true }).keys]).toEqual([0]);
+        expect([...createRunForStaging(l19, SRC, { scratchPersistence: true }).keys]).toEqual([]);
     });
 });
