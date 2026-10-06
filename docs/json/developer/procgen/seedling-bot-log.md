@@ -14028,6 +14028,83 @@ everything in the game."* Wave 6's PROXIMITY slice. The report is
   sweep's "player is a solid" line was never exercised against the game; billing
   the contact exposed it on the first witness.
 
+### Seedling fidelity FRONTIER3 — the planner reads the pixel mask where it asks, and the walls get their names
+
+Planning-3's wave 6 (model coverage), on `main` `88a7e4daa4`. ⚖ The user,
+2026-10-05: *"The first priority is to expand the model to include everything
+in the game."* The JS arc's divergence sweep and the rules arc's route survey
+both listed `solid:*` and `pixelmask:*` obstacles with *"No strategy row exists
+for this obstacle"*. The report is
+`CC/docs/cloud-reports/seedling-fidelity-frontier3.md`.
+
+**D1 — most of the list was not missing a verb.** The frontier names the
+NEAREST entity on the reachable component's edge, so a refusal names whatever
+scenery stands closest, whatever actually cut the corridor. Measured per class:
+- `planttorch` (L62), `bonetorch` (L95), `cliffside1`/`cliffside0` (L87): the
+  16 px lattice had no node where the player fits. L62's pit-maze corridor is
+  two tiles wide with `planttorch@120,152` half a tile off the grid, so both
+  node centres (x 120, 136) hit it and the 8 px gaps either side (x 116, 140)
+  are clear; L87's pocket leaves by a 5 px column (x 50–54) beside
+  `cliffside1@48,32`.
+- `building6` (L62 → L64): the door's trigger centre (120,72) is inside the
+  mask; the player stands in a 13 px niche at y 74–81. It is the only trigger
+  in the map whose centre is in a mask.
+- Misattributed, not this slice's region: L113's `ruinedpillar`/`dungeonspire`
+  and L112's `cliffside2`/`planttorch` boot INSIDE `finaldoor`/`rocklock`
+  (ARRIVAL); L0/L89's `tree` rows start or end on water without the Conch;
+  L12's `cliffside0` boots inside `magicallock@32,864`; L66's `building8`
+  hides `bosslock@72,64` from the frontier flood; L63's `bonetorch2` pocket is
+  cut by a pit band.
+- Real gates: `finaldoor` (all 16 Seal parts and the Watcher's word),
+  `rocklock` on L112 (the Owl's death arm), `crusher` (L42's six-bait
+  pursuit, `r5Totem.L42_PART4`), `cover` (L38: its button is weighed only by
+  the fire-family block).
+
+**D2 — the planner asks where the mask lets the player stand.** Two changes,
+both reached only where the old answer was a refusal:
+- `exitAimFor`: a reach-exit whose trigger centre a pixelmask blocks walks at
+  the nearest clear point whose box overlaps the trigger. L62 → L64 from the
+  niche: **12 t**, the J2 walker's number.
+- `FINE_LATTICE` (8 px): when `identifyAndSelect` refuses (no frontier verb
+  applies), the walk is planned once more on the 8 px lattice; the AVOID rung
+  re-plans on the lattice the walk used. The walk row carries `lattice: 8`,
+  and `solveSegment`'s result gains the optional `fineLatticeWalks`.
+- ⛔ The retry is behind `FINE_LATTICE_ROSTER_WIDE = false` (the per-call grant
+  is `solveSegment`'s optional `fineLattice`). With it ON, one identity-block
+  row moves: the enemy census's generated `lavatrap@corridor` goes REFUSED →
+  SOLVED 153 t (`68466067…` → `d8c2f110…`). No tape, expectation or producer
+  `--check` moves. Flag OFF, the identity block is byte-identical
+  (`5bf10815…`).
+- Game witnesses (p4f, headless): `frontier3-l62-door-niche` (13 obs) and
+  `frontier3-l87-pocket` (188 obs, x 52.91 up the column), model = game, 0 px.
+
+**D3 — rows and named gates.** `solid:grasslock` and `solid:cover` → `hold`
+(both `Activators` responders); `solid:crusher` → `bait`, selected and not
+registered (the computed work order). `obstacleGateFor` names a rowless wall
+whose opener is not in the room: *"ITEM-GATE (finaldoor@112,0)"* and
+*"ENCOUNTER-GATE (rocklock@112,16)"*; `surveyFamily` files them. Scenery with
+no verb (`planttorch`, `bonetorch`, `dungeonspire`, `ruinedpillar`, `tree`,
+`rock`) stays rowless: a wall is not a work order.
+
+**Census (node bare, the 257 legs of the listed rooms):** 156 → **157** solved
+at the default (flag off: the L62 door) and → **173** with the fine-lattice
+flag on (+ L87 ×8, L95 ×8). No leg solved before and not after, and no solved
+leg's ticks moved, either way. Route survey: of the 8 target steps, L42 now reads
+the computed `bait`, L112 an ENCOUNTER gate, L113 an ITEM gate; L62's two read
+LADDER (`darktrap@112,208` in the one-tile corridor) with the flag on and the
+planttorch split without it.
+
+**Trap candidates**, for the catalogue to number:
+
+- the frontier names the NEAREST entity, not the cut: a refusal list ranked by
+  the named obstacle ranks scenery that was merely closest (L62's planttorch
+  was nine legs of a lattice gap and one door aim);
+- a per-pixel collider asked at tile centres is a tile collider: the mask was
+  exact since R2 and the planner still over-claimed, because the question was
+  asked at the wrong POINTS;
+- a door can be standable in a niche its centre is not: a goal point is a
+  claim about where the player stands, and a trigger's centre is not one.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
