@@ -11333,13 +11333,27 @@ export function deriveKillByChaser(run, body, contacts,
     // ── condition 1, and the cheap half of 3 and 4 ────────────────────
     const inLeash = [];
     const candidates = [];
+    /**
+     * ⛓ FIDELITY CHECKPOINTS (the JS arc's recalibration, measured): the scan's
+     * per-cell `corridorPlans` pairs were the longest ask-free stretch left —
+     * L12's sphere-2.2 leg (`level_12__r0c37 -> level_21`) ran 663 s between
+     * two `walk` asks inside this one derivation. Opted in, the `kill-chaser`
+     * site is asked once per scanned cell and once per scored candidate; a trip
+     * refuses the rung with the shape of the entry ask above (the ladder goes
+     * on). Opted out, nothing is asked and the scan is byte-identical.
+     */
+    let scanned = 0;
+    let scanTripped = false;
     const scanAround = (here) => {
         for (let dy = -STANCE_SCAN_CELLS; dy <= STANCE_SCAN_CELLS; dy += 1) {
             for (let dx = -STANCE_SCAN_CELLS; dx <= STANCE_SCAN_CELLS; dx += 1) {
+                if (scanTripped) return;
                 const c = nodeCentre(here.tx + dx, here.ty + dy, pitch);
                 const d = Math.hypot(c.x - targetCentre.x, c.y - targetCentre.y);
                 if (d > leash) continue;
                 inLeash.push(c);
+                if (fineDeadlineReached('kill-chaser')) { scanTripped = true; return; }
+                scanned += 1;
                 if (!corridorPlans(run.world, run.state, c, allowTeleporter, planOpts)) continue;
                 if (aimIsPlannable
                     && !corridorPlans(run.world, c, aim, allowTeleporter, planOpts)) continue;
@@ -11366,6 +11380,11 @@ export function deriveKillByChaser(run, body, contacts,
      */
     const aroundTarget = inLeash.length === 0;
     if (aroundTarget) scanAround(nodeAt(targetCentre.x, targetCentre.y, pitch));
+    if (scanTripped) {
+        return { stance: null, why: 'deadline — the caller\'s anytime deadline (`shouldStop`) was '
+            + `reached during this rung's stance scan, after ${scanned} cell(s), so the rest of the `
+            + 'scan was not run' };
+    }
     // Nearest-first only as a SCAN order — the pick below is by score, and
     // ties are broken by y then x so an emitted tape is not an artifact of
     // iteration order.
@@ -11383,6 +11402,11 @@ export function deriveKillByChaser(run, body, contacts,
     const scored = [];
     const rejected = [];
     for (const c of candidates) {
+        if (fineDeadlineReached('kill-chaser')) {
+            return { stance: null, why: 'deadline — the caller\'s anytime deadline (`shouldStop`) was '
+                + `reached while this rung scored its stance candidates, after ${scored.length} scored, `
+                + 'so the rest were not priced' };
+        }
         const wps = (c.x === run.state.x && c.y === run.state.y)
             ? [] : planWaypointsOrNull(run.world, run.state, c, allowTeleporter, planOpts);
         if (wps === null) continue;
@@ -12026,15 +12050,32 @@ export function solveSegment(o) {
             + `${typeof shouldStop} — the deadline is a callback the caller owns, never a `
             + 'number of milliseconds this module would read a clock for.');
     }
+    return withSolveDeadline({ shouldStop, fineCheckpoints: o.fineCheckpoints ?? false },
+        () => solveSegmentUnder(o));
+}
+
+/**
+ * ⛓ The deadline install `solveSegment` runs a hooked segment under, exported so
+ * a rung can be driven under a deadline one layer in (the kill-chaser scan's
+ * fine rows call `deriveKillByChaser` directly, as slice 12b′'s rows do). `fn`'s
+ * object result gains `deadline` when a site tripped; a `SolverRefusal` it
+ * throws gains the clause and `e.deadline`. Nested installs restore the outer.
+ */
+export function withSolveDeadline({ shouldStop, fineCheckpoints = false }, fn) {
+    if (typeof shouldStop !== 'function') {
+        fail(`solveSegment: shouldStop must be a function (site) => boolean or null, got `
+            + `${typeof shouldStop} — the deadline is a callback the caller owns, never a `
+            + 'number of milliseconds this module would read a clock for.');
+    }
     const outer = activeDeadline;
-    const fine = o.fineCheckpoints ?? false;
+    const fine = fineCheckpoints;
     if (typeof fine !== 'boolean') {
         fail(`solveSegment: fineCheckpoints must be a boolean, got ${typeof fine}`);
     }
     const deadline = { shouldStop, fine, first: null, tripped: new Set(), sites: {} };
     activeDeadline = deadline;
     try {
-        const out = solveSegmentUnder(o);
+        const out = fn();
         return deadline.first === null ? out : { ...out, deadline: deadlineReport(deadline) };
     } catch (e) {
         if (deadline.first !== null && e instanceof SolverRefusal) {

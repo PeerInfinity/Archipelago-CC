@@ -37,8 +37,10 @@ import { createLevelRun } from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
 import { ROLES } from './levelWorld.js';
 import {
-    DEADLINE_SITES, SolverRefusal, WALK_CHECK_TICKS, deriveBlockRoute, solveSegment,
+    DEADLINE_SITES, SolverRefusal, WALK_CHECK_TICKS, deriveBlockRoute, deriveKillByChaser, solveSegment,
+    withSolveDeadline,
 } from './solverBot.js';
+import { DEFAULT_TOLERANCE } from './botDriverV1.js';
 import { DEFAULT_CHECK_EVERY, chebyshevHeuristic, findEarliestArrival } from './mover.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -348,4 +350,51 @@ describe('fidelity CHECKPOINTS — the FINE sites are opt-in, inert until they t
         // opted out, the same counter is asked only by the loop (SF2's row above, unchanged)
         expect(tripAt(3, false).message).toMatch(/DETOUR search after 2 preview\(s\)/);
     }, 60000);
+});
+
+/**
+ * ⛓ FIDELITY CHECKPOINTS, the kill-chaser stance scan (asked for by the JS arc's
+ * recalibration: L12's sphere-2.2 leg ran 663 s ask-free inside ONE derivation's
+ * per-cell `corridorPlans`). Driven one layer in, as slice 12b′'s rows drive it:
+ * L14's boot, six real bobs, `bob@32,32` (its derived stance (40,56), 115 t).
+ */
+describe('the kill-chaser stance scan asks once per cell (opt-in)', () => {
+    const l14 = () => createLevelRun({
+        levelSource, boot: { level: 14, x: 160, y: 64 }, noclip: false, noHazards: [],
+        noDamage: false, grants: [], persistence: [], despawn: [], equips: [],
+        pins: ['dead_frames'], save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+    });
+    const derive = () => {
+        const run = l14();
+        const body = run.strikeBodies.find((b) => b.id === 'bob@32,32');
+        return deriveKillByChaser(run, { ...body }, new Set(),
+            { aim: null, allowTeleporter: null, tolerance: DEFAULT_TOLERANCE });
+    };
+    const counter = (tripAt = Infinity) => {
+        const asks = [];
+        return { asks, shouldStop: (site) => { asks.push(site); return asks.length >= tripAt; } };
+    };
+
+    it('untripped, opted out: one ask (the entry), the stance unchanged; opted in: one ask per cell and per candidate, the stance unchanged', () => {
+        const bare = derive();
+        expect(bare.stance).toEqual({ x: 40, y: 56 });
+        const coarse = counter();
+        const outCoarse = withSolveDeadline({ shouldStop: coarse.shouldStop }, derive);
+        expect(coarse.asks).toEqual(['kill-chaser']);
+        expect([outCoarse.stance, outCoarse.ticks]).toEqual([bare.stance, bare.ticks]);
+        const fine = counter();
+        const outFine = withSolveDeadline({ shouldStop: fine.shouldStop, fineCheckpoints: true }, derive);
+        expect(fine.asks.every((x) => x === 'kill-chaser')).toBe(true);
+        expect(fine.asks.length).toBeGreaterThan(2);
+        expect([outFine.stance, outFine.ticks]).toEqual([bare.stance, bare.ticks]);
+    });
+
+    it('a trip at the 2nd ask (the first scanned cell) refuses the rung by name, the scan cut', () => {
+        const c = counter(2);
+        const out = withSolveDeadline({ shouldStop: c.shouldStop, fineCheckpoints: true }, derive);
+        expect(out.stance).toBeNull();
+        expect(out.why).toMatch(/reached during this rung's stance scan, after 0 cell\(s\)/);
+        expect(out.deadline).toMatchObject({ first: 'kill-chaser' });
+    });
 });
