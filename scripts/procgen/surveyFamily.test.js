@@ -40,6 +40,14 @@ describe('familyOf — the text arm, unchanged by the extraction', () => {
         expect(familyOf('solverBot(survey-step-252) reach-exit (144,96)->L102 -> break: '
             + 'breakablerockghost@224,96 cannot be broken by this run — `BreakableRock.hit(_t)`'))
             .toMatch(/^ITEM-GATE — the 'break' verb is registered and breakablerockghost@224,96/);
+        // ⛓ Seedling fidelity FRONTIER3: a gate whose opener is not in the room.
+        expect(familyOf('solverBot(survey-step-235): no corridor for goal reach-exit toward (120,8) in '
+            + 'level 113. Obstacle: solid:finaldoor (finaldoor@112,0). ITEM-GATE (finaldoor@112,0): the '
+            + 'seal door opens only on approach for a player holding all 16 Seal parts'))
+            .toMatch(/^ITEM-GATE — finaldoor@112,0 has no strategy row and its opener is not in this room \(an item/);
+        expect(familyOf('Obstacle: solid:rocklock (rocklock@112,16). ENCOUNTER-GATE (rocklock@112,16): '
+            + 'no presser in level 112 publishes its group'))
+            .toMatch(/^ENCOUNTER-GATE — rocklock@112,16 .*an encounter the route must win/);
     });
 
     it('⛓ a refusal matching nothing is NAMED as unclassified, never swallowed', () => {

@@ -610,9 +610,9 @@
         "botDriverV2.js": 30,
         "dangerMap.js": 9,
         "director.js": 1,
-        "solverBot.js": 66
+        "solverBot.js": 67
       },
-      "sites": 106,
+      "sites": 107,
       "seen": "both",
       "via": [
         "const-alias",
@@ -994,9 +994,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 56,
-        "solverBot.js": 145
+        "solverBot.js": 147
       },
-      "sites": 201,
+      "sites": 203,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1296,6 +1296,24 @@
     },
     {
       "surface": "world",
+      "name": "finalBosses",
+      "module": "frontend/modules/seedlingDemo/levelWorld.js",
+      "line": 5687,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "direct"
+      ],
+      "dynamic": null,
+      "why": "The level's FinalBoss roster {id, tag, x, y, ex, ey, persistTag}, a Seedling entity family; read by `obstacleGateFor` to name L112's rocklock as an ENCOUNTER gate (FRONTIER3)."
+    },
+    {
+      "surface": "world",
       "name": "height",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
       "line": 5557,
@@ -1500,9 +1518,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 2,
-        "solverBot.js": 11
+        "solverBot.js": 12
       },
-      "sites": 13,
+      "sites": 14,
       "seen": "both",
       "via": [
         "const-alias",
