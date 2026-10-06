@@ -53,6 +53,8 @@ export const DRILL = Object.freeze({
     /** `Enemy.hitPlayer`: `p.hit(this, 3, …, damage)`, `damage = 1`. */
     contactForce: 3,
     damage: 1,
+    /** `Mobile.death`: `alpha -= 0.1` a tick once `destroy` is set. */
+    alphaFade: 0.1,
     /** `sprDrill.add(…)` — frames and rates; "sit" is rate 0 (never completes). */
     anims: Object.freeze({
         drill: Object.freeze({ frames: 5, rate: 20 }),
@@ -64,7 +66,7 @@ export const DRILL = Object.freeze({
 
 export function newDrill({ id, x, y }) {
     return { id, x: x + DRILL.dx, y: y + DRILL.dy, hits: 0, hitsTimer: 0, hitByDarkStuff: false,
-        anim: 'sit', sprite: null, destroy: false, removed: false, hops: 0 };
+        anim: 'sit', sprite: null, destroy: false, removed: false, alpha: 1, hops: 0 };
 }
 
 export function drillRect(d) {
@@ -96,6 +98,11 @@ export function stepDrill(s, ctx) {
     let contact = false;
     // ── Enemy.update (activeOffScreen is never set for this class) ──
     if (ctx.onScreen(drillRect(d))) {
+        // `Mobile.death()`, at the end of `mobileUpdate`: a destroyed body fades 0.1 a tick and is removed at <= 0
+        if (d.destroy) {
+            d.alpha -= DRILL.alphaFade;
+            if (d.alpha <= 0) d.removed = true;
+        }
         if (!d.destroy) {
             if (d.hitsTimer > 0) d.hitsTimer -= 1;
             if (d.anim !== 'die' && d.hitsTimer <= 0 && ctx.playerBox && rectsOverlapStrict(drillRect(d), ctx.playerBox)) {

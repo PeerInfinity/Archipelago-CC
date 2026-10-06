@@ -3418,6 +3418,25 @@ export function createLevelRun({
         return drillStates.get(n);
     };
     /**
+     * ⛓ seedling-fidelity-terrain W3: a drill KILL, staged (the "die" anim is already on the body) — and its
+     * ledger computed, as the chaser kill's is: the removal drops `classCount(Drill)`, so a room whose `tset == -1`
+     * lock that count would open refuses the kill by name.
+     */
+    const stageDrillKill = (d, by) => {
+        const census = world.combat?.enemies ?? null;
+        const before = (census ?? []).filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
+        const i = before.findIndex((b) => b.as3 === 'Drill');
+        const led = killLockLedger(levelSource(level), {
+            bodiesBefore: before, bodiesAfter: i < 0 ? before : [...before.slice(0, i), ...before.slice(i + 1)],
+        });
+        if (!led.nil || (led.locks.length > 0 && census === null)) {
+            throw new Error(`levelRun: the ${by} kill of ${d.id} in level ${level} at tick ${ticksCompleted + 1} `
+                + `moves \`totalEnemies()\` past a kill lock (${led.why ?? 'no combat census'}). Refused by name `
+                + '(seedling-fidelity-terrain W3).');
+        }
+        drillEvents.push({ t: ticksCompleted + 1, level, id: d.id, kind: 'killed', by });
+    };
+    /**
      * ⛓⛓⛓ R8 SLICE 1 — THE BRIDGED CHASERS, PER VISIT.
      *
      * ⚠ PER VISIT, exactly like a spinner and for the stronger version of its
@@ -6154,22 +6173,18 @@ export function createLevelRun({
                         t: weapon === 'spear' ? 'Spear' : 'Sword',
                         frozen: ceremony !== null,
                     });
-                    if (verdict.killed) {
-                        throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} KILLS ${d.id} in level `
-                            + `${level}; the drill's die anim and its place in \`totalEnemies()\` are not staged. `
-                            + 'Refused by name (seedling-fidelity-terrain W3).');
-                    }
+                    if (verdict.killed) stageDrillKill(verdict.d, weapon);
                     dst.set(d.id, verdict.d);
                     if (verdict.landed) drillEvents.push({ t: ticksCompleted, level, id: d.id, kind: 'struck', weapon });
                 }
                 chaserPressHits.push({
                     t: ticksCompleted, level, id: d.id, tag: 'drill', weapon,
-                    landed: verdict.landed, killed: false, reach,
+                    landed: verdict.landed, killed: verdict.killed === true, reach,
                     hits: (verdict.d ?? d).hits, hitsTimer: (verdict.d ?? d).hitsTimer,
                     why: reach > reachLimit ? `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}`
                         : (blocker ? `collideLine("Solid") meets ${blocker.tag ?? 'a Solid'}` : null),
                 });
-                hits.push({ as3: 'Enemy', id: d.id, landed: verdict.landed, killed: false });
+                hits.push({ as3: 'Enemy', id: d.id, landed: verdict.landed, killed: verdict.killed === true });
             } else if (r.as3 === 'Enemy' && r.family === 'wallflyer') {
                 /**
                  * ── ⛓ seedling-fidelity-terrain W2: THE SWING AT A WALLFLYER ──
@@ -10114,11 +10129,7 @@ export function createLevelRun({
                         from: { x: d.x, y: d.y },
                         retaliate: () => {
                             const r = hitDrill(cur, { damage: DARK_SUIT_DAMAGE, t: 'Suit', frozen: ceremony !== null });
-                            if (r.killed) {
-                                throw new Error(`levelRun: the dark suit's retaliation KILLS ${id} at tick ${t} in `
-                                    + `level ${level}; the drill's die anim and its place in \`totalEnemies()\` are `
-                                    + 'not staged. Refused by name (seedling-fidelity-terrain W3).');
-                            }
+                            if (r.killed) stageDrillKill(r.d, 'suit');
                             cur = r.d;
                             return { id, landed: r.landed, hits: cur.hits, hitsTimer: cur.hitsTimer };
                         },

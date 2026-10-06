@@ -32,9 +32,27 @@ import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { FLASH_PANEL, clickPanelTab, createRoomPlay } from './seedlingRoomPlay.js';
-import { orderLegs } from './probe-seedling-divergence-sweep.mjs';
 
 argvHelp(import.meta.url);
+
+/**
+ * The legs as pages, the sweep's `inv` order (`probe-seedling-divergence-sweep.mjs`'s `orderLegs`, restated so this
+ * file does not import that one's argument parsing): the exits in sphere order on one page, then one page per round
+ * of location arrivals (a location opened once stays open for the session).
+ */
+export function contactPages(legs) {
+    const sIdx = (l) => (l.sphere?.index ?? Infinity);
+    const bySphere = (a, b) => sIdx(a) - sIdx(b) || a.id - b.id;
+    const exits = legs.filter((l) => l.goal.kind === 'exit').sort(bySphere);
+    const rounds = [];
+    const seen = new Map();
+    for (const l of legs.filter((x) => x.goal.kind === 'location').sort(bySphere)) {
+        const k = seen.get(l.goal.name) ?? 0;
+        seen.set(l.goal.name, k + 1);
+        (rounds[k] ??= []).push(l);
+    }
+    return [...(exits.length ? [exits] : []), ...rounds];
+}
 
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
 if (isEntryPoint(import.meta.url)) await main();
@@ -59,7 +77,7 @@ async function main() {
     }
     const all = readFileSync(arg('legs', ''), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
     const pick = IDS.length ? all.filter((l) => IDS.includes(l.id)) : all;
-    const pages = orderLegs(pick, 'inv', 60);
+    const pages = contactPages(pick);
     console.log(`INFO: ${pick.length} legs in ${pages.length} page(s)`);
     for (const [pi, legs] of pages.entries()) {
         // eslint-disable-next-line no-await-in-loop

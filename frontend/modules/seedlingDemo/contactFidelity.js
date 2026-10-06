@@ -1,7 +1,7 @@
 /**
  * seedlingDemo/contactFidelity — the switches for slice `seedling-fidelity-terrain` (planner
- * `seedling-fidelity-planning-3`, wave 6). Every one is OFF: with all of them false the model is byte-identical to
- * the one before the slice. Each names the AS3 it transcribes and the game rows that measured it
+ * `seedling-fidelity-planning-3`, wave 6). With all of them false the model is byte-identical to the one before the
+ * slice; W2 and W3 ship ON (nothing measured moved), W1 ships OFF (it moves two pins — see `CONTACT_FIDELITY`). Each names the AS3 it transcribes and the game rows that measured it
  * (`probe-seedling-contact-divergence.mjs`, `replay-seedling-contact-capture.mjs`).
  *
  * ⛔ The divergence sweep filed these rows as "terrain": a 1.3–2.7 px jump on both axes. They are not terrain. The
@@ -58,22 +58,38 @@
 //   → `CONTACT_FIDELITY.drillLive`
 
 /**
- * THE SWITCHES. All OFF: the model is byte-identical to the one before the slice. They are read at CALL time, so a
- * measurement can turn them on without editing this file:
+ * THE SWITCHES. They are read at CALL time, so a measurement can turn any of them on without editing this file:
  *   - node: `SEEDLING_CONTACT_FIDELITY=all` (or a comma list of the keys) in the environment, read once at import;
  *   - a test: `withContactFidelity({ drillLive: true }, () => …)`, which restores the previous values.
  * ⛔ The browser has no such hook on purpose: the page and its solve worker run the defaults.
  */
 export const CONTACT_FIDELITY = {
+    /**
+     * ⛔ OFF, and STOPPED for a licence: ON, it moves two pins nothing else does — `solverSpinnerKill` F2
+     * (a lock-less spinner, post-sword (5,5)) solves in 221 t, not 241, and `seedlingCanCross`'s L22-from-L25
+     * `cannot` changes cause (a stall, not the wallflyer danger). The spinner's and the BobBoss's own
+     * `collideLine("Player", …)` rays go through the same function. No committed tape and no producer moves.
+     */
     collideLinePointsExact: false,
-    wallFlyerSwordHits: false,
-    drillLive: false,
+    /** ON by default (fidelity TERRAIN D3): with it on, no committed tape, producer `--check` or bounded pin moved. */
+    wallFlyerSwordHits: true,
+    /** ON by default (fidelity TERRAIN D3): with it on, no committed tape, producer `--check` or bounded pin moved. */
+    drillLive: true,
 };
+/** The defaults this slice shipped, for a reader that asks what "default" was. */
+export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
 export const CONTACT_FIDELITY_KEYS = Object.freeze(Object.keys(CONTACT_FIDELITY));
 
+/**
+ * ⛓ The node measuring hook: `SEEDLING_CONTACT_FIDELITY=all|none|<keys>` sets EVERY switch (the named ones ON, the
+ * rest OFF), so `none` is the byte-identical BEFORE model.
+ */
 const envFlags = globalThis.process?.env?.SEEDLING_CONTACT_FIDELITY;
 if (envFlags) {
-    const want = envFlags === 'all' ? CONTACT_FIDELITY_KEYS : envFlags.split(',').map((k) => k.trim()).filter(Boolean);
+    // `all`, `none`, or a comma list of the keys to turn ON (every other key OFF)
+    const want = envFlags === 'all' ? CONTACT_FIDELITY_KEYS
+        : (envFlags === 'none' ? [] : envFlags.split(',').map((k) => k.trim()).filter(Boolean));
+    for (const k of CONTACT_FIDELITY_KEYS) CONTACT_FIDELITY[k] = false;
     for (const k of want) {
         if (!CONTACT_FIDELITY_KEYS.includes(k)) {
             throw new Error(`contactFidelity: SEEDLING_CONTACT_FIDELITY names "${k}"; the keys are ${CONTACT_FIDELITY_KEYS.join(', ')}`);

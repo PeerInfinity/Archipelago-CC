@@ -7,7 +7,7 @@
  * `replay-seedling-contact-capture.mjs` rebuilds the model's run and compares the player tick by tick.
  *
  * The pins:
- *   - switches OFF (the default): every witness leaves the model at the tick the sweep named, and the game's side
+ *   - switches all OFF (the BEFORE model): every witness leaves the model at the tick the sweep named, and the game's side
  *     of that tick carries `hits` 0 → 1 or a body the model's run lacks (it is a CONTACT, not terrain);
  *   - each switch alone fixes exactly its own rows (W1 the two ray rows, W2 the three struck-flyer rows, W3 the
  *     four L88 rows), which is also the mutation: switch one off and its rows come back at their tick;
@@ -48,8 +48,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     });
 
     // ⛓ a measuring run sets SEEDLING_CONTACT_FIDELITY on purpose; the default is what this pins
-    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('the switches are all OFF by default', () => {
-        expect(Object.values(CONTACT_FIDELITY).every((v) => v === false)).toBe(true);
+    // ⛓ D3: W2 and W3 ship ON (nothing measured moved); W1 ships OFF (it moves two pins — stopped for a licence)
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('the shipped defaults: W1 OFF, W2 and W3 ON', () => {
+        expect(CONTACT_FIDELITY).toEqual({ collideLinePointsExact: false, wallFlyerSwordHits: true, drillLive: true });
     });
 
     it.each(Object.entries(ROWS))('leg %s — switches OFF, the model leaves the game at the named tick, on a contact', async (id, [t]) => {
