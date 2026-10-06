@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 56,
-            "count": 100,
+            "browser": 57,
+            "count": 101,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 359,
-        "browser": 121,
-        "cited": 175,
-        "files": 371,
+        "blockStyle": 360,
+        "browser": 122,
+        "cited": 176,
+        "files": 372,
         "lineStyle": 12,
-        "withDocblock": 371,
-        "withFlags": 289
+        "withDocblock": 372,
+        "withFlags": 290
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9648,6 +9648,50 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The user retired the three door TEMPLATES into the room-aware ELEMENTS, and this instrument's SUBJECT went with them: its subject is the span-1 corridor form of `wall-gap-spinner-killlock`, retired into the `killgate` ELEMENT (arc-3 §13.2) — which GR…",
             "path": "scripts/procgen/probe-seedling-killlock-span1.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "arms",
+                "author",
+                "record"
+            ],
+            "file": "probe-seedling-killlock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "arms"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "author"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-killlock — ⛓⛓⛓ SEEDLING FIDELITY KILLLOCK, D1/D2: **THE KILL-LOCK ROOMS' BODIES, ASKED OF THE GAME.**",
+            "path": "scripts/procgen/probe-seedling-killlock.mjs"
         },
         {
             "argvHelpers": [],
