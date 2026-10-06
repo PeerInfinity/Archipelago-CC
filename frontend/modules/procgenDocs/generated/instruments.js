@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 3,
+            "count": 5,
             "id": "measure"
         },
         {
@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 56,
-            "count": 100,
+            "browser": 57,
+            "count": 101,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 359,
-        "browser": 121,
-        "cited": 175,
-        "files": 371,
+        "blockStyle": 362,
+        "browser": 122,
+        "cited": 178,
+        "files": 374,
         "lineStyle": 12,
-        "withDocblock": 371,
-        "withFlags": 289
+        "withDocblock": 374,
+        "withFlags": 292
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6662,6 +6662,74 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/measure-apworld-raw-view.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "measure",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "measure-seedling-cleartag-patch.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-tapes"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "measure-seedling-cleartag-patch — **THE FALLBACK, MEASURED, NOT APPLIED** (Seedling fidelity CLEARTAG, D4).",
+            "path": "scripts/procgen/measure-seedling-cleartag-patch.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "measure",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "event"
+            ],
+            "file": "measure-seedling-cleartag.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "event"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "measure-seedling-cleartag — **THE `clear-tag` CENSUS** (Seedling fidelity CLEARTAG, D1 + D3).",
+            "path": "scripts/procgen/measure-seedling-cleartag.mjs"
+        },
+        {
             "argvHelpers": [
                 "M",
                 "arg"
@@ -8976,6 +9044,48 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-ceremony — walk the player onto a real pickup and watch what the game does. `Bot.autoAdvance`'s FIRST LIVE FIRE.",
             "path": "scripts/procgen/probe-seedling-ceremony.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "only",
+                "record"
+            ],
+            "file": "probe-seedling-cleartag.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "scan"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity CLEARTAG (D1/D2): **A SAVED OBSTACLE BROKEN FROM ITS OPEN SIDE, ASKED OF THE GAME.** Every arm runs on a FRESH page of the headless game (default build p4f, logic-only), one arm per page.",
+            "path": "scripts/procgen/probe-seedling-cleartag.mjs"
         },
         {
             "argvHelpers": [

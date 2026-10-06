@@ -14284,6 +14284,52 @@ attempts 33 → 48). Also listed: `plan-seedling-f1c-l18-phase --check`'s stdout
   rung's stalled solve. A re-record of the window necessarily moved it, though no brief listed it. Grep the tests
   for every re-recorded tape's NAME, not only for the functions changed.
 
+### Seedling fidelity CLEARTAG — the `clear-tag` goal: a saved obstacle broken from its open side, finished on the game's write
+
+⚖ The user (2026-10-05): *"break before first use"*; (2026-10-06): build the executor AND measure the fallback (moving
+the obstacles off the screen edge), then recommend one. `solverBot`'s goal loop gains `clear-tag {tag: {level, tag}, at,
+obstacle?}` (`execClearTag`). It adds no verb. The obstacle is named the way the frontier names it (`solid:<class>`), the
+verb is `OBSTACLE_STRATEGIES`'s row (refined as the frontier refines it), the stance is the resolver's, and the act is the
+registered executor. Every refusal is `obstacle.kind 'clear-tag'` with a `reason`: `wrong-level`, `no-verb`,
+`cannot-act`, `unresolved`, `prerequisite` or `not-written`.
+
+**The finish is the GAME's write, and the ledger row is not it.** Measured on p4f with held cuts
+(`scripts/procgen/probe-seedling-cleartag.mjs --scan`), the game's `persistence_cleared` first holds the flag after `T + 1` ticks:
+- a rock: T = the tick `endAnim` removes it (`goneAt`, 50), while its `earnedClears` row is stamped at the HIT (t43);
+- a tree: T = `goneAt` (105), while its row is stamped at the press (t64);
+- a lock snap: T = its close (164), and the row is stamped there too.
+A solve that ended on the row (the L71 touch, 164 t) ended one tick before the game's write. So the goal ends only when
+`clearTagLanded` says the write has run (`brokenRocks` / `burnedTrees` hold it, or the run is past the row's `t`), idling
+for it if needed (L71: 165 t). Four game witnesses, 12 arms, all 0 px with the flag exact at the fencepost:
+- the walk-to-stance strike on `{0,1}` (54 t; the walk's own strike breaks the rock, so the verb is not re-run);
+- `break` on `{0,4}` (75 t);
+- `touch` on `{71,2}` (165 t);
+- `burn` on `{24,0}` (114 t).
+
+**The census** (`scripts/procgen/measure-seedling-cleartag.mjs`, every landing into each event's level): 59 rows, 12 inside (never
+acted from), 13 SOLVES, 34 REFUSES by name. On the AP route's two events: `{0,1}` solves from 5 of its 6 open-side
+arrivals (54–244 t; L89's north pocket has no reachable stance), and `{71,2}` solves from L80 (165 t) and L75 (457 t);
+L72 refuses on the spinning axe's ladder and L85 has no reachable stance. Off route: L12's stacked locks refuse. `magicallock` selects `kill` and binds nothing (the census
+names the wand), and the `bosslock` stance is unreachable: the pocket sits behind `bosslock@80,656`, whose keylock
+order loops. `rocklock` and `finaldoor` have no catalogue row. The `--through=end` route derive emits **no** `clear-tag`
+leg: the gated arrivals (steps 33 and 171) are each preceded by a walk THROUGH the obstacle (steps 29 and 163) that
+credits the event.
+
+**The fallback, measured and not applied** (`scripts/procgen/measure-seedling-cleartag-patch.mjs`): each obstacle moved one width
+inward on a copy of the map. Five of seven groups keep their gate (a 2–4 tile pocket in front of the back door).
+`{0,4}` loses it: the rock sits under its door, and any move opens the room. The L71 pocket's touch stance refuses,
+which makes the solver worse there. The applier has no `move` op. Recommendation: **the executor**, with the patch
+held back.
+
+**Trap candidates**, for the catalogue to number:
+- **A ledger row is a permission, not a write.** `earnedClears` answers "may the next build omit this", and two
+  families stamp it before the game writes. A goal that finishes on the row's appearance ends before the flag exists;
+  ask the family's removal (or the row's own write stamp), and bracket it on the game with HELD cuts.
+- **An unheld cut reads a later state.** Without `hold` the game ran on after the tape's last tick, so the L71 cut read
+  the flag one tick early and looked like a model lag. Every write bracket plays `holdingWindowTape`.
+- **A goal's first walk can satisfy it.** The stance walk's strike policy breaks the rock it walks past; re-asking the
+  ledger after the walk keeps the verb from swinging at air for 20 ticks.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
