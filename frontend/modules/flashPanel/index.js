@@ -174,14 +174,15 @@ export function register(registrationApi) {
       // on every machine") — the wasm engine's solve budget in WORK units (the twin of the JS page's
       // ?solverBudgetWork=). MIGRATION: it replaces `seedlingWasmSolverBudgetMs` (milliseconds); a value saved
       // under the old key is no longer read. ⛓ The default is `jsRuntimeSolver.SOLVER_BUDGET_WORK` (pinned by
-      // `flashPanelSolverBudgetSettings.test.js`).
+      // `flashPanelSolverBudgetSettings.test.js`). ⛓ RECALIBRATE: 640 fine units (was 500 coarse) — the key is
+      // unchanged because its meaning (work units) is.
       seedlingWasmSolverBudgetWork: {
         type: 'number',
-        default: 500,
+        default: 640,
         minimum: 1,
         label: 'Seedling wasm: solver budget (work units)',
         description: "Runtime 'wasm', solver (atlas / vanilla) rooms. How much the Playback Bot's solver may "
-          + "search for one room, counted in solver WORK (one unit per optional scan the solver starts), never in "
+          + "search for one room, counted in solver WORK (one unit per checkpoint the solver passes), never in "
           + "time — so the plan it plays is the same on every machine; a slow machine only takes longer to find "
           + "it (the game is HELD meanwhile). The solver searches without sword dashes first and then with them; "
           + "when the budget runs out and a plan is already in hand, that plan is played. Without one, the room "
@@ -191,10 +192,11 @@ export function register(registrationApi) {
       // ⛓ Seedling SHOULD-STOP → DETERMINISTIC BUDGET — the anytime full pass's dash deadline in WORK units
       // (⚖ the user's "upgrade window", 2026-10-04: "Let's try 1000 ms for now." — carried over as its intent,
       // "upgrade briefly, then ship"). MIGRATION: it replaces `seedlingSolverUpgradeWindowMs` (milliseconds);
-      // a value saved under the old key is no longer read. Default `jsRuntimeSolver.SOLVER_UPGRADE_WINDOW_WORK`.
+      // a value saved under the old key is no longer read. Default `jsRuntimeSolver.SOLVER_UPGRADE_WINDOW_WORK`
+      // (⛓ RECALIBRATE: 80 fine units, was 40 coarse).
       seedlingSolverUpgradeWindowWork: {
         type: 'number',
-        default: 40,
+        default: 80,
         minimum: 0,
         label: 'Seedling: solver upgrade window (work units; 0 = the whole budget)',
         description: "Both runtimes, solver (atlas / vanilla) rooms. The Playback Bot's solver first "

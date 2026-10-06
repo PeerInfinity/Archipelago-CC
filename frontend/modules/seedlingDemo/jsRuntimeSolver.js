@@ -158,10 +158,11 @@ export const ANYTIME_PASSES = Object.freeze([
  * hashes beside a 12-process CPU hog at 3–5× the wall time). A slow machine
  * takes LONGER to reach the same answer; it never reaches a different one.
  *
- * ⚠ THE UNIT IS COARSE. A pass that consults no site (the dashless pass on
- * most legs) spends no units and is bounded only by the solver's own
- * structural limits (`MAX_ROUTE_ORDERS`, …) — deterministic by construction.
- * The ms the units cost on one box are in `flash.md` "Pass deadlines".
+ * ⛓ RECALIBRATE — the unit is FINE (`FINE_CHECKPOINTS`, fidelity CHECKPOINTS):
+ * the solver also asks inside its once-silent phases (the TIME rung, the core
+ * `walk`, DETOUR's via set), so a pass that consults no optional scan still
+ * spends units. The ms one unit costs on one box are in `flash.md` "Pass
+ * deadlines".
  *
  * `SOLVER_BUDGET_WORK` — every pass of one solve attempt trips every site
  * once the attempt has spent this many units (the dashless pass's lossy
@@ -170,23 +171,34 @@ export const ANYTIME_PASSES = Object.freeze([
  * in hand, the full pass's `sword-dash` site (the lossless one) trips at
  * this many units from the attempt's start: "upgrade briefly, then ship".
  *
- * ⛓ CALIBRATED (slice `seedling-js-deterministic-budget`, node, the captured
- * B/D arrivals + the divergence sweep's legs): 40 is the smallest window that
- * keeps every leg that upgraded to its full plan inside the old 1000 ms window
- * upgrading (the largest, the sweep's L30 leg, makes 37 dash scans); 500 lets
- * the slowest SHIPPING dashless pass measured (swordless L14's DETOUR, 492
- * scans, ~6 s) ship on its first attempt, ≈ the old 5 s of the slow scans.
+ * ⛓ RECALIBRATED in fine units (slice `seedling-js-recalibrate`, node, the
+ * captured B/D arrivals, the divergence sweep's legs and fidelity CHECKPOINTS'
+ * D3 legs, re-measured on wave 7; was 500 / 40 coarse): 640 lets the slowest
+ * SHIPPING dashless pass measured (swordless L14's DETOUR: 624 fine units,
+ * 492 coarse) ship on its first attempt; 80 is the smallest window that keeps
+ * every leg that upgraded inside the old 1000 ms window upgrading — the
+ * largest, L40 (480,896) → its stairs, makes its last dash ask at unit 80
+ * (28 dashless + 52); L30 (240,80) at 50. Pinned by
+ * `jsRuntimeSolverCalibration.slow.test.js`.
  */
-export const SOLVER_BUDGET_WORK = 500;
-export const SOLVER_UPGRADE_WINDOW_WORK = 40;
+export const SOLVER_BUDGET_WORK = 640;
+export const SOLVER_UPGRADE_WINDOW_WORK = 80;
+/**
+ * ⛓ RECALIBRATE (fidelity CHECKPOINTS) — every budgeted pass opts in to the solver's FINE checkpoints
+ * (`solveSegment`'s `fineCheckpoints`): the `time` rung, the core `walk` (a trip there REFUSES the segment
+ * by name) and the `detour` via set are asked too, so no stretch of the search runs unasked for long. The
+ * work constants above are counted in these fine units. In place (no budget) nothing is asked at all.
+ */
+export const FINE_CHECKPOINTS = true;
 /**
  * ⛓ DETERMINISTIC BUDGET — the WALL-CLOCK BACKSTOP of one solve attempt, from
  * the worker's start. It never decides an answer: when it fires the solve is
  * terminated and the goal FAILS BY NAME ("the solve exceeded the backstop on
  * this machine"); a plan in hand is NOT played. ~5× the calibrated worst
  * SHIPPING attempt (an L40 leg, 62 s on the calibration box; flash.md "Pass
- * deadlines"). A solve with a longer scan-free stretch (L40's leg 363: no
- * answer in 7 min) ends here, by name.
+ * deadlines"). A solve with a longer stretch the units cannot see ends here,
+ * by name — measured: the sphere-2.2 leg L12 (16,80) → its pit, whose
+ * kill-chaser stance scan ran 663 s with no ask on a loaded box (fidelity's to checkpoint).
  */
 export const SOLVE_BACKSTOP_MS = 300000;
 
@@ -280,7 +292,11 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
         const w0 = work.units;
         const limit = {};
         const shouldStop = passShouldStop(p, { budgetWork, windowWork, planInHand: best?.ok === true, work, limit });
-        const answer = settleSolve(() => solveFromTape({ ...tape, clock, dashMode: p.dashMode, adds: p.adds ?? null, shouldStop }));
+        // ⛓ RECALIBRATE — a budgeted pass always asks the FINE checkpoints (`FINE_CHECKPOINTS`): the constants
+        // above are counted in fine units, so every production path (JS page, wasm arrival, continuation,
+        // held retry — all of them requests to this function) spends the unit they were calibrated in.
+        const answer = settleSolve(() => solveFromTape({ ...tape, clock, dashMode: p.dashMode, adds: p.adds ?? null, shouldStop,
+            fineCheckpoints: shouldStop !== null && FINE_CHECKPOINTS }));
         answer.pass = p.pass;
         if (answer.ok) answer.plan.pass = p.pass;
         const tripped = deadlineOf(answer);
@@ -397,7 +413,7 @@ export function replayShadow(session, levelSource, {
  */
 export function solveFromTape({ staging, perTick, live, levelSource, solverGoal, name = 'js-runtime-solve',
     scratchPersistence = false, equips = null, clock = () => Date.now(), dashMode = DEFAULT_DASH_MODE, adds = null,
-    shouldStop = null }) {
+    shouldStop = null, fineCheckpoints = false }) {
     const t0 = clock();
     const shadow = assertShadow(replayTape({ staging, perTick, levelSource, scratchPersistence, equips }), live, perTick.length);
     const replayMs = clock() - t0;
@@ -433,7 +449,9 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
     });
     const t1 = clock();
     // ⛓ SHOULD-STOP — the pass's deadline (`passShouldStop`; null = today's search exactly).
-    const out = solveSegment({ run, goals: [solverGoal], name, boot: staging.boot, prefix: perTick, dashMode, shouldStop });
+    // ⛓ RECALIBRATE — and whether it also asks the fine sites (`time`, `walk`, the via-set `detour`; only with a hook).
+    const out = solveSegment({ run, goals: [solverGoal], name, boot: staging.boot, prefix: perTick, dashMode, shouldStop,
+        ...(shouldStop ? { fineCheckpoints: fineCheckpoints === true } : {}) });
     const solveMs = clock() - t1;
     const solution = out.perTick.slice(perTick.length).map((h) => new Set(h));
     if (solution.length !== expected.length - 1) {
