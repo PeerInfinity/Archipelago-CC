@@ -40,7 +40,7 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { FLASH_PANEL, clickPanelTab, createRoomPlay } from './seedlingRoomPlay.js';
+import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -141,7 +141,7 @@ async function main() {
     const PRESET = JSON.parse(readFileSync(join(REPO, RULES), 'utf8'));
     // ⛓ --page=<build> (e.g. seedling_bot_ap_p4f) drives another staged build: the rules the page fetches name it
     const BUILD = arg('page', '') || process.env.SEEDLING_PAGE || '';
-    const WASM_PAGE = BUILD ? `${BUILD}/game.html` : (PRESET.flash_panel?.wasm ?? '');
+    const WASM_PAGE = BUILD ? `${BUILD}/game.html` : (slotBlockOf(PRESET, 'flash_panel')?.wasm ?? '');
     if (!WASM_PAGE || !existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', WASM_PAGE))) {
         console.log(`SKIP: seedling wasm artifact not staged (${JSON.stringify(WASM_PAGE)})`);
         process.exit(0);
@@ -188,7 +188,7 @@ async function main() {
         // ⛓ only a build OTHER than the preset's is routed. ⛔ And a response that is not the rules JSON passes
         // through untouched: the glob also matches a fetch the server answers with an HTML 404, and `r.json()` on it
         // threw out of the handler and killed every shard of CI run 37376313790 in 0.5 s.
-        if (BUILD && WASM_PAGE !== PRESET.flash_panel?.wasm) {
+        if (BUILD && WASM_PAGE !== slotBlockOf(PRESET, 'flash_panel')?.wasm) {
             await page.route(`**/presets/${GAME}/AP_1/AP_1_rules.json`, async (route) => {
                 const r = await route.fetch();
                 let doc = null;
