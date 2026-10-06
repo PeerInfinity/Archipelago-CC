@@ -56,7 +56,7 @@ export {
 // camera.js — encounters · physics 2
 export { SCREEN_H, SCREEN_W } from './camera.js';
 // chasers.js — dangerMap, solverBot · seedling 4
-export { bridgedChaserTags, chaserBoxAt, isBridgedChaser, killWindowTicks } from './chasers.js';
+export { bridgedChaserTags, chaserBoxAt, chaserHasSword, isBridgedChaser, killWindowTicks } from './chasers.js';
 // chest.js — botDriverV2, solverBot · seedling 3
 export { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 // combat.js — dangerMap, encounters, solverBot, strikePolicy · seedling 9
@@ -70,7 +70,7 @@ export {
     SLASH_SCALE_NORMAL, slashPressForecast, slashScaleFor, slashSet, slashTimerTick,
 } from './combatVerbs.js';
 // crusher.js — botDriverV2 · seedling 1
-export { scanCrusher } from './crusher.js';
+export { collideLineSolid, scanCrusher } from './crusher.js';
 // endingChain.js — strikePolicy · seedling 1
 export { TALK_RANGE } from './endingChain.js';
 // enemyDamage.js — solverBot, strikePolicy · seedling 3

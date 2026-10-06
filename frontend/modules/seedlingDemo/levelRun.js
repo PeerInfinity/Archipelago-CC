@@ -7045,7 +7045,12 @@ export function createLevelRun({
         const ids = [...st.keys()].reverse();
         const bodies = new Map();
         for (const [id, c] of st) {
-            bodies.set(id, { ...c, v: { ...c.v }, attack: c.attack ? { ...c.attack } : null });
+            bodies.set(id, {
+                ...c, v: { ...c.v }, attack: c.attack ? { ...c.attack } : null,
+                // ⛓ fidelity-bobsoldier: the sword's arrays are the live body's; the forecast steps its own copy.
+                ...(c.sword ? { sword: { ...c.sword, swordSpin: [...c.sword.swordSpin],
+                    swordSpinBegin: [...c.sword.swordSpinBegin] } } : {}),
+            });
         }
         // ⚠ ONCE, not per tick: the previewed world is FROZEN at this tick's
         // geometry (`previewWalk`'s own law — blocks do not glide, locks do not
@@ -7128,9 +7133,28 @@ export function createLevelRun({
             step(playerPos, opts = {}) {
                 if (!first) advanceCamera(playerPos);
                 first = false;
+                // ⛓ fidelity-bobsoldier D3: this tick's CORPSE swords (absent unless one swings).
+                let corpseSwords = null;
                 for (const id of ids) {
                     const c = bodies.get(id);
-                    if (!c || c.removed || c.destroy) continue;
+                    if (!c || c.removed) continue;
+                    /**
+                     * ⛓⛓ fidelity-bobsoldier D3 — A BOBSOLDIER CORPSE IN THE FORECAST: `stepChaserEntity`'s destroy
+                     * branch, on the clone — the fade (on screen only), and the tail that has no `destroy` gate:
+                     * the chase impulse and the sword. Its lines ride BESIDE the projection (`swordsOnCorpses`),
+                     * never in it: the kill arm reads a body's absence from the projection as its death.
+                     */
+                    if (c.destroy) {
+                        if (!c.sword || !chaserChasesWhileDying(c.tag)) continue;
+                        if (onScreenAt(chaserBoxAt(c.tag, c.x, c.y), `${c.tag} ${c.id}`)) {
+                            c.alpha -= MOBILE_DEATH_FADE.alphaStep;
+                        }
+                        c.v = chaseImpulse(c.tag, { x: c.x, y: c.y, v: c.v }, playerPos);
+                        const tail = bobSoldierSwordTail(c.sword, c, playerPos);
+                        (corpseSwords ??= []).push({ id: c.id, tag: c.tag, lines: tail.lines });
+                        if (c.alpha <= 0) c.removed = true;
+                        continue;
+                    }
                     const box = chaserBoxAt(c.tag, c.x, c.y);
                     // ⛓ U7-swim: `stepChaserEntity`'s `"Player"` wall, at the
                     // previewed player's start-of-tick box.
@@ -7191,6 +7215,14 @@ export function createLevelRun({
                     // absent otherwise, so `dangerMap` keeps the pad for every
                     // other body).
                     if (CHASERS[c.tag]?.attack) c.punch = null;
+                    /**
+                     * ⛓⛓ fidelity-bobsoldier D3 — THE SWORD IS REPORTED, NOT SWUNG: the blade's state machine
+                     * steps on the clone exactly as `bobSoldierSwordNow` steps the live one (below the chase, from
+                     * the post-move body, against the previewed player where this tick started), and this tick's
+                     * hit lines ride on the projection. `dangerMap.chaserDanger` tests them against the sample's
+                     * own box. No hit is billed: a preview takes none.
+                     */
+                    if (c.sword) c.swordLines = bobSoldierSwordTail(c.sword, c, playerPos).lines;
                     if (c.attack && stepSpriteAnim(c.attack)) {
                         c.attack = null;
                         /**
@@ -7261,7 +7293,7 @@ export function createLevelRun({
                     }
                 }
                 tickOffset += 1;
-                return ids
+                const projected = ids
                     .map((id) => bodies.get(id))
                     .filter((c) => c && !c.removed && !c.destroy)
                     .map((c) => ({
@@ -7281,7 +7313,13 @@ export function createLevelRun({
                         hitsTimer: c.hitsTimer,
                         // ⛓ U10-swim D2: this tick's punch, for a class that has one.
                         ...(c.punch !== undefined ? { punch: c.punch } : {}),
+                        // ⛓ fidelity-bobsoldier D3: this tick's sword lines, for a class that has one.
+                        ...(c.swordLines !== undefined ? { sword: { lines: c.swordLines } } : {}),
                     }));
+                // ⛓ fidelity-bobsoldier D3: a property of the ARRAY, present only when a corpse swings — so every
+                // other projection is the array it was.
+                if (corpseSwords) projected.swordsOnCorpses = corpseSwords;
+                return projected;
             },
             /**
              * ⛓⛓⛓ R9 SLICE 12c‴ — **THE BODIES AS THEY STAND RIGHT NOW**,

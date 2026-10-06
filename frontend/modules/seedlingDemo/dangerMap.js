@@ -66,7 +66,7 @@
 import {
     arrowLaneForPlacement, arrowLaneRect, arrowRect, ARROW, stepArrow,
     contactPricing, contactRect, ENEMY_CLASSES, plannerContactFree, stepBoundFor,
-    chaserBoxAt, isBridgedChaser,
+    chaserBoxAt, chaserHasSword, collideLineSolid, isBridgedChaser,
     rect, rectsOverlap,
     SPINNER, hammerHitsPlayer, spinnerRect,
     TURRET_SPIT,
@@ -712,6 +712,15 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
      * `threatPad` applies either way: a class whose THREAT exceeds its body is
      * not measured by its body.
      */
+    // ⛓ fidelity-bobsoldier D3: a forecast's CORPSE swords ride beside its bodies (`chaserForecastNow`'s
+    // `swordsOnCorpses`) — a destroyed BobSoldier leaves the projection (the kill arm's death tick reads its
+    // absence) and its blade swings on until the removal.
+    for (const s of (bodies?.swordsOnCorpses ?? [])) {
+        if ((s.lines ?? []).some((l) => collideLineSolid([box], l.x0, l.y0, l.x1, l.y1))) {
+            out.push({ kind: 'chaser', id: s.id,
+                why: 'a CORPSE\'s sword: `BobSoldier.update` swings with no `destroy` gate until `FP.world.remove`' });
+        }
+    }
     for (const c of bodies ?? run.entities('chasers') ?? []) {
         /**
          * ⛓⛓⛓ R9 SLICE 12c″, ⚖ RULING 44 — **A BODY THE GAME'S OWN GATE SAYS
@@ -741,7 +750,16 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
          * body IS drawn is the reading that lets its own state do all the
          * refusing.
          */
-        if (perTick && plannerContactFree(c, 'on').contactFree) continue;
+        /**
+         * ⛓⛓ fidelity-bobsoldier D3 — A SWORD IS NOT THE BODY'S CONTACT, AND NEITHER OF THE TWO GATES BELOW IS
+         * ITS GATE. `BobSoldier.swordHitting` has no `hitsTimer` test and no `destroy` test (`bobSoldier.js` notes
+         * 1 and 3): a struck body's blade still cuts through its i-frame, and a corpse's blade cuts through its
+         * eleven-tick fade. So for a class with a sword the i-frame skip removes only the BODY term, and a
+         * destroyed body keeps its sword term.
+         */
+        const sworded = chaserHasSword(c.tag);
+        const bodyFree = perTick && plannerContactFree(c, 'on').contactFree;
+        if (bodyFree && !sworded) continue;
         /**
          * ⛓⛓⛓ SEEDLING SWIM U10, D3 — **A DESTROYED BODY IS A CORPSE, NOT A
          * THREAT** (U7 § D4's wall 3, measured here rather than as the brief
@@ -765,7 +783,7 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
          * whose die animation is still playing has not reached that gate.
          * (Forecast bodies never carry one: the forecast drops `destroy`.)
          */
-        if (c.destroy) continue;
+        if (c.destroy && !sworded) continue;
         const row = ENEMY_CLASSES[c.tag];
         const bound = stepBoundFor(c.tag);
         if (bound === null) {
@@ -801,6 +819,30 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
                     + 'wind-up THIS tick, and the body\'s own hitsTimer does not refuse it' });
             continue;
         }
+        /**
+         * ⛓⛓ fidelity-bobsoldier D3 — A FORECAST BODY THAT CARRIES ITS OWN SWORD IS PRICED BY IT, NOT BY THE PAD
+         * (the punch's rule, one class over). `chaserForecastNow` steps the blade's state machine on its clone and
+         * reports this tick's hit LINES (`bobSoldierSwordTail`); this sample's `box` is the pre-move player — the
+         * box `swordHitting`'s `collideLine("Player", …)` tests — so the crossing is asked exactly. The body is then
+         * priced bare (its contact), or not at all while its own i-frame/`destroy` refuses the contact.
+         * ⛔ The WAIT arm and the live bodies keep `threatPad` 16 (a reach without a clock).
+         */
+        const swordTimed = perTick && bodies !== null && sworded && c.sword !== undefined;
+        if (swordTimed) {
+            const crossed = (c.sword?.lines ?? []).some((l) => collideLineSolid([box], l.x0, l.y0, l.x1, l.y1));
+            if (crossed) {
+                out.push({ kind: 'chaser', id: c.id,
+                    why: 'the sword: `swordHitting`\'s `collideLine("Player", …)` from 8 to 16 px off the body '
+                        + 'crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)' });
+                continue;
+            }
+            if (bodyFree || c.destroy) continue;
+            if (rectsOverlap(box, chaserBoxAt(c.tag, c.x, c.y))) {
+                out.push({ kind: 'chaser', id: c.id, why: 'the BobSoldier\'s 8x8 body, bare (its sword is timed)' });
+            }
+            continue;
+        }
+        // ⛓ an untimed sword (the WAIT arm, a live corpse, an i-framed body) is the pad around the body.
         const pad = timed ? 0 : (row.threatPad ?? 0);
         // The player's centre against the body's, which is what `Bob.update`'s
         // own `FP.distance(x, y, player.x, player.y)` measures.
