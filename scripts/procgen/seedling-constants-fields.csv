@@ -235,30 +235,7 @@ frontend/modules/flashPanel/seedlingSemantics.js|TILE_COLUMN_TO_TYPE|(module),ru
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_TYPE_IDS|(module),rule,sentinel,,tile type id by name (Tile.as:32-69); P1 names the ids the records held
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_COLUMN_VARIANTS|(module),cosmetic,,,column keys of the cosmetic-only waterfall/grass variant flags
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_TYPE_SEMANTICS|(module),rule,sentinel,,tile type id
-frontend/modules/flashPanel/seedlingSemantics.js|ENTITY_SEMANTICS|(module),physics,magnitude,,entity hitbox size in tiles
-frontend/modules/flashPanel/seedlingSemantics.js|ENTITY_SEMANTICS|(module)|0,rule,sentinel,,entity variant type code
-frontend/modules/flashPanel/seedlingSemantics.js|ENTITY_SEMANTICS|(module)|1,rule,sentinel,,entity variant type code
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h245445a1|1|0,physics,magnitude,,entity hitbox size in tiles
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h2dee78db|1|0,physics,magnitude,,entity hitbox size in tiles
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h33debac4|2|0,physics,magnitude,,entity hitbox size in tiles (burnabletree: Tree.as:23 32x32)
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h33debac4|2|1,physics,magnitude,,entity hitbox size in tiles (burnabletree: Tree.as:23 32x32)
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h31ef0be2|1|0,physics,magnitude,,entity hitbox size in tiles
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h77817ece|1|0,physics,magnitude,,entity hitbox size in tiles
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h90191b8e|1|0,physics,magnitude,,entity hitbox size in tiles
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h0d6bc8f5|1|0,physics,magnitude,,entity hitbox size in tiles
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h48fab870|1|0,physics,magnitude,,entity hitbox size in tiles
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h9c7473a6|2|0,rule,sentinel,,entity variant type code
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|hf03417bc|2|0,rule,sentinel,,entity variant type code
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h6823b978|3|0,rule,sentinel,,entity variant type code
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|ha3e9f9a1|3|0,rule,sentinel,,entity variant type code
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h7299871f|5|0,rule,sentinel,,entity variant type code
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|h8e91b935|4|0,rule,sentinel,,entity variant type code
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|hbdfa3165|6|0,rule,sentinel,,entity variant type code
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|hb340799c|7|0,rule,sentinel,,entity variant type code
-frontend/modules/flashPanel/seedlingSemantics.js|(module)|hcc0e466a|8|0,rule,sentinel,,entity variant type code
 frontend/modules/flashPanel/seedlingSemantics.js|entityPixelRect|entityPixelRect,physics,magnitude,,default 1x1 tile footprint
-frontend/modules/flashPanel/seedlingSemantics.js|entityPixelRect|h90b89281|1|0,physics,bound,,footprint floor of one tile
-frontend/modules/flashPanel/seedlingSemantics.js|entityPixelRect|h42912754|1|0,physics,bound,,footprint floor of one tile
 frontend/modules/flashPanel/seedlingSemantics.js|SEEDLING_PLAYER_BOX|(module),physics,magnitude,Player.as:normalHitbox,player hitbox
 frontend/modules/flashPanel/seedlingSemantics.js|has|has,rule,count,,item count required
 frontend/modules/flashPanel/seedlingSemantics.js|buildFlagItemRules|hd2b6a69f|1|0,rule,derivation,,progressive item count = chain index + 1
@@ -1038,6 +1015,7 @@ frontend/modules/seedlingDemo/pushables.js|walkPushContact|walkPushContact|0,phy
 frontend/modules/seedlingDemo/pushables.js|stepWalkPushable|stepWalkPushable|1,structural,,,REVIEW: +-1 tile index = push target one cell over
 frontend/modules/seedlingDemo/pushables.js|stepWalkPushable|h559c4eb2|0|0,rule,bound,,alpha <= 0 removes
 frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module),physics,magnitude,,Pixelmask collider width/height
+frontend/modules/flashPanel/seedlingEntityColliders.js|ENTITY_COLLIDERS|(module),physics,magnitude,,model entity hitbox offset and size in pixels (generated from levelWorld.ENTITY_CLASSES)
 frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|2816,structural,,,opaque pixel count; a generated-mask checksum read only by tests
 frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|1280,structural,,,opaque pixel count; a generated-mask checksum read only by tests
 frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|4368,structural,,,opaque pixel count; a generated-mask checksum read only by tests

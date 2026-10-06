@@ -15,8 +15,8 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 
 import { buildPlaythroughAtlas, sealedDoorsCharged } from './make-seedling-playthrough-rules.mjs';
-import { ENTITY_SEMANTICS } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
-import { ENTITY_CLASSES, TILE_SIZE } from '../../frontend/modules/seedlingDemo/levelWorld.js';
+import { ENTITY_SEMANTICS, entityPixelRect } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
+import { ENTITY_CLASSES } from '../../frontend/modules/seedlingDemo/levelWorld.js';
 
 let atlas;
 beforeAll(() => { atlas = buildPlaythroughAtlas(); }, 120_000);
@@ -39,11 +39,13 @@ describe('the transcription claims the footprint the game collides with', () => 
             // RopeStart's width is per placement (`spanAttr`); the model carries it the same way.
             if (row.spanAttr) continue;
             expect(model?.collider, `${tag} has a rect collider in the model`).toBe('rect');
-            const [w, h] = row.size ?? [1, 1];
+            // ⛓ RULES footprints: the row's rect is the model's hitbox now (`seedlingFootprints.test.js` holds every
+            // row, not only the gated ones); this row keeps the gated half as the tree slice wrote it.
+            const ours = entityPixelRect({ x: 0, y: 0, attrs: {} }, row);
             const left = (model.dx ?? 0) - (model.originX ?? 0);
             const top = (model.dy ?? 0) - (model.originY ?? 0);
-            if (model.w !== w * TILE_SIZE || model.h !== h * TILE_SIZE || left !== 0 || top !== 0) {
-                mismatched.push(`${tag}: ${w}x${h} tiles vs the model's ${model.w}x${model.h} px at +${left},+${top}`);
+            if (model.w !== ours.w || model.h !== ours.h || left !== ours.x || top !== ours.y) {
+                mismatched.push(`${tag}: ${JSON.stringify(ours)} vs the model's ${model.w}x${model.h} px at +${left},+${top}`);
             }
         }
         expect(mismatched).toEqual([]);

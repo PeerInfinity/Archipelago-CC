@@ -32,6 +32,7 @@
 // the table sizes are pinned. A silent gap is a red test, not a skipped tile.
 
 import { PROFILE } from '../seedlingDemo/seedlingProfile.js';
+import { ENTITY_COLLIDERS } from './seedlingEntityColliders.js';
 
 // --- condition algebra -------------------------------------------------------
 //
@@ -273,12 +274,22 @@ export function tileSemantics(t) {
 // --- entity semantics (Game.as:2034-2213) ------------------------------------
 //
 // Keyed by the Ogmo TAG, because that is what the extract records. `class` is
-// the AS3 class the tag constructs, kept so a reader can find the source. A
-// `size` is the entity's hitbox in TILES — every scenery class in this game
-// places its hitbox's top-left at the Ogmo x/y (Tree, for instance, offsets its
-// centre by +16,+16 and then sets a 32x32 hitbox with a 16,16 origin, which
-// lands the rect back on the placement), so the footprint is
-// `[x/16, y/16] .. +size`. Defaults to 1x1.
+// the AS3 class the tag constructs, kept so a reader can find the source.
+//
+// ⛓ RULES footprints — THE FOOTPRINT IS THE MODEL'S HITBOX, never typed here.
+// Every tag the physics model gives a box (`levelWorld.ENTITY_CLASSES`: rect,
+// pixel-mask bounding box, trigger) gets it as `hitbox` from the generated
+// `seedlingEntityColliders.js`: the constructor offset plus the `setHitbox`
+// args, so the rect is `[x + left, x + left + w) x [y + top, y + top + h)`.
+// This file used to claim "every scenery class places its hitbox's top-left
+// at the Ogmo x/y" and typed a `size` in tiles; it was false for BeamTower
+// (8 px up), BossTotem (centred, 12 px down), Totem (32 px down), the Statues
+// (3 tiles wide) and the sub-tile NPCs, and nothing compared the two outside
+// the gated rows. A `size` remains only on a row the model has NO box for
+// (a body that is not there at boot: FallRockLarge, Moonrock; an unplaced
+// tag) and on the Buildings, whose `manual` sprite rect contains the mask
+// the model collides with; it defaults to 1x1. `entitySealedTiles` then claims only the tiles
+// the rect covers COMPLETELY.
 //
 // `variant` records the constructor argument the tag pins (BreakableRock's
 // rockType, MagicalLock's lockType, ShieldLock's shieldType) — it is why two
@@ -292,7 +303,7 @@ const M = (reason, extra = {}) => ({ kind: 'manual', reason, ...extra });
  * entity type is not in SOLID_ENTITY_TYPES are 'open' — they are decoration,
  * pickups, enemies, triggers or level furniture that the player walks through.
  */
-export const ENTITY_SEMANTICS = Object.freeze({
+const TRANSCRIBED_ENTITY_SEMANTICS = Object.freeze({
     // --- item-conditional blockers -------------------------------------------
     // BreakableRock (Puzzlements/BreakableRock.as:41 type "Solid"; broken by
     // Player.genericHit -> hit(hasGhostSword ? 1 : 0), Player.as:1062). BOTH the
@@ -311,10 +322,11 @@ export const ENTITY_SEMANTICS = Object.freeze({
     // ⛓ RULES burnable-trees — it EXTENDS `Tree` (BurnableTree.as:11, :21
     // `super(_x, _y, ...)`), so it inherits Tree's 32x32 hitbox
     // (Scenery/Tree.as:23 `setHitbox(32, 32, 16, 16)` after the +16,+16 move):
-    // a 2x2 footprint, exactly as `tree` above. Without the size it claimed ONE
-    // tile, the flood walked round the other three, and the crossings it blocks
-    // (L24's teleporters to L12, L44 r4c2, L37 r0c18) shipped True_.
-    burnabletree: G(flag('hasFire'), { class: 'BurnableTree', size: [2, 2] }),
+    // a 2x2 footprint, exactly as `tree` above. With a hand `size` missing it
+    // claimed ONE tile, the flood walked round the other three, and the
+    // crossings it blocks (L24's teleporters to L12, L44 r4c2, L37 r0c18)
+    // shipped True_. The footprint now comes from the model (`hitbox`).
+    burnabletree: G(flag('hasFire'), { class: 'BurnableTree' }),
 
     // MagicalLock (Puzzlements/MagicalLock.as:40 type "Solid"). Opened by a
     // WandShot whose `shotType` is 1 when the player holds the Fire Wand
@@ -374,28 +386,27 @@ export const ENTITY_SEMANTICS = Object.freeze({
     moonrock: M('Moonrock is solid until its puzzle clears', { class: 'Moonrock', size: [3, 3] }),
 
     // --- moving solids: solid, but not in one place -------------------------
-    crusher: M('moving hazard — Crusher sweeps across tiles', { class: 'Crusher', size: [2, 2] }),
+    crusher: M('moving hazard — Crusher sweeps across tiles', { class: 'Crusher' }),
     pulser: M('moving hazard — Pulser', { class: 'Pulser' }),
     spinningaxe: M('moving hazard — SpinningAxe', { class: 'SpinningAxe' }),
     lavachain: M('moving hazard — LavaChain', { class: 'LavaChain' }),
-    beamtower: M('BeamTower is solid and fires a beam across the room', { class: 'BeamTower', size: [1, 2] }),
-    bombpusher: M('BombPusher is a solid that moves', { class: 'BombPusher', size: [3, 3] }),
+    beamtower: M('BeamTower is solid and fires a beam across the room', { class: 'BeamTower' }),
+    bombpusher: M('BombPusher is a solid that moves', { class: 'BombPusher' }),
 
     // --- bosses and set pieces ----------------------------------------------
-    bosstotem: M('boss set piece (type "Enemy"+"Solid")', { class: 'BossTotem', size: [5, 2] }),
+    bosstotem: M('boss set piece (type "Enemy"+"Solid")', { class: 'BossTotem' }),
     finalboss: M('boss set piece', { class: 'FinalBoss' }),
-    shieldboss: M('boss set piece (type "ShieldBoss", which Mobile.solids blocks on)', { class: 'ShieldBoss', size: [3, 3] }),
+    shieldboss: M('boss set piece (type "ShieldBoss", which Mobile.solids blocks on)', { class: 'ShieldBoss' }),
     frozenboss: M('boss set piece with an off-centre hitbox', { class: 'FrozenBoss' }),
-    tentaclebeast: M('boss set piece — hitbox is its spritemap, not transcribed', { class: 'TentacleBeast' }),
-    finaldoor: M('FinalDoor opens on the endgame condition', { class: 'FinalDoor', size: [2, 2] }),
-    treelarge: M('TreeLarge places its hitbox at +80,+96 from the Ogmo x/y and sizes it from a spritemap — footprint not transcribed', { class: 'TreeLarge' }),
+    tentaclebeast: M('boss set piece — collides through a per-pixel mask; its footprint is the mask\'s bounding box', { class: 'TentacleBeast' }),
+    finaldoor: M('FinalDoor opens on the endgame condition', { class: 'FinalDoor' }),
+    treelarge: M('TreeLarge collides through a per-pixel mask (Scenery/TreeLarge.as:22-30); its footprint is the mask\'s bounding box, and the physics model decides each crossing', { class: 'TreeLarge' }),
 
     // --- unconditional solids ------------------------------------------------
-    // Scenery. Sizes are the classes' own setHitbox calls; anything omitted is
-    // the 1x1 default.
-    tree: { kind: 'wall', class: 'Tree', size: [2, 2] },
-    treebare: { kind: 'wall', class: 'Tree', size: [2, 2], variant: { bare: true } },
-    opentree: { kind: 'wall', class: 'OpenTree', size: [2, 2] },
+    // Scenery. Footprints are the model's hitboxes (`hitbox`, attached below).
+    tree: { kind: 'wall', class: 'Tree' },
+    treebare: { kind: 'wall', class: 'Tree', variant: { bare: true } },
+    opentree: { kind: 'wall', class: 'OpenTree' },
     rock: { kind: 'wall', class: 'Rock' },
     rock2: { kind: 'wall', class: 'Rock', variant: { rockType: 1 } },
     rock3: { kind: 'wall', class: 'Rock', variant: { rockType: 2 } },
@@ -404,21 +415,21 @@ export const ENTITY_SEMANTICS = Object.freeze({
     brickpole: { kind: 'wall', class: 'BrickPole' },
     brickwell: { kind: 'wall', class: 'BrickWell' },
     dungeonspire: { kind: 'wall', class: 'DungeonSpire' },
-    bar: { kind: 'wall', class: 'Bar', size: [4, 1] },
+    bar: { kind: 'wall', class: 'Bar' },
     barstool: { kind: 'wall', class: 'Barstool' },
-    bed: { kind: 'wall', class: 'Bed', size: [1, 2] },
-    dresser: { kind: 'wall', class: 'Dresser', size: [2, 1] },
-    snowhill: { kind: 'wall', class: 'SnowHill', size: [6, 4] },
-    statue1: { kind: 'wall', class: 'Statue', size: [1, 2] },
-    statue2: { kind: 'wall', class: 'Statue', size: [1, 2], variant: { statueType: 1 } },
-    shieldstatue: { kind: 'wall', class: 'ShieldStatue', size: [2, 2] },
-    oraclestatue: { kind: 'wall', class: 'OracleStatue', size: [2, 2] },
-    ruinedpillar: { kind: 'wall', class: 'RuinedPillar', size: [2, 2] },
-    moonrockpile: { kind: 'wall', class: 'MoonrockPile', size: [2, 1] },
+    bed: { kind: 'wall', class: 'Bed' },
+    dresser: { kind: 'wall', class: 'Dresser' },
+    snowhill: { kind: 'wall', class: 'SnowHill' },
+    statue1: { kind: 'wall', class: 'Statue' },
+    statue2: { kind: 'wall', class: 'Statue', variant: { statueType: 1 } },
+    shieldstatue: { kind: 'wall', class: 'ShieldStatue' },
+    oraclestatue: { kind: 'wall', class: 'OracleStatue' },
+    ruinedpillar: { kind: 'wall', class: 'RuinedPillar' },
+    moonrockpile: { kind: 'wall', class: 'MoonrockPile' },
     planttorch: { kind: 'wall', class: 'PlantTorch' },
     bonetorch: { kind: 'wall', class: 'BoneTorch' },
     bonetorch2: { kind: 'wall', class: 'BoneTorch', variant: { boneType: 1 } },
-    iceturret: { kind: 'wall', class: 'IceTurret', size: [2, 2] },
+    iceturret: { kind: 'wall', class: 'IceTurret' },
     // Buildings collide through a Pixelmask (Scenery/Building.as:22), so their
     // real outline is per-pixel and this transcription does not have it. Neither
     // rectangle approximation is safe: the sprite rect swallows the building's
@@ -428,7 +439,9 @@ export const ENTITY_SEMANTICS = Object.freeze({
     // derivable outline. Everything walks THROUGH it in the flood, so a house
     // standing in open ground costs nothing, and a building that is genuinely
     // the only way between two areas becomes a hand-authoring row instead of an
-    // invented wall. `size` is the sprite rectangle, kept for the overlay.
+    // invented wall. `size` is the sprite rectangle: it CONTAINS the mask's
+    // bounding box (the model's), so every tile the mask can block is one the
+    // model is asked about — see ENTITY_SEMANTICS below.
     building: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [4, 4], pixelMask: true }),
     building1: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [3, 3], pixelMask: true, variant: { buildingType: 1 } }),
     building2: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [4, 4], pixelMask: true, variant: { buildingType: 2 } }),
@@ -513,6 +526,25 @@ export const ENTITY_SEMANTICS = Object.freeze({
 });
 
 /**
+ * The transcription with the MODEL's hitbox attached: every tag
+ * `seedlingEntityColliders.js` has a box for carries it as `hitbox`
+ * (`{left, top, w, h}` in pixels from the placement), and that is the
+ * footprint `entityPixelRect` reads. See the ⛓ RULES footprints note above.
+ */
+export const ENTITY_SEMANTICS = Object.freeze(Object.fromEntries(
+    Object.entries(TRANSCRIBED_ENTITY_SEMANTICS).map(([tag, row]) => {
+        const box = ENTITY_COLLIDERS[tag];
+        // A Building (`pixelMask: true`) keeps its sprite rect: it is `manual`,
+        // so its footprint is where the physics model is ASKED, and the sprite
+        // contains the mask's bounding box (`scripts/procgen/seedlingFootprints.test.js` pins
+        // that). Its tighter box would only rename sub-regions — the starter
+        // atlas's hub among them — and move no crossing.
+        if (!box || row.pixelMask) return [tag, row];
+        return [tag, Object.freeze({ ...row, hitbox: Object.freeze({ left: box.left, top: box.top, w: box.w, h: box.h }) })];
+    }),
+));
+
+/**
  * Ogmo tags that are LEVEL PROPERTIES, not map objects: Game.as reads them off
  * `xml.objects[0]` to set a world-wide flag and never constructs an entity
  * (Game.as:1871-1890 for the light/weather ones, 2048-2065 for control and
@@ -555,28 +587,37 @@ export function entitySemantics(entity) {
     return base;
 }
 
-/** The entity's hitbox in PIXELS: top-left at its Ogmo x/y, size from the table. */
+/**
+ * The entity's hitbox in PIXELS: the model's `hitbox` placed at its Ogmo x/y,
+ * or — for a row the model has no box for — `size` tiles from the x/y.
+ */
 export function entityPixelRect(entity, semantics) {
+    const box = semantics?.hitbox;
     let [w, h] = semantics?.size ?? [1, 1];
-    let pw = Math.max(1, w) * SEEDLING_TILE_SIZE;
-    const ph = Math.max(1, h) * SEEDLING_TILE_SIZE;
+    let pw = box ? box.w : Math.max(1, w) * SEEDLING_TILE_SIZE;
+    const ph = box ? box.h : Math.max(1, h) * SEEDLING_TILE_SIZE;
+    const x = entity.x + (box?.left ?? 0);
+    const y = entity.y + (box?.top ?? 0);
     // RopeStart's hitbox spans from its x to the rope's far end (Game.as:2209,
     // RopeStart.as:25), so its width is a per-placement attribute.
     if (semantics?.spanAttr) {
         const end = Number(entity.attrs?.[semantics.spanAttr]);
         if (Number.isInteger(end) && end >= entity.x) pw = end - entity.x + SEEDLING_TILE_SIZE;
     }
-    return { x: entity.x, y: entity.y, w: pw, h: ph };
+    return { x, y, w: pw, h: ph };
 }
 
-/** The tile rect an entity covers: top-left tile + its hitbox size in tiles. */
+/** The tile rect an entity's hitbox touches: every tile it overlaps, whole or in part. */
 export function entityFootprint(entity, semantics) {
     const rect = entityPixelRect(entity, semantics);
+    const T = SEEDLING_TILE_SIZE;
+    const x = Math.floor(rect.x / T);
+    const y = Math.floor(rect.y / T);
     return {
-        x: Math.floor(entity.x / SEEDLING_TILE_SIZE),
-        y: Math.floor(entity.y / SEEDLING_TILE_SIZE),
-        w: Math.max(1, Math.ceil(rect.w / SEEDLING_TILE_SIZE)),
-        h: Math.max(1, Math.ceil(rect.h / SEEDLING_TILE_SIZE)),
+        x,
+        y,
+        w: Math.max(1, Math.ceil((rect.x + rect.w) / T) - x),
+        h: Math.max(1, Math.ceil((rect.y + rect.h) / T) - y),
     };
 }
 
@@ -584,9 +625,8 @@ export function entityFootprint(entity, semantics) {
  * ⛔ THE TILES AN ENTITY ACTUALLY SEALS — not the ones it merely touches
  * (R7 slice 5).
  *
- * `entityFootprint` snaps the hitbox to `floor(x/16)` and then claims `size`
- * whole tiles. For the 994 grid-aligned wall entities that is exactly the
- * hitbox. For the **29 that are placed off the 16 px grid** it is a lie in the
+ * `entityFootprint` claims every tile the hitbox touches. For the 994
+ * grid-aligned wall entities that is exactly the hitbox. For the **29 that are placed off the 16 px grid** it is a lie in the
  * dangerous direction: `planttorch@120,152`'s 16x16 rect covers the bottom-right
  * QUARTER of tile (7,9) and three more quarters elsewhere, and calling all four
  * tiles walls sealed the only route to L62's north island — and with it the
