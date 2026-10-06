@@ -183,10 +183,12 @@ export const SOLVER_UPGRADE_WINDOW_WORK = 40;
  * ⛓ DETERMINISTIC BUDGET — the WALL-CLOCK BACKSTOP of one solve attempt, from
  * the worker's start. It never decides an answer: when it fires the solve is
  * terminated and the goal FAILS BY NAME ("the solve exceeded the backstop on
- * this machine"); a plan in hand is NOT played. Several times the calibrated
- * worst case (flash.md "Pass deadlines").
+ * this machine"); a plan in hand is NOT played. ~5× the calibrated worst
+ * SHIPPING attempt (an L40 leg, 62 s on the calibration box; flash.md "Pass
+ * deadlines"). A solve with a longer scan-free stretch (L40's leg 363: no
+ * answer in 7 min) ends here, by name.
  */
-export const SOLVE_BACKSTOP_MS = 180000;
+export const SOLVE_BACKSTOP_MS = 300000;
 
 /**
  * ⛓ SHOULD-STOP → DETERMINISTIC BUDGET — the upgrade window a solve gives its
