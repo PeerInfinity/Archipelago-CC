@@ -8611,7 +8611,26 @@ function deriveCeilingWeapon(run, contacts) {
     const { presser, arms } = options[0];
     const resolved = resolvePresser(world, { x: presser.x, y: presser.y },
         `solverBot kill-by-ceiling (${presser.tag}@${presser.x},${presser.y})`);
-    const { stance, exempt } = deriveHoldStance(run, resolved, contacts);
+    /**
+     * ⛓ SEEDLING FIDELITY STANCE — **A PRESSER WITH NO STANCE IS THIS RUNG'S
+     * REFUSAL, NOT THE SOLVE'S.** `deriveHoldStance` throws when no cell in the
+     * button plans a corridor, and that throw used to escape the whole ladder: the
+     * JS arc's sweep leg L8 → L7 from the L9 door (no items) declined with
+     * *"no REACHABLE stance inside button@64,48 … A hold that cannot be stood on is
+     * not a strategy for this obstacle"*, though the obstacle was a sandtrap and
+     * the button only the ceiling's presser (cut off by `pushableblock@96,112` and
+     * Water). The throw ended the solve, so nothing that solves passes here.
+     */
+    let stance;
+    let exempt;
+    try {
+        ({ stance, exempt } = deriveHoldStance(run, resolved, contacts));
+    } catch (e) {
+        if (!(e instanceof SolverRefusal)) throw e;
+        return { presser: null, why: `the ceiling's presser ${presser.tag}@${presser.x},${presser.y} `
+            + `(group t=${presser.t}, arming [${arms.map((t) => t.id).join(', ')}]) has no stance this `
+            + `run can stand on — ${String(e.message).replace(/^solverBot: /, '')}` };
+    }
     const lanes = arms.map((t) => laneRectOf(run, t));
     const over = lanes.filter((l) => rectsOverlapLocal(l, playerBoxAt(stance.x, stance.y)));
     if (over.length > 0) {
