@@ -58,7 +58,12 @@
  *    `{class, property, value}` flag writes, `{class:'game', property:'menu'}`
  *    (accepted, nothing to do), and the teleport recipe
  *    `{invocation:'new_instance', className:'Game', args:[level, x, y]}`
- *    → a fresh run booted at those constructor args.
+ *    → a fresh run booted at those constructor args; ⛓ KEY DELIVERY: and
+ *    the key setter `{invocation:'method_call', path:[{class:'Main'}],
+ *    method:'hasKeySet', args:[i, true]}` → the session's key. Every boot
+ *    stages the session's keys (`save.keys`) and the last run's slot order
+ *    (`inventory_slots`, `primary`), so a teleport, a Restart or an item
+ *    reboot keeps both, as the game's statics do.
  *  · `botLoadLevels` answers `'pending'` per chunk and `'ok'` on the last;
  *    `botLevelSet` reads back `{active, table_levels, start_level}`
  *    (`levelSetDisagreement.READBACK_FIELDS`).
@@ -121,7 +126,7 @@ import { buildLevelWorld, ENTITY_CLASSES, entityRect, STAIRS_TAGS, tagOf } from 
 import { chestStanceBand } from './chest.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
-import { BUILD_SPAWN, ITEM_PROPERTIES } from './tapeFormat.js';
+import { BUILD_SPAWN, INVENTORY_ITEM_IDS, ITEM_PROPERTIES } from './tapeFormat.js';
 import { createRuntimeWalker, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
 import { createRuntimeSolver } from './jsRuntimeSolver.js';
 import { VANILLA_RECORD_SET_ID_BASE } from './levelSetExporter.js';
@@ -292,6 +297,12 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     let baselineOwed = false;
 
     const flags = { ...ITEM_FLAGS };
+    /**
+     * ⛓ KEY DELIVERY — the session's KEYS (`Main.SAVE_FILE.data.hasKey`): the host's `Main.hasKeySet(i, true)`
+     * calls (an AP key) ∪ what a run picked up itself (a vanilla `BossKey`). Merged, never cleared (the game
+     * never takes a key back), and staged into every boot's `save.keys`. A new mounted set is a new save.
+     */
+    const heldKeys = new Set();
     let menu = true;
     let queue = [];
 
@@ -424,6 +435,28 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         }
     }
 
+    /** ⛓ KEY DELIVERY — fold the keys the run holds (picked up in play included) into the session's. */
+    function foldGainedKeys() {
+        for (const k of session?.run?.keys ?? []) if (Number.isInteger(k)) heldKeys.add(k);
+    }
+
+    /**
+     * ⛓ KEY DELIVERY — the run's SLOT ORDER and selected slot, carried into the next boot (§5.27: the game's
+     * `Inventory.items` is static, so a host teleport, a Restart or an item-flag reboot keeps it). A slot whose
+     * item the flags no longer hold is DROPPED (the model refuses such a slot, `inventorySlotsRefusal`; the game
+     * would keep it — an item REMOVED from the inventory, the one case where the two part). No previous run
+     * (the first boot, a new mounted set) = a fresh game's, as before.
+     */
+    function carriedSlots() {
+        const run = session?.run ?? null;
+        if (!run || !Array.isArray(run.inventorySlots)) return null;
+        const flagOf = Object.fromEntries(Object.entries(INVENTORY_ITEM_IDS)
+            .map(([name, id]) => [id, ITEM_PROPERTIES[name].property]));
+        // (`foldGainedItems` ran first: a weapon picked up in play is in the flags already.)
+        const slots = run.inventorySlots.filter((id) => flags[flagOf[id]] === true);
+        return { slots, primary: Number.isInteger(run.primary) ? run.primary : 0 };
+    }
+
     function boot({ level, x, y }, why) {
         const src = roomSource();
         if (!src) throw new Error('jsRuntimeCore: no level set is mounted and no vanilla map is loaded — nothing to boot');
@@ -433,10 +466,18 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         }
         bankClears();
         foldGainedItems();
+        foldGainedKeys();
+        const slots = carriedSlots();
         // The constructor writes the statics before it builds anything (a room the model refuses included).
         lastCtor = { x, y };
         const staging = bootStaging({ boot: { level, x, y }, items: { ...flags }, pins: [...JS_RUNTIME_PINS] });
         staging.persistence = [...carried.values()].map((c) => ({ ...c }));
+        // ⛓ KEY DELIVERY — the session's keys and slot order survive every boot (teleport, Restart, item reboot).
+        staging.save = { ...staging.save, keys: [...heldKeys].sort((a, b) => a - b) };
+        if (slots) {
+            staging.inventory_slots = slots.slots;
+            staging.seam = { ...(staging.seam ?? {}), primary: slots.primary };
+        }
         bootItems = { ...flags };
         try {
             session = createManualSession({ levelSource: src.source, staging, name: 'js-runtime', scratchPersistence: true });
@@ -629,6 +670,18 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     function aliasClass(alias) { return aliases.get(alias) ?? alias; }
 
     function applyItem(item) {
+        // ⛓ KEY DELIVERY — `Main.hasKeySet(i, true)` (games/seedling.json's method-call keys): the session gains
+        // the key and the room is rebooted in place, as for an item flag (a key is read at BUILD: a held key's
+        // `BossKey` removes itself). A `false` is never sent (the adapter never clears) and is not modelled.
+        if (item?.invocation === 'method_call' && aliasClass(item.path?.[0]?.class) === MAIN
+            && item.method === 'hasKeySet' && Number.isInteger(item.args?.[0]) && item.args?.[1] === true) {
+            const k = item.args[0];
+            if (!heldKeys.has(k) && !(session?.run?.keys?.has?.(k))) {
+                heldKeys.add(k);
+                if (session) deferredReboot = true;
+            } else heldKeys.add(k);
+            return;
+        }
         if (item?.invocation === 'new_instance') {
             if (item.className === GAME) teleport(item.args);
             else note({ type: 'ignored', message: `[js runtime] new_instance ${item.className} is not modelled` });
@@ -674,7 +727,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             if (property === 'pendingCheck') return pendingCheck;
             if (property === 'keyMask') {
                 let mask = 0;
-                for (const k of run?.keys ?? []) mask |= (1 << k);
+                for (const k of [...heldKeys, ...(run?.keys ?? [])]) mask |= (1 << k);
                 return mask;
             }
             if (property === 'totemCount') return (run?.saveState?.totem_parts ?? []).filter(Boolean).length;
@@ -768,8 +821,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ §5.18 — the statics outlive the run (a door crossed in-run moved them since its boot).
         if (session) lastCtor = { x: session.run.worldCtor.x, y: session.run.worldCtor.y };
         mounted = { set, kind: mountedKindOf(set), records, apItems, source: levelSourceFromAtlas(records) };
-        // A new set is a new save: what the old one cleared means nothing here.
+        // A new set is a new save: what the old one cleared means nothing here (its keys included).
         carried.clear();
+        heldKeys.clear();
         collected.clear();
         reportedClears.clear();
         session = null;

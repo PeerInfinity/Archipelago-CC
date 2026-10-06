@@ -479,13 +479,17 @@ export function shippedTape({ staging, keys = [], hold = false, name = 'wasm-pla
     return gameVisibleTape(hold ? holdingWindowTape(parsed) : parsed);
 }
 
+/** The game's index set ∪ the AP-granted one, sorted (⛓ KEY DELIVERY: `wasmDelivery.SAVE_ARRAY_MERGE`). */
+const grantedUnion = (live, granted) => (granted?.length
+    ? [...new Set([...live, ...granted])].sort((a, b) => a - b) : live);
+
 /**
  * null when `tape` declares EXACTLY the live state `status` reports, else the
  * refusal naming the first difference. The shape rules (`seam` null, the rng
  * left alone, the boot this level) are checked too, so a tape built by any
  * other path is caught here as well.
  */
-export function exactDeclarationRefusal(tape, status) {
+export function exactDeclarationRefusal(tape, status, { granted = null } = {}) {
     if (!tape || !status) return 'no tape or no botStatus to check the declaration against';
     if (tape.boot?.level !== status.level) {
         return `the tape boots level ${tape.boot?.level}, the game is in level ${status.level} — a host tape `
@@ -502,9 +506,12 @@ export function exactDeclarationRefusal(tape, status) {
             ? `omits ${JSON.stringify(lost)} (botStart would RESTORE them)` : ''}`;
     }
     const save = tape.save ?? {};
+    // ⛓ KEY DELIVERY — `granted` (`{keys: [...]}`, what AP holds) is DECLARED on top of the game's own
+    // (`wasmDelivery.SAVE_ARRAY_MERGE`): the tape boot is the host channel that hands the game an AP key.
+    // Never fewer than the game holds.
     const rows = [
-        ['keys', indicesOf(status.save?.keys)],
-        ['totem_parts', indicesOf(status.save?.totem_parts)],
+        ['keys', grantedUnion(indicesOf(status.save?.keys), granted?.keys)],
+        ['totem_parts', grantedUnion(indicesOf(status.save?.totem_parts), granted?.totem_parts)],
         ['seal_parts', sealValues(status.save?.seal_parts)],
     ];
     for (const [k, want] of rows) {
@@ -580,12 +587,14 @@ export function goalAction({ goal, liveLevel, playing = false, heldLevel = null 
  * (the model's start) but declares what the game holds NOW (a chest the last
  * plan opened is cleared), so `exactDeclarationRefusal` holds by construction.
  */
-export function liveDeclarations(staging, status) {
+export function liveDeclarations(staging, status, { granted = null } = {}) {
     if (!staging || !status) refuse('wasmPlayback: no staging or no botStatus to re-declare');
     return {
         ...staging,
         persistence: sortClears(status.persistence_cleared),
-        save: { ...(staging.save ?? {}), keys: indicesOf(status.save?.keys), totem_parts: indicesOf(status.save?.totem_parts),
+        // ⛓ KEY DELIVERY — the game's arrays ∪ what AP granted (`exactDeclarationRefusal`'s rule).
+        save: { ...(staging.save ?? {}), keys: grantedUnion(indicesOf(status.save?.keys), granted?.keys),
+            totem_parts: grantedUnion(indicesOf(status.save?.totem_parts), granted?.totem_parts),
             seal_parts: sealValues(status.save?.seal_parts) },
     };
 }

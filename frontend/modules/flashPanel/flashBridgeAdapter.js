@@ -29,6 +29,12 @@
 
 import { pollUntil } from './pollUntil.js';
 
+/**
+ * A method-call item write (`_setIfMissing`) is re-sent after this many queue
+ * ticks while the game's readout still lacks it (one tick = one game frame).
+ */
+export const METHOD_RETRY_TICKS = 30;
+
 const adapters = new Map(); // flashObjectId -> adapter
 
 function ensureGlobalEntryPoints() {
@@ -576,7 +582,7 @@ export class FlashBridgeAdapter {
     // Only compute property writes once the game has initialized
     // enough to accept them. Before then, the bridge will throw
     // #1009 on every write attempt and flood its log.
-    const writes = this.gameReady ? this._buildItemWritesFromInventory() : [];
+    const writes = this.gameReady ? this._setIfMissing(this._buildItemWritesFromInventory()) : [];
     const undoForThisTick = this.gameReady ? this.undoQueue : [];
     if (this.gameReady) this.undoQueue = [];
 
@@ -634,6 +640,10 @@ export class FlashBridgeAdapter {
       const def = this.flashItemDefs[flashName];
       if (!def) continue;
 
+      if (def.method) {
+        writes.push(this._methodWriteFor(def));
+        continue;
+      }
       if (def.op === 'add') {
         const key = def.property;
         if (!addAccum[key]) addAccum[key] = { def, total: 0 };
@@ -677,6 +687,57 @@ export class FlashBridgeAdapter {
     }
 
     return writes;
+  }
+
+  /**
+   * ⛓ A METHOD-CALL ITEM: an item the game holds behind a SETTER FUNCTION, not
+   * a settable static (Seedling's keys: `Main.hasKeySet(i, true)` — `hasKey`
+   * is a function and `keyMask` a getter, so a property write lands nowhere).
+   * The def names the call (`class` alias, `method`, `args`) and the readout
+   * that says the game already holds it (`observed: {property, bit}`); the
+   * write carries both, plus any declared `save_array` / `index` (the staging
+   * channel a host-side driver mirrors it into). The bridge's `method_call`
+   * reads only `path` / `method` / `args` — the rest is stripped before it is
+   * queued (`_setIfMissing`).
+   */
+  _methodWriteFor(def) {
+    const cls = this.config.classes?.[def['class']]?.name ?? def['class'];
+    const w = {
+      invocation: 'method_call',
+      path: [{ 'class': cls }],
+      method: def.method,
+      args: [...(def.args || [])],
+    };
+    if (def.observed) w.observed = { ...def.observed };
+    if (def.save_array) { w.save_array = def.save_array; w.index = def.index; }
+    return w;
+  }
+
+  /**
+   * ⛓ THE MERGE RULE FOR METHOD-CALL ITEMS — `SET_IF_MISSING`: a call is queued
+   * only while the game's `observed` readout lacks it (a key the game holds,
+   * from AP or picked up in play, is never written again), and never more than
+   * once per `METHOD_RETRY_TICKS` while its echo is outstanding. Nothing is
+   * ever CLEARED: an item that leaves the inventory leaves the game as it is
+   * (the game's own pickups must survive). Property writes pass unchanged.
+   */
+  _setIfMissing(writes) {
+    this._methodSentAt = this._methodSentAt || {};
+    const out = [];
+    for (const w of writes) {
+      if (w.invocation !== 'method_call') { out.push(w); continue; }
+      const id = `${w.path?.[0]?.['class']}.${w.method}(${(w.args || []).join(',')})`;
+      const obs = w.observed;
+      if (obs) {
+        const v = Number(this.gameState[obs.property]);
+        if (Number.isFinite(v) && ((v >> obs.bit) & 1) === 1) { delete this._methodSentAt[id]; continue; }
+      }
+      const at = this._methodSentAt[id];
+      if (at !== undefined && this._queueTickCount - at < METHOD_RETRY_TICKS) continue;
+      this._methodSentAt[id] = this._queueTickCount;
+      out.push({ invocation: w.invocation, path: w.path, method: w.method, args: w.args });
+    }
+    return out;
   }
 
   _inventoryToFlashItems(inventoryCounts, { quiet = false } = {}) {

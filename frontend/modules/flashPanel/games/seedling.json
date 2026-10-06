@@ -144,6 +144,7 @@
     { "property": "hasDarkShield","flash_name": "darkshield",  "ap_name": "Dark Shield" }
   ],
 
+  "$comment_keys": "⛓ KEY DELIVERY (solver-walk, 2026-10-06): the five keys are METHOD-CALL items. `Main.hasKey` is a function and `keyMask` a getter, so a property write reaches nothing; the def names the game's own setter, `Main.hasKeySet(i, true)`, which BridgeGeneric's `method_call` invokes (measured on p4f: botStatus.save.keys went [F,F,F,F,F] → [T,F,F,F,F]). `observed` is the readout that says the game already holds it (keyMask bit i): the adapter writes a key only while that bit is clear and NEVER clears one (SET_IF_MISSING), so a key the game picked up in play stays. `save_array`/`index` name the staging channel (`save.keys`) the wasm engine mirrors the AP-held keys into, because every host tape boot resets the game's keys to the tape's `save.keys` (Bot.as). Keys are never consumed (BossLock only reads hasKey). ⛔ A TOP-LEVEL KEY, like the notes above.",
   "items": [
     { "flash_name": "sword",       "class": "main", "property": "hasSword",      "value": true },
     { "flash_name": "darksword",   "class": "main", "property": "hasDarkSword",  "value": true },
@@ -158,7 +159,12 @@
     { "flash_name": "spear",       "class": "main", "property": "hasSpear",      "value": true },
     { "flash_name": "darksuit",    "class": "main", "property": "hasDarkSuit",   "value": true },
     { "flash_name": "torch",       "class": "main", "property": "hasTorch",      "value": true },
-    { "flash_name": "health",      "class": "main", "property": "hitsMax",       "op": "add", "value": 1, "base": 3 }
+    { "flash_name": "health",      "class": "main", "property": "hitsMax",       "op": "add", "value": 1, "base": 3 },
+    { "flash_name": "key0",        "class": "main", "method": "hasKeySet", "args": [0, true], "observed": { "property": "keyMask", "bit": 0 }, "save_array": "keys", "index": 0 },
+    { "flash_name": "key1",        "class": "main", "method": "hasKeySet", "args": [1, true], "observed": { "property": "keyMask", "bit": 1 }, "save_array": "keys", "index": 1 },
+    { "flash_name": "key2",        "class": "main", "method": "hasKeySet", "args": [2, true], "observed": { "property": "keyMask", "bit": 2 }, "save_array": "keys", "index": 2 },
+    { "flash_name": "key3",        "class": "main", "method": "hasKeySet", "args": [3, true], "observed": { "property": "keyMask", "bit": 3 }, "save_array": "keys", "index": 3 },
+    { "flash_name": "key4",        "class": "main", "method": "hasKeySet", "args": [4, true], "observed": { "property": "keyMask", "bit": 4 }, "save_array": "keys", "index": 4 }
   ],
 
   "progressive_items": {

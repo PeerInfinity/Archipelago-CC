@@ -113,8 +113,8 @@ import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.j
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
 import {
-    deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, equipSlotRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites, slotsAfterDelivery,
-    stageItems,
+    deliveredSaveArrays, deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, equipSlotRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites,
+    liveSaveArrays, mergeSaveArrays, saveArraysOfWrites, saveDelta, slotsAfterDelivery, stageItems, stageSaveArrays,
 } from '../seedlingDemo/wasmDelivery.js';
 
 /** How long a goal waits for its arrival (a crossing, or the forced re-arrival) before it fails by name. */
@@ -506,6 +506,7 @@ export function createWasmPlayback({
         if (be && be['begin.level'] === st.level) {
             try {
                 ({ staging } = stagingFromWasmArrival({ seam: se, status: st, state, record }));
+                staging = withApSave(staging);
                 const one = replayTape({ staging, perTick: [new Set()], levelSource, scratchPersistence: true });
                 shadow = { x: one.state.x, y: one.state.y, direction: one.state.direction };
             } catch (err) { return refused('staging', String(err?.message ?? err).split('\n')[0]); }
@@ -521,7 +522,7 @@ export function createWasmPlayback({
         if (blocked) return refused('glue', blocked);
         let freeze;
         try { freeze = shippedTape({ staging, keys: [], hold: true, name: `wasm-adopt-${g.level}` }); } catch (err) { return refused('tape', err.message); }
-        const decl = exactDeclarationRefusal(freeze, st);
+        const decl = exactDeclarationRefusal(freeze, st, { granted: apSave() });
         if (decl) return refused('declaration', decl);
         const started = hostStart(freeze, 'adopt');
         if (started) { fail(started); return true; }
@@ -763,13 +764,14 @@ export function createWasmPlayback({
         let staging;
         try {
             ({ staging } = stagingFromWasmArrival({ seam: se, status: st, state, record: records.get(level) ?? null }));
+            staging = withApSave(staging);
         } catch (err) { stats.holdBlocked.push({ level, why: err.message }); return false; }
         let freeze;
         try { freeze = shippedTape({ staging, keys: [], hold: true, name: `wasm-hold-${level}` }); } catch (err) {
             stats.holdBlocked.push({ level, why: err.message });
             return false;
         }
-        const decl = exactDeclarationRefusal(freeze, st);
+        const decl = exactDeclarationRefusal(freeze, st, { granted: apSave() });
         if (decl) { stats.holdBlocked.push({ level, why: `the hold tape was not shipped — ${decl}` }); return false; }
         // The exit plan that crossed: its tape may still be armed (the trailing ticks after the crossing).
         const exitLeg = phase === 'playing' && play?.plan ? play : null;
@@ -848,10 +850,11 @@ export function createWasmPlayback({
         let staging;
         try {
             ({ staging } = stagingFromWasmArrival({ seam: se, status: st, state, record }));
+            staging = withApSave(staging);
         } catch (err) { fail(err.message); return; }
         let freeze;
         try { freeze = shippedTape({ staging, keys: [], hold: true, name: `wasm-freeze-${goal.level}` }); } catch (err) { fail(err.message); return; }
-        const decl = exactDeclarationRefusal(freeze, st);
+        const decl = exactDeclarationRefusal(freeze, st, { granted: apSave() });
         if (decl) { fail(`the freeze tape was not shipped — ${decl}`); return; }
         const started = hostStart(freeze, 'freeze');
         if (started) { fail(started); return; }
@@ -1164,10 +1167,10 @@ export function createWasmPlayback({
         const hold = holds && endsHeld(goal);
         let tape;
         try {
-            tape = shippedTape({ staging: play.continuation ? liveDeclarations(staging, st) : staging, keys: plan.solution, hold, equips,
+            tape = shippedTape({ staging: play.continuation ? liveDeclarations(staging, st, { granted: apSave() }) : staging, keys: plan.solution, hold, equips,
                 name: `wasm-${play.continuation ? 'continue-' : ''}${goal.kind}-${goal.level}` });
         } catch (err) { fail(err.message); return; }
-        const decl = exactDeclarationRefusal(tape, st);
+        const decl = exactDeclarationRefusal(tape, st, { granted: apSave() });
         if (decl) { fail(`the plan tape was not shipped — ${decl}`); return; }
         const started = hostStart(tape, play.continuation ? 'continuation' : 'plan');
         if (started) { fail(started); return; }
@@ -1325,6 +1328,25 @@ export function createWasmPlayback({
     function delivery() { try { return getDelivery?.() ?? null; } catch { return null; } }
 
     /**
+     * ⛓ KEY DELIVERY — the save arrays AP has let through to the game (`{keys: [...]}`): what the panel's
+     * writes for the ADMITTED inventory declare (`save_array`, `games/seedling.json`'s method-call keys).
+     * A delivery the gate still holds is not in it. No delivery handle (a generated engine, a test) = none.
+     */
+    function apSave() {
+        const d = delivery();
+        if (typeof d?.writesOf !== 'function') return {};
+        let inv = gate?.admitted ?? null;
+        if (!inv) { try { inv = d.inventory?.() ?? null; } catch { inv = null; } }
+        if (!inv) return {};
+        try { return saveArraysOfWrites(d.writesOf(inv)); } catch { return {}; }
+    }
+    /**
+     * Every staging the engine takes (arrival, hold, adoption) carries the AP-held keys (`SAVE_ARRAY_MERGE`,
+     * union): its tape boot then hands them to the game, and the model sees what the game will hold.
+     */
+    const withApSave = (staging) => stageSaveArrays(staging, apSave());
+
+    /**
      * Install the gate on the panel adapter (once per drive): the inventory as it stands is admitted; from now
      * on a delivery the game would SEE is held back (`gateFilter`) until `deliveryStep` finds a safe point.
      */
@@ -1347,14 +1369,17 @@ export function createWasmPlayback({
         try { g?.handle?.setItemGate?.(null); } catch { /* the panel is gone */ }
     }
 
+    // ⛓ KEY DELIVERY — a method-call write (a key) is told apart by its call, not by a property.
+    const writeId = (w) => [w.property ?? `${w.method}(${(w.args ?? []).join(',')})`, w.value ?? null];
     const sameWrites = (d, a, b) => {
-        const key = (inv) => JSON.stringify((d.writesOf(inv) ?? []).map((w) => [w.property, w.value]).sort());
+        const key = (inv) => JSON.stringify((d.writesOf(inv) ?? []).map(writeId).sort());
         return key(a) === key(b);
     };
 
     /**
      * The gate itself — the adapter calls it on every push with the live inventory and writes what it returns.
-     * A change the game cannot see (a key, a totem shard, nothing) is admitted at once; one it can see is held
+     * A change the game cannot see (a totem shard, a Seal, nothing: no write differs) is admitted at once; one it can
+     * see (⛓ KEY DELIVERY: a key's `hasKeySet` call included) is held
      * back (what was admitted, with any count that FELL passed through) and `deliveryStep` is started.
      */
     function gateFilter(live) {
@@ -1407,6 +1432,10 @@ export function createWasmPlayback({
     function predicted(st) {
         return itemsAfterWrites(st?.items ?? {}, gate.handle.writesOf(gate.pending) ?? []);
     }
+    /** ⛓ KEY DELIVERY — the save arrays after the held delivery: the game's ∪ AP's admitted ∪ the pending ones. */
+    function predictedSave(st) {
+        return mergeSaveArrays(liveSaveArrays(st), apSave(), saveArraysOfWrites(gate.handle.writesOf(gate.pending) ?? []));
+    }
 
     /** A delivery the model cannot take mid-run waits out the room (`DELIVERY_FALLBACK`): the next arrival stages it. */
     function deferDelivery(refusal, at) {
@@ -1417,13 +1446,13 @@ export function createWasmPlayback({
     }
 
     /** Let the held delivery through and wait for the game to show it; `then()` runs once it has. */
-    function admit(items, row, then) {
+    function admit(items, row, then, save = {}) {
         const g = gate;
         g.admitted = { ...g.pending };
         g.pending = null;
         g.deferred = null;
         g.waiting = null;
-        landing = { items, since: now(), row, then };
+        landing = { items, save, since: now(), row, then };
         try { g.handle.push?.(); } catch { /* the next tick pushes it */ }
         scheduleDelivery(awaitLanded, 0);
     }
@@ -1433,7 +1462,7 @@ export function createWasmPlayback({
         const l = landing;
         if (!l) return;
         const st = status();
-        if (st && itemDelta(st.items, l.items).length === 0) {
+        if (st && itemDelta(st.items, l.items).length === 0 && saveDelta(liveSaveArrays(st), l.save).length === 0) {
             l.row.landMs = Math.round(now() - l.since);
             landing = null;
             l.then(st);
@@ -1443,7 +1472,9 @@ export function createWasmPlayback({
         if (now() - l.since > DELIVERY_LAND_MS) {
             landing = null;
             l.row.outcome = 'unlanded';
-            fail(`an item delivery did not show in the game within ${DELIVERY_LAND_MS / 1000} s (${itemDelta(st?.items, l.items).map((d) => d.property).join(', ')})`);
+            const missing = [...itemDelta(st?.items, l.items).map((d) => d.property),
+                ...saveDelta(liveSaveArrays(st), l.save).map((k) => `save.${k.array}[${k.index}]`)];
+            fail(`an item delivery did not show in the game within ${DELIVERY_LAND_MS / 1000} s (${missing.join(', ')})`);
             return;
         }
         scheduleDelivery(awaitLanded, DELIVERY_POLL_MS);
@@ -1480,11 +1511,12 @@ export function createWasmPlayback({
         if (readState().freezeObjects === true) { resume('the game is in a freeze (dead frames)'); return; }
         if (st.level !== room.level || plan.expected.slice(0, k + 2).some((r) => r.level !== room.level)) { resume('a crossing is in flight'); return; }
         const items = predicted(st);
+        const save = predictedSave(st);
         // `room.shipped` already holds this whole plan (`ship()` appends it): the prefix is what came before it + its first k.
         const prefix = [...room.shipped.slice(0, room.shipped.length - plan.solution.length), ...plan.solution.slice(0, k).map((h) => [...h])];
         // ⛓ WASM EQUIPS — the selections the prefix made (an equip AT the frozen tick has not fired: the game drained k ticks).
         const prefixEquips = (room.equips ?? []).filter((e) => e.t < prefix.length);
-        const refusal = deliveryRefusal({ staging: room.staging, shipped: prefix, items, status: st, levelSource, equips: equipsMap(prefixEquips) });
+        const refusal = deliveryRefusal({ staging: room.staging, shipped: prefix, items, save, status: st, levelSource, equips: equipsMap(prefixEquips) });
         if (refusal) { try { g.botHold('off'); } catch { /* gone */ } deferDelivery(refusal, 'playing'); return; }
         const heldKeys = keysHeldAtReset({ status: st, solution: plan.solution });
         const leg = play;
@@ -1492,8 +1524,9 @@ export function createWasmPlayback({
         frozen = { tick: k, solution: plan.solution, heldKeys, at: t0, leg, items, statusAt: st,
             stagingBefore: room.staging, shippedBefore: room.shipped, equipsBefore: room.equips ?? [] };
         const post = slotsAfterDelivery({ slots: st.inventory_slots ?? [], primary: st.primary, secondary: st.secondary }, items);
+        const added = deliveredSaveArrays({ staging: room.staging, status: st, save });
         const row = { level: room.level, goal: goal?.name ?? goal?.kind, phase: 'playing', tick: k, of: plan.solution.length,
-            items: itemDelta(st.items, items), heldKeys, outcome: 'replanning', policy: DELIVERY_POLICY };
+            items: itemDelta(st.items, items), save: saveDelta(liveSaveArrays(st), save), heldKeys, outcome: 'replanning', policy: DELIVERY_POLICY };
         stats.deliveries.push(row);
         // The interrupted leg: its tape stops at k (frozen); the goal is served by the continuation.
         token += 1;
@@ -1509,12 +1542,13 @@ export function createWasmPlayback({
             room.equips = prefixEquips;
             room.lead = heldKeys.length ? [heldKeys] : null;
             // ⛓ SLOTS CONSUMER — the game's array as it stood before the write: the model appends the delivered slot.
-            room.staging = stageItems(room.staging, landed.items, { slots: st.inventory_slots });
+            // ⛓ KEY DELIVERY — a delivered key is staged at the arrival too (only what is new to the staging and the game).
+            room.staging = stageItems(room.staging, landed.items, { slots: st.inventory_slots, save: added });
             room.slotLag = { before: st.inventory_slots ?? [], after: post.slots, primary: st.primary, secondary: st.secondary, held: heldKeys };
             phase = 'held';
             if (goal) { solveInRoom(); return; }
             enterHeld();
-        });
+        }, save);
     }
 
     /**
@@ -1526,11 +1560,13 @@ export function createWasmPlayback({
         const st = status();
         if (!st) { later(); return; }
         const items = predicted(st);
-        const refusal = deliveryRefusal({ staging: room.staging, shipped: room.shipped, items, status: st, levelSource, equips: roomEquips(room) });
+        const save = predictedSave(st);
+        const added = deliveredSaveArrays({ staging: room.staging, status: st, save });
+        const refusal = deliveryRefusal({ staging: room.staging, shipped: room.shipped, items, save, status: st, levelSource, equips: roomEquips(room) });
         const atArrival = room.shipped.length === 0 || (room.adopted && room.shipped.length === 1 && room.shipped[0].length === 0);
         if (refusal && !atArrival) { deferDelivery(refusal, phase); return; }
         const row = { level: room.level, goal: goal?.name ?? goal?.kind ?? null, phase, tick: room.shipped.length, items: itemDelta(st.items, items),
-            heldKeys: [], outcome: refusal ? 'forced' : 'replanning', policy: DELIVERY_POLICY, ...(refusal ? { clause: refusal.clause, why: refusal.why } : {}) };
+            save: saveDelta(liveSaveArrays(st), save), heldKeys: [], outcome: refusal ? 'forced' : 'replanning', policy: DELIVERY_POLICY, ...(refusal ? { clause: refusal.clause, why: refusal.why } : {}) };
         stats.deliveries.push(row);
         const solving = phase === 'solving';
         if (solving) {
@@ -1554,14 +1590,14 @@ export function createWasmPlayback({
                 log(`[wasm playback] the held room was released: an item arrived it cannot take (${why}) — the next goal re-enters it`, 'warn');
                 return;
             }
-            room.staging = stageItems(room.staging, landed.items, { slots: st.inventory_slots });
+            room.staging = stageItems(room.staging, landed.items, { slots: st.inventory_slots, save: added });
             room.slotLag = { before: st.inventory_slots ?? [], after: post.slots, primary: st.primary, secondary: st.secondary, held: [] };
             if (!solving) row.outcome = 'staged';
             phase = 'held';
             if (goal) { solveInRoom(); return; }
             enterHeld();
             if (queued) { const q = queued; queued = null; const r = begin(q.goal); if (!r.ok) fail(r.reason); }
-        });
+        }, save);
     }
 
     return {

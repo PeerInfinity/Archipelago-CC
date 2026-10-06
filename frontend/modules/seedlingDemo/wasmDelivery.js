@@ -77,6 +77,94 @@ export function itemDelta(before, after) {
         .map((p) => ({ property: p, from: before?.[p] ?? null, to: after?.[p] ?? null }));
 }
 
+// ── ⛓ KEY DELIVERY — the SAVE-ARRAY channel ────────────────────────────────
+//
+// A key is not an item property: the game holds it in `Main.SAVE_FILE.data.hasKey`,
+// which every host tape boot RESETS to the tape's `save.keys` (`Bot.as`, the R5
+// save-array block, unconditional). The panel writes an AP key through the game's
+// own setter (`games/seedling.json`: a METHOD-CALL item, `Main.hasKeySet(i, true)`),
+// and the write DECLARES the array it lands in (`save_array: 'keys'`, `index`). The
+// engine mirrors those into every staging and every shipped tape's declaration, so a
+// tape boot never takes back a key AP granted and the model sees what the game holds.
+
+/** The save arrays a delivery may reach: INDEX SETS (`keys`, `totem_parts`). `seal_parts` is positional and never merged. */
+export const UNION_SAVE_ARRAYS = Object.freeze(['keys', 'totem_parts']);
+
+/**
+ * ⚖ THE MERGE RULE: a save array AP reaches is the UNION of what the game holds and
+ * what AP granted — never an overwrite. A key the game picked up in play (a vanilla
+ * room's `BossKey`) and AP does not hold stays; a key AP holds and the game lost (a
+ * tape boot that declared too few) is restored. Nothing is ever cleared.
+ */
+export const SAVE_ARRAY_MERGE = 'union';
+
+const sortedUnion = (...lists) => [...new Set(lists.flat().filter((i) => Number.isInteger(i)))].sort((a, b) => a - b);
+
+/** The save arrays `writes` declare (`[{save_array, index}]`, the adapter's method-call items): `{keys: [0, 2]}`. */
+export function saveArraysOfWrites(writes) {
+    const out = {};
+    for (const w of writes ?? []) {
+        if (!w?.save_array) continue;
+        if (!UNION_SAVE_ARRAYS.includes(w.save_array)) {
+            throw new Error(`wasmDelivery: a write declares save array ${JSON.stringify(w.save_array)} — only the index sets `
+                + `${UNION_SAVE_ARRAYS.join(', ')} merge (seal_parts is positional)`);
+        }
+        out[w.save_array] = sortedUnion(out[w.save_array] ?? [], [w.index]);
+    }
+    return out;
+}
+
+/** The game's index sets off `botStatus.save` (booleans → true indices). */
+export function liveSaveArrays(status) {
+    const out = {};
+    for (const name of UNION_SAVE_ARRAYS) {
+        const arr = status?.save?.[name];
+        if (Array.isArray(arr)) out[name] = arr.flatMap((v, i) => (v ? [i] : []));
+    }
+    return out;
+}
+
+/** `SAVE_ARRAY_MERGE` over any number of `{name: indices}` maps. */
+export function mergeSaveArrays(...maps) {
+    const out = {};
+    for (const m of maps) for (const [name, idx] of Object.entries(m ?? {})) out[name] = sortedUnion(out[name] ?? [], idx ?? []);
+    return out;
+}
+
+/** What `after` holds that `before` does not, `[{array, index}]` (a merge never removes, so this is the whole delta). */
+export function saveDelta(before, after) {
+    const rows = [];
+    for (const name of UNION_SAVE_ARRAYS) {
+        const had = new Set(before?.[name] ?? []);
+        for (const i of after?.[name] ?? []) if (!had.has(i)) rows.push({ array: name, index: i });
+    }
+    return rows;
+}
+
+/** `staging` with `arrays` merged into its `save` block (`SAVE_ARRAY_MERGE`). A staging with no such array declares it. */
+export function stageSaveArrays(staging, arrays) {
+    if (!arrays || Object.keys(arrays).length === 0) return staging;
+    const s = structuredClone(staging);
+    s.save = { ...(s.save ?? {}) };
+    for (const [name, idx] of Object.entries(arrays)) {
+        if (!UNION_SAVE_ARRAYS.includes(name)) throw new Error(`wasmDelivery: no union rule for save.${name}`);
+        s.save[name] = sortedUnion(s.save[name] ?? [], idx ?? []);
+    }
+    return s;
+}
+
+/**
+ * The save arrays a delivery ADDS — in `save` (the predicted arrays) and in neither
+ * the staging's `save` nor the game's live arrays: `{keys: [i, …]}` (empty arrays
+ * dropped). What `deliveryRefusal` replays and what the engine re-stages.
+ */
+export function deliveredSaveArrays({ staging, status, save }) {
+    const had = mergeSaveArrays(staging?.save ?? {}, liveSaveArrays(status));
+    const out = {};
+    for (const { array, index } of saveDelta(had, save ?? {})) out[array] = sortedUnion(out[array] ?? [], [index]);
+    return out;
+}
+
 /**
  * `staging` with its item rows replaced by `items` (the room's ARRIVAL, as if
  * the item had been held when it began). The arrival staging carries them in
@@ -87,9 +175,12 @@ export function itemDelta(before, after) {
  * write) replaces the staged `inventory_slots`: the model appends the delivered
  * slot items to it at construction (`appendInventorySlots`), which is the array
  * the game will hold (`slotsAfterDelivery`). Omitted = the staging's own array.
+ *
+ * ⛓ KEY DELIVERY — `save` (`{keys: [...]}`) is merged into the staging's save
+ * arrays (`SAVE_ARRAY_MERGE`): a key delivered mid-room is staged at the arrival.
  */
-export function stageItems(staging, items, { slots } = {}) {
-    const s = structuredClone(staging);
+export function stageItems(staging, items, { slots, save } = {}) {
+    const s = structuredClone(stageSaveArrays(staging, save));
     if (Array.isArray(slots)) s.inventory_slots = [...slots];
     s.seam = s.seam ?? {};
     s.seam.items = { ...(s.seam.items ?? {}) };
@@ -155,20 +246,26 @@ const witness = (run) => `${runDigest(run)}|hits ${hitsOf(run)}`;
  * @param {object} o.staging  the room's arrival staging (the shadow's recipe)
  * @param {Array<Iterable<string>>} o.shipped  every key set the room has played since that arrival
  * @param {object} o.items    the game's items after the delivery (`itemsAfterWrites`)
+ * @param {object} [o.save]   ⛓ KEY DELIVERY — the save arrays after it (`{keys: [...]}`, merged; null = none)
  * @param {object} o.status   `botStatus` NOW (before the write): `items`, `inventory_slots`, `primary`, `secondary`
  * @param {object} o.levelSource
  * @param {Map<number, number>} [o.equips]  the slot selections those keys shipped with (room tick → slot)
  */
-export function deliveryRefusal({ staging, shipped, items, status, levelSource, equips = null }) {
+export function deliveryRefusal({ staging, shipped, items, save = null, status, levelSource, equips = null }) {
     const no = (clause, why) => ({ clause, why });
     const before = status?.items ?? {};
     const delta = itemDelta(before, items);
-    if (delta.length === 0) return null;
-    const names = delta.map((d) => d.property).join(', ');
+    // ⛓ KEY DELIVERY — a key the delivery adds that the STAGING does not already hold (the replay's question).
+    // Only what is NEW to both the staging and the game: a key the run picked up itself mid-room is in the
+    // model's run already, and staging it at the arrival would despawn its pickup there.
+    const added = deliveredSaveArrays({ staging, status, save });
+    const keyRows = saveDelta({}, added);
+    if (delta.length === 0 && keyRows.length === 0) return null;
+    const names = [...delta.map((d) => d.property), ...keyRows.map((k) => `save.${k.array}[${k.index}]`)].join(', ');
     let withItem;
     let without;
     try {
-        withItem = createRunForStaging(stageItems(staging, items), levelSource, { scratchPersistence: true });
+        withItem = createRunForStaging(stageItems(staging, items, { save: added }), levelSource, { scratchPersistence: true });
         without = createRunForStaging(staging, levelSource, { scratchPersistence: true });
     } catch (err) { return no('build', `the room does not build with ${names} staged: ${String(err?.message ?? err).split('\n')[0]}`); }
     if (witness(withItem) !== witness(without)) {
