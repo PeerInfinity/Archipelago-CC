@@ -122,14 +122,18 @@ describe('⛓ O2 — what a wasm solve past its budget does', () => {
         expect(expiryAction({ provisional: null, retries: 0 })).toBe('retry');
         expect(expiryAction({ provisional: refusal('dashless'), retries: 0 })).toBe('retry');
         expect(expiryAction({ provisional: null, retries: 1 })).toBe('give-up');
+        // ⛓ DETERMINISTIC BUDGET — a cut refusal whose every pass ANSWERED has nothing to resume: the end
+        expect(expiryAction({ provisional: refusal('dashless'), retries: 0, unanswered: false })).toBe('give-up');
     });
 
-    it('the failure names the budgets spent; a pass that DECLINED before the expiry leads (the door-only L14 race)', () => {
+    it('the failure names the work budgets spent; a pass that DECLINED (not cut) leads; a cut refusal follows the budgets', () => {
         const goal = { kind: 'exit', level: 16, name: 'level_16 -> level_17' };
-        expect(expiryFailure({ goal, budgets: [5000, 20000] }))
-            .toBe('the solver exceeded 5 s, then 20 s on its held retry on exit in level 16 (terminated)');
-        expect(expiryFailure({ goal, budgets: [5000, 20000], refusal: refusal('dashless') }))
+        expect(expiryFailure({ goal, budgets: [400, 1600] }))
+            .toBe('the solver ran out of 400, then 1600 work units on its held retry on exit in level 16');
+        expect(expiryFailure({ goal, budgets: [400, 1600], refusal: refusal('dashless') }))
             .toBe('the solver declined level_16 -> level_17 in level 16 (pass dashless): refused in dashless — and the solver '
-                + 'exceeded 5 s, then 20 s on its held retry on exit in level 16 (terminated)');
+                + 'ran out of 400, then 1600 work units on its held retry on exit in level 16');
+        expect(expiryFailure({ goal, budgets: [400], refusal: { ...refusal('full'), deadline: { tripped: true, first: 'detour' } } }))
+            .toBe('the solver ran out of 400 work units on exit in level 16: refused in full');
     });
 });

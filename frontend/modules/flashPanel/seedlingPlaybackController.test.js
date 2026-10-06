@@ -18,10 +18,13 @@ import { substrateRegistryEntry as atlasEntry, SEEDLING_ATLAS_PLAYBACK_SCOPE } f
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { parsePendingExit } from './seedlingRegionBinding.js';
 import { createJsRuntime } from '../seedlingDemo/jsRuntimeCore.js';
-import { createInPlaceSolveService } from '../seedlingDemo/jsRuntimeSolver.js';
+import { createInPlaceSolveService, SOLVER_BUDGET_WORK } from '../seedlingDemo/jsRuntimeSolver.js';
 import { assembleGeneratedSeedlingSet } from '../seedlingDemo/seedlingGeneratedSet.js';
 import { planLevelSetChunks } from '../seedlingDemo/levelSetValidator.js';
 import { CAPABILITY_STATEMENTS, CELL_KINDS } from '../procgenCore/substrateCapabilities.js';
+
+/** ⛓ DETERMINISTIC BUDGET — the walker's status while a solve is in flight names the WORK budget. */
+const SOLVING_NOTE = `solving… (budget ${SOLVER_BUDGET_WORK} work units)`;
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
 const GAME_CONFIG = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/games/seedling.json'), 'utf8'));
@@ -333,12 +336,12 @@ describe('SeedlingPlaybackController — the solver mode (solver-walk S1)', () =
         expect(rt.tick(new Set())).toEqual({ stepped: false, solving: true });
         expect(rt.run.ticksCompleted).toBe(ticks);
         expect(notes).toEqual([{ substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, target: { kind: 'location', name: 'Starting House - Chest' },
-            note: 'solving… (budget 5 s)' }]);
-        expect(c.lastNote).toBe('solving… (budget 5 s)');
+            note: SOLVING_NOTE }]);
+        expect(c.lastNote).toBe(SOLVING_NOTE);
         release();
         expect(rt.tick(new Set()).stepped).toBe(true);
         expect(rt.run.ticksCompleted).toBe(ticks + 1);
-        expect(notes.map((n) => n.note)).toEqual(['solving… (budget 5 s)', null]);
+        expect(notes.map((n) => n.note)).toEqual([SOLVING_NOTE, null]);
         expect(c.lastNote).toBeNull();
     });
 });

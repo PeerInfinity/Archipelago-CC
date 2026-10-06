@@ -18,8 +18,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { ADOPT_WAIT_MS, createWasmPlayback, loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
-import { TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
-import { ANYTIME_PASSES } from '../seedlingDemo/jsRuntimeSolver.js';
+import { SOLVE_RETRY_BUDGET_FACTOR, TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
+import { ANYTIME_PASSES, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK } from '../seedlingDemo/jsRuntimeSolver.js';
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService, mountedRecordsOf } from '../seedlingDemo/wasmWalkTape.js';
 import { assembleGeneratedSeedlingSet } from '../seedlingDemo/seedlingGeneratedSet.js';
@@ -163,8 +163,9 @@ function engineOver(arrival, opts = {}) {
         teleport: (p) => { teleports.push(p); if (opts.land !== false) game.land(); return true; },
         getCheckBinding: () => ({ ignoreHostStart: (w) => { windows.push(w); return true; } }),
         records: opts.records ?? RECORDS, generated: opts.generated ?? false, solveService: service, timers, now: opts.now ?? (() => (t += 1)),
-        ...(opts.getBudgetMs ? { getBudgetMs: opts.getBudgetMs } : {}),
-        ...(opts.getUpgradeWindowMs ? { getUpgradeWindowMs: opts.getUpgradeWindowMs } : {}),
+        ...(opts.getBudgetWork ? { getBudgetWork: opts.getBudgetWork } : {}),
+        ...(opts.getUpgradeWindowWork ? { getUpgradeWindowWork: opts.getUpgradeWindowWork } : {}),
+        ...(opts.backstopMs ? { backstopMs: opts.backstopMs } : {}),
         onNote: (n) => notes.push(n), onFailed: (r) => failures.push(r), onDone: (d) => dones.push(d),
     });
     return { engine, game, timers, teleports, windows, notes, failures, dones, service, swap };
@@ -424,10 +425,17 @@ describe('W3 — a divergence: botReset + forced re-arrival + re-solve, bounded,
 
 /** Run the manual timers in small slices until `pred()` (the arrival watch reschedules itself at 0 ms forever). */
 /**
- * ⛓ ANYTIME / O2 — script the engine's solves by attempt number (1-based): `'hang'` = a worker that never
- * answers (no pass landed); `{provisional: 'dashless'}` = the dashless pass's REAL plan landed, then the
- * worker hung; `{provisional: <answer>, answered}` = that answer landed. Anything else solves for real.
+ * ⛓ ANYTIME / O2 → DETERMINISTIC BUDGET — script the engine's solves by attempt number (1-based), each a
+ * worker's SETTLED answer (the cut is the answer's, never the clock's):
+ *   `'cut'`                  every pass cut at the work budget (a ⏱ refusal, nothing answered);
+ *   `{plan: 'dashless'}`     the dashless pass's REAL plan, the full pass cut at the budget;
+ *   `{decline: <answer>}`    the dashless pass DECLINED (not cut), the full pass cut at the budget;
+ *   `'hang'` / `{hang: 'dashless'}`  a worker that never answers (the dashless plan landed as provisional).
+ * Anything else solves for real.
  */
+const CUT_MSG = 'the block-route search hit `deadline` ⏱ DEADLINE: …';
+const cutRow = (pass) => ({ pass, ok: false, kind: 'refusal', ticks: null, deadline: 'block-route', limit: 'budget' });
+const cutAnswer = (pass) => ({ ok: false, kind: 'refusal', pass, message: CUT_MSG, deadline: { tripped: true, first: 'block-route', sites: { 'block-route': 1 } } });
 function scriptSolves(e, script) {
     const inner = e.service.start;
     let n = 0;
@@ -435,14 +443,22 @@ function scriptSolves(e, script) {
         n += 1;
         const step = script[n];
         if (!step) return inner(request);
-        e.service.seen.push({ request, hung: true });
-        let provisional = null;
-        let answered = 0;
-        if (step.provisional === 'dashless') {
-            provisional = inner({ ...request, passes: [ANYTIME_PASSES[0]] }).result;
-            answered = 1;
-        } else if (step.provisional) ({ provisional, answered = 1 } = step);
-        return { settled: false, started: true, startedAt: 0, result: null, provisional, answered, cancel() { this.settled = true; } };
+        e.service.seen.push({ request, scripted: step });
+        const names = (request.passes ?? ANYTIME_PASSES).map((p) => p.pass);
+        const settle = (result, answered) => ({ settled: true, started: true, startedAt: 0, result, provisional: result, answered,
+            passes: result.passes ?? [], cancel() {} });
+        if (step === 'cut') return settle({ ...cutAnswer(names.at(-1)), passes: names.map(cutRow) }, 0);
+        if (step.plan === 'dashless') {
+            const r = inner({ ...request, passes: [ANYTIME_PASSES[0]] }).result;
+            const passes = [...r.passes, cutRow('full')];
+            return settle({ ...r, passes, plan: { ...r.plan, passes } }, 1);
+        }
+        if (step.decline) return settle({ ...step.decline, passes: [{ pass: 'dashless', ok: false, kind: 'refusal', ticks: null }, cutRow('full')] }, 1);
+        const provisional = step.hang === 'dashless' ? inner({ ...request, passes: [ANYTIME_PASSES[0]] }).result : null;
+        const h = { settled: false, started: true, startedAt: 0, result: null, provisional, answered: provisional ? 1 : 0, passes: [],
+            cancel() { h.settled = true; h.cancelled = true; } };
+        e.service.seen.at(-1).handle = h;
+        return h;
     };
 }
 
@@ -464,22 +480,23 @@ function editingService(game, edit) {
     };
 }
 
-describe('⛓ ANYTIME / O2 / O3 — a solve past its budget: the provisional plan, the held retry, the knob', () => {
-    it('a pass\'s PLAN in hand at the expiry PLAYS (no retry, no re-arrival): the leg is named by its pass, `expired`', () => {
+describe('⛓ ANYTIME / O2 / O3 → DETERMINISTIC BUDGET — a solve cut at its WORK budget: the earlier plan, the held retry, the knob, the backstop', () => {
+    const R = SOLVER_BUDGET_WORK * SOLVE_RETRY_BUDGET_FACTOR;
+    it('a later pass CUT at the work budget leaves the earlier pass\'s PLAN, which PLAYS (no retry, no re-arrival): named by its pass, `expired`', () => {
         const e = engineOver(A);
-        scriptSolves(e, { 1: { provisional: 'dashless' } });
+        scriptSolves(e, { 1: { plan: 'dashless' } });
         e.engine.walkTo(CHEST);
         runUntil(e, () => e.dones.length === 1 || e.failures.length > 0, 20000);
         expect(e.failures).toEqual([]);
-        expect(e.dones[0]).toMatchObject({ pass: 'dashless', expired: true, retries: 0, budgets: [5000] });
-        expect(e.engine.stats).toMatchObject({ expiries: 1, provisionalPlays: 1, retries: 0, passes: { dashless: 1 } });
+        expect(e.dones[0]).toMatchObject({ pass: 'dashless', expired: true, retries: 0, budgets: [SOLVER_BUDGET_WORK] });
+        expect(e.engine.stats).toMatchObject({ expiries: 1, provisionalPlays: 1, retries: 0, backstops: 0, passes: { dashless: 1 } });
         expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan']);
         expect(e.teleports).toHaveLength(1); // the cold start only
         expect(e.engine.stats.history.at(-1)).toMatchObject({ outcome: 'done', pass: 'dashless', expired: true });
-        expect(e.dones[0].passes).toEqual([{ pass: 'full', ok: false, kind: 'budget' }]); // the fake landed no pass rows
+        expect(e.dones[0].passes.map((r) => [r.pass, r.limit ?? null])).toEqual([['dashless', null], ['full', 'budget']]);
     });
 
-    it('a solve that lands in time is named by the pass that won (the house, no sword: dashless; full SKIPPED)', () => {
+    it('a solve that answers within its budget is named by the pass that won (the house, no sword: dashless; full SKIPPED)', () => {
         const e = engineOver(A);
         e.engine.walkTo(CHEST);
         e.timers.run();
@@ -488,26 +505,27 @@ describe('⛓ ANYTIME / O2 / O3 — a solve past its budget: the provisional pla
         expect(e.notes.some((n) => /\(chest,walk; dashless pass\)/.test(n ?? ''))).toBe(true);
     });
 
-    it('no plan in hand → a HELD RETRY at 4× (no botReset, no teleport: the freeze still holds the room), and its plan plays', () => {
+    it(`every pass cut, nothing answered → a HELD RETRY at ${SOLVE_RETRY_BUDGET_FACTOR}× the units (no botReset, no teleport: the freeze still holds the room), and its plan plays`, () => {
         const e = engineOver(A);
-        scriptSolves(e, { 1: 'hang' });
+        scriptSolves(e, { 1: 'cut' });
         e.engine.walkTo(CHEST);
         runUntil(e, () => e.dones.length === 1 || e.failures.length > 0, 80000);
         expect(e.failures).toEqual([]);
-        expect(e.dones[0]).toMatchObject({ pass: 'dashless', expired: false, retries: 1, budgets: [5000, 20000] });
-        expect(e.engine.stats).toMatchObject({ expiries: 1, retries: 1, provisionalPlays: 0 });
+        expect(e.dones[0]).toMatchObject({ pass: 'dashless', expired: false, retries: 1, budgets: [SOLVER_BUDGET_WORK, R] });
+        expect(e.engine.stats).toMatchObject({ expiries: 1, retries: 1, provisionalPlays: 0, backstops: 0 });
         expect(e.game.calls).not.toContain('botReset');
         expect(e.teleports).toHaveLength(1);
         expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan']);
-        // nothing had answered: the retry runs every pass again
+        // nothing had answered: the retry runs every pass again, under the RETRY's units
         expect(e.service.seen[1].request.passes.map((p) => p.pass)).toEqual(['dashless', 'full']);
-        expect(e.notes.some((n) => /solving again, the room held… \(budget 20 s, retry 1\)/.test(n ?? ''))).toBe(true);
+        expect(e.service.seen[1].request.budgetWork).toBe(R);
+        expect(e.notes.some((n) => new RegExp(`solving again, the room held… \\(budget ${R} work units, retry 1\\)`).test(n ?? ''))).toBe(true);
     });
 
-    it('the retry RESUMES at the first unanswered pass: a dashless DECLINE before the cut → the retry asks FULL only', () => {
+    it('the retry RESUMES at the first unanswered pass: a dashless DECLINE, full cut → the retry asks FULL only', () => {
         const e = engineOver(A);
         const declined = { ok: false, kind: 'refusal', pass: 'dashless', message: 'no corridor (dashless)' };
-        scriptSolves(e, { 1: { provisional: declined, answered: 1 } });
+        scriptSolves(e, { 1: { decline: declined } });
         e.engine.walkTo(CHEST);
         runUntil(e, () => e.dones.length === 1 || e.failures.length > 0, 80000);
         expect(e.service.seen[1].request.passes.map((p) => p.pass)).toEqual(['full']);
@@ -515,65 +533,88 @@ describe('⛓ ANYTIME / O2 / O3 — a solve past its budget: the provisional pla
         expect(e.failures[0]).toMatch(/the solver declined Starting House - Chest in level 86 \(refusal\): no corridor \(dashless\)/);
     });
 
-    it('the retry runs out too → the walk ends BY NAME with both budgets; the room is released', () => {
+    it('the retry is cut too → the walk ends BY NAME with both work budgets; the room is released', () => {
         const e = engineOver(A);
-        scriptSolves(e, { 1: 'hang', 2: 'hang' });
+        scriptSolves(e, { 1: 'cut', 2: 'cut' });
         e.engine.walkTo(CHEST);
         runUntil(e, () => e.failures.length > 0, 80000);
-        expect(e.failures).toEqual(['the solver exceeded 5 s, then 20 s on its held retry on location in level 86 (terminated)']);
-        expect(e.engine.stats).toMatchObject({ expiries: 2, retries: 1 });
+        expect(e.failures).toEqual([`the solver ran out of ${SOLVER_BUDGET_WORK}, then ${R} work units on its held retry on location in level 86: ${CUT_MSG}`]);
+        expect(e.engine.stats).toMatchObject({ expiries: 2, retries: 1, backstops: 0 });
         expect(e.game.calls).toContain('botReset');
         expect(e.engine.status().phase).toBe('idle');
     });
 
-    it('…and a pass that DECLINED before the cuts leads the failure (the door-only L14 race: the decline, not the budget)', () => {
+    it('…and a pass that DECLINED (not cut) leads the failure: the decline, not the budget', () => {
         const e = engineOver(A);
         const declined = { ok: false, kind: 'refusal', pass: 'dashless', message: 'combat ladder exhausted' };
-        scriptSolves(e, { 1: { provisional: declined, answered: 1 }, 2: 'hang' });
+        scriptSolves(e, { 1: { decline: declined }, 2: 'cut' });
         e.engine.walkTo(CHEST);
         runUntil(e, () => e.failures.length > 0, 80000);
         expect(e.failures[0]).toBe('the solver declined Starting House - Chest in level 86 (pass dashless): combat ladder exhausted '
-            + '— and the solver exceeded 5 s, then 20 s on its held retry on location in level 86 (terminated)');
+            + `— and the solver ran out of ${SOLVER_BUDGET_WORK}, then ${R} work units on its held retry on location in level 86`);
     });
 
-    it('⛓ O3 — the knob (`getBudgetMs`, the setting) is the budget: read at each solve, shown, and what expires', () => {
-        let knob = 300;
-        const e = engineOver(A, { getBudgetMs: () => knob });
-        expect(e.engine.budgetMs).toBe(300);
-        scriptSolves(e, { 1: 'hang', 2: 'hang' });
+    it('⛓ O3 — the knob (`getBudgetWork`, the setting) is the budget: read at each solve, shown, and what is cut', () => {
+        let knob = 30;
+        const e = engineOver(A, { getBudgetWork: () => knob });
+        expect(e.engine.budgetWork).toBe(30);
+        scriptSolves(e, { 1: 'cut', 2: 'cut' });
         e.engine.walkTo(CHEST);
         runUntil(e, () => e.failures.length > 0, 20000);
-        expect(e.failures).toEqual(['the solver exceeded 0.3 s, then 1.2 s on its held retry on location in level 86 (terminated)']);
-        expect(e.notes.some((n) => /solving… \(budget 0\.3 s\)/.test(n ?? ''))).toBe(true);
-        knob = null; // unset → the engine's own budget, which setBudgetMs moves
-        expect(e.engine.budgetMs).toBe(5000);
-        e.engine.setBudgetMs(8000);
-        expect(e.engine.budgetMs).toBe(8000);
+        expect(e.failures[0]).toMatch(new RegExp(`^the solver ran out of 30, then ${30 * SOLVE_RETRY_BUDGET_FACTOR} work units on its held retry`));
+        expect(e.service.seen.map((x) => x.request.budgetWork)).toEqual([30, 30 * SOLVE_RETRY_BUDGET_FACTOR]);
+        expect(e.notes.some((n) => /solving… \(budget 30 work units\)/.test(n ?? ''))).toBe(true);
+        knob = null; // unset → the engine's own budget, which setBudgetWork moves
+        expect(e.engine.budgetWork).toBe(SOLVER_BUDGET_WORK);
+        e.engine.setBudgetWork(800);
+        expect(e.engine.budgetWork).toBe(800);
         knob = 'junk';
-        expect(e.engine.budgetMs).toBe(8000);
+        expect(e.engine.budgetWork).toBe(800);
     });
-    it('⛓ SHOULD-STOP — every solver request carries its budget and the upgrade window; the retry carries 4×, and a dashless refusal CUT by its deadline (not answered) runs again', () => {
-        let windowKnob = 1000;
-        const e = engineOver(A, { getUpgradeWindowMs: () => windowKnob });
-        expect(e.engine.upgradeWindowMs).toBe(1000);
-        const cut = { ok: false, kind: 'refusal', pass: 'dashless', message: 'the block-route search hit `deadline` ⏱ DEADLINE: …',
-            deadline: { tripped: true, first: 'block-route', sites: { 'block-route': 1 } } };
-        scriptSolves(e, { 1: { provisional: cut, answered: 0 }, 2: 'hang' });
+
+    it('every solver request carries its WORK budget and upgrade window (no ms); the retry carries the factor, and a dashless refusal CUT by its deadline (not answered) runs again', () => {
+        let windowKnob = 25;
+        const e = engineOver(A, { getUpgradeWindowWork: () => windowKnob });
+        expect(e.engine.upgradeWindowWork).toBe(25);
+        scriptSolves(e, { 1: 'cut', 2: 'cut' });
         e.engine.walkTo(CHEST);
         runUntil(e, () => e.failures.length > 0, 80000);
-        expect(e.service.seen[0].request).toMatchObject({ budgetMs: 5000, upgradeWindowMs: 1000 });
-        expect(e.service.seen[1].request).toMatchObject({ budgetMs: 20000, upgradeWindowMs: 1000 });
+        expect(e.service.seen[0].request).toMatchObject({ budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: 25 });
+        expect(e.service.seen[1].request).toMatchObject({ budgetWork: R, upgradeWindowWork: 25 });
+        expect(e.service.seen[0].request.budgetMs).toBeUndefined();
         expect(e.service.seen[1].request.passes.map((p) => p.pass)).toEqual(['dashless', 'full']);
-        expect(e.failures[0]).toBe('the solver declined Starting House - Chest in level 86 (pass dashless): the block-route search hit '
-            + '`deadline` ⏱ DEADLINE: … — and the solver exceeded 5 s, then 20 s on its held retry on location in level 86 (terminated)');
-        windowKnob = 0; // the default: the whole budget
-        expect(e.engine.upgradeWindowMs).toBeNull();
+        windowKnob = 0; // 0: the whole budget
+        expect(e.engine.upgradeWindowWork).toBeNull();
+        windowKnob = null; // unset: the engine's own window
+        expect(e.engine.upgradeWindowWork).toBe(SOLVER_UPGRADE_WINDOW_WORK);
         const d = engineOver(A);
         d.engine.walkTo(CHEST);
         d.timers.run();
-        expect(d.service.seen[0].request).toMatchObject({ budgetMs: 5000, upgradeWindowMs: null });
+        expect(d.service.seen[0].request).toMatchObject({ budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: SOLVER_UPGRADE_WINDOW_WORK });
     });
 
+    it('⛔ the clock never retries: a worker that never answers gets ONE request, then the BACKSTOP\'s named failure', () => {
+        const e = engineOver(A, { backstopMs: 5000 });
+        scriptSolves(e, { 1: 'hang' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 0, 80000);
+        expect(e.service.seen).toHaveLength(1);
+        expect(e.failures).toEqual([`the solve exceeded the backstop on this machine (5 s) on location in level 86 (terminated; the solve's own budget is ${SOLVER_BUDGET_WORK} work units)`]);
+        expect(e.engine.stats).toMatchObject({ backstops: 1, retries: 0, expiries: 0 });
+        expect(e.service.seen[0].handle.cancelled).toBe(true);
+        expect(e.game.calls).toContain('botReset');
+    });
+
+    it('⛔ the BACKSTOP never plays the plan in hand: a provisional dashless plan + a worker that never settles → failed by name, no plan tape', () => {
+        const e = engineOver(A, { backstopMs: 5000 });
+        scriptSolves(e, { 1: { hang: 'dashless' } });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 0 || e.dones.length > 0, 80000);
+        expect(e.dones).toEqual([]);
+        expect(e.failures[0]).toMatch(/^the solve exceeded the backstop on this machine/);
+        expect(e.engine.stats).toMatchObject({ backstops: 1, provisionalPlays: 0 });
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze']);
+    });
     it('⛓ SHOULD-STOP — a plan whose pass tripped its deadline is named: the done row\'s `deadline`, the pass row, the playing note', () => {
         const deadline = { tripped: true, first: 'sword-dash', sites: { 'sword-dash': 1 } };
         const e = engineOver(A, { editPlan: (plan) => ({ ...plan, deadline,
@@ -621,29 +662,29 @@ describe('W7 — continuations from a held room, and their named fallbacks', () 
         expect(e.engine.stats.forced).toBe(2);
     });
 
-    it('a continuation over BUDGET — ⛓ O2 and over its held retry too — is terminated and falls back (continuation-budget)', () => {
+    it('a continuation CUT at its work budget — ⛓ O2 and on its held retry too — falls back (continuation-budget)', () => {
         const e = engineOver(A);
-        scriptSolves(e, { 2: 'hang', 3: 'hang' });
+        scriptSolves(e, { 2: 'cut', 3: 'cut' });
         e.engine.walkTo(CHEST);
         runUntil(e, () => e.engine.status().phase === 'held');
         e.engine.walkTo(DOOR);
         runUntil(e, () => e.dones.length === 2 || e.failures.length > 0, 80000);
         expect(e.failures).toEqual([]);
         expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['continuation-budget']);
-        expect(e.engine.stats.fallbacks[0].why).toMatch(/exceeded 5 s, then 20 s on its held retry/);
+        expect(e.engine.stats.fallbacks[0].why).toMatch(new RegExp(`ran out of ${SOLVER_BUDGET_WORK}, then ${SOLVER_BUDGET_WORK * SOLVE_RETRY_BUDGET_FACTOR} work units on its held retry`));
         expect(e.engine.stats.retries).toBe(1);
     });
 
-    it('⛓ O2 — a continuation over budget whose HELD RETRY answers is served by it: no fallback, the room never released', () => {
+    it('⛓ O2 — a continuation cut at its budget whose HELD RETRY answers is served by it: no fallback, the room never released', () => {
         const e = engineOver(A);
-        scriptSolves(e, { 2: 'hang' });
+        scriptSolves(e, { 2: 'cut' });
         e.engine.walkTo(CHEST);
         runUntil(e, () => e.engine.status().phase === 'held');
         e.engine.walkTo(DOOR);
         runUntil(e, () => e.dones.length === 2 || e.failures.length > 0, 80000);
         expect(e.failures).toEqual([]);
         expect(e.engine.stats.fallbacks).toEqual([]);
-        expect(e.dones[1]).toMatchObject({ continuation: true, retries: 1, budgets: [5000, 20000] });
+        expect(e.dones[1]).toMatchObject({ continuation: true, retries: 1, budgets: [SOLVER_BUDGET_WORK, SOLVER_BUDGET_WORK * SOLVE_RETRY_BUDGET_FACTOR] });
         expect(e.teleports).toHaveLength(1); // the cold start only
     });
 

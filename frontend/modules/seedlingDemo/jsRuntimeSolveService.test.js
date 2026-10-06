@@ -14,8 +14,10 @@
  *   m1 the hold is dropped (the core steps the run while the worker thinks)
  *        -> '… worker round-trip ≡ the in-place solve …' reds (the plan is
  *           refuted as stale every time, or the tape differs)
- *   m2 the budget is never checked
- *        -> 'a solve past its budget is TERMINATED …' reds (times out)
+ *   m2 the backstop is never checked
+ *        -> 'the BACKSTOP …' reds (times out)
+ *   d2 the backstop PLAYS the plan in hand instead of failing
+ *        -> 'the BACKSTOP never plays the plan in hand …' reds
  *   m3 a stale answer is played (no run / session check at arrival)
  *        -> 'a re-boot while the worker thinks …' reds
  *   m4 no retry after a decline
@@ -30,7 +32,8 @@ import { Worker as NodeWorker } from 'node:worker_threads';
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { createRuntimeWalker, WALK_STATES } from './jsRuntimeWalker.js';
 import {
-    ANYTIME_PASSES, createInPlaceSolveService, liveOf, runDigest, SOLVER_BUDGET_MS, SOLVER_RETRY_AFTER_TICKS, SOLVER_RETRY_MAX,
+    ANYTIME_PASSES, createInPlaceSolveService, liveOf, runDigest, SOLVE_BACKSTOP_MS, SOLVER_RETRY_AFTER_TICKS, SOLVER_RETRY_MAX,
+    SOLVER_UPGRADE_WINDOW_WORK,
 } from './jsRuntimeSolver.js';
 import { indexLevels } from './atlasSource.js';
 import { createWorkerSolveService } from './jsRuntimeSolveService.js';
@@ -77,12 +80,12 @@ afterEach(() => { while (services.length) services.pop().dispose(); });
 const sleep = (ms) => new Promise((r) => { setTimeout(r, ms); });
 
 /** As `jsRuntimeSolver.test.js`'s `midRoom`: a live runtime walked W ticks by the J2 walker. */
-function midRoom({ region, fromId, toId, walkTicks, kit = false, solveService = null, solverBudgetMs }) {
+function midRoom({ region, fromId, toId, walkTicks, kit = false, solveService = null, solverBudgetWork, solverBackstopMs, solverUpgradeWindowWork }) {
     const pl = PLAYTHROUGH[region].playable_payload;
     const from = pl.exits.find((e) => e.exit_id === fromId);
     const spawn = RETURNS.get(returnKey(pl.level, ...from.exit_tiles[0])) ?? from.entrance_spawn;
     const to = pl.exits.find((e) => e.exit_id === toId);
-    const rt = createJsRuntime({ solveService, solverBudgetMs });
+    const rt = createJsRuntime({ solveService, solverBudgetWork, solverBackstopMs, solverUpgradeWindowWork });
     rt.setVanilla(MAP);
     if (kit) rt.queueItems(KIT.map((p) => ({ class: 'Main', property: p, value: true })));
     rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [pl.level, spawn.x, spawn.y] }]);
@@ -143,9 +146,8 @@ describe('jsRuntimeSolveService — the worker round-trip ≡ the in-place (S1) 
             expect(sync.playback.state).toBe(WALK_STATES.DONE);
 
             const { service, workers } = workerService();
-            // ⛔ Not a budget row: under a loaded box the L12 solve can pass 5 s (measured — it then expired,
-            // retried and solved). Equivalence is asked with the budget out of the way.
-            const rt = midRoom({ ...w, solveService: service, solverBudgetMs: 60000 });
+            // ⛔ Not a budget row: equivalence is asked with the work budget out of the way.
+            const rt = midRoom({ ...w, solveService: service, solverBudgetWork: 1e9, solverUpgradeWindowWork: 0 });
             rt.playback.setSolverWalk(true);
             expect(workers.length).toBe(1); // warmed when the mode came on
             const before = rt.run.ticksCompleted;
@@ -155,7 +157,7 @@ describe('jsRuntimeSolveService — the worker round-trip ≡ the in-place (S1) 
             const s = rt.playback.solverStats;
             expect(`${rt.playback.state} ${rt.playback.reason ?? ''}`).toBe(`${WALK_STATES.DONE} `);
             expect(out.holds).toBeGreaterThan(0);
-            expect([...reasons].some((r) => /^solving… \(budget 60 s\)$/.test(r))).toBe(true);
+            expect([...reasons].some((r) => /^solving… \(budget 1000000000 work units\)$/.test(r))).toBe(true);
             expect(s).toMatchObject({ solves: 1, refutations: 0, declines: 0, expiries: 0, stale: 0 });
             expect(s.lastSolve.where).toBe('worker');
             expect(s.lastSolve.verbs).toEqual(expect.arrayContaining(w.verbs));
@@ -173,33 +175,47 @@ describe('jsRuntimeSolveService — the worker round-trip ≡ the in-place (S1) 
 });
 
 describe('jsRuntimeSolveService — the budget, the retry, and no stale plan', () => {
-    it(`a solve past its budget is TERMINATED and the walker takes the goal, NAMED (default budget ${SOLVER_BUDGET_MS} ms)`, async () => {
-        // L12 from its door: the in-place solve measured 5.2 s (§1.6) — over a 300 ms budget.
+    it('a solve that runs out of its WORK budget DECLINES BY NAME (the ⏱ clause) — the worker answered, nothing was terminated, and the walker takes the goal', async () => {
+        // L4 kit: its shove is REQUIRED, so the block-route search consults the hook; a 1-unit budget trips it in
+        // both passes (the full pass has no plan in hand), and the answer is a refusal by name.
         const { service, workers } = workerService();
-        const rt = midRoom({ ...WITNESSES[2], walkTicks: 0, solveService: service, solverBudgetMs: 300 });
-        expect(rt.playback.solverBudgetMs).toBe(300);
+        const rt = midRoom({ ...WITNESSES[1], solveService: service, solverBudgetWork: 1 });
+        expect(rt.playback.solverBudgetWork).toBe(1);
         rt.playback.setSolverWalk(true);
         const t0 = Date.now();
-        while (rt.playback.solverStats.declines === 0 && Date.now() - t0 < 30000) {
+        while (rt.playback.solverStats.declines === 0 && Date.now() - t0 < 60000) {
             rt.tick();
             await sleep(5);
         }
         const s = rt.playback.solverStats;
-        expect(s).toMatchObject({ solves: 0, declines: 1, expiries: 1, played: 0 });
-        // Expired AT the budget, not before it (and well before the 5.2 s the solve needs).
-        expect(s.lastWaitMs).toBeGreaterThanOrEqual(300);
-        expect(s.lastWaitMs).toBeLessThan(5000);
-        expect(s.lastDecline).toBe('the solver exceeded 0.3 s on reach-exit in level 12 (terminated) — walking');
-        expect(rt.playback.reason).toBe('the solver declined — the solver exceeded 0.3 s on reach-exit in level 12 '
-            + '(terminated) — walking; walking instead');
-        expect(workers[0].terminated).toBe(true);
-        expect(service.stats).toMatchObject({ terminated: 1, live: false });
+        expect(s).toMatchObject({ solves: 0, declines: 1, expiries: 1, played: 0, backstops: 0 });
+        expect(s.lastDecline).toMatch(/⏱ DEADLINE/);
+        expect(rt.playback.reason).toMatch(/^the solver declined — .*⏱ DEADLINE.*; walking instead$/s);
+        expect(workers[0].terminated).toBe(false);
+        expect(service.stats).toMatchObject({ terminated: 0 });
         // The walker walks it now: its own planner runs, the run steps.
         const ticks = rt.run.ticksCompleted;
         for (let t = 0; t < 10; t += 1) rt.tick();
         expect(rt.run.ticksCompleted).toBe(ticks + 10);
         expect(rt.playback.stats.plans).toBeGreaterThan(0);
         expect(rt.playback.solving).toBe(false);
+    }, 90000);
+
+    it(`the BACKSTOP (default ${SOLVE_BACKSTOP_MS} ms): a solve past it is TERMINATED and the goal FAILS BY NAME — never walked, never played`, async () => {
+        const { service, workers } = workerService();
+        const rt = midRoom({ ...WITNESSES[2], walkTicks: 0, solveService: service, solverBudgetWork: 1e9, solverBackstopMs: 300 });
+        expect(rt.playback.solverBackstopMs).toBe(300);
+        rt.playback.setSolverWalk(true);
+        const t0 = Date.now();
+        while (rt.playback.state !== WALK_STATES.FAILED && Date.now() - t0 < 30000) {
+            rt.tick();
+            await sleep(5);
+        }
+        const s = rt.playback.solverStats;
+        expect(rt.playback.state).toBe(WALK_STATES.FAILED);
+        expect(s).toMatchObject({ solves: 0, declines: 0, played: 0, backstops: 1 });
+        expect(rt.playback.reason).toMatch(/the solve exceeded the backstop on this machine \(0\.3 s\) on reach-exit in level 12 \(terminated; the solve's own budget is 1000000000 work units\)/);
+        expect(workers[0].terminated).toBe(true);
     }, 60000);
 
     it('decline → retry → SOLVED on the L6 W=71 leg (each retry named)', async () => {
@@ -284,7 +300,7 @@ describe('the decline-retry policy, unit (a scripted solver)', () => {
     function scripted(answers) {
         const asked = [];
         return {
-            asked, enabled: true, budgetMs: 5000,
+            asked, enabled: true, budgetWork: 400,
             keysFor() { asked.push(run.state.x); return answers.shift() ?? { declined: 'still no' }; },
             clear() {}, cancel() {},
         };
@@ -324,7 +340,7 @@ describe('the decline-retry policy, unit (a scripted solver)', () => {
         w.play();
         expect(w.heldFor(run)).toBeNull();
         expect(w.solverHolding).toBe(true);
-        expect(w.reason).toBe('solving… (budget 5 s)');
+        expect(w.reason).toBe('solving… (budget 400 work units)');
         expect(w.describe()).toContain('solving…');
         expect(w.heldFor(run)).toBeNull();
         expect(w.stats.driven).toBe(0);
@@ -389,51 +405,78 @@ describe('⛓ ANYTIME — the worker posts each pass; the page plays the provisi
         };
     }
 
-    it('at the budget the page PLAYS the dashless pass\'s plan it already had — terminated, named, and it crosses (L6 bait)', async () => {
-        const service = stuckWith((request, inPlace) => inPlace.start({ ...request, levelSource: undefined, passes: [ANYTIME_PASSES[0]] }).result);
-        const rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: service, solverBudgetMs: 1 });
+    /** A service that settles at once with `answer(request, inPlace)` (a worker's settled result). */
+    function settledWith(answer) {
+        const inPlace = createInPlaceSolveService();
+        return { kind: 'scripted', warm() {}, dispose() {},
+            start(request) { return { settled: true, started: true, result: answer(request, inPlace), provisional: null, answered: 0, passes: [], cancel() {} }; } };
+    }
+
+    it('a later pass CUT at the work budget: the page PLAYS the earlier pass\'s plan the worker answered — named `expired`, and it crosses (L6 bait)', async () => {
+        const service = settledWith((request, inPlace) => {
+            const r = inPlace.start({ ...request, levelSource: undefined, passes: [ANYTIME_PASSES[0]] }).result;
+            const passes = [...r.passes, { pass: 'full', ok: false, kind: 'refusal', ticks: null, deadline: 'sword-dash', limit: 'budget' }];
+            return { ...r, passes, plan: { ...r.plan, passes } };
+        });
+        const rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: service });
         rt.playback.setSolverWalk(true);
         const out = await settleAsync(rt);
         const s = rt.playback.solverStats;
         expect(rt.playback.state).toBe(WALK_STATES.DONE);
         expect(out.crossings).toEqual([expect.objectContaining({ from: 6, to: 7 })]);
-        expect(s).toMatchObject({ solves: 1, declines: 0, expiries: 1, provisionalPlays: 1 });
+        expect(s).toMatchObject({ solves: 1, declines: 0, expiries: 1, provisionalPlays: 1, backstops: 0 });
         expect(s.lastSolve).toMatchObject({ pass: 'dashless', expired: true });
-        expect(service.made[0].cancelled).toBe(true);
         expect(rt.events.map((e) => e.message)).toEqual(expect.arrayContaining([
-            expect.stringMatching(/the solver exceeded 0 s on reach-exit in level 6 \(terminated\) — playing the dashless pass's plan/),
-            expect.stringMatching(/solved reach-exit in level 6: .*; pass dashless, the later pass ran out of budget\)/),
+            expect.stringMatching(/solved reach-exit in level 6: .*; pass dashless, full stopped at its deadline \(sword-dash\), the later pass ran out of its work budget\)/),
         ]));
     }, 120000);
 
-    it('a pass that DECLINED before the budget is the decline said (not "exceeded … walking"); no pass → the budget is said', async () => {
-        const declined = { ok: false, kind: 'refusal', pass: 'dashless', message: 'the danger map forbids it\nsecond line' };
-        let rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: stuckWith(() => declined), solverBudgetMs: 1 });
+    it('the BACKSTOP never plays the plan in hand: a provisional dashless plan and a stuck later pass → the goal FAILS by name, 0 keys played', async () => {
+        const inPlace = createInPlaceSolveService();
+        const made = [];
+        const service = { kind: 'stuck', warm() {}, dispose() {},
+            start(request) {
+                const p = inPlace.start({ ...request, levelSource: undefined, passes: [ANYTIME_PASSES[0]] }).result;
+                const h = { settled: false, started: true, result: null, provisional: p, answered: 1, passes: [],
+                    cancel() { h.settled = true; h.cancelled = true; } };
+                made.push(h);
+                return h;
+            } };
+        const rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: service, solverBackstopMs: 1 });
         rt.playback.setSolverWalk(true);
-        for (let i = 0; i < 50 && rt.playback.solverStats.declines === 0; i += 1) { rt.tick(); await sleep(2); }
-        expect(rt.playback.solverStats.lastDecline).toBe('the danger map forbids it (pass dashless; the later pass the solver '
-            + 'exceeded 0 s on reach-exit in level 6 (terminated))');
-        rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: stuckWith(() => null), solverBudgetMs: 1 });
-        rt.playback.setSolverWalk(true);
-        for (let i = 0; i < 50 && rt.playback.solverStats.declines === 0; i += 1) { rt.tick(); await sleep(2); }
-        expect(rt.playback.solverStats.lastDecline).toBe('the solver exceeded 0 s on reach-exit in level 6 (terminated) — walking');
+        for (let i = 0; i < 200 && rt.playback.state !== WALK_STATES.FAILED; i += 1) { rt.tick(); await sleep(2); }
+        const s = rt.playback.solverStats;
+        expect(rt.playback.state).toBe(WALK_STATES.FAILED);
+        expect(rt.playback.reason).toMatch(/the solve exceeded the backstop on this machine/);
+        expect(s).toMatchObject({ solves: 0, played: 0, provisionalPlays: 0, backstops: 1 });
+        expect(made[0].cancelled).toBe(true);
     }, 120000);
-    it('⛓ SHOULD-STOP — the page sends its budget and the upgrade window with every solve (`?solverUpgradeWindowMs=` / the setting); 0 / null = the budget', async () => {
+
+    it('a refusal the worker answered is the decline said, by its first line', async () => {
+        const declined = { ok: false, kind: 'refusal', pass: 'dashless', message: 'the danger map forbids it\nsecond line' };
+        const rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: settledWith(() => declined) });
+        rt.playback.setSolverWalk(true);
+        for (let i = 0; i < 50 && rt.playback.solverStats.declines === 0; i += 1) { rt.tick(); await sleep(2); }
+        expect(rt.playback.solverStats.lastDecline).toBe('the danger map forbids it');
+    }, 120000);
+
+    it('⛓ DETERMINISTIC BUDGET — the page sends its WORK budget and upgrade window with every solve (`?solverUpgradeWindowWork=` / the setting); 0 / null = the budget', async () => {
         const asked = [];
         const service = { kind: 'capture', warm() {}, dispose() {},
             start(request) { asked.push(request); return { settled: false, started: true, result: null, provisional: null, answered: 0, passes: [], cancel() {} }; } };
-        const rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: service, solverBudgetMs: 4000 });
-        expect(rt.playback.solverUpgradeWindowMs).toBeNull();
-        rt.playback.setSolverUpgradeWindowMs(1000);
-        expect(rt.playback.solverUpgradeWindowMs).toBe(1000);
+        const rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: service, solverBudgetWork: 300 });
+        expect(rt.playback.solverUpgradeWindowWork).toBe(SOLVER_UPGRADE_WINDOW_WORK);
+        rt.playback.setSolverUpgradeWindowWork(25);
+        expect(rt.playback.solverUpgradeWindowWork).toBe(25);
         rt.playback.setSolverWalk(true);
         for (let i = 0; i < 5 && asked.length === 0; i += 1) rt.tick();
-        expect(asked[0]).toMatchObject({ budgetMs: 4000, upgradeWindowMs: 1000 });
-        rt.playback.setSolverUpgradeWindowMs(0);
-        expect(rt.playback.solverUpgradeWindowMs).toBeNull();
-        rt.playback.setSolverUpgradeWindowMs(null);
-        expect(rt.playback.solverUpgradeWindowMs).toBeNull();
-        expect(createJsRuntime({ solverUpgradeWindowMs: 750 }).playback.solverUpgradeWindowMs).toBe(750);
+        expect(asked[0]).toMatchObject({ budgetWork: 300, upgradeWindowWork: 25 });
+        expect(asked[0].budgetMs).toBeUndefined();
+        rt.playback.setSolverUpgradeWindowWork(0);
+        expect(rt.playback.solverUpgradeWindowWork).toBeNull();
+        rt.playback.setSolverUpgradeWindowWork(null);
+        expect(rt.playback.solverUpgradeWindowWork).toBeNull();
+        expect(createJsRuntime({ solverUpgradeWindowWork: 75 }).playback.solverUpgradeWindowWork).toBe(75);
     }, 120000);
 
     it('⛓ SHOULD-STOP — a pass refusal CUT by its deadline is not "answered" (a held retry runs that pass again); a plain refusal is', () => {
@@ -445,7 +488,7 @@ describe('⛓ ANYTIME — the worker posts each pass; the page plays the provisi
         post(h, { type: 'started' });
         post(h, { type: 'pass', index: 0, pass: 'dashless', answer: cut, best: cut });
         expect(h.answered).toBe(0);
-        expect(h.provisional).toBe(cut); // still the word an expiry says
+        expect(h.provisional).toBe(cut); // the best so far (what a backstop would NOT play)
         expect(h.passes).toEqual([{ pass: 'dashless', ok: false, kind: 'refusal', deadline: 'block-route' }]);
         post(h, { type: 'pass', index: 1, pass: 'full', answer: { ok: false, kind: 'refusal', pass: 'full', message: 'no' }, best: cut });
         expect(h.answered).toBe(0); // the cut pass still leads: nothing after it counts as answered
