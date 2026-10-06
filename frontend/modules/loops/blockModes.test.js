@@ -2078,6 +2078,36 @@ describe('N4 — summary Playback publishes loops:summaryApplied', () => {
   });
 });
 
+describe('bulletml N5 — every spend publishes loops:manaSpent', () => {
+  it('a summary Playback\'s replay price, with its region and substrate (what Noiz2sa trains from)', () => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    const { loopState, gs, bus } = wire();
+    loopState.dispatcher = { publish: () => {}, publishToNextModule: () => {} };
+    const tick = makeTicker();
+    registerSummarySubstrate();
+    const cdm = new CostDataManager();
+    cdm.setCostData({ regions: { A: { timeDrainPerSecond: 2 } }, locations: {} }, 'test');
+    loopState.setCostDataManager(cdm);
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    gs.setLoopModeActive(true);
+    const summary = { durationSeconds: 4, checks: [], costedActions: [], playStats: { gameSeconds: 4.5, score: 900 } };
+    saveQueue(hashRulesData(RULES_DATA), makeSummaryEntry({ summary }));
+    loopState.setBlockMode('A', 1, 'playback');
+    const seen = [];
+    bus.subscribe('loops:manaSpent', (d) => seen.push(d), 'test');
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+    loopState.stopTimeDrain();
+    expect(seen).toEqual([{ region: 'A', substrate: 'sum_sub', mana: 8 }]);
+  });
+});
+
 describe('M5 — explicit-only per-action costs', () => {
   let loopState, gs, tick;
 

@@ -7238,5 +7238,24 @@
         "has_procgen_data": true
       }
     }
+  },
+  "noiz2sa_priced_test": {
+    "name": "Noiz2sa Priced Test",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Noiz2sa Priced Test"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
   }
 }

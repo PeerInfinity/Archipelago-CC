@@ -31,6 +31,7 @@ import { restoresSavedQueues } from '../savedQueueIsolation.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import loopStateSingleton from '../../loops/loopStateSingleton.js';
 import { resolveQueueBlocks } from '../../loops/blockIdentity.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
 
 const PRESET_RULES_PATH =
     './presets/noiz2sa_substrate_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
@@ -245,13 +246,12 @@ async function noiz2saRegionLoopVisit(testController) {
         testController.assertEqual('instant Playback crossed the recorded departure', true, !!recrossed);
         testController.assertEqual('Playback spent exactly the repriced summary', true,
             manaAtApply !== null && Math.abs((manaAtApply - currentMana()) - expected) < 0.001);
-        // ── 7. N4: instant Playback earns the recorded visit's training points (⚖ "Instant playback should still
-        // accumulate resources") ──
-        const { pointsFor } = await import('../../bulletml-dodge/src/game/tracks.js');
-        const want = pointsFor(trainer.trainer.settings, { seconds: ps?.gameSeconds ?? 0, score: ps?.score ?? 0 });
+        // ── 7. N4: instant Playback earns training points (⚖ "Instant playback should still accumulate resources");
+        // N5: the points of the mana it spent (the repriced summary) at the trainer's pace ──
+        const want = expected * trainer.pointsPerMana;
         const got = trainer.trainer.earned - earnedBefore;
-        testController.log(`Playback earned ${got.toFixed(3)} training points (the summary's playStats: ${want.toFixed(3)})`);
-        testController.assertEqual('instant Playback earned exactly the summary\'s points (its game seconds and score)',
+        testController.log(`Playback earned ${got.toFixed(3)} training points (${expected} mana × ${trainer.pointsPerMana} per mana; the summary's playStats: ${JSON.stringify(ps)})`);
+        testController.assertEqual('N5: instant Playback earned exactly the points of the mana it spent (the repriced summary × the pace)',
             true, want > 0 && Math.abs(got - want) < 1e-9);
     } finally {
         gameWindow()?.__noiz2saTest?.release?.();
@@ -364,14 +364,13 @@ async function noiz2saRefusedClearResent(testController) {
  * move's clear checks nothing). Measured headless (the game repo's runSegment, tracks 0 = the beginner, bot seed 1): deathless, 1002
  * frames, score 17330. The first run plays at 1×, the second at 2× (the bot-speed setting); both play the same
  * frames (the budget is counted, not wall-clock), and both cost the same mana — floor(16.032) game seconds × the
- * region's rate (the drain is charged per GAME second). After each, the tracks rose (the points of 16.032 s and
- * 17330 score, spent Even).
+ * region's rate (the drain is charged per GAME second). After each, the tracks rose (N5: the points of the 16 mana the
+ * visit spent, at the unpriced preset's pace of one per mana, spent Even: 2/2/1/1/1).
  */
 async function noiz2saBotBlockTrains(testController) {
     const { getTrainerService, pinBotSeed } = await trainerModule();
     // N4b: every visit draws its own bot seed; this row's numbers were measured at bot seed 1
     pinBotSeed(1);
-    const { pointsFor } = await import('../../bulletml-dodge/src/game/tracks.js');
     const service = getTrainerService();
     const KEY = 'noiz2sa:trainer:v1';
     let savedTrainer = null;
@@ -479,11 +478,12 @@ async function noiz2saBotBlockTrains(testController) {
             testController.assertEqual(`[${speed}×] the region's XP level was 0 (the drain was not discounted)`, 0, r.xpLevel);
             testController.assertEqual(`[${speed}×] the visit cost floor(its game seconds) × the rate`,
                 Math.floor(1002 / 62.5) * r.rate, r.spent);
-            const want = pointsFor(service.trainer.settings, { seconds: 1002 / 62.5, score: 17330 });
-            testController.assertEqual(`[${speed}×] the bot earned the visit's training points (16.032 s, 17330 score)`,
-                true, Math.abs(r.earned - want) < 1e-9);
-            testController.assertEqual(`[${speed}×] the tracks rose afterwards (Even)`,
-                JSON.stringify({ seeing: 2, thinking: 2, hands: 2, focus: 1, panic: 1 }), JSON.stringify(r.tracksAfter));
+            // N5: training = mana — the visit's 16 mana × the pace (the test preset is unpriced: one point per mana)
+            const want = r.spent * service.pointsPerMana;
+            testController.assertEqual(`[${speed}×] N5: the bot earned the points of the mana the visit spent (${r.spent} × ${service.pointsPerMana})`,
+                true, want > 0 && Math.abs(r.earned - want) < 1e-9);
+            testController.assertEqual(`[${speed}×] the tracks rose afterwards (Even: 16 points → 2/2/1/1/1)`,
+                JSON.stringify({ seeing: 2, thinking: 2, hands: 1, focus: 1, panic: 1 }), JSON.stringify(r.tracksAfter));
         }
         testController.assertEqual('2× cost the same mana as 1× for the same clear', runs[0].spent, runs[1].spent);
         testController.log(`wall clock: ${runs[0].wallSeconds.toFixed(1)} s at 1×, ${runs[1].wallSeconds.toFixed(1)} s at 2×`);
@@ -523,6 +523,127 @@ async function noiz2saBotBlockTrains(testController) {
         pinBotSeed(null);
     }
     return testController.getOverallResult();
+}
+
+// ─────────────────────────────── N5 ───────────────────────────────
+
+const PRICED_RULES_PATH =
+    './presets/noiz2sa_priced_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+/**
+ * N5 — a PRICED world (⚖ the user, 2026-10-05: the regions are priced against the Loops cost planner at generation
+ * time). `noiz2sa_priced_test` was built in loop mode by the pipeline's own path, so its Noiz2sa regions carry the
+ * walk's spans, drain rates and predictions (`pricing`). On the first region (the walk priced it at skill 0: one scene,
+ * the easiest the beginner clears, 1:9 — p 0.47, E 25.8 s; planned cost 16 → 0.6205 mana a game second):
+ *
+ *  - the page plays the priced MOVE span; the loaded world, `getRegionInfo` and the live cost data carry its rate (the
+ *    cost data only with the shared writer's payload-rate rule — feature-detected — else the default 1);
+ *  - the trainer earns at the world's pace (`pricing.pointsPerMana`, named on region load);
+ *  - Bot blocks on the move out of it (fresh Even trainer, 4×, bot seeds 1–4): each visit costs floor(its game seconds)
+ *    × the rate, and the mean of their mana is close to the planned cost (the rate was chosen so the EXPECTED mana of
+ *    a move run is the planned cost; one visit is one draw — a deathless clear is 16 s, each hit adds a failed
+ *    attempt's seconds); each visit trains the bot by its mana × the pace, to the skill the walk's own prediction
+ *    gives for that mana.
+ */
+async function noiz2saPricedWorld(testController) {
+    return withTrainer(testController, async (mod, service, gs) => {
+        const { predictedSkill } = await import('../../noiz2saSubstrate/noiz2saPricing.js');
+        const planner = await import('../../shared/procgen/loopCostPlanner.js');
+        const sharedRates = typeof planner.regionDrainRatesFromRulesJson === 'function';
+        const doc = await (await fetch(PRICED_RULES_PATH)).json();
+        const visits = [];
+        for (const seed of [1, 2, 3, 4]) {
+            const label = `seed ${seed}`;
+            mod.pinBotSeed(seed);
+            const configuresBefore = debugState()?.configures ?? 0;
+            await testController.loadRulesFromFile(PRICED_RULES_PATH);
+            await testController.stateManager.pingWorker('after-rules-load', 3000);
+            const loopOn = await testController.pollForCondition(
+                () => getGameStateSingleton()?.isLoopModeActive === true, `[${label}] loop mode active`, 8000, 100);
+            testController.reportCondition(`[${label}] loop mode active`, !!loopOn);
+            if (!loopOn) return;
+            await testController.pollForCondition(
+                () => loopStateSingleton.getRegionCaptureShape?.(currentRegion()) === 'summary',
+                `[${label}] the player landed in a Noiz2sa region`, 10000, 200);
+            const region = currentRegion();
+            const payload = doc.preset_sidecars?.['1']?.[region]?.playable_payload ?? null;
+            const pricing = payload?.pricing ?? null;
+            testController.assertEqual(`[${label}] ${region} is a PRICED region (its payload carries the walk's pricing and rate)`, true,
+                !!pricing && typeof payload.timeDrainPerSecond === 'number');
+            if (!pricing) return;
+            const rate = payload.timeDrainPerSecond;
+            const regionData = testController.stateManager.getStaticData?.()?.regions?.get(region);
+            const exit = (regionData?.exits ?? []).find((e) => e.connected_region) ?? null;
+            if (!exit) { testController.assertEqual(`[${label}] ${region} has an exit`, true, false); return; }
+            const target = exit.connected_region;
+
+            service.reset('even');
+            service.applySettings({ botSpeed: 4, botRetryCap: 0, pointsPerMana: 0 });
+            gs.updatePath(target, exit.name, region);
+            const block = resolveBlockFor(region);
+            if (!block) { testController.assertEqual(`[${label}] resolved a queue block for ${region}`, true, false); return; }
+            loopStateSingleton.setBlockMode(region, block.instance, 'bot');
+            gs.refillMana();
+            testController.eventBus.publish('ui:activatePanel', { panelId: 'noiz2saSubstratePanel' });
+            const configured = await testController.pollForCondition(
+                () => { const d = debugState(); return d?.configures > configuresBefore && d.regionId === region && d.state === 'ready'; },
+                `[${label}] the game page is configured with ${region}`, 30000, 200);
+            testController.reportCondition(`[${label}] the game page is configured with ${region}`, !!configured);
+            if (!configured) return;
+            if (seed === 1) {
+                const spans = debugState()?.spans ?? null;
+                testController.log(`[${label}] ${region}: payload move ${JSON.stringify(payload.move)}, pricing ${JSON.stringify(pricing)}; page spans ${JSON.stringify(spans)}`);
+                testController.assertEqual(`[${label}] the page plays the PRICED move span (the walk's, not the zone table's)`,
+                    JSON.stringify(payload.move), JSON.stringify({ start: spans?.move?.start, end: spans?.move?.end }));
+                const info = centralRegistryRegionInfo(region);
+                testController.assertEqual(`[${label}] getRegionInfo carries the payload's rate`, rate, info?.timeDrainPerSecond ?? null);
+                const live = loopStateSingleton.costDataManager?.getTimeDrainPerSecond?.(region) ?? null;
+                testController.assertEqual(`[${label}] the live loop_costs rate is the payload's${sharedRates ? '' : ' (no shared payload-rate rule: the default 1)'}`,
+                    sharedRates ? rate : 1, live);
+                testController.assertEqual(`[${label}] the trainer earns at the world's pace (pricing.pointsPerMana)`,
+                    pricing.pointsPerMana, service.pointsPerMana);
+            }
+            const manaBefore = currentMana();
+            const xpLevel = loopStateSingleton.getRegionXP(region).level;
+            loopStateSingleton.startProcessing();
+            const crossed = await testController.pollForCondition(() => currentRegion() === target,
+                `[${label}] the Bot block's bot cleared the move run and left into ${target}`, 120000, 100);
+            testController.reportCondition(`[${label}] the bot cleared the move run and left into ${target}`, !!crossed);
+            const lb = debugState()?.lastBot;
+            if (!crossed) { testController.log(`DIAG: ${JSON.stringify(debugState())}`, 'error'); return; }
+            loopStateSingleton.stopProcessing?.();
+            const spent = manaBefore - currentMana();
+            const unit = rate; // XP level 0: the rate undiscounted
+            const v = { seed, spent, visitSeconds: lb?.visitSeconds, attempts: lb?.attempts, failed: lb?.failed, earned: service.trainer.earned,
+                tracks: { ...service.trainer.tracks }, xpLevel };
+            visits.push(v);
+            testController.log(`[${label}] ${JSON.stringify(v)}`);
+            testController.assertEqual(`[${label}] the region's XP level was 0 (the drain undiscounted)`, 0, xpLevel);
+            const liveRate = sharedRates ? unit : 1;
+            testController.assertEqual(`[${label}] the visit cost floor(its game seconds) × the region's rate`, true,
+                Math.abs(spent - Math.floor(lb?.visitSeconds ?? 0) * liveRate) < 1e-6);
+            testController.assertEqual(`[${label}] the bot earned the visit's mana × the world's pace`, true,
+                Math.abs(service.trainer.earned - spent * pricing.pointsPerMana) < 1e-6);
+            const mean = Object.values(service.trainer.tracks).reduce((a, b) => a + b, 0) / 5;
+            testController.assertEqual(`[${label}] …to the skill the walk's prediction gives for that mana (Even)`,
+                predictedSkill(spent, pricing.pointsPerMana), mean);
+            if (!sharedRates) return; // the rest compares mana with the priced cost: needs the payload-rate rule
+            visits.at(-1).planned = pricing.cost;
+        }
+        if (!sharedRates || visits.length !== 4) return;
+        const meanSpent = visits.reduce((a, x) => a + x.spent, 0) / visits.length;
+        const planned = visits[0].planned;
+        testController.log(`mana per move run over bot seeds 1–4: ${visits.map((x) => x.spent.toFixed(2)).join(', ')}; mean ${meanSpent.toFixed(2)}, planned ${planned}`);
+        testController.assertEqual(`the mean mana of a move run (${meanSpent.toFixed(2)}) is the planned cost ${planned} within a factor of 2`,
+            true, meanSpent >= planned / 2 && meanSpent <= planned * 2);
+    });
+}
+
+/** procgenPlayer's region lookup (the runtime's answer to "what does this region's loaded world say") */
+function centralRegistryRegionInfo(region) {
+    try {
+        return centralRegistry.getPublicFunction?.('procgenPlayer', 'getRegionInfo')?.(region) ?? null;
+    } catch { return null; }
 }
 
 // ─────────────────────────────── N4b ───────────────────────────────
@@ -696,10 +817,10 @@ async function noiz2saBotPlaysCheck(testController) {
         const spent = manaBefore - currentMana();
         testController.assertEqual(`[${label}] visit 2 cost floor(its ${lb?.visitSeconds} game seconds) of drain`,
             true, Math.abs(spent - Math.floor(lb?.visitSeconds ?? 0) * unit) < 0.001);
-        const { pointsFor } = await import('../../bulletml-dodge/src/game/tracks.js');
-        const want = pointsFor(service.trainer.settings, { seconds: lb?.visitSeconds ?? 0, score: lb?.score ?? 0 });
-        testController.assertEqual(`[${label}] visit 2 trained the bot (the visit's points)`, true,
-            Math.abs((service.trainer.earned - earnedBefore) - want) < 1e-9);
+        // N5: the points of the mana the visit spent, at the trainer's pace
+        const want = spent * service.pointsPerMana;
+        testController.assertEqual(`[${label}] visit 2 trained the bot (the points of its ${spent} mana)`, true,
+            want > 0 && Math.abs((service.trainer.earned - earnedBefore) - want) < 1e-9);
     });
 }
 
@@ -923,9 +1044,9 @@ async function noiz2saAssistKey(testController) {
             !!ps && ps.botSeed === 1 && ps.botFrames > 0 && ps.botFrames < totalFrames && totalFrames - ps.botFrames < 120);
         testController.assertEqual(`[${label}] the visit cost floor(its game seconds) of drain (± one second)`, true,
             Math.abs((manaAtPark - currentMana()) - Math.floor(ps?.gameSeconds ?? 0) * unit) <= unit + 0.001);
-        const { pointsFor } = await import('../../bulletml-dodge/src/game/tracks.js');
-        const want = pointsFor(service.trainer.settings, { seconds: ps?.gameSeconds ?? 0, score: ps?.score ?? 0 });
-        testController.assertEqual(`[${label}] the visit trained the bot (its points)`, true,
+        // N5: the points of the mana the visit spent, at the trainer's pace
+        const want = (manaAtPark - currentMana()) * service.pointsPerMana;
+        testController.assertEqual(`[${label}] the visit trained the bot (the points of the mana it spent)`, true,
             want > 0 && Math.abs((service.trainer.earned - earnedBefore) - want) < 1e-6);
     });
 }
@@ -1331,6 +1452,19 @@ registerTest({
         + 'live time drain; then instant Playback spends the repriced summary, crosses the departure and earns the '
         + 'summary\'s training points.',
     testFunction: restoresSavedQueues(noiz2saRegionLoopVisit),
+    category: 'noiz2saSubstrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+registerTest({
+    id: 'noiz2sa-priced-world',
+    name: 'Noiz2sa N5: a priced world — the region plays its priced span at its rate, and a move run costs about its planned mana',
+    description: 'Loads noiz2sa_priced_test (built in loop mode: the Noiz2sa regions priced against the cost planner). '
+        + 'The first region plays the walk\'s move span, the loaded world and the live cost data carry its drain rate '
+        + '(the latter with the shared payload-rate rule), and the trainer earns at the world\'s pace. Bot blocks on its '
+        + 'move (fresh Even trainer, 4×, bot seeds 1–4): each visit costs floor(its game seconds) × the rate and trains '
+        + 'the bot by its mana × the pace; the mean mana is the planned cost within a factor of 2.',
+    testFunction: restoresSavedQueues(noiz2saPricedWorld),
     category: 'noiz2saSubstrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
