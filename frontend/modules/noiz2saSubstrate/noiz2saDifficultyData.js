@@ -4,12 +4,12 @@
  * The humanlike bot's measured difficulty of every Noiz2sa scene (stages 1–10) and every aligned three-scene span, at
  * each measured skill (equal tracks = the skill slider): per cell [n, deathless, L, F] — the attempts (one per bot
  * seed), the deathless ones, a clean clear's mean seconds (null: none was clean) and a failed attempt's mean seconds
- * (null: none failed). Source: PeerInfinity/bulletml-dodge @ 19e3de1, results/segments-scenes.json, results/segments-top.json, results/segments-triples.json; hitbox
+ * (null: none failed). Source: PeerInfinity/bulletml-dodge @ 7423ee8, results/segments-scenes.json, results/segments-top.json, results/segments-triples.json; hitbox
  * centered, game seed 1, 16 bot seeds. Read by
  * `noiz2saDifficulty.js`.
  */
 export const NOIZ2SA_DIFFICULTY = Object.freeze({
-    source: {"repo":"PeerInfinity/bulletml-dodge","commit":"19e3de1","files":["results/segments-scenes.json","results/segments-top.json","results/segments-triples.json"],"hitbox":"centered","gameSeeds":[1],"botSeeds":16},
+    source: {"repo":"PeerInfinity/bulletml-dodge","commit":"7423ee8","files":["results/segments-scenes.json","results/segments-top.json","results/segments-triples.json"],"hitbox":"centered","gameSeeds":[1],"botSeeds":16},
     skills: [0,10,20,30,40,50,60,70,80,90,92,94,96,98,99,100],
     cell: ["n","deathless","L","F"],
     scenes: {
