@@ -52,10 +52,11 @@ const armRun = async (name) => {
     return createRunForStaging(solveStaging(stagingFromTape(tape)), SRC);
 };
 
-describe('fidelity LADDER2 D1 — the three clocks, as the game measured them', () => {
-    it('every arm agrees on K = 0, and each class has a positive control', () => {
+describe('fidelity LADDER2 D1 — the grenade\'s, the chain\'s and the beam\'s clocks, as the game measured them', () => {
+    it('every arm agrees on K = 0, and each class has a positive control', async () => {
         expect(ORACLE.agreeingOffsets).toEqual({ grenade: [0], lavachain: [0], beamtower: [0] });
-        expect(ORACLE.arms).toHaveLength(13);
+        const { LADDER2_ARMS } = await probe();
+        expect(ORACLE.arms.map((a) => a.arm)).toEqual(LADDER2_ARMS.map((a) => a.name));
         const firsts = Object.fromEntries(ORACLE.arms.map((a) => [a.arm, a.gameFirstMove]));
         expect(firsts).toEqual({
             'l2-grenade-l59-walled': 155, 'l2-grenade-l75': 155, 'l2-grenade-l75-armed-clear': -1,

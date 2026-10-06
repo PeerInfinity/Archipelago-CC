@@ -654,7 +654,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `ITEM_PROPERTIES` | seedlingDemo/tapeFormat.js | 2 | 2 | rule | count/magnitude | Player.as:hitsMaxDef |
 | `INVENTORY_ITEM_IDS` | seedlingDemo/tapeFormat.js | 6 | 6 | rule | sentinel | Inventory.as:277-318 |
 | `SAVE_SLOTS` | seedlingDemo/tapeFormat.js | 3 | 3 | rule | count | Player.as:totemParts Player.as:totalKeys SealController.as:SEALS |
-| `PLACED_GRENADE` | seedlingDemo/placedGrenade.js | 4 | 3 | physics/rule | count/magnitude | Enemies/Grenade.as:21 Enemies/Grenade.as:22 Enemies/Grenade.as:32 |
+| `PLACED_GRENADE` | seedlingDemo/placedGrenade.js | 4 | 3 | physics/rule | count/magnitude | Enemies/Grenade.as:fallTriggerDistance Enemies/Grenade.as:g Enemies/Grenade.as:_exTime |
 | `BLACK_COVER` | seedlingDemo/gameClock.js | 2 | 2 | rule | magnitude | Game.as:blackCover Game.as:blackCoverRate |
 | `LOAD_FADE_FRAMES` | seedlingDemo/gameClock.js | 7 | 1 | rule | bound | Game.as:blackCover |
 | `PICKUP_HELP_DEAD_FRAMES` | seedlingDemo/gameClock.js | 1 | 1 | rule | magnitude | Pickups/Sword.as:42-49 Inventory.as:174 Game.as:961 |
