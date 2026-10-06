@@ -126,9 +126,9 @@
       "form": "stepper",
       "files": {
         "botDriverV2.js": 26,
-        "solverBot.js": 21
+        "solverBot.js": 22
       },
-      "sites": 47,
+      "sites": 48,
       "seen": "both",
       "via": [
         "const-alias",
@@ -274,6 +274,24 @@
     },
     {
       "surface": "run",
+      "name": "deadFrameSpans",
+      "module": "frontend/modules/seedlingDemo/levelRun.js",
+      "line": 13749,
+      "class": "physics",
+      "form": "event-ledger",
+      "files": {
+        "dangerMap.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "direct"
+      ],
+      "dynamic": null,
+      "why": "Returns the game clock's spans of dead frames ({frames, kind, why, t}: load fades, freezes, help, ceremonies) — a generic engine dead-frame ledger. ⛓ AXE: dangerMap.axeVisitClock refuses an exact axe phase when a span lands inside the visit."
+    },
+    {
+      "surface": "run",
       "name": "direction",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
       "line": 13361,
@@ -295,6 +313,24 @@
         "sites": 1
       },
       "why": "Returns `state.direction`, the player's facing as of the end of the last tick — generic top-down player state."
+    },
+    {
+      "surface": "run",
+      "name": "endingReboots",
+      "module": "frontend/modules/seedlingDemo/levelRun.js",
+      "line": 15215,
+      "class": "seedling",
+      "form": "event-ledger",
+      "files": {
+        "dangerMap.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "direct"
+      ],
+      "dynamic": null,
+      "why": "Returns the ending reboots (Seed.update’s three `new Game` arms) with their tick and levels — Seedling’s own world-rebuild ledger. ⛓ AXE: dangerMap.axeVisitClock refuses an exact axe phase when the world was rebuilt inside the visit."
     },
     {
       "surface": "run",
@@ -480,11 +516,11 @@
       "form": "event-ledger",
       "files": {
         "botDriverV2.js": 49,
-        "dangerMap.js": 1,
+        "dangerMap.js": 2,
         "director.js": 4,
         "solverBot.js": 20
       },
-      "sites": 74,
+      "sites": 75,
       "seen": "both",
       "via": [
         "const-alias",
@@ -546,6 +582,7 @@
         },
         "playerDeaths": {
           "botDriverV2.js": 3,
+          "dangerMap.js": 1,
           "solverBot.js": 2
         },
         "playerHits": {
@@ -608,11 +645,11 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 30,
-        "dangerMap.js": 9,
+        "dangerMap.js": 10,
         "director.js": 1,
         "solverBot.js": 66
       },
-      "sites": 106,
+      "sites": 107,
       "seen": "both",
       "via": [
         "const-alias",
@@ -904,9 +941,9 @@
       "files": {
         "botDriverV2.js": 3,
         "dangerMap.js": 1,
-        "solverBot.js": 37
+        "solverBot.js": 39
       },
-      "sites": 41,
+      "sites": 43,
       "seen": "both",
       "via": [
         "direct"
@@ -931,9 +968,10 @@
       "form": "event-ledger",
       "files": {
         "botDriverV2.js": 1,
+        "dangerMap.js": 1,
         "solverBot.js": 5
       },
-      "sites": 6,
+      "sites": 7,
       "seen": "both",
       "via": [
         "const-alias",
@@ -994,9 +1032,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 56,
-        "solverBot.js": 143
+        "solverBot.js": 144
       },
-      "sites": 199,
+      "sites": 200,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1252,9 +1290,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 4,
-        "solverBot.js": 5
+        "solverBot.js": 6
       },
-      "sites": 9,
+      "sites": 10,
       "seen": "both",
       "via": [
         "direct",
@@ -3707,9 +3745,9 @@
       "files": {
         "botDriverV2.js": 12,
         "encounters.js": 1,
-        "solverBot.js": 28
+        "solverBot.js": 30
       },
-      "sites": 41,
+      "sites": 43,
       "seen": "static",
       "via": [
         "import"

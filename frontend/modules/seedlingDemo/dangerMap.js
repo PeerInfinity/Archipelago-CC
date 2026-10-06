@@ -71,7 +71,9 @@ import {
     SPINNER, hammerHitsPlayer, spinnerRect,
     TURRET_SPIT,
 } from './solverView.js';
-import { hazardVolume, volumeHitsBox } from './hazards.js';
+import {
+    hazardVolume, volumeHitsBox, axeHitsPlayer, SPINNING_AXE,
+} from './hazards.js';
 
 export class DangerMapError extends Error {
     constructor(message) { super(message); this.name = 'DangerMapError'; }
@@ -357,14 +359,98 @@ export const HAZARDS_PRICED_LIVE = Object.freeze({
 });
 
 /**
- * ⛓ INGREDIENT (b) — the placed puzzlement hazards' verdict volumes,
- * excluding the families `HAZARDS_PRICED_LIVE` names.
+ * ⛓⛓⛓ SEEDLING FIDELITY AXE — **THE SPINNING AXE IS PRICED AT ITS OWN UPDATE
+ * COUNT IN TRANSIT, NOT AS THE DISC IT SWEEPS.**
+ *
+ * The census volume (`hazardVolume('spinningaxe')`) is the union over every
+ * angle: a 32 px disc tested at the box CENTRE. Every route that must pass the
+ * axe — ten survey steps (L48, L61 ×6, L71, L75, L101) — crosses that disc, and
+ * no rung could clear it: AVOID routes around rects (the disc is not one), TIME
+ * is a 48 px last-mile search, and BAIT/KILL need a body. The game lets a player
+ * through by timing (the J2 walker crossed L61, L71 and L76 axe rooms), because
+ * the blade is ONE LINE whose angle is a function of the visit's tick index
+ * alone — autonomous, like the spinner's hammer (§14.2's criterion).
+ *
+ * ⇒ a TRANSIT question at frame `tick` asks `hazards.axeHitsPlayer` at update
+ * `tick − V + AXE_UPDATE_OFFSET`, where V is the observation index of the
+ * visit's arrival (`axeVisitClock`). A transit sample's box is the PRE-move box
+ * of frame `tick` (`previewWalk` records the position before it steps), which
+ * is the box the axe tests, because it updates before the Player
+ * (`hazards.axeHitsPlayer`'s docblock). `AXE_UPDATE_OFFSET` is 0: the game
+ * agrees on every arm of `probe-seedling-axe-phase.mjs` (the AXE report, D1).
+ *
+ * ⛔ THE DISC STAYS where the count is not known — a WAIT question (a union over
+ * a dwell window), or a visit whose clock `axeVisitClock` cannot vouch for —
+ * which is what is TRUE when the phase is unknowable.
  */
-export function hazardDanger(run, box) {
+export const AXE_UPDATE_OFFSET = 0;
+
+/** One revolution of an axe, in updates (`360 / |rate|`, rounded up). */
+export function axePeriod(rate) {
+    const r = Math.abs(Number(rate));
+    return r > 0 ? Math.ceil(360 / r) : Infinity;
+}
+
+/**
+ * The visit's arrival observation `v`, or `v: null` with the reason the axe's
+ * update count cannot be read off the tape's tick index.
+ *
+ * `v` is the last transition's `t` (the arrival observation, `levelRun`'s
+ * `enterWorld`), or 0 for a run that has not left its boot level. ⛔ Refused —
+ * and the disc kept — when (a) the last transition does not arrive HERE, (b) a
+ * death or an ending reboot rebuilt the world inside this visit (a second build,
+ * a second ctor), or (c) any dead-frame span lands at or after `v`: a dead frame
+ * spends `Game.update`s the tape does not count, and whether `World.update` ran
+ * in them is per-kind, so the count would be a guess.
+ */
+export function axeVisitClock(run) {
+    const level = run.level;
+    const trs = run.transitions ?? [];
+    const last = trs.at(-1) ?? null;
+    if (last && last.to_level !== level) {
+        return { v: null, why: `the last transition arrives in L${last.to_level}, not L${level}` };
+    }
+    const v = last ? last.t : 0;
+    const rebuilt = [...(run.ledger('playerDeaths') ?? []), ...(run.endingReboots ?? [])]
+        .find((r) => Number.isFinite(r.t) && r.t >= v);
+    if (rebuilt) return { v: null, why: `the world was rebuilt at t${rebuilt.t}, inside the visit` };
+    const dead = (run.deadFrameSpans ?? []).find((s) => s.t !== null && s.t >= v);
+    if (dead) {
+        return { v: null, why: `${dead.frames} dead frame(s) (${dead.kind}) at t${dead.t}, inside the visit` };
+    }
+    return { v, why: null };
+}
+
+/**
+ * ⛓ INGREDIENT (b) — the placed puzzlement hazards' verdict volumes,
+ * excluding the families `HAZARDS_PRICED_LIVE` names. ⛓ AXE: a spinning axe in
+ * TRANSIT is its exact blade and hub at `tick` (see `AXE_UPDATE_OFFSET`).
+ */
+export function hazardDanger(run, box, tick = null, mode = 'wait') {
     const out = [];
     const world = run.worldFor(run.level);
+    // ⛓ AXE: asked once per call, and only when a spinning axe is placed here.
+    let axeClock;
     for (const h of (world.combat?.hazards ?? [])) {
         if (HAZARDS_PRICED_LIVE[h.tag]) continue;
+        if (h.tag === 'spinningaxe' && mode === 'transit' && Number.isFinite(tick)) {
+            axeClock ??= axeVisitClock(run);
+            if (axeClock.v !== null) {
+                const axe = { cx: h.cx, cy: h.cy, rate: Number(h.attrs?.rate ?? 0) };
+                const updates = tick - axeClock.v + AXE_UPDATE_OFFSET;
+                const hit = updates >= 1 ? axeHitsPlayer(axe, updates, box) : null;
+                if (hit) {
+                    out.push({ kind: 'hazard', id: `${h.tag}@${h.x},${h.y}`, arm: hit.arm,
+                        axe: { cx: axe.cx, cy: axe.cy, rate: axe.rate, period: axePeriod(axe.rate), updates },
+                        why: `a SpinningAxe's ${hit.arm === 'hub' ? `${SPINNING_AXE.endRectSide}x`
+                            + `${SPINNING_AXE.endRectSide} hub rect` : `${SPINNING_AXE.length} px blade`} `
+                            + `on its update ${updates} of this visit (rate ${axe.rate}, `
+                            + `${(((hit.line.deg % 360) + 360) % 360)}°) — the exact \`collideLine\`/`
+                            + '`collideRect` at THIS tick, not the disc' });
+                }
+                continue;
+            }
+        }
         const vol = hazardVolume(h, world.world);
         const hit = volumeHitsBox(vol, box);
         if (hit) {
@@ -1145,7 +1231,8 @@ export function dangerAt(run, tick, box, {
         ...(mode === 'transit'
             ? arrowDangerDuringTransit(run, box, horizon, arrows)
             : arrowDanger(run, box, horizon)),
-        ...hazardDanger(run, box),
+        // ⛓ AXE: the tick and the mode, so a spinning axe in TRANSIT is its blade at `tick`.
+        ...hazardDanger(run, box, tick, mode),
         ...chaserDanger(run, box, coupledHorizon, mode === 'transit' ? chasers : null,
             { perTick: mode === 'transit' }),
         // ⛓ AUTONOMOUS (§14.2): a spinner cannot read the player, so it is
