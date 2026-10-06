@@ -34,6 +34,7 @@ import { buildLevelWorld } from './levelWorld.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, runTape } from './tapeRunner.js';
 import { SolverRefusal, solveSegment } from './solverBot.js';
+import { canCross } from './seedlingCanCross.js';
 import { chestStanceBand } from './chest.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import {
@@ -132,6 +133,16 @@ describe('fidelity STANCE — D2: the keylock stance, both states', () => {
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.sealed).toMatchObject({ wall: 'bosslock@416,240', self: true, with: [],
             flag: { level: 12, tag: 4 }, stance: { x: 424, y: 264 } });
+    });
+});
+
+describe('fidelity STANCE — a presser with no stance is the KILL rung\'s refusal, not the solve\'s', () => {
+    it('L8 → L7 from the L9 door (the JS arc\'s sweep leg 85, no items): LADDER, the ceiling presser named', () => {
+        const r = canCross({ level: 8, exit: 7, arrival: { from: 9 }, inventory: [], witness: false });
+        expect(r.verdict).toBe('cannot');
+        expect(r.why).toMatch(/the combat ladder is EXHAUSTED/);
+        expect(r.why).toMatch(/kill: the ceiling's presser button@64,48 \(group t=0, arming \[arrowtrap@96,16\]\) has no stance/);
+        expect(r.why).not.toMatch(/^solverBot: no REACHABLE stance inside button@64,48/);
     });
 });
 
