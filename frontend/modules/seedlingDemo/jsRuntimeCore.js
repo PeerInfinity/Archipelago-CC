@@ -656,6 +656,20 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         }
     }
 
+    /**
+     * ⛓ OBSTACLE EVENTS — every slot cleared so far, `[{level, tag}]` sorted: what earlier runs carried, the live
+     * run's clears, and the collected apitems (the game clears their slot too).
+     */
+    function persistenceCleared() {
+        const all = new Map(carried);
+        for (const k of collected) {
+            const [level, tag] = k.split(':').map(Number);
+            all.set(k, { level, tag });
+        }
+        for (const c of session ? liveClears(session.run) : []) all.set(`${c.level}:${c.tag}`, { level: c.level, tag: c.tag });
+        return [...all.values()].map((c) => ({ level: c.level, tag: c.tag })).sort((a, b) => a.level - b.level || a.tag - b.tag);
+    }
+
     function rebootInPlace(why) {
         const run = session.run;
         // The player's tick-0 state is the ctor args plus the half tile.
@@ -980,6 +994,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             y: session ? session.run.state.y : null,
             deaths: deaths.length,
             halted: halted ? halted.message : null,
+            // ⛓ OBSTACLE EVENTS — the game's cleared persistence slots, as the wasm game's `botStatus` reports them
+            // (`persistence_cleared`): what earlier runs carried + what this run cleared. The collector's load read.
+            persistence_cleared: persistenceCleared(),
         }),
         botMobiles: () => JSON.stringify({
             mobiles: session ? [{ cls: 'Player', x: session.run.state.x, y: session.run.state.y }] : [],

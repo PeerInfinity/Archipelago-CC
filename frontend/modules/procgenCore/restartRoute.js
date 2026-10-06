@@ -62,11 +62,16 @@ export function isRestartStep(step) {
  *   CONSUMER — exits whose crossing LANDED INSIDE A SOLID (an `arrival-inside-solid` refusal), each with the
  *   refusal's other arrivals as AP exits (`seedlingArrivalEscape`). Every walk this route asks for avoids them
  *   (`avoidingFindPath`); omitted = the walks are `findPath`'s, unchanged.
+ * @param {(a: string, b: string) => object|null} [args.eventPath] ⛓ OBSTACLE EVENTS — the BREAK-BEFORE-FIRST-USE walk
+ *   (`eventRoute.eventPathFinder`): asked only where the graph's walk has none, so a route meets the game-state events it
+ *   needs by crossing credit or a goal-first BREAK step — before any Restart. Omitted = the walks are `findPath`'s.
  * @returns {{route: object|null, kind: 'walk'|'restart'|null, why: string|null}}
  *   `why` names the refusal when `route` is null; without the flag it is exactly `no path from <from> to <to>`.
  */
-export function planRoute({ from, to, findPath: walkPlanner, rules, playerId = '1', restartTarget = restartTargetFor(rules, playerId),
-    avoid = null }) {
+export function planRoute({ from, to, findPath: graphWalk, rules, playerId = '1', restartTarget = restartTargetFor(rules, playerId),
+    avoid = null, eventPath = null }) {
+    const walkPlanner = typeof eventPath === 'function' && typeof graphWalk === 'function'
+        ? (a, b) => usable(graphWalk(a, b)) ?? usable(eventPath(a, b)) : graphWalk;
     const findPath = avoid && avoid.size > 0 && typeof walkPlanner === 'function' ? avoidingFindPath(walkPlanner, avoid) : walkPlanner;
     if (!from || !to || typeof findPath !== 'function') {
         return { route: null, kind: null, why: 'no route asked (a missing region or planner)' };

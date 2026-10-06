@@ -19,6 +19,9 @@ import { PlaybackControlBar } from '../shared/playbackControlBar.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { planRoute, isRestartStep, restartTargetFor } from '../procgenCore/restartRoute.js';
 import { returnToMenu } from '../procgenCore/restartWarp.js';
+import { creditsOfHop, eventPathFinder, gameStateEventsOf, isBreakStep } from '../procgenCore/eventRoute.js';
+import { evaluateRule } from '../shared/ruleEngine.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 
 const DEFAULT_RATE_HZ = 4;
 // LS key for the click-intercept toggle. Persisted separately from
@@ -83,12 +86,17 @@ export function buildLocationIndex(staticData) {
  *
  * Pure function — exported for testing.
  *
+ * ⛓ OBSTACLE EVENTS — `exclude` (a Set of location names) drops rows: the bot passes the slot's GAME-STATE events
+ * (`event_kind: 'game_state'`, a saved obstacle's flag). The sphere log orders them like pickups, but walking to one
+ * would break the obstacle EAGERLY: the game breaks it when a route passes through, or the route visits it first
+ * when it needs it (`procgenCore/eventRoute.js`), and the runtime's collector checks it on the game's flag.
+ *
  * Returns: [{ locationName, regionName, sphereIndex, fractionalIndex }, ...]
  *   sphereIndex / fractionalIndex are preserved verbatim so the bot's
  *   status line can show "Sphere 0.3 → ..." instead of just a queue
  *   index.
  */
-export function buildSphereQueue(sphereData, locationIndex) {
+export function buildSphereQueue(sphereData, locationIndex, { exclude = null } = {}) {
     const queue = [];
     if (!Array.isArray(sphereData)) return queue;
     if (!locationIndex || typeof locationIndex.get !== 'function') return queue;
@@ -96,6 +104,8 @@ export function buildSphereQueue(sphereData, locationIndex) {
         const locations = entry?.locations;
         if (!Array.isArray(locations)) continue;
         for (const locationName of locations) {
+            // ⛓ OBSTACLE EVENTS — a game-state event is never a queue row (break before first use, never eager).
+            if (exclude?.has(locationName)) continue;
             const regionName = locationIndex.get(locationName);
             if (!regionName) continue;
             queue.push({
@@ -173,6 +183,11 @@ export class PlaybackBotUI {
         this._lastArrivalExit = null;
         // ⛓ WAVE-6 CONSUMER — escapes taken (`{from, exit, solids, at}`), for readouts and rows.
         this._escapes = [];
+        // ⛓ OBSTACLE EVENTS — game-state event ITEMS a hop the bot took CREDITED (it passed through the obstacle at the
+        // event's own cost, so the game breaks it on that walk): held for routing until the collector sees the flag.
+        this._creditedEvents = new Set();
+        // The game-state event rows the queue left to the game (never walked eagerly), for readouts.
+        this._leftToGame = [];
         this._getSphereData = getSphereData;
         this._getStaticData = getStaticData;
         // Returns the loaded rules.json (the panel caches it from
@@ -346,6 +361,7 @@ export class PlaybackBotUI {
         this._avoidExits = new Map();
         this._lastArrivalExit = null;
         this._escapes = [];
+        this._creditedEvents = new Set();
         this._dispatcherLog = [];       // dispatcher event log is run-scoped
         this._dispatch('reset');
         this._render();
@@ -538,6 +554,12 @@ export class PlaybackBotUI {
             this._render();
             return;
         }
+        if (isBreakStep(path.steps[1])) {
+            // ⛓ OBSTACLE EVENTS — the route needs an obstacle broken first: walk to it (the target stays pending).
+            this._takeBreakStep(path.steps[1], dest);
+            this._render();
+            return;
+        }
         const nextExit = path.steps[1].exitUsed;
         if (!nextExit) {
             this._setStatus(`error: PathFinder returned no exit (${this._currentRegion} → ${targetRegion})`);
@@ -545,6 +567,7 @@ export class PlaybackBotUI {
             this._render();
             return;
         }
+        this._noteHopCredits(path.steps[1]);
         this._publishWalkTo({ kind: 'exit', name: nextExit });
         this._setStatus(`routing via "${nextExit}" → ${dest}`);
         this._render();
@@ -658,7 +681,10 @@ export class PlaybackBotUI {
             return;
         }
         const idx = buildLocationIndex(staticData);
-        this._queue = buildSphereQueue(sphereData, idx);
+        const events = new Set(gameStateEventsOf(this._getRulesJson?.() ?? null, String(this._getPlayerId?.() ?? '1'))
+            .map((e) => e.name));
+        this._queue = buildSphereQueue(sphereData, idx, { exclude: events });
+        this._leftToGame = sphereData.flatMap((e) => (e?.locations ?? []).filter((n) => events.has(n)));
         this._cursor = 0;
         this._lastPublishedTarget = null;
     }
@@ -916,6 +942,12 @@ export class PlaybackBotUI {
             this._render();
             return;
         }
+        if (isBreakStep(path.steps[1])) {
+            // ⛓ OBSTACLE EVENTS — break before first use: the route needs this obstacle broken, so it is visited FIRST.
+            this._takeBreakStep(path.steps[1], `${head.regionName} ${progress}`, sphereTag);
+            this._render();
+            return;
+        }
         const nextExit = path.steps[1].exitUsed;
         if (!nextExit) {
             this._setStatus(`error: PathFinder returned a step without an exit (${this._currentRegion} → ${head.regionName})`);
@@ -925,6 +957,7 @@ export class PlaybackBotUI {
             this._render();
             return;
         }
+        this._noteHopCredits(path.steps[1]);
         this._setStatus(`${sphereTag}routing via "${nextExit}" → ${head.regionName} ${progress}`);
         this._publishWalkTo({ kind: 'exit', name: nextExit });
         this._render();
@@ -938,6 +971,7 @@ export class PlaybackBotUI {
     _planRoute(from, to) {
         const rules = this._getRulesJson?.() ?? null;
         const playerId = String(this._getPlayerId?.() ?? '1');
+        const eventPath = this._eventPath(rules, playerId);
         return planRoute({
             from,
             to,
@@ -946,7 +980,65 @@ export class PlaybackBotUI {
             playerId,
             // ⛓ WAVE-6 CONSUMER — never back through an entrance that landed inside a solid.
             ...(this._avoidExits.size > 0 ? { avoid: this._avoidExits } : {}),
+            // ⛓ OBSTACLE EVENTS — where the graph has no walk, meet the game-state events the route needs.
+            ...(eventPath ? { eventPath } : {}),
         });
+    }
+
+    /**
+     * ⛓ OBSTACLE EVENTS — the BREAK-BEFORE-FIRST-USE walk for `planRoute` (`procgenCore/eventRoute.js`): crossing
+     * credit and goal-first BREAK steps, judged against the state manager's latest snapshot with the events the bot's
+     * own hops credited counted as held. null without a snapshot or without game-state events in the slot.
+     */
+    _eventPath(rules, playerId) {
+        const snapshot = this._stateManagerProxy?.getLatestStateSnapshot?.() ?? null;
+        const staticData = this._getStaticData?.() ?? null;
+        if (!snapshot || !staticData) return null;
+        const interfaces = new Map();
+        const ruleHolds = (rule, extra) => {
+            const names = [...new Set([...this._creditedEvents, ...(extra ?? [])])].sort();
+            const key = names.join('\u0000');
+            if (!interfaces.has(key)) {
+                const inventory = { ...(snapshot.inventory ?? {}) };
+                for (const n of names) inventory[n] = Math.max(1, Number(inventory[n] ?? 0));
+                interfaces.set(key, createSnapshotInterface({ ...snapshot, inventory }, staticData));
+            }
+            try { return evaluateRule(rule, interfaces.get(key)) === true; } catch { return false; }
+        };
+        const held = () => [...new Set([...this._creditedEvents,
+            ...Object.keys(snapshot.inventory ?? {}).filter((n) => Number(snapshot.inventory[n]) > 0)])];
+        return eventPathFinder({ rules, playerId, ruleHolds, held });
+    }
+
+    /** ⛓ OBSTACLE EVENTS — remember the events the hop about to be walked CREDITS (the game breaks them on it). */
+    _noteHopCredits(step) {
+        const rules = this._getRulesJson?.() ?? null;
+        const playerId = String(this._getPlayerId?.() ?? '1');
+        const events = gameStateEventsOf(rules, playerId);
+        if (events.length === 0) return;
+        for (const e of creditsOfHop({ regions: rules?.regions?.[playerId], events, from: this._currentRegion, step,
+            held: [...this._creditedEvents] })) {
+            this._creditedEvents.add(e.item);
+            this._log.push(`crossing "${step.exitUsed}" passes through ${e.obstacle?.class ?? 'the obstacle'}`
+                + `@${e.obstacle?.x},${e.obstacle?.y} at its own cost — credits "${e.name}"`);
+        }
+    }
+
+    /**
+     * ⛓ OBSTACLE EVENTS — a goal-first BREAK step: walk to the event location (the controller maps it to the
+     * obstacle, or refuses it by name). The route's target stays where it was; the next region move or check
+     * re-plans, and once the game's flag is collected the gated walk exists.
+     */
+    _takeBreakStep(step, toward, sphereTag = '') {
+        const ev = step.event;
+        this._setStatus(`${sphereTag}breaking ${ev.obstacle?.class ?? 'an obstacle'}@${ev.obstacle?.x},${ev.obstacle?.y} `
+            + `first (${ev.eventId ?? ev.name}) — the route to ${toward} needs it`);
+        this._publishWalkTo({ kind: 'location', name: ev.name });
+    }
+
+    /** ⛓ OBSTACLE EVENTS — the queue rows left to the game, and the events the bot's hops credited. */
+    getEventState() {
+        return { leftToGame: [...this._leftToGame], credited: [...this._creditedEvents] };
     }
 
     /**

@@ -19,13 +19,15 @@ import {
 } from './flashSeedlingGenLibrary.js';
 import {
   resolveSeedlingAtlasGoal,
+  runtimeEventsOf,
   SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
   SeedlingPlaybackController,
 } from './seedlingPlaybackController.js';
+import { playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { PLAYBACK_WALK_FAILED_EVENT, PLAYBACK_WALK_NOTE_EVENT } from '../procgenCore/playbackEvents.js';
 import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
-import { stateManagerProxySingleton } from '../stateManager/index.js';
+import { getLastRawJsonData, stateManagerProxySingleton } from '../stateManager/index.js';
 import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 let moduleDispatcher = null;
@@ -318,6 +320,20 @@ export function activateOnLoadRegion(bus, isFocusLocked, focusGame) {
   return true;
 }
 
+/**
+ * ⛓ OBSTACLE EVENTS — the loaded slot's game-state events (`runtimeEventsOf`), re-read only when the rules
+ * payload changes (a preset switch).
+ */
+let _eventsCache = { payload: undefined, events: [] };
+function eventsOfLoadedSlot() {
+  const payload = getLastRawJsonData?.() ?? null;
+  if (payload !== _eventsCache.payload) {
+    const rules = rulesOfRawPayload(payload);
+    _eventsCache = { payload, events: rules ? runtimeEventsOf(rules, playerOfRawPayload(payload) ?? '1').events : [] };
+  }
+  return _eventsCache.events;
+}
+
 export function initialize(moduleId, priorityIndex, initializationApi) {
   log('info', `[FlashPanel Module] Initializing with priority ${priorityIndex}...`);
   moduleDispatcher = initializationApi.getDispatcher();
@@ -357,6 +373,10 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
       const w = c?.status?.()?.wasm ?? null;
       return !!(w && (w.driving || w.gate || w.frozen));
     }).map((c) => c.stop()).length,
+    // ⛓ OBSTACLE EVENTS — the runtime collector: the loaded slot's game-state events, collected on the GAME's flag
+    // as a local event check (forced: the game is the truth, not the logic's reach), never a server check.
+    getEvents: eventsOfLoadedSlot,
+    collectEvent: (location) => stateManagerProxySingleton.checkLocation(location, true, true),
   });
   seedlingRegionGlue.start();
 

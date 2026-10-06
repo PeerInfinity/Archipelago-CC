@@ -98,6 +98,8 @@ import { RANDOMIZER_ARMS } from './seedlingRandomizerEligibility.js';
 import { ATLAS_CHECK_PLAYER, atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
 // ⛓ WAVE-6 CONSUMER — import-free too (an arrival-inside-solid's way out, translated to AP exits).
 import { arrivalEscape } from './seedlingArrivalEscape.js';
+// ⛓ OBSTACLE EVENTS — import-free (the rules' game-state events, read off the raw rules).
+import { GAME_STATE_EVENT_KIND } from '../procgenCore/eventRoute.js';
 
 /** The substrate this controller walks (the default instance; J3 builds a second for the atlas rooms). */
 export const SEEDLING_PLAYBACK_SUBSTRATE = 'flash_seedling_gen';
@@ -151,6 +153,9 @@ export function resolveSeedlingGoal(target, report, { liveLevel = null, region =
 export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, region = null } = {}) {
     const name = target?.name;
     if (target?.kind === 'location') {
+        // ⛓ OBSTACLE EVENTS — a saved obstacle's event is no pickup: its check is the game's flag (the collector's).
+        const ev = (atlas?.events ?? []).find((x) => x.location === name);
+        if (ev) return { refused: EVENT_GOAL_REFUSAL(ev) };
         const e = (atlas?.entries ?? []).find((x) => x.location === name);
         if (!e) {
             const why = (atlas?.refused ?? []).find((r) => r.location === name)?.why ?? null;
@@ -225,6 +230,49 @@ export function realRoomLinks(rules, regions) {
     return out;
 }
 
+/**
+ * ⛓ OBSTACLE EVENTS — the rules' EVENT locations as the playback map sees them (`event_kind`, rules
+ * `seedlingObstacleEvents.js`). A `'game_state'` event is a GOAL whose check is the game's persistence flag
+ * `{level, tag}` turning set (`seedlingEventCollector.js` collects it, on both runtimes) — not a delivered entity and
+ * not a pickup, so it is neither a bound entry nor a refusal: it is listed in `events`. ⛔ FAIL-CLOSED: an event of
+ * any OTHER kind is refused by name, never bound as a pickup.
+ *
+ * @param {object} rules  the raw rules.json
+ * @param {string} [playerId='1']
+ * @returns {{events: Array<{location, eventId, level, tag, obstacle, action, side, across}>, refused: Array<{location, why}>}}
+ */
+export function runtimeEventsOf(rules, playerId = ATLAS_CHECK_PLAYER) {
+    const events = [];
+    const refused = [];
+    for (const region of Object.values(rules?.regions?.[String(playerId)] ?? {})) {
+        for (const loc of region?.locations ?? []) {
+            const kind = loc?.event_kind;
+            if (kind === undefined || kind === null) continue;
+            if (kind !== GAME_STATE_EVENT_KIND) {
+                refused.push({ location: loc.name, why: `an event of kind ${JSON.stringify(kind)}, which the playback map `
+                    + `does not know — not bound as a pickup (only '${GAME_STATE_EVENT_KIND}' events are read)` });
+                continue;
+            }
+            events.push({ location: loc.name, eventId: loc.event_id ?? null, level: loc.obstacle?.level ?? null,
+                tag: loc.obstacle?.tag ?? null, obstacle: loc.obstacle ?? null, action: loc.action ?? null,
+                side: loc.side ?? null, across: [...(loc.across ?? [])] });
+        }
+    }
+    return { events, refused };
+}
+
+/**
+ * ⛓ OBSTACLE EVENTS — why a walk to a game-state event stops: breaking an obstacle on purpose is the solver goal
+ * `clear-tag {tag, at, obstacle}` (the route survey's), whose EXECUTOR is fidelity's and not built — solverBot
+ * refuses the kind by name. The planner reaches here only when a route NEEDS the obstacle broken first
+ * (`procgenCore/eventRoute.js`); a walk that passes through it breaks it without asking.
+ */
+export const EVENT_GOAL_REFUSAL = (e) => `"${e.location}" is a saved-obstacle EVENT (${e.eventId}; `
+    + `${e.obstacle?.class ?? '?'}@${e.obstacle?.x},${e.obstacle?.y} in level ${e.level}, ${e.action?.verb ?? 'no action named'}): `
+    + `its check is the game's persistence flag {${e.level},${e.tag}} turning set, which the runtime collects; breaking it `
+    + `on purpose is the solver goal \`clear-tag {tag: {level: ${e.level}, tag: ${e.tag}}, at: {x: ${e.obstacle?.x}, `
+    + `y: ${e.obstacle?.y}}}\`, which the solver does not execute yet (fidelity's executor)`;
+
 /** ⛓ VANILLA MAP — why the vanilla arm's encounter rows have no cell. */
 export const ENCOUNTER_REFUSAL = (e) => `"${e.location}" is an ENCOUNTER (a ${e.entityType} in level ${e.level}): `
     + 'the vanilla arm does not rewrite it (it grants through a fight or a trade, not a pickup) and its check '
@@ -241,6 +289,7 @@ export const ENCOUNTER_REFUSAL = (e) => `"${e.location}" is an ENCOUNTER (a ${e.
  *              does not hold, and every `encounters` row, is REFUSED by name.
  *   exits      the rules' own `flash_seedling` sidecars (`regions`), as on the atlas arm, plus the logical
  *              sub-region links (`realRoomLinks`), each refused by name.
+ *   events     ⛓ OBSTACLE EVENTS — the rules' game-state events (`runtimeEventsOf`); an unknown kind is refused.
  *
  * @param {object} o
  * @param {Array} o.entries      the vanilla arm's placement entries
@@ -264,7 +313,9 @@ export function vanillaArmPlaybackMap({ entries = [], encounters = [], set = nul
         }
         bound.push({ location: e.location, level: e.level, tag: e.tag, entityType: held.type });
     }
-    return { arm: RANDOMIZER_ARMS.VANILLA, entries: bound, refused, regions, links: realRoomLinks(rules, regions) };
+    const ev = runtimeEventsOf(rules);
+    return { arm: RANDOMIZER_ARMS.VANILLA, entries: bound, refused: [...refused, ...ev.refused], events: ev.events, regions,
+        links: realRoomLinks(rules, regions) };
 }
 
 /**
@@ -283,8 +334,9 @@ export function realRoomPlaybackMap(loaded, rawRules) {
     const regions = new Map(atlasRoomRegions(rawRules).map(({ region }) => [region,
         rawRules.preset_sidecars[ATLAS_CHECK_PLAYER][region].playable_payload]));
     if (loaded.arm === RANDOMIZER_ARMS.ATLAS) {
-        return { arm: RANDOMIZER_ARMS.ATLAS, entries: loaded.entries ?? [], refused: loaded.refused ?? [],
-            regions, links: realRoomLinks(rawRules, regions) };
+        const ev = runtimeEventsOf(rawRules);
+        return { arm: RANDOMIZER_ARMS.ATLAS, entries: loaded.entries ?? [], refused: ev.refused.length ? [...(loaded.refused ?? []), ...ev.refused] : loaded.refused ?? [],
+            events: ev.events, regions, links: realRoomLinks(rawRules, regions) };
     }
     // The vanilla arm's result carries no `arm` field (its shape predates the other two): it is the arm
     // whose load DELIVERED a rewritten set.

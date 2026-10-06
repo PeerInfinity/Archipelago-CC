@@ -46,6 +46,7 @@ import { FLASH_SEEDLING_SUBSTRATE_ID } from './flashSeedlingLibrary.js';
 import { FLASH_SEEDLING_GEN_SUBSTRATE_ID } from './flashSeedlingGenLibrary.js';
 import { SeedlingRegionBinding } from './seedlingRegionBinding.js';
 import { RESTARTED_EVENT } from '../menuPanel/menuPanelEngine.js';
+import { SeedlingEventCollector } from './seedlingEventCollector.js';
 
 /** procgenPlayer's own broadcast of "which substrate owns the player now". */
 export const ACTIVE_SUBSTRATE_EVENT = 'procgen:activeSubstrateChanged';
@@ -90,7 +91,7 @@ export class SeedlingRegionGlue {
      *   every door passes, today's behaviour
      */
     constructor({ eventBus, getDispatcher, loadRegionEvent, substrateId, getPanel, now, canPass, isBotWalking,
-        timers, getProcgen, stopBotWalks } = {}) {
+        timers, getProcgen, stopBotWalks, getEvents, collectEvent } = {}) {
         this.eventBus = eventBus ?? null;
         this.getDispatcher = getDispatcher ?? (() => null);
         this.loadRegionEvent = loadRegionEvent;
@@ -102,6 +103,18 @@ export class SeedlingRegionGlue {
         this.delivery = null;
         /** H6 — the AP check binding. Set from outside, like the delivery. */
         this.checkBinding = null;
+        /**
+         * ⛓ OBSTACLE EVENTS — the runtime collector (`seedlingEventCollector.js`): a game-state event is collected when
+         * the GAME's persistence flag turns set (live: a `pendingCheck` clear; at load: `botStatus.persistence_cleared`).
+         * `getEvents()` = the slot's game-state events; `collectEvent(location)` = a LOCAL event check (never a server
+         * check: the location has no id). Absent = no collector (today's behaviour).
+         */
+        this.collectEvent = typeof collectEvent === 'function' ? collectEvent : null;
+        this.eventCollector = typeof getEvents === 'function' && this.collectEvent
+            ? new SeedlingEventCollector({ getEvents, insideHostStart: (seq) => this.checkBinding?.insideHostStart?.(seq) ?? false })
+            : null;
+        /** Whether this adapter's game has had its load-time read (`syncEventsFromGame`). */
+        this._eventsSynced = false;
         this._unsubs = [];
         this._handler = (payload) => this.handleLoadRegion(payload);
         this._activeHandler = (payload) => this.handleActiveSubstrateChanged(payload);
@@ -117,7 +130,7 @@ export class SeedlingRegionGlue {
         // behaviour from console text.
         this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, parks: 0,
             resumes: 0, setDeliveries: 0, locationChecks: 0, itemsFound: 0, doorsLocked: 0, bounces: 0,
-            logicalMoves: 0, positionReads: 0, restarts: 0 };
+            logicalMoves: 0, positionReads: 0, restarts: 0, eventsCollected: 0 };
         /** ⛓ LOGICAL LINKS — is a Playback Bot walk in flight (its route credits its own links)? */
         this.isBotWalking = isBotWalking ?? (() => false);
         this._timers = timers ?? { setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: (h) => clearInterval(h) };
@@ -248,10 +261,34 @@ export class SeedlingRegionGlue {
             if (this.checkBinding) {
                 this.apply(this.checkBinding.onStateReport(property, value));
             }
+            // ⛓ OBSTACLE EVENTS — the third reader of the same reports (a cleared event flag).
+            if (this.eventCollector) this.apply(this.eventCollector.onStateReport(property, value));
         };
         this._standDownAdapter();
         this.binding.onGameRestart();
         this.checkBinding?.onGameRestart();
+        this.eventCollector?.onGameRestart();
+        this._eventsSynced = false;
+    }
+
+    /**
+     * ⛓ OBSTACLE EVENTS — THE LOAD-TIME READ: the game's cleared persistence slots as they stand
+     * (`botStatus().persistence_cleared`, both runtimes), so a save where the rock is already broken collects its
+     * event. One `botStatus` per adapter (wasm: 14–16 ms), at the first region load and again once an AP load has
+     * bound its checks. Returns the effects applied, or null when the game gave no readout.
+     */
+    syncEventsFromGame() {
+        if (!this.eventCollector || !this.adapter) return null;
+        let st = null;
+        try {
+            const raw = this.adapter._getFlash?.()?.botStatus?.();
+            st = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        } catch { st = null; }
+        if (!Array.isArray(st?.persistence_cleared)) return null;
+        this._eventsSynced = true;
+        const effects = this.eventCollector.onLoad(st.persistence_cleared);
+        this.apply(effects);
+        return effects;
     }
 
     detachAdapter() {
@@ -286,6 +323,8 @@ export class SeedlingRegionGlue {
     setCheckBinding(checkBinding) {
         this.checkBinding = checkBinding ?? null;
         this._standDownAdapter();
+        // ⛓ OBSTACLE EVENTS — an AP load just landed: read the game's cleared flags once more.
+        this.syncEventsFromGame();
         return this;
     }
 
@@ -372,6 +411,7 @@ export class SeedlingRegionGlue {
             }
         }
         this.apply(this.binding.onLoadRegion(payload ?? {}));
+        if (!this._eventsSynced) this.syncEventsFromGame();
     }
 
     /**
@@ -431,6 +471,7 @@ export class SeedlingRegionGlue {
                 case 'regionMove': this._regionMove(effect); break;
                 case 'locationCheck': this._locationCheck(effect); break;
                 case 'apItemFound': this._itemFound(effect); break;
+                case 'eventCollect': this._eventCollect(effect); break;
                 case 'locked': this._doorLocked(effect); break;
                 case 'bounce': this._bounce(effect); break;
                 case 'warn': this._warn(effect.message); break;
@@ -523,6 +564,24 @@ export class SeedlingRegionGlue {
         }, { initialTarget: 'bottom' });
         this.stats.locationChecks += 1;
         this._log(`[ap placement] checked "${location}" (${ledgerId})`);
+    }
+
+    /**
+     * ⛓ OBSTACLE EVENTS — the game's flag for a game-state event is set: collect the event as a LOCAL event check
+     * (`collectEvent`, the state manager's check with the location's event item) — never `user:locationCheck`, whose
+     * connected path asks the server for an id this location does not have and drops it.
+     */
+    _eventCollect({ location, eventId, level, tag, at }) {
+        try {
+            const r = this.collectEvent?.(location);
+            if (r && typeof r.catch === 'function') r.catch((e) => this._warn(`[obstacle event] collecting "${location}" failed — ${e?.message ?? e}`));
+        } catch (e) {
+            this._warn(`[obstacle event] collecting "${location}" failed — ${e?.message ?? e}`);
+            return;
+        }
+        this.stats.eventsCollected += 1;
+        this._log(`[obstacle event] the game's flag {${level},${tag}} is set (${at === 'load' ? 'at load' : 'live'}) — `
+            + `collected "${location}" (${eventId ?? 'no event_id'})`);
     }
 
     /** *"found X for Player Y"* — the panel readout, off the placement table. */
