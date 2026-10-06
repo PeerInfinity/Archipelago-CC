@@ -109,13 +109,12 @@ import {
     chestStanceBand,
     fireRect, INVENTORY_ITEM_IDS, auditFire,
     pullModelled, pullsDrainingInto,
+    PULSER, pulsePushes, pulserCycle, newPushable,
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
 } from './dangerMap.js';
 import { planDash } from './mover.js';
-import { PULSER, pulsePushes, pulserCycle } from './pulser.js';
-import { newPushable } from './pushables.js';
 import { createTraceBuilder } from './decisionTrace.js';
 import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,

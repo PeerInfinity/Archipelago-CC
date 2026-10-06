@@ -102,8 +102,10 @@ export {
 } from './presses.js';
 // pull.js — solverBot · seedling 2
 export { pullModelled, pullsDrainingInto } from './pull.js';
-// pushables.js — solverBot · seedling 1
-export { DESTROYING_TILE_TYPES } from './pushables.js';
+// pulser.js — solverBot · seedling 3
+export { PULSER, pulsePushes, pulserCycle } from './pulser.js';
+// pushables.js — solverBot · seedling 2
+export { DESTROYING_TILE_TYPES, newPushable } from './pushables.js';
 // shieldBossFight.js — solverBot · seedling 4
 export { SHIELD_BOSS, shieldBossBandRect, shieldBossBodyRect, shieldBossDeathSchedule } from './shieldBossFight.js';
 // spinner.js — botDriverV2, dangerMap, solverBot · seedling 5

@@ -157,8 +157,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity WATCHER: 221 — `watcher-l37-reach-l38`, `watcher-l37-reach-l44`, `watcher-l37-silent-lean`, `watcher-l114-silent`, inert.
         // ⛓ fidelity WATCHER: 222 — `watcher-l114-talk`, inert.
         // ⛓ fidelity SLOTS: 227 — `slots-l24-fire-first`, `slots-l24-burn-fire-first`, `slots-l24-burn-cut-80`, `slots-l24-burn-cut-110`, `slots-l24-burn-fencepost`, inert.
-        expect(rows).toHaveLength(227);
-        expect(rows.length - parted.length).toBe(226);
+        // ⛓ fidelity PROXIMITY: 232 — `prox-l38-chest`, `prox-l38-reach-l39`, `prox-l29-key-return`, `prox-l40-turret-volley`, `prox-l40-turret-contact`, inert.
+        expect(rows).toHaveLength(232);
+        expect(rows.length - parted.length).toBe(231);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

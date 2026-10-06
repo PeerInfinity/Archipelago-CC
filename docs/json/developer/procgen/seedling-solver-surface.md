@@ -239,7 +239,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `strikeBodies` | `hp` | `botDriverV2`, `solverBot` |
 | `spinnerBodies` | `rebound`, `contact`, `sweep`, `hp` | `dangerMap`, `solverBot` |
 | `armedPulsers` | `stationary`, `pulse`, `channel` | `botDriverV2`, `solverBot` |
-| `turrets` | `stationary`, `pushable` | `botDriverV2` |
+| `turrets` | `stationary`, `pushable` | `botDriverV2`, `solverBot` |
 | `chasers` | `chase`, `contact` | `dangerMap`, `solverBot` |
 | `brokenRocks` | — | `botDriverV2`, `solverBot` |
 | `crushersParked` | `lane-charge` | `botDriverV2` |

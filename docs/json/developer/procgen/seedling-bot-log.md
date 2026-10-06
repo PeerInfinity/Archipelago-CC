@@ -13840,6 +13840,60 @@ a second row pins the full stop as a relation over the artifact. No tape moves.
   and nothing in the derivation reds. Only an alignment against a walked chain
   showed it.
 
+### Seedling fidelity PROXIMITY — a ButtonRoom is pressed, L38's chain is pulsed, L29's trap is skirted both ways, and an ice turret's range is crossed
+
+⚖ The user (2026-10-05): *"The first priority is to expand the model to include
+everything in the game."* Wave 6's PROXIMITY slice. The report is
+`CC/docs/cloud-reports/seedling-fidelity-proximity.md`.
+
+**What the game punishes (D1, measured on the AS3).**
+- `ButtonRoom` (`Puzzlements/ButtonRoom.as`): the 8x6 press rect at the ctor
+  half-tile; a press is a LATCH (`if (a)`, *"Can't be reset to false!!"*) that
+  publishes `t` in the room (`room == -1`) or clears a flag in another level
+  (the four cross-room ones are all `flip = 1`). No damage, no freeze, no move:
+  the census priced a puzzle press as a hazard.
+- `Button` (L29): a press drops `fallrock@112,112` into the shaft (a 60-tick
+  freeze, the camera, a persistence write, the shaft SEALED). The census was
+  right; the `skirt` only failed on the RETURN.
+- `IceTurret`: inside 128 px (a 129 px disc) it turns a tenth of the angle per
+  tick toward the player and fires three 6 px/tick blasts; a blast that lands is
+  `freeze(15)` plus one damage, and a wall or a FACED SHIELD stops it
+  (`IceTurretBlast.hitables`). The live body's contact is `Enemy.hitPlayer`
+  (force 3, damage 1); `"Player"` joins its sweep's solids only on death.
+
+**The rows (D2, D3).**
+- `proximity-hazard:buttonroom` → `hold` (the "obstacle IS the presser" arm).
+- A chest under a SHUT `Cover` resolves to the cover (both paths).
+- `hold → pulse` (`pulseWeighFor`): a responder whose openers are momentary
+  buttons a room `Pulser` parks a fire block on — press the pulser's latching
+  ButtonRoom (an `uncover` stage first when it sits under its own cover), then
+  wait. That is L38's chain, derived rather than hand-legged.
+- `skirt`: a fallback stance where the align wall exists (L29's row 7 has none),
+  and the x grid kept between a skirt and an owed crossing back (`skirtGridKept`):
+  the lane admits ONE x and an x-only walk cannot reach it from off the grid.
+- `proximity-hazard:iceturret` → `brave`: a zero-tick exemption of the range;
+  the walk pays the volleys the run steps. The live body's contact is billed
+  (`CONTACT_STEPPED_PRICED_BY.iceturret`), and the live turret's sweep no longer
+  stops at the player (measured: 0.0131 px off on the contact tick before).
+
+**The survey** (`--through=end`): 137 / 97 / 2 → steps 57, 68, 103, 145 SOLVE;
+109 and 215 move from VERB-MISSING to the next obstacle (a keylock loop at
+`bosslock@480,352`; the chest's 1-px rect-vs-line sliver). The sweep's exit legs
+296, 338, 530, 532, 535, 539 SOLVE. Five game witnesses (`prox-*`), 0 px.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A press is not a hazard because it writes state.** The census's test
+  ("does approaching it change the game?") is the right test for a dialogue or a
+  chest; for a puzzle button the write IS the route. Ask what the game punishes.
+- **A zero-slack lane is a grid property, not a geometry property.** An x-only
+  walk keeps x on the 0.05 grid it started on; any diagonal walk between two
+  crossings of a one-x lane makes the second crossing impossible, and the
+  failure surfaces at the align, far from its cause.
+- **A refusal hides the arm behind it.** The live turret's contact THREW, so the
+  sweep's "player is a solid" line was never exercised against the game; billing
+  the contact exposed it on the first witness.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

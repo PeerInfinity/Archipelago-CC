@@ -242,8 +242,9 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['botDriverV2', 'solverBot'], strategies: [],
         why: 'the pulsers whose group is pressed or latched (`levelRun.js:10691`).' },
     { family: 'turrets', kind: RUN_ENTITIES, blocks: ['stationary', 'pushable'],
-        solverReads: ['botDriverV2'], strategies: [],
-        why: 'the ice turrets\' rects and `solid` flag (`levelRun.js:10656`) — the live body and the pushed corpse.' },
+        solverReads: ['botDriverV2', 'solverBot'], strategies: [],
+        why: 'the ice turrets\' rects and `solid` flag (`levelRun.js:10656`) — the live body and the pushed corpse; '
+            + '`brave` reads `dead`/`removed` to name a corpse\'s range (fidelity PROXIMITY).' },
     { family: 'chasers', kind: RUN_ENTITIES, blocks: ['chase', 'contact'],
         solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'the bridged chasers\' live positions (`levelRun.js:10634`; `chasers.bridgedChaserTags()`, Bob today); `dangerMap.chaserDanger` grows each by its step bound.' },
