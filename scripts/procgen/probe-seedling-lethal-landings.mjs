@@ -13,9 +13,10 @@
  *     ⛔ A DEATH IS READ OFF `botStatus.dead_frames`, NEVER OFF THE POSITION. The drown spiral holds the player
  *     still and the restart re-places it at the same landing, so the x/y/level ticks of an idle drown are one
  *     point from first to last (measured: L50 (32,16), 180 ticks, 1 distinct position, 5 restarts). Each
- *     restart is a ~20-frame fade the tape does not advance through: `dead_frames` read at the first live
- *     tick (the boot's own fade) and at the end; with no level change, any growth is a restart. With the
- *     conch the same boot stays at the boot's count.
+ *     restart is a ~20-frame fade the tape does not advance through, so a RESTART is an episode of
+ *     `dead_frames` climbing past tick 2 (the boot's own fade sits at tick 0-1, and on a reused page it may
+ *     start after tick 1, so a baseline read at "the first live tick" races it). With the conch the same
+ *     boot has no episode past the boot's.
  *   - CONTROL: idle with the item the terrain's transcription row names (`canSwim` -> conch,
  *     `hasDarkSuit` -> darksuit): no death.
  * Each row is compared with the physics model's verdict (`arrivalIsLethal`) and the generator's gate (the
@@ -194,12 +195,23 @@ async function main() {
         }
     }
 
+    /** Restart episodes: `dead_frames` climbing at a tick past 2, in the boot's level. */
+    const restartsOf = (samples, level) => {
+        let n = 0;
+        let inEpisode = false;
+        for (let i = 1; i < samples.length; i += 1) {
+            const up = samples[i].dead > samples[i - 1].dead && samples[i].tick > 2 && samples[i].level === level;
+            if (up && !inEpisode) n += 1;
+            inEpisode = up || (inEpisode && samples[i].tick === samples[i - 1].tick);
+        }
+        return n;
+    };
     const verdictOf = (ticks, boot) => {
         const left = ticks.find((o) => o.level !== boot.level);
-        const { base, end } = ticks.deadFrames ?? {};
-        if (left) return { verdict: `left->L${left.level}@${left.t}`, deadFrames: { base, end } };
-        if (!Number.isFinite(base) || !Number.isFinite(end)) return { verdict: 'unread', deadFrames: { base, end } };
-        return { verdict: end > base ? 'dies' : 'alive', deadFrames: { base, end } };
+        const restarts = restartsOf(ticks.samples ?? [], boot.level);
+        const deadFrames = { ...(ticks.deadFrames ?? {}), restarts };
+        if (left) return { verdict: `left->L${left.level}@${left.t}`, deadFrames };
+        return { verdict: restarts > 0 ? 'dies' : 'alive', deadFrames };
     };
 
     for (const L of landings) {
@@ -218,17 +230,18 @@ async function main() {
         const game = INPUTS.map((k, i) => `${k ?? 'idle'}:${verdictOf(streams[i], boot).verdict}`);
         const dead = INPUTS.map((k, i) => verdictOf(streams[i], boot).deadFrames);
         const control = verdictOf(streams[INPUTS.length], boot);
-        const cameFrom = [...new Set(L.regions.map((x) => {
-            const [reg, exitId] = x.split('/');
-            const nb = side[reg].playable_payload.exits.find((e) => e.exit_id === exitId)?.targetRegion;
-            return nb ? Number(/^level_(\d+)/.exec(nb)?.[1]) : null;
-        }).filter((v) => v !== null))];
+        // the levels an AP edge arrives from into the landing's region(s), other than its own level
+        const into = new Set(L.regions.map((x) => x.split('/')[0]));
+        const cameFrom = [...new Set(Object.entries(REG).flatMap(([from, r]) => (r.exits ?? [])
+            .filter((e) => into.has(e.connected_region)).map(() => Number(/^level_(\d+)/.exec(from)?.[1]))))]
+            .filter((v) => Number.isInteger(v) && v !== L.level).sort((x, y) => x - y);
         const level = MAP.levels.find((l) => l.level === L.level);
         const model = arrivalIsLethal(level, L.x, L.y, { levelSource, cameFrom: cameFrom[0] ?? null, ticks: TICKS });
         const gameLethal = game.every((g) => g.endsWith(':dies') || cameFrom.some((c) => g.includes(`left->L${c}@`)));
         const edges = gatesOf(L, apItemFor(L.flag));
         console.log(`ROW ${JSON.stringify({ level: L.level, x: L.x, y: L.y, terrain: L.label, game, control: control.verdict,
-            gameLethal, modelLethal: model.lethal, model: model.tries, deadFrames: dead, edges })}`);
+            gameLethal, modelLethal: model.lethal, model: model.tries, cameFrom, deadFrames: dead,
+            controlRestarts: control.deadFrames.restarts, edges })}`);
         check(`L${L.level} (${L.x},${L.y}) ${L.label}: the game ${gameLethal ? 'kills' : 'does NOT kill'} an item-less arrival; `
             + `the model agrees`, gameLethal === model.lethal, `game ${game.join(' ')} | model ${model.tries.join(' ')}`);
         check(`L${L.level} (${L.x},${L.y}): the ${item} saves it (idle, no death)`, control.verdict === 'alive', control.verdict);
