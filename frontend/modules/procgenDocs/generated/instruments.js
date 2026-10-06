@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 61,
+            "count": 62,
             "id": "plan"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 346,
+        "blockStyle": 347,
         "browser": 115,
         "cited": 165,
-        "files": 357,
+        "files": 358,
         "lineStyle": 11,
-        "withDocblock": 357,
-        "withFlags": 275
+        "withDocblock": 358,
+        "withFlags": 276
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6673,6 +6673,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "mine-seedling-roster-history — the evidence half of R6 slice 0's roster trim (`note_roster_trim_evaluation`, kickoff §3.6).",
             "path": "scripts/procgen/mine-seedling-roster-history.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-axe-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-axe-witness — ⛓⛓⛓ SEEDLING FIDELITY AXE: THE SOLVER CROSSES A SPINNING AXE BY ITS PHASE, AND THE GAME LETS IT THROUGH.",
+            "path": "scripts/procgen/plan-seedling-axe-witness.mjs"
         },
         {
             "argvHelpers": [],
