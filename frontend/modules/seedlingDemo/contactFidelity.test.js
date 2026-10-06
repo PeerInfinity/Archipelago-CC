@@ -48,7 +48,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     });
 
     // ⛓ a measuring run sets SEEDLING_CONTACT_FIDELITY on purpose; the default is what this pins
-    // ⛓ D3: W2 and W3 ship ON (nothing measured moved); W1 ships OFF (it moves two pins — stopped for a licence)
+    // ⛓ D3: W2 and W3 ship ON (nothing measured moved); W1 ships OFF (it moves r9-campaign and two pins — stopped for a licence)
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('the shipped defaults: W1 OFF, W2 and W3 ON', () => {
         expect(CONTACT_FIDELITY).toEqual({ collideLinePointsExact: false, wallFlyerSwordHits: true, drillLive: true });
     });
