@@ -74,29 +74,30 @@ async function main() {
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${label}${detail ? ` — ${detail}` : ''}`);
         if (!ok) failed += 1;
     };
-    const tapeOf = (name, k, boot, key, persistence, keys = [k.keyType]) => parseTape({
+    const tapeOf = (name, k, boot, inputs, persistence, keys = [k.keyType]) => parseTape({
         tape_version: 8, game: 'seedling', name, description: 'probe-seedling-bosslock-latch',
         boot: { level: k.level, ...boot }, noclip: false, noDamage: true, noHazards: [],
         grants: [], persistence, equips: [], pins: [...PIN_NAMES],
         save: { totem_parts: [], keys, seal_parts: [] },
         rng: { seed: 1, split: false }, seam: {}, tick_count: TICKS,
-        inputs: [{ key, from: 0, to: TICKS }],
+        inputs: typeof inputs === 'string' ? [{ key: inputs, from: 0, to: TICKS }] : inputs,
     });
 
-    const page = await browser.newPage();
+    // ⛔ EVERY TAPE ON A FRESH PAGE: nothing a tape leaves on a page (statics, the save object) can reach the next.
     const logs = [];
-    page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
-    page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
-    const bot = (name, a) => page.evaluate(([n, x]) => String(window.__swfBridge.game[n](x)), [name, a]);
-    const botJson = async (name, a) => JSON.parse(await bot(name, a));
-    try {
-        await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
-        for (let i = 0; i < 480 && !(await page.evaluate(() => !!window.__runtimeReady)); i += 1) await page.waitForTimeout(250);
-        await page.click('#btn-start');
-        for (let i = 0; i < 480 && !(await page.evaluate(() => !!(window.__swfBridge?.game?.botStatus))); i += 1) await page.waitForTimeout(250);
-        // ⛓ the logic-only channel, PROVED before anything is measured (`seedlingChannel.js`)
-        await assertLogicOnlyChannel(page);
-        const run = async (tape) => {
+    const run = async (tape) => {
+        const page = await browser.newPage();
+        page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
+        page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
+        const bot = (name, a) => page.evaluate(([n, x]) => String(window.__swfBridge.game[n](x)), [name, a]);
+        const botJson = async (name, a) => JSON.parse(await bot(name, a));
+        try {
+            await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
+            for (let i = 0; i < 480 && !(await page.evaluate(() => !!window.__runtimeReady)); i += 1) await page.waitForTimeout(250);
+            await page.click('#btn-start');
+            for (let i = 0; i < 480 && !(await page.evaluate(() => !!(window.__swfBridge?.game?.botStatus))); i += 1) await page.waitForTimeout(250);
+            // ⛓ the logic-only channel, PROVED before anything is measured (`seedlingChannel.js`)
+            await assertLogicOnlyChannel(page);
             if (await bot('botLoadTape', JSON.stringify(tape)) !== 'ok') throw new Error(`botLoadTape ${tape.name}`);
             if (await bot('botStart') !== 'ok') throw new Error(`botStart ${tape.name}`);
             for (const deadline = Date.now() + 10 * 60 * 1000; ;) {
@@ -108,51 +109,59 @@ async function main() {
             }
             const drained = await botJson('botDrain');
             return { ticks: drained.ticks ?? [], cleared: (await botJson('botStatus')).persistence_cleared ?? [] };
-        };
-        const inLevel = (ticks, k) => ticks.filter((o) => o.level === k.level);
+        } finally {
+            await page.close();
+        }
+    };
+    try {
+        const ys = (r, k) => r.ticks.filter((o) => o.level === k.level).map((o) => o.y);
         const has = (cleared, k) => cleared.some((c) => Number(c.level) === k.level && Number(c.tag) === k.tag);
         for (const k of locks) {
             const id = `L${k.level} bosslock@${k.x},${k.y} {${k.level},${k.tag}} key ${k.keyType}`;
             const south = { x: k.x, y: k.y + TILE };
             const north = { x: k.x, y: k.y - TILE };
+            const north2 = { x: k.x, y: k.y - 2 * TILE };
+            const lockBottom = k.y + TILE;
             const open = await run(tapeOf(`l${k.level}-${k.tag}-open`, k, south, 'up', []));
             const opened = has(open.cleared, k);
-            const openMinY = Math.min(...inLevel(open.ticks, k).map((o) => o.y));
-            const held = await run(tapeOf(`l${k.level}-${k.tag}-held`, k, north, 'down', []));
-            const heldMaxY = Math.max(...inLevel(held.ticks, k).map((o) => o.y));
             const written = open.cleared.filter((c) => Number(c.level) === k.level && Number(c.tag) === k.tag)
                 .map((c) => ({ level: Number(c.level), tag: Number(c.tag), note: 'written by the OPEN arm (game)' }));
-            const ret = opened ? await run(tapeOf(`l${k.level}-${k.tag}-return`, k, north, 'down', written)) : null;
-            const retMaxY = ret ? Math.max(...inLevel(ret.ticks, k).map((o) => o.y)) : null;
-            // BUILT OPEN, from the side the key would open it: the flag staged, NO key, holding UP. A lock the
-            // game built open lets the player through; one it built closed stops a keyless player at its face.
-            const built = opened ? await run(tapeOf(`l${k.level}-${k.tag}-built`, k, south, 'up', written, [])) : null;
-            const builtMinY = built ? Math.min(...inLevel(built.ticks, k).map((o) => o.y)) : null;
-            const bare = await run(tapeOf(`l${k.level}-${k.tag}-bare`, k, south, 'up', [], []));
-            const bareMinY = Math.min(...inLevel(bare.ticks, k).map((o) => o.y));
-            const lockBottom = k.y + TILE;
-            const row = {
-                lock: id, opened, cleared: open.cleared, openMinY,
-                heldMaxY, heldCrossed: heldMaxY > lockBottom, heldCleared: has(held.cleared, k),
-                retMaxY, retCrossed: retMaxY !== null && retMaxY > lockBottom, retCleared: ret?.cleared ?? null,
-                builtMinY, builtCrossed: builtMinY !== null && builtMinY < k.y, builtCleared: built?.cleared ?? null,
-                bareMinY, bareCrossed: bareMinY < k.y,
-                firstTick: { open: open.ticks[0] ?? null, held: held.ticks[0] ?? null },
+            const arms = {
+                // the key from the north, no flag: STANCE — the lock stays
+                held: [north, 'down', [], [k.keyType]],
+                // the game-written flag staged, from the north (one and two tiles up)
+                ret: [north, 'down', written, [k.keyType]],
+                ret2: [north2, 'down', written, [k.keyType]],
+                retNoKey: [north, 'down', written, []],
+                // the flag staged, no key, from the south: built open → through; built closed → stopped
+                built: [south, 'up', written, []],
+                // no flag, no key, from the south: the control for `built`
+                bare: [south, 'up', [], []],
+                // one visit: open from the south, walk north, then hold DOWN back through the opened lock
+                roundTrip: [south, [{ key: 'up', from: 0, to: Math.floor(TICKS / 2) }, { key: 'down', from: Math.floor(TICKS / 2), to: TICKS }], [], [k.keyType]],
             };
+            const row = { lock: id, opened, cleared: open.cleared, openMinY: Math.min(...ys(open, k)) };
+            for (const [name, [boot, inputs, pers, keys]] of Object.entries(arms)) {
+                if (pers === written && !opened) continue;
+                const r = await run(tapeOf(`l${k.level}-${k.tag}-${name}`, k, boot, inputs, pers, keys));
+                const y = ys(r, k);
+                row[name] = { boot, y0: y[0], min: Math.min(...y), max: Math.max(...y), last: y.at(-1), cleared: r.cleared };
+            }
             console.log(`ROW ${JSON.stringify(row)}`);
             if (!(strict.has(k.level) || opened)) continue;
             check(`${id}: OPEN from the south with the key WRITES {${k.level},${k.tag}} to persistence_cleared`, opened,
                 JSON.stringify(open.cleared));
             check(`${id}: HELD — from the north with the key and no flag, the lock stays (no crossing, no write)`,
-                !row.heldCrossed && !row.heldCleared, JSON.stringify({ heldMaxY, lockBottom }));
-            check(`${id}: RETURN — the game-written flag staged, the lock is built open and the player crosses south`,
-                row.retCrossed, JSON.stringify({ retMaxY, lockBottom }));
+                row.held.max <= lockBottom && !has(row.held.cleared, k), JSON.stringify(row.held));
+            check(`${id}: BUILT — the game-written flag staged, a keyless player walks north through it; with no flag it cannot`,
+                !!row.built && row.built.min < k.y && row.bare.min >= k.y, JSON.stringify({ built: row.built, bare: row.bare }));
+            check(`${id}: RETURN — the game-written flag staged, the player crosses south from the north`,
+                !!row.ret && row.ret.max > lockBottom, JSON.stringify(row.ret));
         }
     } catch (e) {
         console.log(`PAGE LOGS (last 20):\n${logs.slice(-20).join('\n')}`);
         check('the wasm runs', false, String(e.message).split('\n')[0]);
     } finally {
-        await page.close();
         await browser.close();
     }
     console.log(failed === 0 ? 'ALL CHECKS PASSED' : `${failed} CHECK(S) FAILED`);
