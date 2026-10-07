@@ -281,7 +281,9 @@ export function createWasmPlayback({
         // ⛓ MID-ROOM REPLAN — deliveries the gate held back, each one's outcome (freeze, land, replan), and the refused
         deliveries: [], deliveryDeferred: [], gateHeld: 0,
         // ⛓ ARRIVAL JITTER — the glue teleports pushed in the turn their door's begin record was seen
-        swapPushes: [] };
+        swapPushes: [],
+        // ⛓ ARRIVAL JITTER — every plan ship's clock: staged, shipped prefix, the game's (a diagnostic, never acted on)
+        shipClock: [] };
     const history = [];
     /** ⛓ WG — the reads of the last few arrivals (the probe's fixture recorder; never read back here). */
     const arrivalReads = [];
@@ -1202,6 +1204,12 @@ export function createWasmPlayback({
         if (decl) { fail(`the plan tape was not shipped — ${decl}`); return; }
         const started = hostStart(tape, play.continuation ? 'continuation' : 'plan');
         if (started) { fail(started); return; }
+        // ⛓ ARRIVAL JITTER — the game's clock at the ship against the staged one + the ticks the shadow replays
+        // (`gap` ≠ 0 = frames ran in the room between its staging read and this plan that no tape accounts for).
+        const stagedTime = staging?.seam?.time ?? null;
+        const prefixTicks = play.continuation ? (play.prefix ?? 0) : 0;
+        stats.shipClock.push({ name: tape.name, level: goal.level, staged: stagedTime, prefix: prefixTicks, game: st?.game_time ?? null,
+            gap: Number.isFinite(stagedTime) && Number.isFinite(st?.game_time) ? st.game_time - stagedTime - prefixTicks : null });
         // ⛓ MID-ROOM REPLAN — the frozen tape is replaced (`botLoadTape` disarms it, `botStart` lifts the freeze).
         if (frozen) {
             const row = stats.deliveries.at(-1);
@@ -1698,7 +1706,7 @@ export function createWasmPlayback({
                 holdBlocked: [...stats.holdBlocked], adoptRefused: [...stats.adoptRefused],
                 ceremonies: stats.ceremonies.map((c) => ({ ...c })), dismissed: [...stats.dismissed],
                 deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred],
-                swapPushes: stats.swapPushes.map((r) => ({ ...r })) };
+                swapPushes: stats.swapPushes.map((r) => ({ ...r })), shipClock: stats.shipClock.map((r) => ({ ...r })) };
         },
         /** ⛓ WG — the last arrivals' raw reads (`{seam, status, state}`), for a fixture recorder. */
         get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },
