@@ -1148,7 +1148,9 @@ const CHAIN_DECLARATIONS = Object.freeze([
                 // ⛓ fidelity F5: the spinner ledger stamps the alpha-zero step (320,
                 // was 321) and the fade is spelled v9 (100, was 101) — F1c D2's fix,
                 // game-witnessed by `f1c-l18-lock-removal`; 420 (was 422).
-                removedAt: 320,
+                // ⛓ hammer-phase A2 (`HAMMER_ESCAPE` on, ⚖ user 2026-10-07): `r8-solve-18` re-recorded
+                // 520 → 363 t; the second Spinner is removed at 205, so 305 (was 420).
+                removedAt: 205,
                 fade: 100,
                 why: '`spinnerKillLockOpens`\'s removal (the second Spinner body leaves '
                     + 'and `Game.totalEnemies()` reaches zero) plus '
@@ -1284,11 +1286,13 @@ const CHAIN_DECLARATIONS = Object.freeze([
              * ⛓ fidelity F5 landed that fix (the ledger stamps the alpha-zero
              * step; the arm declares the v9 spelling): removal 350 + 100 = 450,
              * and the window re-solved to 510 t.
+             * ⛓ hammer-phase A2 (`HAMMER_ESCAPE` on, ⚖ user 2026-10-07): the window re-recorded 519 → 518 t;
+             * the second spinner is removed at 367, so the clear is at 467 (was 450).
              */
             Object.freeze({
                 level: 18, tag: 0, source: 'model',
                 evidence: Object.freeze({
-                    removedAt: 350,
+                    removedAt: 367,
                     fade: 100,
                     why: '`spinnerKillLockOpens`\'s removal (the second spinner dies to '
                         + 'the player\'s presses and `Game.totalEnemies()` reaches zero) '

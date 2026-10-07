@@ -1,7 +1,7 @@
 {
     "trace_version": 1,
     "tape": "r9-solve-18",
-    "tick_count": 519,
+    "tick_count": 518,
     "boot": {
         "level": 18,
         "x": 16,
@@ -49,11 +49,11 @@
             ]
         },
         {
-            "tick": 451,
+            "tick": 468,
             "saw": {
                 "level": 18,
-                "x": 154.34789203146215,
-                "y": 87.05757396954381,
+                "x": 40.00883678051107,
+                "y": 73.61422159778866,
                 "vx": 0,
                 "vy": 0,
                 "danger": []
@@ -67,55 +67,47 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 3,
+                "waypoints": 1,
                 "swordDash": {
                     "planned": true,
-                    "ticks": 68,
-                    "baseline": 89,
-                    "saved": 21,
+                    "ticks": 50,
+                    "baseline": 114,
+                    "saved": 64,
                     "windows": [
                         {
                             "at": 0,
-                            "prefix": [
-                                0,
-                                2
-                            ]
-                        },
-                        {
-                            "at": 20,
-                            "prefix": [
-                                0,
-                                2
-                            ]
-                        },
-                        {
-                            "at": 44,
                             "prefix": [
                                 0,
                                 2,
                                 8,
                                 14
                             ]
+                        },
+                        {
+                            "at": 20,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 40,
+                            "prefix": [
+                                0,
+                                2
+                            ]
                         }
                     ],
                     "legs": [
-                        20,
-                        27,
-                        21
+                        50
                     ],
-                    "scanned": 44,
+                    "scanned": 12,
                     "why": null
                 }
             },
             "path": [
-                {
-                    "x": 136,
-                    "y": 88
-                },
-                {
-                    "x": 136,
-                    "y": 120
-                },
                 {
                     "x": 184,
                     "y": 120
@@ -128,12 +120,13 @@
                 },
                 {
                     "option": "sword-dash window: not-faster",
-                    "why": "38 of 44 scanned preview(s) — first at walk-offset 0: 89 tick(s) against 89 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                    "why": "3 of 12 scanned preview(s) — first at walk-offset 0: 114 tick(s) against 114 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
                 }
             ],
             "keys": [
-                "left",
-                "primary"
+                "down",
+                "primary",
+                "right"
             ]
         }
     ]
