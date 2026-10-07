@@ -486,9 +486,12 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
         //   clears, game-sourced at the removal ticks (`{8,0}@248`, `{8,1}@648`).
         // ⛓ Seedling fidelity F5: `r8-solve-8` LEFT — its re-solve declares no
         //   sandtrap clear (the run computes the death, F4, and earns both tags).
+        // ⛓ Seedling hammer-phase A: `hammer-a-l18-escape21` (`{18,0}@408`) and
+        //   `hammer-a-l18-escape15` (`{18,0}@412`) joined — L18's kill lock, model-sourced.
         expect(byAt.sort()).toEqual([
             'f1-l5-lock-removal', 'f1c-l18-lock-removal', 'f1c-l18-phase42',
-            'f4-l8-sandtraps', 'r2-terrain-killlock', 'r7-act2-5', 'r7-act2-full',
+            'f4-l8-sandtraps', 'hammer-a-l18-escape15', 'hammer-a-l18-escape21',
+            'r2-terrain-killlock', 'r7-act2-5', 'r7-act2-full',
             'r8-d2', 'r8-solve-18', 'r8-solve-5', 'r9-solve-18',
         ]);
         expect(byDespawn.sort()).toEqual(['r7-act2-6', 'r7-act2-full']);

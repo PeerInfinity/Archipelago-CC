@@ -183,7 +183,8 @@ describe('fidelity LADDER2 D2 — the pricing and the ladder', () => {
     it('the PHASE arm is bounded by the chain\'s period and has its own deadline site, last', () => {
         expect(PHASE_DODGE_RUNG).toMatchObject({ step: 4, offsets: 8, detourOffsets: 2, detourPreviews: 60,
             period: 90 });
-        expect(DEADLINE_SITES.at(-1)).toBe('phase-dodge');
+        // ⛓ hammer-phase A appended `hammer-escape` after it (`solverDeadline` pins the whole list)
+        expect(DEADLINE_SITES.slice(-2)).toEqual(['phase-dodge', 'hammer-escape']);
     });
 });
 
