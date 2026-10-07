@@ -804,6 +804,18 @@ export class SeedlingRegionBinding {
             } else if (this.pendingDeparture.level === level) {
                 this.pendingDeparture = null;
                 this.lastLevel = level;
+                /**
+                 * ⛓ solver-walk §5.36 — THE DEPARTURE THAT ALREADY LANDED IN THE ARRIVAL'S LEVEL. A
+                 * generated door between two generated rooms swaps the game straight into the target
+                 * room's level, and the departure's region move armed an arrival teleport INTO THAT SAME
+                 * LEVEL while `lastLevel` was still the old one (the move is applied before this report).
+                 * That teleport now lands on the level the game is already on, which produces no level
+                 * report — so its mark could never be echoed (`_beginArrival`'s own rule: such a mark
+                 * "would swallow the player's NEXT real crossing"), and the wasm playback's hold guard
+                 * (`swapState().marks`) read it as a swap in flight and refused every arrival in that
+                 * room (measured live: seedling_generated_room, the parking door after the generated one).
+                 */
+                if (this.pendingArrival?.level === level) this.pendingArrival = null;
                 return [];
             }
         }

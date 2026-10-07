@@ -733,6 +733,32 @@ describe('H3 — the pendingExit arm', () => {
         expect(types(b.onStateReport('level', 30))).toEqual(['regionMove']);
     });
 
+    /**
+     * ⛓ solver-walk §5.36 — the departure lands IN the level its own region move's arrival teleport
+     * targets (a generated door between two generated rooms). The arrival was armed while `lastLevel`
+     * was the old level; its same-level landing reports nothing, so the mark must go with the
+     * departure's report — left armed, it swallowed the next real crossing and blocked every hold.
+     */
+    it('a departure landing in its own arrival\'s level SPENDS that arrival mark too (no same-level echo will come)', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        b.pendingArrival = { level: 31, x: 8, y: 8, at: clock }; // what the region move's arrival teleport arms
+        expect(b.onStateReport('level', 31)).toEqual([]);
+        expect([b.pendingDeparture, b.pendingArrival]).toEqual([null, null]);
+        // the next REAL crossing, well inside the echo window, is a crossing — not "pre-arrival noise"
+        expect(types(b.onStateReport('level', 30))).toEqual(['regionMove']);
+    });
+
+    it('…while an arrival into ANOTHER level stays armed for its own landing (the parking-door case)', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        b.pendingArrival = { level: 30, x: 8, y: 8, at: clock };
+        expect(b.onStateReport('level', 31)).toEqual([]);
+        expect(b.pendingArrival?.level).toBe(30);
+        expect(b.onStateReport('level', 30)).toEqual([]); // its echo, swallowed
+        expect(b.pendingArrival).toBeNull();
+    });
+
     it('a PARKED binding reads no door at all', () => {
         const b = armed();
         b.setActive(false);
