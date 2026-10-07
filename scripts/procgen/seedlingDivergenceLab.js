@@ -163,6 +163,9 @@ export async function createLab() {
         const t0n = tap.tapes.length;
         const h0 = eng.stats.history.length;
         const done0 = eng.stats.done;
+        // ⛓ SERVED LOCATION — the delivery gate's own record for this leg (what a key at contact did)
+        const g0 = { served: (eng.stats.deliveryServed ?? []).length, deliveries: (eng.stats.deliveries ?? []).length,
+            released: eng.stats.releasedForSwap ?? 0 };
         const resolved = resolveGoal(leg);
         if (!resolved.goal) return { end: 'unresolved', failed: resolved.refused ?? JSON.stringify(resolved) };
         const goal = resolved.goal;
@@ -226,7 +229,10 @@ export async function createLab() {
         return { answer, end, failed: st.failed, notes: st.notes.slice(-6), history, plans, tapes: tap.tapes.slice(t0n),
             divs, rowsDrained: rows.length, level: after?.level, x: after?.x, y: after?.y, armed: after?.armed, held: after?.held,
             items: after?.items ?? null, slots: after?.inventory_slots ?? null, cleared: (after?.persistence_cleared ?? []).length,
-            ms: Math.round(performance.now() - t0) };
+            ms: Math.round(performance.now() - t0),
+            gate: { served: plain((eng.stats.deliveryServed ?? []).slice(g0.served)),
+                deliveries: plain((eng.stats.deliveries ?? []).slice(g0.deliveries)).map((d) => ({ phase: d.phase, tick: d.tick, outcome: d.outcome, save: d.save })),
+                releasedForSwap: (eng.stats.releasedForSwap ?? 0) - g0.released } };
     }
 
     /** Raw drained rows split into plays: a new play restarts at t = 0. */
