@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    buildPlaythroughAtlas, playthroughObstacleEvents, pocketDoorsCharged,
+    buildPlaythroughAtlas, playthroughLockEvents, playthroughObstacleEvents, pocketDoorsCharged,
 } from './make-seedling-playthrough-rules.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -28,15 +28,18 @@ const levelOf = (region) => Number(/^level_(\d+)/.exec(region)?.[1]);
 /** every exit whose rule asks for an event item, as `L<from>->L<to>` with the items it asks */
 const gatesOf = (rules, names) => Object.entries(rules.regions['1']).flatMap(([from, r]) => r.exits.flatMap((e) => {
     const asked = JSON.stringify(e.access_rule).match(/"L\d+ flag \d+: [^"]+ cleared"/g) ?? [];
-    return asked.length ? [{ edge: `L${levelOf(from)}->L${levelOf(e.connected_region)}`,
-        items: asked.map((s) => JSON.parse(s)).filter((n) => names.has(n)).sort() }] : [];
+    const items = asked.map((s) => JSON.parse(s)).filter((n) => names.has(n)).sort();
+    return items.length ? [{ edge: `L${levelOf(from)}->L${levelOf(e.connected_region)}`, from, to: e.connected_region, items }] : [];
 }));
 
 let atlas;
 let derived;
+let locks;
 beforeAll(() => {
     atlas = buildPlaythroughAtlas();
     derived = playthroughObstacleEvents(atlas);
+    // ⛓ RULES lock-events: the latching bosslocks' events ride beside the obstacle events
+    locks = playthroughLockEvents(atlas, { existing: derived.events });
 }, 180_000);
 
 describe('the playthrough\'s obstacle events', () => {
@@ -49,8 +52,9 @@ describe('the playthrough\'s obstacle events', () => {
 
     it('the committed rules carry exactly the fresh derivation\'s events, each an AP event in the open side', () => {
         const committed = eventsOf(RULES);
-        expect(committed.map((e) => e.name).sort()).toEqual(derived.events.map((e) => e.name).sort());
-        for (const ev of derived.events) {
+        const all = [...derived.events, ...locks.events];
+        expect(committed.map((e) => e.name).sort()).toEqual(all.map((e) => e.name).sort());
+        for (const ev of all) {
             const c = committed.find((x) => x.name === ev.name);
             expect(c.region, ev.name).toBe(ev.fields.side);
             for (const f of FIELDS) expect(c[f], `${ev.name} ${f}`).toEqual(ev.fields[f]);
@@ -73,6 +77,18 @@ describe('the playthrough\'s obstacle events', () => {
             .toEqual([...want].map(([k, items]) => `${k.split('|')[0]} ${items.join(' + ')}`).sort());
         expect(gates.find((g) => g.edge === 'L83->L12').items).toHaveLength(2);
         expect(gates.filter((g) => g.edge === 'L1->L0' || g.edge === 'L115->L113')).toHaveLength(3);
+    });
+
+    it('rules lock-events: exactly the derived returns ask a lock event, inside the lock\'s own level; none reuses an obstacle event', () => {
+        const names = new Set(locks.events.map((e) => e.name));
+        expect(locks.events.length).toBeGreaterThan(0);
+        expect(locks.reused).toEqual([]);
+        const gates = gatesOf(RULES, names);
+        const apName = (r, sub) => `${r}__${sub}`;
+        expect(gates.map((g) => `${g.from}->${g.to}`).sort())
+            .toEqual(locks.internalExitRules.map((r) => `${apName(r.region_id, r.from)}->${apName(r.region_id, r.to)}`).sort());
+        for (const g of gates) expect(levelOf(g.from)).toBe(levelOf(g.to));
+        expect(JSON.stringify(RULES)).not.toContain('CanReachRegion');
     });
 
     it('the L0↔L1 binding: the door in the house\'s doorway is charged the rock under it', () => {

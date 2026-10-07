@@ -27,8 +27,10 @@ const collector = (over = {}) => new SeedlingEventCollector({ getEvents: () => E
 
 describe('the events the collector reads', () => {
     it('the playthrough\'s game_state events, each with its flag {level, tag}', () => {
-        expect(EVENTS.map((e) => e.eventId)).toEqual(['flag:L0:1', 'flag:L0:4', 'flag:L12:7', 'flag:L12:12', 'flag:L24:0',
-            'flag:L71:2', 'flag:L112:1', 'flag:L113:0']);
+        // ⛓ RULES lock-events added the 11 latching bosslocks (L12:3/4/5/11, L19:1, L30:0/2, L31:0, L40:8, L48:1, L68:0)
+        expect(EVENTS.map((e) => e.eventId)).toEqual(['flag:L0:1', 'flag:L0:4', 'flag:L12:4', 'flag:L12:5', 'flag:L12:11',
+            'flag:L12:3', 'flag:L12:7', 'flag:L12:12', 'flag:L19:1', 'flag:L24:0', 'flag:L30:0', 'flag:L30:2', 'flag:L31:0',
+            'flag:L40:8', 'flag:L48:1', 'flag:L68:0', 'flag:L71:2', 'flag:L112:1', 'flag:L113:0']);
         expect(ROCK).toMatchObject({ location: 'L0 flag 1: breakablerock@288,176 cleared', level: 0, tag: 1 });
     });
 });
