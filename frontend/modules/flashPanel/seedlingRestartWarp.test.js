@@ -215,6 +215,29 @@ describe('the glue — menuPanel:restarted re-takes the start hop when the start
         expect(h.glue.lastRestart.stoppedWalks).toBe(1);
     });
 
+    it('⛓ WALK IDENTITY — the re-taken hop\'s teleport is PUSHED in the Restart\'s own turn (the stop released the room before it queued)', () => {
+        const order = [];
+        const h = harness({ busy: true, retake: () => { order.push('retake'); return { taken: true, why: null, region: 's' }; } });
+        h.glue.adapter = { pushNow: () => { order.push('push'); return true; } };
+        h.restart({ mode: 'world' });
+        expect(order).toEqual(['retake', 'push']);
+        expect(h.glue.lastRestart).toMatchObject({ taken: true, pushed: true, stoppedWalks: 1 });
+    });
+
+    it('⛓ WALK IDENTITY — a refused re-take, a maze start or no adapter pushes nothing', () => {
+        const refused = harness({ retake: () => ({ taken: false, why: 'no', region: 's' }) });
+        const pushNow = vi.fn(() => true);
+        refused.glue.adapter = { pushNow };
+        refused.restart({ mode: 'world' });
+        const maze = harness({ startSubstrate: 'maze' });
+        maze.glue.adapter = { pushNow };
+        maze.restart({ mode: 'world' });
+        expect(pushNow).not.toHaveBeenCalled();
+        const bare = harness();
+        bare.restart({ mode: 'world' });
+        expect(bare.glue.lastRestart).toMatchObject({ taken: true, pushed: false });
+    });
+
     it('a refused re-take is said, not hidden', () => {
         const h = harness({ retake: () => ({ taken: false, why: 'the load does not skip this start', region: 's' }) });
         h.restart({ mode: 'world' });

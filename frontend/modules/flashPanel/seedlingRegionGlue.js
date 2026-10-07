@@ -408,7 +408,11 @@ export class SeedlingRegionGlue {
         const stopped = this.stopBotWalks();
         const r = procgen?.retakeStartHop?.() ?? { taken: false, why: 'procgenPlayer has no retakeStartHop' };
         if (r.taken) this.stats.restarts += 1;
-        return decide(r.taken, r.taken ? null : r.why, { start, substrate, stoppedWalks: stopped });
+        // ⛓ WALK IDENTITY — the stop above released the room BEFORE the hop queued its teleport, so nothing pushed it:
+        // the released room ran on until the adapter's 100 ms tick (measured: the start hop's arrival clock 0–1 tick
+        // apart run to run). Pushed in this turn, as at every other site the room is let go (arrival jitter).
+        const pushed = r.taken ? this.pushQueuedTeleports() : false;
+        return decide(r.taken, r.taken ? null : r.why, { start, substrate, stoppedWalks: stopped, pushed });
     }
 
     /**
