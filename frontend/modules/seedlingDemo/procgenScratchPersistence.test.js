@@ -333,6 +333,10 @@ describe('the layer — the model self-declares the clear its own refusal named'
      * the same removal reads **144** and the clear 245; the scratch layer's v9
      * `declaredAt` is 244 = 144 + 100, the spelling the solver now declares.
      *
+     * ⛓ SEEDLING HAMMER-PHASE A2 moved the WALK (`HAMMER_ESCAPE` on, ⚖ user 2026-10-07; off by the switch the old
+     * numbers return): the press is taken with a certified way out of its landing and the removal reads **142**,
+     * the clear 243, `declaredAt` 242 — the arithmetic unchanged (142 + 101 = 243).
+     *
      * ⛔ THE ARITHMETIC IS UNCHANGED ACROSS BOTH MOVES and that is worth seeing
      * rather than asserting: the clear is still removal + the `Lock`'s own
      * 101-step fade (141 + 101 = 242, as 158 + 101 = 259 and 517 + 101 = 618
@@ -350,8 +354,8 @@ describe('the layer — the model self-declares the clear its own refusal named'
         expect(thrown.undeclaredKillLock.level).toBe(LEVEL);
         expect(thrown.undeclaredKillLock.flags).toEqual([1]);
         expect(thrown.message).toMatch(/two writers of one persistence slot/);
-        expect(thrown.message).toMatch(/removal at tick 144/);
-        expect(thrown.message).toMatch(/lands the durable clear at tick 245/);
+        expect(thrown.message).toMatch(/removal at tick 142/);
+        expect(thrown.message).toMatch(/lands the durable clear at tick 243/);
     });
 
     /**
@@ -370,9 +374,9 @@ describe('the layer — the model self-declares the clear its own refusal named'
         expect(run.scratchClears).toEqual([{
             level: LEVEL,
             tag: 1,
-            at: 245,
-            declaredAt: 244,
-            removedAt: 144,
+            at: 243,
+            declaredAt: 242,
+            removedAt: 142,
             by: 'spinner@48,16',
             lock: 'lock@80,80',
             cause: 'sword',
@@ -497,7 +501,7 @@ describe('the narrowed dialogue guard — LIVE bodies only', () => {
      * where this room threw.
      *
      * ⚠ THE TICK HAS BEEN RE-PINNED THREE TIMES (517 -> 158 at 4e, 158 -> 141 at
-     * R9 slice 11, 141 -> 145 at swim U6, 145 -> 144 at fidelity F5 — the ledger's stamp) for reasons belonging to those slices, and the claim is
+     * R9 slice 11, 141 -> 145 at swim U6, 145 -> 144 at fidelity F5 — the ledger's stamp, 144 -> 142 at hammer-phase A2 — the escape) for reasons belonging to those slices, and the claim is
      * asserted as the ORDER rather than only as a literal — "the removal
      * precedes the ceremony" is what this case is about, a bare number cannot
      * say it, and two re-pins in two slices are the demonstration that the
@@ -509,7 +513,7 @@ describe('the narrowed dialogue guard — LIVE bodies only', () => {
             oracleOpts('removed-spinner'));
         expect(out.verdict).toBe('SOLVED');
         // The removal really did precede the ceremony — the ledger's own row.
-        expect(out.scratchClears[0].removedAt).toBe(144);
+        expect(out.scratchClears[0].removedAt).toBe(142);
         expect(out.scratchClears[0].at).toBeGreaterThan(out.scratchClears[0].removedAt);
         expect(out.ticks).toBeGreaterThan(out.scratchClears[0].at);
     });

@@ -16,6 +16,7 @@ import {
 } from './watchGenOverlay.js';
 import { paintable } from './procgenLedger.js';
 import { seedlingModel, seedlingSeam, seedlingSkeletonSpec } from './procgenSeedling.js';
+import { withHammerEscape } from './solverBot.js';
 
 /** ⛓ A CANVAS CONTEXT THAT RECORDS ITS OPS — the same instrument the maze's
  *  render fixtures use, one substrate over. */
@@ -204,10 +205,15 @@ describe('watchGenOverlay — the layers', () => {
      * drop are 26, 28, 64, 67, 85 and 118; 26, 28 and 118 carry NO certification
      * geometry, so they cannot be this row's subject. 64 is the lowest that drops
      * WITH geometry.
+     *
+     * ⛓ SEEDLING HAMMER-PHASE A2 (`HAMMER_ESCAPE` on by default, ⚖ user 2026-10-07): 64, 67 and 85 all CERTIFY
+     * now (measured; 26, 28 and 118 still drop with no geometry), so no seed in 1..120 is this row's subject with
+     * the escape on. The subject is the overlay ignoring a dropped element's geometry, not the escape, so the
+     * seam is asked with the escape OFF by the switch, where 64 still drops with its geometry.
      */
     it('⛔⛔ …even when the certification\'s GEOMETRY is attached to the model', () => {
-        const seam = seedlingSeam({ seed: 64, items: { hasSword: true },
-            elements: { name: 'killgate' } });
+        const seam = withHammerEscape(false, () => seedlingSeam({ seed: 64, items: { hasSword: true },
+            elements: { name: 'killgate' } }));
         expect(seam.model.elements.ran).toBe(false);
         expect(seam.certification.geometry.length).toBeGreaterThan(0);
         const withGeometry = { ...seam.model,
