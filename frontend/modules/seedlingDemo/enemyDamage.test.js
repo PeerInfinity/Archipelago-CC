@@ -176,7 +176,9 @@ describe('the policy — an ENUMERATION, checked against `combat.js`', () => {
         // is still the class where "transcribed" and "modelled" visibly
         // differ, and the row keeps a live negative rather than becoming an
         // enumeration of successes.
-        expect(() => createEnemyDamage('Jellyfish')).toThrow(/refused/);
+        // ⛓⛓⛓ KILLLOCK K1 (ON since the wave-8 harvest): `Jellyfish` is `modelled` under its switch, so the live
+        // negative moves to `LavaRunner` — the same depth, a chaser, its switch K2 OFF.
+        expect(() => createEnemyDamage('LavaRunner')).toThrow(/refused/);
         expect(createEnemyDamage('Bob').as3).toBe('Bob');
         expect(createEnemyDamage('Spinner').as3).toBe('Spinner');
         expect(() => createEnemyDamage('Nonesuch')).toThrow(/no KILL_ARM_POLICY row/);

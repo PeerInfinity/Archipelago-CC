@@ -1,7 +1,7 @@
 /**
  * seedlingDemo/killLockBodies — the switches for slice `seedling-fidelity-killlock` (planner
  * `seedling-fidelity-planning-3`, wave 8). With every switch false the model is byte-identical to the one before the
- * slice; they ship OFF because turning them on moves committed artifacts (the measured movers are in the slice's
+ * slice; they shipped OFF because turning them on moves committed artifacts (the measured movers are in the slice's
  * report, `CC/docs/cloud-reports/seedling-fidelity-killlock.md`), and a re-record is the user's licence to give.
  *
  * ⛔ The survey refused L60 ×6, L71 ×2 and L99 with *"the kill work order has no weapon — level N tracks NO live
@@ -36,14 +36,19 @@
  *   - a test: `withKillLockBodies({ jellyfishLive: true }, () => …)`, which restores the previous values.
  * ⛔ The browser has no such hook on purpose: the page and its solve worker run the defaults.
  */
+/**
+ * ⚖ THE DEFAULTS (user, 2026-10-06; flipped at the wave-8 harvest by `seedling-fidelity-planning-4`): K1, K3, K4 and
+ * K5 ON; K2 `lavaRunnerLive` stays OFF until a lavarunner GAME witness exists (its rooms' kills are unwitnessed).
+ * ON moves no committed tape; it moves survey rows and the ENEMY census default (the slice's report, D3).
+ */
 export const KILLLOCK_BODIES = {
-    jellyfishLive: false,
+    jellyfishLive: true,
     lavaRunnerLive: false,
-    chaserKillArm: false,
-    turretRemovalLedger: false,
-    darkShieldIceTurret: false,
+    chaserKillArm: true,
+    turretRemovalLedger: true,
+    darkShieldIceTurret: true,
 };
-/** The defaults this slice shipped. */
+/** The defaults (the user's ruling above; the slice shipped every switch OFF). */
 export const KILLLOCK_BODIES_DEFAULTS = Object.freeze({ ...KILLLOCK_BODIES });
 export const KILLLOCK_BODIES_KEYS = Object.freeze(Object.keys(KILLLOCK_BODIES));
 

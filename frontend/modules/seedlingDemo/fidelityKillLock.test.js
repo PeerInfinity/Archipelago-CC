@@ -5,7 +5,7 @@
  * GAME's readings of it (p4f headless, `scripts/procgen/probe-seedling-killlock.mjs --record`): the drained player
  * stream and one `botMobiles()` sample per game tick. With the switches ON the model reproduces the player at 0 px,
  * every counted body's `hits`/`hitsTimer` at every sampled tick, and every body's removal on the tick the game
- * removed it. With the switches OFF (the shipped default) the bridge and the policy rows are the BEFORE model.
+ * removed it. With every switch OFF the bridge and the policy rows are the BEFORE model; the defaults are the user's ruling (K2 OFF).
  */
 import { describe, expect, it } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -24,24 +24,34 @@ const DIR = join(HERE, 'fixtures', 'killlock-witness');
 const ARMS = readdirSync(DIR).filter((f) => f.endsWith('.json')).sort()
     .map((f) => JSON.parse(readFileSync(join(DIR, f), 'utf8')));
 
-describe('the switches ship OFF, and OFF is the BEFORE model', () => {
-    it('every switch is false by default and ALL_ON names every switch', () => {
-        expect(KILLLOCK_BODIES_DEFAULTS).toEqual(Object.fromEntries(KILLLOCK_BODIES_KEYS.map((k) => [k, false])));
+describe('the defaults are the user\'s ruling, and all-OFF is the BEFORE model', () => {
+    it('K1/K3/K4/K5 are ON and K2 lavaRunnerLive is OFF by default; ALL_ON names every switch', () => {
+        expect(KILLLOCK_BODIES_DEFAULTS).toEqual({
+            jellyfishLive: true, lavaRunnerLive: false, chaserKillArm: true, turretRemovalLedger: true,
+            darkShieldIceTurret: true,
+        });
         expect(Object.keys(KILLLOCK_ALL_ON).sort()).toEqual([...KILLLOCK_BODIES_KEYS].sort());
         expect({ ...KILLLOCK_BODIES }).toEqual(KILLLOCK_BODIES_DEFAULTS);
     });
-    it('the bridge roster and the kill policy are the old ones while OFF, and widen only ON', () => {
-        expect(bridgedChaserTags()).toEqual(['bob', 'puncher']);
-        expect(isBridgedChaser('jellyfish')).toBe(false);
-        expect(KILL_ARM_POLICY.Jellyfish.policy).toBe('refused');
-        expect(KILL_ARM_POLICY.LavaRunner.policy).toBe('refused');
-        expect(killArmModelled('Jellyfish')).toBe(false);
+    it('the bridge roster and the kill policy are the old ones with every switch OFF, and widen ON', () => {
+        const ALL_OFF = Object.fromEntries(KILLLOCK_BODIES_KEYS.map((k) => [k, false]));
+        withKillLockBodies(ALL_OFF, () => {
+            expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'puncher']);
+            expect(isBridgedChaser('jellyfish')).toBe(false);
+            expect(KILL_ARM_POLICY.Jellyfish.policy).toBe('refused');
+            expect(KILL_ARM_POLICY.LavaRunner.policy).toBe('refused');
+            expect(killArmModelled('Jellyfish')).toBe(false);
+        });
+        // the defaults: the jellyfish is bridged, the lavarunner is not
+        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
+        expect(KILL_ARM_POLICY.Jellyfish.policy).toBe('modelled');
+        expect(killArmModelled('LavaRunner')).toBe(false);
         withKillLockBodies(KILLLOCK_ALL_ON, () => {
-            expect(bridgedChaserTags()).toEqual(['bob', 'jellyfish', 'lavarunner', 'puncher']);
+            expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher']);
             expect(KILL_ARM_POLICY.Jellyfish.policy).toBe('modelled');
             expect(killArmModelled('LavaRunner')).toBe(true);
         });
-        expect(bridgedChaserTags()).toEqual(['bob', 'puncher']);
+        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
     });
 });
 

@@ -14,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 import { LIVE_GEOMETRY_KEYS } from './levelWorld.js';
+import { KILLLOCK_SWITCHED_CHASERS } from './killLockBodies.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -1253,6 +1254,7 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'lock opens and the walk leaves by `teleporter@0,112`; the crossing\'s last tick is '
                 + 'the L53 arrival; no hit, no kill.',
         }),
+        /**
          * ⛓⛓⛓ seedling-fidelity-bobsoldier — THE FOUR TAPES `bobsoldier` EXPOSES, found BY THIS GUARD (the slice
          * predicted zero; the guard named them on its first run with the class bridged — the fourth time it has
          * caught the slice that followed it). Each enters L30 with `noDamage` false and never comes within the
@@ -1282,6 +1284,27 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             addedBy: 'Seedling fidelity BOBSOLDIER W4 (the guard found it)',
             why: 'the walk into the BobBoss arena crosses L30 for 81 ticks at >= 176 px from the BobSoldier. '
                 + 'No hit.',
+        }),
+        /**
+         * ⛓⛓⛓ seedling-fidelity-killlock K1 — `jellyfish` joins the scope at the wave-8 harvest (the user's ruling
+         * turned `jellyfishLive` ON). The guard named these three; the slice measured every committed tape
+         * byte-identical with the switches ON (tapeRunner), and the harvest re-checks it (observationTolerance and
+         * the full tier at the harvest tip).
+         */
+        Object.freeze({
+            name: 'axe-l61-reach-l63', levels: Object.freeze([63]), bobs: 1, ticks: 1,
+            addedBy: 'Seedling fidelity KILLLOCK K1 at the wave-8 harvest (the guard found it)',
+            why: 'the AXE witness\'s last tick is the L63 arrival, a jellyfish room; replayed unchanged with the jellyfish stepped.',
+        }),
+        Object.freeze({
+            name: 'burn-l44-reach-exit', levels: Object.freeze([45]), bobs: 1, ticks: 1,
+            addedBy: 'Seedling fidelity KILLLOCK K1 at the wave-8 harvest (the guard found it)',
+            why: 'the BURN witness\'s last tick is the L45 arrival, a jellyfish room; replayed unchanged with the jellyfish stepped.',
+        }),
+        Object.freeze({
+            name: 'ladder2-l104-beam', levels: Object.freeze([104, 105]), bobs: 1, ticks: 279,
+            addedBy: 'Seedling fidelity KILLLOCK K1 at the wave-8 harvest (the guard found it)',
+            why: 'the LADDER2 beam witness walks L104 and arrives in L105, both jellyfish rooms; replayed unchanged with the jellyfish stepped.',
         }),
         /** ⛓⛓⛓ seedling-fidelity-bobsoldier — THE BOBSOLDIER'S WITNESSES, written before the roster measured them. */
         Object.freeze({
@@ -1336,7 +1359,11 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
      * BobSoldier's leash the whole time, so byte-inert by geometry (measured; rows in `exposedAdded`). The witnesses
      * are the TERRAIN captures (legs 308/309, `fixtures/contact-witness/`) and this slice's own tapes.
      */
-    bridgedClasses: Object.freeze(['bob', 'bobsoldier', 'puncher']),
+    /**
+     * ⛓⛓⛓ seedling-fidelity-killlock K1 — `jellyfish` JOINS THE SCOPE (under `killLockBodies.jellyfishLive`, ON since
+     * the wave-8 harvest by the user's ruling; `lavarunner` stays out while K2 `lavaRunnerLive` is OFF).
+     */
+    bridgedClasses: Object.freeze(['bob', 'bobsoldier', 'jellyfish', 'puncher']),
 
     /** The roster tally the exposure was derived from, at `153f5100b`. */
     rosterAtPrediction: Object.freeze({
@@ -1619,6 +1646,13 @@ export function assertSteppedContactPartition({ families, pricedBy, why, bridged
         }
     }
     for (const tag of bridged) {
+        /**
+         * ⛓ KILLLOCK K1/K2 (jellyfish ON by default since the wave-8 harvest): a SWITCH-bridged chaser is not a
+         * `stepped` family — `contactPricing` still calls it a `mover` — and `stepContactsNow` skips it by name in
+         * a stepped room (`killLockBridged(inst.tag) && chaserRoomVerdict(level).stepped`), so `stepChasersNow` bills
+         * it live. That skip is its pricer; the partition's question does not apply to it.
+         */
+        if (tag in KILLLOCK_SWITCHED_CHASERS) continue;
         if (!families.includes(tag)) {
             throw new Error(`R8_ENEMY_BRIDGE: "${tag}" is BRIDGED (the run steps it) and is `
                 + 'not a `stepped` contact family — so `stepContactsNow` would still price '

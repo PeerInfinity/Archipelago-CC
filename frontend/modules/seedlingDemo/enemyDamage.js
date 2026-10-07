@@ -555,9 +555,14 @@ export function assertKillArmPolicyCovers() {
     return findings;
 }
 
-/** The classes this rung will actually damage. */
+/**
+ * The classes this rung will actually damage — the STATIC rows only. A row whose policy is a getter reading a
+ * KILLLOCK switch (`Jellyfish`, `LavaRunner`) is left out whatever the import-time default, so a switch turned OFF
+ * later is honoured; `killArmModelled` asks those rows at call time.
+ */
+const switchReadPolicy = (p) => typeof Object.getOwnPropertyDescriptor(p, 'policy')?.get === 'function';
 export const MODELLED_KILL_ARMS = Object.freeze(
-    Object.entries(KILL_ARM_POLICY).filter(([, p]) => p.policy === 'modelled').map(([c]) => c),
+    Object.entries(KILL_ARM_POLICY).filter(([, p]) => !switchReadPolicy(p) && p.policy === 'modelled').map(([c]) => c),
 );
 
 /**

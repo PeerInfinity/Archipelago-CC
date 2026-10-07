@@ -376,6 +376,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'stance-l48-keylock-south',
             // ⛓⛓⛓ Seedling fidelity BOBSOLDIER: the four L30 crossers the guard named, then the two witnesses.
             'r9-solve-30', 'r9-solve-31', 'r9-solve-32', 'swim-u5-bobboss-encounter',
+            // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes the guard named.
+            'axe-l61-reach-l63', 'burn-l44-reach-exit', 'ladder2-l104-beam',
             'bobsoldier-sword', 'bobsoldier-kill', 'bobsoldier-corpse',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
@@ -416,13 +418,16 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // `slots-l24-burn-cut-80`, `slots-l24-burn-cut-110`, `slots-l24-burn-fencepost` (L24 → L12).
         // ⛓ Seedling fidelity PROXIMITY adds three — `prox-l29-key-return` (L29 → L22), `prox-l40-turret-volley` and `prox-l40-turret-contact` (L40).
         // ⛓ Seedling fidelity STANCE adds one — `stance-l48-keylock-south` (L48 → L53).
-        expect(out.exposed).toBe(63);
         // ⛓ Seedling fidelity BOBSOLDIER adds six (70 with STANCE) — the L30 crossers `r9-solve-30/31/32` and
         // `swim-u5-bobboss-encounter` (never inside the leash), and `bobsoldier-sword` / `-kill` / `-corpse`.
-        expect(out.exposed).toBe(70);
+        // ⛓ KILLLOCK K1 at the wave-8 harvest adds three — `axe-l61-reach-l63`, `burn-l44-reach-exit`,
+        // `ladder2-l104-beam` (jellyfish rooms).
+        expect(out.exposed).toBe(73);
         expect(out.tapes).toEqual([
+            'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
-            'burn-l24-reach-exit', 'cancross-l16-sword-none', 'dash-l16-sword-all', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
+            'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'dash-l16-sword-all', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
+            'ladder2-l104-beam',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
             'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
@@ -589,6 +594,10 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'bobsoldier-sword': { tape: {}, levels: [30] },
             'bobsoldier-kill': { tape: {}, levels: [30] },
             'bobsoldier-corpse': { tape: {}, levels: [30] },
+            // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes — the mirror rule.
+            'axe-l61-reach-l63': { tape: {}, levels: [63] },
+            'burn-l44-reach-exit': { tape: {}, levels: [45] },
+            'ladder2-l104-beam': { tape: {}, levels: [104, 105] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
@@ -622,7 +631,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
 describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () => {
     it('the DECLARED scope and the DERIVED roster are the same claim', () => {
         // ⛓ fidelity-bobsoldier: the BobSoldier joins (W4 `bobSoldierLive`, ON by default).
-        expect(assertBridgeRosterMatchesScope(bridgedChaserTags)).toEqual({ classes: ['bob', 'bobsoldier', 'puncher'] });
+        // ⛓ KILLLOCK K1: the jellyfish joins (`jellyfishLive`, ON since the wave-8 harvest).
+        expect(assertBridgeRosterMatchesScope(bridgedChaserTags)).toEqual({ classes: ['bob', 'bobsoldier', 'jellyfish', 'puncher'] });
     });
 
     it('⛔ MUTATION: a roster that drifts from the declaration reds by name', () => {
@@ -644,8 +654,11 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
         expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher']);
         expect(MODELLED_ENEMY_CLASSES.Jellyfish).toBeUndefined();
         expect(MODELLED_ENEMY_CLASSES.LavaRunner).toBeUndefined();
-        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'puncher']);
-        expect(contactPricing('jellyfish').kind).toBe('mover');
+        // ⛓ KILLLOCK K1 (ON since the wave-8 harvest): `jellyfish` is bridged by its switch, so the control is
+        // `lavarunner` — transcribed, no roster row, its switch K2 OFF.
+        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
+        expect(bridgedChaserTags()).not.toContain('lavarunner');
+        expect(contactPricing('lavarunner').kind).toBe('mover');
     });
 
     it('the three `stepped` contact tables are ONE key set, and every bridged tag is in it', () => {
@@ -669,7 +682,7 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
             // ⛓ Seedling fidelity LADDER2: the placed grenade is stepped (`stepPlacedGrenadesNow`,
             // its blast billed) and has no contact, so it joins with that pricer.
             bridged: [...bridgedChaserTags(), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
-        })).toEqual({ families: 6, bridged: ['bob', 'bobsoldier', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+        })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'jellyfish', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
             refused: [] });
     });
 
@@ -780,7 +793,8 @@ function syntheticExposureIo(rows) {
         // ⛓ Seedling fidelity F6: L17 joins — `f6-l17-reentry` is declared exposed there.
         // ⛓ Seedling fidelity STANCE: L53 joins — `stance-l48-keylock-south` is declared exposed there.
         // ⛓ Seedling fidelity BOBSOLDIER: L30 joins — its six exposed tapes are declared there.
-        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 30, 40, 53]),
+        // ⛓ KILLLOCK K1 at the wave-8 harvest: L45, L63, L104 and L105 join — the jellyfish rooms' declared tapes.
+        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 30, 40, 45, 53, 63, 104, 105]),
     };
 }
 
