@@ -194,10 +194,11 @@ export function register(registrationApi) {
       // (⚖ the user's "upgrade window", 2026-10-04: "Let's try 1000 ms for now." — carried over as its intent,
       // "upgrade briefly, then ship"). MIGRATION: it replaces `seedlingSolverUpgradeWindowMs` (milliseconds);
       // a value saved under the old key is no longer read. Default `jsRuntimeSolver.SOLVER_UPGRADE_WINDOW_WORK`
-      // (⛓ RECALIBRATE: 80 fine units, was 40 coarse).
+      // (⛓ RECALIBRATE: 80 fine units, was 40 coarse; ⛓ WINDOW 85, ⚖ the user 2026-10-07: 85 = the whole full
+      // pass of the worst upgrading leg, L40).
       seedlingSolverUpgradeWindowWork: {
         type: 'number',
-        default: 80,
+        default: 85,
         minimum: 0,
         label: 'Seedling: solver upgrade window (work units; 0 = the whole budget)',
         description: "Both runtimes, solver (atlas / vanilla) rooms. The Playback Bot's solver first "

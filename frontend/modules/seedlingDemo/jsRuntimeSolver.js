@@ -183,12 +183,18 @@ export const ANYTIME_PASSES = Object.freeze([
  * ⛓ WINDOW WHOLE PASS — the window now bounds the WHOLE full pass (every
  * site), so an upgrade ships only when the full pass FINISHES inside it.
  * Measured over 64 legs (the captured B/D arrivals, the sweep's legs, D3's
- * legs, the sphere-2.2 leg): ONE shipped plan moved — L40 (480,896), whose
- * full pass ends at unit 85 (28 + 57): 172 → 417 t. The window stays 80
- * (⚖ reported, not retuned); every other upgrader finishes by unit 76.
+ * legs, the sphere-2.2 leg): ONE shipped plan moved at 80 — L40 (480,896),
+ * whose full pass ends at unit 85 (28 + 57): 172 → 417 t; every other
+ * upgrader finishes by unit 76.
+ *
+ * ⛓ WINDOW 85 (⚖ the user, 2026-10-07: "raise the window 80 → 85") — the
+ * calibration rule is now: W = the units the WHOLE full pass needs on the
+ * worst upgrading leg (L40, 85), no longer its last dash ask. At 85 L40
+ * upgrades again (417 → 172 t) and, re-measured over the same 64 legs, no
+ * other shipped plan moves.
  */
 export const SOLVER_BUDGET_WORK = 640;
-export const SOLVER_UPGRADE_WINDOW_WORK = 80;
+export const SOLVER_UPGRADE_WINDOW_WORK = 85;
 /**
  * ⛓ RECALIBRATE (fidelity CHECKPOINTS) — every budgeted pass opts in to the solver's FINE checkpoints
  * (`solveSegment`'s `fineCheckpoints`): the `time` rung, the core `walk` (a trip there REFUSES the segment
