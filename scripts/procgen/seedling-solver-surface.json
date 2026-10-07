@@ -1113,9 +1113,9 @@
       "files": {
         "arrivalSolid.js": 2,
         "botDriverV2.js": 56,
-        "solverBot.js": 172
+        "solverBot.js": 173
       },
-      "sites": 230,
+      "sites": 231,
       "seen": "both",
       "via": [
         "const-alias",
@@ -3978,9 +3978,9 @@
       "class": "seedling",
       "form": "function",
       "files": {
-        "solverBot.js": 2
+        "solverBot.js": 3
       },
-      "sites": 2,
+      "sites": 3,
       "seen": "static",
       "via": [
         "import"
@@ -3996,9 +3996,9 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 4
+        "solverBot.js": 6
       },
-      "sites": 4,
+      "sites": 6,
       "seen": "static",
       "via": [
         "import"
