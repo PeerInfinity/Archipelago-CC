@@ -17,7 +17,12 @@
  *   --from=N --limit=N   a window of the (mode-ordered) list — yield the box in chunks
  *   --page-legs=N        a fresh page every N legs (default 60; the row records the page's leg index). ⛔ 1 = one
  *                        clean game per leg, the start ASSERTED empty (CI's default: the game's items are session-wide)
- *   --ids=a,b            only these leg ids
+ *   --ids=a,b            only these leg ids (this list's positions)
+ *   --keys=k1|k2         only these leg KEYS (`seedling-divergence-legs.legKey`: (region, arrival door, goal) — stable
+ *                        across SHAs, where an id shifts)
+ *
+ * A leg the list marks `skip` (an arrival whose every door needs a `game_state` event: the jump would land inside the
+ * unbroken obstacle) is emitted as `end: 'skipped'` with its reason, and never run.
  *   --shard=i/n          only shard i of n (`partitionLegs`: price-balanced, longest first — CI's matrix)
  *   --shard-plan=n [--json]  print the partition (no browser, no box) — the CI plan job
  *   --page=<build>       drive another staged build (also SEEDLING_PAGE), e.g. seedling_bot_ap_p4f
@@ -30,7 +35,7 @@
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -41,6 +46,7 @@ import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf, withSlotBlock } from './seedlingRoomPlay.js';
+import { legSelectors, pickLegs } from './seedling-divergence-legs.mjs';
 
 argvHelp(import.meta.url);
 
@@ -134,7 +140,6 @@ async function main() {
     const PAGE_LEGS = Number(arg('page-legs', '60'));
     const DUMP = arg('dump', '');
     const PRODUCER = arg('producer', 'solver');
-    const IDS = arg('ids', '').split(',').filter(Boolean).map(Number);
     const SHARD = arg('shard', '');
     const GAME = 'seedling_playthrough';
     const RULES = `frontend/presets/${GAME}/AP_1/AP_1_rules.json`;
@@ -147,7 +152,7 @@ async function main() {
         process.exit(0);
     }
     const all = readFileSync(arg('legs', ''), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
-    let pick = IDS.length ? all.filter((l) => IDS.includes(l.id)) : all;
+    let pick = pickLegs(all, legSelectors(arg));
     if (SHARD) {
         const [i, n] = SHARD.split('/').map(Number);
         const mine = new Set(partitionLegs(pick, n, roomAreas(REPO))[i - 1].ids);
@@ -249,8 +254,13 @@ async function main() {
         const granted = [];
         let swaps = 0;
         for (const [i, leg] of legs.entries()) {
-            const row = { id: leg.id, mode: MODE, producer: PRODUCER, page: pageNo, pageLeg: i, level: leg.level, arrive: [leg.arrive.x, leg.arrive.y],
-                goal: leg.goal.name, kind: leg.goal.kind, sphere: leg.sphere?.label ?? null };
+            const row = { id: leg.id, key: leg.key ?? null, mode: MODE, producer: PRODUCER, page: pageNo, pageLeg: i, level: leg.level,
+                arrive: [leg.arrive.x, leg.arrive.y], goal: leg.goal.name, kind: leg.goal.kind, sphere: leg.sphere?.label ?? null };
+            // ⛔ an arrival needing a game_state event the jump would not stage: named, never run
+            if (leg.skip) {
+                emit({ ...row, end: 'skipped', skip: leg.skip, events: leg.arrive.events ?? [] });
+                continue;
+            }
             try {
                 // ⛔ THE CLEAN START (planner-3's trace, 2026-10-05): the game's `Inventory.items` is STATIC and
                 // append-only for the session — an item an earlier leg PICKED UP stays in the game for every later leg

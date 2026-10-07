@@ -11,13 +11,16 @@
  * ⚠ The solve runs the passes the worker runs (`ANYTIME_PASSES`) with NO budget: a leg the live engine cuts at its
  * budget is SOLVED here. `ms` says what it cost.
  *
- * Run: node scripts/procgen/seedling-divergence-bare.mjs --legs=<jsonl> --dump=<json> --out=<jsonl> [--ids=a,b] [--jobs=N]
+ * A leg the list marks `skip` (an arrival needing a game_state event) is a `skipped` row, never solved.
+ *
+ * Run: node scripts/procgen/seedling-divergence-bare.mjs --legs=<jsonl> --dump=<json> --out=<jsonl> [--ids=a,b|--keys=k1|k2] [--jobs=N]
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
+import { legSelectors, pickLegs } from './seedling-divergence-legs.mjs';
 
 argvHelp(import.meta.url);
 
@@ -29,8 +32,7 @@ async function main() {
     const ONE = arg('one', '');
     if (ONE) { console.log(JSON.stringify(await oneLeg(JSON.parse(ONE), arg('dump', '')))); process.exit(0); }
     const legs = readFileSync(arg('legs', ''), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
-    const ids = arg('ids', '').split(',').filter(Boolean).map(Number);
-    const pick = ids.length ? legs.filter((l) => ids.includes(l.id)) : legs;
+    const pick = pickLegs(legs, legSelectors(arg));
     const jobs = Number(arg('jobs', '3'));
     const timeoutS = Number(arg('timeout', '120'));
     const out = [];
@@ -39,6 +41,13 @@ async function main() {
     async function worker() {
         while (next < pick.length) {
             const leg = pick[next++];
+            // ⛔ an arrival needing a game_state event (the list's `skip`): named, never solved
+            if (leg.skip) {
+                const row = { id: leg.id, key: leg.key ?? null, outcome: 'skipped', err: leg.skip };
+                out.push(row);
+                console.log(`ROW ${JSON.stringify(row).slice(0, 300)}`);
+                continue;
+            }
             // eslint-disable-next-line no-await-in-loop
             const row = await new Promise((resolve) => {
                 const p = spawn(process.execPath, [self, `--one=${JSON.stringify(leg)}`, `--dump=${arg('dump', '')}`], { stdio: ['ignore', 'pipe', 'pipe'] });
@@ -79,7 +88,7 @@ async function oneLeg(leg, dumpPath) {
     // the engine's own records: `loadWasmPlaybackEngine` stages a delivered set through `mountedRecordsOf` alone
     const RECS = dump.deliveredSet ? mountedRecordsOf(dump.deliveredSet) : new Map(indexLevels(MAP));
     const SRC = levelSourceFromAtlas(RECS);
-    const out = { id: leg.id, level: leg.level, arrive: [leg.arrive.x, leg.arrive.y], goal: leg.goal.name, kind: leg.goal.kind };
+    const out = { id: leg.id, key: leg.key ?? null, level: leg.level, arrive: [leg.arrive.x, leg.arrive.y], goal: leg.goal.name, kind: leg.goal.kind };
     const t0 = Date.now();
     try {
         let goal;
