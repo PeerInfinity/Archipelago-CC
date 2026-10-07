@@ -14,7 +14,7 @@
  *     the walker producer's own pin enumerates (`wasmWalkTape.test.js`), asked
  *     of the SOLVER exactly as the wasm engine asks at an arrival
  *     (`arrivalSolverGoal` → `arrivalSolveRequest` → `solveAnytime` at the
- *     shipped 640/80 fine units): `[verb, ticks, digest]` or a named refusal.
+ *     shipped defaults, 640/85 fine units; measured at 640/80, and no solve here asks more than 15 units, so the window never binds): `[verb, ticks, digest]` or a named refusal.
  *     A new member fails until it is classified here.
  *   · DETERMINISM — the same request twice → the same plan, byte for byte.
  *   · THE JS PAGE — `seedling_generated_room` mounted as the host delivers it:
@@ -130,7 +130,7 @@ const MEMBERS = PRESETS.flatMap((name) => arrivalsOf(PRESET[name])
         .filter((kit) => kit === 'bare' || name === 'seedling_generated_swim')
         .map((kit) => ({ name, arrival: a, goal, kit, key: `${name}|${a.from}→L${a.level}(${a.x},${a.y})|${goal.name}|${kit}` })))));
 
-describe('§5.36 — every committed generated leg, asked of the SOLVER (the wasm arrival\'s request, 640/80 fine units)', () => {
+describe('§5.36 — every committed generated leg, asked of the SOLVER (the wasm arrival\'s request, the shipped 640/85 fine units)', () => {
     it('classifies EVERY (preset, arrival, goal, kit) member, and nothing else', () => {
         expect(MEMBERS.map((m) => m.key).sort()).toEqual(Object.keys(SOLVED).sort());
     });
