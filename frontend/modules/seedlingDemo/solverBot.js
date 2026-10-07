@@ -8253,12 +8253,13 @@ function trainIsSafeHere(run, aimKeys = null) {
      * with the run's own stepper, each landing against the forecast index
      * `safeStep` itself pairs it with (a step's landing is `forecast[k]`).
      */
-    const step = run.previewStepper();
+    const step = previewOrDeath(run.previewStepper());
     let st = { ...run.state };
     const keysAt = (k) => (k === 1 ? aimKeys : (k === 2 ? new Set(['primary']) : new Set()));
     for (let k = 1; k < span; k += 1) {
         st = step({ ...st }, keysAt(k));
-        if (!clearOfHammersAt(run, playerBoxAt(st.x, st.y), forecast, k)) return false;
+        // ⛓ hammer-phase A2: a train whose preview dies is not safe (`previewOrDeath`)
+        if (!st || !clearOfHammersAt(run, playerBoxAt(st.x, st.y), forecast, k)) return false;
     }
     return true;
 }
@@ -8278,11 +8279,13 @@ function trainIsSafeHere(run, aimKeys = null) {
 function trainLineBlockedHere(run, dir, aimKeys) {
     const span = SLASH_HIT_TICKS + 3;
     const forecast = run.spinnerForecast(span);
-    const step = run.previewStepper();
+    const step = previewOrDeath(run.previewStepper());
     let st = { ...run.state };
     const keysAt = (k) => (k === 1 ? aimKeys : (k === 2 ? new Set(['primary']) : new Set()));
     for (let k = 1; k < span; k += 1) {
         st = step({ ...st }, keysAt(k));
+        // ⛓ hammer-phase A2: a train whose preview dies is not pressed here (`previewOrDeath`)
+        if (!st) return true;
         if (k < 2) continue;
         const rect = slashRect(st.x, st.y, dir);
         for (const j of [k - 1, k]) {
@@ -8327,7 +8330,7 @@ function stepToward(run, aim, intended) {
     if (!aim || (run.entities('spinnerBodies') ?? []).length === 0) return intended;
     const forecast = run.spinnerForecast(STEP_LOOKAHEAD + 2);
     if (!forecast.length) return intended;
-    const step = run.previewStepper();
+    const step = previewOrDeath(run.previewStepper());
     // ⚠ THE ORDER IS THE TIE-BREAK: the facings and the stand keep the places
     // they had, and the diagonals follow them.
     const options = [intended, ...Object.values(FACING_KEYS).map((k) => new Set([k])),
@@ -8350,7 +8353,7 @@ function stepToward(run, aim, intended) {
         let best = depth;
         for (const keys of options) {
             const next = step({ ...st }, keys);
-            if (!clearOfHammersAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
+            if (!next || !clearOfHammersAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
             const d = survives(next, depth + 1);
             if (d > best) best = d;
             if (best >= STEP_LOOKAHEAD) return best;
@@ -8360,7 +8363,7 @@ function stepToward(run, aim, intended) {
     let best = null;
     for (const keys of options) {
         const next = step({ ...run.state }, keys);
-        if (!clearOfHammersAt(run, playerBoxAt(next.x, next.y), forecast, 1)) continue;
+        if (!next || !clearOfHammersAt(run, playerBoxAt(next.x, next.y), forecast, 1)) continue;
         const depth = survives(next, 1);
         const d = Math.hypot(next.x - aim.x, next.y - aim.y);
         if (!best || depth > best.depth || (depth === best.depth && d < best.d)) {
@@ -8378,6 +8381,26 @@ function stepToward(run, aim, intended) {
  * shallower is what walked into the corner.
  */
 const STEP_LOOKAHEAD = 4;
+
+/**
+ * ⛓ HAMMER-PHASE A2 — **A PREVIEWED DEATH IS A STEP NOT TAKEN, NOT A CRASH.** `previewStepper` THROWS the run's
+ * death refusal (`deathRefusal`, a `PhysicsV2Error`) when a previewed step dies — the R3-swim rule: a preview has no
+ * world to reboot into. `stepToward`'s survival lookahead and the escape's search step EVERY key set a few ticks
+ * ahead, so one set that drowns the preview threw out of the whole solve. Measured with `HAMMER_ESCAPE` on:
+ * `empty post-sword seed 30`'s certify solve aborted its level ("the player DROWNED in level 900 at
+ * (42.79,62.51)", thrown from `stepToward` under the HAMMER-PHASE rung's `previewPressApproach`). Wrapped, the step
+ * returns `null` for a death and the caller skips that set. Only a solve that threw here can change.
+ */
+function previewOrDeath(step) {
+    return (st, keys, opts) => {
+        try {
+            return step(st, keys, opts);
+        } catch (e) {
+            if (e instanceof PhysicsV2Error) return null;
+            throw e;
+        }
+    };
+}
 
 
 /**
@@ -8435,7 +8458,9 @@ function landsClearOfHammers(run, keys) {
     const ahead = run.spinnerForecast(2)[1] ?? null;
     // ⚠ No row at index 1 is "nothing to land in" — `safeStep`'s old early return.
     if (!ahead) return true;
-    const next = run.previewStepper()({ ...run.state }, keys);
+    const next = previewOrDeath(run.previewStepper())({ ...run.state }, keys);
+    // ⛓ hammer-phase A2: a step whose preview dies does not land clear (`previewOrDeath`)
+    if (!next) return false;
     // ⚠ `[ahead]` is a ONE-ELEMENT forecast whose index 0 is the run's
     // own index 1, so the clock is asked for `gameTimeAt(1)` by hand
     // rather than by the shared convention — see the comment above
@@ -8760,8 +8785,12 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
     const PRESS = new Set(['primary']);
     const states = new Map([[at, { ...state }]]);
     let st = { ...state };
+    // ⛓ hammer-phase A2: an approach or train whose preview dies refuses the press (`previewOrDeath`)
+    const died = (t) => ({ ok: false, claim: true, why: `the approach or the train dies at t${t} (a previewed death)` });
+    const stepOrNull = previewOrDeath(step);
     for (let t = at; t < pressAt; t += 1) {
-        st = step({ ...st }, keys[t - at] ?? NO_KEYS);
+        st = stepOrNull({ ...st }, keys[t - at] ?? NO_KEYS);
+        if (!st) return died(t + 1);
         states.set(t + 1, st);
     }
     const direction = st.direction;
@@ -8769,11 +8798,13 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
     if (probe.unmodelled.length > 0) {
         return { ok: false, claim: false, why: `the forecast names ${probe.unmodelled.join(', ')} as unmodelled` };
     }
-    st = step({ ...st }, PRESS, { dashImpulse: probe.impulse });
+    st = stepOrNull({ ...st }, PRESS, { dashImpulse: probe.impulse });
+    if (!st) return died(pressAt + 1);
     states.set(pressAt + 1, st);
     const trainEnd = pressAt + SLASH_HIT_TICKS;
     for (let t = pressAt + 1; t < trainEnd + 1; t += 1) {
-        st = step({ ...st }, NO_KEYS);
+        st = stepOrNull({ ...st }, NO_KEYS);
+        if (!st) return died(t + 1);
         states.set(t + 1, st);
     }
     const { horizon, cell, maxExpansions } = HAMMER_ESCAPE_BOUNDS;
@@ -8783,7 +8814,27 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
     if (first.lineBlocked) return { ok: false, claim: true, why: 'the press\'s line of sight is blocked' };
     if (!first.landing) return { ok: false, claim: true, why: `the press does not land: ${first.why}` };
     const L = first.landing.t;
-    const safeIn = (rows) => (q, i) => clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i);
+    /**
+     * ⛓ HAMMER-PHASE A2 — **AN ESCAPE NEVER WALKS ONTO LETHAL FLOOR.** The prune was the hammer predicate alone, so
+     * a certificate could stand the player in unprotected water until `checkDrowning` latched (measured, flag ON:
+     * `empty post-sword seed 30`'s certify solve DROWNED in level 900 at (42.79,62.51) and the level aborted). A
+     * state is unsafe as `previewWalk`'s `lethalFloorOf` reads it: drowning latched by this path (a drown already
+     * latched at the start is the run's), or a fall whose tile `fallDestination` refuses (a lethal pit).
+     */
+    const drowningAtStart = state.drown?.drowning === true;
+    const lethalFloor = (q) => {
+        if (!drowningAtStart && q.drown?.drowning === true) return true;
+        if (!q.fall || q.fall.phase !== 'out') return false;
+        try {
+            fallDestination(run.world, q.fall.target);
+            return false;
+        } catch (e) {
+            if (!(e instanceof PhysicsV2Error)) throw e;
+            return true;
+        }
+    };
+    const safeIn = (rows) => (q, i) => q !== null && !lethalFloor(q)
+        && clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i);
     const safe = safeIn(first.rows);
     for (let t = at + 1; t <= L; t += 1) {
         if (!safe(states.get(t), t - n)) {
@@ -8792,7 +8843,7 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
         }
     }
     const search = (start, startIndex, rows) => spaceTimeReach({
-        start, startIndex, step: (q, k) => step(q, k), safe: safeIn(rows), horizon: L + horizon - n - startIndex,
+        start, startIndex, step: (q, k) => stepOrNull(q, k), safe: safeIn(rows), horizon: L + horizon - n - startIndex,
         keySets: HOLD_FIRST_KEY_SETS, keyOf: coarseKey(cell), maxExpansions,
         // ⛓ of two states with one coarse key, keep the one farther from every hammer's disc (the refuge's
         // preference, `discClearanceAt` — a robustness score, never the safety test)
