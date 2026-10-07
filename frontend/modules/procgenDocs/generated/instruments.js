@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 5,
+            "count": 7,
             "id": "measure"
         },
         {
@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 67,
+            "count": 68,
             "id": "plan"
         },
         {
@@ -214,23 +214,23 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 6,
+            "count": 7,
             "id": "sweep"
         },
         {
             "browser": 0,
-            "count": 2,
+            "count": 3,
             "id": "witness"
         }
     ],
     "counts": {
-        "blockStyle": 374,
+        "blockStyle": 379,
         "browser": 130,
-        "cited": 185,
-        "files": 386,
+        "cited": 187,
+        "files": 391,
         "lineStyle": 12,
-        "withDocblock": 386,
-        "withFlags": 304
+        "withDocblock": 391,
+        "withFlags": 309
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6732,6 +6732,50 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "list",
+                "valueOf"
+            ],
+            "browser": false,
+            "category": "measure",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "cells",
+                "horizons",
+                "residue"
+            ],
+            "file": "measure-seedling-escape-kernel.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "cells"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "horizons"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "residue"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "measure-seedling-escape-kernel — ⛓ SEEDLING HAMMER-PHASE A D2: what `spaceTimeReach` costs on L18.",
+            "path": "scripts/procgen/measure-seedling-escape-kernel.mjs"
+        },
+        {
+            "argvHelpers": [
                 "M",
                 "arg"
             ],
@@ -6763,6 +6807,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The user retired the three door TEMPLATES into the room-aware ELEMENTS, and this instrument's SUBJECT went with them: it measures the BLAST RADIUS of the kill lock's literal `tag:'1'` — a literal that was converted to the per-placement slot in GENERA…",
             "path": "scripts/procgen/measure-seedling-killlock-tag.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "measure",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "residues"
+            ],
+            "file": "measure-seedling-l18-live-gap.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "residues"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "measure-seedling-l18-live-gap — ⛓ SEEDLING HAMMER-PHASE A D3: is the live playthrough's longer L18 solve at residues 40/41/42 the WORK BUDGET cutting the press kill's search? (measure only; read-only use of the JS arc).",
+            "path": "scripts/procgen/measure-seedling-l18-live-gap.mjs"
         },
         {
             "argvHelpers": [],
@@ -7163,6 +7234,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-frontier3-witness — ⛓⛓⛓ SEEDLING FIDELITY FRONTIER3: THE PLANNER ROUTES THROUGH WHAT THE PIXEL MASK LETS THROUGH.",
             "path": "scripts/procgen/plan-seedling-frontier3-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-hammer-a-escape.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-a-escape — ⛓⛓⛓ SEEDLING HAMMER-PHASE A D2: THE ESCAPE's SOLVE, HANDED TO THE GAME.",
+            "path": "scripts/procgen/plan-seedling-hammer-a-escape.mjs"
         },
         {
             "argvHelpers": [],
@@ -15173,6 +15271,66 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "shiftTo",
+                "valueOf"
+            ],
+            "browser": false,
+            "category": "sweep",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "escape",
+                "full",
+                "json",
+                "residues",
+                "twice"
+            ],
+            "file": "sweep-seedling-l18-residues.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "escape"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "full"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "residues"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "twice"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "sweep-seedling-l18-residues — ⛓ SEEDLING HAMMER-PHASE A W0: L18's press kill across the hammer's 45 phases.",
+            "path": "scripts/procgen/sweep-seedling-l18-residues.mjs"
+        },
+        {
+            "argvHelpers": [
                 "arg"
             ],
             "browser": false,
@@ -15440,6 +15598,51 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "witness-seedling-entities — per entity-record NUMBER leaf, does perturbing it move any committed replay? (behaviour-parameters P1; the profile witness's sibling).",
             "path": "scripts/procgen/witness-seedling-entities.mjs"
+        },
+        {
+            "argvHelpers": [
+                "valueOf"
+            ],
+            "browser": false,
+            "category": "witness",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "horizon",
+                "residues",
+                "tapes"
+            ],
+            "file": "witness-seedling-press-forecast.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "horizon"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "residues"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "tapes"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "witness-seedling-press-forecast — ⛓⛓ SEEDLING HAMMER-PHASE A D1: the hit-aware forecast against the run, model vs model, exact.",
+            "path": "scripts/procgen/witness-seedling-press-forecast.mjs"
         },
         {
             "argvHelpers": [

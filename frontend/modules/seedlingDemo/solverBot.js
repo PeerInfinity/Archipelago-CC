@@ -8687,12 +8687,16 @@ function hammerPhaseRefusal(run, searched, landings, bodyId) {
  *     run's stepper, the dash's impulse included) — whose certificate is the one followed.
  *
  * ⛓ THE HORIZON, DERIVED: the landing opens the body's i-frame (`SPINNER.hitsTimerMax`), and no press can land on it
- * until that runs out — the escape has nothing to do but survive it. Past it the existing loop resumes, and its
- * approach is guarded by the HAMMER-PHASE rung, which previews ONE hammer period (`HAMMER_PHASE_RUNG.horizon`). So
- * the path is certified for the i-frame PLUS one period: the hand-over state has a full period of verified
- * continuation, the same span the rung would have looked at. `follow` is the i-frame: the certificate drives that
- * span outright, and past it only where the loop finds no strike (where it would otherwise take an un-previewed
- * refuge walk — residues 4–6's corner formed exactly there).
+ * until that runs out. The loop's next strike is approached under the HAMMER-PHASE rung, which previews ONE hammer
+ * period (`HAMMER_PHASE_RUNG.horizon`). So the path is certified for the i-frame PLUS one period: wherever the
+ * certificate is left, the state has a verified continuation at least as long as the span the rung looks at.
+ *
+ * ⛓ WHEN IT IS FOLLOWED, MEASURED: the train stands until the landing (the forecast's test points ARE those), and
+ * from the landing the certificate drives every tick ON WHICH THE LOOP HAS NO STRIKE — "until the next strike can be
+ * derived" — instead of the refuge walk nothing previews (residues 4–6's corner formed there). `follow` is the span
+ * driven outright whatever the loop finds, and it is ZERO: the residue sweep with the certificate driven through the
+ * whole i-frame (`follow` = `hitsTimerMax`) solved 45/45 at +75 ticks a solve on the base's 35; with 0, 45/45 at
+ * −49 (the i-frame is spent walking to the next strike, which the admission has already given a way out of).
  *
  * ⚖ OFF BY DEFAULT ⇒ byte-identical: nothing below is reached with the switch off. `SEEDLING_HAMMER_ESCAPE=1` turns
  * it on for a node measurement; `withHammerEscape(true, fn)` for a test.
@@ -8718,7 +8722,7 @@ export function withHammerEscape(enabled, fn) {
 
 /**
  * The escape's bounds, each derived (see `HAMMER_ESCAPE`): the certified `horizon` (the i-frame plus one hammer
- * period), the `follow` span (the i-frame), the dedup `cell` (8 px: a body is 7 px and the player tops out near
+ * period), the `follow` span (zero, measured), the dedup `cell` (8 px: a body is 7 px and the player tops out near
  * 2 px/tick, so one cell is a few ticks of travel), and `maxExpansions`, the search's work bound: one escape's WHOLE
  * reachable set at the 8 px key and this horizon, measured on L18 (the D2 cost table: at most 41,463 expansions over
  * the committed walk's six landings), with room to spare. ⚠ A search the bound cuts is NO CLAIM (the press is taken
@@ -8726,7 +8730,7 @@ export function withHammerEscape(enabled, fn) {
  */
 export const HAMMER_ESCAPE_BOUNDS = Object.freeze({
     horizon: SPINNER.hitsTimerMax + SPINNER.hammerPeriod,
-    follow: SPINNER.hitsTimerMax,
+    follow: 0,
     cell: 8,
     maxExpansions: 50000,
 });
@@ -8829,8 +8833,8 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
 
 /**
  * ⛓ THE ESCAPE IN FLIGHT — what the executor holds at tick `now`, or `null` when it does not drive this tick.
- * The train stands until the landing; from the landing the certificate's keys, for `follow` ticks outright and
- * past that only when `noStrike` (the loop found nothing to walk to). A landing that did not happen when the
+ * The train stands until the landing; from the landing the certificate's keys, for `follow` ticks outright (zero)
+ * and otherwise only when `noStrike` (the loop found nothing to walk to). A landing that did not happen when the
  * certificate said ends it.
  */
 function escapeHeld(escape, now, landings, bodyId, noStrike) {
@@ -10203,8 +10207,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
                     escape = aimEscape;
                     escapes.push({ body: plan.id, t: run.ticksCompleted, pressAt: aimEscape.pressAt,
                         landing: aimEscape.landing, outcome: aimEscape.outcome, ticks: aimEscape.keys.length,
-                        // ⛓ how many of the FOLLOWED ticks move (a certificate of stands is the hold)
-                        moves: aimEscape.keys.slice(0, HAMMER_ESCAPE_BOUNDS.follow).filter((k) => k.size > 0).length,
+                        // ⛓ how many of the certificate's ticks move (a certificate of stands is the hold)
+                        moves: aimEscape.keys.filter((k) => k.size > 0).length,
                         expansions: aimEscape.expansions });
                 } else {
                     escape = null;

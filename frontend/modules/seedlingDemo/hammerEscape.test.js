@@ -18,10 +18,14 @@
  *   m1 the forecast drops the knockback (`vx`/`vy` kept from before the hit)
  *        -> every walk's witness red (the instrument: 9 of 9 walks), so the
  *           committed-walk rows below red
+ *   m3 (found by the sweep, fixed) `landing` taken from ANY landed test, a press
+ *        already in flight included -> the in-flight row red; on the solver,
+ *        an escape searched from the wrong landing asked for points it never
+ *        previewed (residue 35, follow 0: "no player position for the hit test")
  *   m2 the escape's prune off (`safe: () => true` in `pressEscape`)
- *        -> the residue-6 solve-reproduction row red (it refuses
- *           HAMMER_SAFETY again); the residue-21 row stays GREEN — every
- *           certificate there is the hold, which is clear (named, not hidden)
+ *        -> both solve-reproduction rows red (residue 21 re-plans to another
+ *           walk, residue 15 refuses HAMMER_SAFETY again); the sweep: 13 of
+ *           the 45 residues refuse
  */
 import { describe, expect, it } from 'vitest';
 
@@ -77,7 +81,7 @@ describe('hammer-phase A D1 — the hit-aware forecast (levelRun.spinnerForecast
         expect(fromPress.scoped).toEqual([]);
     }, 120_000);
 
-    it('⛓ it reports, it does not assume: a re-press inside the slash timer is a DASH, a press in the past and a missing point are refused, and spinnerForecast is untouched', () => {
+    it('⛓ it reports, it does not assume: a re-press inside the slash timer is a DASH, a press in flight is never this press\'s landing, a press in the past and a missing point are refused, and spinnerForecast is untouched', () => {
         const { tape, make } = replayRun('r9-solve-18');
         const run = make();
         let pressedAt = null;
@@ -93,6 +97,14 @@ describe('hammer-phase A D1 — the hit-aware forecast (levelRun.spinnerForecast
         expect(again.outcome).toBe('dash');
         expect(JSON.stringify(run.spinnerForecast(60))).toBe(before);
         expect(again.rows.length).toBe(60);
+        // ⛓ the press just made is IN FLIGHT: its tests are applied and reported, and never this press's landing
+        const later = run.spinnerForecastWithPress(80, { pressAt: run.ticksCompleted + 40,
+            direction: run.state.direction, positions: stand });
+        expect(later.outcome).toBe('slash');
+        const inFlight = later.tests.filter((x) => !x.own);
+        expect(inFlight.length).toBeGreaterThan(0);
+        expect(inFlight.every((x) => x.t <= pressedAt + 5)).toBe(true);
+        if (later.landing) expect(later.landing.t).toBeGreaterThan(run.ticksCompleted + 40);
         expect(() => run.spinnerForecastWithPress(10, { pressAt: run.ticksCompleted - 1,
             direction: 0, positions: stand })).toThrow(/cannot press in the past/);
         expect(() => run.spinnerForecastWithPress(10, { pressAt: run.ticksCompleted,
@@ -171,10 +183,10 @@ describe('hammer-phase A D2 — HAMMER_ESCAPE in the press kill', () => {
         expect(HAMMER_ESCAPE.enabled).toBe(false);
         expect(DEADLINE_SITES[DEADLINE_SITES.length - 1]).toBe('hammer-escape');
         expect(HAMMER_ESCAPE_BOUNDS.horizon).toBe(SPINNER.hitsTimerMax + HAMMER_PHASE_RUNG.horizon);
-        expect(HAMMER_ESCAPE_BOUNDS.follow).toBe(SPINNER.hitsTimerMax);
+        expect(HAMMER_ESCAPE_BOUNDS.follow).toBe(0);
     });
 
-    for (const residue of [21, 6]) {
+    for (const residue of [21, 15]) {
         const name = `hammer-a-l18-escape${residue}`;
         it(`⛓⛓⛓ the game witness ${name}: the model reproduces the game's recording at 0 px, no hit, the crossing on the game's tick`, () => {
             const tape = loadTape(name);
@@ -193,10 +205,11 @@ describe('hammer-phase A D2 — HAMMER_ESCAPE in the press kill', () => {
 
         it(`⛓⛓ ${name} IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing`, async () => {
             let refused = null;
-            try { await solveR9At(residue); } catch (e) { refused = e; }
+            try { await withHammerEscape(false, () => solveR9At(residue)); } catch (e) { refused = e; }
             expect(refused?.code).toBe('HAMMER_SAFETY');
+            const was = HAMMER_ESCAPE.enabled;
             const r = await withHammerEscape(true, () => solveR9At(residue));
-            expect(HAMMER_ESCAPE.enabled).toBe(false);
+            expect(HAMMER_ESCAPE.enabled).toBe(was);
             const tape = loadTape(name);
             expect(r.out.perTick.length).toBe(tape.tick_count);
             for (let t = 0; t < tape.tick_count; t += 1) {

@@ -14143,9 +14143,10 @@ export function createLevelRun({
          * that tick — the pre-move position the run tests from. A test whose position is not supplied is a
          * caller defect, and it throws.
          *
-         * ⛔ IT REPORTS, IT DOES NOT ASSUME. `landing` is the first test that landed on `id` (null if none),
-         * `tests` has one row per test the rect reached (the `spinnerPressHits` shape), and `why` says why no
-         * test landed. Outside the memo: nothing here is cached or written.
+         * ⛔ IT REPORTS, IT DOES NOT ASSUME. `landing` is the first test OF THIS PRESS that landed on `id` (null
+         * if none), `tests` has one row per test the rect reached (the `spinnerPressHits` shape, plus `own`: false
+         * for a test of a press already in flight, which is applied but is never this press's landing), and `why`
+         * says why no test landed. Outside the memo: nothing here is cached or written.
          *
          * @param {number} n  rows, as `spinnerForecast(n)`
          * @param {{pressAt: number, direction: number, id?: string,
@@ -14192,6 +14193,8 @@ export function createLevelRun({
             const bodies = [];
             const fire = (th, t) => {
                 if (th.weapon !== 'sword') return;
+                // ⚠ a test of a press ALREADY IN FLIGHT (the run's own window) is reported, never this press's
+                const own = thrust !== null && th.pressTick === pressAt;
                 const from = pointAt(t);
                 const scale = th.scale ?? SLASH_SCALE_NORMAL;
                 const rect = slashRect(from.x, from.y, th.direction, scale);
@@ -14202,14 +14205,14 @@ export function createLevelRun({
                     if (!rectsOverlap(rect, body)) continue;
                     const reach = distanceRectPoint(from.x, from.y, body);
                     if (reach > reachLimit) {
-                        tests.push({ t, id: sp.id, landed: false, killed: false, reach, hits: sp.hits,
+                        tests.push({ t, id: sp.id, own, landed: false, killed: false, reach, hits: sp.hits,
                             hitsTimer: sp.hitsTimer, why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}` });
                         continue;
                     }
                     const blocker = collideLineSolid(from.x, from.y, sp.x, sp.y);
                     if (blocker) {
                         lineBlocked = lineBlocked ?? { t, id: sp.id, at: blocker.at };
-                        tests.push({ t, id: sp.id, landed: false, killed: false, reach, hits: sp.hits,
+                        tests.push({ t, id: sp.id, own, landed: false, killed: false, reach, hits: sp.hits,
                             hitsTimer: sp.hitsTimer, why: 'line of sight — the run refuses this hit (it throws)' });
                         continue;
                     }
@@ -14218,7 +14221,7 @@ export function createLevelRun({
                         t: weapon === 'spear' ? 'Spear' : 'Sword', frozen });
                     st.byId.set(sp.id, after);
                     const landed = after.hits !== before.hits;
-                    tests.push({ t, id: sp.id, landed, killed: after.destroy && !before.destroy, reach,
+                    tests.push({ t, id: sp.id, own, landed, killed: after.destroy && !before.destroy, reach,
                         hits: after.hits, hitsTimer: after.hitsTimer,
                         why: landed ? null : (before.hitsTimer > 0 ? `i-frames — hitsTimer ${before.hitsTimer} > 0`
                             : (before.destroy ? 'the body is already dying' : 'the freeze')) });
@@ -14238,7 +14241,7 @@ export function createLevelRun({
                 bodies.push(now.map((s) => ({ id: s.id, hits: s.spinner.hits, hitsTimer: s.spinner.hitsTimer,
                     destroy: s.spinner.destroy })));
             }
-            const mine = tests.filter((x) => id === null || x.id === id);
+            const mine = tests.filter((x) => x.own && (id === null || x.id === id));
             const landing = mine.find((x) => x.landed) ?? null;
             const why = landing ? null
                 : (!opens ? `the press at t${pressAt} opens no window: ${press.outcome} (${press.why})`
