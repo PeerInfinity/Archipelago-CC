@@ -71,7 +71,9 @@ function standing(region, inv = {}) {
     const b = new SeedlingRegionBinding({ now: () => clock, canPass: gate(inv) });
     b.setSubRegions(MAP);
     b.onStateReport('level', world(region).level);
-    b.onLoadRegion({ region_id: region, world: world(region) });
+    const landing = b.onLoadRegion({ region_id: region, world: world(region) }).find((e) => e.type === 'teleport');
+    // ⛓ SAME-LEVEL LANDING — the arrival teleport LANDS: the first read stands on its spawn.
+    if (landing) b.onPlayerPosition({ level: landing.level, x: landing.x, y: landing.y });
     return b;
 }
 const moves = (effects) => effects.filter((e) => e.type === 'regionMove');
@@ -192,6 +194,70 @@ describe('a HUMAN walk across a link (position reads; no bot)', () => {
         expect(b.onPlayerPosition({ level: 0, ...tilesOf(OUT)[0] })).toEqual([]);
         const house = standing('level_86');
         expect(house.wantsPosition()).toBe(false);
+    });
+});
+
+/**
+ * ⛓ SAME-LEVEL LANDING (the divergence sweep's D2): a host jump to L12 (432,560) resolved, through L0's sibling
+ * departure, to `level_12__r0c19`, whose arrival spawn is (16,80) — a teleport INSIDE the level the game already
+ * reports, so no echo mark. The glue's next read still saw (432,560), in `level_12__r0c37`'s tiles, and moved the
+ * region there before the teleport landed; it then landed in r0c19 behind a closed bosslock link, and the AP region
+ * (r0c37) and the player (r0c19) never met again.
+ *   mutants: the mark never armed → the stale row reds; the mark never retired → the step-after-landing row reds.
+ */
+describe('⛓ SAME-LEVEL LANDING — a read before our own same-level teleport lands is stale', () => {
+    const FROM = 'level_12__r0c19';
+    const STALE = 'level_12__r0c37';
+    const INV = { 'Progressive Sword': 1, 'Red Key': 1 };
+    /** The binding as the jump left it: reporting level 12, a region in L12 just loaded (its teleport queued). */
+    function jumped() {
+        const b = new SeedlingRegionBinding({ now: () => clock, canPass: gate(INV) });
+        b.setSubRegions(MAP);
+        b.onStateReport('level', 12);
+        const tp = b.onLoadRegion({ region_id: FROM, world: world(FROM) }).find((e) => e.type === 'teleport');
+        return { b, tp };
+    }
+    const stale = { x: 432, y: 560 };
+
+    it('the shipped data: the jump\'s cell is r0c37\'s, the spawn is r0c19\'s, and r0c19 -> r0c37 is OPEN', () => {
+        expect(subRegionAt(MAP, 12, stale.x, stale.y)).toBe(STALE);
+        const { b, tp } = jumped();
+        expect(tp).toMatchObject({ level: 12, x: 16, y: 80 });
+        expect(subRegionAt(MAP, 12, tp.x, tp.y)).toBe(FROM);
+        expect(linkPath(MAP, FROM, STALE, (l) => b._linkVerdict(l)).path).not.toBeNull();
+    });
+
+    it('a read at the PRE-teleport cell is ignored (counted); the landing is read; a later step across is a real move', () => {
+        const { b, tp } = jumped();
+        expect(b.pendingLanding).toMatchObject({ level: 12, x: 16, y: 80 });
+        expect(b.pendingArrival).toBeNull();                       // no level change will come: no echo mark
+        expect(b.onPlayerPosition({ level: 12, ...stale })).toEqual([]);
+        expect(b.region).toBe(FROM);
+        expect(b.staleLandingReads).toBe(1);
+        expect(b.onPlayerPosition({ level: 12, x: tp.x, y: tp.y })).toEqual([]);
+        expect(b.pendingLanding).toBeNull();
+        expect(b.physicalSub).toBe(FROM);
+        // The harness's re-jump INSIDE the room (or a human walk): now it IS news.
+        expect(moves(b.onPlayerPosition({ level: 12, ...stale })).map((m) => [m.sourceRegion, m.targetRegion])).toEqual([[FROM, STALE]]);
+    });
+
+    it('the mark AGES OUT (a teleport that never lands is not waited for forever), and a BASELINE read retires it', () => {
+        const aged = jumped().b;
+        clock += 15001;
+        expect(moves(aged.onPlayerPosition({ level: 12, ...stale })).map((m) => m.targetRegion)).toEqual([STALE]);
+        const base = jumped().b;
+        expect(base.onPlayerPosition({ level: 12, ...stale }, { baseline: true })).toEqual([]);
+        expect(base.pendingLanding).toBeNull();
+        expect(base.physicalSub).toBe(STALE);
+    });
+
+    it('a CROSS-level arrival arms the echo mark, not the landing mark', () => {
+        const b = new SeedlingRegionBinding({ now: () => clock, canPass: gate(INV) });
+        b.setSubRegions(MAP);
+        b.onStateReport('level', 0);
+        b.onLoadRegion({ region_id: FROM, world: world(FROM) });
+        expect(b.pendingArrival).toMatchObject({ level: 12 });
+        expect(b.pendingLanding).toBeNull();
     });
 });
 
