@@ -274,20 +274,22 @@ describe('the corpus census — printed, then pinned', () => {
          *              noiz2sa.md § Pricing and loop-recording.md → ../modules/loopsCostDebugger.md
          *              (`repo` 36 → 38); noiz2sa.md's N5 ruling and payload lines → its own § Pricing,
          *              and its training paragraph → § The bot (`same-doc` 19 → 22).
+         *   354 → 356  PERSISTENCE (2026-10-07): flash.md's wasm-ship `boot` bullet → seedling-bot.md and
+         *              seedling-bot.md's reuse-path bullet → flash.md (`doc` 272 → 274).
          */
         expect(by).toEqual({
             'same-doc': 22,
-            doc: 272,
+            doc: 274,
             external: 22,
             repo: 38,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(354);
+        expect(CORPUS.length).toBe(356);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(272);
+        expect(docs).toHaveLength(274);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

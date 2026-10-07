@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 60,
-            "count": 104,
+            "browser": 61,
+            "count": 105,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 364,
-        "browser": 125,
-        "cited": 177,
-        "files": 376,
+        "blockStyle": 365,
+        "browser": 126,
+        "cited": 178,
+        "files": 377,
         "lineStyle": 12,
-        "withDocblock": 376,
-        "withFlags": 294
+        "withDocblock": 377,
+        "withFlags": 295
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9326,6 +9326,7 @@ export const INSTRUMENTS = frz({
                 "from",
                 "host",
                 "ids",
+                "keys",
                 "legs",
                 "limit",
                 "mode",
@@ -9356,12 +9357,6 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "ids"
                 },
                 {
                     "how": [
@@ -9426,8 +9421,24 @@ export const INSTRUMENTS = frz({
             ],
             "inheritedFlags": [
                 {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "blocks"
+                },
+                {
                     "from": "argvHelp.js",
                     "name": "help"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "ids"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "keys"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "presets"
                 },
                 {
                     "from": "boxLock.js",
@@ -10056,6 +10067,91 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling OBSTACLE EVENTS, LIVE — **break before first use** (⚖ the user, 2026-10-05) on both runtimes.",
             "path": "scripts/procgen/probe-seedling-obstacle-events.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "freeze",
+                "host",
+                "lock",
+                "only",
+                "rock",
+                "seq",
+                "ticks",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-persistence-rebuild.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "expect-skip-ignores"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "freeze"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "lock"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "rock"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "seq"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ticks"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling: DOES A STAGED PERSISTENCE FLAG REACH THE ENTITIES, PER BOOT PATH? (slice `seedling-js-persistence`, after the rules arc's W0 finding: several tapes on ONE page leaked bosslock state across `botStart`).",
+            "path": "scripts/procgen/probe-seedling-persistence-rebuild.mjs"
         },
         {
             "argvHelpers": [
@@ -13559,6 +13655,7 @@ export const INSTRUMENTS = frz({
                 "dump",
                 "ids",
                 "jobs",
+                "keys",
                 "legs",
                 "out"
             ],
@@ -13569,12 +13666,6 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "dump"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "ids"
                 },
                 {
                     "how": [
@@ -13609,8 +13700,24 @@ export const INSTRUMENTS = frz({
             ],
             "inheritedFlags": [
                 {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "blocks"
+                },
+                {
                     "from": "argvHelp.js",
                     "name": "help"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "ids"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "keys"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "presets"
                 }
             ],
             "oneLiner": "Measure-only (the divergence sweep, planner `seedling-js-planning-2`) — THE BARE PASS, in node: every leg of `--legs=<jsonl>` (`seedling-divergence-legs.mjs`) asked of the solver with NO inventory, from a JS-runtime arrival staged in the rooms the game plays (the vanilla arm's DELIVERED set, `--dump` of `probe-seedl…",
@@ -13636,6 +13743,18 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "blocks"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ids"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "keys"
                 },
                 {
                     "how": [
