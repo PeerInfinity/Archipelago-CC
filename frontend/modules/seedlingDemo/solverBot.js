@@ -8698,10 +8698,13 @@ function hammerPhaseRefusal(run, searched, landings, bodyId) {
  * whole i-frame (`follow` = `hitsTimerMax`) solved 45/45 at +75 ticks a solve on the base's 35; with 0, 45/45 at
  * −49 (the i-frame is spent walking to the next strike, which the admission has already given a way out of).
  *
- * ⚖ OFF BY DEFAULT ⇒ byte-identical: nothing below is reached with the switch off. `SEEDLING_HAMMER_ESCAPE=1` turns
- * it on for a node measurement; `withHammerEscape(true, fn)` for a test.
+ * ⚖ ON BY DEFAULT since hammer-phase A2 (user, 2026-10-07: "I approve." — the flip and the re-records of the
+ * movers A measured: `r8-solve-18` 520 → 363 t, the `r8-d2` chain, `r9-solve-18` 519 → 518 t and the chain after it,
+ * the F1c phase witness's planner, and the generated-level rows whose certify solve kills a spinner).
+ * `SEEDLING_HAMMER_ESCAPE=0` turns it OFF for a node measurement (nothing below is then reached: byte-identical to
+ * the base); `withHammerEscape(false, fn)` for a test. The browser has no `process` and takes the default.
  */
-export const HAMMER_ESCAPE = { enabled: globalThis.process?.env?.SEEDLING_HAMMER_ESCAPE === '1' };
+export const HAMMER_ESCAPE = { enabled: globalThis.process?.env?.SEEDLING_HAMMER_ESCAPE !== '0' };
 
 /** Run `fn` with the switch set to `enabled`, restoring the previous value. */
 export function withHammerEscape(enabled, fn) {
@@ -12948,8 +12951,8 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  *    which refused EXHAUSTED before it, so no existing solve's sequence moves.
  *  - `hammer-escape` — the press kill's ESCAPE search (hammer-phase A,
  *    `pressEscape`), every `SPACE_TIME_CHECK_EVERY` expansions inside
- *    `spaceTimeReach`. Asked ONLY with `HAMMER_ESCAPE` on (off by default), so
- *    no existing solve's sequence moves. A trip is "no claim": the strike is
+ *    `spaceTimeReach`. Asked ONLY with `HAMMER_ESCAPE` on (ON by default since
+ *    hammer-phase A2; OFF it is never asked). A trip is "no claim": the strike is
  *    admitted and the aim taken exactly as with the switch off, so a trip here
  *    cannot itself refuse anything.
  *

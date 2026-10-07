@@ -16,6 +16,8 @@
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs                      # all 45 residues
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --residues=4,15,18-22
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --escape             # `HAMMER_ESCAPE` ON (D2's switch)
+ *   node scripts/procgen/sweep-seedling-l18-residues.mjs --no-escape          # `HAMMER_ESCAPE` OFF (ON is the default
+ *                                                                             #   since hammer-phase A2)
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --twice              # each row solved twice, compared
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --full               # the whole refusal text
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --json=<path>        # also write the rows as JSON
@@ -58,6 +60,8 @@ async function main() {
         return a ? a.slice(flag.length + 1) : null;
     };
     const ESCAPE = argv.includes('--escape');
+    const NO_ESCAPE = argv.includes('--no-escape');
+    if (ESCAPE && NO_ESCAPE) throw new Error('--escape and --no-escape: pick one');
     const TWICE = argv.includes('--twice');
     const FULL = argv.includes('--full');
     const JSON_OUT = valueOf('--json');
@@ -69,6 +73,8 @@ async function main() {
     const { SPINNER } = await import(join(MODULE, 'spinner.js'));
     const { HAMMER_ESCAPE } = await import(join(MODULE, 'solverBot.js'));
     if (ESCAPE) HAMMER_ESCAPE.enabled = true;
+    // ⛓ hammer-phase A2: the switch is ON by default; `--no-escape` measures the base (35/45) without an edit.
+    if (NO_ESCAPE) HAMMER_ESCAPE.enabled = false;
 
     const NAME = 'r9-solve-18';
     const TELEPORTER = { x: 176, y: 112 };
@@ -123,7 +129,7 @@ async function main() {
     }
 
     console.log(`# ${NAME} at seam.time ${STAGING.seam.time} (committed residue ${RESIDUE}); `
-        + `HAMMER_ESCAPE ${ESCAPE ? 'ON' : 'OFF'}; ${residues.length} residue(s)`);
+        + `HAMMER_ESCAPE ${HAMMER_ESCAPE.enabled ? 'ON' : 'OFF'}; ${residues.length} residue(s)`);
     const rows = [];
     let unstable = 0;
     for (const r of residues) {

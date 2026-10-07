@@ -179,8 +179,9 @@ const solveR9At = (residue) => {
 };
 
 describe('hammer-phase A D2 — HAMMER_ESCAPE in the press kill', () => {
-    it('⛓⛓ off by default, a deadline site of its own (appended), and its bounds are the mechanism\'s', () => {
-        expect(HAMMER_ESCAPE.enabled).toBe(false);
+    // ⛓ hammer-phase A2 (⚖ user 2026-10-07, "I approve."): ON by default; `SEEDLING_HAMMER_ESCAPE=0` turns it off.
+    it('⛓⛓ ON by default, a deadline site of its own (appended), and its bounds are the mechanism\'s', () => {
+        expect(HAMMER_ESCAPE.enabled).toBe(true);
         expect(DEADLINE_SITES[DEADLINE_SITES.length - 1]).toBe('hammer-escape');
         expect(HAMMER_ESCAPE_BOUNDS.horizon).toBe(SPINNER.hitsTimerMax + HAMMER_PHASE_RUNG.horizon);
         expect(HAMMER_ESCAPE_BOUNDS.follow).toBe(0);
