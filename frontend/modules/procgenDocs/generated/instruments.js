@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 59,
-            "count": 103,
+            "browser": 60,
+            "count": 104,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 363,
-        "browser": 124,
+        "blockStyle": 364,
+        "browser": 125,
         "cited": 177,
-        "files": 375,
+        "files": 376,
         "lineStyle": 12,
-        "withDocblock": 375,
-        "withFlags": 293
+        "withDocblock": 376,
+        "withFlags": 294
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8854,6 +8854,61 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-boot-reset — **TWO WINDOWS ON ONE PAGE, AND WHAT THE SECOND ONE INHERITS.**",
             "path": "scripts/procgen/probe-seedling-boot-reset.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "strict",
+                "ticks",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-bosslock-latch.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "strict"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ticks"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling BOSSLOCK LATCH, THE GAME'S WAY (rules `rules-lock-events`, W0).",
+            "path": "scripts/procgen/probe-seedling-bosslock-latch.mjs"
         },
         {
             "argvHelpers": [],

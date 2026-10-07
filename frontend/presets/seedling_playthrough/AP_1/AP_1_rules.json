@@ -755,9 +755,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
+                  "rule": "Has",
                   "args": {
-                    "region_name": "level_12__r13c6"
+                    "item_name": "L12 flag 11: bosslock@112,192 cleared"
                   }
                 },
                 {
@@ -776,9 +776,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
+                  "rule": "Has",
                   "args": {
-                    "region_name": "level_12__r40c4"
+                    "item_name": "L12 flag 3: bosslock@80,656 cleared"
                   }
                 },
                 {
@@ -879,6 +879,76 @@
               "advancement": true,
               "type": "progression"
             }
+          },
+          {
+            "name": "L12 flag 4: bosslock@416,240 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Red Key"
+              }
+            },
+            "item": {
+              "name": "L12 flag 4: bosslock@416,240 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L12:4",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 12,
+              "tag": 4,
+              "class": "bosslock",
+              "x": 416,
+              "y": 240
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_12__r0c19",
+            "across": [
+              "level_12__r0c37"
+            ]
+          },
+          {
+            "name": "L12 flag 5: bosslock@432,240 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Red Key"
+              }
+            },
+            "item": {
+              "name": "L12 flag 5: bosslock@432,240 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L12:5",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 12,
+              "tag": 5,
+              "class": "bosslock",
+              "x": 432,
+              "y": 240
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_12__r0c19",
+            "across": [
+              "level_12__r0c37"
+            ]
           }
         ]
       },
@@ -889,19 +959,41 @@
             "name": "level_12__r0c37 -> level_12__r0c19",
             "connected_region": "level_12__r0c19",
             "access_rule": {
-              "rule": "And",
+              "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Key"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Red Key"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L12 flag 5: bosslock@432,240 cleared"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "level_12__r0c19"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Red Key"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L12 flag 4: bosslock@416,240 cleared"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -957,7 +1049,43 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L12 flag 11: bosslock@112,192 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Yellow Key"
+              }
+            },
+            "item": {
+              "name": "L12 flag 11: bosslock@112,192 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L12:11",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 12,
+              "tag": 11,
+              "class": "bosslock",
+              "x": 112,
+              "y": 192
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_12__r13c6",
+            "across": [
+              "level_12__r0c19"
+            ]
+          }
+        ]
       },
       "level_12__r40c4": {
         "name": "level_12__r40c4",
@@ -983,7 +1111,43 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L12 flag 3: bosslock@80,656 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Green Key"
+              }
+            },
+            "item": {
+              "name": "L12 flag 3: bosslock@80,656 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L12:3",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 12,
+              "tag": 3,
+              "class": "bosslock",
+              "x": 80,
+              "y": 656
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_12__r40c4",
+            "across": [
+              "level_12__r0c19"
+            ]
+          }
+        ]
       },
       "level_12__r42c29": {
         "name": "level_12__r42c29",
@@ -1561,9 +1725,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
+                  "rule": "Has",
                   "args": {
-                    "region_name": "level_19__r3c3"
+                    "item_name": "L19 flag 1: bosslock@48,32 cleared"
                   }
                 },
                 {
@@ -1645,7 +1809,43 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L19 flag 1: bosslock@48,32 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Red Key"
+              }
+            },
+            "item": {
+              "name": "L19 flag 1: bosslock@48,32 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L19:1",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 19,
+              "tag": 1,
+              "class": "bosslock",
+              "x": 48,
+              "y": 32
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_19__r3c3",
+            "across": [
+              "level_19__r1c1"
+            ]
+          }
+        ]
       },
       "level_19__r5c5": {
         "name": "level_19__r5c5",
@@ -2266,9 +2466,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
+                  "rule": "Has",
                   "args": {
-                    "region_name": "level_30__r2c10"
+                    "item_name": "L30 flag 0: bosslock@64,32 cleared"
                   }
                 },
                 {
@@ -2382,6 +2582,76 @@
               "advancement": true,
               "type": "progression"
             }
+          },
+          {
+            "name": "L30 flag 0: bosslock@64,32 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Green Key"
+              }
+            },
+            "item": {
+              "name": "L30 flag 0: bosslock@64,32 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L30:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 30,
+              "tag": 0,
+              "class": "bosslock",
+              "x": 64,
+              "y": 32
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_30__r2c10",
+            "across": [
+              "level_30__r0c4"
+            ]
+          },
+          {
+            "name": "L30 flag 2: bosslock@224,208 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Green Key"
+              }
+            },
+            "item": {
+              "name": "L30 flag 2: bosslock@224,208 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L30:2",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 30,
+              "tag": 2,
+              "class": "bosslock",
+              "x": 224,
+              "y": 208
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_30__r2c10",
+            "across": [
+              "level_30__r8c13"
+            ]
           }
         ]
       },
@@ -2401,9 +2671,9 @@
                   }
                 },
                 {
-                  "rule": "CanReachRegion",
+                  "rule": "Has",
                   "args": {
-                    "region_name": "level_30__r2c10"
+                    "item_name": "L30 flag 2: bosslock@224,208 cleared"
                   }
                 }
               ]
@@ -2492,7 +2762,43 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L31 flag 0: bosslock@192,432 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Green Key"
+              }
+            },
+            "item": {
+              "name": "L31 flag 0: bosslock@192,432 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L31:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 31,
+              "tag": 0,
+              "class": "bosslock",
+              "x": 192,
+              "y": 432
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_31__r5c24",
+            "across": [
+              "level_31__r24c10"
+            ]
+          }
+        ]
       },
       "level_31__r24c10": {
         "name": "level_31__r24c10",
@@ -2510,9 +2816,9 @@
                   }
                 },
                 {
-                  "rule": "CanReachRegion",
+                  "rule": "Has",
                   "args": {
-                    "region_name": "level_31__r5c24"
+                    "item_name": "L31 flag 0: bosslock@192,432 cleared"
                   }
                 }
               ]
@@ -2944,9 +3250,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
+                  "rule": "Has",
                   "args": {
-                    "region_name": "level_40__r23c29"
+                    "item_name": "L40 flag 8: bosslock@480,352 cleared"
                   }
                 },
                 {
@@ -3255,6 +3561,41 @@
               "advancement": true,
               "type": "progression"
             }
+          },
+          {
+            "name": "L40 flag 8: bosslock@480,352 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Purple Key"
+              }
+            },
+            "item": {
+              "name": "L40 flag 8: bosslock@480,352 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L40:8",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 40,
+              "tag": 8,
+              "class": "bosslock",
+              "x": 480,
+              "y": 352
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_40__r23c29",
+            "across": [
+              "level_40__r0c53"
+            ]
           }
         ]
       },
@@ -5322,7 +5663,43 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L48 flag 1: bosslock@48,144 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blue Key"
+              }
+            },
+            "item": {
+              "name": "L48 flag 1: bosslock@48,144 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L48:1",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 48,
+              "tag": 1,
+              "class": "bosslock",
+              "x": 48,
+              "y": 144
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_48__r2c10",
+            "across": [
+              "level_48__r4c3"
+            ]
+          }
+        ]
       },
       "level_48__r4c3": {
         "name": "level_48__r4c3",
@@ -5340,9 +5717,9 @@
                   }
                 },
                 {
-                  "rule": "CanReachRegion",
+                  "rule": "Has",
                   "args": {
-                    "region_name": "level_48__r2c10"
+                    "item_name": "L48 flag 1: bosslock@48,144 cleared"
                   }
                 }
               ]
@@ -7854,9 +8231,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
+                  "rule": "Has",
                   "args": {
-                    "region_name": "level_68__r3c1"
+                    "item_name": "L68 flag 0: bosslock@16,32 cleared"
                   }
                 },
                 {
@@ -7979,7 +8356,82 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L68 flag 0: bosslock@16,32 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Yellow Key"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Fire Wand Fusion"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Wand"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Fire"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "L68 flag 0: bosslock@16,32 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L68:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 68,
+              "tag": 0,
+              "class": "bosslock",
+              "x": 16,
+              "y": 32
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_68__r3c1",
+            "across": [
+              "level_68__r1c1"
+            ]
+          }
+        ]
       },
       "level_70": {
         "name": "level_70",
@@ -11582,6 +12034,127 @@
         "event": true,
         "type": "Event",
         "max_count": 1
+      },
+      "L12 flag 3: bosslock@80,656 cleared": {
+        "name": "L12 flag 3: bosslock@80,656 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L12 flag 4: bosslock@416,240 cleared": {
+        "name": "L12 flag 4: bosslock@416,240 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L12 flag 5: bosslock@432,240 cleared": {
+        "name": "L12 flag 5: bosslock@432,240 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L12 flag 11: bosslock@112,192 cleared": {
+        "name": "L12 flag 11: bosslock@112,192 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L19 flag 1: bosslock@48,32 cleared": {
+        "name": "L19 flag 1: bosslock@48,32 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L30 flag 0: bosslock@64,32 cleared": {
+        "name": "L30 flag 0: bosslock@64,32 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L30 flag 2: bosslock@224,208 cleared": {
+        "name": "L30 flag 2: bosslock@224,208 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L31 flag 0: bosslock@192,432 cleared": {
+        "name": "L31 flag 0: bosslock@192,432 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L40 flag 8: bosslock@480,352 cleared": {
+        "name": "L40 flag 8: bosslock@480,352 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L48 flag 1: bosslock@48,144 cleared": {
+        "name": "L48 flag 1: bosslock@48,144 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L68 flag 0: bosslock@16,32 cleared": {
+        "name": "L68 flag 0: bosslock@16,32 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       }
     }
   },
@@ -11616,7 +12189,18 @@
       "L24 flag 0: burnabletree@32,128 cleared": 1,
       "L71 flag 2: shieldlock@288,256 cleared": 1,
       "L112 flag 1: rocklock@112,16 cleared": 1,
-      "L113 flag 0: finaldoor@112,0 cleared": 1
+      "L113 flag 0: finaldoor@112,0 cleared": 1,
+      "L12 flag 3: bosslock@80,656 cleared": 1,
+      "L12 flag 4: bosslock@416,240 cleared": 1,
+      "L12 flag 5: bosslock@432,240 cleared": 1,
+      "L12 flag 11: bosslock@112,192 cleared": 1,
+      "L19 flag 1: bosslock@48,32 cleared": 1,
+      "L30 flag 0: bosslock@64,32 cleared": 1,
+      "L30 flag 2: bosslock@224,208 cleared": 1,
+      "L31 flag 0: bosslock@192,432 cleared": 1,
+      "L40 flag 8: bosslock@480,352 cleared": 1,
+      "L48 flag 1: bosslock@48,144 cleared": 1,
+      "L68 flag 0: bosslock@16,32 cleared": 1
     }
   },
   "world": {
