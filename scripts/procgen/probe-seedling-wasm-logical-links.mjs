@@ -119,6 +119,35 @@ async function main() {
 
     async function runSession(S) {
         const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+        // ⛓ ARRIVAL JITTER — `--trace`: every solve the page posts to a Worker (the request, room records once) and
+        // every answer it gets back, so a run's solves can be replayed off the page.
+        if (TRACE && S === 'B') {
+            await page.addInitScript(() => {
+                const plain = (o) => JSON.parse(JSON.stringify(o, (k, v) => (v instanceof Set ? [...v] : v instanceof Map ? [...v] : v)));
+                const log = [];
+                window.__solveLog = log;
+                const W = window.Worker;
+                let n = 0;
+                window.Worker = class extends W {
+                    constructor(url, opts) {
+                        super(url, opts);
+                        const w = (n += 1);
+                        log.push({ t: 'new', w, at: Math.round(performance.now()) });
+                        this.addEventListener('message', (e) => {
+                            const m = e.data;
+                            if (m?.type !== 'pass' && m?.type !== 'result') return;
+                            log.push({ t: m.type, w, id: m.id, at: Math.round(performance.now()), msg: plain(m) });
+                        });
+                        this.__w = w;
+                    }
+                    postMessage(m, ...rest) {
+                        if (m?.type === 'solve') log.push({ t: 'solve', w: this.__w, id: m.id, at: Math.round(performance.now()), request: plain(m.request) });
+                        return super.postMessage(m, ...rest);
+                    }
+                    terminate() { log.push({ t: 'terminate', w: this.__w, at: Math.round(performance.now()) }); return super.terminate(); }
+                };
+            });
+        }
         const logs = [];
         page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
         page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
@@ -356,10 +385,12 @@ async function main() {
                     history: st.history.map((h) => ({ ...h, goal: { name: h.goal?.name ?? null, kind: h.goal?.kind ?? null, level: h.goal?.level ?? null } })),
                     arrivalReads: e.arrivalReads }));
             });
+            const solves = await page.evaluate(() => window.__solveLog ?? null);
             const { writeFileSync, mkdirSync } = await import('node:fs');
             mkdirSync(dirname(TRACE), { recursive: true });
-            writeFileSync(TRACE, JSON.stringify({ verbs, engine: eng }));
-            out('B trace written', { file: TRACE, verbs: verbs?.length ?? null, tapes: (verbs ?? []).filter((v) => v.verb === 'botLoadTape').length });
+            writeFileSync(TRACE, JSON.stringify({ verbs, engine: eng, solves }));
+            out('B trace written', { file: TRACE, verbs: verbs?.length ?? null, tapes: (verbs ?? []).filter((v) => v.verb === 'botLoadTape').length,
+                solves: (solves ?? []).filter((x) => x.t === 'solve').length, workers: (solves ?? []).filter((x) => x.t === 'new').length });
         }
 
         /** B — the bot to the Sword on the rules' declared directed graph: doors only, no logical link. */
