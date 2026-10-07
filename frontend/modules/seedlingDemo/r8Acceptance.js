@@ -3259,6 +3259,23 @@ export const R8_D2_SHIELD = Object.freeze({
                     + '`lock@144,112` before every reading; its presses are `r9-solve-18`\'s. '
                     + 'Named by this assertion driving the roster.',
             }),
+            Object.freeze({
+                name: 'hammer-a-l18-escape21',
+                level: 18,
+                addedBy: 'Seedling hammer-phase A D2 (the escape kernel, on the game)',
+                why: '`r9-solve-18`\'s staging at hammer residue 21 (a live refusal), solved with '
+                    + '`HAMMER_ESCAPE` on: both spinners killed by presses, each taken with an escape '
+                    + 'out of its own landing, `lock@144,112` opened. Named by this assertion driving '
+                    + 'the roster.',
+            }),
+            Object.freeze({
+                name: 'hammer-a-l18-escape15',
+                level: 18,
+                addedBy: 'Seedling hammer-phase A D2 (the escape kernel, on the game)',
+                why: '`r9-solve-18`\'s staging at hammer residue 15 (a live refusal: the dash), solved '
+                    + 'with `HAMMER_ESCAPE` on, as `hammer-a-l18-escape21`. Named by this assertion '
+                    + 'driving the roster.',
+            }),
         ]),
     }),
 
