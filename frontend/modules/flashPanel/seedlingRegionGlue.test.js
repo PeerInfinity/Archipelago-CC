@@ -465,4 +465,11 @@ describe('⛓ W7 — swapState(): the glue query the wasm engine asks before it 
     it('no adapter: an empty queue, never a throw', () => {
         expect(h.glue.swapState()).toEqual({ marks: [], queued: 0, pushedOn: null, pushes: 0 });
     });
+    it('⛓ ARRIVAL JITTER — pushQueuedTeleports() asks the adapter to push NOW (its answer); no adapter → false', () => {
+        expect(h.glue.pushQueuedTeleports()).toBe(false);
+        const pushNow = vi.fn(() => true);
+        h.glue.attachAdapter({ ...queueingAdapter(), pushNow });
+        expect(h.glue.pushQueuedTeleports()).toBe(true);
+        expect(pushNow).toHaveBeenCalledTimes(1);
+    });
 });

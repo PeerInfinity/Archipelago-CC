@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 import {
     FALLBACK_POLICY, MAX_RECOVERIES, MID_ROOM_POLICY, SHIPPED_RNG, TAPE_KEY_RELEASES, WasmPlaybackError, divergenceAction, divergenceFailure, divergenceRepeatFailure, isExactRepeat,
     exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, keysHeldAtReset, shippedTape, wasmGoalRefusal,
-    arrivalHoldBlocker, endsHeld, liveDeclarations, primarySplitRefusal, shadowMismatch,
+    arrivalHoldBlocker, queuedSwapPush, endsHeld, liveDeclarations, primarySplitRefusal, shadowMismatch,
     ADOPT_CLAUSES, INERT_MOBILES, adoptionRefusal, inertMobilesRefusal, talkCircleGuard, talkCirclesAt,
     newGameBeginEntry, newGameCeremony, TUTORIAL_DISMISS_KEY,
 } from './wasmPlayback.js';
@@ -318,6 +318,22 @@ describe('W7 — arrivalHoldBlocker: the glue query, its three arms', () => {
         expect(arrivalHoldBlocker({ marks: [], queued: 0, pushedOn: { ...be } }, be)).toMatch(/pushed to the game after this arrival/);
         expect(arrivalHoldBlocker({ marks: [], queued: 0, pushedOn: { ...be, 'save.time': 4800 } }, be)).toBeNull();
         expect(arrivalHoldBlocker({ marks: [], queued: 0, pushedOn: null }, be)).toBeNull();
+    });
+});
+
+describe('⛓ ARRIVAL JITTER — queuedSwapPush: push the glue\'s queued teleport in the turn its door landed', () => {
+    const be = { 'begin.level': HOUSE, 'save.time': 4910 };
+    it('the queue is the ONLY blocker → push; `late` iff the door\'s room stepped before the watch saw it', () => {
+        expect(queuedSwapPush({ marks: [], queued: 1, pushedOn: null }, { stepped: 0 }, be)).toEqual({ push: true, late: false });
+        expect(queuedSwapPush({ marks: [], queued: 2, pushedOn: { ...be, 'save.time': 4800 } }, { stepped: 0 }, be)).toEqual({ push: true, late: false });
+        expect(queuedSwapPush({ marks: [], queued: 1 }, { stepped: 3 }, be)).toEqual({ push: true, late: true });
+        expect(queuedSwapPush({ marks: [], queued: 1 }, null, be)).toEqual({ push: true, late: true }); // no reading = not provably unstepped
+    });
+    it('nothing queued, a binding mark, or a push already stamped on THIS begin → null (no glue → null)', () => {
+        expect(queuedSwapPush({ marks: [], queued: 0 }, { stepped: 0 }, be)).toBeNull();
+        expect(queuedSwapPush({ marks: ['parked'], queued: 1 }, { stepped: 0 }, be)).toBeNull();
+        expect(queuedSwapPush({ marks: [], queued: 1, pushedOn: { ...be } }, { stepped: 0 }, be)).toBeNull();
+        expect(queuedSwapPush(null, { stepped: 0 }, be)).toBeNull();
     });
 });
 

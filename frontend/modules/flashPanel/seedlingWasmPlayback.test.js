@@ -66,7 +66,7 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
         held: false, armed: false, finished: false, seq: 0, tape: null, drainRows: null, freezePolls: 0,
         calls: [], tapes: [], stalls: stallDrains, cleared: null,
         land() { g.be = arrival.seam.beginEntry; },
-        botSeam() { g.calls.push('botSeam'); return JSON.stringify({ beginEntry: g.be, latched: false }); },
+        botSeam() { g.calls.push('botSeam'); return JSON.stringify({ beginEntry: g.be, latched: false, ...(g.sinceBegin ? { sinceBegin: g.sinceBegin } : {}) }); },
         botStatus() {
             g.calls.push('botStatus');
             // ⛓ W8c — an unwatched room may script itself read by read (the new game's ceremony)
@@ -160,6 +160,7 @@ function engineOver(arrival, opts = {}) {
     const engine = createWasmPlayback({
         getGame: () => game,
         getSwapState: opts.noGlue ? undefined : () => swap.state,
+        ...(opts.pushSwap ? { pushSwapNow: () => { game.calls.push('pushSwap'); return opts.pushSwap(swap); } } : {}),
         getWin: () => opts.win ?? null,
         teleport: (p) => { teleports.push(p); if (opts.land !== false) game.land(); return true; },
         getCheckBinding: () => ({ ignoreHostStart: (w) => { windows.push(w); return true; } }),
@@ -853,6 +854,56 @@ describe('W7 — the arrival HOLD after an exit plan, and the glue query\'s thre
         const r = crossing((B1) => ({ marks: [], queued: 0, pushedOn: { ...B1 }, pushes: 1 }));
         expect(r.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/pushed to the game after this arrival/)]);
         heldAfter(r);
+    });
+    /**
+     * ⛓ ARRIVAL JITTER — arm 2 is the door's own landing with the redirect still in the adapter's queue. The
+     * engine PUSHES it in the very turn it read B1 (the door's room is not held — a hold blocks the swap — so
+     * every frame until the 100 ms push timer fired used to run it, `Game.time` ticking a wall-clock share).
+     */
+    function pushedCrossing(swapAtB1, sinceBegin) {
+        const pushed = [];
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 },
+            pushSwap: (swap) => { pushed.push(swap.state); const went = (swap.state?.queued ?? 0) > 0; if (went) swap.state = { ...swap.state, queued: 0, pushedOn: e.game.be, pushes: (swap.state.pushes ?? 0) + 1 }; return went; } });
+        e.game.gameTimeFromBegin = true;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 1);
+        e.game.pos = null;
+        const B1 = { ...A.seam.beginEntry, 'save.time': A.seam.beginEntry['save.time'] - 7 };
+        e.swap.state = swapAtB1(B1);
+        e.game.be = B1;
+        e.game.sinceBegin = sinceBegin;
+        const mark = e.game.calls.length;
+        e.timers.run(1); // ONE timer turn: the watch's sample of B1
+        const turn = e.game.calls.slice(mark);
+        const atB1 = { blocked: [...e.engine.stats.holdBlocked], held: e.engine.stats.held, pushes: e.engine.stats.swapPushes, turn, pushed };
+        e.timers.run(50);
+        // The redirect lands: whatever the push sent (or the 100 ms timer would have) has left the queue.
+        e.swap.state = { marks: [], queued: 0, pushedOn: B1, pushes: (e.swap.state?.pushes ?? 0) + (e.swap.state?.queued ? 1 : 0) };
+        e.game.be = A.seam.beginEntry;
+        e.game.sinceBegin = undefined;
+        runUntil(e, () => e.engine.status().phase === 'held');
+        return { e, atB1 };
+    }
+    it('⛓ ARRIVAL JITTER — arm 2 (a teleport QUEUED): B1 is refused AND the queue is PUSHED in the turn B1 was read, before any other bridge call; one `swapPushes` row, not late', () => {
+        const r = pushedCrossing(() => ({ marks: [], queued: 1, pushedOn: null, pushes: 0 }), { stepped: 0 });
+        expect(r.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/queued for the game/)]);
+        expect(r.atB1.turn).toEqual(['botSeam', 'pushSwap']); // the sample, then the push: nothing in between
+        expect(r.atB1.pushes).toEqual([{ level: A.seam.beginEntry['begin.level'], time: A.seam.beginEntry['save.time'] - 7, late: false, pushed: true }]);
+        heldAfter(r);
+        expect(r.e.engine.stats.swapPushes).toHaveLength(1); // the redirect's own landing pushes nothing
+    });
+    it('⛓ ARRIVAL JITTER — a B1 the watch saw only after the door\'s room STEPPED is still pushed, and named `late`', () => {
+        const r = pushedCrossing(() => ({ marks: [], queued: 1, pushedOn: null, pushes: 0 }), { stepped: 1 });
+        expect(r.atB1.pushes).toEqual([expect.objectContaining({ late: true, pushed: true })]);
+        heldAfter(r);
+    });
+    it('⛓ ARRIVAL JITTER — arm 1 (a binding MARK) and arm 3 (a push already stamped on B1) push NOTHING: the queue is not the only blocker', () => {
+        const m = pushedCrossing(() => ({ marks: ['arrival teleport to level 86'], queued: 1, pushedOn: null, pushes: 0 }), { stepped: 0 });
+        expect(m.atB1.turn).not.toContain('pushSwap');
+        expect(m.e.engine.stats.swapPushes).toEqual([]);
+        const p = pushedCrossing((B1) => ({ marks: [], queued: 1, pushedOn: { ...B1 }, pushes: 1 }), { stepped: 0 });
+        expect(p.atB1.turn).not.toContain('pushSwap');
+        expect(p.e.engine.stats.swapPushes).toEqual([]);
     });
     it('an engine built WITHOUT the glue query holds no arrival between goals (a redirect cannot be ruled out); its location end is still held', () => {
         const e = engineOver(A, { noGlue: true });

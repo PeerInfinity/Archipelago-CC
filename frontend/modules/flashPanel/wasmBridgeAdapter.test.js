@@ -151,6 +151,18 @@ describe('⛓ W7 — a pushed INVOCATION is stamped with the begin record live w
         a._pushTick(); // nothing queued (the game is not ready: no property writes either)
         expect(a.invocationPushes).toBe(1);
     });
+    it('⛓ ARRIVAL JITTER — pushNow() is the push tick, NOW: the queued teleport goes (stamped), true; nothing queued → false', () => {
+        const B = { 'begin.level': 86, 'save.time': 4910 };
+        const p = page(B);
+        const a = adapterFor(() => p.win);
+        a._getFlash = () => p.win.__swfBridge.game;
+        a.teleport({ level: 86, x: 48, y: 48 });
+        expect(a.pushNow()).toBe(true);
+        expect(p.pushed).toHaveLength(1);
+        expect(a.lastInvocationPush).toEqual({ seq: 1, begin: B });
+        expect(a.pushNow()).toBe(false);
+        expect(adapterFor(() => null).pushNow()).toBe(false); // no frame: nothing to push, never a throw
+    });
     it('a game without botSeam stamps null (no answer — never a guess)', () => {
         const p = page(null);
         delete p.win.__swfBridge.game.botSeam;
