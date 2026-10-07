@@ -42,7 +42,7 @@ import { loadExpectation, loadTape } from './fixtures/index.js';
 import { heldKeysAt } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
-import { HAMMER_PHASE_RUNG, HAMMER_SAFETY } from './solverBot.js';
+import { HAMMER_ESCAPE, HAMMER_PHASE_RUNG, HAMMER_SAFETY, withHammerEscape } from './solverBot.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
 import { RESPONDERS, opensOnTick } from './activators.js';
@@ -69,6 +69,15 @@ const PRE_F1C_RESIDUE = 17;
 const REBOUND_RESIDUE = 18;
 const shiftTo = (r) => ((((r - RESIDUE) % PERIOD) + PERIOD) % PERIOD) - PERIOD;
 const TELEPORTER = { x: 176, y: 112 };
+
+/**
+ * ⛓ HAMMER-PHASE A2 — `HAMMER_ESCAPE` is ON by default (⚖ user 2026-10-07). With it a press is taken only with a
+ * certified way out of its own landing, and over all 45 residues of this staging NO corner forms for the rung to hold
+ * against (`sweep-seedling-l18-residues --twice`: 45/45 solve, 0 hits, no stall). The rung's own evidence is therefore
+ * exercised with the escape OFF, through the switch (`solveOffAt`): the rows below that pin a STALL, or the rebound
+ * remainder's refusal, ask the solver the question F1c asked. Beside each, a row pins what the default does there.
+ */
+const solveOffAt = (shift) => withHammerEscape(false, () => solveAt(shift));
 
 /** `twoPassSolve` exactly as `solve-seedling-r9-campaign` calls it, at a shifted clock. */
 async function solveAt(shift) {
@@ -125,8 +134,8 @@ describe('F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer\'s pha
         expect(run.transitions.map((x) => x.to_level)).toEqual([TAPE.boot.level + 1]);
     }, 300_000);
 
-    it('⛓⛓⛓ where a corner DOES form (the witness\'s residue 42) the rung solves: a stall meets the line at another phase, no hit, the crossing to L19', async () => {
-        const r = await solveAt(shiftTo(WITNESS_RESIDUE));
+    it('⛓⛓⛓ where a corner DOES form (the witness\'s residue 42, the escape OFF by the switch) the rung solves: a stall meets the line at another phase, no hit, the crossing to L19', async () => {
+        const r = await solveOffAt(shiftTo(WITNESS_RESIDUE));
         const stalls = pressRecords(r.out).flatMap((p) => p.phaseStalls ?? []);
         expect(stalls.length).toBeGreaterThan(0);
         for (const s of stalls) {
@@ -143,9 +152,29 @@ describe('F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer\'s pha
         expect(run.transitions.map((x) => x.to_level)).toEqual([TAPE.boot.level + 1]);
     }, 300_000);
 
-    it('⛓ the remainder is NAMED: a residue whose corner a landing\'s rebound makes refuses with the landing in its words', async () => {
+    /**
+     * ⛓ HAMMER-PHASE A2: with the escape ON (the default) the corner never forms at 42 — the solve needs no stall
+     * (503 t, measured) — and the rebound residue solves (445 t). Both pinned here, beside the rung's OFF rows.
+     */
+    it('⛓⛓ with the escape ON (the default) the same two residues solve with NO stall: 42 (the witness\'s) and 18 (the rebound\'s), no hit, the crossing to L19', async () => {
+        expect(HAMMER_ESCAPE.enabled).toBe(true);
+        for (const [residue, ticks] of [[WITNESS_RESIDUE, 503], [REBOUND_RESIDUE, 445]]) {
+            const r = await solveAt(shiftTo(residue));
+            expect(r.out.perTick.length).toBe(ticks);
+            expect(pressRecords(r.out).flatMap((p) => p.phaseStalls ?? [])).toEqual([]);
+            expect(pressRecords(r.out).flatMap((p) => p.escapes ?? []).length).toBeGreaterThan(0);
+            const seam = { ...STAGING.seam, time: STAGING.seam.time + shiftTo(residue) };
+            const run = createRunForStaging({ ...STAGING, seam, persistence: r.persistence, equips: [] },
+                atlasLevelSource());
+            for (const held of r.out.perTick) run.advance(held);
+            expect(run.playerHits).toEqual([]);
+            expect(run.transitions.map((x) => x.to_level)).toEqual([TAPE.boot.level + 1]);
+        }
+    }, 300_000);
+
+    it('⛓ the remainder is NAMED (the escape OFF by the switch): a residue whose corner a landing\'s rebound makes refuses with the landing in its words', async () => {
         let raised = null;
-        try { await solveAt(shiftTo(REBOUND_RESIDUE)); } catch (e) { raised = e; }
+        try { await solveOffAt(shiftTo(REBOUND_RESIDUE)); } catch (e) { raised = e; }
         expect(raised?.code).toBe(HAMMER_SAFETY);
         expect(raised.message).toMatch(/There is no step out\./);
         expect(raised.message).toMatch(/LANDED at t\d+: a landing's knockback is player-coupled/);
@@ -186,10 +215,11 @@ describe('F1c D1 — the game witness of the chain-residue solve (f1c-l18-phase4
      * keys. It IS the rung's solve at its OWN residue (42), key for key through its declared tick: the game recorded
      * the walk the W1 model plans there. After that tick the witness waits out its later declaration.
      */
+    // ⛓ HAMMER-PHASE A2: the witness is the RUNG's solve, asked with the escape OFF by the switch (as its planner).
     it('⛓⛓ the witness walks the rung\'s solve at its own residue through its declared tick: the solve depends on the residue, not the absolute clock', async () => {
         const w = loadTape(WITNESS);
         const wAt = w.persistence.find((p) => p.level === 18 && p.tag === 0).at;
-        const r = await solveAt(shiftTo(WITNESS_RESIDUE));
+        const r = await solveOffAt(shiftTo(WITNESS_RESIDUE));
         expect(pressRecords(r.out).flatMap((p) => p.phaseStalls ?? []).length).toBeGreaterThan(0);
         for (let t = 0; t <= wAt; t += 1) {
             expect([...heldKeysAt(w, t)].sort()).toEqual([...r.out.perTick[t]].sort());
