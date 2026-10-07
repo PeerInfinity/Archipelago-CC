@@ -74,11 +74,11 @@ async function main() {
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${label}${detail ? ` — ${detail}` : ''}`);
         if (!ok) failed += 1;
     };
-    const tapeOf = (name, k, boot, key, persistence) => parseTape({
+    const tapeOf = (name, k, boot, key, persistence, keys = [k.keyType]) => parseTape({
         tape_version: 8, game: 'seedling', name, description: 'probe-seedling-bosslock-latch',
         boot: { level: k.level, ...boot }, noclip: false, noDamage: true, noHazards: [],
         grants: [], persistence, equips: [], pins: [...PIN_NAMES],
-        save: { totem_parts: [], keys: [k.keyType], seal_parts: [] },
+        save: { totem_parts: [], keys, seal_parts: [] },
         rng: { seed: 1, split: false }, seam: {}, tick_count: TICKS,
         inputs: [{ key, from: 0, to: TICKS }],
     });
@@ -124,11 +124,19 @@ async function main() {
                 .map((c) => ({ level: Number(c.level), tag: Number(c.tag), note: 'written by the OPEN arm (game)' }));
             const ret = opened ? await run(tapeOf(`l${k.level}-${k.tag}-return`, k, north, 'down', written)) : null;
             const retMaxY = ret ? Math.max(...inLevel(ret.ticks, k).map((o) => o.y)) : null;
+            // BUILT OPEN, from the side the key would open it: the flag staged, NO key, holding UP. A lock the
+            // game built open lets the player through; one it built closed stops a keyless player at its face.
+            const built = opened ? await run(tapeOf(`l${k.level}-${k.tag}-built`, k, south, 'up', written, [])) : null;
+            const builtMinY = built ? Math.min(...inLevel(built.ticks, k).map((o) => o.y)) : null;
+            const bare = await run(tapeOf(`l${k.level}-${k.tag}-bare`, k, south, 'up', [], []));
+            const bareMinY = Math.min(...inLevel(bare.ticks, k).map((o) => o.y));
             const lockBottom = k.y + TILE;
             const row = {
                 lock: id, opened, cleared: open.cleared, openMinY,
                 heldMaxY, heldCrossed: heldMaxY > lockBottom, heldCleared: has(held.cleared, k),
-                retMaxY, retCrossed: retMaxY !== null && retMaxY > lockBottom,
+                retMaxY, retCrossed: retMaxY !== null && retMaxY > lockBottom, retCleared: ret?.cleared ?? null,
+                builtMinY, builtCrossed: builtMinY !== null && builtMinY < k.y, builtCleared: built?.cleared ?? null,
+                bareMinY, bareCrossed: bareMinY < k.y,
                 firstTick: { open: open.ticks[0] ?? null, held: held.ticks[0] ?? null },
             };
             console.log(`ROW ${JSON.stringify(row)}`);
