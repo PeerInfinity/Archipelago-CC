@@ -14556,6 +14556,57 @@ and DIES, and the AFTER model follows it tick for tick. The old SOLVED was false
 - **A measurement process imports the tree it runs on.** Mutants made while the entity witness and the identity
   block were measuring can reach their children (U7 said so too). Measure, then mutate.
 
+### Seedling hammer-phase A — the hit-aware forecast + the escape kernel
+
+⚖ The user (2026-10-07): *"fighting an enemy with a swinging hammer means that the target position we want to reach
+to attack from changes over time … it would be helpful for the movement planning to take that into account."* Slice A
+of the HAMMER-PHASE arc (design B — the whole fight as one space-time search — comes next). The report is
+`CC/docs/cloud-reports/seedling-hammer-a.md`.
+
+**The wall, re-measured** (`sweep-seedling-l18-residues.mjs`, base `994e3fac52`): `r9-solve-18`'s staging at the 45
+hammer residues solves 35, refusing `HAMMER_SAFETY` at 4 5 6 8 15 18–22, every length as the planner measured.
+Residue 15, unclassified before, is a DASH: the schedule's press at t171 swings RIGHT (the facing it was handed) and
+reaches nothing; the live arm re-presses at t178, seven ticks later, inside the 20-tick `slashTimer`, so the press is
+a dash (force 2, down) that `trainIsSafeHere`'s preview never stepped; at t179 every key set is cornered.
+
+**D1 — `levelRun.spinnerForecastWithPress`.** `spinnerForecast` with ONE hypothetical press of the player's applied
+where `advance` applies it, by the same calls: `slashPressForecast` over `slashInfo` (a dash has the dash's rect and
+reach), `swordWindowStep` over the run's own window in flight, `applyThrust`'s spinner gates and `hitSpinner` from the
+player's point per test tick (an input). It reports the landing of THIS press (a test of a press already in flight is
+applied and reported `own: false`, never taken as the landing — the sweep found that defect), and names a carried
+shield's bump as unmodelled. Witness, model vs model: taken at the aim tick, every landing's rows equal the run's
+bodies byte for byte to the next landing, and its tests equal `spinnerPressHits` — 35/35 solving residues (210
+landings) and every committed tape that lands a spinner press (`r1-dark-shield-spinner` exact from the press tick:
+the bump at the aim tick is the unmodelled source). Mutant (knockback dropped): every walk red.
+
+**D2 — `spaceTimeReach.js` and `HAMMER_ESCAPE` (OFF by default; byte-identical off).** A forward search over (exact
+state, forecast index): the nine key sets through `previewStepper`, pruned by `clearOfHammersAt`, deduplicated on the
+8 px cell × the sign of each velocity, fixed order; a certificate is tick-exact by construction. With the switch on,
+a press is admitted (in `deriveStrike`, and exactly at the live arm's aim) only with an escape out of its own landing
+certified for the i-frame plus one hammer period, and the executor stands the train and follows the certificate on
+every tick the loop has no strike. The sweep solves **45/45, zero hits, 49 ticks shorter than base on average**;
+game witnesses `hammer-a-l18-escape21` and `hammer-a-l18-escape15` (p4f, 0 px). Deadline site `hammer-escape`.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A coarse dedup key is lossy in the ORDER it is claimed.** Depth first, stand first, 8 px × velocity sign: L18's
+  kill landing at t147 read EXHAUSTED after 187 expansions while the breadth-first set reached the horizon; the same
+  key breadth first with the stand first was also exhausted. What fixed it was keeping the BEST state per key in a
+  layer (a deterministic rank, `discClearanceAt`), not a finer key. A negative from a coarse search is a claim about
+  the key, not the room — say which search ran.
+- **A forecast that applies the run's own window in flight must not report its landings as the caller's.** The
+  forecast was exact on every witness; only the SOLVER found the defect, when an escape searched from an earlier
+  press's landing asked for points nobody had previewed.
+- **Follow a certificate only as long as you need it.** Driving the escape through the whole i-frame solved
+  everything and cost 75 ticks a solve; following it only where the loop had no strike solved everything and saved
+  49. The safety came from the ADMISSION (a strike with a way out of its landing), not from holding still.
+- **A mutant that a witness cannot see is a fact about the witness.** The first residue-21 witness was
+  byte-identical with the prune off (every certificate there was the hold); the witnesses were re-chosen where the
+  prune decides the walk.
+- **"The budget cut the rung" was the WINDOW cutting the dash pass** (D3): the live 540/532/532 at residues 40–42 is
+  the dashless pass's plan, shipped because the full pass needs 66 (r40) / 105 (r41, r42) units against the 85-unit
+  upgrade window.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
