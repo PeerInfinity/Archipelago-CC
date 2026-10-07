@@ -14347,7 +14347,10 @@ its cause is the chest's: a single template's crossing runs north→south, and b
   a finding (the bait rung's `BAIT_REENTRY`, Swim R5, has the same shape).
 - **A one-sided trigger is two states, not one.** A lock that opens only from one side is passable from the other
   exactly when the save says it was already opened. The refusal must name the flag; "no corridor" is the symptom.
+
 ### Seedling fidelity KILLLOCK — the bodies a kill-lock counts, stepped (five switches, OFF)
+
+> ⚖ At the wave-8 harvest (`seedling-fidelity-planning-4`, the user's ruling of 2026-10-06) K1 `jellyfishLive`, K3 `chaserKillArm`, K4 `turretRemovalLedger` and K5 `darkShieldIceTurret` became the defaults; K2 `lavaRunnerLive` stays OFF until a lavarunner game witness. `R8_ENEMY_BRIDGE` gained `jellyfish` and three jellyfish-room tapes.
 
 The survey refused L60 ×6, L71 ×2 and L99 with *"the kill work order has no weapon — level N tracks NO live spinner
 bodies in this run"*. None of those rooms holds a spinner. A `tset = -1` lock opens when `Game.totalEnemies()` is 0
@@ -14397,6 +14400,7 @@ committed tape's replay moves (`tapeRunner` 533 pairs, the same md5).
 - **A refusal that names the wrong family sends the reader to the wrong room.** *"Tracks NO live spinner bodies"*
   was true, and it sent the reader looking for spinners. The arm that refused was the only one asked. The rooms
   needed a chaser arm and a bridge.
+
 ### Seedling fidelity CLEARTAG — the `clear-tag` goal: a saved obstacle broken from its open side, finished on the game's write
 
 ⚖ The user (2026-10-05): *"break before first use"*; (2026-10-06): build the executor AND measure the fallback (moving
@@ -14442,6 +14446,7 @@ held back.
   the flag one tick early and looked like a model lag. Every write bracket plays `holdingWindowTape`.
 - **A goal's first walk can satisfy it.** The stance walk's strike policy breaks the rock it walks past; re-asking the
   ledger after the walk keeps the verb from swinging at air for 20 ticks.
+
 ### Seedling fidelity LADDER2 — a grenade has a fuse, not a contact; a chain and a beam have clocks
 
 ⚖ The user (2026-10-05): *"The first priority is to expand the model to include
@@ -14500,6 +14505,7 @@ plan's L103 walk at x 200, which is how the level-edge rule was found.
   120 frames. The cause was the Igneous floor killing the standing player every
   46 ticks, each death spending 20 dead frames of `Game.time`. Check
   `dead_frames` against the loads before trusting a phase.
+
 ### Seedling fidelity BOBSOLDIER — a chaser with a spinning sword, and a corpse that keeps swinging
 
 Wave 8 (model coverage). TERRAIN's residue: two L30 legs (a sword knockback at t66/t67) came from a BobSoldier that

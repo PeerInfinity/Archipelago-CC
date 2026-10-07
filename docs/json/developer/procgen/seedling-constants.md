@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**62 files, 5335 literals.** Class × position:
+**64 files, 5404 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 5 | 1545 | 353 | 1903 |
-| rule | 6 | 934 | 450 | 1390 |
+| physics | 5 | 1555 | 357 | 1917 |
+| rule | 6 | 939 | 455 | 1400 |
 | cosmetic | 0 | 49 | 14 | 63 |
-| structural | 10 | 356 | 1613 | 1979 |
+| structural | 10 | 359 | 1655 | 2024 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2884 | 2430 | 5335 |
+| total | 21 | 2902 | 2481 | 5404 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1642 | 0 | 88 | 118 | 4 | 51 | 1903 |
-| rule | 424 | 126 | 221 | 22 | 510 | 87 | 1390 |
+| physics | 1650 | 0 | 88 | 118 | 4 | 57 | 1917 |
+| rule | 425 | 131 | 225 | 22 | 510 | 87 | 1400 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -464,7 +464,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
 | `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
-### The 36 derived or aliased top-level constants
+### The 37 derived or aliased top-level constants
 
 | name | file | initialiser |
 |---|---|---|
@@ -480,6 +480,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `WAIT_AFTER_PRESS_TICKS` | seedlingDemo/burnableTree.js | `HIT_TO_GONE_TICKS + 12` |
 | `TILE` | seedlingDemo/spinner.js | `TILE_SIZE` |
 | `TILE` | seedlingDemo/crusher.js | `TILE_SIZE` |
+| `BOB_SOLDIER_SWORD_REACH` | seedlingDemo/bobSoldier.js | `BOB_SOLDIER.weaponLength` |
 | `SHIELD_BOSS_DIE_UPDATES` | seedlingDemo/shieldBossFight.js | `SHIELD_BOSS_ANIM_UPDATES.die` |
 | `SHIELD_BOSS_WINDOW_UPDATES` | seedlingDemo/shieldBossFight.js | `SHIELD_BOSS_ANIM_UPDATES.movedShield` |
 | `FORM_TELEPORT_AT` | seedlingDemo/bobBoss.js | `FORM_TRANSITION_FRAMES / 3` |
@@ -507,7 +508,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **139 small tables** (at most 16 literals) hold at least one (88 with an AS3 reference).
+**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **140 small tables** (at most 16 literals) hold at least one (89 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -566,11 +567,11 @@ None: a name declared in several files now reads one profile key (the table belo
 | `WAIT_AFTER_PRESS_TICKS` | seedlingDemo/burnableTree.js | 1 | 1 | rule | derivation |  |
 | `SPINNER_CTOR_RNG` | seedlingDemo/spinner.js | 2 | 2 | rule | count | Enemy.as:30 Enemy.as:35 Spinner.as:24 FP.as:404-422 |
 | `HAMMER_BILLING` | seedlingDemo/spinner.js | 2 | 2 | physics/rule | magnitude | Spinner.as:72-76 Player.as |
-| `CHASERS` | seedlingDemo/chasers.js | 16 | 16 | physics/rule | count/magnitude | Enemies/LavaRunner.as:swimSpeed Enemies/LavaRunner.as:normalSpeed |
 | `CRUSHER` | seedlingDemo/crusher.js | 9 | 8 | physics/rule | bound/magnitude | Puzzlements/Crusher.as:intDist Puzzlements/Crusher.as:speed Puzzlements/Crusher.as:damage Puzzlements/Crusher.as:force Puzzlements/Crusher.as:spinRate |
 | `DIRECTIONS` | seedlingDemo/crusher.js | 8 | 8 | physics | sign | Puzzlements/Crusher.as:directions |
 | `CEREMONY_RULE` | seedlingDemo/crusher.js | 1 | 1 | rule | magnitude |  |
 | `PLAYER_DAMAGE_PATHS` | seedlingDemo/crusher.js | 4 | 4 | rule | sentinel | LavaTrap.as:72 Player.as:1379 |
+| `BOB_SOLDIER` | seedlingDemo/bobSoldier.js | 12 | 10 | physics/rule | bound/count/derivation/magnitude | Enemies/BobSoldier.as BobSoldier.as:33-48 |
 | `BOSS_TOTEM` | seedlingDemo/bossTotem.js | 14 | 14 | physics/rule | count/derivation/magnitude | Enemies/BossTotem.as:setHitbox Enemies/BossTotem.as:rumblingTimeMax Enemies/BossTotem.as:activationRate Enemies/BossTotem.as:n Enemies/BossTotem.as:activationRestTimeMax Enemies/BossTotem.as:waitAtTopTimeMax Enemies/BossTotem.as:playerPosSet Enemies/BossTotem.as:hitsMax Enemies/BossTotem.as:hitsTimerMax |
 | `WAND_PICKUP` | seedlingDemo/bossTotem.js | 10 | 10 | physics/rule | derivation/magnitude/sentinel | Pickups/Wand.as:setHitbox Pickups/Wand.as:alphaRate Pickups/Wand.as:tset Pickups/Pickup.as:specialTimerMax |
 | `DEF_HEAD_POS` | seedlingDemo/bossTotemFight.js | 2 | 2 | physics | magnitude | Enemies/BossTotem.as:defHeadPos |
@@ -654,6 +655,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `ITEM_PROPERTIES` | seedlingDemo/tapeFormat.js | 2 | 2 | rule | count/magnitude | Player.as:hitsMaxDef |
 | `INVENTORY_ITEM_IDS` | seedlingDemo/tapeFormat.js | 6 | 6 | rule | sentinel | Inventory.as:277-318 |
 | `SAVE_SLOTS` | seedlingDemo/tapeFormat.js | 3 | 3 | rule | count | Player.as:totemParts Player.as:totalKeys SealController.as:SEALS |
+| `PLACED_GRENADE` | seedlingDemo/placedGrenade.js | 4 | 3 | physics/rule | count/magnitude | Enemies/Grenade.as:fallTriggerDistance Enemies/Grenade.as:g Enemies/Grenade.as:_exTime |
 | `BLACK_COVER` | seedlingDemo/gameClock.js | 2 | 2 | rule | magnitude | Game.as:blackCover Game.as:blackCoverRate |
 | `LOAD_FADE_FRAMES` | seedlingDemo/gameClock.js | 7 | 1 | rule | bound | Game.as:blackCover |
 | `PICKUP_HELP_DEAD_FRAMES` | seedlingDemo/gameClock.js | 1 | 1 | rule | magnitude | Pickups/Sword.as:42-49 Inventory.as:174 Game.as:961 |

@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 3,
+            "count": 5,
             "id": "measure"
         },
         {
@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 64,
+            "count": 67,
             "id": "plan"
         },
         {
-            "browser": 61,
-            "count": 105,
+            "browser": 65,
+            "count": 109,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 365,
-        "browser": 126,
-        "cited": 178,
-        "files": 377,
+        "blockStyle": 374,
+        "browser": 130,
+        "cited": 185,
+        "files": 386,
         "lineStyle": 12,
-        "withDocblock": 377,
-        "withFlags": 295
+        "withDocblock": 386,
+        "withFlags": 304
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6663,6 +6663,74 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/measure-apworld-raw-view.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "measure",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "measure-seedling-cleartag-patch.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-tapes"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "measure-seedling-cleartag-patch — **THE FALLBACK, MEASURED, NOT APPLIED** (Seedling fidelity CLEARTAG, D4).",
+            "path": "scripts/procgen/measure-seedling-cleartag-patch.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "measure",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "event"
+            ],
+            "file": "measure-seedling-cleartag.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "event"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "measure-seedling-cleartag — **THE `clear-tag` CENSUS** (Seedling fidelity CLEARTAG, D1 + D3).",
+            "path": "scripts/procgen/measure-seedling-cleartag.mjs"
+        },
+        {
             "argvHelpers": [
                 "M",
                 "arg"
@@ -6817,6 +6885,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-axe-witness — ⛓⛓⛓ SEEDLING FIDELITY AXE: THE SOLVER CROSSES A SPINNING AXE BY ITS PHASE, AND THE GAME LETS IT THROUGH.",
             "path": "scripts/procgen/plan-seedling-axe-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-bobsoldier.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-bobsoldier — ⛓⛓⛓ seedling-fidelity-bobsoldier: THE BOBSOLDIER'S DRIVEN WITNESSES.",
+            "path": "scripts/procgen/plan-seedling-bobsoldier.mjs"
         },
         {
             "argvHelpers": [],
@@ -7095,6 +7190,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-l14-swordless — ⛓⛓⛓ SEEDLING FIDELITY L14: THE SWORDLESS CROSSING OF L14, SOLVED BY THE DETOUR RUNG AND HANDED TO THE GAME.",
             "path": "scripts/procgen/plan-seedling-l14-swordless.mjs"
+        },
+        {
+            "argvHelpers": [
+                "check"
+            ],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "refuted"
+            ],
+            "file": "plan-seedling-ladder2-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "refuted"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-ladder2-witness — ⛓⛓⛓ SEEDLING FIDELITY LADDER2: THE SOLVER CROSSES A PLACED GRENADE, A LAVA CHAIN AND A BEAM TOWER, AND THE GAME LETS IT THROUGH.",
+            "path": "scripts/procgen/plan-seedling-ladder2-witness.mjs"
         },
         {
             "argvHelpers": [],
@@ -8406,6 +8537,41 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-stance-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dry"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-stance-witness — ⛓⛓⛓ SEEDLING FIDELITY STANCE: THE GAME WITNESSES FOR THE STANCES THE SOLVER USED TO LOOP ON.",
+            "path": "scripts/procgen/plan-seedling-stance-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -8789,6 +8955,52 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-axe-phase.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-bobsoldier-mobiles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "upto"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-bobsoldier-mobiles — ⛓⛓⛓ seedling-fidelity-bobsoldier: THE BOBSOLDIER'S OWN POSITION, ASKED OF THE GAME, TICK BY SAMPLED TICK (U7's `probe-seedling-u7-puncher-mobiles.mjs`, one class over).",
+            "path": "scripts/procgen/probe-seedling-bobsoldier-mobiles.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": true,
             "category": "probe",
@@ -9032,6 +9244,48 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-ceremony — walk the player onto a real pickup and watch what the game does. `Bot.autoAdvance`'s FIRST LIVE FIRE.",
             "path": "scripts/procgen/probe-seedling-ceremony.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "only",
+                "record"
+            ],
+            "file": "probe-seedling-cleartag.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "scan"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity CLEARTAG (D1/D2): **A SAVED OBSTACLE BROKEN FROM ITS OPEN SIDE, ASKED OF THE GAME.** Every arm runs on a FRESH page of the headless game (default build p4f, logic-only), one arm per page.",
+            "path": "scripts/procgen/probe-seedling-cleartag.mjs"
         },
         {
             "argvHelpers": [
@@ -9718,6 +9972,50 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "arms",
+                "author",
+                "record"
+            ],
+            "file": "probe-seedling-killlock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "arms"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "author"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-killlock — ⛓⛓⛓ SEEDLING FIDELITY KILLLOCK, D1/D2: **THE KILL-LOCK ROOMS' BODIES, ASKED OF THE GAME.**",
+            "path": "scripts/procgen/probe-seedling-killlock.mjs"
+        },
+        {
+            "argvHelpers": [],
             "browser": false,
             "category": "probe",
             "citedBy": [
@@ -9827,6 +10125,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l67-reach2 — does the spear push a block from TWO tiles away, across a pit?",
             "path": "scripts/procgen/probe-seedling-l67-reach2.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "record"
+            ],
+            "file": "probe-seedling-ladder2-phase.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "model-only"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-ladder2-phase — ⛓⛓⛓ SEEDLING FIDELITY LADDER2, D1: **WHEN DO A PLACED GRENADE, A LAVA CHAIN AND A BEAM TOWER HIT A STANDING PLAYER, ASKED OF THE GAME.**",
+            "path": "scripts/procgen/probe-seedling-ladder2-phase.mjs"
         },
         {
             "argvHelpers": [
