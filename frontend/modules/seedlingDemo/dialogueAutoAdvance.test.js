@@ -163,8 +163,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity STANCE: +5 (243) — `stance-l46-chest`, `stance-l48-chest`, `stance-l48-keylock-open`, `stance-l48-keylock-south`, `stance-l48-keylock-north`, inert.
         // ⛓ fidelity LADDER2: +2 (245) — `ladder2-l59-grenade`, `ladder2-l104-beam`, inert.
         // ⛓ fidelity BOBSOLDIER: +3 (248) — `bobsoldier-sword`, `bobsoldier-kill`, `bobsoldier-corpse`, inert.
-        expect(rows).toHaveLength(248);
-        expect(rows.length - parted.length).toBe(247);
+        // ⛓ hammer-phase A: +2 (250) — `hammer-a-l18-escape21`, `hammer-a-l18-escape6`, inert.
+        expect(rows).toHaveLength(250);
+        expect(rows.length - parted.length).toBe(249);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

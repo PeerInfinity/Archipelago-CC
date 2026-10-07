@@ -113,7 +113,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity STANCE: +5 (243) — `stance-l46-chest`, `stance-l48-chest`, `stance-l48-keylock-open`, `stance-l48-keylock-south`, `stance-l48-keylock-north`.
         // ⛓ fidelity LADDER2: +2 (245) — `ladder2-l59-grenade`, `ladder2-l104-beam`.
         // ⛓ fidelity BOBSOLDIER: +3 (248) — `bobsoldier-sword`, `bobsoldier-kill`, `bobsoldier-corpse`.
-        expect(names.length).toBe(248);
+        // ⛓ hammer-phase A: +2 (250) — `hammer-a-l18-escape21`, `hammer-a-l18-escape6`.
+        expect(names.length).toBe(250);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -161,7 +162,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity STANCE: 243 — the five `stance-*` witnesses swap too.
         // ⛓ fidelity LADDER2: 245 — both witnesses carry a transition to swap.
         // ⛓ fidelity BOBSOLDIER: 248 with `bobsoldier-sword`, `bobsoldier-kill`, `bobsoldier-corpse`.
-        expect(tally.swapped).toBe(248);
+        // ⛓ hammer-phase A: 250 — both escape witnesses cross to L19, a transition to swap.
+        expect(tally.swapped).toBe(250);
     }, 600_000);
 });
 
