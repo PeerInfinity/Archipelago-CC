@@ -69,11 +69,11 @@ function manualTimers() {
 }
 
 /** A game over the recorded house arrival whose plan tapes drain `chunk` rows per read and stop while frozen. */
-function fakeGame({ chunk = 4, items = {}, slots = [], status = {}, keys = [] } = {}) {
+function fakeGame({ chunk = 4, items = {}, slots = [], status = {}, keys = [], clearAt = null } = {}) {
     const baseline = { ...A.seam.beginEntry, 'save.time': A.seam.beginEntry['save.time'] - 100, 'rng.gameplay': 1 };
     const g = {
         be: baseline, held: false, armed: false, finished: false, frozen: false, tape: null, rows: null, drained: 0, tick: 0,
-        pos: null, seq: 0, calls: [], tapes: [],
+        pos: null, seq: 0, calls: [], tapes: [], cleared: false,
         items: { ...A.status.items, ...items }, slots: [...slots], keys: boolKeys(keys),
         land() { g.be = A.seam.beginEntry; },
         botSeam() { return JSON.stringify({ beginEntry: g.be, latched: false }); },
@@ -81,6 +81,8 @@ function fakeGame({ chunk = 4, items = {}, slots = [], status = {}, keys = [] } 
             const keys = g.armed && g.tape && g.tick >= 1 ? heldAt(g.tape, g.tick - 1) : [];
             return JSON.stringify({ ...A.status, ...status, game_time: g.be['save.time'], items: { ...g.items }, inventory_slots: [...g.slots],
                 save: { ...A.status.save, keys: [...g.keys] },
+                // ⛓ SERVED LOCATION — the chest's own check: its flag clears once `clearAt` rows have drained (and stays)
+                ...(g.cleared || (clearAt !== null && g.armed && g.drained >= clearAt) ? (g.cleared = true, { persistence_cleared: [{ level: HOUSE, tag: 0 }] }) : {}),
                 ...(g.pos ? { level: g.pos.level, x: g.pos.x, y: g.pos.y } : {}),
                 input: { ...A.status.input, held: keys, t: g.tick - 1 },
                 held: g.held, armed: g.armed, finished: g.finished, frozen: g.frozen, tick: g.tick, error: '' });
@@ -455,6 +457,45 @@ describe('⛓ KEY DELIVERY — an AP key reaches the game: the gate, the staging
         expect(row).toMatchObject({ phase: 'playing', outcome: 'replanned', items: [], save: [{ array: 'keys', index: 0 }] });
         expect(e.seen[1].request.staging.save.keys).toEqual([0]);           // the continuation's arrival holds it
         expect(e.game.tapes.at(-1).save.keys).toEqual([0]);                 // and the shipped tape declares it
+        expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, true]]);
+    });
+
+    it('⛓ SERVED LOCATION — the goal\'s OWN key delivered AT contact (its flag already cleared): no freeze, no re-solve; the tape ends, the goal is DONE, the key lands in the held room', () => {
+        const e = setup({ keys: true, game: { clearAt: 20 } });
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 24);
+        e.delivery.receive('Red Key');
+        e.delivery.push();
+        expect(e.game.keys[0]).toBe(false);                                 // still held back while the tape plays
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.game.calls.filter((c) => c.startsWith('botHold'))).toEqual([]);
+        expect(e.seen).toHaveLength(1);                                     // the goal was never solved again
+        expect(e.engine.stats.deliveryServed).toEqual([{ level: HOUSE, goal: CHEST.name, tick: expect.any(Number) }]);
+        expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, false]]);
+        expect(e.engine.stats.history.map((h) => h.outcome)).toEqual(['done']);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.engine.status().phase).toBe('held');
+        expect(e.game.keys[0]).toBe(true);
+        expect(e.engine.stats.deliveries).toEqual([expect.objectContaining({ phase: 'held', outcome: 'staged', save: [{ array: 'keys', index: 0 }] })]);
+        e.engine.walkTo(DOOR);                                              // the next goal is solved from the room holding it
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.seen.at(-1).request.staging.save.keys).toEqual([0]);
+    });
+
+    it('⛓ SERVED LOCATION — a DIFFERENT item delivered mid-room BEFORE the contact: the existing replan (§ mid-room), the guard does not fire', () => {
+        const e = setup({ keys: true, game: { clearAt: 40 } });
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 24);
+        expect(e.game.cleared).toBe(false);
+        e.delivery.receive('Progressive Sword');
+        e.delivery.push();
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.deliveryServed).toEqual([]);
+        expect(e.engine.stats.deliveries[0]).toMatchObject({ phase: 'playing', outcome: 'replanned' });
+        expect(e.seen).toHaveLength(2);
         expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, true]]);
     });
 

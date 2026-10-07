@@ -163,6 +163,24 @@ describe('⛓ W7 — a pushed INVOCATION is stamped with the begin record live w
         expect(a.pushNow()).toBe(false);
         expect(adapterFor(() => null).pushNow()).toBe(false); // no frame: nothing to push, never a throw
     });
+    it('⛓ SERVED LOCATION — a KEY\'s method-call write (`Main.hasKeySet`) is pushed but is NO swap: no stamp, no count; a teleport beside it is', () => {
+        const B = { 'begin.level': 19, 'save.time': 9000 };
+        const p = page(B);
+        const a = adapterFor(() => p.win);
+        a._getFlash = () => p.win.__swfBridge.game;
+        a.stateManager = { getLatestStateSnapshot: () => ({ inventory: { 'Red Key': 1 } }) };
+        a.gameReady = true;
+        a._pushTick();
+        const sent = p.pushed.flat();
+        expect(sent.some((i) => i.invocation === 'method_call' && i.method === 'hasKeySet')).toBe(true);
+        expect(a.invocationPushes ?? 0).toBe(0);           // the held room's guard sees no swap
+        expect(a.lastInvocationPush ?? null).toBeNull();
+        expect(a.pushNow()).toBe(false);                    // nothing of the glue's went (the key is not re-sent inside its retry window)
+        a.teleport({ level: 19, x: 16, y: 144 });
+        expect(a.pushNow()).toBe(true);
+        expect(a.invocationPushes).toBe(1);
+        expect(a.lastInvocationPush).toEqual({ seq: 1, begin: B });
+    });
     it('a game without botSeam stamps null (no answer — never a guess)', () => {
         const p = page(null);
         delete p.win.__swfBridge.game.botSeam;
