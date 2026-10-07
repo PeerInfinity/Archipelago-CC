@@ -96,7 +96,8 @@ describe('the corridor body in a generated level', () => {
         expect(p.tags).toEqual({});
         const cert = out.summary.elements.certification;
         expect(cert.certified).toBe(true);
-        expect(cert.ticks).toBe(223);
+        // ⛓ hammer-phase A2 (`HAMMER_ESCAPE` on, ⚖ user 2026-10-07): 223 → 232 t (off, by the switch: 223)
+        expect(cert.ticks).toBe(232);
         expect(cert.strategies).toEqual(['kill', 'collect']);
         const goal = out.record.entities.find((e) => e.type === ROAMING_GOAL_CLASS);
         expect(goal).toBeTruthy();

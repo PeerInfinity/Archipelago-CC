@@ -83,6 +83,13 @@ function solveAt(tx, ty, items) {
  * landings and certifies; the CORRIDOR arm (225) and every walk row are
  * byte-identical.
  */
+/**
+ * ⛓ HAMMER-PHASE A2 — `HAMMER_ESCAPE` ON by default (⚖ user 2026-10-07; these re-pins licensed by the user the same
+ * day). Every press row below re-timed: each press is now taken only with a certified way out of its own landing,
+ * and every row's three landings carry three escapes. ON (OFF, by the switch, = the old pins byte for byte):
+ * (5,5) 269 (221), (2,2) 515 (260), (7,6) 210 (212), (3,6) 160 (173), (2,7) 264 (258), the corridor 193 (225).
+ * Each still SOLVES and certifies with one press kill and three landings.
+ */
 describe('F2 — a lock-less spinner on the walk, post-sword', () => {
     /**
      * ⛓ U4b D1 — 234 → 245 t. The strike schedule now prices each forecast row
@@ -92,15 +99,16 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      */
     // ⛓ LINEFLIP — 241 → 221 t: the hammer's `collideLine` samples untruncated (W1 ON), so the strike plan prices a
     // different (cell, tick) clear against the player's fractional box. Still one press kill, three landings, certified.
-    it('(5,5): was EXHAUSTED; now SOLVES in 221 t by a press kill whose end is OBSERVED', () => {
+    it('(5,5): was EXHAUSTED; now SOLVES in 269 t by a press kill whose end is OBSERVED', () => {
         const out = solveAt(5, 5, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(221);
+        expect(out.ticks).toBe(269);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
         expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@80,80', ledger: 'spinnerWrites' });
         expect(kills[0].landings).toHaveLength(3);
+        expect(kills[0].escapes ?? []).toHaveLength(3);
     });
 
     /**
@@ -119,15 +127,16 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      * was its only exclusion) and the next gate refused; a spinner the run
      * killed is excluded now too (`dangerMap.spinnersTheRunSteps`).
      */
-    it('(2,2): was the run\'s line-of-sight refusal; now SOLVES in 260 t, the swing planned on a clear line', () => {
+    it('(2,2): was the run\'s line-of-sight refusal; now SOLVES in 515 t, the swing planned on a clear line', () => {
         const out = solveAt(2, 2, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(260);
+        expect(out.ticks).toBe(515);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
         expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@32,32' });
         expect(kills[0].landings).toHaveLength(3);
+        expect(kills[0].escapes ?? []).toHaveLength(3);
     });
 
     /**
@@ -140,15 +149,16 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      * (`spinnerClockPairing.test.js`), the kill lands. ⛔ With `clearOfHammersAt`
      * back at `gameTimeAt(i + 1)` the U3 text returns byte for byte.
      */
-    it('(7,6): was "nowhere to be"; now SOLVES in 212 t, the train priced at its own tick\'s phase', () => {
+    it('(7,6): was "nowhere to be"; now SOLVES in 210 t, the train priced at its own tick\'s phase', () => {
         const out = solveAt(7, 6, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(212);
+        expect(out.ticks).toBe(210);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
         expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@112,96' });
         expect(kills[0].landings).toHaveLength(3);
+        expect(kills[0].escapes ?? []).toHaveLength(3);
     });
 
     /**
@@ -163,15 +173,16 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      * (88,56) +67, whose wait was unpriced, and takes (88,72) +70. The second
      * landing comes at 72 instead of 98, and the third at 108 instead of 179.
      */
-    it('(3,6): was "no (cell, tick)"; now SOLVES in 173 t on a strike past the bounded pass', () => {
+    it('(3,6): was "no (cell, tick)"; now SOLVES in 160 t on a strike past the bounded pass', () => {
         const out = solveAt(3, 6, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(173);
+        expect(out.ticks).toBe(160);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
         expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@48,96' });
         expect(kills[0].landings).toHaveLength(3);
+        expect(kills[0].escapes ?? []).toHaveLength(3);
     });
 
     /**
@@ -183,15 +194,16 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      * that dwell (`[eta, i − 2)` at the cell's box). ⛔ With the dwell window
      * empty (U6 mutant (a)) the U4b text returns byte for byte.
      */
-    it('(2,7): was "no step out"; now SOLVES in 258 t, the wait before the train priced', () => {
+    it('(2,7): was "no step out"; now SOLVES in 264 t, the wait before the train priced', () => {
         const out = solveAt(2, 7, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(258);
+        expect(out.ticks).toBe(264);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
         expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@32,112' });
         expect(kills[0].landings).toHaveLength(3);
+        expect(kills[0].escapes ?? []).toHaveLength(3);
     });
 });
 
@@ -202,15 +214,16 @@ describe('U4b D3 — the census CORRIDOR arm: a spinner in a 1-wide L', () => {
      * continuation finds (120,24) at +399 after four more cells, and the live
      * arm presses as the body comes back into reach.
      */
-    it('post-sword: was "no (cell, tick)"; now SOLVES in 225 t by a press kill', () => {
+    it('post-sword: was "no (cell, tick)"; now SOLVES in 193 t by a press kill', () => {
         const out = solveRoom(corridorWithSpinner(), POST_SWORD_ITEMS, 'enemy-census-spinner@corridor');
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(225);
+        expect(out.ticks).toBe(193);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
         expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@64,16' });
         expect(kills[0].landings).toHaveLength(3);
+        expect(kills[0].escapes ?? []).toHaveLength(3);
     });
 
     it('pre-sword: stays REFUSED, and the kill line is the SUB-ORDER', () => {
