@@ -103,7 +103,7 @@ if (process.argv.includes('--bound')) {
         steps = steps.filter((s) => want.has(String(s.step)));
     }
     const costsP = argOf('costs');
-    const { costs, source } = stepCosts(steps, costsP && existsSync(costsP) ? readJson(costsP) : null);
+    const { costs, known, source } = stepCosts(steps, costsP && existsSync(costsP) ? readJson(costsP) : null);
     const shards = partitionSteps(steps.map((s) => String(s.step)), shardsN, costs);
     /**
      * ⛓ A job's timeout is its WORST case — every step running to the survey's
@@ -123,7 +123,7 @@ if (process.argv.includes('--bound')) {
     } else {
         console.log(`PLAN ${mode} through ${through}: ${steps.length} step(s) over ${shards.length} shard(s); price = ${source}`);
         for (const s of plan.shards) {
-            console.log(`  shard ${s.shard}: ${s.steps.length} step(s) est ${Math.round(s.cost / 1000)} s, job cap ${s.timeoutMinutes} min — ${s.steps.join(',')}`);
+            console.log(`  shard ${s.shard}: ${s.steps.length} step(s) ${known ? `est ${Math.round(s.cost / 1000)} s` : 'unpriced'}, job cap ${s.timeoutMinutes} min — ${s.steps.join(',')}`);
         }
     }
 } else if (process.argv.includes('--merge')) {
