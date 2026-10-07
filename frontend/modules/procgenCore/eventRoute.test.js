@@ -140,15 +140,49 @@ describe('planEventRoute over a small graph', () => {
 
     it('creditsOfHop / hopCredits: only a side↔across hop priced the event\'s own rule', () => {
         const [rock] = events;
-        expect(hopCredits(rock, 'Start', 'Pocket', regions.Start.exits[0])).toBe(true);
-        expect(hopCredits(rock, 'Pocket', 'Start', regions.Pocket.exits[0])).toBe(true);
-        expect(hopCredits(rock, 'Start', 'Far2', regions.Start.exits[1])).toBe(false);
-        expect(hopCredits(rock, 'Start', 'Pocket', { ...regions.Start.exits[0], access_rule: has('Other') })).toBe(false);
+        expect(hopCredits(events, 'Start', 'Pocket', regions.Start.exits[0])).toEqual([rock]);
+        expect(hopCredits(events, 'Pocket', 'Start', regions.Pocket.exits[0])).toEqual([rock]);
+        expect(hopCredits(events, 'Start', 'Far2', regions.Start.exits[1])).toEqual([]);
+        expect(hopCredits(events, 'Start', 'Pocket', { ...regions.Start.exits[0], access_rule: has('Other') })).toEqual([]);
         expect(creditsOfHop({ regions, events, from: 'Start', step: { region: 'Pocket', exitUsed: 'Start -> Pocket' } })
             .map((c) => c.eventId)).toEqual(['flag:L9:1']);
         expect(creditsOfHop({ regions, events, from: 'Start', step: { region: 'Pocket', exitUsed: 'Start -> Pocket' }, held: [ROCK] }))
             .toEqual([]);
         expect(creditsOfHop({ regions, events, from: 'Start', step: { region: 'Menu', exitUsed: null, restart: true } })).toEqual([]);
+    });
+});
+
+describe('AMBIGUOUS crossing — two obstacles share one (side, across, rule): the hop credits NEITHER (fail-closed)', () => {
+    // TWIN is a second rock between Start and Pocket at the same cost (L12's paired locks, in miniature): the game
+    // clears only the one the walk goes through, and the hop carries no tile to say which.
+    const TWIN = 'L9 flag 3: breakablerock@32,16 cleared';
+    const twinGraph = () => {
+        const g = graph();
+        g.regions[1].Start.locations.push({ ...ev(TWIN, 3, ['Pocket']), obstacle: { level: 9, tag: 3, class: 'breakablerock', x: 32, y: 16 } });
+        return g;
+    };
+    const regions = twinGraph().regions[1];
+    const events = gameStateEventsOf(twinGraph(), '1');
+    const ruleHolds = holdsWith({ Sword: 1 });
+
+    it('hopCredits: both are candidates, neither is credited; creditsOfHop credits nothing', () => {
+        expect(events.filter((e) => e.across.includes('Pocket')).map((e) => e.name)).toEqual([ROCK, TWIN]);
+        expect(hopCredits(events, 'Start', 'Pocket', regions.Start.exits[0])).toEqual([]);
+        expect(creditsOfHop({ regions, events, from: 'Start', step: { region: 'Pocket', exitUsed: 'Start -> Pocket' } })).toEqual([]);
+    });
+
+    it('a HELD twin is still a candidate: the walk may go through the open one, so the other is not credited either', () => {
+        expect(creditsOfHop({ regions, events, from: 'Start', step: { region: 'Pocket', exitUsed: 'Start -> Pocket' }, held: [TWIN] }))
+            .toEqual([]);
+        const r = planEventRoute({ from: 'Start', to: 'Vault2', regions, events, ruleHolds, held: [TWIN] });
+        expect(show(r)).toEqual(['·→Start', 'BREAK(flag:L9:1)', 'Start -> Pocket→Pocket', 'Pocket -> Gem→Gem', 'Gem -> Lander→Lander',
+            'Lander -> Vault2→Vault2']);
+    });
+
+    it('planEventRoute: the gated landing is met GOAL FIRST (a BREAK), never by the ambiguous crossing', () => {
+        const r = planEventRoute({ from: 'Start', to: 'Vault2', regions, events, ruleHolds });
+        expect(r.credits).toEqual([]);
+        expect(r.breaks.map((b) => b.eventId)).toEqual(['flag:L9:1']);
     });
 });
 
@@ -219,6 +253,26 @@ describe('the committed playthrough — sphere legs 1.2 and 2.1', () => {
         expect(regionPathHops(regions, rh, 'level_36', SHIELD, ITEMS)).toBeNull();
         for (const credit of [true, false]) {
             expect(planEventRoute({ from: 'level_36', to: SHIELD, regions, events, ruleHolds: ruleHolds([]), credit })).toBeNull();
+        }
+    });
+
+    it('L12\'s paired locks (flags 4 and 5: one side, one across, one rule) — the hop r0c19 → r0c37 credits NEITHER', () => {
+        const exit = regions.level_12__r0c19.exits.find((e) => e.connected_region === 'level_12__r0c37');
+        const pair = events.filter((e) => e.side === 'level_12__r0c19' && e.across.includes('level_12__r0c37'));
+        expect(pair.map((e) => [e.eventId, e.obstacle.x, e.obstacle.y])).toEqual([['flag:L12:4', 416, 240], ['flag:L12:5', 432, 240]]);
+        expect(JSON.stringify(pair[0].rule)).toBe(JSON.stringify(pair[1].rule));
+        expect(hopCredits(events, 'level_12__r0c19', 'level_12__r0c37', exit)).toEqual([]);
+        for (const held of [[], [pair[0].item], [pair[1].item]]) {
+            expect(creditsOfHop({ regions, events, from: 'level_12__r0c19', step: { region: 'level_12__r0c37', exitUsed: exit.name }, held }))
+                .toEqual([]);
+        }
+        // every OTHER lock event's crossing is unambiguous and still credits its own flag
+        const lone = events.filter((e) => e.obstacle?.class === 'bosslock' && e.across.length === 1 && !pair.includes(e));
+        expect(lone.length).toBeGreaterThan(0);
+        for (const e of lone) {
+            const x = regions[e.side].exits.find((q) => q.connected_region === e.across[0]
+                && JSON.stringify(q.access_rule ?? null) === JSON.stringify(e.rule ?? null));
+            if (x) expect(hopCredits(events, e.side, e.across[0], x).map((c) => c.eventId)).toEqual([e.eventId]);
         }
     });
 

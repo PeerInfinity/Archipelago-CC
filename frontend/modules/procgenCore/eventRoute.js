@@ -57,10 +57,29 @@ export function gameStateEventsOf(rules, playerId = '1') {
     return out;
 }
 
-/** Does the hop `a → b` through `exit` pass through `event`'s obstacle at the event's own cost? */
-export function hopCredits(event, a, b, exit) {
+/**
+ * Could the hop `a → b` through `exit` pass through `event`'s obstacle at the event's own cost? A CANDIDATE only:
+ * `hopCredits` decides whether the hop names it alone.
+ */
+export function hopCrosses(event, a, b, exit) {
     const crosses = (a === event.side && event.across.includes(b)) || (b === event.side && event.across.includes(a));
     return crosses && JSON.stringify(exit?.access_rule ?? null) === JSON.stringify(event.rule ?? null);
+}
+
+/**
+ * The events the hop `a → b` through `exit` CREDITS, out of `events` (every game-state event of the slot, HELD ONES
+ * INCLUDED): its one candidate (`hopCrosses`), or NONE.
+ *
+ * ⛔ FAIL-CLOSED ON AMBIGUITY. Two obstacles can share one (side, across, rule) — L12's paired locks
+ * `bosslock@416,240` / `@432,240` (flags 4 and 5) both separate r0c19 from r0c37 at the Red Key — and the game clears
+ * only the one the walk goes through. An AP exit is a region pair: it carries no tile to tell which (the obstacle's
+ * `{x, y}` has nothing to be compared with), so such a hop credits NEITHER; the route meets the event goal-first or
+ * waits for the game's flag (the collector). Held events count as candidates too: with flag 4 already collected, a
+ * crossing may well walk through the OPEN lock 4 and clear nothing, so flag 5 is still not credited.
+ */
+export function hopCredits(events, a, b, exit) {
+    const candidates = (events ?? []).filter((e) => hopCrosses(e, a, b, exit));
+    return candidates.length === 1 ? candidates : [];
 }
 
 /**
@@ -125,9 +144,9 @@ export function planEventRoute({ from, to, regions, events, ruleHolds, held = []
             let mask = cur.mask;
             const credits = [];
             if (credit) {
-                for (const e of pending) {
+                for (const e of hopCredits(events, cur.region, v, exit)) {
                     const b = bit.get(e.item);
-                    if ((mask & b) === 0n && hopCredits(e, cur.region, v, exit)) { mask |= b; credits.push(e); }
+                    if (b !== undefined && (mask & b) === 0n) { mask |= b; credits.push(e); }
                 }
             }
             relax({ region: v, mask }, cur.cost + 1, { exit: exit.name, region: v, credits });
@@ -180,7 +199,7 @@ function namesAny(rule, items) {
 
 /**
  * The events a single hop CREDITS: `from → step.region` through `step.exitUsed`, for each pending event whose
- * obstacle that hop passes through at its own cost (`hopCredits`). The caller remembers them (the game breaks the
+ * obstacle that hop passes through at its own cost — the hop's ONE candidate, never an ambiguous pair (`hopCredits`). The caller remembers them (the game breaks the
  * obstacle on that walk) until the collector sees the flag.
  */
 export function creditsOfHop({ regions, events, from, step, held = [] }) {
@@ -188,7 +207,7 @@ export function creditsOfHop({ regions, events, from, step, held = [] }) {
     const exit = (regions?.[from]?.exits ?? []).find((x) => x.name === step.exitUsed);
     if (!exit) return [];
     const heldSet = new Set(held);
-    return (events ?? []).filter((e) => !heldSet.has(e.item) && hopCredits(e, from, step.region, exit)).map(eventRef);
+    return hopCredits(events, from, step.region, exit).filter((e) => !heldSet.has(e.item)).map(eventRef);
 }
 
 /**
