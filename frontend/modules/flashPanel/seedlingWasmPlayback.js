@@ -767,7 +767,7 @@ export function createWasmPlayback({
         if (!d) return;
         let pushed = false;
         try { pushed = pushSwapNow() === true; } catch { pushed = false; }
-        stats.swapPushes.push({ level, time: se.beginEntry?.['save.time'] ?? null, late: d.late, pushed });
+        stats.swapPushes.push({ level, time: se.beginEntry?.['save.time'] ?? null, late: d.late, pushed, at: 'door' });
     }
 
     /**
@@ -1142,7 +1142,16 @@ export function createWasmPlayback({
         log(`[wasm playback] the glue asked for a world swap while level ${room.level} was held — released so it can land`, 'warn');
         const g = goal;
         const keepQueued = queued;
+        const heldLevel = room?.level ?? null;
         release();
+        // ⛓ ARRIVAL JITTER — the released room runs unheld until the swap lands: push a queued teleport in THIS
+        // turn, not at the adapter's next 100 ms tick (the held room's clock stood still until the release).
+        const d = (sw.queued ?? 0) > 0 && !(sw.marks ?? []).includes('parked') && typeof pushSwapNow === 'function';
+        if (d) {
+            let pushed = false;
+            try { pushed = pushSwapNow() === true; } catch { pushed = false; }
+            stats.swapPushes.push({ level: heldLevel, time: null, late: false, pushed, at: 'release' });
+        }
         reset();
         goal = g;
         queued = keepQueued;

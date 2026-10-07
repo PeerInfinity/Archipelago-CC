@@ -323,14 +323,18 @@ describe('W7 — arrivalHoldBlocker: the glue query, its three arms', () => {
 
 describe('⛓ ARRIVAL JITTER — queuedSwapPush: push the glue\'s queued teleport in the turn its door landed', () => {
     const be = { 'begin.level': HOUSE, 'save.time': 4910 };
-    it('the queue is the ONLY blocker → push; `late` iff the door\'s room stepped before the watch saw it', () => {
+    it('a teleport queued → push; `late` iff the door\'s room stepped before the watch saw it', () => {
         expect(queuedSwapPush({ marks: [], queued: 1, pushedOn: null }, { stepped: 0 }, be)).toEqual({ push: true, late: false });
         expect(queuedSwapPush({ marks: [], queued: 2, pushedOn: { ...be, 'save.time': 4800 } }, { stepped: 0 }, be)).toEqual({ push: true, late: false });
         expect(queuedSwapPush({ marks: [], queued: 1 }, { stepped: 3 }, be)).toEqual({ push: true, late: true });
         expect(queuedSwapPush({ marks: [], queued: 1 }, null, be)).toEqual({ push: true, late: true }); // no reading = not provably unstepped
     });
-    it('nothing queued, a binding mark, or a push already stamped on THIS begin → null (no glue → null)', () => {
+    it('a binding MARK beside the queue (a cross-level arrival\'s echo) still pushes: the push serves that swap', () => {
+        expect(queuedSwapPush({ marks: ['arrival teleport to level 86'], queued: 1 }, { stepped: 0 }, be)).toEqual({ push: true, late: false });
+    });
+    it('nothing queued, PARKED, or a push already stamped on THIS begin → null (no glue → null)', () => {
         expect(queuedSwapPush({ marks: [], queued: 0 }, { stepped: 0 }, be)).toBeNull();
+        expect(queuedSwapPush({ marks: ['arrival teleport to level 86'], queued: 0 }, { stepped: 0 }, be)).toBeNull();
         expect(queuedSwapPush({ marks: ['parked'], queued: 1 }, { stepped: 0 }, be)).toBeNull();
         expect(queuedSwapPush({ marks: [], queued: 1, pushedOn: { ...be } }, { stepped: 0 }, be)).toBeNull();
         expect(queuedSwapPush(null, { stepped: 0 }, be)).toBeNull();

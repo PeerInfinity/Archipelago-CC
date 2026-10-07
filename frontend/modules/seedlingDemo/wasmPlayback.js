@@ -684,13 +684,16 @@ export function arrivalHoldBlocker(swap, beginEntry) {
  * ticking, and the teleport's arrival staged a different clock run to run (`seam.time`, which the spinner's
  * phase reads). Pushed in the same turn, the swap lands a fixed number of frames after the latch.
  *
- * `'push'` only when the queue is the ONLY blocker (no binding mark, no park, no push already stamped on this
- * begin record); otherwise null. `late: true` = the door's room already stepped (the 0 ms watch saw it after a
- * frame): pushed anyway, and named, since the clock it carries is no longer the latch's.
+ * A push whenever a teleport is QUEUED: the glue sends it within one 100 ms tick anyway, so pushing it now
+ * changes only WHEN, never what. A binding mark beside it (a cross-level arrival's echo) is the swap the push
+ * serves. Null when nothing is queued, when the substrate is `parked` (its game is not the AP region's), or when
+ * a push is already stamped on this begin record (its swap lands next). `late: true` = the door's room had
+ * already stepped (the 0 ms watch saw it after a frame): pushed anyway and named, since the clock it carries is
+ * no longer the latch's. `sinceBegin` null = not provably unstepped (late).
  * @returns {{push: true, late: boolean}|null}
  */
 export function queuedSwapPush(swap, sinceBegin, beginEntry = null) {
-    if (!swap || swap.marks?.length || !((swap.queued ?? 0) > 0)) return null;
+    if (!swap || !((swap.queued ?? 0) > 0) || (swap.marks ?? []).includes('parked')) return null;
     if (swap.pushedOn && beginEntry && same(swap.pushedOn, beginEntry)) return null;
     return { push: true, late: !(sinceBegin && sinceBegin.stepped === 0) };
 }

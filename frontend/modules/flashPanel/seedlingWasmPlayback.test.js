@@ -799,6 +799,26 @@ describe('W7 — continuations from a held room, and their named fallbacks', () 
         expect(e.timers.run()).toBe(0); // no guard left ticking
     });
 
+    it('⛓ ARRIVAL JITTER — a QUEUED teleport that releases a held room is PUSHED in the release\'s own turn (botReset, then the push: the released room runs no timer\'s share)', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, pushSwap: () => true });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.swap.state = { marks: [], queued: 1, pushedOn: null, pushes: 0 };
+        runUntil(e, () => e.engine.stats.releasedForSwap > 0);
+        const i = e.game.calls.lastIndexOf('pushSwap');
+        expect(i).toBeGreaterThan(0);
+        expect(e.game.calls.slice(e.game.calls.lastIndexOf('botReset'), i + 1)).toEqual(['botReset', 'pushSwap']);
+        expect(e.engine.stats.swapPushes).toEqual([{ level: HOUSE, time: null, late: false, pushed: true, at: 'release' }]);
+    });
+    it('⛓ ARRIVAL JITTER — a release for a MARK alone (nothing queued) pushes nothing', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, pushSwap: () => true });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.swap.state = { marks: ['bounce from level 86'], queued: 0, pushedOn: null, pushes: 0 };
+        runUntil(e, () => e.engine.stats.releasedForSwap > 0);
+        expect(e.game.calls).not.toContain('pushSwap');
+        expect(e.engine.stats.swapPushes).toEqual([]);
+    });
     it('a swap the glue asks for WHILE a room is held (a raced redirect) is let through: released, the room dropped, watching', () => {
         const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 } });
         e.engine.walkTo(CHEST);
@@ -888,7 +908,7 @@ describe('W7 — the arrival HOLD after an exit plan, and the glue query\'s thre
         const r = pushedCrossing(() => ({ marks: [], queued: 1, pushedOn: null, pushes: 0 }), { stepped: 0 });
         expect(r.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/queued for the game/)]);
         expect(r.atB1.turn).toEqual(['botSeam', 'pushSwap']); // the sample, then the push: nothing in between
-        expect(r.atB1.pushes).toEqual([{ level: A.seam.beginEntry['begin.level'], time: A.seam.beginEntry['save.time'] - 7, late: false, pushed: true }]);
+        expect(r.atB1.pushes).toEqual([{ level: A.seam.beginEntry['begin.level'], time: A.seam.beginEntry['save.time'] - 7, late: false, pushed: true, at: 'door' }]);
         heldAfter(r);
         expect(r.e.engine.stats.swapPushes).toHaveLength(1); // the redirect's own landing pushes nothing
     });
@@ -897,10 +917,13 @@ describe('W7 — the arrival HOLD after an exit plan, and the glue query\'s thre
         expect(r.atB1.pushes).toEqual([expect.objectContaining({ late: true, pushed: true })]);
         heldAfter(r);
     });
-    it('⛓ ARRIVAL JITTER — arm 1 (a binding MARK) and arm 3 (a push already stamped on B1) push NOTHING: the queue is not the only blocker', () => {
+    it('⛓ ARRIVAL JITTER — a binding MARK beside the queued teleport (a cross-level arrival\'s echo) still pushes; PARKED and a push already stamped on B1 push NOTHING', () => {
         const m = pushedCrossing(() => ({ marks: ['arrival teleport to level 86'], queued: 1, pushedOn: null, pushes: 0 }), { stepped: 0 });
-        expect(m.atB1.turn).not.toContain('pushSwap');
-        expect(m.e.engine.stats.swapPushes).toEqual([]);
+        expect(m.atB1.turn).toEqual(['botSeam', 'pushSwap']);
+        expect(m.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/waits on a swap/)]);
+        const k = pushedCrossing(() => ({ marks: ['parked'], queued: 1, pushedOn: null, pushes: 0 }), { stepped: 0 });
+        expect(k.atB1.turn).not.toContain('pushSwap');
+        expect(k.e.engine.stats.swapPushes).toEqual([]);
         const p = pushedCrossing((B1) => ({ marks: [], queued: 1, pushedOn: { ...B1 }, pushes: 1 }), { stepped: 0 });
         expect(p.atB1.turn).not.toContain('pushSwap');
         expect(p.e.engine.stats.swapPushes).toEqual([]);
