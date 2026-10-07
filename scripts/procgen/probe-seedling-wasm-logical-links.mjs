@@ -37,6 +37,7 @@
  *
  * Run: node scripts/procgen/probe-seedling-wasm-logical-links.mjs [--host=http://localhost:8000] [--only=H,B]
  *      [--budget-s=900] [--solver-budget-work=<units>] [--solver-upgrade-window-work=<units>] [--wait-for-box=<sec>]
+ *      [--trace=<file>]   (B: every shipped tape + botHold, the deliveries, the history — the arrival-jitter instrument)
  */
 import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
@@ -94,6 +95,8 @@ async function main() {
     const BUDGET_MS = Number(arg('budget-s', '900')) * 1000;
     const SOLVER_BUDGET_WORK = arg('solver-budget-work', null) === null ? null : Number(arg('solver-budget-work', null));
     const UPGRADE_WINDOW_WORK = arg('solver-upgrade-window-work', null) === null ? null : Number(arg('solver-upgrade-window-work', null));
+    /** ⛓ ARRIVAL JITTER — `--trace=<file>`: every tape the engine ships (its staging + keys), every botHold, the deliveries and the history, as JSON. */
+    const TRACE = arg('trace', null);
     const PRESET = JSON.parse(readFileSync(join(REPO, 'frontend', RULES_PATH), 'utf8'));
     const PARTITION = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-subregion-partition.json'), 'utf8'));
     const REGIONS = PRESET.regions['1'];
@@ -318,6 +321,47 @@ async function main() {
                 lastRefusal: c.lastRefusal }));
         });
 
+        /**
+         * ⛓ ARRIVAL JITTER — wrap the bridge's tape verbs in the game's window: each `botLoadTape` keeps its tape
+         * (the staging the engine shipped), each `botHold` its argument, with the page clock. Nothing is read from
+         * the game (a `botStatus` per call would perturb the frame rate it measures).
+         */
+        async function installTrace() {
+            const n = await rp.gameFrame().evaluate(() => {
+                const g = window.__swfBridge.game;
+                if (g.__trace) return -1;
+                const log = [];
+                g.__trace = log;
+                for (const verb of ['botLoadTape', 'botStart', 'botHold', 'botReset']) {
+                    const orig = g[verb].bind(g);
+                    g[verb] = (...a) => {
+                        const r = orig(...a);
+                        log.push({ verb, at: Math.round(performance.now()), arg: verb === 'botLoadTape' ? JSON.parse(a[0]) : (a[0] ?? null), r });
+                        return r;
+                    };
+                }
+                return 0;
+            });
+            out('B trace', { installed: n === 0 });
+        }
+        async function writeTrace() {
+            const verbs = await rp.gameFrame().evaluate(() => window.__swfBridge.game.__trace ?? null);
+            const eng = await page.evaluate(async () => {
+                const { substrateRegistry } = await import('./modules/shared/procgen/substrateRegistry.js');
+                const e = substrateRegistry.get('flash_seedling')?.getPlaybackController?.()?._wasmEngine ?? null;
+                if (!e) return null;
+                const st = e.stats;
+                return JSON.parse(JSON.stringify({ deliveries: st.deliveries, deliveryDeferred: st.deliveryDeferred, holdBlocked: st.holdBlocked,
+                    fallbacks: st.fallbacks, forcedBy: st.forcedBy, heldChecks: st.heldChecks, adoptRefused: st.adoptRefused,
+                    history: st.history.map((h) => ({ ...h, goal: { name: h.goal?.name ?? null, kind: h.goal?.kind ?? null, level: h.goal?.level ?? null } })),
+                    arrivalReads: e.arrivalReads }));
+            });
+            const { writeFileSync, mkdirSync } = await import('node:fs');
+            mkdirSync(dirname(TRACE), { recursive: true });
+            writeFileSync(TRACE, JSON.stringify({ verbs, engine: eng }));
+            out('B trace written', { file: TRACE, verbs: verbs?.length ?? null, tapes: (verbs ?? []).filter((v) => v.verb === 'botLoadTape').length });
+        }
+
         /** B — the bot to the Sword on the rules' declared directed graph: doors only, no logical link. */
         async function runBot() {
             const routing = await page.evaluate(() => {
@@ -351,6 +395,7 @@ async function main() {
                 booted.route?.length === 9 && booted.route?.nextExit === `${START} -> level_2`
                     && !(booted.route?.steps ?? []).some((r) => r.startsWith('level_0__r1c6')), JSON.stringify(booted.route));
             await clickPanelTab(page, FLASH_PANEL).catch(() => null);
+            if (TRACE) await installTrace();
             const sword = booted.head?.location;
             const t0 = Date.now();
             const statuses = [];
@@ -371,6 +416,7 @@ async function main() {
                 await page.waitForTimeout(500);
             }
             const eng = await engineStats();
+            if (TRACE) await writeTrace();
             const checks = await page.evaluate(() => window.__checks ?? []);
             const moves = (await rp.glueMoves()).map((m) => `${m.logical ? '~' : ''}${m.exitName}`);
             const g = await glue();
