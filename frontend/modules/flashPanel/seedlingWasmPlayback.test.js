@@ -820,6 +820,25 @@ describe('W7 — continuations from a held room, and their named fallbacks', () 
         expect(e.engine.stats.swapPushes).toEqual([{ level: HOUSE, time: null, late: false, pushed: true, at: 'stop' }]);
         expect(e.engine.stats.releasedForSwap).toBe(0);
     });
+    it('⛓ ARRIVAL JITTER — stop() on a PARKED substrate pushes nothing (its game is not the AP region\'s)', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, pushSwap: () => true });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.swap.state = { marks: ['parked'], queued: 1, pushedOn: null, pushes: 0 };
+        e.engine.stop();
+        expect(e.game.calls).not.toContain('pushSwap');
+        expect(e.engine.stats.swapPushes).toEqual([]);
+    });
+    it('⛓ ARRIVAL JITTER — the goal\'s OWN arrival sampler (a forced re-arrival in flight) pushes a teleport the glue queued behind a landing (`sample`)', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, land: false, pushSwap: () => true });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        expect(e.engine.stats.swapPushes).toEqual([]); // nothing was queued with our own teleport
+        e.swap.state = { marks: [], queued: 1, pushedOn: null, pushes: 0 };
+        e.game.sinceBegin = { stepped: 0 };
+        e.game.be = { ...A.seam.beginEntry, 'begin.level': 0, 'save.time': A.seam.beginEntry['save.time'] - 3 };
+        e.timers.run(3);
+        expect(e.engine.stats.swapPushes).toEqual([{ level: 0, time: A.seam.beginEntry['save.time'] - 3, late: false, pushed: true, at: 'sample' }]);
+    });
     it('⛓ ARRIVAL JITTER — stop() with nothing queued pushes nothing', () => {
         const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, pushSwap: () => true });
         e.engine.walkTo(CHEST);
