@@ -9,7 +9,13 @@
  *   - swordless L14 (160,64) → its stairs: the slowest SHIPPING dashless pass,
  *     624 fine units (492 coarse) — the budget must ship it in one attempt;
  *   - L30 (240,80) with the sword → its teleporter: the full pass upgrades
- *     237 → 110 t, its last dash ask at unit 50 (16 dashless + 34);
+ *     207 → 97 t, its last dash ask at unit 39 (12 dashless + 27), the whole
+ *     pass done at unit 42 (12 + 30). ⛓ Wave 8 (fidelity BOBSOLDIER W4
+ *     `bobSoldierLive`, ON): the room's BobSoldier is a live body now, and
+ *     both plans changed. `bobSoldierLive` OFF restores wave 7's numbers exactly:
+ *     237 → 110 t, last dash ask at unit 50 (16 + 34), done at 53. At a window
+ *     of 41 the full pass is cut at `walk` and the dashless 207 t ships;
+ *     L40 (85) stays the worst leg;
  *   - L40 (480,896) with the sword → its stairs: 417 → 172 t, the last dash
  *     ask at unit 80 (28 + 52). ⛓ WINDOW WHOLE PASS (the whole full pass stops
  *     at the window once a plan is in hand): its full pass spends 57 units, so
@@ -75,11 +81,12 @@ describe('⛓ RECALIBRATE — the anchor legs at the shipped defaults (fine unit
         expect(SOLVER_BUDGET_WORK).toBeGreaterThanOrEqual(624);
     }, 300000);
 
-    it('L30 with the sword: the full pass UPGRADES inside the window (237 → 110 t), its last dash ask at unit 50', () => {
+    it('L30 with the sword: the full pass UPGRADES inside the window (207 → 97 t; wave 8\'s live BobSoldier), the whole pass done at unit 42', () => {
         const r = atDefaults(leg({ level: 30, at: { x: 240, y: 80 }, tiles: [[0, 8]], sword: true }));
         expect(r.ok).toBe(true);
-        expect(rows(r)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 237, work: 16 },
-            { pass: 'full', ok: true, kind: null, ticks: 110, work: 37 }]);
+        expect(rows(r)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 207, work: 12 },
+            { pass: 'full', ok: true, kind: null, ticks: 97, work: 30 }]);
+        expect(12 + 30).toBeLessThanOrEqual(SOLVER_UPGRADE_WINDOW_WORK);
         expect(r.plan.pass).toBe('full');
     }, 300000);
 
