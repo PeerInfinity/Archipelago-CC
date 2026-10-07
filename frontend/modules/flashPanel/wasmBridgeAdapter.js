@@ -171,10 +171,15 @@ export class WasmBridgeAdapter extends FlashBridgeAdapter {
     const bridge = this._getBridge();
     if (!bridge) return false;
     this.installStateHook();
+    // ⛓ SERVED LOCATION — a SWAP is an invocation from the invoke queue (a teleport: what the glue's
+    // `swapState().queued` counts), read before `_buildQueue` drains it. An ITEM write that is a method call
+    // (⛓ KEY DELIVERY: `Main.hasKeySet`) also carries `invocation`, but it swaps nothing: stamping it made a
+    // held room's guard (`releaseForSwap`) release the room for a swap that never came.
+    const swaps = this.invokeQueue.some((i) => i?.invocation);
     const items = this._buildQueue();
     if (items.length > 0) {
       bridge.queueItems(items);
-      if (items.some((i) => i?.invocation)) { this._stampInvocationPush(); return true; }
+      if (swaps) { this._stampInvocationPush(); return true; }
     }
     return false;
   }

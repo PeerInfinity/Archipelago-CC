@@ -763,6 +763,19 @@ export function firstDivergence(expected, rows, { roomLevel, offset = 0 } = {}) 
 }
 
 /**
+ * ⛓ SERVED LOCATION — whether a LOCATION goal's own check has already fired: its `{level, tag}` is in the
+ * game's cleared set (`botStatus.persistence_cleared`; a chest, a pickup and a collected apitem all clear
+ * their slot). Such a goal is DONE whatever interrupts it afterwards: re-solving it meets only the solver's
+ * "already open" / "resolves to NOTHING" refusal. Read from the GAME, never from AP's inventory: the item a
+ * check grants may be anyone's, and the goal's own key arriving is just the most common case (its delivery
+ * lands at contact). An exit goal, or one without a tag, is never served by this.
+ */
+export function locationGoalServed(goal, status) {
+    return goal?.kind === 'location' && Number.isInteger(goal.tag)
+        && (status?.persistence_cleared ?? []).some((c) => c.level === goal.level && c.tag === goal.tag);
+}
+
+/**
  * ⚖ W-Q3 (W3): how many FORCED RE-ARRIVALS one goal may spend on divergences
  * before it fails by name. The divergence after the last one is the failure —
  * so a goal plays at most `MAX_RECOVERIES + 1` plan tapes.
@@ -800,8 +813,7 @@ export const MAX_RECOVERIES = 3;
  * @returns {'done'|'repeat'|'recover'|'fail'}
  */
 export function divergenceAction({ goal, recoveries, status = null, divergence = null, previous = null }) {
-    if (goal?.kind === 'location' && Number.isInteger(goal.tag)
-        && (status?.persistence_cleared ?? []).some((c) => c.level === goal.level && c.tag === goal.tag)) return 'done';
+    if (locationGoalServed(goal, status)) return 'done';
     if (isExactRepeat(previous, divergence)) return 'repeat';
     return recoveries >= MAX_RECOVERIES ? 'fail' : 'recover';
 }

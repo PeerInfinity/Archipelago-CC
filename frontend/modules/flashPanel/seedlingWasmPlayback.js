@@ -105,7 +105,7 @@ import {
 } from '../seedlingDemo/wasmArrival.js';
 import {
     adoptedClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
-    firstDivergence, foldDrain, goalAction, keysHeldAtReset, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
+    firstDivergence, foldDrain, goalAction, keysHeldAtReset, locationGoalServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
 } from '../seedlingDemo/wasmPlayback.js';
@@ -286,6 +286,8 @@ export function createWasmPlayback({
         expiries: 0, provisionalPlays: 0, retries: 0, passes: {}, backstops: 0,
         // ⛓ MID-ROOM REPLAN — deliveries the gate held back, each one's outcome (freeze, land, replan), and the refused
         deliveries: [], deliveryDeferred: [], gateHeld: 0,
+        // ⛓ SERVED LOCATION — deliveries that met a location goal whose own check had fired: no freeze, no re-solve
+        deliveryServed: [],
         // ⛓ ARRIVAL JITTER — the glue teleports pushed in the turn their door's begin record was seen
         swapPushes: [],
         // ⛓ ARRIVAL JITTER — every plan ship's clock: staged, shipped prefix, the game's (a diagnostic, never acted on)
@@ -1575,6 +1577,17 @@ export function createWasmPlayback({
             if (gate.waiting !== why) { gate.waiting = why; log(`[wasm playback] an item delivery waits: ${why}`); }
             later();
         };
+        // ⛓ SERVED LOCATION — the goal's own check already fired (its flag is in the game's cleared set: a Boss Key
+        // location's key lands AT contact). Nothing is left to replan, so nothing is frozen: the tape plays on to
+        // its end and the goal is done; the delivery lands in the room that end holds (`deliverHeld`). Freezing here
+        // re-solved a goal whose apitem was gone ("resolves to NOTHING").
+        const pre = status();
+        if (locationGoalServed(goal, pre)) {
+            const why = `${goal.name ?? goal.kind} is served (its check fired) — the delivery lands after its tape ends`;
+            if (gate.waiting !== why) stats.deliveryServed.push({ level: room.level, goal: goal.name ?? goal.kind, tick: pre.tick ?? null });
+            wait(why);
+            return;
+        }
         // Cheap reads first: a dead frame (a seal / dialogue freeze) or a crossing within reach is not mid-room.
         if (readState().freezeObjects === true) { wait('the game is in a freeze (dead frames)'); return; }
         const near = play.progress?.ticks ?? 0;
