@@ -1563,3 +1563,41 @@ describe('⛓ WALK IDENTITY — engine.legEnd(): a Restart waits for the playing
         expect(await p).toMatchObject({ ended: true, phase: 'idle' });
     });
 });
+
+/**
+ * ⛓ WALK IDENTITY — `engine.expectArrival()`: a Restart's start hop lands in a room the stopped engine did not
+ * cause. Armed, the watch HOLDS that landing (staged at its own begin record), so the bot's next goal there is
+ * served from the held arrival, whichever turn it comes in — never the cold start's adoption / re-arrival.
+ */
+describe('⛓ WALK IDENTITY — engine.expectArrival(): the Restart\'s start-hop arrival is held at its landing', () => {
+    const CLEAR = { marks: [], queued: 0, pushedOn: null, pushes: 0 };
+    it('armed after a stop, the landing is HELD before any goal; the goal then solves from it (0 forced, 0 teleports)', () => {
+        const e = engineOver(A, { swap: CLEAR });
+        e.engine.stop();
+        expect(e.engine.expectArrival()).toBe(true);
+        e.timers.run(20);
+        expect(e.engine.status().phase).toBe('idle');
+        e.game.land();
+        e.timers.run(20);
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, shipped: 0 } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'continue' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ forced: 0, forcedBy: {}, adopted: 0, expectedArrivals: 1, held: 1 });
+        expect(e.service.seen[0].request.name).toBe('wasm-location-86');
+    });
+    it('NOT armed (today\'s race lost): the same landing before the goal is a cold start (the control)', () => {
+        const e = engineOver(A, { swap: CLEAR });
+        e.game.land();
+        e.timers.run(20);
+        expect(e.engine.status().phase).toBe('idle');
+        expect(e.engine.walkTo(CHEST).action).not.toBe('continue');
+    });
+    it('refused while a goal is in flight, and by an engine without the glue query', () => {
+        const e = engineOver(A, { swap: CLEAR });
+        e.engine.walkTo(CHEST);
+        expect(e.engine.expectArrival()).toBe(false);
+        expect(engineOver(A, { noGlue: true }).engine.expectArrival()).toBe(false);
+    });
+});

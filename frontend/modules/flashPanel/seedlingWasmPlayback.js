@@ -278,6 +278,8 @@ export function createWasmPlayback({
         adopted: 0, adoptRefused: [],
         // ⛓ WALK IDENTITY (a) — each adoption put on the live clock: begin-staged, shadow and held clocks, the shift (or why not)
         adoptClock: [],
+        // ⛓ WALK IDENTITY — arrivals the glue told the engine to expect (a Restart's start hop)
+        expectedArrivals: 0,
         // ⛓ W8c — the new-game arm's ceremonies waited out, and the tutorial Helps dismissed (one arrow pair each)
         ceremonies: [], dismissed: [],
         // ⛓ ANYTIME / O2 — expiries, the provisional plans they played, the held retries, and each plan's pass
@@ -1745,6 +1747,21 @@ export function createWasmPlayback({
                 };
                 t.setTimeout(poll, SOLVE_POLL_MS);
             });
+        },
+        /**
+         * ⛓ WALK IDENTITY — a Restart's start hop is an ARRIVAL the engine did not cause: the glue stopped the walk
+         * (so nothing watches), then queues the hop's teleport. Watch for it as for a crossing in flight, so its
+         * landing is HELD and staged whatever turn the bot's next goal comes in. Measured without it: when the
+         * landing beat the bot's next walkTo, the goal found an unwatched room, the adoption refused it (the
+         * player holds the Sword) and a forced re-arrival spent 2 more frames (2 of 14 CI runs). False when this
+         * engine holds no arrivals (no glue query) or a goal is in flight.
+         */
+        expectArrival() {
+            if (!holds || !glueQuery || goal) return false;
+            arriving = true;
+            startWatch();
+            stats.expectedArrivals += 1;
+            return true;
         },
         liveLevel() { const l = readState().level; return Number.isInteger(l) ? l : null; },
         /** ⛓ O3 — the budget the next solve starts with (the knob's live value, else the engine's own), in work units. */

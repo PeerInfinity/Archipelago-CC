@@ -470,6 +470,12 @@ export class SeedlingPlaybackController {
         return this._wasmEngine?.legEnd?.() ?? null;
     }
 
+    /** ⛓ WALK IDENTITY — a Restart's start hop is coming: the wasm engine watches for it (`engine.expectArrival`). */
+    expectArrival() {
+        if (this._page()) return false;
+        return this._wasmEngine?.expectArrival?.() === true;
+    }
+
     /** The page's walk state, for readouts and rows: `{state, reason, goal}` or null. */
     status() {
         const p = this._page();

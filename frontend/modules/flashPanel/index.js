@@ -379,6 +379,8 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
       const w = c?.status?.()?.wasm ?? null;
       return !!(w && (w.driving || w.gate || w.frozen));
     }).map((c) => c.stop()).length,
+    // ⛓ WALK IDENTITY — after that stop, the wasm engines watch for the Restart's start-hop arrival (held at its landing).
+    expectBotArrivals: () => playbackControllers.filter((c) => c?.expectArrival?.() === true).length,
     // ⛓ OBSTACLE EVENTS — the runtime collector: the loaded slot's game-state events, collected on the GAME's flag
     // as a local event check (forced: the game is the truth, not the logic's reach), never a server check.
     getEvents: eventsOfLoadedSlot,

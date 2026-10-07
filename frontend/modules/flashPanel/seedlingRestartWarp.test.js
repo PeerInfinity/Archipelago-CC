@@ -238,6 +238,20 @@ describe('the glue — menuPanel:restarted re-takes the start hop when the start
         expect(bare.glue.lastRestart).toMatchObject({ taken: true, pushed: false });
     });
 
+    it('⛓ WALK IDENTITY — the stopped engines are told to EXPECT the hop\'s arrival after the stop and BEFORE the hop is queued', () => {
+        const order = [];
+        const h = harness({ retake: () => { order.push('retake'); return { taken: true, why: null, region: 's' }; } });
+        h.glue.stopBotWalks = () => { order.push('stop'); return 1; };
+        h.glue.expectBotArrivals = () => { order.push('expect'); return 1; };
+        h.restart({ mode: 'world' });
+        expect(order).toEqual(['stop', 'expect', 'retake']);
+        expect(h.glue.lastRestart).toMatchObject({ taken: true, watching: 1 });
+        const maze = harness({ startSubstrate: 'maze' });
+        maze.glue.expectBotArrivals = () => { order.push('maze-expect'); return 1; };
+        maze.restart({ mode: 'world' });
+        expect(order).not.toContain('maze-expect');
+    });
+
     it('a refused re-take is said, not hidden', () => {
         const h = harness({ retake: () => ({ taken: false, why: 'the load does not skip this start', region: 's' }) });
         h.restart({ mode: 'world' });

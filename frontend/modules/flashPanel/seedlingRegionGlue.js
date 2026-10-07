@@ -100,7 +100,7 @@ export class SeedlingRegionGlue {
      *   every door passes, today's behaviour
      */
     constructor({ eventBus, getDispatcher, loadRegionEvent, substrateId, getPanel, now, canPass, isBotWalking,
-        timers, getProcgen, stopBotWalks, getEvents, collectEvent, getLoop } = {}) {
+        timers, getProcgen, stopBotWalks, expectBotArrivals, getEvents, collectEvent, getLoop } = {}) {
         this.eventBus = eventBus ?? null;
         this.getDispatcher = getDispatcher ?? (() => null);
         this.loadRegionEvent = loadRegionEvent;
@@ -141,6 +141,7 @@ export class SeedlingRegionGlue {
          */
         this.getProcgen = getProcgen ?? (() => null);
         this.stopBotWalks = stopBotWalks ?? (() => 0);
+        this.expectBotArrivals = expectBotArrivals ?? (() => 0);
         this.lastRestart = null;
         // Diagnostics — the verify script reads these rather than inferring
         // behaviour from console text.
@@ -408,6 +409,8 @@ export class SeedlingRegionGlue {
         // so nothing the gate held back waits on a room the player has left. The Playback Bot re-plans from the
         // start on the region move that follows.
         const stopped = this.stopBotWalks();
+        // ⛓ WALK IDENTITY — the stopped engines watch for the hop's arrival BEFORE it is queued (its landing is held).
+        const watching = this.expectBotArrivals();
         const r = procgen?.retakeStartHop?.() ?? { taken: false, why: 'procgenPlayer has no retakeStartHop' };
         if (r.taken) this.stats.restarts += 1;
         // ⛓ WALK IDENTITY — the stop above released the room BEFORE the hop queued its teleport, so nothing pushed it:
@@ -415,7 +418,7 @@ export class SeedlingRegionGlue {
         // apart run to run). Pushed in this turn, as at every other site the room is let go (arrival jitter).
         const pushed = r.taken ? this.pushQueuedTeleports() : false;
         if (pushed) this.stats.restartPushes.push({ at: 'restart' });
-        return decide(r.taken, r.taken ? null : r.why, { start, substrate, stoppedWalks: stopped, pushed });
+        return decide(r.taken, r.taken ? null : r.why, { start, substrate, stoppedWalks: stopped, watching, pushed });
     }
 
     /**

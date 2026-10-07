@@ -401,6 +401,20 @@ describe('⛓ W2 — the atlas instance walks under the WASM runtime (the engine
         expect(c.settleBeforeRestart()).toBe(leg);
     });
 
+    it('⛓ WALK IDENTITY — expectArrival is the engine\'s answer (no engine → false)', async () => {
+        const engine = fakeEngine();
+        let armed = false;
+        engine.expectArrival = () => { armed = true; return true; };
+        const c = new SeedlingPlaybackController({ getSurface: () => wasmSurface(), substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+            resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas, wasm: true, timers: fakeTimers().timers,
+            loadWasmEngine: async () => engine });
+        expect(c.expectArrival()).toBe(false);
+        c.walkTo({ kind: 'location', name: 'Starting House - Chest' });
+        await flush();
+        expect(c.expectArrival()).toBe(true);
+        expect(armed).toBe(true);
+    });
+
     it('⛓ WALK IDENTITY — the JS page (no wasm engine) restarts as before: settleBeforeRestart is null', () => {
         const c = new SeedlingPlaybackController({ getSurface: () => null, substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
             resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas });
