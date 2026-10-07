@@ -465,6 +465,7 @@ describe('who takes the box', () => {
          * OBSTACLE EVENTS the break-before-first-use witness, `probe-seedling-obstacle-events.mjs`;
          * RULES game-truth-gaps the lethal-landing witness, `probe-seedling-lethal-landings.mjs`, and L57's
          * death-spawned mouth, `probe-seedling-tentacle-mouth.mjs`;
+         * RULES lock-events the BossLock latch witness, `probe-seedling-bosslock-latch.mjs`;
          * LOOP RESTART the loop-mode Restart's first-move witness, `probe-seedling-loop-restart.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
@@ -488,7 +489,8 @@ describe('who takes the box', () => {
             'probe-seedling-restart-warp.mjs', 'probe-seedling-divergence-sweep.mjs', 'probe-seedling-slot-order.mjs',
             'probe-seedling-contact-divergence.mjs', 'probe-seedling-axe-phase.mjs', 'probe-seedling-arrival-solid.mjs',
             'probe-seedling-restart-route.mjs', 'probe-seedling-restart-held-items.mjs', 'probe-seedling-arrival-escape.mjs',
-            'probe-seedling-obstacle-events.mjs', 'probe-seedling-lethal-landings.mjs', 'probe-seedling-tentacle-mouth.mjs', 'probe-seedling-loop-restart.mjs'];
+            'probe-seedling-obstacle-events.mjs', 'probe-seedling-lethal-landings.mjs', 'probe-seedling-tentacle-mouth.mjs', 'probe-seedling-loop-restart.mjs',
+            'probe-seedling-bosslock-latch.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
