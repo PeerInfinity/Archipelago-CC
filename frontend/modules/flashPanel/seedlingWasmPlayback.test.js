@@ -162,7 +162,7 @@ function engineOver(arrival, opts = {}) {
         getSwapState: opts.noGlue ? undefined : () => swap.state,
         ...(opts.pushSwap ? { pushSwapNow: () => { game.calls.push('pushSwap'); return opts.pushSwap(swap); } } : {}),
         getWin: () => opts.win ?? null,
-        teleport: (p) => { teleports.push(p); if (opts.land !== false) game.land(); return true; },
+        teleport: (p) => { teleports.push(p); opts.onTeleport?.(swap); if (opts.land !== false) game.land(); return true; },
         getCheckBinding: () => ({ ignoreHostStart: (w) => { windows.push(w); return true; } }),
         records: opts.records ?? RECORDS, generated: opts.generated ?? false, producer: opts.producer ?? null, solveService: service, timers, now: opts.now ?? (() => (t += 1)),
         ...(opts.getBudgetWork ? { getBudgetWork: opts.getBudgetWork } : {}),
@@ -809,6 +809,31 @@ describe('W7 — continuations from a held room, and their named fallbacks', () 
         expect(i).toBeGreaterThan(0);
         expect(e.game.calls.slice(e.game.calls.lastIndexOf('botReset'), i + 1)).toEqual(['botReset', 'pushSwap']);
         expect(e.engine.stats.swapPushes).toEqual([{ level: HOUSE, time: null, late: false, pushed: true, at: 'release' }]);
+    });
+    it('⛓ ARRIVAL JITTER — stop() with the glue\'s teleport QUEUED (the bot stops on that region move) pushes it in stop\'s own turn, after the release', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, pushSwap: () => true });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.swap.state = { marks: [], queued: 1, pushedOn: null, pushes: 0 };
+        e.engine.stop(); // before any guard tick sees the queue
+        expect(e.game.calls.slice(-2)).toEqual(['botReset', 'pushSwap']);
+        expect(e.engine.stats.swapPushes).toEqual([{ level: HOUSE, time: null, late: false, pushed: true, at: 'stop' }]);
+        expect(e.engine.stats.releasedForSwap).toBe(0);
+    });
+    it('⛓ ARRIVAL JITTER — stop() with nothing queued pushes nothing', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, pushSwap: () => true });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.stop();
+        expect(e.game.calls).not.toContain('pushSwap');
+        expect(e.engine.stats.swapPushes).toEqual([]);
+    });
+    it('⛓ ARRIVAL JITTER — the forced re-arrival\'s OWN teleport is pushed the moment it is queued (`re-arrival`)', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, land: false,
+            onTeleport: (swap) => { swap.state = { ...swap.state, queued: 1 }; }, pushSwap: (swap) => { swap.state = { ...swap.state, queued: 0, pushes: swap.state.pushes + 1 }; return true; } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        expect(e.game.calls.at(-1)).toBe('pushSwap');
+        expect(e.engine.stats.swapPushes).toEqual([{ level: HOUSE, time: null, late: false, pushed: true, at: 're-arrival' }]);
     });
     it('⛓ ARRIVAL JITTER — a release for a MARK alone (nothing queued) pushes nothing', () => {
         const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, pushSwap: () => true });

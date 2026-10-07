@@ -680,6 +680,8 @@ export function createWasmPlayback({
         stats.forcedBy[kind] = (stats.forcedBy[kind] ?? 0) + 1;
         const ok = spawn ? teleport({ level: goal.level, x: spawn.x, y: spawn.y }) : false;
         if (ok === false) { fail('the panel could not queue the forced re-arrival (no teleport recipe, or no spawn recorded)'); return; }
+        // ⛓ ARRIVAL JITTER — the room was released for this teleport: it lands without the timer's share.
+        pushQueuedNow('re-arrival', goal.level);
         note(why);
         schedule(sample, 0);
     }
@@ -690,13 +692,15 @@ export function createWasmPlayback({
         const se = seam();
         if (isArrival(baseline, se)) {
             baseline = se.beginEntry;
+            const sw = holds ? swapState() : null;
             if (se.beginEntry['begin.level'] === goal.level) {
                 // ⛓ W7 — the glue query: an arrival the glue is about to redirect is not the room to hold.
-                const sw = holds ? swapState() : null;
                 const blocked = sw ? arrivalHoldBlocker(sw, se.beginEntry) : null;
                 if (blocked) stats.holdBlocked.push({ level: goal.level, why: blocked });
                 else { arrive(se); return; }
             }
+            // ⛓ ARRIVAL JITTER — any landing with the glue's teleport still queued (the goal's room or not): push it now.
+            if (sw) pushQueuedSwap(sw, se, se.beginEntry['begin.level'], 'sample');
         }
         if (now() > deadline) {
             fail(`no arrival in level ${goal.level} within ${ARRIVAL_WAIT_MS / 1000} s`);
@@ -761,13 +765,27 @@ export function createWasmPlayback({
      * wall-clock share, before the swap lands — the swap's arrival then stages the same `Game.time` on every run.
      * Each push is a `swapPushes` row (`late` = the room had already stepped when the watch saw it).
      */
-    function pushQueuedSwap(sw, se, level) {
+    function pushQueuedSwap(sw, se, level, at = 'door') {
         if (typeof pushSwapNow !== 'function') return;
         const d = queuedSwapPush(sw, se.sinceBegin ?? null, se.beginEntry ?? null);
         if (!d) return;
         let pushed = false;
         try { pushed = pushSwapNow() === true; } catch { pushed = false; }
-        stats.swapPushes.push({ level, time: se.beginEntry?.['save.time'] ?? null, late: d.late, pushed, at: 'door' });
+        stats.swapPushes.push({ level, time: se.beginEntry?.['save.time'] ?? null, late: d.late, pushed, at });
+    }
+
+    /**
+     * ⛓ ARRIVAL JITTER — a room the engine just LET GO (a release for a swap, `stop()`, the forced re-arrival's
+     * own teleport) runs unheld until the queued teleport lands: push it in the turn of the release, so the
+     * frames it runs are the game's, not the adapter timer's wall-clock share. `sw` = a swapState read (re-read
+     * when absent). A `swapPushes` row per push (`at` = the site).
+     */
+    function pushQueuedNow(at, level, sw = swapState()) {
+        if (typeof pushSwapNow !== 'function' || !sw) return;
+        if (!((sw.queued ?? 0) > 0) || (sw.marks ?? []).includes('parked')) return;
+        let pushed = false;
+        try { pushed = pushSwapNow() === true; } catch { pushed = false; }
+        stats.swapPushes.push({ level, time: null, late: false, pushed, at });
     }
 
     /**
@@ -1144,14 +1162,8 @@ export function createWasmPlayback({
         const keepQueued = queued;
         const heldLevel = room?.level ?? null;
         release();
-        // ⛓ ARRIVAL JITTER — the released room runs unheld until the swap lands: push a queued teleport in THIS
-        // turn, not at the adapter's next 100 ms tick (the held room's clock stood still until the release).
-        const d = (sw.queued ?? 0) > 0 && !(sw.marks ?? []).includes('parked') && typeof pushSwapNow === 'function';
-        if (d) {
-            let pushed = false;
-            try { pushed = pushSwapNow() === true; } catch { pushed = false; }
-            stats.swapPushes.push({ level: heldLevel, time: null, late: false, pushed, at: 'release' });
-        }
+        // ⛓ ARRIVAL JITTER — the released room runs unheld until the swap lands: push it in THIS turn.
+        pushQueuedNow('release', heldLevel, sw);
         reset();
         goal = g;
         queued = keepQueued;
@@ -1677,7 +1689,10 @@ export function createWasmPlayback({
                     continuation: play?.continuation ?? false, prefix: play?.prefix ?? 0 });
             }
             queued = null;
+            const heldLevel = room?.level ?? null;
             release();
+            // ⛓ ARRIVAL JITTER — the bot stops on a region move whose teleport the glue has queued: push it now.
+            pushQueuedNow('stop', heldLevel);
             reset();
             stopWatch();
             // ⛓ MID-ROOM REPLAN — the gate comes off: whatever it held reaches the game on the adapter's next push.
