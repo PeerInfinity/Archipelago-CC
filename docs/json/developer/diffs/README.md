@@ -4,11 +4,14 @@ This directory contains diff files showing changes made to this repository compa
 
 ## Available Diff Files
 
-### 1. `diff-files/core-files.diff` (43 lines)
+### 1. `diff-files/core-files.diff` (85 lines)
 Changes to the main Archipelago core files:
 - **settings.py** - `skip_required_files` global, `Group.__getattribute__` bypass for missing ROM paths, and early extraction from host.yaml `json_tools` section
+- **Main.py** - two fixes:
+  - JSON Tools artifacts are kept out of the hostable seed `.zip`, which a stock WebHost would otherwise reject.
+  - Each sphere is iterated in a stable `(player, address)` order when building `multidata["spheres"]`. Without this, the same seed gave `.archipelago` files with different bytes on different runs. For details, see [Non-Deterministic Sphere Sets](../../upstream-bugs/core/nondeterministic-sphere-sets.md).
 
-This is the only core file modification. All other core files (`BaseClasses.py`, `Main.py`, `Utils.py`, `CommonClient.py`, `Launcher.py`) now match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches at runtime.
+All other core files (`BaseClasses.py`, `Utils.py`, `CommonClient.py`, `Launcher.py`) match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches at runtime.
 
 ### 2. `diff-files/config-files.diff` (465 lines)
 Changes to configuration and repository setup files:

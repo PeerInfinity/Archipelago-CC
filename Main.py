@@ -323,7 +323,11 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
                 spheres: list[dict[int, set[int]]] = []
                 for sphere in multiworld.get_sendable_spheres():
                     current_sphere: dict[int, set[int]] = collections.defaultdict(set)
-                    for sphere_location in sphere:
+                    # Fork fix: iterate in a stable order. `sphere` is a set[Location], and Location hashes by id(),
+                    # so its iteration order follows memory addresses; two addresses that collide in the int set's
+                    # hash table would then swap between runs, changing the .archipelago bytes for the same seed.
+                    # See docs/json/upstream-bugs/core/nondeterministic-sphere-sets.md
+                    for sphere_location in sorted(sphere, key=lambda loc: (loc.player, loc.address)):
                         current_sphere[sphere_location.player].add(sphere_location.address)
 
                     if current_sphere:

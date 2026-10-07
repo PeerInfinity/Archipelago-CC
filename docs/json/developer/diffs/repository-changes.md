@@ -118,6 +118,7 @@ The following 26 files have been modified from the upstream version:
 
 ### Core Files (see diff-files/core-files.diff)
 ```
+Main.py
 settings.py
 ```
 
@@ -174,7 +175,11 @@ worlds/yoshisisland/__init__.py
 ### Core Files
 - **settings.py** - `skip_required_files` global, `Group.__getattribute__` bypass for missing ROM paths, and early extraction from host.yaml `json_tools` section. Required for romless world patches.
 
-Note: `BaseClasses.py`, `Main.py`, `Utils.py`, `CommonClient.py`, and `Launcher.py` now match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches (installed at runtime by the JSON Tools Installer).
+- **Main.py** - Two small fork fixes, neither needed by the JSON export:
+  - In the hostable-zip loop, JSON Tools artifacts (`_rules.json`, `_rules-ast.json`, `_sphere_log.jsonl`, `.pkl.gz`, `_pickle_meta.json`) are kept out of the seed `.zip`. A stock WebHost rejects an upload containing them.
+  - Each sphere is iterated in `(player, address)` order when building `multidata["spheres"]`, so the same seed produces the same `.archipelago` bytes. See [Non-Deterministic Sphere Sets](../../upstream-bugs/core/nondeterministic-sphere-sets.md).
+
+Note: `BaseClasses.py`, `Utils.py`, `CommonClient.py`, and `Launcher.py` match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches (installed at runtime by the JSON Tools Installer).
 
 ### World Implementations (skip_required_files support)
 Modified world implementations to support generation without ROM files:

@@ -18,7 +18,7 @@ Files modified from their upstream versions (commit `e6e0bc30`).
 
 - `Main.py`
 
-  Excludes JSON-Tools exporter artifacts (rules JSON, sphere log, pickle) from the hostable .zip so a stock WebHost upload doesn't reject the archive.
+  Excludes JSON-Tools exporter artifacts (rules JSON, sphere log, pickle) from the hostable .zip so a stock WebHost upload doesn't reject the archive. Also iterates each sphere in `(player, address)` order when building `multidata["spheres"]`, so the same seed gives byte-identical `.archipelago` files ([Non-Deterministic Sphere Sets](../../../upstream-bugs/core/nondeterministic-sphere-sets.md)).
 
 - `README.md`
 

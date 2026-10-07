@@ -4,6 +4,12 @@ This directory documents bugs discovered in the upstream Archipelago repository 
 
 ## Bug Index
 
+### Core
+
+| Bug | Status | Description |
+|-----|--------|-------------|
+| [Non-Deterministic Sphere Sets](./core/nondeterministic-sphere-sets.md) | Fixed in fork | `Main.py` builds `multidata["spheres"]` by iterating a `set[Location]` (hashed by `id()`), so the same seed's `.archipelago` bytes vary between runs |
+
 ### A Link to the Past (ALttP)
 
 | Bug | Status | Description |
