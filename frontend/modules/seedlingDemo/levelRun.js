@@ -208,7 +208,7 @@ import { DRILL, drillRect, hitDrill, newDrill, stepDrill, stepDrillGraphic } fro
 // file does not use — the press rect comes from `presses.slashRect` — but
 // `Player.as:116`'s `swordForce` has one home and this is it.
 import {
-    INITIAL_SLASH_STATE, SLASH_ANIM_TICKS, SLASH_SCALE_NORMAL, SWORD_FORCE, slashScaleFor,
+    INITIAL_SLASH_STATE, SLASH_ANIM_TICKS, SLASH_SCALE_NORMAL, SWORD_FORCE, slashPressForecast, slashScaleFor,
     slashSet, slashTimerTick,
 } from './combatVerbs.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
@@ -14112,6 +14112,152 @@ export function createLevelRun({
             }
             spinnerForecastMemo = cur;
             return cur.rows.slice(0, need);
+        },
+        /**
+         * ⛓⛓⛓ SEEDLING HAMMER-PHASE A (D1) — **THE FORECAST WITH ONE PRESS OF THE PLAYER'S IN IT.**
+         *
+         * `spinnerForecast` holds no hit it has not seen, and a landing's knockback is player-coupled, so no
+         * forecast taken before a press carried the rebound (F1c's remainder, `hammerPhaseRefusal`). This is the
+         * same forecast — the live bodies deep-copied, `stepSpinners` under the same `ctxNow`/`ctxAfter` split —
+         * with the press's hit tests applied where `advance` applies them, by the same calls:
+         *
+         *   - the press is `slashSet` at `pressAt` (`combatVerbs.slashPressForecast`, the run's own ageing of
+         *     `slashInfo`), so a re-press inside the 20-tick `slashTimer` is a DASH with the dash's rect and
+         *     reach, and a `gated` or `swallowed` press opens no window at all;
+         *   - the tests are `presses.swordWindowStep` over the run's OWN window in flight (a press of the past
+         *     whose repeats are still due fires here too), the press's thrust replacing it as `advance` does
+         *     (`swordWindowReplace` above the step, `swordWindowSchedule` below it);
+         *   - each test is `applyThrust`'s spinner arm: `auditPress`'s rect overlap against the body's rect now,
+         *     `distanceRectPoint <= slashReachFor(scale)`, the line of sight `assertSpinnerLineOfSight` asks
+         *     (the run THROWS there; this reports it and applies nothing), then `hitSpinner(sp, {force:
+         *     SWORD_FORCE, from: the player's point, damage, t: 'Sword', frozen})` — whose own gates are the
+         *     i-frame and the freeze.
+         *
+         * ⛔ THE INDEX CONVENTION IS `spinnerForecast`'s: `rows[i]` is the bodies at the top of tick
+         * `ticksCompleted + 1 + i`. The advance at `ticksCompleted + i` steps the bodies and THEN fires that
+         * tick's tests, so a hit at tick T is in row `T − ticksCompleted`'s `bodies` (its `hits`, its 30-tick
+         * i-frame) and moves the RECTS from the row after it on (`hitSpinner` moves `v`, not `x`/`y`).
+         *
+         * ⚠ THE PLAYER'S POINT IS AN INPUT, NOT A GUESS: `getSlashRect()` reads `x`/`y` on every test, so
+         * `positions(tick)` (or `positions[tick − ticksCompleted]`) is the player's entity point at the TOP of
+         * that tick — the pre-move position the run tests from. A test whose position is not supplied is a
+         * caller defect, and it throws.
+         *
+         * ⛔ IT REPORTS, IT DOES NOT ASSUME. `landing` is the first test that landed on `id` (null if none),
+         * `tests` has one row per test the rect reached (the `spinnerPressHits` shape), and `why` says why no
+         * test landed. Outside the memo: nothing here is cached or written.
+         *
+         * @param {number} n  rows, as `spinnerForecast(n)`
+         * @param {{pressAt: number, direction: number, id?: string,
+         *   positions: (Function|Array<{x: number, y: number}>)}} press
+         * @returns {{rows: object[][], bodies: object[][], tests: object[], outcome: string, landing: ?object,
+         *   why: ?string, lineBlocked: ?object, unmodelled: string[]}}  `bodies[i]` is row i's `{id, hits, hitsTimer, destroy}`, in
+         *   `rows[i]`'s order (the i-frame a later strike has to wait out is read there).
+         */
+        spinnerForecastWithPress(n, { pressAt, direction, id = null, positions } = {}) {
+            const live = spinnerStateFor(level);
+            const need = Number.isFinite(n) ? Math.max(0, Math.ceil(n)) : 0;
+            if (!Number.isInteger(pressAt) || pressAt < ticksCompleted) {
+                throw new Error(`levelRun.spinnerForecastWithPress: pressAt ${pressAt} is not a tick at or `
+                    + `after ${ticksCompleted} — a forecast cannot press in the past.`);
+            }
+            const pointAt = (t) => {
+                const p = typeof positions === 'function' ? positions(t)
+                    : (Array.isArray(positions) ? positions[t - ticksCompleted] : null);
+                if (!p || !Number.isFinite(p.x) || !Number.isFinite(p.y)) {
+                    throw new Error('levelRun.spinnerForecastWithPress: no player position for the hit test '
+                        + `at tick ${t} — the slash rect is re-aimed from the player's point on every test.`);
+                }
+                return p;
+            };
+            const weapon = weaponForPress();
+            const press = slashPressForecast(slashInfoNow(),
+                { tick: ticksCompleted, ticksAhead: pressAt - ticksCompleted, direction });
+            const opens = (weapon === 'sword' || weapon === 'ghostsword')
+                && (press.outcome === 'slash' || press.outcome === 'dash');
+            const thrust = opens ? {
+                weapon, direction: press.slashDirection, pressTick: pressAt,
+                anim: press.state.anim, scale: slashScaleFor(press.state.anim),
+            } : null;
+            const damage = inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE;
+            const frozen = ceremony !== null;
+            const tests = [];
+            let lineBlocked = null;
+            const st = { byId: new Map([...live.byId].map(([k, v]) => [k, { ...v }])), level };
+            const ctxNow = spinnerCtx();
+            const ctxAfter = firstTickInWorld ? spinnerCtx({ beforeTypeFlip: false }) : ctxNow;
+            let win = swordWindow;
+            const rows = [];
+            const bodies = [];
+            const fire = (th, t) => {
+                if (th.weapon !== 'sword') return;
+                const from = pointAt(t);
+                const scale = th.scale ?? SLASH_SCALE_NORMAL;
+                const rect = slashRect(from.x, from.y, th.direction, scale);
+                const reachLimit = slashReachFor(scale);
+                for (const sp of st.byId.values()) {
+                    if (sp.removed) continue;
+                    const body = spinnerRect(sp);
+                    if (!rectsOverlap(rect, body)) continue;
+                    const reach = distanceRectPoint(from.x, from.y, body);
+                    if (reach > reachLimit) {
+                        tests.push({ t, id: sp.id, landed: false, killed: false, reach, hits: sp.hits,
+                            hitsTimer: sp.hitsTimer, why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}` });
+                        continue;
+                    }
+                    const blocker = collideLineSolid(from.x, from.y, sp.x, sp.y);
+                    if (blocker) {
+                        lineBlocked = lineBlocked ?? { t, id: sp.id, at: blocker.at };
+                        tests.push({ t, id: sp.id, landed: false, killed: false, reach, hits: sp.hits,
+                            hitsTimer: sp.hitsTimer, why: 'line of sight — the run refuses this hit (it throws)' });
+                        continue;
+                    }
+                    const before = sp;
+                    const after = hitSpinner(sp, { force: SWORD_FORCE, from: { x: from.x, y: from.y }, damage,
+                        t: weapon === 'spear' ? 'Spear' : 'Sword', frozen });
+                    st.byId.set(sp.id, after);
+                    const landed = after.hits !== before.hits;
+                    tests.push({ t, id: sp.id, landed, killed: after.destroy && !before.destroy, reach,
+                        hits: after.hits, hitsTimer: after.hitsTimer,
+                        why: landed ? null : (before.hitsTimer > 0 ? `i-frames — hitsTimer ${before.hitsTimer} > 0`
+                            : (before.destroy ? 'the body is already dying' : 'the freeze')) });
+                }
+            };
+            for (let i = 0; i < need; i += 1) {
+                const t = ticksCompleted + i;
+                if (live.byId.size > 0) stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
+                if (!lineBlocked) {
+                    const fired = swordWindowStep(win, t);
+                    win = fired.window;
+                    for (const th of fired.fires) fire(th, t);
+                    if (t === pressAt && thrust) win = swordWindowSchedule(swordWindowReplace(win), thrust);
+                }
+                const now = spinnerRects(st);
+                rows.push(now.map((s) => s.rect));
+                bodies.push(now.map((s) => ({ id: s.id, hits: s.spinner.hits, hitsTimer: s.spinner.hitsTimer,
+                    destroy: s.spinner.destroy })));
+            }
+            const mine = tests.filter((x) => id === null || x.id === id);
+            const landing = mine.find((x) => x.landed) ?? null;
+            const why = landing ? null
+                : (!opens ? `the press at t${pressAt} opens no window: ${press.outcome} (${press.why})`
+                    : (mine.length === 0 ? `no test's rect reached ${id ?? 'a body'} within ${need} row(s)`
+                        : mine.map((x) => `t${x.t} ${x.why}`).join('; ')));
+            /**
+             * ⚠ THE OTHER PLAYER-COUPLED HIT IT DOES NOT CARRY, NAMED: `shieldBumpNow` (a carried shield's bump,
+             * `Shield` damage under the dark shield, with the dark-stuff latch) hits a body the player touches on
+             * any tick — a press is not needed. Measured on `r1-dark-shield-spinner`: a bump at the aim tick
+             * moves the body's `hits` and `v`, and the forecast taken BEFORE it is wrong from that row; taken at
+             * the press (after it) it is exact. So a shield in the inventory is reported, never ignored.
+             */
+            const unmodelled = inventory?.hasShield ? ['shield bump (`shieldBumpNow`)'] : [];
+            return {
+                rows: live.byId.size > 0 ? rows : [], bodies: live.byId.size > 0 ? bodies : [],
+                tests, outcome: press.outcome, unmodelled,
+                landing: landing ? { t: landing.t, index: landing.t - ticksCompleted, id: landing.id,
+                    killed: landing.killed } : null,
+                why, lineBlocked,
+            };
         },
         /**
          * ⛔⛔ R5 slice 13: `{t, level, id, flag, cause}` per `Spinner.removed()`.
