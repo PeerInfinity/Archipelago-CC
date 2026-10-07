@@ -12,6 +12,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
+    adoptedClockStaging,
     FALLBACK_POLICY, MAX_RECOVERIES, MID_ROOM_POLICY, SHIPPED_RNG, TAPE_KEY_RELEASES, WasmPlaybackError, divergenceAction, divergenceFailure, divergenceRepeatFailure, isExactRepeat,
     exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, keysHeldAtReset, shippedTape, wasmGoalRefusal,
     arrivalHoldBlocker, queuedSwapPush, endsHeld, liveDeclarations, primarySplitRefusal, shadowMismatch,
@@ -472,5 +473,26 @@ describe('⛓ KEY DELIVERY — a tape declares the game\'s keys ∪ the AP-grant
         expect(exactDeclarationRefusal(tape([0, 3]), st)).toMatch(/save\.keys \[0,3\] is not the game's \[3\]/);
         expect(exactDeclarationRefusal(tape([0]), st, { granted: { keys: [0] } })).toMatch(/save\.keys \[0\] is not the game's \[0,3\]/);
         expect(exactDeclarationRefusal(tape([3]), st, { granted: { keys: [] } })).toBeNull();
+    });
+});
+
+describe('⛓ WALK IDENTITY (a) — adoptedClockStaging: the adopted shadow put on the HELD clock (a read, never a write)', () => {
+    const staging = { boot: { level: 0, x: 1, y: 2 }, seam: { time: 4801, primary: 0 }, save: { keys: [] } };
+    it('shifts seam.time by live − model, and nothing else', () => {
+        const out = adoptedClockStaging({ staging, modelTime: 4823, liveTime: 4853 });
+        expect(out.shift).toBe(30);
+        expect(out.staging).toEqual({ ...staging, seam: { time: 4831, primary: 0 } });
+        expect(staging.seam.time).toBe(4801); // the input is not mutated
+    });
+    it('a shadow already on the clock shifts by 0', () => {
+        expect(adoptedClockStaging({ staging, modelTime: 4823, liveTime: 4823 })).toMatchObject({ shift: 0, staging: { seam: { time: 4801 } } });
+    });
+    it.each([
+        [{ staging: { ...staging, seam: null }, modelTime: 1, liveTime: 2 }, /declares no seam.time/],
+        [{ staging, modelTime: null, liveTime: 2 }, /answers no Game.time/],
+        [{ staging, modelTime: 4823, liveTime: undefined }, /no game_time/],
+        [{ staging, modelTime: 4823, liveTime: 4822 }, /BEHIND the adopted shadow/],
+    ])('refuses by name: %#', (o, why) => {
+        expect(adoptedClockStaging(o).refusal).toMatch(why);
     });
 });

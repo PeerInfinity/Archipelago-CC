@@ -104,7 +104,7 @@ import {
     arrivalSolveRequest, arrivalSolverGoal, continuationSolveRequest, isArrival, stagingFromWasmArrival,
 } from '../seedlingDemo/wasmArrival.js';
 import {
-    adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
+    adoptedClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
@@ -274,6 +274,8 @@ export function createWasmPlayback({
         forcedBy: {}, held: 0, continuations: 0, fallbacks: [], heldChecks: [], holdBlocked: [], releasedForSwap: 0,
         // ⛓ W8 — cold starts adopted as they stand, and the clause each refused one failed
         adopted: 0, adoptRefused: [],
+        // ⛓ WALK IDENTITY (a) — each adoption put on the live clock: begin-staged, shadow and held clocks, the shift (or why not)
+        adoptClock: [],
         // ⛓ W8c — the new-game arm's ceremonies waited out, and the tutorial Helps dismissed (one arrow pair each)
         ceremonies: [], dismissed: [],
         // ⛓ ANYTIME / O2 — expiries, the provisional plans they played, the held retries, and each plan's pass
@@ -656,7 +658,26 @@ export function createWasmPlayback({
     function adoptLatched() {
         if (phase !== 'adopting') return;
         const st = status();
-        if (st?.held) { phase = 'held'; solveInRoom(); return; }
+        if (st?.held) {
+            // ⛓ WALK IDENTITY (a) — the held clock is the one the plan's first tick sees: the shadow is put on it.
+            let modelTime = null;
+            try {
+                modelTime = replayTape({ staging: room.staging, perTick: room.shipped.map((h) => new Set(h)), levelSource, scratchPersistence: true }).gameTime;
+            } catch { modelTime = null; }
+            const clock = adoptedClockStaging({ staging: room.staging, modelTime, liveTime: st.game_time });
+            stats.adoptClock.push({ level: room.level, begin: room.staging?.seam?.time ?? null, model: modelTime, live: st.game_time ?? null,
+                shift: clock.shift ?? null, refusal: clock.refusal ?? null });
+            if (clock.refusal) {
+                release();
+                reArrive(`re-entering level ${goal.level} to solve from an arrival (${FALLBACK_POLICY}: the adopted room cannot be `
+                    + `put on the live clock — ${clock.refusal})`, 'cold-start');
+                return;
+            }
+            room.staging = clock.staging;
+            phase = 'held';
+            solveInRoom();
+            return;
+        }
         if (st?.error) { fail(`the adoption's freeze tape errored: ${st.error}`); return; }
         if (now() > deadline) { fail(`the adoption's freeze never latched in level ${goal.level} within ${ARRIVAL_WAIT_MS / 1000} s`); return; }
         schedule(adoptLatched, SOLVE_POLL_MS);
@@ -1730,7 +1751,8 @@ export function createWasmPlayback({
                 holdBlocked: [...stats.holdBlocked], adoptRefused: [...stats.adoptRefused],
                 ceremonies: stats.ceremonies.map((c) => ({ ...c })), dismissed: [...stats.dismissed],
                 deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred],
-                swapPushes: stats.swapPushes.map((r) => ({ ...r })), shipClock: stats.shipClock.map((r) => ({ ...r })) };
+                swapPushes: stats.swapPushes.map((r) => ({ ...r })), shipClock: stats.shipClock.map((r) => ({ ...r })),
+                adoptClock: stats.adoptClock.map((r) => ({ ...r })) };
         },
         /** ⛓ WG — the last arrivals' raw reads (`{seam, status, state}`), for a fixture recorder. */
         get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },

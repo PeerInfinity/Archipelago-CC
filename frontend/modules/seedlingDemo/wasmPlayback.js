@@ -283,6 +283,37 @@ export function inertMobilesRefusal({ rows, record, shadow }) {
 export const ADOPT_MIN_ELAPSED = 2 * LEGACY_FADE_PER_LOAD.max;
 
 /**
+ * ⛓ WALK IDENTITY (a) — THE ADOPTION'S CLOCK, staged LIVE. An adoption stages the room from its BEGIN record,
+ * so its `seam.time` is the arrival's; but the room ran N wall-clock frames before the bot drove (the cold
+ * start), and the shadow models "arrival + 1 idle tick". Measured (§5.39): the first adopted plan shipped
+ * 49–52 frames past its staged clock against a constant 21 at every held arrival. A clock-phase body (the
+ * spinner's hammer reads `Game.time`) would be planned at the wrong phase.
+ *
+ * The cure is a READ, never a write: once the adoption's freeze holds the room (the clock stops), the live
+ * `game_time` is the clock the plan's first tick will see. The staging is shifted so the shadow's own clock
+ * after the shipped prefix (`modelTime` = `replayTape(staging, shipped).gameTime`) EQUALS it. Nothing else in
+ * the staging moves; the room is idle-invariant by the adoption's own clauses.
+ *
+ * @param {object} o
+ * @param {object} o.staging    the adoption's staging (its `seam.time` = the begin record's convention)
+ * @param {number|null} o.modelTime  the shadow's `Game.time` at the top of the plan's first frame
+ * @param {number|null} o.liveTime   `botStatus().game_time`, read while the adoption's freeze HOLDS the room
+ * @returns {{staging: object, shift: number}|{refusal: string}}
+ */
+export function adoptedClockStaging({ staging, modelTime, liveTime }) {
+    const staged = staging?.seam?.time;
+    if (!Number.isFinite(staged)) return { refusal: 'the adopted staging declares no seam.time (the shadow has no clock to set)' };
+    if (!Number.isFinite(modelTime)) return { refusal: 'the adopted shadow answers no Game.time (a clock-less run cannot be put on the live clock)' };
+    if (!Number.isFinite(liveTime)) return { refusal: 'botStatus answered no game_time for the held room' };
+    const shift = liveTime - modelTime;
+    if (shift < 0) {
+        return { refusal: `the held room's clock ${liveTime} is BEHIND the adopted shadow's ${modelTime} — the room cannot be `
+            + '"its arrival + N idle ticks" (N ≥ 1)' };
+    }
+    return { staging: { ...staging, seam: { ...staging.seam, time: staged + shift } }, shift };
+}
+
+/**
  * ⛓ W8c — THE NEW-GAME ARM'S BEGIN RECORD (plan §5.15). The host's level-set
  * reset (`seedlingRandomizerWiring.resetTargetFor`, mode `new-game-arm`: a set
  * whose start names a level and no position, WITH the intro asked for —

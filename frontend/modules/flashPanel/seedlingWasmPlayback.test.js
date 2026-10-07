@@ -1213,6 +1213,41 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
     });
 
     /**
+     * ⛓ WALK IDENTITY (a) — the adoption's clock is the LIVE one. The room ran `elapsed` frames past its begin
+     * record before the bot drove; the begin-staged shadow models "arrival + 1 idle tick" (begin + 21 by the
+     * model's clock). Once the freeze HOLDS, the held `game_time` is read and the staging shifted so the shadow's
+     * clock after its prefix IS the game's: the continuation's request carries it, and the ship's `shipClock` gap
+     * is the held arrivals' constant (21), not 21 + (elapsed − 22).
+     */
+    it.each([[200], [60]])('⛓ WALK IDENTITY — adopted %i frames after the begin record: the shadow is put on the HELD clock (gap 21, as a held arrival)', (elapsed) => {
+        const e = adoptOver({ elapsed });
+        const begin = A.seam.beginEntry['save.time'];
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        const live = begin + elapsed;
+        expect(e.engine.stats.adoptClock).toEqual([{ level: HOUSE, begin: begin - 1, model: begin + 21, live, shift: live - (begin + 21), refusal: null }]);
+        // The solve ran on the live clock: its staging's seam.time + the model's boot (21) + the 1-tick prefix = the held clock.
+        expect(e.service.seen[0].request.staging.seam.time).toBe(live - 22);
+        expect(e.engine.stats.shipClock).toEqual([expect.objectContaining({ name: 'wasm-continue-location-86', staged: live - 22, prefix: 1, game: live, gap: 21 })]);
+        expect(e.engine.room.staging.seam.time).toBe(live - 22);
+    });
+
+    it('⛓ WALK IDENTITY — a held clock BEHIND the adopted shadow cannot be put on it: released, and the named cold-start re-arrival serves the goal', () => {
+        const box = {};
+        const e = adoptOver({ tick: (w) => { if (box.game?.held) w.elapsed = 10; } });
+        box.game = e.game;
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.timers.run();
+        const begin = A.seam.beginEntry['save.time'];
+        expect(e.engine.stats.adoptClock).toEqual([expect.objectContaining({ live: begin + 10, model: begin + 21, shift: null,
+            refusal: expect.stringMatching(/is BEHIND the adopted shadow/) })]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.teleports).toHaveLength(1);
+        expect(e.game.calls).toContain('botReset');
+    });
+
+    /**
      * ⛓ §5.19 — a TRANSIENT clause (`ADOPT_TRANSIENT_CLAUSES`) WAITS, bounded: the goal answers `await-adoption`,
      * nothing is recorded or teleported while it waits, and only a clause that outlives `ADOPT_WAIT_MS` is recorded
      * and spends the cold-start re-arrival (named).
@@ -1478,3 +1513,4 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         expect(keys).toEqual([]);
     });
 });
+
