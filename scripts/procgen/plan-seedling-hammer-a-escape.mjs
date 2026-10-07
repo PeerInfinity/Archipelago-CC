@@ -2,18 +2,18 @@
 /**
  * plan-seedling-hammer-a-escape — ⛓⛓⛓ SEEDLING HAMMER-PHASE A D2: THE ESCAPE's SOLVE, HANDED TO THE GAME.
  *
- * At base (`994e3fac52`) `r9-solve-18`'s staging refuses `HAMMER_SAFETY` at hammer residues 21 and 6 — two of the
- * live playthrough's own refusals (`seam.time` 11496 and 11481): a press lands on `spinner@112,48` and the
- * knocked-back body corners the player a few ticks later ("There is no step out."). With `HAMMER_ESCAPE` ON the press kill admits a press only
+ * At base (`994e3fac52`) `r9-solve-18`'s staging refuses `HAMMER_SAFETY` at hammer residues 21 and 15 — two of the
+ * live playthrough's own refusals (`seam.time` 11496 and 11490). At 21 a press lands on `spinner@112,48` and the
+ * knocked-back body corners the player a few ticks later; at 15 a re-press inside the slash timer DASHES the player
+ * into the body ("There is no step out." both). With `HAMMER_ESCAPE` ON the press kill admits a press only
  * with an escape out of its own landing (`levelRun.spinnerForecastWithPress` + `spaceTimeReach`) and follows it. Each
  * tape is that solve: the committed staging with `seam.time` moved to its residue (nothing else changes), solved by
  * `twoPassSolve` exactly as `solve-seedling-r9-campaign` calls it, the switch ON for the solve only. The game is the
  * witness: the differential plays it and the model must reproduce every tick, with no hit on the player.
  *
- * ⛓ WHY TWO. At residue 21 every certificate the executor follows is the HOLD (the stand, which is clear there): it
- * witnesses the admission and the follow, and it is byte-identical with the kernel's prune switched off. At residue 6
- * three of the six certificates MOVE, so it is the one that witnesses the search itself (the prune-off mutant refuses
- * it again).
+ * ⛓ WHY THESE TWO. Both are live refusals, and both witness the SEARCH, not only the admission: with the kernel's
+ * prune switched off residue 21 re-plans to another walk (its t262 escape moves 38 ticks, found breadth first) and
+ * residue 15 refuses again. Residue 15 also carries the dash: its train is previewed with the dash's impulse.
  *
  * ⛓ THE BASE IS FROZEN (`fixtures/witness-bases/r9-solve-18.hammer-a.json`, the committed segment at this slice's
  * base, byte for byte), so a later re-record of the campaign chain cannot move this witness's `--check`.
@@ -51,8 +51,8 @@ async function main() {
     const { withHammerEscape } = await import(join(MODULE, 'solverBot.js'));
 
     const BASE = 'r9-solve-18';
-    /** Live refusals' residues (the playthrough's `seam.time` 11496 and 11481), each refused at base. */
-    const RESIDUES = [21, 6];
+    /** Live refusals' residues (the playthrough's `seam.time` 11496 and 11490), each refused at base. */
+    const RESIDUES = [21, 15];
     const TELEPORTER = { x: 176, y: 112 };
 
     let failures = 0;
@@ -83,7 +83,7 @@ async function main() {
             gameTick: async () => { throw new Error('no game oracle: L18\'s clear is model-sourced'); },
         });
         let refusedOff = null;
-        try { await solve(); } catch (e) { refusedOff = e; }
+        try { await withHammerEscape(false, solve); } catch (e) { refusedOff = e; }
         const r = await withHammerEscape(true, solve);
         const press = (r.out.records ?? []).filter((x) => x.arm === 'press');
         const escapes = press.flatMap((x) => x.escapes ?? []);
