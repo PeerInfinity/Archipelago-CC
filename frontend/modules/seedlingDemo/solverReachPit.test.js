@@ -27,6 +27,7 @@ import { atlasLevelSource } from './levelSource.js';
 import { buildLevelWorld } from './levelWorld.js';
 import { fallDestination } from './playerPhysicsV2.js';
 import { assertGoal, solveSegment } from './solverBot.js';
+import { withContactFidelity } from './contactFidelity.js';
 
 const TAPE = new URL('./fixtures/tapes/r3-collect-torch.json', import.meta.url);
 const PIT = Object.freeze({ tx: 3, ty: 14, x: 48, y: 224 });
@@ -67,7 +68,19 @@ describe('solveSegment — reach-pit L30 (3,14) → L31', () => {
             .toEqual({ to_level: 31, ctor: { x: 48, y: 544 } });
     });
 
-    it('SOLVES: breaks the rock on the tile, falls at t=98, coasts 80 ticks, ends in L31 on the ground', () => {
+    /**
+     * ⛓ fidelity BOBSOLDIER (wave-8 harvest): this fixture boots at (64,88), 8 px from `bobsoldier@48,80` (constructed
+     * at (56,88)). With the BobSoldier live (`contactFidelity.bobSoldierLive`, ON) the danger map forbids the walk —
+     * the honest answer, pinned below. These rows are about the pit's transport and the break verb, so they run with
+     * the BobSoldier static, as they were written.
+     */
+    it('with the BobSoldier LIVE the boot beside it refuses by the danger map\'s name (the old solve ignored the body)', () => {
+        const { run, boot } = l30Run();
+        expect(() => solveSegment({ run, goals: [{ kind: 'reach-pit', pit: { ...PIT } }], name: 'u1-reach-pit', boot }))
+            .toThrow(/the danger map forbids \(72,96\) — chaser:bobsoldier@48,80/);
+    });
+
+    it('SOLVES: breaks the rock on the tile, falls at t=98, coasts 80 ticks, ends in L31 on the ground', () => withContactFidelity({ bobSoldierLive: false }, () => {
         const { run, boot } = l30Run();
         const out = solveSegment({ run, goals: [{ kind: 'reach-pit', pit: { ...PIT } }],
             name: 'u1-reach-pit', boot });
@@ -82,7 +95,7 @@ describe('solveSegment — reach-pit L30 (3,14) → L31', () => {
         expect(out.records.at(-1)).toEqual({ goal: 'reach-pit', to: 31, t: 98, coast: 80 });
         expect(out.records[0]).toMatchObject({ strategy: 'break', target: 'breakablerock@48,224' });
         expect(out.trace.rows.map((r) => r.goal.kind)).toEqual(['reach-pit', 'reach-pit']);
-    });
+    }));
 
     it('a pit the level does not have is refused BY NAME, before a tick is spent', () => {
         const { run, boot } = l30Run();
@@ -92,10 +105,10 @@ describe('solveSegment — reach-pit L30 (3,14) → L31', () => {
         expect(run.ticksCompleted).toBe(0);
     });
 
-    it('pre-sword, the rock on the tile refuses by the break verb\'s own name (the pit is not a bypass)', () => {
+    it('pre-sword, the rock on the tile refuses by the break verb\'s own name (the pit is not a bypass)', () => withContactFidelity({ bobSoldierLive: false }, () => {
         const { run, boot } = l30Run({ sword: false });
         expect(() => solveSegment({ run, name: 'u1-pit-nosword', boot,
             goals: [{ kind: 'reach-pit', pit: { ...PIT } }] }))
             .toThrow(/reach-pit \(3,14\)->L31 -> break: breakablerock@48,224 cannot be broken by this run/);
-    });
+    }));
 });

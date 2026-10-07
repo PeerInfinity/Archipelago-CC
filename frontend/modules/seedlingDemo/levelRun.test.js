@@ -18,6 +18,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { withKillLockBodies } from './killLockBodies.js';
 // ⛓ R9 slice 12c — the chain's own offsets, so the fixture and
 // `combatVerbs.DASH_CHAIN` cannot disagree about what the chain IS.
 import { DASH_CHAIN, SLASH_ANIM_TICKS } from './combatVerbs.js';
@@ -1299,10 +1300,13 @@ describe('despawn — the witnessed mid-run enemy removal (v10)', () => {
             });
             for (let t = 0; t < 30; t += 1) run.advance(new Set(['down']));
         };
-        expect(drive).toThrow(/standing inside jellyfish@224,176 in level 45/);
+        // ⛓ KILLLOCK K1 (ON since the wave-8 harvest) bridges the jellyfish by its switch, so the control holds it
+        // OFF: an UNBRIDGED class still throws by name (the lavarunner, K2 OFF, is the default-state example).
+        const unbridged = () => withKillLockBodies({ jellyfishLive: false }, drive);
+        expect(unbridged).toThrow(/standing inside jellyfish@224,176 in level 45/);
         // ⛔ THE WORD IS THE CLAIM: still `mover`, still refused, and the
         // refusal still names the class rather than the bridge.
-        expect(drive).toThrow(/prices it as "mover"/);
+        expect(unbridged).toThrow(/prices it as "mover"/);
     });
 
     /**

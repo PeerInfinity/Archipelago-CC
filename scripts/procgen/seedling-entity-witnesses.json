@@ -3,7 +3,7 @@
   "head": "af79da5e043b6ad81e63887b8995c560984814ca",
   "treeClean": true,
   "tier": "fast",
-  "entitiesMd5": "0655b315237cb63d79053e0b23eaf3fa",
+  "entitiesMd5": "33ae40cd5f731799be7c2dd7ac17c497",
   "method": "per record number leaf x magnitude, a child process with the entity-records override installed runs every fast-tier tape through runTapeToStream; a tape moves when its stream md5 differs from the control run or it throws. ulp = +1 ULP; pct10 = x1.1, or +1 for an integer default. corpus-blind = neither magnitude moved any tape.",
   "jobs": 4,
   "wallSeconds": 2957,
@@ -9955,6 +9955,6 @@
       "chasers.lavarunner.speedByTerrain.swimTiles[0]",
       "chasers.lavarunner.speedByTerrain.swimTiles[1]"
     ],
-    "why": "seedling-fidelity-killlock added CHASERS.lavarunner; these 8 leaves were measured with --only over today's 180-tape fast tier (0 moved, 0 threw at both magnitudes), which contains every one of this file's 139 tapes, so the rows state 0 moved of those 139. CONTROL stable; its one expectation divergence (r5-l60-kill) is pre-existing at the base 0f952e9a9e. Every other row is the earlier full --write. ⛓ wave-8 harvest: BOBSOLDIER's full --write (183 tapes) is the base of this file; the 8 lavarunner rows are carried into it and restated over its 183 tapes (KILLLOCK's switch K2 lavaRunnerLive stays OFF, so no tape bridges a lavarunner; re-checked with --only at the harvest tip d9f182f71d with K1/K3/K4/K5 ON: the 4 chasers.jellyfish.* and the 8 chasers.lavarunner.* leaves, 0 moved / 0 threw at both magnitudes over the 189-tape fast tier, CONTROL stable)."
+    "why": "seedling-fidelity-killlock added CHASERS.lavarunner; these 8 leaves were measured with --only over today's 180-tape fast tier (0 moved, 0 threw at both magnitudes), which contains every one of this file's 139 tapes, so the rows state 0 moved of those 139. CONTROL stable; its one expectation divergence (r5-l60-kill) is pre-existing at the base 0f952e9a9e. Every other row is the earlier full --write. ⛓ wave-8 harvest: BOBSOLDIER's full --write (183 tapes) is the base of this file; the 8 lavarunner rows are carried into it and restated over its 183 tapes (KILLLOCK's switch K2 lavaRunnerLive stays OFF, so no tape bridges a lavarunner; re-checked with --only at the harvest tip d9f182f71d with K1/K3/K4/K5 ON: the 4 chasers.jellyfish.* and the 8 chasers.lavarunner.* leaves, 0 moved / 0 threw at both magnitudes over the 189-tape fast tier, CONTROL stable). entitiesMd5 is the union's (33ae40cd: BOBSOLDIER's 0655b315 + the lavarunner row); every other row is BOBSOLDIER's full --write."
   }
 }

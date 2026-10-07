@@ -182,7 +182,8 @@ describe('entityRecords — the dump and its md5', () => {
         // ⛓ swim R2 D1: 143e37e6 → abbcd286, the `wallFlyer` record.
         // ⛓ swim U15 + R2 (merged): all three records.
         // ⛓ fidelity BOBSOLDIER: d10864a0 → 0655b315, the `chasers.bobsoldier` row (and the four rows' shape).
-        expect(entitiesMd5()).toBe('0655b315237cb63d79053e0b23eaf3fa');
+        // ⛓ wave-8 harvest: KILLLOCK's `chasers.lavarunner` row + BOBSOLDIER's → 33ae40cd (the union).
+        expect(entitiesMd5()).toBe('33ae40cd5f731799be7c2dd7ac17c497');
         expect(entitiesStamp()).toEqual({ md5: entitiesMd5(), records: entityRecordNames().length });
     });
 });

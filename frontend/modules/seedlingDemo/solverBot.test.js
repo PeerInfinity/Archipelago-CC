@@ -717,13 +717,16 @@ describe('A3 — a kill refusal names the PRESS arm, on a room with no arrow tra
     it('⛔ reports BOTH arms, the PRESS arm FIRST', () => {
         const out = resolveKillStrategy(roomWithNoTrap(), { id: 'lock@3,4' }, []);
         expect(out.weapon).toBe(null);
-        expect(out.rejected).toHaveLength(2);
+        // ⛓ KILLLOCK K3 `chaserKillArm` (ON since the wave-8 harvest) asks its arm between the two.
+        expect(out.rejected).toHaveLength(3);
         /** ⛓⛓ THE ORDER IS THE CLAIM: the arm that was tried first is the one
          *  a reader needs first. */
         expect(out.rejected[0].option).toBe('press a body');
         expect(out.rejected[0].why).toMatch(/tracks NO live spinner bodies/);
-        expect(out.rejected[1].option).toBe('kill-by-ceiling');
-        expect(out.rejected[1].why).toMatch(/has NO arrow trap/);
+        expect(out.rejected[1].option).toBe('kill the chasers by press (KILLLOCK K3)');
+        expect(out.rejected[1].why).toMatch(/is not a live body this run steps/);
+        expect(out.rejected[2].option).toBe('kill-by-ceiling');
+        expect(out.rejected[2].why).toMatch(/has NO arrow trap/);
     });
 
     /** ⛔⛔ THE REGRESSION, SAID AS AN ABSENCE: the ceiling sentence must not be
@@ -746,9 +749,11 @@ describe('A3 — a kill refusal names the PRESS arm, on a room with no arrow tra
      *  module and deliberately unconverted, so the claim keeps a live subject
      *  instead of quietly becoming vacuous. */
     it('⛓ an un-modelled body\'s own sentence survives the fallthrough', () => {
+        // ⛓ KILLLOCK K1 (ON since the wave-8 harvest) made `jellyfish` modelled; the unconverted subject is
+        // `lavarunner` now (K2 OFF), the same depth in the same module.
         const run = roomWithNoTrap();
-        run.world.combat.enemies = [{ tag: 'jellyfish', x: 5, y: 5, counted: true }];
-        run.spinnerBodies = [{ id: 'jellyfish@5,5', x: 5, y: 5 }];
+        run.world.combat.enemies = [{ tag: 'lavarunner', x: 5, y: 5, counted: true }];
+        run.spinnerBodies = [{ id: 'lavarunner@5,5', x: 5, y: 5 }];
         const { rejected } = resolveKillStrategy(run, { id: 'lock@3,4' }, []);
         expect(rejected[0].option).toMatch(/^press /);
         expect(rejected[0].why).toMatch(/KILL_ARM_POLICY/);
