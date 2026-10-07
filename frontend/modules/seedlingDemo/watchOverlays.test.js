@@ -536,18 +536,22 @@ describe('⛔ kickoff §4 slice 2 acceptance — the overlays on committed tapes
          * now lands SIX presses for its six hits — 44, 113, 146, 168, 231, 307 —
          * so on this tape no swing lands on both bodies; the double landing
          * slice 11 measured belonged to that walk, not to the room.
+         *
+         * ⛓⛓ HAMMER-PHASE A2 — RE-PINNED AT THE LICENSED RE-RECORD (`HAMMER_ESCAPE` on, ⚖ user 2026-10-07):
+         * `r8-solve-18` 520 -> 363. FIVE presses land the six hits again — 44, 77, 110, 159, 192 — and the
+         * one at t110 lands on BOTH bodies (`spinner@48,96`'s third, `spinner@112,48`'s first). No press
+         * before the last kill (t193) misses.
          */
         const landing = collected.run.presses.filter((p) => p.hits.some((h) => h.landed));
         expect([...new Set(landing.map((p) => p.t))].sort((a, b) => a - b))
-            .toEqual([44, 113, 146, 168, 231, 307]);
+            .toEqual([44, 77, 110, 159, 192]);
         expect(landing.reduce((n, p) => n + p.hits.filter((h) => h.landed).length, 0)).toBe(6);
-        // …and every press that does NOT land comes after the last kill but
-        // ONE. ⛓ U6b: the 522-t walk makes one press between the kills that
-        // lands nothing (t 161, measured); the row pins it by tick rather than
-        // claiming there are none.
+        // …and every press that does NOT land comes after the last kill.
+        // ⛓ U6b: the 522-t walk made one press between the kills that landed
+        // nothing (t 161). ⛓ hammer-phase A2: the 363-t walk makes none (measured).
         const lastKill = Math.max(...collected.run.spinnerPressKills.map((k) => k.t));
-        expect(pressTicks.filter((t) => ![44, 113, 146, 168, 231, 307].includes(t) && t <= lastKill))
-            .toEqual([161]);
+        expect(pressTicks.filter((t) => ![44, 77, 110, 159, 192].includes(t) && t <= lastKill))
+            .toEqual([]);
 
         // (c) ZERO damage markers — the honest L18 took nothing.
         expect(markers.filter((m) => m.layer === 'damage')).toEqual([]);
