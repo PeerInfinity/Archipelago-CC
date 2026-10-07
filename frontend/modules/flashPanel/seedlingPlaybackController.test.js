@@ -475,12 +475,12 @@ describe('⛓ WG — the GENERATED instance walks under the WASM runtime (the mo
         expect(loads).toHaveLength(1);
     });
 
-    it('a TILE target is refused synchronously, by name, before anything loads (no producer serves it)', () => {
+    it('a TILE target is refused synchronously, by name, before anything loads (the solver has no tile goal kind)', () => {
         const loads = [];
         const c = genController(() => surface(set), { loadWasmEngine: async (d) => { loads.push(d); return fakeEngine(); } });
         expect(c.walkTo({ kind: 'tile', x: 3, y: 3 })).toBe(false);
         expect(c.lastRefusal).toBe('a tile target is not walked in the generated rooms on the wasm runtime — their tapes '
-            + 'come from the walker producer, which serves a location or an exit');
+            + 'come from the solver, which serves a location or an exit (it has no tile goal kind)');
         expect(loads).toEqual([]);
     });
 

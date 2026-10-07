@@ -140,7 +140,7 @@ describe('jsRuntimeWalker — walkTo on a live run (closed loop C)', () => {
         expect(rt.playback.walkTo({ kind: 'location', level: 0, tag: 7 }))
             .toEqual({ ok: false, reason: 'level 0 has no apitem with tag 7' });
         expect(rt.playback.walkTo({ kind: 'exit', level: 0, tile: [2, 2] }))
-            .toEqual({ ok: false, reason: 'level 0 has no teleporter on tile (2, 2)' });
+            .toEqual({ ok: false, reason: 'level 0 has no teleporter or pit on tile (2, 2)' });
         expect(rt.playback.walkTo({ kind: 'exit', level: 9, tile: [2, 2] }))
             .toEqual({ ok: false, reason: 'the mounted set has no level 9' });
         expect(createJsRuntime().playback.walkTo(AP_GOAL)).toEqual({ ok: false, reason: 'no level set is mounted' });

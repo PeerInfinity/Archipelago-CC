@@ -2,6 +2,11 @@
  * wasmWalkTape — solver-walk WG: the J2 WALKER as the tape producer for a
  * GENERATED room on the wasm runtime (solver-walk WG).
  *
+ * ⛓ §5.36 — the walker producer is an INSTRUMENT now (the divergence sweep's
+ * `--producer=walker`), no longer a production path: generated rooms are the
+ * SOLVER's (their classification is `jsRuntimeGeneratedSolver.test.js`). The
+ * rows below pin the instrument (and `mountedRecordsOf`, which is production).
+ *
  *   · the mounted-set level source (`mountedRecordsOf`) IS the JS page's;
  *   · every committed generated preset room × every arrival × every goal:
  *     the producer's tape (keys + expected trajectory) PINNED, replayed
@@ -218,7 +223,7 @@ describe('wasmWalkTape — refusals, by name', () => {
     ])('%s', (_what, goal, why) => {
         expect(() => walkTapeFromStaging({ staging, levelSource, records, goal })).toThrow(why);
     });
-    it('(b) found: since F2 `collect-placement` at an apitem resolves (strategy `apitem`) — the producer is still the walker', () => {
+    it('(b) found: since F2 `collect-placement` at an apitem resolves (strategy `apitem`) — ⛓ §5.36 the production producer is the SOLVER', () => {
         const fresh = createRunForStaging(staging, levelSource, { scratchPersistence: true });
         const r = settleSolve(() => solveFromTape({ staging, perTick: [], live: liveOf(fresh), levelSource, scratchPersistence: true,
             solverGoal: { kind: 'collect-placement', placement: { x: 64, y: 16 } } }));

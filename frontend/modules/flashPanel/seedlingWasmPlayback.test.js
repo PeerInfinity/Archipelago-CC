@@ -163,7 +163,7 @@ function engineOver(arrival, opts = {}) {
         getWin: () => opts.win ?? null,
         teleport: (p) => { teleports.push(p); if (opts.land !== false) game.land(); return true; },
         getCheckBinding: () => ({ ignoreHostStart: (w) => { windows.push(w); return true; } }),
-        records: opts.records ?? RECORDS, generated: opts.generated ?? false, solveService: service, timers, now: opts.now ?? (() => (t += 1)),
+        records: opts.records ?? RECORDS, generated: opts.generated ?? false, producer: opts.producer ?? null, solveService: service, timers, now: opts.now ?? (() => (t += 1)),
         ...(opts.getBudgetWork ? { getBudgetWork: opts.getBudgetWork } : {}),
         ...(opts.getUpgradeWindowWork ? { getUpgradeWindowWork: opts.getUpgradeWindowWork } : {}),
         ...(opts.backstopMs ? { backstopMs: opts.backstopMs } : {}),
@@ -885,7 +885,7 @@ describe('W7 — the arrival HOLD after an exit plan, and the glue query\'s thre
     });
 });
 
-// ── ⛓ WG — GENERATED rooms: the mounted set is the level source, the J2 walker the producer ──────
+// ── ⛓ WG → §5.36 — GENERATED rooms: the mounted set is the level source, the SOLVER the producer ──────
 
 const GEN_RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-gen-p4f.json').arrivals;
 const GEN_SET = assembleGeneratedSeedlingSet(readJson('frontend/presets/seedling_generated_room/AP_1/AP_1_rules.json'),
@@ -895,37 +895,56 @@ const [G_A0, G_B0, G_C1] = GEN_RECORDED;
 const KEY_BLUE = { kind: 'location', level: 0, tag: 0, name: 'region_0_0__key_blue_pickup' };
 const EXIT_0 = { kind: 'exit', level: 0, tile: [8, 1], name: 'exit_0' };
 const PARK = { kind: 'exit', level: 1, tile: [6, 3], name: 'exit_1' };
+/** What `loadWasmPlaybackEngine({levelSet})` builds: the mounted set, labelled `generated` — a SOLVER engine (⛓ §5.36). */
 const genEngine = (arrival, opts = {}) => engineOver(arrival, { ...opts, records: GEN_RECORDS, generated: true });
 
-describe('WG — a GENERATED room (the recorded p4e arrivals on seedling_generated_room, the real walker producer)', () => {
-    it('A0 the apitem: forced re-arrival → freeze → the WALKER\'s tape (220 ticks, from the mounted set) → shipped exact → drained → done', () => {
+describe('§5.36 — a GENERATED room is a SOLVER room (the recorded p4e arrivals on seedling_generated_room)', () => {
+    it('A0 the apitem: forced re-arrival → freeze → the SOLVER\'s plan (F2 `apitem`, 266 ticks, from the mounted set) → shipped → the room HELD at its end', () => {
         const e = genEngine(G_A0);
-        expect(e.engine.generated).toBe(true);
+        expect([e.engine.generated, e.engine.producer, e.engine.status().producer]).toEqual([true, 'solver', 'solver']);
         expect(e.engine.walkTo(KEY_BLUE)).toEqual({ ok: true, action: 'force-re-arrival' });
         expect(e.teleports).toEqual([{ level: 0, x: G_A0.state.playerPositionX, y: G_A0.state.playerPositionY }]);
         e.timers.run();
         expect(e.failures).toEqual([]);
         const req = e.service.seen[0].request;
-        expect(req).toMatchObject({ producer: 'walker', goal: KEY_BLUE, scratchPersistence: true });
+        // ⛔ never the walker: a solver request (its passes and budget), the goal mapped to `collect-placement`
+        expect(req.producer).toBeUndefined();
+        expect(req).toMatchObject({ solverGoal: { kind: 'collect-placement', placement: { x: 64, y: 16 } }, scratchPersistence: true,
+            budgetWork: SOLVER_BUDGET_WORK });
         expect(req.source.records).toBe(GEN_RECORDS);
-        expect(e.service.seen[0].result.plan).toMatchObject({ producer: 'walker', end: 'collected' });
+        expect(e.service.seen[0].result.plan.verbs).toEqual(['apitem']);
+        // ⛓ W7 — a solver room's location plan ENDS HELD (a generated room too, now)
         expect(e.game.tapes.map((t) => [t.tick_count, t.hold ?? false, t.seam, t.persistence.length])).toEqual([[0, true, null, 0],
-            [220, false, null, 0]]);
+            [266, true, null, 0]]);
         expect(e.dones).toHaveLength(1);
-        expect(e.dones[0]).toMatchObject({ producer: 'walker', ticks: 220, divergence: null, recoveries: 0 });
+        expect(e.dones[0]).toMatchObject({ producer: 'solver', ticks: 266, divergence: null, recoveries: 0, heldEnd: true });
         expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan']);
-        expect(e.notes.some((n) => /walking a tape…/.test(n ?? ''))).toBe(true);
+        expect(e.engine.status().phase).toBe('held');
+        expect(e.notes.some((n) => /walking a tape…/.test(n ?? ''))).toBe(false);
     });
 
-    it('B0 the door after the apitem: both tapes re-declare the EARNED apitem clear {0,0} exactly; the walk crosses to room 1', () => {
+    it('A0 then the door, IN the held room: a CONTINUATION (no second teleport), the crossing to room 1', () => {
+        const e = genEngine(G_A0);
+        e.engine.walkTo(KEY_BLUE);
+        e.timers.run();
+        expect(e.engine.walkTo(EXIT_0)).toEqual({ ok: true, action: 'continue' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toHaveLength(1);
+        expect(e.engine.stats.continuations).toBe(1);
+        expect(e.dones[1]).toMatchObject({ producer: 'solver', continuation: true });
+        expect(e.dones[1].expectedEnd.level).toBe(1);
+    });
+
+    it('B0 the door after the apitem: both tapes re-declare the EARNED apitem clear {0,0} exactly; the solver\'s walk crosses to room 1', () => {
         const e = genEngine(G_B0);
         e.engine.walkTo(EXIT_0);
         e.timers.run();
         expect(e.failures).toEqual([]);
         for (const t of e.game.tapes) expect(t.persistence.map(({ level, tag }) => ({ level, tag }))).toEqual([{ level: 0, tag: 0 }]);
         expect(e.windows).toEqual([{ from: 0, to: 1 }, { from: 1, to: 2 }]);
-        expect(e.service.seen[0].result.plan.apItemClearsLifted).toEqual([{ level: 0, tag: 0 }]);
-        expect(e.dones[0]).toMatchObject({ producer: 'walker', ticks: 7 });
+        expect(e.service.seen[0].result.plan.verbs).toEqual(['walk']);
+        expect(e.dones[0]).toMatchObject({ producer: 'solver', ticks: 7 });
         expect(e.dones[0].expectedEnd.level).toBe(1);
     });
 
@@ -935,15 +954,16 @@ describe('WG — a GENERATED room (the recorded p4e arrivals on seedling_generat
         e.timers.run();
         expect(e.failures).toEqual([]);
         expect(e.game.tapes.at(-1).boot.level).toBe(1);
+        expect(e.dones[0]).toMatchObject({ producer: 'solver' });
         expect(e.dones[0].expectedEnd.level).toBe(2);
     });
 
-    it('W3 on a walker tape: ONE divergence recovers (re-entered, re-walked, done); a PERSISTENT one fails by name after 3 (⛓ W4: an exact repeat after 1)', () => {
+    it('W3 on a generated room\'s solver plan: ONE divergence recovers (re-entered, re-solved, done); a PERSISTENT one fails by name after 3 (⛓ W4: an exact repeat after 1)', () => {
         const once = genEngine(G_A0, { perturb: (rows, attempt) => (attempt === 0 ? pushRight()(rows) : rows) });
         once.engine.walkTo(KEY_BLUE);
         once.timers.run();
         expect(once.failures).toEqual([]);
-        expect(once.engine.stats.history.map((x) => [x.outcome, x.producer])).toEqual([['diverged', 'walker'], ['done', 'walker']]);
+        expect(once.engine.stats.history.map((x) => [x.outcome, x.producer])).toEqual([['diverged', 'solver'], ['done', 'solver']]);
         expect(once.dones[0].recoveries).toBe(1);
         const always = genEngine(G_A0, { perturb: (rows, attempt) => pushRight(5 + attempt)(rows) });
         always.engine.walkTo(KEY_BLUE);
@@ -951,7 +971,6 @@ describe('WG — a GENERATED room (the recorded p4e arrivals on seedling_generat
         expect(always.failures).toHaveLength(1);
         expect(always.failures[0]).toMatch(/the game left the plan 4 times on region_0_0__key_blue_pickup in level 0 \(gave up after 3 forced re-arrivals, the bound is 3\)/);
         expect(always.timers.pending).toBe(0);
-        // ⛓ W4 — the same divergence every time: an exact repeat, failed after 2 walks
         const same = genEngine(G_A0, { perturb: pushRight() });
         same.engine.walkTo(KEY_BLUE);
         same.timers.run();
@@ -960,14 +979,51 @@ describe('WG — a GENERATED room (the recorded p4e arrivals on seedling_generat
         expect(same.timers.pending).toBe(0);
     });
 
-    it('a goal the walker cannot turn into a tape: the producer\'s refusal RELEASES the freeze and fails by name', () => {
+    it('⛔ a goal the solver has no goal for: the freeze is RELEASED and the goal fails BY NAME — never handed to the walker', () => {
         const e = genEngine(G_A0);
         e.engine.walkTo({ kind: 'location', level: 0, tag: 7, name: 'nowhere' });
         e.timers.run();
         expect(e.failures).toHaveLength(1);
-        expect(e.failures[0]).toMatch(/^the walker producer declined nowhere in level 0 \(refusal\): .*no apitem with tag 7/);
+        expect(e.failures[0]).toMatch(/^the solver has no goal for nowhere: the location names no entity of the room/);
+        expect(e.service.seen.filter((x) => x.request.producer)).toEqual([]);
         expect(e.game.calls.at(-1)).toBe('botReset');
         expect(e.game.tapes).toHaveLength(1); // the freeze only — no plan shipped
+    });
+
+    it('⛔ a SOLVER DECLINE in a generated room fails the goal by name (the solver\'s reason) — no walker fall-back', () => {
+        // The swim room's apitem across water, bare (measured: the solver's "no corridor"; the walker never reached it either).
+        const swimSet = assembleGeneratedSeedlingSet(readJson('frontend/presets/seedling_generated_swim/AP_1/AP_1_rules.json'), { selfPlayer: 1 }).set;
+        const swimRecords = mountedRecordsOf(swimSet);
+        const at = swimSet.start;
+        const arrival = structuredClone(G_A0);
+        arrival.status.level = at.level;
+        arrival.state.playerPositionX = at.x;
+        arrival.state.playerPositionY = at.y;
+        arrival.status.x = at.x + 8;
+        arrival.status.y = at.y + 8;
+        arrival.status.persistence_cleared = [];
+        arrival.seam.beginEntry.level = at.level;
+        arrival.seam.beginEntry.x = at.x;
+        arrival.seam.beginEntry.y = at.y;
+        const e = engineOver(arrival, { records: swimRecords, generated: true });
+        e.engine.walkTo({ kind: 'location', level: 0, tag: 0, name: 'region_3_2__loc_0' });
+        e.timers.run();
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/^the solver declined region_3_2__loc_0 in level 0 \(refusal\): .*no corridor for goal collect-placement/);
+        expect(e.service.seen.filter((x) => x.request.producer)).toEqual([]);
+        expect(e.dones).toEqual([]);
+    });
+
+    it('the walker producer is an INSTRUMENT (`producer: \'walker\'`, the divergence sweep): W2\'s flow, the walker\'s 220-tick tape — and nothing else is one', () => {
+        const e = engineOver(G_A0, { records: GEN_RECORDS, generated: true, producer: 'walker' });
+        expect([e.engine.producer, e.engine.status().producer]).toEqual(['walker', 'walker']);
+        e.engine.walkTo(KEY_BLUE);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.service.seen[0].request).toMatchObject({ producer: 'walker', goal: KEY_BLUE });
+        expect(e.dones[0]).toMatchObject({ producer: 'walker', ticks: 220 });
+        expect(e.notes.some((n) => /walking a tape…/.test(n ?? ''))).toBe(true);
+        expect(() => engineOver(G_A0, { records: GEN_RECORDS, producer: 'step-off' })).toThrow(/no tape producer "step-off"/);
     });
 
     it('a level the mounted set does not hold is refused synchronously, naming the mounted set', () => {
@@ -977,11 +1033,11 @@ describe('WG — a GENERATED room (the recorded p4e arrivals on seedling_generat
         expect(e.teleports).toEqual([]);
     });
 
-    it('loadWasmPlaybackEngine({levelSet}) builds a GENERATED engine from the set — no map document is fetched', async () => {
+    it('loadWasmPlaybackEngine({levelSet}) builds a GENERATED engine from the set — a SOLVER engine (⛓ §5.36) — no map document is fetched', async () => {
         let fetched = 0;
         const engine = await loadWasmPlaybackEngine({ levelSet: GEN_SET, baseUrl: 'http://x/', fetchImpl: () => { fetched += 1; },
             getGame: () => null, teleport: () => false, solveService: createInPlaceProduceService() });
-        expect(engine.generated).toBe(true);
+        expect([engine.generated, engine.producer, engine.status().producer]).toEqual([true, 'solver', 'solver']);
         expect(fetched).toBe(0);
         engine.dispose();
     });

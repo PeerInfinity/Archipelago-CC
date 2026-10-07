@@ -12,10 +12,10 @@
  * them.
  *
  * The split (`jsRuntimeCore.mountedKindOf`): a set whose provenance names the
- * vanilla record set it rewrote is REAL rooms — every S1–S5 arm the vanilla
- * map has; anything else keeps the GENERATED path (the J2 walker, teleporter
- * exits only). Mutants this file kills (measured, §5.18):
- *   m1 the split off — every mounted set GENERATED → the witness walks (0 solves), the pit is refused
+ * vanilla record set it rewrote is REAL rooms; anything else is GENERATED.
+ * ⛓ §5.36 — the kind is a REPORT: both are the solver's, pits included.
+ * Mutants this file kills (measured, §5.18; m1 restated at §5.36):
+ *   m1 the kind picks the producer again (a GENERATED set → the walker) → the unlabelled set's door walks (0 solves), its pit is refused
  *   m2 an apitem location via the walker (no placement handed to the solver) → the witness's location leg
  *   m3 the mount reports `Main.playerPositionX/Y` as 0 (the run is gone) → the host's reset lands in `tree@0,0`
  */
@@ -236,7 +236,7 @@ describe('§5.18 — WITNESS: seedling_playthrough on the JS runtime, the solver
     });
 });
 
-describe('§5.18 — the real rooms keep the S4 pit arm; a GENERATED set does not', () => {
+describe('§5.18 → §5.36 — the S4 pit arm and the solver, whatever kind the set is', () => {
     // L48's `out_pit_2_2` (S4's bare pit witness), arrived at its payload's first entrance spawn.
     const pl = PT.preset_sidecars['1']['level_48__r2c10'].playable_payload;
     const spawn = pl.exits.find((e) => e.entrance_spawn).entrance_spawn;
@@ -250,14 +250,17 @@ describe('§5.18 — the real rooms keep the S4 pit arm; a GENERATED set does no
         expect(rt.playback.solverStats.lastSolve.goal.kind).toBe('reach-pit');
     });
 
-    it('the SAME rooms mounted as a set that names no provenance: the generated path — no pit, the walker for a door', () => {
+    it('⛓ §5.36 — the SAME rooms mounted as a set that names no provenance (kind GENERATED): the pit is admitted and SOLVED, the door SOLVED — the kind picks no producer', () => {
         const { rt } = delivered(unlabelled(LOADED.set), { level: 48, ...spawn });
         expect(rt.mounted.kind).toBe(MOUNTED_KINDS.GENERATED);
-        expect(rt.playback.walkTo(pit)).toEqual({ ok: false,
-            reason: `level 48 has no teleporter on tile (${pit.tiles[0][0]}, ${pit.tiles[0][1]})` });
+        expect(rt.playback.walkTo(pit)).toEqual({ ok: true });
+        const crossings = walk(rt, pit);
+        expect(crossings).toEqual([{ from: 48, to: 49, type: 'pit' }]);
+        expect(rt.playback.solverStats.lastSolve.goal.kind).toBe('reach-pit');
         const { rt: rt0 } = delivered(unlabelled(LOADED.set), START);
         walk(rt0, doorGoal(0, 86));
         expect(rt0.run.level).toBe(86);
-        expect(rt0.playback.solverStats.solves).toBe(0);
+        expect(rt0.playback.solverStats.solves).toBe(1);
+        expect(rt0.playback.solverStats.lastSolve.goal.kind).toBe('reach-exit');
     });
 });

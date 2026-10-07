@@ -112,11 +112,14 @@ describe('jsRuntimeSolver — step 1, the goal mapping', () => {
         expect(solverGoalFor({ kind: 'location' }, { run, resolved: {}, placement: { x: 48, y: 16, type: 'chest' } }))
             .toEqual({ goal: { kind: 'collect-placement', placement: { x: 48, y: 16 } } });
     });
-    it('a tile goal, and every goal of a mounted GENERATED set, keep the J2 walker', () => {
+    it('only a tile goal keeps the J2 walker — ⛓ §5.36: a GENERATED set\'s exit and location are the solver\'s (no kind is asked)', () => {
         expect(solverGoalFor({ kind: 'tile' }, { run, resolved: {} }).walker).toMatch(/no solver goal kind/);
-        for (const kind of ['exit', 'location', 'tile']) {
-            expect(solverGoalFor({ kind }, { run, resolved: { allowTeleporter: 0 }, generated: true, placement: { x: 0, y: 0 } }).walker)
-                .toMatch(/generated level set keeps the J2 walker/);
+        // the old `generated` argument is no longer read: it maps exactly as without it
+        for (const ctx of [{}, { generated: true }]) {
+            expect(solverGoalFor({ kind: 'exit' }, { run, resolved: { allowTeleporter: 0 }, ...ctx }))
+                .toEqual({ goal: { kind: 'reach-exit', exit: { x: 224, y: 32 } } });
+            expect(solverGoalFor({ kind: 'location' }, { run, resolved: {}, placement: { x: 64, y: 16, type: 'apitem' }, ...ctx }))
+                .toEqual({ goal: { kind: 'collect-placement', placement: { x: 64, y: 16 } } });
         }
     });
 });
