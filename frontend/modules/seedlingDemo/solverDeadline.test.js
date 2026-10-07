@@ -134,8 +134,9 @@ describe('SF2: the anytime deadline — `sword-dash` is an UPGRADE, so a trip ke
         const bare = solveRoom(...DASH_ROOM);
         const got = solveRoom(...DASH_ROOM, { shouldStop: (site) => site !== 'sword-dash' });
         expect(got.json).toBe(bare.json);
+        // ⛓ hammer-phase A appended `hammer-escape` (asked only with `HAMMER_ESCAPE` on)
         expect(DEADLINE_SITES).toEqual(['sword-dash', 'stance-hypothesis', 'block-route',
-            'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk', 'phase-dodge']);
+            'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk', 'phase-dodge', 'hammer-escape']);
     });
 
     it('a deadline that is not a callback is refused by name', () => {

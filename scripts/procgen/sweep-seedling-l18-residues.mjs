@@ -5,7 +5,9 @@
  * `r9-solve-18`'s committed staging with `seam.time` alone moved to each residue of `Game.time mod 45` (the phase
  * `spinner.hammerLine` swings at), solved by `twoPassSolve` exactly as `fidelityF1c.test.js`'s `solveAt` (and
  * `solve-seedling-r9-campaign`) calls it. One line per residue: the verdict, the solve's length, the wall time, a
- * digest of the keys, and the refusal's head. Pure node; no browser, no box lock, writes nothing.
+ * digest of the keys, the escapes and phase stalls it took, and the refusal's head. Every solve is REPLAYED on a fresh
+ * run: one that takes a hit or does not cross reads `SOLVE-BUT-HIT`. Pure node; no browser, no box lock, writes
+ * nothing.
  *
  * The shift that puts the staging at residue r is `((r − time mod 45) mod 45) − 45`, derived from the committed
  * tape's own clock (the F1c rows' `shiftTo`).
@@ -98,8 +100,15 @@ async function main() {
             const res = await solveAt(shiftTo(r));
             const keys = res.out.perTick.map((h) => [...h].sort().join('+')).join(',');
             const press = (res.out.records ?? []).filter((x) => x.arm === 'press');
+            // ⛓ the walk replayed on a fresh run: a solve that takes a hit or does not cross is not a solve
+            const seam = { ...STAGING.seam, time: STAGING.seam.time + shiftTo(r) };
+            const replay = createRunForStaging({ ...STAGING, seam, persistence: res.persistence, equips: [] },
+                atlasLevelSource());
+            for (const held of res.out.perTick) replay.advance(held);
+            const crossed = replay.transitions.map((x) => x.to_level).join() === String(STAGING.boot.level + 1);
             out = {
-                residue: r, verdict: 'SOLVE', length: res.out.perTick.length,
+                residue: r, verdict: replay.playerHits.length === 0 && crossed ? 'SOLVE' : 'SOLVE-BUT-HIT',
+                hits: replay.playerHits.length, crossed, length: res.out.perTick.length,
                 digest: createHash('md5').update(keys).digest('hex').slice(0, 12),
                 stalls: press.flatMap((p) => p.phaseStalls ?? []).length,
                 escapes: press.flatMap((p) => p.escapes ?? []).length,
@@ -126,8 +135,8 @@ async function main() {
         }
         rows.push(a);
         const len = a.length === null ? 'R' : String(a.length);
-        const extra = a.verdict === 'SOLVE'
-            ? `digest ${a.digest} stalls ${a.stalls} escapes ${a.escapes}` : `— ${a.head}`;
+        const extra = a.length !== null
+            ? `digest ${a.digest} stalls ${a.stalls} escapes ${a.escapes} hits ${a.hits}` : `— ${a.head}`;
         console.log(`r${String(r).padStart(2)}  ${a.verdict.padEnd(22)} ${len.padStart(4)}  `
             + `${a.seconds.toFixed(1).padStart(6)}s  ${TWICE ? `${a.twice}  ` : ''}${extra}`);
     }

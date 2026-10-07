@@ -14151,7 +14151,8 @@ export function createLevelRun({
          * @param {{pressAt: number, direction: number, id?: string,
          *   positions: (Function|Array<{x: number, y: number}>)}} press
          * @returns {{rows: object[][], bodies: object[][], tests: object[], outcome: string, landing: ?object,
-         *   why: ?string, lineBlocked: ?object, unmodelled: string[]}}  `bodies[i]` is row i's `{id, hits, hitsTimer, destroy}`, in
+         *   why: ?string, lineBlocked: ?object, unmodelled: string[], impulse: ?object}}  `impulse` is the
+         *   dash's deferred `{force}` (`slashSet`), for a preview to step the press tick with (`previewStepper`).  `bodies[i]` is row i's `{id, hits, hitsTimer, destroy}`, in
          *   `rows[i]`'s order (the i-frame a later strike has to wait out is read there).
          */
         spinnerForecastWithPress(n, { pressAt, direction, id = null, positions } = {}) {
@@ -14253,7 +14254,7 @@ export function createLevelRun({
             const unmodelled = inventory?.hasShield ? ['shield bump (`shieldBumpNow`)'] : [];
             return {
                 rows: live.byId.size > 0 ? rows : [], bodies: live.byId.size > 0 ? bodies : [],
-                tests, outcome: press.outcome, unmodelled,
+                tests, outcome: press.outcome, impulse: press.impulse ?? null, unmodelled,
                 landing: landing ? { t: landing.t, index: landing.t - ticksCompleted, id: landing.id,
                     killed: landing.killed } : null,
                 why, lineBlocked,

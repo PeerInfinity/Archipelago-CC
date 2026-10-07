@@ -212,6 +212,20 @@
       ]
     },
     {
+      "file": "hammer-a-l18-escape21.json",
+      "tickCount": 549,
+      "bootLevel": 18,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
+      "file": "hammer-a-l18-escape6.json",
+      "tickCount": 454,
+      "bootLevel": 18,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "hazard-boot-pit.json",
       "tickCount": 30,
       "bootLevel": 83,
