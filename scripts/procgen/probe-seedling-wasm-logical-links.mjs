@@ -327,7 +327,9 @@ async function main() {
         const botStatus = () => page.evaluate(async () => {
             const { getActivePanel } = await import('./modules/playbackBot/index.js');
             const bot = getActivePanel()?.getBot?.();
-            return { status: bot?.getStatus?.() ?? '', region: bot?.getCurrentRegion?.() ?? null };
+            return { status: bot?.getStatus?.() ?? '', region: bot?.getCurrentRegion?.() ?? null,
+                // ⛓ WALK IDENTITY — the Restarts that waited for their leg's end
+                restartDeferrals: bot?.getRestartDeferrals?.() ?? null };
         });
         const engineStats = () => page.evaluate(async () => {
             const { substrateRegistry } = await import('./modules/shared/procgen/substrateRegistry.js');
@@ -336,7 +338,9 @@ async function main() {
             if (!e) return { engine: false, lastRefusal: c?.lastRefusal ?? null };
             const st = e.stats;
             return JSON.parse(JSON.stringify({
-                engine: true, adopted: st.adopted, forced: st.forced, forcedBy: st.forcedBy, adoptRefused: st.adoptRefused,
+                engine: true, adopted: st.adopted, forced: st.forced,
+                // ⛓ WALK IDENTITY — each adoption put on the live clock, and every plan ship's clock gap
+                adoptClock: st.adoptClock ?? null, shipGaps: (st.shipClock ?? []).map((r) => r.gap), forcedBy: st.forcedBy, adoptRefused: st.adoptRefused,
                 held: st.held, continuations: st.continuations, divergences: st.divergences, recoveries: st.recoveries,
                 failed: st.failed, done: st.done, hostStarts: (st.hostStarts ?? []).map((h) => h.label),
                 // ⛓ ANYTIME — the budget the engine solves under, its expiries / provisional plays / held retries
@@ -381,14 +385,15 @@ async function main() {
                 if (!e) return null;
                 const st = e.stats;
                 return JSON.parse(JSON.stringify({ swapPushes: st.swapPushes, shipClock: st.shipClock, deliveries: st.deliveries, deliveryDeferred: st.deliveryDeferred, holdBlocked: st.holdBlocked,
-                    fallbacks: st.fallbacks, forcedBy: st.forcedBy, heldChecks: st.heldChecks, adoptRefused: st.adoptRefused,
+                    fallbacks: st.fallbacks, forcedBy: st.forcedBy, adoptClock: st.adoptClock ?? null, heldChecks: st.heldChecks, adoptRefused: st.adoptRefused,
                     history: st.history.map((h) => ({ ...h, goal: { name: h.goal?.name ?? null, kind: h.goal?.kind ?? null, level: h.goal?.level ?? null } })),
                     arrivalReads: e.arrivalReads }));
             });
             const solves = await page.evaluate(() => window.__solveLog ?? null);
             const { writeFileSync, mkdirSync } = await import('node:fs');
             mkdirSync(dirname(TRACE), { recursive: true });
-            writeFileSync(TRACE, JSON.stringify({ verbs, engine: eng, solves }));
+            const bot = await botStatus();
+            writeFileSync(TRACE, JSON.stringify({ verbs, engine: eng, solves, restartDeferrals: bot.restartDeferrals }));
             out('B trace written', { file: TRACE, verbs: verbs?.length ?? null, tapes: (verbs ?? []).filter((v) => v.verb === 'botLoadTape').length,
                 solves: (solves ?? []).filter((x) => x.t === 'solve').length, workers: (solves ?? []).filter((x) => x.t === 'new').length });
         }
@@ -485,6 +490,19 @@ async function main() {
             const wantWindow = UPGRADE_WINDOW_WORK === null ? defaults.upgradeWindowWork : (UPGRADE_WINDOW_WORK > 0 ? UPGRADE_WINDOW_WORK : null);
             check(`B: the engine solves under the upgrade window (${wantWindow ?? 'the whole budget'} units, ${UPGRADE_WINDOW_WORK === null ? 'the default' : '--solver-upgrade-window-work, the setting'})`,
                 eng.upgradeWindowWork === wantWindow, JSON.stringify({ upgradeWindowWork: eng.upgradeWindowWork, defaults }));
+            // ⛓ WALK IDENTITY (a) — the cold start's adoption is staged on the LIVE clock: its plan ships at the gap every
+            // held arrival ships at (the model's boot), not begin-staged + the wall-clock idle frames.
+            const gaps = (eng.shipGaps ?? []).filter(Number.isFinite);
+            const modal = [...gaps.reduce((m, g) => m.set(g, (m.get(g) ?? 0) + 1), new Map())].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+            out('B adopt clock', { adoptClock: eng.adoptClock, firstGap: gaps[0] ?? null, modalGap: modal, gaps: [...new Set(gaps)] });
+            check('B: every adoption is put on the LIVE clock (no refusal), and the adopted plan ships at the held arrivals\' gap',
+                (eng.adoptClock ?? []).length >= 1 && eng.adoptClock.every((r) => r.refusal === null && r.shift >= 0) && gaps[0] === modal,
+                JSON.stringify({ adoptClock: eng.adoptClock, firstGap: gaps[0], modal }));
+            // ⛓ WALK IDENTITY (b) — every Restart the bot took waited for the playing leg's end (none cut at a wall-clock tick).
+            const deferrals = end?.restartDeferrals ?? [];
+            out('B restart deferrals', { deferrals });
+            check('B: every Restart that met a playing leg waited for its end (none cut)', deferrals.every((d) => d.ended),
+                JSON.stringify(deferrals));
             check('B: 0 backstops (the wall clock never ended a solve)', eng.backstops === 0, JSON.stringify({ backstops: eng.backstops, backstopMs: eng.backstopMs }));
             check('B: the walk ends FINISHED, with a NAMED refusal, or on the budget — never a silent stall',
                 (end?.status ?? '').startsWith('finished') || (end?.status ?? '').startsWith('error') || Date.now() - t0 >= BUDGET_MS,
