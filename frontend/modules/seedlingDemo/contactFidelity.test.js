@@ -53,9 +53,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     // ⛓ a measuring run sets SEEDLING_CONTACT_FIDELITY on purpose; the default is what this pins
     // ⛓ TERRAIN D3 shipped W2 and W3 ON; LINEFLIP turned W1 ON (licensed: r9-solve-18 re-recorded on the game, 510 → 519 t)
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('the shipped defaults: all three ON', () => {
-        // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` and W5 `chaserPointExact` ship ON as well.
+        // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
+        // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         expect(CONTACT_FIDELITY).toEqual({ collideLinePointsExact: true, wallFlyerSwordHits: true, drillLive: true,
-            bobSoldierLive: true, chaserPointExact: true });
+            bobSoldierLive: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
@@ -80,14 +81,12 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     });
 
     /**
-     * ⛓ fidelity BOBSOLDIER: a row may need a SECOND switch for its last ulp. Leg 309's sword knockback lands from a
-     * body whose position W5 (`chaserPointExact`, the runtime's `Point` arithmetic) makes bit-exact; with W4 alone
-     * it reproduces to 7.1e-15 px (pinned below, the W5 mutant).
+     * ⛓ fidelity BOBSOLDIER: leg 309's sword knockback needed a second switch, W5 `chaserPointExact`, for its last ulp
+     * (7.1e-15 px with W4 alone). ⚖ W5 was retired as a switch at the wave-8 harvest — the runtime's `Point`
+     * arithmetic is now the only one — so its own switch alone reproduces the leg at 0 px.
      */
-    const COMPANION = { 309: 'chaserPointExact' };
     it.each(Object.entries(ROWS).filter(([, [, sw]]) => sw))('leg %s — its own switch alone reproduces the game at 0 px', async (id, [, sw]) => {
-        const extra = COMPANION[id] ? { [COMPANION[id]]: true } : {};
-        const r = await withContactFidelity({ ...ALL_OFF, [sw]: true, ...extra }, () => replayCapture(load(id)));
+        const r = await withContactFidelity({ ...ALL_OFF, [sw]: true }, () => replayCapture(load(id)));
         expect(r.error).toBeNull();
         expect(r.compared).toBeGreaterThan(15);
         expect(r.worst).toBe(0);
@@ -98,17 +97,6 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         const on = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, k !== sw]));
         const r = await withContactFidelity(on, () => replayCapture(load(id)));
         expect(r.firstDiff?.t).toBe(t);
-    });
-
-    it('⛓ W5 (`chaserPointExact`) is the last ulp of leg 309: OFF, the BobSoldier\'s 1-ulp velocity drift reaches the player as 7.1e-15 px', async () => {
-        const on = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, k !== 'chaserPointExact']));
-        const r = await withContactFidelity(on, () => replayCapture(load(309)));
-        expect(r.error).toBeNull();
-        expect(r.firstDiff).toBeNull();
-        expect(r.worst).toBe(7.105427357601002e-15);
-        const all = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, true]));
-        const exact = await withContactFidelity(all, () => replayCapture(load(309)));
-        expect(exact.worst).toBe(0);
     });
 
     it.each(Object.entries(ROWS))('leg %s — all switches ON: fixed rows at 0 px, residue at its tick', async (id, [t, sw]) => {

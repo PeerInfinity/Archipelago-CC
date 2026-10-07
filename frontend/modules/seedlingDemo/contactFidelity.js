@@ -85,9 +85,10 @@
  * chaser's friction and chase normalise drifted by an ulp on diagonals. Measured on the BobSoldier captures: the
  * game's `vx` at L30 leg 309 t38 is `0.7884788477227912`, the model's `…911`; it grows into a 1-ulp position and a
  * 7e-15 px player knockback at the sword's hit (t66). ON: `playerPhysicsV1.pointLength` / `pointNormalize`, and
- * both captures are bit-exact on the player AND the body at every tick. OFF: the BEFORE arithmetic.
+ * both captures are bit-exact on the player AND the body at every tick.
+ * ⚖ RETIRED as a switch at the wave-8 harvest (user, 2026-10-07): its OFF arm was the second spelling the one-spelling
+ * law forbids (`oneSpelling.js`, an empty allow-list), so `chasers.js` always uses the runtime's arithmetic.
  */
-//   → `CONTACT_FIDELITY.chaserPointExact`
 
 /**
  * THE SWITCHES. They are read at CALL time, so a measurement can turn any of them on without editing this file:
@@ -112,8 +113,6 @@ export const CONTACT_FIDELITY = {
     drillLive: true,
     /** fidelity BOBSOLDIER W4 — see its paragraph above. */
     bobSoldierLive: true,
-    /** fidelity BOBSOLDIER W5 — see its paragraph above. */
-    chaserPointExact: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

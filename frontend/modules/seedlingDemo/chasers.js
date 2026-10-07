@@ -496,22 +496,20 @@ export function chaserBoxAt(tag, cx, cy) {
 }
 
 /**
- * ⛓⛓ fidelity-bobsoldier W5 (`contactFidelity.CONTACT_FIDELITY.chaserPointExact`) — `Point.length` and
+ * ⛓⛓ fidelity-bobsoldier W5 (once the switch `chaserPointExact`, retired) — `Point.length` and
  * `FP.distance` are `Math.sqrt(x*x + y*y)`, and `Point.normalize(t)` MULTIPLIES by `t / length`
  * (`playerPhysicsV1.pointNormalize`, the runtime's `point_normalize`). This file spelled both the refuted way
  * (`Math.hypot`, `(x / m) * t`), which R9 slice 12e⁗ measured off the player's diagonals: 1-ulp velocity drift. The
  * BobSoldier captures (L30 legs 308/309) read it off a chaser: the game's `vx` at t38 is `0.7884788477227912`, the
  * refuted spelling's `…911`, and the one-ulp position it grows into moved the sword's knockback by 7e-15 px.
- * OFF: the BEFORE arithmetic, byte-identical.
+ * ⚖ The OFF arm (the refuted spelling) was RETIRED at the wave-8 harvest (user, 2026-10-07): the one-spelling law
+ * (`scripts/procgen/oneSpelling.js`, an empty allow-list) forbids a second `Point.length` spelling in the model's reach.
  */
-const vlen = (x, y) => (CONTACT_FIDELITY.chaserPointExact ? pointLength(x, y) : Math.hypot(x, y));
+const vlen = (x, y) => pointLength(x, y);
 
 /** `flash.geom.Point.normalize(len)` — a no-op on the zero point. */
 function normalize(v, len) {
-    if (CONTACT_FIDELITY.chaserPointExact) return pointNormalize(v.x, v.y, len);
-    const m = Math.hypot(v.x, v.y);
-    if (m === 0) return v;
-    return { x: (v.x / m) * len, y: (v.y / m) * len };
+    return pointNormalize(v.x, v.y, len);
 }
 
 /** `Mobile.friction()`. */
