@@ -250,8 +250,9 @@ describe('⛔ the damage, and it is ONE (trap 143)', () => {
         expect(KILL_ARM_POLICY.Bob.why).toMatch(/enemyHit/);
         // ⛔ and the control that keeps this row honest: a chaser of the same
         // depth that nothing has driven a press against.
-        expect(KILL_ARM_POLICY.Jellyfish.policy).toBe('refused');
-        expect(() => createEnemyDamage('Jellyfish')).toThrow(/is `refused`/);
+        // ⛓ KILLLOCK K1 (ON since the wave-8 harvest) made `Jellyfish` modelled; the control is `LavaRunner` (K2 OFF).
+        expect(KILL_ARM_POLICY.LavaRunner.policy).toBe('refused');
+        expect(() => createEnemyDamage('LavaRunner')).toThrow(/is `refused`/);
     });
 
     it('⛓⛓ THREE arrows kill a default `Enemy`, and the i-frames floor it at 60 ticks', () => {
