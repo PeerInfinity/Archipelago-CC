@@ -1514,3 +1514,52 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
     });
 });
 
+/**
+ * ⛓ WALK IDENTITY (b) — `engine.legEnd()`: the Playback Bot's Restart asks the engine before it stops it. Null
+ * when no tape is PLAYING (the room is frozen or ours to release at a fixed clock); else a promise that resolves
+ * once the playing tape leaves `playing` — its held end — or, bounded, `timedOut`.
+ */
+describe('⛓ WALK IDENTITY — engine.legEnd(): a Restart waits for the playing tape', () => {
+    const untilPhase = (e, want, max = 400) => {
+        for (let i = 0; i < max && e.engine.status().phase !== want; i += 1) e.timers.run(1);
+        return e.engine.status().phase;
+    };
+    it('nothing playing (idle) → null; a PLAYING chest tape → resolves at its HELD end, never before', async () => {
+        const e = engineOver(A);
+        expect(e.engine.legEnd()).toBeNull();
+        e.engine.walkTo(CHEST);
+        expect(untilPhase(e, 'playing')).toBe('playing');
+        const resets = e.game.calls.filter((c) => c === 'botReset').length;
+        let settled = null;
+        const p = e.engine.legEnd();
+        expect(p).toBeInstanceOf(Promise);
+        p.then((r) => { settled = r; });
+        await Promise.resolve();
+        expect(settled).toBeNull();
+        e.timers.run();
+        const r = await p;
+        expect(r).toMatchObject({ ended: true, phase: 'held' });
+        expect(e.engine.status().phase).toBe('held');
+        // The wait itself released nothing: no botReset was spent on it.
+        expect(e.game.calls.filter((c) => c === 'botReset').length).toBe(resets);
+        // Held now → null: the bot restarts at once.
+        expect(e.engine.legEnd()).toBeNull();
+    });
+    it('a tape that never ends (its drain stalls) → resolves timedOut after the wait (the bot names the cut)', async () => {
+        const e = engineOver(A, { game: { stallDrains: 1e9 } });
+        e.engine.walkTo(CHEST);
+        expect(untilPhase(e, 'playing')).toBe('playing');
+        const p = e.engine.legEnd({ waitMs: 50 });
+        for (let i = 0; i < 200; i += 1) e.timers.run(1);
+        expect(await p).toMatchObject({ ended: false, timedOut: true, phase: 'playing' });
+    });
+    it('a stop while waiting resolves it (the leg left `playing`)', async () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        expect(untilPhase(e, 'playing')).toBe('playing');
+        const p = e.engine.legEnd();
+        e.engine.stop();
+        e.timers.run();
+        expect(await p).toMatchObject({ ended: true, phase: 'idle' });
+    });
+});

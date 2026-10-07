@@ -459,6 +459,17 @@ export class SeedlingPlaybackController {
     reset() { this._playing = false; this._instant = false; this._clearPending(); this._page()?.reset(); this._wasmEngine?.stop(); }
     setRate() { /* the game's own 30 tick/s clock is the only clock */ }
 
+    /**
+     * ⛓ WALK IDENTITY (b) — the Playback Bot asks before it takes a RESTART step: null = restart now (no wasm
+     * tape is playing — the JS page and every other substrate answer so, as before), else a promise that
+     * resolves when the playing tape reached its held end (`engine.legEnd`), so the Restart never cuts a tape
+     * at a wall-clock tick.
+     */
+    settleBeforeRestart() {
+        if (this._page()) return null;
+        return this._wasmEngine?.legEnd?.() ?? null;
+    }
+
     /** The page's walk state, for readouts and rows: `{state, reason, goal}` or null. */
     status() {
         const p = this._page();

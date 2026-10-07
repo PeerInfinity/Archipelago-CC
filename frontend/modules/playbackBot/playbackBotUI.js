@@ -176,6 +176,12 @@ export class PlaybackBotUI {
         this._restart = restart;
         // `{from, target}` while a Restart the bot asked for has not yet landed past the restart target.
         this._restartPending = null;
+        // ⛓ WALK IDENTITY (b) — a Restart DEFERRED until the controller's playing leg reached its end
+        // (`settleBeforeRestart`): `{from, statusText}` while it waits; the token drops a wait a stop / reset / move outlived.
+        this._restartDeferred = null;
+        this._restartDeferToken = 0;
+        // Every deferral that resolved (`{from, ended, timedOut, waitedMs}`), for readouts and rows.
+        this._restartDeferrals = [];
         // ⛓ WAVE-6 CONSUMER — exits whose crossing LANDED INSIDE A SOLID (an `arrival-inside-solid` walk failure):
         // exit name → the refusal's other arrivals as AP exits. Every route avoids them (`planRoute`'s `avoid`).
         this._avoidExits = new Map();
@@ -319,6 +325,7 @@ export class PlaybackBotUI {
         // resumes from the same head.
         this._isActive = false;
         this._restartPending = null;
+        this._dropRestartDeferral();
         this._dispatch('stop');
     }
 
@@ -358,6 +365,8 @@ export class PlaybackBotUI {
         this._log = [];                 // start a fresh transition history
         this._pendingManualTarget = null;
         this._restartPending = null;
+        this._dropRestartDeferral();
+        this._restartDeferrals = [];
         this._avoidExits = new Map();
         this._lastArrivalExit = null;
         this._escapes = [];
@@ -548,9 +557,8 @@ export class PlaybackBotUI {
             : `(${targetRegion} ${target.x},${target.y})`;
         if (isRestartStep(path.steps[1])) {
             // The target stays pending: the arrival past the restart target re-enters this method.
-            if (!this._takeRestart(`restarting (no walk from ${this._currentRegion}) → ${dest}`)) {
-                this._pendingManualTarget = null;
-            }
+            const dropTarget = () => { this._pendingManualTarget = null; };
+            if (!this._takeRestart(`restarting (no walk from ${this._currentRegion}) → ${dest}`, dropTarget)) dropTarget();
             this._render();
             return;
         }
@@ -636,6 +644,8 @@ export class PlaybackBotUI {
 
     onRegionMove(data) {
         const target = data?.targetRegion;
+        // ⛓ WALK IDENTITY (b) — the leg moved the player while a Restart waited on it: the route is re-planned from here.
+        if (target && this._restartDeferred && target !== this._restartDeferred.from) this._dropRestartDeferral();
         if (target) {
             // When the new region's substrate differs from the previous
             // region's, the previous substrate's controller would
@@ -807,7 +817,7 @@ export class PlaybackBotUI {
         this._escapes.push({ from, exit: entered, solids: [...(escape.solids ?? [])], at });
         const ok = this._takeRestart(`escaping arrival-inside-solid (${(escape.solids ?? []).join(', ') || 'a solid'}`
             + `${escape.at ? ` at L${escape.at.level} (${escape.at.x},${escape.at.y})` : ''}) in ${from ?? '?'} — Restart`
-            + `${entered ? `, then routing around "${entered}"` : ''}`);
+            + `${entered ? `, then routing around "${entered}"` : ''}`, () => { this._isActive = false; this._dispatch('stop'); });
         if (!ok) {
             this._isActive = false;
             this._dispatch('stop');
@@ -935,10 +945,8 @@ export class PlaybackBotUI {
         }
         if (isRestartStep(path.steps[1])) {
             // ⛓ RETURN TO MENU — no walk from here, one from the start: Restart, then route on from the arrival.
-            if (!this._takeRestart(`${sphereTag}restarting (no walk from ${this._currentRegion}) → ${head.regionName} ${progress}`)) {
-                this._isActive = false;
-                this._dispatch('stop');
-            }
+            const halt = () => { this._isActive = false; this._dispatch('stop'); };
+            if (!this._takeRestart(`${sphereTag}restarting (no walk from ${this._currentRegion}) → ${head.regionName} ${progress}`, halt)) halt();
             this._render();
             return;
         }
@@ -1045,12 +1053,51 @@ export class PlaybackBotUI {
      * Execute a RESTART step: the Menu panel's Restart (the button's own path — a reset move to the restart
      * target, then `menuPanel:restarted`, which the substrate answers with the start hop). Never an exit walkTo.
      * Returns false (with a named status) when no Restart is wired or it did not move the player.
+     *
+     * ⛓ WALK IDENTITY (b) — never at a wall-clock tick of a PLAYING leg: the active controller's
+     * `settleBeforeRestart()` answers null (restart now — every controller without it, and one with nothing
+     * playing) or a promise that resolves when its leg reached its end. The Restart is then taken in that turn;
+     * meanwhile `_takeRestart` answers true (the step is pending) and `onFail` is the caller's own stop for a
+     * Restart that, taken later, did not answer. A stop / reset / region move during the wait drops it.
      */
-    _takeRestart(statusText) {
+    _takeRestart(statusText, onFail = null) {
         if (typeof this._restart !== 'function') {
             this._setStatus(`error: ${this._currentRegion ?? '?'}: the route needs a Restart and no Restart is wired`);
             return false;
         }
+        const controller = this._resolveController();
+        let wait = null;
+        try {
+            wait = typeof controller?.settleBeforeRestart === 'function' ? controller.settleBeforeRestart() : null;
+        } catch (_e) {
+            wait = null;
+        }
+        if (!wait || typeof wait.then !== 'function') return this._restartNow(statusText);
+        const token = ++this._restartDeferToken;
+        const from = this._currentRegion;
+        this._restartDeferred = { from, statusText };
+        this._lastPublishedTarget = null;
+        this._setStatus(`${statusText} — waiting for the leg to reach its end`);
+        wait.then((r) => r, () => null).then((r) => {
+            if (token !== this._restartDeferToken) return;
+            this._restartDeferred = null;
+            const ended = r?.ended === true;
+            this._restartDeferrals.push({ from, ended, timedOut: r?.timedOut === true, waitedMs: r?.waitedMs ?? null });
+            const ok = this._restartNow(ended ? statusText : `${statusText} (the leg did not reach its end: cut)`);
+            if (!ok && typeof onFail === 'function') onFail();
+            this._render();
+        });
+        return true;
+    }
+
+    /** ⛓ WALK IDENTITY (b) — drop a deferred Restart (its wait resolves into nothing). */
+    _dropRestartDeferral() {
+        this._restartDeferToken += 1;
+        this._restartDeferred = null;
+    }
+
+    /** The Restart itself (the Menu panel's), in this turn. */
+    _restartNow(statusText) {
         const from = this._currentRegion;
         const rules = this._getRulesJson?.() ?? null;
         const target = restartTargetFor(rules, this._getPlayerId?.() ?? '1');
@@ -1087,6 +1134,10 @@ export class PlaybackBotUI {
 
     /** ⛓ RETURN TO MENU — the Restart the bot is waiting on (`{from, target}`), or null. */
     getRestartPending() { return this._restartPending ? { ...this._restartPending } : null; }
+
+    /** ⛓ WALK IDENTITY (b) — the Restart waiting on the leg (`{from, statusText}`), or null; and the resolved waits. */
+    getRestartDeferred() { return this._restartDeferred ? { ...this._restartDeferred } : null; }
+    getRestartDeferrals() { return this._restartDeferrals.map((d) => ({ ...d })); }
 
     /**
      * Round-trip a ping through the stateManager worker so any pending

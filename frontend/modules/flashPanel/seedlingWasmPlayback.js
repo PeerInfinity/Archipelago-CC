@@ -126,6 +126,8 @@ import {
 export const ARRIVAL_WAIT_MS = 15000;
 /** How long a QUEUED goal waits for the playing tape (a seal reveal is ~16 s, W0 i.13). */
 export const QUEUE_WAIT_MS = 60000;
+/** ⛓ WALK IDENTITY (b) — how long the bot's Restart waits for a playing tape to reach its end (a seal reveal is ~16 s). */
+export const RESTART_LEG_WAIT_MS = 30000;
 /** Solve poll, drain poll, and the `finished` read's cadence once every planned tick drained. */
 export const SOLVE_POLL_MS = 20;
 /** ⛓ W8c — the new-game ceremony's poll (`awaitCeremony`). */
@@ -1722,6 +1724,27 @@ export function createWasmPlayback({
             arriving = false;
             goal = null;
             note(null);
+        },
+        /**
+         * ⛓ WALK IDENTITY (b) — the bot's RESTART waits for the leg: null when no tape is PLAYING (held, idle,
+         * solving — the room is frozen, so a stop releases it at a fixed clock), else a promise that resolves
+         * `{ended, phase, waitedMs}` once the tape leaves `playing` (its held end; or idle / failed / stopped), or
+         * `{ended: false, timedOut: true}` after `waitMs`. Measured (§5.39): the Restart after L17's chest stopped
+         * the 42-tick tape ~1.15 s in, at a WALL-CLOCK tick — the room's clock then differed run to run.
+         */
+        legEnd({ waitMs = RESTART_LEG_WAIT_MS } = {}) {
+            if (phase !== 'playing') return null;
+            const t = T();
+            const from = now();
+            const leg = play;
+            return new Promise((resolve) => {
+                const poll = () => {
+                    if (phase !== 'playing' || play !== leg) { resolve({ ended: true, phase, waitedMs: now() - from }); return; }
+                    if (now() - from > waitMs) { resolve({ ended: false, timedOut: true, phase, waitedMs: now() - from }); return; }
+                    t.setTimeout(poll, SOLVE_POLL_MS);
+                };
+                t.setTimeout(poll, SOLVE_POLL_MS);
+            });
         },
         liveLevel() { const l = readState().level; return Number.isInteger(l) ? l : null; },
         /** ⛓ O3 — the budget the next solve starts with (the knob's live value, else the engine's own), in work units. */

@@ -1469,6 +1469,140 @@ describe('PlaybackBotUI — the RESTART step (return_to_menu)', () => {
 });
 
 /**
+ * ⛓ WALK IDENTITY (b) — the bot's RESTART waits for the controller's PLAYING leg to reach its end
+ * (`settleBeforeRestart`), so it never cuts a tape at a wall-clock tick (§5.39: L17's chest tape cut ~1.15 s
+ * into 42 ticks). A controller without the hook, or with nothing playing (null), restarts as before.
+ */
+describe('PlaybackBotUI — the RESTART step waits for the playing leg (walk identity)', () => {
+    const ADJ = { Menu: [['GameStart', 'Start']], Start: [['toB', 'region_b'], ['drop', 'Pit']], Pit: [], region_b: [] };
+    const findPathWithExits = (from, to) => {
+        const seen = new Set([from]);
+        const queue = [[{ region: from, exitUsed: null }]];
+        while (queue.length) {
+            const path = queue.shift();
+            const here = path[path.length - 1].region;
+            if (here === to) return { steps: path, length: path.length - 1 };
+            for (const [exit, next] of ADJ[here] ?? []) {
+                if (!seen.has(next)) { seen.add(next); queue.push([...path, { region: next, exitUsed: exit }]); }
+            }
+        }
+        return null;
+    };
+    const staticData = { regions: new Map([['Pit', { locations: [] }], ['region_b', { locations: [{ name: 'Loc B' }] }]]) };
+    const rules = { start_regions: { 1: ['Menu'] }, exporter: { 1: { return_to_menu: true } } };
+    /** `settle`: undefined = the controller has no hook (every non-Seedling substrate); else what the hook answers. */
+    function makeBot({ settle, answer = { mode: 'world', target: 'Menu' } } = {}) {
+        const controller = makeFakeController();
+        if (settle !== undefined) controller.settleBeforeRestart = () => { controller.calls.push({ method: 'settleBeforeRestart', args: [] }); return settle(); };
+        const ref = { restarts: [] };
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc B'] }],
+            getStaticData: () => staticData,
+            getRulesJson: () => rules,
+            getActiveController: () => controller,
+            pathFinder: { findPathWithExits },
+            restart: () => {
+                ref.restarts.push(controller.calls.map((c) => c.method));
+                if (!answer) return null;
+                bot.onRegionMove({ targetRegion: 'Menu' });
+                bot.onRegionMove({ targetRegion: 'Start' });
+                return answer;
+            },
+        });
+        return Object.assign(ref, { bot, controller });
+    }
+    /** A leg the test ends by hand. */
+    const legEnd = () => { const d = {}; d.promise = new Promise((res) => { d.end = res; }); return d; };
+    const flush = () => new Promise((res) => setTimeout(res, 0));
+    const walkTos = (controller) => controller.calls.filter((c) => c.method === 'walkTo').map((c) => c.args[0]);
+
+    it('a controller WITHOUT the hook (a non-Seedling substrate) restarts at once, as before', async () => {
+        const ref = makeBot();
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(ref.restarts).toHaveLength(1);
+        expect(ref.bot.getRestartDeferrals()).toEqual([]);
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+    });
+
+    it('a hook answering null (nothing playing: held, idle, solving) restarts at once', async () => {
+        const ref = makeBot({ settle: () => null });
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(ref.restarts).toHaveLength(1);
+        expect(ref.bot.getRestartDeferred()).toBeNull();
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+    });
+
+    it('a PLAYING leg: the Restart waits (named), is taken in the turn the leg ends, then routes on', async () => {
+        const leg = legEnd();
+        const ref = makeBot({ settle: () => leg.promise });
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(ref.restarts).toEqual([]);
+        expect(ref.bot.getRestartDeferred()).toMatchObject({ from: 'Pit' });
+        expect(ref.bot.getStatus()).toMatch(/restarting \(no walk from Pit\) → region_b .* — waiting for the leg to reach its end/);
+        expect(ref.controller.calls.filter((c) => c.method === 'stop')).toEqual([]);
+        leg.end({ ended: true, phase: 'held', waitedMs: 1400 });
+        await flush();
+        expect(ref.restarts).toHaveLength(1);
+        expect(ref.bot.getRestartDeferred()).toBeNull();
+        expect(ref.bot.getRestartDeferrals()).toEqual([{ from: 'Pit', ended: true, timedOut: false, waitedMs: 1400 }]);
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+        expect(ref.bot.isActive()).toBe(true);
+    });
+
+    it('a leg that never reaches its end within the wait: the Restart is taken anyway and the CUT is named', async () => {
+        const leg = legEnd();
+        const ref = makeBot({ settle: () => leg.promise });
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        leg.end({ ended: false, timedOut: true, phase: 'playing', waitedMs: 30001 });
+        await flush();
+        expect(ref.restarts).toHaveLength(1);
+        expect(ref.bot.getRestartDeferrals()).toEqual([{ from: 'Pit', ended: false, timedOut: true, waitedMs: 30001 }]);
+        expect(ref.bot.getLog().some((l) => /the leg did not reach its end: cut/.test(l))).toBe(true);
+    });
+
+    it('stop() during the wait drops it: the Restart is never taken', async () => {
+        const leg = legEnd();
+        const ref = makeBot({ settle: () => leg.promise });
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        ref.bot.stop();
+        leg.end({ ended: true, phase: 'held' });
+        await flush();
+        expect(ref.restarts).toEqual([]);
+        expect(ref.bot.getRestartDeferred()).toBeNull();
+    });
+
+    it('a region move during the wait drops it (the route is re-planned from there)', async () => {
+        const leg = legEnd();
+        const ref = makeBot({ settle: () => leg.promise });
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        ref.bot.onRegionMove({ targetRegion: 'Start' });
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+        leg.end({ ended: true, phase: 'held' });
+        await flush();
+        expect(ref.restarts).toEqual([]);
+    });
+
+    it('a deferred Restart the Menu panel does not answer stops the bot by name (the caller\'s own stop)', async () => {
+        const leg = legEnd();
+        const ref = makeBot({ settle: () => leg.promise, answer: null });
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(ref.bot.isActive()).toBe(true);
+        leg.end({ ended: true, phase: 'held' });
+        await flush();
+        expect(ref.bot.isActive()).toBe(false);
+        expect(ref.bot.getStatus()).toMatch(/the Menu panel's Restart did not answer/);
+        expect(ref.controller.calls.at(-1).method).toBe('stop');
+    });
+});
+
+/**
  * ⛓ WAVE-6 CONSUMER — a walk that fails because the player's box ARRIVED INSIDE A SOLID (fidelity ARRIVAL's
  * `arrival-inside-solid`; the controller hands the bot `escape` = the refusal's `wayOut` in AP terms). No walk
  * leaves a solid: the bot takes the EXISTING Restart step when the refusal offers it and the slot declares

@@ -385,6 +385,28 @@ describe('⛓ W2 — the atlas instance walks under the WASM runtime (the engine
         expect(engine.stops).toBe(1);
     });
 
+    it('⛓ WALK IDENTITY — settleBeforeRestart: no engine → null; the engine\'s legEnd answer passed through (null idle, a promise mid-play)', async () => {
+        const engine = fakeEngine();
+        const leg = Promise.resolve({ ended: true, phase: 'held' });
+        let answer = null;
+        engine.legEnd = () => answer;
+        const c = new SeedlingPlaybackController({ getSurface: () => wasmSurface(), substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+            resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas, wasm: true, timers: fakeTimers().timers,
+            loadWasmEngine: async () => engine });
+        expect(c.settleBeforeRestart()).toBeNull();
+        c.walkTo({ kind: 'location', name: 'Starting House - Chest' });
+        await flush();
+        expect(c.settleBeforeRestart()).toBeNull();
+        answer = leg;
+        expect(c.settleBeforeRestart()).toBe(leg);
+    });
+
+    it('⛓ WALK IDENTITY — the JS page (no wasm engine) restarts as before: settleBeforeRestart is null', () => {
+        const c = new SeedlingPlaybackController({ getSurface: () => null, substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+            resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas });
+        expect(c.settleBeforeRestart()).toBeNull();
+    });
+
     it('the engine\'s synchronous refusal is FALSE with its reason; its late failure and notes are relayed', async () => {
         const engine = fakeEngine();
         const failed = [];
