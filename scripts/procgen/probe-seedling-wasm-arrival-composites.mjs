@@ -24,8 +24,15 @@
  *       edge wins is untranscribed), L34 (128,16) (the door under a magical lock), L58 (64,16) (a dead door
  *       over a lethal pit).
  *   T   the PIT exits: L48, L83, L84 fallen on plan (`reach-pit`; the fall is the game's crossing).
- *   X   the deterministic RESIDUE legs (§1.2: L28, L30, L45, L88 ×2): each fails BY NAME after 2 plans
+ *   X   the deterministic RESIDUE legs (§1.2: L28, L30, L45): each fails BY NAME after 2 plans
  *       (1 forced re-arrival) — an exact repeat (same tick, same game row) — not after 4.
+ *       ⛓ L88 ×2 (`declined`): their residue WAS the drill — the game's `Drill` hops onto the player and knocks it
+ *       back (Δy ≈ +2.5 at t96), and the model had none. Fidelity TERRAIN's W3 `drillLive` (ON since wave 6,
+ *       `53c8f83118`) put the drill in the model, so the solver now sees it: without the Sword every corridor runs
+ *       through the gap between the torches at (112,128)/(144,128), right above the drill at (128,160), and stalls
+ *       there. The goal fails BY the SOLVER's NAME before ANY plan ships (`the solver declined … the re-planned
+ *       corridor failed too`; 0 plans played, no divergence) — TERRAIN's #663 family (*"a planning gap beside a
+ *       live drill"*), not a model/game residue. `drillLive` OFF restores the old 379 t / 333 t plans exactly.
  *   E   ⛓ WASM EQUIPS — fidelity BURN's step 93 (L24 → L12 under `burnabletree@32,128`), the AP items granted
  *       first (`addItemToInventory`, in the session's order): the Sword then Fire → the plan's tape ships TWO
  *       slot selections (Fire's slot on the press, the sword's again), the tree burns (`{24,0}` cleared), the
@@ -72,7 +79,8 @@ export const PLAN_TICKS_TOLERANCE = 1;
  * The legs, by session. `at` = the arrival (OEL spawn) the host jumps to; `expect` = what the leg must do:
  * `cross` (on plan, out of the room; `producer` the plan's; `stepOff` = the plan steps off a latched door),
  * `closed` (the solver's named closed-pocket refusal),
- * `named` (any named failure — an unreachable goal door, recorded, not fixed), `repeat` (the exact-repeat failure after 2 plans).
+ * `named` (any named failure — an unreachable goal door, recorded, not fixed), `repeat` (the exact-repeat failure after 2 plans),
+ * `declined` (the solver's corridor refusal before any plan ships — `declinedHolds`).
  */
 export const LEGS = {
     D: [
@@ -112,10 +120,24 @@ export const LEGS = {
         { name: 'residue L28', at: [28, 96, 16], goal: exit(28, [[0, 6]], 'out_teleporter_0_96'), expect: 'repeat' },
         { name: 'residue L30', at: [30, 16, 128], goal: exit(30, [[12, 3]], 'out_stairsdown_192_48'), expect: 'repeat' },
         { name: 'residue L45', at: [45, 112, 288], goal: exit(45, [[7, 0]], 'out_teleporter_112_0'), expect: 'repeat' },
-        { name: 'residue L88 a', at: [88, 96, 288], goal: exit(88, [[2, 0]], 'out_teleporter_32_0'), expect: 'repeat' },
-        { name: 'residue L88 b', at: [88, 96, 288], goal: exit(88, [[12, 0]], 'out_teleporter_192_0'), expect: 'repeat' },
+        { name: 'residue L88 a', at: [88, 96, 288], goal: exit(88, [[2, 0]], 'out_teleporter_32_0'), expect: 'declined' },
+        { name: 'residue L88 b', at: [88, 96, 288], goal: exit(88, [[12, 0]], 'out_teleporter_192_0'), expect: 'declined' },
     ],
 };
+
+/**
+ * A `declined` leg's verdict (X L88, fidelity TERRAIN's live drill): the goal FAILED, BY the solver's NAME — the
+ * corridor refusal for THIS goal's exit, in its level — and nothing played (one history entry, `failed`: no plan
+ * shipped, so no divergence and no repeat). A silent success (`crossed`/`done`, or any played plan) and a failure
+ * without the solver's name both red. Pure, so `arrivalCompositesLegs.test.js` holds it to those two controls.
+ */
+export function declinedHolds(leg, r) {
+    const head = `the solver declined ${leg.goal.name} in level ${leg.goal.level} (refusal): `;
+    const failed = typeof r.failed === 'string' ? r.failed : '';
+    return r.answer?.ok === true && r.end === 'failed' && r.level === leg.goal.level
+        && failed.startsWith(head) && failed.includes('the re-planned corridor failed too')
+        && JSON.stringify((r.legs ?? []).map((h) => h.outcome)) === JSON.stringify(['failed']);
+}
 
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
 if (isEntryPoint(import.meta.url)) await main();
@@ -314,6 +336,10 @@ async function main() {
                         r.end === 'failed' && /at the SAME tick with the SAME game row 2 times in a row/.test(r.failed ?? '')
                             && JSON.stringify(r.legs.map((h) => h.outcome)) === JSON.stringify(['diverged', 'failed']),
                         JSON.stringify({ end: r.end, failed: r.failed, outcomes: r.legs.map((h) => h.outcome) }));
+                } else if (leg.expect === 'declined') {
+                    check(`${SESSION} ${leg.name}: the SOLVER declines BY NAME before any plan ships (the corridor beside the live drill fails; 0 plans)`,
+                        declinedHolds(leg, r),
+                        JSON.stringify({ end: r.end, level: r.level, failed: r.failed, outcomes: r.legs.map((h) => h.outcome) }));
                 }
                 if (leg.expect === 'burn') {
                     const plan = r.tapes.filter((t) => t.ticks > 0);
