@@ -68,7 +68,7 @@
         "seal_parts": []
     },
     "rng": {
-        "seed": 852378121,
+        "seed": 1679857288,
         "split": false,
         "cosmetic": 0,
         "fp": 1752443622
@@ -94,7 +94,7 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 10042,
+        "time": 9885,
         "primary": 0,
         "secondary": 0,
         "grass_cut": 0,
@@ -112,13 +112,13 @@
     },
     "tick0": {
         "rng": {
-            "seed": 1181520403,
+            "seed": 2032220659,
             "split": false,
             "cosmetic": 0,
             "fp": 581736349
         },
         "seam": {
-            "time": 10063
+            "time": 9906
         }
     },
     "tick_count": 560,
