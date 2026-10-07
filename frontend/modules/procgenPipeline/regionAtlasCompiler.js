@@ -416,6 +416,10 @@ function deriveIdentifiers(atlas, options) {
  * @param {Array<object>} [options.exitGates] RULES obstacle-events — `{region_id, exit_id, rule}`:
  *   the wired boundary exit leaving from that atlas endpoint carries `And(<its rule>, rule)` (just
  *   `rule` when it has none). Several gates on one endpoint are ANDed; a gate naming no wired exit throws.
+ * @param {Array<object>} [options.internalExitRules] RULES lock-events — `{region_id, from, to, expect, rule}`:
+ *   the ONE-WAY internal exit `from -> to` of that region compiles with `rule` instead of its own, which must
+ *   still equal `expect` (else it throws by name). A row naming no such exit throws. The atlas is not edited:
+ *   this is the rules layer's projection (a latched lock's return priced as its event).
  * @param {boolean} [options.embedSphereLog] embed the forward simulator's
  *   `generateSphereLog` walk of the compiled graph as `sphere_log` (default
  *   false — opt-in, so every existing compile stays byte-identical). The same
@@ -424,6 +428,37 @@ function deriveIdentifiers(atlas, options) {
  *   this compile: the caller asked for a log, and a guessed one is never given.
  * @returns {{ rules: object, report: object }}
  */
+/** `options.internalExitRules` → `region|from|to` → `{expect, rule, used}`; a second row for one exit throws. */
+function internalExitRulesOf(list = []) {
+    const out = new Map();
+    for (const r of list) {
+        if (!r?.region_id || !r?.from || !r?.to || !('rule' in r) || !('expect' in r)) {
+            throw new Error(`internal exit rule needs region_id, from, to, expect and rule: ${JSON.stringify(r)}`);
+        }
+        const key = `${r.region_id}|${r.from}|${r.to}`;
+        if (out.has(key)) throw new Error(`two internal exit rules for ${key}`);
+        out.set(key, { expect: r.expect, rule: r.rule, used: false });
+    }
+    return out;
+}
+
+/**
+ * The rule a one-way internal exit compiles with: its replacement when the caller names one (refused by name
+ * when the atlas row no longer carries the rule the replacement was derived from), else its own.
+ */
+function internalRuleFor(rules, regionId, ie) {
+    const key = `${regionId}|${ie.from}|${ie.to}`;
+    const r = rules.get(key);
+    if (!r) return ie.access_rule;
+    if (ie.bidirectional === true) throw new Error(`internal exit rule for ${key}: the atlas row is bidirectional`);
+    if (JSON.stringify(ie.access_rule ?? null) !== JSON.stringify(r.expect ?? null)) {
+        throw new Error(`internal exit rule for ${key}: the atlas row's rule ${JSON.stringify(ie.access_rule ?? null)} `
+            + `is not the one the replacement was derived from (${JSON.stringify(r.expect ?? null)})`);
+    }
+    r.used = true;
+    return r.rule;
+}
+
 /** `options.exitGates` → endpoint key → `{rule, used}`, several gates on one endpoint ANDed in order. */
 function exitGatesOf(list = []) {
     const out = new Map();
@@ -512,11 +547,12 @@ export function compileRegionAtlas(atlas, options = {}) {
     // exit has to carry the AP exit name the graph actually minted, `#2` suffixes
     // and all, because that name is how procgenPlayer resolves the crossing.
     const internalInfo = new Map();
+    const internalRules = internalExitRulesOf(options.internalExitRules);
     for (const region of atlasRegions) {
         for (const ie of region.subgraph?.internal_exits ?? []) {
             const from = apRegionName(region.region_id, ie.from);
             const to = apRegionName(region.region_id, ie.to);
-            const forward = addExit(from, to, ie.access_rule);
+            const forward = addExit(from, to, internalRuleFor(internalRules, region.region_id, ie));
             const fkey = `${region.region_id}|${ie.from}|${ie.to}`;
             if (!internalInfo.has(fkey)) internalInfo.set(fkey, forward);
             // rules.json exits are strictly one-way ({name, connected_region,
@@ -527,6 +563,10 @@ export function compileRegionAtlas(atlas, options = {}) {
                 if (!internalInfo.has(bkey)) internalInfo.set(bkey, back);
             }
         }
+    }
+
+    for (const [key, r] of internalRules) {
+        if (!r.used) throw new Error(`internal exit rule for ${key} names no one-way internal exit of this atlas`);
     }
 
     // --- boundary exits, wired by the vanilla layout ---------------------

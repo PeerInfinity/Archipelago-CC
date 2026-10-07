@@ -61,7 +61,7 @@ const GAME_NAME = 'Seedling Playthrough';
 const { AtlasSession } = await imp('frontend/modules/regionMarkingTool/atlasSession.js');
 const { validateRegionAtlas, derivedRulesSource } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
 const { compactJsonFile } = await imp('frontend/modules/procgenPipeline/compactJson.js');
-const { analyzeRegion, applyRegionAnalysis } = await imp('frontend/modules/procgenPipeline/regionAtlasAnalyzer.js');
+const { analyzeRegion, applyRegionAnalysis, simplifyRule } = await imp('frontend/modules/procgenPipeline/regionAtlasAnalyzer.js');
 const { compileRegionAtlas } = await imp('frontend/modules/procgenPipeline/regionAtlasCompiler.js');
 const { stringifyRulesJson } = await imp('frontend/modules/shared/rulesJsonBuilder.js');
 const SEM = await imp('frontend/modules/flashPanel/seedlingSemantics.js');
@@ -83,7 +83,8 @@ const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seed
 const { patchedMapDocument, SEEDLING_SET_PATCHES } = await imp('frontend/modules/seedlingDemo/seedlingSetPatches.js');
 const { arrivalSolidCensus } = await imp('frontend/modules/seedlingDemo/fidelityArrival.js');
 const { levelSourceFromAtlas } = await imp('frontend/modules/seedlingDemo/atlasSource.js');
-const { deriveObstacleEvents, parseSolidId } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
+const { deriveObstacleEvents, deriveLockEvents, obstacleEventName, parseSolidId } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
+const { FLAG_ACTIONS } = await imp('frontend/modules/seedlingDemo/arrivalSolid.js');
 const { apRegionName } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
 const { pitChainsFromCensus } = await import('./seedlingPitChains.js');
 
@@ -318,14 +319,40 @@ function gameGatedSolidTiles(level) {
     return tiles;
 }
 
+/**
+ * ⛓ RULES lock-events — the LATCHING locks of one level, by tile: every placed entity whose semantics mark it
+ * `persists` (a one-sided lock whose persistence tag keeps it open: today the BossLock, `persistAttr: 'tag'`), as
+ * `"x,y"` -> `{level, tag, cls, x, y, name}`. Read off the semantics, never a class list here.
+ */
+const latchLocksMemo = new Map();
+function latchLocksOf(level) {
+    if (latchLocksMemo.has(level.level)) return latchLocksMemo.get(level.level);
+    const out = new Map();
+    for (const e of level.entities ?? []) {
+        const sem = SEM.entitySemantics(e);
+        if (!sem?.persists) continue;
+        const lock = { level: level.level, tag: Number(e.attrs[sem.persistAttr]), cls: e.type, x: e.x, y: e.y };
+        lock.name = obstacleEventName(lock);
+        for (const [tx, ty] of SEM.entitySealedTiles(e, sem)) out.set(`${tx},${ty}`, lock);
+    }
+    latchLocksMemo.set(level.level, out);
+    return out;
+}
+
 /** The analyzer options for ONE level: the shared ones plus the model oracles. */
 export function playthroughAnalyzerOptionsFor(level) {
     const oracles = seedlingModelOracles(level, gridFor(level), { tileSize: TILE });
     const gated = gameGatedSolidTiles(level);
+    const locks = latchLocksOf(level);
     return {
         ...analyzerOptions,
         ...oracles,
         tileSolid: ({ tile }) => gated.has(`${tile[0]},${tile[1]}`) && oracles.tileSolid({ tile }),
+        // ⛓ RULES lock-events: a latched cell is opened once its lock's flag is cleared — the lock's event.
+        latchEvent: ([x, y]) => {
+            const lock = locks.get(`${x},${y}`);
+            return lock ? { rule: 'Has', args: { item_name: lock.name } } : null;
+        },
     };
 }
 
@@ -1056,6 +1083,70 @@ export function playthroughObstacleEvents(doc, { rows = arrivalSolidCensus(MAP, 
     });
 }
 
+/**
+ * ⛓⛓ RULES lock-events — **THE LATCHING LOCKS AS AP EVENTS** (`flashPanel/seedlingObstacleEvents.js`
+ * `deriveLockEvents` holds the schema and the why). The rows are the analyzer's `latch_projection` from the
+ * last `buildPlaythroughAtlas` (the internal exits whose rule changes when each latched cell is priced as its
+ * lock's event), so the set is derived: a lock no return crosses mints nothing. This answers the atlas-side
+ * questions:
+ *   - PLACE: the ONE component the analyzer saw OPEN the lock (its `latches` openers; several = a refusal by
+ *     name), and `across` = the other sub-regions its footprint touches;
+ *   - RULE: Or over that opener's condition sets, resolved as every crossing is (the key, and whatever the
+ *     step into the lock crossed);
+ *   - ACTION: the census's `FLAG_ACTIONS` row for the class.
+ * The atlas keeps RULES (A)'s rows; the compiler swaps them (`internalExitRules`, refused when a row moved).
+ */
+export function playthroughLockEvents(doc, { existing = [] } = {}) {
+    const projection = [];
+    for (const [regionId, analysis] of regionAnalyses) {
+        for (const row of analysis.latch_projection ?? []) projection.push({ region_id: regionId, ...row });
+    }
+    const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
+    const locksOfRegion = (regionId) => latchLocksOf(levelOf(regionOf(regionId).map_ref));
+    const tilesOf = (lock, regionId) => [...locksOfRegion(regionId)].filter(([, l]) => l === lock)
+        .map(([k]) => k.split(',').map(Number));
+    const openersOf = (lock, regionId) => tilesOf(lock, regionId)
+        .flatMap(([x, y]) => regionAnalyses.get(regionId).latches?.get(`latch:${x},${y}`) ?? []);
+    return deriveLockEvents(projection, {
+        existing,
+        lockOf: (name, regionId) => [...locksOfRegion(regionId).values()].find((l) => l.name === name),
+        place: (lock, regionId) => {
+            const region = regionOf(regionId);
+            const subs = region.subgraph?.sub_regions ?? [];
+            const from = [...new Set(openersOf(lock, regionId).map((o) => o.from))];
+            if (from.length !== 1 || !subs.includes(from[0])) {
+                throw new Error(`lock events: ${lock.name} in ${regionId} is opened from [${from.join(', ')}] — `
+                    + `one sub-region of [${subs.join(', ')}] was expected`);
+            }
+            const { indexOf, components } = regionAnalyses.get(regionId).componentsResult;
+            const grid = gridFor(levelOf(region.map_ref));
+            const own = new Set(tilesOf(lock, regionId).map(([x, y]) => `${x},${y}`));
+            const touching = new Set();
+            for (const [x, y] of tilesOf(lock, regionId)) {
+                for (const [nx, ny] of [[x, y - 1], [x - 1, y], [x + 1, y], [x, y + 1]]) {
+                    if (own.has(`${nx},${ny}`) || nx < 0 || ny < 0 || nx >= grid.width || ny >= grid.height) continue;
+                    const i = indexOf[ny * grid.width + nx];
+                    if (i >= 0 && subs.includes(components[i].id)) touching.add(components[i].id);
+                }
+            }
+            return {
+                region_id: regionId, sub_region: from[0], side: apRegionName(regionId, from[0]),
+                across: [...touching].filter((c) => c !== from[0]).sort().map((c) => apRegionName(regionId, c)),
+            };
+        },
+        rule: (lock, regionId) => {
+            const ways = openersOf(lock, regionId).flatMap((o) => o.conditionSets).map((set) => {
+                const parts = set.map((c) => analyzerOptions.resolveCondition(c));
+                if (parts.some((p) => !p)) return null;
+                return parts.length === 0 ? null : simplifyRule(parts.length === 1 ? parts[0] : { rule: 'And', children: parts });
+            });
+            if (ways.some((w) => w === null)) throw new Error(`lock events: ${lock.name}'s opening cost does not resolve to items`);
+            return simplifyRule(ways.length === 1 ? ways[0] : { rule: 'Or', children: ways });
+        },
+        action: (cls) => ({ verb: FLAG_ACTIONS[cls]?.action ?? null, item: FLAG_ACTIONS[cls]?.item ?? null }),
+    });
+}
+
 /** Every exit whose arrival spawn is NOT its entrance tile, and why — derived, printed, never typed. */
 export const movedArrivalSpawns = [];
 
@@ -1228,6 +1319,7 @@ function main() {
     movedArrivalSpawns.length = 0;
     setPlaythroughLandingAtlas(doc);
     const obstacle = playthroughObstacleEvents(doc);
+    const locks = playthroughLockEvents(doc, { existing: obstacle.events });
     const landingGates = playthroughLandingGates(doc);
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
@@ -1245,7 +1337,9 @@ function main() {
         // the menu is always possible — a per-player flag, never an edge. Read off the substrate's declaration.
         returnToMenu: Boolean(SEEDLING_ENTRY.restartWarp),
         // ⛓ RULES obstacle-events: the saved obstacles' events and the landing edges they gate.
-        events: obstacle.events,
+        events: [...obstacle.events, ...locks.events],
+        // ⛓ RULES lock-events: a latched lock's far-side return costs its event, not the reach of its open side.
+        internalExitRules: locks.internalExitRules,
         // ⛓ RULES game-truth-gaps (R2): and the landings on lethal terrain.
         exitGates: [...obstacle.exitGates, ...landingGates],
     });
@@ -1286,6 +1380,11 @@ function main() {
     console.log(`${obstacle.events.length} obstacle event(s), ${obstacle.exitGates.length} landing edge(s) gated`
         + `${quiet ? '' : obstacle.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side}`).join('')}`
         + `${obstacle.skipped.length ? `; ${obstacle.skipped.length} skipped: ${obstacle.skipped.join('; ')}` : ''}`);
+    console.log(`${locks.events.length} lock event(s), ${locks.internalExitRules.length} far-side return(s) priced as their event`
+        + `${locks.reused.length ? ` (${locks.reused.join(', ')} reused from the obstacle events)` : ''}`
+        + `${quiet ? '' : locks.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side} `
+            + `across [${e.fields.across.join(', ')}] rule ${JSON.stringify(e.access_rule)}`).join('')}`
+        + `${quiet ? '' : locks.internalExitRules.map((r) => `\n  ${r.region_id} ${r.from} -> ${r.to}: ${JSON.stringify(r.rule)}`).join('')}`);
     console.log(`${landingGates.length} landing edge(s) gated on the lethal terrain they land on; `
         + `${lethalLandings.filter((l) => !l.gated).length} lethal-terrain landing(s) not gated`
         + `${quiet ? '' : lethalLandings.map((l) => `\n  ${l.gated ? 'GATED' : 'not gated'} ${l.where}: ${l.why}`).join('')}`);

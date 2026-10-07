@@ -41,7 +41,11 @@
 //                    And(CanReachRegion(<that component>), <what opening
 //                    costs>). It never makes a new place reachable: you only
 //                    hold it once the near side is already reached. Ignored on
-//                    a sink (falling in is not re-entering).
+//                    a sink (falling in is not re-entering). A caller whose
+//                    game RECORDS the opening (a persistence flag) passes
+//                    `latchEvent(tile)` and gets `latch_projection`: the same
+//                    rows with the condition priced as that event instead
+//                    (RULES lock-events; the atlas rows keep the reach form).
 //   cell.manual[]    why a blocker has no derivable rule
 //
 // plus two helpers the caller supplies, because condition VALUES are the game's:
@@ -994,6 +998,35 @@ function latchResolver(regionId, latches, resolveCondition) {
 }
 
 /**
+ * RULES lock-events — **THE SAME ROWS, EACH LATCH PRICED AS THE CALLER'S EVENT.**
+ * `options.latchEvent(tile)` (an atlas tile `[x, y]` of a latched cell) answers
+ * the rule that says "this cell was opened" in the caller's own vocabulary (a
+ * game-state event the game sets when it opens), or null to keep RULES (A)'s
+ * `CanReachRegion` form for that cell. The atlas rows are NOT touched: this is a
+ * projection the caller hands its compiler (`internalExitRules`), returned as
+ * `{from, to, base_rule, access_rule}` for exactly the rows whose rule changed,
+ * with `base_rule` the atlas row's own rule so the compiler can refuse a row
+ * something else rewrote since. Re-pricing a latch changes a rule, never which
+ * rows exist; a row set that differs is a contract break and throws.
+ */
+function projectLatchEvents(crossings, rows, regionId, latches, options) {
+    const reach = latchResolver(regionId, latches, options.resolveCondition);
+    const resolveCondition = (condition, ...rest) => {
+        if (!isLatchCondition(condition)) return options.resolveCondition(condition, ...rest);
+        return options.latchEvent([...condition.latchOpened]) ?? reach(condition, ...rest);
+    };
+    const projected = buildInternalExits(crossings, { ...options, resolveCondition }).rows;
+    const shape = (r) => `${r.from}>${r.to}|${r.bidirectional}|${r.source}`;
+    if (projected.length !== rows.length || projected.some((r, i) => shape(r) !== shape(rows[i]))) {
+        throw new Error(`${regionId}: pricing its latches as events changed its internal exit rows `
+            + `(${rows.map(shape).join(', ')} -> ${projected.map(shape).join(', ')})`);
+    }
+    return projected.flatMap((r, i) => (
+        JSON.stringify(r.access_rule ?? null) === JSON.stringify(rows[i].access_rule ?? null) ? []
+            : [{ from: r.from, to: r.to, base_rule: rows[i].access_rule ?? null, access_rule: r.access_rule ?? null }]));
+}
+
+/**
  * RULES logical-links — settle the manual crossings with the caller's physics
  * model (`options.manualCrossingVerdict`, see the contract).
  *
@@ -1096,6 +1129,9 @@ export function analyzeRegion(region, grid, options = {}) {
         ...options,
         resolveCondition: latchResolver(region.region_id, latches, options.resolveCondition),
     });
+    const latchProjection = typeof options.latchEvent === 'function'
+        ? projectLatchEvents(crossings, rows, region.region_id, latches, options)
+        : [];
 
     const bindings = [];
     for (const exit of region.exits ?? []) {
@@ -1125,6 +1161,8 @@ export function analyzeRegion(region, grid, options = {}) {
         components,
         crossings,
         internal_exits: rows,
+        latch_projection: latchProjection,
+        latches,
         bindings,
         needs_authoring: needsAuthoring,
         model_verdicts: modelVerdicts,

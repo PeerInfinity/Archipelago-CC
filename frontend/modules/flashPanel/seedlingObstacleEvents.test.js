@@ -8,8 +8,8 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import {
-    deriveObstacleEvents, OBSTACLE_EVENT_KIND, obstacleEventId, obstacleEventName, parseObstacleEventId,
-    parseSolidId, rowVerdict,
+    deriveLockEvents, deriveObstacleEvents, OBSTACLE_EVENT_KIND, obstacleEventId, obstacleEventName, parseObstacleEventId,
+    parseSolidId, rowVerdict, ruleItemNames,
 } from './seedlingObstacleEvents.js';
 
 const FIXTURE = JSON.parse(readFileSync(
@@ -88,5 +88,69 @@ describe('the fidelity ARRIVAL fixture → the agreed schema', () => {
         const from = out.exitGates.map((g) => g.region_id);
         expect(from.filter((r) => r === 'level_1')).toHaveLength(1);
         expect(from.filter((r) => r === 'level_115')).toHaveLength(2);
+    });
+});
+
+// ⛓ RULES lock-events — the analyzer's latch projection → lock events + the compiler's internal exit rules.
+describe('lock events (deriveLockEvents)', () => {
+    const lock = (level, tag, x, y) => ({ level, tag, cls: 'bosslock', x, y, name: obstacleEventName({ level, tag, cls: 'bosslock', x, y }) });
+    const L30 = lock(30, 0, 64, 32);
+    const RED = [lock(12, 4, 416, 240), lock(12, 5, 432, 240)];
+    const has = (n) => ({ rule: 'Has', args: { item_name: n } });
+    const reach = (r) => ({ rule: 'CanReachRegion', args: { region_name: r } });
+    const locks = [L30, ...RED];
+    const lctx = (over = {}) => ({
+        lockOf: (n) => locks.find((l) => l.name === n),
+        place: (l) => ({ region_id: `level_${l.level}`, sub_region: 'south', side: `level_${l.level}__south`, across: [`level_${l.level}__north`] }),
+        rule: () => has('Green Key'),
+        action: () => ({ verb: 'opened', item: 'hasKey' }),
+        ...over,
+    });
+    const projection = [{ region_id: 'level_30', from: 'north', to: 'south',
+        base_rule: { rule: 'And', children: [reach('level_30__south'), has('Green Key')] },
+        access_rule: { rule: 'And', children: [has(L30.name), has('Green Key')] } }];
+
+    it('a one-sided lock → ONE game_state event at its open side + its return priced as the event', () => {
+        const out = deriveLockEvents(projection, lctx());
+        expect(out.events).toEqual([{
+            region_id: 'level_30', sub_region: 'south', name: L30.name, access_rule: has('Green Key'),
+            fields: { event_id: 'flag:L30:0', event_kind: OBSTACLE_EVENT_KIND, obstacle: { level: 30, tag: 0, class: 'bosslock', x: 64, y: 32 },
+                action: { verb: 'opened', item: 'hasKey' }, side: 'level_30__south', across: ['level_30__north'] },
+        }]);
+        expect(out.internalExitRules).toEqual([{ region_id: 'level_30', from: 'north', to: 'south',
+            expect: projection[0].base_rule, rule: projection[0].access_rule }]);
+        expect(JSON.stringify(out.internalExitRules[0].rule)).not.toContain('CanReachRegion');
+    });
+
+    it('nothing projected (a two-sided lock, a non-separator) → nothing minted', () => {
+        expect(deriveLockEvents([], lctx())).toEqual({ events: [], internalExitRules: [], reused: [] });
+    });
+
+    it('two locks side by side (L12\'s red pair) → two events, one return Or-ed over them', () => {
+        const row = { region_id: 'level_12', from: 'north', to: 'south', base_rule: null,
+            access_rule: { rule: 'Or', children: RED.map((l) => ({ rule: 'And', children: [has('Red Key'), has(l.name)] })) } };
+        const out = deriveLockEvents([row], lctx({ rule: () => has('Red Key') }));
+        expect(out.events.map((e) => e.fields.event_id)).toEqual(['flag:L12:4', 'flag:L12:5']);
+        expect(out.internalExitRules).toHaveLength(1);
+    });
+
+    it('an event the obstacle census already minted is REUSED, never duplicated; a disagreeing one is refused by name', () => {
+        const prior = { name: L30.name, fields: { event_id: 'flag:L30:0', side: 'level_30__south' } };
+        const out = deriveLockEvents(projection, lctx({ existing: [prior] }));
+        expect(out.events).toEqual([]);
+        expect(out.reused).toEqual(['flag:L30:0']);
+        expect(out.internalExitRules).toHaveLength(1);
+        const other = { name: L30.name, fields: { event_id: 'flag:L30:0', side: 'level_30__north' } };
+        expect(() => deriveLockEvents(projection, lctx({ existing: [other] }))).toThrow(/flag:L30:0 is already the obstacle event/);
+    });
+
+    it('a projected row naming no lock event is refused by name', () => {
+        const bad = [{ ...projection[0], access_rule: has('Green Key') }];
+        expect(() => deriveLockEvents(bad, lctx())).toThrow(/changed with no lock event/);
+    });
+
+    it('ruleItemNames reads Has, HasAny/HasAll and nesting', () => {
+        expect(ruleItemNames({ rule: 'Or', children: [has('a'), { rule: 'HasAny', args: { item_names: ['b', 'c'] } }] }))
+            .toEqual(['a', 'b', 'c']);
     });
 });

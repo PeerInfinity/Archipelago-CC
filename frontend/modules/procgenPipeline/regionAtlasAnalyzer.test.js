@@ -170,6 +170,40 @@ describe('crossings', () => {
         expect(rowsOf(unlatched).map((r) => `${r.from}->${r.to}`)).toEqual(['r2c0->r0c0']);
     });
 
+    // ⛓ RULES lock-events — `latchEvent`: the SAME rows with the latch priced as the caller's event, as a
+    // projection; the atlas rows keep the reach form.
+    it('`latchEvent`: the far-side return is projected onto the event, the CanReachRegion term gone; the rows stay', () => {
+        const ev = { rule: 'Has', args: { item_name: 'lock opened' } };
+        const seen = [];
+        const analysis = analyzeRegion({ region_id: 'L', exits: [], locations: [] }, gridOf(['.', 'K', '.']),
+            { ...OPTIONS, latchEvent: (tile) => { seen.push(tile); return ev; } });
+        expect(seen).toContainEqual([0, 1]);
+        expect(JSON.stringify(rowsOf(analysis))).toContain('CanReachRegion');
+        expect(analysis.latch_projection).toEqual([{
+            from: 'r0c0',
+            to: 'r2c0',
+            base_rule: rowsOf(analysis).find((r) => r.to === 'r2c0').access_rule,
+            access_rule: { rule: 'And', children: [ev, { rule: 'Has', args: { item_name: 'a' } }] },
+        }]);
+        expect(JSON.stringify(analysis.latch_projection)).not.toMatch(/"access_rule":\{[^}]*CanReachRegion/);
+        // the openers the caller places its event with: the near side, paying the key
+        expect(analysis.latches.get('latch:0,1')).toEqual([{ from: 'r2c0', conditionSets: [['a']] }]);
+    });
+
+    it('`latchEvent`: null keeps the reach form (no projection row); a two-sided or unlatched lock projects nothing', () => {
+        const keep = analyzeRegion({ region_id: 'L', exits: [], locations: [] }, gridOf(['.', 'K', '.']),
+            { ...OPTIONS, latchEvent: () => null });
+        expect(keep.latch_projection).toEqual([]);
+        const unlatched = analyzeRegion({ region_id: 'L', exits: [], locations: [] }, gridOf(['.', 'k', '.']),
+            { ...OPTIONS, latchEvent: () => ({ rule: 'Has', args: { item_name: 'x' } }) });
+        expect(unlatched.latch_projection).toEqual([]);
+        const twoWay = analyzeRegion({ region_id: 'L', exits: [], locations: [] }, gridOf(['.', '~', '.']),
+            { ...OPTIONS, latchEvent: () => ({ rule: 'Has', args: { item_name: 'x' } }) });
+        expect(twoWay.latch_projection).toEqual([]);
+        // and with no hook at all, nothing is computed
+        expect(analyzeRegion({ region_id: 'L', exits: [], locations: [] }, gridOf(['.', 'K', '.']), OPTIONS).latch_projection).toEqual([]);
+    });
+
     it('`latch`: a lock NOBODY can open (its open side walled) stays a wall both ways — no row, no hand-authoring row', () => {
         const analysis = analyzeRegion({ region_id: 'L', exits: [], locations: [] }, gridOf(['.', 'K', '#']), OPTIONS);
         expect(rowsOf(analysis)).toEqual([]);

@@ -67,4 +67,59 @@ describe('SWIM T4 D2 — every bosslock against the committed atlas', () => {
             'L31@192,432', 'L40@480,352', 'L48@48,144', 'L68@16,32',
         ]);
     });
+    // ⛓ RULES lock-events — the RULES layer prices each of those returns as the lock's EVENT (the game's own
+    // flag), not as "the probe side is reachable": read off the census, never a typed list.
+    describe('rules lock-events: the committed seedling_playthrough rules', () => {
+        const RULES = readJson('frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json');
+        const regions = RULES.regions['1'];
+        const events = Object.values(regions).flatMap((r) => r.locations.filter((l) => l.event_kind === 'game_state')
+            .map((l) => ({ ...l, region: r.name })));
+        const eventOf = (x) => events.filter((e) => e.event_id === `flag:L${x.level}:${x.persistTag}`);
+        const names = (rule) => (!rule ? [] : [rule.args?.item_name, ...(rule.args?.item_names ?? []),
+            ...(rule.children ?? []).flatMap(names)].filter(Boolean));
+
+        it('every separating lock → exactly ONE game_state event at its probe (south) side, across its far side', () => {
+            for (const x of rows.filter((r) => /^AGREES/.test(r.verdict))) {
+                const [e, ...dup] = eventOf(x);
+                expect(dup, `L${x.level}@${x.at}`).toEqual([]);
+                expect(e, `L${x.level}@${x.at}`).toMatchObject({
+                    region: `level_${x.level}__${x.probeSide}`,
+                    obstacle: { level: x.level, tag: x.persistTag, class: 'bosslock', x: Number(x.at.split(',')[0]), y: Number(x.at.split(',')[1]) },
+                    action: { item: 'hasKey' },
+                });
+                expect(e.across).toContain(`level_${x.level}__${x.farSide}`);
+                const keys = names(x.rule.access_rule).filter((n) => / Key$/.test(n));
+                expect(keys.length, `L${x.level}@${x.at}`).toBeGreaterThan(0);
+                for (const k of keys) expect(names(e.access_rule)).toContain(k);
+            }
+        });
+
+        it('every return row now needs its lock\'s event; NO CanReachRegion term is left in the rules', () => {
+            expect(JSON.stringify(RULES)).not.toContain('CanReachRegion');
+            for (const x of rows.filter((r) => r.returnRows.length > 0)) {
+                for (const ret of x.returnRows) {
+                    const [from, to] = ret.split('->');
+                    const exit = regions[`level_${x.level}__${from}`].exits.find((e) => e.connected_region === `level_${x.level}__${to}`);
+                    expect(names(exit.access_rule), `L${x.level} ${ret}`).toContain(eventOf(x)[0].name);
+                }
+            }
+        });
+
+        it('a non-separating lock mints no lock event; the stacked L12 landing keeps its ONE obstacle event', () => {
+            for (const x of rows.filter((r) => !/^AGREES/.test(r.verdict))) {
+                const evs = eventOf(x);
+                // an obstacle event (a gated landing) may name the same flag — never a second one
+                expect(evs.length, `L${x.level}@${x.at}`).toBeLessThanOrEqual(1);
+                // …and it gates a LANDING (a departure from another level), not a return inside the lock's level
+                const own = (n) => n === `level_${x.level}` || n.startsWith(`level_${x.level}__`);
+                for (const e of evs) {
+                    const users = Object.values(regions).flatMap((r) => r.exits.filter((ex) => names(ex.access_rule).includes(e.name))
+                        .map((ex) => r.name));
+                    expect(users.length).toBeGreaterThan(0);
+                    expect(users.filter(own), `L${x.level}@${x.at}`).toEqual([]);
+                }
+            }
+            expect(eventOf({ level: 12, persistTag: 12 })).toHaveLength(1);
+        });
+    });
 });

@@ -1073,3 +1073,36 @@ describe('compileRegionAtlas — derived events and exit gates', () => {
             .toThrow(/names no wired departure exit/);
     });
 });
+
+/**
+ * ⛓ RULES lock-events — `options.internalExitRules`: a ONE-WAY internal exit compiles with the caller's rule
+ * (a latched lock's return priced as its event), guarded by the rule it was derived from; the atlas is not edited.
+ */
+describe('compileRegionAtlas — internal exit rules', () => {
+    const has = (n) => ({ rule: 'Has', args: { item_name: n } });
+    const oneWay = { region_id: 'overworld_south', from: 'shore', to: 'pit' };
+    const name = (sub) => apRegionName('overworld_south', sub);
+
+    it('replaces exactly the named one-way internal exit; without options nothing moves; the atlas is untouched', () => {
+        const atlas = clone(FIXTURE);
+        const before = JSON.stringify(atlas);
+        const plain = compileRegionAtlas(clone(FIXTURE)).rules;
+        const swapped = compileRegionAtlas(atlas, { internalExitRules: [{ ...oneWay, expect: null, rule: has('E') }] }).rules;
+        expect(JSON.stringify(atlas)).toBe(before);
+        expect(exitTo(swapped, name('shore'), name('pit')).access_rule).toEqual(has('E'));
+        const diff = Object.entries(regionsOf(plain)).flatMap(([n, r]) => r.exits
+            .filter((e, i) => JSON.stringify(e) !== JSON.stringify(regionsOf(swapped)[n].exits[i])).map(() => n));
+        expect(diff).toEqual([name('shore')]);
+    });
+
+    it('refuses by name: a row whose atlas rule moved, a bidirectional row, a row naming no exit, a duplicate', () => {
+        expect(() => compileFixture({ internalExitRules: [{ ...oneWay, expect: has('X'), rule: has('E') }] }))
+            .toThrow(/is not the one the replacement was derived from/);
+        expect(() => compileFixture({ internalExitRules: [{ region_id: 'overworld_south', from: 'shore', to: 'island',
+            expect: has('Progressive Swim'), rule: has('E') }] })).toThrow(/is bidirectional/);
+        expect(() => compileFixture({ internalExitRules: [{ ...oneWay, to: 'nowhere', expect: null, rule: has('E') }] }))
+            .toThrow(/names no one-way internal exit/);
+        expect(() => compileFixture({ internalExitRules: [{ ...oneWay, expect: null, rule: has('E') }, { ...oneWay, expect: null, rule: has('F') }] }))
+            .toThrow(/two internal exit rules/);
+    });
+});
