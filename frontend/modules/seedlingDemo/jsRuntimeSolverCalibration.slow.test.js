@@ -12,10 +12,15 @@
  *     237 → 110 t, its last dash ask at unit 50 (16 dashless + 34);
  *   - L40 (480,896) with the sword → its stairs: 417 → 172 t, the last dash
  *     ask at unit 80 (28 + 52) — the largest window an upgrade inside the old
- *     1 s window needs.
+ *     1 s window needs. ⛓ WINDOW WHOLE PASS (the whole full pass stops at the
+ *     window once a plan is in hand): its full pass spends 57 units, so the
+ *     upgrade needs a window of 85 (28 + 57); at the default 80 it is cut at
+ *     `walk` and the dashless 417 t ships — the ONE shipped plan the rule moved
+ *     over every measured leg (the slice's as-built; the window stays 80 ⚖).
  *
  * ── THE MUTATION LIST (each row's catcher named) ──
- *   r2 the window back at 40 → 'L30 …' and 'L40 …' red (the dashless plan is kept)
+ *   r2 the window back at 40 → 'L30 …' red (the dashless plan is kept)
+ *   w1 only `sword-dash` trips at the window (the rule before WINDOW WHOLE PASS) → 'L40 … at the default' reds
  *   r4 the budget back at 500 → 'swordless L14 …' red (its only plan is cut at `detour`)
  *
  * Slow tier (`npm run test:unit:slow`): ~10–60 s per leg, CPU-bound.
@@ -75,8 +80,18 @@ describe('⛓ RECALIBRATE — the anchor legs at the shipped defaults (fine unit
         expect(r.plan.pass).toBe('full');
     }, 300000);
 
-    it('L40 with the sword: the full pass UPGRADES inside the window (417 → 172 t), its last dash ask at unit 80', () => {
+    it('L40 with the sword at the default window: ⛓ WINDOW WHOLE PASS cuts the full pass at `walk` past unit 80 — the dashless 417 t ships', () => {
         const r = atDefaults(leg({ level: 40, at: { x: 480, y: 896 }, tiles: [[20, 36]], sword: true }));
+        expect(r.ok).toBe(true);
+        expect(rows(r)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 417, work: 28 },
+            { pass: 'full', ok: false, kind: 'refusal', ticks: null, work: 53, deadline: 'walk', limit: 'window' }]);
+        expect(r.plan.pass).toBe('dashless');
+        expect(SOLVER_UPGRADE_WINDOW_WORK).toBeLessThan(85);
+    }, 600000);
+
+    it('L40 with the sword: a window that holds the WHOLE full pass (28 + 57 = 85) UPGRADES it (417 → 172 t), its last dash ask at unit 80', () => {
+        const r = solveAnytime({ ...leg({ level: 40, at: { x: 480, y: 896 }, tiles: [[20, 36]], sword: true }),
+            budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: 85 });
         expect(r.ok).toBe(true);
         expect(rows(r)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 417, work: 28 },
             { pass: 'full', ok: true, kind: null, ticks: 172, work: 57 }]);

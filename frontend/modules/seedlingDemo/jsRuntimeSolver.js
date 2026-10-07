@@ -179,6 +179,13 @@ export const ANYTIME_PASSES = Object.freeze([
  * largest, L40 (480,896) → its stairs, makes its last dash ask at unit 80
  * (28 dashless + 52); L30 (240,80) at 50. Pinned by
  * `jsRuntimeSolverCalibration.slow.test.js`.
+ *
+ * ⛓ WINDOW WHOLE PASS — the window now bounds the WHOLE full pass (every
+ * site), so an upgrade ships only when the full pass FINISHES inside it.
+ * Measured over 64 legs (the captured B/D arrivals, the sweep's legs, D3's
+ * legs, the sphere-2.2 leg): ONE shipped plan moved — L40 (480,896), whose
+ * full pass ends at unit 85 (28 + 57): 172 → 417 t. The window stays 80
+ * (⚖ reported, not retuned); every other upgrader finishes by unit 76.
  */
 export const SOLVER_BUDGET_WORK = 640;
 export const SOLVER_UPGRADE_WINDOW_WORK = 80;

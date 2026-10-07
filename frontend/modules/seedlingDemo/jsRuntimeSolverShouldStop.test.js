@@ -6,9 +6,12 @@
  *
  *   - every pass of an attempt is bounded at the BUDGET at every site, so a
  *     slow refusal refuses BY NAME (the ⏱ clause) instead of overrunning;
- *   - the FULL pass's dash search stops at the UPGRADE WINDOW (only the
- *     `sword-dash` site, the one lossless site) once a plan is in hand, so the
- *     pass RETURNS a plan instead of being cut; the shorter plan is kept;
+ *   - ⛓ WINDOW WHOLE PASS (⚖ the user, 2026-10-06: *"Yes, stop the whole
+ *     pass"*) — once a plan is in hand, EVERY site of the FULL pass trips at
+ *     the UPGRADE WINDOW (it was the `sword-dash` site only): the pass returns
+ *     what it found inside the window or refuses, and a refusal never
+ *     replaces the plan in hand, so the cut is LOSSLESS for that plan; with
+ *     no plan in hand the full pass keeps the whole budget;
  *   - the window is a setting (`flashPanel.seedlingSolverUpgradeWindowWork`):
  *     0 = the whole budget;
  *   - ⛔ the CLOCK DECIDES NOTHING: a clock that jumps by a day per read gives
@@ -22,8 +25,13 @@
  *
  * ── THE MUTATION LIST (run during development, each row's catcher named) ──
  *
- *   s1 the full pass trips EVERY site at the window (lossy)
- *        -> 'L4: a 1-unit window …' reds (the full pass refuses at block-route)
+ *   s1 (retired by ⛓ WINDOW WHOLE PASS: tripping every site at the window is now the rule)
+ *   w1 only `sword-dash` trips at the window (the rule before)
+ *        -> the `passShouldStop` site table and 'L4: the window that holds the WHOLE full pass …' red
+ *   w2 the window trips with NO plan in hand
+ *        -> the `passShouldStop` site table reds
+ *   w3 a refusal cut at the window replaces the plan in hand
+ *        -> 'betterAnswer: LOSSLESS …' and 'L4: a 1-unit window …' red
  *   s2 a tripped full plan LONGER than the dashless one replaces it
  *        -> 'betterAnswer: a tripped (partial-dash) plan …' reds
  *   s3 the window is ignored (the full pass gets the whole budget)
@@ -74,8 +82,8 @@ const rows = (r) => r.passes.map(({ ms, ...row }) => row);
 const plan = (ticks, pass = 'p', extra = {}) => ({ ok: true, pass, plan: { pass, solution: new Array(ticks).fill([]), ...extra } });
 
 describe('⛓ SHOULD-STOP — the window and each pass\'s deadline', () => {
-    it('the passes name their deadline: dashless every site, full the dash site only', () => {
-        expect(ANYTIME_PASSES.map((p) => [p.pass, p.stop])).toEqual([['dashless', 'all'], ['full', 'sword-dash']]);
+    it('the passes name their deadline: dashless every site at the budget, full every site at the window (⛓ WINDOW WHOLE PASS)', () => {
+        expect(ANYTIME_PASSES.map((p) => [p.pass, p.stop])).toEqual([['dashless', 'all'], ['full', 'window']]);
         expect(DEADLINE_SITES).toContain('sword-dash');
     });
 
@@ -91,7 +99,7 @@ describe('⛓ SHOULD-STOP — the window and each pass\'s deadline', () => {
         expect(SOLVER_UPGRADE_WINDOW_WORK).toBeLessThan(SOLVER_BUDGET_WORK);
     });
 
-    it('passShouldStop: no budget → none; every pass trips EVERY site past the budget; full ALSO trips the dash site past the window, only with a plan in hand — counted in calls, no clock', () => {
+    it('passShouldStop: no budget → none; every pass trips EVERY site past the budget; full ALSO trips every site past the window, only with a plan in hand — counted in calls, no clock', () => {
         const at = { budgetWork: 10 };
         expect(passShouldStop(DASHLESS, { ...at, budgetWork: null, work: createWorkClock() })).toBeNull();
         expect(passShouldStop(FULL, { ...at, budgetWork: null, windowWork: 3, planInHand: true, work: createWorkClock() })).toBeNull();
@@ -100,16 +108,50 @@ describe('⛓ SHOULD-STOP — the window and each pass\'s deadline', () => {
         const ten = new Array(10).fill('block-route');
         // dashless: calls 1..10 pass, the 11th (any site) trips — `budget`
         expect(drive(DASHLESS, {}, [...ten, 'detour'])).toEqual({ out: [...ten.map(() => false), true], limit: 'budget', units: 11 });
-        // full with a plan in hand, window 3: the dash site trips at its 4th unit; other sites run on to the budget
+        // full with a plan in hand, window 3: ANY site trips from its 4th unit (⛓ WINDOW WHOLE PASS)
         const f = drive(FULL, { windowWork: 3, planInHand: true }, ['detour', 'detour', 'detour', 'block-route', 'sword-dash']);
-        expect(f).toEqual({ out: [false, false, false, false, true], limit: 'window', units: 5 });
+        expect(f).toEqual({ out: [false, false, false, true, true], limit: 'window', units: 5 });
         // full with NO plan in hand: no window, but the budget still bounds it (the page's old cut, now work)
         expect(drive(FULL, { windowWork: 3, planInHand: false }, [...ten.map(() => 'sword-dash'), 'sword-dash']).out.slice(-2)).toEqual([false, true]);
         // the attempt's clock is SHARED: units the dashless pass spent count against the full pass
         const work = createWorkClock();
         for (let i = 0; i < 9; i += 1) work.tick();
-        const late = passShouldStop(FULL, { budgetWork: 10, windowWork: 3, planInHand: true, work, limit: {} });
+        const late = passShouldStop(FULL, { budgetWork: 10, windowWork: 3, planInHand: false, work, limit: {} });
         expect([late('detour'), late('detour')]).toEqual([false, true]);
+        // … and against the window: with a plan in hand, 9 units spent > a window of 3 — its first ask trips
+        const work2 = createWorkClock();
+        for (let i = 0; i < 9; i += 1) work2.tick();
+        const limit = {};
+        expect(passShouldStop(FULL, { budgetWork: 10, windowWork: 3, planInHand: true, work: work2, limit })('detour')).toBe(true);
+        expect(limit.first).toBe('window');
+    });
+
+    it('⛓ WINDOW WHOLE PASS — the site table: every site × plan in hand / not × pass, at the unit past the window', () => {
+        const at = { budgetWork: 10, windowWork: 3 };
+        const fourth = (p, planInHand, site) => {
+            const work = createWorkClock(); const limit = {};
+            const f = passShouldStop(p, { ...at, planInHand, work, limit });
+            const first3 = [f('walk'), f('walk'), f('walk')];
+            return { first3, fourth: f(site), limit: limit.first ?? null };
+        };
+        expect(DEADLINE_SITES.length).toBeGreaterThan(5);
+        for (const site of DEADLINE_SITES) {
+            // full, plan in hand: every site trips past the window
+            expect([site, fourth(FULL, true, site)]).toEqual([site, { first3: [false, false, false], fourth: true, limit: 'window' }]);
+            // full, NO plan in hand: the only search — the whole budget
+            expect([site, fourth(FULL, false, site)]).toEqual([site, { first3: [false, false, false], fourth: false, limit: null }]);
+            // dashless: never a window, plan in hand or not
+            expect([site, fourth(DASHLESS, true, site)]).toEqual([site, { first3: [false, false, false], fourth: false, limit: null }]);
+            expect([site, fourth(DASHLESS, false, site)]).toEqual([site, { first3: [false, false, false], fourth: false, limit: null }]);
+        }
+    });
+
+    it('betterAnswer: LOSSLESS for the plan in hand — a refusal cut at the window (any site) never replaces a plan', () => {
+        for (const first of DEADLINE_SITES) {
+            const cut = { ok: false, kind: 'refusal', pass: 'full', message: `hit \`${first}\``, deadline: { tripped: true, first, sites: { [first]: 1 } } };
+            expect([first, betterAnswer(plan(2570, 'dashless'), cut)]).toEqual([first, false]);
+        }
+        expect(betterAnswer(plan(2570, 'dashless'), { ok: false, kind: 'refusal', message: 'no corridor' })).toBe(false);
     });
 
     it('betterAnswer: a tripped (partial-dash) plan replaces the one in hand only when SHORTER (SF: L15 511 t vs dashless 509 t)', () => {
@@ -155,17 +197,31 @@ describe('⛓ SHOULD-STOP — L4 stairs with the sword (dashless 255 t, full 219
         expect(strip(b)).toBe(strip(a));
     }, 120000);
 
-    it('L4: a 1-unit window — the full pass\'s DASH search stops, the pass RETURNS a plan (lossless: no refusal), and the dashless plan (not longer) is kept', () => {
+    it('L4: a 1-unit window — the WHOLE full pass stops at its first ask (⛓ WINDOW WHOLE PASS: `walk`, a refusal), and the plan in hand ships (lossless)', () => {
         const r = solveAnytime({ ...l4StairsSword(), budgetWork: 1e9, upgradeWindowWork: 1 }, { clock: counter() });
         expect(r.ok).toBe(true);
         expect(r.plan.pass).toBe('dashless');
         expect(r.plan.solution.length).toBe(255);
         expect(r.plan.verbs).toEqual(['hold', 'shove', 'walk']);
-        expect(rows(r).map(({ work, ...x }) => x)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 255 },
-            { pass: 'full', ok: true, kind: null, ticks: 255, deadline: 'sword-dash', limit: 'window' }]);
+        expect(rows(r)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 255, work: 19 },
+            { pass: 'full', ok: false, kind: 'refusal', ticks: null, work: 1, deadline: 'walk', limit: 'window' }]);
         expect(budgetCut(r)).toBe(false);
-        expect(passNote(r.plan)).toBe('pass dashless, full stopped at its deadline (sword-dash)');
+        expect(passNote(r.plan)).toBe('pass dashless, full stopped at its deadline (walk)');
     }, 60000);
+
+    it('L4: the window that holds the WHOLE full pass (19 dashless + 57 full = 76 units) upgrades to 219 t; one unit less ships the dashless 255 t — the window bounds the pass, not its last dash ask', () => {
+        const at = (w) => solveAnytime({ ...l4StairsSword(), budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: w }, { clock: counter() });
+        const fits = at(76);
+        expect(rows(fits)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 255, work: 19 },
+            { pass: 'full', ok: true, kind: null, ticks: 219, work: 57 }]);
+        expect(fits.plan.pass).toBe('full');
+        const short = at(75);
+        expect(short.plan.pass).toBe('dashless');
+        expect(short.plan.solution.length).toBe(255);
+        expect(rows(short)[1]).toMatchObject({ pass: 'full', ok: false, kind: 'refusal', limit: 'window' });
+        // the shipped default (80) holds it: L4 still upgrades
+        expect(SOLVER_UPGRADE_WINDOW_WORK).toBeGreaterThanOrEqual(76);
+    }, 120000);
 
     it('L4: a 1-unit BUDGET — the dashless pass refuses BY NAME at the `walk` site (⏱; ⛓ RECALIBRATE: the FINE checkpoints ask `walk` before the first block-route), and so does the full pass (no plan in hand: the budget still bounds it) — a budget CUT', () => {
         const heard = [];
