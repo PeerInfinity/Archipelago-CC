@@ -96,6 +96,11 @@ WIP_WORLDS: frozenset[str] = frozenset({
     # (e.g. sphere-chain RuntimeErrors) until the generator stabilizes.
     "runner_worldgen",
     "runner_sphere_worldgen",
+    # Hero Core (Minish-Link v1.0.4 apworld, imported 2026-10-06) — roving
+    # seed-dependent FillError ("No more spots to place N items") in
+    # test_ids / test_implemented; not expected to pass consistently yet
+    # (user, 2026-10-07).
+    "herocore",
 })
 
 # Known-flaky, deliberately parked (see module docstring) — not WIP, not
