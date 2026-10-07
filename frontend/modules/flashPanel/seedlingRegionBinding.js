@@ -417,6 +417,17 @@ export class SeedlingRegionBinding {
         this.physicalSub = null;
         /** Logical moves published, awaiting their region load (which must not teleport): `{region, at}`. */
         this.pendingLogical = [];
+        /**
+         * ⛓ SAME-LEVEL LANDING — our own teleport INSIDE the level the game already reports (`{level, x, y, at}`).
+         * It arms no echo mark (no level change will come), so without this a position read taken BEFORE it
+         * lands sees where the player stood before it — and moves the region by that stale tile (measured: a
+         * host jump to L12 (432,560) resolved to `level_12__r0c19`, whose spawn is (16,80); the read at
+         * (432,560) moved it on to `level_12__r0c37` before the teleport landed). Position reads are ignored
+         * until one stands in the spawn's own sub-region, or the mark ages out.
+         */
+        this.pendingLanding = null;
+        /** How many position reads a pending same-level landing ignored. */
+        this.staleLandingReads = 0;
         /** `from>to` pairs already warned about (a closed link): said once per region load. */
         this.warnedLinks = new Set();
         this.logicalMoves = 0;
@@ -482,6 +493,14 @@ export class SeedlingRegionBinding {
     onPlayerPosition({ level, x, y } = {}, { baseline = false } = {}) {
         if (!this.wantsPosition() || level !== this.lastLevel) return [];
         const sub = subRegionAt(this.subRegions, level, x, y);
+        // ⛓ SAME-LEVEL LANDING — a read before our own teleport landed is where the player WAS: ignored. A
+        // BASELINE read (the first after a bot walk, which moved the player since) retires the mark.
+        const landing = this.pendingLanding;
+        if (landing) {
+            const landed = baseline || sub === subRegionAt(this.subRegions, landing.level, landing.x, landing.y);
+            if (!landed && this._now() - landing.at <= ARRIVAL_ECHO_TIMEOUT_MS) { this.staleLandingReads += 1; return []; }
+            this.pendingLanding = null;
+        }
         if (!sub || sub === this.physicalSub) return [];
         if (baseline || sub === this.region) { this.physicalSub = sub; return []; }
         // ⛔ A REFUSED move leaves the edge ARMED: the next read asks again (warned once), so an item that
@@ -682,6 +701,7 @@ export class SeedlingRegionBinding {
         this.pendingArrival = null;
         this.pendingDeparture = null;
         this.pendingBounce = null;
+        this.pendingLanding = null;
         this.pendingSpawn = this.world ? this._arrivalSpawn() : null;
     }
 
@@ -710,6 +730,7 @@ export class SeedlingRegionBinding {
             this.pendingBounce = null;
             // ⛓ LOGICAL LINKS — and where the player was last seen: the excursion ends with a fresh read.
             this.physicalSub = null;
+            this.pendingLanding = null;
             this.pendingLogical = [];
             return [{
                 type: 'info',
@@ -863,11 +884,19 @@ export class SeedlingRegionBinding {
     _beginArrival(spawn) {
         // A teleport to the level the game is already on produces no level
         // change, so there is nothing to echo — arming here would swallow the
-        // player's NEXT real crossing.
+        // player's NEXT real crossing. ⛓ It arms the LANDING mark instead.
         if (this.baselineSeen && spawn.level !== this.lastLevel) {
             this.pendingArrival = { level: spawn.level, x: spawn.x, y: spawn.y, at: this._now() };
         }
+        this._armLanding(spawn);
         return [{ type: 'teleport', level: spawn.level, x: spawn.x, y: spawn.y, region: this.region }];
+    }
+
+    /** ⛓ SAME-LEVEL LANDING — a teleport inside the level the game reports: position reads wait for it. */
+    _armLanding(spawn) {
+        this.pendingLanding = this.baselineSeen && spawn.level === this.lastLevel
+            ? { level: spawn.level, x: spawn.x, y: spawn.y, at: this._now() }
+            : null;
     }
 
     /**
@@ -881,6 +910,7 @@ export class SeedlingRegionBinding {
         if (this.baselineSeen && spawn.level !== this.lastLevel) {
             this.pendingArrival = { level: spawn.level, x: spawn.x, y: spawn.y, at: this._now() };
         }
+        this._armLanding(spawn);
         return [{ type: 'bounce', level: spawn.level, x: spawn.x, y: spawn.y, exit: exitId, region }];
     }
 
