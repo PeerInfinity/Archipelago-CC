@@ -246,6 +246,23 @@ describe('the mid-room policy and the queue', () => {
         expect(e.dones[1].expectedEnd.level).not.toBe(HOUSE);
     });
 
+    it('⛓ PERSISTENCE on the reuse path: the continuation declares the LIVE table (the chest its plan opened), not the arrival\'s', () => {
+        // Every host tape boots this level at its spawn, so `botStart` REUSES the live world (no build): the opened chest
+        // stays open whatever the tape declares, and a stale declaration would only RESTORE its flag in the table
+        // (`probe-seedling-persistence-rebuild.mjs`, the reuse path). So the continuation must declare what the game holds.
+        const e = engineOver(A, { game: { clearedAfterDrain: [{ level: HOUSE, tag: 0 }] } });
+        e.engine.walkTo(CHEST);
+        for (let i = 0; i < 400 && e.engine.status().phase !== 'playing'; i++) e.timers.run(1);
+        e.engine.walkTo(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'continuation']);
+        const declared = e.game.tapes.map((t) => t.persistence.map(({ level, tag }) => `${level}:${tag}`));
+        expect(declared).toEqual([[], [], [`${HOUSE}:0`]]);
+        expect(e.game.tapes.every((t) => t.boot.level === HOUSE && t.boot.x === A.state.playerPositionX && t.boot.y === A.state.playerPositionY))
+            .toBe(true);
+    });
+
     it('a goal in ANOTHER room waits for the crossing; no arrival within the window → failed by name', () => {
         const e = engineOver(A);
         e.game.readState = () => JSON.stringify({ ...A.state, level: 0 });

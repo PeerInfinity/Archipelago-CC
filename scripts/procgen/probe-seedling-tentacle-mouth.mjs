@@ -9,7 +9,10 @@
  * the game's own resume path, the one any re-entry after the kill takes. Fighting it on a fixed tape is not
  * possible: the eight tentacles spawn at `Math.random()` positions (`TentacleBeast.as:165-175`).
  *
- * Rows, each a fresh tape on one page (the conch granted: the arena is water):
+ * Rows, EACH ON ITS OWN FRESH PAGE (the conch granted: the arena is water). ⛔ Not one page: `botStart` REUSES the
+ * live world when a tape boots the level and spawn of the last build (`Bot.as`'s `booting` line), and the beast's
+ * state is built by its ctor — an ALIVE tape after a DEAD one that stayed in L57 at the same boot would meet the
+ * dead beast's mouth (`probe-seedling-persistence-rebuild.mjs` measures the skip path):
  *   DEAD  — the tag cleared: from each probe boot, holding the key toward the mouth (96,64), the GAME crosses
  *           to L58 and lands where the manifest says (`named_rooms.tentacle_beast_mouth`, (56,96));
  *   ALIVE — the same inputs with the tag held: no crossing (the door exists only after the death).
@@ -78,20 +81,21 @@ async function main() {
         inputs: [{ key: a.key, from: 0, to: TICKS }],
     });
 
-    const page = await browser.newPage();
     const logs = [];
-    page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
-    page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
-    const bot = (name, a) => page.evaluate(([n, x]) => String(window.__swfBridge.game[n](x)), [name, a]);
-    const botJson = async (name, a) => JSON.parse(await bot(name, a));
-    try {
-        await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
-        for (let i = 0; i < 480 && !(await page.evaluate(() => !!window.__runtimeReady)); i += 1) await page.waitForTimeout(250);
-        await page.click('#btn-start');
-        for (let i = 0; i < 480 && !(await page.evaluate(() => !!(window.__swfBridge?.game?.botStatus))); i += 1) await page.waitForTimeout(250);
-        // ⛓ the logic-only channel, PROVED before anything is measured (`seedlingChannel.js`)
-        await assertLogicOnlyChannel(page);
-        const run = async (tape) => {
+    // ⛔ EVERY TAPE ON A FRESH PAGE (the header: a same-boot tape on a reused page meets the previous world)
+    const run = async (tape) => {
+        const page = await browser.newPage();
+        page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
+        page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
+        const bot = (name, a) => page.evaluate(([n, x]) => String(window.__swfBridge.game[n](x)), [name, a]);
+        const botJson = async (name, a) => JSON.parse(await bot(name, a));
+        try {
+            await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
+            for (let i = 0; i < 480 && !(await page.evaluate(() => !!window.__runtimeReady)); i += 1) await page.waitForTimeout(250);
+            await page.click('#btn-start');
+            for (let i = 0; i < 480 && !(await page.evaluate(() => !!(window.__swfBridge?.game?.botStatus))); i += 1) await page.waitForTimeout(250);
+            // ⛓ the logic-only channel, PROVED before anything is measured (`seedlingChannel.js`)
+            await assertLogicOnlyChannel(page);
             if (await bot('botLoadTape', JSON.stringify(tape)) !== 'ok') throw new Error(`botLoadTape ${tape.name}`);
             if (await bot('botStart') !== 'ok') throw new Error(`botStart ${tape.name}`);
             for (const deadline = Date.now() + 10 * 60 * 1000; ;) {
@@ -103,7 +107,11 @@ async function main() {
             }
             const drained = await botJson('botDrain');
             return { ticks: drained.ticks ?? [], cleared: (await botJson('botStatus')).persistence_cleared ?? null };
-        };
+        } finally {
+            await page.close();
+        }
+    };
+    try {
         let crossedDead = 0;
         for (const a of APPROACHES) {
             for (const dead of [true, false]) {
@@ -127,7 +135,6 @@ async function main() {
         console.log(`PAGE LOGS (last 20):\n${logs.slice(-20).join('\n')}`);
         check('the wasm runs', false, String(e.message).split('\n')[0]);
     } finally {
-        await page.close();
         await browser.close();
     }
     console.log(failed === 0 ? 'ALL CHECKS PASSED' : `${failed} CHECK(S) FAILED`);
