@@ -25,7 +25,15 @@
  *       over a lethal pit).
  *   T   the PIT exits: L48, L83, L84 fallen on plan (`reach-pit`; the fall is the game's crossing).
  *   X   the deterministic RESIDUE legs (§1.2: L28, L30, L45): each fails BY NAME after 2 plans
- *       (1 forced re-arrival) — an exact repeat (same tick, same game row) — not after 4.
+ *       (1 forced re-arrival) — an exact repeat (same tick, same game row) — not after 4. Wave 8 moved two:
+ *       ⛓ L30 (`cross`): its residue WAS the BobSoldier — the old 162 t walk left the plan at t54 beside it (Δx
+ *       +2.1) while the model had it as a plain mover. Fidelity BOBSOLDIER's W4 `bobSoldierLive` (ON at the wave-8
+ *       harvest) put its body and sword in the model: the solver now plans a 167 t `detour` to L31 and the game
+ *       follows it ON PLAN (0 divergences). `bobSoldierLive` OFF restores the old 162 t walk exactly.
+ *       ⛓ L45 (`declined`): its residue WAS the jellyfish — the old 720 t walk left the plan at t119 beside it at
+ *       (224,176). Fidelity KILLLOCK's K1 `jellyfishLive` (ON at the wave-8 harvest) made it a live body, so the
+ *       solver's route baits it from a stance and then needs the burnable tree at (48,64) burned — without FIRE,
+ *       the goal fails BY the SOLVER's NAME before ANY plan ships. `jellyfishLive` OFF restores the old 720 t walk.
  *       ⛓ L88 ×2 (`declined`): their residue WAS the drill — the game's `Drill` hops onto the player and knocks it
  *       back (Δy ≈ +2.5 at t96), and the model had none. Fidelity TERRAIN's W3 `drillLive` (ON since wave 6,
  *       `53c8f83118`) put the drill in the model, so the solver now sees it: without the Sword every corridor runs
@@ -80,7 +88,7 @@ export const PLAN_TICKS_TOLERANCE = 1;
  * `cross` (on plan, out of the room; `producer` the plan's; `stepOff` = the plan steps off a latched door),
  * `closed` (the solver's named closed-pocket refusal),
  * `named` (any named failure — an unreachable goal door, recorded, not fixed), `repeat` (the exact-repeat failure after 2 plans),
- * `declined` (the solver's corridor refusal before any plan ships — `declinedHolds`).
+ * `declined` (the solver's named refusal before any plan ships, with the leg's `clause` — `declinedHolds`).
  */
 export const LEGS = {
     D: [
@@ -118,16 +126,19 @@ export const LEGS = {
     ],
     X: [
         { name: 'residue L28', at: [28, 96, 16], goal: exit(28, [[0, 6]], 'out_teleporter_0_96'), expect: 'repeat' },
-        { name: 'residue L30', at: [30, 16, 128], goal: exit(30, [[12, 3]], 'out_stairsdown_192_48'), expect: 'repeat' },
-        { name: 'residue L45', at: [45, 112, 288], goal: exit(45, [[7, 0]], 'out_teleporter_112_0'), expect: 'repeat' },
-        { name: 'residue L88 a', at: [88, 96, 288], goal: exit(88, [[2, 0]], 'out_teleporter_32_0'), expect: 'declined' },
-        { name: 'residue L88 b', at: [88, 96, 288], goal: exit(88, [[12, 0]], 'out_teleporter_192_0'), expect: 'declined' },
+        { name: 'L30 past the BobSoldier', at: [30, 16, 128], goal: exit(30, [[12, 3]], 'out_stairsdown_192_48'), expect: 'cross', producer: 'solver',
+            verbs: ['detour'], ticks: 167 },
+        { name: 'residue L45', at: [45, 112, 288], goal: exit(45, [[7, 0]], 'out_teleporter_112_0'), expect: 'declined',
+            clause: 'burnabletree@48,64 cannot be burned by this run — this run does not hold FIRE' },
+        { name: 'residue L88 a', at: [88, 96, 288], goal: exit(88, [[2, 0]], 'out_teleporter_32_0'), expect: 'declined', clause: 'the re-planned corridor failed too' },
+        { name: 'residue L88 b', at: [88, 96, 288], goal: exit(88, [[12, 0]], 'out_teleporter_192_0'), expect: 'declined', clause: 'the re-planned corridor failed too' },
     ],
 };
 
 /**
- * A `declined` leg's verdict (X L88, fidelity TERRAIN's live drill): the goal FAILED, BY the solver's NAME — the
- * corridor refusal for THIS goal's exit, in its level — and nothing played (one history entry, `failed`: no plan
+ * A `declined` leg's verdict (X L88, fidelity TERRAIN's live drill; X L45, KILLLOCK's live jellyfish): the goal
+ * FAILED, BY the solver's NAME — the refusal for THIS goal's exit, in its level, carrying the leg's `clause` (the
+ * corridor stall; the missing FIRE) — and nothing played (one history entry, `failed`: no plan
  * shipped, so no divergence and no repeat). A silent success (`crossed`/`done`, or any played plan) and a failure
  * without the solver's name both red. Pure, so `arrivalCompositesLegs.test.js` holds it to those two controls.
  */
@@ -135,7 +146,8 @@ export function declinedHolds(leg, r) {
     const head = `the solver declined ${leg.goal.name} in level ${leg.goal.level} (refusal): `;
     const failed = typeof r.failed === 'string' ? r.failed : '';
     return r.answer?.ok === true && r.end === 'failed' && r.level === leg.goal.level
-        && failed.startsWith(head) && failed.includes('the re-planned corridor failed too')
+        && typeof leg.clause === 'string' && leg.clause.length > 0
+        && failed.startsWith(head) && failed.includes(leg.clause)
         && JSON.stringify((r.legs ?? []).map((h) => h.outcome)) === JSON.stringify(['failed']);
 }
 
@@ -314,12 +326,12 @@ async function main() {
                     // ⛓ STEP-OFF RETIRE — the step-off is IN the solver's plan (its `step-off` verb), not a walker prefix.
                     if (leg.stepOff || leg.verbs) {
                         const verbs = leg.verbs ?? ['step-off', 'walk'];
-                        check(`${SESSION} ${leg.name}: the solver's plan steps off the latched door itself (verbs ${verbs.join(', ')})`,
+                        check(`${SESSION} ${leg.name}: the solver's plan ${verbs.includes('step-off') ? 'steps off the latched door itself' : 'is the one node plans'} (verbs ${verbs.join(', ')})`,
                             JSON.stringify(plays[0]?.verbs ?? null) === JSON.stringify(verbs), JSON.stringify(plays[0]?.verbs ?? null));
                     }
                     // ⛓ fidelity STEPOFF2 — the sub-pixel step-off's length, pinned (the ring walk was 32–33 t).
                     if (leg.ticks !== undefined) {
-                        check(`${SESSION} ${leg.name}: the plan is ${leg.ticks} ± ${PLAN_TICKS_TOLERANCE} t (a sub-pixel step-off, not a walk to a cell centre)`,
+                        check(`${SESSION} ${leg.name}: the plan is ${leg.ticks} ± ${PLAN_TICKS_TOLERANCE} t (${leg.stepOff ? 'a sub-pixel step-off, not a walk to a cell centre' : 'the solver\'s own plan, pinned in node'})`,
                             Math.abs((plays[0]?.ticks ?? Infinity) - leg.ticks) <= PLAN_TICKS_TOLERANCE, String(plays[0]?.ticks));
                     }
                 } else if (leg.expect === 'closed') {
@@ -337,7 +349,7 @@ async function main() {
                             && JSON.stringify(r.legs.map((h) => h.outcome)) === JSON.stringify(['diverged', 'failed']),
                         JSON.stringify({ end: r.end, failed: r.failed, outcomes: r.legs.map((h) => h.outcome) }));
                 } else if (leg.expect === 'declined') {
-                    check(`${SESSION} ${leg.name}: the SOLVER declines BY NAME before any plan ships (the corridor beside the live drill fails; 0 plans)`,
+                    check(`${SESSION} ${leg.name}: the SOLVER declines BY NAME before any plan ships (${leg.clause}; 0 plans)`,
                         declinedHolds(leg, r),
                         JSON.stringify({ end: r.end, level: r.level, failed: r.failed, outcomes: r.legs.map((h) => h.outcome) }));
                 }
