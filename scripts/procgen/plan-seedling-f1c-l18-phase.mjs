@@ -48,6 +48,7 @@ async function main() {
     const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
     const { SPINNER } = await import(join(MODULE, 'spinner.js'));
+    const { withHammerEscape } = await import(join(MODULE, 'solverBot.js'));
 
     const NAME = 'f1c-l18-phase42';
     const BASE = 'r9-solve-18';
@@ -76,14 +77,21 @@ async function main() {
     const seam = { ...staging.seam, time: staging.seam.time + shift };
     const makeRun = (persistence) => createRunForStaging(
         { ...staging, seam, persistence, equips: [] }, atlasLevelSource());
-    const r = await twoPassSolve({
+    /**
+     * ⛓ HAMMER-PHASE A2 — THE RUNG IS EXERCISED WITH THE ESCAPE OFF, BY THE SWITCH. With `HAMMER_ESCAPE` ON (the
+     * default since A2, ⚖ user 2026-10-07) a press is taken only with a certified way out of its own landing, and at
+     * residue 42 the corner the rung holds for never forms: the solve is 503 t with NO stall (measured). This witness
+     * is the RUNG's evidence on the game, so it is planned as it was recorded — the escape off — and the tape stays
+     * byte-identical. `fidelityF1c.test.js` pins the ON solve at this residue beside it.
+     */
+    const r = await withHammerEscape(false, () => twoPassSolve({
         makeRun,
         goals: [{ kind: 'reach-exit', exit: TELEPORTER }],
         name: NAME,
         boot: staging.boot,
         persistence: staging.persistence.filter((c) => c.at === undefined),
         gameTick: async () => { throw new Error('no game oracle: L18\'s clear is model-sourced'); },
-    });
+    }));
     const stalls = (r.out.records ?? []).filter((x) => x.arm === 'press')
         .flatMap((x) => x.phaseStalls ?? []);
     const run = makeRun(r.persistence);
