@@ -104,7 +104,7 @@ import {
     arrivalSolveRequest, arrivalSolverGoal, continuationSolveRequest, isArrival, stagingFromWasmArrival,
 } from '../seedlingDemo/wasmArrival.js';
 import {
-    adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
+    adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
@@ -175,7 +175,7 @@ const roomEquips = (r) => equipsMap(r?.equips);
  *   (`{setItemGate, writesOf, inventory, push}`); absent = items reach the game as they arrive (no gate)
  */
 export function createWasmPlayback({
-    getGame, getWin = () => null, teleport, getCheckBinding = () => null, getSwapState = null, records, generated = false, producer = null,
+    getGame, getWin = () => null, teleport, getCheckBinding = () => null, getSwapState = null, pushSwapNow = null, records, generated = false, producer = null,
     solveService = null, timers = null,
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetWork = SOLVER_BUDGET_WORK,
@@ -279,7 +279,9 @@ export function createWasmPlayback({
         // ⛓ ANYTIME / O2 — expiries, the provisional plans they played, the held retries, and each plan's pass
         expiries: 0, provisionalPlays: 0, retries: 0, passes: {}, backstops: 0,
         // ⛓ MID-ROOM REPLAN — deliveries the gate held back, each one's outcome (freeze, land, replan), and the refused
-        deliveries: [], deliveryDeferred: [], gateHeld: 0 };
+        deliveries: [], deliveryDeferred: [], gateHeld: 0,
+        // ⛓ ARRIVAL JITTER — the glue teleports pushed in the turn their door's begin record was seen
+        swapPushes: [] };
     const history = [];
     /** ⛓ WG — the reads of the last few arrivals (the probe's fixture recorder; never read back here). */
     const arrivalReads = [];
@@ -734,8 +736,10 @@ export function createWasmPlayback({
             const level = se.beginEntry['begin.level'];
             const sw = swapState();
             const blocked = sw ? arrivalHoldBlocker(sw, se.beginEntry) : 'the glue answered no swap state (a redirect cannot be ruled out)';
-            if (blocked) stats.holdBlocked.push({ level, why: blocked });
-            else if (!records.has(level)) stats.holdBlocked.push({ level, why: 'the vanilla map has no such level' });
+            if (blocked) {
+                stats.holdBlocked.push({ level, why: blocked });
+                pushQueuedSwap(sw, se, level);
+            } else if (!records.has(level)) stats.holdBlocked.push({ level, why: 'the vanilla map has no such level' });
             else if (holdArrival(se)) return;
         }
         if (phase === 'await-arrival' && now() > deadline) {
@@ -747,6 +751,21 @@ export function createWasmPlayback({
             return;
         }
         scheduleWatch(watchArrivals, 0);
+    }
+
+    /**
+     * ⛓ ARRIVAL JITTER — the door's own arrival, refused because the glue's teleport is still queued: push it in
+     * THIS turn (`queuedSwapPush`), so the door's room runs a fixed number of frames, not the adapter timer's
+     * wall-clock share, before the swap lands — the swap's arrival then stages the same `Game.time` on every run.
+     * Each push is a `swapPushes` row (`late` = the room had already stepped when the watch saw it).
+     */
+    function pushQueuedSwap(sw, se, level) {
+        if (typeof pushSwapNow !== 'function') return;
+        const d = queuedSwapPush(sw, se.sinceBegin ?? null, se.beginEntry ?? null);
+        if (!d) return;
+        let pushed = false;
+        try { pushed = pushSwapNow() === true; } catch { pushed = false; }
+        stats.swapPushes.push({ level, time: se.beginEntry?.['save.time'] ?? null, late: d.late, pushed });
     }
 
     /**
@@ -1678,7 +1697,8 @@ export function createWasmPlayback({
                 forcedBy: { ...stats.forcedBy }, fallbacks: [...stats.fallbacks], heldChecks: [...stats.heldChecks],
                 holdBlocked: [...stats.holdBlocked], adoptRefused: [...stats.adoptRefused],
                 ceremonies: stats.ceremonies.map((c) => ({ ...c })), dismissed: [...stats.dismissed],
-                deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred] };
+                deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred],
+                swapPushes: stats.swapPushes.map((r) => ({ ...r })) };
         },
         /** ⛓ WG — the last arrivals' raw reads (`{seam, status, state}`), for a fixture recorder. */
         get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },

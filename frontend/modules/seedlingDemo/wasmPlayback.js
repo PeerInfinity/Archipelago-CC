@@ -676,6 +676,26 @@ export function arrivalHoldBlocker(swap, beginEntry) {
 }
 
 /**
+ * ⛓ ARRIVAL JITTER — may the engine PUSH the glue's queued teleport NOW, in the JS turn it saw the door's own
+ * begin record (`swap` = `SeedlingRegionGlue.swapState()`, `sinceBegin` = `botSeam().sinceBegin`)?
+ *
+ * The door's room is not held (a hold blocks the swap, W0 i.11), and the adapter's 100 ms push timer used to
+ * send the teleport a WALL-CLOCK number of frames later: the door's room ran unheld meanwhile, `Game.time`
+ * ticking, and the teleport's arrival staged a different clock run to run (`seam.time`, which the spinner's
+ * phase reads). Pushed in the same turn, the swap lands a fixed number of frames after the latch.
+ *
+ * `'push'` only when the queue is the ONLY blocker (no binding mark, no park, no push already stamped on this
+ * begin record); otherwise null. `late: true` = the door's room already stepped (the 0 ms watch saw it after a
+ * frame): pushed anyway, and named, since the clock it carries is no longer the latch's.
+ * @returns {{push: true, late: boolean}|null}
+ */
+export function queuedSwapPush(swap, sinceBegin, beginEntry = null) {
+    if (!swap || swap.marks?.length || !((swap.queued ?? 0) > 0)) return null;
+    if (swap.pushedOn && beginEntry && same(swap.pushedOn, beginEntry)) return null;
+    return { push: true, late: !(sinceBegin && sinceBegin.stepped === 0) };
+}
+
+/**
  * Fold one `botDrain()` answer into the running progress. `ticks` is the
  * count of stepped ticks drained so far; `rows` keeps them (the W3 compare).
  */

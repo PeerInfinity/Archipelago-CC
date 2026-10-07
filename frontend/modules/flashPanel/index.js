@@ -404,6 +404,8 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
         checkBinding: seedlingRegionGlue?.checkBinding ?? null,
         // ⛓ W7 — the glue query the wasm engine asks before it holds an arrival.
         swapState: () => seedlingRegionGlue?.swapState?.() ?? null,
+        // ⛓ ARRIVAL JITTER — push the glue's queued teleport in the turn the engine saw its door land.
+        pushSwap: () => seedlingRegionGlue?.pushQueuedTeleports?.() ?? false,
         // ⛓ LOGICAL LINKS — the route's link, credited by the region binding (no walk).
         creditLink: (name) => seedlingRegionGlue?.creditLogicalLink?.(name) ?? { ok: false, reason: 'no region glue' } } : null;
     },

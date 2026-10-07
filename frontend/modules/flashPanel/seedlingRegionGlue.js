@@ -542,6 +542,11 @@ export class SeedlingRegionGlue {
             pushes: this.adapter?.invocationPushes ?? 0 };
     }
 
+    /** ⛓ ARRIVAL JITTER — push the adapter's queued teleport(s) now (`WasmBridgeAdapter.pushNow`); false = none went. */
+    pushQueuedTeleports() {
+        return this.adapter?.pushNow?.() ?? false;
+    }
+
     apply(effects) {
         for (const effect of effects ?? []) {
             switch (effect.type) {

@@ -169,13 +169,23 @@ export class WasmBridgeAdapter extends FlashBridgeAdapter {
 
   _pushTick() {
     const bridge = this._getBridge();
-    if (!bridge) return;
+    if (!bridge) return false;
     this.installStateHook();
     const items = this._buildQueue();
     if (items.length > 0) {
       bridge.queueItems(items);
-      if (items.some((i) => i?.invocation)) this._stampInvocationPush();
+      if (items.some((i) => i?.invocation)) { this._stampInvocationPush(); return true; }
     }
+    return false;
+  }
+
+  /**
+   * ⛓ ARRIVAL JITTER — push the queue NOW instead of at the next 100 ms tick (the seedling wasm playback,
+   * the turn it sees a door's begin record with the glue's teleport queued: `wasmPlayback.queuedSwapPush`).
+   * Returns whether an invocation went.
+   */
+  pushNow() {
+    try { return this._pushTick(); } catch { return false; }
   }
 
   /**

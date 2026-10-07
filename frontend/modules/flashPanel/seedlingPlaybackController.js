@@ -510,6 +510,8 @@ export class SeedlingPlaybackController {
             getCheckBinding: () => this._getSurface?.()?.checkBinding ?? null,
             // ⛓ W7 — the glue query: may the engine hold the arrival it just saw (no redirect in flight)?
             getSwapState: () => this._getSurface?.()?.swapState?.() ?? null,
+            // ⛓ ARRIVAL JITTER — push that teleport now (the door's room runs unheld until it lands).
+            pushSwapNow: () => this._getSurface?.()?.pushSwap?.() ?? false,
             // ⛓ O3 — the solve budget knob (work units), read live at each solve's start (null = the engine's own).
             getBudgetWork: () => this._getSurface?.()?.wasm?.solverBudgetWork ?? null,
             // ⛓ SHOULD-STOP — the upgrade window (work units), read live at each solve's start (null = the engine's own).
