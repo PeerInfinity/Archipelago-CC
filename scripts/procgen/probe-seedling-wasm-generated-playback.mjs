@@ -3,21 +3,22 @@
  * Seedling JS solver-walk, slice WG (plan `seedling-js-solver-walk-plan.md` §5, the WG AS-BUILT) —
  * the Playback Bot walks GENERATED Seedling rooms (`flash_seedling_gen`) ON THE WASM RUNTIME
  * (default build p4e, headless logic-only, under the box lock). Each goal is served at an arrival
- * by `flashPanel/seedlingWasmPlayback.js` in its GENERATED mode: the engine stages the MOUNTED set
- * the generated arm delivered (not a map document), and the tape is the J2 WALKER's, produced in
- * the S2 worker from the arrival's staging (`seedlingDemo/wasmWalkTape.js`, `producer: 'walker'`).
+ * by `flashPanel/seedlingWasmPlayback.js` over the MOUNTED set the generated arm delivered (not a
+ * map document). ⛓ §5.36 (⚖ the user: the SOLVER for everything) — the tape is the SOLVER's, as on
+ * real rooms: holds, continuations, an apitem by F2's `apitem` verb. (Before §5.36 it was the J2
+ * WALKER's, `producer: 'walker'` — an instrument only now.) Every leg below must be a solver leg.
  *
  *   R   `seedling_generated_room`: the bot drains the sphere log (the start room's apitem
  *       `region_0_0__key_blue_pickup`) — checked ONCE, key_blue ONCE, 0 fake checks (the binding's
- *       checks 1, nothing caught in a host botStart window), the leg `done`, producer `walker`, 0
+ *       checks 1, nothing caught in a host botStart window), the leg `done`, producer `solver`, 0
  *       divergence. Then the bot is sent to the maze region `region_1_1` (`walkToTile`, the J2
  *       row's route): the generated door `region_0_0 → region_0_1` and the parking door
  *       `region_0_1 → region_1_1` are walked as two exit legs — each crossing reported ONCE, every
  *       planned tick stepped on plan. No `error:` status; every host botStart bracketed.
  *   L   `seedling_generated_leaf`: the sphere log's two maze locations, then the generated LEAF's
  *       apitem behind them (the bot crosses the maze into the generated room — an arrival the glue
- *       teleports) — every location checked ONCE, the generated leg by the walker, 0 fake checks.
- *   P   (`seedling_generated_room`, its own fresh page) W3's bound on the walker's tapes: a
+ *       teleports) — every location checked ONCE, the generated leg by the solver, 0 fake checks.
+ *   P   (`seedling_generated_room`, its own fresh page) W3's bound on the solver's tapes: a
  *       divergence injected into EVERY apitem plan (ArrowRight ~200 ms, the W3 injector) → 3 forced
  *       re-arrivals, then the bot's `error:` names the failure (the count and the bound) — ⛓ W4: or
  *       sooner, when one divergence EXACTLY repeats the previous one (same tick, same game row; the
@@ -153,7 +154,7 @@ async function main() {
             const { substrateRegistry } = await import('./modules/shared/procgen/substrateRegistry.js');
             const c = substrateRegistry.get(substrate)?.getPlaybackController?.();
             const e = c?._wasmEngine ?? null;
-            return e ? JSON.parse(JSON.stringify({ ...e.stats, generated: e.generated, lastRefusal: c.lastRefusal,
+            return e ? JSON.parse(JSON.stringify({ ...e.stats, generated: e.generated, producer: e.producer, lastRefusal: c.lastRefusal,
                 status: c.status(), arrivalReads: e.arrivalReads })) : null;
         }, SUBSTRATE);
         const botState = () => page.evaluate(async () => {
@@ -250,8 +251,9 @@ async function main() {
             const calls = await w(() => window.__wg.calls);
             console.log(`INFO: engine ${JSON.stringify({ ...eng, arrivalReads: undefined })}`);
             console.log(`INFO: verb calls ${JSON.stringify(calls)}; binding ${JSON.stringify(apB.binding)}`);
+            // ⛓ §5.36 — solver rooms: a hold per held arrival + a tape per ship (a continuation in a held room ships no freeze)
             const bracketed = () => (eng?.hostStarts?.length ?? 0) >= 2 && eng.hostStarts.every((h) => h.to >= h.from)
-                && eng.hostStarts.length === 2 * eng.ships - (eng.ships - eng.solves);
+                && eng.hostStarts.length >= eng.ships && eng.hostStarts.filter((h) => h.label === 'plan').length === eng.ships;
 
             if (MODE === 'P') {
                 const inj = await page.evaluate(() => { const i = window.__wginj; if (i) i.stop = true; return i ? { injected: i.injected } : null; });
@@ -265,9 +267,9 @@ async function main() {
                         ? new RegExp(`${k + 1} times in a row \\(gave up after ${k} forced re-arrival`).test(end.status)
                         : /the game left the plan 4 times/.test(end.status) && /gave up after 3 forced re-arrivals, the bound is 3/.test(end.status)),
                     `status "${end?.status}"`);
-                check(`P: ${k} recover${k === 1 ? 'y' : 'ies'} then the failure, on WALKER tapes (${k + 1} plans, ${k + 1} injections)`,
+                check(`P: ${k} recover${k === 1 ? 'y' : 'ies'} then the failure, on SOLVER tapes (${k + 1} plans, ${k + 1} injections)`,
                     k >= 1 && eng?.recoveries === k && JSON.stringify(legs.map((h) => h.outcome)) === JSON.stringify([...Array(k).fill('diverged'), 'failed'])
-                        && legs.slice(0, k).every((h) => h.producer === 'walker') && eng.ships === k + 1 && inj?.injected.length === k + 1,
+                        && legs.slice(0, k).every((h) => h.producer === 'solver') && eng.ships === k + 1 && inj?.injected.length === k + 1,
                     JSON.stringify({ recoveries: eng?.recoveries, outcomes: legs.map((h) => [h.outcome, h.producer]), ships: eng?.ships, injected: inj?.injected.length }));
                 const stale = legs.filter((h) => h.input).map((h) => (h.input.held ?? []).filter((k) => !(h.input.press_totals?.[k] >= 1)));
                 check('P: no STALE key at any divergence (the release pair after each botReset)', stale.every((x) => x.length === 0),
@@ -290,13 +292,15 @@ async function main() {
                 check(`${MODE}: 0 fake checks — the binding made exactly the generated checks and caught nothing in a host botStart window`,
                     apB.binding.checks === GEN_LOCS.length && (apB.binding.armingWindow ?? 0) === 0,
                     `checks ${apB.binding.checks}, armingWindow ${apB.binding.armingWindow}`);
-                // ⛓ An apitem leg normally ends `stopped`: the game reports the check ON the contact tick (the
-                // tape's last), the bot takes it and moves on — stopping the controller before the engine's
-                // `finished` read (STATUS_MS). Measured (R, run 1): 220 of 220 planned ticks drained, on plan.
+                // ⛓ An apitem leg may end `stopped`: the game reports the check at the TAKE (mid-plan — F2's plan walks on
+                // to the box centre), the bot takes it and moves on, stopping the controller while the tape still plays.
                 const locLeg = hist().filter((h) => h.goal?.kind === 'location').at(-1);
-                check(`${MODE}: the engine runs GENERATED (the mounted set) and served the apitem by the WALKER producer: every planned tick stepped, on plan`,
-                    eng?.generated === true && locLeg?.producer === 'walker' && !locLeg.divergence && locLeg.drained >= locLeg.ticks
-                        && (locLeg.outcome === 'done' || (locLeg.outcome === 'stopped' && locLeg.phase === 'playing')), JSON.stringify(locLeg));
+                check(`${MODE}: the engine stages the GENERATED set (the mounted set) and served the apitem by the SOLVER (verb apitem), on plan`,
+                    eng?.generated === true && eng?.producer === 'solver' && locLeg?.producer === 'solver' && (locLeg.verbs ?? []).includes('apitem')
+                        && !locLeg.divergence && (locLeg.outcome === 'done' || (locLeg.outcome === 'stopped' && locLeg.phase === 'playing')),
+                    JSON.stringify(locLeg));
+                check(`${MODE}: no walker-producer leg anywhere (⛓ §5.36)`, hist().every((h) => h.producer !== 'walker'),
+                    JSON.stringify(hist().map((h) => [h.goal?.kind, h.outcome, h.producer])));
                 check(`${MODE}: 0 divergences, 0 recoveries`, eng?.divergences === 0 && eng?.recoveries === 0,
                     JSON.stringify({ divergences: eng?.divergences, recoveries: eng?.recoveries }));
                 check(`${MODE}: every host botStart bracketed by seq reads (freeze + plan per attempt)`, bracketed(), JSON.stringify(eng?.hostStarts));
@@ -323,8 +327,8 @@ async function main() {
                 check('R: the generated door (→ region_0_1) and the parking door (→ region_1_1) each reported ONCE',
                     moves.filter((m) => m === 'region_0_1').length === 1 && moves.filter((m) => m === 'region_1_1').length === 1,
                     JSON.stringify(moves));
-                check('R: both exit legs were WALKER tapes, every planned tick stepped, none off the plan',
-                    doors.length === 2 && doors.every((d) => d.producer === 'walker' && (d.outcome === 'done'
+                check('R: both exit legs were SOLVER tapes (verb walk), every planned tick stepped, none off the plan',
+                    doors.length === 2 && doors.every((d) => d.producer === 'solver' && (d.outcome === 'done'
                         || (d.outcome === 'stopped' && d.phase === 'playing')) && d.drained >= d.ticks && !d.divergence),
                     JSON.stringify(doors.map((d) => ({ o: d.outcome, p: d.producer, ticks: d.ticks, drained: d.drained, div: d.divergence }))));
                 const errs = (await botState()).log.filter((l) => typeof l === 'string' && l.startsWith('error:'));

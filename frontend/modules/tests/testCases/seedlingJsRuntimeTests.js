@@ -299,6 +299,10 @@ export async function seedlingJsRuntimeBotCompletesGeneratedRoom(tc) {
         const checked = new Set(Array.isArray(snap?.checkedLocations) ? snap.checkedLocations : [...(snap?.checkedLocations ?? [])]);
         tc.assertEqual('every sphere-log location is checked in the state manager',
             '[]', JSON.stringify(expected.filter((n) => !checked.has(n))));
+        // ⛓ §5.36 — the generated room's apitem was the SOLVER's (F2 `apitem`), not the J2 walker's.
+        const apitemSolve = rt.playback.solverStats?.lastSolve?.goal ?? null;
+        tc.assertEqual('§5.36: the page\'s SOLVER took the apitem (collect-placement), nothing declined', 'collect-placement/0',
+            `${apitemSolve?.kind ?? null}/${rt.playback.solverStats?.declines ?? null}`);
 
         // ── crossings ─────────────────────────────────────────────────────
         // The queue's one location sits in the start room, so the queue alone
@@ -335,6 +339,11 @@ export async function seedlingJsRuntimeBotCompletesGeneratedRoom(tc) {
         tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
         tc.assertEqual('no death and no halt on the JS runtime', '0/null',
             `${rt.deaths.length}/${rt.halted ? rt.halted.message : null}`);
+        // ⛓ §5.36 — every Seedling leg of the walk (the apitem, the generated door, the parking door, back) SOLVED, none declined.
+        const solved = rt.events.filter((e) => e.type === 'solver' && e.solver === 'solved').length;
+        tc.log(`solver: ${JSON.stringify(rt.playback.solverStats)}; solved events ${solved}`);
+        tc.assertEqual('§5.36: the solver drove the generated rooms — ≥ 3 solves (apitem + two doors), 0 declines, 0 refutations', '3+/0/0',
+            `${solved >= 3 && rt.playback.solverStats.solves >= 3 ? '3+' : rt.playback.solverStats.solves}/${rt.playback.solverStats.declines}/${rt.playback.solverStats.refutations}`);
     } finally {
         try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
     }
@@ -391,7 +400,7 @@ registerTest({
     id: 'seedling-wasm-runtime-bot-names-refusal',
     name: 'Seedling (wasm runtime): the Playback Bot names why it cannot walk a tile target in a generated room',
     description: 'With flashPanel.runtime = wasm, a tile target in a flash_seedling_gen region is refused by the '
-        + 'controller (⛓ WG: the walker producer serves a location or an exit) and the bot\'s status names it '
+        + 'controller (⛓ §5.36: the solver serves a location or an exit) and the bot\'s status names it '
         + '— never a silent wait. The wasm page is never started.',
     testFunction: seedlingWasmRuntimeBotNamesItsRefusal,
     category: 'Seedling JS runtime',
