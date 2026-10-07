@@ -465,6 +465,16 @@ describe('⛓ W7 — swapState(): the glue query the wasm engine asks before it 
     it('no adapter: an empty queue, never a throw', () => {
         expect(h.glue.swapState()).toEqual({ marks: [], queued: 0, pushedOn: null, pushes: 0 });
     });
+    it('⛓ WALK IDENTITY — a Restart\'s start-hop load (startHop + restart) pushes its teleport in the load\'s own turn; any other load does not', () => {
+        const pushNow = vi.fn(() => true);
+        h.glue.attachAdapter({ ...queueingAdapter(), pushNow });
+        h.emitLoad({ region_id: 'starting_house', world: worldFor('starting_house'), arrivedFrom: null, startHop: true });
+        h.emitLoad({ region_id: 'starting_house', world: worldFor('starting_house'), arrivedFrom: null });
+        expect(pushNow).not.toHaveBeenCalled();
+        h.emitLoad({ region_id: 'starting_house', world: worldFor('starting_house'), arrivedFrom: null, startHop: true, restart: true });
+        expect(pushNow).toHaveBeenCalledTimes(1);
+        expect(h.glue.stats.restartPushes).toEqual([{ at: 'start-hop' }]);
+    });
     it('⛓ ARRIVAL JITTER — pushQueuedTeleports() asks the adapter to push NOW (its answer); no adapter → false', () => {
         expect(h.glue.pushQueuedTeleports()).toBe(false);
         const pushNow = vi.fn(() => true);

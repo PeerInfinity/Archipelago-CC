@@ -390,10 +390,15 @@ async function main() {
                     arrivalReads: e.arrivalReads }));
             });
             const solves = await page.evaluate(() => window.__solveLog ?? null);
+            // ⛓ WALK IDENTITY — the glue's Restart decisions and the start-hop pushes they made
+            const restartGlue = await page.evaluate(async () => {
+                const g = (await import('./modules/flashPanel/index.js')).getSeedlingRegionGlue();
+                return JSON.parse(JSON.stringify({ lastRestart: g?.lastRestart ?? null, restartPushes: g?.stats?.restartPushes ?? null }));
+            });
             const { writeFileSync, mkdirSync } = await import('node:fs');
             mkdirSync(dirname(TRACE), { recursive: true });
             const bot = await botStatus();
-            writeFileSync(TRACE, JSON.stringify({ verbs, engine: eng, solves, restartDeferrals: bot.restartDeferrals }));
+            writeFileSync(TRACE, JSON.stringify({ verbs, engine: eng, solves, restartDeferrals: bot.restartDeferrals, restartGlue }));
             out('B trace written', { file: TRACE, verbs: verbs?.length ?? null, tapes: (verbs ?? []).filter((v) => v.verb === 'botLoadTape').length,
                 solves: (solves ?? []).filter((x) => x.t === 'solve').length, workers: (solves ?? []).filter((x) => x.t === 'new').length });
         }

@@ -146,7 +146,9 @@ export class SeedlingRegionGlue {
         // behaviour from console text.
         this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, parks: 0,
             resumes: 0, setDeliveries: 0, locationChecks: 0, itemsFound: 0, doorsLocked: 0, bounces: 0,
-            logicalMoves: 0, positionReads: 0, restarts: 0, eventsCollected: 0, loopResets: 0 };
+            logicalMoves: 0, positionReads: 0, restarts: 0, eventsCollected: 0, loopResets: 0,
+            // ⛓ WALK IDENTITY — a Restart's start-hop teleport pushed in the turn it was queued (`at`: the site)
+            restartPushes: [] };
         /** ⛓ LOGICAL LINKS — is a Playback Bot walk in flight (its route credits its own links)? */
         this.isBotWalking = isBotWalking ?? (() => false);
         this._timers = timers ?? { setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: (h) => clearInterval(h) };
@@ -412,6 +414,7 @@ export class SeedlingRegionGlue {
         // the released room ran on until the adapter's 100 ms tick (measured: the start hop's arrival clock 0–1 tick
         // apart run to run). Pushed in this turn, as at every other site the room is let go (arrival jitter).
         const pushed = r.taken ? this.pushQueuedTeleports() : false;
+        if (pushed) this.stats.restartPushes.push({ at: 'restart' });
         return decide(r.taken, r.taken ? null : r.why, { start, substrate, stoppedWalks: stopped, pushed });
     }
 
@@ -493,6 +496,9 @@ export class SeedlingRegionGlue {
             }
         }
         this.apply(this.binding.onLoadRegion(payload ?? {}));
+        // ⛓ WALK IDENTITY — a Restart's start hop reaches this load through the dispatcher, after the Restart's own
+        // turn: the room was released (the bot walks' stop) and its teleport was queued just now — push it now.
+        if (payload?.startHop && payload?.restart && this.pushQueuedTeleports()) this.stats.restartPushes.push({ at: 'start-hop' });
         if (!this._eventsSynced) this.syncEventsFromGame();
     }
 
