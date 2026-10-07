@@ -108,12 +108,13 @@ export async function createLab() {
         ...(s0.wasm.deliveredSet ? { deliveredSet: s0.wasm.deliveredSet } : {}), ...deps });
     /**
      * §3 — the GAME's evidence for a leg the solver refuses: the same production engine built the WG way
-     * (`generated: true` over the same delivered records), whose producer is the J2 WALKER — its held keys are
+     * (the `producer: 'walker'` INSTRUMENT over the same delivered records — ⛓ §5.36: `generated` is only a label
+     * since generated rooms became solver rooms), whose producer is the J2 WALKER — its held keys are
      * the plan, shipped and watched as a solver plan is. A walker tape that crosses on the game = the game can.
      */
     let walker = null;
     const walkerEngine = () => (walker ??= mod.createWasmPlayback({ ...deps, records: mountedRecordsOf(s0.wasm.deliveredSet),
-        generated: true }));
+        producer: 'walker' }));
 
     /** The location / exit goal as the controller resolves it (the panel's own name → cell map). */
     function resolveGoal(leg) {

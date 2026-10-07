@@ -12,7 +12,8 @@
  *   page → worker  `{type: 'solve', id, request}` — `request` is the tape
  *                  (`staging`, `perTick`, `live`, `solverGoal`, `name`,
  *                  `scratchPersistence`, `equips`; ⛓ WG: or `producer: 'walker'`
- *                  + `goal` — `wasmWalkTape.walkTapeFromStaging`) and `source: {id,
+ *                  + `goal` — `wasmWalkTape.walkTapeFromStaging`, ⛓ §5.36 an
+ *                  INSTRUMENT only: no production engine asks it) and `source: {id,
  *                  records?}`: the room records arrive ONCE per worker and are
  *                  kept by id (`records` omitted on later solves).
  *   worker → page  `{type: 'started', id}` the moment the solve begins (the
@@ -48,8 +49,9 @@ self.onmessage = (event) => {
     if (source.records) sources.set(source.id, { levelSource: levelSourceFromAtlas(source.records), records: source.records });
     const held = sources.get(source.id);
     self.postMessage({ type: 'started', id });
-    // ⛓ WG — `producer: 'walker'` (a generated room on wasm): the J2 walker drives a fresh run
-    // from the staging and its keys are the plan (`wasmWalkTape.js`); the plan has the same shape.
+    // ⛓ WG — `producer: 'walker'`: the J2 walker drives a fresh run from the staging and its keys are the
+    // plan (`wasmWalkTape.js`); the plan has the same shape. ⛓ §5.36 — an INSTRUMENT only (the divergence
+    // sweep's `--producer=walker`): generated rooms are the solver's, like every other room.
     // ⛓ STEP-OFF RETIRE — W4's `producer: 'step-off'` composite is gone: an arrival latched on its goal
     // door is a plain solve (`solveSegment` steps off a latched door itself, fidelity STEP-OFF).
     const produce = request.producer === WALK_TAPE_PRODUCER

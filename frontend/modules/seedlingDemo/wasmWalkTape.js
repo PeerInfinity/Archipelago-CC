@@ -2,6 +2,19 @@
  * seedlingDemo/wasmWalkTape — **THE J2 WALKER AS A TAPE PRODUCER, FOR A
  * GENERATED ROOM ON THE WASM RUNTIME** (solver-walk WG).
  *
+ * ⛓ §5.36 (⚖ the user: the SOLVER for everything, not the walker) — RETIRED
+ * AS A PRODUCTION PATH. Generated rooms are solver rooms on both runtimes
+ * now (F2's `apitem` strategy takes their apitems; measured: the solver
+ * solves every committed generated leg the walker did, and the swim apitem
+ * the walker never reached). What stays here, and why:
+ *   · `mountedRecordsOf` — the mounted set's records, the ONE derivation the
+ *     JS page and the wasm engine share (production);
+ *   · `walkTapeFromStaging` + `producer: 'walker'` — an INSTRUMENT: the
+ *     divergence sweep's `--producer=walker` ships the walker's tape to the
+ *     game for a leg the solver refuses (the game's evidence). No engine the
+ *     panel builds asks it (`createWasmPlayback({producer})`).
+ * The history below is WG's.
+ *
  * On wasm there is no live walker: the game only plays tapes, so every goal
  * must become a TAPE before the game moves. The solver has no goal kind for a
  * generated room's `apitem` (it is not in `world.pickups`; `collect-placement`

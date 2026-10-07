@@ -22,7 +22,7 @@
  *   --shard-plan=n [--json]  print the partition (no browser, no box) — the CI plan job
  *   --page=<build>       drive another staged build (also SEEDLING_PAGE), e.g. seedling_bot_ap_p4f
  *   --out=<jsonl>        append rows here (default stdout only)
- *   --producer=walker    §3: the same engine built the WG way (`generated: true`): the J2 WALKER's tape, shipped to the game
+ *   --producer=walker    §3: the same engine built with the walker INSTRUMENT (`producer: 'walker'`): the J2 WALKER's tape, shipped to the game
  *   --dump=<json>        write the page's delivered set + name map (the node bare pass stages from it)
  *
  * Location legs: a location opened once stays open for the session, so a page takes at most ONE arrival per

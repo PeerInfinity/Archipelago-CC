@@ -110,11 +110,13 @@
  *  · ⛓ solver-walk §5.18 (⚖ the user, 2026-10-03: the JS runtime takes the
  *    VANILLA delivery, WITH THE SOLVER) — a mounted set is one of TWO kinds
  *    (`mountedKindOf`, read off the set's own provenance): GENERATED rooms
- *    (J1: the J2 walker for every goal, teleporter exits only) or REAL rooms
- *    delivered by the vanilla arm (the 116 rewritten only at their AP
- *    locations: every S1–S5 arm the vanilla map has — the solver drives, kill
- *    locks, step-off, pits). Either kind's locations are its APITEMS (the
+ *    or REAL rooms delivered by the vanilla arm (the 116 rewritten only at
+ *    their AP locations). Either kind's locations are its APITEMS (the
  *    solver's `collect-placement` resolves one as strategy `apitem`, F2).
+ *  · ⛓ solver-walk §5.36 (⚖ the user: the SOLVER for everything, not the
+ *    walker) — BOTH kinds are driven by the solver, exactly alike: the kind
+ *    is reported (`botLevelSet().kind`), it picks no producer. A decline is
+ *    named and the walker walks that goal instead, as on the vanilla map.
  */
 
 import { createManualSession } from './watchManual.js';
@@ -238,8 +240,9 @@ export function locationPointOf(entity) {
  * arm delivered names the vanilla record set it rewrote
  * (`apPlacementRewriter.rewriteRecordSet`: `provenance.derived_from.set_id`
  * = `seedling-vanilla-record-<hash>`). That is the positive evidence of REAL
- * rooms; anything else keeps today's GENERATED path (a set that says nothing
- * is not promoted to real rooms on a guess).
+ * rooms; anything else is GENERATED (a set that says nothing is not
+ * promoted to real rooms on a guess). ⛓ §5.36 — a REPORT only: both kinds
+ * are the solver's (`jsRuntimeSolver.solverGoalFor` asks no kind).
  */
 export const MOUNTED_KINDS = Object.freeze({ GENERATED: 'generated', REAL: 'real' });
 export function mountedKindOf(set) {
@@ -369,8 +372,6 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         getLevelSource: () => roomSource()?.source ?? null,
         getRecords: () => roomSource()?.records ?? null,
         placementOf: (goal) => locationEntityOf(roomRecord(goal.level), goal.tag, goal.entityType ?? null),
-        // ⛓ §5.18 — only GENERATED rooms keep the walker; a delivered set of REAL rooms is the solver's.
-        isGenerated: () => generatedMounted(),
         onEvent: (e) => note({ type: 'solver', solver: e.type, message: e.message }),
     });
     /** ⛓ S1 — `instant`: play the solver's planned keys in one burst (a page tick each). */
@@ -400,8 +401,6 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
 
     /** The room source a boot reads: a delivered set first, else the vanilla map. */
     const roomSource = () => mounted ?? vanilla;
-    /** ⛓ §5.18 — a GENERATED set is mounted (a delivered set of real rooms is not). */
-    const generatedMounted = () => mounted?.kind === MOUNTED_KINDS.GENERATED;
     function roomRecord(level) { return roomSource()?.records.get(level) ?? null; }
 
     /**
@@ -917,10 +916,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         }
         if (goal.kind === 'exit' && !tiles.some(([tx, ty]) => (record.entities ?? []).some((e) => EXIT_TYPES.includes(e.type)
             && Math.floor(e.x / 16) === tx && Math.floor(e.y / 16) === ty))
-            // ⛓ S4 — a real room's PIT exit (`out_pit_*`): its cell is a pit tile of the room
-            // (⛓ §5.18 — a delivered set's real rooms too; a generated room has none to walk).
-            && !(!generatedMounted() && tiles.some(([tx, ty]) => pitTilesOf(goal.level, record).some((p) => p.tx === tx && p.ty === ty)))) {
-            return { ok: false, reason: `level ${goal.level} has no teleporter${generatedMounted() ? '' : ' or pit'} on ${tiles.length === 1
+            // ⛓ S4 — a PIT exit (`out_pit_*`): its cell is a pit tile of the room (⛓ §5.36 — any room, of any kind).
+            && !tiles.some(([tx, ty]) => pitTilesOf(goal.level, record).some((p) => p.tx === tx && p.ty === ty))) {
+            return { ok: false, reason: `level ${goal.level} has no teleporter or pit on ${tiles.length === 1
                 ? `tile (${tiles[0][0]}, ${tiles[0][1]})` : `any of the tiles ${JSON.stringify(tiles)}`}` };
         }
         return { ok: true };

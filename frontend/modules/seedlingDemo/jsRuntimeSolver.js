@@ -6,15 +6,14 @@
  * SYNCHRONOUS on the page's main thread until S2's Worker lands). With it on,
  * the walker asks this module for each tick's keys before walking itself:
  *
- *   1. MAP the goal (REAL rooms only: the vanilla map, or ⛓ §5.18 a
- *      delivered set of real rooms). A walker `exit` → `reach-exit
- *      {exit}` at the live teleporter the walker resolved (its OEL x, y), or
- *      ⛓ S4 `reach-pit {pit}` when it resolved a PIT tile (`out_pit_*`); a
- *      `location` → `collect-placement {placement}` at the entity's OEL x, y
- *      (a chest, a pickup, or an `apitem` — F2's strategy `apitem`).
- *      A `tile` goal, and EVERY goal of a mounted GENERATED set, stay on the
- *      J2 walker (the solver has no tile goal, and generated rooms are
- *      solver-certified and booted on scratch persistence).
+ *   1. MAP the goal (every room: the vanilla map, ⛓ §5.18 a delivered set
+ *      of real rooms, ⛓ §5.36 a mounted GENERATED set). A walker `exit` →
+ *      `reach-exit {exit}` at the live teleporter the walker resolved (its
+ *      OEL x, y), or ⛓ S4 `reach-pit {pit}` when it resolved a PIT tile
+ *      (`out_pit_*`); a `location` → `collect-placement {placement}` at the
+ *      entity's OEL x, y (a chest, a pickup, or an `apitem` — F2's strategy
+ *      `apitem`). Only a `tile` goal stays on the J2 walker (the solver has
+ *      no tile goal kind).
  *   2. SHADOW. `createRunForStaging(session.staging)` replayed through the
  *      session's own `perTick`. Its digest MUST equal the live run's (§1.5):
  *      a mismatch is a PAGE bug and fails the walk by name — never a solve
@@ -342,15 +341,15 @@ export function passNote(plan, { expired = false } = {}) {
  * @param {object} ctx.resolved  the walker's resolution (`{target, allowTeleporter}`; ⛓ S5 `latched`
  *   while the run stands latched on the goal's teleporter — still the door's `reach-exit`: the solver
  *   steps off a latched door itself, fidelity STEP-OFF)
- * @param {object|null} ctx.placement  the location's entity (`{x, y}`, OEL), real rooms only
- * @param {boolean} ctx.generated  a GENERATED level set is mounted (⛓ §5.18 — a delivered set of real rooms is not)
+ * @param {object|null} ctx.placement  the location's entity (`{x, y}`, OEL)
+ *
+ * ⛓ §5.36 (⚖ the user: the SOLVER for everything) — a mounted GENERATED set's
+ * goals are mapped here too, exactly as a real room's: the old "a generated
+ * level set keeps the J2 walker" arm is gone (measured: the solver solves
+ * every committed generated leg the walker did, and the swim apitem the
+ * walker never reached).
  */
-export function solverGoalFor(goal, { run, resolved, placement = null, generated = false }) {
-    // ⛔ A GENERATED set keeps the J2 walker for every goal: its rooms are
-    // solver-certified (no enemies, no puzzles to solve) and its sessions run
-    // on scratch persistence. ⛓ §5.18 — a delivered set of REAL rooms does
-    // not: it is the vanilla 116 rewritten only at their AP locations.
-    if (generated) return { walker: 'a generated level set keeps the J2 walker' };
+export function solverGoalFor(goal, { run, resolved, placement = null }) {
     if (goal?.kind === 'exit' && resolved?.pit) {
         // ⛓ S4 — a pit exit → `reach-pit` at the pit TILE the walker resolved (its rect origin = tile·16).
         const { tx, ty } = resolved.pit;
@@ -565,11 +564,10 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
  *   start (`upgradeWindowWork`); null = the whole budget
  * @param {number} [deps.backstopMs]  the wall-clock backstop (`SOLVE_BACKSTOP_MS`): past it the goal FAILS by name
  * @param {(goal:object) => ({x:number, y:number}|null)} deps.placementOf  a location's entity (OEL)
- * @param {() => boolean} deps.isGenerated  a GENERATED set is mounted (⛓ §5.18 — not a delivered set of real rooms)
  * @param {(e:object) => void} [deps.onEvent]  `{type, message, …}` per solve / refutation / decline
  */
 export function createRuntimeSolver({
-    getSession, getLevelSource, getRecords = () => null, placementOf = () => null, isGenerated = () => false,
+    getSession, getLevelSource, getRecords = () => null, placementOf = () => null,
     onEvent = () => {}, maxRefutations = MAX_REFUTATIONS, clock = () => Date.now(), solveService = null,
     budgetWork = SOLVER_BUDGET_WORK, loadBudgetMs = LOAD_BUDGET_MS, upgradeWindowWork: windowWork = SOLVER_UPGRADE_WINDOW_WORK,
     backstopMs = SOLVE_BACKSTOP_MS,
@@ -748,9 +746,8 @@ export function createRuntimeSolver({
          */
         keysFor(run, goal, resolved) {
             if (!enabled) return null;
-            const generated = isGenerated();
             const mapped = solverGoalFor(goal, {
-                run, resolved, generated, placement: goal?.kind === 'location' && !generated ? placementOf(goal) : null,
+                run, resolved, placement: goal?.kind === 'location' ? placementOf(goal) : null,
             });
             if (mapped.walker) { cancel(); return null; }
             if (plan) {

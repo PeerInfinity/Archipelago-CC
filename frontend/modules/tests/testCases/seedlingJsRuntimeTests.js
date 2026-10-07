@@ -343,9 +343,9 @@ export async function seedlingJsRuntimeBotCompletesGeneratedRoom(tc) {
 
 /**
  * ⛓ WG — under wasm the generated rooms ARE walked now (the wasm engine stages
- * the mounted set, the J2 walker produces the tapes), so the refusal this row
- * names is the one that REMAINS: a `tile` target in a generated room — no
- * producer turns a tile into a tape. Refused before the game is needed, so the
+ * the mounted set; ⛓ §5.36 the SOLVER produces the tapes), so the refusal this
+ * row names is the one that REMAINS: a `tile` target in a generated room — the
+ * solver has no tile goal kind. Refused before the game is needed, so the
  * wasm page is loaded but never started (as before).
  *
  * ⛔ The WITNESS that the bot walks generated rooms on wasm is NOT an in-app row:

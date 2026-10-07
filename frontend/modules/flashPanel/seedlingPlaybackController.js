@@ -85,12 +85,12 @@
  *
  * Built with `wasm: true` and `wasmLevelSetOf` (the surface's
  * `wasm.levelSet`, the set the generated arm delivered), the engine stages
- * that MOUNTED set — not a map document — and its tapes come from the J2
- * walker (`seedlingDemo/wasmWalkTape.js`), since the solver has no goal kind
- * for an apitem. A location and an exit are served; a `tile` target is
- * refused on wasm BY NAME (no producer serves it), as is a goal the walker
- * cannot reach (the engine's named failure). A new delivered set (a new
- * object) is a new engine, like a new game.
+ * that MOUNTED set — not a map document. ⛓ §5.36 — its tapes come from the
+ * SOLVER, as the atlas rooms' do (an apitem is F2's strategy `apitem`). A
+ * location and an exit are served; a `tile` target is refused on wasm BY
+ * NAME (the solver has no tile goal kind), as is a goal the solver declines
+ * (the engine's named failure). A new delivered set (a new object) is a new
+ * engine, like a new game.
  */
 
 // ⛓ VANILLA MAP — both import-free, so the controller still imports no model.
@@ -543,11 +543,11 @@ export class SeedlingPlaybackController {
 
     /** ⛓ W2 — `_apply` under the wasm runtime: true / false (refused) / 'pending'. */
     _applyWasm(target, s) {
-        // ⛓ WG — refused before anything loads: no producer turns a tile into a tape (the walker
-        // producer serves a location or an exit), so waiting for the game would only delay the NO.
+        // ⛓ WG → §5.36 — refused before anything loads: the solver (the wasm engine's only producer) has no
+        // tile goal kind — it serves a location or an exit — so waiting for the game would only delay the NO.
         if (this._wasmLevelSetOf && target?.kind !== 'location' && target?.kind !== 'exit') {
             return this._refuse(`a ${target?.kind ?? 'missing'} target is not walked in the ${ROOMS_OF[this.substrate] ?? this.substrate} `
-                + 'on the wasm runtime — their tapes come from the walker producer, which serves a location or an exit');
+                + 'on the wasm runtime — their tapes come from the solver, which serves a location or an exit (it has no tile goal kind)');
         }
         const map = this._mapOf(s);
         if (!map) return this._noMap(s);

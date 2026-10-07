@@ -75,15 +75,20 @@
  * STEP-OFF), ONE plan and ONE tape from the arrival. W4's walker-prefix
  * composite (the worker's `step-off` producer) is gone.
  *
- * ⛓ WG — GENERATED ROOMS (`flash_seedling_gen`, `generated: true`). The
- * rooms are a MOUNTED level set, so the engine's level source is the set the
- * generated arm delivered (`wasmWalkTape.mountedRecordsOf`: the delivery's
- * own chunk plan, the level ids as mounted), never the preset's map document.
- * Every step above is unchanged except step 4's PRODUCER: the solver has no
- * goal kind for an `apitem`, so the S2 worker runs the J2 WALKER on a fresh
- * run from the same staging (`producer: 'walker'`, `wasmWalkTape.js`) and its
- * held keys are the plan — the same `{solution, expected}` shape, shipped,
- * watched and recovered exactly as a solver plan is.
+ * ⛓ WG → §5.36 — GENERATED ROOMS (`flash_seedling_gen`). The rooms are a
+ * MOUNTED level set, so the engine's level source is the set the generated
+ * arm delivered (`mountedRecords.mountedRecordsOf`: the delivery's own chunk
+ * plan, the level ids as mounted), never the preset's map document. Since
+ * §5.36 (⚖ the user: the SOLVER for everything) they are SOLVER rooms exactly
+ * as a delivered set of real rooms is — holds, continuations, the adoption,
+ * the anytime passes and the held retry; an `apitem` is F2's strategy
+ * `apitem`; a decline fails the goal by name. `generated` only LABELS them.
+ *
+ * ⛓ THE WALKER PRODUCER is an INSTRUMENT now (`producer: 'walker'`), never a
+ * production path: the divergence sweep's `--producer=walker` builds an
+ * engine with it to get the GAME's evidence for a leg the solver refuses
+ * (the J2 walker on a fresh run from the arrival's staging, `wasmWalkTape.js`,
+ * its held keys shipped and watched as a plan). Nothing the panel builds sets it.
  *
  * Every `botStart` is bracketed by two `pendingCheck` seq reads and handed to
  * the check binding (`ignoreHostStart`, ⚖ W0-Q1), so a declaration's echo can
@@ -148,7 +153,9 @@ const roomEquips = (r) => equipsMap(r?.equips);
  * @param {(p:{level:number, x:number, y:number}) => boolean} deps.teleport  the panel's teleport recipe
  * @param {() => object|null} [deps.getCheckBinding]  the glue's `SeedlingCheckBinding`
  * @param {Map} deps.records  level → record (the preset's map document; ⛓ WG the mounted set's)
- * @param {boolean} [deps.generated]  ⛓ WG — `records` are a MOUNTED generated set: goals go to the walker producer
+ * @param {boolean} [deps.generated]  `records` are a MOUNTED generated set — a LABEL (status, notes); ⛓ §5.36 it picks no producer
+ * @param {string|null} [deps.producer]  ⛓ an INSTRUMENT only: `'walker'` = every goal by the J2 walker producer
+ *   (W2's flow: no holds, no continuations) — the divergence sweep's `--producer=walker`; production never sets it
  * @param {object} [deps.solveService]  default `createWorkerSolveService()`
  * @param {object} [deps.timers]  `{setTimeout, clearTimeout}` — default the GAME window's
  * @param {() => number} [deps.now]
@@ -168,7 +175,7 @@ const roomEquips = (r) => equipsMap(r?.equips);
  *   (`{setItemGate, writesOf, inventory, push}`); absent = items reach the game as they arrive (no gate)
  */
 export function createWasmPlayback({
-    getGame, getWin = () => null, teleport, getCheckBinding = () => null, getSwapState = null, records, generated = false,
+    getGame, getWin = () => null, teleport, getCheckBinding = () => null, getSwapState = null, records, generated = false, producer = null,
     solveService = null, timers = null,
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetWork = SOLVER_BUDGET_WORK,
@@ -193,8 +200,10 @@ export function createWasmPlayback({
     const levelSource = levelSourceFromAtlas(records);
     let service = solveService;
     const svc = () => { service ??= createWorkerSolveService(); return service; };
-    /** ⛓ W7 — held rooms and continuations serve the SOLVER (vanilla) rooms; a generated set keeps W2's flow. */
-    const holds = !generated;
+    /** ⛓ the walker INSTRUMENT (`producer: 'walker'`) keeps W2's flow; every SOLVER engine holds (⛓ §5.36 — generated rooms too). */
+    if (producer !== null && producer !== WALK_TAPE_PRODUCER) throw new Error(`no tape producer ${JSON.stringify(producer)} (only the '${WALK_TAPE_PRODUCER}' instrument)`);
+    const walkerInstrument = producer === WALK_TAPE_PRODUCER;
+    const holds = !walkerInstrument;
     /**
      * ⛓ W7 — the arrival watch (holding the arrival an exit plan's crossing leads to) needs the GLUE QUERY:
      * an engine built without `getSwapState` cannot know a redirect is in flight, so it holds no arrival
@@ -824,7 +833,7 @@ export function createWasmPlayback({
 
     // ── 3/4: stage, freeze, solve ─────────────────────────────────────────
 
-    /** W2's arrival for the goal (a forced re-arrival's landing, or the generated flow): hold it, then solve. */
+    /** W2's arrival for the goal (a forced re-arrival's landing, or the walker instrument's flow): hold it, then solve. */
     function arrive(se) {
         if (holds) {
             if (!holdArrival(se)) { fail(`the arrival in level ${goal.level} could not be held: ${stats.holdBlocked.at(-1)?.why}`); }
@@ -858,7 +867,7 @@ export function createWasmPlayback({
         if (decl) { fail(`the freeze tape was not shipped — ${decl}`); return; }
         const started = hostStart(freeze, 'freeze');
         if (started) { fail(started); return; }
-        // ⛓ WG — the walker producer: the goal as the controller resolved it, the same staging.
+        // ⛓ the walker INSTRUMENT (`producer: 'walker'`): the goal as the controller resolved it, the same staging.
         const request = { producer: WALK_TAPE_PRODUCER, staging, goal: { ...goal }, name: `wasm-walk-${goal.kind}-${goal.level}`,
             scratchPersistence: true, levelSource, source: { records } };
         startSolve(request, { staging, arrivalStatus: st, continuation: false });
@@ -939,7 +948,7 @@ export function createWasmPlayback({
         play = { ...playInit, t0: now(), request: req, budget, budgets: [budget], retries: 0, best: null };
         handle = svc().start(req);
         phase = 'solving';
-        note(`${generated ? 'walking a tape' : playInit.continuation ? 'solving on from the held room' : 'solving'}… `
+        note(`${walkerInstrument ? 'walking a tape' : playInit.continuation ? 'solving on from the held room' : 'solving'}… `
             + `(budget ${budget} work units)`);
         schedule(pollSolve, SOLVE_POLL_MS);
     }
@@ -1059,7 +1068,7 @@ export function createWasmPlayback({
         }
         let res = handle.result;
         // ⛓ DETERMINISTIC BUDGET / O2 — the cut is the ANSWER's (a pass cut at the work budget), never the clock's.
-        if (!generated && !play.request.producer && budgetCut(res)) {
+        if (!play.request.producer && budgetCut(res)) {
             stats.expiries += 1;
             const cut = { provisional: res, answered: handle.answered ?? 0, passes: handle.passes ?? [] };
             const unanswered = (handle.answered ?? 0) < (play.request.passes?.length ?? 0);
@@ -1081,7 +1090,7 @@ export function createWasmPlayback({
         // ⛓ O2 — a retry's answer against what the cut attempt's passes had answered.
         if (play.best && !betterAnswer(play.best, res)) res = play.best;
         if (!res?.ok) {
-            const why = `the ${generated ? 'walker producer' : 'solver'} declined ${goal.name ?? goal.kind} in level ${goal.level} `
+            const why = `the ${walkerInstrument ? 'walker producer' : 'solver'} declined ${goal.name ?? goal.kind} in level ${goal.level} `
                 + `(${res?.kind}): ${res?.message}`;
             if (play.continuation) { contFallback(why, 'continuation-declined'); return; }
             // ⛓ WAVE-6 CONSUMER — the refusal's `obstacle` (an `arrival-inside-solid` and its `wayOut`) goes with
@@ -1330,7 +1339,7 @@ export function createWasmPlayback({
     /**
      * ⛓ KEY DELIVERY — the save arrays AP has let through to the game (`{keys: [...]}`): what the panel's
      * writes for the ADMITTED inventory declare (`save_array`, `games/seedling.json`'s method-call keys).
-     * A delivery the gate still holds is not in it. No delivery handle (a generated engine, a test) = none.
+     * A delivery the gate still holds is not in it. No delivery handle (an engine built without one: a test, the walker instrument) = none.
      */
     function apSave() {
         const d = delivery();
@@ -1651,10 +1660,12 @@ export function createWasmPlayback({
         setBudgetWork(n) { const v = Number(n); if (Number.isFinite(v) && v > 0) ownBudget = v; },
         /** The wall-clock backstop, in ms (a named failure, never an answer). */
         get backstopMs() { return backstopMs; },
-        /** ⛓ WG — whether this engine stages a mounted generated set. */
+        /** ⛓ WG — whether this engine stages a mounted generated set (a label: ⛓ §5.36 they are solver rooms). */
         get generated() { return generated; },
+        /** The tape producer: `'solver'`, or the `'walker'` INSTRUMENT. */
+        get producer() { return walkerInstrument ? WALK_TAPE_PRODUCER : 'solver'; },
         status() {
-            return { phase, goal, generated, queued: queued?.goal ?? null, ticks: play?.ticks ?? null,
+            return { phase, goal, generated, producer: walkerInstrument ? WALK_TAPE_PRODUCER : 'solver', queued: queued?.goal ?? null, ticks: play?.ticks ?? null,
                 drained: play?.progress?.ticks ?? null, divergence: play?.divergence ?? null, recoveries,
                 // ⛓ W7 — the held room (its level and how many key sets the shadow replays), and whether a crossing is in flight
                 room: room ? { level: room.level, shipped: room.shipped.length, plans: room.plans ?? 0, talkCircles: room.talkCircles?.length ?? 0 } : null, driving, arriving,
@@ -1683,11 +1694,12 @@ export function createWasmPlayback({
  * Load the preset's map document and build the engine. `mapPath` is the one
  * the preset NAMES (`mapDocumentPath`), resolved against `baseUrl`.
  * ⛓ WG — given `levelSet` (the generated arm's assembled set), the engine's
- * rooms are that MOUNTED set instead (`mountedRecordsOf`), and no map is fetched.
+ * rooms are that MOUNTED set instead (`mountedRecordsOf`), and no map is fetched;
+ * ⛓ §5.36 — a SOLVER engine like any other, labelled `generated`.
  * ⛓ VANILLA MAP — given `deliveredSet` (a REAL-room set an arm delivered: the vanilla arm's rewrite,
  * an atlas arm's retag), the rooms are that set too — the game plays them, not the map document (an
  * `apitem` stands where the map has a chest) — but they stay SOLVER rooms (holds, continuations, the
- * adoption): only `generated` sends goals to the walker producer.
+ * adoption). No engine this builds uses the walker producer (an instrument: `createWasmPlayback({producer})`).
  */
 export async function loadWasmPlaybackEngine({ mapPath, levelSet = null, deliveredSet = null, baseUrl, fetchImpl = globalThis.fetch, ...deps }) {
     if (levelSet) return createWasmPlayback({ ...deps, records: mountedRecordsOf(levelSet), generated: true });
