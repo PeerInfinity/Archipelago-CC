@@ -377,23 +377,23 @@
       }
     },
     "identity: solve-seedling-r8-l18 --check": {
-      "value": "33d20889ebd8c72452ce7262bce9505b",
+      "value": "465a8b469896813dc7efc8c1ce3937d2",
       "command": "node scripts/procgen/solve-seedling-r8-l18.mjs --check 2>&1 | b | m",
       "kind": "identity",
       "exit": 0,
-      "ms": 3083,
+      "ms": 2373,
       "cheap": true,
-      "measuredAt": "b34076786f74bdd589d764c86c3fad19283abc3a",
-      "inputKey": "58e0f19a0fe60fff56b68e019210c2db",
-      "keyAt": "b34076786f74bdd589d764c86c3fad19283abc3a",
+      "measuredAt": "7b7b28f0a3f8758522a902b15f22dd8b0ed9d7a0",
+      "inputKey": "6527865a3f7deb06f1efe0b5ed6705a4",
+      "keyAt": "7b7b28f0a3f8758522a902b15f22dd8b0ed9d7a0",
       "keyPopulations": {
         "code": {
-          "count": 83,
-          "digest": "25a71bf7a6ac5470d310054403951382"
+          "count": 91,
+          "digest": "ba5417b12e078643618e3faf85a59b49"
         },
         "data": {
-          "count": 269,
-          "digest": "bccd63a15469dd5a08dba537932f80cd"
+          "count": 354,
+          "digest": "44a97b48a4abfe5cd0571eeba9a97d35"
         },
         "spawn": {
           "count": 0,
