@@ -21,6 +21,7 @@ import {
     GEN_ROOM_CEILING_WHY, GEN_ROOM_LOCATION_CEILING, genRoomCapacityAt, genRoomFloorCells,
 } from './seedlingGenCapacity.js';
 import * as room from './seedlingGenRoom.js';
+import { withHammerEscape } from './solverBot.js';
 import { TILE_SIZE, tagOf } from './levelWorld.js';
 import {
     FLASH_SEEDLING_GEN_SUBSTRATE_ID, substrateRegistryEntry as ENTRY,
@@ -127,9 +128,15 @@ describe('⛓⛓ the ceiling is what the room accepts: N seats, N+1 is refused b
      * bound, red at `f20ac752ae`). Over seeds 31..119, the rule is met by 31, 53,
      * 57, 81, 89, 93, 108; 57 is the cheapest (ONE re-roll, 3.2 s for the three
      * draws on the box). A chosen input that turns slow is re-seeded, not re-bounded.
+     *
+     * ⛓ HAMMER-PHASE A2 — `HAMMER_ESCAPE` ON by default (⚖ user 2026-10-07): the killgate draws re-roll far more
+     * with the escape on, and the row TIMED OUT on CI (60 s, `56b5422`). Measured on the box, the whole rule:
+     * seed 53 escape off 1 re-roll / 3.2 s, ON 48 re-rolls / 291 s; seed 57 off 3 re-rolls / 7.5 s, ON 51 re-rolls / 315 s.
+     * Every seed above still meets the rule with the escape off (31 41 s, 81 104 s, 89 139 s, 93 44 s, 108 246 s).
+     * The subject is the re-roll MECHANISM, not the escape, so the row is asked with the escape OFF by the switch.
      */
     const KILLGATE_ROOM = { exits: 1, biome: 'post-sword', elements: 'killgate' };
-    it('⛓⛓ a draw whose own element spends a tag is RE-ROLLED like one short of cells (post-sword drawn seed 57, `killgate` named)', () => {
+    it('⛓⛓ a draw whose own element spends a tag is RE-ROLLED like one short of cells (post-sword drawn seed 57, `killgate` named)', () => withHammerEscape(false, () => {
         const w = genRoom(57, KILLGATE_ROOM);
         expect(w.generation.rerolls).toBe(0);
         expect(ownTags(w)).toBe(1);
@@ -145,7 +152,7 @@ describe('⛓⛓ the ceiling is what the room accepts: N seats, N+1 is refused b
         expect(ownTags(w)).toBe(0);
         expect(new Set(w.locations.map((l) => l.tag)).size).toBe(30);
         expect(w.seed).toBe(room.rerollSeed(w.drawnSeed, w.generation.rerolls));
-    });
+    }));
 
     it('a deserialized room cannot re-roll: short of tags it refuses in the tag sentence, not the cell one', () => {
         const w = genRoom(57, KILLGATE_ROOM);
