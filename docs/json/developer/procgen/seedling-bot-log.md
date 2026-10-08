@@ -14607,6 +14607,57 @@ game witnesses `hammer-a-l18-escape21` and `hammer-a-l18-escape15` (p4f, 0 px). 
   the dashless pass's plan, shipped because the full pass needs 66 (r40) / 105 (r41, r42) units against the 85-unit
   upgrade window.
 
+### Seedling hammer-phase A2 — HAMMER_ESCAPE on + re-records
+
+⚖ The user (2026-10-07): *"I approve."* — to turning `HAMMER_ESCAPE` on with a slice to re-record the movers A
+measured. Mid-slice, two more rulings: fix the bug the flip exposed before banking anything, and *"Re-pin all 12"*
+(the unit pins A's OFF-only movers list could not see). The report is `CC/docs/cloud-reports/seedling-hammer-a2.md`.
+
+**D1 — the flip.** `HAMMER_ESCAPE.enabled` is `SEEDLING_HAMMER_ESCAPE !== '0'` (the switch and its env hook kept;
+`=0` or `withHammerEscape(false, …)` turns it off; the browser takes the default). The residue sweep reads 45/45 with
+no hit, no stall and every row the same twice; `--no-escape` (new) reads the base's 35/45. Mutant (the default back
+to `=== '1'`): 35/45.
+
+**D2 — the re-records, on the game (p4f, headless).** `r8-solve-18` 520 → 363 t ({18,0}@305); the `r8-d2` headline
+1,826 → 1,669 t (its -19/-20 walks byte-identical, boots −157 and the latch's `rng.seed`); `r9-solve-18` 519 → 518 t
+({18,0}@467) and the 11 windows after it boot-only (`seam.time` −1, the measured `rng.cosmetic`), the chain 10,931 t.
+Every expectation that was not licensed to move re-recorded byte-identical; `tick0` re-derived for exactly the boot-only
+tapes; the two L18 `clears` provenance rows in `playthroughWalk.js` follow their tapes (305, 467). Whole-chain
+differential over the 34 tapes: 995 PASS / 0 FAIL, 34/34 "live game matches the committed oracle stream".
+
+**The bug the flip exposed (fixed, every re-record standing).** ON, `empty post-sword seed 30` (the c3/c6 pair
+dumps) went from a certified level to `GenerationAborted` — *"the player DROWNED in level 900"*. The throw's stack, not
+a guess: `previewStepper` throws the run's death refusal when a PREVIEWED step dies, and `stepToward`'s survival
+lookahead and `landsClearOfHammers` (under the HAMMER-PHASE rung's `previewPressApproach`) did not catch it — one
+key set that drowned in a preview threw out of the whole solve. `previewOrDeath` makes a previewed death a key set
+not taken (the lookahead, the guard predicate, the train previews, the escape's approach and search), and the escape
+also prunes a state that latched drowning or falls into a lethal pit. Only a solve that threw there can change: every
+producer `--check` digest, both sweeps and every OFF row are unchanged; seed 30 certifies ON.
+
+**D3 — the rows, and the pins.** Measured ON at head, against the base (OFF at head = the base, row for row):
+acceptance `76602ae8`, c3 `4937da80`, c6 `430573e9`, c4 `b9d2185d`, ENEMY `0d3262f6`, killgate s2/s5/s9
+`006b0639`/`7d4cb820`/`49e23d85`. No verdict goes solved → refused anywhere. Two c4 rows are different generated
+levels (winding post-sword s4 SATURATED → TARGET_REACHED, loopy post-sword s8 attempts 6 → 18); every other moved row
+is the same level with other ticks. The F1c rung's evidence (its witness's planner and the stall/rebound rows) is asked
+with the escape OFF by the switch; the unit pins it moved (CI named them at the first pushed head) are re-pinned to the
+measured ON values where the row's subject survives (`solverSpinnerKill`'s six chambers, each now asserting an escape
+per landing; `procgenCorridorBody` 223 → 232 t; `procgenScratchPersistence` removal 144 → 142) and re-aimed through
+the switch where it does not (`procgenCountableClock`'s hammer-safety refusal, `watchGenOverlay`'s dropped killgate,
+`seedlingGenCapacity`'s re-roll row); `watchOverlays` follows the re-recorded `r8-solve-18` (five presses land six
+hits, t110 on both bodies).
+
+**A cost, measured.** With the escape on, a generated killgate room's draws re-roll far more: `seedlingGenCapacity`'s
+seed 57 takes 51 re-rolls / 315 s for the row's rule (off: 3 / 7.5 s), seed 53 48 / 291 s (off: 1 / 3.2 s). Every
+verdict holds; the time is the escape's search in each draw's certify solve.
+
+**Trap candidates.**
+1. **A movers list measured with the flag OFF cannot see the pins the flag moves.** A's list was the identity block
+   and the producers; CI at the first pushed head read 15 red rows it did not name. Run the bounded test set (and
+   better, the suite on CI) with the switch ON before a flip is licensed.
+2. **A preview that can die must not be able to throw out of a solve.** `previewStepper` refuses a death by
+   throwing (correct for the run), so every caller that previews many key sets ahead has to catch it. The flip only
+   steered a walk somewhere a lookahead could drown; the defect was older than the escape.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
