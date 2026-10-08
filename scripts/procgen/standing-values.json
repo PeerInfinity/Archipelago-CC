@@ -76,23 +76,23 @@
       "total": "(no total)"
     },
     "identity: ENEMY census default": {
-      "value": "25417923f09a64e793ec03d8fb83911f",
+      "value": "0d3262f61a8894461fde87555213686f",
       "command": "node scripts/procgen/census-seedling-enemies.mjs 2>/dev/null | m",
       "kind": "identity",
       "exit": 0,
-      "ms": 11130,
+      "ms": 7172,
       "cheap": true,
-      "measuredAt": "465655f7b42efadd0a509ffc33b6697d2a78634f",
-      "inputKey": "7a2ba6474c35b0ac2e0f0e938fc0d2dc",
-      "keyAt": "465655f7b42efadd0a509ffc33b6697d2a78634f",
+      "measuredAt": "f6987b04ebcfeee69d59381def29b0654000a9b1",
+      "inputKey": "d346fe410666251fddcc8a38e024fbdc",
+      "keyAt": "f6987b04ebcfeee69d59381def29b0654000a9b1",
       "keyPopulations": {
         "code": {
-          "count": 123,
-          "digest": "6d4e19d253fdad1e293dc19d86756e2c"
+          "count": 124,
+          "digest": "e8ec76e9d56e752c720fc21c7d09a9fb"
         },
         "data": {
           "count": 228,
-          "digest": "3769023cca39010746c3e9f32de79faa"
+          "digest": "4c7fe992b0a9c0b444606d3ab6459254"
         },
         "spawn": {
           "count": 0,
