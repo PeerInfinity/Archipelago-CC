@@ -221,23 +221,23 @@
       }
     },
     "identity: killgate s9": {
-      "value": "30a1e3e732f543aebffd5286a66d1666",
+      "value": "49e23d85e2b7b9561385513d82833882",
       "command": "node scripts/procgen/census-seedling-killgate-clears.mjs --seeds=9-9 2>/dev/null | m",
       "kind": "identity",
       "exit": 0,
-      "ms": 7900,
+      "ms": 7983,
       "cheap": true,
-      "measuredAt": "b34076786f74bdd589d764c86c3fad19283abc3a",
-      "inputKey": "91b6ed13f9582de51801fa285a774434",
-      "keyAt": "b34076786f74bdd589d764c86c3fad19283abc3a",
+      "measuredAt": "3e54b40ba25f9359443d44ed6593eca75396ad5c",
+      "inputKey": "15b84f8fd0c9ea84aaf78edd1a49db05",
+      "keyAt": "3e54b40ba25f9359443d44ed6593eca75396ad5c",
       "keyPopulations": {
         "code": {
-          "count": 114,
-          "digest": "bc0e8913b68da2c3531660f17699c81e"
+          "count": 122,
+          "digest": "6347a0d583216a180633b179964f76ad"
         },
         "data": {
-          "count": 196,
-          "digest": "d95de47bbd5246dbc8fcc85b1922979b"
+          "count": 228,
+          "digest": "94c4a69ed310cb701e2ed02f73194e61"
         },
         "spawn": {
           "count": 0,
@@ -245,7 +245,7 @@
         },
         "build": {
           "count": 1,
-          "digest": "e9276893aaa548ca520176a9c532c2a6"
+          "digest": "36172b21c8736067f0e56e018f6d6c6e"
         }
       }
     },
