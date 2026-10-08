@@ -84,9 +84,13 @@
 #                        cannot SEE a change is not a row that saw none.
 #   killgate s9     [*]  d0687559341d1414839f27dba13a669b   @143846faf
 #                        (DROPPED -> placed/certified/SOLVED, cause `sword`)
-#   ⛓ UNMOVED and worth saying: maze, acceptance batch (it holds NO spinner
-#   traffic at all), guard census, AREA census, killgate s5 (its gate is
+#   ⛓ UNMOVED and worth saying: maze, acceptance batch (it held NO spinner
+#   traffic at slice 11), guard census, AREA census, killgate s5 (its gate is
 #   DROPPED), level pre-sword s1 AND level post-sword s1.
+#   ⛔ HAMMER-PHASE A2 (`HAMMER_ESCAPE` on by default): the acceptance batch DOES
+#   carry spinner traffic now — post-sword seed 13's skeleton re-plans 711 -> 703 t
+#   (its sword-evidence WITH arm 730 -> 715) and a Progressive Shield WITHOUT arm
+#   205 -> 223 t, every verdict unchanged. Measured: 608693d2 -> 76602ae8.
 #
 # ⚠ THREE ROWS BELOW CARRY A COMMAND THIS SCRIPT CHOSE, NOT THE ONE THAT MADE
 #   RULING 8's PUBLISHED VALUE — the AREA census, the three `killgate` levels
