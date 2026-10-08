@@ -32,14 +32,14 @@
       }
     },
     "identity: acceptance batch": {
-      "value": "608693d23fc3d4c67d0e7091e2859ab8",
+      "value": "76602ae80b1671b9630cd62e57ec44db",
       "command": "node scripts/procgen/ci-summary.mjs --gate=\"identity: acceptance batch\" --json",
       "kind": "identity",
       "exit": 0,
-      "ms": 88993,
+      "ms": 10771,
       "cheap": false,
       "ciSourced": true,
-      "measuredAt": "5449ef076e141ebfaaad4967637fb790a6b4e4c4",
+      "measuredAt": "f6987b04ebcfeee69d59381def29b0654000a9b1",
       "total": "(no total)"
     },
     "identity: empty pairs c3": {
