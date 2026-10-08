@@ -15285,6 +15285,7 @@ export const INSTRUMENTS = frz({
                 "escape",
                 "full",
                 "json",
+                "no-escape",
                 "residues",
                 "twice"
             ],
@@ -15307,6 +15308,12 @@ export const INSTRUMENTS = frz({
                         "valueOf"
                     ],
                     "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-escape"
                 },
                 {
                     "how": [
