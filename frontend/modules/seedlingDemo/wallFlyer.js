@@ -55,7 +55,7 @@
 
 import { rectsOverlap, SOLIDS_BY_MOVER, TILE_SIZE } from './levelWorld.js';
 import { collideLineSolid } from './crusher.js';
-import { createSpriteAnim, stepSpriteAnim } from './chasers.js';
+import { animTicks, createSpriteAnim, stepSpriteAnim } from './chasers.js';
 import { defineRecord } from './entityRecords.js';
 import { TILE_TYPE_IDS } from '../flashPanel/seedlingSemantics.js';
 
@@ -361,4 +361,13 @@ export function hitWallFlyer(w, { damage = 1, t = '', frozen = false } = {}) {
         };
     }
     return { w: { ...next, vx: -next.vx, vy: -next.vy }, landed: true, killed: false };
+}
+
+/**
+ * ⛓ seedling-fidelity-wallflyer W6: the "die" anim's length in graphic updates, from `add("die", [5, 6, 7, 8], 10)`
+ * through `chasers.animTicks` (the one stepping rule) — the number `enemyDamage.removalTicksAfterHit('WallFlyer', …)`
+ * takes, since `CORPSE_COUNTING.WallFlyer` carries no chaser tag to resolve it from.
+ */
+export function wallFlyerDeathTicks() {
+    return animTicks(WALLFLYER.dieAnimFrames, WALLFLYER.dieAnimRate);
 }

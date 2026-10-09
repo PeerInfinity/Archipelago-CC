@@ -3456,6 +3456,36 @@ export function createLevelRun({
         drillEvents.push({ t: ticksCompleted + 1, level, id: d.id, kind: 'killed', by });
     };
     /**
+     * ⛓ seedling-fidelity-wallflyer W6 (`CONTACT_FIDELITY.wallFlyerKill`): a wallflyer KILL, staged. `hitWallFlyer`
+     * has already put the "die" anim on the body (`WallFlyer.startDeath` plays it and sets no `destroy`);
+     * `stepWallFlyer` keeps MOVING it (`Mobile.mobileUpdate` runs while `!destroy`) and gates its contact and its
+     * trigger on the anim, `stepWallFlyerGraphic`'s `endAnim` sets `destroy`, and `Mobile.death`'s fade removes it.
+     * `totalEnemies()` counts it until that removal, so the ledger is computed with EVERY wallflyer the visit has
+     * already doomed (dying or fading) and this one taken out: a room whose `tset == -1` lock that removal would
+     * open refuses by name, as a drill kill does. The class has no `removed()` and no `setPersistence`.
+     * OFF: the refusal the two call sites raised before this slice, word for word (`refusal`).
+     */
+    const stageWallFlyerKill = (w, by, t, refusal) => {
+        if (!CONTACT_FIDELITY.wallFlyerKill) throw new Error(refusal);
+        const census = world.combat?.enemies ?? null;
+        const doomed = new Set([w.id]);
+        for (const o of wallFlyerStateFor(level).values()) {
+            if (o.removed || o.destroy || o.dieAnim !== null) doomed.add(o.id);
+        }
+        const before = (census ?? []).filter((e) => !e.removed).map((e) => ({ as3: e.as3, id: `${e.tag}@${e.x},${e.y}` }));
+        const after = before.filter((b) => !(b.as3 === 'WallFlyer' && doomed.has(b.id)));
+        const led = killLockLedger(levelSource(level), {
+            bodiesBefore: before.filter((b) => !(b.as3 === 'WallFlyer' && doomed.has(b.id) && b.id !== w.id)),
+            bodiesAfter: after,
+        });
+        if (!led.nil || (led.locks.length > 0 && census === null)) {
+            throw new Error(`levelRun: the ${by} kill of ${w.id} in level ${level} at tick ${t} moves `
+                + `\`totalEnemies()\` past a kill lock (${led.why ?? 'no combat census'}). Refused by name `
+                + '(seedling-fidelity-wallflyer W6).');
+        }
+        wallFlyerEvents.push({ t, level, id: w.id, kind: 'killed', by, x: w.x, y: w.y, vx: w.vx, vy: w.vy });
+    };
+    /**
      * ⛓⛓⛓ R8 SLICE 1 — THE BRIDGED CHASERS, PER VISIT.
      *
      * ⚠ PER VISIT, exactly like a spinner and for the stronger version of its
@@ -6249,10 +6279,11 @@ export function createLevelRun({
                         frozen: ceremony !== null,
                     });
                     if (verdict.killed) {
-                        throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} KILLS ${w.id} `
-                            + `in level ${level}. \`WallFlyer.startDeath\` plays "die"; its die anim, its fade and `
-                            + 'its place in `totalEnemies()` are not staged for this class. Refused by name '
-                            + '(seedling-fidelity-terrain W2).');
+                        // ⛓ fidelity WALLFLYER W6: staged ON; OFF throws the W2 refusal verbatim.
+                        stageWallFlyerKill(w, weapon, ticksCompleted, `levelRun: the ${weapon} press at tick `
+                            + `${pressTick} KILLS ${w.id} in level ${level}. \`WallFlyer.startDeath\` plays "die"; `
+                            + 'its die anim, its fade and its place in `totalEnemies()` are not staged for this '
+                            + 'class. Refused by name (seedling-fidelity-terrain W2).');
                     }
                     wst.set(w.id, verdict.w);
                     if (verdict.landed) wallFlyerEvents.push({ t: ticksCompleted, level, id: w.id, kind: 'struck',
@@ -6260,12 +6291,12 @@ export function createLevelRun({
                 }
                 chaserPressHits.push({
                     t: ticksCompleted, level, id: w.id, tag: 'wallflyer', weapon,
-                    landed: verdict.landed, killed: false, reach,
+                    landed: verdict.landed, killed: verdict.killed === true, reach,
                     hits: (verdict.w ?? w).hits, hitsTimer: (verdict.w ?? w).hitsTimer,
                     why: reach > reachLimit ? `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}`
                         : (blocker ? `collideLine("Solid") meets ${blocker.tag ?? 'a Solid'}` : null),
                 });
-                hits.push({ as3: 'Enemy', id: w.id, landed: verdict.landed, killed: false });
+                hits.push({ as3: 'Enemy', id: w.id, landed: verdict.landed, killed: verdict.killed === true });
             } else if (r.as3 === 'Enemy') {
                 /**
                  * ── ⛓⛓⛓ R9 SLICE 12: THE SWING AT A CHASER ──────────────
@@ -10190,8 +10221,10 @@ export function createLevelRun({
      * `Enemy.hitPlayer` is `p.hit(this, 3, new Point(x, y), damage)` — so the
      * dark suit retaliates INTO the flyer (`e.hit(1, …, 1, "Suit")`, R1's
      * table), whose `knockback` override is `v = -v`. A retaliation that
-     * would KILL one is refused by name: `startDeath` plays "die", and the die
-     * anim, the fade and `totalEnemies()` are not staged for this class.
+     * KILLS one goes through `stageWallFlyerKill` (fidelity WALLFLYER W6):
+     * staged with `CONTACT_FIDELITY.wallFlyerKill` ON — the "die" anim's first
+     * graphic update is THIS tick's, as the retaliation runs inside the body's
+     * own `hitPlayer` — and refused by name OFF.
      */
     function stepWallFlyersNow() {
         if (noclip || noDamage) return;
@@ -10223,8 +10256,9 @@ export function createLevelRun({
                                 damage: DARK_SUIT_DAMAGE, t: 'Suit', frozen: ceremony !== null,
                             });
                             if (r.killed) {
-                                throw new Error(`levelRun: the dark suit's retaliation KILLS ${id} at `
-                                    + `tick ${t} in level ${level}. \`WallFlyer.startDeath\` plays "die"; `
+                                // ⛓ fidelity WALLFLYER W6: staged ON; OFF throws the R2-swim D1 refusal verbatim.
+                                stageWallFlyerKill(cur, 'suit', t, `levelRun: the dark suit's retaliation KILLS `
+                                    + `${id} at tick ${t} in level ${level}. \`WallFlyer.startDeath\` plays "die"; `
                                     + 'its die anim, its fade and its place in `totalEnemies()` are not '
                                     + 'staged for this class. Refused by name (R2-swim D1).');
                             }
@@ -13127,6 +13161,41 @@ export function createLevelRun({
             const v = enemyKnockbackV(s, { x: s.vx, y: s.vy }, SHIELD_FORCE, p);
             sp.byId.set(id, { ...s, vx: v.x, vy: v.y });
             row({ family: 'spinner', id, shoved: true, v });
+        }
+        /**
+         * ⛓ seedling-fidelity-wallflyer W7 (`CONTACT_FIDELITY.wallFlyerShieldBump`) — a wallflyer is `type = "Enemy"`,
+         * so the moving shield's `collideTypesInto(enemies, …)` meets it too. Its `knockback` is OVERRIDDEN to
+         * `v = -v` (`WallFlyer.as:172-176`) with NO `!destroy` / "die" gate (`Enemy.knockback`'s gate is in the
+         * method it replaces), so a resting flyer goes nowhere, a flying one turns back on every tick the box still
+         * touches it, and a dying one is turned too. The dark arm is `Enemy.hit(5, p, 0.5, "Shield")` through
+         * `hitWallFlyer` (its `knockback` is the same reversal), and a kill there is `stageWallFlyerKill`'s.
+         * MEASURED on the game (survey step 47's walk, L22 t52): `wallflyer@64,80` reverses with `hits_timer` 24
+         * — no hit — as the player's shield crosses it. Like the wallflyer's step, it is asked only where
+         * `stepWallFlyersNow` steps the bodies (not under `noDamage`).
+         */
+        if (CONTACT_FIDELITY.wallFlyerShieldBump && !noDamage) {
+            const wst = wallFlyerStateFor(level);
+            for (const [id, w] of wst) {
+                if (w.removed) continue;
+                if (!shieldBumpTouches(state, slashing, wallFlyerRect(w), rendered)) continue;
+                if (dark && w.hitsTimer <= 0) {
+                    const verdict = hitWallFlyer(w, { damage: DARK_SHIELD_DAMAGE, t: 'Shield', frozen: ceremony !== null });
+                    if (verdict.killed) {
+                        stageWallFlyerKill(w, 'shield', ticksCompleted + 1, `levelRun: the dark shield KILLS ${id} `
+                            + `at tick ${ticksCompleted + 1} in level ${level}. \`WallFlyer.startDeath\` plays "die"; `
+                            + 'its die anim, its fade and its place in `totalEnemies()` are not staged for this class '
+                            + '(`wallFlyerKill` is OFF). Refused by name (seedling-fidelity-wallflyer W7).');
+                    }
+                    wst.set(id, verdict.w);
+                    row({ family: 'wallflyer', id, hit: true, landed: verdict.landed, hits: verdict.w.hits,
+                        hitsTimer: verdict.w.hitsTimer, ...(verdict.killed ? { killed: true } : {}),
+                        v: { x: verdict.w.vx, y: verdict.w.vy } });
+                    continue;
+                }
+                const v = { x: -w.vx, y: -w.vy };
+                wst.set(id, { ...w, vx: v.x, vy: v.y });
+                row({ family: 'wallflyer', id, shoved: v.x !== 0 || v.y !== 0, v });
+            }
         }
         /**
          * ⛓ SEEDLING FIDELITY KILLLOCK K5 (`KILLLOCK_BODIES.darkShieldIceTurret`) — `Player.shieldBump` hits EVERY

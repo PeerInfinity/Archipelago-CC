@@ -91,6 +91,41 @@
  */
 
 /**
+ * W6 — A WALLFLYER KILL IS STAGED (slice `seedling-fidelity-wallflyer`; `wallFlyer.js`, `Enemies/WallFlyer.as`).
+ *
+ *     WallFlyer.as:47-51    startDeath(t): play("die"); dieEffects(t)       — NO `destroy` (Enemy.startDeath is not called)
+ *     WallFlyer.as:53-57    update(): super.update(); if (destroy || currentAnim == "die") return;  — no trigger, no relaunch
+ *     WallFlyer.as:99-111   endAnim(): the "die" arm sets `destroy`             — `add("die", [5, 6, 7, 8], 10)`
+ *     Mobile.as:31-43,60-70 mobileUpdate(): while `!destroy` the body still MOVES; death(): alpha -= 0.1 → FP.world.remove
+ *     Enemy.as:211-220      hitPlayer(): gated on `currentAnim != "die"` and `!destroy` — the dying body is harmless
+ *
+ * W2 refused the killing sword press by name (and R2-swim D1 the dark suit's killing retaliation): survey step 47
+ * (L22 → L29) and the JS arc's `level_22 -> level_29__r2c2` stopped there. `wallFlyer.js` already transcribed the die
+ * anim, `endAnim`'s `destroy`, `Mobile.death`'s fade and the removal; only the entry was refused. Flag ON: both kills
+ * are staged through `levelRun.stageWallFlyerKill`, whose `killLockLedger` is COMPUTED (L22, L25 and L27 hold no
+ * `tset == -1` lock, so it is a scanned nil; a room with one that the removal would open refuses by name). The class
+ * has no `removed()` and no `setPersistence`: a kill writes nothing, and a re-entered room rebuilds the body.
+ * `dieEffects("Sword")` adds a `SlashHit` (an untyped visual Entity that nothing reads). OFF: the refusals, verbatim.
+ */
+//   → `CONTACT_FIDELITY.wallFlyerKill`
+
+/**
+ * W7 — THE MOVING SHIELD TURNS A WALLFLYER (slice `seedling-fidelity-wallflyer`).
+ *
+ *     Player.as:1691-1708   shieldBump(): if (shieldObj && v.length > 0) shieldObj.collideTypesInto(enemies, …) →
+ *                           hasDarkShield && hitsTimer <= 0 ? o.hit(shieldForce, p, darkShieldDamage, "Shield")
+ *                                                           : o.knockback(shieldForce, p)
+ *     WallFlyer.as:172-176  knockback(): v.x = -v.x; v.y = -v.y          — no `!destroy` / "die" gate
+ *
+ * `levelRun.shieldBumpNow` (U9-swim) shoved the chasers and the spinners and never asked the wallflyers. MEASURED on
+ * the game while witnessing W6 (survey step 47's walk, L22, the shield held since step 40): at t52 `wallflyer@64,80`
+ * reverses (+4 → −4) with `hits_timer` 24 and no hit, and back again at t53, as the player's shield box crosses it;
+ * the model's flies on. Flag ON: the bump reverses a touched flyer (the dark arm is `hitWallFlyer` with
+ * `t: "Shield"`, damage 0.5, and a kill is `stageWallFlyerKill`'s). OFF: the wallflyers are not asked, verbatim.
+ */
+//   → `CONTACT_FIDELITY.wallFlyerShieldBump`
+
+/**
  * THE SWITCHES. They are read at CALL time, so a measurement can turn any of them on without editing this file:
  *   - node: `SEEDLING_CONTACT_FIDELITY=all` (or a comma list of the keys) in the environment, read once at import;
  *   - a test: `withContactFidelity({ drillLive: true }, () => …)`, which restores the previous values.
@@ -113,6 +148,13 @@ export const CONTACT_FIDELITY = {
     drillLive: true,
     /** fidelity BOBSOLDIER W4 — see its paragraph above. */
     bobSoldierLive: true,
+    /**
+     * fidelity WALLFLYER W6 — see its paragraph above. ON by default: with it on, no committed tape replay (tapeRunner
+     * 557 pairs, md5 unchanged), producer `--check` or identity row moved; only the refusal it retires changes.
+     */
+    wallFlyerKill: true,
+    /** fidelity WALLFLYER W7 — see its paragraph above. ON by default, on the same measurement as W6. */
+    wallFlyerShieldBump: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

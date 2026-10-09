@@ -96,6 +96,7 @@ import {
 import { RESPONDERS, opensOnTick } from './activators.js';
 import { defineRecord } from './entityRecords.js';
 import { KILLLOCK_BODIES } from './killLockBodies.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 export class EnemyDamageError extends Error {
     constructor(message) { super(message); this.name = 'EnemyDamageError'; }
@@ -416,7 +417,23 @@ export const KILL_ARM_POLICY = Object.freeze({
             + 'the first `modelled` row whose kill really opens one) and the '
             + '`removed()` write, which for a `tag = -1` body lands OUT OF BAND.',
     }),
-    WallFlyer: Object.freeze({ policy: 'refused', why: 'the Bob cost; off every R5 route' }),
+    /**
+     * ⛓ seedling-fidelity-wallflyer W6 — `modelled` while `CONTACT_FIDELITY.wallFlyerKill` is ON, `refused` with the
+     * old words while it is OFF (a getter, as `Jellyfish`'s). ⚠ The press arm that reaches a wallflyer is the
+     * `family: 'wallflyer'` arm (`levelRun`, TERRAIN W2), which reads the switch itself; this row answers the class.
+     */
+    WallFlyer: Object.freeze({
+        get policy() { return CONTACT_FIDELITY.wallFlyerKill ? 'modelled' : 'refused'; },
+        get why() {
+            return CONTACT_FIDELITY.wallFlyerKill
+                ? '⛓ fidelity WALLFLYER W6: `Enemy.hit` with `WallFlyer.knockback` (`v = -v`, none on the killing hit) '
+                    + '— `wallFlyer.hitWallFlyer`; `startDeath` plays "die" (4 frames at rate 10) with NO `destroy`, '
+                    + 'during which the body keeps MOVING (`Mobile.mobileUpdate` runs while `!destroy`) and neither '
+                    + 'hurts nor triggers; `endAnim` sets `destroy`, the fade follows, and the removal moves '
+                    + '`totalEnemies()` — ledgered by `levelRun.stageWallFlyerKill`'
+                : 'the Bob cost; off every R5 route';
+        },
+    }),
     /**
      * ⛓⛓⛓ U7-swim D3 — THE SIXTH `modelled` ROW, AND THE SECOND CHASER.
      *
@@ -699,6 +716,16 @@ export const CORPSE_COUNTING = Object.freeze({
             + '`removed()` writes `Game.setPersistence(tag, false)` — see `KILL_SIDE_WRITES`.',
         src: 'Enemies/Spinner.as:57-64 (removed); Enemies/Enemy.as:182-186 (startDeath)',
     }),
+    // ⛓ fidelity WALLFLYER W6: Bob's two-stage shape, with `add("die", [5, 6, 7, 8], 10)` — and a corpse that FLIES.
+    WallFlyer: Object.freeze({
+        shape: 'anim+fade', removesBody: true, chaserTag: null,
+        why: '`WallFlyer.startDeath` is `play("die"); dieEffects(t)` — no `destroy` — and `endAnim`\'s "die" arm sets '
+            + 'it, then `Mobile.death`\'s fade. ⛔ While the anim plays `Mobile.mobileUpdate` still MOVES the body '
+            + '(it runs while `!destroy`, and the killing hit takes no knockback), so a flyer killed in flight keeps '
+            + 'flying; `hitPlayer` and the trigger are gated on the anim. `chaserTag` is null: the length comes from '
+            + '`wallFlyer.WALLFLYER.dieAnimFrames`/`dieAnimRate` (`wallFlyerDeathTicks`).',
+        src: 'Enemies/WallFlyer.as:47-51 (startDeath), :99-111 (endAnim); Mobile.as:31-43,60-70',
+    }),
     /**
      * ⛓⛓⛓ SEEDLING FIDELITY F4: A FIFTH SHAPE, `anim`. `SandTrap.startDeath`
      * plays "die" and never sets `destroy`, and its `endAnim` calls
@@ -804,6 +831,12 @@ export const KILL_SIDE_WRITES = Object.freeze({
         why: '⛓ U7-swim: NO `removed()` anywhere in its chain — `Puncher`, `Enemy` and '
             + '`Mobile` declare none, and `Entity.removed()` is empty — and no '
             + '`setPersistence` in the class. A puncher kill writes nothing.',
+    }),
+    WallFlyer: Object.freeze({
+        writes: 'none',
+        why: '⛓ fidelity WALLFLYER W6: no `removed()` in `WallFlyer`, `Enemy` or `Mobile`, and no `setPersistence` in the '
+            + 'class (its `coins` are never dropped: `dropCoins` has no caller in it). A wallflyer kill writes nothing, '
+            + 'and a re-entered room rebuilds the body at its `.oel` cell.',
     }),
     ShieldBoss: Object.freeze({
         writes: 'ownTag',
