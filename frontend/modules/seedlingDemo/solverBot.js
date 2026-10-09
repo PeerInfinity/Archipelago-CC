@@ -11588,10 +11588,21 @@ function breakStanceCandidates(run, rock, opts) {
     const candidates = [];
     let outOfReach = 0;
     let noRect = 0;
+    let offLevel = 0;
+    /**
+     * ⛓⛓⛓ seedling-fidelity-ghostsword (D3): A CELL OUTSIDE THE LEVEL IS NO STANCE. `Player.update` clamps the
+     * player inside `[originX, FP.width + originX - width]` (and y alike), so a ring cell past the level's edge can
+     * never be stood in — but `plannerObstacleAt` answers "no obstacle" there, and L3's `breakablerockghost@0,64`
+     * (on the left edge) derived the stance (-8,56): the walk stalled against the Stone at x 8 for 400 ticks
+     * (divergence legs 55 and 58, played on the game). A rock away from every edge has no such candidate.
+     */
+    const levelW = Number.isFinite(run.world.width) ? run.world.width * TILE_SIZE : Infinity;
+    const levelH = Number.isFinite(run.world.height) ? run.world.height * TILE_SIZE : Infinity;
     for (let dy = -2; dy <= 2; dy += 1) {
         for (let dx = -2; dx <= 2; dx += 1) {
             if (dx === 0 && dy === 0) continue;
             const c = nodeCentre(cell.tx + dx, cell.ty + dy, pitch);
+            if (c.x < 0 || c.y < 0 || c.x > levelW || c.y > levelH) { offLevel += 1; continue; }
             if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
             if (distanceRectPoint(c.x, c.y, rock.rect) > SLASH_REACH) { outOfReach += 1; continue; }
             if (!rectsOverlapLocal(slashRectToward(c, rock.rect), rock.rect)) {
@@ -11602,7 +11613,7 @@ function breakStanceCandidates(run, rock, opts) {
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
-    return { candidates, outOfReach, noRect };
+    return { candidates, outOfReach, noRect, offLevel };
 }
 
 /**
