@@ -1,8 +1,10 @@
 # Rate of the intermittent "World Seedling leaked MultiWorld object" leak-check failure
 # (worlds/seedling/test, test/bases.py WorldTestBase.tearDown) on macos-latest / 3.13, with
 # ubuntu 3.13 as the control. Two legs:
-#   triggered — the kivy-importing test that lowers the root logger, then each Seedling
-#              class's test_fill first, `repeat` times in fresh processes (the flake's exact condition);
+#   triggered — the kivy-importing test that lowers the root logger, then each class's test_fill
+#              first in `target` (default Seedling's), `repeat` times in fresh processes (the flake's
+#              exact condition). Any world's leak-checked WorldTestBase is exposed alike, e.g.
+#              target=worlds/apquest/test;
 #   suite    — the full `pytest -n auto` that unittests.yml runs, 4 parallel jobs per OS.
 # Each leg's summary's first line is `Rate: k/N` (k = runs with a leak failure).
 
@@ -14,6 +16,9 @@ on:
       repeat:
         description: triggered runs per OS
         default: '30'
+      target:
+        description: pytest path whose test_fill runs after the polluter (triggered leg)
+        default: worlds/seedling/test/TestSeedling.py
       suite:
         description: also run the full-suite leg
         type: boolean
@@ -43,10 +48,11 @@ jobs:
       env:
         SKIP_REQUIREMENTS_UPDATE: "1"
       run: python Launcher.py --update_settings
-    - name: Repeat the Seedling tests
+    - name: Repeat the target's test_fill after the polluter
       env:
         SKIP_REQUIREMENTS_UPDATE: "1"
         REPEAT: ${{ inputs.repeat }}
+        TARGET: ${{ inputs.target }}
         # Importing kivy (installer_gui) sets the ROOT logger to NOTSET (kivy/logger.py, KIVY log mode);
         # running it first, then test_fill as each class's first test, is the condition the CI flake needs.
         POLLUTER: worlds/json_tools_installer/test/test_gui_invariant.py::test_component_property_defaults_match_default_components
@@ -54,14 +60,14 @@ jobs:
         mkdir -p leak-logs
         k=0; bad=0
         for i in $(seq 1 "$REPEAT"); do
-          python -m pytest -p no:cacheprovider -q -rfs "$POLLUTER" worlds/seedling/test/TestSeedling.py -k "defaults_match or test_fill" > "leak-logs/run-$i.log" 2>&1 && rc=0 || rc=$?
+          python -m pytest -p no:cacheprovider -q -rfs "$POLLUTER" "$TARGET" -k "defaults_match or test_fill" > "leak-logs/run-$i.log" 2>&1 && rc=0 || rc=$?
           n=$(grep -ac "^FAILED .*::test_fill" "leak-logs/run-$i.log" || true)
           if grep -aq "^SKIPPED" "leak-logs/run-$i.log"; then bad=$((bad+1)); echo "run $i: NOT TRIGGERED (polluter skipped)"; grep -a "^SKIPPED" "leak-logs/run-$i.log";
           elif [ "$n" -gt 0 ] && grep -aq "leaked MultiWorld object" "leak-logs/run-$i.log"; then k=$((k+1)); echo "run $i: LEAK in $n classes";
           elif [ "$rc" != 0 ]; then bad=$((bad+1)); echo "run $i: OTHER FAILURE rc=$rc"; tail -20 "leak-logs/run-$i.log";
           else echo "run $i: ok"; fi
         done
-        { echo "Rate: $k/$REPEAT leaked (triggered, ${{ matrix.os }}, other failures / not triggered: $bad)"; } | tee -a "$GITHUB_STEP_SUMMARY"
+        { echo "Rate: $k/$REPEAT leaked (triggered, $TARGET, ${{ matrix.os }}, other failures / not triggered: $bad)"; } | tee -a "$GITHUB_STEP_SUMMARY"
     - uses: actions/upload-artifact@v7.0.0
       if: always()
       with:
