@@ -165,8 +165,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity BOBSOLDIER: +3 (248) — `bobsoldier-sword`, `bobsoldier-kill`, `bobsoldier-corpse`, inert.
         // ⛓ hammer-phase A: +2 (250) — `hammer-a-l18-escape21`, `hammer-a-l18-escape15`, inert.
         // ⛓ fidelity GHOSTSWORD: +3 (253) — the three ghost-sword witnesses (no dialogue on any), inert.
-        expect(rows).toHaveLength(253);
-        expect(rows.length - parted.length).toBe(252);
+        // ⛓ fidelity WALLFLYER: +3 (256) — `wallflyer-kill`, `wallflyer-kill-flight`, `wallflyer-shield-bump`, inert.
+        expect(rows).toHaveLength(256);
+        expect(rows.length - parted.length).toBe(255);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

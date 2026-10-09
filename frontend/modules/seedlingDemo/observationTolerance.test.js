@@ -115,7 +115,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity BOBSOLDIER: +3 (248) — `bobsoldier-sword`, `bobsoldier-kill`, `bobsoldier-corpse`.
         // ⛓ hammer-phase A: +2 (250) — `hammer-a-l18-escape21`, `hammer-a-l18-escape15`.
         // ⛓ fidelity GHOSTSWORD: +3 (253) — `ghostsword-l3-rockghost`, `ghostsword-l3-rock`, `ghostsword-l30-bobsoldier`.
-        expect(names.length).toBe(253);
+        // ⛓ fidelity WALLFLYER: +3 (256) — `wallflyer-kill`, `wallflyer-kill-flight`, `wallflyer-shield-bump`.
+        expect(names.length).toBe(256);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -165,7 +166,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity BOBSOLDIER: 248 with `bobsoldier-sword`, `bobsoldier-kill`, `bobsoldier-corpse`.
         // ⛓ hammer-phase A: 250 — both escape witnesses cross to L19, a transition to swap.
         // ⛓ fidelity GHOSTSWORD: 253 with `ghostsword-l3-rockghost`, `ghostsword-l3-rock`, `ghostsword-l30-bobsoldier`.
-        expect(tally.swapped).toBe(253);
+        // ⛓ fidelity WALLFLYER: 256 with `wallflyer-kill`, `wallflyer-kill-flight`, `wallflyer-shield-bump`.
+        expect(tally.swapped).toBe(256);
     }, 600_000);
 });
 

@@ -2025,6 +2025,27 @@
       "noHazards": []
     },
     {
+      "file": "wallflyer-kill-flight.json",
+      "tickCount": 114,
+      "bootLevel": 22,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "wallflyer-kill.json",
+      "tickCount": 98,
+      "bootLevel": 22,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "wallflyer-shield-bump.json",
+      "tickCount": 24,
+      "bootLevel": 22,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "watcher-l114-silent.json",
       "tickCount": 32,
       "bootLevel": 114,

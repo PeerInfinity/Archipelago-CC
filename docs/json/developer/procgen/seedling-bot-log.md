@@ -14805,6 +14805,53 @@ state*, `KEEP_POLICY` removal when convenient, then oracle and solver features
 **as the vanilla playthrough needs them**. The splice stays R9's first solver
 act (R8's close, option A).
 
+### Seedling fidelity WALLFLYER — a wallflyer dies (and keeps flying while it does), and the shield turns one
+
+Wave 9 (model coverage). The live playthrough's next wall after the hammer arc: survey step 47 (L22 → L29) and the
+JS arc's leg `level_22 -> level_29__r2c2` refused *"the sword press … KILLS wallflyer@64,80 … not staged for this
+class"* (TERRAIN W2). The report is `CC/docs/cloud-reports/seedling-fidelity-wallflyer.md`.
+
+**D1 — the class, read and measured.** `WallFlyer.startDeath` is `play("die"); dieEffects(t)`: no `destroy`, and
+`dieEffects("Sword")` only adds an untyped `SlashHit`. `endAnim`'s "die" arm sets `destroy`, then `Mobile.death` fades
+the alpha (11 subtractions) and removes the body. `totalEnemies()` counts it until then. There is no `removed()`, no
+`setPersistence` and no coin drop. While the anim plays, `Enemy.update` still runs `mobileUpdate`, so the body MOVES,
+and the killing hit takes no knockback. `hitPlayer` and the trigger are gated on the anim, and so is the contact,
+already by the i-frame (30 > 13). New instrument `probe-seedling-wallflyer-mobiles.mjs` compares every WallFlyer row
+`botMobiles()` reports (position, velocity, hits, `hits_timer`, the "die" anim and its index, `destroy`, alpha,
+presence) against the model.
+
+**D2 — W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` (`contactFidelity`, both ON).** `wallFlyer.js` already
+transcribed the anim, `destroy`, the fade and the removal; only the entry was refused. W6 routes every kill (the press,
+the dark suit's retaliation, the dark shield) through `levelRun.stageWallFlyerKill`, which computes `killLockLedger`
+with every doomed flyer taken out (L22/L25/L27 hold no `tset -1` lock: a scanned nil). W7 was found on the game while
+witnessing W6: on step 47's own walk the flyer reverses at L22 t52 with `hits_timer` 24 and no hit. That is
+`Player.shieldBump` → `WallFlyer.knockback` (`v = -v`, no gate), which `shieldBumpNow` never asked of a wallflyer. With
+both ON the game and the model agree on that walk at 0 px, the player included.
+
+**D3 — witnesses (p4f, headless, recorded):** `wallflyer-kill` (at rest from below: three presses t3/34/65; "die" t66,
+`destroy` t79, the count 4 → 3 at t90), `wallflyer-kill-flight` (the kill at t85 on a flyer moving +4: the corpse flies
+x 79 → 131 through the player, `destroy` t99, removed t110), `wallflyer-shield-bump` (turns at t5/7/9/13). The body
+probe is worst |Δ| 0 on all three. `fixtures/wallflyer-witness/` keeps the game's samples, and
+`fidelityWallFlyer.test.js` replays them in node.
+
+**Moved, measured.** Survey step 47: REFUSED → SOLVED 201 t (the plan no longer kills: with W7 the shield turns the
+flyer, and W7 alone solves it). Step 53 (L22 → L21): SOLVED 278 → SOLVED 406 t with 2 deaths. The 278 walk, played
+on the game, never reaches the exit (the new model follows it at 0 px, the old one leaves at t36). The new plan is
+truer and bad: the solver's danger pricing does not see a shield-turned flyer (residue). JS-arc legs 262 and 263:
+refused → done (local run of the sweep's probe); 265 is the same t112 residue before and after. No committed tape,
+producer `--check` or identity row moved.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A refusal can hide a missing mechanism one tick earlier.** The kill refusal was the visible wall, but the plan
+  behind it was built on a flyer the shield should already have turned. Lifting the refusal alone gave a SOLVED walk
+  the game does not play. Only the body probe on the solver's own walk showed it.
+- **An override drops the base method's gate.** `WallFlyer.knockback` replaces `Enemy.knockback`, whose
+  `!destroy`/"die" test goes with it. A per-family copy of the base gate would look right on every witness (mutant M3
+  is green: no witness shields a dying flyer).
+- **A gate can be dead by arithmetic.** `hitPlayer`'s "die" test never decides for this class: every kill sets a
+  30-tick i-frame and the anim lasts 13 (mutant M5 is an equivalent mutant).
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the

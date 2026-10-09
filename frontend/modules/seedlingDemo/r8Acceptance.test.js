@@ -381,6 +381,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'bobsoldier-sword', 'bobsoldier-kill', 'bobsoldier-corpse',
             // ⛓⛓⛓ Seedling fidelity GHOSTSWORD: the enemy witness, in L30.
             'ghostsword-l30-bobsoldier',
+            // ⛓⛓⛓ Seedling fidelity WALLFLYER: the two kill witnesses and the shield-bump witness, in L22.
+            'wallflyer-kill', 'wallflyer-kill-flight', 'wallflyer-shield-bump',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -426,7 +428,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // `ladder2-l104-beam` (jellyfish rooms).
         // ⛓ Seedling fidelity GHOSTSWORD adds one — `ghostsword-l30-bobsoldier` (L30); its two L3 witnesses enter no
         // bridged room.
-        expect(out.exposed).toBe(74);
+        // ⛓ Seedling fidelity WALLFLYER adds three (77 with GHOSTSWORD) — `wallflyer-kill`, `wallflyer-kill-flight`,
+        // `wallflyer-shield-bump` (L22).
+        expect(out.exposed).toBe(77);
         expect(out.tapes).toEqual([
             'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
@@ -451,6 +455,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'u12-pull-carry', 'u12-pull-cross',
             'u7-puncher-kill', 'u7-puncher-punch',
             'u9-shield-bob-shove', 'u9-shield-bob-standing', 'u9-shield-puncher',
+            'wallflyer-kill', 'wallflyer-kill-flight', 'wallflyer-shield-bump',
         ]);
     });
 
@@ -605,6 +610,10 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'axe-l61-reach-l63': { tape: {}, levels: [63] },
             'burn-l44-reach-exit': { tape: {}, levels: [45] },
             'ladder2-l104-beam': { tape: {}, levels: [104, 105] },
+            // ⛓ fidelity WALLFLYER's three L22 witnesses — the mirror rule.
+            'wallflyer-kill': { tape: {}, levels: [22] },
+            'wallflyer-kill-flight': { tape: {}, levels: [22] },
+            'wallflyer-shield-bump': { tape: {}, levels: [22] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
