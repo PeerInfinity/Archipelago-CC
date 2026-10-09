@@ -14750,6 +14750,52 @@ reference regenerated.
 2. **A caught exception still pays for its stack.** A preview that throws on a death, inside a search that explores
    every key set, makes the stack capture the hot path. Where a thrown error is caught and discarded by design,
    capture no stack.
+### Seedling fidelity GHOSTSWORD — the ghost sword swings like a sword and hits like the spear, and it needs the sword
+
+⚖ The user (2026-10-05): *"The first priority is to expand the model to include everything in the game."* Wave 9's
+GHOSTSWORD slice. The route survey's whole endgame (ten steps, L101–L115) refused on one item: `levelRun` threw on a
+ghostsword press, and the break verb refused a `breakablerockghost`. The report is
+`CC/docs/cloud-reports/seedling-fidelity-ghostsword.md`.
+
+**What the game does (D1).** `useItem` case 4 is case 0 (`slashing = true`), and which sword swings is `getSword()`'s:
+the `hasGhostSword` flag, re-read every update. The rect is `getSlashRect`'s ghost arm, 24 along the swing and
+`width * 2` = 48 across it, at scale 1 even on a dash (`render`'s squash is `!hasGhostSword`). The reach gate is 24; the
+`collideLine("Solid")` gate is waived for every target (`|| hasGhostSword`); the call is
+`genericHit(e, "Spear", swordForce 5, ghostSwordDamage 2)`, after `spearDirection = direction`. The animation is 7 frames
+at 30 and 4 at 20, so a swing is 7 hit tests and a dash 6 (the game's `Bot.slashTests`: 7 per press, = the model). The
+rock arm passes the FLAG (`hasGhostSword ? 1 : 0`), so both rock types break. And `slash()` is called from `update()`
+only `if (hasSword)`: a ghost sword held without the sword plays its swing and never tests.
+
+**The model (D2).** `ghostSword.js`; `levelRun.applyThrust`'s ghost arm (the Spear audit, a 24 px reach cut, the line
+waived, `pressHitType`/`pressHitDamage` for every arm); `presses.swordWindowStep`'s ghost repeats; the break verb's
+ghostsword row (through `solverView`). Refused by name: a ghost press on a bridge `Tile` or a `PushableBlockSpear` (the
+Spear arm on seven tests), and the ghost sword without the sword. Switch `GHOSTSWORD_PRESS`, ON: every committed tape
+and all six producer `--check`s are unmoved with it on (no committed run held the ghost sword).
+
+**Witnesses, on the game (p4f, headless), reproduced at 0 px:** `ghostsword-l3-rockghost` (L3's ghost rock across the
+water column from 18.65 px, past the sword's 16; the walk then takes the teleporter under it to L111),
+`ghostsword-l3-rock` (the plain rock), `ghostsword-l30-bobsoldier` (two ghost hits kill a `hitsMax`-3 BobSoldier:
+the game's `hits` 0 → 2 → 4, the body bit-exact). The same L3 tape without the sword is evidence only: the game never
+breaks the rock.
+
+**Moved, measured.** Survey (local; CI dispatch was 403 for the slice): the ten endgame steps 0/10 → 8/10 SOLVED;
+208 and 213 now stop at L101's `darktrap` danger and its `magicallockfire` (no strategy row). Sweep legs 55, 58, 61
+(L3 → L111 with the ghost sword) refused → done on the game; leg 62 (no items) stays refused. 55 and 58 needed one
+more fix: L3's ghost rock sits on the level's left edge, and the break stance derived (-8,56), a cell outside the level
+that the planner called free; `breakStanceCandidates` now cuts cells outside the level.
+
+**Trap candidates**, for the catalogue to number:
+
+- **The weapon is the flag, not the slot.** `useItem` matches cases 0 and 4 to one arm, and `getSword()` reads
+  `hasGhostSword`; a model that keyed the swing on the slot id would swing the wrong sword from a stale or past-the-end
+  slot.
+- **A caller's guard is part of the verb.** `slash()` itself never asks for the sword; `update()` does, one level up.
+  Reading the verb alone says the ghost sword works by itself. The game says it does not.
+- **An edge cell is free to the planner and unreachable to the player.** `plannerObstacleAt` has no opinion outside
+  the level, and `Player.update` clamps the player inside it. Any lattice ring around a body on an edge needs a bounds
+  cut.
+- **A body probe sees what a stream cannot.** Mutant M2 (damage 2 → 1) left every player stream green; only the
+  BobSoldier's own `hits` (the mobiles probe) went red.
 
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
