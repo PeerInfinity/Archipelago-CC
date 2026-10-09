@@ -14658,6 +14658,49 @@ verdict holds; the time is the escape's search in each draw's certify solve.
    throwing (correct for the run), so every caller that previews many key sets ahead has to catch it. The flip only
    steered a walk somewhere a lookahead could drown; the defect was older than the escape.
 
+### Seedling hammer-phase A3 — the escape as a preference
+
+⚖ The user (2026-10-09), on A2's generation cost: *"A3 fallback first: if no strike passes the escape check, fall
+back to today's behaviour instead of refusing. Every room that solved before still solves, and generation cost should
+return to about what it was."* The report is `CC/docs/cloud-reports/seedling-hammer-a3.md`.
+
+**The cause, measured first (W0): the escape does not refuse those draws; it CERTIFIES them.** `seedlingGenCapacity`'s
+killgate row re-rolls a draw whose kill gate spends a tag (30 locations + the lock's tag > 30). OFF, the draws it seats
+on are the ones whose kill-gate certify REFUSES (*"no corridor from (24,24) to a stance that can collect"*), so the gate
+is dropped and the room seats: seed 57's OFF re-rolls are exactly its refused draws k=3, 5 (and 50); seed 53's is k=1.
+ON, every one of those draws certifies (0 refusals in 56 + 51 draws), the gate keeps its tag, and the room re-rolls
+through its whole budget and GROWS (57: 51 re-rolls, 53: 48). The escape's search is ~35–75% of an ON spinner solve's
+time, but the re-roll count is the cost, and a fallback cannot touch it: it only replaces a refusal, and there is none.
+
+**D1 — the fallback (`HAMMER_ESCAPE_FALLBACK`, on).** `deriveStrike` (both passes) keeps a strike whose escape is a
+claimed negative; if the scan ends with no certified strike it returns the first strike that passed every pre-escape
+condition (the switch OFF's), `escape: 'uncertified'` with the negative's bound (`pressEscape`'s claimed negatives now
+name it). A first cut that let the executor's per-tick re-derivation take that strike moved the residue sweep (r0 462
+→ 572 t): A2 got NO strike there and followed the certificate or took a refuge. ⇒ one rank for a tick with no strike
+in hand, `noStrikeMove`: a certified strike, the certificate in flight, a refuge (A2's three, in A2's order), then the
+uncertified strike, then the refusal. The aim refuses an uncertified press only while one of those exists, else presses
+as OFF does (`fellBack`). A certified strike LATER in tick order is preferred to an earlier uncertified one: that is
+what keeps every A2 walk byte-identical.
+
+**D2 — measured.** Sweep `--twice` 45/45, every row = A2's (verdict, length, key digest, stalls, escapes, hits), 0
+fallbacks; every producer `--check` = A2's digest (exit 0); every generated identity row = A2's bank (acceptance, c3,
+c6, c4, ENEMY, killgate s2/s5/s9); `generated set` OK. Monotonicity on identical records (every certify solve that
+holds a spinner, re-solved OFF / A2 / A3): A2 = A3 on every solve; **one** solve is solved OFF and refused ON —
+`winding post-sword seed 4` (c4), record `209c1c23`, *"There is no step out."* at (73.28,66.05) — a corner deep in the
+kill that no strike-level rule sees (the generator reverts that attempt, so the row still certifies a level, the one
+A2 banked). The generation cost is A2's: seed 57 51 re-rolls (OFF 3), seed 53 48 (OFF 1). Mutant (the fallback off):
+the two A3 rows red; nothing measured moves, because nothing measured falls back.
+
+**D3.** `seedlingGenCapacity`'s re-aim stays OFF (the fallback does not let it pass ON). Surface `--write` (two site
+counts). This page's press-kill paragraph.
+
+**Trap candidates.**
+1. **A cost is not a refusal until a per-draw verdict says so.** The brief read "far more re-rolls" as "the escape
+   refuses more"; per draw it refuses nothing and certifies more. Measure the verdict per draw, ON and OFF, before
+   designing the remedy.
+2. **A strike-level fallback must rank below the moves the requirement already had.** Making an uncertified strike
+   available to the executor's per-tick re-derivation silently replaced the certificate-follow and the refuge.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
