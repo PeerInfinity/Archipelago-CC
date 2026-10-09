@@ -1,0 +1,61 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 3,
+        "x": 28,
+        "y": 64
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": true,
+            "canSwim": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 43,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 1,
+            "to": 2
+        },
+        {
+            "key": "left",
+            "from": 10,
+            "to": 33
+        }
+    ],
+    "name": "ghostsword-l3-rockghost",
+    "description": "⛓⛓⛓ seedling-fidelity-ghostsword — THE GHOST ROCK, ACROSS THE WATER. L3, the player on the dungeon floor east of the water column, with the sword, the ghost sword and the conch: one tick of `left` to face west, then ONE press at t 1. The model: `set slashing` plays the ghost sword's \"slash\" (7 frames at 30 under the `FP.elapsed` clamp — SEVEN hit tests, the sword's five plus two), the rect is `getSlashRect`'s ghost arm (24 along, `width * 2` = 48 across), and its first test reaches `breakablerockghost@0,64` from 18.65 px — past the sword's 16, inside the ghost's 24 — and `genericHit`'s rock arm passes `hasGhostSword ? 1 : 0` = 1, which breaks a rockType-1 rock. The rock is gone at t 8; the walk west swims the column and takes the teleporter under it at t 33 (-> L111). Authored by scripts/procgen/plan-seedling-ghostsword.mjs.",
+    "note": ""
+}

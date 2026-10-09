@@ -379,6 +379,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes the guard named.
             'axe-l61-reach-l63', 'burn-l44-reach-exit', 'ladder2-l104-beam',
             'bobsoldier-sword', 'bobsoldier-kill', 'bobsoldier-corpse',
+            // ⛓⛓⛓ Seedling fidelity GHOSTSWORD: the enemy witness, in L30.
+            'ghostsword-l30-bobsoldier',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -422,11 +424,14 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // `swim-u5-bobboss-encounter` (never inside the leash), and `bobsoldier-sword` / `-kill` / `-corpse`.
         // ⛓ KILLLOCK K1 at the wave-8 harvest adds three — `axe-l61-reach-l63`, `burn-l44-reach-exit`,
         // `ladder2-l104-beam` (jellyfish rooms).
-        expect(out.exposed).toBe(73);
+        // ⛓ Seedling fidelity GHOSTSWORD adds one — `ghostsword-l30-bobsoldier` (L30); its two L3 witnesses enter no
+        // bridged room.
+        expect(out.exposed).toBe(74);
         expect(out.tapes).toEqual([
             'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
-            'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'dash-l16-sword-all', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
+            'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'dash-l16-sword-all', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
+            'ghostsword-l30-bobsoldier', 'l14-swordless-detour',
             'ladder2-l104-beam',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
@@ -594,6 +599,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'bobsoldier-sword': { tape: {}, levels: [30] },
             'bobsoldier-kill': { tape: {}, levels: [30] },
             'bobsoldier-corpse': { tape: {}, levels: [30] },
+            // ⛓ fidelity GHOSTSWORD's enemy witness — the mirror rule.
+            'ghostsword-l30-bobsoldier': { tape: {}, levels: [30] },
             // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes — the mirror rule.
             'axe-l61-reach-l63': { tape: {}, levels: [63] },
             'burn-l44-reach-exit': { tape: {}, levels: [45] },

@@ -199,6 +199,27 @@
       "noHazards": []
     },
     {
+      "file": "ghostsword-l3-rock.json",
+      "tickCount": 43,
+      "bootLevel": 3,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "ghostsword-l3-rockghost.json",
+      "tickCount": 43,
+      "bootLevel": 3,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "ghostsword-l30-bobsoldier.json",
+      "tickCount": 103,
+      "bootLevel": 30,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "grant-sword-room.json",
       "tickCount": 376,
       "bootLevel": 0,

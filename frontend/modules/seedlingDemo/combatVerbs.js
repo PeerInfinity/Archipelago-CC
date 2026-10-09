@@ -182,8 +182,9 @@ export const SLASH_ANIM_DASH = 'slashnarrow';
  * (`seedling-fidelity-dash` report § D1).
  *
  * ⛓ AND THE GHOST SWORD. 7 frames at 30 wrap on update 8 (7 ticks), 4 at 20 on
- * update 7 (6 ticks). `levelRun` REFUSES a ghostsword press for an unrelated
- * reason (`genericHit`'s Spear arm), so nothing consumes those yet.
+ * update 7 (6 ticks). ⛓ Seedling fidelity GHOSTSWORD consumes them
+ * (`ghostSword.GHOST_SLASH_ANIM_TICKS`), and the game's `Bot.slashTests` agrees:
+ * seven tests per ghost press (`ghostsword-l3-rock`, `probe-seedling-dash-window`).
  *
  * @param {number} frameCount  the animation's frame list length
  * @param {number} frameRate   `Spritemap.add`'s `frameRate`

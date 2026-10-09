@@ -102,6 +102,11 @@ import {
 } from './crusher.js';
 // ⛓⛓⛓ seedling-fidelity-bobsoldier D1: the BobSoldier's sword, stepped from the chaser loop.
 import { BOB_SOLDIER, bobSoldierSwordTail, createBobSoldierSword } from './bobSoldier.js';
+// ⛓⛓⛓ seedling-fidelity-ghostsword D2: the ghost sword's press — its rect, reach, Spear arm and window.
+import {
+    GHOSTSWORD_PRESS, GHOST_PRESS_ARMS, GHOST_SWORD_DAMAGE, GHOST_SWORD_REACH,
+    ghostSlashRect, ghostSwingRefusal,
+} from './ghostSword.js';
 import {
     createBossTotem, bossTotemClampY, bossTotemSolidRect, renderBossTotem, stepBossTotem,
     wandFadeFreezeTicks, wandFadeGateOpen, WAND_PICKUP,
@@ -4830,13 +4835,18 @@ export function createLevelRun({
         // a sword granted on this very observation is not in it yet (its
         // slot lands in this frame's tail), and the press slashes anyway.
         if (item === undefined) {
-            return inventory.hasSword || inventory.hasGhostSword ? 'sword' : null;
+            if (!(inventory.hasSword || inventory.hasGhostSword)) return null;
+            // ⛓⛓⛓ GHOSTSWORD: `getSword()` reads the FLAG, so case 0 swings the ghost sword while it is held.
+            return GHOSTSWORD_PRESS.enabled && inventory.hasGhostSword ? 'ghostsword' : 'sword';
         }
         // 0 sword / 4 ghostsword -> slashing; 3 spear -> spearing.
         // ⚠ `set slashing` is guarded on `hasSword || hasGhostSword` and
         // `set spearing` on `hasSpear`, but a slot only EXISTS because the
         // item does, so the guard and the slot say the same thing here.
-        if (item === 0) return 'sword';
+        // ⛓⛓⛓ SEEDLING FIDELITY GHOSTSWORD: cases 0 and 4 are ONE arm (`slashing = true`), and which sword swings
+        // is `getSword()`'s — the `hasGhostSword` FLAG, re-read every update (`Player.as:479`, `:616`). So with the
+        // switch on, a sword slot swings the ghost sword while the flag is up. OFF, the pre-slice reading.
+        if (item === 0) return GHOSTSWORD_PRESS.enabled && inventory?.hasGhostSword ? 'ghostsword' : 'sword';
         if (item === 4) return 'ghostsword';
         if (item === 3) return 'spear';
         // ⛓ R5 SLICE 6/7: THE SECOND WEAPON. `useItem`'s fire arm is
@@ -4870,6 +4880,16 @@ export function createLevelRun({
             + `${item}, which no arm of \`useItem\` matches. An unmodelled weapon is `
             + 'refused rather than silently dropped.');
     };
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY GHOSTSWORD — `genericHit`'s `t` and `d` for a press, ONE spelling for every arm.
+     * `Player.slash` passes `hasGhostSword ? "Spear" : "Sword"` and `ghostSwordDamage` (2); `Player.spear` passes
+     * "Spear" and `spearDamage`; the sword `darkSwordDamage` or `swordDamage`. For the sword and the spear these are
+     * the expressions every arm wrote out before (byte-identical); the ghost row is new.
+     */
+    const pressHitType = (weapon) => (weapon === 'spear' || weapon === 'ghostsword' ? 'Spear' : 'Sword');
+    const pressHitDamage = (weapon) => (weapon === 'spear' ? SPEAR_DAMAGE
+        : (weapon === 'ghostsword' ? GHOST_SWORD_DAMAGE
+            : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE)));
     /** The arms this rung MODELS; see `presses.PRESS_ARM_POLICY` for the rest. */
     const MODELLED_PRESS_ARMS = new Set(
         Object.entries(PRESS_ARM_POLICY)
@@ -5452,20 +5472,37 @@ export function createLevelRun({
          * inside another press's window must not retroactively re-scale the
          * earlier one's remaining tests.
          */
-        const reachLimit = weapon === 'spear' ? SLASH_REACH : slashReachFor(scale);
-        const rect = weapon === 'sword'
-            ? slashRect(state.x, state.y, direction, scale)
-            : spearRect(state.x, state.y, direction);
-        // A ghostsword routes a SLASH through the Spear branch of
-        // `genericHit` — R5, and refused rather than approximated.
-        if (weapon === 'ghostsword') {
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY GHOSTSWORD — THE GHOST SWING, MODELLED (behind `GHOSTSWORD_PRESS`; OFF it throws by
+         * name, as it has since R5). `ghostSword.js` is the transcription; what this executor owes it:
+         *   · the RECT is `getSlashRect`'s ghost arm — 24 along, `width * 2` = 48 across, scale pinned at 1 (the
+         *     dash's squash is `!hasGhostSword`), so `thrust.scale` is ignored;
+         *   · the REACH is 24 and it is applied to EVERY collected responder here, once, before the arms — `slash()`
+         *     measures `distanceRectPoint` against each candidate's box (Grass centre to centre: inert);
+         *   · the LINE is waived for every target (`|| hasGhostSword`, `Player.as:917`), so no arm below asks it;
+         *   · the ARM is "Spear" (`pressHitType`) at damage 2 (`pressHitDamage`), and the audit is the SPEAR's —
+         *     `LightPole` and `Tile` answer to `t == "Spear"`;
+         *   · a ghost sword without the sword never tests (`slash()` is `if (hasSword)`): refused by name.
+         */
+        const ghost = weapon === 'ghostsword';
+        if (ghost && !GHOSTSWORD_PRESS.enabled) {
             throw new Error('levelRun: a ghostsword press routes the slash rect through '
                 + "`genericHit`'s Spear arm and doubles the rect's height from the "
                 + 'sprite WIDTH. Neither is modelled (R5).');
         }
+        if (ghost) {
+            const why = ghostSwingRefusal(inventory);
+            if (why) throw new Error(`levelRun: the ghostsword press at tick ${pressTick} in level ${level}: ${why}`);
+        }
+        const reachLimit = ghost ? GHOST_SWORD_REACH
+            : (weapon === 'spear' ? SLASH_REACH : slashReachFor(scale));
+        const rect = ghost ? ghostSlashRect(state.x, state.y, direction)
+            : (weapon === 'sword'
+                ? slashRect(state.x, state.y, direction, scale)
+                : spearRect(state.x, state.y, direction));
         const pushState = pushableStateFor(level);
         const audit = auditPress(world, rect, {
-            weapon: weapon === 'spear' ? 'spear' : 'sword',
+            weapon: weapon === 'spear' || ghost ? 'spear' : 'sword',
             // The block's LIVE rect: a chain's second push aims at where the
             // first one left it.
             pushables: pushableRects(pushState),
@@ -5518,6 +5555,31 @@ export function createLevelRun({
             && (killArmModelled(r.enemyClass)
                 || (CONTACT_FIDELITY.wallFlyerSwordHits && r.family === 'wallflyer')
                 || (CONTACT_FIDELITY.drillLive && r.family === 'drill'));
+        /**
+         * ⛓⛓⛓ GHOSTSWORD: `slash()`'s reach gate, applied to the whole collection ONCE for a ghost swing (the
+         * sword's per-arm gates below then agree by construction: every survivor is within 24). A responder the 24 x
+         * 48 rect collects and the reach drops is recorded as such rather than refused — the game calls nothing on
+         * it. Then the two Spear arms this model cannot carry for seven tests (`GHOST_PRESS_ARMS`) refuse by name.
+         */
+        const ghostOutOfReach = [];
+        if (ghost) {
+            audit.live = audit.live.filter((r) => {
+                if (r.as3 === 'Grass') return true;
+                const box = r.rect;
+                if (!box) return true;
+                const reach = distanceRectPoint(state.x, state.y, box);
+                if (reach <= reachLimit) return true;
+                ghostOutOfReach.push({ as3: r.as3, id: r.rockId ?? r.id ?? `${r.tag}@${r.x},${r.y}`, reach });
+                return false;
+            });
+            const unmodelled = audit.live.filter((r) => GHOST_PRESS_ARMS[r.as3]?.model === 'refused');
+            if (unmodelled.length > 0) {
+                throw new Error(`levelRun: the ghostsword press at tick ${pressTick} in level ${level} reaches `
+                    + `${unmodelled.map((r) => `${r.tag}@${r.x},${r.y}`).join(', ')}, whose "Spear" arm this model `
+                    + `does not carry for a ghost swing (${unmodelled.map((r) => GHOST_PRESS_ARMS[r.as3].why)
+                        .join('; ')}). Re-aim the press, or model the arm.`);
+            }
+        }
         const refused = audit.live.filter(
             (r) => !MODELLED_PRESS_ARMS.has(r.as3) && !INERT_PRESS_ARMS.has(r.as3)
                 && !enemyClassModelled(r),
@@ -5706,15 +5768,14 @@ export function createLevelRun({
                         + 'about which turrets exist, which is the two-consumers failure '
                         + 'this state family exists to prevent.');
                 }
-                const type = weapon === 'spear' ? 'Spear' : 'Sword';
+                const type = pressHitType(weapon);
                 // ⛓ `bump` FIRST, and it is a real no-op for a sword — kept
                 // because the ORDER is the transcription and a later weapon
                 // (Pulse) makes it matter.
                 const bumped = bumpIceTurret(t, { x: state.x, y: state.y }, type);
                 const before = { hits: t.hits, dead: t.dead };
                 const verdict = hitIceTurret(t, {
-                    d: weapon === 'spear' ? SPEAR_DAMAGE
-                        : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
+                    d: pressHitDamage(weapon),
                     // `Player.as:116` — `swordForce = 5`. ⚠ It reaches
                     // `knockback`, which `IceTurret` overrides EMPTY, so this
                     // value is never used by this class; passed anyway because
@@ -5857,12 +5918,12 @@ export function createLevelRun({
                             + 'the rect reached him and `slash()`\'s own gate did not',
                     });
                 } else {
-                    assertShieldBossLineOfSight(b);
-                    const type = weapon === 'spear' ? 'Spear' : 'Sword';
+                    // ⛓ GHOSTSWORD: the line is waived for a ghost swing (`|| hasGhostSword`, `Player.as:917`).
+                    if (!ghost) assertShieldBossLineOfSight(b);
+                    const type = pressHitType(weapon);
                     const before = { hits: b.hits, activated: b.activated, anim: b.anim };
                     const verdict = shieldBossTakesHit(b, {
-                        d: weapon === 'spear' ? SPEAR_DAMAGE
-                            : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
+                        d: pressHitDamage(weapon),
                         f: SWORD_FORCE,
                         t: type,
                         // `Enemy.hit` carries `!Game.freezeObjects` inside
@@ -5989,15 +6050,15 @@ export function createLevelRun({
                     });
                     hits.push({ as3: 'Spinner', id: sp.id, landed: false, killed: false });
                 } else {
-                    assertSpinnerLineOfSight(sp);
+                    // ⛓ GHOSTSWORD: the line is waived for a ghost swing (`|| hasGhostSword`, `Player.as:917`).
+                    if (!ghost) assertSpinnerLineOfSight(sp);
                     const before = { hits: sp.hits, hitsTimer: sp.hitsTimer,
                         destroy: sp.destroy };
                     const after = hitSpinner(sp, {
                         force: SWORD_FORCE,
                         from: { x: state.x, y: state.y },
-                        damage: weapon === 'spear' ? SPEAR_DAMAGE
-                            : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
-                        t: weapon === 'spear' ? 'Spear' : 'Sword',
+                        damage: pressHitDamage(weapon),
+                        t: pressHitType(weapon),
                         // `Enemy.hit`'s own `!Game.freezeObjects` gate. A
                         // spinner overrides none of the five, so unlike the
                         // ShieldBoss there is no arm ABOVE the freeze.
@@ -6102,7 +6163,8 @@ export function createLevelRun({
                     });
                     hits.push({ as3: 'FinalBoss', id: b.id, landed: false, killed: false });
                 } else {
-                    assertFinalBossLineOfSight(b);
+                    // ⛓ GHOSTSWORD: the line is waived for a ghost swing (`|| hasGhostSword`, `Player.as:917`).
+                    if (!ghost) assertFinalBossLineOfSight(b);
                     const before = { x: b.x, y: b.y, vx: b.vx, vy: b.vy, hits: b.hits };
                     const verdict = finalBossHit(b, {
                         force: SWORD_FORCE,
@@ -6111,7 +6173,7 @@ export function createLevelRun({
                         // ⛓ NOT "Lava" — a sword press can never be. The type
                         // is what decides which arm of `Enemy.hit` runs, and
                         // `onlyHitBy` admits exactly one string.
-                        type: weapon === 'spear' ? 'Spear' : 'Sword',
+                        type: pressHitType(weapon),
                     });
                     finalBossShoves.push({
                         t: ticksCompleted, level, id: b.id,
@@ -6177,7 +6239,7 @@ export function createLevelRun({
                     });
                     hits.push({ as3: 'Watcher', id: w.id, landed: false });
                 } else {
-                    const blocker = collideLineSolid(state.x, state.y, w.ex, w.ey);
+                    const blocker = ghost ? null : collideLineSolid(state.x, state.y, w.ex, w.ey);
                     if (blocker) {
                         throw new Error(`levelRun: the ${weapon} press at tick `
                             + `${pressTick} reaches ${w.id} through ${blocker}. `
@@ -6204,13 +6266,12 @@ export function createLevelRun({
                 const dst = drillStateFor(level);
                 const d = dst.get(r.chaserId);
                 const reach = distanceRectPoint(state.x, state.y, drillRect(d));
-                const blocker = reach > reachLimit ? null : collideLineSolid(state.x, state.y, d.x, d.y);
+                const blocker = reach > reachLimit || ghost ? null : collideLineSolid(state.x, state.y, d.x, d.y);
                 let verdict = { landed: false, killed: false };
                 if (reach <= reachLimit && !blocker) {
                     verdict = hitDrill(d, {
-                        damage: weapon === 'spear' ? SPEAR_DAMAGE
-                            : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
-                        t: weapon === 'spear' ? 'Spear' : 'Sword',
+                        damage: pressHitDamage(weapon),
+                        t: pressHitType(weapon),
                         frozen: ceremony !== null,
                     });
                     if (verdict.killed) stageDrillKill(verdict.d, weapon);
@@ -6239,13 +6300,12 @@ export function createLevelRun({
                         + `${r.chaserId} in level ${level}, which is not in the run's wallflyer state.`);
                 }
                 const reach = distanceRectPoint(state.x, state.y, wallFlyerRect(w));
-                const blocker = reach > reachLimit ? null : collideLineSolid(state.x, state.y, w.x, w.y);
+                const blocker = reach > reachLimit || ghost ? null : collideLineSolid(state.x, state.y, w.x, w.y);
                 let verdict = { landed: false, killed: false };
                 if (reach <= reachLimit && !blocker) {
                     verdict = hitWallFlyer(w, {
-                        damage: weapon === 'spear' ? SPEAR_DAMAGE
-                            : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
-                        t: weapon === 'spear' ? 'Spear' : 'Sword',
+                        damage: pressHitDamage(weapon),
+                        t: pressHitType(weapon),
                         frozen: ceremony !== null,
                     });
                     if (verdict.killed) {
@@ -6332,11 +6392,10 @@ export function createLevelRun({
                         vx: c.v.x, vy: c.v.y,
                     };
                     const verdict = enemyHit(c, {
-                        d: weapon === 'spear' ? SPEAR_DAMAGE
-                            : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
+                        d: pressHitDamage(weapon),
                         // `Player.as:116` — `swordForce = 5`.
                         f: SWORD_FORCE,
-                        t: weapon === 'spear' ? 'Spear' : 'Sword',
+                        t: pressHitType(weapon),
                         // ⛔ `Enemy.hit` carries `!Game.freezeObjects` INSIDE
                         // its own gate, so a press during a ceremony damages
                         // nothing while the i-frame it is waiting on keeps
@@ -6447,6 +6506,8 @@ export function createLevelRun({
         bobBossSlashNow({ rect, reachLimit, weapon, pressTick, hits });
         presses.push({
             t: pressTick, fired: ticksCompleted, level, weapon, direction, rect, hits,
+            // ⛓ GHOSTSWORD: what the 24 x 48 rect collected and the 24 px reach dropped (absent for every other weapon).
+            ...(ghost ? { outOfReach: ghostOutOfReach } : {}),
         });
     };
 
@@ -13166,9 +13227,8 @@ export function createLevelRun({
             verdict.refusedAt = geo.gate;
         } else {
             verdict = bobBossHit(b, {
-                d: weapon === 'spear' ? SPEAR_DAMAGE
-                    : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
-                t: weapon === 'spear' ? 'Spear' : 'Sword',
+                d: pressHitDamage(weapon),
+                t: pressHitType(weapon),
                 frozen: ceremony !== null,
             });
         }

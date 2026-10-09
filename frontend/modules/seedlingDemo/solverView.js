@@ -79,6 +79,9 @@ export { KILL_ARM_POLICY, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH, killArmModelled
 export { KILLLOCK_BODIES } from './killLockBodies.js';
 // fireVerb.js — botDriverV2 · seedling 2
 export { FIRE_WINDOW, fireRect } from './fireVerb.js';
+// ghostSword.js — solverBot · seedling 2
+// ⛓⛓⛓ seedling-fidelity-ghostsword: the ghost swing's switch and its one named refusal, for the break verb's row.
+export { GHOSTSWORD_PRESS, ghostSwingRefusal } from './ghostSword.js';
 // iceTurret.js — botDriverV2 · seedling 2
 export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
 // ⛓ U15-swim D2: the turret spit's box, for `dangerMap.spitDanger`'s WAIT sweep.

@@ -295,16 +295,16 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**64 files, 5414 literals.** Class × position:
+**65 files, 5426 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1555 | 357 | 1917 |
 | rule | 6 | 939 | 455 | 1400 |
-| cosmetic | 0 | 49 | 14 | 63 |
-| structural | 10 | 359 | 1665 | 2034 |
+| cosmetic | 0 | 60 | 14 | 74 |
+| structural | 10 | 359 | 1666 | 2035 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2902 | 2491 | 5414 |
+| total | 21 | 2913 | 2492 | 5426 |
 
 Class × kind (physics and rule rows only):
 
@@ -321,7 +321,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile: 138 keys in `seedlingDemo/seedlingProfile.js`
 
-**51 physics**, **87 rule**; 72 with an AS3 anchor. 135 top-level names alias a key, and 154 top-level declarations read one. "Read by" is every such declaration.
+**51 physics**, **87 rule**; 72 with an AS3 anchor. 135 top-level names alias a key, and 156 top-level declarations read one. "Read by" is every such declaration.
 
 | key | value | class | kind | AS3 | read by |
 |---|---|---|---|---|---|
@@ -356,8 +356,8 @@ None: a name declared in several files now reads one profile key (the table belo
 | `puncherAttackRange` | 10 | rule | bound | Enemies/Puncher.as:attackRange | combat.js `PUNCHER_ATTACK_RANGE` |
 | `swordForce` | 5 | physics | magnitude | Player.as:swordForce | combatVerbs.js `SWORD_FORCE` |
 | `slashDashForce` | 2 | physics | magnitude |  | combatVerbs.js `SLASH_DASH_FORCE` |
-| `swordAnimRate` | 30 | rule | magnitude | Player.as:swordSpeed | combatVerbs.js `SWORD_ANIM_RATE` |
-| `swordAnimRateDash` | 20 | rule | magnitude | Player.as:swordSpeedDash | combatVerbs.js `SWORD_ANIM_RATE_DASH` |
+| `swordAnimRate` | 30 | rule | magnitude | Player.as:swordSpeed | ghostSword.js `GHOST_SLASH_ANIM_TICKS`; combatVerbs.js `SWORD_ANIM_RATE` |
+| `swordAnimRateDash` | 20 | rule | magnitude | Player.as:swordSpeedDash | ghostSword.js `GHOST_SLASH_ANIM_TICKS`; combatVerbs.js `SWORD_ANIM_RATE_DASH` |
 | `specialTimerMax` | 150 | rule | magnitude | Pickups/Pickup.as:specialTimerMax | dialogue.js `SPECIAL_TIMER_MAX` |
 | `pickupTextSpeed` | 6 | rule | magnitude | Pickups/Pickup.as:DEF_TEXT_SPEED | dialogue.js `PICKUP_TEXT_SPEED` |
 | `pickupLineLength` | 32 | rule | bound |  | dialogue.js `PICKUP_LINE_LENGTH` |
@@ -464,7 +464,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
 | `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
-### The 37 derived or aliased top-level constants
+### The 39 derived or aliased top-level constants
 
 | name | file | initialiser |
 |---|---|---|
@@ -481,6 +481,8 @@ None: a name declared in several files now reads one profile key (the table belo
 | `TILE` | seedlingDemo/spinner.js | `TILE_SIZE` |
 | `TILE` | seedlingDemo/crusher.js | `TILE_SIZE` |
 | `BOB_SOLDIER_SWORD_REACH` | seedlingDemo/bobSoldier.js | `BOB_SOLDIER.weaponLength` |
+| `GHOST_SWORD_DAMAGE` | seedlingDemo/ghostSword.js | `SWORD_DAMAGE.ghostsword` |
+| `GHOST_SWORD_REACH` | seedlingDemo/ghostSword.js | `SLASH_SPRITES.ghostsword.w` |
 | `SHIELD_BOSS_DIE_UPDATES` | seedlingDemo/shieldBossFight.js | `SHIELD_BOSS_ANIM_UPDATES.die` |
 | `SHIELD_BOSS_WINDOW_UPDATES` | seedlingDemo/shieldBossFight.js | `SHIELD_BOSS_ANIM_UPDATES.movedShield` |
 | `FORM_TELEPORT_AT` | seedlingDemo/bobBoss.js | `FORM_TRANSITION_FRAMES / 3` |

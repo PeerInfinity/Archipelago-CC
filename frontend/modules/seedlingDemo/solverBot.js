@@ -111,6 +111,8 @@ import {
     pullModelled, pullsDrainingInto,
     PULSER, pulsePushes, pulserCycle, newPushable,
     KILLLOCK_BODIES,
+    // ⛓⛓⛓ seedling-fidelity-ghostsword D2: the break verb's ghostsword row (the switch and the no-sword refusal).
+    GHOSTSWORD_PRESS, ghostSwingRefusal,
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -11683,12 +11685,14 @@ function execTouch(run, perTick, resolved, ctx) {
  * campaign does not hold yet, and a refusal that says so is the cheapest
  * planning instrument this rung has (R8 lesson 2).
  *
- * ⚠ **A GHOSTSWORD IN THE PRIMARY SLOT IS REFUSED TOO, AND NOT AS AN
- * OVERSIGHT**: `levelRun.applyThrust` THROWS on one — *"a ghostsword press
+ * ⚠ **A GHOSTSWORD IN THE PRIMARY SLOT WAS REFUSED TOO, AND NOT AS AN
+ * OVERSIGHT**: `levelRun.applyThrust` THREW on one — *"a ghostsword press
  * routes the slash rect through `genericHit`'s Spear arm and doubles the rect's
- * height from the sprite WIDTH. Neither is modelled (R5)"* — so a verb that
- * selected it would turn an item the run really holds into an engine throw.
- * Refused by name, with the model gap as the work order.
+ * height from the sprite WIDTH. Neither is modelled (R5)"*. ⛓⛓⛓ Seedling
+ * fidelity GHOSTSWORD modelled that press (`ghostSword.js`, `GHOSTSWORD_PRESS`,
+ * ON): a ghostsword primary now breaks both rock types, and the refusal stands
+ * only with the switch OFF — and, by the game's own reason, for a ghost sword
+ * held WITHOUT the sword (`slash()` is `if (hasSword)`).
  */
 function resolveBreakStrategy(run, obstacle, contacts, blocked = []) {
     const rock = (run.world.solids ?? []).find((s) => s.rockId === obstacle.id);
@@ -11701,7 +11705,23 @@ function resolveBreakStrategy(run, obstacle, contacts, blocked = []) {
      */
     if (!rock) return null;
     const weapon = run.progress('primaryWeapon');
-    if (weapon !== 'sword') {
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY GHOSTSWORD: with `GHOSTSWORD_PRESS` on, `levelRun` models the ghost swing, so a
+     * `ghostsword` primary breaks a rock too — and a `breakablerockghost` ONLY under it (`rockBreaksUnder` below
+     * reads `hasGhostSword`). The stance stays the SWORD's (16 px, 16 x 32): the ghost rect (24 x 48, anchored the
+     * same way) contains it and its reach is 24, so every stance this derives is one the ghost swing reaches from — a
+     * subset of the game's, not a superset. A ghost sword without the sword never tests (`slash()` is
+     * `if (hasSword)`), which is `ghostSwingRefusal`'s, named.
+     */
+    const ghostOk = weapon === 'ghostsword' && GHOSTSWORD_PRESS.enabled;
+    const ghostWhy = ghostOk ? ghostSwingRefusal(run.progress('inventory')) : null;
+    if (ghostWhy) {
+        return {
+            strategy: 'break', held: false, rock: obstacle.id,
+            rejected: [{ option: `break ${obstacle.id}`, why: ghostWhy }],
+        };
+    }
+    if (weapon !== 'sword' && !ghostOk) {
         return {
             strategy: 'break',
             held: false,

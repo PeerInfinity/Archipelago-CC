@@ -1,0 +1,60 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 30,
+        "x": 96,
+        "y": 112
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 103,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 51,
+            "to": 52
+        },
+        {
+            "key": "primary",
+            "from": 82,
+            "to": 83
+        }
+    ],
+    "name": "ghostsword-l30-bobsoldier",
+    "description": "⛓⛓⛓ seedling-fidelity-ghostsword — THE GHOST SWORD ON AN ENEMY. The `bobsoldier-kill` boot (L30, (104,120)) holding the sword AND the ghost sword: one tick of `left` to face west, then a press whenever the body is within the ghost swing's 24 px reach and the 31-tick cadence allows. `genericHit` is called with \"Spear\", force 5 and `ghostSwordDamage` 2, so TWO landed hits kill a `hitsMax`-3 body (t 52, 83; hits 2 -> 4) where the sword needs three. Sword hits on the player: 0. Authored by scripts/procgen/plan-seedling-ghostsword.mjs.",
+    "note": ""
+}

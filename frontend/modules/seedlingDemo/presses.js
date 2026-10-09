@@ -48,6 +48,7 @@ import {
     SLASH_ANIM_TICKS, SLASH_SCALE_DASH, SLASH_SCALE_NORMAL, SLASH_TIMER_MAX, slashHitTicksFor,
 } from './combatVerbs.js';
 import { PROFILE } from './seedlingProfile.js';
+import { GHOSTSWORD_PRESS, ghostSlashHitTicksFor } from './ghostSword.js';
 
 export class PressError extends Error {
     constructor(message) {
@@ -226,10 +227,14 @@ export function swordWindowStep(win, tick) {
     const fires = [];
     if (pending) {
         fires.push(pending);
-        if (pending.weapon === 'sword') {
+        // ⛓⛓⛓ SEEDLING FIDELITY GHOSTSWORD: a ghost swing is `set slashing` too, and buys its own animation's tests
+        // (7 for a swing, 6 for a dash — `ghostSword.GHOST_SLASH_ANIM_TICKS`). Behind `GHOSTSWORD_PRESS`: OFF, a
+        // ghost thrust schedules no repeats (and `levelRun.applyThrust` throws on its first fire, as before).
+        const ghost = pending.weapon === 'ghostsword' && GHOSTSWORD_PRESS.enabled;
+        if (pending.weapon === 'sword' || ghost) {
             const grown = repeats.slice();
             // ⛓ SEEDLING FIDELITY DASH: per animation — 5 for a swing, 4 for a dash.
-            const hitTicks = slashHitTicksFor(pending.anim);
+            const hitTicks = ghost ? ghostSlashHitTicksFor(pending.anim) : slashHitTicksFor(pending.anim);
             for (let i = 1; i < hitTicks; i += 1) {
                 grown.push({ ...pending, at: tick + i, repeat: i });
             }
@@ -338,9 +343,9 @@ export function spearRect(x, y, direction) {
  *
  * `sprSlash` is a 16x32 Spritemap frame at scale 1, so `h` is 32 and the
  * rect is 16x32 ahead of the player (or 32x16 above/below it). The
- * ghost-sword arm doubles `h` from the frame WIDTH instead — R5, and left
- * out rather than guessed, because `hasGhostSword` also re-routes the whole
- * press through the Spear branch of `genericHit`.
+ * ghost-sword arm doubles `h` from the frame WIDTH instead, and re-routes the
+ * whole press through the Spear branch of `genericHit` — ⛓ modelled since
+ * Seedling fidelity GHOSTSWORD as `ghostSword.ghostSlashRect` (24 x 48).
  */
 export function slashRect(x, y, direction, scale = SLASH_SCALE_NORMAL) {
     // ⛓⛓ R9 SLICE 12b — THE SCALE, WHICH IS THE DASH'S WHOLE RECT.
