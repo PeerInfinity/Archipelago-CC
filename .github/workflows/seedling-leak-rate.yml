@@ -1,0 +1,108 @@
+# Rate of the intermittent "World Seedling leaked MultiWorld object" leak-check failure
+# (worlds/seedling/test, test/bases.py WorldTestBase.tearDown) on macos-latest / 3.13, with
+# ubuntu 3.13 as the control. Two legs:
+#   triggered — the kivy-importing test that lowers the root logger, then each Seedling
+#              class's test_fill first, `repeat` times in fresh processes (the flake's exact condition);
+#   suite    — the full `pytest -n auto` that unittests.yml runs, 4 parallel jobs per OS.
+# Each leg's summary's first line is `Rate: k/N` (k = runs with a leak failure).
+
+name: seedling-leak-rate
+
+on:
+  workflow_dispatch:
+    inputs:
+      repeat:
+        description: triggered runs per OS
+        default: '30'
+      suite:
+        description: also run the full-suite leg
+        type: boolean
+        default: true
+
+permissions: {}
+
+jobs:
+  triggered:
+    runs-on: ${{ matrix.os }}
+    name: triggered ${{ matrix.os }} 3.13
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v6.0.2
+    - uses: actions/setup-python@v6.2.0
+      with:
+        python-version: '3.13'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r ci-requirements.txt
+        python ModuleUpdate.py --yes --force --append "WebHostLib/requirements.txt"
+    - name: Create host.yaml for tests
+      env:
+        SKIP_REQUIREMENTS_UPDATE: "1"
+      run: python Launcher.py --update_settings
+    - name: Repeat the Seedling tests
+      env:
+        SKIP_REQUIREMENTS_UPDATE: "1"
+        REPEAT: ${{ inputs.repeat }}
+        # Importing kivy (installer_gui) sets the ROOT logger to NOTSET (kivy/logger.py, KIVY log mode);
+        # running it first, then test_fill as each class's first test, is the condition the CI flake needs.
+        POLLUTER: worlds/json_tools_installer/test/test_gui_invariant.py::test_component_property_defaults_match_default_components
+      run: |
+        mkdir -p leak-logs
+        k=0; bad=0
+        for i in $(seq 1 "$REPEAT"); do
+          python -m pytest -p no:cacheprovider -q -rfs "$POLLUTER" worlds/seedling/test/TestSeedling.py -k "defaults_match or test_fill" > "leak-logs/run-$i.log" 2>&1 && rc=0 || rc=$?
+          n=$(grep -ac "^FAILED .*::test_fill" "leak-logs/run-$i.log" || true)
+          if grep -aq "^SKIPPED" "leak-logs/run-$i.log"; then bad=$((bad+1)); echo "run $i: NOT TRIGGERED (polluter skipped)"; grep -a "^SKIPPED" "leak-logs/run-$i.log";
+          elif [ "$n" -gt 0 ] && grep -aq "leaked MultiWorld object" "leak-logs/run-$i.log"; then k=$((k+1)); echo "run $i: LEAK in $n classes";
+          elif [ "$rc" != 0 ]; then bad=$((bad+1)); echo "run $i: OTHER FAILURE rc=$rc"; tail -20 "leak-logs/run-$i.log";
+          else echo "run $i: ok"; fi
+        done
+        { echo "Rate: $k/$REPEAT leaked (triggered, ${{ matrix.os }}, other failures / not triggered: $bad)"; } | tee -a "$GITHUB_STEP_SUMMARY"
+    - uses: actions/upload-artifact@v7.0.0
+      if: always()
+      with:
+        name: leak-logs-triggered-${{ matrix.os }}
+        path: leak-logs/
+
+  suite:
+    if: ${{ inputs.suite }}
+    runs-on: ${{ matrix.os }}
+    name: suite ${{ matrix.os }} 3.13 run ${{ matrix.run }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        run: [1, 2, 3, 4]
+    steps:
+    - uses: actions/checkout@v6.0.2
+    - uses: actions/setup-python@v6.2.0
+      with:
+        python-version: '3.13'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r ci-requirements.txt
+        python ModuleUpdate.py --yes --force --append "WebHostLib/requirements.txt"
+    - name: Create host.yaml for tests
+      env:
+        SKIP_REQUIREMENTS_UPDATE: "1"
+      run: python Launcher.py --update_settings
+    - name: Full suite as unittests.yml runs it
+      env:
+        SKIP_REQUIREMENTS_UPDATE: "1"
+        PYTHONUTF8: "1"
+        PYTHONIOENCODING: "utf-8"
+      run: |
+        pytest -n auto > suite.log 2>&1 && rc=0 || rc=$?
+        if grep -aq "leaked MultiWorld object" suite.log; then k=1; else k=0; fi
+        echo "Rate: $k/1 leaked (suite, ${{ matrix.os }}, pytest rc=$rc)" | tee -a "$GITHUB_STEP_SUMMARY"
+        tail -5 suite.log
+    - uses: actions/upload-artifact@v7.0.0
+      if: always()
+      with:
+        name: leak-log-suite-${{ matrix.os }}-${{ matrix.run }}
+        path: suite.log
