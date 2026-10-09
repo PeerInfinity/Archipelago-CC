@@ -36,6 +36,7 @@ import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf } from './seedlingRoomPlay.js';
+import { bootRetriesLine, isBootFault, startWasmGame, withBootRetry } from './seedlingProbeBoot.js';
 
 argvHelp(import.meta.url);
 
@@ -89,9 +90,10 @@ async function main() {
         if (S === 'W' && !haveWasm) { console.log(`SKIP: W — seedling wasm artifact not staged (${JSON.stringify(WASM_PAGE)})`); continue; }
         console.log(`INFO: ── session ${S} (a fresh page) ──`);
         // eslint-disable-next-line no-await-in-loop
-        failed += await runSession(S);
+        failed += await withBootRetry(S, () => runSession(S));
     }
     await browser.close();
+    console.log(bootRetriesLine());
     console.log(failed === 0 ? 'ALL CHECKS PASSED' : `${failed} CHECK(S) FAILED`);
     process.exit(failed === 0 ? 0 : 1);
 
@@ -151,11 +153,8 @@ async function main() {
             } else {
                 await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
                 await rp.waitFor('wasm iframe mounted', async () => page.frames().some((fr) => fr.url().includes(WASM_PAGE)));
-                await rp.waitFor('start button enabled', () => rp.gameFrame().evaluate(() => {
-                    const b = document.getElementById('btn-start');
-                    return !!b && !b.disabled;
-                }));
-                await rp.gameFrame().click('#btn-start');
+                // ⛓ READY before the click; a known boot fault re-boots once (seedlingProbeBoot.js).
+                await startWasmGame(() => rp.gameFrame(), { logs });
                 await assertLogicOnlyChannel(rp.gameFrame());
             }
             await rp.waitFor('the AP load finished', () => page.evaluate(async () => {
@@ -285,6 +284,7 @@ async function main() {
             const errors = logs.filter((l) => l.startsWith('[pageerror]'));
             console.log(`INFO: ${errors.length} page error(s)${errors.length ? `: ${errors.slice(0, 3).map((l) => l.slice(0, 200)).join(' | ')}` : ''}`);
         } catch (e) {
+            if (isBootFault(e)) { await page.close(); throw e; }
             check(`${S}: fatal: ${e.message}`, false, e.stack?.split('\n').slice(0, 4).join(' / '));
             console.log(`PAGE LOGS (last 30):\n${logs.slice(-30).join('\n')}`);
         }

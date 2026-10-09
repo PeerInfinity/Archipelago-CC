@@ -115,6 +115,8 @@ export const activePanelTypes = (page) => page.evaluate(activePanelTypesInPage);
 export const STEP_OFF_PX = 16;
 /** The ceiling on every held key. */
 export const HOLD_CEILING_MS = 4000;
+/** `jumpSettled`'s stillness window before a jump: > the ~140 ms a late re-placement teleport was measured landing after. */
+export const SETTLE_STILL_MS = 500;
 
 /**
  * ⛓ G2, shared at G3 — **A SAFE PATH THROUGH A GENERATED ROOM.** A shortest
@@ -317,6 +319,19 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
      * replaced}` (`replaced` = the spawn the binding moved the player to, or null); the caller checks it.
      */
     async function jumpSettled(level, x, y, { timeoutMs = 15000 } = {}) {
+        // ⛓ THE PREVIOUS CROSSING SETTLES FIRST (seedling-probe-battery; composites D, CI run 37651192979). A leg
+        // that ended by crossing into a bound room leaves the binding's re-placement in flight; the next leg's jump
+        // landed in L87 and the late teleport moved the game back (`new Game(2,48,32)` ~140 ms after the jump), so
+        // "the player in L87" never held. So: the binding has finished with the level the game reports, and the
+        // game's checkpoint stands still across a window longer than that teleport's lag.
+        await waitFor('the previous crossing settled before the jump', async () => {
+            const g0 = await readGameState();
+            if (!await bindingSettled(g0.level)) return null;
+            await page.waitForTimeout(SETTLE_STILL_MS);
+            const g1 = await readGameState();
+            return g1.level === g0.level && g1.playerPositionX === g0.playerPositionX
+                && g1.playerPositionY === g0.playerPositionY ? 'settled' : null;
+        }, timeoutMs);
         let replaced = null;
         let jumps = 0;
         for (;;) {

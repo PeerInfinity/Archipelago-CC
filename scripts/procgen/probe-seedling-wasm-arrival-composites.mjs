@@ -73,6 +73,7 @@ import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf } from './seedlingRoomPlay.js';
+import { bootRetriesLine, isBootFault, startWasmGame, withBootRetry } from './seedlingProbeBoot.js';
 
 argvHelp(import.meta.url);
 
@@ -248,9 +249,10 @@ async function main() {
         if (legs.length === 0) continue;
         console.log(`INFO: ── session ${SESSION} (${legs.length} legs, a fresh page) ──`);
         // eslint-disable-next-line no-await-in-loop
-        failed += await runSession(SESSION, legs);
+        failed += await withBootRetry(SESSION, () => runSession(SESSION, legs));
     }
     await browser.close();
+    console.log(bootRetriesLine());
     console.log(failed === 0 ? 'ALL CHECKS PASSED' : `${failed} CHECK(S) FAILED`);
     process.exit(failed === 0 ? 0 : 1);
 
@@ -266,11 +268,8 @@ async function main() {
             await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
             await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
             await rp.waitFor('wasm iframe mounted', async () => page.frames().some((fr) => fr.url().includes(WASM_PAGE)));
-            await rp.waitFor('start button enabled', () => rp.gameFrame().evaluate(() => {
-                const b = document.getElementById('btn-start');
-                return !!b && !b.disabled;
-            }));
-            await rp.gameFrame().click('#btn-start');
+            // ⛓ READY before the click; a known boot fault re-boots once (seedlingProbeBoot.js).
+            await startWasmGame(() => rp.gameFrame(), { logs });
             await assertLogicOnlyChannel(rp.gameFrame());
             await rp.waitFor("panel status 'ready'", async () => ((await page.evaluate(() =>
                 document.querySelector('.flash-panel-status')?.textContent ?? '')) === 'ready' ? 'ready' : null), 120000);
@@ -381,6 +380,7 @@ async function main() {
             const exits = logs.filter((l) => /heap_alloc|ExitStatus|out of memory/.test(l));
             if (exits.length) console.log(`INFO: the game's memory: ${exits.slice(-3).join(' | ')}`);
         } catch (e) {
+            if (isBootFault(e)) { await page.close(); throw e; }
             check(`fatal: ${e.message}`, false, e.stack?.split('\n').slice(0, 4).join(' / '));
         }
         await page.close();
