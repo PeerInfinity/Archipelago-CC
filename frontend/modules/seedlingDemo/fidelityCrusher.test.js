@@ -40,22 +40,24 @@ const W = CRUSHER_WITNESSES[0];
 const arrivalRun = async () => createRunForStaging(await crusherStaging(W), SRC);
 
 describe('fidelity CRUSHER — the flag\'s contract', () => {
-    it('OFF by default: the frozen table has no `bait`, and the frontier lookup is the table', () => {
-        expect(CRUSHER_BAIT.enabled).toBe(false);
+    // ⚖ ON by default since the wave-9 harvest (user, 2026-10-09); `SEEDLING_CRUSHER_BAIT=0` is the BEFORE model.
+    it.skipIf(process.env.SEEDLING_CRUSHER_BAIT === '0')('ON by default: `bait` is registered for the frontier only', () => {
+        expect(CRUSHER_BAIT.enabled).toBe(true);
+        expect(typeof frontierExecutor('bait')).toBe('function');
         expect(STRATEGY_EXECUTORS.bait).toBeUndefined();
-        expect(frontierExecutor('bait')).toBeUndefined();
-        for (const v of Object.keys(STRATEGY_EXECUTORS)) expect(frontierExecutor(v)).toBe(STRATEGY_EXECUTORS[v]);
-        expect(frontierExecutor(null)).toBeUndefined();
     });
 
-    it('ON: `bait` is registered for the frontier only, and the switch restores itself', () => {
-        withCrusherBait(true, () => {
-            expect(typeof frontierExecutor('bait')).toBe('function');
+    it('OFF: the frozen table has no `bait`, the frontier lookup is the table, and the switch restores itself', () => {
+        const prior = CRUSHER_BAIT.enabled;
+        withCrusherBait(false, () => {
             expect(STRATEGY_EXECUTORS.bait).toBeUndefined();
+            expect(frontierExecutor('bait')).toBeUndefined();
+            for (const v of Object.keys(STRATEGY_EXECUTORS)) expect(frontierExecutor(v)).toBe(STRATEGY_EXECUTORS[v]);
+            expect(frontierExecutor(null)).toBeUndefined();
         });
-        expect(CRUSHER_BAIT.enabled).toBe(false);
-        expect(() => withCrusherBait(true, () => { throw new Error('x'); })).toThrow('x');
-        expect(CRUSHER_BAIT.enabled).toBe(false);
+        expect(CRUSHER_BAIT.enabled).toBe(prior);
+        expect(() => withCrusherBait(false, () => { throw new Error('x'); })).toThrow('x');
+        expect(CRUSHER_BAIT.enabled).toBe(prior);
     });
 });
 
@@ -110,7 +112,8 @@ describe('fidelity CRUSHER D2 — a lane behind a wall is not a trigger', () => 
         // tile (6,13): x 96..112, y 208..224 — inside A's south lane rect [96,128] x [144,240],
         // with wall between it and A's home body.
         const box = playerBoxAt(104, 216);
-        expect(crusherDanger(run, box).map((d) => d.id)).toContain('crusher@96,144');
+        // ⛓ the rects' reading is the flag-OFF one (CRUSHER_BAIT is ON by default since the wave-9 harvest)
+        withCrusherBait(false, () => expect(crusherDanger(run, box).map((d) => d.id)).toContain('crusher@96,144'));
         const solids = (id) => run.world.solidBoxesForMover(run.liveGeometryOpts(), id);
         expect(crusherSightDanger(run, box, { x: 104, y: 216 }, solids)).toEqual([]);
         withCrusherBait(true, () => expect(crusherDanger(run, box)).toEqual([]));
@@ -157,8 +160,9 @@ describe('fidelity CRUSHER D3 — the witness `crusher-l42-round-trip`', () => {
     it('is the solver\'s own plan with the flag ON, and the flag OFF refuses the same staging', async () => {
         const { solved } = await crusherPlan(W, true);
         expect(solved.out.perTick.length).toBe(tape(W.name).tick_count);
+        const prior = CRUSHER_BAIT.enabled;
         await expect(crusherPlan(W, false)).rejects.toThrow(/Strategy 'bait' is SELECTED but not registered/);
-        expect(CRUSHER_BAIT.enabled).toBe(false);
+        expect(CRUSHER_BAIT.enabled).toBe(prior);
     }, 120_000);
 });
 

@@ -37,9 +37,9 @@
  * run's own `previewStepper`, every previewed tick outside every live lane),
  * and only then is the chain driven.
  *
- * ⚖ BEHIND `CRUSHER_BAIT` (env `SEEDLING_CRUSHER_BAIT=1`), OFF by default: with
- * the flag off nothing in this module is reached and every committed artifact
- * is byte-identical. The flag also turns on the sight-aware crusher danger
+ * ⚖ BEHIND `CRUSHER_BAIT` — ON by default since the wave-9 harvest (user, 2026-10-09; its one mover: the ENEMY census's
+ * synthetic `crusher` row's refusal TEXT). `SEEDLING_CRUSHER_BAIT=0` turns it off; with the flag off nothing in this
+ * module is reached and the BEFORE model is byte-identical. The flag also turns on the sight-aware crusher danger
  * (`crusherSightDanger`), which the walks between chains need: `dangerMap`
  * prices all four lanes through walls, and a lane a crusher cannot SEE down is
  * not a trigger (`scanCrusher`'s early exit).
@@ -61,7 +61,7 @@ const fail = (m) => { throw new CrusherBaitError(m); };
  * measurement can flip it in-process (`withCrusherBait`); the env var is the
  * CLI/survey switch.
  */
-export const CRUSHER_BAIT = { enabled: globalThis.process?.env?.SEEDLING_CRUSHER_BAIT === '1' };
+export const CRUSHER_BAIT = { enabled: globalThis.process?.env?.SEEDLING_CRUSHER_BAIT !== '0' };
 
 export function withCrusherBait(enabled, fn) {
     const prior = CRUSHER_BAIT.enabled;
