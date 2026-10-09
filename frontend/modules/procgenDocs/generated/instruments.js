@@ -140,6 +140,11 @@ export const INSTRUMENTS = frz({
         {
             "browser": 0,
             "count": 1,
+            "id": "profile"
+        },
+        {
+            "browser": 0,
+            "count": 1,
             "id": "prove"
         },
         {
@@ -224,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 379,
+        "blockStyle": 380,
         "browser": 130,
-        "cited": 187,
-        "files": 391,
+        "cited": 188,
+        "files": 392,
         "lineStyle": 12,
-        "withDocblock": 391,
-        "withFlags": 309
+        "withDocblock": 392,
+        "withFlags": 310
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12873,6 +12878,60 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only (fidelity CHECKPOINTS, planner `seedling-fidelity-planning-3`) — THE HOOK GAPS: every leg of `--legs=<jsonl>` (`seedling-divergence-legs.mjs`) solved BARE (no inventory) through the same request path `seedling-divergence-bare.mjs` stages (`arrivalSolverGoal` → `arrivalSolveRequest` → one `solveSegment` …",
             "path": "scripts/procgen/probe-solver-hook-gaps.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "profile",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "count",
+                "gen",
+                "json",
+                "killgate",
+                "kinds",
+                "script",
+                "seeds"
+            ],
+            "file": "profile-seedling-hammer-escape.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "gen"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "killgate"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "script"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "profile-seedling-hammer-escape — ⛓ SEEDLING HAMMER-PHASE A4 W0: WHERE THE ESCAPE'S SEARCH TIME GOES.",
+            "path": "scripts/procgen/profile-seedling-hammer-escape.mjs"
         },
         {
             "argvHelpers": [
