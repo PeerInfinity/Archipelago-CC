@@ -285,6 +285,18 @@ export class SeedlingRegionGlue {
             // ⛓ OBSTACLE EVENTS — the third reader of the same reports (a cleared event flag).
             if (this.eventCollector) this.apply(this.eventCollector.onStateReport(property, value));
         };
+        /**
+         * ⛔ WHAT WAS DELIVERED INTO THE OLD PAGE IS DROPPED WITH IT. The delivery, the check binding and the
+         * delivered set's `start` all describe rooms mounted in the PREVIOUS adapter's game; a fresh page has
+         * none mounted, and its own AP load sets all three again (`runSeedlingRandomizerLoad`). Kept, they
+         * outlived a preset switch: the generated preset's `start` (level 0 at its first door's entrance)
+         * placed the NEXT preset's start-hop arrival — an atlas preset, which delivers nothing, teleported to
+         * level 0 (128, 32) instead of the starting house (main CI, fast batch, two atlas rows red since the
+         * generated rows ran before them). Cleared BEFORE `onGameRestart`, which re-derives the queued arrival.
+         */
+        this.delivery = null;
+        this.checkBinding = null;
+        this.binding.setStartSet(null);
         this._standDownAdapter();
         this.binding.onGameRestart();
         this.checkBinding?.onGameRestart();

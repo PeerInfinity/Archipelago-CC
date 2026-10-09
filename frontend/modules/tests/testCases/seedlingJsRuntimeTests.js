@@ -24,7 +24,7 @@
 
 import { registerTest } from '../testRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
-import { getActivePanelInstance } from '../../flashPanel/index.js';
+import { getActivePanelInstance, getSeedlingRegionGlue } from '../../flashPanel/index.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import { getActivePanel as getBotPanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
@@ -464,6 +464,13 @@ async function atlasPanelOnJs(tc, staleAdapter) {
     const load = panel._apLoadResult;
     tc.assertEqual('the atlas arm only BINDS (no delivery, no reset)', 'bind',
         load.ok ? load.steps.map((s) => s.name).filter((n) => /deliver|reset|bind/.test(n)).join(',') : JSON.stringify(load));
+    // ⛔ CLEAN SLATE — this page was delivered nothing, so the region glue holds no delivery and no start set.
+    // A leftover one is the PREVIOUS preset's (a generated room's `start` placed this preset's start-hop arrival
+    // on level 0 instead of the house: these rows red in the fast batch, green alone). Named here, before the
+    // arrival poll, so the leak class fails as itself rather than as a wrong level.
+    const glue = getSeedlingRegionGlue();
+    tc.assertEqual('clean slate: the glue holds no delivery and no start set from an earlier preset', 'null/null',
+        `${JSON.stringify(glue?.delivery ? 'a delivery' : null)}/${JSON.stringify(glue?.binding?.startSet?.start ?? null)}`);
     const rt = await tc.pollForValue(() => {
         const r = frameOf(panel)?.__seedlingJsRuntime ?? null;
         return r?.run && r.vanilla ? r : null;

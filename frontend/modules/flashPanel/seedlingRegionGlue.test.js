@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import { ACTIVE_SUBSTRATE_EVENT, AP_ITEM_FOUND_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
+import { seedlingStartSpawn } from './seedlingRegionBinding.js';
 import {
     substrateRegistryEntry as seedlingEntry,
     FLASH_SEEDLING_LOAD_REGION_EVENT,
@@ -332,8 +333,8 @@ describe('H6 — the check binding, wired', () => {
     it('BOTH bindings see every report — the adapter has ONE hook, so the glue fans out', () => {
         const h = makeHarness();
         const check = checkStub();
-        h.glue.setCheckBinding(check);
         h.glue.attachAdapter(h.adapter);
+        h.glue.setCheckBinding(check);
         h.adapter.onStateReport('level', 3);
         h.adapter.onStateReport('pendingCheck', '1|19|4|0');
         expect(check.seen).toEqual([['level', 3], ['pendingCheck', '1|19|4|0']]);
@@ -347,8 +348,8 @@ describe('H6 — the check binding, wired', () => {
      */
     it('and the region binding still works with a check binding attached', () => {
         const h = makeHarness();
-        h.glue.setCheckBinding(checkStub());
         h.glue.attachAdapter(h.adapter);
+        h.glue.setCheckBinding(checkStub());
         h.emitLoad({ region_id: 'starting_house', world: worldFor('starting_house'), arrivedFrom: null });
         h.adapter.onStateReport('level', 86);   // baseline releases the queued arrival
         expect(h.adapter.teleport).toHaveBeenCalled();
@@ -356,10 +357,10 @@ describe('H6 — the check binding, wired', () => {
 
     it('a locationCheck reaches the dispatcher in the adapter\'s own dialect', () => {
         const h = makeHarness();
+        h.glue.attachAdapter(h.adapter);
         h.glue.setCheckBinding(checkStub([
             { type: 'locationCheck', location: 'Level 019 - Boss Key', ledgerId: 'bosskey0@L19' },
         ]));
-        h.glue.attachAdapter(h.adapter);
         h.adapter.onStateReport('pendingCheck', '1|19|4|0');
         const check = h.published.find((p) => p.name === 'user:locationCheck');
         expect(check).toBeTruthy();
@@ -370,11 +371,11 @@ describe('H6 — the check binding, wired', () => {
 
     it('"found X for Player Y" reaches the panel AND the event bus', () => {
         const h = makeHarness();
+        h.glue.attachAdapter(h.adapter);
         h.glue.setCheckBinding(checkStub([
             { type: 'apItemFound', location: 'Level 019 - Boss Key', item: 'Hookshot',
                 player: 3, forSelf: false },
         ]));
-        h.glue.attachAdapter(h.adapter);
         h.adapter.onStateReport('pendingCheck', '1|19|4|0');
         const line = h.panelLines.at(-1).m;
         expect(line).toContain('Hookshot');
@@ -386,11 +387,11 @@ describe('H6 — the check binding, wired', () => {
 
     it('an item for THIS slot says "you", not "Player <n>"', () => {
         const h = makeHarness();
+        h.glue.attachAdapter(h.adapter);
         h.glue.setCheckBinding(checkStub([
             { type: 'apItemFound', location: 'Level 030 - Torch', item: 'Light',
                 player: 1, forSelf: true },
         ]));
-        h.glue.attachAdapter(h.adapter);
         h.adapter.onStateReport('pendingCheck', '1|30|7|0');
         expect(h.panelLines.at(-1).m).toContain('found Light for you');
     });
@@ -399,8 +400,8 @@ describe('H6 — the check binding, wired', () => {
         const h = makeHarness();
         const adapter = { ...h.adapter, setHostOwnedLocations: vi.fn() };
         const check = checkStub();
-        h.glue.setCheckBinding(check);
         h.glue.attachAdapter(adapter);
+        h.glue.setCheckBinding(check);
         expect(adapter.setHostOwnedLocations).toHaveBeenLastCalledWith(check.owned);
         h.glue.setCheckBinding(null);
         expect(adapter.setHostOwnedLocations).toHaveBeenLastCalledWith(new Set());
@@ -422,13 +423,59 @@ describe('H6 — the check binding, wired', () => {
         expect(() => h.glue.attachAdapter(h.adapter)).not.toThrow();
     });
 
-    it('a fresh adapter restarts BOTH bindings', () => {
+    /**
+     * ⛔ A FRESH ADAPTER IS A FRESH PAGE: nothing is mounted in it, so the check binding the OLD page's AP load
+     * set is dropped (and stood down), not restarted — this page's own AP load binds again
+     * (`flashPanelUI`: `_attachRegionGlue` → bridge ready → `_startSeedlingRandomizer`).
+     */
+    it('a fresh adapter DROPS the previous page\'s check binding and stands the adapter down on nothing', () => {
         const h = makeHarness();
         const check = checkStub();
-        h.glue.setCheckBinding(check);
         h.glue.attachAdapter(h.adapter);
-        h.glue.attachAdapter({ teleport: vi.fn(), onStateReport: null });
-        expect(check.restarts).toBe(2);
+        h.glue.setCheckBinding(check);
+        const next = { teleport: vi.fn(), onStateReport: null, setHostOwnedLocations: vi.fn() };
+        h.glue.attachAdapter(next);
+        expect(h.glue.checkBinding).toBeNull();
+        expect(next.setHostOwnedLocations).toHaveBeenLastCalledWith(new Set());
+        next.onStateReport('pendingCheck', '1|19|4|0');
+        expect(check.seen).toEqual([]);
+    });
+});
+
+/**
+ * ⛔⛔ WHAT A PAGE WAS DELIVERED DIES WITH THE PAGE (main CI, `test-substrates --batch=fast`: the two JS atlas rows red
+ * in the batch, green alone). The generated preset's randomized load set the glue's delivery, check binding and
+ * start set; the atlas preset loaded next delivers nothing (its arm only binds), so all three survived into it, and
+ * the start set's `start` — level 0 at the generated room's first door, (128, 32) — placed the atlas start hop's
+ * arrival instead of the starting house.
+ */
+describe('a preset switch: the new page starts from what IT was delivered', () => {
+    const GENERATED_START = { level: 0, x: 128, y: 32 };
+
+    it('the previous page\'s delivered start does NOT place the next page\'s start-hop arrival', () => {
+        const h = makeHarness();
+        h.glue.attachAdapter(h.adapter);
+        h.glue.setStartSet({ start: GENERATED_START });      // the generated preset's randomized load
+        h.glue.setDelivery({ gateLoadRegion: () => ({ proceed: true, sent: false }) });
+        const next = { teleport: vi.fn(() => true), onStateReport: null };
+        h.glue.attachAdapter(next);                            // the atlas preset's fresh page
+        expect(h.glue.binding.startSet).toBeNull();
+        expect(h.glue.delivery).toBeNull();
+        h.emitLoad({ region_id: 'starting_house', world: worldFor('starting_house'), arrivedFrom: null, startHop: true });
+        next.onStateReport('level', 0);                        // the page's first frame releases the arrival
+        const want = seedlingStartSpawn({ world: worldFor('starting_house') });
+        expect(want.level).toBe(86);
+        expect(next.teleport).toHaveBeenCalledTimes(1);
+        expect(next.teleport).toHaveBeenCalledWith({ level: want.level, x: want.x, y: want.y });
+    });
+
+    it('…while on ONE page, the delivered start still answers a Restart\'s start hop', () => {
+        const h = makeHarness();
+        h.glue.attachAdapter(h.adapter);
+        h.glue.setStartSet({ start: GENERATED_START });
+        h.adapter.onStateReport('level', 0);
+        h.emitLoad({ region_id: 'starting_house', world: worldFor('starting_house'), arrivedFrom: null, startHop: true, restart: true });
+        expect(h.adapter.teleport).toHaveBeenLastCalledWith(GENERATED_START);
     });
 });
 
