@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 68,
+            "count": 69,
             "id": "plan"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 379,
+        "blockStyle": 380,
         "browser": 130,
         "cited": 187,
-        "files": 391,
+        "files": 392,
         "lineStyle": 12,
-        "withDocblock": 391,
-        "withFlags": 309
+        "withDocblock": 392,
+        "withFlags": 310
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7234,6 +7234,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-frontier3-witness — ⛓⛓⛓ SEEDLING FIDELITY FRONTIER3: THE PLANNER ROUTES THROUGH WHAT THE PIXEL MASK LETS THROUGH.",
             "path": "scripts/procgen/plan-seedling-frontier3-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-ghostsword.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-ghostsword — ⛓⛓⛓ seedling-fidelity-ghostsword: THE GHOST SWORD'S DRIVEN WITNESSES.",
+            "path": "scripts/procgen/plan-seedling-ghostsword.mjs"
         },
         {
             "argvHelpers": [],
