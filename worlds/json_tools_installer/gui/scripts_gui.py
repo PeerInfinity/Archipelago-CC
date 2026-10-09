@@ -18,6 +18,7 @@ from typing import Callable, Dict, List, Optional
 os.environ.setdefault("KIVY_NO_CONSOLELOG", "1")
 os.environ.setdefault("KIVY_NO_FILELOG", "1")
 os.environ.setdefault("KIVY_NO_ARGS", "1")
+os.environ.setdefault("KIVY_LOG_MODE", "PYTHON")  # see installer_gui.py
 
 from kivy.app import App
 from kivy.clock import Clock

@@ -12,6 +12,10 @@ import os
 os.environ.setdefault("KIVY_NO_CONSOLELOG", "1")
 os.environ.setdefault("KIVY_NO_FILELOG", "1")
 os.environ.setdefault("KIVY_NO_ARGS", "1")
+# PYTHON log mode: leave the host's logging alone. The default KIVY mode sets the
+# ROOT logger to NOTSET and replaces sys.stderr for the life of the process (with
+# the console and file logs above already off, it gave us nothing in return).
+os.environ.setdefault("KIVY_LOG_MODE", "PYTHON")
 
 from kivy.app import App
 from kivy.clock import Clock
