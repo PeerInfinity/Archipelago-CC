@@ -49,6 +49,11 @@ already committed. Excluding a game from CI means adding it HERE.
 
 from __future__ import annotations
 
+import logging
+import sys
+
+import pytest
+
 # Suppress Settings.autosave during pytest. settings.py registers an atexit
 # hook that would write host.yaml back to disk on process exit; under pytest
 # that fires an assertion ("Auto-saving ... during unittests") that surfaces
@@ -125,6 +130,34 @@ collect_ignore_glob = [
     # (e.g. factorio) keep test_*.py at the world-package root.
     for pattern in (f"worlds/{name}/test", f"worlds/{name}/test_*.py")
 ]
+
+
+@pytest.fixture(autouse=True)
+def _restore_process_logging_and_streams():
+    """Undo what a test does to process-wide logging and ``sys`` streams.
+
+    An import with side effects outlives the test that made it, for the rest of
+    the xdist worker. Measured: kivy (default ``KIVY_LOG_MODE=KIVY``) set the root
+    logger to NOTSET, after which pytest's LogCaptureHandler kept upstream
+    ``BaseClasses`` ``logging.debug('Placed %s at %s', item, location)`` records
+    alive past tearDown, holding the MultiWorld and failing ``WorldTestBase``'s
+    leak check in whatever world ran a fill next on that worker.
+
+    Restores the root level, the ``logging.disable`` level, ``sys.stdout`` /
+    ``sys.stderr``, and drops root handlers the test added. pytest's own
+    handlers (``_pytest.logging``) are left to pytest, which swaps them per phase.
+    """
+    root = logging.getLogger()
+    level, disabled = root.level, root.manager.disable
+    handlers = list(root.handlers)
+    stdout, stderr = sys.stdout, sys.stderr
+    yield
+    root.setLevel(level)
+    logging.disable(disabled)
+    for handler in root.handlers[:]:
+        if handler not in handlers and type(handler).__module__ != "_pytest.logging":
+            root.removeHandler(handler)
+    sys.stdout, sys.stderr = stdout, stderr
 
 
 def _is_excluded_world_module(module: str) -> bool:
