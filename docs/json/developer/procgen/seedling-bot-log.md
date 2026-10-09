@@ -14750,6 +14750,7 @@ reference regenerated.
 2. **A caught exception still pays for its stack.** A preview that throws on a death, inside a search that explores
    every key set, makes the stack capture the hot path. Where a thrown error is caught and discarded by design,
    capture no stack.
+
 ### Seedling fidelity GHOSTSWORD — the ghost sword swings like a sword and hits like the spear, and it needs the sword
 
 ⚖ The user (2026-10-05): *"The first priority is to expand the model to include everything in the game."* Wave 9's
@@ -14796,6 +14797,7 @@ that the planner called free; `breakStanceCandidates` now cuts cells outside the
   cut.
 - **A body probe sees what a stream cannot.** Mutant M2 (damage 2 → 1) left every player stream green; only the
   BobSoldier's own `hits` (the mobiles probe) went red.
+
 ### Seedling fidelity CRUSHER — `bait` as a solver row, and L40's long silences timed
 
 Wave 9 (model coverage), the CRUSHER slice. The two largest unserved heads of the wave-8 re-measure were L42's

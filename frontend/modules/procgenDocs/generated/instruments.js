@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 68,
+            "count": 71,
             "id": "plan"
         },
         {
-            "browser": 65,
-            "count": 109,
+            "browser": 66,
+            "count": 111,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 380,
-        "browser": 130,
-        "cited": 188,
-        "files": 392,
+        "blockStyle": 385,
+        "browser": 131,
+        "cited": 191,
+        "files": 397,
         "lineStyle": 12,
-        "withDocblock": 392,
-        "withFlags": 310
+        "withDocblock": 397,
+        "withFlags": 315
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7025,6 +7025,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-crusher-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-crusher-witness — ⛓⛓⛓ SEEDLING FIDELITY CRUSHER: L42's TOTEM PART, AND THE WAY BACK, BY THE SOLVER'S `bait` VERB.",
+            "path": "scripts/procgen/plan-seedling-crusher-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-f1-l5-lock.mjs",
             "flags": [
                 {
@@ -7239,6 +7266,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-frontier3-witness — ⛓⛓⛓ SEEDLING FIDELITY FRONTIER3: THE PLANNER ROUTES THROUGH WHAT THE PIXEL MASK LETS THROUGH.",
             "path": "scripts/procgen/plan-seedling-frontier3-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-ghostsword.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-ghostsword — ⛓⛓⛓ seedling-fidelity-ghostsword: THE GHOST SWORD'S DRIVEN WITNESSES.",
+            "path": "scripts/procgen/plan-seedling-ghostsword.mjs"
         },
         {
             "argvHelpers": [],
@@ -8890,6 +8944,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-u9-shield-bump — ⛓⛓⛓ U9-swim: `Player.shieldBump`'s DRIVEN WITNESSES.",
             "path": "scripts/procgen/plan-seedling-u9-shield-bump.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-wallflyer.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-wallflyer — ⛓⛓⛓ seedling-fidelity-wallflyer: THE WALLFLYER'S DEATH AND THE SHIELD'S TURN, DRIVEN.",
+            "path": "scripts/procgen/plan-seedling-wallflyer.mjs"
         },
         {
             "argvHelpers": [],
@@ -10889,7 +10970,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-r5-l42-solver.mjs",
@@ -11787,6 +11870,86 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [
                 "arg"
             ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "at",
+                "budget",
+                "dash",
+                "deny",
+                "gap",
+                "goal",
+                "step",
+                "view"
+            ],
+            "file": "probe-seedling-solve-sites.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "at"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dash"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "deny"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "gap"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "goal"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "step"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "view"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-solve-sites — Measure-only (SEEDLING FIDELITY CRUSHER, D1): WHERE A LONG SOLVE SPENDS ITS TIME, read off the solver's own deadline sites.",
+            "path": "scripts/procgen/probe-seedling-solve-sites.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
             "browser": true,
             "category": "probe",
             "citedBy": [
@@ -12145,6 +12308,58 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-v8-seam — does the GAME honour a tape v8 `seam` block, and does its latch report back what the block declared?",
             "path": "scripts/procgen/probe-seedling-v8-seam.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-wallflyer-mobiles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-wallflyer-mobiles — ⛓⛓⛓ seedling-fidelity-wallflyer: THE WALLFLYER'S OWN BODY, AND ITS DEATH, ASKED OF THE GAME TICK BY SAMPLED TICK (BOBSOLDIER's `probe-seedling-bobsoldier-mobiles.mjs`, one class over).",
+            "path": "scripts/procgen/probe-seedling-wallflyer-mobiles.mjs"
         },
         {
             "argvHelpers": [
