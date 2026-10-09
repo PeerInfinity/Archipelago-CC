@@ -1,0 +1,85 @@
+{
+ "note": "local run (survey-seedling-route --through=end --route=full --timeout=1500 --only=…) at the slice head; CI dispatch was 403 for this session. 207,209,212,214,215,217,220 measured before the break-stance bounds cut (which cannot reach them: none derives a break stance at a level edge); 208,213,216 re-measured after it.",
+ "rows": [
+  {
+   "step": 207,
+   "level": 106,
+   "verdict": "SOLVED",
+   "ticks": 185,
+   "family": null,
+   "refusal": null
+  },
+  {
+   "step": 208,
+   "level": 101,
+   "verdict": "REFUSED",
+   "ticks": null,
+   "family": "LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons",
+   "refusal": "solverBot(survey-step-208) reach-exit (144,96)->L102: the combat ladder is EXHAUSTED. The corridor passes through danger at (177.9,88.2) — enemy:darktrap@160,80 (a static \"Enemy\" body at its placement (this room is stepped, so this class is unbridged and does not move), priced \"static\" by `contactPricing`) — and every rung of ⚖ §11.8a's order refused:\n  avoid: no admissible corridor with the danger map's 5 volume(s) forbidden — no walkable tile path in level 101 from tile (15,6) to (9,6). The two are in different connected components of the tiles the player box fits in — which at the v2 rung i"
+  },
+  {
+   "step": 209,
+   "level": 102,
+   "verdict": "SOLVED",
+   "ticks": 16,
+   "family": null,
+   "refusal": null
+  },
+  {
+   "step": 212,
+   "level": 109,
+   "verdict": "SOLVED",
+   "ticks": 135,
+   "family": null,
+   "refusal": null
+  },
+  {
+   "step": 213,
+   "level": 101,
+   "verdict": "REFUSED",
+   "ticks": null,
+   "family": "VERB-MISSING — the selected obstacle has NO strategy row at all",
+   "refusal": "solverBot(survey-step-213): no corridor for goal reach-exit toward (112,32) in level 101. Obstacle: solid:magicallockfire (magicallockfire@96,48); also on the frontier: magicallockfire@112,48, bonetorch@176,144, spinningaxe@80,224. No strategy row exists for this obstacle. Planner said: no walkable tile path in level 101 from tile (15,6) to (7,2). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game."
+  },
+  {
+   "step": 214,
+   "level": 110,
+   "verdict": "SOLVED",
+   "ticks": 161,
+   "family": null,
+   "refusal": null
+  },
+  {
+   "step": 215,
+   "level": 2,
+   "verdict": "SOLVED",
+   "ticks": 22,
+   "family": null,
+   "refusal": null
+  },
+  {
+   "step": 216,
+   "level": 3,
+   "verdict": "SOLVED",
+   "ticks": 79,
+   "family": null,
+   "refusal": null
+  },
+  {
+   "step": 217,
+   "level": 111,
+   "verdict": "SOLVED",
+   "ticks": 95,
+   "family": null,
+   "refusal": null
+  },
+  {
+   "step": 220,
+   "level": 115,
+   "verdict": "SOLVED",
+   "ticks": 173,
+   "family": null,
+   "refusal": null
+  }
+ ]
+}
