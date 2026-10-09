@@ -26,6 +26,11 @@
  *        -> both solve-reproduction rows red (residue 21 re-plans to another
  *           walk, residue 15 refuses HAMMER_SAFETY again); the sweep: 13 of
  *           the 45 residues refuse
+ *   m4 (hammer-phase A3) the fallback off (`HAMMER_ESCAPE_FALLBACK.enabled`
+ *        false, A2's escape as a requirement) -> the A3 default and ranking
+ *        rows red; every solve below, the sweep and every generated row are
+ *        unchanged (the fallback replaces a refusal only, and none of them
+ *        has one)
  */
 import { describe, expect, it } from 'vitest';
 
@@ -39,7 +44,8 @@ import { runTapeToStream } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
 import {
-    DEADLINE_SITES, HAMMER_ESCAPE, HAMMER_ESCAPE_BOUNDS, HAMMER_PHASE_RUNG, withHammerEscape,
+    DEADLINE_SITES, HAMMER_ESCAPE, HAMMER_ESCAPE_BOUNDS, HAMMER_ESCAPE_FALLBACK, HAMMER_PHASE_RUNG, noStrikeMove,
+    withHammerEscape,
 } from './solverBot.js';
 import {
     HOLD_FIRST_KEY_SETS, SPACE_TIME_KEY_SETS, coarseKey, spaceTimeReach,
@@ -220,4 +226,47 @@ describe('hammer-phase A D2 — HAMMER_ESCAPE in the press kill', () => {
             expect(press.flatMap((x) => x.escapes ?? []).length).toBe(press.flatMap((x) => x.landings).length);
         }, 300_000);
     }
+});
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE A3 — the escape is a PREFERENCE (⚖ user 2026-10-09). The rank of a tick's moves with no
+ * strike in hand is one function (`noStrikeMove`), asked by the walk and by the aim's fallback; A2's three moves come
+ * first in A2's order, and the uncertified strike (the switch OFF's) replaces only the refusal.
+ */
+describe('hammer-phase A3 — HAMMER_ESCAPE_FALLBACK: the escape as a preference', () => {
+    const certified = { cell: { x: 8, y: 8 } };
+    const uncertified = { cell: { x: 8, y: 8 }, escape: 'uncertified', escapeBound: 'exhausted' };
+    const none = { cell: null };
+    const asked = [];
+    const thunk = (name, v) => () => { asked.push(name); return v; };
+    const move = (next, following, refuge, fallback) => {
+        asked.length = 0;
+        return noStrikeMove({ next, following: thunk('follow', following), refuge: thunk('refuge', refuge),
+            ...(fallback === undefined ? {} : { fallback }) });
+    };
+
+    it('⛓⛓ ON by default', () => {
+        expect(HAMMER_ESCAPE_FALLBACK.enabled).toBe(true);
+    });
+
+    it('⛓⛓ the rank: a certified strike, the certificate in flight, a refuge, then the uncertified strike, then the refusal', () => {
+        expect(move(certified, true, true)).toBe('strike');
+        expect(asked).toEqual([]);
+        for (const next of [uncertified, none, null]) {
+            expect(move(next, true, true)).toBe('follow');
+            expect(asked).toEqual(['follow']);
+            expect(move(next, false, true)).toBe('refuge');
+            expect(asked).toEqual(['follow', 'refuge']);
+        }
+        expect(move(uncertified, false, false)).toBe('uncertified');
+        expect(move(none, false, false)).toBe('refuse');
+        expect(move(null, false, false)).toBe('refuse');
+    });
+
+    it('⛓ the switch off is A2: the uncertified strike is the refusal it replaced, and nothing above it moves', () => {
+        expect(move(uncertified, false, false, false)).toBe('refuse');
+        expect(move(uncertified, true, false, false)).toBe('follow');
+        expect(move(uncertified, false, true, false)).toBe('refuge');
+        expect(move(certified, false, false, false)).toBe('strike');
+    });
 });
