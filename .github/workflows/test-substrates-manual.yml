@@ -25,9 +25,6 @@ name: Substrate tests — manual batches
 # server step is needed here.
 
 on:
-  # TEMPORARY (registers this new file for dispatch; reverted next commit)
-  push:
-    branches: [tests-batch-split]
   workflow_dispatch:
     inputs:
       batch:

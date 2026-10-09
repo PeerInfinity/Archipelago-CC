@@ -17,7 +17,6 @@ on:
   push:
     branches:
       - main
-      - tests-batch-split  # TEMPORARY: CI on the slice branch; reverted next commit
     paths:
       - 'Players/Templates/*.yaml'
       - 'scripts/test/**'
