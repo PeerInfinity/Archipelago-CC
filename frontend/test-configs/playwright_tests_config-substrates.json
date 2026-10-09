@@ -3,7 +3,7 @@
     "hideDisabledTests": true,
     "randomizeOrder": false,
     "defaultEnabledState": false,
-    "_comment": "Substrate in-app tests (text-adventure wrapper + flash + runner + jta + omsi + maze consumable tiles). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
+    "_comment": "Substrate in-app tests (text-adventure wrapper + flash + runner + jta + omsi + maze consumable tiles). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes). A row's \"batch\" field is the smoke-row override (frontend/modules/tests/testBatches.js): it keeps ONE row of a manual batch on push; delete the line to drop it.",
     "tests": [
         {
             "id": "tasw-location-check-direct-dispatch",
@@ -93,6 +93,7 @@
         },
         {
             "id": "runner-location-check-real-physics",
+            "batch": "fast",
             "enabled": true,
             "category": "runnerDemo"
         },
@@ -132,6 +133,7 @@
         },
         {
             "id": "noiz2sa-first-entry-explores",
+            "batch": "fast",
             "enabled": true,
             "category": "noiz2saSubstrate",
             "_comment": "bulletml-incremental N4b (b, as changed 2026-10-05: fully explored on FIRST ENTRY, not first clear). The second region (N4c: no location) is fogged (its exits undiscovered) and the player is moved into it: on that first entry it reads fully explored (every exit discovered, through loop:exploreCompleted), one explore per exit. Batch fast: no play."

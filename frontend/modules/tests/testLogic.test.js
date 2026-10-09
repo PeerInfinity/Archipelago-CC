@@ -12,12 +12,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // The test files discovery failed to import — set per row (slice C6).
-const discovery = vi.hoisted(() => ({ importFailures: [] }));
+// `tests` replaces the stub roster for a row that needs other categories.
+const discovery = vi.hoisted(() => ({ importFailures: [], tests: null }));
 
 vi.mock('../stateManager/index.js', () => ({ stateManagerProxySingleton: {} }));
 vi.mock('./testDiscovery.js', () => ({
   discoverTests: async () => {},
-  getDiscoveredTests: () => [
+  getDiscoveredTests: () => discovery.tests ?? [
     { id: 'row-a', name: 'Row A', order: 0, category: 'Stub', enabled: true },
     { id: 'row-b', name: 'Row B', order: 1, category: 'Stub', enabled: true },
   ],
@@ -71,6 +72,7 @@ beforeEach(async () => {
 
 afterEach(() => {
   discovery.importFailures = [];
+  discovery.tests = null;
   vi.restoreAllMocks();
   delete globalThis.window;
 });
@@ -172,5 +174,42 @@ describe('test files that failed to import (slice C6)', () => {
     await untilComplete();
     expect(window.__playwrightTestResults__.importFailures).toEqual([]);
     expect(window.__playwrightTestResults__.summary.importFailureCount).toBe(0);
+  });
+});
+
+describe('the smoke-row batch override (?testBatch=, config `batch`)', () => {
+  // Two rows of a MANUAL batch's category (testBatches.js noiz2sa); the mode's
+  // config gives one of them `batch: 'fast'` — the smoke row kept on push.
+  const ROWS = [
+    { id: 'n-smoke', name: 'Smoke', order: 0, category: 'noiz2saSubstrate', enabled: false },
+    { id: 'n-other', name: 'Other', order: 1, category: 'noiz2saSubstrate', enabled: false },
+  ];
+  const CONFIG = {
+    autoStartTestsOnLoad: false,
+    tests: [
+      { id: 'n-smoke', enabled: true, category: 'noiz2saSubstrate', batch: 'fast' },
+      { id: 'n-other', enabled: true, category: 'noiz2saSubstrate' },
+    ],
+  };
+  async function enabledIn(batch) {
+    discovery.tests = ROWS.map((r) => ({ ...r }));
+    window.location.search = `?testBatch=${batch}`;
+    await testLogic.applyLoadedState(CONFIG);
+    return (await testLogic.getTests()).filter((t) => t.enabled).map((t) => t.id);
+  }
+
+  it('the config `batch` field survives the merge and moves the row to that batch', async () => {
+    expect(await enabledIn('fast')).toEqual(['n-smoke']);
+  });
+
+  it('the manual batch keeps the rest of its category, and not the smoke row', async () => {
+    expect(await enabledIn('noiz2sa')).toEqual(['n-other']);
+  });
+
+  it('a second smoke row for the same manual batch is refused', async () => {
+    discovery.tests = ROWS.map((r) => ({ ...r }));
+    window.location.search = '?testBatch=fast';
+    const both = { ...CONFIG, tests: CONFIG.tests.map((t) => ({ ...t, batch: 'fast' })) };
+    await expect(testLogic.applyLoadedState(both)).rejects.toThrow(/two smoke rows/);
   });
 });

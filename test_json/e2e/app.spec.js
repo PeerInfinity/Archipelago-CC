@@ -279,6 +279,10 @@ test.describe('Application End-to-End Tests', () => {
             batch: testBatch || null,
             testIds: testIds || null,
             flavour: TEST_FLAVOUR,
+            // The in-app budget this run raced, when overridden
+            // (TEST_AUTO_START_TIMEOUT_MS); null = testLogic.js's default.
+            // scripts/test/check-batch-headroom.js grades a run against it.
+            budgetMs: autoStartTimeoutMs ? Number(autoStartTimeoutMs) : null,
             // The page's error counts, so a results file alone answers "did a
             // handler throw?" (scripts/test/summarize-repeat-runs.js reads it).
             pageDiagnostics: {

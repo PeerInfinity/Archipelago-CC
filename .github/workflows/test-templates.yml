@@ -1,5 +1,17 @@
 name: Test ALTTP Spoiler & Frontend Regression
 
+# Two kinds of job (slice tests-batch-split, 2026-10-09):
+#   - test-alttp-and-regression: the ALTTP spoiler test + the regression roster
+#     on both boots;
+#   - substrates: one PARALLEL matrix job per ON-PUSH test-substrates batch.
+#     The batch list is not written here: the `batches` job reads it off
+#     frontend/modules/tests/testBatches.js (every batch not marked
+#     `manual: true`), so a new batch joins push by its own definition. Each
+#     batch is its own job, so one batch's red cannot skip another (on main
+#     before this, a red `fast` step skipped the `apworld` step after it), and
+#     each races its own 600 s in-app budget (AUTO_START_TIMEOUT_MS).
+#   Manual batches run in test-substrates-manual.yml.
+
 on:
   # Run on push to main branch
   push:
@@ -126,25 +138,6 @@ jobs:
         run: |
           npm test -- --mode=test-regression --bundled
 
-      # The `fast` batch: every substrate category no other batch claims
-      # (frontend/modules/tests/testBatches.js). The whole roster outlived this
-      # job's 30-minute cap on every main run from 2026-09-11 to 2026-09-27;
-      # the `bot-walks` batch runs on demand in test-substrates-bot-walks.yml
-      # (manual only, by the user's ruling).
-      - name: Run substrate tests (fast batch)
-        run: |
-          npm test -- --mode=test-substrates --batch=fast
-
-      # The `apworld` batch (the `apworldEditor` category), as a second step
-      # rather than a parallel job (ci-split C2, 2026-09-27): each `npm test`
-      # is its own in-app run with its own 600 s page budget
-      # (AUTO_START_TIMEOUT_MS, testLogic.js), and a parallel job would repeat
-      # this job's setup. `!cancelled()` so a red `fast` step still runs it.
-      - name: Run substrate tests (apworld batch)
-        if: ${{ !cancelled() }}
-        run: |
-          npm test -- --mode=test-substrates --batch=apworld
-
       # always(), not !cancelled(): a job cancelled at its cap is exactly the
       # run whose passing steps' results are worth keeping — under !cancelled()
       # the upload was skipped and nothing uploaded for two weeks.
@@ -157,4 +150,100 @@ jobs:
             scripts/output/
             docs/json/developer/test-results/
             test-results/
+          retention-days: 7
+
+  # The on-push batch list, read off testBatches.js. No submodules and no
+  # npm install: the module has no imports.
+  batches:
+    name: On-push substrate batches
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      list: ${{ steps.list.outputs.list }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: List the on-push batches
+        id: list
+        run: |
+          list=$(node scripts/test/list-test-batches.js --on-push)
+          echo "On-push batches: $list"
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+
+  substrates:
+    name: Substrate tests — ${{ matrix.batch }} batch
+    needs: batches
+    runs-on: ubuntu-latest
+    # Sized so the in-app runner's own 600 s budget fires first; the setup
+    # below is the bot-walks job's (no Python venv: the in-app substrate tests
+    # read only the committed presets and the submodules).
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        batch: ${{ fromJSON(needs.batches.outputs.list) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v6.1.0
+        id: cache-node
+        with:
+          path: node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Node.js dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6.1.0
+        id: cache-playwright
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: |
+          npx playwright install chromium
+
+      - name: Run substrate tests (${{ matrix.batch }} batch)
+        env:
+          BATCH: ${{ matrix.batch }}
+        run: |
+          npm test -- --mode=test-substrates --batch="$BATCH"
+
+      # Grades the run just made against its in-app budget
+      # (scripts/test/check-batch-headroom.js): fails on NEVER STARTED / CUT OFF
+      # rows or a span over budget, annotates a WARNING past the headroom
+      # fraction — so a batch creeping up on its budget is named before it
+      # starts dropping its tail. !cancelled(): a red run is exactly the one
+      # whose headroom is worth reading.
+      - name: Budget headroom (${{ matrix.batch }} batch)
+        if: ${{ !cancelled() }}
+        env:
+          BATCH: ${{ matrix.batch }}
+        run: |
+          node scripts/test/check-batch-headroom.js --mode=test-substrates --batch="$BATCH"
+
+      - name: Upload test results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: test-results-${{ matrix.batch }}
+          path: |
+            test-results/
+            playwright-report.json
           retention-days: 7

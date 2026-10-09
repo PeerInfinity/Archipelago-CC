@@ -38,17 +38,17 @@ All test workflows can be triggered manually from the GitHub Actions tab:
 **Tests:**
 - ALTTP template generation and spoiler test
 - Regression tests (the ES-module boot, then the bundled boot)
-- Substrate tests, `--batch=fast` only (every category except the real-time omsi bot walks)
+- Substrate tests: one parallel matrix job per ON-PUSH batch of `frontend/modules/tests/testBatches.js` (every batch not marked `manual: true`, listed by `scripts/test/list-test-batches.js --on-push`), each followed by its budget-headroom check (`scripts/test/check-batch-headroom.js`)
 
 ---
 
-### Substrate tests — bot walks
+### Substrate tests — manual batches
 
-**File:** `test-substrates-bot-walks.yml`
+**File:** `test-substrates-manual.yml` (was `test-substrates-bot-walks.yml`)
 
-**Triggers:** Manual only (`workflow_dispatch`; the user ruled the bot walks manual-only, 2026-09-27)
+**Triggers:** Manual only (`workflow_dispatch`; the user ruled the bot walks manual-only on 2026-09-27, and the noiz2sa and runner rows on 2026-10-09)
 
-**Purpose:** The `bot-walks` batch of `npm test -- --mode=test-substrates` — the real-time omsi bot walks, minutes each by design, which `test-templates.yml` no longer runs. A `batch` input (default `bot-walks`) selects any batch in `frontend/modules/tests/testBatches.js`.
+**Purpose:** The MANUAL batches of `npm test -- --mode=test-substrates` (`manual: true` in `frontend/modules/tests/testBatches.js`), which `test-templates.yml` never runs. The `batch` input names one manual batch, or `all` (the default) runs every manual batch as parallel jobs; an on-push batch name is refused. One smoke row per manual substrate still runs on push (its config `batch` field).
 
 ---
 

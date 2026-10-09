@@ -15,7 +15,7 @@ name: In-app tests — repeat run (manual)
 # fails only when it could not run (bad inputs, setup). The verdict is the
 # run page's summary, whose FIRST line is the rate ("Rate: k/N passed").
 #
-# A separate workflow rather than test-substrates-bot-walks.yml grown: that one
+# A separate workflow rather than test-substrates-manual.yml (then test-substrates-bot-walks.yml) grown: that one
 # runs one batch once and its red IS the verdict; this one loops, keeps each
 # run's files by index and summarises — a different shape, and a dispatch of
 # either should not have to know about the other's inputs.
@@ -45,8 +45,8 @@ on:
         default: ''
       batch:
         description: >-
-          A batch to run each time instead (testBatches.js: fast, apworld,
-          bot-walks). Give this OR test, not both.
+          A batch to run each time instead (testBatches.js: fast,
+          seedling-js, apworld, bot-walks, noiz2sa, runner). Give this OR test, not both.
         type: string
         default: ''
       repeat:
@@ -92,7 +92,7 @@ jobs:
             echo "::error::repeat must be 1–20, got $REPEAT"; exit 2
           fi
 
-      # ── the same setup as test-substrates-bot-walks.yml ─────────────────
+      # ── the same setup as test-substrates-manual.yml ───────────────────
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
         with:

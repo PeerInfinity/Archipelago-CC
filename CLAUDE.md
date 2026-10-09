@@ -199,21 +199,40 @@ python scripts/test/test-all-templates.py --include-list "Game1.yaml" "Game2.yam
 ### Test batches
 The in-app runner races the whole roster against one wall-clock budget
 (`AUTO_START_TIMEOUT_MS` in `frontend/modules/tests/testLogic.js`).
-`test-substrates` outgrew it — the real-time omsi bot walks dominate its wall
-clock — so run it in batches instead:
+`test-substrates` outgrew it, so run it in batches instead:
 ```
-npm test -- --mode=test-substrates --batch=fast        # everything no other batch claims
-npm test -- --mode=test-substrates --batch=apworld     # the apworld editor rows only
-npm test -- --mode=test-substrates --batch=bot-walks   # the real-time bot legs only
+npm test -- --mode=test-substrates --batch=fast          # everything no other batch claims (+ the smoke rows)
+npm test -- --mode=test-substrates --batch=seedling-js   # the Seedling JS/wasm runtime rows
+npm test -- --mode=test-substrates --batch=apworld       # the apworld editor rows only
+npm test -- --mode=test-substrates --batch=bot-walks     # MANUAL: the real-time bot legs only
+npm test -- --mode=test-substrates --batch=noiz2sa       # MANUAL: the noiz2sa substrate rows
+npm test -- --mode=test-substrates --batch=runner        # MANUAL: runnerDemo + Runner block modes
 ```
 ⛔ **No roster counts or durations are quoted here on purpose** — they go stale
 silently and then get trusted. To derive today's numbers, read
 `frontend/test-configs/playwright_tests_config-substrates.json` (note
 `defaultEnabledState`, and that a test counts only if its own `enabled` says so)
-and group by `category`; `bot-walks` claims the `Omsi bot walks` category, `apworld`
-claims `apworldEditor` (CI runs it on push after `fast`), and `fast` takes the rest.
-The authoritative number is a run.
-Batches select whole **categories** and live in `frontend/modules/tests/testBatches.js`.
+and group by `category`; each batch's `categories` in `testBatches.js` say which it
+claims, and `fast` takes the rest. The authoritative number is a run.
+
+**On push vs manual.** A batch marked `manual: true` never runs on push. CI reads
+the on-push list off the module (`node scripts/test/list-test-batches.js --on-push`)
+and runs each as its own PARALLEL job in `test-templates.yml`, so one batch's red
+cannot skip another; `test-substrates-manual.yml` (`workflow_dispatch`, input
+`batch` = one manual batch or `all`) runs the manual ones. **Smoke rows:** one row
+of a manual substrate may carry `"batch": "fast"` in the substrates config, so a
+shared-code change that breaks that substrate's boot is still caught on push.
+`testBatches.js` accepts that override ONLY for a manual category's row moving to an
+on-push batch, and at most one per manual batch; deleting the line drops it.
+
+**Budget headroom.** After each CI batch, `node scripts/test/check-batch-headroom.js
+--mode=test-substrates --batch=<b>` grades the newest results file of that batch:
+it FAILS on NEVER STARTED / CUT OFF rows or a span over the budget, and WARNS when
+the span passes `HEADROOM_WARN_FRACTION` of it — split the batch then, before it
+drops its tail. Runnable locally against any results on disk (no `--batch` = every
+batch's newest run).
+
+Batches select whole **categories** (the smoke rows are the one per-row exception) and live in `frontend/modules/tests/testBatches.js`.
 `fast` is the default batch: it absorbs every category no other batch claims, so
 a new test category still *runs* even if nobody classified it. Omitting `--batch`
 runs the whole roster — which for `test-substrates` currently exceeds the budget.

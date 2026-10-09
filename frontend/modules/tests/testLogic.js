@@ -10,7 +10,7 @@ import {
   getImportFailures,
   isDiscoveryComplete,
 } from './testDiscovery.js';
-import { categoryInBatch, listBatchNames } from './testBatches.js';
+import { assertRowOverrides, listBatchNames, testInBatch } from './testBatches.js';
 
 // Wall-clock budget for a whole auto-started run. When it expires the run is
 // abandoned mid-roster, so this is a CAP ON THE SUITE, not a per-test timeout:
@@ -71,10 +71,14 @@ function applyTestBatchFilter(tests) {
     );
   }
 
+  // A smoke row's config `batch` field moves it out of its manual category's
+  // batch (testBatches.js); refuse a malformed override before filtering.
+  assertRowOverrides(tests.filter((t) => t.enabled));
+
   let excluded = 0;
   for (const test of tests) {
     if (!test.enabled) continue;
-    if (!categoryInBatch(test.category, batchName)) {
+    if (!testInBatch(test, batchName)) {
       test.enabled = false;
       excluded += 1;
     }
@@ -504,6 +508,10 @@ export const testLogic = {
               loadedTest.order !== undefined
                 ? loadedTest.order
                 : discoveredTest.order,
+            // The per-row batch override (a manual batch's smoke row,
+            // testBatches.js batchOfTest). Lives in the mode's config, not the
+            // registration, so dropping a smoke row is one config line.
+            ...(loadedTest.batch !== undefined ? { batch: loadedTest.batch } : {}),
             // Keep discovered test metadata (name, description, functionName, category)
             // But allow some overrides from loaded data if needed
           });

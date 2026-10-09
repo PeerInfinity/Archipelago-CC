@@ -1,0 +1,143 @@
+name: Substrate tests — manual batches
+
+# ⛓ THE MANUAL test-substrates BATCHES, ON DEMAND ONLY.
+#
+# Every batch marked `manual: true` in frontend/modules/tests/testBatches.js
+# runs here and never on push: the real-time omsi bot walks (`bot-walks`), and
+# since slice tests-batch-split (2026-10-09) `noiz2sa` and `runner` too.
+# test-templates.yml runs every other batch on push, one matrix job each; one
+# smoke row of each manual substrate stays on push through its config `batch`
+# field (testBatches.js batchOfTest).
+#
+# ⚖ USER RULINGS: 2026-09-27 "make the slow batch manual only, and also move
+# it to either a different workflow or a separate job" (bot-walks);
+# 2026-10-09 "move the noiz2sa tests out of the main set of tests … make them
+# manual" (and the runner rows with them). ⇒ `workflow_dispatch:` and NOTHING
+# ELSE — never push, pull_request or schedule. A separate workflow rather than
+# manual-only jobs inside test-templates.yml, because such a job would show as
+# `skipped` on every push run of that workflow.
+#
+# This file was test-substrates-bot-walks.yml (slice ci-batches-C1); it now
+# takes any manual batch, or `all` of them as parallel jobs.
+#
+# `npm test` serves the tree itself: playwright.config.js's `webServer` runs
+# `python -m http.server <TEST_PORT>` (scripts/test/testServer.js), so no
+# server step is needed here.
+
+on:
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: >-
+          A manual test-substrates batch (testBatches.js `manual: true`:
+          bot-walks, noiz2sa, runner), or `all` to run every manual batch as
+          parallel jobs.
+        type: string
+        default: all
+
+jobs:
+  # Resolve the input against testBatches.js: `all` = every manual batch; a
+  # name must BE a manual batch (an on-push batch runs in test-templates.yml,
+  # and an empty or unknown --batch would run the whole roster or nothing).
+  batches:
+    name: Resolve the batch
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      list: ${{ steps.list.outputs.list }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: List the batches to run
+        id: list
+        env:
+          BATCH: ${{ inputs.batch || 'all' }}
+        run: |
+          manual=$(node scripts/test/list-test-batches.js --manual)
+          if [ "$BATCH" = all ]; then
+            list="$manual"
+          elif node -e 'process.exit(JSON.parse(process.argv[1]).includes(process.argv[2]) ? 0 : 1)' "$manual" "$BATCH"; then
+            list="[\"$BATCH\"]"
+          else
+            echo "::error::'$BATCH' is not a manual batch; manual batches: $manual (on-push batches run in test-templates.yml)"
+            exit 2
+          fi
+          echo "Batches: $list"
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+
+  manual:
+    name: Substrate tests — ${{ matrix.batch }} batch
+    needs: batches
+    runs-on: ubuntu-latest
+    # Sized so the in-app runner's own budget fires first (AUTO_START_TIMEOUT_MS,
+    # 600 s, testLogic.js): measured 2026-09-27 the bot-walks batch took 366 s
+    # in-app on the runner and the setup steps ~83 s — so a run at the full
+    # budget still ends near 12 minutes, and 20 leaves the margin for a slow
+    # cache-miss install.
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        batch: ${{ fromJSON(needs.batches.outputs.list) }}
+
+    steps:
+      # ── the same setup as test-templates.yml's substrates job ─────────────
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v6.1.0
+        id: cache-node
+        with:
+          path: node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Node.js dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6.1.0
+        id: cache-playwright
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: |
+          npx playwright install chromium
+
+      - name: Run substrate tests (${{ matrix.batch }} batch)
+        env:
+          BATCH: ${{ matrix.batch }}
+        run: |
+          npm test -- --mode=test-substrates --batch="$BATCH"
+
+      # scripts/test/check-batch-headroom.js — see test-templates.yml.
+      - name: Budget headroom (${{ matrix.batch }} batch)
+        if: ${{ !cancelled() }}
+        env:
+          BATCH: ${{ matrix.batch }}
+        run: |
+          node scripts/test/check-batch-headroom.js --mode=test-substrates --batch="$BATCH"
+
+      # always(): a run cancelled at its cap still uploads what it produced.
+      - name: Upload test results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: test-results-${{ matrix.batch }}
+          path: |
+            test-results/
+            playwright-report.json
+          retention-days: 7
