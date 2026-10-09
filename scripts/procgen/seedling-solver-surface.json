@@ -1021,9 +1021,9 @@
       "files": {
         "botDriverV2.js": 3,
         "dangerMap.js": 3,
-        "solverBot.js": 71
+        "solverBot.js": 72
       },
-      "sites": 77,
+      "sites": 78,
       "seen": "both",
       "via": [
         "direct"

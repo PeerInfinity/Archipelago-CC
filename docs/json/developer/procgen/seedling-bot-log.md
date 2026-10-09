@@ -14701,6 +14701,56 @@ counts). This page's press-kill paragraph.
 2. **A strike-level fallback must rank below the moves the requirement already had.** Making an uncertified strike
    available to the executor's per-tick re-derivation silently replaced the certificate-follow and the refuge.
 
+### Seedling hammer-phase A4 — the escape's budget
+
+⚖ The user (2026-10-09), shown A3's finding (the escape's real cost is search time), chose *"A4 budget slice first:
+… a small slice that caps the escape search (e.g., fewer expansions; when it runs out it makes no claim and the press
+goes ahead as before), then measure that L18 still solves 45/45."* The report is
+`CC/docs/cloud-reports/seedling-hammer-a4.md`.
+
+**W0 — profile before the cap (`profile-seedling-hammer-escape.mjs`, every `pressEscape` call; `node --cpu-prof`).**
+- **The outlier was not the escape's search.** `empty post-sword seed 30`'s first draw took 227 s ON vs 21 s OFF.
+  Only 0.3 s of it was in `pressEscape` (256 calls, every search 75 expansions). 187 s was CONSTRUCTING
+  `PhysicsV2Error`: 16,216,872 previewed drownings across 35,590 `stepToward` calls (its depth-4 survival tree under
+  the HAMMER-PHASE rung's stall previews), ~11.6 µs each, almost all of it V8 capturing a stack `previewOrDeath`
+  throws away. The escape steers the walk to the water where those previews die. A2's `previewOrDeath` made the
+  deaths survivable, and nothing made them cheap.
+- **The escape's search never reaches its bound.** The largest CERTIFIED search was 20,109 expansions (L18 sweep);
+  killgate draws 57/53 reached 16,341, and c3/c6/c4 9,920 / 9,920 / 9,745. The largest exhausted search was 18,245.
+  The bound (50,000) cut no search in any set.
+- **Where the escape IS the cost** (killgate draws, 57% of their wall time): medium certified searches (5k–16k
+  expansions) REPEATED. ~87% of the escape time is the same search asked again by another solve of the same record,
+  which is the generator's re-solving. A cache across runs is unsound here: the preview stepper reads activators,
+  pulls and the damage state, none of which a key over the player state sees.
+
+**D1 — what the profile justified (result-identical).**
+- `previewOrDeath` steps with `Error.stackTraceLimit = 0`, restored on every exit. A non-death error is re-stepped
+  with the stack on, so a defect still throws with its trace.
+- `stepToward` asks each key set once: `intended` repeats one of the nine, and a repeat can never displace its first
+  appearance under a strict `>`. The depth-4 tree goes from 10⁴ to 9⁴.
+- `maxExpansions` stays 50,000. A's derivation (the whole reachable set, 41,463) stands, and the measured
+  distribution is frozen beside it (`HAMMER_ESCAPE_MEASURED`). A lower cap saves time only by un-certifying presses.
+
+**D2 — measured.**
+- Sweep `--twice`: 45/45, all 45 rows = A3's (verdict, length, key digest, stalls, escapes, fellBack, hits), 0 hits.
+- Every identity row and producer `--check` = A3's.
+- `empty post-sword seed 30`'s first draw: 227 s → 30.0 s ON (OFF 18.8 s).
+- `seedlingGenCapacity.slow` post-sword (quiet 4-core box): A3 ON 1,563 s, a timeout at 900 s → A4 ON 485 s, A4 OFF
+  504 s. The re-roll histograms are identical.
+- c3: ON 183 s, OFF 179 s.
+- The killgate draws 57/53 k=0…11: ON 111 s, OFF 61 s. Not moved; that cost is residue for B.
+
+**D3.** Surface `--write` (one site count, the trace's `run.ticksCompleted`), this page's press-kill paragraph,
+reference regenerated.
+
+**Trap candidates.**
+1. **"ON minus OFF" is not "the escape's share".** A3 read ~75% of a c3 solve as the escape's search. Most of the
+   difference was a cost the escape only routes the walk into (previewed deaths). Count the calls of the suspect,
+   with their own wall time, before attributing a difference to it.
+2. **A caught exception still pays for its stack.** A preview that throws on a death, inside a search that explores
+   every key set, makes the stack capture the hot path. Where a thrown error is caught and discarded by design,
+   capture no stack.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
