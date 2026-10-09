@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 68,
+            "count": 69,
             "id": "plan"
         },
         {
             "browser": 65,
-            "count": 109,
+            "count": 110,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 379,
+        "blockStyle": 381,
         "browser": 130,
         "cited": 187,
-        "files": 391,
+        "files": 393,
         "lineStyle": 12,
-        "withDocblock": 391,
-        "withFlags": 309
+        "withDocblock": 393,
+        "withFlags": 311
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7020,6 +7020,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-crusher-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-crusher-witness — ⛓⛓⛓ SEEDLING FIDELITY CRUSHER: L42's TOTEM PART, AND THE WAY BACK, BY THE SOLVER'S `bait` VERB.",
+            "path": "scripts/procgen/plan-seedling-crusher-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-f1-l5-lock.mjs",
             "flags": [
                 {
@@ -11777,6 +11804,84 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling fidelity SLOTS, D1: **THE SLOT ARRAY IS SESSION STATE, ON THE GAME.** `Inventory.items` is static (`Inventory.as:51`); `addItemsFromSave` (`:291-332`) only appends what the item flags imply and the array lacks, and its two fusions splice; only `Main.clearSave` / `freshSaveForLevelSet` (`Inventory.clearItems…",
             "path": "scripts/procgen/probe-seedling-slot-order.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "at",
+                "budget",
+                "dash",
+                "deny",
+                "gap",
+                "goal",
+                "step",
+                "view"
+            ],
+            "file": "probe-seedling-solve-sites.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "at"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dash"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "deny"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "gap"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "goal"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "step"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "view"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-solve-sites — Measure-only (SEEDLING FIDELITY CRUSHER, D1): WHERE A LONG SOLVE SPENDS ITS TIME, read off the solver's own deadline sites.",
+            "path": "scripts/procgen/probe-seedling-solve-sites.mjs"
         },
         {
             "argvHelpers": [
