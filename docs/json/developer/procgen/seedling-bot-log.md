@@ -14607,6 +14607,64 @@ game witnesses `hammer-a-l18-escape21` and `hammer-a-l18-escape15` (p4f, 0 px). 
   the dashless pass's plan, shipped because the full pass needs 66 (r40) / 105 (r41, r42) units against the 85-unit
   upgrade window.
 
+### Seedling fidelity CRUSHER — `bait` as a solver row, and L40's long silences timed
+
+Wave 9 (model coverage), the CRUSHER slice. The two largest unserved heads of the wave-8 re-measure were L42's
+crusher (survey step 85, sweep leg 416: *"Strategy 'bait' is SELECTED but not registered"*, Σ 18 unserved) and L40's
+Totem Part (64,144) (sweep legs 376 and 379 TIMEOUT, Σ 18). The report is
+`CC/docs/cloud-reports/seedling-fidelity-crusher.md`.
+
+**L42 was solved in R5 and the solver never met the solution.** Everything the verb needed already existed in three
+places: the round-trip ordering search (`probe-seedling-r5-l42-solver.mjs`), the beam-searched choreographies
+(`r5Totem.L42_SOLVE`, game-recorded in `r5-l42-part4`), and the verb (`botDriverV2.runBait`). `crusherBait.js` joins
+them. The proposer is ported and generalised to the room's own crusher list; run from the survey's real arrival it
+returns R5's nine charges in three chains exactly, in 3.5 s (14 s before the floods were keyed on the configuration's
+cache instead of re-keyed per cell). Each chain is LOOKED UP in `BAIT_CHOREOGRAPHIES`; a chain with no row refuses
+by name.
+
+**The one new thing is the start, and it was measured before it was built.** A choreography is a list of held spans
+searched from one state. Re-driven from the committed tape's prefix with the player nudged: chain 1 survives
+dy ∈ [-1, 1], chain 2 dy ≤ 0.5, chain 3 only |dx| ≤ 0.2. A rest state is quantised (one tap moves 1.70 px, two to four
+5.15, five or six 8.75), so aligning to a sub-pixel start is out of reach; and the tolerance is not a box (chain 2
+fails at a periodic set of x offsets inside its "box"). So the CHAIN is the test: candidate rest states (≤ 3
+tap-and-coast moves, every previewed tick outside every live lane, nearest first) are tried on a FORK of the run —
+`solveSegment`'s new optional `forkRun`, which `twoPassSolve` passes as its own `makeRun` — and the first the fork
+survives is driven live. L42's chains took 1, 4 and 2 tries.
+
+**A lane behind a wall is not a trigger.** `dangerMap.crusherDanger` priced four rects through walls, so the return
+corridor under A's south lane was danger and no walk to a bait stance planned. Under the flag the danger is the
+game's own question (`crusherSightDanger`: sight line first, then the inclusive lanes).
+
+Behind `CRUSHER_BAIT` (env `SEEDLING_CRUSHER_BAIT=1`), OFF by default: the frontier asks `frontierExecutor`, which is
+`STRATEGY_EXECUTORS` byte for byte while the flag is off. With it on, step 85 SOLVES (1,294 t) and the round trip
+(collect, then `teleporter@240,336`) solves in 1,468 t: `crusher-l42-round-trip`, recorded on p4f headless, the
+model reproducing it exactly (hits 0, `hasTotemPart[4]`, `save.time` 10245 = model), the live re-play = oracle.
+
+**L40's TIMEOUTs are cost, not walls.** The sweep rows say it: leg 379's dashless pass SOLVED (1,837 t) in 67 s and
+the 90 s leg budget ran out during playback; leg 376 was cancelled while still solving. In node
+(`probe-seedling-solve-sites.mjs`, the deadline sites as a profiler), from the L41 door the solver never leaves tick 0
+for 200 s: 86 `kill-chaser` asks at ~2.5 s (the stance scan's per-cell A*), and a 56 s ask-free stretch in
+`chooseBodyToRemove`, 95 % of it `planWaypoints` string-pulling paths only their existence was wanted for. With
+`dashMode: 'none'` both north arrivals SOLVE (1,838 t and 1,799 t). `botDriverV2.plansReach` is `planWaypoints`'
+existence answer as two memoised floods (forward from one start, reverse into one aim; the end exemptions, the
+margin ladder and the waterfall's directed edge mirrored), equal to the A* cell for cell; the scan and
+`chooseBodyToRemove` ask it: 262 s → 57 s, the same 1,838-tick solve. What remains from the L42 door (71 s) is the
+spinner kill-by-press (`deriveStrike`/`spinnerForecast`, the hammer-phase arc's), and under `dashMode: 'all'` the
+dash planner's previews (283 s for 32 ticks) and the puncher kill-by-press's dwell hit at t35.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A solution that exists as a tape is not a solution the solver can reach.** L42 had been solved, recorded and
+  replayed since R5; the solver refused it for two waves because the three pieces lived in a probe, a record module
+  and a driver verb that no solver row joined.
+- **A tolerance measured on a grid is not a box.** Chain 2 survived every sample of dy ∈ [-3, 0.5] at the half-pixel
+  grid and failed at a periodic set of quarter-pixel x offsets inside it. Where a margin is sub-pixel, test the
+  thing itself (a fork), not a region drawn around samples of it.
+- **A TIMEOUT hides its refusal.** L40's legs read TIMEOUT; asked with the dash planner off they SOLVE. A verdict
+  that is a budget's is a statement about cost until something says which site spent it.
+- **Ask for existence when existence is the question.** `chooseBodyToRemove` paid for a string-pulled path 30 times
+  to read one bit.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

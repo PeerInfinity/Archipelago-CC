@@ -226,7 +226,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 381,
         "browser": 130,
-        "cited": 187,
+        "cited": 189,
         "files": 393,
         "lineStyle": 12,
         "withDocblock": 393,
@@ -10911,7 +10911,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-r5-l42-solver.mjs",
@@ -11811,7 +11813,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "at",
