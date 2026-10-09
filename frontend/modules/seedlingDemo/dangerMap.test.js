@@ -13,6 +13,7 @@ import {
     TRANSIT_INGREDIENTS,
 } from './dangerMap.js';
 import { SPINNER } from './spinner.js';
+import { withCrusherBait } from './crusherBait.js';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -281,13 +282,15 @@ describe('dangerAt — the four ingredients, each measured in a real room', () =
          * centres must disagree — otherwise "live centre" is a word in a
          * docblock and the map is reading the `.oel` after all.
          */
-        it('moving the crusher moves the danger', () => {
+        // ⛓ CRUSHER_BAIT (ON since the wave-9 harvest) prices a crusher by its SIGHT, which needs a real room; this stub
+        // pins the lane-rect reading, so it runs with the flag off (the sight reading: `fidelityCrusher.test.js`).
+        it('moving the crusher moves the danger', () => withCrusherBait(false, () => {
             const run = withFamilies(null, { crushers: new Map([['c', { id: 'c', x: 100, y: 100 }]]) });
             const box = playerBoxAt(160, 100);
             expect(crusherDanger(run, box).length).toBeGreaterThan(0);
             const moved = withFamilies(null, { crushers: new Map([['c', { id: 'c', x: 400, y: 400 }]]) });
             expect(crusherDanger(moved, box)).toEqual([]);
-        });
+        }));
 
         it('a null roster (noclip) is not an empty one — it asks nothing', () => {
             expect(crusherDanger(withFamilies(null, { crushers: null }), playerBoxAt(0, 0))).toEqual([]);
