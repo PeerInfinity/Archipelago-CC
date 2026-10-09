@@ -134,6 +134,11 @@ describe('⛓⛓ the ceiling is what the room accepts: N seats, N+1 is refused b
      * seed 53 escape off 1 re-roll / 3.2 s, ON 48 re-rolls / 291 s; seed 57 off 3 re-rolls / 7.5 s, ON 51 re-rolls / 315 s.
      * Every seed above still meets the rule with the escape off (31 41 s, 81 104 s, 89 139 s, 93 44 s, 108 246 s).
      * The subject is the re-roll MECHANISM, not the escape, so the row is asked with the escape OFF by the switch.
+     *
+     * ⛓ HAMMER-PHASE A3 — the escape as a PREFERENCE does not bring the row back ON. Per draw the escape refuses
+     * nothing here; it CERTIFIES the kill gates the switch OFF refuses (seed 57's OFF draws k=3, 5; seed 53's k=1), and
+     * a refused gate is dropped, which is what lets those draws seat. ON keeps the gate's tag, so the room re-rolls
+     * (57: 51 + a growth; 53: 48 + a growth) with or without the fallback, which only ever replaces a refusal.
      */
     const KILLGATE_ROOM = { exits: 1, biome: 'post-sword', elements: 'killgate' };
     it('⛓⛓ a draw whose own element spends a tag is RE-ROLLED like one short of cells (post-sword drawn seed 57, `killgate` named)', () => withHammerEscape(false, () => {
