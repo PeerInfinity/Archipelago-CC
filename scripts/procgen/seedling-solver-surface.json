@@ -984,9 +984,9 @@
         "arrivalSolid.js": 5,
         "botDriverV2.js": 114,
         "crusherBait.js": 6,
-        "solverBot.js": 312
+        "solverBot.js": 314
       },
-      "sites": 437,
+      "sites": 439,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1124,9 +1124,9 @@
         "botDriverV2.js": 56,
         "crusherBait.js": 2,
         "dangerMap.js": 1,
-        "solverBot.js": 173
+        "solverBot.js": 175
       },
-      "sites": 234,
+      "sites": 236,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1949,10 +1949,10 @@
       "class": "physics",
       "form": "geometry-query",
       "files": {
-        "botDriverV2.js": 2,
+        "botDriverV2.js": 3,
         "solverBot.js": 11
       },
-      "sites": 13,
+      "sites": 14,
       "seen": "both",
       "via": [
         "const-alias",
@@ -3750,11 +3750,11 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "botDriverV2.js": 46,
+        "botDriverV2.js": 47,
         "crusherBait.js": 4,
         "solverBot.js": 100
       },
-      "sites": 150,
+      "sites": 151,
       "seen": "static",
       "via": [
         "import"
