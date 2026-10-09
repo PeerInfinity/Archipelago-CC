@@ -1068,6 +1068,156 @@ export function controllerPathClear(level, a, b, allowTeleporter = null, opts = 
  * already checks. A ring of two cells: further than that and "nearest" has
  * stopped meaning anything about the corridor the player is in.
  */
+/**
+ * ⛓⛓ SEEDLING FIDELITY CRUSHER (L40) — **`planWaypoints`' EXISTENCE ANSWER, AS
+ * TWO MEMOISED FLOODS.** A stance scan asks *"does a corridor plan from HERE to
+ * that cell?"* and *"…and from that cell to the aim?"* for up to 289 cells, and
+ * each ask is a full A* (`corridorPlans`). Measured on L40 from the L41 door:
+ * 86 `kill-chaser` asks at ~2.5 s each, 210 s of a 262 s solve, all at tick 0.
+ * The world does not change inside one scan, so every ask from one start (or
+ * to one aim) is ONE flood.
+ *
+ * ⚠ EXACT, NOT APPROXIMATE — the same predicates in the same roles as
+ * `planTilePath` under `planWaypoints`' margin ladder:
+ *   · both ENDS walkable under `ends` (no node margin, no trigger margin);
+ *   · the goal is `nearestGoalNode`'s, exactly as `planWaypoints` takes it;
+ *   · every node strictly between is walkable under `{…opts, nodeMargin: m}`;
+ *     the START is exempt (it is only ever checked under `ends`), and the GOAL is
+ *     entered under `ends`;
+ *   · no step is an armed-waterfall climb (`climbsArmedWaterfall`, the one
+ *     directed rule), asked with the same per-margin options;
+ *   · a path exists at SOME margin of the ladder `nodeMargin … 0`.
+ * A* finds a path iff one exists, so its answer is the floods' answer. Returns
+ * null when `opts.snapStart` is set (the start node is then `snappedStartNode`'s,
+ * which this does not model) — the caller asks `planWaypoints` as before.
+ * `fidelityCrusher.test.js` holds it to `planWaypoints` cell for cell.
+ */
+export function plansReach(level, allowTeleporter, opts = {}) {
+    if (opts.snapStart) return null;
+    const pitch = opts.lattice ?? DEFAULT_LATTICE;
+    const ends = { ...opts, nodeMargin: 0, triggerMargin: 0 };
+    const margins = [];
+    for (let m = opts.nodeMargin ?? 0; m >= 0; m -= 1) margins.push(m);
+    const optsAt = new Map(margins.map((m) => [m, { ...opts, nodeMargin: m }]));
+    const stride = level.width * TILE_SIZE / pitch;
+    const key = (tx, ty) => ty * stride + tx;
+    const walkEnds = new Map();
+    const endsOk = (t) => {
+        const k = key(t.tx, t.ty);
+        let v = walkEnds.get(k);
+        if (v === undefined) { v = isWalkableTile(level, t.tx, t.ty, allowTeleporter, ends); walkEnds.set(k, v); }
+        return v;
+    };
+    const walkAt = new Map(margins.map((m) => [m, new Map()]));
+    const midOk = (m, tx, ty) => {
+        const memo = walkAt.get(m);
+        const k = key(tx, ty);
+        let v = memo.get(k);
+        if (v === undefined) { v = isWalkableTile(level, tx, ty, allowTeleporter, optsAt.get(m)); memo.set(k, v); }
+        return v;
+    };
+    const DIRS = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+    const goalNodeOf = (to) => {
+        const g = nearestGoalNode(level, to, allowTeleporter, opts);
+        return nodeAt(g.x, g.y, pitch);
+    };
+    const forward = new Map();
+    const reverse = new Map();
+    return {
+        /** `(to) => planWaypoints(level, from, to, …)` would not throw. */
+        from(from) {
+            const s = nodeAt(from.x, from.y, pitch);
+            const sk = key(s.tx, s.ty);
+            if (!forward.has(sk)) {
+                const floods = new Map();
+                const floodAt = (m) => {
+                    if (floods.has(m)) return floods.get(m);
+                    const seen = new Set([sk]);
+                    const q = [s];
+                    while (q.length) {
+                        const cur = q.pop();
+                        for (const [dx, dy] of DIRS) {
+                            const n = { tx: cur.tx + dx, ty: cur.ty + dy };
+                            const nk = key(n.tx, n.ty);
+                            if (seen.has(nk) || !midOk(m, n.tx, n.ty)) continue;
+                            if (climbsArmedWaterfall(level, cur, n, optsAt.get(m))) continue;
+                            seen.add(nk);
+                            q.push(n);
+                        }
+                    }
+                    floods.set(m, seen);
+                    return seen;
+                };
+                forward.set(sk, floodAt);
+            }
+            const floodAt = forward.get(sk);
+            return (to) => {
+                if (!endsOk(s)) return false;
+                const g = goalNodeOf(to);
+                if (!endsOk(g)) return false;
+                if (g.tx === s.tx && g.ty === s.ty) return true;
+                return margins.some((m) => {
+                    const seen = floodAt(m);
+                    return DIRS.some(([dx, dy]) => {
+                        const u = { tx: g.tx - dx, ty: g.ty - dy };
+                        return seen.has(key(u.tx, u.ty)) && !climbsArmedWaterfall(level, u, g, optsAt.get(m));
+                    });
+                });
+            };
+        },
+        /** `(from) => planWaypoints(level, from, to, …)` would not throw. */
+        to(to) {
+            const g = goalNodeOf(to);
+            const gk = key(g.tx, g.ty);
+            if (!reverse.has(gk)) {
+                const floods = new Map();
+                reverse.set(gk, (m) => {
+                    if (floods.has(m)) return floods.get(m);
+                    // the nodes v (walkable at m) from which g is reached through walkable-at-m nodes
+                    const back = new Set();
+                    const q = [];
+                    for (const [dx, dy] of DIRS) {
+                        const v = { tx: g.tx + dx, ty: g.ty + dy };
+                        const vk = key(v.tx, v.ty);
+                        if (back.has(vk) || !midOk(m, v.tx, v.ty)) continue;
+                        if (climbsArmedWaterfall(level, v, g, optsAt.get(m))) continue;
+                        back.add(vk);
+                        q.push(v);
+                    }
+                    while (q.length) {
+                        const v = q.pop();
+                        for (const [dx, dy] of DIRS) {
+                            const u = { tx: v.tx + dx, ty: v.ty + dy };
+                            const uk = key(u.tx, u.ty);
+                            if (back.has(uk) || !midOk(m, u.tx, u.ty)) continue;
+                            if (climbsArmedWaterfall(level, u, v, optsAt.get(m))) continue;
+                            back.add(uk);
+                            q.push(u);
+                        }
+                    }
+                    floods.set(m, back);
+                    return back;
+                });
+            }
+            const backAt = reverse.get(gk);
+            return (from) => {
+                const s = nodeAt(from.x, from.y, pitch);
+                if (!endsOk(s) || !endsOk(g)) return false;
+                if (g.tx === s.tx && g.ty === s.ty) return true;
+                return margins.some((m) => {
+                    const back = backAt(m);
+                    return DIRS.some(([dx, dy]) => {
+                        const v = { tx: s.tx + dx, ty: s.ty + dy };
+                        const vk = key(v.tx, v.ty);
+                        const into = (v.tx === g.tx && v.ty === g.ty) || back.has(vk);
+                        return into && !climbsArmedWaterfall(level, s, v, optsAt.get(m));
+                    });
+                });
+            };
+        },
+    };
+}
+
 function nearestGoalNode(level, to, allowTeleporter, opts) {
     const pitch = opts.lattice ?? DEFAULT_LATTICE;
     const ends = { ...opts, nodeMargin: 0, triggerMargin: 0 };

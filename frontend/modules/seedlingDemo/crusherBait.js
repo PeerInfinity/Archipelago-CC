@@ -45,11 +45,11 @@
  * not a trigger (`scanCrusher`'s early exit).
  */
 
-import { TILE_SIZE } from './levelWorld.js';
 import { plannerObstacleAt } from './botDriverV2.js';
-import { playerBoxAt } from './playerPhysicsV2.js';
-import { CRUSHER, DIRECTIONS, crusherRect, scanCrusher } from './crusher.js';
-import { L42_SOLVE } from './r5Totem.js';
+// ⛓ the solver family's import door (`seedling-solver-surface.json`).
+import {
+    CRUSHER, DIRECTIONS, TILE_SIZE, crusherRect, playerBoxAt, scanCrusher,
+} from './solverView.js';
 
 export class CrusherBaitError extends Error {
     constructor(message) { super(message); this.name = 'CrusherBaitError'; }
@@ -434,24 +434,133 @@ export function chainsOf(ordering) {
  * the bait's first tick in `r5-l42-part4` (the state the beam searched from,
  * read off the committed tape), and `stance` is the tile the walk aims for.
  */
-const libraryRow = (level, id, from, src, start, stanceTile) => Object.freeze({
-    level,
-    crusher: id,
-    from: Object.freeze({ ...from }),
-    charges: Object.freeze([...src.charges]),
-    park: Object.freeze({ ...src.park }),
-    stance: Object.freeze({ x: stanceTile.tx * TILE_SIZE + TILE_SIZE / 2, y: stanceTile.ty * TILE_SIZE + TILE_SIZE / 2 }),
-    start: Object.freeze({ ...start }),
-    approach: Object.freeze(src.approach.map((s) => Object.freeze({ ...s }))),
-    spans: Object.freeze(src.spans.map((s) => Object.freeze({ ...s }))),
+const libraryRow = (r) => Object.freeze({
+    src: r.src,
+    level: r.level,
+    crusher: r.crusher,
+    from: Object.freeze({ ...r.from }),
+    charges: Object.freeze([...r.charges]),
+    park: Object.freeze({ ...r.park }),
+    stance: Object.freeze({ x: r.stanceTile.tx * TILE_SIZE + TILE_SIZE / 2, y: r.stanceTile.ty * TILE_SIZE + TILE_SIZE / 2 }),
+    start: Object.freeze({ ...r.start }),
+    approach: r.approach,
+    spans: r.spans,
 });
+/**
+ * ⚠ A SECOND SPELLING, HELD TO THE FIRST: the spans are `r5Totem.L42_SOLVE`'s
+ * (`escape`, `chain2`, `chain3`), written out here because the solver family
+ * imports only family files and the simulation door (`solverView.js`), and
+ * `r5Totem.js` is neither. `fidelityCrusher.test.js` asserts every row equals
+ * its `src` field for field.
+ */
 export const BAIT_CHOREOGRAPHIES = Object.freeze([
-    libraryRow(42, 'crusher@96,144', { x: 112, y: 160 }, L42_SOLVE.escape,
-        { x: 72.01589131258784, y: 184.18810535689406 }, { tx: 4, ty: 11 }),
-    libraryRow(42, 'crusher@128,144', { x: 144, y: 160 }, L42_SOLVE.chain2,
-        { x: 72.68107686370016, y: 184.46294906251578 }, L42_SOLVE.chain2.stance),
-    libraryRow(42, 'crusher@96,144', { x: 192, y: 224 }, L42_SOLVE.chain3,
-        { x: 88.40350807352499, y: 216.36214585590002 }, L42_SOLVE.chain3.stance),
+    libraryRow({
+        src: 'L42_SOLVE.escape',
+        level: 42,
+        crusher: 'crusher@96,144',
+        from: { x: 112, y: 160 },
+        charges: ['W', 'S', 'E'],
+        park: { x: 192, y: 224 },
+        stanceTile: { tx: 4, ty: 11 },
+        start: { x: 72.01589131258784, y: 184.18810535689406 },
+        approach: Object.freeze([
+            Object.freeze({ key: 'up', ticks: 7 }),
+        ]),
+        spans: Object.freeze([
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: 'down+right', ticks: 16 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: 'down+right', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 8 }),
+            Object.freeze({ key: 'right', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 16 }),
+            Object.freeze({ key: 'right', ticks: 16 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 72 }),
+        ]),
+    }),
+    libraryRow({
+        src: 'L42_SOLVE.chain2',
+        level: 42,
+        crusher: 'crusher@128,144',
+        from: { x: 144, y: 160 },
+        charges: ['W', 'N', 'E'],
+        park: { x: 240, y: 96 },
+        stanceTile: { tx: 4, ty: 11 },
+        start: { x: 72.68107686370016, y: 184.46294906251578 },
+        approach: Object.freeze([
+            Object.freeze({ key: 'up', ticks: 7 }),
+        ]),
+        spans: Object.freeze([
+            Object.freeze({ key: 'up', ticks: 33 }),
+            Object.freeze({ key: null, ticks: 24 }),
+            Object.freeze({ key: 'up+right', ticks: 24 }),
+            Object.freeze({ key: 'right', ticks: 8 }),
+            Object.freeze({ key: 'left', ticks: 8 }),
+            Object.freeze({ key: 'right', ticks: 8 }),
+            Object.freeze({ key: 'left', ticks: 8 }),
+            Object.freeze({ key: 'right', ticks: 8 }),
+            Object.freeze({ key: 'up+left', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: 'up+left', ticks: 8 }),
+            Object.freeze({ key: 'down+right', ticks: 8 }),
+            Object.freeze({ key: 'left', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 24 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 16 }),
+            Object.freeze({ key: 'down', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 16 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 16 }),
+        ]),
+    }),
+    libraryRow({
+        src: 'L42_SOLVE.chain3',
+        level: 42,
+        crusher: 'crusher@96,144',
+        from: { x: 192, y: 224 },
+        charges: ['W', 'N', 'E'],
+        park: { x: 208, y: 96 },
+        stanceTile: { tx: 5, ty: 13 },
+        start: { x: 88.40350807352499, y: 216.36214585590002 },
+        approach: Object.freeze([
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: 'down+right', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 3 }),
+        ]),
+        spans: Object.freeze([
+            Object.freeze({ key: 'up+right', ticks: 5 }),
+            Object.freeze({ key: 'down+left', ticks: 8 }),
+            Object.freeze({ key: 'up+left', ticks: 24 }),
+            Object.freeze({ key: 'up', ticks: 24 }),
+            Object.freeze({ key: 'up+left', ticks: 8 }),
+            Object.freeze({ key: 'right', ticks: 8 }),
+            Object.freeze({ key: null, ticks: 16 }),
+            Object.freeze({ key: 'left', ticks: 8 }),
+            Object.freeze({ key: 'right', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'up+right', ticks: 8 }),
+            Object.freeze({ key: 'up', ticks: 16 }),
+            Object.freeze({ key: null, ticks: 80 }),
+            Object.freeze({ key: 'up', ticks: 8 }),
+            Object.freeze({ key: 'down', ticks: 16 }),
+            Object.freeze({ key: null, ticks: 104 }),
+        ]),
+    }),
 ]);
 
 export function choreographyFor(level, chain) {

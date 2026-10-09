@@ -87,6 +87,13 @@
       "noHazards": []
     },
     {
+      "file": "crusher-l42-round-trip.json",
+      "tickCount": 1468,
+      "bootLevel": 42,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "dash-l16-sword-all.json",
       "tickCount": 117,
       "bootLevel": 16,

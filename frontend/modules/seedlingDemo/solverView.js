@@ -69,8 +69,8 @@ export {
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD, SLASH_ANIM_TICKS, SLASH_DASH_FORCE,
     SLASH_SCALE_NORMAL, slashPressForecast, slashScaleFor, slashSet, slashTimerTick,
 } from './combatVerbs.js';
-// crusher.js — botDriverV2 · seedling 1
-export { collideLineSolid, scanCrusher } from './crusher.js';
+// crusher.js — botDriverV2, crusherBait · seedling 5
+export { collideLineSolid, CRUSHER, crusherRect, DIRECTIONS, scanCrusher } from './crusher.js';
 // endingChain.js — strikePolicy · seedling 1
 export { TALK_RANGE } from './endingChain.js';
 // enemyDamage.js — solverBot, strikePolicy · seedling 3

@@ -1357,6 +1357,14 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'the sword and the shield, `left` into `wallflyer@48,112`\'s ray: the moving shield turns the flying '
                 + 'body back (`WallFlyer.knockback`, `v = -v`) at t 5, 7, 9 and 13; one contact (t 9).',
         }),
+        /** ⛓⛓ seedling-fidelity-crusher — the `bait` witness, predicted exposed before the guard ran. */
+        Object.freeze({
+            name: 'crusher-l42-round-trip', levels: Object.freeze([40]), bobs: 1, ticks: 1,
+            addedBy: 'Seedling fidelity CRUSHER D3 (the round-trip witness)',
+            why: 'L42 holds no bridged class (two crushers, a part, a teleporter); the tape\'s last tick is the '
+                + 'arrival in L40 by `teleporter@240,336`, a puncher/bobsoldier room, ten tiles from the nearest '
+                + 'body. Recorded on the game with `hits` 0.',
+        }),
     ]),
 
     /**
