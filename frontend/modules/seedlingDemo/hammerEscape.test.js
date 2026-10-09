@@ -44,9 +44,10 @@ import { runTapeToStream } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
 import {
-    DEADLINE_SITES, HAMMER_ESCAPE, HAMMER_ESCAPE_BOUNDS, HAMMER_ESCAPE_FALLBACK, HAMMER_PHASE_RUNG, noStrikeMove,
-    withHammerEscape,
+    DEADLINE_SITES, HAMMER_ESCAPE, HAMMER_ESCAPE_BOUNDS, HAMMER_ESCAPE_FALLBACK, HAMMER_ESCAPE_MEASURED,
+    HAMMER_ESCAPE_TRACE, HAMMER_PHASE_RUNG, noStrikeMove, previewOrDeath, withHammerEscape,
 } from './solverBot.js';
+import { PhysicsV2Error } from './playerPhysicsV2.js';
 import {
     HOLD_FIRST_KEY_SETS, SPACE_TIME_KEY_SETS, coarseKey, spaceTimeReach,
 } from './spaceTimeReach.js';
@@ -191,6 +192,34 @@ describe('hammer-phase A D2 — HAMMER_ESCAPE in the press kill', () => {
         expect(DEADLINE_SITES[DEADLINE_SITES.length - 1]).toBe('hammer-escape');
         expect(HAMMER_ESCAPE_BOUNDS.horizon).toBe(SPINNER.hitsTimerMax + HAMMER_PHASE_RUNG.horizon);
         expect(HAMMER_ESCAPE_BOUNDS.follow).toBe(0);
+    });
+
+    // ⛓ hammer-phase A4 — the budget is the whole reachable set's, and above every escape measured.
+    it('⛓⛓ the budget bounds the whole reachable set, above every certified and every exhausted escape measured', () => {
+        const m = HAMMER_ESCAPE_MEASURED;
+        expect(HAMMER_ESCAPE_BOUNDS.maxExpansions).toBeGreaterThanOrEqual(m.wholeSet);
+        expect(m.wholeSet).toBeGreaterThan(Math.max(m.largestCertified, m.largestExhausted));
+        expect(m.budgetCuts).toBe(0);
+        expect(HAMMER_ESCAPE_TRACE.sink).toBe(null);
+    });
+
+    // ⛓ hammer-phase A4 — a previewed death is a `null`, captured with no stack; anything else throws WITH its stack.
+    it('⛓⛓ previewOrDeath: a death is null with no stack captured, a defect re-throws with its trace, the limit restored', () => {
+        const limit = Error.stackTraceLimit;
+        let seen = null;
+        const dies = previewOrDeath(() => { seen = Error.stackTraceLimit; throw new PhysicsV2Error('drowned'); });
+        expect(dies({ x: 0, y: 0 }, new Set())).toBe(null);
+        expect(seen).toBe(0);
+        expect(Error.stackTraceLimit).toBe(limit);
+        const lives = previewOrDeath((st) => ({ ...st, x: st.x + 1 }));
+        expect(lives({ x: 1, y: 0 }, new Set())).toEqual({ x: 2, y: 0 });
+        expect(Error.stackTraceLimit).toBe(limit);
+        const broken = previewOrDeath(function brokenStep() { throw new TypeError('a defect'); });
+        let thrown = null;
+        try { broken({ x: 0, y: 0 }, new Set()); } catch (e) { thrown = e; }
+        expect(thrown).toBeInstanceOf(TypeError);
+        expect(thrown.stack).toMatch(/brokenStep/);
+        expect(Error.stackTraceLimit).toBe(limit);
     });
 
     for (const residue of [21, 15]) {

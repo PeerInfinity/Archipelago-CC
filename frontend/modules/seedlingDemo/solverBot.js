@@ -8125,7 +8125,8 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
         }
         // ⛓ hammer-phase A — the ESCAPE admission (`HAMMER_ESCAPE`; off ⇒ not reached).
         if (HAMMER_ESCAPE.enabled) {
-            const esc = strikeEscape(run, { cell: o.cell, i: o.i, eta, walk, mine: forecast[o.i + 1][index], bodyId });
+            const esc = strikeEscape(run, { cell: o.cell, i: o.i, eta, walk, mine: forecast[o.i + 1][index], bodyId,
+                caller: continuation ? 'admission' : 'walk' });
             if (!esc.ok && esc.claim) {
                 keepFallback({ cell: { x: o.cell.x, y: o.cell.y }, pressAt: run.ticksCompleted + o.i,
                     aimAt: run.ticksCompleted + o.i - 1, eta, rejected: rejected.slice(),
@@ -8187,7 +8188,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
             if (walk.truncated || unsafe || eta > i - 1) continue;
             if (dwellUnsafeAt(c, eta, i) !== null) { dwelt += 1; continue; }
             if (HAMMER_ESCAPE.enabled) {
-                const esc = strikeEscape(run, { cell: c, i, eta, walk, mine, bodyId });
+                const esc = strikeEscape(run, { cell: c, i, eta, walk, mine, bodyId, caller: 'continuation' });
                 if (!esc.ok && esc.claim) {
                     keepFallback({ cell: { x: c.x, y: c.y }, pressAt: run.ticksCompleted + i,
                         aimAt: run.ticksCompleted + i - 1, eta, rejected, considered: opportunities.length,
@@ -8236,13 +8237,13 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
  * `held` re-stepped with the run's stepper), the stand until the aim tick, the aim key toward the body's forecast
  * rect, the press at `+i` — then `pressEscape`.
  */
-function strikeEscape(run, { cell, i, eta, walk, mine, bodyId }) {
+function strikeEscape(run, { cell, i, eta, walk, mine, bodyId, caller }) {
     // ⚠ FROM THE RUN'S OWN STATE, through the walk: a press already in flight tests from the walk's points too.
     const keys = walk.samples.slice(0, eta).map((sm) => sm.held ?? new Set());
     for (let k = eta; k < i - 1; k += 1) keys.push(new Set());
     keys.push(new Set([FACING_KEYS[facingToward(cell, mine)]]));
     return pressEscape(run, { state: run.state, at: run.ticksCompleted, keys,
-        pressAt: run.ticksCompleted + i, id: bodyId });
+        pressAt: run.ticksCompleted + i, id: bodyId, caller });
 }
 
 /**
@@ -8355,8 +8356,16 @@ function stepToward(run, aim, intended) {
     const step = previewOrDeath(run.previewStepper());
     // ⚠ THE ORDER IS THE TIE-BREAK: the facings and the stand keep the places
     // they had, and the diagonals follow them.
+    /**
+     * ⛓ HAMMER-PHASE A4 — A KEY SET IS ASKED ONCE. `intended` is almost always one of the nine sets after it, and a
+     * repeat scores exactly what its first appearance scored (the step is a pure function of the state and the keys),
+     * so it can never displace it under a strict `>`: dropping the repeat changes no choice and cuts the depth-4
+     * survival tree from 10⁴ leaves to 9⁴.
+     */
+    const sameKeys = (a, b) => a.size === b.size && [...a].every((k) => b.has(k));
     const options = [intended, ...Object.values(FACING_KEYS).map((k) => new Set([k])),
-        new Set(), ...DIAGONAL_KEYS.map((k) => new Set(k))];
+        new Set(), ...DIAGONAL_KEYS.map((k) => new Set(k))]
+        .filter((keys, j, all) => all.findIndex((o) => sameKeys(o, keys)) === j);
     /**
      * ⛓⛓⛓ HOW DEEP THE STEP LOOKS, AND WHY ONE TICK IS NOT ENOUGH.
      *
@@ -8412,15 +8421,33 @@ const STEP_LOOKAHEAD = 4;
  * `empty post-sword seed 30`'s certify solve aborted its level ("the player DROWNED in level 900 at
  * (42.79,62.51)", thrown from `stepToward` under the HAMMER-PHASE rung's `previewPressApproach`). Wrapped, the step
  * returns `null` for a death and the caller skips that set. Only a solve that threw here can change.
+ *
+ * ⛓⛓ HAMMER-PHASE A4 — **AND A PREVIEWED DEATH IS CHEAP: no stack is captured for it.** Profiled
+ * (`profile-seedling-hammer-escape.mjs` + `node --cpu-prof`), `empty post-sword seed 30`'s first draw took 227 s ON
+ * vs 21 s OFF and only 0.3 s of it was the escape's search: 187 s was CONSTRUCTING `PhysicsV2Error` — 16,216,872
+ * previewed drownings across 35,590 `stepToward` calls (its depth-4 survival tree, ten key sets a level, under the
+ * HAMMER-PHASE rung's stall previews), ~11.6 µs each, almost all of it V8 capturing the stack of an error this
+ * wrapper throws away. So the step runs with `Error.stackTraceLimit = 0` and the limit is restored on every exit.
+ * The death's verdict and words are unchanged and nothing reads the stack, so no solve can move. ⚠ An error that is
+ * NOT a previewed death is a defect, and its trace matters: that step is re-run with the stack on, so it throws again
+ * with its trace (a step is a pure function of its arguments).
  */
-function previewOrDeath(step) {
+export function previewOrDeath(step) {
     return (st, keys, opts) => {
+        const limit = Error.stackTraceLimit;
+        Error.stackTraceLimit = 0;
+        let out;
         try {
-            return step(st, keys, opts);
+            out = step(st, keys, opts);
         } catch (e) {
+            Error.stackTraceLimit = limit;
             if (e instanceof PhysicsV2Error) return null;
+            // ⚠ anything else is a real defect: re-stepped with the stack on, so it throws WITH its trace
+            step(st, keys, opts);
             throw e;
         }
+        Error.stackTraceLimit = limit;
+        return out;
     };
 }
 
@@ -8786,6 +8813,31 @@ export const HAMMER_ESCAPE_BOUNDS = Object.freeze({
 });
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE A4 — **THE BUDGET, RE-DERIVED FROM WHAT EVERY ESCAPE SPENT** (⚖ user, 2026-10-09: *"a
+ * small slice that caps the escape search … when it runs out it makes no claim"*). The brief's option was a per-search
+ * `maxExpansions` "well below 50,000, derived from the measured distribution of SUCCESSFUL escapes". Profiled
+ * (`profile-seedling-hammer-escape.mjs`, every `pressEscape` call), the distribution says the cap is ALREADY tight:
+ *   - `largestCertified`: the costliest search that FOUND a way out — 20,109 expansions (the L18 residue sweep,
+ *     a `walk` re-derivation at t143); the killgate draws 57/53 k=0…11: 16,341; empty pairs c3/c6: 9,920; carved
+ *     pairs c4: 9,745.
+ *   - `largestExhausted`: the costliest CLAIMED negative (both passes run dry) — 18,245 (L18, at the aim).
+ *   - `wholeSet`: A's whole reachable set at this key and horizon, 41,463 (the D2 cost table) — what a breadth-first
+ *     search that ends at the horizon may have to expand, so a successful search is bounded by it, not by the largest
+ *     one measured so far.
+ *   - `budgetCuts`: searches the bound cut (`bound: 'expansions'`, no claim) — ZERO in every set measured.
+ * ⇒ `maxExpansions` stays at 50,000: lowering it toward `largestCertified` would cut nothing measured (no time
+ * saved), and below it would turn CERTIFIED escapes into "no claim" (time saved only by un-certifying presses).
+ * ⛔ The generation cost the brief attributed to this search was not this search: `empty post-sword seed 30`'s first
+ * draw spent 0.3 s of 227 s in `pressEscape` and 187 s constructing previewed deaths (`previewOrDeath`).
+ */
+export const HAMMER_ESCAPE_MEASURED = Object.freeze({
+    largestCertified: 20109,
+    largestExhausted: 18245,
+    wholeSet: 41463,
+    budgetCuts: 0,
+});
+
+/**
  * ⛓⛓ SEEDLING HAMMER-PHASE A3 — **THE ESCAPE IS A PREFERENCE, NOT A REQUIREMENT** (⚖ user, 2026-10-09: *"if no
  * strike passes the escape check, fall back to today's behaviour instead of refusing. Every room that solved before
  * still solves"*).
@@ -8845,7 +8897,29 @@ export function noStrikeMove({ next, following, refuge, fallback = HAMMER_ESCAPE
  *   A claimed negative names its `bound` (A3): the kernel's own (`exhausted`, `start`, `horizon`), or `death`,
  *   `line`, `no-landing`, `approach`, `train`.
  */
-function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }) {
+function pressEscape(run, opts) {
+    const sink = HAMMER_ESCAPE_TRACE.sink;
+    if (sink === null) return pressEscapeOnce(run, opts, null);
+    const searches = [];
+    const t0 = globalThis.performance.now();
+    const out = pressEscapeOnce(run, opts, searches);
+    sink({ run, caller: opts.caller ?? 'aim', t: run.ticksCompleted, pressAt: opts.pressAt, id: opts.id,
+        ok: out.ok, claim: out.claim, bound: out.bound ?? null, searches,
+        expansions: searches.reduce((a, x) => a + x.expansions, 0), ms: globalThis.performance.now() - t0 });
+    return out;
+}
+
+/**
+ * ⛓ hammer-phase A4 — THE ESCAPE'S TRACE, for an instrument (`profile-seedling-hammer-escape.mjs`): `sink` is
+ * `null` (nothing is measured, nothing is called), or a function handed one record per `pressEscape` call —
+ * `{run, caller, t, pressAt, id, ok, claim, bound, searches: [{phase, expansions, ok, bound}], expansions, ms}`.
+ * `caller` names who asked: `admission` (`deriveStrike`'s bounded pass under `derivePressKill`), `continuation`,
+ * `walk` (the executor's per-tick re-derivation) or `aim`; `run` is the run asked on (an instrument may tell one
+ * solve from another by it). ⚠ `ms` is the instrument's wall clock; nothing the solver decides reads it.
+ */
+export const HAMMER_ESCAPE_TRACE = { sink: null };
+
+function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = true }, trace) {
     const n = run.ticksCompleted;
     const step = run.previewStepper();
     const NO_KEYS = new Set();
@@ -8904,20 +8978,24 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
     const safeIn = (rows) => (q, i) => q !== null && !lethalFloor(q)
         && clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i);
     const safe = safeIn(first.rows);
+    const traced = (phase, r) => {
+        if (trace !== null) trace.push({ phase, expansions: r.expansions, ok: r.ok, bound: r.bound ?? null });
+        return r;
+    };
     for (let t = at + 1; t <= L; t += 1) {
         if (!safe(states.get(t), t - n)) {
             return { ok: false, claim: true, bound: 'approach', why: `the approach or the train meets a body or the `
                 + `line at t${t}, before the press lands` };
         }
     }
-    const search = (start, startIndex, rows) => spaceTimeReach({
+    const search = (start, startIndex, rows, phase) => traced(phase, spaceTimeReach({
         start, startIndex, step: (q, k) => stepOrNull(q, k), safe: safeIn(rows), horizon: L + horizon - n - startIndex,
         keySets: HOLD_FIRST_KEY_SETS, keyOf: coarseKey(cell), maxExpansions,
         // ⛓ of two states with one coarse key, keep the one farther from every hammer's disc (the refuge's
         // preference, `discClearanceAt` — a robustness score, never the safety test)
         rank: (q, i) => discClearanceAt(playerBoxAt(q.x, q.y), rows, i),
         shouldStop: deadline && activeDeadline !== null ? () => deadlineReached('hammer-escape') : null,
-    });
+    }));
     const verdict = (r, from, pre) => {
         if (r.ok) return null;
         // ⚠ a search cut by its BUDGET proves nothing either way: only an EXHAUSTED one refuses the press
@@ -8925,7 +9003,7 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
         return { ok: false, claim: true, bound: r.bound, why: `no ESCAPE from the landing at t${L} (${pre}): ${r.why}` };
     };
     // ⛓ First: free from the landing. Then re-aim the remaining tests from the certificate's own points.
-    let found = search(states.get(L), L - n, first.rows);
+    let found = search(states.get(L), L - n, first.rows, 'free');
     const bad = verdict(found, L, 'free from the landing');
     if (bad) return bad;
     const at2 = (t) => (t <= L ? states.get(t) : found.states[t - L]);
@@ -8942,7 +9020,7 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
             }
         }
         pre = Array.from({ length: trainEnd + 1 - L }, () => NO_KEYS);
-        found = search(states.get(trainEnd + 1), trainEnd + 1 - n, first.rows);
+        found = search(states.get(trainEnd + 1), trainEnd + 1 - n, first.rows, 'stood');
         const bad2 = verdict(found, trainEnd + 1, 'the train stood');
         if (bad2) return bad2;
     }
@@ -10339,7 +10417,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 if (!HAMMER_ESCAPE.enabled) return true;
                 const aimKeys = new Set([FACING_KEYS[facingToward(run.state, body.rect)]]);
                 aimEscape = pressEscape(run, { state: run.state, at: run.ticksCompleted, keys: [aimKeys],
-                    pressAt: run.ticksCompleted + 1, id: plan.id });
+                    pressAt: run.ticksCompleted + 1, id: plan.id, caller: 'aim' });
                 if (aimEscape.ok || !aimEscape.claim) return true;
                 if (!HAMMER_ESCAPE_FALLBACK.enabled) return false;
                 const lapsed = !strike || run.ticksCompleted > strike.pressAt;
