@@ -1029,11 +1029,23 @@ export async function seedlingJsRuntimeSolverBudgetFallsBack(tc) {
         const backstop = rt.playback.solverBackstopMs;
         rt.playback.setSolverBackstopMs(300);
         const solves0 = rt.playback.solveService.stats.terminated;
-        const runTicks0 = rt.run.ticksCompleted;
+        const run0 = rt.run;
+        const at0 = { level: run0.level, x: run0.state.x, y: run0.state.y, transitions: run0.transitions.length };
+        // ⚠ NOT the run's total tick count: once the goal has FAILED the walker hands back no keys, so the page's
+        // clock steps the room IDLE (as it does with no goal at all) — from the very tick that failed (measured on
+        // CI: 3 → 4, every run). The hold is sampled WHILE the solve is in flight instead.
+        const hold = { first: null, last: null, samples: 0 };
         rt.playback.walkTo({ kind: 'exit', level: SLOW_ROOM.level, tiles: [up.exitTile] });
         rt.playback.play();
-        const failed = await tc.pollForCondition(() => rt.playback.state === 'failed',
-            'the solve was cut off at the backstop and the goal FAILED', 15000, 50);
+        const failed = await tc.pollForCondition(() => {
+            if (rt.playback.solving) {
+                const t = rt.run.ticksCompleted;
+                hold.first ??= t;
+                hold.last = t;
+                hold.samples += 1;
+            }
+            return rt.playback.state === 'failed';
+        }, 'the solve was cut off at the backstop and the goal FAILED', 15000, 50);
         const s = rt.playback.solverStats;
         tc.log(`failed after ${s.lastWaitMs} ms: ${rt.playback.reason}; status: ${rt.playback.describe()}`);
         tc.reportCondition('failed within the backstop\'s reach', !!failed);
@@ -1043,7 +1055,17 @@ export async function seedlingJsRuntimeSolverBudgetFallsBack(tc) {
         tc.assertEqual('one backstop, no solve, no decline, nothing played', '1/0/0/0', `${s.backstops}/${s.solves}/${s.declines}/${s.played}`);
         tc.assertEqual('the worker was TERMINATED', solves0 + 1, rt.playback.solveService.stats.terminated);
         tc.assertEqual('cut off at the backstop, not before it', true, s.lastWaitMs >= 300 && s.lastWaitMs < 3000);
-        tc.assertEqual('the page did not walk the goal instead (the run never stepped)', runTicks0, rt.run.ticksCompleted);
+        tc.log(`held ${hold.samples} sample(s) at run tick ${hold.first}..${hold.last}; walker ${JSON.stringify(rt.playback.stats)}`);
+        tc.assertEqual('the room was HELD while the solve was in flight (sampled; the run never stepped under it)', true,
+            hold.samples > 0 && hold.first === hold.last);
+        const { driven, plans } = rt.playback.stats;
+        tc.assertEqual('the page did not walk the goal instead (the walker drove 0 ticks, planned 0 routes)', '0/0',
+            `${driven}/${plans}`);
+        const run1 = rt.run;
+        tc.assertEqual('the player never moved and never left the room (the same run, spot and level; no crossing)',
+            JSON.stringify(at0),
+            JSON.stringify({ level: run1.level, x: run1.state.x, y: run1.state.y, transitions: run1.transitions.length }));
+        tc.assertEqual('the same run (no re-boot under the failure)', true, run1 === run0);
         tc.assertEqual('the room is no longer held', false, rt.playback.solving);
         rt.playback.setSolverBackstopMs(backstop);
         tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
