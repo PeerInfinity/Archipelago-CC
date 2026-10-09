@@ -1328,6 +1328,14 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'CORPSE\'s blade hits the player at t 155, five ticks into the fade — `BobSoldier.update` has no '
                 + '`destroy` gate. Recorded on the game, which agrees (player `hits` 2).',
         }),
+        /** ⛓⛓⛓ seedling-fidelity-ghostsword — THE GHOST SWORD ON AN ENEMY, declared before the roster measured it. */
+        Object.freeze({
+            name: 'ghostsword-l30-bobsoldier', levels: Object.freeze([30]), bobs: 1, ticks: 103,
+            addedBy: 'Seedling fidelity GHOSTSWORD D1 (the enemy witness)',
+            why: 'the `bobsoldier-kill` boot holding the ghost sword: two landed ghost presses (t 52, 83, from 22.7 and '
+                + '17.9 px — past the sword\'s 16) at `ghostSwordDamage` 2 kill the `hitsMax`-3 body (game `hits` 0 -> 2 '
+                + '-> 4), and the fade removes it; no hit on the player. Recorded on the game; the body probe is bit-exact.',
+        }),
     ]),
 
     /**

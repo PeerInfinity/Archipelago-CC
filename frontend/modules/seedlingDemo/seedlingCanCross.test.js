@@ -25,6 +25,7 @@ import { loadTape } from './fixtures/index.js';
 import { stagingFromTape, createRunForStaging } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
 import { DEFAULT_DASH_MODE, SolverRefusal, deriveChaserDetour } from './solverBot.js';
+import { GHOSTSWORD_PRESS } from './ghostSword.js';
 import {
     CAN_CROSS_DASH_MODE, CanCrossError, DEFAULT_CONSULT_BUDGET, VERDICTS, buildArrivalStaging, canCross, classifyError,
     deriveMinimalSets, doorArrival, importClosure, solverStamp,
@@ -119,11 +120,18 @@ describe('canCross — one real case per verdict', () => {
         expect(classifyError(words).verdict).toBe('cannot');
     });
 
-    it('model-refused: the Ghost Sword on L14 — the model refuses the press arm, by name', () => {
+    /**
+     * ⛓ seedling-fidelity-ghostsword: the press arm is MODELLED now (`GHOSTSWORD_PRESS`, ON), and this staging is
+     * still refused — for the game's own reason. It holds the ghost sword and NOT the sword, and `Player.update`
+     * calls `slash()` only `if (hasSword)`, so the swing never tests (`ghostSword.ghostSwingRefusal`; witnessed on the
+     * game: `ghostsword-l3-nosword`, evidence only). OFF, the old refusal of the unmodelled arm.
+     */
+    it('model-refused: the Ghost Sword on L14 — the model refuses the press, by name', () => {
         const r = ask({ arrival: { staging: L14() }, inventory: ['ghostsword'] });
         expect(r.verdict).toBe('model-refused');
         expect(r.cause).toMatchObject({ kind: 'model', basis: 'field' });
-        expect(r.why).toMatch(/ghostsword press .* Neither is modelled/);
+        expect(r.why).toMatch(GHOSTSWORD_PRESS.enabled ? /calls `slash\(\)` only `if \(hasSword\)`/
+            : /ghostsword press .* Neither is modelled/);
         expect(r.arrival.items).toEqual(['hasGhostSword']);
     });
 

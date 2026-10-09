@@ -1725,6 +1725,17 @@ frontend/modules/seedlingDemo/chasers.js|(module)|h628063d2|0|0,physics,magnitud
 frontend/modules/seedlingDemo/chasers.js|(module)|hf3d441fc|0|0,physics,magnitude,,targetOffset leash centre (BobSoldier: none)
 frontend/modules/seedlingDemo/chasers.js|deathTicks|h05bb1004|0|0,rule,count,,no die animation: Enemy.startDeath sets destroy at the blow (0 ticks)
 frontend/modules/seedlingDemo/levelRun.js|step|hee10ba2a|0|0,rule,bound,,a forecast corpse is removed at alpha <= 0 (Mobile.death)
+frontend/modules/seedlingDemo/ghostSword.js|(module)|he2cadb9a|0|0,cosmetic,,,ghost sword slash frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
+frontend/modules/seedlingDemo/ghostSword.js|(module)|he2cadb9a|1|0,cosmetic,,,ghost sword slash frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
+frontend/modules/seedlingDemo/ghostSword.js|(module)|he2cadb9a|2|0,cosmetic,,,ghost sword slash frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
+frontend/modules/seedlingDemo/ghostSword.js|(module)|he2cadb9a|2|1,cosmetic,,,ghost sword slash frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
+frontend/modules/seedlingDemo/ghostSword.js|(module)|he2cadb9a|3|0,cosmetic,,,ghost sword slash frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
+frontend/modules/seedlingDemo/ghostSword.js|(module)|he2cadb9a|3|1,cosmetic,,,ghost sword slash frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
+frontend/modules/seedlingDemo/ghostSword.js|(module)|he2cadb9a|4|0,cosmetic,,,ghost sword slash frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
+frontend/modules/seedlingDemo/ghostSword.js|(module)|hf5c39ed3|0|0,cosmetic,,,ghost sword slashnarrow frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
+frontend/modules/seedlingDemo/ghostSword.js|(module)|hf5c39ed3|1|0,cosmetic,,,ghost sword slashnarrow frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
+frontend/modules/seedlingDemo/ghostSword.js|(module)|hf5c39ed3|2|0,cosmetic,,,ghost sword slashnarrow frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
+frontend/modules/seedlingDemo/ghostSword.js|(module)|hf5c39ed3|3|0,cosmetic,,,ghost sword slashnarrow frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

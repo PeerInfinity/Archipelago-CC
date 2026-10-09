@@ -48,7 +48,9 @@ if (isEntryPoint(import.meta.url)) await main();
  * `ticksCompleted` F is tested inside the tick that produces observation F + 1.
  */
 export function modelTestsByObservation(presses, observations) {
-    const fired = presses.filter((p) => p.weapon === 'sword').map((p) => p.fired).sort((a, b) => a - b);
+    // ⛓ seedling-fidelity-ghostsword: a ghost swing is `slash()` too — `Bot.slashTests` counts its seven tests.
+    const fired = presses.filter((p) => p.weapon === 'sword' || p.weapon === 'ghostsword')
+        .map((p) => p.fired).sort((a, b) => a - b);
     const out = [];
     let k = 0;
     for (let t = 0; t <= observations; t += 1) {
