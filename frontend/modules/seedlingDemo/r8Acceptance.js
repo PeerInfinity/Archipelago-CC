@@ -1328,6 +1328,27 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'CORPSE\'s blade hits the player at t 155, five ticks into the fade — `BobSoldier.update` has no '
                 + '`destroy` gate. Recorded on the game, which agrees (player `hits` 2).',
         }),
+        /** ⛓⛓⛓ seedling-fidelity-wallflyer — THE WALLFLYER'S DEATH AND THE SHIELD'S TURN, written before the roster measured them. */
+        Object.freeze({
+            name: 'wallflyer-kill', levels: Object.freeze([22]), bobs: 1, ticks: 98,
+            addedBy: 'Seedling fidelity WALLFLYER D3 (the kill witness, at rest)',
+            why: 'three landed presses (t 3, 34, 65) on `wallflyer@64,80` at rest from below, out of every ray; the '
+                + 'third plays "die" without `destroy`, `endAnim` sets it at t 79 and the removal is t 90 — the game '
+                + 'agrees on every body field (`probe-seedling-wallflyer-mobiles`).',
+        }),
+        Object.freeze({
+            name: 'wallflyer-kill-flight', levels: Object.freeze([22]), bobs: 1, ticks: 114,
+            addedBy: 'Seedling fidelity WALLFLYER D3 (the kill witness, in flight)',
+            why: 'the same two hits, then `up` into the y-88 ray: the kill lands at t 85 on a flyer moving +4 px/t and '
+                + 'the corpse flies on, x 79 -> 131, through the player until `destroy` at t 99; removal t 110; one '
+                + 'contact on the player (t 85).',
+        }),
+        Object.freeze({
+            name: 'wallflyer-shield-bump', levels: Object.freeze([22]), bobs: 1, ticks: 24,
+            addedBy: 'Seedling fidelity WALLFLYER D3 (the W7 shield-bump witness)',
+            why: 'the sword and the shield, `left` into `wallflyer@48,112`\'s ray: the moving shield turns the flying '
+                + 'body back (`WallFlyer.knockback`, `v = -v`) at t 5, 7, 9 and 13; one contact (t 9).',
+        }),
     ]),
 
     /**

@@ -1,0 +1,69 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 22,
+        "x": 72,
+        "y": 104
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 114,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 33,
+            "to": 34
+        },
+        {
+            "key": "up",
+            "from": 65,
+            "to": 84
+        },
+        {
+            "key": "primary",
+            "from": 84,
+            "to": 86
+        }
+    ],
+    "name": "wallflyer-kill-flight",
+    "description": "⛓⛓⛓ seedling-fidelity-wallflyer W6 — THE DEATH, IN FLIGHT. The `wallflyer-kill` boot and its first two hits; once the second i-frame is spent, `up` into `wallflyer@64,80`'s y-88 ray until it LAUNCHES, and the killing press at t 85 on a body moving (4, 0). The killing hit takes no knockback and `Mobile.mobileUpdate` still moves a body that is playing \"die\" (`destroy` is false), so the model predicts the corpse flying from x 79 to 131 — through the player, its `hitPlayer` gated on the anim — before `endAnim` sets `destroy` at t 99; the removal at t 110. `wallflyer@128,80` launches with it (the same ray); player hits: t 85 wallflyer@64,80. Authored by scripts/procgen/plan-seedling-wallflyer.mjs.",
+    "note": ""
+}

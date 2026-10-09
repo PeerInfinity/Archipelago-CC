@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 68,
+            "count": 69,
             "id": "plan"
         },
         {
-            "browser": 65,
-            "count": 109,
+            "browser": 66,
+            "count": 110,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 379,
-        "browser": 130,
-        "cited": 187,
-        "files": 391,
+        "blockStyle": 381,
+        "browser": 131,
+        "cited": 188,
+        "files": 393,
         "lineStyle": 12,
-        "withDocblock": 391,
-        "withFlags": 309
+        "withDocblock": 393,
+        "withFlags": 311
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8895,6 +8895,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-wallflyer.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-wallflyer — ⛓⛓⛓ seedling-fidelity-wallflyer: THE WALLFLYER'S DEATH AND THE SHIELD'S TURN, DRIVEN.",
+            "path": "scripts/procgen/plan-seedling-wallflyer.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-watcher-witness.mjs",
             "flags": [
                 {
@@ -12140,6 +12167,58 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-v8-seam — does the GAME honour a tape v8 `seam` block, and does its latch report back what the block declared?",
             "path": "scripts/procgen/probe-seedling-v8-seam.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-wallflyer-mobiles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-wallflyer-mobiles — ⛓⛓⛓ seedling-fidelity-wallflyer: THE WALLFLYER'S OWN BODY, AND ITS DEATH, ASKED OF THE GAME TICK BY SAMPLED TICK (BOBSOLDIER's `probe-seedling-bobsoldier-mobiles.mjs`, one class over).",
+            "path": "scripts/procgen/probe-seedling-wallflyer-mobiles.mjs"
         },
         {
             "argvHelpers": [

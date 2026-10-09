@@ -379,6 +379,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes the guard named.
             'axe-l61-reach-l63', 'burn-l44-reach-exit', 'ladder2-l104-beam',
             'bobsoldier-sword', 'bobsoldier-kill', 'bobsoldier-corpse',
+            // ⛓⛓⛓ Seedling fidelity WALLFLYER: the two kill witnesses and the shield-bump witness, in L22.
+            'wallflyer-kill', 'wallflyer-kill-flight', 'wallflyer-shield-bump',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -422,7 +424,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // `swim-u5-bobboss-encounter` (never inside the leash), and `bobsoldier-sword` / `-kill` / `-corpse`.
         // ⛓ KILLLOCK K1 at the wave-8 harvest adds three — `axe-l61-reach-l63`, `burn-l44-reach-exit`,
         // `ladder2-l104-beam` (jellyfish rooms).
-        expect(out.exposed).toBe(73);
+        // ⛓ Seedling fidelity WALLFLYER adds three (76) — `wallflyer-kill`, `wallflyer-kill-flight`,
+        // `wallflyer-shield-bump` (L22).
+        expect(out.exposed).toBe(76);
         expect(out.tapes).toEqual([
             'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
@@ -446,6 +450,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'u12-pull-carry', 'u12-pull-cross',
             'u7-puncher-kill', 'u7-puncher-punch',
             'u9-shield-bob-shove', 'u9-shield-bob-standing', 'u9-shield-puncher',
+            'wallflyer-kill', 'wallflyer-kill-flight', 'wallflyer-shield-bump',
         ]);
     });
 
@@ -598,6 +603,10 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'axe-l61-reach-l63': { tape: {}, levels: [63] },
             'burn-l44-reach-exit': { tape: {}, levels: [45] },
             'ladder2-l104-beam': { tape: {}, levels: [104, 105] },
+            // ⛓ fidelity WALLFLYER's three L22 witnesses — the mirror rule.
+            'wallflyer-kill': { tape: {}, levels: [22] },
+            'wallflyer-kill-flight': { tape: {}, levels: [22] },
+            'wallflyer-shield-bump': { tape: {}, levels: [22] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

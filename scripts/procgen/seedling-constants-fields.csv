@@ -1487,6 +1487,11 @@ frontend/modules/seedlingDemo/bobBossFight.js|shieldBumpTouches|shieldBumpTouche
 frontend/modules/seedlingDemo/bobBossFight.js|SHIELD_FORCE|(module),physics,magnitude,Player.as:shieldForce,shieldForce: Enemy.knockback(5; player point)
 frontend/modules/seedlingDemo/levelRun.js|step|hbaf0da28|0|0,rule,bound,Player.as:shieldBump,hasDarkShield && o.hitsTimer <= 0: the dark shield HITS only a body out of its i-frame (refused by name in the forecast)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|shieldBumpNow,rule,bound,Player.as:shieldBump,hasDarkShield && o.hitsTimer <= 0: the dark shield HITS only a body out of its i-frame (refused by name)
+frontend/modules/seedlingDemo/levelRun.js|shieldBumpNow|h4c9ce110|0|0,rule,bound,Player.as:shieldBump,fidelity WALLFLYER W7: hasDarkShield && o.hitsTimer <= 0 — the dark shield HITS a wallflyer only out of its i-frame
+frontend/modules/seedlingDemo/levelRun.js|shieldBumpNow|he59d9dc7|1|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|shieldBumpNow|he59d9dc7|1|1,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|shieldBumpNow|h71955e33|0|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|shieldBumpNow|h71955e33|0|1,structural,,,
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|0,rule,bound,,U10 forecast punch: hitsTimer > 0 i-frame gate (attackPlayer)
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|1,rule,magnitude,,U10 forecast punch: the hitUpdate decrement this tick applies before the graphic half
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|2,rule,bound,,U10 forecast punch: attackPlayer returns if hitsTimer > 0
