@@ -478,6 +478,19 @@ The whole roster runs in CI only on demand: `.github/workflows/seedling-full-tie
 
 Per push, CI runs only the bounded smoke face `--tier=fast --only=friction-stop`. `scripts/procgen/check-seedling-full-tier-owed.mjs` prints what a tier run owes and what it costs on the box and in CI.
 
+### The probe battery in CI
+
+The live wasm/JS-runtime probes (`scripts/procgen/probe-seedling-*.mjs`) run on CI through `.github/workflows/seedling-probe.yml`. To run the standard set, use `gh workflow run seedling-probe.yml --ref <branch> -f battery=standard`. A battery is a named list in `scripts/procgen/seedling-probe-batteries.json`. Each entry gets its own job, with its own args, and runs in full. The workflow's `summary` job prints one line per probe: green or red, the verdict, pass and fail counts, boot retries and wall time. A probe that left no verdict file is a dead shard and counts as red. `seedlingProbeBatteries.test.js` checks the committed file: every probe exists, every flag is one the probe parses, and no id is duplicated. The `probes`/`args` inputs remain for ad hoc runs, where `args` applies to every probe.
+
+The probes boot through `scripts/procgen/seedlingProbeBoot.js`:
+
+- `startWasmGame` waits until the game page is ready before it clicks ▶ Start. Ready means `__swfBridge`, `__runtimeReady`, and the button both enabled and shown. After the click it waits for the bridge to answer (`botStatus()`).
+- Two boot faults are known, and either one re-boots the session once on a fresh page, printing a `BOOT-RETRY:` line: `click-timeout` and `bridge-never-ready`.
+- A failure after the boot is never retried.
+- Every probe prints `BOOT-RETRIES: n` before its verdict, so a rising rate stays visible.
+
+The `A valid external Instance reference no longer exists` lines are not a fault. They are this channel's device loss (see above), and the probe counts them inside a `bridge-never-ready` fault.
+
 ## Rebuilding the game after an AS3 change
 
 `build_bot.sh` (in the seedling bot build directory, outside this repo) builds the SWF; its header documents the rest (inject → SWFRecomp → `build_wasm_avm2.sh` → `deploy_wasm_avm2.sh` → copy into `frontend/modules/flashPanel/wasm/`). That directory is the submodule `PeerInfinity/seedling-wasm`: a rebuilt build is committed and pushed there, then the pointer is bumped here in its own commit. A build belongs in the submodule if and only if a tracked file of this repo names it; `scripts/procgen/check-seedling-wasm-pins.mjs` gates the agreement between the manifest, the whitelist, what the submodule tracks and what this repo names. `frontend/modules/flashPanel/README.md` has the add and retire steps.
