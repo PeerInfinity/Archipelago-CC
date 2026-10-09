@@ -1396,7 +1396,7 @@ export function resolvePresser(world, named, what) {
  * and as a precondition **only when `approach` is empty**, so a bait
  * written against slice 15's shape verifies exactly as it did.
  */
-function runBait(run, perTick, bait, what) {
+export function runBait(run, perTick, bait, what) {
     if (run.entities('crushers') === null) {
         fail(`${what}: a bait is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` steps no crusher under noclip, so the choreography would emit '

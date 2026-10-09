@@ -173,7 +173,10 @@ export async function twoPassSolve({
         let out = null;
         let raised = null;
         try {
-            out = solveSegment({ run: makeRun(rows), goals, name, boot, dashMode });
+            // ⛓ CRUSHER: `forkRun` lets a verb try a choreography on a fresh replay
+            // before committing it (`solveSegment`'s docblock); read only by `bait`.
+            out = solveSegment({ run: makeRun(rows), goals, name, boot, dashMode,
+                forkRun: () => makeRun(rows) });
         } catch (e) {
             /**
              * ⛓⛓⛓ THE DISCOVERY ARM. `levelRun` throws BY NAME when a chaser

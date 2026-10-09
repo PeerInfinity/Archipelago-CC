@@ -72,6 +72,11 @@ import {
     CEREMONY_CADENCE_START, ceremonyCadenceStep, runFire,
 } from './botDriverV2.js';
 import { resolvePresser } from './botDriverV2.js';
+// ⛓ SEEDLING FIDELITY CRUSHER — the `bait` verb (behind `CRUSHER_BAIT`).
+import { runBait } from './botDriverV2.js';
+import {
+    BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherSightDanger, searchBaitOrdering,
+} from './crusherBait.js';
 import {
     KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
     fallRocksArmedBy, groupResponders,
@@ -651,6 +656,163 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      */
     brave: execBrave,
 });
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY CRUSHER — **THE FRONTIER'S EXECUTOR LOOKUP**, and the
+ * one place `bait` is registered.
+ *
+ * `STRATEGY_EXECUTORS` stays the frozen table every other reader enumerates
+ * (the catalog invariants, `R8_STRATEGY_EXECUTORS`' derivation rows, the
+ * pending list). The frontier path (`identifyAndSelect`, `prerequisiteOrder`,
+ * the application below it) asks THIS instead, which answers the table's row
+ * or — only while `CRUSHER_BAIT.enabled` — `execBait` for `bait`. With the flag
+ * off it is the table, byte for byte; that is the flag's whole contract.
+ */
+export function frontierExecutor(strategy) {
+    const row = STRATEGY_EXECUTORS[strategy];
+    if (row) return row;
+    return strategy === 'bait' && CRUSHER_BAIT.enabled ? execBait : undefined;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY CRUSHER — RESOLVE the `bait` work order: a `crusher` on
+ * the frontier. The ORDERING is searched (`crusherBait.searchBaitOrdering`, R5
+ * slice 17's proposer with the ROUND TRIP as its goal: the aim reached AND the
+ * cell the bait began from still in the player's safe component), and each
+ * chain it names is LOOKED UP in `BAIT_CHOREOGRAPHIES` — R5's beam-searched,
+ * game-recorded spans. Both misses refuse BY NAME: no ordering is a statement
+ * about the room at this granularity; an ordering with an unbanked chain is
+ * that chain's beam search as the work order.
+ */
+function resolveBaitStrategy(run, obstacle, aim, allowTeleporter) {
+    if (!run.entities('crushers')) return null;
+    const refuse = (why) => {
+        throw new SolverRefusal(`solverBot: bait ${obstacle.id} in level ${run.level} — ${why}`,
+            { obstacle: { kind: 'solid', tag: 'crusher', id: obstacle.id } });
+    };
+    if (!run.entities('crushersParked')) {
+        refuse('a crusher in this room is CHARGING; the ordering search plans from parks, and a '
+            + 'body in motion is not one.');
+    }
+    const aimRect = { x: aim.x - 4, y: aim.y - 4, right: aim.x + 4, bottom: aim.y + 4 };
+    const found = searchBaitOrdering({
+        run, liveOpts: run.liveGeometryOpts(), inventory: run.progress('inventory'),
+        aimRect, allowTeleporter,
+    });
+    if (!found.ordering) {
+        refuse(`the ordering search found nothing: ${found.why} (${found.stats.expanded} state(s) `
+            + 'expanded, the pessimistic escape reading, the 8 px lattice).');
+    }
+    const plan = found.chains.map((chain) => ({ chain, row: choreographyFor(run.level, chain) }));
+    const missing = plan.filter((p) => !p.row);
+    if (missing.length) {
+        refuse(`the ordering search found ${found.ordering.length} charge(s) in ${plan.length} chain(s) `
+            + `[${plan.map((p) => `${p.chain.id} ${p.chain.charges.join('')} (${p.chain.from.x},`
+                + `${p.chain.from.y})->(${p.chain.park.x},${p.chain.park.y})`).join(' | ')}], and `
+            + `${missing.length} of them have no choreography in \`BAIT_CHOREOGRAPHIES\` — the work `
+            + 'order is that chain\'s beam search (R5 slices 17-19: 8-tick blocks, per-stage walls), '
+            + 'which is too slow to be an in-solver search.');
+    }
+    return {
+        strategy: 'bait',
+        target: obstacle.id,
+        stance: { ...plan[0].row.stance },
+        chains: plan,
+        charges: found.ordering.length,
+        parks: found.parks,
+        searched: found.stats,
+        rejected: [{
+            option: 'avoid (hard-avoid the four lanes)',
+            why: `${obstacle.id} is a \`Crusher\`: a 32x32 Solid that charges at 1 px/tick when it SEES `
+                + 'the player in a lane and PARKS where a Solid stops it (`crusher.js`). The corridor '
+                + 'runs through its body, so the route OPERATES it: '
+                + `${found.ordering.length} charge(s) in ${plan.length} chain(s), searched with the round `
+                + 'trip priced.',
+        }],
+    };
+}
+
+/**
+ * Executor: the `bait` verb — per chain, WALK to its stance (the loop's own
+ * `walkTo`; the first stance is walked before this is called), ALIGN at rest to
+ * the choreography's searched start (`crusherBait.alignmentFor`, every previewed
+ * tick outside every live lane), then `botDriverV2.runBait` with the chain's
+ * `{approach, spans, park}` — whose positive control, park-as-position and
+ * zero-contact checks are the verdict. A `runBait` failure is this verb's
+ * refusal, in its words.
+ */
+function execBait(run, perTick, resolved, ctx) {
+    const from = perTick.length;
+    const what = `${ctx.what} (${resolved.target})`;
+    const refuse = (why) => {
+        throw new SolverRefusal(`${what}: ${why}`,
+            { obstacle: { kind: 'solid', tag: 'crusher', id: resolved.target } });
+    };
+    const chains = [];
+    resolved.chains.forEach(({ chain, row }, i) => {
+        const label = `${what} chain ${i + 1}/${resolved.chains.length} ${chain.id} ${row.charges.join('')}`;
+        if (i > 0) ctx.walkTo(ctx.goal, { ...row.stance }, { what: `${label} stance` });
+        const [ox, oy] = chain.id.slice(chain.id.indexOf('@') + 1).split(',').map(Number);
+        const spec = () => ({
+            crusher: { x: ox, y: oy },
+            approach: row.approach.map((sp) => ({ ...sp })),
+            spans: row.spans.map((sp) => ({ ...sp })),
+            park: { ...row.park },
+        });
+        // The lanes are static while every crusher is parked: one solid list per crusher.
+        const lineSolids = new Map([...run.entities('crushers').keys()].map((id) => [id,
+            run.world.solidBoxesForMover(run.liveGeometryOpts(), id)]));
+        const safe = (p) => crusherSightDanger(run, playerBoxAt(p.x, p.y), { x: p.x, y: p.y },
+            (id) => lineSolids.get(id)).length === 0;
+        const candidates = alignmentCandidates(run, row.start, safe);
+        let chosen = null;
+        let tried = 0;
+        const failures = [];
+        if (ctx.fork) {
+            for (const c of candidates) {
+                tried += 1;
+                const f = ctx.fork();
+                for (const held of c.ticks) f.advance(held);
+                try {
+                    runBait(f, [], spec(), `${label} (fork)`);
+                    chosen = c;
+                    break;
+                } catch (e) {
+                    if (!(e instanceof BotDriverV2Error)) throw e;
+                    if (failures.length < 3) failures.push(`(${c.at.x.toFixed(2)},${c.at.y.toFixed(2)}): ${e.message.slice(0, 160)}`);
+                }
+            }
+            if (!chosen) {
+                refuse(`${label}: none of ${tried} aligned start(s) (BAIT_ALIGN ${JSON.stringify(BAIT_ALIGN)}; the `
+                    + `choreography was searched from (${row.start.x},${row.start.y})) survives the chain on a FORK `
+                    + `— ${failures.join(' | ')}`);
+            }
+        } else {
+            // No fork to try on: the nearest aligned start, and `runBait` is the verdict.
+            chosen = candidates[0] ?? null;
+            if (!chosen) refuse(`${label}: the player never comes to rest outside every live lane.`);
+        }
+        for (const held of chosen.ticks) {
+            perTick.push(held);
+            const { transition } = run.advance(held);
+            if (transition) refuse(`${label}: the align crossed to level ${transition.to_level}.`);
+        }
+        if (run.state.x !== chosen.at.x || run.state.y !== chosen.at.y) {
+            refuse(`${label}: the align was previewed to rest at (${chosen.at.x},${chosen.at.y}) and the RUN `
+                + `rests at (${run.state.x},${run.state.y}) — the preview and the run disagree.`);
+        }
+        let rec;
+        try {
+            rec = runBait(run, perTick, spec(), label);
+        } catch (e) {
+            if (e instanceof BotDriverV2Error) refuse(e.message);
+            throw e;
+        }
+        chains.push({ id: chain.id, charges: row.charges.join(''), park: { ...row.park },
+            alignTicks: chosen.ticks.length, tried, ticks: rec.ticks });
+    });
+    return { verb: 'bait', target: resolved.target, from, ticks: perTick.length - from, chains };
+}
 
 /**
  * ⛓⛓ SEEDLING SWIM U5 — THE BOBBOSS ENCOUNTER EXECUTOR.
@@ -1729,6 +1891,8 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'skirt') return resolveSkirtStrategy(run, obstacle, contacts);
     if (strategy === 'pulse') return resolvePulseStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'brave') return resolveBraveStrategy(run, obstacle, contacts);
+    // ⛓ CRUSHER — reached only while `CRUSHER_BAIT` registers the verb (`frontierExecutor`).
+    if (strategy === 'bait') return resolveBaitStrategy(run, obstacle, aim, allowTeleporter);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
@@ -13161,6 +13325,15 @@ function solveSegmentUnder({
      * is true.
      */
     fineLattice = FINE_LATTICE_ROSTER_WIDE,
+    /**
+     * ⛓⛓ SEEDLING FIDELITY CRUSHER — OPTIONAL: `() => run`, a FRESH run at
+     * `boot` built exactly as `run` was (`twoPassSolve` passes its own
+     * `makeRun`). With it an executor may ask for a FORK of the live run — this
+     * segment's ticks replayed onto a fresh one (`ctx.fork`) — and try a
+     * choreography there before committing a tick of it. Only `bait` asks
+     * (behind `CRUSHER_BAIT`); absent, `ctx.fork` is null and nothing reads it.
+     */
+    forkRun = null,
 }) {
     assertDashMode(dashMode, 'solveSegment');
     if (!run || typeof run.advance !== 'function') fail('solveSegment needs a live run');
@@ -13442,6 +13615,20 @@ function solveSegmentUnder({
         run.equipNow(slot);
         solverEquips.push({ t: run.ticksCompleted, slot });
     };
+    /**
+     * ⛓⛓ CRUSHER — the fork (`forkRun`, above): a fresh run with this segment's
+     * own ticks and slot selections replayed onto it, the survey replay's own
+     * fold (`equips` applied at their tick before that tick's advance).
+     */
+    const fork = typeof forkRun === 'function' ? () => {
+        const r = forkRun();
+        const equipsAt = new Map(solverEquips.map((e) => [e.t, e.slot]));
+        perTick.forEach((held, t) => {
+            if (equipsAt.has(t)) r.equipNow(equipsAt.get(t));
+            r.advance(held);
+        });
+        return r;
+    } : null;
 
     /**
      * Refuse, with everything a reader needs. The rows recorded so far ride
@@ -13597,8 +13784,8 @@ function solveSegmentUnder({
             OBSTACLE_STRATEGIES[o.tag ? `${o.kind}:${o.tag}` : o.kind]
                 ?? OBSTACLE_STRATEGIES[o.kind] ?? null, o);
         const actionable = [...frontier.values()].sort((a, b) => {
-            const av = STRATEGY_EXECUTORS[strategyFor(a)] ? 0 : 1;
-            const bv = STRATEGY_EXECUTORS[strategyFor(b)] ? 0 : 1;
+            const av = frontierExecutor(strategyFor(a)) ? 0 : 1;
+            const bv = frontierExecutor(strategyFor(b)) ? 0 : 1;
             return av - bv || a.d - b.d;
         });
         const obstacle = actionable[0] ?? { kind: 'no-corridor', tag: null, id: null };
@@ -13617,7 +13804,7 @@ function solveSegmentUnder({
          * re-plans — a world edit is a re-plan event by the cadence rule
          * (§10.4 note 6), and the trace carries a row for it.
          */
-        if (strategy && STRATEGY_EXECUTORS[strategy]) {
+        if (strategy && frontierExecutor(strategy)) {
             const resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts,
                 aim, allowTeleporter, [...refusedOrders]);
             /**
@@ -13700,7 +13887,7 @@ function solveSegmentUnder({
                     + (detail ? `. The block-route search refused: ${detail}` : ''),
             });
         }
-        if (strategy && !STRATEGY_EXECUTORS[strategy]) {
+        if (strategy && !frontierExecutor(strategy)) {
             considered.push({
                 option: strategy,
                 why: `selected for ${key} and NOT REGISTERED this slice — a later slice's `
@@ -13715,7 +13902,7 @@ function solveSegmentUnder({
                 ? `; also on the frontier: ${actionable.slice(1).map((o) => o.id).join(', ')}`
                 : ''}. `
             + `${strategy
-                ? `Strategy '${strategy}' ${STRATEGY_EXECUTORS[strategy]
+                ? `Strategy '${strategy}' ${frontierExecutor(strategy)
                     ? 'failed to apply' : 'is SELECTED but not registered this slice'}.`
                 : gate ? `${gate.gate}-GATE (${obstacle.id}): ${gate.why}`
                     : 'No strategy row exists for this obstacle.'} `
@@ -13756,7 +13943,7 @@ function solveSegmentUnder({
         const key = p.tag ? `${p.kind}:${p.tag}` : p.kind;
         const strategy = refineStrategy(run,
             OBSTACLE_STRATEGIES[key] ?? OBSTACLE_STRATEGIES[p.kind] ?? null, sub);
-        if (!strategy || !STRATEGY_EXECUTORS[strategy]) {
+        if (!strategy || !frontierExecutor(strategy)) {
             refuse(`${what}: ${identified.obstacle.id}'s stance needs ${p.id} discharged `
                 + `first (${p.via}: ${p.why}), and ${p.id} has `
                 + `${strategy ? `strategy '${strategy}', which is NOT REGISTERED this slice`
@@ -15569,7 +15756,7 @@ function solveSegmentUnder({
                             stanceWalks.delete(walking);
                         }
                     }
-                    const record = STRATEGY_EXECUTORS[plan.strategy](run, perTick, plan.resolved, {
+                    const record = frontierExecutor(plan.strategy)(run, perTick, plan.resolved, {
                         maxTicksPerTarget,
                         economies,
                         dashMode,
@@ -15587,6 +15774,8 @@ function solveSegmentUnder({
                         // ⛓ Seedling fidelity BURN — a verb may select a slot
                         // (`burn` selects the Fire's and then the old one again).
                         equip,
+                        // ⛓ CRUSHER — a try-before-commit run (`forkRun`); null without one.
+                        fork,
                     });
                     records.push({ goal: goal.kind, strategy: plan.strategy, ...record });
                     // ⛓ THE EXEMPTION SURVIVES THE VERB. A `hold` leaves the
