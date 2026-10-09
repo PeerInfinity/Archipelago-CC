@@ -341,6 +341,9 @@ async function main() {
                 }
                 swaps += landed.jumps;
                 row.landed = landed;
+                // the Rng split at the arrival: the botStatus ECHO vs the live LATCH (the arrival staging reads the echo)
+                // eslint-disable-next-line no-await-in-loop
+                row.rngSplitAtArrival = await page.evaluate(() => window.__div.rngSplit());
                 // eslint-disable-next-line no-await-in-loop
                 const r = await page.evaluate((a) => window.__div.serveLeg(a).then((x) => JSON.parse(JSON.stringify(x))),
                     { leg, budgetMs: 90000, producer: PRODUCER });

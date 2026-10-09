@@ -195,7 +195,9 @@ export async function createLab() {
         const plans = solves.map((s) => ({ ok: s.res?.ok ?? null, kind: s.res?.kind ?? null,
             message: s.res?.ok === false ? String(s.res?.message ?? '').split('\n')[0].slice(0, 400) : undefined,
             producer: s.res?.plan?.producer ?? null, verbs: s.res?.plan?.verbs ?? null, ticks: s.res?.plan?.solution?.length ?? null,
-            prefix: s.req.perTick?.length ?? 0, passes: s.passes }));
+            prefix: s.req.perTick?.length ?? 0, passes: s.passes,
+            // the split the solve was STAGED with (`stagingFromWasmArrival` reads `static.Rng.split` off botStatus)
+            split: s.req.staging?.rng?.split ?? null }));
         const rows = tap.rows.slice(r0);
         // Divergence detail per diverged play: match it to its plan by order (one ok plan per play)
         const okSolves = solves.filter((s) => s.res?.ok && s.res.plan?.expected);
@@ -252,12 +254,23 @@ export async function createLab() {
         return { slots: st.inventory_slots ?? [], has: Object.entries(st.items ?? {}).filter(([k, v]) => /^has|^can/.test(k) && v === true).map(([k]) => k).sort() };
     }
 
+    /**
+     * The Rng split, three ways: `echo` = `botStatus().rng.split` (the LAST TAPE's `Bot.rngSplit`, false after
+     * `botReset` — NOT the live flag), `latch` = `botSeam().seam['static.Rng.split']` (the live `Rng.split` at the
+     * last latch), `begin` = the begin entry's, if it carries one.
+     */
+    function rngSplit() {
+        const sm = seam();
+        return { echo: status()?.rng?.split ?? null, latch: sm?.seam?.['static.Rng.split'] ?? null,
+            begin: sm?.beginEntry?.['static.Rng.split'] ?? null };
+    }
+
     /** One status read of the shapes (for the report's field list). */
     function peek() {
         return { status: status(), mobiles: J(game().botMobiles()), seam: seam(), state: readState(),
             lastRows: tap.rows.slice(-2), surfaceKeys: Object.keys(surface()), delivered: !!surface().wasm.deliveredSet };
     }
 
-    return { serveLeg, peek, heldItems, surface, engine, status, readState, tap, splitPlays, firstField, isArrival, stagingFromWasmArrival,
+    return { serveLeg, peek, heldItems, rngSplit, surface, engine, status, readState, tap, splitPlays, firstField, isArrival, stagingFromWasmArrival,
         shippedTape, exactDeclarationRefusal, liveDeclarations, TAPE_KEY_RELEASES, firstDivergence, parsePendingCheck, win };
 }
