@@ -18,6 +18,8 @@
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --escape             # `HAMMER_ESCAPE` ON (D2's switch)
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --no-escape          # `HAMMER_ESCAPE` OFF (ON is the default
  *                                                                             #   since hammer-phase A2)
+ *   node scripts/procgen/sweep-seedling-l18-residues.mjs --no-fallback        # `HAMMER_ESCAPE_FALLBACK` OFF (A2's
+ *                                                                             #   escape as a requirement)
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --twice              # each row solved twice, compared
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --full               # the whole refusal text
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --json=<path>        # also write the rows as JSON
@@ -62,6 +64,7 @@ async function main() {
     const ESCAPE = argv.includes('--escape');
     const NO_ESCAPE = argv.includes('--no-escape');
     if (ESCAPE && NO_ESCAPE) throw new Error('--escape and --no-escape: pick one');
+    const NO_FALLBACK = argv.includes('--no-fallback');
     const TWICE = argv.includes('--twice');
     const FULL = argv.includes('--full');
     const JSON_OUT = valueOf('--json');
@@ -71,10 +74,12 @@ async function main() {
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
     const { SPINNER } = await import(join(MODULE, 'spinner.js'));
-    const { HAMMER_ESCAPE } = await import(join(MODULE, 'solverBot.js'));
+    const { HAMMER_ESCAPE, HAMMER_ESCAPE_FALLBACK } = await import(join(MODULE, 'solverBot.js'));
     if (ESCAPE) HAMMER_ESCAPE.enabled = true;
     // ⛓ hammer-phase A2: the switch is ON by default; `--no-escape` measures the base (35/45) without an edit.
     if (NO_ESCAPE) HAMMER_ESCAPE.enabled = false;
+    // ⛓ hammer-phase A3: the escape is a preference; `--no-fallback` measures A2's requirement.
+    if (NO_FALLBACK) HAMMER_ESCAPE_FALLBACK.enabled = false;
 
     const NAME = 'r9-solve-18';
     const TELEPORTER = { x: 176, y: 112 };
@@ -118,6 +123,9 @@ async function main() {
                 digest: createHash('md5').update(keys).digest('hex').slice(0, 12),
                 stalls: press.flatMap((p) => p.phaseStalls ?? []).length,
                 escapes: press.flatMap((p) => p.escapes ?? []).length,
+                // ⛓ hammer-phase A3: presses taken at an aim with no certificate, strikes derived without one
+                fellBack: press.flatMap((p) => p.fellBack ?? []).length,
+                uncertified: press.flatMap((p) => p.cycles ?? []).filter((c) => c.escape === 'uncertified').length,
             };
         } catch (e) {
             const msg = String(e?.message ?? e);
@@ -129,7 +137,8 @@ async function main() {
     }
 
     console.log(`# ${NAME} at seam.time ${STAGING.seam.time} (committed residue ${RESIDUE}); `
-        + `HAMMER_ESCAPE ${HAMMER_ESCAPE.enabled ? 'ON' : 'OFF'}; ${residues.length} residue(s)`);
+        + `HAMMER_ESCAPE ${HAMMER_ESCAPE.enabled ? 'ON' : 'OFF'}; `
+        + `HAMMER_ESCAPE_FALLBACK ${HAMMER_ESCAPE_FALLBACK.enabled ? 'ON' : 'OFF'}; ${residues.length} residue(s)`);
     const rows = [];
     let unstable = 0;
     for (const r of residues) {
@@ -142,7 +151,8 @@ async function main() {
         rows.push(a);
         const len = a.length === null ? 'R' : String(a.length);
         const extra = a.length !== null
-            ? `digest ${a.digest} stalls ${a.stalls} escapes ${a.escapes} hits ${a.hits}` : `— ${a.head}`;
+            ? `digest ${a.digest} stalls ${a.stalls} escapes ${a.escapes} fellBack ${a.fellBack}/${a.uncertified} `
+                + `hits ${a.hits}` : `— ${a.head}`;
         console.log(`r${String(r).padStart(2)}  ${a.verdict.padEnd(22)} ${len.padStart(4)}  `
             + `${a.seconds.toFixed(1).padStart(6)}s  ${TWICE ? `${a.twice}  ` : ''}${extra}`);
     }

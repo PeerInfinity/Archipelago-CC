@@ -8038,6 +8038,17 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
     let dwelt = 0;
     /** ⛓ hammer-phase A — how many candidates the ESCAPE admission dropped (`HAMMER_ESCAPE` on only). */
     let escaped = 0;
+    /**
+     * ⛓ hammer-phase A3 — THE ESCAPE IS A PREFERENCE (`HAMMER_ESCAPE_FALLBACK`): the first candidate that passed
+     * every pre-escape condition and whose escape was a claimed negative, kept as the switch OFF would have returned
+     * it (its record snapshotted at that moment). Returned only when the scan ends with no certified strike.
+     */
+    let fallback = null;
+    const keepFallback = (record, esc) => {
+        if (fallback === null && HAMMER_ESCAPE_FALLBACK.enabled) {
+            fallback = { ...record, escape: 'uncertified', escapeBound: esc.bound ?? null, escapeWhy: esc.why };
+        }
+    };
     const dwellUnsafeAt = (c, eta, i) => {
         for (let k = eta; k < i - 2; k += 1) {
             if (!clearOfHammersAt(run, c.box, forecast, k)) return k;
@@ -8116,6 +8127,9 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
         if (HAMMER_ESCAPE.enabled) {
             const esc = strikeEscape(run, { cell: o.cell, i: o.i, eta, walk, mine: forecast[o.i + 1][index], bodyId });
             if (!esc.ok && esc.claim) {
+                keepFallback({ cell: { x: o.cell.x, y: o.cell.y }, pressAt: run.ticksCompleted + o.i,
+                    aimAt: run.ticksCompleted + o.i - 1, eta, rejected: rejected.slice(),
+                    considered: opportunities.length, sighted, dwelt }, esc);
                 escaped += 1;
                 rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`, why: esc.why });
                 continue;
@@ -8174,7 +8188,13 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
             if (dwellUnsafeAt(c, eta, i) !== null) { dwelt += 1; continue; }
             if (HAMMER_ESCAPE.enabled) {
                 const esc = strikeEscape(run, { cell: c, i, eta, walk, mine, bodyId });
-                if (!esc.ok && esc.claim) { escaped += 1; continue; }
+                if (!esc.ok && esc.claim) {
+                    keepFallback({ cell: { x: c.x, y: c.y }, pressAt: run.ticksCompleted + i,
+                        aimAt: run.ticksCompleted + i - 1, eta, rejected, considered: opportunities.length,
+                        sighted, dwelt, continued, fromContinuation: true }, esc);
+                    escaped += 1;
+                    continue;
+                }
             }
             return {
                 cell: { x: c.x, y: c.y },
@@ -8191,6 +8211,8 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
             };
         }
     }
+    // ⛓ hammer-phase A3 — no certified strike anywhere in the bounds: the pre-escape strike, as the switch OFF.
+    if (fallback !== null) return { ...fallback, escaped };
     return {
         cell: null,
         rejected,
@@ -8764,6 +8786,49 @@ export const HAMMER_ESCAPE_BOUNDS = Object.freeze({
 });
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE A3 — **THE ESCAPE IS A PREFERENCE, NOT A REQUIREMENT** (⚖ user, 2026-10-09: *"if no
+ * strike passes the escape check, fall back to today's behaviour instead of refusing. Every room that solved before
+ * still solves"*).
+ *
+ * A claimed negative (an exhausted kernel search, or an approach/train/landing the forecast refuses) no longer drops
+ * a strike outright:
+ *   - `deriveStrike` (both passes) keeps scanning for a CERTIFIED strike within the same bounds, and only when the
+ *     scan ends with none does it return the first strike that passed every PRE-ESCAPE condition — exactly what the
+ *     switch OFF returns — marked `escape: 'uncertified'` with the negative's `escapeBound`;
+ *   - at the live arm's aim, a press with no certificate is refused only while a certified strike is in hand (held,
+ *     or derived on that tick); otherwise it is taken as the switch OFF takes it, no certificate followed, and the
+ *     press record lists it (`fellBack`).
+ * ⇒ a certified strike is always preferred, even LATER in tick order than an uncertified one: everything A2 solved
+ * with a certificate is byte-identical, and the fallback only reaches a scan that A2 ended with no strike at all.
+ * A search cut by its budget or the deadline stays "no claim" (A's design), never a fallback.
+ *
+ * `enabled: false` is A2's behaviour (the escape as a requirement): the mutant, and a measurement.
+ */
+export const HAMMER_ESCAPE_FALLBACK = { enabled: true };
+
+/**
+ * ⛓ hammer-phase A3 — **THE MOVE A TICK WITH NO STRIKE IN HAND TAKES**, ranked, the switch's preference made one
+ * function (the walk and the aim's fallback both ask it):
+ *   1. `strike`      the derivation found a CERTIFIED strike (or the switch is off, when every strike is one);
+ *   2. `follow`      the escape certificate in flight still has ticks (A's follow);
+ *   3. `refuge`      a refuge is derivable (the wait A2 takes when nothing above holds);
+ *   4. `uncertified` the derivation's strike passed every pre-escape condition and no escape (the switch OFF's
+ *                    strike), taken only when `fallback` is on;
+ *   5. `refuse`      nothing: the walk fails `HAMMER_SAFETY` ("nowhere to be").
+ * 1–3 are A2's three moves in A2's order, so everything A2 walked is unchanged; 4 replaces a refusal only.
+ * `following` and `refuge` are thunks, asked only when the rank reaches them (a refuge is a search).
+ *
+ * @returns {'strike'|'follow'|'refuge'|'uncertified'|'refuse'}
+ */
+export function noStrikeMove({ next, following, refuge, fallback = HAMMER_ESCAPE_FALLBACK.enabled }) {
+    const uncertified = Boolean(next?.cell) && next.escape === 'uncertified';
+    if (next?.cell && !uncertified) return 'strike';
+    if (following()) return 'follow';
+    if (refuge()) return 'refuge';
+    return uncertified && fallback ? 'uncertified' : 'refuse';
+}
+
+/**
  * ⛓⛓ THE ESCAPE OF ONE PRESS, from a given player state at a given tick (`at` ≥ the run's tick).
  *
  * `keys[k]` is held at tick `at + k` up to the press; the press is `primary` alone at `pressAt` (with the dash's
@@ -8775,8 +8840,10 @@ export const HAMMER_ESCAPE_BOUNDS = Object.freeze({
  * escape is retried with the whole train stood.
  *
  * @returns {{ok: true, claim: true, pressAt, landing, outcome, impulse, keys: Set[], states: object[],
- *   expansions: number} | {ok: false, claim: true, why: string} | {ok: false, claim: false, why: string}}
+ *   expansions: number} | {ok: false, claim: true, bound: string, why: string} | {ok: false, claim: false, why: string}}
  *   `claim: false` is "no claim either way" (an unmodelled hit source, the deadline): the caller admits as before.
+ *   A claimed negative names its `bound` (A3): the kernel's own (`exhausted`, `start`, `horizon`), or `death`,
+ *   `line`, `no-landing`, `approach`, `train`.
  */
 function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }) {
     const n = run.ticksCompleted;
@@ -8786,7 +8853,8 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
     const states = new Map([[at, { ...state }]]);
     let st = { ...state };
     // ⛓ hammer-phase A2: an approach or train whose preview dies refuses the press (`previewOrDeath`)
-    const died = (t) => ({ ok: false, claim: true, why: `the approach or the train dies at t${t} (a previewed death)` });
+    const died = (t) => ({ ok: false, claim: true, bound: 'death',
+        why: `the approach or the train dies at t${t} (a previewed death)` });
     const stepOrNull = previewOrDeath(step);
     for (let t = at; t < pressAt; t += 1) {
         st = stepOrNull({ ...st }, keys[t - at] ?? NO_KEYS);
@@ -8811,8 +8879,8 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
     const rowsFor = (land) => land + horizon + 2 - n;
     const first = run.spinnerForecastWithPress(rowsFor(trainEnd), { pressAt, direction, id,
         positions: (t) => states.get(t) ?? null });
-    if (first.lineBlocked) return { ok: false, claim: true, why: 'the press\'s line of sight is blocked' };
-    if (!first.landing) return { ok: false, claim: true, why: `the press does not land: ${first.why}` };
+    if (first.lineBlocked) return { ok: false, claim: true, bound: 'line', why: 'the press\'s line of sight is blocked' };
+    if (!first.landing) return { ok: false, claim: true, bound: 'no-landing', why: `the press does not land: ${first.why}` };
     const L = first.landing.t;
     /**
      * ⛓ HAMMER-PHASE A2 — **AN ESCAPE NEVER WALKS ONTO LETHAL FLOOR.** The prune was the hammer predicate alone, so
@@ -8838,8 +8906,8 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
     const safe = safeIn(first.rows);
     for (let t = at + 1; t <= L; t += 1) {
         if (!safe(states.get(t), t - n)) {
-            return { ok: false, claim: true, why: `the approach or the train meets a body or the line at t${t}, `
-                + 'before the press lands' };
+            return { ok: false, claim: true, bound: 'approach', why: `the approach or the train meets a body or the `
+                + `line at t${t}, before the press lands` };
         }
     }
     const search = (start, startIndex, rows) => spaceTimeReach({
@@ -8854,7 +8922,7 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
         if (r.ok) return null;
         // ⚠ a search cut by its BUDGET proves nothing either way: only an EXHAUSTED one refuses the press
         if (r.bound === 'deadline' || r.bound === 'expansions') return { ok: false, claim: false, why: r.why };
-        return { ok: false, claim: true, why: `no ESCAPE from the landing at t${L} (${pre}): ${r.why}` };
+        return { ok: false, claim: true, bound: r.bound, why: `no ESCAPE from the landing at t${L} (${pre}): ${r.why}` };
     };
     // ⛓ First: free from the landing. Then re-aim the remaining tests from the certificate's own points.
     let found = search(states.get(L), L - n, first.rows);
@@ -8869,8 +8937,8 @@ function pressEscape(run, { state, at, keys = [], pressAt, id, deadline = true }
         // ⛓ The fallback: the whole train stood, the search from its last test.
         for (let t = L + 1; t <= trainEnd + 1; t += 1) {
             if (!safe(states.get(t), t - n)) {
-                return { ok: false, claim: true, why: `the escape moves the train's later tests, and the train stood `
-                    + `meets a body or the line at t${t}` };
+                return { ok: false, claim: true, bound: 'train', why: `the escape moves the train's later tests, and `
+                    + `the train stood meets a body or the line at t${t}` };
             }
         }
         pre = Array.from({ length: trainEnd + 1 - L }, () => NO_KEYS);
@@ -10127,6 +10195,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
     const phaseStalls = [];
     /** ⛓ hammer-phase A — the escapes certified at an aim this kill (`HAMMER_ESCAPE` on only). */
     const escapes = [];
+    /** ⛓ hammer-phase A3 — the presses taken at an aim with NO certified escape (`HAMMER_ESCAPE_FALLBACK`). */
+    const fellBack = [];
     for (const plan of resolved.plans) {
         /**
          * ⛔ THE BOUND IS THE DERIVATION'S OWN HORIZON PER LANDING. Three
@@ -10233,12 +10303,50 @@ function execKillByPress(run, perTick, resolved, ctx) {
             const following = HAMMER_ESCAPE.enabled
                 ? escapeHeld(escape, run.ticksCompleted, landings, plan.id, false) : null;
             let aimEscape = null;
+            /**
+             * ⛓ hammer-phase A3 — the tick's derivation and refuge, taken once whoever asks first (the aim's
+             * fallback check below, or the walk), and the move a no-strike tick takes (`noStrikeMove`).
+             */
+            let derived;
+            let refugeTaken;
+            const nextNow = () => {
+                if (derived === undefined) {
+                    derived = deriveStrike(run, plan.id, contacts, body.hitsTimer > 0 ? body.hitsTimer : 0);
+                }
+                return derived;
+            };
+            const refugeNow = () => {
+                if (refugeTaken === undefined) {
+                    refugeTaken = deriveRefuge(run, contacts, Math.max(body.hitsTimer, SPINNER.hammerPeriod));
+                }
+                return refugeTaken;
+            };
+            const moveNow = () => noStrikeMove({
+                next: nextNow(),
+                following: () => HAMMER_ESCAPE.enabled
+                    && escapeHeld(escape, run.ticksCompleted, landings, plan.id, true) !== null,
+                refuge: () => refugeNow() !== null,
+            });
+            /**
+             * ⛓ hammer-phase A3 — a claimed negative at the aim refuses the press while a CERTIFIED strike is held,
+             * or while the walk below has a move A2 would take (`noStrikeMove`: a certified strike derived on this
+             * tick, the certificate in flight, a refuge). A held strike that is itself uncertified is pressed.
+             * Otherwise the press is taken as the switch OFF takes it, no certificate followed, and recorded
+             * (`fellBack`).
+             */
+            let aimFellBack = null;
             const aimAdmitted = () => {
                 if (!HAMMER_ESCAPE.enabled) return true;
                 const aimKeys = new Set([FACING_KEYS[facingToward(run.state, body.rect)]]);
                 aimEscape = pressEscape(run, { state: run.state, at: run.ticksCompleted, keys: [aimKeys],
                     pressAt: run.ticksCompleted + 1, id: plan.id });
-                return aimEscape.ok || !aimEscape.claim;
+                if (aimEscape.ok || !aimEscape.claim) return true;
+                if (!HAMMER_ESCAPE_FALLBACK.enabled) return false;
+                const lapsed = !strike || run.ticksCompleted > strike.pressAt;
+                if (!lapsed && strike.escape !== 'uncertified') return false;
+                if (lapsed && !['uncertified', 'refuse'].includes(moveNow())) return false;
+                aimFellBack = aimEscape;
+                return true;
             };
             if (aimed) {
                 held = PRESS;
@@ -10267,6 +10375,10 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 } else {
                     escape = null;
                 }
+                if (aimFellBack !== null) {
+                    fellBack.push({ body: plan.id, t: run.ticksCompleted, pressAt: run.ticksCompleted + 1,
+                        bound: aimFellBack.bound ?? null, why: aimFellBack.why });
+                }
                 /**
                  * ⛓ IN REACH AND READY — aim this tick, press the next. The
                  * reach is asked of the LIVE body rather than of the schedule,
@@ -10278,9 +10390,9 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 aimed = true;
             } else {
                 if (!strike || run.ticksCompleted > strike.pressAt) {
-                    const next = deriveStrike(run, plan.id, contacts,
-                        body.hitsTimer > 0 ? body.hitsTimer : 0);
-                    if (next && next.cell) {
+                    const next = nextNow();
+                    const move = moveNow();
+                    if (move === 'strike' || move === 'uncertified') {
                         strike = next;
                         refuge = null;
                         cycles.push({
@@ -10290,9 +10402,10 @@ function execKillByPress(run, perTick, resolved, ctx) {
                             eta: next.eta,
                             considered: next.considered,
                             rejected: next.rejected.slice(0, 3),
+                            // ⛓ hammer-phase A3 — a strike taken without a certified escape says so
+                            ...(next.escape ? { escape: next.escape, escapeBound: next.escapeBound } : {}),
                         });
-                    } else if (HAMMER_ESCAPE.enabled
-                        && escapeHeld(escape, run.ticksCompleted, landings, plan.id, true) !== null) {
+                    } else if (move === 'follow') {
                         /**
                          * ⛓ hammer-phase A — NO STRIKE, AND AN ESCAPE STILL HAS CERTIFIED TICKS: they replace
                          * the refuge walk, which nothing previews (residues 4–6's corner formed there).
@@ -10309,7 +10422,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
                          */
                         strike = null;
                         const window = Math.max(body.hitsTimer, SPINNER.hammerPeriod);
-                        refuge = deriveRefuge(run, contacts, window);
+                        refuge = refugeNow();
                         if (!refuge) {
                             fail(`${ctx.what}: no reachable cell in level ${run.level} is `
                                 + 'clear of every live body\'s 7x7 rect and of '
@@ -10467,7 +10580,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
         return { verb: 'kill', arm: 'press', from, ticks: perTick.length - from,
             landings, cycles, bodies: resolved.bodies,
             ...(phaseStalls.length ? { phaseStalls } : {}),
-            ...(escapes.length ? { escapes } : {}) };
+            ...(escapes.length ? { escapes } : {}),
+            ...(fellBack.length ? { fellBack } : {}) };
     }
     /**
      * ⛔⛔⛔ R8 SLICE 8 — THE TAIL WAS `run.openActivators.has(lock)`, AND THAT
@@ -10593,7 +10707,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 landings, cycles, bodies: resolved.bodies,
                 ...(economies ? { earlyWalk } : {}),
                 ...(phaseStalls.length ? { phaseStalls } : {}),
-                ...(escapes.length ? { escapes } : {}) };
+                ...(escapes.length ? { escapes } : {}),
+                ...(fellBack.length ? { fellBack } : {}) };
         }
         /**
          * ⚠ THE FADE IS A WAIT TOO, and with the bodies gone the discs are
