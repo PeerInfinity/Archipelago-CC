@@ -7,7 +7,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    chainBound, deriveLegs, eventPrerequisites, eventsBrokenOnPath, gameStateEventsOf, keyItemsOf, makeRuleHolds,
+    chainBound, deriveLegs, eventCrossingsOnPath, eventPrerequisites, eventsBrokenOnPath, gameStateEventsOf, keyItemsOf, makeRuleHolds,
     pickupsThrough, regionPath, ROUTE_MODES, routeOnlyRows, stagedPersistence,
 } from './surveyRoute.js';
 
@@ -287,6 +287,60 @@ describe('obstacle events in the leg walk', () => {
         // a crossing priced differently is a different obstacle
         R.Room.exits[0].access_rule = has('Hammer');
         expect(eventsBrokenOnPath(R, ['Room', 'Pocket'], ['room-pocket'], events, {})).toHaveLength(0);
+    });
+
+    /**
+     * ⛓ RULES survey-twin-credit — L12's red pair: two obstacles on ONE (side, across, rule). An AP exit carries no
+     * tile, so the crossing is undecidable: it credits NEITHER (fail-closed, `procgenCore/eventRoute.hopCredits`),
+     * and a held twin is still a candidate, so the other is never credited by elimination.
+     */
+    const EV2 = 'R flag 2: twin rock cleared';
+    const twin = () => ev({ name: EV2, event_id: 'flag:L0:2', item: { name: EV2 },
+        obstacle: { level: 0, tag: 2, class: 'breakablerock', x: 16, y: 0 } });
+
+    it('a TWIN pair (one side, across and rule) is credited by neither crossing', () => {
+        const rules = graph();
+        rules.regions[1].Room.locations.push(twin());
+        const R = rules.regions[1];
+        const events = gameStateEventsOf(R);
+        expect(events.map((e) => e.eventId)).toEqual(['flag:L0:1', 'flag:L0:2']);
+        expect(eventsBrokenOnPath(R, ['Room', 'Pocket'], ['room-pocket'], events, {})).toEqual([]);
+        expect(eventsBrokenOnPath(R, ['Far', 'Pocket'], ['far-pocket'], events, {})).toEqual([]);
+    });
+
+    it('with one twin HELD, a crossing does not credit the other by elimination', () => {
+        const rules = graph();
+        rules.regions[1].Room.locations.push(twin());
+        const R = rules.regions[1];
+        const events = gameStateEventsOf(R);
+        expect(eventsBrokenOnPath(R, ['Room', 'Pocket'], ['room-pocket'], events, { [EV]: 1 })).toEqual([]);
+        expect(eventsBrokenOnPath(R, ['Room', 'Pocket'], ['room-pocket'], events, { [EV2]: 1 })).toEqual([]);
+    });
+
+    it('a LONE event is credited as before (a twin priced differently is not a twin), and a held one is not again', () => {
+        const rules = graph();
+        rules.regions[1].Room.locations.push(ev({ name: EV2, event_id: 'flag:L0:2', item: { name: EV2 },
+            access_rule: has('Hammer'), obstacle: { level: 0, tag: 2 } }));
+        const R = rules.regions[1];
+        const events = gameStateEventsOf(R);
+        expect(eventsBrokenOnPath(R, ['Room', 'Pocket'], ['room-pocket'], events, {}).map((e) => e.eventId))
+            .toEqual(['flag:L0:1']);
+        expect(eventsBrokenOnPath(R, ['Room', 'Pocket'], ['room-pocket'], events, { [EV]: 1 })).toEqual([]);
+        // crossed twice on one path: credited once, `at` = the side's index
+        expect(eventCrossingsOnPath(R, ['Room', 'Pocket', 'Room', 'Pocket'],
+            ['room-pocket', 'x', 'room-pocket'], events, {}).map((c) => [c.event.eventId, c.at]))
+            .toEqual([['flag:L0:1', 0]]);
+    });
+
+    it('deriveLegs over a twin pair: no credit, no staging, and the gated landing is NOT walked on a guess', () => {
+        const rules = graph();
+        rules.regions[1].Room.locations.push(twin());
+        const out = crossingWalk(rules);
+        expect(out.credits).toEqual([]);
+        expect(out.legs[1].brokeOnTheWay).toBeUndefined();
+        // the landing needs flag 1, which no crossing names: the walk goes round by the Hub (crossing again)
+        expect(out.legs[2].regions).toEqual(['Far', 'Hub', 'Room', 'Pocket']);
+        expect(stagedPersistence({ legs: out.legs, credits: out.credits, levelOfRegion }).flat()).toEqual([]);
     });
 
     it('goal-first: the leg that needs the landing breaks the obstacle first, never eagerly', () => {

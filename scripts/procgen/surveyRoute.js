@@ -23,6 +23,7 @@
  * BFS reads it that way.
  */
 
+import { hopCredits } from '../../frontend/modules/procgenCore/eventRoute.js';
 import { RESTART_WARP } from '../../frontend/modules/procgenCore/restartWarp.js';
 import { buildAccessibilityModel, computeReachableRegions }
     from '../../frontend/modules/shared/procgen/forwardSimulator.js';
@@ -346,7 +347,8 @@ export function gameStateEventsOf(regions) {
         for (const loc of reg.locations ?? []) {
             if (loc.event_kind !== 'game_state') continue;
             out.push({ name: loc.name, item: loc.item?.name ?? loc.name, region, rule: loc.access_rule ?? null,
-                eventId: loc.event_id ?? null, obstacle: loc.obstacle ?? null, across: loc.across ?? [] });
+                eventId: loc.event_id ?? null, obstacle: loc.obstacle ?? null, side: loc.side ?? region,
+                across: loc.across ?? [] });
         }
     }
     return out;
@@ -396,6 +398,13 @@ export function eventPrerequisites({ regions, ruleHolds, here, items, events, ta
  * and one of its `across` regions, through an exit priced exactly the event's own cost, passes through
  * the obstacle, and in the game that crossing clears its flag (the in-order route breaks L0's rock
  * walking from the room into the door pocket). Not eager: the walk was going there anyway.
+ *
+ * ⛔ FAIL-CLOSED ON AMBIGUITY (RULES `rules-survey-twin-credit`) — the JS arc's rule, by import
+ * (`procgenCore/eventRoute.hopCredits`): a hop credits its ONE candidate or NONE, and HELD events still count as
+ * candidates. L12's red pair (flags 4 and 5, `bosslock@416,240` / `@432,240`) share side, across and the Red Key: an
+ * AP exit carries no tile, so a crossing credits neither (the game clears the one walked), and with one twin held
+ * the crossing may walk the OPEN one, so the other is not credited by elimination either. A twin the walk NEEDS is
+ * met goal-first (`eventPrerequisites`: a named break, never a guess).
  */
 export function eventsBrokenOnPath(regions, path, exits, events, items) {
     return eventCrossingsOnPath(regions, path, exits, events, items).map((c) => c.event);
@@ -403,19 +412,16 @@ export function eventsBrokenOnPath(regions, path, exits, events, items) {
 
 /**
  * `eventsBrokenOnPath`, with WHERE: `at` is the index in `path` of the crossing's endpoint on the event's own side
- * (`event.region`, in the obstacle's level) — the region the walk stood in when the flag cleared.
+ * (`event.side`, in the obstacle's level) — the region the walk stood in when the flag cleared.
  */
 export function eventCrossingsOnPath(regions, path, exits, events, items) {
     const out = [];
     for (let i = 0; i + 1 < path.length; i += 1) {
         const [a, b] = [path[i], path[i + 1]];
         const exit = (regions[a]?.exits ?? []).find((x) => x.name === exits[i]);
-        for (const e of events) {
+        for (const e of hopCredits(events, a, b, exit)) {
             if (items[e.item] > 0 || out.some((c) => c.event === e)) continue;
-            const crosses = (a === e.region && e.across.includes(b)) || (b === e.region && e.across.includes(a));
-            if (crosses && JSON.stringify(exit?.access_rule ?? null) === JSON.stringify(e.rule)) {
-                out.push({ event: e, at: a === e.region ? i : i + 1 });
-            }
+            out.push({ event: e, at: a === e.side ? i : i + 1 });
         }
     }
     return out;
