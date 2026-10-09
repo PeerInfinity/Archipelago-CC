@@ -5,7 +5,7 @@
 | Session | `seedling-fidelity-crusher` (planner `seedling-fidelity-planning-4`, wave 9) |
 | Start SHA | `cf647f39ef` (main before the hammer arc's A2+A3 merge, as briefed) |
 | Harness branch | `claude/seedling-crusher-fidelity-qfu391` |
-| Head | see the last commit on the branch (this report is committed last) |
+| Head | `8644be8` + this report's CI line (the branch's last commit) |
 | Verdicts | **W0 PASS · D1 PASS · D2 PASS for L42 (flag OFF in head; movers measured) · D2 L40 PASS for cost, STOP for the rest (hammer arc's region) · D3 PASS** |
 
 **The one thing to know first.** L42 was solved in R5 and the solver never met the solution. With `CRUSHER_BAIT` on,
@@ -221,7 +221,7 @@ the verdict stays REFUSED. No producer `--check`, no committed tape moves. That 
 - ⛔ **`rosterCategories` "the LIVE row carries one part per derived category"** reads red: the standing-values
   `mechanic` part says 190, and the tree holds 191 with the new tape. Re-sealing it is `standing-values --write`,
   which this slice may not run. **The planner re-seals it at the harvest.** CI at `df0bc2b` also showed it, together
-  with three reds fixed after (the reference at `707258a`, the surface census at `4a00494`).
+  with three reds fixed after (the reference at `707258a`, the surface census at `4a00494`). **CI at head `8644be8`: 19,228 passed, 1 failed — this row and nothing else** (run 37993857437).
 - Game witness `crusher-l42-round-trip`: recorded, re-played (live = oracle), model 0 px.
 - Instruments: `probe-seedling-solve-sites.mjs` (measure-only), `plan-seedling-crusher-witness.mjs`.
 
