@@ -1,0 +1,17 @@
+{
+  "$comment": "Named Seedling probe batteries for .github/workflows/seedling-probe.yml (input battery=<name>): one CI job per entry, each with ITS OWN args, each run in full. Read and validated by seedlingProbeBatteries.js (vitest: every probe exists, every flag is one the probe parses, no duplicate ids). --host is set by the job and refused here.",
+  "batteries": {
+    "standard": [
+      { "probe": "probe-seedling-wasm-logical-links.mjs", "args": "--only=B" },
+      { "probe": "probe-seedling-wasm-vanilla-map.mjs", "args": "" },
+      { "probe": "probe-seedling-wasm-arrival-composites.mjs", "args": "" },
+      { "probe": "probe-seedling-wasm-midroom-replan.mjs", "args": "--only=D" },
+      { "probe": "probe-seedling-restart-route.mjs", "args": "--only=W,J" },
+      { "probe": "probe-seedling-restart-warp.mjs", "args": "--only=W,J" },
+      { "probe": "probe-seedling-wasm-adopt.mjs", "args": "" },
+      { "probe": "probe-seedling-obstacle-events.mjs", "args": "--only=W,J" },
+      { "probe": "probe-seedling-wasm-generated-playback.mjs", "args": "" },
+      { "probe": "probe-seedling-loop-restart.mjs", "args": "" }
+    ]
+  }
+}

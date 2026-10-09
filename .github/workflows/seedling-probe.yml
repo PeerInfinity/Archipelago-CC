@@ -5,7 +5,10 @@ name: Seedling wasm probe (manual)
 # the local box until now, queued behind its box lock; on a runner nothing else holds it, and the run is pinned to
 # the pushed SHA (`MEASURED: … at <sha>`).
 #
-# Two ways in:
+# Three ways in:
+#   - a BATTERY (once this file is on the default branch): `gh workflow run seedling-probe.yml --ref <branch>
+#     -f battery=standard` — the named list in scripts/procgen/seedling-probe-batteries.json, one job per entry,
+#     EACH WITH ITS OWN ARGS, each in full; `probes`/`args` are ignored. The `summary` job prints one line per probe;
 #   - workflow_dispatch (once this file is on the default branch): `gh workflow run seedling-probe.yml
 #     --ref <branch> -f probes=probe-seedling-lethal-landings.mjs -f args='--only=50,54'`;
 #   - push to a ref named `seedling-probe/**`: runs the DEFAULT probe list at that SHA (a workflow_dispatch file
@@ -13,17 +16,22 @@ name: Seedling wasm probe (manual)
 #
 # Each probe prints PASS:/FAIL: rows and `ALL CHECKS PASSED` / `N CHECK(S) FAILED` and exits non-zero on a fail;
 # the job also requires its `CHANNEL: headless logic-only` line (a run that silently rasterised is not a
-# measurement — scripts/procgen/seedlingChannel.js).
+# measurement — scripts/procgen/seedlingChannel.js). A probe that re-booted a page on a KNOWN boot fault says so
+# (`BOOT-RETRY:` / `BOOT-RETRIES: n` — scripts/procgen/seedlingProbeBoot.js); the summary carries the count.
 
 on:
   workflow_dispatch:
     inputs:
+      battery:
+        description: A named battery from scripts/procgen/seedling-probe-batteries.json (e.g. standard). Overrides probes/args.
+        type: string
+        default: ''
       probes:
         description: Comma-separated probe file names under scripts/procgen/ (probe-seedling-*.mjs).
         type: string
         default: probe-seedling-lethal-landings.mjs,probe-seedling-tentacle-mouth.mjs
       args:
-        description: Extra arguments passed to EVERY probe (e.g. --only=50,54). --host is set by the job.
+        description: Extra arguments passed to EVERY probe of an ad hoc list (e.g. --only=50,54). --host is set by the job.
         type: string
         default: ''
   push:
@@ -44,31 +52,38 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
 
-      - name: Resolve the probe list (names only; each must be a scripts/procgen/probe-seedling-*.mjs file)
+      - name: Resolve the probe list (a battery, or names only — each a scripts/procgen/probe-seedling-*.mjs file)
         id: plan
         env:
+          BATTERY: ${{ inputs.battery }}
           PROBES: ${{ inputs.probes }}
+          ARGS: ${{ inputs.args }}
         run: |
           set -euo pipefail
-          LIST="${PROBES:-$DEFAULT_PROBES}"
-          node -e '
-            const fs = require("fs");
-            const names = process.argv[1].split(",").map((s) => s.trim()).filter(Boolean);
-            const bad = names.filter((n) => !/^probe-seedling-[a-z0-9-]+\.mjs$/.test(n) || !fs.existsSync(`scripts/procgen/${n}`));
-            if (names.length === 0 || bad.length) { console.error(`refused: ${bad.join(", ") || "(empty list)"}`); process.exit(1); }
-            fs.appendFileSync(process.env.GITHUB_OUTPUT, `matrix=${JSON.stringify(names)}\n`);
-            console.log(names.join("\n"));
-          ' "$LIST"
+          if [ -n "${BATTERY:-}" ]; then
+            # The battery's own validation (every probe exists, every flag is one the probe parses, no duplicates).
+            M=$(node scripts/procgen/seedlingProbeBatteries.js "$BATTERY")
+          else
+            M=$(node -e '
+              const fs = require("fs");
+              const names = process.argv[1].split(",").map((s) => s.trim()).filter(Boolean);
+              const bad = names.filter((n) => !/^probe-seedling-[a-z0-9-]+\.mjs$/.test(n) || !fs.existsSync(`scripts/procgen/${n}`));
+              if (names.length === 0 || bad.length) { console.error(`refused: ${bad.join(", ") || "(empty list)"}`); process.exit(1); }
+              console.log(JSON.stringify(names.map((probe) => ({ id: probe.replace(/\.mjs$/, ""), probe, args: process.argv[2] }))));
+            ' "${PROBES:-$DEFAULT_PROBES}" "${ARGS:-}")
+          fi
+          echo "matrix=$M" >> "$GITHUB_OUTPUT"
+          node -e 'for (const e of JSON.parse(process.argv[1])) console.log(`${e.id}: ${e.probe} ${e.args}`)' "$M"
 
   probe:
-    name: ${{ matrix.probe }}
+    name: ${{ matrix.id }}
     needs: plan
     runs-on: ubuntu-latest
     timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
-        probe: ${{ fromJSON(needs.plan.outputs.matrix) }}
+        include: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
       - name: Checkout repository (the wasm build is a submodule)
         uses: actions/checkout@v6.0.2
@@ -100,10 +115,11 @@ jobs:
         timeout-minutes: 12
         run: node node_modules/playwright/cli.js install chromium
 
-      - name: Run ${{ matrix.probe }}
+      - name: Run ${{ matrix.probe }} ${{ matrix.args }}
         env:
+          ID: ${{ matrix.id }}
           PROBE: ${{ matrix.probe }}
-          ARGS: ${{ inputs.args }}
+          ARGS: ${{ matrix.args }}
         run: |
           set -o pipefail
           python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
@@ -113,7 +129,7 @@ jobs:
             sleep 1
           done
           mkdir -p test-results/seedling-probe
-          L="test-results/seedling-probe/${PROBE%.mjs}.log"
+          L="test-results/seedling-probe/${ID}.log"
           S=$(date +%s)
           set +e
           # ARGS is word-split on purpose (several flags); it is never evaluated as shell.
@@ -121,24 +137,33 @@ jobs:
           node "scripts/procgen/$PROBE" --host=http://localhost:8000 $ARGS 2>&1 | tee "$L"
           RC=$?
           set -e
-          echo "MEASURED: $PROBE rc=$RC wall $(( $(date +%s) - S ))s nproc $(nproc) at ${GITHUB_SHA}" | tee -a "$L"
+          W=$(( $(date +%s) - S ))
+          echo "MEASURED: $PROBE rc=$RC wall ${W}s nproc $(nproc) at ${GITHUB_SHA}" | tee -a "$L"
           kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
           if ! grep -aq '^SKIP' "$L" && ! grep -aq '^CHANNEL: headless logic-only' "$L"; then
             echo "::error::$PROBE printed no 'CHANNEL: headless logic-only' line"
-            exit 1
+            RC=1
           fi
+          # The summary job's one line for this probe (it reads these files, never the job's status).
+          printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$ID" "$RC" \
+            "$(grep -aE '^(ALL CHECKS PASSED|[0-9]+ CHECK\(S\) FAILED)' "$L" | tail -1)" \
+            "$(grep -ac '^PASS:' "$L")" "$(grep -ac '^FAIL:' "$L")" \
+            "$(grep -aoE '^BOOT-RETRIES: [0-9]+' "$L" | tail -1 | grep -oE '[0-9]+$' || echo '?')" \
+            "$W" "$PROBE $ARGS" > "test-results/seedling-probe/${ID}.verdict"
           exit $RC
 
       - name: Summary
         if: always()
         env:
+          ID: ${{ matrix.id }}
           PROBE: ${{ matrix.probe }}
+          ARGS: ${{ matrix.args }}
         run: |
-          L="test-results/seedling-probe/${PROBE%.mjs}.log"
+          L="test-results/seedling-probe/${ID}.log"
           {
-            echo "### $PROBE @ ${GITHUB_SHA}"
+            echo "### $PROBE $ARGS @ ${GITHUB_SHA}"
             echo '```'
-            grep -aE '^(PASS|FAIL|SKIP|CHANNEL|MEASURED|ALL CHECKS|[0-9]+ CHECK)' "$L" 2>/dev/null | cut -c1-300 || echo "(no log)"
+            grep -aE '^(PASS|FAIL|SKIP|CHANNEL|BOOT-RETR|MEASURED|ALL CHECKS|[0-9]+ CHECK)' "$L" 2>/dev/null | cut -c1-300 || echo "(no log)"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -146,6 +171,43 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7.0.0
         with:
-          name: ${{ matrix.probe }}-log
+          name: ${{ matrix.id }}-log
           path: test-results/seedling-probe/
           retention-days: 90
+
+  summary:
+    name: Seedling probe — summary
+    needs: [plan, probe]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Collect every probe's verdict line
+        uses: actions/download-artifact@v8.0.1
+        with:
+          pattern: '*-log'
+          path: verdicts
+          merge-multiple: true
+
+      - name: One line per probe (a probe with no verdict file is a DEAD SHARD, and red)
+        env:
+          MATRIX: ${{ needs.plan.outputs.matrix }}
+        run: |
+          node -e '
+            const fs = require("fs");
+            const rows = JSON.parse(process.env.MATRIX);
+            let red = 0, retries = 0;
+            const lines = rows.map((e) => {
+              const f = `verdicts/${e.id}.verdict`;
+              if (!fs.existsSync(f)) { red += 1; return `RED   ${e.id} — NO VERDICT (the job died before its run step finished) — ${e.probe} ${e.args}`.trim(); }
+              const [id, rc, verdict, pass, fail, boot, wall, cmd] = fs.readFileSync(f, "utf8").replace(/\n$/, "").split("\t");
+              const ok = rc === "0" && verdict === "ALL CHECKS PASSED";
+              if (!ok) red += 1;
+              if (/^[0-9]+$/.test(boot)) retries += Number(boot);
+              return `${ok ? "GREEN" : "RED  "} ${id} rc=${rc} ${verdict || "(no verdict line)"} pass=${pass} fail=${fail} boot-retries=${boot} wall=${wall}s — ${cmd}`;
+            });
+            const head = `SEEDLING PROBES @ ${process.env.GITHUB_SHA}: ${rows.length - red}/${rows.length} green, boot retries ${retries}`;
+            console.log([head, ...lines].join("\n"));
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, ["### " + head, "```", ...lines, "```", ""].join("\n"));
+            process.exit(red ? 1 : 0);
+          '
