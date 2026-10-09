@@ -21,8 +21,17 @@
  *   --keys=k1|k2         only these leg KEYS (`seedling-divergence-legs.legKey`: (region, arrival door, goal) — stable
  *                        across SHAs, where an id shifts)
  *
- * A leg the list marks `skip` (an arrival whose every door needs a `game_state` event: the jump would land inside the
- * unbroken obstacle) is emitted as `end: 'skipped'` with its reason, and never run.
+ * A leg the list marks `stagedEvents` (an arrival whose every door needs a `game_state` event: unstaged, the jump
+ * lands inside the unbroken obstacle) has each flag written into the GAME's persistence table before its jump, by the
+ * game's own setter (`Game.setPersistence(tag, false, level)`, a bridge `method_call`, the channel key delivery
+ * uses), and read back from `botStatus.persistence_cleared` (a flag that never lands = `end: 'stage-failed'`, by
+ * name). The jump's `new Game` then builds the room from that table, and the engine declares it as the live table.
+ * ⚖ A TEST-HARNESS STAGING CHOICE ONLY — a player using that arrival broke the obstacle earlier in the run; the
+ * runtime's "flags flow game → AP only" is unchanged and production never stages a flag the game did not set.
+ * A staged flag outlives its leg, so every staging leg gets its OWN fresh page (`orderLegs`), whatever --page-legs.
+ *   --no-stage-events    the MUTANT / control: stage nothing (the legs land inside their obstacles)
+ * A leg the list marks `skip` (a gate that maps to no flag, or a goal that IS its gating event) is emitted as
+ * `end: 'skipped'` with its reason, and never run.
  *   --shard=i/n          only shard i of n (`partitionLegs`: price-balanced, longest first — CI's matrix)
  *   --shard-plan=n [--json]  print the partition (no browser, no box) — the CI plan job
  *   --page=<build>       drive another staged build (also SEEDLING_PAGE), e.g. seedling_bot_ap_p4f
@@ -35,7 +44,7 @@
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -50,8 +59,19 @@ import { legSelectors, pickLegs } from './seedling-divergence-legs.mjs';
 
 argvHelp(import.meta.url);
 
-/** The mode's leg order, cut into PAGES (each a fresh page). Exported for a reader of the rows. */
+/**
+ * The mode's leg order, cut into PAGES (each a fresh page). Exported for a reader of the rows. A leg that STAGES
+ * event flags (`stagedEvents`) is a page of its own, after the rest: its flags outlive it in the game.
+ */
 export function orderLegs(legs, mode, pageLegs) {
+    const staging = legs.filter((l) => l.stagedEvents?.length);
+    const rest = legs.filter((l) => !l.stagedEvents?.length);
+    const sIdx0 = (l) => (l.sphere?.index ?? Infinity);
+    const own = (mode === 'inv' ? [...staging].sort((a, b) => sIdx0(a) - sIdx0(b) || a.id - b.id) : staging).map((l) => [l]);
+    return [...orderUnstaged(rest, mode, pageLegs), ...own];
+}
+
+function orderUnstaged(legs, mode, pageLegs) {
     const exits = legs.filter((l) => l.goal.kind === 'exit');
     const locs = legs.filter((l) => l.goal.kind === 'location');
     const sIdx = (l) => (l.sphere?.index ?? Infinity);
@@ -118,7 +138,11 @@ async function main() {
         const shards = partitionLegs(legs0, Number(PLAN), roomAreas(REPO));
         // ⛓ a page boot is paid once per `--page-legs` legs (CI measured 18–21 s; priced 30 s)
         const perPage = Number(arg('page-legs', '60'));
-        for (const x of shards) x.price += Math.ceil(x.ids.length / perPage) * 30;
+        const staging = new Set(legs0.filter((l) => l.stagedEvents?.length).map((l) => l.id));
+        for (const x of shards) {
+            const own = x.ids.filter((id) => staging.has(id)).length;
+            x.price += (Math.ceil((x.ids.length - own) / perPage) + own) * 30;
+        }
         const maxPrice = Math.max(...shards.map((x) => x.price));
         if (process.argv.includes('--json')) {
             console.log(JSON.stringify({ legs: legs0.length, matrix: shards.map((x) => x.shard),
@@ -140,6 +164,7 @@ async function main() {
     const PAGE_LEGS = Number(arg('page-legs', '60'));
     const DUMP = arg('dump', '');
     const PRODUCER = arg('producer', 'solver');
+    const STAGE_EVENTS = !process.argv.includes('--no-stage-events');
     const SHARD = arg('shard', '');
     const GAME = 'seedling_playthrough';
     const RULES = `frontend/presets/${GAME}/AP_1/AP_1_rules.json`;
@@ -273,7 +298,7 @@ async function main() {
                 if (PAGE_LEGS === 1 && (before.slots.length || before.has.length)) {
                     row.end = 'dirty-start';
                     row.error = `the game already holds ${JSON.stringify(before)} before this leg's grants — not a clean start`;
-                    throw Object.assign(new Error(row.error), { dirty: true });
+                    throw Object.assign(new Error(row.error), { byName: true });
                 }
                 if (MODE === 'inv') {
                     const want = leg.sphere?.inventory ?? null;
@@ -294,8 +319,26 @@ async function main() {
                     // eslint-disable-next-line no-await-in-loop
                     row.after = await page.evaluate(() => window.__div.heldItems());
                 }
+                // ⚖ TEST-HARNESS STAGING ONLY: the arrival's gating flags, written by the game's own setter (see the head)
+                if (leg.stagedEvents?.length) {
+                    row.stagedEvents = leg.stagedEvents;
+                    if (!STAGE_EVENTS) row.stagingDropped = true;
+                    else {
+                        // eslint-disable-next-line no-await-in-loop
+                        row.staged = await stageEvents(leg.stagedEvents);
+                        if (row.staged.missing.length) {
+                            row.end = 'stage-failed';
+                            row.error = `the game's persistence table never held ${JSON.stringify(row.staged.missing)} after Game.setPersistence`;
+                            throw Object.assign(new Error(row.error), { byName: true });
+                        }
+                    }
+                }
                 // eslint-disable-next-line no-await-in-loop
                 const landed = await rp.jumpSettled(leg.level, leg.arrive.x, leg.arrive.y);
+                if (leg.stagedEvents?.length) {
+                    // eslint-disable-next-line no-await-in-loop
+                    row.stagedAfterJump = heldFlags(leg.stagedEvents, (await page.evaluate(() => window.__div.status()))?.persistence_cleared);
+                }
                 swaps += landed.jumps;
                 row.landed = landed;
                 // eslint-disable-next-line no-await-in-loop
@@ -304,7 +347,7 @@ async function main() {
                 Object.assign(row, r);
                 swaps += (r.history ?? []).length;
             } catch (e) {
-                if (e.dirty) { emit(row); continue; }
+                if (e.byName) { emit(row); continue; }
                 row.end = 'probe-error';
                 row.error = e.message.split('\n')[0].slice(0, 400);
                 row.consoleTail = logs.slice(-12);
@@ -317,7 +360,30 @@ async function main() {
         }
         console.log(`INFO: page ${pageNo}: ${logs.filter((l) => l.startsWith('[pageerror]')).length} page error(s), ~${swaps} swaps`);
         await page.close();
+
+        /** Write each flag through the game's own `Game.setPersistence(tag, false, level)`; poll the table for them. */
+        async function stageEvents(flags) {
+            await rp.gameFrame().evaluate((fs) => {
+                window.__swfBridge.queueItems(fs.map((f) => ({ invocation: 'method_call', path: [{ class: 'Game' }],
+                    method: 'setPersistence', args: [f.tag, false, f.level] })));
+            }, flags.map(({ level, tag }) => ({ level, tag })));
+            let got = null;
+            for (const t0 = Date.now(); Date.now() - t0 < 10000;) {
+                // eslint-disable-next-line no-await-in-loop
+                got = heldFlags(flags, (await page.evaluate(() => window.__div.status()))?.persistence_cleared);
+                if (!got.missing.length) break;
+                // eslint-disable-next-line no-await-in-loop
+                await page.waitForTimeout(100);
+            }
+            return got;
+        }
     }
+}
+
+/** Which of `flags` (`{level, tag}`) the game's `persistence_cleared` holds. */
+export function heldFlags(flags, cleared) {
+    const has = (f) => (cleared ?? []).some((c) => Number(c.level) === f.level && Number(c.tag) === f.tag);
+    return { held: flags.filter(has).map((f) => f.eventId), missing: flags.filter((f) => !has(f)).map((f) => f.eventId) };
 }
 
 function multisetMinus(want, have) {

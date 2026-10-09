@@ -10,7 +10,8 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { legPrice, orderLegs, partitionLegs } from './probe-seedling-divergence-sweep.mjs';
+import { heldFlags, legPrice, orderLegs, partitionLegs } from './probe-seedling-divergence-sweep.mjs';
+import { withStagedFlags } from './seedling-divergence-bare.mjs';
 import { triggersOf } from './seedlingFullTierWorkflow.test.js';
 import { slotBlockOf, withSlotBlock } from './seedlingRoomPlay.js';
 import { refuseRetiredTopLevelKeys } from '../../frontend/modules/stateManager/core/initialization.js';
@@ -68,6 +69,29 @@ describe('orderLegs', () => {
     it('inv mode orders the exits by sphere (the grants only ever grow)', () => {
         const pages = orderLegs([exit(0, 1, 5), exit(1, 1, 0), exit(2, 1, 2)], 'inv', 60);
         expect(pages[0].map((l) => l.id)).toEqual([1, 2, 0]);
+    });
+});
+
+describe('event STAGING — a staged flag outlives its leg in the game', () => {
+    const staged = (l) => ({ ...l, stagedEvents: [{ eventId: 'flag:L0:1', level: 0, tag: 1, otherLevel: false }] });
+    it('a leg that stages flags is a page of its OWN, whatever --page-legs (no later leg inherits its flags)', () => {
+        const legs = [exit(0, 1), staged(exit(1, 0, 3)), exit(2, 1), staged(loc(3, 0, 'A', 1)), loc(4, 2, 'B')];
+        const pages = orderLegs(legs, 'inv', 60);
+        expect(pages.map((p) => p.map((l) => l.id))).toEqual([[0, 2], [4], [3], [1]]);
+        expect(orderLegs(legs.filter((l) => !l.stagedEvents), 'inv', 60).map((p) => p.map((l) => l.id))).toEqual([[0, 2], [4]]);
+    });
+    it('heldFlags reads the game\'s persistence_cleared (string or number fields) — a flag not there is MISSING', () => {
+        const flags = [{ eventId: 'flag:L12:7', level: 12, tag: 7 }, { eventId: 'flag:L12:12', level: 12, tag: 12 }];
+        expect(heldFlags(flags, [{ level: '12', tag: '7' }, { level: 12, tag: 12 }])).toEqual({ held: ['flag:L12:7', 'flag:L12:12'], missing: [] });
+        expect(heldFlags(flags, [{ level: 12, tag: 7 }, { level: 3, tag: 12 }])).toEqual({ held: ['flag:L12:7'], missing: ['flag:L12:12'] });
+        expect(heldFlags(flags, undefined).missing).toHaveLength(2);
+    });
+    it('the bare pass adds the flags to the staging\'s persistence (sorted, deduplicated) and changes nothing else', () => {
+        const s0 = { boot: { level: 0, x: 1, y: 2 }, persistence: [{ level: 3, tag: 0 }, { level: 0, tag: 1 }], save: { keys: [] } };
+        const s1 = withStagedFlags(s0, [{ eventId: 'flag:L0:1', level: 0, tag: 1 }, { eventId: 'flag:L12:7', level: 12, tag: 7 }]);
+        expect(s1.persistence).toEqual([{ level: 0, tag: 1 }, { level: 3, tag: 0 }, { level: 12, tag: 7 }]);
+        expect({ ...s1, persistence: s0.persistence }).toEqual(s0);
+        expect(s0.persistence).toHaveLength(2);
     });
 });
 

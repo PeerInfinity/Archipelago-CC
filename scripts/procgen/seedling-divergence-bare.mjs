@@ -11,9 +11,12 @@
  * ⚠ The solve runs the passes the worker runs (`ANYTIME_PASSES`) with NO budget: a leg the live engine cuts at its
  * budget is SOLVED here. `ms` says what it cost.
  *
- * A leg the list marks `skip` (an arrival needing a game_state event) is a `skipped` row, never solved.
+ * A leg the list marks `stagedEvents` (an event-gated arrival) is solved with those flags in the arrival staging's
+ * `persistence` (the obstacle already broken — ⚖ a test-harness staging choice, as the live sweep's; `--no-stage-events`
+ * drops it, the mutant). A leg the list marks `skip` (a gate with no flag, or a goal that IS its gating event) is a
+ * `skipped` row, never solved.
  *
- * Run: node scripts/procgen/seedling-divergence-bare.mjs --legs=<jsonl> --dump=<json> --out=<jsonl> [--ids=a,b|--keys=k1|k2] [--jobs=N]
+ * Run: node scripts/procgen/seedling-divergence-bare.mjs --legs=<jsonl> --dump=<json> --out=<jsonl> [--ids=a,b|--keys=k1|k2] [--jobs=N] [--no-stage-events]
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -50,7 +53,8 @@ async function main() {
             }
             // eslint-disable-next-line no-await-in-loop
             const row = await new Promise((resolve) => {
-                const p = spawn(process.execPath, [self, `--one=${JSON.stringify(leg)}`, `--dump=${arg('dump', '')}`], { stdio: ['ignore', 'pipe', 'pipe'] });
+                const p = spawn(process.execPath, [self, `--one=${JSON.stringify(leg)}`, `--dump=${arg('dump', '')}`,
+                    ...(process.argv.includes('--no-stage-events') ? ['--no-stage-events'] : [])], { stdio: ['ignore', 'pipe', 'pipe'] });
                 let so = '';
                 let se = '';
                 p.stdout.on('data', (d) => { so += d; });
@@ -72,6 +76,14 @@ async function main() {
     writeFileSync(arg('out', '/dev/stdout'), out.map((r) => JSON.stringify(r)).join('\n') + '\n');
     const tally = out.reduce((m, r) => { m[r.outcome] = (m[r.outcome] ?? 0) + 1; return m; }, {});
     console.log(`INFO: ${out.length} legs`, JSON.stringify(tally));
+}
+
+/** The staging with `flags` (`{level, tag}`) added to its `persistence` (sorted, no duplicates; nothing else changes). */
+export function withStagedFlags(staging, flags) {
+    const all = [...(staging.persistence ?? []), ...flags.map(({ level, tag }) => ({ level, tag }))];
+    const uniq = [...new Map(all.map((c) => [`${c.level}:${c.tag}`, { level: c.level, tag: c.tag }])).values()]
+        .sort((a, b) => a.level - b.level || a.tag - b.tag);
+    return { ...staging, persistence: uniq };
 }
 
 async function oneLeg(leg, dumpPath) {
@@ -114,9 +126,14 @@ async function oneLeg(leg, dumpPath) {
             out.err = `run level ${rt.run?.level}; halted ${JSON.stringify(JSON.parse(rt.game.botStatus()).halted)}`;
             return out;
         }
-        const mapped = arrivalSolverGoal(goal, { staging: rt.session.staging, levelSource: SRC, record: RECS.get(leg.level) });
+        let staging = rt.session.staging;
+        if (leg.stagedEvents?.length && !process.argv.includes('--no-stage-events')) {
+            staging = withStagedFlags(staging, leg.stagedEvents);
+            out.stagedEvents = leg.stagedEvents.map((e) => e.eventId);
+        }
+        const mapped = arrivalSolverGoal(goal, { staging, levelSource: SRC, record: RECS.get(leg.level) });
         if (!mapped.goal) { out.outcome = 'no-solver-goal'; out.err = mapped.walker; return out; }
-        const req = { ...arrivalSolveRequest({ staging: rt.session.staging, solverGoal: mapped.goal, levelSource: SRC, records: RECS,
+        const req = { ...arrivalSolveRequest({ staging, solverGoal: mapped.goal, levelSource: SRC, records: RECS,
             scratchPersistence: true }), passes: ANYTIME_PASSES };
         out.mapped = mapped.goal.kind;
         const res = createInPlaceProduceService().start(req).result;

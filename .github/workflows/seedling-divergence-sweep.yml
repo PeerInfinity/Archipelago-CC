@@ -49,6 +49,18 @@ on:
         description: Comma-separated leg ids to run (empty = every leg) — the BUDGET-BOUND re-run, the walker pass.
         type: string
         default: ''
+      keys:
+        description: >-
+          '|'-separated leg KEYS to run (seedling-divergence-legs.legKey; stable across SHAs, where an id shifts).
+          An unknown key fails the plan by name. Combines with ids (either selects).
+        type: string
+        default: ''
+      stage_events:
+        description: >-
+          true = an event-gated arrival's flags are written into the game before its jump (the test-harness
+          staging); false = the MUTANT / control (--no-stage-events: the legs land inside their obstacles).
+        type: boolean
+        default: true
 
 jobs:
   plan:
@@ -83,6 +95,7 @@ jobs:
         env:
           SHARDS: ${{ inputs.shards }}
           IDS: ${{ inputs.ids }}
+          KEYS: ${{ inputs.keys }}
           PAGE_LEGS: ${{ inputs.page_legs }}
         run: |
           set -o pipefail
@@ -90,9 +103,9 @@ jobs:
           L=test-results/divergence-sweep/legs.jsonl
           node scripts/procgen/seedling-divergence-legs.mjs --out="$L" --presets=seedling_playthrough --blocks | tee plan.txt
           P=scripts/procgen/probe-seedling-divergence-sweep.mjs
-          if [ -n "$IDS" ]; then
-            # ⛓ an id list is partitioned too (the subset, by the same price)
-            node -e "const fs=require('fs');const ids=new Set(process.env.IDS.split(',').map(Number));fs.writeFileSync('$L.sub',fs.readFileSync('$L','utf8').split('\n').filter(Boolean).filter(l=>ids.has(JSON.parse(l).id)).join('\n')+'\n')"
+          if [ -n "$IDS$KEYS" ]; then
+            # ⛓ an id / key list is partitioned too (the subset, by the same price); `pickLegs` throws on an unknown key
+            node --input-type=module -e "import fs from 'node:fs';import {pickLegs} from './scripts/procgen/seedling-divergence-legs.mjs';const legs=fs.readFileSync('$L','utf8').split('\n').filter(Boolean).map((l)=>JSON.parse(l));const pick=pickLegs(legs,{ids:(process.env.IDS||'').split(',').filter(Boolean).map(Number),keys:(process.env.KEYS||'').split('|').filter(Boolean)});console.log('SELECTED: '+pick.length+' leg(s)');fs.writeFileSync('$L.sub',pick.map((l)=>JSON.stringify(l)).join('\n')+'\n')"
             mv "$L.sub" "$L"
           fi
           node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" | tee -a plan.txt
@@ -167,6 +180,7 @@ jobs:
           PRODUCER: ${{ inputs.producer }}
           PAGE: ${{ inputs.page }}
           PAGE_LEGS: ${{ inputs.page_legs }}
+          STAGE: ${{ !inputs.stage_events && '--no-stage-events' || '' }}
         run: |
           set -o pipefail
           python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
@@ -181,7 +195,7 @@ jobs:
           S=$(date +%s)
           set +e
           node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=$D/legs.jsonl --shard="$SHARD" --mode="$MODE" \
-            --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP 2>&1 | tee "$L"
+            --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP $STAGE 2>&1 | tee "$L"
           RC=$?
           set -e
           echo "MEASURED: shard $SHARD rc=$RC wall $(( $(date +%s) - S ))s load $(cut -d' ' -f1-3 /proc/loadavg) nproc $(nproc) at ${GITHUB_SHA}"
@@ -256,6 +270,8 @@ jobs:
           for (const r of rows) ends[r.end] = (ends[r.end] || 0) + 1;
           const booted = rows.filter((r) => r.end === 'page-boot-failed').length;
           const dirty = rows.filter((r) => r.end === 'dirty-start').length;
+          const stageFailed = rows.filter((r) => r.end === 'stage-failed').length;
+          if (stageFailed) { console.log(`MERGE-FAIL: ${stageFailed} leg(s) whose staged event flags never reached the game (stage-failed)`); process.exitCode = 1; }
           if (dirty) { console.log(`MERGE-FAIL: ${dirty} leg(s) started on a game already holding items (dirty-start)`); process.exitCode = 1; }
           console.log(`MERGE: ${rows.length} rows, ${ids.size} distinct legs of ${process.env.LEGS}; ends ${JSON.stringify(ends)}`);
           if (ids.size !== Number(process.env.LEGS)) { console.log(`MERGE-FAIL: ${ids.size} distinct legs, the plan holds ${process.env.LEGS}`); process.exitCode = 1; }

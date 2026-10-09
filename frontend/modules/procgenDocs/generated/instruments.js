@@ -9822,6 +9822,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "no-stage-events"
+                },
+                {
+                    "how": [
                         "arg"
                     ],
                     "name": "out"
@@ -14391,6 +14397,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "legs"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-stage-events"
                 },
                 {
                     "how": [

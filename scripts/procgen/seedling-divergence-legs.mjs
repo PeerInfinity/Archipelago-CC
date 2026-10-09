@@ -26,9 +26,16 @@
  *
  *   events     ⛓ an arrival whose door EDGE needs a `game_state` event (an obstacle flag only the game sets:
  *              `level_76 -> level_71__r0c6` = `Has(L71 flag 2: …)`, its landing inside the shield lock) carries
- *              `arrive.events` (`{eventId, level, tag}` — the flags a stager would declare) and the leg is marked
- *              `skip` BY NAME: a jump to it lands inside the obstacle the route has not broken. An arrival reached
- *              by several doors needs an event only when EVERY door does. The sweep emits a skipped row, never runs it.
+ *              `arrive.events` (`{eventId, level, tag}`). An arrival reached by several doors needs an event only
+ *              when EVERY door does. The leg STAGES those flags (`stagedEvents`: `{eventId, level, tag, otherLevel}`,
+ *              `eventStaging`): the sweep writes each into the game's persistence table before the jump, so the
+ *              obstacle is already broken — the true game state for that arrival, since a player using it broke the
+ *              obstacle earlier in the run (persistence is game-global: a flag in ANOTHER level is staged too,
+ *              `otherLevel: true`). ⚖ A TEST-HARNESS STAGING CHOICE ONLY: the runtime's "flags flow game → AP only"
+ *              is unchanged, and production never stages a flag the game did not set. Two cases stay `skip`ped BY
+ *              NAME (the sweep emits a skipped row and never runs them): a gate that maps to no flag (an event that
+ *              is not `game_state`, or one without an integer `{level, tag}`), and a leg whose GOAL is one of its own
+ *              gating events (staged, there is nothing left to clear).
  *   key        `legKey` — (region, the arrival's door, goal): the leg's identity ACROSS SHAs. The numeric `id` is
  *              the list position (display only: it shifts when an earlier leg is added or removed).
  *
@@ -69,6 +76,55 @@ export function requiredEvents(rule, byItem) {
 export function arrivalEventNeeds(needs) {
     const gated = needs.length > 0 && needs.every((n) => n.length > 0);
     return gated ? [...new Map(needs.flat().map((e) => [e.item, e])).values()] : [];
+}
+
+/**
+ * The flag an event STAGES (`{eventId, level, tag}`), or `{why}` when it maps to none: only a `game_state` event
+ * (`procgenCore/eventRoute.gameStateEventsOf`, `kind: 'game_state'`) with an integer obstacle `{level, tag}` whose
+ * `eventId` is that flag's (`flag:L<level>:<tag>`) is a persistence flag the game itself would hold.
+ */
+export function stagedFlagOf(event) {
+    const id = event?.eventId ?? event?.item ?? event?.name ?? '?';
+    if (event?.kind !== 'game_state') return { why: `${id}: not a game_state event (event_kind ${JSON.stringify(event?.kind ?? null)})` };
+    if (!Number.isInteger(event.level) || !Number.isInteger(event.tag)) return { why: `${id}: no integer obstacle {level, tag}` };
+    if (event.eventId !== `flag:L${event.level}:${event.tag}`) return { why: `${id}: the event id is not its obstacle's flag:L${event.level}:${event.tag}` };
+    return { eventId: event.eventId, level: event.level, tag: event.tag };
+}
+
+/**
+ * An event-gated arrival's staging: `staged` (one `{eventId, level, tag, otherLevel}` per mappable event; `otherLevel`
+ * = the obstacle is in another level than the arrival's) and `unmappable` (`[why]`). A leg with ANY unmappable gate
+ * is skipped: staging only some of its gates would still land it inside the rest.
+ */
+export function eventStaging(events, arrivalLevel) {
+    const staged = [];
+    const unmappable = [];
+    for (const e of events ?? []) {
+        const f = stagedFlagOf(e);
+        if (f.why) unmappable.push(f.why);
+        else staged.push({ ...f, otherLevel: f.level !== arrivalLevel });
+    }
+    return { staged, unmappable };
+}
+
+/**
+ * An event-gated leg's fields: `{}` for an ungated arrival; `{stagedEvents}` when every gate maps to a flag; else
+ * `{skip}` BY NAME — an unmappable gate (`arrival-needs-unmappable-event`), or a location goal that IS one of the
+ * gating events (`goal-is-a-staged-event`: staged, there is nothing left to clear).
+ */
+export function eventGate({ arrive, level, goal }) {
+    if (!arrive?.events?.length) return {};
+    const need = arrive.events.map((e) => e.eventId ?? e.name).join(' / ');
+    const { staged, unmappable } = eventStaging(arrive.events, level);
+    if (unmappable.length) {
+        return { skip: `arrival-needs-unmappable-event: every door into (${arrive.x},${arrive.y}) needs ${need} — `
+            + `${unmappable.join('; ')} (no persistence flag to stage: the landing would be inside the obstacle)` };
+    }
+    if (goal?.kind === 'location' && arrive.events.some((e) => e.name === goal.name)) {
+        return { skip: `goal-is-a-staged-event: every door into (${arrive.x},${arrive.y}) needs ${goal.name}, `
+            + 'the goal itself — staging its flag leaves nothing to clear' };
+    }
+    return { stagedEvents: staged };
 }
 
 /** The leg's identity across SHAs: (region, the arrival's door — `start` for the no-"came from" one, goal). */
@@ -130,7 +186,10 @@ async function main() {
         const pm = rules.progression_mapping?.['1'] ?? null;
         const sidecars = rules.preset_sidecars['1'];
         const regions = atlasRoomRegions(rules).map(({ region }) => [region, sidecars[region].playable_payload]);
-        const byItem = new Map(gameStateEventsOf(rules, '1').map((e) => [e.item, e]));
+        // every EVENT a door may need: the game_state ones (their flags stage) and any other event location
+        // (`event_kind` set, not game_state: no flag to stage, so a leg gated on it stays skipped by name)
+        const byItem = new Map([...otherEventsOf(rules, '1'), ...gameStateEventsOf(rules, '1').map((e) => ({ ...e, kind: 'game_state' }))]
+            .map((e) => [e.item, e]));
         // region → door id → the doors' edges' event needs (one entry per source door)
         const into = new Map();
         for (const [from, pl] of regions) {
@@ -169,7 +228,7 @@ async function main() {
                 const events = arrivalEventNeeds(a.needs);
                 delete a.needs;
                 if (events.length) {
-                    a.events = events.map((e) => ({ eventId: e.eventId, level: e.level, tag: e.tag, name: e.name }));
+                    a.events = events.map((e) => ({ eventId: e.eventId, level: e.level, tag: e.tag, name: e.name, kind: e.kind }));
                 }
             }
             const rr = rulesRegions[region];
@@ -209,10 +268,8 @@ async function main() {
                         regionSphere: spheres.regionSphere.get(region) ?? null };
                     delete leg.geo;
                     delete leg.edge;
-                    if (a.events) {
-                        leg.skip = `arrival-needs-event: every door into (${a.x},${a.y}) needs ${a.events.map((e) => e.eventId).join(' / ')}`
-                            + ' — a game_state flag the jump would not stage (the landing is inside the obstacle)';
-                    }
+                    // ⚖ TEST-HARNESS STAGING ONLY (see `events` above): production never stages a flag
+                    Object.assign(leg, eventGate({ arrive: a, level: pl.level, goal: g.goal }));
                     seen.set(k, leg);
                     legs.push(leg);
                 }
@@ -223,11 +280,27 @@ async function main() {
     writeFileSync(OUT, legs.map((l) => JSON.stringify(l)).join('\n') + '\n');
     const by = (f) => legs.reduce((m, l) => { const k = f(l); m[k] = (m[k] ?? 0) + 1; return m; }, {});
     console.log(`INFO: ${legs.length} legs → ${OUT}`, JSON.stringify(by((l) => `${l.preset} ${l.goal.kind}`)));
+    const staged = legs.filter((l) => l.stagedEvents);
+    console.log(`INFO: ${staged.length} leg(s) STAGE their arrival's gating flag(s) (an event-gated arrival; test-harness staging): `
+        + JSON.stringify(by((l) => (l.stagedEvents ? l.stagedEvents.map((e) => e.eventId + (e.otherLevel ? '(other level)' : '')).join('+') : 'ungated'))));
     const skipped = legs.filter((l) => l.skip);
-    console.log(`INFO: ${skipped.length} leg(s) SKIPPED by name (an arrival needing a game_state event): `
-        + JSON.stringify(by((l) => (l.skip ? l.arrive.events.map((e) => e.eventId).join('+') : 'run'))));
+    console.log(`INFO: ${skipped.length} leg(s) SKIPPED by name (an event gate that maps to no flag, or the goal IS the gating event)`
+        + (skipped.length ? `: ${JSON.stringify(by((l) => (l.skip ? `${l.skip.split(':')[0]} ${l.arrive.events.map((e) => e.eventId ?? e.name).join('+')}` : 'run')))}` : ''));
     const keys = new Set(legs.map((l) => l.key));
     if (keys.size !== legs.length) { console.log(`FAIL: ${legs.length - keys.size} duplicate leg key(s)`); process.exit(1); }
+}
+
+/** Event locations that are NOT `game_state` (`event_kind` set to anything else): gates with no flag to stage. */
+export function otherEventsOf(rules, playerId = '1') {
+    const out = [];
+    for (const [region, reg] of Object.entries(rules?.regions?.[String(playerId)] ?? {})) {
+        for (const loc of reg?.locations ?? []) {
+            if (!loc?.event_kind || loc.event_kind === 'game_state') continue;
+            out.push({ name: loc.name, item: loc.item?.name ?? loc.name, region, eventId: loc.event_id ?? null,
+                level: loc.obstacle?.level ?? null, tag: loc.obstacle?.tag ?? null, kind: loc.event_kind });
+        }
+    }
+    return out;
 }
 
 /** The start hop's target regions (Menu → …). */
