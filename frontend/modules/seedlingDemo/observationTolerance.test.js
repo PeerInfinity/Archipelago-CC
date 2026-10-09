@@ -114,7 +114,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity LADDER2: +2 (245) — `ladder2-l59-grenade`, `ladder2-l104-beam`.
         // ⛓ fidelity BOBSOLDIER: +3 (248) — `bobsoldier-sword`, `bobsoldier-kill`, `bobsoldier-corpse`.
         // ⛓ hammer-phase A: +2 (250) — `hammer-a-l18-escape21`, `hammer-a-l18-escape15`.
-        expect(names.length).toBe(250);
+        // ⛓ fidelity CRUSHER: +1 (251) — `crusher-l42-round-trip`.
+        expect(names.length).toBe(251);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -163,7 +164,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity LADDER2: 245 — both witnesses carry a transition to swap.
         // ⛓ fidelity BOBSOLDIER: 248 with `bobsoldier-sword`, `bobsoldier-kill`, `bobsoldier-corpse`.
         // ⛓ hammer-phase A: 250 — both escape witnesses cross to L19, a transition to swap.
-        expect(tally.swapped).toBe(250);
+        // ⛓ fidelity CRUSHER: 251 — `crusher-l42-round-trip` crosses to L40.
+        expect(tally.swapped).toBe(251);
     }, 600_000);
 });
 

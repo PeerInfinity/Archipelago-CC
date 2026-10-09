@@ -5,6 +5,7 @@
     "botDriverV1.js",
     "botDriverV2.js",
     "campaignChain.js",
+    "crusherBait.js",
     "dangerMap.js",
     "decisionTrace.js",
     "director.js",
@@ -128,9 +129,9 @@
       "form": "stepper",
       "files": {
         "botDriverV2.js": 26,
-        "solverBot.js": 31
+        "solverBot.js": 32
       },
-      "sites": 57,
+      "sites": 58,
       "seen": "both",
       "via": [
         "const-alias",
@@ -343,10 +344,11 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 101,
+        "crusherBait.js": 3,
         "dangerMap.js": 14,
-        "solverBot.js": 113
+        "solverBot.js": 116
       },
-      "sites": 228,
+      "sites": 234,
       "seen": "both",
       "via": [
         "direct"
@@ -398,10 +400,14 @@
         },
         "crushers": {
           "botDriverV2.js": 8,
-          "dangerMap.js": 2
+          "crusherBait.js": 2,
+          "dangerMap.js": 2,
+          "solverBot.js": 2
         },
         "crushersParked": {
-          "botDriverV2.js": 5
+          "botDriverV2.js": 5,
+          "crusherBait.js": 1,
+          "solverBot.js": 1
         },
         "latchedGroups": {
           "solverBot.js": 9
@@ -689,9 +695,9 @@
         "botDriverV2.js": 30,
         "dangerMap.js": 12,
         "director.js": 1,
-        "solverBot.js": 83
+        "solverBot.js": 85
       },
-      "sites": 127,
+      "sites": 129,
       "seen": "both",
       "via": [
         "const-alias",
@@ -716,9 +722,10 @@
       "class": "physics",
       "form": "geometry-query",
       "files": {
-        "solverBot.js": 8
+        "dangerMap.js": 1,
+        "solverBot.js": 10
       },
-      "sites": 8,
+      "sites": 11,
       "seen": "both",
       "via": [
         "direct"
@@ -785,9 +792,10 @@
       "form": "stepper",
       "files": {
         "arrivalSolid.js": 1,
+        "crusherBait.js": 1,
         "solverBot.js": 11
       },
-      "sites": 12,
+      "sites": 13,
       "seen": "both",
       "via": [
         "direct"
@@ -811,9 +819,9 @@
       "files": {
         "botDriverV2.js": 29,
         "director.js": 1,
-        "solverBot.js": 52
+        "solverBot.js": 53
       },
-      "sites": 82,
+      "sites": 83,
       "seen": "both",
       "via": [
         "const-alias",
@@ -842,7 +850,7 @@
         },
         "inventory": {
           "botDriverV2.js": 7,
-          "solverBot.js": 20
+          "solverBot.js": 21
         },
         "inventorySlots": {
           "solverBot.js": 4
@@ -975,9 +983,10 @@
       "files": {
         "arrivalSolid.js": 5,
         "botDriverV2.js": 114,
-        "solverBot.js": 308
+        "crusherBait.js": 6,
+        "solverBot.js": 312
       },
-      "sites": 427,
+      "sites": 437,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1113,9 +1122,11 @@
       "files": {
         "arrivalSolid.js": 2,
         "botDriverV2.js": 56,
-        "solverBot.js": 172
+        "crusherBait.js": 2,
+        "dangerMap.js": 1,
+        "solverBot.js": 173
       },
-      "sites": 230,
+      "sites": 234,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1797,9 +1808,12 @@
       "class": "physics",
       "form": "geometry-query",
       "files": {
-        "botDriverV2.js": 2
+        "botDriverV2.js": 2,
+        "crusherBait.js": 1,
+        "dangerMap.js": 1,
+        "solverBot.js": 1
       },
-      "sites": 2,
+      "sites": 5,
       "seen": "static",
       "via": [
         "direct"
@@ -1963,9 +1977,10 @@
       "class": "physics",
       "form": "constant",
       "files": {
+        "crusherBait.js": 2,
         "solverBot.js": 4
       },
-      "sites": 4,
+      "sites": 6,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2277,9 +2292,10 @@
         "arrivalSolid.js": 2,
         "botDriverV1.js": 2,
         "botDriverV2.js": 57,
-        "solverBot.js": 121
+        "crusherBait.js": 2,
+        "solverBot.js": 123
       },
-      "sites": 182,
+      "sites": 186,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2309,9 +2325,10 @@
         "arrivalSolid.js": 2,
         "botDriverV1.js": 2,
         "botDriverV2.js": 60,
-        "solverBot.js": 125
+        "crusherBait.js": 2,
+        "solverBot.js": 127
       },
-      "sites": 189,
+      "sites": 193,
       "seen": "both",
       "via": [
         "const-alias",
@@ -3304,15 +3321,70 @@
     },
     {
       "surface": "import",
+      "name": "CRUSHER",
+      "module": "frontend/modules/seedlingDemo/crusher.js",
+      "line": 71,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "crusherBait.js": 4
+      },
+      "sites": 4,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The Crusher record transcribed from Crusher.as (body 32x32 with a 16,16 origin, intDist 64, speed 1 px/tick, damage 1000): the bait proposer charges a body and sizes its lanes with it, a Seedling class constant."
+    },
+    {
+      "surface": "import",
+      "name": "crusherRect",
+      "module": "frontend/modules/seedlingDemo/crusher.js",
+      "line": 113,
+      "class": "seedling",
+      "form": "geometry-query",
+      "files": {
+        "crusherBait.js": 7
+      },
+      "sites": 7,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The 32x32 body rect of a crusher at an entity position: the bait proposer and the sight-aware danger take a crusher’s body (its kill box and its collider) from it, a Seedling class rule."
+    },
+    {
+      "surface": "import",
+      "name": "DIRECTIONS",
+      "module": "frontend/modules/seedlingDemo/crusher.js",
+      "line": 102,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "crusherBait.js": 2
+      },
+      "sites": 2,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "Crusher.as’s directions in source order E, N, W, S (the scan has no break, so the last match wins): the bait proposer charges each direction in turn, a Seedling class constant."
+    },
+    {
+      "surface": "import",
       "name": "scanCrusher",
       "module": "frontend/modules/seedlingDemo/crusher.js",
       "line": 249,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
-        "botDriverV2.js": 2
+        "botDriverV2.js": 2,
+        "crusherBait.js": 3
       },
-      "sites": 2,
+      "sites": 5,
       "seen": "static",
       "via": [
         "import"
@@ -3679,9 +3751,10 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 46,
+        "crusherBait.js": 4,
         "solverBot.js": 100
       },
-      "sites": 146,
+      "sites": 150,
       "seen": "static",
       "via": [
         "import"
@@ -3848,10 +3921,10 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 1,
-        "dangerMap.js": 2,
+        "dangerMap.js": 4,
         "solverBot.js": 19
       },
-      "sites": 22,
+      "sites": 24,
       "seen": "static",
       "via": [
         "import"
@@ -4016,10 +4089,11 @@
       "files": {
         "arrivalSolid.js": 1,
         "botDriverV2.js": 12,
+        "crusherBait.js": 4,
         "encounters.js": 1,
-        "solverBot.js": 36
+        "solverBot.js": 37
       },
-      "sites": 50,
+      "sites": 55,
       "seen": "static",
       "via": [
         "import"

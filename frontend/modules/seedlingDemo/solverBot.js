@@ -66,7 +66,7 @@ import {
 } from './botDriverV1.js';
 import {
     BotDriverV2Error, DEFAULT_LATTICE, coastThroughTransport, contactsAt, drive, findExit,
-    holdOneAxis, isWalkableTile, nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, runChest, runCollect,
+    holdOneAxis, isWalkableTile, nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, plansReach, runChest, runCollect,
     runHold,
     runShove, runDwell, SHOVE_STEP,
     CEREMONY_CADENCE_START, ceremonyCadenceStep, runFire,
@@ -12513,6 +12513,18 @@ export function deriveKillByChaser(run, body, contacts,
      */
     let scanned = 0;
     let scanTripped = false;
+    /**
+     * ⛓⛓ SEEDLING FIDELITY CRUSHER (L40) — THE SCAN'S TWO PER-CELL ASKS, AS TWO
+     * FLOODS. Every cell asks *"a corridor from here?"* and *"…to the aim?"*, each a
+     * full A* (`corridorPlans`); nothing moves inside the scan, so one flood from the
+     * player and one into the aim answer all of them (`botDriverV2.plansReach`,
+     * `planWaypoints`' own existence rules — equal cell for cell, held by
+     * `fidelityCrusher.test.js`). Measured on L40 from the L41 door: the scan was
+     * 210 s of a 262 s solve. `null` (a snapped start) keeps the A* asks.
+     */
+    const reach = plansReach(run.world, allowTeleporter, planOpts);
+    const fromHere = reach ? reach.from(run.state) : null;
+    const toAim = reach && aim !== null ? reach.to(aim) : null;
     const scanAround = (here) => {
         for (let dy = -STANCE_SCAN_CELLS; dy <= STANCE_SCAN_CELLS; dy += 1) {
             for (let dx = -STANCE_SCAN_CELLS; dx <= STANCE_SCAN_CELLS; dx += 1) {
@@ -12523,9 +12535,10 @@ export function deriveKillByChaser(run, body, contacts,
                 inLeash.push(c);
                 if (fineDeadlineReached('kill-chaser')) { scanTripped = true; return; }
                 scanned += 1;
-                if (!corridorPlans(run.world, run.state, c, allowTeleporter, planOpts)) continue;
-                if (aimIsPlannable
-                    && !corridorPlans(run.world, c, aim, allowTeleporter, planOpts)) continue;
+                if (!(fromHere ? fromHere(c)
+                    : corridorPlans(run.world, run.state, c, allowTeleporter, planOpts))) continue;
+                if (aimIsPlannable && !(toAim ? toAim(c)
+                    : corridorPlans(run.world, c, aim, allowTeleporter, planOpts))) continue;
                 candidates.push({ ...c, d,
                     approach: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
             }
@@ -14137,9 +14150,20 @@ function solveSegmentUnder({
         const admits = [];
         for (const c of all) {
             const without = dangerVolumes(run, 0).filter((v) => v.id !== c.id);
+            const opts = solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: without });
+            /**
+             * ⛓⛓ SEEDLING FIDELITY CRUSHER (L40) — only the EXISTENCE of a corridor is
+             * asked here, and `planWaypoints` spent ~95 % of each ask string-pulling
+             * the path it found (`controllerPathClear`; 56 s of L40's solve from the
+             * L41 door). `plansReach` is the same existence answer without the pull.
+             */
+            const reach = plansReach(run.world, allowTeleporter, opts);
+            if (reach) {
+                if (reach.from(run.state)(aim)) admits.push(c);
+                continue;
+            }
             try {
-                planWaypoints(run.world, run.state, aim, allowTeleporter,
-                    solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: without }));
+                planWaypoints(run.world, run.state, aim, allowTeleporter, opts);
                 admits.push(c);
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;

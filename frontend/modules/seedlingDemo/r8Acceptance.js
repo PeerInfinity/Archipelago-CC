@@ -1328,6 +1328,14 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'CORPSE\'s blade hits the player at t 155, five ticks into the fade — `BobSoldier.update` has no '
                 + '`destroy` gate. Recorded on the game, which agrees (player `hits` 2).',
         }),
+        /** ⛓⛓ seedling-fidelity-crusher — the `bait` witness, predicted exposed before the guard ran. */
+        Object.freeze({
+            name: 'crusher-l42-round-trip', levels: Object.freeze([40]), bobs: 1, ticks: 1,
+            addedBy: 'Seedling fidelity CRUSHER D3 (the round-trip witness)',
+            why: 'L42 holds no bridged class (two crushers, a part, a teleporter); the tape\'s last tick is the '
+                + 'arrival in L40 by `teleporter@240,336`, a puncher/bobsoldier room, ten tiles from the nearest '
+                + 'body. Recorded on the game with `hits` 0.',
+        }),
     ]),
 
     /**

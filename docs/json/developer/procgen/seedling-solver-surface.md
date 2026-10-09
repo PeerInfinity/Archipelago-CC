@@ -234,7 +234,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `openActivators` | `channel` | `botDriverV2`, `solverBot` |
 | `pushables` | `pushable` | `botDriverV2`, `solverBot` |
 | `armedArrowTraps` | `stationary`, `emitter`, `channel` | `botDriverV2`, `dangerMap`, `solverBot` |
-| `crushers` | `lane-charge`, `contact` | `botDriverV2`, `dangerMap` |
+| `crushers` | `lane-charge`, `contact` | `botDriverV2`, `crusherBait`, `dangerMap`, `solverBot` |
 | `openChests` | — | `botDriverV2`, `solverBot` |
 | `strikeBodies` | `hp` | `botDriverV2`, `solverBot` |
 | `spinnerBodies` | `rebound`, `contact`, `sweep`, `hp` | `dangerMap`, `solverBot` |
@@ -242,7 +242,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `turrets` | `stationary`, `pushable` | `botDriverV2`, `solverBot` |
 | `chasers` | `chase`, `contact` | `dangerMap`, `solverBot` |
 | `brokenRocks` | — | `botDriverV2`, `solverBot` |
-| `crushersParked` | `lane-charge` | `botDriverV2` |
+| `crushersParked` | `lane-charge` | `botDriverV2`, `crusherBait`, `solverBot` |
 | `pushesSettled` | `pushable` | `botDriverV2` |
 | `openBridges` | — | `botDriverV2` |
 | `arrowsInFlight` | `emitter` | `dangerMap`, `solverBot` |

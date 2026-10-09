@@ -23,6 +23,7 @@ import { playerBoxAt } from './playerPhysicsV2.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, createTapeStepper } from './tapeRunner.js';
 import { STRATEGY_EXECUTORS, frontierExecutor } from './solverBot.js';
+import { BotDriverV2Error, planWaypoints, plansReach } from './botDriverV2.js';
 import { crusherDanger } from './dangerMap.js';
 import { L42_SOLVE } from './r5Totem.js';
 import {
@@ -77,6 +78,21 @@ describe('fidelity CRUSHER D2 — the proposer, from the survey\'s L42 arrival',
         const s = (id, dir, hot) => ({ id, dir, from: { x: 0, y: 0 }, park: { x: 1, y: 1 }, stance: { x: 2, y: 2 }, hot });
         expect(chainsOf([s('a', 'W', 'a'), s('a', 'S', null), s('a', 'E', null), s('b', 'N', 'b'), s('b', 'E', null)])
             .map((c) => `${c.id}${c.charges.join('')}`)).toEqual(['aWS', 'aE', 'bNE']);
+    });
+
+    it('the library is R5\'s chains, field for field (the second spelling held to the first)', () => {
+        const srcOf = { 'L42_SOLVE.escape': L42_SOLVE.escape, 'L42_SOLVE.chain2': L42_SOLVE.chain2,
+            'L42_SOLVE.chain3': L42_SOLVE.chain3 };
+        for (const row of BAIT_CHOREOGRAPHIES) {
+            const src = srcOf[row.src];
+            expect(src, row.src).toBeTruthy();
+            expect(row.charges).toEqual([...src.charges]);
+            expect(row.park).toEqual({ ...src.park });
+            expect(row.approach).toEqual(src.approach.map((sp) => ({ ...sp })));
+            expect(row.spans).toEqual(src.spans.map((sp) => ({ ...sp })));
+        }
+        expect(BAIT_CHOREOGRAPHIES.map((r) => r.park)).toEqual(
+            [L42_SOLVE.escape.park, L42_SOLVE.chain2.park, L42_SOLVE.chain3.park]);
     });
 
     it('a chain the library does not hold is no choreography (the lookup is exact)', () => {
@@ -144,4 +160,54 @@ describe('fidelity CRUSHER D3 — the witness `crusher-l42-round-trip`', () => {
         await expect(crusherPlan(W, false)).rejects.toThrow(/Strategy 'bait' is SELECTED but not registered/);
         expect(CRUSHER_BAIT.enabled).toBe(false);
     }, 120_000);
+});
+
+describe('fidelity CRUSHER D2 (L40) — `plansReach` IS `planWaypoints`\' existence answer', () => {
+    /**
+     * Two floods in place of an A* per cell: held cell for cell against
+     * `planWaypoints` (does it throw?) from one start to sampled cells and from
+     * sampled cells to one aim, under the stance scan's own options, in L40
+     * (the room whose scan it was built for) and L0 (whose armed waterfall is the
+     * planner's one DIRECTED rule — featherless, so the climb refusal is live).
+     */
+    const plans = (run, opts, f, t) => {
+        try { planWaypoints(run.world, f, t, null, opts); return true; } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+            return false;
+        }
+    };
+    const cases = [
+        { name: 'L40 from the L41 door', boot: { level: 40, x: 928, y: 96 }, aim: { x: 280, y: 216 }, nodeMargin: 2, step: 4 },
+        { name: 'L0, featherless, the waterfall live', boot: { level: 0, x: 80, y: 128 }, aim: { x: 280, y: 40 }, step: 1 },
+    ];
+    for (const c of cases) {
+        it(c.name, async () => {
+            const staging = await crusherStaging({ ...W, boot: c.boot });
+            staging.seam = { ...staging.seam, items: { ...staging.seam.items, hasFeather: false } };
+            const run = createRunForStaging(staging, SRC);
+            const opts = { liveBag: run.liveGeometryOpts(), avoidVolumes: true, keys: run.progress('keys'),
+                contacts: new Set(), lattice: 16, inventory: run.progress('inventory'), noHazards: run.noHazards,
+                ...(c.nodeMargin ? { nodeMargin: c.nodeMargin } : {}) };
+            if (c.boot.level === 0) expect(run.world.waterfallTiles.length).toBeGreaterThan(0);
+            const reach = plansReach(run.world, null, opts);
+            const fwd = reach.from(run.state);
+            const rev = reach.to(c.aim);
+            const nx = run.world.width;
+            const ny = run.world.height;
+            let yes = 0;
+            for (let ty = 0; ty < ny; ty += c.step) {
+                for (let tx = 0; tx < nx; tx += c.step) {
+                    const cell = { x: tx * 16 + 8, y: ty * 16 + 8 };
+                    const a = plans(run, opts, run.state, cell);
+                    expect(fwd(cell), `from (${run.state.x},${run.state.y}) to tile (${tx},${ty})`).toBe(a);
+                    if (a) yes += 1;
+                    if (c.boot.level === 0) {
+                        expect(rev(cell), `tile (${tx},${ty}) to the aim`).toBe(plans(run, opts, cell, c.aim));
+                    }
+                }
+            }
+            expect(yes).toBeGreaterThan(0);
+            expect(plansReach(run.world, null, { ...opts, snapStart: true })).toBeNull();
+        }, 120_000);
+    }
 });

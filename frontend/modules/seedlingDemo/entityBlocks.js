@@ -227,8 +227,10 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['botDriverV2', 'dangerMap', 'solverBot'], strategies: [],
         why: 'the traps whose group is pressed or latched (`levelRun.js:10704`); `dangerMap.arrowDanger` prices their lanes.' },
     { family: 'crushers', kind: RUN_ENTITIES, blocks: ['lane-charge', 'contact'],
-        solverReads: ['botDriverV2', 'dangerMap'], strategies: [],
-        why: 'the crushers\' LIVE bodies (`levelRun.js:10583`); `dangerMap.crusherDanger` re-derives the lanes at the live centre.' },
+        solverReads: ['botDriverV2', 'crusherBait', 'dangerMap', 'solverBot'], strategies: [],
+        why: 'the crushers\' LIVE bodies (`levelRun.js:10583`); `dangerMap.crusherDanger` re-derives the lanes at the live centre '
+            + '(fidelity CRUSHER: under `CRUSHER_BAIT`, `crusherBait.crusherSightDanger` asks the scan, sight first), and '
+            + '`bait` searches its ordering from them.' },
     { family: 'openChests', kind: RUN_ENTITIES, blocks: [],
         solverReads: ['botDriverV2', 'solverBot'], strategies: ['chest'],
         why: 'opened chest ids (`levelRun.js:10690`) — an obstacle\'s state, not a behaviour block.' },
@@ -252,7 +254,7 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['botDriverV2', 'solverBot'], strategies: ['break'],
         why: 'broken rock ids (`levelRun.js:10580`) — a `TILE_TRIGGERS` level, not a block.' },
     { family: 'crushersParked', kind: RUN_ENTITIES, blocks: ['lane-charge'],
-        solverReads: ['botDriverV2'], strategies: [],
+        solverReads: ['botDriverV2', 'crusherBait', 'solverBot'], strategies: [],
         why: 'whether every crusher has stopped charging (`levelRun.js:10587`).' },
     { family: 'pushesSettled', kind: RUN_ENTITIES, blocks: ['pushable'],
         solverReads: ['botDriverV2'], strategies: [],
