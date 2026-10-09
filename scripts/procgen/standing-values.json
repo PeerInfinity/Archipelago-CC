@@ -52,15 +52,13 @@
       "measuredAt": "969aaa60dd0985fd9d267b2e36fc7a0a9e02b59b"
     },
     "identity: empty pairs c6": {
-      "value": "f85e7722f9a1cf0b28858d497cf7813e",
-      "command": "node scripts/procgen/ci-summary.mjs --gate=\"identity: empty pairs c6\" --json",
+      "value": "430573e9aa483a45b49d5041eb0f8915",
+      "command": null,
       "kind": "identity",
-      "exit": 0,
-      "ms": 23519,
       "cheap": false,
-      "ciSourced": true,
-      "measuredAt": "5fd6ac5084f1f6469f6edbced97481bd5176327b",
-      "total": "(no total)"
+      "quoted": true,
+      "why": "CI-read @ 969aaa60dd (run 37999998370): HAMMER_ESCAPE on (⚖ user 2026-10-07 'I approve'); was f85e7722; A2 measured the same on the box; A3/A4 byte-identical",
+      "measuredAt": "969aaa60dd0985fd9d267b2e36fc7a0a9e02b59b"
     },
     "identity: carved pairs c4": {
       "value": "4aa74add00476387bafcd27081fe95e7",
