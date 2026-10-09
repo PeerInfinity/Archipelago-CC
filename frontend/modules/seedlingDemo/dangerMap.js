@@ -78,6 +78,8 @@ import {
     BEAM_BOB_SPAN, beamRect as beamRectAt, createBeamTower, createLavaChainState, lavaChainRect,
     rectTouchesBox, stepBeamTower, stepLavaChain,
 } from './hazards.js';
+// ⛓ SEEDLING FIDELITY CRUSHER — the sight-aware arm, behind `CRUSHER_BAIT`.
+import { CRUSHER_BAIT, crusherSightDanger } from './crusherBait.js';
 
 export class DangerMapError extends Error {
     constructor(message) { super(message); this.name = 'DangerMapError'; }
@@ -1114,6 +1116,20 @@ export function spinnerDanger(run, box, horizon) {
  * `run.crushersParked`. The caller is told, in the source it consulted.
  */
 export function crusherDanger(run, box) {
+    /**
+     * ⛓⛓ SEEDLING FIDELITY CRUSHER — **A LANE THE CRUSHER CANNOT SEE DOWN IS NOT
+     * A TRIGGER.** `Crusher.update` takes `collideLine("Solid", …)` to the player's
+     * entity point FIRST and returns on any hit (`scanCrusher`'s early exit), and
+     * its lanes are `World.collideRect` — inclusive. The four rects below are
+     * neither: they reach through walls, and in L42 they price the whole return
+     * corridor (rows 13-14, under A's south lane behind a wall) as danger, so no
+     * walk to a bait stance plans at all. Behind the flag, the danger is the
+     * game's own question (`crusherBait.crusherSightDanger`); off, the rects.
+     */
+    if (CRUSHER_BAIT.enabled) {
+        return crusherSightDanger(run, box, { x: box.x + HITBOX.originX, y: box.y + HITBOX.originY },
+            (id) => run.world.solidBoxesForMover(run.liveGeometryOpts(), id));
+    }
     const out = [];
     const live = run.entities('crushers');
     if (!live) return out;
