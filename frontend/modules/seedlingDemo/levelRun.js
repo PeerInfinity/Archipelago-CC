@@ -65,7 +65,7 @@ import {
     BridgeError, TICKS_FROM_PRESS_TO_WALKABLE, withinOnScreenRadius,
 } from './bridges.js';
 import {
-    createPushableState, hitPushable, movedPushables, pushableRects,
+    createPushableState, hitPushableByWeapon, movedPushables, pushableRects,
     pushablesSettled, stepPushables,
 } from './pushables.js';
 import {
@@ -5724,7 +5724,9 @@ export function createLevelRun({
                         + 'exist, which is the two-consumers failure this state family '
                         + 'exists to prevent.');
                 }
-                const { block: after, moved, why } = hitPushable(block, direction);
+                // ⛓ SEEDLING FIDELITY PUSHBLOCK — the arm reads `spearDirection`,
+                // which a plain sword slash leaves at -1 (`pushables.PUSH_SPEAR_DIRECTION`).
+                const { block: after, moved, why } = hitPushableByWeapon(block, weapon, direction);
                 pushState.byId.set(id, after);
                 hits.push({ as3: 'PushableBlockSpear', id, moved, why });
             } else if (r.as3 === 'BreakableRock') {
