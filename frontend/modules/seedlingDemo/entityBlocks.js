@@ -301,6 +301,9 @@ export const FAMILY_BLOCKS = deepFreeze([
     { family: 'staticBodies', kind: RUN_ENTITIES, blocks: ['stationary', 'hp'],
         solverReads: ['solverBot'], strategies: [],
         why: 'the static `"Enemy"` bodies an arrow has reached (fidelity F4: `levelRun.staticBodiesNow`, `STATIC_ARROW_DEATH.SandTrap`): `hits`, `hitsTimer`, the "die" frame and the removal that writes the body\'s tag.' },
+    { family: 'darkTraps', kind: RUN_ENTITIES, blocks: ['stationary', 'light'],
+        solverReads: ['dangerMap', 'solverBot'], strategies: [],
+        why: 'the room\'s `DarkTrap`s and their LIGHT death (fidelity STATICLADDER D2: `levelRun.darkTrapsNow`, `DARKTRAP_LIGHT_DEATH`): `startDying` (harmless from that tick), the 30-tick counter, "die1" and the removal that writes the tag; `null` while `CONTACT_FIDELITY.darkTrapLight` is off.' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */
     { family: 'volume:crusher', kind: VOLUME, blocks: ['lane-charge', 'contact'],
