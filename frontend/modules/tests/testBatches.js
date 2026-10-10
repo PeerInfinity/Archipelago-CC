@@ -82,6 +82,15 @@ export const TEST_BATCHES = Object.freeze({
         manual: true,
         categories: Object.freeze(['runnerDemo', 'Runner block modes']),
     }),
+    tutorials: Object.freeze({
+        description:
+            'The Tutorial panel rows and one walk row per tutorial (each tutorial '
+            + 'played with Do it and graded by its first-failing-step ratchet). '
+            + 'Manual by the user\'s ruling (2026-10-10, "manual for now"); one '
+            + 'smoke row stays on push via its config `batch` field.',
+        manual: true,
+        categories: Object.freeze(['Tutorials', 'Tutorial walks']),
+    }),
 });
 
 /** The batch that claims categories no other batch lists. */

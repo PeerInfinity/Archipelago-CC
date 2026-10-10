@@ -1410,31 +1410,38 @@
             "id": "tutorial-panel-lists-every-tutorial",
             "enabled": true,
             "category": "Tutorials",
-            "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials is claimed by no batch, so it runs in the default batch (fast). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
+            "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials belongs to the MANUAL batch tutorials (\u2696 the user, 2026-10-10: tutorial tests manual for now). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
         },
         {
             "id": "tutorial-start-splits-and-merge-restores",
             "enabled": true,
             "category": "Tutorials",
-            "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials is claimed by no batch, so it runs in the default batch (fast). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
+            "batch": "fast",
+            "_comment": "TUTORIAL PANEL T1 (2026-10-10). The tutorials batch's SMOKE row: it stays on push (the batch field), so a shared change that breaks the panel's boot or its split is still caught. Category Tutorials belongs to the MANUAL batch tutorials (\u2696 the user, 2026-10-10: tutorial tests manual for now). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
         },
         {
             "id": "tutorial-cursor-and-outline-reach-tabs",
             "enabled": true,
             "category": "Tutorials",
-            "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials is claimed by no batch, so it runs in the default batch (fast). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
+            "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials belongs to the MANUAL batch tutorials (\u2696 the user, 2026-10-10: tutorial tests manual for now). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
         },
         {
             "id": "tutorial-url-request-starts-the-tutorial",
             "enabled": true,
             "category": "Tutorials",
-            "_comment": "TUTORIAL PANEL T1b (2026-10-10): ?tutorial=<id>&tutorialStep=<n>. Drives startRequest (the URL parser is a vitest row); restores the panel, its settings and the active tabs."
+            "_comment": "TUTORIAL PANEL T1b (2026-10-10): ?tutorial=<id>&tutorialStep=<n>. Manual batch tutorials. Drives startRequest (the URL parser is a vitest row); restores the panel, its settings and the active tabs."
         },
         {
             "id": "tutorial-guided-tour-plays-every-step",
             "enabled": true,
             "category": "Tutorials",
-            "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials is claimed by no batch, so it runs in the default batch (fast). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
+            "_comment": "TUTORIAL PANEL T1 (2026-10-10): the panel's Play over the whole Guided Tour (the walk rows use Do it). Manual batch tutorials. Restores the panel (list, merged), its settings, the active tabs and the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-guided-tour",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C1 (2026-10-10): the walk row of tutorial guided-tour (one row per tutorial, tutorial-walk-<id>; tutorials.test.js checks each has one). Performs every step with the panel's Do it (outside steps: their stand-in) and grades the result with the ratchet (tutorialWalk.js ratchetVerdict). Manual batch tutorials. Reloads the world loaded before."
         }
     ]
 }

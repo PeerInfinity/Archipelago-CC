@@ -80,9 +80,16 @@ describe('testBatches', () => {
         }
     });
 
+    it('tutorials claims the Tutorial panel rows and the walk rows, and fast no longer does', () => {
+        for (const c of ['Tutorials', 'Tutorial walks']) {
+            expect(categoryInBatch(c, 'tutorials'), c).toBe(true);
+            expect(categoryInBatch(c, 'fast'), c).toBe(false);
+        }
+    });
+
     describe('manual vs on push', () => {
-        it('the user\'s manual batches are manual (rulings 2026-09-27, 2026-10-09)', () => {
-            expect(listManualBatches()).toEqual(expect.arrayContaining(['bot-walks', 'noiz2sa', 'runner']));
+        it('the user\'s manual batches are manual (rulings 2026-09-27, 2026-10-09, 2026-10-10)', () => {
+            expect(listManualBatches()).toEqual(expect.arrayContaining(['bot-walks', 'noiz2sa', 'runner', 'tutorials']));
         });
 
         it('on push = every batch not marked manual, the default among them', () => {
@@ -101,9 +108,9 @@ describe('testBatches', () => {
     });
 
     describe('smoke rows (the per-row config `batch` override)', () => {
-        it('each manual batch with live rows keeps at most one smoke row on push; noiz2sa and runner exactly one', () => {
+        it('each manual batch with live rows keeps at most one smoke row on push; noiz2sa, runner and tutorials exactly one', () => {
             const smoke = assertRowOverrides(substrateRows());
-            for (const b of ['noiz2sa', 'runner']) expect(smoke.has(b), b).toBe(true);
+            for (const b of ['noiz2sa', 'runner', 'tutorials']) expect(smoke.has(b), b).toBe(true);
             for (const [manual, id] of smoke) {
                 expect(TEST_BATCHES[manual].manual, manual).toBe(true);
                 const row = substrateRows().find((r) => r.id === id);

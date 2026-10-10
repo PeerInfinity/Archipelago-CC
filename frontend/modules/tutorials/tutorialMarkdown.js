@@ -25,7 +25,13 @@ function renderBlocks(blocks) {
         if (b.step) {
             if (!inList) n = 0;
             n += 1;
-            out.push({ list: !inList ? 'start' : 'continue', text: `${n}. ${b.step.text}` });
+            let text = `${n}. ${b.step.text}`;
+            if (b.step.command) {
+                // A fenced block inside the list item: indented to the item's text.
+                const pad = ' '.repeat(`${n}. `.length);
+                text += `\n\n${pad}\`\`\`\n${b.step.command.split('\n').map((l) => pad + l).join('\n')}\n${pad}\`\`\``;
+            }
+            out.push({ list: !inList ? 'start' : 'continue', text });
             inList = true;
         } else {
             out.push({ list: null, text: b.prose });

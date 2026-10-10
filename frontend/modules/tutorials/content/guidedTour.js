@@ -23,6 +23,9 @@ const botStatus = { ...BOT, selector: '.playback-bot .playback-bot-status' };
 export const GUIDED_TOUR = Object.freeze({
     id: ID,
     title: 'Guided Tour',
+    summary: 'Watch a generated world play itself, see the logic underneath, and generate a world of your own.',
+    track: 'start',
+    status: 'ready',
     doc: 'docs/json/user/guided-tour.md',
     intro: [
         {
@@ -165,7 +168,13 @@ export const GUIDED_TOUR = Object.freeze({
                         id: 'run-all',
                         text: 'Press **Run all**. The step buttons (1 Plan → 2a Allocate → 2b Topology → 2c Items → 3 Build regions → 4 Compile) run in sequence until it reports **Pipeline complete**.',
                         actions: [{ click: { ...PIPELINE, selector: 'button.procgen-pipeline-btn-primary' } }],
-                        done: (ctx) => ctx.exists({ ...PIPELINE, selector: 'button.procgen-pipeline-btn', text: 'Pipeline complete' }),
+                        // ⛓ Not "Pipeline complete" alone: a second run (the tour taken
+                        // again) still shows the LAST run's label. A click clears the
+                        // result at once (no "Load into frontend") and shows "Working…"
+                        // until the new run is finished.
+                        done: (ctx) => ctx.exists({ ...PIPELINE, selector: 'button.procgen-pipeline-btn', text: 'Pipeline complete' })
+                            && ctx.exists({ ...PIPELINE, selector: 'button.procgen-pipeline-btn', text: 'Load into frontend' })
+                            && !ctx.exists({ ...PIPELINE, selector: 'button.procgen-pipeline-btn-primary', text: 'Working…' }),
                         doneTimeoutMs: 120000,
                     },
                 },

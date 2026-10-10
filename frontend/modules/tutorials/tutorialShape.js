@@ -8,9 +8,25 @@
  *
  * ── THE SHAPE ────────────────────────────────────────────────────────────
  *
- *   { id, title, doc, intro, sections: [{ id, title, blocks: [...] }], outro }
+ *   { id, title, track, status, firstFailingStep?, covers?, doc, intro,
+ *     sections: [{ id, title, blocks: [...] }], outro }
  *
- *   doc       repo path of the generated guide (`docs/json/user/….md`), or null
+ *   summary   one plain sentence: what the tutorial teaches (the list's card,
+ *             the docs' list)
+ *   track     which heading of the list it sits under: a key of TRACKS
+ *   status    'ready', or 'in-progress' (⚖ the user, 2026-10-10: every
+ *             tutorial is written now, finished feature or not; the panel lists
+ *             in-progress ones in a collapsed section)
+ *   firstFailingStep  in-progress only: the id of the first step that does
+ *             not work yet (it fails, or it is an outside step the test cannot
+ *             stand in for), or null when every step works. THE RATCHET: the
+ *             tutorial's walk row fails when an EARLIER step fails, and also
+ *             when this step starts working, so the record cannot go stale
+ *             (tutorialWalk.js `ratchetVerdict`)
+ *   covers    optional componentTypes the tutorial shows without naming them
+ *             in an action (the coverage check, content/coverage.js)
+ *   doc       repo path of the generated guide (`docs/json/user/….md`), or
+ *             null. Only a READY tutorial's guide is written
  *   intro     prose before the first section (an array of prose strings)
  *   outro     { title, blocks } — the closing section; prose only, no steps
  *
@@ -33,6 +49,14 @@
  *               The panel polls it to auto-advance; the test asserts it
  *     doneTimeoutMs  optional: how long the test waits for `done` (default
  *               DEFAULT_DONE_TIMEOUT_MS)
+ *     outside   optional `true`: the step happens OUTSIDE the app (a terminal
+ *               command such as starting a local MultiServer). It has no
+ *               `actions`/`run`; Do it is off; Play waits for its `done` (or
+ *               stops, when it has none)
+ *     command   optional (outside steps): the command to copy, shown in a box
+ *     standIn   optional (outside steps) `async (ctx) => {}`: what the TEST
+ *               does in its place (e.g. load the pre-generated preset instead of
+ *               running Generate.py). Never run by the panel
  *
  *   An action is ONE of:
  *     { activate: TARGET_PANEL }               bring the panel forward
@@ -53,6 +77,22 @@
  */
 
 export const DEFAULT_DONE_TIMEOUT_MS = 15000;
+export const STATUSES = Object.freeze(['ready', 'in-progress']);
+/**
+ * The list's headings, in order. `collapsed`: the panel shows the track in a
+ * collapsed section of its own (⚖ the user, 2026-10-10: developer tutorials,
+ * like the in-progress ones). Procgen is the project's core use (⚖ 2026-10-10).
+ */
+export const TRACKS = Object.freeze({
+    start: Object.freeze({ title: 'Getting started' }),
+    procgen: Object.freeze({ title: 'Procgen' }),
+    seedling: Object.freeze({ title: 'Seedling' }),
+    loops: Object.freeze({ title: 'Loop mode' }),
+    games: Object.freeze({ title: 'MetaMath, DepGraph and APCalc' }),
+    tracker: Object.freeze({ title: 'Tracking a game' }),
+    other: Object.freeze({ title: 'Other' }),
+    developer: Object.freeze({ title: 'For developers', collapsed: true }),
+});
 export const ACTION_KINDS = Object.freeze(['activate', 'click', 'key']);
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -92,7 +132,15 @@ function checkBlock(b, where, stepIds, { stepsAllowed }) {
     if (typeof s.text !== 'string' || !s.text.trim()) fail(`${where} (${s.id})`, 'a step needs `text`');
     if (s.actions !== undefined && !Array.isArray(s.actions)) fail(`${where} (${s.id})`, '`actions` must be an array');
     (s.actions ?? []).forEach((a, i) => checkAction(a, `${where} (${s.id}) action ${i}`));
-    for (const fn of ['run', 'done']) {
+    if (s.outside !== undefined && s.outside !== true) fail(`${where} (${s.id})`, '`outside` is true or absent');
+    if (s.outside && (s.actions?.length || s.run)) fail(`${where} (${s.id})`, 'an outside step has no `actions` or `run`');
+    if (!s.outside && (s.command !== undefined || s.standIn !== undefined)) {
+        fail(`${where} (${s.id})`, '`command` and `standIn` belong to outside steps');
+    }
+    if (s.command !== undefined && (typeof s.command !== 'string' || !s.command.trim())) {
+        fail(`${where} (${s.id})`, '`command` must be a non-empty string');
+    }
+    for (const fn of ['run', 'done', 'standIn']) {
         if (s[fn] !== undefined && typeof s[fn] !== 'function') fail(`${where} (${s.id})`, `\`${fn}\` must be a function`);
     }
     if (s.doneTimeoutMs !== undefined && !(Number.isFinite(s.doneTimeoutMs) && s.doneTimeoutMs > 0)) {
@@ -106,6 +154,7 @@ export function validateTutorial(t) {
     if (typeof t.id !== 'string' || !SLUG.test(t.id)) fail('?', `id ${JSON.stringify(t.id)} is not a slug`);
     const where = t.id;
     if (typeof t.title !== 'string' || !t.title) fail(where, 'needs a title');
+    if (typeof t.summary !== 'string' || !t.summary.trim() || t.summary.includes('\n')) fail(where, 'needs a one-line `summary`');
     if (t.doc !== null && !(typeof t.doc === 'string' && /^docs\/json\/.+\.md$/.test(t.doc))) {
         fail(where, '`doc` is null or a docs/json/….md path');
     }
@@ -124,6 +173,18 @@ export function validateTutorial(t) {
         sec.blocks.forEach((b, j) => checkBlock(b, `${w} block ${j}`, stepIds, { stepsAllowed: true }));
     });
     if (stepIds.size === 0) fail(where, 'has no steps');
+    if (!Object.prototype.hasOwnProperty.call(TRACKS, t.track)) fail(where, `track ${JSON.stringify(t.track)} is not one of ${Object.keys(TRACKS).join(', ')}`);
+    if (!STATUSES.includes(t.status)) fail(where, `status is one of ${STATUSES.join(', ')}`);
+    if (t.status === 'ready' && t.firstFailingStep !== undefined) fail(where, 'a ready tutorial has no firstFailingStep');
+    if (t.status === 'in-progress') {
+        if (t.firstFailingStep === undefined) fail(where, 'an in-progress tutorial records firstFailingStep (a step id, or null)');
+        if (t.firstFailingStep !== null && !panelSteps(t).some(({ step }) => step.id === t.firstFailingStep)) {
+            fail(where, `firstFailingStep ${JSON.stringify(t.firstFailingStep)} is not a step the panel walks`);
+        }
+    }
+    if (t.covers !== undefined && !(Array.isArray(t.covers) && t.covers.every((c) => typeof c === 'string' && c))) {
+        fail(where, '`covers` is an array of componentTypes');
+    }
     if (t.outro !== null) {
         if (!t.outro || typeof t.outro.title !== 'string' || !Array.isArray(t.outro.blocks)) {
             fail(where, '`outro` is null or { title, blocks }');
@@ -147,6 +208,15 @@ export function panelSteps(t) {
 /** The blocks a reader sees on one surface: `'doc'` drops panelOnly ones, `'panel'` drops docOnly ones. */
 export function blocksFor(blocks, surface) {
     return blocks.filter((b) => (surface === 'doc' ? !b.panelOnly : !b.docOnly));
+}
+
+/** Every componentType a tutorial reaches: the panels its actions name, plus `covers`. */
+export function panelsCovered(t) {
+    const out = new Set(t.covers ?? []);
+    for (const { step } of panelSteps(t)) {
+        for (const a of step.actions ?? []) out.add(actionTarget(a).target.panel);
+    }
+    return out;
 }
 
 /** Every target an action names, for the test's "every selector resolves" check and the cursor. */

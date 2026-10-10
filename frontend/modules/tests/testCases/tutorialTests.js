@@ -15,15 +15,18 @@ import { registerTest } from '../testRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import eventBus from '../../../app/core/eventBus.js';
 import { TUTORIALS } from '../../tutorials/content/index.js';
-import { DEFAULT_DONE_TIMEOUT_MS, panelSteps, validateTutorial } from '../../tutorials/tutorialShape.js';
+import { DEFAULT_DONE_TIMEOUT_MS, TRACKS, panelSteps, validateTutorial } from '../../tutorials/tutorialShape.js';
+import { ratchetVerdict, walkTutorial } from '../../tutorials/tutorialWalk.js';
 import { COMPONENT_TYPE, CONTROLS, DEFAULTS, MODULE_ID, TutorialUI } from '../../tutorials/tutorialUI.js';
 import { TUTORIAL_STACK_ID, componentItems, isSplit, mergeBack } from '../../tutorials/tutorialLayout.js';
 import {
-    CURSOR_CLASS, OUTLINE_CLASS, hideCursor, performAction, setOutline,
+    CURSOR_CLASS, OUTLINE_CLASS, hideCursor, performAction, setOutline, waitFor,
 } from '../../tutorials/tutorialExecutor.js';
 import { buildContext } from '../../tutorials/tutorialContext.js';
 
 const CATEGORY = 'Tutorials';
+const WALK_CATEGORY = 'Tutorial walks';
+const walkId = (id) => `tutorial-walk-${id}`;
 const MOUNT_TIMEOUT_MS = 10000;
 const POLL_MS = 100;
 const TOUR_ID = 'guided-tour';
@@ -94,9 +97,29 @@ async function tutorialPanelListsEveryTutorial(tc) {
             try { validateTutorial(tutorial); } catch (e) { valid = false; tc.log?.(e.message); }
             tc.reportCondition(`tutorial ${tutorial.id} has the tutorial shape`, valid);
         }
+        // Where each card belongs (⚖ 2026-10-10): ready ones under their track,
+        // in-progress ones in the collapsed In progress section, the developer
+        // track in a collapsed section of its own — in that order.
+        const all = TUTORIALS.map((e) => e.tutorial);
+        const order = Object.keys(TRACKS);
+        const byTrack = (list) => order.flatMap((k) => list.filter((t) => t.track === k));
+        const where = (t) => (TRACKS[t.track].collapsed ? `.${CONTROLS.developer}`
+            : t.status === 'in-progress' ? `.${CONTROLS.drafts}` : null);
+        const expected = [
+            ...byTrack(all.filter((t) => !where(t))),
+            ...byTrack(all.filter((t) => where(t) === `.${CONTROLS.drafts}`)),
+            ...byTrack(all.filter((t) => where(t) === `.${CONTROLS.developer}`)),
+        ].map((t) => t.id);
         const cards = [...ui.root.querySelectorAll('.tut-card')].map((c) => c.dataset.tutorialId);
-        tc.reportCondition(`the list shows one card per tutorial, in order (${cards.join(', ')})`,
-            JSON.stringify(cards) === JSON.stringify(TUTORIALS.map((e) => e.tutorial.id)));
+        tc.reportCondition(`the list shows one card per tutorial, grouped by track (${cards.join(', ')})`,
+            JSON.stringify(cards) === JSON.stringify(expected));
+        for (const t of all) {
+            const card = ui.root.querySelector(`.tut-card[data-tutorial-id="${t.id}"]`);
+            const box = card?.closest('details');
+            const want = where(t);
+            tc.reportCondition(`${t.id} (${t.status}, track ${t.track}) sits ${want ? `in the collapsed ${want}` : 'in the open list'}`,
+                want ? Boolean(box?.matches(want) && !box.open) : Boolean(card && !box));
+        }
         tc.reportCondition('every card has a Start button',
             [...ui.root.querySelectorAll('.tut-card')].every((c) => c.querySelector(`.${CONTROLS.start}`)));
         tc.reportCondition('the list links to Quick Launch', Boolean(ui.root.querySelector(`.${CONTROLS.quickLaunch}`)));
@@ -250,6 +273,47 @@ async function tutorialUrlRequestStartsTheTutorial(tc) {
     return tc.getOverallResult();
 }
 
+/**
+ * A tutorial's WALK row: every step performed with the panel's Do it (an
+ * outside step: its stand-in), each `done` waited for, and the result graded
+ * by the ratchet against the tutorial's record (tutorialWalk.js).
+ */
+async function tutorialWalkRow(tc, tutorial) {
+    const settings = await savedSettings();
+    const tabs = activeTabs();
+    const ctx = buildContext({ eventBus });
+    const before = ctx.rulesSource();
+    const ui = await freshPanel(tc, { autoAdvance: false, animateCursor: false, showOutline: false });
+    if (!ui) return tc.getOverallResult();
+    try {
+        ui.start(tutorial.id);
+        const outcome = await walkTutorial(tutorial, {
+            onStep: ({ index }) => ui._goTo(index),
+            perform: async () => {
+                if (!(await ui.doIt())) throw new Error(ui.lastError?.message ?? ui.status);
+            },
+            standIn: ({ step }) => step.standIn(ui.ctx),
+            waitDone: async ({ step }) => !step.done || ui.doneSteps.has(step.id) || Boolean(await waitFor(
+                async () => ui.doneSteps.has(step.id) || Boolean(await step.done(ui.ctx)),
+                step.doneTimeoutMs ?? DEFAULT_DONE_TIMEOUT_MS, 250)),
+        });
+        if (outcome.end !== 'complete') {
+            // What the app showed when the walk ended, so a red row needs no rerun to read.
+            tc.log?.(`walk ended at ${outcome.stepId}: panel status "${ui.status}"; rulesSource ${JSON.stringify(ui.ctx.rulesSource())}`);
+        }
+        const verdict = ratchetVerdict(tutorial, outcome);
+        tc.log?.(`${tutorial.id}: ${verdict.message}`);
+        tc.reportCondition(`${tutorial.id} — ${verdict.message}`, verdict.ok);
+    } finally {
+        await restore(ui, settings);
+        restoreActiveTabs(tabs);
+        if (typeof before === 'string' && before.startsWith('./presets/') && ctx.rulesSource() !== before) {
+            try { await ctx.loadRulesPath(before); } catch (e) { tc.log?.(`could not reload ${before}: ${e.message}`); }
+        }
+    }
+    return tc.getOverallResult();
+}
+
 const TESTS = [
     ['tutorial-panel-lists-every-tutorial', 'Tutorial: the list shows every tutorial',
         'Every tutorial in content/index.js passes the shape validator and has a card, in order, with a Start button; '
@@ -281,5 +345,19 @@ for (const [id, name, description, testFunction] of TESTS) {
         testFunction,
         category: CATEGORY,
         enabled: false, // runs where a roster enrols it (the substrates config)
+    });
+}
+
+// One walk row per tutorial (tutorials.test.js checks the roster enrols each).
+for (const { tutorial } of TUTORIALS) {
+    registerTest({
+        id: walkId(tutorial.id),
+        name: `Tutorial walk: ${tutorial.title}`,
+        description: `Performs every step of "${tutorial.title}" with Do it (outside steps: their stand-in) and grades `
+            + `the result by its record (${tutorial.status === 'ready' ? 'ready: every step must work'
+                : `in progress: firstFailingStep ${tutorial.firstFailingStep ?? 'null'}`}). Reloads the world loaded before.`,
+        testFunction: (tc) => tutorialWalkRow(tc, tutorial),
+        category: WALK_CATEGORY,
+        enabled: false,
     });
 }

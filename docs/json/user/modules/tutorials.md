@@ -4,7 +4,7 @@ The Tutorial panel walks you through the app one step at a time — and can do e
 
 ## Starting a tutorial
 
-The panel opens on a list of tutorials. Press **Start** on one. The panel then moves into a stack of its own *below* the panels it shared a stack with, so it stays visible while you open other panels on the left. (The default layout is not split until you start a tutorial.) If you stopped part-way through, the list offers **Resume** at the step you were on.
+The panel opens on a list of tutorials, grouped by what they teach. Two groups are collapsed until you open them: **In progress** (tutorials that are written but do not work all the way through yet) and **For developers**. Press **Start** on one. The panel then moves into a stack of its own *below* the panels it shared a stack with, so it stays visible while you open other panels on the left. (The default layout is not split until you start a tutorial.) If you stopped part-way through, the list offers **Resume** at the step you were on.
 
 Each step shows its section of the tutorial, with the current step marked. You can:
 
@@ -16,6 +16,10 @@ Each step shows its section of the tutorial, with the current step marked. You c
 - **All tutorials** — stop the tutorial and go back to the list. This also merges the panel back.
 
 A step whose result the panel can check is ticked (✓) once it is done — whether the panel did it or you did it yourself. With *Auto-advance* on, the panel then moves to the next step on its own.
+
+Some steps happen **outside the app**, such as starting a local Archipelago server. Their command is shown in a box with a **Copy** button. The panel cannot do these for you, so **Do it** is off; **Play** waits until the app can see the step is done (for example, the Console connecting), or stops so you can do the step and press **Next ▶**.
+
+An **in-progress** tutorial is marked with a badge. Its card and its first screen say which step does not work yet, and that step is marked in the list of steps.
 
 While a step is current, the next thing to press is outlined: the panel's tab, the **▾** button of a stack whose tab has spilled into that stack's list, or the button the step names.
 
@@ -31,7 +35,27 @@ Add `?tutorial=<id>` to the app's address to open it with that tutorial started 
 
 ## Tutorials
 
-- **Guided Tour** — watch a generated world play itself, see the logic underneath, and generate a world of your own. It is the same tour as the [Guided Tour guide](../guided-tour.md), which is generated from the tutorial.
+Tutorials are grouped by what they teach; procgen is the project's core use. Each one opens from a link with `?tutorial=<id>`.
+
+<!-- BEGIN GENERATED tutorial lists (scripts/tutorials/generate-tutorial-docs.mjs; edit the tutorial data, not this) -->
+
+### Getting started
+
+- **Guided Tour** ([guide](../guided-tour.md)) — Watch a generated world play itself, see the logic underneath, and generate a world of your own. `?tutorial=guided-tour`
+
+### Panels with no tutorial
+
+These panels are deliberately left out of the tutorials:
+
+| Panel | Why |
+|---|---|
+| JtA Action Queue | Part of the non-procgen Journey to Ascension, which is deprecated. |
+| JtA Game Data | Part of the non-procgen Journey to Ascension, which is deprecated. |
+| JtA Cost Debugger | Deprecated. |
+| Rule Converter | Very out of date; it may be deprecated or removed. |
+| Tile Map Analyzer | Currently a failed experiment. |
+
+<!-- END GENERATED tutorial lists -->
 
 ## Settings
 
