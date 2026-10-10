@@ -20,6 +20,7 @@
  * Run (the dev server at the repo root, `SEEDLING_PORT`, default 8000):
  *   node scripts/procgen/probe-seedling-darktrap-mobiles.mjs --file=<tape.json>   e.g. a survey `views/step-<n>-walk.json`
  *   … --tape=<fixture name>   a committed tape
+ *   … --witness=<name>        re-witness a recorded `fixtures/darktrap-witness/<name>.json` (its embedded tape)
  *   … --out=<file.json>       write every sample with both readings
  *   … --record --name=<name>  write the TAPE and the GAME's DarkTrap samples to `fixtures/darktrap-witness/<name>.json`,
  *                             which `fidelityDarkTrap.test.js` replays against the model in node — only on a PASS.
@@ -45,7 +46,9 @@ if (isEntryPoint(import.meta.url)) await main();
 async function main() {
     const arg = (k) => process.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3) ?? null;
     const TAPE = arg('tape');
-    const FILE = arg('file');
+    const WITNESS = arg('witness');
+    const FILE = arg('file') ?? (WITNESS ? join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'frontend', 'modules',
+        'seedlingDemo', 'fixtures', 'darktrap-witness', `${WITNESS}.json`) : null);
     if (!TAPE === !FILE) {
         console.error('probe-seedling-darktrap-mobiles: exactly one of --tape=<fixture name> or --file=<path> is required');
         process.exit(2);
@@ -73,7 +76,7 @@ async function main() {
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
 
-    const tape = TAPE ? loadTape(TAPE) : parseTape(readFileSync(FILE, 'utf8'));
+    const tape = TAPE ? loadTape(TAPE) : parseTape(WITNESS ? JSON.stringify(JSON.parse(readFileSync(FILE, 'utf8')).tape) : readFileSync(FILE, 'utf8'));
     const LABEL = TAPE ?? FILE;
 
     // ── the MODEL, the switch ON: the darktraps after each tick (index 0 = boot) ──
@@ -272,7 +275,7 @@ async function main() {
                     bodies: bodiesOf(f).map((g) => ({ x: g.x, y: g.y, anim: g.anim, anim_index: g.anim_index })),
                 })),
                 // The tape as written (a `--file`), re-parsed by the test; a `--tape` fixture is named by `source`.
-                tape: FILE ? JSON.parse(readFileSync(FILE, 'utf8')) : null,
+                tape: FILE ? (WITNESS ? JSON.parse(readFileSync(FILE, 'utf8')).tape : JSON.parse(readFileSync(FILE, 'utf8'))) : null,
             };
             const path = join(dir, `${NAME}.json`);
             writeFileSync(path, `${JSON.stringify(out, null, 1)}\n`);
