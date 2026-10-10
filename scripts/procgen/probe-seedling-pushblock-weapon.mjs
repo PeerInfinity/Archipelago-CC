@@ -39,10 +39,16 @@
 import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { chromium } from 'playwright';
+import { headlessWebgpuArgs } from './headlessChromium.js';
+import { takeBoxLockOrExit } from './boxLock.js';
 
 import { argvHelp } from './argvHelp.js';
 
 argvHelp(import.meta.url);
+// ⛓ THE BOX LOCK (R9 P3b): this instrument drives a browser, so it takes the box before it starts — the
+// `--model-only` arm too (it costs nothing, and a conditional taker is one more row to declare).
+takeBoxLockOrExit({ name: 'probe-seedling-pushblock-weapon.mjs', kind: 'browser' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -104,10 +110,6 @@ if (!MODEL_ONLY) {
     if (!existsSync(WASM_DIR)) {
         console.log(`SKIP game arms: no wasm artifact at ${WASM_DIR}`);
     } else {
-        const { takeBoxLockOrExit } = await import('./boxLock.js');
-        takeBoxLockOrExit({ name: 'probe-seedling-pushblock-weapon.mjs', kind: 'browser' });
-        const { chromium } = await import('playwright');
-        const { headlessWebgpuArgs } = await import('./headlessChromium.js');
         for (const arm of ARMS) {
             const browser = await chromium.launch({
                 args: headlessWebgpuArgs({ enableFeatures: ['WebAssemblyExperimentalJSPI'] }),

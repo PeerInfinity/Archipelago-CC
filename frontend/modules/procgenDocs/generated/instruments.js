@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 76,
+            "count": 77,
             "id": "plan"
         },
         {
-            "browser": 68,
-            "count": 113,
+            "browser": 69,
+            "count": 114,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 395,
-        "browser": 133,
-        "cited": 195,
-        "files": 407,
+        "blockStyle": 397,
+        "browser": 134,
+        "cited": 196,
+        "files": 409,
         "lineStyle": 12,
-        "withDocblock": 407,
-        "withFlags": 325
+        "withDocblock": 409,
+        "withFlags": 327
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7678,6 +7678,35 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/plan-seedling-proximity-witness.mjs"
         },
         {
+            "argvHelpers": [
+                "xAt"
+            ],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-pushblock-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-pushblock-witness — ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK: A `PushableBlockSpear` ON THE FRONTIER OF A REACH-EXIT, MOVED BY THE SOLVER'S `shove` VERB'S THRUST ARM.",
+            "path": "scripts/procgen/plan-seedling-pushblock-witness.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
@@ -11070,6 +11099,37 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling: DOES A STAGED PERSISTENCE FLAG REACH THE ENTITIES, PER BOOT PATH? (slice `seedling-js-persistence`, after the rules arc's W0 finding: several tapes on ONE page leaked bosslock state across `botStart`).",
             "path": "scripts/procgen/probe-seedling-persistence-rebuild.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-pushblock-weapon.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "model-only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-pushblock-weapon — does a SWORD slash move a `PushableBlockSpear`, or only a spear thrust?",
+            "path": "scripts/procgen/probe-seedling-pushblock-weapon.mjs"
         },
         {
             "argvHelpers": [
