@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 74,
+            "count": 76,
             "id": "plan"
         },
         {
-            "browser": 66,
-            "count": 111,
+            "browser": 68,
+            "count": 113,
             "id": "probe"
         },
         {
@@ -229,23 +229,17 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 391,
-        "browser": 131,
-        "cited": 193,
-        "files": 403,
+        "blockStyle": 395,
+        "browser": 133,
+        "cited": 195,
+        "files": 407,
         "lineStyle": 12,
-        "withDocblock": 403,
-        "withFlags": 321
+        "withDocblock": 407,
+        "withFlags": 325
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
-    "findings": [
-        {
-            "name": "probe-seedling-chaser-mobiles.mjs",
-            "severity": "cited without a path; it lives elsewhere in the tree",
-            "what": "`probe-seedling-chaser-mobiles.mjs` is named in [docs/json/developer/procgen/seedling-bot-log.md, docs/json/developer/procgen/seedling-bot.md] and there is no such file in `scripts/procgen/`. It IS in the tree, at [scripts/procgen/probe-seedling-chaser-mobiles.mjs] — so the citation is a bare file name whose directory the reader has to guess. ⛔ Reported, not fixed."
-        }
-    ],
+    "findings": [],
     "flagRule": "a flag is counted where the script READS ARGV for it. A `--x=` literal alone is not enough: `--enable-features=` and `--use-angle=` are the two commonest in this directory and both are Chrome launch arguments. What the file's own `Run:` block shows is published separately as `documentedFlags`.",
     "patterns": {
         "cite": "/(?<![\\w/*.-])(?:scripts\\/procgen\\/)?([a-z][a-zA-Z0-9-]*\\.mjs)\\b/g",
@@ -9702,6 +9696,76 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-ceremony.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-chaser-mobiles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "class"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "upto"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "witness"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-chaser-mobiles — ⛓ seedling-fidelity-staticladder D3: ONE BRIDGED CHASER CLASS, ASKED OF THE GAME TICK BY SAMPLED TICK (`probe-seedling-bobsoldier-mobiles.mjs` with the class and the tape as arguments).",
+            "path": "scripts/procgen/probe-seedling-chaser-mobiles.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": true,
             "category": "probe",
@@ -9847,6 +9911,64 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-ctor-args — THE CONSTRUCTOR ARGUMENT-TABLE AUDIT.",
             "path": "scripts/procgen/probe-seedling-ctor-args.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-darktrap-mobiles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "witness"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-darktrap-mobiles — ⛓⛓⛓ seedling-fidelity-staticladder D2: A DARKTRAP'S LIGHT DEATH, ASKED OF THE GAME TICK BY SAMPLED TICK (WALLFLYER's `probe-seedling-wallflyer-mobiles.mjs`, one class over).",
+            "path": "scripts/procgen/probe-seedling-darktrap-mobiles.mjs"
         },
         {
             "argvHelpers": [
