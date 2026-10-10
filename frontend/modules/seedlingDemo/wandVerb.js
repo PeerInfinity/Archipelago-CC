@@ -547,3 +547,27 @@ export const WAND_MIXED_WINDOW_LAW = Object.freeze({
     perBodyCadenceIsTheEnemys: true,
     src: 'Enemies/Enemy.as:141-181 (`hitsTimer <= 0`) + combatVerbs.KILL_PRESS_CADENCE',
 });
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY WAND — **THE SWITCH** (OFF by default; `SEEDLING_WAND_VERB=1` turns it on for a process).
+ *
+ * One object, read by two modules: `solverBot` (the `wand` verb for a `MagicalLock`, and a `wandlock` refined to its
+ * own opener — see `solverBot.WAND_VERB`'s docblock there) and `levelRun` (a `MagicalLock`'s
+ * `Game.setPersistence(tag, false)` folded into `earnedClears`, at the hit tick, as `MagicalLock.hit` writes it).
+ * With it OFF both modules answer exactly what they did before it existed.
+ */
+export const WAND_VERB = { enabled: globalThis.process?.env?.SEEDLING_WAND_VERB === '1' };
+
+export function withWandVerb(enabled, fn) {
+    const prior = WAND_VERB.enabled;
+    WAND_VERB.enabled = Boolean(enabled);
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(() => { WAND_VERB.enabled = prior; });
+        WAND_VERB.enabled = prior;
+        return out;
+    } catch (e) {
+        WAND_VERB.enabled = prior;
+        throw e;
+    }
+}
