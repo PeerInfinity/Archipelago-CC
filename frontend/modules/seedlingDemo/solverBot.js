@@ -119,6 +119,8 @@ import {
     KILLLOCK_BODIES,
     // ⛓⛓⛓ seedling-fidelity-ghostsword D2: the break verb's ghostsword row (the switch and the no-sword refusal).
     GHOSTSWORD_PRESS, ghostSwingRefusal,
+    // ⛓⛓ seedling-fidelity-pushblock: the spear push (the stance audit, and which weapon's press moves the block).
+    auditPress, PRESS_ARM_POLICY, PUSH_SPEAR_DIRECTION,
     // ⛓ hammer-phase B2: the fight's no-bump prune (a carried shield)
     shieldBumpTouches,
     // ⛓⛓ fidelity ENCOUNTERS D3: the Witch's talk circle (`NPC.talkRange`).
@@ -344,6 +346,18 @@ const fail = (m, opts) => { throw new SolverBotError(m, opts); };
 export const OBSTACLE_STRATEGIES = Object.freeze({
     'solid:pushableblock': 'shove',
     'solid:pushableblockfire': 'shove',
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK (wave 11) — **A SPEAR BLOCK IS SHOVED BY
+     * SPEAR THRUSTS, ONE TILE A PRESS.** The route survey's five refusals on
+     * L63/L65/L67 (steps 137, 145, 146, 149, 180) read *"Obstacle:
+     * solid:pushableblockspear … No strategy row exists for this obstacle"*. Same
+     * OBSTACLE as the two rows above, so the same verb; what differs is the move
+     * (`resolveSpearPushStrategy`: a thrust from a stance whose 32x5 rect is on
+     * the block, never a lean), and only the SPEAR's press moves it — a sword
+     * slash leaves `spearDirection` at -1 (`pushables.PUSH_SPEAR_DIRECTION`,
+     * game-measured).
+     */
+    'solid:pushableblockspear': 'shove',
     'solid:lock': 'hold',
     'solid:shieldlock': 'touch',
     /**
@@ -2970,6 +2984,10 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
     if (run.entities('pushables') === null) return null;
     const row = (run.world.pushables ?? []).find((p) => p.id === obstacle.id);
     if (!row) return null;
+    // ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — a spear block's press verb (one tile per thrust).
+    if (row.as3 === 'PushableBlockSpear') {
+        return resolveSpearPushStrategy(run, row, contacts, aim, allowTeleporter, blocked);
+    }
     if (row.family !== 'walk') {
         /**
          * ⛔ A `pushableblockfire` MOVES ON A PRESS, NOT ON A LEAN — that is
@@ -3116,6 +3134,194 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — the facing a thrust needs for each push
+ * direction: the block moves the way the player FACES (`pushables.PUSH_STEP`).
+ */
+const PRESS_FACING = Object.freeze({ E: RIGHT, N: UP, W: LEFT, S: DOWN });
+
+/**
+ * How far a stance may sit from the cell centre the walk aims at and still be
+ * a stance: the thrust's rect must be on the block from every point within
+ * this many px of the centre, along both axes. The walk stops within its own
+ * tolerance of the aim, and the executor re-asks the question where it stopped.
+ */
+const SPEAR_STANCE_SLACK = 3;
+
+/**
+ * ⛓ The one press responder a push thrust may ALSO reach: a `LightPole`, whose
+ * Spear arm toggles its light (`PRESS_ARM_POLICY.LightPole` 'modelled' — the run
+ * steps it and the danger map reads it). L65's pole stands in the block's own
+ * rows between it and every east stance, so R4's committed W thrust from
+ * (196,116) swept it too. A stance that reaches nothing else is always tried
+ * first; every other responder keeps the stance refused.
+ */
+const SPEAR_PUSH_TOLERATED = new Set(['LightPole']);
+
+/** guard (i)'s hypothesis set for a routed block — `deriveShove`'s own loop. */
+function dischargedPushables(run, row, blocked) {
+    const discharged = [];
+    for (const other of (run.world.pushables ?? [])) {
+        if (other.id === row.id || blocked.includes(other.id)) continue;
+        const otherLive = run.entities('pushables')?.get(other.id);
+        if (!otherLive || otherLive.removed) continue;
+        if (!OBSTACLE_STRATEGIES[`solid:${other.tag}`]) continue;
+        discharged.push(other.id);
+    }
+    return discharged;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — WHERE A THRUST MOVES THE BLOCK `dir`.
+ *
+ * `Player.spear()` collects every hitable under a 32x5 rect from `spearX/Y`
+ * (`spearRect`) with NO distance and NO line gate (`Player.as:954-990`), so a
+ * stance is a floor cell ONE or TWO cells behind the block, on its axis, whose
+ * rect covers the block — R4's "reach is TWO tiles, across pits and through
+ * walls" (`recon-seedling-pushes.mjs` rule 2, oracle-pinned). ⛔ And the rect
+ * must reach NOTHING ELSE the press arms do not call inert: a stray responder
+ * is a ledger entry, a bridge opened or a throw in `levelRun.applyThrust`,
+ * never a no-op (`auditPress`, asked of the route state's own block positions).
+ *
+ * At the START state the live position is asked first (the executor re-asks it
+ * there anyway); a deeper state's player is a cell centre, so only the ring.
+ */
+function spearPressStance(run, row, from, dir, state, bags, atStart, plansOrCrosses) {
+    const facing = PRESS_FACING[dir];
+    const step = SHOVE_STEP[dir];
+    const blockR = blockRectAt(from);
+    const on = (at) => rectsOverlapLocal(spearRect(at.x, at.y, facing), blockR);
+    const strays = (at) => auditPress(run.world, spearRect(at.x, at.y, facing), {
+        weapon: 'spear',
+        intended: [{ as3: 'PushableBlockSpear', x: row.x, y: row.y }],
+        pushables: bags.solid.pushables ?? null,
+    }).illegal.filter((r) => PRESS_ARM_POLICY[r.as3]?.policy !== 'inert');
+    if (atStart && on(state.player) && !strays(state.player).length) {
+        return { ok: true, stance: null, exempt: bags.exempt };
+    }
+    const first = spearPressRing(run, from, step, state, bags, plansOrCrosses, on, strays, false);
+    if (first.ok) return first;
+    const second = spearPressRing(run, from, step, state, bags, plansOrCrosses, on, strays, true);
+    if (second.ok) return second;
+    return { ok: false, why: `no floor cell one or two behind the block (facing ${dir}) puts the spear's `
+        + `32x5 rect on it and is reachable: ${first.tried.join('; ')}` };
+}
+
+/**
+ * The candidate pass. `tolerate` admits `SPEAR_PUSH_TOLERATED` strays and, with
+ * them, the off-centre aims (±4 px across the push axis) a pole's 8 px gap needs.
+ */
+function spearPressRing(run, from, step, state, bags, plansOrCrosses, on, strays, tolerate) {
+    const levelW = run.world.width * TILE_SIZE;
+    const levelH = run.world.height * TILE_SIZE;
+    const floorOpts = solverPlanOpts(run, bags.exempt,
+        { nodeMargin: 0, triggerMargin: 0, liveBag: bags.solid });
+    const tried = [];
+    const across = tolerate ? [0, -4, 4] : [0];
+    for (const d of [1, 2]) for (const off of across) {
+        const centre = nodeCentre(from.tx - step.dx * d, from.ty - step.dy * d, DEFAULT_LATTICE);
+        const c = { x: centre.x + (step.dx === 0 ? off : 0), y: centre.y + (step.dy === 0 ? off : 0) };
+        const at = `(${c.x},${c.y})`;
+        if (c.x < 0 || c.y < 0 || c.x > levelW || c.y > levelH) { tried.push(`${at} is off the level`); continue; }
+        if (plannerObstacleAt(run.world, c.x, c.y, null, floorOpts)) { tried.push(`${at} is not floor`); continue; }
+        const shifts = [[0, 0], [SPEAR_STANCE_SLACK, 0], [-SPEAR_STANCE_SLACK, 0],
+            [0, SPEAR_STANCE_SLACK], [0, -SPEAR_STANCE_SLACK]];
+        if (!shifts.every(([sx, sy]) => on({ x: c.x + sx, y: c.y + sy }))) {
+            tried.push(`${at}'s rect misses the block within ±${SPEAR_STANCE_SLACK} px`);
+            continue;
+        }
+        const stray = strays(c).filter((r) => !(tolerate && SPEAR_PUSH_TOLERATED.has(r.as3)));
+        if (stray.length) {
+            tried.push(`${at}'s rect also reaches ${stray.map((r) => `${r.tag}@${r.x},${r.y}`).join(', ')}`);
+            continue;
+        }
+        const exempt = plansOrCrosses(state, state.player, c, null, bags.solid, bags.exempt);
+        if (!exempt) { tried.push(`no corridor reaches ${at}`); continue; }
+        return { ok: true, stance: c, exempt,
+            ...(tolerate ? { also: strays(c).map((r) => `${r.tag}@${r.x},${r.y}`) } : {}) };
+    }
+    return { ok: false, tried };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK (wave 11) — RESOLVE a `shove` of a
+ * `PushableBlockSpear`: `clear-path`, by THRUSTS.
+ *
+ * The same post-condition and the same search as a lean (`deriveBlockRoute`,
+ * whose `pressMoves` arm the routed block selects); the differences are the
+ * move's, and both are the game's:
+ *   · ONE TILE PER PRESS — `PushableBlockFire.hit`'s relative arm moves the
+ *     target one tile, and refuses while `v.length > 0`; a longer push is more
+ *     orders, each from its own stance.
+ *   · ONLY THE SPEAR — `genericHit`'s Spear arm reads `spearDirection`, which a
+ *     plain sword slash leaves at -1 (`pushables.PUSH_SPEAR_DIRECTION`,
+ *     game-measured). So the run must HOLD the spear; the executor selects its
+ *     slot for the thrusts and selects the old one after (`burn`'s shape).
+ *
+ * ⛔ No spear: resolved `held: false` and the executor refuses BY NAME — the
+ * item is the work order, not the room (`resolveBreakStrategy`'s first guard).
+ */
+function resolveSpearPushStrategy(run, row, contacts, aim, allowTeleporter, blocked = []) {
+    const target = { x: row.x, y: row.y, id: row.id };
+    const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.spear);
+    if (!run.progress('inventory')?.hasSpear || slot < 0) {
+        return {
+            strategy: 'shove', held: false, target, shove: { block: { x: row.x, y: row.y } },
+            rejected: [{
+                option: `thrust at ${row.id}`,
+                why: 'the run holds NO SPEAR. `genericHit`\'s `PushableBlockSpear` arm moves the block '
+                    + 'along `spearDirection`, which only a spear thrust (or a ghost-sword slash) sets; a '
+                    + 'plain sword slash leaves it at -1 and the block stays (game-measured, '
+                    + '`probe-seedling-pushblock-weapon.mjs`). ⇒ the Spear is the work order.',
+            }],
+        };
+    }
+    const discharged = dischargedPushables(run, row, blocked);
+    const route = deriveBlockRoute(run, row, { kind: 'clear-path', aim, allowTeleporter }, contacts,
+        blocked, { discharged });
+    if (!route.steps) {
+        if (route.refused?.bound) {
+            throw new SolverRefusal(`solverBot: the block-route search for ${row.id} in `
+                + `level ${run.level} hit \`${route.refused.bound}\` — ${route.refused.why}`,
+            { obstacle: { kind: 'solid', id: row.id },
+                bound: blockRouteBound(route, row, 'clear-path') });
+        }
+        return null;
+    }
+    const first = route.steps.find((st) => st.verb === 'press');
+    if (!first) return null; // a route of breaks alone: the rock is the door, not this block
+    return {
+        strategy: 'shove',
+        postCondition: 'clear-path',
+        press: true,
+        weapon: 'spear',
+        slot,
+        discharged,
+        target,
+        shove: {
+            block: { x: row.x, y: row.y },
+            dir: first.dir,
+            to: { ...first.to },
+            ...(first.destroys ? { destroys: true } : {}),
+        },
+        k: route.steps.filter((st) => st.verb === 'press').length,
+        stance: route.steps[0].stance ?? null,
+        route: route.steps,
+        rejected: [{
+            option: 'a lean (`runShove`)',
+            why: `${row.id} is a \`PushableBlockSpear\`: \`PushableBlockFire.input()\` reads only its own `
+                + 'target, which only `hit()` writes — a lean moves nothing',
+        }, {
+            option: 'the sword',
+            why: 'a plain sword slash reaches the Spear arm with `spearDirection == -1`, so `p` is (0, 0) '
+                + 'and the block stays (game-measured)',
+        }, {
+            option: 'the route',
+            why: `${route.steps.length} order(s): ${describeRoute(route.steps)}`,
+        }, ...hypothesisRejection(discharged), ...route.rejected],
+    };
+}
+
+/**
  * The block-route search's own rejections for a `shove` the resolver refused
  * — the frontier's `considered` row quotes them. Re-runs the search (tens of
  * expansions on any committed room) rather than threading a side channel
@@ -3123,6 +3329,12 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
  */
 function shoveRefusalDetail(run, obstacle, contacts, aim, allowTeleporter, blocked) {
     const row = (run.world.pushables ?? []).find((p) => p.id === obstacle.id);
+    if (row?.as3 === 'PushableBlockSpear' && run.entities('pushables') !== null) {
+        const r = deriveBlockRoute(run, row, { kind: 'clear-path', aim, allowTeleporter }, contacts,
+            blocked, { discharged: dischargedPushables(run, row, blocked) });
+        const rows = [...(r.rejected ?? []), ...(r.refused ? [{ option: 'the search', why: r.refused.why }] : [])];
+        return rows.length ? rows.map((x) => `[${x.option} — ${x.why}]`).join(' ') : null;
+    }
     if (!row || row.family !== 'walk' || run.entities('pushables') === null) return null;
     const derived = deriveShove(run, row, aim, allowTeleporter, contacts, blocked);
     if (!derived || derived.plan) return null;
@@ -3135,7 +3347,10 @@ function shoveRefusalDetail(run, obstacle, contacts, aim, allowTeleporter, block
 const describeRoute = (route) => route.map((st, i) => (st.verb === 'shove'
     ? `${i + 1}. shove ${st.dir} k=${st.k} -> (${st.to.tx},${st.to.ty})${st.destroys
         ? ' (DESTROYED there)' : ''}`
-    : `${i + 1}. break ${st.rock} (wait ${st.wait})`)).join(' · ');
+    : (st.verb === 'press'
+        ? `${i + 1}. thrust ${st.dir} -> (${st.to.tx},${st.to.ty})${st.destroys
+            ? ' (DESTROYED there)' : ''}${st.stance ? ` from (${st.stance.x},${st.stance.y})` : ''}`
+        : `${i + 1}. break ${st.rock} (wait ${st.wait})`))).join(' · ');
 
 /**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — RESOLVE a `weigh` work order: ⚖ §11.8a's
@@ -5845,7 +6060,9 @@ const SHOVE_PHRASE = Object.freeze({
 const routeCost = (steps) => {
     let sumK = 0; let destroys = 0; const seq = [];
     for (const s of steps) {
-        if (s.verb === 'shove') { sumK += s.k; if (s.destroys) destroys += 1; seq.push(s.dirIndex); }
+        if (s.verb === 'shove' || s.verb === 'press') {
+            sumK += s.k; if (s.destroys) destroys += 1; seq.push(s.dirIndex);
+        }
         else seq.push(SHOVE_DIR_COUNT);
     }
     return { orders: steps.length, sumK, destroys, seq };
@@ -6055,7 +6272,59 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
 
     const rejected = [];
     const found = [];
-    const moveSig = (st) => (st.verb === 'shove' ? `shove:${st.dir}:${st.k}` : `break:${st.rock}`);
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — **A `PushableBlockSpear` MOVES ON A
+     * THRUST, ONE TILE, AND THE PLAYER STAYS WHERE THEY STOOD.** The search is
+     * the same search; the move is the press (`pressMoves`), and the routed
+     * block is the only thing that tells the two apart. A walk block's records
+     * cannot reach this arm, so every committed `shove` is the bytes it was.
+     */
+    const press = row.as3 === 'PushableBlockSpear';
+    const pressMoves = (state, key, bags, atStart, dir, dirIndex, push) => {
+        const step = SHOVE_STEP[dir];
+        const from = state.block;
+        const cell = { tx: from.tx + step.dx, ty: from.ty + step.dy };
+        if (cell.tx < 0 || cell.ty < 0 || cell.tx >= run.world.width || cell.ty >= run.world.height) {
+            if (atStart) rejected.push(phrase.offMap(dir, 1, cell, run));
+            return;
+        }
+        const destroys = blockSinksOn(run.world, cell);
+        /**
+         * ⚠ A THRUST INTO A SOLID IS NOT A NO-OP THE GAME SKIPS — `hit()` sets the
+         * target and the first sweep stops the glide, so the block stays. The
+         * search does not order one; the same instrument the lean asks.
+         */
+        if (!destroys && blockBlockedAt(run, bags.solid, row.id, cell)) {
+            if (atStart) rejected.push(phrase.solid(dir, 1, cell));
+            return;
+        }
+        if (refusedMoves.has(`${key}|press:${dir}`)) return;
+        const st = spearPressStance(run, row, from, dir, state, bags, atStart, plansOrCrosses);
+        if (!st.ok) {
+            if (atStart) rejected.push({ option: `thrust ${dir}`, why: st.why });
+            return;
+        }
+        const crossed = st.exempt === bags.exempt ? [] : [...st.exempt].filter((c) => !bags.exempt.has(c));
+        const next = {
+            block: destroys ? null : cell, rocks: state.rocks,
+            player: st.stance ?? state.player,
+            steps: [...state.steps, { verb: 'press', dir, dirIndex, k: 1, from: { ...from },
+                to: { ...cell }, destroys, stance: st.stance,
+                ...(st.also?.length ? { alsoReaches: st.also } : {}),
+                ...(crossed.length ? { exempt: crossed } : {}) }],
+        };
+        if (atStart) {
+            if (goalMet(next, bagsOf(next))) {
+                found.push({ dir, dirIndex, k: 1, to: { ...cell }, destroys });
+                push(next);
+                return;
+            }
+            rejected.push(phrase.noGoal(dir, 1, cell, destroys, goal));
+        }
+        push(next);
+    };
+    const moveSig = (st) => (st.verb === 'shove' ? `shove:${st.dir}:${st.k}`
+        : (st.verb === 'press' ? `press:${st.dir}` : `break:${st.rock}`));
     /**
      * Replay a candidate route's prefixes and ask A\* every question the
      * flood answered for it. Returns `null` when every step plans, else the
@@ -6076,8 +6345,12 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
                     player: nodeCentre(st.to.tx - SHOVE_STEP[st.dir].dx,
                         st.to.ty - SHOVE_STEP[st.dir].dy, DEFAULT_LATTICE),
                     steps: steps.slice(0, i + 1) }
-                : { block: state.block, rocks: new Set([...state.rocks, st.rock]),
-                    player: st.stance ?? state.player, steps: steps.slice(0, i + 1) };
+                : (st.verb === 'press'
+                    // ⛓ PUSHBLOCK: a thrust moves the BLOCK; the player stays at the stance.
+                    ? { block: st.destroys ? null : st.to, rocks: state.rocks,
+                        player: st.stance ?? state.player, steps: steps.slice(0, i + 1) }
+                    : { block: state.block, rocks: new Set([...state.rocks, st.rock]),
+                        player: st.stance ?? state.player, steps: steps.slice(0, i + 1) });
         }
         if (goal.kind === 'clear-path' && steps.length > 1) {
             const bags = bagsOf(state);
@@ -6195,7 +6468,9 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
             } };
         }
         const atStart = state.steps.length === 0;
-        if (state.block) {
+        if (state.block && press) {
+            dirs.forEach((dir, dirIndex) => pressMoves(state, key, bags, atStart, dir, dirIndex, push));
+        } else if (state.block) {
             dirs.forEach((dir, dirIndex) => {
                 const step = SHOVE_STEP[dir];
                 const from = state.block;
@@ -7473,6 +7748,10 @@ function execHold(run, perTick, resolved, ctx) {
  * (trap 154) beyond the one the verb already takes.
  */
 function execShove(run, perTick, resolved, ctx) {
+    if (resolved.held === false) {
+        throw new SolverRefusal(`${ctx.what}: ${resolved.target.id} cannot be pushed by this run — `
+            + `${resolved.rejected[0].why}`, { obstacle: { kind: 'solid', id: resolved.target.id } });
+    }
     return execRoute(run, perTick, resolved, ctx, ctx.what);
 }
 
@@ -7531,6 +7810,18 @@ function execRoute(run, perTick, resolved, ctx, what) {
                     + 'and the run answered another — a rock, a Solid or a sink the '
                     + 'transcription does not know about.');
             }
+        } else if (step.verb === 'press') {
+            last = execSpearPress(run, perTick, { blockId: blockRow(), dir: step.dir, to: step.to,
+                destroys: Boolean(step.destroys), slot: resolved.slot }, ctx, label);
+            const live = run.entities('pushables').get(blockRow());
+            if (step.destroys ? !live?.removed
+                : (!live || live.removed || tileOf(live).tx !== step.to.tx
+                    || tileOf(live).ty !== step.to.ty)) {
+                refuse(`${label}: after the thrust the block is ${!live || live.removed
+                    ? 'GONE' : `on (${tileOf(live).tx},${tileOf(live).ty})`}, not `
+                    + `${step.destroys ? 'destroyed' : `on (${step.to.tx},${step.to.ty})`} `
+                    + `as route step ${i + 1} requires.`);
+            }
         } else if (step.verb === 'break') {
             const rec = execBreak(run, perTick, {
                 held: true, rock: step.rock, target: step.target, stance: step.stance,
@@ -7547,7 +7838,7 @@ function execRoute(run, perTick, resolved, ctx, what) {
             refuse(`${label}: route step ${i + 1} has verb \`${step.verb}\`, which this `
                 + 'executor does not run');
         }
-        steps.push({ verb: 'shove', ticks: last.ticks, from, to: step.to });
+        steps.push({ verb: step.verb, ticks: last.ticks, from, to: step.to });
     });
     if (route.length === 1) return last;
     return { ...last, steps, ticks: steps.reduce((n, st) => n + st.ticks, 0) };
@@ -7557,6 +7848,88 @@ function execRoute(run, perTick, resolved, ctx, what) {
 function resolveWalkPushableId(run, block) {
     const row = (run.world.pushables ?? []).find((p) => p.x === block.x && p.y === block.y);
     return row ? row.id : null;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — ONE THRUST AT A `PushableBlockSpear`, AND
+ * THE GLIDE WAITED OUT.
+ *
+ * SETTLE (the walk's coast), SELECT the spear's slot if another is up, FACE
+ * (one tick of the facing key — `sprites()` writes `direction` from velocity,
+ * and `set spearing` captures it as `spearDirection`), wait out a FREEZE (a
+ * press on a frozen tick is lost), re-ask the REACH where the player actually
+ * stands, PRESS one tick of `primary`, then wait for the block to SETTLE on
+ * `to` — or to be removed, for a sink: 32 ticks of glide and eleven of fade
+ * (`pushables.TICKS_PER_TILE`, `ALPHA_FADE`). The old slot is selected again
+ * after. Every miss is a refusal naming the check.
+ */
+const SPEAR_PRESS_BOUND = 2 + 32 + 12 + 10;
+function execSpearPress(run, perTick, p, ctx, what) {
+    const refuse = (why) => {
+        throw new SolverRefusal(`${what}: ${why}`, { obstacle: { kind: 'solid', id: p.blockId } });
+    };
+    const IDLE = new Set();
+    const from = perTick.length;
+    const step = (keys, why) => {
+        perTick.push(keys);
+        const { transition } = run.advance(keys);
+        if (transition) refuse(`${why} crossed to level ${transition.to_level} — a block is PER VISIT.`);
+    };
+    const settle = (why) => {
+        for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+            if (i > 60) refuse(`${why} never came to rest.`);
+            step(IDLE, why);
+        }
+    };
+    const live = () => run.entities('pushables').get(p.blockId);
+    const l0 = live();
+    if (!l0 || l0.removed) refuse(`${p.blockId} is ${l0 ? 'GONE' : 'not in the run'} before the thrust.`);
+    const facing = PRESS_FACING[p.dir];
+    settle('the walk to the thrust stance');
+    const prior = run.progress('primary');
+    if (prior !== p.slot) ctx.equip(p.slot);
+    if (run.state.direction !== facing) {
+        step(new Set([FACING_KEYS[facing]]), 'the face tap');
+        settle('the face tap');
+    }
+    for (let i = 0; (run.progress('frozenTimer') ?? 0) > 1; i += 1) {
+        if (i > 105) refuse(`still frozen after ${i} ticks.`);
+        step(IDLE, 'the freeze wait');
+    }
+    if (run.state.direction !== facing) {
+        refuse(`the face tap left the player facing ${run.state.direction}, not ${facing} — the stance is `
+            + 'pinned against something in the facing direction.');
+    }
+    if (!rectsOverlapLocal(spearRect(run.state.x, run.state.y, facing), l0.rect)) {
+        refuse(`the walk settled at (${run.state.x},${run.state.y}) and the spear's 32x5 rect facing ${p.dir} `
+            + `from there misses ${p.blockId} at (${l0.rect.x},${l0.rect.y}) — a stance finding, not a block one.`);
+    }
+    const pressTick = perTick.length;
+    step(new Set(['primary']), 'the thrust');
+    let settledAt = null;
+    for (let i = 0; i < SPEAR_PRESS_BOUND; i += 1) {
+        const l = live();
+        const tile = l && !l.removed
+            ? { tx: Math.floor(l.rect.x / TILE_SIZE), ty: Math.floor(l.rect.y / TILE_SIZE) } : null;
+        if (p.destroys ? (!l || l.removed)
+            : (i > 1 && run.entities('pushesSettled') && tile?.tx === p.to.tx && tile?.ty === p.to.ty)) {
+            settledAt = perTick.length;
+            break;
+        }
+        step(IDLE, 'the glide wait');
+    }
+    if (settledAt === null) {
+        const l = live();
+        refuse(`${SPEAR_PRESS_BOUND} ticks after the thrust (tick ${pressTick}) ${p.blockId} is `
+            + `${!l || l.removed ? 'GONE' : `at (${l.rect.x},${l.rect.y})`}, not `
+            + `${p.destroys ? 'removed' : `settled on (${p.to.tx},${p.to.ty})`}.`);
+    }
+    if (prior !== p.slot) ctx.equip(prior);
+    return {
+        verb: 'press', target: p.blockId, dir: p.dir, to: { ...p.to }, destroys: p.destroys,
+        weapon: 'spear', slot: p.slot, restoredSlot: prior !== p.slot ? prior : null,
+        from, pressTick, ticks: perTick.length - from,
+    };
 }
 
 /**
