@@ -953,6 +953,36 @@ export const STATIC_ARROW_DEATH = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ SEEDLING FIDELITY STATICLADDER D2 — `DarkTrap`'s LIGHT death, which no weapon reaches.
+ *
+ * `DarkTrap.hit()` is EMPTY (`DarkTrap.as:56-59`, `KILL_ARM_POLICY.DarkTrap` `inert`), so no press or arrow kills
+ * one. Its own `update()` (`DarkTrap.as:27-54`) is the death:
+ *
+ *     for each Light in the world: if (!(light is PlayerLight) && FP.distance(x, y, light.x, light.y)
+ *                                       <= light.radiusMin && !light.darkLight && !startDying) startDying = true
+ *     if (startDying) { if (deathCounter > 0) deathCounter--; else play("die1") }  else super.update()
+ *
+ * ⇒ from the tick the light reaches it the body never calls `super.update()` again — `Enemy.update`'s `hitPlayer`
+ * included, so it is HARMLESS from that tick — then 30 ticks of `deathCounter`, then "die1" (14 frames, rate 10),
+ * whose `endAnim` removes it; `SandTrap.removed()` writes the tag.
+ *
+ * The light every failing darktrap sits beside is a `LightPole`'s (`LightPole.as:41`): `new Light(x, y, 100,
+ * 1.5, c, true, 28, 32, 0.5)` — `radiusMin` 28 — lit while `activate` XOR `invert` (`set activate`: `darkLight =
+ * !lit`). `LightPole.render` moves it: `y = startY - originY + 2·sin(2π·(Game.time % 45)/45)` (`originY` 8, the
+ * 16x16 image centred) and `myLight.y = y`, `myLight.x = x` — so the light rides at (`.oel` x + 8, `.oel` y + the
+ * bob), and the distance can cross 28 with the bob (L101's darktrap: 27.2–30.5 px).
+ */
+export const DARKTRAP_LIGHT_DEATH = Object.freeze({
+    deathCounter: 30,
+    dieAnim: Object.freeze({ frames: 14, rate: 10, src: 'DarkTrap.as:24 add("die1", [4,0,1,0,4,5,4,5,6,7,8,9,10,11], 10)' }),
+    pole: Object.freeze({ radiusMin: 28, originY: 8, bob: 2, period: 45, src: 'Scenery/LightPole.as:41, :59-67, :94-115; Game.as:488' }),
+    /** The light-emitting classes this row does NOT model; a darktrap within this many px of one is refused by name. */
+    unmodelledLights: Object.freeze(['torch', 'bonetorch', 'bonetorch2', 'planttorch', 'orb']),
+    unmodelledLightGuard: 48,
+    src: 'Enemies/DarkTrap.as:24, :27-54, :72-83; Enemies/SandTrap.as:82-86 (removed)',
+});
+
+/**
  * The damage state of one static census body whose arrow death this model
  * computes. ⛔ Refuses every class `STATIC_ARROW_DEATH` does not list: a state
  * for an unwitnessed class would be a death the game was never asked about.

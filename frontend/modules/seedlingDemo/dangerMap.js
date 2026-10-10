@@ -922,6 +922,15 @@ function spinnersTheRunSteps(run) {
     return ids;
 }
 
+/**
+ * ⛓ STATICLADDER D2 — THE DARKTRAPS THE LIGHT HAS REACHED, which are HARMLESS: `DarkTrap.update` skips
+ * `super.update()` (and so `hitPlayer`) from its `startDying` tick on, and a removed one is gone. The run's own
+ * verdict (`darkTraps` is `null` while `CONTACT_FIDELITY.darkTrapLight` is off, so this set is empty then).
+ */
+function darkTrapsHarmless(run) {
+    return new Set((run.entities('darkTraps') ?? []).filter((b) => b.startDying || b.removed).map((b) => b.id));
+}
+
 export function staticEnemyDanger(run, box) {
     const out = [];
     const world = run.worldFor(run.level);
@@ -938,9 +947,11 @@ export function staticEnemyDanger(run, box) {
      * (`spinnersTheRunSteps`).
      */
     const live = spinnersTheRunSteps(run);
+    const harmless = darkTrapsHarmless(run);
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
         if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
+        if (harmless.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
         const pricing = contactPricing(inst.tag);
         if (pricing.kind === 'boss') continue;
         // ⛓ LADDER2: a placed grenade has no contact — its blast is ingredient (g).
@@ -1221,9 +1232,11 @@ export function dangerVolumes(run, horizon = 0) {
      * (`spinnersTheRunSteps`).
      */
     const live = spinnersTheRunSteps(run);
+    const harmless = darkTrapsHarmless(run);
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
         if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
+        if (harmless.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
         if (contactPricing(inst.tag).kind === 'boss') continue;
         // ⛓ LADDER2: no contact rect for a placed grenade (`grenadeDanger`).
         if (contactPricing(inst.tag).pricedBy === 'stepPlacedGrenadesNow') continue;

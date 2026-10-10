@@ -204,7 +204,7 @@ import {
 // tSet == -1 locks" — from a blanket policy into an arithmetic the run
 // computes at every kill.
 import {
-    ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, killArmModelled, PIT_FADE, STATIC_ARROW_DEATH,
+    DARKTRAP_LIGHT_DEATH, ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, killArmModelled, PIT_FADE, STATIC_ARROW_DEATH,
     createStaticBodyDamage, enemyHit, enemyHitUpdate, killLockLedger, removalTicksAfterHit,
 } from './enemyDamage.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
@@ -388,6 +388,7 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'pulls',
     'shooters',
     'staticBodies',
+    'darkTraps',
 ]);
 
 /**
@@ -1054,6 +1055,7 @@ export function createLevelRun({
         drillStates.delete(n);
         // ⛓ F4: and the static bodies' damage roster, for the same reason.
         staticBodyStates.delete(n);
+        darkTrapStates.delete(n);
         // R5 slice 15: the crusher roster is built from the world too. No
         // item grants or removes one today; dropped anyway, for the reason
         // the spinner's is.
@@ -2899,7 +2901,7 @@ export function createLevelRun({
                     removedAt: p.removedAt,
                     by: p.id,
                     lock: null,
-                    cause: `${p.id}'s arrow death`,
+                    cause: p.cause ?? `${p.id}'s arrow death`,
                     why: `\`${p.as3}.removed()\` writes its own tag`,
                 });
             } else {
@@ -3647,6 +3649,56 @@ export function createLevelRun({
         }
         return staticBodyStates.get(n);
     };
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY STATICLADDER D2 — THE DARKTRAPS' LIGHT DEATH, per level, keyed by census id
+     * (`darktrap@112,208`). `enemyDamage.DARKTRAP_LIGHT_DEATH` is the transcription; `stepDarkTrapsNow` the step.
+     *
+     * Per VISIT, like F4's roster: a new `Game` constructs every body with `startDying = false` and a full
+     * `deathCounter` (`freshVisitState`). A body whose tag is already cleared is not in the census at all
+     * (`SandTrap.check()`), so it never gets a row. Built only while `CONTACT_FIDELITY.darkTrapLight` is on.
+     *
+     * ⛔ A darktrap within `unmodelledLightGuard` px of a torch/orb is REFUSED here by name: those lights are real
+     * `Light`s the game's loop reads and this model does not place (none is near a darktrap on the extract).
+     */
+    const darkTrapStates = new Map();
+    const darkTrapStateFor = (n) => {
+        if (!darkTrapStates.has(n)) {
+            const byId = new Map();
+            const rows = (worldFor(n).combat?.enemies ?? []).filter((e) => e.as3 === 'DarkTrap');
+            if (rows.length > 0) {
+                const D = DARKTRAP_LIGHT_DEATH;
+                const lights = recordFor(n).entities.filter((e) => D.unmodelledLights.includes(e.type));
+                for (const e of rows) {
+                    const near = lights.find((l) => Math.hypot(l.x + 8 - e.cx, l.y + 8 - e.cy) <= D.unmodelledLightGuard);
+                    if (near) {
+                        throw new Error(`levelRun: ${e.tag}@${e.x},${e.y} in level ${n} stands within `
+                            + `${D.unmodelledLightGuard} px of a ${near.type}@${near.x},${near.y} — a \`Light\` \`DarkTrap.update\` `
+                            + 'reads and this model does not place. Refused by name (STATICLADDER D2).');
+                    }
+                    const id = `${e.tag}@${e.x},${e.y}`;
+                    byId.set(id, {
+                        id,
+                        as3: 'DarkTrap',
+                        tag: e.tag,
+                        // `SandTrap`'s ctor: `super(_x + Tile.w/2, _y + Tile.h/2)` — the census's constructed point.
+                        x: e.cx,
+                        y: e.cy,
+                        persistTag: tagOf(e.tag, e.attrs),
+                        rect: contactRect(e),
+                        startDying: false,
+                        deathCounter: D.deathCounter,
+                        dyingAt: null,
+                        by: null,
+                        dieAnim: null,
+                        removed: false,
+                        removedAt: null,
+                    });
+                }
+            }
+            darkTrapStates.set(n, byId);
+        }
+        return darkTrapStates.get(n);
+    };
     const chaserStates = new Map();
     const chaserStateFor = (n) => {
         if (!chaserStates.has(n)) {
@@ -4061,6 +4113,7 @@ export function createLevelRun({
         drillStates.delete(n);
         // ⛓ F4: nor a static body's hits; its DEATH is durable through its tag.
         staticBodyStates.delete(n);
+        darkTrapStates.delete(n);
         /**
          * ⛓⛓⛓ R5 SLICE 15: AND A RE-ENTERED ROOM REBUILDS EVERY CRUSHER AT
          * ITS CONSTRUCTOR CELL — WITH NOTHING TO CARRY AND NOTHING TO CHECK.
@@ -6918,6 +6971,109 @@ export function createLevelRun({
                 pendingStaticRemovals.push({
                     level, id: b.id, as3: b.as3, persistTag: b.persistTag,
                     killedAt: b.killedAt, removedAt: b.removedAt, applied: false,
+                });
+            }
+        }
+    }
+
+    /**
+     * ⛓ STATICLADDER D2: this level's `LightPole`s as `DarkTrap.update` sees their lights — the entity x (`.oel` + 8),
+     * the bob's centre (`startY - originY` = `.oel` y) and whether the light is LIT (`activate` XOR `invert`,
+     * `Boolean(int(o.@invert))`), from the run's own pole state.
+     */
+    const darkTrapPolesFor = (n) => {
+        const rec = recordFor(n);
+        return polesOf(n).map((p) => {
+            const ps = poleStateFor(n).get(`${p.tag}@${p.x},${p.y}`);
+            const placed = rec.entities.find((e) => e.type === p.tag && e.x === p.x && e.y === p.y);
+            const invert = Number.parseInt(placed?.attrs?.invert ?? '0', 10) !== 0;
+            return {
+                id: `${p.tag}@${p.x},${p.y}`, x: p.x + DARKTRAP_LIGHT_DEATH.pole.originY, y0: p.y,
+                lit: !!ps && ps.activate !== invert, hitsTimer: ps?.hitsTimer ?? 0, rect: p.rect,
+            };
+        });
+    };
+
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY STATICLADDER D2 — `DarkTrap.update`, IN THE BODY'S OWN SLOT
+     * (`enemyDamage.DARKTRAP_LIGHT_DEATH`).
+     *
+     * `loadlevel` adds `darktrap` (`Game.as:2294`) before `lightpole` (`:2373`) and long after the Player (`:2250`);
+     * `addUpdate` prepends, so the pole updates first, then this body, and the Player last. A press on the pole
+     * lands in the Player's update, so this loop reads the pole's `activate` as the PREVIOUS tick left it — this
+     * slot, above the player's step, is that reading.
+     *
+     * ⚠ THE LIGHT'S POSITION IS `LightPole.render`'s, and the render runs after `Game.update`'s `time += timeRate`:
+     * the light this tick's loop reads was placed with the `Game.time` this tick's updates see (`clock.now()`).
+     * With no clock the bob is unknown, and a verdict the bob could flip (the distance band straddles 28) is a
+     * refusal by name, never a guess. The loop has no `onScreen` or freeze gate (`DarkTrap.as:27-54`).
+     */
+    function stepDarkTrapsNow() {
+        if (!CONTACT_FIDELITY.darkTrapLight) return;
+        const st = darkTrapStateFor(level);
+        if (st.size === 0) return;
+        const D = DARKTRAP_LIGHT_DEATH;
+        const now = clock.now();
+        const lit = darkTrapPolesFor(level).filter((l) => l.lit);
+        for (const b of st.values()) {
+            if (b.removed) continue;
+            if (!b.startDying) {
+                for (const l of lit) {
+                    let inRange;
+                    if (now !== null) {
+                        const ly = l.y0 + D.pole.bob * Math.sin(2 * Math.PI * (now % D.pole.period) / D.pole.period);
+                        inRange = Math.sqrt((l.x - b.x) ** 2 + (ly - b.y) ** 2) <= D.pole.radiusMin;
+                    } else {
+                        const dx = (l.x - b.x) ** 2;
+                        const ys = [l.y0 - D.pole.bob, l.y0 + D.pole.bob];
+                        const ds = ys.map((ly) => Math.sqrt(dx + (ly - b.y) ** 2));
+                        const lo = (b.y >= ys[0] && b.y <= ys[1]) ? Math.sqrt(dx) : Math.min(...ds);
+                        const hi = Math.max(...ds);
+                        if (hi <= D.pole.radiusMin) inRange = true;
+                        else if (lo > D.pole.radiusMin) inRange = false;
+                        else {
+                            throw new Error(`levelRun: ${l.id}'s light is ${lo.toFixed(2)}–${hi.toFixed(2)} px from ${b.id} `
+                                + `in level ${level} at tick ${ticksCompleted + 1} — across \`radiusMin\` ${D.pole.radiusMin} `
+                                + `with the bob — and this run has no \`Game.time\` (${clockRefusal}). The verdict is the `
+                                + 'bob\'s; refused by name (STATICLADDER D2).');
+                        }
+                    }
+                    if (inRange) {
+                        b.startDying = true;
+                        b.dyingAt = ticksCompleted + 1;
+                        b.by = l.id;
+                        break;
+                    }
+                }
+            }
+            if (!b.startDying) continue;
+            if (b.deathCounter > 0) {
+                b.deathCounter -= 1;
+            } else if (!b.dieAnim) {
+                b.dieAnim = createSpriteAnim(D.dieAnim.frames, D.dieAnim.rate);
+            }
+            // `World.update` steps the graphic after the entity's own update, in the same frame.
+            if (b.dieAnim && stepSpriteAnim(b.dieAnim)) {
+                if (!(b.persistTag >= 0)) {
+                    throw new Error(`levelRun: ${b.id} finishes "die1" at tick ${ticksCompleted + 1} and carries no `
+                        + 'persistence tag, so `SandTrap.removed()` would write OUT OF BAND. Refused by name (STATICLADDER D2).');
+                }
+                // The removal drops `classCount(DarkTrap)` — a `tset == -1` lock it would open is refused, as a drill kill's.
+                const census = world.combat?.enemies ?? [];
+                const before = census.filter((e) => !e.removed).map((e) => ({ as3: e.as3, id: `${e.tag}@${e.x},${e.y}` }));
+                const led = killLockLedger(levelSource(level), {
+                    bodiesBefore: before, bodiesAfter: before.filter((e) => e.id !== b.id),
+                });
+                if (!led.nil) {
+                    throw new Error(`levelRun: ${b.id}'s removal in level ${level} at tick ${ticksCompleted + 1} moves `
+                        + `\`totalEnemies()\` past a kill lock (${led.why}). Refused by name (STATICLADDER D2).`);
+                }
+                b.removed = true;
+                b.removedAt = ticksCompleted + 1;
+                pendingStaticRemovals.push({
+                    level, id: b.id, as3: b.as3, persistTag: b.persistTag,
+                    killedAt: b.dyingAt, removedAt: b.removedAt, applied: false,
+                    cause: `${b.id}'s light death (${b.by})`,
                 });
             }
         }
@@ -9876,6 +10032,15 @@ export function createLevelRun({
             // ⛓ F4: a static body an arrow has hit carries its own i-frames and
             // its "die" anim (`stepStaticBodiesNow`), and `Enemy.hitPlayer`
             // gates on both. A body no arrow has reached has none of either.
+            // ⛓ STATICLADDER D2: a darktrap the light reached never calls `super.update()` again (`DarkTrap.as:44-52`),
+            // so `Enemy.hitPlayer` does not run — a dying one is harmless (and a removed one is not in the census).
+            if (CONTACT_FIDELITY.darkTrapLight && darkTrapStates.get(level)?.get(id)?.startDying) {
+                contactsSuppressed.push({
+                    t: ticksCompleted + 1, level, source: 'enemy', id,
+                    why: '`DarkTrap.update`: `startDying` skips `super.update()` — no `hitPlayer`',
+                });
+                continue;
+            }
             const live = staticBodyStates.get(level)?.get(id) ?? null;
             const verdict = enemyHitPlayerFires(
                 live
@@ -13525,6 +13690,26 @@ export function createLevelRun({
             dieIndex: b.dieAnim ? b.dieAnim.index : null,
             killedAt: b.killedAt, removed: b.removed === true, removedAt: b.removedAt,
         }));
+    /**
+     * ⛓ STATICLADDER D2: this level's darktraps and their light death (`darkTrapStates`) — `null` while
+     * `CONTACT_FIDELITY.darkTrapLight` is off (no roster is built), [] in a room with none.
+     */
+    const darkTrapsNow = () => (CONTACT_FIDELITY.darkTrapLight && !noclip
+        ? [...darkTrapStateFor(level).values()].map((b) => ({
+            id: b.id, as3: b.as3, x: b.x, y: b.y, persistTag: b.persistTag, rect: { ...b.rect },
+            startDying: b.startDying, dyingAt: b.dyingAt, by: b.by, deathCounter: b.deathCounter,
+            dying: b.dieAnim !== null, dieIndex: b.dieAnim ? b.dieAnim.index : null,
+            removed: b.removed, removedAt: b.removedAt,
+            // Each pole's light: lit now, and its distance band over the bob (min, max).
+            poles: darkTrapPolesFor(level).map((l) => {
+                const P = DARKTRAP_LIGHT_DEATH.pole;
+                const dx2 = (l.x - b.x) ** 2;
+                const ends = [l.y0 - P.bob, l.y0 + P.bob].map((ly) => Math.sqrt(dx2 + (ly - b.y) ** 2));
+                const min = (b.y >= l.y0 - P.bob && b.y <= l.y0 + P.bob) ? Math.sqrt(dx2) : Math.min(...ends);
+                return { id: l.id, lit: l.lit, hitsTimer: l.hitsTimer, rect: { ...l.rect }, min, max: Math.max(...ends) };
+            }),
+        }))
+        : null);
     const ENTITY_FAMILIES = Object.freeze({
         openActivators: openActivatorsNow,
         pushables: pushablesNow,
@@ -13553,6 +13738,7 @@ export function createLevelRun({
         pulls: pullsNow,
         shooters: shootersNow,
         staticBodies: staticBodiesNow,
+        darkTraps: darkTrapsNow,
     });
 
     /**
@@ -15425,6 +15611,8 @@ export function createLevelRun({
         get shooters() { return shootersNow(); },
         /** ⛓ F4: the static bodies an arrow has reached (see `staticBodiesNow`). */
         get staticBodies() { return staticBodiesNow(); },
+        /** ⛓ STATICLADDER D2: the darktraps' light death (see `darkTrapsNow`). */
+        get darkTraps() { return darkTrapsNow(); },
         /** ⛓ U15-swim D1: the spit ledger — see `stepSpitsNow`. */
         get spitEvents() { return spitEventsNow(); },
         /** ⛓ F4: the static bodies this run killed (see `staticBodyDeaths`). */
@@ -16610,6 +16798,8 @@ export function createLevelRun({
             if (!noclip) stepArrowTrapsNow(activators);
             // ⛓ F4: the static bodies the arrows just hit, in their own slot.
             if (!noclip) stepStaticBodiesNow();
+            // ⛓ STATICLADDER D2: the darktraps' light death, in the same band of slots (above the player).
+            if (!noclip) stepDarkTrapsNow();
             // ── ⛓⛓⛓ R5 SLICE 15: THE CRUSHER, IN ITS OWN SLOT ────────
             //
             // `Game.loadlevel` adds it at `:2142` and `World.addUpdate`

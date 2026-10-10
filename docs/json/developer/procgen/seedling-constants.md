@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**65 files, 5443 literals.** Class × position:
+**65 files, 5478 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1555 | 357 | 1917 |
-| rule | 6 | 939 | 456 | 1401 |
+| rule | 6 | 947 | 456 | 1409 |
 | cosmetic | 0 | 60 | 14 | 74 |
-| structural | 10 | 359 | 1682 | 2051 |
+| structural | 10 | 359 | 1709 | 2078 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2913 | 2509 | 5443 |
+| total | 21 | 2921 | 2536 | 5478 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1650 | 0 | 88 | 118 | 4 | 57 | 1917 |
-| rule | 425 | 131 | 226 | 22 | 510 | 87 | 1401 |
+| rule | 428 | 133 | 228 | 22 | 510 | 88 | 1409 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -510,7 +510,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **140 small tables** (at most 16 literals) hold at least one (89 with an AS3 reference).
+**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **141 small tables** (at most 16 literals) hold at least one (90 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -634,6 +634,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `MOBILE_DEATH_FADE` | seedlingDemo/enemyDamage.js | 3 | 3 | rule | magnitude | Image.as:157 |
 | `PIT_FADE` | seedlingDemo/enemyDamage.js | 3 | 3 | rule | magnitude | Enemies/Enemy.as:fallAlphaSpeed |
 | `STATIC_ARROW_DEATH` | seedlingDemo/enemyDamage.js | 2 | 2 | rule | count/magnitude | Arrow.as:51-53 |
+| `DARKTRAP_LIGHT_DEATH` | seedlingDemo/enemyDamage.js | 8 | 8 | rule | bound/count/derivation/magnitude | Enemies/DarkTrap.as:deathCounter Enemies/DarkTrap.as:die1 Scenery/Light.as:radiusMin Scenery/LightPole.as:originY Scenery/LightPole.as:render Game.as:timePerFrame |
 | `SLASH_SPRITES` | seedlingDemo/combatVerbs.js | 6 | 6 | physics | magnitude | Player.as:41-45 |
 | `SLASH_SCALE_NORMAL` | seedlingDemo/combatVerbs.js | 2 | 2 | physics | magnitude | Player.as:1258-1265 |
 | `SLASH_SCALE_DASH` | seedlingDemo/combatVerbs.js | 2 | 2 | physics | magnitude |  |

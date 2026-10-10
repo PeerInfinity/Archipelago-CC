@@ -76,7 +76,7 @@ export { collideLineSolid, CRUSHER, crusherRect, DIRECTIONS, scanCrusher } from 
 // endingChain.js — strikePolicy · seedling 1
 export { TALK_RANGE } from './endingChain.js';
 // enemyDamage.js — solverBot, strikePolicy · seedling 3
-export { KILL_ARM_POLICY, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH, killArmModelled } from './enemyDamage.js';
+export { DARKTRAP_LIGHT_DEATH, KILL_ARM_POLICY, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH, killArmModelled } from './enemyDamage.js';
 // killLockBodies.js — solverBot · seedling 1
 export { KILLLOCK_BODIES } from './killLockBodies.js';
 // fireVerb.js — botDriverV2 · seedling 2
@@ -108,7 +108,7 @@ export { fallDestination, PhysicsV2Error, playerBoxAt, terrainProbeRect } from '
 // presses.js — botDriverV2, solverBot, strikePolicy · seedling 10, physics 5
 export {
     auditFire, DARK_SWORD_DAMAGE, distanceRectPoint, DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH,
-    slashReachFor, slashRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule, swordWindowStep, UP,
+    slashReachFor, slashRect, spearRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule, swordWindowStep, UP,
 } from './presses.js';
 // pull.js — solverBot · seedling 2
 export { pullModelled, pullsDrainingInto } from './pull.js';

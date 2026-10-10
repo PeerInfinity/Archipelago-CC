@@ -19,6 +19,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { withKillLockBodies } from './killLockBodies.js';
+import { withContactFidelity } from './contactFidelity.js';
 // ⛓ R9 slice 12c — the chain's own offsets, so the fixture and
 // `combatVerbs.DASH_CHAIN` cannot disagree about what the chain IS.
 import { DASH_CHAIN, SLASH_ANIM_TICKS } from './combatVerbs.js';
@@ -2696,6 +2697,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             'brokenRocks', 'crushersParked', 'pushesSettled', 'openBridges', 'arrowsInFlight',
             'burnedTrees', 'latchedGroups', 'pulledRopes', 'turretDamage', 'turretsSettled',
             'arrowFlights', 'bosses', 'talkCircles', 'bobBoss', 'pulls', 'shooters', 'staticBodies',
+            'darkTraps',
         ]);
         expect(Object.isFrozen(ENTITY_FAMILY_NAMES)).toBe(true);
         for (const f of ENTITY_FAMILY_NAMES) {
@@ -2756,6 +2758,22 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
         expect([...run.entities('openBridges')]).toEqual(['2,9']);
         expect(seen.has('openBridges')).toBe(true);
         for (const f of seen) witnessed.add(f);
+    });
+
+    it('L62\'s darktrap (STATICLADDER D2, the switch ON, the pole lit at the boot): darkTraps, through the query', () => {
+        withContactFidelity({ darkTrapLight: true }, () => {
+            const run = createLevelRun({
+                levelSource, boot: { level: 62, x: 48, y: 288 }, roles: ROLES,
+                persistence: [{ level: 62, tag: 0, note: 'lightpole@120,200 lit' }],
+                seam: { time: 6667 }, pins: ['dead_frames'],
+            });
+            const { bad, seen } = compareEveryTick(run, 80, () => new Set());
+            expect(bad).toEqual([]);
+            expect(run.entities('darkTraps').map((b) => [b.id, b.dyingAt, b.removedAt]))
+                .toEqual([['darktrap@112,208', 1, 73]]);
+            expect(seen.has('darkTraps')).toBe(true);
+            for (const f of seen) witnessed.add(f);
+        });
     });
 
     it('under noclip the query takes the getter\'s noclip arm too', () => {
