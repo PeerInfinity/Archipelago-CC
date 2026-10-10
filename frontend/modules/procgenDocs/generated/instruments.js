@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 68,
-            "count": 113,
+            "browser": 69,
+            "count": 114,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 395,
-        "browser": 133,
-        "cited": 195,
-        "files": 407,
+        "blockStyle": 396,
+        "browser": 134,
+        "cited": 196,
+        "files": 408,
         "lineStyle": 12,
-        "withDocblock": 407,
-        "withFlags": 325
+        "withDocblock": 408,
+        "withFlags": 326
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10285,6 +10285,100 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only (the divergence sweep, planner `seedling-js-planning-2`) — THE LIVE WASM DIVERGENCE SWEEP: every leg of `--legs=<jsonl>` (`seedling-divergence-legs.mjs`) served by the PRODUCTION wasm playback engine on the live `seedling_playthrough` page (default build p4f, headless logic-only, under the box lock), on…",
             "path": "scripts/procgen/probe-seedling-divergence-sweep.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-encounter-ticks.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "configure"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "from"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "hold-at"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "hold-block"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "hold-live"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tail"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape-file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "to"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "write-at"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-encounter-ticks — ⛓⛓ seedling-fidelity-encounters2: AN ENCOUNTER, ASKED OF THE GAME TICK BY SAMPLED TICK (the BobSoldier probe's harness, `probe-seedling-bobsoldier-mobiles.mjs`, pointed at the two encounters).",
+            "path": "scripts/procgen/probe-seedling-encounter-ticks.mjs"
         },
         {
             "argvHelpers": [],
