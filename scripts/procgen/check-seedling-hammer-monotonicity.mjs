@@ -9,7 +9,8 @@
  *      oracle solve whose level record holds a spinner is captured (the record, the staging, the goals, the budget)
  *      with its verdict, and the row's stdout md5 is printed so it can be compared with the identity block's.
  *   2. RE-SOLVE — each captured record is solved again under every mode `--modes` names (`off` = the switches as the
- *      repository ships them; `fight` = `HAMMER_FIGHT` on; `approach` = `HAMMER_APPROACH` on), in this process, by
+ *      repository ships them; `fight` = `HAMMER_FIGHT` on; `approach` = `HAMMER_APPROACH` on; B3's `fallback` =
+ *      `HAMMER_FIGHT_FALLBACK` on, `whole` = it in its whole-solve mode), in this process, by
  *      `procgenOracle.solve` itself. The path's own mode must reproduce the captured verdict and ticks (a replay check).
  *
  * A record SOLVED under `off` and not SOLVED under another mode is a ⛔ row and the exit is 1.
@@ -62,6 +63,9 @@ const MODES = Object.freeze({
     off: {},
     fight: { SEEDLING_HAMMER_FIGHT: '1' },
     approach: { SEEDLING_HAMMER_APPROACH: '1' },
+    // ⛓ hammer-phase B3 — the fight as a FALLBACK: the rewind retry (default mode), and the whole-solve retry only
+    fallback: { SEEDLING_HAMMER_FIGHT_FALLBACK: '1' },
+    whole: { SEEDLING_HAMMER_FIGHT_FALLBACK: '1', SEEDLING_HAMMER_FIGHT_FALLBACK_MODE: 'whole' },
 });
 
 const isSolved = (v) => v === 'SOLVED';
@@ -71,6 +75,8 @@ async function capture(row, path, file) {
     const env = { ...process.env, SEEDLING_SOLVE_CAPTURE: file };
     delete env.SEEDLING_HAMMER_FIGHT;
     delete env.SEEDLING_HAMMER_APPROACH;
+    delete env.SEEDLING_HAMMER_FIGHT_FALLBACK;
+    delete env.SEEDLING_HAMMER_FIGHT_FALLBACK_MODE;
     Object.assign(env, MODES[path]);
     const child = spawn(process.execPath, ['--import', join(HERE, 'hammerMonotonicityHook.js'), join(HERE, script),
         ...args], { cwd: REPO, env, stdio: ['ignore', 'pipe', 'ignore'] });
@@ -87,6 +93,8 @@ async function resolveAll(records, modes, shard) {
     const set = (mode) => {
         SB.HAMMER_FIGHT.enabled = mode === 'fight';
         SB.HAMMER_APPROACH.enabled = mode === 'approach';
+        SB.HAMMER_FIGHT_FALLBACK.enabled = mode === 'fallback' || mode === 'whole';
+        SB.HAMMER_FIGHT_FALLBACK.mode = mode === 'whole' ? 'whole' : 'rewind';
     };
     // ⛓ every fight search's record (`HAMMER_FIGHT_TRACE`), per re-solve: the cost distribution and the negatives
     let searches = null;
@@ -100,7 +108,7 @@ async function resolveAll(records, modes, shard) {
         const row = { k, n: rec.n, name: rec.args.opts.name, captured: { verdict: rec.verdict, ticks: rec.ticks } };
         for (const mode of modes) {
             set(mode);
-            searches = mode === 'fight' ? [] : null;
+            searches = ['fight', 'fallback', 'whole'].includes(mode) ? [] : null;
             const t0 = process.hrtime.bigint();
             let r;
             try {
@@ -108,6 +116,9 @@ async function resolveAll(records, modes, shard) {
                 const s = solve(levelRecord, staging, goals, budget, opts);
                 r = { verdict: s.verdict, ticks: s.ticks ?? null, why: isSolved(s.verdict) ? null
                     : String(s.reasonText ?? '').split('\n')[0].slice(0, 160) };
+                // ⛓ hammer-phase B3 — which path produced the keys (or what the fallback did before the refusal stood)
+                const ff = s.fightFallbacks ?? (s.fightFallback ? [s.fightFallback] : null);
+                if (ff) r.fallbacks = ff;
             } catch (e) {
                 r = { verdict: `THREW:${e.name}`, ticks: null, why: String(e.message).split('\n')[0].slice(0, 160) };
             }
@@ -137,7 +148,9 @@ async function main() {
     // ⛓ the generator's path: the capture's mode (`off` unless named); a re-used capture names it or skips the replay
     const path = valueOf('--path') ?? (recordsFile ? null : 'off');
     const modes = (valueOf('--modes') ?? 'off,fight').split(',').filter(Boolean);
-    for (const m of [path ?? 'off', ...modes]) if (!MODES[m]) throw new Error(`unknown mode "${m}" (off, fight, approach)`);
+    for (const m of [path ?? 'off', ...modes]) {
+        if (!MODES[m]) throw new Error(`unknown mode "${m}" (off, fight, approach, fallback, whole)`);
+    }
     const keep = valueOf('--keep');
     const jsonOut = valueOf('--json');
     const jobs = Number(valueOf('--jobs') ?? 1);
@@ -188,8 +201,10 @@ async function main() {
             if (worse.length > 0) bad += 1;
             const fightCell = (x) => (x.fights ? ` [${x.fights.map((f) => (f.ok ? `ok${f.expansions}` : `${f.bound}${
                 f.expansions}`)).join(',')}]` : '');
+            const ffCell = (x) => (x.fallbacks ? ` {${x.fallbacks.map((f) => `${f.how}@${f.t}:${f.verdict}`).join(',')}}`
+                : '');
             const cells = modes.map((m) => `${m} ${r[m].verdict}${r[m].ticks === null ? '' : ` ${r[m].ticks}`}`
-                + ` (${r[m].seconds.toFixed(1)}s)${fightCell(r[m])}`).join(' · ');
+                + ` (${r[m].seconds.toFixed(1)}s)${fightCell(r[m])}${ffCell(r[m])}`).join(' · ');
             console.log(`${String(r.k).padStart(4)} n${String(r.n).padStart(4)} ${cells}`
                 + `${same ? '' : `  ⚠ REPLAY ${r.captured.verdict} ${r.captured.ticks}`}`
                 + `${worse.length ? `  ⛔ SOLVED→${worse.map((m) => `${m}:${r[m].verdict}`).join(',')} `

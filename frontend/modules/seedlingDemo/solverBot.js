@@ -7855,12 +7855,16 @@ function derivePressKill(run, bodies, contacts) {
         if (first?.rejected?.length) rejected.push(...first.rejected.slice(0, 3));
         return no(rejected);
     }
+    const plans = bodies.map((e) => ({
+        id: `${e.tag}@${e.x},${e.y}`,
+        as3: ENEMY_CLASSES[e.tag]?.as3 ?? null,
+    }));
+    // ⛓ hammer-phase B3 — the admission's inputs, for the fight fallback's re-admission (`PRESS_ADMISSIONS`)
+    PRESS_ADMISSIONS.set(plans, { bodies: bodies.map((e) => ({ ...e })),
+        contacts: contacts instanceof Set ? new Set(contacts) : contacts });
     return {
         first,
-        plans: bodies.map((e) => ({
-            id: `${e.tag}@${e.x},${e.y}`,
-            as3: ENEMY_CLASSES[e.tag]?.as3 ?? null,
-        })),
+        plans,
         rejected,
     };
 }
@@ -9606,6 +9610,122 @@ export function withHammerFight(enabled, fn) {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE B3 — THE REPLAY REWIND, as a pure function: a fresh run (`makeRun()`, in the state the
+ * segment's run was handed over in: `startTicks` completed, tape tick `from`) with `perTick[from … to)` replayed
+ * through `advance`, each tick's slot selections (`equips`, `{at, slot}`) applied before it and its apitem takes
+ * (`takes`, `{at, level, id, tag}`) after it — the order the segment's own view applies them. No snapshot: the replay
+ * IS the state at `to`. `solveSegment`'s rewind calls it; the exactness gate compares it with the live run
+ * (`check-seedling-rewind-exactness.mjs`).
+ */
+export function replayToTick({ makeRun, perTick, from = 0, to, startTicks = from, equips = [], takes = [] }) {
+    if (!Number.isInteger(to) || to < from || to > perTick.length) {
+        fail(`replayToTick: tick ${to} is outside the replayable span [${from}, ${perTick.length}]`);
+    }
+    const r = makeRun();
+    if (!r || typeof r.advance !== 'function' || r.ticksCompleted !== startTicks) {
+        fail(`replayToTick: the run factory must build the run the segment was handed (${startTicks} tick(s) `
+            + `completed); it built one at ${r?.ticksCompleted} — a replay from another state is not this run's past.`);
+    }
+    for (let t = from; t < to; t += 1) {
+        for (const e of equips) if (e.at === t) r.equipNow(e.slot);
+        r.advance(perTick[t]);
+        for (const a of takes) if (a.at === t) r.takeApItem({ level: a.level, id: a.id, tag: a.tag });
+    }
+    return r;
+}
+
+/**
+ * ⛓ hammer-phase B3 — THE EXACTNESS GATE'S PROBE. With `sink` set, a segment that has a `rewindRun` hands the sink,
+ * at each tape tick in `ticks` (before that tick's advance), its live inner run and a thunk building the rewound one
+ * there. Read only; `null` everywhere but the gate, and nothing branches on it.
+ */
+export const REWIND_PROBE = { ticks: null, sink: null };
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE B3 — THE FIGHT AS A FALLBACK (⚖ the user, 2026-10-10: *"run the fight search only where
+ * today's path refuses … can only add solves"*). A press kill that REFUSES with one of `FIGHT_FALLBACK_CODES` is
+ * redone once with `HAMMER_FIGHT` on: by rewinding the segment to the kill's first tick (`execKillByPress`, where the
+ * segment has a `rewindRun`), or by re-solving the whole segment from a fresh run (`mode: 'whole'`, or no rewind:
+ * `twoPassSolve`'s pass, `procgenOracle.solve`). The retry's result replaces the refusal only if it kills / solves;
+ * otherwise the refusal stands, plus one sentence. Inert while the fight itself is on (the retry would be the same path).
+ *
+ * OFF by default (`SEEDLING_HAMMER_FIGHT_FALLBACK=1` or `withHammerFightFallback(true, fn)`): no retry is ever asked
+ * and every walk is byte-identical. `mode` (`SEEDLING_HAMMER_FIGHT_FALLBACK_MODE`) is `'rewind'` (the primary path) or
+ * `'whole'` (the whole-solve retry only — the measurement of the two against each other).
+ */
+export const HAMMER_FIGHT_FALLBACK = {
+    enabled: globalThis.process?.env?.SEEDLING_HAMMER_FIGHT_FALLBACK === '1',
+    mode: globalThis.process?.env?.SEEDLING_HAMMER_FIGHT_FALLBACK_MODE === 'whole' ? 'whole' : 'rewind',
+};
+
+/** Run `fn` with the fallback switch set to `enabled` (and `mode`, if given), restoring both (`withHammerFight`'s shape). */
+export function withHammerFightFallback(enabled, fn, mode = null) {
+    const was = { ...HAMMER_FIGHT_FALLBACK };
+    HAMMER_FIGHT_FALLBACK.enabled = enabled === true;
+    if (mode !== null) HAMMER_FIGHT_FALLBACK.mode = mode;
+    const restore = () => Object.assign(HAMMER_FIGHT_FALLBACK, was);
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * ⛓ hammer-phase B3 — THE TRIGGER: the press kill's two coded throws, and nothing else.
+ *   - `HAMMER_SAFETY` — `safeStep`'s *"There is no step out."* and its unsafe-press twin, and the refuge's *"nowhere
+ *     to be"*: the run has been driven into the corner the fight search plans around. IN.
+ *   - `STRIKE_BOUND_EXHAUSTED` — the schedule ran its whole bound with the body alive: a kill the switch-off path
+ *     could not finish, which the fight plans as one search. IN.
+ *   - the press arm's ADMISSION refusal (`derivePressKill`'s *"no (cell, tick) …"*, a `rejected` row, no throw):
+ *     IN at the combat ladder's `kill` rung, where it is terminal (the last rung whenever a spinner is a source; the
+ *     EXHAUSTED refusal leaves `walkTo`) — asked again there with the fight on, in rewind mode only (a failed kill
+ *     must be rewound to the rung's tick). OUT at the kill-lock order (`resolveKillStrategy`), which then asks the
+ *     ceiling and chaser arms: retrying there would replace an arm that may SOLVE today.
+ *   - every other throw (an uncoded `SolverBotError`, a `SolverRefusal`, the line-of-sight refusal) — OUT.
+ * Only the two codes are thrown, so only they reach `isFightFallbackRefusal` (the whole-solve retry's trigger).
+ */
+export const FIGHT_FALLBACK_CODES = Object.freeze([HAMMER_SAFETY, STRIKE_BOUND_EXHAUSTED]);
+
+/** True for a throw the fallback answers (`FIGHT_FALLBACK_CODES`), and not one it already answered. */
+export function isFightFallbackRefusal(e) {
+    return e instanceof SolverBotError && FIGHT_FALLBACK_CODES.includes(e.code) && !e.fightFallback;
+}
+
+/** The sentence a failed fallback appends to the refusal that stands (one per path, `row.how`). */
+export function fightFallbackSentence(row) {
+    const how = {
+        rewind: `rewound to the kill's first tick (t${row.t}) and redid the kill with the fight on`,
+        admission: `asked the press arm's admission again with the fight on (t${row.t})`,
+        whole: 'solved the whole segment again from a fresh run with the fight on',
+    }[row.how];
+    return `The fight fallback (\`HAMMER_FIGHT_FALLBACK\`) ${how}; it did not solve (${row.retryRefused}: `
+        + `${String(row.why ?? '').slice(0, 160)}).`;
+}
+
+/** The refusal that stands after a failed retry: its words unchanged, one sentence appended, the retry's row on it. */
+export function fightFallbackRefused(e, row) {
+    const out = new SolverBotError(`${e.message} ${fightFallbackSentence(row)}`,
+        { code: e.code, boundTicks: e.boundTicks });
+    out.fightFallback = row;
+    return out;
+}
+
+/** ⛓ hammer-phase B3 — every fallback as it ends, with its wall time (`sink`, for the instruments; no record holds ms). */
+export const HAMMER_FIGHT_FALLBACK_TRACE = { sink: null };
+
+/**
+ * ⛓ hammer-phase B3 — what an order's admission was asked with (`derivePressKill`'s bodies and a copy of its contacts),
+ * keyed by the `plans` array it returned — the array every caller hands on as `resolved.plans`. The fallback asks the
+ * admission again, from the same inputs, on the rewound run. A side table: nothing in a record or a trace sees it.
+ */
+const PRESS_ADMISSIONS = new WeakMap();
+
+/**
  * ⛓⛓ THE FIGHT'S BOUNDS, each derived and then measured on L18's 45 residues (`sweep-seedling-l18-residues.mjs
  * --fight`, `--fight-bounds=` for the alternatives) and on every generated row's spinner records
  * (`check-seedling-hammer-monotonicity.mjs`); `HAMMER_FIGHT_MEASURED` records what they spent:
@@ -11179,7 +11299,80 @@ function preLockStance(run, lock, contacts) {
     return found[0] ?? null;
 }
 
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE B3 — THE PRESS KILL, WITH THE FIGHT AS ITS FALLBACK (`HAMMER_FIGHT_FALLBACK`).
+ *
+ * The kill runs as it always has (`execKillByPressOnce`). Only when it REFUSES with a press-kill code
+ * (`FIGHT_FALLBACK_CODES`), the switch is on, the fight is off and the segment can rewind (`ctx.rewind`): the segment
+ * is rewound to the tick this kill STARTED, the order is admitted again with `HAMMER_FIGHT` on (`derivePressKill` on
+ * the fresh run, from the admission's own inputs, `PRESS_ADMISSIONS`) and only the kill is redone with the fight on.
+ * A retry that kills (a `PendingDeclaration` raised by the kill's lock tail is a kill that completed) is adopted and
+ * the segment goes on with the fight off; any other outcome is UNDONE — the run, the keys, the equips, the takes and
+ * the dash count are the refusal's again — and the original refusal is thrown, its words unchanged plus one sentence
+ * naming the fallback's outcome. ⛔ Never otherwise: a kill that does not refuse never reaches the retry, so every
+ * success is byte-identical. With no rewind (or `mode: 'whole'`) the refusal goes out un-retried and the caller that
+ * can build a fresh run re-solves the whole segment instead (`twoPassSolve`, `procgenOracle.solve`).
+ */
 function execKillByPress(run, perTick, resolved, ctx) {
+    // ⛓ the exactness gate's kill-start probe (`REWIND_PROBE`): read only, inert unless a sink is set
+    if (REWIND_PROBE.sink !== null && ctx.rewind) {
+        const t = perTick.length;
+        REWIND_PROBE.sink({ t, kind: 'kill-start', live: run, rewound: () => ctx.rewind.replay(t) });
+    }
+    if (!HAMMER_FIGHT_FALLBACK.enabled || HAMMER_FIGHT.enabled || HAMMER_FIGHT_FALLBACK.mode !== 'rewind'
+        || !ctx.rewind) {
+        return execKillByPressOnce(run, perTick, resolved, ctx);
+    }
+    const t0 = perTick.length;
+    try {
+        return execKillByPressOnce(run, perTick, resolved, ctx);
+    } catch (e) {
+        if (!isFightFallbackRefusal(e)) throw e;
+        const started = HAMMER_FIGHT_FALLBACK_TRACE.sink ? performance.now() : 0;
+        const row = { t: t0, how: 'rewind', refused: e.code, refusedAt: perTick.length,
+            bodies: resolved.plans.map((p) => p.id) };
+        const admission = PRESS_ADMISSIONS.get(resolved.plans) ?? null;
+        const { run: fresh, undo } = ctx.rewind.to(t0);
+        try {
+            const record = withHammerFight(true, () => {
+                const press = admission === null ? null
+                    : derivePressKill(fresh, admission.bodies, admission.contacts);
+                if (!press?.first) {
+                    throw new SolverBotError(admission === null
+                        ? 'the order has no recorded admission to ask again'
+                        : `the admission with the fight on found no strike (${press.rejected.map((r) => r.why)
+                            .join(' · ').slice(0, 200)})`);
+                }
+                return execKillByPressOnce(fresh, perTick, { ...resolved, first: press.first, plans: press.plans },
+                    ctx);
+            });
+            row.verdict = 'solved';
+            row.ticks = perTick.length - t0;
+            row.fights = record.fights?.length ?? 0;
+            ctx.rewind.note(row);
+            HAMMER_FIGHT_FALLBACK_TRACE.sink?.({ ...row, ms: performance.now() - started });
+            return { ...record, fightFallback: row };
+        } catch (e2) {
+            // ⛓ the kill completed and its lock tail raised the declaration: the retry is adopted, the throw goes on
+            if (e2 instanceof PendingDeclaration || e2?.undeclaredKillLock) {
+                row.verdict = 'solved';
+                row.ticks = perTick.length - t0;
+                row.raised = e2?.undeclaredKillLock ? 'undeclaredKillLock' : e2.name;
+                ctx.rewind.note(row);
+                HAMMER_FIGHT_FALLBACK_TRACE.sink?.({ ...row, ms: performance.now() - started });
+                throw e2;
+            }
+            undo();
+            row.verdict = 'refused';
+            row.retryRefused = e2?.code ?? e2?.name ?? 'Error';
+            row.why = String(e2?.message ?? e2).split('\n')[0].slice(0, 240);
+            HAMMER_FIGHT_FALLBACK_TRACE.sink?.({ ...row, ms: performance.now() - started });
+            throw fightFallbackRefused(e, row);
+        }
+    }
+}
+
+function execKillByPressOnce(run, perTick, resolved, ctx) {
     /**
      * ⛓ R9 SLICE P2 — ⚖ 47's PERMISSION, off `ctx`, defaulted to the
      * roster-wide flag. `solveSegment` puts it on every `ctx` it builds, so a
@@ -14499,6 +14692,15 @@ function solveSegmentUnder({
      * (behind `CRUSHER_BAIT`); absent, `ctx.fork` is null and nothing reads it.
      */
     forkRun = null,
+    /**
+     * ⛓⛓ SEEDLING HAMMER-PHASE B3 — OPTIONAL: `() => run`, a FRESH run in the state `run` was handed over in (at
+     * `boot`, or with the caller's `prefix` already replayed onto it), built exactly as `run` was. With it the segment
+     * can REWIND: a fresh run with this segment's ticks `[prefix.length, t)` and its non-key inputs replayed
+     * (`replayToTick`), adopted in place of the live run. Only the fight fallback asks (`HAMMER_FIGHT_FALLBACK`, at a
+     * press kill that refused); absent, `ctx.rewind` is null and nothing reads it. `twoPassSolve` passes its own
+     * `makeRun`; `watchSolve.solveForPage` builds one from its staging.
+     */
+    rewindRun = null,
 }) {
     assertDashMode(dashMode, 'solveSegment');
     if (!run || typeof run.advance !== 'function') fail('solveSegment needs a live run');
@@ -14595,10 +14797,20 @@ function solveSegmentUnder({
     const dashWalks = [];
     /** ⛓ FRONTIER3 — the walks planned on `FINE_LATTICE` after the frontier refused. */
     const fineLatticeWalks = [];
-    {
-        const inner = run;
-        let tapeTick = prefix.length;
+    /** ⛓ hammer-phase B3 — the tape tick of every dash `dashesPressed` counted, so a rewind can un-count the tail. */
+    const dashTicks = [];
+    /**
+     * ⛓ hammer-phase B3 — the run as the segment drives it is a VIEW over an inner run, and a rewind builds the same
+     * view over a fresh one (`tapeTick` resumes at the rewind's tick). One function, so the two cannot differ.
+     */
+    const viewOf = (inner, startTick) => {
+        let tapeTick = startTick;
         const advance = (held) => {
+            // ⛓ hammer-phase B3 — the exactness gate's probe (`REWIND_PROBE`): read only, inert unless a sink is set
+            if (REWIND_PROBE.sink !== null && rewind !== null && REWIND_PROBE.ticks?.has(tapeTick)) {
+                const t = tapeTick;
+                REWIND_PROBE.sink({ t, kind: 'tick', name, live: inner, rewound: () => rewind.replay(t) });
+            }
             const dashedBefore = inner.progress('slashInfo').state.slashDashed === true;
             const items = inner.world?.apItems ?? [];
             const pre = items.length === 0 ? null : {
@@ -14619,6 +14831,7 @@ function solveSegmentUnder({
             const out = inner.advance(held);
             if (!dashedBefore && inner.progress('slashInfo').state.slashDashed === true) {
                 dashesPressed += 1;
+                dashTicks.push(tapeTick);
             }
             if (pre) {
                 const open = items.filter((a) => !apItemsTaken.has(`${pre.level}:${a.id}`));
@@ -14636,8 +14849,9 @@ function solveSegmentUnder({
             tapeTick += 1;
             return out;
         };
-        run = Object.create(inner, { advance: { value: advance } });
-    }
+        return Object.create(inner, { advance: { value: advance } });
+    };
+    run = viewOf(run, prefix.length);
     /** Trace rows, buffered; keys are filled from `perTick` at finish. */
     const rows = [];
     const seeRow = (row) => { rows.push(row); return row; };
@@ -14794,6 +15008,74 @@ function solveSegmentUnder({
         });
         return r;
     } : null;
+
+    /**
+     * ⛓⛓ SEEDLING HAMMER-PHASE B3 — THE REPLAY REWIND (`rewindRun`, above). `levelRun` has one mutator and no
+     * snapshot, so the state at tick `t` IS the fresh run with `perTick[prefix.length … t)` replayed — the definition
+     * every tape check already assumes. What feeds a run besides the keys, and how each is carried:
+     *   - construction (the staging, the pass's persistence and PENDING rows, scratch persistence, the caller's own
+     *     `adoptWindowClock` / `addEquips` / `addTimedClears` and prefix): the factory's contract — it builds the run
+     *     exactly as `run` was built, so they are its inputs, not this replay's;
+     *   - the slot selections this segment made (`equip` → `run.equipNow`): `solverEquips`, applied before their tick;
+     *   - the apitems this segment took (the view's `inner.takeApItem` on the take tick): `apItemsTaken`, after it;
+     *   - solver state keyed by the run object (`SKIRTED`): carried to the fresh run on adopt.
+     * `replay(t)` builds; `to(t)` also adopts — the segment's `run`, its keys, equips, takes and dash count are cut back
+     * to `t` — and returns `{run, undo}`; `undo()` puts back exactly what `to` replaced.
+     */
+    const offset = ticked - prefix.length;
+    /** The first index of `arr` from which `atOrAfter` holds (its length when none does): the cut point at a tick. */
+    const cutAt = (arr, atOrAfter) => {
+        const i = arr.findIndex(atOrAfter);
+        return i < 0 ? arr.length : i;
+    };
+    /** Cut the segment's own tick-indexed state back to tape tick `t`, returning what was cut. */
+    const cutBackTo = (t) => {
+        const cut = {
+            keys: perTick.splice(t),
+            dashTicks: dashTicks.splice(cutAt(dashTicks, (d) => d >= t)),
+            equips: solverEquips.splice(cutAt(solverEquips, (e) => e.t - offset >= t)),
+            takes: [...apItemsTaken].filter(([, a]) => a.tick >= t),
+        };
+        for (const [k] of cut.takes) apItemsTaken.delete(k);
+        dashesPressed = dashTicks.length;
+        return cut;
+    };
+    const rewind = typeof rewindRun === 'function' ? {
+        /** A fallback's row, for the result's `fightFallbacks` (the rewind's own record of what it was used for). */
+        note: (row) => { rewinds.push(row); },
+        replay: (t) => replayToTick({
+            makeRun: rewindRun, perTick, from: prefix.length, to: t, startTicks: ticked,
+            equips: solverEquips.map((e) => ({ at: e.t - offset, slot: e.slot })),
+            takes: [...apItemsTaken.values()].map((a) => ({ at: a.tick, level: a.level, id: a.apItem.id,
+                tag: a.apItem.tag })),
+        }),
+        to: (t) => {
+            const fresh = rewind.replay(t);
+            const was = { run, inner: rewoundInner };
+            const cut = cutBackTo(t);
+            // ⛔ `SKIRTED` is keyed by the run the walk skirted with — the view — so the view's entry is carried
+            run = viewOf(fresh, t);
+            if (SKIRTED.has(was.run)) SKIRTED.set(run, SKIRTED.get(was.run));
+            rewoundInner = fresh;
+            return {
+                run,
+                undo: () => {
+                    cutBackTo(t);
+                    perTick.push(...cut.keys);
+                    dashTicks.push(...cut.dashTicks);
+                    dashesPressed = dashTicks.length;
+                    solverEquips.push(...cut.equips);
+                    for (const [k, a] of cut.takes) apItemsTaken.set(k, a);
+                    run = was.run;
+                    rewoundInner = was.inner;
+                    return run;
+                },
+            };
+        },
+    } : null;
+    /** ⛓ hammer-phase B3 — the rewinds this segment adopted (the fallback's records), and the live run after them. */
+    const rewinds = [];
+    let rewoundInner = null;
 
     /**
      * Refuse, with everything a reader needs. The rows recorded so far ride
@@ -16303,9 +16585,33 @@ function solveSegmentUnder({
             const weapon = run.progress('primaryWeapon');
             const [tagPart, xy] = target.id.split('@');
             const [cx, cy] = xy.split(',').map(Number);
-            const press = weapon === 'sword'
+            let press = weapon === 'sword'
                 ? derivePressKill(run, [{ tag: tagPart, x: cx, y: cy }], contacts)
                 : null;
+            /**
+             * ⛓⛓ HAMMER-PHASE B3 — THE ADMISSION ARM OF THE FIGHT FALLBACK (`HAMMER_FIGHT_FALLBACK`, rewind mode
+             * only). Here the press arm's ADMISSION refusal is terminal: `kill` is the ladder's last rung whenever a
+             * spinner is among the danger's sources (`detour` needs every source to be a chaser), and the EXHAUSTED
+             * refusal propagates out of `walkTo`. So the admission is asked once more with the fight on, from this
+             * very state (no tick is spent to rewind); a certificate is executed with the fight on, and a kill that
+             * then fails is rewound to this tick (`rewind.to`) so the refusal below stands, one sentence longer.
+             */
+            let admitted = null;
+            let admittedOffWhy = null;
+            if (press && !press.first && HAMMER_FIGHT_FALLBACK.enabled && HAMMER_FIGHT_FALLBACK.mode === 'rewind'
+                && !HAMMER_FIGHT.enabled && rewind !== null) {
+                const again = withHammerFight(true,
+                    () => derivePressKill(run, [{ tag: tagPart, x: cx, y: cy }], contacts));
+                admittedOffWhy = `${target.id} is a live Spinner, and the press arm refused: `
+                    + press.rejected.map((r) => `${r.option}: ${r.why}`).join(' · ');
+                admitted = { t: perTick.length, how: 'admission', refused: 'PRESS_ADMISSION', bodies: [target.id] };
+                if (again.first) press = again;
+                else {
+                    admitted.verdict = 'refused';
+                    admitted.retryRefused = 'PRESS_ADMISSION';
+                    admitted.why = 'the admission with the fight on found no strike either';
+                }
+            }
             if (weapon !== 'sword') {
                 killWhy = `${target.id} is a live Spinner whose removal the run OBSERVES (the `
                     + '`spinnerBodies` roster, and `spinnerWrites` for a tagged body), but the '
@@ -16314,18 +16620,41 @@ function solveSegmentUnder({
                     + 'The sword is a SUB-ORDER the macro layer owes.';
             } else if (!press.first) {
                 killWhy = `${target.id} is a live Spinner, and the press arm refused: `
-                    + press.rejected.map((r) => `${r.option}: ${r.why}`).join(' · ');
+                    + press.rejected.map((r) => `${r.option}: ${r.why}`).join(' · ')
+                    // ⛓ hammer-phase B3 — named only when the admission fallback ran
+                    + (admitted ? ` ${fightFallbackSentence(admitted)}` : '');
             } else {
                 rowFor('kill', refused, { arm: 'press', target: target.id });
                 const writesBefore = (run.ledger('spinnerWrites') ?? []).length;
                 let record = null;
                 try {
-                    record = execKillByPress(run, perTick, {
+                    const execute = () => execKillByPress(run, perTick, {
                         plans: press.plans, first: press.first, bodies: [target.id], lock: null,
                     }, {
-                        maxTicksPerTarget, economies, dashMode, goal, walkTo,
+                        maxTicksPerTarget, economies, dashMode, goal, walkTo, rewind,
                         what: `${what} -> kill (${target.id}) by press`,
                     });
+                    if (admitted === null) record = execute();
+                    else {
+                        // ⛓ hammer-phase B3 — the admitted kill, with the fight on; any failure rewinds to its tick
+                        const started = HAMMER_FIGHT_FALLBACK_TRACE.sink ? performance.now() : 0;
+                        try {
+                            record = withHammerFight(true, execute);
+                            admitted.verdict = 'solved';
+                            admitted.ticks = perTick.length - admitted.t;
+                            admitted.fights = record.fights?.length ?? 0;
+                            rewind.note(admitted);
+                            record = { ...record, fightFallback: admitted };
+                        } catch (e2) {
+                            if (e2?.undeclaredKillLock || e2 instanceof PendingDeclaration) throw e2;
+                            rewind.to(admitted.t);
+                            admitted.verdict = 'refused';
+                            admitted.retryRefused = e2?.code ?? e2?.name ?? 'Error';
+                            admitted.why = String(e2?.message ?? e2).split('\n')[0].slice(0, 240);
+                            killWhy = `${admittedOffWhy} ${fightFallbackSentence(admitted)}`;
+                        }
+                        HAMMER_FIGHT_FALLBACK_TRACE.sink?.({ ...admitted, ms: performance.now() - started });
+                    }
                 } catch (e) {
                     /**
                      * ⛔ THE MODEL'S OWN REFUSAL OF AN UNFAITHFUL HIT, SAID AS THE
@@ -16951,7 +17280,7 @@ function solveSegmentUnder({
                         // (`burn` selects the Fire's and then the old one again).
                         equip,
                         // ⛓ CRUSHER — a try-before-commit run (`forkRun`); null without one.
-                        fork,
+                        fork, rewind,
                     });
                     records.push({ goal: goal.kind, strategy: plan.strategy, ...record });
                     // ⛓ THE EXEMPTION SURVIVES THE VERB. A `hold` leaves the
@@ -17682,7 +18011,7 @@ function solveSegmentUnder({
         }
         const record = STRATEGY_EXECUTORS[verb](run, perTick, resolved, {
             maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb}`,
-            before, walkTo, goal, equip,
+            before, walkTo, goal, equip, rewind,
         });
         for (const c of resolved.exempt ?? []) exemptions.add(c);
         // The verb's own finish is the WORLD's (the solid gone, the lock open);
@@ -17991,7 +18320,7 @@ function solveSegmentUnder({
             }
             const rec = STRATEGY_EXECUTORS[strategy](run, perTick, resolvedBlocker, {
                 maxTicksPerTarget, economies, dashMode, what: `${what} -> ${strategy}`,
-                before: null, walkTo, goal, equip,
+                before: null, walkTo, goal, equip, rewind,
             });
             records.push({ goal: goal.kind, strategy, ...rec });
             for (const c of resolvedBlocker.exempt ?? []) exemptions.add(c);
@@ -18031,7 +18360,7 @@ function solveSegmentUnder({
             });
         }
         const record = exec(run, perTick, resolved, {
-            maxTicksPerTarget, economies, dashMode, what, before, walkTo, goal, equip,
+            maxTicksPerTarget, economies, dashMode, what, before, walkTo, goal, equip, rewind,
             // ⛓ FIDELITY PROXIMITY: `execCollect`'s grid-keeping approach.
             ...(skirtGridKept(run, goals.slice(goals.indexOf(goal)))
                 ? { keepGrid: true } : {}),
@@ -18115,7 +18444,7 @@ function solveSegmentUnder({
     }
     const trace = builder.finish(perTick.length);
 
-    return {
+    const result = {
         perTick,
         trace,
         transitions: run.transitions,
@@ -18159,5 +18488,17 @@ function solveSegmentUnder({
          * replaced, cut to 200 characters).
          */
         ...(fineLatticeWalks.length ? { fineLatticeWalks } : {}),
+        /**
+         * ⛓ hammer-phase B3 — an optional result field, present only when a press kill's fight fallback ran
+         * (`HAMMER_FIGHT_FALLBACK`): one row per fallback (`execKillByPress`'s `fightFallback` record).
+         */
+        ...(rewinds.length ? { fightFallbacks: rewinds } : {}),
     };
+    /**
+     * ⛓ hammer-phase B3 — a REWOUND segment ends on a run the caller did not build: the fresh one the rewind adopted.
+     * It rides out as `liveRun`, NOT enumerable, so a caller that reads the run after the solve (`solveForPage`: the
+     * despawns, the scratch clears) can take it, and a caller that serialises `out` sees no new field.
+     */
+    if (rewoundInner !== null) Object.defineProperty(result, 'liveRun', { value: rewoundInner });
+    return result;
 }
