@@ -21,6 +21,11 @@ const CAMERA_BAND = 'levelRun: whether bob bob@32,32 is on screen at tick 44 dep
 describe('familyOf — the text arm, unchanged by the extraction', () => {
     it('⛓ classifies the refusals the committed route produces', () => {
         expect(familyOf(CAMERA_BAND)).toMatch(/^CAMERA BAND/);
+        // ⛓ fidelity DARKTRAP2: PUSHBLOCK's survey 145 refusal, verbatim (it read `unclassified`).
+        expect(familyOf('solverBot(survey-step-145) reach-exit (128,304)->L65 -> shove stance (pushableblockspear@112,96) '
+            + '-> light (lightpole@64,88): the stance settled at (37.077550920162714,92.86188546045476) facing 0, and the '
+            + 'spear rect from there does not reach the pole\'s core — the derivation\'s stance was (36,92) facing 0.'))
+            .toMatch(/^LIGHT-ARM — the DarkTrap light arm at lightpole@64,88/);
         expect(familyOf("solverBot: Strategy 'shove' failed to apply to the obstacle"))
             .toBe("VERB-APPLY — the 'shove' strategy IS registered and did not apply here");
         expect(familyOf('twoPassSolve: this clear needs a GAME-sourced tick'))
