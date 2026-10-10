@@ -12,6 +12,7 @@
  * Run (the dev server at the repo root, `SEEDLING_PORT`, default 8000):
  *   SEEDLING_KILLLOCK_BODIES=all node scripts/procgen/probe-seedling-chaser-mobiles.mjs --class=LavaRunner --file=<tape.json>
  *   … --tape=<fixture name>  a committed tape instead of --file
+ *   … --witness=<name>       re-witness a recorded `fixtures/chaser-witness/<name>.json` (its embedded tape)
  *   … --out=<file.json>      write every sample with both readings
  *   … --upto=<tick>          compare only samples at or before this tick
  *   … --record --name=<n>    write the tape and the GAME's rows of the class (with the player) to
@@ -34,7 +35,9 @@ if (isEntryPoint(import.meta.url)) await main();
 async function main() {
     const arg = (k) => process.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3) ?? null;
     const TAPE = arg('tape');
-    const FILE = arg('file');
+    const WITNESS = arg('witness');
+    const FILE = arg('file') ?? (WITNESS ? join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'frontend', 'modules',
+        'seedlingDemo', 'fixtures', 'chaser-witness', `${WITNESS}.json`) : null);
     const CLASS = arg('class');
     if (!TAPE === !FILE || !CLASS) {
         console.error('probe-seedling-chaser-mobiles: --class=<AS3 class> and exactly one of --tape=<fixture> / --file=<path> are required');
@@ -63,7 +66,7 @@ async function main() {
     const { createTapeStepper } = await import(join(MODULE, 'tapeRunner.js'));
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 
-    const tape = TAPE ? loadTape(TAPE) : parseTape(readFileSync(FILE, 'utf8'));
+    const tape = TAPE ? loadTape(TAPE) : parseTape(WITNESS ? JSON.stringify(JSON.parse(readFileSync(FILE, 'utf8')).tape) : readFileSync(FILE, 'utf8'));
     const { CHASERS } = await import(join(MODULE, 'chasers.js'));
     const TAG = Object.entries(CHASERS).find(([, c]) => c.as3 === CLASS)?.[0];
     if (!TAG) {
@@ -223,7 +226,7 @@ async function main() {
                     bodies: bodiesOf(f).map((g) => ({ x: g.x, y: g.y, vx: g.vx, vy: g.vy,
                         hits: g.enemy?.hits ?? null, hits_timer: g.enemy?.hits_timer ?? null })),
                 })),
-                tape: FILE ? JSON.parse(readFileSync(FILE, 'utf8')) : null,
+                tape: FILE ? (WITNESS ? JSON.parse(readFileSync(FILE, 'utf8')).tape : JSON.parse(readFileSync(FILE, 'utf8'))) : null,
             };
             const path = join(dir, `${NAME}.json`);
             writeFileSync(path, `${JSON.stringify(out, null, 1)}\n`);
