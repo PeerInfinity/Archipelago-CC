@@ -99,8 +99,12 @@ export { stepTurret } from './turret.js';
 // levelRun.js — botDriverV2 · physics 1
 export { createLevelRun } from './levelRun.js';
 
-// ⛓ LADDER2: the clamped `FP.elapsed` the chain's and the beam's Spritemaps step at (`hazards.js`).
-export { FP_ELAPSED_CLAMPED } from './r6AnimClock.js';
+// ⛓ K2PREP: `Game.worldFrame`, the Spritemap step and the lava chain — simulation since `levelRun` steps the chain
+// (`lavaChain.js`); `hazards.js` imports them here and re-exports them (the beam, the axe, the danger map).
+export {
+    LAVA_CHAIN, TIME_PER_FRAME, createLavaChainState, lavaChainRect, rectTouchesBox, spritemapPlay, spritemapUpdate,
+    stepLavaChain, worldFrame,
+} from './lavaChain.js';
 // levelWorld.js — botDriverV2, dangerMap, hazards, solverBot, strikePolicy · seedling 3, physics 6
 export {
     assertRect, isNormalizedLiveOpts, LIVE_GEOMETRY_KEYS, normalizeLiveOpts, PRE_R5_ROLES, rect, rectsOverlap,

@@ -1761,6 +1761,14 @@ frontend/modules/seedlingDemo/witch.js|darkSwordSpawnAt|h995a50fb|8|3,rule,magni
 frontend/modules/seedlingDemo/enemyDamage.js|(module)|h6eb33689|6|0,rule,count,Enemies/Turret.as:sprTurret,hammer-phase C1: the Turret's die anim frame count; its wrap sets destroy (STATIC_SWORD_DEATH)
 frontend/modules/seedlingDemo/enemyDamage.js|(module)|he6cdd2c4|10|0,rule,magnitude,Enemies/Turret.as:sprTurret,hammer-phase C1: the Turret's die anim frame rate; gates destroy and the fade (STATIC_SWORD_DEATH)
 frontend/modules/seedlingDemo/levelRun.js|step|hf75284f2|0|0,rule,bound,Enemies/Enemy.as:hitUpdate,hammer-phase C1 spit forecast: hitsTimer > 0 i-frame gate (the turret's fire gate)
+frontend/modules/seedlingDemo/lavaChain.js|TIME_PER_FRAME|(module),rule,magnitude,,Game.timePerFrame 45 — the divisor inside Game.worldFrame; the chain's 90-update period is TIME_PER_FRAME x loops (K2PREP: simulation since levelRun steps the chain)
+frontend/modules/seedlingDemo/lavaChain.js|worldFrame|worldFrame,structural,,,
+frontend/modules/seedlingDemo/lavaChain.js|spritemapPlay|spritemapPlay,structural,,,
+frontend/modules/seedlingDemo/lavaChain.js|spritemapUpdate|spritemapUpdate,structural,,,
+frontend/modules/seedlingDemo/lavaChain.js|LAVA_CHAIN|(module),rule,magnitude,,LavaChain: arm 48x4 / force 5 / damage 1 / loops 2 / fps 60 and the extend-hit-retract anims' frames and rates — the arm is out while extend or hit plays (LavaChain.as:21-46)
+frontend/modules/seedlingDemo/lavaChain.js|lavaChainRect|lavaChainRect,physics,magnitude,,LavaChain.getRect: the 64 px sprite minus Tile.w 16 and the 16x16 hitbox with origin 8 place the 48x4 arm (LavaChain.as:96-119)
+frontend/modules/seedlingDemo/lavaChain.js|createLavaChainState|createLavaChainState,structural,,,
+frontend/modules/seedlingDemo/lavaChain.js|stepLavaChain|stepLavaChain,rule,sentinel,,worldFrame(fps 60 loops 2) == 0 is the extend trigger (`if (!Game.worldFrame(Main.FPS
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

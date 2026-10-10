@@ -248,7 +248,7 @@ import {
 // ⛓⛓⛓ SEEDLING FIDELITY K2PREP: a `LavaChain`'s arm hits the stepped `"Enemy"` bodies too.
 import {
     LAVA_CHAIN, createLavaChainState, lavaChainRect, rectTouchesBox, stepLavaChain, worldFrame,
-} from './hazards.js';
+} from './lavaChain.js';
 import {
     CEREMONY_FREEZE_FRAMES, LOAD_DEAD_FRAMES, stepChannel,
 } from './swimSoundClock.js';
