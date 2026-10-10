@@ -38,10 +38,13 @@ frontend/modules/tutorials/content/*.js   ← the only copy
    between auto-advanced steps**.
 3. **First slice** = the panel, the data shape, the guided tour moved in as the
    first tutorial, and its test row. Demo-backed tutorials are slice 2.
-4. **Highlighting** the control to press: wanted, but **deferred** until the
-   features above are in.
-5. **Idea, not committed:** animate a cursor moving to the UI element before
-   clicking it. See *Cursor animation* below; it rides with highlighting.
+4. **Highlighting and cursor animation are IN T1** (revised 2026-10-10: the
+   data has to carry targets anyway, so build what uses them in the same slice).
+5. **Desktop first.** In the mobile layout, do NOT split the left column; the
+   highlight and cursor may simply be off there (the step text, Do it and Play
+   still work, with no animation).
+6. **Panel activation, tab vs Quick Launch:** see *Reaching a panel* below. The
+   tutorial panel carries a link to Quick Launch either way.
 
 ## Data shape (draft)
 
@@ -54,8 +57,10 @@ export const TUTORIAL = Object.freeze({
     { title: 'Watch a world play itself', steps: [
       { id: 'open-maze-room',
         text: 'Find the **Maze Room** tab and click it.',
-        panel: 'mazeRoomPanel',      // "Do it" / Play activates it (ui:activatePanel)
-        actions: [ { activate: 'mazeRoomPanel' } ],   // declarative, see below
+        actions: [ { activate: 'mazeRoomPanel' } ],   // the executor finds the tab
+        // a control INSIDE a panel is named relative to it, so the executor can
+        // activate the panel first and the content never spells GL markup:
+        // { click: { panel: 'playbackBotPanel', selector: '.pb-play' } }
         done: (ctx) => ctx.isPanelActive('mazeRoomPanel'),
       },
       …
@@ -67,11 +72,14 @@ export const TUTORIAL = Object.freeze({
 
 - **Prose is strings, never HTML.** Rendered through `procgenDocs/markdownLite.js`
   in the panel, and written out unchanged into the `.md`.
-- **⚠ `perform` should be DECLARATIVE where it can be:** `actions: [{activate},
-  {click: selector}, {key}, {setField}]`, with `run: async (ctx) => …` as an
-  escape hatch. This is decided now, not when highlighting arrives, because the
-  cursor and highlight features need a *target* to point at, and a free-form
-  function has none. Retrofitting every step later is the expensive path.
+- **Actions are DECLARATIVE:** `actions: [{activate}, {click}, {key}, {setField}]`,
+  with `run: async (ctx) => …` only as an escape hatch (and a step that uses it gets
+  no highlight or cursor). The highlight and the cursor both need a *target*, and
+  a free-form function has none.
+- **Targets are SEMANTIC:** a panel by `componentType` (+ `title` where two
+  share one, e.g. the two `procgenLabPanel`s), a control by a selector *scoped
+  to its panel*. Golden Layout markup (`.lm_tab`, the dropdown) lives only in the
+  executor.
 - **`ctx`, not imports:** the content module must import cleanly in **node**
   (the `.md` generator imports it), so steps reach the app only through the `ctx`
   the panel/test passes in (`eventBus`, `stateManager`, `isPanelActive`,
@@ -110,8 +118,9 @@ The default preset's left column (`frontend/layout-configs/layout_presets.json`
 the existing stack on top and a new stack holding `tutorialPanel` below, so a
 tutorial stays visible beside the other left-column panels.
 To check while building it:
-`mobileLayoutManager.js` reads panel order from this preset and must handle
-the nested column; and confirm that no saved layout hides the new stack from
+`mobileLayoutManager.js` reads panel order from this preset. It must flatten
+the nested column into its single tab list (⚖ no split on mobile), with
+`tutorialPanel` simply one more tab; and confirm that no saved layout hides the new stack from
 returning users.
 
 ## Testing
@@ -126,20 +135,38 @@ returning users.
 
 ## Slices
 
-- [ ] **T1** — module + panel (list, step view, ◀ ▶, Do it, Play, the two
-  settings) · data shape + validator · `guidedTour.js` (content moved from the
-  `.md`) · `.md` generator + pin · in-app test row · layout split.
+- [ ] **T1** — module + panel (list, step view, ◀ ▶, Do it, Play, the
+  settings, the Quick Launch link) · data shape + validator · `guidedTour.js`
+  (content moved from the `.md`) · `.md` generator + pin · the executor with
+  highlight + cursor (desktop) · in-app test row · desktop layout split.
 - [ ] **T2** — demo-backed tutorials: a step may name `demo: '<demos.js id>'`
   and open its `localHref`/`pagesHref` (iframe panel or a new tab) using the
   catalogue's own text, never copying it.
-- [ ] **T3** — highlighting: outline the `click`/`activate` target of the step
-  (needs DOM selectors in content; the T1 test row already asserts they resolve).
-- [ ] **T4 (optional)** — cursor animation, below.
+## Reaching a panel: the tab, with Quick Launch as the fallback
 
-## Cursor animation — feasibility
+Clicking the tab is about as easy to build as clicking a Quick Launch button, and
+it's the better default:
 
-Practical, and much cheaper once T3 exists, because both need the same thing:
-the step's target element. Sketch: a fixed-position overlay cursor element;
+- **Finding the tab is mechanical.** `goldenLayoutInstance.getAllContentItems()`
+  → the component item → `item.tab.element`. If that element sits inside the
+  stack's `.lm_tabdropdown_list` (an overflowed tab), the cursor first clicks
+  that stack's `.lm_tabdropdown` button, then the entry. That's about 30 lines in one place.
+- **The Quick Launch route has its own hidden states:** its button can be in a
+  collapsed group, filtered out, moved by the user's own tree, or Quick Launch
+  itself can be behind another tab in the top-left stack. So a click there may
+  first need a tab click anyway.
+- **The tour's text says "find the X tab"**, and finding tabs is the skill a new
+  user actually needs.
+- **The one case a tab can't handle is a CLOSED panel** (closed panels have no
+  tab). There, and only there, the executor goes through Quick Launch: activate
+  its tab, then click its `button.ql-panel[data-component-type=…]` (which reopens
+  the panel), expanding the button's group / clearing the filter first if needed.
+- The tutorial panel also gets a plain **"Open Quick Launch"** link, so it's always one click
+  away whatever the cursor does.
+
+## Highlight and cursor animation (T1, desktop only)
+
+Both work off the same resolved target element. Sketch: a fixed-position overlay cursor element;
 for a `click` action, activate the target's panel, `scrollIntoView`, read
 `getBoundingClientRect()`, move the cursor there with a CSS transition
 (~400 ms), pulse, then `element.click()`. The cases that need thought:
@@ -154,4 +181,4 @@ for a `click` action, activate the target's panel, `scrollIntoView`, read
 - **Play mode / tests:** the animation must be skippable (a setting, off in
   tests) so the test row doesn't spend its budget animating.
 
-It is optional because nothing else depends on it; it is not impractical.
+- **Mobile layout:** off. The executor performs the action directly, without either.
