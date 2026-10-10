@@ -119,8 +119,8 @@ import {
     KILLLOCK_BODIES,
     // ⛓⛓⛓ seedling-fidelity-ghostsword D2: the break verb's ghostsword row (the switch and the no-sword refusal).
     GHOSTSWORD_PRESS, ghostSwingRefusal,
-    // ⛓⛓ seedling-fidelity-pushblock: the spear push (the stance audit, and which weapon's press moves the block).
-    auditPress, PRESS_ARM_POLICY, PUSH_SPEAR_DIRECTION,
+    // ⛓⛓ seedling-fidelity-pushblock: the spear push's stance audit (what else the thrust's rect reaches).
+    auditPress, PRESS_ARM_POLICY,
     // ⛓ hammer-phase B2: the fight's no-bump prune (a carried shield)
     shieldBumpTouches,
     // ⛓⛓ fidelity ENCOUNTERS D3: the Witch's talk circle (`NPC.talkRange`).
