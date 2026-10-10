@@ -74,7 +74,8 @@ describe('hammer-phase B1 — the kernel hands the goal its path', () => {
 describe('hammer-phase B1 — HAMMER_APPROACH (OFF by default)', () => {
     it('⛓⛓ OFF by default, its own deadline site (appended last), the switch restores, the trace off', () => {
         expect(HAMMER_APPROACH.enabled).toBe(false);
-        expect(DEADLINE_SITES[DEADLINE_SITES.length - 1]).toBe('hammer-approach');
+        // ⛓ hammer-phase B2 appended `hammer-fight` after it
+        expect(DEADLINE_SITES.slice(-2)).toEqual(['hammer-approach', 'hammer-fight']);
         expect(withHammerApproach(true, () => HAMMER_APPROACH.enabled)).toBe(true);
         expect(HAMMER_APPROACH.enabled).toBe(false);
         expect(() => withHammerApproach(true, () => { throw new Error('x'); })).toThrow('x');

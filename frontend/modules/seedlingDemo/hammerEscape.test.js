@@ -189,8 +189,8 @@ describe('hammer-phase A D2 — HAMMER_ESCAPE in the press kill', () => {
     // ⛓ hammer-phase A2 (⚖ user 2026-10-07, "I approve."): ON by default; `SEEDLING_HAMMER_ESCAPE=0` turns it off.
     it('⛓⛓ ON by default, a deadline site of its own (appended), and its bounds are the mechanism\'s', () => {
         expect(HAMMER_ESCAPE.enabled).toBe(true);
-        // ⛓ hammer-phase B1 appended `hammer-approach` after it
-        expect(DEADLINE_SITES.slice(-2)).toEqual(['hammer-escape', 'hammer-approach']);
+        // ⛓ hammer-phase B1 appended `hammer-approach` after it, and B2 `hammer-fight`
+        expect(DEADLINE_SITES.slice(-3)).toEqual(['hammer-escape', 'hammer-approach', 'hammer-fight']);
         expect(HAMMER_ESCAPE_BOUNDS.horizon).toBe(SPINNER.hitsTimerMax + HAMMER_PHASE_RUNG.horizon);
         expect(HAMMER_ESCAPE_BOUNDS.follow).toBe(0);
     });

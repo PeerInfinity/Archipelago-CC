@@ -130,7 +130,9 @@ import { arrivalInsideSolid, arrivalsInto, solidsAt, STUCK_TICKS } from './arriv
 import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,
 } from './strikePolicy.js';
-import { HOLD_FIRST_KEY_SETS, SPACE_TIME_KEY_SETS, coarseKey, spaceTimeReach } from './spaceTimeReach.js';
+import { shieldBumpTouches } from './bobBossFight.js';
+import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestFirstQueue, coarseKey,
+    spaceTimeReach } from './spaceTimeReach.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
@@ -7801,12 +7803,24 @@ function derivePressKill(run, bodies, contacts) {
      * `deriveStrike`'s admission exactly as before. No press of this kill is in flight yet (the executor's own
      * starting `lastPressAt`).
      */
-    const approached = HAMMER_APPROACH.enabled
+    /**
+     * ⛓ hammer-phase B2 — with `HAMMER_FIGHT` on the admission asks the FIGHT search first, for the whole order; a
+     * certificate is the kill's first strike (adopted by the executor while it still describes the run), and any
+     * negative asks the admission exactly as before.
+     */
+    const fought = HAMMER_FIGHT.enabled
+        ? deriveFight(run, { targets: bodies.map((e) => `${e.tag}@${e.x},${e.y}`), lastPressAt: -KILL_PRESS_CADENCE,
+            caller: 'admission' })
+        : null;
+    const approached = HAMMER_APPROACH.enabled && !fought?.ok
         ? deriveApproach(run, { bodyId: `${bodies[0].tag}@${bodies[0].x},${bodies[0].y}`,
             lastPressAt: -KILL_PRESS_CADENCE, caller: 'admission' })
         : null;
-    const first = approached?.ok ? approached.strike : deriveStrike(run, `${bodies[0].tag}@${bodies[0].x},${bodies[0].y}`,
-        contacts, 0, { continuation: true });
+    let first = fought?.ok ? fightStrike(fought)
+        : (approached?.ok ? approached.strike : deriveStrike(run, `${bodies[0].tag}@${bodies[0].x},${bodies[0].y}`,
+            contacts, 0, { continuation: true }));
+    // ⛓ hammer-phase B2 — a negative rides the strike, so the executor records it (and does not re-ask it)
+    if (fought !== null && !fought.ok && first) first = { ...first, fightRecord: fought.record };
     if (!first || !first.cell) {
         rejected.push({
             option: 'a strike schedule',
@@ -9510,6 +9524,391 @@ function approachHeld(approach, run) {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE B2 — **THE WHOLE FIGHT AS ONE SPACE-TIME SEARCH** (⚖ the user, 2026-10-09: *"plan the
+ * whole fight as one search, surviving to the last kill, with each press a step and the bodies' hit state in the
+ * search"*).
+ *
+ * ⛔ WHAT IT REPLACES, MEASURED. B1 planned ONE strike at a time (the earliest certified press, then the next), and
+ * seven generated certify records that solve with it off refused with it on: a greedy earliest strike killed body 1
+ * and the state was already doomed for body 2 (the search space shrank tick by tick to one expansion, 21–35 ticks after
+ * the landing). Nothing searched past the strike, the escape certificate was per body plan, and a fade was no strike.
+ *
+ * ⇒ with the switch on, the press kill's whole WORK ORDER (`resolved.plans`: every body this kill must remove) is one
+ * search, from the run's state when the kill starts (`deriveFight`):
+ *   - NODE: the exact player state, the absolute tick, the forecast CURSOR that carries every body's fight state
+ *     (`levelRun.spinnerFightForecast`: hits, `hitsTimer`, dying, the slash state my presses left), and my last press.
+ *     The dedup key is the player's coarse key, every body's (hits, dying, i-frame bucket) and the press window's
+ *     bucket — two states with different hit histories never merge.
+ *   - SUCCESSORS: the nine movement key sets, and — where `pressReadyAt` holds for a live body of the order (the one
+ *     predicate the executor's own arm asks) — the press as the executor drives it: the aim key, the press, the train
+ *     stood until the window's last test. The press child's cursor is FORKED from the node's and carries the press
+ *     (its dash, its knockback, its i-frame), so the forecast after it is a function of the path; a press that lands
+ *     on no body of the order, opens no window, or swings through a Solid is no successor.
+ *   - PRUNE: the escape's (`clearOfHammersAt` on the node's own cursor rows, lethal floor, previewed deaths).
+ *   - GOAL: every body of the order dead (dying, or gone) AND a path that survives one escape horizon past that node
+ *     (`HAMMER_ESCAPE_BOUNDS.horizon`, the survive kernel on the same cursor) — so the next leg starts with a verified
+ *     continuation.
+ *   - ORDER: best first (`HAMMER_FIGHT_BOUNDS.order`, measured): `progress` is (hits still owed, then tick + the lower
+ *     bound below); `astar` is (tick + the lower bound, then hits owed). The bound is admissible — per live body the
+ *     first landing is ≥ max(2, its i-frame) ticks away and each later one ≥ `hitsTimerMax` after it, plus the tail —
+ *     so `astar` returns the earliest goal its dedup keeps; `progress` is a heuristic (the deepest stage first, with
+ *     backtracking), which can cost a LONGER fight than the earliest, never a wrong one.
+ *
+ * The certificate is a key per tick from the run's tick through the tail; the executor FOLLOWS it (still under
+ * `safeStep`), and a run that leaves it (a state that is not the certificate's, a landing that is not) drops it and
+ * plans again. ⛔ A PREFERENCE, NEVER A REFUSAL: every negative hands the kill to the path the switch OFF takes.
+ *
+ * OFF by default (`SEEDLING_HAMMER_FIGHT=1` or `withHammerFight(true, fn)` turns it on): nothing below is reached and
+ * every walk is byte-identical.
+ */
+export const HAMMER_FIGHT = { enabled: globalThis.process?.env?.SEEDLING_HAMMER_FIGHT === '1', bounds: null };
+
+/** Run `fn` with the fight switch set to `enabled`, restoring the previous value (`withHammerEscape`'s shape). */
+export function withHammerFight(enabled, fn) {
+    const was = HAMMER_FIGHT.enabled;
+    HAMMER_FIGHT.enabled = enabled === true;
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') {
+            return out.finally(() => { HAMMER_FIGHT.enabled = was; });
+        }
+        HAMMER_FIGHT.enabled = was;
+        return out;
+    } catch (e) {
+        HAMMER_FIGHT.enabled = was;
+        throw e;
+    }
+}
+
+/**
+ * ⛓⛓ THE FIGHT'S BOUNDS (provisional until D2 measures them; `HAMMER_FIGHT_MEASURED` then records what they spent):
+ *   - `cell` 8 px — A's and B1's key;
+ *   - `iframe` — the i-frame bucket of the dedup key, in ticks;
+ *   - `order` — `progress` or `astar` (see `HAMMER_FIGHT`);
+ *   - `tail` — the post-kill window, the escape's horizon (`HAMMER_ESCAPE_BOUNDS.horizon`: the i-frame plus one hammer
+ *     period), searched by the escape's own survive kernel at its own budget;
+ *   - `horizon` `null` ⇒ the hits the order still owes × `strikeHorizon(run)`: the executor's own bound per landing;
+ *   - `maxExpansions` — the search's work bound (pops), a cut is NO CLAIM.
+ */
+export const HAMMER_FIGHT_BOUNDS = Object.freeze({
+    cell: 8,
+    iframe: 8,
+    order: 'astar',
+    weight: 2,
+    tail: HAMMER_ESCAPE_BOUNDS.horizon,
+    horizon: null,
+    maxExpansions: 60000,
+    keepBest: true,
+});
+
+/** ⛓ hammer-phase B2 — what the fight's searches spent at the bounds above (D2; provisional, re-measured in D2). */
+export const HAMMER_FIGHT_MEASURED = Object.freeze({
+    cell: 8,
+    l18: Object.freeze({ largestFound: 30000 }),
+});
+
+/** ⛓ hammer-phase B2 — the fight's trace (`HAMMER_ESCAPE_TRACE`'s shape): `sink` null (off) or a function. */
+export const HAMMER_FIGHT_TRACE = { sink: null };
+
+/**
+ * ⛓ ONE FIGHT SEARCH (see `HAMMER_FIGHT`), from the run's state now, for the bodies `targets` (ids).
+ *
+ * @returns {{ok: true, fight: object, record: object} | {ok: false, claim: boolean, bound: string, why: string,
+ *   record: object}}  `fight` is `{at, keys, states, landings, end, goal, tail}`: `keys[k]` is held at tick `at + k`,
+ *   `states[k]` is the player at its top (`states[0]` the run's), `landings` the `{t, id}` the path's presses land,
+ *   `goal` the index every body of the order is dead at, `end` = `keys.length`.
+ */
+export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER_FIGHT.bounds ?? HAMMER_FIGHT_BOUNDS }) {
+    const n = run.ticksCompleted;
+    const t0 = HAMMER_FIGHT_TRACE.sink === null ? 0 : globalThis.performance.now();
+    const stats = { expansions: 0, nodes: 0, inReach: 0, presses: 0, landed: 0, tails: 0, tailCuts: 0, deepest: 0,
+        byOwed: {} };
+    const done = (out) => {
+        const record = { t: n, caller, ok: out.ok, bound: out.ok ? null : out.bound,
+            goal: out.ok ? out.fight.goal : null, end: out.ok ? out.fight.end : null, ...stats };
+        if (HAMMER_FIGHT_TRACE.sink !== null) {
+            HAMMER_FIGHT_TRACE.sink({ run, ...record, ms: globalThis.performance.now() - t0, out });
+        }
+        return { ...out, record };
+    };
+    const no = (claim, bound, why) => done({ ok: false, claim, bound, why });
+    const live = run.entities('spinnerBodies') ?? [];
+    const order = new Set(targets.filter((id) => live.some((b) => b.id === id && !b.destroy)));
+    if (order.size === 0) return no(false, 'body', `no body of the order (${targets.join(', ')}) is live`);
+    const F = run.spinnerFightForecast();
+    /**
+     * ⛓ A CARRIED SHIELD BUMPS a body its box touches while the player moves (`levelRun.shieldBumpNow`), a hit no
+     * forecast carries (`spinnerFightForecast` names it). Rather than give up (no claim — B1's seven post-shield
+     * records are all here), the fight FORBIDS it: a state whose shield box (`bobBossFight.shieldBumpTouches`, the
+     * live gate and box, at either `slashing`) touches a body's rect on its tick or the row before is pruned. A path
+     * with no bump on it is a path the plain cursor is exact for.
+     */
+    const shield = F.unmodelled.length > 0;
+    if (shield && !F.unmodelled.every((u) => /^shield bump/.test(u))) {
+        return no(false, 'unmodelled', `the forecast names ${F.unmodelled.join(', ')} as unmodelled`);
+    }
+    const bumps = (q, rows, i) => [rows[i], i > 0 ? rows[i - 1] : null].some((row) => (row ?? []).some(
+        (r) => shieldBumpTouches(q, false, r, q) || shieldBumpTouches(q, true, r, q)));
+    const { cell, iframe, tail } = bounds;
+    const NO_KEYS = new Set();
+    const PRESS = new Set(['primary']);
+    const rawStep = run.previewStepper();
+    const step = previewOrDeath(rawStep);
+    const lethalFloor = lethalFloorFrom(run, run.state);
+    const playerKey = coarseKey(cell);
+    /** ⛔ the prune: the node's OWN cursor's row (the hit-aware forecast of its path), the lethal floor, a death */
+    const safe = (cur, q, i) => {
+        if (q === null || lethalFloor(q)) return false;
+        if (cur.rows.length <= i) cur.ensure(i);
+        if (shield && bumps(q, cur.rows, i)) return false;
+        return clearOfHammersAt(run, playerBoxAt(q.x, q.y), cur.rows, i);
+    };
+    /** The order's bodies still owing hits at row `i` of `cur`: `[{id, k, rect, hitsTimer, owed}]`. */
+    const owedAt = (cur, i) => {
+        const row = i === 0 ? null : cur.bodies[i - 1];
+        const out = [];
+        if (i === 0) {
+            live.forEach((b, k) => {
+                if (order.has(b.id) && !b.destroy) {
+                    out.push({ id: b.id, k, rect: b.rect, hitsTimer: b.hitsTimer, owed: SPINNER.hitsMax - b.hits });
+                }
+            });
+            return out;
+        }
+        row.forEach((b, k) => {
+            if (order.has(b.id) && !b.destroy) {
+                out.push({ id: b.id, k, rect: cur.rows[i - 1][k], hitsTimer: b.hitsTimer, owed: SPINNER.hitsMax - b.hits });
+            }
+        });
+        return out;
+    };
+    /** The order's state AFTER row `i` (what a node at `i` has already caused), for the goal and the bound. */
+    const owedAfter = (cur, i) => cur.bodies[i].filter((b) => order.has(b.id) && !b.destroy);
+    /**
+     * ⛓ the lower bound on the ticks to the goal (see `HAMMER_FIGHT`): per body still owing hits, its first landing is
+     * no sooner than the aim and the press (2), its i-frame, and the ticks the gap to slash reach closes in at the
+     * player's top speed plus the body's floor speed; each later landing an i-frame after it; then the tail.
+     */
+    const lower = (cur, i, q) => {
+        let kill = 0;
+        let next = Infinity;
+        const row = cur.bodies[i];
+        for (let k = 0; k < row.length; k += 1) {
+            const b = row[k];
+            if (!order.has(b.id) || b.destroy) continue;
+            const gap = distanceRectPoint(q.x, q.y, cur.rows[i][k]) - SLASH_REACH;
+            const reach = gap > 0 ? Math.ceil(gap / (WALK_SPEED + SPINNER.moveSpeed)) : 0;
+            const first = Math.max(2, b.hitsTimer, reach);
+            const all = first + (SPINNER.hitsMax - b.hits - 1) * SPINNER.hitsTimerMax;
+            if (all > kill) kill = all;
+            if (first < next) next = first;
+        }
+        return { all: kill + tail, next };
+    };
+    const owedHits = (cur, i) => owedAfter(cur, i).reduce((a, b) => a + SPINNER.hitsMax - b.hits, 0);
+    const keyOf = (q, cur, i, lastPress) => {
+        const since = n + i - lastPress;
+        const fightState = cur.bodies[i].map((b) => `${b.hits}.${b.destroy ? 1 : 0}.${Math.ceil(b.hitsTimer / iframe)}`)
+            .join(',');
+        return `${playerKey(q)}|${fightState}|${since <= SLASH_HIT_TICKS ? 'w' : (since <= 19 ? 'd' : 'f')}`;
+    };
+    // ⛓ THE ROOT: a press of mine in flight stands its window out (the train's convention; its points are the stood
+    // states), so every node below holds a quiet cursor
+    const prefixKeys = [];
+    const prefixStates = [];
+    let q0 = { ...run.state };
+    let i0 = 0;
+    for (;;) {
+        F.advance(q0);
+        if (!safe(F, q0, i0)) {
+            return no(true, i0 === 0 ? 'start' : 'window', `the ${i0 === 0 ? 'start' : 'stood window'} at t${n + i0} `
+                + 'meets a body or the line');
+        }
+        if (F.quiet()) break;
+        q0 = step({ ...q0 }, NO_KEYS);
+        if (q0 === null) return no(true, 'window', `the stood window dies at t${n + i0 + 1}`);
+        prefixKeys.push(NO_KEYS);
+        prefixStates.push(q0);
+        i0 += 1;
+    }
+    const owedAtStart = owedHits(F, i0);
+    if (owedAtStart === 0) return no(false, 'dying', 'every body of the order is already dying');
+    const last = bounds.horizon ?? owedAtStart * strikeHorizon(run);
+    const compare = {
+        astar: (a, b) => (a.f - b.f) || (a.owed - b.owed) || (a.seq - b.seq),
+        progress: (a, b) => (a.owed - b.owed) || (a.f - b.f) || (a.seq - b.seq),
+        stage: (a, b) => (a.owed - b.owed) || (a.i - b.i) || (a.seq - b.seq),
+        nearest: (a, b) => (a.owed - b.owed) || (a.g - b.g) || (a.seq - b.seq),
+    }[bounds.order];
+    if (!compare) throw new Error(`deriveFight: order "${bounds.order}" is not astar, progress, stage or nearest`);
+    const queue = bestFirstQueue(compare);
+    /**
+     * ⛓ THE DEDUP KEEPS THE BEST OF EACH KEY, NOT THE FIRST (the rank-kept layer of A's kernel, in best-first form):
+     * a later state with one key at one index replaces the claimant when it orders before it, and the claimant —
+     * if it is still queued — is skipped when popped. Two states at one index differ only in the bound,
+     * so this keeps the one nearer the fight's end.
+     */
+    const seen = new Map();
+    const claim = (node) => {
+        let at = seen.get(node.i);
+        if (!at) { at = new Map(); seen.set(node.i, at); }
+        const k = keyOf(node.q, node.cur, node.i, node.lastPress);
+        node.key = k;
+        const was = at.get(k);
+        if (was !== undefined && (!bounds.keepBest || compare(was, node) <= 0)) return false;
+        at.set(k, node);
+        return true;
+    };
+    let seq = 0;
+    const enqueue = (node) => {
+        node.owed = owedHits(node.cur, node.i);
+        const h = lower(node.cur, node.i, node.q);
+        node.f = node.i + (bounds.weight ?? 1) * h.all;
+        node.g = node.i + h.next;
+        node.seq = seq;
+        seq += 1;
+        stats.nodes += 1;
+        if (node.i > stats.deepest) stats.deepest = node.i;
+    };
+    const root = { q: q0, i: i0, cur: F, lastPress: lastPressAt, parent: null, keys: prefixKeys, states: prefixStates };
+    enqueue(root);
+    claim(root);
+    queue.push(root);
+    const shouldStop = activeDeadline !== null ? () => deadlineReached('hammer-fight') : null;
+    /** the press macro from `node` toward the order's body `b` (see `HAMMER_FIGHT`), or null */
+    const pressFrom = (node, aim) => {
+        const { q, i, cur } = node;
+        const q1 = step({ ...q }, aim);
+        if (q1 === null) return null;
+        const C = cur.fork(i);
+        const press = C.advance(q1, { direction: q1.direction });
+        if (!press.opens || !safe(C, q1, i + 1)) return null;
+        const q2 = step({ ...q1 }, PRESS, { dashImpulse: press.outcome === 'dash' ? press.impulse : null });
+        const keys = [aim, PRESS];
+        const states = [q1, q2];
+        let st = q2;
+        let j = i + 2;
+        for (;;) {
+            if (st === null) return null;
+            C.advance(st);
+            if (C.lineBlocked !== null || !safe(C, st, j)) return null;
+            if (C.quiet()) break;
+            st = step({ ...st }, NO_KEYS);
+            keys.push(NO_KEYS);
+            states.push(st);
+            j += 1;
+        }
+        const pressAt = n + i + 1;
+        if (!C.tests.some((x) => x.t > pressAt && x.landed && order.has(x.id))) return null;
+        stats.landed += 1;
+        return { q: st, i: j, cur: C, lastPress: pressAt, parent: node, keys, states };
+    };
+    const certificate = (node, tailCert) => {
+        const chain = [];
+        for (let nd = node; nd !== null; nd = nd.parent) chain.push(nd);
+        chain.reverse();
+        const keys = [];
+        const states = [{ ...run.state }];
+        for (const nd of chain) {
+            keys.push(...nd.keys);
+            states.push(...nd.states);
+        }
+        keys.push(...tailCert.keys);
+        states.push(...tailCert.states.slice(1));
+        const landings = node.cur.tests.filter((x) => x.t >= n && x.landed)
+            .map((x) => ({ t: x.t, id: x.id })).sort((a, b) => (a.t - b.t) || (a.id < b.id ? -1 : 1));
+        return { at: n, keys, states: states.slice(0, keys.length), landings, goal: node.i, end: keys.length,
+            tail: tailCert.keys.length };
+    };
+    while (queue.size > 0) {
+        if (stats.expansions >= bounds.maxExpansions) {
+            return no(false, 'expansions', `the search spent its ${bounds.maxExpansions} expansion(s)`);
+        }
+        if (shouldStop !== null && stats.expansions > 0 && stats.expansions % SPACE_TIME_CHECK_EVERY === 0
+            && shouldStop()) {
+            return no(false, 'deadline', `the caller's deadline was reached after ${stats.expansions} expansion(s)`);
+        }
+        const node = queue.pop();
+        if (bounds.keepBest && seen.get(node.i).get(node.key) !== node) continue;
+        stats.expansions += 1;
+        stats.byOwed[node.owed] = (stats.byOwed[node.owed] ?? 0) + 1;
+        if (node.owed === 0) {
+            // ⛓ THE GOAL: every body of the order dead; the post-kill window searched by the escape's own kernel
+            stats.tails += 1;
+            node.cur.ensure(node.i + tail + 2);
+            const r = spaceTimeReach({
+                start: node.q, startIndex: node.i, step: (q, k) => step(q, k), safe: (q, k) => safe(node.cur, q, k),
+                horizon: tail, keySets: HOLD_FIRST_KEY_SETS, keyOf: coarseKey(cell),
+                maxExpansions: HAMMER_ESCAPE_BOUNDS.maxExpansions,
+                rank: (q, k) => discClearanceAt(playerBoxAt(q.x, q.y), node.cur.rows, k),
+            });
+            if (r.ok) return done({ ok: true, fight: certificate(node, r) });
+            if (r.bound === 'expansions') stats.tailCuts += 1;
+            continue;
+        }
+        if (node.i >= last) continue;
+        for (const keys of SPACE_TIME_KEY_SETS) {
+            const q = step({ ...node.q }, keys);
+            if (!safe(node.cur, q, node.i + 1)) continue;
+            const kid = { q, i: node.i + 1, cur: node.cur, lastPress: node.lastPress, parent: node, keys: [keys],
+                states: [q] };
+            enqueue(kid);
+            if (!claim(kid)) stats.nodes -= 1;
+            else queue.push(kid);
+        }
+        // ⛓ THE PRESS, where the executor's own arm would take it (`pressReadyAt`, the one predicate)
+        const aims = new Map();
+        for (const b of owedAt(node.cur, node.i)) {
+            if (!(n + node.i - node.lastPress > SLASH_HIT_TICKS && b.hitsTimer === 0
+                && distanceRectPoint(node.q.x, node.q.y, b.rect) <= SLASH_REACH)) continue;
+            stats.inReach += 1;
+            node.cur.ensure(node.i + SLASH_HIT_TICKS + 4);
+            const view = previewViewAt(run, node.i, node.q, live, rawStep, node.cur.rows);
+            if (!pressReadyAt(view, node.q, b.rect, b.hitsTimer, node.lastPress)) continue;
+            const key = FACING_KEYS[facingToward(node.q, b.rect)];
+            if (!aims.has(key)) aims.set(key, new Set([key]));
+        }
+        for (const aim of aims.values()) {
+            stats.presses += 1;
+            const kid = pressFrom(node, aim);
+            if (kid === null) continue;
+            enqueue(kid);
+            if (!claim(kid)) stats.nodes -= 1;
+            else queue.push(kid);
+        }
+    }
+    return no(true, 'exhausted', `no path from t${n} kills ${[...order].join(', ')} and survives ${tail} tick(s) `
+        + `past it by index ${last} (the dedup on the coarse key may have dropped an alternative)`);
+}
+
+/**
+ * ⛓ hammer-phase B2 — the admission's certificate in `deriveStrike`'s shape (the first press's aim state as the
+ * `cell`), carrying the fight for the executor to adopt.
+ */
+function fightStrike(fought) {
+    const { fight } = fought;
+    const k = fight.keys.findIndex((keys) => keys.has('primary'));
+    const aim = fight.states[Math.max(0, k - 1)];
+    return { cell: { x: aim.x, y: aim.y }, pressAt: fight.at + k, aimAt: fight.at + k - 1, eta: k - 1, rejected: [],
+        considered: 0, fight, fightRecord: fought.record };
+}
+
+/**
+ * ⛓ hammer-phase B2 — the fight certificate at the run's tick: `{keys}` to hold, or `{end}` — `done` (its ticks have
+ * run out), `left` (the run's state, or a landing so far, is not the certificate's).
+ */
+function fightHeld(fight, run, landings) {
+    const now = run.ticksCompleted;
+    const k = now - fight.at;
+    if (k < 0 || k >= fight.keys.length) return { end: 'done' };
+    if (!sameState(fight.states[k], run.state)) return { end: 'left' };
+    const sig = (xs) => xs.map((l) => `${l.t}:${l.id}`).sort().join();
+    if (sig(landings.filter((l) => l.t >= fight.at && l.t < now))
+        !== sig(fight.landings.filter((l) => l.t < now))) return { end: 'left' };
+    return { keys: fight.keys[k] };
+}
+
+/**
  * ⛓ THE ESCAPE IN FLIGHT — what the executor holds at tick `now`, or `null` when it does not drive this tick.
  * The train stands until the landing; from the landing the certificate's keys, for `follow` ticks outright (zero)
  * and otherwise only when `noStrike` (the loop found nothing to walk to). A landing that did not happen when the
@@ -10764,6 +11163,22 @@ function execKillByPress(run, perTick, resolved, ctx) {
      * was 665 s of empty pairs c3's 787 s; latched, c3 ran in 127 s.
      */
     let approachQuiet = null;
+    /**
+     * ⛓ hammer-phase B2 — THE FIGHT CERTIFICATE IN FLIGHT (`HAMMER_FIGHT` on only), held across the order's plans:
+     * the search is the kill's, not one body's. `fightQuiet` latches a negative until the next landing (a new fight
+     * state); `fightLastPress` is my last press whoever made it, so a plan that starts mid-fight does not forget it.
+     */
+    let fight = null;
+    let fightQuiet = null;
+    let fightLastPress = -KILL_PRESS_CADENCE;
+    const fights = [];
+    let fightsLeft = 0;
+    if (HAMMER_FIGHT.enabled && resolved.first?.fightRecord) {
+        fights.push(resolved.first.fightRecord);
+        if (resolved.first.fight && fightHeld(resolved.first.fight, run, landings).keys) fight = resolved.first.fight;
+        // ⛓ the admission's negative was asked of this very state: it stands (the latch) rather than be re-asked
+        if (!resolved.first.fight && resolved.first.fightRecord.t === run.ticksCompleted) fightQuiet = 0;
+    }
     for (const plan of resolved.plans) {
         /**
          * ⛔ THE BOUND IS THE DERIVATION'S OWN HORIZON PER LANDING. Three
@@ -10826,7 +11241,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
          * second press on a DIFFERENT body, which the retirement is supposed
          * to allow.
          */
-        let lastPressAt = -KILL_PRESS_CADENCE;
+        let lastPressAt = HAMMER_FIGHT.enabled ? fightLastPress : -KILL_PRESS_CADENCE;
         approachQuiet = null; // ⛓ hammer-phase B1 — a new body is a new search
         /**
          * ⛓ F1c — the stall in flight (absolute ticks `[from, until)` and the
@@ -10927,6 +11342,34 @@ function execKillByPress(run, perTick, resolved, ctx) {
              * Otherwise the press is taken as the switch OFF takes it, no certificate followed, and recorded
              * (`fellBack`).
              */
+            /**
+             * ⛓ hammer-phase B2 — THE FIGHT FIRST: a certificate the run still matches drives this tick (its aim,
+             * press and train are keys like any other); one the run has left is dropped and the kill plans again —
+             * unless a negative stands (`fightQuiet`: until the next landing). Every negative leaves this tick to the
+             * path below, unchanged.
+             */
+            let fightKeys = null;
+            if (HAMMER_FIGHT.enabled) {
+                if (fight !== null) {
+                    const at = fightHeld(fight, run, landings);
+                    if (at.keys) fightKeys = at.keys;
+                    else {
+                        if (at.end === 'left') fightsLeft += 1;
+                        fight = null;
+                    }
+                }
+                if (fight === null && fightQuiet !== landings.length) {
+                    const order = resolved.plans.map((p) => p.id);
+                    const found = deriveFight(run, { targets: order, lastPressAt, caller: 'walk' });
+                    fights.push(found.record);
+                    if (found.ok) {
+                        fight = found.fight;
+                        fightKeys = fightHeld(fight, run, landings).keys ?? null;
+                    } else {
+                        fightQuiet = landings.length;
+                    }
+                }
+            }
             let aimFellBack = null;
             const aimAdmitted = () => {
                 if (!HAMMER_ESCAPE.enabled) return true;
@@ -10941,7 +11384,15 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 aimFellBack = aimEscape;
                 return true;
             };
-            if (aimed) {
+            if (fightKeys !== null) {
+                held = fightKeys;
+                if (held.has('primary')) lastPressAt = run.ticksCompleted;
+                aimed = false;
+                strike = null;
+                refuge = null;
+                escape = null;
+                phaseStall = null;
+            } else if (aimed) {
                 held = PRESS;
                 lastPressAt = run.ticksCompleted;
                 aimed = false;
@@ -11138,6 +11589,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
             for (const h of (run.ledger('spinnerPressHits') ?? []).slice(before)) {
                 if (h.landed) landings.push({ t: h.t, id: h.id, hits: h.hits });
             }
+            if (held.has('primary')) fightLastPress = run.ticksCompleted - 1;
         }
         if ((run.entities('spinnerBodies') ?? []).some((b) => b.id === plan.id)) {
             /**
@@ -11180,7 +11632,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
             ...(phaseStalls.length ? { phaseStalls } : {}),
             ...(escapes.length ? { escapes } : {}),
             ...(fellBack.length ? { fellBack } : {}),
-            ...(HAMMER_APPROACH.enabled ? { approaches, approachesLeft } : {}) };
+            ...(HAMMER_APPROACH.enabled ? { approaches, approachesLeft } : {}),
+            ...(HAMMER_FIGHT.enabled ? { fights, fightsLeft } : {}) };
     }
     /**
      * ⛔⛔⛔ R8 SLICE 8 — THE TAIL WAS `run.openActivators.has(lock)`, AND THAT
@@ -11308,7 +11761,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 ...(phaseStalls.length ? { phaseStalls } : {}),
                 ...(escapes.length ? { escapes } : {}),
                 ...(fellBack.length ? { fellBack } : {}),
-                ...(HAMMER_APPROACH.enabled ? { approaches, approachesLeft } : {}) };
+                ...(HAMMER_APPROACH.enabled ? { approaches, approachesLeft } : {}),
+                ...(HAMMER_FIGHT.enabled ? { fights, fightsLeft } : {}) };
         }
         /**
          * ⚠ THE FADE IS A WAIT TOO, and with the bodies gone the discs are
@@ -13769,6 +14223,10 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  *    is never asked). A trip is "no claim": the tick takes the move it takes with
  *    the switch off (`deriveStrike`, the follow, the refuge), so a trip here
  *    cannot itself refuse anything.
+ *  - `hammer-fight` — the press kill's FIGHT search (hammer-phase B2,
+ *    `deriveFight`), every `SPACE_TIME_CHECK_EVERY` expansions of its best-first
+ *    queue. Asked ONLY with `HAMMER_FIGHT` on (OFF by default; OFF it is never
+ *    asked). A trip is "no claim": the kill takes the path the switch off takes.
  *
  * ⛓⛓ FIDELITY CHECKPOINTS — THE FINE SITES ARE OPT-IN (`solveSegment`'s
  * `fineCheckpoints: true`). The two below and the via-set asks of `detour` are
@@ -13803,7 +14261,7 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  */
 export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
     'block-route', 'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk', 'phase-dodge', 'hammer-escape',
-    'hammer-approach']);
+    'hammer-approach', 'hammer-fight']);
 
 /**
  * ⛓ FIDELITY CHECKPOINTS — the ticks a segment drives between two asks of the
