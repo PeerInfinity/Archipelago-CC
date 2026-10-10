@@ -15574,6 +15574,48 @@ frontier always has one), the wand verb on a MagicalLock (WAND's region), and th
 - **The frontier's nearest name is not the cause.** Step 154's refusal named `bosslock@112,192`, a lock in the north
   that has nothing to do with the goal; the goal's real door is two stacked locks in the south.
 
+### Seedling fidelity WAND — a wand shot opens a MagicalLock, and a WandLock was never its target
+
+Wave 11 (model coverage). Re-measure 3 (survey CI 38075646127) refused steps 60, 81 and 130 on L39's plug
+`wandlock@144,592` with *"Strategy 'wand' is SELECTED but not registered"*. The report is
+`CC/docs/cloud-reports/seedling-fidelity-wand.md`.
+
+**D1 — measured on the game first, and the premise fell.** `WandShot.checkEntity` has two acting arms, `Enemy.hit` and
+`MagicalLock.hit(shotType)`; every other blocker only plays "die". `WandLock extends Lock` with a bare
+`super(…, sprWandLock)`, so it is a plain `"Solid"` to the shot. Its openers are a `Lock`'s: the `tSet` group,
+`checkEnemies()` for `tSet -1`, `Wand.removed()`'s `tset 0` activation, and a tag cleared at BUILD (L39's plug is
+removed by L38's `buttonroom@32,48` writing `{39,8}`, `r5Totem.TOTEM_ENTRANCE`). New instrument
+`probe-seedling-wand-mobiles.mjs` joins the game's `WandShot` rows (`botMobiles()`) and `persistence_cleared` with the
+model's (`run.wandShotsLive`, `run.earnedClears`). Witness `wand-l39-wandlock-shot` (p4f, headless): the shot spawns at
+(152,594) inside the plug, dies the next update, `{39,8}` is never written, the walk north stays at y 610.1; the model
+agrees at 0 px, 121 ticks.
+
+**D2 — `WAND_VERB` (OFF; `wandVerb.js`).** `refineStrategy` sends a `wandlock` to `hold` (then `kill` for a `tSet -1`
+plug) and a `magicallock`/`magicallockfire` to `wand`; the shared rows (`solid:wandlock → wand`,
+`solid:magicallock → kill`) are not reworded. `resolveWandStrategy` / `execWand`: the game's gate (`lockType <=
+shotType`; the Fire Wand is `useItem` case 5, refused by name as `weaponForPress` refuses it), a stance on the lock's
+row or column that a LEAN toward the lock faces, the shot previewed with the model's own `stepWandShot`, the Wand's
+slot, one press, the open read off `magicalLocksOpened`, the slot restored; registered in `frontierExecutor` and the
+clear-tag lookup only while on. A model gap closed under the switch: `MagicalLock.hit`'s `setPersistence(tag, false)`
+never reached `earnedClears` (the cell opened, the flag the next arrival reads was lost).
+
+**D3 — witnesses (p4f, 0 px):** `wand-l68-magicallock` (step 147's staging, the solver's plan: `keylock`, then the
+wand pressed t122, the shot t130, `{68,1}` at t131 in the game's readout, open t145) and `wand-l34-barhouse-exit`
+(sweep-3 leg 354's L34 arrival with the Wand: a whole reach-exit SOLVED, 188 t, into L12). Embedded in
+`fixtures/wand-witness/` (`plan-seedling-wand-witness.mjs`, `fidelityWand.test.js`), not roster tapes.
+
+**Moved (switch ON; nothing moves OFF):** over the 27 survey steps in a level with a wandlock or a MagicalLock, OFF equals CI 38075646127 on every step that finished locally, and ON moves 8 refusals and no SOLVED row. 60/81/130 (L39) now refuse in `kill` (the plug is a kill-lock whose spinners stand behind it; its real opener is L38's button, a cross-room write at build); 147 (L68) gets through `keylock` and `wand` and then refuses on its own pickup (the stance lies past it); 208/213 (L101) refuse by name on the Fire Wand; 82 (L40) reaches `hold` on `wandlock@448,432`, whose presser is behind it; 61 only reorders its frontier. Sweep-3 names a wand lock in one leg (354, L34, no items held), which under the switch becomes a named "needs the WAND" refusal, and with the Wand the same arrival SOLVES (the witness). tapeRunner (589 pairs), the identity block and the six producer `--check`s are unchanged OFF; the bounded set ON is red only on the two rows that pin the default.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A sprite subclass is not a mechanism.** `WandLock`'s name says "wand" and its class says `Lock`; the strategy
+  table took the name. Read the `extends` and the ctor before a row names a verb for a tag.
+- **An open without its write.** The model's MagicalLock opened the cell on the right tick and wrote no flag, so
+  every consumer of `earnedClears` (staging, clear-tag, the next arrival) saw a lock that was never broken. A witness
+  that checks only the player's walk cannot see it; the probe's flag join did.
+- **A co-located pair.** L68's `bosslock@16,32` and `magicallock@16,32` share one cell; a clear-tag order for the
+  second cannot start until the first is open, and the frontier names whichever the sort reaches first.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
