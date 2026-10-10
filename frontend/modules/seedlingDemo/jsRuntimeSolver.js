@@ -402,6 +402,36 @@ export function replayTape({ staging, perTick, levelSource, scratchPersistence =
     return shadow;
 }
 
+/**
+ * ⛓⛓ CRUSHER FORK — `solveSegment`'s `forkRun` for a solve from a tape: a FRESH run at the staging's boot,
+ * built the way the shadow is (`createRunForStaging`, the same persistence mode), on which the solver replays
+ * the segment's ticks — the prefix included — before trying a choreography there (`execBait`). The solver
+ * re-makes only its OWN equips on the fork; the PLAY's equips (`equips`, perTick index → slot) are re-made
+ * here, at their index, on the first `prefixLength` advances — the same fold `replayTape` makes. Each call is
+ * a new run: nothing mutable is shared with the shadow or with another fork.
+ */
+export function forkRunFor({ staging, levelSource, scratchPersistence = false, equips = null, prefixLength = 0 }) {
+    return () => {
+        const run = createRunForStaging(staging, levelSource, { scratchPersistence });
+        if (!(equips?.size > 0)) return run;
+        let advanced = 0;
+        return new Proxy(run, {
+            get(target, prop) {
+                const v = Reflect.get(target, prop);
+                if (prop === 'advance') {
+                    return (...args) => {
+                        const slot = advanced < prefixLength ? equips.get(advanced) : undefined;
+                        if (slot !== undefined) target.equipNow(slot);
+                        advanced += 1;
+                        return v.apply(target, args);
+                    };
+                }
+                return typeof v === 'function' ? v.bind(target) : v;
+            },
+        });
+    };
+}
+
 /** A shadow whose digest is not the live one: the page's bug, by name. */
 function assertShadow(shadow, live, ticks) {
     if (runDigest(shadow) !== live.digest) {
@@ -468,7 +498,9 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
     const t1 = clock();
     // ⛓ SHOULD-STOP — the pass's deadline (`passShouldStop`; null = today's search exactly).
     // ⛓ RECALIBRATE — and whether it also asks the fine sites (`time`, `walk`, the via-set `detour`; only with a hook).
+    // ⛓⛓ CRUSHER — and a fork of the run (`forkRunFor`): `bait` tries a choreography there before committing it.
     const out = solveSegment({ run, goals: [solverGoal], name, boot: staging.boot, prefix: perTick, dashMode, shouldStop,
+        forkRun: forkRunFor({ staging, levelSource, scratchPersistence, equips, prefixLength: perTick.length }),
         ...(shouldStop ? { fineCheckpoints: fineCheckpoints === true } : {}) });
     const solveMs = clock() - t1;
     const solution = out.perTick.slice(perTick.length).map((h) => new Set(h));

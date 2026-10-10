@@ -451,8 +451,9 @@ export function solveForPage({
     const honest = solveStaging(staging);
     const t0 = now();
     const run = createRunForStaging(honest, levelSource, { scratchPersistence });
+    // ⛓⛓ CRUSHER — `forkRun`: a fresh run built exactly as `run` was (`bait` tries a choreography there first).
     const out = solveSegment({ run, goals, name, boot: honest.boot, maxTicksPerTarget,
-        dashMode });
+        dashMode, forkRun: () => createRunForStaging(honest, levelSource, { scratchPersistence }) });
     const ms = now() - t0;
     const despawns = checkSolveDespawns(staging, run);
     return {

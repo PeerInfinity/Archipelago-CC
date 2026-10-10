@@ -465,7 +465,9 @@ export function canCross(o) {
     const t0 = performance.now();
     let out;
     try {
+        // ⛓⛓ CRUSHER — `forkRun`: a fresh run built exactly as `run` was (the solver replays the idle prefix onto it).
         out = solveSegment({ run, goals: [{ ...goal }], name, boot: staging.boot, prefix, dashMode,
+            forkRun: () => createRunForStaging(staging, levelSource, { scratchPersistence }),
             ...(shouldStop ? { shouldStop } : {}) });
     } catch (e) {
         const ms = Math.round(performance.now() - t0);
