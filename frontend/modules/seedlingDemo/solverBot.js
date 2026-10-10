@@ -123,7 +123,7 @@ import { arrivalInsideSolid, arrivalsInto, solidsAt, STUCK_TICKS } from './arriv
 import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,
 } from './strikePolicy.js';
-import { HOLD_FIRST_KEY_SETS, coarseKey, spaceTimeReach } from './spaceTimeReach.js';
+import { HOLD_FIRST_KEY_SETS, SPACE_TIME_KEY_SETS, coarseKey, spaceTimeReach } from './spaceTimeReach.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
@@ -7629,7 +7629,17 @@ function derivePressKill(run, bodies, contacts) {
      * executor's per-tick re-derivations stay bounded, and adopt this strike
      * only when the continuation is what found it (`execKillByPress`).
      */
-    const first = deriveStrike(run, `${bodies[0].tag}@${bodies[0].x},${bodies[0].y}`,
+    /**
+     * ⛓ hammer-phase B1 — with `HAMMER_APPROACH` on the admission's first strike is the APPROACH search's when it
+     * finds one (a certified (position, time) target, adopted by the executor on this tick); any negative asks
+     * `deriveStrike`'s admission exactly as before. No press of this kill is in flight yet (the executor's own
+     * starting `lastPressAt`).
+     */
+    const approached = HAMMER_APPROACH.enabled
+        ? deriveApproach(run, { bodyId: `${bodies[0].tag}@${bodies[0].x},${bodies[0].y}`,
+            lastPressAt: -KILL_PRESS_CADENCE, caller: 'admission' })
+        : null;
+    const first = approached?.ok ? approached.strike : deriveStrike(run, `${bodies[0].tag}@${bodies[0].x},${bodies[0].y}`,
         contacts, 0, { continuation: true });
     if (!first || !first.cell) {
         rejected.push({
@@ -8553,15 +8563,16 @@ function landsClearOfHammers(run, keys) {
  * empty key set, so the hold is the same safe-first chooser the approach uses
  * (a "safe holding step", not a frozen stand that a body can walk into).
  */
-function previewPressApproach(run, { index, hitsTimer, lastPressAt, strike, stall = null,
-    limit, alternatives, from = 0, st0 = null, trail = null }) {
+/**
+ * ⛓ A VIEW OF THE RUN `o` TICKS AHEAD with the player at a previewed `state` — the forecast and the clock shifted by
+ * `o`, the run's own stepper — so `stepToward`, `trainIsSafeHere`, `trainLineBlockedHere` and `landsClearOfHammers`
+ * answer a previewed tick exactly as the run will answer them `o` ticks later (F1c's argument, in
+ * `previewPressApproach`'s docblock). Lifted out of `previewPressApproach` (hammer-phase B1) so the approach search's
+ * goal asks the same view; the members are F1c's, unchanged.
+ */
+function previewViewAt(run, o, state, live, step, forecast = null) {
     const n = run.ticksCompleted;
-    const live = run.entities('spinnerBodies') ?? [];
-    const rows = run.spinnerForecast(limit + STEP_LOOKAHEAD + 2);
-    const step = run.previewStepper();
-    let st = st0 ?? { ...run.state };
-    let hold = null;
-    const viewAt = (o, state) => ({
+    return {
         state,
         level: run.level,
         world: run.world,
@@ -8575,25 +8586,55 @@ function previewPressApproach(run, { index, hitsTimer, lastPressAt, strike, stal
             }
             return live;
         },
-        spinnerForecast: (h) => run.spinnerForecast(o + Math.max(0, Math.ceil(h))).slice(o),
+        // ⛓ hammer-phase B1: `forecast` (rows in `spinnerForecast`'s convention) stands in for the run's own when a
+        // caller holds a hit-aware one (`deriveApproach` with a press in flight); null ⇒ the run's, as F1c built it
+        spinnerForecast: (h) => (forecast === null
+            ? run.spinnerForecast(o + Math.max(0, Math.ceil(h)))
+            : forecast.slice(0, o + Math.max(0, Math.ceil(h)))).slice(o),
         gameTimeAt: (i) => run.gameTimeAt(o + i),
         previewStepper: () => step,
         collideLineSolid: (...a) => run.collideLineSolid(...a),
-    });
+    };
+}
+
+/**
+ * ⛓⛓ THE LIVE ARM'S IN-REACH TEST — ONE PREDICATE, THREE ASKERS (hammer-phase B1). Asked of `view` (the run itself,
+ * or `previewViewAt`'s view of it) with the player at `state`, the body at `rect` with its i-frame `hitsTimer`:
+ *   - no press of mine still owed its tests (`SLASH_HIT_TICKS` since `lastPressAt`; the docblock at `lastPressAt`);
+ *   - the body's i-frame is over;
+ *   - the body is in reach (`distanceRectPoint ≤ SLASH_REACH`) and the slash rect toward it overlaps it;
+ *   - the train as it will be walked (the aim key, the press, the dispatches stood) meets no body or hammer
+ *     (`trainIsSafeHere`) and its line of sight is clear (`trainLineBlockedHere`).
+ * `execKillByPress` asks it of the run (then `aimAdmitted`, the escape); F1c's `previewPressApproach` of a previewed
+ * tick (its `reach` end); the approach search (`deriveApproach`) of each state it reaches. Before B1 the first two
+ * were two spellings of one test ("verbatim in its conditions"); the conditions and their order are unchanged, so no
+ * caller's answer moves.
+ */
+function pressReadyAt(view, state, rect, hitsTimer, lastPressAt) {
+    if (!(view.ticksCompleted - lastPressAt > SLASH_HIT_TICKS && hitsTimer === 0
+        && distanceRectPoint(state.x, state.y, rect) <= SLASH_REACH)) return false;
+    const dir = facingToward(state, rect);
+    if (!rectsOverlapLocal(slashRect(state.x, state.y, dir), rect)) return false;
+    const aimKeys = new Set([FACING_KEYS[dir]]);
+    return trainIsSafeHere(view, aimKeys) && !trainLineBlockedHere(view, dir, aimKeys);
+}
+
+function previewPressApproach(run, { index, hitsTimer, lastPressAt, strike, stall = null,
+    limit, alternatives, from = 0, st0 = null, trail = null }) {
+    const n = run.ticksCompleted;
+    const live = run.entities('spinnerBodies') ?? [];
+    const rows = run.spinnerForecast(limit + STEP_LOOKAHEAD + 2);
+    const step = run.previewStepper();
+    let st = st0 ?? { ...run.state };
+    let hold = null;
     for (let o = from; o < limit; o += 1) {
         if (trail) trail[o] = st;
         const bodies = o === 0 ? live.map((b) => b.rect) : rows[o - 1];
         if (!bodies || bodies.length !== live.length || !rows[o + 1]) return { end: 'unknown', at: o };
-        const view = viewAt(o, st);
+        const view = previewViewAt(run, o, st, live, step);
         const rect = bodies[index];
-        const keyToward = FACING_KEYS[facingToward(st, rect)];
-        // ⛓ The executor's live in-reach test, verbatim in its conditions.
-        if (n + o - lastPressAt > SLASH_HIT_TICKS
-            && Math.max(0, hitsTimer - o) === 0
-            && distanceRectPoint(st.x, st.y, rect) <= SLASH_REACH
-            && rectsOverlapLocal(slashRect(st.x, st.y, facingToward(st, rect)), rect)
-            && trainIsSafeHere(view, new Set([keyToward]))
-            && !trainLineBlockedHere(view, facingToward(st, rect), new Set([keyToward]))) {
+        // ⛓ The executor's live in-reach test — the one predicate (`pressReadyAt`).
+        if (pressReadyAt(view, st, rect, Math.max(0, hitsTimer - o), lastPressAt)) {
             return { end: 'reach', at: o };
         }
         if (n + o > strike.pressAt) return { end: 'lapse', at: o };
@@ -8904,7 +8945,7 @@ function pressEscape(run, opts) {
     const t0 = globalThis.performance.now();
     const out = pressEscapeOnce(run, opts, searches);
     sink({ run, caller: opts.caller ?? 'aim', t: run.ticksCompleted, pressAt: opts.pressAt, id: opts.id,
-        ok: out.ok, claim: out.claim, bound: out.bound ?? null, searches,
+        ok: out.ok, claim: out.claim, bound: out.bound ?? null, why: out.why ?? null, searches,
         expansions: searches.reduce((a, x) => a + x.expansions, 0), ms: globalThis.performance.now() - t0 });
     return out;
 }
@@ -8963,18 +9004,7 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
      * state is unsafe as `previewWalk`'s `lethalFloorOf` reads it: drowning latched by this path (a drown already
      * latched at the start is the run's), or a fall whose tile `fallDestination` refuses (a lethal pit).
      */
-    const drowningAtStart = state.drown?.drowning === true;
-    const lethalFloor = (q) => {
-        if (!drowningAtStart && q.drown?.drowning === true) return true;
-        if (!q.fall || q.fall.phase !== 'out') return false;
-        try {
-            fallDestination(run.world, q.fall.target);
-            return false;
-        } catch (e) {
-            if (!(e instanceof PhysicsV2Error)) throw e;
-            return true;
-        }
-    };
+    const lethalFloor = lethalFloorFrom(run, state);
     const safeIn = (rows) => (q, i) => q !== null && !lethalFloor(q)
         && clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i);
     const safe = safeIn(first.rows);
@@ -9029,6 +9059,288 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         keys: [...pre, ...found.keys], expansions: found.expansions,
         states: [...pre.map((_, k) => states.get(L + k)), ...found.states],
     };
+}
+
+/**
+ * ⛓ hammer-phase A2's lethal-floor reading (`pressEscapeOnce`'s docblock), lifted out in B1 so the approach search
+ * prunes with the escape's own predicate: `(q) => true` when `q` has latched a drowning `start` had not, or falls into
+ * a tile `fallDestination` refuses (a lethal pit).
+ */
+function lethalFloorFrom(run, start) {
+    const drowningAtStart = start.drown?.drowning === true;
+    return (q) => {
+        if (!drowningAtStart && q.drown?.drowning === true) return true;
+        if (!q.fall || q.fall.phase !== 'out') return false;
+        try {
+            fallDestination(run.world, q.fall.target);
+            return false;
+        } catch (e) {
+            if (!(e instanceof PhysicsV2Error)) throw e;
+            return true;
+        }
+    };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE B1 — **THE STRIKE APPROACH, PLANNED IN SPACE-TIME** (⚖ the user, 2026-10-07: *"the
+ * target position we want to reach to attack from changes over time, and so there are multiple (position, time)
+ * targets to choose from"*; 2026-10-09: *"Yes"* to this slice).
+ *
+ * ⛔ WHAT IT REPLACES, AND ONLY WHERE IT FINDS SOMETHING. The approach to the next strike was time-blind:
+ * `deriveStrike` scans (16 px cell × tick) opportunities and checks ONE straight `chooseHeld` walk per cell; the
+ * executor then drives it greedily (`stepToward`, four ticks deep) and repairs it (`hammerPhaseRung`, `safeStep`).
+ * With the switch on, a tick with no strike in hand first asks `spaceTimeReach` in its EARLIEST mode, from the run's
+ * own state: the nine key sets through the run's stepper, pruned by the escape's own predicate (`clearOfHammersAt` on
+ * the forecast's rows, lethal floor, previewed deaths), to the first index at which a state satisfies the GOAL:
+ *   - the live arm's in-reach test (`pressReadyAt`, the one predicate) asked of the previewed state, against the
+ *     forecast's body at that index and its i-frame, through `previewViewAt` — so the aim, the press and the train
+ *     are previewed exactly as the executor will ask them on that tick;
+ *   - AND (with `HAMMER_ESCAPE` on) the escape admission of THAT press (`pressEscape`, from the run's state along the
+ *     certificate's own keys, the aim key, the press), asked lazily — only of a state that passed the first test.
+ *     A press with a claimed negative is not a goal and the search goes on; "no claim" admits, as at the aim.
+ * The certificate is a strike (`cell` = the aim state's point, `aimAt`, `pressAt`) carrying its keys: the executor
+ * HOLDS them, tick for tick (still under `safeStep`), and its own in-reach arm then aims and presses on the
+ * certificate's aim tick. A certificate the run leaves (a state that is not the certificate's, a `safeStep` swap) is
+ * dropped, and the tick derives again.
+ *
+ * ⛔ A PREFERENCE, NEVER A REFUSAL (A3's shape): every negative — `exhausted` (no strike reachable in the horizon),
+ * `expansions` / `deadline` (no claim), `window` (a press of mine still in flight: the forecast without it is not the
+ * run), `start` — hands the tick to the path the switch OFF takes (`deriveStrike`, the follow, the refuge),
+ * unchanged.
+ *
+ * ⛔ THE START IS THE RUN'S STATE NOW, not the escape certificate's end (the brief's alternative). The certificate in
+ * flight is followed only on a tick with no strike (`follow` 0, A's measurement), so the approach — a strike — takes
+ * over from it on the tick it is found; its search covers every state the certificate's keys would have reached (the
+ * same prune), so starting from the certificate's end would only discard the part of the space-time the i-frame
+ * walk could have spent closer to the next target.
+ *
+ * OFF by default (`SEEDLING_HAMMER_APPROACH=1` or `withHammerApproach(true, fn)` turns it on): nothing below is
+ * reached and every walk is byte-identical.
+ */
+export const HAMMER_APPROACH = { enabled: globalThis.process?.env?.SEEDLING_HAMMER_APPROACH === '1' };
+
+/** Run `fn` with the approach switch set to `enabled`, restoring the previous value (`withHammerEscape`'s shape). */
+export function withHammerApproach(enabled, fn) {
+    const was = HAMMER_APPROACH.enabled;
+    HAMMER_APPROACH.enabled = enabled === true;
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') {
+            return out.finally(() => { HAMMER_APPROACH.enabled = was; });
+        }
+        HAMMER_APPROACH.enabled = was;
+        return out;
+    } catch (e) {
+        HAMMER_APPROACH.enabled = was;
+        throw e;
+    }
+}
+
+/**
+ * ⛓⛓ THE APPROACH'S BOUNDS, each derived and then measured (`profile-seedling-hammer-approach.mjs`, every search of
+ * the L18 residue sweep and of the generated rows; `HAMMER_APPROACH_MEASURED`):
+ *   - `cell` 8 px — A's key (`coarseKey`: the cell × the sign of each velocity axis). The goal region is a few px
+ *     wide, so finer keys were measured: 4 px finds an earlier strike at some searches (the census corridor's t55:
+ *     8 px +60, 4 px +33, 2 px +31) but not a shorter FIGHT — over the 45 L18 residues 8 px averages 367.6 t and 4 px
+ *     369.0 t (10 residues longer than A4 at 4 px, 5 at 8 px), the six census spinner rooms sum 1,121 vs 1,167 t,
+ *     and 4 px costs 1.7× the time. Greedy "the earliest next strike" is not monotone in the fight's length.
+ *   - `horizon` `null` ⇒ `strikeHorizon(run)`: the question is `deriveStrike`'s (is there a strike before the body
+ *     can have crossed the room both ways), asked over the same window. The latest strike measured is +72.
+ *   - `maxExpansions` 50,000 — the escape's budget, and above every search measured that ENDED on its own: the
+ *     largest that found a strike (49,291, carved pairs c4) and the largest whole search to the horizon (49,749, c4).
+ *     A cut search is NO CLAIM (the tick takes the switch-OFF path) and is latched until the next press
+ *     (`APPROACH_LATCHED`), so it costs at most one search per press.
+ */
+export const HAMMER_APPROACH_BOUNDS = Object.freeze({
+    cell: 8,
+    horizon: null,
+    maxExpansions: 50000,
+});
+
+/**
+ * ⛓ hammer-phase B1 — what every approach search spent, measured at the bounds above (D1; the box, approach ON):
+ * L18's 45 residues, empty pairs c3/c6, carved pairs c4, the ENEMY census, killgate s2/s5/s9, the acceptance batch.
+ *   - `largestFound` 49,291 (c4; L18 7,707; c3/c6 9,962); `largestHorizon` 49,749 (c4; no other set has one);
+ *     `largestExhausted` 1,646 (L18); `maxFoundIndex` 72 (c3/c6, killgate s5);
+ *   - `budgetCuts`: c3 8, c6 17, c4 12, acceptance 1, L18 and the censuses 0 — each no claim.
+ */
+export const HAMMER_APPROACH_MEASURED = Object.freeze({
+    cell: 8,
+    largestFound: 49291,
+    largestHorizon: 49749,
+    largestExhausted: 1646,
+    maxFoundIndex: 72,
+    budgetCuts: Object.freeze({ l18: 0, c3: 8, c6: 17, c4: 12, acceptance: 1, enemy: 0, killgate: 0 }),
+});
+
+/** ⛓ hammer-phase B1 — the approach's trace, `HAMMER_ESCAPE_TRACE`'s shape: `sink` null (off) or a function. */
+export const HAMMER_APPROACH_TRACE = { sink: null };
+
+/**
+ * ⛓ ONE APPROACH SEARCH (see `HAMMER_APPROACH`), from the run's state now.
+ *
+ * @returns {{ok: true, strike: object, record: object} | {ok: false, bound: string, why: string, record: object}}
+ *   `strike` is `deriveStrike`'s shape (`cell`, `pressAt`, `aimAt`, `eta`, `rejected`, `considered`) plus `approach`
+ *   (`{at, keys, states, index, escape}`); `record` is the press record's row for this search.
+ */
+export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMMER_APPROACH_BOUNDS }) {
+    const n = run.ticksCompleted;
+    const live = run.entities('spinnerBodies') ?? [];
+    const index = live.findIndex((b) => b.id === bodyId);
+    const t0 = HAMMER_APPROACH_TRACE.sink === null ? 0 : globalThis.performance.now();
+    let goals = 0;
+    let escapes = 0;
+    const done = (out) => {
+        const record = { t: n, caller, ok: out.ok, bound: out.ok ? null : out.bound,
+            index: out.ok ? out.strike.approach.index : null, expansions: out.expansions ?? 0, goals, escapes };
+        if (HAMMER_APPROACH_TRACE.sink !== null) {
+            HAMMER_APPROACH_TRACE.sink({ run, ...record, ms: globalThis.performance.now() - t0, out });
+        }
+        return { ...out, record };
+    };
+    if (index < 0) return done({ ok: false, bound: 'body', why: `${bodyId} is not a live body` });
+    // ⛔ a body already dying (its fade running) takes no hit (`hitSpinner`'s gate): there is no strike to approach
+    if (live[index].destroy) return done({ ok: false, bound: 'dying', why: `${bodyId} is dying (its fade runs)` });
+    const horizon = bounds.horizon ?? strikeHorizon(run);
+    const { cell, maxExpansions } = bounds;
+    const NO_KEYS = new Set();
+    const rawStep = run.previewStepper();
+    const step = previewOrDeath(rawStep);
+    /**
+     * ⛓ A PRESS OF MINE STILL IN FLIGHT. Its remaining tests re-aim from the player's point on each test tick, so
+     * the bodies' future depends on the path — `spinnerForecast` (which holds no hit it has not seen) is not the
+     * run. ⇒ the certificate STANDS through the window's last test (the escape's convention for a train), and the
+     * hazards are the hit-aware forecast (`spinnerForecastWithPress`, no press of the approach's own: its `pressAt`
+     * is past the last row) over those stood points — exact. Which ticks the window still tests is ASKED of the
+     * forecast (the points it requests), not counted here. A stood state that dies is no claim.
+     */
+    const stood = [{ ...run.state }];
+    const stoodAt = (t) => {
+        for (let k = stood.length; k <= t - n; k += 1) {
+            const q = stood[k - 1] === null ? null : step({ ...stood[k - 1] }, NO_KEYS);
+            stood.push(q);
+        }
+        return stood[t - n] ?? null;
+    };
+    const need = horizon + SLASH_HIT_TICKS + 4;
+    // ⚠ a test due at `n` itself (the press's pending thrust fires at the top of the next tick) is in flight too:
+    // it needs no stood tick, but the bodies after it are the hit-aware forecast's
+    let windowEnd = null;
+    const probe = (rowsWanted) => run.spinnerForecastWithPress(rowsWanted, { pressAt: n + rowsWanted,
+        direction: run.state.direction, positions: (t) => {
+            if (windowEnd === null || t > windowEnd) windowEnd = t;
+            return stoodAt(t);
+        } });
+    let hitAware = null;
+    try {
+        probe(SLASH_HIT_TICKS + 2);
+        if (windowEnd !== null) hitAware = probe(need);
+    } catch (e) {
+        if (!(e instanceof Error) || !/no player position/.test(e.message)) throw e;
+        return done({ ok: false, bound: 'window', why: 'a press in flight tests a point the stood train dies before' });
+    }
+    // ⛔ the window in flight KILLS the body (its fade starts): no strike remains to approach
+    if (hitAware !== null && hitAware.bodies.some((row) => row[index]?.destroy)) {
+        return done({ ok: false, bound: 'dying', why: `the press in flight kills ${bodyId}` });
+    }
+    // the goal's train previews read `SLASH_HIT_TICKS + 3` rows past the goal's index
+    const rows = hitAware?.rows ?? run.spinnerForecast(need);
+    const prefix = windowEnd === null ? 0 : windowEnd - n;
+    const lethalFloor = lethalFloorFrom(run, run.state);
+    const safe = (q, i) => q !== null && !lethalFloor(q) && clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i);
+    for (let k = 1; k <= prefix; k += 1) {
+        if (!safe(stood[k], k)) {
+            return done({ ok: false, bound: 'window', why: `the window's stood train meets a body or the line at `
+                + `t${n + k}` });
+        }
+    }
+    const hitsTimer = live[index].hitsTimer;
+    /** The body at the top of tick `n + i`: live now, the forecast's row `i − 1` after (F1c's convention). */
+    const bodyAt = (i) => {
+        const bodies = i === 0 ? live.map((b) => b.rect) : rows[i - 1];
+        return bodies && bodies.length === live.length ? bodies[index] : null;
+    };
+    /**
+     * ⛔ ITS I-FRAME AT THE TOP OF TICK `n + i`: with a press in flight the hit-aware forecast's own row (the
+     * landing the window makes opens it), otherwise the live timer run down (F1c's reading); `null` when the body
+     * is dying there (no hit lands).
+     */
+    const iframeAt = (i) => {
+        if (i === 0 || hitAware === null) return Math.max(0, hitsTimer - i);
+        const b = hitAware.bodies[i - 1]?.[index];
+        return !b || b.destroy ? null : b.hitsTimer;
+    };
+    const stands = Array.from({ length: prefix }, () => NO_KEYS);
+    let escape = null;
+    const goal = (q, i, path) => {
+        const rect = bodyAt(i);
+        if (!rect || !rows[i + SLASH_HIT_TICKS + 2]) return false;
+        const iframe = iframeAt(i);
+        if (iframe === null) return false;
+        const view = previewViewAt(run, i, q, live, rawStep, hitAware?.rows ?? null);
+        if (!pressReadyAt(view, q, rect, iframe, lastPressAt)) return false;
+        goals += 1;
+        if (!HAMMER_ESCAPE.enabled) return true;
+        const { keys } = path();
+        escapes += 1;
+        const esc = pressEscape(run, { state: run.state, at: n,
+            keys: [...stands, ...keys, new Set([FACING_KEYS[facingToward(q, rect)]])],
+            pressAt: n + i + 1, id: bodyId, caller: 'approach' });
+        if (esc.ok || !esc.claim) {
+            escape = esc;
+            return true;
+        }
+        return false;
+    };
+    const r = spaceTimeReach({
+        start: stood[prefix], startIndex: prefix, step, safe, horizon: horizon - prefix, goal, mode: 'earliest',
+        keySets: SPACE_TIME_KEY_SETS, keyOf: coarseKey(cell), maxExpansions,
+        // ⛓ of two states with one coarse key, keep the one nearer the body at that index (the goal's own measure)
+        rank: (q, i) => {
+            const rect = bodyAt(i);
+            return rect ? -distanceRectPoint(q.x, q.y, rect) : -Infinity;
+        },
+        shouldStop: activeDeadline !== null ? () => deadlineReached('hammer-approach') : null,
+    });
+    if (!r.ok) return done({ ok: false, bound: r.bound, why: r.why, expansions: r.expansions });
+    const i = r.endIndex;
+    const aim = r.states[r.states.length - 1];
+    return done({
+        ok: true,
+        expansions: r.expansions,
+        strike: {
+            cell: { x: aim.x, y: aim.y },
+            pressAt: n + i + 1,
+            aimAt: n + i,
+            eta: i,
+            rejected: [],
+            considered: 0,
+            approach: { at: n, keys: [...stands, ...r.keys], states: [...stood.slice(0, prefix), ...r.states],
+                index: i, window: prefix,
+                escape: escape?.ok ? { landing: escape.landing, expansions: escape.expansions } : null },
+        },
+    });
+}
+
+/**
+ * ⛓ hammer-phase B1 — the negatives that stand until the next press (`approachQuiet` in `execKillByPress`): the
+ * EXPENSIVE ones — a budget cut (`expansions`, `deadline`) and a search that ran the whole horizon with no strike
+ * (`horizon`: measured on carved pairs c4, 177 such searches of up to 44,286 expansions, 295 s of a 527 s row).
+ * ⛔ Not `exhausted`: measured, latching it moved three L18 residues (r19 363 → 461 t) — a search from a later state,
+ * under the same prune, found a strike the earlier one's coarse dedup had dropped — and an exhausted search is cheap
+ * (the largest measured is 1,646 expansions), so it is asked again every tick.
+ */
+const APPROACH_LATCHED = Object.freeze(new Set(['expansions', 'deadline', 'horizon']));
+
+/**
+ * ⛓ hammer-phase B1 — the key set the approach certificate holds at the run's tick, or `null` when it does not
+ * describe the run (before its start, past its aim tick, or a state that is not the certificate's: the run left it).
+ */
+function approachHeld(approach, run) {
+    const k = run.ticksCompleted - approach.at;
+    if (k < 0 || k >= approach.keys.length) return null;
+    if (!sameState(approach.states[k], run.state)) return null;
+    return approach.keys[k];
 }
 
 /**
@@ -10275,6 +10587,17 @@ function execKillByPress(run, perTick, resolved, ctx) {
     const escapes = [];
     /** ⛓ hammer-phase A3 — the presses taken at an aim with NO certified escape (`HAMMER_ESCAPE_FALLBACK`). */
     const fellBack = [];
+    /** ⛓ hammer-phase B1 — every approach search this kill (`HAMMER_APPROACH` on only), and the certificates left. */
+    const approaches = [];
+    let approachesLeft = 0;
+    /**
+     * ⛓ hammer-phase B1 — A BUDGET CUT STANDS UNTIL A PRESS (`APPROACH_LATCHED`). While no press of mine is made
+     * (`lastPressAt`) the bodies' forecast is the one the cut search had, and the walk's ticks are pruned by the same
+     * predicate (`safeStep`'s landing test is `clearOfHammersAt` at the next index), so the next search would spend
+     * its budget on (nearly) the same space-time again. Measured: re-asking a cut search every tick of a refuge wait
+     * was 665 s of empty pairs c3's 787 s; latched, c3 ran in 127 s.
+     */
+    let approachQuiet = null;
     for (const plan of resolved.plans) {
         /**
          * ⛔ THE BOUND IS THE DERIVATION'S OWN HORIZON PER LANDING. Three
@@ -10338,6 +10661,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
          * to allow.
          */
         let lastPressAt = -KILL_PRESS_CADENCE;
+        approachQuiet = null; // ⛓ hammer-phase B1 — a new body is a new search
         /**
          * ⛓ F1c — the stall in flight (absolute ticks `[from, until)` and the
          * cell it holds around), and the rung's last refusal, which rides the
@@ -10369,6 +10693,20 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 rejected: seeded.rejected.slice(0, 3),
             });
         }
+        // ⛓ hammer-phase B1 — the admission's APPROACH is adopted when it still describes the run (taken on this
+        // tick, from this state); otherwise the loop derives its own.
+        if (seeded?.approach && plan === resolved.plans[0] && approachHeld(seeded.approach, run) !== null) {
+            strike = seeded;
+            cycles.push({
+                body: plan.id,
+                cell: seeded.cell,
+                pressAt: seeded.pressAt,
+                eta: seeded.eta,
+                considered: seeded.considered,
+                rejected: seeded.rejected.slice(0, 3),
+                approach: seeded.approach.index,
+            });
+        }
         for (; spent <= bound; spent += 1) {
             const body = (run.entities('spinnerBodies') ?? []).find((b) => b.id === plan.id);
             if (!body) break;
@@ -10389,7 +10727,18 @@ function execKillByPress(run, perTick, resolved, ctx) {
             let refugeTaken;
             const nextNow = () => {
                 if (derived === undefined) {
-                    derived = deriveStrike(run, plan.id, contacts, body.hitsTimer > 0 ? body.hitsTimer : 0);
+                    /**
+                     * ⛓ hammer-phase B1 — the APPROACH first (`HAMMER_APPROACH`): a certified (position, time)
+                     * target is this tick's strike; any negative hands the tick to `deriveStrike`, unchanged.
+                     */
+                    const planned = HAMMER_APPROACH.enabled && approachQuiet !== lastPressAt
+                        ? deriveApproach(run, { bodyId: plan.id, lastPressAt, caller: 'walk' }) : null;
+                    if (planned !== null) approaches.push(planned.record);
+                    if (planned !== null && !planned.ok && APPROACH_LATCHED.has(planned.bound)) {
+                        approachQuiet = lastPressAt;
+                    }
+                    derived = planned?.ok ? planned.strike
+                        : deriveStrike(run, plan.id, contacts, body.hitsTimer > 0 ? body.hitsTimer : 0);
                 }
                 return derived;
             };
@@ -10433,15 +10782,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 strike = null;
             } else if (following !== null) {
                 held = following;
-            } else if (run.ticksCompleted - lastPressAt > SLASH_HIT_TICKS
-                && body.hitsTimer === 0
-                && distanceRectPoint(run.state.x, run.state.y, body.rect) <= SLASH_REACH
-                && rectsOverlapLocal(slashRect(run.state.x, run.state.y,
-                    facingToward(run.state, body.rect)), body.rect)
-                && trainIsSafeHere(run,
-                    new Set([FACING_KEYS[facingToward(run.state, body.rect)]]))
-                && !trainLineBlockedHere(run, facingToward(run.state, body.rect),
-                    new Set([FACING_KEYS[facingToward(run.state, body.rect)]]))
+            } else if (pressReadyAt(run, run.state, body.rect, body.hitsTimer, lastPressAt)
                 && aimAdmitted()) {
                 if (aimEscape?.ok) {
                     escape = aimEscape;
@@ -10467,12 +10808,20 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 held = new Set([FACING_KEYS[facingToward(run.state, body.rect)]]);
                 aimed = true;
             } else {
+                // ⛓ hammer-phase B1 — an approach certificate the run has left (or whose aim tick passed unpressed)
+                // no longer describes the walk: it ends, and this tick derives again.
+                if (strike?.approach && approachHeld(strike.approach, run) === null) {
+                    approachesLeft += 1;
+                    strike = null;
+                }
                 if (!strike || run.ticksCompleted > strike.pressAt) {
                     const next = nextNow();
                     const move = moveNow();
                     if (move === 'strike' || move === 'uncertified') {
                         strike = next;
                         refuge = null;
+                        // ⛓ hammer-phase B1 — the certificate drives the walk; a stall of an older strike ends
+                        if (next.approach) phaseStall = null;
                         cycles.push({
                             body: plan.id,
                             cell: next.cell,
@@ -10482,6 +10831,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
                             rejected: next.rejected.slice(0, 3),
                             // ⛓ hammer-phase A3 — a strike taken without a certified escape says so
                             ...(next.escape ? { escape: next.escape, escapeBound: next.escapeBound } : {}),
+                            // ⛓ hammer-phase B1 — a strike the approach search planned says so
+                            ...(next.approach ? { approach: next.approach.index } : {}),
                         });
                     } else if (move === 'follow') {
                         /**
@@ -10517,6 +10868,9 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 const late = HAMMER_ESCAPE.enabled && !aim
                     ? escapeHeld(escape, run.ticksCompleted, landings, plan.id, true) : null;
                 if (late !== null) held = late;
+                // ⛓ hammer-phase B1 — the approach certificate's key for this tick (already hammer-checked to its aim)
+                const charted = strike?.approach ? approachHeld(strike.approach, run) : null;
+                if (charted !== null) held = charted;
                 /**
                  * ⛓⛓⛓ THE APPROACH IS DISC-AWARE PER TICK, and the first cut
                  * measured why it has to be. A plain `chooseHeld` walks the
@@ -10530,7 +10884,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
                  * scale (⚖ §11.8a) asked at tick scale, where a moving hazard
                  * is the only thing that can answer it.
                  */
-                if (late === null) held = stepToward(run, aim, held);
+                if (late === null && charted === null) held = stepToward(run, aim, held);
                 /**
                  * ⛓⛓⛓ F1c — THE HAMMER-PHASE RUNG (`hammerPhaseRung`). Only on a
                  * STRIKE approach: a refuge wait re-derives a strike every tick
@@ -10542,7 +10896,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 if (phaseStall && now >= phaseStall.from) {
                     if (now === phaseStall.from) phaseStall.hold = { x: run.state.x, y: run.state.y };
                     held = stepToward(run, phaseStall.hold, NO_KEYS);
-                } else if (!phaseStall && strike && aim === strike.cell) {
+                } else if (!phaseStall && strike && aim === strike.cell && charted === null) {
                     const verdict = hammerPhaseRung(run, {
                         index: (run.entities('spinnerBodies') ?? [])
                             .findIndex((b) => b.id === plan.id),
@@ -10659,7 +11013,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
             landings, cycles, bodies: resolved.bodies,
             ...(phaseStalls.length ? { phaseStalls } : {}),
             ...(escapes.length ? { escapes } : {}),
-            ...(fellBack.length ? { fellBack } : {}) };
+            ...(fellBack.length ? { fellBack } : {}),
+            ...(HAMMER_APPROACH.enabled ? { approaches, approachesLeft } : {}) };
     }
     /**
      * ⛔⛔⛔ R8 SLICE 8 — THE TAIL WAS `run.openActivators.has(lock)`, AND THAT
@@ -10786,7 +11141,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 ...(economies ? { earlyWalk } : {}),
                 ...(phaseStalls.length ? { phaseStalls } : {}),
                 ...(escapes.length ? { escapes } : {}),
-                ...(fellBack.length ? { fellBack } : {}) };
+                ...(fellBack.length ? { fellBack } : {}),
+                ...(HAMMER_APPROACH.enabled ? { approaches, approachesLeft } : {}) };
         }
         /**
          * ⚠ THE FADE IS A WAIT TOO, and with the bodies gone the discs are
@@ -13199,6 +13555,12 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  *    hammer-phase A2; OFF it is never asked). A trip is "no claim": the strike is
  *    admitted and the aim taken exactly as with the switch off, so a trip here
  *    cannot itself refuse anything.
+ *  - `hammer-approach` — the press kill's APPROACH search (hammer-phase B1,
+ *    `deriveApproach`), every `SPACE_TIME_CHECK_EVERY` expansions inside
+ *    `spaceTimeReach`. Asked ONLY with `HAMMER_APPROACH` on (OFF by default; OFF it
+ *    is never asked). A trip is "no claim": the tick takes the move it takes with
+ *    the switch off (`deriveStrike`, the follow, the refuge), so a trip here
+ *    cannot itself refuse anything.
  *
  * ⛓⛓ FIDELITY CHECKPOINTS — THE FINE SITES ARE OPT-IN (`solveSegment`'s
  * `fineCheckpoints: true`). The two below and the via-set asks of `detour` are
@@ -13232,7 +13594,8 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  * trip carries the same object and says so in its words.
  */
 export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
-    'block-route', 'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk', 'phase-dodge', 'hammer-escape']);
+    'block-route', 'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk', 'phase-dodge', 'hammer-escape',
+    'hammer-approach']);
 
 /**
  * ⛓ FIDELITY CHECKPOINTS — the ticks a segment drives between two asks of the

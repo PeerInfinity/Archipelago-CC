@@ -20,6 +20,8 @@
  *                                                                             #   since hammer-phase A2)
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --no-fallback        # `HAMMER_ESCAPE_FALLBACK` OFF (A2's
  *                                                                             #   escape as a requirement)
+ *   node scripts/procgen/sweep-seedling-l18-residues.mjs --approach           # `HAMMER_APPROACH` ON (hammer-phase B1:
+ *                                                                             #   the strike approach in space-time)
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --twice              # each row solved twice, compared
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --full               # the whole refusal text
  *   node scripts/procgen/sweep-seedling-l18-residues.mjs --json=<path>        # also write the rows as JSON
@@ -65,6 +67,7 @@ async function main() {
     const NO_ESCAPE = argv.includes('--no-escape');
     if (ESCAPE && NO_ESCAPE) throw new Error('--escape and --no-escape: pick one');
     const NO_FALLBACK = argv.includes('--no-fallback');
+    const APPROACH = argv.includes('--approach');
     const TWICE = argv.includes('--twice');
     const FULL = argv.includes('--full');
     const JSON_OUT = valueOf('--json');
@@ -74,12 +77,14 @@ async function main() {
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
     const { SPINNER } = await import(join(MODULE, 'spinner.js'));
-    const { HAMMER_ESCAPE, HAMMER_ESCAPE_FALLBACK } = await import(join(MODULE, 'solverBot.js'));
+    const { HAMMER_APPROACH, HAMMER_ESCAPE, HAMMER_ESCAPE_FALLBACK } = await import(join(MODULE, 'solverBot.js'));
     if (ESCAPE) HAMMER_ESCAPE.enabled = true;
     // ⛓ hammer-phase A2: the switch is ON by default; `--no-escape` measures the base (35/45) without an edit.
     if (NO_ESCAPE) HAMMER_ESCAPE.enabled = false;
     // ⛓ hammer-phase A3: the escape is a preference; `--no-fallback` measures A2's requirement.
     if (NO_FALLBACK) HAMMER_ESCAPE_FALLBACK.enabled = false;
+    // ⛓ hammer-phase B1: the approach planned in space-time (OFF by default).
+    if (APPROACH) HAMMER_APPROACH.enabled = true;
 
     const NAME = 'r9-solve-18';
     const TELEPORTER = { x: 176, y: 112 };
@@ -126,6 +131,18 @@ async function main() {
                 // ⛓ hammer-phase A3: presses taken at an aim with no certificate, strikes derived without one
                 fellBack: press.flatMap((p) => p.fellBack ?? []).length,
                 uncertified: press.flatMap((p) => p.cycles ?? []).filter((c) => c.escape === 'uncertified').length,
+                // ⛓ hammer-phase B1: approach searches, those that found a strike, their expansions, certificates left
+                ...(APPROACH ? (() => {
+                    const a = press.flatMap((p) => p.approaches ?? []);
+                    return { approach: { searches: a.length, found: a.filter((x) => x.ok).length,
+                        expansions: a.reduce((s, x) => s + x.expansions, 0),
+                        maxExpansions: a.reduce((m, x) => Math.max(m, x.expansions), 0),
+                        bounds: a.filter((x) => !x.ok).reduce((o, x) => ({ ...o, [x.bound]: (o[x.bound] ?? 0) + 1 }), {}),
+                        escapes: a.reduce((s, x) => s + x.escapes, 0),
+                        left: press.reduce((s, p) => s + (p.approachesLeft ?? 0), 0),
+                        // every search's row (`--json` only prints them): {t, caller, ok, bound, index, expansions, …}
+                        records: a } };
+                })() : {}),
             };
         } catch (e) {
             const msg = String(e?.message ?? e);
@@ -138,7 +155,8 @@ async function main() {
 
     console.log(`# ${NAME} at seam.time ${STAGING.seam.time} (committed residue ${RESIDUE}); `
         + `HAMMER_ESCAPE ${HAMMER_ESCAPE.enabled ? 'ON' : 'OFF'}; `
-        + `HAMMER_ESCAPE_FALLBACK ${HAMMER_ESCAPE_FALLBACK.enabled ? 'ON' : 'OFF'}; ${residues.length} residue(s)`);
+        + `HAMMER_ESCAPE_FALLBACK ${HAMMER_ESCAPE_FALLBACK.enabled ? 'ON' : 'OFF'}; `
+        + `HAMMER_APPROACH ${HAMMER_APPROACH.enabled ? 'ON' : 'OFF'}; ${residues.length} residue(s)`);
     const rows = [];
     let unstable = 0;
     for (const r of residues) {
@@ -152,14 +170,16 @@ async function main() {
         const len = a.length === null ? 'R' : String(a.length);
         const extra = a.length !== null
             ? `digest ${a.digest} stalls ${a.stalls} escapes ${a.escapes} fellBack ${a.fellBack}/${a.uncertified} `
-                + `hits ${a.hits}` : `— ${a.head}`;
+                + `hits ${a.hits}${a.approach ? ` approach ${a.approach.found}/${a.approach.searches} `
+                    + `x${a.approach.expansions} max${a.approach.maxExpansions} esc${a.approach.escapes} `
+                    + `left${a.approach.left} ${JSON.stringify(a.approach.bounds)}` : ''}` : `— ${a.head}`;
         console.log(`r${String(r).padStart(2)}  ${a.verdict.padEnd(22)} ${len.padStart(4)}  `
             + `${a.seconds.toFixed(1).padStart(6)}s  ${TWICE ? `${a.twice}  ` : ''}${extra}`);
     }
     const solved = rows.filter((x) => x.verdict === 'SOLVE');
     console.log(`\n# ${solved.length}/${rows.length} solve; lengths by residue: `
         + rows.map((x) => (x.length === null ? 'R' : x.length)).join(' '));
-    if (JSON_OUT) writeFileSync(JSON_OUT, `${JSON.stringify({ escape: ESCAPE, rows }, null, 2)}\n`);
+    if (JSON_OUT) writeFileSync(JSON_OUT, `${JSON.stringify({ escape: ESCAPE, approach: APPROACH, rows }, null, 2)}\n`);
     if (unstable > 0) {
         console.error(`⛔ ${unstable} row(s) answered differently on the second solve`);
         process.exit(1);
