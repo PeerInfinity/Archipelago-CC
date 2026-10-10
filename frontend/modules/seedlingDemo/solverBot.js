@@ -8656,9 +8656,9 @@ export function previewOrDeath(step) {
  * whose landing cell is unsafe is a strike the schedule should not have
  * planned; refusing it silently would hide that.
  */
-function safeStep(run, held, alternatives, what, bodyId) {
+function safeStep(run, held, alternatives, what, bodyId, landsClear = landsClearOfHammers) {
     if ((run.entities('spinnerBodies') ?? []).length === 0) return held;
-    const lands = (keys) => landsClearOfHammers(run, keys);
+    const lands = (keys) => landsClear(run, keys);
     if (lands(held)) return held;
     if (held.has('primary')) {
         return fail(`${what}: the derived PRESS tick against ${bodyId} would land the `
@@ -8707,6 +8707,26 @@ function landsClearOfHammers(run, keys) {
     return clearOfHammersAt(
         { gameTimeAt: (i) => run.gameTimeAt(i + 1) },
         playerBoxAt(next.x, next.y), [ahead], 0);
+}
+
+/**
+ * ⛓ hammer-phase B2 — `landsClearOfHammers` with a press of mine IN FLIGHT: the same question (the next tick's box
+ * against forecast index 1, at `gameTimeAt(1)`), asked of the hit-aware forecast over the run's own window
+ * (`spinnerForecastWithPress`, no new press: its `pressAt` is past the rows) with the player's points — the run's
+ * state at the top of this tick and the stepped one at the top of the next. Measured why: the plain forecast holds no
+ * test it has not seen, so on a train tick before a landing it moved the body INTO the stood player where the landing
+ * knocks it away, and `safeStep` refused the certificate's stand ("There is no step out", L18 r24 at weight 1.5).
+ * Asked only while the fight's certificate drives the tick.
+ */
+function landsClearInFlight(run, keys) {
+    const next = previewOrDeath(run.previewStepper())({ ...run.state }, keys);
+    if (!next) return false;
+    const n = run.ticksCompleted;
+    const f = run.spinnerForecastWithPress(2, { pressAt: n + 2, direction: run.state.direction,
+        positions: (t) => (t === n ? run.state : next) });
+    const ahead = f.rows[1] ?? null;
+    if (!ahead) return true;
+    return clearOfHammersAt({ gameTimeAt: (i) => run.gameTimeAt(i + 1) }, playerBoxAt(next.x, next.y), [ahead], 0);
 }
 
 /**
@@ -9554,9 +9574,13 @@ function approachHeld(approach, run) {
  *     so `astar` returns the earliest goal its dedup keeps; `progress` is a heuristic (the deepest stage first, with
  *     backtracking), which can cost a LONGER fight than the earliest, never a wrong one.
  *
- * The certificate is a key per tick from the run's tick through the tail; the executor FOLLOWS it (still under
- * `safeStep`), and a run that leaves it (a state that is not the certificate's, a landing that is not) drops it and
- * plans again. ⛔ A PREFERENCE, NEVER A REFUSAL: every negative hands the kill to the path the switch OFF takes.
+ * The certificate is a key per tick from the run's tick through the tail; the executor FOLLOWS it — across the
+ * order's plans, its aims, presses and trains included — still under `safeStep`, which on a certificate tick asks its
+ * landing test of the hit-aware forecast over my window in flight (`landsClearInFlight`: the plain forecast holds no
+ * test it has not seen, and refused the stand a landing makes safe). A run that leaves it — a state, a landing or a
+ * `Game.time` that is not the certificate's (the admission's run is not always the executing run) — drops it, and the
+ * kill plans again once; a negative stands until the next landing. ⛔ A PREFERENCE, NEVER A REFUSAL: every negative
+ * hands the kill to the path the switch OFF takes.
  *
  * OFF by default (`SEEDLING_HAMMER_FIGHT=1` or `withHammerFight(true, fn)` turns it on): nothing below is reached and
  * every walk is byte-identical.
@@ -9581,30 +9605,47 @@ export function withHammerFight(enabled, fn) {
 }
 
 /**
- * ⛓⛓ THE FIGHT'S BOUNDS (provisional until D2 measures them; `HAMMER_FIGHT_MEASURED` then records what they spent):
- *   - `cell` 8 px — A's and B1's key;
- *   - `iframe` — the i-frame bucket of the dedup key, in ticks;
- *   - `order` — `progress` or `astar` (see `HAMMER_FIGHT`);
+ * ⛓⛓ THE FIGHT'S BOUNDS, each derived and then measured on L18's 45 residues (`sweep-seedling-l18-residues.mjs
+ * --fight`, `--fight-bounds=` for the alternatives) and on every generated row's spinner records
+ * (`check-seedling-hammer-monotonicity.mjs`); `HAMMER_FIGHT_MEASURED` records what they spent:
+ *   - `cell` 8 px — A's and B1's key. 4 px: L18 mean 375.7 t (8 px: 380.7 at the bucket 8) at ~6× the expansions
+ *     (median 108,782 vs 18,249) — the key is not the lever, as B1 found;
+ *   - `iframe` `hitsTimerMax + 1` — the bodies' i-frames enter the key as RUNNING OR NOT (their hits always do). An
+ *     8-tick bucket: L18 mean 380.7 t at median 18,249 expansions; the exact timer: 374.3 t, median 23,479 (max
+ *     138,877); running-or-not: 362.1 t, median 29,718 (max 54,079). A finer bucket keeps more siblings of one
+ *     landing tick apart, which the weighted order then explores instead of other landings;
+ *   - `order` `astar`, `weight` 2 — best first on tick + 2 × the admissible bound (`HAMMER_FIGHT`). Measured
+ *     against the alternatives on L18: `progress` (hits owed first) 459 t at r40, `stage` (hits owed, then tick:
+ *     B1's greedy with backtracking) 375–780 t with budget cuts, A* proper (weight 1) 367 t at r40 for 132,958
+ *     expansions, weight 1.5 363.8 t mean at median 37,976 (max 63,627); weight 2 is the cheapest that keeps every
+ *     residue solving and every generated search inside the budget;
+ *   - `keepBest` — of two states with one key at one index the better-ordered is kept (A's rank-kept layer);
  *   - `tail` — the post-kill window, the escape's horizon (`HAMMER_ESCAPE_BOUNDS.horizon`: the i-frame plus one hammer
  *     period), searched by the escape's own survive kernel at its own budget;
  *   - `horizon` `null` ⇒ the hits the order still owes × `strikeHorizon(run)`: the executor's own bound per landing;
- *   - `maxExpansions` — the search's work bound (pops), a cut is NO CLAIM.
+ *   - `maxExpansions` 100,000 — above every search measured that ended on its own (the largest find 63,029, carved
+ *     pairs c4; L18 54,079; the largest exhausted 2,716); a cut is NO CLAIM, latched until the next landing.
  */
 export const HAMMER_FIGHT_BOUNDS = Object.freeze({
     cell: 8,
-    iframe: 8,
+    iframe: SPINNER.hitsTimerMax + 1,
     order: 'astar',
     weight: 2,
     tail: HAMMER_ESCAPE_BOUNDS.horizon,
     horizon: null,
-    maxExpansions: 60000,
+    maxExpansions: 100000,
     keepBest: true,
 });
 
-/** ⛓ hammer-phase B2 — what the fight's searches spent at the bounds above (D2; provisional, re-measured in D2). */
+/**
+ * ⛓ hammer-phase B2 — what the fight's searches spent at the bounds above (D2): L18's 45 residues (every one found at
+ * the kill's admission), and the generated rows' spinner records re-solved with the switch on (acceptance, empty pairs
+ * c3/c6, carved pairs c4, the ENEMY census, killgate s2/s5/s9, both generator paths). Budget cuts: none.
+ */
 export const HAMMER_FIGHT_MEASURED = Object.freeze({
     cell: 8,
-    l18: Object.freeze({ largestFound: 30000 }),
+    l18: Object.freeze({ searches: 45, found: 45, largestFound: 54079, medianFound: 29718 }),
+    generated: Object.freeze({ largestFound: 63029, largestExhausted: 2716, budgetCuts: 0 }),
 });
 
 /** ⛓ hammer-phase B2 — the fight's trace (`HAMMER_ESCAPE_TRACE`'s shape): `sink` null (off) or a function. */
@@ -9818,7 +9859,9 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         const landings = node.cur.tests.filter((x) => x.t >= n && x.landed)
             .map((x) => ({ t: x.t, id: x.id })).sort((a, b) => (a.t - b.t) || (a.id < b.id ? -1 : 1));
         return { at: n, keys, states: states.slice(0, keys.length), landings, goal: node.i, end: keys.length,
-            tail: tailCert.keys.length };
+            tail: tailCert.keys.length,
+            // ⛓ the hammer's clock the search priced each tick at (`clearOfHammersAt` reads `gameTimeAt(i)`)
+            clocks: keys.map((_, k) => run.gameTimeAt(k)) };
     };
     while (queue.size > 0) {
         if (stats.expansions >= bounds.maxExpansions) {
@@ -9902,6 +9945,14 @@ function fightHeld(fight, run, landings) {
     const k = now - fight.at;
     if (k < 0 || k >= fight.keys.length) return { end: 'done' };
     if (!sameState(fight.states[k], run.state)) return { end: 'left' };
+    /**
+     * ⛔ AND THE CLOCK IS THE CERTIFICATE'S. Measured (c3 empty seed 22's certify solve, `spinner@16,32`): the
+     * admission's search ran on a run whose `Game.time` was 150 behind the executing run's at the same tick — the
+     * player and the bodies byte-equal, so the certificate was adopted, and every hammer phase it had priced was 15
+     * of 45 off; `safeStep` caught it six ticks after the kill and the walk refused. A tick whose clock is not the
+     * one the search priced is a tick the certificate does not describe.
+     */
+    if (run.gameTimeAt(0) !== fight.clocks[k]) return { end: 'left' };
     const sig = (xs) => xs.map((l) => `${l.t}:${l.id}`).sort().join();
     if (sig(landings.filter((l) => l.t >= fight.at && l.t < now))
         !== sig(fight.landings.filter((l) => l.t < now))) return { end: 'left' };
@@ -11568,7 +11619,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
              */
             try {
                 const meant = held;
-                held = safeStep(run, held, alternativesNow(), ctx.what, plan.id);
+                held = safeStep(run, held, alternativesNow(), ctx.what, plan.id,
+                    fightKeys !== null ? landsClearInFlight : landsClearOfHammers);
                 // ⛓ hammer-phase A — a certificate `safeStep` overrode no longer describes the walk: it ends.
                 if (escape && held !== meant
                     && escapeHeld(escape, run.ticksCompleted, landings, plan.id, true) === meant) escape = null;

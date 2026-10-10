@@ -14,9 +14,10 @@
  */
 import { describe, expect, it } from 'vitest';
 
-import { loadTape } from './fixtures/index.js';
+import { loadExpectation, loadTape } from './fixtures/index.js';
+import { heldKeysAt } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
-import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
+import { createRunForStaging, runTapeToStream, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
 import {
@@ -96,6 +97,8 @@ describe('hammer-phase B2 — HAMMER_FIGHT (OFF by default)', () => {
         expect(HAMMER_FIGHT_BOUNDS.tail).toBe(HAMMER_ESCAPE_BOUNDS.horizon);
         expect(HAMMER_FIGHT_BOUNDS.cell).toBe(HAMMER_FIGHT_MEASURED.cell);
         expect(HAMMER_FIGHT_BOUNDS.maxExpansions).toBeGreaterThan(HAMMER_FIGHT_MEASURED.l18.largestFound);
+        expect(HAMMER_FIGHT_BOUNDS.maxExpansions).toBeGreaterThan(HAMMER_FIGHT_MEASURED.generated.largestFound);
+        expect(HAMMER_FIGHT_MEASURED.generated.budgetCuts).toBe(0);
     });
 
     it('⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states and landings, every body of the order dies, no hit through the tail', () => {
@@ -148,5 +151,46 @@ describe('hammer-phase B2 — HAMMER_FIGHT (OFF by default)', () => {
         for (const held of on.out.perTick) replay.advance(held);
         expect(replay.playerHits).toEqual([]);
         expect(replay.transitions.map((x) => x.to_level)).toEqual([R9.boot.level + 1]);
+    }, 300_000);
+});
+
+/**
+ * ⛓⛓⛓ THE GAME WITNESS (`plan-seedling-hammer-b2-fight.mjs`, recorded on p4f): `r9-solve-18`'s staging (frozen at
+ * hammer-phase A's base) at its own residue 40, solved with `HAMMER_FIGHT` on — the whole fight one certificate —
+ * played by the game with no hit (`save.time` 10278 = the model's), reproduced here at 0 px.
+ */
+describe('hammer-phase B2 — the game witness hammer-b2-l18-fight40', () => {
+    const NAME = 'hammer-b2-l18-fight40';
+    it('⛓⛓⛓ the model reproduces the game\'s recording at 0 px, no hit, the crossing on the game\'s tick', () => {
+        const tape = loadTape(NAME);
+        const got = runTapeToStream(tape, { levelSource: SOURCE });
+        const want = loadExpectation(NAME).stream;
+        expect(got.ticks.length).toBe(want.ticks.length);
+        for (let i = 0; i < want.ticks.length; i += 1) {
+            expect([got.ticks[i].x, got.ticks[i].y, got.ticks[i].level])
+                .toEqual([want.ticks[i].x, want.ticks[i].y, want.ticks[i].level]);
+        }
+        const run = createRunForStaging(stagingFromTape(tape), SOURCE);
+        for (let t = 0; t < tape.tick_count; t += 1) run.advance(heldKeysAt(tape, t));
+        expect(run.playerHits).toEqual([]);
+        expect(run.transitions.map((x) => x.t)).toEqual(want.transitions.map((x) => x.t));
+    }, 120_000);
+
+    it('⛓⛓ it IS the solve: on, the staging solves to the witness\'s keys, ONE certificate held to its end', async () => {
+        const tape = loadTape(NAME);
+        const staging = stagingFromTape(tape);
+        const makeRun = (persistence) => createRunForStaging({ ...staging, persistence, equips: [] }, SOURCE);
+        const r = await withHammerFight(true, () => twoPassSolve({ makeRun,
+            goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], name: NAME, boot: staging.boot,
+            persistence: staging.persistence.filter((c) => c.at === undefined),
+            gameTick: async () => { throw new Error('no game oracle here'); } }));
+        expect(r.out.perTick.length).toBe(tape.tick_count);
+        for (let t = 0; t < tape.tick_count; t += 1) {
+            expect([...r.out.perTick[t]].sort()).toEqual([...heldKeysAt(tape, t)].sort());
+        }
+        const press = r.out.records.filter((x) => x.arm === 'press');
+        expect(press.flatMap((x) => x.fights).filter((f) => f.ok)).toHaveLength(1);
+        expect(press.reduce((s, x) => s + x.fightsLeft, 0)).toBe(0);
+        expect(press.flatMap((x) => x.landings)).toHaveLength(2 * SPINNER.hitsMax);
     }, 300_000);
 });
