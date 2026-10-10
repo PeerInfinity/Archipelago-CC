@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 76,
+            "count": 77,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 395,
+        "blockStyle": 396,
         "browser": 133,
         "cited": 195,
-        "files": 407,
+        "files": 408,
         "lineStyle": 12,
-        "withDocblock": 407,
-        "withFlags": 325
+        "withDocblock": 408,
+        "withFlags": 326
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7146,6 +7146,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-bobsoldier2 — ⛓⛓⛓ SEEDLING FIDELITY BOBSOLDIER2: L30's TORCHPICKUP, PAST THE BOBSOLDIER, BY THE KILL ARM'S OWN FORECAST.",
             "path": "scripts/procgen/plan-seedling-bobsoldier2.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "out"
+            ],
+            "file": "plan-seedling-bulb.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-bulb — ⛓⛓⛓ seedling-fidelity-bulb: THE BULB'S DRIVEN WITNESSES.",
+            "path": "scripts/procgen/plan-seedling-bulb.mjs"
         },
         {
             "argvHelpers": [],
