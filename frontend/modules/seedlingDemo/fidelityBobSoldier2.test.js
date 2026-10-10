@@ -42,15 +42,16 @@ function replay(name, each = () => {}) {
 }
 
 describe('BOBSOLDIER2 — the switches\' contract', () => {
-    it('both are OFF by default, and `with…` restores them, on a throw too', () => {
-        expect(KILL_STANCE_AS_FORECAST.enabled).toBe(false);
-        expect(SWORD_GATE_TIMED.enabled).toBe(false);
-        expect(withKillStanceAsForecast(true, () => KILL_STANCE_AS_FORECAST.enabled)).toBe(true);
-        expect(withSwordGateTimed(true, () => SWORD_GATE_TIMED.enabled)).toBe(true);
-        expect(() => withSwordGateTimed(true, () => { throw new Error('x'); })).toThrow('x');
-        expect(() => withKillStanceAsForecast(true, () => { throw new Error('x'); })).toThrow('x');
-        expect(KILL_STANCE_AS_FORECAST.enabled).toBe(false);
-        expect(SWORD_GATE_TIMED.enabled).toBe(false);
+    // ⚖ (user, 2026-10-10) both ON at the wave-10 harvest (the slice shipped them OFF).
+    it('both are ON by default, and `with…` restores them, on a throw too', () => {
+        expect(KILL_STANCE_AS_FORECAST.enabled).toBe(true);
+        expect(SWORD_GATE_TIMED.enabled).toBe(true);
+        expect(withKillStanceAsForecast(false, () => KILL_STANCE_AS_FORECAST.enabled)).toBe(false);
+        expect(withSwordGateTimed(false, () => SWORD_GATE_TIMED.enabled)).toBe(false);
+        expect(() => withSwordGateTimed(false, () => { throw new Error('x'); })).toThrow('x');
+        expect(() => withKillStanceAsForecast(false, () => { throw new Error('x'); })).toThrow('x');
+        expect(KILL_STANCE_AS_FORECAST.enabled).toBe(true);
+        expect(SWORD_GATE_TIMED.enabled).toBe(true);
     });
 });
 

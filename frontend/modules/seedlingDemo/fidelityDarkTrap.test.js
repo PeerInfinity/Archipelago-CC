@@ -75,11 +75,14 @@ function disagreements(w, col) {
 }
 
 describe('STATICLADDER D2 — the switch', () => {
-    it('ships OFF, and OFF builds no darktrap roster (`darkTraps` is null)', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.darkTrapLight).toBe(false);
-        expect(CONTACT_FIDELITY.darkTrapLight).toBe(false);
-        const run = createLevelRun({ levelSource, boot: { level: 62, x: 48, y: 288 }, roles: ROLES });
-        expect(run.entities('darkTraps')).toBe(null);
+    // ⚖ (user, 2026-10-10) ON at the wave-10 harvest (the slice shipped it OFF).
+    it('ships ON, and OFF builds no darktrap roster (`darkTraps` is null)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.darkTrapLight).toBe(true);
+        expect(CONTACT_FIDELITY.darkTrapLight).toBe(true);
+        withContactFidelity({ darkTrapLight: false }, () => {
+            const run = createLevelRun({ levelSource, boot: { level: 62, x: 48, y: 288 }, roles: ROLES });
+            expect(run.entities('darkTraps')).toBe(null);
+        });
     });
 });
 
@@ -113,7 +116,7 @@ describe('STATICLADDER D2 — the game witnesses, replayed (switch ON)', () => {
         const w = byName('staticladder-l62-step115-light');
         let col = null;
         let thrown = null;
-        try { col = replay(w); } catch (e) { thrown = e; }
+        try { col = withContactFidelity({ darkTrapLight: false }, () => replay(w)); } catch (e) { thrown = e; }
         if (thrown) {
             expect(String(thrown.message)).toMatch(/darktrap@112,208/);
         } else {

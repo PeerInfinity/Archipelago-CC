@@ -5385,11 +5385,12 @@ function dangerNow(run, x, y, except = null, { timedSword = false } = {}) {
  * an EXECUTOR (`refuseDanger` after a stance walk) and the bait stance scan keep the pad: what follows them is a
  * multi-tick verb, not a probed walk, and one timed tick says nothing about tick two.
  *
- * ⚠ OFF BY DEFAULT (byte-identical): ON, it moves the danger lists in the walk rows of any trace that stands
- * near a BobSoldier. `SEEDLING_SWORD_GATE_TIMED=1` turns it ON for a node measurement; `withSwordGateTimed` for a
- * test. The browser has no `process` and takes the default.
+ * ⚖ ON BY DEFAULT (user, 2026-10-10; flipped at the wave-10 harvest by `seedling-fidelity-planning-5`; the slice
+ * shipped it OFF). With `KILL_STANCE_AS_FORECAST` it moves exactly one producer row: `solve-seedling-r9-campaign`'s
+ * `r9-solve-12` trace sidecar (no tape byte). `SEEDLING_SWORD_GATE_TIMED=0` turns it OFF for a node measurement;
+ * `withSwordGateTimed` for a test. The browser has no `process` and takes the default.
  */
-export const SWORD_GATE_TIMED = { enabled: globalThis.process?.env?.SEEDLING_SWORD_GATE_TIMED === '1' };
+export const SWORD_GATE_TIMED = { enabled: globalThis.process?.env?.SEEDLING_SWORD_GATE_TIMED !== '0' };
 
 /** Run `fn` with `SWORD_GATE_TIMED` set to `enabled`, restoring the previous value. */
 export function withSwordGateTimed(enabled, fn) {
@@ -13753,12 +13754,14 @@ const KILL_BY_CEILING_BOUND = ARROW_KILL_FLOOR * 3 + HOLD_SLACK;
  *
  * ⇒ with the switch ON, the kill arm's stance walk is `walkTo(…, {undashed: true})`: no `planSwordDash`, so the
  * strike policy is the preview's own and the drive IS the preview (step 50: arrival t145, kill t167, both sides).
- * ⚠ OFF BY DEFAULT (byte-identical): ON, every committed solve whose ladder reaches the chaser arm walks its
- * stance without the dash. `SEEDLING_KILL_STANCE_AS_FORECAST=1` turns it ON for a node measurement;
- * `withKillStanceAsForecast` for a test. The browser has no `process` and takes the default.
+ * ⚖ ON BY DEFAULT (user, 2026-10-10; flipped at the wave-10 harvest by `seedling-fidelity-planning-5`; the slice
+ * shipped it OFF): every solve whose ladder reaches the chaser arm walks its stance without the dash (the committed
+ * mover: `r9-solve-12`'s trace sidecar loses three dash-rejection rows; no tape byte).
+ * `SEEDLING_KILL_STANCE_AS_FORECAST=0` turns it OFF for a node measurement; `withKillStanceAsForecast` for a test.
+ * The browser has no `process` and takes the default.
  */
 export const KILL_STANCE_AS_FORECAST = {
-    enabled: globalThis.process?.env?.SEEDLING_KILL_STANCE_AS_FORECAST === '1',
+    enabled: globalThis.process?.env?.SEEDLING_KILL_STANCE_AS_FORECAST !== '0',
 };
 
 /** Run `fn` with `KILL_STANCE_AS_FORECAST` set to `enabled`, restoring the previous value. */
