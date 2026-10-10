@@ -3,8 +3,8 @@
  *
  * Loaded with `node --import scripts/procgen/rewindExactnessHook.js <a producer's own script> …` and only when
  * `SEEDLING_REWIND_PROBE=<file.jsonl>` is set (unset: it registers nothing and the run is the producer's own, byte for
- * byte). It sets `solverBot.REWIND_PROBE` in this process: every segment that has a `rewindRun` (`twoPassSolve`'s
- * passes, `solveForPage`'s solves) then hands it, at every press kill's first tick and at every
+ * byte). It sets `solverBot.REWIND_PROBE` in this process: every segment that has a `forkRun` (`twoPassSolve`'s
+ * passes, `solveForPage`'s solves, the JS worker's `solveFromTape`) then hands it, at every press kill's first tick and at every
  * `SEEDLING_REWIND_EVERY`-th tape tick (default 50), its LIVE run and the rewound one (`replayToTick`). Each pair is
  * fingerprinted — `run.state`, the clock, `entities(…)` for every family, `progress(…)` for every field, `ledger(…)`
  * for every kind, the transitions and the scratch clears, `JSON.stringify` with Sets and Maps spelled out — and one

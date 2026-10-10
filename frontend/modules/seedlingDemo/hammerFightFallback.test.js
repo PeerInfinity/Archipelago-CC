@@ -1,5 +1,5 @@
 /**
- * hammerFightFallback — SEEDLING HAMMER-PHASE B3: the REPLAY REWIND (`solveSegment`'s `rewindRun`, `replayToTick`)
+ * hammerFightFallback — SEEDLING HAMMER-PHASE B3: the REPLAY REWIND (on `solveSegment`'s `forkRun`, `replayToTick`)
  * and the fight as a FALLBACK where today's press kill refuses (`HAMMER_FIGHT_FALLBACK`).
  *
  * ⚖ The user (2026-10-10): *"run the fight search only where today's path refuses … can only add solves"*, and
@@ -13,6 +13,8 @@
  *
  *   m1 the rewind's factory built without the pass's persistence (`twoPassSolve`: `makeRun([])`) -> the exactness row
  *      (and `check-seedling-rewind-exactness --row=l18`: 5 mismatches)
+ *   b3b-m2 the prefix replay dropped (`replayTo`: `from: prefix.length` on the boot factory) -> the b3b prefix row
+ *      (and `check-seedling-rewind-exactness --row=fork-prefix`)
  *   m2 the "replace only if it solves" check removed (a failed retry adopted) -> the refusal-stands row
  *   m3 the trigger widened to every refusal -> the trigger row
  */
@@ -24,6 +26,8 @@ import { loadTape } from './fixtures/index.js';
 import { atlasLevelSource } from './levelSource.js';
 import { ENTITY_FAMILY_NAMES, LEDGER_KIND_NAMES, PROGRESS_FIELD_NAMES } from './levelRun.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
+import { forkRunFor, replayTape } from './jsRuntimeSolver.js';
+import { CRUSHER_WITNESSES, crusherStaging } from '../../../scripts/procgen/plan-seedling-crusher-witness.mjs';
 import { twoPassSolve } from './twoPassSolve.js';
 import { solve } from './procgenOracle.js';
 import { SPINNER } from './spinner.js';
@@ -92,6 +96,25 @@ describe('hammer-phase B3 — the replay rewind', () => {
         expect(() => replayToTick({ makeRun: make, perTick, to: 31 })).toThrow(/outside the replayable span/);
         expect(() => replayToTick({ makeRun: () => { const r = make(); r.advance(new Set()); return r; },
             perTick, to: 5 })).toThrow(/must build the run the segment was handed/);
+    }, 300_000);
+
+    it('⛓⛓ b3b — on a BOOT factory the prefix is replayed too (the factory re-makes the PLAY\'s equips); skipping it is refused by the clock check', async () => {
+        // The JS worker's factory (`forkRunFor`): a boot run whose first `prefixLength` advances re-make the PLAY's
+        // equips. The staging is the JS arc's own fork fixture (`jsRuntimeSolverForkRun`: L42's arrival, two slots).
+        const staging = await crusherStaging(CRUSHER_WITNESSES[0]);
+        const perTick = Array.from({ length: 30 }, (_, t) => new Set(t < 6 ? ['left'] : ['up']));
+        const play = new Map([[3, 1]]);
+        const straight = replayTape({ staging, perTick: perTick.slice(0, 10), levelSource: SOURCE, equips: play });
+        const handover = { at: 10, ticks: straight.ticksCompleted };
+        perTick.slice(10, 20).forEach((h) => straight.advance(h));
+        const makeRun = forkRunFor({ staging, levelSource: SOURCE, equips: play, prefixLength: 10 });
+        expect(fingerprint(replayToTick({ makeRun, perTick, to: 20, handover }))).toBe(fingerprint(straight));
+        // the control: the same factory without the play's equip is another run
+        expect(fingerprint(replayToTick({ makeRun: forkRunFor({ staging, levelSource: SOURCE }), perTick, to: 20,
+            handover }))).not.toBe(fingerprint(straight));
+        // the mutant b3b-m2 (the prefix replay dropped: `from: prefix.length` on a boot factory) is refused by name
+        expect(() => replayToTick({ makeRun, perTick, from: 10, to: 20, handover }))
+            .toThrow(/must build the run the segment was handed/);
     }, 300_000);
 });
 

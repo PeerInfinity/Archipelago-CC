@@ -177,11 +177,10 @@ export async function twoPassSolve({
         let raised = null;
         const passRows = rows;
         // ⛓ CRUSHER: `forkRun` lets a verb try a choreography on a fresh replay
-        // before committing it (`solveSegment`'s docblock); read only by `bait`.
-        // ⛓ HAMMER-PHASE B3: `rewindRun` lets the fight fallback rewind the pass to a
-        // press kill's first tick (`solveSegment`'s docblock); read only by that fallback.
+        // before committing it, and (HAMMER-PHASE B3) the fight fallback rewind the
+        // pass to a press kill's first tick (`solveSegment`'s docblock).
         const solvePass = () => solveSegment({ run: makeRun(passRows), goals, name, boot, dashMode,
-            forkRun: () => makeRun(passRows), rewindRun: () => makeRun(passRows) });
+            forkRun: () => makeRun(passRows) });
         try {
             try {
                 out = solvePass();
