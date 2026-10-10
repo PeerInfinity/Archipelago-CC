@@ -13,6 +13,20 @@ This document describes the GitHub Actions workflows used for testing and CI/CD 
 | [Test Multiworld UT Fuzz](#test-multiworld-ut-fuzz) | Manual | Multiworld assembly UT testing | `test-results-multiworld-ut-fuzz` |
 | [Test World Generator](#test-world-generator) | Manual | World generator consistency testing | `test-results-world-generator` / `test-results-world-generator-canonical` / `test-results-world-generator-random` |
 
+## Push-run policy (the two heavy push workflows)
+
+`unittests.yml` (the upstream Python matrix, Windows and macOS legs included) and `unittests_frontend.yml`
+(vitest, the headless gates, the browser shards) run on pushes to every branch. Two fork rules limit that
+(2026-10-10, after CI queued behind the account's ~40-concurrent-job cap):
+
+- **A newer push to the same branch cancels the older run** of either workflow (`concurrency`). This applies
+  only to pushes to refs other than `main`: `main`, pull requests and `workflow_dispatch` runs never cancel or
+  queue. So an intermediate head of a branch can end `cancelled` — read CI at the branch's last head.
+- **`unittests.yml` skips its matrix on a branch push whose changes pytest never reads** (frontend JS, non-Python
+  `scripts/procgen/`, `test_json/`, prose). Its first job, *Python tests needed?*, decides with
+  `scripts/test/python-tests-needed.py` (pinned by `test/test_python_tests_needed.py`). `main` and pull requests
+  always run the matrix, and so does any push whose changed-file list cannot be read.
+
 ## Running Workflows Manually
 
 All test workflows can be triggered manually from the GitHub Actions tab:

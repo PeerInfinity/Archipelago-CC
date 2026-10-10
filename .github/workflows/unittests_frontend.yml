@@ -123,6 +123,18 @@ on:
       - '.github/workflows/unittests_frontend.yml'
   workflow_dispatch:
 
+# ⛓ ci-workflow-policy-review F3 (2026-10-10): a push to a branch other than
+# main supersedes the in-progress run of the previous push to that SAME branch
+# (79 such runs in four days, ~2,300 runner-minutes). Only those pushes share a
+# group: main, pull requests and every workflow_dispatch get the run id as their
+# group, so a dispatched re-run of a head (⚖ 72 (b)'s consecutive runs) never
+# cancels, or queues behind, anything — and main's per-SHA rows, which the bank
+# and ci-vitest-summary.mjs cite, are never cancelled. ⚠ An intermediate head of
+# a branch can therefore end `cancelled`: read CI at the branch's LAST head.
+concurrency:
+  group: ${{ github.workflow }}-${{ (github.event_name == 'push' && github.ref != 'refs/heads/main') && github.ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   javascript-tests:
     name: JavaScript Unit Tests (Vitest)

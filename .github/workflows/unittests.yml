@@ -31,8 +31,69 @@ on:
 
 permissions: {}
 
+# Fork addition (ci-workflow-policy-review F3): a branch push supersedes the
+# run of the previous push to the SAME branch. Only pushes to non-main refs
+# share a group; main, pull requests and dispatches get a group of their own
+# (the run id), so they never cancel or queue behind each other — main's
+# per-SHA rows are what post-merge readers cite.
+concurrency:
+  group: ${{ github.workflow }}-${{ (github.event_name == 'push' && github.ref != 'refs/heads/main') && github.ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
+  # Fork addition (ci-workflow-policy-review F1): a push to a branch other than
+  # main whose changes pytest never reads (frontend JS, scripts/procgen data,
+  # prose) skips the matrix. Main and pull requests always run it. The decision
+  # is scripts/test/python-tests-needed.py (pinned by
+  # test/test_python_tests_needed.py); every failure to get the changed-file
+  # list runs the matrix.
+  changes:
+    runs-on: ubuntu-latest
+    name: Python tests needed?
+    permissions:
+      contents: read
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+    steps:
+    - uses: actions/checkout@v6.0.2
+      with:
+        sparse-checkout: scripts/test/python-tests-needed.py
+        sparse-checkout-cone-mode: false
+    - name: Decide
+      id: decide
+      env:
+        GH_TOKEN: ${{ github.token }}
+        EVENT: ${{ github.event_name }}
+        REF: ${{ github.ref }}
+        BEFORE: ${{ github.event.before }}
+        SHA: ${{ github.sha }}
+        REPO: ${{ github.repository }}
+      run: |
+        decide() {
+          if [ "$EVENT" != "push" ] || [ "$REF" = "refs/heads/main" ]; then
+            echo "run: $EVENT on $REF always runs"; echo true; return
+          fi
+          # A new branch has no `before`: compare against main's merge-base.
+          base="$BEFORE"
+          case "$base" in ''|0000000000000000000000000000000000000000) base=main ;; esac
+          if ! files=$(gh api "repos/$REPO/compare/$base...$SHA" --jq '.files[].filename'); then
+            echo "run: could not list the changes ($base...$SHA)" >&2; echo true; return
+          fi
+          n=$(printf '%s\n' "$files" | grep -c . || true)
+          # The compare API lists at most 300 files: a longer list is truncated.
+          if [ "$n" -ge 300 ]; then echo "run: $n changed files (list may be truncated)" >&2; echo true; return; fi
+          echo "$n changed file(s) in $base...$SHA:" >&2; printf '%s\n' "$files" | sed 's/^/  /' >&2
+          printf '%s\n' "$files" | python3 scripts/test/python-tests-needed.py
+        }
+        run=$(decide | tail -1)
+        # Anything but an explicit "false" (a crashed classifier prints nothing) runs.
+        [ "$run" = false ] || run=true
+        echo "Python tests needed: $run"
+        echo "run=$run" >> "$GITHUB_OUTPUT"
+
   unit:
+    needs: changes
+    if: needs.changes.outputs.run == 'true'
     runs-on: ${{ matrix.os }}
     name: Test Python ${{ matrix.python.version }} ${{ matrix.os }}
 
@@ -98,6 +159,8 @@ jobs:
         pytest -n auto
 
   hosting:
+    needs: changes
+    if: needs.changes.outputs.run == 'true'
     runs-on: ${{ matrix.os }}
     name: Test hosting with ${{ matrix.python.version }} on ${{ matrix.os }}
 
