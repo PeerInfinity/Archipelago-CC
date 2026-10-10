@@ -387,6 +387,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'wallflyer-kill', 'wallflyer-kill-flight', 'wallflyer-shield-bump',
             // ⛓ Seedling fidelity CRUSHER: the round-trip witness ends on its L40 arrival.
             'crusher-l42-round-trip',
+            // ⛓ Seedling fidelity ENCOUNTERS: the two L32 witnesses end in L30.
+            'enc-l32-fallen-door', 'enc-l32-fire-return',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -436,12 +438,12 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // `wallflyer-shield-bump` (L22).
         // ⛓ Seedling fidelity CRUSHER adds one (78) — `crusher-l42-round-trip` (its last tick is the L40 arrival).
         // ⛓ Seedling fidelity BOBSOLDIER2 adds two (80) — `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch` (L30).
-        expect(out.exposed).toBe(80);
+        // ⛓ Seedling fidelity ENCOUNTERS adds two (82) — `enc-l32-fallen-door`, `enc-l32-fire-return` (their L30 falls).
+        expect(out.exposed).toBe(82);
         expect(out.tapes).toEqual([
             'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
-            'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch',
-            'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'crusher-l42-round-trip', 'dash-l16-sword-all', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
+            'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch', 'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'crusher-l42-round-trip', 'dash-l16-sword-all', 'enc-l32-fallen-door', 'enc-l32-fire-return', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
             'ghostsword-l30-bobsoldier', 'l14-swordless-detour',
             'ladder2-l104-beam',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
@@ -618,6 +620,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓ fidelity BOBSOLDIER2's two L30 witnesses — the mirror rule.
             'bobsoldier2-l30-dash-stance': { tape: {}, levels: [30] },
             'bobsoldier2-l30-torch': { tape: {}, levels: [30] },
+            // ⛓ fidelity ENCOUNTERS: the two L32 witnesses' L30 falls — the mirror rule.
+            'enc-l32-fallen-door': { tape: {}, levels: [30] },
+            'enc-l32-fire-return': { tape: {}, levels: [30] },
             // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes — the mirror rule.
             'axe-l61-reach-l63': { tape: {}, levels: [63] },
             'burn-l44-reach-exit': { tape: {}, levels: [45] },
