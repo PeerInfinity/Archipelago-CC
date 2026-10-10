@@ -292,7 +292,8 @@ export function stagingFromWasmArrival({ seam, status, state, record = undefined
         undeclared.push(spec.key);
     }
     // ⛓ RNG-SPLIT STAGING — the window's rng, field by field (W1's witness rows):
-    //   split     SHIPPED_RNG.split (the latch row above — the tape's declaration).
+    //   split     SHIPPED_RNG.split — set by the latch row (`ARRIVAL_FIELD_SOURCES`, class
+    //             `shipped`) and carried by `segmentBootFromLatch`; ONE place decides it.
     //   cosmetic  SHIPPED_RNG.cosmetic: a split `botStart` writes `Rng.setCosmeticState(
     //             rngCosmetic)` (`Bot.as:1895`, 0 = the build's boot seed), so the
     //             window's cosmetic stream starts THERE, not at the begin record's
@@ -300,7 +301,7 @@ export function stagingFromWasmArrival({ seam, status, state, record = undefined
     //             modelled reads it; it is staged as the game will run it.
     //   seed, fp  the BEGIN record's (live, pre-build): the shipped tape declares 0 =
     //             NOT written, so the live streams run on from where the build began.
-    const rng = { ...blocks.rng, split: SHIPPED_RNG.split, cosmetic: SHIPPED_RNG.cosmetic };
+    const rng = { ...blocks.rng, cosmetic: SHIPPED_RNG.cosmetic };
     const staging = {
         boot: blocks.boot,
         noclip: false,
