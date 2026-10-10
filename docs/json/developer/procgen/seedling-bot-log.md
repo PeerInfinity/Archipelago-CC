@@ -14985,6 +14985,62 @@ equal the base's, the residue sweep's 45 rows too).**
 2. **A certificate equal in every field you compare can belong to another run.** The player and the bodies were
    byte-equal; the clock was not, and the clock is a hazard's input.
 
+### Seedling hammer-phase B3 — the fight as a fallback
+
+⚖ The user (2026-10-10), shown B2's result, chose **"Fight as fallback first"** — *"run the fight search only where
+today's path refuses … can only add solves"* — and, asked about rewinding, **"Yes, please fold replay rewind into
+B3."** The report is `CC/docs/cloud-reports/seedling-hammer-b3.md`.
+
+**W0.** At `3e0ff8b` (main, B2 merged OFF) the identity block is B2's row for row. Today's refused spinner certify
+records (`check-seedling-hammer-monotonicity`, the OFF path): acceptance 4, c3 2, c6 10, c4 22 (11 `HAMMER_SAFETY`,
+2 `STRIKE_BOUND_EXHAUSTED` budget verdicts, 9 `SolverRefusal`s), killgate s2/s5/s9 and ENEMY none.
+
+**D0 — the replay rewind.** `solveSegment` gains an optional `rewindRun` (a fresh run in the state the segment's run
+was handed over in); `twoPassSolve` passes `makeRun` with the pass's persistence, `watchSolve.solveForPage` (the
+oracle's certify solve) builds one from its staging. The state at tape tick `t` is that run with the segment's keys
+`[prefix.length, t)` replayed (`replayToTick`), with the two non-key inputs a segment itself feeds a run: its slot
+selections (`run.equipNow`, before their tick) and its apitem takes (`inner.takeApItem`, after it). Everything else
+(staging, persistence and PENDING rows, scratch persistence, a caller's `adoptWindowClock`/`addEquips`/
+`addTimedClears`, the prefix) is the factory's contract. The segment's view over the run is rebuilt on the fresh one
+(`viewOf`), its tick-indexed state (keys, equips, takes, dashes) cut back to `t`, and the one solver table keyed by the
+run object (`SKIRTED`) carried. A rewound solve ends on that run (`out.liveRun`, not enumerable).
+`check-seedling-rewind-exactness.mjs` (+ `rewindExactnessHook.js`) runs a producer's own script and compares, at every
+press kill's first tick and every 50th tick, the live run's state (`run.state`, the clock, every entity family,
+progress field and ledger) with the rewound run's, `JSON.stringify` byte for byte: the five re-solving producers, the
+campaign, killgate s2/s5/s9, ENEMY, acceptance and the L18 sweep — 2,440 probes, 192 kill starts, **0 mismatches**,
+every producer's stdout md5 unchanged (and L40's 1,799-tick solve, 12 probes, equal). Cost: 0.02–0.11 ms per replayed
+tick in L18 and the generated rooms (a rewind to t300 ≈ 6 ms); L40 (5 spinners) ≈ 310 ms + 1.25 ms/tick (2.4 s at
+t1650). Mutant: the factory without the pass's persistence → 5 mismatches on L18 (from the removal tick on).
+
+**D1 — `HAMMER_FIGHT_FALLBACK` (OFF by default).** A press kill that refuses with `HAMMER_SAFETY` or
+`STRIKE_BOUND_EXHAUSTED` is rewound to its first tick, admitted again with the fight on (`derivePressKill` from the
+admission's own inputs, `PRESS_ADMISSIONS`) and redone with the fight on; the press arm's ADMISSION refusal is asked
+again where it is terminal — the combat ladder's `kill` rung (last whenever a spinner is a source) and `execKill`'s
+*"no weapon"* (every arm refused) — and never at the kill-lock order's press arm, which the ceiling and chaser arms
+follow. A retry that kills is adopted (a `PendingDeclaration` from the kill's lock tail counts); anything else is
+undone and the refusal stands with one sentence appended. `mode: 'whole'` re-solves the pass (`twoPassSolve`, a
+`fight-fallback` row in `passes`) or the certify solve (`procgenOracle.solve`) from a fresh run instead, coded
+refusals only. Records: the kill record's `fightFallback`, the result's `fightFallbacks`, the oracle's
+`fightFallback(s)`.
+
+**D2 — measured.**
+- Byte-identity: the identity block OFF at the head = the base row for row; with the flag ON the six producer
+  `--check`s, ENEMY, killgate s2/s5/s9, guard, AREA, maze and the levels are unmoved; the L18 sweep is 45/45 at A4's
+  lengths, ON = OFF row for row.
+- Added solves (re-solving every captured record): **21**, 0 solved → refused — c4 15 (9 by the kill-start rewind,
+  incl. both strike-bound budget verdicts → 635 t; 6 by the admission arm, incl. the no-weapon n124 → 645 t), c3,
+  c6 and acceptance 2 each (the admission arm, 131/139 t, one room). Every added solve has the plain fight's ticks.
+  The whole-solve retry reaches the same verdict and ticks on all 9 coded cases at the same wall time: every
+  generated press kill that fell back started at tick 0 (the boot room), so there the rewind IS a whole re-solve.
+  No earlier rewind point was needed.
+- Movers ON: acceptance `0094257a`, c3 `6873ee49`, c6 `15dbcf3f`, c4 `bc35ee7e`; `plan-seedling-hammer-a-escape
+  --check` (its *"with the switch OFF this staging REFUSES"* rows now solve). The other 70 planners, the producers and
+  the JS arc's live L18 plan (518/500/503 t full) are unmoved.
+- Mutants: the trigger widened to every throw — the kill tail's own `PendingDeclaration` is "retried", so
+  `r8-solve-18`'s two passes disagree at tick 0 (`l18 --check` exits 1) and the success row reds; the "replace only
+  if it solves" check removed — the undo row reds, and the retry's own throw re-triggers the oracle's whole-solve
+  retry (a second fight search per refusal).
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
