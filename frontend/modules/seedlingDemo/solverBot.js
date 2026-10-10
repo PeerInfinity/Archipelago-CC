@@ -9614,32 +9614,42 @@ export function withHammerFight(enabled, fn) {
 }
 
 /**
- * ⛓⛓ SEEDLING HAMMER-PHASE B3 — THE REPLAY REWIND, as a pure function: a fresh run (`makeRun()`, in the state the
- * segment's run was handed over in: `startTicks` completed, tape tick `from`) with `perTick[from … to)` replayed
- * through `advance`, each tick's slot selections (`equips`, `{at, slot}`) applied before it and its apitem takes
- * (`takes`, `{at, level, id, tag}`) after it — the order the segment's own view applies them. No snapshot: the replay
- * IS the state at `to`. `solveSegment`'s rewind calls it; the exactness gate compares it with the live run
- * (`check-seedling-rewind-exactness.mjs`).
+ * ⛓⛓ SEEDLING HAMMER-PHASE B3 — THE REPLAY, as a pure function: a fresh run (`makeRun()` — `solveSegment`'s `forkRun`,
+ * a run at the segment's BOOT) with `perTick[from … to)` replayed through `advance` (`from` is 0: the caller's prefix
+ * INCLUDED, its own non-key inputs re-made by the factory), each tick's slot selections (`equips`, `{at, slot}`)
+ * applied before it and its apitem takes (`takes`, `{at, level, id, tag}`) after it — the order the segment's own view
+ * applies them. No snapshot: the replay IS the state at `to`. Checked: at tape tick `handover.at` (the end of the
+ * prefix) the replayed run must have completed `handover.ticks` — the clock of the run the segment was handed.
+ * `solveSegment`'s fork (`bait`) and rewind (the fight fallback) both call it; the exactness gate compares it with the
+ * live run (`check-seedling-rewind-exactness.mjs`).
  */
-export function replayToTick({ makeRun, perTick, from = 0, to, startTicks = from, equips = [], takes = [] }) {
-    if (!Number.isInteger(to) || to < from || to > perTick.length) {
-        fail(`replayToTick: tick ${to} is outside the replayable span [${from}, ${perTick.length}]`);
+export function replayToTick({ makeRun, perTick, from = 0, to, handover = { at: from, ticks: 0 }, equips = [],
+    takes = [] }) {
+    if (!Number.isInteger(to) || to < from || to > perTick.length || handover.at < from || handover.at > to) {
+        fail(`replayToTick: tick ${to} (handover ${handover.at}) is outside the replayable span [${from}, `
+            + `${perTick.length}]`);
     }
     const r = makeRun();
-    if (!r || typeof r.advance !== 'function' || r.ticksCompleted !== startTicks) {
-        fail(`replayToTick: the run factory must build the run the segment was handed (${startTicks} tick(s) `
-            + `completed); it built one at ${r?.ticksCompleted} — a replay from another state is not this run's past.`);
-    }
+    const check = () => {
+        if (r.ticksCompleted !== handover.ticks) {
+            fail(`replayToTick: the run factory must build the run the segment was handed (${handover.ticks} `
+                + `tick(s) completed at tape tick ${handover.at}); its replay stood at ${r.ticksCompleted} there — a `
+                + 'replay from another state is not this run\'s past.');
+        }
+    };
+    if (!r || typeof r.advance !== 'function') fail('replayToTick: the run factory built no run');
     for (let t = from; t < to; t += 1) {
+        if (t === handover.at) check();
         for (const e of equips) if (e.at === t) r.equipNow(e.slot);
         r.advance(perTick[t]);
         for (const a of takes) if (a.at === t) r.takeApItem({ level: a.level, id: a.id, tag: a.tag });
     }
+    if (to === handover.at) check();
     return r;
 }
 
 /**
- * ⛓ hammer-phase B3 — THE EXACTNESS GATE'S PROBE. With `sink` set, a segment that has a `rewindRun` hands the sink,
+ * ⛓ hammer-phase B3 — THE EXACTNESS GATE'S PROBE. With `sink` set, a segment that has a `forkRun` hands the sink,
  * at each tape tick in `ticks` (before that tick's advance), its live inner run and a thunk building the rewound one
  * there. Read only; `null` everywhere but the gate, and nothing branches on it.
  */
@@ -9649,7 +9659,7 @@ export const REWIND_PROBE = { ticks: null, sink: null };
  * ⛓⛓ SEEDLING HAMMER-PHASE B3 — THE FIGHT AS A FALLBACK (⚖ the user, 2026-10-10: *"run the fight search only where
  * today's path refuses … can only add solves"*). A press kill that REFUSES with one of `FIGHT_FALLBACK_CODES` is
  * redone once with `HAMMER_FIGHT` on: by rewinding the segment to the kill's first tick (`execKillByPress`, where the
- * segment has a `rewindRun`), or by re-solving the whole segment from a fresh run (`mode: 'whole'`, or no rewind:
+ * segment has a `forkRun`), or by re-solving the whole segment from a fresh run (`mode: 'whole'`, or no rewind:
  * `twoPassSolve`'s pass, `procgenOracle.solve`). The retry's result replaces the refusal only if it kills / solves;
  * otherwise the refusal stands, plus one sentence. Inert while the fight itself is on (the retry would be the same path).
  *
@@ -14739,23 +14749,21 @@ function solveSegmentUnder({
      */
     fineLattice = FINE_LATTICE_ROSTER_WIDE,
     /**
-     * ⛓⛓ SEEDLING FIDELITY CRUSHER — OPTIONAL: `() => run`, a FRESH run at
-     * `boot` built exactly as `run` was (`twoPassSolve` passes its own
-     * `makeRun`). With it an executor may ask for a FORK of the live run — this
-     * segment's ticks replayed onto a fresh one (`ctx.fork`) — and try a
-     * choreography there before committing a tick of it. Only `bait` asks
-     * (behind `CRUSHER_BAIT`); absent, `ctx.fork` is null and nothing reads it.
+     * ⛓⛓ SEEDLING FIDELITY CRUSHER / HAMMER-PHASE B3 — OPTIONAL: `() => run`, the segment's ONE run factory.
+     * THE CONTRACT: each call is a FRESH run at the segment's BOOT, built exactly as `run` was (the staging, the
+     * pass's persistence and PENDING rows, scratch persistence), sharing no mutable state with `run` or another
+     * fork; if the caller handed over a run already advanced through a `prefix`, the factory re-makes the PLAY's own
+     * non-key inputs (its equips) on the first `prefix.length` advances. So "fork, then replay `perTick` (the prefix
+     * included)" lands on `run` — `replayToTick`, which also re-makes this segment's own equips and apitem takes, and
+     * checks the clock at the end of the prefix. Two readers, the same replay:
+     *   - `bait` (behind `CRUSHER_BAIT`) — `ctx.fork`: the live run's state, to try a choreography on before
+     *     committing a tick of it;
+     *   - the fight fallback (`HAMMER_FIGHT_FALLBACK`, at a press kill that refused) — `ctx.rewind`: the state at an
+     *     EARLIER tick, adopted in place of the live run.
+     * Absent, both are null and nothing reads them. `twoPassSolve` passes `() => makeRun(rows)`;
+     * `watchSolve.solveForPage` builds one from its staging; the JS worker passes `jsRuntimeSolver.forkRunFor`.
      */
     forkRun = null,
-    /**
-     * ⛓⛓ SEEDLING HAMMER-PHASE B3 — OPTIONAL: `() => run`, a FRESH run in the state `run` was handed over in (at
-     * `boot`, or with the caller's `prefix` already replayed onto it), built exactly as `run` was. With it the segment
-     * can REWIND: a fresh run with this segment's ticks `[prefix.length, t)` and its non-key inputs replayed
-     * (`replayToTick`), adopted in place of the live run. Only the fight fallback asks (`HAMMER_FIGHT_FALLBACK`, at a
-     * press kill that refused); absent, `ctx.rewind` is null and nothing reads it. `twoPassSolve` passes its own
-     * `makeRun`; `watchSolve.solveForPage` builds one from its staging.
-     */
-    rewindRun = null,
 }) {
     assertDashMode(dashMode, 'solveSegment');
     if (!run || typeof run.advance !== 'function') fail('solveSegment needs a live run');
@@ -15050,27 +15058,17 @@ function solveSegmentUnder({
         solverEquips.push({ t: run.ticksCompleted, slot });
     };
     /**
-     * ⛓⛓ CRUSHER — the fork (`forkRun`, above): a fresh run with this segment's
-     * own ticks and slot selections replayed onto it, the survey replay's own
-     * fold (`equips` applied at their tick before that tick's advance).
+     * ⛓⛓ CRUSHER — the fork (`forkRun`, above): a fresh run at the live run's tick, `replayTo(perTick.length)`.
      */
-    const fork = typeof forkRun === 'function' ? () => {
-        const r = forkRun();
-        const equipsAt = new Map(solverEquips.map((e) => [e.t, e.slot]));
-        perTick.forEach((held, t) => {
-            if (equipsAt.has(t)) r.equipNow(equipsAt.get(t));
-            r.advance(held);
-        });
-        return r;
-    } : null;
+    const fork = typeof forkRun === 'function' ? () => replayTo(perTick.length) : null;
 
     /**
-     * ⛓⛓ SEEDLING HAMMER-PHASE B3 — THE REPLAY REWIND (`rewindRun`, above). `levelRun` has one mutator and no
-     * snapshot, so the state at tick `t` IS the fresh run with `perTick[prefix.length … t)` replayed — the definition
-     * every tape check already assumes. What feeds a run besides the keys, and how each is carried:
+     * ⛓⛓ SEEDLING HAMMER-PHASE B3 — THE REPLAY REWIND (on `forkRun`, above). `levelRun` has one mutator and no
+     * snapshot, so the state at tick `t` IS the fresh boot run with `perTick[0 … t)` replayed — the definition every
+     * tape check already assumes. What feeds a run besides the keys, and how each is carried:
      *   - construction (the staging, the pass's persistence and PENDING rows, scratch persistence, the caller's own
-     *     `adoptWindowClock` / `addEquips` / `addTimedClears` and prefix): the factory's contract — it builds the run
-     *     exactly as `run` was built, so they are its inputs, not this replay's;
+     *     `adoptWindowClock` / `addEquips` / `addTimedClears`, the PLAY's equips inside the prefix): the factory's
+     *     contract — it builds the run exactly as `run` was built, so they are its inputs, not this replay's;
      *   - the slot selections this segment made (`equip` → `run.equipNow`): `solverEquips`, applied before their tick;
      *   - the apitems this segment took (the view's `inner.takeApItem` on the take tick): `apItemsTaken`, after it;
      *   - solver state keyed by the run object (`SKIRTED`): carried to the fresh run on adopt.
@@ -15095,15 +15093,20 @@ function solveSegmentUnder({
         dashesPressed = dashTicks.length;
         return cut;
     };
-    const rewind = typeof rewindRun === 'function' ? {
+    /** The fork's and the rewind's one replay: `forkRun()` with `perTick[0 … t)` and this segment's own inputs. */
+    const replayTo = (t) => replayToTick({
+        makeRun: forkRun, perTick, from: 0, to: t, handover: { at: prefix.length, ticks: ticked },
+        equips: solverEquips.map((e) => ({ at: e.t - offset, slot: e.slot })),
+        takes: [...apItemsTaken.values()].map((a) => ({ at: a.tick, level: a.level, id: a.apItem.id,
+            tag: a.apItem.tag })),
+    });
+    const rewind = typeof forkRun === 'function' ? {
         /** A fallback's row, for the result's `fightFallbacks` (the rewind's own record of what it was used for). */
         note: (row) => { rewinds.push(row); },
-        replay: (t) => replayToTick({
-            makeRun: rewindRun, perTick, from: prefix.length, to: t, startTicks: ticked,
-            equips: solverEquips.map((e) => ({ at: e.t - offset, slot: e.slot })),
-            takes: [...apItemsTaken.values()].map((a) => ({ at: a.tick, level: a.level, id: a.apItem.id,
-                tag: a.apItem.tag })),
-        }),
+        replay: (t) => {
+            if (t < prefix.length) fail(`solveSegment: a rewind to t${t} is inside the caller's prefix (${prefix.length})`);
+            return replayTo(t);
+        },
         to: (t) => {
             const fresh = rewind.replay(t);
             const was = { run, inner: rewoundInner };

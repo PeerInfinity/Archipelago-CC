@@ -2,8 +2,8 @@
 /**
  * check-seedling-rewind-exactness — ⛓ SEEDLING HAMMER-PHASE B3 (D0): THE REWOUND RUN IS THE STRAIGHT RUN.
  *
- * `solveSegment`'s rewind (`rewindRun`, `replayToTick`) defines the state at tick `t` as a fresh run with the
- * segment's ticks and non-key inputs replayed. That is only true if NOTHING else fed the live run — a preview that
+ * `solveSegment`'s rewind (on its `forkRun`, `replayToTick`) defines the state at tick `t` as a fresh BOOT run with
+ * the segment's ticks — the caller's prefix included — and non-key inputs replayed. That is only true if NOTHING else fed the live run — a preview that
  * left state behind, an input the replay forgets. This gate runs a producer's own script (unchanged: its `--check`,
  * the L18 sweep, a generated row) in a child under `rewindExactnessHook.js`, which compares, at every press kill's
  * first tick and every `--every`-th tape tick, the live run's fingerprint with the rewound run's, byte for byte.
@@ -14,6 +14,7 @@
  * Run:
  *   node scripts/procgen/check-seedling-rewind-exactness.mjs --row=l18
  *   node scripts/procgen/check-seedling-rewind-exactness.mjs --row=sweep --every=25
+ *   node scripts/procgen/check-seedling-rewind-exactness.mjs --row=fork-prefix   # the JS worker's factory, a prefix
  *   node scripts/procgen/check-seedling-rewind-exactness.mjs --rows              # the row table, and exit
  *   node scripts/procgen/check-seedling-rewind-exactness.mjs --script=plan-seedling-hammer-a-escape.mjs --args=--check
  *   … --keep=<file.jsonl>   keep the probe rows (default: a temp file, removed)
@@ -47,7 +48,32 @@ const ROWS = Object.freeze({
     'killgate-s9': ['census-seedling-killgate-clears.mjs', '--seeds=9-9'],
     enemy: ['census-seedling-enemies.mjs'],
     acceptance: ['batch-seedling-acceptance.mjs'],
+    // ⛓ b3b — the JS worker's path (`solveFromTape` → `forkRunFor`): a NON-EMPTY prefix with a PLAY equip in it
+    'fork-prefix': ['check-seedling-rewind-exactness.mjs', '--drive=fork-prefix'],
 });
+
+/**
+ * ⛓ b3b — THE `fork-prefix` ROW'S DRIVER (run in the probed child): L42's arrival (`crusher-l42-round-trip`'s
+ * staging, the JS arc's `jsRuntimeSolverForkRun` fixture) behind a 12-tick PLAY prefix that equips slot 1 at tick 3,
+ * solved through the production worker path — `solveFromTape`, whose `forkRun` is `forkRunFor({…, equips,
+ * prefixLength})`. Every probe then rewinds a tick INSIDE the segment from a boot run, the prefix replayed first.
+ */
+async function driveForkPrefix() {
+    const { CRUSHER_WITNESSES, crusherStaging } = await import('./plan-seedling-crusher-witness.mjs');
+    const { atlasLevelSource } = await import('../../frontend/modules/seedlingDemo/levelSource.js');
+    const { liveOf, replayTape, settleSolve, solveFromTape } = await import(
+        '../../frontend/modules/seedlingDemo/jsRuntimeSolver.js');
+    const w = CRUSHER_WITNESSES.find((x) => x.name === 'crusher-l42-round-trip');
+    const staging = await crusherStaging(w);
+    const levelSource = atlasLevelSource();
+    const perTick = Array.from({ length: 12 }, () => new Set());
+    const equips = new Map([[3, 1]]);
+    const live = liveOf(replayTape({ staging, perTick, levelSource, equips }));
+    const answer = settleSolve(() => solveFromTape({ staging, perTick, live, levelSource, equips,
+        solverGoal: JSON.parse(JSON.stringify(w.goals[0])), dashMode: 'none', name: 'b3b-fork-prefix' }));
+    console.log(JSON.stringify(answer.ok ? { ok: true, ticks: answer.plan.solution.length, verbs: answer.plan.verbs }
+        : { ok: false, message: String(answer.message).slice(0, 300) }));
+}
 
 async function probe(script, args, file, every) {
     const env = { ...process.env, SEEDLING_REWIND_PROBE: file, SEEDLING_REWIND_EVERY: String(every) };
@@ -63,6 +89,10 @@ async function probe(script, args, file, every) {
 // ⚠ A bare import does nothing (`check-procgen-help`'s import door): the work is `main()`'s.
 async function main() {
     const argv = process.argv.slice(2);
+    if (argv.includes('--drive=fork-prefix')) {
+        await driveForkPrefix();
+        return;
+    }
     const valueOf = (flag) => {
         const a = argv.find((x) => x.startsWith(`${flag}=`));
         return a ? a.slice(flag.length + 1) : null;
