@@ -775,8 +775,18 @@ function execBait(run, perTick, resolved, ctx) {
         const failures = [];
         if (ctx.fork) {
             for (const c of candidates) {
+                /**
+                 * ⛓ BOBSOLDIER2 D3(a) — the fork tries were invisible to the work budget (no ask in any of them).
+                 * The opt-in fine site `crusher-fork` is asked before each try and inside its replay
+                 * (`replayOntoFork`); a trip refuses the verb by name, as the `walk` site refuses the segment.
+                 */
+                const f = fineDeadlineReached('crusher-fork') ? null : ctx.fork();
+                if (f === null) {
+                    refuse(`${label}: deadline — the caller's anytime deadline (\`shouldStop\`) was reached at the `
+                        + `\`crusher-fork\` site after ${tried} fork tr(y|ies), so the rest of the ${candidates.length} `
+                        + 'aligned start(s) were not tried');
+                }
                 tried += 1;
-                const f = ctx.fork();
                 for (const held of c.ticks) f.advance(held);
                 try {
                     runBait(f, [], spec(), `${label} (fork)`);
@@ -14391,6 +14401,11 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  *    CAN turn any solve into a refusal — it is the bound on the whole solve's
  *    work.
  *
+ *  - `crusher-fork` — (seedling-fidelity-bobsoldier2 D3) the CRUSHER bait's fork tries (`execBait`): asked
+ *    before each try and every `WALK_CHECK_TICKS` advances of its replay (`replayOntoFork`). FINE (opt-in):
+ *    without `fineCheckpoints` it is never asked. A trip refuses the bait verb by name. CAN turn a solve into a
+ *    refusal.
+ *
  * ⛓ FIDELITY CHECKPOINTS also ask `detour` inside the DETOUR rung's via set
  * (opt-in, as above), once per lattice cell it plans to (L16's ~225 legs ran
  * ~19–50 s between the rung's first two asks; L40's thousands, ~230 s after
@@ -14402,7 +14417,7 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  */
 export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
     'block-route', 'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk', 'phase-dodge', 'hammer-escape',
-    'hammer-approach', 'hammer-fight']);
+    'hammer-approach', 'hammer-fight', 'crusher-fork']);
 
 /**
  * ⛓ FIDELITY CHECKPOINTS — the ticks a segment drives between two asks of the
@@ -14410,6 +14425,50 @@ export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
  * of the room is stepped), so 32 ticks keep the stretch near 0.1 s.
  */
 export const WALK_CHECK_TICKS = 32;
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY BOBSOLDIER2, D3 — **THE FORK'S REPLAY, ON THE RUN'S OWN CLOCK** (`solveSegment`'s `fork`).
+ *
+ * A fork is `perTick` (the prefix and every tick this segment drove) replayed onto a fresh run, with the
+ * segment's own slot selections (`solverEquips`) applied where the live run applied them.
+ *
+ * ⛔ (b) TWO CLOCKS. An equip's `t` is `run.ticksCompleted` when `equip` ran — the RUN's clock — and the first
+ * cut replayed it at the perTick INDEX: `equipsAt.has(index)`. A run spends DEAD FRAMES the tape does not tick
+ * (`run.deadFrameSpans`; `solveSegment`'s prefix check: the run clock is AT LEAST the tape clock), so after one
+ * the two differ and the equip landed on the wrong fork tick — or on none. ⇒ the equip is applied when the
+ * FORK's own run clock reaches its `t`, before the next advance, which is where the live run applied it; an equip
+ * whose `t` the fork's clock never lands on fails by name (the two runs are not the same run). An equip made after
+ * the last driven tick is applied after the replay (the first cut dropped it).
+ *
+ * ⛓ (a) THE CHECKPOINT. The replay is the fork's cost — the whole `perTick`, prefix included, once per
+ * candidate (L42 dashless: 5 forks, 3,991 advances, ~0.9 s with no ask). `stop` is asked every
+ * `WALK_CHECK_TICKS` advances; `true` abandons the fork and returns `null`. `solveSegment` hands the OPT-IN fine
+ * site `crusher-fork` (`fineDeadlineReached`: asked only under `fineCheckpoints`), so every existing consult
+ * sequence is unchanged.
+ *
+ * @returns {?object} the fork, or `null` when `stop` tripped
+ */
+export function replayOntoFork(r, perTick, equips, { stop = null } = {}) {
+    let k = 0;
+    const applyDue = () => {
+        while (k < equips.length && equips[k].t <= r.ticksCompleted) {
+            if (equips[k].t !== r.ticksCompleted) {
+                fail(`replayOntoFork: the segment selected slot ${equips[k].slot} at run tick ${equips[k].t}, and `
+                    + `the fork's run clock went from below it to ${r.ticksCompleted} without landing on it — the `
+                    + 'fork is not replaying the run it forks.');
+            }
+            r.equipNow(equips[k].slot);
+            k += 1;
+        }
+    };
+    for (let i = 0; i < perTick.length; i += 1) {
+        if (stop !== null && i > 0 && i % WALK_CHECK_TICKS === 0 && stop()) return null;
+        applyDue();
+        r.advance(perTick[i]);
+    }
+    applyDue();
+    return r;
+}
 
 /** The deadline the segment being solved runs under — `null` is "none". */
 let activeDeadline = null;
@@ -14874,15 +14933,10 @@ function solveSegmentUnder({
      * own ticks and slot selections replayed onto it, the survey replay's own
      * fold (`equips` applied at their tick before that tick's advance).
      */
-    const fork = typeof forkRun === 'function' ? () => {
-        const r = forkRun();
-        const equipsAt = new Map(solverEquips.map((e) => [e.t, e.slot]));
-        perTick.forEach((held, t) => {
-            if (equipsAt.has(t)) r.equipNow(equipsAt.get(t));
-            r.advance(held);
-        });
-        return r;
-    } : null;
+    const fork = typeof forkRun === 'function'
+        ? () => replayOntoFork(forkRun(), perTick, solverEquips,
+            { stop: () => fineDeadlineReached('crusher-fork') })
+        : null;
 
     /**
      * Refuse, with everything a reader needs. The rows recorded so far ride
