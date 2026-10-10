@@ -91,7 +91,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ hammer-phase B1: +1 (258) — `hammer-b1-l18-approach40`.
         // ⛓ hammer-phase B2: +1 (259) — `hammer-b2-l18-fight40`.
         // ⛓ fidelity GHOSTMOTION: +2 (261) — `ghostmotion-l102-axis`, `ghostmotion-l102-diag`.
-        expect(names.length).toBe(261);
+        // ⛓ fidelity BOBSOLDIER2: +2 (263) — `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch`.
+        expect(names.length).toBe(263);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);

@@ -1336,6 +1336,21 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + '17.9 px — past the sword\'s 16) at `ghostSwordDamage` 2 kill the `hitsMax`-3 body (game `hits` 0 -> 2 '
                 + '-> 4), and the fade removes it; no hit on the player. Recorded on the game; the body probe is bit-exact.',
         }),
+        /** ⛓⛓⛓ seedling-fidelity-bobsoldier2 — THE KILL ARM'S STANCE, BEFORE AND AFTER, declared before the roster measured them. */
+        Object.freeze({
+            name: 'bobsoldier2-l30-dash-stance', levels: Object.freeze([30]), bobs: 1, ticks: 145,
+            addedBy: 'Seedling fidelity BOBSOLDIER2 D1 (the BEFORE: the dashed stance walk)',
+            why: 'survey step 50\'s staging solved with both BOBSOLDIER2 switches OFF, cut where the kill arm\'s dwell '
+                + 'refused: the dashed walk to (88,56) arrives at t 92 with `bobsoldier@48,80` on one hit, and at the '
+                + '53-tick bound it is alive on two. No hit on the player. Recorded on the game; the body probe is bit-exact.',
+        }),
+        Object.freeze({
+            name: 'bobsoldier2-l30-torch', levels: Object.freeze([30]), bobs: 1, ticks: 460,
+            addedBy: 'Seedling fidelity BOBSOLDIER2 D2 (the AFTER: the solver\'s own plan, both switches ON)',
+            why: 'the stance walked undashed (arrival t 145), the body killed at t 167 inside the 53-tick bound, the '
+                + 'corpse\'s blade timed at the next gate, the Torchpickup and stairsup@224,160 -> L32 at t 460. Zero hits. '
+                + 'Recorded on the game; the model reproduces it.',
+        }),
         /** ⛓⛓⛓ seedling-fidelity-wallflyer — THE WALLFLYER'S DEATH AND THE SHIELD'S TURN, written before the roster measured them. */
         Object.freeze({
             name: 'wallflyer-kill', levels: Object.freeze([22]), bobs: 1, ticks: 98,

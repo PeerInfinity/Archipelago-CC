@@ -120,7 +120,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ hammer-phase B1: +1 (258) — `hammer-b1-l18-approach40`.
         // ⛓ hammer-phase B2: +1 (259) — `hammer-b2-l18-fight40`.
         // ⛓ fidelity GHOSTMOTION: +2 (261) — `ghostmotion-l102-axis`, `ghostmotion-l102-diag`.
-        expect(names.length).toBe(261);
+        // ⛓ fidelity BOBSOLDIER2: +2 (263) — `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch`.
+        expect(names.length).toBe(263);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -175,7 +176,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ hammer-phase B1: 258 — the approach witness crosses to L19 too.
         // ⛓ hammer-phase B2: 259 — the fight witness crosses to L19 too.
         // ⛓ fidelity GHOSTMOTION: 261 (measured) — both `ghostmotion-l102-*` witnesses swap too.
-        expect(tally.swapped).toBe(261);
+        // ⛓ fidelity BOBSOLDIER2: 263 with `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch`.
+        expect(tally.swapped).toBe(263);
     }, 600_000);
 });
 

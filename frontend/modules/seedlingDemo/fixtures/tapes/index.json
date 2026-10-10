@@ -52,6 +52,20 @@
       "noHazards": []
     },
     {
+      "file": "bobsoldier2-l30-dash-stance.json",
+      "tickCount": 145,
+      "bootLevel": 30,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "bobsoldier2-l30-torch.json",
+      "tickCount": 460,
+      "bootLevel": 30,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "burn-l24-reach-exit.json",
       "tickCount": 124,
       "bootLevel": 24,
