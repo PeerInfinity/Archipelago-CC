@@ -78,7 +78,7 @@ export { TALK_RANGE } from './endingChain.js';
 // enemyDamage.js — solverBot, strikePolicy · seedling 3
 export { DARKTRAP_LIGHT_DEATH, KILL_ARM_POLICY, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH, killArmModelled } from './enemyDamage.js';
 // ⛓ hammer-phase C1: the static sword arm's switch and death table
-export { STATIC_SWORD_ARM, STATIC_SWORD_DEATH, withStaticSwordArm } from './enemyDamage.js';
+export { STATIC_SWORD_ARM, STATIC_SWORD_DEATH } from './enemyDamage.js';
 // killLockBodies.js — solverBot · seedling 1
 export { KILLLOCK_BODIES } from './killLockBodies.js';
 // fireVerb.js — botDriverV2 · seedling 2
@@ -95,7 +95,7 @@ export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
 // ⛓ U15-swim D2: the turret spit's box, for `dangerMap.spitDanger`'s WAIT sweep.
 export { TURRET_SPIT } from './turret.js';
 // ⛓ hammer-phase C1: the static sword arm's turret mini-forecast (`staticSwordShotFree`)
-export { TURRET, stepTurret, turretInRange } from './turret.js';
+export { stepTurret } from './turret.js';
 // levelRun.js — botDriverV2 · physics 1
 export { createLevelRun } from './levelRun.js';
 

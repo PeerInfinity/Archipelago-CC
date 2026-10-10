@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 76,
+            "count": 77,
             "id": "plan"
         },
         {
             "browser": 68,
-            "count": 113,
+            "count": 114,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 396,
+        "blockStyle": 398,
         "browser": 133,
         "cited": 196,
-        "files": 408,
+        "files": 410,
         "lineStyle": 12,
-        "withDocblock": 408,
-        "withFlags": 326
+        "withDocblock": 410,
+        "withFlags": 328
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7258,6 +7258,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-c1-static-sword.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-c1-static-sword — ⛓⛓ SEEDLING HAMMER-PHASE C1: THE STATIC SWORD ARM'S GAME WITNESSES, PLANNED BY THE SOLVER WITH `CHOOSER_HIT_SOURCES` AND `STATIC_SWORD_ARM` ON.",
+            "path": "scripts/procgen/plan-seedling-c1-static-sword.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-crusher-witness.mjs",
             "flags": [
                 {
@@ -12468,6 +12495,49 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-span-ceiling — how many input SPANS can `botLoadTape` actually take before the recompiled runtime runs out of heap?",
             "path": "scripts/procgen/probe-seedling-span-ceiling.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-static-sword-mobiles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "off"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-static-sword-mobiles — ⛓⛓ SEEDLING HAMMER-PHASE C1: A STATIC BODY KILLED BY THE SWORD, ASKED OF THE GAME TICK BY SAMPLED TICK (`probe-seedling-wallflyer-mobiles.mjs`'s shape, for `SandTrap` and `Turret`).",
+            "path": "scripts/procgen/probe-seedling-static-sword-mobiles.mjs"
         },
         {
             "argvHelpers": [],

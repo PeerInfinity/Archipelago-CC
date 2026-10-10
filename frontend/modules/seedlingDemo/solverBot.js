@@ -124,7 +124,7 @@ import {
     // ⛓⛓ fidelity ENCOUNTERS D3: the Witch's talk circle (`NPC.talkRange`).
     TALK_RANGE,
     // ⛓⛓ hammer-phase C1: the static sword arm (its switch, its death table, the turret mini-forecast)
-    STATIC_SWORD_ARM, STATIC_SWORD_DEATH, TURRET, stepTurret, turretInRange,
+    STATIC_SWORD_ARM, STATIC_SWORD_DEATH, stepTurret,
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
