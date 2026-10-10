@@ -7216,6 +7216,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-encounters.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-encounters — ⛓⛓ seedling-fidelity-encounters: THE ENCOUNTER WITNESSES FROM NON-SURVEY ARRIVALS.",
+            "path": "scripts/procgen/plan-seedling-encounters.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-f1-l5-lock.mjs",
             "flags": [
                 {
