@@ -117,7 +117,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity GHOSTSWORD: +3 (253) — `ghostsword-l3-rockghost`, `ghostsword-l3-rock`, `ghostsword-l30-bobsoldier`.
         // ⛓ fidelity WALLFLYER: +3 (256) — `wallflyer-kill`, `wallflyer-kill-flight`, `wallflyer-shield-bump`.
         // ⛓ fidelity CRUSHER: +1 (257) — `crusher-l42-round-trip`.
-        expect(names.length).toBe(257);
+        // ⛓ hammer-phase B1: +1 (258) — `hammer-b1-l18-approach40`.
+        expect(names.length).toBe(258);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -169,7 +170,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity GHOSTSWORD: 253 with `ghostsword-l3-rockghost`, `ghostsword-l3-rock`, `ghostsword-l30-bobsoldier`.
         // ⛓ fidelity WALLFLYER: 256 with `wallflyer-kill`, `wallflyer-kill-flight`, `wallflyer-shield-bump`.
         // ⛓ fidelity CRUSHER: 257 — `crusher-l42-round-trip` crosses to L40.
-        expect(tally.swapped).toBe(257);
+        // ⛓ hammer-phase B1: 258 — the approach witness crosses to L19 too.
+        expect(tally.swapped).toBe(258);
     }, 600_000);
 });
 

@@ -254,6 +254,13 @@
       "noHazards": []
     },
     {
+      "file": "hammer-b1-l18-approach40.json",
+      "tickCount": 362,
+      "bootLevel": 18,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "hazard-boot-pit.json",
       "tickCount": 30,
       "bootLevel": 83,
