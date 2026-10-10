@@ -185,7 +185,9 @@ describe('fidelity LADDER2 D2 — the pricing and the ladder', () => {
             period: 90 });
         // ⛓ hammer-phase A appended `hammer-escape` after it, B1 `hammer-approach` and B2 `hammer-fight`
         // (`solverDeadline` pins the whole list)
-        expect(DEADLINE_SITES.slice(-4)).toEqual(['phase-dodge', 'hammer-escape', 'hammer-approach', 'hammer-fight']);
+        // ⛓ bobsoldier2 D3 appended `crusher-fork` after these (a later row): the order is asked from this row on.
+        const at = DEADLINE_SITES.indexOf('phase-dodge');
+        expect(DEADLINE_SITES.slice(at, at + 4)).toEqual(['phase-dodge', 'hammer-escape', 'hammer-approach', 'hammer-fight']);
     });
 });
 

@@ -138,7 +138,8 @@ describe('SF2: the anytime deadline — `sword-dash` is an UPGRADE, so a trip ke
         // `hammer-approach` (asked only with `HAMMER_APPROACH` on), and B2 `hammer-fight` (only with `HAMMER_FIGHT` on)
         expect(DEADLINE_SITES).toEqual(['sword-dash', 'stance-hypothesis', 'block-route',
             'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk', 'phase-dodge', 'hammer-escape',
-            'hammer-approach', 'hammer-fight']);
+            'hammer-approach', 'hammer-fight', 'crusher-fork']);
+        // ⛓ seedling-fidelity-bobsoldier2 D3 appended `crusher-fork` (a FINE site: only under `fineCheckpoints`).
     });
 
     it('a deadline that is not a callback is refused by name', () => {

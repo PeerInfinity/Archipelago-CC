@@ -15086,6 +15086,56 @@ The game's `Bot.slashTests` equals the model's at all 25 ticks of each.
 - **One boundary witness is half a pin.** A gap-6 swallow proves the clock is ≥ 6, and a gap-7 dash proves it is ≤ 6.
   Mutant M3 (6 → 7) is green on the axis tape alone.
 
+### Seedling fidelity BOBSOLDIER2 — the kill arm walked a walk nobody forecast, and the next gate priced a corpse's blade by a pad
+
+Wave 10 (model coverage), the BOBSOLDIER2 slice. The live playthrough B stopped at L30's Torchpickup on survey step
+50's refusal: *"collect (64,64) stance -> kill (bobsoldier@48,80) by press: the dwell's condition … never became true
+inside its 53-tick bound"*. The report is `CC/docs/cloud-reports/seedling-fidelity-bobsoldier2.md`.
+
+**D1: the model was right, and so was the forecast; the executor walked something else.** `deriveKillByChaser` prices
+a stance by previewing `planWaypoints` + `previewWalk` under the one strike policy, with NO dash plan, and then the
+standing tail on the same forecast; the dwell's bound is that preview's `deathTick − arrival + HOLD_SLACK`. The ladder
+then walked to the stance with `walkTo`, and `walkTo` asks `planSwordDash` for every corridor. Measured on step 50:
+the preview arrives at (88,56) at t145 with the body on two hits and kills it at t167 (bound 53); the drive dashed
+(≈2.2 px/tick against ≈1.2), arrived at t92 with the body on one hit, and at t145 the body is alive on two at
+(78.95,72.84). Played on p4f (`bobsoldier2-l30-dash-stance`): the model reproduces the recording exactly and the body
+probe is bit-exact at all 146 samples. The bound was derived from a walk nobody took.
+
+**D2, two switches, both OFF by default.** `KILL_STANCE_AS_FORECAST`: the chaser arm's stance walk is
+`walkTo(…, {undashed: true})`, so the drive IS the preview (step 50: arrival t145, kill t167, both sides).
+Lifting that wall alone exposed the next: the walk after the kill refused at its own gate, *"inside leash 80
+(d=15.8) … pad 16"*, against the CORPSE, whose blade the stance's forecast had shown clear of that box for the 21
+dwell ticks after the kill. `SWORD_GATE_TIMED`: a WALK's decision gate (`refuseDanger` before the plan, and the walk
+row's `saw`) hands `chaserDanger` the chaser forecast stepped one tick against the player standing at the box
+(`swordTickAt`, the walk's own first transit sample), and a sworded body is priced by that tick's lines and its bare
+body instead of the pad. The gate before an executor and the bait stance scan keep the pad. Both ON, step 50 solves in
+460 t (`bobsoldier2-l30-torch`, game-recorded, model = game); each alone still refuses (one wall each). Step 52
+stays refused, now naming the bare body at d=4.7 (a real contact). Live sweep (`--mode=inv`, the production wasm
+page, defaults flipped for the measurement only): leg 327 (live B's stop) failed → done in 191 t; the pit-arrival legs
+333/339 refuse earlier, in the chaser arm's stance scan. Movers with both ON: ONE producer, `solve-seedling-r9-campaign`
+(`r9-solve-12`'s TRACE only — the undashed stance walk carries no `swordDash` rejection rows; the tape is byte-identical),
+and it is `KILL_STANCE_AS_FORECAST`'s; `SWORD_GATE_TIMED` alone moves no producer.
+
+**D3, the CRUSHER bait's fork.** (b) `solveSegment`'s fork replayed the segment's equips keyed by `t` — the RUN clock —
+at the perTick INDEX; dead frames separate the two. `replayOntoFork` applies each equip when the fork's own run clock
+reaches it, fails by name on a clock it never lands on, and applies a trailing one. (a) the fork tries asked no
+deadline: `crusher-fork` is a new FINE `DEADLINE_SITES` row (asked only under `fineCheckpoints`), before each try and
+every `WALK_CHECK_TICKS` replay advances; a trip refuses the bait by name. The L42 consult sequences without
+`fineCheckpoints` are the base's byte for byte, and with it the base's plus the new site. Step 85's walks are
+byte-identical (1294 t, dashless 1566 t).
+
+**Trap candidates**, for the catalogue to number:
+
+- **A bound derived from a preview is a claim about the walk the preview walked.** The dwell's 53 ticks were the
+  forecast's own measurement, and the executor then walked the stance through `walkTo`, which plans its own dash
+  schedule. Every number the preview produced was right about a walk nobody drove.
+- **Lifting one wall shows the next one a tick later.** With the stance fixed, the very next gate refused on a pad the
+  forecast that chose the stance had already priced exactly. Measure the run past the first fix before calling the
+  room solved.
+- **A probe's sample clock is not dead-frame aware.** The body probe's first-sample-per-tick read one apitem-ceremony
+  tick off the model's column (`bobsoldier2-l30-torch`, t225) while the differential (which skips fade frames) matched
+  all 461 observations. A calibration miss on a ceremony tick is the instrument's, not the model's.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the

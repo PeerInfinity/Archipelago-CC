@@ -75,7 +75,9 @@ describe('hammer-phase B1 — HAMMER_APPROACH (OFF by default)', () => {
     it('⛓⛓ OFF by default, its own deadline site (appended last), the switch restores, the trace off', () => {
         expect(HAMMER_APPROACH.enabled).toBe(false);
         // ⛓ hammer-phase B2 appended `hammer-fight` after it
-        expect(DEADLINE_SITES.slice(-2)).toEqual(['hammer-approach', 'hammer-fight']);
+        // ⛓ bobsoldier2 D3 appended `crusher-fork` after these (a later row): the order is asked from this row on.
+        const at = DEADLINE_SITES.indexOf('hammer-approach');
+        expect(DEADLINE_SITES.slice(at, at + 2)).toEqual(['hammer-approach', 'hammer-fight']);
         expect(withHammerApproach(true, () => HAMMER_APPROACH.enabled)).toBe(true);
         expect(HAMMER_APPROACH.enabled).toBe(false);
         expect(() => withHammerApproach(true, () => { throw new Error('x'); })).toThrow('x');
