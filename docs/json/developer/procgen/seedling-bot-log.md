@@ -15183,6 +15183,51 @@ forecast, hammer escape, approach or fight applies: `execKillByPress` and `deriv
   only for the bodies its question could not reach.
 - **The walk before a press leaves the sword's window open.** A strike policy's presses make the next press a dash.
 
+### Seedling fidelity PUSHBLOCK — a spear block moves on a spear thrust, one tile a press, and a sword slash does not move it
+
+Wave 11 (model coverage), the PUSHBLOCK slice. Its input was re-measure 3's five survey refusals on
+`solid:pushableblockspear` (steps 137, 145, 146, 149, 180; 148 is the same room's block behind a pixel-mask tree):
+*"No strategy row exists for this obstacle"*. The report is `CC/docs/cloud-reports/seedling-fidelity-pushblock.md`.
+
+**A sword slash does not move a `PushableBlockSpear`; R4's reading said it did.** `Player.genericHit`'s Spear arm
+builds its push vector from `spearDirection`, not `direction`. `set spearing` writes `spearDirection = -1` first on
+every call (`Player.as:814`) and sets the facing only on a thrust that starts (`:820`); a ghost-sword slash is the one
+other writer (`:921`). So during a plain sword slash `p` is (0, 0) and the relative arm targets the block's own centre.
+Every R4 recording pressed with the spear, so the sword half of the claim was never witnessed.
+`probe-seedling-pushblock-weapon.mjs` (game and model, one press facing W from R4's L65 stance): SPEAR Δx 15.95 on
+both, 0.000 px apart; SWORD Δx **0.00 on the game, 15.95 on the old model**. Fixed in `pushables.hitPushableByWeapon`
+behind `PUSH_SPEAR_DIRECTION` (ON). All 266 committed tapes give byte-identical model streams with it ON and OFF.
+
+**The verb.** `'solid:pushableblockspear': 'shove'`. The resolver (`resolveSpearPushStrategy`) runs the same
+block-route search as a lean, with a press move (`pressMoves`): one tile per thrust, from a stance one or two cells
+behind the block whose 32x5 spear rect covers it (no distance or line gate in `Player.spear()`), robust to ±3 px, and
+whose rect reaches no other non-inert responder (`auditPress`). A `LightPole` is tolerated in a second pass, because
+L65's pole stands in the block's own rows between it and every east stance (R4's thrust swept it too). The executor
+(`execSpearPress`) settles, selects the spear's slot, taps the facing, re-asks the reach at the live position, presses,
+waits out the 32-tick glide (or the sink), and selects the old slot again. Without the spear it refuses by name.
+The search re-derives R4's L65 route on its own: W, N from two cells below across the pit, W onto the pit.
+
+**Survey (local, at the slice head):** 146 REFUSED → SOLVED 541 t; 148 REFUSED → SOLVED 233 t. 137 now reaches the
+block (one W thrust that sinks it) and then refuses on `arrowtrap@48,48`'s armed lane at the boss key; 145/180 refuse
+in the DarkTrap light arm on the walk to the thrust stance; 149's target (`teleporter@0,96`) is sealed in every block
+state from its boot (`recon-seedling-pushes.mjs`). Every SOLVED step in L59–L68 keeps its exact ticks.
+
+**Witnesses (p4f, model = game exactly):** `pushblock-l65-reach-l68` (348 obs, three thrusts),
+`pushblock-l65-reach-l63` (229 obs, one thrust), `pushblock-l65-sword-press` (81 obs, D1's control). The two solver
+witnesses stage `darktrap@144,144` cleared, because the first recording of the survey's own solves refuted the
+DarkTrap light arm in L65 (step 146's walk: the game kept the body, 2 hits, t54; step 148's left the game at t137
+just after its light thrust). That is handed over, with the tapes and recordings in the report's evidence directory.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A reading of the branch ORDER is not a reading of the ARGUMENT.** R4 established that the Spear arm is reached by
+  any weapon and stopped there; the vector it passes is a field another setter resets.
+- **A walk near a spear block swings the sword.** The solver's dash presses between thrusts reach the block: with
+  D1 OFF, `pushblock-l65-reach-l68` reds as well as the control (mutant M1), so the fix is load-bearing for the
+  solver's own walks, not only for a deliberate slash.
+- **A survey SOLVED is a model verdict.** Both new solves walk through a leg the game refutes; only a recording says
+  which half of a solve is game-exact.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
