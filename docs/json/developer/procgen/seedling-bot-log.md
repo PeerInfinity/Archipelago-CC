@@ -15570,6 +15570,44 @@ partition, which must admit `bulb` at the flip).
 - **A pickup is not its own aim.** The planner forbids a pickup's cell except on the walk that collects it, so a
   reachability question about a pickup asks about the cells around it — the first cut of the veto never fired.
 
+### Seedling fidelity ENCOUNTERS2 — the live Bob Boss divergence was the panel's write, and a pickup's item lands a frame late
+
+Wave 10b, a fix slice after the JS arc bound the two encounters (report
+`CC/docs/cloud-reports/seedling-fidelity-encounters2.md`). Two live symptoms: the logical-links B leg leaves its Bob Boss
+plan at t932 (y 33.85 → 34.25, three CI runs), and all seven Witch legs end with the game's `hasDarkSword` false.
+
+**The Bob Boss model was right.** The B leg re-run locally with `--trace` gave the arrival's staging and the 1,049-tick
+plan the page shipped. Replayed on the game from that staging (new instrument `probe-seedling-encounter-ticks.mjs`), it is
+0 px over 1,050 observations. A mid-span `botHold` at t833 changes nothing (every sub-frame tried, and a 1.5 s
+main-thread stall inside it). What reproduces CI to the bit is one write: `flashBridgeAdapter._itemWritesFor` clears every
+location-mapped property no owned item backs, and while the delivery gate holds the Fire back that is `hasFire = false`.
+With no Fire the press at ~t877 burns nothing, and the walk stops under the tree at t932. The same clearing write is
+what leaves the Witch legs without the dark sword. Witness: `enc-l32-live-arrival` (the live staging, the worker's
+dashless pass, inputs byte-identical to the shipped tape), recorded on p4f.
+
+**A special pickup's item lands one frame after its ceremony closes.** `NPC.removed()` nulls the pickup's `myText` at
+the end of the closing frame, so `pick_up()`'s `!myText` arm and the pickup's `removed()` run on the next frame. The
+model applied `removed()` on the closing frame. No x/y stream could see it (the player is free on the closing frame on
+both sides). The flag can: game `hasDarkSword` obs 378 / model 377 (`enc-l12-witch`), `hasFire` 833 / 832, `hasTorch`
+226 / 225 (a placed pickup), `hasSword` 71 / 70 (`r8-solve-10`). `PICKUP_REMOVED_NEXT_FRAME` (OFF; `pickupRemoval.js`)
+queues the flag writes to the end of the next advance. The executors end their ceremony loops on the `collected`
+record, so their plans do not move. The Bob Boss executor's "one tick after the flag" equip wait was this frame,
+measured from the other side. ⛔ It stays OFF for a measured reason: ON moves `r8-solve-10`'s recorded stream at t73.
+That tape presses `primary` on the sword's closing frame and the game swings, so the game's swing there does not wait
+for `Sword.removed()`; the model's press gate reads `hasSword` and does. ON also moves three producers (the report has
+the list).
+
+**Trap candidates**, for the catalogue to number:
+
+- **A divergence on the live page is not a model divergence until the tape is replayed off the page.** The live leg
+  carried two page-side events the staged witnesses never had (a mid-span hold and a clearing write). One replay from
+  the page's own staging told them apart in minutes.
+- **An item flag can be a frame off under a stream that matches at 0 px.** The ceremony freezes the player, so x/y is
+  the same either way. Only the flag, read per tick, separates them.
+- **The end-of-tape item compare reads the game one frame later than the model.** The disarm frame steps the world,
+  so a flag the game sets on the frame after the tape's last tick still reads true in the game's final status. The
+  model's one-frame-early flag was hidden behind exactly that offset.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
