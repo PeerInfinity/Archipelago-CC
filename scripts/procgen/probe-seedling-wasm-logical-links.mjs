@@ -387,7 +387,7 @@ async function main() {
                 if (!e) return null;
                 const st = e.stats;
                 return JSON.parse(JSON.stringify({ swapPushes: st.swapPushes, shipClock: st.shipClock, deliveries: st.deliveries, deliveryDeferred: st.deliveryDeferred, holdBlocked: st.holdBlocked,
-                    fallbacks: st.fallbacks, forcedBy: st.forcedBy, adoptClock: st.adoptClock ?? null, heldChecks: st.heldChecks, adoptRefused: st.adoptRefused,
+                    fallbacks: st.fallbacks, forcedBy: st.forcedBy, adoptClock: st.adoptClock ?? null, arrivalWatch: st.arrivalWatch ?? null, heldChecks: st.heldChecks, adoptRefused: st.adoptRefused,
                     history: st.history.map((h) => ({ ...h, goal: { name: h.goal?.name ?? null, kind: h.goal?.kind ?? null, level: h.goal?.level ?? null } })),
                     arrivalReads: e.arrivalReads }));
             });
