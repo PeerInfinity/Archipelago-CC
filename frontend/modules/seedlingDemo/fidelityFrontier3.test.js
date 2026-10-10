@@ -25,6 +25,7 @@ import { playerBoxAt } from './playerPhysicsV2.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, runTape } from './tapeRunner.js';
 import { plannerObstacleAt } from './botDriverV2.js';
+import { withCrusherBait } from './crusherBait.js';
 import {
     FINE_LATTICE, FINE_LATTICE_ROSTER_WIDE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, SolverRefusal, exitAimFor, obstacleGateFor,
     solveSegment,
@@ -153,8 +154,10 @@ describe('fidelity FRONTIER3 D3 — the rows, and the gates whose opener is not 
         }
     });
 
-    it('L42 (route step 108): the crusher refuses as the computed work order `bait`', async () => {
-        const e = await refusalOf({ level: 42, x: 240, y: 320 }, { kind: 'collect-placement', placement: { x: 184, y: 152 } });
+    // ⛓ fidelity CRUSHER (wave 9): with `CRUSHER_BAIT` ON (the default) this room SOLVES (`fidelityCrusher.test.js`);
+    // the row pins the work-order refusal FRONTIER3 computed, so it runs with the flag off.
+    it('L42 (route step 108): the crusher refuses as the computed work order `bait` (CRUSHER_BAIT off)', async () => {
+        const e = await withCrusherBait(false, () => refusalOf({ level: 42, x: 240, y: 320 }, { kind: 'collect-placement', placement: { x: 184, y: 152 } }));
         expect(e.message).toMatch(/Obstacle: solid:crusher \(crusher@96,144\)\. Strategy 'bait' is SELECTED but not registered/);
     });
 
