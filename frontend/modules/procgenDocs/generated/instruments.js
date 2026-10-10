@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 66,
-            "count": 111,
+            "browser": 67,
+            "count": 112,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 390,
-        "browser": 131,
-        "cited": 193,
-        "files": 402,
+        "blockStyle": 391,
+        "browser": 132,
+        "cited": 194,
+        "files": 403,
         "lineStyle": 12,
-        "withDocblock": 402,
-        "withFlags": 320
+        "withDocblock": 403,
+        "withFlags": 321
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9760,6 +9760,58 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-ctor-args — THE CONSTRUCTOR ARGUMENT-TABLE AUDIT.",
             "path": "scripts/procgen/probe-seedling-ctor-args.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-darktrap-mobiles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-darktrap-mobiles — ⛓⛓⛓ seedling-fidelity-staticladder D2: A DARKTRAP'S LIGHT DEATH, ASKED OF THE GAME TICK BY SAMPLED TICK (WALLFLYER's `probe-seedling-wallflyer-mobiles.mjs`, one class over).",
+            "path": "scripts/procgen/probe-seedling-darktrap-mobiles.mjs"
         },
         {
             "argvHelpers": [
