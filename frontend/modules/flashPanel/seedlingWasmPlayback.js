@@ -124,6 +124,8 @@ import {
 
 /** How long a goal waits for its arrival (a crossing, or the forced re-arrival) before it fails by name. */
 export const ARRIVAL_WAIT_MS = 15000;
+/** ⛓ RESTART HOLD — `stats.arrivalWatch` keeps this many rows (≤ ~6 per expected arrival: ~10 Restarts whole). */
+export const ARRIVAL_WATCH_ROWS = 64;
 /** How long a QUEUED goal waits for the playing tape (a seal reveal is ~16 s, W0 i.13). */
 export const QUEUE_WAIT_MS = 60000;
 /** ⛓ WALK IDENTITY (b) — how long the bot's Restart waits for a playing tape to reach its end (a seal reveal is ~16 s). */
@@ -255,6 +257,8 @@ export function createWasmPlayback({
     let watchTimer = null;
     let watchToken = 0;
     let watchBaseline = null;
+    /** ⛓ RESTART HOLD — the expected arrival being watched for (`expectArrival`), until it is held or the engine stops. */
+    let expecting = false;
     /**
      * ⛓ MID-ROOM REPLAN — the DELIVERY GATE (`getDelivery`): installed on the panel adapter while the bot
      * drives a solver room. `admitted` = the inventory the game may hold; `pending` = a delivery the game
@@ -292,7 +296,9 @@ export function createWasmPlayback({
         swapPushes: [],
         // ⛓ ARRIVAL JITTER — every plan ship's clock: staged, shipped prefix, the game's (a diagnostic, never acted on)
         shipClock: [],
-        // ⛓ RESTART HOLD (diagnostic) — the arrival watch's life around an expected arrival: armed, dropped, re-based, seen
+        // ⛓ RESTART HOLD (an instrument, never acted on) — the arrival watch around each EXPECTED arrival (`expectArrival`,
+        // a Restart's start hop), from the arming to the hold: `expect`, `walkTo`, `begin` (a re-base) / `begin-keep`,
+        // `seen`, `stop-drop`. Only those rows, so the cap (`ARRIVAL_WATCH_ROWS`) keeps the last ~10 handshakes whole.
         arrivalWatch: [] };
     const history = [];
     /** ⛓ WG — the reads of the last few arrivals (the probe's fixture recorder; never read back here). */
@@ -388,6 +394,8 @@ export function createWasmPlayback({
         const g = goal;
         release();
         reset();
+        watchRow('failed');
+        expecting = false;
         stopWatch();
         arriving = false;
         goal = null;
@@ -448,7 +456,7 @@ export function createWasmPlayback({
         let action = goalAction({ goal: g, liveLevel: live.level, playing: phase === 'playing', heldLevel });
         // ⛓ W7 — an exit plan's crossing is in flight: the goal waits for the HELD arrival, never a teleport back.
         if (action === 'force-re-arrival' && glueQuery && arriving) action = 'await-arrival';
-        if (arriving || action !== 'continue') watchRow('walkTo', { goal: g.level, action, seamLevel: seam().beginEntry?.['begin.level'] ?? null });
+        watchRow('walkTo', { goal: g.level, action, landed: beginTag(seam().beginEntry ?? null) });
         if (action === 'queue') {
             queued = { goal: g, since: now() };
             note(`queued behind the playing tape (${goal?.name ?? 'the last goal'})`);
@@ -482,7 +490,15 @@ export function createWasmPlayback({
             phase = 'await-arrival';
             deadline = now() + ARRIVAL_WAIT_MS;
             note(`waiting to arrive in level ${g.level}`);
-            if (glueQuery) startWatch('begin');
+            if (keepWatch && watchTimer) {
+                // ⛓ RESTART HOLD — the armed watch (`expectArrival`, a crossing in flight) KEEPS its baseline, and reads
+                // the seam in THIS turn: a goal can come in the very turn its room landed (the Restart's route opens on
+                // a logical link, so its goal waits for the level report), and re-basing here would take that landing
+                // as the baseline — never seen, never held, and the 15 s fallback stages a wall-clock room.
+                watchRow('begin-keep');
+                stopWatch();
+                watchArrivals();
+            } else if (glueQuery) startWatch('begin');
             else {
                 baseline = seam().beginEntry ?? null;
                 schedule(sample, 0);
@@ -743,10 +759,11 @@ export function createWasmPlayback({
 
     const beginTag = (be) => (be ? `${be['begin.level']}@${be['save.time']}` : null);
     function watchRow(at, extra = {}) {
+        if (!expecting) return;
         let live = null;
         try { live = readState().level ?? null; } catch { live = null; }
         stats.arrivalWatch.push({ at, t: Math.round(now()), phase, arriving, base: beginTag(watchBaseline), live, ...extra });
-        if (stats.arrivalWatch.length > 64) stats.arrivalWatch.shift();
+        if (stats.arrivalWatch.length > ARRIVAL_WATCH_ROWS) stats.arrivalWatch.shift();
     }
     function stopWatch() {
         watchToken += 1;
@@ -777,7 +794,7 @@ export function createWasmPlayback({
     function watchArrivals() {
         const se = seam();
         if (isArrival(watchBaseline, se)) {
-            if (arriving) watchRow('seen', { landed: beginTag(se.beginEntry) });
+            watchRow('seen', { landed: beginTag(se.beginEntry) });
             watchBaseline = se.beginEntry;
             const level = se.beginEntry['begin.level'];
             const sw = swapState();
@@ -792,6 +809,8 @@ export function createWasmPlayback({
             const live = readState();
             if (goal && live.level === goal.level) {
                 spawn = { x: live.playerPositionX, y: live.playerPositionY };
+                watchRow('fallback');
+                expecting = false;
                 fallback(`no held arrival in level ${goal.level} within ${ARRIVAL_WAIT_MS / 1000} s`, 'no-held-arrival');
             } else fail(`no arrival in level ${goal?.level} within ${ARRIVAL_WAIT_MS / 1000} s`);
             return;
@@ -872,6 +891,8 @@ export function createWasmPlayback({
         if (held.length) releaseKeys(held);
         if (started) { fail(started); return true; }
         stopWatch();
+        watchRow('held', { landed: beginTag(be) });
+        expecting = false;
         stats.arrivals += 1;
         stats.held += 1;
         arrivalReads.push({ seam: se, status: st, state });
@@ -1745,7 +1766,8 @@ export function createWasmPlayback({
             // ⛓ ARRIVAL JITTER — the bot stops on a region move whose teleport the glue has queued: push it now.
             pushQueuedNow('stop', heldLevel);
             reset();
-            watchRow(arriving && watchTimer ? 'stop-drop' : 'stop');
+            if (arriving && watchTimer) watchRow('stop-drop');
+            expecting = false;
             stopWatch();
             // ⛓ MID-ROOM REPLAN — the gate comes off: whatever it held reaches the game on the adapter's next push.
             disengageGate();
@@ -1786,6 +1808,7 @@ export function createWasmPlayback({
         expectArrival() {
             if (!holds || !glueQuery || goal) return false;
             arriving = true;
+            expecting = true;
             startWatch('expect');
             stats.expectedArrivals += 1;
             return true;

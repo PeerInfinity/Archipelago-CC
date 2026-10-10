@@ -1587,6 +1587,41 @@ describe('⛓ WALK IDENTITY — engine.expectArrival(): the Restart\'s start-hop
         expect(e.engine.stats).toMatchObject({ forced: 0, forcedBy: {}, adopted: 0, expectedArrivals: 1, held: 1 });
         expect(e.service.seen[0].request.name).toBe('wasm-location-86');
     });
+    /**
+     * ⛓ RESTART HOLD (§5.51) — the ORDER measured on CI (3/10 B runs, the L19 Restart, whose route opens on a logical
+     * link): the watch is armed, ticks over the un-landed room, then the hop LANDS and the bot's goal comes IN THAT SAME
+     * TURN, before the watch's next tick (`begin` → `await-arrival`, the arming kept). Re-basing the watch there took the
+     * landing as its baseline: never seen, never held, and 15 s later the `no-held-arrival` fallback re-entered a room
+     * that had run unheld (a wall-clock `seam.time` + `rng.seed`). The kept watch reads the seam in begin's own turn.
+     */
+    it('⛓ RESTART HOLD — the landing and the goal in ONE turn (before the watch ticks): the landing is HELD, staged at its own begin record', () => {
+        const e = engineOver(A, { swap: CLEAR });
+        e.engine.stop();
+        expect(e.engine.expectArrival()).toBe(true);
+        e.timers.run(20);
+        expect(e.engine.status().phase).toBe('idle');
+        e.game.land();
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-arrival' });
+        expect(e.engine.status()).toMatchObject({ room: { level: HOUSE } });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ forced: 0, forcedBy: {}, fallbacks: [], expectedArrivals: 1, held: 1 });
+        expect(e.engine.stats.arrivalWatch.map((r) => r.at)).toEqual(['expect', 'walkTo', 'begin-keep', 'seen', 'held']);
+        expect(e.engine.stats.arrivalWatch.at(-1).landed).toBe(`${HOUSE}@${A.seam.beginEntry['save.time']}`);
+        expect(e.service.seen[0].request.staging.seam.time).toBe(e.engine.room.staging.seam.time);
+    });
+    it('⛓ RESTART HOLD — the fallback stays, NAMED: an expected arrival that never lands in the goal\'s room within the wait', () => {
+        const e = engineOver(A, { swap: CLEAR });
+        e.engine.stop();
+        e.engine.expectArrival();
+        e.game.be = null;
+        expect(e.engine.walkTo(CHEST).action).toBe('await-arrival');
+        e.timers.run(20000);
+        expect(e.engine.stats.forcedBy).toEqual({ 'no-held-arrival': 1 });
+        expect(e.engine.stats.fallbacks[0]).toMatchObject({ kind: 'no-held-arrival', why: `no held arrival in level ${HOUSE} within 15 s` });
+        expect(e.engine.stats.arrivalWatch.map((r) => r.at)).toContain('fallback');
+    });
     it('NOT armed (today\'s race lost): the same landing before the goal is a cold start (the control)', () => {
         const e = engineOver(A, { swap: CLEAR });
         e.game.land();

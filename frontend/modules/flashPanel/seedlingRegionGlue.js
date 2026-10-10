@@ -480,6 +480,9 @@ export class SeedlingRegionGlue {
         const dispatcher = this.getDispatcher();
         if (!dispatcher?.publish) return decide(false, 'no dispatcher', { start, substrate, here });
         const stopped = this.stopBotWalks();
+        // ⛓ RESTART HOLD — the same handshake as the Menu's Restart: the stopped engines watch for the hop's arrival
+        // BEFORE the move queues it (its teleport is pushed at the start-hop load, `restartPushes` `at: 'start-hop'`).
+        const watching = this.expectBotArrivals();
         dispatcher.publish('user:regionMove', {
             sourceRegion: here,
             targetRegion: start,
@@ -490,7 +493,7 @@ export class SeedlingRegionGlue {
             source: LOOP_RESET_MOVE_SOURCE,
         }, { initialTarget: 'bottom' });
         this.stats.loopResets += 1;
-        return decide(true, null, { start, substrate, here, stoppedWalks: stopped });
+        return decide(true, null, { start, substrate, here, stoppedWalks: stopped, watching });
     }
 
     /** ⛓ RESTART — the set a randomized load delivered; `seedlingStartSpawn` reads its `start`. */

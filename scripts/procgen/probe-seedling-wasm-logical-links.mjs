@@ -343,6 +343,8 @@ async function main() {
                 engine: true, adopted: st.adopted, forced: st.forced,
                 // ⛓ WALK IDENTITY — each adoption put on the live clock, and every plan ship's clock gap
                 adoptClock: st.adoptClock ?? null, shipGaps: (st.shipClock ?? []).map((r) => r.gap), forcedBy: st.forcedBy, adoptRefused: st.adoptRefused,
+                // ⛓ RESTART HOLD — the expected arrivals (a Restart's start hop) and the watch's rows around each
+                expectedArrivals: st.expectedArrivals ?? null, arrivalWatch: st.arrivalWatch ?? null,
                 held: st.held, continuations: st.continuations, divergences: st.divergences, recoveries: st.recoveries,
                 failed: st.failed, done: st.done, hostStarts: (st.hostStarts ?? []).map((h) => h.label),
                 // ⛓ ANYTIME — the budget the engine solves under, its expiries / provisional plays / held retries
@@ -510,6 +512,14 @@ async function main() {
             out('B restart deferrals', { deferrals });
             check('B: every Restart that met a playing leg waited for its end (none cut)', deferrals.every((d) => d.ended),
                 JSON.stringify(deferrals));
+            // ⛓ RESTART HOLD — every Restart's start-hop arrival is HELD: no `no-held-arrival` fallback, and each expected
+            // arrival ends in a `held` row (measured before the fix: 3/10 runs fell back at the L19 Restart, whose route opens
+            // on a logical link, so its goal came in the landing's own turn and the watch was re-based over the landing).
+            const watchRows = eng.arrivalWatch ?? [];
+            check('B: every Restart\'s start-hop arrival is HELD (0 `no-held-arrival` fallbacks; each expected arrival ends `held`)',
+                !(eng.forcedBy?.['no-held-arrival'] > 0) && (eng.expectedArrivals ?? 0) >= 1
+                    && watchRows.filter((r) => r.at === 'expect').length === watchRows.filter((r) => r.at === 'held').length,
+                JSON.stringify({ forcedBy: eng.forcedBy, expectedArrivals: eng.expectedArrivals, rows: watchRows.map((r) => r.at) }));
             check('B: 0 backstops (the wall clock never ended a solve)', eng.backstops === 0, JSON.stringify({ backstops: eng.backstops, backstopMs: eng.backstopMs }));
             check('B: the walk ends FINISHED, with a NAMED refusal, or on the budget — never a silent stall',
                 (end?.status ?? '').startsWith('finished') || (end?.status ?? '').startsWith('error') || Date.now() - t0 >= BUDGET_MS,

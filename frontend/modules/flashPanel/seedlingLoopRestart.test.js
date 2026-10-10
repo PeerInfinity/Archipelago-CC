@@ -76,6 +76,23 @@ describe('the glue — handleLoopReset decides (stubbed procgen + loop)', () => 
         expect(h.stops).toEqual(['stop']);
     });
 
+    it('⛓ RESTART HOLD — the stopped engines are told to EXPECT the hop\'s arrival after the stop and BEFORE the move queues it', () => {
+        const h = harness({ queue: [{ type: 'regionMove', sourceRegion: 's', destinationRegion: 'r' }] });
+        const order = [];
+        h.glue.stopBotWalks = () => { order.push('stop'); return 1; };
+        h.glue.expectBotArrivals = () => { order.push('expect'); return 1; };
+        const publish = h.glue.getDispatcher().publish;
+        h.glue.getDispatcher = () => ({ publish: (...a) => { order.push('move'); publish(...a); } });
+        h.reset();
+        expect(order).toEqual(['stop', 'expect', 'move']);
+        expect(h.glue.lastLoopReset).toMatchObject({ taken: true, watching: 1 });
+        // declined → nobody is told to expect anything
+        const menu = harness({ startRegions: ['Menu'] });
+        menu.glue.expectBotArrivals = () => { order.push('menu-expect'); return 1; };
+        menu.reset();
+        expect(order).not.toContain('menu-expect');
+    });
+
     it('the generated entry counts as ours too', () => {
         const h = harness({ substrates: { s: FLASH_SEEDLING_GEN_SUBSTRATE_ID, r: FLASH_SEEDLING_GEN_SUBSTRATE_ID } });
         h.reset();
