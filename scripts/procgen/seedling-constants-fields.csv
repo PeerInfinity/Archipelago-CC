@@ -212,6 +212,7 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|talkerStateFor,rule,sen
 frontend/modules/seedlingDemo/levelRun.js|stepFinalDoorsNow|h37890f51|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepFinalDoorsNow|-1,rule,sentinel,,-1 = seal part not collected
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|earnedClearsNow,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|earnedClearsNow|h79b2fd5f|0|0,rule,sentinel,Puzzlements/MagicalLock.as:setPersistence,MagicalLock tag sign test: <0 means no tag (the wand fold)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|crushersParkedNow,physics,bound,,crusher at rest
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|crusherScans,physics,bound,,crusher at rest
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|previewStepper,rule,bound,,i-frame timer gate
@@ -1895,4 +1896,3 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2478e7e0|60|0,rule,ma
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9065cb5b|0|0,rule,sentinel,,Ground state 0 (Player.as:297)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb348a44c|116|0,rule,count,,Game.levels.length
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h4254a394|3|0,physics,magnitude,Player.as:wandSpeed,
-frontend/modules/seedlingDemo/levelRun.js|earnedClearsNow|h79b2fd5f|0|0,rule,sentinel,Puzzlements/MagicalLock.as:63-71,MagicalLock tag sign test: <0 means no tag (seedling-fidelity-wand D2 earnedClears fold)
