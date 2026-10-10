@@ -51,6 +51,10 @@ const ROWS = Object.freeze({
     'killgate-s2': ['census-seedling-killgate-clears.mjs', '--seeds=2-2'],
     'killgate-s5': ['census-seedling-killgate-clears.mjs', '--seeds=5-5'],
     'killgate-s9': ['census-seedling-killgate-clears.mjs', '--seeds=9-9'],
+    // ⛓ `seedlingGenCapacity`'s rows, as a dump (the vitest files run under their own loader)
+    'capacity-killgate': ['dump-seedling-gen-capacity.mjs', '--killgate', '--seeds=53,57'],
+    'capacity-post': ['dump-seedling-gen-capacity.mjs', '--biomes=post-sword', '--seeds=1-60'],
+    'capacity-pre': ['dump-seedling-gen-capacity.mjs', '--biomes=pre-sword', '--seeds=1-60'],
 });
 
 /** The switches each mode sets (the env a child reads at import; the flags this process sets per solve). */
