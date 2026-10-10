@@ -118,7 +118,7 @@ import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.j
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
 import {
-    deliveredSaveArrays, deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, equipSlotRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites,
+    deliveredItems, deliveredSaveArrays, deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, equipSlotRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites,
     liveSaveArrays, mergeSaveArrays, saveArraysOfWrites, saveDelta, slotsAfterDelivery, stageItems, stageSaveArrays,
 } from '../seedlingDemo/wasmDelivery.js';
 
@@ -292,6 +292,8 @@ export function createWasmPlayback({
         deliveries: [], deliveryDeferred: [], gateHeld: 0,
         // ⛓ SERVED LOCATION — deliveries that met a location goal whose own check had fired: no freeze, no re-solve
         deliveryServed: [],
+        // ⛓ ENCOUNTERS-2 — deliveries the game already showed (the room granted the item): admitted, nothing replanned
+        deliveryInGame: 0,
         // ⛓ ARRIVAL JITTER — the glue teleports pushed in the turn their door's begin record was seen
         swapPushes: [],
         // ⛓ ARRIVAL JITTER — every plan ship's clock: staged, shipped prefix, the game's (a diagnostic, never acted on)
@@ -1541,9 +1543,31 @@ export function createWasmPlayback({
         if (!g?.pending || landing) return;
         if (g.deferred && g.deferred.room === room && room) { later(); return; }
         if (g.deferred) g.deferred = null;
+        if (alreadyInGame()) return;
         if (room && phase === 'playing' && play?.plan) { freezeAndDeliver(); return; }
         if (room && (phase === 'held' || phase === 'solving')) { deliverHeld(); return; }
         later();
+    }
+
+    /**
+     * ⛓ ENCOUNTERS-2 — a held delivery the game ALREADY SHOWS (every item it writes is the game's value, no
+     * save array it adds is missing) is admitted at once: nothing is frozen, nothing replanned, nothing
+     * re-staged. That is an encounter's own drop — the room granted it (the game's `hasFire` at L32), the
+     * check fired, and AP's copy of the same item came back. Frozen and re-staged at the arrival instead, the
+     * continuation's shadow was a room whose boss had already left (sweep leg 351's held-shadow mismatch).
+     */
+    function alreadyInGame() {
+        const st = status();
+        if (!st) return false;
+        if (itemDelta(st.items, predicted(st)).length || saveDelta(liveSaveArrays(st), predictedSave(st)).length) return false;
+        const g = gate;
+        g.admitted = { ...g.pending };
+        g.pending = null;
+        g.waiting = null;
+        stats.deliveryInGame += 1;
+        log('[wasm playback] an item delivery the game already shows (the room granted it) — admitted, nothing replanned');
+        try { g.handle.push?.(); } catch { /* the next tick pushes it */ }
+        return true;
     }
 
     /** The items the held delivery would write, over the game's live readout. */
@@ -1616,6 +1640,10 @@ export function createWasmPlayback({
         // its end and the goal is done; the delivery lands in the room that end holds (`deliverHeld`). Freezing here
         // re-solved a goal whose apitem was gone ("resolves to NOTHING").
         const pre = status();
+        // ⛓ ENCOUNTERS-2 — a tape at its END is not mid-span, and asking by `botHold("on")` → `botHold("off")`
+        // RELEASED the hold the plan ends on: retried every drain, it toggled ~520 times and the goal never saw
+        // its held finish (the queued exit goal timed out at 60 s). Read it off the status first; touch nothing.
+        if (pre && (pre.finished || !pre.armed)) { wait('the tape is at its end'); return; }
         if (locationGoalServed(goal, pre)) {
             const why = `${goal.name ?? goal.kind} is served (its check fired) — the delivery lands after its tape ends`;
             if (gate.waiting !== why) stats.deliveryServed.push({ level: room.level, goal: goal.name ?? goal.kind, tick: pre.tick ?? null });
@@ -1672,7 +1700,7 @@ export function createWasmPlayback({
             room.lead = heldKeys.length ? [heldKeys] : null;
             // ⛓ SLOTS CONSUMER — the game's array as it stood before the write: the model appends the delivered slot.
             // ⛓ KEY DELIVERY — a delivered key is staged at the arrival too (only what is new to the staging and the game).
-            room.staging = stageItems(room.staging, landed.items, { slots: st.inventory_slots, save: added });
+            room.staging = stageItems(room.staging, deliveredItems(st.items, landed.items), { slots: st.inventory_slots, save: added });
             room.slotLag = { before: st.inventory_slots ?? [], after: post.slots, primary: st.primary, secondary: st.secondary, held: heldKeys };
             phase = 'held';
             if (goal) { solveInRoom(); return; }
@@ -1719,7 +1747,7 @@ export function createWasmPlayback({
                 log(`[wasm playback] the held room was released: an item arrived it cannot take (${why}) — the next goal re-enters it`, 'warn');
                 return;
             }
-            room.staging = stageItems(room.staging, landed.items, { slots: st.inventory_slots, save: added });
+            room.staging = stageItems(room.staging, deliveredItems(st.items, landed.items), { slots: st.inventory_slots, save: added });
             room.slotLag = { before: st.inventory_slots ?? [], after: post.slots, primary: st.primary, secondary: st.secondary, held: [] };
             if (!solving) row.outcome = 'staged';
             phase = 'held';

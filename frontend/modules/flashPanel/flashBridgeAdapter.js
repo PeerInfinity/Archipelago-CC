@@ -674,11 +674,21 @@ export class FlashBridgeAdapter {
     //
     // Only clear properties that map to an item (have a flashItemDef
     // somewhere) — we don't touch things like hitsMax that are op:add.
+    //
+    // ⛔ NEVER ON A HOST-OWNED LOCATION. A clearing write is an undo by
+    // another name, and the property path already stands down there (see
+    // `hostOwnedLocations`). Seedling's two encounters (`hasFire` at L32,
+    // `hasDarkSword` at L12) are the GAME's own grant: while their AP item is
+    // still on its way (or held by the delivery gate), clearing them took the
+    // drop back mid-room — the L32 burn never fired and the walk stopped at
+    // the pit mouth (fidelity ENCOUNTERS2: a `hasFire = false` write at t840
+    // reproduces CI's t932 divergence to the bit).
     const writtenProperties = new Set(writes.map((w) => w.property));
     for (const loc of (this.config.locations || [])) {
       const propDef = this._findPropertyDef(loc.property);
       if (!propDef) continue;
       if (writtenProperties.has(loc.property)) continue;
+      if (this._isHostOwned(loc.flash_name)) continue;
       writes.push({
         'class': propDef['class'],
         property: loc.property,

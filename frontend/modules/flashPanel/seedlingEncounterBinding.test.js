@@ -34,6 +34,7 @@ import { parseTape } from '../seedlingDemo/tapeFormat.js';
 import { atlasLevelSource } from '../seedlingDemo/levelSource.js';
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import { createJsRuntime } from '../seedlingDemo/jsRuntimeCore.js';
+import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 
 const abs = (rel) => fileURLToPath(new URL(rel, import.meta.url));
 const readJson = (rel) => JSON.parse(readFileSync(abs(rel), 'utf8'));
@@ -280,4 +281,47 @@ describe('4 · PERSISTENCE — a live arrival after a death in L32 ({32,1} clear
         expect(result.plan.verbs).not.toContain('arm');
         expect(result.plan.expected.at(-1).level).toBe(30);
     }, 180_000);
+});
+
+/**
+ * ⛓ ENCOUNTERS-2 — the host never writes back a value the room grants. The adapter's clearing write ("every
+ * location-mapped property no owned item backs → false") put `hasFire = false` / `hasDarkSword = false` into the
+ * game while the drop's AP copy was on its way or held by the delivery gate (fidelity ENCOUNTERS2: a write at
+ * t840 reproduces CI's t932 Bob Boss divergence to the bit; at t377 it leaves the Witch legs without the sword).
+ * The REAL adapter, the SHIPPED config, the vanilla load's REAL host-owned set.
+ *
+ *   mutant: the clearing write restored on host-owned locations -> both rows below red
+ */
+describe('5 · THE HOST\'S OWN WRITES — no clearing write over an encounter\'s drop', () => {
+    const adapterWith = (inventory, owned) => {
+        const a = new FlashBridgeAdapter({ config: GAME_CONFIG, flashObjectId: `enc2-${Math.random()}`,
+            stateManager: { getLatestStateSnapshot: () => ({ inventory }) },
+            dispatcher: { publish: () => {} }, eventBus: { subscribe: () => () => {} }, log: () => {} });
+        if (owned) a.setHostOwnedLocations(owned);
+        return a;
+    };
+    const valueOf = (writes, property) => writes.find((w) => w.property === property)?.value;
+
+    it('no AP item yet: the encounter flags are NOT cleared under the vanilla load; every other location property still is', async () => {
+        const owned = (await freshBinding()).hostOwnedLocations();
+        const writes = adapterWith({}, owned)._buildItemWritesFromInventory();
+        expect(valueOf(writes, 'hasFire')).toBeUndefined();
+        expect(valueOf(writes, 'hasDarkSword')).toBeUndefined();
+        // control: the same adapter with nobody claiming a location clears both (the path every other game keeps)
+        const control = adapterWith({}, null)._buildItemWritesFromInventory();
+        expect(valueOf(control, 'hasFire')).toBe(false);
+        expect(valueOf(control, 'hasDarkSword')).toBe(false);
+        // and the vanilla load's other location properties keep their clearing write
+        const others = GAME_CONFIG.locations.filter((l) => !['hasFire', 'hasDarkSword'].includes(l.property)).map((l) => l.property);
+        expect(others.length).toBeGreaterThan(0);
+        for (const p of others) expect(valueOf(writes, p)).toBe(valueOf(control, p));
+    });
+
+    it('the delivery GATE holds AP\'s Fire: the push writes nothing for hasFire (was `false`, the drop taken back mid-room)', async () => {
+        const owned = (await freshBinding()).hostOwnedLocations();
+        const a = adapterWith({ Fire: 1 }, owned);
+        expect(valueOf(a._buildItemWritesFromInventory(), 'hasFire')).toBe(true);   // admitted: written true
+        a.setItemGate((inv) => { const held = { ...inv }; delete held.Fire; return held; });
+        expect(valueOf(a._buildItemWritesFromInventory(), 'hasFire')).toBeUndefined();
+    });
 });

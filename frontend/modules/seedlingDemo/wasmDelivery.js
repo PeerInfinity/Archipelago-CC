@@ -77,6 +77,17 @@ export function itemDelta(before, after) {
         .map((p) => ({ property: p, from: before?.[p] ?? null, to: after?.[p] ?? null }));
 }
 
+/**
+ * ⛓ ENCOUNTERS-2 — the item rows a delivery CHANGES (`itemDelta`'s properties, at their new value): what a
+ * re-staging may put at the ARRIVAL. ⛔ Never the game's whole readout: an item the room itself granted
+ * mid-room (an encounter's drop — the Fire at L32, the dark sword at L12; a pickup the run collected) is in
+ * the game's items but NOT in the room's arrival, and the model's run grants it again on its own tick.
+ * Staged at the arrival, `BobBoss`'s constructor removes itself and the shadow is elsewhere from tick 4.
+ */
+export function deliveredItems(before, after) {
+    return Object.fromEntries(itemDelta(before, after).map((d) => [d.property, d.to]));
+}
+
 // ── ⛓ KEY DELIVERY — the SAVE-ARRAY channel ────────────────────────────────
 //
 // A key is not an item property: the game holds it in `Main.SAVE_FILE.data.hasKey`,
@@ -265,7 +276,7 @@ export function deliveryRefusal({ staging, shipped, items, save = null, status, 
     let withItem;
     let without;
     try {
-        withItem = createRunForStaging(stageItems(staging, items, { save: added }), levelSource, { scratchPersistence: true });
+        withItem = createRunForStaging(stageItems(staging, deliveredItems(before, items), { save: added }), levelSource, { scratchPersistence: true });
         without = createRunForStaging(staging, levelSource, { scratchPersistence: true });
     } catch (err) { return no('build', `the room does not build with ${names} staged: ${String(err?.message ?? err).split('\n')[0]}`); }
     if (witness(withItem) !== witness(without)) {
