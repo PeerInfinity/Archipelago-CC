@@ -391,6 +391,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'enc-l32-fallen-door', 'enc-l32-fire-return',
             // ⛓ Seedling fidelity ENCOUNTERS D3: the Witch witness, in L12 (a puncher room).
             'enc-l12-witch',
+            // ⛓ Seedling fidelity PUSHBLOCK: the two L65 spear-thrust witnesses (a bob room).
+            'pushblock-l65-reach-l63', 'pushblock-l65-reach-l68',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -442,7 +444,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity BOBSOLDIER2 adds two (80) — `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch` (L30).
         // ⛓ Seedling fidelity ENCOUNTERS adds two (82) — `enc-l32-fallen-door`, `enc-l32-fire-return` (their L30 falls).
         // ⛓ ENCOUNTERS D3 adds one (83) — `enc-l12-witch` (L12).
-        expect(out.exposed).toBe(83);
+        // ⛓ Seedling fidelity PUSHBLOCK adds two (85) — `pushblock-l65-reach-l63`, `pushblock-l65-reach-l68` (L65).
+        expect(out.exposed).toBe(85);
         expect(out.tapes).toEqual([
             'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
@@ -450,6 +453,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'ghostsword-l30-bobsoldier', 'l14-swordless-detour',
             'ladder2-l104-beam',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
+            'pushblock-l65-reach-l63', 'pushblock-l65-reach-l68',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
             'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
             'r4-iceturret-bobs', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
@@ -635,6 +639,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'wallflyer-kill': { tape: {}, levels: [22] },
             'wallflyer-kill-flight': { tape: {}, levels: [22] },
             'wallflyer-shield-bump': { tape: {}, levels: [22] },
+            // ⛓ fidelity PUSHBLOCK's two L65 witnesses — the mirror rule.
+            'pushblock-l65-reach-l63': { tape: {}, levels: [63, 65] },
+            'pushblock-l65-reach-l68': { tape: {}, levels: [65] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
@@ -831,7 +838,8 @@ function syntheticExposureIo(rows) {
         // ⛓ Seedling fidelity STANCE: L53 joins — `stance-l48-keylock-south` is declared exposed there.
         // ⛓ Seedling fidelity BOBSOLDIER: L30 joins — its six exposed tapes are declared there.
         // ⛓ KILLLOCK K1 at the wave-8 harvest: L45, L63, L104 and L105 join — the jellyfish rooms' declared tapes.
-        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 30, 40, 45, 53, 63, 104, 105]),
+        // ⛓ Seedling fidelity PUSHBLOCK: L65 joins — its two spear-thrust witnesses are declared there.
+        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 30, 40, 45, 53, 63, 65, 104, 105]),
     };
 }
 
