@@ -10,6 +10,7 @@ import { PROCGEN_SHUFFLED_SPIRAL } from './procgen/shuffledSpiral.js';
 import { PROCGEN_GRID_GROWTH } from './procgen/gridGrowth.js';
 import { PROCGEN_TOP_DOWN } from './procgen/topDown.js';
 import { PROCGEN_SETTINGS_AND_BOT } from './procgen/settingsAndBot.js';
+import { PROCGEN_TO_MULTIWORLD } from './procgen/toMultiworld.js';
 
 const entry = (source, tutorial) => Object.freeze({ source: `frontend/modules/tutorials/content/${source}`, tutorial });
 
@@ -20,4 +21,5 @@ export const TUTORIALS = Object.freeze([
     entry('procgen/gridGrowth.js', PROCGEN_GRID_GROWTH),
     entry('procgen/topDown.js', PROCGEN_TOP_DOWN),
     entry('procgen/settingsAndBot.js', PROCGEN_SETTINGS_AND_BOT),
+    entry('procgen/toMultiworld.js', PROCGEN_TO_MULTIWORLD),
 ]);

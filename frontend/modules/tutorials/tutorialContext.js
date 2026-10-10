@@ -31,6 +31,16 @@ async function resolvePresetRulesPath(game, seed, player) {
     return path;
 }
 
+/**
+ * The events a step's `done` can ask about (`publishedSinceStep`). Counted
+ * from the moment the context is built, so the list is fixed: a name not on
+ * it would have no count to compare.
+ */
+export const WATCHED_EVENTS = Object.freeze([
+    'stateManager:rulesLoaded',
+    'apworldEditor:loadRules',
+]);
+
 export function buildContext({ eventBus }) {
     // ⛓ THE STEP MARK (⚖ the user, 2026-10-10): a `done` that reads the app's
     // state alone is satisfied by a PREVIOUS run's leftovers — the bot still
@@ -38,20 +48,26 @@ export function buildContext({ eventBus }) {
     // starts polling `done` the moment a step is entered. So the panel marks
     // each step as it enters it (`markStep`), and a `done` can ask what
     // happened SINCE: a rules load, or a state it has seen at some poll.
-    let rulesLoads = 0;
-    let mark = { at: Date.now(), rulesLoads: 0, seen: new Set() };
-    const unsubLoads = eventBus?.subscribe?.('stateManager:rulesLoaded', () => { rulesLoads += 1; }, 'tutorials');
+    const counts = Object.fromEntries(WATCHED_EVENTS.map((name) => [name, 0]));
+    let mark = { at: Date.now(), counts: { ...counts }, seen: new Set() };
+    const unsubs = WATCHED_EVENTS.map((name) => eventBus?.subscribe?.(name, () => { counts[name] += 1; }, 'tutorials'));
+    const publishedSinceStep = (name) => {
+        if (!(name in counts)) throw new Error(`tutorial ctx: ${name} is not one of WATCHED_EVENTS`);
+        return counts[name] > mark.counts[name];
+    };
     const ctx = {
         eventBus,
         waitFor,
         /** The panel calls this as it enters a step: "since the step began" starts now. */
         markStep() {
-            mark = { at: Date.now(), rulesLoads, seen: new Set() };
+            mark = { at: Date.now(), counts: { ...counts }, seen: new Set() };
         },
         /** Is the time `ms` (a Date.now() stamp the app drew) after the step began? */
         sinceStep: (ms) => Number(ms) > mark.at,
+        /** Has one of WATCHED_EVENTS been published since the step began? */
+        publishedSinceStep,
         /** Has a world been loaded (`stateManager:rulesLoaded`) since the step began? */
-        rulesLoadedSinceStep: () => rulesLoads > mark.rulesLoads,
+        rulesLoadedSinceStep: () => publishedSinceStep('stateManager:rulesLoaded'),
         /**
          * True once `predicate()` has held at any call since the step began
          * (remembered under `key`). A done check polls, so this sees a state
@@ -62,7 +78,7 @@ export function buildContext({ eventBus }) {
             return mark.seen.has(key);
         },
         dispose() {
-            unsubLoads?.();
+            for (const u of unsubs) u?.();
         },
         /** Is the panel's tab the active one of its stack? */
         isPanelShowing,

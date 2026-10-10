@@ -37,8 +37,6 @@ export const NOT_COVERED_YET = Object.freeze({
     settingsPanel: 'Your workbench',
     // Procgen
     mazeGameDataPanel: 'Procgen: each pipeline mode, with Maze',
-    apworldEditorPanel: 'Procgen: a generated world in the APWorld Editor, to a multiworld',
-    clientPanel: 'Procgen: a generated world in the APWorld Editor, to a multiworld',
     flashSubstratePanel: 'Procgen: the Seedling features',
     procgenLabPanel: 'Procgen: the Seedling features',
     textAdventureSubstrateWrapperPanel: 'Procgen: a mixed world',
@@ -99,5 +97,5 @@ export const FEATURES = Object.freeze([
     { id: 'modes', title: 'App modes (?mode=…)', tutorial: null, planned: 'MetaMath, DepGraph and APCalc tutorials' },
     { id: 'loop-mode', title: 'Loop mode', tutorial: null, planned: 'Loop mode: Adventure' },
     { id: 'lab-pages', title: 'The procgen lab pages (demos.html, the Seedling lab)', tutorial: null, planned: 'Procgen: the Seedling features' },
-    { id: 'local-multiworld', title: 'Generating a multiworld and connecting to a local server', tutorial: null, planned: 'Procgen: a generated world in the APWorld Editor, to a multiworld' },
+    { id: 'local-multiworld', title: 'Generating a multiworld and connecting to a local server', tutorial: 'procgen-to-multiworld' },
 ]);

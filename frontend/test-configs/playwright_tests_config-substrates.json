@@ -1472,6 +1472,12 @@
             "enabled": true,
             "category": "Tutorial walks",
             "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-settings-and-bot; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-to-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-to-multiworld; it STOPS at the first terminal step (no stand-in: a test cannot start MultiServer.py), which is its recorded firstFailingStep. Manual batch tutorials. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
         }
     ]
 }

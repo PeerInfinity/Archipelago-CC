@@ -1249,6 +1249,7 @@ class ApworldEditorUI {
     toolbar.appendChild(playerWrap);
 
     this.statusLabel = document.createElement('span');
+    this.statusLabel.className = 'apworld-status';
     this.statusLabel.style.color = '#888';
     this.statusLabel.style.marginLeft = 'auto';
     this.statusLabel.textContent = 'No rules loaded';
