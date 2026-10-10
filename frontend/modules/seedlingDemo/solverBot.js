@@ -1127,6 +1127,7 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
 
     // ── (c) the drop ──────────────────────────────────────────────────
     const fire = bobArena(run).get('fire');
+    let fireLagSpent = false;
     if (fire) {
         row('collect');
         const aim = { x: fire.x, y: fire.y };
@@ -1136,13 +1137,22 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
             tick([...chooseHeld(run.state, aim, 0)]);
         }
         let c = CEREMONY_CADENCE_START;
-        while (!run.progress('inventory')?.hasFire) {
+        // ⛓⛓ ENCOUNTERS2 D3: over on the frame the Fire's `collected` record lands (see the Witch's).
+        const fireCollected = () => run.ledger('collected').some((r) => r.t > from && r.item === 'fire');
+        while (!run.progress('inventory')?.hasFire && !fireCollected()) {
             if (perTick.length - from > 1200) refuse(`${what}: the Fire's ceremony never ended.`, { goal });
             const step = ceremonyCadenceStep(c);
             c = step.next;
             tick([...step.held]);
         }
         if (c.pressing) refuse(`${what}: the Fire's ceremony ended with a press still down.`, { goal });
+        // With `PICKUP_REMOVED_NEXT_FRAME` ON, `Fire.removed()` is the next frame's: spend it here. It is the
+        // same idle frame the burn's equip below waits out ("one tick after the flag"), so the plan is the
+        // same tick for tick under either switch.
+        if (!run.progress('inventory')?.hasFire) {
+            tick([]);
+            fireLagSpent = true;
+        }
     }
     const writes = run.ledger('bobBossEvents').filter((r) => r.flag).map((r) => r.what);
     if (already) {
@@ -1172,7 +1182,9 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
                 // frame's `Game.update` tail, after `Bot.update` has applied
                 // that frame's equips. Measured: an equip on the flag's own
                 // tick finds one slot in the game and the tape disarms there.
-                tick([]);
+                // ⛓⛓ ENCOUNTERS2 D3: that tick IS `Fire.removed()`'s frame
+                // (`pickupRemoval.js`); with the switch ON it was spent above.
+                if (!fireLagSpent) tick([]);
                 equip(slot);
             }
             for (const tree of standing) {
@@ -1286,7 +1298,11 @@ function execWitchEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, ref
     const from = perTick.length;
     let c = CEREMONY_CADENCE_START;
     let closedAt = null;
-    while (inv().hasDarkSword !== true) {
+    // ⛓⛓ ENCOUNTERS2 D3: the ceremony is over on the frame its `collected` record lands; `hasDarkSword` is
+    // `DarkSword.removed()`'s, which is that frame (`PICKUP_REMOVED_NEXT_FRAME` OFF) or the next (ON — the
+    // game's). Either way the talk ends there: the next frame is free, and is the next leg's.
+    const swordCollected = () => run.ledger('collected').some((r) => r.t > from && r.item === 'darksword');
+    while (inv().hasDarkSword !== true && !swordCollected()) {
         if (perTick.length - from > WITCH_TALK_MAX) {
             refuse(`${what}: ${WITCH_TALK_MAX} ticks of the talk cadence and no dark sword `
                 + `(${run.ledger('witchEvents').map((r) => r.what).join(', ') || 'no Witch event'}).`, { goal });
@@ -1304,7 +1320,10 @@ function execWitchEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, ref
         }
     }
     if (c.pressing) refuse(`${what}: the dark sword's ceremony ended with a press still down.`, { goal });
-    if (!run.ledger('witchEvents').some((r) => r.what === 'darksword-removed')) {
+    // Set → `darksword-removed` is on the ledger; not yet set → its removal is the next frame's (the switch ON).
+    if (inv().hasDarkSword === true
+        ? !run.ledger('witchEvents').some((r) => r.what === 'darksword-removed')
+        : !swordCollected()) {
         refuse(`${what}: hasDarkSword is set and the run's ledger holds no \`darksword-removed\` — the drop `
             + 'did not come from the Witch.', { goal });
     }
