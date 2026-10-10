@@ -244,6 +244,10 @@ import { clampFor, spawnFromBoot } from './playerPhysicsV1.js';
 import {
     PLACED_GRENADE, blastReaches, createPlacedGrenade, stepPlacedGrenade,
 } from './placedGrenade.js';
+// ⛓⛓⛓ SEEDLING FIDELITY K2PREP: a `LavaChain`'s arm hits the stepped `"Enemy"` bodies too.
+import {
+    LAVA_CHAIN, createLavaChainState, lavaChainRect, rectTouchesBox, stepLavaChain, worldFrame,
+} from './hazards.js';
 import {
     CEREMONY_FREEZE_FRAMES, LOAD_DEAD_FRAMES, stepChannel,
 } from './swimSoundClock.js';
@@ -1090,6 +1094,8 @@ export function createLevelRun({
         owlPendingGrenades = [];
         // ⛓ LADDER2: a rebuild re-runs `new Grenade(…)` — dormant, 48 px up.
         placedGrenadeStates.delete(n);
+        // ⛓ K2PREP: and `new LavaChain(…)` — its anim back to null (the ctor plays nothing).
+        lavaChainStates.delete(n);
         // ⛓ R6 slice 6c: and the watcher, whose rebuild re-arms `talked` —
         // see `watcherStateFor`. Nothing an item grants adds or removes one;
         // dropped anyway, for the reason the spinner's is.
@@ -1855,6 +1861,13 @@ export function createLevelRun({
      */
     const placedGrenadeStates = new Map();
     const placedGrenadeEvents = [];
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY K2PREP — THE LAVA CHAINS' ANIMS, per level and per visit (`stepLavaChainsNow`).
+     * `{t, level, chain, body, damaged, killed, refusedAt, hitsAfter}` per arm that met a stepped body in
+     * `lavaChainEnemyHits`.
+     */
+    const lavaChainStates = new Map();
+    const lavaChainEnemyHits = [];
     /** The rocks and grenades this visit has spawned — RUNTIME bodies. */
     let owlRocks = [];
     let owlGrenades = [];
@@ -4177,6 +4190,8 @@ export function createLevelRun({
         owlPendingGrenades = [];
         // ⛓ LADDER2: a rebuild re-runs `new Grenade(…)` — dormant, 48 px up.
         placedGrenadeStates.delete(n);
+        // ⛓ K2PREP: and `new LavaChain(…)` — its anim back to null (the ctor plays nothing).
+        lavaChainStates.delete(n);
         // ⛓ R6 slice 6c. `new Game` rebuilds the NPC with `talked` false, and
         // the CLEARED tag is what keeps `talk()` from running again — the
         // flag, not the roster, is the memory. See `watcherStateFor`.
@@ -4346,7 +4361,12 @@ export function createLevelRun({
      */
     let shake = 0;
     let camBand = null;
+    // ⛓ K2PREP D2: true from a load's settle until the next `view()` — the game's bot sample on that tick is
+    // polled before the settle (measured: (0, 108) where the settled camera is (0, 80)), so a camera witness is
+    // not asked there (`assertWitnessCamera`).
+    let camFresh = true;
     const settleCameraForLoad = () => {
+        camFresh = true;
         cam = initialCamera(state.x, state.y);
         // ⛓ A LOAD CLEARS THE BAND. `loadlevel` writes `FP.camera` from the
         // arrival position with no history, so whatever the jiggle had
@@ -4376,6 +4396,7 @@ export function createLevelRun({
      * for all 100 of them and this is `stepCamera` with a branch in front.
      */
     const stepCameraNow = (player, worldRec) => {
+        camFresh = false;
         // ⛓⛓⛓ R6 SLICE 4: `Game.cameraTarget`, which the BossTotem
         // overwrites every frame he exists. It REPLACES the follow (and
         // with it the inventory term), so the camera jumps by that offset
@@ -4403,6 +4424,40 @@ export function createLevelRun({
         }
     };
     /**
+     * ⛓⛓⛓ SEEDLING FIDELITY K2PREP D2 — A RECORDED GAME CAMERA, READ RATHER THAN MODELLED.
+     *
+     * ⚖ The user (2026-10-10): never model the cosmetic RNG; keep the shake band. A band's 'uncertain' verdict
+     * stays a refusal for every caller that PLANS (the solver must stand away from it). A REPLAY of a recording
+     * made on the game has the answer the band cannot derive: the camera `view()` really left
+     * (`botStatus().camera`, `Bot.as` "3′c's witness"). `witnessCamera(fn)` hands the run that stream —
+     * `fn(tick) → {x, y} | null`, the game's `FP.camera` after its frame `tick`, which is what this run's
+     * update `tick + 1` reads — and `onScreenNow` reads it ONLY where the band is uncertain.
+     *
+     * ⛔ It is checked, never trusted: on every tick it is asked, the game's camera must EQUAL the model's exact
+     * `cam`, or lie INSIDE the model's band. Either failing is a refusal by name (a misaligned or foreign stream).
+     * Only `tapeRunner.createTapeStepper({ cameraWitness })` passes one; the solver, the forecast
+     * (`chaserForecastNow`) and every planner never do.
+     */
+    let cameraWitness = null;
+    const assertWitnessCamera = (who) => {
+        const w = camFresh ? null : cameraWitness(ticksCompleted);
+        if (!w) return null;
+        if (camBand === null) {
+            if (cam && (w.x !== cam.x || w.y !== cam.y)) {
+                throw new Error(`levelRun: the witnessed game camera (${w.x}, ${w.y}) at tick ${ticksCompleted} is not `
+                    + `the model's exact camera (${cam.x}, ${cam.y}) — asked for ${who}. A camera witness that `
+                    + 'disagrees where the model is exact is misaligned or from another recording.');
+            }
+            return w;
+        }
+        if (w.x < camBand.x.lo || w.x > camBand.x.hi || w.y < camBand.y.lo || w.y > camBand.y.hi) {
+            throw new Error(`levelRun: the witnessed game camera (${w.x}, ${w.y}) at tick ${ticksCompleted} lies `
+                + `OUTSIDE the model's shake band x [${camBand.x.lo}, ${camBand.x.hi}] y [${camBand.y.lo}, `
+                + `${camBand.y.hi}] — asked for ${who}. Either the band or the witness is wrong; refused by name.`);
+        }
+        return w;
+    };
+    /**
      * `Enemy.onScreen()` for a consumer that needs a BOOLEAN.
      *
      * An uncertain band is a refusal, not a `false`: "the camera might not
@@ -4411,8 +4466,15 @@ export function createLevelRun({
      * window has to move.
      */
     const onScreenNow = (rect, who) => {
-        if (camBand === null) return camOnScreen(rect, cam);
+        if (camBand === null) {
+            if (cameraWitness) assertWitnessCamera(who);
+            return camOnScreen(rect, cam);
+        }
         const verdict = onScreenUnderShake(rect, camBand);
+        if (verdict === 'uncertain' && cameraWitness) {
+            const w = assertWitnessCamera(who);
+            if (w) return camOnScreen(rect, w);
+        }
         if (verdict === 'uncertain') {
             throw new Error(`levelRun: whether ${who} is on screen at tick `
                 + `${ticksCompleted} depends on where inside \`Game.shake\`'s jiggle the `
@@ -9902,6 +9964,83 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ SEEDLING FIDELITY K2PREP — `LavaChain.reach()`'s `"Enemy"` ARM, AGAINST THE STEPPED CHASERS.
+     *
+     * `reach` walks `hitables = ["Player", "Enemy"]` (`LavaChain.as:21,76-93`): the `"Enemy"` arm is
+     * `(hit as Enemy).hit(force 5, (x, y), damage 1, "LavaChain")` on the FIRST `"Enemy"` whose box touches the
+     * 48x4 arm. Measured on the game (L75, the LADDER2 chain walk with K2 ON): `lavarunner@104,64` takes
+     * `hits 1 / hits_timer 29` and a 5 px/t shove at t47 with the player 24 px away, and the model without this
+     * arm reads 0/0 there and refutes the walk at t125.
+     *
+     * ⛔ WHAT IT STEPS: only rooms that hold a chain AND bodies `stepChasersNow` steps. Every chain room
+     * (L72, L75, L78, L99) holds lavarunners and no other chaser, so with `KILLLOCK_BODIES.lavaRunnerLive` OFF
+     * this returns at its first test and the model is the one before it, byte for byte.
+     * ⛔ WHAT IT DOES NOT: the `"Player"` arm (the live run never bills a chain on the player — `dangerMap`
+     * prices it for the solver; unchanged here). A chain arm touching a census `"Enemy"` that is NOT a stepped
+     * chaser is refused by name (the families' `collideRect` order is not transcribed; no chain room has one).
+     *
+     * The anim is `hazards.stepLavaChain` at `clock.now()`; the chains are added after every enemy
+     * (`Game.as:2359` vs `:2287`) and `addUpdate` prepends, so this runs BEFORE the bodies and tests where the
+     * previous tick left them. A skipped `Game.time` (a ceremony, an unknown clock) makes the anim UNKNOWN until
+     * its next trigger (`Game.time % 90 < 1.5` replays `extend` from frame 0 — the whole cycle is shorter than
+     * 90 updates); a stepped body touching an arm while it is unknown is a refusal, never a guess.
+     */
+    function stepLavaChainsNow() {
+        if (noclip || noDamage) return;
+        const chains = (world.combat?.hazards ?? []).filter((h) => h.tag === 'lavachain');
+        if (chains.length === 0) return;
+        const st = chaserStateFor(level);
+        if (st.size === 0) return;
+        let list = lavaChainStates.get(level);
+        if (!list) {
+            list = chains.map((h) => ({ h, id: `${h.tag}@${h.x},${h.y}`, anim: createLavaChainState(),
+                unknown: false, lastTime: null }));
+            lavaChainStates.set(level, list);
+        }
+        const now = clock.now();
+        const ids = [...st.keys()].reverse();
+        for (const ch of list) {
+            if (now === null || (ch.lastTime !== null && now !== ch.lastTime + 1)) ch.unknown = true;
+            if (ch.unknown && now !== null && worldFrame(now, LAVA_CHAIN.fps, LAVA_CHAIN.loops) === 0) {
+                ch.anim = createLavaChainState();
+                ch.unknown = false;
+            }
+            ch.lastTime = now;
+            const reaching = ch.unknown ? null : stepLavaChain(ch.anim, now);
+            if (reaching === false) continue;
+            const arm = lavaChainRect(ch.h.cx, ch.h.cy, ch.h.attrs?.dir ?? 0);
+            const touching = ids.map((id) => st.get(id))
+                .filter((c) => !c.removed && rectTouchesBox(arm, chaserBoxAt(c.tag, c.x, c.y)));
+            if (touching.length === 0) continue;
+            if (reaching === null) {
+                const why = now === null ? 'no Game.time' : 'a skipped Game.time since its last update';
+                throw new Error(`levelRun: ${touching[0].id} touches ${ch.id}'s arm at tick ${ticksCompleted + 1} `
+                    + `in level ${level}, and the chain's anim is unknown (${why}) — whether \`LavaChain.reach\` `
+                    + 'hits it this update is not derivable until the next trigger. Refused by name, never guessed.');
+            }
+            const others = (world.combat?.enemies ?? []).filter((inst) => !st.has(`${inst.tag}@${inst.x},${inst.y}`)
+                && contactRect(inst) && rectTouchesBox(arm, contactRect(inst)));
+            if (others.length) {
+                throw new Error(`levelRun: ${ch.id}'s arm touches the stepped ${touching[0].id} AND the census `
+                    + `${others[0].tag}@${others[0].x},${others[0].y} at tick ${ticksCompleted + 1} — \`collideRect\` `
+                    + 'returns ONE "Enemy" and the order across families is not transcribed. Refused by name.');
+            }
+            const c = touching[0];
+            const verdict = enemyHit(c, { d: LAVA_CHAIN.damage, f: LAVA_CHAIN.force, t: 'LavaChain',
+                frozen: ceremony !== null });
+            if (verdict.knockedBack && chaserKnocksBack(c.tag)) {
+                // `Enemy.knockback(f, p)` from `getHitPos` = the chain's own entity point (`LavaChain.as:125-138`).
+                const a = Math.atan2(c.y - ch.h.cy, c.x - ch.h.cx);
+                c.v.x += verdict.force * Math.cos(a);
+                c.v.y += verdict.force * Math.sin(a);
+            }
+            if (verdict.killed) stageChaserKill(c, 'chain', 'a lava-chain kill', { chain: ch.id });
+            lavaChainEnemyHits.push({ t: ticksCompleted + 1, level, chain: ch.id, body: c.id,
+                damaged: verdict.damaged, killed: verdict.killed, refusedAt: verdict.refusedAt, hitsAfter: c.hits });
+        }
+    }
+
+    /**
      * ⛓⛓⛓ SEEDLING FIDELITY LADDER2 — `Grenade.update()` FOR EVERY PLACED
      * GRENADE IN THE ROOM, and its ONE damage arm: the `"explode"` callback's
      * `FP.distance(x, endY, p.x, p.y) <= 20` → `p.hit(null, 2, (x, endY), 1)`.
@@ -14910,6 +15049,16 @@ export function createLevelRun({
          */
         get gameTime() { return clock.now(); },
         /**
+         * ⛓ K2PREP D2: hand a REPLAY the game's recorded camera (`cameraWitness` above) — `fn(tick) → {x, y} |
+         * null`. Read only where the shake band is uncertain, checked against the model on every tick it is asked.
+         */
+        witnessCamera(fn) {
+            if (typeof fn !== 'function') throw new Error('witnessCamera: pass fn(tick) → {x, y} | null');
+            cameraWitness = fn;
+        },
+        /** ⛓ K2PREP: the lava chains' `"Enemy"` arm, one row per arm that met a stepped body. */
+        get lavaChainEnemyHits() { return lavaChainEnemyHits.map((r) => ({ ...r })); },
+        /**
          * ⛓⛓⛓ `Game.time` at a FORECAST HORIZON — the clock the body at
          * `spinnerForecast(h)[h-1]` will be swinging under.
          *
@@ -15328,6 +15477,11 @@ export function createLevelRun({
         get damage() { return { ...damage }; },
         /** `Game.shake` right now — a static, so it outlives every world. */
         get shake() { return shake; },
+        /** ⛓ K2PREP D2: the camera the NEXT update's `onScreen` reads — exact `{x, y}`, or the shake band. */
+        get cameraNow() {
+            return { cam: cam ? { ...cam } : null,
+                band: camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null };
+        },
         /**
          * ⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45 — **WHICH `camera.SHAKE_WRITERS` THIS
          * ROOM CAN REACH**, asked of the run's own state families rather than of
@@ -17935,6 +18089,8 @@ export function createLevelRun({
             // carries `frozen` for the sources that DO run above the return
             // (the blast, the ring and the crusher).
             // ⛓⛓⛓ LADDER2: the placed grenades — added after the Player
+            // ⛓⛓⛓ K2PREP: the lava chains (`Game.as:2359`, after every enemy) update before them all.
+            stepLavaChainsNow();
             // (`Game.as:2298`), so updated before it, reading the pre-move point.
             stepPlacedGrenadesNow();
             stepContactsNow();

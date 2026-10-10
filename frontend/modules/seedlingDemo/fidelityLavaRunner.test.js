@@ -23,9 +23,10 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const W = JSON.parse(readFileSync(join(HERE, 'fixtures', 'chaser-witness', 'staticladder-k2-step190-lavarunner.json'), 'utf8'));
 const levelSource = atlasLevelSource();
 
-function replay() {
+function replay(w = W, opts = {}) {
     let run = null;
-    const st = createTapeStepper(parseTape(JSON.stringify(W.tape)), { levelSource, onTick: (t, s, h, rn) => { run = rn; } });
+    const st = createTapeStepper(parseTape(JSON.stringify(w.tape)), { levelSource, onTick: (t, s, h, rn) => { run = rn; },
+        ...opts });
     const col = [];
     let r = st.next();
     while (!r.done) {
@@ -34,12 +35,13 @@ function replay() {
             .filter((c) => c.id.startsWith('lavarunner@') && !c.removed).map((c) => ({ ...c })) };
         r = st.next();
     }
+    col.run = run;
     return col;
 }
 
-function disagreements(col) {
+function disagreements(col, w = W) {
     const out = [];
-    for (const s of W.samples) {
+    for (const s of w.samples) {
         const m = col[s.t];
         if (!m) { out.push(`t ${s.t}: no model column`); continue; }
         if (m.x !== s.player.x || m.y !== s.player.y) out.push(`t ${s.t}: player game (${s.player.x}, ${s.player.y}) model (${m.x}, ${m.y})`);
@@ -76,5 +78,65 @@ describe('STATICLADDER D3 — K2\'s lavarunner game witness (survey step 190)', 
         let thrown = null;
         try { col = withKillLockBodies({ lavaRunnerLive: false }, () => replay()); } catch (e) { thrown = e; }
         expect(thrown !== null || disagreements(col).length > 0).toBe(true);
+    });
+});
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY K2PREP D2 — TWO MORE K2 WITNESSES, in L75 (a chain room), recorded on the game with its
+ * camera (`probe-seedling-chaser-mobiles.mjs --class=LavaRunner --camera --record`, p4f headless, K2 ON):
+ *   - `k2prep-l75-chain-lavarunner`: LADDER2's L75 chain walk (388 ticks). The chain's arm hits `lavarunner@104,64`
+ *     at t47 (`LavaChain.reach`'s `"Enemy"` arm, `levelRun.stepLavaChainsNow`), and the body walks into the player
+ *     at t161. 743 body comparisons, worst |Δ| 0.
+ *   - `k2prep-l75-grenade-lavarunner`: LADDER2's `l2-grenade-l75` arm (201 ticks). The blast at t155 shakes the
+ *     camera and `lavarunner@104,64` sits on the band's edge for five ticks: the model reads the GAME's camera there
+ *     (`cameraWitness`), checked against its own exact camera and its band on every tick it asks. 402
+ *     comparisons, worst |Δ| 0.
+ */
+const WITNESS = (n) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'chaser-witness', `${n}.json`), 'utf8'));
+const CHAIN = WITNESS('k2prep-l75-chain-lavarunner');
+const GRENADE = WITNESS('k2prep-l75-grenade-lavarunner');
+const camerasOf = (w) => new Map(w.samples.filter((x) => x.camera).map((x) => [x.t, x.camera]));
+
+describe('K2PREP D2 — the L75 witnesses: a chain that hits a lavarunner, and a shake band read off the game', () => {
+    it('the chain walk, K2 ON: every LavaRunner and the player at every sampled tick; the chain\'s hit is t47', () => {
+        const col = withKillLockBodies({ lavaRunnerLive: true }, () => replay(CHAIN));
+        expect(disagreements(col, CHAIN)).toEqual([]);
+        expect(CHAIN.samples.length).toBe(388);
+        // the game's body took the chain's hit at t47 (hits 1, i-frames 29 after its own hitUpdate)…
+        const g47 = CHAIN.samples.find((x) => x.t === 47).bodies.find((b) => b.hits === 1);
+        expect([g47.hits, g47.hits_timer]).toEqual([1, 29]);
+        // …and it is the model's chain arm that dealt it, not a press
+        expect(col.run.lavaChainEnemyHits.filter((h) => h.damaged)
+            .map((h) => [h.t, h.chain, h.body]).slice(0, 1)).toEqual([[47, 'lavachain@96,48', 'lavarunner@104,64']]);
+    });
+
+    it('the chain walk, K2 OFF: NOT reproduced (the bodies stand at their placements)', () => {
+        let col = null;
+        let thrown = null;
+        try { col = withKillLockBodies({ lavaRunnerLive: false }, () => replay(CHAIN)); } catch (e) { thrown = e; }
+        expect(thrown !== null || disagreements(col, CHAIN).length > 0).toBe(true);
+    });
+
+    it('the grenade arm, K2 ON with the game\'s camera: 0 px; without it the band REFUSES at t155', () => {
+        const cams = camerasOf(GRENADE);
+        const col = withKillLockBodies({ lavaRunnerLive: true }, () => replay(GRENADE, { cameraWitness: (t) => cams.get(t) ?? null }));
+        expect(disagreements(col, GRENADE)).toEqual([]);
+        expect(GRENADE.samples.length).toBe(201);
+        // ⚖ the band stays a refusal for anything that does not hold the game's answer
+        expect(() => withKillLockBodies({ lavaRunnerLive: true }, () => replay(GRENADE)))
+            .toThrow(/is on screen at tick 155 depends on where inside `Game.shake`'s jiggle/);
+        // the game's camera on those ticks sat inside the model's band, and it moved (the jiggle landed)
+        const band = [155, 156, 157, 158, 159].map((t) => cams.get(t));
+        expect(band.map((c) => c.shake)).toEqual([4, 3, 2, 1, 0]);
+    });
+
+    it('⛔ the camera witness is CHECKED: off the band, or off the exact camera, is a refusal by name', () => {
+        const cams = camerasOf(GRENADE);
+        const outside = (t) => (t === 155 ? { x: cams.get(t).x + 50, y: cams.get(t).y } : cams.get(t) ?? null);
+        expect(() => withKillLockBodies({ lavaRunnerLive: true }, () => replay(GRENADE, { cameraWitness: outside })))
+            .toThrow(/lies OUTSIDE the model's shake band/);
+        const misaligned = (t) => cams.get(t + 1) ?? null;
+        expect(() => withKillLockBodies({ lavaRunnerLive: true }, () => replay(GRENADE, { cameraWitness: misaligned })))
+            .toThrow(/is not the model's exact camera|lies OUTSIDE the model's shake band/);
     });
 });
