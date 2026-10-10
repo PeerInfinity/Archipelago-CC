@@ -619,7 +619,7 @@ export const DASH_DISPLACEMENT = (() => {
  *
  * ⇒ A PRESS IS REFUSED BY WHAT IT WOULD DO, NOT BY A FLOOR (⚖ ruling 31(b)).
  */
-export const DASH_CHAIN = (() => {
+export function deriveDashChain(animTicks = SLASH_ANIM_TICKS) {
     /**
      * ⛔⛔ DERIVED BY RUNNING THE TRANSCRIPTION UNDER THE RULES A CONTROLLER
      * ACTUALLY HAS, NOT BY DIVIDING. Two corrections, each worth one dash:
@@ -648,7 +648,7 @@ export const DASH_CHAIN = (() => {
     const swallowed = [];
     const opening = slashSet(st, { pressed: true, hasSword: true, direction: 0 });
     st = opening.state;
-    endsAt = SLASH_ANIM_TICKS[opening.state.anim];
+    endsAt = animTicks[opening.state.anim];
     keyHeld = true;
     for (let k = 1; k <= SLASH_TIMER_MAX; k += 1) {
         st = slashTimerTick(st);
@@ -658,7 +658,7 @@ export const DASH_CHAIN = (() => {
         if (press) {
             const r = slashSet(st, { pressed: true, hasSword: true, direction: 0 });
             st = r.state;
-            if (r.outcome === 'dash') { at.push(k); endsAt = k + SLASH_ANIM_TICKS[st.anim]; }
+            if (r.outcome === 'dash') { at.push(k); endsAt = k + animTicks[st.anim]; }
             if (r.outcome === 'swallowed') swallowed.push(k);
         }
         if (endsAt !== null && k >= endsAt) {
@@ -667,7 +667,14 @@ export const DASH_CHAIN = (() => {
         }
     }
     return Object.freeze({ max: at.length, at: Object.freeze(at), swallowed: Object.freeze(swallowed) });
-})();
+}
+
+/**
+ * The plain sword's chain — `deriveDashChain` over `SLASH_ANIM_TICKS`. ⛓ Seedling fidelity GHOSTMOTION made the
+ * derivation a function of the animation table, because the GHOST sword plays its own (7 / 6 ticks, not 5 / 4) and
+ * so re-arms its dash later: `ghostSword.GHOST_DASH_CHAIN` is the same loop over `GHOST_SLASH_ANIM_TICKS`.
+ */
+export const DASH_CHAIN = deriveDashChain(SLASH_ANIM_TICKS);
 
 /** The most dashes one `slashTimer` window admits — see `DASH_CHAIN`. */
 export const DASH_CHAIN_MAX = DASH_CHAIN.max;

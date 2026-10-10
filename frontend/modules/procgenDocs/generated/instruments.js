@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 73,
+            "count": 74,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 390,
+        "blockStyle": 391,
         "browser": 131,
         "cited": 193,
-        "files": 402,
+        "files": 403,
         "lineStyle": 12,
-        "withDocblock": 402,
-        "withFlags": 320
+        "withDocblock": 403,
+        "withFlags": 321
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7397,6 +7397,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-frontier3-witness — ⛓⛓⛓ SEEDLING FIDELITY FRONTIER3: THE PLANNER ROUTES THROUGH WHAT THE PIXEL MASK LETS THROUGH.",
             "path": "scripts/procgen/plan-seedling-frontier3-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-ghostmotion.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-ghostmotion — ⛓⛓⛓ seedling-fidelity-ghostmotion: THE GHOST SWORD'S DASH CLOCK, DRIVEN ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-ghostmotion.mjs"
         },
         {
             "argvHelpers": [],

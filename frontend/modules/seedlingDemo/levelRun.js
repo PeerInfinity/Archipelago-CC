@@ -105,7 +105,7 @@ import { BOB_SOLDIER, bobSoldierSwordTail, createBobSoldierSword } from './bobSo
 // ⛓⛓⛓ seedling-fidelity-ghostsword D2: the ghost sword's press — its rect, reach, Spear arm and window.
 import {
     GHOSTSWORD_PRESS, GHOST_PRESS_ARMS, GHOST_SWORD_DAMAGE, GHOST_SWORD_REACH,
-    ghostSlashRect, ghostSwingRefusal,
+    ghostSlashRect, ghostSwingRefusal, slashEndTicksFor,
 } from './ghostSword.js';
 import {
     createBossTotem, bossTotemClampY, bossTotemSolidRect, renderBossTotem, stepBossTotem,
@@ -17826,7 +17826,15 @@ export function createLevelRun({
                      * two agree for the plain sword is exactly why R6 slice
                      * 5's measured 5 is also the swing's length.)
                      */
-                    slashEndsAt = ticksCompleted + SLASH_ANIM_TICKS[slashState.anim];
+                    /**
+                     * ⛓⛓⛓ SEEDLING FIDELITY GHOSTMOTION — and the animation is
+                     * `getSword()`'s: the GHOST sword plays its own (7 / 6 ticks,
+                     * not 5 / 4), so its dash re-arms two ticks later. The
+                     * sword's clock here was a second +2 px dash at t 9 / t 29
+                     * on 18 sweep legs the game swallowed (`ghostSword.
+                     * slashEndTicksFor`, behind `GHOSTSWORD_MOTION`).
+                     */
+                    slashEndsAt = ticksCompleted + slashEndTicksFor(slashState.anim, weaponForPress());
                     /**
                      * ⛓⛓⛓ R9 SLICE 12c — **AND THE PENDING HIT TICKS ARE
                      * REPLACED, NOT APPENDED.** §23.15 named this and left it;
