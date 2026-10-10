@@ -45,10 +45,31 @@
  * ── ⛓ THE TWO ENCOUNTER LOCATIONS ARE NOT HERE ──────────────────────────
  *
  * `fire@L32` and `darksword@L12` are granted by a boss drop and a special
- * pickup, not by an `APItem`, so they are not rewritten and stay on the
- * adapter's existing property path (`propertyToLocationFlash`). This module
- * covers the 39 that ARE rewritten, and `hostOwnedLocations()` names them so
- * the adapter can stand down on exactly those and no others.
+ * pickup, not by an `APItem`, so they are not rewritten. This module covers
+ * the 39 that ARE rewritten, and `hostOwnedLocations()` names them so the
+ * adapter can stand down on exactly those and no others.
+ *
+ * ── ⛓⛓ ENCOUNTERS — THE TWO, CHECKED OFF THE GAME'S OWN FLAG ─────────────
+ *
+ * Given `encounters` (the vanilla arm's rows: `{location, ledgerId, level,
+ * flag, propertyLocation}`), a report of the row's `flag` (`hasFire`,
+ * `hasDarkSword` — BridgeGeneric `stateChanged` of `Main.<flag>`, a
+ * `state_properties` entry; the JS page reports the same property off its
+ * run) turning TRUE is that location's check. ⛔ THE GAME'S FLAG, NEVER THE
+ * PLAN: nothing here reads a goal, a tape or a solver's verdict. Two reports
+ * of the flag are NOT the drop, and are refused (counted):
+ *
+ *   echo       the adapter's own write coming back (`expectedEchoValue`): an
+ *              AP grant of the same item (Fire placed in a chest) sets the
+ *              flag too, and is no fight;
+ *   elsewhere  the flag turned true while the game reports another level
+ *              than the encounter's (the drop is collected in its own room).
+ *
+ * The property path watched the same flags under the AP names `Fire` / `Dark
+ * Sword`, which no location of these rules carries — so it dispatched a check
+ * nothing could answer and queued an UNDO that took the drop straight back
+ * (the burn after the Bob Boss would then fail). `hostOwnedLocations()` names
+ * those property-path names too (`propertyLocation`), so it stands down there.
  */
 
 import { parseSeqPayload } from './seqPayload.js';
@@ -89,7 +110,7 @@ export class SeedlingCheckBinding {
      *   two spellings of the address cannot drift.
      * @param {number} [deps.selfPlayer]  this slot, for the readout's wording.
      */
-    constructor({ table, placementKey, selfPlayer = null } = {}) {
+    constructor({ table, placementKey, selfPlayer = null, encounters = [] } = {}) {
         if (!(table instanceof Map)) {
             throw new Error('SeedlingCheckBinding: `table` (the placement table) is required — '
                 + 'this module never imports apPlacementRewriter, which costs a browser bundle '
@@ -106,7 +127,10 @@ export class SeedlingCheckBinding {
         this.checked = new Set();
         /** ⛓ W2 — the host `botStart` arming windows, `{from, to}` seq ranges (⚖ W0-Q1). */
         this.hostStarts = [];
-        this.stats = { reports: 0, malformed: 0, restores: 0, unknown: 0, checks: 0, repeats: 0, armingWindow: 0 };
+        this.stats = { reports: 0, malformed: 0, restores: 0, unknown: 0, checks: 0, repeats: 0, armingWindow: 0,
+            encounterChecks: 0, encounterEchoes: 0, encounterElsewhere: 0 };
+        /** ⛓ ENCOUNTERS — the rows checked off a game flag (`{location, ledgerId, level, flag, propertyLocation}`). */
+        this.encounters = (encounters ?? []).filter((e) => typeof e?.flag === 'string' && e.flag !== '');
     }
 
     /**
@@ -150,11 +174,23 @@ export class SeedlingCheckBinding {
      * as a player pickup and take the item straight back.
      */
     hostOwnedLocations() {
-        return new Set([...this.table.values()].map((e) => e.location));
+        return new Set([...[...this.table.values()].map((e) => e.location),
+            // ⛓ ENCOUNTERS — the property path's own names for the two flags (see the head).
+            ...this.encounters.map((e) => e.propertyLocation).filter(Boolean)]);
     }
 
-    /** One BridgeGeneric property report, straight off the adapter. */
-    onStateReport(property, value) {
+    /**
+     * One BridgeGeneric property report, straight off the adapter.
+     *
+     * @param {string} property
+     * @param {*} value
+     * @param {{level?: number, echo?: boolean}} [ctx]  ⛓ ENCOUNTERS — the game's reported level and whether the
+     *   report is the adapter's own write coming back (the glue reads both off the adapter); absent = no encounter
+     *   check (fail-closed)
+     */
+    onStateReport(property, value, ctx = {}) {
+        const enc = this.encounters.find((e) => e.flag === property);
+        if (enc) return this._encounterReport(enc, value, ctx);
         if (property !== 'pendingCheck') return [];
         const report = parsePendingCheck(value);
         if (!report) {
@@ -197,6 +233,18 @@ export class SeedlingCheckBinding {
                 player: entry.player, forSelf: entry.player === this.selfPlayer,
                 look: entry.look, ledgerId: entry.ledgerId },
         ];
+    }
+
+    /** ⛓ ENCOUNTERS — the game's flag for an encounter row turned true: its check, unless an echo / elsewhere. */
+    _encounterReport(enc, value, { level = null, echo = false } = {}) {
+        if (value !== true) return [];
+        if (echo) { this.stats.encounterEchoes += 1; return []; }
+        if (level !== enc.level) { this.stats.encounterElsewhere += 1; return []; }
+        if (this.checked.has(enc.location)) { this.stats.repeats += 1; return []; }
+        this.checked.add(enc.location);
+        this.stats.encounterChecks += 1;
+        return [{ type: 'locationCheck', location: enc.location, ledgerId: enc.ledgerId, level: enc.level, tag: null,
+            flag: enc.flag }];
     }
 
     /** The panel rebuilt its adapter; the game starts over, so may we. */

@@ -80,6 +80,19 @@ export const POSITION_POLL_MS = 250;
  */
 export const LOOP_RESET_EVENT = 'loopState:loopReset';
 
+/**
+ * ⛓ ENCOUNTERS — what the check binding needs beside a report to tell the game's own encounter drop from anything
+ * else that sets the same flag: the level the GAME last reported (`adapter.gameState.level`), and whether the report
+ * is the adapter's own write coming back (`expectedEchoValue` — read here because `onStateReport` runs BEFORE the
+ * adapter consumes the echo).
+ */
+export function reportContext(adapter, property, value) {
+    const level = adapter?.gameState?.level;
+    const echoes = adapter?.expectedEchoValue ?? {};
+    return { level: Number.isInteger(level) ? level : null,
+        echo: Object.prototype.hasOwnProperty.call(echoes, property) && echoes[property] === value };
+}
+
 /** The `source` of the move the loop-reset fallback publishes (`handleLoopReset`). */
 export const LOOP_RESET_MOVE_SOURCE = 'flashSeedling-loopReset';
 
@@ -280,7 +293,7 @@ export class SeedlingRegionGlue {
              */
             this.apply(this.binding.onStateReport(property, value));
             if (this.checkBinding) {
-                this.apply(this.checkBinding.onStateReport(property, value));
+                this.apply(this.checkBinding.onStateReport(property, value, reportContext(adapter, property, value)));
             }
             // ⛓ OBSTACLE EVENTS — the third reader of the same reports (a cleared event flag).
             if (this.eventCollector) this.apply(this.eventCollector.onStateReport(property, value));

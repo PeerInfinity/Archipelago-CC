@@ -401,6 +401,19 @@ export function solverGoalFor(goal, { run, resolved, placement = null }) {
         if (!tp) return { walker: 'no live teleporter resolved for the exit' };
         return { goal: { kind: 'reach-exit', exit: { x: tp.x, y: tp.y } } };
     }
+    if (goal?.kind === 'location' && goal.encounter) {
+        // ⛓ ENCOUNTERS — an encounter location (L32's Bob Boss, L12's Witch) has no pickup entity: it is the solver's
+        // `encounter` goal (swim U5), anchored at the location's atlas tile, its `drop` the game's own grant.
+        // `then` is read off the room: an ARENA (a `fallthrough` room whose boss rock seals the door behind the
+        // player — `levelWorld.arenaRockOf`, the row's `thirdBoss`) is left only by its pit, so the fall is the
+        // encounter's own 'reach-pit' (L32: the burn, then the pit to L30). Any other room is left by the route's
+        // NEXT goal (null) — ⚠ a `fallthrough` alone is not enough: L12 has a control block too, and the Witch's
+        // room is left by a door (the survey's step 140 got null from its door crossing, not from the room).
+        const { at, drop } = goal.encounter;
+        const arena = !!run?.world?.fallthrough && (run.world.fallRocks ?? []).some((r) => r.thirdBoss);
+        return { goal: { kind: 'encounter', at: { x: at.x, y: at.y }, drop: { item: drop.item },
+            then: arena ? 'reach-pit' : null } };
+    }
     if (goal?.kind === 'location') {
         if (!placement) return { walker: 'the location names no entity of the room' };
         return { goal: { kind: 'collect-placement', placement: { x: placement.x, y: placement.y } } };

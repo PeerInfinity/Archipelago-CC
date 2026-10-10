@@ -909,8 +909,13 @@ export async function loadSeedlingRandomizer({
         bot,
         log,
     }).arm(set, invalidation);
+    // ⛓ ENCOUNTERS — the two unrewritten rows are checked off their game flag (`SeedlingCheckBinding`'s head); the
+    // property path's own name for that flag (the game config's `locations[]`) is stood down with them.
+    const propertyNameOf = new Map((gameConfig?.locations ?? []).map((l) => [l.property, l.ap_name ?? l.flash_name]));
     const checkBinding = new SeedlingCheckBinding({
         table, placementKey: rewriter.placementKey, selfPlayer,
+        encounters: encounters.map((e) => ({ location: e.location, ledgerId: e.ledgerId, level: e.level, flag: e.flag,
+            propertyLocation: propertyNameOf.get(e.flag) ?? null })),
     });
 
     return {
