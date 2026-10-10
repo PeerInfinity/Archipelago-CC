@@ -174,8 +174,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity ENCOUNTERS D2: +2 (265) — `enc-l32-fallen-door`, `enc-l32-fire-return`, inert; D3: +1 (266) — `enc-l12-witch`.
         // ⛓ fidelity PUSHBLOCK: +3 (269) — `pushblock-l65-reach-l63`, `pushblock-l65-reach-l68`, `pushblock-l65-sword-press`.
         // ⛓ fidelity ENCOUNTERS2 D2: +1 (270) — `enc-l32-live-arrival`, inert.
-        expect(rows).toHaveLength(270);
-        expect(rows.length - parted.length).toBe(269);
+        // ⛓ fidelity L12KEYLINE: +1 (271) — `l12keyline-134-round`, inert.
+        expect(rows).toHaveLength(271);
+        expect(rows.length - parted.length).toBe(270);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {
