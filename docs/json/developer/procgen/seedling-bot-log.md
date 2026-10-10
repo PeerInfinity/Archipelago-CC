@@ -15515,6 +15515,61 @@ both ways. A3's `run.progress is not a function` was K2's: a modelled lavarunner
 - **A boot/re-arm camera sample predates `view()`.** The bot's sample at t0 and at a level re-arm reads (0, 108) where
   the settled camera is (0, 80); a camera witness must skip those ticks (`camFresh`).
 
+### Seedling fidelity BULB — a Bulb's death writes lava, and its kill is placed
+
+Wave 11 (model coverage). Re-measure 3 (CI 38075646127) refused survey step 160 (L74, the Darkshield) on
+`bulb@48,112` standing on the one-tile floor between L74's lava pools, a static `"Enemy"` body: the class was
+unbridged and `KILL_ARM_POLICY.Bulb` refused its kill ("its death writes a tile"). The report is
+`CC/docs/cloud-reports/seedling-fidelity-bulb.md`.
+
+**D1+D2 — `contactFidelity.bulbLive` (OFF).** `Bulb extends Bob`: alive it is Bob's chase (moveSpeed 0.65, runRange
+80, a 12x12 box, `hitsMax` 1). Its death is its own: `startDeath` is EMPTY, so the update after the blow is a living
+one (moved, chased; only the i-frame the blow armed keeps the contact quiet) whose last statement plays "drop"; "drop"
+and "die" run no `Enemy.update` at all (no off-screen gate, no terrain switch, no `hitUpdate` — `hits_timer` freezes
+at 29 — no contact) and slide the body toward its tile's centre (`v = centre − pos`, normalised to ≤ 0.65, then
+`friction()`; it never leaves the tile, and rests where both components fall in the 0.05 dead zone); "drop"'s
+`endAnim` writes `t = 17` (LAVA) into the Tile under its centre and plays "die"; "die"'s `endAnim` is
+`FP.world.remove` (no `destroy`, no fade). 27 + 27 updates (7 frames at rate 8 each, looping anims). The write is the
+run's per-visit tile overlay (`levelWorld.withTileWrites`: a prototype child of the built world whose tile lists,
+floor-policy getters and `nearestWalkableTile[WithTie]` read the written `t`), so the physics drowns the player on
+it, chasers die on it, and `run.world` (the solver's planner) forbids it; a new `Game` drops it. The Bulb is
+switch-bridged the KILLLOCK way (`contactPricing` keeps it a `mover`; `stepContactsNow` skips it by name in a stepped
+room), because adding it to `CONTACT_STEPPED_FAMILIES` reds `r8Acceptance`'s partition even with the switch OFF.
+
+**Witness (p4f, headless, 0 px):** `bulb-l77-lava` — the kill (t49), "drop" (t50), the lava at (5,3) (t76), the
+removal (t103), then the player walks onto the tile, takes the lava hit (t110), drowns and dies (t140), and the
+restarted room has the Bulb back and the tile restored. 212 samples, the player calibrated, the Bulb's position,
+velocity, `hits`, `hits_timer` and anim at every one.
+
+**D3 — the kill is PLACED (⚖ the user: "We don't want them to die on a tile that we need to walk on").** Every press is
+the one strike policy's, so the constraint is a per-body VETO the policy asks before it aims (and again at the press):
+a press whose swing would kill a Bulb is refused when a tile the body can stand on when "drop" begins (its centre
+grown by `(SLASH_HIT_TICKS + 2) · 0.65`) is NEEDED — with lava written there, a goal the segment still owes
+(`solveSegment` hands the run its remaining goals per goal: pickups by the cells around them, the exit by its aim)
+that the player reaches now is no longer reachable (`plansReach`). Measured: without the veto the solver killed the
+L74 Bulb on the bridge at t22 and the exit leg refused; with it the veto fires in the previews, the Bulb is never
+struck (it chases and drowns itself in L74's lava at t72), and step 160 SOLVES in 321 t with K2 also ON — its walk
+game-exact (322 samples, the Bulb at 82, worst 0). `bulb-l77-placed`: the solver's own policy, the south exit as the
+need, kills `bulb@80,72` in the open room (lava (6,5), t72) — 110 samples, worst 0.
+
+**Moved (switch ON):** survey 160 REFUSED (the Bulb) → REFUSED (the static lavarunner, K2 OFF) → SOLVED 321 t with K2;
+164 and 168 unchanged. tapeRunner 589 pairs and every roster tape unchanged ON and OFF. Flip movers (bounded vitest):
+`fidelityKillLock`'s all-OFF roster and three `r8Acceptance` R8_ENEMY_BRIDGE rows (scope, control, the stepped-contact
+partition, which must admit `bulb` at the flip).
+
+**Trap candidates**, for the catalogue to number:
+
+- **A death that is not a stop.** An empty `startDeath` means the update after the killing blow is a live one; a
+  model that froze the body at the blow picks the wrong tile for anything its death leaves behind (mutant M2).
+- **A per-visit write to a memoised world.** The build is cached per level and shared by every visit; a write must be
+  an overlay the visit owns, re-applied wherever the binding is rebuilt mid-visit (despawns, timed clears), and
+  dropped with the visit.
+- **"Needed" is from where the player stands.** The same tile is cut-critical with the player on one side and harmless
+  on the other (L77: the column's mouth vetoed with the player north of it, not south); a veto keyed on the tile alone
+  over- or under-refuses.
+- **A pickup is not its own aim.** The planner forbids a pickup's cell except on the walk that collects it, so a
+  reachability question about a pickup asks about the cells around it — the first cut of the veto never fired.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
