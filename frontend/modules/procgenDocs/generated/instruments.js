@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 73,
+            "count": 74,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 390,
+        "blockStyle": 391,
         "browser": 131,
         "cited": 193,
-        "files": 402,
+        "files": 403,
         "lineStyle": 12,
-        "withDocblock": 402,
-        "withFlags": 320
+        "withDocblock": 403,
+        "withFlags": 321
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7119,6 +7119,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-bobsoldier — ⛓⛓⛓ seedling-fidelity-bobsoldier: THE BOBSOLDIER'S DRIVEN WITNESSES.",
             "path": "scripts/procgen/plan-seedling-bobsoldier.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-bobsoldier2.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-bobsoldier2 — ⛓⛓⛓ SEEDLING FIDELITY BOBSOLDIER2: L30's TORCHPICKUP, PAST THE BOBSOLDIER, BY THE KILL ARM'S OWN FORECAST.",
+            "path": "scripts/procgen/plan-seedling-bobsoldier2.mjs"
         },
         {
             "argvHelpers": [],
