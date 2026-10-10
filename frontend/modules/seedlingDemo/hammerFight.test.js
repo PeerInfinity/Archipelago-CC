@@ -85,7 +85,8 @@ describe('hammer-phase B2 — HAMMER_FIGHT (OFF by default)', () => {
     it('⛓⛓ OFF by default, its own deadline site (appended last), the switch restores, the trace off', () => {
         expect(HAMMER_FIGHT.enabled).toBe(false);
         expect(HAMMER_FIGHT.bounds).toBe(null);
-        expect(DEADLINE_SITES[DEADLINE_SITES.length - 1]).toBe('hammer-fight');
+        // ⛓ appended after `hammer-approach`; bobsoldier2 D3's `crusher-fork` was appended after it (a later row).
+        expect(DEADLINE_SITES.indexOf('hammer-fight')).toBe(DEADLINE_SITES.indexOf('hammer-approach') + 1);
         expect(withHammerFight(true, () => HAMMER_FIGHT.enabled)).toBe(true);
         expect(HAMMER_FIGHT.enabled).toBe(false);
         expect(() => withHammerFight(true, () => { throw new Error('x'); })).toThrow('x');
