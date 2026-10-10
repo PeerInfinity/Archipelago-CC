@@ -25,10 +25,9 @@ const ARMS = readdirSync(DIR).filter((f) => f.endsWith('.json')).sort()
     .map((f) => JSON.parse(readFileSync(join(DIR, f), 'utf8')));
 
 describe('the defaults are the user\'s ruling, and all-OFF is the BEFORE model', () => {
-    // ⚖ (user, 2026-10-10) K2 ON at the wave-10 harvest: STATICLADDER D3 recorded its lavarunner game witness.
-    it('all five (K1–K5) are ON by default; ALL_ON names every switch', () => {
+    it('K1/K3/K4/K5 are ON and K2 lavaRunnerLive is OFF by default; ALL_ON names every switch', () => {
         expect(KILLLOCK_BODIES_DEFAULTS).toEqual({
-            jellyfishLive: true, lavaRunnerLive: true, chaserKillArm: true, turretRemovalLedger: true,
+            jellyfishLive: true, lavaRunnerLive: false, chaserKillArm: true, turretRemovalLedger: true,
             darkShieldIceTurret: true,
         });
         expect(Object.keys(KILLLOCK_ALL_ON).sort()).toEqual([...KILLLOCK_BODIES_KEYS].sort());
@@ -43,16 +42,16 @@ describe('the defaults are the user\'s ruling, and all-OFF is the BEFORE model',
             expect(KILL_ARM_POLICY.LavaRunner.policy).toBe('refused');
             expect(killArmModelled('Jellyfish')).toBe(false);
         });
-        // the defaults (K2 ON since the wave-10 harvest): the jellyfish and the lavarunner are bridged
-        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher']);
+        // the defaults: the jellyfish is bridged, the lavarunner is not
+        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
         expect(KILL_ARM_POLICY.Jellyfish.policy).toBe('modelled');
-        expect(killArmModelled('LavaRunner')).toBe(true);
+        expect(killArmModelled('LavaRunner')).toBe(false);
         withKillLockBodies(KILLLOCK_ALL_ON, () => {
             expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher']);
             expect(KILL_ARM_POLICY.Jellyfish.policy).toBe('modelled');
             expect(killArmModelled('LavaRunner')).toBe(true);
         });
-        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher']);
+        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
     });
 });
 

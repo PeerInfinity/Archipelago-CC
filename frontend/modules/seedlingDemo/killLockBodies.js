@@ -46,14 +46,15 @@
  */
 /**
  * ⚖ THE DEFAULTS (user, 2026-10-06; flipped at the wave-8 harvest by `seedling-fidelity-planning-4`): K1, K3, K4 and
- * K5 ON; K2 `lavaRunnerLive` stayed OFF until a lavarunner GAME witness existed. ⚖ (user, 2026-10-10) K2 ON too, at
- * the wave-10 harvest: STATICLADDER D3 recorded the witness (`staticladder-k2-step190-lavarunner`, survey step 190's
- * walk, 1,050 body comparisons, worst |Δ| 0). ON moves no committed tape; it moves survey rows (190 → SOLVED 666 t;
- * 158/160/189/200 re-worded refusals).
+ * K5 ON; K2 `lavaRunnerLive` stays OFF. Its lavarunner GAME witness now exists (STATICLADDER D3,
+ * `staticladder-k2-step190-lavarunner`), and the user licensed the flip on 2026-10-10, but the wave-10 harvest
+ * measured movers the licence did not list: `R8_ENEMY_BRIDGE`'s declared scope (+ lavarunner) and the LADDER2 L75
+ * chain witness (a live lavarunner's on-screen test falls inside `Game.shake`'s jiggle and refuses). Held OFF until
+ * the user rules on those.
  */
 export const KILLLOCK_BODIES = {
     jellyfishLive: true,
-    lavaRunnerLive: true,
+    lavaRunnerLive: false,
     chaserKillArm: true,
     turretRemovalLedger: true,
     darkShieldIceTurret: true,
