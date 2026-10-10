@@ -118,6 +118,8 @@ import {
     KILLLOCK_BODIES,
     // ⛓⛓⛓ seedling-fidelity-ghostsword D2: the break verb's ghostsword row (the switch and the no-sword refusal).
     GHOSTSWORD_PRESS, ghostSwingRefusal,
+    // ⛓ hammer-phase B2: the fight's no-bump prune (a carried shield)
+    shieldBumpTouches,
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -130,7 +132,6 @@ import { arrivalInsideSolid, arrivalsInto, solidsAt, STUCK_TICKS } from './arriv
 import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,
 } from './strikePolicy.js';
-import { shieldBumpTouches } from './bobBossFight.js';
 import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestFirstQueue, coarseKey,
     spaceTimeReach } from './spaceTimeReach.js';
 

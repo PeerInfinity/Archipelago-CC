@@ -14905,6 +14905,86 @@ report is `CC/docs/cloud-reports/seedling-hammer-b1.md`.
 2. **The earliest next strike is not the shortest fight**, and it is not a safe fight: a greedy search per strike
    can end in a state from which the next body corners the player. Search the fight, not the strike.
 
+### Seedling hammer-phase B2 — the fight as one search
+
+⚖ The user (2026-10-09), shown B1's result: **"Merge OFF, then B2"** — *"plan the whole fight as one search,
+surviving to the last kill, with each press a step and the bodies' hit state in the search"*. The report is
+`CC/docs/cloud-reports/seedling-hammer-b2.md`.
+
+**W0.** At `8479a459e` (main, B1 merged OFF) the identity block is the bank row for row (ENEMY `30bcc49c`: main
+moved it after B1, at the wave-9 harvest). B1's per-record instrument is committed this time:
+`check-seedling-hammer-monotonicity.mjs` runs a row's OWN script under a load hook
+(`hammerMonotonicityHook.js`/`…Loader.js`: `procgenOracle.solve` becomes a forwarder in that process only, the row's
+stdout md5 unchanged) and re-solves every captured spinner record under each switch. On the `HAMMER_APPROACH` path it
+reproduces B1's seven solved → refused records exactly (c4: 625/419/508/625/700 t; c3/c6: 367/400 t).
+
+**D1 — `HAMMER_FIGHT` (OFF by default; OFF is byte-identical: the identity block and the six `--check`s at the head
+equal the base's, the residue sweep's 45 rows too).**
+- `levelRun.spinnerFightForecast`: `spinnerForecastWithPress` decomposed into a per-tick cursor — many presses along
+  one path, the slash state each leaves (a re-press inside 20 ticks is a dash), the window's tests reading the
+  player's point a tick at a time. A quiet window reads no point, so a cursor is shared by every path through it; a
+  press forks it. The sword test is one spelling with `spinnerForecastWithPress` (`forecastSwordTest`). One press
+  through the cursor IS `spinnerForecastWithPress`, row for row and test for test.
+- `solverBot.deriveFight`: best first over (player state, tick, the cursor). Successors: the nine key sets, and where
+  `pressReadyAt` holds for a body of the order the press as the executor drives it (aim, press, the train stood until
+  the window's last test), whose child carries the forked cursor. Prune: the escape's, on the node's own rows; with a
+  shield carried, a tick whose moving shield box touches a body is pruned (the bump is forbidden, not modelled — B1's
+  six post-shield records were all "unmodelled, no claim" before). Goal: every body of the order dead AND the escape's
+  survive kernel finds 75 ticks past that node. Dedup: 8 px × velocity sign, every body's (hits, dying, i-frame
+  running), the press window; the better-ordered state of a key is kept.
+- Order: A* with weight 2 on an admissible bound. Measured alternatives on L18: `progress` (hits owed first) 459 t at
+  r40; `stage` (B1's greedy + backtracking) up to 780 t with cuts; A* proper 367 t at r40 for 132,958 expansions;
+  weight 1.5 363.8 t mean at median 37,976 expansions; weight 2 at the i-frame running-or-not key 362.1 t, median
+  29,718. 4 px buys nothing (375.7 t at ~6× the expansions).
+- The executor follows the certificate across the order's plans, under `safeStep`. **Found by measuring**:
+  1. `safeStep`'s landing test reads the plain forecast, which holds no test it has not seen: on a train tick it moved
+     a body INTO the stood player where the landing knocks it away, and refused a safe stand (L18 r24 at weight 1.5).
+     On a certificate tick it now asks `landsClearInFlight` (the hit-aware forecast over the window in flight).
+  2. The admission's run is not always the executing run: c3 empty seed 22's certificate was planned on a run 150
+     frames behind in `Game.time` with the player and the bodies byte-equal, so it was adopted, and every hammer phase
+     was 15 of 45 off; `safeStep` caught it six ticks after the kill and the walk refused. The certificate now carries
+     the clock it priced each tick at, and a tick whose clock differs is left.
+- Every negative hands the kill to the switch-off path, latched until the next landing. Bounds
+  (`HAMMER_FIGHT_BOUNDS`/`_MEASURED`): 100,000 expansions (the largest find 63,029, c4; L18 54,079; no cut anywhere);
+  deadline site `hammer-fight` (appended).
+
+**D2 — measured (flag ON).**
+- B1's seven: all SOLVE ON, by the fight itself (c4 winding post-sword s4 625 → 430 t, winding post-shield s6
+  419 → 399, branchy 508 → 436, bushy 625 → 636, loopy 700 → 413; c3/c6 s22 367 → 343, s32 400 → 380).
+- Monotonicity (`check-seedling-hammer-monotonicity.mjs`, every spinner record of each row's own script, captured on
+  the OFF and the FIGHT generator paths, re-solved off and on): acceptance 23/21, c3 102/100, c6 170/168, c4 138/142,
+  ENEMY 2/2, killgate s2/s5/s9 9 each, the capacity killgate draws 885 (OFF path), and B1's approach-path captures of
+  c3/c6/c4 (84/138/130) — **0 solved → refused** anywhere; refused → solved 2–25 per row.
+- ⛔ **STOP (cost)**: a generated killgate draw (`seedlingGenCapacity`'s seed 57, 268 s off) did not finish in 3,000 s
+  on — 898 kill searches (852 found, median 12,411 expansions; 46 cut at 100,000), 2,308 s in the search. Off, a
+  kill's switch-off path is cheap and an OFF draw that refuses re-rolls sooner. The capacity rows (the fast file and
+  the slow census) were not measured on: the cost table is the report's, and the search was not shrunk to fit.
+- L18 sweep (`--fight --twice`): 45/45, 0 hits, 0 certificates left, every row the same twice; mean **362.1 t**
+  (A4 434.3, B1 367.6); every fight found at the kill's admission (median 29,718 expansions, max 54,079).
+- The census spinner rooms OFF → ON: (5,5) 269 → 214, (2,2) 515 → 188, (7,6) 210 → 198, (3,6) 160 → 186, (2,7)
+  264 → 186, corridor 193 → 223 (the fight minimises the kill and its tail, not the walk after it). ENEMY: the
+  corridor spinner 226 → 256, `spinner@nub` 351 → 308. `r8-solve-18` 363 → 353 t; `r9-solve-18` 518 → 342 t (the
+  chain 10,931 → 10,755). L40 from the L42 door (5 spinners, dashless): OFF 1,799 t in 62 s, ON 1,747 t in 18 s
+  (seven fight searches, 2.8 s; OFF spent its time in `deriveStrike`).
+- Game witness `hammer-b2-l18-fight40` (r40 of the frozen staging, 342 t vs 518 OFF): one certificate, six
+  landings, recorded and re-played on the game (23 PASS / 0 FAIL, 0 hits, `save.time` = model), 0 px.
+- Mutants: the bodies' fight state out of the dedup key — no hit, no certificate left (each node keeps its own
+  cursor), but L18 373.0 t (362.1) and MORE expansions, c4 solved 124 → 120; the post-kill window dropped — the B1
+  corner after the last kill returns: L18 43/45 (r16, r19 refuse), one c6 record solved → refused, c4 124 → 106.
+- JS arc: with it ON the live L18 solve's dashless pass alone spends 114–139 work units against the 85-unit upgrade
+  window, so the DASHLESS plan ships (373/371/381 t at r40/41/42; the full pass unbudgeted 342/344/349 t; OFF ships
+  518/500/503). `jsRuntimeSolverCalibration.slow` 5/5 both ways (it does not see it).
+- Movers with the flag ON (not landed): acceptance, c3/c6/c4, ENEMY and killgate s2/s5/s9 (the generated rows'
+  digests); the producers `r8-l18` (363 → 353 t), `r8-d2-chain` and `r9-campaign` (exit 1); the planners
+  `f1c-l18-phase`, `hammer-a-escape`, `hammer-b1-approach` (the other 42 `--check`s unmoved); 25 unit rows in 12
+  files, and `seedlingGenCapacity.test.js`, which does not finish on.
+
+**Trap candidates.**
+1. **A guard on a forecast that lacks the plan's own pending hits refuses the plan.** The certificate was exact; the
+   live check asked a question whose answer the press in flight changes.
+2. **A certificate equal in every field you compare can belong to another run.** The player and the bodies were
+   byte-equal; the clock was not, and the clock is a hazard's input.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
