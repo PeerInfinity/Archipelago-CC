@@ -15178,6 +15178,15 @@ are unchanged; the flip waits on the user's licence.
 - **A lattice that lets a stance through a solid.** The 8 px fallback accepted (136,168), whose player box overlaps
   L62's planttorch; the walk stalled 400 ticks against it. A stance needs its own "can the box stand here" test.
 
+**D3 — K2's lavarunner GAME witness (the one K2 waited for).** With `KILLLOCK_BODIES.lavaRunnerLive` ON, survey step
+190 (L80's chest past `lavarunner@0,96`) goes REFUSED → SOLVED 666 t, and its walk — on into L71, three lavarunners
+killed on the way — is game-exact: new class-parametric instrument `probe-seedling-chaser-mobiles.mjs --class=LavaRunner`,
+667 sampled ticks, 1,050 body comparisons (position, velocity, `hits`, `hits_timer`, presence), worst |Δ| 0, the
+player exact (`fixtures/chaser-witness/`, `fidelityLavaRunner.test.js`; mutant: walk speed 1.5 → 1.4 goes red). K2
+still ships OFF: the flip is the user's licence, and its survey movers (158, 160, 189, 190, 200) are in the report.
+Ranked residue: Turret's static sword arm (7 L62 legs), the Spear sub-order (14 darktrap rows), Bulb's bridge (L74),
+SandTrap's static sword arm, the drill in a mixed room (L91).
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
