@@ -381,6 +381,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'bobsoldier-sword', 'bobsoldier-kill', 'bobsoldier-corpse',
             // ⛓⛓⛓ Seedling fidelity GHOSTSWORD: the enemy witness, in L30.
             'ghostsword-l30-bobsoldier',
+            // ⛓⛓⛓ Seedling fidelity BOBSOLDIER2: the kill arm's stance, before and after, in L30.
+            'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch',
             // ⛓⛓⛓ Seedling fidelity WALLFLYER: the two kill witnesses and the shield-bump witness, in L22.
             'wallflyer-kill', 'wallflyer-kill-flight', 'wallflyer-shield-bump',
             // ⛓ Seedling fidelity CRUSHER: the round-trip witness ends on its L40 arrival.
@@ -433,10 +435,12 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity WALLFLYER adds three (77 with GHOSTSWORD) — `wallflyer-kill`, `wallflyer-kill-flight`,
         // `wallflyer-shield-bump` (L22).
         // ⛓ Seedling fidelity CRUSHER adds one (78) — `crusher-l42-round-trip` (its last tick is the L40 arrival).
-        expect(out.exposed).toBe(78);
+        // ⛓ Seedling fidelity BOBSOLDIER2 adds two (80) — `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch` (L30).
+        expect(out.exposed).toBe(80);
         expect(out.tapes).toEqual([
             'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
+            'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch',
             'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'crusher-l42-round-trip', 'dash-l16-sword-all', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
             'ghostsword-l30-bobsoldier', 'l14-swordless-detour',
             'ladder2-l104-beam',
@@ -611,6 +615,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'ghostsword-l30-bobsoldier': { tape: {}, levels: [30] },
             // ⛓ fidelity CRUSHER: the round-trip witness's L40 arrival.
             'crusher-l42-round-trip': { tape: {}, levels: [40] },
+            // ⛓ fidelity BOBSOLDIER2's two L30 witnesses — the mirror rule.
+            'bobsoldier2-l30-dash-stance': { tape: {}, levels: [30] },
+            'bobsoldier2-l30-torch': { tape: {}, levels: [30] },
             // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes — the mirror rule.
             'axe-l61-reach-l63': { tape: {}, levels: [63] },
             'burn-l44-reach-exit': { tape: {}, levels: [45] },
