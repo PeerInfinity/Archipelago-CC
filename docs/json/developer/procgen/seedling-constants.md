@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**65 files, 5443 literals.** Class × position:
+**66 files, 5453 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1555 | 357 | 1917 |
-| rule | 6 | 939 | 456 | 1401 |
+| rule | 6 | 943 | 460 | 1409 |
 | cosmetic | 0 | 60 | 14 | 74 |
-| structural | 10 | 359 | 1682 | 2051 |
+| structural | 10 | 359 | 1684 | 2053 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2913 | 2509 | 5443 |
+| total | 21 | 2917 | 2515 | 5453 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1650 | 0 | 88 | 118 | 4 | 57 | 1917 |
-| rule | 425 | 131 | 226 | 22 | 510 | 87 | 1401 |
+| rule | 433 | 131 | 226 | 22 | 510 | 87 | 1409 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -464,7 +464,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
 | `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
-### The 39 derived or aliased top-level constants
+### The 40 derived or aliased top-level constants
 
 | name | file | initialiser |
 |---|---|---|
@@ -486,6 +486,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `SHIELD_BOSS_DIE_UPDATES` | seedlingDemo/shieldBossFight.js | `SHIELD_BOSS_ANIM_UPDATES.die` |
 | `SHIELD_BOSS_WINDOW_UPDATES` | seedlingDemo/shieldBossFight.js | `SHIELD_BOSS_ANIM_UPDATES.movedShield` |
 | `FORM_TELEPORT_AT` | seedlingDemo/bobBoss.js | `FORM_TRANSITION_FRAMES / 3` |
+| `WITCH_TEXT_EXTRA` | seedlingDemo/witch.js | `'Oh, you found the wand!~You must be very powerful and your goals noble.' + '...` |
 | `BASE_SPIN_RATE` | seedlingDemo/bobBossFight.js | `Math.PI / 10` |
 | `TRANSITION_PIN` | seedlingDemo/bobBossFight.js | `ARENA.transitionTo` |
 | `BOB_BOSS_ROCK_DEAD_FRAMES` | seedlingDemo/bobBossFight.js | `rockSchedule().bossSpawnsAt` |
@@ -510,7 +511,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **140 small tables** (at most 16 literals) hold at least one (89 with an AS3 reference).
+**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **141 small tables** (at most 16 literals) hold at least one (90 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -591,6 +592,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `FIRE` | seedlingDemo/bobBoss.js | 6 | 6 | rule | magnitude/sentinel | Pickups/Fire.as:tag Pickups/Fire.as:Fire |
 | `BURNABLE_TREE` | seedlingDemo/bobBoss.js | 10 | 10 | rule | derivation/magnitude | Scenery/BurnableTree.as:burn |
 | `BOB_BOSS_LEDGER` | seedlingDemo/bobBoss.js | 2 | 2 | rule | sentinel |  |
+| `DARK_SWORD` | seedlingDemo/witch.js | 4 | 4 | rule | magnitude | Pickups/DarkSword.as:setHitbox |
 | `BASE_SPIN_RATE` | seedlingDemo/bobBossFight.js | 1 | 1 | physics | magnitude | Enemies/BobSoldier.as:swordSpinRate |
 | `BOB_BOSS_BOX` | seedlingDemo/bobBossFight.js | 4 | 4 | physics | magnitude | Enemies/BobBoss.as:setHitbox |
 | `FINAL_BOSS_ANIMS` | seedlingDemo/finalBossFight.js | 8 | 4 | rule | count/magnitude | FinalBoss.as:47-50 |

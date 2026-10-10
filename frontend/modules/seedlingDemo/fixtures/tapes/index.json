@@ -115,6 +115,13 @@
       "noHazards": []
     },
     {
+      "file": "enc-l12-witch.json",
+      "tickCount": 601,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "enc-l32-fallen-door.json",
       "tickCount": 1055,
       "bootLevel": 32,

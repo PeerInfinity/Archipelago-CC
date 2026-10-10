@@ -2793,7 +2793,8 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
     const FOLDS = [
         // ⛓ fidelity SLOTS: 13 — `inventorySlots`, the slot array as run state.
         { query: 'progress', names: PROGRESS_FIELD_NAMES, count: 13, noun: 'progress field', plural: 'fields' },
-        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 33, noun: 'ledger kind', plural: 'kinds' },
+        // ⛓ fidelity ENCOUNTERS D3: 34 — `witchEvents`, L12's Witch.
+        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 34, noun: 'ledger kind', plural: 'kinds' },
     ];
     const ALL = [...PROGRESS_FIELD_NAMES, ...LEDGER_KIND_NAMES];
     const queryOf = new Map(FOLDS.flatMap((f) => f.names.map((n) => [n, f.query])));
@@ -2815,6 +2816,8 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
         { tape: 'u15-turret-spit', members: ['spitEvents'] },
         // ⛓ F4: both sandtraps die to the arrows and are removed.
         { tape: 'f4-l8-sandtraps', members: ['staticBodyDeaths'] },
+        // ⛓ fidelity ENCOUNTERS D3: the Witch's talk, the DarkSword's add, contact and removal.
+        { tape: 'enc-l12-witch', members: ['witchEvents'] },
     ];
     const text = (v) => JSON.stringify(v, (k, x) => (x instanceof Set || x instanceof Map ? [...x] : x));
     const sizeOf = (v) => (v instanceof Set || v instanceof Map ? v.size : Array.isArray(v) ? v.length : null);

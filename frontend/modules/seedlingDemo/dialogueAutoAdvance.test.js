@@ -169,9 +169,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity CRUSHER: +1 (257) — `crusher-l42-round-trip`, inert.
         // ⛓ hammer-phase B1: +1 (258) — `hammer-b1-l18-approach40`, inert.
         // ⛓ hammer-phase B2: +1 (259) — `hammer-b2-l18-fight40`, inert.
-        // ⛓ fidelity ENCOUNTERS D2: +2 (261) — `enc-l32-fallen-door`, `enc-l32-fire-return`, inert.
-        expect(rows).toHaveLength(261);
-        expect(rows.length - parted.length).toBe(260);
+        // ⛓ fidelity ENCOUNTERS D2: +2 (261) — `enc-l32-fallen-door`, `enc-l32-fire-return`, inert; D3: +1 (262) — `enc-l12-witch`.
+        expect(rows).toHaveLength(262);
+        expect(rows.length - parted.length).toBe(261);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

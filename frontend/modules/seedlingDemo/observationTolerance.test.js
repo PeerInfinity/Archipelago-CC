@@ -119,8 +119,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity CRUSHER: +1 (257) — `crusher-l42-round-trip`.
         // ⛓ hammer-phase B1: +1 (258) — `hammer-b1-l18-approach40`.
         // ⛓ hammer-phase B2: +1 (259) — `hammer-b2-l18-fight40`.
-        // ⛓ fidelity ENCOUNTERS D2: +2 (261) — `enc-l32-fallen-door`, `enc-l32-fire-return`.
-        expect(names.length).toBe(261);
+        // ⛓ fidelity ENCOUNTERS D2: +2 (261) — `enc-l32-fallen-door`, `enc-l32-fire-return`; D3: +1 (262) — `enc-l12-witch`.
+        expect(names.length).toBe(262);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -174,8 +174,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity CRUSHER: 257 — `crusher-l42-round-trip` crosses to L40.
         // ⛓ hammer-phase B1: 258 — the approach witness crosses to L19 too.
         // ⛓ hammer-phase B2: 259 — the fight witness crosses to L19 too.
-        // ⛓ fidelity ENCOUNTERS D2: 261 — both L32 witnesses fall to L30.
-        expect(tally.swapped).toBe(261);
+        // ⛓ fidelity ENCOUNTERS D2: 261 — both L32 witnesses fall to L30; D3: 262 — the Witch witness walks out to L95.
+        expect(tally.swapped).toBe(262);
     }, 600_000);
 });
 

@@ -1377,6 +1377,12 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             addedBy: 'Seedling fidelity ENCOUNTERS D2 (the return-visit witness)',
             why: 'the burned pit from L32 to L30: 81 ticks there at >= 180 px from the BobSoldier. No hit.',
         }),
+        Object.freeze({
+            name: 'enc-l12-witch', levels: Object.freeze([12]), bobs: 1, ticks: 601,
+            addedBy: 'Seedling fidelity ENCOUNTERS D3 (the Witch witness)',
+            why: 'L12\'s Witch and the walk out: 601 ticks in a puncher room at >= 129 px from `puncher` — '
+                + 'never inside its reach. Recorded on the game with `hits` 0.',
+        }),
     ]),
 
     /**

@@ -120,6 +120,8 @@ import {
     GHOSTSWORD_PRESS, ghostSwingRefusal,
     // ⛓ hammer-phase B2: the fight's no-bump prune (a carried shield)
     shieldBumpTouches,
+    // ⛓⛓ fidelity ENCOUNTERS D3: the Witch's talk circle (`NPC.talkRange`).
+    TALK_RANGE,
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -1165,6 +1167,126 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
     return { records, landings, pages };
 }
 
+/**
+ * ⛓⛓ SEEDLING FIDELITY ENCOUNTERS, D3 — THE WITCH ENCOUNTER EXECUTOR.
+ *
+ * `Level 012 - Witch` drops the dark sword (AP: the second `Progressive
+ * Sword`). Derived from the model (`witch.js`, `levelRun`'s talker arm and its
+ * runtime `DarkSword`); every decision reads the run:
+ *
+ *   (a) STANCE — the walkable tile centre nearest the player inside the Witch's
+ *       talk circle (`NPC.talkRange`, measured on ENTITY points), walked to and
+ *       settled.
+ *   (b) TALK — the ceremony cadence (`ceremonyCadenceStep`): its first release
+ *       OPENS the dialogue (`NPC.talk()`'s `Input.released`), the rest page it,
+ *       standing still so the circle is never left. Done when the run's
+ *       `witchEvents` ledger holds `witch-close` with `grants`.
+ *   (c) DROP — the `DarkSword` lands at the player's feet and is collected by
+ *       overlap on the next frame; the same cadence pages its ceremony until the
+ *       inventory holds `hasDarkSword`. Verified on the ledger
+ *       (`darksword-removed`), never counted.
+ *
+ * States, read off the run: the sword already held → `already`, nothing to do;
+ * no wand → refused by name (her `doneTalking` adds nothing).
+ */
+const WITCH_STANCE_MARGIN = 2;
+const WITCH_SETTLE_MAX = 60;
+const WITCH_TALK_MAX = 1200;
+
+function execWitchEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, refuse }) {
+    const records = [];
+    const tick = (keys) => {
+        const held = new Set(keys);
+        perTick.push(held);
+        const r = run.advance(held);
+        if (r.transition) refuse(`${what}: the run left level ${r.transition.from_level} mid-encounter.`, { goal });
+        return r;
+    };
+    const row = (verb, extra = {}) => seeRow({
+        tick: perTick.length, saw: saw(), goal: { kind: 'encounter', at: { ...goal.at } },
+        strategy: { verb }, rejected: [], keys: [], ...extra,
+    });
+    const witch = (run.entities('talkCircles') ?? []).find((c) => c.tag === 'witch');
+    if (!witch) {
+        refuse(`${what}: level ${run.level} holds no speaking Witch (no \`witch\` talk circle), so `
+            + 'nothing here can drop the dark sword.', {
+            goal, obstacle: { kind: 'unmodelled-encounter', id: `encounter@${goal.at.x},${goal.at.y}` } });
+    }
+    const inv = () => run.progress('inventory') ?? {};
+    if (inv().hasDarkSword === true) {
+        records.push({ goal: 'encounter', leg: 'drop', already: true, t: perTick.length });
+        return { records };
+    }
+    if (inv().hasWand !== true) {
+        refuse(`${what}: the Witch adds the dark sword only for a player holding the WAND `
+            + '(`Witch.doneTalking`: `Main.hasWand && !Main.hasDarkSword`); this run holds none, so her '
+            + 'dialogue would end with nothing added.', { goal, obstacle: { kind: 'encounter', id: witch.id } });
+    }
+    // ── (a) the stance ────────────────────────────────────────────────
+    const inCircle = (x, y) => Math.hypot(x - witch.ex, y - witch.ey) <= TALK_RANGE;
+    if (!inCircle(run.state.x, run.state.y)) {
+        const r = TALK_RANGE - WITCH_STANCE_MARGIN;
+        const cells = [];
+        for (let ty = Math.floor((witch.ey - r) / TILE_SIZE); ty <= Math.floor((witch.ey + r) / TILE_SIZE); ty += 1) {
+            for (let tx = Math.floor((witch.ex - r) / TILE_SIZE); tx <= Math.floor((witch.ex + r) / TILE_SIZE); tx += 1) {
+                const cx = tx * TILE_SIZE + TILE_SIZE / 2;
+                const cy = ty * TILE_SIZE + TILE_SIZE / 2;
+                if (Math.hypot(cx - witch.ex, cy - witch.ey) > r) continue;
+                if (plannerObstacleAt(run.world, cx, cy, null, solverPlanOpts(run, new Set(), {})) !== null) continue;
+                cells.push({ x: cx, y: cy, d: Math.hypot(cx - run.state.x, cy - run.state.y) });
+            }
+        }
+        cells.sort((a, b) => a.d - b.d);
+        if (cells.length === 0) {
+            refuse(`${what}: no walkable tile centre lies inside ${witch.id}'s talk circle (${TALK_RANGE} px).`,
+                { goal, obstacle: { kind: 'encounter', id: witch.id } });
+        }
+        row('walk');
+        walkTo(goal, { x: cells[0].x, y: cells[0].y }, { what: `${what} -> talk stance (${witch.id})` });
+    }
+    for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+        if (i > WITCH_SETTLE_MAX) refuse(`${what}: the talk stance never came to rest.`, { goal });
+        tick([]);
+    }
+    if (!inCircle(run.state.x, run.state.y)) {
+        refuse(`${what}: the walk rests at (${run.state.x},${run.state.y}), outside ${witch.id}'s talk circle.`,
+            { goal, obstacle: { kind: 'encounter', id: witch.id } });
+    }
+    // ── (b) the talk, then (c) the drop's ceremony, on one cadence ─────
+    row('talk', { obstacle: { kind: 'witch', id: witch.id } });
+    const from = perTick.length;
+    let c = CEREMONY_CADENCE_START;
+    let closedAt = null;
+    while (inv().hasDarkSword !== true) {
+        if (perTick.length - from > WITCH_TALK_MAX) {
+            refuse(`${what}: ${WITCH_TALK_MAX} ticks of the talk cadence and no dark sword `
+                + `(${run.ledger('witchEvents').map((r) => r.what).join(', ') || 'no Witch event'}).`, { goal });
+        }
+        const step = ceremonyCadenceStep(c);
+        c = step.next;
+        tick([...step.held]);
+        if (closedAt === null) {
+            const close = run.ledger('witchEvents').find((r) => r.what === 'witch-close');
+            if (close) {
+                if (!close.grants) refuse(`${what}: the Witch's dialogue closed (${close.cause}) and added nothing.`, { goal });
+                closedAt = perTick.length;
+                records.push({ goal: 'encounter', leg: 'talk', cause: close.cause, t: perTick.length });
+            }
+        }
+    }
+    if (c.pressing) refuse(`${what}: the dark sword's ceremony ended with a press still down.`, { goal });
+    if (!run.ledger('witchEvents').some((r) => r.what === 'darksword-removed')) {
+        refuse(`${what}: hasDarkSword is set and the run's ledger holds no \`darksword-removed\` — the drop `
+            + 'did not come from the Witch.', { goal });
+    }
+    for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+        if (i > WITCH_SETTLE_MAX) refuse(`${what}: the walk never came to rest after the dark sword.`, { goal });
+        tick([]);
+    }
+    records.push({ goal: 'encounter', leg: 'drop', t: perTick.length });
+    return { records };
+}
+
 /** `Entity.collideRect`'s inclusive overlap, for a burn's fire rect and a tree. */
 function rectsOverlapInclusive(a, b) {
     return a.x <= b.x + b.w && b.x <= a.x + a.w && a.y <= b.y + b.h && b.y <= a.y + a.h;
@@ -1744,7 +1866,12 @@ function execTalk(run, perTick, resolved, ctx) {
  * row is registered: `execBobBossEncounter`. A drop with no row still
  * refuses by name, before a tick.
  */
-export const ENCOUNTER_EXECUTORS = Object.freeze({ Fire: execBobBossEncounter });
+export const ENCOUNTER_EXECUTORS = Object.freeze({
+    Fire: execBobBossEncounter,
+    // ⛓⛓ fidelity ENCOUNTERS D3: L12's Witch drops the dark sword (AP's second
+    // `Progressive Sword`); `witch.js` + `levelRun`'s talker arm simulate it.
+    'Progressive Sword': execWitchEncounter,
+});
 
 /**
  * ⛔ THE BOUND ON STRATEGY APPLICATIONS PER GOAL, and it is named rather than

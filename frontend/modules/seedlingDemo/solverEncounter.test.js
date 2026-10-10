@@ -85,7 +85,8 @@ describe('solveSegment — encounter L32 from r5-bobboss-fire\'s boot, honest, s
     }, 120_000);
 
     it('the registry holds Fire, and an unregistered drop refuses BY NAME before a tick', () => {
-        expect(Object.keys(ENCOUNTER_EXECUTORS)).toEqual(['Fire']);
+        // ⛓ fidelity ENCOUNTERS D3: + the Witch's dark sword (AP's second `Progressive Sword`).
+        expect(Object.keys(ENCOUNTER_EXECUTORS)).toEqual(['Fire', 'Progressive Sword']);
         const { run, boot } = l32Run();
         let err = null;
         try {

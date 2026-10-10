@@ -1741,6 +1741,14 @@ frontend/modules/seedlingDemo/ghostSword.js|(module)|hf5c39ed3|0|0,cosmetic,,,gh
 frontend/modules/seedlingDemo/ghostSword.js|(module)|hf5c39ed3|1|0,cosmetic,,,ghost sword slashnarrow frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
 frontend/modules/seedlingDemo/ghostSword.js|(module)|hf5c39ed3|2|0,cosmetic,,,ghost sword slashnarrow frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
 frontend/modules/seedlingDemo/ghostSword.js|(module)|hf5c39ed3|3|0,cosmetic,,,ghost sword slashnarrow frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
+frontend/modules/seedlingDemo/witch.js|(module)|he62e8000|8|0,rule,magnitude,Pickups/DarkSword.as:setHitbox,DarkSword hitbox width: setHitbox(8; 8; 4; 4)
+frontend/modules/seedlingDemo/witch.js|(module)|h6b374907|8|0,rule,magnitude,Pickups/DarkSword.as:setHitbox,DarkSword hitbox height: setHitbox(8; 8; 4; 4)
+frontend/modules/seedlingDemo/witch.js|(module)|hc3eb1c90|4|0,rule,magnitude,Pickups/DarkSword.as:setHitbox,DarkSword hitbox origin x: setHitbox(8; 8; 4; 4)
+frontend/modules/seedlingDemo/witch.js|(module)|h000e7c85|4|0,rule,magnitude,Pickups/DarkSword.as:setHitbox,DarkSword hitbox origin y: setHitbox(8; 8; 4; 4)
+frontend/modules/seedlingDemo/witch.js|darkSwordSpawnAt|h995a50fb|8|0,rule,magnitude,NPCs/Witch.as:doneTalking,new DarkSword(p.x - Tile.w/2; ...): the half tile subtracted before the int truncation
+frontend/modules/seedlingDemo/witch.js|darkSwordSpawnAt|h995a50fb|8|1,rule,magnitude,Pickups/DarkSword.as:DarkSword,super(_x + Tile.w/2; ...): the half tile added back after the truncation
+frontend/modules/seedlingDemo/witch.js|darkSwordSpawnAt|h995a50fb|8|2,rule,magnitude,NPCs/Witch.as:doneTalking,new DarkSword(...; p.y - Tile.h/2): the half tile subtracted before the int truncation
+frontend/modules/seedlingDemo/witch.js|darkSwordSpawnAt|h995a50fb|8|3,rule,magnitude,Pickups/DarkSword.as:DarkSword,super(...; _y + Tile.h/2): the half tile added back after the truncation
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

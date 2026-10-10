@@ -51,7 +51,8 @@ describe('the family registry', () => {
         // this arc keeps getting bitten by.
         expect(OUT_OF_BAND_WRITERS.Fire.witness).toBe('r5-bobboss-fire');
         expect(OUT_OF_BAND_WRITERS.BreakableRock.witness).toBe('r5-feather');
-        expect(OUT_OF_BAND_WRITERS.DarkSword.witness).toBe('r5-witch-darksword');
+        // ⛓ fidelity ENCOUNTERS D3: the reserved name never became a tape; the Witch witness did.
+        expect(OUT_OF_BAND_WRITERS.DarkSword.witness).toBe('enc-l12-witch');
         expect(OUT_OF_BAND_WRITERS.Lock.witness).toBe('r5-shaft');
         expect(OUT_OF_BAND_WRITERS.RopeStart.witness).toBe('r5-shaft');
         // ⚠ AND THE SIXTH HAS NO WITNESS, said out loud rather than left
