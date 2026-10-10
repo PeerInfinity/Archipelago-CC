@@ -1233,6 +1233,7 @@ frontend/modules/seedlingDemo/playerDamage.js|stepPlayerDamage|stepPlayerDamage|
 frontend/modules/seedlingDemo/playerDamage.js|stepPlayerDamage|stepPlayerDamage|-1,rule,sentinel,Player.as:directionFace,-1 = not set
 frontend/modules/seedlingDemo/playerDamage.js|canSteer|canSteer,rule,bound,,hitsTimer <= 0 gates steering
 frontend/modules/seedlingDemo/playerDamage.js|iFrameSteeringSpan|iFrameSteeringSpan,structural,,,synthetic probe hit and span accumulator
+frontend/modules/seedlingDemo/bulb.js|bulbSlideStep|bulbSlideStep,physics,magnitude,,Bulb drop/die slide (Enemies/Bulb.as:39-43): the tile centre (floor(x / Tile.w) + 0.5) * Tile.w
 frontend/modules/seedlingDemo/chasers.js|animTicks|animTicks,structural,,,
 frontend/modules/seedlingDemo/chasers.js|createSpriteAnim|createSpriteAnim,structural,,,
 frontend/modules/seedlingDemo/chasers.js|stepSpriteAnim|stepSpriteAnim,structural,,,Spritemap timer loop transcription
@@ -1896,4 +1897,3 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2478e7e0|60|0,rule,ma
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9065cb5b|0|0,rule,sentinel,,Ground state 0 (Player.as:297)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb348a44c|116|0,rule,count,,Game.levels.length
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h4254a394|3|0,physics,magnitude,Player.as:wandSpeed,
-frontend/modules/seedlingDemo/bulb.js|bulbSlideStep|bulbSlideStep,physics,magnitude,Enemies/Bulb.as:39-43,Bulb drop/die slide: the tile centre (floor(x / Tile.w) + 0.5) * Tile.w
