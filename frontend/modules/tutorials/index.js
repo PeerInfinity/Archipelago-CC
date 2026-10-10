@@ -6,6 +6,9 @@
  * (scripts/tutorials/generate-tutorial-docs.mjs).
  */
 import { COMPONENT_TYPE, DEFAULTS, MODULE_ID, PROGRESS_KEY, TutorialUI } from './tutorialUI.js';
+import { hasTutorialRequest } from './tutorialUrl.js';
+
+const REOPEN_AFTER_MS = 5000;
 
 export const moduleInfo = {
     name: MODULE_ID,
@@ -78,4 +81,17 @@ export function register(registrationApi) {
     // a publish from a module that did not declare it.
     registrationApi.registerEventBusPublisher('files:jsonLoaded');
     registrationApi.registerEventBusPublisher('ui:activatePanel');
+}
+
+/**
+ * `?tutorial=` with the panel CLOSED (its module disabled, e.g. its × was
+ * pressed in an earlier visit): no instance takes the request, so reopen the
+ * panel the way Quick Launch does — its constructor then starts the tutorial.
+ */
+export function initialize() {
+    if (!hasTutorialRequest() || typeof window === 'undefined') return;
+    setTimeout(() => {
+        if (TutorialUI.instance || !hasTutorialRequest()) return;
+        window.moduleManagerApi?.enableModule?.(MODULE_ID);
+    }, REOPEN_AFTER_MS);
 }

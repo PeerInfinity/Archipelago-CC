@@ -26,8 +26,9 @@ import { TUTORIALS } from './content/index.js';
 import { blocksFor, panelSteps } from './tutorialShape.js';
 import { buildContext } from './tutorialContext.js';
 import {
-    hideCursor, nextPressable, performAction, performStep, setOutline,
+    hideCursor, nextPressable, performAction, performStep, setOutline, waitFor,
 } from './tutorialExecutor.js';
+import { TUTORIAL_PARAM, takeTutorialRequest } from './tutorialUrl.js';
 import { componentItems, isDesktopLayout, isSplit, mergeBack, splitOut } from './tutorialLayout.js';
 
 export const MODULE_ID = 'tutorials';
@@ -43,6 +44,7 @@ export const DEFAULTS = Object.freeze({
 });
 const DONE_POLL_MS = 300;
 const QUICK_LAUNCH = Object.freeze({ panel: 'quickLaunchPanel' });
+const URL_START_TIMEOUT_MS = 10000;
 
 /** One class per control, so the in-app test and the CSS address them by name. */
 export const CONTROLS = Object.freeze({
@@ -152,6 +154,35 @@ export class TutorialUI {
         const saved = await settingsManager.getSetting(SETTING(PROGRESS_KEY), null);
         this.saved = saved && TUTORIALS.some((e) => e.tutorial.id === saved.id) ? saved : null;
         this.render();
+        await this._startFromUrl();
+    }
+
+    /** `?tutorial=<id>[&tutorialStep=<n>]` (tutorialUrl.js), once per page load. */
+    async _startFromUrl() {
+        const request = takeTutorialRequest();
+        if (request) await this.startRequest(request);
+    }
+
+    /**
+     * Bring this panel forward and start `request.id` at `request.index` (the
+     * URL's request; the in-app row drives it directly). Waits for the panel's
+     * tab to exist — the layout builds panels before it finishes — so the
+     * split has a stack to split. An unknown id leaves the list showing, with
+     * a note. Returns true when a tutorial started.
+     */
+    async startRequest(request) {
+        await waitFor(() => this.item() || document.querySelector('.mobile-layout-container'), URL_START_TIMEOUT_MS);
+        const item = this.item();
+        if (item) item.parentItem?.setActiveComponentItem?.(item, true);
+        else eventBus.publish('ui:activatePanel', { panelId: COMPONENT_TYPE }, MODULE_ID);
+        if (!TUTORIALS.some((e) => e.tutorial.id === request.id)) {
+            this.notice = `No tutorial named "${request.id}" (from the page's ?${TUTORIAL_PARAM}= parameter).`;
+            this.render();
+            return false;
+        }
+        this.notice = null;
+        this.start(request.id, request.index);
+        return true;
     }
 
     async _loadSettings() {
@@ -411,6 +442,7 @@ export class TutorialUI {
     _listView() {
         const wrap = el('div', CONTROLS.list);
         wrap.append(el('h3', 'tut-heading', 'Tutorials'));
+        if (this.notice) wrap.append(el('div', CONTROLS.status, this.notice));
         const ql = button(CONTROLS.quickLaunch, TEXT.quickLaunch, 'Open the Quick Launch panel', () => this.openQuickLaunch());
         const bar = el('div', 'tut-toolbar');
         bar.append(ql);

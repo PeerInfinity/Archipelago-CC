@@ -220,6 +220,36 @@ async function tutorialGuidedTourPlaysEveryStep(tc) {
     return tc.getOverallResult();
 }
 
+async function tutorialUrlRequestStartsTheTutorial(tc) {
+    const settings = await savedSettings();
+    const tabs = activeTabs();
+    const ui = await freshPanel(tc, { autoAdvance: false, showOutline: false });
+    if (!ui) return tc.getOverallResult();
+    try {
+        const n = panelSteps(TUTORIALS.find((e) => e.tutorial.id === TOUR_ID).tutorial).length;
+        const step = Math.min(4, n);
+        // Another tab forward first, so "brought forward" is observable.
+        const item = ui.item();
+        const sibling = item?.parentItem?.contentItems.find((c) => c !== item);
+        if (sibling) item.parentItem.setActiveComponentItem(sibling, false);
+        const started = await ui.startRequest({ id: TOUR_ID, index: step - 1 });
+        tc.reportCondition(`?tutorial=${TOUR_ID}&tutorialStep=${step} starts the tutorial`, started && ui.tutorial?.id === TOUR_ID);
+        tc.reportCondition(`… at step ${step} (the panel reads "Step ${step} of ${n}")`,
+            ui.root.querySelector(`.${CONTROLS.position}`)?.textContent === `Step ${step} of ${n}`);
+        tc.reportCondition('… with the panel forward, in a stack of its own', isSplit(ui.item())
+            && ui.item().parentItem.getActiveComponentItem() === ui.item());
+        ui.exit();
+        const unknown = await ui.startRequest({ id: 'no-such-tutorial', index: 0 });
+        tc.reportCondition('an unknown id starts nothing and the list names it', !unknown && !ui.tutorial
+            && (ui.root.querySelector(`.${CONTROLS.list} .${CONTROLS.status}`)?.textContent ?? '').includes('no-such-tutorial'));
+    } finally {
+        ui.notice = null;
+        await restore(ui, settings);
+        restoreActiveTabs(tabs);
+    }
+    return tc.getOverallResult();
+}
+
 const TESTS = [
     ['tutorial-panel-lists-every-tutorial', 'Tutorial: the list shows every tutorial',
         'Every tutorial in content/index.js passes the shape validator and has a card, in order, with a Start button; '
@@ -233,6 +263,10 @@ const TESTS = [
         'Activates a tab that sits in its stack\'s ▾ overflow list with the animated cursor (the cursor appears, the tab '
         + 'becomes active, the list closes); the outline is drawn around a tab and removed.',
         tutorialCursorAndOutlineReachTabs],
+    ['tutorial-url-request-starts-the-tutorial', 'Tutorial: ?tutorial=<id>&tutorialStep=<n> starts it',
+        'The request a ?tutorial= URL makes (startRequest; the parser is a unit row) brings the panel forward, starts the '
+        + 'tutorial at the 1-based step and splits; an unknown id starts nothing and the list names it.',
+        tutorialUrlRequestStartsTheTutorial],
     ['tutorial-guided-tour-plays-every-step', 'Tutorial: Play performs every step of the Guided Tour',
         'Starts the Guided Tour and presses Play (auto-advance, no animation): every step the panel walks (read off the '
         + 'tutorial data) is performed and its done check turns true, ending on "Finished.". Reloads the world loaded before.',

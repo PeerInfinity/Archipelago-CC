@@ -43,7 +43,7 @@ This documentation is organized into the following main sections:
 This section is for anyone who wants to use the JSON Web Client to play or track their Archipelago games. These guides cover the application's features from a user's perspective.
 
 - **[Introduction to Archipelago](./user/introduction-to-archipelago.md)**: New to Archipelago and randomizers entirely? Start here — the rest of the docs assume these basics.
-- **[Guided Tour](./user/guided-tour.md)**: See the highlights in ten minutes, directly in the live demo — nothing to install.
+- **[Guided Tour](./user/guided-tour.md)**: See the highlights in ten minutes, directly in the live demo — nothing to install. Or [start it inside the app](https://peerinfinity.github.io/Archipelago-CC/?game=procgen_maze&seed=1&tutorial=guided-tour), where the Tutorial panel can do each step for you.
 - **[Overview: What Is This?](./user/overview.md)**: Learn what this project does, see game compatibility, and understand how to use the tracker.
 - **[Quick Start Guide](./user/quick-start.md)**: A fast-paced introduction to getting the client running.
 - **[Standard Client Guide](./user/standard-client.md)**: A detailed guide on using the client for tracking, checking accessibility, and connecting to a multiworld server.

@@ -112,3 +112,29 @@ describe('the tutorials', () => {
         }
     });
 });
+
+describe('?tutorial= (tutorialUrl.js)', () => {
+    it('reads the id and a 1-based step', async () => {
+        const { parseTutorialRequest } = await import('./tutorialUrl.js');
+        expect(parseTutorialRequest('?game=procgen_maze&seed=1&tutorial=guided-tour')).toEqual({ id: 'guided-tour', index: 0 });
+        expect(parseTutorialRequest('?tutorial=guided-tour&tutorialStep=4')).toEqual({ id: 'guided-tour', index: 3 });
+        expect(parseTutorialRequest('?tutorial=guided-tour&tutorialStep=0')).toEqual({ id: 'guided-tour', index: 0 });
+        expect(parseTutorialRequest('?tutorial=guided-tour&tutorialStep=x')).toEqual({ id: 'guided-tour', index: 0 });
+        expect(parseTutorialRequest('?game=alttp')).toBeNull();
+        expect(parseTutorialRequest('?tutorial=')).toBeNull();
+    });
+
+    it('tutorialLink keeps the base query', async () => {
+        const { tutorialLink } = await import('./tutorialUrl.js');
+        expect(tutorialLink('https://x/', 'a')).toBe('https://x/?tutorial=a');
+        expect(tutorialLink('https://x/?game=g&seed=1', 'a')).toBe('https://x/?game=g&seed=1&tutorial=a');
+    });
+
+    it('every link a tutorial\'s prose gives to ?tutorial= names a tutorial that exists', () => {
+        const ids = new Set(TUTORIALS.map((e) => e.tutorial.id));
+        for (const { tutorial } of TUTORIALS) {
+            const text = JSON.stringify([tutorial.intro, tutorial.sections.map((s) => s.blocks.map((b) => b.prose ?? b.step.text)), tutorial.outro]);
+            for (const m of text.matchAll(/[?&]tutorial=([a-z0-9-]+)/g)) expect(ids.has(m[1]), m[0]).toBe(true);
+        }
+    });
+});

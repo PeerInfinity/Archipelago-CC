@@ -1425,6 +1425,12 @@
             "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials is claimed by no batch, so it runs in the default batch (fast). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
         },
         {
+            "id": "tutorial-url-request-starts-the-tutorial",
+            "enabled": true,
+            "category": "Tutorials",
+            "_comment": "TUTORIAL PANEL T1b (2026-10-10): ?tutorial=<id>&tutorialStep=<n>. Drives startRequest (the URL parser is a vitest row); restores the panel, its settings and the active tabs."
+        },
+        {
             "id": "tutorial-guided-tour-plays-every-step",
             "enabled": true,
             "category": "Tutorials",

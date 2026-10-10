@@ -68,7 +68,7 @@ See the [procgen developer documentation](./docs/json/developer/procgen/README.m
 
 This project contains a full documentation suite for both users and developers.
 
-- **[Guided Tour](./docs/json/user/guided-tour.md)** — See the highlights in ten minutes, directly in the live demo
+- **[Guided Tour](./docs/json/user/guided-tour.md)** — See the highlights in ten minutes, directly in the live demo (or [start it inside the app](https://peerinfinity.github.io/Archipelago-CC/?game=procgen_maze&seed=1&tutorial=guided-tour), where the Tutorial panel can do each step for you)
 - **[Introduction to Archipelago](./docs/json/user/introduction-to-archipelago.md)** — For readers new to Archipelago and randomizers
 - **[Documentation Portal](./docs/json/README.md)** — Main documentation index
 - **[Features Overview](./docs/json/features/README.md)** — All major features with links to detailed docs

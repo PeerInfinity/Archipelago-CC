@@ -4,7 +4,7 @@ The Archipelago JSON Export Tools project provides an advanced tracker for [Arch
 
 **New to Archipelago itself?** Start with the **[Introduction to Archipelago](./introduction-to-archipelago.md)**.
 
-**Want to see the highlights first?** Take the **[Guided Tour](./guided-tour.md)** — ten minutes in the live demo, nothing to install.
+**Want to see the highlights first?** Take the **[Guided Tour](./guided-tour.md)** — ten minutes in the live demo, nothing to install — or [start it inside the app](https://peerinfinity.github.io/Archipelago-CC/?game=procgen_maze&seed=1&tutorial=guided-tour), where the Tutorial panel can do each step for you.
 
 **Ready to get started?** See the **[Quick Start Guide](./quick-start.md)** for step-by-step instructions.
 

@@ -4,13 +4,13 @@ Ten minutes, nothing to install, no server to set up — everything below runs i
 
 One warning before you start: the app opens with a *lot* of panels. That's normal — it's a workbench, and this tour only uses a handful of tabs. Ignore the rest; nothing breaks if you never touch them. If you ever rearrange things into a mess, the **JSON** panel's *Reset Default Mode* button restores the default layout.
 
-This tour is also a tutorial inside the app: open the **Tutorial** panel and pick *Guided Tour* to have each step shown — or performed for you.
+This tour is also a tutorial inside the app: the link in Stop 1 opens it in the **Tutorial** panel, which shows each step as you go — or performs it for you (**Do it**, or **▶ Play** for the lot). Already in the app? Open the **Tutorial** tab and press *Start* on *Guided Tour*.
 
 ## Stop 1 — Watch a world play itself
 
 Open this link:
 
-**<https://peerinfinity.github.io/Archipelago-CC/?game=procgen_maze&seed=1>**
+**<https://peerinfinity.github.io/Archipelago-CC/?game=procgen_maze&seed=1&tutorial=guided-tour>**
 
 It's a small world that was *procedurally generated* by this project — three connected maze regions with a key, a locked door, and a Victory item, plus the machine-checkable logic that proves it's solvable.
 

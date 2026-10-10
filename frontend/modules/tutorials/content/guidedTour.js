@@ -11,6 +11,9 @@
 const LIVE = 'https://peerinfinity.github.io/Archipelago-CC/';
 const GAME = 'procgen_maze';
 const SEED = 1;
+const ID = 'guided-tour';
+/** The world's link, opening this tour in the Tutorial panel too (`?tutorial=`, tutorialUrl.js). */
+const START = `${LIVE}?game=${GAME}&seed=${SEED}&tutorial=${ID}`;
 
 const MAZE = { panel: 'mazeRoomPanel' };
 const BOT = { panel: 'playbackBotPanel' };
@@ -18,7 +21,7 @@ const PIPELINE = { panel: 'procgenPipelinePanel' };
 const botStatus = { ...BOT, selector: '.playback-bot .playback-bot-status' };
 
 export const GUIDED_TOUR = Object.freeze({
-    id: 'guided-tour',
+    id: ID,
     title: 'Guided Tour',
     doc: 'docs/json/user/guided-tour.md',
     intro: [
@@ -30,7 +33,7 @@ export const GUIDED_TOUR = Object.freeze({
         },
         {
             docOnly: true,
-            prose: 'This tour is also a tutorial inside the app: open the **Tutorial** panel and pick *Guided Tour* to have each step shown — or performed for you.',
+            prose: 'This tour is also a tutorial inside the app: the link in Stop 1 opens it in the **Tutorial** panel, which shows each step as you go — or performs it for you (**Do it**, or **▶ Play** for the lot). Already in the app? Open the **Tutorial** tab and press *Start* on *Guided Tour*.',
         },
     ],
     sections: [
@@ -39,7 +42,7 @@ export const GUIDED_TOUR = Object.freeze({
             title: 'Stop 1 — Watch a world play itself',
             blocks: [
                 { docOnly: true, prose: 'Open this link:' },
-                { docOnly: true, prose: `**<${LIVE}?game=${GAME}&seed=${SEED}>**` },
+                { docOnly: true, prose: `**<${START}>**` },
                 {
                     panelOnly: true,
                     step: {

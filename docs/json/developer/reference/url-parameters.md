@@ -28,6 +28,8 @@ Parameters are processed during application initialization and can override conf
 | `focusPanel` | Focus specific panel(s) | `?focusPanel=inventoryPanel,regionsPanel` |
 | `movePanel` | Move panel(s) to specific stack(s) | `?movePanel=loopsPanel:left-stack` |
 | `loadModule` | Load external module(s) by URL | `?loadModule=https://example.com/module/index.js` |
+| `tutorial` | Start a tutorial in the Tutorial panel | `?tutorial=guided-tour` |
+| `tutorialStep` | …at this step (1-based) | `?tutorial=guided-tour&tutorialStep=4` |
 
 ## Supported Parameters
 
@@ -244,6 +246,24 @@ These parameters control automatic connection to an Archipelago server.
 - Activation occurs after a 1.5 second delay to allow Golden Layout to initialize
 - If a panel is in a tabbed stack, it will be brought to the front
 - Each panel is activated in whichever stack contains it (order in the URL does not matter)
+
+#### `tutorial` / `tutorialStep`
+
+**Purpose:** Open the Tutorial panel on a tutorial when the app opens — the link a guide gives its readers.
+
+**Usage:** `?tutorial=<id>` or `?tutorial=<id>&tutorialStep=<n>`
+
+**Valid Values:** a tutorial's `id` (`frontend/modules/tutorials/content/index.js` lists them; today `guided-tour`). `tutorialStep` is 1-based, as the panel numbers its steps; missing, zero or not a number means step 1.
+
+**Examples:**
+- `?game=procgen_maze&seed=1&tutorial=guided-tour` — load the tour's world and start the Guided Tour (the link in the [Guided Tour](../../user/guided-tour.md) guide)
+- `?tutorial=guided-tour&tutorialStep=8` — start it at step 8
+
+**Details:**
+- The panel is brought forward and starts the tutorial as if *Start* had been pressed: on the desktop layout it moves into a stack of its own under the one it was in (see the [Tutorial panel guide](../../user/modules/tutorials.md)).
+- Read once per page load; closing and reopening the panel later does not restart it.
+- If the panel had been closed, it is reopened.
+- An unknown id leaves the panel on its list, with a note naming the id.
 
 #### `movePanel`
 
@@ -469,6 +489,7 @@ URL parameters are processed in multiple locations during initialization:
 | `frontend/app/mode/modeDataLoader.js` | `rules`, `game`, `seed`, `player` |
 | `frontend/app/initialization/index.js` | `mode`, `focusPanel`, `movePanel`, `loadModule`, `iframe`, `useWindow`, `metagame` |
 | `frontend/modules/client/index.js` | `autoConnect`, `server`, `playerName` |
+| `frontend/modules/tutorials/tutorialUrl.js` | `tutorial`, `tutorialStep` |
 | `frontend/modules/shared/adapterClient.js` | `windowId`, `iframeId`, `clientId`, `windowName`, `iframeName`, `heartbeatInterval`, `hostOrigin` |
 | `frontend/modules/tests/testLogic.js` | `mode`, `testOrderSeed` |
 

@@ -21,6 +21,14 @@ While a step is current, the next thing to press is outlined: the panel's tab, t
 
 On the mobile layout the panel is never split, and there is no cursor or outline; **Do it** and **Play** still work.
 
+## Opening a tutorial from a link
+
+Add `?tutorial=<id>` to the app's address to open it with that tutorial started — for example, this link loads the Guided Tour's world and starts the tour:
+
+**<https://peerinfinity.github.io/Archipelago-CC/?game=procgen_maze&seed=1&tutorial=guided-tour>**
+
+`&tutorialStep=<n>` starts at step *n* instead of the first. (The [URL parameters reference](../../developer/reference/url-parameters.md#tutorial--tutorialstep) has the details.)
+
 ## Tutorials
 
 - **Guided Tour** — watch a generated world play itself, see the logic underneath, and generate a world of your own. It is the same tour as the [Guided Tour guide](../guided-tour.md), which is generated from the tutorial.
