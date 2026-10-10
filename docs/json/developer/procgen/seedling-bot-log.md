@@ -15385,6 +15385,48 @@ still ships OFF: the flip is the user's licence, and its survey movers (158, 160
 Ranked residue: Turret's static sword arm (7 L62 legs), the Spear sub-order (14 darktrap rows), Bulb's bridge (L74),
 SandTrap's static sword arm, the drill in a mixed room (L91).
 
+### Seedling fidelity DARKTRAP2 — the L65 "refutation" was the spear's slash gate, not the light
+
+Wave 11 (model coverage). PUSHBLOCK recorded STATICLADDER's light arm on the game in L65 and read it as refuted:
+step 146's walk "lights a pole the game does not", step 148's leaves the game at t137. The user switched
+`darkTrapLight` back OFF. The report is `CC/docs/cloud-reports/seedling-fidelity-darktrap2.md`.
+
+**D1 — per tick on the game.** PUSHBLOCK's own two tapes, replayed with `botStatus().persistence_cleared` (a lit pole
+writes its tag cleared) and `botMobiles()`: the game lights `lightpole@128,168` at t50 (t133) and `darktrap@144,144`
+plays "die1" from t81 (t164) — the model's ticks exactly. The light death was right. What left the game was a SWORD
+press 3 and 5 ticks after the thrust: `set slashing` is gated by `spearing`, and `spearing` lasts the spear's
+animation (8 frames at 45 × 0.0333: `spearEnd` on update 6, so through press + 5). The model's gate read only the
+one-tick pending thrust, so it slashed, then DASHED (t53 → dy 1.88 at t54; t136 → dx −1.88 at t137). Without the
+dash, step 146's game player drifted into a pit at t99 and the respawn rebuilt the room before "die1" ended — no tag,
+PUSHBLOCK's "still SET". Its t230 press then fell inside a second fall, where `receiveInput` is false and the press is
+lost. With both presses gated the model reproduces both refuted tapes at every tick (541 and 233).
+
+**D2 — two switches, OFF** (`contactFidelity.spearingWindow`, `.fallBurnsPress`; `combatVerbs.SPEAR_ANIM_TICKS`).
+The slash gate (press and release) reads the window. A spear press inside a swing, a wand/fire window or its own
+window starts nothing. `slashInfo.spearingUntil` (present only ON) lets `previewWalk` and `slashPressForecast` age it.
+A press while a fall is in flight is lost, as `stepV2` already drops the move keys. The light arm's stance search now
+prefers a 2 px spear-on-core overlap on both axes (`LIGHT_ARM_CORE_MARGIN`): L63's (36,92) met the core by 0.5 px and
+the walk settled at (37.08,92.86). OFF is byte-identical (bounded 61 files, tapeRunner 589 rows md5 unchanged).
+
+**D3 — witnesses (p4f, headless, 0 px, every DarkTrap's presence and "die1" index):** the two refuted tapes
+unchanged; survey 148 re-solved (233 t) and 145's walk through the L63 arm (two darktraps die at t43); the window's
+end (press + 5 gated, + 6 open); a thrust inside a swing (swallowed, the darktrap lives); survey 146 re-solved (539 t,
+to L68) as evidence only, since it replays only on PUSHBLOCK's model. ON: tapeRunner 589 rows and the six producers
+byte-identical.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A refutation read off the wrong variable.** "The model removed a body the game did not" was true at the end of
+  the walk and false about the light: the game killed it too, then lost the kill to a pit respawn 70 ticks later.
+  Before you blame the subsystem a refutation names, find the first tick where the player diverges.
+- **A one-tick flag that the game holds for an animation.** `spearing` (and `slashing`, `wanding`, `firing`) is
+  cleared by a Spritemap callback, not at the hit. A model that keys it off the pending hit gates one tick and lets
+  through every press after that tick. The slash and the wand windows were already modelled this way; the spear's
+  was not.
+- **A hypothesis that the source makes look certain.** `get spearX():int` reads like truncation. On the game, a
+  thrust from x 35.45 reaches the pole's edge at 67, so the origin is not truncated. Measure a type coercion before
+  you model it (`darktrap2-l63-spear-origin-float`).
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
