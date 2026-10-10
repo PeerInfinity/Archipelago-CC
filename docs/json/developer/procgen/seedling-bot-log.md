@@ -14856,6 +14856,55 @@ dash planner's previews (283 s for 32 ticks) and the puncher kill-by-press's dwe
 - **Ask for existence when existence is the question.** `chooseBodyToRemove` paid for a string-pulled path 30 times
   to read one bit.
 
+### Seedling hammer-phase B1 — the strike approach in space-time
+
+⚖ The user (2026-10-07): *"fighting an enemy with a swinging hammer means that the target position we want to reach to
+attack from changes over time, and so there are multiple (position, time) targets to choose from"*; (2026-10-09)
+*"Yes"* to this slice: the approach to the next strike planned by the space-time search, behind its own flag. The
+report is `CC/docs/cloud-reports/seedling-hammer-b1.md`.
+
+**D1 — `HAMMER_APPROACH` (OFF by default; OFF is byte-identical: the base's identity block, six `--check`s and the
+45-row sweep, row for row).**
+- A tick with no strike in hand (and `derivePressKill`'s admission) first asks `deriveApproach`: `spaceTimeReach`'s
+  earliest mode from the run's state, the nine key sets pruned by the escape's predicate (the hammer test on the
+  forecast's rows, lethal floor, previewed deaths), to the first state from which the press is a real strike. The
+  goal is the live arm's in-reach test, now ONE function (`pressReadyAt`) shared by the executor, F1c's preview and
+  the goal, asked of the previewed state through `previewViewAt`; then `pressEscape`'s admission of that press, asked
+  lazily (the kernel now hands the goal the node's path). The executor holds the certificate's keys under `safeStep`
+  and its own live arm aims and presses on the certificate's tick; a certificate the run leaves is dropped.
+- Found by measuring, fixed in the design: a press of mine in flight makes `spinnerForecast` wrong (its tests re-aim
+  from the walk's points), so the certificate stands through the window's last test and the hazards are the hit-aware
+  forecast over those points (which tests are due is ASKED of the forecast — a test due at the search's own tick
+  counts); a body whose fade runs, or that the window in flight kills, has no strike.
+- Every negative hands the tick to the switch-OFF path. Budget cuts and whole-horizon negatives stand until the next
+  press (c3 787 s → 129 s); `exhausted` does not (latching it moved L18 r19 363 → 461 t).
+- Bounds (`HAMMER_APPROACH_BOUNDS`/`_MEASURED`): 8 px (4 px finds earlier strikes at some searches, not shorter
+  fights: L18 367.6 vs 369.0 t, the census rooms 1,121 vs 1,167 t, at 1.7× the time), `strikeHorizon`, 50,000
+  expansions (largest find 49,291 and largest whole-horizon search 49,749, both c4). Deadline site `hammer-approach`.
+
+**D2 — measured (flag ON).**
+- L18 sweep (`--approach --twice`): 45/45, 0 hits, every row the same twice; mean 367.6 t (434.3 escape alone),
+  40 residues shorter, 5 longer.
+- Census spinner rooms: (5,5) 269 → 213, **(2,2) 515 → 141**, (7,6) 210 → 180, (3,6) 160 → 165, (2,7) 264 → 153,
+  corridor 193 → 269 (the kill is as long; the walk after it is not). `r8-solve-18` 363 → 356, `r9-solve-18`
+  518 → 362 (the chain 10,931 → 10,775).
+- Game witness `hammer-b1-l18-approach40` (r40, 362 t vs 518): 0 hits on the game, `save.time` = model, 0 px.
+- ⛔ **STOP: seven certify records are solved OFF and refused ON** ("There is no step out.", 21–35 ticks after a
+  landing): c4 winding post-sword s4's tenth attempt and the skeleton solves of winding/branchy/loopy post-shield
+  s6, bushy post-shield s8, empty post-shield s22 and s32. Traced on the first: after the kill's landing the second
+  body's approach searches are exhausted and shrink to one expansion — the greedy earlier strikes left a state from
+  which nothing survives. Taking no strike on an exhausted search (an experiment, not landed) changed none of them.
+- Movers with the flag ON (not landed; the list is for the user): acceptance, c3/c6/c4, ENEMY, killgate s2/s5/s9,
+  the producers r8-l18 / r8-d2-chain / r9-campaign, the planners f1c-l18-phase and hammer-a-escape, and 22 unit rows
+  in 11 files. The JS arc's live 40–42 gap reopens at the shipped budget (the dashless 405/434/406 t ships; the
+  approach's work units push the full pass past the upgrade window).
+
+**Trap candidates.**
+1. **A forecast without the player's press in flight is not the run.** The escape always knew this; the approach
+   met it twice (a window in flight, and a test due at the search's own tick).
+2. **The earliest next strike is not the shortest fight**, and it is not a safe fight: a greedy search per strike
+   can end in a state from which the next body corners the player. Search the fight, not the strike.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
