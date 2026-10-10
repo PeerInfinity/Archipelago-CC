@@ -18,7 +18,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { ADOPT_WAIT_MS, createWasmPlayback, loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
-import { SOLVE_RETRY_BUDGET_FACTOR, TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
+import { SHIPPED_RNG, SOLVE_RETRY_BUDGET_FACTOR, TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
 import { ANYTIME_PASSES, solveAnytime, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK } from '../seedlingDemo/jsRuntimeSolver.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService, mountedRecordsOf } from '../seedlingDemo/wasmWalkTape.js';
@@ -1599,5 +1599,61 @@ describe('⛓ WALK IDENTITY — engine.expectArrival(): the Restart\'s start-hop
         e.engine.walkTo(CHEST);
         expect(e.engine.expectArrival()).toBe(false);
         expect(engineOver(A, { noGlue: true }).engine.expectArrival()).toBe(false);
+    });
+});
+
+/**
+ * ⛓ RNG-SPLIT STAGING — every live staging path stages the window's split as the SHIPPED tape declares it
+ * (`SHIPPED_RNG`: `botStart` writes `Rng.split` unconditionally), never `botStatus().rng.split` — the ECHO of the
+ * last tape's `Bot.rngSplit`. The recorded reads ARE the trap (every one echoes `split: false`), so a staging that
+ * read the echo stages false and every row below reds. The cosmetic state rides the same rule (a split `botStart`
+ * re-seeds it to the declared 0); the seed is the begin record's (the shipped tape writes none).
+ */
+describe('⛓ RNG-SPLIT STAGING — the arrival, hold, adoption and continuation stagings carry SHIPPED_RNG\'s split, never the echo', () => {
+    const rngOf = (staging) => ({ split: staging.rng.split, cosmetic: staging.rng.cosmetic });
+    const WANT = { split: SHIPPED_RNG.split, cosmetic: SHIPPED_RNG.cosmetic };
+    it('the fixture is the trap: every recorded botStatus echoes split false while the shipped tape declares true', () => {
+        expect(SHIPPED_RNG.split).toBe(true);
+        for (const a of RECORDED) expect(a.status.rng.split).toBe(false);
+    });
+    it('the ARRIVAL (the cold start\'s freeze): the solve\'s staging and the held room\'s', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(rngOf(e.service.seen[0].request.staging)).toEqual(WANT);
+        expect(e.service.seen[0].request.staging.rng.seed).toBe(A.seam.beginEntry['rng.gameplay']);
+        expect(rngOf(e.engine.room.staging)).toEqual(WANT);
+        for (const t of e.game.tapes) expect(t.rng).toMatchObject({ split: SHIPPED_RNG.split });
+    });
+    it('the CONTINUATION from the held room: its request\'s staging', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.dones[1].continuation).toBe(true);
+        expect(rngOf(e.service.seen[1].request.staging)).toEqual(WANT);
+    });
+    it('the HOLD of the arrival after an exit plan: the held room\'s staging', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 } });
+        e.game.gameTimeFromBegin = true;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 1);
+        e.game.pos = null;
+        e.game.be = { ...A.seam.beginEntry, 'save.time': A.seam.beginEntry['save.time'] - 7 };
+        runUntil(e, () => e.engine.status().phase === 'held');
+        expect(e.engine.stats.held).toBe(2);
+        expect(rngOf(e.engine.room.staging)).toEqual(WANT);
+    });
+    it('the ADOPTION of an unwatched room: the continuation request\'s staging (the adopted clock shift keeps it)', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 },
+            game: { unwatched: { elapsed: 200, mobiles: [{ cls: 'Player', x: 56, y: 56, vx: 0, vy: 0, anim: 'down-stand' }], patch: {} } } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(rngOf(e.service.seen[0].request.staging)).toEqual(WANT);
+        expect(rngOf(e.engine.room.staging)).toEqual(WANT);
     });
 });

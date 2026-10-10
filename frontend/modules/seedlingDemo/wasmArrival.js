@@ -58,6 +58,18 @@ export class WasmArrivalError extends Error {
 }
 const refuse = (why) => { throw new WasmArrivalError(why); };
 
+/**
+ * ⛓ RNG-SPLIT STAGING — the `rng` block every shipped tape declares: the
+ * gameplay stream and the FP LCG untouched (0 = not written), the COSMETIC
+ * split ON — the game's own tapeless default since p4f (3′b), which a
+ * `split: false` tape would switch off for its window (`wasmPlayback.js`
+ * header, the `rng` row). Defined HERE because the arrival staging stages its
+ * `split` and `cosmetic` (`ARRIVAL_FIELD_SOURCES['static.Rng.split']`,
+ * `stagingFromWasmArrival`); `wasmPlayback` re-exports it (it imports this
+ * module, so the other direction would be an import cycle).
+ */
+export const SHIPPED_RNG = Object.freeze({ seed: 0, split: true, cosmetic: 0, fp: 0 });
+
 /** The thirteen boolean item flags (`health` → `hitsMax` is the one int, its own row). */
 const ITEM_FLAGS = new Set(Object.values(ITEM_PROPERTIES).filter((p) => p.kind === 'boolean').map((p) => p.property));
 
@@ -70,6 +82,9 @@ const ITEM_FLAGS = new Set(Object.values(ITEM_PROPERTIES).filter((p) => p.kind =
  *   status      `botStatus` (ONE read per arrival: 14–16 ms, W0)
  *   state       the bridge's `readState` (the spawn — `botStatus` has the live player;
  *               ⛓ W5 the moonrock's `beam`/`rockSet`, declared in `games/seedling.json`)
+ *   shipped     what the SHIPPED tape will declare (`SHIPPED_RNG`) — a static the
+ *               tape's `botStart` WRITES before the window it plans runs, so the
+ *               value at the arrival is not the value the plan runs under
  *   unread      no read-only verb carries it (a W5 seam row)
  *   invariant   a calm-arrival invariant; a boot block declares none of them
  *   excluded    the signature's own exclusion
@@ -90,7 +105,13 @@ export const ARRIVAL_FIELD_SOURCES = Object.freeze({
     'save.levelPersistence': fromStatus((s) => s.persistence_cleared),
     'static.Game.cutscene': fromStatus((s) => s.cutscene),
     'static.Game.menuState': fromStatus((s) => s.menu_state),
-    'static.Rng.split': fromStatus((s) => s.rng?.split),
+    // ⛓ RNG-SPLIT STAGING — ⛔ NEVER `botStatus().rng.split`: that is the ECHO of
+    // the LAST tape's `Bot.rngSplit` (`Bot.as` status block: "`seed`/`split` are
+    // echoed from the tape"; `botReset` sets it false while the live `Rng.split`
+    // is true), so every live arrival staged an UNSPLIT window. The window the
+    // plan runs in is the shipped tape's, and `botStart` writes `Rng.split =
+    // rngSplit` UNCONDITIONALLY (`Bot.as:1893`), so its split IS the declared one.
+    'static.Rng.split': { from: 'shipped', read: () => SHIPPED_RNG.split },
     'static.Bot.pins': fromStatus((s) => s.pins),
     ...Object.fromEntries(SEAM_PREBUILD_FIELDS.map((f) => [f, { from: 'beginEntry' }])),
     // ⛓ W5 — the Moonrock's two save statics (`Main.as:159-160`), declared in
@@ -186,7 +207,7 @@ export function arrivalLatch({ seam, status, state }) {
     const flat = {};
     for (const row of SEAM_SIGNATURE) {
         const src = ARRIVAL_FIELD_SOURCES[row.field];
-        if (src.from === 'status' || src.from === 'state') {
+        if (src.from === 'status' || src.from === 'state' || src.from === 'shipped') {
             const v = src.read(status, state);
             if (v === undefined) {
                 refuse(`wasmArrival: \`${row.field}\` reads undefined from ${src.from === 'state'
@@ -270,6 +291,16 @@ export function stagingFromWasmArrival({ seam, status, state, record = undefined
         deleteSeamKey(seamBlock, spec.key);
         undeclared.push(spec.key);
     }
+    // ⛓ RNG-SPLIT STAGING — the window's rng, field by field (W1's witness rows):
+    //   split     SHIPPED_RNG.split (the latch row above — the tape's declaration).
+    //   cosmetic  SHIPPED_RNG.cosmetic: a split `botStart` writes `Rng.setCosmeticState(
+    //             rngCosmetic)` (`Bot.as:1895`, 0 = the build's boot seed), so the
+    //             window's cosmetic stream starts THERE, not at the begin record's
+    //             position `segmentBootFromLatch` carries for a split latch. Nothing
+    //             modelled reads it; it is staged as the game will run it.
+    //   seed, fp  the BEGIN record's (live, pre-build): the shipped tape declares 0 =
+    //             NOT written, so the live streams run on from where the build began.
+    const rng = { ...blocks.rng, split: SHIPPED_RNG.split, cosmetic: SHIPPED_RNG.cosmetic };
     const staging = {
         boot: blocks.boot,
         noclip: false,
@@ -282,7 +313,7 @@ export function stagingFromWasmArrival({ seam, status, state, record = undefined
         // In the format's own order, so the staging round-trips `parseTape` unchanged.
         pins: PIN_NAMES.filter((p) => pins.includes(p)),
         save: blocks.save,
-        rng: blocks.rng,
+        rng,
         seam: Object.keys(seamBlock).length > 0 ? seamBlock : null,
         // ⛓ SLOTS CONSUMER — the game's SLOT ARRAY (session state: acquisition order, `Inventory.items` is
         // static), staged so the model indexes the game's order (`tapeRunner.createRunForStaging`). No tape
@@ -330,20 +361,26 @@ export function arrivalStagingWitness(staging, { seam, status, state }) {
     // ⛓ W5 — the moonrock's two statics, off the bridge's readState (games/seedling.json declares them).
     row('seam.beam = readState.beam', state?.beam, staging.seam?.beam);
     row('seam.rock_set = readState.rockSet', state?.rockSet, staging.seam?.rock_set);
-    row('rng.split = botStatus.rng.split', status.rng?.split, staging.rng?.split);
+    /*
+     * ⛓ RNG-SPLIT STAGING — THE ECHO TRAP. This row read `rng.split =
+     * botStatus.rng.split` until the rng-split slice, and it was GREEN on every
+     * arrival while the staging was wrong: `botStatus.rng.split` is the last
+     * tape's `Bot.rngSplit` echoed back (false after `botReset`, while the live
+     * `Rng.split` is true — the fixture's own reads show it: `split: false` beside
+     * a `cosmetic_state` that moves between arrivals), and the staging READ it,
+     * so the witness compared the staging with its own source and agreed with
+     * the bug. The truth is the window the plan runs in: the shipped tape's
+     * declaration, which `botStart` writes unconditionally. The row compares the
+     * staging with THAT (an independent source), never with the echo.
+     */
+    row('rng.split = the shipped tape\'s declaration (SHIPPED_RNG.split; botStart writes it — never the botStatus echo)',
+        SHIPPED_RNG.split, staging.rng?.split);
     row('rng.seed = begin rng.gameplay', be['rng.gameplay'], staging.rng?.seed);
-    // ⛓ QUALIFIED ON THE STAGED SPLIT, as the seam row is (`r7Acceptance`'s
-    // `rng.cosmetic`, qualifier `static.Rng.split`). An UNSPLIT continuation never
-    // reads the cosmetic generator, so its state is N/A there — and since p4f (3′b,
-    // the split ON by default for tapeless play) a live arrival's begin carries a
-    // non-zero cosmetic position that `segmentBootFromLatch` rightly stages as 0.
-    if (staging.rng?.split === false) {
-        rows.push({ name: 'rng.cosmetic = begin rng.cosmetic', ok: staging.rng?.cosmetic === 0,
-            detail: `N/A — the staged window is unsplit, so the cosmetic generator is not part of it `
-                + `(begin carries ${JSON.stringify(be['rng.cosmetic'])}; staged ${JSON.stringify(staging.rng?.cosmetic)})` });
-    } else {
-        row('rng.cosmetic = begin rng.cosmetic', be['rng.cosmetic'], staging.rng?.cosmetic);
-    }
+    // ⛓ The same trap's second field: a split `botStart` RE-SEEDS the cosmetic
+    // stream to the declared state (0 = the build's boot seed, `Bot.as:1895`), so
+    // the begin record's cosmetic position is not the window's either.
+    row('rng.cosmetic = the shipped tape\'s declaration (SHIPPED_RNG.cosmetic; a split botStart re-seeds it)',
+        SHIPPED_RNG.cosmetic, staging.rng?.cosmetic);
     row('rng.fp = begin fp.seed', be['fp.seed'], staging.rng?.fp);
     rows.push({ name: 'seam.time = begin save.time − BOOT_PRESWAP_FRAMES (segmentBootFromLatch\'s convention)',
         ok: Number.isFinite(staging.seam?.time) && staging.seam.time < be['save.time'],

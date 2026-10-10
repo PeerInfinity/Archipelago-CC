@@ -24,8 +24,9 @@ import { Worker as NodeWorker } from 'node:worker_threads';
 
 import {
     ARRIVAL_FIELD_SOURCES, UNREAD_FIELDS, UNREAD_MODELLED_READERS, arrivalLatch, arrivalSolveRequest, arrivalSolverGoal,
-    arrivalStagingWitness, assertArrivalCoverage, isArrival, stagingFromWasmArrival,
+    SHIPPED_RNG, arrivalStagingWitness, assertArrivalCoverage, isArrival, stagingFromWasmArrival,
 } from './wasmArrival.js';
+import { SHIPPED_RNG as PLAYBACK_SHIPPED_RNG } from './wasmPlayback.js';
 import { SEAM_SIGNATURE } from './r7Acceptance.js';
 import { createInPlaceSolveService } from './jsRuntimeSolver.js';
 import { createWorkerSolveService } from './jsRuntimeSolveService.js';
@@ -293,6 +294,40 @@ describe('the solve — a fresh boot at the arrival, no prefix, no play', () => 
             service.dispose();
         }
     }, 90000);
+});
+
+/**
+ * ⛓ RNG-SPLIT STAGING — THE ECHO TRAP. `botStatus().rng.split` is the last tape's `Bot.rngSplit` echoed back (false
+ * after `botReset`, while the live `Rng.split` is true), and the W1 witness row used to compare the staging with
+ * that same echo — so the staging and its witness agreed with the bug on every arrival. The window the plan runs in
+ * is the SHIPPED tape's (`botStart` writes `Rng.split` unconditionally), so the split is staged from `SHIPPED_RNG`
+ * and the row is pointed there; the fixture's reads all carry the echo (`split: false`), which keeps it honest.
+ */
+describe('⛓ RNG-SPLIT STAGING — the split is the shipped tape\'s declaration, never the botStatus echo', () => {
+    it('the source is `shipped` (SHIPPED_RNG — the one wasmPlayback ships), not botStatus', () => {
+        expect(ARRIVAL_FIELD_SOURCES['static.Rng.split'].from).toBe('shipped');
+        expect(PLAYBACK_SHIPPED_RNG).toBe(SHIPPED_RNG);
+        expect(SHIPPED_RNG).toEqual({ seed: 0, split: true, cosmetic: 0, fp: 0 });
+    });
+    for (const [name, a] of Object.entries({ A, B0, B86, C })) {
+        it(`${name}: botStatus echoes split false; the staging declares the shipped split + cosmetic, the begin record's seed + fp`, () => {
+            expect(a.status.rng.split).toBe(false);
+            const { staging } = stage(a);
+            expect(staging.rng).toEqual({ seed: a.seam.beginEntry['rng.gameplay'], split: SHIPPED_RNG.split,
+                cosmetic: SHIPPED_RNG.cosmetic, fp: a.seam.beginEntry['fp.seed'] });
+            expect(arrivalLatch(reads(a)).envelope.seam['static.Rng.split']).toBe(SHIPPED_RNG.split);
+        });
+    }
+    it('the W1 witness reds an echo-staged split, and a begin-position cosmetic (each its own row)', () => {
+        const { staging } = stage(A);
+        staging.rng.split = A.status.rng.split;
+        expect(arrivalStagingWitness(staging, reads(A)).filter((r) => !r.ok).map((r) => r.name))
+            .toEqual([expect.stringMatching(/^rng\.split = the shipped tape's declaration/)]);
+        const { staging: s2 } = stage(A);
+        s2.rng.cosmetic = A.seam.beginEntry['rng.cosmetic'];
+        expect(arrivalStagingWitness(s2, reads(A)).filter((r) => !r.ok).map((r) => r.name))
+            .toEqual([expect.stringMatching(/^rng\.cosmetic = the shipped tape's declaration/)]);
+    });
 });
 
 describe('arrivalLatch', () => {

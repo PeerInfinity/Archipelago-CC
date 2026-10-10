@@ -31,6 +31,7 @@ import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService } from '../seedlingDemo/wasmWalkTape.js';
 import { appendInventorySlots } from '../seedlingDemo/tapeFormat.js';
 import { createRunForStaging } from '../seedlingDemo/tapeRunner.js';
+import { SHIPPED_RNG } from '../seedlingDemo/wasmPlayback.js';
 import { atlasLevelSource } from '../seedlingDemo/levelSource.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -561,5 +562,39 @@ describe('⛓ KEY DELIVERY — an AP key reaches the game: the gate, the staging
         expect(e.seen.at(-1).request.staging.save.keys).toEqual([0]);
         expect(e.game.tapes.at(-1).save.keys).toEqual([0]);
         expect(e.game.keys[0]).toBe(true);
+    });
+});
+
+/** ⛓ RNG-SPLIT STAGING — the delivery gate's re-stages keep the SHIPPED split (the recorded reads echo false). */
+describe('⛓ RNG-SPLIT STAGING — the mid-room replan and the held-room delivery re-stage carry SHIPPED_RNG\'s split, never the echo', () => {
+    const rngOf = (staging) => ({ split: staging.rng.split, cosmetic: staging.rng.cosmetic });
+    const WANT = { split: SHIPPED_RNG.split, cosmetic: SHIPPED_RNG.cosmetic };
+    it('the MID-ROOM replan (a delivery while a plan plays): the re-staged continuation', () => {
+        expect(A.status.rng.split).toBe(false);
+        const e = setup();
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 24);
+        e.delivery.receive('Progressive Sword');
+        e.delivery.push();
+        e.runUntil(() => e.engine.stats.deliveries.length > 0);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.deliveries[0].outcome).toBe('replanned');
+        expect(e.seen[1].request.staging.seam.items.hasSword).toBe(true);
+        expect(rngOf(e.seen[1].request.staging)).toEqual(WANT);
+    });
+    it('the DELIVERY-GATE re-stage into the held room: the next goal\'s staging', () => {
+        const e = setup();
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        e.delivery.receive('Progressive Shield');
+        e.delivery.push();
+        e.timers.run(200);
+        expect(e.engine.stats.deliveries[0]).toMatchObject({ phase: 'held', outcome: 'staged' });
+        e.engine.walkTo(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.seen.at(-1).request.staging.seam.items.hasShield).toBe(true);
+        expect(rngOf(e.seen.at(-1).request.staging)).toEqual(WANT);
     });
 });

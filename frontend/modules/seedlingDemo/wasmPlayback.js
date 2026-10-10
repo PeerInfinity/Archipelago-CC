@@ -67,7 +67,7 @@
 
 import { buildStagedTape } from './botDriverV1.js';
 import { gameVisibleTape, holdingWindowTape, parseTape } from './tapeFormat.js';
-import { UNREAD_MODELLED_READERS } from './wasmArrival.js';
+import { SHIPPED_RNG, UNREAD_MODELLED_READERS } from './wasmArrival.js';
 import { PUZZLEMENT_HAZARDS } from './combat.js';
 import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
 import { ENTITY_CLASSES } from './levelWorld.js';
@@ -470,12 +470,10 @@ const sortClears = (list) => [...(list ?? [])].map((c) => ({ level: c.level, tag
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 /**
- * The `rng` block every shipped tape declares: the gameplay stream and the FP
- * LCG untouched (0 = not written), the COSMETIC split ON — the game's own
- * tapeless default since p4f (3′b), which a `split: false` tape would switch
- * off for its window (see the header's `rng` row).
+ * The `rng` block every shipped tape declares — defined in `wasmArrival.js`
+ * (whose arrival staging STAGES its `split`/`cosmetic`) and re-exported here.
  */
-export const SHIPPED_RNG = Object.freeze({ seed: 0, split: true, cosmetic: 0, fp: 0 });
+export { SHIPPED_RNG };
 
 /**
  * ⛓ WASM EQUIPS — a plan's slot selections (`plan.equipsAt`, plan index →
