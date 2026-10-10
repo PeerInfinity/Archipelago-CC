@@ -22,6 +22,8 @@
  *   … --tape=<fixture name>   a committed tape
  *   … --witness=<name>        re-witness a recorded `fixtures/darktrap-witness/<name>.json` (its embedded tape)
  *   … --out=<file.json>       write every sample with both readings
+ *   … --fidelity=<k1,k2>     ALSO turn these `CONTACT_FIDELITY` switches ON for the model run (fidelity DARKTRAP2:
+ *                             `spearingWindow,fallBurnsPress,spearOriginInt`); a recorded witness names them
  *   … --record --name=<name>  write the TAPE and the GAME's DarkTrap samples to `fixtures/darktrap-witness/<name>.json`,
  *                             which `fidelityDarkTrap.test.js` replays against the model in node — only on a PASS.
  *                             ⚠ The tape is EMBEDDED, not added to `fixtures/tapes`: the roster replays every tape
@@ -54,6 +56,7 @@ async function main() {
         process.exit(2);
     }
     const OUT = arg('out');
+    const EXTRA = (arg('fidelity') ?? '').split(',').map((k) => k.trim()).filter(Boolean);
     const RECORD = process.argv.includes('--record');
     const NAME = arg('name') ?? TAPE;
     if (RECORD && !NAME) {
@@ -81,7 +84,7 @@ async function main() {
 
     // ── the MODEL, the switch ON: the darktraps after each tick (index 0 = boot) ──
     const col = [];
-    withContactFidelity({ darkTrapLight: true }, () => {
+    withContactFidelity({ darkTrapLight: true, ...Object.fromEntries(EXTRA.map((k) => [k, true])) }, () => {
         let run = null;
         const st = createTapeStepper(tape, {
             levelSource: atlasLevelSource(),
@@ -269,6 +272,7 @@ async function main() {
                 page: PAGE_NAME,
                 recordedBy: 'scripts/procgen/probe-seedling-darktrap-mobiles.mjs --record',
                 note: 'the GAME\'s DarkTrap rows (`botMobiles()`) at each sampled tick of the boot level, in row order',
+                ...(EXTRA.length > 0 ? { fidelity: EXTRA } : {}),
                 samples: samples.filter(inBoot).map((f) => ({
                     t: tickOf(f),
                     player: { x: playerOf(f).x, y: playerOf(f).y },
