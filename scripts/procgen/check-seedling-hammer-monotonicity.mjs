@@ -161,8 +161,10 @@ async function main() {
 
     let rows;
     if (jobs > 1 && !shard) {
+        // ⚠ one temp dir for the shards' parts, removed below (a re-used capture has none of its own)
+        tmp = tmp ?? mkdtempSync(join(tmpdir(), 'b2-mono-'));
         const parts = await Promise.all(Array.from({ length: jobs }, (_, k) => new Promise((res, rej) => {
-            const part = join(tmp ?? mkdtempSync(join(tmpdir(), 'b2-mono-')), `shard-${k}.json`);
+            const part = join(tmp, `shard-${k}.json`);
             const child = spawn(process.execPath, [fileURLToPath(import.meta.url), `--records=${file}`,
                 `--modes=${modes.join(',')}`, `--shard=${k}/${jobs}`, `--json=${part}`],
             { cwd: REPO, env: process.env, stdio: ['ignore', 'ignore', 'inherit'] });
@@ -202,7 +204,7 @@ async function main() {
             + `seconds ${JSON.stringify(secs)}; replay mismatches ${replay}; ⛔ solved→refused ${bad}`);
     }
     if (jsonOut) writeFileSync(jsonOut, `${JSON.stringify({ row, path, modes, rows }, null, 1)}\n`);
-    if (tmp && !keep) rmSync(tmp, { recursive: true, force: true });
+    if (tmp) rmSync(tmp, { recursive: true, force: true });
     if (bad > 0) process.exit(1);
 }
 
