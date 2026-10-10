@@ -15040,6 +15040,52 @@ producer `--check` or identity row moved.
 - **A gate can be dead by arithmetic.** `hitPlayer`'s "die" test never decides for this class: every kill sets a
   30-tick i-frame and the anim lasts 13 (mutant M5 is an equivalent mutant).
 
+### Seedling fidelity GHOSTMOTION — the ghost sword's dash re-arms on its own clock
+
+⚖ The user (2026-10-05): *"The first priority is to expand the model to include everything in the game."* Wave 10's
+GHOSTMOTION slice. The JS arc's sweep-3 found 18 late-game ghost-sword legs (L102, L109, L111, L113) that the game left
+tick-exact at t 9 or t 29, by 2.00 px on an axis or 1.41 on a diagonal. The report is
+`CC/docs/cloud-reports/seedling-fidelity-ghostmotion.md`.
+
+**What the game does (D1).** A dash re-arms only when the animation it played ends: `slashEnd()` is the swing sprite's
+callback, it runs from `sprites()` below the press, and it is what clears `slashDashed`. The animation is `getSword()`'s.
+The ghost sword's "slash" is 7 frames at 30 and its "slashnarrow" 4 at 20, so 7 and 6 ticks; the sword's are 5 and 4.
+The model released every swing on the sword's clock. So the sword's chain (presses 0 · 2 · 8 · 14, `DASH_CHAIN_PATTERN`)
+dashed at t 8 in the model and was swallowed at t 8 in the game: the t 2 ghost dash ends at t 8, below the press. One
+`knockback(2, …)` along travel is the 2.00 px; t 9 and t 29 are the t 8 and t 28 presses of the first two windows.
+Sweep leg 760 (L102) replayed here: model x 204.6, game 202.6, at t 9. Nothing else about motion differs between the
+swords: no movement arm reads `slashing`.
+
+**The model (D2).** `ghostSword.slashEndTicksFor(anim, weapon)` behind `GHOSTSWORD_MOTION` (ON):
+- `levelRun`'s release and `solverBot.previewWalk`'s planned-dash release read it;
+- `combatVerbs.deriveDashChain(animTicks)` derives both chains (the sword's 2 · 8 · 14 unchanged, the ghost's 2 · 10 · 18);
+- `dashPrefixesFor(mode, {weapon})` gives `planSwordDash` the ghost chain.
+
+Every committed tape replays unchanged with it ON; no producer `--check` moved.
+
+**Witnesses, on the game (p4f, headless), reproduced at 0 px on every tick:**
+- `ghostmotion-l102-axis`: leg 760's own presses, 0/2/8/14; the t 8 press is swallowed. OFF is +2.00 at t 9.
+- `ghostmotion-l102-diag`: open floor, presses 0/2/9/15. Gap 7 dashes and gap 6 is swallowed, which pins the dash clock
+  at exactly 6. OFF is (+1.41, +1.41) at t 16.
+
+The game's `Bot.slashTests` equals the model's at all 25 ticks of each.
+
+**Moved, measured.**
+- Sweep legs, on the game: the 18 move from diverged to done with 0 divergences. The walker's leg 779 crosses (sweep-3:
+  4 divergences). Leg 620 (L73) is a different arm (no ghost sword; 2.38 px off travel) and is unchanged.
+- Survey steps 207–220: verdicts unchanged. Six solved plans grow (212: 135 → 158), because the old ones relied on dashes
+  the game swallows. OFF reproduces CI's rows exactly.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A weapon's window has two clocks, and they come from one animation.** Wave 9 gave the ghost swing its seven TESTS
+  but left its RELEASE on the sword's table. Both are the same `play(anim)`, so a model that reads the length in two
+  places can disagree with itself.
+- **A swallowed press is invisible to a hit-test witness.** The press arms already matched the game's `Bot.slashTests`
+  on every wave-9 witness. This defect needs two presses within the window, which only a dash chain makes.
+- **One boundary witness is half a pin.** A gap-6 swallow proves the clock is ≥ 6, and a gap-7 dash proves it is ≤ 6.
+  Mutant M3 (6 → 7) is green on the axis tape alone.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
