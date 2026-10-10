@@ -61,6 +61,10 @@ const fingerprint = (run) => JSON.stringify({
 const ADMISSION = JSON.parse(readFileSync(new URL('./fixtures/hammer-b3-admission-c3.json', import.meta.url), 'utf8'));
 const solveAdmission = () => solve(ADMISSION.levelRecord, ADMISSION.staging, ADMISSION.goals, ADMISSION.budget,
     ADMISSION.opts);
+const KILLLOCK = JSON.parse(readFileSync(new URL('./fixtures/hammer-b3-admission-c4-killlock.json', import.meta.url),
+    'utf8'));
+const solveKillLock = () => solve(KILLLOCK.levelRecord, KILLLOCK.staging, KILLLOCK.goals, KILLLOCK.budget,
+    KILLLOCK.opts);
 
 describe('hammer-phase B3 — the replay rewind', () => {
     it('⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte', async () => {
@@ -185,5 +189,17 @@ describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
         expect(on.ticks).toBe(withHammerFight(true, solveAdmission).ticks);
         expect(on.fightFallbacks).toEqual([{ t: 0, how: 'admission', refused: 'PRESS_ADMISSION',
             bodies: ['spinner@16,64'], verdict: 'solved', ticks: 55, fights: 1 }]);
+    });
+
+    it('⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged', () => {
+        const off = solveKillLock();
+        expect(off.verdict).toBe('REFUSED');
+        expect(off.reasonText).toMatch(/the kill work order has no weapon — no \(cell, tick\) in level 900/);
+        expect(off.reasonText).not.toMatch(/HAMMER_FIGHT_FALLBACK/);
+        const on = withHammerFightFallback(true, solveKillLock);
+        expect(on.verdict).toBe('SOLVED');
+        expect(on.ticks).toBe(withHammerFight(true, solveKillLock).ticks);
+        expect(on.fightFallbacks).toEqual([{ t: 0, how: 'admission', refused: 'PRESS_ADMISSION',
+            bodies: ['spinner@80,80', 'spinner@80,112'], verdict: 'solved', ticks: 569, fights: 1 }]);
     });
 });
