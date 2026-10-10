@@ -1,0 +1,68 @@
+{
+ "note": "rows only, trimmed from survey-seedling-route.mjs --through=end --route=full --only=… --out (node, this tree); switches in the file name",
+ "rows": [
+  {
+   "step": 160,
+   "level": 74,
+   "verdict": "REFUSED",
+   "ticks": null,
+   "family": "LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons",
+   "refusal": "solverBot(survey-step-160) collect (48,32) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (39.3,55.2) — enemy:lavarunner@24,56 (a static \"Enemy\" body at its placement (this room is stepped, so this class is unbridged and does not move), priced \"mover\" by `contactPricing`) — and every rung of ⚖ §11.8a's order refused:\n  avoid: the danger-forbidden corridor STILL probes dangerous at (39.3,55.2) — enemy:lavarunner@24,56 (a static \"Enemy\" body at its placement (this room is stepped, so this class is unbridged and does not move), priced \"mover\" by `contactPricing`). ⚠ The AVOID rung routes around RECTS and the probe asks the whole union, which includes the point tests a rect cannot carry (a disc hazard); that gap is why the ladder has a second rung.\n  time: the aim is 97 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [enemy:lavarunner@24,56] and this room's live roster is [empty]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and ⛔ a static \"Enemy\" body's own arrow death is REFUSED by name (§11.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)",
+   "goals": [
+    {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 48,
+      "y": 32
+     },
+     "why": "Level 074 - Darkshield (sphere 7.4) → Progressive Shield",
+     "location": "Level 074 - Darkshield"
+    },
+    {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 16,
+      "y": 144
+     },
+     "why": "teleporter@16,144 → L75"
+    }
+   ]
+  },
+  {
+   "step": 164,
+   "level": 77,
+   "verdict": "REFUSED",
+   "ticks": null,
+   "family": "VERB-MISSING — the selected obstacle has NO strategy row at all",
+   "refusal": "solverBot(survey-step-164): no corridor for goal reach-exit toward (104,312) in level 77. Obstacle: proximity-hazard:lavatrap (lavatrap@96,192). No strategy row exists for this obstacle. Planner said: no walkable tile path in level 77 from tile (1,2) to (6,19). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+   "goals": [
+    {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 96,
+      "y": 304
+     },
+     "why": "teleporter@96,304 → L78"
+    }
+   ]
+  },
+  {
+   "step": 168,
+   "level": 77,
+   "verdict": "SOLVED",
+   "ticks": 446,
+   "family": null,
+   "refusal": null,
+   "goals": [
+    {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 0,
+      "y": 32
+     },
+     "why": "teleporter@0,32 → L76"
+    }
+   ]
+  }
+ ]
+}
