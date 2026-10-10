@@ -528,7 +528,11 @@ async function main() {
                     const a = s.atlas;
                     return { arm: a?.arm ?? null, entries: a?.entries?.length ?? null, refused: (a?.refused ?? []).map((r) => r.location),
                         events: (a?.events ?? []).map((e) => e.location),
-                        types: [...new Set((a?.entries ?? []).map((e) => e.entityType))], links: a?.links?.length ?? null,
+                        // ⛓ ENCOUNTERS — the two encounter entries are bound too (their own kind): the pickups' types apart
+                        types: [...new Set((a?.entries ?? []).filter((e) => e.kind !== 'encounter').map((e) => e.entityType))],
+                        encounters: (a?.entries ?? []).filter((e) => e.kind === 'encounter')
+                            .map((e) => `${e.location}@${e.at?.x},${e.at?.y}->${e.drop?.item}`).sort(),
+                        links: a?.links?.length ?? null,
                         delivered: !!s.wasm?.deliveredSet, deliveredRooms: s.wasm?.deliveredSet?.rooms?.length ?? null,
                         apRefusal: s.apRefusal };
                 });
@@ -541,6 +545,9 @@ async function main() {
                 check(`${S}: the vanilla arm's map is BOUND — every location a goal, a named refusal or a game-state event, goals at the delivered entity`,
                     map.arm === 'vanilla' && map.entries + map.refused.length + map.events.length === locCount && map.entries > 0
                         && map.types.length === 1 && JSON.stringify([...map.events].sort()) === JSON.stringify(gameState)
+                        // ⛓ ENCOUNTERS — both bound, each at its atlas tile with the game's own drop
+                        && JSON.stringify(map.encounters) === JSON.stringify(['Level 012 - Witch@416,384->Progressive Sword',
+                            'Level 032 - Bob Boss@64,128->Fire'])
                         && map.delivered && map.apRefusal === null, JSON.stringify(map));
 
                 if (S === 'D') await runDirected();
