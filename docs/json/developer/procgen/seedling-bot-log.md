@@ -15136,6 +15136,48 @@ byte-identical (1294 t, dashless 1566 t).
   tick off the model's column (`bobsoldier2-l30-torch`, t225) while the differential (which skips fade frames) matched
   all 461 observations. A calibration miss on a ceremony tick is the instrument's, not the model's.
 
+### Seedling fidelity STATICLADDER — a darktrap dies to a lit pole, and the combat ladder can light one
+
+Wave 10 (model coverage). Re-measure 2 left 13 survey steps (CI 38010117701) and 43 JS-arc sweep-3 legs (CI
+38010249317) on *"the combat ladder is EXHAUSTED"*. The report is `CC/docs/cloud-reports/seedling-fidelity-staticladder.md`.
+
+**D1 — sub-classified by the blocking body** (`CC/docs/cloud-reports/seedling-fidelity-staticladder-evidence/`). F1
+DarkTrap 3 + 15 (weapon-immune, its light death unmodelled); F2 unbridged movers and a shooter priced at their `.oel`
+placement — Bulb, LavaRunner, Drill, Turret — 2 + 13; F3 SandTrap with no static sword arm 1 + 2; F4 bridged chasers
+1 + 7; F5 other arcs' rows 6 + 6. Step 210 (L107's crusher) is a live trigger-lane timing gap on a hold approach,
+CRUSHER_BAIT's, not a static one. 14 of the 18 F1 rows hold neither the Spear nor the ghost sword: the route reaches
+L62/L63 before the Ghost Spear.
+
+**D2 — `contactFidelity.darkTrapLight` (OFF).** `DarkTrap.hit()` is empty; its death is its own `update()`: a `Light`
+that is not the player's, not `darkLight`, within `radiusMin` starts it dying, and from that tick `super.update()` —
+`hitPlayer` with it — never runs again (harmless), then 30 ticks of `deathCounter`, "die1" (14 frames, rate 10), the
+removal and `SandTrap.removed()`'s tag. Every failing darktrap sits on a one-tile ghost bridge beside a `LightPole`
+(`radiusMin` 28; lit by a `"Spear"` hit only). `LightPole.render` moves the light: `y = startY - originY +
+2·sin(2π·(Game.time % 45)/45)`, so at L101 (27.2–30.5 px) the death tick is the clock's. `levelRun.stepDarkTrapsNow`
+(above the player, reading the previous tick's pole), the contact gate, F4's removal path, `run.darkTraps`; the danger
+map stops pricing a dying one; the kill rung's no-target branch gains the LIGHT arm (`deriveLightPole`: a lit pole is
+waited out, an unlit one gets a Spear stance over its bob-invariant core, then walk, face tap, equip, one `primary`
+tick, wait for `startDying`, restore the slot). New instrument `probe-seedling-darktrap-mobiles.mjs`.
+
+**Witnesses (p4f, headless, 0 px, player exact, 0 hits):** survey step 115's solved walk ("die1" t169, removed t211;
+`startDying` t139) and an L101 tape whose death waits for the bob (`startDying` t38, "die1" t68, removed t110) —
+`fixtures/darktrap-witness/`, `fidelityDarkTrap.test.js`. The tapes are embedded, not roster tapes: the roster replays
+under the default model, where the switch is OFF.
+
+**Moved (switch ON):** survey step 115 REFUSED → SOLVED 290 t; 113 and 208 refuse naming the Spear / the ghost-sword
+swing; every other step in a darktrap level is byte-identical. tapeRunner 575 pairs and the six producer `--check`s
+are unchanged; the flip waits on the user's licence.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A light that moves in `render()`.** `LightPole`'s light is placed by its render, after `Game.update`'s clock tick,
+  and an `update()` elsewhere reads it a frame later. A model that placed it at the constructor point is right at L62
+  and L63 (16–24 px) and wrong at L101, where the bob decides; only the L101 witness separates the two (mutant M1).
+- **A census rect that is a union over a bob.** The pole's hitbox moves 2 px with the render, and the census rect
+  covers both ends; a press aimed at the union's edge misses at some phases. The arm aims at the core.
+- **A lattice that lets a stance through a solid.** The 8 px fallback accepted (136,168), whose player box overlaps
+  L62's planttorch; the walk stalled 400 ticks against it. A stance needs its own "can the box stand here" test.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
