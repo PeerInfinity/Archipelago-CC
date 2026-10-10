@@ -473,6 +473,14 @@ export function createTapeStepper(tape, opts = {}) {
     const {
         terrainStateAt = groundTerrain, onTick, levelSource, scratchPersistence = false,
         /**
+         * ⛓⛓⛓ SEEDLING FIDELITY K2PREP D2 — the GAME's recorded camera, `fn(tick) → {x, y} | null` (the
+         * `FP.camera` its frame `tick` left; `probe-seedling-chaser-mobiles.mjs --camera`). An `opts` field like
+         * `run` below — no tape, preset or paste can spell it — and absent on every pre-existing call, so the
+         * replay is byte-identical without it. The run reads it ONLY where `Game.shake`'s band is uncertain
+         * (`levelRun.witnessCamera`); the solver never passes one (⚖ never model the cosmetic RNG).
+         */
+        cameraWitness = null,
+        /**
          * ⛓⛓⛓ R9 SLICE 2 — **THE RESUME FACE**, and it is ONE option.
          *
          * ⚖ Ruling 10 (user, 2026-08-20): the second tape continues from the
@@ -522,6 +530,10 @@ export function createTapeStepper(tape, opts = {}) {
     // IS a staging block plus inputs, so it is passed straight through.
     const run = resumeRun
         ?? (levelSource ? createRunForStaging(t, levelSource, { scratchPersistence }) : null);
+    if (cameraWitness) {
+        if (!run) throw new Error('runTape: a cameraWitness needs a run (pass a levelSource)');
+        run.witnessCamera(cameraWitness);
+    }
     /**
      * ⛓⛓ R9 SLICE L16 — THE ONE STATE A RESUME DOES ADOPT: a clock the run
      * never knew. A chain from the true start boots with no `save.time`, so
