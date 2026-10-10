@@ -1932,6 +1932,15 @@ export const ENCOUNTER_EXECUTORS = Object.freeze({
 const MAX_STRATEGIES_PER_GOAL = 4;
 
 /**
+ * ⛓ SEEDLING FIDELITY L12KEYLINE — when the frontier's nearest door is a
+ * keylock SEALED BEHIND ITSELF (shut state, flag held, key line on the far
+ * side), resolve the next actionable door on the frontier instead of
+ * refusing (`identifyAndSelect`'s `nextPastSealedLock`). Asked only where the
+ * old answer was that refusal.
+ */
+export const SEALED_LOCK_NEXT_ON_FRONTIER = true;
+
+/**
  * ⛓ SEEDLING FIDELITY CLEARTAG — how long `clear-tag` waits, after its verb
  * returned, for the flag to land in the run's `earnedClears`. A POLICY bound:
  * the verbs finish on the world (a rock gone, a lock open) and a `Lock`'s
@@ -16094,6 +16103,71 @@ function solveSegmentUnder({
      * a thing a strategy can act on (L4's own vocabulary: the block IS the
      * door). Nearest-to-aim wins; the rest ride in the message.
      */
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY L12KEYLINE — **A LOCK SEALED BEHIND ITSELF IS A
+     * WALL FOR THE FRONTIER'S PICK, AND THE NEXT DOOR IS TRIED.**
+     *
+     * `deriveKeylockStance` refuses SEALED BEHIND ITSELF when the key line is on
+     * the lock's far side and the save holds its flag (the SHUT state: from
+     * this side it does not open). That is a fact about ONE door, and the
+     * frontier ranks doors by distance to the aim: L12's route steps 134/175
+     * name `bosslock@416,240` first (d ≈ 415 px) and never ask the
+     * `burnabletree@480,640` behind it (d ≈ 545), whose burn plus Progressive
+     * Swim IS the way round (AP's own region chain r0c37 →[Fire]→ r42c29
+     * →[Swim]→ r0c19; the corridor plans with the tree hypothesised gone).
+     *
+     * ⇒ when the chosen door refuses SEALED, the rest of the actionable frontier
+     * is resolved in its own order; the first that binds is this round's order,
+     * carrying a `rejected` row that names the sealed lock and its flag. A
+     * candidate that itself refuses is passed over the same way (it is not
+     * this round's order either). ⛔ If none binds, the SEALED refusal is
+     * re-thrown UNCHANGED, so every room with no other door reads exactly as
+     * it did. Asked only on that throw path: a plan that solved never reaches it.
+     *
+     * ⛔ AND ONLY AFTER FRONTIER3's FINER ASK. The SEALED throw used to reach
+     * `walkTo`'s catch, which asks the 8 px lattice before the refusal stands;
+     * a fine corridor that walked there still walks. So `identifyAndSelect`
+     * only REGISTERS the next-door question against the refusal
+     * (`nextDoorAfter`) and `walkTo` asks it where it would have re-thrown.
+     */
+    const nextDoorAfter = new WeakMap();
+    const nextPastSealedLock = (e, sealedObstacle, rest, contacts, aim, allowTeleporter) => {
+        const passed = [];
+        for (const alt of rest) {
+            const altKey = alt.tag ? `${alt.kind}:${alt.tag}` : alt.kind;
+            const altStrategy = refineStrategy(run,
+                OBSTACLE_STRATEGIES[altKey] ?? OBSTACLE_STRATEGIES[alt.kind] ?? null, alt);
+            if (!altStrategy || !frontierExecutor(altStrategy)) continue;
+            let resolved = null;
+            try {
+                resolved = resolveObstacleStrategy(run, altStrategy, alt, contacts,
+                    aim, allowTeleporter, [...refusedOrders]);
+            } catch (altError) {
+                if (!(altError instanceof SolverRefusal)) throw altError;
+                passed.push({ option: `${altStrategy} ${alt.id}`,
+                    why: `refused: ${String(altError.message).slice(0, 200)}` });
+                continue;
+            }
+            // A resolver that answered "nothing to do" or "not held" is not an order.
+            if (!resolved || resolved.held === false) {
+                passed.push({ option: `${altStrategy} ${alt.id}`,
+                    why: resolved?.rejected?.[0]?.why ?? 'did not bind against live state' });
+                continue;
+            }
+            const s = e.sealed;
+            resolved.rejected = [{
+                option: `keylock ${sealedObstacle.id} (nearer the aim on the frontier)`,
+                why: `SEALED BEHIND ITSELF: its key line (y=${s.keyLine.y}) is on its far side from `
+                    + `(${s.from.x},${s.from.y})${s.flag
+                        ? ` and the save holds its flag {${s.flag.level},${s.flag.tag}} (the SHUT state)`
+                        : ''}, so from here it is a wall. ⛓ L12KEYLINE: the next door on the `
+                    + `frontier, ${alt.id}, is this round's order.`,
+            }, ...passed, ...(resolved.rejected ?? [])];
+            return { obstacle: alt, strategy: resolved.strategy ?? altStrategy, resolved, key: altKey };
+        }
+        return null;
+    };
+
     const identifyAndSelect = (goal, aim, contacts, planError, allowTeleporter) => {
         const opts = solverPlanOpts(run, contacts,
             { ...goalPlanExtra, nodeMargin: 0, triggerMargin: 0 });
@@ -16210,8 +16284,17 @@ function solveSegmentUnder({
          * (§10.4 note 6), and the trace carries a row for it.
          */
         if (strategy && frontierExecutor(strategy)) {
-            const resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts,
-                aim, allowTeleporter, [...refusedOrders]);
+            let resolved;
+            try {
+                resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts,
+                    aim, allowTeleporter, [...refusedOrders]);
+            } catch (e) {
+                if (SEALED_LOCK_NEXT_ON_FRONTIER && e instanceof SolverRefusal && e.sealed?.self) {
+                    nextDoorAfter.set(e, () => nextPastSealedLock(e, obstacle, actionable.slice(1),
+                        contacts, aim, allowTeleporter));
+                }
+                throw e;
+            }
             /**
              * ⛓ THE RESOLVER'S OWN VERB IS THE ANSWER, not the table's — and
              * for all eight verbs that existed before slice 3b this is the
@@ -18142,20 +18225,27 @@ function solveSegmentUnder({
                 try {
                     identified = identifyAndSelect(goal, aim, contacts, e, allowTeleporter);
                 } catch (refusal) {
-                    if (!fineLattice || !(refusal instanceof SolverRefusal) || axisAligned
-                        || (solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) <= FINE_LATTICE) {
-                        throw refusal;
+                    let fineWps = null;
+                    if (fineLattice && refusal instanceof SolverRefusal && !axisAligned
+                        && (solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) > FINE_LATTICE) {
+                        try {
+                            fineWps = planWaypoints(run.world, run.state, aim, allowTeleporter,
+                                solverPlanOpts(run, contacts, { ...goalPlanExtra, lattice: FINE_LATTICE }));
+                        } catch (fineError) {
+                            if (!(fineError instanceof BotDriverV2Error)) throw fineError;
+                        }
                     }
-                    try {
-                        wps = planWaypoints(run.world, run.state, aim, allowTeleporter,
-                            solverPlanOpts(run, contacts, { ...goalPlanExtra, lattice: FINE_LATTICE }));
-                    } catch (fineError) {
-                        if (!(fineError instanceof BotDriverV2Error)) throw fineError;
-                        throw refusal;
+                    if (fineWps) {
+                        wps = fineWps;
+                        fine = true;
+                        fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
+                            waypoints: wps.length, refused: String(refusal.message).slice(0, 200) });
+                    } else {
+                        // ⛓ L12KEYLINE: only once the finer ask has also failed is
+                        // a lock SEALED BEHIND ITSELF passed to the next door.
+                        identified = nextDoorAfter.get(refusal)?.() ?? null;
+                        if (!identified) throw refusal;
                     }
-                    fine = true;
-                    fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
-                        waypoints: wps.length, refused: String(refusal.message).slice(0, 200) });
                 }
                 let plan = null;
                 if (identified) {
