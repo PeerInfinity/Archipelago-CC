@@ -15391,6 +15391,49 @@ byte-identical.
   thrust from x 35.45 reaches the pole's edge at 67, so the origin is not truncated. Measure a type coercion before
   you model it (`darktrap2-l63-spear-origin-float`).
 
+### Seedling fidelity K2PREP — K2's licence list made green both ways: the scope joins under the switch, a lava chain hits enemies, and a replay reads the game's camera
+
+Wave 11 (model coverage). The user licensed K2 (`KILLLOCK_BODIES.lavaRunnerLive`) on 2026-10-10; the wave-10 harvest held
+it OFF because, ON, the planner's bounded vitest went 9 rows red. The report is
+`CC/docs/cloud-reports/seedling-fidelity-k2prep.md`. K2 still ships OFF; every row below is green with K2 OFF and ON.
+
+**D1 — the bridge scope.** `R8_ENEMY_BRIDGE.pendingSwitchScope.lavarunner` declares the class and its exposure row, typed
+before the guard ran, and `declaredBridgedClasses()` / `declaredExposedRows()` join them to the declaration exactly while
+the switch is ON. The lavarunner rooms are L71–L75, L77, L78, L80, L99; exactly ONE committed tape retires `noDamage` and
+enters one: `axe-l71-reach-l76` (L71, 327 of 328 ticks), unchanged with the lavarunners stepped. 83 → 84 exposed.
+
+**D2 — the L75 witness was never the shake band.** Recorded on the game (p4f, headless): the chain walk's K2-ON
+refutation (161 → 125) is `LavaChain.reach`'s `"Enemy"` arm (`LavaChain.as:76-93`, `hitables = ["Player", "Enemy"]`): at
+t47 the chain's arm hits `lavarunner@104,64` — `hits 1`, a 5 px/t shove — with the player 24 px away. The live run had
+never stepped a chain at all. `levelRun.stepLavaChainsNow` steps each chain's anim at `clock.now()` and lands the arm on
+the first touching stepped chaser (`.oel` order reversed; a census non-chaser on the arm, or an anim made unknown by a
+skipped `Game.time`, is a refusal by name). Every chain room holds only lavarunners as chasers, so with K2 OFF it returns
+at its first test. With K2 ON the chain walk is the game's on all 388 rows (743 body comparisons, worst 0). The shake band
+is the GRENADE arms' (`l2-grenade-l75` at t155, `-armed-clear` from t1): a REPLAY may read the game's recorded camera on
+the band's uncertain ticks (`createTapeStepper({ cameraWitness })` → `run.witnessCamera`), checked on every tick it is
+asked against the model's exact camera or its band; the solver and the forecast never pass one, so 'uncertain' stays a
+planning refusal (⚖ never model the cosmetic RNG). Both arms 0 px, 201 rows, 402 comparisons each. Three fixtures in
+`fixtures/chaser-witness/k2prep-*`; the chaser probe gains `--camera` (game first, then the model reading its camera).
+The chain's transcription moved verbatim into the simulation (`lavaChain.js`): `levelRun` importing `hazards.js` had
+pulled it into the simulation closure and sent three family files around the `solverView.js` door (27 surface reds).
+
+**D3 — the controls.** `IceTrap` (`canHit = false` in the game: refused by the game itself, so no bridge or kill arm can
+flip it) replaces `LavaRunner` in `arrowTrap`, `enemyDamage` and `solverBot` A3; `LavaRunner` is asked under its switch
+both ways. A3's `run.progress is not a function` was K2's: a modelled lavarunner sends the press arm to the stub's weapon.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A refutation attributed to the nearest refusal.** The L75 row moved 161 → 125 and a shake-band refusal showed in the
+  same file, so the two were read as one; the band was another row's (the grenade arm), and the 125 was a hazard hitting
+  an ENEMY. Ask the game what happened at the refuted tick before naming its cause.
+- **A hazard's `hitables` is a list.** `LavaChain`, `Crusher` and `Pulser` all name `"Enemy"`; the model billed the
+  chain on nobody in the live run (only the solver's danger map priced it, for the player). A bridge that starts stepping
+  a body in such a room inherits every arm that touches `"Enemy"` there.
+- **One import moves a module across the census line.** The simulation is `levelRun.js`'s closure; importing a family
+  file from it silently reclassifies that file, and the door rule then reds three unrelated importers.
+- **A boot/re-arm camera sample predates `view()`.** The bot's sample at t0 and at a level re-arm reads (0, 108) where
+  the settled camera is (0, 80); a camera witness must skip those ticks (`camFresh`).
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the

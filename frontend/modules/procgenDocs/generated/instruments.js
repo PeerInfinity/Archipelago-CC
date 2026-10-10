@@ -9786,6 +9786,12 @@ export const INSTRUMENTS = frz({
             "flags": [
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "camera"
+                },
+                {
+                    "how": [
                         "arg"
                     ],
                     "name": "class"
