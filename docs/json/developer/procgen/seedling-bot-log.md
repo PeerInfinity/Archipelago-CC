@@ -14995,10 +14995,13 @@ B3."** The report is `CC/docs/cloud-reports/seedling-hammer-b3.md`.
 records (`check-seedling-hammer-monotonicity`, the OFF path): acceptance 4, c3 2, c6 10, c4 22 (11 `HAMMER_SAFETY`,
 2 `STRIKE_BOUND_EXHAUSTED` budget verdicts, 9 `SolverRefusal`s), killgate s2/s5/s9 and ENEMY none.
 
-**D0 — the replay rewind.** `solveSegment` gains an optional `rewindRun` (a fresh run in the state the segment's run
-was handed over in); `twoPassSolve` passes `makeRun` with the pass's persistence, `watchSolve.solveForPage` (the
+**D0 — the replay rewind.** As first built, `solveSegment` gained an optional `rewindRun` (a fresh run in the state
+the segment's run was handed over in); **B3b (rebased on main's CRUSHER wiring) dropped it: the rewind is built on
+`forkRun`, the segment's one run factory (a fresh run at its BOOT), with the caller's prefix replayed too, and the
+crusher's `fork` now uses the same `replayToTick`** (`CC/docs/cloud-reports/seedling-hammer-b3b.md`).
+`twoPassSolve` passes `makeRun` with the pass's persistence, `watchSolve.solveForPage` (the
 oracle's certify solve) builds one from its staging. The state at tape tick `t` is that run with the segment's keys
-`[prefix.length, t)` replayed (`replayToTick`), with the two non-key inputs a segment itself feeds a run: its slot
+`[0, t)` replayed (`replayToTick`), with the two non-key inputs a segment itself feeds a run: its slot
 selections (`run.equipNow`, before their tick) and its apitem takes (`inner.takeApItem`, after it). Everything else
 (staging, persistence and PENDING rows, scratch persistence, a caller's `adoptWindowClock`/`addEquips`/
 `addTimedClears`, the prefix) is the factory's contract. The segment's view over the run is rebuilt on the fresh one
