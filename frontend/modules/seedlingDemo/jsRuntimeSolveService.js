@@ -32,6 +32,8 @@
  * see `jsRuntimeSolveWorker.js`).
  */
 
+import { killLockBodiesStamp } from './killLockBodies.js';
+
 export const SOLVE_WORKER_URL = new URL('./jsRuntimeSolveWorker.js', import.meta.url);
 
 const defaultCreateWorker = () => new Worker(SOLVE_WORKER_URL, { type: 'module', name: 'seedling-js-solver' });
@@ -132,6 +134,10 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             const w = ensure();
             current = handle;
             const { levelSource, source, ...tape } = request;
+            // ⛓ KILLLOCK HOOK — the worker imports its own `killLockBodies`: an off-default switch set of THIS
+            // instance travels with the request (at the defaults nothing is added — the request is today's).
+            const killLock = tape.killLockBodies ?? killLockBodiesStamp();
+            if (killLock) tape.killLockBodies = killLock;
             const id = sourceIdOf(source?.records);
             const msg = { type: 'solve', id: handle.id, request: { ...tape, source: { id, ...(sent.has(id) ? {} : { records: source?.records ?? null }) } } };
             sent.add(id);

@@ -1,4 +1,5 @@
 import { FlashPanelUI } from './flashPanelUI.js';
+import { killLockSchemaProps } from './seedlingKillLockSettings.js';
 import eventBus from '../../app/core/eventBus.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 // Import side effect registers `flash_seedling` (region-atlas Phase 4).
@@ -208,6 +209,9 @@ export function register(registrationApi) {
           + "already finished with a shorter one. Counted in work, not time, so the choice is the same on every "
           + "machine. 0 gives it the whole solver budget. Read at the start of each solve.",
       },
+      // ⛓ KILLLOCK HOOK — the model's kill-lock body switches K1–K5, one boolean each, defaulted to
+      // `KILLLOCK_BODIES_DEFAULTS` (`seedlingKillLockSettings.js`).
+      ...killLockSchemaProps(),
     },
   });
 

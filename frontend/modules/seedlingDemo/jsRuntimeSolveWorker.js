@@ -13,7 +13,9 @@
  *                  (`staging`, `perTick`, `live`, `solverGoal`, `name`,
  *                  `scratchPersistence`, `equips`; ⛓ WG: or `producer: 'walker'`
  *                  + `goal` — `wasmWalkTape.walkTapeFromStaging`, ⛓ §5.36 an
- *                  INSTRUMENT only: no production engine asks it) and `source: {id,
+ *                  INSTRUMENT only: no production engine asks it); ⛓ KILLLOCK HOOK
+ *                  `killLockBodies` (the page's switch set, only when off-default —
+ *                  this worker's module copy runs it) and `source: {id,
  *                  records?}`: the room records arrive ONCE per worker and are
  *                  kept by id (`records` omitted on later solves).
  *   worker → page  `{type: 'started', id}` the moment the solve begins (the
@@ -36,6 +38,7 @@
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { ANYTIME_PASSES, settleSolve, solveAnytime } from './jsRuntimeSolver.js';
 import { walkTapeFromStaging, WALK_TAPE_PRODUCER } from './wasmWalkTape.js';
+import { normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js';
 
 /** source id -> `{levelSource, records}`: the room records this worker has been sent. */
 const sources = new Map();
@@ -54,8 +57,11 @@ self.onmessage = (event) => {
     // sweep's `--producer=walker`): generated rooms are the solver's, like every other room.
     // ⛓ STEP-OFF RETIRE — W4's `producer: 'step-off'` composite is gone: an arrival latched on its goal
     // door is a plain solve (`solveSegment` steps off a latched door itself, fidelity STEP-OFF).
+    // ⛓ KILLLOCK HOOK — this worker's own `killLockBodies` copy runs the request's stamped set (none = defaults);
+    // the solver path applies it inside `solveAnytime`, the walker instrument here.
     const produce = request.producer === WALK_TAPE_PRODUCER
-        ? () => walkTapeFromStaging({ ...request, levelSource: held.levelSource, records: held.records, clock })
+        ? () => withKillLockBodies(normalizeKillLockBodies(request.killLockBodies ?? {}),
+            () => walkTapeFromStaging({ ...request, levelSource: held.levelSource, records: held.records, clock }))
         : null;
     let answer;
     if (!held) answer = { ok: false, kind: 'refusal', message: `the solver worker was never sent room source ${source.id}` };

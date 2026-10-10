@@ -34,7 +34,15 @@
  * THE SWITCHES are read at CALL time:
  *   - node: `SEEDLING_KILLLOCK_BODIES=all|none|<keys>` in the environment, read once at import;
  *   - a test: `withKillLockBodies({ jellyfishLive: true }, () => …)`, which restores the previous values.
- * ⛔ The browser has no such hook on purpose: the page and its solve worker run the defaults.
+ *   - the browser (⚖ the user, 2026-10-10, fidelity's ask): the flashPanel settings
+ *     `flashPanel.seedlingKillLock<Key>` (one boolean per switch, schema default = `KILLLOCK_BODIES_DEFAULTS`).
+ *     The panel applies them to ITS module instance (`applyKillLockBodies`); the JS runtime page gets them as
+ *     `?killLockBodies=<keys>|none` (the env grammar) and applies them before its first run — a change re-mounts
+ *     the page, because a session played under one set cannot be replayed under another. A solve worker imports
+ *     its own copy, so the switch set TRAVELS WITH THE REQUEST: the solve services stamp `killLockBodies` on a
+ *     request made off-default (`killLockBodiesStamp`), and the solve runs under it and stamps its plan. ⚖
+ *     "Identical plans on every machine": at the defaults nothing is stamped — the request is byte-identical to
+ *     the one before the hook — so a plan made off-default is always LABELLED.
  */
 /**
  * ⚖ THE DEFAULTS (user, 2026-10-06; flipped at the wave-8 harvest by `seedling-fidelity-planning-4`): K1, K3, K4 and
@@ -64,18 +72,60 @@ export function killLockBridged(tag) {
     return k !== undefined && KILLLOCK_BODIES[k] === true;
 }
 
-const envFlags = globalThis.process?.env?.SEEDLING_KILLLOCK_BODIES;
-if (envFlags) {
-    const want = envFlags === 'all' ? KILLLOCK_BODIES_KEYS
-        : (envFlags === 'none' ? [] : envFlags.split(',').map((k) => k.trim()).filter(Boolean));
-    for (const k of KILLLOCK_BODIES_KEYS) KILLLOCK_BODIES[k] = false;
+/**
+ * The switch set a `SEEDLING_KILLLOCK_BODIES` / `?killLockBodies=` value names: `all`, `none`, or the keys that
+ * are ON, comma-separated (every other switch OFF). An unknown key throws, naming `what`.
+ */
+export function parseKillLockBodies(value, what = 'SEEDLING_KILLLOCK_BODIES') {
+    const want = value === 'all' ? KILLLOCK_BODIES_KEYS
+        : (value === 'none' ? [] : String(value).split(',').map((k) => k.trim()).filter(Boolean));
+    const set = Object.fromEntries(KILLLOCK_BODIES_KEYS.map((k) => [k, false]));
     for (const k of want) {
         if (!KILLLOCK_BODIES_KEYS.includes(k)) {
-            throw new Error(`killLockBodies: SEEDLING_KILLLOCK_BODIES names "${k}"; the keys are ${KILLLOCK_BODIES_KEYS.join(', ')}`);
+            throw new Error(`killLockBodies: ${what} names "${k}"; the keys are ${KILLLOCK_BODIES_KEYS.join(', ')}`);
         }
-        KILLLOCK_BODIES[k] = true;
+        set[k] = true;
     }
+    return set;
 }
+
+/** The inverse of `parseKillLockBodies`: `none`, or the ON keys in `KILLLOCK_BODIES_KEYS` order. */
+export function formatKillLockBodies(set) {
+    const on = KILLLOCK_BODIES_KEYS.filter((k) => set?.[k] === true);
+    return on.length ? on.join(',') : 'none';
+}
+
+/** A complete switch set: every key, a boolean (a missing key reads its DEFAULT; an unknown key throws). */
+export function normalizeKillLockBodies(over = {}) {
+    for (const k of Object.keys(over ?? {})) {
+        if (!KILLLOCK_BODIES_KEYS.includes(k)) throw new Error(`killLockBodies: unknown switch "${k}"`);
+    }
+    return Object.fromEntries(KILLLOCK_BODIES_KEYS.map((k) => [k,
+        typeof over?.[k] === 'boolean' ? over[k] : KILLLOCK_BODIES_DEFAULTS[k]]));
+}
+
+/** Is this (complete or partial) set the defaults? */
+export function isDefaultKillLockBodies(set) {
+    const full = normalizeKillLockBodies(set);
+    return KILLLOCK_BODIES_KEYS.every((k) => full[k] === KILLLOCK_BODIES_DEFAULTS[k]);
+}
+
+/** Set THIS module instance's switches (a complete set; a missing key reads its default). */
+export function applyKillLockBodies(set) {
+    Object.assign(KILLLOCK_BODIES, normalizeKillLockBodies(set));
+    return { ...KILLLOCK_BODIES };
+}
+
+/**
+ * The stamp a solve request carries: this instance's switch set when it is OFF-default, else null (nothing is
+ * stamped, so a default request is byte-identical to the one before the hook).
+ */
+export function killLockBodiesStamp() {
+    return isDefaultKillLockBodies(KILLLOCK_BODIES) ? null : { ...KILLLOCK_BODIES };
+}
+
+const envFlags = globalThis.process?.env?.SEEDLING_KILLLOCK_BODIES;
+if (envFlags) Object.assign(KILLLOCK_BODIES, parseKillLockBodies(envFlags));
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withKillLockBodies(over, fn) {

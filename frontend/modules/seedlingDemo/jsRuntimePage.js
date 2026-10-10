@@ -47,10 +47,17 @@
  * (`jsRuntimeSolver.upgradeWindowWork`); `?solverBackstopMs=<ms>` the wall-clock
  * backstop, which only ever FAILS a goal by name. A browser without module
  * workers solves in place, as S1 did — said once on the console.
+ *
+ * ⛓ KILLLOCK HOOK — `?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
+ * grammar) sets this page's `killLockBodies` switches before its first run;
+ * absent = the defaults. The panel adds it only when its settings are
+ * off-default, and re-mounts the page when they change. The worker gets the
+ * set with each solve request (`killLockBodiesStamp`).
  */
 
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { createWorkerSolveService } from './jsRuntimeSolveService.js';
+import { applyKillLockBodies, parseKillLockBodies } from './killLockBodies.js';
 import { heldFromCodes, KEYBOARD_BINDINGS } from './watchManual.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { createLifetime } from './watchLifetime.js';
@@ -101,6 +108,9 @@ export function mountJsRuntimePage(win = window) {
     const budgetParam = Number(params.get('solverBudgetWork'));
     const windowParam = Number(params.get('solverUpgradeWindowWork'));
     const backstopParam = Number(params.get('solverBackstopMs'));
+    // ⛓ KILLLOCK HOOK — before the runtime exists, so every run of this page steps under the same switches.
+    const killLockParam = params.get('killLockBodies');
+    if (killLockParam !== null) applyKillLockBodies(parseKillLockBodies(killLockParam, '?killLockBodies='));
     const runtime = createJsRuntime({
         onStateChanged: (name, value) => {
             bridge.stateLog.push({ name, value });

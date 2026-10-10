@@ -19,6 +19,8 @@ import { createHeldKeyRelease, focusGameCanvas } from './gameInput.js';
 import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
 import { SUB_REGION_PARTITION_PATH, buildSubRegionMap } from './seedlingSubRegions.js';
+import { KILLLOCK_SETTING_KEYS, killLockPageQuery } from './seedlingKillLockSettings.js';
+import { KILLLOCK_BODIES_DEFAULTS, applyKillLockBodies, formatKillLockBodies } from '../seedlingDemo/killLockBodies.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -53,6 +55,8 @@ const SOLVER_WALK_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverWalk';
 const WASM_SOLVER_BUDGET_SETTING_KEY = 'moduleSettings.flashPanel.seedlingWasmSolverBudgetWork';
 /** ⛓ Seedling SHOULD-STOP → DETERMINISTIC BUDGET — the upgrade window in WORK units, both runtimes (0 = the budget). */
 const SOLVER_UPGRADE_WINDOW_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork';
+/** ⛓ KILLLOCK HOOK — the model's kill-lock body switches, one setting each (`seedlingKillLockSettings.js`). */
+const KILLLOCK_SETTING_KEY_SET = new Set(Object.values(KILLLOCK_SETTING_KEYS));
 /**
  * ⛓ Seedling JS J1 — the JS runtime's page, document-relative like WASM_DIR.
  * ⛔ A PATH, never an import: the page's closure is the whole JS model, and a
@@ -186,6 +190,19 @@ export class FlashPanelUI {
       }
       if (data?.key === SOLVER_UPGRADE_WINDOW_SETTING_KEY || data?.key === '*') {
         this._refreshSolverUpgradeWindow(data.key === '*' ? undefined : data.value);
+      }
+      if (KILLLOCK_SETTING_KEY_SET.has(data?.key) || data?.key === '*') {
+        // ⛓ KILLLOCK HOOK — the panel's own instance follows at once; a JS page mounted under another set is
+        // re-mounted (its session cannot be replayed under a different set). ⛔ Only a real CHANGE re-mounts.
+        const set = await this._refreshKillLockBodies();
+        if (set && this.isInitialized && this.transport === 'js' && this._jsPageKillLock !== undefined
+          && formatKillLockBodies(set) !== this._jsPageKillLock) {
+          this._panelLog(`kill-lock switches changed (${this._jsPageKillLock} → ${formatKillLockBodies(set)}) — `
+            + 're-mounting the JS runtime page');
+          this._teardownForReinit();
+          this._initializeAdapter();
+          return;
+        }
       }
       if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
       if (!this.isInitialized) return;
@@ -364,6 +381,22 @@ export class FlashPanelUI {
     }
     const n = Number(next);
     this._solverUpgradeWindowWork = next !== null && next !== '' && Number.isFinite(n) && n >= 0 ? n : null;
+  }
+
+  /**
+   * ⛓ KILLLOCK HOOK — read `flashPanel.seedlingKillLock<Key>` (schema default = `KILLLOCK_BODIES_DEFAULTS`),
+   * apply the set to THIS module instance (the wasm engine's host-side solves; its worker gets the request's
+   * stamp) and cache it for the JS page's URL. null = the settings could not be read (nothing changed).
+   */
+  async _refreshKillLockBodies() {
+    const set = {};
+    try {
+      for (const [k, key] of Object.entries(KILLLOCK_SETTING_KEYS)) {
+        set[k] = (await settingsManager.getSetting(key, KILLLOCK_BODIES_DEFAULTS[k])) === true;
+      }
+    } catch { return null; }
+    this._killLockBodies = applyKillLockBodies(set);
+    return this._killLockBodies;
   }
 
   _teardownForReinit() {
@@ -956,14 +989,18 @@ export class FlashPanelUI {
       await this._refreshSolverWalk();
       await this._refreshWasmSolverBudget();
       await this._refreshSolverUpgradeWindow();
+      await this._refreshKillLockBodies();
       this.transport = 'wasm';
       if (runtime === 'js') {
         // ⛓ Seedling JS J1: the JavaScript model's page, through the SAME
         // iframe flow. Any other game keeps 'auto'.
         if (this.configPath && this.configPath.endsWith(`/${JS_RUNTIME_CONFIG}`)) {
           this.transport = 'js';
-          this.wasmPath = JS_RUNTIME_PAGE;
-          this._panelLog(`runtime 'js': the Seedling JS runtime page (${JS_RUNTIME_PAGE})`);
+          // ⛓ KILLLOCK HOOK — an off-default switch set rides on the page's URL (none at the defaults).
+          const killLock = this._killLockBodies ?? KILLLOCK_BODIES_DEFAULTS;
+          this._jsPageKillLock = formatKillLockBodies(killLock);
+          this.wasmPath = JS_RUNTIME_PAGE + killLockPageQuery(killLock);
+          this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
           await this._initializeWasm();
           return;
         }
