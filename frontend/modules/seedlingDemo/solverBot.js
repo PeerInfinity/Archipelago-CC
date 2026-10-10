@@ -139,6 +139,9 @@ import { arrivalInsideSolid, arrivalsInto, solidsAt, STUCK_TICKS } from './arriv
 import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,
 } from './strikePolicy.js';
+// ⛓⛓⛓ seedling-fidelity-bulb D3: a Bulb's kill is PLACED — the strike policy's veto and the segment's needs.
+import { dropKillVetoFor, setDropKillNeeds } from './bulbPlacement.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestFirstQueue, coarseKey,
     spaceTimeReach } from './spaceTimeReach.js';
 
@@ -4022,6 +4025,38 @@ export const FINE_LATTICE_ROSTER_WIDE = true;
  * is an obstacle with a verb (a lock, a tree, the seal door), and the
  * frontier must still name it.
  */
+/**
+ * ⛓ seedling-fidelity-bulb D3 — the planner aims of a goal list, for `bulbPlacement.setDropKillNeeds`: a pickup's
+ * centre, an exit's aim (`exitAimFor`, with its own teleporter allowed), a pit's centre. A goal with no standing aim
+ * (an encounter, a clear-tag) contributes none.
+ */
+function dropKillNeedsFrom(run, goals) {
+    const out = [];
+    for (const g of goals) {
+        if (g.kind === 'collect-placement' && g.placement) {
+            // ⚠ The pickup's own cell is a planner obstacle except on the walk that collects it (its contact is
+            // exempted there), so the need is the CELLS AROUND it: any one reachable is enough to touch it.
+            const tx = Math.floor(g.placement.x / TILE_SIZE) + 0.5;
+            const ty = Math.floor(g.placement.y / TILE_SIZE) + 0.5;
+            out.push({ what: `the ${g.kind} at (${g.placement.x},${g.placement.y})`,
+                aims: [[0, -1], [1, 0], [0, 1], [-1, 0]].map(([dx, dy]) => ({
+                    x: (tx + dx) * TILE_SIZE, y: (ty + dy) * TILE_SIZE })),
+                allowTeleporter: null });
+        } else if (g.kind === 'reach-exit' && g.exit) {
+            let found = null;
+            try { found = findExit(run.world, g.exit); } catch { found = null; }
+            if (!found) continue;
+            out.push({ what: `the exit (${g.exit.x},${g.exit.y})`,
+                aims: [exitAimFor(run.world, found.index, solverPlanOpts(run, senseContacts(run)))],
+                allowTeleporter: found.index });
+        } else if (g.kind === 'reach-pit' && g.pit) {
+            out.push({ what: `the pit (${g.pit.tx},${g.pit.ty})`,
+                aims: [{ x: (g.pit.tx + 0.5) * TILE_SIZE, y: (g.pit.ty + 0.5) * TILE_SIZE }], allowTeleporter: null });
+        }
+    }
+    return out;
+}
+
 export function exitAimFor(world, index, opts = {}) {
     const tp = world.teleporters[index];
     const centre = { x: tp.rect.x + TILE_SIZE / 2, y: tp.rect.y + TILE_SIZE / 2 };
@@ -4401,6 +4436,12 @@ export function strikePolicyFor(run, { dashPlan = null,
          * refuses rather than prices it.
          */
         talkCircles: run.entities('talkCircles') ?? [],
+        /**
+         * ⛓⛓⛓ seedling-fidelity-bulb D3 — the press veto (`bulbPlacement.dropKillVetoFor`): a press whose swing
+         * would kill a Bulb whose lava would cut a goal the segment still owes is refused. `null` — and the policy
+         * byte-identical — on a run with no needs (no `solveSegment`, or `contactFidelity.bulbLive` OFF).
+         */
+        vetoBody: dropKillVetoFor(run),
     });
 }
 
@@ -19396,7 +19437,17 @@ function solveSegmentUnder({
     };
 
     // ── the goals, in order ───────────────────────────────────────────
+    let dropKillGoal = 0;
     for (const goal of goals) {
+        /**
+         * ⛓⛓⛓ seedling-fidelity-bulb D3 — WHAT THE REST OF THE SEGMENT NEEDS, handed to the run for the strike
+         * policy's veto (`bulbPlacement`): this goal and every one after it, as planner aims. Only while a class
+         * whose death writes a tile is bridged (`contactFidelity.bulbLive`); otherwise nothing is set and no policy
+         * asks.
+         */
+        setDropKillNeeds(run, CONTACT_FIDELITY.bulbLive ? dropKillNeedsFrom(run, goals.slice(dropKillGoal)) : null,
+            () => solverPlanOpts(run, senseContacts(run)));
+        dropKillGoal += 1;
         // The bound is PER GOAL: clearing L4's button for the crossing says
         // nothing about how many obstacles the next room's goal may need.
         applied = [];
