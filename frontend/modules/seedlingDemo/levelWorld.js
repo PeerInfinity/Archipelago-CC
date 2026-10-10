@@ -3027,6 +3027,17 @@ export const PERSISTENCE_RESPONSE = Object.freeze({
  * below keeps its own throw for an UNDECLARED response, because that check
  * is about the table's completeness rather than about this entity.
  */
+/**
+ * ⛓ SEEDLING FIDELITY ENCOUNTERS, D2: is `e` the BobBoss arena's rock — a
+ * `fallrocklarge` with BOTH `bossrock` and `thirdboss` set, the pair
+ * `FallRockLarge.update`'s `cameraTimer == 0` arm needs to add the boss?
+ */
+export function arenaRockOf(e) {
+    // `Boolean(int(o.@bossrock))` (`Game.as:2354`): an absent attribute is NaN here, false there.
+    return e?.type === 'fallrocklarge' && Boolean(Number(e.attrs?.bossrock))
+        && Boolean(Number(e.attrs?.thirdboss));
+}
+
 export function clearedAwayByTag(e, clearedTags) {
     if (!clearedTags) return false;
     const entityTag = tagOf(e.type, e.attrs);
@@ -3939,6 +3950,8 @@ export function buildLevelWorld(levelRecord, {
     const pulsers = [];
     /** ⛔⛔ R5 slice 10: every `FallRock`/`FallRockLarge`, parked or landed. */
     const fallRocks = [];
+    /** ⛓ ENCOUNTERS D2: the arena rocks this build's clears leave FALLEN (`arenaRockOf`). */
+    const arenaRockFallen = new Set();
     /**
      * ⛔⛔ R5 slice 13: every live `Spinner` — the first ENEMY the run steps.
      *
@@ -4396,7 +4409,22 @@ export function buildLevelWorld(levelRecord, {
             // that the COMBAT CENSUS reaches the same verdict as this loop.
             clearedHere = clearedAwayByTag(e, clearedTags);
             const refusal = REFUSED_CLEAR_RESPONSES[response];
-            if (refusal) {
+            /**
+             * ⛓⛓ SEEDLING FIDELITY ENCOUNTERS, D2 — THE ARENA ROCK IS THE ONE
+             * `arm` CLASS THE RUN CAN BUILD FALLEN. `FallRockLarge`'s ctor reads
+             * `!checkPersistence(tag)` → `y = fallTo`, `type = "Solid"`,
+             * `cameraTimer = 0`; `levelRun`'s BobBoss arena already builds exactly
+             * that state for a death's reboot (`bobRocksFallen`, witnessed by
+             * `r3-bobboss-death`), and the rock's 32x32 Solid is the ARENA's
+             * (`fallenRocksNow`), not this build's. So a world built with L32's
+             * `bossrock` + `thirdboss` tag cleared — the live state after a death
+             * mid-fight — is admitted, and the roster row says so
+             * (`fallenAtBuild`). Every other `arm` rock (`fallrock`, L82's
+             * `bossrock`) stays refused: nothing here builds their fall.
+             */
+            if (refusal && arenaRockOf(e)) {
+                arenaRockFallen.add(`${e.type}@${x},${y}`);
+            } else if (refusal) {
                 fail(`${where}: the tape clears tag ${entityTag}, which is a `
                     + `"${e.type}" at (${x},${y}) — response "${response}", and `
                     + `${refusal}. A clear list must never name it.`);
@@ -5018,6 +5046,8 @@ export function buildLevelWorld(levelRecord, {
                     bossRock: Boolean(Number(e.attrs?.bossrock ?? 0)),
                     thirdBoss: Boolean(Number(e.attrs?.thirdboss ?? 0)),
                 } : {}),
+                // ⛓ ENCOUNTERS D2: present only when the build's clears felled it.
+                ...(arenaRockFallen.has(`${e.type}@${x},${y}`) ? { fallenAtBuild: true } : {}),
             });
         }
         /**

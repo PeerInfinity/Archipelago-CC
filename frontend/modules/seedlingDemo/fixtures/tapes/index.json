@@ -115,6 +115,20 @@
       "noHazards": []
     },
     {
+      "file": "enc-l32-fallen-door.json",
+      "tickCount": 1055,
+      "bootLevel": 32,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "enc-l32-fire-return.json",
+      "tickCount": 142,
+      "bootLevel": 32,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "f1-l5-lock-removal.json",
       "tickCount": 380,
       "bootLevel": 5,

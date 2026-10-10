@@ -1365,6 +1365,18 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'arrival in L40 by `teleporter@240,336`, a puncher/bobsoldier room, ten tiles from the nearest '
                 + 'body. Recorded on the game with `hits` 0.',
         }),
+        /** ⛓⛓ seedling-fidelity-encounters — the two L32 witnesses fall into L30, predicted exposed before the guard ran. */
+        Object.freeze({
+            name: 'enc-l32-fallen-door', levels: Object.freeze([30]), bobs: 1, ticks: 81,
+            addedBy: 'Seedling fidelity ENCOUNTERS D2 (the rock-fallen arrival witness)',
+            why: 'the encounter from a rock-fallen L32 arrival ends with the pit to L30: 81 ticks there at >= 180 px '
+                + 'from the BobSoldier — outside its leash. Recorded on the game with `hits` 0.',
+        }),
+        Object.freeze({
+            name: 'enc-l32-fire-return', levels: Object.freeze([30]), bobs: 1, ticks: 81,
+            addedBy: 'Seedling fidelity ENCOUNTERS D2 (the return-visit witness)',
+            why: 'the burned pit from L32 to L30: 81 ticks there at >= 180 px from the BobSoldier. No hit.',
+        }),
     ]),
 
     /**

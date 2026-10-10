@@ -996,6 +996,27 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
     if (!arena0.has('rock')) {
         refuse(`${what}: level ${run.level} holds no BobBoss arena (no \`thirdboss\` rock).`, { goal });
     }
+    /**
+     * ⛓⛓ SEEDLING FIDELITY ENCOUNTERS, D2 — WHICH STATE THE ARENA IS IN, READ
+     * OFF THE RUN. The executor never assumes the survey's staging:
+     *   · the rock unarmed      → arm, then the forms (a fresh visit);
+     *   · the rock fallen       → the boss is re-added on the first live frame
+     *     (a reboot after a death, or a build handed {32,1} cleared — `levelWorld
+     *     .arenaRockOf`), so there is no arm leg and the forms start at form 0;
+     *   · mid-fight             → whatever form, dialogue or transition the run
+     *     holds is where the loop below picks up (a continuation's prefix);
+     *   · the Fire already HELD → `BobBoss`'s ctor removes itself
+     *     (`BobBoss.as:37-41`): no fight, no drop to collect; only the burn and
+     *     the pit remain (`already` on the drop record).
+     */
+    const already = run.progress('inventory')?.hasFire === true;
+    // A rock built fallen with the player INSIDE it (a door arrival) snaps the
+    // player onto its top on the first live frame (`levelRun`'s `rock-snap`);
+    // nothing can be planned from inside a Solid, so that frame is spent first.
+    if (arena0.get('rock').holdsPlayer) tick([]);
+    // ⚠ The arm leg runs even with the Fire held: an unarmed rock arms on the
+    // way to the burn stance anyway, and its frozen arm frame would swallow the
+    // burn's press. Armed first, it is spent before anything is timed.
     if (!arena0.get('rock').armed) {
         row('touch');
         const armFrom = perTick.length;
@@ -1013,7 +1034,7 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
     let landings = 0;
     let cadence = CEREMONY_CADENCE_START;
     let inDialogue = false;
-    while (!bobArena(run).has('fire') && !bobArena(run).has('fireCollected')) {
+    while (!already && !bobArena(run).has('fire') && !bobArena(run).has('fireCollected')) {
         const arena = bobArena(run);
         const dlg = arena.get('dialogue');
         if (dlg?.open) {
@@ -1093,12 +1114,15 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
         if (c.pressing) refuse(`${what}: the Fire's ceremony ended with a press still down.`, { goal });
     }
     const writes = run.ledger('bobBossEvents').filter((r) => r.flag).map((r) => r.what);
-    if (!run.progress('inventory')?.hasFire || !writes.includes('rock-armed')
+    if (already) {
+        records.push({ goal: 'encounter', leg: 'drop', already: true, landings, pages, t: perTick.length });
+    } else if (!run.progress('inventory')?.hasFire || !(writes.includes('rock-armed') || arena0.get('rock').armed)
         || !writes.includes('fire-removed')) {
         refuse(`${what}: the drop is not complete — hasFire ${run.progress('inventory')?.hasFire}, `
             + `writes [${writes.join(', ')}].`, { goal });
+    } else {
+        records.push({ goal: 'encounter', leg: 'drop', landings, pages, t: perTick.length });
     }
-    records.push({ goal: 'encounter', leg: 'drop', landings, pages, t: perTick.length });
 
     // ── (d) the burn ──────────────────────────────────────────────────
     if (goal.then === 'reach-pit') {

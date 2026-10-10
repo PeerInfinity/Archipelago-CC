@@ -1,0 +1,200 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 32,
+        "x": 72,
+        "y": 120
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 32,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 32,
+            "tag": 1,
+            "note": ""
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 142,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 1,
+            "to": 2
+        },
+        {
+            "key": "left",
+            "from": 1,
+            "to": 4
+        },
+        {
+            "key": "up",
+            "from": 1,
+            "to": 36
+        },
+        {
+            "key": "primary",
+            "from": 3,
+            "to": 4
+        },
+        {
+            "key": "right",
+            "from": 4,
+            "to": 6
+        },
+        {
+            "key": "primary",
+            "from": 9,
+            "to": 10
+        },
+        {
+            "key": "right",
+            "from": 9,
+            "to": 10
+        },
+        {
+            "key": "primary",
+            "from": 15,
+            "to": 16
+        },
+        {
+            "key": "left",
+            "from": 17,
+            "to": 18
+        },
+        {
+            "key": "primary",
+            "from": 21,
+            "to": 22
+        },
+        {
+            "key": "right",
+            "from": 21,
+            "to": 22
+        },
+        {
+            "key": "primary",
+            "from": 23,
+            "to": 24
+        },
+        {
+            "key": "primary",
+            "from": 29,
+            "to": 30
+        },
+        {
+            "key": "left",
+            "from": 30,
+            "to": 31
+        },
+        {
+            "key": "right",
+            "from": 34,
+            "to": 35
+        },
+        {
+            "key": "primary",
+            "from": 35,
+            "to": 36
+        },
+        {
+            "key": "down",
+            "from": 36,
+            "to": 39
+        },
+        {
+            "key": "up",
+            "from": 39,
+            "to": 43
+        }
+    ],
+    "name": "enc-l32-fire-return",
+    "description": "⛓⛓ seedling-fidelity-encounters D2 — L32 on the RETURN visit: the Fire held, the rock {32,1} fallen and the tree {32,0} burned. The door arrival is snapped onto the rock; `BobBoss`'s ctor removes itself (`Player.hasFire`), so the encounter goal has no fight and no drop to collect (`already`); the walk takes the burned pit to L30 in 142 ticks. Authored by scripts/procgen/plan-seedling-encounters.mjs.",
+    "note": ""
+}

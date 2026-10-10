@@ -12868,7 +12868,10 @@ export function createLevelRun({
         // builds it FALLEN (Solid) with `cameraTimer = 0`, and its first live
         // `update()` takes the `cameraTimer == 0` arm at once — see the rock
         // block of `stepBobBossArenaNow`.
-        const fallen = bobRocksFallen.has(level);
+        // ⛓⛓ ENCOUNTERS D2: …or the BUILD was handed the cleared tag (a live
+        // arrival after a death mid-fight, `levelWorld.arenaRockOf`): the same
+        // ctor state, so the same arena.
+        const fallen = bobRocksFallen.has(level) || rock.fallenAtBuild === true;
         bobArena = {
             level,
             rockId: rock.id,
@@ -13009,6 +13012,25 @@ export function createLevelRun({
         // the player moves on this tick. `BobBoss`'s ctor removes itself when
         // `Player.hasFire`, so then nothing is added. Witness:
         // `r3-bobboss-death` (respawn (80,112) on observation 148).
+        /**
+         * ⛓⛓ ENCOUNTERS D2: `FallRockLarge.update`'s FIRST arm, `if (activate &&
+         * y >= fallTo)`: a player whose box overlaps the fallen rock is SNAPPED
+         * onto its top edge (`p.y = y - originY + p.originY - p.height`), every
+         * frame, before the player's own update (the rock is added after the
+         * Player, so it updates first). A fallen rock seals the L30 door's
+         * stairs, so a later entry through that door ARRIVES inside it, at
+         * (80,128) — the snap lifts it to the box's bottom on y 128. The fight's
+         * own frames never reach it: the rock is Solid once landed.
+         */
+        if (a.landed) {
+            const pb = playerBoxAt(state.x, state.y);
+            const rr = bobBossRockRect();
+            if (pb.right > rr.x && pb.x < rr.right && pb.bottom > rr.y && pb.y < rr.bottom) {
+                const y = rr.y + (state.y - pb.y) - (pb.bottom - pb.y);
+                bobLedger({ what: 'rock-snap', from: state.y, to: y });
+                state = { ...state, y };
+            }
+        }
         if (a.spawnOnFirstFrame) {
             a.spawnOnFirstFrame = false;
             worldCtor = { x: BOB_BOSS_ARENA.respawn.x, y: BOB_BOSS_ARENA.respawn.y };
@@ -13051,7 +13073,10 @@ export function createLevelRun({
                     }
                     state = freed;
                     a.landed = true;
-                    a.pending = { form: 0 };
+                    // ⛓ ENCOUNTERS D2: `new BobBoss(72, 72)`'s ctor REMOVES ITSELF
+                    // when `Player.hasFire` (`BobBoss.as:37-41`) — the same gate the
+                    // fallen-at-build arm above reads. No tape arms the rock holding it.
+                    a.pending = inventory?.hasFire === true ? null : { form: 0 };
                     // ⛓⛓⛓ R3-swim D3: the same `cameraTimer == 0` arm writes
                     // `(FP.world as Game).playerPosition = new Point(72, 104)`
                     // — the args a later `restartLevel()` reboots into.
@@ -13351,7 +13376,13 @@ export function createLevelRun({
         const a = bobArenaNow();
         if (a.none) return out;
         const b = a.boss;
-        out.set('rock', { id: a.rockId, armed: a.armed, landed: a.landed });
+        // ⛓ ENCOUNTERS D2: `holdsPlayer` only while the fallen rock overlaps the
+        // player's box (the snap is due on the next frame), so every other row is
+        // byte-identical.
+        const pb = a.landed ? playerBoxAt(state.x, state.y) : null;
+        const rr = a.landed ? bobBossRockRect() : null;
+        const holds = a.landed && pb.right > rr.x && pb.x < rr.right && pb.bottom > rr.y && pb.y < rr.bottom;
+        out.set('rock', { id: a.rockId, armed: a.armed, landed: a.landed, ...(holds ? { holdsPlayer: true } : {}) });
         if (b) {
             out.set('boss', {
                 id: b.id, form: b.form, x: b.x, y: b.y, vx: b.v.x, vy: b.v.y,
