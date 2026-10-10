@@ -7695,6 +7695,41 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-l12keyline-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dry"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-l12keyline-witness — ⛓⛓⛓ SEEDLING FIDELITY L12KEYLINE: THE GAME WITNESS FOR THE WAY ROUND L12'S SEALED LOCK.",
+            "path": "scripts/procgen/plan-seedling-l12keyline-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
