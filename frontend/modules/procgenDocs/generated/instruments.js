@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 76,
+            "count": 77,
             "id": "plan"
         },
         {
@@ -7661,6 +7661,41 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-hammer-b2-fight — ⛓⛓⛓ SEEDLING HAMMER-PHASE B2 D2: THE FIGHT's SOLVE, HANDED TO THE GAME.",
             "path": "scripts/procgen/plan-seedling-hammer-b2-fight.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-l12keyline-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dry"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-l12keyline-witness — ⛓⛓⛓ SEEDLING FIDELITY L12KEYLINE: THE GAME WITNESS FOR THE WAY ROUND L12'S SEALED LOCK.",
+            "path": "scripts/procgen/plan-seedling-l12keyline-witness.mjs"
         },
         {
             "argvHelpers": [],

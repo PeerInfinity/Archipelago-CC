@@ -15527,6 +15527,53 @@ the list).
   so a flag the game sets on the frame after the tape's last tick still reads true in the game's final status. The
   model's one-frame-early flag was hidden behind exactly that offset.
 
+### Seedling fidelity L12KEYLINE — a lock sealed behind itself is one door, and the frontier tries the next
+
+Wave 11 (model coverage). Re-measure 3 (survey CI 38075646127) left four L12 steps on KEYLOCK-SEALED once the rules
+arc made the survey's crossing credit fail-closed: 134 and 175 (arrival (592,16), north of `bosslock@416,240`, flag
+{12,4}) and 154 and 185 (arrival (16,352), naming `bosslock@112,192`, flag {12,11}). The rules arc asked whether AP's
+own route round the lock, r0c37 →[Fire]→ r42c29 →[Progressive Swim]→ r0c19, is real in the game. The report is
+`CC/docs/cloud-reports/seedling-fidelity-l12keyline.md`.
+
+**D1: the way round is real.** From (592,16) the east shaft (columns 34–37) runs south past the lock row to the
+south-east pocket; `burnabletree@480,640` (tiles 30–31 × 40–41) is the only door from there to the shore under it, and
+the row-48 water (x 216..456) is the only way west. With the tree hypothesised gone, `planWaypoints` plans it at once
+(13 waypoints, one swim leg (456,744) → (216,776)); without `canSwim` it does not. Played on p4f
+(`l12keyline-134-round`, the solver's own plan, 1269 t): burned at t347 (gone t388), 184 ticks in water, `drownTimer`
+0, `hits` 0, `save.time` 9896 = model, into L95; the lock and its twin never open. The model reproduces the recording
+at 0 px.
+
+**D2: the frontier ranked doors by distance and stopped at the first.** `identifyAndSelect` floods the reachable
+component, sorts the actionable entities on its edge by distance to the aim, and resolves the first. The sealed lock is
+nearer the aim (≈415 px) than the tree (≈545 px), its keylock derivation throws SEALED BEHIND ITSELF, and nothing asked
+the tree. `SEALED_LOCK_NEXT_ON_FRONTIER` (ON): when the chosen door's refusal carries `sealed.self`, and only after
+FRONTIER3's 8 px retry has also failed (the order the throw used to take), the rest of the actionable frontier is
+resolved in its own order; the first that binds is the round's order, with a `rejected` row naming the sealed lock and
+its flag. A candidate that refuses, or answers "not held", is passed over. If none binds, the SEALED refusal is re-thrown
+unchanged. Steps 134 and 175 SOLVE (1269 t each); without Fire the refusal is the old one, byte for byte.
+
+**154/185 are not this lock (STOPPED, handed over).** `bosslock@112,192` is only the frontier's nearest name. The
+goal `teleporter@32,848` sits in a pocket closed on every side but the south, where `bosslock@32,864` (key 4, key line
+y 881, its own side) and `magicallock@32,864` (a `WandShot` breaks it) are stacked. The south side is reached through
+a cliffside-pixelmask gap 13 px wide (player x 202..214 at y 896) that no 16 px node sits in; with an 8 px lattice
+everywhere the flood reaches it from the arrival and names the magical lock, whose `kill` row cannot bind. Three
+pieces: the fine lattice in the flood and the walks (here: the retry fires only when the frontier has NO verb, and L12's
+frontier always has one), the wand verb on a MagicalLock (WAND's region), and the keylock from the south.
+
+**D3, the census** (the 11 later-L12 survey steps, CI 38075646127 → this tree): 134 and 175 REFUSED → SOLVED 1269 t; 154 and 185 stay REFUSED, their text now *"applied 4 strategies for one goal [chest, touch, burn, keylock(bosslock@416,240)]"* (the fall-through opens the lock from its own side, which is progress toward nothing); 57, 63, 78, 87, 108, 120 and 140 identical. Identity block, the six producer `--check`s and the roster's committed tapes byte-identical.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A refusal about one door is not a refusal about the room.** The frontier sorts doors by distance and the first
+  door's verb threw; the throw ended the goal although a farther door had a verb that binds. "This lock is sealed from
+  here" is a fact about the lock.
+- **A fallback that only fires when nothing else does is invisible wherever something else does.** FRONTIER3's 8 px
+  retry runs only when the frontier has no verb. L12's south cliffs need it, and L12's frontier always offers a verb
+  (a chest, a shield lock, a tree, a lock), so the retry never runs and four strategies are spent on doors that lead
+  nowhere.
+- **The frontier's nearest name is not the cause.** Step 154's refusal named `bosslock@112,192`, a lock in the north
+  that has nothing to do with the goal; the goal's real door is two stacked locks in the south.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
