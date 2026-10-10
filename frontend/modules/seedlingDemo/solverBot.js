@@ -77,10 +77,6 @@ import { runBait } from './botDriverV2.js';
 import {
     BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherSightDanger, searchBaitOrdering,
 } from './crusherBait.js';
-// ⛓ SEEDLING FIDELITY WAND — the `wand` verb (behind `WAND_VERB`).
-import { WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb } from './wandVerb.js';
-import { createWandShot, stepWandShot, wandShotRect } from './wandShot.js';
-import { MAGICAL_LOCK_OPEN_TICK_OFFSET } from './magicalLock.js';
 import {
     KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
     fallRocksArmedBy, groupResponders,
@@ -127,6 +123,9 @@ import {
     shieldBumpTouches,
     // ⛓⛓ fidelity ENCOUNTERS D3: the Witch's talk circle (`NPC.talkRange`).
     TALK_RANGE,
+    // ⛓⛓⛓ seedling-fidelity-wand D2: the `wand` verb (behind `WAND_VERB`).
+    WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb,
+    createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,

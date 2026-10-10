@@ -1895,3 +1895,4 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2478e7e0|60|0,rule,ma
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9065cb5b|0|0,rule,sentinel,,Ground state 0 (Player.as:297)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb348a44c|116|0,rule,count,,Game.levels.length
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h4254a394|3|0,physics,magnitude,Player.as:wandSpeed,
+frontend/modules/seedlingDemo/levelRun.js|earnedClearsNow|h79b2fd5f|0|0,rule,sentinel,Puzzlements/MagicalLock.as:63-71,MagicalLock tag sign test: <0 means no tag (seedling-fidelity-wand D2 earnedClears fold)
