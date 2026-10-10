@@ -34,11 +34,9 @@
  */
 
 import { DEFAULT_LATTICE, plansReach } from './botDriverV2.js';
-import { ENEMY_CLASSES } from './combat.js';
-import { hasDropDeath, tileUnder } from './bulb.js';
-import { TILE_SIZE, withTileWrites } from './levelWorld.js';
-import { CHASERS } from './chasers.js';
-import { SLASH_HIT_TICKS } from './presses.js';
+import {
+    CHASERS, ENEMY_CLASSES, SLASH_HIT_TICKS, TILE_SIZE, hasDropDeath, tileUnder, withTileWrites,
+} from './solverView.js';
 
 /** run → `{ needs: [{what, aims: [{x, y}], allowTeleporter}], planOpts: () => opts }` for the goals the segment still owes. */
 const NEEDS = new WeakMap();

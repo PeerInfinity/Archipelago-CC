@@ -125,6 +125,8 @@ import {
     shieldBumpTouches,
     // ⛓⛓ fidelity ENCOUNTERS D3: the Witch's talk circle (`NPC.talkRange`).
     TALK_RANGE,
+    // ⛓ seedling-fidelity-bulb D3: `bulbLive` gates the segment's kill-veto needs.
+    CONTACT_FIDELITY,
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -139,7 +141,6 @@ import {
 } from './strikePolicy.js';
 // ⛓⛓⛓ seedling-fidelity-bulb D3: a Bulb's kill is PLACED — the strike policy's veto and the segment's needs.
 import { dropKillVetoFor, setDropKillNeeds } from './bulbPlacement.js';
-import { CONTACT_FIDELITY } from './contactFidelity.js';
 import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestFirstQueue, coarseKey,
     spaceTimeReach } from './spaceTimeReach.js';
 
