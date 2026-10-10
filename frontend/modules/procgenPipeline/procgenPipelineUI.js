@@ -2393,8 +2393,12 @@ export class ProcgenPipelineUI {
 
         // Post-generation export actions, shown next to Generate once
         // a result is available. Hidden until then to keep the panel
-        // uncluttered before there's anything to export.
-        if (this.result) {
+        // uncluttered before there's anything to export. ⛓ A result
+        // RECONSTRUCTED from a loaded world's sidecars (the rawJsonLoaded
+        // handler) is a map with no rulesJson: nothing to export, so no
+        // buttons (until 2026-10-10 "Load into frontend" published undefined
+        // and still said "Loaded").
+        if (this.result?.rulesJson) {
             const json = stringifyRulesJson(this.result.rulesJson);
             const seedName = this.result.rulesJson?.seed_name || String(this.params.seed);
             const filename = `AP_${seedName}_rules.json`;
@@ -3813,7 +3817,13 @@ export class ProcgenPipelineUI {
         // In the stepped modes the step runners own this.result (a "Run all"
         // that just finishes an in-progress pipeline must not wipe it);
         // other modes clear it up front.
-        const midSphere = this.mode === 'sphereGrowth' && this._stepState;
+        // A COMPLETE sphere pipeline re-generates, as the other stepped modes
+        // do: before 2026-10-10 "Run all" on one was a no-op, which kept a
+        // result another load had already replaced (a world loaded from the
+        // Presets panel swaps in a map reconstructed from its sidecars, with no
+        // rulesJson) — the Guided Tour taken twice found nothing to load.
+        const midSphere = this.mode === 'sphereGrowth' && this._stepState
+            && nextSphereStep(this._stepState) !== null;
         // Mid-pipeline = an incomplete top-down run we're finishing; a COMPLETE
         // (or absent) one means Generate re-generates, so clear its result.
         const midTopDown = this.mode === 'topDown' && this._tdState
@@ -3821,6 +3831,7 @@ export class ProcgenPipelineUI {
         const midSpiral = this.mode === 'shuffledSpiral' && this._spiralState
             && nextSpiralStep(this._spiralState) !== null;
         if (!midSphere && !midTopDown && !midSpiral) this.result = null;
+        if (this.mode === 'sphereGrowth' && !midSphere) this._stepState = null; // re-plan (1) from the current params
         this.render();
 
         try {
