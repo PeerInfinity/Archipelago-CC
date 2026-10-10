@@ -113,7 +113,10 @@ describe('stagingFromWasmArrival on the recorded arrivals', () => {
             back.persistence = back.persistence.map(({ level, tag }) => ({ level, tag }));
             // ⛓ SLOTS CONSUMER — the slot array is staged off botStatus and no tape carries it (the tape is unchanged).
             const { inventory_slots: slots, ...format } = staging;
-            expect(back).toEqual(format);
+            // ⛓ FP REQUEST — the staging stages no `fp`, and `parseTape` normalises an undeclared fp to 0 (= "do not
+            // touch", the same meaning), so the round trip adds exactly that one key and nothing else.
+            expect(staging.rng).not.toHaveProperty('fp');
+            expect(back).toEqual({ ...format, rng: { ...format.rng, fp: 0 } });
             expect(slots).toEqual(a.status.inventory_slots);
             const run = createRunForStaging(staging, SOURCE);
             expect([run.level, run.state.x, run.state.y]).toEqual([a.status.level, a.status.x, a.status.y]);
@@ -310,11 +313,14 @@ describe('⛓ RNG-SPLIT STAGING — the split is the shipped tape\'s declaration
         expect(SHIPPED_RNG).toEqual({ seed: 0, split: true, cosmetic: 0, fp: 0 });
     });
     for (const [name, a] of Object.entries({ A, B0, B86, C })) {
-        it(`${name}: botStatus echoes split false; the staging declares the shipped split + cosmetic, the begin record's seed + fp`, () => {
+        it(`${name}: botStatus echoes split false; the staging declares the shipped split + cosmetic, the begin record's seed, and NO fp`, () => {
             expect(a.status.rng.split).toBe(false);
             const { staging } = stage(a);
+            // ⛓ FP REQUEST — `toEqual` with no `fp` key: the begin record's fp.seed stays a diagnostic, never staged.
+            expect(Number.isInteger(a.seam.beginEntry['fp.seed'])).toBe(true);
             expect(staging.rng).toEqual({ seed: a.seam.beginEntry['rng.gameplay'], split: SHIPPED_RNG.split,
-                cosmetic: SHIPPED_RNG.cosmetic, fp: a.seam.beginEntry['fp.seed'] });
+                cosmetic: SHIPPED_RNG.cosmetic });
+            expect(staging.rng).not.toHaveProperty('fp');
             expect(arrivalLatch(reads(a)).envelope.seam['static.Rng.split']).toBe(SHIPPED_RNG.split);
         });
     }
@@ -327,6 +333,19 @@ describe('⛓ RNG-SPLIT STAGING — the split is the shipped tape\'s declaration
         s2.rng.cosmetic = A.seam.beginEntry['rng.cosmetic'];
         expect(arrivalStagingWitness(s2, reads(A)).filter((r) => !r.ok).map((r) => r.name))
             .toEqual([expect.stringMatching(/^rng\.cosmetic = the shipped tape's declaration/)]);
+    });
+    /*
+     * ⛓ FP REQUEST — fp is FlashPunk's LCG — waterfall particles only — not solver input. The row asks for the
+     * key's ABSENCE, so both ways back are red: the begin record's value (what was staged until this slice), and
+     * the tape's own "do not touch" 0 (a staging that declares fp at all is a solve request that can differ).
+     */
+    it('the W1 witness reds a staged fp — the begin record\'s, or even 0 (each alone)', () => {
+        for (const fp of [A.seam.beginEntry['fp.seed'], 0]) {
+            const { staging } = stage(A);
+            staging.rng.fp = fp;
+            expect(arrivalStagingWitness(staging, reads(A)).filter((r) => !r.ok).map((r) => r.name))
+                .toEqual([expect.stringMatching(/^rng has no fp/)]);
+        }
     });
 });
 

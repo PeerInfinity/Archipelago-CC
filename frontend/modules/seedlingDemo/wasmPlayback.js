@@ -22,11 +22,13 @@
  *           fields with guesses. The world is the live one (same-world start),
  *           so every seam value the solve declared IS already the game's.
  *   `rng`   → seed 0, fp 0 (= "do not touch": `Bot.as` writes them only when
- *           non-zero). The staging's seeds are the BEGIN record's — the
- *           streams before the build drew from them (measured: begin
+ *           non-zero). The staging's seed is the BEGIN record's — the
+ *           stream before the build drew from it (measured: begin
  *           `rng.gameplay` 811240737 vs the live `rng.state` 771911645 at the
- *           same arrival) — so re-declaring them would REWIND the live stream
- *           under an already-built world.
+ *           same arrival) — so re-declaring it would REWIND the live stream
+ *           under an already-built world. The staging carries no `fp` at all
+ *           (fp-request slice: FlashPunk's LCG — waterfall particles only —
+ *           is not solver input); the tape's 0 leaves the live one running.
  *           `split` → TRUE, `cosmetic` 0 (post-p4f rng-split slice). `botStart`
  *           writes `Rng.split` UNCONDITIONALLY, and since p4f (3′b) tapeless
  *           play runs split — so a tape declaring false turns the game's own
@@ -552,7 +554,8 @@ export function exactDeclarationRefusal(tape, status, { granted = null } = {}) {
             + 'block writes seven fields no verb reads';
     }
     if ((tape.rng?.seed ?? 0) !== 0 || (tape.rng?.fp ?? 0) !== 0) {
-        return 'the tape re-seeds the rng — the staging\'s seeds are the begin record\'s, before the build drew';
+        return 'the tape re-seeds the rng — the staging\'s seed is the begin record\'s, before the build drew '
+            + '(and fp is never staged: the live FlashPunk LCG runs on)';
     }
     // ⛔ NOT compared with `status.rng.split`: that echoes the last tape's declaration, not the live flag.
     if (tape.rng?.split !== true || (tape.rng?.cosmetic ?? 0) !== 0) {

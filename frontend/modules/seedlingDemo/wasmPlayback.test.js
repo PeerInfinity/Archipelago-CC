@@ -52,9 +52,11 @@ describe('shippedTape — the tape the game is handed', () => {
         expect(t.seam).toBeNull();
     });
 
-    it('the rng is left alone (seed 0, fp 0 = untouched) — the staging\'s seeds are the BEGIN record\'s, not the live stream', () => {
+    it('the rng is left alone (seed 0, fp 0 = untouched) — the staging\'s seed is the BEGIN record\'s, not the live stream; no fp is staged', () => {
         const staging = stage(A);
         expect(staging.rng.seed).toBe(A.seam.beginEntry['rng.gameplay']);
+        // ⛓ FP REQUEST — fp is FlashPunk's LCG (waterfall particles only, not solver input): never staged.
+        expect(staging.rng).not.toHaveProperty('fp');
         // ⛓ p4f (seedling-wasm-leak L4 3′b): tapeless play runs SPLIT by default, so this
         // room's build drew only from the COSMETIC generator and the live gameplay stream
         // still equals the begin record (on p4e the build's tile draws had moved it).

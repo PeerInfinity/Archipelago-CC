@@ -1610,7 +1610,9 @@ describe('⛓ WALK IDENTITY — engine.expectArrival(): the Restart\'s start-hop
  * re-seeds it to the declared 0); the seed is the begin record's (the shipped tape writes none).
  */
 describe('⛓ RNG-SPLIT STAGING — the arrival, hold, adoption and continuation stagings carry SHIPPED_RNG\'s split, never the echo', () => {
-    const rngOf = (staging) => ({ split: staging.rng.split, cosmetic: staging.rng.cosmetic });
+    // ⛓ FP REQUEST — everything but the seed, so an `fp` key on ANY path reds the row: fp is FlashPunk's LCG —
+    // waterfall particles only — not solver input, and it is never staged (the begin record keeps it).
+    const rngOf = (staging) => { const { seed: _seed, ...rest } = staging.rng; return rest; };
     const WANT = { split: SHIPPED_RNG.split, cosmetic: SHIPPED_RNG.cosmetic };
     it('the fixture is the trap: every recorded botStatus echoes split false while the shipped tape declares true', () => {
         expect(SHIPPED_RNG.split).toBe(true);

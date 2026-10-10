@@ -299,9 +299,18 @@ export function stagingFromWasmArrival({ seam, status, state, record = undefined
     //             window's cosmetic stream starts THERE, not at the begin record's
     //             position `segmentBootFromLatch` carries for a split latch. Nothing
     //             modelled reads it; it is staged as the game will run it.
-    //   seed, fp  the BEGIN record's (live, pre-build): the shipped tape declares 0 =
-    //             NOT written, so the live streams run on from where the build began.
-    const rng = { ...blocks.rng, cosmetic: SHIPPED_RNG.cosmetic };
+    //   seed      the BEGIN record's (live, pre-build): the shipped tape declares 0 =
+    //             NOT written, so the live stream runs on from where the build began.
+    //   fp        NOT STAGED. fp is FlashPunk's LCG — waterfall particles only — not
+    //             solver input: its only draws are `Emitter` (the waterfall spray,
+    //             `Scenery/Tile.as`) and render-only `FP.choose` flips/spins, and no
+    //             model module reads it. A held room keeps spraying for wall-clock
+    //             time, so the begin record's position differed between two runs at
+    //             one start and broke the byte-identity of the solve requests (§5.48's
+    //             residue). The latch still RECORDS it (`seam.beginEntry['fp.seed']`)
+    //             and the shipped tape still declares `SHIPPED_RNG.fp` (0 = do not touch).
+    const { fp: _recordedNotStaged, ...rest } = blocks.rng;
+    const rng = { ...rest, cosmetic: SHIPPED_RNG.cosmetic };
     const staging = {
         boot: blocks.boot,
         noclip: false,
@@ -382,7 +391,15 @@ export function arrivalStagingWitness(staging, { seam, status, state }) {
     // the begin record's cosmetic position is not the window's either.
     row('rng.cosmetic = the shipped tape\'s declaration (SHIPPED_RNG.cosmetic; a split botStart re-seeds it)',
         SHIPPED_RNG.cosmetic, staging.rng?.cosmetic);
-    row('rng.fp = begin fp.seed', be['fp.seed'], staging.rng?.fp);
+    /*
+     * ⛓ FP REQUEST — fp is FlashPunk's LCG — waterfall particles only — not
+     * solver input. This row read `rng.fp = begin fp.seed` until the fp-request
+     * slice; the staging now carries NO `fp` key at all (the begin record keeps
+     * it, as a diagnostic), so the row asks for the key's ABSENCE — a staging
+     * that re-acquires it (any value, the begin record's included) is red.
+     */
+    row('rng has no fp (FlashPunk\'s LCG — waterfall particles only — not solver input; recorded on begin fp.seed, never staged)',
+        false, Object.prototype.hasOwnProperty.call(staging.rng ?? {}, 'fp'));
     rows.push({ name: 'seam.time = begin save.time − BOOT_PRESWAP_FRAMES (segmentBootFromLatch\'s convention)',
         ok: Number.isFinite(staging.seam?.time) && staging.seam.time < be['save.time'],
         detail: `staged ${staging.seam?.time}, begin save.time ${be['save.time']}` });

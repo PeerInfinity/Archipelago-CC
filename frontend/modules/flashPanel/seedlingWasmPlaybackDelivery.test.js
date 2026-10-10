@@ -567,7 +567,9 @@ describe('⛓ KEY DELIVERY — an AP key reaches the game: the gate, the staging
 
 /** ⛓ RNG-SPLIT STAGING — the delivery gate's re-stages keep the SHIPPED split (the recorded reads echo false). */
 describe('⛓ RNG-SPLIT STAGING — the mid-room replan and the held-room delivery re-stage carry SHIPPED_RNG\'s split, never the echo', () => {
-    const rngOf = (staging) => ({ split: staging.rng.split, cosmetic: staging.rng.cosmetic });
+    // ⛓ FP REQUEST — everything but the seed, so an `fp` key on ANY path reds the row: fp is FlashPunk's LCG —
+    // waterfall particles only — not solver input, and it is never staged (the begin record keeps it).
+    const rngOf = (staging) => { const { seed: _seed, ...rest } = staging.rng; return rest; };
     const WANT = { split: SHIPPED_RNG.split, cosmetic: SHIPPED_RNG.cosmetic };
     it('the MID-ROOM replan (a delivery while a plan plays): the re-staged continuation', () => {
         expect(A.status.rng.split).toBe(false);
