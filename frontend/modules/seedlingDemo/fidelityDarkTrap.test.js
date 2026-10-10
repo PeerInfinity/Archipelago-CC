@@ -32,6 +32,8 @@ const DIR = join(HERE, 'fixtures', 'darktrap-witness');
 const WITNESSES = readdirSync(DIR).filter((f) => f.endsWith('.json')).sort()
     .map((f) => JSON.parse(readFileSync(join(DIR, f), 'utf8')));
 const byName = (n) => WITNESSES.find((w) => w.name === n);
+/** ⛓ fidelity DARKTRAP2: the switches a witness was recorded with besides `darkTrapLight` (`--fidelity=`). */
+const switchesOf = (w) => ({ darkTrapLight: true, ...Object.fromEntries((w.fidelity ?? []).map((k) => [k, true])) });
 
 const levelSource = atlasLevelSource();
 const ROLES = ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'];
@@ -88,11 +90,16 @@ describe('STATICLADDER D2 — the switch', () => {
 
 describe('STATICLADDER D2 — the game witnesses, replayed (switch ON)', () => {
     it('the witness set is the two recorded runs', () => {
-        expect(WITNESSES.map((w) => w.name)).toEqual(['staticladder-l101-light-bob', 'staticladder-l62-step115-light']);
+        // ⛓ fidelity DARKTRAP2: + the L65/L63 witnesses, each replayed under its recorded switches (`switchesOf`).
+        expect(WITNESSES.map((w) => w.name)).toEqual([
+            'darktrap2-l63-spear-origin-float', 'darktrap2-l63-step145-light', 'darktrap2-l65-spear-in-swing',
+            'darktrap2-l65-spear-window-t5', 'darktrap2-l65-spear-window-t6', 'darktrap2-l65-step146-spear-gate',
+            'darktrap2-l65-step148-resolved', 'darktrap2-l65-step148-spear-gate',
+            'staticladder-l101-light-bob', 'staticladder-l62-step115-light']);
     });
     for (const w of WITNESSES) {
         it(`${w.name}: the player, and every DarkTrap's presence, "die1" and index, at every sampled tick`, () => {
-            const col = withContactFidelity({ darkTrapLight: true }, () => replay(w));
+            const col = withContactFidelity(switchesOf(w), () => replay(w));
             expect(disagreements(w, col)).toEqual([]);
             expect(w.samples.length).toBeGreaterThan(100);
         });
