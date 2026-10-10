@@ -190,7 +190,9 @@ describe('hammer-phase A D2 — HAMMER_ESCAPE in the press kill', () => {
     it('⛓⛓ ON by default, a deadline site of its own (appended), and its bounds are the mechanism\'s', () => {
         expect(HAMMER_ESCAPE.enabled).toBe(true);
         // ⛓ hammer-phase B1 appended `hammer-approach` after it, and B2 `hammer-fight`
-        expect(DEADLINE_SITES.slice(-3)).toEqual(['hammer-escape', 'hammer-approach', 'hammer-fight']);
+        // ⛓ bobsoldier2 D3 appended `crusher-fork` after these (a later row): the order is asked from this row on.
+        const at = DEADLINE_SITES.indexOf('hammer-escape');
+        expect(DEADLINE_SITES.slice(at, at + 3)).toEqual(['hammer-escape', 'hammer-approach', 'hammer-fight']);
         expect(HAMMER_ESCAPE_BOUNDS.horizon).toBe(SPINNER.hitsTimerMax + HAMMER_PHASE_RUNG.horizon);
         expect(HAMMER_ESCAPE_BOUNDS.follow).toBe(0);
     });

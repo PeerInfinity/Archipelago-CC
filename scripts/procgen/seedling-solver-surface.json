@@ -215,9 +215,9 @@
       "class": "seedling",
       "form": "forecast",
       "files": {
-        "solverBot.js": 1
+        "solverBot.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "both",
       "via": [
         "direct"
@@ -346,9 +346,9 @@
         "botDriverV2.js": 101,
         "crusherBait.js": 3,
         "dangerMap.js": 14,
-        "solverBot.js": 118
+        "solverBot.js": 119
       },
-      "sites": 236,
+      "sites": 237,
       "seen": "both",
       "via": [
         "direct"
@@ -396,7 +396,7 @@
         },
         "chasers": {
           "dangerMap.js": 2,
-          "solverBot.js": 11
+          "solverBot.js": 12
         },
         "crushers": {
           "botDriverV2.js": 8,
@@ -819,9 +819,9 @@
       "files": {
         "botDriverV2.js": 29,
         "director.js": 1,
-        "solverBot.js": 54
+        "solverBot.js": 55
       },
-      "sites": 84,
+      "sites": 85,
       "seen": "both",
       "via": [
         "const-alias",
@@ -872,7 +872,7 @@
         },
         "slashInfo": {
           "botDriverV2.js": 3,
-          "solverBot.js": 6
+          "solverBot.js": 7
         },
         "takenPickups": {
           "botDriverV2.js": 1,
@@ -1002,9 +1002,9 @@
         "arrivalSolid.js": 5,
         "botDriverV2.js": 114,
         "crusherBait.js": 6,
-        "solverBot.js": 319
+        "solverBot.js": 320
       },
-      "sites": 444,
+      "sites": 445,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2852,10 +2852,10 @@
       "class": "seedling",
       "form": "geometry-query",
       "files": {
-        "dangerMap.js": 3,
+        "dangerMap.js": 4,
         "solverBot.js": 1
       },
-      "sites": 4,
+      "sites": 5,
       "seen": "static",
       "via": [
         "import"
@@ -2871,9 +2871,10 @@
       "class": "seedling",
       "form": "function",
       "files": {
-        "dangerMap.js": 1
+        "dangerMap.js": 1,
+        "solverBot.js": 1
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "import"
@@ -3091,10 +3092,10 @@
       "class": "seedling",
       "form": "function",
       "files": {
-        "dangerMap.js": 1,
+        "dangerMap.js": 2,
         "strikePolicy.js": 1
       },
-      "sites": 2,
+      "sites": 3,
       "seen": "static",
       "via": [
         "import"
@@ -3348,9 +3349,9 @@
       "class": "seedling",
       "form": "geometry-query",
       "files": {
-        "dangerMap.js": 2
+        "dangerMap.js": 4
       },
-      "sites": 2,
+      "sites": 4,
       "seen": "static",
       "via": [
         "import"
@@ -3787,11 +3788,11 @@
       "files": {
         "arrivalSolid.js": 1,
         "botDriverV2.js": 12,
-        "dangerMap.js": 13,
+        "dangerMap.js": 14,
         "solverBot.js": 8,
         "strikePolicy.js": 1
       },
-      "sites": 35,
+      "sites": 36,
       "seen": "static",
       "via": [
         "import"
