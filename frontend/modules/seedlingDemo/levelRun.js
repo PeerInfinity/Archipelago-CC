@@ -16579,6 +16579,17 @@ export function createLevelRun({
         /** One record per contact a shot made, including the ones that paid nothing. */
         get wandShotHits() { return wandShotHits.map((h) => ({ ...h })); },
         /**
+         * ⛓ SEEDLING FIDELITY WAND — the shots in flight (or dying) in the
+         * CURRENT level, `{id, x, y, anim, life, destroy}`: what the game's
+         * `botMobiles()` reports for a `WandShot` row, for a probe to join on.
+         * A pure read; nothing in the run consults it.
+         */
+        get wandShotsLive() {
+            return wandShotsFor(level).map((s) => ({
+                id: s.id, x: s.x, y: s.y, anim: s.anim, life: s.life, destroy: s.destroy, removed: s.removed,
+            }));
+        },
+        /**
          * ── ⛓⛓⛓ R6 SLICE 4: THE FIGHT'S SIX LEDGERS ─────────────────
          *
          * ⛔ EACH ONE IS A DIFFERENT CLAIM. A window that asserted "the
