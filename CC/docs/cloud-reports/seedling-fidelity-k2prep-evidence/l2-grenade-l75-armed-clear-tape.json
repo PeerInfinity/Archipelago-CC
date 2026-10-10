@@ -1,0 +1,88 @@
+{
+  "tape_version": 8,
+  "game": "seedling",
+  "name": "l2-grenade-l75-armed-clear",
+  "description": "SEEDLING FIDELITY LADDER2 D1 probe arm l2-grenade-l75-armed-clear: stand where grenade@72,168 reaches for 200 ticks. Authored by scripts/procgen/probe-seedling-ladder2-phase.mjs.",
+  "boot": {
+    "level": 75,
+    "x": 72,
+    "y": 194
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [
+    {
+      "level": 5,
+      "tag": 0
+    },
+    {
+      "level": 8,
+      "tag": 0
+    },
+    {
+      "level": 8,
+      "tag": 1
+    },
+    {
+      "level": 10,
+      "tag": 0
+    }
+  ],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": []
+  },
+  "rng": {
+    "seed": 418414780,
+    "split": false,
+    "cosmetic": 0,
+    "fp": 1763053598
+  },
+  "seam": {
+    "items": {
+      "hasSword": true,
+      "hasGhostSword": false,
+      "hasShield": false,
+      "hasFire": false,
+      "hasWand": false,
+      "hasFireWand": false,
+      "canSwim": false,
+      "hasSpear": false,
+      "hasDarkShield": false,
+      "hasDarkSuit": false,
+      "hasDarkSword": false,
+      "hasFeather": false,
+      "hasTorch": false
+    },
+    "beam": false,
+    "rock_set": false,
+    "hits_max": 3,
+    "first_use": false,
+    "extended": false,
+    "time": 8586,
+    "primary": 0,
+    "secondary": 0,
+    "grass_cut": 0,
+    "cutscene": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "menu_state": 0,
+    "music": {
+      "set": "Room",
+      "index": 1
+    }
+  },
+  "tick_count": 200,
+  "inputs": []
+}

@@ -17,6 +17,9 @@
  *   … --upto=<tick>          compare only samples at or before this tick
  *   … --record --name=<n>    write the tape and the GAME's rows of the class (with the player) to
  *                            `fixtures/chaser-witness/<n>.json` — only on a PASS; `fidelityLavaRunner.test.js` replays it
+ *   … --camera               (⛓ K2PREP D2) also record the GAME's camera at each sample (`botStatus().camera`, the
+ *                            `FP.camera` `view()` left — the jiggle LANDED, read rather than modelled), so a replay
+ *                            can read a shake band's 'uncertain' on-screen ticks off the game (`cameraWitness`)
  */
 import { chromium } from 'playwright';
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -51,6 +54,7 @@ async function main() {
         process.exit(2);
     }
     const UPTO = arg('upto') === null ? Infinity : Number(arg('upto'));
+    const CAMERA = process.argv.includes('--camera');
 
     takeBoxLockOrExit({ name: 'probe-seedling-chaser-mobiles.mjs', kind: 'browser' });
 
@@ -72,28 +76,6 @@ async function main() {
     if (!TAG) {
         console.error(`probe-seedling-chaser-mobiles: no CHASERS row transcribes ${CLASS}`);
         process.exit(2);
-    }
-
-    // ── the MODEL: the run's own chaser state after each tick (index 0 = boot) ──
-    const col = [];
-    {
-        let run = null;
-        const st = createTapeStepper(tape, {
-            levelSource: atlasLevelSource(),
-            onTick: (t, s, h, rn) => { run = rn; },
-        });
-        let r = st.next();
-        while (!r.done) {
-            const o = r.value.observation;
-            const ch = run ? (run.entities('chasers') ?? []) : [];
-            col[o.t] = {
-                px: o.x, py: o.y,
-                bodies: ch.map((c) => ({ id: c.id, x: c.x, y: c.y, vx: c.vx, vy: c.vy, hits: c.hits, hitsTimer: c.hitsTimer,
-                    removed: c.removed === true,
-                    swordSpin: c.swordSpin, swordSpinning: c.swordSpinning })),
-            };
-            r = st.next();
-        }
     }
 
     // ── the GAME ────────────────────────────────────────────────────────────
@@ -127,7 +109,7 @@ async function main() {
             });
             const m = JSON.parse(raw[0]);
             const s = JSON.parse(raw[1]);
-            frames.push({ status: { tick: s.tick, level: s.level, finished: s.finished }, mobiles: m });
+            frames.push({ status: { tick: s.tick, level: s.level, finished: s.finished, camera: s.camera ?? null }, mobiles: m });
             if (s.finished) { status = s; break; }
         }
     } finally {
@@ -136,6 +118,38 @@ async function main() {
     if (!status) {
         console.log('FAIL: the tape never finished inside the deadline');
         process.exit(1);
+    }
+
+    // ── the MODEL: the run's own chaser state after each tick (index 0 = boot) — AFTER the game (⛓ K2PREP D2) ──
+    const col = [];
+    {
+        let run = null;
+        // ⛓ K2PREP D2: with --camera the replay reads the GAME's camera on the shake band's uncertain ticks
+        // (`levelRun.witnessCamera`) — the first sample at each tick, as the join below takes. ⚠ NOT tick 0: the
+        // boot sample is polled before the level's first `view()` (measured on L75: (0, 108) at t0, then the
+        // model's (0, 80) at every exact tick from t1), so it is not the camera update 1 reads.
+        const cams = new Map();
+        for (const f of frames) {
+            const t = f.mobiles.tick ?? f.status.tick;
+            if (Number.isInteger(t) && t >= 1 && !cams.has(t) && f.status.camera) cams.set(t, f.status.camera);
+        }
+        const st = createTapeStepper(tape, {
+            levelSource: atlasLevelSource(),
+            onTick: (t, s, h, rn) => { run = rn; },
+            ...(CAMERA ? { cameraWitness: (t) => cams.get(t) ?? null } : {}),
+        });
+        let r = st.next();
+        while (!r.done) {
+            const o = r.value.observation;
+            const ch = run ? (run.entities('chasers') ?? []) : [];
+            col[o.t] = {
+                px: o.x, py: o.y,
+                bodies: ch.map((c) => ({ id: c.id, x: c.x, y: c.y, vx: c.vx, vy: c.vy, hits: c.hits, hitsTimer: c.hitsTimer,
+                    removed: c.removed === true,
+                    swordSpin: c.swordSpin, swordSpinning: c.swordSpinning })),
+            };
+            r = st.next();
+        }
     }
 
     // ── the JOIN ────────────────────────────────────────────────────────────
@@ -206,7 +220,8 @@ async function main() {
     for (const d of disagreements.slice(0, 12)) console.log(`      ${d}`);
     if (disagreements.length > 12) console.log(`      … ${disagreements.length - 12} more`);
     if (OUT) {
-        writeFileSync(OUT, `${JSON.stringify({ tape: TAPE ?? FILE, class: CLASS, page: PAGE_NAME, calibrated, fits, compared, worst, disagreements, rows }, null, 1)}\n`);
+        writeFileSync(OUT, `${JSON.stringify({ tape: TAPE ?? FILE, class: CLASS, page: PAGE_NAME, calibrated, fits, compared, worst, disagreements, rows,
+            ...(CAMERA ? { cameras: samples.map((f) => [tickOf(f), f.status.camera]) } : {}) }, null, 1)}\n`);
         console.log(`wrote ${OUT}`);
     }
     if (RECORD) {
@@ -225,6 +240,7 @@ async function main() {
                     t: tickOf(f), level: f.status.level, player: { x: playerOf(f).x, y: playerOf(f).y },
                     bodies: bodiesOf(f).map((g) => ({ x: g.x, y: g.y, vx: g.vx, vy: g.vy,
                         hits: g.enemy?.hits ?? null, hits_timer: g.enemy?.hits_timer ?? null })),
+                    ...(CAMERA && tickOf(f) >= 1 ? { camera: f.status.camera } : {}),
                 })),
                 tape: FILE ? (WITNESS ? JSON.parse(readFileSync(FILE, 'utf8')).tape : JSON.parse(readFileSync(FILE, 'utf8'))) : null,
             };

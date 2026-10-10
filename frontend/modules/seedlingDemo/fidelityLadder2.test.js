@@ -39,6 +39,7 @@ import {
 import { createPlacedGrenade, placedGrenadeFuse, stepPlacedGrenade } from './placedGrenade.js';
 import { axeVisitClock, dangerAt, grenadeDanger, phaseHazardCanReach } from './dangerMap.js';
 import { DEADLINE_SITES, PHASE_DODGE_RUNG } from './solverBot.js';
+import { withKillLockBodies } from './killLockBodies.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..', '..');
@@ -89,10 +90,24 @@ describe('fidelity LADDER2 D1 — the grenade\'s, the chain\'s and the beam\'s c
 
     it('the model reproduces the game\'s blast knockback, 0 px over every row of three arms', async () => {
         const { LADDER2_ARMS, ladder2ArmTape } = await probe();
+        /**
+         * ⛓ K2PREP D2: with K2 `lavaRunnerLive` ON, L75's two lavarunners are stepped, and the blast's shake opens
+         * the camera band at t155 with `lavarunner@104,64` on its edge — the model refuses to guess the jiggle
+         * (⚖ never model the cosmetic RNG). This is a REPLAY of a game recording, so it reads the game's own camera
+         * on those ticks (`fixtures/chaser-witness/k2prep-l75-grenade{,-armed-clear}-lavarunner.json`, `cameraWitness`;
+         * the armed-clear arm's band is open from t1). With K2 OFF no body asks, and the witness is never read.
+         */
+        const camerasFor = (n) => new Map(JSON.parse(readFileSync(join(HERE, 'fixtures', 'chaser-witness', `${n}.json`),
+            'utf8')).samples.filter((x) => x.camera).map((x) => [x.t, x.camera]));
+        const witnessed = {
+            'l2-grenade-l75': camerasFor('k2prep-l75-grenade-lavarunner'),
+            'l2-grenade-l75-armed-clear': camerasFor('k2prep-l75-grenade-armed-clear-lavarunner'),
+        };
         for (const name of ['l2-grenade-l59-walled', 'l2-grenade-l75', 'l2-grenade-l75-armed-clear']) {
             const arm = ORACLE.arms.find((a) => a.arm === name);
+            const cams = witnessed[name];
             const replay = runTape(await ladder2ArmTape(LADDER2_ARMS.find((a) => a.name === name)),
-                { levelSource: SRC });
+                { levelSource: SRC, ...(cams ? { cameraWitness: (t) => cams.get(t) ?? null } : {}) });
             const worst = Math.max(...arm.gameStream.map(([, L, x, y], i) => (replay.ticks[i].level !== L
                 ? Infinity : Math.max(Math.abs(replay.ticks[i].x - x), Math.abs(replay.ticks[i].y - y)))));
             expect([name, arm.gameStream.length, worst]).toEqual([name, 201, 0]);
@@ -211,10 +226,19 @@ describe('fidelity LADDER2 D3 — the witnesses, recorded on the game', () => {
         }
     });
 
-    it('⛔ ladder2-l75-chain is EVIDENCE, not a witness: 0 px past all three chains, refuted at t161 by a LavaRunner', () => {
+    /**
+     * ⛓ K2PREP D2: the refutation is K2's. With `lavaRunnerLive` OFF the model's lavarunners stand at their
+     * placements and the game's walks into the player at t161. With K2 ON the walk is the game's on all 388 rows —
+     * the lavarunners stepped AND `LavaChain.reach`'s `"Enemy"` arm (`levelRun.stepLavaChainsNow`: the chain's arm
+     * hits `lavarunner@104,64` at t47, 1 hit + a 5 px/t shove). Without that arm K2 ON refutes at t125 (the wave-10
+     * harvest's 161 → 125); the shake band was never this row's cause (it is the grenade arm's, above).
+     */
+    it('⛔ ladder2-l75-chain: K2 OFF refuted at t161 by a LavaRunner; K2 ON the game\'s walk, 0 px on every row', () => {
         const E = join(REPO, 'CC', 'docs', 'cloud-reports', 'seedling-fidelity-ladder2-evidence');
-        const got = replayVsGame(readFileSync(join(E, 'ladder2-l75-chain-tape.json'), 'utf8'),
-            JSON.parse(readFileSync(join(E, 'ladder2-l75-chain-game.json'), 'utf8')).ticks);
-        expect(got.first).toBe(161);
+        const game = JSON.parse(readFileSync(join(E, 'ladder2-l75-chain-game.json'), 'utf8')).ticks;
+        const tape = readFileSync(join(E, 'ladder2-l75-chain-tape.json'), 'utf8');
+        expect(withKillLockBodies({ lavaRunnerLive: false }, () => replayVsGame(tape, game)).first).toBe(161);
+        const on = withKillLockBodies({ lavaRunnerLive: true }, () => replayVsGame(tape, game));
+        expect([on.first, on.rows]).toEqual([-1, 388]);
     });
 });
