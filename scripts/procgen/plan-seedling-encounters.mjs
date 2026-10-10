@@ -136,6 +136,48 @@ async function main() {
         console.log(`## ${NAME}: ${out.perTick.length} ticks`);
     }
 
+    // ── enc-l12-witch ────────────────────────────────────────────────────
+    {
+        const NAME = 'enc-l12-witch';
+        // The survey's step-140 arrival (`in_L95_624_64` → L12 at (16,352)), holding the sword and the wand.
+        const header = {
+            ...U5,
+            boot: Object.freeze({ level: 12, x: 16, y: 352 }),
+            persistence: [],
+            equips: [],
+            save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: { seed: 1, split: false },
+            seam: { items: { hasSword: true, hasWand: true } },
+        };
+        const { run, out } = solve(NAME, header,
+            [{ kind: 'encounter', at: { x: 416, y: 384 }, drop: { item: 'Progressive Sword' }, then: null },
+                // ⚠ and OUT, as survey step 140 does: the talk and the ceremony freeze the player, so a tape that
+                // stopped at the drop would read the same x/y stream for any dialogue length — the walk to the
+                // L95 door is what makes the stream carry the encounter's timing.
+                { kind: 'reach-exit', exit: { x: 0, y: 352 } }]);
+        const ev = run.ledger('witchEvents');
+        const close = ev.find((r) => r.what === 'witch-close');
+        const added = ev.find((r) => r.what === 'darksword-added');
+        const contact = ev.find((r) => r.what === 'darksword-contact');
+        check('⛓⛓ holding the wand, the Witch speaks `textExtra` (the item\'s text, not the level\'s)',
+            ev.find((r) => r.what === 'witch-open')?.extra === true, JSON.stringify(ev[0]));
+        check('⛓⛓ the dialogue closes on its last page and `doneTalking` ADDS the sword at the player\'s feet',
+            close?.cause === 'done' && close.grants === true && added?.t === close.t, JSON.stringify(added));
+        check('⛓ collected by overlap on the NEXT frame, `hasDarkSword` after its ceremony, untouched',
+            contact?.t === close.t + 1 && run.progress('inventory').hasDarkSword === true
+            && run.ledger('playerHits').length === 0, `contact t ${contact?.t}, ${out.perTick.length} t`);
+        check('⛓ then the walk out by the L95 door', run.level === 95, `level ${run.level}`);
+        const description = '⛓⛓ seedling-fidelity-encounters D3 — L12\'s WITCH, holding the wand. From the survey\'s '
+            + 'step-140 arrival (16,352) with the sword and the wand, the encounter goal walks into the Witch\'s talk '
+            + `circle, opens her dialogue on an X release (t ${ev.find((r) => r.what === 'witch-open')?.t}), pages `
+            + `\`textExtra\` to its end (t ${close?.t}); \`Witch.doneTalking\` adds a \`DarkSword\` at the player's feet `
+            + `(${added?.x},${added?.y}), collected by overlap on the next frame; its ceremony is paged and the run `
+            + `holds \`hasDarkSword\`; then the walk out by the L95 door (t ${out.perTick.length}). Authored by `
+            + 'scripts/procgen/plan-seedling-encounters.mjs.';
+        emit(NAME, tapeJson(NAME, header, {}, out.perTick, out.equips, description));
+        console.log(`## ${NAME}: ${out.perTick.length} ticks`);
+    }
+
     if (failures > 0) {
         console.error(`plan-seedling-encounters: ${failures} check(s) FAILED`);
         process.exit(1);

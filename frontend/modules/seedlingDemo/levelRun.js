@@ -126,6 +126,8 @@ import {
 // ⛓⛓ Swim U5: L32's BobBoss encounter — the rock, three forms, three
 // dialogues, the transitions and the runtime Fire (`bobBossFight.js`).
 import { ARENA as BOB_BOSS_ARENA, FIRE as BOB_BOSS_FIRE } from './bobBoss.js';
+// ⛓⛓ Seedling fidelity ENCOUNTERS D3: L12's Witch and the DarkSword it adds.
+import { DARK_SWORD, darkSwordBox, darkSwordSpawnAt, witchGrants, witchText } from './witch.js';
 import {
     BOB_BOSS_ROCK_DEAD_FRAMES, beginBobBossDialogue, bobBossBox, bobBossHit, bobBossRockArms,
     bobBossRockRect, bobBossShieldBump, createBobBossBody, DARK_SHIELD_DAMAGE, enemyKnockbackV,
@@ -449,6 +451,7 @@ export const LEDGER_KIND_NAMES = Object.freeze([
     'shieldBumps',
     'spitEvents',
     'staticBodyDeaths',
+    'witchEvents',
 ]);
 
 /**
@@ -2539,6 +2542,20 @@ export function createLevelRun({
      * an effect is transcribed it will.
      */
     const talkerTalks = [];
+    /**
+     * ⛓⛓ ENCOUNTERS D3: the Witch's encounter ledger, `run.ledger('witchEvents')`
+     * — `witch-open` / `witch-close` (with `grants`) / `darksword-added` /
+     * `darksword-contact` / `darksword-removed` (the out-of-band write, reported).
+     * Empty in every room without a speaking Witch.
+     */
+    const witchLedger = [];
+    /**
+     * ⛓⛓ ENCOUNTERS D3: the runtime `DarkSword` — `null`, or `{level, x, y,
+     * added, collected}`. `added` is false on the closing frame (the add is
+     * queued; `updateLists` lands it at the frame's end) and true from the next.
+     * A new `Game` destroys it, as it does every runtime entity.
+     */
+    let witchSword = null;
     /** The `{114,0}` write `doneTalking()` makes — keyed like `bossFlags`. */
     const watcherFlags = new Map();
     /**
@@ -12580,6 +12597,19 @@ export function createLevelRun({
                         page: w.dialogue.page,
                         frames: w.dialogue.frames,
                     });
+                    // ⛓⛓ ENCOUNTERS D3: `Witch.doneTalking()` — the `talking`
+                    // setter's false branch, on BOTH causes. The player has not
+                    // stepped yet this frame (the Witch updates first), so the
+                    // sword is spawned where the player stands now.
+                    if (w.tag === 'witch') {
+                        const grants = witchGrants(inventory);
+                        witchLedger.push({ t: ticksCompleted, level: w.level, what: 'witch-close', id: w.id,
+                            cause: r.left ? 'left' : 'done', grants });
+                        if (grants) {
+                            const at = darkSwordSpawnAt(state);
+                            witchSword = { level: w.level, x: at.x, y: at.y, added: false, collected: false };
+                        }
+                    }
                 }
                 continue;
             }
@@ -12611,7 +12641,15 @@ export function createLevelRun({
             }
             // `startTalking()`, and NOT an advance this frame: `if (talking)`
             // is tested ABOVE it, so the opening release is spent opening.
-            w.dialogue = beginNpcDialogue(w.text, {
+            // ⛓ ENCOUNTERS D3: `Witch.update` swaps `myText` by the item flags
+            // before `talk()` runs (`witch.witchText`); every other class speaks
+            // its level text.
+            const spoken = w.tag === 'witch' ? witchText(w.text, inventory) : w.text;
+            if (w.tag === 'witch') {
+                witchLedger.push({ t: ticksCompleted, level: w.level, what: 'witch-open', id: w.id,
+                    extra: spoken !== w.text });
+            }
+            w.dialogue = beginNpcDialogue(spoken, {
                 talkingSpeed: w.talkingSpeed,
                 lineLength: w.lineLength,
                 framesThisCharacter,
@@ -14094,6 +14132,8 @@ export function createLevelRun({
     const spinnerWritesNow = () => spinnerWrites.map((w) => ({ ...w, flag: { ...w.flag } }));
     const turretKillsNow = () => turretKills.map((k) => ({ ...k }));
     const staticBodyDeathsNow = () => staticBodyDeaths.map((d) => ({ ...d }));
+    /** ⛓ ENCOUNTERS D3: `run.ledger('witchEvents')` — a copy of the Witch's rows. */
+    const witchEventsNow = () => witchLedger.map((r) => ({ ...r, ...(r.flag ? { flag: { ...r.flag } } : {}) }));
     const PROGRESS_FIELDS = Object.freeze({
         inventory: inventoryNow,
         keys: keysNow,
@@ -14143,6 +14183,7 @@ export function createLevelRun({
         shieldBumps: shieldBumpsNow,
         spitEvents: spitEventsNow,
         staticBodyDeaths: staticBodyDeathsNow,
+        witchEvents: witchEventsNow,
     });
 
     return {
@@ -15648,6 +15689,8 @@ export function createLevelRun({
         get spitEvents() { return spitEventsNow(); },
         /** ⛓ F4: the static bodies this run killed (see `staticBodyDeaths`). */
         get staticBodyDeaths() { return staticBodyDeathsNow(); },
+        /** ⛓ ENCOUNTERS D3: the Witch's encounter rows — see `witchEventsNow`. */
+        get witchEvents() { return witchEventsNow(); },
         /**
          * ⛓⛓⛓ R5 SLICE 22 — THE FREEZE LEDGER, AND IT IS THE PRICE OF THE
          * KILL RATHER THAN AN ACCIDENT.
@@ -17326,6 +17369,38 @@ export function createLevelRun({
                     };
                 }
             }
+            // ⛓⛓ ENCOUNTERS D3: the runtime `DarkSword` `Witch.doneTalking()`
+            // adds. Queued on the closing frame (`added` false), in the world
+            // from the next, where it updates before everything placed (a runtime
+            // add is PREPENDED) and `collide("Player")` decides by overlap alone
+            // (`_attract` false). `special`: phase A, then its text.
+            if (witchSword && witchSword.level !== level) witchSword = null;
+            if (witchSword && !witchSword.collected) {
+                if (!witchSword.added) {
+                    witchSword.added = true;
+                    witchLedger.push({ t: ticksCompleted, level, what: 'darksword-added',
+                        x: witchSword.x, y: witchSword.y });
+                } else if (ceremony === null && !noclip && !state.fall) {
+                    const pb = playerBoxAt(state.x, state.y);
+                    const sb = darkSwordBox(witchSword);
+                    if (pb.right > sb.x && pb.x < sb.right && pb.bottom > sb.y && pb.y < sb.bottom) {
+                        assertNoCeremonyBesideLiveChaser('darksword');
+                        ceremonyStarts.push({ t: ticksCompleted, level, tag: 'darksword', runtime: true });
+                        spendCeremonyPhaseA('darksword');
+                        witchLedger.push({ t: ticksCompleted, level, what: 'darksword-contact',
+                            x: state.x, y: state.y });
+                        ceremony = {
+                            pickup: { tag: 'darksword', x: witchSword.x, y: witchSword.y, runtime: true,
+                                witchSword: true },
+                            level,
+                            item: DARK_SWORD.item,
+                            keyType: null,
+                            totemPart: null,
+                            dialogue: beginDialogue(DARK_SWORD.text, { framesThisCharacter }),
+                        };
+                    }
+                }
+            }
             // ⛓⛓ Swim U5: the runtime Fire `BobBoss.death` adds — `new Fire(72,
             // 72, -1)`, special, text `FIRE.text`. Runtime-added, so it updates
             // before the placed pickups, exactly like the Watcher's Seed.
@@ -17539,6 +17614,17 @@ export function createLevelRun({
                     // item, below) and `setPersistence(-1, false)`, which lands in
                     // the PREVIOUS level's last slot. Reported, not applied: an
                     // out-of-band write is a ledger entry (`spinnerWrites`' rule).
+                    // ⛓⛓ ENCOUNTERS D3: `DarkSword.removed()` — `hasDarkSword` (the
+                    // item, below) and `if (checkPersistence(-1)) setPersistence(-1,
+                    // false)`: an out-of-band write behind an out-of-band READ
+                    // (`OUT_OF_BAND_WRITERS.DarkSword`, `ifFlagAlreadySet`). Reported.
+                    if (ceremony.pickup.witchSword) {
+                        witchSword.collected = true;
+                        const flag = outOfBandFlagForWriter({ as3: 'DarkSword', level, tag: -1 });
+                        witchLedger.push({ t: ticksCompleted + 1, level, what: 'darksword-removed',
+                            flag: { level: flag.level, tag: flag.tag, value: false }, outOfBand: flag.outOfBand,
+                            writesWhen: 'ifFlagAlreadySet' });
+                    }
                     if (ceremony.pickup.bobFire) {
                         bobArena.fireCollected = true;
                         const flag = outOfBandFlagForWriter({ as3: 'Fire', level, tag: -1 });

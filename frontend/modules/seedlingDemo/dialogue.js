@@ -568,12 +568,17 @@ export const PLACED_NPC_TALK = Object.freeze({
         why: 'NPCs/Oracle.as:95-109 — under `Game.cutscene[1]` it either `exitToMenu()` '
             + 'or plays the player\'s DEATH animation, and `Oracle.as` is also the only '
             + 'class with a `talking_extras()` override' }),
+    /**
+     * ⛓⛓ MODELLED since seedling fidelity ENCOUNTERS D3 (`witch.js`): its
+     * `doneTalking()` ADDS a `DarkSword` pickup at the player's feet when
+     * `Main.hasWand && !Main.hasDarkSword`, and `update()` swaps the text by the
+     * same two flags. `levelRun`'s talker arm runs both and the runtime pickup.
+     */
     witch: Object.freeze({ as3: 'Witch', spawn: 'Game.as:2272',
         ctor: 'NPCs/Witch.as:23-25', lineLength: NPC_LINE_LENGTH_DEFAULT,
-        doneTalking: 'REFUSED',
+        doneTalking: 'darksword',
         why: 'NPCs/Witch.as:46-53 — `if (Main.hasWand && !Main.hasDarkSword)` it ADDS a '
-            + '`DarkSword` pickup at the player\'s feet, which is a new entity and a new '
-            + 'ceremony this model would not know about' }),
+            + '`DarkSword` pickup at the player\'s feet (`witch.js`; `levelRun`\'s talker arm)' }),
     yeti: Object.freeze({ as3: 'Yeti', spawn: 'Game.as:2274',
         ctor: 'NPCs/Yeti.as:19-21', lineLength: NPC_LINE_LENGTH_DEFAULT,
         doneTalking: 'REFUSED',
