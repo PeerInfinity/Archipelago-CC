@@ -206,6 +206,20 @@
       "noHazards": []
     },
     {
+      "file": "ghostmotion-l102-axis.json",
+      "tickCount": 24,
+      "bootLevel": 102,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "ghostmotion-l102-diag.json",
+      "tickCount": 24,
+      "bootLevel": 102,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "ghostsword-l3-rock.json",
       "tickCount": 43,
       "bootLevel": 3,

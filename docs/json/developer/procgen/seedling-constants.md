@@ -302,9 +302,9 @@ The region below is rendered by `--write`; do not edit it by hand.
 | physics | 5 | 1555 | 357 | 1917 |
 | rule | 6 | 939 | 456 | 1401 |
 | cosmetic | 0 | 60 | 14 | 74 |
-| structural | 10 | 359 | 1682 | 2051 |
+| structural | 10 | 355 | 1686 | 2051 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2913 | 2509 | 5443 |
+| total | 21 | 2909 | 2513 | 5443 |
 
 Class × kind (physics and rule rows only):
 

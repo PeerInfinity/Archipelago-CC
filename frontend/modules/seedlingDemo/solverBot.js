@@ -107,6 +107,7 @@ import {
     // value than since R5. The press arm never consulted it; the game found out.
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD,
     SLASH_ANIM_TICKS, slashScaleFor, slashSet, slashTimerTick,
+    GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
     MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
@@ -4281,7 +4282,8 @@ export function previewWalk(run, wps, tolerance = 0,
             });
             slashState = r.state;
             if (r.outcome === 'slash' || r.outcome === 'dash') {
-                slashEndsAt = at + SLASH_ANIM_TICKS[slashState.anim];
+                // ⛓ GHOSTMOTION: the release is the swinging sword's own animation (`getSword()` reads the flag).
+                slashEndsAt = at + slashEndTicksFor(slashState.anim, gate.hasGhostSword ? 'ghostsword' : 'sword');
                 /**
                  * ⛓⛓ THE REPLACEMENT AND THE SCHEDULE, in `advance`'s own two
                  * places: `play(anim, true)` restarts the animation so the
@@ -4681,6 +4683,17 @@ export const PREVIEW_AGREEMENT_BOUND = 195;
 export const DASH_CHAIN_PATTERN = Object.freeze([0, ...DASH_CHAIN.at]);
 
 /**
+ * ⛓⛓⛓ SEEDLING FIDELITY GHOSTMOTION — **THE GHOST SWORD'S CHAIN**, the same derivation over the ghost sword's own
+ * animations (`ghostSword.GHOST_DASH_CHAIN`: 0 · 2 · 10 · 18). Under the ghost sword the sword's pattern presses at
+ * 8 and 14 — and the game SWALLOWS the 8 (the 2's dash animation is 6 ticks, still up), so that schedule is three
+ * presses for two dashes. `dashPrefixesFor(mode, {weapon})` picks it.
+ */
+export const GHOST_DASH_CHAIN_PATTERN = Object.freeze([0, ...GHOST_DASH_CHAIN.at]);
+const GHOST_DASH_CHAIN_PREFIXES = Object.freeze(
+    GHOST_DASH_CHAIN_PATTERN.map((_, i) => Object.freeze(GHOST_DASH_CHAIN_PATTERN.slice(0, i + 1))),
+);
+
+/**
  * ⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45(b) — **THE PARTIAL WINDOWS** (user,
  * 2026-08-24: *"I would like the planner to consider dashes that aren't full
  * length, if possible."*).
@@ -4721,11 +4734,13 @@ export const DASH_CHAIN_PREFIXES = Object.freeze(
  * ⛔ A MODE OUTSIDE THE SET FAILS BY NAME HERE TOO, so a set can never be
  * silently smaller than the mode a header printed.
  */
-export function dashPrefixesFor(mode) {
+export function dashPrefixesFor(mode, { weapon = 'sword' } = {}) {
     assertDashMode(mode, 'dashPrefixesFor');
     if (mode === 'none') return Object.freeze([]);
-    if (mode === 'full') return Object.freeze([DASH_CHAIN_PATTERN]);
-    return DASH_CHAIN_PREFIXES;
+    // ⛓ GHOSTMOTION: a ghost swing's chain is its own (`ghostClockFor`: both ghost switches ON).
+    const ghost = ghostClockFor(weapon);
+    if (mode === 'full') return Object.freeze([ghost ? GHOST_DASH_CHAIN_PATTERN : DASH_CHAIN_PATTERN]);
+    return ghost ? GHOST_DASH_CHAIN_PREFIXES : DASH_CHAIN_PREFIXES;
 }
 
 /**
@@ -4811,7 +4826,9 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
             + 'does not build a plan at all — so reaching here is a threading defect, '
             + 'not an empty candidate set.');
     }
-    const prefixes = dashPrefixesFor(dashMode);
+    // ⛓ GHOSTMOTION: `getSword()` reads the FLAG, so every press in a ghost-sword room swings the ghost's chain.
+    const prefixes = dashPrefixesFor(dashMode,
+        { weapon: run.progress('inventory')?.hasGhostSword ? 'ghostsword' : 'sword' });
     const startTick = run.ticksCompleted;
     const candidates = [];
     const refuse = (why) => ({ plan: null, ticks: null, saved: null, baseline: null,

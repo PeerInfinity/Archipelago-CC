@@ -119,7 +119,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity CRUSHER: +1 (257) — `crusher-l42-round-trip`.
         // ⛓ hammer-phase B1: +1 (258) — `hammer-b1-l18-approach40`.
         // ⛓ hammer-phase B2: +1 (259) — `hammer-b2-l18-fight40`.
-        expect(names.length).toBe(259);
+        // ⛓ fidelity GHOSTMOTION: +2 (261) — `ghostmotion-l102-axis`, `ghostmotion-l102-diag`.
+        expect(names.length).toBe(261);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -173,7 +174,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity CRUSHER: 257 — `crusher-l42-round-trip` crosses to L40.
         // ⛓ hammer-phase B1: 258 — the approach witness crosses to L19 too.
         // ⛓ hammer-phase B2: 259 — the fight witness crosses to L19 too.
-        expect(tally.swapped).toBe(259);
+        // ⛓ fidelity GHOSTMOTION: 261 (measured) — both `ghostmotion-l102-*` witnesses swap too.
+        expect(tally.swapped).toBe(261);
     }, 600_000);
 });
 
