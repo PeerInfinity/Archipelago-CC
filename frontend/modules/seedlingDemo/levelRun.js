@@ -215,8 +215,8 @@ import { DRILL, drillRect, hitDrill, newDrill, stepDrill, stepDrillGraphic } fro
 // file does not use — the press rect comes from `presses.slashRect` — but
 // `Player.as:116`'s `swordForce` has one home and this is it.
 import {
-    INITIAL_SLASH_STATE, SLASH_ANIM_TICKS, SLASH_SCALE_NORMAL, SWORD_FORCE, slashPressForecast, slashScaleFor,
-    slashSet, slashTimerTick,
+    INITIAL_SLASH_STATE, SLASH_ANIM_TICKS, SLASH_SCALE_NORMAL, SPEAR_ANIM_TICKS, SWORD_FORCE, slashPressForecast,
+    slashScaleFor, slashSet, slashTimerTick,
 } from './combatVerbs.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { createChestState, stepChests } from './chest.js';
@@ -4568,6 +4568,7 @@ export function createLevelRun({
         // `slashTimer`/`slashDashed`/`_slashing` are Player fields.
         slashState = { ...INITIAL_SLASH_STATE };
         slashEndsAt = null;
+        spearEndsAt = -1;
         // ⛓⛓ R6 SLICE 6d: …and a RUNTIME pickup cannot outlive its level
         // either, for a stronger reason than the thrust's. A placed pickup is
         // rebuilt by the destination's `loadlevel`; a `Seed` the Watcher added
@@ -4880,6 +4881,15 @@ export function createLevelRun({
      * so the callback's clock restarts with it.
      */
     let slashEndsAt = null;
+    /**
+     * ⛓ fidelity DARKTRAP2 D2 — the last tick whose `input()` still sees `spearing` (`combatVerbs.SPEAR_ANIM_TICKS`
+     * after the thrust's press; `spearEnd` is `sprites()`', below that tick's press). -1 = no spear animation. Read
+     * only under `CONTACT_FIDELITY.spearingWindow`; a Player field, so a world swap clears it with `slashState`.
+     */
+    let spearEndsAt = -1;
+    /** `spearing` as `set slashing`/`set spearing` read it on tick `t` (see `spearEndsAt`). */
+    const spearingAt = (t) => swordWindow.pending?.weapon === 'spear'
+        || (CONTACT_FIDELITY.spearingWindow && t <= spearEndsAt);
     /**
      * ⛓⛓⛓ R9 SLICE 12b — ONE RECORD PER PRESS THAT REACHED `set slashing`,
      * carrying which of its four arms took it.
@@ -13864,8 +13874,11 @@ export function createLevelRun({
                 wanding: ticksCompleted <= wandUntil,
                 firing: ticksCompleted <= fireUntil,
                 deathRaying: false,
-                spearing: swordWindow.pending?.weapon === 'spear',
+                spearing: spearingAt(ticksCompleted),
             },
+            // ⛓ fidelity DARKTRAP2 D2: the spear's window end, aged by a preview like the two above (ON only, so the
+            // shape is byte-identical with the switch off).
+            ...(CONTACT_FIDELITY.spearingWindow ? { spearingUntil: spearEndsAt } : {}),
         };
     };
     /**
@@ -18051,7 +18064,14 @@ export function createLevelRun({
             // of the update. So a press consumes the facing this tick
             // STARTED with, which is the value in `state` right now.
             const pressFacing = state.direction;
-            const pressed = acting.has(TALK_KEY) && !wasHeld.has(TALK_KEY);
+            /**
+             * ⛓ fidelity DARKTRAP2 D2 (`CONTACT_FIDELITY.fallBurnsPress`): a pit fall in flight at the tick's start
+             * has `receiveInput = false`, so `input()` returns before `useItem` — the press is lost, as `stepV2`
+             * already drops the move keys (`fall ? NO_KEYS : held`). The edge tick still presses (`checkFallingInPit`
+             * runs after `super.update()`).
+             */
+            const pressKeys = (CONTACT_FIDELITY.fallBurnsPress && state.fall) ? NO_KEYS : acting;
+            const pressed = pressKeys.has(TALK_KEY) && !wasHeld.has(TALK_KEY);
             // ⛔⛔⛔ R5 SLICE 22: A FREEZE FRAME BURNS A PRESS, LOUDLY.
             //
             // The line above already models the loss — `acting` is
@@ -18093,7 +18113,7 @@ export function createLevelRun({
              * that case is the throw above.
              */
             let slashPress = null;
-            if (acting.has(TALK_KEY) && !wasHeld.has(TALK_KEY) && !noclip
+            if (pressKeys.has(TALK_KEY) && !wasHeld.has(TALK_KEY) && !noclip
                 && (weaponForPress() === 'sword' || weaponForPress() === 'ghostsword')) {
                 slashPress = slashSet(slashState, {
                     pressed: true,
@@ -18107,7 +18127,7 @@ export function createLevelRun({
                     wanding: wandWindows.some((w) => ticksCompleted <= w.endTick),
                     firing: fireWindows.some((w) => ticksCompleted <= w.endTick),
                     deathRaying: false,
-                    spearing: swordWindow.pending?.weapon === 'spear',
+                    spearing: spearingAt(ticksCompleted),
                     direction: pressFacing,
                 });
                 slashState = slashPress.state;
@@ -18379,6 +18399,23 @@ export function createLevelRun({
                             scale: slashScaleFor(slashState.anim),
                         });
                     }
+                } else if (weapon === 'spear' && CONTACT_FIDELITY.spearingWindow) {
+                    /**
+                     * ⛓ fidelity DARKTRAP2 D2 — `set spearing`'s gate, `Player.as:815`:
+                     * `if (hasSpear && !wanding && !firing && !deathRaying && !slashing) { if (!spearing && _s)
+                     * play("spear", true); … }`. A press inside a swing, a wand/fire window or the spear's own
+                     * animation starts nothing (no thrust, no restart of the window). `slashState.slashing` is the
+                     * value `input()` sees: this tick's `slashEnd` is below, in `sprites()`.
+                     */
+                    const gated = slashState.slashing
+                        || wandWindows.some((w) => ticksCompleted <= w.endTick)
+                        || fireWindows.some((w) => ticksCompleted <= w.endTick)
+                        || spearingAt(ticksCompleted);
+                    if (!gated) {
+                        swordWindow = swordWindowSchedule(swordWindow,
+                            { weapon, direction: pressFacing, pressTick: ticksCompleted });
+                        spearEndsAt = ticksCompleted + SPEAR_ANIM_TICKS;
+                    }
                 } else if (weapon) {
                     swordWindow = swordWindowSchedule(swordWindow,
                         { weapon, direction: pressFacing, pressTick: ticksCompleted });
@@ -18408,7 +18445,7 @@ export function createLevelRun({
                     wanding: wandWindows.some((w) => ticksCompleted <= w.endTick),
                     firing: fireWindows.some((w) => ticksCompleted <= w.endTick),
                     deathRaying: false,
-                    spearing: swordWindow.pending?.weapon === 'spear',
+                    spearing: spearingAt(ticksCompleted),
                 }).state;
             }
             // ── ⛓⛓⛓ R6 SLICE 2: `wandEnd()`, AND IT IS BELOW THE PRESS ──
