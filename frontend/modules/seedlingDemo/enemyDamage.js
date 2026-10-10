@@ -587,7 +587,9 @@ export const MODELLED_KILL_ARMS = Object.freeze(
  * `LavaRunner`) is asked here at call time. With every switch OFF it is `MODELLED_KILL_ARMS.includes`.
  */
 export function killArmModelled(as3) {
-    return MODELLED_KILL_ARMS.includes(as3) || KILL_ARM_POLICY[as3]?.policy === 'modelled';
+    return MODELLED_KILL_ARMS.includes(as3) || KILL_ARM_POLICY[as3]?.policy === 'modelled'
+        // ⛓ hammer-phase C1 — the static sword arm's read (OFF: false, so the answer is the rows')
+        || staticSwordModelled(as3);
 }
 
 /**
@@ -953,6 +955,72 @@ export const STATIC_ARROW_DEATH = Object.freeze({
 });
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE C1 — A STATIC BODY KILLED BY THE PLAYER'S OWN SWORD (`STATIC_SWORD_ARM`, OFF by default:
+ * `SEEDLING_STATIC_SWORD_ARM=1` or `withStaticSwordArm(true, fn)`). With it OFF a sword press that reaches a static
+ * census body is not a press responder at all — the model leaves the body unhurt while the GAME damages it (measured
+ * on the game, C1 D1: L36's `sandtrap@48,80` and `@64,80` both die to one stance's three presses; L62's
+ * `turret@232,248` dies to three) — and every walk is byte-identical. With it ON the classes below are press
+ * responders (`presses.pressRespondersIn`'s `statics`), take `Enemy.hit` through `levelRun`'s static damage state
+ * (F4's `staticBodyStates`, the arrow death's own staging), and `killArmModelled` reads `modelled` for them.
+ * `KILL_ARM_POLICY`'s rows are NOT edited: the switch is read at call time.
+ *
+ * The death, read off the game (C1 D1, p4f): "die" is six frames at rate 10 and its first update is the tick AFTER
+ * the blow (the Player updates last) — the press at obs 64 lands at 66, the anim ends at 85.
+ *   · `SandTrap.endAnim` removes the body there, and `removed()` writes its tag (F4's removal).
+ *   · `Turret.endAnim` sets `destroy` there (no removal, no tag: `Turret` has no `removed()`); `Mobile.death` then
+ *     fades it for `MOBILE_DEATH_FADE.ticks` updates and removes it. While its `hitsTimer` runs a turret starts no
+ *     shot (`else if (hitsTimer <= 0)`), and once "die" plays it neither aims nor shoots — a shot begun the tick
+ *     before the blow never spawns (`play("die")` replaces "startshot").
+ * Both `knockback`s are empty overrides, so no hit moves the body.
+ */
+export const STATIC_SWORD_ARM = {
+    enabled: globalThis.process?.env?.SEEDLING_STATIC_SWORD_ARM === '1',
+};
+
+/** Run `fn` with `STATIC_SWORD_ARM` set to `enabled`, restoring the previous value (`withHammerFight`'s shape). */
+export function withStaticSwordArm(enabled, fn) {
+    const was = STATIC_SWORD_ARM.enabled;
+    STATIC_SWORD_ARM.enabled = enabled === true;
+    const restore = () => { STATIC_SWORD_ARM.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/** The static classes the sword arm kills, and how each one's death ends (C1 D1, on the game). */
+export const STATIC_SWORD_DEATH = Object.freeze({
+    SandTrap: Object.freeze({
+        dieAnim: STATIC_ARROW_DEATH.SandTrap.dieAnim,
+        end: 'remove',
+        writesTag: true,
+        witness: 'c1-l36-sandtraps',
+        src: 'Enemies/SandTrap.as:77-80 (knockback), :82-104 (removed, startDeath, endAnim); Player.as genericHit',
+    }),
+    Turret: Object.freeze({
+        dieAnim: Object.freeze({ frames: 6, rate: 10, src: 'Turret.as:31 add("die", [3, 4, 5, 6, 7, 8], 10)' }),
+        end: 'destroy-fade',
+        writesTag: false,
+        witness: 'c1-l62-turret',
+        src: 'Enemies/Turret.as:45-79 (update: the freeze/destroy/"die" return, the hitsTimer fire gate), '
+            + ':86-89 (knockback), :91-114 (startDeath, endAnim); Mobile.as:60-72 (death)',
+    }),
+});
+
+/**
+ * ⛓ C1 — `killArmModelled`'s per-class answer with `STATIC_SWORD_ARM` read: `modelled` for a class
+ * `STATIC_SWORD_DEATH` lists while the switch is ON, the row's own policy otherwise.
+ */
+export function staticSwordModelled(as3) {
+    return STATIC_SWORD_ARM.enabled && Object.prototype.hasOwnProperty.call(STATIC_SWORD_DEATH, as3);
+}
+
+/**
  * ⛓⛓⛓ SEEDLING FIDELITY STATICLADDER D2 — `DarkTrap`'s LIGHT death, which no weapon reaches.
  *
  * `DarkTrap.hit()` is EMPTY (`DarkTrap.as:56-59`, `KILL_ARM_POLICY.DarkTrap` `inert`), so no press or arrow kills
@@ -989,7 +1057,8 @@ export const DARKTRAP_LIGHT_DEATH = Object.freeze({
  */
 export function createStaticBodyDamage(as3) {
     const p = STATIC_ARROW_DEATH[as3];
-    if (!p || p.policy !== 'modelled') {
+    // ⛓ hammer-phase C1 — a class the static SWORD arm kills (`STATIC_SWORD_ARM` ON) has a state too.
+    if ((!p || p.policy !== 'modelled') && !staticSwordModelled(as3)) {
         fail(`createStaticBodyDamage: "${as3}" has no modelled STATIC_ARROW_DEATH row — `
             + '§11.4 refuses to compute a static "Enemy" body\'s arrow death until the '
             + 'game has been asked about that class.');

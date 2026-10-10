@@ -1,0 +1,6832 @@
+{
+ "name": "c1-d1-l36-sandtraps-press",
+ "page": "seedling_bot_ap_p4f",
+ "recordedBy": "scripts/procgen/probe-seedling-static-sword-mobiles.mjs --record",
+ "note": "the GAME's SandTrap / Turret / TurretSpit rows (`botMobiles()`) and the player at each sampled tick of the boot level; the model with `STATIC_SWORD_ARM` ON reproduces every one",
+ "final": {
+  "level": 36,
+  "x": 56,
+  "y": 102.30000000000001,
+  "hits": 0,
+  "tick": 110
+ },
+ "tape": {
+  "tape_version": 8,
+  "game": "seedling",
+  "boot": {
+   "level": 36,
+   "x": 48,
+   "y": 96
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
+  "despawn": [],
+  "equips": [],
+  "pins": [
+   "sound",
+   "dead_frames"
+  ],
+  "save": {
+   "totem_parts": [],
+   "keys": [],
+   "seal_parts": []
+  },
+  "rng": {
+   "seed": 1,
+   "split": false,
+   "cosmetic": 0,
+   "fp": 0
+  },
+  "seam": {
+   "items": {
+    "hasSword": true
+   }
+  },
+  "tick0": null,
+  "hold": false,
+  "tick_count": 110,
+  "inputs": [
+   {
+    "key": "up",
+    "from": 0,
+    "to": 1
+   },
+   {
+    "key": "primary",
+    "from": 2,
+    "to": 3
+   },
+   {
+    "key": "primary",
+    "from": 33,
+    "to": 34
+   },
+   {
+    "key": "primary",
+    "from": 64,
+    "to": 65
+   }
+  ],
+  "name": "d1-sandtrap-l36",
+  "description": "scratch D1"
+ },
+ "samples": [
+  {
+   "t": 0,
+   "player": {
+    "x": 56,
+    "y": 104
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 1,
+   "player": {
+    "x": 56,
+    "y": 103.2
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 2,
+   "player": {
+    "x": 56,
+    "y": 102.65
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 3,
+   "player": {
+    "x": 56,
+    "y": 102.35000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 4,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 30
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 30
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 5,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 29
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 29
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 6,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 28
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 28
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 7,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 27
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 27
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 8,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 26
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 26
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 9,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 25
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 25
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 10,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 24
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 24
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 11,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 23
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 23
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 12,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 22
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 22
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 13,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 21
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 21
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 14,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 20
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 20
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 15,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 19
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 19
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 16,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 18
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 18
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 17,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 17
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 17
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 18,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 16
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 16
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 19,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 15
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 15
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 20,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 14
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 14
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 21,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 13
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 13
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 22,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 12
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 12
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 23,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 11
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 11
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 24,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 10
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 10
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 25,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 9
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 9
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 26,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 8
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 8
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 27,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 7
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 7
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 28,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 6
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 6
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 29,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 5
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 5
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 30,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 4
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 4
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 31,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 3
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 3
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 32,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 2
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 2
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 33,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 1
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 1
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 34,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 35,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 30
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 30
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 36,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 29
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 29
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 37,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 28
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 28
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 38,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 27
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 27
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 39,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 26
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 26
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 40,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 25
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 25
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 41,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 24
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 24
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 42,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 23
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 23
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 43,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 22
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 22
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 44,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 21
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 21
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 45,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 20
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 20
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 46,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 19
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 19
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 47,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 18
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 18
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 48,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 17
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 17
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 49,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 16
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 16
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 50,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 15
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 15
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 51,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 14
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 14
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 52,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 13
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 13
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 53,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 12
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 12
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 54,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 11
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 11
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 55,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 10
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 10
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 56,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 9
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 9
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 57,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 8
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 8
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 58,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 7
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 7
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 59,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 6
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 6
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 60,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 5
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 5
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 61,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 4
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 4
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 62,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 3
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 3
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 63,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 2
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 2
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 64,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 1
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 1
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 65,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "chomp",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 66,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 30
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 30
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 67,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 29
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 29
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 68,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 28
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 28
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 69,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 27
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 27
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 70,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 26
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 26
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 71,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 25
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 25
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 72,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 24
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 24
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 73,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 23
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 23
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 74,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 22
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 22
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 75,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 21
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 21
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 76,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 20
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 20
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 77,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 19
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 19
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 78,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 18
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 18
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 79,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 17
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 17
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 80,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 16
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 16
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 81,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 15
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 15
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 82,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 14
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 14
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 83,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 13
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 13
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 84,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 12
+    },
+    {
+     "cls": "SandTrap",
+     "x": 56,
+     "y": 88,
+     "anim": "die",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 12
+    },
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 85,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 86,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 87,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 88,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 89,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 90,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 91,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 92,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 93,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 94,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 95,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 96,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 97,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 98,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 99,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 100,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 101,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 102,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 103,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 104,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 105,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 106,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 107,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 108,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 109,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 110,
+   "player": {
+    "x": 56,
+    "y": 102.30000000000001
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "SandTrap",
+     "x": 88,
+     "y": 88,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 72,
+     "y": 72,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "cls": "SandTrap",
+     "x": 40,
+     "y": 56,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  }
+ ]
+}

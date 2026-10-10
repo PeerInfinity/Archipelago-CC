@@ -401,7 +401,7 @@ export function distanceRectPoint(px, py, r) {
  */
 export function pressRespondersIn(world, rect, {
     pushables: live = null, turrets = null, shieldBosses = null, finalBosses = null,
-    spinners = null, chasers = null,
+    spinners = null, chasers = null, statics = null,
 } = {}) {
     if (!world.roles?.includes('blocking')) {
         throw new PressError(`pressRespondersIn: level ${world.level} was built without `
@@ -601,6 +601,31 @@ export function pressRespondersIn(world, rect, {
             });
         }
     }
+    /**
+     * ⛓⛓ SEEDLING HAMMER-PHASE C1 — THE STATIC BODIES A SWORD REACHES (`enemyDamage.STATIC_SWORD_ARM`). `null` unless
+     * the switch is ON (the caller passes none), so with it OFF a static census body is no responder, as before.
+     * The rect is the body's contact box at its placement (a static body never moves); `staticId` is its census id.
+     */
+    if (statics) {
+        for (const [id, b] of statics) {
+            if (b.removed) continue;
+            if (!rectsOverlap(rect, b.rect)) continue;
+            hits.push({
+                tag: b.tag,
+                as3: 'Enemy',
+                enemyClass: b.as3,
+                family: 'static',
+                staticId: id,
+                x: b.x,
+                y: b.y,
+                rect: b.rect,
+                live: true,
+                arm: PRESS_ARMS.Enemy.arm,
+                cost: PRESS_ARMS.Enemy.cost,
+                src: PRESS_ARMS.Enemy.src,
+            });
+        }
+    }
     // A bridge is a press responder and it is TERRAIN — the one arm of
     // `genericHit` that dispatches on `Tile`. Merged here so a caller
     // asking "what does this thrust touch" gets one answer rather than two
@@ -647,10 +672,10 @@ export function pressRespondersIn(world, rect, {
  */
 export function auditPress(world, rect, {
     weapon, intended = [], pushables = null, turrets = null, shieldBosses = null,
-    finalBosses = null, spinners = null, chasers = null,
+    finalBosses = null, spinners = null, chasers = null, statics = null,
 } = {}) {
     const responders = pressRespondersIn(world, rect, {
-        pushables, turrets, shieldBosses, finalBosses, spinners, chasers,
+        pushables, turrets, shieldBosses, finalBosses, spinners, chasers, statics,
     });
     const spearOnly = new Set(['LightPole', 'Tile']);
     const live = responders.filter(

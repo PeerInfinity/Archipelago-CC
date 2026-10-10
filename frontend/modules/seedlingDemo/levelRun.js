@@ -207,6 +207,7 @@ import {
 // computes at every kill.
 import {
     DARKTRAP_LIGHT_DEATH, ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, killArmModelled, PIT_FADE, STATIC_ARROW_DEATH,
+    STATIC_SWORD_ARM, STATIC_SWORD_DEATH,
     createStaticBodyDamage, enemyHit, enemyHitUpdate, killLockLedger, removalTicksAfterHit,
 } from './enemyDamage.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
@@ -2901,9 +2902,15 @@ export function createLevelRun({
                 worlds.delete(p.level);
                 if (p.level === level) world = worldFor(p.level);
             }
-            const owner = declaredClears.find((c) => c.level === p.level && c.tag === p.persistTag);
+            // ⛓ hammer-phase C1: a body whose class has no `removed()` write (a `Turret`) leaves the census only.
+            const owner = p.writesTag === false ? null
+                : declaredClears.find((c) => c.level === p.level && c.tag === p.persistTag);
             let write;
-            if (owner) {
+            if (p.writesTag === false) {
+                write = null;
+                const sh = shooterStates.get(p.level)?.get(p.id);
+                if (sh) sh.removed = true;
+            } else if (owner) {
                 write = 'declared';
             } else if (scratchPersistence) {
                 write = 'scratch';
@@ -3649,7 +3656,9 @@ export function createLevelRun({
         if (!staticBodyStates.has(n)) {
             const byId = new Map();
             for (const e of (worldFor(n).combat?.enemies ?? [])) {
-                if (STATIC_ARROW_DEATH[e.as3]?.policy !== 'modelled') continue;
+                // ⛓ hammer-phase C1: and, with `STATIC_SWORD_ARM` ON, every class the static sword arm kills.
+                if (STATIC_ARROW_DEATH[e.as3]?.policy !== 'modelled'
+                    && !(STATIC_SWORD_ARM.enabled && STATIC_SWORD_DEATH[e.as3])) continue;
                 const id = `${e.tag}@${e.x},${e.y}`;
                 byId.set(id, {
                     ...createStaticBodyDamage(e.as3),
@@ -3665,6 +3674,22 @@ export function createLevelRun({
             staticBodyStates.set(n, byId);
         }
         return staticBodyStates.get(n);
+    };
+    /**
+     * ⛓⛓ HAMMER-PHASE C1 — THE STATIC BODIES A SWORD PRESS CAN REACH, for `pressRespondersIn`'s `statics` (asked only
+     * with `STATIC_SWORD_ARM` ON). The rows are F4's (`staticBodyStateFor`, built on first ask); the bodies are the
+     * classes `STATIC_SWORD_DEATH` lists, still in this level's census. Under `noclip`/`noDamage` the run steps no
+     * body, so none is offered (`chaserPressBodiesNow`'s gate).
+     */
+    const staticPressBodiesNow = () => {
+        if (noclip || noDamage) return null;
+        const out = new Map();
+        for (const [id, b] of staticBodyStateFor(level)) {
+            if (!STATIC_SWORD_DEATH[b.as3] || b.removed) continue;
+            const [x, y] = id.slice(id.indexOf('@') + 1).split(',').map(Number);
+            out.set(id, { tag: b.tag, as3: b.as3, x, y, rect: b.rect, removed: false });
+        }
+        return out;
     };
     /**
      * ⛓⛓⛓ SEEDLING FIDELITY STATICLADDER D2 — THE DARKTRAPS' LIGHT DEATH, per level, keyed by census id
@@ -5638,6 +5663,8 @@ export function createLevelRun({
             // — the opposite of the other five arms' default, and right for a
             // body that is never where the level built it.
             chasers: chaserPressBodiesNow(),
+            // ⛓ hammer-phase C1: the static bodies a sword reaches — only with `STATIC_SWORD_ARM` ON.
+            ...(STATIC_SWORD_ARM.enabled ? { statics: staticPressBodiesNow() } : {}),
         });
         /**
          * ⛓⛓⛓ R9 SLICE 12 — THE FAMILY ARM IS STILL THE TABLE THAT GOVERNS,
@@ -6427,6 +6454,72 @@ export function createLevelRun({
                         : (blocker ? `collideLine("Solid") meets ${blocker.tag ?? 'a Solid'}` : null),
                 });
                 hits.push({ as3: 'Enemy', id: w.id, landed: verdict.landed, killed: verdict.killed === true });
+            } else if (r.as3 === 'Enemy' && r.family === 'static') {
+                /**
+                 * ── ⛓⛓ HAMMER-PHASE C1: THE SWING AT A STATIC BODY (`STATIC_SWORD_ARM`; only reached with it ON —
+                 * no `statics` responder exists otherwise) ──
+                 * `slash()`'s reach gate and its `collideLine("Solid")` line of sight (waived for a ghost swing, whose
+                 * reach was applied above), then `genericHit`'s `e is Enemy` arm: `Enemy.hit(swordForce 5, Point(x, y),
+                 * d, t)` on F4's damage state. Both classes' `knockback` is an empty override, so nothing moves; the
+                 * kill plays "die" (`startDeath`, no `destroy`) and `stepStaticBodiesNow` steps it from the NEXT tick
+                 * (the Player updates last — measured on the game, C1 D1: the blow at 66, the anim's end at 85).
+                 */
+                const sb = staticBodyStateFor(level).get(r.staticId) ?? null;
+                if (!sb) {
+                    throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} reaches ${r.staticId} in `
+                        + `level ${level}, which is not in the run's static body state.`);
+                }
+                const box = sb.rect;
+                const reach = distanceRectPoint(state.x, state.y, box);
+                const ex = (box.x + box.right) / 2;
+                const ey = (box.y + box.bottom) / 2;
+                const blocker = reach > reachLimit || ghost || weapon === 'spear' ? null
+                    : collideLineSolid(state.x, state.y, ex, ey);
+                let verdict = { landed: false, killed: false, refusedAt: null };
+                if (reach <= reachLimit && !blocker) {
+                    verdict = enemyHit(sb, {
+                        d: pressHitDamage(weapon),
+                        f: SWORD_FORCE,
+                        t: pressHitType(weapon),
+                        frozen: ceremony !== null,
+                    });
+                    if (verdict.killed) {
+                        const spec = STATIC_SWORD_DEATH[sb.as3];
+                        // ⛔ `SandTrap`/`Turret` override `startDeath` to `play("die")`: no `destroy` at the blow.
+                        sb.destroy = false;
+                        if (spec.writesTag && !(sb.persistTag >= 0)) {
+                            throw new Error(`levelRun: ${sb.id} dies to the ${weapon} press at tick ${pressTick} and `
+                                + 'carries no persistence tag, so its `removed()` would write OUT OF BAND. Refused by '
+                                + 'name (hammer-phase C1, F4\'s rule).');
+                        }
+                        /**
+                         * ⛔ THE COUNT MOVES AT THE REMOVAL, and a room whose `tset == -1` lock that move opens is a
+                         * room this arm has no verdict for (the lock's open tick is not staged here). Computed, never
+                         * assumed nil: the body is taken out of the roster as the removal will take it.
+                         */
+                        const census = world.combat?.enemies ?? [];
+                        const before = census.filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
+                        const after = census.filter((e) => !e.removed && `${e.tag}@${e.x},${e.y}` !== sb.id
+                            && !(staticBodyStateFor(level).get(`${e.tag}@${e.x},${e.y}`)?.dying))
+                            .map((e) => ({ as3: e.as3 }));
+                        const led = killLockLedger(levelSource(level), { bodiesBefore: before, bodiesAfter: after });
+                        if (!led.nil) {
+                            throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} KILLS ${sb.id}, whose `
+                                + `removal OPENS ${led.opens.length} kill lock(s) in level ${level} (${led.why}) — not `
+                                + 'staged by the static sword arm. Refused by name (hammer-phase C1).');
+                        }
+                        sb.killedAt = ticksCompleted + 1;
+                        sb.dieAnim = createSpriteAnim(spec.dieAnim.frames, spec.dieAnim.rate);
+                    }
+                }
+                chaserPressHits.push({
+                    t: ticksCompleted, level, id: sb.id, tag: sb.tag, weapon,
+                    landed: verdict.landed, killed: verdict.killed === true, reach,
+                    hits: sb.hits, hitsTimer: sb.hitsTimer,
+                    why: reach > reachLimit ? `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}`
+                        : (blocker ? `collideLine("Solid") meets ${blocker.tag ?? 'a Solid'}` : verdict.refusedAt),
+                });
+                hits.push({ as3: 'Enemy', id: sb.id, landed: verdict.landed, killed: verdict.killed === true });
             } else if (r.as3 === 'Enemy') {
                 /**
                  * ── ⛓⛓⛓ R9 SLICE 12: THE SWING AT A CHASER ──────────────
@@ -6981,6 +7074,35 @@ export function createLevelRun({
         if (!st) return;
         for (const b of st.values()) {
             if (b.removed) continue;
+            /**
+             * ⛓⛓ HAMMER-PHASE C1 — A TURRET'S DEATH IS `destroy` THEN THE FADE (`STATIC_SWORD_DEATH.Turret`, only with
+             * `STATIC_SWORD_ARM` ON). `Enemy.update`, behind `onScreen()`: `Mobile.death()` (the fade, once `destroy`
+             * is set) and, only while `!destroy`, `hitUpdate()`; then the graphic, outside that gate: "die"'s
+             * `endAnim` sets `destroy` (no removal, no tag). The eleventh fade call removes the body.
+             */
+            if (STATIC_SWORD_ARM.enabled && STATIC_SWORD_DEATH[b.as3]?.end === 'destroy-fade') {
+                const on = onScreenNow(b.rect, b.id);
+                if (on && b.destroy) {
+                    b.fadeCalls = (b.fadeCalls ?? 0) + 1;
+                    if (b.fadeCalls >= MOBILE_DEATH_FADE.ticks) {
+                        b.removed = true;
+                        b.removedAt = ticksCompleted + 1;
+                        pendingStaticRemovals.push({
+                            level, id: b.id, as3: b.as3, persistTag: b.persistTag,
+                            killedAt: b.killedAt, removedAt: b.removedAt, applied: false, writesTag: false,
+                        });
+                        continue;
+                    }
+                } else if (b.hitsTimer > 0) {
+                    enemyHitUpdate(b, { onScreen: on });
+                }
+                if (b.dieAnim && stepSpriteAnim(b.dieAnim)) {
+                    b.dieAnim = null;
+                    b.destroy = true;
+                    b.fadeCalls = 0;
+                }
+                continue;
+            }
             if (b.hitsTimer > 0) enemyHitUpdate(b, { onScreen: onScreenNow(b.rect, b.id) });
             if (b.dieAnim && stepSpriteAnim(b.dieAnim)) {
                 b.removed = true;
@@ -7259,7 +7381,10 @@ export function createLevelRun({
         const st = shooterStateFor(level);
         const live = spitsFor(level);
         if (st.size === 0 && live.length === 0) return null;
-        const turrets = [...st.keys()].reverse().map((id) => ({ ...st.get(id), spawned: null }));
+        const turrets = [...st.keys()].reverse().map((id) => ({ ...st.get(id), spawned: null,
+            // ⛓ hammer-phase C1 (`STATIC_SWORD_ARM` ON): a dying/removed turret fires no more
+            ...(STATIC_SWORD_ARM.enabled ? { silenced: st.get(id).removed === true
+                || !!staticBodyStates.get(level)?.get(id)?.dying } : {}) }));
         const air = live.map((s) => ({ ...s, v: { ...s.v } }));
         const solidOpts = normalizeLiveOpts(liveSolidOpts());
         const shielded = inventory?.hasShield === true;
@@ -7288,6 +7413,9 @@ export function createLevelRun({
                     if (air[i].removed) air.splice(i, 1);
                 }
                 for (const t of turrets) {
+                    // ⛓ hammer-phase C1: `hitUpdate` before the aim, and a silenced turret is skipped
+                    if (t.silenced) continue;
+                    if (STATIC_SWORD_ARM.enabled && t.hitsTimer > 0) t.hitsTimer -= 1;
                     stepTurret(t, { frozen: false, player: { x: playerPos.x, y: playerPos.y } });
                     if (t.spawned) air.unshift(t.spawned);
                 }
@@ -7744,8 +7872,10 @@ export function createLevelRun({
          * is its `startDeath`: "die" plays from this tick, and the body's own
          * slot (`stepStaticBodiesNow`) steps it to the removal.
          */
-        const sb = (!c && !hit.cover && hit.type === 'Enemy')
+        const sbRow = (!c && !hit.cover && hit.type === 'Enemy')
             ? (staticBodyStateFor(level).get(hit.id) ?? null) : null;
+        // ⛓ hammer-phase C1: a row the static SWORD arm added (a `Turret`) is not an arrow death this model computes.
+        const sb = sbRow && STATIC_ARROW_DEATH[sbRow.as3] ? sbRow : null;
         if (sb) {
             const verdict = enemyHit(sb, {
                 d: ARROW_ENEMY_HIT.damage,
@@ -10034,7 +10164,13 @@ export function createLevelRun({
                     + 'concerned, and a contact against a stale placement is a number this '
                     + 'run cannot produce. Route clear of it, or build the missing family.');
             }
-            if (pricing.kind !== 'static') {
+            /**
+             * ⛓ hammer-phase C1 (`STATIC_SWORD_ARM` ON): a `Turret` is `speed 0` — its `"mover"` pricing is its
+             * `static-shooter` aggro, not motion — and the run now holds its damage state (F4's row: i-frames, "die",
+             * `destroy`), so its contact is the static scan's, gated below by that row. Relabelled only with the
+             * switch ON, where the row exists; OFF it refuses exactly as before.
+             */
+            if (pricing.kind !== 'static' && !(STATIC_SWORD_ARM.enabled && STATIC_SWORD_DEATH[inst.as3])) {
                 throw new Error(`levelRun: the player is standing inside ${id} in level `
                     + `${level} at tick ${ticksCompleted + 1} on a tape that does NOT `
                     + `declare \`noDamage\`, and this rung prices it as "${pricing.kind}" `
@@ -10061,7 +10197,8 @@ export function createLevelRun({
             const live = staticBodyStates.get(level)?.get(id) ?? null;
             const verdict = enemyHitPlayerFires(
                 live
-                    ? { hitsTimer: live.hitsTimer, destroy: false, dieAnim: live.dying === true }
+                    // ⛓ hammer-phase C1: a turret's `destroy` (set at its "die" end) gates its contact too.
+                    ? { hitsTimer: live.hitsTimer, destroy: live.destroy === true, dieAnim: live.dying === true }
                     : { hitsTimer: 0, destroy: false, dieAnim: false },
                 onScreenNow(rect, id) ? 'on' : 'off',
             );
@@ -11226,6 +11363,23 @@ export function createLevelRun({
         }
         for (const id of [...st.keys()].reverse()) {
             const t = st.get(id);
+            /**
+             * ⛓ hammer-phase C1 (`STATIC_SWORD_ARM` ON): the body's own damage state is F4's row, stepped above
+             * (`stepStaticBodiesNow`: `hitUpdate` first, as `Enemy.update` runs it before the aim). A turret playing
+             * "die", `destroy`ed or removed neither aims nor shoots (`Turret.update`'s return; `play("die")` replaced
+             * any shot in the barrel), and a live one's fire gate reads that row's `hitsTimer`.
+             */
+            if (STATIC_SWORD_ARM.enabled) {
+                const row = staticBodyStates.get(level)?.get(id) ?? null;
+                if (t.removed || row?.dying || row?.removed) {
+                    t.anim = '';
+                    t.animIndex = 0;
+                    t.animTimer = 0;
+                    t.spawned = null;
+                    continue;
+                }
+                if (row) t.hitsTimer = row.hitsTimer;
+            }
             stepTurret(t, { frozen: ceremony !== null, player: { x: state.x, y: state.y } });
             if (t.spawned) {
                 t.spawned.spawnedAt = ticksCompleted + 1;
@@ -13758,6 +13912,8 @@ export function createLevelRun({
             hitsTimer: b.hitsTimer, dying: b.dying === true,
             dieIndex: b.dieAnim ? b.dieAnim.index : null,
             killedAt: b.killedAt, removed: b.removed === true, removedAt: b.removedAt,
+            // ⛓ hammer-phase C1: a turret's `destroy` and fade (only with `STATIC_SWORD_ARM` ON)
+            ...(STATIC_SWORD_ARM.enabled ? { destroy: b.destroy === true, fadeCalls: b.fadeCalls ?? 0 } : {}),
         }));
     /**
      * ⛓ STATICLADDER D2: this level's darktraps and their light death (`darkTrapStates`) — `null` while

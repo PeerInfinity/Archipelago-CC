@@ -1,0 +1,2485 @@
+{
+ "name": "c1-d1-l62-turret-noshield",
+ "page": "seedling_bot_ap_p4f",
+ "recordedBy": "scripts/procgen/probe-seedling-static-sword-mobiles.mjs --record",
+ "note": "the GAME's SandTrap / Turret / TurretSpit rows (`botMobiles()`) and the player at each sampled tick of the boot level; the model with `STATIC_SWORD_ARM` ON reproduces every one",
+ "final": {
+  "level": 62,
+  "x": 227.70000000000005,
+  "y": 256,
+  "hits": 0,
+  "tick": 110
+ },
+ "tape": {
+  "tape_version": 8,
+  "game": "seedling",
+  "boot": {
+   "level": 62,
+   "x": 218,
+   "y": 248
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
+  "despawn": [],
+  "equips": [],
+  "pins": [
+   "sound",
+   "dead_frames"
+  ],
+  "save": {
+   "totem_parts": [],
+   "keys": [],
+   "seal_parts": []
+  },
+  "rng": {
+   "seed": 1,
+   "split": false,
+   "cosmetic": 0,
+   "fp": 0
+  },
+  "seam": {
+   "items": {
+    "hasSword": true
+   }
+  },
+  "tick0": null,
+  "hold": false,
+  "tick_count": 110,
+  "inputs": [
+   {
+    "key": "right",
+    "from": 0,
+    "to": 1
+   },
+   {
+    "key": "primary",
+    "from": 2,
+    "to": 3
+   },
+   {
+    "key": "primary",
+    "from": 33,
+    "to": 34
+   },
+   {
+    "key": "primary",
+    "from": 64,
+    "to": 65
+   }
+  ],
+  "name": "d1-turret-l62-noshield",
+  "description": "scratch D1"
+ },
+ "samples": [
+  {
+   "t": 0,
+   "player": {
+    "x": 226,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 1,
+   "player": {
+    "x": 226.8,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 2,
+   "player": {
+    "x": 227.35000000000002,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 3,
+   "player": {
+    "x": 227.65000000000003,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 4,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 30
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 5,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 29
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 6,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 28
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 7,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 27
+    }
+   ],
+   "spits": [
+    {
+     "x": 240,
+     "y": 256
+    }
+   ]
+  },
+  {
+   "t": 8,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 26
+    }
+   ],
+   "spits": [
+    {
+     "x": 242.85316954888546,
+     "y": 256.92705098312484
+    }
+   ]
+  },
+  {
+   "t": 9,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 25
+    }
+   ],
+   "spits": [
+    {
+     "x": 245.70633909777092,
+     "y": 257.8541019662497
+    }
+   ]
+  },
+  {
+   "t": 10,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 24
+    }
+   ],
+   "spits": [
+    {
+     "x": 248.55950864665638,
+     "y": 258.78115294937453
+    }
+   ]
+  },
+  {
+   "t": 11,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 23
+    }
+   ],
+   "spits": [
+    {
+     "x": 251.41267819554184,
+     "y": 259.7082039324994
+    }
+   ]
+  },
+  {
+   "t": 12,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 22
+    }
+   ],
+   "spits": [
+    {
+     "x": 254.2658477444273,
+     "y": 260.6352549156242
+    }
+   ]
+  },
+  {
+   "t": 13,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 21
+    }
+   ],
+   "spits": [
+    {
+     "x": 257.11901729331277,
+     "y": 261.56230589874906
+    }
+   ]
+  },
+  {
+   "t": 14,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 20
+    }
+   ],
+   "spits": [
+    {
+     "x": 259.9721868421982,
+     "y": 262.4893568818739
+    }
+   ]
+  },
+  {
+   "t": 15,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 19
+    }
+   ],
+   "spits": [
+    {
+     "x": 262.82535639108363,
+     "y": 263.41640786499875
+    }
+   ]
+  },
+  {
+   "t": 16,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 18
+    }
+   ],
+   "spits": [
+    {
+     "x": 265.67852593996906,
+     "y": 264.3434588481236
+    }
+   ]
+  },
+  {
+   "t": 17,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 17
+    }
+   ],
+   "spits": [
+    {
+     "x": 268.5316954888545,
+     "y": 265.27050983124843
+    }
+   ]
+  },
+  {
+   "t": 18,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 16
+    }
+   ],
+   "spits": [
+    {
+     "x": 271.3848650377399,
+     "y": 266.1975608143733
+    }
+   ]
+  },
+  {
+   "t": 19,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 15
+    }
+   ],
+   "spits": [
+    {
+     "x": 274.23803458662536,
+     "y": 267.1246117974981
+    }
+   ]
+  },
+  {
+   "t": 20,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 14
+    }
+   ],
+   "spits": [
+    {
+     "x": 277.0912041355108,
+     "y": 268.05166278062296
+    }
+   ]
+  },
+  {
+   "t": 21,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 13
+    }
+   ],
+   "spits": [
+    {
+     "x": 279.9443736843962,
+     "y": 268.9787137637478
+    }
+   ]
+  },
+  {
+   "t": 22,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 12
+    }
+   ],
+   "spits": [
+    {
+     "x": 282.79754323328166,
+     "y": 269.90576474687265
+    }
+   ]
+  },
+  {
+   "t": 23,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 11
+    }
+   ],
+   "spits": [
+    {
+     "x": 285.6507127821671,
+     "y": 270.8328157299975
+    }
+   ]
+  },
+  {
+   "t": 24,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 10
+    }
+   ],
+   "spits": [
+    {
+     "x": 288.5038823310525,
+     "y": 271.75986671312234
+    }
+   ]
+  },
+  {
+   "t": 25,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 9
+    }
+   ],
+   "spits": [
+    {
+     "x": 291.35705187993796,
+     "y": 272.6869176962472
+    }
+   ]
+  },
+  {
+   "t": 26,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 8
+    }
+   ],
+   "spits": [
+    {
+     "x": 294.2102214288234,
+     "y": 273.613968679372
+    }
+   ]
+  },
+  {
+   "t": 27,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 7
+    }
+   ],
+   "spits": [
+    {
+     "x": 297.0633909777088,
+     "y": 274.54101966249686
+    }
+   ]
+  },
+  {
+   "t": 28,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 6
+    }
+   ],
+   "spits": [
+    {
+     "x": 299.91656052659425,
+     "y": 275.4680706456217
+    }
+   ]
+  },
+  {
+   "t": 29,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 5
+    }
+   ],
+   "spits": [
+    {
+     "x": 302.7697300754797,
+     "y": 276.39512162874655
+    }
+   ]
+  },
+  {
+   "t": 30,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 4
+    }
+   ],
+   "spits": [
+    {
+     "x": 305.6228996243651,
+     "y": 277.3221726118714
+    }
+   ]
+  },
+  {
+   "t": 31,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 3
+    }
+   ],
+   "spits": [
+    {
+     "x": 308.47606917325055,
+     "y": 278.24922359499624
+    }
+   ]
+  },
+  {
+   "t": 32,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 2
+    }
+   ],
+   "spits": [
+    {
+     "x": 311.329238722136,
+     "y": 279.1762745781211
+    }
+   ]
+  },
+  {
+   "t": 33,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 1
+    }
+   ],
+   "spits": [
+    {
+     "x": 314.1824082710214,
+     "y": 280.1033255612459
+    }
+   ]
+  },
+  {
+   "t": 34,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 317.03557781990685,
+     "y": 281.03037654437077
+    }
+   ]
+  },
+  {
+   "t": 35,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 30
+    }
+   ],
+   "spits": [
+    {
+     "x": 319.8887473687923,
+     "y": 281.9574275274956
+    }
+   ]
+  },
+  {
+   "t": 36,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 29
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 37,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 28
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 38,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 27
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 39,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 26
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 40,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 25
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 41,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 24
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 42,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 23
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 43,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 22
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 44,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 21
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 45,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 20
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 46,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 19
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 47,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 18
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 48,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 17
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 49,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 16
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 50,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 15
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 51,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 14
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 52,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 13
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 53,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 12
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 54,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 55,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 10
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 56,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 9
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 57,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 8
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 58,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 7
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 59,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 6
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 60,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 5
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 61,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 4
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 62,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 3
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 63,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 2
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 64,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 1
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 65,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 66,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 30
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 67,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 29
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 68,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 28
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 69,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 27
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 70,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 26
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 71,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 25
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 72,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 24
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 73,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 23
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 74,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 22
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 75,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 21
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 76,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 20
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 77,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 19
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 78,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 18
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 79,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 17
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 80,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 16
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 81,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 15
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 82,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 14
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 83,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 13
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 84,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 12
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 85,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 86,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.9,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 87,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.8,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 88,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.7000000000000001,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 89,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.6000000000000001,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 90,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.5000000000000001,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 91,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.40000000000000013,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 92,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.30000000000000016,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 93,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.20000000000000015,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 94,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.10000000000000014,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 95,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 1.3877787807814457e-16,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 96,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 97,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 98,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 99,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 100,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 101,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 102,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 103,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 104,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 105,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 106,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 107,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 108,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 109,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 110,
+   "player": {
+    "x": 227.70000000000005,
+    "y": 256
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  }
+ ]
+}
