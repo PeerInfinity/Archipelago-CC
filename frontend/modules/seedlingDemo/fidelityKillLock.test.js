@@ -43,15 +43,21 @@ describe('the defaults are the user\'s ruling, and all-OFF is the BEFORE model',
             expect(killArmModelled('Jellyfish')).toBe(false);
         });
         // the defaults: the jellyfish is bridged, the lavarunner is not
-        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
-        expect(KILL_ARM_POLICY.Jellyfish.policy).toBe('modelled');
-        expect(killArmModelled('LavaRunner')).toBe(false);
+        // ⛓ K2PREP: asked AT the defaults (not at whatever the process runs), so a `SEEDLING_KILLLOCK_BODIES` run
+        // leaves this row green; the row above (`{ ...KILLLOCK_BODIES }`) is the one that says the process is off them.
+        withKillLockBodies(KILLLOCK_BODIES_DEFAULTS, () => {
+            expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
+            expect(KILL_ARM_POLICY.Jellyfish.policy).toBe('modelled');
+            expect(killArmModelled('LavaRunner')).toBe(false);
+        });
         withKillLockBodies(KILLLOCK_ALL_ON, () => {
             expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher']);
             expect(KILL_ARM_POLICY.Jellyfish.policy).toBe('modelled');
             expect(killArmModelled('LavaRunner')).toBe(true);
         });
-        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
+        withKillLockBodies(KILLLOCK_BODIES_DEFAULTS, () => {
+            expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
+        });
     });
 });
 

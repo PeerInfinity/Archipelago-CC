@@ -749,14 +749,18 @@ describe('A3 — a kill refusal names the PRESS arm, on a room with no arrow tra
      *  module and deliberately unconverted, so the claim keeps a live subject
      *  instead of quietly becoming vacuous. */
     it('⛓ an un-modelled body\'s own sentence survives the fallthrough', () => {
-        // ⛓ KILLLOCK K1 (ON since the wave-8 harvest) made `jellyfish` modelled; the unconverted subject is
-        // `lavarunner` now (K2 OFF), the same depth in the same module.
+        // ⛓ KILLLOCK K1 (ON since the wave-8 harvest) made `jellyfish` modelled; the unconverted subject was
+        // `lavarunner` (K2 OFF), the same depth in the same module.
+        // ⛓ K2PREP D3: K2 makes `lavarunner` modelled, and the press arm then asks the stub run for its weapon
+        // (`run.progress is not a function` — the stub assumed K2 OFF). The subject is `icetrap` now: `canHit =
+        // false` in the game, so its row can never become `modelled` and this sentence keeps a live subject.
+        // (It is uncounted in the game; `counted: true` here is the fixture's, so the kill order asks about it.)
         const run = roomWithNoTrap();
-        run.world.combat.enemies = [{ tag: 'lavarunner', x: 5, y: 5, counted: true }];
-        run.spinnerBodies = [{ id: 'lavarunner@5,5', x: 5, y: 5 }];
+        run.world.combat.enemies = [{ tag: 'icetrap', x: 5, y: 5, counted: true }];
+        run.spinnerBodies = [{ id: 'icetrap@5,5', x: 5, y: 5 }];
         const { rejected } = resolveKillStrategy(run, { id: 'lock@3,4' }, []);
         expect(rejected[0].option).toMatch(/^press /);
-        expect(rejected[0].why).toMatch(/KILL_ARM_POLICY/);
+        expect(rejected[0].why).toMatch(/KILL_ARM_POLICY\.IceTrap` is "refused"/);
         expect(rejected.at(-1).option).toBe('kill-by-ceiling');
     });
 });
