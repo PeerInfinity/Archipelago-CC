@@ -450,9 +450,12 @@ export function solveForPage({
 }) {
     const honest = solveStaging(staging);
     const t0 = now();
-    const run = createRunForStaging(honest, levelSource, { scratchPersistence });
-    const out = solveSegment({ run, goals, name, boot: honest.boot, maxTicksPerTarget,
-        dashMode });
+    const built = createRunForStaging(honest, levelSource, { scratchPersistence });
+    // ⛓ HAMMER-PHASE B3: `rewindRun` — the same construction, fresh — lets the fight fallback rewind
+    // to a press kill's first tick; a rewound solve ends on that fresh run (`out.liveRun`).
+    const out = solveSegment({ run: built, goals, name, boot: honest.boot, maxTicksPerTarget,
+        dashMode, rewindRun: () => createRunForStaging(honest, levelSource, { scratchPersistence }) });
+    const run = out.liveRun ?? built;
     const ms = now() - t0;
     const despawns = checkSolveDespawns(staging, run);
     return {

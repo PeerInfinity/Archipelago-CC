@@ -60,7 +60,10 @@
  * over: `passes` is returned and the caller states it.
  */
 
-import { PENDING_AT, PendingDeclaration, solveSegment } from './solverBot.js';
+import {
+    HAMMER_FIGHT, HAMMER_FIGHT_FALLBACK, PENDING_AT, PendingDeclaration, fightFallbackRefused,
+    isFightFallbackRefusal, solveSegment, withHammerFight,
+} from './solverBot.js';
 import { assertTwoPassPrefixAgrees } from './r8Acceptance.js';
 
 export class TwoPassError extends Error {
@@ -172,11 +175,43 @@ export async function twoPassSolve({
     for (let pass = 1; pass <= MAX_PASSES; pass += 1) {
         let out = null;
         let raised = null;
+        const passRows = rows;
+        // ⛓ CRUSHER: `forkRun` lets a verb try a choreography on a fresh replay
+        // before committing it (`solveSegment`'s docblock); read only by `bait`.
+        // ⛓ HAMMER-PHASE B3: `rewindRun` lets the fight fallback rewind the pass to a
+        // press kill's first tick (`solveSegment`'s docblock); read only by that fallback.
+        const solvePass = () => solveSegment({ run: makeRun(passRows), goals, name, boot, dashMode,
+            forkRun: () => makeRun(passRows), rewindRun: () => makeRun(passRows) });
         try {
-            // ⛓ CRUSHER: `forkRun` lets a verb try a choreography on a fresh replay
-            // before committing it (`solveSegment`'s docblock); read only by `bait`.
-            out = solveSegment({ run: makeRun(rows), goals, name, boot, dashMode,
-                forkRun: () => makeRun(rows) });
+            try {
+                out = solvePass();
+            } catch (e) {
+                /**
+                 * ⛓⛓ HAMMER-PHASE B3 — THE WHOLE-PASS RETRY, the fight fallback where no rewind answered
+                 * (`HAMMER_FIGHT_FALLBACK.mode === 'whole'`): a press-kill refusal re-solves this pass from a fresh
+                 * run with the fight on, once. Only a SOLVE (or the next declaration) replaces it; otherwise the
+                 * refusal stands, one sentence longer. Recorded as its own `passes` row.
+                 */
+                if (!(HAMMER_FIGHT_FALLBACK.enabled && !HAMMER_FIGHT.enabled && isFightFallbackRefusal(e))) throw e;
+                const row = { t: null, how: 'whole', refused: e.code };
+                try {
+                    out = withHammerFight(true, solvePass);
+                    row.verdict = 'solved';
+                } catch (e2) {
+                    if (e2 instanceof PendingDeclaration || e2?.undeclaredKillLock) {
+                        row.verdict = 'solved';
+                        row.raised = e2?.undeclaredKillLock ? 'undeclaredKillLock' : e2.name;
+                        passes.push({ pass, kind: 'fight-fallback', ...row });
+                        throw e2;
+                    }
+                    row.verdict = 'refused';
+                    row.retryRefused = e2?.code ?? e2?.name ?? 'Error';
+                    row.why = String(e2?.message ?? e2).split('\n')[0].slice(0, 240);
+                    passes.push({ pass, kind: 'fight-fallback', ...row });
+                    throw fightFallbackRefused(e, row);
+                }
+                passes.push({ pass, kind: 'fight-fallback', ...row });
+            }
         } catch (e) {
             /**
              * ⛓⛓⛓ THE DISCOVERY ARM. `levelRun` throws BY NAME when a chaser
@@ -208,7 +243,9 @@ export async function twoPassSolve({
         }
         if (out) {
             checkPrefix(out.perTick, 'the solving pass');
-            passes.push({ pass, kind: 'solve', ticks: out.perTick.length });
+            passes.push({ pass, kind: 'solve', ticks: out.perTick.length,
+                // ⛓ hammer-phase B3 — the press kills this pass redid by rewinding (only when the fallback ran)
+                ...(out.fightFallbacks ? { fightFallbacks: out.fightFallbacks.length } : {}) });
             log(`  pass ${pass}: SOLVED in ${out.perTick.length} ticks`);
             return {
                 out,

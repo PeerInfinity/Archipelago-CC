@@ -95,7 +95,8 @@ import { levelSourceFromAtlas } from './atlasSource.js';
 import { BotDriverV2Error } from './botDriverV2.js';
 import { DEFAULT_MAX_TICKS_PER_TARGET } from './botDriverV1.js';
 import {
-    HAMMER_SAFETY, STRIKE_BOUND_EXHAUSTED, SolverBotError, SolverRefusal,
+    HAMMER_FIGHT, HAMMER_FIGHT_FALLBACK, HAMMER_SAFETY, STRIKE_BOUND_EXHAUSTED, SolverBotError, SolverRefusal,
+    fightFallbackRefused, isFightFallbackRefusal, withHammerFight,
 } from './solverBot.js';
 import { atlasOf } from './procgenLevel.js';
 import { PAGE_BOOT_TIME } from './gameClock.js';
@@ -589,8 +590,8 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
     const t0 = now();
     let result = null;
     let thrown = null;
-    try {
-        result = solveForPage({
+    let fightFallback = null;
+    const solveOnce = () => solveForPage({
             levelSource, staging, goals, name, now,
             // ⛓ Slice 1's one addition to the shared arm: the budget the loop
             // names is the budget the solver runs under. Absent, it would be
@@ -603,10 +604,31 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
             // neighbour below and `levelRun`'s own.
             scratchPersistence,
         });
+    try {
+        result = solveOnce();
     } catch (e) {
         if (!(e instanceof SolverRefusal) && !(e instanceof BotDriverV2Error)
             && !isHammerSafetyRefusal(e) && !isStrikeBoundExhaustion(e)) throw e;
         thrown = e;
+    }
+    /**
+     * ⛓⛓ HAMMER-PHASE B3 — THE WHOLE-SOLVE RETRY: the fight fallback where no rewind answered
+     * (`HAMMER_FIGHT_FALLBACK.mode === 'whole'`; in the default mode `solveForPage`'s rewind already redid the
+     * kill, and a refusal it answered carries `fightFallback` and is not asked again). One more solve from a fresh
+     * run with the fight on; only a SOLVE replaces the refusal, which otherwise stands one sentence longer.
+     */
+    if (thrown && HAMMER_FIGHT_FALLBACK.enabled && !HAMMER_FIGHT.enabled && isFightFallbackRefusal(thrown)) {
+        fightFallback = { t: null, how: 'whole', refused: thrown.code };
+        try {
+            result = withHammerFight(true, solveOnce);
+            fightFallback.verdict = 'solved';
+            thrown = null;
+        } catch (e) {
+            fightFallback.verdict = 'refused';
+            fightFallback.retryRefused = e?.code ?? e?.name ?? 'Error';
+            fightFallback.why = String(e?.message ?? e).split('\n')[0].slice(0, 240);
+            thrown = fightFallbackRefused(thrown, fightFallback);
+        }
     }
     const ms = now() - t0;
 
@@ -633,6 +655,8 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
                 budgetKind,
                 // ⛔ VERBATIM. The refusal's own text is the evidence channel.
                 reasonText: thrown.message,
+                // ⛓ hammer-phase B3 — the fight fallback's row, when it ran and did not solve
+                ...(thrown.fightFallback ? { fightFallback: thrown.fightFallback } : {}),
                 errorName: thrown.name,
                 /**
                  * ⛓ SLICE 2d — THE SENTENCE NAMES WHICH BOUND, because there
@@ -661,6 +685,8 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
             verdict: VERDICT.REFUSED,
             ms,
             reasonText: thrown.message,
+            // ⛓ hammer-phase B3 — the fight fallback's row, when it ran and did not solve
+            ...(thrown.fightFallback ? { fightFallback: thrown.fightFallback } : {}),
             errorName: thrown.name,
             classifiedBy: isHammerSafetyRefusal(thrown)
                 ? 'the kill schedule refused on HAMMER SAFETY — a `SolverBotError` whose '
@@ -719,6 +745,12 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
         classifiedBy: 'the solver reached every goal within budget',
         ticks: result.out.perTick.length,
         certification: cert,
+        /**
+         * ⛓ HAMMER-PHASE B3 — which path produced the keys, present only when the fight fallback ran:
+         * `fightFallback` (the whole-solve retry above) or `fightFallbacks` (the press kills the solve's rewind redid).
+         */
+        ...(fightFallback ? { fightFallback } : {}),
+        ...(result.out.fightFallbacks ? { fightFallbacks: result.out.fightFallbacks } : {}),
         /**
          * ⛓⛓⛓ SLICE 4b — the scratch ledger, carried out beside the records.
          *
