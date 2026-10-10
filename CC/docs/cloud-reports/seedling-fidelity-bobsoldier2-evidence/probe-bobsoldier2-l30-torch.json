@@ -1,0 +1,7131 @@
+{
+ "tape": "bobsoldier2-l30-torch",
+ "page": "seedling_bot_ap_p4f",
+ "calibrated": false,
+ "fits": [],
+ "compared": 178,
+ "worst": 0,
+ "disagreements": [],
+ "rows": [
+  {
+   "t": 0,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 1,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 2,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 3,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 4,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 5,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 6,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 7,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 8,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 9,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 10,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 11,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 12,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 13,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 14,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 15,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 16,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 17,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 18,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 19,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 20,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 21,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 22,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 23,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 24,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 25,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 26,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 27,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 28,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 29,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 30,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 31,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 32,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 33,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 34,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 35,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 36,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 37,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 38,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 39,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 40,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 41,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 42,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 43,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 44,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0.565685424949238,
+    "vy": 0.565685424949238,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0.565685424949238,
+    "vy": 0.565685424949238,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 45,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0.7884788477227912,
+    "vy": -0.13528158298061024,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0.7884788477227912,
+    "vy": -0.13528158298061024,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 46,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": -0.011521152277208846,
+    "vy": 0.6647184170193898,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": -0.011521152277208846,
+    "vy": 0.6647184170193898,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 47,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0.788478847722791,
+    "vy": -0.1352815829806102,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0.788478847722791,
+    "vy": -0.1352815829806102,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 48,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": -0.011521152277209068,
+    "vy": 0.6647184170193898,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": -0.011521152277209068,
+    "vy": 0.6647184170193898,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 49,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": 0.788478847722791,
+    "vy": -0.13528158298061022,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": 0.788478847722791,
+    "vy": -0.13528158298061022,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 50,
+   "game": {
+    "x": 56,
+    "y": 88,
+    "vx": -0.011521152277209068,
+    "vy": 0.6647184170193898,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88,
+    "vx": -0.011521152277209068,
+    "vy": 0.6647184170193898,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 51,
+   "game": {
+    "x": 56,
+    "y": 88.41475595998594,
+    "vx": 0.7207806080210313,
+    "vy": -0.3470955417472726,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56,
+    "y": 88.41475595998594,
+    "vx": 0.7207806080210313,
+    "vy": -0.3470955417472726,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 52,
+   "game": {
+    "x": 56.49553666801446,
+    "y": 88.17612777503469,
+    "vx": 0.73405016560793,
+    "vy": 0.3180728758806233,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 56.49553666801446,
+    "y": 88.17612777503469,
+    "vx": 0.73405016560793,
+    "vy": 0.3180728758806233,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 53,
+   "game": {
+    "x": 57.00019615686991,
+    "y": 88.39480287720261,
+    "vx": 0.7307420434891098,
+    "vy": -0.3256010839622008,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 57.00019615686991,
+    "y": 88.39480287720261,
+    "vx": 0.7307420434891098,
+    "vy": -0.3256010839622008,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 54,
+   "game": {
+    "x": 57.50258131176867,
+    "y": 88.1709521319786,
+    "vx": 0.7316086761068562,
+    "vy": 0.3236491079010931,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 57.50258131176867,
+    "y": 88.1709521319786,
+    "vx": 0.7316086761068562,
+    "vy": 0.3236491079010931,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 55,
+   "game": {
+    "x": 58.00556227659214,
+    "y": 88.3934608936606,
+    "vx": 0.7313845440027651,
+    "vy": -0.3241552850006728,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 58.00556227659214,
+    "y": 88.3934608936606,
+    "vx": 0.7313845440027651,
+    "vy": -0.3241552850006728,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 56,
+   "game": {
+    "x": 58.50838915059404,
+    "y": 88.17060413522265,
+    "vx": 0.731442703541056,
+    "vy": 0.3240240291036316,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 58.50838915059404,
+    "y": 88.17060413522265,
+    "vx": 0.731442703541056,
+    "vy": 0.3240240291036316,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 57,
+   "game": {
+    "x": 59.01125600927852,
+    "y": 88.3933706552314,
+    "vx": 0.7314276248939688,
+    "vy": -0.3240580650777999,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 59.01125600927852,
+    "y": 88.3933706552314,
+    "vx": 0.7314276248939688,
+    "vy": -0.3240580650777999,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 58,
+   "game": {
+    "x": 59.51411250139312,
+    "y": 88.1705807354904,
+    "vx": 0.7314315351136877,
+    "vy": 0.32404923922335366,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 59.51411250139312,
+    "y": 88.1705807354904,
+    "vx": 0.7314315351136877,
+    "vy": 0.32404923922335366,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 59,
+   "game": {
+    "x": 60.01697168178378,
+    "y": 88.39336458745646,
+    "vx": 0.731430521167982,
+    "vy": -0.3240515278531091,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 60.01697168178378,
+    "y": 88.39336458745646,
+    "vx": 0.731430521167982,
+    "vy": -0.3240515278531091,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 60,
+   "game": {
+    "x": 60.519830165086766,
+    "y": 88.17057916205745,
+    "vx": 0.7314307840947394,
+    "vy": 0.32405093438926347,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 60.519830165086766,
+    "y": 88.17057916205745,
+    "vx": 0.7314307840947394,
+    "vy": 0.32405093438926347,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 61,
+   "game": {
+    "x": 61.0226888291519,
+    "y": 88.39336417945007,
+    "vx": 0.6292633591608822,
+    "vy": 0.493991523021967,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 61.0226888291519,
+    "y": 88.39336417945007,
+    "vx": 0.6292633591608822,
+    "vy": 0.493991523021967,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 62,
+   "game": {
+    "x": 61.45530738857501,
+    "y": 88.73298335152768,
+    "vx": 0.7494327159727827,
+    "vy": -0.27991177936924794,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 61.45530738857501,
+    "y": 88.73298335152768,
+    "vx": 0.7494327159727827,
+    "vy": -0.27991177936924794,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 63,
+   "game": {
+    "x": 61.97054238080629,
+    "y": 88.54054400321132,
+    "vx": 0.7262562999046942,
+    "vy": 0.3354873870188609,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 61.97054238080629,
+    "y": 88.54054400321132,
+    "vx": 0.7262562999046942,
+    "vy": 0.3354873870188609,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 64,
+   "game": {
+    "x": 62.46984358699077,
+    "y": 88.7711915817868,
+    "vx": 0.6267588477013301,
+    "vy": 0.49716531136846337,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 62.46984358699077,
+    "y": 88.7711915817868,
+    "vx": 0.6267588477013301,
+    "vy": 0.49716531136846337,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 65,
+   "game": {
+    "x": 62.900740294785436,
+    "y": 89.11299273335261,
+    "vx": 0.7497394954051183,
+    "vy": -0.2790890342340215,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 62.900740294785436,
+    "y": 89.11299273335261,
+    "vx": 0.7497394954051183,
+    "vy": -0.2790890342340215,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 66,
+   "game": {
+    "x": 63.416186197876456,
+    "y": 88.92111902231672,
+    "vx": 0.7261578712020971,
+    "vy": 0.33570038142849773,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 63.416186197876456,
+    "y": 88.92111902231672,
+    "vx": 0.7261578712020971,
+    "vy": 0.33570038142849773,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 67,
+   "game": {
+    "x": 63.9154197343279,
+    "y": 89.15191303454881,
+    "vx": 0.6267118474848412,
+    "vy": 0.49722455713906283,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 63.9154197343279,
+    "y": 89.15191303454881,
+    "vx": 0.6267118474848412,
+    "vy": 0.49722455713906283,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 68,
+   "game": {
+    "x": 64.34628412947373,
+    "y": 89.49375491758192,
+    "vx": 0.7497452114320172,
+    "vy": -0.27907367832663826,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 64.34628412947373,
+    "y": 89.49375491758192,
+    "vx": 0.7497452114320172,
+    "vy": -0.27907367832663826,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 69,
+   "game": {
+    "x": 64.86173396233325,
+    "y": 89.30189176373236,
+    "vx": 0.7261560334124678,
+    "vy": 0.33570435674663346,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 64.86173396233325,
+    "y": 89.30189176373236,
+    "vx": 0.7261560334124678,
+    "vy": 0.33570435674663346,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 70,
+   "game": {
+    "x": 65.36096623530432,
+    "y": 89.53268850899566,
+    "vx": 0.6267109701498057,
+    "vy": 0.4972256629478103,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 65.36096623530432,
+    "y": 89.53268850899566,
+    "vx": 0.6267109701498057,
+    "vy": 0.4972256629478103,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 71,
+   "game": {
+    "x": 65.79183002728232,
+    "y": 89.87453115227228,
+    "vx": 0.7497453181166216,
+    "vy": -0.2790733917130153,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 65.79183002728232,
+    "y": 89.87453115227228,
+    "vx": 0.7497453181166216,
+    "vy": -0.2790733917130153,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 72,
+   "game": {
+    "x": 66.3072799334875,
+    "y": 89.68266819546959,
+    "vx": 0.7261559991104081,
+    "vy": 0.3357044309447898,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 66.3072799334875,
+    "y": 89.68266819546959,
+    "vx": 0.7261559991104081,
+    "vy": 0.3357044309447898,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 73,
+   "game": {
+    "x": 66.80651218287589,
+    "y": 89.91346499174414,
+    "vx": 0.626710953774559,
+    "vy": 0.4972256835874256,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 66.80651218287589,
+    "y": 89.91346499174414,
+    "vx": 0.626710953774559,
+    "vy": 0.4972256835874256,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 4.71238898038469,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 74,
+   "game": {
+    "x": 67.2373759635959,
+    "y": 90.2553076492105,
+    "vx": 0.7497453201078591,
+    "vy": -0.27907338636345136,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 67.2373759635959,
+    "y": 90.2553076492105,
+    "vx": 0.7497453201078591,
+    "vy": -0.27907338636345136,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 5.026548245743669,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 75,
+   "game": {
+    "x": 67.75282587117005,
+    "y": 90.06344469608563,
+    "vx": 0.7261559984701697,
+    "vy": 0.3357044323296779,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 67.75282587117005,
+    "y": 90.06344469608563,
+    "vx": 0.7261559984701697,
+    "vy": 0.3357044323296779,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 5.340707511102648,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 76,
+   "game": {
+    "x": 68.25205812011829,
+    "y": 90.29424149331228,
+    "vx": 0.6267109534689195,
+    "vy": 0.4972256839726583,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 68.25205812011829,
+    "y": 90.29424149331228,
+    "vx": 0.6267109534689195,
+    "vy": 0.4972256839726583,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 5.654866776461628,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 77,
+   "game": {
+    "x": 68.68292190062817,
+    "y": 90.63608415104349,
+    "vx": 0.5864966200231331,
+    "vy": 0.5440787761909489,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 68.68292190062817,
+    "y": 90.63608415104349,
+    "vx": 0.5864966200231331,
+    "vy": 0.5440787761909489,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 5.969026041820607,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 78,
+   "game": {
+    "x": 69.08613832689407,
+    "y": 91.01013830967477,
+    "vx": 0.7541399009015144,
+    "vy": -0.2669700542537576,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 69.08613832689407,
+    "y": 91.01013830967477,
+    "vx": 0.7541399009015144,
+    "vy": -0.2669700542537576,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 6.283185307179586,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 79,
+   "game": {
+    "x": 69.60460950876386,
+    "y": 90.82659639737531,
+    "vx": 0.7246995551565761,
+    "vy": 0.3388370622524351,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 69.60460950876386,
+    "y": 90.82659639737531,
+    "vx": 0.7246995551565761,
+    "vy": 0.3388370622524351,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 6.5973445725385655,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 80,
+   "game": {
+    "x": 70.102840452934,
+    "y": 91.05954687767387,
+    "vx": 0.6260181660504992,
+    "vy": 0.4980976367889831,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 70.102840452934,
+    "y": 91.05954687767387,
+    "vx": 0.6260181660504992,
+    "vy": 0.4980976367889831,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 6.911503837897545,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 81,
+   "game": {
+    "x": 70.53322794209372,
+    "y": 91.40198900296629,
+    "vx": 0.5862491772505246,
+    "vy": 0.5443453886762365,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 70.53322794209372,
+    "y": 91.40198900296629,
+    "vx": 0.5862491772505246,
+    "vy": 0.5443453886762365,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 7.225663103256524,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 82,
+   "game": {
+    "x": 70.93627425145345,
+    "y": 91.7762264576812,
+    "vx": 0.5724985865117903,
+    "vy": 0.5587891985731311,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 70.93627425145345,
+    "y": 91.7762264576812,
+    "vx": 0.5724985865117903,
+    "vy": 0.5587891985731311,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 7.5398223686155035,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 83,
+   "game": {
+    "x": 71.32986702968032,
+    "y": 92.16039403170024,
+    "vx": 0.5679232836620857,
+    "vy": 0.5634386780071761,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 71.32986702968032,
+    "y": 92.16039403170024,
+    "vx": 0.5679232836620857,
+    "vy": 0.5634386780071761,
+    "hits": 0,
+    "hitsTimer": 0,
+    "swordSpin": 7.853981633974483,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 84,
+   "game": {
+    "x": 71.720314287198,
+    "y": 92.54775812283017,
+    "vx": -3.3450556603598613,
+    "vy": -2.549590299308757,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 71.720314287198,
+    "y": 92.54775812283017,
+    "vx": -3.3450556603598613,
+    "vy": -2.549590299308757,
+    "hits": 1,
+    "hitsTimer": 30,
+    "swordSpin": 8.168140899333462,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 85,
+   "game": {
+    "x": 68.574088573909,
+    "y": 90.14971534790833,
+    "vx": -2.3462257132890016,
+    "vy": -1.598042774921853,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 29,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 68.574088573909,
+    "y": 90.14971534790833,
+    "vx": -2.3462257132890016,
+    "vy": -1.598042774921853,
+    "hits": 1,
+    "hitsTimer": 29,
+    "swordSpin": 8.482300164692441,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 86,
+   "game": {
+    "x": 66.43448757567796,
+    "y": 88.69240717117474,
+    "vx": -1.3396009982310255,
+    "vy": -0.6573081767335955,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 28,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 66.43448757567796,
+    "y": 88.69240717117474,
+    "vx": -1.3396009982310255,
+    "vy": -0.6573081767335955,
+    "hits": 1,
+    "hitsTimer": 28,
+    "swordSpin": 8.79645943005142,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 87,
+   "game": {
+    "x": 65.3193242952803,
+    "y": 88.14522488065211,
+    "vx": -0.3151632803976636,
+    "vy": 0.2528177094773778,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 27,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 65.3193242952803,
+    "y": 88.14522488065211,
+    "vx": -0.3151632803976636,
+    "vy": 0.2528177094773778,
+    "hits": 1,
+    "hitsTimer": 27,
+    "swordSpin": 9.1106186954104,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 88,
+   "game": {
+    "x": 65.19917066019875,
+    "y": 88.24160973477716,
+    "vx": 0.4834325748241757,
+    "vy": 0.6374111276082869,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 26,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 65.19917066019875,
+    "y": 88.24160973477716,
+    "vx": 0.4834325748241757,
+    "vy": 0.6374111276082869,
+    "hits": 1,
+    "hitsTimer": 26,
+    "swordSpin": 9.42477796076938,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 89,
+   "game": {
+    "x": 65.53153055539036,
+    "y": 88.67982988500785,
+    "vx": 0.7620516242251472,
+    "vy": -0.24346934512544982,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 25,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 65.53153055539036,
+    "y": 88.67982988500785,
+    "vx": 0.7620516242251472,
+    "vy": -0.24346934512544982,
+    "hits": 1,
+    "hitsTimer": 25,
+    "swordSpin": 9.738937226128359,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 90,
+   "game": {
+    "x": 66.05544104704515,
+    "y": 88.5124447102341,
+    "vx": 0.7218261249402054,
+    "vy": 0.34491599753245294,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 24,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 66.05544104704515,
+    "y": 88.5124447102341,
+    "vx": 0.7218261249402054,
+    "vy": 0.34491599753245294,
+    "hits": 1,
+    "hitsTimer": 24,
+    "swordSpin": 10.053096491487338,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 91,
+   "game": {
+    "x": 66.55169650794154,
+    "y": 88.74957445853767,
+    "vx": 0.6246655730879758,
+    "vy": 0.4997928788995206,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 23,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 66.55169650794154,
+    "y": 88.74957445853767,
+    "vx": 0.6246655730879758,
+    "vy": 0.4997928788995206,
+    "hits": 1,
+    "hitsTimer": 23,
+    "swordSpin": 10.367255756846317,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 92,
+   "game": {
+    "x": 66.98115408943953,
+    "y": 89.09318206278108,
+    "vx": 0.5857669410112409,
+    "vy": 0.5448642866056954,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 22,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 66.98115408943953,
+    "y": 89.09318206278108,
+    "vx": 0.5857669410112409,
+    "vy": 0.5448642866056954,
+    "hits": 1,
+    "hitsTimer": 22,
+    "swordSpin": 10.681415022205297,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 93,
+   "game": {
+    "x": 67.38386886138476,
+    "y": 89.4677762598225,
+    "vx": 0.5723367329707314,
+    "vy": 0.5589549750135423,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 21,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 67.38386886138476,
+    "y": 89.4677762598225,
+    "vx": 0.5723367329707314,
+    "vy": 0.5589549750135423,
+    "hits": 1,
+    "hitsTimer": 21,
+    "swordSpin": 10.995574287564276,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 94,
+   "game": {
+    "x": 67.77735036530213,
+    "y": 89.85205780514431,
+    "vx": 0.567869904825245,
+    "vy": 0.5634924766079554,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 20,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 67.77735036530213,
+    "y": 89.85205780514431,
+    "vx": 0.567869904825245,
+    "vy": 0.5634924766079554,
+    "hits": 1,
+    "hitsTimer": 20,
+    "swordSpin": 11.309733552923255,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 95,
+   "game": {
+    "x": 68.16776092486948,
+    "y": 90.23945888281229,
+    "vx": 0.5664009321503302,
+    "vy": 0.5649690115919963,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 19,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 68.16776092486948,
+    "y": 90.23945888281229,
+    "vx": 0.5664009321503302,
+    "vy": 0.5649690115919963,
+    "hits": 1,
+    "hitsTimer": 19,
+    "swordSpin": 11.623892818282235,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 96,
+   "game": {
+    "x": 68.55716156572284,
+    "y": 90.62787507828179,
+    "vx": 0.5659195771640685,
+    "vy": 0.5654511757724463,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 18,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 68.55716156572284,
+    "y": 90.62787507828179,
+    "vx": 0.5659195771640685,
+    "vy": 0.5654511757724463,
+    "hits": 1,
+    "hitsTimer": 18,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 97,
+   "game": {
+    "x": 68.94623127502314,
+    "y": 91.01662276162534,
+    "vx": 0.7560573761022457,
+    "vy": -0.2614904282022338,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 17,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 68.94623127502314,
+    "y": 91.01662276162534,
+    "vx": 0.7560573761022457,
+    "vy": -0.2614904282022338,
+    "hits": 1,
+    "hitsTimer": 17,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 98,
+   "game": {
+    "x": 69.46602072109343,
+    "y": 90.83684809223631,
+    "vx": 0.7240349495672234,
+    "vy": 0.340254892404486,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 16,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 69.46602072109343,
+    "y": 90.83684809223631,
+    "vx": 0.7240349495672234,
+    "vy": 0.340254892404486,
+    "hits": 1,
+    "hitsTimer": 16,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 99,
+   "game": {
+    "x": 69.96379474892089,
+    "y": 91.0707733307644,
+    "vx": 0.6257036669168813,
+    "vy": 0.49849264910003294,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 15,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 69.96379474892089,
+    "y": 91.0707733307644,
+    "vx": 0.6257036669168813,
+    "vy": 0.49849264910003294,
+    "hits": 1,
+    "hitsTimer": 15,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 100,
+   "game": {
+    "x": 70.39396601992624,
+    "y": 91.41348702702066,
+    "vx": 0.7498674627261818,
+    "vy": -0.2787450238920838,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 14,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 70.39396601992624,
+    "y": 91.41348702702066,
+    "vx": 0.7498674627261818,
+    "vy": -0.2787450238920838,
+    "hits": 1,
+    "hitsTimer": 14,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 101,
+   "game": {
+    "x": 70.90949990055049,
+    "y": 91.22184982309486,
+    "vx": 0.7261166940724525,
+    "vy": 0.3357894378763165,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 13,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 70.90949990055049,
+    "y": 91.22184982309486,
+    "vx": 0.7261166940724525,
+    "vy": 0.3357894378763165,
+    "hits": 1,
+    "hitsTimer": 13,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 102,
+   "game": {
+    "x": 71.4087051277253,
+    "y": 91.45270506163483,
+    "vx": 0.7327720068186621,
+    "vy": -0.32100652021875004,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 12,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 71.4087051277253,
+    "y": 91.45270506163483,
+    "vx": 0.7327720068186621,
+    "vy": -0.32100652021875004,
+    "hits": 1,
+    "hitsTimer": 12,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 103,
+   "game": {
+    "x": 71.91248588241312,
+    "y": 91.23201307898444,
+    "vx": 0.7310804718515402,
+    "vy": 0.3248404895903976,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 11,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 71.91248588241312,
+    "y": 91.23201307898444,
+    "vx": 0.7310804718515402,
+    "vy": 0.3248404895903976,
+    "hits": 1,
+    "hitsTimer": 11,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 104,
+   "game": {
+    "x": 72.41510370681105,
+    "y": 91.45534091557784,
+    "vx": 0.731521390121565,
+    "vy": -0.32384634596458434,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 10,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 72.41510370681105,
+    "y": 91.45534091557784,
+    "vx": 0.731521390121565,
+    "vy": -0.32384634596458434,
+    "hits": 1,
+    "hitsTimer": 10,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 105,
+   "game": {
+    "x": 72.91802466251963,
+    "y": 91.23269655272718,
+    "vx": 0.7314072097948686,
+    "vy": 0.32410413983793124,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 9,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 72.91802466251963,
+    "y": 91.23269655272718,
+    "vx": 0.7314072097948686,
+    "vy": 0.32410413983793124,
+    "hits": 1,
+    "hitsTimer": 9,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 106,
+   "game": {
+    "x": 73.4208671192536,
+    "y": 91.45551814886575,
+    "vx": 0.7314368282131336,
+    "vy": -0.32403729157847105,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 8,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 73.4208671192536,
+    "y": 91.45551814886575,
+    "vx": 0.7314368282131336,
+    "vy": -0.32403729157847105,
+    "hits": 1,
+    "hitsTimer": 8,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 107,
+   "game": {
+    "x": 73.92372993865013,
+    "y": 91.23274251090555,
+    "vx": 0.7314291485667151,
+    "vy": 0.32405462599223955,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 7,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 73.92372993865013,
+    "y": 91.23274251090555,
+    "vx": 0.7314291485667151,
+    "vy": 0.32405462599223955,
+    "hits": 1,
+    "hitsTimer": 7,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 108,
+   "game": {
+    "x": 74.42658747828975,
+    "y": 91.45553006627522,
+    "vx": 0.7314311400202251,
+    "vy": -0.32405013101172175,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 6,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 74.42658747828975,
+    "y": 91.45553006627522,
+    "vx": 0.7314311400202251,
+    "vy": -0.32405013101172175,
+    "hits": 1,
+    "hitsTimer": 6,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 109,
+   "game": {
+    "x": 74.92944638705364,
+    "y": 91.23274560120466,
+    "vx": 0.6292635337929843,
+    "vy": -0.49399130056951995,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 5,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 74.92944638705364,
+    "y": 91.23274560120466,
+    "vx": 0.6292635337929843,
+    "vy": -0.49399130056951995,
+    "hits": 1,
+    "hitsTimer": 5,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 110,
+   "game": {
+    "x": 75.36206506653632,
+    "y": 90.8931265820631,
+    "vx": 0.749432694431108,
+    "vy": 0.2799118370446838,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 4,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 75.36206506653632,
+    "y": 90.8931265820631,
+    "vx": 0.749432694431108,
+    "vy": 0.2799118370446838,
+    "hits": 1,
+    "hitsTimer": 4,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 111,
+   "game": {
+    "x": 75.8773000439577,
+    "y": 91.08556597003133,
+    "vx": 0.7262563068021098,
+    "vy": -0.33548737208747453,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 3,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 75.8773000439577,
+    "y": 91.08556597003133,
+    "vx": 0.7262563068021098,
+    "vy": -0.33548737208747453,
+    "hits": 1,
+    "hitsTimer": 3,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 112,
+   "game": {
+    "x": 76.37660125488415,
+    "y": 90.85491840172119,
+    "vx": 0.6267588509956895,
+    "vy": -0.49716530721537994,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 2,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 76.37660125488415,
+    "y": 90.85491840172119,
+    "vx": 0.6267588509956895,
+    "vy": -0.49716530721537994,
+    "hits": 1,
+    "hitsTimer": 2,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 113,
+   "game": {
+    "x": 76.80749796494369,
+    "y": 90.51311725301062,
+    "vx": 0.5865137387922493,
+    "vy": -0.5440603222143084,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 1,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 76.80749796494369,
+    "y": 90.51311725301062,
+    "vx": 0.5865137387922493,
+    "vy": -0.5440603222143084,
+    "hits": 1,
+    "hitsTimer": 1,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 114,
+   "game": {
+    "x": 77.21072616036336,
+    "y": 90.13907578148829,
+    "vx": 0.5725874262801113,
+    "vy": -0.5586981647239573,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 77.21072616036336,
+    "y": 90.13907578148829,
+    "vx": 0.5725874262801113,
+    "vy": -0.5586981647239573,
+    "hits": 1,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 115,
+   "game": {
+    "x": 77.60438001593094,
+    "y": 89.75497079324057,
+    "vx": 0.5679525873123629,
+    "vy": -0.5634091395825886,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 77.60438001593094,
+    "y": 89.75497079324057,
+    "vx": 0.5679525873123629,
+    "vy": -0.5634091395825886,
+    "hits": 1,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 116,
+   "game": {
+    "x": 77.9948474197082,
+    "y": 89.36762700977755,
+    "vx": 0.5664280509268876,
+    "vy": -0.5649418227775026,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 1
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 77.9948474197082,
+    "y": 89.36762700977755,
+    "vx": 0.5664280509268876,
+    "vy": -0.5649418227775026,
+    "hits": 1,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 117,
+   "game": {
+    "x": 78.38426670472043,
+    "y": 88.97922950661801,
+    "vx": -3.2398667876401417,
+    "vy": 2.677384033952362,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 78.38426670472043,
+    "y": 88.97922950661801,
+    "vx": -3.2398667876401417,
+    "vy": 2.677384033952362,
+    "hits": 2,
+    "hitsTimer": 30,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 118,
+   "game": {
+    "x": 75.33711195369695,
+    "y": 91.49735880455584,
+    "vx": -2.2471547510234817,
+    "vy": 1.7181292979378273,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 29,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 75.33711195369695,
+    "y": 91.49735880455584,
+    "vx": -2.2471547510234817,
+    "vy": 1.7181292979378273,
+    "hits": 2,
+    "hitsTimer": 29,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 119,
+   "game": {
+    "x": 73.28855873582444,
+    "y": 93.06364136716464,
+    "vx": -1.248553217872516,
+    "vy": 0.7662825626087928,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 28,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 73.28855873582444,
+    "y": 93.06364136716464,
+    "vx": -1.248553217872516,
+    "vy": 0.7662825626087928,
+    "hits": 2,
+    "hitsTimer": 28,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 120,
+   "game": {
+    "x": 72.25307669742445,
+    "y": 93.69915439020787,
+    "vx": -0.2354820383999925,
+    "vy": -0.16448697695676406,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 27,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 72.25307669742445,
+    "y": 93.69915439020787,
+    "vx": -0.2354820383999925,
+    "vy": -0.16448697695676406,
+    "hits": 2,
+    "hitsTimer": 27,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 121,
+   "game": {
+    "x": 72.25307669742445,
+    "y": 93.69915439020787,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 26,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 72.25307669742445,
+    "y": 93.69915439020787,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "hits": 2,
+    "hitsTimer": 26,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 122,
+   "game": {
+    "x": 72.64198542707705,
+    "y": 93.31024566055527,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 25,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 72.64198542707705,
+    "y": 93.31024566055527,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "hits": 2,
+    "hitsTimer": 25,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 123,
+   "game": {
+    "x": 73.03089415672964,
+    "y": 92.92133693090267,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 24,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 73.03089415672964,
+    "y": 92.92133693090267,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "hits": 2,
+    "hitsTimer": 24,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 124,
+   "game": {
+    "x": 73.41980288638224,
+    "y": 92.53242820125007,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 23,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 73.41980288638224,
+    "y": 92.53242820125007,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "hits": 2,
+    "hitsTimer": 23,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 125,
+   "game": {
+    "x": 73.80871161603484,
+    "y": 92.14351947159747,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 22,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 73.80871161603484,
+    "y": 92.14351947159747,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "hits": 2,
+    "hitsTimer": 22,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 126,
+   "game": {
+    "x": 74.19762034568744,
+    "y": 91.75461074194487,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 21,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 74.19762034568744,
+    "y": 91.75461074194487,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "hits": 2,
+    "hitsTimer": 21,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 127,
+   "game": {
+    "x": 74.58652907534004,
+    "y": 91.36570201229227,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 20,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 74.58652907534004,
+    "y": 91.36570201229227,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "hits": 2,
+    "hitsTimer": 20,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 128,
+   "game": {
+    "x": 74.97543780499264,
+    "y": 90.97679328263968,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 19,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 74.97543780499264,
+    "y": 90.97679328263968,
+    "vx": 0.565685424949238,
+    "vy": -0.565685424949238,
+    "hits": 2,
+    "hitsTimer": 19,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 129,
+   "game": {
+    "x": 75.36434653464524,
+    "y": 90.58788455298708,
+    "vx": -0.2614305774304744,
+    "vy": -0.7560780734714959,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 18,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 75.36434653464524,
+    "y": 90.58788455298708,
+    "vx": -0.2614305774304744,
+    "vy": -0.7560780734714959,
+    "hits": 2,
+    "hitsTimer": 18,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 130,
+   "game": {
+    "x": 75.18461301266179,
+    "y": 90.06808087747542,
+    "vx": 0.3402703771065553,
+    "vy": -0.7240276724433692,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 17,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 75.18461301266179,
+    "y": 90.06808087747542,
+    "vx": 0.3402703771065553,
+    "vy": -0.7240276724433692,
+    "hits": 2,
+    "hitsTimer": 17,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 131,
+   "game": {
+    "x": 75.41854889692254,
+    "y": 89.57031185267061,
+    "vx": 0.4984969644585043,
+    "vy": -0.6257002288841332,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 16,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 75.41854889692254,
+    "y": 89.57031185267061,
+    "vx": 0.4984969644585043,
+    "vy": -0.6257002288841332,
+    "hits": 2,
+    "hitsTimer": 16,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 132,
+   "game": {
+    "x": 75.76126555998776,
+    "y": 89.14014294531277,
+    "vx": -0.2787439055435334,
+    "vy": -0.7498678784441549,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 15,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 75.76126555998776,
+    "y": 89.14014294531277,
+    "vx": -0.2787439055435334,
+    "vy": -0.7498678784441549,
+    "hits": 2,
+    "hitsTimer": 15,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 133,
+   "game": {
+    "x": 75.56962912492658,
+    "y": 88.62460877888242,
+    "vx": 0.33578972738952745,
+    "vy": -0.7261165601882846,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 14,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 75.56962912492658,
+    "y": 88.62460877888242,
+    "vx": 0.33578972738952745,
+    "vy": -0.7261165601882846,
+    "hits": 2,
+    "hitsTimer": 14,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 134,
+   "game": {
+    "x": 75.80048456250688,
+    "y": 88.12540364375297,
+    "vx": 0.4972494108090978,
+    "vy": -0.6266921281219393,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 13,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 75.80048456250688,
+    "y": 88.12540364375297,
+    "vx": 0.4972494108090978,
+    "vy": -0.6266921281219393,
+    "hits": 2,
+    "hitsTimer": 13,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 135,
+   "game": {
+    "x": 76.14234353243813,
+    "y": 87.69455280566915,
+    "vx": -0.27906723653290016,
+    "vy": -0.7497476091951814,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 12,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 76.14234353243813,
+    "y": 87.69455280566915,
+    "vx": -0.27906723653290016,
+    "vy": -0.7497476091951814,
+    "hits": 2,
+    "hitsTimer": 12,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 136,
+   "game": {
+    "x": 75.95048480732176,
+    "y": 87.17910132434746,
+    "vx": 0.33570602438950947,
+    "vy": -0.7261552624532787,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 11,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 75.95048480732176,
+    "y": 87.17910132434746,
+    "vx": 0.33570602438950947,
+    "vy": -0.7261552624532787,
+    "hits": 2,
+    "hitsTimer": 11,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 137,
+   "game": {
+    "x": 76.18128269908955,
+    "y": 86.67986958141083,
+    "vx": 0.49722612683425005,
+    "vy": -0.6267106021070734,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 10,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 76.18128269908955,
+    "y": 86.67986958141083,
+    "vx": 0.49722612683425005,
+    "vy": -0.6267106021070734,
+    "hits": 2,
+    "hitsTimer": 10,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 138,
+   "game": {
+    "x": 76.52312566128809,
+    "y": 86.24900604246221,
+    "vx": -0.27907327147869543,
+    "vy": -0.7497453628707406,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 9,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 76.52312566128809,
+    "y": 86.24900604246221,
+    "vx": -0.27907327147869543,
+    "vy": -0.7497453628707406,
+    "hits": 2,
+    "hitsTimer": 9,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 139,
+   "game": {
+    "x": 76.33126278714649,
+    "y": 85.73355610548857,
+    "vx": 0.33570446207089155,
+    "vy": -0.7261559847207026,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 8,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 76.33126278714649,
+    "y": 85.73355610548857,
+    "vx": 0.33570446207089155,
+    "vy": -0.7261559847207026,
+    "hits": 2,
+    "hitsTimer": 8,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 140,
+   "game": {
+    "x": 76.56205960482022,
+    "y": 85.23432386599309,
+    "vx": 0.4972256922457376,
+    "vy": -0.626710946905148,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 7,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 76.56205960482022,
+    "y": 85.23432386599309,
+    "vx": 0.4972256922457376,
+    "vy": -0.626710946905148,
+    "hits": 2,
+    "hitsTimer": 7,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 141,
+   "game": {
+    "x": 76.90390226823916,
+    "y": 84.8034600899958,
+    "vx": -0.279073384119311,
+    "vy": -0.7497453209431825,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 6,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 76.90390226823916,
+    "y": 84.8034600899958,
+    "vx": -0.279073384119311,
+    "vy": -0.7497453209431825,
+    "hits": 2,
+    "hitsTimer": 6,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 142,
+   "game": {
+    "x": 76.71203931665714,
+    "y": 84.28801018184735,
+    "vx": 0.33570443291063795,
+    "vy": -0.7261559982015896,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 5,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 76.71203931665714,
+    "y": 84.28801018184735,
+    "vx": 0.33570443291063795,
+    "vy": -0.7261559982015896,
+    "hits": 2,
+    "hitsTimer": 5,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 143,
+   "game": {
+    "x": 76.94283611428321,
+    "y": 83.78877793308376,
+    "vx": 0.4972256841342634,
+    "vy": -0.6267109533407038,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 4,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 76.94283611428321,
+    "y": 83.78877793308376,
+    "vx": 0.4972256841342634,
+    "vy": -0.6267109533407038,
+    "hits": 2,
+    "hitsTimer": 4,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 144,
+   "game": {
+    "x": 77.28467877212552,
+    "y": 83.35791415266203,
+    "vx": -0.2790733862217169,
+    "vy": -0.7497453201606159,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 3,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 77.28467877212552,
+    "y": 83.35791415266203,
+    "vx": -0.2790733862217169,
+    "vy": -0.7497453201606159,
+    "hits": 2,
+    "hitsTimer": 3,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 145,
+   "game": {
+    "x": 77.09281581909809,
+    "y": 82.84246424505162,
+    "vx": 0.33570443236636993,
+    "vy": -0.7261559984532067,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 2,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 77.09281581909809,
+    "y": 82.84246424505162,
+    "vx": 0.33570443236636993,
+    "vy": -0.7261559984532067,
+    "hits": 2,
+    "hitsTimer": 2,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 146,
+   "game": {
+    "x": 77.32361261634998,
+    "y": 82.34323199611504,
+    "vx": 0.4972256839828649,
+    "vy": -0.6267109534608217,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 1,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 77.32361261634998,
+    "y": 82.34323199611504,
+    "vx": 0.4972256839828649,
+    "vy": -0.6267109534608217,
+    "hits": 2,
+    "hitsTimer": 1,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 147,
+   "game": {
+    "x": 77.6654552740882,
+    "y": 81.91236821561073,
+    "vx": -0.2790733862609578,
+    "vy": -0.7497453201460096,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 77.6654552740882,
+    "y": 81.91236821561073,
+    "vx": -0.2790733862609578,
+    "vy": -0.7497453201460096,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 148,
+   "game": {
+    "x": 77.47359232103379,
+    "y": 81.39691830801034,
+    "vx": 0.3357044323562113,
+    "vy": -0.726155998457903,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 77.47359232103379,
+    "y": 81.39691830801034,
+    "vx": 0.3357044323562113,
+    "vy": -0.726155998457903,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 149,
+   "game": {
+    "x": 77.70438911827868,
+    "y": 80.89768605907054,
+    "vx": 0.4972256839800392,
+    "vy": -0.6267109534630637,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 77.70438911827868,
+    "y": 80.89768605907054,
+    "vx": 0.4972256839800392,
+    "vy": -0.6267109534630637,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 150,
+   "game": {
+    "x": 78.04623177601496,
+    "y": 80.46682227856468,
+    "vx": -0.2790733862616901,
+    "vy": -0.7497453201457369,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 78.04623177601496,
+    "y": 80.46682227856468,
+    "vx": -0.2790733862616901,
+    "vy": -0.7497453201457369,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 151,
+   "game": {
+    "x": 77.85436882296005,
+    "y": 79.95137237096448,
+    "vx": 0.33570443235602165,
+    "vy": -0.7261559984579905,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 77.85436882296005,
+    "y": 79.95137237096448,
+    "vx": 0.33570443235602165,
+    "vy": -0.7261559984579905,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 152,
+   "game": {
+    "x": 78.08516562020482,
+    "y": 79.45214012202462,
+    "vx": 0.49722568397998634,
+    "vy": -0.6267109534631053,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 78.08516562020482,
+    "y": 79.45214012202462,
+    "vx": 0.49722568397998634,
+    "vy": -0.6267109534631053,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 153,
+   "game": {
+    "x": 78.42700827794106,
+    "y": 79.02127634151873,
+    "vx": -0.27907338626170386,
+    "vy": -0.7497453201457319,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 78.42700827794106,
+    "y": 79.02127634151873,
+    "vx": -0.27907338626170386,
+    "vy": -0.7497453201457319,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 154,
+   "game": {
+    "x": 78.23514532488613,
+    "y": 78.50582643391854,
+    "vx": 0.3357044323560181,
+    "vy": -0.7261559984579924,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 78.23514532488613,
+    "y": 78.50582643391854,
+    "vx": 0.3357044323560181,
+    "vy": -0.7261559984579924,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 155,
+   "game": {
+    "x": 78.4659421221309,
+    "y": 78.00659418497867,
+    "vx": 0.4972256839799854,
+    "vy": -0.6267109534631063,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 78.4659421221309,
+    "y": 78.00659418497867,
+    "vx": 0.4972256839799854,
+    "vy": -0.6267109534631063,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 156,
+   "game": {
+    "x": 78.80778477986713,
+    "y": 77.57573040447278,
+    "vx": -0.27907338626170414,
+    "vy": -0.7497453201457317,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 78.80778477986713,
+    "y": 77.57573040447278,
+    "vx": -0.27907338626170414,
+    "vy": -0.7497453201457317,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 5.720517934257036,
+    "swordSpinning": false
+   }
+  },
+  {
+   "t": 157,
+   "game": {
+    "x": 78.61592182681221,
+    "y": 77.0602804968726,
+    "vx": 0.33570443235601805,
+    "vy": -0.7261559984579924,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 78.61592182681221,
+    "y": 77.0602804968726,
+    "vx": 0.33570443235601805,
+    "vy": -0.7261559984579924,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 6.034677199616015,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 158,
+   "game": {
+    "x": 78.84671862405698,
+    "y": 76.56104824793272,
+    "vx": 0.4972256839799854,
+    "vy": -0.6267109534631063,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 78.84671862405698,
+    "y": 76.56104824793272,
+    "vx": 0.4972256839799854,
+    "vy": -0.6267109534631063,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 6.348836464974994,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 159,
+   "game": {
+    "x": 79.18856128179321,
+    "y": 76.13018446742683,
+    "vx": -0.27907338626170414,
+    "vy": -0.7497453201457317,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.18856128179321,
+    "y": 76.13018446742683,
+    "vx": -0.27907338626170414,
+    "vy": -0.7497453201457317,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 6.662995730333973,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 160,
+   "game": {
+    "x": 78.99669832873829,
+    "y": 75.61473455982664,
+    "vx": 0.33570443235601805,
+    "vy": -0.7261559984579924,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 78.99669832873829,
+    "y": 75.61473455982664,
+    "vx": 0.33570443235601805,
+    "vy": -0.7261559984579924,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 6.977154995692953,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 161,
+   "game": {
+    "x": 79.22749512598305,
+    "y": 75.11550231088677,
+    "vx": 0.4972256839799854,
+    "vy": -0.6267109534631063,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.22749512598305,
+    "y": 75.11550231088677,
+    "vx": 0.4972256839799854,
+    "vy": -0.6267109534631063,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 7.291314261051932,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 162,
+   "game": {
+    "x": 79.56933778371929,
+    "y": 74.68463853038088,
+    "vx": -0.27907338626170414,
+    "vy": -0.7497453201457317,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.56933778371929,
+    "y": 74.68463853038088,
+    "vx": -0.27907338626170414,
+    "vy": -0.7497453201457317,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 7.605473526410911,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 163,
+   "game": {
+    "x": 79.37747483066437,
+    "y": 74.1691886227807,
+    "vx": 0.33570443235601805,
+    "vy": -0.7261559984579924,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.37747483066437,
+    "y": 74.1691886227807,
+    "vx": 0.33570443235601805,
+    "vy": -0.7261559984579924,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 7.9196327917698905,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 164,
+   "game": {
+    "x": 79.60827162790913,
+    "y": 73.66995637384082,
+    "vx": 0.4972256839799854,
+    "vy": -0.6267109534631063,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.60827162790913,
+    "y": 73.66995637384082,
+    "vx": 0.4972256839799854,
+    "vy": -0.6267109534631063,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 8.23379205712887,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 165,
+   "game": {
+    "x": 79.95011428564537,
+    "y": 73.23909259333493,
+    "vx": -0.27907338626170414,
+    "vy": -0.7497453201457317,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.95011428564537,
+    "y": 73.23909259333493,
+    "vx": -0.27907338626170414,
+    "vy": -0.7497453201457317,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 8.54795132248785,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 166,
+   "game": {
+    "x": 79.75825133259045,
+    "y": 72.72364268573475,
+    "vx": 0.33570443235601805,
+    "vy": -0.7261559984579924,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 3,
+     "hits": 2
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.75825133259045,
+    "y": 72.72364268573475,
+    "vx": 0.33570443235601805,
+    "vy": -0.7261559984579924,
+    "hits": 2,
+    "hitsTimer": 0,
+    "swordSpin": 8.862110587846828,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 167,
+   "game": {
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": 0.4972256839799854,
+    "vy": -0.6267109534631063,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 3
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": 0.4972256839799854,
+    "vy": -0.6267109534631063,
+    "hits": 3,
+    "hitsTimer": 30,
+    "swordSpin": 9.176269853205808,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 168,
+   "game": {
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": -0.16607614773669394,
+    "vy": -0.7825718581401582,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 3
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": -0.16607614773669394,
+    "vy": -0.7825718581401582,
+    "hits": 3,
+    "hitsTimer": 30,
+    "swordSpin": 9.490429118564787,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 169,
+   "game": {
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": 0.6339238522633062,
+    "vy": 0.017428141859841872,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 3
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": 0.6339238522633062,
+    "vy": 0.017428141859841872,
+    "hits": 3,
+    "hitsTimer": 30,
+    "swordSpin": 9.804588383923766,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 170,
+   "game": {
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": -0.16607614773669388,
+    "vy": -0.7825718581401582,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 3
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": -0.16607614773669388,
+    "vy": -0.7825718581401582,
+    "hits": 3,
+    "hitsTimer": 30,
+    "swordSpin": 10.118747649282746,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 171,
+   "game": {
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": 0.2974746076302501,
+    "vy": -0.7426364237062635,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 3
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": 0.2974746076302501,
+    "vy": -0.7426364237062635,
+    "hits": 3,
+    "hitsTimer": 30,
+    "swordSpin": 10.432906914641725,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 172,
+   "game": {
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": -0.24778995481191252,
+    "vy": -0.7606577011339006,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 3
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": -0.24778995481191252,
+    "vy": -0.7606577011339006,
+    "hits": 3,
+    "hitsTimer": 30,
+    "swordSpin": 10.747066180000704,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 173,
+   "game": {
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": 0.2668531799604416,
+    "vy": -0.7541812649124877,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 3
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": 0.2668531799604416,
+    "vy": -0.7541812649124877,
+    "hits": 3,
+    "hitsTimer": 30,
+    "swordSpin": 11.061225445359684,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 174,
+   "game": {
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": -0.25958348054417385,
+    "vy": -0.7567142238841374,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 3
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": -0.25958348054417385,
+    "vy": -0.7567142238841374,
+    "hits": 3,
+    "hitsTimer": 30,
+    "swordSpin": 11.375384710718663,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 175,
+   "game": {
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": 0.26236201720246255,
+    "vy": -0.7557553651344162,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 3
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": 0.26236201720246255,
+    "vy": -0.7557553651344162,
+    "hits": 3,
+    "hitsTimer": 30,
+    "swordSpin": 11.689543976077642,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 176,
+   "game": {
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": -0.26130096518689794,
+    "vy": -0.756122877310557,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 3
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": -0.26130096518689794,
+    "vy": -0.756122877310557,
+    "hits": 3,
+    "hitsTimer": 30,
+    "swordSpin": 12.003703241436622,
+    "swordSpinning": true
+   }
+  },
+  {
+   "t": 177,
+   "game": {
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": -0.7993171853050378,
+    "vy": 0.033045987290921904,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 30,
+     "hits_max": 3,
+     "hits": 3
+    }
+   },
+   "model": {
+    "id": "bobsoldier@48,80",
+    "x": 79.98904812983521,
+    "y": 72.22441043679487,
+    "vx": -0.7993171853050378,
+    "vy": 0.033045987290921904,
+    "hits": 3,
+    "hitsTimer": 30,
+    "swordSpin": 12.317862506795601,
+    "swordSpinning": true
+   }
+  }
+ ]
+}

@@ -692,8 +692,27 @@ export function hazardDanger(run, box, tick = null, mode = 'wait') {
  * flags the run does not step a chaser, so it has no live position to offer
  * and this must not invent one from the census.
  */
-export function chaserDanger(run, box, horizon, bodies = null, { perTick = false } = {}) {
+export function chaserDanger(run, box, horizon, bodies = null, { perTick = false, swordTick = null } = {}) {
     const out = [];
+    /**
+     * ⛓⛓ seedling-fidelity-bobsoldier2 D2b — THE DECISION GATE TIMES A SWORD IT CAN TIME (`swordTick`, opt-in:
+     * `solverBot.SWORD_GATE_TIMED`). The WAIT arm below prices every body untimed — a pad stands for a reach without
+     * a clock. A BobSoldier's blade HAS a clock: `run.chasers` carries its spin state and `chaserForecastNow` steps it
+     * exactly. So when the caller hands `swordTick` — the chaser forecast stepped ONE tick against the player standing
+     * at this box (the walk's own first sample, `previewWalk`'s pairing: post-step bodies, pre-move player) — a sworded
+     * body is priced by that tick's lines and its bare body, as the TRANSIT arm prices it, and the pad is not added.
+     * Every other body, and every caller that hands nothing, is the code below unchanged.
+     */
+    const swordTimedNow = swordTick !== null && !perTick;
+    if (swordTimedNow) {
+        for (const s of (swordTick.swordsOnCorpses ?? [])) {
+            if ((s.lines ?? []).some((l) => collideLineSolid([box], l.x0, l.y0, l.x1, l.y1))) {
+                out.push({ kind: 'chaser', id: s.id,
+                    why: 'a CORPSE\'s sword, timed (one forecast tick at this box): `BobSoldier.update` swings with '
+                        + 'no `destroy` gate until `FP.world.remove`' });
+            }
+        }
+    }
     /**
      * ⛓⛓⛓ R9 SLICE 12 — **THE BODIES MAY BE A FORECAST'S**, and when they are
      * they are already AT the ETA.
@@ -760,6 +779,26 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
          * destroyed body keeps its sword term.
          */
         const sworded = chaserHasSword(c.tag);
+        if (swordTimedNow && sworded) {
+            // A corpse's blade was priced above (the forecast drops `destroy` from the projection).
+            if (c.destroy) continue;
+            const f = swordTick.find((x) => x.id === c.id);
+            if (!f) {
+                fail(`chaserDanger: the timed sword tick has no row for the live ${c.id} — a forecast that lost a `
+                    + 'live body would price it as absent, which is the one reading that is never safe.');
+            }
+            if ((f.sword?.lines ?? []).some((l) => collideLineSolid([box], l.x0, l.y0, l.x1, l.y1))) {
+                out.push({ kind: 'chaser', id: c.id,
+                    why: 'the sword, timed (one forecast tick at this box): `swordHitting`\'s `collideLine("Player", …)` '
+                        + 'from 8 to 16 px off the body crosses it' });
+                continue;
+            }
+            if (!plannerContactFree(f, 'on').contactFree && rectsOverlap(box, chaserBoxAt(f.tag ?? c.tag, f.x, f.y))) {
+                out.push({ kind: 'chaser', id: c.id,
+                    why: 'the BobSoldier\'s 8x8 body, bare, one forecast tick on (its sword is timed)' });
+            }
+            continue;
+        }
         const bodyFree = perTick && plannerContactFree(c, 'on').contactFree;
         if (bodyFree && !sworded) continue;
         /**
@@ -1472,7 +1511,7 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
  * @returns {{danger: boolean, horizon: number, mode: string, sources: object[]}}
  */
 export function dangerAt(run, tick, box, {
-    mode = 'wait', arrows = null, chasers = null, spits = null, grenades = null,
+    mode = 'wait', arrows = null, chasers = null, spits = null, grenades = null, swordTick = null,
 } = {}) {
     if (!run || typeof run.level !== 'number') {
         fail('dangerAt: needs a live run — the whole point is that the positions are the '
@@ -1504,7 +1543,7 @@ export function dangerAt(run, tick, box, {
         // ⛓ AXE: the tick and the mode, so a spinning axe in TRANSIT is its blade at `tick`.
         ...hazardDanger(run, box, tick, mode),
         ...chaserDanger(run, box, coupledHorizon, mode === 'transit' ? chasers : null,
-            { perTick: mode === 'transit' }),
+            { perTick: mode === 'transit', ...(swordTick !== null && horizon === 0 ? { swordTick } : {}) }),
         // ⛓ AUTONOMOUS (§14.2): a spinner cannot read the player, so it is
         // carried to the cell's own ETA in transit mode exactly as an arrow is.
         ...spinnerDanger(run, box, horizon),
