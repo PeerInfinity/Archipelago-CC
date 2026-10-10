@@ -85,7 +85,7 @@ import {
     SPINNER, hammerHitsPlayer,
     KILL_ARM_POLICY,
     DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH, UP,
-    distanceRectPoint, slashReachFor, slashRect,
+    distanceRectPoint, slashReachFor, slashRect, spearRect,
     swordWindowReplace, swordWindowSchedule, swordWindowStep,
     /**
      * ⛓⛓⛓ R9 SLICE 4 — THE ROCK'S OWN TRANSCRIPTION, ASKED RATHER THAN COPIED.
@@ -101,14 +101,14 @@ import {
     bridgedChaserTags, chaserBoxAt, chaserHasSword, killWindowTicks,
     DESTROYING_TILE_TYPES,
     rect, rectsOverlap, TILE_SIZE,
-    ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET, contactPricing,
+    ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET, contactPricing, contactRect,
     // ⛓ R8 slice 8: the PRESSER's own cadence floor — the dash rule plus the
     // receiver's i-frames, in one constant `killSchedule` has refused a smaller
     // value than since R5. The press arm never consulted it; the game found out.
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD,
     SLASH_ANIM_TICKS, slashScaleFor, slashSet, slashTimerTick,
     GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
-    MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
+    DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
     applyFriction, applyInput, DEFAULT_FRICTION, sweepAxis,
@@ -14313,6 +14313,109 @@ function deriveKillByCeiling(run, body, contacts) {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING FIDELITY STATICLADDER D2 — THE LIGHT ARM's derivation: which `LightPole` kills this `DarkTrap`,
+ * from where the run can thrust at it, and with what.
+ *
+ * The death is the run's own (`levelRun.stepDarkTrapsNow`, `DARKTRAP_LIGHT_DEATH`): a LIT pole whose light comes
+ * within `radiusMin` of the body starts it dying, and it is harmless from that tick. So the arm is:
+ *
+ *   · a pole whose light band (over the bob) reaches the body — `darkTraps[].poles[].min <= radiusMin`;
+ *   · already LIT → nothing to press: the death is the bob's, and the arm waits (`wait: true`). ⛔ A press then
+ *     would put the light OUT (`LightPole.hit()` toggles);
+ *   · unlit → a thrust: `LightPole.hit()` runs only under `t == "Spear"` (`Player.genericHit`), i.e. the Spear's
+ *     thrust (`useItem` case 3) — a sword swing does nothing to a pole. ⛔ The ghost sword's swing also passes
+ *     `"Spear"`; this arm does not author it (its rect and motion are another region's) and names it instead.
+ *   · the STANCE: a walkable tile centre and a facing whose `spearRect` overlaps the pole's bob-invariant core
+ *     (the census rect is the union over the bob, 4 px top and bottom of which the hitbox leaves at some phase) and
+ *     no other press responder, with the player box clear of the body, reached by `stanceReaches`.
+ *
+ * @returns {{pole, stance?, dir?, wait?, why}|{pole: null, why}}
+ */
+function deriveLightPole(run, body, contacts, blocked = []) {
+    const D = DARKTRAP_LIGHT_DEATH;
+    const poles = body.poles.filter((p) => p.min <= D.pole.radiusMin)
+        .sort((a, b) => a.min - b.min);
+    if (poles.length === 0) {
+        return { pole: null, why: `no LightPole's light reaches ${body.id} — `
+            + `[${body.poles.map((p) => `${p.id} ${p.min.toFixed(1)}–${p.max.toFixed(1)} px`).join(', ') || 'no pole'}] `
+            + `against \`radiusMin\` ${D.pole.radiusMin}, and \`DarkTrap.hit()\` is empty: no weapon kills it.` };
+    }
+    const litPole = poles.find((p) => p.lit);
+    if (litPole) {
+        return { pole: litPole, wait: true, why: `${litPole.id} is LIT and its light comes within `
+            + `${litPole.min.toFixed(1)}–${litPole.max.toFixed(1)} px of ${body.id}: the death is the bob's, and a press `
+            + 'would put the light out (`LightPole.hit()` toggles)' };
+    }
+    const inv = run.progress('inventory') ?? {};
+    const slots = run.progress('inventorySlots') ?? [];
+    if (!inv.hasSpear || slots.indexOf(INVENTORY_ITEM_IDS.spear) < 0) {
+        return { pole: null, why: `${poles[0].id}'s light would kill ${body.id} once lit, and only a \`"Spear"\` hit `
+            + 'lights a pole (`Player.genericHit`: `if (t == "Spear") (e as LightPole).hit()`) — this run holds '
+            + `${inv.hasGhostSword ? 'the GHOST SWORD (whose swing passes "Spear"; this arm does not author it — '
+                + 'its rect and motion are another region\'s)' : 'NO Spear'}. ⇒ the Spear is a SUB-ORDER the route `
+            + 'owes before this crossing.' };
+    }
+    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
+    let tried = 0;
+    let crowded = 0;
+    let unsafe = 0;
+    let unreached = 0;
+    const tiles = run.world.walkableTiles ?? [];
+    for (const pole of poles) {
+        const core = { x: pole.rect.x, y: pole.rect.y + D.pole.bob * 2,
+            right: pole.rect.right, bottom: pole.rect.bottom - D.pole.bob * 2 };
+        const cx = (core.x + core.right) / 2;
+        const cy = (core.y + core.bottom) / 2;
+        const cands = [];
+        // The tile centres and the 8 px lattice's nodes (`FINE_LATTICE`, x ≡ 4 mod 8): the walk plans on either.
+        for (const t of tiles) {
+            for (const [ox, oy] of [[8, 8], [4, 4], [12, 4], [4, 12], [12, 12]]) {
+                const sx = t.rect.x + ox;
+                const sy = t.rect.y + oy;
+                if (Math.hypot(sx - cx, sy - cy) > 48) continue;
+                for (const dir of [RIGHT, UP, LEFT, DOWN]) cands.push({ x: sx, y: sy, dir });
+            }
+        }
+        cands.sort((a, b) => Math.hypot(a.x - run.state.x, a.y - run.state.y)
+            - Math.hypot(b.x - run.state.x, b.y - run.state.y));
+        for (const c of cands) {
+            const sr = spearRect(c.x, c.y, c.dir);
+            if (!rectsOverlapLocal(sr, core)) continue;
+            tried += 1;
+            const others = run.world.pressResponders.filter((r) => `${r.tag}@${r.x},${r.y}` !== pole.id
+                && rectsOverlapLocal(sr, r.rect));
+            const bodies = (run.world.combat?.enemies ?? []).filter((e) => e.as3 !== 'DarkTrap'
+                && contactRect(e) && rectsOverlapLocal(sr, contactRect(e)));
+            if (others.length > 0 || bodies.length > 0) { crowded += 1; continue; }
+            if (rectsOverlapLocal(playerBoxAt(c.x, c.y), body.rect)) { unsafe += 1; continue; }
+            // A stance the player box cannot occupy (a solid under it) is not a stance, whatever a lattice says.
+            if (solidsAt(run.world, c.x, c.y).length > 0) { crowded += 1; continue; }
+            let reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+            if (!reached) {
+                // ⛓ FRONTIER3's lattice: a stance the 16 px planner cannot reach past a narrow solid may be on the
+                // 8 px one, which is what the walk re-asks after a frontier refusal.
+                try {
+                    planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
+                        solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
+                    reached = { discharged: [] };
+                } catch (e) {
+                    if (!(e instanceof BotDriverV2Error)) throw e;
+                }
+            }
+            if (!reached) { unreached += 1; continue; }
+            return {
+                pole, stance: { x: c.x, y: c.y }, dir: c.dir, discharged: reached.discharged,
+                why: `${pole.id}'s light comes within ${pole.min.toFixed(1)}–${pole.max.toFixed(1)} px of ${body.id}; a Spear `
+                    + `thrust facing ${FACING_KEYS[c.dir]} from (${c.x},${c.y}) lights it`,
+            };
+        }
+    }
+    return { pole: null, why: `no REACHABLE stance thrusts at [${poles.map((p) => p.id).join(', ')}] — ${tried} `
+        + `stance/facing pair(s) put the spear on the pole's core; ${crowded} also hit another responder or body or stand in a solid, `
+        + `${unsafe} stand inside ${body.id}, and ${unreached} plan no corridor from (${run.state.x},${run.state.y}).` };
+}
+
+/**
  * An armed-or-not trap's lane, as a rect, at THIS run's level height.
  *
  * ⚠ NAMED `laneRectOf` AND NOT `arrowLaneRect`: the geometry now lives in
@@ -15505,6 +15608,8 @@ function solveSegmentUnder({
     const pullingRopes = new Set();
     /** ⛓ Swim R5, D1 — the bait walks in flight (`body@stance#tick`): a re-entry is refused. */
     const baitingBodies = new Set();
+    /** ⛓ STATICLADDER D2 — the light-arm stance walks in flight (`body#tick`): a re-entry is refused. */
+    const lightingBodies = new Set();
     /**
      * ⛓ Seedling fidelity STANCE — the frontier stance walks in flight
      * (`verb(obstacle)#tick`). A stance walk whose own frontier names the same
@@ -15550,6 +15655,102 @@ function solveSegmentUnder({
                 rejected: priorRefusals.map((r) => ({ option: r.rung, why: r.why })),
                 keys: [],
             });
+        };
+
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY STATICLADDER D2 — the LIGHT arm's executor (the kill rung's no-target branch calls
+         * it for each `DarkTrap` on the corridor). Returns `true` when the body is dying (a world edit: re-plan),
+         * `false` with `lightArmWhy` set when the arm does not apply. ⛔ A walk to the stance that climbs back into
+         * the same arm at the same tick is refused (`LIGHT_REENTRY`), BAIT_REENTRY's shape.
+         */
+        let lightArmWhy = null;
+        const execLightArm = (body) => {
+            const d = deriveLightPole(run, body, contacts);
+            if (!d.pole || (!d.stance && !d.wait)) { lightArmWhy = d.why; return false; }
+            const key = `${body.id}#${perTick.length}`;
+            if (lightingBodies.has(key)) {
+                lightArmWhy = `${body.id}: the walk to its light stance re-entered the same light arm at tick `
+                    + `${perTick.length} with nothing spent between, so a second walk would be the first one `
+                    + 'again (LIGHT_REENTRY).';
+                return false;
+            }
+            rowFor('kill', refused, { arm: 'light', target: body.id, pole: d.pole.id,
+                stance: d.stance ?? null, wait: d.wait === true });
+            const from = perTick.length;
+            const IDLE = new Set();
+            const step = (keys, why) => {
+                perTick.push(keys);
+                const { transition } = run.advance(keys);
+                if (transition) {
+                    refuse(`${what} -> light (${d.pole.id}): ${why} crossed to level ${transition.to_level}.`,
+                        { goal, obstacle: { kind: 'danger', id: body.id } });
+                }
+            };
+            const settle = (why) => {
+                for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+                    if (i > 60) {
+                        refuse(`${what} -> light (${d.pole.id}): ${why} never came to rest.`,
+                            { goal, obstacle: { kind: 'danger', id: body.id } });
+                    }
+                    step(IDLE, why);
+                }
+            };
+            let pressTick = null;
+            let prior = null;
+            if (!d.wait) {
+                lightingBodies.add(key);
+                try {
+                    if (d.stance.x !== run.state.x || d.stance.y !== run.state.y) {
+                        walkTo(goal, d.stance, { what: `${what} -> light (${d.pole.id}) stance` });
+                    }
+                } finally {
+                    lightingBodies.delete(key);
+                }
+                settle('the walk to the light stance');
+                // The facing is `Player.direction`, the last tick with velocity: a one-tick tap, then the coast.
+                if (run.state.direction !== d.dir) {
+                    step(new Set([FACING_KEYS[d.dir]]), 'the face tap');
+                    settle('the face tap');
+                }
+                const pole = (run.entities('darkTraps').find((b) => b.id === body.id)?.poles ?? [])
+                    .find((p) => p.id === d.pole.id);
+                const core = { x: pole.rect.x, y: pole.rect.y + DARKTRAP_LIGHT_DEATH.pole.bob * 2,
+                    right: pole.rect.right, bottom: pole.rect.bottom - DARKTRAP_LIGHT_DEATH.pole.bob * 2 };
+                const sr = spearRect(run.state.x, run.state.y, run.state.direction);
+                if (run.state.direction !== d.dir || !rectsOverlapLocal(sr, core)) {
+                    refuse(`${what} -> light (${d.pole.id}): the stance settled at (${run.state.x},${run.state.y}) facing `
+                        + `${run.state.direction}, and the spear rect from there does not reach the pole's core — `
+                        + `the derivation's stance was (${d.stance.x},${d.stance.y}) facing ${d.dir}.`,
+                    { goal, obstacle: { kind: 'danger', id: body.id } });
+                }
+                for (let i = 0; (run.progress('frozenTimer') ?? 0) > 1; i += 1) {
+                    if (i > 105) refuse(`${what} -> light: still frozen after ${i} ticks.`, { goal });
+                    step(IDLE, 'the freeze wait');
+                }
+                prior = run.progress('primary');
+                const slot = run.progress('inventorySlots').indexOf(INVENTORY_ITEM_IDS.spear);
+                if (prior !== slot) equip(slot);
+                pressTick = perTick.length;
+                step(new Set(['primary']), 'the thrust');
+            }
+            const bound = 3 + DARKTRAP_LIGHT_DEATH.pole.period + 2;
+            const now = () => run.entities('darkTraps').find((b) => b.id === body.id);
+            for (let i = 0; !(now()?.startDying || now()?.removed); i += 1) {
+                if (i >= bound) {
+                    const p = now()?.poles.find((q) => q.id === d.pole.id);
+                    refuse(`${what} -> light (${d.pole.id}): ${body.id} is not dying ${i} tick(s) after the `
+                        + `${d.wait ? 'arm began waiting' : 'thrust'} — the pole is ${p?.lit ? 'LIT' : 'UNLIT'} and its `
+                        + `light ${p ? `${p.min.toFixed(1)}–${p.max.toFixed(1)}` : '?'} px away. The model's own death `
+                        + 'did not come, so this is a refusal, not a wait.',
+                    { goal, obstacle: { kind: 'danger', id: body.id } });
+                }
+                step(IDLE, 'the wait for the light');
+            }
+            if (prior !== null && run.progress('primary') !== prior) equip(prior);
+            records.push({ goal: goal.kind, strategy: 'kill', arm: 'light', target: body.id, pole: d.pole.id,
+                stance: d.stance ?? null, wait: d.wait === true, from, pressTick,
+                dyingAt: now()?.dyingAt ?? null, ticks: perTick.length - from, restoredSlot: prior });
+            return true;
         };
 
         // ── rung 1: AVOID — a static re-plan with the threatened cells out ──
@@ -16523,6 +16724,25 @@ function solveSegmentUnder({
                 }
             }
         } else if (!target) {
+            /**
+             * ⛓⛓⛓ SEEDLING FIDELITY STATICLADDER D2 — **THE LIGHT ARM.** A `DarkTrap` on the corridor is a body
+             * the run CAN watch die once `CONTACT_FIDELITY.darkTrapLight` is on (`run.entities('darkTraps')` is
+             * then a roster, `null` otherwise — so with the switch off this block is skipped and the refusal
+             * below is word for word the BEFORE one). The death is the light's (`deriveLightPole`); the arm
+             * walks to the stance, selects the Spear, thrusts once, waits for `startDying`, selects the old
+             * slot again, and returns `{escalations}` — a world edit, so AVOID is re-asked against a room whose
+             * darktrap the danger map no longer prices.
+             */
+            const traps = run.entities('darkTraps');
+            const lightWhy = [];
+            if (traps) {
+                const onCorridor = new Set(hit.sources.filter((sx) => sx.kind === 'enemy').map((sx) => sx.id));
+                for (const body of traps.filter((b) => onCorridor.has(b.id) && !b.startDying && !b.removed)) {
+                    const done = execLightArm(body);
+                    if (done) return { escalations };
+                    lightWhy.push(lightArmWhy);
+                }
+            }
             killWhy = 'the danger on this corridor is not a body this run can watch die — '
                 + 'a kill needs a target whose removal the model OBSERVES (a live chaser or '
                 + 'spinner the run steps; a live body without a recorded removal is not a '
@@ -16530,7 +16750,8 @@ function solveSegmentUnder({
                 + 'name (§11.4): its clear is the tape\'s DECLARED v9 `at` row, and a second '
                 + 'writer of one persistence slot is two cost models. (F4: the classes whose '
                 + `death the run computes, [${Object.keys(STATIC_ARROW_DEATH).join(', ')}], are `
-                + 'targets of the static arm, not of this one.)';
+                + 'targets of the static arm, not of this one.)'
+                + lightWhy.map((w) => `\n         light arm: ${w}`).join('');
         } else {
             const kill = deriveKillByCeiling(run, target, contacts);
             if (kill.presser) {

@@ -155,6 +155,14 @@ export const CONTACT_FIDELITY = {
     wallFlyerKill: true,
     /** fidelity WALLFLYER W7 — see its paragraph above. ON by default, on the same measurement as W6. */
     wallFlyerShieldBump: true,
+    /**
+     * fidelity STATICLADDER D2 — a `DarkTrap` dies to a lit `LightPole` (`enemyDamage.DARKTRAP_LIGHT_DEATH`):
+     * `levelRun.stepDarkTrapsNow` starts the death when the pole's light is within 28 px, the body is harmless from
+     * that tick, and "die1"'s end removes it and writes its tag; the danger map stops pricing a dying one and the
+     * combat ladder's kill rung gains a LIGHT arm (press the pole). OFF by default (byte-identical): the user licenses
+     * the flip on the measured movers.
+     */
+    darkTrapLight: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

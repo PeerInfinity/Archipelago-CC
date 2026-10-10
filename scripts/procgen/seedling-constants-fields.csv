@@ -1741,6 +1741,14 @@ frontend/modules/seedlingDemo/ghostSword.js|(module)|hf5c39ed3|0|0,cosmetic,,,gh
 frontend/modules/seedlingDemo/ghostSword.js|(module)|hf5c39ed3|1|0,cosmetic,,,ghost sword slashnarrow frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
 frontend/modules/seedlingDemo/ghostSword.js|(module)|hf5c39ed3|2|0,cosmetic,,,ghost sword slashnarrow frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
 frontend/modules/seedlingDemo/ghostSword.js|(module)|hf5c39ed3|3|0,cosmetic,,,ghost sword slashnarrow frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
+frontend/modules/seedlingDemo/enemyDamage.js|(module)|ha148f1d3|30|0,rule,count,Enemies/DarkTrap.as:deathCounter,DARKTRAP_LIGHT_DEATH.deathCounter: ticks from startDying to die1 (game-witnessed STATICLADDER D2)
+frontend/modules/seedlingDemo/enemyDamage.js|(module)|hdf626710|14|0,rule,count,Enemies/DarkTrap.as:die1,DARKTRAP_LIGHT_DEATH.dieAnim.frames: die1's 14 frames (removal on endAnim)
+frontend/modules/seedlingDemo/enemyDamage.js|(module)|hd3f87fad|10|0,rule,magnitude,Enemies/DarkTrap.as:die1,DARKTRAP_LIGHT_DEATH.dieAnim.rate: die1's frame rate 10
+frontend/modules/seedlingDemo/enemyDamage.js|(module)|ha89c44fc|28|0,rule,bound,Scenery/Light.as:radiusMin,DARKTRAP_LIGHT_DEATH.pole.radiusMin: the pole light's radiusMin; DarkTrap dies at FP.distance <= 28
+frontend/modules/seedlingDemo/enemyDamage.js|(module)|h10a9e9bd|8|0,rule,derivation,Scenery/LightPole.as:originY,DARKTRAP_LIGHT_DEATH.pole.originY: the 16x16 pole image centred (centerOO); light y = startY - 8 + bob
+frontend/modules/seedlingDemo/enemyDamage.js|(module)|h3c5607ed|2|0,rule,magnitude,Scenery/LightPole.as:render,DARKTRAP_LIGHT_DEATH.pole.bob: the pole's 2 px render bob (moves its light)
+frontend/modules/seedlingDemo/enemyDamage.js|(module)|h9b570e53|45|0,rule,magnitude,Game.as:timePerFrame,DARKTRAP_LIGHT_DEATH.pole.period: the bob's period = Game.timePerFrame
+frontend/modules/seedlingDemo/enemyDamage.js|(module)|h5fe52c95|48|0,rule,bound,,DARKTRAP_LIGHT_DEATH.unmodelledLightGuard: a darktrap this near an unplaced torch/orb light is refused by name
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

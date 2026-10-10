@@ -258,6 +258,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `pulls` | `stationary` | `solverBot` |
 | `shooters` | `stationary`, `emitter` | `dangerMap` |
 | `staticBodies` | `stationary`, `hp` | `solverBot` |
+| `darkTraps` | `stationary`, `light` | `dangerMap`, `solverBot` |
 | `volume:crusher` | `lane-charge`, `contact` | `encounters` |
 | `volume:spinningaxe` | `stationary`, `sweep` | `dangerMap`, `encounters` |
 | `volume:pulser` | `stationary`, `pulse` | `dangerMap`, `encounters` |
@@ -268,11 +269,11 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `volume:pull` | `stationary` | `dangerMap`, `encounters` |
 | `volume:pod` | `stationary`, `contact` | `dangerMap`, `encounters` |
 
-**Modelled.** A block counts as modelled when some `run.entities` family that a solver-family file reads realises it. These blocks are modelled, with the families behind each: `stationary` (`armedArrowTraps`, `armedPulsers`, `turrets`, `pulls`, `shooters`, `staticBodies`), `chase` (`chasers`, `bobBoss`), `rebound` (`spinnerBodies`), `pushable` (`pushables`, `turrets`, `pushesSettled`, `turretsSettled`), `lane-charge` (`crushers`, `crushersParked`), `contact` (`crushers`, `spinnerBodies`, `chasers`, `bobBoss`), `emitter` (`armedArrowTraps`, `arrowsInFlight`, `turretDamage`, `arrowFlights`, `shooters`), `sweep` (`spinnerBodies`), `pulse` (`armedPulsers`), `hp` (`strikeBodies`, `spinnerBodies`, `turretDamage`, `bobBoss`, `staticBodies`), `channel` (`openActivators`, `armedArrowTraps`, `armedPulsers`, `latchedGroups`).
+**Modelled.** A block counts as modelled when some `run.entities` family that a solver-family file reads realises it. These blocks are modelled, with the families behind each: `stationary` (`armedArrowTraps`, `armedPulsers`, `turrets`, `pulls`, `shooters`, `staticBodies`, `darkTraps`), `chase` (`chasers`, `bobBoss`), `rebound` (`spinnerBodies`), `pushable` (`pushables`, `turrets`, `pushesSettled`, `turretsSettled`), `lane-charge` (`crushers`, `crushersParked`), `contact` (`crushers`, `spinnerBodies`, `chasers`, `bobBoss`), `emitter` (`armedArrowTraps`, `arrowsInFlight`, `turretDamage`, `arrowFlights`, `shooters`), `sweep` (`spinnerBodies`), `pulse` (`armedPulsers`), `hp` (`strikeBodies`, `spinnerBodies`, `turretDamage`, `bobBoss`, `staticBodies`), `channel` (`openActivators`, `armedArrowTraps`, `armedPulsers`, `latchedGroups`), `light` (`darkTraps`).
 
 **Only avoided.** These blocks reach the solver only as an avoid volume: `beam` (`volume:beamtower`), `tether` (`volume:lavachain`).
 
-**Not modelled.** No family the solver reads realises these blocks. A concept whose realisation uses one of them needs that block modelled before a solve can certify it: `patrol`, `seek`, `ballistic`, `wall-launch`, `tile-hop`, `rise`, `melee`, `stomp`, `explode`, `matrix`, `terrain`, `onDeath`, `proximity`, `lineOfSight`, `persistence`, `onHit`, `allEnemiesDead`, `itemHeld`, `schedule`, `light`, `facingAway`.
+**Not modelled.** No family the solver reads realises these blocks. A concept whose realisation uses one of them needs that block modelled before a solve can certify it: `patrol`, `seek`, `ballistic`, `wall-launch`, `tile-hop`, `rise`, `melee`, `stomp`, `explode`, `matrix`, `terrain`, `onDeath`, `proximity`, `lineOfSight`, `persistence`, `onHit`, `allEnemiesDead`, `itemHeld`, `schedule`, `facingAway`.
 
 `certifiableBlocks(realisation.blocks)` returns `{modelled, unmodelled, avoidedOnly}` for one realisation, so certifiability is a lookup. `blocksTheSolverModels()` returns the first list, `blocksOnlyAvoided()` the second, and `blocksNoFamilyModels()` the second and third together.
 
