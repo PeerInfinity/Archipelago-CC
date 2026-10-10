@@ -88,7 +88,9 @@ export function coarseKey(cell = 8) {
  * @param {Function} o.step  `(state, keys) => nextState` — the run's `previewStepper()`
  * @param {Function} o.safe  `(state, index) => boolean` — the prune
  * @param {number} o.horizon  ticks searched past `startIndex`
- * @param {?Function} [o.goal]  `(state, index) => boolean`
+ * @param {?Function} [o.goal]  `(state, index, path) => boolean` — `path()` (hammer-phase B1) returns the
+ *   certificate that would end at this node, `{keys, states}` in `certificate`'s shape, so a goal that has to preview
+ *   the path to the state (the approach's escape admission) can ask for it lazily; a goal of two arguments ignores it
  * @param {'survive'|'earliest'} [o.mode]
  * @param {ReadonlyArray<Set>} [o.keySets]
  * @param {Function} [o.keyOf]  the dedup key, `coarseKey(8)` by default
@@ -152,8 +154,14 @@ export function spaceTimeReach({
     if (!safe(start, startIndex)) {
         return negative('start', `the start state at index ${startIndex} is not safe`);
     }
+    /** ⛓ hammer-phase B1 — the goal's third argument: the path to `node`, built only if the goal asks. */
+    const pathTo = (node) => () => {
+        const { keys, states } = certificate(node, 'goal');
+        return { keys, states };
+    };
+    const isGoal = (node) => goal(node.state, node.index, pathTo(node));
     const root = { state: start, index: startIndex, keys: null, parent: null };
-    if (goal && goal(start, startIndex)) return certificate(root, 'goal');
+    if (goal && isGoal(root)) return certificate(root, 'goal');
     if (horizon === 0) return certificate(root, 'horizon');
     /** `seen[i]` — the coarse keys already holding a node at index i. */
     const seen = new Map();
@@ -190,7 +198,7 @@ export function spaceTimeReach({
             const kids = children(node);
             for (const kid of kids) {
                 if (kid.index > deepest) deepest = kid.index;
-                if (goal && goal(kid.state, kid.index)) return certificate(kid, 'goal');
+                if (goal && isGoal(kid)) return certificate(kid, 'goal');
                 if (kid.index >= last) return certificate(kid, 'horizon');
             }
             for (let j = kids.length - 1; j >= 0; j -= 1) stack.push(kids[j]);
@@ -236,7 +244,7 @@ export function spaceTimeReach({
                 + `${i + 1} (the dedup on the coarse key may have dropped an alternative)`);
         }
         if (i + 1 > deepest) deepest = i + 1;
-        const hit = goal ? next.find((n) => goal(n.state, n.index)) : undefined;
+        const hit = goal ? next.find((n) => isGoal(n)) : undefined;
         if (hit) return certificate(hit, 'goal');
         layer = next;
     }
