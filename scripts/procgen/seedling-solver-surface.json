@@ -344,9 +344,9 @@
       "files": {
         "botDriverV2.js": 101,
         "dangerMap.js": 14,
-        "solverBot.js": 113
+        "solverBot.js": 114
       },
-      "sites": 228,
+      "sites": 229,
       "seen": "both",
       "via": [
         "direct"
@@ -435,7 +435,7 @@
         },
         "spinnerBodies": {
           "dangerMap.js": 2,
-          "solverBot.js": 9
+          "solverBot.js": 10
         },
         "staticBodies": {
           "solverBot.js": 1
@@ -785,9 +785,9 @@
       "form": "stepper",
       "files": {
         "arrivalSolid.js": 1,
-        "solverBot.js": 11
+        "solverBot.js": 12
       },
-      "sites": 12,
+      "sites": 13,
       "seen": "both",
       "via": [
         "direct"
@@ -912,9 +912,9 @@
       "files": {
         "botDriverV2.js": 1,
         "dangerMap.js": 1,
-        "solverBot.js": 8
+        "solverBot.js": 9
       },
-      "sites": 10,
+      "sites": 11,
       "seen": "both",
       "via": [
         "direct"
@@ -937,9 +937,9 @@
       "class": "seedling",
       "form": "forecast",
       "files": {
-        "solverBot.js": 3
+        "solverBot.js": 4
       },
-      "sites": 3,
+      "sites": 4,
       "seen": "static",
       "via": [
         "direct"
@@ -975,9 +975,9 @@
       "files": {
         "arrivalSolid.js": 5,
         "botDriverV2.js": 114,
-        "solverBot.js": 308
+        "solverBot.js": 306
       },
-      "sites": 427,
+      "sites": 425,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1021,12 +1021,13 @@
       "files": {
         "botDriverV2.js": 3,
         "dangerMap.js": 3,
-        "solverBot.js": 72
+        "solverBot.js": 75
       },
-      "sites": 78,
+      "sites": 81,
       "seen": "both",
       "via": [
-        "direct"
+        "direct",
+        "param"
       ],
       "dynamic": {
         "reads": 89373,
@@ -1989,9 +1990,10 @@
       "class": "physics",
       "form": "live-state",
       "files": {
-        "botDriverV2.js": 4
+        "botDriverV2.js": 4,
+        "solverBot.js": 1
       },
-      "sites": 4,
+      "sites": 5,
       "seen": "both",
       "via": [
         "direct"
@@ -2015,12 +2017,13 @@
       "class": "seedling",
       "form": "live-state",
       "files": {
-        "solverBot.js": 1
+        "solverBot.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "both",
       "via": [
-        "direct"
+        "direct",
+        "param"
       ],
       "dynamic": {
         "reads": 21500,
@@ -3129,9 +3132,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 2,
-        "solverBot.js": 2
+        "solverBot.js": 3
       },
-      "sites": 4,
+      "sites": 5,
       "seen": "static",
       "via": [
         "import"
@@ -4017,9 +4020,9 @@
         "arrivalSolid.js": 1,
         "botDriverV2.js": 12,
         "encounters.js": 1,
-        "solverBot.js": 36
+        "solverBot.js": 37
       },
-      "sites": 50,
+      "sites": 51,
       "seen": "static",
       "via": [
         "import"
@@ -4181,10 +4184,10 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 14,
+        "solverBot.js": 16,
         "strikePolicy.js": 2
       },
-      "sites": 16,
+      "sites": 18,
       "seen": "static",
       "via": [
         "import"
@@ -4201,9 +4204,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 2,
-        "solverBot.js": 15
+        "solverBot.js": 14
       },
-      "sites": 17,
+      "sites": 16,
       "seen": "static",
       "via": [
         "import"
@@ -4239,10 +4242,10 @@
       "form": "geometry-query",
       "files": {
         "botDriverV2.js": 1,
-        "solverBot.js": 8,
+        "solverBot.js": 7,
         "strikePolicy.js": 1
       },
-      "sites": 10,
+      "sites": 9,
       "seen": "static",
       "via": [
         "import"

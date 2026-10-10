@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 68,
+            "count": 69,
             "id": "plan"
         },
         {
@@ -139,7 +139,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "profile"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 380,
+        "blockStyle": 382,
         "browser": 130,
-        "cited": 188,
-        "files": 392,
+        "cited": 189,
+        "files": 394,
         "lineStyle": 12,
-        "withDocblock": 392,
-        "withFlags": 310
+        "withDocblock": 394,
+        "withFlags": 312
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7276,6 +7276,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-hammer-b1-approach.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-b1-approach — ⛓⛓⛓ SEEDLING HAMMER-PHASE B1 D2: THE APPROACH's SOLVE, HANDED TO THE GAME.",
+            "path": "scripts/procgen/plan-seedling-hammer-b1-approach.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-l14-swordless.mjs",
             "flags": [
                 {
@@ -12884,6 +12911,59 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "profile",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "count",
+                "gen",
+                "json",
+                "killgate",
+                "kinds",
+                "script",
+                "seeds"
+            ],
+            "file": "profile-seedling-hammer-approach.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "gen"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "killgate"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "script"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "profile-seedling-hammer-approach — ⛓ SEEDLING HAMMER-PHASE B1: WHAT THE APPROACH SEARCH SPENDS.",
+            "path": "scripts/procgen/profile-seedling-hammer-approach.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "profile",
+            "citedBy": [
                 "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
@@ -15341,6 +15421,7 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "approach",
                 "escape",
                 "full",
                 "json",
@@ -15351,6 +15432,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "sweep-seedling-l18-residues.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "approach"
+                },
                 {
                     "how": [
                         "includes"
