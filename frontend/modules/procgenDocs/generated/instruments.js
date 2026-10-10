@@ -7129,6 +7129,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-bobsoldier2.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-bobsoldier2 — ⛓⛓⛓ SEEDLING FIDELITY BOBSOLDIER2: L30's TORCHPICKUP, PAST THE BOBSOLDIER, BY THE KILL ARM'S OWN FORECAST.",
+            "path": "scripts/procgen/plan-seedling-bobsoldier2.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-burn-witness.mjs",
             "flags": [
                 {
