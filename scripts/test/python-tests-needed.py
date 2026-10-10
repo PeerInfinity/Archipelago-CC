@@ -55,3 +55,4 @@ def needed(paths) -> bool:
 
 if __name__ == '__main__':
     print('true' if needed(sys.stdin) else 'false')
+
