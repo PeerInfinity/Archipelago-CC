@@ -45,6 +45,8 @@ export {
 } from './activators.js';
 // arrowTrap.js — dangerMap, solverBot · seedling 6
 export { ARROW, arrowLaneForPlacement, arrowLaneRect, arrowRect, arrowTrapFires, stepArrow } from './arrowTrap.js';
+// bobBossFight.js — solverBot · seedling 1 (hammer-phase B2: the fight forbids a shield bump)
+export { shieldBumpTouches } from './bobBossFight.js';
 // breakableRocks.js — botDriverV2, solverBot · seedling 3
 export { assertWaitCovers, rockBreaksUnder, WAIT_AFTER_PRESS_TICKS } from './breakableRocks.js';
 // bridges.js — botDriverV2 · seedling 1

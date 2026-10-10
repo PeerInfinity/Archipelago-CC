@@ -54,7 +54,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 61,
-            "count": 98,
+            "count": 99,
             "id": "check"
         },
         {
@@ -69,7 +69,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 5,
+            "count": 6,
             "id": "dump"
         },
         {
@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 72,
+            "count": 73,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 387,
+        "blockStyle": 390,
         "browser": 131,
-        "cited": 192,
-        "files": 399,
+        "cited": 193,
+        "files": 402,
         "lineStyle": 12,
-        "withDocblock": 399,
-        "withFlags": 317
+        "withDocblock": 402,
+        "withFlags": 320
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -4093,6 +4093,94 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-seedling-generated-swim-play.mjs"
         },
         {
+            "argvHelpers": [
+                "valueOf"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "jobs",
+                "json",
+                "keep",
+                "modes",
+                "path",
+                "records",
+                "row",
+                "rows",
+                "shard"
+            ],
+            "file": "check-seedling-hammer-monotonicity.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "jobs"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "keep"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "modes"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "path"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "records"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "row"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "rows"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "shard"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "check-seedling-hammer-monotonicity — ⛓ SEEDLING HAMMER-PHASE B2 (W0): NO RECORD SOLVED OFF MAY BE REFUSED ON.",
+            "path": "scripts/procgen/check-seedling-hammer-monotonicity.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "check",
@@ -5292,6 +5380,49 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Byte-identity harness for the maze wall-generation stack (docs/json/developer/procgen/maze.md, \"Biomes and wall backends\").",
             "path": "scripts/procgen/dump-maze-byteidentity.mjs"
+        },
+        {
+            "argvHelpers": [
+                "valueOf"
+            ],
+            "browser": false,
+            "category": "dump",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "biomes",
+                "killgate",
+                "seeds"
+            ],
+            "file": "dump-seedling-gen-capacity.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "biomes"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "killgate"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "seeds"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "dump-seedling-gen-capacity — ⛓ SEEDLING HAMMER-PHASE B2: `seedlingGenCapacity.slow`'s census AS A DUMP (the draws and their seating, one row per drawn seed), so the capacity rows' certify solves can be captured and re-solved by `check-seedling-hammer-monotonicity` (a vitest file runs under its own module loader, whi…",
+            "path": "scripts/procgen/dump-seedling-gen-capacity.mjs"
         },
         {
             "argvHelpers": [
@@ -7347,6 +7478,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-hammer-b1-approach — ⛓⛓⛓ SEEDLING HAMMER-PHASE B1 D2: THE APPROACH's SOLVE, HANDED TO THE GAME.",
             "path": "scripts/procgen/plan-seedling-hammer-b1-approach.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-hammer-b2-fight.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-b2-fight — ⛓⛓⛓ SEEDLING HAMMER-PHASE B2 D2: THE FIGHT's SOLVE, HANDED TO THE GAME.",
+            "path": "scripts/procgen/plan-seedling-hammer-b2-fight.mjs"
         },
         {
             "argvHelpers": [],
@@ -15650,6 +15808,8 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "approach",
                 "escape",
+                "fight",
+                "fight-bounds",
                 "full",
                 "json",
                 "no-escape",
@@ -15670,6 +15830,18 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "escape"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "fight"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "fight-bounds"
                 },
                 {
                     "how": [
