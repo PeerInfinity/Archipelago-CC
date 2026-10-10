@@ -163,7 +163,7 @@ import {
 } from './turret.js';
 // ⛓⛓⛓ R6 SLICE 2: the THIRTEENTH family — the first projectile the PLAYER
 // makes, so the first per-visit body a tape is responsible for.
-import { WAND_PRESS_CADENCE, WAND_WINDOW, wandPress } from './wandVerb.js';
+import { WAND_PRESS_CADENCE, WAND_VERB, WAND_WINDOW, wandPress } from './wandVerb.js';
 import {
     WAND_SHOT_CULL, createWandShot, stepWandShot, stepWandShotGraphic, wandShotRect,
 } from './wandShot.js';
@@ -14108,6 +14108,17 @@ export function createLevelRun({
             if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
             if (out.some((o) => o.level === n && o.tag === tag)) continue;
             out.push({ level: n, tag, by: r.id, t: r.t });
+        }
+        // ⛓⛓ SEEDLING FIDELITY WAND (behind `WAND_VERB`): `MagicalLock.hit` runs `Game.setPersistence(tag, false)`
+        // on the HIT tick (`Puzzlements/MagicalLock.as:63-71`), fifteen ticks before the cell opens — the flag the
+        // next arrival's `check()` reads. Its own loop for the reason every family above has one.
+        if (WAND_VERB.enabled) {
+            for (const r of magicalLocksOpened) {
+                if (r.tag < 0) continue;
+                if ((clearedByLevel.get(r.level) ?? []).includes(r.tag)) continue;
+                if (out.some((o) => o.level === r.level && o.tag === r.tag)) continue;
+                out.push({ level: r.level, tag: r.tag, by: r.id, t: r.hitTick });
+            }
         }
         // ⛓ U14-swim D1: the set moonrock's `moonrock_target` write — a
         // CROSS-LEVEL in-band clear ({2,0} from L0), measured in the game's
