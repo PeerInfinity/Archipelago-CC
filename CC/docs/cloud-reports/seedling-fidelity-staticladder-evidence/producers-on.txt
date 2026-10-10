@@ -1,0 +1,6 @@
+solve-seedling-r8-battery --check ON  405d9c4bb37a0ab00fb0ef9a99194783 [exit 0]
+solve-seedling-r8-d2-chain --check ON  b76f648331c7a56e8fc11f89d5a4daf8 [exit 0]
+solve-seedling-r8-l18 --check ON  465a8b469896813dc7efc8c1ce3937d2 [exit 0]
+solve-seedling-r8-tail --check ON  35456fbc07e7151ddbc4c2a1fd00c789 [exit 0]
+solve-seedling-r9-l3 --check ON  6cd35fe1414af6bf5beb7605f235cb8e [exit 0]
+solve-seedling-r9-campaign --check ON  13b8d51f4479cd12f939eb560f137337 [exit 0]
