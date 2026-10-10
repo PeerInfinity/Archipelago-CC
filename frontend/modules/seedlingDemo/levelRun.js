@@ -128,6 +128,7 @@ import {
 import { ARENA as BOB_BOSS_ARENA, FIRE as BOB_BOSS_FIRE } from './bobBoss.js';
 // ⛓⛓ Seedling fidelity ENCOUNTERS D3: L12's Witch and the DarkSword it adds.
 import { DARK_SWORD, darkSwordBox, darkSwordSpawnAt, witchGrants, witchText } from './witch.js';
+import { PICKUP_REMOVED_NEXT_FRAME } from './pickupRemoval.js';
 import {
     BOB_BOSS_ROCK_DEAD_FRAMES, beginBobBossDialogue, bobBossBox, bobBossHit, bobBossRockArms,
     bobBossRockRect, bobBossShieldBump, createBobBossBody, DARK_SHIELD_DAMAGE, enemyKnockbackV,
@@ -725,6 +726,20 @@ export function createLevelRun({
     syncSlots();
     /** `Game.update`'s tail: `inventory.update()` → `addItemsFromSave`, every frame. */
     const syncSlotsAtTail = () => syncSlots();
+    /**
+     * ⛓⛓ ENCOUNTERS2 D3 — a pickup's `removed()` writes, queued on its ceremony's
+     * finishing frame when `PICKUP_REMOVED_NEXT_FRAME` is ON (`pickupRemoval.js`):
+     * `{due, writes}`, run at the END of the advance whose `ticksCompleted` is
+     * `due` (the next frame), before that frame's slot tail. Never set while OFF.
+     */
+    let pendingRemoved = null;
+    function flushPendingRemoved({ late = false } = {}) {
+        if (pendingRemoved === null) return;
+        if (!late && ticksCompleted !== pendingRemoved.due) return;
+        const { writes } = pendingRemoved;
+        pendingRemoved = null;
+        for (const fn of writes) fn();
+    }
     /**
      * ⛓⛓⛓ R8 SLICE 8: `Game.time`, AND THE ROW ABOVE STOPS BEING A LIE.
      *
@@ -12163,6 +12178,7 @@ export function createLevelRun({
                 + 'all. Press outside the freeze.');
         }
         // ⛓ SLOTS: `Game.update`'s tail runs on a frozen frame too.
+        flushPendingRemoved();
         syncSlotsAtTail();
         ticksCompleted++;
         // ⛓ R8 slice 8: a frozen tick is still one `Game.update()`, and
@@ -16596,6 +16612,7 @@ export function createLevelRun({
             // tick numbered `at` begins, which is what "the game cleared it
             // by then" means.
             applyTimedClears(ticksCompleted);
+            if (pendingRemoved !== null && ticksCompleted > pendingRemoved.due) flushPendingRemoved({ late: true });
             // ⛓ R9 slice 12e‴: and the Help the previous tick's `removed()`
             // queued — its count is THIS tick's keys (see `spendPickupHelp`).
             drainPickupHelp(held);
@@ -17600,6 +17617,15 @@ export function createLevelRun({
                     // `Game.setPersistence`. The item lands HERE and not on
                     // contact, which is the whole difference between a real
                     // collection and R0's grant.
+                    // ⛓⛓ ENCOUNTERS2 D3: …or, with `PICKUP_REMOVED_NEXT_FRAME`
+                    // ON, on the NEXT frame — `NPC.removed()` nulls `myText` at
+                    // the end of THIS one, so `pick_up()`'s `!myText` arm (and
+                    // `removed()`) is the next frame's (`pickupRemoval.js`). The
+                    // flag writes are queued (`removedWrite`) and land at the end
+                    // of the next advance; everything else here stays on F.
+                    const removedCeremony = ceremony;
+                    const removedQueue = PICKUP_REMOVED_NEXT_FRAME.enabled ? [] : null;
+                    const removedWrite = (fn) => { if (removedQueue) removedQueue.push(fn); else fn(); };
                     collectedPickups.add(pickupKey(ceremony.level, ceremony.pickup));
                     // ⛓ U14-swim D1: `Shield.removed()` — `Moonrock.beam = true`
                     // (`Pickups/Shield.as:46`), under the same `doActions` as the
@@ -17621,16 +17647,18 @@ export function createLevelRun({
                     if (ceremony.pickup.witchSword) {
                         witchSword.collected = true;
                         const flag = outOfBandFlagForWriter({ as3: 'DarkSword', level, tag: -1 });
-                        witchLedger.push({ t: ticksCompleted + 1, level, what: 'darksword-removed',
+                        const at = level;
+                        removedWrite(() => witchLedger.push({ t: ticksCompleted + 1, level: at, what: 'darksword-removed',
                             flag: { level: flag.level, tag: flag.tag, value: false }, outOfBand: flag.outOfBand,
-                            writesWhen: 'ifFlagAlreadySet' });
+                            writesWhen: 'ifFlagAlreadySet' }));
                     }
                     if (ceremony.pickup.bobFire) {
                         bobArena.fireCollected = true;
                         const flag = outOfBandFlagForWriter({ as3: 'Fire', level, tag: -1 });
-                        bobLedger({ what: 'fire-removed', t: ticksCompleted + 1,
+                        const at = level;
+                        removedWrite(() => bobLedger({ what: 'fire-removed', t: ticksCompleted + 1, level: at,
                             flag: { level: flag.level, tag: flag.tag, value: false },
-                            outOfBand: flag.outOfBand });
+                            outOfBand: flag.outOfBand }));
                     }
                     // ⛓⛓ R8 slice 8: and the ONE pickup whose `removed()` costs a
                     // dead frame of its own — `Sword.removed()` adds `Help(3)`,
@@ -17647,28 +17675,35 @@ export function createLevelRun({
                     // what the game does.
                     if (ceremony.pickup.persistTag !== undefined
                         && ceremony.pickup.persistTag >= 0) {
-                        pickupFlags.set(
-                            `${ceremony.level}:${ceremony.pickup.persistTag}`,
+                        const c = removedCeremony;
+                        removedWrite(() => pickupFlags.set(
+                            `${c.level}:${c.pickup.persistTag}`,
                             {
-                                id: `${ceremony.pickup.tag}@${ceremony.pickup.x},`
-                                    + `${ceremony.pickup.y}`,
-                                level: ceremony.level,
-                                tag: ceremony.pickup.persistTag,
+                                id: `${c.pickup.tag}@${c.pickup.x},`
+                                    + `${c.pickup.y}`,
+                                level: c.level,
+                                tag: c.pickup.persistTag,
                                 t: ticksCompleted + 1,
-                            });
+                            }));
                     }
                     // `item: null` is a pickup the fourteen-property mirror
                     // does not track (a boss key, a totem part) — the
                     // ceremony is real, there is just nothing to apply.
                     if (ceremony.item) {
-                        applyItem(inventory, ceremony.item);
-                        syncSlots();
+                        const { item } = removedCeremony;
+                        removedWrite(() => {
+                            applyItem(inventory, item);
+                            syncSlots();
+                        });
                     }
                     // ...unless it is a BossKey, whose `removed()` writes
                     // `Player.hasKeySet(keyType, true)` INSTEAD of an item
                     // property and instead of persistence. R4's whole key
                     // chain hangs off this one line.
-                    if (ceremony.keyType !== null) keys.add(ceremony.keyType);
+                    if (ceremony.keyType !== null) {
+                        const { keyType } = removedCeremony;
+                        removedWrite(() => keys.add(keyType));
+                    }
                     // ⛓ R7 slice 1: and the same line for a totem part,
                     // whose `removed()` writes `Player.hasTotemPartSet`
                     // instead. It was missing for four rungs and nothing
@@ -17679,7 +17714,8 @@ export function createLevelRun({
                     // visible, which is the shape of debt 6 exactly.
                     if (ceremony.totemPart !== null
                         && ceremony.totemPart !== undefined) {
-                        totemParts.add(ceremony.totemPart);
+                        const { totemPart } = removedCeremony;
+                        removedWrite(() => totemParts.add(totemPart));
                     }
                     // ── ⛓⛓⛓ R5 SLICE 23: `Wand.removed()` ───────────────
                     //
@@ -17733,6 +17769,9 @@ export function createLevelRun({
                     });
                     if (ceremony.dialogue) {
                         framesThisCharacter = ceremony.dialogue.framesThisCharacter;
+                    }
+                    if (removedQueue && removedQueue.length > 0) {
+                        pendingRemoved = { due: ticksCompleted + 1, writes: removedQueue };
                     }
                     ceremony = null;
                     // ⚠ AND THEN FALL THROUGH TO A NORMAL STEP. The frame
@@ -18474,6 +18513,7 @@ export function createLevelRun({
             // ⛓ SLOTS: `Game.update`'s tail — `inventory.update()` appends
             // what this observation's grant wrote (before the swap below,
             // whose own grant lands on the NEXT observation).
+            flushPendingRemoved();
             syncSlotsAtTail();
             ticksCompleted++;
             clock.tick();

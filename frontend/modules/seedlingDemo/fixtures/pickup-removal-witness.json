@@ -1,0 +1,53 @@
+{
+  "$comment": "\u26d3\u26d3 seedling-fidelity-encounters2 D3 \u2014 the GAME's first observation holding a special pickup's item flag, per tape. Recorded on p4f, headless (`SEEDLING_PORT=9550 node scripts/procgen/probe-seedling-encounter-ticks.mjs --tape=<tape> --out=\u2026`): the flag read off `botStatus().items` at every tick (both `sampled` ticks were read), the drained x/y stream equal to the model's at 0 px. The pickup's `removed()` runs one frame after its ceremony's text closes (`pickupRemoval.js`). Read by `fidelityEncounters2.test.js`. \u26a0 r8-solve-10 (the Sword, whose removed() also adds Help(3)): the flag is one frame late too, but the switch ON breaks that tape's x/y stream at t73 (a sword press on the closing frame that the game swings and the ON model does not) \u2014 the residue that keeps the switch OFF.",
+  "rows": [
+    {
+      "tape": "enc-l12-witch",
+      "property": "hasDarkSword",
+      "gameObs": 378,
+      "sampled": [
+        377,
+        378
+      ],
+      "page": "seedling_bot_ap_p4f",
+      "streamWorst": 0,
+      "observations": 602
+    },
+    {
+      "tape": "enc-l32-live-arrival",
+      "property": "hasFire",
+      "gameObs": 833,
+      "sampled": [
+        832,
+        833
+      ],
+      "page": "seedling_bot_ap_p4f",
+      "streamWorst": 0,
+      "observations": 1050
+    },
+    {
+      "tape": "bobsoldier2-l30-torch",
+      "property": "hasTorch",
+      "gameObs": 226,
+      "sampled": [
+        225,
+        226
+      ],
+      "page": "seedling_bot_ap_p4f",
+      "streamWorst": 0,
+      "observations": 461
+    },
+    {
+      "tape": "r8-solve-10",
+      "property": "hasSword",
+      "gameObs": 71,
+      "sampled": [
+        70,
+        71
+      ],
+      "page": "seedling_bot_ap_p4f",
+      "streamWorst": 0,
+      "observations": 84
+    }
+  ]
+}
