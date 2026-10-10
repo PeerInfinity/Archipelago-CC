@@ -273,4 +273,8 @@ No AS3, wasm, gitlink or rules edit; no `standing-values --write`, `pytest` or u
 - Producers unmoved at the defaults: `405d9c4b b76f6483 465a8b46 35456fbc 6cd35fe1 13b8d51f`.
 - Game witnesses: `bobsoldier2-l30-dash-stance` (D1, body bit-exact 146/146), `bobsoldier2-l30-torch` (D2, model = game
   461/461, body bit-exact 178/178).
-- CI: `JavaScript Unit Tests` at the last head: read after the push of this commit; see the follow-up line below.
+- CI: `JavaScript Unit Tests` at `cfe3f6039` (run 38065923221; the code head, only this line changed after it):
+  **739 files / 19,349 tests, 19,348 passed, 1 failed**. The one red row is `rosterCategories.test.js` "the LIVE row
+  carries one part per derived category" (199 ≠ 201: the planner's standing-values composite is quoted at 259 tapes,
+  residue 6). The slow battery printed no summary (the job's first step failed). The earlier head `fb74d06`'s other
+  four reds (`docsRender` ×2, `generated` ×2) were the reference not yet regenerated, and are green here.
