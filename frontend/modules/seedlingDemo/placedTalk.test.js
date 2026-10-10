@@ -77,7 +77,8 @@ describe('the placed-NPC talk table is the AS3, not a guess', () => {
     it('⛔ the three classes whose `doneTalking()` DOES something are REFUSED by name', () => {
         const refused = Object.entries(PLACED_NPC_TALK)
             .filter(([, r]) => r.doneTalking === 'REFUSED').map(([t]) => t).sort();
-        expect(refused).toEqual(['oracle', 'witch', 'yeti']);
+        // ⛓ fidelity ENCOUNTERS D3: the Witch is modelled (`witch.js`).
+        expect(refused).toEqual(['oracle', 'yeti']);
         for (const t of refused) expect(PLACED_NPC_TALK[t].why, t).toMatch(/NPCs\/\w+\.as:/);
     });
 

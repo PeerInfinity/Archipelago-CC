@@ -131,7 +131,9 @@ export const OUT_OF_BAND_WRITERS = Object.freeze({
             + '`Player.hasDarkSword = true` lands unconditionally — but the ledger write '
             + 'sits behind `if (Game.checkPersistence(tag))`, an out-of-band READ of the '
             + 'same slot, so the ENTRY appears only when that slot was already true',
-        witness: 'r5-witch-darksword',
+        // ⛓ fidelity ENCOUNTERS D3: the name slice 5 reserved (`r5-witch-darksword`) was never recorded;
+        // the Witch's first driven tape is this one (game hasDarkSword, the model's `darksword-removed`).
+        witness: 'enc-l12-witch',
     }),
     // ⚠ THE FOURTH AND FIFTH, registered at R5 slice 7 — and the fourth is
     // the one this module's own docblock said "cannot be modelled" without
