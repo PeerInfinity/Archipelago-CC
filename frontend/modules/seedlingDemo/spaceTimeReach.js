@@ -68,6 +68,51 @@ export const HOLD_FIRST_KEY_SETS = Object.freeze([SPACE_TIME_KEY_SETS[4],
 export const SPACE_TIME_CHECK_EVERY = 250;
 
 /**
+ * ⛓ hammer-phase B2 — A BEST-FIRST QUEUE (a binary heap) for a search whose order is not the layer's: `push(item)`,
+ * `pop()` (the least under `compare`, or `undefined`), `size`. ⛔ Deterministic only if `compare` is a TOTAL order —
+ * the caller breaks its ties by an insertion number, so no heap shape can decide which of two equals comes first.
+ *
+ * @param {(a: object, b: object) => number} compare  negative when `a` comes first
+ */
+export function bestFirstQueue(compare) {
+    const heap = [];
+    const swap = (i, j) => { const t = heap[i]; heap[i] = heap[j]; heap[j] = t; };
+    return {
+        get size() { return heap.length; },
+        push(item) {
+            heap.push(item);
+            let i = heap.length - 1;
+            while (i > 0) {
+                const p = (i - 1) >> 1;
+                if (compare(heap[i], heap[p]) >= 0) break;
+                swap(i, p);
+                i = p;
+            }
+        },
+        pop() {
+            if (heap.length === 0) return undefined;
+            const top = heap[0];
+            const last = heap.pop();
+            if (heap.length > 0) {
+                heap[0] = last;
+                let i = 0;
+                for (;;) {
+                    const l = 2 * i + 1;
+                    const r = l + 1;
+                    let m = i;
+                    if (l < heap.length && compare(heap[l], heap[m]) < 0) m = l;
+                    if (r < heap.length && compare(heap[r], heap[m]) < 0) m = r;
+                    if (m === i) break;
+                    swap(i, m);
+                    i = m;
+                }
+            }
+            return top;
+        },
+    };
+}
+
+/**
  * The default coarse key: the `cell` px cell of the player's point and the sign of each velocity axis.
  *
  * @param {number} cell  px

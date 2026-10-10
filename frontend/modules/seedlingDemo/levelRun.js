@@ -13613,6 +13613,49 @@ export function createLevelRun({
             },
         };
     };
+    /**
+     * ⛓ ONE SWORD TEST OF A FORECAST, `applyThrust`'s spinner arm transcribed in order (hammer-phase A's `fire`, lifted
+     * out in hammer-phase B2 so `spinnerForecastWithPress` and `spinnerFightForecast` share one spelling): the slash
+     * rect from `from` at the thrust's facing and scale against each live body's rect, `distanceRectPoint ≤
+     * slashReachFor(scale)`, the line of sight (the run THROWS there; a forecast reports it and applies nothing), then
+     * `hitSpinner`. Mutates `st.byId` with each hit body and pushes one row per test the rect reached to `tests`.
+     *
+     * @returns {?{t, id, at}} the first blocked line of THIS call, or null
+     */
+    const forecastSwordTest = (st, th, t, from, { own, damage, frozen, weapon }, tests) => {
+        let blocked = null;
+        const scale = th.scale ?? SLASH_SCALE_NORMAL;
+        const rect = slashRect(from.x, from.y, th.direction, scale);
+        const reachLimit = slashReachFor(scale);
+        for (const sp of st.byId.values()) {
+            if (sp.removed) continue;
+            const body = spinnerRect(sp);
+            if (!rectsOverlap(rect, body)) continue;
+            const reach = distanceRectPoint(from.x, from.y, body);
+            if (reach > reachLimit) {
+                tests.push({ t, id: sp.id, own, landed: false, killed: false, reach, hits: sp.hits,
+                    hitsTimer: sp.hitsTimer, why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}` });
+                continue;
+            }
+            const blocker = collideLineSolid(from.x, from.y, sp.x, sp.y);
+            if (blocker) {
+                blocked = blocked ?? { t, id: sp.id, at: blocker.at };
+                tests.push({ t, id: sp.id, own, landed: false, killed: false, reach, hits: sp.hits,
+                    hitsTimer: sp.hitsTimer, why: 'line of sight — the run refuses this hit (it throws)' });
+                continue;
+            }
+            const before = sp;
+            const after = hitSpinner(sp, { force: SWORD_FORCE, from: { x: from.x, y: from.y }, damage,
+                t: weapon === 'spear' ? 'Spear' : 'Sword', frozen });
+            st.byId.set(sp.id, after);
+            const landed = after.hits !== before.hits;
+            tests.push({ t, id: sp.id, own, landed, killed: after.destroy && !before.destroy, reach,
+                hits: after.hits, hitsTimer: after.hitsTimer,
+                why: landed ? null : (before.hitsTimer > 0 ? `i-frames — hitsTimer ${before.hitsTimer} > 0`
+                    : (before.destroy ? 'the body is already dying' : 'the freeze')) });
+        }
+        return blocked;
+    };
     const inputRefusedNow = () => lockSnap !== null || bobNoInput;
     const unfiredEquipTicksNow = () => [...equipsByTick.keys()];
     const unfiredGrantLevelsNow = () => [...grantsByLevel.keys()];
@@ -14325,36 +14368,9 @@ export function createLevelRun({
                 // ⚠ a test of a press ALREADY IN FLIGHT (the run's own window) is reported, never this press's
                 const own = thrust !== null && th.pressTick === pressAt;
                 const from = pointAt(t);
-                const scale = th.scale ?? SLASH_SCALE_NORMAL;
-                const rect = slashRect(from.x, from.y, th.direction, scale);
-                const reachLimit = slashReachFor(scale);
-                for (const sp of st.byId.values()) {
-                    if (sp.removed) continue;
-                    const body = spinnerRect(sp);
-                    if (!rectsOverlap(rect, body)) continue;
-                    const reach = distanceRectPoint(from.x, from.y, body);
-                    if (reach > reachLimit) {
-                        tests.push({ t, id: sp.id, own, landed: false, killed: false, reach, hits: sp.hits,
-                            hitsTimer: sp.hitsTimer, why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}` });
-                        continue;
-                    }
-                    const blocker = collideLineSolid(from.x, from.y, sp.x, sp.y);
-                    if (blocker) {
-                        lineBlocked = lineBlocked ?? { t, id: sp.id, at: blocker.at };
-                        tests.push({ t, id: sp.id, own, landed: false, killed: false, reach, hits: sp.hits,
-                            hitsTimer: sp.hitsTimer, why: 'line of sight — the run refuses this hit (it throws)' });
-                        continue;
-                    }
-                    const before = sp;
-                    const after = hitSpinner(sp, { force: SWORD_FORCE, from: { x: from.x, y: from.y }, damage,
-                        t: weapon === 'spear' ? 'Spear' : 'Sword', frozen });
-                    st.byId.set(sp.id, after);
-                    const landed = after.hits !== before.hits;
-                    tests.push({ t, id: sp.id, own, landed, killed: after.destroy && !before.destroy, reach,
-                        hits: after.hits, hitsTimer: after.hitsTimer,
-                        why: landed ? null : (before.hitsTimer > 0 ? `i-frames — hitsTimer ${before.hitsTimer} > 0`
-                            : (before.destroy ? 'the body is already dying' : 'the freeze')) });
-                }
+                // ⛓ hammer-phase B2: the test itself is `forecastSwordTest`, one spelling with the fight forecast
+                const blocked = forecastSwordTest(st, th, t, from, { own, damage, frozen, weapon }, tests);
+                lineBlocked = lineBlocked ?? blocked;
             };
             for (let i = 0; i < need; i += 1) {
                 const t = ticksCompleted + i;
@@ -14391,6 +14407,137 @@ export function createLevelRun({
                     killed: landing.killed } : null,
                 why, lineBlocked,
             };
+        },
+        /**
+         * ⛓⛓⛓ SEEDLING HAMMER-PHASE B2 — **THE FORECAST AS A FUNCTION OF THE PATH: A CURSOR THAT FORKS AT A PRESS.**
+         *
+         * `spinnerForecastWithPress` carries ONE hypothetical press from the run's tick. The fight search (`solverBot
+         * .deriveFight`) presses many times along one path, and the bodies after the second press depend on where the
+         * first one left them (its knockback, its i-frame) and on the slash state it left (a re-press inside the
+         * 20-tick `slashTimer` is a dash). So this is the same forecast decomposed into ticks: the live bodies
+         * deep-copied, `stepSpinners` under the same `ctxNow`/`ctxAfter` split, and per tick the run's own order —
+         * the window's due tests (`swordWindowStep`, each one `forecastSwordTest`, the one spelling), then a press of
+         * the player's at that tick (`slashPressForecast` aged from the slash state the LAST press left, the window
+         * replaced and scheduled as `advance` takes it).
+         *
+         * ⛔ THE PLAYER'S POINT IS STILL AN INPUT. A tick with a test due asks `advance(point)` for the player's entity
+         * point at the top of that tick, and throws without one. A tick with no window in flight reads no point, so a
+         * cursor whose window is quiet (`quiet()`) is PATH-INDEPENDENT and is shared by every path through it; a press
+         * forks it (`fork(row)`, the state after that row).
+         *
+         * Index convention as `spinnerForecast`: `rows[i]` (and `bodies[i]`) is the bodies after the advance of tick
+         * `ticksCompleted + i`. Outside the memo: nothing here is cached on the run or written.
+         *
+         * @returns {object} the root cursor: `{n, rows, bodies, tests, lineBlocked, unmodelled, next(), quiet(),
+         *   advance(point, press?), ensure(row), fork(row)}`; `advance` with `press = {direction}` returns the press's
+         *   `{outcome, impulse, opens}` (`impulse` the dash's `{force}` for the previewed step of that tick)
+         */
+        spinnerFightForecast() {
+            const live = spinnerStateFor(level);
+            const n0 = ticksCompleted;
+            const weapon = weaponForPress();
+            const damage = inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE;
+            const frozen = ceremony !== null;
+            const ctxNow = spinnerCtx();
+            const ctxAfter = firstTickInWorld ? spinnerCtx({ beforeTypeFlip: false }) : ctxNow;
+            const info = slashInfoNow();
+            const gate = info.gate;
+            const unmodelled = inventory?.hasShield ? ['shield bump (`shieldBumpNow`)'] : [];
+            const hasBodies = live.byId.size > 0;
+            /**
+             * A cursor: `rows`/`bodies` are whole arrays from row 0 (a fork copies its parent's prefix by reference);
+             * `snaps` (the bodies' map after each own row), `wins` and `slashes` are its own rows only, the earlier
+             * ones its parent's.
+             */
+            const cursor = ({ parent, from, st, win, slash, rows, bodies, tests, lineBlocked }) => {
+                const snaps = [];
+                const wins = [];
+                const slashes = [];
+                const c = {
+                    n: n0, rows, bodies, tests, unmodelled,
+                    get lineBlocked() { return lineBlocked; },
+                    /** The next tick this cursor advances. */
+                    next: () => n0 + rows.length,
+                    /** No press of the player's has a test still due: the next ticks read no point. */
+                    quiet: () => win.pending === null && win.repeats.length === 0,
+                    advance(point, press = null) {
+                        const i = rows.length;
+                        const t = n0 + i;
+                        if (hasBodies) stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
+                        if (!lineBlocked) {
+                            const fired = swordWindowStep(win, t);
+                            win = fired.window;
+                            for (const th of fired.fires) {
+                                if (th.weapon !== 'sword') continue;
+                                if (!point || !Number.isFinite(point.x) || !Number.isFinite(point.y)) {
+                                    throw new Error('levelRun.spinnerFightForecast: no player position for the hit '
+                                        + `test at tick ${t} — a cursor with a window in flight reads the point.`);
+                                }
+                                const blocked = forecastSwordTest(st, th, t, point,
+                                    { own: th.pressTick >= n0, damage, frozen, weapon }, tests);
+                                lineBlocked = lineBlocked ?? blocked;
+                            }
+                        }
+                        let out = null;
+                        if (press) {
+                            const r = slashPressForecast(slash,
+                                { tick: slash.tick, ticksAhead: t - slash.tick, direction: press.direction });
+                            const opens = (weapon === 'sword' || weapon === 'ghostsword')
+                                && (r.outcome === 'slash' || r.outcome === 'dash');
+                            // ⚠ the ageing above released a swing that ended before this tick; one ending ON it
+                            // releases after the press (`slashEnd` is below the press in `Player.update`)
+                            let endsAt = slash.endsAt !== null && slash.endsAt <= t - 1 ? null : slash.endsAt;
+                            let state = r.state;
+                            if (opens) endsAt = t + SLASH_ANIM_TICKS[state.anim];
+                            else if (endsAt !== null && t >= endsAt) {
+                                state = slashSet(state, { pressed: false, ...gate }).state;
+                                endsAt = null;
+                            }
+                            slash = { state, endsAt, gate, tick: t + 1 };
+                            if (opens && !lineBlocked) {
+                                win = swordWindowSchedule(swordWindowReplace(win), {
+                                    weapon, direction: r.slashDirection, pressTick: t,
+                                    anim: r.state.anim, scale: slashScaleFor(r.state.anim),
+                                });
+                            }
+                            out = { outcome: r.outcome, impulse: r.impulse ?? null, opens };
+                        }
+                        const now = spinnerRects(st);
+                        rows.push(now.map((s) => s.rect));
+                        bodies.push(now.map((s) => ({ id: s.id, hits: s.spinner.hits, hitsTimer: s.spinner.hitsTimer,
+                            destroy: s.spinner.destroy })));
+                        snaps.push(new Map(st.byId));
+                        wins.push(win);
+                        slashes.push(slash);
+                        return out;
+                    },
+                    /** Advance (with no point: a quiet window) until row `j` exists. */
+                    ensure(j) {
+                        while (rows.length <= j) c.advance(null);
+                        return c;
+                    },
+                    /** The state after row `j` (its own, or its parent's). */
+                    snap(j) {
+                        if (j >= from) return { st: snaps[j - from], win: wins[j - from], slash: slashes[j - from] };
+                        if (parent === null) throw new Error(`levelRun.spinnerFightForecast: no row ${j} to fork at`);
+                        return parent.snap(j);
+                    },
+                    /** A new cursor from the state after row `j` (`j` < the rows this one has). */
+                    fork(j) {
+                        if (j >= rows.length) throw new Error(`levelRun.spinnerFightForecast: row ${j} not reached`);
+                        const s = c.snap(j);
+                        return cursor({ parent: c, from: j + 1, st: { byId: new Map(s.st), level },
+                            win: s.win, slash: s.slash, rows: rows.slice(0, j + 1), bodies: bodies.slice(0, j + 1),
+                            tests: tests.filter((x) => x.t <= n0 + j),
+                            lineBlocked: lineBlocked !== null && lineBlocked.t <= n0 + j ? lineBlocked : null });
+                    },
+                };
+                return c;
+            };
+            return cursor({ parent: null, from: 0,
+                st: { byId: new Map([...live.byId].map(([k, v]) => [k, { ...v }])), level },
+                win: swordWindow, slash: { state: info.state, endsAt: info.endsAt, gate, tick: n0 },
+                rows: [], bodies: [], tests: [], lineBlocked: null });
         },
         /**
          * ⛔⛔ R5 slice 13: `{t, level, id, flag, cause}` per `Spinner.removed()`.
