@@ -119,6 +119,7 @@ frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h0811f52e|0|0,rule,m
 frontend/modules/seedlingDemo/levelRun.js|*|*,structural,,,
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|createLevelRun|-1,rule,sentinel,,-1 = seal part not collected
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|h52f28f77|0|0,rule,sentinel,,primary item slot default
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|h12d7a223|-1|0,rule,sentinel,,-1 = no spear animation running (spearEndsAt; fidelity DARKTRAP2 spearingWindow)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|createLevelRun|20,rule,magnitude,,REVIEW: camera settle ticks on load; camera position feeds onScreen gates but comment says any value over ~12 is equivalent
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|shieldBossStateFor,rule,sentinel,,-1 = no persistTag
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|owlStateFor|-1,rule,sentinel,,-1 = no persistTag

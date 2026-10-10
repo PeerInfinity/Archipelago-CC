@@ -276,6 +276,17 @@ export const DASH_WINDOW_ROSTER_WIDE = true;
 export const SLASH_ANIM_TICKS = DASH_WINDOW_ROSTER_WIDE ? SLASH_ANIM_TICKS_GAME : SLASH_ANIM_TICKS_LEGACY;
 
 /**
+ * ⛓ fidelity DARKTRAP2 D2 — the SPEAR's animation, which is what `spearing` lasts: `sprSpear.add("spear", [0, 1, 2,
+ * 3, 4, 5, 6, 7], 45, true)` (`Player.as:410`), `spearEnd` (`:1051`, `spearing = false`) on the wrap. 8 frames at
+ * 45 × 0.0333 wrap on update 6, so a press at T keeps `spearing` up through the `input()` of T + **5** — and every
+ * `set slashing` / `set spearing` in that span is gated (`contactFidelity.spearingWindow`). Witnessed on the game:
+ * L65 step 148, thrust t131, sword presses at t134 and t136 both do nothing.
+ */
+export const SPEAR_ANIM_FRAMES = 8;
+export const SPEAR_ANIM_RATE = 45;
+export const SPEAR_ANIM_TICKS = animCompleteTicks(SPEAR_ANIM_FRAMES, SPEAR_ANIM_RATE);
+
+/**
  * ⛓ SEEDLING FIDELITY DASH — **THE HIT TESTS A SWING BUYS, PER ANIMATION.**
  * `slash()` tests the rect on every tick `slashing` is up, and `slashEnd` drops
  * the flag in `sprites()` BELOW that tick's test — so a press at T tests on
@@ -536,7 +547,11 @@ export function slashPressForecast(slash, {
             + 'gate}. A forecast built from a gap alone cannot tell a dash from a swing, '
             + 'and the two swing different rects.');
     }
-    const { gate } = slash;
+    // ⛓ fidelity DARKTRAP2 D2: with `spearingWindow` on, `slashInfo` carries the spear animation's last tick
+    // (`spearingUntil`); a later tick's gate reads it (the read tick's own `gate.spearing` also covers a pending
+    // thrust). Absent — the switch off — the gate is the read tick's, every tick, as before.
+    const gateFor = (t) => (slash.spearingUntil === undefined || t === tick ? slash.gate
+        : { ...slash.gate, spearing: t <= slash.spearingUntil });
     let st = slash.state;
     let endsAt = slash.endsAt;
     for (let k = 0; k < ticksAhead; k += 1) {
@@ -545,13 +560,13 @@ export function slashPressForecast(slash, {
         // ⛓ `slashEnd` fires BELOW the press, so on a tick with no press of
         // ours it is the tick's last act — and it is what RE-ARMS the dash.
         if (endsAt !== null && t >= endsAt) {
-            st = slashSet(st, { pressed: false, ...gate }).state;
+            st = slashSet(st, { pressed: false, ...gateFor(t) }).state;
             endsAt = null;
         }
     }
     const at = tick + ticksAhead;
     st = slashTimerTick(st);
-    const r = slashSet(st, { pressed: true, ...gate, direction });
+    const r = slashSet(st, { pressed: true, ...gateFor(at), direction });
     return { ...r, at, scale: slashScaleFor(r.state.anim) };
 }
 

@@ -4332,7 +4332,9 @@ export function previewWalk(run, wps, tolerance = 0,
         wanding: t <= slashLive.openUntil.wanding,
         firing: t <= slashLive.openUntil.firing,
         deathRaying: false,
-        spearing: spearPending,
+        // ⛓ fidelity DARKTRAP2 D2: under `spearingWindow` the run hands the spear animation's last tick too, aged
+        // here like the wand/fire windows (absent with the switch off, so this is the BEFORE gate).
+        spearing: spearPending || t <= (slashLive.spearingUntil ?? -1),
     });
     /**
      * ⛓⛓ ONE TICK OF THE COMBAT STATE, WRITTEN ONCE. The TRANSIT loop and the
@@ -15026,6 +15028,9 @@ function deriveKillByCeiling(run, body, contacts) {
  *
  * @returns {{pole, stance?, dir?, wait?, why}|{pole: null, why}}
  */
+/** ⛓ fidelity DARKTRAP2 D2 — px of spear-on-core overlap (both axes) the light arm's first stance pass asks for. */
+export const LIGHT_ARM_CORE_MARGIN = 2;
+
 function deriveLightPole(run, body, contacts, blocked = []) {
     const D = DARKTRAP_LIGHT_DEATH;
     const poles = body.poles.filter((p) => p.min <= D.pole.radiusMin)
@@ -15056,6 +15061,15 @@ function deriveLightPole(run, body, contacts, blocked = []) {
     let unsafe = 0;
     let unreached = 0;
     const tiles = run.world.walkableTiles ?? [];
+    /**
+     * ⛓ fidelity DARKTRAP2 D2 — THE AIM HAS TO SURVIVE THE ARRIVAL. The walk settles NEAR a stance, not on it: L63
+     * step 145's (36,92) settled at (37.08,92.86), and a thrust whose rect met the core by 0.5 px from the stance
+     * missed it from there (the executor's own check refused). So a pass asks for `LIGHT_ARM_CORE_MARGIN` px of
+     * overlap on BOTH axes first (the candidates sort deep-first, then by distance), and only then takes a bare
+     * overlap (the executor still checks what it settled on).
+     */
+    const coreDepth = (a, b) => Math.min(Math.min(a.right, b.right) - Math.max(a.x, b.x),
+        Math.min(a.bottom, b.bottom) - Math.max(a.y, b.y));
     for (const pole of poles) {
         const core = { x: pole.rect.x, y: pole.rect.y + D.pole.bob * 2,
             right: pole.rect.right, bottom: pole.rect.bottom - D.pole.bob * 2 };
@@ -15071,8 +15085,9 @@ function deriveLightPole(run, body, contacts, blocked = []) {
                 for (const dir of [RIGHT, UP, LEFT, DOWN]) cands.push({ x: sx, y: sy, dir });
             }
         }
-        cands.sort((a, b) => Math.hypot(a.x - run.state.x, a.y - run.state.y)
-            - Math.hypot(b.x - run.state.x, b.y - run.state.y));
+        const deep = (c) => (coreDepth(spearRect(c.x, c.y, c.dir), core) >= LIGHT_ARM_CORE_MARGIN ? 0 : 1);
+        cands.sort((a, b) => (deep(a) - deep(b)) || (Math.hypot(a.x - run.state.x, a.y - run.state.y)
+            - Math.hypot(b.x - run.state.x, b.y - run.state.y)));
         for (const c of cands) {
             const sr = spearRect(c.x, c.y, c.dir);
             if (!rectsOverlapLocal(sr, core)) continue;

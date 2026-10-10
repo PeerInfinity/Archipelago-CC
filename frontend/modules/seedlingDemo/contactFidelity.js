@@ -165,8 +165,37 @@ export const CONTACT_FIDELITY = {
      * light-arm thrust; in L63 the arm's stance misses the pole's core by ~1 px). Evidence:
      * `CC/docs/cloud-reports/seedling-fidelity-pushblock-evidence/lightarm-refuted-l65-*`. OFF until a fix slice
      * re-witnesses L62, L65 and L63 on the game. OFF moves no committed tape (ON never did); survey 115 refuses again.
+     * ⛓ fidelity DARKTRAP2 D1: the L65 refutation was NOT the light death — replayed per tick on the game, the pole
+     * lights at t50 (t133) and `darktrap@144,144` starts "die1" at t81 (t164), the model's ticks exactly. Both walks
+     * left the game at a SWORD press inside the spear's animation (`spearingWindow` below), and step 146's then fell
+     * into a pit and rebuilt the room before "die1" ended.
      */
     darkTrapLight: false,
+    /**
+     * fidelity DARKTRAP2 D2 — `spearing` IS UP FOR THE SPEAR'S WHOLE ANIMATION, NOT ONE TICK.
+     *
+     *     Player.as:410    sprSpear.add("spear", [0..7], 45, true)       — `spearEnd` is the wrap's callback (:1051)
+     *     Player.as:781    set slashing: if (… && !spearing) { … }       — a sword press while spearing is GATED
+     *     Player.as:815    set spearing: if (… && !slashing) { if (!spearing && _s) play("spear") }
+     *
+     * 8 frames at 45 × `FP.elapsed` 0.0333 an update wrap on update 6, so `spearing` holds through the press tick + 5
+     * (`combatVerbs.SPEAR_ANIM_TICKS`). The model's gate read `swordWindow.pending` — up for ONE tick — so a sword
+     * press 3 or 5 ticks after a thrust slashed (and dashed) in the model and did nothing in the game. Measured: L65
+     * step 146 (thrust t48, presses t51/t53 → the model's dash moves y 1.88 px at t54) and step 148 (thrust t131,
+     * presses t134/t136 → dx −1.88 at t137). ON: the slash gate (press and release) reads the window, a spear press
+     * inside a swing, a wand/fire window or its own window is gated (no thrust), and `slashInfo.openUntil.spearing`
+     * carries the end tick so `solverBot.previewWalk` ages it like the wand/fire windows.
+     */
+    spearingWindow: false,
+    /**
+     * fidelity DARKTRAP2 D2 — A PRESS DURING A PIT FALL IS LOST. `checkFallingInPit` sets `receiveInput = false` and
+     * `Player.input()` returns at its first line (`!receiveInput || frozenTimer > 0 || fallFromCeiling`), so the
+     * `useItem` inside it never runs. `playerPhysicsV2.stepV2` already drops the MOVE keys for a fall in flight at the
+     * tick's start (`fall ? NO_KEYS : held`); the press path read `acting`, which did not. Measured: step 146's
+     * corrected walk, the game's `receive_input` false from t227 and the t230 sword press is lost (the model's dash
+     * moved y 1.71 px at t231).
+     */
+    fallBurnsPress: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
