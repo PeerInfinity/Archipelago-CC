@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 76,
+            "count": 77,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 395,
+        "blockStyle": 396,
         "browser": 133,
-        "cited": 195,
-        "files": 407,
+        "cited": 196,
+        "files": 408,
         "lineStyle": 12,
-        "withDocblock": 407,
-        "withFlags": 325
+        "withDocblock": 408,
+        "withFlags": 326
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7586,6 +7586,41 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-hammer-b2-fight — ⛓⛓⛓ SEEDLING HAMMER-PHASE B2 D2: THE FIGHT's SOLVE, HANDED TO THE GAME.",
             "path": "scripts/procgen/plan-seedling-hammer-b2-fight.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-l12keyline-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dry"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-l12keyline-witness — ⛓⛓⛓ SEEDLING FIDELITY L12KEYLINE: THE GAME WITNESS FOR THE WAY ROUND L12'S SEALED LOCK.",
+            "path": "scripts/procgen/plan-seedling-l12keyline-witness.mjs"
         },
         {
             "argvHelpers": [],
