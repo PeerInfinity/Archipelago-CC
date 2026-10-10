@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 import { LIVE_GEOMETRY_KEYS } from './levelWorld.js';
-import { KILLLOCK_SWITCHED_CHASERS } from './killLockBodies.js';
+import { KILLLOCK_BODIES, KILLLOCK_SWITCHED_CHASERS } from './killLockBodies.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -1453,6 +1453,35 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
      */
     bridgedClasses: Object.freeze(['bob', 'bobsoldier', 'jellyfish', 'puncher']),
 
+    /**
+     * ⛓⛓⛓ seedling-fidelity-k2prep D1 — A SCOPE THAT JOINS UNDER ITS SWITCH, declared before the flip.
+     *
+     * `lavarunner` is bridged only while `KILLLOCK_BODIES.lavaRunnerLive` is ON (K2, OFF by default; the user
+     * licensed the flip 2026-10-10 and the wave-10 harvest held it on movers the licence did not list — this
+     * declaration was one). Its class and its exposure rows are DECLARED here, typed before the guard measured
+     * them, and JOIN `bridgedClasses` / the exposed set exactly when the switch is ON (`declaredBridgedClasses`,
+     * `declaredExposedRows`) — so the guard is green with K2 OFF (the BEFORE model, byte for byte) and with K2 ON.
+     * At the flip the harvest folds these into `bridgedClasses` and `exposedAdded` (the wave-8 precedent) and
+     * deletes this row.
+     *
+     * The lavarunner rooms are L71–L75, L77, L78, L80 and L99. ONE committed tape retires `noDamage` and enters
+     * one: `axe-l71-reach-l76` (L71, 327 of its 328 ticks). Measured with K2 ON: byte-identical on tapeRunner
+     * (its five lavarunners never reach the walk).
+     */
+    pendingSwitchScope: Object.freeze({
+        lavarunner: Object.freeze({
+            switch: 'lavaRunnerLive',
+            exposedAdded: Object.freeze([
+                Object.freeze({
+                    name: 'axe-l71-reach-l76', levels: Object.freeze([71]), bobs: 5, ticks: 327,
+                    addedBy: 'Seedling fidelity K2PREP D1 (declared for K2 `lavaRunnerLive`, before the guard ran)',
+                    why: 'the AXE witness walks L71 for 327 ticks past its five lavarunners and leaves for L76; '
+                        + 'replayed with the lavarunners stepped it is unchanged (tapeRunner, K2 ON).',
+                }),
+            ]),
+        }),
+    }),
+
     /** The roster tally the exposure was derived from, at `153f5100b`. */
     rosterAtPrediction: Object.freeze({
         tapes: 133, gatedByFlag: 94, retiresNoDamage: 39, exposed: 5,
@@ -1535,6 +1564,23 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
 });
 
 /**
+ * ⛓ K2PREP D1 — the DECLARED scope as the switches stand: `bridgedClasses` plus every `pendingSwitchScope` class
+ * whose switch is ON. Read at CALL time, like every switch.
+ */
+export function declaredBridgedClasses() {
+    const pending = Object.entries(R8_ENEMY_BRIDGE.pendingSwitchScope)
+        .filter(([, row]) => KILLLOCK_BODIES[row.switch] === true).map(([tag]) => tag);
+    return [...R8_ENEMY_BRIDGE.bridgedClasses, ...pending];
+}
+
+/** ⛓ K2PREP D1 — the declared exposure rows as the switches stand (the pending rows join under their switch). */
+export function declaredExposedRows() {
+    const pending = Object.values(R8_ENEMY_BRIDGE.pendingSwitchScope)
+        .filter((row) => KILLLOCK_BODIES[row.switch] === true).flatMap((row) => row.exposedAdded);
+    return [...R8_ENEMY_BRIDGE.exposedTapes, ...R8_ENEMY_BRIDGE.exposedAdded, ...pending];
+}
+
+/**
  * ⛔ THE EXPOSURE IS RE-DERIVED FROM DISK, NOT TRUSTED.
  *
  * Reads every committed tape and every committed expectation, recomputes
@@ -1563,7 +1609,8 @@ export function assertBridgeExposureIsMeasured(io) {
         const levels = [...io.levelsVisited(name)].filter((l) => bridged.has(l)).sort((a, b) => a - b);
         if (levels.length) found.push({ name, levels });
     }
-    const all = [...R8_ENEMY_BRIDGE.exposedTapes, ...R8_ENEMY_BRIDGE.exposedAdded];
+    // ⛓ K2PREP D1: the pending switch rows join while their switch is ON.
+    const all = declaredExposedRows();
     /**
      * ⛓⛓ THE RETIREMENT IS GUARDED AGAINST THE DIRECTORY, BOTH WAYS (R9 7b).
      *
@@ -1662,8 +1709,7 @@ export function campaignBridgeCoverageFindings(io) {
             + 'bridged bodies, so an empty answer means the declaration or the census '
             + 'was not read — a vacuous pass, not a clean one.');
     }
-    const declared = [...R8_ENEMY_BRIDGE.exposedTapes, ...R8_ENEMY_BRIDGE.exposedAdded]
-        .map((t) => t.name);
+    const declared = declaredExposedRows().map((t) => t.name);
     const missing = touching.filter((n) => !declared.includes(n));
     if (missing.length) {
         throw new Error(`R8_ENEMY_BRIDGE: ${missing.join(', ')} is a campaign segment `
@@ -1695,7 +1741,8 @@ export function assertBridgeRosterMatchesScope(derived) {
             + 'default import would make the disagreement case unconstructable.');
     }
     const got = [...derived()].sort();
-    const want = [...R8_ENEMY_BRIDGE.bridgedClasses].sort();
+    // ⛓ K2PREP D1: the declaration as the switches stand (`pendingSwitchScope` joins under its switch).
+    const want = declaredBridgedClasses().sort();
     if (got.join(',') !== want.join(',')) {
         throw new Error('R8_ENEMY_BRIDGE: the DECLARED scope and the DERIVED bridge '
             + `roster disagree — declared [${want.join(', ')}], derived [${got.join(', ')}]. `
