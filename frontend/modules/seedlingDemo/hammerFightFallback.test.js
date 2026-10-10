@@ -16,6 +16,7 @@
  *   b3b-m2 the prefix replay dropped (the replay started at `prefix.length` on the boot factory) -> the b3b prefix
  *      row (and `check-seedling-rewind-exactness --row=fork-prefix`)
  *   b3c-m1 the equips back on the TAPE index (B3b's `e.t − offset`) -> the b3c dead-frame row
+ *   b3c-m2 the takes keyed on the RUN clock (`takesAt.get(r.ticksCompleted)`) -> the b3c dead-frame TAKE row
  *   m2 the "replace only if it solves" check removed (a failed retry adopted) -> the refusal-stands row
  *   m3 the trigger widened to every refusal -> the trigger row
  */
@@ -129,6 +130,31 @@ describe('hammer-phase B3 — the replay rewind', () => {
         expect(back.log).toEqual(live.log.filter((e) => e.at < 8));
         // the rewind's cut is the same rule on the same clock: what it keeps is exactly what the replay applied
         expect(equips.filter((e) => e.t < back.ticksCompleted).map((e) => e.slot)).toEqual(back.log.map((e) => e.slot));
+    });
+
+    it('⛓⛓ b3c — a TAKE after a DEAD-FRAME span replays on the TAPE index, not the run clock', () => {
+        // The counterpart of the equips row above (fidelity-planning-5's ask): `apItemsTaken.tick` is the view's
+        // `tapeTick`, so a take is applied after the advance whose INDEX is its `at` — whatever the run clock reads
+        // there. Past the 174-frame dead span the two differ (index 5 ↔ clock 180); a replay that moved takes onto
+        // the run clock would never apply this one (or fail it as off the drive).
+        const dead = new Map([[3, 174]]);
+        const stubRun = () => {
+            const r = { ticksCompleted: 0, advances: 0, level: 7, log: [] };
+            r.advance = () => { r.ticksCompleted += 1 + (dead.get(r.advances) ?? 0); r.advances += 1; };
+            r.equipNow = () => {};
+            r.takeApItem = (a) => r.log.push({ ...a, afterAdvances: r.advances, clock: r.ticksCompleted });
+            return r;
+        };
+        const perTick = new Array(10).fill(new Set());
+        const takes = [{ at: 5, level: 7, id: 'ap-1', tag: 'x' }];
+        const back = replayOntoFork(stubRun(), perTick, [], { takes, handover: { at: 0, ticks: 0 } });
+        expect(back.log).toEqual([{ level: 7, id: 'ap-1', tag: 'x', afterAdvances: 6, clock: 180 }]);
+        // a take at a tape index past the drive fails by name (a run-clock `at` such as 180 would land here)
+        expect(() => replayOntoFork(stubRun(), perTick, [], { takes: [{ ...takes[0], at: 180 }], handover: { at: 0, ticks: 0 } }))
+            .toThrow(/outside the ticks it drove/);
+        // and on another level, by name
+        expect(() => replayOntoFork(stubRun(), perTick, [], { takes: [{ ...takes[0], level: 8 }], handover: { at: 0, ticks: 0 } }))
+            .toThrow(/the fork stood on level 7/);
     });
 
     it('⛓⛓ b3b — on a BOOT factory the prefix is replayed too (the factory re-makes the PLAY\'s equips); skipping it is refused by the clock check', async () => {
