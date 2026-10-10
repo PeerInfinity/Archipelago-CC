@@ -14985,6 +14985,57 @@ equal the base's, the residue sweep's 45 rows too).**
 2. **A certificate equal in every field you compare can belong to another run.** The player and the bodies were
    byte-equal; the clock was not, and the clock is a hazard's input.
 
+### Seedling fidelity ENCOUNTERS — the encounter goal from any arrival, and the Witch is a talk
+
+Wave 10 (model coverage), the ENCOUNTERS slice. Its inputs were re-measure 2's two encounter rows: sweep-3's
+largest unserved edge, `Level 032 - Bob Boss` (42 blocks, its arrival `unresolved`), and survey step 140,
+`Level 012 - Witch` → Progressive Sword (`ENCOUNTER-UNMODELLED`). The report is
+`CC/docs/cloud-reports/seedling-fidelity-encounters.md`.
+
+**The eight `unresolved` encounter legs never reach the solver.** They are one Bob Boss leg (351) and seven Witch
+legs (109 … 169), the only two `encounter` rows in the vanilla arm's ledger. Every one stops at the binding:
+`vanillaArmPlaybackMap` refuses every encounter row (`ENCOUNTER_REFUSAL`, flashPanel). Behind that,
+`jsRuntimeSolver.solverGoalFor` maps a location only to `collect-placement`. The solver already owns the goal kind;
+the JS arc has to bind the row and map it to `{kind: 'encounter', at, drop: {item}, then}`.
+
+**From a live arrival the fight already worked; the state did not.** The sweep's L32 arrival (64,112) is the survey's
+staged door (72,120), written in OEL rather than player coordinates. Continuations cut anywhere in a solve (t5 … t800)
+solved, because the executor reads the arena off the run. What failed was a state the survey never stages: the rock's
+tag {32,1} already cleared (after a death mid-fight, or on a later visit). `buildLevelWorld` refused that clear
+(`REFUSED_CLEAR_RESPONSES.arm`), even though `levelRun` already built that exact arena for a death's reboot.
+Admitting the clear for L32's `bossrock` + `thirdboss` rock (`fallenAtBuild`) exposed two more mechanisms:
+
+- `FallRockLarge.update` snaps a player standing inside the fallen rock onto its top, every frame, before the player
+  updates. The L30 door's arrival (80,128) is inside it. The game moves it to y 125 at obs 1, and the model now does
+  too (`rock-snap`).
+- With the Fire held, the executor spun to its 8,000-tick bound waiting for a boss whose ctor removes itself.
+  Unarmed, the rock's frozen arm frame swallowed the burn press. Now the drop is `already`, the arm runs first, and
+  one settle tick is spent when the rock holds the player.
+
+Witnesses recorded on p4f (worst |Δ| 0): `enc-l32-fallen-door` (1,055 t, no arm leg, seven landings) and
+`enc-l32-fire-return` (142 t).
+
+**The Witch is not a fight.** `NPCs/Witch.as` is an NPC. Holding the wand, `update()` swaps the text before `talk()`
+runs, and `doneTalking()` adds a `DarkSword` at the player's int-truncated point. `doneTalking()` runs on the last
+page AND on leaving the circle. The sword is collected by overlap on the next frame (a runtime add, prepended), and
+its ceremony sets `hasDarkSword` and writes out of band behind an out-of-band read. `witch.js` holds the facts, and
+`levelRun`'s placed-talk arm runs them (it threw on opening her before). `execWitchEncounter` is registered as
+`ENCOUNTER_EXECUTORS['Progressive Sword']`. Survey step 140: REFUSED → SOLVED 601 t (local). Witness `enc-l12-witch`
+(602 obs): the game holds the dark sword and the model reproduces the stream.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A frozen witness is blind to time.** The first `enc-l12-witch` stopped at the drop. The talk and the ceremony
+  freeze the player, so x/y were constant through both, and three mutants (the level's text, no add delay, no spawn)
+  all passed tapeRunner. The witness has to MOVE after the thing it times; walking out by the L95 door turned all
+  three red.
+- **"Unresolved" is a binding verdict, not a solver verdict.** The sweep read the Bob Boss as the top unserved
+  solver edge. Its legs never reached the solver: the map refused the row before a goal existed.
+- **A staging is one state of a room.** The survey's encounter row solved, and the room still held three states
+  (rock fallen, Fire held, either at the door) that refused or spun.
+- **A name reserved for a witness is not a witness.** `OUT_OF_BAND_WRITERS.DarkSword.witness` named
+  `r5-witch-darksword` for five waves, and that tape never existed.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
