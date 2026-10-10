@@ -1398,6 +1398,12 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'L12\'s Witch and the walk out: 601 ticks in a puncher room at >= 129 px from `puncher` — '
                 + 'never inside its reach. Recorded on the game with `hits` 0.',
         }),
+        Object.freeze({
+            name: 'enc-l32-live-arrival', levels: Object.freeze([30]), bobs: 1, ticks: 81,
+            addedBy: 'Seedling fidelity ENCOUNTERS2 D2 (the live-arrival witness)',
+            why: 'the live page\'s L32 arrival: the fight, the Fire, the burn, then the pit to L30 at t969 — 81 ticks '
+                + 'there, below the stairs, away from the BobSoldier. Recorded on the game with `hits` 0.',
+        }),
     ]),
 
     /**
