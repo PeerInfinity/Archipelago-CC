@@ -98,7 +98,7 @@ import {
      */
     WAIT_AFTER_PRESS_TICKS, assertWaitCovers, rockBreaksUnder,
     ARROW, arrowLaneForPlacement, arrowLaneRect, arrowTrapFires,
-    bridgedChaserTags, chaserBoxAt, killWindowTicks,
+    bridgedChaserTags, chaserBoxAt, chaserHasSword, killWindowTicks,
     DESTROYING_TILE_TYPES,
     rect, rectsOverlap, TILE_SIZE,
     ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET, contactPricing,
@@ -5199,8 +5199,66 @@ const NO_HELD_PREVIEW = new Set();
  * 3's charge); the probe is wired now so the seam exists and the trace can
  * carry what was seen.
  */
-function dangerNow(run, x, y, except = null) {
-    return withoutSources(dangerAt(run, run.ticksCompleted, playerBoxAt(x, y)), except);
+function dangerNow(run, x, y, except = null, { timedSword = false } = {}) {
+    const swordTick = timedSword && SWORD_GATE_TIMED.enabled ? swordTickAt(run, x, y) : null;
+    return withoutSources(dangerAt(run, run.ticksCompleted, playerBoxAt(x, y),
+        swordTick ? { swordTick } : {}), except);
+}
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY BOBSOLDIER2, D2b — **THE WALK'S DECISION GATE TIMES A BOBSOLDIER'S BLADE.**
+ *
+ * The gate (`refuseDanger` before a walk plans, and the walk row's `saw`) asks the WAIT question at horizon 0,
+ * and `chaserDanger`'s WAIT arm prices every body UNTIMED: a sworded body is its 8x8 box grown by `threatPad` 16,
+ * "a reach without a clock". ⛔ A BobSoldier's blade HAS a clock — `run.chasers` carries its spin state and
+ * `chaserForecastNow` steps it exactly (fidelity-bobsoldier D3, bit-exact on the game). MEASURED on survey step 50
+ * (L30 Torchpickup): with the kill arm's walk repaired (`KILL_STANCE_AS_FORECAST`) the body dies at t167, and the
+ * very next walk's gate refused at (87.86,58.05) — *"chaser:bobsoldier@48,80 (inside leash 80 (d=15.8) … pad 16)"*
+ * — against the CORPSE, whose blade the stance's own forecast had already shown clear of that box for the 21
+ * dwell ticks after the kill.
+ *
+ * ⇒ with the switch ON, the gate a WALK opens with hands `chaserDanger` the chaser forecast stepped ONE tick
+ * against the player standing at the box (`swordTickAt`): exactly the walk's first transit sample (`previewWalk`'s
+ * pairing — post-step bodies, pre-move player), so the gate and the probe that follows it ask one question. A
+ * sworded body is priced by that tick's lines and its bare body; every other body keeps the pad. ⛔ The gate before
+ * an EXECUTOR (`refuseDanger` after a stance walk) and the bait stance scan keep the pad: what follows them is a
+ * multi-tick verb, not a probed walk, and one timed tick says nothing about tick two.
+ *
+ * ⚠ OFF BY DEFAULT (byte-identical): ON, it moves the danger lists in the walk rows of any trace that stands
+ * near a BobSoldier. `SEEDLING_SWORD_GATE_TIMED=1` turns it ON for a node measurement; `withSwordGateTimed` for a
+ * test. The browser has no `process` and takes the default.
+ */
+export const SWORD_GATE_TIMED = { enabled: globalThis.process?.env?.SEEDLING_SWORD_GATE_TIMED === '1' };
+
+/** Run `fn` with `SWORD_GATE_TIMED` set to `enabled`, restoring the previous value. */
+export function withSwordGateTimed(enabled, fn) {
+    return withSwitch(SWORD_GATE_TIMED, enabled, fn);
+}
+
+/**
+ * One chaser-forecast tick against a player standing at (x, y) — the bodies `previewWalk`'s first sample would
+ * carry. `null` when the run steps no sworded body (the gate is then the code it was) or has no forecast.
+ */
+export function swordTickAt(run, x, y) {
+    if (!(run.entities('chasers') ?? []).some((c) => chaserHasSword(c.tag))) return null;
+    const fc = run.chaserForecast?.() ?? null;
+    if (!fc) return null;
+    return fc.step({ ...run.state, x, y }, { slashing: run.progress('slashInfo')?.slashing === true });
+}
+
+/** A `{enabled}` switch set for the duration of `fn` (sync or async), restored after — `withHammerEscape`'s shape. */
+function withSwitch(sw, enabled, fn) {
+    const was = sw.enabled;
+    sw.enabled = enabled === true;
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(() => { sw.enabled = was; });
+        sw.enabled = was;
+        return out;
+    } catch (e) {
+        sw.enabled = was;
+        throw e;
+    }
 }
 
 /**
@@ -13517,6 +13575,36 @@ const KILL_BY_CEILING_BOUND = ARROW_KILL_FLOOR * 3 + HOLD_SLACK;
  * candidate stances are SCORED and the best is taken, with the runners-up
  * carried so the trace can answer "why there".
  */
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY BOBSOLDIER2, D2a — **THE STANCE IS WALKED AS IT WAS FORECAST.**
+ *
+ * `deriveKillByChaser` prices a stance by previewing the walk to it — `planWaypoints` + `previewWalk` under the
+ * one strike policy, NO dash plan — and its standing tail, on one forecast; the dwell's bound is that preview's
+ * `deathTick − arrival` plus `HOLD_SLACK`. The ladder then walked to the stance with `walkTo`, and `walkTo` asks
+ * `planSwordDash` for every corridor: a DIFFERENT walk, with dash presses the preview never pressed.
+ *
+ * MEASURED on survey step 50 (L30 Torchpickup, `bobsoldier@48,80`; seedling-fidelity-bobsoldier2 § D1): the
+ * preview arrives at the stance (88,56) in 145 ticks with the body on 2 hits and kills it at t167 (bound 53). The
+ * drive dashed (≈2.2 px/tick against ≈1.2), arrived at t92 with the body on ONE hit, and the 53-tick bound ran out
+ * at t145 with the body alive on 2 hits at (78.95,72.84) — and the GAME agrees, body bit-exact at all 146 samples
+ * (`probe-seedling-bobsoldier-mobiles`, worst |Δ| 0). Neither the model nor the forecast is wrong about the game;
+ * the executor walked a walk nobody forecast.
+ *
+ * ⇒ with the switch ON, the kill arm's stance walk is `walkTo(…, {undashed: true})`: no `planSwordDash`, so the
+ * strike policy is the preview's own and the drive IS the preview (step 50: arrival t145, kill t167, both sides).
+ * ⚠ OFF BY DEFAULT (byte-identical): ON, every committed solve whose ladder reaches the chaser arm walks its
+ * stance without the dash. `SEEDLING_KILL_STANCE_AS_FORECAST=1` turns it ON for a node measurement;
+ * `withKillStanceAsForecast` for a test. The browser has no `process` and takes the default.
+ */
+export const KILL_STANCE_AS_FORECAST = {
+    enabled: globalThis.process?.env?.SEEDLING_KILL_STANCE_AS_FORECAST === '1',
+};
+
+/** Run `fn` with `KILL_STANCE_AS_FORECAST` set to `enabled`, restoring the previous value. */
+export function withKillStanceAsForecast(enabled, fn) {
+    return withSwitch(KILL_STANCE_AS_FORECAST, enabled, fn);
+}
+
 export function deriveKillByChaser(run, body, contacts,
     /**
      * ⛓ R9 slice 12i — `dashMode` rides down here for the same reason ⚖ 46's
@@ -14714,7 +14802,8 @@ function solveSegmentUnder({
     };
     const saw = () => {
         const s = run.state;
-        const d = dangerNow(run, s.x, s.y);
+        // ⛓ BOBSOLDIER2 D2b: the walk row's reading is the walk gate's (`SWORD_GATE_TIMED`).
+        const d = dangerNow(run, s.x, s.y, null, { timedSword: true });
         recordDanger('sense', s.x, s.y, d);
         return {
             level: run.level, x: s.x, y: s.y, vx: s.vx, vy: s.vy,
@@ -14836,8 +14925,8 @@ function solveSegmentUnder({
      * Dodge is slice 3's policy; a policy that walked on past a named
      * danger would be worse than one that stops and says why.
      */
-    const refuseDanger = (x, y, goal, what, except = null) => {
-        const d = dangerNow(run, x, y, except);
+    const refuseDanger = (x, y, goal, what, except = null, { timedSword = false } = {}) => {
+        const d = dangerNow(run, x, y, except, { timedSword });
         // ⛓ Recorded whichever way it answers: a gate that CLEARED is as much
         // of the walk's record as one that refused, and a layer that only
         // showed refusals would draw a bot that was never told it was safe.
@@ -16537,6 +16626,8 @@ function solveSegmentUnder({
                     if (hunt.stance.x !== run.state.x || hunt.stance.y !== run.state.y) {
                         walkTo(goal, hunt.stance, {
                             what: `${what} -> kill (${hunted.id}) stance`,
+                            // ⛓ BOBSOLDIER2 D2a: the walk `deriveKillByChaser` previewed (no dash plan).
+                            ...(KILL_STANCE_AS_FORECAST.enabled ? { undashed: true } : {}),
                         });
                     }
                     /**
@@ -16688,6 +16779,11 @@ function solveSegmentUnder({
          * `approach: 'axis-aligned'` — `skirt`'s, whose lane admits one x.
          */
         axisAligned: axisAlignedAsked = false,
+        /**
+         * ⛓ BOBSOLDIER2 D2a — a walk the caller has already PREVIEWED without a dash plan (the kill arm's stance,
+         * `KILL_STANCE_AS_FORECAST`): `planSwordDash` is not asked, so the drive is the walk that was priced.
+         */
+        undashed = false,
     }) => {
         /**
          * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **A SKIRTED LANE IS CROSSED TWICE,
@@ -16723,7 +16819,8 @@ function solveSegmentUnder({
             const except = (dangerExcept || leaving)
                 ? new Set([...(dangerExcept ?? []), ...(leaving ?? [])])
                 : null;
-            refuseDanger(run.state.x, run.state.y, goal, what, except);
+            // ⛓ BOBSOLDIER2 D2b: a WALK's gate — the transit probe follows it (`SWORD_GATE_TIMED`).
+            refuseDanger(run.state.x, run.state.y, goal, what, except, { timedSword: true });
             let wps;
             let fine = false;
             try {
@@ -17046,7 +17143,7 @@ function solveSegmentUnder({
              * walk row's `verb` and `path`. Measured: the first cut did
              * exactly that and every campaign trace lost its waypoint list.
              */
-            const dash = (dashMode === 'none' || axisAligned)
+            const dash = (dashMode === 'none' || axisAligned || undashed)
                 ? null
                 : planSwordDash(run, wps, { tolerance, dashMode,
                     certify: (samples) => probeSamples(samples, except) });
