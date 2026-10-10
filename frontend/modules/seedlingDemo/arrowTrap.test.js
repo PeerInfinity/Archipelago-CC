@@ -15,6 +15,7 @@ import {
     ENEMY_DAMAGE_DEFAULTS, KILL_ARM_POLICY, MOBILE_DEATH_FADE, createEnemyDamage, enemyHit,
 } from './enemyDamage.js';
 import { PUZZLEMENT_HAZARDS } from './combat.js';
+import { withKillLockBodies } from './killLockBodies.js';
 
 /** L5's four traps, as the level places them. */
 const L5_TRAPS = ARROW_TRAP_CENSUS[5].map((p, i) => {
@@ -250,9 +251,18 @@ describe('⛔ the damage, and it is ONE (trap 143)', () => {
         expect(KILL_ARM_POLICY.Bob.why).toMatch(/enemyHit/);
         // ⛔ and the control that keeps this row honest: a chaser of the same
         // depth that nothing has driven a press against.
-        // ⛓ KILLLOCK K1 (ON since the wave-8 harvest) made `Jellyfish` modelled; the control is `LavaRunner` (K2 OFF).
-        expect(KILL_ARM_POLICY.LavaRunner.policy).toBe('refused');
-        expect(() => createEnemyDamage('LavaRunner')).toThrow(/is `refused`/);
+        // ⛓ KILLLOCK K1 (ON since the wave-8 harvest) made `Jellyfish` modelled; the control was `LavaRunner` (K2 OFF).
+        // ⛓ K2PREP D3: K2 makes `LavaRunner` modelled too, so the control is `IceTrap` — `canHit = false` in the GAME
+        // (`IceTrap.as`), so no press, arrow or bridge can ever land on one: it is refused by the game itself, not
+        // by a slice still to come. `LavaRunner` is asked both ways, under its switch.
+        expect(KILL_ARM_POLICY.IceTrap.policy).toBe('refused');
+        expect(KILL_ARM_POLICY.IceTrap.why).toMatch(/canHit = false/);
+        expect(() => createEnemyDamage('IceTrap')).toThrow(/is `refused`/);
+        withKillLockBodies({ lavaRunnerLive: false }, () => {
+            expect(KILL_ARM_POLICY.LavaRunner.policy).toBe('refused');
+            expect(() => createEnemyDamage('LavaRunner')).toThrow(/is `refused`/);
+        });
+        withKillLockBodies({ lavaRunnerLive: true }, () => expect(KILL_ARM_POLICY.LavaRunner.policy).toBe('modelled'));
     });
 
     it('⛓⛓ THREE arrows kill a default `Enemy`, and the i-frames floor it at 60 ticks', () => {
