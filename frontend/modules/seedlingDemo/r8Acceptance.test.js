@@ -8,6 +8,7 @@ import {
     R8_NORMALIZE_LIVE_BATCH, assertBatchSitesCoverSource, assertPlannerLivePartition,
     assertBatchIsModelSide,
     R8_ENEMY_BRIDGE, assertBridgeExposureIsMeasured, assertBridgeRosterMatchesScope,
+    declaredBridgedClasses, declaredExposedRows,
     assertSteppedContactPartition,
     R8_STRATEGY_EXECUTORS, assertShovePostConditionKind,
     assertExecutorParametersAreDerived, assertEscalationIsOrdered,
@@ -23,6 +24,7 @@ import {
     contactPricing,
 } from './combat.js';
 import { MODELLED_ENEMY_CLASSES } from './spinner.js';
+import { withKillLockBodies } from './killLockBodies.js';
 import { atlasLevelSource } from './levelSource.js';
 import {
     LIVE_GEOMETRY_KEYS, ROLES, assertNormalizedLiveOpts, isNormalizedLiveOpts,
@@ -252,7 +254,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
      * from the tapes and their own recorded streams on every run.
      */
     it('re-derives the exposed set from the committed roster and its recorded streams', () => {
-        const out = assertBridgeExposureIsMeasured(realExposureIo());
+        // ⛓ K2PREP D1: the pins below are the K2-OFF set, asked explicitly (the K2-ON set is the next row).
+        const out = withKillLockBodies({ lavaRunnerLive: false }, () => assertBridgeExposureIsMeasured(realExposureIo()));
         // ⛓ FIVE PREDICTED + ONE AUTHORED. The prediction's own list is
         // asserted UNCHANGED beside the union, because a prediction edited
         // after its measurement is not a prediction.
@@ -472,6 +475,32 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
     });
 
     /**
+     * ⛓⛓⛓ K2PREP D1 — WITH K2 `lavaRunnerLive` ON, the lavarunner rooms join the scope (L71–L75, L77, L78, L80,
+     * L99) and the guard re-derives the set: ONE more tape, `axe-l71-reach-l76` (L71), declared in
+     * `pendingSwitchScope` before this ran. Every other tape that enters a lavarunner room declares `noDamage`.
+     */
+    it('⛓ K2 ON: the lavarunner rooms join, and exactly the declared `axe-l71-reach-l76` is newly exposed', () => {
+        const off = withKillLockBodies({ lavaRunnerLive: false }, () => assertBridgeExposureIsMeasured(realExposureIo()));
+        const on = withKillLockBodies({ lavaRunnerLive: true }, () => assertBridgeExposureIsMeasured(realExposureIo()));
+        expect(on.exposed).toBe(off.exposed + 1);
+        expect(on.tapes.filter((n) => !off.tapes.includes(n))).toEqual(['axe-l71-reach-l76']);
+        expect(R8_ENEMY_BRIDGE.pendingSwitchScope.lavarunner.exposedAdded.map((t) => [t.name, [...t.levels]]))
+            .toEqual([['axe-l71-reach-l76', [71]]]);
+        // the declaration follows the switch, both ways
+        expect(withKillLockBodies({ lavaRunnerLive: false }, () => declaredExposedRows().map((t) => t.name)))
+            .not.toContain('axe-l71-reach-l76');
+        expect(withKillLockBodies({ lavaRunnerLive: true }, () => declaredExposedRows().map((t) => t.name)))
+            .toContain('axe-l71-reach-l76');
+        const lavaLevels = withKillLockBodies({ lavaRunnerLive: true }, () => realExposureIo().bridgedLevels());
+        // ⛔ MUTATION: the lavarunner rooms join but the pending row does not (the K2-OFF declaration) — the guard
+        // names the tape.
+        expect(() => withKillLockBodies({ lavaRunnerLive: false }, () => assertBridgeExposureIsMeasured(
+            { ...realExposureIo(), bridgedLevels: () => lavaLevels }))).toThrow(/Undeclared and exposed: axe-l71-reach-l76/);
+        expect([71, 72, 73, 74, 75, 77, 78, 80, 99].every((l) => lavaLevels.has(l))).toBe(true);
+        expect(withKillLockBodies({ lavaRunnerLive: false }, () => realExposureIo().bridgedLevels()).has(71)).toBe(false);
+    });
+
+    /**
      * ⛔ THE NON-VACUITY IS WITNESSED, not assumed: a comparison that has
      * never seen a disagreement might be comparing nothing (slice 0 track C's
      * own law). Two synthetic rosters, one exposed tape too many and one too
@@ -636,7 +665,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'wallflyer-kill-flight': { tape: {}, levels: [22] },
             'wallflyer-shield-bump': { tape: {}, levels: [22] },
         });
-        expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
+        // ⛓ K2PREP D1: the synthetic roster mirrors the K2-OFF declaration, so it is asked with K2 OFF.
+        expect(() => withKillLockBodies({ lavaRunnerLive: false }, () => assertBridgeExposureIsMeasured(io)))
+            .toThrow(/right name with wrong rooms/);
     });
 
     /**
@@ -669,7 +700,11 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
     it('the DECLARED scope and the DERIVED roster are the same claim', () => {
         // ⛓ fidelity-bobsoldier: the BobSoldier joins (W4 `bobSoldierLive`, ON by default).
         // ⛓ KILLLOCK K1: the jellyfish joins (`jellyfishLive`, ON since the wave-8 harvest).
-        expect(assertBridgeRosterMatchesScope(bridgedChaserTags)).toEqual({ classes: ['bob', 'bobsoldier', 'jellyfish', 'puncher'] });
+        // ⛓ K2PREP D1: and the lavarunner under K2 — the declaration follows the switch (`pendingSwitchScope`).
+        expect(withKillLockBodies({ lavaRunnerLive: false }, () => assertBridgeRosterMatchesScope(bridgedChaserTags)))
+            .toEqual({ classes: ['bob', 'bobsoldier', 'jellyfish', 'puncher'] });
+        expect(withKillLockBodies({ lavaRunnerLive: true }, () => assertBridgeRosterMatchesScope(bridgedChaserTags)))
+            .toEqual({ classes: ['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher'] });
     });
 
     it('⛔ MUTATION: a roster that drifts from the declaration reds by name', () => {
@@ -692,9 +727,16 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
         expect(MODELLED_ENEMY_CLASSES.Jellyfish).toBeUndefined();
         expect(MODELLED_ENEMY_CLASSES.LavaRunner).toBeUndefined();
         // ⛓ KILLLOCK K1 (ON since the wave-8 harvest): `jellyfish` is bridged by its switch, so the control is
-        // `lavarunner` — transcribed, no roster row, its switch K2 OFF.
-        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
-        expect(bridgedChaserTags()).not.toContain('lavarunner');
+        // `lavarunner` — transcribed, no roster row — with its switch K2 asked OFF.
+        // ⛓ K2PREP D3: once K2 is ON every transcribed chaser is bridged, so the control is the SWITCH itself, asked
+        // both ways: the roster row a switch-bridged chaser lacks is the switch, and turning it off un-bridges it.
+        withKillLockBodies({ lavaRunnerLive: false }, () => {
+            expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
+            expect(bridgedChaserTags()).not.toContain('lavarunner');
+        });
+        withKillLockBodies({ lavaRunnerLive: true }, () => {
+            expect(bridgedChaserTags()).toContain('lavarunner');
+        });
         expect(contactPricing('lavarunner').kind).toBe('mover');
     });
 
@@ -718,8 +760,17 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
             // (`stepIceTurretsNow`'s contact arm), so it joins — and no family is refused.
             // ⛓ Seedling fidelity LADDER2: the placed grenade is stepped (`stepPlacedGrenadesNow`,
             // its blast billed) and has no contact, so it joins with that pricer.
-            bridged: [...bridgedChaserTags(), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+            // ⛓ K2PREP D1: asked with K2 OFF here; the K2-ON roster is asked below (a switch-bridged tag skips
+            // the partition — `KILLLOCK_SWITCHED_CHASERS`).
+            bridged: [...withKillLockBodies({ lavaRunnerLive: false }, () => bridgedChaserTags()), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
         })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'jellyfish', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+            refused: [] });
+        expect(assertSteppedContactPartition({
+            families: CONTACT_STEPPED_FAMILIES,
+            pricedBy: CONTACT_STEPPED_PRICED_BY,
+            why: CONTACT_STEPPED_WHY,
+            bridged: [...withKillLockBodies({ lavaRunnerLive: true }, () => bridgedChaserTags()), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+        })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
             refused: [] });
     });
 
@@ -798,7 +849,8 @@ function realExposureIo() {
          * widens this automatically, which is the point.
          */
         bridgedLevels: () => {
-            const tags = R8_ENEMY_BRIDGE.bridgedClasses;
+            // ⛓ K2PREP D1: the declaration as the switches stand (`pendingSwitchScope` joins under its switch).
+            const tags = declaredBridgedClasses();
             const out = new Set();
             for (let l = 0; l < 130; l += 1) {
                 let rec;
