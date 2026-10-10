@@ -141,6 +141,11 @@ export { PLACED_GRENADE, blastReaches, createPlacedGrenade, stepPlacedGrenade } 
 export { DESTROYING_TILE_TYPES, newPushable } from './pushables.js';
 // shieldBossFight.js — solverBot · seedling 4
 export { SHIELD_BOSS, shieldBossBandRect, shieldBossBodyRect, shieldBossDeathSchedule } from './shieldBossFight.js';
+// ⛓⛓⛓ seedling-fidelity-wand D2: the `wand` verb's own transcriptions — the switch, the window, the spawn, the
+// shot's step (the preview) and the MagicalLock's open offset.
+export { WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb } from './wandVerb.js';
+export { createWandShot, stepWandShot, wandShotRect } from './wandShot.js';
+export { MAGICAL_LOCK_OPEN_TICK_OFFSET } from './magicalLock.js';
 // spinner.js — botDriverV2, dangerMap, solverBot · seedling 5
 export {
     enemiesUnseenByBlockSweep, hammerHitsPlayer, MODELLED_ENEMY_CLASSES, SPINNER, spinnerRect,
