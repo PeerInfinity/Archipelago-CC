@@ -3813,6 +3813,95 @@ export function assertNormalizedLiveOpts(o, what) {
     return o;
 }
 
+/**
+ * `nearestWalkableTileWithTie`'s one scan, over the two lists it is handed — the world's own, or a
+ * `withTileWrites` overlay's (whose tiles carry the written `t`). See that method for the tie-break and the
+ * bridge's place at the head of the list.
+ */
+function nearestTileScan(tiles, walkableTiles, x, y, { beforeTypeFlip = false, openBridges = null } = {}) {
+    let best = null;
+    let bestDist = Infinity;
+    let tie = null;
+    const scan = (tile) => {
+        const dx = tile.x - x;
+        const dy = tile.y - y;
+        const d = dx * dx + dy * dy;
+        if (d < bestDist) {
+            bestDist = d;
+            best = tile;
+            tie = null;
+        } else if (d === bestDist && best && tile.t !== best.t && !tie) {
+            tie = tile;
+        }
+    };
+    // ── the list, in the order `nearestToPoint` walks it ─────────
+    if (openBridges && openBridges.size > 0 && !beforeTypeFlip) {
+        for (const tile of tiles) {
+            if (tile.t === BRIDGE_STATE && openBridges.has(`${tile.tx},${tile.ty}`)) {
+                scan(tile);
+            }
+        }
+    }
+    const list = beforeTypeFlip ? tiles : walkableTiles;
+    for (let i = list.length - 1; i >= 0; i -= 1) scan(list[i]);
+    return { tile: best, tie };
+}
+
+/**
+ * ⛓⛓⛓ seedling-fidelity-bulb D2 — A WORLD WHOSE TILES SOMETHING HAS WRITTEN THIS VISIT.
+ *
+ * `Bulb.endAnim`'s "drop" arm is `collidePoint("Tile", x, y).t = 17`: it writes the tile's `t` and NOTHING ELSE. The
+ * entity's `type` was fixed by its own first `update()` (`Tile.as:117-122`, then `active = false`), so collision is
+ * unchanged — but every reader of `t` sees lava from that frame on: `Player.getState`/`checkDrowning` (the drown and
+ * the lava hit), `getStatePos`, every `Enemy`'s terrain switch, a `LavaRunner`'s speed. A new `Game` rebuilds the
+ * tile from the `.oel`, so the write lasts the VISIT.
+ *
+ * The overlay is a prototype child of the built world (every other query is the world's own) with the tile lists
+ * and the four floor-policy getters re-read from the WRITTEN tiles, and `nearestWalkableTile[WithTie]` scanning
+ * them in the same list order (`nearestTileScan` — one implementation). `writes` is `Map<"tx,ty", t>`; an empty
+ * or absent map returns `world` itself, so a run with no write holds exactly the object it held before.
+ *
+ * ⛔ Only a tile whose entity is still typed `"Tile"` can be written — `collidePoint("Tile", …)` finds no other —
+ * so a write to a wall/solid cell is refused by name rather than silently changing a tile the game cannot reach.
+ */
+export function withTileWrites(world, writes) {
+    if (!writes || writes.size === 0) return world;
+    const byKey = new Map(world.tiles.map((t) => [`${t.tx},${t.ty}`, t]));
+    for (const [k, t] of writes) {
+        const tile = byKey.get(k);
+        if (!tile || tile.entityType !== 'Tile') {
+            fail(`withTileWrites: level ${world.level} tile (${k}) is ${tile ? `typed "${tile.entityType}"` : 'not built'}; `
+                + '`collidePoint("Tile", …)` cannot reach it, so the game writes nothing there');
+        }
+        if (!MODELLED_TILE_SET.has(t)) fail(`withTileWrites: type ${t} is not a modelled tile type`);
+    }
+    const swap = (tile) => {
+        const k = `${tile.tx},${tile.ty}`;
+        return writes.has(k) ? Object.freeze({ ...tile, t: writes.get(k), name: TILE_TYPE_NAMES[writes.get(k)] }) : tile;
+    };
+    const tiles = world.tiles.map(swap);
+    const walkableTiles = world.walkableTiles.map(swap);
+    const o = Object.create(world);
+    Object.defineProperties(o, {
+        tiles: { value: tiles, enumerable: true },
+        walkableTiles: { value: walkableTiles, enumerable: true },
+        tileWrites: { value: new Map(writes), enumerable: true },
+        pitTiles: { get: () => walkableTiles.filter((t) => t.t === PIT_STATE), enumerable: true },
+        lethalTerrainTiles: {
+            get: () => walkableTiles.filter((t) => t.t === WATER_STATE || t.t === LAVA_STATE), enumerable: true,
+        },
+        waterfallTiles: { get: () => walkableTiles.filter((t) => t.t === WATERFALL_STATE), enumerable: true },
+        bridgeTiles: { get: () => tiles.filter((t) => t.t === BRIDGE_STATE), enumerable: true },
+        nearestWalkableTileWithTie: {
+            value: (x, y, opts = {}) => nearestTileScan(tiles, walkableTiles, x, y, opts), enumerable: true,
+        },
+        nearestWalkableTile: {
+            value: (x, y, opts = {}) => nearestTileScan(tiles, walkableTiles, x, y, opts).tile, enumerable: true,
+        },
+    });
+    return o;
+}
+
 export function buildLevelWorld(levelRecord, {
     roles = PRE_R5_ROLES, cleared = null, inventory = null, nextLevelRecord = null,
 } = {}) {
@@ -6241,33 +6330,8 @@ export function buildLevelWorld(levelRecord, {
          * candidates lead somewhere different — as a finding in the stream
          * rather than as an abort.
          */
-        nearestWalkableTileWithTie(x, y, { beforeTypeFlip = false, openBridges = null } = {}) {
-            let best = null;
-            let bestDist = Infinity;
-            let tie = null;
-            const scan = (tile) => {
-                const dx = tile.x - x;
-                const dy = tile.y - y;
-                const d = dx * dx + dy * dy;
-                if (d < bestDist) {
-                    bestDist = d;
-                    best = tile;
-                    tie = null;
-                } else if (d === bestDist && best && tile.t !== best.t && !tie) {
-                    tie = tile;
-                }
-            };
-            // ── the list, in the order `nearestToPoint` walks it ─────────
-            if (openBridges && openBridges.size > 0 && !beforeTypeFlip) {
-                for (const tile of tiles) {
-                    if (tile.t === BRIDGE_STATE && openBridges.has(`${tile.tx},${tile.ty}`)) {
-                        scan(tile);
-                    }
-                }
-            }
-            const list = beforeTypeFlip ? tiles : walkableTiles;
-            for (let i = list.length - 1; i >= 0; i -= 1) scan(list[i]);
-            return { tile: best, tie };
+        nearestWalkableTileWithTie(x, y, opts = {}) {
+            return nearestTileScan(tiles, walkableTiles, x, y, opts);
         },
 
         /**

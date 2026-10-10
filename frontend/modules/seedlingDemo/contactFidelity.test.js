@@ -61,7 +61,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         expect(CONTACT_FIDELITY).toEqual({ collideLinePointsExact: true, wallFlyerSwordHits: true, drillLive: true,
             bobSoldierLive: true, wallFlyerKill: true, wallFlyerShieldBump: true, darkTrapLight: false,
             // ⛓ fidelity DARKTRAP2 D2: the spear's `spearing` window and the press a pit fall burns, OFF (the user flips).
-            spearingWindow: false, fallBurnsPress: false });
+            spearingWindow: false, fallBurnsPress: false,
+            // ⛓ fidelity BULB: W8 `bulbLive` ships OFF (its movers are in the slice's report; a flip is the user's).
+            bulbLive: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

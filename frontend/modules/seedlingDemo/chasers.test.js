@@ -280,6 +280,22 @@ describe('the placements come from the census, not from here', () => {
 describe('R8 slice 3: `Spritemap.update` as the loop it is', () => {
     it('⛓ the LOOP and the closed form agree, for every transcribed class', () => {
         for (const [tag, c] of Object.entries(CHASERS)) {
+            // ⛓ fidelity-bulb: a DROP death is two anims ("drop" then "die") — each loop agrees with its closed form
+            // (`fidelityBulb.test.js`: 27 + 27), and `deathTicks` is their sum.
+            if (c.dropDeath) {
+                for (const a of [c.dropDeath.drop, c.dropDeath.die]) {
+                    const anim = createSpriteAnim(a.frames, a.rate);
+                    let n = 0;
+                    let fired = false;
+                    while (!fired && n < 500) { fired = stepSpriteAnim(anim); n += 1; }
+                    expect(fired).toBe(true);
+                    expect(n).toBe(animTicks(a.frames, a.rate));
+                }
+                expect(deathTicks(tag)).toBe(animTicks(c.dropDeath.drop.frames, c.dropDeath.drop.rate)
+                    + animTicks(c.dropDeath.die.frames, c.dropDeath.die.rate));
+                expect(createDieAnim(tag)).toBeNull();
+                continue;
+            }
             // ⛓ fidelity-bobsoldier: a class with NO die animation (`Enemy.startDeath` sets `destroy` at the blow)
             // has no loop to agree with — no anim, and zero ticks to `destroy`.
             if (c.dieAnim === null) {

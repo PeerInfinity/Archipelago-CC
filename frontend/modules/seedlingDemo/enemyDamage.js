@@ -477,11 +477,21 @@ export const KILL_ARM_POLICY = Object.freeze({
                 : 'D7; the island stances are a slice-7 problem';
         },
     }),
+    /**
+     * ⛓ fidelity-bulb W8 — `modelled` while `contactFidelity.bulbLive` is ON: the kill is staged as the game runs it
+     * (`bulb.js`: the armed update, "drop", the lava write, "die", the removal) and the kill arms forecast the lava
+     * tile and refuse a kill whose tile the rest of the visit needs. OFF: the refusal, verbatim.
+     */
     Bulb: Object.freeze({
-        policy: 'refused',
-        why: '⛔ ITS DEATH WRITES A TILE. `Bulb.endAnim` turns the cell it dies on into '
-            + 'LAVA for the visit (§5\'s standing rule: never kill one on a cell the '
-            + 'route re-crosses), so the arm owes a terrain write as well as a count.',
+        get policy() { return CONTACT_FIDELITY.bulbLive ? 'modelled' : 'refused'; },
+        get why() {
+            return CONTACT_FIDELITY.bulbLive
+                ? '⛓ fidelity-bulb: a bridged chaser (`CHASERS.bulb`, `hitsMax` 1) whose death writes LAVA under its '
+                    + 'centre for the visit — staged by `bulb.js`, the tile forecast and placed by the kill arms'
+                : '⛔ ITS DEATH WRITES A TILE. `Bulb.endAnim` turns the cell it dies on into '
+                    + 'LAVA for the visit (§5\'s standing rule: never kill one on a cell the '
+                    + 'route re-crosses), so the arm owes a terrain write as well as a count.';
+        },
     }),
     Squishle: Object.freeze({ policy: 'refused', why: 'off every R5 route' }),
     /**
@@ -734,6 +744,19 @@ export const CORPSE_COUNTING = Object.freeze({
      * on the game (`f4-l8-sandtraps`): the arrow kill on t230, "die" from that
      * tick, gone on t248, the 19th update counting the killing tick's.
      */
+    /**
+     * ⛓⛓ fidelity-bulb: A SIXTH SHAPE, `drop+anim`. `Bulb.startDeath` is EMPTY: the blow sets nothing, the next
+     * update is a living one that ends in `play("drop")`, "drop"'s `endAnim` writes lava and plays "die", and "die"'s
+     * `endAnim` is `FP.world.remove(this)` — no `destroy`, no fade. `chasers.deathTicks('bulb')` is the two anims'
+     * sum; the armed update before them is the caller's (it depends on who struck: an arrow updates before the body).
+     */
+    Bulb: Object.freeze({
+        shape: 'drop+anim', removesBody: true, chaserTag: 'bulb',
+        why: '`startDeath` is `{ }`; `update()`\'s last statement plays "drop" once `hits >= hitsMax`; `endAnim` turns '
+            + '"drop" into "die" (writing lava under the centre) and "die" into `FP.world.remove`. `classCount(Bulb)` '
+            + 'drops at that removal.',
+        src: 'Enemies/Bulb.as:35-86',
+    }),
     SandTrap: Object.freeze({
         shape: 'anim', removesBody: true, chaserTag: null,
         why: '`startDeath` is `play("die"); dieEffects(t)` with no `destroy`, and `endAnim`\'s '
@@ -777,6 +800,9 @@ export function removalTicksAfterHit(as3, deathAnimTicks = null) {
     }
     // ⛓ F4: an `anim` row has no fade — its `endAnim` removes the body itself.
     if (row.shape === 'anim') return deathAnimTicks;
+    // ⛓ fidelity-bulb: neither has a `drop+anim` row — plus the ARMED update between the blow and "drop" (the latest
+    // it can start: a press lands in `Player.update`, after the body's own).
+    if (row.shape === 'drop+anim') return 1 + deathAnimTicks;
     return deathAnimTicks + MOBILE_DEATH_FADE.ticks;
 }
 
@@ -831,6 +857,13 @@ export const KILL_SIDE_WRITES = Object.freeze({
         why: '⛓ U7-swim: NO `removed()` anywhere in its chain — `Puncher`, `Enemy` and '
             + '`Mobile` declare none, and `Entity.removed()` is empty — and no '
             + '`setPersistence` in the class. A puncher kill writes nothing.',
+    }),
+    // ⛓ fidelity-bulb: no `removed()` in `Bulb`/`Bob`… — `Bob.removed()` is the empty override — and no
+    // `setPersistence`. Its one write is to the FLOOR (`endAnim`'s lava, `CHASERS.bulb.dropDeath`), not the ledger.
+    Bulb: Object.freeze({
+        writes: 'none',
+        why: '⛓ fidelity-bulb: inherits `Bob.removed()`\'s empty override; no `setPersistence` in the class. ⛔ Its kill '
+            + 'DOES write — a Tile\'s `t`, to lava, for the visit (`bulb.js`) — which is terrain, not persistence.',
     }),
     WallFlyer: Object.freeze({
         writes: 'none',

@@ -126,6 +126,25 @@
 //   → `CONTACT_FIDELITY.wallFlyerShieldBump`
 
 /**
+ * W8 — THE BULB IS A LIVE BODY, AND ITS DEATH WRITES LAVA (slice `seedling-fidelity-bulb`; `bulb.js`,
+ * `Enemies/Bulb.as`).
+ *
+ *     Bulb.as:35-61   update(): "drop"/"die" → slide to the tile centre, mobileUpdate(); else super.update() (Bob's
+ *                     chase); then `if (hits >= hitsMax && anim != "drop"/"die") play("drop")`
+ *     Bulb.as:63-66   startDeath(): { }                          — the blow sets nothing
+ *     Bulb.as:68-86   endAnim(): "drop" → play("die"); collidePoint("Tile", x, y).t = 17;  "die" → FP.world.remove
+ *
+ * Survey step 160 (L74, the Darkshield) refused on `bulb@48,112` standing on the one-tile floor between the lava
+ * pools, as a static `"Enemy"` body (unbridged, `contactPricing` a `mover`), and `KILL_ARM_POLICY.Bulb` refused its
+ * kill by name. Flag ON: the class is a bridged chaser (`chasers.CHASERS.bulb`, `spinner.MODELLED_ENEMY_CLASSES.Bulb`)
+ * walked by `chaserStep`, its contact billed by `chaserContactNow`, a kill staged as the game runs it (the armed
+ * update, "drop", the lava write into the run's per-visit tile overlay, "die", the removal), and the kill arms
+ * forecast the lava tile and refuse a kill whose tile the rest of the visit needs. OFF: the class is the `mover` it
+ * was and its kill is refused, byte-identical.
+ */
+//   → `CONTACT_FIDELITY.bulbLive`
+
+/**
  * THE SWITCHES. They are read at CALL time, so a measurement can turn any of them on without editing this file:
  *   - node: `SEEDLING_CONTACT_FIDELITY=all` (or a comma list of the keys) in the environment, read once at import;
  *   - a test: `withContactFidelity({ drillLive: true }, () => …)`, which restores the previous values.
@@ -196,6 +215,12 @@ export const CONTACT_FIDELITY = {
      * moved y 1.71 px at t231).
      */
     fallBurnsPress: false,
+    /**
+     * fidelity BULB W8 — see its paragraph above. ⛔ OFF by default: turning it on moves committed artifacts (the
+     * measured movers are in `CC/docs/cloud-reports/seedling-fidelity-bulb.md`), and a default flip is the user's
+     * licence to give.
+     */
+    bulbLive: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
