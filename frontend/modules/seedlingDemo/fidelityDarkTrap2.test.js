@@ -31,7 +31,8 @@ const levelSource = atlasLevelSource();
 
 /** Replay a witness's tape under `switches`; the player per tick, and the run's slash presses at `at`. */
 function replay(w, switches, at = null) {
-    return withContactFidelity({ darkTrapLight: true, ...switches }, () => {
+    // The two gates are set EXPLICITLY (OFF unless asked): `SEEDLING_CONTACT_FIDELITY` may have turned them on.
+    return withContactFidelity({ darkTrapLight: true, spearingWindow: false, fallBurnsPress: false, ...switches }, () => {
         let run = null;
         const st = createTapeStepper(parseTape(JSON.stringify(w.tape)), {
             levelSource, onTick: (t, s, h, rn) => { run = rn; },
