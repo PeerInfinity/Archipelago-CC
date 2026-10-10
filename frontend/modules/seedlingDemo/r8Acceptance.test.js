@@ -391,6 +391,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'enc-l32-fallen-door', 'enc-l32-fire-return',
             // ⛓ Seedling fidelity ENCOUNTERS D3: the Witch witness, in L12 (a puncher room).
             'enc-l12-witch',
+            // ⛓ Seedling fidelity L12KEYLINE: the way round the sealed lock, in L12 (a puncher room).
+            'l12keyline-134-round',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -442,12 +444,13 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity BOBSOLDIER2 adds two (80) — `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch` (L30).
         // ⛓ Seedling fidelity ENCOUNTERS adds two (82) — `enc-l32-fallen-door`, `enc-l32-fire-return` (their L30 falls).
         // ⛓ ENCOUNTERS D3 adds one (83) — `enc-l12-witch` (L12).
-        expect(out.exposed).toBe(83);
+        // ⛓ Seedling fidelity L12KEYLINE adds one (84) — `l12keyline-134-round` (L12).
+        expect(out.exposed).toBe(84);
         expect(out.tapes).toEqual([
             'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
             'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch', 'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'crusher-l42-round-trip', 'dash-l16-sword-all', 'enc-l12-witch', 'enc-l32-fallen-door', 'enc-l32-fire-return', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
-            'ghostsword-l30-bobsoldier', 'l14-swordless-detour',
+            'ghostsword-l30-bobsoldier', 'l12keyline-134-round', 'l14-swordless-detour',
             'ladder2-l104-beam',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
@@ -627,6 +630,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'enc-l32-fallen-door': { tape: {}, levels: [30] },
             'enc-l32-fire-return': { tape: {}, levels: [30] },
             'enc-l12-witch': { tape: {}, levels: [12] },
+            // ⛓ fidelity L12KEYLINE's L12 witness — the mirror rule.
+            'l12keyline-134-round': { tape: {}, levels: [12] },
             // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes — the mirror rule.
             'axe-l61-reach-l63': { tape: {}, levels: [63] },
             'burn-l44-reach-exit': { tape: {}, levels: [45] },

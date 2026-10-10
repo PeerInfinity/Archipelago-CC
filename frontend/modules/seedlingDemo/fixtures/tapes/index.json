@@ -343,6 +343,13 @@
       ]
     },
     {
+      "file": "l12keyline-134-round.json",
+      "tickCount": 1269,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "l14-swordless-detour.json",
       "tickCount": 173,
       "bootLevel": 14,

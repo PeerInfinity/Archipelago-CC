@@ -1398,6 +1398,14 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'L12\'s Witch and the walk out: 601 ticks in a puncher room at >= 129 px from `puncher` — '
                 + 'never inside its reach. Recorded on the game with `hits` 0.',
         }),
+        /** ⛓⛓⛓ seedling-fidelity-l12keyline — the way ROUND L12's sealed lock, a puncher room. */
+        Object.freeze({
+            name: 'l12keyline-134-round', levels: Object.freeze([12]), bobs: 1, ticks: 1268,
+            addedBy: 'Seedling fidelity L12KEYLINE D1 (the round-the-lock witness)',
+            why: 'route step 134\'s walk round `bosslock@416,240` (east shaft, the tree burned, the row-48 swim, north '
+                + 'to `teleporter@0,352`): 1268 ticks in L12 at >= 150 px from `puncher@416,256`, which stays behind '
+                + 'the shut lock — never inside its reach. Recorded on the game with `hits` 0.',
+        }),
     ]),
 
     /**
