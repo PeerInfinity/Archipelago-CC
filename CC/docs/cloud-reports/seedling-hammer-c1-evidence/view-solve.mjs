@@ -27,8 +27,8 @@ try {
     res.verdict = 'SOLVED';
     res.ticks = out.perTick.length;
     res.records = (out.records ?? []).filter((r) => r.strategy === 'kill').map((r) => ({ arm: r.arm ?? null, target: r.target, ledger: r.ledger ?? null }));
-    res.hits = run.state?.hits ?? null;
-    res.deaths = run.progress?.('playerDeaths') ?? null;
+    res.hits = run.ledger('playerHits').length;
+    res.deaths = run.ledger('playerDeaths').length; res.staticDeaths = (run.ledger('staticBodyDeaths') ?? []).map((d) => `${d.id}@${d.killedAt}->${d.removedAt}`);
     res.end = { level: run.level, x: run.state.x, y: run.state.y };
     if (arg('tape', null)) writeFileSync(arg('tape'), JSON.stringify(out.perTick.map((s) => [...s])));
 } catch (e) {

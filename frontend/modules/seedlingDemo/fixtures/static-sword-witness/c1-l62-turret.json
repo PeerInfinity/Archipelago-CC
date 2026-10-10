@@ -1,0 +1,4198 @@
+{
+ "name": "c1-l62-turret",
+ "page": "seedling_bot_ap_p4f",
+ "recordedBy": "scripts/procgen/probe-seedling-static-sword-mobiles.mjs --record",
+ "note": "the GAME's SandTrap / Turret / TurretSpit rows (`botMobiles()`) and the player at each sampled tick of the boot level; the model with `STATIC_SWORD_ARM` ON reproduces every one",
+ "final": {
+  "level": 61,
+  "x": 168,
+  "y": 24,
+  "hits": 0,
+  "tick": 220
+ },
+ "tape": {
+  "tape_version": 8,
+  "game": "seedling",
+  "boot": {
+   "level": 62,
+   "x": 240,
+   "y": 288
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [
+   {
+    "level": 0,
+    "tag": 1,
+    "note": ""
+   },
+   {
+    "level": 5,
+    "tag": 0,
+    "note": ""
+   },
+   {
+    "level": 8,
+    "tag": 0,
+    "note": ""
+   },
+   {
+    "level": 8,
+    "tag": 1,
+    "note": ""
+   },
+   {
+    "level": 10,
+    "tag": 0,
+    "note": ""
+   },
+   {
+    "level": 12,
+    "tag": 3,
+    "note": ""
+   },
+   {
+    "level": 19,
+    "tag": 1,
+    "note": ""
+   },
+   {
+    "level": 30,
+    "tag": 0,
+    "note": ""
+   },
+   {
+    "level": 30,
+    "tag": 2,
+    "note": ""
+   },
+   {
+    "level": 31,
+    "tag": 0,
+    "note": ""
+   },
+   {
+    "level": 40,
+    "tag": 8,
+    "note": ""
+   }
+  ],
+  "despawn": [],
+  "equips": [],
+  "pins": [
+   "sound",
+   "dead_frames"
+  ],
+  "save": {
+   "totem_parts": [],
+   "keys": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "seal_parts": []
+  },
+  "rng": {
+   "seed": 418414780,
+   "split": false,
+   "cosmetic": 0,
+   "fp": 1763053598
+  },
+  "seam": {
+   "items": {
+    "hasSword": true,
+    "hasGhostSword": false,
+    "hasShield": true,
+    "hasFire": true,
+    "hasWand": false,
+    "hasFireWand": false,
+    "canSwim": true,
+    "hasSpear": false,
+    "hasDarkShield": false,
+    "hasDarkSuit": false,
+    "hasDarkSword": false,
+    "hasFeather": false,
+    "hasTorch": true
+   },
+   "beam": false,
+   "rock_set": false,
+   "hits_max": 3,
+   "first_use": false,
+   "extended": false,
+   "time": 8586,
+   "primary": 0,
+   "secondary": 0,
+   "grass_cut": 0,
+   "cutscene": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "menu_state": 0,
+   "music": {
+    "set": "Room",
+    "index": 1
+   }
+  },
+  "tick0": null,
+  "hold": false,
+  "tick_count": 220,
+  "inputs": [
+   {
+    "key": "primary",
+    "from": 0,
+    "to": 1
+   },
+   {
+    "key": "right",
+    "from": 0,
+    "to": 2
+   },
+   {
+    "key": "up",
+    "from": 0,
+    "to": 9
+   },
+   {
+    "key": "left",
+    "from": 2,
+    "to": 3
+   },
+   {
+    "key": "primary",
+    "from": 2,
+    "to": 3
+   },
+   {
+    "key": "right",
+    "from": 3,
+    "to": 4
+   },
+   {
+    "key": "left",
+    "from": 4,
+    "to": 5
+   },
+   {
+    "key": "right",
+    "from": 5,
+    "to": 6
+   },
+   {
+    "key": "primary",
+    "from": 8,
+    "to": 9
+   },
+   {
+    "key": "left",
+    "from": 8,
+    "to": 10
+   },
+   {
+    "key": "down",
+    "from": 9,
+    "to": 10
+   },
+   {
+    "key": "up",
+    "from": 10,
+    "to": 15
+   },
+   {
+    "key": "right",
+    "from": 12,
+    "to": 13
+   },
+   {
+    "key": "primary",
+    "from": 14,
+    "to": 15
+   },
+   {
+    "key": "down",
+    "from": 15,
+    "to": 17
+   },
+   {
+    "key": "down",
+    "from": 19,
+    "to": 20
+   },
+   {
+    "key": "left",
+    "from": 21,
+    "to": 22
+   },
+   {
+    "key": "primary",
+    "from": 22,
+    "to": 23
+   },
+   {
+    "key": "primary",
+    "from": 53,
+    "to": 54
+   },
+   {
+    "key": "primary",
+    "from": 84,
+    "to": 85
+   },
+   {
+    "key": "primary",
+    "from": 117,
+    "to": 118
+   },
+   {
+    "key": "up",
+    "from": 117,
+    "to": 119
+   },
+   {
+    "key": "left",
+    "from": 117,
+    "to": 164
+   },
+   {
+    "key": "down",
+    "from": 119,
+    "to": 120
+   },
+   {
+    "key": "primary",
+    "from": 119,
+    "to": 120
+   },
+   {
+    "key": "up",
+    "from": 120,
+    "to": 121
+   },
+   {
+    "key": "down",
+    "from": 121,
+    "to": 122
+   },
+   {
+    "key": "up",
+    "from": 122,
+    "to": 123
+   },
+   {
+    "key": "down",
+    "from": 123,
+    "to": 124
+   },
+   {
+    "key": "up",
+    "from": 124,
+    "to": 125
+   },
+   {
+    "key": "primary",
+    "from": 125,
+    "to": 126
+   },
+   {
+    "key": "down",
+    "from": 127,
+    "to": 128
+   },
+   {
+    "key": "primary",
+    "from": 131,
+    "to": 132
+   },
+   {
+    "key": "primary",
+    "from": 137,
+    "to": 138
+   },
+   {
+    "key": "primary",
+    "from": 139,
+    "to": 140
+   },
+   {
+    "key": "primary",
+    "from": 145,
+    "to": 146
+   },
+   {
+    "key": "primary",
+    "from": 161,
+    "to": 162
+   },
+   {
+    "key": "primary",
+    "from": 163,
+    "to": 164
+   },
+   {
+    "key": "right",
+    "from": 164,
+    "to": 166
+   },
+   {
+    "key": "left",
+    "from": 166,
+    "to": 167
+   },
+   {
+    "key": "right",
+    "from": 169,
+    "to": 170
+   },
+   {
+    "key": "down",
+    "from": 171,
+    "to": 184
+   },
+   {
+    "key": "primary",
+    "from": 181,
+    "to": 182
+   },
+   {
+    "key": "primary",
+    "from": 183,
+    "to": 184
+   },
+   {
+    "key": "up",
+    "from": 184,
+    "to": 185
+   },
+   {
+    "key": "down",
+    "from": 185,
+    "to": 190
+   },
+   {
+    "key": "primary",
+    "from": 189,
+    "to": 190
+   },
+   {
+    "key": "up",
+    "from": 190,
+    "to": 193
+   },
+   {
+    "key": "left",
+    "from": 195,
+    "to": 196
+   },
+   {
+    "key": "primary",
+    "from": 195,
+    "to": 196
+   },
+   {
+    "key": "right",
+    "from": 196,
+    "to": 197
+   },
+   {
+    "key": "left",
+    "from": 197,
+    "to": 204
+   },
+   {
+    "key": "primary",
+    "from": 204,
+    "to": 205
+   },
+   {
+    "key": "right",
+    "from": 204,
+    "to": 205
+   },
+   {
+    "key": "primary",
+    "from": 206,
+    "to": 207
+   },
+   {
+    "key": "down",
+    "from": 207,
+    "to": 220
+   },
+   {
+    "key": "primary",
+    "from": 212,
+    "to": 213
+   }
+  ],
+  "name": "c1-l62-turret",
+  "description": "⛓⛓ SEEDLING HAMMER-PHASE C1 — the static sword arm's game witness: sweep leg 551's room (L62 from (240,288) to teleporter@96,304 → L61), the route survey's step-113 block re-pointed at the arrival. Solved with `CHOOSER_HIT_SOURCES` and `STATIC_SWORD_ARM` ON: the chooser admits the probe's hit, the arm kills turret@232,248 from its stance (three presses, the spit priced) and the walk crosses: 220 t. Authored by scripts/procgen/plan-seedling-c1-static-sword.mjs."
+ },
+ "samples": [
+  {
+   "t": 0,
+   "player": {
+    "x": 248,
+    "y": 296
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 1,
+   "player": {
+    "x": 248.8,
+    "y": 295.2
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 2,
+   "player": {
+    "x": 250.22322330470337,
+    "y": 293.77677669529663
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 3,
+   "player": {
+    "x": 250.6696699141101,
+    "y": 290.64746288949084
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 4,
+   "player": {
+    "x": 251.8808075513892,
+    "y": 287.76564307651574
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 5,
+   "player": {
+    "x": 252.19508449792252,
+    "y": 285.11429670363356
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 6,
+   "player": {
+    "x": 253.27993374772703,
+    "y": 282.7112123106541
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 7,
+   "player": {
+    "x": 254.2619189757379,
+    "y": 280.5359853139128
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 240,
+     "y": 256
+    }
+   ]
+  },
+  {
+   "t": 8,
+   "player": {
+    "x": 255.14104018195513,
+    "y": 278.5886157134097
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 242.97175100032692,
+     "y": 256.41072617649235
+    }
+   ]
+  },
+  {
+   "t": 9,
+   "player": {
+    "x": 255.11729736637875,
+    "y": 274.86929413939475
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 245.94350200065384,
+     "y": 256.8214523529847
+    }
+   ]
+  },
+  {
+   "t": 10,
+   "player": {
+    "x": 254.31729736637874,
+    "y": 272.1999674716756
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 248.91525300098075,
+     "y": 257.23217852947704
+    }
+   ]
+  },
+  {
+   "t": 11,
+   "player": {
+    "x": 253.58906865443666,
+    "y": 269.7701170704434
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 251.88700400130767,
+     "y": 257.6429047059694
+    }
+   ]
+  },
+  {
+   "t": 12,
+   "player": {
+    "x": 252.93261123055248,
+    "y": 267.57974293569805
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 254.8587550016346,
+     "y": 258.05363088246173
+    }
+   ]
+  },
+  {
+   "t": 13,
+   "player": {
+    "x": 253.14792509472622,
+    "y": 265.6288450674396
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 257.83050600196145,
+     "y": 258.4643570589541
+    }
+   ]
+  },
+  {
+   "t": 14,
+   "player": {
+    "x": 253.33581384578125,
+    "y": 263.9264383724056
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 260.80225700228834,
+     "y": 258.8750832354464
+    }
+   ]
+  },
+  {
+   "t": 15,
+   "player": {
+    "x": 253.4962774837176,
+    "y": 260.4845934648009
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 263.77400800261523,
+     "y": 259.28580941193877
+    }
+   ]
+  },
+  {
+   "t": 16,
+   "player": {
+    "x": 253.64509841710742,
+    "y": 258.09247730490233
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 266.7457590029421,
+     "y": 259.6965355884311
+    }
+   ]
+  },
+  {
+   "t": 17,
+   "player": {
+    "x": 253.77839609060413,
+    "y": 256.7498787363721
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 269.717510003269,
+     "y": 260.10726176492346
+    }
+   ]
+  },
+  {
+   "t": 18,
+   "player": {
+    "x": 253.88699436320894,
+    "y": 255.65605705502315
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 272.6892610035959,
+     "y": 260.5179879414158
+    }
+   ]
+  },
+  {
+   "t": 19,
+   "player": {
+    "x": 253.97089323492185,
+    "y": 254.81101226085542
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 275.6610120039228,
+     "y": 260.92871411790816
+    }
+   ]
+  },
+  {
+   "t": 20,
+   "player": {
+    "x": 254.03009270574287,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 278.6327630042497,
+     "y": 261.3394402944005
+    }
+   ]
+  },
+  {
+   "t": 21,
+   "player": {
+    "x": 254.03009270574287,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 281.6045140045766,
+     "y": 261.75016647089285
+    }
+   ]
+  },
+  {
+   "t": 22,
+   "player": {
+    "x": 253.23009270574286,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 284.57626500490346,
+     "y": 262.1608926473852
+    }
+   ]
+  },
+  {
+   "t": 23,
+   "player": {
+    "x": 252.68009270574285,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ],
+   "spits": [
+    {
+     "x": 287.54801600523035,
+     "y": 262.57161882387754
+    }
+   ]
+  },
+  {
+   "t": 24,
+   "player": {
+    "x": 252.38009270574284,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 30
+    }
+   ],
+   "spits": [
+    {
+     "x": 290.51976700555724,
+     "y": 262.9823450003699
+    }
+   ]
+  },
+  {
+   "t": 25,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 29
+    }
+   ],
+   "spits": [
+    {
+     "x": 293.49151800588413,
+     "y": 263.39307117686224
+    }
+   ]
+  },
+  {
+   "t": 26,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 28
+    }
+   ],
+   "spits": [
+    {
+     "x": 296.463269006211,
+     "y": 263.8037973533546
+    }
+   ]
+  },
+  {
+   "t": 27,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 27
+    }
+   ],
+   "spits": [
+    {
+     "x": 299.4350200065379,
+     "y": 264.21452352984693
+    }
+   ]
+  },
+  {
+   "t": 28,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 26
+    }
+   ],
+   "spits": [
+    {
+     "x": 302.4067710068648,
+     "y": 264.6252497063393
+    }
+   ]
+  },
+  {
+   "t": 29,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 25
+    }
+   ],
+   "spits": [
+    {
+     "x": 305.3785220071917,
+     "y": 265.0359758828316
+    }
+   ]
+  },
+  {
+   "t": 30,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 24
+    }
+   ],
+   "spits": [
+    {
+     "x": 308.3502730075186,
+     "y": 265.44670205932397
+    }
+   ]
+  },
+  {
+   "t": 31,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 23
+    }
+   ],
+   "spits": [
+    {
+     "x": 311.32202400784547,
+     "y": 265.8574282358163
+    }
+   ]
+  },
+  {
+   "t": 32,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 22
+    }
+   ],
+   "spits": [
+    {
+     "x": 314.29377500817236,
+     "y": 266.26815441230866
+    }
+   ]
+  },
+  {
+   "t": 33,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 21
+    }
+   ],
+   "spits": [
+    {
+     "x": 317.26552600849925,
+     "y": 266.678880588801
+    }
+   ]
+  },
+  {
+   "t": 34,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 20
+    }
+   ],
+   "spits": [
+    {
+     "x": 320.23727700882614,
+     "y": 267.08960676529335
+    }
+   ]
+  },
+  {
+   "t": 35,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 19
+    }
+   ],
+   "spits": [
+    {
+     "x": 323.20902800915303,
+     "y": 267.5003329417857
+    }
+   ]
+  },
+  {
+   "t": 36,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 18
+    }
+   ],
+   "spits": [
+    {
+     "x": 326.1807790094799,
+     "y": 267.91105911827805
+    }
+   ]
+  },
+  {
+   "t": 37,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 17
+    }
+   ],
+   "spits": [
+    {
+     "x": 329.1525300098068,
+     "y": 268.3217852947704
+    }
+   ]
+  },
+  {
+   "t": 38,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 16
+    }
+   ],
+   "spits": [
+    {
+     "x": 332.1242810101337,
+     "y": 268.73251147126274
+    }
+   ]
+  },
+  {
+   "t": 39,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 15
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 40,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 14
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 41,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 13
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 42,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 12
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 43,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 44,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 10
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 45,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 9
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 46,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 8
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 47,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 7
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 48,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 6
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 49,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 5
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 50,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 4
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 51,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 3
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 52,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 2
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 53,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 1
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 54,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 1,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 55,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 30
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 56,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 29
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 57,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 28
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 58,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 27
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 59,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 26
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 60,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "startshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 25
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 61,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 24
+    }
+   ],
+   "spits": [
+    {
+     "x": 240,
+     "y": 256
+    }
+   ]
+  },
+  {
+   "t": 62,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 23
+    }
+   ],
+   "spits": [
+    {
+     "x": 242.99170295660127,
+     "y": 255.77703493667588
+    }
+   ]
+  },
+  {
+   "t": 63,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 22
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 64,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 21
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 65,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 20
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 66,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 19
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 67,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "finishshot",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 18
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 68,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 17
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 69,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 16
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 70,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 15
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 71,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 14
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 72,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 13
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 73,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 12
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 74,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 75,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 10
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 76,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 9
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 77,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 8
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 78,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 7
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 79,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 6
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 80,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 5
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 81,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 4
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 82,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 3
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 83,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 2
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 84,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 1
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 85,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 2,
+     "hits_timer": 0
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 86,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 30
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 87,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 29
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 88,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 28
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 89,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 0,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 27
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 90,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 26
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 91,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 25
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 92,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 1,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 24
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 93,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 23
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 94,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 22
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 95,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 2,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 21
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 96,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 20
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 97,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 19
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 98,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 3,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 18
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 99,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 17
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 100,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 16
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 101,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 4,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 15
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 102,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 14
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 103,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 13
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 104,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "die",
+     "anim_index": 5,
+     "destroy": false,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 12
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 105,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 1,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 106,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.9,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 107,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.8,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 108,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.7000000000000001,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 109,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.6000000000000001,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 110,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.5000000000000001,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 111,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.40000000000000013,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 112,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.30000000000000016,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 113,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.20000000000000015,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 114,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 0.10000000000000014,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 115,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [
+    {
+     "cls": "Turret",
+     "x": 240,
+     "y": 256,
+     "anim": "",
+     "anim_index": 0,
+     "destroy": true,
+     "alpha": 1.3877787807814457e-16,
+     "hits": 3,
+     "hits_timer": 11
+    }
+   ],
+   "spits": []
+  },
+  {
+   "t": 116,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 117,
+   "player": {
+    "x": 252.33009270574283,
+    "y": 255.0147443538689
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 118,
+   "player": {
+    "x": 251.53009270574282,
+    "y": 254.2147443538689
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 119,
+   "player": {
+    "x": 250.10686940103946,
+    "y": 252.79152104916554
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 120,
+   "player": {
+    "x": 246.97755559523367,
+    "y": 252.3450744397588
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 121,
+   "player": {
+    "x": 244.09573578225857,
+    "y": 251.1339368024797
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 122,
+   "player": {
+    "x": 241.44438940937636,
+    "y": 250.81965985594638
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 123,
+   "player": {
+    "x": 239.0413050163969,
+    "y": 249.73481060614188
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 124,
+   "player": {
+    "x": 236.86607801965562,
+    "y": 249.552825378131
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 125,
+   "player": {
+    "x": 234.9399806596809,
+    "y": 248.59168299264604
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 126,
+   "player": {
+    "x": 231.44801629936046,
+    "y": 247.74216685464395
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 127,
+   "player": {
+    "x": 228.1989669321743,
+    "y": 246.95174645346415
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 128,
+   "player": {
+    "x": 225.19283255812243,
+    "y": 247.02042178910662
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 129,
+   "player": {
+    "x": 222.4366329724695,
+    "y": 247.0833873482234
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 130,
+   "player": {
+    "x": 219.93036817521553,
+    "y": 247.14064313081448
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 131,
+   "player": {
+    "x": 217.6740381663605,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 132,
+   "player": {
+    "x": 213.66764294590442,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 133,
+   "player": {
+    "x": 209.91124772544833,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 134,
+   "player": {
+    "x": 206.40485250499225,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 135,
+   "player": {
+    "x": 203.14845728453616,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 136,
+   "player": {
+    "x": 200.14206206408008,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 137,
+   "player": {
+    "x": 197.385666843624,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 138,
+   "player": {
+    "x": 194.8792716231679,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 139,
+   "player": {
+    "x": 192.62287640271182,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 140,
+   "player": {
+    "x": 188.61648118225574,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 141,
+   "player": {
+    "x": 184.86008596179965,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 142,
+   "player": {
+    "x": 181.35369074134357,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 143,
+   "player": {
+    "x": 178.09729552088749,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 144,
+   "player": {
+    "x": 175.0909003004314,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 145,
+   "player": {
+    "x": 172.33450507997532,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 146,
+   "player": {
+    "x": 167.82810985951923,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 147,
+   "player": {
+    "x": 163.57171463906315,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 148,
+   "player": {
+    "x": 159.56531941860706,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 149,
+   "player": {
+    "x": 155.80892419815098,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 150,
+   "player": {
+    "x": 152.3025289776949,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 151,
+   "player": {
+    "x": 149.0461337572388,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 152,
+   "player": {
+    "x": 146.03973853678272,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 153,
+   "player": {
+    "x": 143.28334331632664,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 154,
+   "player": {
+    "x": 140.77694809587055,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 155,
+   "player": {
+    "x": 138.52055287541447,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 156,
+   "player": {
+    "x": 136.51415765495838,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 157,
+   "player": {
+    "x": 134.7577624345023,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 158,
+   "player": {
+    "x": 133.2513672140462,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 159,
+   "player": {
+    "x": 131.99497199359013,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 160,
+   "player": {
+    "x": 130.98857677313404,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 161,
+   "player": {
+    "x": 129.43218155267795,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 162,
+   "player": {
+    "x": 128.12578633222185,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 163,
+   "player": {
+    "x": 127.06939111176577,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 164,
+   "player": {
+    "x": 124.26299589130969,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 165,
+   "player": {
+    "x": 122.5066006708536,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 166,
+   "player": {
+    "x": 121.80020545039751,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 167,
+   "player": {
+    "x": 120.54381022994143,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 168,
+   "player": {
+    "x": 119.53741500948534,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 169,
+   "player": {
+    "x": 118.78101978902926,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 170,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 171,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 247.19218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 172,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 247.9921891368799
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 173,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 249.34218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 174,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 250.44218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 175,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 251.29218913687987
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 176,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 252.69218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 177,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 253.84218913687988
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 178,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 254.7421891368799
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 179,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 256.1921891368799
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 180,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 257.3921891368799
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 181,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 258.3421891368799
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 182,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 259.8421891368799
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 183,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 261.0921891368799
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 184,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 264.0921891368799
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 185,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 266.04218913687987
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 186,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 267.74218913687986
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 187,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 269.19218913687985
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 188,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 270.39218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 189,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 271.3421891368798
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 190,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 274.8421891368798
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 191,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 277.2921891368798
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 192,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 278.6921891368798
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 193,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 279.0421891368798
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 194,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 195,
+   "player": {
+    "x": 119.07462456857317,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 196,
+   "player": {
+    "x": 116.27462456857317,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 197,
+   "player": {
+    "x": 114.52462456857317,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 198,
+   "player": {
+    "x": 113.02462456857317,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 199,
+   "player": {
+    "x": 111.77462456857317,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 200,
+   "player": {
+    "x": 110.77462456857317,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 201,
+   "player": {
+    "x": 109.22462456857318,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 202,
+   "player": {
+    "x": 107.92462456857318,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 203,
+   "player": {
+    "x": 106.87462456857318,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 204,
+   "player": {
+    "x": 105.27462456857319,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 205,
+   "player": {
+    "x": 104.72462456857319,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 206,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 207,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 279.14218913687984
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 208,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 279.94218913687985
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 209,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 281.29218913687987
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 210,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 282.3921891368799
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 211,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 283.2421891368799
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 212,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 284.6421891368799
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 213,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 287.79218913687987
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 214,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 290.69218913687985
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 215,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 293.3421891368798
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 216,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 295.7421891368798
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 217,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 297.8921891368798
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 218,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 299.79218913687976
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  },
+  {
+   "t": 219,
+   "player": {
+    "x": 104.4246245685732,
+    "y": 301.44218913687973
+   },
+   "hits": 0,
+   "bodies": [],
+   "spits": []
+  }
+ ]
+}

@@ -10,7 +10,8 @@
  *      with its verdict, and the row's stdout md5 is printed so it can be compared with the identity block's.
  *   2. RE-SOLVE — each captured record is solved again under every mode `--modes` names (`off` = the switches as the
  *      repository ships them; `fight` = `HAMMER_FIGHT` on; `approach` = `HAMMER_APPROACH` on; B3's `fallback` =
- *      `HAMMER_FIGHT_FALLBACK` on, `whole` = it in its whole-solve mode), in this process, by
+ *      `HAMMER_FIGHT_FALLBACK` on, `whole` = it in its whole-solve mode; C1's `chooser` / `chooserorder` =
+ *      `CHOOSER_HIT_SOURCES` on in its `empty` / `order` mode, `static` = `STATIC_SWORD_ARM` on, `c1` = both), in this process, by
  *      `procgenOracle.solve` itself. The path's own mode must reproduce the captured verdict and ticks (a replay check).
  *
  * A record SOLVED under `off` and not SOLVED under another mode is a ⛔ row and the exit is 1.
@@ -66,6 +67,11 @@ const MODES = Object.freeze({
     // ⛓ hammer-phase B3 — the fight as a FALLBACK: the rewind retry (default mode), and the whole-solve retry only
     fallback: { SEEDLING_HAMMER_FIGHT_FALLBACK: '1' },
     whole: { SEEDLING_HAMMER_FIGHT_FALLBACK: '1', SEEDLING_HAMMER_FIGHT_FALLBACK_MODE: 'whole' },
+    // ⛓ hammer-phase C1 — the removal chooser reads the probe's hit (both of its modes), the static sword arm, both
+    chooser: { SEEDLING_CHOOSER_HIT_SOURCES: '1' },
+    chooserorder: { SEEDLING_CHOOSER_HIT_SOURCES: '1', SEEDLING_CHOOSER_HIT_SOURCES_MODE: 'order' },
+    static: { SEEDLING_STATIC_SWORD_ARM: '1' },
+    c1: { SEEDLING_CHOOSER_HIT_SOURCES: '1', SEEDLING_STATIC_SWORD_ARM: '1' },
 });
 
 const isSolved = (v) => v === 'SOLVED';
@@ -77,6 +83,9 @@ async function capture(row, path, file) {
     delete env.SEEDLING_HAMMER_APPROACH;
     delete env.SEEDLING_HAMMER_FIGHT_FALLBACK;
     delete env.SEEDLING_HAMMER_FIGHT_FALLBACK_MODE;
+    delete env.SEEDLING_CHOOSER_HIT_SOURCES;
+    delete env.SEEDLING_CHOOSER_HIT_SOURCES_MODE;
+    delete env.SEEDLING_STATIC_SWORD_ARM;
     Object.assign(env, MODES[path]);
     const child = spawn(process.execPath, ['--import', join(HERE, 'hammerMonotonicityHook.js'), join(HERE, script),
         ...args], { cwd: REPO, env, stdio: ['ignore', 'pipe', 'ignore'] });
@@ -89,12 +98,17 @@ async function capture(row, path, file) {
 async function resolveAll(records, modes, shard) {
     const { solve } = await import(join(MODULE, 'procgenOracle.js'));
     const SB = await import(join(MODULE, 'solverBot.js'));
+    const ED = await import(join(MODULE, 'enemyDamage.js'));
     // ⛓ `off` is the shipped configuration (both switches off), whatever this process's env says
     const set = (mode) => {
         SB.HAMMER_FIGHT.enabled = mode === 'fight';
         SB.HAMMER_APPROACH.enabled = mode === 'approach';
         SB.HAMMER_FIGHT_FALLBACK.enabled = mode === 'fallback' || mode === 'whole';
         SB.HAMMER_FIGHT_FALLBACK.mode = mode === 'whole' ? 'whole' : 'rewind';
+        // ⛓ hammer-phase C1
+        SB.CHOOSER_HIT_SOURCES.enabled = ['chooser', 'chooserorder', 'c1'].includes(mode);
+        SB.CHOOSER_HIT_SOURCES.mode = mode === 'chooserorder' ? 'order' : 'empty';
+        ED.STATIC_SWORD_ARM.enabled = mode === 'static' || mode === 'c1';
     };
     // ⛓ every fight search's record (`HAMMER_FIGHT_TRACE`), per re-solve: the cost distribution and the negatives
     let searches = null;
@@ -149,7 +163,7 @@ async function main() {
     const path = valueOf('--path') ?? (recordsFile ? null : 'off');
     const modes = (valueOf('--modes') ?? 'off,fight').split(',').filter(Boolean);
     for (const m of [path ?? 'off', ...modes]) {
-        if (!MODES[m]) throw new Error(`unknown mode "${m}" (off, fight, approach, fallback, whole)`);
+        if (!MODES[m]) throw new Error(`unknown mode "${m}" (${Object.keys(MODES).join(', ')})`);
     }
     const keep = valueOf('--keep');
     const jsonOut = valueOf('--json');

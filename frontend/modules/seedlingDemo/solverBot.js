@@ -123,6 +123,8 @@ import {
     shieldBumpTouches,
     // ⛓⛓ fidelity ENCOUNTERS D3: the Witch's talk circle (`NPC.talkRange`).
     TALK_RANGE,
+    // ⛓⛓ hammer-phase C1: the static sword arm (its switch, its death table, the turret mini-forecast)
+    STATIC_SWORD_ARM, STATIC_SWORD_DEATH, TURRET, stepTurret, turretInRange,
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -9892,6 +9894,88 @@ export function withHammerFightFallback(enabled, fn, mode = null) {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE C1 — THE REMOVAL CHOOSER READS THE PROBE'S HIT (⚖ the user, 2026-10-09: *"consider the
+ * probe's hit sources first"*; 2026-10-10: the chooser is designed with the static sword arm, one slice).
+ *
+ * `chooseBodyToRemove` admits a body when its removal ADMITS A CORRIDOR — a question about the danger map's VOLUMES.
+ * A spinner has no danger volume, so the question cannot speak for one: on L40 (480,896) → chest (880,816) the aim
+ * lies inside `bobsoldier@880,832`'s volume, no body's removal admits a corridor, the list is EMPTY and the kill rung
+ * refuses although the probe's own hit, `spinner@880,848`, is a body the press arm kills. With this switch the
+ * climb consults `hit.sources` (the corridor probe's answer, in the order the walk met them): a source that is a
+ * body some kill arm can watch die — a live spinner the run steps, a live chaser, or (with `STATIC_SWORD_ARM`) a
+ * static `SandTrap`/`Turret` still in the census — is admitted, ordered by the hit.
+ *   - `mode: 'empty'` (the default): only where the chooser's list is EMPTY. The smallest change: every climb the
+ *     chooser already answers keeps its answer.
+ *   - `mode: 'order'`: the admitted sources are put FIRST, ahead of the chooser's own list (a measurement arm).
+ * The trace's ladder rows and the EXHAUSTED refusal also carry the whole `sources` array (`obstacle.sources`).
+ *
+ * OFF by default (`SEEDLING_CHOOSER_HIT_SOURCES=1`, `..._MODE=order`, or `withChooserHitSources(true, fn, mode)`):
+ * nothing below is asked and every walk and trace is byte-identical.
+ */
+export const CHOOSER_HIT_SOURCES = {
+    enabled: globalThis.process?.env?.SEEDLING_CHOOSER_HIT_SOURCES === '1',
+    mode: globalThis.process?.env?.SEEDLING_CHOOSER_HIT_SOURCES_MODE === 'order' ? 'order' : 'empty',
+};
+
+/** Run `fn` with `CHOOSER_HIT_SOURCES` set (and `mode`, if given), restoring both (`withHammerFightFallback`'s shape). */
+export function withChooserHitSources(enabled, fn, mode = null) {
+    const was = { ...CHOOSER_HIT_SOURCES };
+    CHOOSER_HIT_SOURCES.enabled = enabled === true;
+    if (mode !== null) CHOOSER_HIT_SOURCES.mode = mode;
+    const restore = () => Object.assign(CHOOSER_HIT_SOURCES, was);
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * ⛓ C1 — the trace's danger obstacle: `sources[0]`'s id, as ever, and with `CHOOSER_HIT_SOURCES` ON the whole
+ * `sources` array (`kind:id`), so a reader sees every body the probe named and not only the first.
+ */
+function dangerObstacleOf(hit) {
+    return CHOOSER_HIT_SOURCES.enabled
+        ? { kind: 'danger', id: hit.sources[0]?.id ?? null, sources: hit.sources.map((x) => `${x.kind}:${x.id ?? '?'}`) }
+        : { kind: 'danger', id: hit.sources[0]?.id ?? null };
+}
+
+/**
+ * ⛓ C1 — the probe's hit sources a kill arm can watch die, in the hit's order (see `CHOOSER_HIT_SOURCES`). A spinner
+ * must be live in `spinnerBodies`, a chaser live in `chasers` (neither dying nor destroyed); a static body must be a
+ * `STATIC_SWORD_DEATH` class still in the census, not already dying, and asked only with `STATIC_SWORD_ARM` ON.
+ */
+function hitSourceBodies(run, hit) {
+    const out = [];
+    const seen = new Set();
+    const spinners = new Map((run.entities('spinnerBodies') ?? []).map((b) => [b.id, b]));
+    const chasers = new Map((run.entities('chasers') ?? []).map((c) => [c.id, c]));
+    const dying = new Set((run.entities('staticBodies') ?? []).filter((b) => b.dying || b.removed).map((b) => b.id));
+    for (const sx of hit.sources ?? []) {
+        const id = sx.id;
+        if (!id || seen.has(id)) continue;
+        if (sx.kind === 'spinner' && spinners.has(id)) {
+            const b = spinners.get(id);
+            out.push({ id, tag: id.slice(0, id.indexOf('@')), x: b.x, y: b.y, kind: 'spinner', stepped: true, viaHit: true });
+        } else if (sx.kind === 'chaser' && chasers.has(id)) {
+            const c = chasers.get(id);
+            if (c.dying || c.destroy) continue;
+            out.push({ ...c, stepped: true, viaHit: true });
+        } else if (sx.kind === 'enemy' && STATIC_SWORD_ARM.enabled && !dying.has(id)) {
+            const e = (run.world.combat?.enemies ?? []).find((r) => `${r.tag}@${r.x},${r.y}` === id);
+            if (!e || !STATIC_SWORD_DEATH[e.as3]) continue;
+            out.push({ id, tag: e.tag, x: e.cx ?? e.x, y: e.cy ?? e.y, row: e, stepped: false, viaHit: true });
+        } else continue;
+        seen.add(id);
+    }
+    return out;
+}
+
+/**
  * ⛓ hammer-phase B3 — THE TRIGGER: the press kill's two coded throws, and nothing else.
  *   - `HAMMER_SAFETY` — `safeStep`'s *"There is no step out."* and its unsafe-press twin, and the refuge's *"nowhere
  *     to be"*: the run has been driven into the corner the fight search plans around. IN.
@@ -11259,6 +11343,232 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
     return { phase: 'turret-kill', target: id, side: side.key, stance: { x: side.x, y: side.y }, presses,
         ticks: perTick.length - from };
 }
+/**
+ * ⛓⛓ HAMMER-PHASE C1 — THE STATIC SWORD ARM (`STATIC_SWORD_ARM`): a `SandTrap` or `Turret` the kill rung was handed
+ * (`stepped === false`, in a stepped room too since `CHOOSER_HIT_SOURCES`), killed by the player's own press.
+ *
+ * ⛓ WHAT IT REUSES AND WHAT IT BYPASSES. It is `killIceTurretInPlace`'s shape (KILLLOCK K4, a static body pressed in
+ * place), not the spinner press arm's: a static body is the spinner kill with NO HAMMER and NO MOTION, so the strike
+ * schedule's (cell, tick) search collapses to one stance per side, the hammer escape / approach / fight have nothing
+ * to price, and `execKillByPress`/`deriveStrike`/`pressEscape` are bypassed (they are built on `spinnerForecast`).
+ * What is reused: the run's own slash gates (`slashRect`, `SLASH_REACH`, the `collideLine("Solid")` line asked of
+ * `run.collideLineSolid`), the loop's `walkTo` to the stance (the corridor probe prices the approach), the
+ * receiver's cadence (`KILL_PRESS_CADENCE`, past the 30-tick i-frame), and the end OBSERVED on the run (the body's
+ * F4 row dying, then removed — `levelRun`'s staging, witnessed on the game in C1 D1).
+ *
+ * ⛓ THE STANCE'S HAZARDS ARE PRICED BEFORE A PRESS:
+ *   · the body's own contact (`Enemy.hitPlayer`, the 16x16 box at force 3): the stance box keeps
+ *     `STATIC_SWORD_STANCE_GAPS` px off it (widest first), and the player settles there before the face tap (its
+ *     drift is 1.7 px on the game), keeping `STATIC_SWORD_TAP_ROOM`;
+ *   · every other danger at the stance (another static body's box, a stepped body): `dangerAt` over the box;
+ *   · a TURRET's spit (`staticSwordShotPlan`): its own transcription (`turret.js`'s `stepTurret`) stepped on a copy
+ *     of the live turret with the planned landings writing its `hitsTimer` (a turret starts no shot while that runs,
+ *     and "die" cancels a shot in the barrel); the arm waits the fewest ticks at the stance (≤ `STATIC_SWORD_WAIT_MAX`)
+ *     for which NO spit spawns before the kill. With none, a carried shield FACED at the turret (the press faces it)
+ *     is the fallback (`TurretSpit` dies on `"Shield"`); without one the side is refused.
+ * The executor is then guarded tick by tick: a player hit or a crossing refuses by name.
+ *
+ * @returns {{record?: object, why?: string}} `record` on a kill; `why` when no side applies AND no tick was spent.
+ */
+function killStaticBySword(run, perTick, target, ctx) {
+    const from = perTick.length;
+    const id = target.id;
+    const as3 = target.row?.as3 ?? null;
+    if (!STATIC_SWORD_DEATH[as3]) return { why: `${id}: \`${as3}\` is not a class the static sword arm kills` };
+    const weapon = run.progress('primaryWeapon');
+    if (weapon !== 'sword') {
+        return { why: `${id}: the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``}`
+            + ' — the static sword arm is a SWORD press. The sword is a SUB-ORDER the macro layer owes.' };
+    }
+    const r = contactRect(target.row);
+    const ex = (r.x + r.right) / 2;
+    const ey = (r.y + r.bottom) / 2;
+    const box0 = playerBoxAt(0, 0);
+    const opts = solverPlanOpts(run, ctx.contacts ?? new Set());
+    const sideWhys = [];
+    /** Why a stance is not one, or null — the gates in the order the swing asks them. */
+    const stanceWhy = (c) => {
+        const box = playerBoxAt(c.x, c.y);
+        if (distanceRectPoint(c.x, c.y, r) > SLASH_REACH) return `(${c.x},${c.y}) is out of the sword's reach`;
+        if (!rectsOverlapLocal(slashRect(c.x, c.y, c.dir), r)) return 'the slash rect misses the body';
+        if (plannerObstacleAt(run.world, c.x, c.y, null, opts) !== null) return `(${c.x},${c.y}) is not plannable floor`;
+        const blocker = run.collideLineSolid(c.x, c.y, ex, ey);
+        if (blocker) return `the swing's line to the body crosses ${blocker.tag ?? 'a Solid'}`;
+        const d = dangerAt(run, run.ticksCompleted, box, { mode: 'wait' });
+        const others = (d.sources ?? []).filter((sx) => sx.id !== id);
+        if (others.length > 0) return `the stance box is in danger: ${others.map((sx) => `${sx.kind}:${sx.id ?? '?'}`).join(', ')}`;
+        if (planWaypointsOrNull(run.world, run.state, { x: c.x, y: c.y }, null, opts) === null) {
+            return `no corridor to (${c.x},${c.y})`;
+        }
+        return null;
+    };
+    /**
+     * Per side, the WIDEST gap that passes every gate, from `STATIC_SWORD_STANCE_GAPS` (widest first): a wide gap is
+     * room for the face tap's drift, a narrow one fits a one-tile path (L62's turret sits on one).
+     */
+    const sides = [];
+    for (const key of ['up', 'down', 'left', 'right']) {
+        let why = null;
+        for (const G of STATIC_SWORD_STANCE_GAPS) {
+            const c = {
+                up: { key, dir: UP, x: ex, y: r.bottom + G - box0.y },
+                down: { key, dir: DOWN, x: ex, y: r.y - G - box0.bottom },
+                left: { key, dir: LEFT, x: r.right + G - box0.x, y: ey },
+                right: { key, dir: RIGHT, x: r.x - G - box0.right, y: ey },
+            }[key];
+            const w = stanceWhy(c);
+            if (w === null) { sides.push({ ...c, gap: G, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) }); why = null; break; }
+            why ??= w;
+        }
+        if (why !== null) sideWhys.push(`${key}: ${why}`);
+    }
+    sides.sort((a, b) => a.d - b.d);
+    if (sides.length === 0) return { why: `${id}: no side is a stance — ${sideWhys.join(' | ')}` };
+    let side = null;
+    for (const c of sides) {
+        const before = perTick.length;
+        if (hasArrived(run.state, c, DEFAULT_TOLERANCE)) { side = c; break; }
+        try {
+            ctx.onCommit?.(c);
+            // ⛔ NO `dangerExcept` for the body: the stance is outside its box, and excepting it lets the corridor
+            // pass THROUGH the body on the way (measured: sweep leg 549, the player inside `turret@232,248`).
+            ctx.walkTo(ctx.goal, { x: c.x, y: c.y }, {
+                what: `${ctx.what} -> ${id} static sword stance (${c.key})`,
+                contactsOverride: ctx.contacts ?? null,
+            });
+            side = c;
+            break;
+        } catch (e) {
+            if (!(e instanceof SolverRefusal) || perTick.length !== before) throw e;
+            sideWhys.push(`${c.key}: ${e.message.split('\n')[0].slice(0, 200)}`);
+        }
+    }
+    if (!side) return { why: `${id}: no side is reachable — ${sideWhys.join(' | ')}` };
+    const refuse = (msg) => {
+        throw new SolverRefusal(`${ctx.what}: ${msg}`, { goal: ctx.goal, obstacle: { kind: 'static-sword', id },
+            perTick: [...perTick] });
+    };
+    const hitsBefore = run.ledger('playerHits').length;
+    const step = (keys) => {
+        perTick.push(keys);
+        const { transition } = run.advance(keys);
+        if (transition) refuse(`the static sword kill of ${id} crossed a door (trap 150)`);
+        if (run.ledger('playerHits').length !== hitsBefore) {
+            const h = run.ledger('playerHits').at(-1);
+            refuse(`the player was HIT while killing ${id} at run tick ${run.ticksCompleted} (source `
+                + `${h?.source ?? '?'}${h?.id ? ` ${h.id}` : ''}) from the ${side.key} side at `
+                + `(${run.state.x.toFixed(1)},${run.state.y.toFixed(1)})`);
+        }
+    };
+    const rowOf = () => (run.entities('staticBodies') ?? []).find((b) => b.id === id) ?? null;
+    const NO_KEYS = new Set();
+    /**
+     * ⛓ SETTLE before the face tap: the walk arrives within its tolerance with velocity left, and the tap adds an
+     * acceleration toward the body (C1 D1: 1.7 px from rest). Measured on sweep leg 544: arriving at 3 px the
+     * player coasted into `turret@232,248`'s box. So the player stands until still, and steps back (one tick
+     * of the opposite key, then still again) while the box is nearer the body than `STATIC_SWORD_TAP_ROOM`.
+     */
+    const back = { up: 'down', down: 'up', left: 'right', right: 'left' }[side.key];
+    const gapNow = () => {
+        const b = playerBoxAt(run.state.x, run.state.y);
+        return Math.max(r.x - b.right, b.x - r.right, r.y - b.bottom, b.y - r.bottom);
+    };
+    const still = () => Math.abs(run.state.vx ?? 0) < 1e-9 && Math.abs(run.state.vy ?? 0) < 1e-9;
+    /**
+     * ⛔ AND THE SWORD'S OWN WINDOW: a press while `slashTimer` runs is a DASH (`slashSet`'s first arm — 2.55 px/tick
+     * toward the facing). Measured on survey step 31: the walk's own strike-policy presses left the timer running and
+     * the arm's first press dashed the player into `sandtrap@48,80`. So the settle also waits it out.
+     */
+    const slashTimer = () => run.progress('slashInfo')?.state?.slashTimer ?? 0;
+    const settled = () => still() && gapNow() >= STATIC_SWORD_TAP_ROOM && slashTimer() <= 0;
+    for (let k = 0; k < STATIC_SWORD_SETTLE_BOUND && !settled(); k += 1) {
+        step(still() && gapNow() < STATIC_SWORD_TAP_ROOM ? new Set([back]) : NO_KEYS);
+    }
+    if (!settled()) {
+        refuse(`the player does not settle at ${id}'s ${side.key} stance (gap ${gapNow().toFixed(2)} px, `
+            + `velocity (${run.state.vx},${run.state.vy}), slashTimer ${slashTimer()}) within `
+            + `${STATIC_SWORD_SETTLE_BOUND} ticks`);
+    }
+    // ── the turret's spit, priced at the settled stance from the live state ──
+    let wait = 0;
+    let shieldFaced = false;
+    if (as3 === 'Turret') {
+        const plan = staticSwordShotPlan(run, id, { x: run.state.x, y: run.state.y });
+        if (plan.wait !== null) wait = plan.wait;
+        else if (run.progress('inventory')?.hasShield) shieldFaced = true;
+        else refuse(`${id} fires a spit before the kill at every wait up to ${STATIC_SWORD_WAIT_MAX} ticks `
+            + `from the ${side.key} side (${plan.why}), and the run carries no shield to face it`);
+    }
+    for (let w = 0; w < wait; w += 1) step(NO_KEYS);
+    step(new Set([side.key]));
+    let presses = 0;
+    for (let n = 0; n < STATIC_SWORD_PRESS_BOUND && !rowOf()?.dying; n += 1) {
+        step(new Set(['primary']));
+        presses += 1;
+        for (let w = 1; w < KILL_PRESS_CADENCE && !rowOf()?.dying; w += 1) step(NO_KEYS);
+    }
+    if (!rowOf()?.dying) refuse(`${presses} press(es) from the ${side.key} side and ${id} is not dying`);
+    const killedAt = rowOf().killedAt;
+    // The end is the CENSUS, not the row's flag: the removal edits the level record at the top of the next tick
+    // (`fireStaticRemovals`), and until it lands the danger map still prices the corpse at its placement.
+    const inCensus = () => (run.world.combat?.enemies ?? []).some((e) => `${e.tag}@${e.x},${e.y}` === id);
+    for (let w = 0; w < STATIC_SWORD_REMOVAL_BOUND && inCensus(); w += 1) step(NO_KEYS);
+    if (inCensus()) refuse(`${id} is dying and still in the census after ${STATIC_SWORD_REMOVAL_BOUND} ticks`);
+    return { record: { arm: 'static-sword', side: side.key, stance: { x: side.x, y: side.y }, wait, shieldFaced,
+        presses, killedAt, removedAt: rowOf().removedAt, ticks: perTick.length - from } };
+}
+
+/**
+ * ⛓ C1 — the fewest ticks to wait at `side` before the face tap so that `id` (a `Turret`) spawns no spit before the
+ * kill: the live turret copied (`run.entities('shooters')`) and stepped by `turret.js`'s own `stepTurret`, its
+ * `hitsTimer` run down first each tick (`Enemy.update`'s `hitUpdate`, above the aim) and written by each planned
+ * landing (the press at local tick `wait + 2 + 31k` lands one tick later — C1 D1: the press at obs 2 landed at 4);
+ * "die" at the third landing silences it, cancelling a shot in the barrel.
+ */
+function staticSwordShotPlan(run, id, side) {
+    const live = (run.entities('shooters') ?? []).find((t) => t.id === id);
+    if (!live) return { wait: 0, why: 'no live turret state' };
+    const row = (run.entities('staticBodies') ?? []).find((b) => b.id === id);
+    const hitsMax = 3;
+    let firstWhy = null;
+    for (let wait = 0; wait <= STATIC_SWORD_WAIT_MAX; wait += 1) {
+        const t = { ...live, spawned: null };
+        let hits = row?.hits ?? 0;
+        let ht = row?.hitsTimer ?? 0;
+        let dead = false;
+        let shot = null;
+        const landings = new Set(Array.from({ length: STATIC_SWORD_PRESS_BOUND }, (_, k) => wait + 3 + KILL_PRESS_CADENCE * k));
+        const last = wait + 3 + KILL_PRESS_CADENCE * (STATIC_SWORD_PRESS_BOUND - 1);
+        for (let k = 1; k <= last && !dead; k += 1) {
+            if (ht > 0) ht -= 1;
+            t.hitsTimer = ht;
+            stepTurret(t, { frozen: false, player: { x: side.x, y: side.y } });
+            if (t.spawned) { shot = k; break; }
+            if (landings.has(k) && ht <= 0) {
+                hits += 1;
+                ht = 30;
+                if (hits >= hitsMax) dead = true;
+            }
+        }
+        if (shot === null && dead) return { wait, why: null };
+        if (firstWhy === null) firstWhy = shot !== null ? `a spit spawns ${shot} tick(s) after the stance at wait 0` : 'no kill in the bound';
+    }
+    return { wait: null, why: firstWhy };
+}
+
+/** The stance box's clearances from the static body's box tried per side, px, widest first (see `killStaticBySword`). */
+const STATIC_SWORD_STANCE_GAPS = Object.freeze([8, 7, 6, 5, 4, 3]);
+/** The least box-to-body gap the face tap is pressed from (the tap's drift is 1.7 px from rest). */
+const STATIC_SWORD_TAP_ROOM = 3;
+/** Ticks the settle (stand still, step back, the slash window out) may take before the arm refuses. */
+const STATIC_SWORD_SETTLE_BOUND = 30;
+/** Five presses: three landed hits with room for two whiffs (K4's bound). */
+const STATIC_SWORD_PRESS_BOUND = 5;
+/** The longest wait at the stance the turret pricing searches: one shot cycle (54 ticks) and change. */
+const STATIC_SWORD_WAIT_MAX = 60;
+/** "die" (19 updates) then, for a turret, `Mobile.death`'s eleven-call fade, with slack. */
+const STATIC_SWORD_REMOVAL_BOUND = 60;
+
 /** The stance's clearance from the live box, px (see `killIceTurretInPlace`). */
 const ICE_TURRET_STANCE_MARGIN = 3;
 /** Five presses: three landed hits with room for two whiffs. */
@@ -16178,7 +16488,7 @@ function solveSegmentUnder({
                 tick: perTick.length,
                 saw: saw(),
                 goal: { kind: goal.kind, aim: { x: aim.x, y: aim.y } },
-                obstacle: { kind: 'danger', id: hit.sources[0]?.id ?? null },
+                obstacle: dangerObstacleOf(hit),
                 strategy: { verb: rung === 'avoid' ? 'walk' : rung, rung, climb, ...extra },
                 rejected: priorRefusals.map((r) => ({ option: r.rung, why: r.why })),
                 keys: [],
@@ -16972,7 +17282,17 @@ function solveSegmentUnder({
          * actually has a strategy for (a LIVE stepped body; a static census
          * row is a wall for this quantifier).
          */
-        const removable = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
+        let removable = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
+        /**
+         * ⛓⛓ HAMMER-PHASE C1 (`CHOOSER_HIT_SOURCES`) — where the chooser cannot speak (an EMPTY list: no body's
+         * removal admits a corridor, which a body with no danger volume never can), the probe's own hit can: its
+         * sources that a kill arm can watch die, in the hit's order. `mode: 'order'` puts them first always.
+         */
+        if (CHOOSER_HIT_SOURCES.enabled && (removable.length === 0 || CHOOSER_HIT_SOURCES.mode === 'order')) {
+            const admitted = hitSourceBodies(run, hit);
+            const ids = new Set(admitted.map((b) => b.id));
+            removable = [...admitted, ...removable.filter((b) => !ids.has(b.id))];
+        }
         // ⛓ BAIT and the ceiling arm read the head of the ordered set, which
         // is the body the single-return chooser used to hand them.
         const body = removable[0] ?? null;
@@ -17072,9 +17392,33 @@ function solveSegmentUnder({
              * has already removed is never a target: a staging that boots with
              * its tag cleared builds the room without it.
              */
+            /**
+             * ⛓⛓ HAMMER-PHASE C1 — THE SWORD FIRST, WHERE IT REACHES (`STATIC_SWORD_ARM`). A `SandTrap`/`Turret` is
+             * killed by the player's own press (`killStaticBySword`) before the ceiling is asked: the press needs
+             * nothing from the room but a stance, and costs three cadences; the ceiling needs a presser whose group
+             * arms a lane over the body. Where the sword arm cannot apply (no sword, no stance) and no tick was
+             * spent, the ceiling arm below runs exactly as before, and its refusal carries the sword arm's why.
+             */
+            let swordWhy = null;
+            if (STATIC_SWORD_ARM.enabled && STATIC_SWORD_DEATH[target.row?.as3]) {
+                let committed = false;
+                const done = killStaticBySword(run, perTick, target, {
+                    walkTo, goal, contacts, what: `${what} -> kill (${target.id})`,
+                    onCommit: (c) => {
+                        if (committed) return;
+                        committed = true;
+                        rowFor('kill', refused, { arm: 'static-sword', target: target.id, side: c.key });
+                    },
+                });
+                if (done.record) {
+                    records.push({ goal: goal.kind, strategy: 'kill', target: target.id, ...done.record });
+                    return { escalations };
+                }
+                swordWhy = done.why;
+            }
             const weapon = deriveCeilingWeapon(run, contacts);
             if (!weapon.presser) {
-                killWhy = weapon.why;
+                killWhy = swordWhy ? `static sword arm: ${swordWhy} · the ceiling: ${weapon.why}` : weapon.why;
             } else {
                 rowFor('kill', refused, { presser: weapon.presser.tag, target: target.id });
                 /**
@@ -17602,7 +17946,7 @@ function solveSegmentUnder({
                 .join('\n')
             + `\n  ${escalations[escalations.length - 1].rung}: ${lastWhy}`, {
             goal,
-            obstacle: { kind: 'danger', id: hit.sources[0]?.id ?? null },
+            obstacle: dangerObstacleOf(hit),
             considered: escalations.map((e) => ({
                 option: e.rung, why: e.refused?.why ?? 'attempted',
             })).concat([{ option: lastOption, why: lastWhy,
