@@ -3322,6 +3322,14 @@ export const R8_D2_SHIELD = Object.freeze({
                     + 'an escape, both spinners killed, `lock@144,112` opened. Named by this assertion '
                     + 'driving the roster.',
             }),
+            Object.freeze({
+                name: 'hammer-b2-l18-fight40',
+                level: 18,
+                addedBy: 'Seedling hammer-phase B2 D2 (the whole fight as one space-time search, on the game)',
+                why: '`r9-solve-18`\'s staging at its own hammer residue 40, solved with `HAMMER_FIGHT` on: '
+                    + 'both spinners\' six landings in ONE certificate found at the kill\'s admission and held '
+                    + 'tick for tick, `lock@144,112` opened. Named by this assertion driving the roster.',
+            }),
         ]),
     }),
 

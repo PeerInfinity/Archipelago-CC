@@ -89,7 +89,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ fidelity WALLFLYER: +3 (256) — `wallflyer-kill`, `wallflyer-kill-flight`, `wallflyer-shield-bump`.
         // ⛓ fidelity CRUSHER: +1 (257) — `crusher-l42-round-trip`.
         // ⛓ hammer-phase B1: +1 (258) — `hammer-b1-l18-approach40`.
-        expect(names.length).toBe(258);
+        // ⛓ hammer-phase B2: +1 (259) — `hammer-b2-l18-fight40`.
+        expect(names.length).toBe(259);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);
