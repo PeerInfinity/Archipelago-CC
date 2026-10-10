@@ -1,0 +1,1326 @@
+{
+ "name": "wand-l39-wandlock-shot",
+ "source": "wand-l39-wandlock-shot.json (authored by scripts/procgen/plan-seedling-wand-witness.mjs)",
+ "page": "seedling_bot_ap_p4f",
+ "recordedBy": "scripts/procgen/probe-seedling-wand-mobiles.mjs --record",
+ "note": "the GAME's WandShot rows (`botMobiles()`) and the boot level's newly cleared flags (`botStatus().persistence_cleared` less the first sample's) at each sampled tick of the boot level",
+ "samples": [
+  {
+   "t": 0,
+   "player": {
+    "x": 152,
+    "y": 616
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 1,
+   "player": {
+    "x": 152,
+    "y": 615.2
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 2,
+   "player": {
+    "x": 152,
+    "y": 613.85
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 3,
+   "player": {
+    "x": 152,
+    "y": 612.75
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 4,
+   "player": {
+    "x": 152,
+    "y": 611.9
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 5,
+   "player": {
+    "x": 152,
+    "y": 610.5
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 6,
+   "player": {
+    "x": 152,
+    "y": 610.5
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 7,
+   "player": {
+    "x": 152,
+    "y": 610.5
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 8,
+   "player": {
+    "x": 152,
+    "y": 610.5
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 9,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 10,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 11,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 12,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 13,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 14,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 15,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 16,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 17,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 18,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 19,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 20,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "flare",
+     "anim_index": 0
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 21,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 0
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 22,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 1
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 23,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 1
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 24,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 2
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 25,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 0
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 26,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 0
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 27,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 1
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 28,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 2
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 29,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 2
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 30,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 0
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 31,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 1
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 32,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 1
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 33,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 2
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 34,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 0
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 35,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [
+    {
+     "x": 152,
+     "y": 594,
+     "anim": "die",
+     "anim_index": 0
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "t": 36,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 37,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 38,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 39,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 40,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 41,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 42,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 43,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 44,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 45,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 46,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 47,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 48,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 49,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 50,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 51,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 52,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 53,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 54,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 55,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 56,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 57,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 58,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 59,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 60,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 61,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 62,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 63,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 64,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 65,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 66,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 67,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 68,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 69,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 70,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 71,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 72,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 73,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 74,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 75,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 76,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 77,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 78,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 79,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 80,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 81,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 82,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 83,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 84,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 85,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 86,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 87,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 88,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 89,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 90,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 91,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 92,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 93,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 94,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 95,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 96,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 97,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 98,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 99,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 100,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 101,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 102,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 103,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 104,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 105,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 106,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 107,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 108,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 109,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 110,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 111,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 112,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 113,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 114,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 115,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 116,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 117,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 118,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 119,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  },
+  {
+   "t": 120,
+   "player": {
+    "x": 152,
+    "y": 610.1
+   },
+   "shots": [],
+   "cleared": []
+  }
+ ],
+ "tape": {
+  "game": "seedling",
+  "name": "wand-l39-wandlock-shot",
+  "boot": {
+   "level": 39,
+   "x": 144,
+   "y": 608
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [
+   {
+    "level": 5,
+    "tag": 0,
+    "note": ""
+   },
+   {
+    "level": 8,
+    "tag": 0,
+    "note": ""
+   },
+   {
+    "level": 8,
+    "tag": 1,
+    "note": ""
+   },
+   {
+    "level": 10,
+    "tag": 0,
+    "note": ""
+   }
+  ],
+  "equips": [
+   {
+    "t": 8,
+    "slot": 2
+   }
+  ],
+  "pins": [
+   "sound",
+   "dead_frames"
+  ],
+  "save": {
+   "totem_parts": [],
+   "keys": [
+    0,
+    1
+   ],
+   "seal_parts": []
+  },
+  "rng": {
+   "seed": 418414780,
+   "split": false,
+   "cosmetic": 0,
+   "fp": 1763053598
+  },
+  "seam": {
+   "items": {
+    "hasSword": true,
+    "hasGhostSword": false,
+    "hasShield": true,
+    "hasFire": true,
+    "hasWand": true,
+    "hasFireWand": false,
+    "canSwim": false,
+    "hasSpear": false,
+    "hasDarkShield": false,
+    "hasDarkSuit": false,
+    "hasDarkSword": false,
+    "hasFeather": false,
+    "hasTorch": true
+   },
+   "beam": false,
+   "rock_set": false,
+   "hits_max": 3,
+   "first_use": false,
+   "extended": false,
+   "time": 8586,
+   "primary": 0,
+   "secondary": 0,
+   "grass_cut": 0,
+   "cutscene": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "menu_state": 0,
+   "music": {
+    "set": "Room",
+    "index": 1
+   }
+  },
+  "tick_count": 120,
+  "inputs": [
+   {
+    "key": "up",
+    "from": 0,
+    "to": 6
+   },
+   {
+    "key": "primary",
+    "from": 12,
+    "to": 13
+   },
+   {
+    "key": "up",
+    "from": 60,
+    "to": 120
+   }
+  ],
+  "tape_version": 8,
+  "description": "seedling-fidelity-wand D1 NEGATIVE witness: L39 arrival (144,608) under the plug `wandlock@144,592 {tset -1, tag 8}`, the Wand granted; face up, select the wand slot, press, then walk up into the plug. `WandShot.checkEntity` opens only a MagicalLock: the shot dies on the WandLock and the plug stays."
+ }
+}
