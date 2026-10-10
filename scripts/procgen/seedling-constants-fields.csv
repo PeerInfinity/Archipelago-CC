@@ -96,7 +96,8 @@ frontend/modules/seedlingDemo/levelWorld.js|cliffSideClassFor|cliffSideClassFor,
 frontend/modules/seedlingDemo/levelWorld.js|maskHitsBox|maskHitsBox,structural,,,
 frontend/modules/seedlingDemo/levelWorld.js|ropeSpanRect|ropeSpanRect,structural,,,
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|avoidVolumesAt,structural,,,
-frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|nearestWalkableTileWithTie,structural,,,
+frontend/modules/seedlingDemo/levelWorld.js|nearestTileScan|nearestTileScan,structural,,,
+frontend/modules/seedlingDemo/levelWorld.js|withTileWrites|withTileWrites,structural,,,
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|buildLevelWorld,structural,,,
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h16329831|0|0,rule,sentinel,,tag >= 0 means tagged
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hca08c4d0|0|0,rule,sentinel,,tag >= 0 means tagged
@@ -153,7 +154,7 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|solidOver,physics,magni
 frontend/modules/seedlingDemo/levelRun.js|step|h89e67ab9|1|0,rule,magnitude,,timer decrements one per tick
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|step|0,physics,bound,,airborne body still moving
 frontend/modules/seedlingDemo/levelRun.js|step|h98281141|0|0,structural,,,
-frontend/modules/seedlingDemo/levelRun.js|step|hdf442f31|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|step|haf5def61|0|0,rule,bound,,i-frame timer gate (fidelity-bulb: frozen in a Bulb's drop/die)
 frontend/modules/seedlingDemo/levelRun.js|chaserStaticEnemyBoxesNow|h7ceee914|0|0,physics,bound,,chaser row moves only if speed nonzero (R4-swim D2: the forecast and the drive share one helper)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|sweep,physics,sign,,
 frontend/modules/seedlingDemo/levelRun.js|sweep|h60d0f44f|0|0,structural,,,
@@ -1907,3 +1908,4 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2478e7e0|60|0,rule,ma
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9065cb5b|0|0,rule,sentinel,,Ground state 0 (Player.as:297)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb348a44c|116|0,rule,count,,Game.levels.length
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h4254a394|3|0,physics,magnitude,Player.as:wandSpeed,
+frontend/modules/seedlingDemo/bulb.js|bulbSlideStep|bulbSlideStep,physics,magnitude,Enemies/Bulb.as:39-43,Bulb drop/die slide: the tile centre (floor(x / Tile.w) + 0.5) * Tile.w

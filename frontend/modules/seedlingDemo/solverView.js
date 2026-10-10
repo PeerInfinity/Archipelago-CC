@@ -58,7 +58,13 @@ export {
 // camera.js — encounters · physics 2
 export { SCREEN_H, SCREEN_W } from './camera.js';
 // chasers.js — dangerMap, solverBot · seedling 4
-export { bridgedChaserTags, chaserBoxAt, chaserHasSword, isBridgedChaser, killWindowTicks } from './chasers.js';
+export { bridgedChaserTags, chaserBoxAt, chaserHasSword, isBridgedChaser, killWindowTicks, CHASERS } from './chasers.js';
+
+// ⛓ seedling-fidelity-bulb D3: the Bulb's drop death — which classes have one, and the tile under a centre.
+export { hasDropDeath, tileUnder } from './bulb.js';
+
+// ⛓ seedling-fidelity-bulb D3: the contact-fidelity switches (`bulbLive` gates the kill veto's needs).
+export { CONTACT_FIDELITY } from './contactFidelity.js';
 // chest.js — botDriverV2, solverBot · seedling 3
 export { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 // combat.js — dangerMap, encounters, solverBot, strikePolicy · seedling 9
@@ -108,7 +114,7 @@ export {
 // levelWorld.js — botDriverV2, dangerMap, hazards, solverBot, strikePolicy · seedling 3, physics 6
 export {
     assertRect, isNormalizedLiveOpts, LIVE_GEOMETRY_KEYS, normalizeLiveOpts, PRE_R5_ROLES, rect, rectsOverlap,
-    RELAXED_ROLES, TILE_SIZE,
+    RELAXED_ROLES, TILE_SIZE, withTileWrites,
 } from './levelWorld.js';
 // playerPhysicsV1.js — botDriverV1, botDriverV2, mover, solverBot, strikePolicy · physics 11
 export {
