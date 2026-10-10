@@ -77,6 +77,10 @@ import { runBait } from './botDriverV2.js';
 import {
     BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherSightDanger, searchBaitOrdering,
 } from './crusherBait.js';
+// ⛓ SEEDLING FIDELITY WAND — the `wand` verb (behind `WAND_VERB`).
+import { WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb } from './wandVerb.js';
+import { createWandShot, stepWandShot, wandShotRect } from './wandShot.js';
+import { MAGICAL_LOCK_OPEN_TICK_OFFSET } from './magicalLock.js';
 import {
     KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
     fallRocksArmedBy, groupResponders,
@@ -697,7 +701,18 @@ export const STRATEGY_EXECUTORS = Object.freeze({
 export function frontierExecutor(strategy) {
     const row = STRATEGY_EXECUTORS[strategy];
     if (row) return row;
-    return strategy === 'bait' && CRUSHER_BAIT.enabled ? execBait : undefined;
+    if (strategy === 'bait' && CRUSHER_BAIT.enabled) return execBait;
+    // ⛓ SEEDLING FIDELITY WAND — registered only while `WAND_VERB` is on.
+    return strategy === 'wand' && WAND_VERB.enabled ? execWand : undefined;
+}
+
+/**
+ * ⛓ SEEDLING FIDELITY WAND — the clear-tag order's executor lookup: the frozen table, plus `wand` while `WAND_VERB`
+ * is on (a `MagicalLock`'s tag is a flag the wand clears). `bait` is NOT added here: the clear-tag path never had it,
+ * and this lookup answers the table byte for byte with the flag off.
+ */
+function clearTagExecutor(strategy) {
+    return STRATEGY_EXECUTORS[strategy] ?? (strategy === 'wand' && WAND_VERB.enabled ? execWand : undefined);
 }
 
 /**
@@ -1702,6 +1717,215 @@ function execBurn(run, perTick, resolved, ctx) {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING FIDELITY WAND — **THE `wand` VERB OPENS A `MagicalLock`, AND NOTHING ELSE.**
+ *
+ * ⛔ MEASURED ON THE GAME BEFORE A LINE OF THIS WAS WRITTEN (`fixtures/wand-witness/wand-l39-wandlock-shot`, p4f
+ * headless, 0 px): `WandShot.checkEntity` has exactly two acting arms — `_e is Enemy` and `_e is MagicalLock` — and a
+ * `WandLock` is NEITHER. `WandLock extends Lock` with a bare `super(…, sprWandLock)` (`Puzzlements/WandLock.as:13-16`):
+ * a `"Solid"` that the shot dies on, opened only the way every `Lock` is (its `tSet` group, `checkEnemies()` for
+ * `tSet == -1`, or `Wand.removed()`'s `tset 0` activation, and a cleared tag at BUILD). L39's plug is shot from below
+ * in that witness: the shot spawns at (152,594), plays "die" the next tick, `{39,8}` is never written, and the walk
+ * north stays at y 610.1. So `OBSTACLE_STRATEGIES['solid:wandlock'] = 'wand'` names a verb that cannot open it, and
+ * `'solid:magicallock' = 'kill'` names one that cannot open THAT (a `MagicalLock` has no `tSet` and no enemy check).
+ *
+ * ⇒ behind `WAND_VERB` (OFF by default; the tables are SHARED and are not reworded here — `refineStrategy` asks):
+ *   · `wandlock` is refined to `hold`, and from there to `kill` for a `tSet == -1` plug — the lock's own opener;
+ *   · `magicallock` / `magicallockfire` are refined to `wand`, registered here (`resolveWandStrategy` / `execWand`).
+ * With the flag OFF `refineStrategy`, `frontierExecutor` and `resolveObstacleStrategy` answer what they always did.
+ */
+export { WAND_VERB, withWandVerb };
+
+/** The census tags a wand shot opens (`levelWorld`'s `MAGICAL_LOCK_TYPES`: 0 the plain lock, 1 the fire one). */
+export const WAND_TARGET_TAGS = Object.freeze(['magicallock', 'magicallockfire']);
+
+/** Lean key → `Player.direction` (`a = direction * PI/2`: 0 right, 1 up, 2 left, 3 down). */
+const WAND_LEAN_DIRECTION = Object.freeze({ right: 0, up: 1, left: 2, down: 3 });
+/** How many tiles back from the lock a stance is looked for: the shot spawns 16 px out and flies 48 (`tilesMove 3`). */
+const WAND_STANCE_TILES = 4;
+/** The wait after the press, beyond the derived open tick, before the verb calls the open a miss. */
+const WAND_OPEN_SLACK = 4;
+
+/**
+ * Where a shot fired facing `direction` from the player at `at` first stops, previewed with the model's own shot
+ * (`wandShot.stepWandShot`, the epsilon axis included) against the run's LIVE solids — `levelRun`'s blocker
+ * classification for the one arm this verb needs (`magicalLockId`). An Enemy-typed body is not in this preview; the
+ * executor reads the run's own `magicalLocksOpened` after the press, so a body the preview missed is a refusal there,
+ * never a silent pass.
+ */
+function previewWandShot(run, at, direction, fire = false) {
+    const spawn = wandShotSpawn(direction, at.x, at.y);
+    const shot = createWandShot('preview', spawn.x, spawn.y, wandShotVelocity(direction), { fire });
+    const opts = run.liveGeometryOpts();
+    const hitAt = (x, y, s) => {
+        const hit = run.world.collidesSolid(wandShotRect({ ...s, x, y }), opts);
+        if (!hit) return null;
+        return hit.magicalLockId ? { kind: 'magicallock', id: hit.magicalLockId, lockType: hit.lockType }
+            : { kind: 'other', id: hit.id ?? hit.tag ?? null };
+    };
+    for (let i = 0; i <= shot.lifeMax + 1 && !shot.removed && shot.anim !== 'die'; i += 1) {
+        const r = stepWandShot(shot, { tick: i, hitAt });
+        if (r.event) return { event: r.event, spawn };
+    }
+    return { event: null, spawn };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY WAND — RESOLVE the `wand` work order: a `MagicalLock` on the frontier.
+ *
+ * ⛔ **THE GATE IS THE GAME'S.** `MagicalLock.hit(t)` opens on `lockType <= t`; the plain wand's shot is type 0 and
+ * the Fire Wand's type 1 (`WandShot.as:52-57`), so a `magicallockfire` needs the FIRE WAND. And the Fire Wand's slot is
+ * `useItem` case 5 (`wanding` AND `firing` on one press), which `levelRun.weaponForPress` refuses by name — so every
+ * Fire-Wand-only answer is refused here, by name, as that work order.
+ *
+ * ⛔ **THE STANCE IS A LEAN ON THE LOCK'S AXIS.** `Player.direction` is written by `sprites()` from the velocity, so
+ * the one way to face a lock without guessing is to walk at it: each candidate is a walkable tile centre on the lock's
+ * row or column, up to `WAND_STANCE_TILES` back; the lean holds the key toward the lock until the box stops, and the
+ * shot is PREVIEWED from where the lean ends. The first candidate whose preview's first blocker is this lock, and that
+ * a corridor reaches (`stanceReaches`), is the stance.
+ */
+function resolveWandStrategy(run, obstacle, contacts, blocked = []) {
+    const lock = (run.world.magicalLocks ?? []).find((l) => l.id === obstacle.id);
+    if (!lock) return null;
+    const inv = run.progress('inventory') ?? {};
+    const refusal = (why) => ({ strategy: 'wand', held: false, lock: obstacle.id,
+        rejected: [{ option: `wand ${obstacle.id}`, why }] });
+    if (lock.lockType >= 1 && !inv.hasFireWand) {
+        return refusal(`${obstacle.id} is a FIRE MagicalLock (\`lockType 1\`): \`MagicalLock.hit(t)\` opens on `
+            + '`lockType <= t`, and only the Fire Wand\'s shot is type 1. This run does not hold the Fire Wand.');
+    }
+    if (lock.lockType >= 1 || (!inv.hasWand && inv.hasFireWand)) {
+        return refusal(`${obstacle.id} needs the FIRE WAND's shot, whose slot is \`useItem\` case 5 (\`wanding\` AND `
+            + '`firing` on one press). `levelRun.weaponForPress` refuses that case by name — two windows on one press '
+            + 'are not modelled — so the shot this lock needs cannot be pressed by this model. ⇒ the work order is the '
+            + 'case-5 press, not a stance.');
+    }
+    if (!inv.hasWand) {
+        return refusal('this run does not hold the WAND. `WandShot.checkEntity` is the only caller of '
+            + '`MagicalLock.hit`, and a sword, spear or fire press reaches the lock and does nothing. ⇒ the lock NEEDS '
+            + 'the wand: an item the route has not collected yet.');
+    }
+    const r = lock.rect;
+    const cx = Math.floor((r.x + r.w / 2) / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
+    const cy = Math.floor((r.y + r.h / 2) / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
+    const candidates = [];
+    for (let k = 1; k <= WAND_STANCE_TILES; k += 1) {
+        for (const [key, dx, dy] of [['up', 0, 1], ['down', 0, -1], ['left', 1, 0], ['right', -1, 0]]) {
+            const c = { x: cx + dx * k * TILE_SIZE, y: cy + dy * k * TILE_SIZE, key };
+            if (c.x < 0 || c.y < 0) continue;
+            if (plannerObstacleAt(run.world, c.x, c.y, null, solverPlanOpts(run, new Set(), {})) !== null) continue;
+            candidates.push({ ...c, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
+        }
+    }
+    candidates.sort((a, b) => a.d - b.d);
+    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
+    let missed = 0;
+    let unreached = 0;
+    for (const c of candidates) {
+        const leaned = previewLean(run, c, c.key);
+        if (!leaned) { missed += 1; continue; }
+        const shot = previewWandShot(run, leaned, WAND_LEAN_DIRECTION[c.key]);
+        if (!shot.event || shot.event.arm !== 'magicallock' || shot.event.id !== lock.id || !shot.event.opened) {
+            missed += 1;
+            continue;
+        }
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        if (!reached) { unreached += 1; continue; }
+        const here = run.state.x === c.x && run.state.y === c.y;
+        return {
+            strategy: 'wand',
+            postCondition: 'gone',
+            lock: lock.id,
+            tag: lock.tag,
+            lockType: lock.lockType,
+            stance: here ? null : { x: c.x, y: c.y },
+            at: { ...leaned },
+            lean: c.key,
+            direction: WAND_LEAN_DIRECTION[c.key],
+            discharged: reached.discharged,
+            rejected: [{
+                option: 'kill / hold / break',
+                why: `${lock.id} is a \`MagicalLock\` (\`extends Entity\`, not \`Activators\`): no \`tSet\`, no enemy `
+                    + 'check, no swing arm. `WandShot.checkEntity` → `hit(shotType)` is its only opener, and the '
+                    + 'destroy animation\'s wrap (`MAGICAL_LOCK_OPEN_TICK_OFFSET` after the hit) removes it.',
+            }, ...hypothesisRejection(reached.discharged)],
+        };
+    }
+    throw new SolverRefusal(`solverBot: no REACHABLE stance with a clear wand line at ${lock.id} in level `
+        + `${run.level} — ${candidates.length} walkable tile centre(s) on its row/column within ${WAND_STANCE_TILES} `
+        + `tiles; ${missed} lean into a shot whose first blocker is not the lock, and ${unreached} plan no corridor `
+        + `from (${run.state.x},${run.state.y}). ⇒ the lock is on the frontier and the room offers nowhere to stand and `
+        + 'shoot it.', { obstacle: { kind: 'solid', tag: obstacle.tag ?? null, id: lock.id } });
+}
+
+/**
+ * Executor: the `wand` verb — SETTLE, LEAN AT THE LOCK, SELECT THE WAND, PRESS, WAIT FOR THE OPEN, SELECT THE OLD
+ * SLOT AGAIN. `execBurn`'s shape: the slot is restored because every later walk's strike policy presses `primary`.
+ * The open is read off the run (`magicalLocksOpened`, its `openTick`), never assumed from the press.
+ */
+function execWand(run, perTick, resolved, ctx) {
+    const refuse = (why) => {
+        throw new SolverRefusal(why, { obstacle: { kind: 'solid', id: resolved.lock } });
+    };
+    if (resolved.held === false) {
+        return refuse(`${ctx.what}: ${resolved.lock} cannot be opened by this run — ${resolved.rejected[0].why}`);
+    }
+    if (!ctx.equip) {
+        throw new Error(`${ctx.what}: the wand verb needs the segment's \`equip\` (a slot selection the tape `
+            + 'carries); this caller handed none.');
+    }
+    const from = perTick.length;
+    const NO_KEYS = new Set();
+    const step = (keys, what) => {
+        perTick.push(keys);
+        const { transition } = run.advance(keys);
+        if (transition) refuse(`${ctx.what}: the run crossed to level ${transition.to_level} ${what}.`);
+    };
+    const settle = (what) => {
+        for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+            if (i > BURN_SETTLE_MAX) refuse(`${ctx.what}: ${what} never came to rest.`);
+            step(NO_KEYS, `while settling after ${what}`);
+        }
+    };
+    settle('the walk to the wand stance');
+    const held = new Set([resolved.lean]);
+    for (let i = 0; i < BURN_LEAN_MAX; i += 1) {
+        const before = { x: run.state.x, y: run.state.y };
+        step(held, `on the lean toward ${resolved.lock}`);
+        if (run.state.x === before.x && run.state.y === before.y) break;
+    }
+    settle('the lean');
+    const shot = previewWandShot(run, run.state, resolved.direction);
+    if (run.direction !== resolved.direction || !shot.event || shot.event.id !== resolved.lock) {
+        refuse(`${ctx.what}: the lean came to rest at (${run.state.x},${run.state.y}) facing ${run.direction}, and a `
+            + `shot from there stops on ${shot.event ? shot.event.id : 'nothing'} — not ${resolved.lock}. The stance `
+            + `this verb derived leaned to (${resolved.at.x},${resolved.at.y}) facing ${resolved.direction}.`);
+    }
+    const prior = run.progress('primary');
+    if (run.progress('primaryWeapon') !== 'wand') {
+        const slot = run.progress('inventorySlots').indexOf(INVENTORY_ITEM_IDS.wand);
+        if (slot < 0) refuse(`${ctx.what}: the inventory has no Wand slot.`);
+        ctx.equip(slot);
+    }
+    const pressTick = run.ticksCompleted;
+    step(new Set(['primary']), `on the wand press at ${resolved.lock}`);
+    // fire tick, the deferred add, the flight (at most `lifeMax`, 16 updates), the destroy animation's wrap.
+    const deadline = pressTick + WAND_WINDOW.fireTick + 1 + 16 + MAGICAL_LOCK_OPEN_TICK_OFFSET + WAND_OPEN_SLACK;
+    let opened = null;
+    while (!(opened = run.magicalLocksOpened.find((l) => l.id === resolved.lock && run.ticksCompleted >= l.openTick))) {
+        if (run.ticksCompleted > deadline) {
+            const hits = run.wandShotHits.filter((h) => h.t >= pressTick);
+            refuse(`${ctx.what}: the wand was pressed at t${pressTick} toward ${resolved.lock} and it is not open by `
+                + `t${run.ticksCompleted} — the shot(s) since stopped on [${hits.map((h) => h.id).join(', ')}].`);
+        }
+        step(NO_KEYS, `while waiting for ${resolved.lock} to open`);
+    }
+    if (run.progress('primary') !== prior) ctx.equip(prior);
+    return { verb: 'wand', target: resolved.lock, from, ticks: perTick.length - from, pressTick,
+        hitTick: opened.hitTick, openTick: opened.openTick, stance: resolved.stance, lean: resolved.lean,
+        restoredSlot: prior };
+}
+
+/**
  * ⛓⛓⛓ SEEDLING FIDELITY WATCHER — the `talk` verb's bounds. A stance is a tile
  * centre at least `TALK_STANCE_MARGIN` px OUTSIDE the talk circle (so the walk
  * to it cannot overshoot into it and open the dialogue mid-drive) and no more
@@ -2011,6 +2235,15 @@ export const NESTED_OPENER_DEPTH = 2;
  * are which, and it is asked rather than copied (trap 89).
  */
 function refineStrategy(run, strategy, obstacle) {
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY WAND (behind `WAND_VERB`) — the two rows the game contradicts, asked here so the
+     * shared table keeps its words: a `wandlock` is a `Lock` (its group's verb, then the kill-lock arm below), and a
+     * `MagicalLock` is opened by the wand's shot alone. See `WAND_VERB`.
+     */
+    if (WAND_VERB.enabled) {
+        if (WAND_TARGET_TAGS.includes(obstacle?.tag) && obstacle?.kind === 'solid') return 'wand';
+        if (strategy === 'wand' && obstacle?.tag === 'wandlock') strategy = 'hold';
+    }
     if (strategy !== 'hold') return strategy;
     /**
      * ⛓⛓ SEEDLING SWIM U1, D2 — THE TRAP PRESSER. Asked FIRST and only of a
@@ -2106,6 +2339,8 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'brave') return resolveBraveStrategy(run, obstacle, contacts);
     // ⛓ CRUSHER — reached only while `CRUSHER_BAIT` registers the verb (`frontierExecutor`).
     if (strategy === 'bait') return resolveBaitStrategy(run, obstacle, aim, allowTeleporter);
+    // ⛓ WAND — reached only while `WAND_VERB` registers the verb (`frontierExecutor`).
+    if (strategy === 'wand') return resolveWandStrategy(run, obstacle, contacts, blocked);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
@@ -19124,7 +19359,7 @@ function solveSegmentUnder({
         const obstacle = { kind: 'solid', tag: cls, id };
         const key = `solid:${cls}`;
         const strategy = refineStrategy(run, OBSTACLE_STRATEGIES[key] ?? null, obstacle);
-        if (!strategy || !STRATEGY_EXECUTORS[strategy]) {
+        if (!strategy || !clearTagExecutor(strategy)) {
             refuseCT('no-verb', strategy
                 ? `${key} selects '${strategy}', which is NOT REGISTERED — no executor clears this flag `
                     + 'yet (a later slice\'s row, computed rather than guessed)'
@@ -19183,7 +19418,7 @@ function solveSegmentUnder({
                 why: `the walk to ${verb}'s stance cleared ${id} on its way — the verb is not run again` });
             return;
         }
-        const record = STRATEGY_EXECUTORS[verb](run, perTick, resolved, {
+        const record = clearTagExecutor(verb)(run, perTick, resolved, {
             maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb}`,
             before, walkTo, goal, equip, rewind,
         });
