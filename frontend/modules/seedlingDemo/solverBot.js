@@ -9902,8 +9902,9 @@ export function withHammerFightFallback(enabled, fn, mode = null) {
  * lies inside `bobsoldier@880,832`'s volume, no body's removal admits a corridor, the list is EMPTY and the kill rung
  * refuses although the probe's own hit, `spinner@880,848`, is a body the press arm kills. With this switch the
  * climb consults `hit.sources` (the corridor probe's answer, in the order the walk met them): a source that is a
- * body some kill arm can watch die — a live spinner the run steps, a live chaser, or (with `STATIC_SWORD_ARM`) a
- * static `SandTrap`/`Turret` still in the census — is admitted, ordered by the hit.
+ * body some kill arm can watch die AND that the chooser could not speak for — a live spinner the run steps, or
+ * (with `STATIC_SWORD_ARM`) a static `SandTrap`/`Turret` still in the census of a stepped room — is admitted,
+ * ordered by the hit (`hitSourceBodies`; never a chaser, whose removal the chooser already asked about).
  *   - `mode: 'empty'` (the default): only where the chooser's list is EMPTY. The smallest change: every climb the
  *     chooser already answers keeps its answer.
  *   - `mode: 'order'`: the admitted sources are put FIRST, ahead of the chooser's own list (a measurement arm).
@@ -9945,15 +9946,19 @@ function dangerObstacleOf(hit) {
 }
 
 /**
- * ⛓ C1 — the probe's hit sources a kill arm can watch die, in the hit's order (see `CHOOSER_HIT_SOURCES`). A spinner
- * must be live in `spinnerBodies`, a chaser live in `chasers` (neither dying nor destroyed); a static body must be a
- * `STATIC_SWORD_DEATH` class still in the census, not already dying, and asked only with `STATIC_SWORD_ARM` ON.
+ * ⛓ C1 — the probe's hit sources a kill arm can watch die AND the chooser could not speak for, in the hit's order
+ * (see `CHOOSER_HIT_SOURCES`):
+ *   - a live spinner (`spinnerBodies`): it has no danger volume, so "its removal admits a corridor" is vacuous;
+ *   - with `STATIC_SWORD_ARM` ON, a `STATIC_SWORD_DEATH` body still in the census and not dying, in a STEPPED room
+ *     (where the chooser never hypothesises a static body).
+ * ⛔ NEVER A CHASER: a live chaser is in the chooser's hypothesis set and has a volume, so an empty list already says
+ * its removal admits no corridor. Measured: admitting `bob@208,32` on `r9-solve-16` (L16) took the climb to BAIT,
+ * whose dwell was hit — the segment the switch-off ladder solves by DETOUR.
  */
 function hitSourceBodies(run, hit) {
     const out = [];
     const seen = new Set();
     const spinners = new Map((run.entities('spinnerBodies') ?? []).map((b) => [b.id, b]));
-    const chasers = new Map((run.entities('chasers') ?? []).map((c) => [c.id, c]));
     const dying = new Set((run.entities('staticBodies') ?? []).filter((b) => b.dying || b.removed).map((b) => b.id));
     for (const sx of hit.sources ?? []) {
         const id = sx.id;
@@ -9961,11 +9966,8 @@ function hitSourceBodies(run, hit) {
         if (sx.kind === 'spinner' && spinners.has(id)) {
             const b = spinners.get(id);
             out.push({ id, tag: id.slice(0, id.indexOf('@')), x: b.x, y: b.y, kind: 'spinner', stepped: true, viaHit: true });
-        } else if (sx.kind === 'chaser' && chasers.has(id)) {
-            const c = chasers.get(id);
-            if (c.dying || c.destroy) continue;
-            out.push({ ...c, stepped: true, viaHit: true });
-        } else if (sx.kind === 'enemy' && STATIC_SWORD_ARM.enabled && !dying.has(id)) {
+        } else if (sx.kind === 'enemy' && STATIC_SWORD_ARM.enabled && !dying.has(id)
+            && (run.chaserRoomVerdict?.(run.level)?.stepped) === true) {
             const e = (run.world.combat?.enemies ?? []).find((r) => `${r.tag}@${r.x},${r.y}` === id);
             if (!e || !STATIC_SWORD_DEATH[e.as3]) continue;
             out.push({ id, tag: e.tag, x: e.cx ?? e.x, y: e.cy ?? e.y, row: e, stepped: false, viaHit: true });
@@ -11375,6 +11377,12 @@ function killStaticBySword(run, perTick, target, ctx) {
     const id = target.id;
     const as3 = target.row?.as3 ?? null;
     if (!STATIC_SWORD_DEATH[as3]) return { why: `${id}: \`${as3}\` is not a class the static sword arm kills` };
+    // ⛔ A class whose `removed()` writes its tag, placed with none (`tag -1`), would write OUT OF BAND — the model refuses
+    // that death by name (`levelRun`, F4's rule), so the arm does not plan it (measured: the ENEMY census's corridor room).
+    if (STATIC_SWORD_DEATH[as3].writesTag && persistTagOf(target.row) === null) {
+        return { why: `${id} carries no persistence tag, so its \`removed()\` would write OUT OF BAND — a death the model `
+            + 'refuses by name (F4\'s rule); not planned' };
+    }
     const weapon = run.progress('primaryWeapon');
     if (weapon !== 'sword') {
         return { why: `${id}: the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``}`
