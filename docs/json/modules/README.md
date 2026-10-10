@@ -56,6 +56,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - **Options Panel** (`optionsPanel`) — general application settings and preferences, including the auto-generated All Settings view.
 - [Modules](./modules.md)
 - [Quick Launch](../user/modules/quickLaunch.md) (`quickLaunch`) — a button per registered panel (opens it, or brings it forward) and a link per user guide; its catalog is read off the live registry and each module's own `moduleInfo` (`docs` = its guide). Code: `frontend/modules/quickLaunch/`.
+- [Tutorial](../user/modules/tutorials.md) (`tutorials`) — step-by-step tutorials shown one step at a time and performed on request (Do it / Play), with an animated cursor and an outline on the next control; starting one splits the panel's column, Merge restores it. The tutorials are data (`content/`), and the user guides they replace are generated from it (`scripts/tutorials/generate-tutorial-docs.mjs`). Code: `frontend/modules/tutorials/`.
 - [Editor CodeMirror6](./editorCodeMirror6.md)
 - [Editor](./editor.md) *(disabled)*
 - **Rule Converter** (`ruleConverter`) *(disabled)* — converts between Python code and JSON rule format.

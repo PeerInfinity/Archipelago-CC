@@ -900,6 +900,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Timer panel is a dedicated space for the automated location-checking timer. It acts as a host container — the timer UI itself is created by the Timer service module and attached here."
     },
     {
+        "path": "docs/json/user/modules/tutorials.md",
+        "title": "Tutorial Panel",
+        "section": "user/modules",
+        "summary": "The Tutorial panel walks you through the app one step at a time — and can do each step for you, so you can watch what happens. It sits in the left column of the default layout, next to Quick Launch."
+    },
+    {
         "path": "docs/json/user/modules/windowManagerPanel.md",
         "title": "Window Manager Panel",
         "section": "user/modules",
@@ -978,6 +984,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/storagePanel.md",
             "docs/json/user/modules/textAdventure.md",
             "docs/json/user/modules/timerPanel.md",
+            "docs/json/user/modules/tutorials.md",
             "docs/json/user/modules/windowManagerPanel.md",
             "docs/json/user/modules/windowPanel.md"
         ],

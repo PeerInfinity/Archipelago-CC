@@ -1405,6 +1405,30 @@
             "enabled": true,
             "category": "procgenPipeline",
             "_comment": "SUBSTRATE CHART S4. The pipeline's Substrates (click to add) rows, a selected row and the sphere per-region override options show the live entry's label and hover cardText(cardOf(entry, capabilityRows(getAll()))) computed in the row; the stored value stays the id. Category procgenPipeline is claimed by no batch, so it runs in the default batch (fast). Restores the Scenario Pool collapse state and the active substrate dict."
+        },
+        {
+            "id": "tutorial-panel-lists-every-tutorial",
+            "enabled": true,
+            "category": "Tutorials",
+            "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials is claimed by no batch, so it runs in the default batch (fast). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
+        },
+        {
+            "id": "tutorial-start-splits-and-merge-restores",
+            "enabled": true,
+            "category": "Tutorials",
+            "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials is claimed by no batch, so it runs in the default batch (fast). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
+        },
+        {
+            "id": "tutorial-cursor-and-outline-reach-tabs",
+            "enabled": true,
+            "category": "Tutorials",
+            "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials is claimed by no batch, so it runs in the default batch (fast). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
+        },
+        {
+            "id": "tutorial-guided-tour-plays-every-step",
+            "enabled": true,
+            "category": "Tutorials",
+            "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials is claimed by no batch, so it runs in the default batch (fast). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
         }
     ]
 }

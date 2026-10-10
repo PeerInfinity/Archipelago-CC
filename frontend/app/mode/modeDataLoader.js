@@ -447,7 +447,7 @@ async function resolveRulesOverride(urlParams, fetchJson, logger) {
  *   - playerParam is ignored for non-multiworld games
  *
  */
-function findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerParam, logger) {
+export function findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerParam, logger) {
   let gameEntry = null;
   let gameKey = null;
 

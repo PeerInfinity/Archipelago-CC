@@ -8,6 +8,10 @@
       "path": "./modules/quickLaunch/index.js",
       "enabled": true
     },
+    "tutorials": {
+      "path": "./modules/tutorials/index.js",
+      "enabled": true
+    },
     "json": {
       "path": "./modules/json/index.js",
       "enabled": true
@@ -316,6 +320,7 @@
   "loadPriority": [
     "modules",
     "quickLaunch",
+    "tutorials",
     "json",
     "storagePanel",
     "events",

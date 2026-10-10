@@ -19,6 +19,11 @@
             },
             {
               "type": "component",
+              "componentType": "tutorialPanel",
+              "title": "Tutorial"
+            },
+            {
+              "type": "component",
               "componentType": "inventoryPanel",
               "title": "Inventory"
             },
