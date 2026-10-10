@@ -54,7 +54,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 61,
-            "count": 99,
+            "count": 100,
             "id": "check"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 395,
+        "blockStyle": 396,
         "browser": 133,
-        "cited": 195,
-        "files": 407,
+        "cited": 196,
+        "files": 408,
         "lineStyle": 12,
-        "withDocblock": 407,
-        "withFlags": 325
+        "withDocblock": 408,
+        "withFlags": 326
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -4224,6 +4224,81 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-rerecord-rehearsal — **THE RE-RECORD PIPELINE IS REHEARSED BEFORE IT SPENDS A GPU, AND THIS GATE IS WHAT MAKES THAT A STANDING CLAIM.** R9 slice P1b, ⚖ ruling 54 (3).",
             "path": "scripts/procgen/check-seedling-rerecord-rehearsal.mjs"
+        },
+        {
+            "argvHelpers": [
+                "valueOf"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "args",
+                "check",
+                "every",
+                "json",
+                "keep",
+                "row",
+                "rows",
+                "script"
+            ],
+            "file": "check-seedling-rewind-exactness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "args"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "every"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "keep"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "row"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "rows"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "script"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "check-seedling-rewind-exactness — ⛓ SEEDLING HAMMER-PHASE B3 (D0): THE REWOUND RUN IS THE STRAIGHT RUN.",
+            "path": "scripts/procgen/check-seedling-rewind-exactness.mjs"
         },
         {
             "argvHelpers": [],
