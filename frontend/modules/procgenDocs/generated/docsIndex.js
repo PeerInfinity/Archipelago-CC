@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 27,
         "headings": 1028,
         "indexHeadings": 2,
-        "lines": 26589,
+        "lines": 26592,
         "pages": 4,
-        "words": 337877
+        "words": 337926
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -341,7 +341,7 @@ export const DOCS_INDEX = frz({
                 "seedling-editor.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 19990
+            "words": 20006
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -360,7 +360,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
             "headings": 566,
-            "lines": 20330,
+            "lines": 20333,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -368,7 +368,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 208088
+            "words": 208121
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",
