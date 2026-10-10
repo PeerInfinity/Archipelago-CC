@@ -168,8 +168,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity WALLFLYER: +3 (256) — `wallflyer-kill`, `wallflyer-kill-flight`, `wallflyer-shield-bump`, inert.
         // ⛓ fidelity CRUSHER: +1 (257) — `crusher-l42-round-trip`, inert.
         // ⛓ hammer-phase B1: +1 (258) — `hammer-b1-l18-approach40`, inert.
-        expect(rows).toHaveLength(258);
-        expect(rows.length - parted.length).toBe(257);
+        // ⛓ hammer-phase B2: +1 (259) — `hammer-b2-l18-fight40`, inert.
+        expect(rows).toHaveLength(259);
+        expect(rows.length - parted.length).toBe(258);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

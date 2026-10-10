@@ -118,7 +118,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity WALLFLYER: +3 (256) — `wallflyer-kill`, `wallflyer-kill-flight`, `wallflyer-shield-bump`.
         // ⛓ fidelity CRUSHER: +1 (257) — `crusher-l42-round-trip`.
         // ⛓ hammer-phase B1: +1 (258) — `hammer-b1-l18-approach40`.
-        expect(names.length).toBe(258);
+        // ⛓ hammer-phase B2: +1 (259) — `hammer-b2-l18-fight40`.
+        expect(names.length).toBe(259);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -171,7 +172,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity WALLFLYER: 256 with `wallflyer-kill`, `wallflyer-kill-flight`, `wallflyer-shield-bump`.
         // ⛓ fidelity CRUSHER: 257 — `crusher-l42-round-trip` crosses to L40.
         // ⛓ hammer-phase B1: 258 — the approach witness crosses to L19 too.
-        expect(tally.swapped).toBe(258);
+        // ⛓ hammer-phase B2: 259 — the fight witness crosses to L19 too.
+        expect(tally.swapped).toBe(259);
     }, 600_000);
 });
 
