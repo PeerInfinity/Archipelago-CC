@@ -91,3 +91,56 @@ def test_builds_with_only_the_standard_library(tmp_path):
                             capture_output=True, text=True, cwd=tmp_path, timeout=120)
     assert result.returncode == 0, result.stderr[-3000:]
     assert result.stdout.strip().endswith(tuple("0123456789"))
+
+
+# A minimal hand-written rules.json: no world_attributes block, which an export
+# always carries. The generator used to crash on it ("cannot access local
+# variable 'shop_wrapper_section'") because the template's two shop sections
+# were only assigned inside the world_attributes branch.
+_HAND_WRITTEN_RULES = {
+    "schema_version": 3,
+    "game_name": "Tiny Mod",
+    "game_directory": "tiny_mod",
+    "archipelago_version": "0.0.0",
+    "generation_seed": 1,
+    "player_names": {"1": "Player1"},
+    "regions": {"1": {
+        "Menu": {"name": "Menu", "locations": [], "exits": [
+            {"name": "Enter Village", "connected_region": "Village", "access_rule": {"rule": "True_"}}]},
+        "Village": {"name": "Village", "exits": [
+            {"name": "Cave Door", "connected_region": "Cave",
+             "access_rule": {"rule": "Has", "args": {"item_name": "Lantern"}}}],
+            "locations": [
+                {"name": "Village Chest", "id": 1, "access_rule": {"rule": "True_"}},
+                {"name": "Blacksmith Reward", "id": 2,
+                 "access_rule": {"rule": "Has", "args": {"item_name": "Iron Ore"}}}]},
+        "Cave": {"name": "Cave", "exits": [], "locations": [
+            {"name": "Cave Chest", "id": 3, "access_rule": {"rule": "True_"}},
+            {"name": "Cave Boss", "id": 4, "access_rule": {"rule": "Has", "args": {"item_name": "Sword"}}},
+            {"name": "Victory", "id": None, "access_rule": {"rule": "Has", "args": {"item_name": "Sword"}},
+             "item": {"name": "Victory", "player": 1, "advancement": True, "type": "None"},
+             "locked": True, "event": True}]},
+    }},
+    "start_regions": {"1": {"default": ["Menu"], "available": []}},
+    "items": {"1": {
+        name: {"name": name, "id": i, "groups": [], "classification": cls, "type": None, "max_count": 1}
+        for i, (name, cls) in enumerate([("Lantern", "progression"), ("Iron Ore", "progression"),
+                                         ("Sword", "progression"), ("Gold", "filler")], start=1)
+    } | {"Victory": {"name": "Victory", "id": None, "groups": [], "classification": "progression",
+                     "type": "Event", "max_count": 1}}},
+    "item_groups": {"1": []},
+    "itempool_counts": {"1": {"Lantern": 1, "Iron Ore": 1, "Sword": 1, "Gold": 1}},
+    "world": {"1": {"game": "Tiny Mod"}},
+    "game_info": {"1": {"completion_condition": {"rule": "Has", "args": {"item_name": "Victory"}}}},
+}
+
+
+def test_builds_a_hand_written_rules_file_without_world_attributes(tmp_path):
+    assert "world_attributes" not in _HAND_WRITTEN_RULES
+    rules = tmp_path / "rules.json"
+    rules.write_text(json.dumps(_HAND_WRITTEN_RULES))
+    built = build_apworld(rules)
+    assert built["file_name"] == "tiny_mod.apworld"
+    init_source = _entries(built["data"])["tiny_mod/__init__.py"].decode()
+    compile(init_source, "tiny_mod/__init__.py", "exec")
+    assert "_ShopWrapper" not in init_source

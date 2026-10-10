@@ -739,6 +739,10 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     # Generate __init__ method for world_attributes (game-specific instance attributes)
     init_section = ''
     needs_types_import = False
+    # The template below always interpolates these two; a rules.json with no
+    # world_attributes (a hand-written one) never enters the block that sets them.
+    shop_wrapper_section = ''
+    create_shops_method = ''
     if data.world_attributes:
         init_attrs = []
         for attr_name, attr_value in data.world_attributes.items():
@@ -784,8 +788,6 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
 
         # Check if we need the ShopWrapper class (for games with shops)
         has_shops = 'shops' in data.world_attributes and data.world_attributes['shops']
-        shop_wrapper_section = ''
-        create_shops_method = ''
         if has_shops:
             shop_wrapper_section = '''
 
