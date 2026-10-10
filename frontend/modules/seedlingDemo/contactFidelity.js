@@ -159,11 +159,14 @@ export const CONTACT_FIDELITY = {
      * fidelity STATICLADDER D2 — a `DarkTrap` dies to a lit `LightPole` (`enemyDamage.DARKTRAP_LIGHT_DEATH`):
      * `levelRun.stepDarkTrapsNow` starts the death when the pole's light is within 28 px, the body is harmless from
      * that tick, and "die1"'s end removes it and writes its tag; the danger map stops pricing a dying one and the
-     * combat ladder's kill rung gains a LIGHT arm (press the pole). ⚖ ON by default (user, 2026-10-10; flipped at the
-     * wave-10 harvest — the slice shipped it OFF): no committed tape, producer or planner moves; survey 113/115/208 do
-     * (115 REFUSED → SOLVED 290 t).
+     * combat ladder's kill rung gains a LIGHT arm (press the pole). ⚖ OFF by default again (user, 2026-10-10): flipped
+     * ON at the wave-10 harvest, then GAME-REFUTED in L65 by wave 11's PUSHBLOCK (step 146's walk lights a pole and the
+     * game's `darktrap@144,144` does NOT die — the player takes 2 hits; step 148's walk leaves the game 3 ticks after its
+     * light-arm thrust; in L63 the arm's stance misses the pole's core by ~1 px). Evidence:
+     * `CC/docs/cloud-reports/seedling-fidelity-pushblock-evidence/lightarm-refuted-l65-*`. OFF until a fix slice
+     * re-witnesses L62, L65 and L63 on the game. OFF moves no committed tape (ON never did); survey 115 refuses again.
      */
-    darkTrapLight: true,
+    darkTrapLight: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

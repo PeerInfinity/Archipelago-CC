@@ -56,9 +56,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
-        // ⛓ fidelity STATICLADDER D2: `darkTrapLight` shipped OFF; ⚖ (user, 2026-10-10) ON at the wave-10 harvest.
+        // ⛓ fidelity STATICLADDER D2: `darkTrapLight` shipped OFF; ⚖ (user, 2026-10-10) ON at the wave-10 harvest, then
+        // OFF again the same day (game-refuted in L65 by PUSHBLOCK) until a fix slice re-witnesses it.
         expect(CONTACT_FIDELITY).toEqual({ collideLinePointsExact: true, wallFlyerSwordHits: true, drillLive: true,
-            bobSoldierLive: true, wallFlyerKill: true, wallFlyerShieldBump: true, darkTrapLight: true });
+            bobSoldierLive: true, wallFlyerKill: true, wallFlyerShieldBump: true, darkTrapLight: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
