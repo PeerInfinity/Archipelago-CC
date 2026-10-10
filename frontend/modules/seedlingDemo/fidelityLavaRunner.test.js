@@ -59,8 +59,8 @@ function disagreements(col) {
 }
 
 describe('STATICLADDER D3 — K2\'s lavarunner game witness (survey step 190)', () => {
-    it('K2 still ships OFF (the flip is the user\'s licence; this is the witness it waited for)', () => {
-        expect(KILLLOCK_BODIES_DEFAULTS.lavaRunnerLive).toBe(false);
+    it('K2 ships ON (⚖ user, 2026-10-10, at the wave-10 harvest; this is the witness it waited for)', () => {
+        expect(KILLLOCK_BODIES_DEFAULTS.lavaRunnerLive).toBe(true);
     });
     it('K2 ON: the player and every LavaRunner (position, velocity, hits, hits_timer, presence) at every sampled tick', () => {
         const col = withKillLockBodies({ lavaRunnerLive: true }, () => replay());

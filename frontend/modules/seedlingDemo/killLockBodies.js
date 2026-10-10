@@ -46,12 +46,14 @@
  */
 /**
  * ⚖ THE DEFAULTS (user, 2026-10-06; flipped at the wave-8 harvest by `seedling-fidelity-planning-4`): K1, K3, K4 and
- * K5 ON; K2 `lavaRunnerLive` stays OFF until a lavarunner GAME witness exists (its rooms' kills are unwitnessed).
- * ON moves no committed tape; it moves survey rows and the ENEMY census default (the slice's report, D3).
+ * K5 ON; K2 `lavaRunnerLive` stayed OFF until a lavarunner GAME witness existed. ⚖ (user, 2026-10-10) K2 ON too, at
+ * the wave-10 harvest: STATICLADDER D3 recorded the witness (`staticladder-k2-step190-lavarunner`, survey step 190's
+ * walk, 1,050 body comparisons, worst |Δ| 0). ON moves no committed tape; it moves survey rows (190 → SOLVED 666 t;
+ * 158/160/189/200 re-worded refusals).
  */
 export const KILLLOCK_BODIES = {
     jellyfishLive: true,
-    lavaRunnerLive: false,
+    lavaRunnerLive: true,
     chaserKillArm: true,
     turretRemovalLedger: true,
     darkShieldIceTurret: true,
