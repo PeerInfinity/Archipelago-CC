@@ -150,6 +150,13 @@
       "noHazards": []
     },
     {
+      "file": "enc-l32-live-arrival.json",
+      "tickCount": 1049,
+      "bootLevel": 32,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "f1-l5-lock-removal.json",
       "tickCount": 380,
       "bootLevel": 5,
