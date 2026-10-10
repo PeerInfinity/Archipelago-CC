@@ -11,7 +11,7 @@ import {
 import { PAGE_CHAINS } from './director.js';
 import { PLAYTHROUGH_CHAINS } from './playthroughWalk.js';
 import { DEMOS } from '../procgenDocs/demos.js';
-import { R8_ENEMY_BRIDGE, campaignBridgeCoverageFindings } from './r8Acceptance.js';
+import { campaignBridgeCoverageFindings, declaredBridgedClasses } from './r8Acceptance.js';
 import { atlasLevelSource } from './levelSource.js';
 import { campaignChainMarkdown } from '../../../scripts/procgen/reference/campaignChain.mjs';
 
@@ -192,7 +192,8 @@ describe('the campaign chain has ONE declaration (R9 slice 12d)', () => {
 describe('the campaign\'s bridged rooms all have a prediction row', () => {
     const bridgedLevels = () => {
         const src = atlasLevelSource();
-        const tags = R8_ENEMY_BRIDGE.bridgedClasses;
+        // ⛓ K2PREP D1: the declaration as the switches stand (the lavarunner joins under K2).
+        const tags = declaredBridgedClasses();
         const out = new Set();
         for (let l = 0; l < 130; l += 1) {
             let rec;
