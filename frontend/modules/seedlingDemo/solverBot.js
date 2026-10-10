@@ -9851,41 +9851,6 @@ export function withHammerFight(enabled, fn) {
 }
 
 /**
- * ⛓⛓ SEEDLING HAMMER-PHASE B3 — THE REPLAY, as a pure function: a fresh run (`makeRun()` — `solveSegment`'s `forkRun`,
- * a run at the segment's BOOT) with `perTick[from … to)` replayed through `advance` (`from` is 0: the caller's prefix
- * INCLUDED, its own non-key inputs re-made by the factory), each tick's slot selections (`equips`, `{at, slot}`)
- * applied before it and its apitem takes (`takes`, `{at, level, id, tag}`) after it — the order the segment's own view
- * applies them. No snapshot: the replay IS the state at `to`. Checked: at tape tick `handover.at` (the end of the
- * prefix) the replayed run must have completed `handover.ticks` — the clock of the run the segment was handed.
- * `solveSegment`'s fork (`bait`) and rewind (the fight fallback) both call it; the exactness gate compares it with the
- * live run (`check-seedling-rewind-exactness.mjs`).
- */
-export function replayToTick({ makeRun, perTick, from = 0, to, handover = { at: from, ticks: 0 }, equips = [],
-    takes = [] }) {
-    if (!Number.isInteger(to) || to < from || to > perTick.length || handover.at < from || handover.at > to) {
-        fail(`replayToTick: tick ${to} (handover ${handover.at}) is outside the replayable span [${from}, `
-            + `${perTick.length}]`);
-    }
-    const r = makeRun();
-    const check = () => {
-        if (r.ticksCompleted !== handover.ticks) {
-            fail(`replayToTick: the run factory must build the run the segment was handed (${handover.ticks} `
-                + `tick(s) completed at tape tick ${handover.at}); its replay stood at ${r.ticksCompleted} there — a `
-                + 'replay from another state is not this run\'s past.');
-        }
-    };
-    if (!r || typeof r.advance !== 'function') fail('replayToTick: the run factory built no run');
-    for (let t = from; t < to; t += 1) {
-        if (t === handover.at) check();
-        for (const e of equips) if (e.at === t) r.equipNow(e.slot);
-        r.advance(perTick[t]);
-        for (const a of takes) if (a.at === t) r.takeApItem({ level: a.level, id: a.id, tag: a.tag });
-    }
-    if (to === handover.at) check();
-    return r;
-}
-
-/**
  * ⛓ hammer-phase B3 — THE EXACTNESS GATE'S PROBE. With `sink` set, a segment that has a `forkRun` hands the sink,
  * at each tape tick in `ticks` (before that tick's advance), its live inner run and a thunk building the rewound one
  * there. Read only; `null` everywhere but the gate, and nothing branches on it.
@@ -14978,27 +14943,78 @@ export const WALK_CHECK_TICKS = 32;
  * site `crusher-fork` (`fineDeadlineReached`: asked only under `fineCheckpoints`), so every existing consult
  * sequence is unchanged.
  *
+ * ⛓⛓ SEEDLING HAMMER-PHASE B3c — **ONE REPLAY: THE FORK'S AND THE REWIND'S.** The fight fallback's rewind
+ * (`solveSegment`'s `rewind`) is this same replay, stopped early. Three options serve it; the fork passes none of the
+ * first two and so replays exactly as above:
+ *   - `to` — replay `perTick[0 … to)` only: the state at tape tick `to`, before that tick's advance;
+ *   - `trailing` — whether the equips made at the clock the replay ends on are applied (the fork: yes, they are the
+ *     live run's now). The rewind passes `false`: its state is where the refused kill BEGAN, and an equip made at that
+ *     clock may be the kill's own — so the rewind's cut (`cutBackTo`) drops exactly those, on this same RUN clock;
+ *   - `takes` — the segment's apitem takes (`{at, level, id, tag}`). A take's `at` is the TAPE index of the advance
+ *     that took it (`solveSegment`'s view records `tapeTick`, the prefix included), so it is applied after that
+ *     index's advance — on the tape clock, which is the replay's loop index; a take on a level the fork does not
+ *     stand on there fails by name (the two runs are not the same run). Both readers pass them;
+ *   - `handover` — `{at, ticks}`: at tape tick `at` (the end of the caller's prefix) the replay must have completed
+ *     `ticks` — the clock of the run the segment was handed; otherwise it fails by name. Both readers pass it.
+ * `stop` is asked where it always was; the rewind passes none (its replay is not optional work).
+ *
  * @returns {?object} the fork, or `null` when `stop` tripped
  */
-export function replayOntoFork(r, perTick, equips, { stop = null } = {}) {
+export function replayOntoFork(r, perTick, equips, { stop = null, to = perTick.length, trailing = true, takes = [],
+    handover = null } = {}) {
+    if (!r || typeof r.advance !== 'function') fail('replayOntoFork: the run factory built no run');
+    if (!Number.isInteger(to) || to < 0 || to > perTick.length || (handover !== null && handover.at > to)) {
+        fail(`replayOntoFork: tick ${to}${handover === null ? '' : ` (handover ${handover.at})`} is outside the `
+            + `replayable span [0, ${perTick.length}]`);
+    }
+    const takesAt = new Map();
+    for (const a of takes) {
+        if (!Number.isInteger(a.at) || a.at < 0 || a.at >= perTick.length) {
+            fail(`replayOntoFork: the segment took apitem ${a.id} at tape tick ${a.at}, outside the ticks it drove `
+                + `[0, ${perTick.length}) — the fork is not replaying the run it forks.`);
+        }
+        if (!takesAt.has(a.at)) takesAt.set(a.at, []);
+        takesAt.get(a.at).push(a);
+    }
+    const checkHandover = () => {
+        if (r.ticksCompleted !== handover.ticks) {
+            fail(`replayOntoFork: the run factory must build the run the segment was handed (${handover.ticks} `
+                + `tick(s) completed at tape tick ${handover.at}); its replay stood at ${r.ticksCompleted} there — a `
+                + 'replay from another state is not this run\'s past.');
+        }
+    };
     let k = 0;
-    const applyDue = () => {
+    const applyDue = (apply = true) => {
         while (k < equips.length && equips[k].t <= r.ticksCompleted) {
             if (equips[k].t !== r.ticksCompleted) {
                 fail(`replayOntoFork: the segment selected slot ${equips[k].slot} at run tick ${equips[k].t}, and `
                     + `the fork's run clock went from below it to ${r.ticksCompleted} without landing on it — the `
                     + 'fork is not replaying the run it forks.');
             }
+            if (!apply) return;
             r.equipNow(equips[k].slot);
             k += 1;
         }
     };
-    for (let i = 0; i < perTick.length; i += 1) {
+    for (let i = 0; i < to; i += 1) {
         if (stop !== null && i > 0 && i % WALK_CHECK_TICKS === 0 && stop()) return null;
+        if (handover !== null && i === handover.at) checkHandover();
         applyDue();
+        const due = takesAt.get(i);
+        const level = due === undefined ? null : r.level;
         r.advance(perTick[i]);
+        if (due !== undefined) {
+            for (const a of due) {
+                if (a.level !== level) {
+                    fail(`replayOntoFork: the segment took apitem ${a.id} on level ${a.level} at tape tick ${i}, and `
+                        + `the fork stood on level ${level} there — the fork is not replaying the run it forks.`);
+                }
+                r.takeApItem({ level: a.level, id: a.id, tag: a.tag });
+            }
+        }
     }
-    applyDue();
+    if (handover !== null && to === handover.at) checkHandover();
+    applyDue(trailing);
     return r;
 }
 
@@ -15175,8 +15191,8 @@ function solveSegmentUnder({
      * pass's persistence and PENDING rows, scratch persistence), sharing no mutable state with `run` or another
      * fork; if the caller handed over a run already advanced through a `prefix`, the factory re-makes the PLAY's own
      * non-key inputs (its equips) on the first `prefix.length` advances. So "fork, then replay `perTick` (the prefix
-     * included)" lands on `run` — `replayToTick`, which also re-makes this segment's own equips and apitem takes, and
-     * checks the clock at the end of the prefix. Two readers, the same replay:
+     * included)" lands on `run` — `replayOntoFork`, which also re-makes this segment's own equips (on the run clock) and
+     * apitem takes (on the tape index), and checks the clock at the end of the prefix. Two readers, the same replay:
      *   - `bait` (behind `CRUSHER_BAIT`) — `ctx.fork`: the live run's state, to try a choreography on before
      *     committing a tick of it;
      *   - the fight fallback (`HAMMER_FIGHT_FALLBACK`, at a press kill that refused) — `ctx.rewind`: the state at an
@@ -15480,13 +15496,20 @@ function solveSegmentUnder({
         solverEquips.push({ t: run.ticksCompleted, slot });
     };
     /**
+     * ⛓ hammer-phase B3c — the replay's two other inputs, shared by the fork and the rewind: this segment's apitem
+     * takes (tape index, `apItemsTaken`) and the clock check at the end of the caller's prefix.
+     */
+    const replayTakes = () => [...apItemsTaken.values()].map((a) => ({ at: a.tick, level: a.level, id: a.apItem.id,
+        tag: a.apItem.tag }));
+    const handover = { at: prefix.length, ticks: ticked };
+    /**
      * ⛓⛓ CRUSHER — the fork (`forkRun`, above): a fresh run with this segment's
-     * own ticks and slot selections replayed onto it, the survey replay's own
-     * fold (`equips` applied at their tick before that tick's advance).
+     * own ticks, slot selections (on the run clock) and apitem takes replayed
+     * onto it (`replayOntoFork`, the one replay — the rewind's too).
      */
     const fork = typeof forkRun === 'function'
         ? () => replayOntoFork(forkRun(), perTick, solverEquips,
-            { stop: () => fineDeadlineReached('crusher-fork') })
+            { stop: () => fineDeadlineReached('crusher-fork'), takes: replayTakes(), handover })
         : null;
 
     /**
@@ -15496,48 +15519,49 @@ function solveSegmentUnder({
      *   - construction (the staging, the pass's persistence and PENDING rows, scratch persistence, the caller's own
      *     `adoptWindowClock` / `addEquips` / `addTimedClears`, the PLAY's equips inside the prefix): the factory's
      *     contract — it builds the run exactly as `run` was built, so they are its inputs, not this replay's;
-     *   - the slot selections this segment made (`equip` → `run.equipNow`): `solverEquips`, applied before their tick;
-     *   - the apitems this segment took (the view's `inner.takeApItem` on the take tick): `apItemsTaken`, after it;
+     *   - the slot selections this segment made (`equip` → `run.equipNow`): `solverEquips`, applied when the replay's
+     *     RUN clock reaches their `t` (`replayOntoFork`, the fork's own replay — never at a tape index);
+     *   - the apitems this segment took (the view's `inner.takeApItem` on the take tick): `apItemsTaken`, after the
+     *     advance at their TAPE index;
      *   - solver state keyed by the run object (`SKIRTED`): carried to the fresh run on adopt.
      * `replay(t)` builds; `to(t)` also adopts — the segment's `run`, its keys, equips, takes and dash count are cut back
      * to `t` — and returns `{run, undo}`; `undo()` puts back exactly what `to` replaced.
      */
-    const offset = ticked - prefix.length;
     /** The first index of `arr` from which `atOrAfter` holds (its length when none does): the cut point at a tick. */
     const cutAt = (arr, atOrAfter) => {
         const i = arr.findIndex(atOrAfter);
         return i < 0 ? arr.length : i;
     };
-    /** Cut the segment's own tick-indexed state back to tape tick `t`, returning what was cut. */
-    const cutBackTo = (t) => {
+    /**
+     * Cut the segment's own tick-indexed state back to tape tick `t`, returning what was cut. The equips are cut on
+     * the RUN clock the replay applies them on (`replayOntoFork`, `trailing: false`): every equip at or after
+     * `clock`, the rewound run's `ticksCompleted` at `t` — the keys, dashes and takes on the tape index.
+     */
+    const cutBackTo = (t, clock) => {
         const cut = {
             keys: perTick.splice(t),
             dashTicks: dashTicks.splice(cutAt(dashTicks, (d) => d >= t)),
-            equips: solverEquips.splice(cutAt(solverEquips, (e) => e.t - offset >= t)),
+            equips: solverEquips.splice(cutAt(solverEquips, (e) => e.t >= clock)),
             takes: [...apItemsTaken].filter(([, a]) => a.tick >= t),
         };
         for (const [k] of cut.takes) apItemsTaken.delete(k);
         dashesPressed = dashTicks.length;
         return cut;
     };
-    /** The fork's and the rewind's one replay: `forkRun()` with `perTick[0 … t)` and this segment's own inputs. */
-    const replayTo = (t) => replayToTick({
-        makeRun: forkRun, perTick, from: 0, to: t, handover: { at: prefix.length, ticks: ticked },
-        equips: solverEquips.map((e) => ({ at: e.t - offset, slot: e.slot })),
-        takes: [...apItemsTaken.values()].map((a) => ({ at: a.tick, level: a.level, id: a.apItem.id,
-            tag: a.apItem.tag })),
-    });
     const rewind = typeof forkRun === 'function' ? {
         /** A fallback's row, for the result's `fightFallbacks` (the rewind's own record of what it was used for). */
         note: (row) => { rewinds.push(row); },
         replay: (t) => {
             if (t < prefix.length) fail(`solveSegment: a rewind to t${t} is inside the caller's prefix (${prefix.length})`);
-            return replayTo(t);
+            // the fork's replay, stopped at `t` — the state the refused kill began in (`trailing: false`), no `stop`
+            return replayOntoFork(forkRun(), perTick, solverEquips,
+                { to: t, trailing: false, takes: replayTakes(), handover });
         },
         to: (t) => {
             const fresh = rewind.replay(t);
             const was = { run, inner: rewoundInner };
-            const cut = cutBackTo(t);
+            const clock = fresh.ticksCompleted;
+            const cut = cutBackTo(t, clock);
             // ⛔ `SKIRTED` is keyed by the run the walk skirted with — the view — so the view's entry is carried
             run = viewOf(fresh, t);
             if (SKIRTED.has(was.run)) SKIRTED.set(run, SKIRTED.get(was.run));
@@ -15545,7 +15569,7 @@ function solveSegmentUnder({
             return {
                 run,
                 undo: () => {
-                    cutBackTo(t);
+                    cutBackTo(t, clock);
                     perTick.push(...cut.keys);
                     dashTicks.push(...cut.dashTicks);
                     dashesPressed = dashTicks.length;

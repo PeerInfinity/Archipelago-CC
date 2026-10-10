@@ -1,5 +1,5 @@
 /**
- * hammerFightFallback — SEEDLING HAMMER-PHASE B3: the REPLAY REWIND (on `solveSegment`'s `forkRun`, `replayToTick`)
+ * hammerFightFallback — SEEDLING HAMMER-PHASE B3: the REPLAY REWIND (on `solveSegment`'s `forkRun`, `replayOntoFork`)
  * and the fight as a FALLBACK where today's press kill refuses (`HAMMER_FIGHT_FALLBACK`).
  *
  * ⚖ The user (2026-10-10): *"run the fight search only where today's path refuses … can only add solves"*, and
@@ -13,8 +13,9 @@
  *
  *   m1 the rewind's factory built without the pass's persistence (`twoPassSolve`: `makeRun([])`) -> the exactness row
  *      (and `check-seedling-rewind-exactness --row=l18`: 5 mismatches)
- *   b3b-m2 the prefix replay dropped (`replayTo`: `from: prefix.length` on the boot factory) -> the b3b prefix row
- *      (and `check-seedling-rewind-exactness --row=fork-prefix`)
+ *   b3b-m2 the prefix replay dropped (the replay started at `prefix.length` on the boot factory) -> the b3b prefix
+ *      row (and `check-seedling-rewind-exactness --row=fork-prefix`)
+ *   b3c-m1 the equips back on the TAPE index (B3b's `e.t − offset`) -> the b3c dead-frame row
  *   m2 the "replace only if it solves" check removed (a failed retry adopted) -> the refusal-stands row
  *   m3 the trigger widened to every refusal -> the trigger row
  */
@@ -33,7 +34,7 @@ import { solve } from './procgenOracle.js';
 import { SPINNER } from './spinner.js';
 import {
     FIGHT_FALLBACK_CODES, HAMMER_ESCAPE, HAMMER_FIGHT, HAMMER_FIGHT_BOUNDS, HAMMER_FIGHT_FALLBACK, HAMMER_SAFETY, REWIND_PROBE,
-    STRIKE_BOUND_EXHAUSTED, SolverBotError, SolverRefusal, isFightFallbackRefusal, replayToTick, withHammerEscape,
+    STRIKE_BOUND_EXHAUSTED, SolverBotError, SolverRefusal, isFightFallbackRefusal, replayOntoFork, withHammerEscape,
     withHammerFight, withHammerFightFallback,
 } from './solverBot.js';
 
@@ -87,16 +88,48 @@ describe('hammer-phase B3 — the replay rewind', () => {
         for (const p of seen) expect(p.back, `t${p.t} (${p.kind})`).toBe(p.live);
     }, 300_000);
 
-    it('⛓⛓ `replayToTick` replays keys, equips before their tick and takes after it, and refuses a factory from another state', () => {
+    it('⛓⛓ the rewind\'s replay (`replayOntoFork`, `to`) lands on the straight run, and refuses a factory from another state', () => {
         const make = () => createRunForStaging({ ...R9, seam: seamAt(40), equips: [] }, SOURCE);
         const straight = make();
         const perTick = Array.from({ length: 30 }, (_, t) => new Set(t % 3 ? ['right'] : ['down']));
         perTick.slice(0, 20).forEach((h) => straight.advance(h));
-        expect(fingerprint(replayToTick({ makeRun: make, perTick, to: 20 }))).toBe(fingerprint(straight));
-        expect(() => replayToTick({ makeRun: make, perTick, to: 31 })).toThrow(/outside the replayable span/);
-        expect(() => replayToTick({ makeRun: () => { const r = make(); r.advance(new Set()); return r; },
-            perTick, to: 5 })).toThrow(/must build the run the segment was handed/);
+        const boot = { at: 0, ticks: 0 };
+        expect(fingerprint(replayOntoFork(make(), perTick, [], { to: 20, trailing: false, handover: boot })))
+            .toBe(fingerprint(straight));
+        expect(() => replayOntoFork(make(), perTick, [], { to: 31, handover: boot })).toThrow(/outside the replayable span/);
+        expect(() => replayOntoFork((() => { const r = make(); r.advance(new Set()); return r; })(), perTick, [],
+            { to: 5, handover: boot })).toThrow(/must build the run the segment was handed/);
     }, 300_000);
+
+    it('⛓⛓ b3c — a rewind across a DEAD-FRAME span lands on the straight run: equips on the run clock, cut on it', () => {
+        // The fork hygiene test's stub (`fidelityForkHygiene`): a run whose clock jumps `dead` extra ticks on the
+        // advances listed. The live run equips by advance count and records the run clock, as `solveSegment`'s
+        // `equip` does; the rewind to tape tick 8 replays `perTick[0 … 8)` and applies the equips the live run made
+        // BEFORE that tick's clock — the one at advance 6 sits at clock 180, past the 174-frame dead span, where a
+        // tape-index replay (B3b's `e.t − offset`) never reaches it.
+        const dead = new Map([[3, 174]]);
+        const stubRun = () => {
+            const r = { ticksCompleted: 0, advances: 0, log: [] };
+            r.advance = () => { r.ticksCompleted += 1 + (dead.get(r.advances) ?? 0); r.advances += 1; };
+            r.equipNow = (slot) => r.log.push({ at: r.advances, clock: r.ticksCompleted, slot });
+            return r;
+        };
+        const plan = new Map([[2, 'fire'], [6, 'sword'], [8, 'shield']]);
+        const live = stubRun();
+        const equips = [];
+        for (let i = 0; i <= 10; i += 1) {
+            if (plan.has(i)) { live.equipNow(plan.get(i)); equips.push({ t: live.ticksCompleted, slot: plan.get(i) }); }
+            if (i < 10) live.advance();
+        }
+        expect(equips.map((e) => e.t)).toEqual([2, 180, 182]);
+        const perTick = new Array(10).fill(new Set());
+        const back = replayOntoFork(stubRun(), perTick, equips, { to: 8, trailing: false, handover: { at: 0, ticks: 0 } });
+        // the straight run to tape tick 8: the live run's equips before its 8th advance, the clock it stood at
+        expect(back.ticksCompleted).toBe(182);
+        expect(back.log).toEqual(live.log.filter((e) => e.at < 8));
+        // the rewind's cut is the same rule on the same clock: what it keeps is exactly what the replay applied
+        expect(equips.filter((e) => e.t < back.ticksCompleted).map((e) => e.slot)).toEqual(back.log.map((e) => e.slot));
+    });
 
     it('⛓⛓ b3b — on a BOOT factory the prefix is replayed too (the factory re-makes the PLAY\'s equips); skipping it is refused by the clock check', async () => {
         // The JS worker's factory (`forkRunFor`): a boot run whose first `prefixLength` advances re-make the PLAY's
@@ -108,12 +141,14 @@ describe('hammer-phase B3 — the replay rewind', () => {
         const handover = { at: 10, ticks: straight.ticksCompleted };
         perTick.slice(10, 20).forEach((h) => straight.advance(h));
         const makeRun = forkRunFor({ staging, levelSource: SOURCE, equips: play, prefixLength: 10 });
-        expect(fingerprint(replayToTick({ makeRun, perTick, to: 20, handover }))).toBe(fingerprint(straight));
+        const rewindTo = (mk, keys, to, at) => replayOntoFork(mk(), keys, [], { to, trailing: false, handover: at });
+        expect(fingerprint(rewindTo(makeRun, perTick, 20, handover))).toBe(fingerprint(straight));
         // the control: the same factory without the play's equip is another run
-        expect(fingerprint(replayToTick({ makeRun: forkRunFor({ staging, levelSource: SOURCE }), perTick, to: 20,
-            handover }))).not.toBe(fingerprint(straight));
-        // the mutant b3b-m2 (the prefix replay dropped: `from: prefix.length` on a boot factory) is refused by name
-        expect(() => replayToTick({ makeRun, perTick, from: 10, to: 20, handover }))
+        expect(fingerprint(rewindTo(forkRunFor({ staging, levelSource: SOURCE }), perTick, 20, handover)))
+            .not.toBe(fingerprint(straight));
+        // the mutant b3b-m2 (the prefix replay dropped: the replay starts at `prefix.length` on a boot factory) is
+        // refused by name — the boot run stands at 0 where the handed-over run stood at its prefix's clock
+        expect(() => rewindTo(makeRun, perTick.slice(10), 10, { at: 0, ticks: handover.ticks }))
             .toThrow(/must build the run the segment was handed/);
     }, 300_000);
 });

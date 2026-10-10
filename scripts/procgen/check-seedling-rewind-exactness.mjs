@@ -2,7 +2,7 @@
 /**
  * check-seedling-rewind-exactness — ⛓ SEEDLING HAMMER-PHASE B3 (D0): THE REWOUND RUN IS THE STRAIGHT RUN.
  *
- * `solveSegment`'s rewind (on its `forkRun`, `replayToTick`) defines the state at tick `t` as a fresh BOOT run with
+ * `solveSegment`'s rewind (on its `forkRun`, `replayOntoFork`) defines the state at tick `t` as a fresh BOOT run with
  * the segment's ticks — the caller's prefix included — and non-key inputs replayed. That is only true if NOTHING else fed the live run — a preview that
  * left state behind, an input the replay forgets. This gate runs a producer's own script (unchanged: its `--check`,
  * the L18 sweep, a generated row) in a child under `rewindExactnessHook.js`, which compares, at every press kill's
