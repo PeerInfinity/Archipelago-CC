@@ -15,9 +15,10 @@
  */
 import { describe, expect, it } from 'vitest';
 
-import { loadTape } from './fixtures/index.js';
+import { loadExpectation, loadTape } from './fixtures/index.js';
+import { heldKeysAt } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
-import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
+import { createRunForStaging, runTapeToStream, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
 import {
@@ -136,5 +137,45 @@ describe('hammer-phase B1 — HAMMER_APPROACH (OFF by default)', () => {
         for (const held of on.out.perTick) replay.advance(held);
         expect(replay.playerHits).toEqual([]);
         expect(replay.transitions.map((x) => x.to_level)).toEqual([R9.boot.level + 1]);
+    }, 300_000);
+});
+
+/**
+ * ⛓⛓⛓ THE GAME WITNESS (`plan-seedling-hammer-b1-approach.mjs`, recorded on p4f): `r9-solve-18`'s staging at its own
+ * residue 40 (the residue sweep's r40 row), solved with `HAMMER_APPROACH` on, played by the game with no hit
+ * (`save.time` 10298 = the model's), reproduced here at 0 px.
+ */
+describe('hammer-phase B1 — the game witness hammer-b1-l18-approach40', () => {
+    const NAME = 'hammer-b1-l18-approach40';
+    it('⛓⛓⛓ the model reproduces the game\'s recording at 0 px, no hit, the crossing on the game\'s tick', () => {
+        const tape = loadTape(NAME);
+        const got = runTapeToStream(tape, { levelSource: SOURCE });
+        const want = loadExpectation(NAME).stream;
+        expect(got.ticks.length).toBe(want.ticks.length);
+        for (let i = 0; i < want.ticks.length; i += 1) {
+            expect([got.ticks[i].x, got.ticks[i].y, got.ticks[i].level])
+                .toEqual([want.ticks[i].x, want.ticks[i].y, want.ticks[i].level]);
+        }
+        const run = createRunForStaging(stagingFromTape(tape), SOURCE);
+        for (let t = 0; t < tape.tick_count; t += 1) run.advance(heldKeysAt(tape, t));
+        expect(run.playerHits).toEqual([]);
+        expect(run.transitions.map((x) => x.t)).toEqual(want.transitions.map((x) => x.t));
+    }, 120_000);
+
+    it('⛓⛓ it IS the solve: on, the staging solves to the witness\'s keys, every press planned in space-time', async () => {
+        const tape = loadTape(NAME);
+        const staging = stagingFromTape(tape);
+        const makeRun = (persistence) => createRunForStaging({ ...staging, persistence, equips: [] }, SOURCE);
+        const r = await withHammerApproach(true, () => twoPassSolve({ makeRun,
+            goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], name: NAME, boot: staging.boot,
+            persistence: staging.persistence.filter((c) => c.at === undefined),
+            gameTick: async () => { throw new Error('no game oracle here'); } }));
+        expect(r.out.perTick.length).toBe(tape.tick_count);
+        for (let t = 0; t < tape.tick_count; t += 1) {
+            expect([...r.out.perTick[t]].sort()).toEqual([...heldKeysAt(tape, t)].sort());
+        }
+        const press = r.out.records.filter((x) => x.arm === 'press');
+        const planned = press.flatMap((x) => x.cycles).filter((c) => c.approach !== undefined);
+        expect(planned.length).toBe(press.flatMap((x) => x.landings).length);
     }, 300_000);
 });

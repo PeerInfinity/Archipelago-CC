@@ -3276,6 +3276,15 @@ export const R8_D2_SHIELD = Object.freeze({
                     + 'with `HAMMER_ESCAPE` on, as `hammer-a-l18-escape21`. Named by this assertion '
                     + 'driving the roster.',
             }),
+            Object.freeze({
+                name: 'hammer-b1-l18-approach40',
+                level: 18,
+                addedBy: 'Seedling hammer-phase B1 D2 (the approach planned in space-time, on the game)',
+                why: '`r9-solve-18`\'s staging at its own hammer residue 40, solved with `HAMMER_APPROACH` '
+                    + 'on: every strike\'s approach planned in space-time and held, every press taken with '
+                    + 'an escape, both spinners killed, `lock@144,112` opened. Named by this assertion '
+                    + 'driving the roster.',
+            }),
         ]),
     }),
 

@@ -7,7 +7,8 @@
  * first state from which the press train is a real strike with a certified way out of its landing) and the executor
  * holds the certificate's keys tick for tick. The tape is that solve: `r9-solve-18`'s committed staging (frozen at
  * hammer-phase A's base — B1 reads the same staging: only the solve-derived clear and the inputs differ from today's
- * tape) at its own hammer residue 40 (nothing moved), solved by `twoPassSolve` exactly as `solve-seedling-r9-campaign`
+ * tape) at its own hammer residue 40 — `seam.time` one hammer period earlier (9940 → 9895: the residue sweep's shift,
+ * which moves a clock already at its residue by −45, so this IS the sweep's r40 row) and nothing else moved — solved by `twoPassSolve` exactly as `solve-seedling-r9-campaign`
  * calls it, the switch ON for the solve only. With the switch OFF the same staging solves to the committed walk (518
  * ticks); ON it is shorter. The game is the witness: the differential plays it, and the model must reproduce every
  * tick with no hit on the player.
@@ -106,7 +107,8 @@ async function main() {
             { noclip: false, noDamage: false, noHazards: [], grants: [] });
         const description = '⛓⛓⛓ SEEDLING HAMMER-PHASE B1 D2 — THE APPROACH\'s SOLVE ON THE GAME. '
             + `\`${BASE}\`'s committed staging (frozen at hammer-phase A's base) at its own hammer residue ${RESIDUE} `
-            + `(\`seam.time\` ${seam.time}, nothing moved), solved by \`twoPassSolve\` as \`solve-seedling-r9-campaign\` `
+            + `(\`seam.time\` ${staging.seam.time} → ${seam.time}, one hammer period earlier — the residue sweep's r${RESIDUE} `
+            + 'row; nothing else moved), solved by `twoPassSolve` as `solve-seedling-r9-campaign` '
             + `calls it with \`HAMMER_APPROACH\` ON. Off, this staging solves in ${OFF_TICKS} ticks (the committed walk); `
             + `on, every strike's approach is planned in space-time (${planned.length}) and held tick for tick, every `
             + `press is taken with an escape out of its own landing (${escapes.length}), and the walk solves in `
