@@ -90,7 +90,9 @@ async function main() {
                 px: o.x, py: o.y,
                 bodies: ch.map((c) => ({ id: c.id, x: c.x, y: c.y, vx: c.vx, vy: c.vy, hits: c.hits, hitsTimer: c.hitsTimer,
                     removed: c.removed === true,
-                    swordSpin: c.swordSpin, swordSpinning: c.swordSpinning })),
+                    swordSpin: c.swordSpin, swordSpinning: c.swordSpinning,
+                    // ⛓ fidelity-bulb: a drop-death class's phase (`null`/`armed`/`drop`/`die`), absent on every other.
+                    bulbPhase: c.bulbPhase })),
             };
             r = st.next();
         }
@@ -194,6 +196,15 @@ async function main() {
                 disagreements.push(`t ${t}: game (${g.x}, ${g.y}) v (${g.vx}, ${g.vy}) model `
                     + `(${b.x}, ${b.y}) v (${b.vx}, ${b.vy})`);
             }
+            /**
+             * ⛓ fidelity-bulb: a class with a drop death is compared on its ANIM too — the game's "drop"/"die" is
+             * the model's `bulbPhase` (the armed update ends in `play("drop")`, so both read "drop" after it).
+             */
+            if (b.bulbPhase !== undefined) {
+                const gPhase = g.anim === 'drop' || g.anim === 'die' ? g.anim : null;
+                const mPhase = b.bulbPhase === 'drop' || b.bulbPhase === 'die' ? b.bulbPhase : null;
+                if (gPhase !== mPhase) disagreements.push(`t ${t}: game anim "${g.anim}" model phase ${b.bulbPhase}`);
+            }
             if (g.enemy && (g.enemy.hits !== b.hits || g.enemy.hits_timer !== b.hitsTimer)) {
                 disagreements.push(`t ${t}: game hits ${g.enemy.hits}/${g.enemy.hits_timer} model `
                     + `${b.hits}/${b.hitsTimer}`);
@@ -219,12 +230,19 @@ async function main() {
             const out = {
                 name: NAME, class: CLASS, source: TAPE ?? FILE, page: PAGE_NAME,
                 recordedBy: 'scripts/procgen/probe-seedling-chaser-mobiles.mjs --record',
-                switches: { SEEDLING_KILLLOCK_BODIES: process.env.SEEDLING_KILLLOCK_BODIES ?? null },
+                switches: {
+                    SEEDLING_KILLLOCK_BODIES: process.env.SEEDLING_KILLLOCK_BODIES ?? null,
+                    // ⛓ fidelity-bulb: the contact-fidelity switches the model ran under (`bulbLive` for a Bulb).
+                    ...(process.env.SEEDLING_CONTACT_FIDELITY
+                        ? { SEEDLING_CONTACT_FIDELITY: process.env.SEEDLING_CONTACT_FIDELITY } : {}),
+                },
                 note: `the GAME's ${CLASS} rows (\`botMobiles()\`) and the player at each sampled tick`,
                 samples: samples.filter((f) => tickOf(f) <= UPTO).map((f) => ({
                     t: tickOf(f), level: f.status.level, player: { x: playerOf(f).x, y: playerOf(f).y },
                     bodies: bodiesOf(f).map((g) => ({ x: g.x, y: g.y, vx: g.vx, vy: g.vy,
-                        hits: g.enemy?.hits ?? null, hits_timer: g.enemy?.hits_timer ?? null })),
+                        hits: g.enemy?.hits ?? null, hits_timer: g.enemy?.hits_timer ?? null,
+                        // ⛓ fidelity-bulb: the anim, for a class whose death is a sequence of them.
+                        ...(TAG && CHASERS[TAG]?.dropDeath ? { anim: g.anim ?? null } : {}) })),
                 })),
                 tape: FILE ? (WITNESS ? JSON.parse(readFileSync(FILE, 'utf8')).tape : JSON.parse(readFileSync(FILE, 'utf8'))) : null,
             };

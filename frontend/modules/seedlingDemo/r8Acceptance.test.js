@@ -688,7 +688,8 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
      */
     it('a transcribed class with no roster row is NOT bridged — the control exists', () => {
         // ⛓ KILLLOCK K2: `lavarunner` is transcribed too, and bridged only under its switch (OFF by default).
-        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher']);
+        // ⛓ fidelity-bulb: `bulb` is transcribed and bridged only under `contactFidelity.bulbLive` (OFF by default).
+        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'bobsoldier', 'bulb', 'jellyfish', 'lavarunner', 'puncher']);
         expect(MODELLED_ENEMY_CLASSES.Jellyfish).toBeUndefined();
         expect(MODELLED_ENEMY_CLASSES.LavaRunner).toBeUndefined();
         // ⛓ KILLLOCK K1 (ON since the wave-8 harvest): `jellyfish` is bridged by its switch, so the control is

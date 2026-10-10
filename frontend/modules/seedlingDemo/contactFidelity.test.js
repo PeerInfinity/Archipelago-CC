@@ -57,8 +57,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
         // ⛓ fidelity STATICLADDER D2: `darkTrapLight` shipped OFF; ⚖ (user, 2026-10-10) ON at the wave-10 harvest.
+        // ⛓ fidelity BULB: W8 `bulbLive` ships OFF (its movers are in the slice's report; a flip is the user's).
         expect(CONTACT_FIDELITY).toEqual({ collideLinePointsExact: true, wallFlyerSwordHits: true, drillLive: true,
-            bobSoldierLive: true, wallFlyerKill: true, wallFlyerShieldBump: true, darkTrapLight: true });
+            bobSoldierLive: true, wallFlyerKill: true, wallFlyerShieldBump: true, darkTrapLight: true,
+            bulbLive: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
