@@ -125,7 +125,11 @@ describe('fidelity STANCE — D2: the keylock stance, both states', () => {
         expect(run.level).toBe(53);
     });
     it('L12 twin locks (route step 135\'s arrival): sealed by bosslock@416,240 alone, flag {12,4}', async () => {
+        // ⛓ L12KEYLINE: with Fire held the frontier now passes the sealed lock to
+        // `burnabletree@480,640` and the step goes ROUND (fidelityL12Keyline). This
+        // row is the no-other-door case, so the staging drops Fire.
         const staging = await stanceStaging({ ...witness('stance-l48-keylock-north'),
+            items: witness('stance-l48-keylock-north').items.filter((p) => p !== 'hasFire'),
             boot: { level: 12, x: 592, y: 16 } });
         const run = createRunForStaging(staging, SRC);
         const e = refusalOf(() => solveSegment({ run, goals: [{ kind: 'reach-exit', exit: { x: 0, y: 352 } }],
