@@ -7618,7 +7618,7 @@ export function resolveKillStrategy(run, obstacle, contacts) {
         press.rejected.push({ option: 'kill the chasers by press (KILLLOCK K3)', why: chaser.why });
     }
     if (!weapon.presser) {
-        return {
+        const none = {
             strategy: 'kill',
             weapon: null,
             /**
@@ -7634,6 +7634,10 @@ export function resolveKillStrategy(run, obstacle, contacts) {
              */
             rejected: [...press.rejected, { option: 'kill-by-ceiling', why: weapon.why }],
         };
+        // ⛓ hammer-phase B3 — the order's inputs, for the fight fallback's admission at `execKill`'s no-weapon refusal
+        KILL_ORDER_ADMISSIONS.set(none, { row, obstacle: { x: obstacle.x, y: obstacle.y },
+            bodies: bodies.map((e) => ({ ...e })), contacts: contacts instanceof Set ? new Set(contacts) : contacts });
+        return none;
     }
     return {
         strategy: 'kill',
@@ -9684,8 +9688,9 @@ export function withHammerFightFallback(enabled, fn, mode = null) {
  *   - the press arm's ADMISSION refusal (`derivePressKill`'s *"no (cell, tick) …"*, a `rejected` row, no throw):
  *     IN at the combat ladder's `kill` rung, where it is terminal (the last rung whenever a spinner is a source; the
  *     EXHAUSTED refusal leaves `walkTo`) — asked again there with the fight on, in rewind mode only (a failed kill
- *     must be rewound to the rung's tick). OUT at the kill-lock order (`resolveKillStrategy`), which then asks the
- *     ceiling and chaser arms: retrying there would replace an arm that may SOLVE today.
+ *     must be rewound to the rung's tick). At the kill-lock order (`resolveKillStrategy`) it is NOT asked where the
+ *     press arm refuses — the ceiling and chaser arms come next and may SOLVE today — but only at `execKill`'s
+ *     *"the kill work order has no weapon"*, which is reached when every arm refused (terminal, as at the rung).
  *   - every other throw (an uncoded `SolverBotError`, a `SolverRefusal`, the line-of-sight refusal) — OUT.
  * Only the two codes are thrown, so only they reach `isFightFallbackRefusal` (the whole-solve retry's trigger).
  */
@@ -9724,6 +9729,9 @@ export const HAMMER_FIGHT_FALLBACK_TRACE = { sink: null };
  * admission again, from the same inputs, on the rewound run. A side table: nothing in a record or a trace sees it.
  */
 const PRESS_ADMISSIONS = new WeakMap();
+
+/** ⛓ hammer-phase B3 — a kill-lock order no arm could arm (`resolveKillStrategy`), and what it was resolved from. */
+const KILL_ORDER_ADMISSIONS = new WeakMap();
 
 /**
  * ⛓⛓ THE FIGHT'S BOUNDS, each derived and then measured on L18's 45 residues (`sweep-seedling-l18-residues.mjs
@@ -10479,8 +10487,55 @@ function execKill(run, perTick, resolved, ctx) {
     if (resolved.arm === 'press') return execKillByPress(run, perTick, resolved, ctx);
     if (resolved.arm === 'chaser') return execKillByChaser(run, perTick, resolved, ctx);
     if (!resolved.presser) {
+        /**
+         * ⛓⛓ HAMMER-PHASE B3 — THE ADMISSION ARM AT THE KILL-LOCK ORDER (`HAMMER_FIGHT_FALLBACK`, rewind mode). This
+         * refusal is reached only when EVERY arm refused (the press admission, the ceiling, the chaser arm), so it is
+         * terminal: the press admission is asked again here with the fight on, and a certificate is executed with
+         * the fight on as the press arm's own resolution would be; a kill that then fails is rewound to this tick and
+         * the refusal below stands, one sentence longer.
+         */
+        const order = KILL_ORDER_ADMISSIONS.get(resolved) ?? null;
+        let tail = '';
+        if (order !== null && HAMMER_FIGHT_FALLBACK.enabled && HAMMER_FIGHT_FALLBACK.mode === 'rewind'
+            && !HAMMER_FIGHT.enabled && ctx.rewind) {
+            const row = { t: perTick.length, how: 'admission', refused: 'PRESS_ADMISSION',
+                bodies: order.bodies.map((e) => `${e.tag}@${e.x},${e.y}`) };
+            const started = HAMMER_FIGHT_FALLBACK_TRACE.sink ? performance.now() : 0;
+            const press = withHammerFight(true, () => derivePressKill(run, order.bodies, order.contacts));
+            if (!press.first) {
+                Object.assign(row, { verdict: 'refused', retryRefused: 'PRESS_ADMISSION',
+                    why: 'the admission with the fight on found no strike either' });
+            } else {
+                try {
+                    const record = withHammerFight(true, () => execKillByPress(run, perTick, {
+                        strategy: 'kill', arm: 'press', postCondition: 'kill-lock',
+                        target: { x: order.row.x ?? order.obstacle.x, y: order.row.y ?? order.obstacle.y },
+                        lock: order.row, stance: null, first: press.first, plans: press.plans,
+                        bodies: press.plans.map((p) => p.id), rejected: resolved.rejected ?? [],
+                    }, ctx));
+                    Object.assign(row, { verdict: 'solved', ticks: perTick.length - row.t,
+                        fights: record.fights?.length ?? 0 });
+                    ctx.rewind.note(row);
+                    HAMMER_FIGHT_FALLBACK_TRACE.sink?.({ ...row, ms: performance.now() - started });
+                    return { ...record, fightFallback: row };
+                } catch (e2) {
+                    if (e2 instanceof PendingDeclaration || e2?.undeclaredKillLock) {
+                        Object.assign(row, { verdict: 'solved', ticks: perTick.length - row.t,
+                            raised: e2?.undeclaredKillLock ? 'undeclaredKillLock' : e2.name });
+                        ctx.rewind.note(row);
+                        throw e2;
+                    }
+                    ctx.rewind.to(row.t);
+                    run = null; // ⛔ the rewound run is the segment's now; nothing below reads this one
+                    Object.assign(row, { verdict: 'refused', retryRefused: e2?.code ?? e2?.name ?? 'Error',
+                        why: String(e2?.message ?? e2).split('\n')[0].slice(0, 240) });
+                }
+            }
+            HAMMER_FIGHT_FALLBACK_TRACE.sink?.({ ...row, ms: performance.now() - started });
+            tail = ` ${fightFallbackSentence(row)}`;
+        }
         throw new SolverRefusal(`${ctx.what}: the kill work order has no weapon — `
-            + `${resolved.rejected?.[0]?.why ?? 'no reason recorded'}`,
+            + `${resolved.rejected?.[0]?.why ?? 'no reason recorded'}${tail}`,
         { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null },
             considered: resolved.rejected ?? [], perTick: [...perTick] });
     }
