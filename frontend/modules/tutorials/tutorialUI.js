@@ -13,6 +13,12 @@
  *   - the default layout is NOT split; starting a tutorial moves this panel
  *     into a stack of its own under the stack it was in (tutorialLayout.js),
  *     and "Merge" puts it back. The mobile layout is never split.
+ *   - the list is grouped by TRACK (tutorialShape.js TRACKS); in-progress
+ *     tutorials, and the developer track, sit in COLLAPSED sections of their
+ *     own. An in-progress tutorial marks the step where it stops working.
+ *   - an OUTSIDE step (a terminal command, e.g. a local MultiServer) shows its
+ *     command with a Copy button; Do it is off for it, and Play waits for its
+ *     done check (or stops, when it has none).
  *
  * The DOM is built with createElement + textContent, except step and prose
  * text, which goes through markdown-lite (procgenDocs/markdownLite.js: it
@@ -23,7 +29,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { DOCS_LINK_TARGETS, docsHref } from '../../app/config/docsBase.js';
 import { inline } from '../procgenDocs/markdownLite.js';
 import { TUTORIALS } from './content/index.js';
-import { blocksFor, panelSteps } from './tutorialShape.js';
+import { TRACKS, blocksFor, panelSteps } from './tutorialShape.js';
 import { buildContext } from './tutorialContext.js';
 import {
     hideCursor, nextPressable, performAction, performStep, setOutline, waitFor,
@@ -62,6 +68,13 @@ export const CONTROLS = Object.freeze({
     step: 'tut-step',
     current: 'tut-current',
     done: 'tut-done',
+    drafts: 'tut-drafts',
+    developer: 'tut-developer',
+    badge: 'tut-badge',
+    command: 'tut-command',
+    copy: 'tut-copy',
+    blocked: 'tut-blocked',
+    banner: 'tut-banner',
 });
 export const TEXT = Object.freeze({
     prev: '◀ Back',
@@ -75,7 +88,25 @@ export const TEXT = Object.freeze({
     exit: 'All tutorials',
     start: 'Start',
     resume: 'Resume',
+    inProgress: 'In progress',
+    drafts: 'In progress',
+    copy: 'Copy',
+    copied: 'Copied',
+    outsideWaiting: 'Do this step yourself, outside the app — Play carries on once it is done.',
+    outsideStopped: 'This step happens outside the app: do it yourself, then press Next ▶.',
 });
+
+/** "Works up to step 3 of 9; step 4 does not work yet." */
+function blockedText(blocked, n) {
+    const which = `step ${blocked.index + 1}`;
+    return blocked.index === 0 ? `${which} of ${n} does not work yet.` : `works up to step ${blocked.index} of ${n}; ${which} does not work yet.`;
+}
+
+/** Where an in-progress tutorial stops working: `{ index, step }`, or null. */
+export function blockedStep(t, steps = panelSteps(t)) {
+    if (t.status !== 'in-progress' || !t.firstFailingStep) return null;
+    return steps.find(({ step }) => step.id === t.firstFailingStep) ?? null;
+}
 
 function el(tag, cls, text) {
     const e = document.createElement(tag);
@@ -141,6 +172,8 @@ export class TutorialUI {
         this._token = 0;
         this._pollTimer = null;
         this._advanceTimer = null;
+        // Which collapsed sections of the list are open (render() rebuilds them).
+        this.openSections = new Set();
         this._unsubs = [
             eventBus.subscribe('settings:changed', () => this._loadSettings().then(() => this.render()), MODULE_ID),
         ];
@@ -358,10 +391,10 @@ export class TutorialUI {
         };
     }
 
-    /** Perform the current step (the "Do it" button). */
+    /** Perform the current step (the "Do it" button). Resolves true when it was performed; `lastError` says why not. */
     async doIt() {
         const entry = this.current();
-        if (!entry || this.busy) return;
+        if (!entry || this.busy || entry.step.outside) return;
         this.busy = true;
         this.status = 'Working…';
         setOutline(null);
@@ -372,6 +405,7 @@ export class TutorialUI {
             ok = true;
             this.status = entry.step.done && !this.doneSteps.has(entry.step.id) ? 'Waiting for it to finish…' : '';
         } catch (e) {
+            this.lastError = e;
             this.status = `Could not do this step: ${e.message}`;
             this.playing = false;
         } finally {
@@ -384,6 +418,7 @@ export class TutorialUI {
             this._maybeAdvance();
         }
         this._updateOutline();
+        return ok;
     }
 
     _playCurrent() {
@@ -391,6 +426,19 @@ export class TutorialUI {
         const entry = this.current();
         if (this.doneSteps.has(entry.step.id)) {
             this._maybeAdvance();
+            return;
+        }
+        if (entry.step.outside) {
+            // Nothing to perform: wait for its done check (_watchDone is
+            // already polling it), or hand over to the person.
+            hideCursor();
+            if (entry.step.done) {
+                this.status = TEXT.outsideWaiting;
+            } else {
+                this.playing = false;
+                this.status = TEXT.outsideStopped;
+            }
+            this.render();
             return;
         }
         this.doIt();
@@ -447,25 +495,73 @@ export class TutorialUI {
         const bar = el('div', 'tut-toolbar');
         bar.append(ql);
         wrap.append(bar);
-        for (const { tutorial } of TUTORIALS) {
-            const card = el('div', 'tut-card');
-            card.dataset.tutorialId = tutorial.id;
-            card.append(el('div', 'tut-card-title', tutorial.title));
-            const first = blocksFor(tutorial.intro, 'panel')[0];
-            if (first) card.append(richText('div', 'tut-card-text', first.prose.split('\n')[0], tutorial.doc, this.linkTarget));
-            const n = panelSteps(tutorial).length;
-            const resume = this.saved?.id === tutorial.id;
-            const row = el('div', 'tut-card-row');
-            row.append(el('span', 'tut-card-count', `${n} steps`));
-            if (resume) {
-                row.append(button(`${CONTROLS.start} tut-resume`, `${TEXT.resume} (step ${this.saved.index + 1})`,
-                    'Carry on where you left off', () => this.start(tutorial.id, this.saved.index)));
+        const all = TUTORIALS.map((e) => e.tutorial);
+        const tracks = Object.entries(TRACKS);
+        // Ready tutorials, under their track's heading (collapsed tracks aside).
+        for (const [key, track] of tracks) {
+            if (track.collapsed) continue;
+            const list = all.filter((t) => t.track === key && t.status === 'ready');
+            if (!list.length) continue;
+            wrap.append(el('h4', 'tut-track', track.title));
+            for (const t of list) wrap.append(this._card(t));
+        }
+        // ⚖ 2026-10-10: in-progress tutorials in a collapsed section …
+        const drafts = all.filter((t) => t.status === 'in-progress' && !TRACKS[t.track].collapsed);
+        if (drafts.length) {
+            const box = this._section(CONTROLS.drafts, `${TEXT.drafts} (${drafts.length})`);
+            for (const [key, track] of tracks) {
+                const list = drafts.filter((t) => t.track === key);
+                if (!list.length) continue;
+                box.append(el('h4', 'tut-track', track.title));
+                for (const t of list) box.append(this._card(t));
             }
-            row.append(button(CONTROLS.start, resume ? 'Restart' : TEXT.start, 'Start this tutorial', () => this.start(tutorial.id)));
-            card.append(row);
-            wrap.append(card);
+            wrap.append(box);
+        }
+        // … and so are the developer ones (ready or not).
+        for (const [key, track] of tracks) {
+            if (!track.collapsed) continue;
+            const list = all.filter((t) => t.track === key);
+            if (!list.length) continue;
+            const box = this._section(key === 'developer' ? CONTROLS.developer : `tut-track-${key}`, `${track.title} (${list.length})`);
+            for (const t of list) box.append(this._card(t));
+            wrap.append(box);
         }
         return wrap;
+    }
+
+    /** A collapsed section of the list that remembers being opened across re-renders. */
+    _section(cls, title) {
+        const d = el('details', `tut-collapsed ${cls}`);
+        d.open = this.openSections.has(cls);
+        d.append(el('summary', 'tut-collapsed-title', title));
+        d.addEventListener('toggle', () => {
+            if (d.open) this.openSections.add(cls);
+            else this.openSections.delete(cls);
+        });
+        return d;
+    }
+
+    _card(tutorial) {
+        const card = el('div', 'tut-card');
+        card.dataset.tutorialId = tutorial.id;
+        const title = el('div', 'tut-card-title', tutorial.title);
+        if (tutorial.status === 'in-progress') title.append(' ', el('span', CONTROLS.badge, TEXT.inProgress));
+        card.append(title, el('div', 'tut-card-text', tutorial.summary));
+        const steps = panelSteps(tutorial);
+        const blocked = blockedStep(tutorial, steps);
+        if (blocked) {
+            card.append(el('div', 'tut-card-blocked', blockedText(blocked, steps.length)));
+        }
+        const resume = this.saved?.id === tutorial.id;
+        const row = el('div', 'tut-card-row');
+        row.append(el('span', 'tut-card-count', `${steps.length} steps`));
+        if (resume) {
+            row.append(button(`${CONTROLS.start} tut-resume`, `${TEXT.resume} (step ${this.saved.index + 1})`,
+                'Carry on where you left off', () => this.start(tutorial.id, this.saved.index)));
+        }
+        row.append(button(CONTROLS.start, resume ? 'Restart' : TEXT.start, 'Start this tutorial', () => this.start(tutorial.id)));
+        card.append(row);
+        return card;
     }
 
     _stepView() {
@@ -494,13 +590,21 @@ export class TutorialUI {
         prev.disabled = this.index === 0 || this.busy;
         const next = button(CONTROLS.next, TEXT.next, 'The next step', () => this.goTo(this.index + 1));
         next.disabled = this.isLast() || this.busy;
-        const doIt = button(CONTROLS.doIt, TEXT.doIt, 'Perform this step for me', () => this.doIt());
-        doIt.disabled = this.busy || this.playing || this.doneSteps.has(entry.step.id);
+        const outside = Boolean(entry.step.outside);
+        const doIt = button(CONTROLS.doIt, TEXT.doIt,
+            outside ? 'This step happens outside the app, so the panel cannot do it' : 'Perform this step for me', () => this.doIt());
+        doIt.disabled = outside || this.busy || this.playing || this.doneSteps.has(entry.step.id);
         const play = button(CONTROLS.play, this.playing ? TEXT.pause : TEXT.play,
             this.playing ? 'Stop after this step' : 'Perform every step from here, one after another', () => this.togglePlay());
         nav.append(prev, el('span', CONTROLS.position, `Step ${this.index + 1} of ${this.steps.length}`), next, doIt, play);
         head.append(nav, el('div', CONTROLS.status, this.status));
         wrap.append(head);
+        const blocked = blockedStep(t, this.steps);
+        if (t.status === 'in-progress') {
+            wrap.append(el('div', CONTROLS.banner, blocked
+                ? `In progress: ${blockedText(blocked, this.steps.length)}`
+                : 'In progress: every step works, but the tutorial is not finished yet.'));
+        }
 
         const sec = entry.section;
         const body = el('div', 'tut-section');
@@ -524,8 +628,13 @@ export class TutorialUI {
             li.value = n;
             if (s === entry.step) li.classList.add(CONTROLS.current);
             if (this.doneSteps.has(s.id)) li.classList.add(CONTROLS.done);
+            if (blocked?.step === s) {
+                li.classList.add(CONTROLS.blocked);
+                li.title = 'This step does not work yet';
+            }
+            if (s.command) li.append(this._commandBox(s.command));
             const target = this.steps.findIndex((x) => x.step === s);
-            li.title = 'Go to this step';
+            if (!li.title) li.title = 'Go to this step';
             li.addEventListener('click', (ev) => {
                 if (ev.target.closest('a')) return;
                 this.goTo(target);
@@ -540,6 +649,21 @@ export class TutorialUI {
             wrap.append(out);
         }
         return wrap;
+    }
+
+    /** An outside step's command, with a Copy button. */
+    _commandBox(command) {
+        const box = el('div', CONTROLS.command);
+        box.append(el('pre', null, command));
+        const copy = button(CONTROLS.copy, TEXT.copy, 'Copy the command', async (ev) => {
+            ev.stopPropagation();
+            try {
+                await navigator.clipboard.writeText(command);
+                copy.textContent = TEXT.copied;
+            } catch { /* no clipboard permission: the text is selectable */ }
+        });
+        box.append(copy);
+        return box;
     }
 
     destroy() {

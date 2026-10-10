@@ -46,7 +46,7 @@ on:
       batch:
         description: >-
           A batch to run each time instead (testBatches.js: fast,
-          seedling-js, apworld, bot-walks, noiz2sa, runner). Give this OR test, not both.
+          seedling-js, apworld, bot-walks, noiz2sa, runner, tutorials). Give this OR test, not both.
         type: string
         default: ''
       repeat:
