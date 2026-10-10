@@ -2098,7 +2098,9 @@
     }
   },
   "helpers": {},
-  "is_vanilla": true,
+  "is_vanilla": {
+    "1": true
+  },
   "loop_costs": {
     "1": {
       "regions": {},

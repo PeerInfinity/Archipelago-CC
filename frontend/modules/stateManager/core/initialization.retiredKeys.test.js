@@ -75,3 +75,31 @@ describe('loadFromJSON — the F2 slot-map keys refuse their document-level bloc
       .toThrow(/flash_panel/);
   });
 });
+
+/**
+ * ⛓ rules F3 — `is_vanilla`, `is_canonical` and `preset_label` are per-world
+ * facts: slot maps (`{"<p>": true}` / `{"<p>": "label"}`). The flat document-
+ * level value (OR'd / first-wins over every slot by the old exporter) is the
+ * retired shape, refused by name.
+ */
+describe('loadFromJSON — the F3 per-slot flags refuse their document-level value', () => {
+  const OLD = { is_vanilla: true, is_canonical: true, preset_label: 'canth s4' };
+
+  for (const [key, value] of Object.entries(OLD)) {
+    it(`refuses a document-level \`${key}\` value, naming the key, its home and the script`, () => {
+      const doc = { schema_version: 3, [key]: value };
+      expect(() => loadFromJSON(stubStateManager(), doc, '1')).toThrow(new RegExp(`\`${key}\` value`));
+      expect(() => loadFromJSON(stubStateManager(), doc, '1')).toThrow(new RegExp(`${key}\\["<player>"\\]`));
+      expect(() => loadFromJSON(stubStateManager(), doc, '1')).toThrow(/migrate-per-player-blocks\.mjs/);
+    });
+
+    it(`lets the slot map \`${key}\` through (one slot, two slots)`, () => {
+      expect(() => refuseRetiredTopLevelKeys({ [key]: { 1: value } })).not.toThrow();
+      expect(() => refuseRetiredTopLevelKeys({ [key]: { 3: value, 4: value } })).not.toThrow();
+    });
+  }
+
+  it('refuses a document-level `false` too — the VALUE is never read', () => {
+    expect(() => refuseRetiredTopLevelKeys({ is_vanilla: false })).toThrow(/`is_vanilla` value/);
+  });
+});

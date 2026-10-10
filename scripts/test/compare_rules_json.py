@@ -1619,8 +1619,10 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     # canonical_placements section only exists with --canonical-seed
     if 'canonical_placements' in path:
         return True
-    # is_canonical flag only exists in WorldGen exports (marks canonical seed generation)
-    if path == 'is_canonical' and original_value == '<missing>':
+    # is_canonical flag only exists in WorldGen exports (marks canonical seed generation).
+    # rules F3: it is a per-player map (`{"<p>": true}`), so the difference is the
+    # whole map (`is_canonical`) or one slot's entry (`is_canonical.<p>`).
+    if (path == 'is_canonical' or re.fullmatch(r'is_canonical\.[0-9]+', path)) and original_value == '<missing>':
         return True
     # locked status differs because WorldGen uses place_locked_item() for canonical
     # placements while original uses fill algorithm. This is an implementation detail.

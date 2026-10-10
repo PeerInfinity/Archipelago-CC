@@ -195,7 +195,7 @@ describe('the contract shape', () => {
                 op: 'set-progression-mapping', name: 'Progressive Key',
                 mapping: { base_item: 'Progressive Key', items: [{ name: 'Key', level: 1 }] },
             },
-            'set-key': { op: 'set-key', key: 'preset_label', value: 'a label' },
+            'set-key': { op: 'set-key', key: 'playerId', value: '2' },
             'replace-document': { op: 'replace-document', document: { game_name: 'Replaced' } },
             clear: { op: 'clear' },
         };
@@ -1332,16 +1332,30 @@ describe('replace-document — the raw view\'s one op (H2)', () => {
     });
 });
 
+/**
+ * ⛓ rules F3: the document-scope string these rows write is `playerId` — the
+ * scaffold does not carry it, so a write APPENDS. `preset_label` was the example
+ * until it became a per-slot map (`{"<p>": label}`); its row is the player-scope
+ * one below.
+ */
 describe('set-key — one top-level key of the document (H1)', () => {
     it('⛓ writes a DOCUMENT-scope key and keeps every other key in place', () => {
         const doc = fixture();
-        const res = applied(doc, { op: 'set-key', key: 'preset_label', value: 'canth s4' });
-        expect(res.doc.preset_label).toBe('canth s4');
-        expect(res.description).toBe('preset_label = "canth s4"');
+        const res = applied(doc, { op: 'set-key', key: 'playerId', value: '2' });
+        expect(res.doc.playerId).toBe('2');
+        expect(res.description).toBe('playerId = "2"');
         // ⛔ key ORDER is content for this document (the adapter's `equal` reads
         //    it), so a new key APPENDS and an existing one keeps its position.
         expect(Object.keys(res.doc).slice(0, -1)).toEqual(Object.keys(doc));
-        expect(Object.keys(res.doc).at(-1)).toBe('preset_label');
+        expect(Object.keys(res.doc).at(-1)).toBe('playerId');
+    });
+
+    it('⛓ rules F3: the per-slot `preset_label` is written at PLAYER scope, under its slot', () => {
+        const res = applied(fixture(), {
+            op: 'set-key', key: 'preset_label', scope: 'player', player: '2', value: 'canth s4',
+        });
+        expect(res.doc.preset_label).toEqual({ 2: 'canth s4' });
+        expect(res.description).toBe('preset_label[2] = "canth s4"');
     });
 
     it('⛓ `scope: \'player\'` writes the SLOT\'s slice and leaves the other slots alone', () => {
@@ -1365,18 +1379,18 @@ describe('set-key — one top-level key of the document (H1)', () => {
      */
     it('⛓⛓ a `player` alone does NOT nest — the default scope is the document', () => {
         const res = applied(fixture(), {
-            op: 'set-key', key: 'preset_label', value: 'x', player: '3',
+            op: 'set-key', key: 'playerId', value: '3', player: '3',
         });
-        expect(res.doc.preset_label).toBe('x');
-        expect(res.doc.preset_label).not.toEqual({ 3: 'x' });
+        expect(res.doc.playerId).toBe('3');
+        expect(res.doc.playerId).not.toEqual({ 3: '3' });
     });
 
     it('⛓ an absent `value` DELETES the key, as set-meta does', () => {
         const doc = fixture();
-        doc.preset_label = 'gone';
-        const res = applied(doc, { op: 'set-key', key: 'preset_label' });
-        expect('preset_label' in res.doc).toBe(false);
-        expect(res.description).toBe('preset_label deleted');
+        doc.playerId = '1';
+        const res = applied(doc, { op: 'set-key', key: 'playerId' });
+        expect('playerId' in res.doc).toBe(false);
+        expect(res.description).toBe('playerId deleted');
     });
 
     it('⛓ refuses a blank key and an unknown scope, naming the vocabulary', () => {
@@ -1399,13 +1413,13 @@ describe('set-key — one top-level key of the document (H1)', () => {
     it('⛓⛓ one set-key is ONE undo, and the fold reproduces the document', () => {
         const doc = fixture();
         const s = createEditSession(rulesEditAdapter, doc, { base: { kind: 'rules' } });
-        expect(s.apply({ op: 'set-key', key: 'preset_label', value: 'a' }).applied).toBe(true);
-        expect(s.apply({ op: 'set-key', key: 'preset_label', value: 'b' }).applied).toBe(true);
+        expect(s.apply({ op: 'set-key', key: 'playerId', value: '2' }).applied).toBe(true);
+        expect(s.apply({ op: 'set-key', key: 'playerId', value: '3' }).applied).toBe(true);
         expect(bytes(s.record())).toBe(bytes(foldEdits(rulesEditAdapter, doc, s.ops()).record));
         s.undo();
-        expect(s.record().preset_label).toBe('a');
+        expect(s.record().playerId).toBe('2');
         s.undo();
-        expect('preset_label' in s.record()).toBe(false);
+        expect('playerId' in s.record()).toBe(false);
     });
 });
 

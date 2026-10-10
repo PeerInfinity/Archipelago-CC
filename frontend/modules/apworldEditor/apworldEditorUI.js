@@ -4244,7 +4244,10 @@ class ApworldEditorUI {
      * string the schema then refuses — a control that can only produce a
      * refusal is not an affordance.
      */
-    const container = row.type === 'object' || row.type === 'array'
+    // ⛓ rules F3: a per-player row edits ONE SLOT's value, so the slot's type
+    //   decides (`is_vanilla["1"]` is a boolean, not the map's `object`).
+    const type = row.slotType ?? row.type;
+    const container = type === 'object' || type === 'array'
       || row.summary.kind === 'object' || row.summary.kind === 'array';
     wrap.appendChild(container
       ? this._makeDocumentBlockEditor(row)
@@ -4255,7 +4258,8 @@ class ApworldEditorUI {
   _makeDocumentScalarEditor(row) {
     const line = document.createElement('div');
     Object.assign(line.style, { display: 'flex', alignItems: 'center', gap: '6px' });
-    if (row.type === 'boolean') {
+    const type = row.slotType ?? row.type;
+    if (type === 'boolean') {
       const cb = document.createElement('input');
       cb.type = 'checkbox';
       cb.className = 'apworld-doc-input';
@@ -4275,15 +4279,15 @@ class ApworldEditorUI {
     input.dataset.docKey = row.key;
     input.addEventListener('change', (e) => {
       const raw = e.target.value;
-      if (row.type === 'integer' || row.type === 'number') {
+      if (type === 'integer' || type === 'number') {
         const n = Number(raw);
         if (raw === '' || !Number.isFinite(n)) {
-          this._opMessage = `Refused: \`${row.key}\` is a ${row.type} and `
+          this._opMessage = `Refused: \`${row.key}\` is a ${type} and `
             + `${JSON.stringify(raw)} is not one.`;
           this._render();
           return;
         }
-        this._applySetKey(row, row.type === 'integer' ? Math.trunc(n) : n);
+        this._applySetKey(row, type === 'integer' ? Math.trunc(n) : n);
         return;
       }
       this._applySetKey(row, raw);
@@ -4308,7 +4312,7 @@ class ApworldEditorUI {
       },
       // ⛓ An absent container is seeded with its own EMPTY form, so "add the key"
       //   and "edit the key" are the same gesture.
-      value: () => (row.value !== undefined ? row.value : (row.type === 'array' ? [] : {})),
+      value: () => (row.value !== undefined ? row.value : ((row.slotType ?? row.type) === 'array' ? [] : {})),
       sizeLabel: row.summary.inline,
       onSave: (parsed) => this._applySetKey(row, parsed),
     });

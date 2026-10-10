@@ -273,12 +273,26 @@
       "description": "The seed name string for this generation."
     },
     "is_vanilla": {
-      "type": "boolean",
-      "description": "Whether item placements match the original non-randomized game. True for games where items are in their designed/intended locations."
+      "type": "object",
+      "description": "Which slots' item placements match the original non-randomized game, keyed by player slot ID (string): a slot whose world puts items in their designed/intended locations maps to `true`; a slot that does not is ABSENT (the key is omitted when no slot is vanilla). Per slot, never one value for the document (rules F3, 2026-10-10; ⚖ user 2026-10-03: *\"This should also be per player. This should not be folder level.\"*). A document-level boolean is refused by name: stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`, and `scripts/procgen/migrate-per-player-blocks.mjs` moves an old document. Producer: exporter/exporter.py `export_game_rules`'s per-player loop, from the slot world's `is_vanilla` (class or instance attribute).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "boolean",
+          "description": "`true`: this slot's placements are the original game's."
+        }
+      },
+      "additionalProperties": false
     },
     "is_canonical": {
-      "type": "boolean",
-      "description": "Whether item placements are deterministically reproduced by the world generator. True for worldgen worlds generated with --canonical-seed."
+      "type": "object",
+      "description": "Which slots' item placements are deterministically reproduced by the world generator (worldgen worlds generated with --canonical-seed), keyed by player slot ID (string): such a slot maps to `true`; any other slot is ABSENT (the key is omitted when no slot is canonical). Per slot (rules F3, 2026-10-10): a multiworld mixing a canonical world with a non-canonical one marks only the canonical slots. A document-level boolean is refused by name (stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`). Producer: exporter/exporter.py `export_game_rules`'s per-player loop, from the slot world's `is_canonical` (class or instance attribute; world_generator/_template_init.py emits the ClassVar).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "boolean",
+          "description": "`true`: this slot's placements are the world generator's canonical ones."
+        }
+      },
+      "additionalProperties": false
     },
     "canonical_placements": {
       "type": "object",
@@ -298,9 +312,15 @@
       "pattern": "^[0-9]+$"
     },
     "preset_label": {
-      "type": "string",
-      "description": "Short label shown on this preset's frontend button (e.g. 'canth s4'). Producer: exporter/exporter.py:1391-1396, copied from the first player world declaring a `preset_label` class attribute (world_generator/_template_init.py:688-694).",
-      "minLength": 1
+      "type": "object",
+      "description": "Each slot's short frontend button label (e.g. 'canth s4'), keyed by player slot ID (string); a slot whose world declares no label is ABSENT (the key is omitted when none does). Per slot (rules F3, 2026-10-10), never the first declaring world's label for the whole document. A document-level string is refused by name (stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`). Producer: exporter/exporter.py `export_game_rules`'s per-player loop, from the slot world's `preset_label` (a class attribute world_generator/_template_init.py `generate_init_py` emits, or the instance label depgraph/metamath set in `generate_early`).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
     },
     "preset_sidecars": {
       "type": "object",

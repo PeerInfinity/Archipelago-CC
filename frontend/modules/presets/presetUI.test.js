@@ -10,6 +10,7 @@ import {
     buildSphereEnrichment,
     computeProcgenStats,
     procgenDriverLabel,
+    presetButtonFace,
 } from './presetUI.js';
 import { INITIALISE_DRIVER } from '../apworldEditor/initialiseDriver.js';
 
@@ -36,7 +37,13 @@ const FIXTURE = {
     },
     alttp_vanilla: {
         name: 'A Link to the Past',
-        folders: { AP_V1: { seed: 1, is_vanilla: true, files: ['AP_V1_rules.json'] } },
+        folders: {
+            AP_V1: {
+                seed: 1,
+                games: [{ player: 1, name: 'P', game: 'A Link to the Past', is_vanilla: true }],
+                files: ['AP_V1_rules.json'],
+            },
+        },
     },
     adventure: {
         name: 'Adventure',
@@ -809,5 +816,27 @@ describe('procgenDriverLabel — the preset card names the producer (APWORLD SUB
         expect(procgenDriverLabel(stats('top-down', 'Adventure'))).toBe('Top-down (Adventure)');
         expect(procgenDriverLabel(stats('grid-growth', null))).toBe('Grid-growth');
         expect(procgenDriverLabel(stats(undefined, null))).toBe('Procgen (driver unknown)');
+    });
+});
+
+/**
+ * ⛓ rules F3 (⚖ user 2026-10-10, ruling A): the flat button's label and V badge
+ * are the SLOT's (`games[i]`), never the folder's.
+ */
+describe('presetButtonFace', () => {
+    it("a one-slot folder shows its slot's label and V badge", () => {
+        expect(presetButtonFace(FIXTURE.alttp_vanilla.folders.AP_V1)).toEqual({ label: undefined, isVanilla: true });
+        expect(presetButtonFace({ games: [{ player: 1, label: 'canth v', is_vanilla: true }] }))
+            .toEqual({ label: 'canth v', isVanilla: true });
+    });
+
+    it('a multi-slot folder shows neither — no all/any rule picks a slot', () => {
+        const folder = { games: [{ player: 1, label: 'a s1', is_vanilla: true }, { player: 2, label: 'b s1' }] };
+        expect(presetButtonFace(folder)).toEqual({ label: undefined, isVanilla: false });
+    });
+
+    it('ignores a folder-level flag or label (the retired place)', () => {
+        const folder = { is_vanilla: true, label: 'old', games: [{ player: 1 }] };
+        expect(presetButtonFace(folder)).toEqual({ label: undefined, isVanilla: false });
     });
 });

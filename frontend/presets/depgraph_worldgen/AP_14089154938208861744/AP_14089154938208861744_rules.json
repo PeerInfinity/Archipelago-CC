@@ -17677,6 +17677,10 @@
     }
   },
   "helpers": {},
-  "is_canonical": true,
-  "preset_label": "coding_adventure s1"
+  "is_canonical": {
+    "1": true
+  },
+  "preset_label": {
+    "1": "coding_adventure s1"
+  }
 }

@@ -495,7 +495,8 @@ export async function apworldSetKeyRoundTripsThroughUndo(testController) {
             () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
         selectTab(panel, 'document');
 
-        // ⛓ `preset_label` — a document-scope STRING no other tab owns, and one
+        // ⛓ `preset_label` — a per-slot STRING (rules F3: `{"<p>": label}`) no
+        //   other tab owns, drawn as the selected slot's text box; and one
         //   this preset does not carry, so the edit is visible as an ADDED key.
         const KEY = 'preset_label';
         const VALUE = 'H1 round-trip';
@@ -517,12 +518,15 @@ export async function apworldSetKeyRoundTripsThroughUndo(testController) {
         input.dispatchEvent(new Event('change', { bubbles: true }));
 
         testController.assertEqual(
-            'the edit reached the record', VALUE, panel.rulesDoc[KEY]);
+            'the edit reached the record — the SLOT\'s entry (rules F3)', VALUE, panel.rulesDoc[KEY]?.[panel.playerId]);
         testController.assertEqual(
             'it was exactly ONE op', String(opsBefore + 1), String(panel.session.ops().length));
         testController.assertEqual(
             'the recorded op is a set-key on that key',
             'set-key', panel.session.ops().at(-1).op);
+        testController.assertEqual(
+            'at PLAYER scope — the row edits one slot of a per-player key',
+            'player', panel.session.ops().at(-1).scope);
 
         /**
          * ⛓⛓ **THE UNDO IS THE HALF THAT DISCRIMINATES.** An op that stored the
@@ -615,7 +619,7 @@ registerTest({
 registerTest({
     id: 'apworld-set-key-round-trips-through-undo',
     name: 'APWorld hub: a Document-tab edit is ONE op and undo takes the key back out',
-    description: 'Types into the `preset_label` row of the Document tab through the real '
+    description: 'Types into the (per-slot) `preset_label` row of the Document tab through the real '
                + 'change event, asserts the record moved and exactly one op was recorded, '
                + 'then presses the panel\'s own Undo and asserts the key is GONE rather than '
                + 'blanked — the fold over the shorter list, which is what catches an op that '
@@ -791,7 +795,7 @@ export async function apworldDownloadWritesTheWorkingCopy(testController) {
          */
         captured = null;
         panel._applyOp({
-            op: 'set-key', key: 'preset_label', value: 'H2 download row', scope: 'document',
+            op: 'set-key', key: 'preset_label', value: 'H2 download row', scope: 'player', player: '1',
         });
         panel._handleDownload();
         const edited = captured ? await captured.text() : '';
@@ -889,10 +893,12 @@ export async function apworldApplyKeepsTheSphereLog(testController) {
          * a panel that got this wrong would discard the edits it just published.
          */
         const opsBefore = hub.session.ops().length;
-        hub._applyOp({ op: 'set-key', key: 'preset_label', value: 'survives apply' });
+        // rules F3: `preset_label` is a slot map — a flat one would be REFUSED by the
+        //   loader Apply hands it to.
+        hub._applyOp({ op: 'set-key', key: 'preset_label', value: 'survives apply', scope: 'player', player: '1' });
         hub._handleApply();
         await testController.pollForCondition(
-            () => hub.rulesDoc.preset_label === 'survives apply',
+            () => hub.rulesDoc.preset_label?.['1'] === 'survives apply',
             'the edit is still in the record after its own Apply round-trip',
             5000,
             50,
@@ -986,7 +992,7 @@ export async function apworldRawViewReplacesTheDocumentAsOneOp(testController) {
         /* ── an edit, then Apply-from-text ("Save JSON") ─────────────────── */
 
         const edited = JSON.parse(recordText);
-        edited.preset_label = 'H2b raw view';
+        edited.preset_label = { 1: 'H2b raw view' }; // rules F3: a slot map
         mounted.view.dispatch({
             changes: { from: 0, to: mounted.view.state.doc.length,
                 insert: JSON.stringify(edited, null, 2) },
@@ -1000,7 +1006,7 @@ export async function apworldRawViewReplacesTheDocumentAsOneOp(testController) {
         document.querySelector(`${PANEL_SELECTOR} .apworld-raw-save`).click();
 
         testController.assertEqual('the text edit reached the record',
-            'H2b raw view', panel.rulesDoc.preset_label);
+            'H2b raw view', panel.rulesDoc.preset_label?.['1']);
         testController.assertEqual('it was exactly ONE op',
             String(opsBefore + 1), String(panel.session.ops().length));
         /**
@@ -1081,7 +1087,9 @@ export async function apworldRawViewUndoInsideTheEditorIsTheEditors(testControll
         if (!panel) return testController.getOverallResult();
 
         // One recorded op to undo, made OUTSIDE the raw tab.
-        panel._applyOp({ op: 'set-key', key: 'preset_label', value: 'before the raw edit' });
+        panel._applyOp({
+            op: 'set-key', key: 'preset_label', value: 'before the raw edit', scope: 'player', player: '1',
+        });
         const opsAfterSetKey = panel.session.ops().length;
 
         selectTab(panel, 'raw');
@@ -1112,7 +1120,7 @@ export async function apworldRawViewUndoInsideTheEditorIsTheEditors(testControll
             String(opsAfterSetKey), String(panel.session.ops().length));
         testController.assertEqual(
             '…and the record is untouched',
-            'before the raw edit', panel.rulesDoc.preset_label);
+            'before the raw edit', panel.rulesDoc.preset_label?.['1']);
 
         /**
          * ⛓ CM6's own history is what handles it, and it is reachable: the
@@ -1133,7 +1141,7 @@ export async function apworldRawViewUndoInsideTheEditorIsTheEditors(testControll
             '⛓ the SAME keystroke on the panel chrome DOES pop the session',
             String(opsAfterSetKey - 1), String(panel.session.ops().length));
         testController.reportCondition('…and the record went back with it',
-            panel.rulesDoc.preset_label !== 'before the raw edit');
+            panel.rulesDoc.preset_label?.['1'] !== 'before the raw edit');
         void host;
     } catch (error) {
         testController.log(`ERROR: ${error.message}`);

@@ -1060,6 +1060,18 @@ export const APWORLD_EDITOR_BUTTON = Object.freeze({
     payload: Object.freeze({ panelId: 'apworldEditorPanel' }),
 });
 
+/**
+ * ⛓ A flat-layout folder button's face: its label and V badge. rules F3 (⚖ user
+ * 2026-10-10, ruling A): both are the SLOT's — `preset_files.json` holds
+ * `is_vanilla` / `label` on the folder's `games[i]`, never at folder level — so a
+ * one-slot folder shows its slot's, and a multi-slot folder shows neither (no
+ * all/any rule picks a slot).
+ */
+export function presetButtonFace(folderData) {
+    const slot = folderData?.games?.length === 1 ? folderData.games[0] : {};
+    return { label: slot.label, isVanilla: !!slot.is_vanilla };
+}
+
 /** ⛓ The control's markup, from the descriptor above and nothing else. */
 export function apworldEditorButtonHtml(button = APWORLD_EDITOR_BUTTON) {
     const esc = (unsafe) => String(unsafe)
@@ -1408,7 +1420,7 @@ export class PresetUI {
         // test badges last with margin-left:auto (bottom-right)
         html += `<h4 class="game-name">${this.escapeHtml(name)}</h4>`;
         seeds.forEach(({ gameDirectory, seedName, folderData }) => {
-          const isVanilla = !!folderData.is_vanilla;
+          const { label, isVanilla } = presetButtonFace(folderData);
           const vanillaBadge = isVanilla
             ? `<span class="placement-badge placement-vanilla" title="Vanilla placement">V</span>`
             : '';
@@ -1417,9 +1429,9 @@ export class PresetUI {
                     data-game-directory="${this.escapeHtml(gameDirectory)}"
                     data-seed-name="${this.escapeHtml(seedName)}"
                     title="${this.escapeHtml(
-                      folderData.label || `Seed ${folderData.seed}${isVanilla ? ' (vanilla)' : ''}`
+                      label || `Seed ${folderData.seed}${isVanilla ? ' (vanilla)' : ''}`
                     )}">
-              ${this.escapeHtml(folderData.label || folderData.seed)}${vanillaBadge}
+              ${this.escapeHtml(label || folderData.seed)}${vanillaBadge}
             </button>
           `;
         });

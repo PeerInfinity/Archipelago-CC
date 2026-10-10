@@ -146,8 +146,8 @@ export const SIDECARS_TAB_SUMMARY_KEY = 'preset_sidecars';
  * `set-canonical-placement` reads.
  *
  * ⛔ **NOT `is_canonical`.** That is the EXPORTER's stamp saying a document came
- * out of a canonical run; it is a boolean the Document tab already draws and
- * nothing here touches it.
+ * out of a canonical run; it is a per-slot boolean (`{"<p>": true}`, rules F3)
+ * the Document tab already draws, and nothing here touches it.
  *
  * ⛓ Exported so the tab, the op and the parity rows all name it once.
  */
@@ -535,14 +535,27 @@ function isPerPlayer(propSchema) {
     return !!(pp && Object.prototype.hasOwnProperty.call(pp, PLAYER_SLOT_PATTERN));
 }
 
+/** ⛓ A per-player key's one-slot declared type, or `null` (see `buildDocumentKeys`). */
+function slotTypeOf(propSchema) {
+    if (!isPerPlayer(propSchema)) return null;
+    const type = propSchema.patternProperties[PLAYER_SLOT_PATTERN]?.type;
+    return typeof type === 'string' ? type : null;
+}
+
 /**
  * ⛓⛓⛓ **THE REGISTRY, DERIVED.** One entry per `schema.properties` key, in the
  * schema's own order.
  *
  * @param {object} schema the parsed `rules.schema.json`
  * @returns {ReadonlyArray<{key:string, label:string, description:string,
- *   type:string|null, perPlayer:boolean, required:boolean, ownedByTab:string|null,
- *   editor:object|null}>}
+ *   type:string|null, slotType:string|null, perPlayer:boolean, required:boolean,
+ *   ownedByTab:string|null, editor:object|null}>}
+ *
+ * ⛓ `slotType` is a per-player key's ONE SLOT's declared type (its
+ * `patternProperties` schema's `type`; `null` for a document-scope key). The
+ * Document tab draws the SELECTED SLOT's value, so its editor follows the slot's
+ * type, not the map's `object` — rules F3's `is_vanilla` slot is a checkbox and
+ * `preset_label`'s a text box, never a JSON block around one scalar.
  */
 export function buildDocumentKeys(schema) {
     const props = schema && schema.properties;
@@ -558,6 +571,7 @@ export function buildDocumentKeys(schema) {
         label: labelForKey(key),
         description: typeof propSchema.description === 'string' ? propSchema.description : '',
         type: typeof propSchema.type === 'string' ? propSchema.type : null,
+        slotType: slotTypeOf(propSchema),
         perPlayer: isPerPlayer(propSchema),
         required: required.has(key),
         ownedByTab: TAB_FOR_KEY[key] ?? null,
@@ -628,6 +642,7 @@ export function documentKeyRows(doc, schema, { player = '1' } = {}) {
                 + 'check. Shown raw so an "every element" tab does not silently drop a key that '
                 + 'is visibly in the file.',
             type: null,
+            slotType: null,
             perPlayer: false,
             required: false,
             ownedByTab: null,

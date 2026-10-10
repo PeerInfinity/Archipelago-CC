@@ -738,5 +738,7 @@
     }
   },
   "helpers": {},
-  "is_vanilla": true
+  "is_vanilla": {
+    "1": true
+  }
 }

@@ -103,7 +103,7 @@ def parse_args() -> argparse.Namespace:
         "--label",
         default=None,
         help=(
-            "Optional folder label shown in the presets panel (e.g. "
+            "Optional label for the (one) slot's button in the presets panel (e.g. "
             "'adventure s1'). Used by tiers like depgraph/metamath that "
             "host multiple source variants under one game-id."
         ),
@@ -223,8 +223,10 @@ def update_preset_files(
     # preset_sidecars. Absent = false.
     if has_procgen_data:
         new_folder_entry["has_procgen_data"] = True
+    # rules F3 (⚖ user 2026-10-10, ruling A): the button label is the SLOT's —
+    # on its `games[i]` entry, never at folder level.
     if label:
-        new_folder_entry["label"] = label
+        new_folder_entry["games"][0]["label"] = label
 
     game_entry = data.get(game_id)
     if game_entry is None:

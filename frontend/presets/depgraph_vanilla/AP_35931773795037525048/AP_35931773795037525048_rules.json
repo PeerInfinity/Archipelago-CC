@@ -13114,6 +13114,10 @@
     }
   },
   "helpers": {},
-  "is_vanilla": true,
-  "preset_label": "taskflow_example v"
+  "is_vanilla": {
+    "1": true
+  },
+  "preset_label": {
+    "1": "taskflow_example v"
+  }
 }

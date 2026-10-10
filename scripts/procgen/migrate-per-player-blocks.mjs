@@ -14,6 +14,9 @@
  *   - `region_atlas` / `flash_panel` / `provenance` → `{"<p>": block}` (rules
  *     F2, 2026-10-05; ⚖ user: *"If the schema allows both, then the schema is
  *     wrong."*) — the region-atlas compile's blocks, the P1a move again.
+ *   - `is_vanilla` / `is_canonical` / `preset_label` → `{"<p>": value}` (rules
+ *     F3, 2026-10-10; ⚖ user 2026-10-03: *"This should also be per player.
+ *     This should not be folder level. I want to fix this in the schema."*).
  *
  *   node scripts/procgen/migrate-per-player-blocks.mjs --check   # exit 1 naming every unmigrated file
  *   node scripts/procgen/migrate-per-player-blocks.mjs --write   # move them (idempotent: a second run writes 0 bytes)
@@ -38,6 +41,11 @@
  * the one Seedling slot. They are now `{"<p>": block}` like the P1a keys; the
  * loader REFUSES a document-level block by name (`RETIRED_TOP_LEVEL_KEYS`).
  *
+ * Until rules F3 the AP exporter wrote `is_vanilla` / `is_canonical` as ONE
+ * boolean OR'd over every slot's world, and `preset_label` as the FIRST slot
+ * world's label — per-world facts flattened to the document. They are now
+ * `{"<p>": value}` holding only the slots that declare them.
+ *
  * ── ⛓ WHAT A MOVE IS ────────────────────────────────────────────────────
  *
  * For every tracked `frontend/presets/**∕AP_*_rules.json` carrying either key:
@@ -54,6 +62,15 @@
  *      `exporter`'s own position. A document whose `exporter["<p>"]` already
  *      names the flag is REFUSED: two values, no rule picks one;
  *   3. write with the writer + newline rule step 1 found.
+ * ⛓ rules F3 — THE LINE SPLICE. A document whose integer-like object keys
+ * (`"19"`, `"21"`, …) sit out of numeric order cannot pass step 1 — `JSON.parse`
+ * re-orders such keys, so no JS writer reproduces them (the metamath family,
+ * `alttp_vanilla`, `apcalc_worldgen`: the Python exporter's
+ * `json.dumps(indent=2)`). When every key to move is a rules-F3 SCALAR on its
+ * own top-level line (`  "is_vanilla": true,`), that one line is replaced by
+ * the two-space-indent slot map the exporter writes (`  "is_vanilla": {` /
+ * `    "1": true` / `  },`), and the result is PROVED: it must parse to the
+ * moved document (every other value deep-equal). Anything else is refused.
  * A block whose keys are all slot ids of the document is already moved (the
  * old block's keys are field names — `driver`, `regions`, … — never digits).
  *
@@ -77,9 +94,20 @@
  * document and asserts exactly this; since P1b′ the committed row
  * `test/test_export_player_slicing.py` holds the table to the exporter's own
  * `create_ordered_export_data` without a regeneration.
+ *
+ * ⛓⛓ KEY_TABLE — the same document's rules-F3 truth, which differs from the
+ * P1a blocks' and so overrides TABLE per key: all five files said
+ * `is_canonical: true`, the exporter's old OR over every slot. Only
+ * `bounce_worldgen` (slots 3–4) declares `is_canonical` (a ClassVar); the
+ * `procgen_maze_worldgen` package (slots 1–2) declares none. So the combined
+ * file is `{"3": true, "4": true}`, `_P3` `{"3": true}`, `_P4` `{"4": true}`,
+ * and `_P1` / `_P2` LOSE the key — what the moved exporter writes, measured by
+ * re-exporting the generation (`Generate.py --player_files_path
+ * Players/presets/Multiworld --seed 4`).
  */
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
+import { isDeepStrictEqual } from 'node:util';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -91,7 +119,8 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..');
 const { stringifyRulesJson } = await import(join(ROOT, 'frontend/modules/shared/rulesJsonBuilder.js'));
 
-const KEYS = ['procgen_metadata', 'loop_costs', 'provenance', 'region_atlas', 'flash_panel'];
+const KEYS = ['procgen_metadata', 'loop_costs', 'provenance', 'region_atlas', 'flash_panel',
+    'is_vanilla', 'is_canonical', 'preset_label'];
 /** ⛓ The flat flag whose home is `exporter["<p>"]` (rules F1). */
 const EXPORTER_FLAGS = ['assume_bidirectional_exits'];
 const MW = 'frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311';
@@ -102,6 +131,16 @@ const TABLE = new Map([
     [`${MW}_P2_rules.json`, ['2']],
     [`${MW}_P3_rules.json`, []],
     [`${MW}_P4_rules.json`, []],
+]);
+/** ⛓ The per-key override of TABLE (docblock): path → key → the slots that carry it. */
+/** ⛓ The rules-F3 keys: scalar per-world values, the only ones the line splice moves. */
+const SCALAR_KEYS = ['is_vanilla', 'is_canonical', 'preset_label'];
+const KEY_TABLE = new Map([
+    [`${MW}_rules.json`, { is_canonical: ['3', '4'] }],
+    [`${MW}_P1_rules.json`, { is_canonical: [] }],
+    [`${MW}_P2_rules.json`, { is_canonical: [] }],
+    [`${MW}_P3_rules.json`, { is_canonical: ['3'] }],
+    [`${MW}_P4_rules.json`, { is_canonical: ['4'] }],
 ]);
 
 /** ⛓ The writers the corpus was measured to use, in the order tried (plan §36.1: 22 / 6 / 13). */
@@ -189,13 +228,16 @@ function main() {
             continue;
         }
         const writer = writerOf(doc, text);
-        if (!writer) {
+        const spliceable = todo.every((k) => SCALAR_KEYS.includes(k));
+        if (!writer && !spliceable) {
             refused.push(`${rel}: no known writer reproduces its bytes — the move could not be proved to be the block alone`);
             continue;
         }
+        const slotsOf = (k) => KEY_TABLE.get(rel)?.[k] ?? slots;
         const dest = (k) => (EXPORTER_FLAGS.includes(k) ? `exporter["${slots[0]}"]`
-            : slots.length ? `{${slots.map((p) => `"${p}"`).join(', ')}}` : 'key dropped');
-        unmigrated.push(`${rel} (${todo.map((k) => `${k} → ${dest(k)}`).join(', ')}; ${writer.name}${writer.nl ? ' + \\n' : ''})`);
+            : slotsOf(k).length ? `{${slotsOf(k).map((p) => `"${p}"`).join(', ')}}` : 'key dropped');
+        const how = writer ? `${writer.name}${writer.nl ? ' + \\n' : ''}` : 'line splice';
+        unmigrated.push(`${rel} (${todo.map((k) => `${k} → ${dest(k)}`).join(', ')}; ${how})`);
         if (mode !== 'write') continue;
 
         const out = {};
@@ -207,10 +249,37 @@ function main() {
             }
             if (EXPORTER_FLAGS.includes(k) && todo.includes(k)) continue;
             if (!todo.includes(k)) { out[k] = v; continue; }
-            if (slots.length === 0) continue;
-            out[k] = Object.fromEntries(slots.map((p) => [p, v]));
+            if (slotsOf(k).length === 0) continue;
+            out[k] = Object.fromEntries(slotsOf(k).map((p) => [p, v]));
         }
-        writeFileSync(path, writer.fn(out) + writer.nl);
+        if (writer) {
+            writeFileSync(path, writer.fn(out) + writer.nl);
+            moved += 1;
+            continue;
+        }
+        let spliced = text;
+        let spliceRefusal = null;
+        for (const k of todo) {
+            const line = new RegExp(`^  "${k}": (.+?)(,?)$`, 'gm');
+            const hits = [...spliced.matchAll(line)];
+            if (hits.length !== 1 || JSON.stringify(doc[k]) !== hits[0][1] || slotsOf(k).length === 0) {
+                spliceRefusal = `${k}: ${hits.length} top-level line(s), or a value/slot set the splice cannot write`;
+                break;
+            }
+            const [whole, value, comma] = hits[0];
+            const body = slotsOf(k).map((p) => `    "${p}": ${value}`).join(',\n');
+            // ⛔ by INDEX: the same text can sit deeper inside (`world["1"].options`).
+            const at = hits[0].index;
+            spliced = `${spliced.slice(0, at)}  "${k}": {\n${body}\n  }${comma}${spliced.slice(at + whole.length)}`;
+        }
+        let parsed = null;
+        try { parsed = spliceRefusal ? null : JSON.parse(spliced); } catch { parsed = null; }
+        if (!parsed || !isDeepStrictEqual(parsed, out)
+            || JSON.stringify(Object.keys(parsed)) !== JSON.stringify(Object.keys(out))) {
+            refused.push(`${rel}: the line splice could not be proved to be the move alone${spliceRefusal ? ` (${spliceRefusal})` : ''}`);
+            continue;
+        }
+        writeFileSync(path, spliced);
         moved += 1;
     }
 

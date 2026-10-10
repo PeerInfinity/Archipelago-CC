@@ -243,6 +243,30 @@ describe('the tab-ownership table', () => {
      * stays unowned, so "the placements key is owned" is a discrimination
      * rather than a tab that claimed everything with `canonical` in its name.
      */
+    /**
+     * ⛓ rules F3: `is_vanilla` / `is_canonical` / `preset_label` are slot maps, so
+     * they derive `perPlayer`, and their `slotType` (the one slot's declared type)
+     * is what the Document tab's editor follows — a checkbox / a text box for the
+     * selected slot, never a JSON block around one scalar. Document-scope keys
+     * have none.
+     */
+    it('⛓ rules F3: the per-slot flags derive perPlayer and their SLOT type', () => {
+        const byKey = Object.fromEntries(buildDocumentKeys(SCHEMA).map((e) => [e.key, e]));
+        for (const [key, slotType] of [['is_vanilla', 'boolean'], ['is_canonical', 'boolean'],
+            ['preset_label', 'string']]) {
+            expect(byKey[key].perPlayer, key).toBe(true);
+            expect(byKey[key].type, key).toBe('object');
+            expect(byKey[key].slotType, key).toBe(slotType);
+        }
+        expect(byKey.regions.slotType).toBe('object');
+        expect(byKey.seed_name.slotType).toBeNull();
+        const doc = { ...combined(), preset_label: { 1: 'canth s4' } };
+        const row = documentKeyRows(doc, SCHEMA, { player: '1' }).find((r) => r.key === 'preset_label');
+        expect(row.value).toBe('canth s4');
+        expect(documentKeyRows(doc, SCHEMA, { player: '2' }).find((r) => r.key === 'preset_label').present)
+            .toBe(false);
+    });
+
     it('⛓ the placements key names its home tab, and is_canonical does not', () => {
         const rows = documentKeyRows(combined(), SCHEMA, { player: '1' });
         const byKey = Object.fromEntries(rows.map((r) => [r.key, r]));

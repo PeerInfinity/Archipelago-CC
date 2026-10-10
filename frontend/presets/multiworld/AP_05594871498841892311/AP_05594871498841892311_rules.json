@@ -3108,5 +3108,8 @@
     }
   },
   "helpers": {},
-  "is_canonical": true
+  "is_canonical": {
+    "3": true,
+    "4": true
+  }
 }

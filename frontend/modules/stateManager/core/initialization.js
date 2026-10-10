@@ -160,6 +160,11 @@ function validateJSONData(jsonData, selectedPlayerId) {
  * block is the retired shape — a slot map's keys are all slot ids, an old
  * block's are field names (`atlas_id`, `config`, …) — and is refused by name:
  * read as absent, it would boot no panel and name no atlas, silently.
+ *
+ * ⛓ rules F3: `is_vanilla`, `is_canonical` and `preset_label` are per-world
+ * facts, so slot maps too (`{"<p>": true}` / `{"<p>": "label"}`); a document-
+ * level boolean or string is the retired shape (the exporter OR'd it over every
+ * slot, so a multiworld's non-canonical `_P1` said `is_canonical: true`).
  */
 const MIGRATE_SCRIPT = 'scripts/procgen/migrate-per-player-blocks.mjs --write';
 const isNotSlotMap = (v) => !v || typeof v !== 'object' || Array.isArray(v)
@@ -172,6 +177,9 @@ export const RETIRED_TOP_LEVEL_KEYS = Object.freeze({
   region_atlas: ['region_atlas["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
   flash_panel: ['flash_panel["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
   provenance: ['provenance["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
+  is_vanilla: ['is_vanilla["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
+  is_canonical: ['is_canonical["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
+  preset_label: ['preset_label["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
 });
 
 /**
@@ -184,10 +192,12 @@ export function refuseRetiredTopLevelKeys(jsonData) {
   for (const [key, [home, script, retired]] of Object.entries(RETIRED_TOP_LEVEL_KEYS)) {
     if (!Object.hasOwn(jsonData, key)) continue;
     if (retired && !retired(jsonData[key])) continue;
+    // rules F3: a retired flat boolean/string is a VALUE, not a block.
+    const what = jsonData[key] && typeof jsonData[key] === 'object' ? 'block' : 'value';
     throw new Error(
-      `rules.json carries a ${retired ? 'document-level' : 'top-level'} \`${key}\`${retired ? ' block' : ''}, `
+      `rules.json carries a ${retired ? 'document-level' : 'top-level'} \`${key}\`${retired ? ` ${what}` : ''}, `
       + `which is per player: its home is ${home}. `
-      + `Nothing reads the ${retired ? 'document-level block' : 'top-level copy'} — move the document with ${script}.`
+      + `Nothing reads the ${retired ? `document-level ${what}` : 'top-level copy'} — move the document with ${script}.`
     );
   }
 }

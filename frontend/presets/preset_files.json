@@ -8,7 +8,8 @@
           {
             "player": 1,
             "name": "VanillaPlando",
-            "game": "A Link to the Past"
+            "game": "A Link to the Past",
+            "is_vanilla": true
           }
         ],
         "files": [
@@ -16,8 +17,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true
+        ]
       }
     }
   },
@@ -493,7 +493,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Journey to Ascension"
+            "game": "Journey to Ascension",
+            "is_vanilla": true
           }
         ],
         "files": [
@@ -503,8 +504,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true
+        ]
       }
     }
   },
@@ -615,7 +615,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Baking Adventure"
+            "game": "Baking Adventure",
+            "is_vanilla": true
           }
         ],
         "files": [
@@ -623,8 +624,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true
+        ]
       }
     }
   },
@@ -729,7 +729,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Coding Adventure"
+            "game": "Coding Adventure",
+            "is_vanilla": true
           }
         ],
         "files": [
@@ -737,8 +738,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true
+        ]
       }
     }
   },
@@ -843,7 +843,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath"
+            "game": "Metamath",
+            "is_vanilla": true,
+            "label": "2p2e4 v"
           }
         ],
         "files": [
@@ -851,9 +853,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "2p2e4 v"
+        ]
       },
       "AP_01043188731678011336": {
         "seed": 2,
@@ -861,7 +861,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath"
+            "game": "Metamath",
+            "is_vanilla": true,
+            "label": "canth v"
           }
         ],
         "files": [
@@ -869,9 +871,7 @@
           "AP_01043188731678011336_Spoiler.txt",
           "AP_01043188731678011336_rules.json",
           "AP_01043188731678011336_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "canth v"
+        ]
       },
       "AP_84719271504320872445": {
         "seed": 3,
@@ -879,7 +879,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath"
+            "game": "Metamath",
+            "is_vanilla": true,
+            "label": "wilth v"
           }
         ],
         "files": [
@@ -887,9 +889,7 @@
           "AP_84719271504320872445_Spoiler.txt",
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "wilth v"
+        ]
       }
     }
   },
@@ -902,7 +902,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath"
+            "game": "Metamath",
+            "label": "2p2e4 s1"
           }
         ],
         "files": [
@@ -910,8 +911,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "label": "2p2e4 s1"
+        ]
       },
       "AP_01043188731678011336": {
         "seed": 2,
@@ -919,7 +919,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath"
+            "game": "Metamath",
+            "label": "2p2e4 s2"
           }
         ],
         "files": [
@@ -927,8 +928,7 @@
           "AP_01043188731678011336_Spoiler.txt",
           "AP_01043188731678011336_rules.json",
           "AP_01043188731678011336_sphere_log.jsonl"
-        ],
-        "label": "2p2e4 s2"
+        ]
       },
       "AP_84719271504320872445": {
         "seed": 3,
@@ -936,7 +936,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath"
+            "game": "Metamath",
+            "label": "2p2e4 s3"
           }
         ],
         "files": [
@@ -944,8 +945,7 @@
           "AP_84719271504320872445_Spoiler.txt",
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
-        ],
-        "label": "2p2e4 s3"
+        ]
       },
       "AP_05594871498841892311": {
         "seed": 4,
@@ -953,7 +953,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath"
+            "game": "Metamath",
+            "label": "canth s4"
           }
         ],
         "files": [
@@ -961,8 +962,7 @@
           "AP_05594871498841892311_Spoiler.txt",
           "AP_05594871498841892311_rules.json",
           "AP_05594871498841892311_sphere_log.jsonl"
-        ],
-        "label": "canth s4"
+        ]
       },
       "AP_96945849220684217413": {
         "seed": 5,
@@ -970,7 +970,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath"
+            "game": "Metamath",
+            "label": "canth s5"
           }
         ],
         "files": [
@@ -978,8 +979,7 @@
           "AP_96945849220684217413_Spoiler.txt",
           "AP_96945849220684217413_rules.json",
           "AP_96945849220684217413_sphere_log.jsonl"
-        ],
-        "label": "canth s5"
+        ]
       },
       "AP_00679259829289197625": {
         "seed": 6,
@@ -987,7 +987,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath"
+            "game": "Metamath",
+            "label": "canth s6"
           }
         ],
         "files": [
@@ -995,8 +996,7 @@
           "AP_00679259829289197625_Spoiler.txt",
           "AP_00679259829289197625_rules.json",
           "AP_00679259829289197625_sphere_log.jsonl"
-        ],
-        "label": "canth s6"
+        ]
       },
       "AP_35931773795037525048": {
         "seed": 7,
@@ -1004,7 +1004,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath"
+            "game": "Metamath",
+            "label": "wilth s7"
           }
         ],
         "files": [
@@ -1012,8 +1013,7 @@
           "AP_35931773795037525048_Spoiler.txt",
           "AP_35931773795037525048_rules.json",
           "AP_35931773795037525048_sphere_log.jsonl"
-        ],
-        "label": "wilth s7"
+        ]
       },
       "AP_20777137877808592492": {
         "seed": 8,
@@ -1021,7 +1021,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath"
+            "game": "Metamath",
+            "label": "wilth s8"
           }
         ],
         "files": [
@@ -1029,8 +1030,7 @@
           "AP_20777137877808592492_Spoiler.txt",
           "AP_20777137877808592492_rules.json",
           "AP_20777137877808592492_sphere_log.jsonl"
-        ],
-        "label": "wilth s8"
+        ]
       },
       "AP_48205312626925217390": {
         "seed": 9,
@@ -1038,7 +1038,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath"
+            "game": "Metamath",
+            "label": "wilth s9"
           }
         ],
         "files": [
@@ -1046,8 +1047,7 @@
           "AP_48205312626925217390_Spoiler.txt",
           "AP_48205312626925217390_rules.json",
           "AP_48205312626925217390_sphere_log.jsonl"
-        ],
-        "label": "wilth s9"
+        ]
       }
     },
     "test_results": {
@@ -1099,7 +1099,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "is_vanilla": true,
+            "label": "coding_adventure v"
           }
         ],
         "files": [
@@ -1107,9 +1109,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "coding_adventure v"
+        ]
       },
       "AP_01043188731678011336": {
         "seed": 2,
@@ -1117,7 +1117,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "is_vanilla": true,
+            "label": "baking_adventure v"
           }
         ],
         "files": [
@@ -1125,9 +1127,7 @@
           "AP_01043188731678011336_Spoiler.txt",
           "AP_01043188731678011336_rules.json",
           "AP_01043188731678011336_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "baking_adventure v"
+        ]
       },
       "AP_84719271504320872445": {
         "seed": 3,
@@ -1135,7 +1135,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "is_vanilla": true,
+            "label": "tech_tree v"
           }
         ],
         "files": [
@@ -1143,9 +1145,7 @@
           "AP_84719271504320872445_Spoiler.txt",
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "tech_tree v"
+        ]
       },
       "AP_05594871498841892311": {
         "seed": 4,
@@ -1153,7 +1153,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "is_vanilla": true,
+            "label": "skill_tree v"
           }
         ],
         "files": [
@@ -1161,9 +1163,7 @@
           "AP_05594871498841892311_Spoiler.txt",
           "AP_05594871498841892311_rules.json",
           "AP_05594871498841892311_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "skill_tree v"
+        ]
       },
       "AP_96945849220684217413": {
         "seed": 5,
@@ -1171,7 +1171,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "is_vanilla": true,
+            "label": "recipe_chain v"
           }
         ],
         "files": [
@@ -1179,9 +1181,7 @@
           "AP_96945849220684217413_Spoiler.txt",
           "AP_96945849220684217413_rules.json",
           "AP_96945849220684217413_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "recipe_chain v"
+        ]
       },
       "AP_00679259829289197625": {
         "seed": 6,
@@ -1189,7 +1189,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "is_vanilla": true,
+            "label": "swfrecomp_vibe_coding v"
           }
         ],
         "files": [
@@ -1197,9 +1199,7 @@
           "AP_00679259829289197625_Spoiler.txt",
           "AP_00679259829289197625_rules.json",
           "AP_00679259829289197625_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "swfrecomp_vibe_coding v"
+        ]
       },
       "AP_35931773795037525048": {
         "seed": 7,
@@ -1207,7 +1207,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "is_vanilla": true,
+            "label": "taskflow_example v"
           }
         ],
         "files": [
@@ -1215,9 +1217,7 @@
           "AP_35931773795037525048_Spoiler.txt",
           "AP_35931773795037525048_rules.json",
           "AP_35931773795037525048_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "taskflow_example v"
+        ]
       }
     }
   },
@@ -1230,7 +1230,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "coding_adventure s1"
           }
         ],
         "files": [
@@ -1238,8 +1239,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "label": "coding_adventure s1"
+        ]
       },
       "AP_01043188731678011336": {
         "seed": 2,
@@ -1247,7 +1247,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "coding_adventure s2"
           }
         ],
         "files": [
@@ -1255,8 +1256,7 @@
           "AP_01043188731678011336_Spoiler.txt",
           "AP_01043188731678011336_rules.json",
           "AP_01043188731678011336_sphere_log.jsonl"
-        ],
-        "label": "coding_adventure s2"
+        ]
       },
       "AP_84719271504320872445": {
         "seed": 3,
@@ -1264,7 +1264,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "coding_adventure s3"
           }
         ],
         "files": [
@@ -1272,8 +1273,7 @@
           "AP_84719271504320872445_Spoiler.txt",
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
-        ],
-        "label": "coding_adventure s3"
+        ]
       },
       "AP_05594871498841892311": {
         "seed": 4,
@@ -1281,7 +1281,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "baking_adventure s4"
           }
         ],
         "files": [
@@ -1289,8 +1290,7 @@
           "AP_05594871498841892311_Spoiler.txt",
           "AP_05594871498841892311_rules.json",
           "AP_05594871498841892311_sphere_log.jsonl"
-        ],
-        "label": "baking_adventure s4"
+        ]
       },
       "AP_96945849220684217413": {
         "seed": 5,
@@ -1298,7 +1298,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "baking_adventure s5"
           }
         ],
         "files": [
@@ -1306,8 +1307,7 @@
           "AP_96945849220684217413_Spoiler.txt",
           "AP_96945849220684217413_rules.json",
           "AP_96945849220684217413_sphere_log.jsonl"
-        ],
-        "label": "baking_adventure s5"
+        ]
       },
       "AP_00679259829289197625": {
         "seed": 6,
@@ -1315,7 +1315,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "baking_adventure s6"
           }
         ],
         "files": [
@@ -1323,8 +1324,7 @@
           "AP_00679259829289197625_Spoiler.txt",
           "AP_00679259829289197625_rules.json",
           "AP_00679259829289197625_sphere_log.jsonl"
-        ],
-        "label": "baking_adventure s6"
+        ]
       },
       "AP_35931773795037525048": {
         "seed": 7,
@@ -1332,7 +1332,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "tech_tree s7"
           }
         ],
         "files": [
@@ -1340,8 +1341,7 @@
           "AP_35931773795037525048_Spoiler.txt",
           "AP_35931773795037525048_rules.json",
           "AP_35931773795037525048_sphere_log.jsonl"
-        ],
-        "label": "tech_tree s7"
+        ]
       },
       "AP_20777137877808592492": {
         "seed": 8,
@@ -1349,7 +1349,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "tech_tree s8"
           }
         ],
         "files": [
@@ -1357,8 +1358,7 @@
           "AP_20777137877808592492_Spoiler.txt",
           "AP_20777137877808592492_rules.json",
           "AP_20777137877808592492_sphere_log.jsonl"
-        ],
-        "label": "tech_tree s8"
+        ]
       },
       "AP_48205312626925217390": {
         "seed": 9,
@@ -1366,7 +1366,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "tech_tree s9"
           }
         ],
         "files": [
@@ -1374,8 +1375,7 @@
           "AP_48205312626925217390_Spoiler.txt",
           "AP_48205312626925217390_rules.json",
           "AP_48205312626925217390_sphere_log.jsonl"
-        ],
-        "label": "tech_tree s9"
+        ]
       },
       "AP_55941320597534372051": {
         "seed": 10,
@@ -1383,7 +1383,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "skill_tree s10"
           }
         ],
         "files": [
@@ -1391,8 +1392,7 @@
           "AP_55941320597534372051_Spoiler.txt",
           "AP_55941320597534372051_rules.json",
           "AP_55941320597534372051_sphere_log.jsonl"
-        ],
-        "label": "skill_tree s10"
+        ]
       },
       "AP_89757102641179993453": {
         "seed": 11,
@@ -1400,7 +1400,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "skill_tree s11"
           }
         ],
         "files": [
@@ -1408,8 +1409,7 @@
           "AP_89757102641179993453_Spoiler.txt",
           "AP_89757102641179993453_rules.json",
           "AP_89757102641179993453_sphere_log.jsonl"
-        ],
-        "label": "skill_tree s11"
+        ]
       },
       "AP_97195801408842856158": {
         "seed": 12,
@@ -1417,7 +1417,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "skill_tree s12"
           }
         ],
         "files": [
@@ -1425,8 +1426,7 @@
           "AP_97195801408842856158_Spoiler.txt",
           "AP_97195801408842856158_rules.json",
           "AP_97195801408842856158_sphere_log.jsonl"
-        ],
-        "label": "skill_tree s12"
+        ]
       },
       "AP_97597253031866294651": {
         "seed": 13,
@@ -1434,7 +1434,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "recipe_chain s13"
           }
         ],
         "files": [
@@ -1442,8 +1443,7 @@
           "AP_97597253031866294651_Spoiler.txt",
           "AP_97597253031866294651_rules.json",
           "AP_97597253031866294651_sphere_log.jsonl"
-        ],
-        "label": "recipe_chain s13"
+        ]
       },
       "AP_85815028503973011889": {
         "seed": 14,
@@ -1451,7 +1451,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "recipe_chain s14"
           }
         ],
         "files": [
@@ -1459,8 +1460,7 @@
           "AP_85815028503973011889_Spoiler.txt",
           "AP_85815028503973011889_rules.json",
           "AP_85815028503973011889_sphere_log.jsonl"
-        ],
-        "label": "recipe_chain s14"
+        ]
       },
       "AP_03855006904931195900": {
         "seed": 15,
@@ -1468,7 +1468,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "recipe_chain s15"
           }
         ],
         "files": [
@@ -1476,8 +1477,7 @@
           "AP_03855006904931195900_Spoiler.txt",
           "AP_03855006904931195900_rules.json",
           "AP_03855006904931195900_sphere_log.jsonl"
-        ],
-        "label": "recipe_chain s15"
+        ]
       },
       "AP_63995860912159113643": {
         "seed": 16,
@@ -1485,7 +1485,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "swfrecomp_vibe_coding s16"
           }
         ],
         "files": [
@@ -1493,8 +1494,7 @@
           "AP_63995860912159113643_Spoiler.txt",
           "AP_63995860912159113643_rules.json",
           "AP_63995860912159113643_sphere_log.jsonl"
-        ],
-        "label": "swfrecomp_vibe_coding s16"
+        ]
       },
       "AP_54611489483343604102": {
         "seed": 17,
@@ -1502,7 +1502,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "swfrecomp_vibe_coding s17"
           }
         ],
         "files": [
@@ -1510,8 +1511,7 @@
           "AP_54611489483343604102_Spoiler.txt",
           "AP_54611489483343604102_rules.json",
           "AP_54611489483343604102_sphere_log.jsonl"
-        ],
-        "label": "swfrecomp_vibe_coding s17"
+        ]
       },
       "AP_94499266122763165639": {
         "seed": 18,
@@ -1519,7 +1519,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "swfrecomp_vibe_coding s18"
           }
         ],
         "files": [
@@ -1527,8 +1528,7 @@
           "AP_94499266122763165639_Spoiler.txt",
           "AP_94499266122763165639_rules.json",
           "AP_94499266122763165639_sphere_log.jsonl"
-        ],
-        "label": "swfrecomp_vibe_coding s18"
+        ]
       },
       "AP_09600906052635305867": {
         "seed": 19,
@@ -1536,7 +1536,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "taskflow_example s19"
           }
         ],
         "files": [
@@ -1544,8 +1545,7 @@
           "AP_09600906052635305867_Spoiler.txt",
           "AP_09600906052635305867_rules.json",
           "AP_09600906052635305867_sphere_log.jsonl"
-        ],
-        "label": "taskflow_example s19"
+        ]
       },
       "AP_39682733307390651924": {
         "seed": 20,
@@ -1553,7 +1553,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "taskflow_example s20"
           }
         ],
         "files": [
@@ -1561,8 +1562,7 @@
           "AP_39682733307390651924_Spoiler.txt",
           "AP_39682733307390651924_rules.json",
           "AP_39682733307390651924_sphere_log.jsonl"
-        ],
-        "label": "taskflow_example s20"
+        ]
       },
       "AP_99944342256591970567": {
         "seed": 21,
@@ -1570,7 +1570,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph"
+            "game": "DepGraph",
+            "label": "taskflow_example s21"
           }
         ],
         "files": [
@@ -1578,8 +1579,7 @@
           "AP_99944342256591970567_Spoiler.txt",
           "AP_99944342256591970567_rules.json",
           "AP_99944342256591970567_sphere_log.jsonl"
-        ],
-        "label": "taskflow_example s21"
+        ]
       }
     },
     "test_results": {
@@ -1749,12 +1749,14 @@
           {
             "player": 3,
             "name": "Player3",
-            "game": "Bounce Demo WorldGen"
+            "game": "Bounce Demo WorldGen",
+            "is_canonical": true
           },
           {
             "player": 4,
             "name": "Player4",
-            "game": "Bounce Demo WorldGen"
+            "game": "Bounce Demo WorldGen",
+            "is_canonical": true
           }
         ],
         "files": [
@@ -1767,7 +1769,6 @@
           "AP_05594871498841892311_rules.json",
           "AP_05594871498841892311_sphere_log.jsonl"
         ],
-        "is_canonical": true,
         "has_procgen_data": true
       }
     }
@@ -5913,7 +5914,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "A Link to the Past Vanilla WorldGen"
+            "game": "A Link to the Past Vanilla WorldGen",
+            "is_vanilla": true,
+            "is_canonical": true
           }
         ],
         "files": [
@@ -5921,9 +5924,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "is_canonical": true
+        ]
       }
     }
   },
@@ -5936,7 +5937,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "A Link to the Past WorldGen"
+            "game": "A Link to the Past WorldGen",
+            "is_canonical": true
           }
         ],
         "files": [
@@ -5944,8 +5946,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
+        ]
       }
     },
     "test_results": {
@@ -5990,7 +5991,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "APCalc WorldGen"
+            "game": "APCalc WorldGen",
+            "is_canonical": true
           }
         ],
         "files": [
@@ -5998,8 +6000,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
+        ]
       }
     },
     "test_results": {
@@ -6044,7 +6045,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Baking Adventure Vanilla WorldGen"
+            "game": "Baking Adventure Vanilla WorldGen",
+            "is_vanilla": true,
+            "is_canonical": true
           }
         ],
         "files": [
@@ -6052,9 +6055,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "is_canonical": true
+        ]
       }
     }
   },
@@ -6067,7 +6068,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Baking Adventure WorldGen"
+            "game": "Baking Adventure WorldGen",
+            "is_canonical": true
           }
         ],
         "files": [
@@ -6075,8 +6077,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
+        ]
       }
     },
     "test_results": {
@@ -6121,7 +6122,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Coding Adventure Vanilla WorldGen"
+            "game": "Coding Adventure Vanilla WorldGen",
+            "is_vanilla": true,
+            "is_canonical": true
           }
         ],
         "files": [
@@ -6129,9 +6132,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "is_canonical": true
+        ]
       }
     }
   },
@@ -6144,7 +6145,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Coding Adventure WorldGen"
+            "game": "Coding Adventure WorldGen",
+            "is_canonical": true
           }
         ],
         "files": [
@@ -6152,8 +6154,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
+        ]
       }
     },
     "test_results": {
@@ -6198,7 +6199,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "DepGraph WorldGen"
+            "game": "DepGraph WorldGen",
+            "is_canonical": true,
+            "label": "coding_adventure s1"
           }
         ],
         "files": [
@@ -6206,9 +6209,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true,
-        "label": "coding_adventure s1"
+        ]
       }
     },
     "test_results": {
@@ -6253,7 +6254,9 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Metamath WorldGen"
+            "game": "Metamath WorldGen",
+            "is_canonical": true,
+            "label": "2p2e4 s1"
           }
         ],
         "files": [
@@ -6261,9 +6264,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true,
-        "label": "2p2e4 s1"
+        ]
       }
     },
     "test_results": {
@@ -6308,7 +6309,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "TOEM original WorldGen"
+            "game": "TOEM original WorldGen",
+            "is_canonical": true
           }
         ],
         "files": [
@@ -6316,8 +6318,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
+        ]
       }
     },
     "test_results": {
@@ -6362,7 +6363,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "TOEM rule builder WorldGen"
+            "game": "TOEM rule builder WorldGen",
+            "is_canonical": true
           }
         ],
         "files": [
@@ -6370,8 +6372,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
+        ]
       }
     },
     "test_results": {
@@ -6416,14 +6417,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Procgen Top-Down"
+            "game": "Procgen Top-Down",
+            "label": "adventure s1"
           }
         ],
         "files": [
           "AP_1_rules.json"
         ],
-        "has_procgen_data": true,
-        "label": "adventure s1"
+        "has_procgen_data": true
       },
       "AP_2": {
         "seed": 2,
@@ -6431,14 +6432,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Procgen Top-Down"
+            "game": "Procgen Top-Down",
+            "label": "adventure s2"
           }
         ],
         "files": [
           "AP_2_rules.json"
         ],
-        "has_procgen_data": true,
-        "label": "adventure s2"
+        "has_procgen_data": true
       },
       "AP_3": {
         "seed": 3,
@@ -6446,14 +6447,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Procgen Top-Down"
+            "game": "Procgen Top-Down",
+            "label": "adventure s3"
           }
         ],
         "files": [
           "AP_3_rules.json"
         ],
-        "has_procgen_data": true,
-        "label": "adventure s3"
+        "has_procgen_data": true
       },
       "AP_4": {
         "seed": 4,
@@ -6461,14 +6462,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Procgen Top-Down"
+            "game": "Procgen Top-Down",
+            "label": "apcalc s1"
           }
         ],
         "files": [
           "AP_4_rules.json"
         ],
-        "has_procgen_data": true,
-        "label": "apcalc s1"
+        "has_procgen_data": true
       },
       "AP_5": {
         "seed": 5,
@@ -6476,14 +6477,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Procgen Top-Down"
+            "game": "Procgen Top-Down",
+            "label": "apcalc s2"
           }
         ],
         "files": [
           "AP_5_rules.json"
         ],
-        "has_procgen_data": true,
-        "label": "apcalc s2"
+        "has_procgen_data": true
       },
       "AP_6": {
         "seed": 6,
@@ -6491,14 +6492,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Procgen Top-Down"
+            "game": "Procgen Top-Down",
+            "label": "apcalc s3"
           }
         ],
         "files": [
           "AP_6_rules.json"
         ],
-        "has_procgen_data": true,
-        "label": "apcalc s3"
+        "has_procgen_data": true
       },
       "AP_7": {
         "seed": 7,
@@ -6506,14 +6507,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Procgen Top-Down"
+            "game": "Procgen Top-Down",
+            "label": "alttp s1"
           }
         ],
         "files": [
           "AP_7_rules.json"
         ],
-        "has_procgen_data": true,
-        "label": "alttp s1"
+        "has_procgen_data": true
       },
       "AP_8": {
         "seed": 8,
@@ -6521,14 +6522,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Procgen Top-Down"
+            "game": "Procgen Top-Down",
+            "label": "alttp s2"
           }
         ],
         "files": [
           "AP_8_rules.json"
         ],
-        "has_procgen_data": true,
-        "label": "alttp s2"
+        "has_procgen_data": true
       },
       "AP_9": {
         "seed": 9,
@@ -6536,14 +6537,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Procgen Top-Down"
+            "game": "Procgen Top-Down",
+            "label": "alttp s3"
           }
         ],
         "files": [
           "AP_9_rules.json"
         ],
-        "has_procgen_data": true,
-        "label": "alttp s3"
+        "has_procgen_data": true
       },
       "AP_10": {
         "seed": 10,
@@ -6551,14 +6552,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Procgen Top-Down"
+            "game": "Procgen Top-Down",
+            "label": "adventure mixed s1"
           }
         ],
         "files": [
           "AP_10_rules.json"
         ],
-        "has_procgen_data": true,
-        "label": "adventure mixed s1"
+        "has_procgen_data": true
       },
       "AP_11": {
         "seed": 11,
@@ -6566,14 +6567,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Procgen Top-Down"
+            "game": "Procgen Top-Down",
+            "label": "adventure mixed s2"
           }
         ],
         "files": [
           "AP_11_rules.json"
         ],
-        "has_procgen_data": true,
-        "label": "adventure mixed s2"
+        "has_procgen_data": true
       },
       "AP_12": {
         "seed": 12,
@@ -6581,14 +6582,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Procgen Top-Down"
+            "game": "Procgen Top-Down",
+            "label": "adventure mixed s3"
           }
         ],
         "files": [
           "AP_12_rules.json"
         ],
-        "has_procgen_data": true,
-        "label": "adventure mixed s3"
+        "has_procgen_data": true
       }
     }
   },
@@ -6601,7 +6602,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Bounce Demo WorldGen"
+            "game": "Bounce Demo WorldGen",
+            "is_canonical": true
           }
         ],
         "files": [
@@ -6610,7 +6612,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
-        "is_canonical": true,
         "has_procgen_data": true
       }
     }
@@ -6624,7 +6625,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Runner WorldGen"
+            "game": "Runner WorldGen",
+            "is_canonical": true
           }
         ],
         "files": [
@@ -6633,7 +6635,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
-        "is_canonical": true,
         "has_procgen_data": true
       }
     }
@@ -6647,7 +6648,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Runner Sphere WorldGen"
+            "game": "Runner Sphere WorldGen",
+            "is_canonical": true
           }
         ],
         "files": [
@@ -6656,7 +6658,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
-        "is_canonical": true,
         "has_procgen_data": true
       }
     }
@@ -6689,14 +6690,14 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "JtA (substrate test)"
+            "game": "JtA (substrate test)",
+            "is_vanilla": true
           }
         ],
         "files": [
           "AP_14089154938208861744_rules.json"
         ],
-        "has_procgen_data": true,
-        "is_vanilla": true
+        "has_procgen_data": true
       }
     }
   },
@@ -7023,7 +7024,8 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Seedling Playthrough"
+            "game": "Seedling Playthrough",
+            "is_canonical": true
           }
         ],
         "files": [
@@ -7031,8 +7033,7 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
+        ]
       }
     }
   },

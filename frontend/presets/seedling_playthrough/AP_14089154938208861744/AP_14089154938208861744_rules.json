@@ -11435,5 +11435,7 @@
     }
   },
   "helpers": {},
-  "is_canonical": true
+  "is_canonical": {
+    "1": true
+  }
 }

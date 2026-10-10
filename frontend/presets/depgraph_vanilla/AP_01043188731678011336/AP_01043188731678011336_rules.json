@@ -12638,6 +12638,10 @@
     }
   },
   "helpers": {},
-  "is_vanilla": true,
-  "preset_label": "baking_adventure v"
+  "is_vanilla": {
+    "1": true
+  },
+  "preset_label": {
+    "1": "baking_adventure v"
+  }
 }

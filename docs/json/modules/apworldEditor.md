@@ -1657,8 +1657,9 @@ pipeline's compile writes it
 one entry of it.
 
 ⛔ **`is_canonical` is a different key.** That is the exporter's *stamp* saying a
-document came out of a canonical run; it is a boolean the Document tab already
-draws, it stays unowned, and this tab does not touch it.
+document came out of a canonical run; it is a per-slot boolean (`{"<p>": true}`,
+rules F3) the Document tab already draws, it stays unowned, and this tab does not
+touch it.
 
 **The op — the second vocabulary on this key.**
 

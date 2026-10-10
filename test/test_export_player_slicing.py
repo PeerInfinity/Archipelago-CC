@@ -33,7 +33,9 @@ from exporter.exporter import create_ordered_export_data
 ROOT = Path(__file__).resolve().parent.parent
 FIXTURE_DIR = ROOT / "frontend/presets/multiworld/AP_05594871498841892311"
 COMBINED = FIXTURE_DIR / "AP_05594871498841892311_rules.json"
-PER_PLAYER_KEYS = ("procgen_metadata", "loop_costs")
+# rules F3 adds `is_canonical`: the fixture's slots 3–4 (`bounce_worldgen`) carry
+# it and slots 1–2 (`procgen_maze_worldgen`) do not.
+PER_PLAYER_KEYS = ("procgen_metadata", "loop_costs", "is_canonical")
 
 
 def _load(path):
@@ -119,5 +121,54 @@ def test_a_slice_carries_only_its_own_f2_blocks(slot):
     for key in F2_KEYS:
         if slot in blocks:
             assert sliced[key] == {slot: blocks[slot][key]}, (key, sliced.get(key))
+        else:
+            assert key not in sliced, (key, sliced.get(key))
+
+
+F3_KEYS = ("is_vanilla", "is_canonical", "preset_label")
+
+
+def test_the_fixture_marks_only_its_canonical_slots():
+    """rules F3, measured: only `bounce_worldgen` (slots 3–4) declares
+    `is_canonical`; the old exporter OR'd it over every slot, so `_P1`/`_P2`
+    of the non-canonical `procgen_maze_worldgen` said `true`."""
+    combined = _load(COMBINED)
+    assert combined["is_canonical"] == {"3": True, "4": True}
+    for slot, path in _player_files().items():
+        doc = _load(path)
+        if slot in ("3", "4"):
+            assert doc["is_canonical"] == {slot: True}, slot
+        else:
+            assert "is_canonical" not in doc, slot
+
+
+@pytest.mark.parametrize("slot", ["1", "2", "3"])
+def test_a_slice_carries_only_its_own_f3_flags(slot):
+    """rules F3: `is_vanilla` / `is_canonical` / `preset_label` are per-player
+    maps, so a `_P<n>` slice carries ONLY slot n's entry, and no key for a slot
+    that declares none. Synthetic: slot 1 vanilla+canonical with a label, slot 2
+    a label only, slot 3 nothing."""
+    values = {
+        "is_vanilla": {"1": True},
+        "is_canonical": {"1": True},
+        "preset_label": {"1": "canth v", "2": "canth s4"},
+    }
+    doc = {
+        "schema_version": 3,
+        "player_names": {"1": "A", "2": "B", "3": "C"},
+        "regions": {"1": {}, "2": {}, "3": {}},
+        "helpers": {},
+        **values,
+    }
+    combined = create_ordered_export_data(doc)
+    for key in F3_KEYS:
+        assert combined[key] == values[key], key
+    # After `helpers` — where the flat keys sat, so the move changed no key order.
+    assert list(combined)[-3:] == list(F3_KEYS), list(combined)
+
+    sliced = create_ordered_export_data(doc, player_id=slot)
+    for key in F3_KEYS:
+        if slot in values[key]:
+            assert sliced[key] == {slot: values[key][slot]}, (key, sliced.get(key))
         else:
             assert key not in sliced, (key, sliced.get(key))

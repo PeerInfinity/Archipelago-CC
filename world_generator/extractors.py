@@ -1366,11 +1366,12 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     # Get canonical placements from JSON (vanilla/original item locations)
     canonical_placements = extract_canonical_placements(json_data, player_id=player_id)
 
-    # Check if placements are vanilla (match original non-randomized game)
-    is_vanilla = json_data.get('is_vanilla', False)
+    # Check if placements are vanilla (match original non-randomized game).
+    # rules F3: a per-player map — THIS slot's flag, never another slot's.
+    is_vanilla = bool(json_data.get('is_vanilla', {}).get(player_id, False))
 
-    # Get preset label for frontend display (e.g., "canth s4")
-    preset_label = json_data.get('preset_label', '')
+    # Get this slot's preset label for frontend display (e.g., "canth s4"; rules F3: per-player)
+    preset_label = json_data.get('preset_label', {}).get(player_id, '')
 
     # Get progression mapping for progressive items (e.g., progressive-processing -> [steel-processing, oil-processing, ...])
     progression_mapping = extract_progression_mapping(json_data, player_id=player_id)

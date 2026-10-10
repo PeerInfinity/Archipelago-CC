@@ -14,6 +14,11 @@ The **generic base schema** that defines the structure for all Archipelago games
 - World metadata, exporter settings, and game-specific info
 - Helper function definitions
 - Canonical placements for deterministic seed generation
+- Per-world placement facts — `is_vanilla`, `is_canonical` and `preset_label` — as per-player maps
+  (`^[0-9]+$` → that slot's `true` / label; a slot that does not declare one is absent). They were
+  one document-level value (OR'd, or the first world's label, over every slot) until rules F3
+  (2026-10-10); the runtime loader refuses that flat shape by name. `preset_files.json` mirrors them
+  on each folder's `games[i]` entry (`is_vanilla`, `is_canonical`, `label`), never at folder level.
 - The procgen / preset extension keys — `preset_sidecars` (typed by `$defs/presetSidecarEntry`),
   `procgen_metadata`, `loop_costs`, `region_atlas`, `flash_panel`, `provenance` (these six are
   per-player maps, `^[0-9]+$` → one slot's block; the last three since rules F2, 2026-10-05, and

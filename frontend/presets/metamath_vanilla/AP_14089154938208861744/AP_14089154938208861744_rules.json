@@ -2260,6 +2260,10 @@
     }
   },
   "helpers": {},
-  "is_vanilla": true,
-  "preset_label": "2p2e4 v"
+  "is_vanilla": {
+    "1": true
+  },
+  "preset_label": {
+    "1": "2p2e4 v"
+  }
 }

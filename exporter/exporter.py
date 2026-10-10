@@ -1373,28 +1373,24 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
             logger.error(f"Error processing canonical_placements for player {player}: {str(e)}")
             export_data['canonical_placements'][player_str] = {}
 
-    # Determine is_vanilla and is_canonical from world class attributes
-    # Check all players' worlds for these flags
-    is_vanilla = False
-    is_canonical = False
+    # rules F3: `is_vanilla` / `is_canonical` / `preset_label` are facts about ONE
+    # slot's world, so each is a per-player map (`{"<p>": value}`) holding only
+    # the slots that declare it — never one value OR'd (or first-wins) over the
+    # whole multiworld. A key no slot declares is omitted. They are in
+    # PLAYER_SPECIFIC_KEYS, so a `_P<n>` slice carries its own slot's only.
+    per_slot_flags = {'is_vanilla': {}, 'is_canonical': {}, 'preset_label': {}}
     for player in multiworld.player_ids:
         world = multiworld.worlds[player]
-        if getattr(world.__class__, 'is_vanilla', False) or getattr(world, 'is_vanilla', False):
-            is_vanilla = True
-        if getattr(world.__class__, 'is_canonical', False) or getattr(world, 'is_canonical', False):
-            is_canonical = True
-    if is_vanilla:
-        export_data['is_vanilla'] = True
-    if is_canonical:
-        export_data['is_canonical'] = True
-
-    # Pick up preset_label from any player's world
-    for player in multiworld.player_ids:
-        world = multiworld.worlds[player]
+        player_str = str(player)
+        for flag in ('is_vanilla', 'is_canonical'):
+            if getattr(world.__class__, flag, False) or getattr(world, flag, False):
+                per_slot_flags[flag][player_str] = True
         preset_label = getattr(world, 'preset_label', None)
         if preset_label:
-            export_data['preset_label'] = preset_label
-            break
+            per_slot_flags['preset_label'][player_str] = preset_label
+    for key, slots in per_slot_flags.items():
+        if slots:
+            export_data[key] = slots
 
     # Add raw spoiler entrances data for debugging
     #if hasattr(multiworld, 'spoiler') and multiworld.spoiler and hasattr(multiworld.spoiler, 'entrances'):
@@ -2737,7 +2733,12 @@ DESIRED_KEY_ORDER = [
     'world',
     'exporter',
     'game_info',
-    'helpers'
+    'helpers',
+    # rules F3: after `helpers` — where these keys sat when they were flat
+    # (unlisted keys go last), so the per-slot move changed no key order.
+    'is_vanilla',
+    'is_canonical',
+    'preset_label',
 ]
 
 # Player-specific keys contain data nested under player IDs
@@ -2751,6 +2752,9 @@ PLAYER_SPECIFIC_KEYS = [
     # rules F2: the region-atlas compile's blocks are per-player maps too, so a
     # `_P<n>` slice carries only its own slot's (never slot 1's wiring).
     'provenance', 'region_atlas', 'flash_panel',
+    # rules F3: per-world facts, so per-slot maps (a multiworld's `_P1` no
+    # longer inherits slot 3's `is_canonical`).
+    'is_vanilla', 'is_canonical', 'preset_label',
 ]
 
 
@@ -3125,7 +3129,13 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         # If this world has vanilla placements and the game directory doesn't already
         # include "_vanilla" (e.g. alttp_vanilla_worldgen already has it), route it to
         # a dedicated {game}_vanilla directory instead of the standard game directory.
-        if cleaned_data.get('is_vanilla') and '_vanilla' not in clean_game_name:
+        # rules F3 (⚖ user 2026-10-10, ruling A): `is_vanilla` is per slot, so only a
+        # ONE-slot document routes — its slot's flag is the document's. A multi-slot
+        # document never routes (no all/any rule over its slots).
+        only_slot = [str(p) for p in multiworld.player_ids]
+        if (len(only_slot) == 1
+                and (cleaned_data.get('is_vanilla') or {}).get(only_slot[0])
+                and '_vanilla' not in clean_game_name):
             clean_game_name = f"{clean_game_name}_vanilla"
             game_dir = os.path.join(presets_dir, clean_game_name)
 
@@ -3273,11 +3283,21 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             for player_id in multiworld.player_ids:
                 # Use getattr to safely access player_name and provide a default
                 player_name = getattr(multiworld, 'player_name', {}).get(player_id, f"Player {player_id}")
-                player_game_data.append({
+                game_entry = {
                     "player": player_id,
                     "name": player_name,
                     "game": multiworld.game.get(player_id, "Unknown Game")
-                })
+                }
+                # rules F3 (⚖ user 2026-10-10, ruling A): the placement flags and
+                # the button label are the SLOT's, so they sit on its `games[i]`
+                # entry — nothing at folder level.
+                for flag in ('is_vanilla', 'is_canonical'):
+                    if (cleaned_data.get(flag) or {}).get(str(player_id)):
+                        game_entry[flag] = True
+                slot_label = (cleaned_data.get('preset_label') or {}).get(str(player_id))
+                if slot_label:
+                    game_entry["label"] = slot_label
+                player_game_data.append(game_entry)
 
             # Update preset entry
             folder_entry = {
@@ -3286,13 +3306,6 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                 "files": preset_files
             }
 
-            # Add placement flags if present in export data
-            if cleaned_data.get('is_vanilla'):
-                folder_entry["is_vanilla"] = True
-            if cleaned_data.get('is_canonical'):
-                folder_entry["is_canonical"] = True
-            if cleaned_data.get('preset_label'):
-                folder_entry["label"] = cleaned_data['preset_label']
             # Procgen data flag — true when the rules.json carries
             # preset_sidecars (i.e. the world was generated via the
             # procgen pipeline). Powers the Presets panel's "has

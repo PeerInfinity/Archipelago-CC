@@ -1132,5 +1132,7 @@
     }
   },
   "helpers": {},
-  "is_canonical": true
+  "is_canonical": {
+    "4": true
+  }
 }
