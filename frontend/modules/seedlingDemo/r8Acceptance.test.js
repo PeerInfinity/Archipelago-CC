@@ -396,6 +396,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'enc-l12-witch',
             // ⛓ Seedling fidelity PUSHBLOCK: the two L65 spear-thrust witnesses (a bob room).
             'pushblock-l65-reach-l63', 'pushblock-l65-reach-l68',
+            // ⛓ Seedling fidelity ENCOUNTERS2 D2: the live-arrival witness ends in L30 too.
+            'enc-l32-live-arrival',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -448,11 +450,12 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity ENCOUNTERS adds two (82) — `enc-l32-fallen-door`, `enc-l32-fire-return` (their L30 falls).
         // ⛓ ENCOUNTERS D3 adds one (83) — `enc-l12-witch` (L12).
         // ⛓ Seedling fidelity PUSHBLOCK adds two (85) — `pushblock-l65-reach-l63`, `pushblock-l65-reach-l68` (L65).
-        expect(out.exposed).toBe(85);
+        // ⛓ ENCOUNTERS2 D2 adds one (86) — `enc-l32-live-arrival` (its L30 fall).
+        expect(out.exposed).toBe(86);
         expect(out.tapes).toEqual([
             'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
-            'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch', 'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'crusher-l42-round-trip', 'dash-l16-sword-all', 'enc-l12-witch', 'enc-l32-fallen-door', 'enc-l32-fire-return', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
+            'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch', 'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'crusher-l42-round-trip', 'dash-l16-sword-all', 'enc-l12-witch', 'enc-l32-fallen-door', 'enc-l32-fire-return', 'enc-l32-live-arrival', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
             'ghostsword-l30-bobsoldier', 'l14-swordless-detour',
             'ladder2-l104-beam',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
@@ -660,6 +663,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'enc-l32-fallen-door': { tape: {}, levels: [30] },
             'enc-l32-fire-return': { tape: {}, levels: [30] },
             'enc-l12-witch': { tape: {}, levels: [12] },
+            'enc-l32-live-arrival': { tape: {}, levels: [30] },
             // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes — the mirror rule.
             'axe-l61-reach-l63': { tape: {}, levels: [63] },
             'burn-l44-reach-exit': { tape: {}, levels: [45] },

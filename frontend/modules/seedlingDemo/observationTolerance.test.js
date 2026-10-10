@@ -123,7 +123,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity BOBSOLDIER2: +2 (263) — `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch`.
         // ⛓ fidelity ENCOUNTERS D2: +2 (265) — `enc-l32-fallen-door`, `enc-l32-fire-return`; D3: +1 (266) — `enc-l12-witch`.
         // ⛓ fidelity PUSHBLOCK: +3 (269) — `pushblock-l65-reach-l63`, `pushblock-l65-reach-l68`, `pushblock-l65-sword-press`.
-        expect(names.length).toBe(269);
+        // ⛓ fidelity ENCOUNTERS2 D2: +1 (270) — `enc-l32-live-arrival`, inert.
+        expect(names.length).toBe(270);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -181,7 +182,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity BOBSOLDIER2: 263 with `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch`.
         // ⛓ fidelity ENCOUNTERS D2: 265 — both L32 witnesses fall to L30; D3: 266 — the Witch witness walks out to L95.
         // ⛓ fidelity PUSHBLOCK: 269 — its three witnesses.
-        expect(tally.swapped).toBe(269);
+        // ⛓ fidelity ENCOUNTERS2 D2: 270 — the live-arrival witness falls to L30.
+        expect(tally.swapped).toBe(270);
     }, 600_000);
 });
 

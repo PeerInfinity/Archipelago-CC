@@ -1416,6 +1416,12 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + '`teleporter@184,64`: 347 ticks in L65 with `bob@208,80`, the last on L68\'s arrival (no '
                 + 'bridged body). Recorded on the game with `hits` 0.',
         }),
+        Object.freeze({
+            name: 'enc-l32-live-arrival', levels: Object.freeze([30]), bobs: 1, ticks: 81,
+            addedBy: 'Seedling fidelity ENCOUNTERS2 D2 (the live-arrival witness)',
+            why: 'the live page\'s L32 arrival: the fight, the Fire, the burn, then the pit to L30 at t969 — 81 ticks '
+                + 'there, below the stairs, away from the BobSoldier. Recorded on the game with `hits` 0.',
+        }),
     ]),
 
     /**
