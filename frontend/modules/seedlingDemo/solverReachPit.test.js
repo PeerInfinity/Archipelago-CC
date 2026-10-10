@@ -26,7 +26,7 @@ import { withItemFlag } from './watchSolve.js';
 import { atlasLevelSource } from './levelSource.js';
 import { buildLevelWorld } from './levelWorld.js';
 import { fallDestination } from './playerPhysicsV2.js';
-import { assertGoal, solveSegment } from './solverBot.js';
+import { assertGoal, solveSegment, withSwordGateTimed } from './solverBot.js';
 import { withContactFidelity } from './contactFidelity.js';
 
 const TAPE = new URL('./fixtures/tapes/r3-collect-torch.json', import.meta.url);
@@ -74,10 +74,25 @@ describe('solveSegment — reach-pit L30 (3,14) → L31', () => {
      * the honest answer, pinned below. These rows are about the pit's transport and the break verb, so they run with
      * the BobSoldier static, as they were written.
      */
-    it('with the BobSoldier LIVE the boot beside it refuses by the danger map\'s name (the old solve ignored the body)', () => {
+    /**
+     * ⛓ fidelity BOBSOLDIER2 (wave-10 harvest, ⚖ `SWORD_GATE_TIMED` ON): the walk gate prices the sworded BobSoldier
+     * by its next-tick sword lines and bare body instead of the 16 px pad, and this boot SOLVES — 178 t, the same break
+     * and fall as the static row below, 0 player hits (measured). The pad's refusal is the OFF gate's, pinned so.
+     */
+    it('with the BobSoldier LIVE and the gate\'s pad (SWORD_GATE_TIMED OFF) the boot beside it refuses by the danger map\'s name', () => {
+        withSwordGateTimed(false, () => {
+            const { run, boot } = l30Run();
+            expect(() => solveSegment({ run, goals: [{ kind: 'reach-pit', pit: { ...PIT } }], name: 'u1-reach-pit', boot }))
+                .toThrow(/the danger map forbids \(72,96\) — chaser:bobsoldier@48,80/);
+        });
+    });
+    it('with the BobSoldier LIVE and the timed gate (the default) the boot SOLVES: 178 t, 0 hits, break then fall', () => {
         const { run, boot } = l30Run();
-        expect(() => solveSegment({ run, goals: [{ kind: 'reach-pit', pit: { ...PIT } }], name: 'u1-reach-pit', boot }))
-            .toThrow(/the danger map forbids \(72,96\) — chaser:bobsoldier@48,80/);
+        const out = solveSegment({ run, goals: [{ kind: 'reach-pit', pit: { ...PIT } }], name: 'u1-reach-pit', boot });
+        expect(out.perTick.length).toBe(178);
+        expect(run.playerHits).toEqual([]);
+        expect(run.level).toBe(31);
+        expect(out.records.map((r) => r.strategy ?? r.goal)).toEqual(['break', 'reach-pit']);
     });
 
     it('SOLVES: breaks the rock on the tile, falls at t=98, coasts 80 ticks, ends in L31 on the ground', () => withContactFidelity({ bobSoldierLive: false }, () => {
