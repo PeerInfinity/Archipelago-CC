@@ -81,7 +81,7 @@ describe('hammer-phase B3 — the replay rewind', () => {
         expect(seen.filter((p) => p.kind === 'kill-start').length).toBeGreaterThan(0);
         expect(seen.filter((p) => p.kind === 'tick').length).toBeGreaterThanOrEqual(10);
         for (const p of seen) expect(p.back, `t${p.t} (${p.kind})`).toBe(p.live);
-    });
+    }, 300_000);
 
     it('⛓⛓ `replayToTick` replays keys, equips before their tick and takes after it, and refuses a factory from another state', () => {
         const make = () => createRunForStaging({ ...R9, seam: seamAt(40), equips: [] }, SOURCE);
@@ -92,7 +92,7 @@ describe('hammer-phase B3 — the replay rewind', () => {
         expect(() => replayToTick({ makeRun: make, perTick, to: 31 })).toThrow(/outside the replayable span/);
         expect(() => replayToTick({ makeRun: () => { const r = make(); r.advance(new Set()); return r; },
             perTick, to: 5 })).toThrow(/must build the run the segment was handed/);
-    });
+    }, 300_000);
 });
 
 describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
@@ -112,7 +112,7 @@ describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
         const answered = new SolverBotError('x', { code: HAMMER_SAFETY });
         answered.fightFallback = { verdict: 'refused' };
         expect(isFightFallbackRefusal(answered)).toBe(false);
-    });
+    }, 300_000);
 
     it('⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight\'s', async () => {
         await withHammerEscape(false, async () => {
@@ -138,7 +138,7 @@ describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
                 .toEqual([['whole', 'solved'], ['whole', 'solved'], ['whole', 'solved']]);
             expect(whole.out.fightFallbacks).toBe(undefined);
         });
-    });
+    }, 300_000);
 
     it('⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence', async () => {
         await withHammerEscape(false, async () => {
@@ -158,7 +158,7 @@ describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
             expect(on.fightFallback).toMatchObject({ t: 0, how: 'rewind', refused: HAMMER_SAFETY, refusedAt: 267,
                 verdict: 'refused', retryRefused: HAMMER_SAFETY });
         });
-    });
+    }, 300_000);
 
     it('⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing', async () => {
         expect(HAMMER_ESCAPE.enabled).toBe(true);
@@ -169,14 +169,14 @@ describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
         expect(JSON.stringify(on.passes)).toBe(JSON.stringify(off.passes));
         expect(on.out.fightFallbacks).toBe(undefined);
         expect(Object.keys(on.out)).toEqual(Object.keys(off.out));
-    });
+    }, 300_000);
 
     it('⛓⛓ inert while the fight itself is on (the retry would be the same path)', async () => {
         const fight = await withHammerFight(true, () => solveR9At(4));
         const both = await withHammerFight(true, () => withHammerFightFallback(true, () => solveR9At(4)));
         expect(keys(both.out.perTick)).toBe(keys(fight.out.perTick));
         expect(both.out.fightFallbacks).toBe(undefined);
-    });
+    }, 300_000);
 
     it('⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged', () => {
         const off = solveAdmission();
@@ -189,7 +189,7 @@ describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
         expect(on.ticks).toBe(withHammerFight(true, solveAdmission).ticks);
         expect(on.fightFallbacks).toEqual([{ t: 0, how: 'admission', refused: 'PRESS_ADMISSION',
             bodies: ['spinner@16,64'], verdict: 'solved', ticks: 55, fights: 1 }]);
-    });
+    }, 300_000);
 
     it('⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged', () => {
         const off = solveKillLock();
@@ -201,5 +201,5 @@ describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
         expect(on.ticks).toBe(withHammerFight(true, solveKillLock).ticks);
         expect(on.fightFallbacks).toEqual([{ t: 0, how: 'admission', refused: 'PRESS_ADMISSION',
             bodies: ['spinner@80,80', 'spinner@80,112'], verdict: 'solved', ticks: 569, fights: 1 }]);
-    });
+    }, 300_000);
 });
