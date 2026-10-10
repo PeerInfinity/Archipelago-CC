@@ -1398,6 +1398,24 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'L12\'s Witch and the walk out: 601 ticks in a puncher room at >= 129 px from `puncher` — '
                 + 'never inside its reach. Recorded on the game with `hits` 0.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity PUSHBLOCK — the solver's spear thrusts in L65 (one `bob`), each walk
+         * ending on its arrival: L68 (no bridged body) and L63 (two jellyfish).
+         */
+        Object.freeze({
+            name: 'pushblock-l65-reach-l63', levels: Object.freeze([63, 65]), bobs: 3, ticks: 229,
+            addedBy: 'Seedling fidelity PUSHBLOCK D3 (route step 148\'s plan, the spear thrust E)',
+            why: 'one spear thrust at `pushableblockspear@176,128` from the L68 arrival and the walk up '
+                + 'the west column to `teleporter@128,0`: 228 ticks in L65 with `bob@208,80`, the last on '
+                + 'L63\'s arrival among its two jellyfish. Recorded on the game with `hits` 0.',
+        }),
+        Object.freeze({
+            name: 'pushblock-l65-reach-l68', levels: Object.freeze([65]), bobs: 1, ticks: 348,
+            addedBy: 'Seedling fidelity PUSHBLOCK D3 (route step 146\'s room, R4\'s three thrusts)',
+            why: 'three spear thrusts at `pushableblockspear@176,128` from its own pocket and the walk to '
+                + '`teleporter@184,64`: 347 ticks in L65 with `bob@208,80`, the last on L68\'s arrival (no '
+                + 'bridged body). Recorded on the game with `hits` 0.',
+        }),
     ]),
 
     /**
