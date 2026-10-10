@@ -35,7 +35,7 @@
 
 import {
     PLAYER_SOLID_TYPES, TILE_SIZE,
-    addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap, tagOf,
+    addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap, tagOf, withTileWrites,
 } from './levelWorld.js';
 import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE,
@@ -102,6 +102,10 @@ import {
 } from './crusher.js';
 // ⛓⛓⛓ seedling-fidelity-bobsoldier D1: the BobSoldier's sword, stepped from the chaser loop.
 import { BOB_SOLDIER, bobSoldierSwordTail, createBobSoldierSword } from './bobSoldier.js';
+// ⛓⛓⛓ seedling-fidelity-bulb D2: the Bulb's drop death — the armed update, "drop", the lava write, "die".
+import {
+    bulbSlideStep, createDropAnim, dropDeathOf, hasDropDeath, stepBulbGraphic, tileUnder,
+} from './bulb.js';
 // ⛓⛓⛓ seedling-fidelity-ghostsword D2: the ghost sword's press — its rect, reach, Spear arm and window.
 import {
     GHOSTSWORD_PRESS, GHOST_PRESS_ARMS, GHOST_SWORD_DAMAGE, GHOST_SWORD_REACH,
@@ -883,7 +887,7 @@ export function createLevelRun({
          * The tell was a byte-exact replay that stopped 1.34 px short of
          * a teleporter it should have crossed.
          */
-        if (c.level === level) world = worldFor(c.level);
+        if (c.level === level) world = visitWorld(c.level);
     };
     const applyTimedClears = (tick) => {
         for (const c of timedClears) {
@@ -985,6 +989,19 @@ export function createLevelRun({
         return worlds.get(n);
     };
     /**
+     * ⛓⛓⛓ seedling-fidelity-bulb D2 — THE TILES THIS VISIT HAS WRITTEN, per level (`Map<"tx,ty", t>`).
+     *
+     * `Bulb.endAnim` writes a Tile's `t` (lava) and a new `Game` rebuilds the tile, so the write is PER VISIT:
+     * `freshVisitState` drops it. `world` — the run's binding, which `run.world`, the physics and every stepper read —
+     * is the memoised build wrapped by `levelWorld.withTileWrites` while a write stands (`visitWorld`); with none it
+     * IS the memoised build, the object every run held before this slice.
+     */
+    const tileWritesByLevel = new Map();
+    const tileWriteEvents = [];
+    /** ⛓ fidelity-bulb: every Bulb death's fenceposts — `drop` (the armed update's end), `lava`, `removed`. */
+    const bulbEvents = [];
+    const visitWorld = (n) => withTileWrites(worldFor(n), tileWritesByLevel.get(n) ?? null);
+    /**
      * The despawns, pending until their tick — `applyTimedClears`' twin, and
      * deliberately its twin down to the live-binding refresh.
      *
@@ -1007,7 +1024,7 @@ export function createLevelRun({
             if (!despawnedByLevel.has(d.level)) despawnedByLevel.set(d.level, new Set());
             despawnedByLevel.get(d.level).add(d.id);
             worlds.delete(d.level);
-            if (d.level === level) world = worldFor(d.level);
+            if (d.level === level) world = visitWorld(d.level);
             /**
              * ⛔⛔ R8 SLICE 1: AND THE ONE BODY LEAVES THE LIVE ROSTER —
              * TARGETED, NEVER A ROSTER DROP.
@@ -2913,7 +2930,7 @@ export function createLevelRun({
                 if (!staticRemovedTags.has(p.level)) staticRemovedTags.set(p.level, new Set());
                 staticRemovedTags.get(p.level).add(p.persistTag);
                 worlds.delete(p.level);
-                if (p.level === level) world = worldFor(p.level);
+                if (p.level === level) world = visitWorld(p.level);
             }
             // ⛓ hammer-phase C1: a body whose class has no `removed()` write (a `Turret`) leaves the census only.
             const owner = p.writesTag === false ? null
@@ -3816,6 +3833,14 @@ export function createLevelRun({
                     // the spread's value byte for byte.
                     ...(killLockBridged(e.tag) ? { hitsMax: ENEMY_CLASSES[e.tag].kill.hits } : {}),
                     /**
+                     * ⛓ fidelity-bulb: `Bulb` writes `hitsMax = 1` (`Bulb.as:30`) — the census row's `kill.hits` —
+                     * and carries its drop-death phase: null alive, `armed` from the blow to the end of its next
+                     * update, then `drop` and `die` (`bulb.js`). Present ONLY on that class.
+                     */
+                    ...(hasDropDeath(e.tag) ? {
+                        hitsMax: ENEMY_CLASSES[e.tag].kill.hits, bulbPhase: null, dropTile: null,
+                    } : {}),
+                    /**
                      * The "die" Spritemap, once `startDeath` has played it.
                      * `null` while the body is alive — an animation nobody
                      * started is not an animation at frame 0.
@@ -4146,6 +4171,8 @@ export function createLevelRun({
         return poleStates.get(n);
     };
     const freshVisitState = (n) => {
+        // ⛓ fidelity-bulb: a new `Game` rebuilds every Tile from the `.oel` — a Bulb's lava does not survive the door.
+        tileWritesByLevel.delete(n);
         // ⛓ U14-swim D1: a new `Game` constructs the moonrock again, from `rockSet`.
         moonrockStates.delete(n);
         // ⛓ U15-swim D1: and every turret (angle 0, `shootTimer` 0) and no spit.
@@ -7517,6 +7544,9 @@ export function createLevelRun({
                 // ⛓ fidelity-bobsoldier: the sword's arrays are the live body's; the forecast steps its own copy.
                 ...(c.sword ? { sword: { ...c.sword, swordSpin: [...c.sword.swordSpin],
                     swordSpinBegin: [...c.sword.swordSpinBegin] } } : {}),
+                // ⛓ fidelity-bulb: the drop death's Spritemap is stepped on the clone — its own copy.
+                ...(c.bulbPhase !== undefined ? { anim: c.anim ? { ...c.anim } : null,
+                    dropTile: c.dropTile ? { ...c.dropTile } : null } : {}),
             });
         }
         // ⚠ ONCE, not per tick: the previewed world is FROZEN at this tick's
@@ -7662,7 +7692,23 @@ export function createLevelRun({
                         sweep(dy, 'y');
                         return { x, y };
                     };
-                    const r = chaserStep(c.tag, c, playerPos, {
+                    /**
+                     * ⛓⛓ fidelity-bulb D2 — A BULB'S DROP DEATH, ON THE CLONE: `stepChaserEntity`'s branch and the
+                     * graphic half (`stepBulbGraphic`), so a previewed kill leaves the body sliding, harmless, its
+                     * i-frame frozen, and gone where the live run removes it — with the lava tile it wrote carried on
+                     * the clone (`lavaTile`, `lavaAt`) for a reader that asks where.
+                     */
+                    if (c.bulbPhase === 'drop' || c.bulbPhase === 'die') {
+                        const r = bulbSlideStep(c.tag, c, { frozen: false, move });
+                        c.x = r.x;
+                        c.y = r.y;
+                        c.v = r.v;
+                        const ev = stepBulbGraphic(c.tag, c);
+                        if (ev?.event === 'lava') { c.lavaTile = ev.tile; c.lavaAt = tickOffset + 1; }
+                        if (ev?.event === 'removed') c.removed = true;
+                        continue;
+                    }
+                    const r = chaserStep(c.tag, c.bulbPhase === 'armed' ? { ...c, dying: false } : c, playerPos, {
                         onScreen: onScreenAt(box, `${c.tag} ${c.id}`),
                         // ⚠ A ceremony freezes the world, and a preview never
                         // starts one — `previewWalk` does not collect, does not
@@ -7673,6 +7719,13 @@ export function createLevelRun({
                     c.x = r.x;
                     c.y = r.y;
                     c.v = r.v;
+                    // ⛓ fidelity-bulb: the armed update's last statement, then its first "drop" graphic update.
+                    if (c.bulbPhase === 'armed') {
+                        c.bulbPhase = 'drop';
+                        c.anim = createDropAnim(c.tag);
+                        c.dropTile = tileUnder(c.x, c.y);
+                        stepBulbGraphic(c.tag, c);
+                    }
                     // ⛓ U7-swim D2: the wind-up, decided and stepped as the live
                     // run does, so the chase gate (`getSprite() != "attack"`)
                     // agrees. ⛔ No punch is thrown: a hit does not happen in a
@@ -7736,8 +7789,13 @@ export function createLevelRun({
                                  * the same game tick is applied after `step`
                                  * returns — both are `Player.update`'s.
                                  */
-                                c.dyingAt = tickOffset + 1;
-                                c.removalTicks = removalTicksAfterHit(c.as3, deathTicks(c.tag));
+                                if (hasDropDeath(c.tag)) {
+                                    // ⛓ fidelity-bulb: the death is staged by the body's own updates (armed, drop, die).
+                                    c.bulbPhase = 'armed';
+                                } else {
+                                    c.dyingAt = tickOffset + 1;
+                                    c.removalTicks = removalTicksAfterHit(c.as3, deathTicks(c.tag));
+                                }
                             }
                             continue;
                         }
@@ -7754,7 +7812,8 @@ export function createLevelRun({
                 // would let the strike policy press again next tick into a body
                 // the game is still refusing.
                 for (const c of bodies.values()) {
-                    if (c.hitsTimer > 0) c.hitsTimer -= 1;
+                    // ⛓ fidelity-bulb: "drop"/"die" run no `Enemy.update`, so no `hitUpdate` — the i-frame freezes.
+                    if (c.hitsTimer > 0 && c.bulbPhase !== 'drop' && c.bulbPhase !== 'die') c.hitsTimer -= 1;
                     if (c.dyingAt !== undefined && tickOffset - c.dyingAt >= c.removalTicks) {
                         c.removed = true;
                     }
@@ -7782,6 +7841,9 @@ export function createLevelRun({
                         ...(c.punch !== undefined ? { punch: c.punch } : {}),
                         // ⛓ fidelity-bobsoldier D3: this tick's sword lines, for a class that has one.
                         ...(c.swordLines !== undefined ? { sword: { lines: c.swordLines } } : {}),
+                        // ⛓ fidelity-bulb: a killed Bulb (armed, dropping, dying) — harmless; and its lava tile.
+                        ...(c.bulbPhase ? { dying: true, bulbPhase: c.bulbPhase, dropTile: c.dropTile ?? null,
+                            ...(c.lavaTile ? { lavaTile: c.lavaTile, lavaAt: c.lavaAt } : {}) } : {}),
                     }));
                 // ⛓ fidelity-bobsoldier D3: a property of the ARRAY, present only when a corpse swings — so every
                 // other projection is the array it was.
@@ -7858,7 +7920,10 @@ export function createLevelRun({
                     c.v.x += verdict.force * Math.cos(a);
                     c.v.y += verdict.force * Math.sin(a);
                 }
-                if (verdict.killed) {
+                if (verdict.killed && hasDropDeath(c.tag)) {
+                    // ⛓ fidelity-bulb: `startDeath` is empty — the body's own next update arms "drop".
+                    c.bulbPhase = 'armed';
+                } else if (verdict.killed) {
                     c.dyingAt = tickOffset;
                     // ⛓ U7-swim D3: the CLASS's corpse row, not Bob's.
                     c.removalTicks = removalTicksAfterHit(c.as3, deathTicks(c.tag));
@@ -10285,6 +10350,9 @@ export function createLevelRun({
             // `stepChasersNow` at its live position — the `stepped` skip below, for a class `contactPricing` still
             // calls a `mover` (measured: survey steps 169/191, the player standing in L77's/L80's `.oel` placement).
             if (killLockBridged(inst.tag) && chaserRoomVerdict(level).stepped) continue;
+            // ⛓ fidelity-bulb: the same skip for the switch-bridged Bulb (`contactPricing` keeps it a `mover`, so the
+            // `stepped` contact tables — and `r8Acceptance`'s partition over them — are untouched with the switch OFF).
+            if (hasDropDeath(inst.tag) && isBridgedChaser(inst.tag) && chaserRoomVerdict(level).stepped) continue;
             if (pricing.kind === 'stepped' && pricing.pricedBy) {
                 /**
                  * ⛓⛓⛓ R8 SLICE 6 — A SPINNER'S PRICER IS A REFUSAL AT THE
@@ -10516,7 +10584,16 @@ export function createLevelRun({
      * @param {object} extra the row's own fields, between `by` and `hits`
      */
     function stageChaserKill(c, by, cause, extra = {}) {
-        c.anim = createDieAnim(c.tag);
+        /**
+         * ⛓⛓ fidelity-bulb: `Bulb.startDeath` is EMPTY — no anim plays at the blow. The body is `armed`: its next
+         * update is an ordinary living one that ends in `play("drop")` (`stepChasersNow`).
+         */
+        if (hasDropDeath(c.tag)) {
+            c.anim = null;
+            c.bulbPhase = 'armed';
+        } else {
+            c.anim = createDieAnim(c.tag);
+        }
         c.attack = null;
         chaserKills.push({ t: ticksCompleted + 1, level, id: c.id, by, ...extra, hits: c.hits });
         c.removalLedger = cause;
@@ -11015,6 +11092,13 @@ export function createLevelRun({
             const stop = stepChaserEntity(c, {
                 st, playerPoint, solidOpts, staticEnemyBoxes,
             });
+            if (hasDropDeath(c.tag)) {
+                // ⛓ fidelity-bulb: `Bulb.update`'s last statement, and the graphic half that follows it.
+                if (c.bulbPhase === 'armed') startBulbDrop(c);
+                stepBulbGraphicNow(c);
+                if (stop === 'player-died') return;
+                continue;
+            }
             // `Bob.endAnim` — `destroy = true`, at the animation's end and
             // not at the killing hit. The third fencepost of the three
             // (`dying` -> `destroy` -> `removed`).
@@ -11030,6 +11114,58 @@ export function createLevelRun({
                 c.attack = null;
                 if (punchNow(c) === 'player-died') return;
             }
+        }
+    }
+
+    /**
+     * ⛓⛓⛓ fidelity-bulb D2 — `Bulb.update`'s LAST STATEMENT: `if (hits >= hitsMax && anim != "drop" && anim !=
+     * "die") play("drop")`. It closes the armed update — after the move and the chase — so the tile the lava will be
+     * written to is the one under the centre where THAT update left the body (the slide never leaves it).
+     *
+     * ⛔ Refused by name if the armed update DESTROYED the body (water/lava under it — `Enemy.update`'s switch) or
+     * started a pit fall: the game then runs "drop" on a fading body (no move, `Mobile.death`'s fade) and its lava
+     * write races the removal — not transcribed.
+     */
+    function startBulbDrop(c) {
+        if (c.destroy || c.fallInPit) {
+            throw new Error(`levelRun: ${c.id} in level ${level} was killed and then ${c.destroy ? 'destroyed by '
+                + 'the terrain under it' : 'started a pit fall'} on its armed update (tick ${ticksCompleted + 1}). `
+                + 'The game plays "drop" on that body anyway, so its lava write races `Mobile.death`\'s fade — '
+                + 'not transcribed; refused by name (fidelity-bulb D2).');
+        }
+        c.bulbPhase = 'drop';
+        c.anim = createDropAnim(c.tag);
+        c.dropTile = tileUnder(c.x, c.y);
+        bulbEvents.push({ t: ticksCompleted + 1, level, id: c.id, kind: 'drop', x: c.x, y: c.y, tile: { ...c.dropTile } });
+    }
+
+    /**
+     * ⛓⛓⛓ fidelity-bulb D2 — THE GRAPHIC HALF of a Bulb in its drop death (`bulb.stepBulbGraphic`), ungated like
+     * every Spritemap's. "drop"'s `endAnim` writes the tile under the centre — the run's per-visit overlay, and the
+     * binding `world` is re-wrapped so the physics, the steppers and the solver read lava from this tick on — and
+     * "die"'s removes the body (`FP.world.remove`: no fade), where the kill-lock ledger runs as for every death.
+     */
+    function stepBulbGraphicNow(c) {
+        const ev = stepBulbGraphic(c.tag, c);
+        if (ev === null) return;
+        if (ev.event === 'lava') {
+            const key = `${ev.tile.tx},${ev.tile.ty}`;
+            const writes = new Map(tileWritesByLevel.get(level) ?? []);
+            writes.set(key, dropDeathOf(c.tag).becomes);
+            tileWritesByLevel.set(level, writes);
+            world = visitWorld(level);
+            const row = { t: ticksCompleted + 1, level, id: c.id, kind: 'lava', x: c.x, y: c.y, tile: { ...ev.tile },
+                becomes: dropDeathOf(c.tag).becomes };
+            bulbEvents.push(row);
+            tileWriteEvents.push(row);
+            return;
+        }
+        c.removed = true;
+        bulbEvents.push({ t: ticksCompleted + 1, level, id: c.id, kind: 'removed', x: c.x, y: c.y });
+        if (c.removalLedger) {
+            const cause = c.removalLedger;
+            c.removalLedger = null;
+            assertChaserRemovalIsDeclared(c, cause);
         }
     }
 
@@ -11143,6 +11279,23 @@ export function createLevelRun({
              * caller's and still runs.)
              */
             if (CHASERS[c.tag]?.freezeSkipsUpdate && ceremony !== null) return null;
+            /**
+             * ⛓⛓⛓ fidelity-bulb D2 — A BULB IN "drop" OR "die" RUNS NO `Enemy.update` AT ALL (`Bulb.as:37-45`): no
+             * off-screen return, no terrain switch, no `hitUpdate`, no `hitPlayer`. It slides toward its tile's
+             * centre through `mobileUpdate` (freeze-gated), on its own `solids`, and bills nothing.
+             */
+            if (c.bulbPhase === 'drop' || c.bulbPhase === 'die') {
+                const r = bulbSlideStep(c.tag, c, { frozen: ceremony !== null, move });
+                c.x = r.x;
+                c.y = r.y;
+                c.v = r.v;
+                if (before.x !== c.x || before.y !== c.y) {
+                    chaserWalks.push({
+                        t: ticksCompleted + 1, level, id: c.id, x: c.x, y: c.y, vx: c.v.x, vy: c.v.y,
+                    });
+                }
+                return null;
+            }
             const onScreen = onScreenNow(box, `${c.tag} ${c.id}`);
             /**
              * ⛓ KILLLOCK K1/K2 — the switch's three arms are the CLASS's flags (`dieInWater`, `dieInLava`,
@@ -11369,8 +11522,14 @@ export function createLevelRun({
              * at its own place, through `chaserStep`'s `hitPlayer` hook.
              */
             let contact = null;
+            /**
+             * ⛓ fidelity-bulb: an `armed` Bulb is killed (`dying` — its `hits` reached `hitsMax`) but `startDeath`
+             * played nothing, so this update is Bob's living one: the chase runs, and only the i-frame the blow
+             * armed keeps the contact quiet. `dying` is what the gates read as "die" is playing; it is not, yet.
+             */
+            const dyingNow = c.dying && c.bulbPhase !== 'armed';
             const r = chaserStep(c.tag, {
-                x: c.x, y: c.y, v: c.v, dying: c.dying, attack: c.attack, moveSpeed: c.moveSpeed,
+                x: c.x, y: c.y, v: c.v, dying: dyingNow, attack: c.attack, moveSpeed: c.moveSpeed,
             }, playerPoint, {
                 onScreen,
                 frozen: ceremony !== null,
@@ -11383,7 +11542,7 @@ export function createLevelRun({
                     // `hitPlayer()`, and BOTH are inside `if (!destroy)`.
                     if (mid.iframesTicked && c.hitsTimer > 0) c.hitsTimer -= 1;
                     contact = chaserContactNow(c);
-                    return { v: c.v, dying: c.dying };
+                    return { v: c.v, dying: c.dying && c.bulbPhase !== 'armed' };
                 },
             });
             c.x = r.x;
@@ -11439,7 +11598,7 @@ export function createLevelRun({
         const bodyNow = chaserBoxAt(c.tag, c.x, c.y);
         if (!rectsOverlap(bodyNow, playerBoxAt(state.x, state.y))) return null;
         const verdict = enemyHitPlayerFires(
-            { hitsTimer: c.hitsTimer, destroy: c.removed, dieAnim: c.dying },
+            { hitsTimer: c.hitsTimer, destroy: c.removed, dieAnim: c.dying && c.bulbPhase !== 'armed' },
             onScreenNow(bodyNow, `${c.tag} ${c.id}`) ? 'on' : 'off',
         );
         if (!verdict.fires) {
@@ -13974,6 +14133,9 @@ export function createLevelRun({
                 // ⛓ fidelity-bobsoldier: the sword's angle and phase, on a class that carries one.
                 ...(c.sword ? { swordSpin: c.sword.swordSpin[0], swordSpinning: c.sword.swordSpinning,
                     swordSpinResetTimer: c.sword.swordSpinResetTimer } : {}),
+                // ⛓ fidelity-bulb: the drop death's phase and the tile it will write, on a class that has one.
+                ...(hasDropDeath(c.tag) ? { bulbPhase: c.bulbPhase, dropTile: c.dropTile ? { ...c.dropTile } : null }
+                    : {}),
             });
         }
         return out;
@@ -15901,6 +16063,12 @@ export function createLevelRun({
         get chaserWalks() { return chaserWalks.map((w) => ({ ...w })); },
         /** One per chaser the ROOM removed (water/lava), with the cause. */
         get chaserTerrainDeaths() { return chaserTerrainDeaths.map((d) => ({ ...d })); },
+        /** ⛓ fidelity-bulb: every Bulb death's `drop` / `lava` / `removed` rows. */
+        get bulbEvents() { return bulbEvents.map((d) => ({ ...d, ...(d.tile ? { tile: { ...d.tile } } : {}) })); },
+        /** ⛓ fidelity-bulb: every tile write this run made (`{t, level, tile, becomes, …}`), oldest first. */
+        get tileWriteEvents() { return tileWriteEvents.map((d) => ({ ...d, tile: { ...d.tile } })); },
+        /** ⛓ fidelity-bulb: the tiles the CURRENT visit has written (`"tx,ty"` → t); empty with none. */
+        get tileWrites() { return new Map(tileWritesByLevel.get(level) ?? []); },
         /**
          * ⛓⛓⛓ R5 SLICE 20 — the ice turrets, as `collidesSolid` sees them.
          *
