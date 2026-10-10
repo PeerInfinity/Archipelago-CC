@@ -45,7 +45,9 @@
  *   `PushableBlockSpear`  `hit(<spearDirection's unit>, t, true)` — the RELATIVE arm, which ignores `t`.
  */
 
-import { SLASH_SPRITES, SWORD_DAMAGE, animCompleteTicks, slashRect as combatSlashRect } from './combatVerbs.js';
+import {
+    SLASH_ANIM_TICKS, SLASH_SPRITES, SWORD_DAMAGE, animCompleteTicks, deriveDashChain, slashRect as combatSlashRect,
+} from './combatVerbs.js';
 import { PROFILE } from './seedlingProfile.js';
 
 /**
@@ -154,3 +156,58 @@ export function ghostSwingRefusal(inventory) {
     }
     return null;
 }
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY GHOSTMOTION — **THE GHOST SWING'S CLOCK IS ITS OWN ANIMATION'S.**
+ *
+ * `slashEnd()` is the swing animation's own callback (`sprites()`, BELOW the press in `Player.update`), and it is
+ * what clears `slashDashed` — i.e. what RE-ARMS the dash (`combatVerbs.slashSet`'s release arm). The animation is
+ * `getSword()`'s: under `hasGhostSword` that is `sprGhostSword`, whose "slash" is 7 frames at 30 and "slashnarrow" 4
+ * at 20 — **7 and 6 ticks** (`GHOST_SLASH_ANIM_TICKS`), against the sword's 5 and 4. Wave 9 gave the ghost swing its
+ * seven TESTS (`presses.swordWindowStep`) but `levelRun` still timed the RELEASE off `combatVerbs.SLASH_ANIM_TICKS`,
+ * so a press 5–6 ticks after a ghost dash was a second dash in the model (`knockback(2, …)`, +2 px along travel) and
+ * SWALLOWED in the game. MEASURED (the wave-10 sweep, 18 legs at L102/L109/L111/L113): the game leaves the plan at
+ * t 9 or t 29 by 2.00 px on an axis, 1.41 on a diagonal — the press at t 8 (t 28) of the sword's chain
+ * `[0, 2, 8, 14]` (`[20, 22, 28, …]`), which the game swallows because the t 2 (t 22) ghost dash ends at t 8 (t 28).
+ *
+ * The switch `GHOSTSWORD_MOTION` (ON; `SEEDLING_GHOSTMOTION=0|1` for a process): OFF is the BEFORE model (the sword's
+ * clock for every swing). It reads through `GHOSTSWORD_PRESS` too — with the ghost press OFF there is no ghost swing.
+ */
+export const GHOSTSWORD_MOTION = { enabled: true };
+export const GHOSTSWORD_MOTION_DEFAULT = true;
+
+const motionEnvFlag = globalThis.process?.env?.SEEDLING_GHOSTMOTION;
+if (motionEnvFlag !== undefined && motionEnvFlag !== '') {
+    GHOSTSWORD_MOTION.enabled = motionEnvFlag === '1' || motionEnvFlag === 'on' || motionEnvFlag === 'true';
+}
+
+/** Run `fn` with `GHOSTSWORD_MOTION` set to `on`, restoring it after. */
+export function withGhostSwordMotion(on, fn) {
+    const was = GHOSTSWORD_MOTION.enabled;
+    GHOSTSWORD_MOTION.enabled = on;
+    try {
+        return fn();
+    } finally {
+        GHOSTSWORD_MOTION.enabled = was;
+    }
+}
+
+/** True when a swing by `weapon` runs on the ghost sword's clock (both switches ON and the swing is the ghost's). */
+export function ghostClockFor(weapon) {
+    return weapon === 'ghostsword' && GHOSTSWORD_PRESS.enabled && GHOSTSWORD_MOTION.enabled;
+}
+
+/**
+ * Ticks from a press that plays `anim` to its `slashEnd` (the release that re-arms the dash), for a swing by
+ * `weapon` ('sword' | 'ghostsword'). The ONE spelling `levelRun`'s release clock and `solverBot.previewWalk`'s read.
+ */
+export function slashEndTicksFor(anim, weapon) {
+    return ghostClockFor(weapon) ? ghostSlashHitTicksFor(anim) : SLASH_ANIM_TICKS[anim];
+}
+
+/**
+ * The ghost sword's dash chain — `combatVerbs.deriveDashChain` over `GHOST_SLASH_ANIM_TICKS`: the opening swing at 0,
+ * then dashes at **2 · 10 · 18** (each dash's 6-tick animation, plus the release-below-the-press tick, plus the key's
+ * rising edge). The sword's is 2 · 8 · 14.
+ */
+export const GHOST_DASH_CHAIN = deriveDashChain(GHOST_SLASH_ANIM_TICKS);
