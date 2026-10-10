@@ -180,8 +180,8 @@ step carries a SEALED refusal (D1 of the census: the only `KEYLOCK-SEALED` rows 
 - Bounded vitest AFTER: **56 files, 2,383 / 2,384**. The one red is `rosterCategories`' LIVE composite row (206 vs
   207): it is the planner's quote and is re-quoted at the bank (`standing-values --write` is not a slice's to run).
 - Branch CI at `150a69a` (run 38089455745): 19,463 passed / 3 failed. Those were `rosterCategories` and the two
-  `procgenDocs/generated` rows (the reference had not been regenerated yet; fixed at `ac890d5`). The last head's run
-  is quoted in the final message.
+  `procgenDocs/generated` rows (the reference had not been regenerated yet; fixed at `ac890d5`). At the last code head `ac890d5` (run **38091454167**): **19,465 passed / 1 failed** —
+  `rosterCategories` alone (the bank's re-quote). The report commit after it is docs-only (no Vitest run).
 
 ## Roster, records
 
