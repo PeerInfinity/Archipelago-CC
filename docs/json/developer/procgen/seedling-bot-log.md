@@ -15033,6 +15033,10 @@ refusals only. Records: the kill record's `fightFallback`, the result's `fightFa
   The whole-solve retry reaches the same verdict and ticks on all 9 coded cases at the same wall time: every
   generated press kill that fell back started at tick 0 (the boot room), so there the rewind IS a whole re-solve.
   No earlier rewind point was needed.
+- ⛔ **STOP (cost)**: each fallback is cheap (0.7–2.5 s), but a refused kill gate it rescues now certifies, keeps its
+  tag, and the room re-rolls (A3's mechanism): `seedlingGenCapacity`'s seed-57 killgate draw goes from 335 s (escape
+  on; 7.5 s with the row's own escape-off switch) to more than 2,400 s in either escape state — 65 fallbacks, all won,
+  83 s of search. The fast file does not finish ON (killed at 3,000 s); the slow census does (703 s off, 712 s on).
 - Movers ON: acceptance `0094257a`, c3 `6873ee49`, c6 `15dbcf3f`, c4 `bc35ee7e`; `plan-seedling-hammer-a-escape
   --check` (its *"with the switch OFF this staging REFUSES"* rows now solve). The other 70 planners, the producers and
   the JS arc's live L18 plan (518/500/503 t full) are unmoved.
