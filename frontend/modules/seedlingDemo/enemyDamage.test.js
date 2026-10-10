@@ -31,6 +31,7 @@ import { RESPONDERS, opensOnTick } from './activators.js';
 import { deathTicks, killWindowTicks } from './chasers.js';
 import { KILL_PRESS_CADENCE } from './combatVerbs.js';
 import { atlasLevelSource } from './levelSource.js';
+import { withKillLockBodies } from './killLockBodies.js';
 
 const sword = { d: 1, f: 5, t: 'Sword' };
 
@@ -177,8 +178,12 @@ describe('the policy — an ENUMERATION, checked against `combat.js`', () => {
         // differ, and the row keeps a live negative rather than becoming an
         // enumeration of successes.
         // ⛓⛓⛓ KILLLOCK K1 (ON since the wave-8 harvest): `Jellyfish` is `modelled` under its switch, so the live
-        // negative moves to `LavaRunner` — the same depth, a chaser, its switch K2 OFF.
-        expect(() => createEnemyDamage('LavaRunner')).toThrow(/refused/);
+        // negative moved to `LavaRunner` — the same depth, a chaser, its switch K2 OFF.
+        // ⛓⛓⛓ K2PREP D3: K2 bridges `LavaRunner`, so the live negative is `IceTrap` — `canHit = false` in the game:
+        // unkillable by construction, so no model coverage can ever flip it. `LavaRunner` is asked under its switch.
+        expect(() => createEnemyDamage('IceTrap')).toThrow(/refused/);
+        withKillLockBodies({ lavaRunnerLive: false }, () => expect(() => createEnemyDamage('LavaRunner')).toThrow(/refused/));
+        withKillLockBodies({ lavaRunnerLive: true }, () => expect(createEnemyDamage('LavaRunner').as3).toBe('LavaRunner'));
         expect(createEnemyDamage('Bob').as3).toBe('Bob');
         expect(createEnemyDamage('Spinner').as3).toBe('Spinner');
         expect(() => createEnemyDamage('Nonesuch')).toThrow(/no KILL_ARM_POLICY row/);
