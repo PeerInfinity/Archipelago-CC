@@ -49,6 +49,11 @@
  *               The panel polls it to auto-advance; the test asserts it
  *     doneTimeoutMs  optional: how long the test waits for `done` (default
  *               DEFAULT_DONE_TIMEOUT_MS)
+ *     failed    optional `(ctx) => string | falsy` (may be async): a state the
+ *               app shows that means `done` will never hold (e.g. the Maze
+ *               Room's "no path … under current inventory"). The panel stops
+ *               and shows the text; the walk fails AT ONCE with it instead of
+ *               waiting out `doneTimeoutMs`
  *     outside   optional `true`: the step happens OUTSIDE the app (a terminal
  *               command such as starting a local MultiServer). It has no
  *               `actions`/`run`; Do it is off; Play waits for its `done` (or
@@ -62,10 +67,22 @@
  *     { activate: TARGET_PANEL }               bring the panel forward
  *     { click: TARGET_CONTROL }                activate its panel, then click
  *     { key: { panel, selector?, key } }       focus, then press a key
+ *     { select: { panel, selector, value } }   choose a <select>'s option by
+ *                                              its value (⚖ the user,
+ *                                              2026-10-10: a dropdown gets the
+ *                                              cursor and outline too)
+ *     { fill: { panel, selector, value } }     type `value` into an input
+ *                                              (its value set, then input +
+ *                                              change, as typing ends)
  *
  *     TARGET_PANEL   = { panel: '<componentType>', title?: '<tab title>' }
  *     TARGET_CONTROL = { panel, title?, selector: '<CSS, scoped to the panel>',
- *                        text?: '<exact textContent, to pick one of several>' }
+ *                        text?: '<exact textContent, to pick one of several>',
+ *                        optional?: true }
+ *
+ *   `optional` (click only): when the control is not there, the action is
+ *   skipped instead of failing — "unfold the section if it is folded", where
+ *   the selector names the FOLDED state.
  *
  *   `title` is only for a componentType that has more than one tab (the two
  *   `procgenLabPanel`s). ⛔ No selector names Golden Layout markup: tabs and
@@ -93,7 +110,7 @@ export const TRACKS = Object.freeze({
     other: Object.freeze({ title: 'Other' }),
     developer: Object.freeze({ title: 'For developers', collapsed: true }),
 });
-export const ACTION_KINDS = Object.freeze(['activate', 'click', 'key']);
+export const ACTION_KINDS = Object.freeze(['activate', 'click', 'key', 'select', 'fill']);
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function fail(where, why) {
@@ -114,6 +131,9 @@ function checkAction(a, where) {
     checkPanelTarget(t, where);
     if (kind === 'click' && (typeof t.selector !== 'string' || !t.selector)) fail(where, 'a click needs `selector`');
     if (kind === 'key' && (typeof t.key !== 'string' || !t.key)) fail(where, 'a key action needs `key`');
+    if ((kind === 'select' || kind === 'fill') && (typeof t.selector !== 'string' || !t.selector)) fail(where, `a ${kind} needs \`selector\``);
+    if ((kind === 'select' || kind === 'fill') && typeof t.value !== 'string') fail(where, `a ${kind} needs \`value\` (a string)`);
+    if (t.optional !== undefined && !(t.optional === true && kind === 'click')) fail(where, '`optional` is true, on a click only');
     if (t.text !== undefined && typeof t.text !== 'string') fail(where, '`text` must be a string');
 }
 
@@ -140,7 +160,7 @@ function checkBlock(b, where, stepIds, { stepsAllowed }) {
     if (s.command !== undefined && (typeof s.command !== 'string' || !s.command.trim())) {
         fail(`${where} (${s.id})`, '`command` must be a non-empty string');
     }
-    for (const fn of ['run', 'done', 'standIn']) {
+    for (const fn of ['run', 'done', 'failed', 'standIn']) {
         if (s[fn] !== undefined && typeof s[fn] !== 'function') fail(`${where} (${s.id})`, `\`${fn}\` must be a function`);
     }
     if (s.doneTimeoutMs !== undefined && !(Number.isFinite(s.doneTimeoutMs) && s.doneTimeoutMs > 0)) {

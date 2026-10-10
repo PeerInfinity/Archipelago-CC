@@ -627,6 +627,17 @@ const PARAMETERS_SECTION_SHA256_BEFORE_R1 = Object.freeze({
     shuffledSpiral: 'cbd1d83f8490db92a82331113efd87544be267f2471c54f6dbe7e9b0f3eecf9b',
     topDown: '55923d59e185ecb8aeb3ca78347ef9e514d5017888fc651f261b04f2ac9c1585',
 });
+/**
+ * ⛓ TUTORIAL CATALOGUE C2 (2026-10-10) — each number box now carries
+ * `data-param-key` (the bag key it edits; a handle for the tutorials' steps).
+ * It is NEW after the R1 capture, so the pins drop it and hold the rest of
+ * the section to its fixture; that it names the key is asserted below.
+ */
+function withoutParamKeys(el) {
+    delete el.dataset?.paramKey;
+    for (const c of el.children ?? []) withoutParamKeys(c);
+    return el;
+}
 function unwrapForms(el) {
     el.children = el.children.flatMap((c) => (c.className === 'procgen-region-generation-form'
         ? c.children.map(unwrapForms) : [unwrapForms(c)]));
@@ -640,8 +651,26 @@ describe('R1 — the Parameters section draws the DOM it drew before the split',
         ctx.params = { ...panelDefaultParams(), enableHazards: true };
         ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1, runner: 1 });
         ctx._saveToLocalStorage = () => {};
-        const html = withFakeDocument(() => serialize(unwrapForms(withoutConceptsRow(ctx._renderParams()))));
+        const html = withFakeDocument(() => serialize(withoutParamKeys(unwrapForms(withoutConceptsRow(ctx._renderParams())))));
         expect(createHash('sha256').update(html).digest('hex')).toBe(PARAMETERS_SECTION_SHA256_BEFORE_R1[mode]);
+    });
+
+    it.each(Object.keys(PARAMETERS_SECTION_SHA256_BEFORE_R1))('⛓ %s: every number box names the bag key it edits (data-param-key)', (mode) => {
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.mode = mode;
+        ctx.params = { ...panelDefaultParams(), enableHazards: true };
+        ctx._activeSubstrateDict = () => ({ maze: 1 });
+        ctx._saveToLocalStorage = () => {};
+        ctx._handEditedGridKeys = new Set();
+        withFakeDocument(() => {
+            const boxes = controls(ctx._renderParams()).filter((c) => c.type === 'number' && c.dataset.paramKey);
+            expect(boxes.map((b) => b.dataset.paramKey)).toContain('seed');
+            for (const b of boxes) {
+                b.value = '3';
+                b.fire('change');
+                expect(ctx.params[b.dataset.paramKey]).toBe(3);
+            }
+        });
     });
 });
 

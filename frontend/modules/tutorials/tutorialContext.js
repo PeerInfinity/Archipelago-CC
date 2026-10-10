@@ -32,9 +32,38 @@ async function resolvePresetRulesPath(game, seed, player) {
 }
 
 export function buildContext({ eventBus }) {
+    // ⛓ THE STEP MARK (⚖ the user, 2026-10-10): a `done` that reads the app's
+    // state alone is satisfied by a PREVIOUS run's leftovers — the bot still
+    // says "finished", the last world is still the loaded one — and the panel
+    // starts polling `done` the moment a step is entered. So the panel marks
+    // each step as it enters it (`markStep`), and a `done` can ask what
+    // happened SINCE: a rules load, or a state it has seen at some poll.
+    let rulesLoads = 0;
+    let mark = { at: Date.now(), rulesLoads: 0, seen: new Set() };
+    const unsubLoads = eventBus?.subscribe?.('stateManager:rulesLoaded', () => { rulesLoads += 1; }, 'tutorials');
     const ctx = {
         eventBus,
         waitFor,
+        /** The panel calls this as it enters a step: "since the step began" starts now. */
+        markStep() {
+            mark = { at: Date.now(), rulesLoads, seen: new Set() };
+        },
+        /** Is the time `ms` (a Date.now() stamp the app drew) after the step began? */
+        sinceStep: (ms) => Number(ms) > mark.at,
+        /** Has a world been loaded (`stateManager:rulesLoaded`) since the step began? */
+        rulesLoadedSinceStep: () => rulesLoads > mark.rulesLoads,
+        /**
+         * True once `predicate()` has held at any call since the step began
+         * (remembered under `key`). A done check polls, so this sees a state
+         * that passes — e.g. the bot NOT finished — between two of them.
+         */
+        seenSinceStep(key, predicate) {
+            if (!mark.seen.has(key) && predicate()) mark.seen.add(key);
+            return mark.seen.has(key);
+        },
+        dispose() {
+            unsubLoads?.();
+        },
         /** Is the panel's tab the active one of its stack? */
         isPanelShowing,
         /** The control (or, without `selector`, the panel's element), or null. */

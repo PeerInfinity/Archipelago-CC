@@ -693,6 +693,12 @@ export class ProcgenPipelineUI {
             : 'Only user presets can be deleted';
         row.appendChild(deleteBtn);
 
+        const resetBtn = this._btn('Reset panel', () => this._resetPanel());
+        resetBtn.classList.add('procgen-pipeline-reset-panel');
+        resetBtn.title = 'Put the whole setup back as a fresh panel has it: sphere growth, default parameters '
+            + 'and scenario, no substrates or libraries chosen, preset Custom. Saved presets are kept.';
+        row.appendChild(resetBtn);
+
         section.appendChild(row);
         return section;
     }
@@ -734,6 +740,40 @@ export class ProcgenPipelineUI {
         this.activePresetId = id;
         this._saveToLocalStorage({ fromPreset: true });
         this.message = `Preset "${preset.label}" applied.`;
+        this.render();
+    }
+
+    /**
+     * "Reset panel": the whole setup back to a fresh panel's (the constructor's
+     * defaults) and auto-saved, the result and any stepped run dropped. User
+     * presets are kept. (⚖ the user, 2026-10-10: a tutorial that changes the
+     * panel ends by resetting it — so it needs one control that does.) Unlike
+     * the Parameters section's "Reset Defaults", which resets only the
+     * parameters and the scenario.
+     */
+    _resetPanel() {
+        this.mode = 'sphereGrowth';
+        this.params = this._defaultParams();
+        this._handEditedGridKeys = new Set();
+        this.scenario = {
+            items: { ...DEFAULT_SCENARIO.items },
+            obstacles: { ...DEFAULT_SCENARIO.obstacles },
+        };
+        this.substrateMix = {};
+        this.substrateQuotas = {};
+        this.substrateMode = 'quotas';
+        this._setPersistedLibraries([]);
+        this.useLoadedRules = true;
+        this.useLoadedSphereLog = true;
+        this._applyLoadedRules();
+        this.result = null;
+        this._stepState = null;
+        this._tdState = null;
+        this._spiralState = null;
+        this.warning = '';
+        this.activePresetId = null;
+        this._saveToLocalStorage();
+        this.message = 'Panel reset to its defaults.';
         this.render();
     }
 
@@ -2214,6 +2254,7 @@ export class ProcgenPipelineUI {
     _renderActions() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-actions';
+        section.dataset.generatedAt = String(this.lastGeneratedAt ?? 0);
         const sphere = this.mode === 'sphereGrowth';
         const topDown = this.mode === 'topDown';
         const spiral = this.mode === 'shuffledSpiral';
@@ -3854,6 +3895,11 @@ export class ProcgenPipelineUI {
             this.message = `ERROR: ${e.message}`;
         }
 
+        // ⛓ When a run last produced a loadable world, drawn on the actions
+        // row (`data-generated-at`): a tutorial step's done check compares it
+        // with when the step began, so the previous run's "Pipeline complete"
+        // cannot pass for this one's (tutorialContext.js `sinceStep`).
+        if (this.result?.rulesJson) this.lastGeneratedAt = Date.now();
         this.isGenerating = false;
         this._progressState = null;
         this.render();

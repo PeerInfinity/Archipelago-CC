@@ -285,6 +285,7 @@ export class TutorialUI {
 
     _enterStep() {
         this.status = '';
+        this.ctx.markStep();
         this._saveProgress({ id: this.tutorial.id, index: this.index });
         this.render();
         this._watchDone();
@@ -315,9 +316,23 @@ export class TutorialUI {
             if (checking || token !== this._token) return;
             checking = true;
             let ok = false;
+            let failed = null;
             try { ok = Boolean(await entry.step.done(this.ctx)); } catch { ok = false; }
+            if (!ok && entry.step.failed) {
+                try { failed = (await entry.step.failed(this.ctx)) || null; } catch { failed = null; }
+            }
             checking = false;
-            if (token !== this._token || !ok) return;
+            if (token !== this._token) return;
+            if (failed) {
+                // The app says this step cannot finish: say so, and stop Play here.
+                this._clearTimers();
+                this.playing = false;
+                this.status = `This step cannot finish: ${failed}`;
+                hideCursor();
+                this.render();
+                return;
+            }
+            if (!ok) return;
             this._markDone(entry);
         }, DONE_POLL_MS);
     }
@@ -669,6 +684,7 @@ export class TutorialUI {
     destroy() {
         if (TutorialUI.instance === this) TutorialUI.instance = null;
         this._clearTimers();
+        this.ctx.dispose();
         this.playing = false;
         setOutline(null);
         hideCursor();

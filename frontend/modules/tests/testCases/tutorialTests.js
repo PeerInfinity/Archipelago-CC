@@ -283,6 +283,7 @@ async function tutorialWalkRow(tc, tutorial) {
     const tabs = activeTabs();
     const ctx = buildContext({ eventBus });
     const before = ctx.rulesSource();
+    const pipelineSetup = readPipelineSetup();
     const ui = await freshPanel(tc, { autoAdvance: false, animateCursor: false, showOutline: false });
     if (!ui) return tc.getOverallResult();
     try {
@@ -293,13 +294,24 @@ async function tutorialWalkRow(tc, tutorial) {
                 if (!(await ui.doIt())) throw new Error(ui.lastError?.message ?? ui.status);
             },
             standIn: ({ step }) => step.standIn(ui.ctx),
-            waitDone: async ({ step }) => !step.done || ui.doneSteps.has(step.id) || Boolean(await waitFor(
-                async () => ui.doneSteps.has(step.id) || Boolean(await step.done(ui.ctx)),
-                step.doneTimeoutMs ?? DEFAULT_DONE_TIMEOUT_MS, 250)),
+            waitDone: async ({ step }) => {
+                if (!step.done || ui.doneSteps.has(step.id)) return true;
+                // A `failed` state ends the wait at once, with the app's own words.
+                let failed = null;
+                const ok = await waitFor(async () => {
+                    if (ui.doneSteps.has(step.id) || await step.done(ui.ctx)) return true;
+                    failed = step.failed ? (await step.failed(ui.ctx)) || null : null;
+                    return Boolean(failed);
+                }, step.doneTimeoutMs ?? DEFAULT_DONE_TIMEOUT_MS, 250);
+                if (failed) throw new Error(`the app shows it cannot finish: ${failed}`);
+                return Boolean(ok);
+            },
         });
         if (outcome.end !== 'complete') {
             // What the app showed when the walk ended, so a red row needs no rerun to read.
-            tc.log?.(`walk ended at ${outcome.stepId}: panel status "${ui.status}"; rulesSource ${JSON.stringify(ui.ctx.rulesSource())}`);
+            const bot = document.querySelector('.playback-bot .playback-bot-status')?.textContent.trim();
+            tc.log?.(`walk ended at ${outcome.stepId}: panel status "${ui.status}"; rulesSource ${JSON.stringify(ui.ctx.rulesSource())}`
+                + (bot ? `; Playback Bot status "${bot}"` : ''));
         }
         const verdict = ratchetVerdict(tutorial, outcome);
         tc.log?.(`${tutorial.id}: ${verdict.message}`);
@@ -307,11 +319,36 @@ async function tutorialWalkRow(tc, tutorial) {
     } finally {
         await restore(ui, settings);
         restoreActiveTabs(tabs);
+        restorePipelineSetup(pipelineSetup, tc);
         if (typeof before === 'string' && before.startsWith('./presets/') && ctx.rulesSource() !== before) {
             try { await ctx.loadRulesPath(before); } catch (e) { tc.log?.(`could not reload ${before}: ${e.message}`); }
         }
+        ctx.dispose();
     }
     return tc.getOverallResult();
+}
+
+// The Procgen Pipeline auto-saves its setup, and the procgen tutorials change
+// it (and end with its Reset panel). A row puts back what the page had.
+const PIPELINE_SETUP_KEY = 'procgenPipeline_params';
+
+function readPipelineSetup() {
+    try { return localStorage.getItem(PIPELINE_SETUP_KEY); } catch { return null; }
+}
+
+function restorePipelineSetup(saved, tc) {
+    try {
+        if (readPipelineSetup() === saved) return;
+        if (saved === null) localStorage.removeItem(PIPELINE_SETUP_KEY);
+        else localStorage.setItem(PIPELINE_SETUP_KEY, saved);
+        const panel = document.querySelector('.procgen-pipeline-panel')?.__panel;
+        if (panel) {
+            panel._loadFromLocalStorage();
+            panel.render();
+        }
+    } catch (e) {
+        tc.log?.(`could not restore the Procgen Pipeline's setup: ${e.message}`);
+    }
 }
 
 const TESTS = [
@@ -356,7 +393,8 @@ for (const { tutorial } of TUTORIALS) {
         description: `Performs every step of "${tutorial.title}" with Do it (outside steps: their stand-in) and grades `
             + `the result by its record (${tutorial.status === 'ready' ? 'ready: every step must work'
                 : `in progress: firstFailingStep ${tutorial.firstFailingStep ?? 'null'}`}). Reloads the world loaded before.`,
-        testFunction: (tc) => tutorialWalkRow(tc, tutorial),
+        // Named per row: the registry tells test functions apart by name.
+        testFunction: { [`walk_${tutorial.id.replace(/-/g, '_')}`]: (tc) => tutorialWalkRow(tc, tutorial) }[`walk_${tutorial.id.replace(/-/g, '_')}`],
         category: WALK_CATEGORY,
         enabled: false,
     });

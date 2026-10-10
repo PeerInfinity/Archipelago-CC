@@ -1442,6 +1442,36 @@
             "enabled": true,
             "category": "Tutorial walks",
             "_comment": "TUTORIAL CATALOGUE C1 (2026-10-10): the walk row of tutorial guided-tour (one row per tutorial, tutorial-walk-<id>; tutorials.test.js checks each has one). Performs every step with the panel's Do it (outside steps: their stand-in) and grades the result with the ratchet (tutorialWalk.js ratchetVerdict). Manual batch tutorials. Reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-sphere-growth",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-sphere-growth; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-shuffled-spiral",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-shuffled-spiral; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-grid-growth",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-grid-growth; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-top-down",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-top-down; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-settings-and-bot",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-settings-and-bot; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
         }
     ]
 }

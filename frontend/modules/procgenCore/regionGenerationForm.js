@@ -109,6 +109,8 @@ export function numberField(params, {
 export function bagIntegerField(params, f, onChange = () => {}) {
     const input = document.createElement('input');
     input.type = 'number';
+    // Which bag key the box edits — a stable handle for the tutorials' steps.
+    input.dataset.paramKey = f.key;
     input.value = params[f.key] ?? '';
     if (f.min !== undefined) input.min = f.min;
     if (f.max !== undefined) input.max = f.max;

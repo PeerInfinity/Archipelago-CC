@@ -68,6 +68,21 @@ describe('validateTutorial', () => {
         expect(() => validateTutorial(bare)).toThrow(/a click needs `selector`/);
     });
 
+    it('checks select / fill (a selector and a string value) and `optional` (true, on a click only)', () => {
+        const withAction = (a) => {
+            const t = tiny();
+            t.sections[0].blocks[2].step.actions = [a];
+            return t;
+        };
+        expect(() => validateTutorial(withAction({ select: { panel: 'x', selector: 'select', value: 'v' } }))).not.toThrow();
+        expect(() => validateTutorial(withAction({ fill: { panel: 'x', selector: 'input', value: '4' } }))).not.toThrow();
+        expect(() => validateTutorial(withAction({ click: { panel: 'x', selector: '.y', optional: true } }))).not.toThrow();
+        expect(() => validateTutorial(withAction({ select: { panel: 'x', value: 'v' } }))).toThrow(/a select needs `selector`/);
+        expect(() => validateTutorial(withAction({ fill: { panel: 'x', selector: 'input', value: 4 } }))).toThrow(/a fill needs `value`/);
+        expect(() => validateTutorial(withAction({ fill: { panel: 'x', selector: 'input', value: '4', optional: true } })))
+            .toThrow(/`optional` is true, on a click only/);
+    });
+
     it('refuses a block that is both docOnly and panelOnly', () => {
         const t = tiny();
         t.sections[0].blocks[0] = { prose: 'x', docOnly: true, panelOnly: true };

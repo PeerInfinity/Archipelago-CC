@@ -255,6 +255,10 @@ export async function performAction(action, opts) {
     const { kind, target } = actionTarget(action);
     await activatePanel(target, o);
     if (kind === 'activate') return;
+    if (target.optional && !findControl(target)) {
+        await FRAME();
+        if (!findControl(target)) return;
+    }
     const el = await waitFor(() => {
         const c = findControl(target);
         return c && visible(c) && !c.disabled ? c : null;
@@ -263,6 +267,19 @@ export async function performAction(action, opts) {
     if (!el) throw new Error(`no enabled control ${name}`);
     if (kind === 'click') {
         await press(el, o);
+        return;
+    }
+    if (kind === 'select' || kind === 'fill') {
+        if (kind === 'select' && ![...(el.options ?? [])].some((opt) => opt.value === target.value)) {
+            throw new Error(`${name} has no option "${target.value}"`);
+        }
+        el.scrollIntoView?.({ block: 'nearest' });
+        if (o.animate) await moveCursorTo(el, o.moveMs);
+        el.focus?.();
+        el.value = target.value;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+        await FRAME();
         return;
     }
     // key: focus the control (or the panel), then send the key to it.
