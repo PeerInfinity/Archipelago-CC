@@ -33,6 +33,7 @@
  */
 
 import { killLockBodiesStamp } from './killLockBodies.js';
+import { contactFidelityStamp } from './contactFidelity.js';
 
 export const SOLVE_WORKER_URL = new URL('./jsRuntimeSolveWorker.js', import.meta.url);
 
@@ -138,6 +139,9 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             // instance travels with the request (at the defaults nothing is added — the request is today's).
             const killLock = tape.killLockBodies ?? killLockBodiesStamp();
             if (killLock) tape.killLockBodies = killLock;
+            // ⛓ CONTACT HOOK — the same, for the model's contact switches (`contactFidelity.js`).
+            const contact = tape.contactFidelity ?? contactFidelityStamp();
+            if (contact) tape.contactFidelity = contact;
             const id = sourceIdOf(source?.records);
             const msg = { type: 'solve', id: handle.id, request: { ...tape, source: { id, ...(sent.has(id) ? {} : { records: source?.records ?? null }) } } };
             sent.add(id);

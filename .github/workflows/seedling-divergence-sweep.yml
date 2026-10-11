@@ -61,6 +61,13 @@ on:
           staging); false = the MUTANT / control (--no-stage-events: the legs land inside their obstacles).
         type: boolean
         default: true
+      contact_fidelity:
+        description: >-
+          Empty = the model's contact switches at their defaults (today's run). Otherwise the ON keys of
+          contactFidelity.js (comma-separated; every other OFF), or all / none — set through the flashPanel settings
+          (the CONTACT hook), read back as a CONTACT line, and stamped on each plan the worker solved under it.
+        type: string
+        default: ''
 
 jobs:
   plan:
@@ -181,6 +188,7 @@ jobs:
           PAGE: ${{ inputs.page }}
           PAGE_LEGS: ${{ inputs.page_legs }}
           STAGE: ${{ !inputs.stage_events && '--no-stage-events' || '' }}
+          CONTACT: ${{ inputs.contact_fidelity }}
         run: |
           set -o pipefail
           python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
@@ -195,7 +203,7 @@ jobs:
           S=$(date +%s)
           set +e
           node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=$D/legs.jsonl --shard="$SHARD" --mode="$MODE" \
-            --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP $STAGE 2>&1 | tee "$L"
+            --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP $STAGE ${CONTACT:+--contact-fidelity="$CONTACT"} 2>&1 | tee "$L"
           RC=$?
           set -e
           echo "MEASURED: shard $SHARD rc=$RC wall $(( $(date +%s) - S ))s load $(cut -d' ' -f1-3 /proc/loadavg) nproc $(nproc) at ${GITHUB_SHA}"

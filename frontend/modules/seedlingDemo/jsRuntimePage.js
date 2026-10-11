@@ -58,6 +58,7 @@
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { createWorkerSolveService } from './jsRuntimeSolveService.js';
 import { applyKillLockBodies, parseKillLockBodies } from './killLockBodies.js';
+import { applyContactFidelity, parseContactFidelity } from './contactFidelity.js';
 import { heldFromCodes, KEYBOARD_BINDINGS } from './watchManual.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { createLifetime } from './watchLifetime.js';
@@ -111,6 +112,9 @@ export function mountJsRuntimePage(win = window) {
     // ⛓ KILLLOCK HOOK — before the runtime exists, so every run of this page steps under the same switches.
     const killLockParam = params.get('killLockBodies');
     if (killLockParam !== null) applyKillLockBodies(parseKillLockBodies(killLockParam, '?killLockBodies='));
+    // ⛓ CONTACT HOOK — the same, for the model's contact switches (`contactFidelity.js`).
+    const contactParam = params.get('contactFidelity');
+    if (contactParam !== null) applyContactFidelity(parseContactFidelity(contactParam, '?contactFidelity='));
     const runtime = createJsRuntime({
         onStateChanged: (name, value) => {
             bridge.stateLog.push({ name, value });

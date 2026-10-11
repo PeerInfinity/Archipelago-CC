@@ -38,13 +38,17 @@
  *   --out=<jsonl>        append rows here (default stdout only)
  *   --producer=walker    §3: the same engine built with the walker INSTRUMENT (`producer: 'walker'`): the J2 WALKER's tape, shipped to the game
  *   --dump=<json>        write the page's delivered set + name map (the node bare pass stages from it)
+ *   --contact-fidelity=<keys>|all|none  ⛓ CONTACT HOOK: set the model's contact switches through the flashPanel
+ *                        settings (`seedlingContact<Key>`, the ON keys; every other OFF) before the panel boots. The
+ *                        panel's instance is read back and printed as a `CONTACT:` line (a mismatch fails the boot);
+ *                        each plan the worker solved under an off-default set carries its `contactFidelity` stamp.
  *
  * Location legs: a location opened once stays open for the session, so a page takes at most ONE arrival per
  * location; the k-th arrivals of every location share the k-th location page.
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--contact-fidelity=<keys>|all|none] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -166,6 +170,11 @@ async function main() {
     const PRODUCER = arg('producer', 'solver');
     const STAGE_EVENTS = !process.argv.includes('--no-stage-events');
     const SHARD = arg('shard', '');
+    // ⛓ CONTACT HOOK — the set, parsed here so a bad key fails before a browser starts
+    const CONTACT_ARG = arg('contact-fidelity', '');
+    const { parseContactFidelity, formatContactFidelity } = await import('../../frontend/modules/seedlingDemo/contactFidelity.js');
+    const CONTACT = CONTACT_ARG ? parseContactFidelity(CONTACT_ARG, '--contact-fidelity') : null;
+    const { CONTACT_SETTING_KEYS } = await import('../../frontend/modules/flashPanel/seedlingContactSettings.js');
     const GAME = 'seedling_playthrough';
     const RULES = `frontend/presets/${GAME}/AP_1/AP_1_rules.json`;
     const PRESET = JSON.parse(readFileSync(join(REPO, RULES), 'utf8'));
@@ -234,6 +243,12 @@ async function main() {
             if (attempt > 1) await page.goto('about:blank');
             await page.goto(`${HOST}/frontend/?rules=./presets/${GAME}/AP_1/AP_1_rules.json`, { waitUntil: 'domcontentloaded' });
             await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
+            if (CONTACT) {
+                await page.evaluate(async (writes) => {
+                    const { default: settingsManager } = await import('./app/core/settingsManager.js');
+                    for (const [key, value] of writes) await settingsManager.updateSetting(key, value);
+                }, Object.entries(CONTACT_SETTING_KEYS).map(([k, key]) => [key, CONTACT[k]]));
+            }
             await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
             await rp.waitFor('wasm iframe mounted', async () => page.frames().some((fr) => fr.url().includes(WASM_PAGE)), 180000);
             await rp.waitFor('start button enabled', () => rp.gameFrame().evaluate(() => {
@@ -250,6 +265,15 @@ async function main() {
                 return !!(p?._apLoadResult && s?.atlas && s?.wasm?.deliveredSet);
             }), 120000);
             await page.waitForTimeout(1500);
+            // ⛓ CONTACT HOOK — the set the panel's (shared) module instance holds, read back
+            const contactNow = await page.evaluate(async () => {
+                const { CONTACT_FIDELITY } = await import('./modules/seedlingDemo/contactFidelity.js');
+                return { ...CONTACT_FIDELITY };
+            });
+            console.log(`CONTACT: page ${pageNo}: ${formatContactFidelity(contactNow)}${CONTACT ? ' (--contact-fidelity)' : ''}`);
+            if (CONTACT && formatContactFidelity(contactNow) !== formatContactFidelity(CONTACT)) {
+                throw new Error(`--contact-fidelity asked ${formatContactFidelity(CONTACT)}; the page holds ${formatContactFidelity(contactNow)}`);
+            }
             await page.evaluate(async () => {
                 const { createLab } = await import('/scripts/procgen/seedlingDivergenceLab.js');
                 window.__div = await createLab();

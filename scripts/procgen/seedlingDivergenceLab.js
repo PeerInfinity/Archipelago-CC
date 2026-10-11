@@ -197,7 +197,9 @@ export async function createLab() {
             producer: s.res?.plan?.producer ?? null, verbs: s.res?.plan?.verbs ?? null, ticks: s.res?.plan?.solution?.length ?? null,
             prefix: s.req.perTick?.length ?? 0, passes: s.passes,
             // the split the solve was STAGED with (`stagingFromWasmArrival` reads `static.Rng.split` off botStatus)
-            split: s.req.staging?.rng?.split ?? null }));
+            split: s.req.staging?.rng?.split ?? null,
+            // ⛓ CONTACT HOOK — the contact set the WORKER solved under, when off-default (its stamp; absent at the defaults)
+            ...(s.res?.contactFidelity ? { contactFidelity: plain(s.res.contactFidelity) } : {}) }));
         const rows = tap.rows.slice(r0);
         // Divergence detail per diverged play: match it to its plan by order (one ok plan per play)
         const okSolves = solves.filter((s) => s.res?.ok && s.res.plan?.expected);

@@ -62,6 +62,7 @@ import { DEFAULT_DASH_MODE, solveSegment } from './solverBot.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { TILE_SIZE } from './levelWorld.js';
 import { KILLLOCK_BODIES, killLockBodiesStamp, normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js';
+import { CONTACT_FIDELITY, contactFidelityStamp, normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
 
 /** Refutations of one goal's plans before the goal FAILS, by name (§2.2 step 5). */
 export const MAX_REFUTATIONS = 3;
@@ -298,6 +299,24 @@ export function betterAnswer(best, next) {
  * `passes`: one `{pass, ok, kind, ticks, ms}` row per pass that ran.
  */
 export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => {}, clock = request.clock ?? (() => Date.now()) } = {}) {
+    // ⛓ CONTACT HOOK — the KILLLOCK arm below, for the model's contact switches (`contactFidelity`, off-default
+    // only): solved under the stamped set in whichever module instance runs it, and every answer says so.
+    if (request.contactFidelity) {
+        const { contactFidelity, ...rest } = request;
+        // The stamp is the set this instance's switches READ while it solved, not the request's echo.
+        let ran = null;
+        const stamp = (a) => {
+            if (!a || !ran) return a;
+            a.contactFidelity = { ...ran };
+            if (a.ok && a.plan) a.plan.contactFidelity = { ...ran };
+            return a;
+        };
+        const out = withContactFidelity(normalizeContactFidelity(contactFidelity), () => {
+            ran = { ...CONTACT_FIDELITY };
+            return solveAnytime(rest, { passes, clock, onPass: (one, best, index) => onPass(stamp(one), stamp(best), index) });
+        });
+        return stamp(out);
+    }
     // ⛓ KILLLOCK HOOK — a request stamped with a switch set (`killLockBodies`, off-default only) is solved under
     // it, in whichever module instance runs it (a worker's own copy included), and every answer says so.
     if (request.killLockBodies) {
@@ -628,8 +647,10 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
             const { passes = ANYTIME_PASSES, budgetWork, upgradeWindowWork: windowWork, ...rest } = request;
             // ⛓ KILLLOCK HOOK — an off-default set of this instance is stamped here too, so the plan is labelled.
             const killLock = rest.killLockBodies ?? killLockBodiesStamp();
-            const result = solveAnytime({ ...rest, ...(killLock ? { killLockBodies: killLock } : {}), levelSource, clock },
-                { passes, clock });
+            // ⛓ CONTACT HOOK — and the contact switches' set, the same way.
+            const contact = rest.contactFidelity ?? contactFidelityStamp();
+            const result = solveAnytime({ ...rest, ...(killLock ? { killLockBodies: killLock } : {}),
+                ...(contact ? { contactFidelity: contact } : {}), levelSource, clock }, { passes, clock });
             return { settled: true, started: true, result, cancel() {} };
         },
         warm() {},

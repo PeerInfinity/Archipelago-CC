@@ -39,6 +39,7 @@ import { levelSourceFromAtlas } from './atlasSource.js';
 import { ANYTIME_PASSES, settleSolve, solveAnytime } from './jsRuntimeSolver.js';
 import { walkTapeFromStaging, WALK_TAPE_PRODUCER } from './wasmWalkTape.js';
 import { normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js';
+import { normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
 
 /** source id -> `{levelSource, records}`: the room records this worker has been sent. */
 const sources = new Map();
@@ -58,10 +59,12 @@ self.onmessage = (event) => {
     // ⛓ STEP-OFF RETIRE — W4's `producer: 'step-off'` composite is gone: an arrival latched on its goal
     // door is a plain solve (`solveSegment` steps off a latched door itself, fidelity STEP-OFF).
     // ⛓ KILLLOCK HOOK — this worker's own `killLockBodies` copy runs the request's stamped set (none = defaults);
-    // the solver path applies it inside `solveAnytime`, the walker instrument here.
+    // the solver path applies it inside `solveAnytime`, the walker instrument here. ⛓ CONTACT HOOK — the same for
+    // the request's `contactFidelity`.
     const produce = request.producer === WALK_TAPE_PRODUCER
-        ? () => withKillLockBodies(normalizeKillLockBodies(request.killLockBodies ?? {}),
-            () => walkTapeFromStaging({ ...request, levelSource: held.levelSource, records: held.records, clock }))
+        ? () => withContactFidelity(normalizeContactFidelity(request.contactFidelity ?? {}),
+            () => withKillLockBodies(normalizeKillLockBodies(request.killLockBodies ?? {}),
+                () => walkTapeFromStaging({ ...request, levelSource: held.levelSource, records: held.records, clock })))
         : null;
     let answer;
     if (!held) answer = { ok: false, kind: 'refusal', message: `the solver worker was never sent room source ${source.id}` };

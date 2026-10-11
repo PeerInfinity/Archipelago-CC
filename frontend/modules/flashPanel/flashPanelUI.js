@@ -21,6 +21,8 @@ import { returnSpawnTable } from './seedlingReturnSpawns.js';
 import { SUB_REGION_PARTITION_PATH, buildSubRegionMap } from './seedlingSubRegions.js';
 import { KILLLOCK_SETTING_KEYS, killLockPageQuery } from './seedlingKillLockSettings.js';
 import { KILLLOCK_BODIES_DEFAULTS, applyKillLockBodies, formatKillLockBodies } from '../seedlingDemo/killLockBodies.js';
+import { CONTACT_SETTING_KEYS, contactPageParam } from './seedlingContactSettings.js';
+import { CONTACT_FIDELITY_DEFAULTS, applyContactFidelity, formatContactFidelity } from '../seedlingDemo/contactFidelity.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -57,6 +59,8 @@ const WASM_SOLVER_BUDGET_SETTING_KEY = 'moduleSettings.flashPanel.seedlingWasmSo
 const SOLVER_UPGRADE_WINDOW_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork';
 /** ⛓ KILLLOCK HOOK — the model's kill-lock body switches, one setting each (`seedlingKillLockSettings.js`). */
 const KILLLOCK_SETTING_KEY_SET = new Set(Object.values(KILLLOCK_SETTING_KEYS));
+/** ⛓ CONTACT HOOK — the model's contact switches, one setting each (`seedlingContactSettings.js`). */
+const CONTACT_SETTING_KEY_SET = new Set(Object.values(CONTACT_SETTING_KEYS));
 /**
  * ⛓ Seedling JS J1 — the JS runtime's page, document-relative like WASM_DIR.
  * ⛔ A PATH, never an import: the page's closure is the whole JS model, and a
@@ -198,6 +202,18 @@ export class FlashPanelUI {
         if (set && this.isInitialized && this.transport === 'js' && this._jsPageKillLock !== undefined
           && formatKillLockBodies(set) !== this._jsPageKillLock) {
           this._panelLog(`kill-lock switches changed (${this._jsPageKillLock} → ${formatKillLockBodies(set)}) — `
+            + 're-mounting the JS runtime page');
+          this._teardownForReinit();
+          this._initializeAdapter();
+          return;
+        }
+      }
+      if (CONTACT_SETTING_KEY_SET.has(data?.key) || data?.key === '*') {
+        // ⛓ CONTACT HOOK — the KILLLOCK arm above, for the model's contact switches.
+        const set = await this._refreshContactFidelity();
+        if (set && this.isInitialized && this.transport === 'js' && this._jsPageContact !== undefined
+          && formatContactFidelity(set) !== this._jsPageContact) {
+          this._panelLog(`contact switches changed (${this._jsPageContact} → ${formatContactFidelity(set)}) — `
             + 're-mounting the JS runtime page');
           this._teardownForReinit();
           this._initializeAdapter();
@@ -399,6 +415,22 @@ export class FlashPanelUI {
     } catch { return null; }
     this._killLockBodies = applyKillLockBodies(set);
     return this._killLockBodies;
+  }
+
+  /**
+   * ⛓ CONTACT HOOK — read `flashPanel.seedlingContact<Key>` (schema default = `CONTACT_FIDELITY_DEFAULTS`), apply
+   * the set to THIS module instance (the wasm engine's host-side solves; its worker gets the request's stamp) and
+   * cache it for the JS page's URL. null = the settings could not be read (nothing changed).
+   */
+  async _refreshContactFidelity() {
+    const set = {};
+    try {
+      for (const [k, key] of Object.entries(CONTACT_SETTING_KEYS)) {
+        set[k] = (await settingsManager.getSetting(key, CONTACT_FIDELITY_DEFAULTS[k])) === true;
+      }
+    } catch { return null; }
+    this._contactFidelity = applyContactFidelity(set);
+    return this._contactFidelity;
   }
 
   _teardownForReinit() {
@@ -992,6 +1024,7 @@ export class FlashPanelUI {
       await this._refreshWasmSolverBudget();
       await this._refreshSolverUpgradeWindow();
       await this._refreshKillLockBodies();
+      await this._refreshContactFidelity();
       this.transport = 'wasm';
       if (runtime === 'js') {
         // ⛓ Seedling JS J1: the JavaScript model's page, through the SAME
@@ -1001,7 +1034,11 @@ export class FlashPanelUI {
           // ⛓ KILLLOCK HOOK — an off-default switch set rides on the page's URL (none at the defaults).
           const killLock = this._killLockBodies ?? KILLLOCK_BODIES_DEFAULTS;
           this._jsPageKillLock = formatKillLockBodies(killLock);
-          this.wasmPath = JS_RUNTIME_PAGE + killLockPageQuery(killLock);
+          // ⛓ CONTACT HOOK — and an off-default contact set, the same way.
+          const contact = this._contactFidelity ?? CONTACT_FIDELITY_DEFAULTS;
+          this._jsPageContact = formatContactFidelity(contact);
+          const query = [killLockPageQuery(killLock).replace(/^\?/, ''), contactPageParam(contact)].filter(Boolean);
+          this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
           await this._initializeWasm();
           return;

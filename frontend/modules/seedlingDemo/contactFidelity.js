@@ -147,8 +147,12 @@
 /**
  * THE SWITCHES. They are read at CALL time, so a measurement can turn any of them on without editing this file:
  *   - node: `SEEDLING_CONTACT_FIDELITY=all` (or a comma list of the keys) in the environment, read once at import;
- *   - a test: `withContactFidelity({ drillLive: true }, () => …)`, which restores the previous values.
- * ⛔ The browser has no such hook on purpose: the page and its solve worker run the defaults.
+ *   - a test: `withContactFidelity({ drillLive: true }, () => …)`, which restores the previous values;
+ *   - the browser (⛓ CONTACT HOOK, slice `seedling-js-contact-hook`, the KILLLOCK hook's pattern): the flashPanel
+ *     settings `seedlingContact<Key>` (one boolean per key, schema default = `CONTACT_FIDELITY_DEFAULTS`) set the
+ *     panel's instance, the JS page reads `?contactFidelity=<keys>|none`, and a solve WORKER (its own module copy)
+ *     runs the set an off-default request carries as `contactFidelity` and stamps it on the answer and the plan.
+ *     At the defaults nothing is stamped: the request is byte-identical to the one before the hook.
  */
 export const CONTACT_FIDELITY = {
     /**
@@ -231,22 +235,63 @@ export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
 export const CONTACT_FIDELITY_KEYS = Object.freeze(Object.keys(CONTACT_FIDELITY));
 
 /**
+ * The switch set a `SEEDLING_CONTACT_FIDELITY` / `?contactFidelity=` value names: `all`, `none`, or the keys that
+ * are ON, comma-separated (every other switch OFF). An unknown key throws, naming `what`.
+ */
+export function parseContactFidelity(value, what = 'SEEDLING_CONTACT_FIDELITY') {
+    const want = value === 'all' ? CONTACT_FIDELITY_KEYS
+        : (value === 'none' ? [] : String(value).split(',').map((k) => k.trim()).filter(Boolean));
+    const set = Object.fromEntries(CONTACT_FIDELITY_KEYS.map((k) => [k, false]));
+    for (const k of want) {
+        if (!CONTACT_FIDELITY_KEYS.includes(k)) {
+            throw new Error(`contactFidelity: ${what} names "${k}"; the keys are ${CONTACT_FIDELITY_KEYS.join(', ')}`);
+        }
+        set[k] = true;
+    }
+    return set;
+}
+
+/** The inverse of `parseContactFidelity`: `none`, or the ON keys in `CONTACT_FIDELITY_KEYS` order. */
+export function formatContactFidelity(set) {
+    const on = CONTACT_FIDELITY_KEYS.filter((k) => set?.[k] === true);
+    return on.length ? on.join(',') : 'none';
+}
+
+/** A complete switch set: every key, a boolean (a missing key reads its DEFAULT; an unknown key throws). */
+export function normalizeContactFidelity(over = {}) {
+    for (const k of Object.keys(over ?? {})) {
+        if (!CONTACT_FIDELITY_KEYS.includes(k)) throw new Error(`contactFidelity: unknown switch "${k}"`);
+    }
+    return Object.fromEntries(CONTACT_FIDELITY_KEYS.map((k) => [k,
+        typeof over?.[k] === 'boolean' ? over[k] : CONTACT_FIDELITY_DEFAULTS[k]]));
+}
+
+/** Is this (complete or partial) set the defaults? */
+export function isDefaultContactFidelity(set) {
+    const full = normalizeContactFidelity(set);
+    return CONTACT_FIDELITY_KEYS.every((k) => full[k] === CONTACT_FIDELITY_DEFAULTS[k]);
+}
+
+/** Set THIS module instance's switches (a complete set; a missing key reads its default). */
+export function applyContactFidelity(set) {
+    Object.assign(CONTACT_FIDELITY, normalizeContactFidelity(set));
+    return { ...CONTACT_FIDELITY };
+}
+
+/**
+ * The stamp a solve request carries: this instance's switch set when it is OFF-default, else null (nothing is
+ * stamped, so a default request is byte-identical to the one before the hook).
+ */
+export function contactFidelityStamp() {
+    return isDefaultContactFidelity(CONTACT_FIDELITY) ? null : { ...CONTACT_FIDELITY };
+}
+
+/**
  * ⛓ The node measuring hook: `SEEDLING_CONTACT_FIDELITY=all|none|<keys>` sets EVERY switch (the named ones ON, the
  * rest OFF), so `none` is the byte-identical BEFORE model.
  */
 const envFlags = globalThis.process?.env?.SEEDLING_CONTACT_FIDELITY;
-if (envFlags) {
-    // `all`, `none`, or a comma list of the keys to turn ON (every other key OFF)
-    const want = envFlags === 'all' ? CONTACT_FIDELITY_KEYS
-        : (envFlags === 'none' ? [] : envFlags.split(',').map((k) => k.trim()).filter(Boolean));
-    for (const k of CONTACT_FIDELITY_KEYS) CONTACT_FIDELITY[k] = false;
-    for (const k of want) {
-        if (!CONTACT_FIDELITY_KEYS.includes(k)) {
-            throw new Error(`contactFidelity: SEEDLING_CONTACT_FIDELITY names "${k}"; the keys are ${CONTACT_FIDELITY_KEYS.join(', ')}`);
-        }
-        CONTACT_FIDELITY[k] = true;
-    }
-}
+if (envFlags) Object.assign(CONTACT_FIDELITY, parseContactFidelity(envFlags));
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
