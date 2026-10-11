@@ -14796,6 +14796,20 @@ const DODGE_RUNG = Object.freeze({ step: 4, maxTicks: 30, maxPerSegment: 12 });
  * apart from just before the hit backwards, and it shares the spit arm's
  * per-segment count (`maxPerSegment`).
  */
+/**
+ * ⛓⛓ SEEDLING FIDELITY SOLVECOST D2b — **WHAT ONE `axe-dodge` WORK UNIT BUYS.** Shipped, the AXE arm asks its
+ * deadline site once per STALL LENGTH, and most stall lengths are priced by the rest-length screen's arithmetic
+ * (`hazards.axeHitsPlayer` over the shifted samples) without a preview at all. Measured on the divergence sweep's
+ * `level_98 -> level_99__r2c7` (from (112,176), the live inventory): 10,864 (dashless) and 17,512 (full) asks for
+ * ~3 s of work, ~0.3 ms a unit, so its 640-unit budget is spent there. ON, the site is asked once per PREVIEW
+ * (a `certified` walk or the rest-length screen's own), the unit the rest of the ladder is counted in.
+ *
+ * ⛔ OFF BY DEFAULT: a committed solve passes no `shouldStop`, so no tape or `--check` can move, but a budgeted
+ * solve's units — and so where its deadlines trip — move with it. The movers are listed in the SOLVECOST report;
+ * the default is the user's to flip.
+ */
+export const AXE_DODGE_ASK_PER_PREVIEW = { enabled: false };
+
 export const AXE_DODGE_RUNG = Object.freeze({ step: 4, offsets: 8, detourOffsets: 2, detourPreviews: 60,
     rest: 12, maxPerSegment: DODGE_RUNG.maxPerSegment });
 
@@ -17673,7 +17687,16 @@ function solveSegmentUnder({
                 let door = Math.min(hitAt, base.samples.length - 1);
                 while (door > 0 && h.sources.some((s) => axeCanReach(s.axe,
                     playerBoxAt(base.samples[door].x, base.samples[door].y)))) door -= 1;
+                /**
+                 * ⛓ SOLVECOST D2b — WHERE THE `axe-dodge` SITE IS ASKED. OFF (the shipped state): once per stall
+                 * length, screened or not. ON: once per PREVIEW (`AXE_DODGE_ASK_PER_PREVIEW`).
+                 */
+                const askAxe = () => {
+                    if (deadlineReached('axe-dodge')) { tripped = true; return true; }
+                    return false;
+                };
                 const certified = (at, ticks) => {
+                    if (AXE_DODGE_ASK_PER_PREVIEW.enabled && askAxe()) return null;
                     previews += 1;
                     const walk = previewWalk(run, wps, tolerance, optsFor({ at, ticks }));
                     if (walk.truncated && walk.truncated.kind !== 'crossed') return null;
@@ -17706,11 +17729,13 @@ function solveSegmentUnder({
                     if (at < 0) break;
                     let screen = null;
                     for (let ticks = 1; ticks < period; ticks += 1) {
-                        if (deadlineReached('axe-dodge')) { tripped = true; return null; }
+                        if (!AXE_DODGE_ASK_PER_PREVIEW.enabled && askAxe()) return null;
                         if (ticks <= rest || screen === null) {
                             const got = certified(at, ticks);
                             if (got) return got;
+                            if (tripped) return null;
                             if (ticks === rest && clock.v !== null) {
+                                if (AXE_DODGE_ASK_PER_PREVIEW.enabled && askAxe()) return null;
                                 previews += 1;
                                 const full = previewWalk(run, wps, tolerance, axisAligned
                                     ? { strike: null, axisAligned, stall: { at, ticks: rest } }
@@ -17725,6 +17750,7 @@ function solveSegmentUnder({
                         if (screen === false) {
                             const got = certified(at, ticks);
                             if (got) return got;
+                            if (tripped) return null;
                             continue;
                         }
                         // ⛓ the stall of `ticks`: samples [0, at + rest) as previewed,
@@ -17739,6 +17765,7 @@ function solveSegmentUnder({
                         if (!clear) continue;
                         const got = certified(at, ticks);
                         if (got) return got;
+                        if (tripped) return null;
                     }
                 }
                 return null;
