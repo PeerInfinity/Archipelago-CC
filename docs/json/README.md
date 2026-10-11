@@ -32,7 +32,6 @@ For an overview of all major features in this project, see the **[Features Index
 - [DepGraph](./features/depgraph.md) — Any dependency graph as an Archipelago world
 - [Journey to Ascension](../../worlds/jta/docs/en_Journey%20to%20Ascension.md) — Incremental game integration with cost rebalancing
 - [Loops](./features/loops.md) — Incremental/idle game mode on top of the tracker
-- [Maze Metagame](./features/maze-metagame.md) — A-Mazing-Idle as a meta-progression layer
 
 ## Documentation Sections
 

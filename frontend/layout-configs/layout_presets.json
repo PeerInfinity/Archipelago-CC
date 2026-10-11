@@ -126,11 +126,6 @@
             },
             {
               "type": "component",
-              "componentType": "mazeGameDataPanel",
-              "title": "Maze Game Data"
-            },
-            {
-              "type": "component",
               "componentType": "jtaGameDataPanel",
               "title": "JtA Game Data"
             },

@@ -13,7 +13,7 @@ Changes to the main Archipelago core files:
 
 All other core files (`BaseClasses.py`, `Utils.py`, `CommonClient.py`, `Launcher.py`) match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches at runtime.
 
-### 2. `diff-files/config-files.diff` (465 lines)
+### 2. `diff-files/config-files.diff` (635 lines)
 Changes to configuration and repository setup files:
 - **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
 - **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (explicit permissions for forks)

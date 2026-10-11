@@ -86,7 +86,6 @@ Documented in depth in the [procgen developer docs](../developer/procgen/README.
 - **JtA Substrate Wrapper** (`jtaSubstrateWrapper`) — Journey to Ascension as a zone-based substrate. See [JtA Substrate](../developer/procgen/jta.md).
 - **Noiz2sa** (`noiz2saSubstrate`) — the BulletML shoot-'em-up substrate: a region is a segment of a stage. See [Noiz2sa Substrate](../developer/procgen/noiz2sa.md).
 - **Idle Loops Substrate Wrapper** (`omsiSubstrateWrapper`) — Idle Loops (omsi-loops) as a loop-mode substrate. See [Omsi Substrate (Idle Loops)](../developer/procgen/omsi.md).
-- **Maze Game Data Panel** (`mazeGameDataPanel`) — views and edits A-Mazing-Idle game data (points, biome, mazes, saves).
 
 ## Procgen Infrastructure Panels
 
@@ -134,5 +133,5 @@ These live under `frontend/modules/` but are not frontend modules in the registr
 
 - **`shared/`** — git submodule of cross-module utilities and the procgen primitives ([Shared](./shared.md)); `git log`/`blame`/commits happen inside the submodule.
 - **`textAdventureEngine/`** — git submodule holding the Archipelago-naive text-adventure engine. See [Text Adventure Substrate](../developer/procgen/text-adventure.md).
-- **`journey-to-ascension/`**, **`jta-randomizer/`**, **`a-mazing-idle-remote/`** — bundled game builds/forks consumed by their wrapper modules, not modules themselves.
+- **`journey-to-ascension/`**, **`jta-randomizer/`** — bundled game builds/forks consumed by their wrapper modules, not modules themselves.
 - **`testModule/`** — a minimal dynamically-loaded panel used as a test fixture.

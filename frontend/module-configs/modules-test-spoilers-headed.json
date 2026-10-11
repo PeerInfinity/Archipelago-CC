@@ -172,10 +172,6 @@
       "path": "./modules/iframeManagerPanel/index.js",
       "enabled": true
     },
-    "mazeGameDataPanel": {
-      "path": "./modules/mazeGameDataPanel/index.js",
-      "enabled": false
-    },
     "jtaGameDataPanel": {
       "path": "./modules/jtaGameDataPanel/index.js",
       "enabled": false
@@ -273,7 +269,6 @@
     "iframeAdapter",
     "iframePanel",
     "iframeManagerPanel",
-    "mazeGameDataPanel",
     "jtaGameDataPanel",
     "jtaCostDebugger",
     "windowAdapter",

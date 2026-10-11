@@ -17,8 +17,6 @@ export const moduleInfo = {
   requires: ['iframeAdapter', 'iframePanel'],
   storage: [
     { key: 'incrementalGameSave', kind: STORAGE_KINDS.user, label: 'Journey to Ascension game save (the iframe page)' },
-    { key: 'a-mazing-idle', kind: STORAGE_KINDS.user, label: 'A-Mazing-Idle game save (the iframe page)' },
-    { key: 'a-mazing-idle-disable-biome-check', kind: STORAGE_KINDS.state, label: 'A-Mazing-Idle: one-shot flag across a reload' },
     { key: 'externalModule.customUrlWarning.suppressed', kind: STORAGE_KINDS.state, label: '"Don\'t warn again" for custom page addresses' },
   ],
 };

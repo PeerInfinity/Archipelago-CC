@@ -4,7 +4,6 @@
 *-new.js
 *-new.py
 *-new/
-modules/mazeGame-iframe/
 
 # Build output
 dist/

@@ -21,7 +21,6 @@ This document outlines the development priorities for the Archipelago JSON Expor
 
 These are longer-term goals to be considered after the current priorities are addressed.
 
-*   **[TASK]** Consider making an apworld for A-Mazing Idle.
 *   **[TASK]** Consider making an apworld for Idle Loops.
 *   **[TASK]** Consider making an apworld for Prestige Tree.
 *   **[TASK]** Review ideas from the future ideas list.

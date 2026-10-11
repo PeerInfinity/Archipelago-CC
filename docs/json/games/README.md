@@ -14,7 +14,6 @@ These are alternate ways to interact with the tracker. They work with any Archip
 |------|-------------|------|
 | **Loops** | Incremental/idle game layered on the tracker — queue actions, spend mana, earn XP, optimize your loops. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=loops) | [loops/](loops/README.md) |
 | **Text Adventure** | Text-based adventure mode for navigating any Archipelago world via typed commands. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=textadventure) | [text-adventure/](text-adventure/README.md) |
-| **Maze Metagame** | A-Mazing-Idle as a meta-progression layer — solve mazes before checking locations. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?metagame=mazegame) | [maze-metagame/](maze-metagame/README.md) |
 
 ## APWorld Games
 

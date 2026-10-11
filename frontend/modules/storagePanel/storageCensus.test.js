@@ -20,7 +20,6 @@ export const CENSUS_KEYS = [
     'jtaBalance_patches_v1_1', 'jtaBalance_patches_v1_1__ds_synthetic-sunken-meridian-s1-z3-5febd71f',
     'vcs-config', 'bounceDjReal.player', 'externalModule.customUrlWarning.suppressed',
     'clientSettings', 'clientId', '__storage_test__', 'frontendProfiling',
-    'a-mazing-idle', 'a-mazing-idle-disable-biome-check',
     'incrementalGameSave', 'incrementalGameSave_substrate', 'incrementalGameSave_substrate__synthetic-x',
     'idleLoops1', 'idleLoopsChallenge', 'idleLoops_substrate', 'prestigeBackup',
     'updateRate', 'latestTheme', 'loadingText', 'loadPredictor', 'disabledMenus', 'actionListHeight',
@@ -30,11 +29,13 @@ export const CENSUS_KEYS = [
 /**
  * Keys that are Unknown ON PURPOSE: the orphans in the user's profile (§37.9),
  * the retired client cache (§37.7.1), and the games no module wraps (Cavernous is
- * served as a standalone page only; golden-layout's popout key is never reached).
+ * served as a standalone page only; golden-layout's popout key is never reached;
+ * A-Mazing-Idle's saves outlive its removal, 2026-10-11).
  */
 export const EXPECTED_UNKNOWN = [
     '__pathAnalysisResults__', '__pathAnalysis_Kings Grave__', '__playwrightTestResults__', '__spoilerTestResults__',
     'dataPackage', 'dataPackageVersion', 'saveGameII', 'saveGameIIBackup', 'gl-window-config-abc',
+    'a-mazing-idle', 'a-mazing-idle-disable-biome-check',
 ];
 
 describe('storage census coverage', () => {

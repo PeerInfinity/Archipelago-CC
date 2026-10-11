@@ -14,8 +14,6 @@ export class MetaGameLogic {
     this.progressBars = new Map(); // Track created progress bars
     this.progressBarCompletionHandlers = new Map(); // Track active completion handler unsubscribers
     this.registeredDispatcherReceivers = []; // Track registered dispatcher receivers for cleanup
-    this.activeMazeChallenge = null; // Active maze challenge state
-    this.mazeCompletionUnsubscribe = null; // Unsubscribe function for maze completion handler
     
     this.logger.info('metaGame', 'MetaGameLogic instance created');
   }
@@ -223,14 +221,6 @@ export class MetaGameLogic {
         await this.handleForwardEvent(action, eventData, eventName);
         break;
 
-      case 'startMazeChallenge':
-        await this.handleStartMazeChallenge(action, eventData, eventName);
-        break;
-
-      case 'cancelMazeChallenge':
-        this.handleCancelMazeChallenge();
-        break;
-
       default:
         this.logger.warn('metaGame', `Unknown action type: ${action.type}`);
     }
@@ -364,163 +354,6 @@ export class MetaGameLogic {
     }
   }
   
-  async handleStartMazeChallenge(action, eventData, originalEventName) {
-    const { challengeId, config } = action;
-    if (!challengeId || !config) {
-      throw new Error('startMazeChallenge action requires challengeId and config');
-    }
-
-    this.logger.debug('metaGame', `Starting maze challenge: ${challengeId}`, config);
-
-    // Cancel any existing active maze challenge
-    this.handleCancelMazeChallenge();
-
-    // Save the currently active panel in the iframe panel's stack
-    const savedPanelType = this.findActivePanelInIframeStack();
-    this.logger.debug('metaGame', `Saved active panel type: ${savedPanelType}`);
-
-    // Store active challenge state
-    this.activeMazeChallenge = {
-      challengeId,
-      completionActions: config.completionActions,
-      eventData,
-      originalEventName,
-      savedPanelType
-    };
-
-    // Check if using window mode
-    const useWindow = new URLSearchParams(window.location.search).get('useWindow');
-
-    if (useWindow) {
-      // In window mode: open the maze game in a separate window
-      this.eventBus.publish('window:loadUrl', {
-        url: './modules/a-mazing-idle-remote/index-iframe.html'
-      });
-    } else {
-      // In iframe mode: activate the iframe panel to show the maze game
-      this.eventBus.publish('ui:activatePanel', { panelId: 'iframePanel' });
-    }
-
-    // Set the biome for this challenge (triggers iframe reload).
-    // Upgrades are written directly to save data; disableBiomeCheck zeros out
-    // the game's biome requirements so upgrades take effect at any biome level.
-    if (typeof config.biome === 'number') {
-      const setBiomeData = { biome: config.biome };
-      if (config.upgrades) {
-        setBiomeData.upgrades = config.upgrades;
-      }
-      if (config.disableBiomeCheck) {
-        setBiomeData.disableBiomeCheck = true;
-      }
-      this.eventBus.publish('amazingIdle:setBiome', setBiomeData);
-    }
-
-    if (!useWindow) {
-      // Focus the iframe so keyboard input goes to the maze game
-      requestAnimationFrame(() => {
-        const iframe = document.querySelector('.iframe-panel-container iframe');
-        if (iframe) {
-          iframe.focus();
-          this.logger.debug('metaGame', 'Focused maze game iframe');
-        }
-      });
-    }
-
-    // Subscribe to maze completion (one-shot)
-    const completionHandler = (data) => {
-      this.onMazeCompleted(data);
-    };
-    this.mazeCompletionUnsubscribe = this.eventBus.subscribe('amazingIdle:mazeCompleted', completionHandler);
-
-    this.logger.info('metaGame', `Maze challenge ${challengeId} started, waiting for completion`);
-  }
-
-  handleCancelMazeChallenge() {
-    if (!this.activeMazeChallenge) {
-      return;
-    }
-
-    this.logger.debug('metaGame', `Cancelling maze challenge: ${this.activeMazeChallenge.challengeId}`);
-
-    // Unsubscribe the completion handler
-    if (this.mazeCompletionUnsubscribe) {
-      this.mazeCompletionUnsubscribe();
-      this.mazeCompletionUnsubscribe = null;
-    }
-
-    this.activeMazeChallenge = null;
-  }
-
-  findActivePanelInIframeStack() {
-    const gl = window.goldenLayoutInstance;
-    if (!gl || !gl.root) {
-      this.logger.warn('metaGame', 'Cannot find iframe stack: GoldenLayout not available');
-      return null;
-    }
-
-    // Find the iframePanel component in the layout
-    const allItems = gl.getAllContentItems();
-    let iframePanelItem = null;
-    for (const item of allItems) {
-      if (item.componentType === 'iframePanel') {
-        iframePanelItem = item;
-        break;
-      }
-    }
-
-    if (!iframePanelItem) {
-      this.logger.warn('metaGame', 'Could not find iframePanel in layout');
-      return null;
-    }
-
-    // Get the parent stack and its active component
-    const stack = iframePanelItem.parent;
-    if (!stack || !stack.getActiveComponentItem) {
-      this.logger.warn('metaGame', 'iframePanel parent is not a stack');
-      return null;
-    }
-
-    const activeItem = stack.getActiveComponentItem();
-    if (activeItem) {
-      return activeItem.componentType;
-    }
-
-    return null;
-  }
-
-  onMazeCompleted(data) {
-    if (!this.activeMazeChallenge) {
-      this.logger.warn('metaGame', 'Maze completed but no active challenge');
-      return;
-    }
-
-    const { challengeId, completionActions, eventData, originalEventName, savedPanelType } = this.activeMazeChallenge;
-    this.logger.info('metaGame', `Maze challenge ${challengeId} completed`, data);
-
-    // Clean up the completion handler
-    if (this.mazeCompletionUnsubscribe) {
-      this.mazeCompletionUnsubscribe();
-      this.mazeCompletionUnsubscribe = null;
-    }
-
-    // Restore the previously active panel or close the window
-    const useWindow = new URLSearchParams(window.location.search).get('useWindow');
-    if (useWindow) {
-      this.eventBus.publish('window:close', {});
-    } else if (savedPanelType) {
-      this.logger.debug('metaGame', `Restoring panel: ${savedPanelType}`);
-      this.eventBus.publish('ui:activatePanel', { panelId: savedPanelType });
-    }
-
-    // Clear active challenge before executing completion actions
-    this.activeMazeChallenge = null;
-
-    // Execute completion actions
-    if (completionActions) {
-      this.executeActions(completionActions, eventData, originalEventName);
-    }
-  }
-
   getProgressBarTargetElement() {
     // Try to find the progress bar panel
     const progressBarPanel = document.querySelector('.progress-bar-panel-main');
@@ -644,9 +477,6 @@ export class MetaGameLogic {
     }
     this.progressBars.clear();
     
-    // Clean up active maze challenge
-    this.handleCancelMazeChallenge();
-
     // Clean up event handlers
     this.eventHandlers.clear();
     
