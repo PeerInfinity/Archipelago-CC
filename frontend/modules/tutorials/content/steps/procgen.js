@@ -39,10 +39,10 @@ const sectionOpen = (ctx, sectionId) => ctx.exists({
 export const BOT_STALL_MS = 60000;
 
 /**
- * The bot cannot finish: its status is an error, it has said the same thing
- * for BOT_STALL_MS, or the Maze Room it drives
- * says its walker is stuck ("Stuck — reset to retry.", after a "no path …
- * under current inventory"; it does not move again). → the app's own words.
+ * The bot cannot finish: its status is an error — a substrate whose walk
+ * stuck says so through `playback:walkFailed` (the Maze Room's "no path …
+ * under current inventory" included), so this is the one place to read — or
+ * it has said the same thing for BOT_STALL_MS. → the app's own words.
  */
 export function botCannotFinish(ctx) {
     const status = ctx.text(botStatus);
@@ -50,10 +50,7 @@ export function botCannotFinish(ctx) {
     if (ctx.unchangedFor('bot-status', status, BOT_STALL_MS)) {
         return `the Playback Bot has said "${status}" for ${BOT_STALL_MS / 1000} s`;
     }
-    if (ctx.text({ ...MAZE, selector: '.playback-control-bar-status' }) !== 'Stuck — reset to retry.') return null;
-    const blocked = [...(ctx.query({ ...MAZE, selector: '.maze-room-playback-log' })
-        ?.querySelectorAll('.maze-room-playback-log-blocked') ?? [])].pop()?.textContent.trim();
-    return `the Maze Room is stuck${blocked ? ` ("${blocked}")` : ''}; the bot says "${status}"`;
+    return null;
 }
 
 /** Did a pipeline run produce a loadable world since the step began, and is nothing running? */
