@@ -1,4 +1,5 @@
 import { RegionGraphLayoutEditor } from './regionGraphLayoutEditor.js';
+import { pickerHTML, setupNodePicker } from './nodePicker.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
@@ -23,6 +24,7 @@ export class LayoutControlsManager {
           <button id="relayout" style="margin: 2px; padding: 4px 8px;">Re-layout</button>
           <button id="exportPositions" style="margin: 2px; padding: 4px 8px;">Export Positions</button>
         </div>
+        ${pickerHTML()}
         <div id="layoutEditorContainer"></div>
         <div id="discoveryControls" style="display: none; margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
           <div style="font-weight: bold; margin-bottom: 5px;">Discovery Mode:</div>
@@ -126,6 +128,7 @@ export class LayoutControlsManager {
       layoutEditorContainer.innerHTML = this.ui.layoutEditor.createEditorHTML();
       this.ui.layoutEditor.setupEventHandlers(this.ui);
     }
+    setupNodePicker(this.ui);
   }
 
   async loadCheckboxSettings() {

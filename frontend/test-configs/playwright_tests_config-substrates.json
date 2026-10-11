@@ -1562,6 +1562,12 @@
             "enabled": true,
             "category": "Tutorial walks",
             "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "test_region_graph_node_picker",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the Region Graph's folded \"Go to\" section (⚖ the user: regions AND locations, collapsed by default) does what a node tap does, so a tutorial step can reach a node. On push (fast batch). Reloads the world loaded before."
         }
     ]
 }
