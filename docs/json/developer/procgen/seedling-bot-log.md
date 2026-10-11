@@ -15295,7 +15295,12 @@ surface GREEN 237, constants 5,506, entities 528, profile 138, roster 266, bound
 - `ropeSword.test.js`'s climb pin now carries `sources: ['arrowLane:arrowtrap@96,32']`.
 - `fidelityStaticSword.test.js`'s "ships OFF" rows now pin ON. The monotonicity checker's `off` mode holds both
   switches `=0` in its capture child, so `off` still means OFF on both sides.
-- tapeRunner pairs `e6c073f9` unchanged; nothing moved that C1 did not list.
+- tapeRunner pairs are `e6c073f9`, unchanged.
+- ⛔ **STOP: two unit rows C1 did not list** (CI JS Unit Tests 19,555/19,557; both pass with the switches `=0`):
+  - `fidelityStance.test.js`'s leg-85 row moves with `STATIC_SWORD_ARM` ALONE: the kill line now leads with the
+    static arm's *"`primary` slot holds NOTHING"*.
+  - `turretSolver.test.js`'s DODGE row moves with the `sources` field.
+  - Neither is re-recorded; they wait for the planner (patches in the report).
 
 **D3 — the page.** CI dispatch was refused for the session (403), so the page legs ran locally (p4f, headless
 logic-only, the worker served from the branch). ⚠ **The sweep's leg ids shifted** since sweep-3 (843 legs now, 841
