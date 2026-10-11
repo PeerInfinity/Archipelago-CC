@@ -634,10 +634,13 @@ describe('the form — the Source row, the picker, what Generate sends (R5b)', (
             const ids = regionGenerationSourcesFor(plan).map((x) => x.id);
             expect(ids.includes(REGION_SOURCE_KINDS.ZONE), e.id).toBe(zoneSourceFacts(e).recovers);
         }
-        // ⛓ the form OPENS on the zone for a target that has no realiser but offers it
+        // ⛓ the form OPENS on the zone for a target that has no realiser but offers it.
+        //   ⛓ spiral victory: jta, the one such target, now realises a spec
+        //   (`generateZoneForSpecs`), so it opens on Generate, the zone still offered.
         const jta = regionGenerationPlan(d.doc, d.p, r0, 'jta');
-        expect(jta.refusal).toBeTruthy();
-        expect(defaultRegionGenerationSource(jta)).toBe(REGION_SOURCE_KINDS.ZONE);
+        expect(jta.refusal).toBeNull();
+        expect(jta.offersZone).toBe(true);
+        expect(defaultRegionGenerationSource(jta)).toBe(REGION_SOURCE_KINDS.GENERATE);
         const maze = regionGenerationPlan(d.doc, d.p, r0, 'maze');
         expect(defaultRegionGenerationSource(maze)).toBe(REGION_SOURCE_KINDS.GENERATE);
     });

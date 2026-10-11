@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 27,
         "headings": 1041,
         "indexHeadings": 2,
-        "lines": 27180,
+        "lines": 27185,
         "pages": 4,
-        "words": 349971
+        "words": 350307
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -69,7 +69,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 5239
+            "words": 5305
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -240,7 +240,7 @@ export const DOCS_INDEX = frz({
             "file": "sphere-growth.md",
             "h1": "Sphere-Driven Growth",
             "headings": 13,
-            "lines": 108,
+            "lines": 110,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -249,7 +249,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/sphere-growth.md",
-            "words": 1882
+            "words": 1978
         },
         {
             "description": "Paths-and-obstacles is the intermediate representation procgen uses for access rules. Substrates reason spatially — \"to reach this goal you cross these obstacles\" — while Archipelago reasons in Boolean item logic. This representation is the bridge: rules are *authored* as paths of obstacles during generation, verified against the geometry, and *compiled* to Rule Builder JSON only at the end.",
@@ -415,7 +415,7 @@ export const DOCS_INDEX = frz({
             "file": "jta.md",
             "h1": "JtA Substrate",
             "headings": 14,
-            "lines": 159,
+            "lines": 161,
             "links": [
                 "architecture.md",
                 "gotchas.md",
@@ -424,7 +424,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/jta.md",
-            "words": 3409
+            "words": 3510
         },
         {
             "description": "The omsi substrate (`frontend/modules/omsiSubstrateWrapper/`, id `omsi`) runs the `PeerInfinity/omsi-loops` fork of Idle Loops, from the `frontend/modules/omsi-loops/` submodule, in a same-origin iframe as a loop-mode substrate. The host owns the game clock, and the game's per-loop mana budget is the shared mana pool.",
@@ -447,7 +447,7 @@ export const DOCS_INDEX = frz({
             "file": "noiz2sa.md",
             "h1": "Noiz2sa Substrate",
             "headings": 13,
-            "lines": 174,
+            "lines": 175,
             "links": [
                 "flash.md",
                 "loop-recording.md",
@@ -455,7 +455,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/noiz2sa.md",
-            "words": 7380
+            "words": 7453
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",

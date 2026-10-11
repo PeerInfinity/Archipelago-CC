@@ -33,6 +33,8 @@ import { envelopeExitNames, nameMapValues } from '../procgenCore/sidecarFields.j
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
 import { DEFAULT_JTA_PROCGEN_PARAMS, renderJtaProcgenParams } from './jtaProcgenParams.js';
+import { logicOnlyExitLocks } from '../procgenCore/logicExitLocks.js';
+import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 
 // Host-side PlaybackProxy, injected by index.js's initialize() once the
 // eventBus exists (setter injection rather than importing index.js so
@@ -606,6 +608,58 @@ function buildZoneLocations(zoneIdx, region_id, { itemsToPlace = [], locationSpe
     return { locations, payload, placedItems };
 }
 
+/** The obstacle id prefix of a jta region's logic-only exit locks (sphere growth). */
+export const JTA_EXIT_LOCK_PREFIX = 'jta_exit_lock_';
+
+/**
+ * A jta zone built to a sphere-growth (or top-down) spec: `generateZoneForSpecs`.
+ *
+ * ⚖ The user, 2026-10-11: a sphere jta zone exposes ONLY its planned locations
+ * — each spec's item on one of the zone's tasks: the goal (`Victory`) on the
+ * Travel task, the others Mandatory first (`POOL_SLOT_TYPE_ORDER`, then task
+ * order). The zone's perks stay native game rewards: no perk is an AP item, no
+ * location carries a perk count, and no task's grant is suppressed. The tree's
+ * exit gates are LOGIC ONLY (`logicOnlyExitLocks`): the bridge does not enforce
+ * an exit's rule, so leaving early is out of logic.
+ *
+ * `ctx.ordinal` is the zone: sphere growth's `sphereZoneOrdinal` (the Nth jta
+ * node takes zone N). Location ids are the specs' ids; `ap_locations` maps each
+ * hosting task to the name the compiler gives the spec's location.
+ */
+function generateZoneForSpecs({ region_id, exitSpecs = [], locationSpecs = [] } = {}, { ordinal = 0 } = {}) {
+    const view = _zoneView();
+    const zoneIdx = ordinal;
+    const zone = view.zones[zoneIdx];
+    if (!zone) {
+        throw new Error(`jta: region '${region_id}' needs zone ${zoneIdx}, but the ${_dataset ? 'dataset' : 'vanilla '
+            + 'fixture'} has ${view.zones.length} zone(s) — lower the jta quota`);
+    }
+    const free = zone.tasks
+        .map((t, order) => ({ t, order }))
+        .filter(({ t }) => !view.excluded.has(t.id))
+        .sort((a, b) => (poolSlotRank(a.t.type) - poolSlotRank(b.t.type)) || (a.order - b.order));
+    if (locationSpecs.length > free.length) {
+        throw new Error(`jta: region '${region_id}' (zone ${zoneIdx}) has ${free.length} task(s) to hold `
+            + `${locationSpecs.length} location(s)`);
+    }
+    const taskOf = new Map();
+    const take = (spec, slot) => { free.splice(free.indexOf(slot), 1); taskOf.set(spec, slot.t.id); };
+    for (const spec of locationSpecs.filter((sp) => sp.item === JTA_VICTORY_ITEM_NAME)) {
+        take(spec, free.find(({ t }) => t.type === 'Travel') ?? free[0]);
+    }
+    for (const spec of locationSpecs.filter((sp) => sp.item !== JTA_VICTORY_ITEM_NAME)) take(spec, free[0]);
+    const locations = locationSpecs.map((sp) => ({ id: sp.id, item: sp.item ?? null, position: null }));
+    const apLocations = Object.fromEntries(locationSpecs
+        .map((sp) => [taskOf.get(sp), makeLocationName(region_id, sp.id, null)]));
+    const payload = { jtaZone: zoneIdx, ap_locations: apLocations, task_patches: [] };
+    if (_dataset) {
+        payload.jta_dataset_ref = { dataset_id: _dataset.dataset_id, schema_version: _dataset.schema_version };
+        if (zoneIdx === 0) payload.jta_dataset = _dataset;
+    }
+    const { exitPaths, obstacleDefs } = logicOnlyExitLocks(exitSpecs, JTA_EXIT_LOCK_PREFIX);
+    return { locations, payload, exitPaths, obstacleDefs };
+}
+
 /**
  * ⛓ R5b — the perk names an IDENTITY placement puts on zones 0..g of `doc`, for
  * every g (sorted, as `_perkUniverse` sorts them). Pure: reads the document, not
@@ -988,6 +1042,9 @@ export const substrateRegistryEntry = Object.freeze({
         const result = buildZoneLocations(zoneIdx, region_id, { itemsToPlace, locationSpecs, goalOwned });
         return { ...result, payload: { jtaZone: zoneIdx, ...result.payload } };
     },
+
+    // Sphere growth (and top-down): a zone built to the planned locations.
+    generateZoneForSpecs,
 
     // The shuffled spiral's item layer (`planSpiralItems`): how many pool items
     // zone `zoneIdx` can hold — its tasks that carry no perk (the zone's own

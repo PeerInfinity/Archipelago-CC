@@ -155,7 +155,7 @@ A source that feeds a *document* into the pipeline (jta's dataset) declares `emi
 |-------|------|---------|
 | `regionGeometry` | `'tiles'` \| `'sides'` (optional) | `'tiles'` (the default): each exit stands on a tile, so the engine writes `exits[].x/y`, `exits_placed[].tile_position` and `extracted_rules.exits[].position`. `'sides'`: exits are only sides, and the engine writes none of those and no `entrance` tile. Declare it on the entry, never as a factory default. |
 
-`procgenCore/regionGeometry.js` holds `REGION_GEOMETRY`, `DEFAULT_REGION_GEOMETRY` and `geometryOf(entry)`, the only reader; unknown values are refused. When a tile region mirrors a sides-only neighbour's exit, the engine uses `perimeterMidpoint(side, regionSize)`, so maze regions do not change. jta and omsi reach the engine only through `assembleZoneRegion`; the sphere and top-down drivers refuse substrates without `generateRegionCore` or `generateZoneForSpecs`. A substrate with `generateZoneForSpecs` and no `generateRegionCore` (bounce, runner) is built through the zone path, which gives every exit its own side, so such a room has at most four exits (`ZONE_PATH_EXIT_CEILING`). The top-down driver refuses a region with more by name before it builds anything (`zoneExitCeilingRefusal`). A `'sides'` geometry alone sets no such limit: `text_adventure` is `'sides'` but is built through its own `generateRegionCore`, which this limit does not cover.
+`procgenCore/regionGeometry.js` holds `REGION_GEOMETRY`, `DEFAULT_REGION_GEOMETRY` and `geometryOf(entry)`, the only reader; unknown values are refused. When a tile region mirrors a sides-only neighbour's exit, the engine uses `perimeterMidpoint(side, regionSize)`, so maze regions do not change. omsi reaches the engine only through `assembleZoneRegion`; the sphere and top-down drivers refuse substrates without `generateRegionCore` or `generateZoneForSpecs`. A substrate with `generateZoneForSpecs` and no `generateRegionCore` (bounce, runner, jta, noiz2sa) is built through the zone path, which gives every exit its own side, so such a room has at most four exits (`ZONE_PATH_EXIT_CEILING`). The top-down driver refuses a region with more by name before it builds anything (`zoneExitCeilingRefusal`). A `'sides'` geometry alone sets no such limit: `text_adventure` is `'sides'` but is built through its own `generateRegionCore`, which this limit does not cover.
 
 ### Build-time — generation cost
 
@@ -197,11 +197,11 @@ A **region library** stores a generated region as an entry and re-instantiates i
 
 `regionLibraryValidator.js` keeps its own `LIBRARY_V1_SUBSTRATES` list because it runs with nothing registered; `procgenCore/sidecarFieldsRegistry.test.js` checks it against the registry.
 
-### Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)
+### Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)
 
 Optional hooks the sphere-growth driver and the Procgen Pipeline panel read, so the engine never names a substrate. Semantics are documented at the consumers, `procgenPipelineEngine.js` and `sphereConfigHooks.js`.
 
-- **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item).
+- **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item). The zone path calls the generator as `(zoneSpecs, {ordinal})`: `ordinal` is which of the substrate's zones the region is (sphere growth's `sphereZoneOrdinal`, top-down's running count, the APWorld editor's own or first free zone), read by a source whose regions are content (jta's zones, noiz2sa's spans). A substrate whose runtime does not enforce exit rules expresses the tree's gates as logic-only locks (`procgenCore/logicExitLocks.js`: jta, noiz2sa).
 - **Gate vetoes and hints:** `canHostExitGates`, `canHostExitGatesBraid`, `exitGateVeto`, `backPortalGated`, `hostsSurplusExitsNatively`, `gateHostingHint`.
 - **Region contract:** `buildRegionContract`, used by the panel's Edit flow.
 - **Panel parameters:** `defaultProcgenParams`, `prepareSphereGrowth`, `buildRegionParams`, `renderProcgenParams`; for a selected region library, `buildLibraryRegionParams` and `renderLibraryProcgenParams`. `procgenParamsFromPayload(payload)` recovers the params an existing payload records.
@@ -374,7 +374,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `libraryEntryRefusal` | fn | — | — | — | — | fn | — | — | — | — |
 | `validateLibraryEntry` | fn | — | — | — | — | fn | — | — | fn | — |
 
-**Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)**
+**Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)**
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -390,7 +390,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `exitGateVeto` | fn | — | fn | fn | — | — | — | — | fn | — |
 | `gateHostingHint` | fn | — | — | — | — | — | — | — | fn | — |
 | `gateableItems` | `null` | — | — | — | — | — | — | — | 5 items | — |
-| `generateZoneForSpecs` | fn | — | fn | — | — | — | — | — | fn | — |
+| `generateZoneForSpecs` | fn | — | fn | — | fn | — | fn | — | fn | — |
 | `generateZoneForSpecsGen` | fn | — | — | — | — | — | — | — | fn | — |
 | `hostsSurplusExitsNatively` | fn | — | — | — | — | — | — | — | fn | — |
 | `libraryItems` | 7 keys | — | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | 6 keys | — |

@@ -2090,6 +2090,9 @@ export function* realiseTopDownGen(layout, opts) {
     const exitSidesByExit = new Map(); // "name:exit_id" -> {side, tile_position}
 
     let index = 0;
+    // Per-substrate running count, in placement order: a zone source whose
+    // regions are content (jta, noiz2sa) takes its Nth zone for its Nth region.
+    const zoneOrdinals = {};
 
     for (const { name, cell, parent } of placementOrder) {
         const sourceRegion = sourceRegions[name];
@@ -2149,6 +2152,7 @@ export function* realiseTopDownGen(layout, opts) {
             useSourceLocationName: true,
             stampEntrance: true,
             freeItems,
+            zoneOrdinal: (zoneOrdinals[substrateId] = (zoneOrdinals[substrateId] ?? -1) + 1),
         });
 
         for (const placed of region.exits_placed) {
@@ -3540,9 +3544,13 @@ function* generateRegionZoneGen(spec) {
     const zoneSpecs = typeof adapter.buildZoneSpecs === 'function'
         ? adapter.buildZoneSpecs(baseZoneSpecs, spec.params ?? {})
         : baseZoneSpecs;
+    // `ordinal`: which of the substrate's zones this region is (sphere growth's
+    // `sphereZoneOrdinal`; 0 for a caller that names none) — read by a zone
+    // source whose regions are content (jta, noiz2sa).
+    const zoneCtx = { ordinal: spec.zoneOrdinal ?? 0 };
     const zoneRules = typeof adapter.generateZoneForSpecsGen === 'function'
-        ? yield* adapter.generateZoneForSpecsGen(zoneSpecs)
-        : adapter.generateZoneForSpecs(zoneSpecs);
+        ? yield* adapter.generateZoneForSpecsGen(zoneSpecs, zoneCtx)
+        : adapter.generateZoneForSpecs(zoneSpecs, zoneCtx);
 
     // Assemble the descriptor, keying exits by the SPEC's exit_id (top-down
     // overrides/teleporters key on the source exit id) rather than
@@ -3626,9 +3634,13 @@ function* generateRegionZoneGen(spec) {
     // the compiled global_name so the bridge reports the registered name.
     if (spec.useSourceLocationName && playable_payload.ap_locations) {
         const nameById = new Map(extractedLocations.map((l) => [l.id, l.global_name ?? l.id]));
+        // A substrate whose map is keyed by its OWN ids (jta: task id → name)
+        // is matched by the name it minted instead.
+        const nameByMinted = new Map(extractedLocations.map((l) => [
+            makeLocationName(spec.region_id, l.id, l.position), l.global_name ?? l.id]));
         playable_payload.ap_locations = Object.fromEntries(
             Object.entries(playable_payload.ap_locations)
-                .map(([k, v]) => [k, nameById.get(k) ?? v]));
+                .map(([k, v]) => [k, nameById.get(k) ?? nameByMinted.get(v) ?? v]));
     }
     // Entrance leak fix: zone regions previously omitted .entrance, so the
     // top-down bidirectional back-exit pass threw on entranceTile.x. Only
@@ -5318,7 +5330,7 @@ function zoneExitGate(e) {
 function* buildSphereZoneRegion({
     substrate, region_id, regionSize, exitPlans, locations,
     entranceSide, entryGate = [], entryGateCounts = {},
-    regionParams = {}, seed,
+    regionParams = {}, seed, zoneOrdinal = 0,
 }) {
     if (!entranceSide && exitPlans.length === 0) {
         throw new Error(`growSpheres: zone region '${region_id}' has neither `
@@ -5342,7 +5354,24 @@ function* buildSphereZoneRegion({
         entrances: entranceSide
             ? [{ side: entranceSide, requirement: entryGate, counts: entryGateCounts }]
             : [],
+        zoneOrdinal,
     });
+}
+
+/**
+ * Which of its substrate's zones a sphere node takes: how many nodes of the same
+ * substrate come before it in the tree. A zone source whose regions are content
+ * (jta's zones, noiz2sa's spans) reads it as `ctx.ordinal`, so the first jta
+ * node is zone 0, the next zone 1, in wave order. Deterministic from the tree,
+ * so a re-roll gets the same zone.
+ */
+export function sphereZoneOrdinal(node, tree) {
+    let n = 0;
+    for (const other of tree.nodes) {
+        if (other.index === node.index) break;
+        if (other.substrate === node.substrate) n += 1;
+    }
+    return n;
 }
 
 // Count gates: a multi-instance gate item demands its cumulative count
@@ -5931,6 +5960,7 @@ export function reRollSphereRegion(grid, node, tree, {
         entryGateCounts: node.gateCounts,
         regionParams,
         seed,
+        zoneOrdinal: sphereZoneOrdinal(node, tree),
         adapter,
     });
     let r = gen.next();
@@ -6565,6 +6595,7 @@ function* realiseOneSphereNode(grid, node, tree, rng, {
                 entryGateCounts: node.gateCounts,
                 regionParams,
                 seed: (rng.next() * 0x7fffffff) | 0,
+                zoneOrdinal: sphereZoneOrdinal(node, tree),
                 adapter,
             });
         } else {

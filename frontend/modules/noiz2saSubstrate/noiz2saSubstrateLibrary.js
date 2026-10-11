@@ -54,6 +54,8 @@ import { defaultCheckSpans, parsePosition, regionSpanOf, regionSpansOf, showSpan
 import { DEFAULT_FINAL_SPAN, FINAL_SPAN_PARAM, priceNoiz2saRegions } from './noiz2saPricing.js';
 import { parseSpan } from './noiz2saDifficulty.js';
 import { fieldRow } from '../procgenCore/regionGenerationForm.js';
+import { logicOnlyExitLocks } from '../procgenCore/logicExitLocks.js';
+import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 
 export const NOIZ2SA_SUBSTRATE_ID = 'noiz2sa';
 export const NOIZ2SA_GAME_ID = 'noiz2sa';
@@ -291,6 +293,37 @@ export function zoneRulesOf(zones, zoneIdx, { region_id, itemsToPlace = [], goal
 /** the shipped zone table's zone-locations channel */
 const extractZoneRules = (zoneIdx, ctx) => zoneRulesOf(NOIZ2SA_ZONES, zoneIdx, ctx);
 
+/** The obstacle id prefix of a noiz2sa region's logic-only exit locks (sphere growth). */
+export const NOIZ2SA_EXIT_LOCK_PREFIX = 'noiz2sa_exit_lock_';
+
+/**
+ * A region built to a sphere-growth (or top-down) spec, from a zone table: its move span is zone `ctx.ordinal`'s (the
+ * table repeats when the world has more noiz2sa regions than zones — a span is content, and a region may replay one),
+ * and it has exactly one location per spec, each with the default check span, holding the spec's item. The tree's exit
+ * gates are LOGIC ONLY (⚖ the user, 2026-10-11: `logicOnlyExitLocks` — the page does not read an exit's rule). Location
+ * ids are the specs' ids; `ap_locations` maps each `checkN` to the name the compiler gives the spec's location.
+ */
+export function zoneForSpecsOf(zones, { region_id, exitSpecs = [], locationSpecs = [] } = {}, { ordinal = 0 } = {}) {
+    if (!zones.length) throw new Error('noiz2sa: an empty zone table builds no region');
+    const z = zones[ordinal % zones.length];
+    const { start, end, seed } = regionSpanOf({ start: parsePosition(z.start), end: parsePosition(z.end), seed: ZONE_SEED });
+    const move = { start, end };
+    const checks = defaultCheckSpans(move, locationSpecs.length).map((check, i) => ({ id: noiz2saLocationId(i), check }));
+    const { exitPaths, obstacleDefs } = logicOnlyExitLocks(exitSpecs, NOIZ2SA_EXIT_LOCK_PREFIX);
+    return {
+        locations: locationSpecs.map((sp) => ({ id: sp.id, item: sp.item ?? null, position: null })),
+        payload: {
+            gameId: NOIZ2SA_GAME_ID,
+            move,
+            seed,
+            locations: checks,
+            ap_locations: Object.fromEntries(checks.map((c, i) => [c.id, makeLocationName(region_id, locationSpecs[i].id, null)])),
+        },
+        exitPaths,
+        obstacleDefs,
+    };
+}
+
 /** N5: the generation form's Noiz2sa knobs (the procgen params bag) */
 export const NOIZ2SA_PROCGEN_PARAMS = Object.freeze({ [FINAL_SPAN_PARAM]: DEFAULT_FINAL_SPAN });
 
@@ -376,6 +409,8 @@ export const substrateRegistryEntry = Object.freeze({
     // beyond its table's (the engine caps it at maxItemsPerRegion).
     spiralItemCapacity: () => Infinity,
     fillerItem: NOIZ2SA_FILLER_ITEM_NAME,
+    // Sphere growth (and top-down): a region built to the planned locations.
+    generateZoneForSpecs: (specs, ctx) => zoneForSpecsOf(NOIZ2SA_ZONES, specs, ctx),
     zoneSourceLabel: 'Noiz2sa segment',
 });
 

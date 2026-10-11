@@ -6,6 +6,8 @@ The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the J
 
 jta is the reference zone-based substrate: one AP region = one JtA zone. It has no procedural build-time hooks. Instead its registry entry exposes `zoneCount` and `extractZoneRules(zoneIdx)`. Layout drivers that arrange ordered zones (the shuffled-spiral driver) allocate at most `zoneCount` regions to jta, and `extractZoneRules` supplies each zone's payload, which always starts with `{ jtaZone: zoneIdx }`.
 
+**In sphere growth** (and top-down) a jta region is built to its node's specs by `generateZoneForSpecs(zoneSpecs, {ordinal})`; the Nth jta node takes zone N. ⚖ The user, 2026-10-11: such a zone exposes ONLY its planned locations (each spec's item on one task: the goal on Travel, the others Mandatory first), and its perks stay native game rewards (no perk item, no perk-count rule, no grant suppression). The tree's exit gates are logic-only locks: the bridge does not enforce an exit's rule, so leaving early is out of logic. A world needing more zones than the source has is refused by name.
+
 `zoneCount` is a getter over the active source document: the loaded dataset's `zones.length`, or the vanilla fixture's (`datasets/vanilla.json`, exposed by `vanillaDataset.js`). The fixture is regenerated from the submodule build by `frontend/modules/jtaSubstrateWrapper/export-vanilla-dataset.mjs`, so there is no hand-kept zone count. As a backstop, the fork's `loadZone` refuses a bad index with a warning.
 
 Other entry fields worth knowing:

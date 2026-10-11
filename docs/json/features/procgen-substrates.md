@@ -46,9 +46,9 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 | | What you can do | Bounce Demo | Flash | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Runner Demo | Text Adventure |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| G1 | The pipeline can build regions of it | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✗ only as content from its own game | ✓ grown to order | ✗ only as content from its own game | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ grown to order |
+| G1 | The pipeline can build regions of it | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ grown to order |
 | G2 | How many ready-made rooms / levels it brings | ✓ 5 | ✗ | ✓ 4 Atlas rooms | n/a | ✓ 30 | n/a | ✓ 3 Noiz2sa segments | ✓ 1 | ✓ 6 | n/a |
-| G3 | Generates quickly | ✓ | n/a | ✓ | ✓ | n/a | ✓ | n/a | n/a | ✗ its generation cost is declared `heavy` | ✓ |
+| G3 | Generates quickly | ✓ | n/a | ✓ | ✓ | ✓ | ✓ | ✓ | n/a | ✗ its generation cost is declared `heavy` | ✓ |
 | G4 | Its rooms can be captured into a library and reused | ✓ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✓ | ✗ |
 | G5 | Exits can be locked behind items | ✓ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ | ✓ | ✓ |
 | G6 | It has its own settings in the generation form | ✓ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ |
@@ -193,7 +193,9 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Loop mode* — It shares the loop-mode mana pool
 - *Loop mode* — It shares consumable items with other substrates: its list comes from the running game — see the Substrate Registry panel
 - *Loop mode* — Recorded actions are named in the game's own words
+- *Generate* — The pipeline can build regions of it: picked from its own levels to fit the plan
 - *Generate* — How many ready-made rooms / levels it brings: 30
+- *Generate* — Generates quickly
 - *Generate* — It has its own settings in the generation form
 - *Generate* — A world of it can start with an empty inventory
 - *Edit* — An exit can be moved to another side (and a side can hold more than one): and a side can hold more than one
@@ -239,7 +241,9 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Loop mode* — Instant fast-forward: always — a replay is already instant
 - *Loop mode* — A Bot block can play it for you: the game's own automation walks it
 - *Loop mode* — You can play it outside loop mode
+- *Generate* — The pipeline can build regions of it: picked from its own levels to fit the plan
 - *Generate* — How many ready-made rooms / levels it brings: 3 Noiz2sa segments
+- *Generate* — Generates quickly
 - *Generate* — It has its own settings in the generation form
 - *Generate* — A world of it can start with an empty inventory
 - *Edit* — An exit can be moved to another side (and a side can hold more than one): and a side can hold more than one

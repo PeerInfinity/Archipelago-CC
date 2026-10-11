@@ -407,8 +407,18 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "generate",
+                    "statement": "The pipeline can build regions of it",
+                    "text": "picked from its own levels to fit the plan"
+                },
+                {
+                    "group": "generate",
                     "statement": "How many ready-made rooms / levels it brings",
                     "text": "30"
+                },
+                {
+                    "group": "generate",
+                    "statement": "Generates quickly",
+                    "text": null
                 },
                 {
                     "group": "generate",
@@ -619,8 +629,18 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "generate",
+                    "statement": "The pipeline can build regions of it",
+                    "text": "picked from its own levels to fit the plan"
+                },
+                {
+                    "group": "generate",
                     "statement": "How many ready-made rooms / levels it brings",
                     "text": "3 Noiz2sa segments"
+                },
+                {
+                    "group": "generate",
+                    "statement": "Generates quickly",
+                    "text": null
                 },
                 {
                     "group": "generate",
@@ -3655,8 +3675,8 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "jta",
-                    "kind": "no",
-                    "text": "only as content from its own game",
+                    "kind": "yes",
+                    "text": "picked from its own levels to fit the plan",
                     "why": [
                         {
                             "field": "generateRegionCore",
@@ -3664,7 +3684,7 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "generateZoneForSpecs",
-                            "value": "—"
+                            "value": "fn"
                         },
                         {
                             "field": "generateZoneForSpecsGen",
@@ -3693,8 +3713,8 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "noiz2sa",
-                    "kind": "no",
-                    "text": "only as content from its own game",
+                    "kind": "yes",
+                    "text": "picked from its own levels to fit the plan",
                     "why": [
                         {
                             "field": "generateRegionCore",
@@ -3702,7 +3722,7 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "generateZoneForSpecs",
-                            "value": "—"
+                            "value": "fn"
                         },
                         {
                             "field": "generateZoneForSpecsGen",
@@ -4027,7 +4047,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "jta",
-                    "kind": "na",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
@@ -4049,7 +4069,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "noiz2sa",
-                    "kind": "na",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
