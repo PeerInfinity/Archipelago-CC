@@ -23,6 +23,7 @@ import { MAZE_CONCEPT_REALISATIONS } from '../mazeRoom/mazeConcepts.js';
 import { TEXT_ADVENTURE_CONCEPT_REALISATIONS }
     from '../textAdventureSubstrateWrapper/textAdventureConceptRealisations.js';
 import { DOCUMENT_KEY_EDITORS } from '../apworldEditor/documentKeys.js';
+import { MAZE_ARRIVAL_ROW_CLASS } from '../mazeRoom/mazeProcgenParams.js';
 
 /**
  * ⛓ APWORLD EDITOR HUB H3 — three suites LEFT this file with the code they
@@ -532,6 +533,17 @@ const PARAMETER_KEYS_BEFORE_R1 = Object.freeze({
     ],
 });
 
+/**
+ * ⛓ TUTORIAL BUGS (2026-10-10) — the maze hook's *Maze rooms play as* row
+ * (`mazeArrival`) is NEW after the R1 capture: the R1 pins splice it out (the
+ * `withoutConceptsRow` move), and its own rows follow them.
+ */
+function withoutArrivalRow(el) {
+    el.children = el.children.filter((c) => !String(c.className).includes(MAZE_ARRIVAL_ROW_CLASS));
+    for (const c of el.children) withoutArrivalRow(c);
+    return el;
+}
+
 const HOOK_CASES = Object.freeze([
     ['maze-on', 'maze', { enableHazards: true }],
     ['maze-off', 'maze', {}],
@@ -542,9 +554,9 @@ const HOOK_CASES = Object.freeze([
 describe('R1 — the substrate hooks draw with the shared helpers exactly as their own copies did', () => {
     it.each(HOOK_CASES)('⛓ %s renders the captured fixture DOM (captured at the start HEAD)', (name, id, extra) => {
         const entry = substrateRegistry.get(id);
-        const html = withFakeDocument(() => serialize(entry.renderProcgenParams({
+        const html = withFakeDocument(() => serialize(withoutArrivalRow(entry.renderProcgenParams({
             params: { ...entry.defaultProcgenParams, ...extra }, onChange: () => {},
-        })));
+        }))));
         expect(html).toBe(HOOKS_BEFORE_R1[name]);
     });
 
@@ -552,14 +564,14 @@ describe('R1 — the substrate hooks draw with the shared helpers exactly as the
         const entry = substrateRegistry.get(id);
         const bag = () => ({ ...entry.defaultProcgenParams, ...extra });
         const rows = withFakeDocument(() => {
-            const n = controls(entry.renderProcgenParams({ params: bag(), onChange: () => {} })).length;
+            const n = controls(withoutArrivalRow(entry.renderProcgenParams({ params: bag(), onChange: () => {} }))).length;
             const out = [];
             for (let i = 0; i < n; i++) {
                 const probes = [];
                 for (const typed of PROBES) {
                     const b = bag();
                     let calls = 0;
-                    const c = controls(entry.renderProcgenParams({ params: b, onChange: () => { calls += 1; } }))[i];
+                    const c = controls(withoutArrivalRow(entry.renderProcgenParams({ params: b, onChange: () => { calls += 1; } })))[i];
                     if (c.type !== 'number') {
                         if (typed !== '') continue;
                         perturb(c);
@@ -600,7 +612,7 @@ describe('R1 — the Parameters section binds the same bag keys it bound before 
         ctx._saveToLocalStorage = () => {};
         ctx._handEditedGridKeys = new Set();
         withFakeDocument(() => {
-            for (const c of controls(withoutConceptsRow(ctx._renderParams()))) { perturb(c); c.fire('change'); }
+            for (const c of controls(withoutArrivalRow(withoutConceptsRow(ctx._renderParams())))) { perturb(c); c.fire('change'); }
         });
         expect([...written].sort()).toEqual(PARAMETER_KEYS_BEFORE_R1[mode]);
         // ⛓ F1: a changed grid control records its key as hand-edited (a
@@ -651,7 +663,7 @@ describe('R1 — the Parameters section draws the DOM it drew before the split',
         ctx.params = { ...panelDefaultParams(), enableHazards: true };
         ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1, runner: 1 });
         ctx._saveToLocalStorage = () => {};
-        const html = withFakeDocument(() => serialize(withoutParamKeys(unwrapForms(withoutConceptsRow(ctx._renderParams())))));
+        const html = withFakeDocument(() => serialize(withoutParamKeys(unwrapForms(withoutArrivalRow(withoutConceptsRow(ctx._renderParams()))))));
         expect(createHash('sha256').update(html).digest('hex')).toBe(PARAMETERS_SECTION_SHA256_BEFORE_R1[mode]);
     });
 
@@ -671,6 +683,28 @@ describe('R1 — the Parameters section draws the DOM it drew before the split',
                 expect(ctx.params[b.dataset.paramKey]).toBe(3);
             }
         });
+    });
+});
+
+describe('TUTORIAL BUGS — *Maze rooms play as* (`mazeArrival`) on the maze hook', () => {
+    it('one select, zone by default; choosing regions writes mazeArrival and calls onChange', () => {
+        const entry = substrateRegistry.get('maze');
+        expect(entry.defaultProcgenParams.mazeArrival).toBe('zone');
+        const bag = { ...entry.defaultProcgenParams };
+        let calls = 0;
+        withFakeDocument(() => {
+            const wrap = entry.renderProcgenParams({ params: bag, onChange: () => { calls += 1; } });
+            const rows = wrap.children.filter((c) => String(c.className).includes(MAZE_ARRIVAL_ROW_CLASS));
+            expect(rows).toHaveLength(1);
+            const [select] = controls(rows[0]);
+            expect(select.dataset.paramKey).toBe('mazeArrival');
+            expect(select.children.map((o) => o.value)).toEqual(['zone', 'region']);
+            expect(select.value).toBe('zone');
+            select.value = 'region';
+            select.fire('change');
+        });
+        expect(bag.mazeArrival).toBe('region');
+        expect(calls).toBe(1);
     });
 });
 

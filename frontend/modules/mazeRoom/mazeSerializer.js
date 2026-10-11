@@ -153,6 +153,16 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
             + 'there are none; no committed preset carries it.',
         schema: Object.freeze({ items: atXY({ amount: Object.freeze({ type: 'number' }) }, ['amount']) }),
     }),
+    arrival: Object.freeze({
+        type: 'string', required: false,
+        enum: Object.freeze(['zone', 'region']),
+        description: 'How the room is entered (⚖ the user, 2026-10-10: maze regions can work like zones). '
+            + '`zone`: every arrival lands on `entrance`, the point the compiled logic is measured from; '
+            + '`region`: on the exit leading back to where the player came from. Absent: `resolveMazeArrival`\'s '
+            + 'own rule (the linked exit, else the exit back). `buildPresetSidecars` stamps `zone` on a '
+            + 'shuffled-spiral room when the pipeline\'s *Maze rooms play as* is zones; the APWorld Editor '
+            + 'sets it per room.',
+    }),
     atlas_region: Object.freeze({
         type: 'string', required: false, derived: true,
         description: `Atlas provenance written by ${ATLAS_PROJECTION}: the atlas region this room was `
@@ -331,5 +341,8 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         ...(hazardsOut ? { hazards: hazardsOut } : {}),
         ...(consumableTilesOut ? { consumableTiles: consumableTilesOut } : {}),
         ...(manaTilesOut ? { manaTiles: manaTilesOut } : {}),
+        // A room that says how it is entered keeps saying it (an editor
+        // regenerate round-trips it); generation stamps it at compile.
+        ...(world.arrival ? { arrival: world.arrival } : {}),
     };
 }

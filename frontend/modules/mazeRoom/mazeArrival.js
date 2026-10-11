@@ -26,9 +26,20 @@
  * whose names collide otherwise would not. There `source_region` goes first,
  * and `exit_id` is the fallback.
  *
+ * ⛓⛓ ZONE OR REGION (tutorial-bugs, ⚖ the user, 2026-10-10: *"add the option
+ * for maze regions to work like zones"*). A room whose payload says
+ * `arrival: 'zone'` is entered at its `entrance` every time — `null` here — which
+ * is where its compiled logic is measured from. The `source_region` arm above
+ * was added for an entrance POCKET that reached the exit back only over another
+ * exit's tile; the generator can no longer build that (an exit tile is a dead
+ * end, mazeRoomEngine `isDeadEndExit`), and in a spiral world the arm landed a
+ * player behind a door its logic put in front of them (procgen-mixed-world:
+ * key_blue past door_blue). `arrival: 'region'` (or absent) keeps the arms.
+ *
  * @returns {{exitId: string, x: number, y: number, by: 'exit_id'|'source_region'}|null}
  */
 export function resolveMazeArrival(world, arrivedFrom) {
+    if (world?.arrival === 'zone') return null;
     const exits = world?.exits;
     if (!exits || typeof exits.values !== 'function') return null;
     const byExitId = () => {

@@ -504,6 +504,9 @@ export function buildSpiralRun(state, { resolvedLibraries = [] } = {}) {
         completionConditionItem: resolveVictoryItemId(state),
         // ⛓ bulletml N5: only when an in-quota substrate prices its regions (bytes kept otherwise)
         ...withPricingParams(Object.keys(substrateQuotas), params),
+        // ⛓ tutorial-bugs: maze rooms play as zones — the payload's `arrival`
+        //   (stamped only by a substrate that declares the field; absent = region).
+        ...(params.mazeArrival === 'zone' ? { arrival: 'zone' } : {}),
     };
     return { config, compileIn };
 }

@@ -212,6 +212,7 @@ function stepCompile(env) {
         regionXpEffect: c.regionXpEffect ?? 'cost',
         completionConditionItem: c.completionConditionItem ?? null,
         procgenParams: c.procgenParams ?? null,
+        ...(c.arrival ? { arrival: c.arrival } : {}),
         procgenMetadata: {
             driver: 'shuffled-spiral',
             stop_reason: stats.stopReason,

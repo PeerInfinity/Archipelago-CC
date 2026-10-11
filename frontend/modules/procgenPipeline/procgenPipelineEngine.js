@@ -6864,6 +6864,9 @@ export function buildPresetSidecars(grid, {
     // explore action. Defaults to true (decoupled from manaEnabled
     // since the flip — pass `false` explicitly to opt out).
     fogEnabled = true,
+    // How rooms are entered ('zone'), for the substrates that declare an
+    // `arrival` payload field; null = none stamped. See serializeRegionEntry.
+    arrival = null,
 } = {}) {
     const regionMap = {};
     // ⛓ The 5th `serializeWorld` argument — what a payload can only know
@@ -6893,7 +6896,7 @@ export function buildPresetSidecars(grid, {
     });
     for (const region of grid.allRegions()) {
         regionMap[region.region_id] = serializeRegionEntry(region, {
-            manaEnabled, fogEnabled, baseObstacleLib, baseItemLib, serializeContext,
+            manaEnabled, fogEnabled, baseObstacleLib, baseItemLib, serializeContext, arrival,
         });
     }
     return { [playerId]: regionMap };
@@ -6919,6 +6922,12 @@ export function serializeRegionEntry(region, {
     //   no grid (the hub's op) passes what it knows, or nothing — a
     //   four-argument serializer never sees it.
     serializeContext = undefined,
+    // ⛓ tutorial-bugs (⚖ the user, 2026-10-10: maze regions can work like
+    //   zones) — 'zone': every arrival lands on the room's entrance. Stamped
+    //   only where it means something: a substrate whose `sidecarFields`
+    //   declares `arrival`, in a region with no LINKED reverse exit (the
+    //   spiral's), where the runtime would otherwise land on the exit back.
+    arrival = null,
 } = {}) {
     const substrateId = region.substrate ?? DEFAULT_SUBSTRATE_ID;
     const adapter = getAdapter(substrateId);
@@ -6951,6 +6960,11 @@ export function serializeRegionEntry(region, {
     // Emit fogEnabled explicitly so consumers can disambiguate
     // "absent → default true" from "explicit false → opt-out".
     playablePayload.fogEnabled = fogEnabled !== false;
+    if (arrival
+        && substrateRegistry.get(substrateId)?.sidecarFields?.arrival
+        && !(playablePayload.exits ?? []).some((e) => e?.targetExitId)) {
+        playablePayload.arrival = arrival;
+    }
     return {
         substrate: substrateId,
         render_hint: region.render_hint ?? substrateId,
@@ -7058,6 +7072,10 @@ export function buildRulesJson(grid, opts = {}) {
         // embedSphereLog. The runtime loops module auto-loads this when
         // present. Default false (loop mode is opt-in).
         enableLoopMode = false,
+        // ⛓ tutorial-bugs — how this world's rooms are entered, stamped as
+        // each payload's `arrival` (see serializeRegionEntry). null = stamp
+        // nothing (every world before the knob).
+        arrival = null,
         // Per-region XP effect mode stamped on every loop_costs region
         // entry: 'cost' (default — XP discounts mana cost), 'speed'
         // (reserved for v2 — XP discounts action time only), 'both'
@@ -7323,6 +7341,7 @@ export function buildRulesJson(grid, opts = {}) {
         baseObstacleLib: obstacleLib,
         baseItemLib: itemLib,
         manaEnabled: enableLoopMode,
+        arrival,
     });
 
     // Procgen metadata: caller-supplied fields plus auto-derived

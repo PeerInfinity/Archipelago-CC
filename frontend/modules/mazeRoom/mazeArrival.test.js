@@ -87,3 +87,36 @@ describe('T4 — an unlinked world prefers the exit leading back over a name coi
     });
 });
 
+
+/**
+ * ⛓ tutorial-bugs (⚖ the user, 2026-10-10: maze regions can work like zones) —
+ * `arrival: 'zone'` lands on the entrance (null) whatever the arms would say;
+ * 'region' and absent keep the arms. And the flag rides the payload both ways.
+ */
+describe('resolveMazeArrival — zone or region', () => {
+    it('a zone room is always entered at its entrance, in an unlinked or a linked world', () => {
+        expect(resolveMazeArrival({ ...W, arrival: 'zone' }, { exit_id: 'exit_S', source_region: 'region_0_0' })).toBeNull();
+        expect(resolveMazeArrival({ ...LINKED, arrival: 'zone' }, { exit_id: 'exit_0', source_region: 'region_0_0' })).toBeNull();
+    });
+
+    it('a region room (or one that does not say) keeps the arms', () => {
+        const from = { exit_id: 'exit_S', source_region: 'region_0_0' };
+        expect(resolveMazeArrival({ ...W, arrival: 'region' }, from)).toEqual(resolveMazeArrival(W, from));
+        expect(resolveMazeArrival(W, from).by).toBe('source_region');
+    });
+
+    it('the payload carries it through deserializeMazeWorld and serializeMazeWorld', async () => {
+        const { deserializeMazeWorld } = await import('./mazeRoomEngine.js');
+        const { serializeMazeWorld } = await import('./mazeSerializer.js');
+        const payload = {
+            width: 3, height: 2, tiles: [0, 0, 0, 0, 0, 0], entrance: { x: 0, y: 0 },
+            exits: [{ exit_id: 'e', x: 2, y: 0, side: 'E', targetRegion: 'B' }],
+            obstacles: [], items: [], obstacleLib: {},
+        };
+        const zone = deserializeMazeWorld({ ...payload, arrival: 'zone' });
+        expect(zone.arrival).toBe('zone');
+        expect(serializeMazeWorld(zone, null).arrival).toBe('zone');
+        expect(deserializeMazeWorld(payload).arrival).toBeUndefined();
+        expect('arrival' in serializeMazeWorld(deserializeMazeWorld(payload), null)).toBe(false);
+    });
+});

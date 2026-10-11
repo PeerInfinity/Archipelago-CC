@@ -360,6 +360,12 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.fogEnabled === true) {
         world.fogEnabled = true;
     }
+    // tutorial-bugs: how the room is entered ('zone' → the entrance; 'region'
+    // → the exit back). Its reader is `resolveMazeArrival` (mazeArrival.js);
+    // absent keeps that function's own rule.
+    if (sidecar.arrival === 'zone' || sidecar.arrival === 'region') {
+        world.arrival = sidecar.arrival;
+    }
 
     // Hazards (maze content modules Phase 2). Each sidecar entry is the
     // immutable shape (tiles + cycleLength + length + shape); phase

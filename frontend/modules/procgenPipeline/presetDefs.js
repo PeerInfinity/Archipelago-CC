@@ -103,7 +103,9 @@ export const PRESETS_SKIPPED_AS_HEAVY = Object.freeze([
  */
 export const SEEDLING_SPIRAL_ROOM_STATE = Object.freeze({
     mode: 'shuffledSpiral',
-    params: Object.freeze({ seed: 1, regionWidth: 8, regionHeight: 6 }),
+    // ⛓ tutorial-bugs: its maze rooms keep the REGION arrival (the source_region
+    //   arm its rows were measured on); the panel's default is now zones.
+    params: Object.freeze({ seed: 1, regionWidth: 8, regionHeight: 6, mazeArrival: 'region' }),
     scenario: Object.freeze({ items: Object.freeze({}), obstacles: Object.freeze({}) }),
     substrateQuotas: Object.freeze({ maze: 3, flash_seedling: 1 }),
     substrateMix: Object.freeze({}),
@@ -154,7 +156,8 @@ export const SEEDLING_SPHERE_ROOM_STATE = Object.freeze({
  */
 export const SEEDLING_GENERATED_ROOM_STATE = Object.freeze({
     mode: 'shuffledSpiral',
-    params: Object.freeze({ seed: 1, regionWidth: 10, regionHeight: 10 }),
+    // ⛓ tutorial-bugs: region arrival kept, as SEEDLING_SPIRAL_ROOM_STATE's.
+    params: Object.freeze({ seed: 1, regionWidth: 10, regionHeight: 10, mazeArrival: 'region' }),
     scenario: Object.freeze({ items: Object.freeze({ key_blue: 1 }), obstacles: Object.freeze({}) }),
     substrateQuotas: Object.freeze({ maze: 2, flash_seedling_gen: 2 }),
     substrateMix: Object.freeze({}),
