@@ -11384,7 +11384,7 @@ async function freeAZoneAndOpenJtaForm(testController, panel, holder, onto) {
  * ⛓⛓ **(a) THE SOURCE ROW OFFERS ZONE N FOR A JTA TARGET AND NOT FOR A NON-ZONE ONE**
  * — `jta_dataset_test` `region_1_0`: pick a non-zone realiser (derived) → its
  * Source row has no Zone N; pick `jta` back → Generate · Zone N, opened on the
- * zone (jta has no realiser); no seed row under the zone.
+ * zone (jta's `regionSourceDefault`); no seed row under the zone.
  */
 export async function apworldTheSourceRowOffersZoneNForAJtaTargetOnly(testController) {
     try {
@@ -11403,7 +11403,7 @@ export async function apworldTheSourceRowOffersZoneNForAJtaTargetOnly(testContro
         testController.assertEqual('⛓⛓ `jta`: the Source row = the flow\'s sources for the target (derived)',
             JSON.stringify(want), JSON.stringify(sourcesOf()));
         testController.reportCondition('…and it includes Zone N', want.includes(REGION_SOURCE_KINDS.ZONE));
-        testController.assertEqual('⛓ the form opens on the zone (jta has no realiser)', REGION_SOURCE_KINDS.ZONE,
+        testController.assertEqual('⛓ the form opens on the zone (jta declares it its default)', REGION_SOURCE_KINDS.ZONE,
             String(regionGenSection(region)?.dataset.source));
         testController.reportCondition('⛓ no seed row under Zone N',
             !regionGenSection(region)?.querySelector('.procgen-region-generation-form'));

@@ -1045,6 +1045,10 @@ export const substrateRegistryEntry = Object.freeze({
 
     // Sphere growth (and top-down): a zone built to the planned locations.
     generateZoneForSpecs,
+    // The APWorld editor's Region generation form opens on Zone N for jta: a
+    // jta region's own zone is the source that keeps its perks; Generate (the
+    // spec path above) builds a sphere-style zone without them.
+    regionSourceDefault: 'zone',
 
     // The shuffled spiral's item layer (`planSpiralItems`): how many pool items
     // zone `zoneIdx` can hold — its tasks that carry no perk (the zone's own

@@ -100,6 +100,10 @@ export function regionGenerationPlan(doc, player, region, target, { seed = REGIO
         // ⛓ R5c — the Source row's word for the zone source, read off the entry
         //   (`zoneSourceLabel`: flash_seedling's *Atlas room*), never typed here.
         zoneSourceLabel: zoneSourceLabelOf(entry),
+        // ⛓ spiral victory — the target's own word that its zone is the source a
+        //   form should open on even though it realises a spec too (jta: Generate
+        //   builds a sphere-style zone, its perks native).
+        prefersZone: entry?.regionSourceDefault === REGION_SOURCE_KINDS.ZONE,
     };
 }
 
@@ -143,12 +147,14 @@ export function regionGenerationSourcesFor(plan) {
 }
 
 /**
- * ⛓ R5b — the source the form OPENS on: *Generate*, unless the target has no
- * realiser to generate with (the op's refusal) and offers *Zone N* — then the
- * zone, so a jta pick opens on the one source that can do anything.
+ * ⛓ R5b — the source the form OPENS on: *Generate*, unless the target offers
+ * *Zone N* and either has no realiser to generate with (the op's refusal) or
+ * declares the zone its default (`regionSourceDefault: 'zone'` — jta, whose
+ * Generate builds a sphere-style zone without its perks).
  */
 export function defaultRegionGenerationSource(plan) {
-    return plan.refusal && plan.offersZone ? REGION_SOURCE_KINDS.ZONE : REGION_SOURCE_KINDS.GENERATE;
+    return plan.offersZone && (plan.refusal || plan.prefersZone)
+        ? REGION_SOURCE_KINDS.ZONE : REGION_SOURCE_KINDS.GENERATE;
 }
 
 /**

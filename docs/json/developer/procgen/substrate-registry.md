@@ -142,6 +142,7 @@ A **content source** supplies existing region content by ordinal: its Nth planne
 | `zoneConfigFromSlot({entries, locations, blocks, fetched})` | Read back the config one player slot's zones were built with, without installing it: `{ok, cfg, assumed, zoneCount, host}`, optionally `zoneNames` and `unplaceable`. The editor verifies `assumed` by re-extracting every zone. Returns `{ok: false, needs: [path]}` when served files are needed (`resolveZoneFetches` fetches them). A `recorded` config wins over read-back. |
 | `zoneOfPayload(payload, cfg)` | The zone a region's payload plays, or `null`; the editor refuses a zone already in use. |
 | `zoneSourceLabel` | The editor's name for this zone source. If absent, *Zone N*. |
+| `regionSourceDefault` | `'zone'`: the editor's Region generation form opens on the zone source even though the entry also realises a spec (jta: its own zone keeps its perks, while Generate builds a sphere-style zone). Absent: the form opens on Generate unless the target has no realiser. |
 | `onContentEdit(doc)` | Restamp a hand-edited content document (hash, id suffix, validation); idempotent. A changed id clears downstream steps. See [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). |
 | `rulesJsonBlocks()` | `rules.json` blocks this substrate's runtime reads, merged by `buildRulesJson` (and the APWorld Editor's initialise op) for substrates that realised a region, each under the slot (`{"<p>": block}`, rules F2). A key already present is refused, so one world cannot realise both Seedling entries (both write `flash_panel`). |
 | `restartWarp` | Declared when this substrate's runtime answers the Menu panel's Restart by warping the player to the start region (`procgenCore/restartWarp.js`'s `RESTART_WARP`). If any substrate that realised a region declares it, `buildRulesJson` writes `exporter[p].return_to_menu: true`: returning to the menu is always possible. It is a flag, never an edge (no region gets an exit into `Menu`). `region-atlas-compile.mjs` and the playthrough generator ask the same declaration. Position-aware readers honour it: `scripts/procgen/census-soft-locks.mjs` lists Restart-only regions as a diagnostic, the route survey may Restart, and the client's route planners (the Playback Bot, the region graph's one-step move) begin a route with a RESTART step when no walk exists (`procgenCore/restartRoute.js`). Seedling's two entries declare it; a world of maze rooms only does not. |
@@ -227,7 +228,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**10 registered entries · 90 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**10 registered entries · 91 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -335,6 +336,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `pipelineConfigFromParams` | — | — | fn | — | fn | — | — | — | — | — |
 | `pipelineConfigKeys` | — | — | atlasDoc, atlasId | — | 7 items | — | — | 5 items | — | — |
 | `recordablePipelineConfig` | — | — | — | — | fn | — | — | fn | — | — |
+| `regionSourceDefault` | — | — | — | — | zone | — | — | — | — | — |
 | `restartWarp` | — | — | {cite, label, target} | {cite, label, target} | — | — | — | — | — | — |
 | `rulesJsonBlocks` | — | — | fn | fn | — | — | — | — | — | — |
 | `spiralContentConfigKey` | — | — | — | — | datasetDoc | — | — | — | — | — |
