@@ -104,7 +104,7 @@ import {
     arrivalSolveRequest, arrivalSolverGoal, continuationSolveRequest, isArrival, stagingFromWasmArrival,
 } from '../seedlingDemo/wasmArrival.js';
 import {
-    adoptedClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
+    adoptedClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, locationGoalServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
@@ -124,6 +124,8 @@ import {
 
 /** How long a goal waits for its arrival (a crossing, or the forced re-arrival) before it fails by name. */
 export const ARRIVAL_WAIT_MS = 15000;
+/** ⛓ CROSS-LEVEL END — `stats.timeline` (an instrument, never acted on) keeps this many rows. */
+export const TIMELINE_ROWS = 200;
 /** ⛓ RESTART HOLD — `stats.arrivalWatch` keeps this many rows (≤ ~6 per expected arrival: ~10 Restarts whole). */
 export const ARRIVAL_WATCH_ROWS = 64;
 /** How long a QUEUED goal waits for the playing tape (a seal reveal is ~16 s, W0 i.13). */
@@ -288,6 +290,12 @@ export function createWasmPlayback({
      * — a tick the game state fixes — instead of wherever the next tape had got to when the round trip came back.
      */
     let selfCheck = null;
+    /**
+     * ⛓ CROSS-LEVEL END — a goal the bot queued behind a CROSSING location leg in the room that leg LEFT (it routed
+     * off its pre-crossing region): `{goal, since, row}`. Beginning it would release the new held arrival, so the
+     * room stays held while the bot's re-route replaces it; past `QUEUE_WAIT_MS` it is begun as before (named).
+     */
+    let stale = null;
     /** Warm the worker now, so the first solve does not pay the module load inside its budget (S2). */
     try { svc().warm?.(); } catch { /* no Worker here: the first start says so */ }
     const stats = { arrivals: 0, forced: 0, solves: 0, ships: 0, hostStarts: [], done: 0, failed: 0, divergences: 0,
@@ -320,8 +328,14 @@ export function createWasmPlayback({
         // a Restart's start hop), from the arming to the hold: `expect`, `walkTo`, `begin` (a re-base) / `begin-keep`,
         // `seen`, `stop-drop`. Only those rows, so the cap (`ARRIVAL_WATCH_ROWS`) keeps the last ~10 handshakes whole.
         arrivalWatch: [],
-        // ⛓ CROSS-LEVEL END (diag) — the engine's goal-level events with the game's clock: begin / finish / release /
-        // self-check / adoption / re-arrival / hold. A ring of TIMELINE_ROWS.
+        // ⛓ CROSS-LEVEL END — goals queued behind a crossing location leg in the room it left: `{goal, level, outcome}`
+        // (`replaced` by the bot's next walkTo, or `begun` after QUEUE_WAIT_MS — the named fallback)
+        staleGoals: [],
+        // ⛓ CROSS-LEVEL END — location legs whose plan ends in another level: `{goal, from, to, outcome}` (`held-arrival`,
+        // or the fallbacks `held-end` (no arrival watch: re-entered in one turn) / `unheld-end`)
+        crossLevelEnds: [],
+        // ⛓ CROSS-LEVEL END (an instrument, never acted on) — the engine's goal-level events with the game's clock:
+        // begin / solve / finish / hold / release / self-check / adoption refusal / re-arrival. A ring of TIMELINE_ROWS.
         timeline: [] };
     const history = [];
     /** ⛓ WG — the reads of the last few arrivals (the probe's fixture recorder; never read back here). */
@@ -343,12 +357,19 @@ export function createWasmPlayback({
         if (timer) { try { timer.t.clearTimeout(timer.h); } catch { /* gone */ } timer = null; }
     }
     function note(n) { try { onNote(n); } catch { /* a listener's bug */ } }
+    /** ⛓ CROSS-LEVEL END — the stale goal is gone (`outcome` names how); its row keeps the outcome. */
+    function dropStale(outcome) {
+        if (!stale) return;
+        stale.row.outcome = outcome;
+        stale.row.waitedMs = Math.round(now() - stale.since);
+        stale = null;
+    }
     function tl(e, extra = {}, given = undefined) {
         let st = given ?? null;
         if (given === undefined) { try { st = J(game()?.botStatus?.()); } catch { st = null; } }
         stats.timeline.push({ e, t: Math.round(now()), gt: st?.game_time ?? null, lv: st?.level ?? null, held: st?.held ?? null,
             phase, room: room?.level ?? null, goal: goal?.name ?? null, ...extra });
-        if (stats.timeline.length > 200) stats.timeline.shift();
+        if (stats.timeline.length > TIMELINE_ROWS) stats.timeline.shift();
     }
     const readState = () => J(game()?.readState?.()) ?? {};
     const seam = () => J(game()?.botSeam?.()) ?? {};
@@ -367,6 +388,7 @@ export function createWasmPlayback({
     function release(st = undefined) {
         room = null;
         selfCheck = null;
+        dropStale('released');
         const wasFrozen = frozen;
         frozen = null;
         if (!ours) return;
@@ -468,6 +490,8 @@ export function createWasmPlayback({
         if (refusal) return { ok: false, reason: refusal };
         const live = readState();
         if (!Number.isInteger(live.level)) return { ok: false, reason: 'the game reports no level (is it started?)' };
+        // ⛓ CROSS-LEVEL END — the bot's re-route: the goal queued off its pre-crossing region is replaced.
+        dropStale('replaced');
         driving = true;
         engageGate();
         // ⛓ MID-ROOM REPLAN — a delivery is landing in the held room: the goal waits for it (then is served from it).
@@ -485,7 +509,8 @@ export function createWasmPlayback({
             play = null;
             phase = 'held';
         }
-        const heldLevel = holds && room && phase === 'held' ? room.level : null;
+        // ⛓ CROSS-LEVEL END — a held end in ANOTHER level (`room.endLevel`, the fallback) is held there.
+        const heldLevel = holds && room && phase === 'held' ? (room.endLevel ?? room.level) : null;
         let action = goalAction({ goal: g, liveLevel: live.level, playing: phase === 'playing', heldLevel });
         // ⛓ W7 — an exit plan's crossing is in flight: the goal waits for the HELD arrival, never a teleport back.
         if (action === 'force-re-arrival' && glueQuery && arriving) action = 'await-arrival';
@@ -563,7 +588,7 @@ export function createWasmPlayback({
         const state = readState();
         const record = records.get(g.level) ?? null;
         const refused = (clause, why) => {
-            if (transient && adoptRefusalIsTransient(clause, arrived.beginEntry)) { tl('adopt-transient', { clause }); return { transient: { clause, why } }; }
+            if (transient && adoptRefusalIsTransient(clause, arrived.beginEntry)) return { transient: { clause, why } };
             tl('adopt-refused', { clause });
             stats.adoptRefused.push({ level: g.level, clause, why });
             return `${clause}: ${why}`;
@@ -946,6 +971,21 @@ export function createWasmPlayback({
             play = null;
             goal = null;
             enterHeld();
+            if (leg.crossing) {
+                // ⛓ CROSS-LEVEL END — a LOCATION leg that crossed: its check fired inside the tape, so its AP round trip
+                // is outstanding — the next goal waits for it in the ARRIVED room (⛓ DELIVERY TICK), held at its landing.
+                stats.crossLevelEnds.push({ goal: g?.name ?? null, from: leg.crossing.from, to: level, outcome: 'held-arrival' });
+                selfCheck = g?.kind === 'location' && g.name && typeof delivery()?.checked === 'function'
+                    ? { location: g.name, level, tick: 0, since: now(), deliveries: stats.deliveries.length } : null;
+                if (queued && queued.goal.level !== level) {
+                    // The bot routed off its PRE-crossing region (the check fired before the pit): beginning that goal
+                    // would release this hold for a room the player left. Held while the bot's re-route replaces it.
+                    const row = { goal: queued.goal.name ?? null, level: queued.goal.level, held: level, outcome: 'waiting' };
+                    stats.staleGoals.push(row);
+                    stale = { goal: queued.goal, since: now(), row };
+                    queued = null;
+                }
+            }
             const done = { goal: g, producer: leg.plan.producer ?? 'solver', ticks: leg.ticks,
                 drained: leg.progress.ticks, verbs: leg.plan.verbs, solvedMs: leg.solvedMs, divergence: leg.divergence, recoveries,
                 end: { level, x: st.x, y: st.y }, expectedEnd: leg.plan.expected.at(-1), heldArrival: level,
@@ -1019,6 +1059,17 @@ export function createWasmPlayback({
     function solveInRoom() {
         if (awaitSelfCheck()) return;
         const r = room;
+        if (Number.isInteger(r.endLevel) && r.endLevel !== r.level) {
+            // ⛓ CROSS-LEVEL END, the FALLBACK — the held end is in another level than the room's staging (no arrival
+            // watch held the landing). Its begin record cannot be read back (`botReset` clears it), so no adoption can
+            // succeed: re-enter in THIS turn, the release and the teleport's push together, from a clock the hold stopped.
+            const live = readState();
+            spawn = { x: live.playerPositionX, y: live.playerPositionY };
+            release();
+            reArrive(`re-entering level ${goal.level} to solve from an arrival (${FALLBACK_POLICY}: the last tape's held end `
+                + `is in level ${goal.level}, the room it was staged in is level ${r.level})`, 'cross-level-end');
+            return;
+        }
         const record = records.get(goal.level) ?? null;
         spawn = r.spawn;
         if (r.shipped.length === 0) {
@@ -1316,7 +1367,14 @@ export function createWasmPlayback({
         const slotWhy = equipSlotRefusal({ equipsAt: plan.equipsAt, equipItems: plan.equipItems, slots: st?.inventory_slots ?? [] });
         if (slotWhy) { fail(`the plan tape was not shipped — ${slotWhy}`); return; }
         const equips = tapeEquips(plan.equipsAt);
-        const hold = holds && endsHeld(goal);
+        // ⛓ CROSS-LEVEL END — a LOCATION plan that ends in ANOTHER level (its own `expected` rows say so: L32's Bob
+        // Boss, the burn then the pit to L30) is a CROSSING in flight, as an exit plan is: shipped un-held, its landing
+        // held by the arrival watch at the begin record (`holdArrival`), never at the tape's end in a room staged as
+        // the one it left. Without the glue query no watch can hold it: it keeps its held end (the fallback in
+        // `solveInRoom`).
+        const crossTo = crossLevelEnd(goal, plan);
+        const crossing = holds && glueQuery && crossTo !== null;
+        const hold = holds && endsHeld(goal) && !crossing;
         let tape;
         try {
             tape = shippedTape({ staging: play.continuation ? liveDeclarations(staging, st, { granted: apSave() }) : staging, keys: plan.solution, hold, equips,
@@ -1351,6 +1409,7 @@ export function createWasmPlayback({
         stats.ships += 1;
         play.ticks = plan.solution.length;
         play.hold = hold;
+        play.crossing = crossing ? { from: goal.level, to: crossTo } : null;
         play.equips = equips;
         play.progress = foldDrain(null, null);
         play.divergence = null;
@@ -1443,6 +1502,15 @@ export function createWasmPlayback({
             equips: play.equips ?? [], ...solvedBy(play) };
         const heldEnd = done.heldEnd && room !== null;
         tl('finish', { heldEnd, endLevel: st.level, roomLevel: room?.level ?? null }, st);
+        // ⛓ CROSS-LEVEL END — the fallbacks: a held end in another level (no watch could hold the landing) is held
+        // THERE (`room.endLevel`: the next goal in it re-enters in one turn, `solveInRoom`); a crossing whose landing
+        // the watch never held ends un-held (the next goal's cold start, as before), named.
+        if (heldEnd && Number.isInteger(st.level) && st.level !== room.level) {
+            room.endLevel = st.level;
+            stats.crossLevelEnds.push({ goal: goal?.name ?? null, from: room.level, to: st.level, outcome: 'held-end' });
+        } else if (play.crossing) {
+            stats.crossLevelEnds.push({ goal: goal?.name ?? null, from: play.crossing.from, to: st.level ?? null, outcome: 'unheld-end' });
+        }
         // ⛓ DELIVERY TICK — a LOCATION goal's check fired inside its tape: its AP round trip is outstanding.
         selfCheck = heldEnd && goal?.kind === 'location' && goal.name && typeof delivery()?.checked === 'function'
             ? { location: goal.name, level: room.level, tick: room.shipped.length, since: now(), deliveries: stats.deliveries.length } : null;
@@ -1474,6 +1542,16 @@ export function createWasmPlayback({
     /** ⛓ W7 — a HELD room with no goal: watch the glue (a raced redirect is let through). */
     function heldGuard() {
         if (phase !== 'held') return;
+        if (stale && now() - stale.since > QUEUE_WAIT_MS) {
+            // ⛓ CROSS-LEVEL END — the named fallback: no re-route came; the stale goal is begun as it was queued.
+            const s = stale;
+            dropStale('begun');
+            log(`[wasm playback] the goal ${s.goal.name ?? s.goal.kind} queued behind a crossing waited `
+                + `${QUEUE_WAIT_MS / 1000} s for the bot's re-route — begun as queued`, 'warn');
+            const r = begin(s.goal);
+            if (!r.ok) fail(r.reason);
+            return;
+        }
         if (releaseForSwap()) return;
         schedule(heldGuard, DRAIN_MS);
     }
@@ -1942,7 +2020,7 @@ export function createWasmPlayback({
             return { phase, goal, generated, producer: walkerInstrument ? WALK_TAPE_PRODUCER : 'solver', queued: queued?.goal ?? null, ticks: play?.ticks ?? null,
                 drained: play?.progress?.ticks ?? null, divergence: play?.divergence ?? null, recoveries,
                 // ⛓ W7 — the held room (its level and how many key sets the shadow replays), and whether a crossing is in flight
-                room: room ? { level: room.level, shipped: room.shipped.length, plans: room.plans ?? 0, talkCircles: room.talkCircles?.length ?? 0 } : null, driving, arriving,
+                room: room ? { level: room.level, endLevel: room.endLevel ?? null, shipped: room.shipped.length, plans: room.plans ?? 0, talkCircles: room.talkCircles?.length ?? 0 } : null, driving, arriving,
                 // ⛓ MID-ROOM REPLAN — the gate: installed, a delivery held back, the room a refused one waits out
                 gate: gate ? { pending: !!gate.pending, deferred: gate.deferred ? { clause: gate.deferred.clause, why: gate.deferred.why } : null } : null,
                 // ⛓ DELIVERY TICK — the bot's own check the next goal waits on
@@ -1957,7 +2035,8 @@ export function createWasmPlayback({
                 deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred],
                 swapPushes: stats.swapPushes.map((r) => ({ ...r })), shipClock: stats.shipClock.map((r) => ({ ...r })),
                 adoptClock: stats.adoptClock.map((r) => ({ ...r })), selfChecks: stats.selfChecks.map((r) => ({ ...r })),
-                timeline: stats.timeline.map((r) => ({ ...r })) };
+                timeline: stats.timeline.map((r) => ({ ...r })), staleGoals: stats.staleGoals.map((r) => ({ ...r })),
+                crossLevelEnds: stats.crossLevelEnds.map((r) => ({ ...r })) };
         },
         /** ⛓ WG — the last arrivals' raw reads (`{seam, status, state}`), for a fixture recorder. */
         get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },

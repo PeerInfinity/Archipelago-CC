@@ -345,6 +345,8 @@ async function main() {
                 adoptClock: st.adoptClock ?? null, shipGaps: (st.shipClock ?? []).map((r) => r.gap), forcedBy: st.forcedBy, adoptRefused: st.adoptRefused,
                 // ⛓ RESTART HOLD — the expected arrivals (a Restart's start hop) and the watch's rows around each
                 expectedArrivals: st.expectedArrivals ?? null, arrivalWatch: st.arrivalWatch ?? null,
+                // ⛓ CROSS-LEVEL END — location legs ending in another level, the goals held behind them, the bot's self-checks
+                crossLevelEnds: st.crossLevelEnds ?? null, staleGoals: st.staleGoals ?? null, selfChecks: st.selfChecks ?? null,
                 held: st.held, continuations: st.continuations, divergences: st.divergences, recoveries: st.recoveries,
                 failed: st.failed, done: st.done, hostStarts: (st.hostStarts ?? []).map((h) => h.label),
                 // ⛓ ANYTIME — the budget the engine solves under, its expiries / provisional plays / held retries
@@ -393,7 +395,7 @@ async function main() {
                     // ⛓ DELIVERY TICK — each self-check the next goal waited on, and the deliveries the game already showed
                     selfChecks: st.selfChecks ?? null, deliveryInGame: st.deliveryInGame ?? null, arrivalWatch: st.arrivalWatch ?? null, heldChecks: st.heldChecks, adoptRefused: st.adoptRefused,
                     history: st.history.map((h) => ({ ...h, goal: { name: h.goal?.name ?? null, kind: h.goal?.kind ?? null, level: h.goal?.level ?? null } })),
-                    arrivalReads: e.arrivalReads, timeline: st.timeline ?? null }));
+                    arrivalReads: e.arrivalReads, timeline: st.timeline ?? null, crossLevelEnds: st.crossLevelEnds ?? null, staleGoals: st.staleGoals ?? null }));
             });
             const solves = await page.evaluate(() => window.__solveLog ?? null);
             // ⛓ WALK IDENTITY — the glue's Restart decisions and the start-hop pushes they made
@@ -523,6 +525,14 @@ async function main() {
                 !(eng.forcedBy?.['no-held-arrival'] > 0) && (eng.expectedArrivals ?? 0) >= 1
                     && watchRows.filter((r) => r.at === 'expect').length === watchRows.filter((r) => r.at === 'held').length,
                 JSON.stringify({ forcedBy: eng.forcedBy, expectedArrivals: eng.expectedArrivals, rows: watchRows.map((r) => r.at) }));
+            // ⛓ CROSS-LEVEL END — a location leg whose plan ends in another level (L32 Bob Boss → L30) is HELD at its
+            // landing (no `held-end` / `unheld-end` fallback, no `cross-level-end` re-arrival), and its own check SETTLES.
+            const cross = eng.crossLevelEnds ?? [];
+            out('B cross-level ends', { cross, staleGoals: eng.staleGoals ?? [] });
+            check('B: every location leg that ends in another level is HELD at its landing, and its own check settles',
+                cross.every((r) => r.outcome === 'held-arrival') && !(eng.forcedBy?.['cross-level-end'] > 0)
+                    && cross.every((r) => (eng.selfChecks ?? []).some((c) => c.location === r.goal && c.settled === true)),
+                JSON.stringify({ cross, forcedBy: eng.forcedBy, selfChecks: (eng.selfChecks ?? []).filter((c) => cross.some((r) => r.goal === c.location)) }));
             check('B: 0 backstops (the wall clock never ended a solve)', eng.backstops === 0, JSON.stringify({ backstops: eng.backstops, backstopMs: eng.backstopMs }));
             check('B: the walk ends FINISHED, with a NAMED refusal, or on the budget — never a silent stall',
                 (end?.status ?? '').startsWith('finished') || (end?.status ?? '').startsWith('error') || Date.now() - t0 >= BUDGET_MS,
