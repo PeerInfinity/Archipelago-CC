@@ -12101,7 +12101,7 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
         .map((c) => ({ ...c, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) }))
         .sort((a, b) => a.d - b.d);
     /**
-     * ⛓⛓ HAMMER-PHASE C3 — THE SPEAR FIRST (`ICE_TURRET_SPEAR_ARM`, OFF by default). Asked before the sword sides
+     * ⛓⛓ HAMMER-PHASE C3 — THE SPEAR FIRST (`ICE_TURRET_SPEAR_ARM`, ON by default). Asked before the sword sides
      * because a sword side's refusal is the expensive one: L98's below-side walk exhausts the axe ladder (12,365 work
      * units from (96,112)) before it gives way, which is why the divergence sweep read the room as budget-bound. A
      * spear arm that answers `why` spent no tick, and the sword sides follow exactly as OFF.
@@ -12184,7 +12184,7 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
         ticks: perTick.length - from };
 }
 /**
- * ⛓⛓ HAMMER-PHASE C3 — THE ICE TURRET'S SPEAR ARM (`ICE_TURRET_SPEAR_ARM`, OFF by default; `=1` opts in).
+ * ⛓⛓ HAMMER-PHASE C3 — THE ICE TURRET'S SPEAR ARM (`ICE_TURRET_SPEAR_ARM`, ON by default since ⚖ the user's flip of 2026-10-11; `=0` opts out).
  *
  * `Player.spear()` hits every hitable under its 32x5 rect (`presses.spearRect`) with NO distance and NO
  * `collideLine("Solid")` gate (`Player.as:954-990`), where `slash()` has both. So a spear reaches an `IceTurret`
@@ -12197,7 +12197,7 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
  * the user's to flip. OFF, `killIceTurretInPlace` never asks it — the byte-inert state.
  */
 export const ICE_TURRET_SPEAR_ARM = {
-    enabled: globalThis.process?.env?.SEEDLING_ICE_TURRET_SPEAR_ARM === '1',
+    enabled: globalThis.process?.env?.SEEDLING_ICE_TURRET_SPEAR_ARM !== '0',
 };
 
 /** Run `fn` with `ICE_TURRET_SPEAR_ARM` set to `enabled`, restoring the previous value (`withStaticSwordArm`'s shape). */

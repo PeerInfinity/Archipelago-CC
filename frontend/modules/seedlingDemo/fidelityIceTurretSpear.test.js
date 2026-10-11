@@ -65,12 +65,13 @@ describe('C3 D1 — the spear through the wall, on the game (c3-d1-l98-spear-wes
     });
 });
 
-describe('C3 D2 — `ICE_TURRET_SPEAR_ARM` (OFF by default): the solver\'s ON plan crosses on the game (c3-l98-spear-l93)', () => {
+describe('C3 D2 — `ICE_TURRET_SPEAR_ARM` (ON by default): the solver\'s ON plan crosses on the game (c3-l98-spear-l93)', () => {
     const w = ARMS.get('c3-l98-spear-l93');
     const m = modelReadings(w.tape);
 
-    it('ships OFF (`SEEDLING_ICE_TURRET_SPEAR_ARM=1` opts in)', () => {
-        expect(ICE_TURRET_SPEAR_ARM.enabled).toBe(globalThis.process?.env?.SEEDLING_ICE_TURRET_SPEAR_ARM === '1');
+    /* ⚖ the user's flip (2026-10-11): ON by default; `SEEDLING_ICE_TURRET_SPEAR_ARM=0` is the opt-out. */
+    it('ships ON (`SEEDLING_ICE_TURRET_SPEAR_ARM=0` opts out)', () => {
+        expect(ICE_TURRET_SPEAR_ARM.enabled).toBe(globalThis.process?.env?.SEEDLING_ICE_TURRET_SPEAR_ARM !== '0');
         expect(withIceTurretSpearArm(true, () => ICE_TURRET_SPEAR_ARM.enabled)).toBe(true);
         expect(withIceTurretSpearArm(false, () => ICE_TURRET_SPEAR_ARM.enabled)).toBe(false);
     });

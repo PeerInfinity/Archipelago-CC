@@ -15475,6 +15475,8 @@ state*, `KEEP_POLICY` removal when convenient, then oracle and solver features
 **as the vanilla playthrough needs them**. The splice stays R9's first solver
 act (R8's close, option A).
 
+**C3-ON (harvest, 2026-10-11).** ⚖ The user: *"Turn it ON"*. `ICE_TURRET_SPEAR_ARM` defaults ON; `SEEDLING_ICE_TURRET_SPEAR_ARM=0` is the opt-out. C3's D3 measured no committed mover ON (identity block, r9-campaign `712f0ead` with `r9-solve-16` as the control, ENEMY `afdc6d1a`, tapeRunner pairs); the live change is the two L98 legs (745 SOLVED 853 t within the page's retry; 748 refused by name). With the default now `!== '0'`, the page worker (no `process`) runs it ON too, which C3's report noted it could not do OFF-by-default.
+
 ### Seedling fidelity WALLFLYER — a wallflyer dies (and keeps flying while it does), and the shield turns one
 
 Wave 9 (model coverage). The live playthrough's next wall after the hammer arc: survey step 47 (L22 → L29) and the
