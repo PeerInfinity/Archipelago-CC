@@ -104,7 +104,7 @@
             "index": 1
         }
     },
-    "tick_count": 371,
+    "tick_count": 347,
     "inputs": [
         {
             "key": "down",
@@ -237,76 +237,121 @@
             "to": 190
         },
         {
+            "key": "primary",
+            "from": 195,
+            "to": 196
+        },
+        {
+            "key": "primary",
+            "from": 203,
+            "to": 204
+        },
+        {
+            "key": "primary",
+            "from": 215,
+            "to": 216
+        },
+        {
             "key": "up",
             "from": 191,
-            "to": 244
+            "to": 218
+        },
+        {
+            "key": "primary",
+            "from": 217,
+            "to": 218
         },
         {
             "key": "down",
-            "from": 246,
-            "to": 248
-        },
-        {
-            "key": "left",
-            "from": 252,
-            "to": 263
-        },
-        {
-            "key": "right",
-            "from": 263,
-            "to": 264
-        },
-        {
-            "key": "left",
-            "from": 264,
-            "to": 265
-        },
-        {
-            "key": "right",
-            "from": 265,
-            "to": 266
-        },
-        {
-            "key": "left",
-            "from": 266,
-            "to": 267
+            "from": 218,
+            "to": 221
         },
         {
             "key": "up",
-            "from": 271,
-            "to": 276
-        },
-        {
-            "key": "primary",
-            "from": 355,
-            "to": 356
-        },
-        {
-            "key": "primary",
-            "from": 357,
-            "to": 358
-        },
-        {
-            "key": "up",
-            "from": 355,
-            "to": 364
-        },
-        {
-            "key": "primary",
-            "from": 363,
-            "to": 364
+            "from": 221,
+            "to": 222
         },
         {
             "key": "down",
-            "from": 364,
-            "to": 365
+            "from": 222,
+            "to": 223
         },
         {
             "key": "up",
-            "from": 365,
-            "to": 371
+            "from": 223,
+            "to": 224
+        },
+        {
+            "key": "left",
+            "from": 228,
+            "to": 239
+        },
+        {
+            "key": "right",
+            "from": 239,
+            "to": 240
+        },
+        {
+            "key": "left",
+            "from": 240,
+            "to": 241
+        },
+        {
+            "key": "right",
+            "from": 241,
+            "to": 242
+        },
+        {
+            "key": "left",
+            "from": 242,
+            "to": 243
+        },
+        {
+            "key": "up",
+            "from": 247,
+            "to": 252
+        },
+        {
+            "key": "primary",
+            "from": 331,
+            "to": 332
+        },
+        {
+            "key": "primary",
+            "from": 333,
+            "to": 334
+        },
+        {
+            "key": "up",
+            "from": 331,
+            "to": 340
+        },
+        {
+            "key": "primary",
+            "from": 339,
+            "to": 340
+        },
+        {
+            "key": "down",
+            "from": 340,
+            "to": 341
+        },
+        {
+            "key": "up",
+            "from": 341,
+            "to": 346
+        },
+        {
+            "key": "primary",
+            "from": 345,
+            "to": 346
+        },
+        {
+            "key": "down",
+            "from": 346,
+            "to": 347
         }
     ],
     "tape_version": 8,
-    "description": "⛓⛓⛓ SEEDLING FIDELITY L30KEYLOCK D2/D3 — the AFTER: survey step 52's staging (see `l30keylock-pit224-before`) at the pit landing (224,80), solved with `KILL_STANCE_TARGET_RESCAN` and `KEYLOCK_WAIT_PRICED` ON: 371 t. The keylock's wait is priced as the stance walk's tail, so the ladder climbs; the kill rung's chaser arm finds no stance in the player's box and scans the body's: (88,120), where the dwell kills bobsoldier@48,80 in 26 of its 57-tick bound; then bosslock@64,32's key line and teleporter@64,0 → L22. Authored by scripts/procgen/plan-seedling-l30keylock.mjs."
+    "description": "⛓⛓⛓ SEEDLING FIDELITY L30KEYLOCK D2/D3 — the AFTER: survey step 52's staging (see `l30keylock-pit224-before`) at the pit landing (224,80), solved with `KILL_STANCE_TARGET_RESCAN` and `KEYLOCK_WAIT_PRICED` ON: 347 t. The keylock's wait is priced as the stance walk's tail, so the ladder climbs; the kill rung's chaser arm finds no stance in the player's box and scans the body's: (88,120), where the dwell kills bobsoldier@48,80 in 26 of its 57-tick bound; then bosslock@64,32's key line and teleporter@64,0 → L22. Authored by scripts/procgen/plan-seedling-l30keylock.mjs."
 }

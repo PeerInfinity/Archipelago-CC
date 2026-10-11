@@ -372,14 +372,14 @@
     },
     {
       "file": "l30keylock-pit224.json",
-      "tickCount": 371,
+      "tickCount": 347,
       "bootLevel": 30,
       "tapeVersion": 8,
       "noHazards": []
     },
     {
       "file": "l30keylock-pit240.json",
-      "tickCount": 386,
+      "tickCount": 360,
       "bootLevel": 30,
       "tapeVersion": 8,
       "noHazards": []

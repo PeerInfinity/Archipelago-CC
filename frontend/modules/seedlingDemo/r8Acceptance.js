@@ -1362,15 +1362,15 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'game\'s own `hits` is the model\'s.',
         }),
         Object.freeze({
-            name: 'l30keylock-pit224', levels: Object.freeze([22, 30]), bobs: 1, ticks: 371,
+            name: 'l30keylock-pit224', levels: Object.freeze([22, 30]), bobs: 1, ticks: 347,
             addedBy: 'Seedling fidelity L30KEYLOCK D2 (the AFTER from (224,80): the solver\'s own plan, both switches ON)',
-            why: 'the keylock\'s wait priced, the kill from (88,120) (the body gone at t 191), the key line at t 276, '
-                + 'the lock open at t 355, teleporter@64,0 -> L22. Zero hits. Recorded on the game; the model reproduces it.',
+            why: 'the keylock\'s wait priced, the kill from (88,120) (the body gone at t 191), the key line at t 252, '
+                + 'the lock open at t 331, teleporter@64,0 -> L22. Zero hits. Recorded on the game; the model reproduces it.',
         }),
         Object.freeze({
-            name: 'l30keylock-pit240', levels: Object.freeze([22, 30]), bobs: 1, ticks: 386,
+            name: 'l30keylock-pit240', levels: Object.freeze([22, 30]), bobs: 1, ticks: 360,
             addedBy: 'Seedling fidelity L30KEYLOCK D3 (the AFTER from the other pit landing (240,80))',
-            why: 'the kill from (88,120) (the body gone at t 207), the key line at t 291, the lock open at t 370, '
+            why: 'the kill from (88,120) (the body gone at t 207), the key line at t 265, the lock open at t 344, '
                 + 'teleporter@64,0 -> L22. Zero hits — the base solver\'s walk from here DIES on the key line. Recorded on '
                 + 'the game; the model reproduces it.',
         }),
