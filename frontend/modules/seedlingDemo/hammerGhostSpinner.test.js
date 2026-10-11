@@ -91,8 +91,10 @@ describe('the switch', () => {
     });
 
     it('the press row is the ghost\'s only with the switch ON and a ghost primary; its numbers are imported', () => {
-        expect(spinnerStrikePress('ghostsword')).toBe(SWORD_SPINNER_PRESS);
-        expect(ghostSpinnerPressFor('ghostsword')).toBe(false);
+        withGhostSpinnerPress(false, () => {
+            expect(spinnerStrikePress('ghostsword')).toBe(SWORD_SPINNER_PRESS);
+            expect(ghostSpinnerPressFor('ghostsword')).toBe(false);
+        });
         withGhostSpinnerPress(true, () => {
             expect(spinnerStrikePress('ghostsword')).toBe(GHOST_SPINNER_PRESS_ROW);
             expect(spinnerStrikePress('sword')).toBe(SWORD_SPINNER_PRESS);
@@ -119,14 +121,16 @@ describe(`D2 — the forecasts on the game witness \`${WITNESS}\``, () => {
     });
 
     it('OFF (the BEFORE model): a ghost press forecasts NO landing, and the fight cursor leaves the run at the first', () => {
-        const w = walk(WITNESS);
-        const fs = pressForecasts(w);
-        expect(fs.filter((x) => x.f.landing !== null)).toEqual([]);
-        expect(fs[0].f.why).toMatch(/no test's rect reached a body/);
-        expect(fs[0].diverged[0]).toBe(27);
-        const { c, diverged } = fightCursor(w);
-        expect(c.tests).toEqual([]);
-        expect(diverged[0]).toBe(27);
+        withGhostSpinnerPress(false, () => {
+            const w = walk(WITNESS);
+            const fs = pressForecasts(w);
+            expect(fs.filter((x) => x.f.landing !== null)).toEqual([]);
+            expect(fs[0].f.why).toMatch(/no test's rect reached a body/);
+            expect(fs[0].diverged[0]).toBe(27);
+            const { c, diverged } = fightCursor(w);
+            expect(c.tests).toEqual([]);
+            expect(diverged[0]).toBe(27);
+        });
     });
 
     it('⛓⛓⛓ ON: each press\'s forecast is the run\'s, byte for byte, up to the next press — and its landing is the run\'s', () => {
@@ -155,8 +159,8 @@ describe(`D2 — the forecasts on the game witness \`${WITNESS}\``, () => {
     });
 
     it('ON leaves a SWORD press\'s forecast byte-identical (`r9-solve-18`, every press)', () => {
-        const w = walk('r9-solve-18');
-        const off = JSON.stringify(pressForecasts(w).map((x) => [x.f.landing, x.f.tests, x.diverged]));
+        const off = withGhostSpinnerPress(false, () => JSON.stringify(pressForecasts(walk('r9-solve-18'))
+            .map((x) => [x.f.landing, x.f.tests, x.diverged])));
         const on = withGhostSpinnerPress(true, () => JSON.stringify(pressForecasts(walk('r9-solve-18'))
             .map((x) => [x.f.landing, x.f.tests, x.diverged])));
         expect(on).toBe(off);
@@ -193,7 +197,7 @@ async function solveL18(items) {
 
 describe('D3 — the spinner press kill with the ghost sword (`r9-solve-18`\'s staging + `hasGhostSword`)', () => {
     it('OFF (the BEFORE model): refused at t0, by name — the kill arm derives a SWORD press', async () => {
-        const off = await solveL18({ hasGhostSword: true });
+        const off = await withGhostSpinnerPress(false, () => solveL18({ hasGhostSword: true }));
         expect(off.verdict).toBe('REFUSED');
         expect(off.why).toMatch(/the kill work order has no weapon — the run's `primary` slot fires `ghostsword`/);
     });
@@ -220,7 +224,7 @@ describe('D3 — the spinner press kill with the ghost sword (`r9-solve-18`\'s s
     });
 
     it('ON leaves the SWORD\'s solve byte-identical (the committed staging, 518 ticks)', async () => {
-        const off = await solveL18({});
+        const off = await withGhostSpinnerPress(false, () => solveL18({}));
         const on = await withGhostSpinnerPress(true, () => solveL18({}));
         expect(off.ticks).toBe(518);
         expect(on.keys).toEqual(off.keys);
