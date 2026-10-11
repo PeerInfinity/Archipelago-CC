@@ -43,13 +43,20 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 
 - **Guided Tour** ([guide](../guided-tour.md)) — Watch a generated world play itself, see the logic underneath, and generate a world of your own. `?tutorial=guided-tour`
 
+### Procgen
+
+- **Procgen: Shuffled spiral, with Maze** ([guide](../tutorials/procgen-shuffled-spiral.md)) — Generate a maze-only world with the Shuffled spiral mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-shuffled-spiral`
+- **Procgen: Grid growth, with Maze** ([guide](../tutorials/procgen-grid-growth.md)) — Generate a maze-only world with the legacy Grid growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-grid-growth`
+
+### MetaMath, DepGraph and APCalc
+
+- **APCalc: generate a world** ([guide](../tutorials/apcalc-generator.md)) — Generate a new APCalc map with the APCalc Generator, play it, and package it as a .apworld. `?tutorial=apcalc-generator`
+
 ### In progress
 
 Written, but not working all the way through yet. The panel lists these in a collapsed section and marks the step where each one stops.
 
 - **Procgen: Sphere growth, with Maze** — Generate a maze-only world with the Sphere growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-sphere-growth`
-- **Procgen: Shuffled spiral, with Maze** — Generate a maze-only world with the Shuffled spiral mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-shuffled-spiral`
-- **Procgen: Grid growth, with Maze** — Generate a maze-only world with the legacy Grid growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-grid-growth`
 - **Procgen: Top-down, with Maze** — Turn an existing game's region graph (Adventure) into a world of mazes with the Top-down mode, and watch the Playback Bot finish it. `?tutorial=procgen-top-down`
 - **Procgen: settings and the Playback Bot** — Change a generated world's seed and size, run the pipeline one step at a time, and drive the Playback Bot by hand. `?tutorial=procgen-settings-and-bot`
 - **Procgen: from a generated world to a multiworld** — Take a generated world through the APWorld Editor to a .apworld, play it on a local Archipelago server, and let the Playback Bot send the checks. `?tutorial=procgen-to-multiworld`
@@ -64,7 +71,6 @@ Written, but not working all the way through yet. The panel lists these in a col
 - **DepGraph: more graphs, and your own** — Load DepGraph's other bundled graphs, see one in the Region Graph, and turn a task list of your own into a game. `?tutorial=depgraph-extras`
 - **DepGraph: in a multiworld** — Host a DepGraph graph on a local Archipelago server and solve it from the app. `?tutorial=depgraph-multiworld`
 - **APCalc: the calculator game** — Play APCalc: a calculator whose number and operation keys are the items, and whose results are the locations. `?tutorial=apcalc-demo`
-- **APCalc: generate a world** — Generate a new APCalc map with the APCalc Generator, play it, and package it as a .apworld. `?tutorial=apcalc-generator`
 - **APCalc: in a multiworld** — Host APCalc on a local Archipelago server and play it from the app. `?tutorial=apcalc-multiworld`
 
 ### Panels with no tutorial

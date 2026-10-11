@@ -1,6 +1,6 @@
 /**
  * Procgen: Shuffled spiral, with Maze (catalogue P1, one tutorial per mode — ⚖
- * the user, 2026-10-10). In progress: its walk row measures `firstFailingStep`.
+ * the user, 2026-10-10). Ready (⚖ the user, 2026-10-10); its walk row holds it.
  * Shape: ../../tutorialShape.js; shared steps: ../steps/procgen.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -14,9 +14,8 @@ export const PROCGEN_SHUFFLED_SPIRAL = Object.freeze({
     title: 'Procgen: Shuffled spiral, with Maze',
     summary: 'Generate a maze-only world with the Shuffled spiral mode, load it, and watch the Playback Bot finish it.',
     track: 'procgen',
-    status: 'in-progress',
-    firstFailingStep: null, // every step works since the bot's same-region flush; ready = the user's call
-    doc: null,
+    status: 'ready', // ⚖ the user, 2026-10-10 (tutorial-bugs)
+    doc: 'docs/json/user/tutorials/procgen-shuffled-spiral.md',
     intro: [
         { prose: '**Shuffled spiral** lays its regions out from a centre cell outwards, in shuffled zones, and then places the scenario\'s items so the world can be finished. You choose how many regions of each substrate it makes — here, mazes only.' },
     ],

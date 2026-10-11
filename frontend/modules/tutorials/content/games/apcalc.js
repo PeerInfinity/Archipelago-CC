@@ -1,8 +1,9 @@
 /**
  * APCalc: play a demo preset (catalogue A1), and generate a world of your own
  * with the APCalc Generator (A2, through the .apworld button F1 added). Default mode, modules on
- * in the Modules panel (⚖ the user, 2026-10-10). In progress: the walk rows
- * measure `firstFailingStep`. Shape: ../../tutorialShape.js.
+ * in the Modules panel (⚖ the user, 2026-10-10). apcalc-demo is in progress (its
+ * walk row measures `firstFailingStep`); apcalc-generator is ready (⚖ the user,
+ * 2026-10-10). Shape: ../../tutorialShape.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
  */
@@ -79,9 +80,8 @@ export const APCALC_GENERATOR = Object.freeze({
     title: 'APCalc: generate a world',
     summary: 'Generate a new APCalc map with the APCalc Generator, play it, and package it as a .apworld.',
     track: 'games',
-    status: 'in-progress',
-    firstFailingStep: null, // every step works since F1 (the .apworld button); ready = the user's call
-    doc: null,
+    status: 'ready', // ⚖ the user, 2026-10-10 (tutorial-bugs)
+    doc: 'docs/json/user/tutorials/apcalc-generator.md',
     intro: [
         { prose: 'The **APCalc Generator** builds APCalc maps in the browser: how many spheres, how many operations and numbers each one adds, how branchy the map is. The result plays at once, saves as a rules.json, and — with the .apworld button — becomes a game Archipelago can host.' },
     ],
