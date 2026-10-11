@@ -364,6 +364,27 @@
       "noHazards": []
     },
     {
+      "file": "l30keylock-pit224-before.json",
+      "tickCount": 212,
+      "bootLevel": 30,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "l30keylock-pit224.json",
+      "tickCount": 371,
+      "bootLevel": 30,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "l30keylock-pit240.json",
+      "tickCount": 386,
+      "bootLevel": 30,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "l71-button-lock.json",
       "tickCount": 160,
       "bootLevel": 71,

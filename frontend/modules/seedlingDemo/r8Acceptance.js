@@ -1352,6 +1352,28 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'corpse\'s blade timed at the next gate, the Torchpickup and stairsup@224,160 -> L32 at t 460. Zero hits. '
                 + 'Recorded on the game; the model reproduces it.',
         }),
+        /** ⛓⛓⛓ seedling-fidelity-l30keylock — THE KEYLOCK BESIDE THE BOBSOLDIER, BEFORE AND AFTER, declared before the roster measured them. */
+        Object.freeze({
+            name: 'l30keylock-pit224-before', levels: Object.freeze([30]), bobs: 1, ticks: 212,
+            addedBy: 'Seedling fidelity L30KEYLOCK D1 (the BEFORE: the unguarded wait on the key line)',
+            why: 'survey step 52\'s staging solved with both L30KEYLOCK switches OFF, cut where the next walk\'s gate '
+                + 'refused: the player stands on `bosslock@64,32`\'s key line from t 133 and `bobsoldier@48,80` lands a '
+                + 'sword hit (t 173) and a body hit (t 193) before the lock opens (t 212). Recorded on the game; the '
+                + 'game\'s own `hits` is the model\'s.',
+        }),
+        Object.freeze({
+            name: 'l30keylock-pit224', levels: Object.freeze([22, 30]), bobs: 1, ticks: 371,
+            addedBy: 'Seedling fidelity L30KEYLOCK D2 (the AFTER from (224,80): the solver\'s own plan, both switches ON)',
+            why: 'the keylock\'s wait priced, the kill from (88,120) (the body gone at t 191), the key line at t 276, '
+                + 'the lock open at t 355, teleporter@64,0 -> L22. Zero hits. Recorded on the game; the model reproduces it.',
+        }),
+        Object.freeze({
+            name: 'l30keylock-pit240', levels: Object.freeze([22, 30]), bobs: 1, ticks: 386,
+            addedBy: 'Seedling fidelity L30KEYLOCK D3 (the AFTER from the other pit landing (240,80))',
+            why: 'the kill from (88,120) (the body gone at t 207), the key line at t 291, the lock open at t 370, '
+                + 'teleporter@64,0 -> L22. Zero hits — the base solver\'s walk from here DIES on the key line. Recorded on '
+                + 'the game; the model reproduces it.',
+        }),
         /** ⛓⛓⛓ seedling-fidelity-wallflyer — THE WALLFLYER'S DEATH AND THE SHIELD'S TURN, written before the roster measured them. */
         Object.freeze({
             name: 'wallflyer-kill', levels: Object.freeze([22]), bobs: 1, ticks: 98,

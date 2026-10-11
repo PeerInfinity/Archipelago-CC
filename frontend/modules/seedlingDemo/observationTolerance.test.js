@@ -125,7 +125,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity PUSHBLOCK: +3 (269) — `pushblock-l65-reach-l63`, `pushblock-l65-reach-l68`, `pushblock-l65-sword-press`.
         // ⛓ fidelity ENCOUNTERS2 D2: +1 (270) — `enc-l32-live-arrival`, inert.
         // ⛓ fidelity L12KEYLINE: +1 (271) — `l12keyline-134-round`.
-        expect(names.length).toBe(271);
+        // ⛓ fidelity L30KEYLOCK: +3 (274) — `l30keylock-pit224-before`, `l30keylock-pit224`, `l30keylock-pit240`.
+        expect(names.length).toBe(274);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -185,7 +186,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity PUSHBLOCK: 269 — its three witnesses.
         // ⛓ fidelity ENCOUNTERS2 D2: 270 — the live-arrival witness falls to L30.
         // ⛓ fidelity L12KEYLINE: 271 — `l12keyline-134-round` crosses to L95.
-        expect(tally.swapped).toBe(271);
+        // ⛓ fidelity L30KEYLOCK: 274 with `l30keylock-pit224-before`, `l30keylock-pit224`, `l30keylock-pit240`.
+        expect(tally.swapped).toBe(274);
     }, 600_000);
 });
 
