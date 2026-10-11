@@ -4982,7 +4982,14 @@ export function dashPrefixesFor(mode, { weapon = 'sword' } = {}) {
  *   legs: ?number[], candidates: object[], why: ?string}}
  */
 export function planSwordDash(run, wps, { tolerance = 0, certify = null,
-    dashMode = DEFAULT_DASH_MODE } = {}) {
+    dashMode = DEFAULT_DASH_MODE,
+    /**
+     * ⛓ SEEDLING FIDELITY L30KEYLOCK — OPT-IN: `{ticks, keys}`, the wait the caller will stand at the corridor's end
+     * (`KEYLOCK_WAIT_PRICED`'s keylock hold). Each candidate is previewed with that tail and `certify` is handed the
+     * tail's samples after the walk's, so a dash that arrives early is priced on the wait it arrives into; every
+     * other number here (ticks, legs, the comparisons) reads the walk's own samples. `null` changes nothing.
+     */
+    stand = null } = {}) {
     /**
      * ⛓⛓⛓ R9 SLICE 12i — **THE PASS READS ITS CANDIDATE SET, NEVER THE
      * CONSTANT**, and the set is the mode's own derivation.
@@ -5043,7 +5050,11 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
     };
     const previewFor = (dashPlan) => {
         const strike = strikePolicyFor(run, { dashPlan, dashMode });
-        return { walk: previewWalk(run, wps, tolerance, { strike }), strike };
+        if (!stand) return { walk: previewWalk(run, wps, tolerance, { strike }), strike };
+        const whole = previewWalk(run, wps, tolerance, { strike, standFor: stand.ticks, standKeys: stand.keys });
+        const walk = { ...whole, samples: whole.samples.filter((sm) => sm.phase !== 'dwell'),
+            tail: whole.samples.filter((sm) => sm.phase === 'dwell') };
+        return { walk, strike };
     };
     /**
      * ⛓ R9 slice 12c‴ — a window is `{at, pattern}` now, not a bare tick: ⚖
@@ -5230,7 +5241,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
                 + `${row.dashed} of them dashes, and ${row.yielded} were YIELDED`
                 + `${row.yieldedFirst ? ` — first: ${row.yieldedFirst}` : ''}`;
         } else {
-            const hit = certify ? certify(walk.samples) : null;
+            const hit = certify ? certify(walk.tail ? [...walk.samples, ...walk.tail] : walk.samples) : null;
             if (hit) {
                 row.kind = 'danger';
                 row.why = `the dashed corridor probes DANGEROUS at `
@@ -12940,8 +12951,9 @@ function execKeylock(run, perTick, resolved, ctx) {
 /**
  * ⛓ L30KEYLOCK (`KEYLOCK_WAIT_PRICED`) — the walk options that price a keylock's hold as the stance walk's tail:
  * `stand` = `{ticks: hold.ticks, keys}`, where `keys` stands as `execKeylock` does (lean from where the walk
- * arrives toward the lock on one axis until the player's box touches the key line, then nothing), and `undashed`,
- * so the walk driven is the walk priced. `{}` for a resolution without a hold or a key line.
+ * arrives toward the lock on one axis until the player's box touches the key line, then nothing). The walk keeps
+ * its dash plan, whose candidates are certified with the same tail (`planSwordDash`'s `stand`), so the walk driven
+ * is a walk priced. `{}` for a resolution without a hold or a key line.
  */
 function keylockStandWalk(run, resolved) {
     const keyLine = (run.world.activators ?? []).find((a) => a.id === resolved.lock)?.keyLine;
@@ -12956,7 +12968,7 @@ function keylockStandWalk(run, resolved) {
             return touched ? NO_KEYS : into;
         };
     };
-    return { stand: { ticks: resolved.hold.ticks, keys }, undashed: true };
+    return { stand: { ticks: resolved.hold.ticks, keys } };
 }
 
 /** The held key set that leans from `state` toward `aim` on ONE axis. */
@@ -14051,8 +14063,8 @@ export function withKillStanceTargetRescan(enabled, fn) {
  * before the lock opens. With the switch, the frontier's keylock stance walk is probed with the hold as its TAIL
  * (`previewWalk`'s `standFor`, the chaser arm's own instrument, stood as `execKeylock` stands: `standKeys` leans onto
  * the key line and then presses nothing, the strike policy disarmed — `keylockStandWalk`), so such a wait is a
- * corridor hit and the combat ladder climbs (the kill rung's chaser arm: kill first, then the lock); the walk is
- * driven undashed, as priced. ⚠ The tail stands the whole `hold.ticks` bound (the executor stops at the opening),
+ * corridor hit and the combat ladder climbs (the kill rung's chaser arm: kill first, then the lock); a dashed
+ * drive is certified with the same tail (`planSwordDash`'s `stand`), so the drive is a walk that was priced. ⚠ The tail stands the whole `hold.ticks` bound (the executor stops at the opening),
  * which is the side to err on.
  * OFF by default: `SEEDLING_KEYLOCK_WAIT_PRICED=1` for a node measurement; `withKeylockWaitPriced` for a test.
  */
@@ -18043,8 +18055,8 @@ function solveSegmentUnder({
                                     + `(${plan.obstacle.id})`,
                                 contactsOverride: plan.resolved.exempt,
                                 axisAligned: plan.resolved.approach === 'axis-aligned',
-                                // ⛓ L30KEYLOCK: the hold is priced as the walk's tail, and the walk is driven as
-                                // priced (no dash plan: BOBSOLDIER2's lesson).
+                                // ⛓ L30KEYLOCK: the hold is priced as the walk's tail — the undashed probe's and
+                                // every dash candidate's (BOBSOLDIER2's lesson: the drive is a priced walk).
                                 ...(plan.strategy === 'keylock' && KEYLOCK_WAIT_PRICED.enabled
                                     ? keylockStandWalk(run, plan.resolved) : {}),
                             });
@@ -18154,7 +18166,8 @@ function solveSegmentUnder({
             const dash = (dashMode === 'none' || axisAligned || undashed)
                 ? null
                 : planSwordDash(run, wps, { tolerance, dashMode,
-                    certify: (samples) => probeSamples(samples, except) });
+                    certify: (samples) => probeSamples(samples, except),
+                    ...(stand ? { stand } : {}) });
             seeRow({
                 tick: perTick.length,
                 saw: saw(),

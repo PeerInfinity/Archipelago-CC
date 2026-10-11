@@ -82,8 +82,8 @@ describe('L30KEYLOCK D1 — the game witnesses', () => {
     });
 
     for (const [name, at] of [
-        ['l30keylock-pit224', { touch: 276, open: 355, bodyGone: 191 }],
-        ['l30keylock-pit240', { touch: 291, open: 370, bodyGone: 207 }],
+        ['l30keylock-pit224', { touch: 252, open: 331, bodyGone: 191 }],
+        ['l30keylock-pit240', { touch: 265, open: 344, bodyGone: 207 }],
     ]) {
         it(`\`${name}\`: the body dies first, then the key line, then the crossing into L22 — zero hits`, () => {
             const got = landmarks(name);
@@ -126,7 +126,7 @@ describe('L30KEYLOCK D2 — the solver, switch by switch, from both pit landings
 
     it('WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick', async () => {
         expect(verdict(await l30keylockPlan(224, { rescan: false, waitPriced: true })))
-            .toMatchObject({ solved: 332, hits: 0 });
+            .toMatchObject({ solved: 309, hits: 0 });
         const v = verdict(await l30keylockPlan(240, { rescan: false, waitPriced: true }));
         expect(v).toMatchObject({ solved: null, hits: 0 });
         expect(v.refusal).toMatch(/keylock stance \(bosslock@64,32\): the combat ladder is EXHAUSTED/);
