@@ -75,7 +75,10 @@
             },
             "obstacle": {
                 "kind": "danger",
-                "id": "puncher@416,256"
+                "id": "puncher@416,256",
+                "sources": [
+                    "chaser:puncher@416,256"
+                ]
             },
             "strategy": {
                 "verb": "kill",
