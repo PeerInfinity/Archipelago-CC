@@ -246,7 +246,7 @@ Nothing handed over. The rung is generic over the ladder's sources, so a spinner
 
 ## CI (`JavaScript Unit Tests`)
 
-Read at the last head: see the chat message. Earlier pushes' runs are cancelled by design.
+At `1f95bd7`, the last code head (the report commits touch only `CC/docs/`, which the workflow's path filter skips): run **38182531707**, `completed success`, the suite (unfiltered) **19,836 / 19,836**, the slow battery 253 / 253.
 
 ## Rows to BANK
 
