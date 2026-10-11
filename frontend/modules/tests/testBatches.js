@@ -48,6 +48,11 @@ export const TEST_BATCHES = Object.freeze({
             + 'walks, the costliest on-push category, so they get a budget of '
             + 'their own instead of starving the tail of fast. On push.',
         categories: Object.freeze(['Seedling JS runtime']),
+        // ⛓ SEEDLING LOOP MODE (2026-10-11): its wasm rows (`seedling-wasm-runtime-loop-*`)
+        // boot the recompiled game, which needs a WebGPU adapter — the same headless
+        // WebGPU launch as tutorials-procgen. The JS rows do not need it and are
+        // unaffected (the JS page draws no WebGPU).
+        webgpu: true,
     }),
     apworld: Object.freeze({
         description:

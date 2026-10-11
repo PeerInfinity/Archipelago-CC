@@ -29,6 +29,10 @@ import { getGameStateSingleton } from '../../gameState/singleton.js';
 import { getActivePanel as getBotPanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { returnKey, returnSpawnTable } from '../../flashPanel/seedlingReturnSpawns.js';
+import loopStateSingleton from '../../loops/loopStateSingleton.js';
+import { resolveQueueBlocks } from '../../loops/blockIdentity.js';
+import { restoresSavedQueues } from '../savedQueueIsolation.js';
+import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 
 /**
  * ⛔ The walk helper imports `levelWorld.js`; a static import here would put
@@ -360,10 +364,11 @@ export async function seedlingJsRuntimeBotCompletesGeneratedRoom(tc) {
  * wasm page is loaded but never started (as before).
  *
  * ⛔ The WITNESS that the bot walks generated rooms on wasm is NOT an in-app row:
- * the in-app runner's Chromium (`playwright.config.js`: `--disable-gpu`, no
- * WebGPU switches) has no WebGPU adapter — measured, `requestAdapter()` → null —
- * so the recompiled game never starts in any in-app row. It is the headless
- * probe `scripts/procgen/probe-seedling-wasm-generated-playback.mjs`.
+ * it is the headless probe `scripts/procgen/probe-seedling-wasm-generated-playback.mjs`.
+ * (When this row was written the in-app Chromium had no WebGPU adapter —
+ * `--disable-gpu`, `requestAdapter()` → null. ⛓ SEEDLING LOOP MODE: the
+ * `seedling-js` batch now launches with WebGPU (`testBatches.js`), and the
+ * `seedling-wasm-runtime-loop-*` rows below start the game; this row still does not.)
  */
 export async function seedlingWasmRuntimeBotNamesItsRefusal(tc) {
     let previous = 'auto';
@@ -1529,3 +1534,308 @@ registerTest({
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+// ── ⛓ SEEDLING LOOP MODE: Loops BOT blocks play real atlas rooms ──────────
+//
+// Loop mode on, a queue of Seedling actions, every Seedling block set to BOT: loops hands each action to the
+// `flash_seedling` controller (`executeVia: 'solver'` → `walkTo`) and parks; a location completes on the game's
+// OWN check (collected by the runtime), an exit on the crossing's `user:regionMove` — a door the page walks, or a
+// LOGICAL link the region binding credits (its regionMove lands on the next turn). The queue then ends on its own.
+// ⛓ MANA: a Seedling region is COARSE (no recorder, no summaryRecording), so a Bot park is not time-drained
+// (`loopState._timeDrainTick` drains SUMMARY regions only) — each action is charged once, at its completion, at
+// its own loop price (`_completeBotExecutedAction`). Measured here off `loops:manaSpent`, spend by spend.
+
+const HOUSE_REGION = 'region_2_2';
+const HOUSE_EXIT = 'exit_S';
+const MAZE_CHILD = 'region_2_3';
+
+const queueLine = (a) => `${a.type}:${a.sourceRegion}>${a.destinationRegion ?? a.locationName ?? ''}`;
+
+/**
+ * Queue `steps` (`{check, region}` | `{exit, from, to}`), set every flash_seedling block to BOT, fill the pool and
+ * run the queue to its end. Returns the measured facts, or null (named).
+ */
+async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000 } = {}) {
+    const gs = getGameStateSingleton();
+    gs.setLoopModeActive(true);
+    const on = await tc.pollForCondition(() => gs.isLoopModeActive === true, `[${label}] loop mode on`, 5000, 100);
+    tc.reportCondition(`[${label}] loop mode on`, !!on);
+    if (!on) return null;
+    for (const st of steps) {
+        if (st.check) gs.addLocationCheck(st.check, st.region);
+        else gs.updatePath(st.to, st.exit, st.from);
+    }
+    const queue = loopStateSingleton.getActionQueue?.() ?? [];
+    const seedlingRegions = [...new Set(steps.map((st) => st.region ?? st.from))];
+    for (const r of seedlingRegions) {
+        tc.assertEqual(`[${label}] ${r} is a walkTo-solver region (flash_seedling declares executeVia solver)`,
+            'walkTo', loopStateSingleton.regionSolver(r));
+    }
+    const { visits } = resolveQueueBlocks(queue);
+    const botBlocks = visits.filter((v) => seedlingRegions.includes(v.name));
+    for (const v of botBlocks) loopStateSingleton.setBlockMode(v.name, v.instance, 'bot');
+    tc.log(`[${label}] queue: ${JSON.stringify(queue.map(queueLine))}; Bot blocks: ${JSON.stringify(botBlocks.map((v) => `${v.name}#${v.instance}`))}`);
+    const queued = steps.map((st) => (st.check ? `locationCheck:${st.region}>${st.check}` : `regionMove:${st.from}>${st.to}`));
+    tc.assertEqual(`[${label}] the queue holds the steps, in order, after the start hop`, JSON.stringify(queued),
+        JSON.stringify(queue.map(queueLine).filter((q) => seedlingRegions.some((r) => q.includes(`:${r}>`)))));
+
+    const spends = [];
+    const regions = [];
+    const onSpend = (e) => spends.push({ region: e?.region ?? null, mana: e?.mana ?? null });
+    const onRegion = (e) => regions.push(e?.newRegion ?? null);
+    const manaTrace = [];
+    const onMana = () => manaTrace.push(Math.round(gs.getCurrentMana() * 100) / 100);
+    const prices = new Map(queue.map((a) => [queueLine(a), loopStateSingleton._calculateActionCost(a)]));
+    tc.eventBus.subscribe('loops:manaSpent', onSpend);
+    tc.eventBus.subscribe('gameState:regionChanged', onRegion);
+    tc.eventBus.subscribe('gameState:manaChanged', onMana);
+    const controller = substrateRegistry.get('flash_seedling')?.getPlaybackController?.() ?? null;
+    const goals = [];
+    const t0 = performance.now();
+    try {
+        gs.refillMana();
+        const manaBefore = gs.getCurrentMana();
+        const completed = tc.waitForEvent('loopState:queueCompleted', maxMs).catch(() => null);
+        loopStateSingleton.startProcessing();
+        const parked = await tc.pollForCondition(() => seedlingRegions.includes(loopStateSingleton.botSolverRegion?.()),
+            `[${label}] a Bot block parked on a Seedling region (walkTo handed over)`, 15000, 20);
+        tc.reportCondition(`[${label}] a Bot block parked on a Seedling region and handed its action to the controller`, !!parked);
+        // Every goal the controller took (a link credit is a goal too), sampled as the queue runs.
+        const sample = () => {
+            const g = controller?.lastGoal ?? null;
+            const key = g ? `${g.kind}:${g.name ?? g.tag}` : null;
+            if (key && goals[goals.length - 1] !== key) goals.push(key);
+        };
+        const sampler = setInterval(sample, 20);
+        const ended = await completed;
+        clearInterval(sampler);
+        // A link credit, its regionMove and the queue's end can all land inside one sample interval.
+        sample();
+        const out = {
+            queueCompleted: !!ended, reason: ended?.reason ?? loopStateSingleton._queueCompletedReason ?? null,
+            processing: loopStateSingleton.isProcessing, parkedAfter: loopStateSingleton.botSolverRegion?.() ?? null,
+            pausedUntilReset: loopStateSingleton._queuePausedUntilReset === true,
+            spent: manaBefore - gs.getCurrentMana(), manaBefore, manaTrace, spends, regions, goals,
+            wallSeconds: (performance.now() - t0) / 1000,
+            // What each queued Seedling action costs at its loop price (the expected charges, in queue order).
+            priced: queued.map((q) => ({ region: q.split(':')[1].split('>')[0], mana: prices.get(q) ?? null })),
+        };
+        if (!ended) {
+            tc.log(`[${label}] DIAG controller: ${JSON.stringify({ status: controller?.status?.() ?? null,
+                lastRefusal: controller?.lastRefusal ?? null, lastGoal: controller?.lastGoal ?? null })}; cursor `
+                + `${JSON.stringify(loopStateSingleton.currentAction ? queueLine(loopStateSingleton.currentAction) : null)}`, 'error');
+        }
+        tc.log(`[${label}] ${JSON.stringify(out)}`);
+        return out;
+    } finally {
+        tc.eventBus.unsubscribe?.('loops:manaSpent', onSpend);
+        tc.eventBus.unsubscribe?.('gameState:regionChanged', onRegion);
+        tc.eventBus.unsubscribe?.('gameState:manaChanged', onMana);
+    }
+}
+
+/** The queue's end, asserted the same way on every row: on its own (`queueEnd`), the park released, no hard pause. */
+function assertLoopEndedOnItsOwn(tc, label, r) {
+    tc.assertEqual(`[${label}] the last regionMove resumed the park and the queue ended on its own (queueEnd)`,
+        'true/queueEnd/false/null/false', `${r.queueCompleted}/${r.reason}/${r.processing}/${r.parkedAfter}/${r.pausedUntilReset}`);
+}
+
+/** ⛓ MANA — the Seedling spends are exactly the queued actions' own prices, one each, in order: no time drain. */
+function assertSeedlingChargedPerAction(tc, label, r, seedlingRegions) {
+    const seedlingSpends = r.spends.filter((sp) => seedlingRegions.includes(sp.region));
+    tc.assertEqual(`[${label}] mana: one charge per queued Seedling action, at its own price — no per-second drain `
+        + `(a Seedling region is COARSE) over ${r.wallSeconds.toFixed(1)} s of walking`,
+        JSON.stringify(r.priced), JSON.stringify(seedlingSpends));
+    tc.assertEqual(`[${label}] the queue cost mana`, true, r.spent > 0);
+}
+
+async function seedlingLoopBotCleanup() {
+    try { loopStateSingleton.stopProcessing?.(); } catch { /* best effort */ }
+    try { loopStateSingleton.clearQueue?.(); } catch { /* best effort */ }
+    try { getGameStateSingleton().setLoopModeActive(false); } catch { /* best effort */ }
+}
+
+/**
+ * Load `presetPath` on `runtime` ('js' | 'wasm') by the production path and wait for the panel on the atlas arm,
+ * with the game running and gameState at `startRegion`. Returns `{panel, win, rt?}` (rt = the JS page's core), or null.
+ * ⛔ The wasm game needs a WebGPU adapter: the `seedling-js` batch launches Chromium with one (`testBatches.js`).
+ */
+async function atlasPresetOn(tc, runtime, presetPath, startRegion) {
+    if (runtime === 'js') {
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        await settingsManager.updateSetting(RUNTIME_KEY, 'js', { persist: false });
+        const rulesJson = await (await fetch(presetPath)).json();
+        const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+        tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: presetPath });
+        await loaded;
+        await tc.stateManager.pingWorker('after-rules-load', 5000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+        const up = await atlasPanelOnJs(tc, staleAdapter);
+        if (!up) return null;
+        const at = await tc.pollForCondition(() => readCurrentRegion() === startRegion && !!up.rt.run,
+            `[js] the run is up and gameState is in ${startRegion}`, 15000, 200);
+        tc.reportCondition(`[js] the game runs and gameState is in ${startRegion}`, !!at);
+        return at ? up : null;
+    }
+    const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+    await settingsManager.updateSetting(RUNTIME_KEY, 'wasm', { persist: false });
+    const rulesJson = await (await fetch(presetPath)).json();
+    const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+    tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: presetPath });
+    await loaded;
+    await tc.stateManager.pingWorker('after-rules-load', 5000);
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+    const panel = await tc.pollForValue(() => {
+        const p = getActivePanelInstance();
+        return p?.transport === 'wasm' && p.adapter && p.adapter !== staleAdapter && p._initRuntime === 'wasm' ? p : null;
+    }, '[wasm] the flash panel mounted the wasm runtime (a fresh adapter)', 30000, 250);
+    tc.assertEqual('[wasm] the panel is on the wasm transport', 'wasm', panel?.transport ?? null);
+    if (!panel) return null;
+    // The wasm page waits for its ▶ Start (a person's click — the tutorials' `startSeedlingGame`).
+    const startButton = await tc.pollForValue(() => {
+        if (panel.statusElement?.textContent !== 'click ▶ Start in the game') return null;
+        try { return frameOf(panel)?.document?.querySelector('#btn-start') ?? null; } catch { return null; }
+    }, '[wasm] the panel asks for ▶ Start (the game runtime is fetched)', 120000, 250);
+    tc.reportCondition('[wasm] the game page is up (▶ Start)', !!startButton);
+    if (!startButton) return null;
+    startButton.click();
+    const bound = await tc.pollForCondition(() => !!(panel._apLoadResult && panel.seedlingPlaybackSurface()?.atlas),
+        '[wasm] the panel bound the ATLAS arm and holds the atlas name → cell map', 60000, 250);
+    if (!bound) {
+        const statusEl = document.querySelector('.flash-panel-status') ?? null;
+        tc.log(`[wasm] DIAG status "${statusEl?.textContent ?? '?'}"; apLoad ${JSON.stringify(panel._apLoadResult ?? null)?.slice(0, 300)}; `
+            + `refusal ${JSON.stringify(panel._apLoadRefusal ?? null)}; game ${!!panel.seedlingPlaybackSurface()?.wasm?.getGame?.()}; log: `
+            + `${(document.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-25).join(' | ')}`, 'error');
+    }
+    tc.reportCondition('[wasm] the atlas arm loaded on the wasm runtime', !!bound);
+    if (!bound) return null;
+    const running = await tc.pollForCondition(() => !!panel.seedlingPlaybackSurface()?.wasm?.getGame?.()
+        && readCurrentRegion() === startRegion, `[wasm] the game is running and gameState is in ${startRegion}`, 60000, 250);
+    if (!running) {
+        tc.log(`[wasm] panel log: ${(document.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-15).join(' | ')}`, 'error');
+    }
+    tc.reportCondition(`[wasm] the game runs and gameState is in ${startRegion}`, !!running);
+    return running ? { panel, win: frameOf(panel), rt: null } : null;
+}
+
+/** The JS page's own death / halt record (the wasm game has none to read). */
+function assertNoDeathNoHalt(tc, runtime, rt) {
+    if (!rt) return;
+    tc.assertEqual(`[${runtime}] no death and no halt on the JS runtime`, '0/null', `${rt.deaths.length}/${rt.halted ? rt.halted.message : null}`);
+}
+
+async function withRuntimeRestored(tc, body) {
+    let previous = 'auto';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try {
+        await seedlingLoopBotCleanup();
+        await body();
+    } finally {
+        await seedlingLoopBotCleanup();
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+/** A Bot block walks the starting house: the queued chest check, then its door into the maze child. */
+const loopBotWalksAtlasRoom = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
+    const up = await atlasPresetOn(tc, runtime, ATLAS_LOCATION_PATH, HOUSE_REGION);
+    if (!up) return;
+    const r = await seedlingLoopBotQueue(tc, runtime, [
+        { check: CHEST_LOCATION, region: HOUSE_REGION },
+        { exit: HOUSE_EXIT, from: HOUSE_REGION, to: MAZE_CHILD },
+    ]);
+    if (!r) return;
+    await tc.stateManager.pingWorker('after-loop', 5000);
+    tc.assertEqual(`[${runtime}] the Bot block walked to the chest: the game's own check reached the state manager`, true,
+        snapshotFacts(tc).checked.has(CHEST_LOCATION));
+    tc.assertEqual(`[${runtime}] the controller took the chest, then the house door`,
+        JSON.stringify([`location:${CHEST_LOCATION}`, `exit:${HOUSE_EXIT}`]), JSON.stringify(r.goals));
+    tc.assertEqual(`[${runtime}] the game took the house door itself (a pendingExit from level 86)`, true,
+        reportedExits(up.win).some((e) => e.fromLevel === 86 && e.type === 'teleporter'));
+    tc.assertEqual(`[${runtime}] gameState moved into the maze child`, MAZE_CHILD, readCurrentRegion());
+    assertLoopEndedOnItsOwn(tc, runtime, r);
+    assertSeedlingChargedPerAction(tc, runtime, r, [HOUSE_REGION]);
+    assertNoDeathNoHalt(tc, runtime, up.rt);
+});
+
+export const seedlingJsRuntimeLoopBotBlockWalksAtlasRoom = loopBotWalksAtlasRoom('js');
+export const seedlingWasmRuntimeLoopBotBlockWalksAtlasRoom = loopBotWalksAtlasRoom('wasm');
+
+const OVERWORLD = 'overworld_start__r8c0';
+const OWLS_NEST = 'owls_nest_entrance';
+const DUNGEON = 'dungeon1_room1__r0c4';
+const DUNGEON_FAR = 'dungeon1_room1__r8c6';
+const LINK_EXIT = `${DUNGEON} -> ${DUNGEON_FAR}`;
+
+/** Bot blocks route the owl's-nest stairs, the descent, then the sword-gated LOGICAL link (credited, next turn). */
+const loopBotCrossesAtlasRooms = (runtime) => async (tc) => {
+    let granted = false;
+    try {
+        return await withRuntimeRestored(tc, async () => {
+            const up = await atlasPresetOn(tc, runtime, ATLAS_PATH, OVERWORLD);
+            if (!up) return;
+            // The link is sword-gated (`Or(Progressive Sword, Ghost Spear)`): the sword goes through the AP ITEM path
+            // (AP → game, as the S5 rows grant it), removed after. ⛔ No game flag is set from the AP side.
+            await tc.stateManager.addItemToInventory('Progressive Sword', 1);
+            granted = true;
+            await tc.stateManager.pingWorker('after-item-grant', 5000);
+            const held = await tc.pollForCondition(() => snapshotFacts(tc).held('Progressive Sword') > 0,
+                `[${runtime}] the sword is held (the link's gate is open)`, 10000, 100);
+            tc.reportCondition(`[${runtime}] the sword is held (the link's gate is open)`, !!held);
+            if (!held) return;
+            const r = await seedlingLoopBotQueue(tc, runtime, [
+                { exit: `${OVERWORLD} -> ${OWLS_NEST}`, from: OVERWORLD, to: OWLS_NEST },
+                { exit: `${OWLS_NEST} -> ${DUNGEON}`, from: OWLS_NEST, to: DUNGEON },
+                { exit: LINK_EXIT, from: DUNGEON, to: DUNGEON_FAR },
+            ]);
+            if (!r) return;
+            tc.assertEqual(`[${runtime}] gameState walked the stairs, the descent, then across the logical link`,
+                JSON.stringify([OWLS_NEST, DUNGEON, DUNGEON_FAR]), JSON.stringify(r.regions.filter(Boolean)));
+            tc.assertEqual(`[${runtime}] the controller walked two doors, then CREDITED the link (no walk)`,
+                JSON.stringify([`exit:${OVERWORLD} -> ${OWLS_NEST}`, `exit:${OWLS_NEST} -> ${DUNGEON}`, `link:${LINK_EXIT}`]),
+                JSON.stringify(r.goals));
+            tc.assertEqual(`[${runtime}] the game took the stairs and the descent, and no door for the link`,
+                JSON.stringify(['0:stairsdown', '2:teleporter']), JSON.stringify(reportedExits(up.win).map((e) => `${e.fromLevel}:${e.type}`)));
+            assertLoopEndedOnItsOwn(tc, runtime, r);
+            assertSeedlingChargedPerAction(tc, runtime, r, [OVERWORLD, OWLS_NEST, DUNGEON]);
+            assertNoDeathNoHalt(tc, runtime, up.rt);
+        });
+    } finally {
+        if (granted) { try { await tc.stateManager.removeItemFromInventory('Progressive Sword', 1); } catch { /* best effort */ } }
+    }
+};
+
+export const seedlingJsRuntimeLoopBotBlocksCrossAtlasRooms = loopBotCrossesAtlasRooms('js');
+export const seedlingWasmRuntimeLoopBotBlocksCrossAtlasRooms = loopBotCrossesAtlasRooms('wasm');
+
+const LOOP_ROOM_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on `
+    + 'and the house\'s block set to Bot: loops hands the queued chest check and the departure to the flash_seedling '
+    + 'controller (executeVia solver); the game\'s own check completes the first, the door crossing\'s user:regionMove '
+    + 'the second, and the queue ends on its own. Mana: one charge per action at its own price, no per-second drain (COARSE).';
+const LOOP_CROSS_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas, loop mode on and every `
+    + 'Seedling block set to Bot (the sword granted through the AP item path, removed after): the owl\'s-nest stairs, the '
+    + 'descent into the dungeon, then the sword-gated LOGICAL link to its far sub-region (credited by the region binding, '
+    + 'its user:regionMove on the next turn) — each resuming its park; the queue ends on its own; one charge per action.';
+
+for (const [id, name, fn, description] of [
+    ['seedling-js-runtime-loop-bot-block-walks-atlas-room',
+        'Seedling JS runtime: a Loops Bot block walks a real atlas room (its check, then its door)',
+        seedlingJsRuntimeLoopBotBlockWalksAtlasRoom, LOOP_ROOM_DESCRIPTION('js')],
+    ['seedling-wasm-runtime-loop-bot-block-walks-atlas-room',
+        'Seedling (wasm runtime): a Loops Bot block walks a real atlas room (its check, then its door)',
+        seedlingWasmRuntimeLoopBotBlockWalksAtlasRoom, LOOP_ROOM_DESCRIPTION('wasm')],
+    ['seedling-js-runtime-loop-bot-blocks-cross-atlas-rooms',
+        'Seedling JS runtime: Loops Bot blocks cross real atlas rooms and a logical link',
+        seedlingJsRuntimeLoopBotBlocksCrossAtlasRooms, LOOP_CROSS_DESCRIPTION('js')],
+    ['seedling-wasm-runtime-loop-bot-blocks-cross-atlas-rooms',
+        'Seedling (wasm runtime): Loops Bot blocks cross real atlas rooms and a logical link',
+        seedlingWasmRuntimeLoopBotBlocksCrossAtlasRooms, LOOP_CROSS_DESCRIPTION('wasm')],
+]) {
+    registerTest({
+        id, name, description,
+        testFunction: restoresSavedQueues(fn),
+        category: 'Seedling JS runtime',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
