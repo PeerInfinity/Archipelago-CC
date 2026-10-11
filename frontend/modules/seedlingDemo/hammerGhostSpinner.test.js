@@ -83,11 +83,12 @@ function fightCursor(w) {
 const testRow = (h) => [h.t, h.id, h.landed, h.killed, h.hits, h.hitsTimer];
 
 describe('the switch', () => {
-    it('is OFF by default, and `withGhostSpinnerPress` restores it', () => {
-        expect(GHOST_SPINNER_PRESS_DEFAULT).toBe(false);
-        expect(GHOST_SPINNER_PRESS.enabled).toBe(false);
-        withGhostSpinnerPress(true, () => expect(GHOST_SPINNER_PRESS.enabled).toBe(true));
-        expect(GHOST_SPINNER_PRESS.enabled).toBe(false);
+    /* ⚖ the user's flip (2026-10-11): ON by default; `SEEDLING_GHOST_SPINNER_PRESS=0` is the opt-out. */
+    it('is ON by default, and `withGhostSpinnerPress` restores it', () => {
+        expect(GHOST_SPINNER_PRESS_DEFAULT).toBe(true);
+        expect(GHOST_SPINNER_PRESS.enabled).toBe(true);
+        withGhostSpinnerPress(false, () => expect(GHOST_SPINNER_PRESS.enabled).toBe(false));
+        expect(GHOST_SPINNER_PRESS.enabled).toBe(true);
     });
 
     it('the press row is the ghost\'s only with the switch ON and a ghost primary; its numbers are imported', () => {
@@ -228,5 +229,5 @@ describe('D3 — the spinner press kill with the ghost sword (`r9-solve-18`\'s s
         const on = await withGhostSpinnerPress(true, () => solveL18({}));
         expect(off.ticks).toBe(518);
         expect(on.keys).toEqual(off.keys);
-    });
+    }, 300_000); /* two full solves (24 s alone): the 60 s default timed out under a parallel bounded run */
 });

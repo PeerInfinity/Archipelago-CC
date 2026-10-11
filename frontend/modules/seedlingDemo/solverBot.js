@@ -108,7 +108,7 @@ import {
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD,
     SLASH_ANIM_TICKS, slashScaleFor, slashSet, slashTimerTick,
     GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
-    // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (behind `GHOST_SPINNER_PRESS`, OFF).
+    // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (behind `GHOST_SPINNER_PRESS`, ON by default).
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
@@ -8739,7 +8739,7 @@ function derivePressKill(run, bodies, contacts) {
      */
     const weapon = run.progress('primaryWeapon');
     /**
-     * ⛓⛓⛓ HAMMER-PHASE C2 — **A GHOST PRESS IS A KILL TOO** (`GHOST_SPINNER_PRESS`, OFF). With the switch ON a
+     * ⛓⛓⛓ HAMMER-PHASE C2 — **A GHOST PRESS IS A KILL TOO** (`GHOST_SPINNER_PRESS`, ON by default). With the switch ON a
      * `ghostsword` primary is admitted: the forecasts carry its press (D2) and the strike plans with its row
      * (`strikePressOf`). A ghost sword without the sword never tests (`ghostSwingRefusal`), refused by name.
      */

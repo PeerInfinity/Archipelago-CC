@@ -111,7 +111,7 @@ import {
     GHOSTSWORD_PRESS, GHOST_PRESS_ARMS, GHOST_SWORD_DAMAGE, GHOST_SWORD_REACH,
     ghostSlashRect, ghostSwingRefusal, slashEndTicksFor,
 } from './ghostSword.js';
-// ⛓⛓⛓ hammer-phase C2: the spinner forecasts carry a ghost press (behind `GHOST_SPINNER_PRESS`, OFF).
+// ⛓⛓⛓ hammer-phase C2: the spinner forecasts carry a ghost press (behind `GHOST_SPINNER_PRESS`, ON by default).
 import { ghostSpinnerPressFor } from './ghostSpinnerPress.js';
 import {
     createBossTotem, bossTotemClampY, bossTotemSolidRect, renderBossTotem, stepBossTotem,
@@ -15136,7 +15136,7 @@ export function createLevelRun({
             const rows = [];
             const bodies = [];
             const fire = (th, t) => {
-                // ⛓ hammer-phase C2: a ghost thrust tests too, under `GHOST_SPINNER_PRESS` (OFF: the sword's only)
+                // ⛓ hammer-phase C2: a ghost thrust tests too, under `GHOST_SPINNER_PRESS` (ON by default; OFF: the sword's only)
                 if (th.weapon !== 'sword' && !ghostSpinnerPressFor(th.weapon)) return;
                 // ⚠ a test of a press ALREADY IN FLIGHT (the run's own window) is reported, never this press's
                 const own = thrust !== null && th.pressTick === pressAt;
