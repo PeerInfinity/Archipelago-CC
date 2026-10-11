@@ -15697,6 +15697,54 @@ wand pressed t122, the shot t130, `{68,1}` at t131 in the game's readout, open t
 - **A co-located pair.** L68's `bosslock@16,32` and `magicallock@16,32` share one cell; a clear-tag order for the
   second cannot start until the first is open, and the frontier names whichever the sort reaches first.
 
+### Seedling fidelity L30KEYLOCK — the key line was a wait nobody priced, and the kill arm looked for a stance where the player stood
+
+Wave 12 (model coverage). The live playthrough B's next wall after the Bob Boss binding: L30 → L22, *"combat ladder
+EXHAUSTED"* at the keylock stance of `bosslock@64,32` against `chaser:bobsoldier@48,80`; the route survey's step 52 (the
+pit landing (224,80)) refused at the danger gate. The report is `CC/docs/cloud-reports/seedling-fidelity-l30keylock.md`.
+
+**D1 — measured on the game.** Step 52's base solve walks a detour to the keylock stance (72,56) and `execKeylock`
+stands on the key line from t133 for the lock's 60-tick `keyTimer` and fade. Nothing asks what reaches it there: the
+BobSoldier lands a sword hit (t173) and a body hit (t193), the lock opens at t212, and only the NEXT walk's gate
+refuses (the survey's text). From the other pit landing, (240,80), the same wait takes three hits and the run DIES. So
+the answer to "can the player open the lock before the chase reaches them" is no: it needs a kill first (or a timed
+approach). Recorded on p4f (`l30keylock-pit224-before`): the model reproduces the game, the game's own `hits` = 2 = the
+model's, the body bit-exact (212/212). The ladder could not offer the kill either: the chaser arm's stance scan is
+centred on the PLAYER (±8 cells), whose box from the pit landing holds only 14 cells on the leash's far-east rim (x
+104..128), 7 reachable, all refused by the forecast. Step 50's own stance (88,56) was never asked. Not the hammer arc's:
+`chooseBodyToRemove` was not involved.
+
+**D2 — two switches (ON by default; the flip is a separable commit).**
+- `KEYLOCK_WAIT_PRICED`: the frontier's keylock stance walk carries `stand = {ticks: hold.ticks, keys}`
+  (`keylockStandWalk`): `previewWalk` stands the tail as the executor stands (`standKeys`: lean on one axis until the key
+  line latches, then nothing; the strike policy disarmed for the tail), in the walk's probe, AVOID's re-probe,
+  DETOUR's certify (whole candidates only) and every `planSwordDash` candidate (`stand`: the tail's samples go to
+  `certify` only). A wait a body reaches is a corridor hit, so the ladder climbs.
+- `KILL_STANCE_TARGET_RESCAN`: `deriveKillByChaser` scans the TARGET's box when the player's box priced no stance.
+- Measured: rescan alone solves (224,80) and leaves (240,80) dying; the wait alone makes nothing hit ((224,80) a timed
+  detour, (240,80) an honest EXHAUSTED before a tick); both: kill from (88,120), the lock, the crossing, 0 hits.
+
+**The first cut moved four producers, and the cause was mine.** It drove the keylock stance walk undashed ("the drive
+is the priced walk", BOBSOLDIER2's lesson): ON, `r8-d2-19`, `r9-solve-12/19/30/31` re-derived longer (2364 → 2381 …).
+Certifying the DASH candidates with the same tail keeps the lesson and moves nothing: with both ON the identity block,
+the six producers, all 46 plan `--check`s and every tape are the base's.
+
+**D3 — witnesses and census.** `l30keylock-pit224` (347 t) and `l30keylock-pit240` (360 t), the solver's own plans,
+recorded on p4f: model = game, 0 hits, the BobSoldier bit-exact (202/218). The whole `--through=end` route, OFF vs ON:
+155 → 158 SOLVED, exactly steps 52 (L30, 347 t), 78 and 87 (L12 → L37 past `puncher@416,256`, 921 t, carried by the
+wait switch). Live sweep (production page, both ON): legs 333 and 339 failed → done (237 / 247 t, no divergence).
+
+**Trap candidates.**
+- **An executor that checks only its own condition is a wait nobody priced.** `execKeylock` waited out 80 ticks with
+  no hit check, and its refusal ("did not open") hid a dead run; the solver's own walk was hit while the survey read
+  only the gate's refusal after it.
+- **A preview's tail must stand as the executor stands.** The first tail stood with the strike policy armed: it
+  repelled the body the executor never strikes, and DETOUR certified a 369-tick corridor that the drive died on.
+- **A scan centred on the asker can see only the rim of a leash.** U10's fallback answered "no cells at all"; the
+  same blind spot holds when the box sees a few cells and none of them is any good.
+- **Fixing "the drive is the priced walk" by dropping the dash moves every walk that shares the verb.** Price the
+  dash instead.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
