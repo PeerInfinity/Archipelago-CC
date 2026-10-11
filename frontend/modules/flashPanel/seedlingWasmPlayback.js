@@ -2004,6 +2004,8 @@ export function createWasmPlayback({
             return true;
         },
         liveLevel() { const l = readState().level; return Number.isInteger(l) ? l : null; },
+        /** ⛓ SOLVE PROGRESS — this engine's solve service (the flashPanel progress view subscribes to it). */
+        get solveService() { return svc(); },
         /** ⛓ O3 — the budget the next solve starts with (the knob's live value, else the engine's own), in work units. */
         get budgetWork() { return baseBudget(); },
         /** The upgrade window the next solve starts with, in work units (null = the whole budget). */

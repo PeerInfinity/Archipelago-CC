@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 82,
+            "count": 83,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 410,
+        "blockStyle": 411,
         "browser": 139,
-        "cited": 206,
-        "files": 422,
+        "cited": 207,
+        "files": 423,
         "lineStyle": 12,
-        "withDocblock": 422,
-        "withFlags": 339
+        "withDocblock": 423,
+        "withFlags": 340
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7726,6 +7726,36 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-hammer-b2-fight — ⛓⛓⛓ SEEDLING HAMMER-PHASE B2 D2: THE FIGHT's SOLVE, HANDED TO THE GAME.",
             "path": "scripts/procgen/plan-seedling-hammer-b2-fight.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-hammer-c2-ghost.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-c2-ghost — ⛓⛓⛓ SEEDLING HAMMER-PHASE C2 D1: THE GHOST SWORD AGAINST A SPINNER, ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-hammer-c2-ghost.mjs"
         },
         {
             "argvHelpers": [],

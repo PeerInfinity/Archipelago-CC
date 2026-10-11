@@ -15363,6 +15363,53 @@ never-tripping fine deadline. `r9-campaign --check` and the identity block are u
 - The overhead was not resolvable below ~±10% on the loaded box: the identical no-hook code read −2% to +12% against
   the base. A silent hook read +2% (L18) and +8% (L40, where no-hook read +12%).
 
+### Seedling hammer-phase C2 — the ghost-sword press against a spinner
+
+⚖ The user (2026-10-11): *"Please continue with the queue."* One switch, **OFF**, byte-inert:
+`ghostSpinnerPress.GHOST_SPINNER_PRESS` (`SEEDLING_GHOST_SPINNER_PRESS=1`, `withGhostSpinnerPress`). The report is
+`CC/docs/cloud-reports/seedling-hammer-c2.md`.
+
+**W0** at `dd6ae2e379`: identity block non-`#` md5 `3a48647f` (ENEMY `afdc6d1a`, r9-campaign `712f0ead`, the six
+producers exit 0, reference ALL 7 + 5 MATCH); tapeRunner 605 pairs `70c1a2d1`; surface GREEN 265, constants 5,623,
+entities 535, profile 138; roster 274; bounded vitest 1124/1124 (19 files). No sweep leg holds the ghost sword in a
+spinner room (the route reaches L18/L39/L40/L92 before "Ghost Sword Fusion"), so the staging is `r9-solve-18`'s frozen
+staging with `seam.items.hasGhostSword` — the override `ghostsword-l30-bobsoldier` commits. At base it refused at t0 in
+37 ms: *"the kill work order has no weapon — the run's `primary` slot fires `ghostsword`"* (`obstacle`
+`{kind: 'kill-lock', id: null}`), and both spinner forecasts predicted **0** of the run's 2 landings on D1's walk.
+
+**D1 — the game.** `hammer-c2-l18-ghostspinner` (`plan-seedling-hammer-c2-ghost.mjs`, 91 t), recorded on p4f; the
+model replays it. Measured on the game, matching the GHOSTMOTION table:
+- the swing lands from 18.41 px (the sword reaches 16), 2 damage: `hits` 0 → 2 → 4, and the second landing kills;
+- presses +0/+2/+8/+10/+18 are slash · dash · SWALLOWED · dash · dash (the ghost dash's 6-tick release);
+- a dash REPLACES the swing's window (2 + 6 + 6 + 6 + 7 = 27 `Bot.slashTests`, = the model's at 92/92 ticks);
+- the bodies (position, `hits`, `hits_timer`) are the model's at every sampled tick through t87.
+⚠ **The model removes a killed spinner one tick late** (t89 vs the game's t88); the committed sword kill
+`r9-solve-18` shows it too (t198, t367). Not the ghost's: fidelity's to classify.
+
+**D2 — the forecasts.** Under the switch both fire a ghost thrust's tests through `applyThrust`'s ghost arm (24 × 48,
+reach 24, no line, 2 / "Spear"; an out-of-reach body writes no test row, as the run's whole-collection cut does), and
+the fight cursor releases on `slashEndTicksFor`. Gate (`hammerGhostSpinner.test.js`): ON, every press's forecast and
+the cursor equal the run byte for byte on the witness (rects, `{id, hits, hitsTimer, destroy}`, tests, outcomes); OFF,
+no landing. Mutants: the cursor on the sword's clock, sword damage, reach 16 → red; the line asked → blind (L18's line
+is clear).
+
+**D3 — the strike.** `strikePressOf(run)` → `spinnerStrikePress`: `derivePressKill` admits the ghost,
+`deriveStrike`/`strikeLineBlocked`/`pressReadyAt`/the train previews/`pressEscape` take its rect, reach, waived line
+and seven-test train. ON the staging **solves in 336 t, 0 hits** (landings t37/t92 kill/t113/t159 kill, 19–20 px), and
+the game plays that solve: the stream is the model's at 337/337, `slashTests` 76, to L19 at t336, `{18,0}` cleared.
+Across all 45 hammer residues the ghost staging solves **45/45** ON (336 t at 43 of them) and 0/45 OFF.
+
+**D4 — no movers.** ON vs OFF: the identity block row for row (only the reference row read DIFFER, from this branch's
+own unregenerated docs), the L18 sweep (45/45, rows identical, lengths `1c019765`), r9-campaign `712f0ead`, ENEMY
+`afdc6d1a`, tapeRunner 607 `dbe15e60`, and the bounded vitest set: the only row that moves is this slice's own
+"OFF by default".
+
+**D5.** Roster 274 → 275 (tapeEnvelope, observationTolerance ×2, dialogueAutoAdvance ×2, `r8Acceptance`'s
+declared exposure). ⚠ `rosterCategories`' standing LIVE row reads 214 → 215 (`mechanic`): `standing-values --write`
+is the planner's. Surface GREEN 268 (3 classified), constants 5,623.
+
+**C2-ON (harvest, 2026-10-11).** ⚖ The user: *"Turn it ON"*. `GHOST_SPINNER_PRESS` defaults ON; `SEEDLING_GHOST_SPINNER_PRESS=0` is the opt-out. C2's D4 measured the flip moving no committed artifact (identity block, r9-campaign `712f0ead`, ENEMY `afdc6d1a`, the L18 sweep and the tapeRunner pairs all equal ON), so the only re-pin is `hammerGhostSpinner.test.js`'s default row.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

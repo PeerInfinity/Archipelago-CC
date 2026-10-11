@@ -11,7 +11,7 @@ What the Seedling solver reports while it solves: one hook, called at fixed poin
 | Install | `withSolveProgress(onProgress, fn, {pass?})` runs `fn` with the hook active. Nested installs restore the outer one, the same way `withSolveDeadline` works. `solveSegment({…, onProgress})` installs it for one segment. |
 | Signature | `onProgress(site, peek)`. `site` is the name of the point that called. `peek()` builds a snapshot and returns it (or `null` before the first segment starts). |
 | When it is called | Only at fixed points in the search: every deadline site (`DEADLINE_SITES`, coarse and fine, whether or not a deadline is installed) and the count points in §3. It is never called on a timer, and the solver never reads a clock. |
-| Throttling | The caller throttles. The JS worker reads its own clock in the hook, and about once a second it calls `peek()` and posts `{type: 'solve-progress', solveId, snapshot}`. |
+| Throttling | The caller throttles. The JS worker reads its own clock in the hook, and at most once a second it calls `peek()` and posts `{type: 'solve-progress', id, snapshot, final}` (§7). |
 | Cost | With no hook installed, each count point is one null check (`activeProgress !== null`). With a hook installed, the counts are kept, and `peek()` does the materialising. |
 | Observation only | Every count is read from a value the solver had already computed. Nothing is read back. A hook that throws is ignored. With and without the hook, every plan, trace, record and verdict is byte-identical (§6). |
 | Off unless subscribed | Nothing goes into the request stamp, and no committed artifact changes. |
@@ -184,4 +184,29 @@ A longer climb, for the tree's ladder shape: `r5-l40-part5`'s staging toward the
 - that roles are stable keys, that `tiles` counts never fall, and that `firstTick` never rises across a stream;
 - that a snapshot survives `structuredClone`, and that mutating it leaves the next snapshot unchanged.
 
-`scripts/procgen/probe-seedling-solve-progress.mjs --compare` checks byte-identity for any staging.
+`scripts/procgen/probe-seedling-solve-progress.mjs --compare` checks byte-identity for any staging. `--hook=tap` solves under the JS worker's own tap and prints its posts and the time spent inside it.
+
+The JS half (§7):
+- `jsRuntimeSolveProgress.test.js` runs real solves through the real worker. With and without a subscriber the request is byte-identical, and so is the plan (the session's keys and the end digest). With no subscriber, no `solve-progress` message is posted. Posts are at most one a second plus the final one, and the final snapshot meters the attempt's whole `work`. A stale solve's message never reaches a listener.
+- `solveProgressTap.test.js` covers the throttle on a fake clock, `peek()` only for a post, the meter's sum across segments, and the window stamp.
+- `flashPanel/seedlingSolveProgress.test.js` uses D1's real streams to cover ordering, the stale drop, the segment reset, collapse and the cap, the tiles, and the rule that `close()` unsubscribes.
+
+## 7. The JS half: the worker, the service and the panel
+
+The JS arc's half carries the stream from the solve worker to the flashPanel and shows it there.
+
+| Piece | File | What it does |
+|---|---|---|
+| The ask | `jsRuntimeSolveService.js` | `subscribeProgress(listener)` returns the unsubscribe. While a listener exists, each solve started puts `progress: true` on the solve message's **envelope**. The request itself is unchanged, so the plan is too. |
+| The tap | `solveProgressTap.js`, installed by `jsRuntimeSolveWorker.js` | Only when the envelope asks: `withSolveProgress(tap.hook, () => solveAnytime(…))`. It reads the worker's clock and posts at most once a second. It calls `peek()` only for a post, once at each segment's `done` (to bank that segment's work), and once after the solve for the **final** snapshot, which is posted just before `result`. |
+| The stamps | the tap, on the posted copy | `budget.spent = {shouldStop}`: the attempt's work units, summed over its segments (each segment's `shouldStop` is banked at its `done`). `budget.limit = {shouldStop: budgetWork, window?}`. `window` is present only while it bounds the pass that is running (the `full` pass with a plan in hand). `segment.pass` is the anytime pass that is running. |
+| The routing | the service | `listener({solveId, snapshot, final})` is called only for the solve in flight. A message from a cancelled, superseded or answered solve is dropped and counted in `stats.progressDropped`. |
+| The view | `flashPanel/seedlingSolveProgress.js` (the model), `seedlingSolveProgressView.js` (the DOM) | The setting is `moduleSettings.flashPanel.seedlingSolveProgressView` (default off), and the panel's **Solve Progress** button flips it. While the view is open it subscribes to the JS page's service and to each wasm engine's service, and it re-resolves them every second. Closing it unsubscribes from all of them. |
+
+The meter reconciles two clocks. `budget.work.shouldStop` counts per segment, but the page's work clock counts per attempt, across every pass. So the meter shows `budget.spent` (the attempt's sum) against `budget.limit`, and marks the window when one is set. The tree and the tiles reset with each new `segment.index`. The final snapshot's `budget.spent.shouldStop` equals the attempt's `work` in its result (`jsRuntimeSolveProgress.test.js`).
+
+The view drops a note of an older solve than the one it shows, and, within a solve, a `seq` older than or equal to the last (a repeated final is the exception). A finished subtree is collapsed until the viewer opens it, and the list is capped at `SOLVE_PROGRESS_TREE_CAP` rows. The tile map is one canvas, shaded on a log scale of the count, and hovering over a tile names its count and earliest tick. The header shows *last update N s ago*, because the solver reports only at its own sites: a quiet stretch shows as quiet.
+
+**What the open view costs** (`probe-seedling-solve-progress.mjs --hook=tap`, node, 2026-10-11, on an 8-core box at load average ~14). The time spent inside the tap (its clock reads, peeks and one `structuredClone` per post) was 0.15–0.21% of the L18 hammer solve (23–43 posts and 26–46 peeks over 22–43 s) and 0.02–0.04% of the L40 climb (37–43 posts over 102–123 s), in two runs each. The answer digests matched the no-hook runs. The solver's own counting under an installed hook is D1's measurement. A wall-clock A/B on that box is noise: the same L18 solve with no hook took 19.9 s in one run and 45.2 s in another.
+
+⚠ **A solve already running when the view opens does not report.** Its worker is busy until it answers, so it cannot be told to start. The view starts reporting from the next solve. A view closed during a solve drops the rest of that solve's stream at the service.

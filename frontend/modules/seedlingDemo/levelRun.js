@@ -111,6 +111,8 @@ import {
     GHOSTSWORD_PRESS, GHOST_PRESS_ARMS, GHOST_SWORD_DAMAGE, GHOST_SWORD_REACH,
     ghostSlashRect, ghostSwingRefusal, slashEndTicksFor,
 } from './ghostSword.js';
+// ⛓⛓⛓ hammer-phase C2: the spinner forecasts carry a ghost press (behind `GHOST_SPINNER_PRESS`, ON by default).
+import { ghostSpinnerPressFor } from './ghostSpinnerPress.js';
 import {
     createBossTotem, bossTotemClampY, bossTotemSolidRect, renderBossTotem, stepBossTotem,
     wandFadeFreezeTicks, wandFadeGateOpen, WAND_PICKUP,
@@ -14366,24 +14368,33 @@ export function createLevelRun({
      * slashReachFor(scale)`, the line of sight (the run THROWS there; a forecast reports it and applies nothing), then
      * `hitSpinner`. Mutates `st.byId` with each hit body and pushes one row per test the rect reached to `tests`.
      *
+     * ⛓⛓⛓ hammer-phase C2 — A GHOST THRUST, under `GHOST_SPINNER_PRESS`: `applyThrust`'s ghost arm, in its order — the
+     * 24 x 48 rect at scale 1 (`ghostSlashRect`), reach 24, NO line (`|| hasGhostSword`), and `hitSpinner` with the
+     * ghost's `pressHitDamage` / `pressHitType` (2, "Spear"). OFF this is never asked with a ghost thrust (the callers
+     * fire `sword` thrusts only), so every sword test is byte-identical.
+     *
      * @returns {?{t, id, at}} the first blocked line of THIS call, or null
      */
     const forecastSwordTest = (st, th, t, from, { own, damage, frozen, weapon }, tests) => {
         let blocked = null;
+        const ghost = ghostSpinnerPressFor(th.weapon);
         const scale = th.scale ?? SLASH_SCALE_NORMAL;
-        const rect = slashRect(from.x, from.y, th.direction, scale);
-        const reachLimit = slashReachFor(scale);
+        const rect = ghost ? ghostSlashRect(from.x, from.y, th.direction) : slashRect(from.x, from.y, th.direction, scale);
+        const reachLimit = ghost ? GHOST_SWORD_REACH : slashReachFor(scale);
         for (const sp of st.byId.values()) {
             if (sp.removed) continue;
             const body = spinnerRect(sp);
             if (!rectsOverlap(rect, body)) continue;
             const reach = distanceRectPoint(from.x, from.y, body);
+            // ⛓ C2: a ghost swing's reach cut is the WHOLE collection's, before the arms (`presses[].outOfReach`), so the
+            // run writes no `spinnerPressHits` row for it — and nor does its forecast
+            if (ghost && reach > reachLimit) continue;
             if (reach > reachLimit) {
                 tests.push({ t, id: sp.id, own, landed: false, killed: false, reach, hits: sp.hits,
                     hitsTimer: sp.hitsTimer, why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}` });
                 continue;
             }
-            const blocker = collideLineSolid(from.x, from.y, sp.x, sp.y);
+            const blocker = ghost ? null : collideLineSolid(from.x, from.y, sp.x, sp.y);
             if (blocker) {
                 blocked = blocked ?? { t, id: sp.id, at: blocker.at };
                 tests.push({ t, id: sp.id, own, landed: false, killed: false, reach, hits: sp.hits,
@@ -14391,8 +14402,9 @@ export function createLevelRun({
                 continue;
             }
             const before = sp;
-            const after = hitSpinner(sp, { force: SWORD_FORCE, from: { x: from.x, y: from.y }, damage,
-                t: weapon === 'spear' ? 'Spear' : 'Sword', frozen });
+            const after = hitSpinner(sp, { force: SWORD_FORCE, from: { x: from.x, y: from.y },
+                damage: ghost ? pressHitDamage(th.weapon) : damage,
+                t: ghost ? pressHitType(th.weapon) : (weapon === 'spear' ? 'Spear' : 'Sword'), frozen });
             st.byId.set(sp.id, after);
             const landed = after.hits !== before.hits;
             tests.push({ t, id: sp.id, own, landed, killed: after.destroy && !before.destroy, reach,
@@ -15124,7 +15136,8 @@ export function createLevelRun({
             const rows = [];
             const bodies = [];
             const fire = (th, t) => {
-                if (th.weapon !== 'sword') return;
+                // ⛓ hammer-phase C2: a ghost thrust tests too, under `GHOST_SPINNER_PRESS` (ON by default; OFF: the sword's only)
+                if (th.weapon !== 'sword' && !ghostSpinnerPressFor(th.weapon)) return;
                 // ⚠ a test of a press ALREADY IN FLIGHT (the run's own window) is reported, never this press's
                 const own = thrust !== null && th.pressTick === pressAt;
                 const from = pointAt(t);
@@ -15228,7 +15241,8 @@ export function createLevelRun({
                             const fired = swordWindowStep(win, t);
                             win = fired.window;
                             for (const th of fired.fires) {
-                                if (th.weapon !== 'sword') continue;
+                                // ⛓ hammer-phase C2: and a ghost thrust, under `GHOST_SPINNER_PRESS`
+                                if (th.weapon !== 'sword' && !ghostSpinnerPressFor(th.weapon)) continue;
                                 if (!point || !Number.isFinite(point.x) || !Number.isFinite(point.y)) {
                                     throw new Error('levelRun.spinnerFightForecast: no player position for the hit '
                                         + `test at tick ${t} — a cursor with a window in flight reads the point.`);
@@ -15248,7 +15262,11 @@ export function createLevelRun({
                             // releases after the press (`slashEnd` is below the press in `Player.update`)
                             let endsAt = slash.endsAt !== null && slash.endsAt <= t - 1 ? null : slash.endsAt;
                             let state = r.state;
-                            if (opens) endsAt = t + SLASH_ANIM_TICKS[state.anim];
+                            // ⛓ hammer-phase C2: a ghost swing releases on its own clock (`slashEndTicksFor`: 7 / 6)
+                            if (opens) {
+                                endsAt = t + (ghostSpinnerPressFor(weapon) ? slashEndTicksFor(state.anim, weapon)
+                                    : SLASH_ANIM_TICKS[state.anim]);
+                            }
                             else if (endsAt !== null && t >= endsAt) {
                                 state = slashSet(state, { pressed: false, ...gate }).state;
                                 endsAt = null;

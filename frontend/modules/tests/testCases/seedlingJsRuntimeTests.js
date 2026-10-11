@@ -748,6 +748,106 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+// ── ⛓ SOLVE PROGRESS (JS half): the panel's progress view on a real solve ──
+
+const SOLVE_PROGRESS_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressView';
+
+export async function seedlingJsRuntimeSolveProgressView(tc) {
+    let previousRuntime = 'auto';
+    let previousSolver = true;
+    let previousView = false;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
+    try { previousView = await settingsManager.getSetting(SOLVE_PROGRESS_KEY, false); } catch { /* keep the default (off) */ }
+    let svc = null;
+    try {
+        // ⚖ This row SETS its own state: solver mode on, the view open (session-only overrides, restored below).
+        await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
+        await settingsManager.updateSetting(SOLVE_PROGRESS_KEY, true, { persist: false });
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
+        if (!ready) return tc.getOverallResult();
+        const up = await atlasPanelOnJs(tc, staleAdapter);
+        if (!up) return tc.getOverallResult();
+        const { rt, panel } = up;
+        const view = panel._solveProgressView;
+        tc.assertEqual('the progress view is open (the setting is on)', true, !!view?.isOpen);
+        svc = rt.playback.solveService;
+        tc.assertEqual('the JS page solves in its WORKER service', true, typeof svc?.subscribeProgress === 'function');
+        // the feed re-resolves the page's service each second: wait until it listens, BEFORE the solve starts
+        const listening = await tc.pollForCondition(() => svc.progressSubscribed === true,
+            'the view subscribed to the page\'s solve service', 5000, 100);
+        tc.reportCondition('the view listens to the page\'s solve service before the solve', !!listening);
+        if (!listening) return tc.getOverallResult();
+
+        const map = await (await fetch(new URL(VANILLA_MAP_URL, document.baseURI).href)).json();
+        const room = map.levels.find((l) => l.level === ENEMY_ROOM.level);
+        const tile = (e) => [Math.floor(e.x / map.tile_size), Math.floor(e.y / map.tile_size)];
+        const door = room.entities.find((e) => Number(e.attrs?.to) === ENEMY_ROOM.from);
+        const stairs = room.entities.find((e) => e.x === ENEMY_ROOM.stairs.x && e.y === ENEMY_ROOM.stairs.y);
+        const spawn = returnSpawnTable(map).get(returnKey(ENEMY_ROOM.level, ...tile(door)));
+        tc.reportCondition(`level ${ENEMY_ROOM.level} has its door, its stairs and a return spawn`, !!(door && stairs && spawn));
+        if (!door || !stairs || !spawn) return tc.getOverallResult();
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [ENEMY_ROOM.level, spawn.x, spawn.y] }]);
+        const there = await tc.pollForCondition(() => rt.run?.level === ENEMY_ROOM.level,
+            `the page is in level ${ENEMY_ROOM.level}`, 10000, 100);
+        tc.reportCondition('teleported into the enemy room', !!there);
+        if (!there) return tc.getOverallResult();
+        const answer = rt.playback.walkTo({ kind: 'exit', level: ENEMY_ROOM.level, tiles: [tile(stairs)] });
+        tc.assertEqual('the page accepted the stairs goal', true, !!answer?.ok);
+        rt.playback.play();
+        const settled = await tc.pollForCondition(() => ['done', 'failed'].includes(rt.playback.state) || !!rt.halted,
+            'the solver-driven walk settled', 60000, 200);
+        tc.reportCondition('the walk settled', !!settled);
+        tc.assertEqual('the walk is DONE', 'done', rt.playback.state);
+        const s = rt.playback.solverStats;
+        tc.assertEqual('the SOLVER drove it, in the worker', '1/worker', `${s.solves}/${s.lastSolve?.where ?? null}`);
+
+        // ── the view: the stream arrived, finished, and was drawn ──
+        const st = view.state;
+        tc.log(`view: ${st.received} update(s), seq ${st.seq}, final ${st.final}; service ${JSON.stringify(svc.stats)}`);
+        tc.assertEqual('the view received the FINAL snapshot of the solve', true, st.final === true);
+        tc.assertEqual('the final snapshot\'s segment finished solved', 'solved', st.snapshot?.segment?.outcome ?? null);
+        tc.assertEqual('the progress messages came at most ~1/s: updates ≤ the solve\'s wait in seconds + 2', true,
+            st.received <= Math.ceil((s.lastSolve?.waitMs ?? 0) / 1000) + 2);
+        const rows = view.tree.querySelectorAll('div').length;
+        tc.assertEqual('the tree is drawn (≥ 1 row)', true, rows >= 1);
+        tc.assertEqual('the meter reads the attempt against the budget', true,
+            /^work \d+ \/ \d+ units/.test(view.meterText.textContent));
+        if (st.snapshot?.tiles) {
+            tc.assertEqual('the tile map is ONE canvas sized to the room', `${st.snapshot.tiles.cols}x${st.snapshot.tiles.rows}`,
+                `${Math.round(view.canvas.width / view._px)}x${Math.round(view.canvas.height / view._px)}`);
+        }
+        // the "last update N s ago" indicator ticks on its own (never implies liveness from the throttle)
+        const aged = await tc.pollForCondition(() => /last update [1-9]\d* s ago/.test(view.header.textContent),
+            'the header\'s "last update N s ago" advanced', 5000, 100);
+        tc.reportCondition('the age indicator advances while nothing arrives', !!aged);
+    } finally {
+        try { await settingsManager.updateSetting(SOLVE_PROGRESS_KEY, previousView, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    // ⛔ closing the view UNSUBSCRIBES: the next solve installs no hook
+    if (svc && previousView !== true) {
+        const off = await tc.pollForCondition(() => svc.progressSubscribed === false,
+            'the closed view left no listener on the service', 3000, 100);
+        tc.reportCondition('closing the view unsubscribed it', !!off);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-solve-progress-view',
+    name: 'Seedling JS runtime: the panel\'s SOLVE PROGRESS view on a real solve (L6, past the bobs)',
+    description: 'With flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView ON, on '
+        + 'seedling_atlas: the view subscribes to the page\'s worker service before the solve, the L6 enemy-room solve '
+        + 'streams its progress, and the view holds the FINAL snapshot (solved), draws its tree, its tile canvas and '
+        + 'its work meter, and its "last update N s ago" advances; closing the view unsubscribes.',
+    testFunction: seedlingJsRuntimeSolveProgressView,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
 // ── Seedling solver-walk S3: a KILL LOCK on the live page (scratch persistence, ⚖ Q4) ──
 
 /**
