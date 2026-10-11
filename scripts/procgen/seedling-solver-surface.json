@@ -136,8 +136,8 @@
       "sites": 60,
       "seen": "both",
       "via": [
-        "const-alias",
-        "direct"
+        "direct",
+        "param"
       ],
       "dynamic": {
         "reads": 80927,
@@ -574,8 +574,8 @@
       "sites": 94,
       "seen": "both",
       "via": [
-        "const-alias",
-        "direct"
+        "direct",
+        "param"
       ],
       "dynamic": {
         "reads": 10036,
@@ -709,8 +709,8 @@
       "sites": 130,
       "seen": "both",
       "via": [
-        "const-alias",
-        "direct"
+        "direct",
+        "param"
       ],
       "dynamic": {
         "reads": 377501,
@@ -833,8 +833,8 @@
       "sites": 94,
       "seen": "both",
       "via": [
-        "const-alias",
-        "direct"
+        "direct",
+        "param"
       ],
       "dynamic": {
         "reads": 88749,
@@ -1017,8 +1017,8 @@
       "sites": 476,
       "seen": "both",
       "via": [
-        "const-alias",
-        "direct"
+        "direct",
+        "param"
       ],
       "dynamic": {
         "reads": 454608,
@@ -1043,7 +1043,7 @@
       "sites": 1,
       "seen": "static",
       "via": [
-        "const-alias"
+        "param"
       ],
       "dynamic": null,
       "why": "Method `takeApItem({level, id, tag})` banks Seedling's `APItem.removed()` write, `Game.setPersistence(tag, false)` on the take tick, into `earnedClears` and the next build's cleared set (F7 D-B); the solver's apitem observer calls it."
@@ -1092,8 +1092,8 @@
       "sites": 7,
       "seen": "both",
       "via": [
-        "const-alias",
-        "direct"
+        "direct",
+        "param"
       ],
       "dynamic": {
         "reads": 54,
@@ -1153,12 +1153,11 @@
         "botDriverV2.js": 56,
         "crusherBait.js": 2,
         "dangerMap.js": 1,
-        "solverBot.js": 186
+        "solverBot.js": 187
       },
-      "sites": 247,
+      "sites": 248,
       "seen": "both",
       "via": [
-        "const-alias",
         "direct",
         "param"
       ],
@@ -1225,9 +1224,9 @@
       "files": {
         "arrivalSolid.js": 1,
         "botDriverV2.js": 10,
-        "solverBot.js": 20
+        "solverBot.js": 21
       },
-      "sites": 31,
+      "sites": 32,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1257,7 +1256,8 @@
       "sites": 2,
       "seen": "static",
       "via": [
-        "const-alias"
+        "const-alias",
+        "param"
       ],
       "dynamic": null,
       "why": "The level's placed APItem roster {id, tag, x, y, look, rect} (a delivered set's Archipelago placement pickup, Seedling-specific); read by the collect-placement selector and the apitem contact observer, never by a step (seedling fidelity F2)."
@@ -2477,9 +2477,9 @@
       "form": "geometry-query",
       "files": {
         "botDriverV2.js": 2,
-        "solverBot.js": 2
+        "solverBot.js": 3
       },
-      "sites": 4,
+      "sites": 5,
       "seen": "static",
       "via": [
         "import"
@@ -3756,7 +3756,7 @@
       "surface": "import",
       "name": "KILLLOCK_BODIES",
       "module": "frontend/modules/seedlingDemo/killLockBodies.js",
-      "line": 54,
+      "line": 55,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -4287,9 +4287,9 @@
         "botDriverV2.js": 12,
         "crusherBait.js": 4,
         "encounters.js": 1,
-        "solverBot.js": 42
+        "solverBot.js": 43
       },
-      "sites": 60,
+      "sites": 61,
       "seen": "static",
       "via": [
         "import"

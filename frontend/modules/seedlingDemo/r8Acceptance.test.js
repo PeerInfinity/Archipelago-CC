@@ -383,6 +383,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'ghostsword-l30-bobsoldier',
             // ⛓⛓⛓ Seedling fidelity BOBSOLDIER2: the kill arm's stance, before and after, in L30.
             'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch',
+            // ⛓⛓⛓ Seedling fidelity L30KEYLOCK: the keylock beside the BobSoldier, before and after, in L30.
+            'l30keylock-pit224-before', 'l30keylock-pit224', 'l30keylock-pit240',
             // ⛓⛓⛓ Seedling fidelity WALLFLYER: the two kill witnesses and the shield-bump witness, in L22.
             'wallflyer-kill', 'wallflyer-kill-flight', 'wallflyer-shield-bump',
             // ⛓ Seedling fidelity CRUSHER: the round-trip witness ends on its L40 arrival.
@@ -442,12 +444,15 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity BOBSOLDIER2 adds two (80) — `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch` (L30).
         // ⛓ Seedling fidelity ENCOUNTERS adds two (82) — `enc-l32-fallen-door`, `enc-l32-fire-return` (their L30 falls).
         // ⛓ ENCOUNTERS D3 adds one (83) — `enc-l12-witch` (L12).
-        expect(out.exposed).toBe(83);
+        // ⛓ Seedling fidelity L30KEYLOCK adds three (86) — `l30keylock-pit224-before`, `l30keylock-pit224`,
+        // `l30keylock-pit240` (L30; the AFTERs also enter L22).
+        expect(out.exposed).toBe(86);
         expect(out.tapes).toEqual([
             'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
             'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch', 'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'crusher-l42-round-trip', 'dash-l16-sword-all', 'enc-l12-witch', 'enc-l32-fallen-door', 'enc-l32-fire-return', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
-            'ghostsword-l30-bobsoldier', 'l14-swordless-detour',
+            'ghostsword-l30-bobsoldier', 'l14-swordless-detour', 'l30keylock-pit224', 'l30keylock-pit224-before',
+            'l30keylock-pit240',
             'ladder2-l104-beam',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
@@ -623,6 +628,10 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓ fidelity BOBSOLDIER2's two L30 witnesses — the mirror rule.
             'bobsoldier2-l30-dash-stance': { tape: {}, levels: [30] },
             'bobsoldier2-l30-torch': { tape: {}, levels: [30] },
+            // ⛓ fidelity L30KEYLOCK's three L30 witnesses (the two AFTERs end in L22, a WallFlyer room) — the mirror rule.
+            'l30keylock-pit224-before': { tape: {}, levels: [30] },
+            'l30keylock-pit224': { tape: {}, levels: [22, 30] },
+            'l30keylock-pit240': { tape: {}, levels: [22, 30] },
             // ⛓ fidelity ENCOUNTERS: the two L32 witnesses' L30 falls — the mirror rule.
             'enc-l32-fallen-door': { tape: {}, levels: [30] },
             'enc-l32-fire-return': { tape: {}, levels: [30] },
