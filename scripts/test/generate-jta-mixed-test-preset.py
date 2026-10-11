@@ -139,6 +139,8 @@ def build_rules() -> dict:
     # (31d515e2c6 fixed them in the preset only): placements are a
     # location->item OBJECT, a world names its game, and exporter is
     # keyed by slot, so a hand-authored preset carries none.
+    # game_info names the slot's goal, the victory item, as every exporter
+    # does (rules S12: the schema refuses a game_info with no slot row).
     rules = {
         "schema_version": 3,
         "game_name": GAME_NAME,
@@ -170,7 +172,7 @@ def build_rules() -> dict:
         "loop_costs": {PLAYER_ID: DEFAULT_LOOP_COSTS},
         "world": {PLAYER_ID: {"game": GAME_NAME}},
         "exporter": {},
-        "game_info": {},
+        "game_info": {PLAYER_ID: {"completion_condition": {"type": "item_check", "item": "victory"}}},
         "helpers": {},
     }
 

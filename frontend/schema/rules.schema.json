@@ -242,7 +242,8 @@
     },
     "game_info": {
       "type": "object",
-      "description": "Game-specific information and accumulator patterns, keyed by player slot ID (string). Contains custom game data that doesn't fit in world/exporter sections.",
+      "description": "Game-specific information and accumulator patterns, keyed by player slot ID (string). Contains custom game data that doesn't fit in world/exporter sections. At least one slot row (rules S12): every producer writes the slot's completion_condition, so an empty map is a writer that forgot the slot.",
+      "minProperties": 1,
       "patternProperties": {
         "^[0-9]+$": {
           "type": "object",
