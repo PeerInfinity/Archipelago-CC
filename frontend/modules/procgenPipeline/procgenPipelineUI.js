@@ -349,6 +349,8 @@ export class ProcgenPipelineUI {
         this.useLoadedRules = true;
         this.useLoadedSphereLog = true;
         this.result = null;
+        // A world loaded into the app, reconstructed for the map (see `result`).
+        this.loadedMap = null;
         // Sphere-growth stepped-pipeline state (null until step 1 runs).
         // See _stepPlan / _renderSphereSteps. Session-only (not persisted).
         this._stepState = null;
@@ -419,12 +421,11 @@ export class ProcgenPipelineUI {
             if (this.useLoadedRules) this._applyLoadedRules();
             // If the loaded rules.json carries preset_sidecars,
             // reconstruct a Grid so the composite-view canvas paints
-            // all regions side-by-side. A subsequent local Generate
-            // overwrites this.result, so the user always sees the
-            // most recent state. We avoid clobbering an in-progress
-            // local generation result on top.
+            // all regions side-by-side (`loadedMap`). The panel's own
+            // generation (`this.result`) is KEPT: the map shows whichever
+            // came last, the exports always act on the generation.
             const reconstructed = reconstructResultFromSidecars(data.rawJsonData);
-            if (reconstructed) this.result = reconstructed;
+            if (reconstructed) this._showLoaded(reconstructed);
             // ⛓ C1 — a region its substrate refused is not drawn; say which.
             const refusedNote = refusedRegionsNote(reconstructed);
             if (refusedNote) this.message = refusedNote;
@@ -856,7 +857,7 @@ export class ProcgenPipelineUI {
         //   fixture's P2–P4) paints that slot, and there the answer says
         //   nothing can be built for slot 1.
         const reconstructed = reconstructResultFromSidecars(jsonData);
-        if (reconstructed) this.result = reconstructed;
+        if (reconstructed) this._showLoaded(reconstructed);
         this.message = this._handoffAnswer(jsonData, carriedPlayer);
         this.render();
     }
@@ -2253,6 +2254,32 @@ export class ProcgenPipelineUI {
 
     // --- Actions + stats ---
 
+    /**
+     * ⛓ THE PANEL'S OWN GENERATION — `{ grid, rulesJson, stats, … }` from Run
+     * all / a step's Compile, or null. Only a generation sets it; a world LOADED
+     * into the app is `loadedMap` instead. Until tutorial-bugs (2026-10-10) any
+     * world load replaced this with a sidecar reconstruction that has no
+     * rulesJson, so the exports vanished and "Run all" on a complete sphere
+     * pipeline lost its result. Setting it also brings the map back to it.
+     */
+    get result() { return this._result ?? null; }
+
+    set result(value) {
+        this._result = value;
+        this._showingLoadedMap = false;
+    }
+
+    /** Paint a loaded world's map (`reconstructResultFromSidecars`) without touching the generation. */
+    _showLoaded(reconstructed) {
+        this.loadedMap = reconstructed;
+        this._showingLoadedMap = true;
+    }
+
+    /** What the map and its stats line show: the loaded world if it came last, else the generation. */
+    _mapResult() {
+        return (this._showingLoadedMap && this.loadedMap) ? this.loadedMap : this.result;
+    }
+
     _renderActions() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-actions';
@@ -2444,11 +2471,9 @@ export class ProcgenPipelineUI {
 
         // Post-generation export actions, shown next to Generate once
         // a result is available. Hidden until then to keep the panel
-        // uncluttered before there's anything to export. ⛓ A result
-        // RECONSTRUCTED from a loaded world's sidecars (the rawJsonLoaded
-        // handler) is a map with no rulesJson: nothing to export, so no
-        // buttons (until 2026-10-10 "Load into frontend" published undefined
-        // and still said "Loaded").
+        // uncluttered before there's anything to export. They act on the
+        // panel's OWN generation, never on a loaded world's map (`loadedMap`,
+        // which has no rulesJson).
         if (this.result?.rulesJson) {
             const json = stringifyRulesJson(this.result.rulesJson);
             const seedName = this.result.rulesJson?.seed_name || String(this.params.seed);
@@ -3342,8 +3367,9 @@ export class ProcgenPipelineUI {
     _renderStats() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-stats';
-        if (!this.result) return section;
-        const { stats, poolRemaining, fromLoadedPreset } = this.result;
+        const shown = this._mapResult();
+        if (!shown) return section;
+        const { stats, poolRemaining, fromLoadedPreset } = shown;
         const parts = [];
         if (fromLoadedPreset) {
             parts.push(`loaded preset · regions ${stats.regionsBuilt}`);
@@ -3401,8 +3427,8 @@ export class ProcgenPipelineUI {
             grid = this._spiralState.regions.grid;
             regionSize = this.result?.regionSize
                 ?? { width: this.params.regionWidth, height: this.params.regionHeight };
-        } else if (this.result) {
-            ({ grid, regionSize } = this.result);
+        } else if (this._mapResult()) {
+            ({ grid, regionSize } = this._mapResult());
         }
         if (!grid || !regionSize) {
             const hint = document.createElement('div');

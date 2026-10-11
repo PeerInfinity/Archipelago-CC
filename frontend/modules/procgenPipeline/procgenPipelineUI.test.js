@@ -826,3 +826,25 @@ describe('local-storage V1 — a full origin is reported, never a silent success
         });
     });
 });
+
+describe('a loaded world paints the map but never replaces the panel\'s own generation (tutorial-bugs)', () => {
+    it('result stays the generation; the map shows whichever came last', () => {
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        const generation = { grid: 'gen-grid', rulesJson: { seed_name: 'g' }, stats: {} };
+        const loaded = { grid: 'loaded-grid', stats: {}, fromLoadedPreset: true };
+        ctx.result = generation;
+        expect(ctx._mapResult()).toBe(generation);
+        // A world load (the rawJsonDataLoaded handler / a hand-off).
+        ctx._showLoaded(loaded);
+        expect(ctx.result).toBe(generation);           // the exports still have their rulesJson
+        expect(ctx.result.rulesJson).toEqual({ seed_name: 'g' });
+        expect(ctx._mapResult()).toBe(loaded);         // the map shows the loaded world
+        // The next generation takes the map back.
+        const next = { grid: 'next-grid', rulesJson: { seed_name: 'n' }, stats: {} };
+        ctx.result = next;
+        expect(ctx._mapResult()).toBe(next);
+        // Clearing the generation does not resurrect the loaded map either.
+        ctx.result = null;
+        expect(ctx._mapResult()).toBe(null);
+    });
+});
