@@ -25,8 +25,13 @@ import {
     frictionStep,
     getPos,
     gridPos,
+    PUSH_SPEAR_DIRECTION,
+    PUSH_SPEAR_DIRECTION_DEFAULT,
     hitPushable,
+    hitPushableByWeapon,
     hitPushableFromPoint,
+    spearDirectionFor,
+    withPushSpearDirection,
     movedPushables,
     newPushable,
     pushVector,
@@ -585,5 +590,51 @@ describe('R5 slice 6 — hitPushableFromPoint (the absolute/`moveTypes` arm)', (
         const settled = run(arrived, 1, OPEN);
         expect(settled.vx).toBe(0);
         expect(hitPushableFromPoint(settled, { x: 100, y: 184 }).moved).toBe(true);
+    });
+});
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — the Spear arm reads `spearDirection`, and a
+ * plain sword slash leaves it at -1 (`Player.as:814`, `:1123`). Game-measured by
+ * `probe-seedling-pushblock-weapon.mjs`: L65's block, one press facing W — sword
+ * Δx 0.00, spear Δx 15.95 (model and game 0.000 px apart, switch ON).
+ */
+describe('PUSHBLOCK: which weapon\'s press moves a PushableBlockSpear', () => {
+    const spearBlock = () => newPushable({
+        id: 'pushableblockspear@176,128', as3: 'PushableBlockSpear', tag: 'pushableblockspear',
+        x: 176, y: 128,
+    });
+    it('the switch defaults ON (the game\'s reading)', () => {
+        expect(PUSH_SPEAR_DIRECTION_DEFAULT).toBe(true);
+        expect(PUSH_SPEAR_DIRECTION.enabled).toBe(true);
+    });
+    it('spearDirection: the facing for a spear thrust and a ghost swing, -1 for a sword', () => {
+        for (const d of [0, 1, 2, 3]) {
+            expect(spearDirectionFor('spear', d)).toBe(d);
+            expect(spearDirectionFor('ghostsword', d)).toBe(d);
+            expect(spearDirectionFor('sword', d)).toBe(-1);
+        }
+    });
+    it('a sword slash leaves the block where it is; a spear thrust moves it one tile', () => {
+        const sword = hitPushableByWeapon(spearBlock(), 'sword', 2);
+        expect(sword.moved).toBe(false);
+        expect(sword.block.target).toEqual(getPos(176, 128));
+        expect(sword.why).toMatch(/spearDirection/);
+        const spear = hitPushableByWeapon(spearBlock(), 'spear', 2);
+        expect(spear.moved).toBe(true);
+        expect(spear.block.target).toEqual({ x: 176 + TILE / 2 - TILE, y: 128 + TILE / 2 });
+        expect(spear).toEqual(hitPushable(spearBlock(), 2));
+    });
+    it('OFF, the pre-slice reading: every weapon pushes along the facing', () => {
+        withPushSpearDirection(false, () => {
+            expect(spearDirectionFor('sword', 2)).toBe(2);
+            expect(hitPushableByWeapon(spearBlock(), 'sword', 2).moved).toBe(true);
+        });
+        expect(PUSH_SPEAR_DIRECTION.enabled).toBe(true);
+    });
+    it('a moving block still refuses the hit, whatever the weapon', () => {
+        const moving = { ...spearBlock(), vx: -PUSHABLE_SPEED };
+        expect(hitPushableByWeapon(moving, 'sword', 2).moved).toBe(false);
+        expect(hitPushableByWeapon(moving, 'spear', 2).moved).toBe(false);
     });
 });

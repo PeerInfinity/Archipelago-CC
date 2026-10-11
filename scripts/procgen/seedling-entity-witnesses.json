@@ -3,7 +3,7 @@
   "head": "af79da5e043b6ad81e63887b8995c560984814ca",
   "treeClean": true,
   "tier": "fast",
-  "entitiesMd5": "33ae40cd5f731799be7c2dd7ac17c497",
+  "entitiesMd5": "322c896f1018c5eada17ec6d79279adc",
   "method": "per record number leaf x magnitude, a child process with the entity-records override installed runs every fast-tier tape through runTapeToStream; a tape moves when its stream md5 differs from the control run or it throws. ulp = +1 ULP; pct10 = x1.1, or +1 for an integer default. corpus-blind = neither magnitude moved any tape.",
   "jobs": 4,
   "wallSeconds": 2957,
@@ -9800,12 +9800,131 @@
         "movedTapes": []
       },
       "verdict": "corpus-blind"
+    },
+    "chasers.bulb.targetOffset.x": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.bulb.targetOffset.y": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.bulb.dropDeath.drop.frames": {
+      "ulp": {
+        "value": 7.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 8,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.bulb.dropDeath.drop.rate": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.bulb.dropDeath.die.frames": {
+      "ulp": {
+        "value": 7.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 8,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.bulb.dropDeath.die.rate": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.bulb.dropDeath.becomes": {
+      "ulp": {
+        "value": 17.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 18,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
     }
   },
   "summary": {
     "verdicts": {
       "moves": 97,
-      "corpus-blind": 431
+      "corpus-blind": 438
     },
     "byClass": {
       "arrow": {
@@ -9834,7 +9953,7 @@
       },
       "chasers": {
         "moves": 11,
-        "corpus-blind": 16
+        "corpus-blind": 23
       },
       "crusher": {
         "moves": 0,
@@ -9953,8 +10072,16 @@
       "chasers.lavarunner.speedByTerrain.swim",
       "chasers.lavarunner.speedByTerrain.walk",
       "chasers.lavarunner.speedByTerrain.swimTiles[0]",
-      "chasers.lavarunner.speedByTerrain.swimTiles[1]"
+      "chasers.lavarunner.speedByTerrain.swimTiles[1]",
+      "chasers.bulb.targetOffset.x",
+      "chasers.bulb.targetOffset.y",
+      "chasers.bulb.dropDeath.drop.frames",
+      "chasers.bulb.dropDeath.drop.rate",
+      "chasers.bulb.dropDeath.die.frames",
+      "chasers.bulb.dropDeath.die.rate",
+      "chasers.bulb.dropDeath.becomes"
     ],
-    "why": "seedling-fidelity-killlock added CHASERS.lavarunner; these 8 leaves were measured with --only over today's 180-tape fast tier (0 moved, 0 threw at both magnitudes), which contains every one of this file's 139 tapes, so the rows state 0 moved of those 139. CONTROL stable; its one expectation divergence (r5-l60-kill) is pre-existing at the base 0f952e9a9e. Every other row is the earlier full --write. ⛓ wave-8 harvest: BOBSOLDIER's full --write (183 tapes) is the base of this file; the 8 lavarunner rows are carried into it and restated over its 183 tapes (KILLLOCK's switch K2 lavaRunnerLive stays OFF, so no tape bridges a lavarunner; re-checked with --only at the harvest tip d9f182f71d with K1/K3/K4/K5 ON: the 4 chasers.jellyfish.* and the 8 chasers.lavarunner.* leaves, 0 moved / 0 threw at both magnitudes over the 189-tape fast tier, CONTROL stable). entitiesMd5 is the union's (33ae40cd: BOBSOLDIER's 0655b315 + the lavarunner row); every other row is BOBSOLDIER's full --write."
-  }
+    "why": "seedling-fidelity-killlock added CHASERS.lavarunner; these 8 leaves were measured with --only over today's 180-tape fast tier (0 moved, 0 threw at both magnitudes), which contains every one of this file's 139 tapes, so the rows state 0 moved of those 139. CONTROL stable; its one expectation divergence (r5-l60-kill) is pre-existing at the base 0f952e9a9e. Every other row is the earlier full --write. ⛓ wave-8 harvest: BOBSOLDIER's full --write (183 tapes) is the base of this file; the 8 lavarunner rows are carried into it and restated over its 183 tapes (KILLLOCK's switch K2 lavaRunnerLive stays OFF, so no tape bridges a lavarunner; re-checked with --only at the harvest tip d9f182f71d with K1/K3/K4/K5 ON: the 4 chasers.jellyfish.* and the 8 chasers.lavarunner.* leaves, 0 moved / 0 threw at both magnitudes over the 189-tape fast tier, CONTROL stable). entitiesMd5 is the union's (33ae40cd: BOBSOLDIER's 0655b315 + the lavarunner row); every other row is BOBSOLDIER's full --write. ⛓ 2026-10-10 seedling-fidelity-bulb: CHASERS.bulb added 7 leaves, measured with --only over the 204-tape fast tier at cf7a0eb (a superset of this file's 183 — checked: 0 of the 183 missing), 0 moved / 0 threw at both magnitudes (contactFidelity.bulbLive ships OFF, so no tape steps a Bulb); CONTROL stable, its one divergence r5-l60-kill as before. Restated over the 183. entitiesMd5 is 322c896f (33ae40cd + the bulb row)."
+  },
+  "note": "⛓ fidelity-bulb: the seven chasers.bulb leaves were measured with --only (14 runs over today's 204-tape fast tier, a superset of the 183 listed here: 0 moved, 0 threw) and merged; every other row is the measurement at af79da5e0."
 }

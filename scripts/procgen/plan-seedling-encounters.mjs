@@ -178,6 +178,66 @@ async function main() {
         console.log(`## ${NAME}: ${out.perTick.length} ticks`);
     }
 
+    // ── enc-l32-live-arrival ─────────────────────────────────────────────
+    // ⛓⛓ seedling-fidelity-encounters2 D1/D2: the LIVE page's L32 arrival, not a staged one. The staging is the one
+    // the JS arc's page built at the arrival (`stagingFromWasmArrival`, the logical-links B session, branch
+    // `seedling-js-encounters-rebased` @ 36b72856f5, its solve request for "Level 032 - Bob Boss"), verbatim: the
+    // inventory the walk had earned (the shield, the torch, two keys), 35 cleared flags, the arrival's rng. The plan
+    // is the worker's SHIPPING pass (`dashMode: 'none'`, `ANYTIME_PASSES[0]`), which is the 1,049-tick plan the
+    // page shipped and CI saw leave at t932 — on the game it is 0 px to its end; the t932 divergence needs the
+    // panel's clearing write `hasFire = false` (`probe-seedling-encounter-ticks.mjs --write-at=840,hasFire,false`).
+    {
+        const NAME = 'enc-l32-live-arrival';
+        const LIVE = {
+            boot: Object.freeze({ level: 32, x: 64, y: 112 }),
+            persistence: [[0, 1], [3, 0], [5, 0], [8, 0], [8, 1], [10, 0], [11, 0], [12, 5], [12, 10], [15, 0],
+                [15, 2], [15, 3], [16, 0], [16, 6], [16, 7], [17, 0], [17, 29], [18, 0], [19, 0], [19, 1], [19, 3],
+                [20, 0], [20, 1], [20, 2], [20, 4], [25, 0], [29, 1], [30, 2], [30, 4], [31, 0], [36, 0], [36, 2],
+                [36, 3], [36, 4], [86, 0]].map(([level, tag]) => ({ level, tag })),
+            save: { totem_parts: [], keys: [0, 1], seal_parts: [] },
+            rng: { seed: 1370430624, split: true, cosmetic: 0 },
+            seam: {
+                items: {
+                    hasSword: true, hasGhostSword: false, hasShield: true, hasFire: false, hasWand: false,
+                    hasFireWand: false, canSwim: false, hasSpear: false, hasDarkShield: false, hasDarkSuit: false,
+                    hasDarkSword: false, hasFeather: false, hasTorch: true,
+                },
+                beam: false, rock_set: false, hits_max: 3, time: 22485, primary: 0, secondary: 0,
+                cutscene: [false, false, false, false], menu_state: 0,
+            },
+        };
+        const header = {
+            tape_version: 11, game: 'seedling', boot: LIVE.boot, noclip: false, noDamage: false, noHazards: [],
+            grants: [], persistence: LIVE.persistence, despawn: [], equips: [], pins: ['sound', 'dead_frames'],
+            save: LIVE.save, rng: LIVE.rng, seam: LIVE.seam,
+        };
+        const staging = solveStaging(stagingFromTape(parseTape({ ...header, name: NAME, tick_count: 0, inputs: [] })));
+        const run = createRunForStaging(staging, levelSource);
+        const out = solveSegment({ run, goals: [{ ...L32_GOAL }], name: NAME, boot: staging.boot, dashMode: 'none' });
+        const ev = run.ledger('bobBossEvents');
+        check('⛓⛓ the live arrival is the fresh arena: the rock arms, three forms, the Fire, the burn, the pit to L30',
+            ev.some((r) => r.what === 'rock-armed') && run.progress('inventory').hasFire === true && run.level === 30
+            && run.ledger('playerHits').length === 0, `level ${run.level}, ${out.perTick.length} t`);
+        check('⛓ the page\'s shipped plan, to the tick: 1,049 ticks, the Fire slot selected at t833',
+            out.perTick.length === 1049 && JSON.stringify(out.equips) === JSON.stringify([{ t: 833, slot: 1 }]),
+            `${out.perTick.length} t, equips ${JSON.stringify(out.equips)}`);
+        const folded = buildTape(out.perTick, header.boot, NAME,
+            { noclip: false, noDamage: false, noHazards: [], grants: [] });
+        const description = '⛓⛓ seedling-fidelity-encounters2 D1/D2 — L32\'s Bob Boss from the LIVE page\'s arrival '
+            + '(the JS arc\'s logical-links B session: the walk\'s own inventory, the shield and the torch held, 35 '
+            + 'cleared flags, the arrival\'s rng), solved by the worker\'s shipping pass (dashless): '
+            + `${out.perTick.length} ticks, the arm, seven landings, the Fire, the burn, the pit to L30. It is the plan `
+            + 'CI saw leave at t932 (y 33.85 → 34.25): on the game it plays to its end at 0 px; that divergence is the '
+            + 'panel\'s clearing write `hasFire = false` while its delivery gate holds the Fire. Authored by '
+            + 'scripts/procgen/plan-seedling-encounters.mjs.';
+        const tape = {
+            ...header, name: NAME, tick_count: out.perTick.length, inputs: folded.inputs, equips: out.equips,
+        };
+        const parsed = parseTape({ ...tape, description });
+        emit(NAME, `${JSON.stringify({ ...parsed, description, note: '' }, null, 4)}\n`);
+        console.log(`## ${NAME}: ${out.perTick.length} ticks, equips ${JSON.stringify(out.equips)}`);
+    }
+
     if (failures > 0) {
         console.error(`plan-seedling-encounters: ${failures} check(s) FAILED`);
         process.exit(1);

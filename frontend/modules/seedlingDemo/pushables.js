@@ -22,6 +22,9 @@
  *
  *   1. `moveTypes = ["Spear"]` is never consulted on the player's path.
  *      A SWORD slash pushes a `PushableBlockSpear` too.
+ *      ⛔ HALF WRONG, GAME-MEASURED (seedling fidelity PUSHBLOCK): the arm IS
+ *      reached, but its vector is `spearDirection`, which a sword slash leaves
+ *      at -1 — so the block does not move. See `PUSH_SPEAR_DIRECTION`.
  *   2. The block moves ONE TILE IN THE PLAYER'S FACING DIRECTION, not
  *      "away from the hit point": `tile = getPos() - p * 16` with
  *      `p = (int(d%2==0)*(d-1), int(d%2==1)*(2-d))`, so the step is `-p`
@@ -269,6 +272,83 @@ export function hitPushable(block, direction) {
         moved: true,
         why: null,
         step: PUSH_STEP[direction],
+    };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK (wave 11) — **THE SPEAR ARM READS
+ * `spearDirection`, AND A SWORD SLASH LEAVES IT AT -1.**
+ *
+ * R4 §8.10 (and this file's header, item 1) read "a SWORD slash pushes a
+ * `PushableBlockSpear` too" off `genericHit`'s ORDER. The order is right; the
+ * vector is not the facing. `Player.as:1123` builds `p` from `spearDirection`,
+ * and `set spearing` writes `spearDirection = -1` FIRST on every call
+ * (`Player.as:814`), setting it to `direction` only on a thrust that starts
+ * (`:820`); the one other writer is a GHOST-sword slash (`:921`). So during a
+ * plain sword slash `spearDirection` is -1, `-1 % 2` is -1 in AS3, both
+ * components of `p` are 0, and the relative arm sets `tile` to the block's OWN
+ * centre: the hit lands and the block stays.
+ *
+ * ⛔ GAME-MEASURED, not read: `probe-seedling-pushblock-weapon.mjs` — L65's
+ * block, one press facing W from R4's own stance: SPEAR Δx 15.95 on the game
+ * and the model (0.000 px apart); SWORD Δx **0.00 on the game, 15.95 on the
+ * old model**. Every R4 recording pressed with the spear, which is why the
+ * sword half of the claim was never seen.
+ *
+ * The switch is the model change (ON = the game's reading). The node
+ * measuring hook: `SEEDLING_PUSH_SPEAR_DIRECTION=0` turns it OFF for a process.
+ */
+export const PUSH_SPEAR_DIRECTION = { enabled: true };
+export const PUSH_SPEAR_DIRECTION_DEFAULT = true;
+
+const pushSpearEnv = globalThis.process?.env?.SEEDLING_PUSH_SPEAR_DIRECTION;
+if (pushSpearEnv !== undefined && pushSpearEnv !== '') {
+    PUSH_SPEAR_DIRECTION.enabled = pushSpearEnv === '1' || pushSpearEnv === 'on'
+        || pushSpearEnv === 'true';
+}
+
+/** Run `fn` with the switch set to `on`, restoring it after. */
+export function withPushSpearDirection(on, fn) {
+    const was = PUSH_SPEAR_DIRECTION.enabled;
+    PUSH_SPEAR_DIRECTION.enabled = on;
+    try {
+        return fn();
+    } finally {
+        PUSH_SPEAR_DIRECTION.enabled = was;
+    }
+}
+
+/**
+ * `Player.spearDirection` at the moment a press's hit test reaches a block:
+ * the facing for a SPEAR thrust (`set spearing`) and for a GHOST-sword slash
+ * (`slash()`'s `if (hasGhostSword) spearDirection = direction`), and -1 for a
+ * plain sword slash. With the switch OFF, the pre-slice reading (the facing).
+ */
+export function spearDirectionFor(weapon, direction) {
+    assertDirection(direction, 'spearDirectionFor');
+    if (!PUSH_SPEAR_DIRECTION.enabled) return direction;
+    return weapon === 'spear' || weapon === 'ghostsword' ? direction : -1;
+}
+
+/**
+ * `genericHit`'s Spear arm for the weapon that pressed: `hitPushable` along
+ * `spearDirectionFor(weapon, direction)`, and for `spearDirection == -1` the
+ * relative arm with `p = (0, 0)` — `tile` is re-set to the block's own centre
+ * (the block was at rest, so it already pointed there) and nothing moves.
+ */
+export function hitPushableByWeapon(block, weapon, direction) {
+    const sd = spearDirectionFor(weapon, direction);
+    if (sd >= 0) return hitPushable(block, sd);
+    if (block.removed) return { block, moved: false, why: 'the block has been removed' };
+    if (block.vx !== 0 || block.vy !== 0) {
+        return { block, moved: false, why: 'the block is already moving (`v.length > 0`)' };
+    }
+    const here = getPos(block.x, block.y);
+    return {
+        block: { ...block, target: { x: here.x, y: here.y } },
+        moved: false,
+        why: `a ${weapon} slash leaves \`spearDirection\` at -1, so \`p\` is (0, 0) and the `
+            + 'relative arm targets the block\'s own centre (`Player.as:814`, `:1123`)',
     };
 }
 

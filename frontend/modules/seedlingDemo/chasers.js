@@ -366,6 +366,35 @@ export const CHASERS = defineRecord('chasers', {
         liveSwitch: 'bobSoldierLive',
         src: 'Enemies/BobSoldier.as:72-170',
     }),
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bulb D2 — THE SIXTH ROW: the Bulb (`bulb.js` holds its death). `Bulb extends Bob` and
+     * calls `super.update()` while alive, so the chase is `chaseImpulse` (moveSpeed 0.65, runRange 80, no target
+     * offset) behind Bob's `destroy || "die" || freeze` gate, and its `solids` carry Bob's "Enemy" push. What is NOT
+     * Bob's is the death (`dropDeath`): `startDeath` is EMPTY, the update after the blow is an ordinary living one that
+     * ends in `play("drop")`, "drop" slides the body to its tile's centre and its `endAnim` writes LAVA under it, and
+     * "die"'s `endAnim` removes it — no `destroy`, no fade (`dieAnim: null`; `deathTicks` sums the two anims).
+     */
+    bulb: Object.freeze({
+        as3: 'Bulb',
+        targetOffset: Object.freeze({ x: 0, y: 0 }),
+        // `Bob.update`'s gate, reached through `super.update()` while alive.
+        freezesOnGameFreeze: true,
+        // ⛔ Not Bob's "die": the death is `dropDeath`, staged by `bulb.js`.
+        dieAnim: null,
+        dropDeath: Object.freeze({
+            drop: Object.freeze({ frames: 7, rate: 8, src: 'Bulb.as:24 add("drop", [5..11], animSpeed 8)' }),
+            die: Object.freeze({ frames: 7, rate: 8, src: 'Bulb.as:25 add("die", [12..18], animSpeed 8)' }),
+            becomes: TILE_TYPE_IDS.lava,
+            src: 'Enemies/Bulb.as:35-86',
+        }),
+        // ⛔ `Bob.as:39` — `solids.push("Enemy")`, inherited.
+        solidsMover: 'chaser',
+        // `Enemy.knockback`, inherited (a non-killing hit is a dark shield's 0.5).
+        knocksBack: true,
+        /** ⛓ Bridged only while `contactFidelity.CONTACT_FIDELITY.bulbLive` is on (OFF = the BEFORE model). */
+        liveSwitch: 'bulbLive',
+        src: 'Enemies/Bulb.as:35-61 (+ Enemies/Bob.as:44-83 via super.update())',
+    }),
 }, { doc: ['src'], src: 'chasers.js' });
 
 /**
@@ -446,6 +475,11 @@ export function chaserSolids(tag) {
 export function deathTicks(tag) {
     const c = CHASERS[tag];
     if (!c) fail(`deathTicks: "${tag}" is not a transcribed chaser (know ${Object.keys(CHASERS)})`);
+    // ⛓ fidelity-bulb: a drop death is two anims back to back ("drop" then "die"), the removal at the second's end.
+    if (c.dropDeath) {
+        return animTicks(c.dropDeath.drop.frames, c.dropDeath.drop.rate)
+            + animTicks(c.dropDeath.die.frames, c.dropDeath.die.rate);
+    }
     if (c.dieAnim === null) return 0;
     return animTicks(c.dieAnim.frames, c.dieAnim.rate);
 }

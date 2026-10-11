@@ -343,10 +343,11 @@ describe('the kill schedule', () => {
     });
 
     it('refuses a class with no chaser transcription instead of assuming 0', () => {
-        // `bulb` has a census row (1 hit) but no `chasers.js` entry, so its
+        // `flyer` has a census row but no `chasers.js` entry, so its
         // death length is unknown — and the window floor is mostly that
-        // length.
-        expect(() => killSchedule({ tag: 'bulb', cx: 0, cy: 0 }, 0))
+        // length. ⛓ fidelity-bulb: this row named `bulb` until the Bulb was
+        // transcribed (`CHASERS.bulb`); `flyer` is the next untranscribed one.
+        expect(() => killSchedule({ tag: 'flyer', cx: 0, cy: 0 }, 0))
             .toThrow(/no chaser transcription/);
     });
 

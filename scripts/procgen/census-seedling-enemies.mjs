@@ -96,6 +96,8 @@ const { POST_SWORD_ITEMS, PRE_SWORD_ITEMS } = await M('procgenPalette.js');
 const { SEEDLING_DEFAULTS } = await M('procgenSeedling.js');
 const { ENTITY_CLASSES } = await M('levelWorld.js');
 const { MODELLED_ENEMY_CLASSES } = await M('spinner.js');
+// ⛓ fidelity-bulb: a `chasers.js` roster row is a stepper only while the run bridges it (its `liveSwitch`).
+const { CHASERS, isBridgedChaser } = await M('chasers.js');
 const { ENTITY_ROSTER_TYPES } = await M('watchEdit.js');
 
 const arg = (n, d) => (process.argv.find((a) => a.startsWith(`--${n}=`)) ?? `--${n}=${d}`)
@@ -291,8 +293,9 @@ for (const cls of CLASSES) {
         rows.push({
             cls: AT_ARG === '' ? cls : `${cls}@${at.tx},${at.ty}`,
             as3: ENTITY_CLASSES[cls].as3,
-            modelled: Object.keys(MODELLED_ENEMY_CLASSES)
-                .some((k) => k.toLowerCase() === cls) ? 'yes' : 'no',
+            modelled: Object.entries(MODELLED_ENEMY_CLASSES)
+                .some(([k, row]) => k.toLowerCase() === cls && (row.module !== 'chasers.js'
+                    || !CHASERS[cls] || isBridgedChaser(cls))) ? 'yes' : 'no',
             spellable: ENTITY_ROSTER_TYPES.includes(cls) ? 'yes' : 'no',
             danger: dangerOf(cls),
             ...attempt(rec, AT_ARG === '' ? cls : `${cls}@${at.tx},${at.ty}`),

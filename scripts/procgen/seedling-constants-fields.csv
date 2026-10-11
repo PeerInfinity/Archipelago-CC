@@ -96,7 +96,8 @@ frontend/modules/seedlingDemo/levelWorld.js|cliffSideClassFor|cliffSideClassFor,
 frontend/modules/seedlingDemo/levelWorld.js|maskHitsBox|maskHitsBox,structural,,,
 frontend/modules/seedlingDemo/levelWorld.js|ropeSpanRect|ropeSpanRect,structural,,,
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|avoidVolumesAt,structural,,,
-frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|nearestWalkableTileWithTie,structural,,,
+frontend/modules/seedlingDemo/levelWorld.js|nearestTileScan|nearestTileScan,structural,,,
+frontend/modules/seedlingDemo/levelWorld.js|withTileWrites|withTileWrites,structural,,,
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|buildLevelWorld,structural,,,
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h16329831|0|0,rule,sentinel,,tag >= 0 means tagged
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hca08c4d0|0|0,rule,sentinel,,tag >= 0 means tagged
@@ -119,6 +120,7 @@ frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h0811f52e|0|0,rule,m
 frontend/modules/seedlingDemo/levelRun.js|*|*,structural,,,
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|createLevelRun|-1,rule,sentinel,,-1 = seal part not collected
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|h52f28f77|0|0,rule,sentinel,,primary item slot default
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|h12d7a223|-1|0,rule,sentinel,,-1 = no spear animation running (spearEndsAt; fidelity DARKTRAP2 spearingWindow)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|createLevelRun|20,rule,magnitude,,REVIEW: camera settle ticks on load; camera position feeds onScreen gates but comment says any value over ~12 is equivalent
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|shieldBossStateFor,rule,sentinel,,-1 = no persistTag
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|owlStateFor|-1,rule,sentinel,,-1 = no persistTag
@@ -152,7 +154,7 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|solidOver,physics,magni
 frontend/modules/seedlingDemo/levelRun.js|step|h89e67ab9|1|0,rule,magnitude,,timer decrements one per tick
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|step|0,physics,bound,,airborne body still moving
 frontend/modules/seedlingDemo/levelRun.js|step|h98281141|0|0,structural,,,
-frontend/modules/seedlingDemo/levelRun.js|step|hdf442f31|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|step|haf5def61|0|0,rule,bound,,i-frame timer gate (fidelity-bulb: frozen in a Bulb's drop/die)
 frontend/modules/seedlingDemo/levelRun.js|chaserStaticEnemyBoxesNow|h7ceee914|0|0,physics,bound,,chaser row moves only if speed nonzero (R4-swim D2: the forecast and the drive share one helper)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|sweep,physics,sign,,
 frontend/modules/seedlingDemo/levelRun.js|sweep|h60d0f44f|0|0,structural,,,
@@ -212,6 +214,7 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|talkerStateFor,rule,sen
 frontend/modules/seedlingDemo/levelRun.js|stepFinalDoorsNow|h37890f51|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepFinalDoorsNow|-1,rule,sentinel,,-1 = seal part not collected
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|earnedClearsNow,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|earnedClearsNow|h79b2fd5f|0|0,rule,sentinel,Puzzlements/MagicalLock.as:setPersistence,MagicalLock tag sign test: <0 means no tag (the wand fold)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|crushersParkedNow,physics,bound,,crusher at rest
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|crusherScans,physics,bound,,crusher at rest
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|previewStepper,rule,bound,,i-frame timer gate
@@ -1232,6 +1235,7 @@ frontend/modules/seedlingDemo/playerDamage.js|stepPlayerDamage|stepPlayerDamage|
 frontend/modules/seedlingDemo/playerDamage.js|stepPlayerDamage|stepPlayerDamage|-1,rule,sentinel,Player.as:directionFace,-1 = not set
 frontend/modules/seedlingDemo/playerDamage.js|canSteer|canSteer,rule,bound,,hitsTimer <= 0 gates steering
 frontend/modules/seedlingDemo/playerDamage.js|iFrameSteeringSpan|iFrameSteeringSpan,structural,,,synthetic probe hit and span accumulator
+frontend/modules/seedlingDemo/bulb.js|bulbSlideStep|bulbSlideStep,physics,magnitude,,Bulb drop/die slide (Enemies/Bulb.as:39-43): the tile centre (floor(x / Tile.w) + 0.5) * Tile.w
 frontend/modules/seedlingDemo/chasers.js|animTicks|animTicks,structural,,,
 frontend/modules/seedlingDemo/chasers.js|createSpriteAnim|createSpriteAnim,structural,,,
 frontend/modules/seedlingDemo/chasers.js|stepSpriteAnim|stepSpriteAnim,structural,,,Spritemap timer loop transcription
@@ -1760,6 +1764,14 @@ frontend/modules/seedlingDemo/witch.js|darkSwordSpawnAt|h995a50fb|8|3,rule,magni
 frontend/modules/seedlingDemo/enemyDamage.js|(module)|h6eb33689|6|0,rule,count,Enemies/Turret.as:sprTurret,hammer-phase C1: the Turret's die anim frame count; its wrap sets destroy (STATIC_SWORD_DEATH)
 frontend/modules/seedlingDemo/enemyDamage.js|(module)|he6cdd2c4|10|0,rule,magnitude,Enemies/Turret.as:sprTurret,hammer-phase C1: the Turret's die anim frame rate; gates destroy and the fade (STATIC_SWORD_DEATH)
 frontend/modules/seedlingDemo/levelRun.js|step|hf75284f2|0|0,rule,bound,Enemies/Enemy.as:hitUpdate,hammer-phase C1 spit forecast: hitsTimer > 0 i-frame gate (the turret's fire gate)
+frontend/modules/seedlingDemo/lavaChain.js|TIME_PER_FRAME|(module),rule,magnitude,,Game.timePerFrame 45 — the divisor inside Game.worldFrame; the chain's 90-update period is TIME_PER_FRAME x loops (K2PREP: simulation since levelRun steps the chain)
+frontend/modules/seedlingDemo/lavaChain.js|worldFrame|worldFrame,structural,,,
+frontend/modules/seedlingDemo/lavaChain.js|spritemapPlay|spritemapPlay,structural,,,
+frontend/modules/seedlingDemo/lavaChain.js|spritemapUpdate|spritemapUpdate,structural,,,
+frontend/modules/seedlingDemo/lavaChain.js|LAVA_CHAIN|(module),rule,magnitude,,LavaChain: arm 48x4 / force 5 / damage 1 / loops 2 / fps 60 and the extend-hit-retract anims' frames and rates — the arm is out while extend or hit plays (LavaChain.as:21-46)
+frontend/modules/seedlingDemo/lavaChain.js|lavaChainRect|lavaChainRect,physics,magnitude,,LavaChain.getRect: the 64 px sprite minus Tile.w 16 and the 16x16 hitbox with origin 8 place the 48x4 arm (LavaChain.as:96-119)
+frontend/modules/seedlingDemo/lavaChain.js|createLavaChainState|createLavaChainState,structural,,,
+frontend/modules/seedlingDemo/lavaChain.js|stepLavaChain|stepLavaChain,rule,sentinel,,worldFrame(fps 60 loops 2) == 0 is the extend trigger (`if (!Game.worldFrame(Main.FPS
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

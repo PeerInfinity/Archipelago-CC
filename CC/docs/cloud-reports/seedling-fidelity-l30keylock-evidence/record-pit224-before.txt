@@ -1,0 +1,24 @@
+PASS: l30keylock-pit224-before: the seam latch fired and carries the whole signature — 47 field(s) latched at tick 212 (46 signature rows)
+PASS: l30keylock-pit224-before: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: l30keylock-pit224-before: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: l30keylock-pit224-before: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: l30keylock-pit224-before: the dead frames are accounted for — 20 dead = 0 modelled (0 run freeze + 0 seal + 0 pickup + 0 spawned + 0 declared) + 20 residue, against 1 load(s) at 19.2632/load −9.0 (floor min 9) +4.5 (4.5·√1) = [10.3,23.8]
+PASS: l30keylock-pit224-before: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: l30keylock-pit224-before: all 14 item properties match, positives and negatives — hitsMax=3, 4 flag(s) true
+PASS: l30keylock-pit224-before: Main.primary matches the mirror — game: 0, expected: 0
+PASS: l30keylock-pit224-before: the inventory slot ARRAY matches the mirror — game: [0,1], expected: [0,1] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: l30keylock-pit224-before: the selected slot holds an item — primary=0 against 2 slot(s)
+PASS: l30keylock-pit224-before: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: l30keylock-pit224-before: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: l30keylock-pit224-before: the seam latch carries the frozen terminal counters — hits 2, hits_timer 0, latched at tick 212
+PASS: l30keylock-pit224-before: the game's own `hits` matches the damage model — game (frozen at the last observation): 2, model: 2; polled 0 (-2 post-tape drift) — 2 landed hit(s), 0 death(s); a death RESETS `hits`, so a mismatch here can be a death the model placed on the wrong tick
+PASS: l30keylock-pit224-before: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: l30keylock-pit224-before: the game's own `hasKey` array matches the model — game: [true,true,false,false,false], model: [true,true,false,false,false]
+PASS: l30keylock-pit224-before: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: l30keylock-pit224-before: the game's own `hasSealPart` array has the shape the run earns — game: [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 0 filled against 0 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: l30keylock-pit224-before: the game saw every edge the tape dispatched — primary x17, left x8, right x7, down x9, up x10 — all seen
+PASS: l30keylock-pit224-before: the game's own latched `save.time` is the model's clock — game 8819, model 8819
+PASS: l30keylock-pit224-before: the live `game_time` readout is at or past the model's clock — game 8830 >= model 8819 (the status is served after the disarm and keeps advancing)
+PASS: l30keylock-pit224-before: observation count — 213 (expected tick_count+1 = 213), 0 transition(s) derived, 20 fade frames skipped, 11s
+RECORDED: l30keylock-pit224-before.json (213 observations)
+PASS: l30keylock-pit224-before: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 213 observations, 0 transition(s) — the recording is an ORACLE and the model already agrees with it

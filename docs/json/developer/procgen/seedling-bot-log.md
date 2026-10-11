@@ -15183,6 +15183,51 @@ forecast, hammer escape, approach or fight applies: `execKillByPress` and `deriv
   only for the bodies its question could not reach.
 - **The walk before a press leaves the sword's window open.** A strike policy's presses make the next press a dash.
 
+### Seedling fidelity PUSHBLOCK — a spear block moves on a spear thrust, one tile a press, and a sword slash does not move it
+
+Wave 11 (model coverage), the PUSHBLOCK slice. Its input was re-measure 3's five survey refusals on
+`solid:pushableblockspear` (steps 137, 145, 146, 149, 180; 148 is the same room's block behind a pixel-mask tree):
+*"No strategy row exists for this obstacle"*. The report is `CC/docs/cloud-reports/seedling-fidelity-pushblock.md`.
+
+**A sword slash does not move a `PushableBlockSpear`; R4's reading said it did.** `Player.genericHit`'s Spear arm
+builds its push vector from `spearDirection`, not `direction`. `set spearing` writes `spearDirection = -1` first on
+every call (`Player.as:814`) and sets the facing only on a thrust that starts (`:820`); a ghost-sword slash is the one
+other writer (`:921`). So during a plain sword slash `p` is (0, 0) and the relative arm targets the block's own centre.
+Every R4 recording pressed with the spear, so the sword half of the claim was never witnessed.
+`probe-seedling-pushblock-weapon.mjs` (game and model, one press facing W from R4's L65 stance): SPEAR Δx 15.95 on
+both, 0.000 px apart; SWORD Δx **0.00 on the game, 15.95 on the old model**. Fixed in `pushables.hitPushableByWeapon`
+behind `PUSH_SPEAR_DIRECTION` (ON). All 266 committed tapes give byte-identical model streams with it ON and OFF.
+
+**The verb.** `'solid:pushableblockspear': 'shove'`. The resolver (`resolveSpearPushStrategy`) runs the same
+block-route search as a lean, with a press move (`pressMoves`): one tile per thrust, from a stance one or two cells
+behind the block whose 32x5 spear rect covers it (no distance or line gate in `Player.spear()`), robust to ±3 px, and
+whose rect reaches no other non-inert responder (`auditPress`). A `LightPole` is tolerated in a second pass, because
+L65's pole stands in the block's own rows between it and every east stance (R4's thrust swept it too). The executor
+(`execSpearPress`) settles, selects the spear's slot, taps the facing, re-asks the reach at the live position, presses,
+waits out the 32-tick glide (or the sink), and selects the old slot again. Without the spear it refuses by name.
+The search re-derives R4's L65 route on its own: W, N from two cells below across the pit, W onto the pit.
+
+**Survey (local, at the slice head):** 146 REFUSED → SOLVED 541 t; 148 REFUSED → SOLVED 233 t. 137 now reaches the
+block (one W thrust that sinks it) and then refuses on `arrowtrap@48,48`'s armed lane at the boss key; 145/180 refuse
+in the DarkTrap light arm on the walk to the thrust stance; 149's target (`teleporter@0,96`) is sealed in every block
+state from its boot (`recon-seedling-pushes.mjs`). Every SOLVED step in L59–L68 keeps its exact ticks.
+
+**Witnesses (p4f, model = game exactly):** `pushblock-l65-reach-l68` (348 obs, three thrusts),
+`pushblock-l65-reach-l63` (229 obs, one thrust), `pushblock-l65-sword-press` (81 obs, D1's control). The two solver
+witnesses stage `darktrap@144,144` cleared, because the first recording of the survey's own solves refuted the
+DarkTrap light arm in L65 (step 146's walk: the game kept the body, 2 hits, t54; step 148's left the game at t137
+just after its light thrust). That is handed over, with the tapes and recordings in the report's evidence directory.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A reading of the branch ORDER is not a reading of the ARGUMENT.** R4 established that the Spear arm is reached by
+  any weapon and stopped there; the vector it passes is a field another setter resets.
+- **A walk near a spear block swings the sword.** The solver's dash presses between thrusts reach the block: with
+  D1 OFF, `pushblock-l65-reach-l68` reds as well as the control (mutant M1), so the fix is load-bearing for the
+  solver's own walks, not only for a deliberate slash.
+- **A survey SOLVED is a model verdict.** Both new solves walk through a leg the game refutes; only a recording says
+  which half of a solve is game-exact.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
@@ -15384,6 +15429,321 @@ player exact (`fixtures/chaser-witness/`, `fidelityLavaRunner.test.js`; mutant: 
 still ships OFF: the flip is the user's licence, and its survey movers (158, 160, 189, 190, 200) are in the report.
 Ranked residue: Turret's static sword arm (7 L62 legs), the Spear sub-order (14 darktrap rows), Bulb's bridge (L74),
 SandTrap's static sword arm, the drill in a mixed room (L91).
+
+### Seedling fidelity DARKTRAP2 — the L65 "refutation" was the spear's slash gate, not the light
+
+Wave 11 (model coverage). PUSHBLOCK recorded STATICLADDER's light arm on the game in L65 and read it as refuted:
+step 146's walk "lights a pole the game does not", step 148's leaves the game at t137. The user switched
+`darkTrapLight` back OFF. The report is `CC/docs/cloud-reports/seedling-fidelity-darktrap2.md`.
+
+**D1 — per tick on the game.** PUSHBLOCK's own two tapes, replayed with `botStatus().persistence_cleared` (a lit pole
+writes its tag cleared) and `botMobiles()`: the game lights `lightpole@128,168` at t50 (t133) and `darktrap@144,144`
+plays "die1" from t81 (t164) — the model's ticks exactly. The light death was right. What left the game was a SWORD
+press 3 and 5 ticks after the thrust: `set slashing` is gated by `spearing`, and `spearing` lasts the spear's
+animation (8 frames at 45 × 0.0333: `spearEnd` on update 6, so through press + 5). The model's gate read only the
+one-tick pending thrust, so it slashed, then DASHED (t53 → dy 1.88 at t54; t136 → dx −1.88 at t137). Without the
+dash, step 146's game player drifted into a pit at t99 and the respawn rebuilt the room before "die1" ended — no tag,
+PUSHBLOCK's "still SET". Its t230 press then fell inside a second fall, where `receiveInput` is false and the press is
+lost. With both presses gated the model reproduces both refuted tapes at every tick (541 and 233).
+
+**D2 — two switches, OFF** (`contactFidelity.spearingWindow`, `.fallBurnsPress`; `combatVerbs.SPEAR_ANIM_TICKS`).
+The slash gate (press and release) reads the window. A spear press inside a swing, a wand/fire window or its own
+window starts nothing. `slashInfo.spearingUntil` (present only ON) lets `previewWalk` and `slashPressForecast` age it.
+A press while a fall is in flight is lost, as `stepV2` already drops the move keys. The light arm's stance search now
+prefers a 2 px spear-on-core overlap on both axes (`LIGHT_ARM_CORE_MARGIN`): L63's (36,92) met the core by 0.5 px and
+the walk settled at (37.08,92.86). OFF is byte-identical (bounded 61 files, tapeRunner 589 rows md5 unchanged).
+
+**D3 — witnesses (p4f, headless, 0 px, every DarkTrap's presence and "die1" index):** the two refuted tapes
+unchanged; survey 148 re-solved (233 t) and 145's walk through the L63 arm (two darktraps die at t43); the window's
+end (press + 5 gated, + 6 open); a thrust inside a swing (swallowed, the darktrap lives); survey 146 re-solved (539 t,
+to L68) as evidence only, since it replays only on PUSHBLOCK's model. ON: tapeRunner 589 rows and the six producers
+byte-identical.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A refutation read off the wrong variable.** "The model removed a body the game did not" was true at the end of
+  the walk and false about the light: the game killed it too, then lost the kill to a pit respawn 70 ticks later.
+  Before you blame the subsystem a refutation names, find the first tick where the player diverges.
+- **A one-tick flag that the game holds for an animation.** `spearing` (and `slashing`, `wanding`, `firing`) is
+  cleared by a Spritemap callback, not at the hit. A model that keys it off the pending hit gates one tick and lets
+  through every press after that tick. The slash and the wand windows were already modelled this way; the spear's
+  was not.
+- **A hypothesis that the source makes look certain.** `get spearX():int` reads like truncation. On the game, a
+  thrust from x 35.45 reaches the pole's edge at 67, so the origin is not truncated. Measure a type coercion before
+  you model it (`darktrap2-l63-spear-origin-float`).
+
+### Seedling fidelity K2PREP — K2's licence list made green both ways: the scope joins under the switch, a lava chain hits enemies, and a replay reads the game's camera
+
+Wave 11 (model coverage). The user licensed K2 (`KILLLOCK_BODIES.lavaRunnerLive`) on 2026-10-10; the wave-10 harvest held
+it OFF because, ON, the planner's bounded vitest went 9 rows red. The report is
+`CC/docs/cloud-reports/seedling-fidelity-k2prep.md`. K2 still ships OFF; every row below is green with K2 OFF and ON.
+
+**D1 — the bridge scope.** `R8_ENEMY_BRIDGE.pendingSwitchScope.lavarunner` declares the class and its exposure row, typed
+before the guard ran, and `declaredBridgedClasses()` / `declaredExposedRows()` join them to the declaration exactly while
+the switch is ON. The lavarunner rooms are L71–L75, L77, L78, L80, L99; exactly ONE committed tape retires `noDamage` and
+enters one: `axe-l71-reach-l76` (L71, 327 of 328 ticks), unchanged with the lavarunners stepped. 83 → 84 exposed.
+
+**D2 — the L75 witness was never the shake band.** Recorded on the game (p4f, headless): the chain walk's K2-ON
+refutation (161 → 125) is `LavaChain.reach`'s `"Enemy"` arm (`LavaChain.as:76-93`, `hitables = ["Player", "Enemy"]`): at
+t47 the chain's arm hits `lavarunner@104,64` — `hits 1`, a 5 px/t shove — with the player 24 px away. The live run had
+never stepped a chain at all. `levelRun.stepLavaChainsNow` steps each chain's anim at `clock.now()` and lands the arm on
+the first touching stepped chaser (`.oel` order reversed; a census non-chaser on the arm, or an anim made unknown by a
+skipped `Game.time`, is a refusal by name). Every chain room holds only lavarunners as chasers, so with K2 OFF it returns
+at its first test. With K2 ON the chain walk is the game's on all 388 rows (743 body comparisons, worst 0). The shake band
+is the GRENADE arms' (`l2-grenade-l75` at t155, `-armed-clear` from t1): a REPLAY may read the game's recorded camera on
+the band's uncertain ticks (`createTapeStepper({ cameraWitness })` → `run.witnessCamera`), checked on every tick it is
+asked against the model's exact camera or its band; the solver and the forecast never pass one, so 'uncertain' stays a
+planning refusal (⚖ never model the cosmetic RNG). Both arms 0 px, 201 rows, 402 comparisons each. Three fixtures in
+`fixtures/chaser-witness/k2prep-*`; the chaser probe gains `--camera` (game first, then the model reading its camera).
+The chain's transcription moved verbatim into the simulation (`lavaChain.js`): `levelRun` importing `hazards.js` had
+pulled it into the simulation closure and sent three family files around the `solverView.js` door (27 surface reds).
+
+**D3 — the controls.** `IceTrap` (`canHit = false` in the game: refused by the game itself, so no bridge or kill arm can
+flip it) replaces `LavaRunner` in `arrowTrap`, `enemyDamage` and `solverBot` A3; `LavaRunner` is asked under its switch
+both ways. A3's `run.progress is not a function` was K2's: a modelled lavarunner sends the press arm to the stub's weapon.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A refutation attributed to the nearest refusal.** The L75 row moved 161 → 125 and a shake-band refusal showed in the
+  same file, so the two were read as one; the band was another row's (the grenade arm), and the 125 was a hazard hitting
+  an ENEMY. Ask the game what happened at the refuted tick before naming its cause.
+- **A hazard's `hitables` is a list.** `LavaChain`, `Crusher` and `Pulser` all name `"Enemy"`; the model billed the
+  chain on nobody in the live run (only the solver's danger map priced it, for the player). A bridge that starts stepping
+  a body in such a room inherits every arm that touches `"Enemy"` there.
+- **One import moves a module across the census line.** The simulation is `levelRun.js`'s closure; importing a family
+  file from it silently reclassifies that file, and the door rule then reds three unrelated importers.
+- **A boot/re-arm camera sample predates `view()`.** The bot's sample at t0 and at a level re-arm reads (0, 108) where
+  the settled camera is (0, 80); a camera witness must skip those ticks (`camFresh`).
+
+### Seedling fidelity BULB — a Bulb's death writes lava, and its kill is placed
+
+Wave 11 (model coverage). Re-measure 3 (CI 38075646127) refused survey step 160 (L74, the Darkshield) on
+`bulb@48,112` standing on the one-tile floor between L74's lava pools, a static `"Enemy"` body: the class was
+unbridged and `KILL_ARM_POLICY.Bulb` refused its kill ("its death writes a tile"). The report is
+`CC/docs/cloud-reports/seedling-fidelity-bulb.md`.
+
+**D1+D2 — `contactFidelity.bulbLive` (OFF).** `Bulb extends Bob`: alive it is Bob's chase (moveSpeed 0.65, runRange
+80, a 12x12 box, `hitsMax` 1). Its death is its own: `startDeath` is EMPTY, so the update after the blow is a living
+one (moved, chased; only the i-frame the blow armed keeps the contact quiet) whose last statement plays "drop"; "drop"
+and "die" run no `Enemy.update` at all (no off-screen gate, no terrain switch, no `hitUpdate` — `hits_timer` freezes
+at 29 — no contact) and slide the body toward its tile's centre (`v = centre − pos`, normalised to ≤ 0.65, then
+`friction()`; it never leaves the tile, and rests where both components fall in the 0.05 dead zone); "drop"'s
+`endAnim` writes `t = 17` (LAVA) into the Tile under its centre and plays "die"; "die"'s `endAnim` is
+`FP.world.remove` (no `destroy`, no fade). 27 + 27 updates (7 frames at rate 8 each, looping anims). The write is the
+run's per-visit tile overlay (`levelWorld.withTileWrites`: a prototype child of the built world whose tile lists,
+floor-policy getters and `nearestWalkableTile[WithTie]` read the written `t`), so the physics drowns the player on
+it, chasers die on it, and `run.world` (the solver's planner) forbids it; a new `Game` drops it. The Bulb is
+switch-bridged the KILLLOCK way (`contactPricing` keeps it a `mover`; `stepContactsNow` skips it by name in a stepped
+room), because adding it to `CONTACT_STEPPED_FAMILIES` reds `r8Acceptance`'s partition even with the switch OFF.
+
+**Witness (p4f, headless, 0 px):** `bulb-l77-lava` — the kill (t49), "drop" (t50), the lava at (5,3) (t76), the
+removal (t103), then the player walks onto the tile, takes the lava hit (t110), drowns and dies (t140), and the
+restarted room has the Bulb back and the tile restored. 212 samples, the player calibrated, the Bulb's position,
+velocity, `hits`, `hits_timer` and anim at every one.
+
+**D3 — the kill is PLACED (⚖ the user: "We don't want them to die on a tile that we need to walk on").** Every press is
+the one strike policy's, so the constraint is a per-body VETO the policy asks before it aims (and again at the press):
+a press whose swing would kill a Bulb is refused when a tile the body can stand on when "drop" begins (its centre
+grown by `(SLASH_HIT_TICKS + 2) · 0.65`) is NEEDED — with lava written there, a goal the segment still owes
+(`solveSegment` hands the run its remaining goals per goal: pickups by the cells around them, the exit by its aim)
+that the player reaches now is no longer reachable (`plansReach`). Measured: without the veto the solver killed the
+L74 Bulb on the bridge at t22 and the exit leg refused; with it the veto fires in the previews, the Bulb is never
+struck (it chases and drowns itself in L74's lava at t72), and step 160 SOLVES in 321 t with K2 also ON — its walk
+game-exact (322 samples, the Bulb at 82, worst 0). `bulb-l77-placed`: the solver's own policy, the south exit as the
+need, kills `bulb@80,72` in the open room (lava (6,5), t72) — 110 samples, worst 0.
+
+**Moved (switch ON):** survey 160 REFUSED (the Bulb) → REFUSED (the static lavarunner, K2 OFF) → SOLVED 321 t with K2;
+164 and 168 unchanged. tapeRunner 589 pairs and every roster tape unchanged ON and OFF. Flip movers (bounded vitest):
+`fidelityKillLock`'s all-OFF roster and three `r8Acceptance` R8_ENEMY_BRIDGE rows (scope, control, the stepped-contact
+partition, which must admit `bulb` at the flip).
+
+**Trap candidates**, for the catalogue to number:
+
+- **A death that is not a stop.** An empty `startDeath` means the update after the killing blow is a live one; a
+  model that froze the body at the blow picks the wrong tile for anything its death leaves behind (mutant M2).
+- **A per-visit write to a memoised world.** The build is cached per level and shared by every visit; a write must be
+  an overlay the visit owns, re-applied wherever the binding is rebuilt mid-visit (despawns, timed clears), and
+  dropped with the visit.
+- **"Needed" is from where the player stands.** The same tile is cut-critical with the player on one side and harmless
+  on the other (L77: the column's mouth vetoed with the player north of it, not south); a veto keyed on the tile alone
+  over- or under-refuses.
+- **A pickup is not its own aim.** The planner forbids a pickup's cell except on the walk that collects it, so a
+  reachability question about a pickup asks about the cells around it — the first cut of the veto never fired.
+
+### Seedling fidelity ENCOUNTERS2 — the live Bob Boss divergence was the panel's write, and a pickup's item lands a frame late
+
+Wave 10b, a fix slice after the JS arc bound the two encounters (report
+`CC/docs/cloud-reports/seedling-fidelity-encounters2.md`). Two live symptoms: the logical-links B leg leaves its Bob Boss
+plan at t932 (y 33.85 → 34.25, three CI runs), and all seven Witch legs end with the game's `hasDarkSword` false.
+
+**The Bob Boss model was right.** The B leg re-run locally with `--trace` gave the arrival's staging and the 1,049-tick
+plan the page shipped. Replayed on the game from that staging (new instrument `probe-seedling-encounter-ticks.mjs`), it is
+0 px over 1,050 observations. A mid-span `botHold` at t833 changes nothing (every sub-frame tried, and a 1.5 s
+main-thread stall inside it). What reproduces CI to the bit is one write: `flashBridgeAdapter._itemWritesFor` clears every
+location-mapped property no owned item backs, and while the delivery gate holds the Fire back that is `hasFire = false`.
+With no Fire the press at ~t877 burns nothing, and the walk stops under the tree at t932. The same clearing write is
+what leaves the Witch legs without the dark sword. Witness: `enc-l32-live-arrival` (the live staging, the worker's
+dashless pass, inputs byte-identical to the shipped tape), recorded on p4f.
+
+**A special pickup's item lands one frame after its ceremony closes.** `NPC.removed()` nulls the pickup's `myText` at
+the end of the closing frame, so `pick_up()`'s `!myText` arm and the pickup's `removed()` run on the next frame. The
+model applied `removed()` on the closing frame. No x/y stream could see it (the player is free on the closing frame on
+both sides). The flag can: game `hasDarkSword` obs 378 / model 377 (`enc-l12-witch`), `hasFire` 833 / 832, `hasTorch`
+226 / 225 (a placed pickup), `hasSword` 71 / 70 (`r8-solve-10`). `PICKUP_REMOVED_NEXT_FRAME` (OFF; `pickupRemoval.js`)
+queues the flag writes to the end of the next advance. The executors end their ceremony loops on the `collected`
+record, so their plans do not move. The Bob Boss executor's "one tick after the flag" equip wait was this frame,
+measured from the other side. ⛔ It stays OFF for a measured reason: ON moves `r8-solve-10`'s recorded stream at t73.
+That tape presses `primary` on the sword's closing frame and the game swings, so the game's swing there does not wait
+for `Sword.removed()`; the model's press gate reads `hasSword` and does. ON also moves three producers (the report has
+the list).
+
+**Trap candidates**, for the catalogue to number:
+
+- **A divergence on the live page is not a model divergence until the tape is replayed off the page.** The live leg
+  carried two page-side events the staged witnesses never had (a mid-span hold and a clearing write). One replay from
+  the page's own staging told them apart in minutes.
+- **An item flag can be a frame off under a stream that matches at 0 px.** The ceremony freezes the player, so x/y is
+  the same either way. Only the flag, read per tick, separates them.
+- **The end-of-tape item compare reads the game one frame later than the model.** The disarm frame steps the world,
+  so a flag the game sets on the frame after the tape's last tick still reads true in the game's final status. The
+  model's one-frame-early flag was hidden behind exactly that offset.
+
+### Seedling fidelity L12KEYLINE — a lock sealed behind itself is one door, and the frontier tries the next
+
+Wave 11 (model coverage). Re-measure 3 (survey CI 38075646127) left four L12 steps on KEYLOCK-SEALED once the rules
+arc made the survey's crossing credit fail-closed: 134 and 175 (arrival (592,16), north of `bosslock@416,240`, flag
+{12,4}) and 154 and 185 (arrival (16,352), naming `bosslock@112,192`, flag {12,11}). The rules arc asked whether AP's
+own route round the lock, r0c37 →[Fire]→ r42c29 →[Progressive Swim]→ r0c19, is real in the game. The report is
+`CC/docs/cloud-reports/seedling-fidelity-l12keyline.md`.
+
+**D1: the way round is real.** From (592,16) the east shaft (columns 34–37) runs south past the lock row to the
+south-east pocket; `burnabletree@480,640` (tiles 30–31 × 40–41) is the only door from there to the shore under it, and
+the row-48 water (x 216..456) is the only way west. With the tree hypothesised gone, `planWaypoints` plans it at once
+(13 waypoints, one swim leg (456,744) → (216,776)); without `canSwim` it does not. Played on p4f
+(`l12keyline-134-round`, the solver's own plan, 1269 t): burned at t347 (gone t388), 184 ticks in water, `drownTimer`
+0, `hits` 0, `save.time` 9896 = model, into L95; the lock and its twin never open. The model reproduces the recording
+at 0 px.
+
+**D2: the frontier ranked doors by distance and stopped at the first.** `identifyAndSelect` floods the reachable
+component, sorts the actionable entities on its edge by distance to the aim, and resolves the first. The sealed lock is
+nearer the aim (≈415 px) than the tree (≈545 px), its keylock derivation throws SEALED BEHIND ITSELF, and nothing asked
+the tree. `SEALED_LOCK_NEXT_ON_FRONTIER` (ON): when the chosen door's refusal carries `sealed.self`, and only after
+FRONTIER3's 8 px retry has also failed (the order the throw used to take), the rest of the actionable frontier is
+resolved in its own order; the first that binds is the round's order, with a `rejected` row naming the sealed lock and
+its flag. A candidate that refuses, or answers "not held", is passed over. If none binds, the SEALED refusal is re-thrown
+unchanged. Steps 134 and 175 SOLVE (1269 t each); without Fire the refusal is the old one, byte for byte.
+
+**154/185 are not this lock (STOPPED, handed over).** `bosslock@112,192` is only the frontier's nearest name. The
+goal `teleporter@32,848` sits in a pocket closed on every side but the south, where `bosslock@32,864` (key 4, key line
+y 881, its own side) and `magicallock@32,864` (a `WandShot` breaks it) are stacked. The south side is reached through
+a cliffside-pixelmask gap 13 px wide (player x 202..214 at y 896) that no 16 px node sits in; with an 8 px lattice
+everywhere the flood reaches it from the arrival and names the magical lock, whose `kill` row cannot bind. Three
+pieces: the fine lattice in the flood and the walks (here: the retry fires only when the frontier has NO verb, and L12's
+frontier always has one), the wand verb on a MagicalLock (WAND's region), and the keylock from the south.
+
+**D3, the census** (the 11 later-L12 survey steps, CI 38075646127 → this tree): 134 and 175 REFUSED → SOLVED 1269 t; 154 and 185 stay REFUSED, their text now *"applied 4 strategies for one goal [chest, touch, burn, keylock(bosslock@416,240)]"* (the fall-through opens the lock from its own side, which is progress toward nothing); 57, 63, 78, 87, 108, 120 and 140 identical. Identity block, the six producer `--check`s and the roster's committed tapes byte-identical.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A refusal about one door is not a refusal about the room.** The frontier sorts doors by distance and the first
+  door's verb threw; the throw ended the goal although a farther door had a verb that binds. "This lock is sealed from
+  here" is a fact about the lock.
+- **A fallback that only fires when nothing else does is invisible wherever something else does.** FRONTIER3's 8 px
+  retry runs only when the frontier has no verb. L12's south cliffs need it, and L12's frontier always offers a verb
+  (a chest, a shield lock, a tree, a lock), so the retry never runs and four strategies are spent on doors that lead
+  nowhere.
+- **The frontier's nearest name is not the cause.** Step 154's refusal named `bosslock@112,192`, a lock in the north
+  that has nothing to do with the goal; the goal's real door is two stacked locks in the south.
+
+### Seedling fidelity WAND — a wand shot opens a MagicalLock, and a WandLock was never its target
+
+Wave 11 (model coverage). Re-measure 3 (survey CI 38075646127) refused steps 60, 81 and 130 on L39's plug
+`wandlock@144,592` with *"Strategy 'wand' is SELECTED but not registered"*. The report is
+`CC/docs/cloud-reports/seedling-fidelity-wand.md`.
+
+**D1 — measured on the game first, and the premise fell.** `WandShot.checkEntity` has two acting arms, `Enemy.hit` and
+`MagicalLock.hit(shotType)`; every other blocker only plays "die". `WandLock extends Lock` with a bare
+`super(…, sprWandLock)`, so it is a plain `"Solid"` to the shot. Its openers are a `Lock`'s: the `tSet` group,
+`checkEnemies()` for `tSet -1`, `Wand.removed()`'s `tset 0` activation, and a tag cleared at BUILD (L39's plug is
+removed by L38's `buttonroom@32,48` writing `{39,8}`, `r5Totem.TOTEM_ENTRANCE`). New instrument
+`probe-seedling-wand-mobiles.mjs` joins the game's `WandShot` rows (`botMobiles()`) and `persistence_cleared` with the
+model's (`run.wandShotsLive`, `run.earnedClears`). Witness `wand-l39-wandlock-shot` (p4f, headless): the shot spawns at
+(152,594) inside the plug, dies the next update, `{39,8}` is never written, the walk north stays at y 610.1; the model
+agrees at 0 px, 121 ticks.
+
+**D2 — `WAND_VERB` (OFF; `wandVerb.js`).** `refineStrategy` sends a `wandlock` to `hold` (then `kill` for a `tSet -1`
+plug) and a `magicallock`/`magicallockfire` to `wand`; the shared rows (`solid:wandlock → wand`,
+`solid:magicallock → kill`) are not reworded. `resolveWandStrategy` / `execWand`: the game's gate (`lockType <=
+shotType`; the Fire Wand is `useItem` case 5, refused by name as `weaponForPress` refuses it), a stance on the lock's
+row or column that a LEAN toward the lock faces, the shot previewed with the model's own `stepWandShot`, the Wand's
+slot, one press, the open read off `magicalLocksOpened`, the slot restored; registered in `frontierExecutor` and the
+clear-tag lookup only while on. A model gap closed under the switch: `MagicalLock.hit`'s `setPersistence(tag, false)`
+never reached `earnedClears` (the cell opened, the flag the next arrival reads was lost).
+
+**D3 — witnesses (p4f, 0 px):** `wand-l68-magicallock` (step 147's staging, the solver's plan: `keylock`, then the
+wand pressed t122, the shot t130, `{68,1}` at t131 in the game's readout, open t145) and `wand-l34-barhouse-exit`
+(sweep-3 leg 354's L34 arrival with the Wand: a whole reach-exit SOLVED, 188 t, into L12). Embedded in
+`fixtures/wand-witness/` (`plan-seedling-wand-witness.mjs`, `fidelityWand.test.js`), not roster tapes.
+
+**Moved (switch ON; nothing moves OFF):** over the 27 survey steps in a level with a wandlock or a MagicalLock, OFF equals CI 38075646127 on every step that finished locally, and ON moves 8 refusals and no SOLVED row. 60/81/130 (L39) now refuse in `kill` (the plug is a kill-lock whose spinners stand behind it; its real opener is L38's button, a cross-room write at build); 147 (L68) gets through `keylock` and `wand` and then refuses on its own pickup (the stance lies past it); 208/213 (L101) refuse by name on the Fire Wand; 82 (L40) reaches `hold` on `wandlock@448,432`, whose presser is behind it; 61 only reorders its frontier. Sweep-3 names a wand lock in one leg (354, L34, no items held), which under the switch becomes a named "needs the WAND" refusal, and with the Wand the same arrival SOLVES (the witness). tapeRunner (589 pairs), the identity block and the six producer `--check`s are unchanged OFF; the bounded set ON is red only on the two rows that pin the default.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A sprite subclass is not a mechanism.** `WandLock`'s name says "wand" and its class says `Lock`; the strategy
+  table took the name. Read the `extends` and the ctor before a row names a verb for a tag.
+- **An open without its write.** The model's MagicalLock opened the cell on the right tick and wrote no flag, so
+  every consumer of `earnedClears` (staging, clear-tag, the next arrival) saw a lock that was never broken. A witness
+  that checks only the player's walk cannot see it; the probe's flag join did.
+- **A co-located pair.** L68's `bosslock@16,32` and `magicallock@16,32` share one cell; a clear-tag order for the
+  second cannot start until the first is open, and the frontier names whichever the sort reaches first.
+
+### Seedling fidelity L30KEYLOCK — the key line was a wait nobody priced, and the kill arm looked for a stance where the player stood
+
+Wave 12 (model coverage). The live playthrough B's next wall after the Bob Boss binding: L30 → L22, *"combat ladder
+EXHAUSTED"* at the keylock stance of `bosslock@64,32` against `chaser:bobsoldier@48,80`; the route survey's step 52 (the
+pit landing (224,80)) refused at the danger gate. The report is `CC/docs/cloud-reports/seedling-fidelity-l30keylock.md`.
+
+**D1 — measured on the game.** Step 52's base solve walks a detour to the keylock stance (72,56) and `execKeylock`
+stands on the key line from t133 for the lock's 60-tick `keyTimer` and fade. Nothing asks what reaches it there: the
+BobSoldier lands a sword hit (t173) and a body hit (t193), the lock opens at t212, and only the NEXT walk's gate
+refuses (the survey's text). From the other pit landing, (240,80), the same wait takes three hits and the run DIES. So
+the answer to "can the player open the lock before the chase reaches them" is no: it needs a kill first (or a timed
+approach). Recorded on p4f (`l30keylock-pit224-before`): the model reproduces the game, the game's own `hits` = 2 = the
+model's, the body bit-exact (212/212). The ladder could not offer the kill either: the chaser arm's stance scan is
+centred on the PLAYER (±8 cells), whose box from the pit landing holds only 14 cells on the leash's far-east rim (x
+104..128), 7 reachable, all refused by the forecast. Step 50's own stance (88,56) was never asked. Not the hammer arc's:
+`chooseBodyToRemove` was not involved.
+
+**D2 — two switches (ON by default; the flip is a separable commit).**
+- `KEYLOCK_WAIT_PRICED`: the frontier's keylock stance walk carries `stand = {ticks: hold.ticks, keys}`
+  (`keylockStandWalk`): `previewWalk` stands the tail as the executor stands (`standKeys`: lean on one axis until the key
+  line latches, then nothing; the strike policy disarmed for the tail), in the walk's probe, AVOID's re-probe,
+  DETOUR's certify (whole candidates only) and every `planSwordDash` candidate (`stand`: the tail's samples go to
+  `certify` only). A wait a body reaches is a corridor hit, so the ladder climbs.
+- `KILL_STANCE_TARGET_RESCAN`: `deriveKillByChaser` scans the TARGET's box when the player's box priced no stance.
+- Measured: rescan alone solves (224,80) and leaves (240,80) dying; the wait alone makes nothing hit ((224,80) a timed
+  detour, (240,80) an honest EXHAUSTED before a tick); both: kill from (88,120), the lock, the crossing, 0 hits.
+
+**The first cut moved four producers, and the cause was mine.** It drove the keylock stance walk undashed ("the drive
+is the priced walk", BOBSOLDIER2's lesson): ON, `r8-d2-19`, `r9-solve-12/19/30/31` re-derived longer (2364 → 2381 …).
+Certifying the DASH candidates with the same tail keeps the lesson and moves nothing: with both ON the identity block,
+the six producers, all 46 plan `--check`s and every tape are the base's.
+
+**D3 — witnesses and census.** `l30keylock-pit224` (347 t) and `l30keylock-pit240` (360 t), the solver's own plans,
+recorded on p4f: model = game, 0 hits, the BobSoldier bit-exact (202/218). The whole `--through=end` route, OFF vs ON:
+155 → 158 SOLVED, exactly steps 52 (L30, 347 t), 78 and 87 (L12 → L37 past `puncher@416,256`, 921 t, carried by the
+wait switch). Live sweep (production page, both ON): legs 333 and 339 failed → done (237 / 247 t, no divergence).
+
+**Trap candidates.**
+- **An executor that checks only its own condition is a wait nobody priced.** `execKeylock` waited out 80 ticks with
+  no hit check, and its refusal ("did not open") hid a dead run; the solver's own walk was hit while the survey read
+  only the gate's refusal after it.
+- **A preview's tail must stand as the executor stands.** The first tail stood with the strike policy armed: it
+  repelled the body the executor never strikes, and DETOUR certified a 369-tick corridor that the drive died on.
+- **A scan centred on the asker can see only the rim of a leash.** U10's fallback answered "no cells at all"; the
+  same blind spot holds when the box sees a few cells and none of them is any good.
+- **Fixing "the drive is the priced walk" by dropping the dash moves every walk that shares the verb.** Price the
+  dash instead.
 
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 

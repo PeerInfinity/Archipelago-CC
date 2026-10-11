@@ -150,6 +150,13 @@
       "noHazards": []
     },
     {
+      "file": "enc-l32-live-arrival.json",
+      "tickCount": 1049,
+      "bootLevel": 32,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "f1-l5-lock-removal.json",
       "tickCount": 380,
       "bootLevel": 5,
@@ -343,10 +350,38 @@
       ]
     },
     {
+      "file": "l12keyline-134-round.json",
+      "tickCount": 1269,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "l14-swordless-detour.json",
       "tickCount": 173,
       "bootLevel": 14,
       "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
+      "file": "l30keylock-pit224-before.json",
+      "tickCount": 212,
+      "bootLevel": 30,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "l30keylock-pit224.json",
+      "tickCount": 347,
+      "bootLevel": 30,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "l30keylock-pit240.json",
+      "tickCount": 360,
+      "bootLevel": 30,
+      "tapeVersion": 8,
       "noHazards": []
     },
     {
@@ -493,6 +528,32 @@
       "bootLevel": 40,
       "tapeVersion": 8,
       "noHazards": []
+    },
+    {
+      "file": "pushblock-l65-reach-l63.json",
+      "tickCount": 228,
+      "bootLevel": 65,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "pushblock-l65-reach-l68.json",
+      "tickCount": 347,
+      "bootLevel": 65,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "pushblock-l65-sword-press.json",
+      "tickCount": 80,
+      "bootLevel": 65,
+      "tapeVersion": 4,
+      "noHazards": [
+        "water",
+        "lava",
+        "ice",
+        "waterfall"
+      ]
     },
     {
       "file": "r1-dark-shield-bobboss.json",

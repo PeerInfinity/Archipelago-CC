@@ -182,6 +182,16 @@ export const FAMILY_RULES = [
     [/STANCE_REENTRY — the walk to (\S+)'s `([a-z]+)` stance/,
         (m) => `STANCE-REENTRY — the \`${m[2]}\` stance of ${m[1]} is behind ${m[1]} itself, on both `
             + 'lattices; applying the verb again would be the same walk again'],
+    /**
+     * ⛓ SEEDLING FIDELITY DARKTRAP2 — THE LIGHT ARM'S OWN REFUSALS (`solverBot.execLightArm`): the stance it walked to
+     * settled where the thrust misses the pole's core, the darktrap is not dying after the thrust or the wait, or the
+     * walk re-entered its own arm (`LIGHT_REENTRY`). PUSHBLOCK measured the first as `unclassified` (survey 145/180
+     * at its head, `lightpole@64,88`); DARKTRAP2's stance margin retired that instance. Named so the next one is not.
+     */
+    [/-> light \((\S+)\): (?:the stance settled|(\S+) is not dying)|\(LIGHT_REENTRY\)/,
+        (m) => `LIGHT-ARM — the DarkTrap light arm${m[1] ? ` at ${m[1]}` : ''} refused its own execution (the `
+            + 'stance missed the pole\'s core, the death did not come, or the walk re-entered the arm): the light '
+            + 'arm\'s region (`deriveLightPole` / `execLightArm`), not the body'],
 ];
 
 /**

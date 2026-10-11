@@ -861,6 +861,18 @@ export const MODELLED_ENEMY_CLASSES = Object.freeze({
         // ⛔ FALSE for Bob's reason: `pushableCtx().collides` sees spinners only.
         wedgeVisible: false,
     }),
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bulb D2 — THE SIXTH ROW: the Bulb, bridged through `chasers.js` (gated by
+     * `contactFidelity.bulbLive` via `CHASERS.bulb.liveSwitch`). Survey step 160 (L74) refused on it as a static body.
+     */
+    Bulb: Object.freeze({
+        module: 'chasers.js',
+        why: 'alive it runs `Bob.update` (`chaseImpulse`, moveSpeed 0.65); its death is a slide to its tile\'s centre '
+            + 'and a lava write under it (`bulb.js`) — every term a function of the level geometry and the body',
+        stepped: 'levelRun.advance, in the chaser slot beside the Bobs',
+        // ⛔ FALSE for Bob's reason: `pushableCtx().collides` sees spinners only.
+        wedgeVisible: false,
+    }),
 });
 
 /**
