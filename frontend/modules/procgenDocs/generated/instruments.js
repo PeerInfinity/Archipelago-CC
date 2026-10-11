@@ -134,7 +134,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 74,
-            "count": 119,
+            "count": 120,
             "id": "probe"
         },
         {
@@ -229,23 +229,17 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 408,
+        "blockStyle": 409,
         "browser": 139,
-        "cited": 204,
-        "files": 420,
+        "cited": 205,
+        "files": 421,
         "lineStyle": 12,
-        "withDocblock": 420,
-        "withFlags": 338
+        "withDocblock": 421,
+        "withFlags": 339
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
-    "findings": [
-        {
-            "name": "probe-seedling-solve-progress.mjs",
-            "severity": "cited without a path; it lives elsewhere in the tree",
-            "what": "`probe-seedling-solve-progress.mjs` is named in [docs/json/developer/procgen/seedling-solve-progress.md] and there is no such file in `scripts/procgen/`. It IS in the tree, at [scripts/procgen/probe-seedling-solve-progress.mjs] — so the citation is a bare file name whose directory the reader has to guess. ⛔ Reported, not fixed."
-        }
-    ],
+    "findings": [],
     "flagRule": "a flag is counted where the script READS ARGV for it. A `--x=` literal alone is not enough: `--enable-features=` and `--use-angle=` are the two commonest in this directory and both are Chrome launch arguments. What the file's own `Run:` block shows is published separately as `documentedFlags`.",
     "patterns": {
         "cite": "/(?<![\\w/*.-])(?:scripts\\/procgen\\/)?([a-z][a-zA-Z0-9-]*\\.mjs)\\b/g",
@@ -12770,6 +12764,92 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling fidelity SLOTS, D1: **THE SLOT ARRAY IS SESSION STATE, ON THE GAME.** `Inventory.items` is static (`Inventory.as:51`); `addItemsFromSave` (`:291-332`) only appends what the item flags imply and the array lacks, and its two fusions splice; only `Main.clearSave` / `freshSaveForLevelSet` (`Inventory.clearItems…",
             "path": "scripts/procgen/probe-seedling-slot-order.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-solve-progress.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "deadline",
+                "every",
+                "goal",
+                "hook",
+                "out",
+                "repeat",
+                "residue",
+                "tape"
+            ],
+            "file": "probe-seedling-solve-progress.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "compare"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "deadline"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "every"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "goal"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "hook"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "residue"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-solve-progress — Measure-only (SEEDLING HAMMER-PHASE D1): THE SOLVER'S PROGRESS STREAM, without a page.",
+            "path": "scripts/procgen/probe-seedling-solve-progress.mjs"
         },
         {
             "argvHelpers": [
