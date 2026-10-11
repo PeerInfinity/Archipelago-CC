@@ -15325,6 +15325,44 @@ then), so the comparison is by leg KEY. Sweep-3's target legs land as C1 predict
 **D4.** The two `static-sword-witness` tapes are not enrolled: joining the roster means moving them into
 `fixtures/tapes/`, plus index and tier rows and a re-quoted composite. That is more than a one-line union.
 
+### Seedling hammer-phase D1 — the solver's progress emitter
+
+⚖ The user (2026-10-11), on the progress display: *"Both, plus extras"*: a tree of goals and rungs with attempts,
+successes and rejection tallies, a tile map with a count and an earliest tick per tile, and a work-budget meter, over
+one channel, live. This slice is the solver's half. The worker → page transport and the `flashPanel` display are the
+JS arc's, built against the schema `seedling-solve-progress.md`, which was published (D0) before the emitter landed.
+The report is `CC/docs/cloud-reports/seedling-hammer-d1.md`.
+
+**The emitter** (`solveProgress.js`). `withSolveProgress(onProgress, fn)` is installed like the deadline (nested
+installs restore the outer, and solverBot re-exports it); `solveSegment` takes `onProgress`; `installSolveProgress`
+installs until its uninstall, for a whole process. `onProgress(site, peek)` is called only at fixed points: every
+deadline site's ask point (with or without a deadline), and the count points segment, goal, walk, verb, climb, rung,
+arm, search, preview and done. It is never called on a timer. `peek()` builds a plain-JSON copy.
+- **Tree.** Nodes are keyed by role path. A rung's rejection is the refusal the next rung's row carries, keyed by the
+  solver's own words (a code, a bound, or the deciding clause with numbers as `#`).
+- **Tiles.** The unit is the previewed player state, `previewWalk`'s samples and `spaceTimeReach`'s kept states (a
+  new `onNode` option), because every corridor, stall, detour and dash candidate is certified by a preview, and both
+  carry an absolute tick already.
+- **Budget.** The site asks, and the work units the solver already counts. `shouldStop` calls are the JS arc's work
+  clock, measured equal to the caller's own count.
+
+No count point sits inside C2's four functions or fidelity's list; their callers count them.
+
+**Observation only, measured.** With no hook each count point is one null check. With one, the answers are
+byte-identical: no hook, a hook that peeks at every call, a silent hook and a throwing hook all give the same bytes on
+the L18 hammer room (residue 21, three two-pass segments), an L6 climb and an L3 walk, under no deadline and under a
+never-tripping fine deadline. `r9-campaign --check` and the identity block are unmoved under the silent-hook preload
+(`seedling-solve-progress-hook.mjs`). **No committed artifact moved**; the surface census re-recorded line numbers and
+`solveProgress.js` in four rows' file lists.
+
+**What the stream is like** (D2, three streams committed under `seedling-hammer-d1-evidence/`):
+- A final snapshot is 0.9–3.0 KB, and `peek()` costs ~0.05–0.17 ms median, ~0.6 ms max.
+- ⚠ **The hook is not called evenly.** The L40 leg (675 t, ~24 s) makes only 276 calls, with up to 1.2 s between two
+  of them, inside the kill-chaser stance scan. The far L40 totem part's refusal went 3.5 s without one. A 1 Hz display
+  is bounded by the solver's own ask density, not by the worker's throttle.
+- The overhead was not resolvable below ~±10% on the loaded box: the identical no-hook code read −2% to +12% against
+  the base. A silent hook read +2% (L18) and +8% (L40, where no-hook read +12%).
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

@@ -184,7 +184,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 4,
+            "count": 5,
             "id": "seedling"
         },
         {
@@ -229,12 +229,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 409,
+        "blockStyle": 410,
         "browser": 139,
-        "cited": 205,
-        "files": 421,
+        "cited": 206,
+        "files": 422,
         "lineStyle": 12,
-        "withDocblock": 421,
+        "withDocblock": 422,
         "withFlags": 339
     },
     "dir": "scripts/procgen",
@@ -12772,6 +12772,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "probe",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md",
                 "docs/json/developer/procgen/seedling-solve-progress.md"
             ],
             "docblockStyle": "block",
@@ -15637,6 +15638,30 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only (the divergence sweep, planner `seedling-js-planning-2`) — THE LEG LIST: every exit and location leg of the committed Seedling atlas worlds + `seedling_playthrough`, from each region's RESOLVED arrivals, with the inventory the AP route holds there.",
             "path": "scripts/procgen/seedling-divergence-legs.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "seedling",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "import"
+            ],
+            "file": "seedling-solve-progress-hook.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "seedling-solve-progress-hook — a NODE PRELOAD (SEEDLING HAMMER-PHASE D3): every solve in the process runs under a progress hook that never peeks, so any producer or instrument can be shown byte-identical under one without editing it.",
+            "path": "scripts/procgen/seedling-solve-progress-hook.mjs"
         },
         {
             "argvHelpers": [

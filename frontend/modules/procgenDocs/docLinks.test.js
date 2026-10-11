@@ -276,20 +276,22 @@ describe('the corpus census — printed, then pinned', () => {
          *              and its training paragraph → § The bot (`same-doc` 19 → 22).
          *   354 → 356  PERSISTENCE (2026-10-07): flash.md's wasm-ship `boot` bullet → seedling-bot.md and
          *              seedling-bot.md's reuse-path bullet → flash.md (`doc` 272 → 274).
+         *   356 → 358  HAMMER-PHASE D1 (2026-10-11): the README index's row for seedling-solve-progress.md and
+         *              seedling-bot.md's progress paragraph → it (`doc` 274 → 276).
          */
         expect(by).toEqual({
             'same-doc': 22,
-            doc: 274,
+            doc: 276,
             external: 22,
             repo: 38,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(356);
+        expect(CORPUS.length).toBe(358);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(274);
+        expect(docs).toHaveLength(276);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
