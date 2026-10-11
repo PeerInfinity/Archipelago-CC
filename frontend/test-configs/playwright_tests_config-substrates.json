@@ -495,6 +495,12 @@
             "_comment": "Seedling solver-walk S1. flashPanel.runtime = js + flashPanel.seedlingSolverWalk ON, on seedling_atlas: the page handle teleports the real page into level 6 (⚖ Q2: no new preset) and the page's bot walks to the stairs (224, 32) past the bobs — the REAL solver (solveSegment with the session as prefix) plans a bait, the page plays it one key set per tick; the stairs crossing reported, 0 HALT, no refutation, no error: status. Fast batch, like the J1–J3 rows."
         },
         {
+            "id": "seedling-js-runtime-solve-progress-view",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "SOLVE PROGRESS (JS half). flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView ON, on seedling_atlas: the view subscribes to the page's worker service before the L6 enemy-room solve, holds its FINAL snapshot (solved) and draws the tree, the tile canvas and the work meter; its 'last update N s ago' advances; closing the view unsubscribes. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
             "enabled": true,
             "category": "Seedling JS runtime",

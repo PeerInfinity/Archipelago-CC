@@ -210,6 +210,19 @@ export function register(registrationApi) {
           + "already finished with a shorter one. Counted in work, not time, so the choice is the same on every "
           + "machine. 0 gives it the whole solver budget. Read at the start of each solve.",
       },
+      // ⛓ SOLVE PROGRESS — the panel's live view of the solver's progress stream (the tree, the tile map and the
+      // work meter, `seedlingSolveProgressView.js`). Off by default: while it is off no solve asks its worker for
+      // the stream (the hook is not installed). The panel's "Solve Progress" button flips it.
+      seedlingSolveProgressView: {
+        type: 'boolean',
+        default: false,
+        label: 'Seedling: show the solver\'s progress',
+        description: "Both runtimes, solver rooms. Shows what the Playback Bot's solver is doing while it solves: "
+          + "the goals, rungs and searches it tried (with how often each succeeded or was rejected, and why), the "
+          + "tiles its previews reached, and the work it has spent against its budget. Updated about once a "
+          + "second, and only at the solver's own checkpoints. It starts reporting from the next solve. Watching "
+          + "never changes the plan the solver finds.",
+      },
       // ⛓ KILLLOCK HOOK — the model's kill-lock body switches K1–K5, one boolean each, defaulted to
       // `KILLLOCK_BODIES_DEFAULTS` (`seedlingKillLockSettings.js`).
       ...killLockSchemaProps(),
@@ -306,6 +319,15 @@ export function setActivePanelInstance(instance) {
  */
 export function getSeedlingRegionGlue() {
   return seedlingRegionGlue;
+}
+
+/**
+ * ⛓ SOLVE PROGRESS — the Playback Bot controllers' wasm engine solve services that exist now (the JS page's own
+ * service is the panel's to read, off its page). The progress view re-reads this every second.
+ */
+let seedlingPlaybackControllers = [];
+export function getSeedlingWasmSolveServices() {
+  return seedlingPlaybackControllers.map((c) => c?.wasmSolveService?.() ?? null).filter(Boolean);
 }
 
 // Test/diagnostic handle (used by scripts/procgen/check-seedling-wasm-
@@ -448,6 +470,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   });
   setSeedlingAtlasPlaybackController(atlasController);
   playbackControllers.push(genController, atlasController);
+  seedlingPlaybackControllers = playbackControllers;
 
   // ⛓ AFTER the glue's own subscription, so the arrival is queued before the
   // tab switch that resumes the game's page.

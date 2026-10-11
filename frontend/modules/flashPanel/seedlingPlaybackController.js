@@ -549,6 +549,11 @@ export class SeedlingPlaybackController {
         return this._wasmEngine?.expectArrival?.() === true;
     }
 
+    /** ⛓ SOLVE PROGRESS — the wasm engine's solve service, or null (no engine built: nothing has solved here). */
+    wasmSolveService() {
+        try { return this._wasmEngine?.solveService ?? null; } catch { return null; }
+    }
+
     /** The page's walk state, for readouts and rows: `{state, reason, goal}` or null. */
     status() {
         const p = this._page();
