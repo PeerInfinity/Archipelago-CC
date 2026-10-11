@@ -113,6 +113,7 @@ import {
 } from './ghostSword.js';
 // ⛓⛓⛓ hammer-phase C2: the spinner forecasts carry a ghost press (behind `GHOST_SPINNER_PRESS`, ON by default).
 import { ghostSpinnerPressFor } from './ghostSpinnerPress.js';
+import { PRESS_KILL_COST, UNCACHEABLE, sameValue, snapshotValue } from './pressKillCost.js';
 import {
     createBossTotem, bossTotemClampY, bossTotemSolidRect, renderBossTotem, stepBossTotem,
     wandFadeFreezeTicks, wandFadeGateOpen, WAND_PICKUP,
@@ -4454,6 +4455,69 @@ export function createLevelRun({
      */
     let spinnerForecastMemo = null;
     /**
+     * ⛓⛓⛓ hammer-phase P1 — THE MEMO THE LAST `advance` RETIRED, kept for ONE question: can its rows from 1 on be
+     * this tick's rows from 0 on (`spinnerForecast`'s shift)? It is never read as a forecast; `null` with
+     * `PRESS_KILL_COST` OFF.
+     */
+    let spinnerForecastPrev = null;
+    /**
+     * ⛓⛓⛓ hammer-phase P1 — THE FORECAST SHIFTED BY ONE TICK, or `null` (`PRESS_KILL_COST`). The press kill asks a
+     * horizon-long forecast on every tick (`deriveStrike`), and the memo above is per tick, so every tick re-stepped
+     * every body over the whole horizon — 18 % of C1's staging A — to arrive at rows the tick before had already cut.
+     *
+     * ⛔ WHEN ROW i + 1 OF THE LAST TICK'S MEMO IS ROW i OF THIS ONE, and every clause is checked, not assumed:
+     *   1. the memo is the one cut at `ticksCompleted - 1`, for this roster object, this level and this world (the memo
+     *      key's own first four, one tick back);
+     *   2. this tick is not the world's first (`firstTickInWorld` picks a different ctx for row 0, see the ONE-TICK
+     *      TRANSIENT note in `spinnerForecast`);
+     *   3. the live bodies ARE the state that memo's row 0 was cut from (`states[0]`): the same ids in the same order,
+     *      every field equal — a press that landed, a knockback, a death or a terrain write is a miss;
+     *   4. every input the spinner ctx closes over is the value the last memo's rows from 1 on were stepped under
+     *      (`inputs`, compared with a COPY taken when that memo was cut: a bag can alias live state).
+     * Then a fresh forecast would step the same bodies under an equal ctx from the same state, and the stepper is
+     * deterministic, so its rows ARE those rows; past them the memo extends from its own `st` under this tick's ctx,
+     * which is what extending a memo always did. Otherwise the forecast is cut fresh, exactly as before.
+     */
+    const shiftedSpinnerForecast = (live) => {
+        const prev = spinnerForecastPrev;
+        spinnerForecastPrev = null;
+        if (prev === null || prev.key === UNCACHEABLE || prev.state !== live || prev.level !== level
+            || prev.world !== world || prev.ticks !== ticksCompleted - 1 || firstTickInWorld
+            || prev.rows.length < 2) return null;
+        const predicted = prev.states[0];
+        if (predicted.length !== live.byId.size) return null;
+        let k = 0;
+        for (const body of live.byId.values()) {
+            if (!sameSpinnerFields(body, predicted[k])) return null;
+            k += 1;
+        }
+        const ctx = spinnerCtx();
+        if (!sameValue(ctx.inputs, prev.key)) return null;
+        return {
+            state: live,
+            level,
+            world,
+            firstTick: false,
+            ticks: ticksCompleted,
+            st: prev.st,
+            ctxNow: ctx,
+            ctxAfter: ctx,
+            key: prev.key,
+            rows: prev.rows.slice(1),
+            states: prev.states.slice(1),
+        };
+    };
+    /** Two spinner states with the same own fields in the same order, each `Object.is` (they are all primitives). */
+    const sameSpinnerFields = (a, b) => {
+        const ka = Object.keys(a);
+        const kb = Object.keys(b);
+        if (ka.length !== kb.length) return false;
+        for (let i = 0; i < ka.length; i += 1) {
+            if (ka[i] !== kb[i] || !Object.is(a[ka[i]], b[ka[i]])) return false;
+        }
+        return true;
+    };
+    /**
      * ⛔⛔⛔ R5 SLICE 22: THE CAMERA IS LIVE NOW, AND SLICE 20'S NAMED
      * SIMPLIFICATION IS WHAT THE RECORDING REFUTED.
      *
@@ -5329,6 +5393,12 @@ export function createLevelRun({
             pushables,
         }));
         return {
+            /**
+             * ⛓ hammer-phase P1 — WHAT THE THREE MEMBERS BELOW CLOSE OVER, as values (`world` is read live, by
+             * name, so it is not here): the forecast's shift compares these to decide two ctxs answer alike.
+             * `stepSpinner` destructures its own four fields, so an extra one changes no step.
+             */
+            inputs: { base, openBridges, frozen: ceremony !== null },
             collides: (rect) => world.collidesSolid(rect, base),
             // ⚠ THE ENTITY POINT, not a box centre — they coincide on a
             // spinner and do NOT on a block, whose `input()` probes
@@ -15084,6 +15154,7 @@ export function createLevelRun({
                 && memo.firstTick === firstTickInWorld
                 && memo.ticks === ticksCompleted;
             if (usable && memo.rows.length >= need) return memo.rows.slice(0, need);
+            const shifted = usable || !PRESS_KILL_COST.enabled ? null : shiftedSpinnerForecast(live);
             /**
              * ⛔⛔⛔ R8 SLICE 7 — A CTX SNAPSHOT MAY FREEZE **STATE**, BUT
              * NEVER A **ONE-TICK TRANSIENT**.
@@ -15113,7 +15184,7 @@ export function createLevelRun({
              * set, the freeze — is untouched, because that approximation is
              * the one `runFire`'s exact effect check is allowed to lean on.
              */
-            const cur = usable ? memo : {
+            const cur = usable ? memo : (shifted ?? {
                 state: live,
                 level,
                 world,
@@ -15122,16 +15193,22 @@ export function createLevelRun({
                 st: { byId: new Map([...live.byId].map(([k, v]) => [k, { ...v }])), level },
                 ctxNow: null,
                 ctxAfter: null,
+                key: UNCACHEABLE,
                 rows: [],
-            };
-            if (!usable) {
+                states: [],
+            });
+            if (!usable && shifted === null) {
                 cur.ctxNow = spinnerCtx();
                 cur.ctxAfter = firstTickInWorld
                     ? spinnerCtx({ beforeTypeFlip: false }) : cur.ctxNow;
+                // ⛓ hammer-phase P1: what rows 1… are stepped under, copied now (the shift's clause 4)
+                cur.key = PRESS_KILL_COST.enabled ? snapshotValue(cur.ctxAfter.inputs) : UNCACHEABLE;
             }
             for (let i = cur.rows.length; i < need; i += 1) {
                 stepSpinners(cur.st, i === 0 ? cur.ctxNow : cur.ctxAfter);
                 cur.rows.push(spinnerRects(cur.st).map((s) => s.rect));
+                // ⛓ hammer-phase P1: the bodies each row was cut from (`stepSpinner` never mutates one), for the shift
+                cur.states.push([...cur.st.byId.values()]);
             }
             spinnerForecastMemo = cur;
             return cur.rows.slice(0, need);
@@ -17207,6 +17284,7 @@ export function createLevelRun({
             // here so a tick that THROWS half-way — `firePendingKillLockThrows`
             // is three lines down — cannot leave a survivor behind for a
             // caller that catches. See `spinnerForecast`.
+            spinnerForecastPrev = PRESS_KILL_COST.enabled ? spinnerForecastMemo : null;
             spinnerForecastMemo = null;
             // ⛓ U9-swim: the shield box's player, as the last frame rendered it.
             // ⛔ Its `direction` is the GAME's, which `sprites()` pins to
