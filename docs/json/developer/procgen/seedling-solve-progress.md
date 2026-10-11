@@ -24,11 +24,16 @@ Where the JS arc installs it: `solveAnytime` runs one `solveSegment` per pass, s
 
 ```
 { v: 1,
+  seq,
   segment: { name, index, level, pass?, outcome },
   tree:    { key, role, label, attempts, successes, rejections: { <reason>: n }, active, children: [ … ] },
   tiles:   { level, tile: 16, cols, rows, cells: [ [col, row, reached, firstTick], … ] } | null,
   budget:  { asks: { <site>: n }, work: { <unit>: n } } }
 ```
+
+### `seq`
+
+How many times this install has called `onProgress`, counting the call in progress. It counts across segments and never resets within one install, so it strictly rises from one hook call to the next. Two `peek()`s inside the same call return the same `seq`. The page uses it to order snapshots and drop duplicates (the JS arc's request). It is a count of hook calls, not a clock.
 
 ### `segment`
 
@@ -120,13 +125,14 @@ L18's hammer room is `r9-solve-18`'s staging, with the hammers phased to residue
 node scripts/procgen/probe-seedling-solve-progress.mjs --tape=r9-solve-18 --goal=exit:176,112 --residue=21 \
     --deadline=never --every=200 --out=l18.jsonl
 r9-solve-18 L18 hook=peek deadline=never run 1/1: 8278 ms — SOLVED 445 t (3 pass(es))
-  answer 230dc0ff7300b9741e5559abc26ef70f · hook calls 1441 · snapshots 8 · final 1949 bytes · peek ms median 0.098 max 4.479
+  answer 230dc0ff7300b9741e5559abc26ef70f · hook calls 1441 · snapshots 8 · final 1960 bytes · peek ms median 0.098 max 4.479
 ```
 
 The solve takes three passes. Pass 1 discovers the kill lock and pass 2 measures it, so the third segment (`index: 2`) solves in 445 ticks, the witness tape's own length. Its final snapshot, with the cells cut to six:
 
 ```json
 { "v": 1,
+  "seq": 1441,
   "segment": { "name": "r9-solve-18", "index": 2, "level": 19, "outcome": "solved" },
   "tree": { "key": "segment", "role": "segment", "label": "r9-solve-18", "attempts": 1, "successes": 1,
     "rejections": {}, "active": false, "children": [

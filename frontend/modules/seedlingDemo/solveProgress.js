@@ -78,7 +78,7 @@ function installOf(onProgress, pass, who) {
     if (typeof onProgress !== 'function') {
         throw new Error(`${who}: onProgress must be a function (site, peek) => void, got ${typeof onProgress}`);
     }
-    const p = { hook: onProgress, pass, segments: 0, depth: 0, seg: null, peek: null };
+    const p = { hook: onProgress, pass, segments: 0, depth: 0, seg: null, peek: null, calls: 0 };
     p.peek = () => (p.seg === null ? null : snapshotOf(p));
     return p;
 }
@@ -129,6 +129,7 @@ export function progressReason(x) {
 
 /** Call the hook. ⛔ A hook that throws is ignored: the solve must not depend on its listener. */
 function emit(p, site) {
+    p.calls += 1;
     try {
         p.hook(site, p.peek);
     } catch { /* a listener's bug is not the solve's */ }
@@ -425,6 +426,7 @@ function snapshotOf(p) {
     if (seg.readers !== null) for (const [k, f] of Object.entries(seg.readers)) counted[k] = f();
     return {
         v: SOLVE_PROGRESS_VERSION,
+        seq: p.calls,
         segment: { name: seg.name, index: seg.index, level: seg.level, ...(p.pass !== null ? { pass: p.pass } : {}),
             outcome: seg.outcome },
         tree: nodeJson(seg.root, active),

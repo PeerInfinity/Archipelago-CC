@@ -190,8 +190,12 @@ describe('hammer-phase D1 — the snapshot\'s structure', () => {
             const roleOf = new Map();
             const prev = new Map();
             let seg = -1;
+            let seq = 0;
             for (const { snap } of stream) {
                 expect(snap.v).toBe(SOLVE_PROGRESS_VERSION);
+                // ⛓ `seq` (the JS arc's ask): the install's hook-call count, strictly rising — the page orders and dedupes by it
+                expect(Number.isInteger(snap.seq) && snap.seq > seq).toBe(true);
+                seq = snap.seq;
                 if (snap.segment.index !== seg) { seg = snap.segment.index; prev.clear(); }
                 const all = nodes(snap.tree);
                 for (const n of nodes(snap.tree)) {
