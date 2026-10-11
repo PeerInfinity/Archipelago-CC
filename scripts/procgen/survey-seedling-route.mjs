@@ -714,14 +714,27 @@ function encounterGoal(level, pickup, then) {
         location: pickup.location,
     };
 }
+/** ⛓ CROSSROOM D3 — the rules event's cross-room presser `{level, class, x, y}`, or null (by `event_id`). */
+function presserOfEvent(eventId) {
+    for (const reg of Object.values(REGIONS)) {
+        const loc = (reg.locations ?? []).find((l) => l.event_kind === 'game_state' && l.event_id === eventId);
+        const p = loc?.action?.presser;
+        if (p) return { level: p.level, class: p.class, x: p.x, y: p.y };
+    }
+    return null;
+}
 /** ⛓ RULES obstacle-events — an event leg's goal: clear the saved obstacle's flag (`clear-tag`). */
 function clearTagGoal(leg) {
     const o = leg.event.obstacle;
+    // ⛓ CROSSROOM D3: an event pressed from ANOTHER level names its presser (`action.presser`, the rules
+    //   location's own field) — handed to the solver, which walks to it when the run stands in its level.
+    const presser = presserOfEvent(leg.event.id);
     return {
         kind: 'clear-tag',
         tag: { level: o.level, tag: o.tag },
         at: { x: o.x, y: o.y },
         obstacle: `${o.class}@${o.x},${o.y}`,
+        ...(presser ? { presser } : {}),
         why: `${leg.goal} (${leg.event.id}) — broken before row ${leg.event.prerequisiteFor} walks its landing`,
         location: leg.goal,
     };
@@ -1286,6 +1299,11 @@ async function solveOneStep(step) {
         ? { kind: 'encounter', at: { ...g.at }, drop: { ...g.drop }, then: g.then }
         : g.kind === 'reach-exit'
         ? { kind: 'reach-exit', exit: { ...g.exit } }
+        // ⛓ CROSSROOM D3: a clear-tag goal is handed AS IS (it used to fall into the
+        //   collect-placement arm with no placement, and refused on the goal's shape).
+        : g.kind === 'clear-tag'
+        ? { kind: 'clear-tag', tag: { ...g.tag }, at: { ...g.at },
+            ...(g.obstacle ? { obstacle: g.obstacle } : {}), ...(g.presser ? { presser: { ...g.presser } } : {}) }
         : { kind: 'collect-placement', placement: { ...g.placement } }));
 
     /**
