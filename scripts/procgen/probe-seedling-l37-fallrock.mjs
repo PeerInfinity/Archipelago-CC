@@ -38,7 +38,6 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { derivedTransitions } from './probe-seedling-moonrock.mjs';
 import { PATCH_L37_FALLROCK_REMOVED, SEEDLING_SET_PATCHES } from '../../frontend/modules/seedlingDemo/seedlingSetPatches.js';
 
 argvHelp(import.meta.url);
@@ -63,6 +62,10 @@ export const roundTripTape = (parseTape, PIN_NAMES) => parseTape({
         { key: 'down', from: 310, to: TICKS },
     ],
 });
+
+/** The transitions a drained stream implies: one per level change (`probe-seedling-moonrock.mjs`' reading). */
+const derivedTransitions = (ticks) => ticks.slice(1).flatMap((o, i) => (o.level === ticks[i].level ? []
+    : [{ t: o.t, from: ticks[i].level, to: o.level, at: { x: o.x, y: o.y } }]));
 
 /**
  * What one arm's drained stream says: the transitions, and the L37 y range AFTER the first return (from the
