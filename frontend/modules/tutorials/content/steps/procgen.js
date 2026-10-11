@@ -280,4 +280,4 @@ export function startSeedlingGame(id) {
     ];
 }
 
-export const SEEDLING_RUNTIME_NOTE = 'Seedling rooms play in the **wasm** build of the original game (the default). The **Settings** panel\'s Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime, where the Playback Bot already walks them; this tutorial stays on wasm, where that work is in progress.';
+export const SEEDLING_RUNTIME_NOTE = 'Seedling rooms play in the **wasm** build of the original game (the default). The **Settings** panel\'s Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime, where the Playback Bot already walks them; this tutorial stays on wasm.';

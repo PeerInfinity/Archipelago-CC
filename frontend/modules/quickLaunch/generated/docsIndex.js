@@ -954,6 +954,18 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Grid growth is the pipeline's first mode, kept as the legacy grower: it grows regions cell by cell on a grid, drawing from the scenario pool, until the pool or the frontier runs out. How many…"
     },
     {
+        "path": "docs/json/user/tutorials/procgen-mixed-world.md",
+        "title": "Procgen: a mixed world",
+        "section": "user/tutorials",
+        "summary": "Each region of a generated world is drawn by a *substrate* — a kind of game that knows how to make a room, put items in it, and gate its exits. One world can mix them: the logic underneath does not…"
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-seedling.md",
+        "title": "Procgen: Seedling rooms",
+        "section": "user/tutorials",
+        "summary": "*Seedling* is a Flash game this project runs in the browser, recompiled from its SWF. Its rooms can be regions of a generated world: either real rooms from the game (the *region atlas*) or new rooms…"
+    },
+    {
         "path": "docs/json/user/tutorials/procgen-shuffled-spiral.md",
         "title": "Procgen: Shuffled spiral, with Maze",
         "section": "user/tutorials",
@@ -1034,6 +1046,8 @@ export const HELP_SECTIONS = Object.freeze([
                 "docs": [
                     "docs/json/user/tutorials/apcalc-generator.md",
                     "docs/json/user/tutorials/procgen-grid-growth.md",
+                    "docs/json/user/tutorials/procgen-mixed-world.md",
+                    "docs/json/user/tutorials/procgen-seedling.md",
                     "docs/json/user/tutorials/procgen-shuffled-spiral.md",
                     "docs/json/user/tutorials/procgen-sphere-growth.md"
                 ],

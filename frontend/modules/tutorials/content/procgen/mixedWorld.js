@@ -3,8 +3,8 @@
  * substrates — maze, text adventure, bounce, Noiz2sa and a generated Seedling
  * room — played to the end by the Playback Bot; plus the Substrate Registry.
  * ⚖ The user, 2026-10-10: a custom pool built in the tutorial; Seedling stays
- * on the wasm runtime (mention the switch). In progress: its walk row measures
- * `firstFailingStep`. Shape: ../../tutorialShape.js; shared steps: ../steps/.
+ * on the wasm runtime (mention the switch). Ready (⚖ the user, 2026-10-10); its
+ * walk row needs a WebGPU browser (batch flag). Shape: ../../tutorialShape.js; shared steps: ../steps/.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
  */
@@ -21,9 +21,8 @@ export const PROCGEN_MIXED_WORLD = Object.freeze({
     title: 'Procgen: a mixed world',
     summary: 'Build one world from a maze, a text adventure, a bounce zone, a Noiz2sa stage and a generated Seedling room, and watch the Playback Bot play every kind.',
     track: 'procgen',
-    status: 'in-progress',
-    firstFailingStep: null, // every step works since the ▶ Start step + a WebGPU test browser; ready = the user's call
-    doc: null,
+    status: 'ready', // ⚖ the user, 2026-10-10 (tutorial-bugs)
+    doc: 'docs/json/user/tutorials/procgen-mixed-world.md',
     intro: [
         { prose: 'Each region of a generated world is drawn by a *substrate* — a kind of game that knows how to make a room, put items in it, and gate its exits. One world can mix them: the logic underneath does not care whether a key sits at the end of a maze, a text adventure\'s room or a platform.' },
         { prose: SEEDLING_RUNTIME_NOTE },

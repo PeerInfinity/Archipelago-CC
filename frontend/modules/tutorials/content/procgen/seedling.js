@@ -3,8 +3,8 @@
  * generated world — a generated room as a sphere leaf, the generated room
  * world in a spiral — the Flash Panel, the Procgen Lab's Seedling tab, and the
  * bot. ⚖ The user, 2026-10-10: on the wasm runtime (getting the bot through
- * Seedling on wasm is a high priority), mentioning the switch to JS. In
- * progress: its walk row measures `firstFailingStep`.
+ * Seedling on wasm is a high priority), mentioning the switch to JS. Ready
+ * (⚖ the user, 2026-10-10); its walk row needs a WebGPU browser (batch flag).
  * Shape: ../../tutorialShape.js; shared steps: ../steps/procgen.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -22,9 +22,8 @@ export const PROCGEN_SEEDLING = Object.freeze({
     title: 'Procgen: Seedling rooms',
     summary: 'Put generated Seedling rooms into a procgen world, play them in the original game, look at a room in the Procgen Lab, and watch the bot.',
     track: 'procgen',
-    status: 'in-progress',
-    firstFailingStep: null, // every step works since the ▶ Start step + a WebGPU test browser; ready = the user's call
-    doc: null,
+    status: 'ready', // ⚖ the user, 2026-10-10 (tutorial-bugs)
+    doc: 'docs/json/user/tutorials/procgen-seedling.md',
     intro: [
         { prose: '*Seedling* is a Flash game this project runs in the browser, recompiled from its SWF. Its rooms can be regions of a generated world: either real rooms from the game (the *region atlas*) or new rooms generated in its style, with the game\'s own physics deciding what is reachable.' },
         { prose: SEEDLING_RUNTIME_NOTE },
