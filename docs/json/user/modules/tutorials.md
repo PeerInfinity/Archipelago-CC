@@ -47,6 +47,8 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 
 Written, but not working all the way through yet. The panel lists these in a collapsed section and marks the step where each one stops.
 
+- **Your workbench** — Find any panel with Quick Launch, arrange the tabs, follow a tutorial beside your work, and switch modules on and off. `?tutorial=start-workbench`
+- **Saving your setup** — Change the options and settings, save the layout and settings as a mode of your own, and clear what the app keeps in your browser. `?tutorial=start-saving-your-setup`
 - **Procgen: Sphere growth, with Maze** — Generate a maze-only world with the Sphere growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-sphere-growth`
 - **Procgen: Shuffled spiral, with Maze** — Generate a maze-only world with the Shuffled spiral mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-shuffled-spiral`
 - **Procgen: Grid growth, with Maze** — Generate a maze-only world with the legacy Grid growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-grid-growth`
@@ -66,6 +68,14 @@ Written, but not working all the way through yet. The panel lists these in a col
 - **APCalc: the calculator game** — Play APCalc: a calculator whose number and operation keys are the items, and whose results are the locations. `?tutorial=apcalc-demo`
 - **APCalc: generate a world** — Generate a new APCalc map with the APCalc Generator, play it, and package it as a .apworld. `?tutorial=apcalc-generator`
 - **APCalc: in a multiworld** — Host APCalc on a local Archipelago server and play it from the app. `?tutorial=apcalc-multiworld`
+- **Track a game** — Load a game's logic, track items and checks by hand, see what is reachable, and connect to your multiworld's server. `?tutorial=tracker-track-a-game`
+- **Tracking: why can't I get there?** — Ask the Path Analyzer how to reach a region, and which items each way needs. `?tutorial=tracker-path-analyzer`
+- **Tracking: the Region Graph** — Track a game on the Region Graph: regions coloured by reachability, clicked to move, check and show. `?tutorial=tracker-region-graph`
+- **Tracking: dungeons** — See a dungeon's regions and boss in the Dungeons panel. `?tutorial=tracker-dungeons`
+- **Tracking: helpers** — Watch a game's helper rules — "can lift rocks" and the like — turn true as you collect items. `?tutorial=tracker-helpers`
+- **Tracking: the Spoiler Checklist** — Follow a seed's spoiler sphere by sphere, and see which item each location holds. `?tutorial=tracker-spoiler-checklist`
+- **Tracking: the timer** — Let the timer check reachable locations by itself, in the Console or in a tab of its own. `?tutorial=tracker-timer`
+- **Tracking: the rules in the Editor** — Read the loaded game's rules JSON — and other data — in the Editor. `?tutorial=tracker-editor`
 
 ### Panels with no tutorial
 

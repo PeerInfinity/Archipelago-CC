@@ -31,7 +31,11 @@ const WALK_CATEGORY = 'Tutorial walks';
  * procgen walks generate worlds and play them to the end, and together they
  * outgrew the tutorials batch's budget (81 % of it on 2026-10-10).
  */
-const WALK_CATEGORY_BY_TRACK = Object.freeze({ procgen: 'Tutorial walks: procgen' });
+const WALK_CATEGORY_BY_TRACK = Object.freeze({
+    procgen: 'Tutorial walks: procgen',
+    // 2026-10-10: the tracker walks took the tutorials batch to 88 % of its budget.
+    tracker: 'Tutorial walks: tracker',
+});
 const walkCategory = (tutorial) => WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
 const walkId = (id) => `tutorial-walk-${id}`;
 const MOUNT_TIMEOUT_MS = 10000;

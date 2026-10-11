@@ -30,7 +30,7 @@ on:
       batch:
         description: >-
           A manual test-substrates batch (testBatches.js `manual: true`:
-          bot-walks, noiz2sa, runner, tutorials, tutorials-procgen), or `all` to run every manual batch as
+          bot-walks, noiz2sa, runner, tutorials, tutorials-procgen, tutorials-tracker), or `all` to run every manual batch as
           parallel jobs.
         type: string
         default: all

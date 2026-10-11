@@ -1568,6 +1568,66 @@
             "enabled": true,
             "category": "Region Graph",
             "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the Region Graph's folded \"Go to\" section (⚖ the user: regions AND locations, collapsed by default) does what a node tap does, so a tutorial step can reach a node. On push (fast batch). Reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-start-workbench",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft start-workbench; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-start-saving-your-setup",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft start-saving-your-setup; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-tracker-track-a-game",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-track-a-game; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-path-analyzer",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-path-analyzer; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-region-graph",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-region-graph; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-dungeons",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-dungeons; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-helpers",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-helpers; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-spoiler-checklist",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-spoiler-checklist; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-timer",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-timer; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-editor",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-editor; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
         }
     ]
 }
