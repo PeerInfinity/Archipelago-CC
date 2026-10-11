@@ -114,6 +114,8 @@ import {
     SOLVER_UPGRADE_WINDOW_WORK,
 } from '../seedlingDemo/jsRuntimeSolver.js';
 import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.js';
+import { applyAxeDodgeAsk, parseAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskHook.js';
+import { axeDodgeOverride } from './seedlingAxeDodgeSettings.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
@@ -183,6 +185,9 @@ const roomEquips = (r) => equipsMap(r?.equips);
  * @param {() => number|null} [deps.getUpgradeWindowWork]  the upgrade window in work units
  *   (`flashPanel.seedlingSolverUpgradeWindowWork`), read at each solve's start; null = the engine's own
  *   (`SOLVER_UPGRADE_WINDOW_WORK`), 0 = the whole budget
+ * @param {() => string|null} [deps.getAxeDodgeAskPerPreview]  ⛓ AXE_DODGE HOOK — the panel's setting
+ *   (`flashPanel.seedlingAxeDodgeAskPerPreview`: `on` / `off` / `default`), applied to THIS instance's
+ *   `AXE_DODGE_ASK_PER_PREVIEW` at each solve's start (its worker gets the request's stamp); absent = untouched
  * @param {number} [deps.backstopMs]  the wall-clock backstop (`SOLVE_BACKSTOP_MS`): a named failure, never an answer
  * @param {() => object|null} [deps.getDelivery]  ⛓ MID-ROOM REPLAN — the panel adapter's delivery gate
  *   (`{setItemGate, writesOf, inventory, push}`); absent = items reach the game as they arrive (no gate).
@@ -195,6 +200,7 @@ export function createWasmPlayback({
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetWork = SOLVER_BUDGET_WORK,
     getBudgetWork = null, getUpgradeWindowWork = null, getDelivery = null, backstopMs = SOLVE_BACKSTOP_MS,
+    getAxeDodgeAskPerPreview = null,
 }) {
     /** ⛓ O3 — the budget (work units) a solve starts with: the knob's live value, else the engine's own. */
     let ownBudget = budgetWork;
@@ -211,6 +217,14 @@ export function createWasmPlayback({
         const n = Number(v);
         if (v === null || v === '' || !Number.isFinite(n)) return SOLVER_UPGRADE_WINDOW_WORK;
         return n > 0 ? n : null;
+    };
+    /** ⛓ AXE_DODGE HOOK — the knob onto this instance's model, read at each solve's start (`default` = the model's own). */
+    const applyAxeDodge = () => {
+        if (!getAxeDodgeAskPerPreview) return;
+        let v = null;
+        try { v = getAxeDodgeAskPerPreview() ?? null; } catch { v = null; }
+        const o = axeDodgeOverride(v);
+        applyAxeDodgeAsk(o ? parseAxeDodgeAsk(o) : null);
     };
     const levelSource = levelSourceFromAtlas(records);
     let service = solveService;
@@ -1135,6 +1149,7 @@ export function createWasmPlayback({
         const req = request.producer ? request
             : { ...request, passes: request.passes ?? ANYTIME_PASSES, budgetWork: budget, upgradeWindowWork: upgradeWindow() };
         play = { ...playInit, t0: now(), request: req, budget, budgets: [budget], retries: 0, best: null };
+        applyAxeDodge();
         handle = svc().start(req);
         phase = 'solving';
         tl('solve', { name: req.name ?? null });
@@ -1162,6 +1177,7 @@ export function createWasmPlayback({
         play.budget = budget;
         play.budgets.push(play.budget);
         play.t0 = now();
+        applyAxeDodge();
         handle = svc().start(req);
         log(`[wasm playback] ${goal.name ?? goal.kind}: the solver ran out of ${play.budgets.at(-2)} work units in level ${goal.level} `
             + `— asking again with ${play.budget}, the room held (retry ${play.retries})`, 'warn');

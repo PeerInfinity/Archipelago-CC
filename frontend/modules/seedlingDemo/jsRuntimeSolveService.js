@@ -45,6 +45,7 @@
 
 import { killLockBodiesStamp } from './killLockBodies.js';
 import { contactFidelityStamp } from './contactFidelity.js';
+import { axeDodgeAskStamp } from './axeDodgeAskHook.js';
 import { SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
 
 export const SOLVE_WORKER_URL = new URL('./jsRuntimeSolveWorker.js', import.meta.url);
@@ -169,6 +170,9 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             // ⛓ CONTACT HOOK — the same, for the model's contact switches (`contactFidelity.js`).
             const contact = tape.contactFidelity ?? contactFidelityStamp();
             if (contact) tape.contactFidelity = contact;
+            // ⛓ AXE_DODGE HOOK — and an off-default `AXE_DODGE_ASK_PER_PREVIEW` (`axeDodgeAskHook.js`).
+            const axe = tape.axeDodgeAskPerPreview ?? axeDodgeAskStamp();
+            if (axe !== null) tape.axeDodgeAskPerPreview = axe;
             const id = sourceIdOf(source?.records);
             const msg = { type: 'solve', id: handle.id, request: { ...tape, source: { id, ...(sent.has(id) ? {} : { records: source?.records ?? null }) } } };
             // ⛓ SOLVE PROGRESS — on the ENVELOPE, and only while someone listens (absent = today's message exactly).

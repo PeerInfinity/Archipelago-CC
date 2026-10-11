@@ -25,6 +25,7 @@ import { KILLLOCK_SETTING_KEYS, killLockPageQuery } from './seedlingKillLockSett
 import { KILLLOCK_BODIES_DEFAULTS, applyKillLockBodies, formatKillLockBodies } from '../seedlingDemo/killLockBodies.js';
 import { CONTACT_SETTING_KEYS, contactPageParam } from './seedlingContactSettings.js';
 import { CONTACT_FIDELITY_DEFAULTS, applyContactFidelity, formatContactFidelity } from '../seedlingDemo/contactFidelity.js';
+import { AXE_DODGE_SETTING_KEY, axeDodgeOverride, axeDodgePageParam } from './seedlingAxeDodgeSettings.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -228,6 +229,18 @@ export class FlashPanelUI {
           return;
         }
       }
+      if (data?.key === AXE_DODGE_SETTING_KEY || data?.key === '*') {
+        // ⛓ AXE_DODGE HOOK — the CONTACT arm above, for `AXE_DODGE_ASK_PER_PREVIEW`. The wasm engine reads the
+        // cached value at each solve (the surface); a JS page mounted under another value is re-mounted.
+        const value = await this._refreshAxeDodgeAsk(data.key === '*' ? undefined : data.value);
+        if (value !== undefined && this.isInitialized && this.transport === 'js' && this._jsPageAxeDodge !== undefined
+          && value !== this._jsPageAxeDodge) {
+          this._panelLog(`axe-dodge switch changed (${this._jsPageAxeDodge} → ${value}) — re-mounting the JS runtime page`);
+          this._teardownForReinit();
+          this._initializeAdapter();
+          return;
+        }
+      }
       if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
       if (!this.isInitialized) return;
       if (this.componentState.configPath || this.componentState.swfPath
@@ -355,6 +368,8 @@ export class FlashPanelUI {
         mapPath: this._atlasMapPath ?? null,
         // ⛓ O3 — the solve budget knob, work units (null until the setting is read: the engine's own default then).
         solverBudgetWork: this._wasmSolverBudgetWork ?? null,
+        // ⛓ AXE_DODGE HOOK — `on` / `off` / `default` (null until the setting is read: the model's own value then).
+        axeDodgeAskPerPreview: this._axeDodgeAsk ?? null,
         // ⛓ MID-ROOM REPLAN — the delivery gate (`FlashBridgeAdapter.itemGate`): the engine holds an item that
         // arrives while it drives, and lets it through where it can replan around it.
         delivery: {
@@ -466,6 +481,21 @@ export class FlashPanelUI {
     } catch { return null; }
     this._contactFidelity = applyContactFidelity(set);
     return this._contactFidelity;
+  }
+
+  /**
+   * ⛓ AXE_DODGE HOOK — cache `flashPanel.seedlingAxeDodgeAskPerPreview` as `on` / `off` / `default`
+   * (`seedlingAxeDodgeSettings.js`). The panel's closure holds no model, so nothing is applied here: the wasm engine
+   * applies it to its own instance at each solve (`wasm.axeDodgeAskPerPreview` on the surface), the JS page reads it
+   * on its URL. undefined = the setting could not be read (nothing changed).
+   */
+  async _refreshAxeDodgeAsk(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(AXE_DODGE_SETTING_KEY, 'default'); } catch { return undefined; }
+    }
+    this._axeDodgeAsk = axeDodgeOverride(next) ?? 'default';
+    return this._axeDodgeAsk;
   }
 
   _teardownForReinit() {
@@ -1071,6 +1101,7 @@ export class FlashPanelUI {
       await this._refreshSolverUpgradeWindow();
       await this._refreshKillLockBodies();
       await this._refreshContactFidelity();
+      await this._refreshAxeDodgeAsk();
       this.transport = 'wasm';
       if (runtime === 'js') {
         // ⛓ Seedling JS J1: the JavaScript model's page, through the SAME
@@ -1083,7 +1114,10 @@ export class FlashPanelUI {
           // ⛓ CONTACT HOOK — and an off-default contact set, the same way.
           const contact = this._contactFidelity ?? CONTACT_FIDELITY_DEFAULTS;
           this._jsPageContact = formatContactFidelity(contact);
-          const query = [killLockPageQuery(killLock).replace(/^\?/, ''), contactPageParam(contact)].filter(Boolean);
+          // ⛓ AXE_DODGE HOOK — and an off-`default` axe-dodge setting.
+          this._jsPageAxeDodge = this._axeDodgeAsk ?? 'default';
+          const query = [killLockPageQuery(killLock).replace(/^\?/, ''), contactPageParam(contact),
+            axeDodgePageParam(this._jsPageAxeDodge)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
           await this._initializeWasm();
