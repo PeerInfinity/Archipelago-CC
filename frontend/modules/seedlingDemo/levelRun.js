@@ -113,7 +113,7 @@ import {
 } from './ghostSword.js';
 // ⛓⛓⛓ hammer-phase C2: the spinner forecasts carry a ghost press (behind `GHOST_SPINNER_PRESS`, ON by default).
 import { ghostSpinnerPressFor } from './ghostSpinnerPress.js';
-import { PRESS_KILL_COST, UNCACHEABLE, sameValue, snapshotValue } from './pressKillCost.js';
+import { PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue } from './pressKillCost.js';
 import {
     createBossTotem, bossTotemClampY, bossTotemSolidRect, renderBossTotem, stepBossTotem,
     wandFadeFreezeTicks, wandFadeGateOpen, WAND_PICKUP,
@@ -15155,6 +15155,10 @@ export function createLevelRun({
                 && memo.ticks === ticksCompleted;
             if (usable && memo.rows.length >= need) return memo.rows.slice(0, need);
             const shifted = usable || !PRESS_KILL_COST.enabled ? null : shiftedSpinnerForecast(live);
+            if (!usable && PRESS_KILL_COST.enabled) {
+                if (shifted === null) PRESS_KILL_COST_COUNTS.forecastCut += 1;
+                else PRESS_KILL_COST_COUNTS.forecastShifted += 1;
+            }
             /**
              * ⛔⛔⛔ R8 SLICE 7 — A CTX SNAPSHOT MAY FREEZE **STATE**, BUT
              * NEVER A **ONE-TICK TRANSIENT**.
