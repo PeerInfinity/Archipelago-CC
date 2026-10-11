@@ -61,15 +61,16 @@ function landmarks(name) {
 }
 
 describe('L30KEYLOCK — the switches\' contract', () => {
-    it('both are OFF by default, and `with…` restores them, on a throw too', () => {
-        expect(KILL_STANCE_TARGET_RESCAN.enabled).toBe(false);
-        expect(KEYLOCK_WAIT_PRICED.enabled).toBe(false);
-        expect(withKillStanceTargetRescan(true, () => KILL_STANCE_TARGET_RESCAN.enabled)).toBe(true);
-        expect(withKeylockWaitPriced(true, () => KEYLOCK_WAIT_PRICED.enabled)).toBe(true);
-        expect(() => withKillStanceTargetRescan(true, () => { throw new Error('x'); })).toThrow('x');
-        expect(() => withKeylockWaitPriced(true, () => { throw new Error('x'); })).toThrow('x');
-        expect(KILL_STANCE_TARGET_RESCAN.enabled).toBe(false);
-        expect(KEYLOCK_WAIT_PRICED.enabled).toBe(false);
+    // ON by default (the slice's flip commit: measured ON, nothing committed moves).
+    it('both are ON by default, and `with…` restores them, on a throw too', () => {
+        expect(KILL_STANCE_TARGET_RESCAN.enabled).toBe(true);
+        expect(KEYLOCK_WAIT_PRICED.enabled).toBe(true);
+        expect(withKillStanceTargetRescan(false, () => KILL_STANCE_TARGET_RESCAN.enabled)).toBe(false);
+        expect(withKeylockWaitPriced(false, () => KEYLOCK_WAIT_PRICED.enabled)).toBe(false);
+        expect(() => withKillStanceTargetRescan(false, () => { throw new Error('x'); })).toThrow('x');
+        expect(() => withKeylockWaitPriced(false, () => { throw new Error('x'); })).toThrow('x');
+        expect(KILL_STANCE_TARGET_RESCAN.enabled).toBe(true);
+        expect(KEYLOCK_WAIT_PRICED.enabled).toBe(true);
     });
 });
 
@@ -151,7 +152,7 @@ describe('L30KEYLOCK D2 — the two mechanisms, asked directly', () => {
         const body = run.entities('strikeBodies').find((b) => b.id === BODY);
         // the ladder's own ask: the keylock stance as the aim, the segment's tolerance
         const opts = { aim: { x: 72, y: 56 }, tolerance: DEFAULT_TOLERANCE };
-        const off = deriveKillByChaser(run, body, new Set(), opts);
+        const off = withKillStanceTargetRescan(false, () => deriveKillByChaser(run, body, new Set(), opts));
         expect(off.stance).toBeNull();
         expect(off.why).toMatch(/14 cell\(s\) inside its 80 px leash, 7 of those reachable/);
         const on = withKillStanceTargetRescan(true, () => deriveKillByChaser(run, body, new Set(), opts));
