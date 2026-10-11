@@ -39,6 +39,7 @@ import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import { JTA_PERK_ITEM_NAMES } from '../../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../../procgenCore/playbackEvents.js';
 import {
     JTA_TEST_PRESET_PATH,
     JTA_TEST_REGION,
@@ -995,6 +996,115 @@ registerTest({
     testFunction: locationCheckAndPerkGrant,
     category: 'JtA substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+/**
+ * The Playback Bot's walk to a JtA LOCATION (a zone task), on the
+ * jta_locations_test preset. Before 2026-10-11 the bridge accepted only exit
+ * walks and ignored a location walk without a word, so the bot waited forever
+ * on the first JtA location of a procgen world.
+ *
+ * Legs: a location of ANOTHER zone, and a target kind jta has no notion of,
+ * are each refused at once through `playback:walkFailed` (the bot's terminal
+ * status); a location of the loaded zone switches the zone's own automation on
+ * (the bridge's 'activate' policy), the automation plays the zone until the
+ * target is checked, and the walk then ends — the automation mode the player
+ * had comes back. The bot drives no task itself, so the leg never calls
+ * performTask: only energy is topped up, so affordability is not under test.
+ */
+async function botWalkToLocation(testController) {
+    testController.log('Loading jta_locations_test preset…');
+    await testController.loadRulesFromFile(JTA_LOCTEST_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'jtaSubstrateWrapperPanel' });
+    moveToRegion(JTA_LOCTEST_REGION, JTA_LOCTEST_START_REGION);
+    if (!await waitForJtaActive(testController)) return testController.getOverallResult();
+
+    // Fresh game (the substrate save slot is shared across a suite run).
+    try {
+        getJtaIframe()?.contentWindow?.localStorage?.removeItem('incrementalGameSave_substrate');
+    } catch { /* same-origin here */ }
+    getJtaIframe()?.contentWindow?.location?.reload();
+    if (!await waitForJtaActive(testController)) return testController.getOverallResult();
+
+    const controller = substrateRegistry.get('jta')?.getPlaybackController?.();
+    testController.assertEqual('jta PlaybackController present', true, !!controller?.walkTo);
+    if (!controller?.walkTo) return testController.getOverallResult();
+
+    const failures = [];
+    const onFailed = (data) => { failures.push(data); };
+    testController.eventBus.subscribe(PLAYBACK_WALK_FAILED_EVENT, onFailed, 'jta-walkto-location-test');
+
+    // The perk location's check must pass the loop-mode gate: park a Manual
+    // block in the zone (the jta-location-check-and-perk-grant precedent).
+    const parkHandle = await parkManualBlockInRegion(
+        testController, JTA_LOCTEST_REGION, 'region_1_0', 'exit_E');
+    testController.assertEqual('parked a Manual block in the zone region', true, !!parkHandle);
+    if (!parkHandle) {
+        testController.eventBus.unsubscribe(PLAYBACK_WALK_FAILED_EVENT, onFailed, 'jta-walkto-location-test');
+        return testController.getOverallResult();
+    }
+    const win = await waitForJtaActive(testController);
+    const savedNoReset = parkHandle.gs.noManaDepletionReset;
+    parkHandle.gs.noManaDepletionReset = true;
+    try {
+        // Leg 1 — another zone's location: refused at once, by name.
+        const otherZone = 'region_1_0__20';
+        controller.walkTo({ kind: 'location', name: otherZone });
+        const refused = await eventually(testController,
+            () => failures.some((f) => f?.target?.name === otherZone),
+            `walk to ${otherZone} refused`, 5000, 100);
+        testController.assertEqual('a location of another zone is refused through playback:walkFailed',
+            true, refused);
+
+        // Leg 2 — a tile: jta has none.
+        controller.walkTo({ kind: 'tile', x: 1, y: 1 });
+        const tileRefused = await eventually(testController,
+            () => failures.some((f) => f?.target?.kind === 'tile'),
+            'walk to a tile refused', 5000, 100);
+        testController.assertEqual('a tile target is refused through playback:walkFailed', true, tileRefused);
+
+        // Leg 3 — the loaded zone's perk location: automation plays the zone
+        // until the target is checked, then the walk ends.
+        const modeBefore = win.getAutomationMode?.();
+        controller.walkTo({ kind: 'location', name: JTA_LOCTEST_PERK_LOCATION });
+        const armed = await eventually(testController,
+            () => win.getAutomationMode?.() === 0, 'automation switched on for the walk', 5000, 50);
+        testController.assertEqual('the location walk switches the zone\'s automation on', true, armed);
+        const checked = await eventually(testController, () => {
+            if (snapshotHasLocation(testController.stateManager.getSnapshot(), JTA_LOCTEST_PERK_LOCATION)) {
+                return true;
+            }
+            win.setEnergy(1e9);
+            pumpTicks(win);
+            return false;
+        }, `walk target ${JTA_LOCTEST_PERK_LOCATION} checked`, 60000, 20);
+        testController.assertEqual('the zone\'s automation plays the target to its check', true, checked);
+        const ended = await eventually(testController,
+            () => win.getAutomationMode?.() === modeBefore,
+            'the walk ended (automation mode restored)', 5000, 50);
+        testController.assertEqual('the walk ends on its check (the player\'s automation mode is back)',
+            true, ended);
+        testController.assertEqual('the in-zone walk was not refused', false,
+            failures.some((f) => f?.target?.name === JTA_LOCTEST_PERK_LOCATION));
+    } finally {
+        testController.eventBus.unsubscribe(PLAYBACK_WALK_FAILED_EVENT, onFailed, 'jta-walkto-location-test');
+        parkHandle.gs.noManaDepletionReset = savedNoReset;
+        unparkManualBlock(parkHandle);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'jta-bot-walkto-location',
+    name: 'JtA: a walk to a zone location plays the zone to its check; other targets are refused',
+    description: 'Loads jta_locations_test. A walk to another zone\'s location and a walk to a tile are '
+               + 'refused at once through playback:walkFailed; a walk to the loaded zone\'s perk location '
+               + 'switches the zone\'s own automation on, the location is checked, and the walk ends '
+               + '(the automation mode the player had comes back).',
+    testFunction: botWalkToLocation,
+    category: 'JtA substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode
 });
 
 // ---------------------------------------------------------------------------

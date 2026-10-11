@@ -66,6 +66,7 @@
  */
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 import {
     activePerkItemNames,
     buildOwnPlacements,
@@ -170,8 +171,17 @@ let _lastPrestigeCount = null;
 // walk (restoring the previous mode after); under 'respect' it relies
 // entirely on the player's automation configuration. Cleared on
 // region load/exit.
+//
+// A walk targets an exit (_pendingWalkExit: taken when Travel completes) or
+// one of the zone's AP locations (_pendingWalkLocation: the walk ends when
+// that location is checked). At most one is set; a new walkTo replaces the
+// old one. While a LOCATION walk is pending, a completed Travel task does not
+// leave the zone (_travelHeldForWalk): the target may still be unplayed, and
+// the bot, not the zone, chooses where to go next.
 const JTA_AUTOMATION_MODE_ALL = 0;   // simulation.ts AutomationMode.All
 let _pendingWalkExit = null;
+let _pendingWalkLocation = null;
+let _travelHeldForWalk = false;
 let _walkPrevAutomationMode = null;  // mode to restore when the walk ends (null = we didn't change it)
 let _playbackAutomationPolicy = 'activate';   // 'activate' | 'respect' (host setting)
 
@@ -309,7 +319,7 @@ let _walkStallSince = 0;
 let _walkStallWarned = false;
 
 function _walkStallDiagnostic(fullState) {
-    if (!_pendingWalkExit) {
+    if (!_walkInFlight()) {
         _walkStallSince = 0;
         _walkStallWarned = false;
         return;
@@ -323,7 +333,7 @@ function _walkStallDiagnostic(fullState) {
     _walkStallWarned = true;
     const automationMode = typeof _w.getAutomationMode === 'function'
         ? _w.getAutomationMode() : 'n/a';
-    log('warn', `walk to '${_pendingWalkExit.exitName}' has not completed in `
+    log('warn', `walk to ${_walkTargetLabel()} has not completed in `
         + `${Math.round((now - _walkStallSince) / 1000)}s — `
         + `energy=${Math.round(fullState.currentEnergy)}/${Math.round(fullState.maxEnergy)} `
         + `zone=${fullState.currentZone} active=${fullState.activeTaskId ?? 'idle'} `
@@ -705,6 +715,9 @@ function _handleLoadRegion(payload) {
     if (regionId !== _currentRegionId) {
         _clearPendingWalk('loadRegion:different-region');
     }
+    // Every load plays the zone afresh (a reset un-plays it; a completed
+    // reload offers only its exits), so no Travel is held across it.
+    _travelHeldForWalk = false;
     // Defensive: a Playback instant pump belongs to the visit we're leaving;
     // stop it before loading a new region (the replay driver normally stops it
     // on completion, but a mid-replay reset/interrupt could leave it running).
@@ -813,7 +826,7 @@ function _handleLoadRegion(payload) {
     // A walk that survived a same-region reload needs the automation
     // engine re-armed (the catch-up reset may have been a prestige,
     // which zeroes automation_mode).
-    if (_pendingWalkExit) _armWalkAutomation();
+    if (_walkInFlight()) _armWalkAutomation();
     _startPolling();
     log('debug', `loaded region ${regionId} (zone ${jtaZone}, completed=${completed})`);
 }
@@ -858,6 +871,7 @@ function _handleTaskCompleted(task) {
         originator: 'jtaSubstrate',
     }, { initialTarget: 'bottom' });
     log('debug', `task ${task.id} (${task.name}) -> user:locationCheck (${locationName})`);
+    if (_pendingWalkLocation === locationName) _endLocationWalk('target checked');
     // The check has landed: this perk task no longer needs perk-category
     // treatment, so automation stops prioritizing it every run.
     _syncPerkCategoryTaskIds();
@@ -1149,10 +1163,11 @@ function _applyTaskPatches() {
 function _clearPendingWalk(reason = 'unspecified') {
     // A walk that was destroyed and one that stalled both go silent, and
     // telling them apart is the first question when a bot leg hangs.
-    if (_pendingWalkExit) {
-        log('debug', `cleared pending walk to '${_pendingWalkExit.exitName}' — ${reason}`);
+    if (_walkInFlight()) {
+        log('debug', `cleared pending walk to ${_walkTargetLabel()} — ${reason}`);
     }
     _pendingWalkExit = null;
+    _pendingWalkLocation = null;
     // If we activated the automation engine for this walk, restore the
     // mode the player had (automation_mode is session-transient in the
     // fork, so this can't corrupt their save either way).
@@ -1162,6 +1177,39 @@ function _clearPendingWalk(reason = 'unspecified') {
         }
         _walkPrevAutomationMode = null;
     }
+}
+
+function _walkInFlight() {
+    return !!(_pendingWalkExit || _pendingWalkLocation);
+}
+
+function _walkTargetLabel() {
+    if (_pendingWalkExit) return `exit '${_pendingWalkExit.exitName}'`;
+    if (_pendingWalkLocation) return `location '${_pendingWalkLocation}'`;
+    return '(none)';
+}
+
+/**
+ * End a location walk. If Travel completed while it was pending, the zone
+ * was held: now offer its exits as tasks, so the player (or the next walk —
+ * an exit walk in a completed zone crosses at once) can leave.
+ */
+function _endLocationWalk(reason) {
+    _clearPendingWalk(reason);
+    if (!_travelHeldForWalk) return;
+    _travelHeldForWalk = false;
+    const exits = _getRegionExits();
+    if (exits.length > 0) _injectExitTasks(exits);
+}
+
+/** Tell the bot a walk it asked for cannot be walked (`playback:walkFailed`). */
+function _publishWalkFailed(target, reason) {
+    log('warn', `walkTo refused — ${reason}`, target);
+    _client?.publishEventBus(PLAYBACK_WALK_FAILED_EVENT, {
+        substrateId: 'jta',
+        target: { kind: target?.kind ?? null, name: target?.name ?? null },
+        reason,
+    });
 }
 
 /**
@@ -1190,15 +1238,20 @@ function _handleWalkTo(target) {
         log('warn', 'walkTo ignored — no active jta region');
         return;
     }
+    if (target?.kind === 'location' && target?.name) {
+        _walkToLocation(target);
+        return;
+    }
     if (target?.kind !== 'exit' || !target?.name) {
-        // v1 jta regions have no locations/tiles; only exits are walkable.
-        log('warn', 'walkTo ignored — unsupported target', target);
+        // A jta region has no tiles: only its exits and its zone tasks
+        // (locations) can be walked to.
+        _publishWalkFailed(target, `jta cannot walk to a target of kind '${target?.kind}'`);
         return;
     }
     const exits = _getRegionExits();
     const exit = exits.find(e => e?.exitName === target.name || e?.exit_id === target.name);
     if (!exit) {
-        log('warn', `walkTo: exit '${target.name}' not found in ${_currentRegionId}`);
+        _publishWalkFailed(target, `exit '${target.name}' is not an exit of ${_currentRegionId}`);
         return;
     }
     // Completed region: the Travel requirement is already met this
@@ -1216,9 +1269,45 @@ function _handleWalkTo(target) {
     // zone a priority list if the player configured none; under
     // 'respect' the walk only designates the exit and completion is
     // entirely up to the player's own automation settings.
+    _pendingWalkLocation = null;
     _pendingWalkExit = exit;
     _armWalkAutomation();
     log('debug', `walkTo: zone playing toward exit '${exit.exitName}' (policy=${_playbackAutomationPolicy})`);
+}
+
+/**
+ * A walk to one of the zone's AP locations: the zone's own automation plays
+ * the zone (as for an exit walk), and the walk ends when the target's task
+ * completes and is checked. It survives a same-region reload (the loop-reset
+ * retry), like an exit walk, and has no give-up rule — the player stops it.
+ * Which task the automation runs first is the automation's choice; the walk
+ * only keeps it on until the target lands.
+ */
+function _walkToLocation(target) {
+    const map = _world?.ap_locations ?? {};
+    const inZone = Object.values(map).includes(target.name);
+    if (!inZone) {
+        _publishWalkFailed(target, `location '${target.name}' is not a task of ${_currentRegionId}`
+            + ` (zone ${_world?.jtaZone ?? '?'})`);
+        return;
+    }
+    if (_reportedLocationNames.has(target.name)) {
+        // Already checked: nothing to walk. The bot advances on the check
+        // it saw; say so rather than leave a walk that cannot end.
+        log('debug', `walkTo: location '${target.name}' is already checked`);
+        return;
+    }
+    if (_completedThisLoop.has(_currentRegionId) && !_travelHeldForWalk) {
+        // The zone was completed (and left) this loop, so its tasks only come
+        // back with the next loop reset.
+        _publishWalkFailed(target, `zone ${_world?.jtaZone ?? '?'} (${_currentRegionId}) was already `
+            + `completed this loop; '${target.name}' can be played again after the loop reset`);
+        return;
+    }
+    _pendingWalkExit = null;
+    _pendingWalkLocation = target.name;
+    _armWalkAutomation();
+    log('debug', `walkTo: zone playing toward location '${target.name}' (policy=${_playbackAutomationPolicy})`);
 }
 
 // Instant-mode replay pump (M4). A Playback block flagged Instant drains its
@@ -1302,7 +1391,8 @@ function _handlePlaybackControl(payload) {
             if (typeof _w.resumeGameLoop === 'function') _w.resumeGameLoop();
             return;
         case 'stop':
-            _clearPendingWalk('playbackControl:stop');
+            if (_pendingWalkLocation) _endLocationWalk('playbackControl:stop');
+            else _clearPendingWalk('playbackControl:stop');
             if (typeof _w.pauseGameLoop === 'function') _w.pauseGameLoop();
             return;
         case 'step':
@@ -1369,7 +1459,7 @@ function _queueStatus() {
         tasks: s.tasks,
         // A playback walk owns the zone's automation; the action queue must
         // not drive concurrently. The host executor watches this to pause.
-        walkInFlight: !!_pendingWalkExit,
+        walkInFlight: _walkInFlight(),
     };
 }
 
@@ -1385,7 +1475,7 @@ const _WALK_IN_FLIGHT = Object.freeze({
  * result (or a small derived payload); throws on an unknown method or a
  * missing fork hook so the caller reports an error.
  *
- * While a playback walk is pending (_pendingWalkExit set), the driving
+ * While a playback walk is pending (_walkInFlight()), the driving
  * commands (performTask / useItem / setAutomationMode) are refused: the walk
  * is played by the game's own automation and must not be disturbed. Read-only
  * queries stay available so the executor can observe the walk and pause.
@@ -1393,11 +1483,11 @@ const _WALK_IN_FLIGHT = Object.freeze({
 function _dispatchQueueAction(method, args) {
     switch (method) {
         case 'performTask':
-            if (_pendingWalkExit) return _WALK_IN_FLIGHT;
+            if (_walkInFlight()) return _WALK_IN_FLIGHT;
             if (typeof _w.performTask !== 'function') throw new Error('performTask hook missing');
             return _w.performTask(args[0]);
         case 'useItem':
-            if (_pendingWalkExit) return _WALK_IN_FLIGHT;
+            if (_walkInFlight()) return _WALK_IN_FLIGHT;
             if (typeof _w.useItem !== 'function') throw new Error('useItem hook missing');
             return _w.useItem(args[0], !!args[1]);
         case 'getStatus':
@@ -1431,7 +1521,7 @@ function _dispatchQueueAction(method, args) {
             return typeof _w.getAutomationMode === 'function' ? _w.getAutomationMode() : null;
         case 'setAutomationMode':
             // Refuse to touch automation mid-walk — the walk needs it On.
-            if (_pendingWalkExit) return _WALK_IN_FLIGHT;
+            if (_walkInFlight()) return _WALK_IN_FLIGHT;
             if (typeof _w.setAutomationMode !== 'function') throw new Error('setAutomationMode hook missing');
             return _w.setAutomationMode(args[0]);
         default:
@@ -1502,6 +1592,15 @@ function _handleTravelTaskCompleted(zone, task) {
     // Mark the region completed for this loop. Subsequent re-entries
     // load it in completed state (only exit tasks visible).
     _completedThisLoop.add(_currentRegionId);
+
+    // A location walk is in flight: stay. Its target may still be unplayed
+    // (automation usually runs Travel last, but not always), and the bot picks
+    // the exit; _endLocationWalk offers the exits once the walk ends.
+    if (_pendingWalkLocation) {
+        _travelHeldForWalk = true;
+        log('debug', `Travel completed in ${_currentRegionId}; held for the walk to '${_pendingWalkLocation}'`);
+        return;
+    }
 
     // A playback walkTo is in flight: take ITS exit — no exit-choice
     // tasks, no single-exit fallthrough.

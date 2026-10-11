@@ -59,11 +59,16 @@ The registry entry's PlaybackController is the shared `PlaybackProxy` on the `jt
 | `startInstantPump` / `stopInstantPump` | fast `stepTick` batches (Playback path) |
 | `reset` | `doEnergyReset`, which cascades to a loop reset |
 | `walkTo({kind:'exit', name})` | designate the exit; see below |
+| `walkTo({kind:'location', name})` | play the zone until that location is checked; see below |
 
 `walkTo` only designates the exit. The game's own automation engine (the mods, thresholds and priorities the player configures on the JtA page) completes the zone, and the exit is taken when the zone's Travel task completes; on an already-completed zone the exit is taken directly. The host setting `jtaSubstrateWrapper.playbackAutomation` picks the policy:
 
 - `activate` (default): the bridge switches automation on for the walk (`_armWalkAutomation`), fills the zone's priorities only if the player set none, and restores the previous mode afterwards.
 - `respect`: zone completion is left to the player's own automation settings. With the all-off defaults the walk waits forever.
+
+A location walk targets one of the loaded zone's AP locations (a zone task). The same automation plays the zone, in its own order, and the walk ends when the target is checked. Checks of other tasks land on the way. While a location walk is pending, a completed Travel task does not leave the zone: the bridge holds it, and when the walk ends it offers the exits as tasks. The next exit walk then crosses at once, because the zone is already completed this loop.
+
+The bridge refuses a walk it cannot play through `playback:walkFailed`, which the Playback Bot shows as an error, rather than leaving the bot waiting. It refuses a location of another zone, a zone already completed and left this loop (its tasks come back after the loop reset), an exit the region does not have, and any other target kind. A walk has no give-up rule: one that never reaches its target keeps going until the player stops it. Covered in-app by `jta-bot-walkto-location`.
 
 **Walks that span resets.** Playing a zone with fresh skills often costs more than one pool, so a walk usually spans several loop resets. Skills persist, so each attempt is cheaper. jta carries the walk across a reset in the bridge: on a same-region reload it keeps `_pendingWalkExit` and re-arms automation, so loops does not re-issue anything. Solvers without such memory (runner, bounce) rely on the generic queue-restart retry instead; the loops side of both paths is in [The Bot flow](./loop-recording.md#the-bot-flow).
 
