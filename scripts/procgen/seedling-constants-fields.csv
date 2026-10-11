@@ -97,15 +97,15 @@ frontend/modules/seedlingDemo/levelWorld.js|maskHitsBox|maskHitsBox,structural,,
 frontend/modules/seedlingDemo/levelWorld.js|ropeSpanRect|ropeSpanRect,structural,,,
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|avoidVolumesAt,structural,,,
 frontend/modules/seedlingDemo/levelWorld.js|nearestTileScanLinear|nearestTileScanLinear,structural,,,
-frontend/modules/seedlingDemo/levelWorld.js|walkableIndexFor|walkableIndexFor,structural,,,SOLVECOST D2 broad phase: index arithmetic, no game meaning (the linear scan is the reference)
-frontend/modules/seedlingDemo/levelWorld.js|nearestTileScanIndexed|nearestTileScanIndexed,structural,,,SOLVECOST D2 broad phase: index arithmetic, no game meaning (the linear scan is the reference)
-frontend/modules/seedlingDemo/levelWorld.js|solidKey|solidKey,structural,,,SOLVECOST D2 broad phase: index arithmetic, no game meaning (the linear scan is the reference)
-frontend/modules/seedlingDemo/levelWorld.js|solidGridFor|solidGridFor,structural,,,SOLVECOST D2 broad phase: index arithmetic, no game meaning (the linear scan is the reference)
-frontend/modules/seedlingDemo/levelWorld.js|solidCandidates|solidCandidates,structural,,,SOLVECOST D2 broad phase: index arithmetic, no game meaning (the linear scan is the reference)
-frontend/modules/seedlingDemo/levelWorld.js|(module)|h675573c1|16|0,structural,,,TILE_BUCKET: the nearest-tile index bucket (one tile); SOLVECOST D2 broad phase: index arithmetic, no game meaning (the linear scan is the reference)
-frontend/modules/seedlingDemo/levelWorld.js|(module)|h6c931de9|32|0,structural,,,SOLID_CELL: the solid grid cell; SOLVECOST D2 broad phase: index arithmetic, no game meaning (the linear scan is the reference)
-frontend/modules/seedlingDemo/levelWorld.js|(module)|hee41c03f|1|0,structural,,,SOLID_KEY_OFFSET 1 << 15; SOLVECOST D2 broad phase: index arithmetic, no game meaning (the linear scan is the reference)
-frontend/modules/seedlingDemo/levelWorld.js|(module)|hee41c03f|15|0,structural,,,SOLID_KEY_OFFSET 1 << 15; SOLVECOST D2 broad phase: index arithmetic, no game meaning (the linear scan is the reference)
+frontend/modules/seedlingDemo/levelWorld.js|walkableIndexFor|walkableIndexFor,structural,,,SOLVECOST D2 broad phase: index arithmetic
+frontend/modules/seedlingDemo/levelWorld.js|nearestTileScanIndexed|nearestTileScanIndexed,structural,,,SOLVECOST D2 broad phase: index arithmetic
+frontend/modules/seedlingDemo/levelWorld.js|solidKey|solidKey,structural,,,SOLVECOST D2 broad phase: index arithmetic
+frontend/modules/seedlingDemo/levelWorld.js|solidGridFor|solidGridFor,structural,,,SOLVECOST D2 broad phase: index arithmetic
+frontend/modules/seedlingDemo/levelWorld.js|solidCandidates|solidCandidates,structural,,,SOLVECOST D2 broad phase: index arithmetic
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h675573c1|16|0,structural,,,TILE_BUCKET: the nearest-tile index bucket (one tile); SOLVECOST D2 broad phase: index arithmetic
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h6c931de9|32|0,structural,,,SOLID_CELL: the solid grid cell; SOLVECOST D2 broad phase: index arithmetic
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hee41c03f|1|0,structural,,,SOLID_KEY_OFFSET 1 << 15; SOLVECOST D2 broad phase: index arithmetic
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hee41c03f|15|0,structural,,,SOLID_KEY_OFFSET 1 << 15; SOLVECOST D2 broad phase: index arithmetic
 frontend/modules/seedlingDemo/levelWorld.js|collidesSolid|hce3e4411|0|0,structural,,,SOLVECOST D2: the broad-phase candidate loop's index / first-tile coercion
 frontend/modules/seedlingDemo/levelWorld.js|collidesSolid|hcc2a6080|1|0,structural,,,SOLVECOST D2: the broad-phase candidate loop's index / first-tile coercion
 frontend/modules/seedlingDemo/levelWorld.js|plannerBlockerAt|hce3e4411|0|0,structural,,,SOLVECOST D2: the broad-phase candidate loop's index / first-tile coercion

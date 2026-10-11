@@ -15842,6 +15842,55 @@ wait switch). Live sweep (production page, both ON): legs 333 and 339 failed →
 - **Fixing "the drive is the priced walk" by dropping the dash moves every walk that shares the verb.** Price the
   dash instead.
 
+### Seedling fidelity SOLVECOST — the dash planner's cost was the room's collision scan, and a budget-bound leg was a refusal underneath
+
+Wave 12 (model coverage), the solver wall-clock slice. Live playthrough B (JS battery run 38108807480) ended on its
+TIME budget at sphere 4.4, walking to "Level 012 - Chest"; the route survey's L12 corridor (step 177, (592,16) →
+teleporter@0,352, 1269 t) cost ~105 s on CI; sweep-4 called `level_98 -> level_99__r2c7` budget-bound. The report is
+`CC/docs/cloud-reports/seedling-fidelity-solvecost.md`.
+
+**D1 — where the time goes (`node --cpu-prof`).** Step 177: `planSwordDash` 91.6 % of 245 s, and 84 % of the solve is
+`previewWalk`'s physics step. Three LINEAR SCANS took 80 % of all self time: `collidesSolid` 37.5 % and `liveRectOf`
+28.5 % (every solid of the level, once per pixel of sweep) and the nearest-tile scan inlined in `resolveTerrainState`
+14 % (every walkable tile, once per tick). L12 is the atlas's largest room, which is why its legs dominate the survey's
+wall-clock (steps 156, 187, 142, 43, 177 are its five slowest). B's slow legs are a different mix: its full pass is cut at
+the 85-unit window on every big leg (`L12 dashless 2570t w283/1`), so B's wall-clock is DASHLESS solves, which never call
+`planSwordDash` — and they pay the same three scans.
+
+**D2 — the scans get a broad phase (byte-identical, ON).** `SOLID_GRID`: a static 32 px grid over the solids whose
+live rect can only be `s.rect` or none; a crusher, turret, rope or pushable is always a candidate; candidates are
+visited in ascending list order, so the first hit (and its identity) is the linear loop's. Used by `collidesSolid` and
+both `plannerBlockerAt` loops. `NEAREST_TILE_INDEX`: the walkable tiles inside a window of half-width R, in the linear
+pass's own reverse order, accepted only when `bestDist < R²` (every tile left out is strictly farther, and the answer
+— `best` and `tie` — depends only on the tiles at the minimum). `pitTiles` / `lethalTerrainTiles` filter once and hand
+back a fresh copy. `levelWorldBroadPhase.test.js` compares ON vs OFF on every atlas world under random per-visit state
+(87,000 probes per query family); mutants m1–m4 (reverse order, a dynamic family dropped, the getter's copy dropped,
+the candidate sort dropped) each red it.
+
+**D2b — `AXE_DODGE_ASK_PER_PREVIEW` (OFF).** L98 → L99's units are almost all `axe-dodge` asks: the AXE arm asks once per
+stall length, and most stall lengths are priced by its rest-length screen's arithmetic with no preview. ON asks once
+per preview. No committed solve passes `shouldStop`, so nothing committed can move either way; ON moves where a
+budgeted solve trips, so it ships OFF. Measured ON over sweep-4's 16 budget-bound exit legs (node, the live inventory): one
+solves (`level_61__r0c7` from the L60 door, 462 t), six end on their own named refusal instead of the budget, two stay
+budget-bound (one is cut at `phase-dodge`, LADDER2's copy of the same ask), seven do not move.
+
+**D3 — the census.** Interleaved base/head on one box, every plan and refusal md5 equal, every work count equal:
+step 177 245 → 43 s; B's L12 leg (16,80) → pit 2570 t 55.2 → 6.9 s; B's last leg (L24 arrival → Level 012 - Chest,
+3122 t) 39.3 → 5.9 s; the budget-bound legs in the report's table. **L98 → L99 does NOT stop being budget-bound, and
+speed was never the reason**: in node, with the live inventory and NO budget, both arrivals REFUSE — *"kill: no side of
+iceturret@104,24 is reachable"* — after 31,559 and 24,730 units (~11 s). With D2b ON the same refusal costs 6,651 and
+3,604 units, and from (96,112) it now lands inside the 2,560-unit retry, by name.
+
+**Trap candidates.**
+- **A planner's cost hides in the oracle it asks.** The dash search looked quadratic and expensive; the preview it
+  repeats spent 80 % of its time in two linear scans of static geometry. Profile before pruning the search.
+- **A budget-bound verdict is not a cost finding.** Unbudgeted, L98 → L99 refuses by name; the budget only hid which
+  refusal. Ask the unbudgeted solve first.
+- **A work unit is only as good as what it buys.** The axe arm charged one unit per arithmetic screen (~0.3 ms) where
+  the rest of the ladder charges one per preview, so a cheap search exhausted a budget calibrated on expensive ones.
+- **A timing control rots with every speed-up.** `jsRuntimeSolveService`'s BACKSTOP row needs an L12 solve slower than
+  300 ms; after D2a it passes alone but went red once under a parallel run.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
