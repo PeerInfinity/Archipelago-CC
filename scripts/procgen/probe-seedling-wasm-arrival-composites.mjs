@@ -130,7 +130,9 @@ export const LEGS = {
         { name: 'L30 past the BobSoldier', at: [30, 16, 128], goal: exit(30, [[12, 3]], 'out_stairsdown_192_48'), expect: 'cross', producer: 'solver',
             verbs: ['detour'], ticks: 167 },
         { name: 'residue L45', at: [45, 112, 288], goal: exit(45, [[7, 0]], 'out_teleporter_112_0'), expect: 'declined',
-            clause: 'burnabletree@48,64 cannot be burned by this run — this run does not hold FIRE' },
+            // ⛓ wave-12 harvest (fidelity LEASH, `baitForecast` ON by default, user-licensed; clause by js-planning-5): the
+            // ladder now refuses at the BAIT rung — no jellyfish stance survives the forecast — before the FIRE clause.
+            clause: 'no bait stance for jellyfish@224,176 survives the chaser forecast' },
         { name: 'residue L88 a', at: [88, 96, 288], goal: exit(88, [[2, 0]], 'out_teleporter_32_0'), expect: 'declined', clause: 'the re-planned corridor failed too' },
         { name: 'residue L88 b', at: [88, 96, 288], goal: exit(88, [[12, 0]], 'out_teleporter_192_0'), expect: 'declined', clause: 'the re-planned corridor failed too' },
     ],
