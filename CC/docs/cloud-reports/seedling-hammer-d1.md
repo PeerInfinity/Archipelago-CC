@@ -206,8 +206,9 @@ Mutations, each run and caught:
     `quickLaunch/generated.test.js` were in no local list. The second needs
     `node scripts/quicklaunch/generate-docs-index.mjs`, a second generator over the docs tree.
   - Both were fixed in `e4bbc38`; the four files are 131/131 locally.
-  - **CI at the final head was still running when this report was written.** Read it with
-    `node scripts/procgen/ci-vitest-summary.mjs <head> --wait` (⚖ 52: the suite number is CI's).
+  - **CI at `e4bbc38`** (run `38156933637`): **success**. Unfiltered vitest 761 files / **19,718 passed, 0
+    failed**; the slow battery 18 files / 253 passed (read with `ci-vitest-summary.mjs e4bbc38 --wait`). The report
+    commit after it changes only this file.
 - **Identity block AFTER** at head (`SEEDLING_PORT=9573`, venv active): **row for row equal to BEFORE**, md5
   `3a48647f548c821267c3e60cf0ddc496`.
 
@@ -259,8 +260,6 @@ Mutations, each run and caught:
     freeze silently.
   - A snapshot is 1–3 KB. `peek()` is ≤ 0.6 ms.
 - **For the planner:**
-  - CI at the final head (after `e4bbc38`), JS Unit Tests: the read is owed. Expected: green except any pre-existing
-    rows.
   - CI dispatch was not attempted (the C1 session got 403). If wanted: `seedling-full-tier.yml` on this branch. The
     solver's default path is byte-identical, so no page leg should move.
   - **The overhead A/B on a quiet box**, if the 2% bound must be shown. The cheapest change to try is a typed array per
