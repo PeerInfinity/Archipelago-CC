@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    buildPlaythroughAtlas, playthroughLockEvents, playthroughObstacleEvents, pocketDoorsCharged,
+    buildPlaythroughAtlas, playthroughButtonEvents, playthroughLockEvents, playthroughObstacleEvents, pocketDoorsCharged,
 } from './make-seedling-playthrough-rules.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -35,11 +35,14 @@ const gatesOf = (rules, names) => Object.entries(rules.regions['1']).flatMap(([f
 let atlas;
 let derived;
 let locks;
+let buttons;
 beforeAll(() => {
     atlas = buildPlaythroughAtlas();
     derived = playthroughObstacleEvents(atlas);
     // ⛓ RULES lock-events: the latching bosslocks' events ride beside the obstacle events
     locks = playthroughLockEvents(atlas, { existing: derived.events });
+    // ⛓ RULES l38-button-event: and the cross-room button presses
+    buttons = playthroughButtonEvents(atlas, { existing: [...derived.events, ...locks.events] });
 }, 180_000);
 
 describe('the playthrough\'s obstacle events', () => {
@@ -52,7 +55,7 @@ describe('the playthrough\'s obstacle events', () => {
 
     it('the committed rules carry exactly the fresh derivation\'s events, each an AP event in the open side', () => {
         const committed = eventsOf(RULES);
-        const all = [...derived.events, ...locks.events];
+        const all = [...derived.events, ...locks.events, ...buttons.events];
         expect(committed.map((e) => e.name).sort()).toEqual(all.map((e) => e.name).sort());
         for (const ev of all) {
             const c = committed.find((x) => x.name === ev.name);
@@ -89,6 +92,27 @@ describe('the playthrough\'s obstacle events', () => {
             .toEqual(locks.internalExitRules.map((r) => `${apName(r.region_id, r.from)}->${apName(r.region_id, r.to)}`).sort());
         for (const g of gates) expect(levelOf(g.from)).toBe(levelOf(g.to));
         expect(JSON.stringify(RULES)).not.toContain('CanReachRegion');
+    });
+
+    it('rules l38-button-event: the L38 press is ONE event in L39\'s flag at the button, gating exactly the plug\'s two crossings', () => {
+        expect(buttons.events.map((e) => e.fields.event_id)).toEqual(['flag:L39:8']);
+        expect(buttons.reused).toEqual([]);
+        const [e] = buttons.events;
+        expect(e.fields.side).toBe('level_38__r0c9');
+        expect(e.fields.obstacle).toEqual({ level: 39, tag: 8, class: 'wandlock', x: 144, y: 592 });
+        expect(e.fields.action.presser).toEqual({ level: 38, class: 'buttonroom', x: 32, y: 48 });
+        expect(e.fields.across).toEqual([]);
+        const gates = gatesOf(RULES, new Set([e.name]));
+        expect(gates.map((g) => `${g.from}->${g.to}`).sort()).toEqual(['level_38__r0c9->level_39__r2c11', 'level_39__r2c11->level_38__r0c9']);
+        // the fresh derivation gates exactly the departures the committed rules ask it on
+        expect(buttons.exitGates.map((g) => `${g.region_id}/${g.exit_id}`))
+            .toEqual(['level_38/out_teleporter_144_0', 'level_39/out_teleporter_144_624']);
+        // the lock's own region is NOT split: the atlas carries no event and no gate
+        expect(RULES.regions['1'].level_39__r2c11.exits.find((x) => x.connected_region === 'level_39__r0c9').access_rule)
+            .toEqual({ rule: 'True_' });
+        expect(buttons.skipped.map((x) => x.split(':')[0]).sort()).toEqual([
+            'L38 buttonroom@144,288 -> {37,4} fallrock@288,32', 'L61 buttonroom@176,40 -> {63,1} lightpole@64,88',
+            'L63 buttonroom@32,64 -> {62,0} lightpole@120,200']);
     });
 
     it('the L0↔L1 binding: the door in the house\'s doorway is charged the rock under it', () => {

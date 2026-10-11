@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 69,
-            "count": 114,
+            "browser": 70,
+            "count": 115,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 398,
-        "browser": 134,
+        "blockStyle": 399,
+        "browser": 135,
         "cited": 198,
-        "files": 410,
+        "files": 411,
         "lineStyle": 12,
-        "withDocblock": 410,
-        "withFlags": 328
+        "withDocblock": 411,
+        "withFlags": 329
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9988,6 +9988,54 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only (slice `seedling-fidelity-terrain` D1, planner `seedling-fidelity-planning-3`) — THE HELD PER-TICK COMPARE behind the divergence sweep's \"terrain\" rows: each leg of `--legs=<jsonl>` (`seedling-divergence-legs.mjs`) is served by the PRODUCTION wasm playback engine on the live `seedling_playthrough` page …",
             "path": "scripts/procgen/probe-seedling-contact-divergence.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "ticks",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-cross-room-button.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ticks"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling CROSS-ROOM BUTTON WRITE, THE GAME'S WAY (rules `rules-l38-button-event`, W0).",
+            "path": "scripts/procgen/probe-seedling-cross-room-button.mjs"
         },
         {
             "argvHelpers": [],
