@@ -57,6 +57,7 @@ location_table: Dict[str, LocationData] = {
     "Level 032 - Bob Boss": LocationData("level_32", "Level 032 - Bob Boss", 30000011, False),
     "Level 036 - Chest": LocationData("level_36", "Level 036 - Chest", 30000012, False),
     "Level 038 - Chest": LocationData("level_38__r0c9", "Level 038 - Chest", 30000013, False),
+    "L39 flag 8: wandlock@144,592 cleared": LocationData("level_38__r0c9", "L39 flag 8: wandlock@144,592 cleared", None, True, extra_attributes={"event_id": "flag:L39:8", "event_kind": "game_state", "obstacle": {"level": 39, "tag": 8, "class": "wandlock", "x": 144, "y": 592}, "action": {"verb": "press", "item": None, "presser": {"level": 38, "class": "buttonroom", "x": 32, "y": 48}}, "side": "level_38__r0c9", "across": []}),
     "Level 039 - Totem Part 72,40": LocationData("level_39__r0c9", "Level 039 - Totem Part 72,40", 30000014, False),
     "Level 040 - Totem Part 64,144": LocationData("level_40__r0c53", "Level 040 - Totem Part 64,144", 30000018, False),
     "Level 040 - Totem Part 160,640": LocationData("level_40__r23c29", "Level 040 - Totem Part 160,640", 30000017, False),
