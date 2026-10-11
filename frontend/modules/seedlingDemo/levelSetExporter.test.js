@@ -562,7 +562,10 @@ describe('vanillaRecordSet — the manifest and the map extract in, a record-sou
             menu_rooms: [1],
             named_rooms: {},
         };
-        const { set, report } = vanillaRecordSet(smallSet, smallMap);
+        // ⛔ `patches: []`: the stand-in holds levels 0 and 1 only, and the delivery's table names L37
+        // (`l37-fallrock-removed`), whose missing record the applier refuses by name. This row is about the
+        // manifest's `start`, not the patches (`seedlingSetPatches.test.js` owns those).
+        const { set, report } = vanillaRecordSet(smallSet, smallMap, { patches: [] });
         expect(set.start).toEqual({ level: 1, x: 32, y: 48 });
         expect(set.menu_rooms).toEqual([1]);
         expect(set.rooms[1].snow_gradient).toBe(true);
