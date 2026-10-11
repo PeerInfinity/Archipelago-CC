@@ -105,6 +105,15 @@ export const TEST_BATCHES = Object.freeze({
         // (tutorial-bugs, 2026-10-10: "Failed to get WebGPU adapter").
         webgpu: true,
     }),
+    'tutorials-seedling': Object.freeze({
+        description:
+            'The Seedling track\'s tutorial walk rows (the original game on wasm: '
+            + 'seedling_playthrough and the bot). Manual, like tutorials; WebGPU, '
+            + 'like tutorials-procgen.',
+        manual: true,
+        categories: Object.freeze(['Tutorial walks: seedling']),
+        webgpu: true,
+    }),
     'tutorials-tracker': Object.freeze({
         description:
             'The Tracking track\'s tutorial walk rows (ALTTP seed 1, loaded fresh '

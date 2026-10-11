@@ -36,6 +36,8 @@ const WALK_CATEGORY_BY_TRACK = Object.freeze({
     procgen: 'Tutorial walks: procgen',
     // 2026-10-10: the tracker walks took the tutorials batch to 88 % of its budget.
     tracker: 'Tutorial walks: tracker',
+    // The Seedling walks boot the wasm game (WebGPU) — a batch of their own.
+    seedling: 'Tutorial walks: seedling',
 });
 const walkCategory = (tutorial) => WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
 const walkId = (id) => `tutorial-walk-${id}`;

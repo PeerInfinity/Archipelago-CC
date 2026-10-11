@@ -12,6 +12,7 @@ import { OTHER_EMBEDDING } from './other/embedding.js';
 import { OTHER_MAZE_GAME_DATA } from './other/mazeGameData.js';
 import { OTHER_VIBE_CODING } from './other/vibeCoding.js';
 import { PROCGEN_RUNNER_DEMO } from './procgen/runnerDemo.js';
+import { SEEDLING_BOT, SEEDLING_MULTIWORLD, SEEDLING_RECOMPILE, SEEDLING_WHOLE_GAME } from './seedling/seedling.js';
 import {
     DEV_EVENTS, DEV_LOOPS_COST_DEBUGGER, DEV_REGION_MARKING_TOOL, DEV_SPOILER_TEST, DEV_TESTS,
 } from './developer/developer.js';
@@ -54,6 +55,10 @@ export const TUTORIALS = Object.freeze([
     entry('procgen/loopModeJta.js', PROCGEN_LOOP_MODE_JTA),
     entry('procgen/loopModeEverything.js', PROCGEN_LOOP_MODE_EVERYTHING),
     entry('procgen/runnerDemo.js', PROCGEN_RUNNER_DEMO),
+    entry('seedling/seedling.js', SEEDLING_RECOMPILE),
+    entry('seedling/seedling.js', SEEDLING_BOT),
+    entry('seedling/seedling.js', SEEDLING_MULTIWORLD),
+    entry('seedling/seedling.js', SEEDLING_WHOLE_GAME),
     entry('games/metamath.js', METAMATH_DEMO),
     entry('games/multiworld.js', METAMATH_MULTIWORLD),
     entry('games/depgraph.js', DEPGRAPH_DEMO),

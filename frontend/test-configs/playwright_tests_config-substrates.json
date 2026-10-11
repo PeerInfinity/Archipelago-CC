@@ -1688,6 +1688,30 @@
             "enabled": true,
             "category": "Tutorial walks: procgen",
             "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft procgen-runner-demo; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen."
+        },
+        {
+            "id": "tutorial-walk-seedling-recompile",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-recompile; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
+        },
+        {
+            "id": "tutorial-walk-seedling-bot",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-bot; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
+        },
+        {
+            "id": "tutorial-walk-seedling-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
+        },
+        {
+            "id": "tutorial-walk-seedling-whole-game",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-whole-game; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
         }
     ]
 }

@@ -27,6 +27,16 @@ export const NO_TUTORIAL = Object.freeze({
     progressBarPanel: { title: 'Progress Bars', why: 'Removed from the default layout with the Meta Game panel; it may be deprecated.' },
 });
 
+/**
+ * Panels a DRAFT names that are not built yet: componentType → the feature
+ * that will build it. A draft written for an unfinished feature (⚖ the user,
+ * 2026-10-10: write every tutorial now, record where it stops) may target
+ * one; the census refuses the entry once the panel is registered.
+ */
+export const PLANNED_PANELS = Object.freeze({
+    swfRecompilerPanel: 'F2 — the in-browser SWF recompiler (SWFRecomp-CC), not built yet',
+});
+
 /** Panels a tutorial is planned for, not written yet: componentType → the planned tutorial. */
 export const NOT_COVERED_YET = Object.freeze({
 });
