@@ -7941,7 +7941,62 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
         if (!strategy || !STRATEGY_EXECUTORS[strategy]) continue;
         out.push({ id: b.id, kind: 'shieldBoss', strategy });
     }
+    if (STANCE_ROCKS.enabled) out.push(...rockHypothesis(run, wall));
     return out;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY L40BUTTON — **A BREAKABLE ROCK IS A PENDING OBSTACLE TOO**, behind `STANCE_ROCKS` (OFF).
+ *
+ * Measured on L40 from both north arrivals (sweep-4 legs 378/381, `Totem Part 64,144`). The part's locks are
+ * group 1; their opener `buttonroom@160,128` latches, so `hold` is selected and a stance is derived. The stance
+ * stands behind group 0's three wandlocks AND the three `breakablerock`s {tags 22,23,24}. The wandlocks are in
+ * the hypothesis (their opener `buttonroom@272,208` latches too); the rocks were not, because the quantifier
+ * enumerated activators and shield bosses only. So the stance read as unreachable, the prerequisite sweep
+ * listed the room's group-2/5 walls instead (`wandlock@448,432` & co., which the route never needs), and the
+ * leg refused. The game's own order is the R5 tape `r5-l40-part0`: latch t0, break the three rocks, latch t1.
+ *
+ * ⇒ a rock joins the set on guard (i)'s own terms: `break` is a SELECTED and REGISTERED verb, and its discharge
+ * is durable (the rock is removed for the visit and its tag written). It is admitted only where the run's swing
+ * can break it at all (the same two guards `resolveBreakStrategy` asks first — a sword or a modelled ghost
+ * swing, and `rockBreaksUnder`), so a rock the run cannot break stays a wall here, not an optimistic gap.
+ * Discharging it is the bag's own field (`brokenRocks`), which is what a real break writes.
+ */
+function rockHypothesis(run, wall) {
+    const broken = run.entities('brokenRocks') ?? new Set();
+    const weapon = run.progress('primaryWeapon');
+    const inventory = run.progress('inventory');
+    const swings = weapon === 'sword'
+        || (weapon === 'ghostsword' && GHOSTSWORD_PRESS.enabled && !ghostSwingRefusal(inventory));
+    if (!swings) return [];
+    const out = [];
+    for (const s of (run.world.solids ?? [])) {
+        if (!s.rockId || wall.has(s.rockId) || broken.has(s.rockId)) continue;
+        const strategy = OBSTACLE_STRATEGIES[`solid:${s.tag}`] ?? null;
+        if (strategy !== 'break' || !STRATEGY_EXECUTORS[strategy]) continue;
+        if (!rockBreaksUnder(s.rockType, inventory)) continue;
+        out.push({ id: s.rockId, kind: 'rock', tag: s.tag, strategy });
+    }
+    return out;
+}
+
+/**
+ * The switch for `rockHypothesis` — OFF by default; `SEEDLING_STANCE_ROCKS=1` turns it on for a process,
+ * `withStanceRocks` for a test. The browser has no `process` and takes the default.
+ */
+export const STANCE_ROCKS = { enabled: globalThis.process?.env?.SEEDLING_STANCE_ROCKS === '1' };
+
+/** Run `fn` with `STANCE_ROCKS` set to `enabled`, restoring the previous value. */
+export function withStanceRocks(enabled, fn) {
+    return withSwitch(STANCE_ROCKS, enabled, fn);
+}
+
+/**
+ * ⛓ READ-ONLY PROBE for `fidelityL40Button.test.js`: the stance hypothesis for `run` as it stands (ids, kinds,
+ * verbs), the set every stance derivation reads once its direct plan fails. It steps nothing.
+ */
+export function stanceHypothesisProbe(run, blocked = []) {
+    return stanceHypothesis(run, blocked).map((h) => ({ id: h.id, kind: h.kind, strategy: h.strategy }));
 }
 
 /**
@@ -7991,6 +8046,13 @@ function bagWithDischarged(run, bag, hypothesis) {
             bosses.set(h.id, { ...bosses.get(h.id), removed: true, rect: null });
         }
     }
+    // ⛓ L40BUTTON: a hypothesised rock is discharged in the field a real break writes. Only rock entries add the
+    // key, so a hypothesis without one (every one while `STANCE_ROCKS` is OFF) returns the bag it always did.
+    const rocks = hypothesis.filter((h) => h.kind === 'rock').map((h) => h.id);
+    if (rocks.length) {
+        return { ...bag, openActivators: opens, shieldBosses: bosses,
+            brokenRocks: new Set([...(bag.brokenRocks ?? []), ...rocks]) };
+    }
     return { ...bag, openActivators: opens, shieldBosses: bosses };
 }
 
@@ -8025,7 +8087,7 @@ function stanceReaches(run, aim, contacts, hypothesisOf) {
      * nothing at all.
      */
     const exempt = new Set([...contacts,
-        ...hypothesis.filter((h) => h.kind === 'activator')
+        ...hypothesis.filter((h) => h.kind === 'activator' || h.kind === 'rock')
             .map((h) => `proximity-hazard:${h.id}`)]);
     try {
         planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, exempt, {
@@ -14468,8 +14530,27 @@ function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null
     }
     const { candidates, outOfReach, noRect } = breakStanceCandidates(run, target,
         solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }));
-    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
+    // ⛓ L40BUTTON: a rock is never in its OWN swing stance's hypothesis — "reachable once this rock is broken" is
+    // a stance on the rock's far side (measured: (168,136) for `breakablerock@176,128`, STANCE_REENTRY at t1188).
+    // Only `rockHypothesis` entries are filtered, so with `STANCE_ROCKS` OFF the set is the one it always was.
+    const anyHypothesis = lazyStanceHypothesis(run, blocked, contacts);
+    let ownless = null;
+    const hypothesis = () => (ownless ??= anyHypothesis()
+        .filter((h) => h.kind !== 'rock' || h.id !== target.id));
     let unsafe = 0;
+    /**
+     * ⛓ L40BUTTON: with `STANCE_ROCKS` ON a rock's NEIGHBOURS are in the hypothesis too, and a far-side cell is
+     * "reachable once the other rocks are broken" — measured: L40's (168,136) for `breakablerock@176,128`, through
+     * `breakablerock@176,144`. So every candidate is first asked DIRECTLY (the world as it is), and only then
+     * under the hypothesis. OFF the loop below is the one it always was.
+     */
+    if (STANCE_ROCKS.enabled) {
+        for (const c of candidates) {
+            if (admit && !admit(c)) continue;
+            const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, () => []);
+            if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
+        }
+    }
     for (const c of candidates) {
         if (admit && !admit(c)) { unsafe += 1; continue; }
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
