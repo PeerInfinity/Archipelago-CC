@@ -295,16 +295,16 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**69 files, 5623 literals.** Class × position:
+**69 files, 5675 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1557 | 388 | 1950 |
 | rule | 7 | 985 | 464 | 1456 |
 | cosmetic | 0 | 60 | 14 | 74 |
-| structural | 12 | 355 | 1776 | 2143 |
+| structural | 14 | 357 | 1824 | 2195 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 24 | 2957 | 2642 | 5623 |
+| total | 26 | 2959 | 2690 | 5675 |
 
 Class × kind (physics and rule rows only):
 
@@ -464,12 +464,13 @@ None: a name declared in several files now reads one profile key (the table belo
 | `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
 | `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
-### The 40 derived or aliased top-level constants
+### The 41 derived or aliased top-level constants
 
 | name | file | initialiser |
 |---|---|---|
 | `PIT_STATE` | seedlingDemo/levelWorld.js | `HAZARD_STATES.pit` |
 | `TILE_SIZE` | seedlingDemo/levelWorld.js | `SEEDLING_TILE_SIZE` |
+| `SOLID_KEY_OFFSET` | seedlingDemo/levelWorld.js | `1 << 15` |
 | `NPC_LINE_LENGTH` | seedlingDemo/endingChain.js | `NPC_LINE_LENGTH_DEFAULT` |
 | `BLOODY_SEED_TEXT` | seedlingDemo/endingChain.js | `'The seed, covered in the blood of the Watcher, seems ' + 'almost to cower fr...` |
 | `BEAM_TIME_MAX` | seedlingDemo/moonrock.js | `MOONROCK.fps * MOONROCK.beamSeconds` |
