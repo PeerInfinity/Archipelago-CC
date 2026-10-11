@@ -458,14 +458,14 @@
       }
     },
     "identity: solve-seedling-r9-campaign --check": {
-      "value": "b064c264048a8a8a2fcfbbdd8db452ce",
+      "value": "712f0eada1a7baab29bccf6de86f0997",
       "command": "node scripts/procgen/ci-summary.mjs --gate=\"identity: solve-seedling-r9-campaign --check\" --json",
       "kind": "identity",
       "exit": 0,
-      "ms": 10924,
+      "ms": 113299,
       "cheap": false,
       "ciSourced": true,
-      "measuredAt": "0b7a2e253630d4b65b0ada7a773ccec5bd97f7e7",
+      "measuredAt": "ea71810f9ade5bfc224feb7e81a660667dd8ea5b",
       "total": "(no total)"
     },
     "identity: generate-procgen-reference.mjs": {
