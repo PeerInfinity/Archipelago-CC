@@ -1974,3 +1974,4 @@ frontend/modules/seedlingDemo/bombPusher.js|stepBomb|hbeb26f40|0|0,physics,magni
 frontend/modules/seedlingDemo/bombPusher.js|stepBomb|hdaa05290|0|0,rule,bound,Projectiles/Bomb.as:update,t > 0 counts down
 frontend/modules/seedlingDemo/bombPusher.js|stepBomb|h36506d2a|1|0,structural,,,t-- per update
 frontend/modules/seedlingDemo/bombPusher.js|bombPusherCadence|bombPusherCadence,structural,,,the cadence simulator: counters
+frontend/modules/seedlingDemo/levelRun.js|step|h98281141|0|2,structural,,,the lobber forecast's backward splice loop

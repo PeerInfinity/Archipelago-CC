@@ -8133,11 +8133,38 @@ const hypothesisRejection = (discharged) => (discharged?.length ? [{
 }] : []);
 
 /**
+ * ⛓⛓⛓ seedling-fidelity-bombpusher D3 — A HOLD INSIDE A LOBBER'S REACH IS REFUSED BY NAME, BEFORE IT STANDS.
+ *
+ * Both of the hold's waits (`runHold` on the presser, `runLatchedWait` wherever the latch left the player) stand
+ * still for their bound, by contract: a hold that moved is a failure. A `BombPusher` aims every bomb at the player
+ * and the blast lands one step past the aim (≤ 8.5 px, inside the 15 px disc), so a standing player within its
+ * 256 px is hit once the wait outlasts the next shot + 61 ticks — `dangerAt`'s WAIT arm simulates exactly that
+ * (`lobberWaitDanger`). Measured on the game: L40BUTTON's 131-tick hold of `buttonroom@272,208`, 157 px from
+ * `bombpusher@112,128`, is knocked at hold tick 48 (leg 378) / 58 (leg 381); without this the executor failed
+ * "MOVED" with no cause. ⛔ NO VERB WAITS WHILE MOVING, which is what a bomb-free hold would need, so this is a
+ * refusal and not a re-plan; a no-op while `CONTACT_FIDELITY.bombPusherLive` is OFF (no lobber is listed).
+ */
+function lobberHoldRefusal(run, ticks, what) {
+    if (!CONTACT_FIDELITY.bombPusherLive || !Number.isFinite(ticks) || ticks <= 0) return;
+    if ((run.entities('bombPushers') ?? []).length === 0) return;
+    const at = { x: run.state.x, y: run.state.y };
+    const d = dangerAt(run, run.ticksCompleted + ticks, playerBoxAt(at.x, at.y), { mode: 'wait' });
+    const bomb = d.sources.find((src) => src.kind === 'bomb');
+    if (!bomb) return;
+    const lobber = String(bomb.id).split('#')[0];
+    throw new SolverRefusal(`${what}: the hold stands still for up to ${ticks} tick(s) at (${at.x},${at.y}), `
+        + `inside ${lobber}'s 256 px reach — ${bomb.why}. A hold cannot move, and no verb waits while moving, so `
+        + 'every plan through this wait is a bomb hit (seedling-fidelity-bombpusher: a forced-hit candidate unless a '
+        + 'moving wait is built).', { obstacle: { kind: 'danger', id: lobber } });
+}
+
+/**
  * Executor: the `hold` verb, with everything a leg spec used to declare
  * derived from live state — the presser from the frontier's own blocker id,
  * the stance from the presser's rect, the duration from the mechanism.
  */
 function execHold(run, perTick, resolved, ctx) {
+    lobberHoldRefusal(run, resolved.hold.ticks, ctx.what);
     if (resolved.latched === true && resolved.stance === null) {
         return runLatchedWait(run, perTick, resolved, ctx.what);
     }
