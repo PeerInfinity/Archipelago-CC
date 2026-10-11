@@ -1,0 +1,12 @@
+off 624 failed None None  the solver declined level_74 -> level_75 in level 74 (refusal): solverBot(wasm-exit-74) reach-exit (16,144)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (232.2,119.6) — 
+off 628 timeout None None  
+off 772 done 366 ['detour']  
+off 626 timeout None None  
+off 629 done 278 ['bait', 'kill', 'walk']  
+on 624 failed None None  the solver declined level_74 -> level_75 in level 74 (refusal): solverBot(wasm-exit-74) reach-exit (16,144)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (232.2,119.6) — 
+on 628 timeout None None  
+on 772 done 366 ['detour']  
+on 626 timeout None None  
+on 629 done 278 ['bait', 'kill', 'walk']  
+
+[exited with code 0]

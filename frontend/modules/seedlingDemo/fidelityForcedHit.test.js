@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
-import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
+import { createRunForStaging, createTapeStepper, stagingFromTape } from './tapeRunner.js';
 import { CONTACT_FIDELITY_DEFAULTS } from './contactFidelity.js';
 import { FORCED_HITS, FORCED_HIT_ALPHABET, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit,
     withForcedHits, worldHitsOf } from './forcedHit.js';
@@ -27,6 +27,8 @@ import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const witness = (n) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'chaser-witness', `${n}.json`), 'utf8'));
 const W622 = witness('leash-l73-622-up-lavarunner');
+// ⛓ D3: the forced-hit plan's first three ticks, played on the GAME (p4f headless, `--player-hits`)
+const WPLAN = witness('forcedhit-l73-622-plan');
 const levelSource = atlasLevelSource();
 /** A fork at L73's arrival, as the LEASH witness stages it (a fresh run each call — the proof's own contract). */
 const fork622 = () => createRunForStaging(stagingFromTape(parseTape(JSON.stringify(W622.tape))), levelSource);
@@ -68,7 +70,7 @@ describe('FORCEDHIT — the switch, the alphabet, the verb', () => {
         expect(withForcedHits(true, () => FORCED_HITS.enabled)).toBe(true);
         expect(FORCED_HITS.enabled).toBe(false);
     });
-    it('the alphabet is every held set of the 8 directions + none, × primary, × secondary — 36, all distinct', () => {
+    it('the alphabet: every direction or none, crossed with primary and secondary, each held set distinct', () => {
         expect(FORCED_HIT_ALPHABET.length).toBe(36);
         expect(new Set(FORCED_HIT_ALPHABET.map((k) => [...k].sort().join('+'))).size).toBe(36);
         expect(KNOWN_STRATEGY_VERBS).toContain('forced-hit');
@@ -123,7 +125,8 @@ describe('FORCEDHIT D2 — the state a hit leaves is read off the run (`worldHit
         r.advance(new Set(['up']));
         expect(worldHitsOf(r)).toEqual({ hits: 1, lastHitAt: 2, id: 'lavarunner@72,24' });
         expect(r.damage.hits).toBe(1);
-        // the 30-tick i-frame the hit opened (`Player.hit`), and the knockback the ledger row carries
+        // the 20-tick i-frame the hit opened (`PLAYER_DAMAGE.hitsTimerMax`; the game reads 19 on the hit tick, D3), and
+        // the knockback the ledger row carries
         expect(r.damage.hitsTimer).toBeGreaterThan(0);
         expect(r.ledger('playerHits')[0].knockback).not.toBe(null);
         let crossed = null;
@@ -172,5 +175,45 @@ describe('FORCEDHIT D2 — leg 622 (L73 → L74): OFF refuses EXHAUSTED; ON bill
             // a door swaps the `Player`: the next room starts at 0 hits
             expect(r.damage.hits).toBe(0);
         }
+    });
+});
+
+describe('FORCEDHIT D3 — the forced-hit plan on the GAME: the hit tick, the knockback and the i-frame, at 0 px', () => {
+    it('the game witness replays: the player (position, hits, hits_timer) and lavarunner@72,24 at every sample', () => {
+        let run = null;
+        const st = createTapeStepper(parseTape(JSON.stringify(WPLAN.tape)), { levelSource, onTick: (t, x, h, rn) => { run = rn; } });
+        const bad = [];
+        const game = new Map(WPLAN.samples.map((g) => [g.t, g]));
+        let compared = 0;
+        let r = st.next();
+        while (!r.done) {
+            const o = r.value.observation;
+            const g = game.get(o.t);
+            if (g) {
+                compared += 1;
+                const d = run ? run.damage : { hits: 0, hitsTimer: 0 };
+                if (o.x !== g.player.x || o.y !== g.player.y) bad.push(`t ${o.t}: player game (${g.player.x}, ${g.player.y}) model (${o.x}, ${o.y})`);
+                if (d.hits !== g.player.hits || d.hitsTimer !== g.player.hits_timer) {
+                    bad.push(`t ${o.t}: hits game ${g.player.hits}/${g.player.hits_timer} model ${d.hits}/${d.hitsTimer}`);
+                }
+                const live = (run ? run.entities('chasers') ?? [] : []).filter((c) => c.tag === 'lavarunner' && !c.removed);
+                for (const gb of g.bodies) {
+                    if (!live.some((c) => c.x === gb.x && c.y === gb.y && c.vx === gb.vx && c.vy === gb.vy
+                        && c.hits === gb.hits && c.hitsTimer === gb.hits_timer)) bad.push(`t ${o.t}: game lavarunner (${gb.x}, ${gb.y}) has no model body`);
+                }
+            }
+            r = st.next();
+        }
+        expect(bad).toEqual([]);
+        expect(compared).toBe(4);
+        // the game bills the one hit the proof forced, at t2, and opens its i-frame there
+        expect(WPLAN.samples.map((g) => [g.player.hits, g.player.hits_timer])).toEqual([[0, 0], [0, 0], [1, 19], [1, 18]]);
+        expect(run.ledger('playerHits').map((h) => [h.t, h.id])).toEqual([[2, 'lavarunner@72,24']]);
+    });
+    it('the witness\'s keys are the ON plan\'s first three ticks (the fourth crosses to L74)', () => {
+        const tape = parseTape(JSON.stringify(WPLAN.tape));
+        expect(tape.tick_count).toBe(3);
+        expect(WPLAN.tape.inputs).toEqual([{ key: 'up', from: 0, to: 2 }, { key: 'right', from: 2, to: 3 },
+            { key: 'down', from: 2, to: 3 }]);
     });
 });

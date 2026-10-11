@@ -16180,6 +16180,47 @@ iceturret@104,24 is reachable"* — after 31,559 and 24,730 units (~11 s). With 
 - **A timing control rots with every speed-up.** `jsRuntimeSolveService`'s BACKSTOP row needs an L12 solve slower than
   300 ms; after D2a it passes alone but went red once under a parallel run.
 
+### Seedling fidelity FORCEDHIT — a hit every input takes is billed, not refused
+
+Wave 13 (model coverage), planner `seedling-fidelity-planning-6`. ⚖ The user, 2026-10-11 ("Allow forced hits"): when
+an exhaustive input search proves that every crossing takes a hit, the solver may plan the least-damage crossing and
+bill the hit. The measured case is LEASH's leg 622 (L73, the arrival from L74, `lavarunner@72,24` diagonally
+adjacent). The report is `CC/docs/cloud-reports/seedling-fidelity-forcedhit.md`.
+
+**D1 — the outcome, defined before it was coded (`forcedHit.js`).** The PROOF steps every input over 36 held sets (the
+8 directions + none, × primary, × secondary) on a fork of the segment — the run itself, not a forecast or a danger
+box. It holds at depth d when no hitless prefix of length d is left, so no input sequence from that state is hitless.
+It fails by name when a hitless prefix survives `depthMax` 3, when a depth would overrun the budget (2000 fork steps,
+or 600,000 run ticks counting each fork's replay), or when the model refuses to step an input. The BUDGET: a
+crossing must bill exactly the proven least hits, at most 1 per crossing and 2 per segment, with no death, and leave
+`hits ≤ hitsMax − 1 − margin` (margin 1). The VERDICT: a `forced-hit` trace row (`proof`, `billed`, `candidate`,
+`ticks`), distinct from a walk with 0 hits. The census (flag ON): leg 622 is proven at depth 2 (1,332 fork steps,
+least 1 hit). Legs 624 and 772 and the survey's 9 ladder-EXHAUSTED steps are not proven: standing still is hitless for
+two ticks, so no hit is imminent, and 624's arrival tick refuses a sword press. Legs 626 and 628 never reach the
+ladder, and 629 is already solved.
+
+**D2 — the rung (`CONTACT_FIDELITY.forcedHits`, OFF).** `climbLadderUnder` asks it after every rung refused, on a
+segment with a fork. It plans the crossing from the walk's corridor (armed, unarmed) and the proof's fewest-hit
+leaves as prefixes, each played on a fork through `botDriverV2.drive`. The fewest-hit, then shortest, crossing is
+replayed on the live run, whose new `playerHits` rows must be the fork's, and handed back to `walkTo` as its crossing.
+The hit count is per world (`worldHitsOf`, read off the ledger: a door or a death resets it), and the segment's result
+carries `forcedHits` and `damage`. Leg 622 ON solves in 4 ticks (`up up down+right down+right`), billing
+`lavarunner@72,24` at t2.
+
+**D3 — on the game.** The plan's first three ticks were recorded on the game (p4f headless, `--player-hits`; witness
+`forcedhit-l73-622-plan`). The game bills the hit at t2 (`hits` 1, `hits_timer` 19, then 18), and the knockback moves
+the player to (70.13, 20.38). The model is the same at 0 px: the player, its damage state, and the LavaRunner. On the
+page, with the switch added to the defaults, leg 622 is done in 4 ticks with no divergence, ending at L74 (296,136),
+the expected end. OFF, the page refuses it as before. ON, the survey moves none of its 222 steps.
+
+**Trap candidates.**
+- **The player's i-frame is 20 ticks, not 30.** `PLAYER_DAMAGE.hitsTimerMax` is 20 (the game reads 19 on the hit
+  tick); 30 is the enemies' `hitsTimerMax`.
+- **A proof needs an answer for every input.** `levelRun` refuses a press on a frozen tick rather than model it, so a
+  proof over an alphabet with a press is open there, not proven.
+- **A fork replays the whole segment.** Without a snapshot, a proof's cost is forks × the segment's ticks; budget it
+  in run ticks, not forks.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
