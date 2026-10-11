@@ -1,0 +1,302 @@
+{
+    "game": "seedling",
+    "name": "l30keylock-pit240",
+    "boot": {
+        "level": 30,
+        "x": 240,
+        "y": 80
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 0,
+            "tag": 1
+        },
+        {
+            "level": 19,
+            "tag": 1
+        },
+        {
+            "level": 31,
+            "tag": 0
+        },
+        {
+            "level": 30,
+            "tag": 2
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 386,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "up",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "down",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "up",
+            "from": 13,
+            "to": 14
+        },
+        {
+            "key": "down",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "up",
+            "from": 18,
+            "to": 20
+        },
+        {
+            "key": "down",
+            "from": 22,
+            "to": 24
+        },
+        {
+            "key": "up",
+            "from": 27,
+            "to": 28
+        },
+        {
+            "key": "left",
+            "from": 0,
+            "to": 132
+        },
+        {
+            "key": "right",
+            "from": 132,
+            "to": 133
+        },
+        {
+            "key": "left",
+            "from": 133,
+            "to": 135
+        },
+        {
+            "key": "primary",
+            "from": 135,
+            "to": 136
+        },
+        {
+            "key": "right",
+            "from": 136,
+            "to": 139
+        },
+        {
+            "key": "left",
+            "from": 140,
+            "to": 142
+        },
+        {
+            "key": "down",
+            "from": 146,
+            "to": 157
+        },
+        {
+            "key": "up",
+            "from": 157,
+            "to": 158
+        },
+        {
+            "key": "down",
+            "from": 158,
+            "to": 160
+        },
+        {
+            "key": "up",
+            "from": 162,
+            "to": 165
+        },
+        {
+            "key": "down",
+            "from": 166,
+            "to": 168
+        },
+        {
+            "key": "up",
+            "from": 171,
+            "to": 172
+        },
+        {
+            "key": "primary",
+            "from": 172,
+            "to": 173
+        },
+        {
+            "key": "down",
+            "from": 173,
+            "to": 174
+        },
+        {
+            "key": "up",
+            "from": 204,
+            "to": 205
+        },
+        {
+            "key": "primary",
+            "from": 205,
+            "to": 206
+        },
+        {
+            "key": "up",
+            "from": 207,
+            "to": 260
+        },
+        {
+            "key": "down",
+            "from": 261,
+            "to": 263
+        },
+        {
+            "key": "left",
+            "from": 267,
+            "to": 278
+        },
+        {
+            "key": "right",
+            "from": 278,
+            "to": 279
+        },
+        {
+            "key": "left",
+            "from": 279,
+            "to": 280
+        },
+        {
+            "key": "right",
+            "from": 280,
+            "to": 281
+        },
+        {
+            "key": "left",
+            "from": 281,
+            "to": 282
+        },
+        {
+            "key": "up",
+            "from": 286,
+            "to": 291
+        },
+        {
+            "key": "primary",
+            "from": 370,
+            "to": 371
+        },
+        {
+            "key": "primary",
+            "from": 372,
+            "to": 373
+        },
+        {
+            "key": "up",
+            "from": 370,
+            "to": 379
+        },
+        {
+            "key": "primary",
+            "from": 378,
+            "to": 379
+        },
+        {
+            "key": "down",
+            "from": 379,
+            "to": 380
+        },
+        {
+            "key": "up",
+            "from": 380,
+            "to": 386
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY L30KEYLOCK D2/D3 — the AFTER: survey step 52's staging (see `l30keylock-pit224-before`) at the pit landing (240,80), solved with `KILL_STANCE_TARGET_RESCAN` and `KEYLOCK_WAIT_PRICED` ON: 386 t. The keylock's wait is priced as the stance walk's tail, so the ladder climbs; the kill rung's chaser arm finds no stance in the player's box and scans the body's: (88,120), where the dwell kills bobsoldier@48,80 in 31 of its 62-tick bound; then bosslock@64,32's key line and teleporter@64,0 → L22. Authored by scripts/procgen/plan-seedling-l30keylock.mjs."
+}
