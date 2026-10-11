@@ -95,7 +95,7 @@ export function register(registrationApi) {
         'user:locationCheck',
         (data) => {
             const bot = getActivePanel()?.getBot();
-            if (bot?.isInterceptEnabled?.()) {
+            if (bot?.isInterceptEnabled?.() && !data?.fromBot) {
                 bot.logDispatcherEvent?.('user:locationCheck', data, 'intercepted');
                 bot.walkToLocation?.(data?.locationName);
                 return; // swallow — do NOT propagate
@@ -144,7 +144,7 @@ export function register(registrationApi) {
         'user:exitClicked',
         (data) => {
             const bot = getActivePanel()?.getBot();
-            if (bot?.isInterceptEnabled?.()) {
+            if (bot?.isInterceptEnabled?.() && !data?.fromBot) {
                 bot.logDispatcherEvent?.('user:exitClicked', data, 'intercepted');
                 bot.walkToExit?.(data?.exitName);
                 return; // swallow — do NOT propagate

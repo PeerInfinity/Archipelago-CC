@@ -1892,3 +1892,124 @@ describe('PlaybackBotUI — obstacle events (break before first use)', () => {
         expect(bot.getStatus()).toBe('error: no path from Start to Vault');
     });
 });
+
+describe('PlaybackBotUI — direct play and blocked events (loop-mode-bot S1)', () => {
+    // A plain world: no sidecars, no controller. `publish` plays the dispatcher chain — the world decides whether
+    // the action lands (`refuse`), then hands the event to the bot's receivers as playbackBot/index.js does.
+    function makeWorld({ refuse = () => false, loopMode = false } = {}) {
+        const world = { here: 'region_a', checked: [], published: [] };
+        const staticData = {
+            regions: new Map([
+                ['region_a', { locations: [{ name: 'Loc A', id: 1 }], exits: [{ name: 'A to B', connected_region: 'region_b' }] }],
+                ['region_b', { locations: [{ name: 'Loc B', id: 2 }], exits: [] }],
+            ]),
+        };
+        const sphereData = [
+            { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
+            { sphereIndex: 1, fractionalIndex: 0, locations: ['Loc B'] },
+        ];
+        const proxy = {
+            pingWorker: () => Promise.resolve(),
+            getLatestStateSnapshot: () => ({ checkedLocations: world.checked.slice() }),
+        };
+        const pathFinder = {
+            findPathWithExits: (from, to) => (from === 'region_a' && to === 'region_b'
+                ? { steps: [{ region: 'region_a', exitUsed: null }, { region: 'region_b', exitUsed: 'A to B' }], length: 1 }
+                : null),
+        };
+        let bot;
+        const publish = (eventName, payload) => {
+            world.published.push({ eventName, payload });
+            if (!refuse(eventName, payload)) {
+                if (eventName === 'user:locationCheck') world.checked.push(payload.locationName);
+                if (eventName === 'user:regionMove') world.here = payload.targetRegion;
+            }
+            if (eventName === 'user:locationCheck') bot.onLocationCheck(payload);
+            if (eventName === 'user:regionMove') bot.onRegionMove(payload);
+        };
+        bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => null,
+            pathFinder,
+            stateManagerProxy: proxy,
+            publish,
+            getCurrentRegion: () => world.here,
+            isLoopModeActive: () => loopMode,
+        });
+        return { bot, world };
+    }
+
+    it('plays a plain rules.json to the end with its own checks and moves', async () => {
+        const { bot, world } = makeWorld();
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/^finished/));
+        expect(world.checked).toEqual(['Loc A', 'Loc B']);
+        expect(world.here).toBe('region_b');
+        expect(world.published.map((p) => p.eventName))
+            .toEqual(['user:locationCheck', 'user:regionMove', 'user:locationCheck']);
+        expect(world.published.every((p) => p.payload.fromBot === true)).toBe(true);
+    });
+
+    it('a step performs exactly one action', async () => {
+        const { bot, world } = makeWorld();
+        await bot.step();
+        await vi.waitFor(() => expect(world.checked).toEqual(['Loc A']));
+        await new Promise((r) => setTimeout(r, 300));
+        expect(world.published).toHaveLength(1);
+        expect(bot.isActive()).toBe(false);
+    });
+
+    it('a BLOCKED check does not move the cursor', async () => {
+        const { bot, world } = makeWorld({ refuse: (ev) => ev === 'user:locationCheck' });
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/blocked: the check of "Loc A" did not land/));
+        expect(bot.getCursor()).toBe(0);
+        expect(world.checked).toEqual([]);
+    });
+
+    it('a BLOCKED move keeps the region and the cursor', async () => {
+        const { bot, world } = makeWorld({ refuse: (ev) => ev === 'user:regionMove' });
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/blocked: the move to region_b did not land \(still in region_a\)/));
+        expect(bot.getCurrentRegion()).toBe('region_a');
+        expect(bot.getCursor()).toBe(1);
+        expect(world.checked).toEqual(['Loc A']);
+    });
+
+    it('waits instead of acting directly in loop mode', async () => {
+        const { bot, world } = makeWorld({ loopMode: true });
+        await bot.instant();
+        await new Promise((r) => setTimeout(r, 50));
+        expect(world.published).toEqual([]);
+        expect(bot.getStatus()).toMatch(/does not play loop mode yet/);
+    });
+
+    it('a region with a sidecar never plays directly', async () => {
+        const { bot, world } = makeWorld();
+        bot._getRulesJson = () => ({ preset_sidecars: { 1: { region_a: { substrate: 'maze' } } } });
+        await bot.instant();
+        await new Promise((r) => setTimeout(r, 50));
+        expect(world.published).toEqual([]);
+    });
+});
+
+describe('PlaybackBotUI — direct play behind a refusing controller', () => {
+    it('a plain region whose controller has no tile for the target is played directly', async () => {
+        const world = { here: 'region_a', checked: [] };
+        const controller = { walkTo: () => false, play() {}, stop() {}, step() {}, instant() {}, reset() {}, setRate() {} };
+        let bot;
+        bot = new PlaybackBotUI({
+            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] }],
+            getStaticData: () => ({ regions: new Map([['region_a', { locations: [{ name: 'Loc A', id: 1 }], exits: [] }]]) }),
+            getActiveController: () => controller,
+            stateManagerProxy: { pingWorker: () => Promise.resolve(), getLatestStateSnapshot: () => ({ checkedLocations: world.checked.slice() }) },
+            publish: (ev, payload) => { world.checked.push(payload.locationName); bot.onLocationCheck(payload); },
+            getCurrentRegion: () => world.here,
+            isLoopModeActive: () => false,
+        });
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/^finished/));
+        expect(world.checked).toEqual(['Loc A']);
+    });
+});

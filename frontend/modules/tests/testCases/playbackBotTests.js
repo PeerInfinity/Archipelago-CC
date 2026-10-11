@@ -9,6 +9,7 @@ import { registerTest } from '../testRegistry.js';
 import { getActivePanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { _testOnly_getWarehouse } from '../../procgenPlayer/index.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
 
 const APCALC_RULES = './presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 // The smallest procgen_maze tier — picked specifically because (a) it uses
@@ -18,6 +19,8 @@ const APCALC_RULES = './presets/apcalc/AP_14089154938208861744/AP_14089154938208
 // APWORLD SUBSTRATE CHANGE PM1 this pointed at procgen_maze_worldgen's
 // Generate.py export of the same three payloads — deleted in ccfc5bad02.)
 const PROCGEN_MAZE_RULES = './presets/procgen_maze/AP_1/AP_1_rules.json';
+// A plain (non-procgen) rules.json: no sidecars, no substrate, no controller — the bot plays it DIRECTLY.
+const ADVENTURE_RULES = './presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 
 /**
  * Smoke test: load apcalc, activate the playback bot panel, verify the bot
@@ -185,6 +188,64 @@ registerTest({
     + 'smallest tier) and asserts it reaches the "finished" status. '
     + 'Exercises the bot → substrate-controller dispatch chain.',
   testFunction: playbackBotInstantPlaybackTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+/**
+ * ⛓ DIRECT PLAY (loop-mode-bot S1): the Adventure preset, loop mode OFF, no Maze panel — no region has a substrate
+ * or a controller, so the bot publishes its own user:locationCheck / user:regionMove, one per tick, and counts only
+ * what LANDED (the snapshot's checks, gameState's region). Done = every sphere-log location checked.
+ */
+async function playbackBotDirectPlayAdventureTest(testController) {
+  const loopModeOn = () => centralRegistry.getPublicFunction('loops', 'isLoopModeActive')?.() === true;
+  if (loopModeOn()) {
+    testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
+    await testController.pollForCondition(() => !loopModeOn(), 'loop mode off', 5000, 100);
+  }
+  testController.reportCondition('loop mode is off', !loopModeOn());
+
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+  const panel = await testController.pollForValue(() => getActivePanel(), 'playback bot panel instance', 5000, 100);
+  const bot = panel?.getBot?.();
+  testController.reportCondition('bot reachable', !!bot);
+  if (!bot) return testController.getOverallResult();
+  bot.reset();
+
+  await testController.loadRulesFromFile(ADVENTURE_RULES);
+  const sphereState = getSphereStateSingleton();
+  await sphereState.loadSphereLog(ADVENTURE_RULES.replace('_rules.json', '_sphere_log.jsonl'));
+  const sphereLocations = (sphereState.getSphereData() ?? []).flatMap((e) => e?.locations ?? []);
+  testController.reportCondition('sphere log has locations', sphereLocations.length > 0);
+  bot.refresh();
+
+  await bot.instant();
+  const finished = await testController.pollForCondition(
+    () => (bot.getStatus() || '').startsWith('finished') || /^(error|blocked)/.test(bot.getStatus() || ''),
+    'bot reaches a terminal status',
+    60000,
+    250,
+  );
+  testController.reportCondition(`bot finished (status: "${bot.getStatus()}")`,
+    finished && (bot.getStatus() || '').startsWith('finished'));
+  const checked = new Set(testController.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []);
+  const missing = sphereLocations.filter((n) => !checked.has(n));
+  testController.reportCondition(`every sphere-log location checked (missing: ${missing.slice(0, 5).join(', ') || 'none'})`,
+    missing.length === 0);
+  if (missing.length) {
+    testController.log(`Bot transition log (tail): ${JSON.stringify(bot.getLog?.().slice(-12) ?? [])}`);
+  }
+  bot.stop();
+  return testController.getOverallResult();
+}
+
+registerTest({
+  id: 'playback-bot-direct-play-adventure',
+  name: 'Playback Bot: direct play (Adventure, loop mode off)',
+  description:
+    'Loads the Adventure preset (no procgen, no substrate) with loop mode off and drives the bot at instant speed: '
+    + 'it checks locations and moves through exits itself, and every sphere-log location ends checked.',
+  testFunction: playbackBotDirectPlayAdventureTest,
   category: 'Playback Bot',
   enabled: false,
 });

@@ -168,7 +168,21 @@ export class PlaybackBotUI {
         getActiveController = null,
         getPlayerId = null,
         restart = null,
+        publish = null,
+        getCurrentRegion = null,
+        isLoopModeActive = null,
     } = {}) {
+        // ⛓ DIRECT PLAY (loop-mode-bot S1) — a region with no substrate and no controller (a plain rules.json:
+        // Adventure, any non-procgen preset without the Maze panel) is played straight through the dispatcher:
+        // `publish(eventName, payload)` sends the bot's own user:locationCheck / user:regionMove, one per tick.
+        // `getCurrentRegion` is gameState's — the AUTHORITY for where the player is (a gated move never lands,
+        // so the event alone says nothing); `isLoopModeActive` keeps direct play out of loop mode, where only
+        // the Loops queue may act honestly.
+        this._publish = publish;
+        this._getCurrentRegion = getCurrentRegion;
+        this._isLoopModeActive = isLoopModeActive;
+        this._directTimer = null;
+        this._instantMode = false;
         // ⛓ RETURN TO MENU (procgenCore/restartRoute.js): the slot's player id (default '1') and the Menu panel's
         // Restart (`menuPanel.restart`, the button's own path). A route whose first step is RESTART calls it; the
         // bot never walks an edge for it.
@@ -301,6 +315,8 @@ export class PlaybackBotUI {
 
     async play(rateHz = this._rate) {
         this._rate = rateHz;
+        this._instantMode = false;
+        this._syncCurrentRegion();
         this._ensureQueueBuilt();
         this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
@@ -326,10 +342,13 @@ export class PlaybackBotUI {
         this._isActive = false;
         this._restartPending = null;
         this._dropRestartDeferral();
+        this._cancelDirectTimer();
+        this._directOnce = false;
         this._dispatch('stop');
     }
 
     async step() {
+        this._syncCurrentRegion();
         this._ensureQueueBuilt();
         this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
@@ -338,11 +357,18 @@ export class PlaybackBotUI {
         }
         // Awaited, as play() does: the walkTo is published after the
         // snapshot flush, and the step must not tick before it lands.
+        // A direct-play step performs exactly one action.
+        if (this._isPlainRegion()) {
+            this._directOnce = true;
+            this._lastPublishedTarget = null;
+        }
         await this._publishNextWalkTo();
         this._dispatch('step');
     }
 
     async instant() {
+        this._instantMode = true;
+        this._syncCurrentRegion();
         this._ensureQueueBuilt();
         this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
@@ -374,6 +400,9 @@ export class PlaybackBotUI {
         this._escapes = [];
         this._creditedEvents = new Set();
         this._dispatcherLog = [];       // dispatcher event log is run-scoped
+        this._cancelDirectTimer();
+        this._directOnce = false;
+        this._instantMode = false;
         this._dispatch('reset');
         this._render();
     }
@@ -634,6 +663,27 @@ export class PlaybackBotUI {
     onLocationCheck(data) {
         const name = data?.locationName;
         if (!name) return;
+        // ⛓ BLOCKED EVENTS (loop-mode-bot S1) — a user:locationCheck is a REQUEST: the loop-mode action gate (or the
+        // worker, for an inaccessible location) can refuse it after the bot heard it. The bot used to count it
+        // anyway and move its cursor past a location that was never checked (the JtA investigation, 2026-10-11:
+        // "8/23" with nothing checked). With a snapshot to ask, the check counts only once the snapshot holds it.
+        const proxy = this._stateManagerProxy;
+        if (proxy?.pingWorker && proxy?.getLatestStateSnapshot) {
+            this._flushSnapshot().then(() => {
+                const checked = proxy.getLatestStateSnapshot()?.checkedLocations;
+                if (Array.isArray(checked) && !checked.includes(name)) {
+                    this._setStatus(`blocked: the check of "${name}" did not land`);
+                    this._render();
+                    return;
+                }
+                this._acceptLocationCheck(name);
+            });
+            return;
+        }
+        this._acceptLocationCheck(name);
+    }
+
+    _acceptLocationCheck(name) {
         this._checkedSoFar.add(name);
         // If this matches the pending manual target, the route is
         // complete — clear it.
@@ -646,6 +696,16 @@ export class PlaybackBotUI {
 
     onRegionMove(data) {
         const target = data?.targetRegion;
+        // ⛓ BLOCKED EVENTS (loop-mode-bot S1) — gameState moves the player synchronously inside the dispatcher chain
+        // the bot's receiver forwards on BEFORE calling here, so a move the gate swallowed has left the player where
+        // it was. Then nothing happened: keep the region and the cursor (the bot used to report "in" a region the
+        // player never reached).
+        const actual = this._getCurrentRegion?.() ?? null;
+        if (target && actual && actual !== target) {
+            this._setStatus(`blocked: the move to ${target} did not land (still in ${actual})`);
+            this._render();
+            return;
+        }
         // ⛓ WALK IDENTITY (b) — the leg moved the player while a Restart waited on it: the route is re-planned from here.
         if (target && this._restartDeferred && target !== this._restartDeferred.from) this._dropRestartDeferral();
         if (target) {
@@ -714,6 +774,16 @@ export class PlaybackBotUI {
      * Called at the play/step/instant entry points; mid-run checks
      * arrive through the normal event path.
      */
+    /**
+     * Seed `_currentRegion` from gameState when the bot has not heard a move yet: a plain preset's start region
+     * arrives before the panel's receivers are wired, and a direct-play run has no substrate to report it.
+     */
+    _syncCurrentRegion() {
+        if (this._currentRegion) return;
+        const here = this._getCurrentRegion?.() ?? null;
+        if (here) this._currentRegion = here;
+    }
+
     _seedCheckedFromSnapshot() {
         const checked = this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations;
         if (!Array.isArray(checked)) return;
@@ -1174,6 +1244,10 @@ export class PlaybackBotUI {
         this._lastPublishedTarget = sig;
         // ⛓ S2 — a new target: the last walk's note is stale.
         this._walkNote = null;
+        if (this._isPlainRegion() && !this._resolveController()) {
+            this._directAct(target, tail);
+            return;
+        }
         // A substrate whose registry entry declares NO controller (flash and
         // both Seedling entries today) can never take this target. `_dispatch`
         // reads that as "no panel mounted yet" and returns undefined, so the
@@ -1197,6 +1271,12 @@ export class PlaybackBotUI {
         // bot waited for a transition that could never come: a SILENT STALL,
         // indistinguishable from slow progress. Make it terminal and named.
         if (this._dispatch('walkTo', [target]) === false) {
+            // ⛓ DIRECT PLAY — a plain region's controller (the Maze Room panel, mounted for another preset) has no
+            // tile for it: the bot plays the region itself.
+            if (this._isPlainRegion()) {
+                this._directAct(target, tail);
+                return;
+            }
             // ⛓ Seedling JS J2 — a controller that knows WHY it refused says
             // so (`lastRefusal`): e.g. a generated Seedling room under the wasm
             // runtime, which has no feet. Without one, the router's case.
@@ -1216,6 +1296,70 @@ export class PlaybackBotUI {
         // executes the plan instead of sitting on a target with a
         // stopped clock.
         this._dispatch('play', [this._rate]);
+    }
+
+    /**
+     * ⛓ DIRECT PLAY (loop-mode-bot S1) — true when the current region has no substrate (no preset sidecar) and the
+     * bot can publish: a plain rules.json region. It is played through the dispatcher when no controller resolves
+     * for it, or when the one that resolves (the maze fallback) refuses the walk. A region a substrate owns never
+     * qualifies (its controller may still be mounting).
+     */
+    _isPlainRegion() {
+        if (!this._publish || !this._currentRegion) return false;
+        const rulesJson = this._getRulesJson?.() ?? null;
+        const playerId = String(this._getPlayerId?.() ?? '1');
+        return !rulesJson?.preset_sidecars?.[playerId]?.[this._currentRegion];
+    }
+
+    /** The region an exit of `regionName` leads to, from static data (null when unknown). */
+    _exitTargetRegion(regionName, exitName) {
+        const exits = this._getStaticData?.()?.regions?.get?.(regionName)?.exits;
+        if (!Array.isArray(exits)) return null;
+        return exits.find((e) => e?.name === exitName)?.connected_region ?? null;
+    }
+
+    /**
+     * Perform `target` directly, one action per tick at the bot's rate (immediately under Instant, once under
+     * Step). The outcome comes back through the bot's own receivers (onLocationCheck / onRegionMove), which only
+     * count what LANDED, so a refused action leaves the cursor where it was and the status says why.
+     */
+    _directAct(target, tail) {
+        const here = this._currentRegion;
+        if (this._isLoopModeActive?.()) {
+            // Loop mode: only the Loops queue may act honestly (a direct check in a plain region would cost no mana).
+            this._setStatus(`waiting: ${here} is a plain region in loop mode — the bot does not play loop mode yet`);
+            return;
+        }
+        let eventName;
+        let payload;
+        if (target.kind === 'location') {
+            eventName = 'user:locationCheck';
+            payload = { locationName: target.name, regionName: here, originator: 'PlaybackBot', fromBot: true };
+        } else if (target.kind === 'exit') {
+            const to = this._exitTargetRegion(here, target.name);
+            if (!to) {
+                this._setStatus(`error: ${here} has no exit "${target.name}" in the static data`);
+                return;
+            }
+            eventName = 'user:regionMove';
+            payload = { sourceRegion: here, targetRegion: to, exitName: target.name, originator: 'PlaybackBot', fromBot: true };
+        } else {
+            this._setStatus(`error: ${here} is a plain region — it has no ${target.kind} "${tail}" to walk to`);
+            return;
+        }
+        this._cancelDirectTimer();
+        const delayMs = this._instantMode ? 0 : Math.round(1000 / Math.max(0.01, this._rate || DEFAULT_RATE_HZ));
+        this._directTimer = setTimeout(() => {
+            this._directTimer = null;
+            if (!this._isActive && !this._directOnce) return;
+            this._directOnce = false;
+            this._publish(eventName, payload);
+        }, delayMs);
+    }
+
+    _cancelDirectTimer() {
+        if (this._directTimer) clearTimeout(this._directTimer);
+        this._directTimer = null;
     }
 
     /**

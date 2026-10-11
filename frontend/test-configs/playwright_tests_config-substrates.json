@@ -1718,6 +1718,12 @@
             "enabled": true,
             "category": "Tutorial walks: seedling",
             "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-whole-game; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
+        },
+        {
+            "id": "playback-bot-direct-play-adventure",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "loop-mode-bot S1: the Playback Bot plays a PLAIN rules.json directly (Adventure, loop mode off, no substrate, no controller): its own checks and moves, counted only when they land. Done = every sphere-log location checked. Fast batch."
         }
     ]
 }

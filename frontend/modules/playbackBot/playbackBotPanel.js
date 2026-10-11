@@ -201,6 +201,11 @@ export class PlaybackBotPanel {
             getPlayerId: () => this._cachedPlayerId ?? '1',
             // ⛓ RETURN TO MENU — a RESTART step takes the Menu panel's own Restart (the button's path).
             restart: () => centralRegistry.getPublicFunction?.('menuPanel', 'restart')?.() ?? null,
+            // ⛓ DIRECT PLAY — the bot's own checks and moves for plain regions, published like a click.
+            publish: (eventName, payload) => PlaybackBotPanel.moduleApis?.dispatcher
+                ?.publish?.(eventName, payload, { initialTarget: 'bottom' }),
+            getCurrentRegion: () => centralRegistry.getPublicFunction?.('gameState', 'getCurrentRegion')?.() ?? null,
+            isLoopModeActive: () => !!centralRegistry.getPublicFunction?.('loops', 'isLoopModeActive')?.(),
         });
     }
 
