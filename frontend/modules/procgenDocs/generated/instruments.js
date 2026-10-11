@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 74,
-            "count": 121,
+            "browser": 75,
+            "count": 122,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 413,
-        "browser": 139,
-        "cited": 209,
-        "files": 425,
+        "blockStyle": 414,
+        "browser": 140,
+        "cited": 210,
+        "files": 426,
         "lineStyle": 12,
-        "withDocblock": 425,
-        "withFlags": 341
+        "withDocblock": 426,
+        "withFlags": 342
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10985,6 +10985,56 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "HOLD-AFTER-LATCH, MEASURED ON THE GAME (R9 slice P4E, ⚖ 72 (a′)) — does a tape that declares `hold` freeze the room at its seam latch until the next `botStart`, and does the next window then start from EXACTLY the latch?",
             "path": "scripts/procgen/probe-seedling-hold.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "arms",
+                "author",
+                "record"
+            ],
+            "file": "probe-seedling-iceturret-spear.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "arms"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "author"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-iceturret-spear — ⛓⛓ SEEDLING HAMMER-PHASE C3: **L98'S ICE TURRET, KILLED BY THE GHOST SPEAR THROUGH A WALL, ASKED OF THE GAME.**",
+            "path": "scripts/procgen/probe-seedling-iceturret-spear.mjs"
         },
         {
             "argvHelpers": [],
