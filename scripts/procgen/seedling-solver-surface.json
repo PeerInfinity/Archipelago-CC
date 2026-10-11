@@ -242,9 +242,9 @@
       "form": "function",
       "files": {
         "dangerMap.js": 2,
-        "solverBot.js": 2
+        "solverBot.js": 3
       },
-      "sites": 4,
+      "sites": 5,
       "seen": "both",
       "via": [
         "direct"
@@ -348,9 +348,9 @@
         "botDriverV2.js": 101,
         "crusherBait.js": 3,
         "dangerMap.js": 15,
-        "solverBot.js": 129
+        "solverBot.js": 128
       },
-      "sites": 248,
+      "sites": 247,
       "seen": "both",
       "via": [
         "direct"
@@ -398,7 +398,7 @@
         },
         "chasers": {
           "dangerMap.js": 2,
-          "solverBot.js": 13
+          "solverBot.js": 12
         },
         "crushers": {
           "botDriverV2.js": 8,
@@ -705,9 +705,9 @@
         "botDriverV2.js": 30,
         "dangerMap.js": 12,
         "director.js": 1,
-        "solverBot.js": 86
+        "solverBot.js": 87
       },
-      "sites": 130,
+      "sites": 131,
       "seen": "both",
       "via": [
         "direct",
@@ -3616,9 +3616,9 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 3
+        "solverBot.js": 4
       },
-      "sites": 3,
+      "sites": 4,
       "seen": "static",
       "via": [
         "import"
