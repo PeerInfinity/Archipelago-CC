@@ -59,11 +59,12 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         // ⛓ fidelity STATICLADDER D2: `darkTrapLight` shipped OFF; ⚖ (user, 2026-10-10) ON at the wave-10 harvest, then
         // OFF again the same day (game-refuted in L65 by PUSHBLOCK) until a fix slice re-witnesses it.
         expect(CONTACT_FIDELITY).toEqual({ collideLinePointsExact: true, wallFlyerSwordHits: true, drillLive: true,
-            bobSoldierLive: true, wallFlyerKill: true, wallFlyerShieldBump: true, darkTrapLight: false,
-            // ⛓ fidelity DARKTRAP2 D2: the spear's `spearing` window and the press a pit fall burns, OFF (the user flips).
-            spearingWindow: false, fallBurnsPress: false,
-            // ⛓ fidelity BULB: W8 `bulbLive` ships OFF (its movers are in the slice's report; a flip is the user's).
-            bulbLive: false });
+            bobSoldierLive: true, wallFlyerKill: true, wallFlyerShieldBump: true, darkTrapLight: true,
+            // ⛓ fidelity DARKTRAP2 D2: the spear's `spearing` window and the press a pit fall burns — ⚖ (user, 2026-10-10, "Yes to all") ON since the wave-11 harvest, with
+            // `darkTrapLight` (DARKTRAP2 re-witnessed L62/L65/L63).
+            spearingWindow: true, fallBurnsPress: true,
+            // ⛓ fidelity BULB: W8 `bulbLive` — ⚖ (user, 2026-10-10, "Yes to all") ON since the wave-11 harvest.
+            bulbLive: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -63,8 +63,9 @@ function disagreements(W, col) {
 }
 
 describe('fidelity BULB — the switch and the tables', () => {
-    it('`bulbLive` ships OFF; OFF the Bulb is unbridged and its kill refused (the BEFORE model)', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.bulbLive).toBe(false);
+    // ⚖ (user, 2026-10-10, "Yes to all") ON since the wave-11 harvest.
+    it('`bulbLive` ships ON; OFF the Bulb is unbridged and its kill refused (the BEFORE model)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.bulbLive).toBe(true);
         withContactFidelity({ bulbLive: false }, () => {
             expect(isBridgedChaser('bulb')).toBe(false);
             expect(bridgedChaserTags()).not.toContain('bulb');
