@@ -339,23 +339,11 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
 def _determine_classification(item_data: Dict[str, Any]) -> str:
     """Determine item classification from JSON data.
 
-    First checks for the new 'classification' field, then falls back to
-    legacy boolean flags for backwards compatibility.
+    `classification` is the one shape (rules S6: the boolean
+    advancement/useful/trap flags are refused by the schema, and every
+    committed preset carries the string). An item without one is filler.
     """
-    # New format: direct classification string
-    if 'classification' in item_data:
-        return item_data['classification']
-
-    # Legacy format: boolean flags (for backwards compatibility)
-    if item_data.get('event', False):
-        return 'progression'
-    if item_data.get('trap', False):
-        return 'trap'
-    if item_data.get('advancement', False):
-        return 'progression'
-    if item_data.get('useful', False):
-        return 'useful'
-    return 'filler'
+    return item_data.get('classification', 'filler')
 
 
 def extract_items(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, ItemData], List[str], Dict[str, List[str]]]:

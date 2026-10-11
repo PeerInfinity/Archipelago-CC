@@ -2244,7 +2244,7 @@ class BaseGameExportHandler(
             def make_accumulator_item(name: str, is_target: bool = False) -> Dict[str, Any]:
                 return {
                     'name': name, 'id': None, 'groups': [group],
-                    'advancement': True, 'useful': False, 'trap': False,
+                    'classification': 'progression',
                     'type': item_type,
                     'max_count': max_count if is_target else 1
                 }

@@ -996,6 +996,10 @@
       "required": ["name"]
     },
     "itemDefinition": {
+      "$comment": "rules S6: the retired boolean flags advancement/useful/trap are REFUSED by name (propertyNames), not merely undeclared, since additionalProperties is open; 'classification' is the one shape. The exporter's items step converts a handler's flags, and the accumulator items (handler.py make_accumulator_item) write classification directly.",
+      "propertyNames": {
+        "not": { "enum": ["advancement", "useful", "trap"] }
+      },
       "type": "object",
       "properties": {
         "name": { "type": "string" },
@@ -1015,18 +1019,6 @@
         "classification": {
           "type": "string",
           "description": "Item classification string (e.g., 'progression', 'useful', 'trap', 'filler', 'progression_skip_balancing')."
-        },
-        "advancement": {
-          "type": "boolean",
-          "description": "Legacy: whether item is progression. Replaced by 'classification' in newer exports."
-        },
-        "useful": {
-          "type": "boolean",
-          "description": "Legacy: whether item is useful. Replaced by 'classification' in newer exports."
-        },
-        "trap": {
-          "type": "boolean",
-          "description": "Legacy: whether item is a trap. Replaced by 'classification' in newer exports."
         },
         "event": { "type": "boolean" },
         "type": {
