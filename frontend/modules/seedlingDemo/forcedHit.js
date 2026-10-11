@@ -22,8 +22,8 @@
  * The proof's leaves give `minHits`, the fewest hits any length-`d` prefix takes (≥ 1). A crossing is admitted only
  * when it bills EXACTLY `minHits` (so it is provably least-damage: no crossing takes fewer), at most
  * `maxHitsPerCrossing`, at most `maxPerSegment` over the segment, no death, and leaves `hits ≤ hitsMax − 1 − margin`.
- * The state the hit leaves — the knockback, the 30-tick i-frame, the shake, the dark-suit retaliation — is the run's
- * own (`levelRun.applyPlayerHit`); the chosen crossing is REPLAYED on the live run key for key, and the live run's
+ * The state the hit leaves — the knockback, the 20-tick i-frame (`PLAYER_DAMAGE.hitsTimerMax`), the shake, the
+ * dark-suit retaliation — is the run's own (`levelRun.applyPlayerHit`); the chosen crossing is REPLAYED on the live run key for key, and the live run's
  * new `playerHits` rows must be the fork's, so every later plan of the segment reads the damage it actually carries
  * (`worldHitsOf`). ⚠ `hits` is per world (a door or a death swaps the `Player`), so a crossing that ends in a
  * transition hands the next room a fresh 0; one that ends in the same room carries `hits` to every later goal of
