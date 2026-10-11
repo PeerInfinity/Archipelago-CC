@@ -301,6 +301,19 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         expect(flash.loopSupport).toMatchObject({ manual: true, customQueues: false });
         expect(flash.loopSupport.instant ?? false).toBe(false);
         expect([...flash.loopSupport.queueActions]).toEqual(['regionMove']);
+        // The bare flash entry declares no solver: a per-game entry opts in.
+        expect(flash.loopSupport.executeVia).toBeUndefined();
+
+        // Seedling loop mode: flash_seedling (built on the flash factory) is
+        // the per-game entry that opts in — a Bot block walks its queued exits
+        // AND locations through the Seedling playback controller (⚖ user
+        // 2026-10-11: a check loop queues the location; JtA/omsi stay move-only).
+        const seedling = (await import('../flashPanel/flashSeedlingLibrary.js')).substrateRegistryEntry;
+        expect(seedling.loopSupport).toMatchObject({
+            manual: true, customQueues: false, executeVia: 'solver',
+        });
+        expect([...seedling.loopSupport.queueActions]).toEqual(['regionMove', 'locationCheck']);
+        expect(seedling.loopSupport.requiresLoopMode ?? false).toBe(false);
     });
 });
 
