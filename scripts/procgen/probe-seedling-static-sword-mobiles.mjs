@@ -16,10 +16,10 @@
  *                `fidelityStaticSword.test.js` replays in node — only when this run PASSES
  */
 
-import { createRequire } from 'node:module';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { chromium } from 'playwright';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
@@ -103,7 +103,6 @@ async function main() {
     const RECORD = process.argv.includes('--record');
     const OFF = process.argv.includes('--off');
     takeBoxLockOrExit({ name: 'probe-seedling-static-sword-mobiles.mjs', kind: 'browser' });
-    const { chromium } = createRequire(join(REPO, 'package.json'))('playwright');
     const { gameVisibleTape, parseTape } = await import(join(MODULE, 'tapeFormat.js'));
     const tape = parseTape(readFileSync(FILE, 'utf8'));
     const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';

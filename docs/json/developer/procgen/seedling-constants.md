@@ -636,7 +636,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `MOBILE_DEATH_FADE` | seedlingDemo/enemyDamage.js | 3 | 3 | rule | magnitude | Image.as:157 |
 | `PIT_FADE` | seedlingDemo/enemyDamage.js | 3 | 3 | rule | magnitude | Enemies/Enemy.as:fallAlphaSpeed |
 | `STATIC_ARROW_DEATH` | seedlingDemo/enemyDamage.js | 2 | 2 | rule | count/magnitude | Arrow.as:51-53 |
-| `STATIC_SWORD_DEATH` | seedlingDemo/enemyDamage.js | 2 | 2 | rule | count/magnitude | Enemies/Turret.as:31 |
+| `STATIC_SWORD_DEATH` | seedlingDemo/enemyDamage.js | 2 | 2 | rule | count/magnitude | Enemies/Turret.as:sprTurret |
 | `DARKTRAP_LIGHT_DEATH` | seedlingDemo/enemyDamage.js | 8 | 8 | rule | bound/count/derivation/magnitude | Enemies/DarkTrap.as:deathCounter Enemies/DarkTrap.as:die1 Scenery/Light.as:radiusMin Scenery/LightPole.as:originY Scenery/LightPole.as:render Game.as:timePerFrame |
 | `SLASH_SPRITES` | seedlingDemo/combatVerbs.js | 6 | 6 | physics | magnitude | Player.as:41-45 |
 | `SLASH_SCALE_NORMAL` | seedlingDemo/combatVerbs.js | 2 | 2 | physics | magnitude | Player.as:1258-1265 |

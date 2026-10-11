@@ -256,7 +256,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `talkCircles` | — | `solverBot` |
 | `bobBoss` | `chase`, `contact`, `hp` | `solverBot` |
 | `pulls` | `stationary` | `solverBot` |
-| `shooters` | `stationary`, `emitter` | `dangerMap` |
+| `shooters` | `stationary`, `emitter` | `dangerMap`, `solverBot` |
 | `staticBodies` | `stationary`, `hp` | `solverBot` |
 | `darkTraps` | `stationary`, `light` | `dangerMap`, `solverBot` |
 | `volume:crusher` | `lane-charge`, `contact` | `encounters` |

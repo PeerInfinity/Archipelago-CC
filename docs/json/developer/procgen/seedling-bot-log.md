@@ -15114,7 +15114,7 @@ GREEN 234, constants PASS 5,488, entities 528, profile 138; roster 266; bounded 
 reproduce verbatim: A (survey step 61's L40 view, (480,896) → chest (880,816)) refuses at t0, *"kill: the danger on
 this corridor is not a body this run can watch die"* on `spinner@880,848`, with the aim inside `bobsoldier@880,832`'s
 volume; B — survey step 31 and sweep legs 76, 85, 539, 544, 549–553 reproduce sweep-3's `failed` text byte for byte
-through a node replay of the leg's arrival with the row's items (`inv-leg.mjs`).
+through a node replay of the leg's arrival with the row's items (`CC/docs/cloud-reports/seedling-hammer-c1-evidence/inv-leg.mjs`).
 
 **D1 — the game first (p4f, headless).** Three hand-built tapes:
 - L36 from (48,96) facing up, presses at 2/33/64. One swing reaches BOTH `sandtrap@48,80` and `@64,80`: hits at obs
