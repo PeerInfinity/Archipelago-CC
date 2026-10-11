@@ -76,6 +76,16 @@ Written, but not working all the way through yet. The panel lists these in a col
 - **Tracking: the Spoiler Checklist** — Follow a seed's spoiler sphere by sphere, and see which item each location holds. `?tutorial=tracker-spoiler-checklist`
 - **Tracking: the timer** — Let the timer check reachable locations by itself, in the Console or in a tab of its own. `?tutorial=tracker-timer`
 - **Tracking: the rules in the Editor** — Read the loaded game's rules JSON — and other data — in the Editor. `?tutorial=tracker-editor`
+- **Adventure in Loop Mode** — Turn a world into an incremental game: queue moves, explores and checks, spend mana, and start again when it runs out. `?tutorial=loops-adventure`
+- **Embedding pages and windows** — Load a page into an Iframe panel, or open it in a window of its own, and watch it connect to the app. `?tutorial=other-embedding`
+
+### For developers (a collapsed section in the panel)
+
+- **Run the in-app tests** — Run one of the app's in-app tests from the Tests panel and read its conditions. `?tutorial=dev-tests`
+- **Replay a spoiler test** — Replay a world's solution sphere by sphere and check the app's logic reaches what the generator said it would. `?tutorial=dev-spoiler-test`
+- **The event registry** — See which modules publish and subscribe to each event, in the Events panel. `?tutorial=dev-events`
+- **The Loops Cost Debugger** — Plan a world's solution as a Loop-mode queue and see what each step would cost. `?tutorial=dev-loops-cost-debugger`
+- **The Region Marking Tool** — Mark a level map's regions, exits and locations by hand, and save them as a region atlas. `?tutorial=dev-region-marking-tool`
 
 ### Panels with no tutorial
 

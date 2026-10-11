@@ -33,17 +33,7 @@ export const NOT_COVERED_YET = Object.freeze({
     mazeGameDataPanel: 'Procgen: each pipeline mode, with Maze',
     runnerDemoPanel: 'Procgen: a runner world (not in the mixed world: its generation is heavy)',
     // Other
-    iframeManagerPanel: 'Other: embedding pages and windows',
-    iframePanel: 'Other: embedding pages and windows',
-    windowManagerPanel: 'Other: embedding pages and windows',
-    windowPanel: 'Other: embedding pages and windows',
     vibeCodingSimPanel: 'Other: the Vibe Coding Simulator (low priority; kept out of the main indexes)',
-    // For developers
-    testsPanel: 'Developers: run the in-app tests',
-    spoilerTestPanel: 'Developers: replay a spoiler test',
-    eventsPanel: 'Developers: watch the event bus',
-    loopsCostDebuggerPanel: 'Developers: the Loops Cost Debugger',
-    regionMarkingTool: 'Developers: the Region Marking Tool',
 });
 
 /**

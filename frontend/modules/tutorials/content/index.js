@@ -7,6 +7,11 @@
 import { GUIDED_TOUR } from './guidedTour.js';
 import { START_SAVING_YOUR_SETUP, START_WORKBENCH } from './start/workbench.js';
 import { TRACKER_TRACK_A_GAME } from './tracker/trackAGame.js';
+import { LOOPS_ADVENTURE } from './loops/adventureLoopMode.js';
+import { OTHER_EMBEDDING } from './other/embedding.js';
+import {
+    DEV_EVENTS, DEV_LOOPS_COST_DEBUGGER, DEV_REGION_MARKING_TOOL, DEV_SPOILER_TEST, DEV_TESTS,
+} from './developer/developer.js';
 import {
     TRACKER_DUNGEONS, TRACKER_EDITOR, TRACKER_HELPERS, TRACKER_PATH_ANALYZER, TRACKER_REGION_GRAPH,
     TRACKER_SPOILER_CHECKLIST, TRACKER_TIMER,
@@ -61,4 +66,11 @@ export const TUTORIALS = Object.freeze([
     entry('tracker/panels.js', TRACKER_SPOILER_CHECKLIST),
     entry('tracker/panels.js', TRACKER_TIMER),
     entry('tracker/panels.js', TRACKER_EDITOR),
+    entry('loops/adventureLoopMode.js', LOOPS_ADVENTURE),
+    entry('other/embedding.js', OTHER_EMBEDDING),
+    entry('developer/developer.js', DEV_TESTS),
+    entry('developer/developer.js', DEV_SPOILER_TEST),
+    entry('developer/developer.js', DEV_EVENTS),
+    entry('developer/developer.js', DEV_LOOPS_COST_DEBUGGER),
+    entry('developer/developer.js', DEV_REGION_MARKING_TOOL),
 ]);

@@ -39,6 +39,9 @@ async function resolvePresetRulesPath(game, seed, player) {
 export const WATCHED_EVENTS = Object.freeze([
     'stateManager:rulesLoaded',
     'apworldEditor:loadRules',
+    // The world's sphere log arrives AFTER its rules (fetched separately);
+    // Loop mode's Generate Costs and the Loops Cost Debugger need it.
+    'sphereState:dataLoaded',
 ]);
 
 export function buildContext({ eventBus }) {

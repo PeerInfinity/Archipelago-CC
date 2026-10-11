@@ -1628,6 +1628,48 @@
             "enabled": true,
             "category": "Tutorial walks: tracker",
             "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-editor; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-loops-adventure",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft loops-adventure; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-other-embedding",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft other-embedding; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-tests",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-tests; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-spoiler-test",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-spoiler-test; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-events",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-events; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-loops-cost-debugger",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-loops-cost-debugger; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-region-marking-tool",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-region-marking-tool; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
         }
     ]
 }

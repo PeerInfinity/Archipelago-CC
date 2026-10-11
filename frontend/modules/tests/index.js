@@ -88,6 +88,9 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('progressBar:show');
   registrationApi.registerEventBusPublisher('progressBar:hide');
 
+  // The tutorial walk rows leave Loop mode when a walk stopped inside it.
+  registrationApi.registerEventBusPublisher('loops:setLoopMode');
+
   registrationApi.registerEventBusPublisher('iframe:loadUrl');
 
   registrationApi.registerJsonDataHandler('testsConfig', {

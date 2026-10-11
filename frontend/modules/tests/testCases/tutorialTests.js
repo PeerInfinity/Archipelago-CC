@@ -23,6 +23,7 @@ import {
     CURSOR_CLASS, OUTLINE_CLASS, hideCursor, performAction, setOutline, waitFor,
 } from '../../tutorials/tutorialExecutor.js';
 import { buildContext } from '../../tutorials/tutorialContext.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
 
 const CATEGORY = 'Tutorials';
 const WALK_CATEGORY = 'Tutorial walks';
@@ -296,6 +297,7 @@ async function tutorialWalkRow(tc, tutorial) {
     const before = ctx.rulesSource();
     const pipelineSetup = readPipelineSetup();
     const modulesBefore = moduleStates();
+    const loopModeBefore = loopModeActive();
     const ui = await freshPanel(tc, { autoAdvance: false, animateCursor: false, showOutline: false });
     if (!ui) return tc.getOverallResult();
     try {
@@ -333,6 +335,7 @@ async function tutorialWalkRow(tc, tutorial) {
         restoreActiveTabs(tabs);
         restorePipelineSetup(pipelineSetup, tc);
         await restoreModules(modulesBefore, tc);
+        await restoreLoopMode(loopModeBefore, tc);
         if (typeof before === 'string' && before.startsWith('./presets/') && ctx.rulesSource() !== before) {
             try { await ctx.loadRulesPath(before); } catch (e) { tc.log?.(`could not reload ${before}: ${e.message}`); }
         }
@@ -355,6 +358,18 @@ async function restoreModules(before, tc) {
             try { await window.moduleManagerApi.disableModule(id); } catch (e) { tc.log?.(`could not switch ${id} off: ${e.message}`); }
         }
     }
+}
+
+// The Loop-mode tutorial enters Loop mode and leaves it at its end — a walk
+// that stops early leaves it on, and the next row's world plays under it.
+function loopModeActive() {
+    try { return centralRegistry.getPublicFunction('loops', 'isLoopModeActive')?.() === true; } catch { return false; }
+}
+
+async function restoreLoopMode(before, tc) {
+    if (before || !loopModeActive()) return;
+    eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
+    if (!await waitFor(() => !loopModeActive(), 5000)) tc.log?.('could not leave Loop mode');
 }
 
 // The Procgen Pipeline auto-saves its setup, and the procgen tutorials change
