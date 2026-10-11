@@ -23,6 +23,8 @@ export const NO_TUTORIAL = Object.freeze({
     jtaCostDebuggerPanel: { title: 'JtA Cost Debugger', why: 'Deprecated.' },
     ruleConverterPanel: { title: 'Rule Converter', why: 'Very out of date; it may be deprecated or removed.' },
     tileMapAnalyzer: { title: 'Tile Map Analyzer', why: 'Currently a failed experiment.' },
+    metaGamePanel: { title: 'Meta Game', why: 'Removed from the default layout; it may be deprecated (an early draft of the procgen idea).' },
+    progressBarPanel: { title: 'Progress Bars', why: 'Removed from the default layout with the Meta Game panel; it may be deprecated.' },
 });
 
 /** Panels a tutorial is planned for, not written yet: componentType → the planned tutorial. */
@@ -48,8 +50,6 @@ export const NOT_COVERED_YET = Object.freeze({
     timerPanel: 'Tracking: the Timer',
     editorPanel: 'Tracking: viewing the rules in the Editor',
     editorCodeMirror6Panel: 'Tracking: viewing the rules in the Editor',
-    metaGamePanel: 'Undecided — the Meta Game panel may be deprecated (⚖ 2026-10-10)',
-    progressBarPanel: 'Undecided — goes with the Meta Game panel',
     // Other
     iframeManagerPanel: 'Other: embedding pages and windows',
     iframePanel: 'Other: embedding pages and windows',

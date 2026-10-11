@@ -78,6 +78,8 @@ These panels are deliberately left out of the tutorials:
 | JtA Cost Debugger | Deprecated. |
 | Rule Converter | Very out of date; it may be deprecated or removed. |
 | Tile Map Analyzer | Currently a failed experiment. |
+| Meta Game | Removed from the default layout; it may be deprecated (an early draft of the procgen idea). |
+| Progress Bars | Removed from the default layout with the Meta Game panel; it may be deprecated. |
 
 <!-- END GENERATED tutorial lists -->
 

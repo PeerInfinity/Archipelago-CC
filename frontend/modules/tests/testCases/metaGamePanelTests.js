@@ -732,7 +732,9 @@ registerTest({
   description: 'Tests the metaGame module with progress bar integration using progressBarTest.js configuration',
   testFunction: testMetaGameProgressBarIntegration,
   category: 'Meta Game',
-  //enabled: true,
+  // ⚖ the user, 2026-10-10: the panel is out of the default layout and may be deprecated —
+  // off by default (the full / full-random modes enable every test with no explicit value).
+  enabled: false,
 });
 
 registerTest({
@@ -741,5 +743,7 @@ registerTest({
   description: 'Tests the metaGame panel UI elements including dropdown selection, configuration loading, and JSON editing',
   testFunction: testMetaGamePanelUI,
   category: 'Meta Game',
-  //enabled: true,
+  // ⚖ the user, 2026-10-10: the panel is out of the default layout and may be deprecated —
+  // off by default (the full / full-random modes enable every test with no explicit value).
+  enabled: false,
 });

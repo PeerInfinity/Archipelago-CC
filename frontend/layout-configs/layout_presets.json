@@ -121,16 +121,6 @@
             },
             {
               "type": "component",
-              "componentType": "progressBarPanel",
-              "title": "Progress Bars"
-            },
-            {
-              "type": "component",
-              "componentType": "metaGamePanel",
-              "title": "Meta Game"
-            },
-            {
-              "type": "component",
               "componentType": "iframeManagerPanel",
               "title": "Iframe Manager"
             },
