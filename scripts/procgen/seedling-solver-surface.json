@@ -3527,7 +3527,7 @@
       "surface": "import",
       "name": "CONTACT_FIDELITY",
       "module": "frontend/modules/seedlingDemo/contactFidelity.js",
-      "line": 153,
+      "line": 157,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3655,7 +3655,7 @@
       "surface": "import",
       "name": "DARKTRAP_LIGHT_DEATH",
       "module": "frontend/modules/seedlingDemo/enemyDamage.js",
-      "line": 1076,
+      "line": 1077,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3746,7 +3746,7 @@
       "surface": "import",
       "name": "STATIC_SWORD_ARM",
       "module": "frontend/modules/seedlingDemo/enemyDamage.js",
-      "line": 1009,
+      "line": 1010,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3764,7 +3764,7 @@
       "surface": "import",
       "name": "STATIC_SWORD_DEATH",
       "module": "frontend/modules/seedlingDemo/enemyDamage.js",
-      "line": 1030,
+      "line": 1031,
       "class": "seedling",
       "form": "constant",
       "files": {
