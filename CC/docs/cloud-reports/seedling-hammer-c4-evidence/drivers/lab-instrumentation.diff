@@ -1,0 +1,81 @@
+--- frontend/modules/seedlingDemo/solverBot.js	2026-10-11 23:14:06.022969315 +0000
++++ lab/frontend/modules/seedlingDemo/solverBot.js	2026-10-11 23:22:52.891000634 +0000
+@@ -15904,6 +15904,7 @@
+                 sm.arrows, sm.chasers, sm.spits ?? null, sm.grenades ?? null);
+             if (dg.danger) danger = { tick: sm.tick, phase: sm.phase ?? 'transit', ...dg };
+         }
++        if (globalThis.__C4 && globalThis.process?.env?.C4_ARM === '1') globalThis.__C4({ at: 'chaserArm', target: target.id, c: { x: c.x, y: c.y }, start: walk.startTick, danger: danger ? { tick: danger.tick - walk.startTick, src: danger.sources.map((x) => x.id) } : null, deathTick, samples: walk.samples.map((sm) => [sm.tick - walk.startTick, sm.phase ?? 't', +sm.x.toFixed(1), +sm.y.toFixed(1), (sm.chasers ?? []).filter((b) => b.id === target.id).map((b) => [+(b.x ?? b.rect?.x ?? 0).toFixed(1), +(b.y ?? b.rect?.y ?? 0).toFixed(1), b.hits ?? null, b.hitsTimer ?? null])[0] ?? null, sm.held ? [...sm.held].join('+') : null]) });
+         if (danger) {
+             rejected.push({ ...c, why: `${danger.phase === 'dwell' ? 'the WAIT' : 'the APPROACH'} `
+                 + `is dangerous at tick ${danger.tick - walk.startTick} — `
+@@ -17917,6 +17918,14 @@
+          * starts with the one furthest from the fight: on L14 that is
+          * `bob@32,32`, 127 px away behind four bobs that are already coming.
+          */
++        if (globalThis.__C4 && globalThis.process?.env?.C4_PAIRS === '1') {
++            for (let i = 0; i < all.length; i += 1) for (let j = i + 1; j < all.length; j += 1) {
++                const gone = new Set([all[i].id, all[j].id]);
++                const opts2 = solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: dangerVolumes(run, 0).filter((v) => !gone.has(v.id)) });
++                const r2 = plansReach(run.world, allowTeleporter, opts2);
++                globalThis.__C4({ at: 'pair', ids: [...gone], admits: r2 ? r2.from(run.state)(aim) : 'noreach' });
++            }
++        }
+         const admits = [];
+         for (const c of all) {
+             const without = dangerVolumes(run, 0).filter((v) => v.id !== c.id);
+@@ -17928,6 +17937,16 @@
+              * L41 door). `plansReach` is the same existence answer without the pull.
+              */
+             const reach = plansReach(run.world, allowTeleporter, opts);
++            if (globalThis.__C4) globalThis.__C4({ at: 'chooser', t: perTick.length, aim: { x: aim.x, y: aim.y }, cand: c.id, stepped: c.stepped, kind: c.kind ?? null, vols: dangerVolumes(run, 0).map((v) => v.id), admits: reach ? reach.from(run.state)(aim) : 'noreach' });
++            if (globalThis.__C4 && globalThis.process?.env?.C4_PROBE === '1' && reach && reach.from(run.state)(aim)) {
++                let pr = null;
++                try {
++                    const wps = planWaypoints(run.world, run.state, aim, allowTeleporter, opts);
++                    const h = probeCorridor(wps, new Set([c.id]));
++                    pr = h ? { hit: true, at: [+h.x.toFixed(1), +h.y.toFixed(1)], eta: h.eta, sources: h.sources.map((x) => `${x.kind}:${x.id}`) } : { hit: false, wps: wps.length };
++                } catch (e) { pr = { threw: String(e.message).slice(0, 200) }; }
++                globalThis.__C4({ at: 'chooserProbe', cand: c.id, probe: pr });
++            }
+             if (reach) {
+                 if (reach.from(run.state)(aim)) admits.push(c);
+                 continue;
+@@ -18824,6 +18843,16 @@
+          */
+         if (activeProgress !== null) progressRung('bait');
+         let removable = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
++        if (globalThis.process?.env?.C4_APPEND === '1') {
++            const have = new Set(removable.map((b) => b.id));
++            for (const c of (run.entities('chasers') ?? [])) if (hit.sources.some((sx) => sx.id === c.id) && !have.has(c.id)) removable.push({ ...c, stepped: true, c4: 'appended' });
++        }
++        if (globalThis.process?.env?.C4_PREPEND === '1') {
++            const have = new Set(removable.map((b) => b.id));
++            const pre = (run.entities('chasers') ?? []).filter((c) => hit.sources.some((sx) => sx.id === c.id) && !have.has(c.id)).map((c) => ({ ...c, stepped: true, c4: 'prepended' }));
++            removable = [...pre, ...removable];
++        }
++        if (globalThis.__C4) globalThis.__C4({ at: 'climb', t: perTick.length, what, aim: { x: aim.x, y: aim.y }, hit: { at: hit.at ?? null, sources: hit.sources.map((x) => `${x.kind}:${x.id}`) }, removable: removable.map((b) => b.id) });
+         /**
+          * ⛓⛓ HAMMER-PHASE C1 (`CHOOSER_HIT_SOURCES`) — where the chooser cannot speak (an EMPTY list: no body's
+          * removal admits a corridor, which a body with no danger volume never can), the probe's own hit can: its
+--- frontend/modules/seedlingDemo/strikePolicy.js	2026-10-11 23:14:06.034969316 +0000
++++ lab/frontend/modules/seedlingDemo/strikePolicy.js	2026-10-11 23:25:35.168815364 +0000
+@@ -273,7 +273,7 @@
+                 + `slash rect facing ${facing} does not cover it` });
+             continue;
+         }
+-        if (b.hitsTimer > 0) {
++        if (b.hitsTimer > Number(globalThis.process?.env?.C4_ANTICIPATE ?? 0)) {
+             rejected.push({ id: b.id, why: `hitsTimer ${b.hitsTimer} — \`Enemy.hit\` `
+                 + 'refuses while it is up' });
+             continue;
+--- frontend/modules/seedlingDemo/levelWorld.js	2026-10-11 23:14:05.954969311 +0000
++++ lab/frontend/modules/seedlingDemo/levelWorld.js	2026-10-11 23:26:31.630757061 +0000
+@@ -114,7 +114,7 @@
+     }
+ }
+ 
+-const fail = (message) => { throw new LevelWorldError(message); };
++const fail = (message) => { if (globalThis.process?.env?.C4_STACK === "1") console.error("C4STACK", new Error(message).stack); throw new LevelWorldError(message); };
+ 
+ /** Is THIS entity's tag in the cleared set? (rope's shrink needs it late.) */
+ const clearedHere2 = (e, entityTag, clearedTags) => Boolean(
