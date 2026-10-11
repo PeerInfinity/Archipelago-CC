@@ -237,8 +237,9 @@ export const CONTACT_FIDELITY = {
      * flags), and the dwell's bound is that removal. Game-measured on L74 (leg 629): `lavarunner@24,56` pins on a wall
      * the straight line ignores. ⛔ OFF by default: ON moves no tape, producer `--check` or identity row, but two
      * bounded rows' refusal wording (the slice report lists them); the flip is the user's licence.
+     * ⚖ ON by default since the wave-12 harvest (user, 2026-10-11: "ON at harvest", on the slice's measured movers).
      */
-    baitForecast: false,
+    baitForecast: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -302,8 +303,9 @@ export function contactFidelityStamp() {
  */
 const envFlags = globalThis.process?.env?.SEEDLING_CONTACT_FIDELITY;
 if (envFlags) Object.assign(CONTACT_FIDELITY, parseContactFidelity(envFlags));
-// ⛓ fidelity LEASH: `SEEDLING_BAIT_FORECAST=1` turns that one switch on over the set above (a node measurement).
+// ⛓ fidelity LEASH: `SEEDLING_BAIT_FORECAST=0|1` sets that one switch over the set above (a node measurement).
 if (globalThis.process?.env?.SEEDLING_BAIT_FORECAST === '1') CONTACT_FIDELITY.baitForecast = true;
+if (globalThis.process?.env?.SEEDLING_BAIT_FORECAST === '0') CONTACT_FIDELITY.baitForecast = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
