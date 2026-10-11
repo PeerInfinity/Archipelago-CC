@@ -780,11 +780,15 @@ export function firstDivergence(expected, rows, { roomLevel, offset = 0 } = {}) 
  * their slot). Such a goal is DONE whatever interrupts it afterwards: re-solving it meets only the solver's
  * "already open" / "resolves to NOTHING" refusal. Read from the GAME, never from AP's inventory: the item a
  * check grants may be anyone's, and the goal's own key arriving is just the most common case (its delivery
- * lands at contact). An exit goal, or one without a tag, is never served by this.
+ * lands at contact). An exit goal, or one without a tag, is never served by this. ⛓ EVENT GOALS — an event goal
+ * is served when its own flag (`goal.event.tag`) is in the cleared set.
  */
 export function locationGoalServed(goal, status) {
-    return goal?.kind === 'location' && Number.isInteger(goal.tag)
-        && (status?.persistence_cleared ?? []).some((c) => c.level === goal.level && c.tag === goal.tag);
+    if (goal?.kind !== 'location') return false;
+    // ⛓ EVENT GOALS — an event's check is ITS flag `{level, tag}` (cross-room: another level than the goal's room).
+    const flag = goal.event ? goal.event.tag : { level: goal.level, tag: goal.tag };
+    return Number.isInteger(flag?.level) && Number.isInteger(flag?.tag)
+        && (status?.persistence_cleared ?? []).some((c) => c.level === flag.level && c.tag === flag.tag);
 }
 
 /**

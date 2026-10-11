@@ -1088,7 +1088,12 @@ export function createWasmPlayback({
         spawn = r.spawn;
         if (r.shipped.length === 0) {
             const mapped = arrivalSolverGoal(goal, { staging: r.staging, levelSource, record });
-            if (!mapped.goal) { fail(`the solver has no goal for ${goal.name ?? goal.kind}: ${mapped.walker}`); return; }
+            if (!mapped.goal) {
+                // ⛓ EVENT GOALS — an event the solver's clear-tag refuses carries its reason (`obstacle.kind 'clear-tag'`)
+                fail(`the solver has no goal for ${goal.name ?? goal.kind}: ${mapped.walker}`,
+                    mapped.refusal ? { obstacle: mapped.refusal } : null);
+                return;
+            }
             const request = arrivalSolveRequest({ staging: r.staging, solverGoal: mapped.goal, levelSource, records,
                 name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true });
             startSolve(request, { staging: r.staging, continuation: false });
