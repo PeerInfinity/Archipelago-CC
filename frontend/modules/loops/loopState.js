@@ -46,6 +46,7 @@ import {
 // AND exactly one exit). A pure module (it imports only `rulesGraph`), so this
 // is not a dependency on the menu panel's wiring.
 import { SKIP_MENU_DEFAULT, skipsStart } from '../menuPanel/menuPanelEngine.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 
 /**
  * Tick period of the SUMMARY substrates' live-play time drain (M5). One
@@ -430,6 +431,12 @@ export class LoopState {
     // the substrate panel finishes its tile-by-tile walk.
     this.eventBus.subscribe('loops:substrateActionCompleted', (data) => {
       this._handleSubstrateActionCompleted(data);
+    });
+    // Bot block (loop-mode-bot): a solver that ACCEPTED the walk and only
+    // later found it cannot be walked says so here. The park would otherwise
+    // wait forever for a completion that never comes.
+    this.eventBus.subscribe(PLAYBACK_WALK_FAILED_EVENT, (data) => {
+      this._handleBotWalkFailed(data);
     });
     // Phase 6h followup: when the substrate-driven path triggers a
     // loop reset (out-of-mana, fired via gameState.triggerLoopReset),
@@ -3009,7 +3016,16 @@ export class LoopState {
       if (this.regionBotHonorsInstant(action.sourceRegion)) {
         controller?.instant?.(this._currentBlockIsInstant());
       }
-      controller?.walkTo?.(target);
+      // A synchronous `false` is a REFUSAL (the PlaybackController contract):
+      // the walk will never happen, so the park would never wake. Stop by
+      // name instead, with the controller's own reason when it has one.
+      if (controller?.walkTo?.(target) === false) {
+        const why = typeof controller.lastRefusal === 'string' && controller.lastRefusal
+          ? controller.lastRefusal
+          : `the ${substrate} controller refused ${target.kind} '${target.name}'`;
+        this._failBotExecutedAction(why);
+        return;
+      }
       log('info', `[LoopState] Bot walking to ${target.kind} '${target.name}' in ${action.sourceRegion}`);
     } catch (err) {
       log('warn', '[LoopState] Bot walkTo threw:', err);
@@ -3021,6 +3037,46 @@ export class LoopState {
    * action. Called on pause/stop, loop reset, and unexpected-region
    * detection.
    */
+  /**
+   * A late refusal (`playback:walkFailed`) for the parked Bot walk. Matched
+   * on the parked action's substrate and, when the event names one, its
+   * target — a failure from another controller (the standalone Playback Bot
+   * driving a different region) is not ours.
+   */
+  _handleBotWalkFailed(data) {
+    const action = this._botExecutedAction;
+    if (!action) return;
+    const substrate = this._lookupSubstrateId(action.sourceRegion);
+    if (data?.substrate && substrate && data.substrate !== substrate) return;
+    const want = action.type === 'locationCheck' ? action.locationName : action.exitUsed;
+    if (data?.target?.name && want && data.target.name !== want) return;
+    this._failBotExecutedAction(
+      typeof data?.reason === 'string' && data.reason ? data.reason : `the ${substrate} walk failed`);
+  }
+
+  /**
+   * The NAMED STOP of a Bot block whose walk cannot happen: drop the park,
+   * pause the queue, and publish `loopState:botWalkFailed` with the reason
+   * (never a silent wait). The user — or the Playback Bot's loop runner —
+   * decides what next.
+   */
+  _failBotExecutedAction(reason) {
+    const action = this._botExecutedAction;
+    this._stopBotExecutedAction();
+    log('warn', `[LoopState] Bot block in '${action?.sourceRegion}' stopped: ${reason}`);
+    this.stopProcessing();
+    this.isPaused = true;
+    this.eventBus?.publish?.('loopState:botWalkFailed', {
+      region: action?.sourceRegion ?? null,
+      action,
+      reason,
+    });
+    this.eventBus?.publish?.('loopState:pauseStateChanged', {
+      isPaused: this.isPaused,
+      processingState: this.getProcessingState(),
+    });
+  }
+
   _stopBotExecutedAction() {
     const action = this._botExecutedAction;
     if (!action) return;
