@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 75,
-            "count": 122,
+            "browser": 76,
+            "count": 123,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 414,
-        "browser": 140,
-        "cited": 210,
-        "files": 426,
+        "blockStyle": 415,
+        "browser": 141,
+        "cited": 211,
+        "files": 427,
         "lineStyle": 12,
-        "withDocblock": 426,
-        "withFlags": 342
+        "withDocblock": 427,
+        "withFlags": 343
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
