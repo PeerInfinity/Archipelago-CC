@@ -69,7 +69,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // the wave-12 harvest.
             baitForecast: true,
             // ⛓ fidelity FORCEDHIT D2: `forcedHits` (`forcedHit.FORCED_HITS`) ships OFF.
-            forcedHits: false });
+            forcedHits: false,
+            // ⛓ fidelity BOMBPUSHER D2: `bombPusherLive` (the lobber, its Bomb and its Explosion) ships OFF.
+            bombPusherLive: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
