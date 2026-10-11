@@ -187,7 +187,8 @@ describe('F1 D2 — L5\'s open-lock arrival declines by what the hold measured, 
 
     // ⚖ wave-12 harvest (user, 2026-10-11: "Accept; witness live"): with `baitForecast` ON (the default since then) the
     // BAIT rung refuses every bob@48,80 stance on the forecast (its one preview drowns), so the ladder reaches its DETOUR
-    // rung, which plans a 90-tick corridor round the bob with zero hits. Not yet game-witnessed (queued); the decline
+    // rung, which plans a 90-tick corridor round the bob with zero hits. GAME-WITNESSED (the JS arc's `stage_flags` sweep, CI
+    // 38180608285: on plan 90/90, 0 hits; unstaged control 38180613353: 403 t kill+walk); the decline
     // below is the `baitForecast` OFF control and keeps this row's point — never the false "ALREADY OPEN".
     it('⛓⛓ lock OPEN (baitForecast ON): the arrival DETOURS round bob@48,80 — 90 ticks, zero hits', () => {
         const { run, out, err } = arrive([{ level: 5, tag: 0 }]);

@@ -68,8 +68,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity LEASH D2: `baitForecast` (`solverBot.BAIT_FORECAST`) shipped OFF — ⚖ (user, 2026-10-11) ON since
             // the wave-12 harvest.
             baitForecast: true,
-            // ⛓ fidelity FORCEDHIT D2: `forcedHits` (`forcedHit.FORCED_HITS`) ships OFF.
-            forcedHits: false,
+            // ⛓ fidelity FORCEDHIT D2: `forcedHits` (`forcedHit.FORCED_HITS`) — ⚖ ON since the wave-13 harvest.
+            forcedHits: true,
             // ⛓ fidelity BOMBPUSHER D2: `bombPusherLive` (the lobber, its Bomb and its Explosion) ships OFF.
             bombPusherLive: false });
     });

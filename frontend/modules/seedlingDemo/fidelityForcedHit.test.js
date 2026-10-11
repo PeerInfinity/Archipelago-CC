@@ -64,11 +64,12 @@ function solve622() {
 }
 
 describe('FORCEDHIT — the switch, the alphabet, the verb', () => {
-    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_FORCED_HITS)('ships OFF, and `withForcedHits` restores it', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.forcedHits).toBe(false);
-        expect(FORCED_HITS.enabled).toBe(false);
-        expect(withForcedHits(true, () => FORCED_HITS.enabled)).toBe(true);
-        expect(FORCED_HITS.enabled).toBe(false);
+    // ⚖ ON by default since the wave-13 harvest (user, 2026-10-11: "ON at harvest").
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_FORCED_HITS)('ships ON, and `withForcedHits` restores it', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.forcedHits).toBe(true);
+        expect(FORCED_HITS.enabled).toBe(true);
+        expect(withForcedHits(false, () => FORCED_HITS.enabled)).toBe(false);
+        expect(FORCED_HITS.enabled).toBe(true);
     });
     it('the alphabet: every direction or none, crossed with primary and secondary, each held set distinct', () => {
         expect(FORCED_HIT_ALPHABET.length).toBe(36);
