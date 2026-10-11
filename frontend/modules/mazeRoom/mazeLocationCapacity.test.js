@@ -22,8 +22,13 @@ import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
 
 const OPEN = Object.freeze({ maxIterations: 0 });
 
-/** How many `True_` locations the placer lands in a freshly built room. */
-function placerCapacity({ width, height }, exits, params, seed) {
+/**
+ * How many `True_` locations the placer lands in a freshly built room. With
+ * `{ cut: true }`: `{ placed, cutCorners }` — the corners whose two neighbours
+ * are both exits, which no walk reaches without crossing (an exit tile is a
+ * dead end to the generator: mazeRoomEngine `isDeadEndExit`).
+ */
+function placerCapacity({ width, height }, exits, params, seed, { cut = false } = {}) {
     const rng = createRng(seed);
     const core = generateRegionCore({
         region_id: 'r', size: { width, height }, entrances: [],
@@ -34,25 +39,36 @@ function placerCapacity({ width, height }, exits, params, seed) {
     const location_rules = Object.fromEntries(ids.map((id) => [id, { rule: 'True_' }]));
     const item_placements = ids.map((location_id) => ({ item_id: 'key_red', location_id }));
     const placed = placeFromRules(core.world, { location_rules, item_placements, rng });
-    return placed.placed_locations.length;
+    if (!cut) return placed.placed_locations.length;
+    const { world } = core;
+    const exitAt = new Set([...world.exits.values()].map((e) => `${e.x},${e.y}`));
+    const cutCorners = [[0, 0], [world.width - 1, 0], [0, world.height - 1], [world.width - 1, world.height - 1]]
+        .filter(([x, y]) => !exitAt.has(`${x},${y}`)
+            && [[x === 0 ? 1 : x - 1, y], [x, y === 0 ? 1 : y - 1]].every(([nx, ny]) => exitAt.has(`${nx},${ny}`)))
+        .length;
+    return { placed: placed.placed_locations.length, cutCorners };
 }
 
 describe('mazeLocationCapacity — an OPEN room holds its floor, exactly', () => {
     const SIZES = [[3, 3], [8, 6], [9, 7], [12, 12], [15, 11]];
-    it('⛓ capacityAt(size).locations == what the placer lands, over sizes × 0–4 exits × seeds', () => {
+    it('⛓ capacityAt(size).locations == what the placer lands, less the corners two exits cut off, over sizes × 0–4 exits × seeds', () => {
         let rooms = 0;
+        let cut = 0;
         for (const [width, height] of SIZES) {
             for (let exits = 0; exits <= 4; exits++) {
                 for (const seed of [1, 2, 3]) {
                     const declared = mazeCapacityAt({ width, height }, OPEN, { exits });
                     expect(declared, `${width}x${height} exits=${exits}`).not.toBeNull();
-                    expect(placerCapacity({ width, height }, exits, OPEN, seed),
-                        `${width}x${height} exits=${exits} seed=${seed}`).toBe(declared.locations);
+                    const { placed, cutCorners } = placerCapacity({ width, height }, exits, OPEN, seed, { cut: true });
+                    expect(placed, `${width}x${height} exits=${exits} seed=${seed}`).toBe(declared.locations - cutCorners);
+                    cut += cutCorners;
                     rooms++;
                 }
             }
         }
         expect(rooms).toBe(SIZES.length * 5 * 3);
+        // The population carries the case the declaration over-counts.
+        expect(cut).toBeGreaterThan(0);
     });
 
     it('⛓ a room with NO exit is open under any params (wall generation is skipped) — and held', () => {

@@ -542,6 +542,25 @@ export function isExit(world, x, y) {
     return getExitAt(world, x, y) !== null;
 }
 
+/**
+ * ⛓⛓ AN EXIT TILE IS A DEAD END FOR THE GENERATOR (tutorial-bugs, 2026-10-10).
+ * In play, arriving on an exit tile IS the crossing (`detectStepEvents` →
+ * `exit_cross` → `user:regionMove`), so no walk can pass OVER another exit on
+ * its way somewhere. The generator's floods used to: a room could be carved
+ * whose only corridor to one exit ran across another exit's tile — the Maze
+ * demo preset's region_3_2, where that tile was also key_blue's gate and
+ * key_blue lay beyond the first exit, so the world deadlocked (4 of 45 maze
+ * rooms over the shipped presets at seed 1). Every flood that decides what the
+ * generator may build — wall feasibility (`floorReachableSet`), the placer's
+ * reachable set (`reachableTileFixpoint` / `reachableTilesByKey`) and the rule
+ * extraction (`ghostPlansFromEntrance`) — reaches an exit tile but does not
+ * continue from it. The flood's own start (the entrance, which a back-exit may
+ * share) is exempt: the player stands there already.
+ */
+function isDeadEndExit(world, x, y, start) {
+    return !(x === start.x && y === start.y) && getExitAt(world, x, y) !== null;
+}
+
 // --- State ---
 
 /**
@@ -1054,6 +1073,7 @@ function ghostPlansFromEntrance(world) {
     const queue = [start];
     for (let head = 0; head < queue.length; head++) {
         const s = queue[head];
+        if (isDeadEndExit(world, s.player_pos.x, s.player_pos.y, start.player_pos)) continue;
         const from = key(s.player_pos.x, s.player_pos.y);
         for (const input of INPUTS) {
             const next = ghostStep(world, s, input);
@@ -1238,6 +1258,7 @@ function reachableTilesByKey(world, startState) {
     const out = [{ x: startState.player_pos.x, y: startState.player_pos.y }];
     for (let head = 0; head < queue.length; head++) {
         const s = queue[head];
+        if (isDeadEndExit(world, s.player_pos.x, s.player_pos.y, startState.player_pos)) continue;
         for (const input of INPUTS) {
             const next = step(world, s, input);
             if (!next) continue;
@@ -1325,6 +1346,7 @@ function reachableTileFixpoint(world, startState) {
             const cell = order[head];
             const x = cell % width;
             const y = (cell - x) / width;
+            if (cell !== start && getExitAt(world, x, y)) continue; // a dead end (isDeadEndExit)
             for (const input of INPUTS) {
                 const { dx, dy } = DELTAS[input];
                 const nx = x + dx;
@@ -1337,7 +1359,10 @@ function reachableTileFixpoint(world, startState) {
                 seen[next] = 1;
                 order.push(next);
                 const itemId = pickupAt[next];
-                if (itemId && !inventory.has(itemId)) found.push(itemId);
+                // A pickup ON a dead-end exit is collected where the walk
+                // ends: nothing it opens is reachable with it (the general
+                // form's state stops there too).
+                if (itemId && !inventory.has(itemId) && !getExitAt(world, nx, ny)) found.push(itemId);
             }
         }
         if (found.length === 0) return order;
@@ -1360,7 +1385,8 @@ export function _testOnly_reachableTileOrders(world, startState) {
     };
 }
 // Floor-only flood fill from the entrance: walls block, obstacles are
-// transparent. This matches what extractPathsAndObstacles consumes
+// transparent, exit tiles are reached but not passed (isDeadEndExit). This
+// matches what extractPathsAndObstacles consumes
 // (ghostStep semantics) — a target tile in this set is guaranteed to
 // have a non-empty path in the extracted rules. Used as the wall-
 // generator's feasibility predicate so no wall can isolate a target
@@ -1370,6 +1396,7 @@ export function floorReachableSet(world) {
     const queue = [{ x: world.entrance.x, y: world.entrance.y }];
     while (queue.length > 0) {
         const p = queue.shift();
+        if (isDeadEndExit(world, p.x, p.y, world.entrance)) continue;
         for (const input of INPUTS) {
             const d = DELTAS[input];
             const nx = p.x + d.dx;

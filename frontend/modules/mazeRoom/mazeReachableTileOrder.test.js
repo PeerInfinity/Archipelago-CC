@@ -20,7 +20,7 @@ import { createRng } from '../shared/rng.js';
 import { reach, makeBfsSolver } from '../shared/simulatorCore.js';
 import {
     TILE_WALL, INPUTS, INPUT_N, INPUT_S, INPUT_E, INPUT_W,
-    createWorld, createState, isFloor, getObstacle, step,
+    createWorld, createState, isFloor, getObstacle, getExitAt, step,
     extractPathsAndObstacles,
     setTile, setItem, setObstacle, setButton, setBlock, clearItem, clearObstacle,
     generateRegionCore, placeFromItems,
@@ -107,7 +107,9 @@ function positionBfsUnderEverything(world, start, byKey) {
     const inventory = new Set(start.inventory);
     for (const cell of byKey) {
         const itemId = world.items.get(cellKey(world, cell));
-        if (itemId) inventory.add(itemId);
+        // A pickup on an exit tile is where the walk ENDS — it opens nothing.
+        const [x, y] = cellKey(world, cell).split(',').map(Number);
+        if (itemId && !getExitAt(world, x, y)) inventory.add(itemId);
     }
     const width = world.width;
     const first = start.player_pos.y * width + start.player_pos.x;
@@ -115,6 +117,9 @@ function positionBfsUnderEverything(world, start, byKey) {
     const queue = [start];
     const out = [first];
     for (let head = 0; head < queue.length; head++) {
+        // An exit tile is reached, never passed (the engine's isDeadEndExit).
+        const at = queue[head].player_pos;
+        if (head > 0 && getExitAt(world, at.x, at.y)) continue;
         for (const input of INPUTS) {
             const next = step(world, queue[head], input, inventory);
             if (!next) continue;
@@ -327,6 +332,11 @@ describe('extractPathsAndObstacles — one ghost BFS tree serves every target', 
             inputs: INPUTS,
             visitedKey: (s) => `${s.player_pos.x},${s.player_pos.y}`,
             step: (world, s, input) => {
+                // An exit tile is reached, never passed (the engine's
+                // isDeadEndExit) — except the entrance a back exit shares.
+                const here = s.player_pos;
+                const { entrance } = world;
+                if (!(here.x === entrance.x && here.y === entrance.y) && getExitAt(world, here.x, here.y)) return null;
                 const d = DELTA[input];
                 const x = s.player_pos.x + d[0];
                 const y = s.player_pos.y + d[1];
