@@ -18,6 +18,7 @@ import {
 import { bridgedChaserTags, isBridgedChaser } from './chasers.js';
 import { KILL_ARM_POLICY, killArmModelled } from './enemyDamage.js';
 import { classOf, gameBodyEvents, KILLLOCK_ALL_ON, modelReadings } from './killLockWitness.js';
+import { withContactFidelity } from './contactFidelity.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DIR = join(HERE, 'fixtures', 'killlock-witness');
@@ -25,15 +26,17 @@ const ARMS = readdirSync(DIR).filter((f) => f.endsWith('.json')).sort()
     .map((f) => JSON.parse(readFileSync(join(DIR, f), 'utf8')));
 
 describe('the defaults are the user\'s ruling, and all-OFF is the BEFORE model', () => {
-    it('K1/K3/K4/K5 are ON and K2 lavaRunnerLive is OFF by default; ALL_ON names every switch', () => {
+    // K2: ⚖ (user, 2026-10-10, "Yes to all") ON since the wave-11 harvest.
+    it('all five switches (K1–K5) are ON by default; ALL_ON names every switch', () => {
         expect(KILLLOCK_BODIES_DEFAULTS).toEqual({
-            jellyfishLive: true, lavaRunnerLive: false, chaserKillArm: true, turretRemovalLedger: true,
+            jellyfishLive: true, lavaRunnerLive: true, chaserKillArm: true, turretRemovalLedger: true,
             darkShieldIceTurret: true,
         });
         expect(Object.keys(KILLLOCK_ALL_ON).sort()).toEqual([...KILLLOCK_BODIES_KEYS].sort());
         expect({ ...KILLLOCK_BODIES }).toEqual(KILLLOCK_BODIES_DEFAULTS);
     });
-    it('the bridge roster and the kill policy are the old ones with every switch OFF, and widen ON', () => {
+    // ⛓ wave-11 harvest: asked with the Bulb's own switch (`contactFidelity.bulbLive`, ON) OFF — this row is KILLLOCK's.
+    it('the bridge roster and the kill policy are the old ones with every switch OFF, and widen ON', () => withContactFidelity({ bulbLive: false }, () => {
         const ALL_OFF = Object.fromEntries(KILLLOCK_BODIES_KEYS.map((k) => [k, false]));
         withKillLockBodies(ALL_OFF, () => {
             expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'puncher']);
@@ -42,13 +45,13 @@ describe('the defaults are the user\'s ruling, and all-OFF is the BEFORE model',
             expect(KILL_ARM_POLICY.LavaRunner.policy).toBe('refused');
             expect(killArmModelled('Jellyfish')).toBe(false);
         });
-        // the defaults: the jellyfish is bridged, the lavarunner is not
+        // the defaults (K2 ON since the wave-11 harvest): the jellyfish and the lavarunner are bridged
         // ⛓ K2PREP: asked AT the defaults (not at whatever the process runs), so a `SEEDLING_KILLLOCK_BODIES` run
         // leaves this row green; the row above (`{ ...KILLLOCK_BODIES }`) is the one that says the process is off them.
         withKillLockBodies(KILLLOCK_BODIES_DEFAULTS, () => {
-            expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
+            expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher']);
             expect(KILL_ARM_POLICY.Jellyfish.policy).toBe('modelled');
-            expect(killArmModelled('LavaRunner')).toBe(false);
+            expect(killArmModelled('LavaRunner')).toBe(true);
         });
         withKillLockBodies(KILLLOCK_ALL_ON, () => {
             expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher']);
@@ -56,9 +59,9 @@ describe('the defaults are the user\'s ruling, and all-OFF is the BEFORE model',
             expect(killArmModelled('LavaRunner')).toBe(true);
         });
         withKillLockBodies(KILLLOCK_BODIES_DEFAULTS, () => {
-            expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
+            expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher']);
         });
-    });
+    }));
 });
 
 describe('the game witnesses (fixtures/killlock-witness/)', () => {

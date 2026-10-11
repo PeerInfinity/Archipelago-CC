@@ -15,6 +15,7 @@ import { dirname, join } from 'node:path';
 
 import { LIVE_GEOMETRY_KEYS } from './levelWorld.js';
 import { KILLLOCK_BODIES, KILLLOCK_SWITCHED_CHASERS } from './killLockBodies.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -1494,6 +1495,16 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 }),
             ]),
         }),
+        /**
+         * ⛓ wave-11 harvest (planning-5) — `bulb` joins under `contactFidelity.bulbLive` (ON since this harvest, ⚖ the
+         * user, 2026-10-10), the BULB slice's own hand-over ("at the flip R8_ENEMY_BRIDGE needs `bulb`"). Its rows are
+         * the committed tapes that retire `noDamage` and enter a Bulb room, measured here by the guard.
+         */
+        bulb: Object.freeze({
+            table: 'contactFidelity',
+            switch: 'bulbLive',
+            exposedAdded: Object.freeze([]),
+        }),
     }),
 
     /** The roster tally the exposure was derived from, at `153f5100b`. */
@@ -1581,16 +1592,23 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
  * ⛓ K2PREP D1 — the DECLARED scope as the switches stand: `bridgedClasses` plus every `pendingSwitchScope` class
  * whose switch is ON. Read at CALL time, like every switch.
  */
+/**
+ * Is a `pendingSwitchScope` row's switch ON? A row names its table: `killLockBodies` (the default — K2) or
+ * `contactFidelity` (⛓ wave-11 harvest: BULB's `bulbLive`). Read at CALL time.
+ */
+const pendingSwitchOn = (row) => (row.table === 'contactFidelity'
+    ? CONTACT_FIDELITY[row.switch] === true : KILLLOCK_BODIES[row.switch] === true);
+
 export function declaredBridgedClasses() {
     const pending = Object.entries(R8_ENEMY_BRIDGE.pendingSwitchScope)
-        .filter(([, row]) => KILLLOCK_BODIES[row.switch] === true).map(([tag]) => tag);
+        .filter(([, row]) => pendingSwitchOn(row)).map(([tag]) => tag);
     return [...R8_ENEMY_BRIDGE.bridgedClasses, ...pending];
 }
 
 /** ⛓ K2PREP D1 — the declared exposure rows as the switches stand (the pending rows join under their switch). */
 export function declaredExposedRows() {
     const pending = Object.values(R8_ENEMY_BRIDGE.pendingSwitchScope)
-        .filter((row) => KILLLOCK_BODIES[row.switch] === true).flatMap((row) => row.exposedAdded);
+        .filter((row) => pendingSwitchOn(row)).flatMap((row) => row.exposedAdded);
     return [...R8_ENEMY_BRIDGE.exposedTapes, ...R8_ENEMY_BRIDGE.exposedAdded, ...pending];
 }
 
@@ -1802,6 +1820,9 @@ export function assertSteppedContactPartition({ families, pricedBy, why, bridged
          * it live. That skip is its pricer; the partition's question does not apply to it.
          */
         if (tag in KILLLOCK_SWITCHED_CHASERS) continue;
+        // ⛓ wave-11 harvest: the switch-bridged Bulb (`pendingSwitchScope.bulb`, `contactFidelity.bulbLive`) — the same
+        // skip by name in `stepContactsNow` (`hasDropDeath && isBridgedChaser` in a stepped room), BULB's hand-over.
+        if (R8_ENEMY_BRIDGE.pendingSwitchScope[tag]?.table === 'contactFidelity') continue;
         if (!families.includes(tag)) {
             throw new Error(`R8_ENEMY_BRIDGE: "${tag}" is BRIDGED (the run steps it) and is `
                 + 'not a `stepped` contact family — so `stepContactsNow` would still price '

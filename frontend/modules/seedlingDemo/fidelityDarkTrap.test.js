@@ -78,9 +78,10 @@ function disagreements(w, col) {
 
 describe('STATICLADDER D2 — the switch', () => {
     // ⚖ (user, 2026-10-10) ON at the wave-10 harvest, then OFF again (game-refuted in L65 by PUSHBLOCK).
-    it('ships OFF, and OFF builds no darktrap roster (`darkTraps` is null)', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.darkTrapLight).toBe(false);
-        expect(CONTACT_FIDELITY.darkTrapLight).toBe(false);
+    // ⚖ (user, 2026-10-10, "Yes to all") ON since the wave-11 harvest (DARKTRAP2: the L65 'refutation' was the spear's slash gate, not the light death).
+    it('ships ON, and OFF builds no darktrap roster (`darkTraps` is null)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.darkTrapLight).toBe(true);
+        expect(CONTACT_FIDELITY.darkTrapLight).toBe(true);
         withContactFidelity({ darkTrapLight: false }, () => {
             const run = createLevelRun({ levelSource, boot: { level: 62, x: 48, y: 288 }, roles: ROLES });
             expect(run.entities('darkTraps')).toBe(null);

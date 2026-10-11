@@ -61,7 +61,9 @@ describe('PUSHBLOCK: L65 (route steps 146 and 148)', () => {
         expect(error).toBeUndefined();
         expect(run.level).toBe(68);
         expect(run.playerHits).toEqual([]);
-        expect(out.perTick.length).toBe(541);
+        // ⛓ wave-11 harvest: 541 → 539 with DARKTRAP2's `spearingWindow` ON (the light arm's sword presses inside the
+        // spear's window are gated, as on the game) — DARKTRAP2's predicted "146 SOLVED 539", game-witnessed.
+        expect(out.perTick.length).toBe(539);
         const rec = out.records.find((r) => r.strategy === 'shove');
         expect(rec.steps.map((s) => [s.verb, s.to])).toEqual([
             ['press', { tx: 10, ty: 8 }], ['press', { tx: 10, ty: 7 }], ['press', { tx: 9, ty: 7 }],

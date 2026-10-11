@@ -57,10 +57,11 @@
  * walk is the game's with K2 ON; the shake band was the GRENADE arms', and a replay reads the game's recorded
  * camera there (`tapeRunner` `cameraWitness`); the refused-class controls are `IceTrap` (`canHit = false`). The
  * complete K2-ON mover list is that slice's report (`CC/docs/cloud-reports/seedling-fidelity-k2prep.md`).
+ * ⚖ (user, 2026-10-10, "Yes to all") K2 ON at the wave-11 harvest, on that list: all five switches are ON.
  */
 export const KILLLOCK_BODIES = {
     jellyfishLive: true,
-    lavaRunnerLive: false,
+    lavaRunnerLive: true,
     chaserKillArm: true,
     turretRemovalLedger: true,
     darkShieldIceTurret: true,

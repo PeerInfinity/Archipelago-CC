@@ -188,8 +188,9 @@ export const CONTACT_FIDELITY = {
      * lights at t50 (t133) and `darktrap@144,144` starts "die1" at t81 (t164), the model's ticks exactly. Both walks
      * left the game at a SWORD press inside the spear's animation (`spearingWindow` below), and step 146's then fell
      * into a pit and rebuilt the room before "die1" ended.
+     * ⚖ ON by default since the wave-11 harvest (user, 2026-10-10: "Yes to all", on the slice's measured movers).
      */
-    darkTrapLight: false,
+    darkTrapLight: true,
     /**
      * fidelity DARKTRAP2 D2 — `spearing` IS UP FOR THE SPEAR'S WHOLE ANIMATION, NOT ONE TICK.
      *
@@ -205,7 +206,8 @@ export const CONTACT_FIDELITY = {
      * inside a swing, a wand/fire window or its own window is gated (no thrust), and `slashInfo.openUntil.spearing`
      * carries the end tick so `solverBot.previewWalk` ages it like the wand/fire windows.
      */
-    spearingWindow: false,
+    // ⚖ ON since the wave-11 harvest (user, 2026-10-10), with darkTrapLight and fallBurnsPress.
+    spearingWindow: true,
     /**
      * fidelity DARKTRAP2 D2 — A PRESS DURING A PIT FALL IS LOST. `checkFallingInPit` sets `receiveInput = false` and
      * `Player.input()` returns at its first line (`!receiveInput || frozenTimer > 0 || fallFromCeiling`), so the
@@ -214,13 +216,15 @@ export const CONTACT_FIDELITY = {
      * corrected walk, the game's `receive_input` false from t227 and the t230 sword press is lost (the model's dash
      * moved y 1.71 px at t231).
      */
-    fallBurnsPress: false,
+    // ⚖ ON since the wave-11 harvest (user, 2026-10-10), with darkTrapLight and spearingWindow.
+    fallBurnsPress: true,
     /**
      * fidelity BULB W8 — see its paragraph above. ⛔ OFF by default: turning it on moves committed artifacts (the
      * measured movers are in `CC/docs/cloud-reports/seedling-fidelity-bulb.md`), and a default flip is the user's
      * licence to give.
+     * ⚖ ON by default since the wave-11 harvest (user, 2026-10-10: "Yes to all", on the slice's measured movers).
      */
-    bulbLive: false,
+    bulbLive: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

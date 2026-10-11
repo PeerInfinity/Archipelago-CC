@@ -54,11 +54,12 @@ const firstOff = (w, col) => w.samples.find((s) => !col[s.t] || col[s.t].x !== s
     ?.t ?? null;
 
 describe('DARKTRAP2 — the switches', () => {
-    it('ship OFF (the user flips them), and `darkTrapLight` stays OFF', () => {
+    // ⚖ (user, 2026-10-10, "Yes to all") ON since the wave-11 harvest: the three switches flip together.
+    it('ship ON together with `darkTrapLight`', () => {
         expect(CONTACT_FIDELITY_DEFAULTS).toEqual(expect.objectContaining(
-            { darkTrapLight: false, spearingWindow: false, fallBurnsPress: false }));
-        expect(CONTACT_FIDELITY.spearingWindow).toBe(false);
-        expect(CONTACT_FIDELITY.fallBurnsPress).toBe(false);
+            { darkTrapLight: true, spearingWindow: true, fallBurnsPress: true }));
+        expect(CONTACT_FIDELITY.spearingWindow).toBe(true);
+        expect(CONTACT_FIDELITY.fallBurnsPress).toBe(true);
     });
     it('the spear animation: 8 frames at 45, `spearEnd` 5 ticks after the press (the slash period\'s own arithmetic)', () => {
         expect([SPEAR_ANIM_FRAMES, SPEAR_ANIM_RATE]).toEqual([8, 45]);

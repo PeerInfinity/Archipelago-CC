@@ -103,7 +103,8 @@ describe('the wand witnesses replay at 0 px (the GAME, p4f headless)', () => {
 });
 
 describe('WAND_VERB OFF is the base (byte-identical lookups)', () => {
-    it('ships OFF, and the shared tables keep their words', () => {
+    // ⚖ (user, 2026-10-10, "Yes to all") ON since the wave-11 harvest; the shared tables keep their words, and OFF is the base.
+    it('ships ON, and the shared tables keep their words', () => withWandVerb(false, () => {
         expect(WAND_VERB.enabled).toBe(false);
         expect(OBSTACLE_STRATEGIES['solid:wandlock']).toBe('wand');
         expect(OBSTACLE_STRATEGIES['solid:magicallock']).toBe('kill');
@@ -112,10 +113,11 @@ describe('WAND_VERB OFF is the base (byte-identical lookups)', () => {
         expect(frontierExecutor('wand')).toBeUndefined();
         expect(KNOWN_STRATEGY_VERBS).toContain('wand');
         expect(WAND_TARGET_TAGS).toEqual(['magicallock', 'magicallockfire']);
-    });
-    it('ON registers the verb on the frontier only while it is on', () => {
-        expect(withWandVerb(true, () => typeof frontierExecutor('wand'))).toBe('function');
-        expect(frontierExecutor('wand')).toBeUndefined();
+    }));
+    it('ON registers the verb on the frontier only while it is on (ON by default)', () => {
+        expect(WAND_VERB.enabled).toBe(true);
+        expect(typeof frontierExecutor('wand')).toBe('function');
+        expect(withWandVerb(false, () => frontierExecutor('wand'))).toBeUndefined();
     });
     it('the L68 witness tape, stepped with the switch OFF, opens the lock but folds no flag (ON folds it at the hit)', () => {
         const { tape } = replay('wand-l68-magicallock');

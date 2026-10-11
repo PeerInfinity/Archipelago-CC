@@ -556,7 +556,8 @@ export const WAND_MIXED_WINDOW_LAW = Object.freeze({
  * `Game.setPersistence(tag, false)` folded into `earnedClears`, at the hit tick, as `MagicalLock.hit` writes it).
  * With it OFF both modules answer exactly what they did before it existed.
  */
-export const WAND_VERB = { enabled: globalThis.process?.env?.SEEDLING_WAND_VERB === '1' };
+// ⚖ ON by default since the wave-11 harvest (user, 2026-10-10); `SEEDLING_WAND_VERB=0` turns it OFF for a process.
+export const WAND_VERB = { enabled: globalThis.process?.env?.SEEDLING_WAND_VERB !== '0' };
 
 export function withWandVerb(enabled, fn) {
     const prior = WAND_VERB.enabled;
