@@ -7601,7 +7601,13 @@ export function createLevelRun({
         if (noclip) return null;
         const st = shooterStateFor(level);
         const live = spitsFor(level);
-        if (st.size === 0 && live.length === 0) return null;
+        // ⛓ seedling-fidelity-bombpusher D3: the lobber and its bombs ride the same forecast (key ON only).
+        const lob = bombForecastNow();
+        if (st.size === 0 && live.length === 0) return lob;
+        if (lob) {
+            throw new Error(`levelRun: level ${level} holds a Turret and a BombPusher — their shots would share one `
+                + 'forecast and one prepend order, which is not transcribed (no room in the game has both).');
+        }
         const turrets = [...st.keys()].reverse().map((id) => ({ ...st.get(id), spawned: null,
             // ⛓ hammer-phase C1 (`STATIC_SWORD_ARM` ON): a dying/removed turret fires no more
             ...(STATIC_SWORD_ARM.enabled ? { silenced: st.get(id).removed === true
@@ -7639,6 +7645,56 @@ export function createLevelRun({
                     if (STATIC_SWORD_ARM.enabled && t.hitsTimer > 0) t.hitsTimer -= 1;
                     stepTurret(t, { frozen: false, player: { x: playerPos.x, y: playerPos.y } });
                     if (t.spawned) air.unshift(t.spawned);
+                }
+                return out;
+            },
+        };
+    }
+
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bombpusher D3 — **THE LOBBER FORECAST**, `spitForecastNow`'s sentence for a BombPusher.
+     *
+     * The lobber is PLAYER-COUPLED (its clock starts on range and every bomb is aimed at the player), and a bomb is
+     * autonomous from its spawn, so where the blasts land is a function of the WALK: `previewWalk` steps this (through
+     * `run.spitForecast()`) against the previewed player, per tick. The stepping is `stepBombsNow` then
+     * `stepBombPushersNow`'s — the same `bombPusher.js` functions on clones, in the same order.
+     *
+     * An Explosion is tested at the END of the tick its bomb removed itself (`updateLists()`), i.e. against the
+     * player the NEXT step is handed. So a blast is returned by the step AFTER the one that removed its bomb, on the
+     * sample whose box is that end-of-tick player: `{kind: 'bomb', id, x, y, rect: the prefilter square, radius,
+     * hitsPlayer}` — `dangerMap.spitDanger` asks the square and the disc of any box. `null` while the key is OFF or
+     * the room holds no lobber and no bomb (every other preview is byte-identical).
+     */
+    function bombForecastNow() {
+        if (noclip || !CONTACT_FIDELITY.bombPusherLive) return null;
+        const pushers = [...bombPusherStateFor(level).values()];
+        const live = bombsFor(level);
+        if (pushers.length === 0 && live.length === 0) return null;
+        const lobbers = [...pushers].reverse().map((b) => ({ ...b, spawned: null }));
+        const air = live.map((b) => ({ ...b, v: { ...b.v } }));
+        // A blast its bomb's removal queued on the LIVE tick that just ended is already in `pendingBombBlasts`.
+        let pending = pendingBombBlasts.filter((b) => b.level === level).map((b) => ({ id: b.id, x: b.x, y: b.y }));
+        const radius = BOMB.explosionHitRadius;
+        return {
+            step(playerPos) {
+                const out = [];
+                for (const b of pending) {
+                    const square = rect(b.x - radius, b.y - radius, radius * 2, radius * 2);
+                    const hitsPlayer = rectsOverlap(playerBoxAt(playerPos.x, playerPos.y), square)
+                        && Math.sqrt((b.x - playerPos.x) ** 2 + (b.y - playerPos.y) ** 2) <= radius;
+                    out.push({ kind: 'bomb', id: b.id, x: b.x, y: b.y, rect: square, radius, hitsPlayer });
+                }
+                pending = [];
+                for (const s of air) {
+                    const r = stepBomb(s, { frozen: false });
+                    if (r.exploded) pending.push({ id: s.id, x: r.exploded.x, y: r.exploded.y });
+                }
+                for (let i = air.length - 1; i >= 0; i -= 1) {
+                    if (air[i].removed) air.splice(i, 1);
+                }
+                for (const b of lobbers) {
+                    stepBombPusher(b, { player: { x: playerPos.x, y: playerPos.y } });
+                    if (b.spawned) air.unshift(b.spawned);
                 }
                 return out;
             },
@@ -11913,7 +11969,11 @@ export function createLevelRun({
             if (b.level !== level) continue;
             const square = rect(b.x - radius, b.y - radius, radius * 2, radius * 2);
             const inDisc = (px, py) => Math.sqrt((b.x - px) ** 2 + (b.y - py) ** 2) <= radius;
-            for (const c of chaserStateFor(level).values()) {
+            // ⛔ `stepChasersNow`'s own gate: under `noclip`/`noDamage` the run does not step a chaser, so a chaser's
+            // position has no reader (`R8_ENEMY_BRIDGE.enemyBodyReaders`) — and asking the PLACEMENT it was left at
+            // would refuse a blast the game's walked-away body never met (measured: the committed `noDamage`
+            // `l40button-l42-part0` at t972, `bob@304,144` at its placement vs the game's (337, 200)).
+            for (const c of (noclip || noDamage) ? [] : chaserStateFor(level).values()) {
                 if (c.removed) continue;
                 if (rectsOverlap(chaserBoxAt(c.tag, c.x, c.y), square) && inDisc(c.x, c.y)) {
                     throw new Error(`levelRun: the Explosion of ${b.id} at (${b.x}, ${b.y}) on tick `

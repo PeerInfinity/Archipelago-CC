@@ -70,6 +70,8 @@ import {
     rect, rectsOverlap,
     SPINNER, hammerHitsPlayer, spinnerRect,
     TURRET_SPIT,
+    // ⛓ seedling-fidelity-bombpusher D3: the lobber and its bombs.
+    BOMB, stepBomb, stepBombPusher,
     // ⛓ LADDER2: the placed grenade, and the player's hitbox origin (its entity point).
     HITBOX, PLACED_GRENADE, blastReaches, createPlacedGrenade, stepPlacedGrenade,
 } from './solverView.js';
@@ -291,10 +293,18 @@ export function arrowDangerDuringTransit(run, box, horizon, arrows = null) {
  * not fired yet is NOT priced here: whether it fires, and where, is a question
  * about where the player will be, which is a walk's question.
  */
-export function spitDanger(run, box, horizon, spits = null) {
+export function spitDanger(run, box, horizon, spits = null, mode = 'wait') {
     const out = [];
     if (spits) {
         for (const s of spits) {
+            if (s.kind === 'bomb') {
+                if (bombBlastHits(s, box)) {
+                    out.push({ kind: 'bomb', id: s.id, why: `a Bomb's Explosion at (${s.x},${s.y}), r ${s.radius} `
+                        + '(`Explosion.as:52-56`: the square, then the origin-to-origin disc), the bomb aimed and '
+                        + 'stepped with the walk by `bombPusher.js` against the previewed player' });
+                }
+                continue;
+            }
             if (rectsOverlap(box, s.rect)) {
                 out.push({ kind: 'spit', id: s.id, why: `a TurretSpit AT ITS PREDICTED POSITION `
                     + `(${s.x.toFixed(1)},${s.y.toFixed(1)}), stepped with the walk by `
@@ -314,6 +324,60 @@ export function spitDanger(run, box, horizon, spits = null) {
                 out.push({ kind: 'spit', id: s.id, why: `a live TurretSpit swept along its `
                     + `velocity x ${horizon} tick(s)` });
             }
+        }
+    }
+    // ⛓ seedling-fidelity-bombpusher D3: a WAIT only — a transit caller with no walk has no standing player.
+    if (mode !== 'transit') out.push(...lobberWaitDanger(run, box, horizon));
+    return out;
+}
+
+/** `Explosion.added()` against the player whose box this is: the prefilter square, then the disc on the ORIGIN. */
+function bombBlastHits(b, box) {
+    if (!rectsOverlap(box, b.rect)) return false;
+    const px = box.x + HITBOX.originX;
+    const py = box.y + HITBOX.originY;
+    return Math.sqrt((b.x - px) ** 2 + (b.y - py) ** 2) <= b.radius;
+}
+
+/**
+ * ⛓⛓⛓ seedling-fidelity-bombpusher D3 — THE LOBBER, PRICED FOR A WAIT.
+ *
+ * WAIT: the player stands at the box's origin from now for the horizon, and the room's lobbers and bombs are
+ * stepped against that standing player with `bombPusher.js`'s own functions (`run.entities('bombPushers' /
+ * 'bombs')`, copies). ⛔ A STANDING PLAYER IN RANGE IS ALWAYS HIT: a bomb is aimed at the player and explodes one
+ * step PAST the aim, and a step is at most 256/30 ≈ 8.5 px — inside the 15 px disc. So any wait that outlasts the
+ * lobber's next shot plus 61 ticks is a hit; measured on the game as L40BUTTON's 101-tick fade on
+ * `buttonroom@272,208` (157 px from `bombpusher@112,128`). Empty while the key is OFF (no lobber is listed).
+ */
+function lobberWaitDanger(run, box, horizon) {
+    const pushers = run.entities('bombPushers') ?? [];
+    const live = run.entities('bombs') ?? [];
+    if (pushers.length === 0 && live.length === 0) return [];
+    const p = { x: box.x + HITBOX.originX, y: box.y + HITBOX.originY };
+    const lobbers = pushers.map((b) => ({ ...b, spawned: null }));
+    const air = live.filter((b) => !b.removed).map((b) => ({ ...b, v: { ...b.v } }));
+    const out = [];
+    let pending = [];
+    for (let k = 0; k <= horizon; k += 1) {
+        for (const b of pending) {
+            if (bombBlastHits({ ...b, rect: rect(b.x - BOMB.explosionHitRadius, b.y - BOMB.explosionHitRadius,
+                BOMB.explosionHitRadius * 2, BOMB.explosionHitRadius * 2), radius: BOMB.explosionHitRadius }, box)) {
+                out.push({ kind: 'bomb', id: b.id, why: `a Bomb's Explosion at (${b.x},${b.y}) ${k} tick(s) into `
+                    + 'the wait — a player standing within 256 px of a BombPusher is aimed at and the blast lands '
+                    + 'one step past the aim, inside its 15 px disc (`bombPusher.js`)' });
+                return out;
+            }
+        }
+        if (k === horizon) break;
+        pending = [];
+        for (const s of air) {
+            const r = stepBomb(s, { frozen: false });
+            if (r.exploded) pending.push({ id: s.id, ...r.exploded });
+        }
+        for (let i = air.length - 1; i >= 0; i -= 1) if (air[i].removed) air.splice(i, 1);
+        for (const b of lobbers) {
+            stepBombPusher(b, { player: p });
+            if (b.spawned) air.unshift(b.spawned);
         }
     }
     return out;
@@ -1565,7 +1629,7 @@ export function dangerAt(run, tick, box, {
         ...grenadeDanger(run, box, tick, mode, mode === 'transit' ? grenades : null),
         ...crusherDanger(run, box),
         // ⛓ U15-swim D2: the spits — the walk's own forecast in TRANSIT.
-        ...spitDanger(run, box, horizon, mode === 'transit' ? spits : null),
+        ...spitDanger(run, box, horizon, mode === 'transit' ? spits : null, mode),
     ];
     return { danger: sources.length > 0, horizon, mode, sources };
 }

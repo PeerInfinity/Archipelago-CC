@@ -105,3 +105,81 @@ describe.each(WITNESSES)('BOMBPUSHER — the game witness $name (leg $leg)', ({ 
         expect(firstMiss.t).toBe(firstHit + 1);
     }, 120_000);
 });
+
+describe('BOMBPUSHER D3 — standing within a lobber\'s range is priced', async () => {
+    const { dangerAt, dangerWhileWaiting } = await import('./dangerMap.js');
+    const { playerBoxAt } = await import('./playerPhysicsV2.js');
+    const { createRunForStaging } = await import('./tapeRunner.js');
+    const { l40buttonStaging } = await import('../../../scripts/procgen/plan-seedling-l40button-witness.mjs');
+    // the NW cluster's own boot: 154 px from `bombpusher@112,128`'s centre (136,152)
+    const boot = { level: 40, x: 272, y: 224 };
+    const runAt = async () => createRunForStaging(await l40buttonStaging(boot), atlasLevelSource());
+
+    it('ON: a 101-tick wait at the buttonroom stance is a bomb hit (the lobber fires on tick 1, the blast lands ≈ +61)', async () => {
+        const run = await runAt();
+        const d = withContactFidelity({ bombPusherLive: true },
+            () => dangerWhileWaiting(run, run.ticksCompleted + 101, playerBoxAt(280.7, 215.3)));
+        expect(d.sources.filter((s) => s.kind === 'bomb').map((s) => s.id)).toEqual(['bombpusher@112,128#1']);
+    });
+
+    it('ON: a wait shorter than the first blast is clean, and so is a wait out of range', async () => {
+        const run = await runAt();
+        withContactFidelity({ bombPusherLive: true }, () => {
+            expect(dangerWhileWaiting(run, run.ticksCompleted + 50, playerBoxAt(280.7, 215.3))
+                .sources.filter((s) => s.kind === 'bomb')).toEqual([]);
+            // (480, 300): 380 px from the lobber
+            expect(dangerWhileWaiting(run, run.ticksCompleted + 200, playerBoxAt(480, 300))
+                .sources.filter((s) => s.kind === 'bomb')).toEqual([]);
+        });
+    });
+
+    it('OFF: the same wait prices no bomb (byte-inert)', async () => {
+        const run = await runAt();
+        const d = withContactFidelity({ bombPusherLive: false },
+            () => dangerWhileWaiting(run, run.ticksCompleted + 101, playerBoxAt(280.7, 215.3)));
+        expect(d.sources.filter((s) => s.kind === 'bomb')).toEqual([]);
+    });
+
+    it('ON: the walk forecast returns the blast on the sample whose box is the end-of-tick player, and only a box in its disc is hit', async () => {
+        const run = await runAt();
+        withContactFidelity({ bombPusherLive: true }, () => {
+            const f = run.spitForecast();
+            const stand = { x: run.state.x, y: run.state.y };
+            let blast = null;
+            for (let k = 0; k < 80 && !blast; k += 1) blast = f.step(stand).find((s) => s.kind === 'bomb') ?? null;
+            expect(blast).not.toBe(null);
+            expect(blast.hitsPlayer).toBe(true);
+            const tick = run.ticksCompleted;
+            expect(dangerAt(run, tick, playerBoxAt(stand.x, stand.y), { mode: 'transit', spits: [blast] })
+                .sources.map((s) => s.kind)).toContain('bomb');
+            expect(dangerAt(run, tick, playerBoxAt(stand.x + 20, stand.y), { mode: 'transit', spits: [blast] })
+                .sources.map((s) => s.kind)).not.toContain('bomb');
+        });
+    });
+});
+
+describe('BOMBPUSHER D3 — the hold inside the lobber\'s reach is refused by name', async () => {
+    const { SolverRefusal } = await import('./solverBot.js');
+    const { createRunForStaging } = await import('./tapeRunner.js');
+    const { twoPassSolve } = await import('./twoPassSolve.js');
+    const { L40BUTTON_GOAL, l40buttonStaging } = await import('../../../scripts/procgen/plan-seedling-l40button-witness.mjs');
+    const solveFromCluster = async () => {
+        const staging = await l40buttonStaging({ level: 40, x: 272, y: 224 });
+        const makeRun = (p) => createRunForStaging({ ...staging, persistence: p }, atlasLevelSource());
+        return twoPassSolve({ makeRun, goals: [L40BUTTON_GOAL], name: 'bombpusher-test', boot: staging.boot,
+            persistence: staging.persistence, log: () => {} });
+    };
+
+    it('ON: the cluster boot\'s plan stops at buttonroom@272,208\'s hold, naming the lobber and the blast', async () => {
+        let refusal = null;
+        await withContactFidelity({ bombPusherLive: true }, async () => {
+            try { await solveFromCluster(); } catch (e) { refusal = e; }
+        });
+        expect(refusal).toBeInstanceOf(SolverRefusal);
+        expect(refusal.message).toMatch(/-> hold: the hold stands still .* inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at/);
+        expect(refusal.obstacle).toMatchObject({ kind: 'danger', id: 'bombpusher@112,128' });
+        // the survey files it under its own family (`surveyFamily.FAMILY_RULES`, appended)
+        const { familyOf } = await import('../../../scripts/procgen/surveyFamily.js');
+        expect(familyOf(refusal.message)).toMatch(/^BOMB — the wait stands still inside bombpusher@112,128's reach/);
+    }, 300_000);
+});
