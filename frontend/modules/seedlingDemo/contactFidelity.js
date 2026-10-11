@@ -229,6 +229,16 @@ export const CONTACT_FIDELITY = {
      * ⚖ ON by default since the wave-11 harvest (user, 2026-10-10: "Yes to all", on the slice's measured movers).
      */
     bulbLive: true,
+    /**
+     * fidelity LEASH D2 — A BAIT IS VERIFIED ON THE CHASER FORECAST (`solverBot.BAIT_FORECAST` reads this key, so the
+     * page, its solve worker and the divergence sweep's `contact_fidelity=` set it like every switch here). OFF: a
+     * bait stance is the straight line's, as it was. ON: each candidate's walk and dwell are previewed on one
+     * forecast, a stance is offered only where the body leaves the world (a terrain death read against the CLASS's
+     * flags), and the dwell's bound is that removal. Game-measured on L74 (leg 629): `lavarunner@24,56` pins on a wall
+     * the straight line ignores. ⛔ OFF by default: ON moves no tape, producer `--check` or identity row, but two
+     * bounded rows' refusal wording (the slice report lists them); the flip is the user's licence.
+     */
+    baitForecast: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -292,6 +302,8 @@ export function contactFidelityStamp() {
  */
 const envFlags = globalThis.process?.env?.SEEDLING_CONTACT_FIDELITY;
 if (envFlags) Object.assign(CONTACT_FIDELITY, parseContactFidelity(envFlags));
+// ⛓ fidelity LEASH: `SEEDLING_BAIT_FORECAST=1` turns that one switch on over the set above (a node measurement).
+if (globalThis.process?.env?.SEEDLING_BAIT_FORECAST === '1') CONTACT_FIDELITY.baitForecast = true;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
