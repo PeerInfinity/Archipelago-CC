@@ -85,7 +85,7 @@ describe.each(WITNESSES)('BOMBPUSHER — the game witness $name (leg $leg)', ({ 
     }, 120_000);
 
     it('OFF: the quiet room — no bomb, and the model leaves the game the tick after the first hit', () => {
-        const { cols, run } = withContactFidelity({ bombPusherLive: false }, () => {
+        const { cols, bombs: bombsOff, pushers: pushersOff } = withContactFidelity({ bombPusherLive: false }, () => {
             const tape = parseTape(JSON.stringify(w.tape));
             let rn = null;
             const st = createTapeStepper(tape, { levelSource: atlasLevelSource(), onTick: (t, s, h, r) => { rn = r; } });
@@ -94,10 +94,11 @@ describe.each(WITNESSES)('BOMBPUSHER — the game witness $name (leg $leg)', ({ 
                 out.set(r.value.observation.t, [r.value.observation.x, r.value.observation.y]);
                 if (r.value.observation.t > firstHit + 1) break;
             }
-            return { cols: out, run: rn };
+            // read INSIDE the scope: the families answer the switch at call time
+            return { cols: out, run: rn, bombs: rn.entities('bombs'), pushers: rn.entities('bombPushers') };
         });
-        expect(run.entities('bombs')).toEqual([]);
-        expect(run.entities('bombPushers')).toEqual([]);
+        expect(bombsOff).toEqual([]);
+        expect(pushersOff).toEqual([]);
         const firstMiss = w.samples.find((s) => {
             const m = cols.get(s.t);
             return m && (m[0] !== s.p[0] || m[1] !== s.p[1]);

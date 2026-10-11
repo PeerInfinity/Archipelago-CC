@@ -16616,6 +16616,11 @@ export function createLevelRun({
         get staticBodies() { return staticBodiesNow(); },
         /** ⛓ STATICLADDER D2: the darktraps' light death (see `darkTrapsNow`). */
         get darkTraps() { return darkTrapsNow(); },
+        /** ⛓ seedling-fidelity-bombpusher: the lobbers and the bombs in flight (empty while the key is OFF). */
+        get bombPushers() { return bombPushersNow(); },
+        get bombs() { return bombsNow(); },
+        /** ⛓ seedling-fidelity-bombpusher: the bomb ledger — see `stepBombsNow` / `drainBombBlastsNow`. */
+        get bombEvents() { return bombEventsNow(); },
         /** ⛓ U15-swim D1: the spit ledger — see `stepSpitsNow`. */
         get spitEvents() { return spitEventsNow(); },
         /** ⛓ F4: the static bodies this run killed (see `staticBodyDeaths`). */
