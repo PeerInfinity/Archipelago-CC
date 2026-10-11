@@ -15927,6 +15927,55 @@ wait switch). Live sweep (production page, both ON): legs 333 and 339 failed →
 - **Fixing "the drive is the priced walk" by dropping the dash moves every walk that shares the verb.** Price the
   dash instead.
 
+### Seedling fidelity CROSSROOM — a cross-room button write into a level nothing reads is a ledger entry, and a clear-tag can be pressed from another level
+
+Wave 12 (model coverage). Re-measure 4 refused survey steps 59 and 76 (CI 38107331670) and sweep-4 legs 366 and 368 on
+one root: the rules arc's `ButtonRoom` events write across rooms, and the model handled neither direction. The report
+is `CC/docs/cloud-reports/seedling-fidelity-crossroom.md`.
+
+**D1 — measured.** On the game (p4f, headless, `probe-seedling-cross-room-button.mjs --only=38`): L38's
+`buttonroom@144,288` writes `{37,4}` and its own `{38,5}`; `buttonroom@32,48` writes `{39,8}` and `{38,4}`. Both
+land in `persistence_cleared` on the press. On the delivered set (`l37-fallrock-removed`) no entity of L37 carries
+tag 4; on the vanilla map the fallrock does. At the base, step 59 refused at L37's build (*"the tape clears tag(s) 4,
+which no entity in this level reads"*), and so did leg 366 (local sweep). **Step 76 never reached the executor:** the
+survey's goal mapper turned every goal that was not `reach-exit`, `reach-pit` or `encounter` into `collect-placement`,
+so it refused on the goal's shape (*"collect-placement needs placement"*), not on `'wrong-level'`. Leg 368 is refused
+by the page's `EVENT_GOAL_REFUSAL` before any solve.
+
+**D2 — the ledger (`levelRun`).** A cross-level clear into a level whose RECORD has no carrier of the tag is reported
+(`run.ledger('unreadRoomWrites')`, and the `roomWrites` row is marked `unread`). It is never banked or cashed. A
+STAGED clear with the same provenance is left out of the build (`clearedForBuild`) and reported too. The provenance is
+a map-placed `flip = 1` `buttonroom` whose `room`/`tset` name exactly `{n, tag}`. A clear with no such writer is still
+the build's derivation-error throw. A level that has a carrier keeps the banked path unchanged. `LEDGER_KIND_NAMES`
+34 → 35.
+
+**D3 — the cross-room presser (`execClearTag` + the survey).** The goal may name `presser: {level, class, x, y}` (the
+event's `action.presser`). When the run stands in the presser's level and the flag is in another, the executor
+presses the presser with the registered verb (`proximity-hazard:buttonroom` → `hold`). When no stance is reachable
+from where it stands, `walkTo`'s frontier loop walks it to the presser through the room. It finishes on
+`earnedClears` like every clear-tag. The survey hands the goal over as it is, with the presser read off the rules
+location. Step 76 SOLVES in 480 t with 0 hits: L38's chain (`buttonroom@144,128`, the pulser via `button@80,192`, the
+chest), then `buttonroom@32,48`, then into L39, whose build reads `{39,8}`.
+
+**D4 — witnesses and census.** `probe-seedling-cleartag.mjs --set=crossroom` (`fidelityCrossRoom.CROSSROOM_WITNESSES`,
+`fixtures/crossroom-oracle.json`): both presses at 0 px (13 and 423 observations). `{39,8}` is first held after 412
+ticks, which is the model's T + 1. Survey (local, base → head): 59 REFUSED → SOLVED 371 t, 76 REFUSED → SOLVED 480 t.
+58/60/75 are unchanged and 77/123/138 still refuse on `rope@96,384`; they boot with `{39,8}` staged by the survey's
+route credits, a contract left as it is. Sweep (local, production page): leg 366 failed → done (no divergence).
+Leg 368 is unchanged until the JS arc maps the event goal to `clear-tag` with its presser. Nothing committed moves:
+the identity block, the six producers, tapeRunner (605, `c439305b…`) and the bounded set (55 → 56 files, all green).
+
+**Trap candidates.**
+- **A goal mapper with a default arm eats new goal kinds.** The survey's `… : collect-placement` fallthrough turned a
+  `clear-tag` into a malformed pickup, and the refusal text sent the reader to the solver.
+- **A `contactsOverride` is a snapshot.** The holds a frontier applies mid-walk add their presser to the segment's
+  `exemptions`. A frozen override re-met L38's `buttonroom@144,128` after its press, and `hold` refused "ALREADY OPEN".
+- **A boot ON a presser is pressed in the arrival frame.** The game holds `{37,4}` after one tick, and the model's
+  row is t1 (the flag lands after two). `activators.bootPress`'s note says "a press by the player cannot tell", and
+  this one can. It is pinned as residue, not fixed.
+- **"Nobody reads it" is a fact about the delivered set, not the game.** The same press is read on the vanilla map
+  (the fallrock arm) and unread on the delivered one. The provenance is the writer, never the slot.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
