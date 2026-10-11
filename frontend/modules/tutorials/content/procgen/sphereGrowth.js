@@ -15,7 +15,7 @@ export const PROCGEN_SPHERE_GROWTH = Object.freeze({
     summary: 'Generate a maze-only world with the Sphere growth mode, load it, and watch the Playback Bot finish it.',
     track: 'procgen',
     status: 'in-progress',
-    firstFailingStep: 'bot-plays',
+    firstFailingStep: null, // every step works since the maze generator fix (7379b019dc)
     doc: null,
     intro: [
         { prose: '**Sphere growth** is the pipeline\'s default mode: it plans the item progression first — which items unlock which, sphere by sphere — and then grows a world to match. This tutorial builds a world from mazes alone, so you can see the plan become rooms.' },
