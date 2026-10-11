@@ -110,8 +110,10 @@ describe('the playthrough\'s obstacle events', () => {
         // the lock's own region is NOT split: the atlas carries no event and no gate
         expect(RULES.regions['1'].level_39__r2c11.exits.find((x) => x.connected_region === 'level_39__r0c9').access_rule)
             .toEqual({ rule: 'True_' });
+        // ⚖ rules l37-fallrock-patch: the delivered set drops L37's fallrock, so the L38 arrival button's write
+        // reaches NO target on the playthrough's map (it was `-> {37,4} fallrock@288,32`, an arm).
         expect(buttons.skipped.map((x) => x.split(':')[0]).sort()).toEqual([
-            'L38 buttonroom@144,288 -> {37,4} fallrock@288,32', 'L61 buttonroom@176,40 -> {63,1} lightpole@64,88',
+            'L38 buttonroom@144,288 -> {37,4}', 'L61 buttonroom@176,40 -> {63,1} lightpole@64,88',
             'L63 buttonroom@32,64 -> {62,0} lightpole@120,200']);
     });
 
