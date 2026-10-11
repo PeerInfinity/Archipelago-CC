@@ -817,7 +817,23 @@ function createModuleManagerApi(options) {
       logger.info('init', `Module ${moduleId} is already enabled.`);
       const componentType = centralRegistry.getComponentTypeForModule(moduleId);
       if (componentType && panelManagerInstance) {
-        panelManagerInstance.activatePanel(componentType);
+        // ⛓ An enabled module whose panel the layout has NEVER had (it is not
+        // in the active layout preset — e.g. Discovery in the default layout)
+        // has no tab to activate, and activatePanel only finds tabs: Quick
+        // Launch's button did nothing (measured 2026-10-10). Create the panel
+        // in the module's declared column, as enabling a module does.
+        const inLayout = (window.goldenLayoutInstance?.getAllContentItems?.() ?? [])
+          .some((item) => item.isComponent && item.container?.componentType === componentType);
+        if (window.goldenLayoutInstance && !inLayout) {
+          const info = importedModules.get(moduleId)?.moduleInfo;
+          await panelManagerInstance.createPanelForComponent(
+            componentType,
+            info?.title || info?.name || moduleId,
+            info?.column || null
+          );
+        } else {
+          panelManagerInstance.activatePanel(componentType);
+        }
       }
       return;
     }

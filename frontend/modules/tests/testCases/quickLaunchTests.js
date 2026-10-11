@@ -1019,6 +1019,40 @@ async function quickLaunchInlineFormSurvivesARender(testController) {
     return testController.getOverallResult();
 }
 
+/**
+ * ⛓ TUTORIAL CATALOGUE C2 (2026-10-10): a panel whose module is ENABLED but
+ * which the layout never had (Discovery is not in the default layout) — its
+ * Quick Launch button did nothing, because enableModule only activated an
+ * existing tab. The target is read off the live layout: the first registered
+ * panel with an enabled module and no tab (Discovery first, when it is one).
+ */
+async function quickLaunchButtonOpensPanelNeverInLayout(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const candidates = [...centralRegistry.getAllPanelComponents().entries()]
+        .filter(([type, info]) => moduleEnabled(info.moduleId) && tabItem(type) === null && rowButton(root, type))
+        .map(([type]) => type)
+        .sort((a, b) => (b === 'discoveryPanel') - (a === 'discoveryPanel'));
+    const target = candidates[0];
+    testController.reportCondition(`some enabled panel has no tab (${candidates.join(', ') || 'none'})`, Boolean(target));
+    if (!target) return testController.getOverallResult();
+    try {
+        rowButton(root, target).click();
+        const opened = await testController.pollForCondition(() => tabItem(target) !== null,
+            `${target} to get a tab`, ACTION_TIMEOUT_MS, POLL_MS);
+        testController.reportCondition(`clicking ${target}'s button opens it, though the layout never had it`, opened);
+        const item = tabItem(target);
+        testController.reportCondition(`${target} is its stack's active tab`,
+            Boolean(item && item.parent?.getActiveComponentItem?.() === item));
+    } finally {
+        // Put the layout back as it was (no tab). Closing a tab disables its
+        // module (moduleLayoutSync), so the module ends disabled — a panel
+        // module only; its logic module is untouched.
+        if (tabItem(target) !== null) await window.panelManager.destroyPanelByComponentType(target);
+    }
+    return testController.getOverallResult();
+}
+
 const TESTS = [
     ['quick-launch-lists-every-registered-panel', 'Quick Launch: a button per registered panel',
         'Asserts the Quick Launch panel draws one button per componentType centralRegistry.getAllPanelComponents() '
@@ -1113,6 +1147,10 @@ const TESTS = [
         + 'off HELP_SECTIONS) draws no rows of its own and one sub-group per heading (+ Unlisted), in order, each holding '
         + 'its docs in bullet order; the labels are the served README\'s own headings.',
         quickLaunchDeveloperSubgroupsFollowTheReadme],
+    ['quick-launch-button-opens-panel-never-in-layout', 'Quick Launch: a button opens an enabled panel the layout never had',
+        'Picks (off the live layout) a registered panel whose module is enabled and which has no tab — Discovery in the '
+        + 'default layout; clicking its Quick Launch button gives it a tab, active in its stack; the tab is closed again.',
+        quickLaunchButtonOpensPanelNeverInLayout],
     ['quick-launch-inline-form-survives-a-render', 'Quick Launch: an open inline form survives a render',
         'Commits ✎ on group A and, before that write renders, opens ✎ on group B and types; after A\'s render B\'s input '
         + 'is still there with its text and the focus; Escape cancels it; the tree holds A\'s rename only.',
