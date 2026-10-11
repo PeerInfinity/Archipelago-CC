@@ -14886,7 +14886,120 @@ function segmentCrosses(a, b, r) {
  * tape is an artifact and a tie broken by iteration order is a tie broken by
  * nothing.
  */
-function deriveBaitStance(run, body, contacts) {
+/**
+ * ⛓⛓ SEEDLING FIDELITY LEASH D2 — **A BAIT IS VERIFIED ON THE CHASER FORECAST, NOT ON A STRAIGHT LINE**
+ * (`BAIT_FORECAST`, OFF by default).
+ *
+ * MEASURED on the game (p4f, headless; leg 629, L74 from L75, `lavarunner@24,56`): with the player standing at the
+ * bait stance (24,136) the body chases, meets the wall corner of tile (2,5) and PINS at (30.906↔31.362, 73.062)
+ * from t10 — and is still there at t160 (322 comparisons, worst |Δ| 0: the model's run is the game's). The
+ * straight line (32,64)→(24,136) crosses the Bulb's lava region, so the derivation offered the stance with an
+ * 84-tick bound (`ceil(72.4 / 1.5) + fade + 30`), and the dwell waited for a body the GAME never sends: the leg
+ * refused *"the dwell's condition … never became true inside its 84-tick bound"*. The bound was never the short
+ * term — the body never comes. `segmentCrosses` asks the line, not the room's solids.
+ *
+ * ⇒ with the switch, each candidate's walk AND its dwell are previewed on ONE chaser forecast (`previewWalk`'s
+ * standing tail, the kill arm's own instrument, stood as `runDwell` stands for a bait: no keys, the strike
+ * disarmed), and a stance is offered only where the forecast removes the body inside the preview; the dwell's
+ * bound is then the forecast's own removal tick past the arrival, plus `BAIT_SLACK`. A pinned body, a removal
+ * during the approach (the dwell would have nothing to wait for), a dangerous wait, or a walk the model refuses
+ * to price is a rejected candidate, named; the scan stops after `BAIT_FORECAST.maxPreviews` previews.
+ * The switch is `CONTACT_FIDELITY.baitForecast` (OFF), so the page, its solve worker and the divergence sweep's
+ * `contact_fidelity=` set it with the rest; `SEEDLING_BAIT_FORECAST=1` (or `SEEDLING_CONTACT_FIDELITY`) for a node
+ * measurement, `withBaitForecast` for a test.
+ */
+export const BAIT_FORECAST = {
+    get enabled() { return CONTACT_FIDELITY.baitForecast === true; },
+    // the preview's ceiling is this multiple of the straight-line bound: a swimming body (`LavaRunner.swim`,
+    // speed 1 against the census's 1.5) or one that walks round a corner is slower than its line, never faster
+    ceilingFactor: 2,
+    maxPreviews: 32,
+};
+
+/** Run `fn` with `CONTACT_FIDELITY.baitForecast` set to `enabled`, restoring the previous value (also on a throw). */
+export function withBaitForecast(enabled, fn) {
+    const before = CONTACT_FIDELITY.baitForecast;
+    CONTACT_FIDELITY.baitForecast = enabled === true;
+    try {
+        return fn();
+    } finally {
+        CONTACT_FIDELITY.baitForecast = before;
+    }
+}
+
+/**
+ * Does a terrain tile of DESTROYING type `t` kill a body of `tag`? `Enemy.update`'s switch gated on the CLASS's flags
+ * (`combat.ENEMY_CLASSES[tag].terrain` — a lavarunner survives lava, a jellyfish both and pits); a class with no row
+ * keeps the base `Enemy`'s `true`s, as the run's stepper does.
+ */
+export function terrainKillsTag(tag, t) {
+    const kind = DESTROYING_TILE_TYPES[t];
+    if (!kind) return false;
+    const terr = ENEMY_CLASSES[tag]?.terrain ?? null;
+    if (terr === null) return true;
+    return kind === 'pit' ? terr.pit === 'falls' : terr[kind] === 'dies';
+}
+
+/**
+ * One bait candidate read off the forecast (`BAIT_FORECAST`): `{removedAt}` (ticks past the arrival), or `{why}`.
+ *
+ * ⚠ THE FORECAST HAS NO TERRAIN SWITCH (`levelRun.chaserForecastNow` steps `chaserStep` only; the run's
+ * `stepChasersNow` drowns a body separately) — and a terrain death is a bait's whole mechanism. So the death is
+ * read off the forecast's own positions here: the first sample whose body centre stands on a tile that kills its
+ * class (`terrainKillsTag`, the stepper's `nearestWalkableTile(x, y).t`) starts it, and the removal is that tick plus
+ * `MOBILE_DEATH_FADE` — the straight-line derivation's own staging term. From the start on the body is a corpse
+ * (`Enemy.update` gates `hitPlayer` on `!destroy`) and leaves the wait's danger question. A removal the forecast
+ * itself makes (an arrow lane, a strike) is read as it is.
+ */
+function baitForecastOf(run, body, c, bound, { allowTeleporter, tolerance, dashMode, planOpts }) {
+    const wps = (c.x === run.state.x && c.y === run.state.y)
+        ? [] : planWaypointsOrNull(run.world, run.state, c, allowTeleporter, planOpts);
+    if (wps === null) return { why: 'no corridor plans to it' };
+    const ceiling = bound * BAIT_FORECAST.ceilingFactor;
+    let walk;
+    try {
+        walk = previewWalk(run, wps, tolerance, { strike: strikePolicyFor(run, { dashMode }), standFor: ceiling,
+            standKeys: () => () => NO_HELD_PREVIEW });
+    } catch (e) {
+        if (!(e instanceof PhysicsV2Error) && !(e instanceof BotDriverV2Error)) throw e;
+        return { why: `the model REFUSES to price its walk — ${e.message.split('\n')[0].slice(0, 160)}` };
+    }
+    if (walk.truncated) return { why: `the preview did not settle — ${walk.truncated.why}` };
+    const arrival = walk.startTick + walk.samples.filter((sm) => sm.phase !== 'dwell').length;
+    let removal = null;
+    let last = null;
+    for (const sm of walk.samples) {
+        const b = sm.chasers?.find((x) => x.id === body.id) ?? null;
+        if (removal === null && !b) removal = sm.tick;
+        if (removal === null && b && terrainKillsTag(body.tag, run.world.nearestWalkableTile(b.x, b.y)?.t)) {
+            removal = sm.tick + MOBILE_DEATH_FADE.ticks;
+        }
+        if (removal !== null && removal <= arrival) {
+            return { why: `the forecast removes ${body.id} by the arrival (tick ${removal - walk.startTick} of `
+                + `${arrival - walk.startTick}), so a dwell at the stance would have nothing to wait for` };
+        }
+        if (removal !== null && sm.tick >= removal) return { removedAt: removal - arrival };
+        if (b) last = b;
+        if (sm.phase === 'dwell') {
+            const live = removal === null ? sm.chasers : (sm.chasers ?? []).filter((x) => x.id !== body.id);
+            const dg = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y), sm.arrows, live,
+                sm.spits ?? null, sm.grenades ?? null);
+            if (dg.danger) {
+                return { why: `the WAIT is dangerous at dwell tick ${sm.tick - arrival} — `
+                    + `${dg.sources.map((x) => `${x.kind}:${x.id}`).join(', ')}` };
+            }
+        }
+    }
+    if (removal !== null) return { removedAt: removal - arrival };
+    return { why: `the forecast still has ${body.id} in the world after the whole ${ceiling}-tick dwell `
+        + `(${BAIT_FORECAST.ceilingFactor} x the straight line's ${bound}), at `
+        + `(${last ? `${last.x.toFixed(2)},${last.y.toFixed(2)}` : '?'}) — its chase never carries it onto a tile `
+        + 'that kills its class (a wall the straight line ignores pins it, or the region does not kill it)' };
+}
+
+export function deriveBaitStance(run, body, contacts,
+    // ⛓ LEASH D2: the ladder's own walk parameters, read only by `BAIT_FORECAST`'s previews
+    { allowTeleporter = null, tolerance = 0, dashMode = DEFAULT_DASH_MODE } = {}) {
     const regions = bodyKillRegions(run);
     if (regions.length === 0) {
         return { stance: null, why: `level ${run.level} has NO region that kills a body — `
@@ -14916,8 +15029,33 @@ function deriveBaitStance(run, body, contacts) {
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    const forecastRejected = [];
+    let previews = 0;
     for (const c of candidates) {
         if (!corridorPlans(run.world, run.state, { x: c.x, y: c.y }, null, planOpts)) continue;
+        if (BAIT_FORECAST.enabled) {
+            if (previews >= BAIT_FORECAST.maxPreviews) break;
+            previews += 1;
+            const bound = Math.ceil(Math.hypot(c.x - body.x, c.y - body.y) / (row.speed || 0.5))
+                + MOBILE_DEATH_FADE.ticks + BAIT_SLACK;
+            const f = baitForecastOf(run, body, c, bound, { allowTeleporter, tolerance, dashMode, planOpts });
+            if (f.removedAt === undefined) {
+                forecastRejected.push(`(${c.x},${c.y}): ${f.why}`);
+                continue;
+            }
+            return {
+                stance: { x: c.x, y: c.y },
+                crossed: c.crossed,
+                ticks: f.removedAt + BAIT_SLACK,
+                leash,
+                forecast: { removedAt: f.removedAt, straightLine: bound, rejected: forecastRejected.length },
+                why: `the straight line from ${body.id} at (${body.x.toFixed(1)},`
+                    + `${body.y.toFixed(1)}) to (${c.x},${c.y}) crosses ${c.crossed.kind} `
+                    + `${c.crossed.id} — ${c.crossed.why}; the chaser forecast (the walk and the wait on one `
+                    + `clock) removes it ${f.removedAt} tick(s) after the arrival (the line said ${bound}); the `
+                    + `stance is inside the leash (${leash})`,
+            };
+        }
         /**
          * ⛓ THE BOUND IS THE BODY'S OWN TRAVEL TIME, not a margin. The body
          * walks the straight line at its own `moveSpeed`, so the distance to
@@ -14936,6 +15074,15 @@ function deriveBaitStance(run, body, contacts) {
                 + `${body.y.toFixed(1)}) to (${c.x},${c.y}) crosses ${c.crossed.kind} `
                 + `${c.crossed.id} — ${c.crossed.why}; the stance is inside the leash `
                 + `(${leash}) and the danger map names nothing at it`,
+        };
+    }
+    if (BAIT_FORECAST.enabled && forecastRejected.length > 0) {
+        return {
+            stance: null,
+            forecastRejected,
+            why: `no bait stance for ${body.id} survives the chaser forecast: ${near.length} cell(s) in its leash `
+                + `(${leash}), ${candidates.length} crossing a kill region, ${forecastRejected.length} previewed `
+                + `and refused [${forecastRejected.slice(0, 3).join('; ')}${forecastRejected.length > 3 ? '; …' : ''}]`,
         };
     }
     return {
@@ -18251,7 +18398,7 @@ function solveSegmentUnder({
                 + 'never turns toward the player, so there is no line to bend. That is a KILL '
                 + 'question, and the kill is the player\'s own press.';
         } else {
-            const derived = deriveBaitStance(run, body, contacts);
+            const derived = deriveBaitStance(run, body, contacts, { allowTeleporter, tolerance, dashMode });
             /**
              * ⛓⛓ SWIM R5, D1 — **THE BAIT WALK MAY NOT RE-ENTER ITSELF.** The
              * walk to a bait stance is an ordinary `walkTo`, so its corridor is
