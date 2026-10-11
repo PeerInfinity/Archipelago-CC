@@ -1,0 +1,72 @@
+# MEASURE-ONLY copy of generate-presets.yml (census branch only; never merged).
+# Same recipe (minimal-spoilers host settings, generate_all_templates.sh with the
+# workflow's defaults) but NO branch switch, NO commit, NO push: the regenerated
+# tree is diffed against the checked-out commit and uploaded as an artifact.
+name: Preset Drift Census
+
+on:
+  push:
+    branches: [rules-preset-drift-census]
+
+permissions:
+  contents: read
+
+jobs:
+  census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+      - name: Install
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+      - name: Templates + host settings (the generate-presets recipe)
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+      - name: Generate (generate-presets defaults, CLEAN_EXISTING=false)
+        env:
+          PYTHONUNBUFFERED: "1"
+          GENERATE_MULTIWORLD: "true"
+          GENERATE_EXTRA_SEEDS: "true"
+          GENERATE_VANILLA_SEEDS: "true"
+          GENERATE_WORLDGEN: "true"
+          WORLDGEN_CANONICAL_SEED: "1"
+          GENERATE_WORLDGEN2: "false"
+          CLEAN_EXISTING: "false"
+        run: |
+          source .venv/bin/activate
+          touch /tmp/gen-start; sleep 1
+          scripts/utils/generate_all_templates.sh 2>&1 | tee /tmp/generate.log
+          python scripts/docs/update-preset-files.py
+          python scripts/build/build-world-mapping.py
+      - name: Collect
+        if: always()
+        run: |
+          mkdir -p census
+          cp /tmp/generate.log census/ || true
+          git status --porcelain --untracked-files=all > census/status.txt
+          git diff --stat=200 > census/diffstat.txt
+          git diff --numstat > census/numstat.txt
+          find frontend/presets -type f -newer /tmp/gen-start | sort > census/written.txt
+          git ls-files frontend/presets | sort > census/tracked.txt
+          git diff --name-only > census/changed.txt
+          git ls-files --others --exclude-standard > census/untracked.txt
+          tar czf census/changed-files.tgz -T <(cat census/changed.txt census/untracked.txt | sort -u) || true
+      - uses: actions/upload-artifact@v7.0.0
+        if: always()
+        with:
+          name: preset-drift-census
+          path: census/
