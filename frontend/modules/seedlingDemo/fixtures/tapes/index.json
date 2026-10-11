@@ -324,6 +324,13 @@
       "noHazards": []
     },
     {
+      "file": "hammer-c2-l18-ghostspinner.json",
+      "tickCount": 91,
+      "bootLevel": 18,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "hazard-boot-pit.json",
       "tickCount": 30,
       "bootLevel": 83,
