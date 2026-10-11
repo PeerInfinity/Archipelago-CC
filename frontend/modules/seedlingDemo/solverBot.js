@@ -4205,7 +4205,16 @@ export function previewWalk(run, wps, tolerance = 0,
          * on L16 lands ~40 ticks into a ~220-tick walk. `null` (every other
          * caller) changes nothing.
          */
-        stopWhen = null } = {}) {
+        stopWhen = null,
+        /**
+         * ⛓ SEEDLING FIDELITY L30KEYLOCK — an OPT-IN tail stance: `() => (state) => Set`, a factory for the held
+         * set each `standFor` tick presses (the factory is called once per preview, so its latch is this
+         * preview's). With it the tail stands the way an EXECUTOR stands (`execKeylock`: lean into the lock until
+         * the key line latches, then nothing) and the strike policy is DISARMED for the tail — the executor
+         * presses nothing — while the slash windows already in flight still step. `null` (every other caller)
+         * changes nothing.
+         */
+        standKeys = null } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
     /**
@@ -4274,6 +4283,8 @@ export function previewWalk(run, wps, tolerance = 0,
      * pairing and a different question.
      */
     let bodiesForPolicy = strike ? (run.entities('strikeBodies') ?? []) : null;
+    // ⛓ L30KEYLOCK — `false` only through a `standKeys` tail (the executor presses nothing).
+    let strikeArmed = true;
     /**
      * ⛓ R9 slice 12c‴ — every body a PLANNED press's window struck, in the
      * order it struck them. See the push site for why it is the application and
@@ -4366,7 +4377,7 @@ export function previewWalk(run, wps, tolerance = 0,
          * list scans nothing, chooses nothing and hands back the walk's own
          * keys, which is what the skipped call did.
          */
-        if (strike && !state.fall) {
+        if (strike && strikeArmed && !state.fall) {
             decision = strike.decide(state, bodiesForPolicy ?? [], at, walkHeld, {
                 slash: { state: slashState, endsAt: slashEndsAt, gate },
             });
@@ -4739,6 +4750,8 @@ export function previewWalk(run, wps, tolerance = 0,
      * ⚠ A TRUNCATED WALK GETS NO TAIL. The player is not where the caller
      * thinks, so standing "there" would be standing somewhere else.
      */
+    const tailHeld = !truncated && standFor > 0 && standKeys ? standKeys() : null;
+    if (tailHeld) strikeArmed = false;
     if (!truncated && standFor > 0) {
         for (let i = 0; i < standFor; i += 1) {
             tick += 1;
@@ -4752,7 +4765,7 @@ export function previewWalk(run, wps, tolerance = 0,
             }
             if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
             samples.push(sample);
-            let held = st.fall ? new Set() : NO_HELD_PREVIEW;
+            let held = st.fall ? new Set() : (tailHeld ? tailHeld(st) : NO_HELD_PREVIEW);
             const combat = combatBefore(st, tick - 1, held, chaserBodies);
             held = combat.held;
             sample.held = held;
@@ -12924,6 +12937,28 @@ function execKeylock(run, perTick, resolved, ctx) {
         + `was ${touched ? '' : 'NEVER '}touched. ${resolved.hold.until.why}.`);
 }
 
+/**
+ * ⛓ L30KEYLOCK (`KEYLOCK_WAIT_PRICED`) — the walk options that price a keylock's hold as the stance walk's tail:
+ * `stand` = `{ticks: hold.ticks, keys}`, where `keys` stands as `execKeylock` does (lean from where the walk
+ * arrives toward the lock on one axis until the player's box touches the key line, then nothing), and `undashed`,
+ * so the walk driven is the walk priced. `{}` for a resolution without a hold or a key line.
+ */
+function keylockStandWalk(run, resolved) {
+    const keyLine = (run.world.activators ?? []).find((a) => a.id === resolved.lock)?.keyLine;
+    if (!(resolved.hold?.ticks > 0) || !keyLine || !resolved.target) return {};
+    const NO_KEYS = new Set();
+    const keys = () => {
+        let into = null;
+        let touched = false;
+        return (st) => {
+            into ??= leanKeys(st, resolved.target);
+            if (!touched && keyLineTouches(playerBoxAt(st.x, st.y), keyLine)) touched = true;
+            return touched ? NO_KEYS : into;
+        };
+    };
+    return { stand: { ticks: resolved.hold.ticks, keys }, undashed: true };
+}
+
 /** The held key set that leans from `state` toward `aim` on ONE axis. */
 function leanKeys(state, aim) {
     const dx = aim.x - state.x;
@@ -13992,6 +14027,44 @@ export function withKillStanceAsForecast(enabled, fn) {
     return withSwitch(KILL_STANCE_AS_FORECAST, enabled, fn);
 }
 
+/**
+ * ⛓⛓ SEEDLING FIDELITY L30KEYLOCK — `deriveKillByChaser` asks the TARGET's box when the player's box priced no
+ * stance (the docblock at the rescan). OFF by default: `SEEDLING_KILL_STANCE_TARGET_RESCAN=1` turns it ON for a node
+ * measurement; `withKillStanceTargetRescan` for a test. The browser has no `process` and takes the default.
+ */
+export const KILL_STANCE_TARGET_RESCAN = {
+    enabled: globalThis.process?.env?.SEEDLING_KILL_STANCE_TARGET_RESCAN === '1',
+};
+
+/** Run `fn` with `KILL_STANCE_TARGET_RESCAN` set to `enabled`, restoring the previous value. */
+export function withKillStanceTargetRescan(enabled, fn) {
+    return withSwitch(KILL_STANCE_TARGET_RESCAN, enabled, fn);
+}
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY L30KEYLOCK — **THE KEYLOCK'S WAIT IS PRICED BEFORE IT IS WALKED TO.**
+ *
+ * `execKeylock` stands on the lock's key line for `opensOnKeyTick` (+ slack): `BossLock`'s 60-tick `keyTimer`, then
+ * its fade. The walk to the stance was probed in TRANSIT only, and the gate after it asks one instant. MEASURED on
+ * L30 (the pit landing (240,80), `bobsoldier@48,80` beside `bosslock@64,32`): the corridor probes clean, the player
+ * stands on the key line at t~124, the BobSoldier closes and lands three hits (t~151, ~175, ~193), and the run DIES
+ * before the lock opens. With the switch, the frontier's keylock stance walk is probed with the hold as its TAIL
+ * (`previewWalk`'s `standFor`, the chaser arm's own instrument, stood as `execKeylock` stands: `standKeys` leans onto
+ * the key line and then presses nothing, the strike policy disarmed — `keylockStandWalk`), so such a wait is a
+ * corridor hit and the combat ladder climbs (the kill rung's chaser arm: kill first, then the lock); the walk is
+ * driven undashed, as priced. ⚠ The tail stands the whole `hold.ticks` bound (the executor stops at the opening),
+ * which is the side to err on.
+ * OFF by default: `SEEDLING_KEYLOCK_WAIT_PRICED=1` for a node measurement; `withKeylockWaitPriced` for a test.
+ */
+export const KEYLOCK_WAIT_PRICED = {
+    enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_WAIT_PRICED === '1',
+};
+
+/** Run `fn` with `KEYLOCK_WAIT_PRICED` set to `enabled`, restoring the previous value. */
+export function withKeylockWaitPriced(enabled, fn) {
+    return withSwitch(KEYLOCK_WAIT_PRICED, enabled, fn);
+}
+
 export function deriveKillByChaser(run, body, contacts,
     /**
      * ⛓ R9 slice 12i — `dashMode` rides down here for the same reason ⚖ 46's
@@ -14216,7 +14289,8 @@ export function deriveKillByChaser(run, body, contacts,
 
     const scored = [];
     const rejected = [];
-    for (const c of candidates) {
+    const scoreAll = (list) => {
+    for (const c of list) {
         if (fineDeadlineReached('kill-chaser')) {
             return { stance: null, why: 'deadline — the caller\'s anytime deadline (`shouldStop`) was '
                 + `reached while this rung scored its stance candidates, after ${scored.length} scored, `
@@ -14291,12 +14365,65 @@ export function deriveKillByChaser(run, body, contacts,
             ticks: (deathTick - arrival) + HOLD_SLACK,
         });
     }
+    return null;
+    };
+    {
+        const cut = scoreAll(candidates);
+        if (cut) return cut;
+    }
+    /**
+     * ⛓⛓ SEEDLING FIDELITY L30KEYLOCK — **THE TARGET'S BOX, ASKED WHEN THE PLAYER'S BOX PRICED NOTHING**
+     * (`KILL_STANCE_TARGET_RESCAN`). U10's fallback above scans around the target only when the player's box holds
+     * NO leash cell. MEASURED on survey step 52 (L30 pit landing (224,80), `bobsoldier@48,80`): the player's box
+     * holds 14 leash cells, all on the leash's far-east rim (x 104..128, 70–80 px from the body), and every one of
+     * the 7 reachable is refused by the forecast (the body does not arrive inside the ceiling, or the WAIT is hit).
+     * The cells beside the body — step 50's own stance (88,56) among them — were never asked. With the switch, a
+     * scan that scored nothing asks the target's box too (the cells the first box did not hold), by the same four
+     * conditions and the same score. A scan that scored anything is unchanged.
+     */
+    let rescanned = null;
+    if (scored.length === 0 && !aroundTarget && KILL_STANCE_TARGET_RESCAN.enabled) {
+        const seen = new Set(inLeash.map((c) => `${c.x},${c.y}`));
+        const firstCandidates = candidates.length;
+        scanAround(nodeAt(targetCentre.x, targetCentre.y, pitch));
+        if (scanTripped) {
+            return { stance: null, why: 'deadline — the caller\'s anytime deadline (`shouldStop`) was '
+                + `reached during this rung's target-box rescan, after ${scanned} cell(s), so the rest of the `
+                + 'scan was not run' };
+        }
+        const fresh = candidates.slice(firstCandidates).filter((c) => !seen.has(`${c.x},${c.y}`));
+        // The box overlap re-pushes cells the first box held; keep one of each, in the first box's order.
+        const keep = new Set();
+        const dedup = [];
+        for (const c of fresh) {
+            const k = `${c.x},${c.y}`;
+            if (keep.has(k)) continue;
+            keep.add(k);
+            dedup.push(c);
+        }
+        candidates.length = firstCandidates;
+        {
+            const all = inLeash.splice(0);
+            const k2 = new Set();
+            for (const c of all) {
+                const k = `${c.x},${c.y}`;
+                if (!k2.has(k)) { k2.add(k); inLeash.push(c); }
+            }
+        }
+        dedup.sort((a, b) => a.approach - b.approach || a.y - b.y || a.x - b.x);
+        rescanned = dedup.length;
+        candidates.push(...dedup);
+        const cut = scoreAll(dedup);
+        if (cut) return cut;
+    }
     if (scored.length === 0) {
         return {
             stance: null,
             why: `no stance derives for ${body.id} on level ${run.level}: `
                 + `${aroundTarget ? `the ${STANCE_SCAN_CELLS}-cell box around the player's `
                     + 'node held 0 leash cells, so the box around the TARGET was scanned: ' : ''}`
+                + `${rescanned !== null ? `the player's box priced no stance, so the TARGET's box was scanned too `
+                    + `(+${rescanned} reachable cell(s)): ` : ''}`
                 + `${inLeash.length} cell(s) inside its ${leash} px leash, `
                 + `${candidates.length} of those reachable`
                 + `${aimIsPlannable ? ' and with a corridor onward' : ''}, `
@@ -15987,7 +16114,7 @@ function solveSegmentUnder({
         return null;
     };
 
-    const probeCorridor = (wps, except = null, { axisAligned = false, walkCheck = false } = {}) => {
+    const probeCorridor = (wps, except = null, { axisAligned = false, walkCheck = false, stand = null } = {}) => {
         // ⛔ THE SAME TOLERANCE `drive` WILL USE. A preview that arrived on a
         // different criterion would spend different ticks, and the ETAs are
         // the whole product.
@@ -16003,11 +16130,22 @@ function solveSegmentUnder({
          * the same held-set sequence — which `solverBot.test.js` asserts
          * directly rather than leaving to inspection.
          */
+        /**
+         * ⛓⛓ L30KEYLOCK — `stand` (`KEYLOCK_WAIT_PRICED`, a keylock stance walk only: `{ticks, keys}`): the walk
+         * is previewed with the lock's hold as its TAIL, stood as the executor stands, on the same forecast, so a body that reaches the player while
+         * the key line counts down is a hit on THIS corridor (trap 154: a stance safe to pass is not safe to wait
+         * in). `null` (every other walk) previews exactly what it did.
+         */
+        const tail = stand ? { standFor: stand.ticks, standKeys: stand.keys } : {};
         const walk = previewWalk(run, wps, tolerance, axisAligned
-            ? { strike: null, axisAligned }
-            : { strike: strikePolicyFor(run, { dashMode }) });
+            ? { strike: null, axisAligned, ...tail }
+            : { strike: strikePolicyFor(run, { dashMode }), ...tail });
         const hit = probeSamples(walk.samples, except, { walkCheck });
-        if (hit) return { ...hit, eta: hit.tick - walk.startTick };
+        if (hit) {
+            return { ...hit, eta: hit.tick - walk.startTick,
+                ...(stand && walk.samples.find((sm) => sm.tick === hit.tick)?.phase === 'dwell'
+                    ? { waiting: true } : {}) };
+        }
         /**
          * ⛔ THE NON-VACUITY CHECK RUNS ON THE CLEAN PATH, not only on the
          * refusal — a probe that found nothing because it sampled nothing
@@ -16150,7 +16288,10 @@ function solveSegmentUnder({
         dangerExcept = null, corridor = null, axisAligned = false,
         // ⛓ FRONTIER3 — the AVOID rung re-plans on the lattice the walk was
         // planned on (`FINE_LATTICE` only after a frontier refusal).
-        lattice = DEFAULT_LATTICE }) => {
+        lattice = DEFAULT_LATTICE,
+        // ⛓ L30KEYLOCK — the stance wait the walk's own probe priced (`KEYLOCK_WAIT_PRICED`); AVOID and DETOUR
+        // certify their corridors with the same tail. `null` everywhere else.
+        stand = null }) => {
         const escalations = [];
         climbNo += 1;
         const climb = climbNo;
@@ -16321,7 +16462,7 @@ function solveSegmentUnder({
             }
         }
         if (avoid) {
-            const still = probeCorridor(avoid, dangerExcept);
+            const still = probeCorridor(avoid, dangerExcept, stand ? { stand } : {});
             if (!still) {
                 rowFor('avoid', null, { waypoints: avoid.length });
                 return { wps: avoid, escalations };
@@ -17566,9 +17707,14 @@ function solveSegmentUnder({
                     // ⛔ `probeSamples` on ONE sample is the probe's own predicate;
                     // the stop only saves the ticks after the first danger.
                     const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
+                    // ⛓ L30KEYLOCK — a WHOLE candidate (it ends at the aim) carries the stance wait; a prefix
+                    // (it ends at a via) does not, because nobody waits at a via.
+                    const end = wps[wps.length - 1];
+                    const tail = stand && end && end.x === aim.x && end.y === aim.y
+                        ? { standFor: stand.ticks, standKeys: stand.keys } : {};
                     const walk = previewWalk(run, wps, tolerance, axisAligned
-                        ? { strike: null, axisAligned, stopWhen: dangerous }
-                        : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous });
+                        ? { strike: null, axisAligned, stopWhen: dangerous, ...tail }
+                        : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous, ...tail });
                     const hit = probeSamples(walk.samples, dangerExcept);
                     return { hit, hitWp: hit ? walk.samples.at(-1).wp : null,
                         truncated: hit ? null : (walk.truncated ?? null), ticks: walk.samples.length };
@@ -17634,6 +17780,12 @@ function solveSegmentUnder({
          * `KILL_STANCE_AS_FORECAST`): `planSwordDash` is not asked, so the drive is the walk that was priced.
          */
         undashed = false,
+        /**
+         * ⛓ L30KEYLOCK — what the caller will do at `aim` once there, `{ticks, keys}` (`KEYLOCK_WAIT_PRICED`: a
+         * keylock's hold, `keylockStandWalk`). The corridor's probe and the ladder's AVOID/DETOUR certify the walk
+         * with that wait as its tail.
+         */
+        stand = null,
     }) => {
         /**
          * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **A SKIRTED LANE IS CROSSED TWICE,
@@ -17891,6 +18043,10 @@ function solveSegmentUnder({
                                     + `(${plan.obstacle.id})`,
                                 contactsOverride: plan.resolved.exempt,
                                 axisAligned: plan.resolved.approach === 'axis-aligned',
+                                // ⛓ L30KEYLOCK: the hold is priced as the walk's tail, and the walk is driven as
+                                // priced (no dash plan: BOBSOLDIER2's lesson).
+                                ...(plan.strategy === 'keylock' && KEYLOCK_WAIT_PRICED.enabled
+                                    ? keylockStandWalk(run, plan.resolved) : {}),
                             });
                         } finally {
                             stanceWalks.delete(walking);
@@ -17952,7 +18108,8 @@ function solveSegmentUnder({
              */
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site between the plan and its probe.
             if (fineDeadlineReached('walk')) refuseWalkDeadline(`after ${what}'s corridor was planned (attempt ${attempt + 1})`);
-            const hit = probeCorridor(wps, except, { axisAligned, walkCheck: true });
+            const hit = probeCorridor(wps, except,
+                { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
             if (hit) {
                 /**
                  * ⛓⛓⛓ ⚖ §11.8a RULING 2 — THE LADDER REPLACES SLICE 2's
@@ -17966,6 +18123,7 @@ function solveSegmentUnder({
                     goal, aim, contacts, allowTeleporter, what, hit,
                     dangerExcept: except, corridor: wps, axisAligned,
                     ...(fine ? { lattice: FINE_LATTICE } : {}),
+                    ...(stand ? { stand } : {}),
                 });
                 if (climbed.wps) { wps = climbed.wps; } else { continue; }
             }
