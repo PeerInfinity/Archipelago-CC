@@ -1,0 +1,78 @@
+plan-seedling-axe-witness ae0291131dc1 exit 0
+plan-seedling-bobsoldier 4c2dee24b147 exit 0
+plan-seedling-bobsoldier2 2e94b9ef800f exit 0
+plan-seedling-burn-witness a30e67d74750 exit 0
+plan-seedling-crusher-witness 4093709f5cb6 exit 0
+plan-seedling-encounters 0d79bc5a3d8d exit 0
+plan-seedling-f1-l5-lock c4206479eaa9 exit 0
+plan-seedling-f1-l5-open-lock 6381a6cd205e exit 0
+plan-seedling-f1c-l18-lock d2d46d2cfad3 exit 0
+plan-seedling-f1c-l18-phase 01ec5f9f6525 exit 0
+plan-seedling-f4-l8-sandtraps ccea3ce1fb2a exit 0
+plan-seedling-f6-reentry e797e8cf474b exit 0
+plan-seedling-f7-reentry 18571df8a936 exit 0
+plan-seedling-frontier3-witness 7d571d620a43 exit 0
+plan-seedling-ghostmotion 3ba1198897c5 exit 0
+plan-seedling-ghostsword 542ebb09fd74 exit 0
+plan-seedling-hammer-a-escape 29891f04b530 exit 0
+plan-seedling-hammer-b1-approach 78925b771172 exit 0
+plan-seedling-hammer-b2-fight 9709cfc176b1 exit 0
+plan-seedling-l14-swordless afef0caee9ef exit 0
+plan-seedling-l30keylock 9e8010a779fc exit 0
+plan-seedling-ladder2-witness fae9cd642ee0 exit 1
+plan-seedling-proximity-witness 574e07f6a895 exit 0
+plan-seedling-r1-dark-suit daa19a7bf32b exit 0
+plan-seedling-r1-route no-check
+plan-seedling-r2-route no-check
+plan-seedling-r2-singles d8c805503a9c exit 0
+plan-seedling-r2-wallflyer d30c1acc90c6 exit 0
+plan-seedling-r3-death 33010b695072 exit 0
+plan-seedling-r3-route no-check
+plan-seedling-r4-route no-check
+plan-seedling-r4 15ddb671b972 exit 0
+plan-seedling-r5-bobboss no-check
+plan-seedling-r5-bosskey no-check
+plan-seedling-r5-conch no-check
+plan-seedling-r5-feather no-check
+plan-seedling-r5-karlore no-check
+plan-seedling-r5-l37-burn no-check
+plan-seedling-r5-l40-join no-check
+plan-seedling-r5-l40-part0 no-check
+plan-seedling-r5-l40-part1 no-check
+plan-seedling-r5-l40-part5 no-check
+plan-seedling-r5-l41-part3 no-check
+plan-seedling-r5-l42-part4 no-check
+plan-seedling-r5-l43-wand no-check
+plan-seedling-r5-l60-kill no-check
+plan-seedling-r5-shaft no-check
+plan-seedling-r5-swim no-check
+plan-seedling-r5-totem-entrance no-check
+plan-seedling-r5-waterfall no-check
+plan-seedling-r6-shieldboss no-check
+plan-seedling-r6-wblood no-check
+plan-seedling-r6-wdoor no-check
+plan-seedling-r6-wowl no-check
+plan-seedling-r6-wseed no-check
+plan-seedling-r6-wtalk no-check
+plan-seedling-r7-attribution 7445d2e3000a exit 0
+plan-seedling-r7-ends-meet SKIPPED (browser)
+plan-seedling-r8-hammer-pair f29fa128d944 exit 0
+plan-seedling-r8-l18-spinner 3d0742362203 exit 0
+plan-seedling-r9-l0-sword-dash e06b988e8676 exit 1
+plan-seedling-r9-l6-bob-press fa831b4d94d1 exit 0
+plan-seedling-r9-l6-harmless-window 0b27a9ff7773 exit 0
+plan-seedling-r9-l6-sword-dash-hit 57fbc418192e exit 1
+plan-seedling-return-l15 8d7b493a0bbc exit 0
+plan-seedling-slots-witness c08fe48f7ed8 exit 0
+plan-seedling-stance-witness 27f2e27a5824 exit 0
+plan-seedling-u10-puncher-dwell 06edb1495b1a exit 0
+plan-seedling-u11-dark-shield 13ff1bc6cff1 exit 0
+plan-seedling-u11-facing edb55eda8039 exit 0
+plan-seedling-u12-pull a95140eea0d5 exit 0
+plan-seedling-u14-moonrock 29b73f837273 exit 0
+plan-seedling-u15-turret 17867266829c exit 0
+plan-seedling-u7-puncher cea8e935e423 exit 0
+plan-seedling-u9-shield-bump 8f295ed62984 exit 0
+plan-seedling-wallflyer 531a42f413c2 exit 0
+plan-seedling-watcher-witness 571e3511300a exit 0
+DONE

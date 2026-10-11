@@ -119,12 +119,19 @@ import {
     KILLLOCK_BODIES,
     // ⛓⛓⛓ seedling-fidelity-ghostsword D2: the break verb's ghostsword row (the switch and the no-sword refusal).
     GHOSTSWORD_PRESS, ghostSwingRefusal,
+    // ⛓⛓ seedling-fidelity-pushblock: the spear push's stance audit (what else the thrust's rect reaches).
+    auditPress, PRESS_ARM_POLICY,
     // ⛓ hammer-phase B2: the fight's no-bump prune (a carried shield)
     shieldBumpTouches,
     // ⛓⛓ fidelity ENCOUNTERS D3: the Witch's talk circle (`NPC.talkRange`).
     TALK_RANGE,
     // ⛓⛓ hammer-phase C1: the static sword arm (its switch, its death table, the turret mini-forecast)
     STATIC_SWORD_ARM, STATIC_SWORD_DEATH, stepTurret,
+    // ⛓ seedling-fidelity-bulb D3: `bulbLive` gates the segment's kill-veto needs.
+    CONTACT_FIDELITY,
+    // ⛓⛓⛓ seedling-fidelity-wand D2: the `wand` verb (behind `WAND_VERB`).
+    WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb,
+    createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -137,6 +144,8 @@ import { arrivalInsideSolid, arrivalsInto, solidsAt, STUCK_TICKS } from './arriv
 import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,
 } from './strikePolicy.js';
+// ⛓⛓⛓ seedling-fidelity-bulb D3: a Bulb's kill is PLACED — the strike policy's veto and the segment's needs.
+import { dropKillVetoFor, setDropKillNeeds } from './bulbPlacement.js';
 import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestFirstQueue, coarseKey,
     spaceTimeReach } from './spaceTimeReach.js';
 
@@ -344,6 +353,18 @@ const fail = (m, opts) => { throw new SolverBotError(m, opts); };
 export const OBSTACLE_STRATEGIES = Object.freeze({
     'solid:pushableblock': 'shove',
     'solid:pushableblockfire': 'shove',
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK (wave 11) — **A SPEAR BLOCK IS SHOVED BY
+     * SPEAR THRUSTS, ONE TILE A PRESS.** The route survey's five refusals on
+     * L63/L65/L67 (steps 137, 145, 146, 149, 180) read *"Obstacle:
+     * solid:pushableblockspear … No strategy row exists for this obstacle"*. Same
+     * OBSTACLE as the two rows above, so the same verb; what differs is the move
+     * (`resolveSpearPushStrategy`: a thrust from a stance whose 32x5 rect is on
+     * the block, never a lean), and only the SPEAR's press moves it — a sword
+     * slash leaves `spearDirection` at -1 (`pushables.PUSH_SPEAR_DIRECTION`,
+     * game-measured).
+     */
+    'solid:pushableblockspear': 'shove',
     'solid:lock': 'hold',
     'solid:shieldlock': 'touch',
     /**
@@ -681,7 +702,18 @@ export const STRATEGY_EXECUTORS = Object.freeze({
 export function frontierExecutor(strategy) {
     const row = STRATEGY_EXECUTORS[strategy];
     if (row) return row;
-    return strategy === 'bait' && CRUSHER_BAIT.enabled ? execBait : undefined;
+    if (strategy === 'bait' && CRUSHER_BAIT.enabled) return execBait;
+    // ⛓ SEEDLING FIDELITY WAND — registered only while `WAND_VERB` is on.
+    return strategy === 'wand' && WAND_VERB.enabled ? execWand : undefined;
+}
+
+/**
+ * ⛓ SEEDLING FIDELITY WAND — the clear-tag order's executor lookup: the frozen table, plus `wand` while `WAND_VERB`
+ * is on (a `MagicalLock`'s tag is a flag the wand clears). `bait` is NOT added here: the clear-tag path never had it,
+ * and this lookup answers the table byte for byte with the flag off.
+ */
+function clearTagExecutor(strategy) {
+    return STRATEGY_EXECUTORS[strategy] ?? (strategy === 'wand' && WAND_VERB.enabled ? execWand : undefined);
 }
 
 /**
@@ -1111,6 +1143,7 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
 
     // ── (c) the drop ──────────────────────────────────────────────────
     const fire = bobArena(run).get('fire');
+    let fireLagSpent = false;
     if (fire) {
         row('collect');
         const aim = { x: fire.x, y: fire.y };
@@ -1120,13 +1153,22 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
             tick([...chooseHeld(run.state, aim, 0)]);
         }
         let c = CEREMONY_CADENCE_START;
-        while (!run.progress('inventory')?.hasFire) {
+        // ⛓⛓ ENCOUNTERS2 D3: over on the frame the Fire's `collected` record lands (see the Witch's).
+        const fireCollected = () => run.ledger('collected').some((r) => r.t > from && r.item === 'fire');
+        while (!run.progress('inventory')?.hasFire && !fireCollected()) {
             if (perTick.length - from > 1200) refuse(`${what}: the Fire's ceremony never ended.`, { goal });
             const step = ceremonyCadenceStep(c);
             c = step.next;
             tick([...step.held]);
         }
         if (c.pressing) refuse(`${what}: the Fire's ceremony ended with a press still down.`, { goal });
+        // With `PICKUP_REMOVED_NEXT_FRAME` ON, `Fire.removed()` is the next frame's: spend it here. It is the
+        // same idle frame the burn's equip below waits out ("one tick after the flag"), so the plan is the
+        // same tick for tick under either switch.
+        if (!run.progress('inventory')?.hasFire) {
+            tick([]);
+            fireLagSpent = true;
+        }
     }
     const writes = run.ledger('bobBossEvents').filter((r) => r.flag).map((r) => r.what);
     if (already) {
@@ -1156,7 +1198,9 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
                 // frame's `Game.update` tail, after `Bot.update` has applied
                 // that frame's equips. Measured: an equip on the flag's own
                 // tick finds one slot in the game and the tape disarms there.
-                tick([]);
+                // ⛓⛓ ENCOUNTERS2 D3: that tick IS `Fire.removed()`'s frame
+                // (`pickupRemoval.js`); with the switch ON it was spent above.
+                if (!fireLagSpent) tick([]);
                 equip(slot);
             }
             for (const tree of standing) {
@@ -1270,7 +1314,11 @@ function execWitchEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, ref
     const from = perTick.length;
     let c = CEREMONY_CADENCE_START;
     let closedAt = null;
-    while (inv().hasDarkSword !== true) {
+    // ⛓⛓ ENCOUNTERS2 D3: the ceremony is over on the frame its `collected` record lands; `hasDarkSword` is
+    // `DarkSword.removed()`'s, which is that frame (`PICKUP_REMOVED_NEXT_FRAME` OFF) or the next (ON — the
+    // game's). Either way the talk ends there: the next frame is free, and is the next leg's.
+    const swordCollected = () => run.ledger('collected').some((r) => r.t > from && r.item === 'darksword');
+    while (inv().hasDarkSword !== true && !swordCollected()) {
         if (perTick.length - from > WITCH_TALK_MAX) {
             refuse(`${what}: ${WITCH_TALK_MAX} ticks of the talk cadence and no dark sword `
                 + `(${run.ledger('witchEvents').map((r) => r.what).join(', ') || 'no Witch event'}).`, { goal });
@@ -1288,7 +1336,10 @@ function execWitchEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, ref
         }
     }
     if (c.pressing) refuse(`${what}: the dark sword's ceremony ended with a press still down.`, { goal });
-    if (!run.ledger('witchEvents').some((r) => r.what === 'darksword-removed')) {
+    // Set → `darksword-removed` is on the ledger; not yet set → its removal is the next frame's (the switch ON).
+    if (inv().hasDarkSword === true
+        ? !run.ledger('witchEvents').some((r) => r.what === 'darksword-removed')
+        : !swordCollected()) {
         refuse(`${what}: hasDarkSword is set and the run's ledger holds no \`darksword-removed\` — the drop `
             + 'did not come from the Witch.', { goal });
     }
@@ -1667,6 +1718,215 @@ function execBurn(run, perTick, resolved, ctx) {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING FIDELITY WAND — **THE `wand` VERB OPENS A `MagicalLock`, AND NOTHING ELSE.**
+ *
+ * ⛔ MEASURED ON THE GAME BEFORE A LINE OF THIS WAS WRITTEN (`fixtures/wand-witness/wand-l39-wandlock-shot`, p4f
+ * headless, 0 px): `WandShot.checkEntity` has exactly two acting arms — `_e is Enemy` and `_e is MagicalLock` — and a
+ * `WandLock` is NEITHER. `WandLock extends Lock` with a bare `super(…, sprWandLock)` (`Puzzlements/WandLock.as:13-16`):
+ * a `"Solid"` that the shot dies on, opened only the way every `Lock` is (its `tSet` group, `checkEnemies()` for
+ * `tSet == -1`, or `Wand.removed()`'s `tset 0` activation, and a cleared tag at BUILD). L39's plug is shot from below
+ * in that witness: the shot spawns at (152,594), plays "die" the next tick, `{39,8}` is never written, and the walk
+ * north stays at y 610.1. So `OBSTACLE_STRATEGIES['solid:wandlock'] = 'wand'` names a verb that cannot open it, and
+ * `'solid:magicallock' = 'kill'` names one that cannot open THAT (a `MagicalLock` has no `tSet` and no enemy check).
+ *
+ * ⇒ behind `WAND_VERB` (OFF by default; the tables are SHARED and are not reworded here — `refineStrategy` asks):
+ *   · `wandlock` is refined to `hold`, and from there to `kill` for a `tSet == -1` plug — the lock's own opener;
+ *   · `magicallock` / `magicallockfire` are refined to `wand`, registered here (`resolveWandStrategy` / `execWand`).
+ * With the flag OFF `refineStrategy`, `frontierExecutor` and `resolveObstacleStrategy` answer what they always did.
+ */
+export { WAND_VERB, withWandVerb };
+
+/** The census tags a wand shot opens (`levelWorld`'s `MAGICAL_LOCK_TYPES`: 0 the plain lock, 1 the fire one). */
+export const WAND_TARGET_TAGS = Object.freeze(['magicallock', 'magicallockfire']);
+
+/** Lean key → `Player.direction` (`a = direction * PI/2`: 0 right, 1 up, 2 left, 3 down). */
+const WAND_LEAN_DIRECTION = Object.freeze({ right: 0, up: 1, left: 2, down: 3 });
+/** How many tiles back from the lock a stance is looked for: the shot spawns 16 px out and flies 48 (`tilesMove 3`). */
+const WAND_STANCE_TILES = 4;
+/** The wait after the press, beyond the derived open tick, before the verb calls the open a miss. */
+const WAND_OPEN_SLACK = 4;
+
+/**
+ * Where a shot fired facing `direction` from the player at `at` first stops, previewed with the model's own shot
+ * (`wandShot.stepWandShot`, the epsilon axis included) against the run's LIVE solids — `levelRun`'s blocker
+ * classification for the one arm this verb needs (`magicalLockId`). An Enemy-typed body is not in this preview; the
+ * executor reads the run's own `magicalLocksOpened` after the press, so a body the preview missed is a refusal there,
+ * never a silent pass.
+ */
+function previewWandShot(run, at, direction, fire = false) {
+    const spawn = wandShotSpawn(direction, at.x, at.y);
+    const shot = createWandShot('preview', spawn.x, spawn.y, wandShotVelocity(direction), { fire });
+    const opts = run.liveGeometryOpts();
+    const hitAt = (x, y, s) => {
+        const hit = run.world.collidesSolid(wandShotRect({ ...s, x, y }), opts);
+        if (!hit) return null;
+        return hit.magicalLockId ? { kind: 'magicallock', id: hit.magicalLockId, lockType: hit.lockType }
+            : { kind: 'other', id: hit.id ?? hit.tag ?? null };
+    };
+    for (let i = 0; i <= shot.lifeMax + 1 && !shot.removed && shot.anim !== 'die'; i += 1) {
+        const r = stepWandShot(shot, { tick: i, hitAt });
+        if (r.event) return { event: r.event, spawn };
+    }
+    return { event: null, spawn };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY WAND — RESOLVE the `wand` work order: a `MagicalLock` on the frontier.
+ *
+ * ⛔ **THE GATE IS THE GAME'S.** `MagicalLock.hit(t)` opens on `lockType <= t`; the plain wand's shot is type 0 and
+ * the Fire Wand's type 1 (`WandShot.as:52-57`), so a `magicallockfire` needs the FIRE WAND. And the Fire Wand's slot is
+ * `useItem` case 5 (`wanding` AND `firing` on one press), which `levelRun.weaponForPress` refuses by name — so every
+ * Fire-Wand-only answer is refused here, by name, as that work order.
+ *
+ * ⛔ **THE STANCE IS A LEAN ON THE LOCK'S AXIS.** `Player.direction` is written by `sprites()` from the velocity, so
+ * the one way to face a lock without guessing is to walk at it: each candidate is a walkable tile centre on the lock's
+ * row or column, up to `WAND_STANCE_TILES` back; the lean holds the key toward the lock until the box stops, and the
+ * shot is PREVIEWED from where the lean ends. The first candidate whose preview's first blocker is this lock, and that
+ * a corridor reaches (`stanceReaches`), is the stance.
+ */
+function resolveWandStrategy(run, obstacle, contacts, blocked = []) {
+    const lock = (run.world.magicalLocks ?? []).find((l) => l.id === obstacle.id);
+    if (!lock) return null;
+    const inv = run.progress('inventory') ?? {};
+    const refusal = (why) => ({ strategy: 'wand', held: false, lock: obstacle.id,
+        rejected: [{ option: `wand ${obstacle.id}`, why }] });
+    if (lock.lockType >= 1 && !inv.hasFireWand) {
+        return refusal(`${obstacle.id} is a FIRE MagicalLock (\`lockType 1\`): \`MagicalLock.hit(t)\` opens on `
+            + '`lockType <= t`, and only the Fire Wand\'s shot is type 1. This run does not hold the Fire Wand.');
+    }
+    if (lock.lockType >= 1 || (!inv.hasWand && inv.hasFireWand)) {
+        return refusal(`${obstacle.id} needs the FIRE WAND's shot, whose slot is \`useItem\` case 5 (\`wanding\` AND `
+            + '`firing` on one press). `levelRun.weaponForPress` refuses that case by name — two windows on one press '
+            + 'are not modelled — so the shot this lock needs cannot be pressed by this model. ⇒ the work order is the '
+            + 'case-5 press, not a stance.');
+    }
+    if (!inv.hasWand) {
+        return refusal('this run does not hold the WAND. `WandShot.checkEntity` is the only caller of '
+            + '`MagicalLock.hit`, and a sword, spear or fire press reaches the lock and does nothing. ⇒ the lock NEEDS '
+            + 'the wand: an item the route has not collected yet.');
+    }
+    const r = lock.rect;
+    const cx = Math.floor((r.x + r.w / 2) / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
+    const cy = Math.floor((r.y + r.h / 2) / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
+    const candidates = [];
+    for (let k = 1; k <= WAND_STANCE_TILES; k += 1) {
+        for (const [key, dx, dy] of [['up', 0, 1], ['down', 0, -1], ['left', 1, 0], ['right', -1, 0]]) {
+            const c = { x: cx + dx * k * TILE_SIZE, y: cy + dy * k * TILE_SIZE, key };
+            if (c.x < 0 || c.y < 0) continue;
+            if (plannerObstacleAt(run.world, c.x, c.y, null, solverPlanOpts(run, new Set(), {})) !== null) continue;
+            candidates.push({ ...c, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
+        }
+    }
+    candidates.sort((a, b) => a.d - b.d);
+    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
+    let missed = 0;
+    let unreached = 0;
+    for (const c of candidates) {
+        const leaned = previewLean(run, c, c.key);
+        if (!leaned) { missed += 1; continue; }
+        const shot = previewWandShot(run, leaned, WAND_LEAN_DIRECTION[c.key]);
+        if (!shot.event || shot.event.arm !== 'magicallock' || shot.event.id !== lock.id || !shot.event.opened) {
+            missed += 1;
+            continue;
+        }
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        if (!reached) { unreached += 1; continue; }
+        const here = run.state.x === c.x && run.state.y === c.y;
+        return {
+            strategy: 'wand',
+            postCondition: 'gone',
+            lock: lock.id,
+            tag: lock.tag,
+            lockType: lock.lockType,
+            stance: here ? null : { x: c.x, y: c.y },
+            at: { ...leaned },
+            lean: c.key,
+            direction: WAND_LEAN_DIRECTION[c.key],
+            discharged: reached.discharged,
+            rejected: [{
+                option: 'kill / hold / break',
+                why: `${lock.id} is a \`MagicalLock\` (\`extends Entity\`, not \`Activators\`): no \`tSet\`, no enemy `
+                    + 'check, no swing arm. `WandShot.checkEntity` → `hit(shotType)` is its only opener, and the '
+                    + 'destroy animation\'s wrap (`MAGICAL_LOCK_OPEN_TICK_OFFSET` after the hit) removes it.',
+            }, ...hypothesisRejection(reached.discharged)],
+        };
+    }
+    throw new SolverRefusal(`solverBot: no REACHABLE stance with a clear wand line at ${lock.id} in level `
+        + `${run.level} — ${candidates.length} walkable tile centre(s) on its row/column within ${WAND_STANCE_TILES} `
+        + `tiles; ${missed} lean into a shot whose first blocker is not the lock, and ${unreached} plan no corridor `
+        + `from (${run.state.x},${run.state.y}). ⇒ the lock is on the frontier and the room offers nowhere to stand and `
+        + 'shoot it.', { obstacle: { kind: 'solid', tag: obstacle.tag ?? null, id: lock.id } });
+}
+
+/**
+ * Executor: the `wand` verb — SETTLE, LEAN AT THE LOCK, SELECT THE WAND, PRESS, WAIT FOR THE OPEN, SELECT THE OLD
+ * SLOT AGAIN. `execBurn`'s shape: the slot is restored because every later walk's strike policy presses `primary`.
+ * The open is read off the run (`magicalLocksOpened`, its `openTick`), never assumed from the press.
+ */
+function execWand(run, perTick, resolved, ctx) {
+    const refuse = (why) => {
+        throw new SolverRefusal(why, { obstacle: { kind: 'solid', id: resolved.lock } });
+    };
+    if (resolved.held === false) {
+        return refuse(`${ctx.what}: ${resolved.lock} cannot be opened by this run — ${resolved.rejected[0].why}`);
+    }
+    if (!ctx.equip) {
+        throw new Error(`${ctx.what}: the wand verb needs the segment's \`equip\` (a slot selection the tape `
+            + 'carries); this caller handed none.');
+    }
+    const from = perTick.length;
+    const NO_KEYS = new Set();
+    const step = (keys, what) => {
+        perTick.push(keys);
+        const { transition } = run.advance(keys);
+        if (transition) refuse(`${ctx.what}: the run crossed to level ${transition.to_level} ${what}.`);
+    };
+    const settle = (what) => {
+        for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+            if (i > BURN_SETTLE_MAX) refuse(`${ctx.what}: ${what} never came to rest.`);
+            step(NO_KEYS, `while settling after ${what}`);
+        }
+    };
+    settle('the walk to the wand stance');
+    const held = new Set([resolved.lean]);
+    for (let i = 0; i < BURN_LEAN_MAX; i += 1) {
+        const before = { x: run.state.x, y: run.state.y };
+        step(held, `on the lean toward ${resolved.lock}`);
+        if (run.state.x === before.x && run.state.y === before.y) break;
+    }
+    settle('the lean');
+    const shot = previewWandShot(run, run.state, resolved.direction);
+    if (run.direction !== resolved.direction || !shot.event || shot.event.id !== resolved.lock) {
+        refuse(`${ctx.what}: the lean came to rest at (${run.state.x},${run.state.y}) facing ${run.direction}, and a `
+            + `shot from there stops on ${shot.event ? shot.event.id : 'nothing'} — not ${resolved.lock}. The stance `
+            + `this verb derived leaned to (${resolved.at.x},${resolved.at.y}) facing ${resolved.direction}.`);
+    }
+    const prior = run.progress('primary');
+    if (run.progress('primaryWeapon') !== 'wand') {
+        const slot = run.progress('inventorySlots').indexOf(INVENTORY_ITEM_IDS.wand);
+        if (slot < 0) refuse(`${ctx.what}: the inventory has no Wand slot.`);
+        ctx.equip(slot);
+    }
+    const pressTick = run.ticksCompleted;
+    step(new Set(['primary']), `on the wand press at ${resolved.lock}`);
+    // fire tick, the deferred add, the flight (at most `lifeMax`, 16 updates), the destroy animation's wrap.
+    const deadline = pressTick + WAND_WINDOW.fireTick + 1 + 16 + MAGICAL_LOCK_OPEN_TICK_OFFSET + WAND_OPEN_SLACK;
+    let opened = null;
+    while (!(opened = run.magicalLocksOpened.find((l) => l.id === resolved.lock && run.ticksCompleted >= l.openTick))) {
+        if (run.ticksCompleted > deadline) {
+            const hits = run.wandShotHits.filter((h) => h.t >= pressTick);
+            refuse(`${ctx.what}: the wand was pressed at t${pressTick} toward ${resolved.lock} and it is not open by `
+                + `t${run.ticksCompleted} — the shot(s) since stopped on [${hits.map((h) => h.id).join(', ')}].`);
+        }
+        step(NO_KEYS, `while waiting for ${resolved.lock} to open`);
+    }
+    if (run.progress('primary') !== prior) ctx.equip(prior);
+    return { verb: 'wand', target: resolved.lock, from, ticks: perTick.length - from, pressTick,
+        hitTick: opened.hitTick, openTick: opened.openTick, stance: resolved.stance, lean: resolved.lean,
+        restoredSlot: prior };
+}
+
+/**
  * ⛓⛓⛓ SEEDLING FIDELITY WATCHER — the `talk` verb's bounds. A stance is a tile
  * centre at least `TALK_STANCE_MARGIN` px OUTSIDE the talk circle (so the walk
  * to it cannot overshoot into it and open the dialogue mid-drive) and no more
@@ -1897,6 +2157,15 @@ export const ENCOUNTER_EXECUTORS = Object.freeze({
 const MAX_STRATEGIES_PER_GOAL = 4;
 
 /**
+ * ⛓ SEEDLING FIDELITY L12KEYLINE — when the frontier's nearest door is a
+ * keylock SEALED BEHIND ITSELF (shut state, flag held, key line on the far
+ * side), resolve the next actionable door on the frontier instead of
+ * refusing (`identifyAndSelect`'s `nextPastSealedLock`). Asked only where the
+ * old answer was that refusal.
+ */
+export const SEALED_LOCK_NEXT_ON_FRONTIER = true;
+
+/**
  * ⛓ SEEDLING FIDELITY CLEARTAG — how long `clear-tag` waits, after its verb
  * returned, for the flag to land in the run's `earnedClears`. A POLICY bound:
  * the verbs finish on the world (a rock gone, a lock open) and a `Lock`'s
@@ -1967,6 +2236,15 @@ export const NESTED_OPENER_DEPTH = 2;
  * are which, and it is asked rather than copied (trap 89).
  */
 function refineStrategy(run, strategy, obstacle) {
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY WAND (behind `WAND_VERB`) — the two rows the game contradicts, asked here so the
+     * shared table keeps its words: a `wandlock` is a `Lock` (its group's verb, then the kill-lock arm below), and a
+     * `MagicalLock` is opened by the wand's shot alone. See `WAND_VERB`.
+     */
+    if (WAND_VERB.enabled) {
+        if (WAND_TARGET_TAGS.includes(obstacle?.tag) && obstacle?.kind === 'solid') return 'wand';
+        if (strategy === 'wand' && obstacle?.tag === 'wandlock') strategy = 'hold';
+    }
     if (strategy !== 'hold') return strategy;
     /**
      * ⛓⛓ SEEDLING SWIM U1, D2 — THE TRAP PRESSER. Asked FIRST and only of a
@@ -2062,6 +2340,8 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'brave') return resolveBraveStrategy(run, obstacle, contacts);
     // ⛓ CRUSHER — reached only while `CRUSHER_BAIT` registers the verb (`frontierExecutor`).
     if (strategy === 'bait') return resolveBaitStrategy(run, obstacle, aim, allowTeleporter);
+    // ⛓ WAND — reached only while `WAND_VERB` registers the verb (`frontierExecutor`).
+    if (strategy === 'wand') return resolveWandStrategy(run, obstacle, contacts, blocked);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
@@ -2970,6 +3250,10 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
     if (run.entities('pushables') === null) return null;
     const row = (run.world.pushables ?? []).find((p) => p.id === obstacle.id);
     if (!row) return null;
+    // ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — a spear block's press verb (one tile per thrust).
+    if (row.as3 === 'PushableBlockSpear') {
+        return resolveSpearPushStrategy(run, row, contacts, aim, allowTeleporter, blocked);
+    }
     if (row.family !== 'walk') {
         /**
          * ⛔ A `pushableblockfire` MOVES ON A PRESS, NOT ON A LEAN — that is
@@ -3116,6 +3400,194 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — the facing a thrust needs for each push
+ * direction: the block moves the way the player FACES (`pushables.PUSH_STEP`).
+ */
+const PRESS_FACING = Object.freeze({ E: RIGHT, N: UP, W: LEFT, S: DOWN });
+
+/**
+ * How far a stance may sit from the cell centre the walk aims at and still be
+ * a stance: the thrust's rect must be on the block from every point within
+ * this many px of the centre, along both axes. The walk stops within its own
+ * tolerance of the aim, and the executor re-asks the question where it stopped.
+ */
+const SPEAR_STANCE_SLACK = 3;
+
+/**
+ * ⛓ The one press responder a push thrust may ALSO reach: a `LightPole`, whose
+ * Spear arm toggles its light (`PRESS_ARM_POLICY.LightPole` 'modelled' — the run
+ * steps it and the danger map reads it). L65's pole stands in the block's own
+ * rows between it and every east stance, so R4's committed W thrust from
+ * (196,116) swept it too. A stance that reaches nothing else is always tried
+ * first; every other responder keeps the stance refused.
+ */
+const SPEAR_PUSH_TOLERATED = new Set(['LightPole']);
+
+/** guard (i)'s hypothesis set for a routed block — `deriveShove`'s own loop. */
+function dischargedPushables(run, row, blocked) {
+    const discharged = [];
+    for (const other of (run.world.pushables ?? [])) {
+        if (other.id === row.id || blocked.includes(other.id)) continue;
+        const otherLive = run.entities('pushables')?.get(other.id);
+        if (!otherLive || otherLive.removed) continue;
+        if (!OBSTACLE_STRATEGIES[`solid:${other.tag}`]) continue;
+        discharged.push(other.id);
+    }
+    return discharged;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — WHERE A THRUST MOVES THE BLOCK `dir`.
+ *
+ * `Player.spear()` collects every hitable under a 32x5 rect from `spearX/Y`
+ * (`spearRect`) with NO distance and NO line gate (`Player.as:954-990`), so a
+ * stance is a floor cell ONE or TWO cells behind the block, on its axis, whose
+ * rect covers the block — R4's "reach is TWO tiles, across pits and through
+ * walls" (`recon-seedling-pushes.mjs` rule 2, oracle-pinned). ⛔ And the rect
+ * must reach NOTHING ELSE the press arms do not call inert: a stray responder
+ * is a ledger entry, a bridge opened or a throw in `levelRun.applyThrust`,
+ * never a no-op (`auditPress`, asked of the route state's own block positions).
+ *
+ * At the START state the live position is asked first (the executor re-asks it
+ * there anyway); a deeper state's player is a cell centre, so only the ring.
+ */
+function spearPressStance(run, row, from, dir, state, bags, atStart, plansOrCrosses) {
+    const facing = PRESS_FACING[dir];
+    const step = SHOVE_STEP[dir];
+    const blockR = blockRectAt(from);
+    const on = (at) => rectsOverlapLocal(spearRect(at.x, at.y, facing), blockR);
+    const strays = (at) => auditPress(run.world, spearRect(at.x, at.y, facing), {
+        weapon: 'spear',
+        intended: [{ as3: 'PushableBlockSpear', x: row.x, y: row.y }],
+        pushables: bags.solid.pushables ?? null,
+    }).illegal.filter((r) => PRESS_ARM_POLICY[r.as3]?.policy !== 'inert');
+    if (atStart && on(state.player) && !strays(state.player).length) {
+        return { ok: true, stance: null, exempt: bags.exempt };
+    }
+    const first = spearPressRing(run, from, step, state, bags, plansOrCrosses, on, strays, false);
+    if (first.ok) return first;
+    const second = spearPressRing(run, from, step, state, bags, plansOrCrosses, on, strays, true);
+    if (second.ok) return second;
+    return { ok: false, why: `no floor cell one or two behind the block (facing ${dir}) puts the spear's `
+        + `32x5 rect on it and is reachable: ${first.tried.join('; ')}` };
+}
+
+/**
+ * The candidate pass. `tolerate` admits `SPEAR_PUSH_TOLERATED` strays and, with
+ * them, the off-centre aims (±4 px across the push axis) a pole's 8 px gap needs.
+ */
+function spearPressRing(run, from, step, state, bags, plansOrCrosses, on, strays, tolerate) {
+    const levelW = run.world.width * TILE_SIZE;
+    const levelH = run.world.height * TILE_SIZE;
+    const floorOpts = solverPlanOpts(run, bags.exempt,
+        { nodeMargin: 0, triggerMargin: 0, liveBag: bags.solid });
+    const tried = [];
+    const across = tolerate ? [0, -4, 4] : [0];
+    for (const d of [1, 2]) for (const off of across) {
+        const centre = nodeCentre(from.tx - step.dx * d, from.ty - step.dy * d, DEFAULT_LATTICE);
+        const c = { x: centre.x + (step.dx === 0 ? off : 0), y: centre.y + (step.dy === 0 ? off : 0) };
+        const at = `(${c.x},${c.y})`;
+        if (c.x < 0 || c.y < 0 || c.x > levelW || c.y > levelH) { tried.push(`${at} is off the level`); continue; }
+        if (plannerObstacleAt(run.world, c.x, c.y, null, floorOpts)) { tried.push(`${at} is not floor`); continue; }
+        const shifts = [[0, 0], [SPEAR_STANCE_SLACK, 0], [-SPEAR_STANCE_SLACK, 0],
+            [0, SPEAR_STANCE_SLACK], [0, -SPEAR_STANCE_SLACK]];
+        if (!shifts.every(([sx, sy]) => on({ x: c.x + sx, y: c.y + sy }))) {
+            tried.push(`${at}'s rect misses the block within ±${SPEAR_STANCE_SLACK} px`);
+            continue;
+        }
+        const stray = strays(c).filter((r) => !(tolerate && SPEAR_PUSH_TOLERATED.has(r.as3)));
+        if (stray.length) {
+            tried.push(`${at}'s rect also reaches ${stray.map((r) => `${r.tag}@${r.x},${r.y}`).join(', ')}`);
+            continue;
+        }
+        const exempt = plansOrCrosses(state, state.player, c, null, bags.solid, bags.exempt);
+        if (!exempt) { tried.push(`no corridor reaches ${at}`); continue; }
+        return { ok: true, stance: c, exempt,
+            ...(tolerate ? { also: strays(c).map((r) => `${r.tag}@${r.x},${r.y}`) } : {}) };
+    }
+    return { ok: false, tried };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK (wave 11) — RESOLVE a `shove` of a
+ * `PushableBlockSpear`: `clear-path`, by THRUSTS.
+ *
+ * The same post-condition and the same search as a lean (`deriveBlockRoute`,
+ * whose `pressMoves` arm the routed block selects); the differences are the
+ * move's, and both are the game's:
+ *   · ONE TILE PER PRESS — `PushableBlockFire.hit`'s relative arm moves the
+ *     target one tile, and refuses while `v.length > 0`; a longer push is more
+ *     orders, each from its own stance.
+ *   · ONLY THE SPEAR — `genericHit`'s Spear arm reads `spearDirection`, which a
+ *     plain sword slash leaves at -1 (`pushables.PUSH_SPEAR_DIRECTION`,
+ *     game-measured). So the run must HOLD the spear; the executor selects its
+ *     slot for the thrusts and selects the old one after (`burn`'s shape).
+ *
+ * ⛔ No spear: resolved `held: false` and the executor refuses BY NAME — the
+ * item is the work order, not the room (`resolveBreakStrategy`'s first guard).
+ */
+function resolveSpearPushStrategy(run, row, contacts, aim, allowTeleporter, blocked = []) {
+    const target = { x: row.x, y: row.y, id: row.id };
+    const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.spear);
+    if (!run.progress('inventory')?.hasSpear || slot < 0) {
+        return {
+            strategy: 'shove', held: false, target, shove: { block: { x: row.x, y: row.y } },
+            rejected: [{
+                option: `thrust at ${row.id}`,
+                why: 'the run holds NO SPEAR. `genericHit`\'s `PushableBlockSpear` arm moves the block '
+                    + 'along `spearDirection`, which only a spear thrust (or a ghost-sword slash) sets; a '
+                    + 'plain sword slash leaves it at -1 and the block stays (game-measured, '
+                    + '`probe-seedling-pushblock-weapon.mjs`). ⇒ the Spear is the work order.',
+            }],
+        };
+    }
+    const discharged = dischargedPushables(run, row, blocked);
+    const route = deriveBlockRoute(run, row, { kind: 'clear-path', aim, allowTeleporter }, contacts,
+        blocked, { discharged });
+    if (!route.steps) {
+        if (route.refused?.bound) {
+            throw new SolverRefusal(`solverBot: the block-route search for ${row.id} in `
+                + `level ${run.level} hit \`${route.refused.bound}\` — ${route.refused.why}`,
+            { obstacle: { kind: 'solid', id: row.id },
+                bound: blockRouteBound(route, row, 'clear-path') });
+        }
+        return null;
+    }
+    const first = route.steps.find((st) => st.verb === 'press');
+    if (!first) return null; // a route of breaks alone: the rock is the door, not this block
+    return {
+        strategy: 'shove',
+        postCondition: 'clear-path',
+        press: true,
+        weapon: 'spear',
+        slot,
+        discharged,
+        target,
+        shove: {
+            block: { x: row.x, y: row.y },
+            dir: first.dir,
+            to: { ...first.to },
+            ...(first.destroys ? { destroys: true } : {}),
+        },
+        k: route.steps.filter((st) => st.verb === 'press').length,
+        stance: route.steps[0].stance ?? null,
+        route: route.steps,
+        rejected: [{
+            option: 'a lean (`runShove`)',
+            why: `${row.id} is a \`PushableBlockSpear\`: \`PushableBlockFire.input()\` reads only its own `
+                + 'target, which only `hit()` writes — a lean moves nothing',
+        }, {
+            option: 'the sword',
+            why: 'a plain sword slash reaches the Spear arm with `spearDirection == -1`, so `p` is (0, 0) '
+                + 'and the block stays (game-measured)',
+        }, {
+            option: 'the route',
+            why: `${route.steps.length} order(s): ${describeRoute(route.steps)}`,
+        }, ...hypothesisRejection(discharged), ...route.rejected],
+    };
+}
+
+/**
  * The block-route search's own rejections for a `shove` the resolver refused
  * — the frontier's `considered` row quotes them. Re-runs the search (tens of
  * expansions on any committed room) rather than threading a side channel
@@ -3123,6 +3595,12 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
  */
 function shoveRefusalDetail(run, obstacle, contacts, aim, allowTeleporter, blocked) {
     const row = (run.world.pushables ?? []).find((p) => p.id === obstacle.id);
+    if (row?.as3 === 'PushableBlockSpear' && run.entities('pushables') !== null) {
+        const r = deriveBlockRoute(run, row, { kind: 'clear-path', aim, allowTeleporter }, contacts,
+            blocked, { discharged: dischargedPushables(run, row, blocked) });
+        const rows = [...(r.rejected ?? []), ...(r.refused ? [{ option: 'the search', why: r.refused.why }] : [])];
+        return rows.length ? rows.map((x) => `[${x.option} — ${x.why}]`).join(' ') : null;
+    }
     if (!row || row.family !== 'walk' || run.entities('pushables') === null) return null;
     const derived = deriveShove(run, row, aim, allowTeleporter, contacts, blocked);
     if (!derived || derived.plan) return null;
@@ -3135,7 +3613,10 @@ function shoveRefusalDetail(run, obstacle, contacts, aim, allowTeleporter, block
 const describeRoute = (route) => route.map((st, i) => (st.verb === 'shove'
     ? `${i + 1}. shove ${st.dir} k=${st.k} -> (${st.to.tx},${st.to.ty})${st.destroys
         ? ' (DESTROYED there)' : ''}`
-    : `${i + 1}. break ${st.rock} (wait ${st.wait})`)).join(' · ');
+    : (st.verb === 'press'
+        ? `${i + 1}. thrust ${st.dir} -> (${st.to.tx},${st.to.ty})${st.destroys
+            ? ' (DESTROYED there)' : ''}${st.stance ? ` from (${st.stance.x},${st.stance.y})` : ''}`
+        : `${i + 1}. break ${st.rock} (wait ${st.wait})`))).join(' · ');
 
 /**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — RESOLVE a `weigh` work order: ⚖ §11.8a's
@@ -3807,6 +4288,38 @@ export const FINE_LATTICE_ROSTER_WIDE = true;
  * is an obstacle with a verb (a lock, a tree, the seal door), and the
  * frontier must still name it.
  */
+/**
+ * ⛓ seedling-fidelity-bulb D3 — the planner aims of a goal list, for `bulbPlacement.setDropKillNeeds`: a pickup's
+ * centre, an exit's aim (`exitAimFor`, with its own teleporter allowed), a pit's centre. A goal with no standing aim
+ * (an encounter, a clear-tag) contributes none.
+ */
+function dropKillNeedsFrom(run, goals) {
+    const out = [];
+    for (const g of goals) {
+        if (g.kind === 'collect-placement' && g.placement) {
+            // ⚠ The pickup's own cell is a planner obstacle except on the walk that collects it (its contact is
+            // exempted there), so the need is the CELLS AROUND it: any one reachable is enough to touch it.
+            const tx = Math.floor(g.placement.x / TILE_SIZE) + 0.5;
+            const ty = Math.floor(g.placement.y / TILE_SIZE) + 0.5;
+            out.push({ what: `the ${g.kind} at (${g.placement.x},${g.placement.y})`,
+                aims: [[0, -1], [1, 0], [0, 1], [-1, 0]].map(([dx, dy]) => ({
+                    x: (tx + dx) * TILE_SIZE, y: (ty + dy) * TILE_SIZE })),
+                allowTeleporter: null });
+        } else if (g.kind === 'reach-exit' && g.exit) {
+            let found = null;
+            try { found = findExit(run.world, g.exit); } catch { found = null; }
+            if (!found) continue;
+            out.push({ what: `the exit (${g.exit.x},${g.exit.y})`,
+                aims: [exitAimFor(run.world, found.index, solverPlanOpts(run, senseContacts(run)))],
+                allowTeleporter: found.index });
+        } else if (g.kind === 'reach-pit' && g.pit) {
+            out.push({ what: `the pit (${g.pit.tx},${g.pit.ty})`,
+                aims: [{ x: (g.pit.tx + 0.5) * TILE_SIZE, y: (g.pit.ty + 0.5) * TILE_SIZE }], allowTeleporter: null });
+        }
+    }
+    return out;
+}
+
 export function exitAimFor(world, index, opts = {}) {
     const tp = world.teleporters[index];
     const centre = { x: tp.rect.x + TILE_SIZE / 2, y: tp.rect.y + TILE_SIZE / 2 };
@@ -4186,6 +4699,12 @@ export function strikePolicyFor(run, { dashPlan = null,
          * refuses rather than prices it.
          */
         talkCircles: run.entities('talkCircles') ?? [],
+        /**
+         * ⛓⛓⛓ seedling-fidelity-bulb D3 — the press veto (`bulbPlacement.dropKillVetoFor`): a press whose swing
+         * would kill a Bulb whose lava would cut a goal the segment still owes is refused. `null` — and the policy
+         * byte-identical — on a run with no needs (no `solveSegment`, or `contactFidelity.bulbLive` OFF).
+         */
+        vetoBody: dropKillVetoFor(run),
     });
 }
 
@@ -4207,7 +4726,16 @@ export function previewWalk(run, wps, tolerance = 0,
          * on L16 lands ~40 ticks into a ~220-tick walk. `null` (every other
          * caller) changes nothing.
          */
-        stopWhen = null } = {}) {
+        stopWhen = null,
+        /**
+         * ⛓ SEEDLING FIDELITY L30KEYLOCK — an OPT-IN tail stance: `() => (state) => Set`, a factory for the held
+         * set each `standFor` tick presses (the factory is called once per preview, so its latch is this
+         * preview's). With it the tail stands the way an EXECUTOR stands (`execKeylock`: lean into the lock until
+         * the key line latches, then nothing) and the strike policy is DISARMED for the tail — the executor
+         * presses nothing — while the slash windows already in flight still step. `null` (every other caller)
+         * changes nothing.
+         */
+        standKeys = null } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
     /**
@@ -4276,6 +4804,8 @@ export function previewWalk(run, wps, tolerance = 0,
      * pairing and a different question.
      */
     let bodiesForPolicy = strike ? (run.entities('strikeBodies') ?? []) : null;
+    // ⛓ L30KEYLOCK — `false` only through a `standKeys` tail (the executor presses nothing).
+    let strikeArmed = true;
     /**
      * ⛓ R9 slice 12c‴ — every body a PLANNED press's window struck, in the
      * order it struck them. See the push site for why it is the application and
@@ -4332,7 +4862,9 @@ export function previewWalk(run, wps, tolerance = 0,
         wanding: t <= slashLive.openUntil.wanding,
         firing: t <= slashLive.openUntil.firing,
         deathRaying: false,
-        spearing: spearPending,
+        // ⛓ fidelity DARKTRAP2 D2: under `spearingWindow` the run hands the spear animation's last tick too, aged
+        // here like the wand/fire windows (absent with the switch off, so this is the BEFORE gate).
+        spearing: spearPending || t <= (slashLive.spearingUntil ?? -1),
     });
     /**
      * ⛓⛓ ONE TICK OF THE COMBAT STATE, WRITTEN ONCE. The TRANSIT loop and the
@@ -4368,7 +4900,7 @@ export function previewWalk(run, wps, tolerance = 0,
          * list scans nothing, chooses nothing and hands back the walk's own
          * keys, which is what the skipped call did.
          */
-        if (strike && !state.fall) {
+        if (strike && strikeArmed && !state.fall) {
             decision = strike.decide(state, bodiesForPolicy ?? [], at, walkHeld, {
                 slash: { state: slashState, endsAt: slashEndsAt, gate },
             });
@@ -4741,6 +5273,8 @@ export function previewWalk(run, wps, tolerance = 0,
      * ⚠ A TRUNCATED WALK GETS NO TAIL. The player is not where the caller
      * thinks, so standing "there" would be standing somewhere else.
      */
+    const tailHeld = !truncated && standFor > 0 && standKeys ? standKeys() : null;
+    if (tailHeld) strikeArmed = false;
     if (!truncated && standFor > 0) {
         for (let i = 0; i < standFor; i += 1) {
             tick += 1;
@@ -4754,7 +5288,7 @@ export function previewWalk(run, wps, tolerance = 0,
             }
             if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
             samples.push(sample);
-            let held = st.fall ? new Set() : NO_HELD_PREVIEW;
+            let held = st.fall ? new Set() : (tailHeld ? tailHeld(st) : NO_HELD_PREVIEW);
             const combat = combatBefore(st, tick - 1, held, chaserBodies);
             held = combat.held;
             sample.held = held;
@@ -4971,7 +5505,14 @@ export function dashPrefixesFor(mode, { weapon = 'sword' } = {}) {
  *   legs: ?number[], candidates: object[], why: ?string}}
  */
 export function planSwordDash(run, wps, { tolerance = 0, certify = null,
-    dashMode = DEFAULT_DASH_MODE } = {}) {
+    dashMode = DEFAULT_DASH_MODE,
+    /**
+     * ⛓ SEEDLING FIDELITY L30KEYLOCK — OPT-IN: `{ticks, keys}`, the wait the caller will stand at the corridor's end
+     * (`KEYLOCK_WAIT_PRICED`'s keylock hold). Each candidate is previewed with that tail and `certify` is handed the
+     * tail's samples after the walk's, so a dash that arrives early is priced on the wait it arrives into; every
+     * other number here (ticks, legs, the comparisons) reads the walk's own samples. `null` changes nothing.
+     */
+    stand = null } = {}) {
     /**
      * ⛓⛓⛓ R9 SLICE 12i — **THE PASS READS ITS CANDIDATE SET, NEVER THE
      * CONSTANT**, and the set is the mode's own derivation.
@@ -5032,7 +5573,11 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
     };
     const previewFor = (dashPlan) => {
         const strike = strikePolicyFor(run, { dashPlan, dashMode });
-        return { walk: previewWalk(run, wps, tolerance, { strike }), strike };
+        if (!stand) return { walk: previewWalk(run, wps, tolerance, { strike }), strike };
+        const whole = previewWalk(run, wps, tolerance, { strike, standFor: stand.ticks, standKeys: stand.keys });
+        const walk = { ...whole, samples: whole.samples.filter((sm) => sm.phase !== 'dwell'),
+            tail: whole.samples.filter((sm) => sm.phase === 'dwell') };
+        return { walk, strike };
     };
     /**
      * ⛓ R9 slice 12c‴ — a window is `{at, pattern}` now, not a bare tick: ⚖
@@ -5219,7 +5764,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
                 + `${row.dashed} of them dashes, and ${row.yielded} were YIELDED`
                 + `${row.yieldedFirst ? ` — first: ${row.yieldedFirst}` : ''}`;
         } else {
-            const hit = certify ? certify(walk.samples) : null;
+            const hit = certify ? certify(walk.tail ? [...walk.samples, ...walk.tail] : walk.samples) : null;
             if (hit) {
                 row.kind = 'danger';
                 row.why = `the dashed corridor probes DANGEROUS at `
@@ -5843,7 +6388,9 @@ const SHOVE_PHRASE = Object.freeze({
 const routeCost = (steps) => {
     let sumK = 0; let destroys = 0; const seq = [];
     for (const s of steps) {
-        if (s.verb === 'shove') { sumK += s.k; if (s.destroys) destroys += 1; seq.push(s.dirIndex); }
+        if (s.verb === 'shove' || s.verb === 'press') {
+            sumK += s.k; if (s.destroys) destroys += 1; seq.push(s.dirIndex);
+        }
         else seq.push(SHOVE_DIR_COUNT);
     }
     return { orders: steps.length, sumK, destroys, seq };
@@ -6053,7 +6600,59 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
 
     const rejected = [];
     const found = [];
-    const moveSig = (st) => (st.verb === 'shove' ? `shove:${st.dir}:${st.k}` : `break:${st.rock}`);
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — **A `PushableBlockSpear` MOVES ON A
+     * THRUST, ONE TILE, AND THE PLAYER STAYS WHERE THEY STOOD.** The search is
+     * the same search; the move is the press (`pressMoves`), and the routed
+     * block is the only thing that tells the two apart. A walk block's records
+     * cannot reach this arm, so every committed `shove` is the bytes it was.
+     */
+    const press = row.as3 === 'PushableBlockSpear';
+    const pressMoves = (state, key, bags, atStart, dir, dirIndex, push) => {
+        const step = SHOVE_STEP[dir];
+        const from = state.block;
+        const cell = { tx: from.tx + step.dx, ty: from.ty + step.dy };
+        if (cell.tx < 0 || cell.ty < 0 || cell.tx >= run.world.width || cell.ty >= run.world.height) {
+            if (atStart) rejected.push(phrase.offMap(dir, 1, cell, run));
+            return;
+        }
+        const destroys = blockSinksOn(run.world, cell);
+        /**
+         * ⚠ A THRUST INTO A SOLID IS NOT A NO-OP THE GAME SKIPS — `hit()` sets the
+         * target and the first sweep stops the glide, so the block stays. The
+         * search does not order one; the same instrument the lean asks.
+         */
+        if (!destroys && blockBlockedAt(run, bags.solid, row.id, cell)) {
+            if (atStart) rejected.push(phrase.solid(dir, 1, cell));
+            return;
+        }
+        if (refusedMoves.has(`${key}|press:${dir}`)) return;
+        const st = spearPressStance(run, row, from, dir, state, bags, atStart, plansOrCrosses);
+        if (!st.ok) {
+            if (atStart) rejected.push({ option: `thrust ${dir}`, why: st.why });
+            return;
+        }
+        const crossed = st.exempt === bags.exempt ? [] : [...st.exempt].filter((c) => !bags.exempt.has(c));
+        const next = {
+            block: destroys ? null : cell, rocks: state.rocks,
+            player: st.stance ?? state.player,
+            steps: [...state.steps, { verb: 'press', dir, dirIndex, k: 1, from: { ...from },
+                to: { ...cell }, destroys, stance: st.stance,
+                ...(st.also?.length ? { alsoReaches: st.also } : {}),
+                ...(crossed.length ? { exempt: crossed } : {}) }],
+        };
+        if (atStart) {
+            if (goalMet(next, bagsOf(next))) {
+                found.push({ dir, dirIndex, k: 1, to: { ...cell }, destroys });
+                push(next);
+                return;
+            }
+            rejected.push(phrase.noGoal(dir, 1, cell, destroys, goal));
+        }
+        push(next);
+    };
+    const moveSig = (st) => (st.verb === 'shove' ? `shove:${st.dir}:${st.k}`
+        : (st.verb === 'press' ? `press:${st.dir}` : `break:${st.rock}`));
     /**
      * Replay a candidate route's prefixes and ask A\* every question the
      * flood answered for it. Returns `null` when every step plans, else the
@@ -6074,8 +6673,12 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
                     player: nodeCentre(st.to.tx - SHOVE_STEP[st.dir].dx,
                         st.to.ty - SHOVE_STEP[st.dir].dy, DEFAULT_LATTICE),
                     steps: steps.slice(0, i + 1) }
-                : { block: state.block, rocks: new Set([...state.rocks, st.rock]),
-                    player: st.stance ?? state.player, steps: steps.slice(0, i + 1) };
+                : (st.verb === 'press'
+                    // ⛓ PUSHBLOCK: a thrust moves the BLOCK; the player stays at the stance.
+                    ? { block: st.destroys ? null : st.to, rocks: state.rocks,
+                        player: st.stance ?? state.player, steps: steps.slice(0, i + 1) }
+                    : { block: state.block, rocks: new Set([...state.rocks, st.rock]),
+                        player: st.stance ?? state.player, steps: steps.slice(0, i + 1) });
         }
         if (goal.kind === 'clear-path' && steps.length > 1) {
             const bags = bagsOf(state);
@@ -6193,7 +6796,9 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
             } };
         }
         const atStart = state.steps.length === 0;
-        if (state.block) {
+        if (state.block && press) {
+            dirs.forEach((dir, dirIndex) => pressMoves(state, key, bags, atStart, dir, dirIndex, push));
+        } else if (state.block) {
             dirs.forEach((dir, dirIndex) => {
                 const step = SHOVE_STEP[dir];
                 const from = state.block;
@@ -7471,6 +8076,10 @@ function execHold(run, perTick, resolved, ctx) {
  * (trap 154) beyond the one the verb already takes.
  */
 function execShove(run, perTick, resolved, ctx) {
+    if (resolved.held === false) {
+        throw new SolverRefusal(`${ctx.what}: ${resolved.target.id} cannot be pushed by this run — `
+            + `${resolved.rejected[0].why}`, { obstacle: { kind: 'solid', id: resolved.target.id } });
+    }
     return execRoute(run, perTick, resolved, ctx, ctx.what);
 }
 
@@ -7529,6 +8138,18 @@ function execRoute(run, perTick, resolved, ctx, what) {
                     + 'and the run answered another — a rock, a Solid or a sink the '
                     + 'transcription does not know about.');
             }
+        } else if (step.verb === 'press') {
+            last = execSpearPress(run, perTick, { blockId: blockRow(), dir: step.dir, to: step.to,
+                destroys: Boolean(step.destroys), slot: resolved.slot }, ctx, label);
+            const live = run.entities('pushables').get(blockRow());
+            if (step.destroys ? !live?.removed
+                : (!live || live.removed || tileOf(live).tx !== step.to.tx
+                    || tileOf(live).ty !== step.to.ty)) {
+                refuse(`${label}: after the thrust the block is ${!live || live.removed
+                    ? 'GONE' : `on (${tileOf(live).tx},${tileOf(live).ty})`}, not `
+                    + `${step.destroys ? 'destroyed' : `on (${step.to.tx},${step.to.ty})`} `
+                    + `as route step ${i + 1} requires.`);
+            }
         } else if (step.verb === 'break') {
             const rec = execBreak(run, perTick, {
                 held: true, rock: step.rock, target: step.target, stance: step.stance,
@@ -7545,7 +8166,7 @@ function execRoute(run, perTick, resolved, ctx, what) {
             refuse(`${label}: route step ${i + 1} has verb \`${step.verb}\`, which this `
                 + 'executor does not run');
         }
-        steps.push({ verb: 'shove', ticks: last.ticks, from, to: step.to });
+        steps.push({ verb: step.verb, ticks: last.ticks, from, to: step.to });
     });
     if (route.length === 1) return last;
     return { ...last, steps, ticks: steps.reduce((n, st) => n + st.ticks, 0) };
@@ -7555,6 +8176,88 @@ function execRoute(run, perTick, resolved, ctx, what) {
 function resolveWalkPushableId(run, block) {
     const row = (run.world.pushables ?? []).find((p) => p.x === block.x && p.y === block.y);
     return row ? row.id : null;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — ONE THRUST AT A `PushableBlockSpear`, AND
+ * THE GLIDE WAITED OUT.
+ *
+ * SETTLE (the walk's coast), SELECT the spear's slot if another is up, FACE
+ * (one tick of the facing key — `sprites()` writes `direction` from velocity,
+ * and `set spearing` captures it as `spearDirection`), wait out a FREEZE (a
+ * press on a frozen tick is lost), re-ask the REACH where the player actually
+ * stands, PRESS one tick of `primary`, then wait for the block to SETTLE on
+ * `to` — or to be removed, for a sink: 32 ticks of glide and eleven of fade
+ * (`pushables.TICKS_PER_TILE`, `ALPHA_FADE`). The old slot is selected again
+ * after. Every miss is a refusal naming the check.
+ */
+const SPEAR_PRESS_BOUND = 2 + 32 + 12 + 10;
+function execSpearPress(run, perTick, p, ctx, what) {
+    const refuse = (why) => {
+        throw new SolverRefusal(`${what}: ${why}`, { obstacle: { kind: 'solid', id: p.blockId } });
+    };
+    const IDLE = new Set();
+    const from = perTick.length;
+    const step = (keys, why) => {
+        perTick.push(keys);
+        const { transition } = run.advance(keys);
+        if (transition) refuse(`${why} crossed to level ${transition.to_level} — a block is PER VISIT.`);
+    };
+    const settle = (why) => {
+        for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+            if (i > 60) refuse(`${why} never came to rest.`);
+            step(IDLE, why);
+        }
+    };
+    const live = () => run.entities('pushables').get(p.blockId);
+    const l0 = live();
+    if (!l0 || l0.removed) refuse(`${p.blockId} is ${l0 ? 'GONE' : 'not in the run'} before the thrust.`);
+    const facing = PRESS_FACING[p.dir];
+    settle('the walk to the thrust stance');
+    const prior = run.progress('primary');
+    if (prior !== p.slot) ctx.equip(p.slot);
+    if (run.state.direction !== facing) {
+        step(new Set([FACING_KEYS[facing]]), 'the face tap');
+        settle('the face tap');
+    }
+    for (let i = 0; (run.progress('frozenTimer') ?? 0) > 1; i += 1) {
+        if (i > 105) refuse(`still frozen after ${i} ticks.`);
+        step(IDLE, 'the freeze wait');
+    }
+    if (run.state.direction !== facing) {
+        refuse(`the face tap left the player facing ${run.state.direction}, not ${facing} — the stance is `
+            + 'pinned against something in the facing direction.');
+    }
+    if (!rectsOverlapLocal(spearRect(run.state.x, run.state.y, facing), l0.rect)) {
+        refuse(`the walk settled at (${run.state.x},${run.state.y}) and the spear's 32x5 rect facing ${p.dir} `
+            + `from there misses ${p.blockId} at (${l0.rect.x},${l0.rect.y}) — a stance finding, not a block one.`);
+    }
+    const pressTick = perTick.length;
+    step(new Set(['primary']), 'the thrust');
+    let settledAt = null;
+    for (let i = 0; i < SPEAR_PRESS_BOUND; i += 1) {
+        const l = live();
+        const tile = l && !l.removed
+            ? { tx: Math.floor(l.rect.x / TILE_SIZE), ty: Math.floor(l.rect.y / TILE_SIZE) } : null;
+        if (p.destroys ? (!l || l.removed)
+            : (i > 1 && run.entities('pushesSettled') && tile?.tx === p.to.tx && tile?.ty === p.to.ty)) {
+            settledAt = perTick.length;
+            break;
+        }
+        step(IDLE, 'the glide wait');
+    }
+    if (settledAt === null) {
+        const l = live();
+        refuse(`${SPEAR_PRESS_BOUND} ticks after the thrust (tick ${pressTick}) ${p.blockId} is `
+            + `${!l || l.removed ? 'GONE' : `at (${l.rect.x},${l.rect.y})`}, not `
+            + `${p.destroys ? 'removed' : `settled on (${p.to.tx},${p.to.ty})`}.`);
+    }
+    if (prior !== p.slot) ctx.equip(prior);
+    return {
+        verb: 'press', target: p.blockId, dir: p.dir, to: { ...p.to }, destroys: p.destroys,
+        weapon: 'spear', slot: p.slot, restoredSlot: prior !== p.slot ? prior : null,
+        from, pressTick, ticks: perTick.length - from,
+    };
 }
 
 /**
@@ -13242,6 +13945,29 @@ function execKeylock(run, perTick, resolved, ctx) {
         + `was ${touched ? '' : 'NEVER '}touched. ${resolved.hold.until.why}.`);
 }
 
+/**
+ * ⛓ L30KEYLOCK (`KEYLOCK_WAIT_PRICED`) — the walk options that price a keylock's hold as the stance walk's tail:
+ * `stand` = `{ticks: hold.ticks, keys}`, where `keys` stands as `execKeylock` does (lean from where the walk
+ * arrives toward the lock on one axis until the player's box touches the key line, then nothing). The walk keeps
+ * its dash plan, whose candidates are certified with the same tail (`planSwordDash`'s `stand`), so the walk driven
+ * is a walk priced. `{}` for a resolution without a hold or a key line.
+ */
+function keylockStandWalk(run, resolved) {
+    const keyLine = (run.world.activators ?? []).find((a) => a.id === resolved.lock)?.keyLine;
+    if (!(resolved.hold?.ticks > 0) || !keyLine || !resolved.target) return {};
+    const NO_KEYS = new Set();
+    const keys = () => {
+        let into = null;
+        let touched = false;
+        return (st) => {
+            into ??= leanKeys(st, resolved.target);
+            if (!touched && keyLineTouches(playerBoxAt(st.x, st.y), keyLine)) touched = true;
+            return touched ? NO_KEYS : into;
+        };
+    };
+    return { stand: { ticks: resolved.hold.ticks, keys } };
+}
+
 /** The held key set that leans from `state` toward `aim` on ONE axis. */
 function leanKeys(state, aim) {
     const dx = aim.x - state.x;
@@ -14310,6 +15036,47 @@ export function withKillStanceAsForecast(enabled, fn) {
     return withSwitch(KILL_STANCE_AS_FORECAST, enabled, fn);
 }
 
+/**
+ * ⛓⛓ SEEDLING FIDELITY L30KEYLOCK — `deriveKillByChaser` asks the TARGET's box when the player's box priced no
+ * stance (the docblock at the rescan). ON by default: measured ON, no committed tape, producer `--check`, plan
+ * script or identity row moves (seedling-fidelity-l30keylock's report); `SEEDLING_KILL_STANCE_TARGET_RESCAN=0` turns it
+ * OFF for a node measurement; `withKillStanceTargetRescan` for a test. The browser has no `process` and takes the
+ * default.
+ */
+export const KILL_STANCE_TARGET_RESCAN = {
+    enabled: globalThis.process?.env?.SEEDLING_KILL_STANCE_TARGET_RESCAN !== '0',
+};
+
+/** Run `fn` with `KILL_STANCE_TARGET_RESCAN` set to `enabled`, restoring the previous value. */
+export function withKillStanceTargetRescan(enabled, fn) {
+    return withSwitch(KILL_STANCE_TARGET_RESCAN, enabled, fn);
+}
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY L30KEYLOCK — **THE KEYLOCK'S WAIT IS PRICED BEFORE IT IS WALKED TO.**
+ *
+ * `execKeylock` stands on the lock's key line for `opensOnKeyTick` (+ slack): `BossLock`'s 60-tick `keyTimer`, then
+ * its fade. The walk to the stance was probed in TRANSIT only, and the gate after it asks one instant. MEASURED on
+ * L30 (the pit landing (240,80), `bobsoldier@48,80` beside `bosslock@64,32`): the corridor probes clean, the player
+ * stands on the key line at t~124, the BobSoldier closes and lands three hits (t~151, ~175, ~193), and the run DIES
+ * before the lock opens. With the switch, the frontier's keylock stance walk is probed with the hold as its TAIL
+ * (`previewWalk`'s `standFor`, the chaser arm's own instrument, stood as `execKeylock` stands: `standKeys` leans onto
+ * the key line and then presses nothing, the strike policy disarmed — `keylockStandWalk`), so such a wait is a
+ * corridor hit and the combat ladder climbs (the kill rung's chaser arm: kill first, then the lock); a dashed
+ * drive is certified with the same tail (`planSwordDash`'s `stand`), so the drive is a walk that was priced. ⚠ The tail stands the whole `hold.ticks` bound (the executor stops at the opening),
+ * which is the side to err on.
+ * ON by default: measured ON, no committed tape, producer `--check`, plan script or identity row moves (the slice
+ * report); `SEEDLING_KEYLOCK_WAIT_PRICED=0` turns it OFF for a node measurement; `withKeylockWaitPriced` for a test.
+ */
+export const KEYLOCK_WAIT_PRICED = {
+    enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_WAIT_PRICED !== '0',
+};
+
+/** Run `fn` with `KEYLOCK_WAIT_PRICED` set to `enabled`, restoring the previous value. */
+export function withKeylockWaitPriced(enabled, fn) {
+    return withSwitch(KEYLOCK_WAIT_PRICED, enabled, fn);
+}
+
 export function deriveKillByChaser(run, body, contacts,
     /**
      * ⛓ R9 slice 12i — `dashMode` rides down here for the same reason ⚖ 46's
@@ -14534,7 +15301,8 @@ export function deriveKillByChaser(run, body, contacts,
 
     const scored = [];
     const rejected = [];
-    for (const c of candidates) {
+    const scoreAll = (list) => {
+    for (const c of list) {
         if (fineDeadlineReached('kill-chaser')) {
             return { stance: null, why: 'deadline — the caller\'s anytime deadline (`shouldStop`) was '
                 + `reached while this rung scored its stance candidates, after ${scored.length} scored, `
@@ -14609,12 +15377,65 @@ export function deriveKillByChaser(run, body, contacts,
             ticks: (deathTick - arrival) + HOLD_SLACK,
         });
     }
+    return null;
+    };
+    {
+        const cut = scoreAll(candidates);
+        if (cut) return cut;
+    }
+    /**
+     * ⛓⛓ SEEDLING FIDELITY L30KEYLOCK — **THE TARGET'S BOX, ASKED WHEN THE PLAYER'S BOX PRICED NOTHING**
+     * (`KILL_STANCE_TARGET_RESCAN`). U10's fallback above scans around the target only when the player's box holds
+     * NO leash cell. MEASURED on survey step 52 (L30 pit landing (224,80), `bobsoldier@48,80`): the player's box
+     * holds 14 leash cells, all on the leash's far-east rim (x 104..128, 70–80 px from the body), and every one of
+     * the 7 reachable is refused by the forecast (the body does not arrive inside the ceiling, or the WAIT is hit).
+     * The cells beside the body — step 50's own stance (88,56) among them — were never asked. With the switch, a
+     * scan that scored nothing asks the target's box too (the cells the first box did not hold), by the same four
+     * conditions and the same score. A scan that scored anything is unchanged.
+     */
+    let rescanned = null;
+    if (scored.length === 0 && !aroundTarget && KILL_STANCE_TARGET_RESCAN.enabled) {
+        const seen = new Set(inLeash.map((c) => `${c.x},${c.y}`));
+        const firstCandidates = candidates.length;
+        scanAround(nodeAt(targetCentre.x, targetCentre.y, pitch));
+        if (scanTripped) {
+            return { stance: null, why: 'deadline — the caller\'s anytime deadline (`shouldStop`) was '
+                + `reached during this rung's target-box rescan, after ${scanned} cell(s), so the rest of the `
+                + 'scan was not run' };
+        }
+        const fresh = candidates.slice(firstCandidates).filter((c) => !seen.has(`${c.x},${c.y}`));
+        // The box overlap re-pushes cells the first box held; keep one of each, in the first box's order.
+        const keep = new Set();
+        const dedup = [];
+        for (const c of fresh) {
+            const k = `${c.x},${c.y}`;
+            if (keep.has(k)) continue;
+            keep.add(k);
+            dedup.push(c);
+        }
+        candidates.length = firstCandidates;
+        {
+            const all = inLeash.splice(0);
+            const k2 = new Set();
+            for (const c of all) {
+                const k = `${c.x},${c.y}`;
+                if (!k2.has(k)) { k2.add(k); inLeash.push(c); }
+            }
+        }
+        dedup.sort((a, b) => a.approach - b.approach || a.y - b.y || a.x - b.x);
+        rescanned = dedup.length;
+        candidates.push(...dedup);
+        const cut = scoreAll(dedup);
+        if (cut) return cut;
+    }
     if (scored.length === 0) {
         return {
             stance: null,
             why: `no stance derives for ${body.id} on level ${run.level}: `
                 + `${aroundTarget ? `the ${STANCE_SCAN_CELLS}-cell box around the player's `
                     + 'node held 0 leash cells, so the box around the TARGET was scanned: ' : ''}`
+                + `${rescanned !== null ? `the player's box priced no stance, so the TARGET's box was scanned too `
+                    + `(+${rescanned} reachable cell(s)): ` : ''}`
                 + `${inLeash.length} cell(s) inside its ${leash} px leash, `
                 + `${candidates.length} of those reachable`
                 + `${aimIsPlannable ? ' and with a corridor onward' : ''}, `
@@ -15026,6 +15847,9 @@ function deriveKillByCeiling(run, body, contacts) {
  *
  * @returns {{pole, stance?, dir?, wait?, why}|{pole: null, why}}
  */
+/** ⛓ fidelity DARKTRAP2 D2 — px of spear-on-core overlap (both axes) the light arm's first stance pass asks for. */
+export const LIGHT_ARM_CORE_MARGIN = 2;
+
 function deriveLightPole(run, body, contacts, blocked = []) {
     const D = DARKTRAP_LIGHT_DEATH;
     const poles = body.poles.filter((p) => p.min <= D.pole.radiusMin)
@@ -15056,6 +15880,15 @@ function deriveLightPole(run, body, contacts, blocked = []) {
     let unsafe = 0;
     let unreached = 0;
     const tiles = run.world.walkableTiles ?? [];
+    /**
+     * ⛓ fidelity DARKTRAP2 D2 — THE AIM HAS TO SURVIVE THE ARRIVAL. The walk settles NEAR a stance, not on it: L63
+     * step 145's (36,92) settled at (37.08,92.86), and a thrust whose rect met the core by 0.5 px from the stance
+     * missed it from there (the executor's own check refused). So a pass asks for `LIGHT_ARM_CORE_MARGIN` px of
+     * overlap on BOTH axes first (the candidates sort deep-first, then by distance), and only then takes a bare
+     * overlap (the executor still checks what it settled on).
+     */
+    const coreDepth = (a, b) => Math.min(Math.min(a.right, b.right) - Math.max(a.x, b.x),
+        Math.min(a.bottom, b.bottom) - Math.max(a.y, b.y));
     for (const pole of poles) {
         const core = { x: pole.rect.x, y: pole.rect.y + D.pole.bob * 2,
             right: pole.rect.right, bottom: pole.rect.bottom - D.pole.bob * 2 };
@@ -15071,8 +15904,9 @@ function deriveLightPole(run, body, contacts, blocked = []) {
                 for (const dir of [RIGHT, UP, LEFT, DOWN]) cands.push({ x: sx, y: sy, dir });
             }
         }
-        cands.sort((a, b) => Math.hypot(a.x - run.state.x, a.y - run.state.y)
-            - Math.hypot(b.x - run.state.x, b.y - run.state.y));
+        const deep = (c) => (coreDepth(spearRect(c.x, c.y, c.dir), core) >= LIGHT_ARM_CORE_MARGIN ? 0 : 1);
+        cands.sort((a, b) => (deep(a) - deep(b)) || (Math.hypot(a.x - run.state.x, a.y - run.state.y)
+            - Math.hypot(b.x - run.state.x, b.y - run.state.y)));
         for (const c of cands) {
             const sr = spearRect(c.x, c.y, c.dir);
             if (!rectsOverlapLocal(sr, core)) continue;
@@ -15963,6 +16797,71 @@ function solveSegmentUnder({
      * a thing a strategy can act on (L4's own vocabulary: the block IS the
      * door). Nearest-to-aim wins; the rest ride in the message.
      */
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY L12KEYLINE — **A LOCK SEALED BEHIND ITSELF IS A
+     * WALL FOR THE FRONTIER'S PICK, AND THE NEXT DOOR IS TRIED.**
+     *
+     * `deriveKeylockStance` refuses SEALED BEHIND ITSELF when the key line is on
+     * the lock's far side and the save holds its flag (the SHUT state: from
+     * this side it does not open). That is a fact about ONE door, and the
+     * frontier ranks doors by distance to the aim: L12's route steps 134/175
+     * name `bosslock@416,240` first (d ≈ 415 px) and never ask the
+     * `burnabletree@480,640` behind it (d ≈ 545), whose burn plus Progressive
+     * Swim IS the way round (AP's own region chain r0c37 →[Fire]→ r42c29
+     * →[Swim]→ r0c19; the corridor plans with the tree hypothesised gone).
+     *
+     * ⇒ when the chosen door refuses SEALED, the rest of the actionable frontier
+     * is resolved in its own order; the first that binds is this round's order,
+     * carrying a `rejected` row that names the sealed lock and its flag. A
+     * candidate that itself refuses is passed over the same way (it is not
+     * this round's order either). ⛔ If none binds, the SEALED refusal is
+     * re-thrown UNCHANGED, so every room with no other door reads exactly as
+     * it did. Asked only on that throw path: a plan that solved never reaches it.
+     *
+     * ⛔ AND ONLY AFTER FRONTIER3's FINER ASK. The SEALED throw used to reach
+     * `walkTo`'s catch, which asks the 8 px lattice before the refusal stands;
+     * a fine corridor that walked there still walks. So `identifyAndSelect`
+     * only REGISTERS the next-door question against the refusal
+     * (`nextDoorAfter`) and `walkTo` asks it where it would have re-thrown.
+     */
+    const nextDoorAfter = new WeakMap();
+    const nextPastSealedLock = (e, sealedObstacle, rest, contacts, aim, allowTeleporter) => {
+        const passed = [];
+        for (const alt of rest) {
+            const altKey = alt.tag ? `${alt.kind}:${alt.tag}` : alt.kind;
+            const altStrategy = refineStrategy(run,
+                OBSTACLE_STRATEGIES[altKey] ?? OBSTACLE_STRATEGIES[alt.kind] ?? null, alt);
+            if (!altStrategy || !frontierExecutor(altStrategy)) continue;
+            let resolved = null;
+            try {
+                resolved = resolveObstacleStrategy(run, altStrategy, alt, contacts,
+                    aim, allowTeleporter, [...refusedOrders]);
+            } catch (altError) {
+                if (!(altError instanceof SolverRefusal)) throw altError;
+                passed.push({ option: `${altStrategy} ${alt.id}`,
+                    why: `refused: ${String(altError.message).slice(0, 200)}` });
+                continue;
+            }
+            // A resolver that answered "nothing to do" or "not held" is not an order.
+            if (!resolved || resolved.held === false) {
+                passed.push({ option: `${altStrategy} ${alt.id}`,
+                    why: resolved?.rejected?.[0]?.why ?? 'did not bind against live state' });
+                continue;
+            }
+            const s = e.sealed;
+            resolved.rejected = [{
+                option: `keylock ${sealedObstacle.id} (nearer the aim on the frontier)`,
+                why: `SEALED BEHIND ITSELF: its key line (y=${s.keyLine.y}) is on its far side from `
+                    + `(${s.from.x},${s.from.y})${s.flag
+                        ? ` and the save holds its flag {${s.flag.level},${s.flag.tag}} (the SHUT state)`
+                        : ''}, so from here it is a wall. ⛓ L12KEYLINE: the next door on the `
+                    + `frontier, ${alt.id}, is this round's order.`,
+            }, ...passed, ...(resolved.rejected ?? [])];
+            return { obstacle: alt, strategy: resolved.strategy ?? altStrategy, resolved, key: altKey };
+        }
+        return null;
+    };
+
     const identifyAndSelect = (goal, aim, contacts, planError, allowTeleporter) => {
         const opts = solverPlanOpts(run, contacts,
             { ...goalPlanExtra, nodeMargin: 0, triggerMargin: 0 });
@@ -16079,8 +16978,17 @@ function solveSegmentUnder({
          * (§10.4 note 6), and the trace carries a row for it.
          */
         if (strategy && frontierExecutor(strategy)) {
-            const resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts,
-                aim, allowTeleporter, [...refusedOrders]);
+            let resolved;
+            try {
+                resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts,
+                    aim, allowTeleporter, [...refusedOrders]);
+            } catch (e) {
+                if (SEALED_LOCK_NEXT_ON_FRONTIER && e instanceof SolverRefusal && e.sealed?.self) {
+                    nextDoorAfter.set(e, () => nextPastSealedLock(e, obstacle, actionable.slice(1),
+                        contacts, aim, allowTeleporter));
+                }
+                throw e;
+            }
             /**
              * ⛓ THE RESOLVER'S OWN VERB IS THE ANSWER, not the table's — and
              * for all eight verbs that existed before slice 3b this is the
@@ -16305,7 +17213,7 @@ function solveSegmentUnder({
         return null;
     };
 
-    const probeCorridor = (wps, except = null, { axisAligned = false, walkCheck = false } = {}) => {
+    const probeCorridor = (wps, except = null, { axisAligned = false, walkCheck = false, stand = null } = {}) => {
         // ⛔ THE SAME TOLERANCE `drive` WILL USE. A preview that arrived on a
         // different criterion would spend different ticks, and the ETAs are
         // the whole product.
@@ -16321,11 +17229,22 @@ function solveSegmentUnder({
          * the same held-set sequence — which `solverBot.test.js` asserts
          * directly rather than leaving to inspection.
          */
+        /**
+         * ⛓⛓ L30KEYLOCK — `stand` (`KEYLOCK_WAIT_PRICED`, a keylock stance walk only: `{ticks, keys}`): the walk
+         * is previewed with the lock's hold as its TAIL, stood as the executor stands, on the same forecast, so a body that reaches the player while
+         * the key line counts down is a hit on THIS corridor (trap 154: a stance safe to pass is not safe to wait
+         * in). `null` (every other walk) previews exactly what it did.
+         */
+        const tail = stand ? { standFor: stand.ticks, standKeys: stand.keys } : {};
         const walk = previewWalk(run, wps, tolerance, axisAligned
-            ? { strike: null, axisAligned }
-            : { strike: strikePolicyFor(run, { dashMode }) });
+            ? { strike: null, axisAligned, ...tail }
+            : { strike: strikePolicyFor(run, { dashMode }), ...tail });
         const hit = probeSamples(walk.samples, except, { walkCheck });
-        if (hit) return { ...hit, eta: hit.tick - walk.startTick };
+        if (hit) {
+            return { ...hit, eta: hit.tick - walk.startTick,
+                ...(stand && walk.samples.find((sm) => sm.tick === hit.tick)?.phase === 'dwell'
+                    ? { waiting: true } : {}) };
+        }
         /**
          * ⛔ THE NON-VACUITY CHECK RUNS ON THE CLEAN PATH, not only on the
          * refusal — a probe that found nothing because it sampled nothing
@@ -16468,7 +17387,10 @@ function solveSegmentUnder({
         dangerExcept = null, corridor = null, axisAligned = false,
         // ⛓ FRONTIER3 — the AVOID rung re-plans on the lattice the walk was
         // planned on (`FINE_LATTICE` only after a frontier refusal).
-        lattice = DEFAULT_LATTICE }) => {
+        lattice = DEFAULT_LATTICE,
+        // ⛓ L30KEYLOCK — the stance wait the walk's own probe priced (`KEYLOCK_WAIT_PRICED`); AVOID and DETOUR
+        // certify their corridors with the same tail. `null` everywhere else.
+        stand = null }) => {
         const escalations = [];
         climbNo += 1;
         const climb = climbNo;
@@ -16639,7 +17561,7 @@ function solveSegmentUnder({
             }
         }
         if (avoid) {
-            const still = probeCorridor(avoid, dangerExcept);
+            const still = probeCorridor(avoid, dangerExcept, stand ? { stand } : {});
             if (!still) {
                 rowFor('avoid', null, { waypoints: avoid.length });
                 return { wps: avoid, escalations };
@@ -17918,9 +18840,14 @@ function solveSegmentUnder({
                     // ⛔ `probeSamples` on ONE sample is the probe's own predicate;
                     // the stop only saves the ticks after the first danger.
                     const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
+                    // ⛓ L30KEYLOCK — a WHOLE candidate (it ends at the aim) carries the stance wait; a prefix
+                    // (it ends at a via) does not, because nobody waits at a via.
+                    const end = wps[wps.length - 1];
+                    const tail = stand && end && end.x === aim.x && end.y === aim.y
+                        ? { standFor: stand.ticks, standKeys: stand.keys } : {};
                     const walk = previewWalk(run, wps, tolerance, axisAligned
-                        ? { strike: null, axisAligned, stopWhen: dangerous }
-                        : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous });
+                        ? { strike: null, axisAligned, stopWhen: dangerous, ...tail }
+                        : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous, ...tail });
                     const hit = probeSamples(walk.samples, dangerExcept);
                     return { hit, hitWp: hit ? walk.samples.at(-1).wp : null,
                         truncated: hit ? null : (walk.truncated ?? null), ticks: walk.samples.length };
@@ -17986,6 +18913,12 @@ function solveSegmentUnder({
          * `KILL_STANCE_AS_FORECAST`): `planSwordDash` is not asked, so the drive is the walk that was priced.
          */
         undashed = false,
+        /**
+         * ⛓ L30KEYLOCK — what the caller will do at `aim` once there, `{ticks, keys}` (`KEYLOCK_WAIT_PRICED`: a
+         * keylock's hold, `keylockStandWalk`). The corridor's probe and the ladder's AVOID/DETOUR certify the walk
+         * with that wait as its tail.
+         */
+        stand = null,
     }) => {
         /**
          * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **A SKIRTED LANE IS CROSSED TWICE,
@@ -18045,20 +18978,27 @@ function solveSegmentUnder({
                 try {
                     identified = identifyAndSelect(goal, aim, contacts, e, allowTeleporter);
                 } catch (refusal) {
-                    if (!fineLattice || !(refusal instanceof SolverRefusal) || axisAligned
-                        || (solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) <= FINE_LATTICE) {
-                        throw refusal;
+                    let fineWps = null;
+                    if (fineLattice && refusal instanceof SolverRefusal && !axisAligned
+                        && (solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) > FINE_LATTICE) {
+                        try {
+                            fineWps = planWaypoints(run.world, run.state, aim, allowTeleporter,
+                                solverPlanOpts(run, contacts, { ...goalPlanExtra, lattice: FINE_LATTICE }));
+                        } catch (fineError) {
+                            if (!(fineError instanceof BotDriverV2Error)) throw fineError;
+                        }
                     }
-                    try {
-                        wps = planWaypoints(run.world, run.state, aim, allowTeleporter,
-                            solverPlanOpts(run, contacts, { ...goalPlanExtra, lattice: FINE_LATTICE }));
-                    } catch (fineError) {
-                        if (!(fineError instanceof BotDriverV2Error)) throw fineError;
-                        throw refusal;
+                    if (fineWps) {
+                        wps = fineWps;
+                        fine = true;
+                        fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
+                            waypoints: wps.length, refused: String(refusal.message).slice(0, 200) });
+                    } else {
+                        // ⛓ L12KEYLINE: only once the finer ask has also failed is
+                        // a lock SEALED BEHIND ITSELF passed to the next door.
+                        identified = nextDoorAfter.get(refusal)?.() ?? null;
+                        if (!identified) throw refusal;
                     }
-                    fine = true;
-                    fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
-                        waypoints: wps.length, refused: String(refusal.message).slice(0, 200) });
                 }
                 let plan = null;
                 if (identified) {
@@ -18243,6 +19183,10 @@ function solveSegmentUnder({
                                     + `(${plan.obstacle.id})`,
                                 contactsOverride: plan.resolved.exempt,
                                 axisAligned: plan.resolved.approach === 'axis-aligned',
+                                // ⛓ L30KEYLOCK: the hold is priced as the walk's tail — the undashed probe's and
+                                // every dash candidate's (BOBSOLDIER2's lesson: the drive is a priced walk).
+                                ...(plan.strategy === 'keylock' && KEYLOCK_WAIT_PRICED.enabled
+                                    ? keylockStandWalk(run, plan.resolved) : {}),
                             });
                         } finally {
                             stanceWalks.delete(walking);
@@ -18304,7 +19248,8 @@ function solveSegmentUnder({
              */
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site between the plan and its probe.
             if (fineDeadlineReached('walk')) refuseWalkDeadline(`after ${what}'s corridor was planned (attempt ${attempt + 1})`);
-            const hit = probeCorridor(wps, except, { axisAligned, walkCheck: true });
+            const hit = probeCorridor(wps, except,
+                { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
             if (hit) {
                 /**
                  * ⛓⛓⛓ ⚖ §11.8a RULING 2 — THE LADDER REPLACES SLICE 2's
@@ -18318,6 +19263,7 @@ function solveSegmentUnder({
                     goal, aim, contacts, allowTeleporter, what, hit,
                     dangerExcept: except, corridor: wps, axisAligned,
                     ...(fine ? { lattice: FINE_LATTICE } : {}),
+                    ...(stand ? { stand } : {}),
                 });
                 if (climbed.wps) { wps = climbed.wps; } else { continue; }
             }
@@ -18348,7 +19294,8 @@ function solveSegmentUnder({
             const dash = (dashMode === 'none' || axisAligned || undashed)
                 ? null
                 : planSwordDash(run, wps, { tolerance, dashMode,
-                    certify: (samples) => probeSamples(samples, except) });
+                    certify: (samples) => probeSamples(samples, except),
+                    ...(stand ? { stand } : {}) });
             seeRow({
                 tick: perTick.length,
                 saw: saw(),
@@ -18937,7 +19884,7 @@ function solveSegmentUnder({
         const obstacle = { kind: 'solid', tag: cls, id };
         const key = `solid:${cls}`;
         const strategy = refineStrategy(run, OBSTACLE_STRATEGIES[key] ?? null, obstacle);
-        if (!strategy || !STRATEGY_EXECUTORS[strategy]) {
+        if (!strategy || !clearTagExecutor(strategy)) {
             refuseCT('no-verb', strategy
                 ? `${key} selects '${strategy}', which is NOT REGISTERED — no executor clears this flag `
                     + 'yet (a later slice\'s row, computed rather than guessed)'
@@ -18996,7 +19943,7 @@ function solveSegmentUnder({
                 why: `the walk to ${verb}'s stance cleared ${id} on its way — the verb is not run again` });
             return;
         }
-        const record = STRATEGY_EXECUTORS[verb](run, perTick, resolved, {
+        const record = clearTagExecutor(verb)(run, perTick, resolved, {
             maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb}`,
             before, walkTo, goal, equip, rewind,
         });
@@ -19008,7 +19955,17 @@ function solveSegmentUnder({
     };
 
     // ── the goals, in order ───────────────────────────────────────────
+    let dropKillGoal = 0;
     for (const goal of goals) {
+        /**
+         * ⛓⛓⛓ seedling-fidelity-bulb D3 — WHAT THE REST OF THE SEGMENT NEEDS, handed to the run for the strike
+         * policy's veto (`bulbPlacement`): this goal and every one after it, as planner aims. Only while a class
+         * whose death writes a tile is bridged (`contactFidelity.bulbLive`); otherwise nothing is set and no policy
+         * asks.
+         */
+        setDropKillNeeds(run, CONTACT_FIDELITY.bulbLive ? dropKillNeedsFrom(run, goals.slice(dropKillGoal)) : null,
+            () => solverPlanOpts(run, senseContacts(run)));
+        dropKillGoal += 1;
         // The bound is PER GOAL: clearing L4's button for the crossing says
         // nothing about how many obstacles the next room's goal may need.
         applied = [];

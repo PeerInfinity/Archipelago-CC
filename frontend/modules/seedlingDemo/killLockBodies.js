@@ -51,10 +51,17 @@
  * measured movers the licence did not list: `R8_ENEMY_BRIDGE`'s declared scope (+ lavarunner) and the LADDER2 L75
  * chain witness (a live lavarunner's on-screen test falls inside `Game.shake`'s jiggle and refuses). Held OFF until
  * the user rules on those.
+ * ⛓ seedling-fidelity-k2prep (wave 11) made every one of those rows green with K2 OFF AND ON, still shipping OFF:
+ * the scope joins under the switch (`R8_ENEMY_BRIDGE.pendingSwitchScope`, + `axe-l71-reach-l76`); the L75 chain
+ * walk's refutation was `LavaChain.reach`'s `"Enemy"` arm, now stepped (`levelRun.stepLavaChainsNow`), and the
+ * walk is the game's with K2 ON; the shake band was the GRENADE arms', and a replay reads the game's recorded
+ * camera there (`tapeRunner` `cameraWitness`); the refused-class controls are `IceTrap` (`canHit = false`). The
+ * complete K2-ON mover list is that slice's report (`CC/docs/cloud-reports/seedling-fidelity-k2prep.md`).
+ * ⚖ (user, 2026-10-10, "Yes to all") K2 ON at the wave-11 harvest, on that list: all five switches are ON.
  */
 export const KILLLOCK_BODIES = {
     jellyfishLive: true,
-    lavaRunnerLive: false,
+    lavaRunnerLive: true,
     chaserKillArm: true,
     turretRemovalLedger: true,
     darkShieldIceTurret: true,

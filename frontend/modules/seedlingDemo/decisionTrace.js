@@ -132,6 +132,9 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // listed in the slice that first drives them, for `break`'s reason.
     'pulse',
     'brave',
+    // ⛓ Seedling fidelity WAND: the `wand` verb (`solverBot.execWand`, a `MagicalLock` on the frontier, behind
+    // `WAND_VERB`), listed in the slice that first drives it, for `break`'s reason.
+    'wand',
 ]);
 
 const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);

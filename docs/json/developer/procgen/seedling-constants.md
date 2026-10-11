@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**66 files, 5506 literals.** Class × position:
+**69 files, 5622 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 5 | 1555 | 357 | 1917 |
-| rule | 6 | 953 | 461 | 1420 |
+| physics | 5 | 1557 | 388 | 1950 |
+| rule | 7 | 985 | 464 | 1456 |
 | cosmetic | 0 | 60 | 14 | 74 |
-| structural | 10 | 355 | 1730 | 2095 |
+| structural | 12 | 355 | 1775 | 2142 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2923 | 2562 | 5506 |
+| total | 24 | 2957 | 2641 | 5622 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1650 | 0 | 88 | 118 | 4 | 57 | 1917 |
-| rule | 437 | 134 | 229 | 22 | 510 | 88 | 1420 |
+| physics | 1683 | 0 | 88 | 118 | 4 | 57 | 1950 |
+| rule | 468 | 136 | 229 | 22 | 513 | 88 | 1456 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -511,7 +511,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **143 small tables** (at most 16 literals) hold at least one (92 with an AS3 reference).
+**12 named scalars** are `physics` or `rule` (12 with an AS3 anchor), and **143 small tables** (at most 16 literals) hold at least one (92 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -526,6 +526,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `DEATH_LIFT` | seedlingDemo/bobBossFight.js | 1.2 | physics | magnitude | Enemies/BobBoss.as:death |
 | `SHIELD_FORCE` | seedlingDemo/bobBossFight.js | 5 | physics | magnitude | Player.as:shieldForce |
 | `NO_FORCE_CAP` | seedlingDemo/enemyDamage.js | -1 | physics | sentinel | Enemies/Enemy.as:maxForce |
+| `TIME_PER_FRAME` | seedlingDemo/lavaChain.js | 45 | rule | magnitude | Game.as:timePerFrame |
 
 | table | file | literals | physics/rule | classes | kinds | AS3 |
 |---|---|---|---|---|---|---|

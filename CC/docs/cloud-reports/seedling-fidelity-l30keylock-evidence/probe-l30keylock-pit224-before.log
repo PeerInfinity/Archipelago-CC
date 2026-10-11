@@ -1,0 +1,5 @@
+# box lock: BUSY — check-seedling-generated-set.mjs (pid 13881, browser) since 2026-10-11T00:15:46.439Z; queuing for up to 5400s
+# box lock: TAKEN by probe-seedling-bobsoldier-mobiles.mjs (browser, pid 14114) — head 26cb83182, 1 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the sample clock is the model's — 212 sampled tick(s) inside the tape; shifts that fit every player x: [0] (must be exactly [0])
+PASS: the BobSoldier's position, velocity, hits and hits_timer are the model's at every sampled tick, and it exists exactly when the model's does — 212 comparison(s), worst |Δ| 0

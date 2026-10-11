@@ -1,0 +1,3294 @@
+{
+ "tape": "/tmp/claude-0/s/tapes/bulb-step160-walk.json",
+ "class": "Bulb",
+ "page": "seedling_bot_ap_p4f",
+ "calibrated": true,
+ "fits": [
+  0
+ ],
+ "compared": 82,
+ "worst": 0,
+ "disagreements": [],
+ "rows": [
+  {
+   "t": 0,
+   "game": {
+    "x": 56,
+    "y": 120,
+    "vx": 0,
+    "vy": 0,
+    "anim": "",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 56,
+    "y": 120,
+    "vx": 0,
+    "vy": 0,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 1,
+   "game": {
+    "x": 56,
+    "y": 120,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 56,
+    "y": 120,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 2,
+   "game": {
+    "x": 55.71715728752538,
+    "y": 120.28284271247462,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 55.71715728752538,
+    "y": 120.28284271247462,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 3,
+   "game": {
+    "x": 55.43431457505076,
+    "y": 120.56568542494924,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 55.43431457505076,
+    "y": 120.56568542494924,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 4,
+   "game": {
+    "x": 55.151471862576145,
+    "y": 120.84852813742386,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 55.151471862576145,
+    "y": 120.84852813742386,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 5,
+   "game": {
+    "x": 54.868629150101526,
+    "y": 121.13137084989847,
+    "vx": -0.6048375546287106,
+    "vy": -0.2380578343822394,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 54.868629150101526,
+    "y": 121.13137084989847,
+    "vx": -0.6048375546287106,
+    "vy": -0.2380578343822394,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 6,
+   "game": {
+    "x": 54.49642142417616,
+    "y": 120.98487372104786,
+    "vx": -0.5831016709538321,
+    "vy": 0.2872149740714244,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 54.49642142417616,
+    "y": 120.98487372104786,
+    "vx": -0.5831016709538321,
+    "vy": 0.2872149740714244,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 7,
+   "game": {
+    "x": 54.13758962666611,
+    "y": 121.16162139739951,
+    "vx": -0.5027448455656343,
+    "vy": 0.41200439349257745,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 54.13758962666611,
+    "y": 121.16162139739951,
+    "vx": -0.5027448455656343,
+    "vy": 0.41200439349257745,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 8,
+   "game": {
+    "x": 53.82820818324111,
+    "y": 121.41516256262571,
+    "vx": -0.47318377154852564,
+    "vy": 0.4456423659652577,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 53.82820818324111,
+    "y": 121.41516256262571,
+    "vx": -0.47318377154852564,
+    "vy": 0.4456423659652577,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 9,
+   "game": {
+    "x": 53.53701816998048,
+    "y": 121.68940401860434,
+    "vx": -0.46377618265145804,
+    "vy": 0.4554246945492102,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 53.53701816998048,
+    "y": 121.68940401860434,
+    "vx": -0.46377618265145804,
+    "vy": 0.4554246945492102,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 10,
+   "game": {
+    "x": 53.25161744219496,
+    "y": 121.96966536909616,
+    "vx": -0.46088378200587277,
+    "vy": 0.45835154574187176,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 53.25161744219496,
+    "y": 121.96966536909616,
+    "vx": -0.46088378200587277,
+    "vy": 0.45835154574187176,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 11,
+   "game": {
+    "x": 52.96799665326827,
+    "y": 121.96966536909616,
+    "vx": -0.4600031412919576,
+    "vy": 0.4592353536058949,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 52.96799665326827,
+    "y": 121.96966536909616,
+    "vx": -0.4600031412919576,
+    "vy": 0.4592353536058949,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 12,
+   "game": {
+    "x": 52.68491779708861,
+    "y": 121.96966536909616,
+    "vx": -0.45973579163026457,
+    "vy": 0.45950299443430614,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 52.68491779708861,
+    "y": 121.96966536909616,
+    "vx": -0.45973579163026457,
+    "vy": 0.45950299443430614,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 13,
+   "game": {
+    "x": 52.402003463777675,
+    "y": 121.96966536909616,
+    "vx": -0.45965469907059153,
+    "vy": 0.4595841137619141,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 52.402003463777675,
+    "y": 121.96966536909616,
+    "vx": -0.45965469907059153,
+    "vy": 0.4595841137619141,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 14,
+   "game": {
+    "x": 52.11913903358039,
+    "y": 121.96966536909616,
+    "vx": -0.4596301085611663,
+    "vy": 0.45960870673220555,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 52.11913903358039,
+    "y": 121.96966536909616,
+    "vx": -0.4596301085611663,
+    "vy": 0.45960870673220555,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 15,
+   "game": {
+    "x": 51.83628973600429,
+    "y": 121.96966536909616,
+    "vx": -0.4596226523321602,
+    "vy": 0.4596161631874474,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 51.83628973600429,
+    "y": 121.96966536909616,
+    "vx": -0.4596226523321602,
+    "vy": 0.4596161631874474,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 16,
+   "game": {
+    "x": 51.55344502687681,
+    "y": 121.96966536909616,
+    "vx": -0.45962039154124384,
+    "vy": 0.45961842399916236,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 51.55344502687681,
+    "y": 121.96966536909616,
+    "vx": -0.45962039154124384,
+    "vy": 0.45961842399916236,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 17,
+   "game": {
+    "x": 51.27060170900528,
+    "y": 121.96966536909616,
+    "vx": -0.4596197060556029,
+    "vy": 0.45961910948671536,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 51.27060170900528,
+    "y": 121.96966536909616,
+    "vx": -0.4596197060556029,
+    "vy": 0.45961910948671536,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 18,
+   "game": {
+    "x": 50.98775881297106,
+    "y": 121.96966536909616,
+    "vx": -0.4596194982126258,
+    "vy": 0.4596193173298681,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 50.98775881297106,
+    "y": 121.96966536909616,
+    "vx": -0.4596194982126258,
+    "vy": 0.4596193173298681,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 19,
+   "game": {
+    "x": 50.70491604484021,
+    "y": 121.96966536909616,
+    "vx": -0.4596194351935467,
+    "vy": 0.45961938034896344,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 50.70491604484021,
+    "y": 121.96966536909616,
+    "vx": -0.4596194351935467,
+    "vy": 0.45961938034896344,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 20,
+   "game": {
+    "x": 50.42207331549034,
+    "y": 121.96966536909616,
+    "vx": -0.45961941608583584,
+    "vy": 0.4596193994566759,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 50.42207331549034,
+    "y": 121.96966536909616,
+    "vx": -0.45961941608583584,
+    "vy": 0.4596193994566759,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 21,
+   "game": {
+    "x": 50.13923059789905,
+    "y": 121.96966536909616,
+    "vx": -0.45961941029227943,
+    "vy": 0.4596194052502325,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 50.13923059789905,
+    "y": 121.96966536909616,
+    "vx": -0.45961941029227943,
+    "vy": 0.4596194052502325,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 22,
+   "game": {
+    "x": 49.85638788387303,
+    "y": 121.96966536909616,
+    "vx": -0.4596194085356432,
+    "vy": 0.4596194070068686,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 49.85638788387303,
+    "y": 121.96966536909616,
+    "vx": -0.4596194085356432,
+    "vy": 0.4596194070068686,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 23,
+   "game": {
+    "x": 49.57354517092802,
+    "y": 121.96966536909616,
+    "vx": -0.45961940800302215,
+    "vy": 0.4596194075394898,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 49.57354517092802,
+    "y": 121.96966536909616,
+    "vx": -0.45961940800302215,
+    "vy": 0.4596194075394898,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 24,
+   "game": {
+    "x": 49.290702458310776,
+    "y": 121.96966536909616,
+    "vx": -0.45961940784152866,
+    "vy": 0.45961940770098325,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 49.290702458310776,
+    "y": 121.96966536909616,
+    "vx": -0.45961940784152866,
+    "vy": 0.45961940770098325,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 25,
+   "game": {
+    "x": 49.00785974579291,
+    "y": 121.96966536909616,
+    "vx": -0.45961940779256305,
+    "vy": 0.4596194077499489,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 49.00785974579291,
+    "y": 121.96966536909616,
+    "vx": -0.45961940779256305,
+    "vy": 0.4596194077499489,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 26,
+   "game": {
+    "x": 48.725017033305186,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777771637,
+    "vy": 0.4596194077647955,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 48.725017033305186,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777771637,
+    "vy": 0.4596194077647955,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 27,
+   "game": {
+    "x": 48.44217432082659,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777321475,
+    "vy": 0.45961940776929705,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 48.44217432082659,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777321475,
+    "vy": 0.45961940776929705,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 28,
+   "game": {
+    "x": 48.15933160835076,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777184995,
+    "vy": 0.459619407770662,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 48.15933160835076,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777184995,
+    "vy": 0.459619407770662,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 29,
+   "game": {
+    "x": 47.876488895875774,
+    "y": 121.96966536909616,
+    "vx": -0.459619407771436,
+    "vy": 0.4596194077710758,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 47.876488895875774,
+    "y": 121.96966536909616,
+    "vx": -0.459619407771436,
+    "vy": 0.4596194077710758,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 30,
+   "game": {
+    "x": 47.59364618340104,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777131055,
+    "vy": 0.4596194077712014,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 47.59364618340104,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777131055,
+    "vy": 0.4596194077712014,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 31,
+   "game": {
+    "x": 47.31080347092639,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777127247,
+    "vy": 0.4596194077712394,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 47.31080347092639,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777127247,
+    "vy": 0.4596194077712394,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 32,
+   "game": {
+    "x": 47.027960758451755,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777126103,
+    "vy": 0.45961940777125093,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 47.027960758451755,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777126103,
+    "vy": 0.45961940777125093,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 33,
+   "game": {
+    "x": 46.74511804597713,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777125754,
+    "vy": 0.45961940777125443,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 46.74511804597713,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777125754,
+    "vy": 0.45961940777125443,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 34,
+   "game": {
+    "x": 46.46227533350251,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712564,
+    "vy": 0.45961940777125543,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 46.46227533350251,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712564,
+    "vy": 0.45961940777125543,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 35,
+   "game": {
+    "x": 46.17943262102789,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777125604,
+    "vy": 0.45961940777125576,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 46.17943262102789,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777125604,
+    "vy": 0.45961940777125576,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 36,
+   "game": {
+    "x": 45.896589908553274,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777125593,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 45.896589908553274,
+    "y": 121.96966536909616,
+    "vx": -0.45961940777125593,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 37,
+   "game": {
+    "x": 45.613747196078656,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 45.613747196078656,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 38,
+   "game": {
+    "x": 45.33090448360404,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 45.33090448360404,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 39,
+   "game": {
+    "x": 45.04806177112942,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 45.04806177112942,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 40,
+   "game": {
+    "x": 44.7652190586548,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 44.7652190586548,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 41,
+   "game": {
+    "x": 44.48237634618018,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 44.48237634618018,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 42,
+   "game": {
+    "x": 44.19953363370556,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 44.19953363370556,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 43,
+   "game": {
+    "x": 43.916690921230945,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 43.916690921230945,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 44,
+   "game": {
+    "x": 43.633848208756326,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 43.633848208756326,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 45,
+   "game": {
+    "x": 43.35100549628171,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 43.35100549628171,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 46,
+   "game": {
+    "x": 43.06816278380709,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 43.06816278380709,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 47,
+   "game": {
+    "x": 42.78532007133247,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 42.78532007133247,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 48,
+   "game": {
+    "x": 42.50247735885785,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 42.50247735885785,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 49,
+   "game": {
+    "x": 42.219634646383234,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 42.219634646383234,
+    "y": 121.96966536909616,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 50,
+   "game": {
+    "x": 41.936791933908616,
+    "y": 122.25250808157078,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 41.936791933908616,
+    "y": 122.25250808157078,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 51,
+   "game": {
+    "x": 41.653949221434,
+    "y": 122.5353507940454,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 41.653949221434,
+    "y": 122.5353507940454,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 52,
+   "game": {
+    "x": 41.37110650895938,
+    "y": 122.81819350652002,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 41.37110650895938,
+    "y": 122.81819350652002,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 53,
+   "game": {
+    "x": 41.08826379648476,
+    "y": 123.10103621899464,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 41.08826379648476,
+    "y": 123.10103621899464,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 54,
+   "game": {
+    "x": 40.80542108401014,
+    "y": 123.38387893146925,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 40.80542108401014,
+    "y": 123.38387893146925,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 55,
+   "game": {
+    "x": 40.52257837153552,
+    "y": 123.66672164394387,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 40.52257837153552,
+    "y": 123.66672164394387,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 56,
+   "game": {
+    "x": 40.239735659060905,
+    "y": 123.94956435641849,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 40.239735659060905,
+    "y": 123.94956435641849,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 57,
+   "game": {
+    "x": 39.95689294658629,
+    "y": 124.23240706889311,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 39.95689294658629,
+    "y": 124.23240706889311,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 58,
+   "game": {
+    "x": 39.67405023411167,
+    "y": 124.51524978136773,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 39.67405023411167,
+    "y": 124.51524978136773,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 59,
+   "game": {
+    "x": 39.39120752163705,
+    "y": 124.79809249384235,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 39.39120752163705,
+    "y": 124.79809249384235,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 60,
+   "game": {
+    "x": 39.10836480916243,
+    "y": 125.08093520631697,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 39.10836480916243,
+    "y": 125.08093520631697,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 61,
+   "game": {
+    "x": 38.82552209668781,
+    "y": 125.36377791879158,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 38.82552209668781,
+    "y": 125.36377791879158,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 62,
+   "game": {
+    "x": 38.542679384213194,
+    "y": 125.6466206312662,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 38.542679384213194,
+    "y": 125.6466206312662,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 63,
+   "game": {
+    "x": 38.259836671738576,
+    "y": 125.92946334374082,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 38.259836671738576,
+    "y": 125.92946334374082,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 64,
+   "game": {
+    "x": 37.97699395926396,
+    "y": 126.21230605621544,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 37.97699395926396,
+    "y": 126.21230605621544,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 65,
+   "game": {
+    "x": 37.69415124678934,
+    "y": 126.49514876869006,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 37.69415124678934,
+    "y": 126.49514876869006,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 66,
+   "game": {
+    "x": 37.41130853431472,
+    "y": 126.77799148116468,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 37.41130853431472,
+    "y": 126.77799148116468,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 67,
+   "game": {
+    "x": 37.1284658218401,
+    "y": 127.0608341936393,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 37.1284658218401,
+    "y": 127.0608341936393,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 68,
+   "game": {
+    "x": 36.845623109365484,
+    "y": 127.34367690611391,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 36.845623109365484,
+    "y": 127.34367690611391,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 69,
+   "game": {
+    "x": 36.562780396890865,
+    "y": 127.62651961858853,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 36.562780396890865,
+    "y": 127.62651961858853,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 70,
+   "game": {
+    "x": 36.27993768441625,
+    "y": 127.90936233106315,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 36.27993768441625,
+    "y": 127.90936233106315,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 71,
+   "game": {
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 72,
+   "game": {
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 73,
+   "game": {
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 74,
+   "game": {
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 75,
+   "game": {
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 76,
+   "game": {
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 77,
+   "game": {
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 78,
+   "game": {
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 79,
+   "game": {
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 80,
+   "game": {
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  },
+  {
+   "t": 81,
+   "game": {
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "anim": "walk",
+    "enemy": {
+     "activated": null,
+     "max_force": -1,
+     "only_hit_by": "",
+     "active_off_screen": false,
+     "die_in_lava": true,
+     "die_in_water": true,
+     "hit_by_dark_stuff": false,
+     "hit_by_fire": false,
+     "fell": false,
+     "fall_in_pit": false,
+     "can_fall_in_pit": true,
+     "just_knock": false,
+     "can_hit": true,
+     "damage": 1,
+     "hits_timer": 0,
+     "hits_max": 1,
+     "hits": 0
+    }
+   },
+   "model": {
+    "id": "bulb@48,112",
+    "x": 35.99709497194163,
+    "y": 128.19220504353777,
+    "vx": -0.4596194077712559,
+    "vy": 0.4596194077712559,
+    "hits": 0,
+    "hitsTimer": 0,
+    "removed": false,
+    "bulbPhase": null
+   }
+  }
+ ]
+}

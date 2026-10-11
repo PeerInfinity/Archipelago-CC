@@ -1,0 +1,53 @@
+{
+    "tape_version": 4,
+    "game": "seedling",
+    "name": "pushblock-l65-sword-press",
+    "description": "⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK D1 — R4's L65 probe stance one cell east of `pushableblockspear@176,128`: walk W into its face, ONE sword slash facing W, walk W again. The block does NOT move — `genericHit`'s Spear arm reads `spearDirection`, which a sword slash leaves at -1 (game-measured, `probe-seedling-pushblock-weapon.mjs`). Authored by scripts/procgen/plan-seedling-pushblock-witness.mjs.",
+    "boot": {
+        "level": 65,
+        "x": 192,
+        "y": 128
+    },
+    "noclip": false,
+    "noDamage": true,
+    "noHazards": [
+        "water",
+        "lava",
+        "ice",
+        "waterfall"
+    ],
+    "grants": [
+        {
+            "level": 65,
+            "items": [
+                "sword",
+                "spear"
+            ]
+        }
+    ],
+    "persistence": [],
+    "equips": [
+        {
+            "t": 0,
+            "slot": 0
+        }
+    ],
+    "tick_count": 80,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 5,
+            "to": 25
+        },
+        {
+            "key": "primary",
+            "from": 30,
+            "to": 31
+        },
+        {
+            "key": "left",
+            "from": 40,
+            "to": 75
+        }
+    ]
+}

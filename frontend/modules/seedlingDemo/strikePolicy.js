@@ -225,6 +225,13 @@ function armRefusalWhy(body) {
  */
 export function strikeCandidates(player, bodies, {
     facingToward, owed, tick, scale = SLASH_SCALE_NORMAL, direction = null,
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bulb D3 — `(body, player) => null | {why}`: a body this press must NOT kill (a Bulb whose
+     * lava would cut the segment's corridor, `bulbPlacement.dropKillVetoFor`). A candidate whose swing rect would
+     * cover a vetoed body is rejected with the veto's reason — the slash hits EVERY body in its rect. `null` (every
+     * caller before this slice) asks nothing.
+     */
+    vetoBody = null,
 }) {
     /**
      * ⛓⛓⛓ R9 SLICE 12c — **THE SCAN ASKS WITH THE RECT THE PRESS WILL SWING.**
@@ -284,6 +291,13 @@ export function strikeCandidates(player, bodies, {
                 + 'landed yet, so `hitsTimer` reading 0 is not an invitation' });
             continue;
         }
+        if (vetoBody) {
+            const v = vetoedInRect(player, bodies, facing, scale, vetoBody);
+            if (v) {
+                rejected.push({ id: b.id, why: `the swing facing ${facing} would kill ${v.id}: ${v.why}`, veto: v });
+                continue;
+            }
+        }
         chosen.push({ id: b.id, as3: b.as3, enemyClass: b.enemyClass, reach,
             direction: facing, rect: b.rect });
     }
@@ -291,6 +305,25 @@ export function strikeCandidates(player, bodies, {
     // on both sides of the preview/drive equality.
     chosen.sort((a, b) => (a.reach - b.reach) || (a.id < b.id ? -1 : 1));
     return { chosen, rejected };
+}
+
+/**
+ * ⛓ seedling-fidelity-bulb D3 — the first body a press facing `direction` would reach AND the veto refuses, with the
+ * veto's reason; null when none. `Player.slash`'s own two gates (the rect, then the reach), and `Enemy.hit`'s
+ * i-frame gate (a body inside its i-frame takes nothing, so its death is not this press's).
+ */
+export function vetoedInRect(player, bodies, direction, scale, vetoBody) {
+    if (!vetoBody) return null;
+    const r = slashRect(player.x, player.y, direction, scale);
+    const reachLimit = slashReachFor(scale);
+    for (const o of bodies) {
+        if (!rectsOverlap(r, o.rect)) continue;
+        if (distanceRectPoint(player.x, player.y, o.rect) > reachLimit) continue;
+        if ((o.hitsTimer ?? 0) > 0) continue;
+        const v = vetoBody(o, player);
+        if (v) return { id: o.id, ...v };
+    }
+    return null;
 }
 
 /**
@@ -695,6 +728,8 @@ function talkWhy(g, pressTick) {
 export function createStrikePolicy({
     facingToward, facingKeys, allowDash = false, hasSword = true, dashPlan = null,
     talkCircles = [],
+    /** ⛓ seedling-fidelity-bulb D3 — see `strikeCandidates`' `vetoBody`. `null`: nothing is asked. */
+    vetoBody = null,
 } = {}) {
     if (typeof facingToward !== 'function') fail('createStrikePolicy: facingToward is required');
     if (!facingKeys) fail('createStrikePolicy: facingKeys is required');
@@ -826,6 +861,20 @@ export function createStrikePolicy({
                     });
                     return { held: walkHeld, decision: STRIKE_NONE };
                 }
+                /**
+                 * ⛓ seedling-fidelity-bulb D3 — AND THE VETO, RE-ASKED WITH THIS TICK'S BODIES: the aim was taken
+                 * against last tick's, and a Bulb that walked into the rect since would die where it stands.
+                 * Dropped like the talk refusal (`owed` untouched).
+                 */
+                const vetoed = vetoBody
+                    ? vetoedInRect(state, bodies, aimed.direction, SLASH_SCALE_NORMAL, vetoBody)
+                    : null;
+                if (vetoed) {
+                    aimed = null;
+                    trace.push({ tick, decision: STRIKE_NONE, target, vetoRefused: vetoed,
+                        why: `the press would kill ${vetoed.id}: ${vetoed.why}` });
+                    return { held: walkHeld, decision: STRIKE_NONE };
+                }
                 aimed = null;
                 owed.set(target, tick);
                 lastPressAt = tick;
@@ -888,9 +937,15 @@ export function createStrikePolicy({
                  * `walkHeld` and not the returned set — `primary` is not a
                  * direction key and `applyInput` never reads it.
                  */
-                const verdict = now.outcome === 'dash'
+                const certified = now.outcome === 'dash'
                     ? certifyDash(state, bodies, now.impulse, { held: walkHeld })
                     : { certified: true, why: null, worst: null };
+                // ⛓ seedling-fidelity-bulb D3: a scheduled press swings too, and kills what its rect covers.
+                const plannedVeto = (opens && vetoBody)
+                    ? vetoedInRect(state, bodies, state.direction ?? 0, now.scale, vetoBody) : null;
+                const verdict = plannedVeto
+                    ? { certified: false, why: `the press would kill ${plannedVeto.id}: ${plannedVeto.why}`, worst: null }
+                    : certified;
                 if (opens && verdict.certified) {
                     /**
                      * ⛓ WHICH BODIES THE RECT COVERS — ALL OF THEM. `slashDirection`
@@ -1006,7 +1061,7 @@ export function createStrikePolicy({
                 return { held: walkHeld, decision: STRIKE_NONE };
             }
             const { chosen, rejected } = strikeCandidates(state, bodies,
-                { facingToward, owed, tick, scale: forecast?.scale ?? SLASH_SCALE_NORMAL });
+                { facingToward, owed, tick, scale: forecast?.scale ?? SLASH_SCALE_NORMAL, vetoBody });
             /**
              * ⛔⛔⛔ R9 SLICE 12c′ — **THE OPPORTUNISTIC DASH IS RETIRED, AND
              * THE REFUSAL IS NOW THE SAME UNDER BOTH FLAG STATES.**

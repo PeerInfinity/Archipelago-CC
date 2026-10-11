@@ -8,6 +8,7 @@ import {
     R8_NORMALIZE_LIVE_BATCH, assertBatchSitesCoverSource, assertPlannerLivePartition,
     assertBatchIsModelSide,
     R8_ENEMY_BRIDGE, assertBridgeExposureIsMeasured, assertBridgeRosterMatchesScope,
+    declaredBridgedClasses, declaredExposedRows,
     assertSteppedContactPartition,
     R8_STRATEGY_EXECUTORS, assertShovePostConditionKind,
     assertExecutorParametersAreDerived, assertEscalationIsOrdered,
@@ -23,6 +24,7 @@ import {
     contactPricing,
 } from './combat.js';
 import { MODELLED_ENEMY_CLASSES } from './spinner.js';
+import { withKillLockBodies } from './killLockBodies.js';
 import { atlasLevelSource } from './levelSource.js';
 import {
     LIVE_GEOMETRY_KEYS, ROLES, assertNormalizedLiveOpts, isNormalizedLiveOpts,
@@ -41,6 +43,7 @@ import { dangerVolumes } from './dangerMap.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { KILL_LOCK_TSET } from './combat.js';
 import { applyFriction, DEFAULT_FRICTION } from './playerPhysicsV1.js';
+import { withContactFidelity } from './contactFidelity.js';
 
 /** This file's own directory — the banked fixtures are read relative to it. */
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -252,7 +255,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
      * from the tapes and their own recorded streams on every run.
      */
     it('re-derives the exposed set from the committed roster and its recorded streams', () => {
-        const out = assertBridgeExposureIsMeasured(realExposureIo());
+        // ⛓ K2PREP D1: the pins below are the K2-OFF set, asked explicitly (the K2-ON set is the next row).
+        const out = withKillLockBodies({ lavaRunnerLive: false }, () => assertBridgeExposureIsMeasured(realExposureIo()));
         // ⛓ FIVE PREDICTED + ONE AUTHORED. The prediction's own list is
         // asserted UNCHANGED beside the union, because a prediction edited
         // after its measurement is not a prediction.
@@ -383,6 +387,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'ghostsword-l30-bobsoldier',
             // ⛓⛓⛓ Seedling fidelity BOBSOLDIER2: the kill arm's stance, before and after, in L30.
             'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch',
+            // ⛓⛓⛓ Seedling fidelity L30KEYLOCK: the keylock beside the BobSoldier, before and after, in L30.
+            'l30keylock-pit224-before', 'l30keylock-pit224', 'l30keylock-pit240',
             // ⛓⛓⛓ Seedling fidelity WALLFLYER: the two kill witnesses and the shield-bump witness, in L22.
             'wallflyer-kill', 'wallflyer-kill-flight', 'wallflyer-shield-bump',
             // ⛓ Seedling fidelity CRUSHER: the round-trip witness ends on its L40 arrival.
@@ -391,6 +397,12 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'enc-l32-fallen-door', 'enc-l32-fire-return',
             // ⛓ Seedling fidelity ENCOUNTERS D3: the Witch witness, in L12 (a puncher room).
             'enc-l12-witch',
+            // ⛓ Seedling fidelity PUSHBLOCK: the two L65 spear-thrust witnesses (a bob room).
+            'pushblock-l65-reach-l63', 'pushblock-l65-reach-l68',
+            // ⛓ Seedling fidelity ENCOUNTERS2 D2: the live-arrival witness ends in L30 too.
+            'enc-l32-live-arrival',
+            // ⛓ Seedling fidelity L12KEYLINE: the way round the sealed lock, in L12 (a puncher room).
+            'l12keyline-134-round',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -442,14 +454,19 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity BOBSOLDIER2 adds two (80) — `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch` (L30).
         // ⛓ Seedling fidelity ENCOUNTERS adds two (82) — `enc-l32-fallen-door`, `enc-l32-fire-return` (their L30 falls).
         // ⛓ ENCOUNTERS D3 adds one (83) — `enc-l12-witch` (L12).
-        expect(out.exposed).toBe(83);
+        // ⛓ Seedling fidelity PUSHBLOCK adds two (85) — `pushblock-l65-reach-l63`, `pushblock-l65-reach-l68` (L65).
+        // ⛓ ENCOUNTERS2 D2 adds one (86) — `enc-l32-live-arrival` (its L30 fall).
+        // ⛓ Seedling fidelity L12KEYLINE adds one (87) — `l12keyline-134-round` (L12).
+        // ⛓ Seedling fidelity L30KEYLOCK adds three (90) — `l30keylock-pit224-before`, `l30keylock-pit224`,
+        expect(out.exposed).toBe(90);
         expect(out.tapes).toEqual([
             'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
-            'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch', 'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'crusher-l42-round-trip', 'dash-l16-sword-all', 'enc-l12-witch', 'enc-l32-fallen-door', 'enc-l32-fire-return', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
-            'ghostsword-l30-bobsoldier', 'l14-swordless-detour',
+            'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch', 'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'crusher-l42-round-trip', 'dash-l16-sword-all', 'enc-l12-witch', 'enc-l32-fallen-door', 'enc-l32-fire-return', 'enc-l32-live-arrival', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
+            'ghostsword-l30-bobsoldier', 'l12keyline-134-round', 'l14-swordless-detour', 'l30keylock-pit224', 'l30keylock-pit224-before', 'l30keylock-pit240',
             'ladder2-l104-beam',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
+            'pushblock-l65-reach-l63', 'pushblock-l65-reach-l68',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
             'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
             'r4-iceturret-bobs', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
@@ -469,6 +486,32 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'u9-shield-bob-shove', 'u9-shield-bob-standing', 'u9-shield-puncher',
             'wallflyer-kill', 'wallflyer-kill-flight', 'wallflyer-shield-bump',
         ]);
+    });
+
+    /**
+     * ⛓⛓⛓ K2PREP D1 — WITH K2 `lavaRunnerLive` ON, the lavarunner rooms join the scope (L71–L75, L77, L78, L80,
+     * L99) and the guard re-derives the set: ONE more tape, `axe-l71-reach-l76` (L71), declared in
+     * `pendingSwitchScope` before this ran. Every other tape that enters a lavarunner room declares `noDamage`.
+     */
+    it('⛓ K2 ON: the lavarunner rooms join, and exactly the declared `axe-l71-reach-l76` is newly exposed', () => {
+        const off = withKillLockBodies({ lavaRunnerLive: false }, () => assertBridgeExposureIsMeasured(realExposureIo()));
+        const on = withKillLockBodies({ lavaRunnerLive: true }, () => assertBridgeExposureIsMeasured(realExposureIo()));
+        expect(on.exposed).toBe(off.exposed + 1);
+        expect(on.tapes.filter((n) => !off.tapes.includes(n))).toEqual(['axe-l71-reach-l76']);
+        expect(R8_ENEMY_BRIDGE.pendingSwitchScope.lavarunner.exposedAdded.map((t) => [t.name, [...t.levels]]))
+            .toEqual([['axe-l71-reach-l76', [71]]]);
+        // the declaration follows the switch, both ways
+        expect(withKillLockBodies({ lavaRunnerLive: false }, () => declaredExposedRows().map((t) => t.name)))
+            .not.toContain('axe-l71-reach-l76');
+        expect(withKillLockBodies({ lavaRunnerLive: true }, () => declaredExposedRows().map((t) => t.name)))
+            .toContain('axe-l71-reach-l76');
+        const lavaLevels = withKillLockBodies({ lavaRunnerLive: true }, () => realExposureIo().bridgedLevels());
+        // ⛔ MUTATION: the lavarunner rooms join but the pending row does not (the K2-OFF declaration) — the guard
+        // names the tape.
+        expect(() => withKillLockBodies({ lavaRunnerLive: false }, () => assertBridgeExposureIsMeasured(
+            { ...realExposureIo(), bridgedLevels: () => lavaLevels }))).toThrow(/Undeclared and exposed: axe-l71-reach-l76/);
+        expect([71, 72, 73, 74, 75, 77, 78, 80, 99].every((l) => lavaLevels.has(l))).toBe(true);
+        expect(withKillLockBodies({ lavaRunnerLive: false }, () => realExposureIo().bridgedLevels()).has(71)).toBe(false);
     });
 
     /**
@@ -623,10 +666,17 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓ fidelity BOBSOLDIER2's two L30 witnesses — the mirror rule.
             'bobsoldier2-l30-dash-stance': { tape: {}, levels: [30] },
             'bobsoldier2-l30-torch': { tape: {}, levels: [30] },
+            // ⛓ fidelity L30KEYLOCK's three L30 witnesses (the two AFTERs end in L22, a WallFlyer room) — the mirror rule.
+            'l30keylock-pit224-before': { tape: {}, levels: [30] },
+            'l30keylock-pit224': { tape: {}, levels: [22, 30] },
+            'l30keylock-pit240': { tape: {}, levels: [22, 30] },
             // ⛓ fidelity ENCOUNTERS: the two L32 witnesses' L30 falls — the mirror rule.
             'enc-l32-fallen-door': { tape: {}, levels: [30] },
             'enc-l32-fire-return': { tape: {}, levels: [30] },
             'enc-l12-witch': { tape: {}, levels: [12] },
+            'enc-l32-live-arrival': { tape: {}, levels: [30] },
+            // ⛓ fidelity L12KEYLINE's L12 witness — the mirror rule.
+            'l12keyline-134-round': { tape: {}, levels: [12] },
             // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes — the mirror rule.
             'axe-l61-reach-l63': { tape: {}, levels: [63] },
             'burn-l44-reach-exit': { tape: {}, levels: [45] },
@@ -635,8 +685,13 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'wallflyer-kill': { tape: {}, levels: [22] },
             'wallflyer-kill-flight': { tape: {}, levels: [22] },
             'wallflyer-shield-bump': { tape: {}, levels: [22] },
+            // ⛓ fidelity PUSHBLOCK's two L65 witnesses — the mirror rule.
+            'pushblock-l65-reach-l63': { tape: {}, levels: [63, 65] },
+            'pushblock-l65-reach-l68': { tape: {}, levels: [65] },
         });
-        expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
+        // ⛓ K2PREP D1: the synthetic roster mirrors the K2-OFF declaration, so it is asked with K2 OFF.
+        expect(() => withKillLockBodies({ lavaRunnerLive: false }, () => assertBridgeExposureIsMeasured(io)))
+            .toThrow(/right name with wrong rooms/);
     });
 
     /**
@@ -669,7 +724,16 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
     it('the DECLARED scope and the DERIVED roster are the same claim', () => {
         // ⛓ fidelity-bobsoldier: the BobSoldier joins (W4 `bobSoldierLive`, ON by default).
         // ⛓ KILLLOCK K1: the jellyfish joins (`jellyfishLive`, ON since the wave-8 harvest).
-        expect(assertBridgeRosterMatchesScope(bridgedChaserTags)).toEqual({ classes: ['bob', 'bobsoldier', 'jellyfish', 'puncher'] });
+        // ⛓ K2PREP D1: and the lavarunner under K2 — the declaration follows the switch (`pendingSwitchScope`).
+        // ⛓ wave-11 harvest: and the Bulb under `contactFidelity.bulbLive` (ON by default) — asked both ways.
+        expect(withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: false },
+            () => assertBridgeRosterMatchesScope(bridgedChaserTags))))
+            .toEqual({ classes: ['bob', 'bobsoldier', 'jellyfish', 'puncher'] });
+        expect(withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: true },
+            () => assertBridgeRosterMatchesScope(bridgedChaserTags))))
+            .toEqual({ classes: ['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher'] });
+        expect(assertBridgeRosterMatchesScope(bridgedChaserTags))
+            .toEqual({ classes: ['bob', 'bobsoldier', 'bulb', 'jellyfish', 'lavarunner', 'puncher'] });
     });
 
     it('⛔ MUTATION: a roster that drifts from the declaration reds by name', () => {
@@ -688,13 +752,23 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
      */
     it('a transcribed class with no roster row is NOT bridged — the control exists', () => {
         // ⛓ KILLLOCK K2: `lavarunner` is transcribed too, and bridged only under its switch (OFF by default).
-        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher']);
+        // ⛓ fidelity-bulb: `bulb` is transcribed and bridged only under `contactFidelity.bulbLive` (OFF by default).
+        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'bobsoldier', 'bulb', 'jellyfish', 'lavarunner', 'puncher']);
         expect(MODELLED_ENEMY_CLASSES.Jellyfish).toBeUndefined();
         expect(MODELLED_ENEMY_CLASSES.LavaRunner).toBeUndefined();
         // ⛓ KILLLOCK K1 (ON since the wave-8 harvest): `jellyfish` is bridged by its switch, so the control is
-        // `lavarunner` — transcribed, no roster row, its switch K2 OFF.
-        expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
-        expect(bridgedChaserTags()).not.toContain('lavarunner');
+        // `lavarunner` — transcribed, no roster row — with its switch K2 asked OFF.
+        // ⛓ K2PREP D3: once K2 is ON every transcribed chaser is bridged, so the control is the SWITCH itself, asked
+        // both ways: the roster row a switch-bridged chaser lacks is the switch, and turning it off un-bridges it.
+        withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: false }, () => {
+            expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
+            expect(bridgedChaserTags()).not.toContain('lavarunner');
+        }));
+        // ⛓ wave-11 harvest: `bulbLive` ON by default bridges the Bulb the same way (asked both ways).
+        expect(bridgedChaserTags()).toContain('bulb');
+        withKillLockBodies({ lavaRunnerLive: true }, () => {
+            expect(bridgedChaserTags()).toContain('lavarunner');
+        });
         expect(contactPricing('lavarunner').kind).toBe('mover');
     });
 
@@ -718,8 +792,25 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
             // (`stepIceTurretsNow`'s contact arm), so it joins — and no family is refused.
             // ⛓ Seedling fidelity LADDER2: the placed grenade is stepped (`stepPlacedGrenadesNow`,
             // its blast billed) and has no contact, so it joins with that pricer.
-            bridged: [...bridgedChaserTags(), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+            // ⛓ K2PREP D1: asked with K2 OFF here; the K2-ON roster is asked below (a switch-bridged tag skips
+            // the partition — `KILLLOCK_SWITCHED_CHASERS`).
+            bridged: [...withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: false }, () => bridgedChaserTags())), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
         })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'jellyfish', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+            refused: [] });
+        expect(assertSteppedContactPartition({
+            families: CONTACT_STEPPED_FAMILIES,
+            pricedBy: CONTACT_STEPPED_PRICED_BY,
+            why: CONTACT_STEPPED_WHY,
+            bridged: [...withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: true }, () => bridgedChaserTags())), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+        })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+            refused: [] });
+        // ⛓ wave-11 harvest: the defaults (K2 and `bulbLive` ON) — the switch-bridged Bulb skips the partition too.
+        expect(assertSteppedContactPartition({
+            families: CONTACT_STEPPED_FAMILIES,
+            pricedBy: CONTACT_STEPPED_PRICED_BY,
+            why: CONTACT_STEPPED_WHY,
+            bridged: [...bridgedChaserTags(), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+        })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'bulb', 'jellyfish', 'lavarunner', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
             refused: [] });
     });
 
@@ -798,7 +889,8 @@ function realExposureIo() {
          * widens this automatically, which is the point.
          */
         bridgedLevels: () => {
-            const tags = R8_ENEMY_BRIDGE.bridgedClasses;
+            // ⛓ K2PREP D1: the declaration as the switches stand (`pendingSwitchScope` joins under its switch).
+            const tags = declaredBridgedClasses();
             const out = new Set();
             for (let l = 0; l < 130; l += 1) {
                 let rec;
@@ -831,7 +923,8 @@ function syntheticExposureIo(rows) {
         // ⛓ Seedling fidelity STANCE: L53 joins — `stance-l48-keylock-south` is declared exposed there.
         // ⛓ Seedling fidelity BOBSOLDIER: L30 joins — its six exposed tapes are declared there.
         // ⛓ KILLLOCK K1 at the wave-8 harvest: L45, L63, L104 and L105 join — the jellyfish rooms' declared tapes.
-        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 30, 40, 45, 53, 63, 104, 105]),
+        // ⛓ Seedling fidelity PUSHBLOCK: L65 joins — its two spear-thrust witnesses are declared there.
+        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 30, 40, 45, 53, 63, 65, 104, 105]),
     };
 }
 

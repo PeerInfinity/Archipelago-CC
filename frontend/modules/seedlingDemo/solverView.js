@@ -58,7 +58,13 @@ export {
 // camera.js — encounters · physics 2
 export { SCREEN_H, SCREEN_W } from './camera.js';
 // chasers.js — dangerMap, solverBot · seedling 4
-export { bridgedChaserTags, chaserBoxAt, chaserHasSword, isBridgedChaser, killWindowTicks } from './chasers.js';
+export { bridgedChaserTags, chaserBoxAt, chaserHasSword, isBridgedChaser, killWindowTicks, CHASERS } from './chasers.js';
+
+// ⛓ seedling-fidelity-bulb D3: the Bulb's drop death — which classes have one, and the tile under a centre.
+export { hasDropDeath, tileUnder } from './bulb.js';
+
+// ⛓ seedling-fidelity-bulb D3: the contact-fidelity switches (`bulbLive` gates the kill veto's needs).
+export { CONTACT_FIDELITY } from './contactFidelity.js';
 // chest.js — botDriverV2, solverBot · seedling 3
 export { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 // combat.js — dangerMap, encounters, solverBot, strikePolicy · seedling 9
@@ -99,12 +105,16 @@ export { stepTurret } from './turret.js';
 // levelRun.js — botDriverV2 · physics 1
 export { createLevelRun } from './levelRun.js';
 
-// ⛓ LADDER2: the clamped `FP.elapsed` the chain's and the beam's Spritemaps step at (`hazards.js`).
-export { FP_ELAPSED_CLAMPED } from './r6AnimClock.js';
+// ⛓ K2PREP: `Game.worldFrame`, the Spritemap step and the lava chain — simulation since `levelRun` steps the chain
+// (`lavaChain.js`); `hazards.js` imports them here and re-exports them (the beam, the axe, the danger map).
+export {
+    LAVA_CHAIN, TIME_PER_FRAME, createLavaChainState, lavaChainRect, rectTouchesBox, spritemapPlay, spritemapUpdate,
+    stepLavaChain, worldFrame,
+} from './lavaChain.js';
 // levelWorld.js — botDriverV2, dangerMap, hazards, solverBot, strikePolicy · seedling 3, physics 6
 export {
     assertRect, isNormalizedLiveOpts, LIVE_GEOMETRY_KEYS, normalizeLiveOpts, PRE_R5_ROLES, rect, rectsOverlap,
-    RELAXED_ROLES, TILE_SIZE,
+    RELAXED_ROLES, TILE_SIZE, withTileWrites,
 } from './levelWorld.js';
 // playerPhysicsV1.js — botDriverV1, botDriverV2, mover, solverBot, strikePolicy · physics 11
 export {
@@ -118,6 +128,8 @@ export {
     auditFire, DARK_SWORD_DAMAGE, distanceRectPoint, DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH,
     slashReachFor, slashRect, spearRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule, swordWindowStep, UP,
 } from './presses.js';
+// ⛓ SEEDLING FIDELITY PUSHBLOCK: the spear push's stance audit (a thrust that reaches anything but the block).
+export { auditPress, PRESS_ARM_POLICY } from './presses.js';
 // pull.js — solverBot · seedling 2
 export { pullModelled, pullsDrainingInto } from './pull.js';
 // pulser.js — solverBot · seedling 3
@@ -129,6 +141,11 @@ export { PLACED_GRENADE, blastReaches, createPlacedGrenade, stepPlacedGrenade } 
 export { DESTROYING_TILE_TYPES, newPushable } from './pushables.js';
 // shieldBossFight.js — solverBot · seedling 4
 export { SHIELD_BOSS, shieldBossBandRect, shieldBossBodyRect, shieldBossDeathSchedule } from './shieldBossFight.js';
+// ⛓⛓⛓ seedling-fidelity-wand D2: the `wand` verb's own transcriptions — the switch, the window, the spawn, the
+// shot's step (the preview) and the MagicalLock's open offset.
+export { WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb } from './wandVerb.js';
+export { createWandShot, stepWandShot, wandShotRect } from './wandShot.js';
+export { MAGICAL_LOCK_OPEN_TICK_OFFSET } from './magicalLock.js';
 // spinner.js — botDriverV2, dangerMap, solverBot · seedling 5
 export {
     enemiesUnseenByBlockSweep, hammerHitsPlayer, MODELLED_ENEMY_CLASSES, SPINNER, spinnerRect,

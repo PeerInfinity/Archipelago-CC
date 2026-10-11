@@ -14,7 +14,8 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 import { LIVE_GEOMETRY_KEYS } from './levelWorld.js';
-import { KILLLOCK_SWITCHED_CHASERS } from './killLockBodies.js';
+import { KILLLOCK_BODIES, KILLLOCK_SWITCHED_CHASERS } from './killLockBodies.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -1351,6 +1352,28 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'corpse\'s blade timed at the next gate, the Torchpickup and stairsup@224,160 -> L32 at t 460. Zero hits. '
                 + 'Recorded on the game; the model reproduces it.',
         }),
+        /** ⛓⛓⛓ seedling-fidelity-l30keylock — THE KEYLOCK BESIDE THE BOBSOLDIER, BEFORE AND AFTER, declared before the roster measured them. */
+        Object.freeze({
+            name: 'l30keylock-pit224-before', levels: Object.freeze([30]), bobs: 1, ticks: 212,
+            addedBy: 'Seedling fidelity L30KEYLOCK D1 (the BEFORE: the unguarded wait on the key line)',
+            why: 'survey step 52\'s staging solved with both L30KEYLOCK switches OFF, cut where the next walk\'s gate '
+                + 'refused: the player stands on `bosslock@64,32`\'s key line from t 133 and `bobsoldier@48,80` lands a '
+                + 'sword hit (t 173) and a body hit (t 193) before the lock opens (t 212). Recorded on the game; the '
+                + 'game\'s own `hits` is the model\'s.',
+        }),
+        Object.freeze({
+            name: 'l30keylock-pit224', levels: Object.freeze([22, 30]), bobs: 1, ticks: 347,
+            addedBy: 'Seedling fidelity L30KEYLOCK D2 (the AFTER from (224,80): the solver\'s own plan, both switches ON)',
+            why: 'the keylock\'s wait priced, the kill from (88,120) (the body gone at t 191), the key line at t 252, '
+                + 'the lock open at t 331, teleporter@64,0 -> L22. Zero hits. Recorded on the game; the model reproduces it.',
+        }),
+        Object.freeze({
+            name: 'l30keylock-pit240', levels: Object.freeze([22, 30]), bobs: 1, ticks: 360,
+            addedBy: 'Seedling fidelity L30KEYLOCK D3 (the AFTER from the other pit landing (240,80))',
+            why: 'the kill from (88,120) (the body gone at t 207), the key line at t 265, the lock open at t 344, '
+                + 'teleporter@64,0 -> L22. Zero hits — the base solver\'s walk from here DIES on the key line. Recorded on '
+                + 'the game; the model reproduces it.',
+        }),
         /** ⛓⛓⛓ seedling-fidelity-wallflyer — THE WALLFLYER'S DEATH AND THE SHIELD'S TURN, written before the roster measured them. */
         Object.freeze({
             name: 'wallflyer-kill', levels: Object.freeze([22]), bobs: 1, ticks: 98,
@@ -1398,6 +1421,38 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'L12\'s Witch and the walk out: 601 ticks in a puncher room at >= 129 px from `puncher` — '
                 + 'never inside its reach. Recorded on the game with `hits` 0.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity PUSHBLOCK — the solver's spear thrusts in L65 (one `bob`), each walk
+         * ending on its arrival: L68 (no bridged body) and L63 (two jellyfish).
+         */
+        Object.freeze({
+            name: 'pushblock-l65-reach-l63', levels: Object.freeze([63, 65]), bobs: 3, ticks: 229,
+            addedBy: 'Seedling fidelity PUSHBLOCK D3 (route step 148\'s plan, the spear thrust E)',
+            why: 'one spear thrust at `pushableblockspear@176,128` from the L68 arrival and the walk up '
+                + 'the west column to `teleporter@128,0`: 228 ticks in L65 with `bob@208,80`, the last on '
+                + 'L63\'s arrival among its two jellyfish. Recorded on the game with `hits` 0.',
+        }),
+        Object.freeze({
+            name: 'pushblock-l65-reach-l68', levels: Object.freeze([65]), bobs: 1, ticks: 348,
+            addedBy: 'Seedling fidelity PUSHBLOCK D3 (route step 146\'s room, R4\'s three thrusts)',
+            why: 'three spear thrusts at `pushableblockspear@176,128` from its own pocket and the walk to '
+                + '`teleporter@184,64`: 347 ticks in L65 with `bob@208,80`, the last on L68\'s arrival (no '
+                + 'bridged body). Recorded on the game with `hits` 0.',
+        }),
+        Object.freeze({
+            name: 'enc-l32-live-arrival', levels: Object.freeze([30]), bobs: 1, ticks: 81,
+            addedBy: 'Seedling fidelity ENCOUNTERS2 D2 (the live-arrival witness)',
+            why: 'the live page\'s L32 arrival: the fight, the Fire, the burn, then the pit to L30 at t969 — 81 ticks '
+                + 'there, below the stairs, away from the BobSoldier. Recorded on the game with `hits` 0.',
+        }),
+        /** ⛓⛓⛓ seedling-fidelity-l12keyline — the way ROUND L12's sealed lock, a puncher room. */
+        Object.freeze({
+            name: 'l12keyline-134-round', levels: Object.freeze([12]), bobs: 1, ticks: 1268,
+            addedBy: 'Seedling fidelity L12KEYLINE D1 (the round-the-lock witness)',
+            why: 'route step 134\'s walk round `bosslock@416,240` (east shaft, the tree burned, the row-48 swim, north '
+                + 'to `teleporter@0,352`): 1268 ticks in L12 at >= 150 px from `puncher@416,256`, which stays behind '
+                + 'the shut lock — never inside its reach. Recorded on the game with `hits` 0.',
+        }),
     ]),
 
     /**
@@ -1434,6 +1489,45 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
      * the wave-8 harvest by the user's ruling; `lavarunner` stays out while K2 `lavaRunnerLive` is OFF).
      */
     bridgedClasses: Object.freeze(['bob', 'bobsoldier', 'jellyfish', 'puncher']),
+
+    /**
+     * ⛓⛓⛓ seedling-fidelity-k2prep D1 — A SCOPE THAT JOINS UNDER ITS SWITCH, declared before the flip.
+     *
+     * `lavarunner` is bridged only while `KILLLOCK_BODIES.lavaRunnerLive` is ON (K2, OFF by default; the user
+     * licensed the flip 2026-10-10 and the wave-10 harvest held it on movers the licence did not list — this
+     * declaration was one). Its class and its exposure rows are DECLARED here, typed before the guard measured
+     * them, and JOIN `bridgedClasses` / the exposed set exactly when the switch is ON (`declaredBridgedClasses`,
+     * `declaredExposedRows`) — so the guard is green with K2 OFF (the BEFORE model, byte for byte) and with K2 ON.
+     * At the flip the harvest folds these into `bridgedClasses` and `exposedAdded` (the wave-8 precedent) and
+     * deletes this row.
+     *
+     * The lavarunner rooms are L71–L75, L77, L78, L80 and L99. ONE committed tape retires `noDamage` and enters
+     * one: `axe-l71-reach-l76` (L71, 327 of its 328 ticks). Measured with K2 ON: byte-identical on tapeRunner
+     * (its five lavarunners never reach the walk).
+     */
+    pendingSwitchScope: Object.freeze({
+        lavarunner: Object.freeze({
+            switch: 'lavaRunnerLive',
+            exposedAdded: Object.freeze([
+                Object.freeze({
+                    name: 'axe-l71-reach-l76', levels: Object.freeze([71]), bobs: 5, ticks: 327,
+                    addedBy: 'Seedling fidelity K2PREP D1 (declared for K2 `lavaRunnerLive`, before the guard ran)',
+                    why: 'the AXE witness walks L71 for 327 ticks past its five lavarunners and leaves for L76; '
+                        + 'replayed with the lavarunners stepped it is unchanged (tapeRunner, K2 ON).',
+                }),
+            ]),
+        }),
+        /**
+         * ⛓ wave-11 harvest (planning-5) — `bulb` joins under `contactFidelity.bulbLive` (ON since this harvest, ⚖ the
+         * user, 2026-10-10), the BULB slice's own hand-over ("at the flip R8_ENEMY_BRIDGE needs `bulb`"). Its rows are
+         * the committed tapes that retire `noDamage` and enter a Bulb room, measured here by the guard.
+         */
+        bulb: Object.freeze({
+            table: 'contactFidelity',
+            switch: 'bulbLive',
+            exposedAdded: Object.freeze([]),
+        }),
+    }),
 
     /** The roster tally the exposure was derived from, at `153f5100b`. */
     rosterAtPrediction: Object.freeze({
@@ -1517,6 +1611,30 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
 });
 
 /**
+ * ⛓ K2PREP D1 — the DECLARED scope as the switches stand: `bridgedClasses` plus every `pendingSwitchScope` class
+ * whose switch is ON. Read at CALL time, like every switch.
+ */
+/**
+ * Is a `pendingSwitchScope` row's switch ON? A row names its table: `killLockBodies` (the default — K2) or
+ * `contactFidelity` (⛓ wave-11 harvest: BULB's `bulbLive`). Read at CALL time.
+ */
+const pendingSwitchOn = (row) => (row.table === 'contactFidelity'
+    ? CONTACT_FIDELITY[row.switch] === true : KILLLOCK_BODIES[row.switch] === true);
+
+export function declaredBridgedClasses() {
+    const pending = Object.entries(R8_ENEMY_BRIDGE.pendingSwitchScope)
+        .filter(([, row]) => pendingSwitchOn(row)).map(([tag]) => tag);
+    return [...R8_ENEMY_BRIDGE.bridgedClasses, ...pending];
+}
+
+/** ⛓ K2PREP D1 — the declared exposure rows as the switches stand (the pending rows join under their switch). */
+export function declaredExposedRows() {
+    const pending = Object.values(R8_ENEMY_BRIDGE.pendingSwitchScope)
+        .filter((row) => pendingSwitchOn(row)).flatMap((row) => row.exposedAdded);
+    return [...R8_ENEMY_BRIDGE.exposedTapes, ...R8_ENEMY_BRIDGE.exposedAdded, ...pending];
+}
+
+/**
  * ⛔ THE EXPOSURE IS RE-DERIVED FROM DISK, NOT TRUSTED.
  *
  * Reads every committed tape and every committed expectation, recomputes
@@ -1545,7 +1663,8 @@ export function assertBridgeExposureIsMeasured(io) {
         const levels = [...io.levelsVisited(name)].filter((l) => bridged.has(l)).sort((a, b) => a - b);
         if (levels.length) found.push({ name, levels });
     }
-    const all = [...R8_ENEMY_BRIDGE.exposedTapes, ...R8_ENEMY_BRIDGE.exposedAdded];
+    // ⛓ K2PREP D1: the pending switch rows join while their switch is ON.
+    const all = declaredExposedRows();
     /**
      * ⛓⛓ THE RETIREMENT IS GUARDED AGAINST THE DIRECTORY, BOTH WAYS (R9 7b).
      *
@@ -1644,8 +1763,7 @@ export function campaignBridgeCoverageFindings(io) {
             + 'bridged bodies, so an empty answer means the declaration or the census '
             + 'was not read — a vacuous pass, not a clean one.');
     }
-    const declared = [...R8_ENEMY_BRIDGE.exposedTapes, ...R8_ENEMY_BRIDGE.exposedAdded]
-        .map((t) => t.name);
+    const declared = declaredExposedRows().map((t) => t.name);
     const missing = touching.filter((n) => !declared.includes(n));
     if (missing.length) {
         throw new Error(`R8_ENEMY_BRIDGE: ${missing.join(', ')} is a campaign segment `
@@ -1677,7 +1795,8 @@ export function assertBridgeRosterMatchesScope(derived) {
             + 'default import would make the disagreement case unconstructable.');
     }
     const got = [...derived()].sort();
-    const want = [...R8_ENEMY_BRIDGE.bridgedClasses].sort();
+    // ⛓ K2PREP D1: the declaration as the switches stand (`pendingSwitchScope` joins under its switch).
+    const want = declaredBridgedClasses().sort();
     if (got.join(',') !== want.join(',')) {
         throw new Error('R8_ENEMY_BRIDGE: the DECLARED scope and the DERIVED bridge '
             + `roster disagree — declared [${want.join(', ')}], derived [${got.join(', ')}]. `
@@ -1723,6 +1842,9 @@ export function assertSteppedContactPartition({ families, pricedBy, why, bridged
          * it live. That skip is its pricer; the partition's question does not apply to it.
          */
         if (tag in KILLLOCK_SWITCHED_CHASERS) continue;
+        // ⛓ wave-11 harvest: the switch-bridged Bulb (`pendingSwitchScope.bulb`, `contactFidelity.bulbLive`) — the same
+        // skip by name in `stepContactsNow` (`hasDropDeath && isBridgedChaser` in a stepped room), BULB's hand-over.
+        if (R8_ENEMY_BRIDGE.pendingSwitchScope[tag]?.table === 'contactFidelity') continue;
         if (!families.includes(tag)) {
             throw new Error(`R8_ENEMY_BRIDGE: "${tag}" is BRIDGED (the run steps it) and is `
                 + 'not a `stepped` contact family — so `stepContactsNow` would still price '

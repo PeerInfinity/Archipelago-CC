@@ -172,8 +172,12 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity GHOSTMOTION: +2 (261) — `ghostmotion-l102-axis`, `ghostmotion-l102-diag` (no dialogue), inert.
         // ⛓ fidelity BOBSOLDIER2: +2 (263) — `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch`, inert.
         // ⛓ fidelity ENCOUNTERS D2: +2 (265) — `enc-l32-fallen-door`, `enc-l32-fire-return`, inert; D3: +1 (266) — `enc-l12-witch`.
-        expect(rows).toHaveLength(266);
-        expect(rows.length - parted.length).toBe(265);
+        // ⛓ fidelity PUSHBLOCK: +3 (269) — `pushblock-l65-reach-l63`, `pushblock-l65-reach-l68`, `pushblock-l65-sword-press`.
+        // ⛓ fidelity ENCOUNTERS2 D2: +1 (270) — `enc-l32-live-arrival`, inert.
+        // ⛓ fidelity L12KEYLINE: +1 (271) — `l12keyline-134-round`, inert.
+        // ⛓ fidelity L30KEYLOCK: +3 (274) — `l30keylock-pit224-before`, `l30keylock-pit224`, `l30keylock-pit240`, inert.
+        expect(rows).toHaveLength(274);
+        expect(rows.length - parted.length).toBe(273);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

@@ -257,7 +257,8 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['botDriverV2', 'crusherBait', 'solverBot'], strategies: [],
         why: 'whether every crusher has stopped charging (`levelRun.js:10587`).' },
     { family: 'pushesSettled', kind: RUN_ENTITIES, blocks: ['pushable'],
-        solverReads: ['botDriverV2'], strategies: [],
+        // ⛓ seedling-fidelity-pushblock: `solverBot.execSpearPress` waits on it after a thrust.
+        solverReads: ['botDriverV2', 'solverBot'], strategies: [],
         why: 'whether every pushed block has come to rest (`levelRun.js:10729`).' },
     { family: 'openBridges', kind: RUN_ENTITIES, blocks: [],
         solverReads: ['botDriverV2'], strategies: [],
