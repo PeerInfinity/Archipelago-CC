@@ -79,7 +79,7 @@ export class SolveProgressView {
         });
     }
 
-    get isOpen() { return this.feed.open; }
+    get isOpen() { return this.feed.isOpen; }
 
     /** Show the view and subscribe (a solve already in flight reports from the next solve on). */
     open() {

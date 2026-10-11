@@ -149,7 +149,8 @@ export function createSolveProgressFeed({ getServices, onNote, tick = () => {}, 
     }
 
     return {
-        get open() { return timer !== null; },
+        /** ⛔ Not `open`: an object literal's `open()` method below would REPLACE a getter of that name. */
+        get isOpen() { return timer !== null; },
         get subscribed() { return subs.size; },
         open() {
             if (timer !== null) return;

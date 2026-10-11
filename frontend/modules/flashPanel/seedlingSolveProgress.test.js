@@ -9,6 +9,9 @@
  *        -> 'close() UNSUBSCRIBES from every service …' reds
  *   v3 finished subtrees are not collapsed
  *        -> 'a FINISHED subtree is collapsed …' reds
+ *   v4 (a defect the in-app row found, 2026-10-11) the feed's open-state getter shares the name of its `open()`
+ *        method, which replaces it — `isOpen` reads a function (always truthy), so the panel never opens the view
+ *        -> 'close() UNSUBSCRIBES …' reds (`feed.isOpen` before open / after close)
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -154,12 +157,15 @@ describe('createSolveProgressFeed — subscribe while open, UNSUBSCRIBE on close
         const heard = [];
         const feed = createSolveProgressFeed({ getServices: () => [a, b, null, {}], onNote: (n) => heard.push(n), timers });
         expect(a.listeners.size).toBe(0);
+        expect(feed.isOpen).toBe(false);
         feed.open();
+        expect(feed.isOpen).toBe(true);
         expect([a.listeners.size, b.listeners.size, feed.subscribed]).toEqual([1, 1, 2]);
         a.emit({ solveId: 1, snapshot: {}, final: false });
         expect(heard).toHaveLength(1);
         expect(heard[0].service).not.toBe(undefined);
         feed.close();
+        expect(feed.isOpen).toBe(false);
         expect([a.listeners.size, b.listeners.size, feed.subscribed, timers.fns.size]).toEqual([0, 0, 0, 0]);
         a.emit({ solveId: 2, snapshot: {}, final: false });
         expect(heard).toHaveLength(1);
