@@ -15467,6 +15467,51 @@ byte for byte and asserts that OFF refuses.
 - **A budget that trips earlier hides which refusal it is, and a fix that keeps the old arm first stays under the
   budget.** With the spear asked after the sword sides, ON was still budget-bound on the page.
 
+### Seedling hammer-phase C4 — the L74 chooser
+
+The divergence sweep's leg 624 (`level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144`) refuses on
+`lavarunner@208,96` (d 9.3). LEASH showed the corridor's hit is the game's, at t87. The kill rung was handed
+`bulb@48,112`. C4 measured why, and what handing it the lavarunner would do. **No code changed: the leg's wall is not
+the chooser.** The report is `CC/docs/cloud-reports/seedling-hammer-c4.md`.
+
+**Why the bulb.** `chooseBodyToRemove` asks a static question: with this body's volume removed, does a tile path reach
+the aim over the t0 danger volumes? It never asks the corridor probe, which steps the chasers against the walk.
+- Removing the bulb: a path exists. Probed, it is hit by `lavarunner@208,96` at (232.2,119.6), eta 87, which is the
+  walk's own refused hit.
+- Removing either lavarunner: no path, because the bulb's volume still cuts the one-tile path near the goal (24,152).
+- Removing pairs: bulb + either lavarunner admits; the two lavarunners do not.
+
+So the list is `[bulb]`, and C1's `hitSourceBodies` admits no chaser. Mode `order` refuses with the same message,
+and so does the switch OFF.
+
+**If the kill rung were handed the lavarunner** (a lab override: the hit's chaser appended or prepended).
+- The leg still refuses. The chaser arm finds 21 reachable stances in the leash, and its forecast refuses all 21:
+  the WAIT is hit at t87 (t99 from (280,120)) by the target itself.
+- In the preview the first press lands at t57 (hits 1, i-frame 30). The body is back on the player when that i-frame
+  lapses at t87, and the strike policy's next press goes in at t88, too late.
+- **On the game** (p4f, `probe-seedling-chaser-mobiles` with the player recorded): the stance (264,120)'s preview
+  played as a tape is hit at t87 on both sides, and the second landing kills the body at t90. The lavarunner agrees at
+  0 px over 311 comparisons. The player agrees on every tick but t1–t2, the known L74 arrival-frame residue.
+- **The same tape with the press at t84 or t85** kills the body at t87 with **no hit**, on the game and in the model
+  (0 px). A press inside the i-frame lands, because its hit tests run T+1…T+5. `strikePolicy`'s `hitsTimer > 0` gate
+  is what refuses it, and that gate is the chaser arm's (fidelity's).
+- Even with a lab gate that anticipates (a reading ≤ 4), the solve then dies on a model refusal. The walk rebuilds
+  L74 with fallrock tag 2 cleared (`LevelWorldError`), the same wall the t83/t86 tape replays hit.
+
+**Neighbours at this head** (node, the page's 2,560 retry):
+- 622: forced hit (FORCEDHIT's).
+- 626: the arrival's fallrock freeze at t0.
+- 628: the skirt-stance stall.
+- 629: solves in 307 t (`baitForecast` is ON now).
+
+**Trap candidates:**
+- **"Its removal admits a corridor" is a static answer, and the probe is a moving one.** A body can be necessary for
+  the static path and still leave the probed corridor hit by another body.
+- **A measurement arm can stop being inert when another switch flips.** C1 measured `order` equal to `empty`. With
+  `STATIC_SWORD_ARM` ON (C1-ON), `order` hands L6's `sandtrap@64,16` ahead of `bob@112,48`, and
+  `solve-seedling-r9-campaign --check` throws at `r8-solve-6`. With `SEEDLING_STATIC_SWORD_ARM=0`, `order` is the
+  base (`712f0ead`; `r9-solve-16` byte-identical, 688 t).
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
