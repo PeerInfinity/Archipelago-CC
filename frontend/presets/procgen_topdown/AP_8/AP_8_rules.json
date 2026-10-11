@@ -18937,15 +18937,15 @@
               "id": "logic_gate_27"
             },
             {
-              "x": 17,
-              "y": 18,
+              "x": 2,
+              "y": 17,
               "id": "logic_gate_28"
             }
           ],
           "items": [
             {
-              "x": 20,
-              "y": 12,
+              "x": 10,
+              "y": 1,
               "id": "Piece of Heart",
               "locationName": "Mushroom"
             },
@@ -18974,8 +18974,8 @@
               "locationName": "Purple Chest"
             },
             {
-              "x": 17,
-              "y": 18,
+              "x": 2,
+              "y": 17,
               "id": "Activated Flute",
               "locationName": "Flute Activation Spot"
             }
@@ -24038,15 +24038,15 @@
               "id": "logic_gate_7"
             },
             {
-              "x": 20,
-              "y": 0,
+              "x": 3,
+              "y": 18,
               "id": "logic_gate_8"
             }
           ],
           "items": [
             {
-              "x": 20,
-              "y": 0,
+              "x": 3,
+              "y": 18,
               "id": "Get Frog",
               "locationName": "Frog"
             }
@@ -36962,15 +36962,15 @@
               "id": "logic_gate_0"
             },
             {
-              "x": 19,
-              "y": 17,
+              "x": 16,
+              "y": 14,
               "id": "logic_gate_1"
             }
           ],
           "items": [
             {
-              "x": 19,
-              "y": 17,
+              "x": 16,
+              "y": 14,
               "id": "Rupees (5)",
               "locationName": "Ether Tablet"
             }
