@@ -278,7 +278,8 @@ describe('⛓ the links the render emits', () => {
         //   347 → 354: bulletml N5 — two links to noiz2sa.md § Pricing, two to ../modules/loopsCostDebugger.md, three same-doc in noiz2sa.md.
         //   354 → 356: persistence — flash.md ↔ seedling-bot.md (the botStart reuse path).
         //   356 → 357: JtA zone locations — substrate-registry.md → jta.md.
-        expect(checked).toBe(357);
+        //   357 → 359: spiral victory — architecture.md and substrate-registry.md → stepped-pipeline.md § The item layer.
+        expect(checked).toBe(359);
     });
 
     it('tags each link with the kind that produced it', () => {

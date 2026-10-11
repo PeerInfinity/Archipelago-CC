@@ -115,7 +115,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "victory",
+              "name": "Victory",
               "player": 1,
               "advancement": true,
               "type": "progression"
@@ -151,8 +151,8 @@
           "Everything"
         ]
       },
-      "victory": {
-        "name": "victory",
+      "Victory": {
+        "name": "Victory",
         "id": 3,
         "classification": "progression",
         "groups": [
@@ -170,7 +170,7 @@
     "1": {
       "key_blue": 1,
       "key_red": 1,
-      "victory": 1
+      "Victory": 1
     }
   },
   "world": {
@@ -184,7 +184,7 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "victory"
+        "item": "Victory"
       }
     }
   },
@@ -199,7 +199,7 @@
     "1": {
       "region_2_2__loc_0__5_4": "key_blue",
       "region_2_3__loc_0__5_1": "key_red",
-      "region_3_3__loc_0": "victory"
+      "region_3_3__loc_0": "Victory"
     }
   },
   "progression_mapping": {
@@ -832,7 +832,7 @@
           "locations": [
             {
               "name": "region_3_3__loc_0",
-              "item": "victory",
+              "item": "Victory",
               "cell": {
                 "tx": 5,
                 "ty": 3
@@ -899,7 +899,7 @@
           {
             "sphere": 3,
             "items": [
-              "victory"
+              "Victory"
             ]
           }
         ]
@@ -1091,10 +1091,10 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "victory": 1
+              "Victory": 1
             },
             "resolved_items": {
-              "victory": 1
+              "Victory": 1
             }
           },
           "new_accessible_locations": [],

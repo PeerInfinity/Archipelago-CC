@@ -60,6 +60,9 @@ describe('buildRunFromState — shuffled spiral', () => {
                 regionSize: { width: 8, height: 6 },
                 itemPool: { victory: 1, key_red: 1 },
                 obstaclePool: { door_red: 1 },
+                // ⚖ One goal item: the scenario's victory is the switch, the
+                // engine places `Victory` (the item layer pins it).
+                goalItem: 'Victory',
                 seed: 3,
                 regionParams: {},
                 growthParams: {
@@ -74,7 +77,7 @@ describe('buildRunFromState — shuffled spiral', () => {
                 seed: 3,
                 enableLoopMode: false,
                 regionXpEffect: 'cost',
-                completionConditionItem: 'victory',
+                completionConditionItem: 'Victory',
                 // tutorial-bugs: the panel default `mazeArrival: 'zone'`.
                 arrival: 'zone',
             },
@@ -108,6 +111,8 @@ describe('buildRunFromState — sphere growth', () => {
         });
         const { itemLib, ...config } = run.config;
         expect(itemLib.victory?.is_victory).toBe(true);
+        // The one goal item's row joins the library (maze and TA draw it).
+        expect(itemLib.Victory?.is_victory).toBe(true);
         expect(config).toEqual({
             seed: 2,
             regionSize: { width: 8, height: 6 },
@@ -122,13 +127,13 @@ describe('buildRunFromState — sphere growth', () => {
             startSubstrate: 'maze',
             sphereCount: 2,
             spheresPerBatch: null,
-            victoryItem: 'victory',
+            victoryItem: 'Victory',
             exclusiveSpheres: {},
             startingItems: [],
             pinnedCanonicalItems: [],
             enableLoopMode: false,
             regionXpEffect: 'cost',
-            itemPool: { victory: 1, key_red: 1 },
+            itemPool: { Victory: 1, key_red: 1 },
         });
         expect(run.cfg.activeIds).toEqual(['maze']);
     });

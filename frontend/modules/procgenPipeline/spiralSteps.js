@@ -42,12 +42,14 @@
 import {
     arrangeSpiralPlan,
     realiseSpiralRegions,
+    spiralItemHolders,
     buildRulesJson,
     serializeGrid,
     deserializeGrid,
 } from './procgenPipelineEngine.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { isLibrarySourceId } from './procgenPipelineEngine.js';
+import { unplacedGoalSentence } from '../procgenCore/goalItem.js';
 import { stampLibraryIdentity } from './regionLibraryValidator.js';
 import {
     runStep as runStepGeneric,
@@ -156,8 +158,11 @@ function stepArrange(env) {
         cells: plan.cells,
         startCell: plan.startCell,
         gridDims: plan.gridDims,
+        // The item layer: the pool items each cell holds, the goal on the last
+        // cell that can hold one (editable like the rest of the plan).
+        items: plan.items,
     };
-    env.rng = { s: plan.rngState }; // continuous stream, post-shuffle
+    env.rng = { s: plan.rngState }; // continuous stream, post-shuffle + post-deal
     env.content = null;
     env.regions = null;
     env.compile = null;
@@ -192,8 +197,12 @@ function stepContent(env) {
 // config; procedural substrates draw rng in the exact monolithic order.
 function stepRegions(env) {
     const plan = { ...env.arrange, rngState: env.rng.s };
-    const { grid, stats, startCell } = realiseSpiralRegions(plan, env.config);
-    env.regions = { grid, stats, startCell };
+    const {
+        grid, stats, startCell, goalItem,
+    } = realiseSpiralRegions(plan, env.config);
+    env.regions = {
+        grid, stats, startCell, goalItem,
+    };
     env.compile = null;
     env.completed = 2;
     return env;
@@ -203,14 +212,18 @@ function stepRegions(env) {
 // loop-mode flags, completion item) so the runner stays self-contained for the
 // CLI — mirrors the panel's old inline _runShuffledSpiral compile tail.
 function stepCompile(env) {
-    const { grid, stats, startCell } = env.regions;
+    const {
+        grid, stats, startCell, goalItem,
+    } = env.regions;
     const c = env.compileIn ?? {};
     const rulesJson = buildRulesJson(grid, {
         startCell,
         seed: c.seed,
         enableLoopMode: !!c.enableLoopMode,
         regionXpEffect: c.regionXpEffect ?? 'cost',
-        completionConditionItem: c.completionConditionItem ?? null,
+        // The goal ③ realised (an envelope from before ③ reported one keeps
+        // the completion item it was given).
+        completionConditionItem: goalItem !== undefined ? goalItem : (c.completionConditionItem ?? null),
         procgenParams: c.procgenParams ?? null,
         ...(c.arrival ? { arrival: c.arrival } : {}),
         procgenMetadata: {
@@ -218,6 +231,12 @@ function stepCompile(env) {
             stop_reason: stats.stopReason,
         },
     });
+    const unplaced = unplacedGoalSentence(rulesJson);
+    if (unplaced) {
+        const { holders, gaps } = spiralItemHolders();
+        throw new Error(`shuffled spiral: ${unplaced}. No region of it can hold the goal — add a region of a substrate that `
+            + `holds pool items (${holders.join(', ')}); ${gaps.join(', ')} do not hold them`);
+    }
     env.compile = { rulesJson };
     env.completed = 3;
     return env;

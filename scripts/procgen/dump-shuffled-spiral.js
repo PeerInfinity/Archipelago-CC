@@ -43,8 +43,6 @@ import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
 
 import { arrangeShuffledSpiral, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
-import { substrateRegistry } from
-    '../../frontend/modules/shared/procgen/substrateRegistry.js';
 import { setJtaEmitZoneLocations } from
     '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 
@@ -166,7 +164,9 @@ async function main() {
     // Opt-in jta zone-locations channel (Phase 1 skeleton). Off by
     // default so jta dumps stay byte-identical to prior runs.
     setJtaEmitZoneLocations(config.jtaLocations);
-    const { grid, stats, startCell } = arrangeShuffledSpiral({
+    const {
+        grid, stats, startCell, goalItem,
+    } = arrangeShuffledSpiral({
         regionSize: config.region,
         itemPool: { ...config.items },
         obstaclePool: { ...config.obstacles },
@@ -178,18 +178,12 @@ async function main() {
                 ? { startSubstrate: config.start } : {}),
         },
     });
-    // Completion-condition item: first quota'd substrate declaring a
-    // victoryItem on its registry entry (e.g. bounce — its zone table
-    // places the item itself). Mirrors the pipeline UI's substrate
-    // fallback in _resolveVictoryItemId; without it the emitted world
-    // has no goal and AP defaults to trivially-true completion.
-    const victoryItem = Object.entries(config.quotas)
-        .map(([id, n]) => (n > 0 ? substrateRegistry.get(id)?.victoryItem : null))
-        .find(Boolean) ?? null;
+    // Completion-condition item: the goal the spiral's item layer placed
+    // (`Victory`), or null for a world without one.
     const rulesJson = buildRulesJson(grid, {
         startCell,
         seed: config.seed,
-        completionConditionItem: victoryItem,
+        completionConditionItem: goalItem,
     });
     const dump = {
         config,

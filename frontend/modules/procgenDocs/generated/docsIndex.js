@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 27,
-        "headings": 1040,
+        "headings": 1041,
         "indexHeadings": 2,
-        "lines": 27170,
+        "lines": 27180,
         "pages": 4,
-        "words": 349465
+        "words": 349971
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -51,7 +51,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 4115
+            "words": 4164
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` connects the pipeline, the runtime player and the substrates: each substrate registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This page documents the entry fields, the generated capability matrix, and how to add a substrate.",
@@ -69,7 +69,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 5153
+            "words": 5239
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -286,8 +286,8 @@ export const DOCS_INDEX = frz({
             "description": "Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline panel's step buttons and the per-step CLIs drive, and it reproduces the monolithic output byte for byte.",
             "file": "stepped-pipeline.md",
             "h1": "The Stepped Pipeline",
-            "headings": 15,
-            "lines": 181,
+            "headings": 16,
+            "lines": 191,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -296,7 +296,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/stepped-pipeline.md",
-            "words": 2323
+            "words": 2599
         },
         {
             "description": "The Procgen Pipeline panel's **Preset** drop-down applies a shipped configuration (mode, seed, substrates, knobs and item pool) so that Generate builds a world demonstrating one feature. CI generates every preset that names no heavy substrate headless, twice, and requires the two runs to be byte-identical.",
@@ -424,7 +424,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/jta.md",
-            "words": 3376
+            "words": 3409
         },
         {
             "description": "The omsi substrate (`frontend/modules/omsiSubstrateWrapper/`, id `omsi`) runs the `PeerInfinity/omsi-loops` fork of Idle Loops, from the `frontend/modules/omsi-loops/` submodule, in a same-origin iframe as a loop-mode substrate. The host owns the game clock, and the game's per-loop mana budget is the shared mana pool.",
@@ -455,7 +455,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/noiz2sa.md",
-            "words": 7318
+            "words": 7380
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",

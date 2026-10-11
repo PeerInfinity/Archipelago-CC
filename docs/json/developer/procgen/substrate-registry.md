@@ -126,14 +126,14 @@ Implemented by `maze` (tile-grid helpers in `adapterPrimitives.js`), `text_adven
 
 ### Build-time — content sources (zone-based substrates)
 
-A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)), except a source that takes scenario-pool items (`absorbsScenarioItems`), which draws them as a procedural region does, and only while the pool holds items. The content sources are the zone games (`jta`, `bounce`, `runner`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
+A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)). The pool items a content cell holds were dealt to it up front by the spiral's [item layer](./stepped-pipeline.md#the-item-layer). The content sources are the zone games (`jta`, `bounce`, `runner`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
 
 | Field | Meaning |
 |-------|---------|
 | `zoneCount` | Pool size. `arrangeShuffledSpiral` allocates no more regions than this, and the APWorld editor's *Zone N* source (`apworldEditor/regionContent.js`) offers `0..zoneCount-1`. |
-| `extractZoneRules(zoneIdx, ctx)` | Instantiate one entry: locations, per-side exit rules, obstacle defs and `playable_payload` fragment. With `ctx.itemsToPlace` (an `absorbsScenarioItems` source) it also answers `placedItems`, the pool items it put on its locations. |
-| `absorbsScenarioItems` | When true, the spiral hands each of this source's regions up to `maxItemsPerRegion` items from the scenario pool (`ScenarioPool.planPlacement`), which the region marks placed. jta, with its zone locations on. |
-| `placeVictoryIfMissing(region)` | The victory fallback. After every spiral region is built, a world in which no location holds a victory item (any `is_victory` item of the item library or of a quota substrate's `libraryItems`) offers each region to this hook; the first that answers `true` placed one. jta's goal zone puts its `Victory` on its Travel task. |
+| `extractZoneRules(zoneIdx, ctx)` | Instantiate one entry: locations, per-side exit rules, obstacle defs and `playable_payload` fragment. In a spiral, `ctx.itemsToPlace` holds the pool items the item layer dealt this cell (the goal, `Victory`, among them on the goal cell), and the region must hold every one of them or the spiral refuses it by name. `ctx.goalOwned` says the engine places the world's goal, so the entry must not place a victory item of its own. |
+| `spiralItemCapacity(ordinal)` | How many pool items the source's `ordinal`th region can hold (the engine caps it at `maxItemsPerRegion`; `Infinity` = as many as it is dealt). A source without it holds none, so it never receives the goal: bounce, runner, `flash_seedling` and omsi are the ruled known gaps. jta answers its perk-free tasks (none with zone locations off); noiz2sa grows a location per item. |
+| `fillerItem` | The item a location of this substrate holds when the engine takes a victory item off it (the spiral keeps ONE goal: a known-gap substrate's own victory becomes filler when the goal was placed elsewhere). Absent: the engine's slot filler, `Region Library Filler`. |
 | `getSpiralContent()` | The installed content document, for the stepped pipeline's content step; `null` when none is installed. |
 | `applyPipelineConfig(cfg)` | Install this source's pipeline config (called via `applySubstrateConfig`); `applyPipelineConfig({})` restores defaults. See [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). |
 | `pipelineConfigKeys` | The keys `applyPipelineConfig` reads, as a frozen array. Tested in `procgenCore/substrateConfigRecord.test.js`. |
@@ -145,7 +145,7 @@ A **content source** supplies existing region content by ordinal: its Nth planne
 | `onContentEdit(doc)` | Restamp a hand-edited content document (hash, id suffix, validation); idempotent. A changed id clears downstream steps. See [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). |
 | `rulesJsonBlocks()` | `rules.json` blocks this substrate's runtime reads, merged by `buildRulesJson` (and the APWorld Editor's initialise op) for substrates that realised a region, each under the slot (`{"<p>": block}`, rules F2). A key already present is refused, so one world cannot realise both Seedling entries (both write `flash_panel`). |
 | `restartWarp` | Declared when this substrate's runtime answers the Menu panel's Restart by warping the player to the start region (`procgenCore/restartWarp.js`'s `RESTART_WARP`). If any substrate that realised a region declares it, `buildRulesJson` writes `exporter[p].return_to_menu: true`: returning to the menu is always possible. It is a flag, never an edge (no region gets an exit into `Menu`). `region-atlas-compile.mjs` and the playthrough generator ask the same declaration. Position-aware readers honour it: `scripts/procgen/census-soft-locks.mjs` lists Restart-only regions as a diagnostic, the route survey may Restart, and the client's route planners (the Playback Bot, the region graph's one-step move) begin a route with a RESTART step when no walk exists (`procgenCore/restartRoute.js`). Seedling's two entries declare it; a world of maze rooms only does not. |
-| `victoryItem` | The goal item, used as the completion item when the scenario pool has no `is_victory` item. |
+| `victoryItem` | Declares that a world with this substrate in its quota has a goal even when the scenario pool has no `is_victory` item. In the shuffled spiral and sphere growth the goal is always the one item `Victory` (`procgenCore/goalItem.js`); grid growth still completes on this item. |
 
 A source that feeds a *document* into the pipeline (jta's dataset) declares `emitsSpiralContent: true` and names its config field with `spiralContentConfigKey` (default `datasetDoc`). Only jta is truly pre-built (indices into one game build); bounce and runner generate their zones and store them by value.
 
@@ -326,19 +326,19 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `absorbsScenarioItems` | — | — | — | — | no | — | — | — | — | — |
 | `applyPipelineConfig` | — | — | fn | — | fn | — | — | fn | — | — |
 | `emitsSpiralContent` | — | — | — | — | yes | — | — | — | — | — |
 | `extractZoneRules` | fn | — | fn | — | fn | — | fn | fn | fn | — |
+| `fillerItem` | — | — | — | — | — | — | Noiz2sa Star | — | — | — |
 | `getSpiralContent` | — | — | — | — | fn | — | — | — | — | — |
 | `onContentEdit` | — | — | — | — | fn | — | — | — | — | — |
 | `pipelineConfigFromParams` | — | — | fn | — | fn | — | — | — | — | — |
 | `pipelineConfigKeys` | — | — | atlasDoc, atlasId | — | 7 items | — | — | 5 items | — | — |
-| `placeVictoryIfMissing` | — | — | — | — | fn | — | — | — | — | — |
 | `recordablePipelineConfig` | — | — | — | — | fn | — | — | fn | — | — |
 | `restartWarp` | — | — | {cite, label, target} | {cite, label, target} | — | — | — | — | — | — |
 | `rulesJsonBlocks` | — | — | fn | fn | — | — | — | — | — | — |
 | `spiralContentConfigKey` | — | — | — | — | datasetDoc | — | — | — | — | — |
+| `spiralItemCapacity` | — | — | — | — | fn | — | fn | — | — | — |
 | `victoryItem` | Victory | — | — | — | Victory | — | Victory | Victory | Victory | — |
 | `zoneConfigFromSlot` | — | — | fn | — | fn | — | — | — | — | — |
 | `zoneCount` | 5 | — | 4 | — | 30 | — | 3 | 1 | 6 | — |

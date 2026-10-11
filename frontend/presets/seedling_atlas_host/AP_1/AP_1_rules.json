@@ -45,7 +45,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "victory",
+              "name": "Victory",
               "player": 1,
               "advancement": true,
               "type": "progression"
@@ -161,8 +161,8 @@
   },
   "items": {
     "1": {
-      "victory": {
-        "name": "victory",
+      "Victory": {
+        "name": "Victory",
         "id": 1,
         "classification": "progression",
         "groups": [
@@ -194,7 +194,7 @@
   },
   "itempool_counts": {
     "1": {
-      "victory": 1,
+      "Victory": 1,
       "key_blue": 1,
       "key_red": 1
     }
@@ -210,7 +210,7 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "victory"
+        "item": "Victory"
       }
     }
   },
@@ -223,7 +223,7 @@
   },
   "canonical_placements": {
     "1": {
-      "region_3_1__loc_0__4_2": "victory",
+      "region_3_1__loc_0__4_2": "Victory",
       "region_2_2__loc_0__2_3": "key_blue",
       "region_2_3__loc_0__5_2": "key_red"
     }
@@ -671,12 +671,22 @@
             {
               "x": 4,
               "y": 2,
-              "id": "victory",
+              "id": "Victory",
               "locationName": "region_3_1__loc_0__4_2"
             }
           ],
           "obstacleLib": {},
-          "itemLib": {},
+          "itemLib": {
+            "Victory": {
+              "name": "Victory",
+              "id": "Victory",
+              "classification": "progression",
+              "color": "#f5d020",
+              "symbol": "star",
+              "feature": "victory",
+              "is_victory": true
+            }
+          },
           "longestShortestPath": 1,
           "fogEnabled": true
         },
@@ -719,7 +729,7 @@
           {
             "sphere": 3,
             "items": [
-              "victory"
+              "Victory"
             ]
           }
         ]
@@ -956,10 +966,10 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "victory": 1
+              "Victory": 1
             },
             "resolved_items": {
-              "victory": 1
+              "Victory": 1
             }
           },
           "new_accessible_locations": [],

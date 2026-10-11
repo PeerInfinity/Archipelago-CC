@@ -48,7 +48,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
         },
         {
-            "fields": 36,
+            "fields": 35,
             "id": "jta",
             "label": "JtA",
             "registeredBy": "frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js"
@@ -60,7 +60,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
         },
         {
-            "fields": 23,
+            "fields": 25,
             "id": "noiz2sa",
             "label": "Noiz2sa",
             "registeredBy": "frontend/modules/noiz2saSubstrate/noiz2saSubstrateLibrary.js"
@@ -175,19 +175,19 @@ export const REGISTRY = frz({
         },
         {
             "rows": [
-                "absorbsScenarioItems",
                 "applyPipelineConfig",
                 "emitsSpiralContent",
                 "extractZoneRules",
+                "fillerItem",
                 "getSpiralContent",
                 "onContentEdit",
                 "pipelineConfigFromParams",
                 "pipelineConfigKeys",
-                "placeVictoryIfMissing",
                 "recordablePipelineConfig",
                 "restartWarp",
                 "rulesJsonBlocks",
                 "spiralContentConfigKey",
+                "spiralItemCapacity",
                 "victoryItem",
                 "zoneConfigFromSlot",
                 "zoneCount",
@@ -334,86 +334,6 @@ export const REGISTRY = frz({
         }
     ],
     "rows": [
-        {
-            "carriedBy": [
-                "jta"
-            ],
-            "cells": [
-                {
-                    "id": "bounce",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash_seedling_gen",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "jta",
-                    "present": true,
-                    "short": "no",
-                    "type": "boolean",
-                    "value": false
-                },
-                {
-                    "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "noiz2sa",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "text_adventure",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                }
-            ],
-            "documentedHow": "table",
-            "group": "Build-time — content sources (zone-based substrates)",
-            "name": "absorbsScenarioItems"
-        },
         {
             "carriedBy": [
                 "bounce",
@@ -2485,6 +2405,86 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Build-time — content sources (zone-based substrates)",
             "name": "extractZoneRules"
+        },
+        {
+            "carriedBy": [
+                "noiz2sa"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": true,
+                    "short": "Noiz2sa Star",
+                    "type": "string",
+                    "value": "Noiz2sa Star"
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "fillerItem"
         },
         {
             "carriedBy": [
@@ -5710,86 +5710,6 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
-                "jta"
-            ],
-            "cells": [
-                {
-                    "id": "bounce",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash_seedling_gen",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "jta",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
-                    "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "noiz2sa",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "text_adventure",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                }
-            ],
-            "documentedHow": "table",
-            "group": "Build-time — content sources (zone-based substrates)",
-            "name": "placeVictoryIfMissing"
-        },
-        {
-            "carriedBy": [
                 "flash_seedling",
                 "flash_seedling_gen"
             ],
@@ -7509,6 +7429,87 @@ export const REGISTRY = frz({
             "documentedHow": "prose",
             "group": "Build-time — content sources (zone-based substrates)",
             "name": "spiralContentConfigKey"
+        },
+        {
+            "carriedBy": [
+                "jta",
+                "noiz2sa"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "spiralItemCapacity"
         },
         {
             "carriedBy": [

@@ -23,6 +23,7 @@ import { CONCEPTS, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 import { getItemRenderHints } from '../shared/procgen/library.js';
 import { MAZE_CONCEPT_REALISATIONS } from '../mazeRoom/mazeConcepts.js';
+import { GOAL_ITEM, GOAL_ITEM_DEF } from '../procgenCore/goalItem.js';
 
 const CONCEPT_LIST = ['sword', 'guardian', 'swim', 'water'];
 const bundle = (concepts) => ({
@@ -115,13 +116,19 @@ describe('T0b D2 — the concept\'s colour reaches play', async () => {
         'Progressive Swim': markConceptRow(itemRowsOf(CONCEPTS.swim)[0], 'swim'),
     };
 
-    it('⛔ a concept-less world\'s payload itemLib extras stay {} (byte identity)', () => {
-        for (const p of payloads(control.rulesJson)) expect(p.itemLib).toEqual({});
+    // ⛓ spiral victory: the room holding the one goal item carries the goal's
+    //   row (`Victory` is in no library the runtime reads a room against).
+    const holdsGoal = (p) => (p.items ?? []).some((i) => i.id === GOAL_ITEM);
+    const goalRow = (p) => (holdsGoal(p) ? { [GOAL_ITEM]: GOAL_ITEM_DEF } : {});
+
+    it('⛔ a concept-less world\'s payload itemLib extras stay {} but the goal\'s row (byte identity)', () => {
+        expect(payloads(control.rulesJson).filter(holdsGoal)).toHaveLength(1);
+        for (const p of payloads(control.rulesJson)) expect(p.itemLib).toEqual(goalRow(p));
     });
 
     it('a concept world\'s payloads carry the marked table rows, the table\'s colour included', () => {
         for (const p of payloads(world.rulesJson)) {
-            expect(p.itemLib).toEqual(MARKED);
+            expect(p.itemLib).toEqual({ ...MARKED, ...goalRow(p) });
             expect(p.itemLib['Progressive Sword'].color).toBe(CONCEPTS.sword.item.color);
         }
     });

@@ -43,13 +43,13 @@
         ],
         "locations": [
           {
-            "name": "region_0_0__key_blue_pickup",
+            "name": "region_0_0__key_red_pickup",
             "id": 1000,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "key_blue",
+              "name": "key_red",
               "player": 1,
               "advancement": true,
               "type": "progression"
@@ -75,7 +75,21 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "region_1_0__key_blue_pickup__6_1",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_blue",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
       },
       "region_0_1": {
         "name": "region_0_1",
@@ -95,7 +109,21 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "region_0_1__key_yellow_pickup",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_yellow",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
       },
       "region_1_1": {
         "name": "region_1_1",
@@ -115,7 +143,21 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "region_1_1__key_green_pickup__4_3",
+            "id": 1003,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_green",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
       }
     }
   },
@@ -129,9 +171,33 @@
   },
   "items": {
     "1": {
+      "key_red": {
+        "name": "key_red",
+        "id": 1,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
       "key_blue": {
         "name": "key_blue",
-        "id": 1,
+        "id": 2,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "key_yellow": {
+        "name": "key_yellow",
+        "id": 3,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "key_green": {
+        "name": "key_green",
+        "id": 4,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -146,7 +212,10 @@
   },
   "itempool_counts": {
     "1": {
-      "key_blue": 1
+      "key_red": 1,
+      "key_blue": 1,
+      "key_yellow": 1,
+      "key_green": 1
     }
   },
   "world": {
@@ -173,7 +242,10 @@
   },
   "canonical_placements": {
     "1": {
-      "region_0_0__key_blue_pickup": "key_blue"
+      "region_0_0__key_red_pickup": "key_red",
+      "region_1_0__key_blue_pickup__6_1": "key_blue",
+      "region_0_1__key_yellow_pickup": "key_yellow",
+      "region_1_1__key_green_pickup__4_3": "key_green"
     }
   },
   "progression_mapping": {
@@ -200,7 +272,7 @@
         "playable_payload": {
           "gameId": "seedling",
           "generated": true,
-          "seed": 2079575700,
+          "seed": 79769937,
           "size": {
             "width": 10,
             "height": 10
@@ -294,271 +366,271 @@
                   [
                     3,
                     1,
-                    0,
-                    0
-                  ],
-                  [
-                    4,
-                    1,
-                    0,
-                    0
-                  ],
-                  [
-                    5,
-                    1,
-                    0,
-                    0
-                  ],
-                  [
-                    6,
-                    1,
-                    48,
-                    0
-                  ],
-                  [
-                    7,
-                    1,
-                    48,
-                    0
-                  ],
-                  [
-                    8,
-                    1,
-                    0,
-                    0
-                  ],
-                  [
-                    9,
-                    1,
-                    48,
-                    0
-                  ],
-                  [
-                    0,
-                    2,
-                    48,
-                    0
-                  ],
-                  [
-                    1,
-                    2,
-                    0,
-                    0
-                  ],
-                  [
-                    2,
-                    2,
-                    48,
-                    0
-                  ],
-                  [
-                    3,
-                    2,
-                    48,
-                    0
-                  ],
-                  [
-                    4,
-                    2,
-                    48,
-                    0
-                  ],
-                  [
-                    5,
-                    2,
-                    0,
-                    0
-                  ],
-                  [
-                    6,
-                    2,
-                    48,
-                    0
-                  ],
-                  [
-                    7,
-                    2,
-                    48,
-                    0
-                  ],
-                  [
-                    8,
-                    2,
-                    0,
-                    0
-                  ],
-                  [
-                    9,
-                    2,
-                    48,
-                    0
-                  ],
-                  [
-                    0,
-                    3,
-                    48,
-                    0
-                  ],
-                  [
-                    1,
-                    3,
-                    0,
-                    0
-                  ],
-                  [
-                    2,
-                    3,
-                    0,
-                    0
-                  ],
-                  [
-                    3,
-                    3,
-                    0,
-                    0
-                  ],
-                  [
-                    4,
-                    3,
-                    0,
-                    0
-                  ],
-                  [
-                    5,
-                    3,
-                    0,
-                    0
-                  ],
-                  [
-                    6,
-                    3,
-                    48,
-                    0
-                  ],
-                  [
-                    7,
-                    3,
-                    48,
-                    0
-                  ],
-                  [
-                    8,
-                    3,
-                    0,
-                    0
-                  ],
-                  [
-                    9,
-                    3,
-                    48,
-                    0
-                  ],
-                  [
-                    0,
-                    4,
-                    48,
-                    0
-                  ],
-                  [
-                    1,
-                    4,
-                    0,
-                    0
-                  ],
-                  [
-                    2,
-                    4,
-                    0,
-                    0
-                  ],
-                  [
-                    3,
-                    4,
-                    0,
-                    0
-                  ],
-                  [
-                    4,
-                    4,
-                    0,
-                    0
-                  ],
-                  [
-                    5,
-                    4,
-                    0,
-                    0
-                  ],
-                  [
-                    6,
-                    4,
-                    48,
-                    0
-                  ],
-                  [
-                    7,
-                    4,
-                    48,
-                    0
-                  ],
-                  [
-                    8,
-                    4,
-                    0,
-                    0
-                  ],
-                  [
-                    9,
-                    4,
-                    48,
-                    0
-                  ],
-                  [
-                    0,
-                    5,
-                    48,
-                    0
-                  ],
-                  [
-                    1,
-                    5,
-                    0,
-                    0
-                  ],
-                  [
-                    2,
-                    5,
-                    0,
-                    0
-                  ],
-                  [
-                    3,
-                    5,
                     112,
                     0
                   ],
                   [
                     4,
-                    5,
+                    1,
                     112,
                     0
                   ],
                   [
                     5,
-                    5,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    6,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    1,
                     112,
                     0
                   ],
                   [
-                    6,
+                    8,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    1,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    2,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    2,
+                    0,
+                    0
+                  ],
+                  [
+                    3,
+                    2,
+                    112,
+                    0
+                  ],
+                  [
+                    4,
+                    2,
+                    112,
+                    0
+                  ],
+                  [
                     5,
+                    2,
+                    0,
+                    0
+                  ],
+                  [
+                    6,
+                    2,
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    2,
+                    112,
+                    0
+                  ],
+                  [
+                    8,
+                    2,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    3,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    4,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    5,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    6,
+                    3,
                     48,
                     0
                   ],
                   [
                     7,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    8,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    4,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    4,
+                    32,
+                    0
+                  ],
+                  [
+                    3,
+                    4,
+                    32,
+                    0
+                  ],
+                  [
+                    4,
+                    4,
+                    32,
+                    0
+                  ],
+                  [
+                    5,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    6,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    8,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    4,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
                     5,
                     48,
+                    0
+                  ],
+                  [
+                    1,
+                    5,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    5,
+                    32,
+                    0
+                  ],
+                  [
+                    3,
+                    5,
+                    32,
+                    0
+                  ],
+                  [
+                    4,
+                    5,
+                    32,
+                    0
+                  ],
+                  [
+                    5,
+                    5,
+                    0,
+                    0
+                  ],
+                  [
+                    6,
+                    5,
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    5,
+                    0,
                     0
                   ],
                   [
@@ -588,19 +660,19 @@
                   [
                     2,
                     6,
-                    0,
+                    32,
                     0
                   ],
                   [
                     3,
                     6,
-                    0,
+                    32,
                     0
                   ],
                   [
                     4,
                     6,
-                    0,
+                    32,
                     0
                   ],
                   [
@@ -624,7 +696,7 @@
                   [
                     8,
                     6,
-                    0,
+                    32,
                     0
                   ],
                   [
@@ -654,19 +726,19 @@
                   [
                     3,
                     7,
-                    48,
+                    0,
                     0
                   ],
                   [
                     4,
                     7,
-                    48,
+                    0,
                     0
                   ],
                   [
                     5,
                     7,
-                    48,
+                    0,
                     0
                   ],
                   [
@@ -684,7 +756,7 @@
                   [
                     8,
                     7,
-                    0,
+                    32,
                     0
                   ],
                   [
@@ -732,7 +804,7 @@
                   [
                     6,
                     8,
-                    0,
+                    48,
                     0
                   ],
                   [
@@ -744,7 +816,7 @@
                   [
                     8,
                     8,
-                    0,
+                    32,
                     0
                   ],
                   [
@@ -819,8 +891,8 @@
             "entities": [
               {
                 "type": "torchpickup",
-                "x": 64,
-                "y": 16,
+                "x": 128,
+                "y": 64,
                 "attrs": {
                   "tag": "0"
                 }
@@ -832,8 +904,8 @@
             "ty": 1
           },
           "goal_cell": {
-            "tx": 4,
-            "ty": 1
+            "tx": 8,
+            "ty": 4
           },
           "generation": {
             "biome": "pre-sword",
@@ -844,15 +916,16 @@
             "elements": "",
             "areas": "",
             "fill": "dense",
-            "rerolls": 0
+            "rerolls": 4,
+            "rerollCause": "doors"
           },
           "locations": [
             {
-              "name": "region_0_0__key_blue_pickup",
-              "item": "key_blue",
+              "name": "region_0_0__key_red_pickup",
+              "item": "key_red",
               "cell": {
-                "tx": 4,
-                "ty": 1
+                "tx": 8,
+                "ty": 4
               },
               "tag": 0
             }
@@ -861,22 +934,22 @@
           "tile_size": 16,
           "exits": [
             {
-              "exit_id": "out_teleporter_128_16",
+              "exit_id": "out_teleporter_112_128",
               "kind": "teleporter",
               "side": "S",
               "exit_tiles": [
                 [
-                  8,
-                  1
+                  7,
+                  8
                 ]
               ],
               "entrance_tile": [
-                8,
-                1
+                7,
+                8
               ],
               "entrance_spawn": {
-                "x": 128,
-                "y": 32
+                "x": 112,
+                "y": 112
               },
               "exitName": "exit_0",
               "targetRegion": "region_0_1",
@@ -888,22 +961,22 @@
               "target_substrate": "flash_seedling_gen"
             },
             {
-              "exit_id": "out_teleporter_128_128",
+              "exit_id": "out_teleporter_112_96",
               "kind": "teleporter",
               "side": "E",
               "exit_tiles": [
                 [
-                  8,
-                  8
+                  7,
+                  6
                 ]
               ],
               "entrance_tile": [
-                8,
-                8
+                7,
+                6
               ],
               "entrance_spawn": {
-                "x": 128,
-                "y": 112
+                "x": 112,
+                "y": 80
               },
               "exitName": "exit_1",
               "targetRegion": "region_1_0",
@@ -940,41 +1013,17 @@
             1,
             1,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             1,
             1,
             1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
+            0,
             1,
             1,
             1,
@@ -985,21 +1034,16 @@
             1,
             1,
             0,
-            0,
             1,
             1,
             1,
             1,
             0,
             0,
+            1,
+            1,
+            1,
             0,
-            0,
-            0,
-            1,
-            1,
-            1,
-            1,
-            1,
             1,
             1,
             1,
@@ -1027,6 +1071,35 @@
             1,
             1,
             1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
             1,
             1,
             1
@@ -1038,7 +1111,7 @@
           "exits": [
             {
               "exit_id": "exit_0",
-              "x": 3,
+              "x": 6,
               "y": 9,
               "side": "S",
               "exitName": "exit_0",
@@ -1050,7 +1123,7 @@
             {
               "exit_id": "exit_1",
               "x": 0,
-              "y": 5,
+              "y": 4,
               "side": "W",
               "exitName": "exit_1",
               "targetRegion": "region_0_0",
@@ -1060,10 +1133,17 @@
             }
           ],
           "obstacles": [],
-          "items": [],
+          "items": [
+            {
+              "x": 6,
+              "y": 1,
+              "id": "key_blue",
+              "locationName": "region_1_0__key_blue_pickup__6_1"
+            }
+          ],
           "obstacleLib": {},
           "itemLib": {},
-          "longestShortestPath": 9,
+          "longestShortestPath": 21,
           "fogEnabled": true
         },
         "biome": {
@@ -1097,31 +1177,6 @@
             1,
             1,
             0,
-            0,
-            0,
-            0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            0,
-            0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            0,
-            1,
             1,
             1,
             1,
@@ -1131,6 +1186,19 @@
             0,
             0,
             0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
             1,
             1,
             1,
@@ -1146,13 +1214,6 @@
             1,
             1,
             1,
-            0,
-            0,
-            0,
-            1,
-            1,
-            1,
-            1,
             1,
             1,
             0,
@@ -1162,17 +1223,36 @@
             1,
             1,
             1,
-            0,
-            0,
-            0,
-            0,
-            1,
-            1,
             1,
             1,
             1,
             1,
             0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
             1,
             1,
             1,
@@ -1212,7 +1292,7 @@
             {
               "exit_id": "exit_1",
               "x": 0,
-              "y": 8,
+              "y": 2,
               "side": "W",
               "exitName": "exit_1",
               "targetRegion": "region_0_1",
@@ -1222,10 +1302,17 @@
             }
           ],
           "obstacles": [],
-          "items": [],
+          "items": [
+            {
+              "x": 4,
+              "y": 3,
+              "id": "key_green",
+              "locationName": "region_1_1__key_green_pickup__4_3"
+            }
+          ],
           "obstacleLib": {},
           "itemLib": {},
-          "longestShortestPath": 20,
+          "longestShortestPath": 10,
           "fogEnabled": true
         },
         "biome": {
@@ -1253,7 +1340,7 @@
         "playable_payload": {
           "gameId": "seedling",
           "generated": true,
-          "seed": 1049664918,
+          "seed": 331771480,
           "size": {
             "width": 10,
             "height": 10
@@ -1341,7 +1428,7 @@
                   [
                     2,
                     1,
-                    0,
+                    112,
                     0
                   ],
                   [
@@ -1359,13 +1446,13 @@
                   [
                     5,
                     1,
-                    0,
+                    112,
                     0
                   ],
                   [
                     6,
                     1,
-                    0,
+                    112,
                     0
                   ],
                   [
@@ -1407,31 +1494,31 @@
                   [
                     3,
                     2,
-                    48,
+                    0,
                     0
                   ],
                   [
                     4,
                     2,
-                    48,
+                    0,
                     0
                   ],
                   [
                     5,
                     2,
-                    48,
+                    0,
                     0
                   ],
                   [
                     6,
                     2,
-                    48,
+                    0,
                     0
                   ],
                   [
                     7,
                     2,
-                    48,
+                    0,
                     0
                   ],
                   [
@@ -1461,7 +1548,7 @@
                   [
                     2,
                     3,
-                    0,
+                    48,
                     0
                   ],
                   [
@@ -1473,19 +1560,19 @@
                   [
                     4,
                     3,
-                    0,
+                    48,
                     0
                   ],
                   [
                     5,
                     3,
-                    0,
+                    48,
                     0
                   ],
                   [
                     6,
                     3,
-                    0,
+                    48,
                     0
                   ],
                   [
@@ -1497,7 +1584,7 @@
                   [
                     8,
                     3,
-                    0,
+                    48,
                     0
                   ],
                   [
@@ -1521,25 +1608,25 @@
                   [
                     2,
                     4,
-                    48,
+                    0,
                     0
                   ],
                   [
                     3,
                     4,
-                    48,
+                    32,
                     0
                   ],
                   [
                     4,
                     4,
-                    0,
+                    32,
                     0
                   ],
                   [
                     5,
                     4,
-                    0,
+                    32,
                     0
                   ],
                   [
@@ -1575,43 +1662,43 @@
                   [
                     1,
                     5,
-                    32,
+                    0,
                     0
                   ],
                   [
                     2,
                     5,
-                    48,
+                    0,
                     0
                   ],
                   [
                     3,
                     5,
-                    48,
+                    0,
                     0
                   ],
                   [
                     4,
                     5,
-                    48,
+                    0,
                     0
                   ],
                   [
                     5,
                     5,
-                    48,
+                    0,
                     0
                   ],
                   [
                     6,
                     5,
-                    48,
+                    0,
                     0
                   ],
                   [
                     7,
                     5,
-                    48,
+                    0,
                     0
                   ],
                   [
@@ -1635,13 +1722,13 @@
                   [
                     1,
                     6,
-                    32,
+                    0,
                     0
                   ],
                   [
                     2,
                     6,
-                    48,
+                    0,
                     0
                   ],
                   [
@@ -1653,25 +1740,25 @@
                   [
                     4,
                     6,
-                    0,
+                    112,
                     0
                   ],
                   [
                     5,
                     6,
-                    32,
+                    0,
                     0
                   ],
                   [
                     6,
                     6,
-                    32,
+                    0,
                     0
                   ],
                   [
                     7,
                     6,
-                    32,
+                    0,
                     0
                   ],
                   [
@@ -1701,13 +1788,13 @@
                   [
                     2,
                     7,
-                    48,
+                    112,
                     0
                   ],
                   [
                     3,
                     7,
-                    32,
+                    112,
                     0
                   ],
                   [
@@ -1719,19 +1806,19 @@
                   [
                     5,
                     7,
-                    32,
+                    0,
                     0
                   ],
                   [
                     6,
                     7,
-                    32,
+                    0,
                     0
                   ],
                   [
                     7,
                     7,
-                    32,
+                    112,
                     0
                   ],
                   [
@@ -1761,7 +1848,7 @@
                   [
                     2,
                     8,
-                    0,
+                    112,
                     0
                   ],
                   [
@@ -1773,13 +1860,13 @@
                   [
                     4,
                     8,
-                    112,
+                    0,
                     0
                   ],
                   [
                     5,
                     8,
-                    112,
+                    0,
                     0
                   ],
                   [
@@ -1791,13 +1878,13 @@
                   [
                     7,
                     8,
-                    48,
+                    112,
                     0
                   ],
                   [
                     8,
                     8,
-                    48,
+                    0,
                     0
                   ],
                   [
@@ -1872,11 +1959,16 @@
             "entities": [
               {
                 "type": "torchpickup",
-                "x": 128,
-                "y": 80,
+                "x": 80,
+                "y": 96,
                 "attrs": {
                   "tag": "0"
                 }
+              },
+              {
+                "type": "pushableblock",
+                "x": 16,
+                "y": 48
               }
             ]
           },
@@ -1885,8 +1977,8 @@
             "ty": 1
           },
           "goal_cell": {
-            "tx": 8,
-            "ty": 5
+            "tx": 5,
+            "ty": 6
           },
           "generation": {
             "biome": "pre-sword",
@@ -1899,27 +1991,37 @@
             "fill": "dense",
             "rerolls": 0
           },
-          "locations": [],
+          "locations": [
+            {
+              "name": "region_0_1__key_yellow_pickup",
+              "item": "key_yellow",
+              "cell": {
+                "tx": 5,
+                "ty": 6
+              },
+              "tag": 0
+            }
+          ],
           "level": 1,
           "tile_size": 16,
           "exits": [
             {
-              "exit_id": "out_teleporter_64_48",
+              "exit_id": "out_teleporter_128_32",
               "kind": "teleporter",
               "side": "N",
               "exit_tiles": [
                 [
-                  4,
-                  3
+                  8,
+                  2
                 ]
               ],
               "entrance_tile": [
-                4,
-                3
+                8,
+                2
               ],
               "entrance_spawn": {
-                "x": 80,
-                "y": 48
+                "x": 128,
+                "y": 16
               },
               "exitName": "exit_0",
               "targetRegion": "region_0_0",
@@ -1931,22 +2033,22 @@
               "target_substrate": "flash_seedling_gen"
             },
             {
-              "exit_id": "out_teleporter_96_48",
+              "exit_id": "out_teleporter_64_16",
               "kind": "teleporter",
               "side": "E",
               "exit_tiles": [
                 [
-                  6,
-                  3
+                  4,
+                  1
                 ]
               ],
               "entrance_tile": [
-                6,
-                3
+                4,
+                1
               ],
               "entrance_spawn": {
-                "x": 96,
-                "y": 64
+                "x": 48,
+                "y": 16
               },
               "exitName": "exit_1",
               "targetRegion": "region_1_1",
@@ -1993,7 +2095,10 @@
             "resolved_items": {}
           },
           "new_accessible_locations": [
-            "region_0_0__key_blue_pickup"
+            "region_0_0__key_red_pickup",
+            "region_0_1__key_yellow_pickup",
+            "region_1_0__key_blue_pickup__6_1",
+            "region_1_1__key_green_pickup__4_3"
           ],
           "new_accessible_regions": [
             "Menu",
@@ -2013,6 +2118,48 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "key_red": 1
+            },
+            "resolved_items": {
+              "key_red": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_0_0__key_red_pickup"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_yellow": 1
+            },
+            "resolved_items": {
+              "key_yellow": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_0_1__key_yellow_pickup"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "key_blue": 1
             },
             "resolved_items": {
@@ -2022,7 +2169,28 @@
           "new_accessible_locations": [],
           "new_accessible_regions": [],
           "sphere_locations": [
-            "region_0_0__key_blue_pickup"
+            "region_1_0__key_blue_pickup__6_1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_green": 1
+            },
+            "resolved_items": {
+              "key_green": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__key_green_pickup__4_3"
           ]
         }
       }

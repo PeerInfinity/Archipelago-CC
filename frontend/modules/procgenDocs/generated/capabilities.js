@@ -5304,7 +5304,6 @@ export const CAPABILITIES = frz({
         }
     ],
     "uncovered": [
-        "absorbsScenarioItems",
         "applyContentModules",
         "applyPipelineConfig",
         "backPortalGated",
@@ -5319,6 +5318,7 @@ export const CAPABILITIES = frz({
         "exitGateVeto",
         "extractPathsAndObstacles",
         "extractZoneRules",
+        "fillerItem",
         "gateHostingHint",
         "gateableItems",
         "getSpiralContent",
@@ -5337,7 +5337,6 @@ export const CAPABILITIES = frz({
         "pipelineConfigKeys",
         "placeFromItems",
         "placeFromRules",
-        "placeVictoryIfMissing",
         "prepareSphereGrowth",
         "priceRegions",
         "procgenParamsFromPayload",
@@ -5349,6 +5348,7 @@ export const CAPABILITIES = frz({
         "serializeWorld",
         "sidecarFields",
         "spiralContentConfigKey",
+        "spiralItemCapacity",
         "validateLibraryEntry",
         "victoryItem",
         "zoneConfigFromSlot",

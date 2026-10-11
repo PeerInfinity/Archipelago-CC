@@ -1,8 +1,9 @@
 /**
  * JtA zone locations from the Procgen Pipeline panel (⚖ user 2026-10-11,
- * JtA investigation option A): default ON, the Victory on the final zone's
- * Travel task only when the world has no victory item, scenario items on
- * filler tasks, and the shuffle / free zones / starting perks as settings.
+ * JtA investigation option A): default ON, scenario items on filler tasks, and
+ * the shuffle / free zones / starting perks as settings. In a shuffled spiral
+ * the engine owns the world's one goal, `Victory` (⚖ 2026-10-11): a jta zone
+ * dealt it puts it on its Travel task.
  */
 import { afterEach, describe, expect, it } from 'vitest';
 
@@ -11,7 +12,6 @@ import {
     substrateRegistryEntry as jta,
     JTA_FILLER_ITEM_NAME,
     JTA_VICTORY_ITEM_NAME,
-    getJtaGoalVictory,
 } from './jtaSubstrateWrapperLibrary.js';
 import { DEFAULT_JTA_PROCGEN_PARAMS } from './jtaProcgenParams.js';
 import { JTA_VANILLA_DATASET } from './vanillaDataset.js';
@@ -23,7 +23,7 @@ const itemOf = (region, id) => region.extracted_rules.locations.find((l) => l.id
 afterEach(() => { jta.applyPipelineConfig({}); });
 
 describe('pipelineConfigFromParams — the panel knobs', () => {
-    it('defaults to zone locations ON, the goal at the last jta zone, the Victory left to the fallback', () => {
+    it('defaults to zone locations ON, the goal at the last jta zone, the Victory left to the engine', () => {
         const cfg = jta.pipelineConfigFromParams({ params: { ...DEFAULT_JTA_PROCGEN_PARAMS, seed: 7 }, quota: 3 });
         expect(cfg).toEqual({
             emitZoneLocations: true, goalZone: 2, goalVictory: false,
@@ -74,6 +74,20 @@ describe('the zone channel', () => {
         expect(locations.some((l) => l.item === 'How to Read')).toBe(true);
     });
 
+    it('the goal dealt to a zone goes on ITS Travel task, and the engine-owned goal silences the zone\'s own', () => {
+        jta.applyPipelineConfig({ emitZoneLocations: true, goalZone: 0, goalVictory: true });
+        const own = jta.extractZoneRules(0, { region_id: 'r', goalOwned: true }).locations;
+        expect(own.some((l) => l.item === JTA_VICTORY_ITEM_NAME)).toBe(false);
+        const { locations, placedItems } = jta.extractZoneRules(1, {
+            region_id: 'r', goalOwned: true, itemsToPlace: ['key_red', JTA_VICTORY_ITEM_NAME],
+        });
+        expect(placedItems).toEqual([JTA_VICTORY_ITEM_NAME, 'key_red']);
+        const victory = locations.filter((l) => l.item === JTA_VICTORY_ITEM_NAME);
+        expect(victory).toHaveLength(1);
+        expect(taskType(victory[0].id)).toBe('Travel');
+        expect(taskType(locations.find((l) => l.item === 'key_red').id)).toBe('Mandatory');
+    });
+
     it('a document\'s own item on a filler task is answered back (the hub\'s re-extraction)', () => {
         jta.applyPipelineConfig({ emitZoneLocations: true, goalZone: 2, goalVictory: false });
         const { locations } = jta.extractZoneRules(0, {
@@ -84,29 +98,30 @@ describe('the zone channel', () => {
     });
 });
 
-describe('the engine: scenario items and the victory fallback', () => {
+describe('the engine: scenario items and the one goal', () => {
     const run = (itemPool, quotas = { jta: 3 }) => {
         jta.applyPipelineConfig(jta.pipelineConfigFromParams({ params: {}, quota: quotas.jta }));
-        const { grid, pool } = arrangeShuffledSpiral({
+        const { grid } = arrangeShuffledSpiral({
             regionSize: { width: 8, height: 6 }, itemPool, obstaclePool: {}, seed: 1,
             growthParams: { substrateQuotas: quotas, startSubstrate: 'jta' },
         });
         const items = grid.allRegions().flatMap((r) => r.extracted_rules.locations.map((l) => l.item));
-        return { grid, pool, items };
+        return { grid, items };
     };
 
-    it('a world with no victory gets the JtA Victory (exactly one)', () => {
-        const { items } = run({});
+    it('a world with no scenario victory gets the goal on the last jta zone\'s Travel task (exactly one)', () => {
+        const { grid, items } = run({});
         expect(items.filter((i) => i === JTA_VICTORY_ITEM_NAME)).toHaveLength(1);
-        expect(getJtaGoalVictory()).toBe(true);
+        const holder = grid.allRegions().find((r) => r.extracted_rules.locations.some((l) => l.item === JTA_VICTORY_ITEM_NAME));
+        expect(holder.playable_payload.jtaZone).toBe(2);
+        expect(taskType(holder.extracted_rules.locations.find((l) => l.item === JTA_VICTORY_ITEM_NAME).id))
+            .toBe('Travel');
     });
 
-    it('a scenario victory is placed in a JtA zone and JtA adds none of its own', () => {
-        const { items, pool } = run({ key_red: 1, victory: 1 });
+    it('a scenario victory becomes the one goal `Victory`, and every scenario item is placed', () => {
+        const { items } = run({ key_red: 1, victory: 1 });
         expect(items).toContain('key_red');
-        expect(items).toContain('victory');
-        expect(items).not.toContain(JTA_VICTORY_ITEM_NAME);
-        expect(pool.itemsRemaining()).toBe(0);
-        expect(getJtaGoalVictory()).toBe(false);
+        expect(items).not.toContain('victory');
+        expect(items.filter((i) => i === JTA_VICTORY_ITEM_NAME)).toHaveLength(1);
     });
 });

@@ -41,6 +41,9 @@ import { ROUND_TRIP_RULES, roundTripRulesOf } from '../procgenCore/roundTripRule
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
 import { declareReturnToMenu } from '../procgenCore/restartWarp.js';
 import {
+    GOAL_ITEM, isVictoryItem, goalItemPool, withGoalItemDef,
+} from '../procgenCore/goalItem.js';
+import {
     exceedsCeiling, locationCeilingRefusal, locationDemandOf, sizeForLocations,
 } from '../procgenCore/locationCapacity.js';
 import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
@@ -3031,11 +3034,16 @@ export function perimeterMidpoint(side, size) {
  * will implement this same hook.
  */
 function synthesizeZoneRegion({
-    substrate, region_id, zoneIdx, regionSize, exitSides, adapter, itemsToPlace = [],
+    substrate, region_id, zoneIdx, regionSize, exitSides, adapter, itemsToPlace = [], goalOwned = false,
 }) {
+    // `itemsToPlace`: the pool items the spiral dealt this cell (the goal among
+    // them on the goal cell). `goalOwned`: the engine places the world's goal,
+    // so the zone must not place a victory item of its own.
     const zoneRules = adapter.extractZoneRules
         ? adapter.extractZoneRules(zoneIdx, {
-            region_id, exitSides, regionSize, ...(itemsToPlace.length ? { itemsToPlace } : {}),
+            region_id, exitSides, regionSize,
+            ...(itemsToPlace.length ? { itemsToPlace } : {}),
+            ...(goalOwned ? { goalOwned: true } : {}),
         })
         : null;
     // Zone payload comes entirely from the extractZoneRules channel now
@@ -3044,10 +3052,9 @@ function synthesizeZoneRegion({
     const region = assembleZoneRegion({
         substrate, region_id, regionSize, exitSides, zoneRules, zonePayload: {},
     });
-    // The scenario items the channel took (`absorbsScenarioItems`), in the
-    // procedural regions' shape, so the pool marks them placed.
-    const placed = zoneRules?.placedItems ?? [];
-    if (placed.length) region.placed_items = placed.map((item_id) => ({ item_id }));
+    // The pool items the zone holds, in the procedural regions' shape, so a
+    // later region's arrival inventory counts them.
+    if (itemsToPlace.length) region.placed_items = itemsToPlace.map((item_id) => ({ item_id }));
     return region;
 }
 
@@ -3781,9 +3788,147 @@ export function arrangeSpiralPlan(config) {
     const cells = rawCells.map((c) => ({ gx: c.gx - minX, gy: c.gy - minY }));
     const startCell = cells[0];
 
+    // The item layer, planned up front like sphere growth's: which pool items
+    // each cell holds, the goal on the last cell that can hold one. Draws its
+    // shuffle from the same stream, after the substrate shuffle.
+    const items = planSpiralItems({ sequence, config, rng });
+
     return {
-        sequence, cells, startCell, gridDims, rngState: rng.getState(),
+        sequence, cells, startCell, gridDims, items, rngState: rng.getState(),
     };
+}
+
+// --- The spiral item layer (⚖ user 2026-10-11) ---
+//
+// The shuffled spiral used to hand pool items out region by region as it built
+// them (`ScenarioPool.planPlacement`), so whatever was left when the regions ran
+// out was never placed — the victory included, which the pool held back until
+// last. Now it works like sphere growth: plan the items first, pin the goal to
+// the LAST region in spiral order that can hold an item, then build each region
+// from the items it was dealt. ⚖ The deal is SPREAD EVENLY: the regular items,
+// in seeded-shuffled order, go to evenly spaced item-holding cells, at most
+// maxItemsPerRegion each.
+
+/**
+ * How many pool items a spiral cell of `substrate` can hold, as its `ordinal`th
+ * use. A procedural substrate grows its region around them (maxItemsPerRegion);
+ * a zone substrate answers through `spiralItemCapacity(ordinal)` (capped at
+ * maxItemsPerRegion); a zone substrate without that hook (bounce, runner,
+ * Seedling, omsi — the ruled known gaps) and a region library hold none.
+ */
+export function spiralCellCapacity(substrate, ordinal, maxItemsPerRegion) {
+    if (isLibrarySourceId(substrate)) return 0;
+    const adapter = substrateRegistry.get(substrate);
+    if (!adapter) return 0;
+    if (typeof adapter.generateRegionCore === 'function') return maxItemsPerRegion;
+    if (typeof adapter.spiralItemCapacity !== 'function') return 0;
+    const n = adapter.spiralItemCapacity(ordinal);
+    return Math.max(0, Math.min(maxItemsPerRegion, Number.isFinite(n) ? Math.floor(n) : maxItemsPerRegion));
+}
+
+/**
+ * The registered spiral substrates, split by whether a cell of theirs can hold
+ * pool items (and so the goal): `{holders, gaps}`, ids sorted. A spiral
+ * substrate is a procedural one or a zone one (`zoneCount`).
+ */
+export function spiralItemHolders() {
+    const holders = [];
+    const gaps = [];
+    for (const a of substrateRegistry.getAll()) {
+        const procedural = typeof a.generateRegionCore === 'function';
+        if (!procedural && typeof a.zoneCount !== 'number') continue;
+        (procedural || typeof a.spiralItemCapacity === 'function' ? holders : gaps).push(a.id);
+    }
+    return { holders, gaps };
+}
+
+/**
+ * Does a spiral world have a goal? `config.goalItem` says so explicitly (null:
+ * no goal); otherwise the scenario pool asked for one (a victory item with a
+ * positive count) or an in-quota substrate declares a `victoryItem`, as the
+ * panel's completion item has always been resolved.
+ */
+export function spiralWorldHasGoal(config) {
+    if (config.goalItem !== undefined) return config.goalItem != null;
+    const itemLib = config.itemLib ?? DEFAULT_ITEMS;
+    const pool = config.itemPool ?? {};
+    if (Object.entries(pool).some(([id, n]) => Number(n) > 0 && isVictoryItem(id, itemLib))) return true;
+    const quotas = config.growthParams?.substrateQuotas ?? {};
+    return Object.entries(quotas)
+        .some(([id, n]) => Number(n) > 0 && !!substrateRegistry.get(id)?.victoryItem);
+}
+
+/**
+ * Plan the spiral's items: an array parallel to `sequence`, each entry the
+ * items that cell holds (the goal last in its cell). Throws, naming the
+ * shortfall, when the pool holds more regular items than the item-holding
+ * cells have slots.
+ */
+export function planSpiralItems({ sequence, config, rng }) {
+    const { growthParams = {} } = config;
+    const maxItemsPerRegion = growthParams.maxItemsPerRegion ?? 2;
+    const itemLib = config.itemLib ?? DEFAULT_ITEMS;
+    const pool = goalItemPool(config.itemPool ?? {}, itemLib, false);
+    const regular = [];
+    for (const [id, count] of Object.entries(pool)) {
+        for (let k = 0; k < Number(count); k++) regular.push(id);
+    }
+    rng.shuffle(regular);
+
+    const ordinals = {};
+    const caps = sequence.map((sub) => {
+        const ordinal = ordinals[sub] ?? 0;
+        ordinals[sub] = ordinal + 1;
+        return spiralCellCapacity(sub, ordinal, maxItemsPerRegion);
+    });
+    const items = sequence.map(() => []);
+    const holders = caps.map((c, i) => (c > 0 ? i : -1)).filter((i) => i >= 0);
+    const room = [...caps];
+    let goalCell = -1;
+    if (spiralWorldHasGoal(config) && holders.length > 0) {
+        goalCell = holders[holders.length - 1];
+        room[goalCell] -= 1;
+    }
+    const slots = holders.reduce((n, i) => n + room[i], 0);
+    if (regular.length > slots) {
+        const gaps = [...new Set(sequence.filter((s, i) => caps[i] === 0))];
+        throw new Error(`shuffled spiral: the item pool holds ${regular.length} item(s) but the regions that can `
+            + `hold items have ${slots} slot(s)${goalCell >= 0 ? ' besides the goal' : ''} `
+            + `(${holders.length} region(s), at most ${maxItemsPerRegion} each)`
+            + (gaps.length ? `; ${gaps.join(', ')} region(s) hold no pool items` : '')
+            + ' — raise maxItemsPerRegion, add regions, or take items out of the pool');
+    }
+    regular.forEach((item, k) => {
+        const target = Math.floor(((k + 0.5) * holders.length) / regular.length);
+        let pick = -1;
+        for (let step = 0; step < holders.length; step++) {
+            const i = holders[(target + step) % holders.length];
+            if (room[i] > 0) { pick = i; break; }
+        }
+        room[pick] -= 1;
+        items[pick].push(item);
+    });
+    if (goalCell >= 0) items[goalCell].push(GOAL_ITEM);
+    return items;
+}
+
+// The obstacles a procedural cell places beside its items: one per item, an
+// obstacle whose single-item clear set is that item, while the pool still has
+// one (ScenarioPool.planPlacement's pairing, without its item draw).
+function pairedObstacles(items, obstacleBudget, obstacleLib) {
+    const budget = { ...obstacleBudget };
+    const out = [];
+    for (const item of items) {
+        for (const [obsId, obs] of Object.entries(obstacleLib)) {
+            const clears = (obs.clear_set ?? []).some((combo) => combo.length === 1 && combo[0] === item);
+            if (clears && (budget[obsId] ?? 0) > 0) {
+                out.push(obsId);
+                budget[obsId] -= 1;
+                break;
+            }
+        }
+    }
+    return out;
 }
 
 // --- Spiral content sources (region-library C2) ---
@@ -3823,11 +3968,7 @@ function resolveSpiralContentSource(id, config = {}) {
     if (adapter && typeof adapter.zoneCount === 'number') {
         return {
             poolSize: adapter.zoneCount,
-            // A zone substrate that takes scenario-pool items onto its own
-            // locations (jta with its zone locations on). Off for every other
-            // zone substrate, which keeps drawing no rng.
-            absorbsScenarioItems: adapter.absorbsScenarioItems === true,
-            instantiate: ({ region_id, ordinal, regionSize, exitSides, itemsToPlace }) =>
+            instantiate: ({ region_id, ordinal, regionSize, exitSides, itemsToPlace, goalOwned }) =>
                 synthesizeZoneRegion({
                     substrate: id,
                     region_id,
@@ -3836,6 +3977,7 @@ function resolveSpiralContentSource(id, config = {}) {
                     exitSides,
                     adapter,
                     itemsToPlace,
+                    goalOwned,
                 }),
         };
     }
@@ -3931,7 +4073,7 @@ export function realiseSpiralRegions(plan, config) {
     const {
         itemPool = {},
         obstaclePool = {},
-        itemLib = DEFAULT_ITEMS,
+        itemLib: baseItemLib = DEFAULT_ITEMS,
         obstacleLib = DEFAULT_OBSTACLES,
         regionParams = {},
         growthParams = {},
@@ -3939,7 +4081,7 @@ export function realiseSpiralRegions(plan, config) {
         consumableTileOpts = null,
     } = config;
     const { regionSize } = config;
-    const { maxItemsPerRegion = 2, assumeBidirectional = true } = growthParams;
+    const { assumeBidirectional = true } = growthParams;
     const {
         sequence, cells, startCell, gridDims,
     } = plan;
@@ -3947,7 +4089,20 @@ export function realiseSpiralRegions(plan, config) {
     const rng = createRng(0);
     rng.setState(plan.rngState); // post-shuffle position (continuous stream)
 
+    // The item layer planned in ① (`planSpiralItems`). An envelope written
+    // before the layer existed has none, so it is planned here, from the
+    // restored stream, the same way.
+    const cellItems = plan.items ?? planSpiralItems({ sequence, config, rng });
+    if (cellItems.length !== cells.length) {
+        throw new Error(`shuffled spiral: the item plan has ${cellItems.length} cell(s) but the layout has `
+            + `${cells.length} — re-run ① arrange`);
+    }
+    const goalCell = cellItems.findIndex((list) => list.includes(GOAL_ITEM));
+    // The goal's library row rides only the region that holds it.
+    const itemLib = goalCell >= 0 ? withGoalItemDef(baseItemLib) : baseItemLib;
+
     const grid = new Grid(gridDims);
+    // The pool only tracks the obstacles now: the items were dealt in ①.
     const pool = new ScenarioPool({
         items: itemPool, obstacles: obstaclePool, itemLib, obstacleLib,
     });
@@ -3969,6 +4124,7 @@ export function realiseSpiralRegions(plan, config) {
         const substrate = sequence[i];
         const ordinal = ordinalCounter[substrate] ?? 0;
         ordinalCounter[substrate] = ordinal + 1;
+        const itemsToPlace = cellItems[i] ?? [];
 
         // Sides whose geographic neighbor is in-bounds AND will hold
         // a spiral region (occupied set is the universe of cells).
@@ -3983,26 +4139,17 @@ export function realiseSpiralRegions(plan, config) {
         const source = (sourceCache[substrate] ??= resolveSpiralContentSource(substrate, config) ?? null);
         let region;
         if (source) {
-            // Content source: instantiate its Nth entry. It draws no rng —
-            // unless it takes scenario-pool items (`absorbsScenarioItems`),
-            // which it draws exactly as a procedural region does, and only
-            // while the pool still holds items (an empty pool draws none).
-            let itemsToPlace = [];
-            if (source.absorbsScenarioItems && pool.itemsRemaining() > 0) {
-                itemsToPlace = pool.planPlacement({
-                    arrivalInventory: accumulatedInventory(grid), rng, maxItems: maxItemsPerRegion,
-                }).items_to_place;
-            }
-            region = source.instantiate({ region_id, ordinal, regionSize, exitSides, itemsToPlace });
+            // Content source: instantiate its Nth entry from the items it was
+            // dealt. It draws no rng.
+            region = source.instantiate({
+                region_id, ordinal, regionSize, exitSides, itemsToPlace, goalOwned: goalCell >= 0,
+            });
             if (region.notes?.length) contentNotes.push(...region.notes);
-            if (region.placed_items?.length) pool.markPlaced({ placed_items: region.placed_items });
         } else {
-            // Procedural substrate: grow geometry from the rng stream.
+            // Procedural substrate: grow geometry from the rng stream around
+            // the cell's items and the obstacles they open.
             getAdapter(substrate); // preserve the "unregistered id" throw
             const arrival = accumulatedInventory(grid);
-            const placementPlan = pool.planPlacement({
-                arrivalInventory: arrival, rng, maxItems: maxItemsPerRegion,
-            });
             region = buildSubstrateRegion({
                 substrate,
                 region_id,
@@ -4010,21 +4157,22 @@ export function realiseSpiralRegions(plan, config) {
                 entrances: [],
                 exit_sides: exitSides,
                 arrival_inventory: arrival,
-                items_to_place: placementPlan.items_to_place,
-                obstacles_to_place: placementPlan.obstacles_to_place,
-                itemLib, obstacleLib, rng, params: regionParams,
+                items_to_place: itemsToPlace,
+                obstacles_to_place: pairedObstacles(itemsToPlace, pool.obstacles, obstacleLib),
+                itemLib: i === goalCell ? itemLib : baseItemLib, obstacleLib, rng, params: regionParams,
                 hazardOpts,
                 consumableTileOpts,
             });
-            pool.markPlaced({
-                placed_items: region.placed_items,
-                placed_obstacles: region.placed_obstacles,
-            });
+            pool.markPlaced({ placed_obstacles: region.placed_obstacles });
         }
+        assertSpiralCellItemsPlaced(region, itemsToPlace, substrate);
         grid.placeRegion(cell, region);
     }
 
-    placeVictoryIfMissing(grid, itemLib, [...new Set(sequence)]);
+    // The engine placed the goal: a victory item some other region placed on
+    // its own (a known-gap substrate's table — omsi's Start Journey, a bounce
+    // or runner zone, a library entry) becomes filler, so the world has ONE.
+    if (goalCell >= 0) neutraliseForeignVictories(grid, regionIdForCell(cells[goalCell]), itemLib);
 
     // Resolve exit targets to neighbor region ids. Same pass the
     // grid-growth driver uses; it matches exits_placed to extracted exits
@@ -4043,28 +4191,45 @@ export function realiseSpiralRegions(plan, config) {
         substrateCounts: { ...ordinalCounter },
         ...(contentNotes.length ? { contentNotes } : {}),
     };
-    return { grid, pool, stats, startCell };
+    // `goalItem`: what the completion condition names — the goal, when this
+    // world has one (placed by the engine, or by a known-gap substrate's own
+    // table when no region could hold it); null for a world without a goal.
+    const goalItem = spiralWorldHasGoal(config) ? GOAL_ITEM : null;
+    return {
+        grid, pool, stats, startCell, goalItem,
+    };
 }
 
-// The victory fallback (⚖ user 2026-10-11, for jta): once every region is
-// built, a world in which no location holds a victory item — the scenario
-// pool's, or one a substrate places itself — gets one from the first region
-// whose substrate offers `placeVictoryIfMissing(region)` (jta's goal zone).
-// A world that already has its victory is left alone, so no substrate adds a
-// second one. Draws no rng.
-function placeVictoryIfMissing(grid, itemLib, substrateIds) {
-    const offers = substrateIds
-        .map((id) => substrateRegistry.get(id))
-        .filter((a) => typeof a?.placeVictoryIfMissing === 'function');
-    if (offers.length === 0) return;
-    const libs = [itemLib, ...substrateIds.map((id) => substrateRegistry.get(id)?.libraryItems)].filter(Boolean);
-    const isVictory = (item) => item != null && libs.some((lib) => lib?.[item]?.is_victory === true);
-    const regions = grid.allRegions();
-    const placed = regions.some((r) => (r.extracted_rules?.locations ?? []).some((l) => isVictory(l.item)));
-    if (placed) return;
-    for (const region of regions) {
+// A cell must hold every item it was dealt: a lost item would be a hole in the
+// plan (and a lost goal an unbeatable world), so it is refused by name.
+function assertSpiralCellItemsPlaced(region, itemsToPlace, substrate) {
+    if (itemsToPlace.length === 0) return;
+    const held = (region.extracted_rules?.locations ?? []).map((l) => l.item);
+    const missing = [];
+    const left = [...held];
+    for (const item of itemsToPlace) {
+        const k = left.indexOf(item);
+        if (k < 0) missing.push(item);
+        else left.splice(k, 1);
+    }
+    if (missing.length) {
+        throw new Error(`shuffled spiral: ${substrate} region '${region.region_id}' was dealt `
+            + `[${itemsToPlace.join(', ')}] but did not place [${missing.join(', ')}]`);
+    }
+}
+
+// Every victory item outside the goal's region becomes filler: the registry
+// entry's `fillerItem` when it declares one, else the engine's slot filler.
+function neutraliseForeignVictories(grid, goalRegionId, itemLib) {
+    for (const region of grid.allRegions()) {
+        if (region.region_id === goalRegionId) continue;
         const adapter = substrateRegistry.get(region.substrate);
-        if (adapter?.placeVictoryIfMissing?.(region)) return;
+        const libs = [itemLib, adapter?.libraryItems].filter(Boolean);
+        for (const loc of region.extracted_rules?.locations ?? []) {
+            if (loc.item != null && libs.some((lib) => isVictoryItem(loc.item, lib))) {
+                loc.item = adapter?.fillerItem ?? LIBRARY_SLOT_FILLER_ITEM;
+            }
+        }
     }
 }
 

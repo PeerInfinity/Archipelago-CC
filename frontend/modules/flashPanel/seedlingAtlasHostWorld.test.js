@@ -30,6 +30,7 @@ import { makeAndRule, makeHasRule } from '../shared/rulesJsonBuilder.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { reachableRegions, regionsOf } from '../procgenCore/rulesGraph.js';
+import { GOAL_ITEM } from '../procgenCore/goalItem.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 for (const rel of REGISTRY_LIBRARIES) {
@@ -139,7 +140,8 @@ describe('sphere growth — SEEDLING_ATLAS_HOST_STATE (a REAL two-door room host
     it('world completion is REACHABLE: the completion condition names the victory item, placed in the world', async () => {
         const { rulesJson } = await build(SEEDLING_ATLAS_HOST_STATE);
         const cc = rulesJson.game_info['1'].completion_condition;
-        expect(cc).toEqual({ type: 'item_check', item: 'victory' });
+        // ⛓ spiral victory: one goal item, `Victory` (the scenario's `victory` is the switch).
+        expect(cc).toEqual({ type: 'item_check', item: GOAL_ITEM });
         const where = Object.entries(rulesJson.canonical_placements['1']).filter(([, it]) => it === cc.item);
         expect(where).toHaveLength(1);
     }, 60_000);

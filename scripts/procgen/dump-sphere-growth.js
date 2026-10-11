@@ -117,7 +117,7 @@ import { sortAtlasRegionsIntoSpheres, formatAtlasSortReport } from
 import {
     defaultProcgenParams, activeSubstrateIds,
     collectSphereGrowthPrep, assembleRegionParams,
-    mergeSubstrateItemLib, resolveVictoryItem,
+    mergeSubstrateItemLib, resolveSphereGoal,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
 
 /**
@@ -321,10 +321,14 @@ async function main() {
     // assembly (same path the panel + sphere-step CLI use).
     const selectedSubs = new Set(Object.keys(config.quotas));
     if (config.start) selectedSubs.add(config.start);
-    const itemLib = mergeSubstrateItemLib(DEFAULT_ITEMS, selectedSubs);
-    const victory = resolveVictoryItem({
-        explicit: config.victory, itemPool: config.items, itemLib, selectedIds: selectedSubs,
+    // One goal item (`Victory`): the pool's victory items fold into it, and the
+    // library gains its row.
+    const goal = resolveSphereGoal({
+        explicit: config.victory, itemPool: config.items,
+        itemLib: mergeSubstrateItemLib(DEFAULT_ITEMS, selectedSubs), selectedIds: selectedSubs,
     });
+    const { itemLib } = goal;
+    const victory = goal.goalItem;
 
     // Substrate params: merged defaultProcgenParams overlaid with explicit CLI
     // flags. The bounce hooks read the bounce*-prefixed keys; --param sets the
@@ -339,7 +343,7 @@ async function main() {
     if (config.fallBehavior != null) params.bounceFallBehavior = config.fallBehavior;
     Object.assign(params, config.params);
     const activeIds = activeSubstrateIds(config.quotas, config.start);
-    const itemPool = { ...config.items };
+    const itemPool = { ...goal.itemPool };
     const prep = config.arrowEntry
         ? collectSphereGrowthPrep({
             activeIds, itemPool, quotas: config.quotas,

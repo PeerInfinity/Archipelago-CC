@@ -61,7 +61,17 @@ Because ② never draws from ①'s rng stream, re-running ② after a hand edit 
 
 `arrange → content → regions → compile` (`SPIRAL_STEPS`). These split the monolithic `arrangeShuffledSpiral` (in the engine, `arrangeSpiralPlan` + `realiseSpiralRegions`) plus `buildRulesJson`.
 
-**① arrange** first installs each quota substrate's pipeline config through its registry entry's `applyPipelineConfig`, so that validating quotas against `zoneCount` sees a configured dataset's real zone count. It then builds the shuffled substrate sequence (the only rng draw before the loop) and sizes the grid. The output is an editable placement plan (`sequence`, `cells`, `startCell`, `gridDims`) plus the post-shuffle rng snapshot.
+**① arrange** first installs each quota substrate's pipeline config through its registry entry's `applyPipelineConfig`, so that validating quotas against `zoneCount` sees a configured dataset's real zone count. It then builds the shuffled substrate sequence (an rng draw), sizes the grid and plans the item layer (below). The output is an editable placement plan (`sequence`, `cells`, `startCell`, `gridDims`, `items`) plus the rng snapshot after both draws.
+
+### The item layer
+
+The spiral plans its items up front, the way sphere growth does (⚖ the user, 2026-10-11). `planSpiralItems` in the engine:
+
+- **Capacity.** Each cell can hold `spiralCellCapacity` pool items: a procedural substrate `maxItemsPerRegion`, a content source what its `spiralItemCapacity(ordinal)` answers (capped), and a source without that hook, or a region library, none. The ruled known gaps are bounce, runner, `flash_seedling` and omsi; `spiralItemHolders()` lists the registered spiral substrates on each side.
+- **The goal.** A world has a goal when `config.goalItem` says so, or else when its pool holds a victory item or an in-quota substrate declares a `victoryItem`. The goal is always the one item `Victory` (`procgenCore/goalItem.js`), and it goes on the LAST cell in spiral order that can hold an item.
+- **The deal is spread evenly.** The regular items, in a seeded shuffle, go to evenly spaced item-holding cells, at most `maxItemsPerRegion` each. A pool larger than the slots is refused with a sentence naming the shortfall and the substrates that hold none.
+
+③ builds every region from the items it was dealt (`plan.items`): a procedural region grows around them (with the obstacles they open, paired as `ScenarioPool` pairs them), and a content source receives them as `ctx.itemsToPlace`. A region that loses an item it was dealt is refused by name. When the engine placed the goal, a victory item some other region placed on its own (a known gap's table) becomes that substrate's `fillerItem`, so the world holds one. ③ reports `goalItem`, and ④ names it as the completion item; ④ then refuses a world whose completion names an item no location holds (`unplacedGoalSentence`).
 
 **② content** copies a content source's installed document onto `env.content`, where it can be edited. For a world with no content document it does nothing and stays byte-identical. A world has content only when a source declares `emitsSpiralContent` and its `substrateConfig[id]` carries a document under the source's `spiralContentConfigKey` (default `datasetDoc`). So a jta world with no dataset reads as content-free, and the step's presence probe reports it complete.
 

@@ -102,13 +102,16 @@ export function zoneLocationPlan(zones) {
 }
 const ZONE_SEED = 1;
 
-/** zone i of a table → its region `{move: {start, end}, seed, locations: [{id, check: {start, end}}]}` */
-function zoneRegionOf(zones, zoneIdx) {
+/**
+ * zone i of a table → its region `{move: {start, end}, seed, locations: [{id, check: {start, end}}]}`; `minLocations`
+ * raises the location count (a zone dealt more pool items than its table declares locations).
+ */
+function zoneRegionOf(zones, zoneIdx, { minLocations = 0 } = {}) {
     const z = zones[zoneIdx];
     if (!z) throw new Error(`noiz2sa: no zone ${zoneIdx} (have ${zones.length})`);
     const { start, end, seed } = regionSpanOf({ start: parsePosition(z.start), end: parsePosition(z.end), seed: ZONE_SEED });
     const move = { start, end };
-    const n = zoneLocationPlan(zones).counts[zoneIdx];
+    const n = Math.max(zoneLocationPlan(zones).counts[zoneIdx], minLocations);
     const locations = defaultCheckSpans(move, n).map((check, i) => ({ id: noiz2saLocationId(i), check }));
     return { move, seed, locations };
 }
@@ -258,14 +261,24 @@ export const NOIZ2SA_SIDECAR_FIELDS = Object.freeze({
  * zone i of a table → the zone-locations channel result (`procgenPipelineEngine.synthesizeZoneRegion`); a zone with no
  * locations yields a region with none (still a region: its exits are its AP entrances). Exported for the tests.
  */
-export function zoneRulesOf(zones, zoneIdx, { region_id } = {}) {
-    const region = zoneRegionOf(zones, zoneIdx);
+export function zoneRulesOf(zones, zoneIdx, { region_id, itemsToPlace = [], goalOwned = false } = {}) {
+    // The shuffled spiral's item layer: the pool items dealt this zone. The goal goes on its LAST location, the others
+    // on its first ones; a zone with fewer locations than items gets more (each with the default check span). With
+    // the engine owning the goal (`goalOwned`), the table's own Victory is filler.
+    const goals = itemsToPlace.filter((it) => it === NOIZ2SA_VICTORY_ITEM_NAME);
+    const regular = itemsToPlace.filter((it) => it !== NOIZ2SA_VICTORY_ITEM_NAME);
+    const region = zoneRegionOf(zones, zoneIdx, { minLocations: itemsToPlace.length });
     const { victoryZone } = zoneLocationPlan(zones);
     const n = region.locations.length;
+    const own = (i) => (!goalOwned && zoneIdx === victoryZone && i === n - 1
+        ? NOIZ2SA_VICTORY_ITEM_NAME : NOIZ2SA_FILLER_ITEM_NAME);
+    const items = region.locations.map((l, i) => own(i));
+    if (goals.length) items[n - 1] = goals[0];
+    regular.forEach((item, i) => { items[i] = item; });
     return {
         locations: region.locations.map((l, i) => ({
             id: l.id,
-            item: zoneIdx === victoryZone && i === n - 1 ? NOIZ2SA_VICTORY_ITEM_NAME : NOIZ2SA_FILLER_ITEM_NAME,
+            item: items[i],
             position: null,
         })),
         payload: {
@@ -359,6 +372,10 @@ export const substrateRegistryEntry = Object.freeze({
     libraryItems: NOIZ2SA_LIBRARY_ITEMS,
     zoneCount: NOIZ2SA_ZONES.length,
     extractZoneRules,
+    // The shuffled spiral's item layer: a zone takes as many pool items as it is dealt — it grows a location per item
+    // beyond its table's (the engine caps it at maxItemsPerRegion).
+    spiralItemCapacity: () => Infinity,
+    fillerItem: NOIZ2SA_FILLER_ITEM_NAME,
     zoneSourceLabel: 'Noiz2sa segment',
 });
 

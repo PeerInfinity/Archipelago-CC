@@ -158,7 +158,12 @@ export const SEEDLING_GENERATED_ROOM_STATE = Object.freeze({
     mode: 'shuffledSpiral',
     // ⛓ tutorial-bugs: region arrival kept, as SEEDLING_SPIRAL_ROOM_STATE's.
     params: Object.freeze({ seed: 1, regionWidth: 10, regionHeight: 10, mazeArrival: 'region' }),
-    scenario: Object.freeze({ items: Object.freeze({ key_blue: 1 }), obstacles: Object.freeze({}) }),
+    // ⛓ spiral victory (⚖ 2026-10-11, the item layer SPREADS the pool evenly):
+    //   one key per room, so the START room still holds an AP item (G2's ARM C)
+    //   — one key alone now lands mid-spiral.
+    scenario: Object.freeze({
+        items: Object.freeze({ key_blue: 1, key_red: 1, key_green: 1, key_yellow: 1 }), obstacles: Object.freeze({}),
+    }),
     substrateQuotas: Object.freeze({ maze: 2, flash_seedling_gen: 2 }),
     substrateMix: Object.freeze({}),
     substrateMode: 'quotas',
