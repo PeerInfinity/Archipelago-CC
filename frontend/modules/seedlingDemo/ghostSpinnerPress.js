@@ -15,8 +15,8 @@
  * This module is the switch and the one per-weapon table both sides read; every number is `ghostSword.js`'s or
  * `presses.js`'s, imported (fidelity owns the model; nothing here restates it).
  *
- * ⛓ THE SWITCH — `GHOST_SPINNER_PRESS`, OFF by default (`SEEDLING_GHOST_SPINNER_PRESS=1` for a process, or
- * `withGhostSpinnerPress(true, fn)`). OFF, every reader takes the sword's row exactly as before (byte-inert); ON, a
+ * ⛓ THE SWITCH — `GHOST_SPINNER_PRESS`, ON by default since ⚖ the user's flip (2026-10-11, "Turn it ON"); OFF is the
+ * control (`SEEDLING_GHOST_SPINNER_PRESS=0` for a process, or `withGhostSpinnerPress(false, fn)`). OFF, every reader takes the sword's row exactly as before (byte-inert); ON, a
  * `ghostsword` primary takes the ghost's.
  */
 
@@ -24,9 +24,9 @@ import { SLASH_HIT_TICKS, SLASH_REACH, slashRect } from './presses.js';
 import { GHOST_SLASH_ANIM_TICKS, GHOST_SWORD_REACH, ghostSlashRect } from './ghostSword.js';
 
 export const GHOST_SPINNER_PRESS = {
-    enabled: globalThis.process?.env?.SEEDLING_GHOST_SPINNER_PRESS === '1',
+    enabled: globalThis.process?.env?.SEEDLING_GHOST_SPINNER_PRESS !== '0',
 };
-export const GHOST_SPINNER_PRESS_DEFAULT = false;
+export const GHOST_SPINNER_PRESS_DEFAULT = true;
 
 /** Run `fn` with `GHOST_SPINNER_PRESS` set to `enabled`, restoring the previous value (`withStaticSwordArm`'s shape). */
 export function withGhostSpinnerPress(enabled, fn) {

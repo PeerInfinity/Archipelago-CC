@@ -15408,6 +15408,8 @@ own unregenerated docs), the L18 sweep (45/45, rows identical, lengths `1c019765
 declared exposure). ⚠ `rosterCategories`' standing LIVE row reads 214 → 215 (`mechanic`): `standing-values --write`
 is the planner's. Surface GREEN 268 (3 classified), constants 5,623.
 
+**C2-ON (harvest, 2026-10-11).** ⚖ The user: *"Turn it ON"*. `GHOST_SPINNER_PRESS` defaults ON; `SEEDLING_GHOST_SPINNER_PRESS=0` is the opt-out. C2's D4 measured the flip moving no committed artifact (identity block, r9-campaign `712f0ead`, ENEMY `afdc6d1a`, the L18 sweep and the tapeRunner pairs all equal ON), so the only re-pin is `hammerGhostSpinner.test.js`'s default row.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
