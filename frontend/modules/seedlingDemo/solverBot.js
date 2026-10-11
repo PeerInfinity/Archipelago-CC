@@ -15038,11 +15038,13 @@ export function withKillStanceAsForecast(enabled, fn) {
 
 /**
  * ⛓⛓ SEEDLING FIDELITY L30KEYLOCK — `deriveKillByChaser` asks the TARGET's box when the player's box priced no
- * stance (the docblock at the rescan). OFF by default: `SEEDLING_KILL_STANCE_TARGET_RESCAN=1` turns it ON for a node
- * measurement; `withKillStanceTargetRescan` for a test. The browser has no `process` and takes the default.
+ * stance (the docblock at the rescan). ON by default: measured ON, no committed tape, producer `--check`, plan
+ * script or identity row moves (seedling-fidelity-l30keylock's report); `SEEDLING_KILL_STANCE_TARGET_RESCAN=0` turns it
+ * OFF for a node measurement; `withKillStanceTargetRescan` for a test. The browser has no `process` and takes the
+ * default.
  */
 export const KILL_STANCE_TARGET_RESCAN = {
-    enabled: globalThis.process?.env?.SEEDLING_KILL_STANCE_TARGET_RESCAN === '1',
+    enabled: globalThis.process?.env?.SEEDLING_KILL_STANCE_TARGET_RESCAN !== '0',
 };
 
 /** Run `fn` with `KILL_STANCE_TARGET_RESCAN` set to `enabled`, restoring the previous value. */
@@ -15063,10 +15065,11 @@ export function withKillStanceTargetRescan(enabled, fn) {
  * corridor hit and the combat ladder climbs (the kill rung's chaser arm: kill first, then the lock); a dashed
  * drive is certified with the same tail (`planSwordDash`'s `stand`), so the drive is a walk that was priced. ⚠ The tail stands the whole `hold.ticks` bound (the executor stops at the opening),
  * which is the side to err on.
- * OFF by default: `SEEDLING_KEYLOCK_WAIT_PRICED=1` for a node measurement; `withKeylockWaitPriced` for a test.
+ * ON by default: measured ON, no committed tape, producer `--check`, plan script or identity row moves (the slice
+ * report); `SEEDLING_KEYLOCK_WAIT_PRICED=0` turns it OFF for a node measurement; `withKeylockWaitPriced` for a test.
  */
 export const KEYLOCK_WAIT_PRICED = {
-    enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_WAIT_PRICED === '1',
+    enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_WAIT_PRICED !== '0',
 };
 
 /** Run `fn` with `KEYLOCK_WAIT_PRICED` set to `enabled`, restoring the previous value. */
