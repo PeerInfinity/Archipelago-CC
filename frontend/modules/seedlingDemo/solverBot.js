@@ -9910,11 +9910,12 @@ export function withHammerFightFallback(enabled, fn, mode = null) {
  *   - `mode: 'order'`: the admitted sources are put FIRST, ahead of the chooser's own list (a measurement arm).
  * The trace's ladder rows and the EXHAUSTED refusal also carry the whole `sources` array (`obstacle.sources`).
  *
- * OFF by default (`SEEDLING_CHOOSER_HIT_SOURCES=1`, `..._MODE=order`, or `withChooserHitSources(true, fn, mode)`):
- * nothing below is asked and every walk and trace is byte-identical.
+ * ON by default since C1-ON (⚖ the user 2026-10-10: *"Yes, please turn both of them on"*), mode `empty`. Opt out with
+ * `SEEDLING_CHOOSER_HIT_SOURCES=0` or `withChooserHitSources(false, fn)` (the control): then nothing below is asked
+ * and every walk and trace is C1's base, byte for byte. `..._MODE=order` selects the measurement arm.
  */
 export const CHOOSER_HIT_SOURCES = {
-    enabled: globalThis.process?.env?.SEEDLING_CHOOSER_HIT_SOURCES === '1',
+    enabled: globalThis.process?.env?.SEEDLING_CHOOSER_HIT_SOURCES !== '0',
     mode: globalThis.process?.env?.SEEDLING_CHOOSER_HIT_SOURCES_MODE === 'order' ? 'order' : 'empty',
 };
 

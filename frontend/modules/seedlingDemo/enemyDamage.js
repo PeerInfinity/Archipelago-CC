@@ -955,8 +955,9 @@ export const STATIC_ARROW_DEATH = Object.freeze({
 });
 
 /**
- * ⛓⛓ SEEDLING HAMMER-PHASE C1 — A STATIC BODY KILLED BY THE PLAYER'S OWN SWORD (`STATIC_SWORD_ARM`, OFF by default:
- * `SEEDLING_STATIC_SWORD_ARM=1` or `withStaticSwordArm(true, fn)`). With it OFF a sword press that reaches a static
+ * ⛓⛓ SEEDLING HAMMER-PHASE C1 — A STATIC BODY KILLED BY THE PLAYER'S OWN SWORD (`STATIC_SWORD_ARM`, ON by default
+ * since C1-ON, ⚖ the user 2026-10-10 *"Yes, please turn both of them on"*; opt out with `SEEDLING_STATIC_SWORD_ARM=0`
+ * or `withStaticSwordArm(false, fn)`, the control). With it OFF a sword press that reaches a static
  * census body is not a press responder at all — the model leaves the body unhurt while the GAME damages it (measured
  * on the game, C1 D1: L36's `sandtrap@48,80` and `@64,80` both die to one stance's three presses; L62's
  * `turret@232,248` dies to three) — and every walk is byte-identical. With it ON the classes below are press
@@ -974,7 +975,7 @@ export const STATIC_ARROW_DEATH = Object.freeze({
  * Both `knockback`s are empty overrides, so no hit moves the body.
  */
 export const STATIC_SWORD_ARM = {
-    enabled: globalThis.process?.env?.SEEDLING_STATIC_SWORD_ARM === '1',
+    enabled: globalThis.process?.env?.SEEDLING_STATIC_SWORD_ARM !== '0',
 };
 
 /** Run `fn` with `STATIC_SWORD_ARM` set to `enabled`, restoring the previous value (`withHammerFight`'s shape). */

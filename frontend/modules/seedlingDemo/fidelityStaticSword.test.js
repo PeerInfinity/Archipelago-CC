@@ -1,6 +1,7 @@
 /**
  * ⛓⛓ SEEDLING HAMMER-PHASE C1 — A STATIC BODY KILLED BY THE PLAYER'S SWORD (`STATIC_SWORD_ARM`), AND THE REMOVAL
- * CHOOSER THAT READS THE PROBE'S HIT (`CHOOSER_HIT_SOURCES`). Both switches ship OFF.
+ * CHOOSER THAT READS THE PROBE'S HIT (`CHOOSER_HIT_SOURCES`). Both switches ship ON since C1-ON (⚖ the user,
+ * 2026-10-10: *"Yes, please turn both of them on"*); OFF is the control.
  *
  * The game witnesses are `fixtures/static-sword-witness/` (recorded on p4f by
  * `scripts/procgen/probe-seedling-static-sword-mobiles.mjs --record`): three hand-built presses (C1 D1: L36's
@@ -26,25 +27,25 @@ const DIR = join(HERE, 'fixtures', 'static-sword-witness');
 const WITNESSES = readdirSync(DIR).filter((f) => f.endsWith('.json') && !f.endsWith('.tape.json')).sort()
     .map((f) => JSON.parse(readFileSync(join(DIR, f), 'utf8')));
 
-describe('C1 — the switches ship OFF, and KILL_ARM_POLICY\'s rows are read, never edited', () => {
-    it('both switches are OFF by default', () => {
-        expect(STATIC_SWORD_ARM.enabled).toBe(false);
-        expect(CHOOSER_HIT_SOURCES.enabled).toBe(false);
+describe('C1-ON — the switches ship ON, and KILL_ARM_POLICY\'s rows are read, never edited', () => {
+    it('both switches are ON by default (the env var is an opt-OUT: `=0`), the chooser in its `empty` mode', () => {
+        expect(STATIC_SWORD_ARM.enabled).toBe(true);
+        expect(CHOOSER_HIT_SOURCES.enabled).toBe(true);
         expect(CHOOSER_HIT_SOURCES.mode).toBe('empty');
     });
     it('the SandTrap and Turret rows stay `refused`; `killArmModelled` reads `modelled` only with the switch ON', () => {
         expect(KILL_ARM_POLICY.SandTrap.policy).toBe('refused');
         expect(KILL_ARM_POLICY.Turret.policy).toBe('refused');
-        expect(killArmModelled('SandTrap')).toBe(false);
-        expect(killArmModelled('Turret')).toBe(false);
-        STATIC_SWORD_ARM.enabled = true;
+        expect(killArmModelled('SandTrap')).toBe(true);
+        expect(killArmModelled('Turret')).toBe(true);
+        expect(killArmModelled('DarkTrap')).toBe(false);
+        STATIC_SWORD_ARM.enabled = false;
         try {
-            expect(killArmModelled('SandTrap')).toBe(true);
-            expect(killArmModelled('Turret')).toBe(true);
-            expect(killArmModelled('DarkTrap')).toBe(false);
+            expect(killArmModelled('SandTrap')).toBe(false);
+            expect(killArmModelled('Turret')).toBe(false);
             expect(KILL_ARM_POLICY.Turret.policy).toBe('refused');
         } finally {
-            STATIC_SWORD_ARM.enabled = false;
+            STATIC_SWORD_ARM.enabled = true;
         }
         expect(Object.keys(STATIC_SWORD_DEATH).sort()).toEqual(['SandTrap', 'Turret']);
     });
