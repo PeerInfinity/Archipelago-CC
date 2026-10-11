@@ -26,7 +26,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { createWasmPlayback, SELF_CHECK_SETTLE_MS } from './seedlingWasmPlayback.js';
+import { createWasmPlayback, QUEUE_WAIT_MS, SELF_CHECK_SETTLE_MS } from './seedlingWasmPlayback.js';
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService } from '../seedlingDemo/wasmWalkTape.js';
 import { appendInventorySlots } from '../seedlingDemo/tapeFormat.js';
@@ -157,7 +157,7 @@ function fakeDelivery(game, live = {}, { keys = false, writeKeys = true, selfChe
     return d;
 }
 
-function setup({ game: gopts = {}, live = {}, decline = false, editPlan = null, keys = false, writeKeys = true, selfChecks = false } = {}) {
+function setup({ game: gopts = {}, live = {}, decline = false, editPlan = null, keys = false, writeKeys = true, selfChecks = false, glue = false } = {}) {
     const game = fakeGame(gopts);
     const timers = manualTimers();
     const delivery = fakeDelivery(game, live, { keys, writeKeys, selfChecks });
@@ -176,13 +176,18 @@ function setup({ game: gopts = {}, live = {}, decline = false, editPlan = null, 
     };
     const failures = [];
     const dones = [];
+    const teleports = [];
+    const logs = [];
     let t = 0;
     const engine = createWasmPlayback({
-        getGame: () => game, teleport: () => { game.land(); return true; }, records: RECORDS, solveService: service, timers,
+        getGame: () => game, teleport: (p) => { teleports.push({ ...p, afterCall: game.calls.length }); game.land(); return true; }, records: RECORDS, solveService: service, timers,
         now: () => (t += 1), getDelivery: () => delivery, onFailed: (r) => failures.push(r), onDone: (x) => dones.push(x),
+        log: (m) => logs.push(m),
+        // ⛓ CROSS-LEVEL END — `glue`: the glue query answers CLEAR (no redirect in flight), so arrivals are held between goals.
+        ...(glue ? { getSwapState: () => ({ marks: [], queued: 0, pushedOn: null, pushes: 0 }) } : {}),
     });
     const runUntil = (pred, max = 4000) => { for (let i = 0; i < max && !pred(); i++) timers.run(1); };
-    return { engine, game, timers, delivery, seen, failures, dones, runUntil };
+    return { engine, game, timers, delivery, seen, failures, dones, runUntil, teleports, logs };
 }
 
 describe('⛓ MID-ROOM REPLAN — the delivery gate', () => {
@@ -807,5 +812,121 @@ describe('⛓ DELIVERY TICK — a self-delivery lands at its check\'s held end',
         expect(e.failures).toEqual([]);
         expect(e.engine.stats.selfChecks).toEqual([]);
         expect(e.dones.map((d) => d.goal.name)).toEqual([CHEST.name, DOOR.name]);
+    });
+});
+
+/**
+ * ⛓ CROSS-LEVEL END — a LOCATION plan whose own `expected` rows end in ANOTHER level (live: L32's Bob Boss, the burn
+ * then the pit to L30) is a CROSSING: shipped un-held, its landing HELD by the arrival watch at the begin record. The
+ * bot's own check settles in the ARRIVED room, and the next goal is solved from that held arrival. Measured before
+ * (§5.54 residue): the tape ended held in L30 with the room staged as L32; the next goal released it (`botReset`
+ * cleared the in-tape begin record) and the adoption waited 15 s on a record that never comes, the room running free
+ * (440–443 frames), then re-entered.
+ *
+ *   x1 the crossing ships HELD (`crossing` ignored)                         -> 'held at its LANDING …' reds
+ *   x2 no self-check recorded on the arrived room                           -> 'held at its LANDING …' reds
+ *   x3 the stale goal begun at the held arrival (as any queued goal)        -> 'a goal queued off the PRE-crossing …' reds
+ *   x4 the stale goal never begun (no QUEUE_WAIT fallback)                  -> 'no re-route within QUEUE_WAIT_MS …' reds
+ *   x5 the held end elsewhere goes through the adoption (no in-turn entry)  -> 'the FALLBACK …' reds
+ */
+describe('⛓ CROSS-LEVEL END — a location tape that ends in another level is held at its landing', () => {
+    const OTHER = 30;
+    /** The chest's plan, edited so its last expected row is in `OTHER` (the crossing's destination, as the model says). */
+    const crossPlan = (plan, n) => (n === 0
+        ? { ...plan, expected: [...plan.expected.slice(0, -1), { ...plan.expected.at(-1), level: OTHER }] } : plan);
+    const LANDING = { ...A.seam.beginEntry, 'rng.gameplay': 77, 'save.time': A.seam.beginEntry['save.time'] + 200 };
+    const STALE = { kind: 'exit', level: 0, tiles: [[0, 0]], name: 'level_32 -> level_30__r2c10' };
+    /** Walk the chest to its crossing's landing (`LANDING`), queuing `queue` (if any) behind the playing tape. */
+    function toLanding({ queue = null, selfChecks = true } = {}) {
+        const e = setup({ glue: true, selfChecks, editPlan: crossPlan });
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 8);
+        if (queue) expect(e.engine.walkTo(queue)).toEqual({ ok: true, action: 'queue' });
+        e.marks = { calls: e.game.calls.length };
+        e.game.be = LANDING; // the pit: the game's own Game.begin in the new room
+        e.runUntil(() => e.engine.status().phase === 'held' || e.failures.length > 0);
+        return e;
+    }
+
+    it('the plan ships UN-held as a crossing; its landing is HELD at the begin record; the bot\'s check settles THERE and the next goal is solved from the held arrival', () => {
+        const e = toLanding();
+        expect(e.failures).toEqual([]);
+        expect(e.game.tapes[1].hold ?? false).toBe(false); // the plan tape: a crossing, not a held end
+        expect(e.engine.stats.crossLevelEnds).toEqual([{ goal: CHEST.name, from: HOUSE, to: HOUSE, outcome: 'held-arrival' }]);
+        expect(e.dones).toEqual([expect.objectContaining({ goal: CHEST, heldArrival: HOUSE })]);
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, shipped: 0, endLevel: null },
+            selfCheck: { location: CHEST.name, level: HOUSE, tick: 0 } });
+        // Nothing released the room between the landing and the hold: the freeze replaced the plan in one turn.
+        expect(e.game.calls.slice(e.marks.calls)).toEqual(['botLoadTape', 'botStart']);
+        expect(e.game.held).toBe(true);
+        // The next goal waits for the check (held), then solves from the ARRIVAL: no prefix, the landing's clock.
+        expect(e.engine.walkTo(DOOR)).toEqual({ ok: true, action: 'continue' });
+        for (let i = 0; i < 20; i++) e.timers.run(1);
+        expect(e.seen).toHaveLength(1);
+        expect(e.game.held).toBe(true);
+        e.delivery.settle(CHEST.name);
+        e.runUntil(() => e.seen.length === 2);
+        expect(e.engine.stats.selfChecks).toEqual([expect.objectContaining({ location: CHEST.name, level: HOUSE, tick: 0, settled: true })]);
+        expect(e.seen[1].request.perTick).toEqual([]);
+        expect(e.seen[1].request.staging.seam.time).toBeLessThan(LANDING['save.time']);
+        expect(e.game.calls).not.toContain('botReset');
+        expect(e.teleports).toHaveLength(1); // the cold start only — no re-entry
+    });
+
+    it('a goal queued off the PRE-crossing region (the room the leg LEFT) is not begun: the room stays held until the bot\'s re-route replaces it', () => {
+        const e = toLanding({ queue: STALE });
+        expect(e.failures).toEqual([]);
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE }, queued: null });
+        expect(e.engine.stats.staleGoals).toEqual([{ goal: STALE.name, level: 0, held: HOUSE, outcome: 'waiting' }]);
+        for (let i = 0; i < 200; i++) e.timers.run(1);
+        expect(e.engine.status().phase).toBe('held');
+        expect(e.game.held).toBe(true);
+        expect(e.game.calls).not.toContain('botReset');
+        e.delivery.settle(CHEST.name);
+        expect(e.engine.walkTo(DOOR)).toEqual({ ok: true, action: 'continue' });
+        expect(e.engine.stats.staleGoals[0]).toMatchObject({ outcome: 'replaced' });
+        e.runUntil(() => e.seen.length === 2);
+        expect(e.seen[1].request.perTick).toEqual([]);
+        expect(e.game.calls).not.toContain('botReset');
+    });
+
+    it('no re-route within QUEUE_WAIT_MS: the stale goal is begun as queued — named (`begun`, logged), counted', () => {
+        const e = toLanding({ queue: STALE });
+        e.runUntil(() => e.engine.stats.staleGoals[0].outcome !== 'waiting', 200000);
+        expect(e.engine.stats.staleGoals[0]).toMatchObject({ outcome: 'begun' });
+        expect(e.engine.stats.staleGoals[0].waitedMs).toBeGreaterThan(QUEUE_WAIT_MS);
+        expect(e.logs.some((m) => /queued behind a crossing waited/.test(m))).toBe(true);
+        expect(e.engine.status().goal).toMatchObject({ name: STALE.name });
+    });
+
+    it('the FALLBACK — no arrival watch (no glue query): the tape keeps its held end in the other level; the next goal there re-enters in ONE turn (release + teleport), after the check settles, named `cross-level-end`', () => {
+        const e = setup({ selfChecks: true, editPlan: crossPlan });
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.dones.length === 1);
+        expect(e.game.tapes[1].hold).toBe(true);
+        expect(e.engine.stats.crossLevelEnds).toEqual([{ goal: CHEST.name, from: HOUSE, to: OTHER, outcome: 'held-end' }]);
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, endLevel: OTHER } });
+        const goal = { kind: 'exit', level: OTHER, tiles: [[0, 0]], name: 'level_30__r0c4 -> level_22' };
+        expect(e.engine.walkTo(goal)).toEqual({ ok: true, action: 'continue' });
+        for (let i = 0; i < 20; i++) e.timers.run(1);
+        expect(e.game.calls).not.toContain('botReset'); // held while the check is outstanding
+        e.delivery.settle(CHEST.name);
+        e.runUntil(() => e.teleports.length === 2);
+        expect(e.engine.stats.selfChecks).toEqual([expect.objectContaining({ location: CHEST.name, settled: true })]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1, 'cross-level-end': 1 });
+        expect(e.engine.stats.adoptRefused).toEqual([]); // no 15 s adoption wait
+        // the release and the teleport in ONE turn: the reset is the last game call before the teleport
+        const reset = e.game.calls.lastIndexOf('botReset');
+        expect(reset).toBeGreaterThanOrEqual(0);
+        expect(e.teleports[1]).toMatchObject({ level: OTHER, afterCall: reset + 1 });
+    });
+
+    it('a location plan that ends in its OWN level is unchanged: held at its end, no crossing row', () => {
+        const e = setup({ glue: true });
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.dones.length === 1);
+        expect(e.game.tapes[1].hold).toBe(true);
+        expect(e.dones[0].heldEnd).toBe(true);
+        expect(e.engine.stats.crossLevelEnds).toEqual([]);
     });
 });
