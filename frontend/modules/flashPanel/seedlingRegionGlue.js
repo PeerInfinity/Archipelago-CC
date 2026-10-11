@@ -296,7 +296,12 @@ export class SeedlingRegionGlue {
                 this.apply(this.checkBinding.onStateReport(property, value, reportContext(adapter, property, value)));
             }
             // ⛓ OBSTACLE EVENTS — the third reader of the same reports (a cleared event flag).
-            if (this.eventCollector) this.apply(this.eventCollector.onStateReport(property, value));
+            if (this.eventCollector) {
+                const clears = this.eventCollector.liveClears;
+                this.apply(this.eventCollector.onStateReport(property, value));
+                // ⛓ EVENT GOALS — a live clear: re-read the game's table (a same-frame second write hid the first).
+                if (this.eventCollector.liveClears !== clears) this.reconcileEventsFromGame();
+            }
         };
         /**
          * ⛔ WHAT WAS DELIVERED INTO THE OLD PAGE IS DROPPED WITH IT. The delivery, the check binding and the
@@ -333,6 +338,24 @@ export class SeedlingRegionGlue {
         if (!Array.isArray(st?.persistence_cleared)) return null;
         this._eventsSynced = true;
         const effects = this.eventCollector.onLoad(st.persistence_cleared);
+        this.apply(effects);
+        return effects;
+    }
+
+    /**
+     * ⛓ EVENT GOALS — the RECONCILE read (`SeedlingEventCollector.onReconcile`): the game's cleared table after a live
+     * clear, so an event flag whose report a same-frame write overwrote is still collected. One `botStatus` per live
+     * persistence clear (they are rare: a pickup, a broken obstacle, a press). Returns the effects, or null.
+     */
+    reconcileEventsFromGame() {
+        if (!this.eventCollector || !this.adapter) return null;
+        let st = null;
+        try {
+            const raw = this.adapter._getFlash?.()?.botStatus?.();
+            st = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        } catch { st = null; }
+        if (!Array.isArray(st?.persistence_cleared)) return null;
+        const effects = this.eventCollector.onReconcile(st.persistence_cleared);
         this.apply(effects);
         return effects;
     }

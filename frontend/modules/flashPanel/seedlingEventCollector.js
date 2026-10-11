@@ -22,7 +22,10 @@
  * is a tape's DECLARATION, not the player's doing, and is not collected (`stats.armingWindow`): the declarations
  * are the game's live clears, which the load read collected already.
  *
- * Effects (the glue applies them): `{type: 'eventCollect', location, eventId, level, tag, at: 'live'|'load'}`. The
+ *   RECONCILE ⛓ EVENT GOALS — after every live clear, the same table re-read: a write the single report slot lost
+ *            (two writes in one frame) is still the game's flag (`onReconcile`).
+ *
+ * Effects (the glue applies them): `{type: 'eventCollect', location, eventId, level, tag, at: 'live'|'load'|'reconcile'}`. The
  * glue sends each to the state manager as a LOCAL event check — never a server check (the location has no id).
  */
 
@@ -41,7 +44,13 @@ export class SeedlingEventCollector {
         this.insideHostStart = insideHostStart;
         /** Event locations this game has collected (a re-clear of one flag collects nothing). */
         this.collected = new Set();
-        this.stats = { reports: 0, restores: 0, other: 0, live: 0, load: 0, repeats: 0, armingWindow: 0, loadReads: 0 };
+        this.stats = { reports: 0, restores: 0, other: 0, live: 0, load: 0, repeats: 0, armingWindow: 0, loadReads: 0,
+            reconcile: 0, reconcileReads: 0 };
+        /**
+         * ⛓ EVENT GOALS — how many CLEARS the game reported outside a host start's arming window, of ANY slot (an event's
+         * or not). The glue re-reads the game's cleared table after each one (`onReconcile`): see `onReconcile`.
+         */
+        this.liveClears = 0;
     }
 
     _eventAt(level, tag) {
@@ -61,6 +70,7 @@ export class SeedlingEventCollector {
         const report = parsePendingCheck(value);
         if (!report) return [];
         this.stats.reports += 1;
+        if (report.cleared && !this.insideHostStart(report.seq)) this.liveClears += 1;
         const ev = this._eventAt(report.level, report.tag);
         if (!ev) { this.stats.other += 1; return []; }
         if (!report.cleared) { this.stats.restores += 1; return []; }
@@ -79,6 +89,27 @@ export class SeedlingEventCollector {
         for (const c of cleared) {
             const ev = this._eventAt(Number(c?.level), Number(c?.tag));
             if (ev) out.push(...this._collect(ev, 'load'));
+        }
+        return out;
+    }
+
+    /**
+     * ⛓ EVENT GOALS — ONE REPORT SLOT, TWO WRITES IN ONE FRAME. `pendingCheck` is a single string the host polls once
+     * per frame, so when one update makes two persistence writes only the LAST is reported. `ButtonRoom` does exactly
+     * that (`ButtonRoom.as`: `setPersistence(t, persist, room)` — another room's slot — then its own
+     * `setPersistence(tag, !activate)`): L38's `buttonroom@32,48` clears `{39,8}` and is reported as `{38,4}` alone
+     * (measured: the divergence sweep's leg 368, the flag in `persistence_cleared` and never collected live). So after
+     * every live clear the glue re-reads the game's cleared table (`botStatus().persistence_cleared` — the GAME's flags,
+     * as at load) and every event flag in it is collected. The arming window is honoured by the trigger: only a clear
+     * outside it asks for a re-read (`liveClears`).
+     */
+    onReconcile(cleared) {
+        if (!Array.isArray(cleared)) return [];
+        this.stats.reconcileReads += 1;
+        const out = [];
+        for (const c of cleared) {
+            const ev = this._eventAt(Number(c?.level), Number(c?.tag));
+            if (ev && !this.collected.has(ev.location)) out.push(...this._collect(ev, 'reconcile'));
         }
         return out;
     }
