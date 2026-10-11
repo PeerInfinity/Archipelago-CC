@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 70,
-            "count": 115,
+            "browser": 71,
+            "count": 116,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 399,
-        "browser": 135,
+        "blockStyle": 400,
+        "browser": 136,
         "cited": 198,
-        "files": 411,
+        "files": 412,
         "lineStyle": 12,
-        "withDocblock": 411,
-        "withFlags": 329
+        "withDocblock": 412,
+        "withFlags": 330
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10769,6 +10769,40 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l14-swordless — ⛓ SEEDLING FIDELITY L14 D1: IS A 0-HIT SWORDLESS CROSSING OF L14 POSSIBLE AT ALL?",
             "path": "scripts/procgen/probe-seedling-l14-swordless.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-l37-fallrock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling L37 FALLROCK, ON THE GAME (rules `rules-l37-fallrock-patch`).",
+            "path": "scripts/procgen/probe-seedling-l37-fallrock.mjs"
         },
         {
             "argvHelpers": [],
