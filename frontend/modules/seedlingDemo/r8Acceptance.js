@@ -3493,6 +3493,14 @@ export const R8_D2_SHIELD = Object.freeze({
                     + '(24 x 48, reach 24, 2 damage) land twice on `spinner@48,96` and kill it. Named by this '
                     + 'assertion driving the roster.',
             }),
+            Object.freeze({
+                name: 'l40button-l42-part0',
+                level: 40,
+                addedBy: 'Seedling fidelity L40BUTTON D3 (L40 from L42 to Totem Part 64,144, on the game)',
+                why: 'sweep-4 leg 381\'s arrival, the solver\'s own plan with `STANCE_ROCKS` on: on its way to the NW '
+                    + 'cluster\'s rocks the walk kills `spinner@192,128` (a `kill` order), then latches t1 and collects. '
+                    + 'Recorded on p4f (noDamage), model = game at 0 px. Named by this assertion driving the roster.',
+            }),
         ]),
     }),
 
