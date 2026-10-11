@@ -1,0 +1,39 @@
+23,24d22
+<  *   … --player-hits          (⛓ LEASH D3) also record the GAME's player `hits` / `hits_timer` (`botStatus()`) in each
+<  *                            recorded sample's `player`, so a witness can say WHEN the game billed a contact
+26c24
+< import { chromium } from 'playwright';
+---
+> import { chromium } from '/home/user/Archipelago-CC/node_modules/playwright/index.mjs';
+30,33c28,31
+< import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+< import { takeBoxLockOrExit } from './boxLock.js';
+< import { assertLogicOnlyChannel } from './seedlingChannel.js';
+< import { argvHelp, isEntryPoint } from './argvHelp.js';
+---
+> import { HEADLESS_LOGIC_ONLY_ARGS } from '/home/user/Archipelago-CC/scripts/procgen/headlessChromium.js';
+> import { takeBoxLockOrExit } from '/home/user/Archipelago-CC/scripts/procgen/boxLock.js';
+> import { assertLogicOnlyChannel } from '/home/user/Archipelago-CC/scripts/procgen/seedlingChannel.js';
+> import { argvHelp, isEntryPoint } from '/home/user/Archipelago-CC/scripts/procgen/argvHelp.js';
+60d57
+<     const PLAYER_HITS = process.argv.includes('--player-hits');
+62c59
+<     takeBoxLockOrExit({ name: 'probe-seedling-chaser-mobiles.mjs', kind: 'browser' });
+---
+>     takeBoxLockOrExit({ name: '_scratch-leash-probe.mjs', kind: 'browser' });
+65c62
+<     const REPO = join(HERE, '..', '..');
+---
+>     const REPO = '/home/user/Archipelago-CC';
+115,116c112
+<             frames.push({ status: { tick: s.tick, level: s.level, finished: s.finished, camera: s.camera ?? null,
+<                 ...(PLAYER_HITS ? { hits: s.hits, hits_timer: s.hits_timer } : {}) }, mobiles: m });
+---
+>             frames.push({ status: { tick: s.tick, level: s.level, finished: s.finished, camera: s.camera ?? null, hits: s.hits, hits_timer: s.hits_timer, px: s.x, py: s.y, items: s.items, pc: s.persistence_cleared, inv: s.inventory_slots }, mobiles: m });
+160a157
+>     if (process.env.PLAYER_OUT) writeFileSync(process.env.PLAYER_OUT, JSON.stringify(frames.map((f) => ({ t: f.mobiles.tick ?? f.status.tick, ...f.status })), null, 0));
+260,261c257
+<                     t: tickOf(f), level: f.status.level, player: { x: playerOf(f).x, y: playerOf(f).y,
+<                         ...(PLAYER_HITS ? { hits: f.status.hits, hits_timer: f.status.hits_timer } : {}) },
+---
+>                     t: tickOf(f), level: f.status.level, player: { x: playerOf(f).x, y: playerOf(f).y },
