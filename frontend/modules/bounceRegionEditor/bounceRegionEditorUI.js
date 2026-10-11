@@ -673,6 +673,7 @@ export class BounceRegionEditorUI {
         row.appendChild(span);
         const inp = document.createElement('input');
         inp.type = 'number';
+        inp.dataset.field = label;
         inp.value = String(value);
         inp.step = String(step);
         inp.min = String(min);
@@ -681,6 +682,41 @@ export class BounceRegionEditorUI {
             if (Number.isFinite(v)) onChange(v);
         });
         row.appendChild(inp);
+        return row;
+    }
+
+    /**
+     * A drop-down of the level's platforms — the same selection a click on the
+     * canvas makes (⚖ the user, 2026-10-10: the editor gets one, so a platform
+     * can be picked without aiming at a 14-px bar, and a tutorial step can
+     * pick one). Lists them bottom to top, as the level is climbed.
+     */
+    _renderPlatformPick(level) {
+        const row = document.createElement('label');
+        row.className = 'bre-field';
+        const span = document.createElement('span');
+        span.textContent = 'pick';
+        row.appendChild(span);
+        const sel = document.createElement('select');
+        sel.className = 'bre-platform-pick';
+        const none = document.createElement('option');
+        none.value = '';
+        none.textContent = '— a platform —';
+        sel.appendChild(none);
+        const platforms = [...(level.platforms ?? [])].sort((a, b) => b.y - a.y);
+        for (const p of platforms) {
+            const o = document.createElement('option');
+            o.value = String(p.id);
+            o.textContent = `${p.id} (${Math.round(p.x)}, ${Math.round(p.y)})`;
+            sel.appendChild(o);
+        }
+        sel.value = this._selectedId == null ? '' : String(this._selectedId);
+        sel.addEventListener('change', () => {
+            const picked = platforms.find((p) => String(p.id) === sel.value);
+            this._selectedId = picked ? picked.id : null;
+            this.render();
+        });
+        row.appendChild(sel);
         return row;
     }
 
@@ -849,6 +885,7 @@ export class BounceRegionEditorUI {
         h.className = 'bre-subhead';
         h.textContent = 'Platform';
         block.appendChild(h);
+        block.appendChild(this._renderPlatformPick(level));
 
         const p = (level.platforms ?? []).find((x) => x.id === this._selectedId);
         if (!p) {
