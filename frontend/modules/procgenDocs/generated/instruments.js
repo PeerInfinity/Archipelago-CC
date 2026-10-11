@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 76,
+            "count": 77,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 396,
+        "blockStyle": 397,
         "browser": 133,
         "cited": 196,
-        "files": 408,
+        "files": 409,
         "lineStyle": 12,
-        "withDocblock": 408,
-        "withFlags": 326
+        "withDocblock": 409,
+        "withFlags": 327
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7688,6 +7688,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-l14-swordless — ⛓⛓⛓ SEEDLING FIDELITY L14: THE SWORDLESS CROSSING OF L14, SOLVED BY THE DETOUR RUNG AND HANDED TO THE GAME.",
             "path": "scripts/procgen/plan-seedling-l14-swordless.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-l30keylock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-l30keylock — ⛓⛓⛓ SEEDLING FIDELITY L30KEYLOCK: L30 → L22 THROUGH `bosslock@64,32`, PAST THE BOBSOLDIER THAT STANDS BESIDE IT.",
+            "path": "scripts/procgen/plan-seedling-l30keylock.mjs"
         },
         {
             "argvHelpers": [
