@@ -145,7 +145,8 @@ describe('fidelity STANCE — a presser with no stance is the KILL rung\'s refus
         const r = canCross({ level: 8, exit: 7, arrival: { from: 9 }, inventory: [], witness: false });
         expect(r.verdict).toBe('cannot');
         expect(r.why).toMatch(/the combat ladder is EXHAUSTED/);
-        expect(r.why).toMatch(/kill: the ceiling's presser button@64,48 \(group t=0, arming \[arrowtrap@96,16\]\) has no stance/);
+        /* hammer-phase C1-ON: the static sword arm is asked first, and its why leads the kill line (no sword here). */
+        expect(r.why).toMatch(/kill: static sword arm: sandtrap@96,128: the run's `primary` slot holds NOTHING[\s\S]*· the ceiling: the ceiling's presser button@64,48 \(group t=0, arming \[arrowtrap@96,16\]\) has no stance/);
         expect(r.why).not.toMatch(/^solverBot: no REACHABLE stance inside button@64,48/);
     });
 });
