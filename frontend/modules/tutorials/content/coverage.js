@@ -21,10 +21,10 @@ export const NO_TUTORIAL = Object.freeze({
     jtaActionQueue: { title: 'JtA Action Queue', why: 'Part of the non-procgen Journey to Ascension, which is deprecated.' },
     jtaGameDataPanel: { title: 'JtA Game Data', why: 'Part of the non-procgen Journey to Ascension, which is deprecated.' },
     jtaCostDebuggerPanel: { title: 'JtA Cost Debugger', why: 'Deprecated.' },
-    ruleConverterPanel: { title: 'Rule Converter', why: 'Very out of date; it may be deprecated or removed.' },
+    ruleConverterPanel: { title: 'Rule Converter', why: 'Deprecated.' },
     tileMapAnalyzer: { title: 'Tile Map Analyzer', why: 'Currently a failed experiment.' },
-    metaGamePanel: { title: 'Meta Game', why: 'Removed from the default layout; it may be deprecated (an early draft of the procgen idea).' },
-    progressBarPanel: { title: 'Progress Bars', why: 'Removed from the default layout with the Meta Game panel; it may be deprecated.' },
+    metaGamePanel: { title: 'Meta Game', why: 'Deprecated (an early draft of the procgen idea).' },
+    progressBarPanel: { title: 'Progress Bars', why: 'Deprecated, with the Meta Game panel.' },
 });
 
 /**

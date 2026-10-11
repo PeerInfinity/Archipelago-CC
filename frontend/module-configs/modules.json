@@ -154,19 +154,19 @@
     },
     "progressBar": {
       "path": "./modules/progressBar/index.js",
-      "enabled": true
+      "enabled": false
     },
     "progressBarPanel": {
       "path": "./modules/progressBarPanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "metaGame": {
       "path": "./modules/metaGame/index.js",
-      "enabled": true
+      "enabled": false
     },
     "metaGamePanel": {
       "path": "./modules/metaGamePanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "flashPanel": {
       "path": "./modules/flashPanel/index.js",

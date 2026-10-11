@@ -108,10 +108,10 @@ These panels are deliberately left out of the tutorials:
 | JtA Action Queue | Part of the non-procgen Journey to Ascension, which is deprecated. |
 | JtA Game Data | Part of the non-procgen Journey to Ascension, which is deprecated. |
 | JtA Cost Debugger | Deprecated. |
-| Rule Converter | Very out of date; it may be deprecated or removed. |
+| Rule Converter | Deprecated. |
 | Tile Map Analyzer | Currently a failed experiment. |
-| Meta Game | Removed from the default layout; it may be deprecated (an early draft of the procgen idea). |
-| Progress Bars | Removed from the default layout with the Meta Game panel; it may be deprecated. |
+| Meta Game | Deprecated (an early draft of the procgen idea). |
+| Progress Bars | Deprecated, with the Meta Game panel. |
 
 <!-- END GENERATED tutorial lists -->
 

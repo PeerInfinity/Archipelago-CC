@@ -1453,7 +1453,8 @@ export const CATEGORY_ORDER = Object.freeze([
     "Procgen Substrate Panels",
     "Procgen Infrastructure Panels",
     "Developer and Testing Panels",
-    "Core Service Modules"
+    "Core Service Modules",
+    "Deprecated Panels"
 ]);
 
 /** The label of the child holding the docs a README-sub-grouped section's headings do not list (last). */

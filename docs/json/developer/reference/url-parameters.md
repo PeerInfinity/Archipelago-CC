@@ -354,7 +354,7 @@ These parameters control automatic connection to an Archipelago server.
 **Examples:**
 - `?metagame=progressbar` - The progress-bar test scenario
 
-The Meta Game module is deprecated (2026-10-11).
+The Meta Game module is deprecated (2026-10-11) and disabled in every launch mode, so the parameter does nothing unless the mode's module config enables `metaGame` and `metaGamePanel` again.
 
 ---
 

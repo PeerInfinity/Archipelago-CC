@@ -2,6 +2,8 @@
 
 The MetaGame panel lets you load and manage scripted scenarios (MetaGame configurations) that orchestrate automated sequences of events, progress bars, and other interactive experiences.
 
+> ⚠ **Deprecated** (2026-10-11). The Meta Game and Progress Bars panels and their MetaGame / ProgressBar modules are kept in the code but disabled in every launch mode, and are no longer maintained. See [Deprecated Panels](../../modules/README.md#deprecated-panels).
+
 ## Loading a Configuration
 
 Select a configuration from the dropdown (e.g., "Progress Bar Test") and press **Load Configuration** to load and activate it. The panel shows a status message confirming success or describing any error.
