@@ -108,6 +108,8 @@ import {
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD,
     SLASH_ANIM_TICKS, slashScaleFor, slashSet, slashTimerTick,
     GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
+    // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (behind `GHOST_SPINNER_PRESS`, OFF).
+    GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
@@ -8736,7 +8738,15 @@ function derivePressKill(run, bodies, contacts) {
      * weapon is asked only where a modelled live spinner is there to press.
      */
     const weapon = run.progress('primaryWeapon');
-    if (weapon !== 'sword') {
+    /**
+     * ⛓⛓⛓ HAMMER-PHASE C2 — **A GHOST PRESS IS A KILL TOO** (`GHOST_SPINNER_PRESS`, OFF). With the switch ON a
+     * `ghostsword` primary is admitted: the forecasts carry its press (D2) and the strike plans with its row
+     * (`strikePressOf`). A ghost sword without the sword never tests (`ghostSwingRefusal`), refused by name.
+     */
+    const ghostPress = spinnerStrikePress(weapon) !== SWORD_SPINNER_PRESS;
+    const ghostWhy = ghostPress ? ghostSwingRefusal(run.progress('inventory')) : null;
+    if (ghostWhy) return no([{ option: 'press a body', why: ghostWhy }]);
+    if (weapon !== 'sword' && !ghostPress) {
         return no([{
             option: 'press a body',
             why: `the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``}`
@@ -8778,8 +8788,9 @@ function derivePressKill(run, bodies, contacts) {
         rejected.push({
             option: 'a strike schedule',
             why: `no (cell, tick) in level ${run.level} over the next `
-                + `${strikeHorizon(run)} ticks puts the whole five-dispatch train inside `
-                + `${SLASH_REACH} px of a body while the player box stays clear of every `
+                + `${strikeHorizon(run)} ticks puts the whole `
+                + `${ghostPress ? `${strikePressOf(run).hitTicks}-dispatch (ghost sword)` : 'five-dispatch'} train inside `
+                + `${strikePressOf(run).reach} px of a body while the player box stays clear of every `
                 + `body's 7x7 rect and of ${hammerTestAt(run)} AND is reachable in time `
                 + `along a transit-safe corridor. ${first?.considered ?? 0} `
                 + 'opportunit(ies) were considered.'
@@ -9093,6 +9104,19 @@ function minTicksBetween(from, to) {
 }
 
 /**
+ * ⛓⛓⛓ HAMMER-PHASE C2 — **THE STRIKE'S PRESS, PER WEAPON** (`ghostSpinnerPress.spinnerStrikePress`). The sword's row
+ * (`slashRect`, `SLASH_REACH`, the line, `SLASH_HIT_TICKS`) unless `GHOST_SPINNER_PRESS` is ON and the run's primary
+ * swings the ghost sword, whose row is `applyThrust`'s ghost arm (24 x 48, reach 24, no line, seven tests). Asked of
+ * the RUN (a previewed view has no progress): `pressReadyAt` and the two train previews take the row as an argument
+ * from their callers, each of which holds the run. OFF it is the sword's row, always, and nothing is read: every caller
+ * reads the very values it read before.
+ */
+function strikePressOf(run) {
+    if (!GHOST_SPINNER_PRESS.enabled) return SWORD_SPINNER_PRESS;
+    return spinnerStrikePress(run.progress('primaryWeapon'));
+}
+
+/**
  * ⛓⛓ SEEDLING SWIM U3 (D2) — **THE SWING'S LINE OF SIGHT, ASKED BEFORE IT IS
  * PLANNED.** `Player.slash` refuses a hit whose line from the player's entity
  * point to the body's crosses a Solid, and `levelRun` refuses to model that
@@ -9110,14 +9134,18 @@ function minTicksBetween(from, to) {
  * pairing reason the hammer window is widened. A strike it drops for that one
  * tick was a strike the run might have refused.
  *
+ * ⛓ hammer-phase C2 — a GHOST press asks no line (`|| hasGhostSword`, `Player.as:917`): never blocked.
+ *
  * @returns {?{tag, at:{x, y}}} the first blocker, or null
  */
 function strikeLineBlocked(run, from, dir, forecast, i) {
-    const rect = slashRect(from.x, from.y, dir);
-    for (let k = 0; k <= SLASH_HIT_TICKS; k += 1) {
+    const press = strikePressOf(run);
+    if (!press.lineOfSight) return null;
+    const rect = press.rect(from.x, from.y, dir);
+    for (let k = 0; k <= press.hitTicks; k += 1) {
         for (const r of forecast[i + k] ?? []) {
             if (!rectsOverlapLocal(rect, r)) continue;
-            if (distanceRectPoint(from.x, from.y, r) > SLASH_REACH) continue;
+            if (distanceRectPoint(from.x, from.y, r) > press.reach) continue;
             const blocker = run.collideLineSolid(from.x, from.y,
                 r.x + SPINNER.originX, r.y + SPINNER.originY);
             if (blocker) return blocker;
@@ -9132,6 +9160,8 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
     const horizon = strikeHorizon(run);
     const forecast = run.spinnerForecast(horizon);
     const cells = walkableCells(run, contacts);
+    // ⛓ hammer-phase C2: the press's rect, reach and train length (the sword's, unless the ghost's under the switch)
+    const press = strikePressOf(run);
     // ⛓ The admissible ETA floor, once per cell — see `minTicksBetween`.
     const floor = new Map(cells.map((c) => [c, minTicksBetween(run.state, c)]));
     const opportunities = [];
@@ -9149,8 +9179,8 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
      * line skips only, so the refusal's count keeps its meaning.
      */
     const opportunityAt = (i, c, mine, { countSighted = true } = {}) => {
-        if (distanceRectPoint(c.x, c.y, mine) > SLASH_REACH) return false;
-        if (!rectsOverlapLocal(slashRectToward(c, mine), mine)) return false;
+        if (distanceRectPoint(c.x, c.y, mine) > press.reach) return false;
+        if (!rectsOverlapLocal(press.rect(c.x, c.y, facingToward(c, mine)), mine)) return false;
         /**
          * ⚠ THE TRAIN IS CHECKED ONE WIDER AT EACH END, and the reason is
          * the pairing rather than caution: the assert reads the PRE-MOVE
@@ -9158,7 +9188,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
          * on and the tick after the last dispatch are both compared
          * against a body this window would otherwise not have asked about.
          */
-        for (let k = -2; k <= SLASH_HIT_TICKS + 1; k += 1) {
+        for (let k = -2; k <= press.hitTicks + 1; k += 1) {
             if (!clearOfHammersAt(run, c.box, forecast, i + k)) return false;
         }
         if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i)) {
@@ -9202,7 +9232,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
         }
         return null;
     };
-    for (let i = Math.max(1, notBefore); i < horizon - SLASH_HIT_TICKS - 1; i += 1) {
+    for (let i = Math.max(1, notBefore); i < horizon - press.hitTicks - 1; i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
         for (const c of cells) {
@@ -9318,7 +9348,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
      */
     let continued = 0;
     for (let i = Math.max(stoppedAt + 1, notBefore, 1);
-        continuation && i < horizon - SLASH_HIT_TICKS - 1 && continued < STRIKE_CANDIDATES;
+        continuation && i < horizon - press.hitTicks - 1 && continued < STRIKE_CANDIDATES;
         i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
@@ -9404,8 +9434,9 @@ function strikeEscape(run, { cell, i, eta, walk, mine, bodyId, caller }) {
  * actually is. ⚠ One wider at each end, for the pairing reason `deriveStrike`
  * records.
  */
-function trainIsSafeHere(run, aimKeys = null) {
-    const span = SLASH_HIT_TICKS + 3;
+function trainIsSafeHere(run, aimKeys = null, press = SWORD_SPINNER_PRESS) {
+    // ⛓ hammer-phase C2: the train is the press's own (`strikePressOf`: a ghost swing tests seven ticks)
+    const span = press.hitTicks + 3;
     const forecast = run.spinnerForecast(span);
     const box = playerBoxAt(run.state.x, run.state.y);
     for (let i = 0; i < span; i += 1) {
@@ -9446,8 +9477,9 @@ function trainIsSafeHere(run, aimKeys = null) {
  * A blocked line means DO NOT press here; the schedule then plans a strike the
  * line admits.
  */
-function trainLineBlockedHere(run, dir, aimKeys) {
-    const span = SLASH_HIT_TICKS + 3;
+function trainLineBlockedHere(run, dir, aimKeys, press = SWORD_SPINNER_PRESS) {
+    // ⛓ hammer-phase C2: the press's own train, rect and reach; a ghost swing asks no line (its death is still asked)
+    const span = press.hitTicks + 3;
     const forecast = run.spinnerForecast(span);
     const step = previewOrDeath(run.previewStepper());
     let st = { ...run.state };
@@ -9456,12 +9488,12 @@ function trainLineBlockedHere(run, dir, aimKeys) {
         st = step({ ...st }, keysAt(k));
         // ⛓ hammer-phase A2: a train whose preview dies is not pressed here (`previewOrDeath`)
         if (!st) return true;
-        if (k < 2) continue;
-        const rect = slashRect(st.x, st.y, dir);
+        if (k < 2 || !press.lineOfSight) continue;
+        const rect = press.rect(st.x, st.y, dir);
         for (const j of [k - 1, k]) {
             for (const r of forecast[j] ?? []) {
                 if (!rectsOverlapLocal(rect, r)) continue;
-                if (distanceRectPoint(st.x, st.y, r) > SLASH_REACH) continue;
+                if (distanceRectPoint(st.x, st.y, r) > press.reach) continue;
                 if (run.collideLineSolid(st.x, st.y,
                     r.x + SPINNER.originX, r.y + SPINNER.originY)) return true;
             }
@@ -9767,13 +9799,14 @@ function previewViewAt(run, o, state, live, step, forecast = null) {
  * were two spellings of one test ("verbatim in its conditions"); the conditions and their order are unchanged, so no
  * caller's answer moves.
  */
-function pressReadyAt(view, state, rect, hitsTimer, lastPressAt) {
-    if (!(view.ticksCompleted - lastPressAt > SLASH_HIT_TICKS && hitsTimer === 0
-        && distanceRectPoint(state.x, state.y, rect) <= SLASH_REACH)) return false;
+function pressReadyAt(view, state, rect, hitsTimer, lastPressAt, press) {
+    // ⛓ hammer-phase C2: `press` is the press's own row (`strikePressOf` of the caller's run; the sword's OFF)
+    if (!(view.ticksCompleted - lastPressAt > press.hitTicks && hitsTimer === 0
+        && distanceRectPoint(state.x, state.y, rect) <= press.reach)) return false;
     const dir = facingToward(state, rect);
-    if (!rectsOverlapLocal(slashRect(state.x, state.y, dir), rect)) return false;
+    if (!rectsOverlapLocal(press.rect(state.x, state.y, dir), rect)) return false;
     const aimKeys = new Set([FACING_KEYS[dir]]);
-    return trainIsSafeHere(view, aimKeys) && !trainLineBlockedHere(view, dir, aimKeys);
+    return trainIsSafeHere(view, aimKeys, press) && !trainLineBlockedHere(view, dir, aimKeys, press);
 }
 
 function previewPressApproach(run, { index, hitsTimer, lastPressAt, strike, stall = null,
@@ -9791,7 +9824,7 @@ function previewPressApproach(run, { index, hitsTimer, lastPressAt, strike, stal
         const view = previewViewAt(run, o, st, live, step);
         const rect = bodies[index];
         // ⛓ The executor's live in-reach test — the one predicate (`pressReadyAt`).
-        if (pressReadyAt(view, st, rect, Math.max(0, hitsTimer - o), lastPressAt)) {
+        if (pressReadyAt(view, st, rect, Math.max(0, hitsTimer - o), lastPressAt, strikePressOf(run))) {
             return { end: 'reach', at: o };
         }
         if (n + o > strike.pressAt) return { end: 'lapse', at: o };
@@ -10141,7 +10174,8 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     st = stepOrNull({ ...st }, PRESS, { dashImpulse: probe.impulse });
     if (!st) return died(pressAt + 1);
     states.set(pressAt + 1, st);
-    const trainEnd = pressAt + SLASH_HIT_TICKS;
+    // ⛓ hammer-phase C2: the press's own train (`strikePressOf`: seven tests for a ghost swing)
+    const trainEnd = pressAt + strikePressOf(run).hitTicks;
     for (let t = pressAt + 1; t < trainEnd + 1; t += 1) {
         st = stepOrNull({ ...st }, NO_KEYS);
         if (!st) return died(t + 1);
@@ -10438,7 +10472,7 @@ export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMM
         const iframe = iframeAt(i);
         if (iframe === null) return false;
         const view = previewViewAt(run, i, q, live, rawStep, hitAware?.rows ?? null);
-        if (!pressReadyAt(view, q, rect, iframe, lastPressAt)) return false;
+        if (!pressReadyAt(view, q, rect, iframe, lastPressAt, strikePressOf(run))) return false;
         goals += 1;
         if (!HAMMER_ESCAPE.enabled) return true;
         const { keys } = path();
@@ -11052,7 +11086,7 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
             stats.inReach += 1;
             node.cur.ensure(node.i + SLASH_HIT_TICKS + 4);
             const view = previewViewAt(run, node.i, node.q, live, rawStep, node.cur.rows);
-            if (!pressReadyAt(view, node.q, b.rect, b.hitsTimer, node.lastPress)) continue;
+            if (!pressReadyAt(view, node.q, b.rect, b.hitsTimer, node.lastPress, strikePressOf(run))) continue;
             const key = FACING_KEYS[facingToward(node.q, b.rect)];
             if (!aims.has(key)) aims.set(key, new Set([key]));
         }
@@ -12954,7 +12988,7 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 strike = null;
             } else if (following !== null) {
                 held = following;
-            } else if (pressReadyAt(run, run.state, body.rect, body.hitsTimer, lastPressAt)
+            } else if (pressReadyAt(run, run.state, body.rect, body.hitsTimer, lastPressAt, strikePressOf(run))
                 && aimAdmitted()) {
                 if (aimEscape?.ok) {
                     escape = aimEscape;

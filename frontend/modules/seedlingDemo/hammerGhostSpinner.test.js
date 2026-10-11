@@ -162,3 +162,67 @@ describe(`D2 — the forecasts on the game witness \`${WITNESS}\``, () => {
         expect(on).toBe(off);
     });
 });
+
+/**
+ * D3's staging (W0): `r9-solve-18`'s frozen staging with the ghost sword — the D1 witness's room, solved as
+ * `sweep-seedling-l18-residues` solves it. `items` overrides the seam's.
+ */
+async function solveL18(items) {
+    const { parseTape } = await import('./tapeFormat.js');
+    const { readFileSync } = await import('node:fs');
+    const { fileURLToPath } = await import('node:url');
+    const { twoPassSolve } = await import('./twoPassSolve.js');
+    const base = parseTape(readFileSync(fileURLToPath(new URL('./fixtures/witness-bases/r9-solve-18.hammer-a.json',
+        import.meta.url)), 'utf8'));
+    const staging = stagingFromTape(base);
+    const seam = { ...staging.seam, items: { ...staging.seam.items, ...items } };
+    const makeRun = (persistence) => createRunForStaging({ ...staging, seam, persistence, equips: [] },
+        atlasLevelSource());
+    try {
+        const r = await twoPassSolve({ makeRun, goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }],
+            name: 'r9-solve-18', boot: staging.boot, persistence: staging.persistence.filter((c) => c.at === undefined),
+            gameTick: async () => { throw new Error('no game oracle here'); } });
+        const run = makeRun(r.persistence);
+        for (const h of r.out.perTick) run.advance(h);
+        return { verdict: 'SOLVED', ticks: r.out.perTick.length, keys: r.out.perTick.map((h) => [...h].sort().join('+')),
+            run };
+    } catch (e) {
+        return { verdict: 'REFUSED', code: e?.code ?? e?.name, why: String(e?.message ?? e), obstacle: e?.obstacle ?? null };
+    }
+}
+
+describe('D3 — the spinner press kill with the ghost sword (`r9-solve-18`\'s staging + `hasGhostSword`)', () => {
+    it('OFF (the BEFORE model): refused at t0, by name — the kill arm derives a SWORD press', async () => {
+        const off = await solveL18({ hasGhostSword: true });
+        expect(off.verdict).toBe('REFUSED');
+        expect(off.why).toMatch(/the kill work order has no weapon — the run's `primary` slot fires `ghostsword`/);
+    });
+
+    it('⛓⛓⛓ ON: SOLVED with no hit, crossing to L19; every landing a ghost press, two per body (2 damage each), '
+        + 'from beyond the sword\'s reach', async () => {
+        const on = await withGhostSpinnerPress(true, () => solveL18({ hasGhostSword: true }));
+        expect(on.verdict).toBe('SOLVED');
+        expect(on.ticks).toBe(336);
+        expect(on.run.playerHits).toEqual([]);
+        expect(on.run.transitions.map((x) => x.to_level)).toEqual([19]);
+        const landed = on.run.spinnerPressHits.filter((h) => h.landed);
+        expect(landed.map((h) => [h.t, h.id, h.hits, h.killed])).toEqual([
+            [37, 'spinner@48,96', 2, false], [92, 'spinner@48,96', 4, true],
+            [113, 'spinner@112,48', 2, false], [159, 'spinner@112,48', 4, true]]);
+        expect(landed.every((h) => h.weapon === 'ghostsword' && h.reach > SLASH_REACH && h.reach <= GHOST_SWORD_REACH))
+            .toBe(true);
+    });
+
+    it('ON: a ghost sword WITHOUT the sword is refused by name (it never tests)', async () => {
+        const r = await withGhostSpinnerPress(true, () => solveL18({ hasGhostSword: true, hasSword: false }));
+        expect(r.verdict).toBe('REFUSED');
+        expect(r.why).toMatch(/holds the GHOST SWORD and not the sword/);
+    });
+
+    it('ON leaves the SWORD\'s solve byte-identical (the committed staging, 518 ticks)', async () => {
+        const off = await solveL18({});
+        const on = await withGhostSpinnerPress(true, () => solveL18({}));
+        expect(off.ticks).toBe(518);
+        expect(on.keys).toEqual(off.keys);
+    });
+});
