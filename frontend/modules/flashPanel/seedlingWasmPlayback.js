@@ -142,6 +142,13 @@ export const STATUS_MS = 500;
 /** ⛓ MID-ROOM REPLAN — how long a delivery the gate let through may take to show in `botStatus.items`, and the poll. */
 export const DELIVERY_LAND_MS = 3000;
 export const DELIVERY_POLL_MS = 20;
+/**
+ * ⛓ DELIVERY TICK — how long the next goal in a held room waits for the bot's OWN location check to settle (the
+ * state manager's snapshot lists it checked), and the poll. Past it the goal is solved as before and the item, if
+ * any, lands at wall time (`stats.selfChecks` row `settled: false`). The measured margin is in flash.md.
+ */
+export const SELF_CHECK_SETTLE_MS = 5000;
+export const SELF_CHECK_POLL_MS = 20;
 
 const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
 const secs = (ms) => `${Math.round(ms / 100) / 10} s`;
@@ -176,7 +183,9 @@ const roomEquips = (r) => equipsMap(r?.equips);
  *   (`SOLVER_UPGRADE_WINDOW_WORK`), 0 = the whole budget
  * @param {number} [deps.backstopMs]  the wall-clock backstop (`SOLVE_BACKSTOP_MS`): a named failure, never an answer
  * @param {() => object|null} [deps.getDelivery]  ⛓ MID-ROOM REPLAN — the panel adapter's delivery gate
- *   (`{setItemGate, writesOf, inventory, push}`); absent = items reach the game as they arrive (no gate)
+ *   (`{setItemGate, writesOf, inventory, push}`); absent = items reach the game as they arrive (no gate).
+ *   ⛓ DELIVERY TICK — its optional `checked(locationName)` (true / false; null = cannot tell) is the state
+ *   manager's checked set: without it no self-check is awaited (the item lands where it lands, as before).
  */
 export function createWasmPlayback({
     getGame, getWin = () => null, teleport, getCheckBinding = () => null, getSwapState = null, pushSwapNow = null, records, generated = false, producer = null,
@@ -272,6 +281,13 @@ export function createWasmPlayback({
     let landing = null;
     let deliveryTimer = null;
     let deliveryToken = 0;
+    /**
+     * ⛓ DELIVERY TICK — the bot's OWN location check, from its goal's HELD end until the state manager lists it
+     * checked: `{location, level, tick, since}`. The next goal in that room is not solved before it settles, so
+     * the check's item (if it is ours and the game would see it) lands in the held room at the check's own tape end
+     * — a tick the game state fixes — instead of wherever the next tape had got to when the round trip came back.
+     */
+    let selfCheck = null;
     /** Warm the worker now, so the first solve does not pay the module load inside its budget (S2). */
     try { svc().warm?.(); } catch { /* no Worker here: the first start says so */ }
     const stats = { arrivals: 0, forced: 0, solves: 0, ships: 0, hostStarts: [], done: 0, failed: 0, divergences: 0,
@@ -294,6 +310,8 @@ export function createWasmPlayback({
         deliveryServed: [],
         // ⛓ ENCOUNTERS-2 — deliveries the game already showed (the room granted the item): admitted, nothing replanned
         deliveryInGame: 0,
+        // ⛓ DELIVERY TICK — each self-check the next goal waited on: `{location, level, tick, settled, delivered, waitedMs, why?}`
+        selfChecks: [],
         // ⛓ ARRIVAL JITTER — the glue teleports pushed in the turn their door's begin record was seen
         swapPushes: [],
         // ⛓ ARRIVAL JITTER — every plan ship's clock: staged, shipped prefix, the game's (a diagnostic, never acted on)
@@ -338,6 +356,7 @@ export function createWasmPlayback({
      */
     function release(st = undefined) {
         room = null;
+        selfCheck = null;
         const wasFrozen = frozen;
         frozen = null;
         if (!ours) return;
@@ -982,6 +1001,7 @@ export function createWasmPlayback({
      * shipped since as S0's prefix), after checking the held game IS the shadow.
      */
     function solveInRoom() {
+        if (awaitSelfCheck()) return;
         const r = room;
         const record = records.get(goal.level) ?? null;
         spawn = r.spawn;
@@ -1404,6 +1424,9 @@ export function createWasmPlayback({
             // ⛓ WASM EQUIPS — the slot selections the tape shipped (`[{t, slot}]`, its own ticks)
             equips: play.equips ?? [], ...solvedBy(play) };
         const heldEnd = done.heldEnd && room !== null;
+        // ⛓ DELIVERY TICK — a LOCATION goal's check fired inside its tape: its AP round trip is outstanding.
+        selfCheck = heldEnd && goal?.kind === 'location' && goal.name && typeof delivery()?.checked === 'function'
+            ? { location: goal.name, level: room.level, tick: room.shipped.length, since: now(), deliveries: stats.deliveries.length } : null;
         if (!heldEnd) {
             ours = false; // finished and un-held: nothing of ours is armed
             room = null;
@@ -1436,6 +1459,47 @@ export function createWasmPlayback({
         schedule(heldGuard, DRAIN_MS);
     }
 
+
+    /**
+     * ⛓ DELIVERY TICK — the next goal in the held room waits for the bot's own check to SETTLE (the state manager's
+     * snapshot lists the location checked: the check's item, if any, is in its inventory). Then the gate is pushed in
+     * this same turn: an item the game would see lands in the held room at the check's tape end (`deliverHeld`) and
+     * the goal is solved from it; an item for another player, or one the game cannot see, settles with no delivery.
+     * True = not solved yet (waiting, or a delivery is landing — its landing solves the goal).
+     * ⚖ Items still arrive at wall time and mid-room: the room is HELD while they come (its clock stopped, never set);
+     * only the bot's own check, whose cause tick is game state, is waited for. Anything else lands where it lands.
+     */
+    function awaitSelfCheck() {
+        const sc = selfCheck;
+        if (!sc || room === null || room.level !== sc.level) { selfCheck = null; return false; }
+        const d = delivery();
+        let checked = null;
+        try { checked = d?.checked?.(sc.location) ?? null; } catch { checked = null; }
+        const waited = now() - sc.since;
+        if (checked === false && waited <= SELF_CHECK_SETTLE_MS) {
+            if (!sc.waiting) { sc.waiting = true; note(`waiting for the check of ${sc.location} to settle`); }
+            schedule(() => { if (phase === 'held' && goal && selfCheck === sc) solveInRoom(); }, SELF_CHECK_POLL_MS);
+            return true;
+        }
+        selfCheck = null;
+        // `delivered`: its item landed in the held room — here, or already (the adapter's own push tick got there first).
+        const row = { location: sc.location, level: sc.level, tick: sc.tick, settled: checked === true,
+            delivered: stats.deliveries.length > sc.deliveries, waitedMs: Math.round(waited) };
+        stats.selfChecks.push(row);
+        if (checked !== true) {
+            row.why = checked === null ? 'the checked set cannot be read' : `not checked within ${SELF_CHECK_SETTLE_MS} ms`;
+            log(`[wasm playback] the check of ${sc.location} did not settle (${row.why}) — the goal is solved as it stands; `
+                + 'its item, if any, lands at wall time', 'warn');
+            return false;
+        }
+        try { d.push?.(); } catch { /* the next tick pushes it */ }
+        if (!gate?.pending || landing) return false;
+        stopDelivery();
+        deliveryStep();
+        if (phase !== 'delivering') return false;
+        row.delivered = true;
+        return true;
+    }
 
     // ── ⛓ MID-ROOM REPLAN: the delivery gate ─────────────────────────────
 
@@ -1861,6 +1925,8 @@ export function createWasmPlayback({
                 room: room ? { level: room.level, shipped: room.shipped.length, plans: room.plans ?? 0, talkCircles: room.talkCircles?.length ?? 0 } : null, driving, arriving,
                 // ⛓ MID-ROOM REPLAN — the gate: installed, a delivery held back, the room a refused one waits out
                 gate: gate ? { pending: !!gate.pending, deferred: gate.deferred ? { clause: gate.deferred.clause, why: gate.deferred.why } : null } : null,
+                // ⛓ DELIVERY TICK — the bot's own check the next goal waits on
+                selfCheck: selfCheck ? { location: selfCheck.location, level: selfCheck.level, tick: selfCheck.tick } : null,
                 frozen: frozen ? { tick: frozen.tick, heldKeys: [...frozen.heldKeys] } : null };
         },
         get stats() {
@@ -1870,7 +1936,7 @@ export function createWasmPlayback({
                 ceremonies: stats.ceremonies.map((c) => ({ ...c })), dismissed: [...stats.dismissed],
                 deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred],
                 swapPushes: stats.swapPushes.map((r) => ({ ...r })), shipClock: stats.shipClock.map((r) => ({ ...r })),
-                adoptClock: stats.adoptClock.map((r) => ({ ...r })) };
+                adoptClock: stats.adoptClock.map((r) => ({ ...r })), selfChecks: stats.selfChecks.map((r) => ({ ...r })) };
         },
         /** ⛓ WG — the last arrivals' raw reads (`{seam, status, state}`), for a fixture recorder. */
         get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },

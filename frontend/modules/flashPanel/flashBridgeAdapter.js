@@ -844,6 +844,17 @@ export class FlashBridgeAdapter {
     return { ...(this.stateManager.getLatestStateSnapshot?.()?.inventory || {}) };
   }
 
+  /**
+   * ⛓ DELIVERY TICK — is `locationName` in the state manager's checked set (the snapshot that also carries the
+   * check's item)? null = no snapshot to read.
+   */
+  isLocationChecked(locationName) {
+    const checked = this.stateManager?.getLatestStateSnapshot?.()?.checkedLocations;
+    if (checked instanceof Set) return checked.has(locationName);
+    if (!Array.isArray(checked)) return null;
+    return checked.includes(locationName);
+  }
+
   _apNameToFlash(apName) {
     // Look up via ap_items by either ap_name (canonical AP display
     // name) or flash_name (for configs where the two are identical).
