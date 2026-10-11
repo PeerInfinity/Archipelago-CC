@@ -219,22 +219,16 @@ class RuleAnalysisMixin:
             return None
 
     def _get_setting_name_from_operand(self, operand: Any) -> Optional[str]:
-        """Extract the setting name from a SettingValue/OptionValue operand."""
+        """Extract the option name from an OptionValue / option_value operand."""
         if not isinstance(operand, dict):
             return None
         rule_type = operand.get('rule', '')
         ast_type = operand.get('type', '')
 
-        if rule_type == 'SettingValue':
-            return operand.get('args', {}).get('setting', '')
         if rule_type == 'OptionValue':
             return operand.get('args', {}).get('option', '')
-        if ast_type == 'setting_value':
-            return operand.get('setting', '')
         if ast_type == 'option_value':
             return operand.get('option', '')
-        if rule_type == 'AST_setting_value':
-            return operand.get('args', {}).get('setting', '')
         return None
 
     def _convert_option_key_to_value(self, setting_name: str, key: str) -> Optional[int]:
@@ -291,7 +285,6 @@ class RuleAnalysisMixin:
         Handles:
         - Raw values (strings, numbers, bools)
         - Constant rules (AST and Rule Builder formats)
-        - SettingValue rules (resolves from self.settings)
         - OptionValue rules (resolves from self.settings)
         - WorldAttribute rules (resolves from self.world_attributes)
         """
@@ -312,21 +305,12 @@ class RuleAnalysisMixin:
             return operand.get('value')
 
         # Setting/Option values
-        if rule_type == 'SettingValue':
-            setting = operand.get('args', {}).get('setting', '')
-            return self.settings.get(setting)
         if rule_type == 'OptionValue':
             option = operand.get('args', {}).get('option', '')
             return self.settings.get(option)
-        if ast_type == 'setting_value':
-            setting = operand.get('setting', '')
-            return self.settings.get(setting)
         if ast_type == 'option_value':
             option = operand.get('option', '')
             return self.settings.get(option)
-        if rule_type == 'AST_setting_value':
-            setting = operand.get('args', {}).get('setting', '')
-            return self.settings.get(setting)
 
         # World attributes
         if rule_type == 'WorldAttribute':
@@ -616,8 +600,7 @@ class RuleAnalysisMixin:
 
         Strategy:
         1. Look for return statements and try to evaluate them
-        2. If the block references a missing setting_value, default to False
-        3. For unknown patterns, default to False (conservative - makes locations accessible)
+        2. For unknown patterns, default to False (conservative - makes locations accessible)
         """
         args = rule.get('args', {})
         statements = args.get('statements', [])
@@ -642,8 +625,6 @@ class RuleAnalysisMixin:
 
         # Track variable assignments for substitution
         local_vars: Dict[str, Any] = {}
-        # Track if block references missing settings
-        has_missing_settings = False
 
         for stmt in statements:
             stmt_type = stmt.get('type', '')
@@ -656,14 +637,6 @@ class RuleAnalysisMixin:
 
                 if value_type == 'constant':
                     local_vars[name] = value.get('value')
-                elif value_type == 'setting_value':
-                    # Look up setting value from resolved settings
-                    setting_name = value.get('setting', '')
-                    if setting_name in self.settings:
-                        local_vars[name] = self.settings[setting_name]
-                    else:
-                        has_missing_settings = True
-                        local_vars[name] = 0
                 elif value_type == 'subscript':
                     # Evaluate subscript (e.g., [200, 400, 600][swim_rule % 3])
                     subscript_value = value.get('value', {})
@@ -706,13 +679,6 @@ class RuleAnalysisMixin:
                         except (IndexError, KeyError, TypeError):
                             local_vars[name] = 0
                     else:
-                        local_vars[name] = 0
-                else:
-                    # Complex assignment - check if it references missing settings
-                    if self._references_missing_setting(value):
-                        has_missing_settings = True
-                        # For variables like 'sharks' that count from sprite_data,
-                        # assume 0 (no blocking elements)
                         local_vars[name] = 0
 
             elif stmt_type == 'aug_assign':
@@ -759,33 +725,12 @@ class RuleAnalysisMixin:
             elif stmt_type == 'return':
                 # Evaluate the return value
                 result = self._evaluate_ast_return_value(stmt.get('value', {}), local_vars)
-                # If the result is False and we have missing settings,
-                # that might be incorrect - but keep it for now
                 return result
 
         # No return statement found or couldn't evaluate
         # Default to True (accessible) when we can't determine
         self.required_imports.add('True_')
         return 'True_()'
-
-    def _references_missing_setting(self, value: Dict[str, Any]) -> bool:
-        """Check if an expression references a missing setting."""
-        if not isinstance(value, dict):
-            return False
-
-        if value.get('type') == 'setting_value':
-            setting_name = value.get('setting', '')
-            return setting_name not in self.settings
-
-        # Check nested structures
-        for v in value.values():
-            if isinstance(v, dict) and self._references_missing_setting(v):
-                return True
-            elif isinstance(v, list):
-                for item in v:
-                    if isinstance(item, dict) and self._references_missing_setting(item):
-                        return True
-        return False
 
     def _can_evaluate_if_test(self, test: Dict[str, Any], local_vars: Dict[str, Any]) -> bool:
         """Check if we can evaluate an if statement test."""
@@ -886,42 +831,6 @@ class RuleAnalysisMixin:
             left = value.get('left', {})
             op = value.get('op', '')
             right = value.get('right', {})
-
-            # Check if this is a setting_value subscript comparison
-            if left.get('type') == 'subscript':
-                subscript_value = left.get('value', {})
-
-                # Check for setting_value (like auto_scroll_levels)
-                if subscript_value.get('type') == 'setting_value':
-                    setting_name = subscript_value.get('setting', '')
-
-                    # If the setting exists, try to evaluate
-                    if setting_name in self.settings:
-                        setting_data = self.settings[setting_name]
-                        # Get the index
-                        index = left.get('index', {})
-                        index_val = None
-                        if index.get('type') == 'constant':
-                            index_val = index.get('value')
-                        elif index.get('type') == 'name':
-                            index_val = local_vars.get(index.get('name'))
-
-                        if index_val is not None and isinstance(setting_data, (dict, list)):
-                            try:
-                                actual_value = setting_data[index_val] if isinstance(setting_data, dict) else setting_data[int(index_val)]
-                                right_val = right.get('value', 0) if right.get('type') == 'constant' else 0
-
-                                # Evaluate the comparison
-                                result = self._evaluate_comparison(actual_value, op, right_val)
-                                self.required_imports.add('True_' if result else 'False_')
-                                return 'True_()' if result else 'False_()'
-                            except (KeyError, IndexError, TypeError):
-                                pass
-
-                    # Setting not found or can't evaluate - default to False
-                    # For auto_scroll checks, False means no auto-scroll, which is the most accessible case
-                    self.required_imports.add('False_')
-                    return 'False_()'
 
             # Try to evaluate other comparisons
             left_val = self._try_evaluate_expr(left, local_vars)
@@ -1365,12 +1274,6 @@ class RuleAnalysisMixin:
                     pass
             return None
 
-        if expr_type == 'setting_value':
-            setting_name = expr.get('setting', '')
-            if setting_name in self.settings:
-                return self.settings[setting_name]
-            return 0
-
         if expr_type == 'attribute':
             # Handle attribute access like options.first_person_mode_glitch_in_logic
             obj = expr.get('object', {})
@@ -1724,14 +1627,6 @@ class RuleAnalysisMixin:
             # Can't evaluate, return as expression
             return f'{value_expr}[{index_expr}]'
 
-        # Handle setting_value - lookup game option values
-        if expr_type == 'setting_value':
-            setting_name = expr.get('setting', '')
-            if setting_name in self.settings:
-                return repr(self.settings[setting_name])
-            # Default to 0 if setting not found
-            return '0'
-
         # Handle world_attribute - access world properties at runtime
         if expr_type == 'world_attribute':
             attribute = expr.get('attribute', '')
@@ -1787,12 +1682,6 @@ class RuleAnalysisMixin:
                 for arg in args:
                     if isinstance(arg, dict) and arg.get('type') == 'constant':
                         arg_strs.append(repr(arg.get('value')))
-                    elif isinstance(arg, dict) and arg.get('type') == 'setting_value':
-                        setting = arg.get('setting', '')
-                        if setting in self.settings:
-                            arg_strs.append(repr(self.settings[setting]))
-                        else:
-                            arg_strs.append('None')
                     else:
                         arg_expr = self._expr_to_rule_builder(arg, var_expressions)
                         if arg_expr is None:

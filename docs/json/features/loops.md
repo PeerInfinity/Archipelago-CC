@@ -456,10 +456,6 @@ The action queue is built on top of GameState's path system:
 
 Loops mode is designed to integrate with the region graph visualization (planned features include displaying nodes as pie charts showing mana costs as fractions of total mana).
 
-### MetaGame (Maze Metagame)
-
-Loops mode can be combined with the [Maze Metagame](maze-metagame.md) via `?metagame=mazegameloops`, which adds maze challenges before explore and location check actions.
-
 ## Architecture
 
 ### Module Structure

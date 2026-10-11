@@ -1,0 +1,485 @@
+{
+    "tape_version": 11,
+    "game": "seedling",
+    "boot": {
+        "level": 18,
+        "x": 16,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 3,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 11,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 4,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 6,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 7,
+            "note": ""
+        },
+        {
+            "level": 18,
+            "tag": 0,
+            "note": "model-sourced by twoPassSolve: `spinnerKillLockOpens` computed the removal at 171 and `activators.opensOnTick(0.01)` is 101, which a declared v9 row spells 100",
+            "at": 271
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": [
+            8
+        ]
+    },
+    "rng": {
+        "seed": 463063377,
+        "split": true,
+        "cosmetic": 1853748893,
+        "fp": 1847462486
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": true,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 9940,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 192,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 336,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "right",
+            "from": 0,
+            "to": 27
+        },
+        {
+            "key": "up",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "left",
+            "from": 28,
+            "to": 29
+        },
+        {
+            "key": "down",
+            "from": 35,
+            "to": 36
+        },
+        {
+            "key": "primary",
+            "from": 36,
+            "to": 37
+        },
+        {
+            "key": "down",
+            "from": 38,
+            "to": 62
+        },
+        {
+            "key": "right",
+            "from": 38,
+            "to": 63
+        },
+        {
+            "key": "up",
+            "from": 63,
+            "to": 64
+        },
+        {
+            "key": "right",
+            "from": 64,
+            "to": 66
+        },
+        {
+            "key": "up",
+            "from": 65,
+            "to": 66
+        },
+        {
+            "key": "down",
+            "from": 66,
+            "to": 67
+        },
+        {
+            "key": "right",
+            "from": 67,
+            "to": 68
+        },
+        {
+            "key": "up",
+            "from": 68,
+            "to": 69
+        },
+        {
+            "key": "down",
+            "from": 69,
+            "to": 70
+        },
+        {
+            "key": "right",
+            "from": 69,
+            "to": 71
+        },
+        {
+            "key": "up",
+            "from": 71,
+            "to": 72
+        },
+        {
+            "key": "down",
+            "from": 72,
+            "to": 73
+        },
+        {
+            "key": "right",
+            "from": 72,
+            "to": 73
+        },
+        {
+            "key": "up",
+            "from": 73,
+            "to": 74
+        },
+        {
+            "key": "down",
+            "from": 74,
+            "to": 75
+        },
+        {
+            "key": "right",
+            "from": 75,
+            "to": 77
+        },
+        {
+            "key": "up",
+            "from": 76,
+            "to": 77
+        },
+        {
+            "key": "down",
+            "from": 77,
+            "to": 78
+        },
+        {
+            "key": "right",
+            "from": 78,
+            "to": 80
+        },
+        {
+            "key": "up",
+            "from": 79,
+            "to": 80
+        },
+        {
+            "key": "down",
+            "from": 80,
+            "to": 81
+        },
+        {
+            "key": "left",
+            "from": 81,
+            "to": 82
+        },
+        {
+            "key": "down",
+            "from": 90,
+            "to": 91
+        },
+        {
+            "key": "primary",
+            "from": 91,
+            "to": 92
+        },
+        {
+            "key": "up",
+            "from": 105,
+            "to": 107
+        },
+        {
+            "key": "down",
+            "from": 107,
+            "to": 109
+        },
+        {
+            "key": "up",
+            "from": 109,
+            "to": 110
+        },
+        {
+            "key": "up",
+            "from": 111,
+            "to": 112
+        },
+        {
+            "key": "primary",
+            "from": 112,
+            "to": 113
+        },
+        {
+            "key": "up",
+            "from": 114,
+            "to": 125
+        },
+        {
+            "key": "right",
+            "from": 114,
+            "to": 127
+        },
+        {
+            "key": "up",
+            "from": 127,
+            "to": 139
+        },
+        {
+            "key": "left",
+            "from": 128,
+            "to": 129
+        },
+        {
+            "key": "down",
+            "from": 140,
+            "to": 142
+        },
+        {
+            "key": "up",
+            "from": 142,
+            "to": 143
+        },
+        {
+            "key": "up",
+            "from": 157,
+            "to": 158
+        },
+        {
+            "key": "primary",
+            "from": 158,
+            "to": 159
+        },
+        {
+            "key": "primary",
+            "from": 272,
+            "to": 273
+        },
+        {
+            "key": "right",
+            "from": 272,
+            "to": 275
+        },
+        {
+            "key": "down",
+            "from": 272,
+            "to": 306
+        },
+        {
+            "key": "primary",
+            "from": 274,
+            "to": 275
+        },
+        {
+            "key": "left",
+            "from": 275,
+            "to": 276
+        },
+        {
+            "key": "right",
+            "from": 276,
+            "to": 283
+        },
+        {
+            "key": "primary",
+            "from": 282,
+            "to": 283
+        },
+        {
+            "key": "left",
+            "from": 284,
+            "to": 291
+        },
+        {
+            "key": "primary",
+            "from": 290,
+            "to": 291
+        },
+        {
+            "key": "right",
+            "from": 291,
+            "to": 292
+        },
+        {
+            "key": "right",
+            "from": 293,
+            "to": 295
+        },
+        {
+            "key": "primary",
+            "from": 297,
+            "to": 298
+        },
+        {
+            "key": "left",
+            "from": 301,
+            "to": 302
+        },
+        {
+            "key": "primary",
+            "from": 305,
+            "to": 306
+        },
+        {
+            "key": "right",
+            "from": 306,
+            "to": 307
+        },
+        {
+            "key": "up",
+            "from": 306,
+            "to": 309
+        },
+        {
+            "key": "down",
+            "from": 309,
+            "to": 310
+        },
+        {
+            "key": "right",
+            "from": 314,
+            "to": 334
+        },
+        {
+            "key": "primary",
+            "from": 315,
+            "to": 316
+        },
+        {
+            "key": "primary",
+            "from": 325,
+            "to": 326
+        },
+        {
+            "key": "primary",
+            "from": 333,
+            "to": 334
+        },
+        {
+            "key": "left",
+            "from": 334,
+            "to": 335
+        },
+        {
+            "key": "right",
+            "from": 335,
+            "to": 336
+        }
+    ],
+    "name": "hammer-c2-l18-ghostsolve",
+    "description": "C2 evidence: r9-solve-18 frozen staging + hasGhostSword, solved with GHOST_SPINNER_PRESS ON (twoPassSolve)",
+    "note": ""
+}

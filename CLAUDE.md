@@ -19,7 +19,7 @@ source .venv/bin/activate
 | Test the BUNDLED boot (what a deployed site serves) | `npm test -- --bundled …` — runs `npm run build` first (under the box lock; `--no-build` reuses `frontend/dist/bundle.js`) and drives `?bundled=true` instead of the ES modules. The results JSON is stamped `flavour`; `compare-runs.js` refuses to diff a bundled run against an unbundled one. Detail: `docs/json/developer/guides/testing-pipeline.md` § *The bundled boot* |
 | `npm test` TAKES THE BOX LOCK | `scripts/test/run-tests.js` takes `~/.cache/seedling-box/lock.json` (kind `browser`, name `npm test <mode>[ batch=][ test=]`) before Playwright starts. A held box → it refuses by name, exit 1; `npm test -- --wait-for-box=<sec> …` queues instead. Under a holder that exported its token it passes through. The results JSON records `frozen` (the head it ran at) and `treeMoved`; `compare-runs.js` warns on a moved tree |
 | Refuse commits under a FOREIGN box lock | `git config --worktree core.hooksPath scripts/git-hooks` in each clone/worktree (⚠ `--worktree`: plain `git config` in a worktree writes the SHARED config and installs it on every tree). The pre-commit hook refuses when a live lock names THIS tree and you are not its holder; a lock on another tree does not refuse. Override: `BOX_LOCK_COMMIT_ANYWAY=1 git commit …` |
-| New worktree for a slice | `scripts/dev/new-worktree.sh <name> [<base>=origin/main]` (`--dry-run`, `--with-wasm`, `--help`) — worktree + branch, submodules except the wasm builds, submodule identity, `npm ci`, the hook, then step 6: the getting-started guide's steps 3–4 in the worktree (`Players/Templates` + a `full-spoilers` `host.yaml`, so the `Generate.py` gates run there) with the primary's venv ACTIVATED, not copied; prints `python -m http.server <port>` and `npm test -- --port=<port>` on a free port. Creation only |
+| New worktree for a slice | `scripts/dev/new-worktree.sh <name> [<base>=origin/main]` (`--dry-run`, `--with-wasm`, `--help`) — worktree + branch, submodules except the wasm builds, submodule identity, `npm ci`, the hook, then step 6: the getting-started guide's steps 3–4 in the worktree (`Players/Templates` + a `minimal-spoilers` `host.yaml` — the recipe the committed presets were generated under, so a regenerated preset matches them — so the `Generate.py` gates run there) with the primary's venv ACTIVATED, not copied; prints `python -m http.server <port>` and `npm test -- --port=<port>` on a free port. Creation only |
 | Stop dev server | `ss -ltnp \| grep ":8000"` → read `pid=NNN` → `kill NNN`. ⛔ NOT `pkill` in any form: a PreToolUse hook refuses every pattern kill, brackets or no brackets |
 
 ## Important Gotchas
@@ -207,8 +207,10 @@ npm test -- --mode=test-substrates --batch=apworld       # the apworld editor ro
 npm test -- --mode=test-substrates --batch=bot-walks     # MANUAL: the real-time bot legs only
 npm test -- --mode=test-substrates --batch=noiz2sa       # MANUAL: the noiz2sa substrate rows
 npm test -- --mode=test-substrates --batch=runner        # MANUAL: runnerDemo + Runner block modes
-npm test -- --mode=test-substrates --batch=tutorials     # MANUAL: the Tutorial panel rows + one walk row per tutorial (but procgen's)
+npm test -- --mode=test-substrates --batch=tutorials     # MANUAL: the Tutorial panel rows + one walk row per tutorial (but procgen's, the tracker's and Seedling's)
 npm test -- --mode=test-substrates --batch=tutorials-procgen  # MANUAL: the procgen tutorials' walk rows
+npm test -- --mode=test-substrates --batch=tutorials-tracker  # MANUAL: the tracker tutorials' walk rows
+npm test -- --mode=test-substrates --batch=tutorials-seedling  # MANUAL: the Seedling tutorials' walk rows (WebGPU)
 ```
 ⛔ **No roster counts or durations are quoted here on purpose** — they go stale
 silently and then get trusted. To derive today's numbers, read

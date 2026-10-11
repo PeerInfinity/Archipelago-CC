@@ -40,7 +40,7 @@ class RuleCodeGenerator(
                  option_definitions: Dict[str, Any] = None) -> None:
         self.required_imports: Set[str] = set()
         self.game_name = game_name
-        self.settings = settings or {}  # Resolved settings for evaluating setting_value nodes
+        self.settings = settings or {}  # Resolved settings for evaluating option_value / world_attribute nodes
         self.option_definitions = option_definitions or {}  # Option definitions for Choice value lookups
         # Sanitize game name for use in Python identifiers
         import re
@@ -132,7 +132,7 @@ class RuleCodeGenerator(
             depth: Current expansion depth. Only expand at depth 0 (top level).
 
         Returns:
-            Rule dict with helper references and setting_value references expanded
+            Rule dict with helper references expanded
         """
         if visited is None:
             visited = set()
@@ -142,16 +142,6 @@ class RuleCodeGenerator(
 
         rule_type = rule.get('type', '')
         rb_rule = rule.get('rule', '')  # Rule Builder format uses 'rule' key
-
-        # Handle Rule Builder format AST_setting_value - resolve to constant
-        # This is critical for short-circuiting conditionals based on option values
-        if rb_rule == 'AST_setting_value':
-            args = rule.get('args', {})
-            setting_name = args.get('setting', '')
-            if setting_name in self.settings:
-                value = self.settings[setting_name]
-                return {'type': 'constant', 'value': value}
-            return rule
 
         # Handle Rule Builder format Conditional - check for constant test
         if rb_rule == 'Conditional':
@@ -226,31 +216,10 @@ class RuleCodeGenerator(
             # Unknown helper - return as-is
             return rule
 
-        # If this is a setting_value reference, resolve it to a constant
-        # This is critical because worldgen worlds don't have the original game options
-        if rule_type == 'setting_value':
-            setting_name = rule.get('setting', '')
-            if setting_name in self.settings:
-                value = self.settings[setting_name]
-                # Handle indexed access into list settings (e.g., required_medallions[0])
-                if 'index' in rule and isinstance(value, list):
-                    index = rule['index']
-                    if 0 <= index < len(value):
-                        value = value[index]
-                return {'type': 'constant', 'value': value}
-            # Unknown setting - return as-is (will evaluate to undefined in frontend)
-            return rule
-
-        # If this is an attribute access on a setting_value (e.g., world.options.goal.value),
-        # resolve it to a constant
         if rule_type == 'attribute':
             obj = rule.get('object', {})
             attr = rule.get('attr', '')
-            if isinstance(obj, dict) and obj.get('type') == 'setting_value' and attr == 'value':
-                setting_name = obj.get('setting', '')
-                if setting_name in self.settings:
-                    return {'type': 'constant', 'value': self.settings[setting_name]}
-            # Also handle self.xxx attribute access (e.g., self.flag_specific_keycards)
+            # Handle self.xxx attribute access (e.g., self.flag_specific_keycards)
             # These are option-dependent flags from LogicExtensions classes
             if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self':
                 if attr in self.settings:
@@ -309,7 +278,7 @@ class RuleCodeGenerator(
 
     def _contains_dynamic_reference(self, value: Any, depth: int = 0) -> bool:
         """
-        Check if a value contains dynamic references (option_value, setting_value, etc.)
+        Check if a value contains dynamic references (option_value, world_attribute, etc.)
         that cannot be statically resolved at generation time.
 
         Args:
@@ -330,7 +299,6 @@ class RuleCodeGenerator(
         # These types represent dynamic runtime values
         dynamic_types = {
             'option_value',
-            'setting_value',
             'world_attribute',
             'attribute',  # attribute access can wrap option_value
         }
@@ -415,7 +383,7 @@ class RuleCodeGenerator(
         # (not dynamic references like world_attribute, option_value, etc.)
         if rule_type in ('item_check', 'count_check', 'group_check'):
             item = rule.get('item') or rule.get('group')
-            if isinstance(item, dict) and item.get('type') in ('world_attribute', 'setting_value', 'option_value', 'attribute'):
+            if isinstance(item, dict) and item.get('type') in ('world_attribute', 'option_value', 'attribute'):
                 # Dynamic item reference - not convertible to static Rule Builder
                 return False
             # Also check the count field - dynamic counts can't be statically converted
@@ -495,7 +463,6 @@ class RuleCodeGenerator(
             if param_to_arg:
                 expanded_body = self._substitute_names(expanded_body, param_to_arg)
 
-        # Also expand setting_value references
         expanded_body = self._expand_helper_refs(expanded_body)
 
         # Try to convert the expanded body
@@ -533,8 +500,8 @@ class RuleCodeGenerator(
             self.required_imports.add('True_')
             return 'True_()'
 
-        # Expand helper references and resolve setting_value references first.
-        # This allows conditionals with setting-based tests to be short-circuited
+        # Expand helper references first.
+        # This allows conditionals with constant tests to be short-circuited
         # when the setting evaluates to a constant boolean, avoiding generation
         # of unreachable branches that may contain unresolvable expressions
         # (like dynamic location lookups that only apply when a setting is false).
@@ -589,7 +556,6 @@ class RuleCodeGenerator(
                     'AST_any_of': 'ast_any_of',
                     'AST_prog_item_count': 'prog_item_count',  # State counter items like coins
                     'Arithmetic': 'binary_op',
-                    'SettingValue': 'setting_value',  # Legacy
                     'OptionValue': 'option_value',
                     'WorldAttribute': 'world_attribute',
                     'Conditional': 'conditional',
@@ -635,15 +601,6 @@ class RuleCodeGenerator(
                         'right': args.get('right', {})
                     }
                     return self._convert_compare(compare_rule)
-
-                # Check if this is an AST_setting_value rule (setting references from AST format)
-                if rb_rule == 'AST_setting_value':
-                    args = rule.get('args', {})
-                    setting_rule = {
-                        'type': 'setting_value',
-                        'setting': args.get('setting', '')
-                    }
-                    return self._convert_setting_value(setting_rule)
 
                 # Check if this is an AST_location_rule_ref rule (location accessibility check from AST format)
                 if rb_rule == 'AST_location_rule_ref':
@@ -747,7 +704,6 @@ class RuleCodeGenerator(
             'list': self._convert_list,
             'binary_op': self._convert_binary_op,
             'sum': self._convert_sum,
-            'setting_value': self._convert_setting_value,
             'world_attribute': self._expr_world_attribute,
             'option_value': self._expr_option_value,
             'ast_all_of': self._convert_ast_all_of,

@@ -836,7 +836,6 @@ export class PathAnalyzerLogic {
       'attribute',
       'subscript',
       'value',
-      'setting_check',
     ].includes(nodeType);
   }
 
@@ -1045,22 +1044,6 @@ export class PathAnalyzerLogic {
           displayColor,
           identifier: `method_${rule.method}`,
         };
-
-      case 'setting_check': {
-        const settingName =
-          typeof rule.setting === 'string' ? rule.setting : rule.setting?.value;
-        const settingValue =
-          typeof rule.value === 'object' ? rule.value?.value : rule.value;
-        if (!settingName) return null;
-        return {
-          type: 'setting_check',
-          setting: settingName,
-          value: settingValue,
-          display: `Setting: ${settingName} == ${settingValue}`,
-          displayColor,
-          identifier: `setting_${settingName}_${settingValue}`,
-        };
-      }
     }
 
     return null;

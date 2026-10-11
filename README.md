@@ -52,8 +52,6 @@ For a detailed walkthrough, see the [User Quick Start Guide](./docs/json/user/qu
 
 **[Loops](./docs/json/features/loops.md)** — Turns any Archipelago game into an incremental game inspired by Idle Loops. Queue actions to move between regions, explore, and check locations, spending mana on each action. Spending mana in a region earns XP that reduces action costs in that region. Obtaining items boosts max mana. When mana runs out, the loop resets — but XP and checked locations persist. A cost generation algorithm guarantees at least one path through the game without grinding. [Demo](https://peerinfinity.github.io/Archipelago-CC/?mode=loops)
 
-**[Maze Metagame](./docs/json/features/maze-metagame.md)** — A meta-progression layer using A-Mazing Idle. Before each region discovery or location check, complete a maze challenge. A proof of concept demonstrating the MetaGame system, which can layer any iframe-based game on top of Archipelago tracking. [Demo](https://peerinfinity.github.io/Archipelago-CC/?metagame=mazegame) | [Loops variant](https://peerinfinity.github.io/Archipelago-CC/?metagame=mazegameloops)
-
 **Text Adventure** — Play through any Archipelago world as a text adventure. Originally built for testing, but works as a standalone interface for any game.
 
 ## Procedural Generation
@@ -121,4 +119,3 @@ This approach ensures your fork maintains a clean relationship with the upstream
 - APWorld Manager from [silasary/Archipelago](https://github.com/silasary/Archipelago)
 - APWorld Index from [silasary/apworlds](https://github.com/silasary/apworlds)
 - APWorld and Iframe integration of [Journey to Ascension](https://github.com/meneth/journey-to-ascension/) by Meneth (used with permission, non-commercial; see [NOTICE.md](NOTICE.md))
-- Iframe integration of [A-Mazing-Idle](https://imgreghenry.github.io/A-Mazing-Idle/) by ImGregHenry

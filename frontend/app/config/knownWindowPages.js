@@ -26,18 +26,12 @@ export const knownWindowPages = [
         url: "./modules/window-base/index.html",
         description: "Basic window module showing connection status and heartbeat",
         shortName: "windowbase"
-    },
-    {
-        name: "A-Mazing-Idle",
-        url: "./modules/a-mazing-idle-remote/index-iframe.html",
-        description: "Incremental maze game in separate window",
-        shortName: "mazegame"
     }
 ];
 
 /**
  * Resolve a window URL from a shortname or pass through a full URL.
- * @param {string} input - A shortname (e.g., "mazegame") or a URL
+ * @param {string} input - A shortname (e.g., "windowbase") or a URL
  * @returns {string|null} The resolved URL, or null if input is empty
  */
 export function resolveWindowUrl(input) {

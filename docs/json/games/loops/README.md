@@ -51,10 +51,6 @@ Shows a side-by-side comparison of previous loop vs current loop costs. Expandab
 
 Per-game cost files balance mana costs based on the sphere log progression. Generated automatically during seed generation or in-browser via the cost debugger. When no cost data exists, default costs apply (50 mana per move, 100 per explore/check).
 
-## Combination Modes
-
-Loops can combine with the Maze Metagame via `?metagame=mazegameloops` — adding maze challenges on top of the loop mechanics.
-
 ## Further Reading
 
 - [Detailed feature overview](../../features/loops.md)

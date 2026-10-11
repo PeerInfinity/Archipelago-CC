@@ -18922,7 +18922,7 @@
               "id": "logic_gate_24"
             },
             {
-              "x": 6,
+              "x": 20,
               "y": 11,
               "id": "logic_gate_25"
             },
@@ -18932,31 +18932,31 @@
               "id": "logic_gate_26"
             },
             {
-              "x": 1,
-              "y": 3,
+              "x": 2,
+              "y": 2,
               "id": "logic_gate_27"
             },
             {
-              "x": 16,
-              "y": 15,
+              "x": 11,
+              "y": 14,
               "id": "logic_gate_28"
             }
           ],
           "items": [
             {
-              "x": 20,
-              "y": 4,
+              "x": 7,
+              "y": 3,
               "id": "Rupees (20)",
               "locationName": "Mushroom"
             },
             {
-              "x": 9,
+              "x": 17,
               "y": 1,
               "id": "Piece of Heart",
               "locationName": "Bottle Merchant"
             },
             {
-              "x": 6,
+              "x": 20,
               "y": 11,
               "id": "Progressive Sword",
               "locationName": "Flute Spot"
@@ -18968,14 +18968,14 @@
               "locationName": "Sunken Treasure"
             },
             {
-              "x": 1,
-              "y": 3,
+              "x": 2,
+              "y": 2,
               "id": "Cane of Somaria",
               "locationName": "Purple Chest"
             },
             {
-              "x": 16,
-              "y": 15,
+              "x": 11,
+              "y": 14,
               "id": "Activated Flute",
               "locationName": "Flute Activation Spot"
             }
@@ -19687,8 +19687,8 @@
               "locationName": "Link's Uncle"
             },
             {
-              "x": 13,
-              "y": 4,
+              "x": 11,
+              "y": 2,
               "id": "Ice Rod",
               "locationName": "Secret Passage"
             }

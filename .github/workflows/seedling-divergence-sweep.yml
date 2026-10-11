@@ -12,8 +12,14 @@ name: Seedling divergence sweep (manual)
 #          (`probe-seedling-divergence-sweep.mjs --shard-plan=<n> --json`: price-balanced, longest first, so the
 #          location legs and the big rooms spread across shards). No browser.
 #   shard  `--shard=i/n` per matrix entry, headless logic-only; asserts the CHANNEL line; uploads its rows.
-#   merge  concatenates the shards' rows and fails BY NAME when the distinct leg ids != the plan's leg count,
-#          or when a leg's page never booted.
+#   merge  concatenates the shards' rows and fails BY NAME (`scripts/procgen/seedlingDivergenceMerge.js`) when the
+#          distinct leg ids != the plan's leg count, a leg's page never booted, a leg's page HUNG in a harness step
+#          (`end: 'harness-hang'`, H1), or a shard never reported ids of its plan — those are listed per shard, and
+#          their union printed as `REDISPATCH ids=…` (the `ids` input of the re-run, as is).
+#
+# ⛓ H1 (sweep-4 shard 9, run 38110831520, sat ~5 h after page 18 and named nothing): every harness step between
+# legs runs under a MEASURED wall-clock bound in the probe (`HANG_BOUNDS_MS`); one that expires prints `HANG:`,
+# SIGKILLs the browser, emits the page's unreported legs as `harness-hang`, and the shard moves on.
 #
 # ⛓ HEADLESS LOGIC-ONLY, as the full tier: the probe launches on HEADLESS_LOGIC_ONLY_ARGS and refuses unless the
 # page's `__swfGpu.lost >= 1` (`assertLogicOnlyChannel`), printing the CHANNEL line each shard greps.
@@ -68,6 +74,13 @@ on:
           (the CONTACT hook), read back as a CONTACT line, and stamped on each plan the worker solved under it.
         type: string
         default: ''
+      test_fault:
+        description: >-
+          TEST-ONLY, empty for every real sweep. The probe's fault injection SWEEP_INJECT_HANG=<page>:<step>[,…]
+          (steps pageClose browserClose launch newPage boot leg; the shard-local page number); a `nobound;` prefix
+          also runs the MUTANT (SWEEP_HANG_BOUND=off: no bound — the injected hang sits until the job timeout).
+        type: string
+        default: ''
 
 jobs:
   plan:
@@ -117,17 +130,21 @@ jobs:
           fi
           node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" | tee -a plan.txt
           node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --json > plan.json
+          # ⛓ the partition travels with the leg list: the merge compares each shard's ids against its rows
+          cp plan.json test-results/divergence-sweep/plan.json
           echo "matrix=$(node -p "JSON.stringify(require('./plan.json').matrix)")" >> "$GITHUB_OUTPUT"
           echo "timeout=$(node -p "require('./plan.json').timeoutMinutes")" >> "$GITHUB_OUTPUT"
           echo "legs=$(node -p "require('./plan.json').legs")" >> "$GITHUB_OUTPUT"
           echo "MEASURED: legs sha256 $(sha256sum "$L" | cut -c1-16) at ${GITHUB_SHA}"
           { echo '```'; cat plan.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload the leg list
+      - name: Upload the leg list and the partition
         uses: actions/upload-artifact@v7.0.0
         with:
           name: divergence-legs
-          path: test-results/divergence-sweep/legs.jsonl
+          path: |
+            test-results/divergence-sweep/legs.jsonl
+            test-results/divergence-sweep/plan.json
           retention-days: 90
 
   shard:
@@ -189,8 +206,16 @@ jobs:
           PAGE_LEGS: ${{ inputs.page_legs }}
           STAGE: ${{ !inputs.stage_events && '--no-stage-events' || '' }}
           CONTACT: ${{ inputs.contact_fidelity }}
+          TEST_FAULT: ${{ inputs.test_fault }}
         run: |
           set -o pipefail
+          # ⛔ TEST-ONLY (the `test_fault` input; empty = inert): the hang injection and the no-bound mutant
+          if [ -n "$TEST_FAULT" ]; then
+            TF="$TEST_FAULT"
+            case "$TF" in nobound\;*) export SWEEP_HANG_BOUND=off; TF="${TF#nobound;}";; esac
+            [ -n "$TF" ] && export SWEEP_INJECT_HANG="$TF"
+            echo "::warning::TEST-ONLY fault injection: SWEEP_INJECT_HANG=${SWEEP_INJECT_HANG:-} SWEEP_HANG_BOUND=${SWEEP_HANG_BOUND:-on}"
+          fi
           python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
           echo $! > /tmp/httpd.pid
           for i in $(seq 1 30); do
@@ -225,7 +250,7 @@ jobs:
           {
             echo "## Divergence sweep — shard ${SHARD} — \`${{ steps.sweep.outcome }}\`"
             echo '```'
-            grep -aE '^SHARD |^CHANNEL:|^INFO: page|^FAIL' "$D/shard.log" 2>/dev/null | cut -c1-300 || true
+            grep -aE '^SHARD |^CHANNEL:|^INFO: page|^FAIL|^HANG:' "$D/shard.log" 2>/dev/null | cut -c1-300 || true
             echo "rows $(wc -l < "$D/rows-$I.jsonl" 2>/dev/null || echo 0)"
             node -e "const fs=require('fs');const m={};for(const l of fs.readFileSync('$D/rows-$I.jsonl','utf8').split('\n').filter(Boolean)){const e=JSON.parse(l).end;m[e]=(m[e]||0)+1}console.log(JSON.stringify(m))" 2>/dev/null || true
             echo '```'
@@ -247,6 +272,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      # ⛓ the verdict module only (pure node, no npm)
+      - name: Checkout the merge verdict
+        uses: actions/checkout@v6.0.2
+        with:
+          sparse-checkout: scripts/procgen/seedlingDivergenceMerge.js
+          sparse-checkout-cone-mode: false
+
+      - name: Download the partition
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: divergence-legs
+          path: plan
+
       - name: Download every shard's rows
         uses: actions/download-artifact@v8.0.1
         with:
@@ -270,21 +308,13 @@ jobs:
             [ -f "$F" ] && cat "$F" >> merged/rows.jsonl
           done
           cp shards/divergence-shard-1/delivered-set.json merged/ 2>/dev/null || cp shards/delivered-set.json merged/ 2>/dev/null || true
-          node - <<'JS' | tee merged/summary.txt
-          const fs = require('fs');
-          const rows = fs.readFileSync('merged/rows.jsonl', 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
-          const ids = new Set(rows.map((r) => r.id));
-          const ends = {};
-          for (const r of rows) ends[r.end] = (ends[r.end] || 0) + 1;
-          const booted = rows.filter((r) => r.end === 'page-boot-failed').length;
-          const dirty = rows.filter((r) => r.end === 'dirty-start').length;
-          const stageFailed = rows.filter((r) => r.end === 'stage-failed').length;
-          if (stageFailed) { console.log(`MERGE-FAIL: ${stageFailed} leg(s) whose staged event flags never reached the game (stage-failed)`); process.exitCode = 1; }
-          if (dirty) { console.log(`MERGE-FAIL: ${dirty} leg(s) started on a game already holding items (dirty-start)`); process.exitCode = 1; }
-          console.log(`MERGE: ${rows.length} rows, ${ids.size} distinct legs of ${process.env.LEGS}; ends ${JSON.stringify(ends)}`);
-          if (ids.size !== Number(process.env.LEGS)) { console.log(`MERGE-FAIL: ${ids.size} distinct legs, the plan holds ${process.env.LEGS}`); process.exitCode = 1; }
-          if (booted) { console.log(`MERGE-FAIL: ${booted} leg(s) on a page that never booted`); process.exitCode = 1; }
-          JS
+          LOGS=$(ls shards/*/shard.log shards/shard.log 2>/dev/null || true)
+          set +e
+          # shellcheck disable=SC2086
+          node scripts/procgen/seedlingDivergenceMerge.js merged/rows.jsonl plan/plan.json $LOGS | tee merged/summary.txt
+          set -e
+          W=$(grep -c '^MERGE-WARN' merged/summary.txt || true)
+          if [ "$W" -gt 0 ]; then echo "::warning::$W harness hang(s) after every leg of their page had reported (see the summary)"; fi
           { echo '```'; cat merged/summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           if grep -q '^MERGE-FAIL' merged/summary.txt; then
             echo "::error::$(grep '^MERGE-FAIL' merged/summary.txt | head -1)"

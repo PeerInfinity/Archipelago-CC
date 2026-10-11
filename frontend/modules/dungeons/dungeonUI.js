@@ -13,6 +13,14 @@ function log(level, message, ...data) {
   }
 }
 
+// The proxy's static data holds dungeons as a Map (stateManagerProxy.js
+// converts the worker's array); Object.values of a Map is [] — the panel
+// listed no dungeons at all until 2026-10-10.
+function dungeonList(staticData) {
+  const d = staticData.dungeons;
+  return d instanceof Map ? [...d.values()] : Object.values(d);
+}
+
 export class DungeonUI {
   constructor(container, componentState) {
     this.container = container;
@@ -136,7 +144,7 @@ export class DungeonUI {
           : 'Expand All';
         const staticData = stateManager.getStaticData();
         if (staticData && staticData.dungeons) {
-          Object.values(staticData.dungeons).forEach((dungeon) => {
+          dungeonList(staticData).forEach((dungeon) => {
             this.dungeonStates[dungeon.name] = { expanded: isExpand };
           });
         }
@@ -172,7 +180,7 @@ export class DungeonUI {
       .querySelector('#dungeon-search')
       .value.toLowerCase();
 
-    const dungeons = Object.values(staticData.dungeons).filter((dungeon) =>
+    const dungeons = dungeonList(staticData).filter((dungeon) =>
       dungeon.name.toLowerCase().includes(searchTerm)
     );
 

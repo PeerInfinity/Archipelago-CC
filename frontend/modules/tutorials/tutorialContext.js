@@ -39,7 +39,15 @@ async function resolvePresetRulesPath(game, seed, player) {
 export const WATCHED_EVENTS = Object.freeze([
     'stateManager:rulesLoaded',
     'apworldEditor:loadRules',
+    // The world's sphere log arrives AFTER its rules (fetched separately);
+    // Loop mode's Generate Costs and the Loops Cost Debugger need it.
+    'sphereState:dataLoaded',
+    // A Loop-mode action finished. With Auto-restart on, the queue wraps at
+    // once and a finished row is pending again before a poll can see it.
+    'loopState:actionCompleted',
 ]);
+/** How many payloads per event `seenSinceStep`-style questions can look back over. */
+const PAYLOADS_KEPT = 200;
 
 export function buildContext({ eventBus }) {
     // ⛓ THE STEP MARK (⚖ the user, 2026-10-10): a `done` that reads the app's
@@ -49,8 +57,14 @@ export function buildContext({ eventBus }) {
     // each step as it enters it (`markStep`), and a `done` can ask what
     // happened SINCE: a rules load, or a state it has seen at some poll.
     const counts = Object.fromEntries(WATCHED_EVENTS.map((name) => [name, 0]));
+    // The last PAYLOADS_KEPT payloads of each, numbered by `counts`.
+    const payloads = Object.fromEntries(WATCHED_EVENTS.map((name) => [name, []]));
     let mark = { at: Date.now(), counts: { ...counts }, seen: new Set() };
-    const unsubs = WATCHED_EVENTS.map((name) => eventBus?.subscribe?.(name, () => { counts[name] += 1; }, 'tutorials'));
+    const unsubs = WATCHED_EVENTS.map((name) => eventBus?.subscribe?.(name, (data) => {
+        counts[name] += 1;
+        payloads[name].push(data);
+        if (payloads[name].length > PAYLOADS_KEPT) payloads[name].shift();
+    }, 'tutorials'));
     const publishedSinceStep = (name) => {
         if (!(name in counts)) throw new Error(`tutorial ctx: ${name} is not one of WATCHED_EVENTS`);
         return counts[name] > mark.counts[name];
@@ -66,6 +80,12 @@ export function buildContext({ eventBus }) {
         sinceStep: (ms) => Number(ms) > mark.at,
         /** Has one of WATCHED_EVENTS been published since the step began? */
         publishedSinceStep,
+        /** Has one of WATCHED_EVENTS been published since the step began with a payload `predicate` accepts? */
+        publishedSinceStepWith(name, predicate) {
+            publishedSinceStep(name);
+            const since = counts[name] - mark.counts[name];
+            return payloads[name].slice(-Math.min(since, payloads[name].length)).some((d) => since > 0 && predicate(d));
+        },
         /** Has a world been loaded (`stateManager:rulesLoaded`) since the step began? */
         rulesLoadedSinceStep: () => publishedSinceStep('stateManager:rulesLoaded'),
         /**

@@ -277,9 +277,11 @@ describe('⛓ the links the render emits', () => {
         //   344 → 347: bulletml N4b/N4c — flash.md's host-state row → noiz2sa.md, two noiz2sa.md links to its own § Loop mode.
         //   347 → 354: bulletml N5 — two links to noiz2sa.md § Pricing, two to ../modules/loopsCostDebugger.md, three same-doc in noiz2sa.md.
         //   354 → 356: persistence — flash.md ↔ seedling-bot.md (the botStart reuse path).
-        //   356 → 357: JtA zone locations — substrate-registry.md → jta.md.
-        //   357 → 359: spiral victory — architecture.md and substrate-registry.md → stepped-pipeline.md § The item layer.
-        expect(checked).toBe(359);
+        //   356 → 358: hammer-phase D1 — the README row for seedling-solve-progress.md and seedling-bot.md's link to it
+        //   358 → 359: SOLVE PROGRESS (JS half) — flash.md's "Solve progress" bullet → seedling-solve-progress.md §7
+        //   359 → 360: JtA zone locations — substrate-registry.md → jta.md.
+        //   360 → 362: spiral victory — architecture.md and substrate-registry.md → stepped-pipeline.md § The item layer.
+        expect(checked).toBe(362);
     });
 
     it('tags each link with the kind that produced it', () => {

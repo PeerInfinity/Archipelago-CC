@@ -17,7 +17,7 @@ Each section lists its keys grouped by the part of the app that owns them. The l
 | Section | What is in it | Section button |
 |---|---|---|
 | **Unknown — no owner declared** | Keys no part of the app says it writes. Most are left by older versions of the app. Some are written by pages outside the app, or by a game the app does not know (for example Cavernous, when opened as a standalone page). The app as it is now does not read any of them. | **Clear all unknown keys** |
-| **Your data** | Things you made: game saves (Idle Loops, Journey to Ascension, A-Mazing-Idle, Seedling), your saved queues, your pipeline presets, captured regions, JtA loadouts. | none — clear these one row at a time; each row has a **Download** button to keep a copy first |
+| **Your data** | Things you made: game saves (Idle Loops, Journey to Ascension, Seedling), your saved queues, your pipeline presets, captured regions, JtA loadouts. | none — clear these one row at a time; each row has a **Download** button to keep a copy first |
 | **Settings and panel state** | Your saved settings for each mode, the last active mode, and each panel's remembered view (filters, folded sections, parameters). Clearing one returns it to its default. | **Clear all state** |
 | **Caches** | Results the app can compute again, such as JtA balance patches (one per seed). | **Clear all caches** |
 

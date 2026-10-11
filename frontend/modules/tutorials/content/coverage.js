@@ -21,47 +21,24 @@ export const NO_TUTORIAL = Object.freeze({
     jtaActionQueue: { title: 'JtA Action Queue', why: 'Part of the non-procgen Journey to Ascension, which is deprecated.' },
     jtaGameDataPanel: { title: 'JtA Game Data', why: 'Part of the non-procgen Journey to Ascension, which is deprecated.' },
     jtaCostDebuggerPanel: { title: 'JtA Cost Debugger', why: 'Deprecated.' },
-    ruleConverterPanel: { title: 'Rule Converter', why: 'Very out of date; it may be deprecated or removed.' },
+    ruleConverterPanel: { title: 'Rule Converter', why: 'Deprecated.' },
     tileMapAnalyzer: { title: 'Tile Map Analyzer', why: 'Currently a failed experiment.' },
+    metaGamePanel: { title: 'Meta Game', why: 'Deprecated (an early draft of the procgen idea).' },
+    progressBarPanel: { title: 'Progress Bars', why: 'Deprecated, with the Meta Game panel.' },
+});
+
+/**
+ * Panels a DRAFT names that are not built yet: componentType → the feature
+ * that will build it. A draft written for an unfinished feature (⚖ the user,
+ * 2026-10-10: write every tutorial now, record where it stops) may target
+ * one; the census refuses the entry once the panel is registered.
+ */
+export const PLANNED_PANELS = Object.freeze({
+    swfRecompilerPanel: 'F2 — the in-browser SWF recompiler (SWFRecomp-CC), not built yet',
 });
 
 /** Panels a tutorial is planned for, not written yet: componentType → the planned tutorial. */
 export const NOT_COVERED_YET = Object.freeze({
-    // Getting started — "Your workbench"
-    quickLaunchPanel: 'Your workbench',
-    tutorialPanel: 'Your workbench',
-    jsonPanel: 'Your workbench',
-    storagePanel: 'Your workbench',
-    optionsPanel: 'Your workbench',
-    settingsPanel: 'Your workbench',
-    // Procgen
-    mazeGameDataPanel: 'Procgen: each pipeline mode, with Maze',
-    runnerDemoPanel: 'Procgen: a runner world (not in the mixed world: its generation is heavy)',
-    // Tracking a game (ALTTP)
-    presetsPanel: 'Tracking: ALTTP',
-    exitsPanel: 'Tracking: ALTTP',
-    regionsPanel: 'Tracking: ALTTP',
-    pathAnalyzerPanel: 'Tracking: the Path Analyzer',
-    dungeonsPanel: 'Tracking: Dungeons',
-    helpersPanel: 'Tracking: Helpers',
-    spoilerChecklistPanel: 'Tracking: the Spoiler Checklist',
-    timerPanel: 'Tracking: the Timer',
-    editorPanel: 'Tracking: viewing the rules in the Editor',
-    editorCodeMirror6Panel: 'Tracking: viewing the rules in the Editor',
-    metaGamePanel: 'Undecided — the Meta Game panel may be deprecated (⚖ 2026-10-10)',
-    progressBarPanel: 'Undecided — goes with the Meta Game panel',
-    // Other
-    iframeManagerPanel: 'Other: embedding pages and windows',
-    iframePanel: 'Other: embedding pages and windows',
-    windowManagerPanel: 'Other: embedding pages and windows',
-    windowPanel: 'Other: embedding pages and windows',
-    vibeCodingSimPanel: 'Other: the Vibe Coding Simulator (low priority; kept out of the main indexes)',
-    // For developers
-    testsPanel: 'Developers: run the in-app tests',
-    spoilerTestPanel: 'Developers: replay a spoiler test',
-    eventsPanel: 'Developers: watch the event bus',
-    loopsCostDebuggerPanel: 'Developers: the Loops Cost Debugger',
-    regionMarkingTool: 'Developers: the Region Marking Tool',
 });
 
 /**
@@ -70,7 +47,7 @@ export const NOT_COVERED_YET = Object.freeze({
  */
 export const FEATURES = Object.freeze([
     { id: 'tutorial-links', title: 'Opening a tutorial from a ?tutorial= link', tutorial: 'guided-tour' },
-    { id: 'layouts', title: 'Moving, splitting and closing panels; layout presets', tutorial: null, planned: 'Your workbench' },
+    { id: 'layouts', title: 'Moving, splitting and closing panels; saving the layout with the mode', tutorial: 'start-workbench' },
     { id: 'modes', title: 'App modes (?mode=…)', tutorial: 'metamath-demo' },
     { id: 'loop-mode', title: 'Loop mode', tutorial: 'procgen-loop-mode-jta' },
     { id: 'lab-pages', title: 'The procgen lab pages (demos.html, the Seedling lab)', tutorial: 'procgen-seedling' },

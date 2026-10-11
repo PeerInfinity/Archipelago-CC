@@ -501,6 +501,12 @@
             "_comment": "Seedling solver-walk S1. flashPanel.runtime = js + flashPanel.seedlingSolverWalk ON, on seedling_atlas: the page handle teleports the real page into level 6 (⚖ Q2: no new preset) and the page's bot walks to the stairs (224, 32) past the bobs — the REAL solver (solveSegment with the session as prefix) plans a bait, the page plays it one key set per tick; the stairs crossing reported, 0 HALT, no refutation, no error: status. Fast batch, like the J1–J3 rows."
         },
         {
+            "id": "seedling-js-runtime-solve-progress-view",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "SOLVE PROGRESS (JS half). flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView ON, on seedling_atlas: the view subscribes to the page's worker service before the L6 enemy-room solve, holds its FINAL snapshot (solved) and draws the tree, the tile canvas and the work meter; its 'last update N s ago' advances; closing the view unsubscribes. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
             "enabled": true,
             "category": "Seedling JS runtime",
@@ -1568,6 +1574,150 @@
             "enabled": true,
             "category": "Tutorial walks",
             "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "test_region_graph_node_picker",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the Region Graph's folded \"Go to\" section (⚖ the user: regions AND locations, collapsed by default) does what a node tap does, so a tutorial step can reach a node. On push (fast batch). Reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-start-workbench",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft start-workbench; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-start-saving-your-setup",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft start-saving-your-setup; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-tracker-track-a-game",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-track-a-game; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-path-analyzer",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-path-analyzer; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-region-graph",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-region-graph; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-dungeons",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-dungeons; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-helpers",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-helpers; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-spoiler-checklist",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-spoiler-checklist; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-timer",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-timer; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-editor",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-editor; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-loops-adventure",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft loops-adventure; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-other-embedding",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft other-embedding; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-tests",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-tests; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-spoiler-test",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-spoiler-test; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-events",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-events; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-loops-cost-debugger",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-loops-cost-debugger; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-region-marking-tool",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-region-marking-tool; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-other-vibe-coding",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft other-vibe-coding; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-procgen-runner-demo",
+            "enabled": true,
+            "category": "Tutorial walks: procgen",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft procgen-runner-demo; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen."
+        },
+        {
+            "id": "tutorial-walk-seedling-recompile",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-recompile; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
+        },
+        {
+            "id": "tutorial-walk-seedling-bot",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-bot; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
+        },
+        {
+            "id": "tutorial-walk-seedling-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
+        },
+        {
+            "id": "tutorial-walk-seedling-whole-game",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-whole-game; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
         }
     ]
 }

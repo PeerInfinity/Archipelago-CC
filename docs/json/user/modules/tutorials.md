@@ -62,9 +62,16 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 
 Written, but not working all the way through yet. The panel lists these in a collapsed section and marks the step where each one stops.
 
+- **Your workbench** — Find any panel with Quick Launch, arrange the tabs, follow a tutorial beside your work, and switch modules on and off. `?tutorial=start-workbench`
+- **Saving your setup** — Change the options and settings, save the layout and settings as a mode of your own, and clear what the app keeps in your browser. `?tutorial=start-saving-your-setup`
 - **Procgen: from a generated world to a multiworld** — Take a generated world through the APWorld Editor to a .apworld, play it on a local Archipelago server, and let the Playback Bot send the checks. `?tutorial=procgen-to-multiworld`
 - **Procgen: Journey to Ascension in Loop mode** — Generate a world of Journey to Ascension zones with loop mode on, see the loop panels, and watch the bot finish it. `?tutorial=procgen-loop-mode-jta`
 - **Procgen: everything, in Loop mode** — Mix every substrate — Idle Loops included — into one loop-mode world sharing one mana pool, and watch the bot finish it. `?tutorial=procgen-loop-mode-everything`
+- **Procgen: a runner world** — Play a generated world of auto-running platformer strips, where the jumps you can make are the items you hold. `?tutorial=procgen-runner-demo`
+- **Seedling: recompile the original game in your browser** — Turn Seedling's Flash file into a WebAssembly game, in the browser, and play it. `?tutorial=seedling-recompile`
+- **Seedling: watch the bot play** — Load the whole of Seedling as an Archipelago world and watch the Playback Bot take its first checks in the original game. `?tutorial=seedling-bot`
+- **Seedling: in a multiworld** — Generate a multiworld with Seedling Playthrough, host it locally, and connect the app to play it. `?tutorial=seedling-multiworld`
+- **Seedling: the bot through the whole game** — Watch the Playback Bot play the original Seedling from the first chest to the end. `?tutorial=seedling-whole-game`
 - **MetaMath: prove 2 + 2 = 4** — Play a MetaMath proof as an Archipelago game: each proof step is a location, unlocked when the steps it depends on are proved. `?tutorial=metamath-demo`
 - **MetaMath: in a multiworld** — Host a MetaMath proof on a local Archipelago server and prove it from the app. `?tutorial=metamath-multiworld`
 - **DepGraph: a coding adventure** — Play a dependency graph as an Archipelago game: each task is a location, unlocked when the tasks it depends on are done. `?tutorial=depgraph-demo`
@@ -72,6 +79,25 @@ Written, but not working all the way through yet. The panel lists these in a col
 - **DepGraph: in a multiworld** — Host a DepGraph graph on a local Archipelago server and solve it from the app. `?tutorial=depgraph-multiworld`
 - **APCalc: the calculator game** — Play APCalc: a calculator whose number and operation keys are the items, and whose results are the locations. `?tutorial=apcalc-demo`
 - **APCalc: in a multiworld** — Host APCalc on a local Archipelago server and play it from the app. `?tutorial=apcalc-multiworld`
+- **Track a game** — Load a game's logic, track items and checks by hand, see what is reachable, and connect to your multiworld's server. `?tutorial=tracker-track-a-game`
+- **Tracking: why can't I get there?** — Ask the Path Analyzer how to reach a region, and which items each way needs. `?tutorial=tracker-path-analyzer`
+- **Tracking: the Region Graph** — Track a game on the Region Graph: regions coloured by reachability, clicked to move, check and show. `?tutorial=tracker-region-graph`
+- **Tracking: dungeons** — See a dungeon's regions and boss in the Dungeons panel. `?tutorial=tracker-dungeons`
+- **Tracking: helpers** — Watch a game's helper rules — "can lift rocks" and the like — turn true as you collect items. `?tutorial=tracker-helpers`
+- **Tracking: the Spoiler Checklist** — Follow a seed's spoiler sphere by sphere, and see which item each location holds. `?tutorial=tracker-spoiler-checklist`
+- **Tracking: the timer** — Let the timer check reachable locations by itself, in the Console or in a tab of its own. `?tutorial=tracker-timer`
+- **Tracking: the rules in the Editor** — Read the loaded game's rules JSON — and other data — in the Editor. `?tutorial=tracker-editor`
+- **Adventure in Loop Mode** — Turn a world into an incremental game: queue moves, explores and checks, spend mana, and start again when it runs out. `?tutorial=loops-adventure`
+- **Embedding pages and windows** — Load a page into an Iframe panel, or open it in a window of its own, and watch it connect to the app. `?tutorial=other-embedding`
+- **The Vibe Coding Simulator** — Manage unreliable AI agents building a project, one feature (one location) at a time — a joke game, fully playable. `?tutorial=other-vibe-coding`
+
+### For developers (a collapsed section in the panel)
+
+- **Run the in-app tests** — Run one of the app's in-app tests from the Tests panel and read its conditions. `?tutorial=dev-tests`
+- **Replay a spoiler test** — Replay a world's solution sphere by sphere and check the app's logic reaches what the generator said it would. `?tutorial=dev-spoiler-test`
+- **The event registry** — See which modules publish and subscribe to each event, in the Events panel. `?tutorial=dev-events`
+- **The Loops Cost Debugger** — Plan a world's solution as a Loop-mode queue and see what each step would cost. `?tutorial=dev-loops-cost-debugger`
+- **The Region Marking Tool** — Mark a level map's regions, exits and locations by hand, and save them as a region atlas. `?tutorial=dev-region-marking-tool`
 
 ### Panels with no tutorial
 
@@ -82,8 +108,10 @@ These panels are deliberately left out of the tutorials:
 | JtA Action Queue | Part of the non-procgen Journey to Ascension, which is deprecated. |
 | JtA Game Data | Part of the non-procgen Journey to Ascension, which is deprecated. |
 | JtA Cost Debugger | Deprecated. |
-| Rule Converter | Very out of date; it may be deprecated or removed. |
+| Rule Converter | Deprecated. |
 | Tile Map Analyzer | Currently a failed experiment. |
+| Meta Game | Deprecated (an early draft of the procgen idea). |
+| Progress Bars | Deprecated, with the Meta Game panel. |
 
 <!-- END GENERATED tutorial lists -->
 

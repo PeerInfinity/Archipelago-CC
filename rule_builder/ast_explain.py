@@ -62,7 +62,6 @@ def explain_ast_rule(
         'conditional': _explain_conditional,
         'helper': _explain_helper,
         'state_method': _explain_state_method,
-        'setting_value': _explain_setting_value,  # Legacy
         'option_value': _explain_option_value,
         'world_attribute': _explain_world_attribute,
         'can_reach': _explain_can_reach,
@@ -399,17 +398,6 @@ def _explain_state_method(
     # Generic state method display
     args_str = ', '.join(str(_extract_value(a)) for a in args)
     return [{"type": "text", "text": f"state.{method}({args_str})"}]
-
-
-def _explain_setting_value(
-    rule: dict, state: "CollectionState | None", player: int, depth: int
-) -> list[JSONMessagePart]:
-    """Explain a setting_value rule (legacy, for backward compat)."""
-    setting = rule.get('setting', '')
-    return [
-        {"type": "text", "text": "Setting: "},
-        {"type": "color", "color": "cyan", "text": setting},
-    ]
 
 
 def _explain_option_value(

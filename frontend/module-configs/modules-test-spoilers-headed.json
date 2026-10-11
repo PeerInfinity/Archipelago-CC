@@ -146,19 +146,19 @@
     },
     "progressBar": {
       "path": "./modules/progressBar/index.js",
-      "enabled": true
+      "enabled": false
     },
     "progressBarPanel": {
       "path": "./modules/progressBarPanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "metaGame": {
       "path": "./modules/metaGame/index.js",
-      "enabled": true
+      "enabled": false
     },
     "metaGamePanel": {
       "path": "./modules/metaGamePanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "iframeAdapter": {
       "path": "./modules/iframeAdapter/index.js",
@@ -171,10 +171,6 @@
     "iframeManagerPanel": {
       "path": "./modules/iframeManagerPanel/index.js",
       "enabled": true
-    },
-    "mazeGameDataPanel": {
-      "path": "./modules/mazeGameDataPanel/index.js",
-      "enabled": false
     },
     "jtaGameDataPanel": {
       "path": "./modules/jtaGameDataPanel/index.js",
@@ -273,7 +269,6 @@
     "iframeAdapter",
     "iframePanel",
     "iframeManagerPanel",
-    "mazeGameDataPanel",
     "jtaGameDataPanel",
     "jtaCostDebugger",
     "windowAdapter",

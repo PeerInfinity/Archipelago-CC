@@ -589,7 +589,8 @@
       "properties": {
         "rule": {
           "type": "string",
-          "description": "The rule type name (e.g., 'Has', 'And', 'True_') or a game-specific helper name."
+          "not": { "enum": ["SettingValue", "AST_setting_value"] },
+          "description": "The rule type name (e.g., 'Has', 'And', 'True_') or a game-specific helper name. `SettingValue` / `AST_setting_value` are retired (rules S7) and refused by name: an option is `OptionValue` (`option`), a world attribute `WorldAttribute` (`attribute`)."
         },
         "args": {
           "description": "Rule arguments. Object for named args (e.g., {\"item_name\": \"Sword\"}), array for positional args."
@@ -617,8 +618,8 @@
       "properties": {
         "type": {
           "type": "string",
-          "not": { "const": "setting_value" },
-          "description": "The node type. `setting_value` is retired (rules S7, user 2026-10-03) and refused by name: an option is `option_value` (`option`), a world attribute `world_attribute` (`attribute`)."
+          "not": { "enum": ["setting_value", "setting_check"] },
+          "description": "The node type. `setting_value` is retired (rules S7, user 2026-10-03) and refused by name: an option is `option_value` (`option`), a world attribute `world_attribute` (`attribute`). `setting_check` (never written by any exporter) is refused with it."
         },
         "value": { "description": "Used for 'constant' type." },
         "name": {

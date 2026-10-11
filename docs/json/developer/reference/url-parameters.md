@@ -310,15 +310,15 @@ These parameters control automatic connection to an Archipelago server.
 
 **Usage:** `?iframe=<shortname>` or `?iframe=<url>`
 
-**Valid Values:** A shortname from the known pages list (`textadventure`, `iframebase`, `mazegame`) or a full URL.
+**Valid Values:** A shortname from the known pages list (`iframebase`) or a full URL.
 
 **Examples:**
-- `?iframe=mazegame` - Load A-Mazing-Idle in an iframe
-- `?iframe=mazegame&useWindow=1` - Load A-Mazing-Idle in a separate browser window instead
+- `?iframe=iframebase` - Load the Iframe Base page in an iframe
+- `?iframe=iframebase&useWindow=1` - Load it in a separate browser window instead
 
 **Details:**
 - Resolved via `knownIframePages.js` shortname lookup, or passed through as a URL
-- Falls back to the `iframeAutoLoad` setting from mode settings (e.g. `"iframeAutoLoad": "mazegame"` in a mode's settings file)
+- Falls back to the `iframeAutoLoad` setting from mode settings (e.g. `"iframeAutoLoad": "iframebase"` in a mode's settings file)
 - Publishes `iframe:loadUrl` (or `window:loadUrl` when `useWindow=1`)
 - Loading happens after the panel manager initializes, with a 500ms delay
 - **Dev-host only:** `?iframe=` is a local-testing affordance. It is honored
@@ -335,12 +335,10 @@ These parameters control automatic connection to an Archipelago server.
 **Usage:** `?useWindow=1`
 
 **Examples:**
-- `?iframe=mazegame&useWindow=1` - Load A-Mazing-Idle in a separate window
-- `?metagame=mazegame&useWindow=1` - Maze metagame with mazes opening in separate windows
+- `?iframe=iframebase&useWindow=1` - Load the Iframe Base page in a separate window
 
 **Details:**
 - Works with both `?iframe=` parameter and `iframeAutoLoad` setting
-- Also affects metagame configurations: maze challenges open/close in separate windows instead of switching iframe panel tabs
 - The same HTML pages work in both iframe and window contexts thanks to the unified AdapterClient
 - **Dev-host only:** like `?iframe=`, the `?useWindow=` URL parameter is
   honored only on dev hosts and is ignored elsewhere.
@@ -351,12 +349,12 @@ These parameters control automatic connection to an Archipelago server.
 
 **Usage:** `?metagame=<shortname>`
 
-**Valid Values:** `mazegame`, `mazegameloops`
+**Valid Values:** `progressbar`
 
 **Examples:**
-- `?metagame=mazegame` - Standard maze challenges
-- `?metagame=mazegameloops` - Loops-compatible maze challenges
-- `?metagame=mazegame&useWindow=1` - Maze challenges in separate windows
+- `?metagame=progressbar` - The progress-bar test scenario
+
+The Meta Game module is deprecated (2026-10-11) and disabled in every launch mode, so the parameter does nothing unless the mode's module config enables `metaGame` and `metaGamePanel` again.
 
 ---
 

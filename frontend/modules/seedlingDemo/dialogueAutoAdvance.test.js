@@ -176,8 +176,10 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity ENCOUNTERS2 D2: +1 (270) — `enc-l32-live-arrival`, inert.
         // ⛓ fidelity L12KEYLINE: +1 (271) — `l12keyline-134-round`, inert.
         // ⛓ fidelity L30KEYLOCK: +3 (274) — `l30keylock-pit224-before`, `l30keylock-pit224`, `l30keylock-pit240`, inert.
-        expect(rows).toHaveLength(274);
-        expect(rows.length - parted.length).toBe(273);
+        // ⛓ hammer-phase C2: +1 (275) — `hammer-c2-l18-ghostspinner` (no dialogue), inert.
+        // ⛓ fidelity L40BUTTON: +2 (277) — `l40button-l41-part0`, `l40button-l42-part0` (no dialogue), inert.
+        expect(rows).toHaveLength(277);
+        expect(rows.length - parted.length).toBe(276);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

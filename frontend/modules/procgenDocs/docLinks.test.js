@@ -276,25 +276,29 @@ describe('the corpus census — printed, then pinned', () => {
          *              and its training paragraph → § The bot (`same-doc` 19 → 22).
          *   354 → 356  PERSISTENCE (2026-10-07): flash.md's wasm-ship `boot` bullet → seedling-bot.md and
          *              seedling-bot.md's reuse-path bullet → flash.md (`doc` 272 → 274).
-         *   356 → 357  JtA zone locations (2026-10-11): substrate-registry.md's `pipelineConfigFromParams`
-         *              row → jta.md's AP-locations section (`doc` 274 → 275).
-         *   357 → 359  spiral victory (2026-10-11): architecture.md's goal paragraph and
+         *   356 → 358  HAMMER-PHASE D1 (2026-10-11): the README index's row for seedling-solve-progress.md and
+         *              seedling-bot.md's progress paragraph → it (`doc` 274 → 276).
+         *   358 → 359  SOLVE PROGRESS, JS half (2026-10-11): flash.md's "Solve progress" bullet → the progress
+         *              stream's §7 (`doc` 276 → 277).
+         *   359 → 360  JtA zone locations (2026-10-11): substrate-registry.md's `pipelineConfigFromParams`
+         *              row → jta.md's AP-locations section (`doc` 277 → 278).
+         *   360 → 362  spiral victory (2026-10-11): architecture.md's goal paragraph and
          *              substrate-registry.md's content-source paragraph → stepped-pipeline.md
-         *              § The item layer (`doc` 275 → 277).
+         *              § The item layer (`doc` 278 → 280).
          */
         expect(by).toEqual({
             'same-doc': 22,
-            doc: 277,
+            doc: 280,
             external: 22,
             repo: 38,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(359);
+        expect(CORPUS.length).toBe(362);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(277);
+        expect(docs).toHaveLength(280);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

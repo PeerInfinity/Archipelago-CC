@@ -36,7 +36,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/progressBarPanel.md',
   icon: '📊',
   column: 2, // Middle column,
-  category: 'Tracker Panels',
+  category: 'Deprecated Panels',
   description: 'Holds the progress bars Meta Game scenarios create, with buttons to add a test bar or clear them all.',
   requires: ['progressBar'],
 };

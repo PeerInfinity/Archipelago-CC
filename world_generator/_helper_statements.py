@@ -302,7 +302,6 @@ class HelperStatementMixin:
             'location_check': self._expr_location_check,
             'count_item': self._expr_count_item,
             'group_count': self._expr_group_count,
-            'setting_value': self._expr_setting_value,  # Legacy
             'option_value': self._expr_option_value,
             'world_attribute': self._expr_world_attribute,
             'prog_item_count': self._expr_prog_item_count,
@@ -475,12 +474,6 @@ class HelperStatementMixin:
                 option = args.get('option', '')
                 return f'state.multiworld.worlds[player].options.{option}'
 
-            # Handle SettingValue rules (Rule Builder format - legacy)
-            if rule_type == 'SettingValue':
-                args = expr.get('args', {})
-                setting = args.get('setting', '')
-                return self._expr_setting_value({'setting': setting})
-
             # Handle Tuple rules (Rule Builder format)
             if rule_type == 'Tuple':
                 args = expr.get('args', {})
@@ -576,17 +569,6 @@ class HelperStatementMixin:
                 # Generate call to item_name_in_location_names for runtime lookup
                 locs_str = f'[{", ".join(loc_pairs)}]'
                 return f'item_name_in_location_names(state, {repr(item_name)}, player, {locs_str})'
-
-            # Handle AST_setting_value (Rule Builder format for setting_value)
-            if rule_type == 'AST_setting_value':
-                args = expr.get('args', {})
-                setting = args.get('setting', '')
-                index = args.get('index')
-                # Build a setting_value dict and use the existing handler
-                setting_expr = {'setting': setting}
-                if index is not None:
-                    setting_expr['index'] = index
-                return self._expr_setting_value(setting_expr)
 
             # Handle OptionValue (Rule Builder format for option_value)
             if rule_type == 'OptionValue':

@@ -3818,7 +3818,213 @@ export function assertNormalizedLiveOpts(o, what) {
  * `withTileWrites` overlay's (whose tiles carry the written `t`). See that method for the tie-break and the
  * bridge's place at the head of the list.
  */
-function nearestTileScan(tiles, walkableTiles, x, y, { beforeTypeFlip = false, openBridges = null } = {}) {
+function nearestTileScan(tiles, walkableTiles, x, y, opts = {}) {
+    const { beforeTypeFlip = false, openBridges = null } = opts;
+    if (beforeTypeFlip || !NEAREST_TILE_INDEX.enabled) return nearestTileScanLinear(tiles, walkableTiles, x, y, opts);
+    return nearestTileScanIndexed(tiles, walkableTiles, x, y, openBridges);
+}
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY SOLVECOST D2 — **THE NEAREST-TILE SCAN'S BROAD PHASE, AND IT ANSWERS EXACTLY WHAT THE
+ * LINEAR SCAN ANSWERS.**
+ *
+ * MEASURED (D1, `--cpu-prof` on survey step 177, L12 → teleporter@0,352): `resolveTerrainState` was 14 % of the
+ * solve's SELF time, and its body is this scan inlined — every walkable tile of the level, once per preview tick.
+ *
+ * ⛔ WHY IT IS EXACT, NOT APPROXIMATE. The linear pass's answer depends only on the tiles at the MINIMUM distance:
+ * `best` is the first of them in scan order, `tie` the first LATER one at that distance with a different `t`
+ * (a strictly nearer tile resets both, a farther one touches neither). So any tile whose distance is STRICTLY
+ * greater than the minimum is irrelevant. The indexed pass scans the open bridges first (the head of the list,
+ * unchanged), then only the walkable tiles whose centre lies within `R` of the probe on BOTH axes — by the same
+ * float subtraction the scan uses — in the linear pass's own order (descending index). Every tile left out has
+ * `|dx| > R` or `|dy| > R`, so `d >= R²`; the pass is accepted only when `bestDist < R²`, which makes every
+ * excluded tile strictly farther than the answer. Otherwise `R` doubles, and past the level's extent it is the
+ * linear pass itself.
+ *
+ * `NEAREST_TILE_INDEX.enabled = false` is the linear scan everywhere (the mutant and the A/B arm).
+ */
+export const NEAREST_TILE_INDEX = { enabled: true };
+
+const TILE_BUCKET = 16;
+/** One index per walkable-tile LIST (the world's own, or a `withTileWrites` overlay's), keyed by the array. */
+const walkableIndexes = new WeakMap();
+
+function walkableIndexFor(list) {
+    let ix = walkableIndexes.get(list);
+    if (ix && ix.length === list.length) return ix;
+    let bx0 = Infinity; let by0 = Infinity; let bx1 = -Infinity; let by1 = -Infinity;
+    for (const t of list) {
+        const bx = Math.floor(t.x / TILE_BUCKET);
+        const by = Math.floor(t.y / TILE_BUCKET);
+        if (!Number.isFinite(bx) || !Number.isFinite(by)) {
+            ix = { length: list.length, linear: true };
+            walkableIndexes.set(list, ix);
+            return ix;
+        }
+        if (bx < bx0) bx0 = bx;
+        if (by < by0) by0 = by;
+        if (bx > bx1) bx1 = bx;
+        if (by > by1) by1 = by;
+    }
+    const w = list.length ? bx1 - bx0 + 1 : 0;
+    const h = list.length ? by1 - by0 + 1 : 0;
+    const buckets = new Array(w * h);
+    for (let i = 0; i < list.length; i += 1) {
+        const k = (Math.floor(list[i].y / TILE_BUCKET) - by0) * w + (Math.floor(list[i].x / TILE_BUCKET) - bx0);
+        (buckets[k] ??= []).push(i);
+    }
+    ix = { length: list.length, linear: list.length === 0, bx0, by0, w, h, buckets,
+        // past this half-width the window holds every tile, so the indexed pass stops being cheaper
+        span: TILE_BUCKET * (Math.max(w, h) + 2) };
+    walkableIndexes.set(list, ix);
+    return ix;
+}
+
+function nearestTileScanIndexed(tiles, walkableTiles, x, y, openBridges) {
+    const ix = walkableIndexFor(walkableTiles);
+    if (ix.linear || !Number.isFinite(x) || !Number.isFinite(y)) {
+        return nearestTileScanLinear(tiles, walkableTiles, x, y, { openBridges });
+    }
+    const cand = [];
+    for (let R = TILE_BUCKET; R <= ix.span; R *= 2) {
+        let best = null;
+        let bestDist = Infinity;
+        let tie = null;
+        const scan = (tile) => {
+            const dx = tile.x - x;
+            const dy = tile.y - y;
+            const d = dx * dx + dy * dy;
+            if (d < bestDist) {
+                bestDist = d;
+                best = tile;
+                tie = null;
+            } else if (d === bestDist && best && tile.t !== best.t && !tie) {
+                tie = tile;
+            }
+        };
+        if (openBridges && openBridges.size > 0) {
+            for (const tile of tiles) {
+                if (tile.t === BRIDGE_STATE && openBridges.has(`${tile.tx},${tile.ty}`)) scan(tile);
+            }
+        }
+        // the buckets the window can touch, one wider than the arithmetic says (the filter below is the exact one)
+        const cx0 = Math.max(0, Math.floor((x - R) / TILE_BUCKET) - ix.bx0 - 1);
+        const cx1 = Math.min(ix.w - 1, Math.floor((x + R) / TILE_BUCKET) - ix.bx0 + 1);
+        const cy0 = Math.max(0, Math.floor((y - R) / TILE_BUCKET) - ix.by0 - 1);
+        const cy1 = Math.min(ix.h - 1, Math.floor((y + R) / TILE_BUCKET) - ix.by0 + 1);
+        cand.length = 0;
+        for (let cy = cy0; cy <= cy1; cy += 1) {
+            for (let cx = cx0; cx <= cx1; cx += 1) {
+                const b = ix.buckets[cy * ix.w + cx];
+                if (!b) continue;
+                for (const i of b) {
+                    const t = walkableTiles[i];
+                    if (Math.abs(t.x - x) <= R && Math.abs(t.y - y) <= R) cand.push(i);
+                }
+            }
+        }
+        // ⛔ the linear pass walks the list BACKWARDS (`addType` prepends), so the candidates do too
+        cand.sort((a, b) => b - a);
+        for (const i of cand) scan(walkableTiles[i]);
+        if (bestDist < R * R) return { tile: best, tie };
+    }
+    return nearestTileScanLinear(tiles, walkableTiles, x, y, { openBridges });
+}
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY SOLVECOST D2 — **`collidesSolid`'s BROAD PHASE: A STATIC GRID OVER THE SOLIDS WHOSE LIVE
+ * RECT CAN ONLY BE THEIR OWN OR NONE.**
+ *
+ * MEASURED (D1, `--cpu-prof` on survey step 177): `collidesSolid` 37.5 % and `liveRectOf` 28.5 % of the solve's
+ * self time. The sweep asks once per pixel of travel and the query walked EVERY solid of the level (L12 holds
+ * thousands), running `liveRectOf`'s thirteen-arm chain on each.
+ *
+ * ⛔ WHY IT IS EXACT. `liveRectOf` answers `null` or `s.rect` for every family but four: a crusher, a turret, a
+ * rope (`shrunkRect`) and a pushable (`now.rect`) can occupy a box the build never gave them. Those four are
+ * `dynamic` and are ALWAYS candidates. Every other entry can only overlap the box through its own `s.rect`, and
+ * `rectsOverlap` is strict, so an overlap needs an interior point both rects hold — which lies in a grid cell both
+ * rects touch. The candidates are therefore a superset of every entry that can answer, and they are visited in
+ * ascending LIST order, so the first hit is the linear loop's first hit (callers compare blockers by identity).
+ * `liveRectOf` reads maps and sets only, so skipping it for an entry is not skipping a side effect.
+ *
+ * `null` (the linear loop) for a box the grid cannot place (a non-finite edge, or one spanning more cells than
+ * the list has entries). `SOLID_GRID.enabled = false` is the linear loop everywhere (the mutant and the A/B arm).
+ */
+export const SOLID_GRID = { enabled: true };
+
+const SOLID_CELL = 32;
+const SOLID_KEY_OFFSET = 1 << 15;
+const solidKey = (cx, cy) => (cx + SOLID_KEY_OFFSET) * 65536 + (cy + SOLID_KEY_OFFSET);
+/** One grid per solids LIST (a world's `solids`, its `objectSolids`), keyed by the array. */
+const solidGrids = new WeakMap();
+
+function solidGridFor(list) {
+    let g = solidGrids.get(list);
+    if (g && g.length === list.length) return g;
+    const cells = new Map();
+    const dynamic = [];
+    for (let i = 0; i < list.length; i += 1) {
+        const s = list[i];
+        // the four families whose live rect is not `s.rect` (see `liveRectOf`'s crusher, turret, rope and pushable arms)
+        if (s.crusherId || s.turretId || s.ropeId || s.pushableId) { dynamic.push(i); continue; }
+        const r = s.rect;
+        const x0 = Math.floor(r.x / SOLID_CELL);
+        const x1 = Math.floor(r.right / SOLID_CELL);
+        const y0 = Math.floor(r.y / SOLID_CELL);
+        const y1 = Math.floor(r.bottom / SOLID_CELL);
+        if (![x0, x1, y0, y1].every(Number.isFinite) || (x1 - x0 + 1) * (y1 - y0 + 1) > 4096) {
+            dynamic.push(i);
+            continue;
+        }
+        for (let cy = y0; cy <= y1; cy += 1) {
+            for (let cx = x0; cx <= x1; cx += 1) {
+                const k = solidKey(cx, cy);
+                const b = cells.get(k);
+                if (b) b.push(i); else cells.set(k, [i]);
+            }
+        }
+    }
+    g = { length: list.length, cells, dynamic, stamp: new Uint32Array(list.length), query: 0, buf: [] };
+    solidGrids.set(list, g);
+    return g;
+}
+
+/**
+ * The indices of `list` whose live rect can overlap `box`, ascending — or `null` for the linear loop.
+ * ⚠ THE ARRAY IS THE GRID'S OWN BUFFER, reused by the next query on the same list: every caller consumes it before
+ * asking again (`liveRectOf` and `rectsOverlap` query nothing).
+ */
+function solidCandidates(list, box) {
+    const g = solidGridFor(list);
+    const x0 = Math.floor(box.x / SOLID_CELL);
+    const x1 = Math.floor(box.right / SOLID_CELL);
+    const y0 = Math.floor(box.y / SOLID_CELL);
+    const y1 = Math.floor(box.bottom / SOLID_CELL);
+    if (!(Number.isFinite(x0) && Number.isFinite(x1) && Number.isFinite(y0) && Number.isFinite(y1))) return null;
+    if ((x1 - x0 + 1) * (y1 - y0 + 1) > list.length) return null;
+    g.query = (g.query + 1) >>> 0;
+    if (g.query === 0) { g.stamp.fill(0); g.query = 1; }
+    const q = g.query;
+    const out = g.buf;
+    out.length = 0;
+    for (const i of g.dynamic) { g.stamp[i] = q; out.push(i); }
+    for (let cy = y0; cy <= y1; cy += 1) {
+        for (let cx = x0; cx <= x1; cx += 1) {
+            const b = g.cells.get(solidKey(cx, cy));
+            if (!b) continue;
+            for (const i of b) {
+                if (g.stamp[i] === q) continue;
+                g.stamp[i] = q;
+                out.push(i);
+            }
+        }
+    }
+    if (out.length > 1) out.sort((a, b) => a - b);
+    return out;
+}
+
+/** The scan as the game walks it — the reference the indexed pass must equal, and its fallback. */
+function nearestTileScanLinear(tiles, walkableTiles, x, y, { beforeTypeFlip = false, openBridges = null } = {}) {
     let best = null;
     let bestDist = Infinity;
     let tie = null;
@@ -3927,6 +4133,9 @@ export function buildLevelWorld(levelRecord, {
     const tiles = [];
     const walkableTiles = [];
     const solids = [];
+    /** ⛓ SOLVECOST D2: the two floor-policy getters' filters, taken once on first read (see `pitTiles`). */
+    let pitTilesOnce = null;
+    let lethalTilesOnce = null;
     // Object entities only — the `solids` list minus everything a TILE
     // contributed. It exists for the first-tick type flip (see the query
     // methods' `beforeTypeFlip` option): a Tile is constructed
@@ -5714,7 +5923,9 @@ export function buildLevelWorld(levelRecord, {
          */
         fallthrough,
         /** Pit tiles, for the planner's forbidden-floor policy. */
-        get pitTiles() { return walkableTiles.filter((t) => t.t === PIT_STATE); },
+        // ⛓ SOLVECOST D2: filtered ONCE (a built world's tiles are never rewritten in place — a write is a
+        // `withTileWrites` overlay), and still a FRESH array per read, so no caller can alias another's.
+        get pitTiles() { return (pitTilesOnce ??= walkableTiles.filter((t) => t.t === PIT_STATE)).slice(); },
         /**
          * Water and lava tiles, for R4's forbidden-floor policy.
          *
@@ -5735,7 +5946,7 @@ export function buildLevelWorld(levelRecord, {
          * `noDamage` does not guard.
          */
         get lethalTerrainTiles() {
-            return walkableTiles.filter((t) => t.t === WATER_STATE || t.t === LAVA_STATE);
+            return (lethalTilesOnce ??= walkableTiles.filter((t) => t.t === WATER_STATE || t.t === LAVA_STATE)).slice();
         },
         /**
          * ⚠ WATERFALL TILES, which are the THIRD floor policy and the one
@@ -6077,7 +6288,21 @@ export function buildLevelWorld(levelRecord, {
                     if (rectsOverlap(box, r.rect)) return { ...r, fallen: true };
                 }
             }
-            for (const s of (beforeTypeFlip ? objectSolids : solids)) {
+            const list = beforeTypeFlip ? objectSolids : solids;
+            // ⛓⛓ SOLVECOST D2: only the entries the box's grid cells can hold, in list order (`solidCandidates`).
+            const cand = SOLID_GRID.enabled ? solidCandidates(list, box) : null;
+            if (cand) {
+                for (let k = 0; k < cand.length; k += 1) {
+                    const s = list[cand[k]];
+                    const at = liveRectOf(s, live);
+                    if (at === null) continue;
+                    if (!rectsOverlap(box, at)) continue;
+                    if (at === s.rect) return s;
+                    return { ...s, rect: at, live: true };
+                }
+                return null;
+            }
+            for (const s of list) {
                 // ⛓⛓⛓ R5 SLICE 15: ONE CHAIN, SHARED WITH THE PLANNER AND
                 // WITH THE CRUSHER'S SIGHT LIST. See `liveRectOf`.
                 const at = liveRectOf(s, live);
@@ -6415,7 +6640,19 @@ export function buildLevelWorld(levelRecord, {
                         return { kind: 'pixelmask', blocker: p };
                     }
                 }
-                for (const s of solids) {
+                // ⛓⛓ SOLVECOST D2: `collidesSolid`'s broad phase, the same exactness argument (`solidCandidates`).
+                const cand = SOLID_GRID.enabled ? solidCandidates(solids, box) : null;
+                if (cand) {
+                    for (let k = 0; k < cand.length; k += 1) {
+                        const s = solids[cand[k]];
+                        const at = liveRectOf(s, live);
+                        if (at === null) continue;
+                        if (!rectsOverlap(box, at)) continue;
+                        if (at === s.rect) return { kind: 'solid', blocker: s };
+                        return { kind: 'solid', blocker: { ...s, rect: at, live: true } };
+                    }
+                }
+                for (const s of (cand ? [] : solids)) {
                     // ⛓⛓⛓ R5 SLICE 15: the SAME chain `collidesSolid` walks
                     // — `liveRectOf`. Until this slice the two were separate
                     // transcriptions of nine arms, which is the §28.2 defect
@@ -6436,7 +6673,22 @@ export function buildLevelWorld(levelRecord, {
                 }
             }
             if (probeRect) {
-                for (const tile of walkableTiles) {
+                // ⛓⛓ SOLVECOST D2: a walkable tile is a static rect, so the same grid finds every one the probe can
+                // overlap, in list order.
+                const near = SOLID_GRID.enabled ? solidCandidates(walkableTiles, probeRect) : null;
+                if (near) {
+                    // the linear loop coerces EVERY tile, so a `noHazards` it cannot iterate throws there too
+                    if (walkableTiles.length) coerceTerrainState(walkableTiles[0].t, noHazards);
+                    for (let k = 0; k < near.length; k += 1) {
+                        const tile = walkableTiles[near[k]];
+                        const effective = coerceTerrainState(tile.t, noHazards);
+                        if (!MODELLED_TILE_SET.has(effective)
+                            && rectsOverlap(probeRect, tile.rect)) {
+                            return { kind: 'terrain', blocker: tile };
+                        }
+                    }
+                }
+                for (const tile of (near ? [] : walkableTiles)) {
                     const effective = coerceTerrainState(tile.t, noHazards);
                     if (!MODELLED_TILE_SET.has(effective)
                         && rectsOverlap(probeRect, tile.rect)) {

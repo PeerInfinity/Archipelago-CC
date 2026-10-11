@@ -1,0 +1,138 @@
+[
+ {
+  "step": 58,
+  "level": 37,
+  "ci38107331670": "SOLVED",
+  "base": "SOLVED 316",
+  "head": "SOLVED 316",
+  "baseRefusal": "",
+  "headRefusal": "",
+  "headReplay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 38,
+   "transitions": [
+    "undefined->undefined@316"
+   ],
+   "earnedClears": [
+    "{37,1}"
+   ]
+  }
+ },
+ {
+  "step": 59,
+  "level": 38,
+  "ci38107331670": "REFUSED",
+  "base": "REFUSED",
+  "head": "SOLVED 371",
+  "baseRefusal": "level 37: the tape clears tag(s) 4, which no entity in this level reads. A clear is derived from a named blocker; one that matches nothing is a derivation error, not a harmless extra. (Entities that r",
+  "headRefusal": "",
+  "headReplay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 37,
+   "transitions": [
+    "undefined->undefined@371"
+   ],
+   "earnedClears": [
+    "{37,4}",
+    "{38,5}",
+    "{38,0}",
+    "{38,3}"
+   ]
+  }
+ },
+ {
+  "step": 60,
+  "level": 37,
+  "ci38107331670": "SOLVED",
+  "base": "SOLVED 332",
+  "head": "SOLVED 332",
+  "baseRefusal": "",
+  "headRefusal": "",
+  "headReplay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 44,
+   "transitions": [
+    "undefined->undefined@332"
+   ],
+   "earnedClears": [
+    "{37,1}"
+   ]
+  }
+ },
+ {
+  "step": 75,
+  "level": 37,
+  "ci38107331670": "SOLVED",
+  "base": "SOLVED 314",
+  "head": "SOLVED 314",
+  "baseRefusal": "",
+  "headRefusal": "",
+  "headReplay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 38,
+   "transitions": [
+    "undefined->undefined@314"
+   ],
+   "earnedClears": []
+  }
+ },
+ {
+  "step": 76,
+  "level": 38,
+  "ci38107331670": "REFUSED",
+  "base": "REFUSED",
+  "head": "SOLVED 480",
+  "baseRefusal": "solverBot: goals[0]: collect-placement needs placement {x, y} — the pickup's or chest's OEL coordinates. Which VERB collects it is the solver's strategy selection, not the goal's.",
+  "headRefusal": "",
+  "headReplay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 39,
+   "transitions": [
+    "undefined->undefined@480"
+   ],
+   "earnedClears": [
+    "{37,4}",
+    "{38,5}",
+    "{38,0}",
+    "{38,3}",
+    "{39,8}",
+    "{38,4}"
+   ]
+  }
+ },
+ {
+  "step": 77,
+  "level": 39,
+  "ci38107331670": "REFUSED",
+  "base": "REFUSED",
+  "head": "REFUSED",
+  "baseRefusal": "solverBot(survey-step-77): no corridor for goal collect-placement toward (88,24) in level 39. Obstacle: solid:rope (rope@96,384). No strategy row exists for this obstacle. Planner said: no walkable ti",
+  "headRefusal": "solverBot(survey-step-77): no corridor for goal collect-placement toward (88,24) in level 39. Obstacle: solid:rope (rope@96,384). No strategy row exists for this obstacle. Planner said: no walkable ti",
+  "headReplay": null
+ },
+ {
+  "step": 123,
+  "level": 39,
+  "ci38107331670": "REFUSED",
+  "base": "REFUSED",
+  "head": "REFUSED",
+  "baseRefusal": "solverBot(survey-step-123): no corridor for goal reach-exit toward (152,8) in level 39. Obstacle: solid:rope (rope@96,384). No strategy row exists for this obstacle. Planner said: no walkable tile pat",
+  "headRefusal": "solverBot(survey-step-123): no corridor for goal reach-exit toward (152,8) in level 39. Obstacle: solid:rope (rope@96,384). No strategy row exists for this obstacle. Planner said: no walkable tile pat",
+  "headReplay": null
+ },
+ {
+  "step": 138,
+  "level": 39,
+  "ci38107331670": "REFUSED",
+  "base": "REFUSED",
+  "head": "REFUSED",
+  "baseRefusal": "solverBot(survey-step-138): no corridor for goal reach-exit toward (152,8) in level 39. Obstacle: solid:rope (rope@96,384). No strategy row exists for this obstacle. Planner said: no walkable tile pat",
+  "headRefusal": "solverBot(survey-step-138): no corridor for goal reach-exit toward (152,8) in level 39. Obstacle: solid:rope (rope@96,384). No strategy row exists for this obstacle. Planner said: no walkable tile pat",
+  "headReplay": null
+ }
+]

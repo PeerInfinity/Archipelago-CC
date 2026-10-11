@@ -232,7 +232,6 @@ Around the panel:
 - The **playthrough visualizer** (`mazeRoomVisualizer.js`) auto-walks the region with its own simulated state; see [Playback and Debugging Tools](./playback-and-debugging.md#per-substrate-visualizers).
 - The **editor** (`mazeRoomEditor.js`) edits a loaded region in place: floor/wall, entrance, items (with AP-canonical location names), obstacles, block, button (with its `buttonLib` entry and `door_A{n}` registration) and flag. Every brush produces a closed op (`applyEditOp`), so an edit list replays. Exits and logic gates are not in its palette.
 - The canvas draw is `mazeRoomRender.drawWorld`, shared with the lab page; see [its `view` contract](./maze-lab.md#drawworlds-view-contract).
-- `frontend/modules/mazeGameDataPanel/` is a separate module for the A-Mazing-Idle game, not this substrate.
 
 ## A real game's map as maze regions
 

@@ -104,7 +104,6 @@ that must handle it.
 | `OptionValue` | Get user-configurable option value (Rule Builder) | `option` | `{"rule": "OptionValue", "args": {"option": "difficulty"}}` |
 | `world_attribute` | Get runtime world attribute | `attribute`, `index` (optional) | `{"type": "world_attribute", "attribute": "required_medallions", "index": 0}` |
 | `WorldAttribute` | Get runtime world attribute (Rule Builder) | `attribute`, `index` (optional) | `{"rule": "WorldAttribute", "args": {"attribute": "shop_items", "index": 0}}` |
-| `setting_check` | Check if setting equals value | `setting`, `value` | `{"type": "setting_check", "setting": "mode", "value": "hard"}` |
 | `f_string` | String formatting | `parts: [{type, value}]` | `{"type": "f_string", "parts": [...]}` |
 
 ### Functions & Helpers
@@ -250,7 +249,7 @@ For worlds using class-based helpers (e.g., KH2), the following references are s
 | `world.options.*` | `option_value` | Access user-configurable options |
 | `world.*` (non-option) | `world_attribute` | Access runtime world attributes |
 
-**Note:** The legacy `setting_value` type (which covered both options and world attributes) is retired: the schema refuses it, `test_schema_validation.py` refuses it anywhere in a committed preset, and the runtime has no handler for it. Exports use `option_value` and `world_attribute`.
+**Note:** The legacy `setting_value` type (which covered both options and world attributes) is retired, together with its Rule Builder forms `SettingValue` / `AST_setting_value` and the never-written `setting_check`: the schema refuses all four by name, `test_schema_validation.py` refuses them anywhere in a committed preset (including inside Rule Builder `args`, which the schema does not descend), and neither the runtime nor `world_generator` has a handler for them. Exports use `option_value` / `OptionValue` and `world_attribute` / `WorldAttribute`; the AST → Rule Builder converter writes `OptionValue` for a raw `options.X` / `self.options.X` / `options.X.to_bool()`.
 
 ## Internal/Supporting Types
 

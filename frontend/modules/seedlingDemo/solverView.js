@@ -96,6 +96,9 @@ export {
     // ⛓ seedling-fidelity-ghostmotion: the ghost swing's own release clock and dash chain.
     GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
 } from './ghostSword.js';
+// ghostSpinnerPress.js — solverBot · seedling 3
+// ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (its switch, the sword's row, the chooser).
+export { GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress } from './ghostSpinnerPress.js';
 // iceTurret.js — botDriverV2 · seedling 2
 export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
 // ⛓ U15-swim D2: the turret spit's box, for `dangerMap.spitDanger`'s WAIT sweep.
@@ -126,7 +129,8 @@ export { fallDestination, PhysicsV2Error, playerBoxAt, terrainProbeRect } from '
 // presses.js — botDriverV2, solverBot, strikePolicy · seedling 10, physics 5
 export {
     auditFire, DARK_SWORD_DAMAGE, distanceRectPoint, DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH,
-    slashReachFor, slashRect, spearRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule, swordWindowStep, UP,
+    slashReachFor, slashRect, SPEAR_HIT_TICKS_UNMODELLED, spearRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule,
+    swordWindowStep, UP,
 } from './presses.js';
 // ⛓ SEEDLING FIDELITY PUSHBLOCK: the spear push's stance audit (a thrust that reaches anything but the block).
 export { auditPress, PRESS_ARM_POLICY } from './presses.js';

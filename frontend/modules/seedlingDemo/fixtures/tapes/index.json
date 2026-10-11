@@ -324,6 +324,13 @@
       "noHazards": []
     },
     {
+      "file": "hammer-c2-l18-ghostspinner.json",
+      "tickCount": 91,
+      "bootLevel": 18,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "hazard-boot-pit.json",
       "tickCount": 30,
       "bootLevel": 83,
@@ -381,6 +388,20 @@
       "file": "l30keylock-pit240.json",
       "tickCount": 360,
       "bootLevel": 30,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "l40button-l41-part0.json",
+      "tickCount": 1543,
+      "bootLevel": 40,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "l40button-l42-part0.json",
+      "tickCount": 1597,
+      "bootLevel": 40,
       "tapeVersion": 8,
       "noHazards": []
     },

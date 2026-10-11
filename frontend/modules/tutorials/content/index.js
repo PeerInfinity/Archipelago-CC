@@ -5,6 +5,20 @@
  * imports this in node.
  */
 import { GUIDED_TOUR } from './guidedTour.js';
+import { START_SAVING_YOUR_SETUP, START_WORKBENCH } from './start/workbench.js';
+import { TRACKER_TRACK_A_GAME } from './tracker/trackAGame.js';
+import { LOOPS_ADVENTURE } from './loops/adventureLoopMode.js';
+import { OTHER_EMBEDDING } from './other/embedding.js';
+import { OTHER_VIBE_CODING } from './other/vibeCoding.js';
+import { PROCGEN_RUNNER_DEMO } from './procgen/runnerDemo.js';
+import { SEEDLING_BOT, SEEDLING_MULTIWORLD, SEEDLING_RECOMPILE, SEEDLING_WHOLE_GAME } from './seedling/seedling.js';
+import {
+    DEV_EVENTS, DEV_LOOPS_COST_DEBUGGER, DEV_REGION_MARKING_TOOL, DEV_SPOILER_TEST, DEV_TESTS,
+} from './developer/developer.js';
+import {
+    TRACKER_DUNGEONS, TRACKER_EDITOR, TRACKER_HELPERS, TRACKER_PATH_ANALYZER, TRACKER_REGION_GRAPH,
+    TRACKER_SPOILER_CHECKLIST, TRACKER_TIMER,
+} from './tracker/panels.js';
 import { PROCGEN_SPHERE_GROWTH } from './procgen/sphereGrowth.js';
 import { PROCGEN_SHUFFLED_SPIRAL } from './procgen/shuffledSpiral.js';
 import { PROCGEN_GRID_GROWTH } from './procgen/gridGrowth.js';
@@ -26,6 +40,8 @@ const entry = (source, tutorial) => Object.freeze({ source: `frontend/modules/tu
 
 export const TUTORIALS = Object.freeze([
     entry('guidedTour.js', GUIDED_TOUR),
+    entry('start/workbench.js', START_WORKBENCH),
+    entry('start/workbench.js', START_SAVING_YOUR_SETUP),
     entry('procgen/sphereGrowth.js', PROCGEN_SPHERE_GROWTH),
     entry('procgen/shuffledSpiral.js', PROCGEN_SHUFFLED_SPIRAL),
     entry('procgen/gridGrowth.js', PROCGEN_GRID_GROWTH),
@@ -37,6 +53,11 @@ export const TUTORIALS = Object.freeze([
     entry('procgen/mixedWorld.js', PROCGEN_MIXED_WORLD),
     entry('procgen/loopModeJta.js', PROCGEN_LOOP_MODE_JTA),
     entry('procgen/loopModeEverything.js', PROCGEN_LOOP_MODE_EVERYTHING),
+    entry('procgen/runnerDemo.js', PROCGEN_RUNNER_DEMO),
+    entry('seedling/seedling.js', SEEDLING_RECOMPILE),
+    entry('seedling/seedling.js', SEEDLING_BOT),
+    entry('seedling/seedling.js', SEEDLING_MULTIWORLD),
+    entry('seedling/seedling.js', SEEDLING_WHOLE_GAME),
     entry('games/metamath.js', METAMATH_DEMO),
     entry('games/multiworld.js', METAMATH_MULTIWORLD),
     entry('games/depgraph.js', DEPGRAPH_DEMO),
@@ -45,4 +66,20 @@ export const TUTORIALS = Object.freeze([
     entry('games/apcalc.js', APCALC_DEMO),
     entry('games/apcalc.js', APCALC_GENERATOR),
     entry('games/multiworld.js', APCALC_MULTIWORLD),
+    entry('tracker/trackAGame.js', TRACKER_TRACK_A_GAME),
+    entry('tracker/panels.js', TRACKER_PATH_ANALYZER),
+    entry('tracker/panels.js', TRACKER_REGION_GRAPH),
+    entry('tracker/panels.js', TRACKER_DUNGEONS),
+    entry('tracker/panels.js', TRACKER_HELPERS),
+    entry('tracker/panels.js', TRACKER_SPOILER_CHECKLIST),
+    entry('tracker/panels.js', TRACKER_TIMER),
+    entry('tracker/panels.js', TRACKER_EDITOR),
+    entry('loops/adventureLoopMode.js', LOOPS_ADVENTURE),
+    entry('other/embedding.js', OTHER_EMBEDDING),
+    entry('other/vibeCoding.js', OTHER_VIBE_CODING),
+    entry('developer/developer.js', DEV_TESTS),
+    entry('developer/developer.js', DEV_SPOILER_TEST),
+    entry('developer/developer.js', DEV_EVENTS),
+    entry('developer/developer.js', DEV_LOOPS_COST_DEBUGGER),
+    entry('developer/developer.js', DEV_REGION_MARKING_TOOL),
 ]);
