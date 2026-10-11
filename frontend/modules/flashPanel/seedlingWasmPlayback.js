@@ -319,7 +319,10 @@ export function createWasmPlayback({
         // ⛓ RESTART HOLD (an instrument, never acted on) — the arrival watch around each EXPECTED arrival (`expectArrival`,
         // a Restart's start hop), from the arming to the hold: `expect`, `walkTo`, `begin` (a re-base) / `begin-keep`,
         // `seen`, `stop-drop`. Only those rows, so the cap (`ARRIVAL_WATCH_ROWS`) keeps the last ~10 handshakes whole.
-        arrivalWatch: [] };
+        arrivalWatch: [],
+        // ⛓ CROSS-LEVEL END (diag) — the engine's goal-level events with the game's clock: begin / finish / release /
+        // self-check / adoption / re-arrival / hold. A ring of TIMELINE_ROWS.
+        timeline: [] };
     const history = [];
     /** ⛓ WG — the reads of the last few arrivals (the probe's fixture recorder; never read back here). */
     const arrivalReads = [];
@@ -340,6 +343,13 @@ export function createWasmPlayback({
         if (timer) { try { timer.t.clearTimeout(timer.h); } catch { /* gone */ } timer = null; }
     }
     function note(n) { try { onNote(n); } catch { /* a listener's bug */ } }
+    function tl(e, extra = {}, given = undefined) {
+        let st = given ?? null;
+        if (given === undefined) { try { st = J(game()?.botStatus?.()); } catch { st = null; } }
+        stats.timeline.push({ e, t: Math.round(now()), gt: st?.game_time ?? null, lv: st?.level ?? null, held: st?.held ?? null,
+            phase, room: room?.level ?? null, goal: goal?.name ?? null, ...extra });
+        if (stats.timeline.length > 200) stats.timeline.shift();
+    }
     const readState = () => J(game()?.readState?.()) ?? {};
     const seam = () => J(game()?.botSeam?.()) ?? {};
     const status = () => J(game()?.botStatus?.());
@@ -360,6 +370,7 @@ export function createWasmPlayback({
         const wasFrozen = frozen;
         frozen = null;
         if (!ours) return;
+        tl('release');
         ours = false;
         let held = [];
         if (phase === 'playing' && play?.plan) {
@@ -412,6 +423,7 @@ export function createWasmPlayback({
     }
 
     function fail(reason, extra = null) {
+        tl('fail');
         const g = goal;
         release();
         reset();
@@ -478,6 +490,7 @@ export function createWasmPlayback({
         // ⛓ W7 — an exit plan's crossing is in flight: the goal waits for the HELD arrival, never a teleport back.
         if (action === 'force-re-arrival' && glueQuery && arriving) action = 'await-arrival';
         watchRow('walkTo', { goal: g.level, action, landed: beginTag(seam().beginEntry ?? null) });
+        tl('begin', { to: g.name ?? null, action, heldLevel, liveLevel: live.level });
         if (action === 'queue') {
             queued = { goal: g, since: now() };
             note(`queued behind the playing tape (${goal?.name ?? 'the last goal'})`);
@@ -550,7 +563,8 @@ export function createWasmPlayback({
         const state = readState();
         const record = records.get(g.level) ?? null;
         const refused = (clause, why) => {
-            if (transient && adoptRefusalIsTransient(clause, arrived.beginEntry)) return { transient: { clause, why } };
+            if (transient && adoptRefusalIsTransient(clause, arrived.beginEntry)) { tl('adopt-transient', { clause }); return { transient: { clause, why } }; }
+            tl('adopt-refused', { clause });
             stats.adoptRefused.push({ level: g.level, clause, why });
             return `${clause}: ${why}`;
         };
@@ -737,6 +751,7 @@ export function createWasmPlayback({
      * ⛓ W7 — `why` is counted in `stats.forcedBy` (cold-start / recovery / a named fallback).
      */
     function reArrive(why, kind = 'recovery') {
+        tl('re-arrive', { kind });
         room = null;
         arriving = false;
         stopWatch();
@@ -911,6 +926,7 @@ export function createWasmPlayback({
         const started = hostStart(freeze, 'freeze');
         if (held.length) releaseKeys(held);
         if (started) { fail(started); return true; }
+        tl('hold', { level, begin: be['save.time'] });
         stopWatch();
         watchRow('held', { landed: beginTag(be) });
         expecting = false;
@@ -1070,6 +1086,7 @@ export function createWasmPlayback({
         play = { ...playInit, t0: now(), request: req, budget, budgets: [budget], retries: 0, best: null };
         handle = svc().start(req);
         phase = 'solving';
+        tl('solve', { name: req.name ?? null });
         note(`${walkerInstrument ? 'walking a tape' : playInit.continuation ? 'solving on from the held room' : 'solving'}… `
             + `(budget ${budget} work units)`);
         schedule(pollSolve, SOLVE_POLL_MS);
@@ -1240,6 +1257,7 @@ export function createWasmPlayback({
         const pushedSince = Number.isInteger(sw?.pushes) && Number.isInteger(room?.pushes) && sw.pushes > room.pushes;
         if (!sw || !((sw.queued ?? 0) > 0 || sw.marks?.length || pushedSince)) return false;
         stats.releasedForSwap += 1;
+        tl('release-for-swap', { marks: sw.marks ?? null, queued: sw.queued ?? null });
         log(`[wasm playback] the glue asked for a world swap while level ${room.level} was held — released so it can land`, 'warn');
         const g = goal;
         const keepQueued = queued;
@@ -1424,6 +1442,7 @@ export function createWasmPlayback({
             // ⛓ WASM EQUIPS — the slot selections the tape shipped (`[{t, slot}]`, its own ticks)
             equips: play.equips ?? [], ...solvedBy(play) };
         const heldEnd = done.heldEnd && room !== null;
+        tl('finish', { heldEnd, endLevel: st.level, roomLevel: room?.level ?? null }, st);
         // ⛓ DELIVERY TICK — a LOCATION goal's check fired inside its tape: its AP round trip is outstanding.
         selfCheck = heldEnd && goal?.kind === 'location' && goal.name && typeof delivery()?.checked === 'function'
             ? { location: goal.name, level: room.level, tick: room.shipped.length, since: now(), deliveries: stats.deliveries.length } : null;
@@ -1477,7 +1496,7 @@ export function createWasmPlayback({
         try { checked = d?.checked?.(sc.location) ?? null; } catch { checked = null; }
         const waited = now() - sc.since;
         if (checked === false && waited <= SELF_CHECK_SETTLE_MS) {
-            if (!sc.waiting) { sc.waiting = true; note(`waiting for the check of ${sc.location} to settle`); }
+            if (!sc.waiting) { sc.waiting = true; tl('self-check-wait', { location: sc.location }); note(`waiting for the check of ${sc.location} to settle`); }
             schedule(() => { if (phase === 'held' && goal && selfCheck === sc) solveInRoom(); }, SELF_CHECK_POLL_MS);
             return true;
         }
@@ -1486,6 +1505,7 @@ export function createWasmPlayback({
         const row = { location: sc.location, level: sc.level, tick: sc.tick, settled: checked === true,
             delivered: stats.deliveries.length > sc.deliveries, waitedMs: Math.round(waited) };
         stats.selfChecks.push(row);
+        tl('self-check', { location: sc.location, checked });
         if (checked !== true) {
             row.why = checked === null ? 'the checked set cannot be read' : `not checked within ${SELF_CHECK_SETTLE_MS} ms`;
             log(`[wasm playback] the check of ${sc.location} did not settle (${row.why}) — the goal is solved as it stands; `
@@ -1936,7 +1956,8 @@ export function createWasmPlayback({
                 ceremonies: stats.ceremonies.map((c) => ({ ...c })), dismissed: [...stats.dismissed],
                 deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred],
                 swapPushes: stats.swapPushes.map((r) => ({ ...r })), shipClock: stats.shipClock.map((r) => ({ ...r })),
-                adoptClock: stats.adoptClock.map((r) => ({ ...r })), selfChecks: stats.selfChecks.map((r) => ({ ...r })) };
+                adoptClock: stats.adoptClock.map((r) => ({ ...r })), selfChecks: stats.selfChecks.map((r) => ({ ...r })),
+                timeline: stats.timeline.map((r) => ({ ...r })) };
         },
         /** ⛓ WG — the last arrivals' raw reads (`{seam, status, state}`), for a fixture recorder. */
         get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },

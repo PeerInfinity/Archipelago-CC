@@ -393,7 +393,7 @@ async function main() {
                     // ⛓ DELIVERY TICK — each self-check the next goal waited on, and the deliveries the game already showed
                     selfChecks: st.selfChecks ?? null, deliveryInGame: st.deliveryInGame ?? null, arrivalWatch: st.arrivalWatch ?? null, heldChecks: st.heldChecks, adoptRefused: st.adoptRefused,
                     history: st.history.map((h) => ({ ...h, goal: { name: h.goal?.name ?? null, kind: h.goal?.kind ?? null, level: h.goal?.level ?? null } })),
-                    arrivalReads: e.arrivalReads }));
+                    arrivalReads: e.arrivalReads, timeline: st.timeline ?? null }));
             });
             const solves = await page.evaluate(() => window.__solveLog ?? null);
             // ⛓ WALK IDENTITY — the glue's Restart decisions and the start-hop pushes they made
