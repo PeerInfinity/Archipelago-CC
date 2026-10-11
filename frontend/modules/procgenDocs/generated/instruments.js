@@ -10038,6 +10038,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "includes"
                     ],
+                    "name": "player-hits"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
                     "name": "record"
                 },
                 {
