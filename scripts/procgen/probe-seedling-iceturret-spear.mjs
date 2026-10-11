@@ -24,6 +24,11 @@
  *                          (`presses.SPEAR_HIT_TICKS_UNMODELLED`) lands on it in the game at t39, past its i-frame
  *                          (a dark-shield bump latched `hitByDarkStuff`): the model carries one landing a thrust,
  *                          so that body's rows disagree from t39. Named, not fixed here (fidelity's region).
+ *   c3-l98-spear-l93       PLANNED (D2): sweep leg 745's arrival (L98 from L93, (112,176)) on the same staging
+ *                          with the route's `Health` (`hits_max` 4), solved with `ICE_TURRET_SPEAR_ARM` ON: the
+ *                          kill rung kills the three jellyfish, the spear arm kills the turret from the west pocket,
+ *                          the lock opens and the walk crosses to L99. OFF the same staging refuses with the sweep's
+ *                          words (*"no side of iceturret@104,24 is reachable"*).
  *
  * Writes `seedlingDemo/fixtures/iceturret-spear-witness/<arm>.json` (`--author`: the tape and the model's readings;
  * `--record`: adds the game's stream and body rows). `fidelityIceTurretSpear.test.js` replays them in node.
@@ -54,11 +59,63 @@ const BASE = join(MODULE, 'fixtures', 'killlock-witness', 'killlock-l98-turret.j
 export const ICETURRET_SPEAR_ARMS = Object.freeze([
     Object.freeze({ name: 'c3-d1-l98-spear-west', kind: 'hand', boot: { x: 68, y: 32 }, face: 'right',
         presses: [2, 33], ticks: 60 }),
+    Object.freeze({ name: 'c3-l98-spear-l93', kind: 'plan', boot: { x: 112, y: 176 }, hitsMax: 4,
+        goals: [{ kind: 'reach-exit', exit: { x: 112, y: 112 } }],
+        offRefusal: /reach-exit \(112,112\)->L99 -> kill: no side of iceturret@104,24 is reachable — down: /,
+        endLevel: 99 }),
 ]);
 
-/** The arm's tape, re-derived (deterministic): the base staging with the arm's boot, the spear's slot and its keys. */
+/** The base staging (`stagingFromTape` of the KILLLOCK turret witness's tape) re-pointed at `arm.boot`. */
+export async function armStaging(arm) {
+    const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
+    const { stagingFromTape } = await import(join(MODULE, 'tapeRunner.js'));
+    const base = JSON.parse(readFileSync(BASE, 'utf8')).tape;
+    return stagingFromTape(parseTape({ ...base, boot: { ...base.boot, ...arm.boot },
+        seam: { ...base.seam, hits_max: arm.hitsMax ?? base.seam.hits_max } }));
+}
+
+/**
+ * A planned arm's solve (`twoPassSolve`, the authoring scripts' path) with `ICE_TURRET_SPEAR_ARM` set to `enabled`:
+ * `{staging, solved, refusal}`.
+ */
+export async function armPlan(arm, enabled) {
+    const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
+    const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
+    const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
+    const { withIceTurretSpearArm } = await import(join(MODULE, 'solverBot.js'));
+    const staging = await armStaging(arm);
+    const levelSource = atlasLevelSource();
+    const makeRun = (p) => createRunForStaging({ ...staging, persistence: p }, levelSource);
+    try {
+        const solved = await withIceTurretSpearArm(enabled, () => twoPassSolve({ makeRun,
+            goals: arm.goals.map((g) => JSON.parse(JSON.stringify(g))), name: arm.name, boot: staging.boot,
+            persistence: staging.persistence, log: () => {} }));
+        return { staging, solved, refusal: null };
+    } catch (e) {
+        return { staging, solved: null, refusal: e };
+    }
+}
+
+/**
+ * The arm's tape, re-derived (deterministic). A hand arm: the base staging with the arm's boot, the spear's slot and
+ * its keys. A planned arm: the ON solve's keys and slot selections on the arm's staging (`armPlan`).
+ */
 export async function armTape(arm) {
     const { parseTape, inventorySlotsFor, INVENTORY_ITEM_IDS } = await import(join(MODULE, 'tapeFormat.js'));
+    if (arm.kind === 'plan') {
+        const { buildStagedTape } = await import(join(MODULE, 'botDriverV1.js'));
+        const on = await armPlan(arm, true);
+        if (!on.solved) throw new Error(`${arm.name}: the ON solve refused — ${on.refusal?.message?.split('\n')[0]}`);
+        const staging = { ...on.staging, persistence: on.solved.persistence,
+            equips: [...(on.staging.equips ?? []), ...(on.solved.out.equips ?? [])] };
+        const perTick = on.solved.out.perTick;
+        return parseTape({ ...buildStagedTape({ staging, perTick, name: arm.name }),
+            description: `⛓⛓ SEEDLING HAMMER-PHASE C3 D2 — planned with \`ICE_TURRET_SPEAR_ARM\` ON: the KILLLOCK turret `
+                + `witness's staging (survey step 200) at sweep leg 745's arrival (${arm.boot.x},${arm.boot.y}), hits_max `
+                + `${arm.hitsMax}. The kill rung kills the three jellyfish, the spear arm kills iceturret@104,24 from the `
+                + `west pocket through the wall, the lock opens and the walk crosses to L${arm.endLevel}: ${perTick.length} t. `
+                + 'Authored by scripts/procgen/probe-seedling-iceturret-spear.mjs.' });
+    }
     const base = JSON.parse(readFileSync(BASE, 'utf8')).tape;
     const slot = inventorySlotsFor(base.seam.items).indexOf(INVENTORY_ITEM_IDS.spear);
     if (slot < 0) throw new Error(`${arm.name}: the base staging holds no spear slot`);
@@ -197,6 +254,12 @@ async function main() {
             const again = await author(arm);
             check(`${arm.name}: the committed tape is what this script derives today`,
                 JSON.stringify(again.tape) === JSON.stringify(w.tape), 'byte for byte');
+            if (arm.kind === 'plan') {
+                const off = await armPlan(arm, false);
+                check(`${arm.name}: ICE_TURRET_SPEAR_ARM OFF — the staging REFUSES with the sweep's words`,
+                    off.solved === null && arm.offRefusal.test(off.refusal?.message ?? ''),
+                    (off.refusal?.message ?? 'it solved').split('\n')[0].slice(0, 160));
+            }
         }
         if (!w.game) { check(`${arm.name}: recorded on the game`, false, 'no game readings (run --record)'); continue; }
         const m = modelReadings(w.tape);
@@ -217,6 +280,11 @@ async function main() {
         const jellyBad = bad.filter((b) => b.cls === 'Jellyfish');
         console.log(`INFO: ${arm.name}: jellyfish rows disagreeing: ${jellyBad.length}${jellyBad.length
             ? ` (first t${jellyBad[0].t}: game [${jellyBad[0].game}] model [${jellyBad[0].model}])` : ''}`);
+        if (arm.endLevel !== undefined) {
+            check(`${arm.name}: the game crosses to L${arm.endLevel} with no player hit`,
+                g.at(-1)?.level === arm.endLevel && w.game.status?.hits === 0,
+                `ends ${JSON.stringify(g.at(-1))}, hits ${w.game.status?.hits}`);
+        }
         for (const [id, t] of Object.entries(m.gone)) {
             const gt = ev.gone[classOf(id)]?.shift();
             check(`${arm.name}: ${id} leaves the world on t${t} in the model, and in the game`,
