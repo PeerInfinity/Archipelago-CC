@@ -1,0 +1,31 @@
+{
+ "id": 628,
+ "ok": false,
+ "ms": 566,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 331
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 233
+  }
+ ],
+ "keys": [
+  "ok",
+  "kind",
+  "message",
+  "pass",
+  "passes"
+ ],
+ "kind": "refusal",
+ "message": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128): the re-planned corridor failed too \u2014 solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128) waypoint 2 (72,72): not reached within 400 ticks; stalled at (24,109.74999999999999) v=(-0.30901699437494734,1.9021130325903073) in level 74, aiming at (72,72).",
+ "forcedRung": []
+}
