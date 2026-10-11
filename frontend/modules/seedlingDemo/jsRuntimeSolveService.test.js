@@ -207,7 +207,17 @@ describe('jsRuntimeSolveService — the budget, the retry, and no stale plan', (
     }, 90000);
 
     it(`the BACKSTOP (default ${SOLVE_BACKSTOP_MS} ms): a solve past it is TERMINATED and the goal FAILS BY NAME — never walked, never played`, async () => {
-        const { service, workers } = workerService();
+        // ⛓ DETERMINISTIC — a worker double that says `started` and never answers: the solve is past the backstop on
+        // every box at any solver speed (a real L12 solve stopped outlasting 300 ms once the solver got faster).
+        const workers = [];
+        const service = createWorkerSolveService({ createWorker: () => {
+            const w = { onmessage: null, onerror: null, terminated: false, posted: [],
+                postMessage(m) { w.posted.push(m); if (m.type === 'solve') setTimeout(() => w.onmessage?.({ data: { type: 'started', id: m.id } }), 0); },
+                terminate() { w.terminated = true; } };
+            workers.push(w);
+            return w;
+        } });
+        services.push(service);
         const rt = midRoom({ ...WITNESSES[2], walkTicks: 0, solveService: service, solverBudgetWork: 1e9, solverBackstopMs: 300 });
         expect(rt.playback.solverBackstopMs).toBe(300);
         rt.playback.setSolverWalk(true);
@@ -220,6 +230,7 @@ describe('jsRuntimeSolveService — the budget, the retry, and no stale plan', (
         expect(rt.playback.state).toBe(WALK_STATES.FAILED);
         expect(s).toMatchObject({ solves: 0, declines: 0, played: 0, backstops: 1 });
         expect(rt.playback.reason).toMatch(/the solve exceeded the backstop on this machine \(0\.3 s\) on reach-exit in level 12 \(terminated; the solve's own budget is 1000000000 work units\)/);
+        expect(workers[0].posted.map((m) => m.type)).toEqual(['solve']); // the real request went out, unanswered
         expect(workers[0].terminated).toBe(true);
     }, 60000);
 

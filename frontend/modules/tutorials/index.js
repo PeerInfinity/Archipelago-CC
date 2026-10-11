@@ -77,6 +77,10 @@ export function register(registrationApi) {
 
     registrationApi.registerEventBusSubscriberIntent('settings:changed');
     registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
+    // The step context counts these (tutorialContext.js WATCHED_EVENTS).
+    for (const name of ['apworldEditor:loadRules', 'sphereState:dataLoaded', 'loopState:actionCompleted']) {
+        registrationApi.registerEventBusSubscriberIntent(name);
+    }
     // ctx.loadPreset loads a world the way the Presets panel does; the bus drops
     // a publish from a module that did not declare it.
     registrationApi.registerEventBusPublisher('files:jsonLoaded');

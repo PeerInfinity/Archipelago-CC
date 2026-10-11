@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 82,
+            "count": 84,
             "id": "plan"
         },
         {
             "browser": 74,
-            "count": 119,
+            "count": 121,
             "id": "probe"
         },
         {
@@ -184,7 +184,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 4,
+            "count": 5,
             "id": "seedling"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 408,
+        "blockStyle": 413,
         "browser": 139,
-        "cited": 204,
-        "files": 420,
+        "cited": 209,
+        "files": 425,
         "lineStyle": 12,
-        "withDocblock": 420,
-        "withFlags": 338
+        "withDocblock": 425,
+        "withFlags": 341
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7732,6 +7732,36 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "plan",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-hammer-c2-ghost.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-c2-ghost — ⛓⛓⛓ SEEDLING HAMMER-PHASE C2 D1: THE GHOST SWORD AGAINST A SPINNER, ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-hammer-c2-ghost.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -7815,6 +7845,41 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-l30keylock — ⛓⛓⛓ SEEDLING FIDELITY L30KEYLOCK: L30 → L22 THROUGH `bosslock@64,32`, PAST THE BOBSOLDIER THAT STANDS BESIDE IT.",
             "path": "scripts/procgen/plan-seedling-l30keylock.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "only"
+            ],
+            "file": "plan-seedling-l40button-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-l40button-witness — Seedling fidelity L40BUTTON (wave 12), D3: the solver's own plan for `Level 040 - Totem Part 64,144` from L40's two NORTH arrivals (sweep-4 legs 378 and 381), written as roster tapes for `check-seedling-bot-differential --record` to record on the game (p4f) and for the model to repr…",
+            "path": "scripts/procgen/plan-seedling-l40button-witness.mjs"
         },
         {
             "argvHelpers": [
@@ -10008,6 +10073,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "includes"
                     ],
+                    "name": "player-hits"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
                     "name": "record"
                 },
                 {
@@ -10052,7 +10123,8 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "only",
-                "record"
+                "record",
+                "set"
             ],
             "file": "probe-seedling-cleartag.mjs",
             "flags": [
@@ -10073,6 +10145,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "scan"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "set"
                 }
             ],
             "inheritedFlags": [
@@ -10168,7 +10246,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "host",
@@ -11085,6 +11165,24 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling L37 FALLROCK, ON THE GAME (rules `rules-l37-fallrock-patch`).",
             "path": "scripts/procgen/probe-seedling-l37-fallrock.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l40button.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-l40button — Measure-only (seedling fidelity L40BUTTON, wave 12): WHAT GATES `Totem Part 64,144` FROM L40's NORTH ARRIVALS, and why the solver read it as `wandlock@448,432`.",
+            "path": "scripts/procgen/probe-seedling-l40button.mjs"
         },
         {
             "argvHelpers": [],
@@ -12764,6 +12862,93 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling fidelity SLOTS, D1: **THE SLOT ARRAY IS SESSION STATE, ON THE GAME.** `Inventory.items` is static (`Inventory.as:51`); `addItemsFromSave` (`:291-332`) only appends what the item flags imply and the array lacks, and its two fusions splice; only `Main.clearSave` / `freshSaveForLevelSet` (`Inventory.clearItems…",
             "path": "scripts/procgen/probe-seedling-slot-order.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md",
+                "docs/json/developer/procgen/seedling-solve-progress.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "deadline",
+                "every",
+                "goal",
+                "hook",
+                "out",
+                "repeat",
+                "residue",
+                "tape"
+            ],
+            "file": "probe-seedling-solve-progress.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "compare"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "deadline"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "every"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "goal"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "hook"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "residue"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-solve-progress — Measure-only (SEEDLING HAMMER-PHASE D1): THE SOLVER'S PROGRESS STREAM, without a page.",
+            "path": "scripts/procgen/probe-seedling-solve-progress.mjs"
         },
         {
             "argvHelpers": [
@@ -15551,6 +15736,30 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only (the divergence sweep, planner `seedling-js-planning-2`) — THE LEG LIST: every exit and location leg of the committed Seedling atlas worlds + `seedling_playthrough`, from each region's RESOLVED arrivals, with the inventory the AP route holds there.",
             "path": "scripts/procgen/seedling-divergence-legs.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "seedling",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "import"
+            ],
+            "file": "seedling-solve-progress-hook.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "seedling-solve-progress-hook — a NODE PRELOAD (SEEDLING HAMMER-PHASE D3): every solve in the process runs under a progress hook that never peeks, so any producer or instrument can be shown byte-identical under one without editing it.",
+            "path": "scripts/procgen/seedling-solve-progress-hook.mjs"
         },
         {
             "argvHelpers": [

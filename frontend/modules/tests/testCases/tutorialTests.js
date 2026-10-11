@@ -23,6 +23,7 @@ import {
     CURSOR_CLASS, OUTLINE_CLASS, hideCursor, performAction, setOutline, waitFor,
 } from '../../tutorials/tutorialExecutor.js';
 import { buildContext } from '../../tutorials/tutorialContext.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
 
 const CATEGORY = 'Tutorials';
 const WALK_CATEGORY = 'Tutorial walks';
@@ -31,7 +32,13 @@ const WALK_CATEGORY = 'Tutorial walks';
  * procgen walks generate worlds and play them to the end, and together they
  * outgrew the tutorials batch's budget (81 % of it on 2026-10-10).
  */
-const WALK_CATEGORY_BY_TRACK = Object.freeze({ procgen: 'Tutorial walks: procgen' });
+const WALK_CATEGORY_BY_TRACK = Object.freeze({
+    procgen: 'Tutorial walks: procgen',
+    // 2026-10-10: the tracker walks took the tutorials batch to 88 % of its budget.
+    tracker: 'Tutorial walks: tracker',
+    // The Seedling walks boot the wasm game (WebGPU) — a batch of their own.
+    seedling: 'Tutorial walks: seedling',
+});
 const walkCategory = (tutorial) => WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
 const walkId = (id) => `tutorial-walk-${id}`;
 const MOUNT_TIMEOUT_MS = 10000;
@@ -292,6 +299,7 @@ async function tutorialWalkRow(tc, tutorial) {
     const before = ctx.rulesSource();
     const pipelineSetup = readPipelineSetup();
     const modulesBefore = moduleStates();
+    const loopModeBefore = loopModeActive();
     const ui = await freshPanel(tc, { autoAdvance: false, animateCursor: false, showOutline: false });
     if (!ui) return tc.getOverallResult();
     try {
@@ -329,6 +337,7 @@ async function tutorialWalkRow(tc, tutorial) {
         restoreActiveTabs(tabs);
         restorePipelineSetup(pipelineSetup, tc);
         await restoreModules(modulesBefore, tc);
+        await restoreLoopMode(loopModeBefore, tc);
         if (typeof before === 'string' && before.startsWith('./presets/') && ctx.rulesSource() !== before) {
             try { await ctx.loadRulesPath(before); } catch (e) { tc.log?.(`could not reload ${before}: ${e.message}`); }
         }
@@ -351,6 +360,18 @@ async function restoreModules(before, tc) {
             try { await window.moduleManagerApi.disableModule(id); } catch (e) { tc.log?.(`could not switch ${id} off: ${e.message}`); }
         }
     }
+}
+
+// The Loop-mode tutorial enters Loop mode and leaves it at its end — a walk
+// that stops early leaves it on, and the next row's world plays under it.
+function loopModeActive() {
+    try { return centralRegistry.getPublicFunction('loops', 'isLoopModeActive')?.() === true; } catch { return false; }
+}
+
+async function restoreLoopMode(before, tc) {
+    if (before || !loopModeActive()) return;
+    eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
+    if (!await waitFor(() => !loopModeActive(), 5000)) tc.log?.('could not leave Loop mode');
 }
 
 // The Procgen Pipeline auto-saves its setup, and the procgen tutorials change

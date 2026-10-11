@@ -7,7 +7,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { REPO, renderAll, renderGuides } from '../../../scripts/tutorials/generate-tutorial-docs.mjs';
-import { FEATURES, NOT_COVERED_YET, NO_TUTORIAL } from './content/coverage.js';
+import { FEATURES, NOT_COVERED_YET, NO_TUTORIAL, PLANNED_PANELS } from './content/coverage.js';
 import { TUTORIALS } from './content/index.js';
 import { generatedMarker, tutorialMarkdown } from './tutorialMarkdown.js';
 import { blocksFor, panelSteps, panelsCovered, validateTutorial } from './tutorialShape.js';
@@ -312,9 +312,14 @@ describe('coverage: every panel is in a tutorial, planned, or deliberately left 
         expect(problems).toEqual([]);
     });
 
-    it('the lists and the tutorials name only real panels', () => {
-        const ghosts = [...Object.keys(NOT_COVERED_YET), ...Object.keys(NO_TUTORIAL), ...covered].filter((t) => !types.has(t));
+    it('the lists and the tutorials name only real panels (or a PLANNED one)', () => {
+        const ghosts = [...Object.keys(NOT_COVERED_YET), ...Object.keys(NO_TUTORIAL), ...covered]
+            .filter((t) => !types.has(t) && !Object.prototype.hasOwnProperty.call(PLANNED_PANELS, t));
         expect(ghosts).toEqual([]);
+    });
+
+    it('a PLANNED panel is not built yet — once it is registered, it leaves PLANNED_PANELS', () => {
+        expect(Object.keys(PLANNED_PANELS).filter((t) => types.has(t))).toEqual([]);
     });
 
     it('each non-panel feature names a tutorial that exists, or the planned one', () => {

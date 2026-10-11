@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    TEST_BATCHES, assertRowOverrides, batchOfTest, categoryInBatch, getDefaultBatchName,
+    TEST_BATCHES, assertRowOverrides, batchNeedsWebgpu, batchOfTest, categoryInBatch, getDefaultBatchName,
     listBatchNames, listManualBatches, listOnPushBatches, testInBatch,
 } from './testBatches.js';
 
@@ -86,6 +86,18 @@ describe('testBatches', () => {
         expect(categoryInBatch('Tutorial walks: procgen', 'fast')).toBe(false);
     });
 
+    it('tutorials-seedling claims the Seedling walk rows and asks for WebGPU (2026-10-11)', () => {
+        expect(categoryInBatch('Tutorial walks: seedling', 'tutorials-seedling')).toBe(true);
+        expect(categoryInBatch('Tutorial walks: seedling', 'tutorials')).toBe(false);
+        expect(batchNeedsWebgpu('tutorials-seedling')).toBe(true);
+    });
+
+    it('tutorials-tracker claims the tracker walk rows (split from tutorials, 2026-10-10)', () => {
+        expect(categoryInBatch('Tutorial walks: tracker', 'tutorials-tracker')).toBe(true);
+        expect(categoryInBatch('Tutorial walks: tracker', 'tutorials')).toBe(false);
+        expect(categoryInBatch('Tutorial walks: tracker', 'fast')).toBe(false);
+    });
+
     it('tutorials claims the Tutorial panel rows and the walk rows, and fast no longer does', () => {
         for (const c of ['Tutorials', 'Tutorial walks']) {
             expect(categoryInBatch(c, 'tutorials'), c).toBe(true);
@@ -95,7 +107,7 @@ describe('testBatches', () => {
 
     describe('manual vs on push', () => {
         it('the user\'s manual batches are manual (rulings 2026-09-27, 2026-10-09, 2026-10-10)', () => {
-            expect(listManualBatches()).toEqual(expect.arrayContaining(['bot-walks', 'noiz2sa', 'runner', 'tutorials', 'tutorials-procgen']));
+            expect(listManualBatches()).toEqual(expect.arrayContaining(['bot-walks', 'noiz2sa', 'runner', 'tutorials', 'tutorials-procgen', 'tutorials-tracker', 'tutorials-seedling']));
         });
 
         it('on push = every batch not marked manual, the default among them', () => {

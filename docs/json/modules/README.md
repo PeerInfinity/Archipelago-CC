@@ -22,14 +22,12 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - [Dungeons](./dungeons.md)
 - [Helpers](./helpers.md)
 - [Game State Panel](./gameStatePanel.md)
-- [Progress Bar Panel](./progressBarPanel.md)
 - [Spoiler Checklist](./spoilerChecklist.md)
 
 ## Game Mode Panels
 
 - [Menu Panel](./menuPanel.md) (`menuPanel`) — the start region's substrate: one button per exit, a Restart that works outside loop mode, and the *skip the menu* setting.
 - [Discovery Panel](./discoveryPanel.md)
-- [Meta Game Panel](./metaGamePanel.md)
 - [Timer Panel](./timerPanel.md) *(disabled)*
 
 ## Loop Mode Modules
@@ -42,7 +40,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 
 - **APCalc** (`apcalc`) *(disabled)* — calculator-themed puzzle game for Archipelago (enabled in the apcalc launch mode).
 - **APCalc Generator** (`apcalcGenerator`) *(disabled)* — generates APCalc puzzle data with configurable parameters.
-- **JtA panel cluster** *(all disabled except `jtaQueueEngine`; superseded for substrate use by `jtaSubstrateWrapper`)*: `jtaGameDataPanel` (view/control JtA game data), `jtaActionQueue` (queue and execute JtA actions), `jtaQueueEngine` (headless queue execution strategy and predictions), `jtaArchipelago` (bridges JtA game events to AP checks/items), `jtaCostDebugger` (step-through debugger for JtA cost generation).
+- **JtA panel cluster** *(all disabled except `jtaQueueEngine`; superseded for substrate use by `jtaSubstrateWrapper`)*: `jtaQueueEngine` (headless queue execution strategy and predictions), `jtaArchipelago` (bridges JtA game events to AP checks/items). Its three panels are under [Deprecated Panels](#deprecated-panels).
 - [Proof Queue](./proofQueue.md) *(disabled)*
 - [Proof Graph](./proofGraph.md) *(disabled)*
 - [Vibe Coding Simulator](./vibeCodingSim.md) *(disabled)*
@@ -59,7 +57,6 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - [Tutorial](../user/modules/tutorials.md) (`tutorials`) — step-by-step tutorials shown one step at a time and performed on request (Do it / Play), with an animated cursor and an outline on the next control; starting one splits the panel's column, Merge restores it. The tutorials are data (`content/`), and the user guides they replace are generated from it (`scripts/tutorials/generate-tutorial-docs.mjs`). Code: `frontend/modules/tutorials/`.
 - [Editor CodeMirror6](./editorCodeMirror6.md)
 - [Editor](./editor.md) *(disabled)*
-- **Rule Converter** (`ruleConverter`) *(disabled)* — converts between Python code and JSON rule format.
 
 ## Analysis Panels
 
@@ -86,7 +83,6 @@ Documented in depth in the [procgen developer docs](../developer/procgen/README.
 - **JtA Substrate Wrapper** (`jtaSubstrateWrapper`) — Journey to Ascension as a zone-based substrate. See [JtA Substrate](../developer/procgen/jta.md).
 - **Noiz2sa** (`noiz2saSubstrate`) — the BulletML shoot-'em-up substrate: a region is a segment of a stage. See [Noiz2sa Substrate](../developer/procgen/noiz2sa.md).
 - **Idle Loops Substrate Wrapper** (`omsiSubstrateWrapper`) — Idle Loops (omsi-loops) as a loop-mode substrate. See [Omsi Substrate (Idle Loops)](../developer/procgen/omsi.md).
-- **Maze Game Data Panel** (`mazeGameDataPanel`) — views and edits A-Mazing-Idle game data (points, biome, mazes, saves).
 
 ## Procgen Infrastructure Panels
 
@@ -116,8 +112,6 @@ Documented in depth in the [procgen developer docs](../developer/procgen/README.
 - [GameState](./gameState.md)
 - [Sphere State](./sphereState.md)
 - [Timer](./timer.md)
-- [ProgressBar](./progressBar.md)
-- [MetaGame](./metaGame.md)
 - [Editor Core](./editorCore.md)
 - [IframeAdapter](./iframeAdapter.md)
 - [WindowAdapter](./windowAdapter.md)
@@ -128,11 +122,20 @@ Documented in depth in the [procgen developer docs](../developer/procgen/README.
 - [Shared](./shared.md)
 - [Window Base](./window-base.md)
 
+## Deprecated Panels
+
+Kept in the codebase but deprecated (⚖ 2026-10-11): disabled in every launch mode's module config unless a mode says otherwise, given no tutorial (`frontend/modules/tutorials/content/coverage.js` `NO_TUTORIAL`), and not maintained.
+
+- [Meta Game Panel](./metaGamePanel.md) *(disabled)* — loads a scripted scenario (a MetaGame configuration) and edits its JSON; an early draft of the procgen idea. Its service module is [MetaGame](./metaGame.md).
+- [Progress Bar Panel](./progressBarPanel.md) *(disabled)* — hosts the progress bars Meta Game scenarios create. Its service module is [ProgressBar](./progressBar.md).
+- **JtA Game Data** (`jtaGameDataPanel`), **JtA Action Queue** (`jtaActionQueue`) and **JtA Cost Debugger** (`jtaCostDebugger`) *(disabled)* — the non-procgen Journey to Ascension panels (view/control JtA game data; queue and execute JtA actions; step-through debugger for JtA cost generation), superseded by `jtaSubstrateWrapper`.
+- **Rule Converter** (`ruleConverter`) *(disabled)* — converts between Python code and JSON rule format; very out of date.
+
 ## Submodules and Non-Module Directories
 
 These live under `frontend/modules/` but are not frontend modules in the registration sense:
 
 - **`shared/`** — git submodule of cross-module utilities and the procgen primitives ([Shared](./shared.md)); `git log`/`blame`/commits happen inside the submodule.
 - **`textAdventureEngine/`** — git submodule holding the Archipelago-naive text-adventure engine. See [Text Adventure Substrate](../developer/procgen/text-adventure.md).
-- **`journey-to-ascension/`**, **`jta-randomizer/`**, **`a-mazing-idle-remote/`** — bundled game builds/forks consumed by their wrapper modules, not modules themselves.
+- **`journey-to-ascension/`**, **`jta-randomizer/`** — bundled game builds/forks consumed by their wrapper modules, not modules themselves.
 - **`testModule/`** — a minimal dynamically-loaded panel used as a test fixture.

@@ -289,6 +289,8 @@ case 'max': {
 
 ### Example 5: `setting_value` Pattern Detection (commit 52fe9b0a)
 
+> **Historical.** `setting_value` (and its Rule Builder forms `SettingValue` / `AST_setting_value`) is retired (rules S7, 2026-10): the same pattern now emits `option_value` (an option) or `world_attribute` (a top-level world attribute), and the schema refuses the old node. The example is kept for the technique.
+
 **Problem:** Helpers accessing world options like `state.multiworld.worlds[player].options.bombless_start` produced verbose, deeply nested attribute chains in the exported rules that the frontend couldn't evaluate.
 
 **Python pattern:**

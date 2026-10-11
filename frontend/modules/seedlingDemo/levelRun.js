@@ -111,6 +111,8 @@ import {
     GHOSTSWORD_PRESS, GHOST_PRESS_ARMS, GHOST_SWORD_DAMAGE, GHOST_SWORD_REACH,
     ghostSlashRect, ghostSwingRefusal, slashEndTicksFor,
 } from './ghostSword.js';
+// ⛓⛓⛓ hammer-phase C2: the spinner forecasts carry a ghost press (behind `GHOST_SPINNER_PRESS`, ON by default).
+import { ghostSpinnerPressFor } from './ghostSpinnerPress.js';
 import {
     createBossTotem, bossTotemClampY, bossTotemSolidRect, renderBossTotem, stepBossTotem,
     wandFadeFreezeTicks, wandFadeGateOpen, WAND_PICKUP,
@@ -462,6 +464,7 @@ export const LEDGER_KIND_NAMES = Object.freeze([
     'spitEvents',
     'staticBodyDeaths',
     'witchEvents',
+    'unreadRoomWrites',
 ]);
 
 /**
@@ -946,6 +949,63 @@ export function createLevelRun({
         activatorStates.delete(n);
     };
     /**
+     * ⛓⛓⛓ SEEDLING FIDELITY CROSSROOM D2 — **A CROSS-ROOM `ButtonRoom` WRITE INTO A
+     * LEVEL NOTHING READS IS A LEDGER ENTRY, NEVER A PERMISSION** (the spinner's
+     * out-of-band law, trap 120, met from a third side).
+     *
+     * `ButtonRoom.as:93` writes `levelPersistence[room * 30 + tset]` whatever
+     * `room` holds. On the delivered set L37 has no `fallrock` (the rules arc's
+     * `l37-fallrock-removed` patch), so L38's arrival button `buttonroom@144,288`
+     * writes `{37,4}` into a level where no entity carries tag 4: the game's save
+     * holds the flag (`persistence_cleared`, p4f, `probe-seedling-cross-room-button`)
+     * and nobody reads it. Banking it handed L37's build a clear "which no entity
+     * in this level reads" — survey step 59 and sweep leg 366 refused on exactly
+     * that text.
+     *
+     * ⇒ such a write is REPORTED (`unreadRoomWrites`, the `roomWrites` row marked
+     * `unread`) and NOT banked; and a STAGED clear with the same provenance (the
+     * live table a later solve declares after the press) is left out of the build
+     * the same way (`clearedForBuild`) and reported too. The provenance is the
+     * WRITER, never the slot: a map-placed `buttonroom` whose `room`/`tset` name
+     * exactly `{n, tag}` with `flip = 1` (`crossRoomWritersOnto`). A clear with no
+     * such writer stays the build's derivation-error throw.
+     *
+     * ⚠ "Reads" is "an entity of the level RECORD carries the tag" (`tagOf`) — the
+     * raw record, so a level that has a carrier keeps the banked path unchanged
+     * (every vanilla target does: L37's fallrock, L39's wandlock, L63's and L62's
+     * lightpoles), whatever the build later makes of it.
+     */
+    const levelCarriesTag = (n, tag) => (levelSource(n).entities ?? [])
+        .some((e) => tagOf(e.type, e.attrs) === tag);
+    let crossRoomWriterIndex = null;
+    const crossRoomWritersOnto = (n, tag) => {
+        if (crossRoomWriterIndex === null) {
+            crossRoomWriterIndex = new Map();
+            // The levels are numbered from 0 with no gap (116 in the extract); the
+            // source throws past the last one.
+            for (let m = 0; ; m += 1) {
+                let rec;
+                try { rec = levelSource(m); } catch { break; }
+                for (const e of rec?.entities ?? []) {
+                    if (e.type !== 'buttonroom') continue;
+                    const room = Number(e.attrs?.room ?? -1);
+                    if (!(Number.isInteger(room) && room >= 0)) continue;
+                    if (Number(e.attrs?.flip ?? 0) === 0) continue;
+                    const key = `${room}:${Number(e.attrs?.tset ?? 0)}`;
+                    if (!crossRoomWriterIndex.has(key)) crossRoomWriterIndex.set(key, []);
+                    crossRoomWriterIndex.get(key).push(`L${m} buttonroom@${e.x},${e.y}`);
+                }
+            }
+        }
+        return crossRoomWriterIndex.get(`${n}:${tag}`) ?? [];
+    };
+    /** `[{level, tag, by, from, t, staged}]` — the reported unread writes (D2). */
+    const unreadRoomWrites = [];
+    const reportUnreadStaged = (n, tag, writers) => {
+        if (unreadRoomWrites.some((u) => u.level === n && u.tag === tag)) return;
+        unreadRoomWrites.push({ level: n, tag, by: writers.join(', '), from: null, t: null, staged: true });
+    };
+    /**
      * ⛓⛓⛓ R7 slice 6e: THE DESPAWNED BODIES, BY LEVEL — and they are removed
      * from the level RECORD rather than from any one list the world derives.
      *
@@ -981,6 +1041,11 @@ export function createLevelRun({
      */
     const staticRemovedTags = new Map();
     const clearedForBuild = (n, cleared) => {
+        // ⛓ CROSSROOM D2: a clear no entity of the record carries, whose writer is a
+        // cross-room ButtonRoom, is the game's unread save slot — reported, not built.
+        const unread = cleared.filter((t) => !levelCarriesTag(n, t) && crossRoomWritersOnto(n, t).length > 0);
+        for (const t of unread) reportUnreadStaged(n, t, crossRoomWritersOnto(n, t));
+        if (unread.length > 0) cleared = cleared.filter((t) => !unread.includes(t));
         const gone = staticRemovedTags.get(n);
         if (!gone || gone.size === 0) return cleared;
         const rec = recordFor(n);
@@ -12463,13 +12528,26 @@ export function createLevelRun({
                 // write the game makes and the ledger's "cleared" list does
                 // NOT contain. Banking it as a clear would put an entry in
                 // an exact set that the game never reports.
+                // ⛓ CROSSROOM D2: a cross-room clear into a level with no carrier of
+                // the tag is the game's unread save slot — reported, never banked.
+                const unreadWrite = (w) => w.level !== null && w.value === false
+                    && !levelCarriesTag(w.level, w.tag);
                 for (const w of ev.writes) {
                     const at = w.level === null ? level : w.level;
+                    const unread = unreadWrite(w);
                     roomWrites.push({
                         id: ev.id, from: level, level: at, tag: w.tag,
                         value: w.value, which: w.which, t: ticksCompleted,
+                        ...(unread ? { unread: true } : {}),
                     });
                     if (w.value !== false) continue;
+                    if (unread) {
+                        if (!unreadRoomWrites.some((u) => u.level === at && u.tag === w.tag)) {
+                            unreadRoomWrites.push({ level: at, tag: w.tag, by: ev.id, from: level,
+                                t: ticksCompleted, staged: false });
+                        }
+                        continue;
+                    }
                     if (!pendingEarnedClears.has(at)) pendingEarnedClears.set(at, new Set());
                     pendingEarnedClears.get(at).add(w.tag);
                 }
@@ -12482,7 +12560,7 @@ export function createLevelRun({
                 // has no such constraint, and holding it back would leave a
                 // memoised world that the game has already invalidated.
                 for (const w of ev.writes) {
-                    if (w.level === null || w.value !== false) continue;
+                    if (w.level === null || w.value !== false || unreadWrite(w)) continue;
                     applyEarnedClears(w.level);
                 }
                 continue;
@@ -14366,24 +14444,33 @@ export function createLevelRun({
      * slashReachFor(scale)`, the line of sight (the run THROWS there; a forecast reports it and applies nothing), then
      * `hitSpinner`. Mutates `st.byId` with each hit body and pushes one row per test the rect reached to `tests`.
      *
+     * ⛓⛓⛓ hammer-phase C2 — A GHOST THRUST, under `GHOST_SPINNER_PRESS`: `applyThrust`'s ghost arm, in its order — the
+     * 24 x 48 rect at scale 1 (`ghostSlashRect`), reach 24, NO line (`|| hasGhostSword`), and `hitSpinner` with the
+     * ghost's `pressHitDamage` / `pressHitType` (2, "Spear"). OFF this is never asked with a ghost thrust (the callers
+     * fire `sword` thrusts only), so every sword test is byte-identical.
+     *
      * @returns {?{t, id, at}} the first blocked line of THIS call, or null
      */
     const forecastSwordTest = (st, th, t, from, { own, damage, frozen, weapon }, tests) => {
         let blocked = null;
+        const ghost = ghostSpinnerPressFor(th.weapon);
         const scale = th.scale ?? SLASH_SCALE_NORMAL;
-        const rect = slashRect(from.x, from.y, th.direction, scale);
-        const reachLimit = slashReachFor(scale);
+        const rect = ghost ? ghostSlashRect(from.x, from.y, th.direction) : slashRect(from.x, from.y, th.direction, scale);
+        const reachLimit = ghost ? GHOST_SWORD_REACH : slashReachFor(scale);
         for (const sp of st.byId.values()) {
             if (sp.removed) continue;
             const body = spinnerRect(sp);
             if (!rectsOverlap(rect, body)) continue;
             const reach = distanceRectPoint(from.x, from.y, body);
+            // ⛓ C2: a ghost swing's reach cut is the WHOLE collection's, before the arms (`presses[].outOfReach`), so the
+            // run writes no `spinnerPressHits` row for it — and nor does its forecast
+            if (ghost && reach > reachLimit) continue;
             if (reach > reachLimit) {
                 tests.push({ t, id: sp.id, own, landed: false, killed: false, reach, hits: sp.hits,
                     hitsTimer: sp.hitsTimer, why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}` });
                 continue;
             }
-            const blocker = collideLineSolid(from.x, from.y, sp.x, sp.y);
+            const blocker = ghost ? null : collideLineSolid(from.x, from.y, sp.x, sp.y);
             if (blocker) {
                 blocked = blocked ?? { t, id: sp.id, at: blocker.at };
                 tests.push({ t, id: sp.id, own, landed: false, killed: false, reach, hits: sp.hits,
@@ -14391,8 +14478,9 @@ export function createLevelRun({
                 continue;
             }
             const before = sp;
-            const after = hitSpinner(sp, { force: SWORD_FORCE, from: { x: from.x, y: from.y }, damage,
-                t: weapon === 'spear' ? 'Spear' : 'Sword', frozen });
+            const after = hitSpinner(sp, { force: SWORD_FORCE, from: { x: from.x, y: from.y },
+                damage: ghost ? pressHitDamage(th.weapon) : damage,
+                t: ghost ? pressHitType(th.weapon) : (weapon === 'spear' ? 'Spear' : 'Sword'), frozen });
             st.byId.set(sp.id, after);
             const landed = after.hits !== before.hits;
             tests.push({ t, id: sp.id, own, landed, killed: after.destroy && !before.destroy, reach,
@@ -14636,6 +14724,8 @@ export function createLevelRun({
     const staticBodyDeathsNow = () => staticBodyDeaths.map((d) => ({ ...d }));
     /** ⛓ ENCOUNTERS D3: `run.ledger('witchEvents')` — a copy of the Witch's rows. */
     const witchEventsNow = () => witchLedger.map((r) => ({ ...r, ...(r.flag ? { flag: { ...r.flag } } : {}) }));
+    /** ⛓ CROSSROOM D2: `run.ledger('unreadRoomWrites')` — the cross-room writes no entity of their level reads. */
+    const unreadRoomWritesNow = () => unreadRoomWrites.map((u) => ({ ...u }));
     const PROGRESS_FIELDS = Object.freeze({
         inventory: inventoryNow,
         keys: keysNow,
@@ -14686,6 +14776,7 @@ export function createLevelRun({
         spitEvents: spitEventsNow,
         staticBodyDeaths: staticBodyDeathsNow,
         witchEvents: witchEventsNow,
+        unreadRoomWrites: unreadRoomWritesNow,
     });
 
     return {
@@ -15124,7 +15215,8 @@ export function createLevelRun({
             const rows = [];
             const bodies = [];
             const fire = (th, t) => {
-                if (th.weapon !== 'sword') return;
+                // ⛓ hammer-phase C2: a ghost thrust tests too, under `GHOST_SPINNER_PRESS` (ON by default; OFF: the sword's only)
+                if (th.weapon !== 'sword' && !ghostSpinnerPressFor(th.weapon)) return;
                 // ⚠ a test of a press ALREADY IN FLIGHT (the run's own window) is reported, never this press's
                 const own = thrust !== null && th.pressTick === pressAt;
                 const from = pointAt(t);
@@ -15228,7 +15320,8 @@ export function createLevelRun({
                             const fired = swordWindowStep(win, t);
                             win = fired.window;
                             for (const th of fired.fires) {
-                                if (th.weapon !== 'sword') continue;
+                                // ⛓ hammer-phase C2: and a ghost thrust, under `GHOST_SPINNER_PRESS`
+                                if (th.weapon !== 'sword' && !ghostSpinnerPressFor(th.weapon)) continue;
                                 if (!point || !Number.isFinite(point.x) || !Number.isFinite(point.y)) {
                                     throw new Error('levelRun.spinnerFightForecast: no player position for the hit '
                                         + `test at tick ${t} — a cursor with a window in flight reads the point.`);
@@ -15248,7 +15341,11 @@ export function createLevelRun({
                             // releases after the press (`slashEnd` is below the press in `Player.update`)
                             let endsAt = slash.endsAt !== null && slash.endsAt <= t - 1 ? null : slash.endsAt;
                             let state = r.state;
-                            if (opens) endsAt = t + SLASH_ANIM_TICKS[state.anim];
+                            // ⛓ hammer-phase C2: a ghost swing releases on its own clock (`slashEndTicksFor`: 7 / 6)
+                            if (opens) {
+                                endsAt = t + (ghostSpinnerPressFor(weapon) ? slashEndTicksFor(state.anim, weapon)
+                                    : SLASH_ANIM_TICKS[state.anim]);
+                            }
                             else if (endsAt !== null && t >= endsAt) {
                                 state = slashSet(state, { pressed: false, ...gate }).state;
                                 endsAt = null;
@@ -16214,6 +16311,8 @@ export function createLevelRun({
         get staticBodyDeaths() { return staticBodyDeathsNow(); },
         /** ⛓ ENCOUNTERS D3: the Witch's encounter rows — see `witchEventsNow`. */
         get witchEvents() { return witchEventsNow(); },
+        /** ⛓ CROSSROOM D2: the unread cross-room writes — see `unreadRoomWrites`. */
+        get unreadRoomWrites() { return unreadRoomWritesNow(); },
         /**
          * ⛓⛓⛓ R5 SLICE 22 — THE FREEZE LEDGER, AND IT IS THE PRICE OF THE
          * KILL RATHER THAN AN ACCIDENT.

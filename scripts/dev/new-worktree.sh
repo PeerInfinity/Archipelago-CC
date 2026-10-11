@@ -26,10 +26,11 @@ PORT_STEP=10
 HOOKS_PATH="scripts/git-hooks"
 # Step 6. The ladder is ASKED, never re-spelled here: repoPython.js is its one spelling.
 REPO_PYTHON="scripts/procgen/repoPython.js"
-# A key of PRESETS in scripts/setup/update_host_settings.py. full, not minimal: the
-# primary's host.yaml json_tools equals it exactly, and a preset regenerated under
-# other settings differs from the committed one (plan §19.1 rung D).
-HOST_PRESET="full-spoilers"
+# A key of PRESETS in scripts/setup/update_host_settings.py: the one the committed
+# presets were generated under (.github/workflows/generate-presets.yml runs it), so a
+# preset regenerated here matches the committed one. Not full-spoilers: its
+# extend_sphere_log_to_all_locations rewrites the sphere logs of a regenerated preset.
+HOST_PRESET="minimal-spoilers"
 # The guide's step 3, verbatim (docs/json/developer/getting-started.md); 'Players' is
 # settings.py's generator.player_files_path default, which Generate.py scans.
 TEMPLATES_PY="from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"

@@ -40,6 +40,9 @@ Click the +/- toggle at the top to expand the control panel:
 - **Re-layout** — Recalculate node positions using the layout algorithm
 - **Export Positions** — Download current node positions as a JSON file
 
+### Go to (instead of clicking a node)
+A folded section under the main controls. Type or choose a **Region** or a **Location** by name: it does exactly what clicking that node does (the Region Click Behavior options below apply), and centres the view on it. The lists hold the regions the graph shows and every location in them, drawn as a node right now or not. Useful when a node is hard to find or click, or from the keyboard.
+
 ### Location Visibility
 - **Always show/hide locations** — Override zoom-based location visibility
 - **Max location nodes** — Limit the number of location nodes rendered (0 = unlimited)

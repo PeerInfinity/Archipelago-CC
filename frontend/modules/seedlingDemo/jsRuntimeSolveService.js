@@ -21,6 +21,17 @@
  *                one); `passes` one row each. A
  *                budget expiry plays a provisional PLAN instead of declining.
  *
+ * ⛓ SOLVE PROGRESS — `subscribeProgress(listener)` (returns the unsubscribe):
+ * while a listener exists, each solve STARTED asks its worker for the solver's
+ * progress stream (`progress: true` on the solve's ENVELOPE — the request
+ * itself is unchanged, so the plan is too), and every `solve-progress` the
+ * worker posts reaches each listener as `listener({solveId, snapshot, final})`
+ * — but ONLY for the solve in flight: a message of a cancelled or superseded
+ * solve (any id but `current`'s) is dropped, as `pass` and `result` are. A
+ * solve in flight cannot be told to start or stop (its worker is busy until it
+ * answers), so a subscription opened mid-solve takes effect at the next solve,
+ * and one closed mid-solve drops the rest of that solve's stream here.
+ *
  * One solve is in flight at a time (the solver keeps one). The room records
  * are posted once per worker, by id. A worker that errors (a module that
  * fails to load) settles the solve in flight as a refusal NAMING the error,
@@ -34,6 +45,7 @@
 
 import { killLockBodiesStamp } from './killLockBodies.js';
 import { contactFidelityStamp } from './contactFidelity.js';
+import { SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
 
 export const SOLVE_WORKER_URL = new URL('./jsRuntimeSolveWorker.js', import.meta.url);
 
@@ -54,7 +66,9 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
     const sourceIds = new WeakMap();
     /** source ids the CURRENT worker holds. */
     let sent = new Set();
-    const stats = { workers: 0, solves: 0, terminated: 0, errors: 0 };
+    const stats = { workers: 0, solves: 0, terminated: 0, errors: 0, progress: 0, progressDropped: 0 };
+    /** ⛓ SOLVE PROGRESS — the listeners; a solve asks for the stream only while this is non-empty. */
+    const progressListeners = new Set();
 
     function drop() {
         if (!worker) return;
@@ -77,7 +91,20 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
         w.onmessage = (event) => {
             if (w !== worker) return;
             const msg = event.data;
-            if (!current || msg?.id !== current.id) return;
+            if (!current || msg?.id !== current.id) {
+                // ⛓ SOLVE PROGRESS — a stale solve's stream (cancelled, superseded, already answered) is dropped.
+                if (msg?.type === SOLVE_PROGRESS_MESSAGE) stats.progressDropped += 1;
+                return;
+            }
+            if (msg.type === SOLVE_PROGRESS_MESSAGE) {
+                if (progressListeners.size === 0) { stats.progressDropped += 1; return; }
+                stats.progress += 1;
+                const note = { solveId: msg.id, snapshot: msg.snapshot, final: msg.final === true };
+                for (const fn of [...progressListeners]) {
+                    try { fn(note); } catch { /* a view's bug is not the solve's */ }
+                }
+                return;
+            }
             if (msg.type === 'started') { current.started = true; current.startedAt = clock(); }
             else if (msg.type === 'pass') {
                 // ⛓ ANYTIME — the best answer so far: what an expiry plays (a plan) or says (a refusal).
@@ -144,6 +171,8 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             if (contact) tape.contactFidelity = contact;
             const id = sourceIdOf(source?.records);
             const msg = { type: 'solve', id: handle.id, request: { ...tape, source: { id, ...(sent.has(id) ? {} : { records: source?.records ?? null }) } } };
+            // ⛓ SOLVE PROGRESS — on the ENVELOPE, and only while someone listens (absent = today's message exactly).
+            if (progressListeners.size > 0) msg.progress = true;
             sent.add(id);
             stats.solves += 1;
             try {
@@ -154,6 +183,17 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             }
             return handle;
         },
-        dispose() { if (current) current.cancel(); drop(); },
+        /**
+         * ⛓ SOLVE PROGRESS — listen to the solver's progress stream (`{solveId, snapshot, final}`); returns the
+         * unsubscribe. The id of the solve in flight is `currentSolveId` (null when none).
+         */
+        subscribeProgress(listener) {
+            if (typeof listener !== 'function') throw new Error('subscribeProgress: listener must be a function');
+            progressListeners.add(listener);
+            return () => { progressListeners.delete(listener); };
+        },
+        get progressSubscribed() { return progressListeners.size > 0; },
+        get currentSolveId() { return current && !current.settled ? current.id : null; },
+        dispose() { if (current) current.cancel(); drop(); progressListeners.clear(); },
     };
 }

@@ -8,7 +8,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/metaGamePanel.md',
   icon: '🎯',
   column: 2, // Middle column,
-  category: 'Game Mode Panels',
+  category: 'Deprecated Panels',
   description: 'Loads a scripted scenario from a list, lets you edit and apply its JSON settings, or clears it.',
   requires: ['metaGame'],
 };

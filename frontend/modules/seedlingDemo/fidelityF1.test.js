@@ -51,6 +51,7 @@ import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 // The JS arc's modules, imported read-only: the staging and the arrival goal.
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { arrivalSolverGoal } from './wasmArrival.js';
+import { withContactFidelity } from './contactFidelity.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ORACLE = JSON.parse(readFileSync(join(HERE, 'fixtures', 'f1-bodies-oracle.json'), 'utf8'));
@@ -184,8 +185,22 @@ describe('F1 D2 — L5\'s open-lock arrival declines by what the hold measured, 
         expect(run.playerHits).toEqual([]);
     });
 
-    it('⛓⛓ lock OPEN: the arrival declines with BODY_OUT_OF_LANE, and never with the false "ALREADY OPEN"', () => {
-        const { run, err } = arrive([{ level: 5, tag: 0 }]);
+    // ⚖ wave-12 harvest (user, 2026-10-11: "Accept; witness live"): with `baitForecast` ON (the default since then) the
+    // BAIT rung refuses every bob@48,80 stance on the forecast (its one preview drowns), so the ladder reaches its DETOUR
+    // rung, which plans a 90-tick corridor round the bob with zero hits. Not yet game-witnessed (queued); the decline
+    // below is the `baitForecast` OFF control and keeps this row's point — never the false "ALREADY OPEN".
+    it('⛓⛓ lock OPEN (baitForecast ON): the arrival DETOURS round bob@48,80 — 90 ticks, zero hits', () => {
+        const { run, out, err } = arrive([{ level: 5, tag: 0 }]);
+        expect(err).toBeUndefined();
+        expect(out.perTick.length).toBe(90);
+        expect(run.playerHits).toEqual([]);
+        expect(out.trace.rows[0].strategy.verb).toBe('detour');
+        expect(out.trace.rows[0].rejected.find((r) => r.option === 'bait').why)
+            .toMatch(/^no bait stance for bob@48,80 survives the chaser forecast/);
+    }, 300_000);
+
+    it('⛓⛓ lock OPEN, baitForecast OFF: the arrival declines with BODY_OUT_OF_LANE, and never with the false "ALREADY OPEN"', () => {
+        const { run, err } = withContactFidelity({ baitForecast: false }, () => arrive([{ level: 5, tag: 0 }]));
         expect(err?.name).toBe('BotDriverV2Error');
         expect(err.message).not.toMatch(/ALREADY OPEN/);
         expect(err.message).toMatch(/kill \(bob@16,80\): held button@48,48 for the whole bound/);

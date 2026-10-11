@@ -26,7 +26,7 @@ export const moduleInfo = {
     componentType: 'jtaCostDebuggerPanel',
     icon: '🪙',
     column: 2,
-    category: 'Non-procgen Games',
+    category: 'Deprecated Panels',
     description: 'Generate Journey to Ascension task costs by simulated play, inspect each energy reset, then verify and apply.',
     requires: ['jtaGameDataPanel'],
 };

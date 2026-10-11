@@ -3,8 +3,10 @@ import {
 } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import {
-  getDispatcher, getModuleEventBus, setActivePanelInstance, getSeedlingRegionGlue,
+  getDispatcher, getModuleEventBus, setActivePanelInstance, getSeedlingRegionGlue, getSeedlingWasmSolveServices,
 } from './index.js';
+// ⛓ SOLVE PROGRESS — DOM + model only (it imports no solver: the stream arrives as plain snapshots).
+import { SolveProgressView } from './seedlingSolveProgressView.js';
 import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
 import { RANDOMIZER_ARMS, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
@@ -57,6 +59,8 @@ const SOLVER_WALK_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverWalk';
 const WASM_SOLVER_BUDGET_SETTING_KEY = 'moduleSettings.flashPanel.seedlingWasmSolverBudgetWork';
 /** ⛓ Seedling SHOULD-STOP → DETERMINISTIC BUDGET — the upgrade window in WORK units, both runtimes (0 = the budget). */
 const SOLVER_UPGRADE_WINDOW_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork';
+/** ⛓ SOLVE PROGRESS — the progress view's on/off (both runtimes); the panel's "Solve Progress" button flips it. */
+const SOLVE_PROGRESS_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressView';
 /** ⛓ KILLLOCK HOOK — the model's kill-lock body switches, one setting each (`seedlingKillLockSettings.js`). */
 const KILLLOCK_SETTING_KEY_SET = new Set(Object.values(KILLLOCK_SETTING_KEYS));
 /** ⛓ CONTACT HOOK — the model's contact switches, one setting each (`seedlingContactSettings.js`). */
@@ -153,6 +157,7 @@ export class FlashPanelUI {
     });
 
     this._createBaseUI();
+    this._refreshSolveProgressView();
 
     // Make this instance available to the dispatcher receivers
     // registered at module scope (index.js). Only one flash panel
@@ -191,6 +196,9 @@ export class FlashPanelUI {
       }
       if (data?.key === WASM_SOLVER_BUDGET_SETTING_KEY || data?.key === '*') {
         this._refreshWasmSolverBudget(data.key === '*' ? undefined : data.value);
+      }
+      if (data?.key === SOLVE_PROGRESS_SETTING_KEY || data?.key === '*') {
+        this._refreshSolveProgressView(data.key === '*' ? undefined : data.value);
       }
       if (data?.key === SOLVER_UPGRADE_WINDOW_SETTING_KEY || data?.key === '*') {
         this._refreshSolverUpgradeWindow(data.key === '*' ? undefined : data.value);
@@ -381,6 +389,33 @@ export class FlashPanelUI {
     } catch { /* the page is not up yet — the next walkTo carries it */ }
   }
 
+  /**
+   * ⛓ SOLVE PROGRESS — open or close the progress view from `flashPanel.seedlingSolveProgressView`. Closing it
+   * UNSUBSCRIBES from every solve service, so no later solve installs the solver's hook.
+   */
+  async _refreshSolveProgressView(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(SOLVE_PROGRESS_SETTING_KEY, false); } catch { return; }
+    }
+    const view = this._solveProgressView;
+    if (!view) return;
+    if (next === true && !view.isOpen) view.open();
+    else if (next !== true && view.isOpen) view.close();
+    if (this._solveProgressButton) this._solveProgressButton.style.opacity = next === true ? '1' : '0.6';
+  }
+
+  /** ⛓ SOLVE PROGRESS — the solve services the view listens to: the JS page's worker service, the wasm engines'. */
+  _solveServices() {
+    const out = [];
+    try {
+      const svc = this.seedlingPlaybackSurface?.()?.jsRuntime?.playback?.solveService ?? null;
+      if (svc) out.push(svc);
+    } catch { /* the page is not up */ }
+    try { out.push(...getSeedlingWasmSolveServices()); } catch { /* the module is not initialized */ }
+    return out;
+  }
+
   /** ⛓ O3 — cache `flashPanel.seedlingWasmSolverBudgetWork` (the engine reads it through the surface per solve). */
   async _refreshWasmSolverBudget(value) {
     let next = value;
@@ -483,7 +518,8 @@ export class FlashPanelUI {
       <div class="flash-panel-controls" style="flex-shrink: 0; margin-top: 6px; font-size: 12px;">
         <button class="flash-panel-wirecheck" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Wire Check</button>
         <button class="flash-panel-readstate" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Read State</button>
-        <button class="flash-panel-configure" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;">Configure Bridge</button>
+        <button class="flash-panel-configure" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Configure Bridge</button>
+        <button class="flash-panel-solve-progress-toggle" title="Show or hide the solver's progress (setting flashPanel.seedlingSolveProgressView)" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;opacity:0.6;">Solve Progress</button>
       </div>
       <div class="flash-panel-teleport" style="flex-shrink: 0; margin-top: 6px; font-size: 12px; display: none;">
         <span style="color:#aaa;margin-right:4px;">Teleport:</span>
@@ -504,6 +540,16 @@ export class FlashPanelUI {
       <div class="flash-panel-ap-found" style="flex-shrink: 0; margin-top: 6px; font-size: 11px; background:#111; border:1px solid #333; border-radius:4px; padding:6px; display:none;"><div class="flash-panel-ap-found-headline" style="color:#e94560;"></div><div class="flash-panel-ap-found-rows" style="color:#aaa; white-space:pre-wrap;"></div></div>
       <div class="flash-panel-log" style="flex-grow: 1; margin-top: 6px; background: #111; border: 1px solid #333; border-radius: 4px; padding: 6px; font-size: 11px; overflow-y: auto; min-height: 60px; white-space: pre-wrap;"></div>
     `;
+
+    // ⛓ SOLVE PROGRESS — the view sits above the log; the button flips the SETTING (the one source of truth).
+    this._solveProgressView = new SolveProgressView({ getServices: () => this._solveServices() });
+    this.rootElement.insertBefore(this._solveProgressView.element, this.rootElement.querySelector('.flash-panel-log'));
+    this._solveProgressButton = this.rootElement.querySelector('.flash-panel-solve-progress-toggle');
+    this._solveProgressButton.addEventListener('click', () => {
+      const next = !this._solveProgressView.isOpen;
+      settingsManager.updateSetting(SOLVE_PROGRESS_SETTING_KEY, next)
+        .catch(() => this._refreshSolveProgressView(next));
+    });
 
     this.apFoundElement = this.rootElement.querySelector('.flash-panel-ap-found');
     this.apFoundHeadline = this.rootElement.querySelector('.flash-panel-ap-found-headline');
@@ -1322,6 +1368,7 @@ export class FlashPanelUI {
   destroy() {
     log('info', '[FlashPanelUI] Destroying');
     this._heldKeys?.uninstall();
+    this._solveProgressView?.close();
     if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
     if (this._rulesLoadedHandler) {
       this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);

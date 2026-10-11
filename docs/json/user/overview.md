@@ -104,7 +104,6 @@ This project also includes an enhanced version of [Universal Tracker](https://gi
 Beyond standard tracking, the frontend supports several alternate game modes:
 
 - **[Loops](../features/loops.md):** An incremental/idle game mode where you queue actions, spend mana, and earn XP across loops to optimize your way through the randomizer.
-- **[Maze Metagame](../features/maze-metagame.md):** Layers A-Mazing-Idle on top of tracking — solve mazes before you can check locations or move to new regions.
 - **Text Adventure:** Play through the randomizer as a text-based adventure game.
 
 ## Procedural Generation

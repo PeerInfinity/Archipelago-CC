@@ -108,6 +108,8 @@ import {
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD,
     SLASH_ANIM_TICKS, slashScaleFor, slashSet, slashTimerTick,
     GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
+    // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (behind `GHOST_SPINNER_PRESS`, ON by default).
+    GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
@@ -148,6 +150,10 @@ import {
 import { dropKillVetoFor, setDropKillNeeds } from './bulbPlacement.js';
 import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestFirstQueue, coarseKey,
     spaceTimeReach } from './spaceTimeReach.js';
+// ⛓ hammer-phase D1 — the progress emitter: every count point below is `activeProgress !== null` first.
+import { activeProgress, progressAsked, progressEnter, progressGoal, progressLeave, progressPreview,
+    progressReaders, progressRow, progressRun, progressRung, progressSearch, progressSegment, progressSite,
+    progressStatesFor, progressTick, withSolveProgress } from './solveProgress.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
@@ -5308,6 +5314,8 @@ export function previewWalk(run, wps, tolerance = 0,
             }
         }
     }
+    // ⛓ hammer-phase D1 — every sample is a previewed player state: the progress tile map's unit
+    if (activeProgress !== null) progressPreview(run, samples);
     return { samples, startTick, truncated, stood: standFor, plannedStruck };
 }
 
@@ -6075,9 +6083,15 @@ export function assertGoal(goal, i) {
         if (!Number.isInteger(goal.tag?.level) || !Number.isInteger(goal.tag?.tag) || goal.tag.tag < 0
             || !Number.isFinite(goal.at?.x) || !Number.isFinite(goal.at?.y)
             || (goal.obstacle !== undefined
-                && !/^[a-z0-9_]+@-?\d+,-?\d+$/i.test(String(goal.obstacle)))) {
+                && !/^[a-z0-9_]+@-?\d+,-?\d+$/i.test(String(goal.obstacle)))
+            // ⛓ CROSSROOM D3: optionally the PRESSER that writes the flag from another level (the event's
+            // `action.presser`) — `{level, class, x, y}`, integers and a class name.
+            || (goal.presser !== undefined && !(Number.isInteger(goal.presser?.level)
+                && /^[a-z0-9_]+$/i.test(String(goal.presser?.class))
+                && Number.isFinite(goal.presser?.x) && Number.isFinite(goal.presser?.y)))) {
             fail(`${at}: clear-tag needs tag {level, tag} (the persistence flag, integers, tag >= 0), `
-                + 'at {x, y} (the obstacle\'s OEL cell) and optionally obstacle \'<class>@<x>,<y>\', got '
+                + 'at {x, y} (the obstacle\'s OEL cell), optionally obstacle \'<class>@<x>,<y>\' and optionally '
+                + 'presser {level, class, x, y} (a cross-room writer), got '
                 + `${JSON.stringify(goal)}. The MACRO layer names WHICH flag; the solver owns HOW to clear it.`);
         }
         return goal;
@@ -7941,7 +7955,63 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
         if (!strategy || !STRATEGY_EXECUTORS[strategy]) continue;
         out.push({ id: b.id, kind: 'shieldBoss', strategy });
     }
+    if (STANCE_ROCKS.enabled) out.push(...rockHypothesis(run, wall));
     return out;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY L40BUTTON — **A BREAKABLE ROCK IS A PENDING OBSTACLE TOO**, behind `STANCE_ROCKS` (OFF).
+ *
+ * Measured on L40 from both north arrivals (sweep-4 legs 378/381, `Totem Part 64,144`). The part's locks are
+ * group 1; their opener `buttonroom@160,128` latches, so `hold` is selected and a stance is derived. The stance
+ * stands behind group 0's three wandlocks AND the three `breakablerock`s {tags 22,23,24}. The wandlocks are in
+ * the hypothesis (their opener `buttonroom@272,208` latches too); the rocks were not, because the quantifier
+ * enumerated activators and shield bosses only. So the stance read as unreachable, the prerequisite sweep
+ * listed the room's group-2/5 walls instead (`wandlock@448,432` & co., which the route never needs), and the
+ * leg refused. The game's own order is the R5 tape `r5-l40-part0`: latch t0, break the three rocks, latch t1.
+ *
+ * ⇒ a rock joins the set on guard (i)'s own terms: `break` is a SELECTED and REGISTERED verb, and its discharge
+ * is durable (the rock is removed for the visit and its tag written). It is admitted only where the run's swing
+ * can break it at all (the same two guards `resolveBreakStrategy` asks first — a sword or a modelled ghost
+ * swing, and `rockBreaksUnder`), so a rock the run cannot break stays a wall here, not an optimistic gap.
+ * Discharging it is the bag's own field (`brokenRocks`), which is what a real break writes.
+ */
+function rockHypothesis(run, wall) {
+    const broken = run.entities('brokenRocks') ?? new Set();
+    const weapon = run.progress('primaryWeapon');
+    const inventory = run.progress('inventory');
+    const swings = weapon === 'sword'
+        || (weapon === 'ghostsword' && GHOSTSWORD_PRESS.enabled && !ghostSwingRefusal(inventory));
+    if (!swings) return [];
+    const out = [];
+    for (const s of (run.world.solids ?? [])) {
+        if (!s.rockId || wall.has(s.rockId) || broken.has(s.rockId)) continue;
+        const strategy = OBSTACLE_STRATEGIES[`solid:${s.tag}`] ?? null;
+        if (strategy !== 'break' || !STRATEGY_EXECUTORS[strategy]) continue;
+        if (!rockBreaksUnder(s.rockType, inventory)) continue;
+        out.push({ id: s.rockId, kind: 'rock', tag: s.tag, strategy });
+    }
+    return out;
+}
+
+/**
+ * The switch for `rockHypothesis` — OFF by default; `SEEDLING_STANCE_ROCKS=1` turns it on for a process,
+ * `withStanceRocks` for a test. The browser has no `process` and takes the default.
+ */
+// ⚖ ON by default since the wave-12 harvest (user, 2026-10-11: "ON at harvest"); `SEEDLING_STANCE_ROCKS=0` opts out.
+export const STANCE_ROCKS = { enabled: globalThis.process?.env?.SEEDLING_STANCE_ROCKS !== '0' };
+
+/** Run `fn` with `STANCE_ROCKS` set to `enabled`, restoring the previous value. */
+export function withStanceRocks(enabled, fn) {
+    return withSwitch(STANCE_ROCKS, enabled, fn);
+}
+
+/**
+ * ⛓ READ-ONLY PROBE for `fidelityL40Button.test.js`: the stance hypothesis for `run` as it stands (ids, kinds,
+ * verbs), the set every stance derivation reads once its direct plan fails. It steps nothing.
+ */
+export function stanceHypothesisProbe(run, blocked = []) {
+    return stanceHypothesis(run, blocked).map((h) => ({ id: h.id, kind: h.kind, strategy: h.strategy }));
 }
 
 /**
@@ -7991,6 +8061,13 @@ function bagWithDischarged(run, bag, hypothesis) {
             bosses.set(h.id, { ...bosses.get(h.id), removed: true, rect: null });
         }
     }
+    // ⛓ L40BUTTON: a hypothesised rock is discharged in the field a real break writes. Only rock entries add the
+    // key, so a hypothesis without one (every one while `STANCE_ROCKS` is OFF) returns the bag it always did.
+    const rocks = hypothesis.filter((h) => h.kind === 'rock').map((h) => h.id);
+    if (rocks.length) {
+        return { ...bag, openActivators: opens, shieldBosses: bosses,
+            brokenRocks: new Set([...(bag.brokenRocks ?? []), ...rocks]) };
+    }
     return { ...bag, openActivators: opens, shieldBosses: bosses };
 }
 
@@ -8025,7 +8102,7 @@ function stanceReaches(run, aim, contacts, hypothesisOf) {
      * nothing at all.
      */
     const exempt = new Set([...contacts,
-        ...hypothesis.filter((h) => h.kind === 'activator')
+        ...hypothesis.filter((h) => h.kind === 'activator' || h.kind === 'rock')
             .map((h) => `proximity-hazard:${h.id}`)]);
     try {
         planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, exempt, {
@@ -8730,7 +8807,15 @@ function derivePressKill(run, bodies, contacts) {
      * weapon is asked only where a modelled live spinner is there to press.
      */
     const weapon = run.progress('primaryWeapon');
-    if (weapon !== 'sword') {
+    /**
+     * ⛓⛓⛓ HAMMER-PHASE C2 — **A GHOST PRESS IS A KILL TOO** (`GHOST_SPINNER_PRESS`, ON by default). With the switch ON a
+     * `ghostsword` primary is admitted: the forecasts carry its press (D2) and the strike plans with its row
+     * (`strikePressOf`). A ghost sword without the sword never tests (`ghostSwingRefusal`), refused by name.
+     */
+    const ghostPress = spinnerStrikePress(weapon) !== SWORD_SPINNER_PRESS;
+    const ghostWhy = ghostPress ? ghostSwingRefusal(run.progress('inventory')) : null;
+    if (ghostWhy) return no([{ option: 'press a body', why: ghostWhy }]);
+    if (weapon !== 'sword' && !ghostPress) {
         return no([{
             option: 'press a body',
             why: `the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``}`
@@ -8772,8 +8857,9 @@ function derivePressKill(run, bodies, contacts) {
         rejected.push({
             option: 'a strike schedule',
             why: `no (cell, tick) in level ${run.level} over the next `
-                + `${strikeHorizon(run)} ticks puts the whole five-dispatch train inside `
-                + `${SLASH_REACH} px of a body while the player box stays clear of every `
+                + `${strikeHorizon(run)} ticks puts the whole `
+                + `${ghostPress ? `${strikePressOf(run).hitTicks}-dispatch (ghost sword)` : 'five-dispatch'} train inside `
+                + `${strikePressOf(run).reach} px of a body while the player box stays clear of every `
                 + `body's 7x7 rect and of ${hammerTestAt(run)} AND is reachable in time `
                 + `along a transit-safe corridor. ${first?.considered ?? 0} `
                 + 'opportunit(ies) were considered.'
@@ -9087,6 +9173,19 @@ function minTicksBetween(from, to) {
 }
 
 /**
+ * ⛓⛓⛓ HAMMER-PHASE C2 — **THE STRIKE'S PRESS, PER WEAPON** (`ghostSpinnerPress.spinnerStrikePress`). The sword's row
+ * (`slashRect`, `SLASH_REACH`, the line, `SLASH_HIT_TICKS`) unless `GHOST_SPINNER_PRESS` is ON and the run's primary
+ * swings the ghost sword, whose row is `applyThrust`'s ghost arm (24 x 48, reach 24, no line, seven tests). Asked of
+ * the RUN (a previewed view has no progress): `pressReadyAt` and the two train previews take the row as an argument
+ * from their callers, each of which holds the run. OFF it is the sword's row, always, and nothing is read: every caller
+ * reads the very values it read before.
+ */
+function strikePressOf(run) {
+    if (!GHOST_SPINNER_PRESS.enabled) return SWORD_SPINNER_PRESS;
+    return spinnerStrikePress(run.progress('primaryWeapon'));
+}
+
+/**
  * ⛓⛓ SEEDLING SWIM U3 (D2) — **THE SWING'S LINE OF SIGHT, ASKED BEFORE IT IS
  * PLANNED.** `Player.slash` refuses a hit whose line from the player's entity
  * point to the body's crosses a Solid, and `levelRun` refuses to model that
@@ -9104,14 +9203,18 @@ function minTicksBetween(from, to) {
  * pairing reason the hammer window is widened. A strike it drops for that one
  * tick was a strike the run might have refused.
  *
+ * ⛓ hammer-phase C2 — a GHOST press asks no line (`|| hasGhostSword`, `Player.as:917`): never blocked.
+ *
  * @returns {?{tag, at:{x, y}}} the first blocker, or null
  */
 function strikeLineBlocked(run, from, dir, forecast, i) {
-    const rect = slashRect(from.x, from.y, dir);
-    for (let k = 0; k <= SLASH_HIT_TICKS; k += 1) {
+    const press = strikePressOf(run);
+    if (!press.lineOfSight) return null;
+    const rect = press.rect(from.x, from.y, dir);
+    for (let k = 0; k <= press.hitTicks; k += 1) {
         for (const r of forecast[i + k] ?? []) {
             if (!rectsOverlapLocal(rect, r)) continue;
-            if (distanceRectPoint(from.x, from.y, r) > SLASH_REACH) continue;
+            if (distanceRectPoint(from.x, from.y, r) > press.reach) continue;
             const blocker = run.collideLineSolid(from.x, from.y,
                 r.x + SPINNER.originX, r.y + SPINNER.originY);
             if (blocker) return blocker;
@@ -9126,6 +9229,8 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
     const horizon = strikeHorizon(run);
     const forecast = run.spinnerForecast(horizon);
     const cells = walkableCells(run, contacts);
+    // ⛓ hammer-phase C2: the press's rect, reach and train length (the sword's, unless the ghost's under the switch)
+    const press = strikePressOf(run);
     // ⛓ The admissible ETA floor, once per cell — see `minTicksBetween`.
     const floor = new Map(cells.map((c) => [c, minTicksBetween(run.state, c)]));
     const opportunities = [];
@@ -9143,8 +9248,8 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
      * line skips only, so the refusal's count keeps its meaning.
      */
     const opportunityAt = (i, c, mine, { countSighted = true } = {}) => {
-        if (distanceRectPoint(c.x, c.y, mine) > SLASH_REACH) return false;
-        if (!rectsOverlapLocal(slashRectToward(c, mine), mine)) return false;
+        if (distanceRectPoint(c.x, c.y, mine) > press.reach) return false;
+        if (!rectsOverlapLocal(press.rect(c.x, c.y, facingToward(c, mine)), mine)) return false;
         /**
          * ⚠ THE TRAIN IS CHECKED ONE WIDER AT EACH END, and the reason is
          * the pairing rather than caution: the assert reads the PRE-MOVE
@@ -9152,7 +9257,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
          * on and the tick after the last dispatch are both compared
          * against a body this window would otherwise not have asked about.
          */
-        for (let k = -2; k <= SLASH_HIT_TICKS + 1; k += 1) {
+        for (let k = -2; k <= press.hitTicks + 1; k += 1) {
             if (!clearOfHammersAt(run, c.box, forecast, i + k)) return false;
         }
         if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i)) {
@@ -9196,7 +9301,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
         }
         return null;
     };
-    for (let i = Math.max(1, notBefore); i < horizon - SLASH_HIT_TICKS - 1; i += 1) {
+    for (let i = Math.max(1, notBefore); i < horizon - press.hitTicks - 1; i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
         for (const c of cells) {
@@ -9312,7 +9417,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
      */
     let continued = 0;
     for (let i = Math.max(stoppedAt + 1, notBefore, 1);
-        continuation && i < horizon - SLASH_HIT_TICKS - 1 && continued < STRIKE_CANDIDATES;
+        continuation && i < horizon - press.hitTicks - 1 && continued < STRIKE_CANDIDATES;
         i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
@@ -9398,8 +9503,9 @@ function strikeEscape(run, { cell, i, eta, walk, mine, bodyId, caller }) {
  * actually is. ⚠ One wider at each end, for the pairing reason `deriveStrike`
  * records.
  */
-function trainIsSafeHere(run, aimKeys = null) {
-    const span = SLASH_HIT_TICKS + 3;
+function trainIsSafeHere(run, aimKeys = null, press = SWORD_SPINNER_PRESS) {
+    // ⛓ hammer-phase C2: the train is the press's own (`strikePressOf`: a ghost swing tests seven ticks)
+    const span = press.hitTicks + 3;
     const forecast = run.spinnerForecast(span);
     const box = playerBoxAt(run.state.x, run.state.y);
     for (let i = 0; i < span; i += 1) {
@@ -9440,8 +9546,9 @@ function trainIsSafeHere(run, aimKeys = null) {
  * A blocked line means DO NOT press here; the schedule then plans a strike the
  * line admits.
  */
-function trainLineBlockedHere(run, dir, aimKeys) {
-    const span = SLASH_HIT_TICKS + 3;
+function trainLineBlockedHere(run, dir, aimKeys, press = SWORD_SPINNER_PRESS) {
+    // ⛓ hammer-phase C2: the press's own train, rect and reach; a ghost swing asks no line (its death is still asked)
+    const span = press.hitTicks + 3;
     const forecast = run.spinnerForecast(span);
     const step = previewOrDeath(run.previewStepper());
     let st = { ...run.state };
@@ -9450,12 +9557,12 @@ function trainLineBlockedHere(run, dir, aimKeys) {
         st = step({ ...st }, keysAt(k));
         // ⛓ hammer-phase A2: a train whose preview dies is not pressed here (`previewOrDeath`)
         if (!st) return true;
-        if (k < 2) continue;
-        const rect = slashRect(st.x, st.y, dir);
+        if (k < 2 || !press.lineOfSight) continue;
+        const rect = press.rect(st.x, st.y, dir);
         for (const j of [k - 1, k]) {
             for (const r of forecast[j] ?? []) {
                 if (!rectsOverlapLocal(rect, r)) continue;
-                if (distanceRectPoint(st.x, st.y, r) > SLASH_REACH) continue;
+                if (distanceRectPoint(st.x, st.y, r) > press.reach) continue;
                 if (run.collideLineSolid(st.x, st.y,
                     r.x + SPINNER.originX, r.y + SPINNER.originY)) return true;
             }
@@ -9761,13 +9868,14 @@ function previewViewAt(run, o, state, live, step, forecast = null) {
  * were two spellings of one test ("verbatim in its conditions"); the conditions and their order are unchanged, so no
  * caller's answer moves.
  */
-function pressReadyAt(view, state, rect, hitsTimer, lastPressAt) {
-    if (!(view.ticksCompleted - lastPressAt > SLASH_HIT_TICKS && hitsTimer === 0
-        && distanceRectPoint(state.x, state.y, rect) <= SLASH_REACH)) return false;
+function pressReadyAt(view, state, rect, hitsTimer, lastPressAt, press) {
+    // ⛓ hammer-phase C2: `press` is the press's own row (`strikePressOf` of the caller's run; the sword's OFF)
+    if (!(view.ticksCompleted - lastPressAt > press.hitTicks && hitsTimer === 0
+        && distanceRectPoint(state.x, state.y, rect) <= press.reach)) return false;
     const dir = facingToward(state, rect);
-    if (!rectsOverlapLocal(slashRect(state.x, state.y, dir), rect)) return false;
+    if (!rectsOverlapLocal(press.rect(state.x, state.y, dir), rect)) return false;
     const aimKeys = new Set([FACING_KEYS[dir]]);
-    return trainIsSafeHere(view, aimKeys) && !trainLineBlockedHere(view, dir, aimKeys);
+    return trainIsSafeHere(view, aimKeys, press) && !trainLineBlockedHere(view, dir, aimKeys, press);
 }
 
 function previewPressApproach(run, { index, hitsTimer, lastPressAt, strike, stall = null,
@@ -9785,7 +9893,7 @@ function previewPressApproach(run, { index, hitsTimer, lastPressAt, strike, stal
         const view = previewViewAt(run, o, st, live, step);
         const rect = bodies[index];
         // ⛓ The executor's live in-reach test — the one predicate (`pressReadyAt`).
-        if (pressReadyAt(view, st, rect, Math.max(0, hitsTimer - o), lastPressAt)) {
+        if (pressReadyAt(view, st, rect, Math.max(0, hitsTimer - o), lastPressAt, strikePressOf(run))) {
             return { end: 'reach', at: o };
         }
         if (n + o > strike.pressAt) return { end: 'lapse', at: o };
@@ -10135,7 +10243,8 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     st = stepOrNull({ ...st }, PRESS, { dashImpulse: probe.impulse });
     if (!st) return died(pressAt + 1);
     states.set(pressAt + 1, st);
-    const trainEnd = pressAt + SLASH_HIT_TICKS;
+    // ⛓ hammer-phase C2: the press's own train (`strikePressOf`: seven tests for a ghost swing)
+    const trainEnd = pressAt + strikePressOf(run).hitTicks;
     for (let t = pressAt + 1; t < trainEnd + 1; t += 1) {
         st = stepOrNull({ ...st }, NO_KEYS);
         if (!st) return died(t + 1);
@@ -10161,6 +10270,8 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     const safe = safeIn(first.rows);
     const traced = (phase, r) => {
         if (trace !== null) trace.push({ phase, expansions: r.expansions, ok: r.ok, bound: r.bound ?? null });
+        // ⛓ hammer-phase D1 — the escape search is a progress leaf
+        if (activeProgress !== null) progressSearch(`escape-${phase}`, r);
         return r;
     };
     for (let t = at + 1; t <= L; t += 1) {
@@ -10176,6 +10287,7 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         // preference, `discClearanceAt` — a robustness score, never the safety test)
         rank: (q, i) => discClearanceAt(playerBoxAt(q.x, q.y), rows, i),
         shouldStop: deadline && activeDeadline !== null ? () => deadlineReached('hammer-escape') : null,
+        onNode: activeProgress === null ? null : progressStatesFor(run, n),
     }));
     const verdict = (r, from, pre) => {
         if (r.ok) return null;
@@ -10429,7 +10541,7 @@ export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMM
         const iframe = iframeAt(i);
         if (iframe === null) return false;
         const view = previewViewAt(run, i, q, live, rawStep, hitAware?.rows ?? null);
-        if (!pressReadyAt(view, q, rect, iframe, lastPressAt)) return false;
+        if (!pressReadyAt(view, q, rect, iframe, lastPressAt, strikePressOf(run))) return false;
         goals += 1;
         if (!HAMMER_ESCAPE.enabled) return true;
         const { keys } = path();
@@ -10452,7 +10564,10 @@ export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMM
             return rect ? -distanceRectPoint(q.x, q.y, rect) : -Infinity;
         },
         shouldStop: activeDeadline !== null ? () => deadlineReached('hammer-approach') : null,
+        onNode: activeProgress === null ? null : progressStatesFor(run, n),
     });
+    // ⛓ hammer-phase D1 — the approach search is a progress leaf
+    if (activeProgress !== null) progressSearch('approach', r);
     if (!r.ok) return done({ ok: false, bound: r.bound, why: r.why, expansions: r.expansions });
     const i = r.endIndex;
     const aim = r.states[r.states.length - 1];
@@ -10801,6 +10916,8 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         if (HAMMER_FIGHT_TRACE.sink !== null) {
             HAMMER_FIGHT_TRACE.sink({ run, ...record, ms: globalThis.performance.now() - t0, out });
         }
+        // ⛓ hammer-phase D1 — the fight search is a progress leaf (its expansions, its bound)
+        if (activeProgress !== null) progressSearch('fight', { ok: out.ok, bound: out.bound, expansions: stats.expansions });
         return { ...out, record };
     };
     const no = (claim, bound, why) => done({ ok: false, claim, bound, why });
@@ -11038,7 +11155,7 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
             stats.inReach += 1;
             node.cur.ensure(node.i + SLASH_HIT_TICKS + 4);
             const view = previewViewAt(run, node.i, node.q, live, rawStep, node.cur.rows);
-            if (!pressReadyAt(view, node.q, b.rect, b.hitsTimer, node.lastPress)) continue;
+            if (!pressReadyAt(view, node.q, b.rect, b.hitsTimer, node.lastPress, strikePressOf(run))) continue;
             const key = FACING_KEYS[facingToward(node.q, b.rect)];
             if (!aims.has(key)) aims.set(key, new Set([key]));
         }
@@ -11486,8 +11603,15 @@ function censusRowFor(run, id) {
  * never enter the bait arm at all, and the record says which happened.
  */
 function execKill(run, perTick, resolved, ctx) {
-    if (resolved.arm === 'press') return execKillByPress(run, perTick, resolved, ctx);
-    if (resolved.arm === 'chaser') return execKillByChaser(run, perTick, resolved, ctx);
+    // ⛓ hammer-phase D1 — the arm is a progress node, counted here at its caller
+    if (resolved.arm === 'press') {
+        return activeProgress === null ? execKillByPress(run, perTick, resolved, ctx)
+            : progressRun('arm:press', 'arm', 'press', () => execKillByPress(run, perTick, resolved, ctx));
+    }
+    if (resolved.arm === 'chaser') {
+        return activeProgress === null ? execKillByChaser(run, perTick, resolved, ctx)
+            : progressRun('arm:chaser', 'arm', 'chaser', () => execKillByChaser(run, perTick, resolved, ctx));
+    }
     if (!resolved.presser) {
         /**
          * ⛓⛓ HAMMER-PHASE B3 — THE ADMISSION ARM AT THE KILL-LOCK ORDER (`HAMMER_FIGHT_FALLBACK`, rewind mode). This
@@ -12933,7 +13057,7 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 strike = null;
             } else if (following !== null) {
                 held = following;
-            } else if (pressReadyAt(run, run.state, body.rect, body.hitsTimer, lastPressAt)
+            } else if (pressReadyAt(run, run.state, body.rect, body.hitsTimer, lastPressAt, strikePressOf(run))
                 && aimAdmitted()) {
                 if (aimEscape?.ok) {
                     escape = aimEscape;
@@ -14468,8 +14592,27 @@ function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null
     }
     const { candidates, outOfReach, noRect } = breakStanceCandidates(run, target,
         solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }));
-    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
+    // ⛓ L40BUTTON: a rock is never in its OWN swing stance's hypothesis — "reachable once this rock is broken" is
+    // a stance on the rock's far side (measured: (168,136) for `breakablerock@176,128`, STANCE_REENTRY at t1188).
+    // Only `rockHypothesis` entries are filtered, so with `STANCE_ROCKS` OFF the set is the one it always was.
+    const anyHypothesis = lazyStanceHypothesis(run, blocked, contacts);
+    let ownless = null;
+    const hypothesis = () => (ownless ??= anyHypothesis()
+        .filter((h) => h.kind !== 'rock' || h.id !== target.id));
     let unsafe = 0;
+    /**
+     * ⛓ L40BUTTON: with `STANCE_ROCKS` ON a rock's NEIGHBOURS are in the hypothesis too, and a far-side cell is
+     * "reachable once the other rocks are broken" — measured: L40's (168,136) for `breakablerock@176,128`, through
+     * `breakablerock@176,144`. So every candidate is first asked DIRECTLY (the world as it is), and only then
+     * under the hypothesis. OFF the loop below is the one it always was.
+     */
+    if (STANCE_ROCKS.enabled) {
+        for (const c of candidates) {
+            if (admit && !admit(c)) continue;
+            const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, () => []);
+            if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
+        }
+    }
     for (const c of candidates) {
         if (admit && !admit(c)) { unsafe += 1; continue; }
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
@@ -14796,6 +14939,22 @@ const DODGE_RUNG = Object.freeze({ step: 4, maxTicks: 30, maxPerSegment: 12 });
  * apart from just before the hit backwards, and it shares the spit arm's
  * per-segment count (`maxPerSegment`).
  */
+/**
+ * ⛓⛓ SEEDLING FIDELITY SOLVECOST D2b — **WHAT ONE `axe-dodge` WORK UNIT BUYS.** Shipped, the AXE arm asks its
+ * deadline site once per STALL LENGTH, and most stall lengths are priced by the rest-length screen's arithmetic
+ * (`hazards.axeHitsPlayer` over the shifted samples) without a preview at all. Measured on the divergence sweep's
+ * `level_98 -> level_99__r2c7` (from (112,176), the live inventory): 10,864 (dashless) and 17,512 (full) asks for
+ * ~3 s of work, ~0.3 ms a unit, so its 640-unit budget is spent there. ON, the site is asked once per PREVIEW
+ * (a `certified` walk or the rest-length screen's own), the unit the rest of the ladder is counted in.
+ *
+ * ⛔ OFF BY DEFAULT: a committed solve passes no `shouldStop`, so no tape or `--check` can move, but a budgeted
+ * solve's units — and so where its deadlines trip — move with it. The movers are listed in the SOLVECOST report;
+ * the default is the user's to flip.
+ */
+// ⚖ ON by default since the wave-12 harvest (user, 2026-10-11: "ON at harvest"). The default is this literal
+// (the page and its worker read it; no env read decides it); `SEEDLING_AXE_DODGE_ASK_PER_PREVIEW=0` opts a node run out.
+export const AXE_DODGE_ASK_PER_PREVIEW = { enabled: globalThis.process?.env?.SEEDLING_AXE_DODGE_ASK_PER_PREVIEW !== '0' };
+
 export const AXE_DODGE_RUNG = Object.freeze({ step: 4, offsets: 8, detourOffsets: 2, detourPreviews: 60,
     rest: 12, maxPerSegment: DODGE_RUNG.maxPerSegment });
 
@@ -14886,7 +15045,120 @@ function segmentCrosses(a, b, r) {
  * tape is an artifact and a tie broken by iteration order is a tie broken by
  * nothing.
  */
-function deriveBaitStance(run, body, contacts) {
+/**
+ * ⛓⛓ SEEDLING FIDELITY LEASH D2 — **A BAIT IS VERIFIED ON THE CHASER FORECAST, NOT ON A STRAIGHT LINE**
+ * (`BAIT_FORECAST`, OFF by default).
+ *
+ * MEASURED on the game (p4f, headless; leg 629, L74 from L75, `lavarunner@24,56`): with the player standing at the
+ * bait stance (24,136) the body chases, meets the wall corner of tile (2,5) and PINS at (30.906↔31.362, 73.062)
+ * from t10 — and is still there at t160 (322 comparisons, worst |Δ| 0: the model's run is the game's). The
+ * straight line (32,64)→(24,136) crosses the Bulb's lava region, so the derivation offered the stance with an
+ * 84-tick bound (`ceil(72.4 / 1.5) + fade + 30`), and the dwell waited for a body the GAME never sends: the leg
+ * refused *"the dwell's condition … never became true inside its 84-tick bound"*. The bound was never the short
+ * term — the body never comes. `segmentCrosses` asks the line, not the room's solids.
+ *
+ * ⇒ with the switch, each candidate's walk AND its dwell are previewed on ONE chaser forecast (`previewWalk`'s
+ * standing tail, the kill arm's own instrument, stood as `runDwell` stands for a bait: no keys, the strike
+ * disarmed), and a stance is offered only where the forecast removes the body inside the preview; the dwell's
+ * bound is then the forecast's own removal tick past the arrival, plus `BAIT_SLACK`. A pinned body, a removal
+ * during the approach (the dwell would have nothing to wait for), a dangerous wait, or a walk the model refuses
+ * to price is a rejected candidate, named; the scan stops after `BAIT_FORECAST.maxPreviews` previews.
+ * The switch is `CONTACT_FIDELITY.baitForecast` (OFF), so the page, its solve worker and the divergence sweep's
+ * `contact_fidelity=` set it with the rest; `SEEDLING_BAIT_FORECAST=1` (or `SEEDLING_CONTACT_FIDELITY`) for a node
+ * measurement, `withBaitForecast` for a test.
+ */
+export const BAIT_FORECAST = {
+    get enabled() { return CONTACT_FIDELITY.baitForecast === true; },
+    // the preview's ceiling is this multiple of the straight-line bound: a swimming body (`LavaRunner.swim`,
+    // speed 1 against the census's 1.5) or one that walks round a corner is slower than its line, never faster
+    ceilingFactor: 2,
+    maxPreviews: 32,
+};
+
+/** Run `fn` with `CONTACT_FIDELITY.baitForecast` set to `enabled`, restoring the previous value (also on a throw). */
+export function withBaitForecast(enabled, fn) {
+    const before = CONTACT_FIDELITY.baitForecast;
+    CONTACT_FIDELITY.baitForecast = enabled === true;
+    try {
+        return fn();
+    } finally {
+        CONTACT_FIDELITY.baitForecast = before;
+    }
+}
+
+/**
+ * Does a terrain tile of DESTROYING type `t` kill a body of `tag`? `Enemy.update`'s switch gated on the CLASS's flags
+ * (`combat.ENEMY_CLASSES[tag].terrain` — a lavarunner survives lava, a jellyfish both and pits); a class with no row
+ * keeps the base `Enemy`'s `true`s, as the run's stepper does.
+ */
+export function terrainKillsTag(tag, t) {
+    const kind = DESTROYING_TILE_TYPES[t];
+    if (!kind) return false;
+    const terr = ENEMY_CLASSES[tag]?.terrain ?? null;
+    if (terr === null) return true;
+    return kind === 'pit' ? terr.pit === 'falls' : terr[kind] === 'dies';
+}
+
+/**
+ * One bait candidate read off the forecast (`BAIT_FORECAST`): `{removedAt}` (ticks past the arrival), or `{why}`.
+ *
+ * ⚠ THE FORECAST HAS NO TERRAIN SWITCH (`levelRun.chaserForecastNow` steps `chaserStep` only; the run's
+ * `stepChasersNow` drowns a body separately) — and a terrain death is a bait's whole mechanism. So the death is
+ * read off the forecast's own positions here: the first sample whose body centre stands on a tile that kills its
+ * class (`terrainKillsTag`, the stepper's `nearestWalkableTile(x, y).t`) starts it, and the removal is that tick plus
+ * `MOBILE_DEATH_FADE` — the straight-line derivation's own staging term. From the start on the body is a corpse
+ * (`Enemy.update` gates `hitPlayer` on `!destroy`) and leaves the wait's danger question. A removal the forecast
+ * itself makes (an arrow lane, a strike) is read as it is.
+ */
+function baitForecastOf(run, body, c, bound, { allowTeleporter, tolerance, dashMode, planOpts }) {
+    const wps = (c.x === run.state.x && c.y === run.state.y)
+        ? [] : planWaypointsOrNull(run.world, run.state, c, allowTeleporter, planOpts);
+    if (wps === null) return { why: 'no corridor plans to it' };
+    const ceiling = bound * BAIT_FORECAST.ceilingFactor;
+    let walk;
+    try {
+        walk = previewWalk(run, wps, tolerance, { strike: strikePolicyFor(run, { dashMode }), standFor: ceiling,
+            standKeys: () => () => NO_HELD_PREVIEW });
+    } catch (e) {
+        if (!(e instanceof PhysicsV2Error) && !(e instanceof BotDriverV2Error)) throw e;
+        return { why: `the model REFUSES to price its walk — ${e.message.split('\n')[0].slice(0, 160)}` };
+    }
+    if (walk.truncated) return { why: `the preview did not settle — ${walk.truncated.why}` };
+    const arrival = walk.startTick + walk.samples.filter((sm) => sm.phase !== 'dwell').length;
+    let removal = null;
+    let last = null;
+    for (const sm of walk.samples) {
+        const b = sm.chasers?.find((x) => x.id === body.id) ?? null;
+        if (removal === null && !b) removal = sm.tick;
+        if (removal === null && b && terrainKillsTag(body.tag, run.world.nearestWalkableTile(b.x, b.y)?.t)) {
+            removal = sm.tick + MOBILE_DEATH_FADE.ticks;
+        }
+        if (removal !== null && removal <= arrival) {
+            return { why: `the forecast removes ${body.id} by the arrival (tick ${removal - walk.startTick} of `
+                + `${arrival - walk.startTick}), so a dwell at the stance would have nothing to wait for` };
+        }
+        if (removal !== null && sm.tick >= removal) return { removedAt: removal - arrival };
+        if (b) last = b;
+        if (sm.phase === 'dwell') {
+            const live = removal === null ? sm.chasers : (sm.chasers ?? []).filter((x) => x.id !== body.id);
+            const dg = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y), sm.arrows, live,
+                sm.spits ?? null, sm.grenades ?? null);
+            if (dg.danger) {
+                return { why: `the WAIT is dangerous at dwell tick ${sm.tick - arrival} — `
+                    + `${dg.sources.map((x) => `${x.kind}:${x.id}`).join(', ')}` };
+            }
+        }
+    }
+    if (removal !== null) return { removedAt: removal - arrival };
+    return { why: `the forecast still has ${body.id} in the world after the whole ${ceiling}-tick dwell `
+        + `(${BAIT_FORECAST.ceilingFactor} x the straight line's ${bound}), at `
+        + `(${last ? `${last.x.toFixed(2)},${last.y.toFixed(2)}` : '?'}) — its chase never carries it onto a tile `
+        + 'that kills its class (a wall the straight line ignores pins it, or the region does not kill it)' };
+}
+
+export function deriveBaitStance(run, body, contacts,
+    // ⛓ LEASH D2: the ladder's own walk parameters, read only by `BAIT_FORECAST`'s previews
+    { allowTeleporter = null, tolerance = 0, dashMode = DEFAULT_DASH_MODE } = {}) {
     const regions = bodyKillRegions(run);
     if (regions.length === 0) {
         return { stance: null, why: `level ${run.level} has NO region that kills a body — `
@@ -14916,8 +15188,33 @@ function deriveBaitStance(run, body, contacts) {
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    const forecastRejected = [];
+    let previews = 0;
     for (const c of candidates) {
         if (!corridorPlans(run.world, run.state, { x: c.x, y: c.y }, null, planOpts)) continue;
+        if (BAIT_FORECAST.enabled) {
+            if (previews >= BAIT_FORECAST.maxPreviews) break;
+            previews += 1;
+            const bound = Math.ceil(Math.hypot(c.x - body.x, c.y - body.y) / (row.speed || 0.5))
+                + MOBILE_DEATH_FADE.ticks + BAIT_SLACK;
+            const f = baitForecastOf(run, body, c, bound, { allowTeleporter, tolerance, dashMode, planOpts });
+            if (f.removedAt === undefined) {
+                forecastRejected.push(`(${c.x},${c.y}): ${f.why}`);
+                continue;
+            }
+            return {
+                stance: { x: c.x, y: c.y },
+                crossed: c.crossed,
+                ticks: f.removedAt + BAIT_SLACK,
+                leash,
+                forecast: { removedAt: f.removedAt, straightLine: bound, rejected: forecastRejected.length },
+                why: `the straight line from ${body.id} at (${body.x.toFixed(1)},`
+                    + `${body.y.toFixed(1)}) to (${c.x},${c.y}) crosses ${c.crossed.kind} `
+                    + `${c.crossed.id} — ${c.crossed.why}; the chaser forecast (the walk and the wait on one `
+                    + `clock) removes it ${f.removedAt} tick(s) after the arrival (the line said ${bound}); the `
+                    + `stance is inside the leash (${leash})`,
+            };
+        }
         /**
          * ⛓ THE BOUND IS THE BODY'S OWN TRAVEL TIME, not a margin. The body
          * walks the straight line at its own `moveSpeed`, so the distance to
@@ -14936,6 +15233,15 @@ function deriveBaitStance(run, body, contacts) {
                 + `${body.y.toFixed(1)}) to (${c.x},${c.y}) crosses ${c.crossed.kind} `
                 + `${c.crossed.id} — ${c.crossed.why}; the stance is inside the leash `
                 + `(${leash}) and the danger map names nothing at it`,
+        };
+    }
+    if (BAIT_FORECAST.enabled && forecastRejected.length > 0) {
+        return {
+            stance: null,
+            forecastRejected,
+            why: `no bait stance for ${body.id} survives the chaser forecast: ${near.length} cell(s) in its leash `
+                + `(${leash}), ${candidates.length} crossing a kill region, ${forecastRejected.length} previewed `
+                + `and refused [${forecastRejected.slice(0, 3).join('; ')}${forecastRejected.length > 3 ? '; …' : ''}]`,
         };
     }
     return {
@@ -16065,6 +16371,12 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  * trace (the first site, and per-site counts), and a refusal raised after a
  * trip carries the same object and says so in its words.
  */
+/**
+ * ⛓ hammer-phase D1 — the progress hook's install (`solveProgress.withSolveProgress`), beside the deadline's: the same
+ * shape (`withSolveProgress(onProgress, fn)`, nested installs restore the outer), and `solveSegment`'s `onProgress`.
+ */
+export { withSolveProgress };
+
 export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
     'block-route', 'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk', 'phase-dodge', 'hammer-escape',
     'hammer-approach', 'hammer-fight', 'crusher-fork']);
@@ -16181,17 +16493,32 @@ let activeDeadline = null;
  */
 const fineActive = () => activeDeadline !== null && activeDeadline.fine === true;
 
-/** ⛓ FIDELITY CHECKPOINTS — `deadlineReached`, for a FINE ask (opt-in). */
-const fineDeadlineReached = (site) => fineActive() && deadlineReached(site);
+/**
+ * ⛓ FIDELITY CHECKPOINTS — `deadlineReached`, for a FINE ask (opt-in). ⛓ hammer-phase D1: the site is a progress
+ * count point whether or not a deadline (or its fine opt-in) is installed.
+ */
+const fineDeadlineReached = (site) => {
+    if (activeProgress !== null) progressSite(site);
+    return fineActive() && askDeadline(site);
+};
 
 /**
  * Has the active deadline been reached for `site`? Asked by a site, before its
  * optional work. ⛔ With no deadline active this returns false and calls nothing.
+ * ⛓ hammer-phase D1: the site is a progress count point (one null check without a hook).
  */
 function deadlineReached(site) {
+    if (activeProgress !== null) progressSite(site);
+    return askDeadline(site);
+}
+
+/** `deadlineReached`'s ask, after the progress count point. */
+function askDeadline(site) {
     const d = activeDeadline;
     if (d === null) return false;
     if (!d.tripped.has(site)) {
+        // ⛓ hammer-phase D1 — a call to the caller's `shouldStop` is the JS arc's work unit
+        if (activeProgress !== null) progressAsked();
         if (!d.shouldStop(site)) return false;
         d.tripped.add(site);
         d.first ??= site;
@@ -16228,12 +16555,24 @@ const deadlineClause = (d) => ` ⏱ DEADLINE: the caller's \`shouldStop\` trippe
  *   FINE sites (`time`, `walk`, and `detour` inside its via set), so no long
  *   stretch of the solve runs without an ask. Default false: the consult
  *   sequence of every existing caller, exactly. Meaningless without a hook.
+ * @param {?function} [o.onProgress] ⛓ hammer-phase D1 — the progress hook, `(site, peek) => void`
+ *   (`solveProgress.withSolveProgress`, installed for this segment). Observation only: omitted or `null`, the solve
+ *   is today's; given, it is byte-identical. The schema is `seedling-solve-progress.md`.
  * @returns {{perTick: Array<Set>, trace: object, transitions: Array,
  *            waypointsPlanned: number, replans: number, records: Array,
  *            deadline?: {tripped: true, first: string, sites: object}}}
  *   `deadline` is present only when the hook tripped.
  */
 export function solveSegment(o) {
+    const onProgress = o?.onProgress ?? null;
+    if (onProgress !== null) return withSolveProgress(onProgress, () => solveSegment({ ...o, onProgress: null }));
+    // ⛓ hammer-phase D1 — under an installed hook the segment is a progress segment (its tree, tiles and budget)
+    if (activeProgress !== null) return progressSegment(o?.name, o?.run, () => solveSegmentDeadlined(o));
+    return solveSegmentDeadlined(o);
+}
+
+/** `solveSegment` after the progress install: the deadline install, then the loop. */
+function solveSegmentDeadlined(o) {
     const shouldStop = o?.shouldStop ?? null;
     // ⛔ No hook: the segment runs under whatever deadline is already active —
     // none at all for every committed caller — so the default is untouched.
@@ -16477,11 +16816,12 @@ function solveSegmentUnder({
              * ticks this segment drives (counted from its own first tick, so the
              * asks are a function of the solve alone). A trip refuses by name.
              */
-            if (activeDeadline !== null && tapeTick > prefix.length
+            if ((activeDeadline !== null || activeProgress !== null) && tapeTick > prefix.length
                 && (tapeTick - prefix.length) % WALK_CHECK_TICKS === 0 && fineDeadlineReached('walk')) {
                 refuseWalkDeadline(`after ${tapeTick - prefix.length} tick(s) of the segment's drive`);
             }
             const out = inner.advance(held);
+            if (activeProgress !== null) progressTick(inner.level);
             if (!dashedBefore && inner.progress('slashInfo').state.slashDashed === true) {
                 dashesPressed += 1;
                 dashTicks.push(tapeTick);
@@ -16574,6 +16914,11 @@ function solveSegmentUnder({
     };
     let replans = 0;
     let waypointsPlanned = 0;
+    // ⛓ hammer-phase D1 — the counts this segment already keeps, read by a progress snapshot
+    if (activeProgress !== null) {
+        progressReaders({ waypointsPlanned: () => waypointsPlanned, replans: () => replans,
+            dashesPressed: () => dashesPressed });
+    }
     /**
      * ⛓⛓⛓ WHICH CLIMB — and it is a counter rather than a flag because the
      * ladder is cheapest-first WITHIN one climb and a NEW obstacle starts a
@@ -17384,7 +17729,7 @@ function solveSegmentUnder({
     const stanceWalks = new Set();
     /** ⛓ U15-swim D2 — the DODGE rung's stalls this segment (`DODGE_RUNG.maxPerSegment`). */
     let dodgesSpent = 0;
-    const climbLadder = ({ goal, aim, contacts, allowTeleporter, what, hit,
+    const climbLadderUnder = ({ goal, aim, contacts, allowTeleporter, what, hit,
         dangerExcept = null, corridor = null, axisAligned = false,
         // ⛓ FRONTIER3 — the AVOID rung re-plans on the lattice the walk was
         // planned on (`FINE_LATTICE` only after a frontier refusal).
@@ -17413,6 +17758,7 @@ function solveSegmentUnder({
          */
         const priorRefusals = [];
         const rowFor = (rung, refused, extra = {}) => {
+            if (activeProgress !== null) progressRow(rung, refused, extra);
             escalations.push(refused ? { rung, refused } : { rung });
             if (refused) priorRefusals.push(refused);
             seeRow({
@@ -17523,6 +17869,7 @@ function solveSegmentUnder({
         };
 
         // ── rung 1: AVOID — a static re-plan with the threatened cells out ──
+        if (activeProgress !== null) progressRung('avoid');
         const vols = dangerVolumes(run, 0)
             .filter((v) => !(dangerExcept && dangerExcept.has(v.id)));
         let refused = null;
@@ -17595,6 +17942,7 @@ function solveSegmentUnder({
          * a spit climbs again; `DODGE_RUNG.maxPerSegment` bounds the stalls.
          */
         if (spitOnly && corridor) {
+            if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
             if (dodgesSpent >= DODGE_RUNG.maxPerSegment) {
@@ -17651,6 +17999,7 @@ function solveSegmentUnder({
          * (`axe-dodge`).
          */
         if (axeOnly && corridor) {
+            if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
             let previews = 0;
@@ -17673,7 +18022,16 @@ function solveSegmentUnder({
                 let door = Math.min(hitAt, base.samples.length - 1);
                 while (door > 0 && h.sources.some((s) => axeCanReach(s.axe,
                     playerBoxAt(base.samples[door].x, base.samples[door].y)))) door -= 1;
+                /**
+                 * ⛓ SOLVECOST D2b — WHERE THE `axe-dodge` SITE IS ASKED. OFF (the shipped state): once per stall
+                 * length, screened or not. ON: once per PREVIEW (`AXE_DODGE_ASK_PER_PREVIEW`).
+                 */
+                const askAxe = () => {
+                    if (deadlineReached('axe-dodge')) { tripped = true; return true; }
+                    return false;
+                };
                 const certified = (at, ticks) => {
+                    if (AXE_DODGE_ASK_PER_PREVIEW.enabled && askAxe()) return null;
                     previews += 1;
                     const walk = previewWalk(run, wps, tolerance, optsFor({ at, ticks }));
                     if (walk.truncated && walk.truncated.kind !== 'crossed') return null;
@@ -17706,11 +18064,13 @@ function solveSegmentUnder({
                     if (at < 0) break;
                     let screen = null;
                     for (let ticks = 1; ticks < period; ticks += 1) {
-                        if (deadlineReached('axe-dodge')) { tripped = true; return null; }
+                        if (!AXE_DODGE_ASK_PER_PREVIEW.enabled && askAxe()) return null;
                         if (ticks <= rest || screen === null) {
                             const got = certified(at, ticks);
                             if (got) return got;
+                            if (tripped) return null;
                             if (ticks === rest && clock.v !== null) {
+                                if (AXE_DODGE_ASK_PER_PREVIEW.enabled && askAxe()) return null;
                                 previews += 1;
                                 const full = previewWalk(run, wps, tolerance, axisAligned
                                     ? { strike: null, axisAligned, stall: { at, ticks: rest } }
@@ -17725,6 +18085,7 @@ function solveSegmentUnder({
                         if (screen === false) {
                             const got = certified(at, ticks);
                             if (got) return got;
+                            if (tripped) return null;
                             continue;
                         }
                         // ⛓ the stall of `ticks`: samples [0, at + rest) as previewed,
@@ -17739,6 +18100,7 @@ function solveSegmentUnder({
                         if (!clear) continue;
                         const got = certified(at, ticks);
                         if (got) return got;
+                        if (tripped) return null;
                     }
                 }
                 return null;
@@ -17846,6 +18208,7 @@ function solveSegmentUnder({
         const phaseOnly = hit.sources.length > 0
             && hit.sources.every((s) => s.kind === 'hazard' && s.phase);
         if (phaseOnly && corridor) {
+            if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
             let previews = 0;
@@ -18031,6 +18394,7 @@ function solveSegmentUnder({
          * (`R8_STRATEGY_EXECUTORS.ladder` marks it `conditional`, and
          * `assertEscalationIsOrdered` lets an escalation skip only that kind).
          */
+        if (activeProgress !== null) progressRung('pull');
         let silencer = deriveLaneSilencer(run, hit, what, pullingRopes);
         /**
          * ⛓⛓⛓ SEEDLING FIDELITY ROBUST, D2 + D3 — **A LANE FURTHER ALONG THE
@@ -18127,6 +18491,7 @@ function solveSegmentUnder({
         }
 
         // ── rung 2: TIME — the mover, against the danger TIMELINE ──────────
+        if (activeProgress !== null) progressRung('time');
         const timeline = `dangerMap over L${run.level} at model tick `
             + `${run.ticksCompleted}`;
         const reachable = Math.hypot(aim.x - run.state.x, aim.y - run.state.y)
@@ -18213,6 +18578,7 @@ function solveSegmentUnder({
          * actually has a strategy for (a LIVE stepped body; a static census
          * row is a wall for this quantifier).
          */
+        if (activeProgress !== null) progressRung('bait');
         let removable = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
         /**
          * ⛓⛓ HAMMER-PHASE C1 (`CHOOSER_HIT_SOURCES`) — where the chooser cannot speak (an EMPTY list: no body's
@@ -18251,7 +18617,7 @@ function solveSegmentUnder({
                 + 'never turns toward the player, so there is no line to bend. That is a KILL '
                 + 'question, and the kill is the player\'s own press.';
         } else {
-            const derived = deriveBaitStance(run, body, contacts);
+            const derived = deriveBaitStance(run, body, contacts, { allowTeleporter, tolerance, dashMode });
             /**
              * ⛓⛓ SWIM R5, D1 — **THE BAIT WALK MAY NOT RE-ENTER ITSELF.** The
              * walk to a bait stance is an ordinary `walkTo`, so its corridor is
@@ -18303,6 +18669,7 @@ function solveSegmentUnder({
         refused = { rung: 'bait', why: baitWhy };
 
         // ── rung 4: KILL — the room's own weapon, held until the count moves ─
+        if (activeProgress !== null) progressRung('kill');
         let killWhy = null;
         const target = body ?? null;
         if (target && target.stepped === false) {
@@ -18834,6 +19201,7 @@ function solveSegmentUnder({
         let lastOption = 'kill';
         let lastBound;
         if (hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser')) {
+            if (activeProgress !== null) progressRung('detour');
             const detour = deriveChaserDetour(run, {
                 aim, allowTeleporter,
                 planOpts: solverPlanOpts(run, contacts, goalPlanExtra),
@@ -18890,6 +19258,9 @@ function solveSegmentUnder({
         });
         return {};
     };
+    /** ⛓ hammer-phase D1 — a climb is a progress node (its rungs and arms are its children). */
+    const climbLadder = (o) => (activeProgress === null ? climbLadderUnder(o)
+        : progressRun('climb', 'climb', 'climb', () => climbLadderUnder(o)));
 
     /**
      * Walk to `aim` through a planned corridor, re-planning ONCE per failure
@@ -18897,7 +19268,7 @@ function solveSegmentUnder({
      * silent re-plan hides a model divergence; a TRACED one is a decision a
      * reader can audit).
      */
-    const walkTo = (goal, aim, {
+    const walkToUnder = (goal, aim, {
         allowTeleporter = null, crossTo = null, what, contactsOverride = null,
         dangerExcept = null,
         /**
@@ -19169,6 +19540,9 @@ function solveSegmentUnder({
                          */
                         chests: run.entities('openChests'),
                     };
+                    // ⛓ hammer-phase D1 — the verb applied (its stance walk, then its executor) is a progress node
+                    const verbFrame = activeProgress === null ? null
+                        : progressEnter(`verb:${plan.strategy}`, 'verb', plan.strategy);
                     // The stance first — planned with whatever exemptions the
                     // strategy's own resolution earned (trap 147: a hold is what
                     // ADDS its presser to the exemptions, so the stance and the
@@ -19215,6 +19589,7 @@ function solveSegmentUnder({
                         fork, rewind,
                     });
                     records.push({ goal: goal.kind, strategy: plan.strategy, ...record });
+                    if (verbFrame !== null) progressLeave(verbFrame);
                     // ⛓ THE EXEMPTION SURVIVES THE VERB. A `hold` leaves the
                     // player standing in the presser's volume, so every later
                     // plan of this segment carries it — which is what
@@ -19415,6 +19790,12 @@ function solveSegmentUnder({
             }
         }
     };
+    /**
+     * ⛓ hammer-phase D1 — a walk is a progress node: its climbs, the frontier verbs it applies and the walks those
+     * make nest under it. Every caller (the goals, the rungs, the executors handed `walkTo`) reaches this one.
+     */
+    const walkTo = (goal, aim, opts) => (activeProgress === null ? walkToUnder(goal, aim, opts)
+        : progressRun('walk', 'walk', 'walk', () => walkToUnder(goal, aim, opts)));
 
     /**
      * ⛓⛓⛓ U12-swim D2 — THE PULLS THAT ARE A RIDE INTO PIT (tx, ty): every
@@ -19816,7 +20197,9 @@ function solveSegmentUnder({
      * executor: the wand), `cannot-act` (the resolver's `held: false`, e.g. no
      * sword), `unresolved` (the resolver could not bind, or no REACHABLE
      * stance), `prerequisite`, `not-written` (the verb ran and the flag did not
-     * land within `CLEAR_TAG_WRITE_TICKS`).
+     * land within `CLEAR_TAG_WRITE_TICKS`), and (CROSSROOM D3) `cross-room-presser`
+     * (the goal's `presser` is not a presser of this level, or does not write this
+     * clear).
      */
     const execClearTag = (goal) => {
         const flag = { level: goal.tag.level, tag: goal.tag.tag };
@@ -19831,7 +20214,21 @@ function solveSegmentUnder({
         const refuseCT = (reason, why, extra = {}) => refuse(`${whatCT}: ${why}`, {
             goal, obstacle: { kind: 'clear-tag', id, flag: { ...flag }, reason }, ...extra,
         });
-        if (run.level !== flag.level) {
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY CROSSROOM D3 — **A FLAG IN ANOTHER LEVEL, PRESSED FROM THIS ONE.**
+         *
+         * The rules arc's `flag:L39:8` is cleared by L38's `buttonroom@32,48` (`ButtonRoom.as:93`:
+         * `setPersistence(t, persist, room)` — its TSET, in level `room`, FALSE with `flip`); the
+         * obstacle stands in L39 and the press is in L38. The goal names the presser
+         * (`presser: {level, class, x, y}`, the event's `action.presser`), and when the run stands in
+         * the presser's level that is the order: walk to it and press it with the registered verb
+         * (`proximity-hazard:buttonroom` → `hold`, whose `runHold` already answers a cross-room presser
+         * by its `roomWrites`), then finish on the same ledger as every clear-tag (`earnedClears` holds
+         * `{level, tag}` from the `roomWrites` row, and the run is past its tick). The write is the
+         * run's ledger entry, so L39's next build reads it (`applyEarnedClears`, cashed at the press).
+         */
+        const crossRoom = run.level !== flag.level && goal.presser?.level === run.level;
+        if (run.level !== flag.level && !crossRoom) {
             refuseCT('wrong-level', `the run stands in level ${run.level}; the flag is level `
                 + `${flag.level}'s, and only that level's own world holds the obstacle. The macro layer `
                 + 'owes the crossing first.');
@@ -19870,10 +20267,132 @@ function solveSegmentUnder({
             }
             return perTick.length - from;
         };
+        /** CROSSROOM D3: the presser's press, finished on the flag's ledger row (see `crossRoom`). */
+        const execCrossRoomPress = () => {
+            const p = goal.presser;
+            const pid = `${p.class}@${p.x},${p.y}`;
+            const presser = (run.world.pressers ?? []).find((q) => q.tag === p.class && q.x === p.x && q.y === p.y)
+                ?? null;
+            if (!presser) {
+                refuseCT('cross-room-presser', `the goal's presser ${pid} is not a presser of level ${run.level}'s `
+                    + `live world (its pressers: [${(run.world.pressers ?? []).map((q) => `${q.tag}@${q.x},${q.y}`)
+                        .join(', ') || 'none'}])`);
+            }
+            if (!(presser.room === flag.level && presser.t === flag.tag && presser.flip === true)) {
+                refuseCT('cross-room-presser', `${pid} writes {${presser.room ?? -1},${presser.t}} = `
+                    + `${presser.flip ? 'false' : 'true'} (room ${presser.room ?? -1}, tset ${presser.t}, flip `
+                    + `${presser.flip ? 1 : 0}), not the clear {${flag.level},${flag.tag}} this goal asks for`);
+            }
+            if (presser.bootPressed) {
+                // `check()` re-ran the setter when this level was built (`activators.bootPress`): the game
+                // wrote the flag at the arrival, and a press now is a re-write the run does not ledger.
+                done('boot-pressed', { presser: pid, why: `${pid}'s own tag ${presser.persistTag} is cleared, so it `
+                    + `booted PRESSED and its \`check()\` re-wrote {${flag.level},${flag.tag}} at the build` });
+                return;
+            }
+            const obstacle = { kind: 'proximity-hazard', tag: presser.tag, id: pid };
+            const key = `proximity-hazard:${presser.tag}`;
+            const strategy = refineStrategy(run, OBSTACLE_STRATEGIES[key] ?? null, obstacle);
+            if (!strategy || !clearTagExecutor(strategy)) {
+                refuseCT('no-verb', `the presser ${pid} selects ${strategy ? `'${strategy}', which is NOT REGISTERED`
+                    : `no verb (no strategy row for ${key})`}`);
+            }
+            const presserContact = `proximity-hazard:${presser.tag}@${presser.x},${presser.y}`;
+            const resolveAt = () => resolveObstacleStrategy(run, strategy, obstacle,
+                new Set([...senseContacts(run), ...exemptions]), { x: presser.x, y: presser.y }, null,
+                [...refusedOrders]);
+            let resolved;
+            let approach = null;
+            try {
+                resolved = resolveAt();
+            } catch (e) {
+                if (!(e instanceof SolverRefusal)) throw e;
+                /**
+                 * ⛔ NO CORRIDOR TO THE PRESSER FROM HERE: the button stands behind the room's own chain
+                 * (L38's `buttonroom@32,48` is past `cover@208,224` and the link-2 pulser). The walk to its
+                 * centre is then the ROOM's question, and `walkTo`'s frontier loop is what answers a room —
+                 * the same loop a `reach-exit` gets — with the presser exempted so the plan may end on it.
+                 * Stepping onto the press rect presses it (`ButtonRoom.update`); if the walk stops short, the
+                 * stance is resolved again from where it stands.
+                 */
+                const firstWhy = e.message;
+                const centre = { x: (presser.rect.x + presser.rect.right) / 2,
+                    y: (presser.rect.y + presser.rect.bottom) / 2 };
+                // ⚠ INTO THE SEGMENT'S LIVE EXEMPTIONS, not a `contactsOverride`: an override is a snapshot,
+                // and the holds the frontier applies on the way add THEIR presser to `exemptions` — a frozen
+                // set re-met L38's own `buttonroom@144,128` as an obstacle after its press (measured, step 76).
+                exemptions.add(presserContact);
+                try {
+                    walkTo(goal, centre, { what: `${whatCT} -> the presser ${pid} (L${run.level}) through the room` });
+                } catch (e2) {
+                    if (!(e2 instanceof SolverRefusal)) throw e2;
+                    refuseCT('unresolved', `'${strategy}' at the presser ${pid} could not be resolved from `
+                        + `(${run.state.x},${run.state.y}) (${firstWhy}), and the walk to it through the room `
+                        + `refused: ${e2.message}`);
+                }
+                approach = 'through-the-room';
+                if (!written()) {
+                    try {
+                        resolved = resolveAt();
+                    } catch (e3) {
+                        if (!(e3 instanceof SolverRefusal)) throw e3;
+                        refuseCT('unresolved', `the walk reached (${run.state.x},${run.state.y}) by ${pid} without `
+                            + `pressing it, and '${strategy}' could not be resolved there: ${e3.message}`);
+                    }
+                }
+            }
+            if (approach && written()) {
+                const waited = waitForWrite(`the walk onto ${pid} in level ${run.level} pressed it`);
+                done('cross-room-press', { strategy: 'walk', presser: pid, from: run.level, approach, waited });
+                return;
+            }
+            if (!resolved || !resolved.stance) {
+                refuseCT('unresolved', `'${strategy}' is SELECTED and REGISTERED for ${key}, and the resolver `
+                    + `found no reachable stance on the presser ${pid}`);
+            }
+            if (resolved.prerequisite) {
+                refuseCT('prerequisite', `the presser ${pid}'s stance is reachable only once `
+                    + `${resolved.prerequisite.id} is discharged (${resolved.prerequisite.via}: `
+                    + `${resolved.prerequisite.why}); a clear-tag order does not chain openers`);
+            }
+            const verb = resolved.strategy ?? strategy;
+            seeRow({
+                tick: perTick.length,
+                saw: saw(),
+                goal: { kind: goal.kind, tag: { ...flag }, at: { x: goal.at.x, y: goal.at.y } },
+                obstacle: { kind: obstacle.kind, id: pid },
+                strategy: { verb },
+                rejected: resolved.rejected ?? [],
+                keys: [],
+            });
+            const before = {
+                open: run.entities('openActivators'),
+                armed: run.entities('armedPulsers') ?? new Set(),
+                trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
+                chests: run.entities('openChests'),
+            };
+            walkTo(goal, resolved.stance, {
+                what: `${whatCT} -> ${verb} the presser ${pid} (L${run.level})`,
+                contactsOverride: resolved.exempt,
+                axisAligned: resolved.approach === 'axis-aligned',
+            });
+            const record = written() ? { pressedOnTheWay: true } : clearTagExecutor(verb)(run, perTick, resolved, {
+                maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb} ${pid}`,
+                before, walkTo, goal, equip, rewind,
+            });
+            for (const c of resolved.exempt ?? []) exemptions.add(c);
+            const waited = waitForWrite(`'${verb}' pressed ${pid} in level ${run.level}`);
+            done('cross-room-press', { strategy: verb, presser: pid, from: run.level,
+                ...(approach ? { approach } : {}), waited, ...record });
+        };
         if (written()) {
             const waited = waitForWrite('an earlier walk or verb cleared it');
             done('cleared-in-passing', { waited, why: `the run's \`earnedClears\` already holds {${flag.level},`
                 + `${flag.tag}} — an earlier walk or verb cleared it, so the goal is met and not walked at` });
+            return;
+        }
+        if (crossRoom) {
+            execCrossRoomPress();
             return;
         }
         if (!solid) {
@@ -19958,6 +20477,8 @@ function solveSegmentUnder({
     // ── the goals, in order ───────────────────────────────────────────
     let dropKillGoal = 0;
     for (const goal of goals) {
+        // ⛓ hammer-phase D1 — each goal of the list is a progress node (the previous one has succeeded)
+        if (activeProgress !== null) progressGoal(dropKillGoal, goal);
         /**
          * ⛓⛓⛓ seedling-fidelity-bulb D3 — WHAT THE REST OF THE SEGMENT NEEDS, handed to the run for the strike
          * policy's veto (`bulbPlacement`): this goal and every one after it, as planner aims. Only while a class

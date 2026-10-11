@@ -144,6 +144,9 @@ export function coarseKey(cell = 8) {
  * @param {number} [o.maxExpansions]
  * @param {?Function} [o.shouldStop]  `() => boolean`
  * @param {number} [o.checkEvery]
+ * @param {?Function} [o.onNode]  ⛓ hammer-phase D1 — `(state, index) => void`, told of each state the search KEEPS
+ *   (where `nodes` counts it): the solver's progress tile map. Observation only — its return is ignored and nothing
+ *   it does is read back; `null` (the default) is the search exactly.
  * @returns {{ok: true, keys: Set[], states: object[], endIndex: number, reached: string, expansions: number,
  *   nodes: number} | {ok: false, bound: string, why: string, expansions: number, nodes: number,
  *   deepest: number}}  `keys[k]` is held at index `startIndex + k`; `states[k]` is the state at that index
@@ -152,7 +155,7 @@ export function coarseKey(cell = 8) {
 export function spaceTimeReach({
     start, startIndex = 0, step, safe, horizon, goal = null, mode = 'survive',
     keySets = SPACE_TIME_KEY_SETS, keyOf = coarseKey(8), rank = null, maxExpansions = Infinity,
-    shouldStop = null, checkEvery = SPACE_TIME_CHECK_EVERY,
+    shouldStop = null, checkEvery = SPACE_TIME_CHECK_EVERY, onNode = null,
 }) {
     if (typeof step !== 'function' || typeof safe !== 'function') {
         throw new Error('spaceTimeReach: `step` and `safe` are required functions');
@@ -227,6 +230,7 @@ export function spaceTimeReach({
             if (!safe(next, i)) continue;
             if (!claim(i, next)) continue;
             nodes += 1;
+            if (onNode !== null) onNode(next, i);
             out.push({ state: next, index: i, keys, parent: node });
         }
         return out;
@@ -271,6 +275,7 @@ export function spaceTimeReach({
                 const was = best.get(k);
                 if (was === undefined) {
                     nodes += 1;
+                    if (onNode !== null) onNode(next, i);
                     best.set(k, rank === null ? kid : { ...kid, score: rank(next, i) });
                 } else if (rank !== null) {
                     const score = rank(next, i);

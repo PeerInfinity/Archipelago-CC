@@ -30,7 +30,9 @@ import { loadTape } from './fixtures/index.js';
 import {
     createLevelRun, ENTITY_FAMILY_NAMES, LEDGER_KIND_NAMES, PROGRESS_FIELD_NAMES,
 } from './levelRun.js';
-import { atlasLevelSource } from './levelSource.js';
+import { atlasLevelSource, loadAtlas } from './levelSource.js';
+import { levelSourceFromAtlas } from './atlasSource.js';
+import { patchedMapDocument } from './seedlingSetPatches.js';
 import { RELAXED_ROLES, ROLES, buildLevelWorld, rectsOverlap } from './levelWorld.js';
 import {
     DEFAULT_FRICTION, SLIDING_FRICTION, SLIDING_SPEED, WALK_SPEED,
@@ -2812,7 +2814,8 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
         // ⛓ fidelity SLOTS: 13 — `inventorySlots`, the slot array as run state.
         { query: 'progress', names: PROGRESS_FIELD_NAMES, count: 13, noun: 'progress field', plural: 'fields' },
         // ⛓ fidelity ENCOUNTERS D3: 34 — `witchEvents`, L12's Witch.
-        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 34, noun: 'ledger kind', plural: 'kinds' },
+        // ⛓ fidelity CROSSROOM D2: 35 — `unreadRoomWrites`, a cross-room write no entity of its level reads.
+        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 35, noun: 'ledger kind', plural: 'kinds' },
     ];
     const ALL = [...PROGRESS_FIELD_NAMES, ...LEDGER_KIND_NAMES];
     const queryOf = new Map(FOLDS.flatMap((f) => f.names.map((n) => [n, f.query])));
@@ -2923,6 +2926,23 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
         expect(bad).toEqual([]);
         expect(run.ledger('crusherContacts')[0]).toMatchObject({ level: 41, id: 'crusher@240,64' });
         expect(seen.has('crusherContacts')).toBe(true);
+        for (const m of seen) witnessed.add(m);
+    });
+
+    /**
+     * ⛓ fidelity CROSSROOM D2: no committed tape walks the DELIVERED set, where L37 carries no tag 4 — so a
+     * staging does: L38's arrival button on the patched map, walked south into L37.
+     */
+    it('L38\'s arrival button on the delivered set: an unreadRoomWrites entry, through the query', () => {
+        const run = createLevelRun({
+            levelSource: levelSourceFromAtlas(patchedMapDocument(loadAtlas())),
+            boot: { level: 38, x: 144, y: 288 },
+            noDamage: true,
+        });
+        const { bad, seen } = compareEveryTick(run, 30, () => new Set(['down']));
+        expect(bad).toEqual([]);
+        expect(run.ledger('unreadRoomWrites')[0]).toMatchObject({ level: 37, tag: 4, by: 'buttonroom@144,288' });
+        expect(seen.has('unreadRoomWrites')).toBe(true);
         for (const m of seen) witnessed.add(m);
     });
 

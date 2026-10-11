@@ -1,0 +1,79 @@
+{
+ "base_dd6ae2e": [
+  {
+   "id": 366,
+   "key": "level_38__r0c9 <- in_L37_288_0 -> exit:out_teleporter_144_304",
+   "end": "failed",
+   "failed": "the solver declined level_38__r0c9 -> level_37__r0c18 in level 38 (refusal): level 37: the tape clears tag(s) 4, which no entity in this level reads. A clear is derived from a named blocker; one that matches nothing is a derivation error, not a harmless extra. (Entities that read persistence here: n",
+   "history": [
+    {
+     "outcome": "failed"
+    }
+   ]
+  },
+  {
+   "id": 368,
+   "key": "level_38__r0c9 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared",
+   "end": "unresolved",
+   "failed": "\"L39 flag 8: wandlock@144,592 cleared\" is a saved-obstacle EVENT (flag:L39:8; wandlock@144,592 in level 39, press): its check is the game's persistence flag {39,8} turning set, which the runtime collects; breaking it on purpose is the solver goal `clear-tag {tag: {level: 39, tag: 8}, at: {x: 144, y:",
+   "history": []
+  }
+ ],
+ "head": [
+  {
+   "id": 358,
+   "key": "level_37__r0c18 <- in_L38_144_304 -> exit:out_teleporter_288_0",
+   "end": "done",
+   "failed": "",
+   "history": [
+    {
+     "ticks": 5,
+     "divergence": null,
+     "end": {
+      "level": 38,
+      "x": 152,
+      "y": 296
+     },
+     "expectedEnd": {
+      "level": 38,
+      "x": 152,
+      "y": 296,
+      "deaths": 0
+     },
+     "outcome": "done"
+    }
+   ]
+  },
+  {
+   "id": 366,
+   "key": "level_38__r0c9 <- in_L37_288_0 -> exit:out_teleporter_144_304",
+   "end": "done",
+   "failed": "",
+   "history": [
+    {
+     "ticks": 4,
+     "divergence": null,
+     "end": {
+      "level": 37,
+      "x": 296,
+      "y": 24
+     },
+     "expectedEnd": {
+      "level": 37,
+      "x": 296,
+      "y": 24,
+      "deaths": 0
+     },
+     "outcome": "done"
+    }
+   ]
+  },
+  {
+   "id": 368,
+   "key": "level_38__r0c9 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared",
+   "end": "unresolved",
+   "failed": "\"L39 flag 8: wandlock@144,592 cleared\" is a saved-obstacle EVENT (flag:L39:8; wandlock@144,592 in level 39, press): its check is the game's persistence flag {39,8} turning set, which the runtime collects; breaking it on purpose is the solver goal `clear-tag {tag: {level: 39, tag: 8}, at: {x: 144, y:",
+   "history": []
+  }
+ ]
+}

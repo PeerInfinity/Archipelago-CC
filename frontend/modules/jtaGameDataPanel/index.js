@@ -9,7 +9,7 @@ export const moduleInfo = {
   componentType: 'jtaGameDataPanel',
   icon: '🗃️',
   column: 2,
-  category: 'Non-procgen Games',
+  category: 'Deprecated Panels',
   description: 'Shows live Journey to Ascension state, checks it against the simulator, and edits task costs and save data.',
   requires: ['iframeAdapter', 'iframePanel'],
 };

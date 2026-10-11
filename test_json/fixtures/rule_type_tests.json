@@ -686,23 +686,6 @@
         }
       ]
     },
-    "setting_check": {
-      "description": "Setting comparison tests",
-      "tests": [
-        {
-          "name": "setting_equals_true",
-          "rule": {"type": "setting_check", "setting": "difficulty", "value": "hard"},
-          "context": {"settings": {"difficulty": "hard"}},
-          "expected": true
-        },
-        {
-          "name": "setting_equals_false",
-          "rule": {"type": "setting_check", "setting": "difficulty", "value": "hard"},
-          "context": {"settings": {"difficulty": "easy"}},
-          "expected": false
-        }
-      ]
-    },
     "counts": {
       "description": "Count total items from list tests",
       "tests": [
