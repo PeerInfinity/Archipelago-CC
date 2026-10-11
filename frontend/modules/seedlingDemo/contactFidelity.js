@@ -246,9 +246,10 @@ export const CONTACT_FIDELITY = {
      * was. ON: the ladder first asks the proof — every input sequence over 36 held sets from this state, stepped on
      * the segment's fork, takes a hit within the bound — and then plans the least-damage crossing under the budget
      * (no death, one hit of margin), replays it, and bills the hit in the trace (`verb: 'forced-hit'`). Measured on
-     * L73 (leg 622, `lavarunner@72,24`). ⛔ OFF by default: a flip is the user's licence.
+     * L73 (leg 622, `lavarunner@72,24`). ⚖ ON by default since the wave-13 harvest (user, 2026-10-11: "ON at
+     * harvest"; game witness `forcedhit-l73-622-plan` 0 px, CI sweep 38183630094 done); `SEEDLING_FORCED_HITS=0` opts out.
      */
-    forcedHits: false,
+    forcedHits: true,
     /**
      * fidelity BOMBPUSHER D2 — THE LOBBER IS A LIVE EMITTER (`bombPusher.js`, `Enemies/BombPusher.as`,
      * `Projectiles/Bomb.as`, `Projectiles/Explosion.as`).

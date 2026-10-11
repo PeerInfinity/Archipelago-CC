@@ -5,7 +5,7 @@
  * hit, the solver may plan the least-damage crossing and bill the hit, instead of refusing.
  *
  * This module is the PROOF and the CROSSING; the solver's combat ladder (`solverBot.climbLadderUnder`) asks it only
- * where every rung has refused (the EXHAUSTED verdict), behind `FORCED_HITS` (`CONTACT_FIDELITY.forcedHits`, OFF).
+ * where every rung has refused (the EXHAUSTED verdict), behind `FORCED_HITS` (`CONTACT_FIDELITY.forcedHits`, ⚖ ON since the wave-13 harvest).
  *
  * ── (a) THE PROOF — a measured fact, not a search that gave up ───────────────────────────────────────────────────
  * From the state the ladder was asked in, every input sequence over `FORCED_HIT_ALPHABET` (the 8 directions + none,
