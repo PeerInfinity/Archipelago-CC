@@ -23,14 +23,17 @@
  *   m2 `clearedForBuild`'s unread filter removed
  *        -> the STAGED row reds with the same orphan text; the press rows stay green.
  *   m3 the writer provenance dropped (`crossRoomWritersOnto` answers every slot)
- *        -> the "no writer stays a derivation error" row reds (L37's `{37,5}` builds).
+ *        -> the "no writer stays a derivation error" row reds (L37's `{37,5}` builds); MEASURED, the STAGED
+ *           row reds too (its `by` names the writer the mutant no longer finds).
  *   m4 the cross-room branch removed from `execClearTag`
- *        -> D3's SOLVES row reds with `wrong-level`.
+ *        -> D3's SOLVES row reds with `wrong-level`; MEASURED, the wrong-presser row too (it is answered
+ *           `wrong-level` before the presser is read).
  *   m5 the presser walk keeps a `contactsOverride` snapshot (the first cut)
  *        -> D3's SOLVES row reds: the frontier re-meets `buttonroom@144,128` after its press and `hold`
  *           refuses "ALREADY OPEN".
  */
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
 
 import { loadAtlas } from './levelSource.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -39,6 +42,13 @@ import { createLevelRun } from './levelRun.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { arrivalStaging } from './fidelityArrival.js';
 import { assertGoal, solveSegment, SolverRefusal } from './solverBot.js';
+import { runTape } from './tapeRunner.js';
+import { compactTicks } from './fidelityStepOff.js';
+import { clearTagArms, modelWrote } from './fidelityClearTag.js';
+import { CROSSROOM_WITNESSES } from './fidelityCrossRoom.js';
+
+/** `probe-seedling-cleartag.mjs --set=crossroom --record` (p4f, headless logic-only). */
+const ORACLE = JSON.parse(readFileSync(new URL('./fixtures/crossroom-oracle.json', import.meta.url), 'utf8'));
 
 const VANILLA = levelSourceFromAtlas(loadAtlas());
 const DELIVERED = levelSourceFromAtlas(patchedMapDocument(loadAtlas()));
@@ -149,4 +159,40 @@ describe('fidelity CROSSROOM — D3: a clear-tag pressed from another level', ()
         // L39's build read the write: the run stands in L39, past the plug's landing
         expect(run.level).toBe(39);
     }, 120000);
+});
+
+describe('fidelity CROSSROOM — D4: the game witnesses (the oracle replays at 0 px)', () => {
+    const arms = clearTagArms(VANILLA, CROSSROOM_WITNESSES);
+    it('the oracle holds both presses × the solve and its two cuts; every stream is the model\'s at 0 px', () => {
+        expect(ORACLE.source).toMatch(/--set=crossroom/);
+        expect(ORACLE.arms.map((a) => a.arm)).toEqual(arms.map((a) => a.arm));
+        expect(ORACLE.arms.every((a) => a.vsModel.worst === 0 && a.error === '')).toBe(true);
+        // both presses write their target on the game, as the model's roomWrites say
+        expect(ORACLE.arms.find((a) => a.arm === 'L37-4-from-L38-solve').persistenceCleared)
+            .toEqual(expect.arrayContaining([{ level: 37, tag: 4 }, { level: 38, tag: 5 }]));
+        expect(ORACLE.arms.find((a) => a.arm === 'L39-8-from-L38-solve').persistenceCleared)
+            .toEqual(expect.arrayContaining([{ level: 39, tag: 8 }, { level: 38, tag: 4 }]));
+    });
+    it.each(arms.map((a) => [a.arm, a]))('%s: the model replays the game\'s stream', (name, a) => {
+        const game = ORACLE.arms.find((r) => r.arm === name);
+        const model = runTape(a.tape, { levelSource: VANILLA });
+        expect(compactTicks(model.ticks)).toEqual(game.ticks);
+        expect(model.transitions).toEqual(game.transitions);
+    });
+    it('the flag on the write tick: L39\'s press agrees with the game; the BOOT press is one update early in the game', () => {
+        for (const a of arms) {
+            const game = ORACLE.arms.find((r) => r.arm === a.arm);
+            const model = modelWrote(a.tape, a.w.goal.tag, VANILLA);
+            if (a.arm === 'L37-4-from-L38-cut-1') {
+                // ⛔ MEASURED, NOT FIXED HERE: booted ON `buttonroom@144,288`, the game's arrival-frame update presses
+                // it, so its `persistence_cleared` holds {37,4} after ONE tick; the model's first activator step is
+                // a tick later (`activators.bootPress`'s arrival-frame note), so its row is t1 and the flag lands
+                // after two. The streams are 0 px either way. Named residue for the activators' owner.
+                expect([game.gameFlag, model]).toEqual([true, false]);
+                continue;
+            }
+            expect(game.gameFlag).toBe(a.flagExpected);
+            expect(model).toBe(game.gameFlag);
+        }
+    });
 });
