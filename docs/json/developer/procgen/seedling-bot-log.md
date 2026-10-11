@@ -16076,6 +16076,48 @@ iceturret@104,24 is reachable"* — after 31,559 and 24,730 units (~11 s). With 
 - **A timing control rots with every speed-up.** `jsRuntimeSolveService`'s BACKSTOP row needs an L12 solve slower than
   300 ms; after D2a it passes alone but went red once under a parallel run.
 
+### Seedling fidelity BOMBPUSHER — the lobber is a live emitter, and a hold inside its reach is a hit by construction
+
+Wave 13 (model coverage), the enemy-projectile slice. L40BUTTON's damage-on walks of sweep legs 378/381 (`Totem Part
+64,144` from L40's north arrivals) were refuted on the game by `bombpusher@112,128`'s bombs while the player waited out
+group 0's lock fade on `buttonroom@272,208`; the model stepped no emitter. The report is
+`CC/docs/cloud-reports/seedling-fidelity-bombpusher.md`.
+
+**D1 — measured on the game** (`probe-seedling-bombpusher.mjs`, the two `bomb-refuted-*` tapes, p4f). The lobber
+updates before the player and plays "shoot" on the first tick the PREVIOUS tick's player is within `FP.distance` 256
+(L42: t818 reads 255.52, t817 256.44; the play is t819). "shoot" is five frames at rate 5 × 0.0333: 7 updates, then 6,
+so the wrap — and the `Bomb` — is the play + 30; the next play is the wrap + 16. One bomb every 46 ticks. A bomb is aimed
+at `Point(p.x, p.y)`, `v = aim / 30`; thirty updates land it exactly on the aim, the 31st moves it one step more and
+removes it, and its `Explosion` (radius `int(24 × 0.65)` = **15**, an `int` field) is added in the same `updateLists()`,
+so it tests the player's END-of-tick origin. Hits: L42 t1064/t1156 (then the spinner's hammer kills at t1221), L41
+t1153/t1291, and t1337's third bomb kills. `knockback`'s `|centre.y| > 0.5` gate is why the measured `vy` is 0.
+
+**D2 — the model** (`bombPusher.js`, `CONTACT_FIDELITY.bombPusherLive`, OFF). `levelRun` steps the bombs first
+(run-time, prepended), the lobber in its `Game.as:2299` slot before the player, both through a pickup's frozen frames,
+and each Explosion at `updateLists()` through `applyPlayerHit`. An Explosion whose disc reaches a stepped chaser or a
+spinner, or whose square meets a static `"Enemy"` box, refuses by name (the `"Enemy"` arm is not staged). Witnessed: the
+two damage-on walks reproduce at 0 px through every bomb hit and the death (`fixtures/bomb-witness/`, the game's camera
+read on the shake band's uncertain ticks), every bomb bit-exact; OFF leaves the game the tick after the first hit.
+
+**D3 — the price.** `dangerMap.spitDanger` tests a blast square-then-disc against any box: in TRANSIT from the walk's
+own forecast (`levelRun.bombForecastNow`, carried by `run.spitForecast()`), in a WAIT by simulating the lobber against
+a player standing at the box. A standing player in range is always hit (the blast lands ≤ 8.5 px past the aim), so
+`solverBot.lobberHoldRefusal` refuses a hold or latched wait whose dwell prices as a hit, by name
+(`obstacle {kind: 'danger', id: 'bombpusher@112,128'}`, the survey family `BOMB`). ON, legs 378/381 refuse at the
+131-tick hold naming the blast the game landed ((284,218) at +47, (285,217) at +57; the game's hold ticks 48/58).
+Survey steps 78/124/126/139: no row moves.
+
+**Trap candidates.**
+- **An `int` field truncates a `Number` compound assignment.** `radius *= 0.65` on `radius:int` is 15, not 15.6.
+  `bossTotemFight.BOSS_TOTEM_SHOT.explosionHitRadius` carries 15.6 for the same AS3 (`Explosion.as:22,40`).
+- **A guard that reads a body the run does not step reads a placement.** Under `noDamage` no chaser is stepped, so an
+  Explosion "met" `bob@304,144` at its placement on the committed `noDamage` plans while the game's bob was 50 px away.
+  Ask the same gate the stepping asks.
+- **A forecast branch the data never reaches is a mutant that survives.** No room holds a turret and a lobber, so the
+  composed forecast was untestable; it is a refusal by name now.
+- **A refusal with no cause is a model that caught the hit and did not say so.** Before D3 the hold failed "MOVED" at
+  the game's exact knockback tick.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
