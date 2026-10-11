@@ -22,7 +22,11 @@
  * Prereqs: a dev server at the repo root (`SEEDLING_PORT`, default 8000) and the
  * wasm build (`flashPanel/wasm`), or this SKIPs (exit 0). Takes the box lock.
  *
+ * `--set=crossroom` (⛓ CROSSROOM D4) plays `fidelityCrossRoom.CROSSROOM_WITNESSES` instead — L38's two
+ * cross-room `ButtonRoom` presses, as `clear-tag` goals with a `presser` — through the same arms and checks.
+ *
  * Run: SEEDLING_PORT=9470 node scripts/procgen/probe-seedling-cleartag.mjs [--record=<path>] [--only=<substring>]
+ *      [--set=cleartag|crossroom]
  */
 import { existsSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -58,6 +62,14 @@ async function main() {
     }
     const RECORD = process.argv.find((a) => a.startsWith('--record='))?.slice('--record='.length) ?? '';
     const ONLY = process.argv.find((a) => a.startsWith('--only='))?.slice('--only='.length) ?? '';
+    const SET = process.argv.find((a) => a.startsWith('--set='))?.slice('--set='.length) ?? 'cleartag';
+    if (!['cleartag', 'crossroom'].includes(SET)) {
+        console.log(`FAIL: --set=${SET} — the sets are cleartag (the default) and crossroom`);
+        process.exit(1);
+    }
+    const WITNESSES = SET === 'crossroom'
+        ? (await M('fidelityCrossRoom.js')).CROSSROOM_WITNESSES
+        : (await M('fidelityClearTag.js')).CLEARTAG_WITNESSES;
     let failed = 0;
     const check = (name, ok, detail = '') => {
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
@@ -130,10 +142,10 @@ async function main() {
      */
     const SCAN = process.argv.find((a) => a.startsWith('--scan='))?.slice('--scan='.length) ?? '';
     if (SCAN) {
-        const { CLEARTAG_WITNESSES, clearTagSolve } = await M('fidelityClearTag.js');
+        const { clearTagSolve } = await M('fidelityClearTag.js');
         const [key, range] = SCAN.split(':');
         let [lo, hi] = range.split('-').map(Number);
-        const w = CLEARTAG_WITNESSES.find((x) => x.key === key);
+        const w = WITNESSES.find((x) => x.key === key);
         const s = clearTagSolve(w, levelSource);
         const { level, tag } = w.goal.tag;
         const holds = async (n) => (await play(s.tapeOf(n, `-scan-${n}`))).status.persistence_cleared
@@ -154,9 +166,11 @@ async function main() {
         process.exit(failed ? 1 : 0);
     }
 
-    const oracle = { source: 'probe-seedling-cleartag.mjs --record (seedling fidelity CLEARTAG)', build: PAGE_NAME, arms: [] };
+    const oracle = { source: SET === 'crossroom'
+        ? 'probe-seedling-cleartag.mjs --set=crossroom --record (seedling fidelity CROSSROOM)'
+        : 'probe-seedling-cleartag.mjs --record (seedling fidelity CLEARTAG)', build: PAGE_NAME, arms: [] };
     try {
-        for (const a of clearTagArms(levelSource).filter((x) => !ONLY || x.arm.includes(ONLY))) {
+        for (const a of clearTagArms(levelSource, WITNESSES).filter((x) => !ONLY || x.arm.includes(ONLY))) {
             const { level, tag } = a.w.goal.tag;
             const model = runTape(a.tape, { levelSource });
             const game = await play(a.tape);
