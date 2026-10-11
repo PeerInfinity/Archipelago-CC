@@ -45,7 +45,8 @@ const levels = (arm) => arm.transitions.map((t) => [t.from, t.to]);
 describe('the oracle is a recording of THIS delivery', () => {
     it('its delivered set is the set vanillaRecordSet delivers today', () => {
         expect(ORACLE.delivered_set_id).toBe(deliveredMoonrockSet(ROOT).set.set_id);
-        expect(ORACLE.delivered_set_id).toBe('seedling-vanilla-record-329dd9d9');
+        // 329dd9d9 → eb8cc643: the table gained `l37-fallrock-removed` (rules l37-fallrock-patch; the game rows re-recorded identical)
+        expect(ORACLE.delivered_set_id).toBe('seedling-vanilla-record-eb8cc643');
         for (const [world, id] of Object.entries(ORACLE.variant_set_ids)) {
             const v = world === 'delivered' ? 'table' : world.slice('delivered:'.length);
             expect(deliveredMoonrockSet(ROOT, v).set.set_id, world).toBe(id);
