@@ -60,7 +60,7 @@ jobs:
       # (Pyodide), fetching the files `worldGeneratorFiles.json` lists from
       # `<siteRoot>/world_generator/` — the repo root locally, so the same path
       # only exists on the site because of this copy
-      # (`apworldEditor/apworldBuild.js` → `worldGeneratorBaseUrl`).
+      # (`apworldBuild/apworldBuild.js` → `worldGeneratorBaseUrl`).
       # ⛔ `frontend/world_generator/` is in .gitignore, like `frontend/docs/`.
       - name: Stage world_generator into the site
         run: cp -r world_generator frontend/world_generator

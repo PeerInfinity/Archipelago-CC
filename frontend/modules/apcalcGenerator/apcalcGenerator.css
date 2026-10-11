@@ -102,7 +102,8 @@ a.apcalc-gen-btn:hover {
     background: #3d6a3d;
 }
 
-.apcalc-gen-btn-primary:disabled {
+.apcalc-gen-btn-primary:disabled,
+.apcalc-gen-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }

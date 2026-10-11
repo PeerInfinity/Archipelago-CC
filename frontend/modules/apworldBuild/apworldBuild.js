@@ -1,7 +1,11 @@
 /**
- * apworldEditor/apworldBuild — **THE HUB'S EXIT TO AN .APWORLD.** Turns the
- * document being edited into a downloadable `.apworld` by running the real
+ * apworldBuild/apworldBuild — **A RULES DOCUMENT'S EXIT TO AN .APWORLD.** Turns
+ * a rules.json document into a downloadable `.apworld` by running the real
  * `world_generator` package (Python) in the browser under Pyodide.
+ *
+ * Shared, not a panel: the APWorld Editor builds the document it edits, the
+ * APCalc Generator the map it generated (catalogue F1). It lived in
+ * `apworldEditor/` until a second panel needed it.
  *
  * ── HOW THE PYTHON GETS HERE ───────────────────────────────────────────
  *
@@ -40,7 +44,7 @@ export function pyodideIndexUrl(version = PYODIDE_VERSION) {
 }
 
 /** ⛓ The worker file, relative to `frontend/modules/`. */
-export const BUILD_WORKER_PATH = 'apworldEditor/apworldBuildWorker.js';
+export const BUILD_WORKER_PATH = 'apworldBuild/apworldBuildWorker.js';
 
 /**
  * ⛓ `resolveRegenerateWorkerUrl`'s rule: in bundled mode `import.meta.url`

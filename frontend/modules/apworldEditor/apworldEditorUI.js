@@ -205,7 +205,7 @@ import {
 import { reconstructResultFromSidecars, refusedRegionsNote } from '../procgenPipeline/compositeMapDocument.js';
 import { SHOW_MENU_ON_MAP_SETTING, menuMarkerFor, showMenuOnMap } from './menuMarker.js';
 import { downloadJson, rulesDownloadName } from './downloadJson.js';
-import { buildApworld, downloadBytes } from './apworldBuild.js';
+import { buildApworld, downloadBytes } from '../apworldBuild/apworldBuild.js';
 import {
   needSentence, startingCountOf, startingGrantOp, startingInventoryList, startingNeedRows, substratesInSlot,
 } from './startingInventoryBlock.js';

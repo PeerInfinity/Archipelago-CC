@@ -44,9 +44,9 @@ document.
 | `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid`; (M2) `mapBoundsFor`, the grid's size in cells, shared with the map moves |
 | `rawView.js` | the **Raw JSON** tab's text and its parse (the size limit was RETIRED by measurement — H2b) |
 | `downloadJson.js` | the download exit — the file name and the bytes |
-| `apworldBuild.js` | the **`.apworld` exit** — `buildApworld(doc, {gameName, playerId})` (the page side of the worker protocol), `worldGeneratorBaseUrl` (where `world_generator/` is served), `PYODIDE_VERSION` (pinned), `downloadBytes` |
-| `apworldBuildWorker.js` | the MODULE WORKER the build runs in — Pyodide from the CDN, booted on the first build and kept; the package files fetched per `worldGeneratorFiles.json`; calls `world_generator.apworld.build_apworld` |
-| `worldGeneratorFiles.json` | GENERATED (`node scripts/build/world-generator-files.mjs --write`, from `git ls-files world_generator`) — the files the worker fetches; `apworldBuild.test.js` fails when it is stale |
+| `../apworldBuild/apworldBuild.js` | the **`.apworld` exit** — `buildApworld(doc, {gameName, playerId})` (the page side of the worker protocol), `worldGeneratorBaseUrl` (where `world_generator/` is served), `PYODIDE_VERSION` (pinned), `downloadBytes` |
+| `../apworldBuild/apworldBuildWorker.js` | the MODULE WORKER the build runs in — Pyodide from the CDN, booted on the first build and kept; the package files fetched per `worldGeneratorFiles.json`; calls `world_generator.apworld.build_apworld` |
+| `../apworldBuild/worldGeneratorFiles.json` | GENERATED (`node scripts/build/world-generator-files.mjs --write`, from `git ls-files world_generator`) — the files the worker fetches; `apworldBuild.test.js` fails when it is stale |
 
 ## The `.apworld` button
 
@@ -56,7 +56,8 @@ document.
 [Pyodide](https://pyodide.org). Nothing is re-implemented in JavaScript: the
 worker calls `world_generator.apworld.build_apworld`, the function behind
 `python -m world_generator rules.json --apworld DIR`, so the page and the CLI
-produce the same archive.
+produce the same archive. The build lives in `frontend/modules/apworldBuild/`,
+shared with the APCalc Generator's `⭳ .apworld` button.
 
 - **The name field** beside it is optional. Blank keeps the document's
   `game_name`; a new name avoids clashing with an installed world of the same

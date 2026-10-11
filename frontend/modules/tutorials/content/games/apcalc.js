@@ -1,7 +1,6 @@
 /**
  * APCalc: play a demo preset (catalogue A1), and generate a world of your own
- * with the APCalc Generator (A2, up to the .apworld button that F1 adds — the
- * step is written now and records where it stops). Default mode, modules on
+ * with the APCalc Generator (A2, through the .apworld button F1 added). Default mode, modules on
  * in the Modules panel (⚖ the user, 2026-10-10). In progress: the walk rows
  * measure `firstFailingStep`. Shape: ../../tutorialShape.js.
  *
@@ -81,7 +80,7 @@ export const APCALC_GENERATOR = Object.freeze({
     summary: 'Generate a new APCalc map with the APCalc Generator, play it, and package it as a .apworld.',
     track: 'games',
     status: 'in-progress',
-    firstFailingStep: 'apworld', // the .apworld button is slice F1, not built yet
+    firstFailingStep: null, // every step works since F1 (the .apworld button); ready = the user's call
     doc: null,
     intro: [
         { prose: 'The **APCalc Generator** builds APCalc maps in the browser: how many spheres, how many operations and numbers each one adds, how branchy the map is. The result plays at once, saves as a rules.json, and — with the .apworld button — becomes a game Archipelago can host.' },
@@ -129,9 +128,10 @@ export const APCALC_GENERATOR = Object.freeze({
                 {
                     step: {
                         id: 'apworld',
-                        text: 'Press **⭳ .apworld**: the generator runs Archipelago\'s world generator in your browser on this map and saves it as a game for `custom_worlds/` — as the APWorld Editor does for procgen worlds.',
+                        text: 'Press **⭳ .apworld**: the generator runs Archipelago\'s world generator in your browser on this map and saves it as a game for `custom_worlds/` — as the APWorld Editor does for procgen worlds. The first build loads Python (~10 MB); the log ends with *.apworld: downloaded apcalc.apworld*.',
                         actions: [{ click: { ...GEN, selector: 'button.apcalc-gen-apworld' } }],
-                        done: (ctx) => ctx.text({ ...GEN, selector: '.apcalc-gen-log' }).includes('.apworld'),
+                        done: (ctx) => /\.apworld: downloaded \S+\.apworld/.test(ctx.text({ ...GEN, selector: '.apcalc-gen-log' })),
+                        failed: (ctx) => ctx.text({ ...GEN, selector: '.apcalc-gen-log' }).match(/\.apworld: build failed: .*/)?.[0] ?? null,
                         doneTimeoutMs: 120000,
                     },
                 },

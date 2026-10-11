@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
  * The file list the browser fetches to run `world_generator` under Pyodide
- * (frontend/modules/apworldEditor/apworldBuild.js).
+ * (frontend/modules/apworldBuild/apworldBuild.js).
  *
  * A static site cannot list a directory, so the page needs the list handed to
  * it. It is DERIVED here from `git ls-files world_generator` and committed as
- * frontend/modules/apworldEditor/worldGeneratorFiles.json; the committed copy
+ * frontend/modules/apworldBuild/worldGeneratorFiles.json; the committed copy
  * is a cache, and `worldGeneratorFiles.test.js` fails when it no longer
  * matches the tracked tree.
  *
@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const PACKAGE_DIR = 'world_generator';
-export const MANIFEST_PATH = 'frontend/modules/apworldEditor/worldGeneratorFiles.json';
+export const MANIFEST_PATH = 'frontend/modules/apworldBuild/worldGeneratorFiles.json';
 
 /** Tracked files of the package, relative to it, sorted. */
 export function trackedPackageFiles(repoRoot = REPO_ROOT) {
