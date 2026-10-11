@@ -51,7 +51,7 @@ function placerCapacity({ width, height }, exits, params, seed, { cut = false } 
 
 describe('mazeLocationCapacity — an OPEN room holds its floor, exactly', () => {
     const SIZES = [[3, 3], [8, 6], [9, 7], [12, 12], [15, 11]];
-    it('⛓ capacityAt(size).locations == what the placer lands, less the corners two exits cut off, over sizes × 0–4 exits × seeds', () => {
+    it('⛓ capacityAt(size).locations == what the placer lands, less the corners its exits cut off, over sizes × 0–4 exits × seeds', () => {
         let rooms = 0;
         let cut = 0;
         for (const [width, height] of SIZES) {

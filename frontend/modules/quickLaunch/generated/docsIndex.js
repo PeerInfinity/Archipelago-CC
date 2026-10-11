@@ -940,6 +940,24 @@ export const DOCS_INDEX = Object.freeze([
         "title": "Tips, Tricks, and FAQs",
         "section": "user",
         "summary": "This guide provides a collection of useful tips, advanced interactions, and answers to frequently asked questions to help you get the most out of the JSON Web Client."
+    },
+    {
+        "path": "docs/json/user/tutorials/apcalc-generator.md",
+        "title": "APCalc: generate a world",
+        "section": "user/tutorials",
+        "summary": "The APCalc Generator builds APCalc maps in the browser: how many spheres, how many operations and numbers each one adds, how branchy the map is. The result plays at once, saves as a rules.json, and…"
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-grid-growth.md",
+        "title": "Procgen: Grid growth, with Maze",
+        "section": "user/tutorials",
+        "summary": "Grid growth is the pipeline's first mode, kept as the legacy grower: it grows regions cell by cell on a grid, drawing from the scenario pool, until the pool or the frontier runs out. How many…"
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-shuffled-spiral.md",
+        "title": "Procgen: Shuffled spiral, with Maze",
+        "section": "user/tutorials",
+        "summary": "Shuffled spiral lays its regions out from a centre cell outwards, in shuffled zones, and then places the scenario's items so the world can be finished. You choose how many regions of each substrate…"
     }
 ].map(Object.freeze));
 
@@ -1003,7 +1021,18 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/standard-client.md",
             "docs/json/user/tips-and-tricks.md"
         ],
-        "children": []
+        "children": [
+            {
+                "dir": "user/tutorials",
+                "label": "tutorials",
+                "docs": [
+                    "docs/json/user/tutorials/apcalc-generator.md",
+                    "docs/json/user/tutorials/procgen-grid-growth.md",
+                    "docs/json/user/tutorials/procgen-shuffled-spiral.md"
+                ],
+                "single": false
+            }
+        ]
     },
     {
         "dir": "features",
