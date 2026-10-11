@@ -630,12 +630,6 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Live demo"
     },
     {
-        "path": "docs/json/features/maze-metagame.md",
-        "title": "Maze Metagame",
-        "section": "features",
-        "summary": "Live demo: Standard | With Loops"
-    },
-    {
         "path": "docs/json/features/procgen-substrates.md",
         "title": "What each substrate can do",
         "section": "features",
@@ -675,7 +669,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/games/journey-to-ascension/README.md",
         "title": "Journey to Ascension",
         "section": "games/journey-to-ascension",
-        "summary": "Archipelago integration for Journey to Ascension, an incremental/idle game. Progress through 27 zones by completing tasks, leveling skills, and collecting perks — but your perks are shuffled into…"
+        "summary": "Archipelago integration for Journey to Ascension by Meneth, an incremental/idle game (used with permission; see NOTICE.md). Progress through 27 zones by completing tasks, leveling skills, and…"
     },
     {
         "path": "docs/json/games/journey-to-ascension/cost-adjustment-algorithm.md",
@@ -688,12 +682,6 @@ export const DOCS_INDEX = Object.freeze([
         "title": "Loops",
         "section": "games/loops",
         "summary": "Live demo"
-    },
-    {
-        "path": "docs/json/games/maze-metagame/README.md",
-        "title": "Maze Metagame",
-        "section": "games/maze-metagame",
-        "summary": "Live demo: Standard | With Loops"
     },
     {
         "path": "docs/json/games/metamath/README.md",
@@ -1091,7 +1079,6 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/features/depgraph.md",
             "docs/json/features/fuzzer.md",
             "docs/json/features/loops.md",
-            "docs/json/features/maze-metagame.md",
             "docs/json/features/procgen-substrates.md",
             "docs/json/features/procgen.md",
             "docs/json/features/skip-required-files.md",
@@ -1136,14 +1123,6 @@ export const HELP_SECTIONS = Object.freeze([
                 "label": "Loops",
                 "docs": [
                     "docs/json/games/loops/README.md"
-                ],
-                "single": true
-            },
-            {
-                "dir": "games/maze-metagame",
-                "label": "Maze Metagame",
-                "docs": [
-                    "docs/json/games/maze-metagame/README.md"
                 ],
                 "single": true
             },
@@ -1474,7 +1453,8 @@ export const CATEGORY_ORDER = Object.freeze([
     "Procgen Substrate Panels",
     "Procgen Infrastructure Panels",
     "Developer and Testing Panels",
-    "Core Service Modules"
+    "Core Service Modules",
+    "Deprecated Panels"
 ]);
 
 /** The label of the child holding the docs a README-sub-grouped section's headings do not list (last). */

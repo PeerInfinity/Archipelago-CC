@@ -12,7 +12,7 @@ export const moduleInfo = {
     componentType: 'jtaActionQueue',
     icon: '🗒️',
     column: 2,
-    category: 'Non-procgen Games',
+    category: 'Deprecated Panels',
     description: 'Queue Journey to Ascension tasks zone by zone, run them with Start and Stop, and save queues as loadouts.',
     requires: ['jtaQueueEngine'],
     storage: [

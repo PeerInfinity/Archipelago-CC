@@ -20,6 +20,8 @@
  *   … --camera               (⛓ K2PREP D2) also record the GAME's camera at each sample (`botStatus().camera`, the
  *                            `FP.camera` `view()` left — the jiggle LANDED, read rather than modelled), so a replay
  *                            can read a shake band's 'uncertain' on-screen ticks off the game (`cameraWitness`)
+ *   … --player-hits          (⛓ LEASH D3) also record the GAME's player `hits` / `hits_timer` (`botStatus()`) in each
+ *                            recorded sample's `player`, so a witness can say WHEN the game billed a contact
  */
 import { chromium } from 'playwright';
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -55,6 +57,7 @@ async function main() {
     }
     const UPTO = arg('upto') === null ? Infinity : Number(arg('upto'));
     const CAMERA = process.argv.includes('--camera');
+    const PLAYER_HITS = process.argv.includes('--player-hits');
 
     takeBoxLockOrExit({ name: 'probe-seedling-chaser-mobiles.mjs', kind: 'browser' });
 
@@ -109,7 +112,8 @@ async function main() {
             });
             const m = JSON.parse(raw[0]);
             const s = JSON.parse(raw[1]);
-            frames.push({ status: { tick: s.tick, level: s.level, finished: s.finished, camera: s.camera ?? null }, mobiles: m });
+            frames.push({ status: { tick: s.tick, level: s.level, finished: s.finished, camera: s.camera ?? null,
+                ...(PLAYER_HITS ? { hits: s.hits, hits_timer: s.hits_timer } : {}) }, mobiles: m });
             if (s.finished) { status = s; break; }
         }
     } finally {
@@ -253,7 +257,8 @@ async function main() {
                 },
                 note: `the GAME's ${CLASS} rows (\`botMobiles()\`) and the player at each sampled tick`,
                 samples: samples.filter((f) => tickOf(f) <= UPTO).map((f) => ({
-                    t: tickOf(f), level: f.status.level, player: { x: playerOf(f).x, y: playerOf(f).y },
+                    t: tickOf(f), level: f.status.level, player: { x: playerOf(f).x, y: playerOf(f).y,
+                        ...(PLAYER_HITS ? { hits: f.status.hits, hits_timer: f.status.hits_timer } : {}) },
                     bodies: bodiesOf(f).map((g) => ({ x: g.x, y: g.y, vx: g.vx, vy: g.vy,
                         hits: g.enemy?.hits ?? null, hits_timer: g.enemy?.hits_timer ?? null,
                         // ⛓ fidelity-bulb: the anim, for a class whose death is a sequence of them.

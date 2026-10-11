@@ -89,7 +89,6 @@ Written, but not working all the way through yet. The panel lists these in a col
 - **Tracking: the rules in the Editor** — Read the loaded game's rules JSON — and other data — in the Editor. `?tutorial=tracker-editor`
 - **Adventure in Loop Mode** — Turn a world into an incremental game: queue moves, explores and checks, spend mana, and start again when it runs out. `?tutorial=loops-adventure`
 - **Embedding pages and windows** — Load a page into an Iframe panel, or open it in a window of its own, and watch it connect to the app. `?tutorial=other-embedding`
-- **A-Mazing-Idle and the Maze Game Data panel** — Load the incremental maze game A-Mazing-Idle into an Iframe Panel and watch its state in the Maze Game Data panel. `?tutorial=other-maze-game-data`
 - **The Vibe Coding Simulator** — Manage unreliable AI agents building a project, one feature (one location) at a time — a joke game, fully playable. `?tutorial=other-vibe-coding`
 
 ### For developers (a collapsed section in the panel)
@@ -109,10 +108,10 @@ These panels are deliberately left out of the tutorials:
 | JtA Action Queue | Part of the non-procgen Journey to Ascension, which is deprecated. |
 | JtA Game Data | Part of the non-procgen Journey to Ascension, which is deprecated. |
 | JtA Cost Debugger | Deprecated. |
-| Rule Converter | Very out of date; it may be deprecated or removed. |
+| Rule Converter | Deprecated. |
 | Tile Map Analyzer | Currently a failed experiment. |
-| Meta Game | Removed from the default layout; it may be deprecated (an early draft of the procgen idea). |
-| Progress Bars | Removed from the default layout with the Meta Game panel; it may be deprecated. |
+| Meta Game | Deprecated (an early draft of the procgen idea). |
+| Progress Bars | Deprecated, with the Meta Game panel. |
 
 <!-- END GENERATED tutorial lists -->
 

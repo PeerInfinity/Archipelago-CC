@@ -31,4 +31,4 @@ An overview of the major features in the Archipelago JSON Export Tools project.
 
 ## New Games & Modes
 
-See the **[Playable Games Index](../games/README.md)** for all games and game modes, including DepGraph, Loops, MetaMath, Journey to Ascension, Maze Metagame, Text Adventure, and Vibe Coding Simulator.
+See the **[Playable Games Index](../games/README.md)** for all games and game modes, including DepGraph, Loops, MetaMath, Journey to Ascension, Text Adventure, and Vibe Coding Simulator.

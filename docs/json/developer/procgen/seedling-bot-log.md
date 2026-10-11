@@ -15927,6 +15927,155 @@ wait switch). Live sweep (production page, both ON): legs 333 and 339 failed →
 - **Fixing "the drive is the priced walk" by dropping the dash moves every walk that shares the verb.** Price the
   dash instead.
 
+### Seedling fidelity CROSSROOM — a cross-room button write into a level nothing reads is a ledger entry, and a clear-tag can be pressed from another level
+
+Wave 12 (model coverage). Re-measure 4 refused survey steps 59 and 76 (CI 38107331670) and sweep-4 legs 366 and 368 on
+one root: the rules arc's `ButtonRoom` events write across rooms, and the model handled neither direction. The report
+is `CC/docs/cloud-reports/seedling-fidelity-crossroom.md`.
+
+**D1 — measured.** On the game (p4f, headless, `probe-seedling-cross-room-button.mjs --only=38`): L38's
+`buttonroom@144,288` writes `{37,4}` and its own `{38,5}`; `buttonroom@32,48` writes `{39,8}` and `{38,4}`. Both
+land in `persistence_cleared` on the press. On the delivered set (`l37-fallrock-removed`) no entity of L37 carries
+tag 4; on the vanilla map the fallrock does. At the base, step 59 refused at L37's build (*"the tape clears tag(s) 4,
+which no entity in this level reads"*), and so did leg 366 (local sweep). **Step 76 never reached the executor:** the
+survey's goal mapper turned every goal that was not `reach-exit`, `reach-pit` or `encounter` into `collect-placement`,
+so it refused on the goal's shape (*"collect-placement needs placement"*), not on `'wrong-level'`. Leg 368 is refused
+by the page's `EVENT_GOAL_REFUSAL` before any solve.
+
+**D2 — the ledger (`levelRun`).** A cross-level clear into a level whose RECORD has no carrier of the tag is reported
+(`run.ledger('unreadRoomWrites')`, and the `roomWrites` row is marked `unread`). It is never banked or cashed. A
+STAGED clear with the same provenance is left out of the build (`clearedForBuild`) and reported too. The provenance is
+a map-placed `flip = 1` `buttonroom` whose `room`/`tset` name exactly `{n, tag}`. A clear with no such writer is still
+the build's derivation-error throw. A level that has a carrier keeps the banked path unchanged. `LEDGER_KIND_NAMES`
+34 → 35.
+
+**D3 — the cross-room presser (`execClearTag` + the survey).** The goal may name `presser: {level, class, x, y}` (the
+event's `action.presser`). When the run stands in the presser's level and the flag is in another, the executor
+presses the presser with the registered verb (`proximity-hazard:buttonroom` → `hold`). When no stance is reachable
+from where it stands, `walkTo`'s frontier loop walks it to the presser through the room. It finishes on
+`earnedClears` like every clear-tag. The survey hands the goal over as it is, with the presser read off the rules
+location. Step 76 SOLVES in 480 t with 0 hits: L38's chain (`buttonroom@144,128`, the pulser via `button@80,192`, the
+chest), then `buttonroom@32,48`, then into L39, whose build reads `{39,8}`.
+
+**D4 — witnesses and census.** `probe-seedling-cleartag.mjs --set=crossroom` (`fidelityCrossRoom.CROSSROOM_WITNESSES`,
+`fixtures/crossroom-oracle.json`): both presses at 0 px (13 and 423 observations). `{39,8}` is first held after 412
+ticks, which is the model's T + 1. Survey (local, base → head): 59 REFUSED → SOLVED 371 t, 76 REFUSED → SOLVED 480 t.
+58/60/75 are unchanged and 77/123/138 still refuse on `rope@96,384`; they boot with `{39,8}` staged by the survey's
+route credits, a contract left as it is. Sweep (local, production page): leg 366 failed → done (no divergence).
+Leg 368 is unchanged until the JS arc maps the event goal to `clear-tag` with its presser. Nothing committed moves:
+the identity block, the six producers, tapeRunner (605, `c439305b…`) and the bounded set (55 → 56 files, all green).
+
+**Trap candidates.**
+- **A goal mapper with a default arm eats new goal kinds.** The survey's `… : collect-placement` fallthrough turned a
+  `clear-tag` into a malformed pickup, and the refusal text sent the reader to the solver.
+- **A `contactsOverride` is a snapshot.** The holds a frontier applies mid-walk add their presser to the segment's
+  `exemptions`. A frozen override re-met L38's `buttonroom@144,128` after its press, and `hold` refused "ALREADY OPEN".
+- **A boot ON a presser is pressed in the arrival frame.** The game holds `{37,4}` after one tick, and the model's
+  row is t1 (the flag lands after two). `activators.bootPress`'s note says "a press by the player cannot tell", and
+  this one can. It is pinned as residue, not fixed.
+- **"Nobody reads it" is a fact about the delivered set, not the game.** The same press is read on the vanilla map
+  (the fallrock arm) and unread on the delivered one. The provenance is the writer, never the slot.
+
+### Seedling fidelity LEASH — the walker's crossing took a hit, and a bait waited for a body pinned on a wall
+
+Wave 12 (model coverage), planner `seedling-fidelity-planning-6`. RE-MEASURE 4 put the live chasers K2 made
+(`lavaRunnerLive` ON) on top of the sweep's unserved list: L73 leg 622 refused against `chaser:lavarunner@72,24` while
+the walker crossed it, L74 leg 624 against `lavarunner@208,96`, L104 leg 772 against `jellyfish@72,40`, and L74's
+Darkshield (leg 629) on the bait dwell's 84-tick bound. The report is `CC/docs/cloud-reports/seedling-fidelity-leash.md`.
+
+**D1 — measured on the game, and the brief's premise was the thing refuted.** The leash and the trigger are the game's:
+`runRange` 80 (Bob, so LavaRunner) and 160 (Jellyfish) are the census's `aggro.range`, and standing at the L73 arrival
+the model's lavarunner is the game's at 0 px (116 comparisons). Leg 622's walker crossing (`up` into teleporter@64,0)
+is HIT by the game at t2 (`hits` 0 → 1; `--player-hits`, witness `leash-l73-622-up-lavarunner`): the body sits
+diagonally adjacent, moves at t2, and the player's first-tick 0.8 px cannot clear it. The walker "crosses" because it
+does not price damage. A search over every two-tick prefix (moves, sword, secondary; 441 sequences, depth 3 measured
+too) finds no hitless crossing: the refusal is the game's. The solver's own corridor is worse for its own reason: the
+opportunistic strike turns `right` to face the body and presses, stepping 0.8 px into it (game: hit at t2 as well).
+Leg 629's bait stance is the L75 arrival (24,136); standing there, the game's `lavarunner@24,56` chases and PINS on the
+wall corner of tile (2,5) at (30.906↔31.362, 73.062) from t10 to t160 (322 comparisons, worst 0; witness
+`leash-l74-629-pin-lavarunner`). The straight line the derivation drew crosses the Bulb's lava — which does not kill a
+lavarunner either (`dieInLava = false`; `bodyKillRegions` is class-blind). The input that separates the page's refusal
+from BULB's node solve is `hasDarkSword`: survey step 162's staging holds the Dark Sword (Progressive Sword ×2), the
+page's sphere-7.3 leg the plain one; with it added the page's staging solves (241 t).
+
+**D2 — `CONTACT_FIDELITY.baitForecast` (read by `solverBot.BAIT_FORECAST`; OFF).** Each bait candidate's walk and its dwell are previewed on one chaser
+forecast (`previewWalk`'s standing tail, no keys, the strike disarmed, ceiling 2 × the line's bound, ≤ 32 previews);
+a stance is offered only where the body leaves the world, and the dwell's bound is the forecast's removal past the
+arrival plus `BAIT_SLACK`. The chaser forecast has no terrain switch, so `baitForecastOf` reads a terrain death off
+its own positions (`terrainKillsTag` against `ENEMY_CLASSES[tag].terrain`) and drops the corpse from the wait's danger
+question. ON, leg 629 SOLVES in 307 ticks (bait the Bulb into the lava, collect, kill the pinned lavarunner, walk);
+played on the game: the player at every tick, 0 hits, 548 LavaRunner and 82 Bulb comparisons at 0 px, and the game
+ends holding the Dark Shield (`leash-l74-629-on-plan-game`). On the page, with the switch set through the sweep's
+`--contact-fidelity`, leg 629 is done in 278 ticks with no divergence. OFF is byte-identical (tapeRunner 605 pairs,
+the identity block, bounded vitest); ON moves no tape, producer `--check` or identity row, only two bounded rows'
+refusal wording (L45's jellyfish bait, L6's TIME trip) and the switch's own pins.
+
+**Not changed, and why (measured).** Leg 624's refusal is the corridor the solver plans: played on the game it is hit
+at t87 exactly where the forecast priced it (`lavarunner@208,96` sits on the one-tile path); the ladder then hands the
+kill rung `bulb@48,112` (`chooseBodyToRemove`, the hammer arc's) instead of the body the corridor met. Leg 772 is
+SOLVED on the page at this base (366 t, no divergence). The TIME rung's WAIT bound grows a body from plan time with no
+one-tick lag (on 622 every tick-1 state was forbidden though the body cannot move on tick 1); with the lag 622 still
+has no path, so it is named, not changed.
+
+**Trap candidates.**
+- **A walker crossing is not game evidence of a hitless path.** The walker does not price damage; read the game's
+  player `hits` before calling a refusal over-conservative.
+- **A straight line from a chaser is not its path.** A wall the line ignores pins the body, and a dwell waiting for
+  its removal waits for ever.
+- **A kill region is a property of the region AND the class.** Lava does not kill a lavarunner; water, lava and pits
+  do not kill a jellyfish.
+- **The chaser forecast drowns nobody.** A consumer whose question is a terrain death must read it off the
+  forecast's positions, or it refuses every terrain bait.
+
+### Seedling fidelity SOLVECOST — the dash planner's cost was the room's collision scan, and a budget-bound leg was a refusal underneath
+
+Wave 12 (model coverage), the solver wall-clock slice. Live playthrough B (JS battery run 38108807480) ended on its
+TIME budget at sphere 4.4, walking to "Level 012 - Chest"; the route survey's L12 corridor (step 177, (592,16) →
+teleporter@0,352, 1269 t) cost ~105 s on CI; sweep-4 called `level_98 -> level_99__r2c7` budget-bound. The report is
+`CC/docs/cloud-reports/seedling-fidelity-solvecost.md`.
+
+**D1 — where the time goes (`node --cpu-prof`).** Step 177: `planSwordDash` 91.6 % of 245 s, and 84 % of the solve is
+`previewWalk`'s physics step. Three LINEAR SCANS took 80 % of all self time: `collidesSolid` 37.5 % and `liveRectOf`
+28.5 % (every solid of the level, once per pixel of sweep) and the nearest-tile scan inlined in `resolveTerrainState`
+14 % (every walkable tile, once per tick). L12 is the atlas's largest room, which is why its legs dominate the survey's
+wall-clock (steps 156, 187, 142, 43, 177 are its five slowest). B's slow legs are a different mix: its full pass is cut at
+the 85-unit window on every big leg (`L12 dashless 2570t w283/1`), so B's wall-clock is DASHLESS solves, which never call
+`planSwordDash` — and they pay the same three scans.
+
+**D2 — the scans get a broad phase (byte-identical, ON).** `SOLID_GRID`: a static 32 px grid over the solids whose
+live rect can only be `s.rect` or none; a crusher, turret, rope or pushable is always a candidate; candidates are
+visited in ascending list order, so the first hit (and its identity) is the linear loop's. Used by `collidesSolid` and
+both `plannerBlockerAt` loops. `NEAREST_TILE_INDEX`: the walkable tiles inside a window of half-width R, in the linear
+pass's own reverse order, accepted only when `bestDist < R²` (every tile left out is strictly farther, and the answer
+— `best` and `tie` — depends only on the tiles at the minimum). `pitTiles` / `lethalTerrainTiles` filter once and hand
+back a fresh copy. `levelWorldBroadPhase.test.js` compares ON vs OFF on every atlas world under random per-visit state
+(87,000 probes per query family); mutants m1–m4 (reverse order, a dynamic family dropped, the getter's copy dropped,
+the candidate sort dropped) each red it.
+
+**D2b — `AXE_DODGE_ASK_PER_PREVIEW` (OFF).** L98 → L99's units are almost all `axe-dodge` asks: the AXE arm asks once per
+stall length, and most stall lengths are priced by its rest-length screen's arithmetic with no preview. ON asks once
+per preview. No committed solve passes `shouldStop`, so nothing committed can move either way; ON moves where a
+budgeted solve trips, so it ships OFF. Measured ON over sweep-4's 16 budget-bound exit legs (node, the live inventory): one
+solves (`level_61__r0c7` from the L60 door, 462 t), six end on their own named refusal instead of the budget, two stay
+budget-bound (one is cut at `phase-dodge`, LADDER2's copy of the same ask), seven do not move.
+
+**D3 — the census.** Interleaved base/head on one box, every plan and refusal md5 equal, every work count equal:
+step 177 245 → 43 s; B's L12 leg (16,80) → pit 2570 t 55.2 → 6.9 s; B's last leg (L24 arrival → Level 012 - Chest,
+3122 t) 39.3 → 5.9 s; the budget-bound legs in the report's table. **L98 → L99 does NOT stop being budget-bound, and
+speed was never the reason**: in node, with the live inventory and NO budget, both arrivals REFUSE — *"kill: no side of
+iceturret@104,24 is reachable"* — after 31,559 and 24,730 units (~11 s). With D2b ON the same refusal costs 6,651 and
+3,604 units, and from (96,112) it now lands inside the 2,560-unit retry, by name.
+
+**Trap candidates.**
+- **A planner's cost hides in the oracle it asks.** The dash search looked quadratic and expensive; the preview it
+  repeats spent 80 % of its time in two linear scans of static geometry. Profile before pruning the search.
+- **A budget-bound verdict is not a cost finding.** Unbudgeted, L98 → L99 refuses by name; the budget only hid which
+  refusal. Ask the unbudgeted solve first.
+- **A work unit is only as good as what it buys.** The axe arm charged one unit per arithmetic screen (~0.3 ms) where
+  the rest of the ladder charges one per preview, so a cheap search exhausted a budget calibrated on expensive ones.
+- **A timing control rots with every speed-up.** `jsRuntimeSolveService`'s BACKSTOP row needs an L12 solve slower than
+  300 ms; after D2a it passes alone but went red once under a parallel run.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the

@@ -60,7 +60,9 @@ export function clearTagSolve(w, levelSource = atlasLevelSource()) {
     const run = createRunForStaging(staging, levelSource);
     const name = `cleartag-${w.key}`;
     const out = solveSegment({ run, goals: [{ ...w.goal }], name, boot: { ...w.boot } });
-    const record = out.records.find((r) => r.goal === 'clear-tag');
+    // ⛓ CROSSROOM D4: the clear-tag's OWN record (`done` stamps `arm`) — a frontier order run inside it (L38's
+    // chain on the way to a cross-room presser) records under the same goal kind first.
+    const record = out.records.find((r) => r.goal === 'clear-tag' && r.arm !== undefined);
     // The solve's slot selections ride on the tape (`burn` selects the Fire's slot and the old one again).
     const tapeOf = (n, suffix = '') => parseTape(buildStagedTape({
         staging: { ...staging, equips: out.equips.filter((e) => e.t < n) },
@@ -97,11 +99,12 @@ export function modelWrote(tape, flag, levelSource = atlasLevelSource()) {
 /**
  * Every game arm: the whole solve, and the two cuts around the model's write
  * tick T in the solve's replay (`modelWriteTick`): ended after `T` ticks (the
- * write's update not yet run) and after `T + 1`.
+ * write's update not yet run) and after `T + 1`. `witnesses` defaults to this
+ * module's list (⛓ CROSSROOM D4 passes `fidelityCrossRoom.CROSSROOM_WITNESSES`).
  */
-export function clearTagArms(levelSource = atlasLevelSource()) {
+export function clearTagArms(levelSource = atlasLevelSource(), witnesses = CLEARTAG_WITNESSES) {
     const out = [];
-    for (const w of CLEARTAG_WITNESSES) {
+    for (const w of witnesses) {
         const s = clearTagSolve(w, levelSource);
         const n = modelWriteTick(runTape(s.tape, { levelSource }), w.goal.tag) + 1;
         out.push({ arm: `${w.key}-solve`, w, tape: s.tape, flagExpected: true, solve: s, n });

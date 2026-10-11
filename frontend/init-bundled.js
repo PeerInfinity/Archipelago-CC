@@ -112,7 +112,6 @@ import * as windowAdapterModule from './modules/windowAdapter/index.js';
 import * as windowPanelModule from './modules/windowPanel/index.js';
 import * as windowManagerPanelModule from './modules/windowManagerPanel/index.js';
 import * as ruleConverterModule from './modules/ruleConverter/index.js';
-import * as mazeGameDataPanelModule from './modules/mazeGameDataPanel/index.js';
 import * as jtaGameDataPanelModule from './modules/jtaGameDataPanel/index.js';
 import * as jtaCostDebuggerModule from './modules/jtaCostDebugger/index.js';
 import * as proofQueueModule from './modules/proofQueue/index.js';
@@ -245,7 +244,6 @@ const BUNDLED_MODULES = {
   windowPanel: windowPanelModule,
   windowManagerPanel: windowManagerPanelModule,
   ruleConverter: ruleConverterModule,
-  mazeGameDataPanel: mazeGameDataPanelModule,
   jtaGameDataPanel: jtaGameDataPanelModule,
   jtaCostDebugger: jtaCostDebuggerModule,
   proofQueue: proofQueueModule,

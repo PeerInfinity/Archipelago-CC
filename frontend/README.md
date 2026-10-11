@@ -25,7 +25,6 @@ Beyond standard tracking, the frontend supports alternate game modes activated v
 | **[MetaMath](../worlds/metamath/docs/README.md)** | `?mode=metamath` | Play through mathematical proofs as Archipelago worlds |
 | **[DepGraph](../docs/json/features/depgraph.md)** | `?mode=depgraph` | Navigate dependency graphs (tech trees, skill trees) |
 | **[Loops](../docs/json/features/loops.md)** | `?mode=loops` | Incremental/idle mode — queue actions, spend mana, earn XP |
-| **[Maze Metagame](../docs/json/features/maze-metagame.md)** | `?metagame=mazegame` | Solve mazes before checking locations or moving regions |
 | **Text Adventure** | *(via module config)* | Play the randomizer as a text-based adventure |
 
 The frontend also includes a **procedural-generation pipeline**: the Procgen Pipeline panel generates complete multi-region worlds whose regions are rendered by pluggable substrates (maze, platformer, text adventure, Flash, idle game), compiled to standard `rules.json` and playable in place. See the [procgen developer docs](../docs/json/developer/procgen/README.md).

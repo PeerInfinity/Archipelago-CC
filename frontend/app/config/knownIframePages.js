@@ -30,18 +30,12 @@ export const knownIframePages = [
         url: "./modules/iframe-base/index.html",
         description: "Basic iframe module showing connection status and heartbeat",
         shortName: "iframebase"
-    },
-    {
-        name: "A-Mazing-Idle",
-        url: "./modules/a-mazing-idle-remote/index-iframe.html",
-        description: "Incremental maze game with bot automation",
-        shortName: "mazegame"
     }
 ];
 
 /**
  * Resolve an iframe URL from a shortname or pass through a full URL.
- * @param {string} input - A shortname (e.g., "mazegame") or a URL
+ * @param {string} input - A shortname (e.g., "iframebase") or a URL
  * @returns {string|null} The resolved URL, or null if input is empty
  */
 export function resolveIframeUrl(input) {
