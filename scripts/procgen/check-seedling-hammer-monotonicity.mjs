@@ -8,10 +8,11 @@
  *      is run in a child under `hammerMonotonicityHook.js`, with the generator's path in the mode `--path` names. Every
  *      oracle solve whose level record holds a spinner is captured (the record, the staging, the goals, the budget)
  *      with its verdict, and the row's stdout md5 is printed so it can be compared with the identity block's.
- *   2. RE-SOLVE — each captured record is solved again under every mode `--modes` names (`off` = the switches as the
- *      repository ships them; `fight` = `HAMMER_FIGHT` on; `approach` = `HAMMER_APPROACH` on; B3's `fallback` =
+ *   2. RE-SOLVE — each captured record is solved again under every mode `--modes` names (`off` = every switch below
+ *      OFF; `fight` = `HAMMER_FIGHT` on; `approach` = `HAMMER_APPROACH` on; B3's `fallback` =
  *      `HAMMER_FIGHT_FALLBACK` on, `whole` = it in its whole-solve mode; C1's `chooser` / `chooserorder` =
- *      `CHOOSER_HIT_SOURCES` on in its `empty` / `order` mode, `static` = `STATIC_SWORD_ARM` on, `c1` = both), in this process, by
+ *      `CHOOSER_HIT_SOURCES` on in its `empty` / `order` mode, `static` = `STATIC_SWORD_ARM` on, `c1` = both — the shipped pair
+ *      since C1-ON; every other mode, `off` included, holds those two OFF as the control), in this process, by
  *      `procgenOracle.solve` itself. The path's own mode must reproduce the captured verdict and ticks (a replay check).
  *
  * A record SOLVED under `off` and not SOLVED under another mode is a ⛔ row and the exit is 1.
@@ -86,6 +87,9 @@ async function capture(row, path, file) {
     delete env.SEEDLING_CHOOSER_HIT_SOURCES;
     delete env.SEEDLING_CHOOSER_HIT_SOURCES_MODE;
     delete env.SEEDLING_STATIC_SWORD_ARM;
+    // ⛓ C1-ON: the two C1 switches ship ON, so every mode but its own holds them OFF explicitly (the control)
+    env.SEEDLING_CHOOSER_HIT_SOURCES = '0';
+    env.SEEDLING_STATIC_SWORD_ARM = '0';
     Object.assign(env, MODES[path]);
     const child = spawn(process.execPath, ['--import', join(HERE, 'hammerMonotonicityHook.js'), join(HERE, script),
         ...args], { cwd: REPO, env, stdio: ['ignore', 'pipe', 'ignore'] });
@@ -99,7 +103,7 @@ async function resolveAll(records, modes, shard) {
     const { solve } = await import(join(MODULE, 'procgenOracle.js'));
     const SB = await import(join(MODULE, 'solverBot.js'));
     const ED = await import(join(MODULE, 'enemyDamage.js'));
-    // ⛓ `off` is the shipped configuration (both switches off), whatever this process's env says
+    // ⛓ `off` is every switch off (C1's two included, though they ship ON since C1-ON), whatever this process's env says
     const set = (mode) => {
         SB.HAMMER_FIGHT.enabled = mode === 'fight';
         SB.HAMMER_APPROACH.enabled = mode === 'approach';
