@@ -6083,9 +6083,15 @@ export function assertGoal(goal, i) {
         if (!Number.isInteger(goal.tag?.level) || !Number.isInteger(goal.tag?.tag) || goal.tag.tag < 0
             || !Number.isFinite(goal.at?.x) || !Number.isFinite(goal.at?.y)
             || (goal.obstacle !== undefined
-                && !/^[a-z0-9_]+@-?\d+,-?\d+$/i.test(String(goal.obstacle)))) {
+                && !/^[a-z0-9_]+@-?\d+,-?\d+$/i.test(String(goal.obstacle)))
+            // ⛓ CROSSROOM D3: optionally the PRESSER that writes the flag from another level (the event's
+            // `action.presser`) — `{level, class, x, y}`, integers and a class name.
+            || (goal.presser !== undefined && !(Number.isInteger(goal.presser?.level)
+                && /^[a-z0-9_]+$/i.test(String(goal.presser?.class))
+                && Number.isFinite(goal.presser?.x) && Number.isFinite(goal.presser?.y)))) {
             fail(`${at}: clear-tag needs tag {level, tag} (the persistence flag, integers, tag >= 0), `
-                + 'at {x, y} (the obstacle\'s OEL cell) and optionally obstacle \'<class>@<x>,<y>\', got '
+                + 'at {x, y} (the obstacle\'s OEL cell), optionally obstacle \'<class>@<x>,<y>\' and optionally '
+                + 'presser {level, class, x, y} (a cross-room writer), got '
                 + `${JSON.stringify(goal)}. The MACRO layer names WHICH flag; the solver owns HOW to clear it.`);
         }
         return goal;
@@ -19933,7 +19939,9 @@ function solveSegmentUnder({
      * executor: the wand), `cannot-act` (the resolver's `held: false`, e.g. no
      * sword), `unresolved` (the resolver could not bind, or no REACHABLE
      * stance), `prerequisite`, `not-written` (the verb ran and the flag did not
-     * land within `CLEAR_TAG_WRITE_TICKS`).
+     * land within `CLEAR_TAG_WRITE_TICKS`), and (CROSSROOM D3) `cross-room-presser`
+     * (the goal's `presser` is not a presser of this level, or does not write this
+     * clear).
      */
     const execClearTag = (goal) => {
         const flag = { level: goal.tag.level, tag: goal.tag.tag };
@@ -19948,7 +19956,21 @@ function solveSegmentUnder({
         const refuseCT = (reason, why, extra = {}) => refuse(`${whatCT}: ${why}`, {
             goal, obstacle: { kind: 'clear-tag', id, flag: { ...flag }, reason }, ...extra,
         });
-        if (run.level !== flag.level) {
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY CROSSROOM D3 — **A FLAG IN ANOTHER LEVEL, PRESSED FROM THIS ONE.**
+         *
+         * The rules arc's `flag:L39:8` is cleared by L38's `buttonroom@32,48` (`ButtonRoom.as:93`:
+         * `setPersistence(t, persist, room)` — its TSET, in level `room`, FALSE with `flip`); the
+         * obstacle stands in L39 and the press is in L38. The goal names the presser
+         * (`presser: {level, class, x, y}`, the event's `action.presser`), and when the run stands in
+         * the presser's level that is the order: walk to it and press it with the registered verb
+         * (`proximity-hazard:buttonroom` → `hold`, whose `runHold` already answers a cross-room presser
+         * by its `roomWrites`), then finish on the same ledger as every clear-tag (`earnedClears` holds
+         * `{level, tag}` from the `roomWrites` row, and the run is past its tick). The write is the
+         * run's ledger entry, so L39's next build reads it (`applyEarnedClears`, cashed at the press).
+         */
+        const crossRoom = run.level !== flag.level && goal.presser?.level === run.level;
+        if (run.level !== flag.level && !crossRoom) {
             refuseCT('wrong-level', `the run stands in level ${run.level}; the flag is level `
                 + `${flag.level}'s, and only that level's own world holds the obstacle. The macro layer `
                 + 'owes the crossing first.');
@@ -19987,10 +20009,132 @@ function solveSegmentUnder({
             }
             return perTick.length - from;
         };
+        /** CROSSROOM D3: the presser's press, finished on the flag's ledger row (see `crossRoom`). */
+        const execCrossRoomPress = () => {
+            const p = goal.presser;
+            const pid = `${p.class}@${p.x},${p.y}`;
+            const presser = (run.world.pressers ?? []).find((q) => q.tag === p.class && q.x === p.x && q.y === p.y)
+                ?? null;
+            if (!presser) {
+                refuseCT('cross-room-presser', `the goal's presser ${pid} is not a presser of level ${run.level}'s `
+                    + `live world (its pressers: [${(run.world.pressers ?? []).map((q) => `${q.tag}@${q.x},${q.y}`)
+                        .join(', ') || 'none'}])`);
+            }
+            if (!(presser.room === flag.level && presser.t === flag.tag && presser.flip === true)) {
+                refuseCT('cross-room-presser', `${pid} writes {${presser.room ?? -1},${presser.t}} = `
+                    + `${presser.flip ? 'false' : 'true'} (room ${presser.room ?? -1}, tset ${presser.t}, flip `
+                    + `${presser.flip ? 1 : 0}), not the clear {${flag.level},${flag.tag}} this goal asks for`);
+            }
+            if (presser.bootPressed) {
+                // `check()` re-ran the setter when this level was built (`activators.bootPress`): the game
+                // wrote the flag at the arrival, and a press now is a re-write the run does not ledger.
+                done('boot-pressed', { presser: pid, why: `${pid}'s own tag ${presser.persistTag} is cleared, so it `
+                    + `booted PRESSED and its \`check()\` re-wrote {${flag.level},${flag.tag}} at the build` });
+                return;
+            }
+            const obstacle = { kind: 'proximity-hazard', tag: presser.tag, id: pid };
+            const key = `proximity-hazard:${presser.tag}`;
+            const strategy = refineStrategy(run, OBSTACLE_STRATEGIES[key] ?? null, obstacle);
+            if (!strategy || !clearTagExecutor(strategy)) {
+                refuseCT('no-verb', `the presser ${pid} selects ${strategy ? `'${strategy}', which is NOT REGISTERED`
+                    : `no verb (no strategy row for ${key})`}`);
+            }
+            const presserContact = `proximity-hazard:${presser.tag}@${presser.x},${presser.y}`;
+            const resolveAt = () => resolveObstacleStrategy(run, strategy, obstacle,
+                new Set([...senseContacts(run), ...exemptions]), { x: presser.x, y: presser.y }, null,
+                [...refusedOrders]);
+            let resolved;
+            let approach = null;
+            try {
+                resolved = resolveAt();
+            } catch (e) {
+                if (!(e instanceof SolverRefusal)) throw e;
+                /**
+                 * ⛔ NO CORRIDOR TO THE PRESSER FROM HERE: the button stands behind the room's own chain
+                 * (L38's `buttonroom@32,48` is past `cover@208,224` and the link-2 pulser). The walk to its
+                 * centre is then the ROOM's question, and `walkTo`'s frontier loop is what answers a room —
+                 * the same loop a `reach-exit` gets — with the presser exempted so the plan may end on it.
+                 * Stepping onto the press rect presses it (`ButtonRoom.update`); if the walk stops short, the
+                 * stance is resolved again from where it stands.
+                 */
+                const firstWhy = e.message;
+                const centre = { x: (presser.rect.x + presser.rect.right) / 2,
+                    y: (presser.rect.y + presser.rect.bottom) / 2 };
+                // ⚠ INTO THE SEGMENT'S LIVE EXEMPTIONS, not a `contactsOverride`: an override is a snapshot,
+                // and the holds the frontier applies on the way add THEIR presser to `exemptions` — a frozen
+                // set re-met L38's own `buttonroom@144,128` as an obstacle after its press (measured, step 76).
+                exemptions.add(presserContact);
+                try {
+                    walkTo(goal, centre, { what: `${whatCT} -> the presser ${pid} (L${run.level}) through the room` });
+                } catch (e2) {
+                    if (!(e2 instanceof SolverRefusal)) throw e2;
+                    refuseCT('unresolved', `'${strategy}' at the presser ${pid} could not be resolved from `
+                        + `(${run.state.x},${run.state.y}) (${firstWhy}), and the walk to it through the room `
+                        + `refused: ${e2.message}`);
+                }
+                approach = 'through-the-room';
+                if (!written()) {
+                    try {
+                        resolved = resolveAt();
+                    } catch (e3) {
+                        if (!(e3 instanceof SolverRefusal)) throw e3;
+                        refuseCT('unresolved', `the walk reached (${run.state.x},${run.state.y}) by ${pid} without `
+                            + `pressing it, and '${strategy}' could not be resolved there: ${e3.message}`);
+                    }
+                }
+            }
+            if (approach && written()) {
+                const waited = waitForWrite(`the walk onto ${pid} in level ${run.level} pressed it`);
+                done('cross-room-press', { strategy: 'walk', presser: pid, from: run.level, approach, waited });
+                return;
+            }
+            if (!resolved || !resolved.stance) {
+                refuseCT('unresolved', `'${strategy}' is SELECTED and REGISTERED for ${key}, and the resolver `
+                    + `found no reachable stance on the presser ${pid}`);
+            }
+            if (resolved.prerequisite) {
+                refuseCT('prerequisite', `the presser ${pid}'s stance is reachable only once `
+                    + `${resolved.prerequisite.id} is discharged (${resolved.prerequisite.via}: `
+                    + `${resolved.prerequisite.why}); a clear-tag order does not chain openers`);
+            }
+            const verb = resolved.strategy ?? strategy;
+            seeRow({
+                tick: perTick.length,
+                saw: saw(),
+                goal: { kind: goal.kind, tag: { ...flag }, at: { x: goal.at.x, y: goal.at.y } },
+                obstacle: { kind: obstacle.kind, id: pid },
+                strategy: { verb },
+                rejected: resolved.rejected ?? [],
+                keys: [],
+            });
+            const before = {
+                open: run.entities('openActivators'),
+                armed: run.entities('armedPulsers') ?? new Set(),
+                trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
+                chests: run.entities('openChests'),
+            };
+            walkTo(goal, resolved.stance, {
+                what: `${whatCT} -> ${verb} the presser ${pid} (L${run.level})`,
+                contactsOverride: resolved.exempt,
+                axisAligned: resolved.approach === 'axis-aligned',
+            });
+            const record = written() ? { pressedOnTheWay: true } : clearTagExecutor(verb)(run, perTick, resolved, {
+                maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb} ${pid}`,
+                before, walkTo, goal, equip, rewind,
+            });
+            for (const c of resolved.exempt ?? []) exemptions.add(c);
+            const waited = waitForWrite(`'${verb}' pressed ${pid} in level ${run.level}`);
+            done('cross-room-press', { strategy: verb, presser: pid, from: run.level,
+                ...(approach ? { approach } : {}), waited, ...record });
+        };
         if (written()) {
             const waited = waitForWrite('an earlier walk or verb cleared it');
             done('cleared-in-passing', { waited, why: `the run's \`earnedClears\` already holds {${flag.level},`
                 + `${flag.tag}} — an earlier walk or verb cleared it, so the goal is met and not walked at` });
+            return;
+        }
+        if (crossRoom) {
+            execCrossRoomPress();
             return;
         }
         if (!solid) {
