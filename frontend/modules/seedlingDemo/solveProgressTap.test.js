@@ -11,6 +11,9 @@
  *        -> '… peek() only when it posts (and at a segment's done)' reds
  *   t3 the meter reads the segment's own `shouldStop` (no banking across segments)
  *        -> 'the meter SUMS the attempt …' reds
+ *   t4 (a defect the panel's screenshot showed, 2026-10-11) the pass stamped is the one running at READ time, so the
+ *        final snapshot of L6's dashless segment said `full` (and showed the window)
+ *        -> 'the FINAL snapshot names the pass its segment RAN in …' reds
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -97,6 +100,18 @@ describe('solveProgressTap — the stamps (the meter, the pass)', () => {
         h.call('walk', snap({ seq: 2, index: 1 }));
         expect(h.posts[1].s.segment.pass).toBe('full');
         expect(h.posts[1].s.budget.limit).toEqual({ shouldStop: 640, window: 85 });
+    });
+
+    it('the FINAL snapshot names the pass its segment RAN in, not the last pass (a skipped full pass runs no segment)', () => {
+        const h = harness({ minIntervalMs: 0 });
+        h.call('walk', snap({ seq: 1 }));
+        h.call('done', snap({ seq: 2, outcome: 'solved' }));
+        // the dashless pass lands with a plan; the full pass is skipped (no segment)
+        h.tap.onPass({ ok: true }, { ok: true });
+        h.tap.onPass({ kind: 'skipped' }, { ok: true });
+        h.tap.finish();
+        expect(h.posts.at(-1)).toMatchObject({ final: true, s: { segment: { index: 0, pass: 'dashless' } } });
+        expect(h.posts.at(-1).s.budget.limit).toEqual({ shouldStop: 640 });
     });
 
     it('the full pass with NO plan in hand has the whole budget (no window)', () => {

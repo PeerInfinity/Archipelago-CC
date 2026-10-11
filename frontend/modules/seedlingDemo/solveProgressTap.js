@@ -49,6 +49,12 @@ export function createProgressTap({ post, clock, minIntervalMs = SOLVE_PROGRESS_
     let planInHand = false;
     /** segment index -> its final `shouldStop` (banked at its `done`). */
     const finals = new Map();
+    /**
+     * segment index -> `{pass, windowed}` as of the first time the tap read it (a post, or at the latest its `done`,
+     * which comes before its pass lands): a segment keeps the pass it RAN in, so the final snapshot — read after the
+     * last pass landed — still names its own pass, not the last one.
+     */
+    const ofSegment = new Map();
     const stats = { calls: 0, peeks: 0, posts: 0 };
 
     const read = (peek) => { stats.peeks += 1; return peek(); };
@@ -58,12 +64,15 @@ export function createProgressTap({ post, clock, minIntervalMs = SOLVE_PROGRESS_
         let spent = 0;
         for (const [i, n] of finals) if (i < index) spent += n;
         spent += snap.budget?.work?.shouldStop ?? 0;
-        const p = passes[Math.min(landed, passes.length - 1)] ?? null;
-        if (p && snap.segment && snap.segment.pass === undefined) snap.segment.pass = p.pass;
+        if (!ofSegment.has(index)) {
+            const p = passes[Math.min(landed, passes.length - 1)] ?? null;
+            ofSegment.set(index, { pass: p?.pass ?? null, windowed: p?.stop === 'window' && planInHand });
+        }
+        const { pass, windowed } = ofSegment.get(index);
+        if (pass !== null && snap.segment && snap.segment.pass === undefined) snap.segment.pass = pass;
         if (snap.budget) {
             snap.budget.spent = { shouldStop: spent };
             if (Number.isFinite(budgetWork) && budgetWork > 0) {
-                const windowed = p?.stop === 'window' && planInHand;
                 snap.budget.limit = { shouldStop: budgetWork,
                     ...(windowed && Number.isFinite(windowAt) ? { window: windowAt } : {}) };
             }
