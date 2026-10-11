@@ -12100,11 +12100,18 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
         .filter((c) => planWaypointsOrNull(run.world, run.state, { x: c.x, y: c.y }, null, opts) !== null)
         .map((c) => ({ ...c, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) }))
         .sort((a, b) => a.d - b.d);
+    /**
+     * ⛓⛓ HAMMER-PHASE C3 — THE SPEAR FIRST (`ICE_TURRET_SPEAR_ARM`, OFF by default). Asked before the sword sides
+     * because a sword side's refusal is the expensive one: L98's below-side walk exhausts the axe ladder (12,365 work
+     * units from (96,112)) before it gives way, which is why the divergence sweep read the room as budget-bound. A
+     * spear arm that answers `why` spent no tick, and the sword sides follow exactly as OFF.
+     */
+    const spear = ICE_TURRET_SPEAR_ARM.enabled ? killIceTurretBySpear(run, perTick, id, resolved, ctx) : null;
+    if (spear?.record) return spear.record;
+    const spearWhy = spear ? ` · the spear: ${spear.why}` : '';
     if (sides.length === 0) {
-        const spear = ICE_TURRET_SPEAR_ARM.enabled ? killIceTurretBySpear(run, perTick, id, resolved, ctx) : null;
-        if (spear?.record) return spear.record;
         throw new SolverRefusal(`${ctx.what}: no side of ${id}'s live box is plannable floor within the sword's reach`
-            + `${spear ? ` · the spear: ${spear.why}` : ''}`,
+            + spearWhy,
         { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
     }
     /**
@@ -12129,11 +12136,8 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
         }
     }
     if (!side) {
-        const spear = ICE_TURRET_SPEAR_ARM.enabled ? killIceTurretBySpear(run, perTick, id, resolved, ctx) : null;
-        if (spear?.record) return spear.record;
-        throw new SolverRefusal(`${ctx.what}: no side of ${id} is reachable — ${sideWhys.join(' | ')}`
-            + `${spear ? ` · the spear: ${spear.why}` : ''}`,
-        { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+        throw new SolverRefusal(`${ctx.what}: no side of ${id} is reachable — ${sideWhys.join(' | ')}${spearWhy}`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
     }
     const hitsBefore = run.ledger('playerHits').length;
     const step = (keys) => {
@@ -12277,8 +12281,8 @@ function axeFreeFlood(run, opts, axes) {
 }
 
 /**
- * The spear arm (`ICE_TURRET_SPEAR_ARM`), asked only where `killIceTurretInPlace`'s sword sides all refused with no
- * tick spent.
+ * The spear arm (`ICE_TURRET_SPEAR_ARM`), asked by `killIceTurretInPlace` before its sword sides; a `why` means no
+ * tick was spent and the sword sides follow.
  *
  * A STANCE is a walkable point whose thrust rect (`spearRect`, from the run's own `spearOrigin`) overlaps the live
  * box, the player's box off that box (its contact) and clear of every spinning axe's reach by `SPEAR_AXE_MARGIN`,
