@@ -929,43 +929,6 @@ class RuleConverterMixin:
         # For other iterable types, try to convert
         return self._convert_rule(iterable)
 
-    def _convert_setting_value(self, rule: Dict[str, Any]) -> str:
-        """Convert a setting_value reference to its resolved value.
-
-        Settings are resolved at generation time since worldgen worlds
-        don't have access to the original game options at runtime.
-        """
-        setting = rule.get('setting', '')
-
-        # Look up the setting value in our resolved settings
-        if setting in self.settings:
-            value = self.settings[setting]
-            # Handle boolean values
-            if isinstance(value, bool):
-                self.required_imports.add('True_' if value else 'False_')
-                return 'True_()' if value else 'False_()'
-            # Handle string 'true'/'false' which are boolean-like
-            elif isinstance(value, str):
-                if value.lower() == 'true':
-                    self.required_imports.add('True_')
-                    return 'True_()'
-                elif value.lower() == 'false':
-                    self.required_imports.add('False_')
-                    return 'False_()'
-                # For other strings (like 'normal', 'light_and_darkness'), return as string literal
-                return repr(value)
-            # Handle integer values - return as-is for use in count/arithmetic contexts
-            # In cases where they're used in boolean contexts (like Not()), the caller
-            # is responsible for appropriate handling via Compare(value, ">", 0)
-            elif isinstance(value, int):
-                return repr(value)
-            else:
-                return repr(value)
-
-        # Setting not found - return False as safe default
-        self.required_imports.add('False_')
-        return 'False_()'
-
     def _expr_world_attribute(self, expr: Dict[str, Any]) -> str:
         """Generate code to access a world attribute at runtime."""
         return generate_world_attribute_expr(expr)
@@ -1214,11 +1177,6 @@ class RuleConverterMixin:
 
         # ===== Setting/Option/WorldAttribute Values =====
         # AST format
-        if ast_type == 'setting_value':
-            setting = arg.get('setting', '')
-            if setting in self.settings:
-                return repr(self.settings[setting])
-            return 'None'
         if ast_type == 'option_value':
             option = arg.get('option', '')
             if option in self.settings:
@@ -1231,16 +1189,6 @@ class RuleConverterMixin:
             return 'None'
 
         # Rule Builder format
-        if rule_type == 'SettingValue':
-            setting = arg.get('args', {}).get('setting', '')
-            if setting in self.settings:
-                return repr(self.settings[setting])
-            return 'None'
-        if rule_type == 'AST_setting_value':
-            setting = arg.get('args', {}).get('setting', '')
-            if setting in self.settings:
-                return repr(self.settings[setting])
-            return 'None'
         if rule_type == 'OptionValue':
             option = arg.get('args', {}).get('option', '')
             if option in self.settings:
@@ -1285,12 +1233,6 @@ class RuleConverterMixin:
 
         # ===== Attribute Access =====
         if ast_type == 'attribute':
-            obj = arg.get('object', {})
-            if obj.get('type') == 'setting_value' and arg.get('attr') == 'value':
-                setting = obj.get('setting', '')
-                if setting in self.settings:
-                    return repr(self.settings[setting])
-                return 'None'
             return 'None'
         if rule_type == 'Attribute':
             obj_info = arg.get('args', {}).get('object', {})

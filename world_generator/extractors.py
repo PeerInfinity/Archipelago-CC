@@ -277,7 +277,7 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
     # Extract game options (for generating dynamic fill_slot_data)
     game_options = world_data.get('options', {})
 
-    # Extract resolved values for evaluating option_value/world_attribute/setting_value nodes
+    # Extract resolved values for evaluating option_value/world_attribute nodes
     # This flat dict merges values from three sources:
     # 1. game_options (from world_data.options) - user-configurable options
     # 2. Top-level world_data attributes - game-specific values with correct types

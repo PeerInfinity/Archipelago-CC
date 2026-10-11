@@ -261,41 +261,6 @@ class HelperExpressionMixin:
 
         return []
 
-    def _expr_setting_value(self, expr: Dict[str, Any]) -> str:
-        """Generate code to access an option or world attribute at runtime.
-
-        Instead of resolving to constants at generation time, generate code that
-        accesses the value at runtime. This allows the exporter to recognize the
-        pattern and convert it back to a setting_value rule.
-
-        For options (defined in option_definitions):
-            state.multiworld.worlds[player].options.<name>
-        For world attributes (not in option_definitions):
-            state.multiworld.worlds[player].<name>
-
-        These patterns are recognized by the exporter's _is_world_options_pattern().
-        """
-        setting = expr.get('setting', '')
-
-        # Check if this is an option or a world attribute
-        is_option = setting in self.option_definitions
-
-        # Build the base path
-        if is_option:
-            base_path = f'state.multiworld.worlds[player].options.{setting}'
-        else:
-            base_path = f'state.multiworld.worlds[player].{setting}'
-
-        # Handle indexed access (e.g., required_medallions[0])
-        if 'index' in expr:
-            index = expr['index']
-            if isinstance(index, int):
-                return f'{base_path}[{index}]'
-            elif isinstance(index, str):
-                return f'{base_path}[{repr(index)}]'
-
-        return base_path
-
     def _expr_option_value(self, expr: Dict[str, Any]) -> str:
         """Generate code to access an option or world attribute at runtime.
 
@@ -1057,13 +1022,6 @@ class HelperExpressionMixin:
         """Generate attribute access expression."""
         obj_expr = expr.get('object', {})
         attr = expr.get('attr', '')
-
-        # Special case: when accessing .value on a setting_value, the setting_value
-        # is already resolved to its actual value, so just return it directly.
-        # This handles cases like world.options.goal.value where we captured the
-        # setting as setting_value and now just need the numeric/boolean value.
-        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'setting_value' and attr == 'value':
-            return self._generate_expression(obj_expr)
 
         # Special case: when accessing param.value where param is a helper function parameter
         # (e.g., card_region.value), return just the parameter name since enum values are
