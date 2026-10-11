@@ -37,6 +37,23 @@
  * The approved coordinates therefore go back to the user; both repoints are
  * exported below, NAMED and UNAPPLIED, so the choice is one line in the table.
  *
+ * ⚖ The user (2026-10-10): *"This might require a change to the AS3, to make
+ * the path not close except in vanilla mode. Please investigate this."* — and
+ * then *"Yes please"* to a third edit of the delivered set, no AS3:
+ *
+ *   3. `l37-fallrock-removed` — L37 (`OverWorld/region2`) loses its
+ *      `<fallrock>` (288,32, tset 0, tag 4). L38's arrival from L37 (its
+ *      `teleporter@288,0` → L38 (144,288)) lands ON L38's
+ *      `buttonroom@144,288` (tset 4, flip 1, room 37), which writes `{37,4}`
+ *      cleared (`ButtonRoom.as:93`), and a cleared `{37,4}` builds L37's rock
+ *      FALLEN, a Solid (`FallRock.as:42-45`), in L37's 1-tile column-18
+ *      corridor. So after the first entry into L38, L37's door to L38 and L38's
+ *      return landing (288,16) were sealed from the rest of L37, while the
+ *      rules price `level_37 <-> level_38` free both ways. With no rock, the
+ *      button's write reaches nothing (nothing else in L37 has tset 0, and no
+ *      other L38 button writes tset 4 into 37), and the corridor stays open in
+ *      both directions, as the rules already say. The button itself stays.
+ *
  * ── ⛔ WHERE THIS APPLIES, AND WHERE IT DOES NOT ─────────────────────────────
  *
  * ONE caller: `levelSetExporter.vanillaRecordSet`, the single source of the
@@ -46,7 +63,7 @@
  * playback map). Measured at `0aab89b4d8`: only `seedling_playthrough` reaches
  * it among the presets (the vanilla arm, and the atlas arm's 11 retags); the
  * four atlas presets allocate 0 retags, deliver no set, and run the BUILT-IN
- * map — Moonrock included — so they stay VANILLA.
+ * map — Moonrock and L37's fallrock included — so they stay VANILLA.
  *
  * NOT applied to: `flashPanel/atlases/seedling-map.json` itself (the faithful
  * extract of the game's OEL), `levelSource.loadAtlas()` (the model's built-in
@@ -77,6 +94,7 @@ export const SET_PATCH_IDS = Object.freeze({
     moonrockRemoved: 'moonrock-removed',
     l110FallToL2: 'l110-fall-to-l2',
     l110FallOffStairs: 'l110-fall-off-stairs',
+    l37FallrockRemoved: 'l37-fallrock-removed',
 });
 
 /**
@@ -95,6 +113,16 @@ export const PATCH_MOONROCK_REMOVED = Object.freeze({
     why: 'the moonrock event never fires: no rock, no `moonrock_target` Teleporter over '
         + 'L0\'s stairs, no `{2,0}` write, so L2\'s `moonrockpile` never appears and its '
         + 'stairs back to L0 stay open',
+});
+
+export const PATCH_L37_FALLROCK_REMOVED = Object.freeze({
+    id: SET_PATCH_IDS.l37FallrockRemoved,
+    level: 37,
+    op: 'remove',
+    match: Object.freeze({ type: 'fallrock', x: 288, y: 32, attrs: Object.freeze({ tset: '0', tag: '4' }) }),
+    why: 'L38\'s arrival from L37 presses `buttonroom@144,288`, which clears `{37,4}`; with no '
+        + 'fallrock in L37 that write builds nothing, so L37\'s column-18 corridor to and from L38 '
+        + 'stays open after the first entry',
 });
 
 /** L110's control, repointed so its pit's fall arrives at L2 (`x`, `y`) — `xOff`/`yOff` solved from (64,64). */
@@ -118,12 +146,13 @@ export const PATCH_L110_FALL_OFF_STAIRS = l110RepointTo(SET_PATCH_IDS.l110FallOf
     + 'fall-from-ceiling descent does not cross L2\'s `stairsup@48,16`');
 
 /**
- * ⚖ THE TABLE THE DELIVERY CARRIES. Edit 1 only: edit 2 is STOPPED (the header
- * above) — `PATCH_L110_FALL_TO_L2` and `PATCH_L110_FALL_OFF_STAIRS` stand ready
- * for the user's choice.
+ * ⚖ THE TABLE THE DELIVERY CARRIES. Edits 1 and 3: edit 2 is STOPPED (the
+ * header above) — `PATCH_L110_FALL_TO_L2` and `PATCH_L110_FALL_OFF_STAIRS` stand
+ * ready for the user's choice.
  */
 export const SEEDLING_SET_PATCHES = Object.freeze([
     PATCH_MOONROCK_REMOVED,
+    PATCH_L37_FALLROCK_REMOVED,
 ]);
 
 const sameAttrs = (have, want) => Object.entries(want)
