@@ -67,7 +67,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             bulbLive: true,
             // ⛓ fidelity LEASH D2: `baitForecast` (`solverBot.BAIT_FORECAST`) shipped OFF — ⚖ (user, 2026-10-11) ON since
             // the wave-12 harvest.
-            baitForecast: true });
+            baitForecast: true,
+            // ⛓ fidelity FORCEDHIT D2: `forcedHits` (`forcedHit.FORCED_HITS`) ships OFF.
+            forcedHits: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
