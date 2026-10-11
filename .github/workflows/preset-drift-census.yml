@@ -35,7 +35,7 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
           python Launcher.py --update_settings
-          python scripts/setup/update_host_settings.py minimal-spoilers
+          python scripts/setup/update_host_settings.py full-spoilers
       - name: Generate (generate-presets defaults, CLEAN_EXISTING=false)
         env:
           PYTHONUNBUFFERED: "1"
@@ -68,5 +68,5 @@ jobs:
       - uses: actions/upload-artifact@v7.0.0
         if: always()
         with:
-          name: preset-drift-census
+          name: preset-drift-census-full
           path: census/
