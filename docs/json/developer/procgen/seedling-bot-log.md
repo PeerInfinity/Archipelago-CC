@@ -15842,6 +15842,57 @@ wait switch). Live sweep (production page, both ON): legs 333 and 339 failed →
 - **Fixing "the drive is the priced walk" by dropping the dash moves every walk that shares the verb.** Price the
   dash instead.
 
+### Seedling fidelity LEASH — the walker's crossing took a hit, and a bait waited for a body pinned on a wall
+
+Wave 12 (model coverage), planner `seedling-fidelity-planning-6`. RE-MEASURE 4 put the live chasers K2 made
+(`lavaRunnerLive` ON) on top of the sweep's unserved list: L73 leg 622 refused against `chaser:lavarunner@72,24` while
+the walker crossed it, L74 leg 624 against `lavarunner@208,96`, L104 leg 772 against `jellyfish@72,40`, and L74's
+Darkshield (leg 629) on the bait dwell's 84-tick bound. The report is `CC/docs/cloud-reports/seedling-fidelity-leash.md`.
+
+**D1 — measured on the game, and the brief's premise was the thing refuted.** The leash and the trigger are the game's:
+`runRange` 80 (Bob, so LavaRunner) and 160 (Jellyfish) are the census's `aggro.range`, and standing at the L73 arrival
+the model's lavarunner is the game's at 0 px (116 comparisons). Leg 622's walker crossing (`up` into teleporter@64,0)
+is HIT by the game at t2 (`hits` 0 → 1; `--player-hits`, witness `leash-l73-622-up-lavarunner`): the body sits
+diagonally adjacent, moves at t2, and the player's first-tick 0.8 px cannot clear it. The walker "crosses" because it
+does not price damage. A search over every two-tick prefix (moves, sword, secondary; 441 sequences, depth 3 measured
+too) finds no hitless crossing: the refusal is the game's. The solver's own corridor is worse for its own reason: the
+opportunistic strike turns `right` to face the body and presses, stepping 0.8 px into it (game: hit at t2 as well).
+Leg 629's bait stance is the L75 arrival (24,136); standing there, the game's `lavarunner@24,56` chases and PINS on the
+wall corner of tile (2,5) at (30.906↔31.362, 73.062) from t10 to t160 (322 comparisons, worst 0; witness
+`leash-l74-629-pin-lavarunner`). The straight line the derivation drew crosses the Bulb's lava — which does not kill a
+lavarunner either (`dieInLava = false`; `bodyKillRegions` is class-blind). The input that separates the page's refusal
+from BULB's node solve is `hasDarkSword`: survey step 162's staging holds the Dark Sword (Progressive Sword ×2), the
+page's sphere-7.3 leg the plain one; with it added the page's staging solves (241 t).
+
+**D2 — `CONTACT_FIDELITY.baitForecast` (read by `solverBot.BAIT_FORECAST`; OFF).** Each bait candidate's walk and its dwell are previewed on one chaser
+forecast (`previewWalk`'s standing tail, no keys, the strike disarmed, ceiling 2 × the line's bound, ≤ 32 previews);
+a stance is offered only where the body leaves the world, and the dwell's bound is the forecast's removal past the
+arrival plus `BAIT_SLACK`. The chaser forecast has no terrain switch, so `baitForecastOf` reads a terrain death off
+its own positions (`terrainKillsTag` against `ENEMY_CLASSES[tag].terrain`) and drops the corpse from the wait's danger
+question. ON, leg 629 SOLVES in 307 ticks (bait the Bulb into the lava, collect, kill the pinned lavarunner, walk);
+played on the game: the player at every tick, 0 hits, 548 LavaRunner and 82 Bulb comparisons at 0 px, and the game
+ends holding the Dark Shield (`leash-l74-629-on-plan-game`). On the page, with the switch set through the sweep's
+`--contact-fidelity`, leg 629 is done in 278 ticks with no divergence. OFF is byte-identical (tapeRunner 605 pairs,
+the identity block, bounded vitest); ON moves no tape, producer `--check` or identity row, only two bounded rows'
+refusal wording (L45's jellyfish bait, L6's TIME trip) and the switch's own pins.
+
+**Not changed, and why (measured).** Leg 624's refusal is the corridor the solver plans: played on the game it is hit
+at t87 exactly where the forecast priced it (`lavarunner@208,96` sits on the one-tile path); the ladder then hands the
+kill rung `bulb@48,112` (`chooseBodyToRemove`, the hammer arc's) instead of the body the corridor met. Leg 772 is
+SOLVED on the page at this base (366 t, no divergence). The TIME rung's WAIT bound grows a body from plan time with no
+one-tick lag (on 622 every tick-1 state was forbidden though the body cannot move on tick 1); with the lag 622 still
+has no path, so it is named, not changed.
+
+**Trap candidates.**
+- **A walker crossing is not game evidence of a hitless path.** The walker does not price damage; read the game's
+  player `hits` before calling a refusal over-conservative.
+- **A straight line from a chaser is not its path.** A wall the line ignores pins the body, and a dwell waiting for
+  its removal waits for ever.
+- **A kill region is a property of the region AND the class.** Lava does not kill a lavarunner; water, lava and pits
+  do not kill a jellyfish.
+- **The chaser forecast drowns nobody.** A consumer whose question is a terrain death must read it off the
+  forecast's positions, or it refuses every terrain bait.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
