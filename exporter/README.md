@@ -62,6 +62,8 @@ export_game_rules(
 )
 ```
 
+**Format fallback.** If `rule_builder` or `both` is requested and the Rule Builder output cannot be produced — the converter (`exporter/converter`) or the extended `rule_builder` fails to import, or conversion raises — the exporter still writes the rules in **AST format** (kept deliberately). It is never silent: (1) an ERROR log line names the requested and written format and the cause (exception type, message and raising `file:line`; an import failure's full traceback is logged once per process); (2) every slot's `exporter["<player>"]` block in the file gets a `format_fallback` record `{requested, written, reason, rule_builder_output}` (`rule_builder_output: "dropped"` when `both` lost its Rule Builder half; the `_rules-ast.json` is still written) — declared in `frontend/schema/rules.schema.json` and absent on a normal export; (3) a `Generate.py` run ends with `WARNING: N rules file(s) written in ast instead of <requested>: <paths>`. On a compiled Archipelago install, where the extended Rule Builder cannot load, this fallback is expected on every run. Implementation: `exporter/format_fallback.py`.
+
 ## Pickle Export
 
 The pickle exporter provides an alternative export format that preserves the multiworld object directly, including lambdas and closures in access rules. This is faster than JSON-based worldgen tracking since no regeneration is needed.

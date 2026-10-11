@@ -366,6 +366,7 @@ def _install_export_hook() -> bool:
                 except Exception as e:
                     logger.warning(f"Fallback post-generation export failed: {e}")
 
+            _log_format_fallback_summary()
             return result
 
         Main.main = hooked_main
@@ -379,6 +380,18 @@ def _install_export_hook() -> bool:
     except Exception as e:
         logger.error(f"Failed to install {hook_name} hook: {e}")
         return False
+
+
+def _log_format_fallback_summary() -> None:
+    """Last line of a run: the rules files written in a format other than the
+    one asked for (exporter/format_fallback.py), if any."""
+    try:
+        from exporter import format_fallback
+    except ImportError:
+        return  # no exporter, or one that predates the fallback record
+    line = format_fallback.summary_line(format_fallback.drain())
+    if line:
+        logging.warning(line)
 
 
 # ---------------------------------------------------------------------------

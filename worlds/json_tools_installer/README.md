@@ -178,7 +178,9 @@ dependencies are covered by the apworld-requirements scan described above.
 Components that cannot work there are skipped with a warning:
 
 - `rule_builder` — vanilla's copy inside `lib/library.zip` takes module-path
-  precedence and cannot be replaced; rule exports fall back to `ast` format.
+  precedence and cannot be replaced; rule exports fall back to `ast` format
+  (logged, recorded in the file and summarised at the end of the run — see the
+  exporter README's *Format fallback*).
 - `romless_patches` and `upstream_fixes` — compiled installs run their worlds
   from `lib/worlds/*.apworld`, which file patches cannot reach.
 - `worldgen_worlds`, and the `toem_rule_builder` demo world — they require the
