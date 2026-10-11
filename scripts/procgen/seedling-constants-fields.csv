@@ -1926,3 +1926,50 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2478e7e0|60|0,rule,ma
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9065cb5b|0|0,rule,sentinel,,Ground state 0 (Player.as:297)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb348a44c|116|0,rule,count,,Game.levels.length
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h4254a394|3|0,physics,magnitude,Player.as:wandSpeed,
+frontend/modules/seedlingDemo/bombPusher.js|fpSign|fpSign,physics,sign,,FP.sign
+frontend/modules/seedlingDemo/bombPusher.js|(module)|hfa455bca|24|0,physics,magnitude,Enemies/BombPusher.as:super,ctor centre: _x + Tile.w*3/2
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h51dc993b|24|0,physics,magnitude,Enemies/BombPusher.as:super,ctor centre: _x + Tile.w*3/2
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h1f0f5a09|48|0,physics,magnitude,Enemies/BombPusher.as:setHitbox,setHitbox(48; 48; 24; 24)
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h690ad4df|48|0,physics,magnitude,Enemies/BombPusher.as:setHitbox,setHitbox(48; 48; 24; 24)
+frontend/modules/seedlingDemo/bombPusher.js|(module)|hb1436db0|24|0,physics,magnitude,Enemies/BombPusher.as:setHitbox,setHitbox(48; 48; 24; 24)
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h19876d2d|24|0,physics,magnitude,Enemies/BombPusher.as:setHitbox,setHitbox(48; 48; 24; 24)
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h758602fb|256|0,rule,bound,Enemies/BombPusher.as:maxDistance,FP.distance <= 256 starts a shot
+frontend/modules/seedlingDemo/bombPusher.js|(module)|hc8124af9|15|0,rule,magnitude,Enemies/BombPusher.as:shotTimeMax,15 decrements between a wrap and the next play
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h7212eb88|5|0,rule,magnitude,Enemies/BombPusher.as:shoot,five-frame shoot anim at rate 5: the wrap adds the Bomb
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h67677bcb|5|0,rule,magnitude,Enemies/BombPusher.as:shoot,five-frame shoot anim at rate 5: the wrap adds the Bomb
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h54f37cfd|2|0,cosmetic,,,sit anim: its wrap does nothing
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h2f7cbe28|2|0,cosmetic,,,sit anim: its wrap does nothing
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h62db2842|16|0,physics,magnitude,Projectiles/Bomb.as:setHitbox,setHitbox(16; 16; 8; 8): nothing collides with type Bomb
+frontend/modules/seedlingDemo/bombPusher.js|(module)|ha8e3f3f5|16|0,physics,magnitude,Projectiles/Bomb.as:setHitbox,setHitbox(16; 16; 8; 8): nothing collides with type Bomb
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h8ba80560|8|0,physics,magnitude,Projectiles/Bomb.as:setHitbox,setHitbox(16; 16; 8; 8): nothing collides with type Bomb
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h1d4abf3e|8|0,physics,magnitude,Projectiles/Bomb.as:setHitbox,setHitbox(16; 16; 8; 8): nothing collides with type Bomb
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h82857fb0|30|0,rule,magnitude,Projectiles/Bomb.as:tMax,v is a 30th of the aim; 31 updates to the Explosion
+frontend/modules/seedlingDemo/bombPusher.js|(module)|h5cf04cd6|0.05|0,physics,magnitude,Mobile.as:friction,an axis zeroed below 0.05
+frontend/modules/seedlingDemo/bombPusher.js|(module)|ha5f157f1|24|0,rule,magnitude,Projectiles/Bomb.as:removed,new Explosion(x; y; hitables; 24)
+frontend/modules/seedlingDemo/bombPusher.js|(module)|hc9f1ed73|0.65|0,rule,magnitude,Projectiles/Explosion.as:radiusCoeff,radius *= 0.65
+frontend/modules/seedlingDemo/bombPusher.js|(module)|haddd7528|24|0,rule,derivation,Projectiles/Explosion.as:radius,int(24 * 0.65) = 15: the hit radius
+frontend/modules/seedlingDemo/bombPusher.js|(module)|haddd7528|0.65|0,rule,derivation,Projectiles/Explosion.as:radius,int(24 * 0.65) = 15: the hit radius
+frontend/modules/seedlingDemo/bombPusher.js|(module)|hf918006d|4|0,physics,magnitude,Projectiles/Explosion.as:force,knockback force 4
+frontend/modules/seedlingDemo/bombPusher.js|(module)|hfeb7c2f8|1|0,rule,magnitude,Projectiles/Explosion.as:Explosion,damage default 1
+frontend/modules/seedlingDemo/bombPusher.js|createBombPusher|hd9d2dff8|0|0,structural,,,
+frontend/modules/seedlingDemo/bombPusher.js|createBombPusher|hd9d2dff8|0|1,rule,magnitude,Enemies/BombPusher.as:shotTime,seeded 0 so an in-range player is shot at on the first update
+frontend/modules/seedlingDemo/bombPusher.js|createBombPusher|hd9d2dff8|0|2,structural,,,
+frontend/modules/seedlingDemo/bombPusher.js|createBombPusher|hd9d2dff8|0|3,structural,,,
+frontend/modules/seedlingDemo/bombPusher.js|play|play,structural,,,play(): _index = 0 / _timer = 0
+frontend/modules/seedlingDemo/bombPusher.js|bombPusherAnimStep|h00dbb6a1|1|0,structural,,,Spritemap _timer >= 1
+frontend/modules/seedlingDemo/bombPusher.js|bombPusherAnimStep|h168241cb|1|0,structural,,,Spritemap _timer--
+frontend/modules/seedlingDemo/bombPusher.js|bombPusherAnimStep|hc0649c44|1|0,structural,,,Spritemap _index++
+frontend/modules/seedlingDemo/bombPusher.js|bombPusherAnimStep|h42dcd95b|0|0,structural,,,loop wrap _index = 0
+frontend/modules/seedlingDemo/bombPusher.js|bombPusherAnimStep|hfbc8f180|1|0,structural,,,bomb id counter
+frontend/modules/seedlingDemo/bombPusher.js|stepBombPusher|h08acd311|0|0,rule,bound,Enemies/BombPusher.as:shotTime,shotTime > 0 counts down
+frontend/modules/seedlingDemo/bombPusher.js|stepBombPusher|h83045773|1|0,structural,,,shotTime-- per update
+frontend/modules/seedlingDemo/bombPusher.js|stepBombPusher|h4cd8d828|0|0,rule,sentinel,Enemies/BombPusher.as:shotTime,shotTime == 0 may start a shot
+frontend/modules/seedlingDemo/bombPusher.js|stepBombPusher|h0727bbb4|-1|0,rule,sentinel,Enemies/BombPusher.as:shotTime,-1 while the shoot anim plays
+frontend/modules/seedlingDemo/bombPusher.js|moveAxis|moveAxis,structural,,,one-pixel move sub-steps (Mobile.moveX/moveY)
+frontend/modules/seedlingDemo/bombPusher.js|stepBomb|h5e5692ed|0|0,structural,,,friction with f = 0 (length - 0; max 0)
+frontend/modules/seedlingDemo/bombPusher.js|stepBomb|h5e5692ed|0|1,structural,,,friction with f = 0 (length - 0; max 0)
+frontend/modules/seedlingDemo/bombPusher.js|stepBomb|hab9fb5f0|0|0,physics,magnitude,Mobile.as:friction,an axis zeroed below 0.05
+frontend/modules/seedlingDemo/bombPusher.js|stepBomb|hbeb26f40|0|0,physics,magnitude,Mobile.as:friction,an axis zeroed below 0.05
+frontend/modules/seedlingDemo/bombPusher.js|stepBomb|hdaa05290|0|0,rule,bound,Projectiles/Bomb.as:update,t > 0 counts down
+frontend/modules/seedlingDemo/bombPusher.js|stepBomb|h36506d2a|1|0,structural,,,t-- per update
+frontend/modules/seedlingDemo/bombPusher.js|bombPusherCadence|bombPusherCadence,structural,,,the cadence simulator: counters

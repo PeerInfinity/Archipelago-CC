@@ -168,6 +168,8 @@ import {
     TURRET_SPIT, createTurret, spitSpeed, stepTurret, stepTurretSpit, turretRect,
     turretSpitRect,
 } from './turret.js';
+// ⛓⛓⛓ seedling-fidelity-bombpusher D2: `BombPusher` + `Bomb` + its `Explosion` (`CONTACT_FIDELITY.bombPusherLive`).
+import { BOMB, createBombPusher, stepBomb, stepBombPusher } from './bombPusher.js';
 // ⛓⛓⛓ R6 SLICE 2: the THIRTEENTH family — the first projectile the PLAYER
 // makes, so the first per-visit body a tape is responsible for.
 import { WAND_PRESS_CADENCE, WAND_VERB, WAND_WINDOW, wandPress } from './wandVerb.js';
@@ -403,6 +405,8 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'shooters',
     'staticBodies',
     'darkTraps',
+    'bombPushers',
+    'bombs',
 ]);
 
 /**
@@ -465,6 +469,7 @@ export const LEDGER_KIND_NAMES = Object.freeze([
     'staticBodyDeaths',
     'witchEvents',
     'unreadRoomWrites',
+    'bombEvents',
 ]);
 
 /**
@@ -2175,6 +2180,33 @@ export function createLevelRun({
         if (!spitStates.has(n)) spitStates.set(n, []);
         return spitStates.get(n);
     };
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bombpusher D2: the room's lobbers (`Game.as:2299`, `.oel` order; a new `Game` rebuilds
+     * each with `shotTime` 0 and no anim) and its bombs in flight, NEWEST FIRST (`addUpdate` prepends). Only read
+     * under `CONTACT_FIDELITY.bombPusherLive`; OFF nothing here is ever built.
+     */
+    const bombPusherStates = new Map();
+    const bombPusherStateFor = (n) => {
+        if (!bombPusherStates.has(n)) {
+            const byId = new Map();
+            for (const e of levelSource(n).entities ?? []) {
+                if (e.type !== 'bombpusher') continue;
+                const b = createBombPusher(e.x, e.y);
+                byId.set(b.id, b);
+            }
+            bombPusherStates.set(n, byId);
+        }
+        return bombPusherStates.get(n);
+    };
+    const bombStates = new Map();
+    const bombsFor = (n) => {
+        if (!bombStates.has(n)) bombStates.set(n, []);
+        return bombStates.get(n);
+    };
+    /** One row per bomb spawned / exploded / dropped — `{t, level, what, id, …}`. */
+    const bombEvents = [];
+    /** The bombs' `Explosion.added()` calls waiting for this tick's `updateLists()` (see `drainBombBlastsNow`). */
+    const pendingBombBlasts = [];
     /** One row per spit spawned or removed — `{t, level, what, id, x, y, …}`. */
     const spitEvents = [];
     /**
@@ -4258,6 +4290,9 @@ export function createLevelRun({
         // ⛓ U15-swim D1: and every turret (angle 0, `shootTimer` 0) and no spit.
         shooterStates.delete(n);
         spitStates.delete(n);
+        // ⛓ seedling-fidelity-bombpusher: and every lobber (`shotTime` 0, no anim) and no bomb.
+        bombPusherStates.delete(n);
+        bombStates.delete(n);
         bridgeStates.set(n, new Map());
         pushableStates.set(n, createPushableState(worldFor(n)));
         // R5 slice 13: a re-entered room rebuilds every spinner at its cell,
@@ -4809,6 +4844,8 @@ export function createLevelRun({
         blastStates.delete(fromLevel);
         wandShotStates.delete(fromLevel);
         spitStates.delete(fromLevel);
+        bombStates.delete(fromLevel);
+        pendingBombBlasts.length = 0;
         // ⛓ THE NEW `Game`'s OWN ARGS, for a later `restartLevel()`.
         worldCtor = { x: ctor.x, y: ctor.y };
         // ⛓ AND THE CAMERA IS A NEW `Game`'s TOO — `loadlevel` writes it raw
@@ -11798,6 +11835,124 @@ export function createLevelRun({
         }
     }
 
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bombpusher D2: ONE TICK OF EVERY BOMB, AND IT IS FIRST — the spits' slot, for their
+     * reason: a bomb is added at RUN TIME and `addUpdate` PREPENDS, so it updates ahead of every `.oel` entity.
+     * `solids = []` and `type = "Bomb"` (in no one's list), so it reads and moves nothing but itself; its only act
+     * is the `Explosion` its removal adds, which is deferred to `updateLists()` (`drainBombBlastsNow`). So its order
+     * against the other run-time families (L40's IceTurret blasts) is unobservable.
+     *
+     * ⛔ `frozen` gates the MOVE only (`Mobile.mobileUpdate`); `t` counts through a ceremony.
+     */
+    function stepBombsNow({ frozen = ceremony !== null } = {}) {
+        const list = bombsFor(level);
+        if (list.length === 0) return;
+        for (const s of list) {
+            const r = stepBomb(s, { frozen });
+            if (!r.exploded) continue;
+            bombEvents.push({ t: ticksCompleted + 1, level, what: 'explode', id: s.id, at: { ...r.exploded } });
+            pendingBombBlasts.push({ level, id: s.id, x: r.exploded.x, y: r.exploded.y, frozen });
+        }
+        const kept = list.filter((s) => !s.removed);
+        if (kept.length !== list.length) bombStates.set(level, kept);
+    }
+
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bombpusher D2: ONE TICK OF EVERY LOBBER (`BombPusher.update` + its Spritemap), in the
+     * slot `Game.as:2299` gives it: added after the Player (`:2250`) and after the turrets, before the crushers and
+     * the punchers, and `addUpdate` prepends — so it updates BEFORE the player and reads the player as the previous
+     * tick left it (`state`, here). A bomb its `endAnim` adds first updates on the next tick.
+     *
+     * ⛔ NOT FREEZE-GATED (no `Game.freezeObjects` test in the class): see `stepBombsThroughFreeze`.
+     */
+    function stepBombPushersNow() {
+        const st = bombPusherStateFor(level);
+        if (st.size === 0) return;
+        for (const id of [...st.keys()].reverse()) {
+            const b = st.get(id);
+            stepBombPusher(b, { player: { x: state.x, y: state.y } });
+            if (!b.spawned) continue;
+            b.spawned.spawnedAt = ticksCompleted + 1;
+            bombsFor(level).unshift(b.spawned);
+            bombEvents.push({ t: ticksCompleted + 1, level, what: 'spawn', id: b.spawned.id,
+                x: b.spawned.x, y: b.spawned.y, v: { ...b.spawned.v } });
+        }
+    }
+
+    /**
+     * ⛓ seedling-fidelity-bombpusher: a pickup's phase A is a LUMP of dead frames, and the lobber and its bombs run
+     * through every one: the clock and the anim are ungated, a bomb stops MOVING and keeps counting, and an
+     * Explosion that lands in the freeze bills nothing (`Player.hit`'s `!Game.freezeObjects`; `Enemy.hit` is gated the
+     * same way). The player does not move, so each frame is stepped here at the ceremony's start.
+     */
+    function stepBombsThroughFreeze(frames) {
+        if (!CONTACT_FIDELITY.bombPusherLive) return;
+        if (bombPusherStateFor(level).size === 0 && bombsFor(level).length === 0) return;
+        for (let k = 0; k < frames; k += 1) {
+            stepBombsNow({ frozen: true });
+            stepBombPushersNow();
+            drainBombBlastsNow();
+        }
+    }
+
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bombpusher D2: `Explosion.added()` for this tick's bombs, in `updateLists()` — the
+     * bomb's `removed()` runs in the REMOVE loop and adds the Explosion, which the ADD loop of the SAME
+     * `updateLists()` then adds (`World.as:900-926`). So the disc tests the player's END-of-tick origin (`state`,
+     * advanced by the caller), as the boss's blasts do (`applyExplosion`, whose square-then-disc test this is, with
+     * the TRUNCATED radius `int(24 * 0.65)` = 15).
+     *
+     * ⛔ THE `"Enemy"` / `"ShieldBoss"` ARMS ARE A REFUSAL, NOT A ZERO. `Enemy.hit(4, Point(x, y), 1)` would land on a
+     * body in the disc; this arm does not stage it. A stepped chaser in the disc, or any other `"Enemy"` body whose
+     * box meets the prefilter square, refuses by name (the lobber itself is `type = "Solid"`, out of every list).
+     */
+    function drainBombBlastsNow() {
+        if (pendingBombBlasts.length === 0) return;
+        const radius = BOMB.explosionHitRadius;
+        for (const b of pendingBombBlasts.splice(0, pendingBombBlasts.length)) {
+            if (b.level !== level) continue;
+            const square = rect(b.x - radius, b.y - radius, radius * 2, radius * 2);
+            const inDisc = (px, py) => Math.sqrt((b.x - px) ** 2 + (b.y - py) ** 2) <= radius;
+            for (const c of chaserStateFor(level).values()) {
+                if (c.removed) continue;
+                if (rectsOverlap(chaserBoxAt(c.tag, c.x, c.y), square) && inDisc(c.x, c.y)) {
+                    throw new Error(`levelRun: the Explosion of ${b.id} at (${b.x}, ${b.y}) on tick `
+                        + `${ticksCompleted} in level ${level} reaches the chaser ${c.id} — \`Enemy.hit(4, …, 1)\` `
+                        + '(`Explosion.as:62-65`) is not staged on a bomb\'s blast (seedling-fidelity-bombpusher). '
+                        + 'Refused by name.');
+                }
+            }
+            // A spinner's entity point is its own (`spinner.js`), so the game's whole rule is asked: the square
+            // meets its box AND its origin is in the disc. A static census body is asked by its box alone — a
+            // conservative refusal (it can only refuse MORE than the game hits).
+            for (const e of spinnerRectsNow() ?? []) {
+                if (rectsOverlap(e.rect, square) && inDisc(e.spinner.x, e.spinner.y)) {
+                    throw new Error(`levelRun: the Explosion of ${b.id} at (${b.x}, ${b.y}) on tick `
+                        + `${ticksCompleted} in level ${level} reaches the spinner ${e.id} — \`Enemy.hit(4, …, 1)\` `
+                        + '(`Explosion.as:62-65`) is not staged on a bomb\'s blast (seedling-fidelity-bombpusher). '
+                        + 'Refused by name.');
+                }
+            }
+            const others = chaserStaticEnemyBoxesNow().filter((e) => !e.id.startsWith('bombpusher@'));
+            for (const e of others) {
+                if (e.rect && rectsOverlap(e.rect, square)) {
+                    throw new Error(`levelRun: the Explosion of ${b.id} at (${b.x}, ${b.y}) on tick `
+                        + `${ticksCompleted} in level ${level} meets ${e.id ?? 'an "Enemy" body'} in its prefilter `
+                        + 'square — its `"Enemy"` arm is not staged on a bomb\'s blast (seedling-fidelity-bombpusher). '
+                        + 'Refused by name.');
+                }
+            }
+            const inSquare = rectsOverlap(playerBoxAt(state.x, state.y), square);
+            const hitPlayer = inSquare && inDisc(state.x, state.y);
+            bombEvents.push({ t: ticksCompleted, level, what: 'blast', id: b.id, at: { x: b.x, y: b.y },
+                inSquare, hitPlayer, frozen: b.frozen });
+            if (!hitPlayer || noclip) continue;
+            // `Explosion.as:60` — `(c as Player).hit(null, force, new Point(x, y), damage)`: no attacker.
+            applyPlayerHit({ source: 'bomb', id: b.id, force: BOMB.force, damage: BOMB.damage,
+                from: { x: b.x, y: b.y }, retaliate: null });
+        }
+    }
+
     function stepIceTurretsNow() {
         const st = turretStateFor(level);
         if (st.size === 0) return;
@@ -14127,6 +14282,18 @@ export function createLevelRun({
         spits: spitsFor(level).filter((s) => s.id.startsWith(`${t.id}#`))
             .map((s) => ({ id: s.id, x: s.x, y: s.y, v: { ...s.v }, spawnedAt: s.spawnedAt })),
     }));
+    /** ⛓ seedling-fidelity-bombpusher: this room's lobbers in `.oel` order (a copy; empty while the key is OFF). */
+    const bombPushersNow = () => (CONTACT_FIDELITY.bombPusherLive
+        ? [...bombPusherStateFor(level).values()].map((b) => ({
+            id: b.id, x: b.x, y: b.y, shotTime: b.shotTime, anim: b.anim, animIndex: b.animIndex,
+            animTimer: b.animTimer, shots: b.shots,
+        })) : []);
+    /** ⛓ seedling-fidelity-bombpusher: the bombs in flight, newest first (a copy). */
+    const bombsNow = () => bombsFor(level).map((s) => ({ id: s.id, x: s.x, y: s.y, v: { ...s.v }, t: s.t,
+        spawnedAt: s.spawnedAt, removed: s.removed }));
+    /** ⛓ seedling-fidelity-bombpusher: one row per bomb spawned / exploded / dropped. */
+    const bombEventsNow = () => bombEvents.map((r) => ({ ...r, ...(r.v ? { v: { ...r.v } } : {}),
+        ...(r.at ? { at: { ...r.at } } : {}) }));
     /** ⛓ U15-swim D1: one row per spit spawned or removed — `stepSpitsNow`. */
     const spitEventsNow = () => spitEvents.map((r) => ({ ...r, ...(r.v ? { v: { ...r.v } } : {}),
         ...(r.types ? { types: [...r.types] } : {}) }));
@@ -14374,6 +14541,8 @@ export function createLevelRun({
         shooters: shootersNow,
         staticBodies: staticBodiesNow,
         darkTraps: darkTrapsNow,
+        bombPushers: bombPushersNow,
+        bombs: bombsNow,
     });
 
     /**
@@ -14777,6 +14946,7 @@ export function createLevelRun({
         staticBodyDeaths: staticBodyDeathsNow,
         witchEvents: witchEventsNow,
         unreadRoomWrites: unreadRoomWritesNow,
+        bombEvents: bombEventsNow,
     });
 
     return {
@@ -17276,6 +17446,8 @@ export function createLevelRun({
             if (!noclip) stepBlastsNow();
             // ⛓ U15-swim D1: the turret spits, beside the blasts and for their reasons.
             if (!noclip) stepSpitsNow();
+            // ⛓ seedling-fidelity-bombpusher D2: the bombs, beside the spits and for their reasons.
+            if (!noclip && CONTACT_FIDELITY.bombPusherLive) stepBombsNow();
 
             // ── R4: the entities that update BEFORE the player ────────
             // `Game.loadlevel` adds the Player at `:2040` and the pushables
@@ -17548,6 +17720,9 @@ export function createLevelRun({
             // §32.6 item 5. A glide PAUSES for a ceremony and resumes after
             // it; what runs through a freeze is `Enemy.update`'s terrain
             // switch, a claim about DYING rather than about moving.
+            // ⛓ seedling-fidelity-bombpusher D2: the lobber (`Game.as:2299`, added after the turrets and before the
+            // crushers) — its only reader is the player's previous point, so its slot among them is unobservable.
+            if (!noclip && CONTACT_FIDELITY.bombPusherLive) stepBombPushersNow();
             if (!noclip) stepIceTurretsNow();
             // ── ⛓⛓⛓ U15-swim D1: THE TURRETS, BELOW THE ICE TURRETS ──────
             // `Game.as:2272` adds them just before the `iceturret`
@@ -18098,6 +18273,8 @@ export function createLevelRun({
                     };
                     // ⛓ U15-swim D1: phase A's dead frames, frozen, for the turrets.
                     if (!noclip) stepShootersThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
+                    // ⛓ seedling-fidelity-bombpusher: and for the lobber and its bombs.
+                    if (!noclip) stepBombsThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
                 }
             }
             if (ceremony !== null) {
@@ -19205,6 +19382,11 @@ export function createLevelRun({
                     for (const b of pendingBlasts.splice(0, pendingBlasts.length)) {
                         applyExplosion(b);
                     }
+                    next = state;
+                }
+                // ⛓ seedling-fidelity-bombpusher D2: and the bombs' Explosions, in the same `updateLists()`.
+                if (pendingBombBlasts.length > 0) {
+                    drainBombBlastsNow();
                     next = state;
                 }
                 drainBossRemovals();
