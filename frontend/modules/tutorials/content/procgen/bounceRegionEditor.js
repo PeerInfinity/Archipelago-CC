@@ -22,7 +22,7 @@ export const PROCGEN_BOUNCE_REGION_EDITOR = Object.freeze({
     summary: 'Open a generated world\'s bounce zone in the Bounce Region Editor, change a platform, save it back to the pipeline, and play the result.',
     track: 'procgen',
     status: 'in-progress',
-    firstFailingStep: 'bot-plays',
+    firstFailingStep: null, // every step works since the bounce sole-free-arrow fix; ready = the user's call
     doc: null,
     intro: [
         { prose: 'A generated region is not final: the pipeline\'s step 3 lists every region it built, and **Edit ▸** opens one in its substrate\'s editor. For a bounce zone that is the **Bounce Region Editor** — its platforms, pickups and portals on a canvas, and the access rules they imply, re-derived as you edit.' },
