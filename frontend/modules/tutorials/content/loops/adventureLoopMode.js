@@ -26,6 +26,31 @@ const entries = (ctx) => [...(ctx.query(LOOPS)?.querySelectorAll('.loop-action-e
 const hasEntry = (ctx, word, { done = false } = {}) => entries(ctx).some((e) => e.text.includes(word) && (!done || e.done));
 const GATE = 'Black Castle Gate';
 const PORT = 'BlackCastlePort';
+/** The run button when a press would START the queue (not while it says Pause, nor while it waits — off). */
+const RUN_BUTTON_READY = '#loop-ui-toggle-pause:not([title="Pause the queue"]):not(:disabled)';
+/** The ✕ on the queue row whose action's name starts with `name`. */
+const cancelOf = (name) => ({ ...LOOPS, selector: `.loop-action-entry:has(.loop-action-name[title^="${name}"]) .loop-action-cancel` });
+const dropEntry = (id, name, text) => [{
+    step: { id, text, actions: [{ click: cancelOf(name) }], done: (ctx) => !hasEntry(ctx, name) },
+}];
+/**
+ * One press of the run button, whatever it offers (Start / Resume / Restart) —
+ * never while it says Pause (that would stop the run) or while it waits (off).
+ * A new action may have resumed the queue already, so the press is optional.
+ */
+const runQueue = (id, name, after) => ({
+    step: {
+        id,
+        text: `If the queue is not running already (a new action can resume it), press the run button — **Start**, **Resume** or **Restart**, whichever it says. ${after}`,
+        actions: [{ click: { ...runButton, selector: RUN_BUTTON_READY, optional: true } }],
+        done: (ctx) => hasEntry(ctx, name, { done: true }),
+        // The queue stopped (its button offers to restart) without it.
+        failed: (ctx) => (ctx.text(runButton) === 'Restart' && !hasEntry(ctx, name, { done: true })
+            ? `the queue ended: ${entries(ctx).map((e) => `${e.text.replace(/\s+/g, ' ').trim().slice(0, 40)}${e.done ? ' (done)' : ''}`).join('; ')}`
+            : null),
+        doneTimeoutMs: 60000,
+    },
+});
 /** A location or exit of the region whose name the panel shows (no longer ???). */
 const item = (list, name) => ({ ...LOOPS, selector: `${block} .${list} li.compact-item:not(.undiscovered) .compact-item-name`, text: name });
 const found = (ctx, list, name) => [...(ctx.query(LOOPS)?.querySelectorAll(`${block} .${list} li.compact-item:not(.undiscovered) .compact-item-name`) ?? [])]
@@ -116,48 +141,61 @@ export const LOOPS_ADVENTURE = Object.freeze({
             id: 'check-and-move',
             title: 'Check a location, and move',
             blocks: [
+                { prose: 'Each loop has 100 mana, and exploring and checking in the same loop costs more than that — so drop the explore once it has found what you need. (The check stays in the queue: in Loop mode, what you hold is what the queue collects.)' },
                 {
                     step: {
                         id: 'pause',
-                        text: 'Press **Pause**, and untick **Auto-restart** again.',
+                        text: 'Untick **Auto-restart** and press **Pause**.',
                         actions: [
-                            { click: { ...runButton, text: 'Pause', optional: true } },
                             { click: { ...LOOPS, selector: '#loop-ui-toggle-auto-restart:checked', optional: true } },
+                            { click: { ...runButton, text: 'Pause', optional: true } },
                         ],
                         done: (ctx) => ctx.text(runButton) !== 'Pause' && ctx.query({ ...LOOPS, selector: '#loop-ui-toggle-auto-restart' })?.checked === false,
                     },
                 },
+                ...dropEntry('drop-explore', 'Explore', 'The explore has done its work: press the **✕** on its row in the queue.'),
                 {
                     step: {
                         id: 'queue-check',
                         text: `Click **${GATE}**: a *Check* action joins the queue. It holds the Black Key.`,
                         actions: [{ click: item('region-locations-list', GATE) }],
-                        done: (ctx) => hasEntry(ctx, 'Check'),
+                        done: (ctx) => hasEntry(ctx, `Check: ${GATE}`),
                     },
                 },
+                runQueue('run-check', `Check: ${GATE}`, 'The check is marked done, with the mana it left you, and the Black Key is yours.'),
                 {
                     step: {
                         id: 'queue-move',
-                        text: `Click the exit **${PORT} → BlackCastle**. It says *Blocked* now, but the queue plans ahead: once the check before it has given you the Black Key, the gate opens, so a *Move* action joins the queue.`,
-                        actions: [{ click: { ...LOOPS, selector: `${block} .region-exits-list li.compact-item:not(.undiscovered) .compact-item-name`, text: `${PORT} → BlackCastle` } }],
-                        done: (ctx) => hasEntry(ctx, 'Move'),
+                        text: `With the key, the exit **${PORT} → BlackCastle** says *Available*. Click it: a *Move* action joins the queue.`,
+                        actions: [{ click: { ...LOOPS, selector: `${block} .region-exits-list li.compact-available:not(.undiscovered) .compact-item-name`, text: `${PORT} → BlackCastle` } }],
+                        done: (ctx) => hasEntry(ctx, 'Move: BlackCastle'),
                     },
                 },
                 {
                     step: {
-                        id: 'run-queue',
-                        text: 'If the queue is not running already (a new action can resume it), press **Resume**, **Restart** or **Start** — whichever the button says — to carry it out. Each finished action is marked done, with the mana it left you.',
-                        // Never the button while it says Pause: that would stop the run.
-                        actions: ['Resume', 'Restart', 'Start'].map((text) => ({ click: { ...runButton, text, optional: true } })),
-                        done: (ctx) => hasEntry(ctx, 'Check', { done: true }) && hasEntry(ctx, 'Move', { done: true }),
-                        // The queue stopped (its button offers to restart) without both done.
-                        failed: (ctx) => (ctx.text(runButton) === 'Restart'
-                            ? `the queue ended: ${entries(ctx).map((e) => `${e.text.trim().slice(0, 40)}${e.done ? ' (done)' : ''}`).join('; ')}`
-                            : null),
-                        doneTimeoutMs: 60000,
+                        id: 'run-move',
+                        text: 'Tick **Auto-restart** again, untick **Instant** to watch it, and run the queue (**Start**, **Resume** or **Restart**). The check and the move may not both fit in one loop\'s mana: then the loop resets and runs again — each loop\'s experience makes the actions cheaper — until you walk into the Black Castle.',
+                        actions: [
+                            { click: { ...LOOPS, selector: '#loop-ui-toggle-auto-restart:not(:checked)', optional: true } },
+                            { click: { ...LOOPS, selector: '#loop-ui-toggle-instant:checked', optional: true } },
+                            { click: { ...runButton, selector: RUN_BUTTON_READY, optional: true } },
+                        ],
+                        done: (ctx) => ctx.publishedSinceStepWith('loopState:actionCompleted', (d) => d?.action?.type === 'regionMove' && d.action.destinationRegion === 'BlackCastle'),
+                        doneTimeoutMs: 180000,
                     },
                 },
-                { prose: 'When the mana runs out, the loop resets: back to the start, and the queue runs again from the top — with everything you explored still known, and each region\'s experience making its actions cheaper. **Restart** in the Controls starts a new loop at once.' },
+                {
+                    step: {
+                        id: 'stop',
+                        text: 'Untick **Auto-restart** and press **Pause**.',
+                        actions: [
+                            { click: { ...LOOPS, selector: '#loop-ui-toggle-auto-restart:checked', optional: true } },
+                            { click: { ...runButton, text: 'Pause', optional: true } },
+                        ],
+                        done: (ctx) => ctx.query({ ...LOOPS, selector: '#loop-ui-toggle-auto-restart' })?.checked === false,
+                    },
+                },
+                { prose: 'When the mana runs out, the loop resets: back to the start, with everything you explored still known, and the queue runs again from the top. **Restart** in the Controls starts a new loop at once.' },
             ],
         },
         {
@@ -198,10 +236,9 @@ export const LOOPS_ADVENTURE = Object.freeze({
                 {
                     step: {
                         id: 'exit-loop-mode',
-                        text: 'Back in **Loops**, untick **Instant**, press **Exit Loop Mode**, and fold the **Controls**.',
+                        text: 'Back in **Loops**, press **Exit Loop Mode**, and fold the **Controls**.',
                         actions: [
                             { click: { ...LOOPS, selector: controlsFolded, optional: true } },
-                            { click: { ...LOOPS, selector: '#loop-ui-toggle-instant:checked', optional: true } },
                             { click: { ...toggle, text: 'Exit Loop Mode' } },
                             { click: { ...LOOPS, selector: controlsOpen, optional: true } },
                         ],
