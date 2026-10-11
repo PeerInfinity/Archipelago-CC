@@ -1,0 +1,16 @@
+L40 @(480,896) dash=all deny=[] — 1229.5 s — REFUSED — solverBot(probe-sites): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site after 800 tick(s) of the segment's drive — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.
+
+site            asks      ms   max gap ms
+walk               41  1229480     141891
+
+gaps over 5000 ms (10):
+  9.2 s  walk  5947 ms  t32 (494,866)
+  143.9 s  walk  108509 ms  t544 (728,680)
+  273.1 s  walk  129157 ms  t576 (728,680)
+  408.0 s  walk  134917 ms  t608 (728,680)
+  541.8 s  walk  133761 ms  t640 (728,680)
+  675.7 s  walk  133958 ms  t672 (728,680)
+  812.4 s  walk  136698 ms  t704 (729,680)
+  954.3 s  walk  141891 ms  t736 (744,696)
+  1093.4 s  walk  139095 ms  t768 (744,696)
+  1229.5 s  walk  136069 ms  t800 (744,696)

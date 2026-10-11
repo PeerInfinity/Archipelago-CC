@@ -15102,6 +15102,87 @@ refusals only. Records: the kill record's `fightFallback`, the result's `fightFa
   if it solves" check removed — the undo row reds, and the retry's own throw re-triggers the oracle's whole-solve
   retry (a second fight search per refusal).
 
+### Seedling hammer-phase C1 — the chooser reads the hit; the static sword arm
+
+⚖ The user (2026-10-09): *"Yes"* to the chooser fix (*"consider the probe's hit sources first"*); (2026-10-10) the
+chooser and the static sword arm both route through `chooseBodyToRemove`, so *"Brief them together"*. Two switches,
+both OFF: `CHOOSER_HIT_SOURCES` (`solverBot`) and `STATIC_SWORD_ARM` (`enemyDamage`). The report is
+`CC/docs/cloud-reports/seedling-hammer-c1.md`.
+
+**W0.** At `20b2644` the identity block is B3c's row for row (md5 `4647e1e0`); tapeRunner 589 `e6c073f9`; surface
+GREEN 234, constants PASS 5,488, entities 528, profile 138; roster 266; bounded vitest 2510/2510. Both defects
+reproduce verbatim: A (survey step 61's L40 view, (480,896) → chest (880,816)) refuses at t0, *"kill: the danger on
+this corridor is not a body this run can watch die"* on `spinner@880,848`, with the aim inside `bobsoldier@880,832`'s
+volume; B — survey step 31 and sweep legs 76, 85, 539, 544, 549–553 reproduce sweep-3's `failed` text byte for byte
+through a node replay of the leg's arrival with the row's items (`inv-leg.mjs`).
+
+**D1 — the game first (p4f, headless).** Three hand-built tapes:
+- L36 from (48,96) facing up, presses at 2/33/64. One swing reaches BOTH `sandtrap@48,80` and `@64,80`: hits at obs
+  4/35/66, `hitsTimer` 30, no knockback. The 20 px chomp is harmless. "die" runs from the tick after the blow, the
+  removal is at 85, and tags 4 and 5 are written.
+- L62 from (218,248) facing right, with and without the shield. `turret@232,248` dies to three presses: "die" at 66,
+  `destroy` at 85, the fade, removed at 96, no tag. While its `hitsTimer` runs it starts no shot, and the kill at 66
+  swallowed the shot begun at 65.
+
+**The divergence:** OFF, a static census body is no press responder at all. The model leaves it unhurt (106/57/118
+sampled disagreements), and the no-shield tape even takes a spit hit the game does not. With `STATIC_SWORD_ARM` ON
+the bodies are responders (`pressRespondersIn`'s `statics`) on F4's `staticBodyStates`. The turret's death is die,
+then `destroy`, then the fade. Its fire gate reads the row's `hitsTimer` (live and in the spit forecast), its contact
+is the static scan's, and it writes no tag. The model then agrees on 0 sampled disagreements.
+
+**D2 — the chooser.** Where the chooser's list is EMPTY, the climb admits the probe's `hit.sources` that an arm can
+watch die AND the chooser could not speak for: a live spinner (no danger volume, so its hypothesis is vacuous), or,
+with `STATIC_SWORD_ARM`, a static body in a STEPPED room (never hypothesised). It is never a chaser. Measured: the
+first cut admitted chasers, and on `r9-solve-16` (L16, solved OFF by DETOUR) it handed `bob@208,32` to BAIT, whose
+dwell was hit. Only the empty list is consulted (`mode: 'order'` is the measurement arm). Over 324 generated spinner
+records (c3/c6/acceptance/killgate/ENEMY) both modes equal OFF in verdict and ticks, and the L39/L92 legs are
+unchanged, so A's "no wrong kill" stands.
+
+**D3 — the static sword arm.** `killStaticBySword`, asked before the ceiling, is K4's in-place shape. No spinner
+forecast, hammer escape, approach or fight applies: `execKillByPress` and `deriveStrike` are bypassed.
+- The stance keeps the box 8–3 px off the body (widest first; L62's turret sits on a one-tile path).
+- The player settles: still, and with the sword's `slashTimer` run out — a press inside it is a DASH, measured on
+  survey 31, where the walk's own presses left it running and the first press dashed into a sandtrap.
+- Other dangers at the stance refuse it.
+- A turret's spit is priced by `stepTurret` on a copy of the live turret, with the planned landings writing its
+  `hitsTimer`. From an in-range arrival no wait ≤ 60 avoids every spit (a shot held at `shootTimer` 0 fires on the
+  first i-frame lapse, and a non-killing landing does not cancel it), so a faced shield is the fallback, else a
+  refusal by name.
+- An untagged sandtrap's death (an out-of-band write the model refuses) is not planned.
+
+**D4 — measured.**
+- Each switch alone moves none of the target legs. Both together solve sweep legs 544 (233 t), 550 (209), 551
+  (220) and 553 (252) with 0 hits. 552 now refuses on `darktrap@112,208` (F1). 539/549 refuse mid-walk on L62's
+  pit maze, where the stance walk's re-plan fails on the coarse lattice. 76/85 hold no sword. Survey 31 kills four
+  sandtraps and then refuses on the chest's own stance walk.
+- A (L40) with the chooser ON gets past t0 into the spinner press kill. It is at t800 when a 20-minute budget cuts
+  it, and does not solve within the measured bound.
+- L40 cost, chooser ON, profiled: 95.7 % in `execKillByPress`, 78.9 % in `deriveStrike` and 68.9 % in
+  `spinnerForecast` → `reflectAxis` → `collides`. The self time is `liveRectOf` 37.8 % and `collidesSolid` 37.4 %:
+  B2's shape.
+- L18 sweep with both ON: 45/45 at A4's lengths (`1c019765`).
+- Movers ON (not landed, for the licence):
+  - ENEMY census with both ON: `ad84493c`, the turret corridor REFUSED → SOLVED 221.
+  - `solve-seedling-r9-campaign --check` with the chooser: six committed TRACES (`r8-solve-6`, `-8`; `r9-solve-12`,
+    `-14`, `-16`, `-29`) gain the `sources` field. Every tape is unchanged, and with that field suppressed the
+    producer equals the base.
+  - `ropeSword.test.js`'s trace pin.
+  - With `STATIC_SWORD_ARM` alone nothing moves: every committed tape replays and every identity row is equal.
+- Witnesses: five on the game, 0 px and 0 hits, in `fixtures/static-sword-witness/`: the three D1 tapes,
+  `c1-l62-turret` (sweep leg 551's room, 220 t, crosses to L61) and `c1-l36-sandtraps`.
+- Mutants:
+  - The admission removed: A's refusal is byte-identical to OFF's, and the turret staging refuses with OFF's words.
+  - The spit pricing dropped: equivalent on the shielded witness (wait 0 behind the shield either way). On the
+    no-shield staging the priced arm refuses by name with 0 hits, while the unpriced one is hit by spit #2 at run
+    tick 64.
+
+**Trap candidates**, for the catalogue to number:
+- **A silent no-op in the press dispatch passes the differential.** The expectation is the player's stream, and a body
+  the model never damages changes nothing the player sees until a contact or a spit does. Only a body probe saw it.
+- **A chooser's empty answer is an answer for the bodies it asked about.** Overriding it with the probe's hit is right
+  only for the bodies its question could not reach.
+- **The walk before a press leaves the sword's window open.** A strike policy's presses make the next press a dash.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
