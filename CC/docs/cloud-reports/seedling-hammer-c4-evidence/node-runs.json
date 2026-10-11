@@ -1,0 +1,731 @@
+{
+ "note": "scratch runs, BUDGET=2560 (the page retry), node arrival path = LEASH drivers/leg.mjs over the sweep row items/slots (seedling-fidelity-leash-evidence/sweep-base-solver.jsonl), legs from seedling-divergence-legs.mjs at bdb10bb12f; lab = a copy of frontend/ with drivers/lab-instrumentation.diff",
+ "624_off": {
+  "ok": false,
+  "ticks": null,
+  "verbs": null,
+  "end": null,
+  "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (232.2,119.6) \u2014 chaser:lavarunner@208,96 (inside leash 80 (d=9.3), box grown 1.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 3 volume(s) forbidden \u2014 no walkable tile path in level 74 from tile (18,8) to (1,9). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water,\n  time: the aim is 272 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: no stance within bulb@48,112's leash (80) both pulls its straight line through a kill region and is itself danger-free: 0 cell(s) in leash, 0 of them crossing a region, none of those reachable. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.\n  kill: no presser in level 74 arms a trap whose lane covers bulb@48,112 \u2014 the room has 1 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: no stance derives for bulb@48,112 on level 74: the 8-cell box around the player's node held 0 leash cells, so the box around the TARGET was scanned: 81 cell(s) inside its 80 px leash, 20 of those reachable and with a corridor onward, and 20 of THOSE refused by the forecast [(104,56): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (88,72): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (88,56): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant.\n  detour: no corridor bent through at most 2 via cell(s) of the 50 the walk can plan to probes clean: 246 candidate corridor(s) previewed with the bodies stepped against each, 46 prefix(es) dangerous before their last via, 246 preview(s) of the 300 bound spent and 445 leg(s) of the 500 planned.",
+  "passes": [
+   {
+    "pass": "dashless",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 5975
+   },
+   {
+    "pass": "full",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 5391
+   }
+  ]
+ },
+ "624_order": {
+  "ok": false,
+  "ticks": null,
+  "verbs": null,
+  "end": null,
+  "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (232.2,119.6) \u2014 chaser:lavarunner@208,96 (inside leash 80 (d=9.3), box grown 1.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 3 volume(s) forbidden \u2014 no walkable tile path in level 74 from tile (18,8) to (1,9). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water,\n  time: the aim is 272 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: no stance within bulb@48,112's leash (80) both pulls its straight line through a kill region and is itself danger-free: 0 cell(s) in leash, 0 of them crossing a region, none of those reachable. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.\n  kill: no presser in level 74 arms a trap whose lane covers bulb@48,112 \u2014 the room has 1 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: no stance derives for bulb@48,112 on level 74: the 8-cell box around the player's node held 0 leash cells, so the box around the TARGET was scanned: 81 cell(s) inside its 80 px leash, 20 of those reachable and with a corridor onward, and 20 of THOSE refused by the forecast [(104,56): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (88,72): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (88,56): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant.\n  detour: no corridor bent through at most 2 via cell(s) of the 50 the walk can plan to probes clean: 246 candidate corridor(s) previewed with the bodies stepped against each, 46 prefix(es) dangerous before their last via, 246 preview(s) of the 300 bound spent and 445 leg(s) of the 500 planned.",
+  "passes": [
+   {
+    "pass": "dashless",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 5576
+   },
+   {
+    "pass": "full",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 5359
+   }
+  ]
+ },
+ "624_chooser_off": {
+  "ok": false,
+  "ticks": null,
+  "verbs": null,
+  "end": null,
+  "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (232.2,119.6) \u2014 chaser:lavarunner@208,96 (inside leash 80 (d=9.3), box grown 1.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 3 volume(s) forbidden \u2014 no walkable tile path in level 74 from tile (18,8) to (1,9). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water,\n  time: the aim is 272 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: no stance within bulb@48,112's leash (80) both pulls its straight line through a kill region and is itself danger-free: 0 cell(s) in leash, 0 of them crossing a region, none of those reachable. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.\n  kill: no presser in level 74 arms a trap whose lane covers bulb@48,112 \u2014 the room has 1 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: no stance derives for bulb@48,112 on level 74: the 8-cell box around the player's node held 0 leash cells, so the box around the TARGET was scanned: 81 cell(s) inside its 80 px leash, 20 of those reachable and with a corridor onward, and 20 of THOSE refused by the forecast [(104,56): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (88,72): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (88,56): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant.\n  detour: no corridor bent through at most 2 via cell(s) of the 50 the walk can plan to probes clean: 246 candidate corridor(s) previewed with the bodies stepped against each, 46 prefix(es) dangerous before their last via, 246 preview(s) of the 300 bound spent and 445 leg(s) of the 500 planned.",
+  "passes": [
+   {
+    "pass": "dashless",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 5910
+   },
+   {
+    "pass": "full",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 5552
+   }
+  ]
+ },
+ "624_lab_APPEND": {
+  "ok": false,
+  "ticks": null,
+  "verbs": null,
+  "end": null,
+  "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (232.2,119.6) \u2014 chaser:lavarunner@208,96 (inside leash 80 (d=9.3), box grown 1.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 3 volume(s) forbidden \u2014 no walkable tile path in level 74 from tile (18,8) to (1,9). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water,\n  time: the aim is 272 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: no stance within bulb@48,112's leash (80) both pulls its straight line through a kill region and is itself danger-free: 0 cell(s) in leash, 0 of them crossing a region, none of those reachable. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.\n  kill: no presser in level 74 arms a trap whose lane covers bulb@48,112 \u2014 the room has 1 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: no stance derives for lavarunner@208,96 on level 74: the player's box priced no stance, so the TARGET's box was scanned too (+1 reachable cell(s)): 81 cell(s) inside its 80 px leash, 21 of those reachable and with a corridor onward, and 21 of THOSE refused by the forecast [(280,120): the WAIT is dangerous at tick 99 \u2014 chaser:lavarunner@208,96; (264,120): the WAIT is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (248,120): the WAIT is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant.\n  detour: no corridor bent through at most 2 via cell(s) of the 50 the walk can plan to probes clean: 246 candidate corridor(s) previewed with the bodies stepped against each, 46 prefix(es) dangerous before their last via, 246 preview(s) of the 300 bound spent and 445 leg(s) of the 500 planned.",
+  "passes": [
+   {
+    "pass": "dashless",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 5542
+   },
+   {
+    "pass": "full",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 4813
+   }
+  ]
+ },
+ "624_lab_PREPEND": {
+  "ok": false,
+  "ticks": null,
+  "verbs": null,
+  "end": null,
+  "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (232.2,119.6) \u2014 chaser:lavarunner@208,96 (inside leash 80 (d=9.3), box grown 1.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 3 volume(s) forbidden \u2014 no walkable tile path in level 74 from tile (18,8) to (1,9). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water,\n  time: the aim is 272 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: no bait stance for lavarunner@208,96 survives the chaser forecast: 73 cell(s) in its leash (80), 54 crossing a kill region, 2 previewed and refused [(280,120): the WAIT is dangerous at dwell tick 27 \u2014 chaser:lavarunner@208,96; (264,168): the preview did not settle \u2014 the preview crossed to level 73; the danger map is scoped to one room]\n  kill: no presser in level 74 arms a trap whose lane covers lavarunner@208,96 \u2014 the room has 1 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: no stance derives for lavarunner@208,96 on level 74: the player's box priced no stance, so the TARGET's box was scanned too (+1 reachable cell(s)): 81 cell(s) inside its 80 px leash, 21 of those reachable and with a corridor onward, and 21 of THOSE refused by the forecast [(280,120): the WAIT is dangerous at tick 99 \u2014 chaser:lavarunner@208,96; (264,120): the WAIT is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (248,120): the WAIT is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant.\n  detour: no corridor bent through at most 2 via cell(s) of the 50 the walk can plan to probes clean: 246 candidate corridor(s) previewed with the bodies stepped against each, 46 prefix(es) dangerous before their last via, 246 preview(s) of the 300 bound spent and 445 leg(s) of the 500 planned.",
+  "passes": [
+   {
+    "pass": "dashless",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 4871
+   },
+   {
+    "pass": "full",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 4720
+   }
+  ]
+ },
+ "624_lab_anticipate3_append1": {
+  "ok": false,
+  "ticks": null,
+  "verbs": null,
+  "end": null,
+  "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (232.2,119.6) \u2014 chaser:lavarunner@208,96 (inside leash 80 (d=9.3), box grown 1.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 3 volume(s) forbidden \u2014 no walkable tile path in level 74 from tile (18,8) to (1,9). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water,\n  time: the aim is 272 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: no stance within bulb@48,112's leash (80) both pulls its straight line through a kill region and is itself danger-free: 0 cell(s) in leash, 0 of them crossing a region, none of those reachable. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.\n  kill: no presser in level 74 arms a trap whose lane covers bulb@48,112 \u2014 the room has 1 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: no stance derives for lavarunner@208,96 on level 74: the player's box priced no stance, so the TARGET's box was scanned too (+1 reachable cell(s)): 81 cell(s) inside its 80 px leash, 21 of those reachable and with a corridor onward, and 21 of THOSE refused by the forecast [(280,120): the WAIT is dangerous at tick 99 \u2014 chaser:lavarunner@208,96; (264,120): the WAIT is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (248,120): the WAIT is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant.\n  detour: no corridor bent through at most 2 via cell(s) of the 50 the walk can plan to probes clean: 246 candidate corridor(s) previewed with the bodies stepped against each, 46 prefix(es) dangerous before their last via, 246 preview(s) of the 300 bound spent and 445 leg(s) of the 500 planned.",
+  "passes": [
+   {
+    "pass": "dashless",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 5453
+   },
+   {
+    "pass": "full",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 5497
+   }
+  ]
+ },
+ "624_lab_anticipate4": {
+  "ok": false,
+  "ticks": null,
+  "verbs": null,
+  "end": null,
+  "message": "level 74: the tape clears tag 2, which is a \"fallrock\" at (288,144) \u2014 response \"arm\", and clearing it does not remove it \u2014 it BUILDS IT FALLEN, Solid and live, and its update writes the player's y. A clear list must never name it.",
+  "passes": [
+   {
+    "pass": "dashless",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 2373
+   },
+   {
+    "pass": "full",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 5561
+   }
+  ]
+ },
+ "622_off": {
+  "ok": false,
+  "ticks": null,
+  "verbs": null,
+  "end": null,
+  "message": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74: the combat ladder is EXHAUSTED. The corridor passes through danger at (72.8,24.0) \u2014 chaser:lavarunner@72,24 (inside leash 80 (d=9.1), box grown 1.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: the danger-forbidden corridor STILL probes dangerous at (72.8,24.0) \u2014 chaser:lavarunner@72,24 (inside leash 80 (d=9.1), box grown 1.5 px/tick x 0 + pad 0). \u26a0 The AVOID rung routes around RECTS and the probe asks the whole union, which includes the point tests a rect cannot carry (a disc hazard); that gap is why the ladder has a second rung.\n  time: the search returned a NEGATIVE, and it names its own bound: the reachable set was exhausted (maxTicks=600, dwell=4, quant={\"pos\":0.25,\"vel\":0.05} \u2014 a coarser grid merges states and a dwell above 1 skips decision points, so this is \"no path at this granularity\", NOT \"no path\").\n  bait: no bait stance for lavarunner@72,24 survives the chaser forecast: 80 cell(s) in its leash (80), 39 crossing a kill region, 6 previewed and refused [(56,-8): the preview did not settle \u2014 the preview crossed to level 74; the danger map is scoped to one room; (88,-8): the preview did not settle \u2014 the preview crossed to level 74; the danger map is scoped to one room; (40,-8): the preview did not settle \u2014 the preview crossed to level 74; the danger map is scoped to one room; \u2026]\n  kill: no presser in level 73 arms a trap whose lane covers lavarunner@72,24 \u2014 the room has 0 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: no stance derives for lavarunner@72,24 on level 73: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 80 cell(s) inside its 80 px leash, 7 of those reachable and with a corridor onward, and 7 of THOSE refused by the forecast [(72,24): the WAIT is dangerous at tick 2 \u2014 chaser:lavarunner@72,24; (72,8): the preview did not settle \u2014 the preview crossed to level 74; the danger map is scoped to one room; (88,24): the APPROACH is dangerous at tick 2 \u2014 chaser:lavarunner@72,24; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant.\n  detour: no corridor bent through at most 2 via cell(s) of the 5 the walk can plan to probes clean: 5 candidate corridor(s) previewed with the bodies stepped against each, 5 prefix(es) dangerous before their last via, 5 preview(s) of the 300 bound spent and 104 leg(s) of the 500 planned.",
+  "passes": [
+   {
+    "pass": "dashless",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 187
+   },
+   {
+    "pass": "full",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 114
+   }
+  ]
+ },
+ "626_off": {
+  "ok": false,
+  "ticks": null,
+  "verbs": null,
+  "end": null,
+  "message": "levelRun: a sword press at tick 0 would fire its rect on a FROZEN tick (a button-dropped fallrock), and `genericHit` returns immediately under `Game.freezeObjects` \u2014 so the press would do nothing at all. Press outside the freeze.",
+  "passes": [
+   {
+    "pass": "dashless",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 1713
+   },
+   {
+    "pass": "full",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 2477
+   }
+  ]
+ },
+ "628_off": {
+  "ok": false,
+  "ticks": null,
+  "verbs": null,
+  "end": null,
+  "message": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128): the re-planned corridor failed too \u2014 solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128) waypoint 2 (72,72): not reached within 400 ticks; stalled at (24,109.74999999999999) v=(-0.30901699437494734,1.9021130325903073) in level 74, aiming at (72,72).",
+  "passes": [
+   {
+    "pass": "dashless",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 323
+   },
+   {
+    "pass": "full",
+    "ok": false,
+    "kind": "refusal",
+    "ticks": null,
+    "ms": 253
+   }
+  ]
+ },
+ "629_off": {
+  "ok": true,
+  "ticks": 307,
+  "verbs": [
+   "bait",
+   "collect",
+   "kill",
+   "walk"
+  ],
+  "end": {
+   "level": 74,
+   "x": 49.824872963036356,
+   "y": 39.103951144754966,
+   "deaths": 0
+  },
+  "message": null,
+  "passes": [
+   {
+    "pass": "dashless",
+    "ok": true,
+    "kind": null,
+    "ticks": 322,
+    "ms": 740
+   },
+   {
+    "pass": "full",
+    "ok": true,
+    "kind": null,
+    "ticks": 307,
+    "ms": 627
+   }
+  ]
+ },
+ "624_chooser_rows": [
+  {
+   "at": "chooser",
+   "t": 0,
+   "aim": {
+    "x": 24,
+    "y": 152
+   },
+   "cand": "bulb@48,112",
+   "stepped": true,
+   "kind": null,
+   "vols": [
+    "lavarunner@24,56",
+    "bulb@48,112",
+    "lavarunner@208,96"
+   ],
+   "admits": true
+  },
+  {
+   "at": "chooser",
+   "t": 0,
+   "aim": {
+    "x": 24,
+    "y": 152
+   },
+   "cand": "lavarunner@24,56",
+   "stepped": true,
+   "kind": null,
+   "vols": [
+    "lavarunner@24,56",
+    "bulb@48,112",
+    "lavarunner@208,96"
+   ],
+   "admits": false
+  },
+  {
+   "at": "chooser",
+   "t": 0,
+   "aim": {
+    "x": 24,
+    "y": 152
+   },
+   "cand": "lavarunner@208,96",
+   "stepped": true,
+   "kind": null,
+   "vols": [
+    "lavarunner@24,56",
+    "bulb@48,112",
+    "lavarunner@208,96"
+   ],
+   "admits": false
+  },
+  {
+   "at": "climb",
+   "t": 0,
+   "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+   "aim": {
+    "x": 24,
+    "y": 152
+   },
+   "hit": {
+    "at": null,
+    "sources": [
+     "chaser:lavarunner@208,96"
+    ]
+   },
+   "removable": [
+    "bulb@48,112"
+   ]
+  }
+ ],
+ "624_chooser_probe": [
+  {
+   "at": "chooserProbe",
+   "cand": "bulb@48,112",
+   "probe": {
+    "hit": true,
+    "at": [
+     232.2,
+     119.6
+    ],
+    "eta": 87,
+    "sources": [
+     "chaser:lavarunner@208,96"
+    ]
+   }
+  }
+ ],
+ "624_chooser_pairs": [
+  {
+   "at": "pair",
+   "ids": [
+    "bulb@48,112",
+    "lavarunner@24,56"
+   ],
+   "admits": true
+  },
+  {
+   "at": "pair",
+   "ids": [
+    "bulb@48,112",
+    "lavarunner@208,96"
+   ],
+   "admits": true
+  },
+  {
+   "at": "pair",
+   "ids": [
+    "lavarunner@24,56",
+    "lavarunner@208,96"
+   ],
+   "admits": false
+  }
+ ],
+ "624_chaser_arm_on_lavarunner": [
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 280,
+    "y": 120
+   },
+   "start": 0,
+   "danger": {
+    "tick": 99,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 133
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 264,
+    "y": 120
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 141
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 248,
+    "y": 120
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 232,
+    "y": 120
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 232,
+    "y": 104
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 232,
+    "y": 88
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 216,
+    "y": 104
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 216,
+    "y": 88
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 200,
+    "y": 104
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 216,
+    "y": 72
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 200,
+    "y": 88
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 216,
+    "y": 56
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 200,
+    "y": 72
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 184,
+    "y": 88
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 200,
+    "y": 56
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 184,
+    "y": 72
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 184,
+    "y": 56
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 184,
+    "y": 40
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 168,
+    "y": 56
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 168,
+    "y": 40
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  },
+  {
+   "at": "chaserArm",
+   "target": "lavarunner@208,96",
+   "c": {
+    "x": 152,
+    "y": 56
+   },
+   "start": 0,
+   "danger": {
+    "tick": 87,
+    "src": [
+     "lavarunner@208,96"
+    ]
+   },
+   "deathTick": 121
+  }
+ ],
+ "624_lab_anticipate4_stack": [
+  "C4STACK Error: level 74: the tape clears tag 2, which is a \"fallrock\" at (288,144) \u2014 response \"arm\", and clearing it does not remove it \u2014 it BUILDS IT FALLEN, Solid and live, and its update writes the player's y. A clear list must never name it.",
+  "    at fail (file:///tmp/claude-0/c4/lab/frontend/modules/seedlingDemo/levelWorld.js:117:101)",
+  "    at buildLevelWorld (file:///tmp/claude-0/c4/lab/frontend/modules/seedlingDemo/levelWorld.js:4726:17)",
+  "    at worldFor (file:///tmp/claude-0/c4/lab/frontend/modules/seedlingDemo/levelRun.js:1067:27)",
+  "    at enterWorld (file:///tmp/claude-0/c4/lab/frontend/modules/seedlingDemo/levelRun.js:4742:17)",
+  "    at Object.advance (file:///tmp/claude-0/c4/lab/frontend/modules/seedlingDemo/levelRun.js:19250:31)",
+  "    at Proxy.<anonymous> (file:///tmp/claude-0/c4/lab/frontend/modules/seedlingDemo/jsRuntimeSolver.js:533:35)",
+  "    at Object.advance (file:///tmp/claude-0/c4/lab/frontend/modules/seedlingDemo/solverBot.js:17068:31)",
+  "    at drive (file:///tmp/claude-0/c4/lab/frontend/modules/seedlingDemo/botDriverV2.js:5241:48)",
+  "    at walkToUnder (file:///tmp/claude-0/c4/lab/frontend/modules/seedlingDemo/solverBot.js:20030:31)",
+  "    at walkTo (file:///tmp/claude-0/c4/lab/frontend/modules/seedlingDemo/solverBot.js:20070:68)"
+ ]
+}

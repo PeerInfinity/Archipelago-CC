@@ -15410,6 +15410,108 @@ is the planner's. Surface GREEN 268 (3 classified), constants 5,623.
 
 **C2-ON (harvest, 2026-10-11).** ⚖ The user: *"Turn it ON"*. `GHOST_SPINNER_PRESS` defaults ON; `SEEDLING_GHOST_SPINNER_PRESS=0` is the opt-out. C2's D4 measured the flip moving no committed artifact (identity block, r9-campaign `712f0ead`, ENEMY `afdc6d1a`, the L18 sweep and the tapeRunner pairs all equal ON), so the only re-pin is `hammerGhostSpinner.test.js`'s default row.
 
+### Seedling hammer-phase C3 — the L98 iceturret
+
+The divergence sweep's `level_98 -> level_99__r2c7` (legs 745 from L93 and 748 from L99) read as budget refusals on
+the page. In node, with the route's inventory and no budget, both refuse BY NAME: *"kill: no side of
+iceturret@104,24 is reachable"*. The cost is 31,559 and 24,730 work units. The report is
+`CC/docs/cloud-reports/seedling-hammer-c3.md`.
+
+**What the turret is.** An `IceTurret` is a static shooter. While it lives it is `type "Enemy"`, not Solid: its contact
+is force 3, and its blasts freeze the player (`IceTurretBlast`). Three sword hits kill it (with the sword's `collideLine("Solid")` gate),
+or two spear thrusts (`spearDamage` 2, and `Player.spear()` has **no line gate**). Fire does nothing to it. The stairs
+sit behind `lock@112,112` (`tset -1`), whose count holds the turret and three jellyfish. The kill-lock work order, not
+the chooser, hands the turret to the kill rung: the stance walk's own hit sources are only
+`hazard:spinningaxe@96,64`.
+
+**Why no side reaches.** The two spinning axes have their hubs on the turret's bottom corners, at (104,72) and
+(136,72). The side filter (centre more than 36 px from a hub) drops up (19.4), left (32.4) and right (32.4). Down is the
+water pocket above the body, and the only way to it is between the two blades, so the ladder's axe rungs exhaust. The
+sides are the class's real geometry (the 32x32 live box, `ICE_TURRET_STANCE_MARGIN`), not `Turret`'s.
+
+**The game's way past (D1, `c3-d1-l98-spear-west`).** Stand in the west pocket at (76,40), outside both axes' reach,
+select the spear and thrust east through the wall. On p4f: two landings (t4, t35), "dead" on t36, and the corpse
+drowns and is removed on t47. Every tick is the model's (0 px; turret rows equal at every sampled tick). The one
+disagreement is a jellyfish: the second thrust's REPEAT hit (`presses.SPEAR_HIT_TICKS_UNMODELLED`) lands on it in the
+game at t39, inside an i-frame that a dark-shield bump had latched open (`hitByDarkStuff`). Named for fidelity.
+
+**D2 — `solverBot.ICE_TURRET_SPEAR_ARM` (OFF; `SEEDLING_ICE_TURRET_SPEAR_ARM=1` / `withIceTurretSpearArm`).**
+`killIceTurretInPlace` asks `killIceTurretBySpear` before its sword sides. A stance is a walkable point that meets all
+of these:
+- its `spearRect` overlaps the live box;
+- its box is off the body, and clear of every axe's reach by 2 px;
+- it is inside `axeFreeFlood`, a 2 px flood from the player that never enters an axe's reach (the planner's whole
+  tiles miss the off-centre passage into the west pocket);
+- it is plannable.
+
+Stances are tried nearest first. The executor is the sword sides': `walkTo`, `ctx.equip` the spear, a facing tap and
+a press at `KILL_PRESS_CADENCE`, then `dead` and `removed` observed, and the prior slot restored. A hit, a crossing, or
+a live chaser that the thrust's repeats could reach refuses by name. A `why` answer has spent no tick, and the sword
+sides then run exactly as OFF. Spear first, because a sword side's refusal costs ~12k `axe-dodge` units.
+
+Game-witnessed: `c3-l98-spear-l93` is the solver's ON plan from leg 745's arrival. It kills the three jellyfish, then
+the turret from the west pocket, then crosses the lock to L99 in 693 t. On p4f: 0 px over 694 observations, 831 body
+rows equal, every removal on the model's tick, and 0 hits. `probe-seedling-iceturret-spear.mjs --check` re-derives it
+byte for byte and asserts that OFF refuses.
+
+**ON, measured.**
+- Leg 745 SOLVES unbudgeted (1,344 + 1,572 units) and inside the page's 2,560 retry (853 t, dashless).
+- Leg 748 (the turret first, three jellyfish alive) refuses by name in 601 units: the repeat guard on
+  `jellyfish@56,48`, and the dashless pass's pinned `jellyfish@176,72`.
+- The identity block, the bounded vitest set (2,131/2,131) and tapeRunner's 605 pairs are unmoved. No committed solve
+  reaches the arm (only L98's turret is lock-counted, and no producer solves L98).
+
+**Trap candidates:**
+- **A refusal that names the right body can still name the wrong weapon.** "No side is reachable" was true of the
+  sword, and the game kills the turret with the spear through a wall.
+- **A budget that trips earlier hides which refusal it is, and a fix that keeps the old arm first stays under the
+  budget.** With the spear asked after the sword sides, ON was still budget-bound on the page.
+
+### Seedling hammer-phase C4 — the L74 chooser
+
+The divergence sweep's leg 624 (`level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144`) refuses on
+`lavarunner@208,96` (d 9.3). LEASH showed the corridor's hit is the game's, at t87. The kill rung was handed
+`bulb@48,112`. C4 measured why, and what handing it the lavarunner would do. **No code changed: the leg's wall is not
+the chooser.** The report is `CC/docs/cloud-reports/seedling-hammer-c4.md`.
+
+**Why the bulb.** `chooseBodyToRemove` asks a static question: with this body's volume removed, does a tile path reach
+the aim over the t0 danger volumes? It never asks the corridor probe, which steps the chasers against the walk.
+- Removing the bulb: a path exists. Probed, it is hit by `lavarunner@208,96` at (232.2,119.6), eta 87, which is the
+  walk's own refused hit.
+- Removing either lavarunner: no path, because the bulb's volume still cuts the one-tile path near the goal (24,152).
+- Removing pairs: bulb + either lavarunner admits; the two lavarunners do not.
+
+So the list is `[bulb]`, and C1's `hitSourceBodies` admits no chaser. Mode `order` refuses with the same message,
+and so does the switch OFF.
+
+**If the kill rung were handed the lavarunner** (a lab override: the hit's chaser appended or prepended).
+- The leg still refuses. The chaser arm finds 21 reachable stances in the leash, and its forecast refuses all 21:
+  the WAIT is hit at t87 (t99 from (280,120)) by the target itself.
+- In the preview the first press lands at t57 (hits 1, i-frame 30). The body is back on the player when that i-frame
+  lapses at t87, and the strike policy's next press goes in at t88, too late.
+- **On the game** (p4f, `probe-seedling-chaser-mobiles` with the player recorded): the stance (264,120)'s preview
+  played as a tape is hit at t87 on both sides, and the second landing kills the body at t90. The lavarunner agrees at
+  0 px over 311 comparisons. The player agrees on every tick but t1–t2, the known L74 arrival-frame residue.
+- **The same tape with the press at t84 or t85** kills the body at t87 with **no hit**, on the game and in the model
+  (0 px). A press inside the i-frame lands, because its hit tests run T+1…T+5. `strikePolicy`'s `hitsTimer > 0` gate
+  is what refuses it, and that gate is the chaser arm's (fidelity's).
+- Even with a lab gate that anticipates (a reading ≤ 4), the solve then dies on a model refusal. The walk rebuilds
+  L74 with fallrock tag 2 cleared (`LevelWorldError`), the same wall the t83/t86 tape replays hit.
+
+**Neighbours at this head** (node, the page's 2,560 retry):
+- 622: forced hit (FORCEDHIT's).
+- 626: the arrival's fallrock freeze at t0.
+- 628: the skirt-stance stall.
+- 629: solves in 307 t (`baitForecast` is ON now).
+
+**Trap candidates:**
+- **"Its removal admits a corridor" is a static answer, and the probe is a moving one.** A body can be necessary for
+  the static path and still leave the probed corridor hit by another body.
+- **A measurement arm can stop being inert when another switch flips.** C1 measured `order` equal to `empty`. With
+  `STATIC_SWORD_ARM` ON (C1-ON), `order` hands L6's `sandtrap@64,16` ahead of `bob@112,48`, and
+  `solve-seedling-r9-campaign --check` throws at `r8-solve-6`. With `SEEDLING_STATIC_SWORD_ARM=0`, `order` is the
+  base (`712f0ead`; `r9-solve-16` byte-identical, 688 t).
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
@@ -15417,6 +15519,8 @@ is the planner's. Surface GREEN 268 (3 classified), constants 5,623.
 state*, `KEEP_POLICY` removal when convenient, then oracle and solver features
 **as the vanilla playthrough needs them**. The splice stays R9's first solver
 act (R8's close, option A).
+
+**C3-ON (harvest, 2026-10-11).** ⚖ The user: *"Turn it ON"*. `ICE_TURRET_SPEAR_ARM` defaults ON; `SEEDLING_ICE_TURRET_SPEAR_ARM=0` is the opt-out. C3's D3 measured no committed mover ON (identity block, r9-campaign `712f0ead` with `r9-solve-16` as the control, ENEMY `afdc6d1a`, tapeRunner pairs); the live change is the two L98 legs (745 SOLVED 853 t within the page's retry; 748 refused by name). With the default now `!== '0'`, the page worker (no `process`) runs it ON too, which C3's report noted it could not do OFF-by-default.
 
 ### Seedling fidelity WALLFLYER — a wallflyer dies (and keeps flying while it does), and the shield turns one
 

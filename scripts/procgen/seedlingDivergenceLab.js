@@ -12,7 +12,10 @@
  *   - `botDrain`: every raw drained row (all its fields), in order.
  *
  *   serveLeg({goal, budgetMs})   the engine serves ONE goal from where the player stands (the probe jumped first);
- *                                returns the engine's history rows, the plans, the tapes, the raw rows
+ *                                returns the engine's history rows, the plans, the tapes, the raw rows, and
+ *                                `roomHits`: the GAME's damage taken in the leg's room (`botStatus.hits`, sampled every
+ *                                25 ms while the player is in it — a drained row carries no hits, and `Player.hits`
+ *                                is per instance, so the status after an exit crossing reads the NEXT room's player)
  *   divergenceDetail(...)        for each play that left its plan: the model rows and the game rows around the
  *                                tick, and the FIRST DIFFERING FIELD among the fields both sides carry
  *   heldCompare({...})           re-arrive, ship the SAME plan's first k keys HELD, and read the whole held game
@@ -169,6 +172,14 @@ export async function createLab() {
         const resolved = resolveGoal(leg);
         if (!resolved.goal) return { end: 'unresolved', failed: resolved.refused ?? JSON.stringify(resolved) };
         const goal = resolved.goal;
+        // ⛓ the game's hits in the leg's room (see the head): the arrival's, the max, the samples behind it
+        const roomHits = { atArrival: status()?.hits ?? null, max: null, samples: 0 };
+        const hitSampler = setInterval(() => {
+            const s = status();
+            if (s?.level !== goal.level || typeof s.hits !== 'number') return;
+            roomHits.samples += 1;
+            roomHits.max = Math.max(roomHits.max ?? 0, s.hits);
+        }, 25);
         const answer = eng.walkTo(goal);
         const t0 = performance.now();
         let end = 'timeout';
@@ -187,6 +198,7 @@ export async function createLab() {
             }
         }
         if (end !== 'crossed') eng.stop();
+        clearInterval(hitSampler);
         const after = status();
         const history = plain(eng.stats.history.slice(h0)).map((h) => ({ ...h, goal: undefined }));
         // the plans: settled results of the solves this leg made
@@ -233,7 +245,7 @@ export async function createLab() {
         return { answer, end, failed: st.failed, notes: st.notes.slice(-6), history, plans, tapes: tap.tapes.slice(t0n),
             divs, rowsDrained: rows.length, level: after?.level, x: after?.x, y: after?.y, armed: after?.armed, held: after?.held,
             items: after?.items ?? null, slots: after?.inventory_slots ?? null, cleared: (after?.persistence_cleared ?? []).length,
-            ms: Math.round(performance.now() - t0),
+            ms: Math.round(performance.now() - t0), roomHits,
             gate: { served: plain((eng.stats.deliveryServed ?? []).slice(g0.served)),
                 deliveries: plain((eng.stats.deliveries ?? []).slice(g0.deliveries)).map((d) => ({ phase: d.phase, tick: d.tick, outcome: d.outcome, save: d.save })),
                 releasedForSwap: (eng.stats.releasedForSwap ?? 0) - g0.released } };

@@ -85,7 +85,7 @@ import {
     SPINNER, hammerHitsPlayer,
     KILL_ARM_POLICY,
     DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH, UP,
-    distanceRectPoint, slashReachFor, slashRect, spearRect,
+    distanceRectPoint, slashReachFor, slashRect, SPEAR_HIT_TICKS_UNMODELLED, spearRect,
     swordWindowReplace, swordWindowSchedule, swordWindowStep,
     /**
      * ⛓⛓⛓ R9 SLICE 4 — THE ROCK'S OWN TRANSCRIPTION, ASKED RATHER THAN COPIED.
@@ -139,7 +139,7 @@ import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseHazardCanReach, phaseHazardHit,
 } from './dangerMap.js';
-import { axeCanReach, axeHitsPlayer } from './hazards.js';
+import { axeCanReach, axeHitsPlayer, SPINNING_AXE } from './hazards.js';
 import { planDash } from './mover.js';
 import { createTraceBuilder } from './decisionTrace.js';
 import { arrivalInsideSolid, arrivalsInto, solidsAt, STUCK_TICKS } from './arrivalSolid.js';
@@ -12100,9 +12100,19 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
         .filter((c) => planWaypointsOrNull(run.world, run.state, { x: c.x, y: c.y }, null, opts) !== null)
         .map((c) => ({ ...c, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) }))
         .sort((a, b) => a.d - b.d);
+    /**
+     * ⛓⛓ HAMMER-PHASE C3 — THE SPEAR FIRST (`ICE_TURRET_SPEAR_ARM`, ON by default). Asked before the sword sides
+     * because a sword side's refusal is the expensive one: L98's below-side walk exhausts the axe ladder (12,365 work
+     * units from (96,112)) before it gives way, which is why the divergence sweep read the room as budget-bound. A
+     * spear arm that answers `why` spent no tick, and the sword sides follow exactly as OFF.
+     */
+    const spear = ICE_TURRET_SPEAR_ARM.enabled ? killIceTurretBySpear(run, perTick, id, resolved, ctx) : null;
+    if (spear?.record) return spear.record;
+    const spearWhy = spear ? ` · the spear: ${spear.why}` : '';
     if (sides.length === 0) {
-        throw new SolverRefusal(`${ctx.what}: no side of ${id}'s live box is plannable floor within the sword's reach`,
-            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+        throw new SolverRefusal(`${ctx.what}: no side of ${id}'s live box is plannable floor within the sword's reach`
+            + spearWhy,
+        { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
     }
     /**
      * Each side in turn, nearest first; a side whose walk refuses AT PLAN TIME (no tick spent) gives way to the
@@ -12126,7 +12136,7 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
         }
     }
     if (!side) {
-        throw new SolverRefusal(`${ctx.what}: no side of ${id} is reachable — ${sideWhys.join(' | ')}`,
+        throw new SolverRefusal(`${ctx.what}: no side of ${id} is reachable — ${sideWhys.join(' | ')}${spearWhy}`,
             { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
     }
     const hitsBefore = run.ledger('playerHits').length;
@@ -12173,6 +12183,240 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
     return { phase: 'turret-kill', target: id, side: side.key, stance: { x: side.x, y: side.y }, presses,
         ticks: perTick.length - from };
 }
+/**
+ * ⛓⛓ HAMMER-PHASE C3 — THE ICE TURRET'S SPEAR ARM (`ICE_TURRET_SPEAR_ARM`, ON by default since ⚖ the user's flip of 2026-10-11; `=0` opts out).
+ *
+ * `Player.spear()` hits every hitable under its 32x5 rect (`presses.spearRect`) with NO distance and NO
+ * `collideLine("Solid")` gate (`Player.as:954-990`), where `slash()` has both. So a spear reaches an `IceTurret`
+ * THROUGH a wall the sword cannot swing past, for `spearDamage` 2 a thrust (`hitsMax` 3: two landings, 31 ticks
+ * apart). Measured on the game (C3 D1, `c3-d1-l98-spear-west`): from L98's west pocket (76,40), outside both
+ * spinning axes' reach, two thrusts through the wall kill `iceturret@104,24` (landed t4/t35, "dead" t36) and its
+ * corpse drowns (removed t47), every tick equal to the model's.
+ *
+ * ⛔ OFF by default: ON, a refusal that is today's words becomes a plan (legs 745/748's room), so the default is
+ * the user's to flip. OFF, `killIceTurretInPlace` never asks it — the byte-inert state.
+ */
+export const ICE_TURRET_SPEAR_ARM = {
+    enabled: globalThis.process?.env?.SEEDLING_ICE_TURRET_SPEAR_ARM !== '0',
+};
+
+/** Run `fn` with `ICE_TURRET_SPEAR_ARM` set to `enabled`, restoring the previous value (`withStaticSwordArm`'s shape). */
+export function withIceTurretSpearArm(enabled, fn) {
+    const was = ICE_TURRET_SPEAR_ARM.enabled;
+    ICE_TURRET_SPEAR_ARM.enabled = enabled === true;
+    const restore = () => { ICE_TURRET_SPEAR_ARM.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/** The four thrust directions, `Player.direction`'s numbering (`presses.spearRect`), with their facing and back keys. */
+const SPEAR_THRUSTS = Object.freeze([
+    { dir: 0, key: 'right', back: 'left' }, { dir: 1, key: 'up', back: 'down' },
+    { dir: 2, key: 'left', back: 'right' }, { dir: 3, key: 'down', back: 'up' },
+]);
+/** The stance's sub-tile offsets tried per walkable tile, px from its centre (the drift room is the slack). */
+const SPEAR_TURRET_OFFSETS = Object.freeze([0, -4, 4]);
+/** The box's clearance past an axe's reach, px: the facing tap's drift toward the body (~0.7 px) and change. */
+const SPEAR_AXE_MARGIN = 2;
+/** Stances walked (each refusing at plan time) before the arm gives up. */
+const SPEAR_TURRET_TRIES = 4;
+
+/** The distance from a spinning axe's hub to the nearest point of `box` (`axeCanReach`'s own measure). */
+function boxGapFrom(h, box) {
+    return Math.hypot(Math.max(box.x, Math.min(h.cx, box.right)) - h.cx, Math.max(box.y, Math.min(h.cy, box.bottom)) - h.cy);
+}
+
+/**
+ * A live chaser (`strikeBodies`) that could overlap the thrust's rect, from the player's position facing `dir`, by
+ * the thrust's last repeat (`SPEAR_HIT_TICKS_UNMODELLED`, T+5) at its own `speed`: its id, or null. ⛔ The repeats are
+ * inert on the TURRET (a spear landing clears `hitByDarkStuff`, so the 30-tick i-frame holds them off — game-measured,
+ * C3 D1), not on a body a dark-shield bump has latched.
+ */
+function spearRepeatReaches(run, dir) {
+    const t = SPEAR_HIT_TICKS_UNMODELLED.ticks.at(-1) + 1;
+    const thrust = spearRect(run.state.x, run.state.y, dir);
+    for (const b of run.entities('strikeBodies') ?? []) {
+        if (!b.rect) continue;
+        const g = (ENEMY_CLASSES[b.tag]?.speed ?? 1) * t;
+        const grown = { x: b.rect.x - g, y: b.rect.y - g, right: b.rect.right + g, bottom: b.rect.bottom + g };
+        if (rectsOverlapLocal(grown, thrust)) return b.id;
+    }
+    return null;
+}
+
+/** The flood's lattice step, px: finer than the 4 px box, so an off-centre passage is found. */
+const AXE_FREE_PITCH = 2;
+
+/** Lattice points (`AXE_FREE_PITCH` keys) reachable from the player by 4-neighbour steps, each box plannable and clear of every axe's reach. */
+function axeFreeFlood(run, opts, axes) {
+    const P = AXE_FREE_PITCH;
+    const W = run.world.width * TILE_SIZE;
+    const H = run.world.height * TILE_SIZE;
+    const ok = (x, y) => x >= 0 && y >= 0 && x <= W && y <= H
+        && axes.every((h) => boxGapFrom(h, playerBoxAt(x, y)) > SPINNING_AXE.length + 1)
+        && plannerObstacleAt(run.world, x, y, null, opts) === null;
+    const seen = new Set();
+    const sx = Math.round(run.state.x / P);
+    const sy = Math.round(run.state.y / P);
+    if (!ok(sx * P, sy * P)) return seen;
+    const queue = [[sx, sy]];
+    seen.add(`${sx},${sy}`);
+    for (let i = 0; i < queue.length; i += 1) {
+        const [x, y] = queue[i];
+        for (const [nx, ny] of [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]) {
+            const k = `${nx},${ny}`;
+            if (seen.has(k) || !ok(nx * P, ny * P)) continue;
+            seen.add(k);
+            queue.push([nx, ny]);
+        }
+    }
+    return seen;
+}
+
+/**
+ * The spear arm (`ICE_TURRET_SPEAR_ARM`), asked by `killIceTurretInPlace` before its sword sides; a `why` means no
+ * tick was spent and the sword sides follow.
+ *
+ * A STANCE is a walkable point whose thrust rect (`spearRect`, from the run's own `spearOrigin`) overlaps the live
+ * box, the player's box off that box (its contact) and clear of every spinning axe's reach by `SPEAR_AXE_MARGIN`,
+ * inside `axeFreeFlood` (reached without entering an axe's reach), and plannable; nearest first. The EXECUTOR is the
+ * sword sides': the loop's `walkTo` with the range braved; the spear selected (`ctx.equip`); per thrust one facing
+ * tap and one press at `KILL_PRESS_CADENCE`; the end OBSERVED (`dead`, then `removed`); the prior slot restored. A
+ * hit, a crossing, or a live chaser the thrust's repeats could reach (`spearRepeatReaches`) refuses by name.
+ *
+ * @returns {{record?: object, why?: string}} `record` on a kill; `why` when no stance applies and no tick was spent.
+ */
+function killIceTurretBySpear(run, perTick, id, resolved, ctx) {
+    const from = perTick.length;
+    const turret = () => run.entities('turrets')?.get?.(id) ?? null;
+    const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.spear);
+    if (!run.progress('inventory')?.hasSpear || slot < 0) return { why: 'the run holds no spear' };
+    if (typeof ctx.equip !== 'function') return { why: 'this caller cannot select a slot' };
+    const r = turret().rect;
+    const opts = solverPlanOpts(run, resolved.contacts ?? new Set());
+    const axes = (run.world.combat?.hazards ?? []).filter((h) => h.tag === 'spinningaxe');
+    const on = (x, y, dir) => rectsOverlapLocal(spearRect(x, y, dir), r);
+    const reach = spearRect(0, 0, RIGHT).right + 8; // the thrust's length off its own rect, and a tile of slack
+    const cands = [];
+    for (const t of run.world.walkableTiles ?? []) {
+        const cx = t.tx * TILE_SIZE + TILE_SIZE / 2;
+        const cy = t.ty * TILE_SIZE + TILE_SIZE / 2;
+        if (cx < r.x - reach || cx > r.right + reach || cy < r.y - reach || cy > r.bottom + reach) continue;
+        for (const th of SPEAR_THRUSTS) {
+            for (const ox of SPEAR_TURRET_OFFSETS) {
+                for (const oy of SPEAR_TURRET_OFFSETS) {
+                    const x = cx + ox;
+                    const y = cy + oy;
+                    if (!on(x, y, th.dir)) continue;
+                    // ⛔ off the live box (its contact, force 3)
+                    const box = playerBoxAt(x, y);
+                    if (rectsOverlapLocal(box, r)) continue;
+                    /**
+                     * ⛔ The BOX clear of every axe's reach (`axeCanReach`: the blade's 32 px + 1 to the box's
+                     * nearest point) by `SPEAR_AXE_MARGIN` more — the facing tap's drift. The sword sides' centre
+                     * test admits L98's 8 px channel beside the turret (36.2 px from a hub, its box 33.1), whose
+                     * approach stalls against the wall at the channel's mouth (measured, from (112,176)).
+                     */
+                    if (!axes.every((h) => boxGapFrom(h, box) > SPINNING_AXE.length + 1 + SPEAR_AXE_MARGIN)) continue;
+                    if (plannerObstacleAt(run.world, x, y, null, opts) !== null) continue;
+                    cands.push({ ...th, x, y, d: Math.hypot(x - run.state.x, y - run.state.y) });
+                }
+            }
+        }
+    }
+    /**
+     * ⛔ THE APPROACH MAY NOT NEED AN AXE EITHER. The sword sides' refusal IS a walk between the two blades, and a
+     * stance clear of the axes can still be one reached only past them (L98's 8 px channels beside the turret, and
+     * the pocket above it). The planner works in whole tiles and the one tile into L98's west pocket has its centre
+     * inside the left axe's reach, though a box off that centre passes clear (the game witness walks it). So the
+     * screen is a flood of its own: `AXE_FREE_PITCH` px steps from the player over points whose box is plannable and
+     * clear of every axe's reach (`boxGapFrom` > the blade + 1); a stance is kept only inside it. Nearest first.
+     */
+    const flood = axeFreeFlood(run, opts, axes);
+    const keyOf = (x, y) => `${Math.round(x / AXE_FREE_PITCH)},${Math.round(y / AXE_FREE_PITCH)}`;
+    const plannable = cands.filter((c) => flood.has(keyOf(c.x, c.y)))
+        .sort((a, b) => a.d - b.d || a.dir - b.dir)
+        .filter((c) => planWaypointsOrNull(run.world, run.state, { x: c.x, y: c.y }, null, opts) !== null);
+    if (plannable.length === 0) {
+        return { why: `no stance puts the thrust on ${id} that the player reaches without entering a spinning axe's `
+            + `reach (${cands.length} on it outside the axes, ${flood.size} lattice point(s) reachable clear of them)` };
+    }
+    let stance = null;
+    const whys = [];
+    for (const c of plannable.slice(0, SPEAR_TURRET_TRIES)) {
+        const before = perTick.length;
+        if (hasArrived(run.state, c, DEFAULT_TOLERANCE)) { stance = c; break; }
+        try {
+            ctx.walkTo(ctx.goal, { x: c.x, y: c.y }, {
+                what: `${ctx.what} -> ${id} spear stance (${c.key} at ${c.x},${c.y})`,
+                contactsOverride: new Set([...(resolved.contacts ?? []), `proximity-hazard:${id}`]),
+            });
+            stance = c;
+            break;
+        } catch (e) {
+            if (!(e instanceof SolverRefusal) || perTick.length !== before) throw e;
+            whys.push(`${c.key}@${c.x},${c.y}: ${e.message.split('\n')[0].slice(0, 200)}`);
+        }
+    }
+    if (!stance) return { why: `no spear stance is reachable — ${whys.join(' | ')}` };
+    const refuse = (why) => {
+        throw new SolverRefusal(`${ctx.what}: ${why}`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+    };
+    const hitsBefore = run.ledger('playerHits').length;
+    const step = (keys) => {
+        perTick.push(keys);
+        const { transition } = run.advance(keys);
+        if (transition) refuse('the turret spear kill crossed a door (trap 150)');
+        if (run.ledger('playerHits').length !== hitsBefore) {
+            const h = run.ledger('playerHits').at(-1);
+            refuse(`the player was HIT while spearing ${id} at run tick ${run.ticksCompleted} (source `
+                + `${h?.source ?? '?'}${h?.id ? ` ${h.id}` : ''}) from (${run.state.x.toFixed(1)},${run.state.y.toFixed(1)})`);
+        }
+    };
+    const prior = run.progress('primary');
+    if (prior !== slot) ctx.equip(slot);
+    const FACE = new Set([stance.key]);
+    const PRESS = new Set(['primary']);
+    const NO_KEYS = new Set();
+    let presses = 0;
+    const drift = () => (stance.dir === 0 ? run.state.x - stance.x : stance.dir === 2 ? stance.x - run.state.x
+        : stance.dir === 1 ? stance.y - run.state.y : run.state.y - stance.y);
+    for (let n = 0; n < ICE_TURRET_PRESS_BOUND && !(turret()?.dead); n += 1) {
+        for (let b = 0; b < 4 && drift() > 0.5; b += 1) step(new Set([stance.back]));
+        step(FACE);
+        if (!on(run.state.x, run.state.y, stance.dir)) {
+            refuse(`the facing tap left the player at (${run.state.x.toFixed(1)},${run.state.y.toFixed(1)}), where the `
+                + `thrust misses ${id}`);
+        }
+        const near = spearRepeatReaches(run, stance.dir);
+        if (near) {
+            refuse(`${near} could walk into the thrust's rect during its repeats (T+1/T+3/T+5 on the game, `
+                + '`presses.SPEAR_HIT_TICKS_UNMODELLED`): the game can hit a latched body there and the model would '
+                + 'not (C3 D1, `jellyfish@56,48` at t39)');
+        }
+        step(PRESS);
+        presses += 1;
+        for (let w = 2; w < KILL_PRESS_CADENCE && !(turret()?.dead); w += 1) step(NO_KEYS);
+    }
+    if (!turret()?.dead) refuse(`${presses} spear thrust(s) from (${stance.x},${stance.y}) and ${id} is not dead`);
+    for (let w = 0; w < ICE_TURRET_DROWN_BOUND && !(turret()?.removed); w += 1) step(NO_KEYS);
+    if (!turret()?.removed) {
+        refuse(`${id} is a CORPSE and still counted after ${ICE_TURRET_DROWN_BOUND} ticks — it died on floor that `
+            + 'does not destroy it');
+    }
+    if (run.progress('primary') !== prior) ctx.equip(prior);
+    return { record: { phase: 'turret-kill', target: id, side: stance.key, weapon: 'spear',
+        stance: { x: stance.x, y: stance.y }, presses, restoredSlot: prior, ticks: perTick.length - from } };
+}
+
 /**
  * ⛓⛓ HAMMER-PHASE C1 — THE STATIC SWORD ARM (`STATIC_SWORD_ARM`): a `SandTrap` or `Turret` the kill rung was handed
  * (`stepped === false`, in a stepped room too since `CHOOSER_HIT_SOURCES`), killed by the player's own press.

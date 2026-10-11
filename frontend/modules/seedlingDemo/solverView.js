@@ -129,7 +129,8 @@ export { fallDestination, PhysicsV2Error, playerBoxAt, terrainProbeRect } from '
 // presses.js — botDriverV2, solverBot, strikePolicy · seedling 10, physics 5
 export {
     auditFire, DARK_SWORD_DAMAGE, distanceRectPoint, DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH,
-    slashReachFor, slashRect, spearRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule, swordWindowStep, UP,
+    slashReachFor, slashRect, SPEAR_HIT_TICKS_UNMODELLED, spearRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule,
+    swordWindowStep, UP,
 } from './presses.js';
 // ⛓ SEEDLING FIDELITY PUSHBLOCK: the spear push's stance audit (a thrust that reaches anything but the block).
 export { auditPress, PRESS_ARM_POLICY } from './presses.js';
