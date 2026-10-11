@@ -958,6 +958,12 @@ export const DOCS_INDEX = Object.freeze([
         "title": "Procgen: Shuffled spiral, with Maze",
         "section": "user/tutorials",
         "summary": "Shuffled spiral lays its regions out from a centre cell outwards, in shuffled zones, and then places the scenario's items so the world can be finished. You choose how many regions of each substrate…"
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-sphere-growth.md",
+        "title": "Procgen: Sphere growth, with Maze",
+        "section": "user/tutorials",
+        "summary": "Sphere growth is the pipeline's default mode: it plans the item progression first — which items unlock which, sphere by sphere — and then grows a world to match. This tutorial builds a world from…"
     }
 ].map(Object.freeze));
 
@@ -1028,7 +1034,8 @@ export const HELP_SECTIONS = Object.freeze([
                 "docs": [
                     "docs/json/user/tutorials/apcalc-generator.md",
                     "docs/json/user/tutorials/procgen-grid-growth.md",
-                    "docs/json/user/tutorials/procgen-shuffled-spiral.md"
+                    "docs/json/user/tutorials/procgen-shuffled-spiral.md",
+                    "docs/json/user/tutorials/procgen-sphere-growth.md"
                 ],
                 "single": false
             }

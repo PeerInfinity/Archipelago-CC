@@ -45,6 +45,7 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 
 ### Procgen
 
+- **Procgen: Sphere growth, with Maze** ([guide](../tutorials/procgen-sphere-growth.md)) — Generate a maze-only world with the Sphere growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-sphere-growth`
 - **Procgen: Shuffled spiral, with Maze** ([guide](../tutorials/procgen-shuffled-spiral.md)) — Generate a maze-only world with the Shuffled spiral mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-shuffled-spiral`
 - **Procgen: Grid growth, with Maze** ([guide](../tutorials/procgen-grid-growth.md)) — Generate a maze-only world with the legacy Grid growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-grid-growth`
 
@@ -56,7 +57,6 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 
 Written, but not working all the way through yet. The panel lists these in a collapsed section and marks the step where each one stops.
 
-- **Procgen: Sphere growth, with Maze** — Generate a maze-only world with the Sphere growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-sphere-growth`
 - **Procgen: Top-down, with Maze** — Turn an existing game's region graph (Adventure) into a world of mazes with the Top-down mode, and watch the Playback Bot finish it. `?tutorial=procgen-top-down`
 - **Procgen: settings and the Playback Bot** — Change a generated world's seed and size, run the pipeline one step at a time, and drive the Playback Bot by hand. `?tutorial=procgen-settings-and-bot`
 - **Procgen: from a generated world to a multiworld** — Take a generated world through the APWorld Editor to a .apworld, play it on a local Archipelago server, and let the Playback Bot send the checks. `?tutorial=procgen-to-multiworld`

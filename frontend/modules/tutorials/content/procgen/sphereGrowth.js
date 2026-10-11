@@ -1,6 +1,6 @@
 /**
  * Procgen: Sphere growth, with Maze (catalogue P1, one tutorial per mode — ⚖
- * the user, 2026-10-10). In progress: its walk row measures `firstFailingStep`.
+ * the user, 2026-10-10). Ready (⚖ the user, 2026-10-10); its walk row holds it.
  * Shape: ../../tutorialShape.js; shared steps: ../steps/procgen.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -14,9 +14,8 @@ export const PROCGEN_SPHERE_GROWTH = Object.freeze({
     title: 'Procgen: Sphere growth, with Maze',
     summary: 'Generate a maze-only world with the Sphere growth mode, load it, and watch the Playback Bot finish it.',
     track: 'procgen',
-    status: 'in-progress',
-    firstFailingStep: null, // every step works since the maze generator fix (7379b019dc)
-    doc: null,
+    status: 'ready', // ⚖ the user, 2026-10-10 (tutorial-bugs)
+    doc: 'docs/json/user/tutorials/procgen-sphere-growth.md',
     intro: [
         { prose: '**Sphere growth** is the pipeline\'s default mode: it plans the item progression first — which items unlock which, sphere by sphere — and then grows a world to match. This tutorial builds a world from mazes alone, so you can see the plan become rooms.' },
     ],
