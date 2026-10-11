@@ -222,6 +222,8 @@ import { profiler } from '../shared/profiler.js';
 // Import worker-side spoiler test runner
 import { WorkerSpoilerTest } from './core/workerSpoilerTest.js';
 
+import { slotGameName } from './core/statePersistence.js';
+
 // Initialize worker logger with basic settings
 initializeWorkerLogger({
   defaultLevel: 'WARN',
@@ -598,7 +600,8 @@ async function handleMessage(message) {
         self.postMessage({
           type: 'rulesLoadedConfirmation',
           initialSnapshot: initialSnapshot,
-          gameName: stateManagerInstance.rules?.game_name,
+          // The loaded SLOT's game (rules F4), not the document label.
+          gameName: slotGameName(stateManagerInstance),
           playerId: playerId,
           newStaticData: workerStaticGameData, // Send the entire new static data object
         });

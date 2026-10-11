@@ -75,6 +75,16 @@ import { DEFAULT_PLAYER_ID } from '../../shared/playerIdUtils.js';
 import { buildSubstitutionMaps, getDisplayName } from '../../shared/nameSubstitutions.js';
 
 // Module-level helper for logging
+/**
+ * ⛓ rules F4: the LOADED slot's game is `world["<p>"].game` (schema-required).
+ * The top-level `game_name` is the DOCUMENT's label — `"Multiworld"` for a
+ * combined document — so logic, inventory and the snapshot's identity never
+ * resolve from it.
+ */
+export function slotGameName(sm) {
+  return sm.rules?.world?.[sm.playerId]?.game;
+}
+
 function log(level, message, ...data) {
   console[level === 'info' ? 'log' : level]?.(message, ...data);
 }
@@ -185,7 +195,7 @@ export function getSnapshot(sm) {
       slot: sm.playerId, // Deprecated: use 'id' instead
       team: sm.team, // Assuming sm.team exists on StateManager
     },
-    game: sm.rules?.game_name || sm.settings?.game || 'Unknown', // Single game identifier
+    game: slotGameName(sm) || sm.settings?.game || 'Unknown', // The loaded slot's game (F4)
     // All games now use gameStateModule data
     difficultyRequirements: sm.gameStateModule?.difficultyRequirements,
     shops: sm.gameStateModule?.shops,
@@ -513,12 +523,7 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
       // Logic object (game-specific helper functions)
       if (name === 'logic') {
         // Get game-specific helpers from the game logic module
-        // For multiworld, use the player-specific game from world data instead of the top-level game_name
-        const worldData = sm.world || sm.settings;
-        let gameName = sm.rules?.game_name;
-        if (gameName === 'Multiworld' && worldData?.game) {
-          gameName = worldData.game;
-        }
+        const gameName = slotGameName(sm);
         if (gameName) {
           const gameLogic = getGameLogic(gameName);
           if (gameLogic && gameLogic.helperFunctions) {
@@ -653,7 +658,7 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
       // Helpers that require additional arguments (like graffiti_spots with movestyle, limit, etc.)
       // must be called via executeHelper with their args properly evaluated
       // Also skip helpers that have optional parameters (function.length doesn't count defaults)
-      const gameName = sm.rules?.game_name;
+      const gameName = slotGameName(sm);
       if (gameName) {
         const gameLogic = getGameLogic(gameName);
         const computedHelpers = gameLogic?.helperFunctions;
@@ -728,7 +733,7 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
       const currentLoc = anInterface.currentLocation || anInterface.location;
       if (currentLoc && currentLoc.name) {
         const locationName = currentLoc.name;
-        const gameName = sm.rules?.game_name;
+        const gameName = slotGameName(sm);
 
         if (gameName) {
           const gameLogic = getGameLogic(gameName);
@@ -951,6 +956,8 @@ export function getStaticGameData(sm) {
   // Phase 3.2: Return Maps directly instead of converting to arrays
   // Helper functions (like location_item_name) are already designed to handle Maps
   return {
+    // The DOCUMENT's labels, echoed as written (a combined document says
+    // "Multiworld"); the slot's game is `world[playerId].game` (rules F4).
     game_name: sm.rules?.game_name,
     game_directory: sm.rules?.game_directory,
     // ⛓ rules F2: `flash_panel` is per player (`{"<p>": block}`); the panel
@@ -1024,7 +1031,7 @@ export function applyRuntimeState(sm, payload) {
   if (isFullReset && sm.settings) {
     // Fallback: Re-create state if reset is not available but settings are
     const gameSettings = sm.settings;
-    const determinedGameName = gameSettings.game || sm.rules?.game_name;
+    const determinedGameName = gameSettings.game || slotGameName(sm);
 
     // Use centralized game logic selection for runtime state reset
     const logic = getGameLogic(determinedGameName);
@@ -1051,7 +1058,7 @@ export function applyRuntimeState(sm, payload) {
   if (isFullReset) {
     const gameNameForInventory = sm.settings
       ? sm.settings.game
-      : sm.rules?.game_name || 'UnknownGame';
+      : slotGameName(sm) || 'UnknownGame';
     sm.inventory = sm._createInventoryInstance(gameNameForInventory);
     sm._logDebug(
       `[StateManager applyRuntimeState] Inventory re-initialized via _createInventoryInstance for ${gameNameForInventory}.`
@@ -1281,7 +1288,7 @@ export function clearState(sm, options = { recomputeAndSendUpdate: true }) {
   } else if (!sm.inventory) {
     // If inventory doesn't exist, create it
     sm.inventory = sm._createInventoryInstance(
-      sm.settings ? sm.settings.game : sm.rules?.game_name || 'UnknownGame'
+      sm.settings ? sm.settings.game : slotGameName(sm) || 'UnknownGame'
     );
   }
 
@@ -1291,7 +1298,7 @@ export function clearState(sm, options = { recomputeAndSendUpdate: true }) {
 
     // Use centralized game logic selection
     const logic = initializeGameLogic({
-      gameName: sm.rules?.game_name,
+      gameName: slotGameName(sm),
       settings: gameSettings,
       worldClass: null // Not available in this context
     });

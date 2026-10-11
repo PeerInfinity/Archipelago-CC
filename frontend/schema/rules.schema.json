@@ -10,11 +10,11 @@
     },
     "game_name": {
       "type": "string",
-      "description": "The name of the game."
+      "description": "The DOCUMENT's game label: the slot's game for a one-slot document, \"Multiworld\" for a combined one. It is a label, not the slot's identity: the loaded slot's game is world[\"<p>\"].game, and logic, inventory and the snapshot resolve from that (rules F4)."
     },
     "game_directory": {
       "type": "string",
-      "description": "The world directory name for the game."
+      "description": "The DOCUMENT's world-directory label (a combined document's is \"multiworld\"). The slot's own directory is world[\"<p>\"].world_directory (rules F4)."
     },
     "archipelago_version": {
       "type": "string",
@@ -156,7 +156,12 @@
           "properties": {
             "game": {
               "type": "string",
-              "description": "Name of the game this world is for."
+              "description": "Name of the game this world is for: the slot's game, which every reader that resolves logic, inventory or the slot's identity uses (top-level game_name is only the document's label)."
+            },
+            "world_directory": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The slot's world directory under worlds/ (the export handler's lookup key; exporter.py's export_game_rules adds it, as do the JS producers rulesExporter.js, regionAtlasCompiler.js and apcalcGeneratorEngine.js). Optional: older documents omit it."
             },
             "slot_data": {
               "type": "object",
