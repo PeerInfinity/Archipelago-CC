@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 82,
+            "count": 83,
             "id": "plan"
         },
         {
             "browser": 74,
-            "count": 119,
+            "count": 120,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 408,
+        "blockStyle": 410,
         "browser": 139,
-        "cited": 204,
-        "files": 420,
+        "cited": 205,
+        "files": 422,
         "lineStyle": 12,
-        "withDocblock": 420,
-        "withFlags": 338
+        "withDocblock": 422,
+        "withFlags": 339
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7817,6 +7817,41 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/plan-seedling-l30keylock.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "only"
+            ],
+            "file": "plan-seedling-l40button-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-l40button-witness — Seedling fidelity L40BUTTON (wave 12), D3: the solver's own plan for `Level 040 - Totem Part 64,144` from L40's two NORTH arrivals (sweep-4 legs 378 and 381), written as roster tapes for `check-seedling-bot-differential --record` to record on the game (p4f) and for the model to repr…",
+            "path": "scripts/procgen/plan-seedling-l40button-witness.mjs"
+        },
+        {
             "argvHelpers": [
                 "check"
             ],
@@ -11085,6 +11120,24 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling L37 FALLROCK, ON THE GAME (rules `rules-l37-fallrock-patch`).",
             "path": "scripts/procgen/probe-seedling-l37-fallrock.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l40button.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-l40button — Measure-only (seedling fidelity L40BUTTON, wave 12): WHAT GATES `Totem Part 64,144` FROM L40's NORTH ARRIVALS, and why the solver read it as `wandlock@448,432`.",
+            "path": "scripts/procgen/probe-seedling-l40button.mjs"
         },
         {
             "argvHelpers": [],
