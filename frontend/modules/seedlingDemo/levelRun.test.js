@@ -2699,7 +2699,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             'brokenRocks', 'crushersParked', 'pushesSettled', 'openBridges', 'arrowsInFlight',
             'burnedTrees', 'latchedGroups', 'pulledRopes', 'turretDamage', 'turretsSettled',
             'arrowFlights', 'bosses', 'talkCircles', 'bobBoss', 'pulls', 'shooters', 'staticBodies',
-            'darkTraps',
+            'darkTraps', 'bombPushers', 'bombs',
         ]);
         expect(Object.isFrozen(ENTITY_FAMILY_NAMES)).toBe(true);
         for (const f of ENTITY_FAMILY_NAMES) {
@@ -2778,6 +2778,17 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
         });
     });
 
+    it('L40\'s lobber (BOMBPUSHER D2, the switch ON, the player standing 154 px away): bombPushers and bombs, through the query', () => {
+        withContactFidelity({ bombPusherLive: true }, () => {
+            const run = createLevelRun({ levelSource, boot: { level: 40, x: 272, y: 224 }, roles: ROLES, noDamage: true });
+            const { bad, seen } = compareEveryTick(run, 70, () => new Set());
+            expect(bad).toEqual([]);
+            expect(seen.has('bombPushers')).toBe(true);
+            expect(seen.has('bombs')).toBe(true);
+            for (const f of seen) witnessed.add(f);
+        });
+    });
+
     it('under noclip the query takes the getter\'s noclip arm too', () => {
         const run = createLevelRun({ levelSource, boot: { level: 71, x: 112, y: 176 }, noclip: true });
         const { bad } = compareEveryTick(run, 30, () => new Set(['down']));
@@ -2815,7 +2826,8 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
         { query: 'progress', names: PROGRESS_FIELD_NAMES, count: 13, noun: 'progress field', plural: 'fields' },
         // ⛓ fidelity ENCOUNTERS D3: 34 — `witchEvents`, L12's Witch.
         // ⛓ fidelity CROSSROOM D2: 35 — `unreadRoomWrites`, a cross-room write no entity of its level reads.
-        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 35, noun: 'ledger kind', plural: 'kinds' },
+        // ⛓ fidelity BOMBPUSHER D2: 36 — `bombEvents`, the lobber's bombs spawned and their Explosions.
+        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 36, noun: 'ledger kind', plural: 'kinds' },
     ];
     const ALL = [...PROGRESS_FIELD_NAMES, ...LEDGER_KIND_NAMES];
     const queryOf = new Map(FOLDS.flatMap((f) => f.names.map((n) => [n, f.query])));
@@ -2944,6 +2956,17 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
         expect(run.ledger('unreadRoomWrites')[0]).toMatchObject({ level: 37, tag: 4, by: 'buttonroom@144,288' });
         expect(seen.has('unreadRoomWrites')).toBe(true);
         for (const m of seen) witnessed.add(m);
+    });
+
+    it('L40\'s lobber (BOMBPUSHER D2, the switch ON): a bombEvents entry, through the query', () => {
+        withContactFidelity({ bombPusherLive: true }, () => {
+            const run = createLevelRun({ levelSource, boot: { level: 40, x: 272, y: 224 }, noDamage: true });
+            const { bad, seen } = compareEveryTick(run, 70, () => new Set());
+            expect(bad).toEqual([]);
+            expect(run.ledger('bombEvents').map((e) => e.what)).toEqual(['spawn', 'explode', 'blast']);
+            expect(seen.has('bombEvents')).toBe(true);
+            for (const m of seen) witnessed.add(m);
+        });
     });
 
     it('r5-shaft, walked up into its latched pulser after tick 2000: a pulserPlayerHits entry, through the query', () => {

@@ -305,6 +305,12 @@ export const FAMILY_BLOCKS = deepFreeze([
     { family: 'darkTraps', kind: RUN_ENTITIES, blocks: ['stationary', 'light'],
         solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'the room\'s `DarkTrap`s and their LIGHT death (fidelity STATICLADDER D2: `levelRun.darkTrapsNow`, `DARKTRAP_LIGHT_DEATH`): `startDying` (harmless from that tick), the 30-tick counter, "die1" and the removal that writes the tag; `null` while `CONTACT_FIDELITY.darkTrapLight` is off.' },
+    { family: 'bombPushers', kind: RUN_ENTITIES, blocks: ['stationary', 'emitter', 'proximity'],
+        solverReads: ['dangerMap', 'solverBot'], strategies: [],
+        why: 'the room\'s `BombPusher`s in `.oel` order, each with its `shotTime` clock and its "shoot"/"sit" Spritemap (fidelity BOMBPUSHER: `levelRun.bombPushersNow`, `bombPusher.js`); empty while `CONTACT_FIDELITY.bombPusherLive` is off.' },
+    { family: 'bombs', kind: RUN_ENTITIES, blocks: ['explode'],
+        solverReads: ['dangerMap'], strategies: [],
+        why: 'the `Bomb`s in flight, newest first (fidelity BOMBPUSHER: `levelRun.bombsNow`): position, velocity and the 30-update count to the `Explosion` (r 15) the 31st update adds.' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */
     { family: 'volume:crusher', kind: VOLUME, blocks: ['lane-charge', 'contact'],
