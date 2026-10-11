@@ -669,7 +669,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/games/journey-to-ascension/README.md",
         "title": "Journey to Ascension",
         "section": "games/journey-to-ascension",
-        "summary": "Archipelago integration for Journey to Ascension, an incremental/idle game. Progress through 27 zones by completing tasks, leveling skills, and collecting perks — but your perks are shuffled into…"
+        "summary": "Archipelago integration for Journey to Ascension by Meneth, an incremental/idle game (used with permission; see NOTICE.md). Progress through 27 zones by completing tasks, leveling skills, and…"
     },
     {
         "path": "docs/json/games/journey-to-ascension/cost-adjustment-algorithm.md",

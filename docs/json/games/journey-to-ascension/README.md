@@ -1,6 +1,6 @@
 # Journey to Ascension
 
-Archipelago integration for [Journey to Ascension](https://imgreghenry.github.io/JourneyToAscension/), an incremental/idle game. Progress through 27 zones by completing tasks, leveling skills, and collecting perks — but your perks are shuffled into the multiworld item pool.
+Archipelago integration for [Journey to Ascension](https://meneth.github.io/journey-to-ascension/) by Meneth, an incremental/idle game (used with permission; see [NOTICE.md](../../../../NOTICE.md)). Progress through 27 zones by completing tasks, leveling skills, and collecting perks — but your perks are shuffled into the multiworld item pool.
 
 ## How to Play
 
