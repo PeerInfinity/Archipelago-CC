@@ -1549,6 +1549,12 @@ const HOUSE_REGION = 'region_2_2';
 const HOUSE_EXIT = 'exit_S';
 const MAZE_CHILD = 'region_2_3';
 
+/** The queue block of `region` (its last visit), or null. */
+function loopBlockFor(region) {
+    const { visits } = resolveQueueBlocks(loopStateSingleton.getActionQueue?.() ?? []);
+    return [...visits].reverse().find((v) => v.name === region) ?? null;
+}
+
 const queueLine = (a) => `${a.type}:${a.sourceRegion}>${a.destinationRegion ?? a.locationName ?? ''}`;
 
 /**
@@ -1591,6 +1597,9 @@ async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000 } = {}) {
     tc.eventBus.subscribe('gameState:manaChanged', onMana);
     const controller = substrateRegistry.get('flash_seedling')?.getPlaybackController?.() ?? null;
     const goals = [];
+    // ⛔ The controller is ONE instance for the session: the goal it holds now is an earlier row's (measured on CI —
+    // the previous row's last goal led the list). Only goals taken after this point are this queue's.
+    const staleGoal = controller?.lastGoal ?? null;
     const t0 = performance.now();
     try {
         gs.refillMana();
@@ -1603,7 +1612,7 @@ async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000 } = {}) {
         // Every goal the controller took (a link credit is a goal too), sampled as the queue runs.
         const sample = () => {
             const g = controller?.lastGoal ?? null;
-            const key = g ? `${g.kind}:${g.name ?? g.tag}` : null;
+            const key = g && g !== staleGoal ? `${g.kind}:${g.name ?? g.tag}` : null;
             if (key && goals[goals.length - 1] !== key) goals.push(key);
         };
         const sampler = setInterval(sample, 20);
@@ -1808,6 +1817,72 @@ const loopBotCrossesAtlasRooms = (runtime) => async (tc) => {
 
 export const seedlingJsRuntimeLoopBotBlocksCrossAtlasRooms = loopBotCrossesAtlasRooms('js');
 export const seedlingWasmRuntimeLoopBotBlocksCrossAtlasRooms = loopBotCrossesAtlasRooms('wasm');
+
+/**
+ * ⛓ The Flash (Ruffle) runtime has no feet: a Bot block's walkTo there is refused BY NAME, and loops turns the
+ * refusal into its named stop (`loopState:botWalkFailed`, the controller's `lastRefusal` as its reason) instead of
+ * a silent park. The Seedling SWF is not committed (`flashPanel/swf/README.md`), so the preset is loaded with its
+ * `flash_panel.swf` naming the one that README describes: the panel takes the REAL Flash path (Ruffle fetched from
+ * its CDN, the bridge adapter built) and never gets a game — which is all the refusal needs. Before the panel's
+ * Flash path said `transport: 'flash'`, the surface read 'wasm' and the goal was HELD (no map, no engine) for 60 s.
+ */
+export async function seedlingFlashRuntimeLoopBotBlockNamesItsStop(tc) {
+    return withRuntimeRestored(tc, async () => {
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        await settingsManager.updateSetting(RUNTIME_KEY, 'flash', { persist: false });
+        const rulesJson = await (await fetch(ATLAS_LOCATION_PATH)).json();
+        rulesJson.flash_panel['1'] = { ...rulesJson.flash_panel['1'], swf: 'seedling_injected.swf' };
+        const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+        tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: `${ATLAS_LOCATION_PATH} (+swf)` });
+        await loaded;
+        await tc.stateManager.pingWorker('after-rules-load', 5000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+        const panel = await tc.pollForValue(() => {
+            const p = getActivePanelInstance();
+            return p?.adapter && p.adapter !== staleAdapter && p._initRuntime === 'flash' ? p : null;
+        }, '[flash] the flash panel took the Flash path (a fresh bridge adapter)', 30000, 250);
+        tc.assertEqual('[flash] the playback surface names the Flash runtime', 'flash', panel?.seedlingPlaybackSurface?.()?.transport ?? null);
+        if (!panel) return;
+        const at = await tc.pollForCondition(() => readCurrentRegion() === HOUSE_REGION, `[flash] gameState is in ${HOUSE_REGION}`, 15000, 200);
+        tc.reportCondition(`[flash] gameState is in ${HOUSE_REGION} (the start hop)`, !!at);
+        if (!at) return;
+
+        const gs = getGameStateSingleton();
+        gs.setLoopModeActive(true);
+        gs.updatePath(MAZE_CHILD, HOUSE_EXIT, HOUSE_REGION);
+        const block = loopBlockFor(HOUSE_REGION);
+        tc.assertEqual('[flash] resolved the house\'s queue block', true, !!block);
+        if (!block) return;
+        loopStateSingleton.setBlockMode(HOUSE_REGION, block.instance, 'bot');
+        gs.refillMana();
+        const stopped = tc.waitForEvent('loopState:botWalkFailed', 15000).catch(() => null);
+        const t0 = performance.now();
+        loopStateSingleton.startProcessing();
+        const stop = await stopped;
+        const ms = performance.now() - t0;
+        const controller = substrateRegistry.get('flash_seedling')?.getPlaybackController?.() ?? null;
+        tc.log(`[flash] stop after ${ms.toFixed(0)} ms: ${JSON.stringify({ region: stop?.region ?? null, reason: stop?.reason ?? null })}`);
+        tc.assertEqual('[flash] loops named its stop (loopState:botWalkFailed) for the house', HOUSE_REGION, stop?.region ?? null);
+        tc.assertEqual('[flash] the stop carries the controller\'s lastRefusal', controller?.lastRefusal ?? '(none)', stop?.reason ?? null);
+        tc.assertEqual('[flash] …which names the Flash runtime and the two runtimes that walk', true,
+            /^flash_seedling regions are walked only on the Seedling JS or wasm runtime — the Flash Panel is running the flash runtime/
+                .test(stop?.reason ?? ''));
+        tc.assertEqual('[flash] the refusal was synchronous (no held goal, no 60 s give-up)', true, ms < 5000);
+        tc.assertEqual('[flash] the park was dropped and the queue paused (not parked on the house)', 'null/false',
+            `${loopStateSingleton.botSolverRegion?.() ?? null}/${loopStateSingleton.isProcessing}`);
+    });
+}
+
+registerTest({
+    id: 'seedling-flash-runtime-loop-bot-block-names-its-stop',
+    name: 'Seedling (Flash runtime): a Loops Bot block\'s walk is refused by name — a named stop, not a silent park',
+    description: 'With flashPanel.runtime = flash (the Ruffle path; the SWF is not committed, so no game boots): loop '
+        + 'mode on, the house block Bot. The flash_seedling controller refuses the walk synchronously, naming the Flash '
+        + 'runtime, and loops publishes loopState:botWalkFailed carrying that lastRefusal; the park is dropped.',
+    testFunction: restoresSavedQueues(seedlingFlashRuntimeLoopBotBlockNamesItsStop),
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
 
 const LOOP_ROOM_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on `
     + 'and the house\'s block set to Bot: loops hands the queued chest check and the departure to the flash_seedling '
