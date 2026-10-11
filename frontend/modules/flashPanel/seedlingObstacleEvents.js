@@ -247,3 +247,137 @@ export function deriveLockEvents(projection, ctx) {
     const byId = (a, b) => a.fields.event_id.localeCompare(b.fields.event_id, 'en', { numeric: true });
     return { events: [...events.values()].sort(byId), internalExitRules, reused: [...reused].sort() };
 }
+
+/**
+ * ⛓⛓ RULES l38-button-event — **A CROSS-ROOM BUTTON PRESS AS AN AP EVENT.** A `ButtonRoom` whose `room >= 0`
+ * writes `Game.setPersistence(t, persist, room)` (`ButtonRoom.as:93`): its TSET, as a tag, in ANOTHER level, with
+ * `persist = !flip` — `flip` = a CLEAR. L38's `buttonroom@32,48 {t 8, flip 1, room 39}` clears `{39,8}`, and
+ * L39's plug `wandlock@144,592 {tset -1, tag 8}` is then left out of the build (`Lock.check()`). The overlay priced
+ * that plug FREE ("the button half is choreography", `seedlingPlaythroughOverlay.lockRuling`), which never asked
+ * whether the button was PRESSED — RULES (A)'s `CanReachRegion` shape one level over. Witnessed on the wasm by
+ * `probe-seedling-cross-room-button.mjs` (the press writes `{39,8}` to `persistence_cleared`; the plug is built
+ * gone with it and standing without it).
+ *
+ * The rows are every cross-room button of the map (`crossRoomButtonsOf`), never a list. Per (button, target):
+ *   - a CLEAR of a target the caller says it prices FREE on the button's account → ONE event: `obstacle` = the
+ *     TARGET `{level, tag, class, x, y}` (the flag the game writes, so the collector keys off it), `side` = the
+ *     presser's AP region (in the PRESSER's level — the one schema delta: `obstacle.level` may differ from
+ *     `side`'s), `across` = [] (pressing is not crossing: no hop credits it; a route meets it goal-first),
+ *     `action {verb: 'press', item: null, presser: {level, class, x, y}}`, `access_rule` = standing on the
+ *     button within `side` (`ctx.reach`); and the caller's `gates(target)` departures get `Has(<event>)`;
+ *   - a clear that ADDS the target's solid (a FallRock's `arm`), a target solid in neither state, or one the rules
+ *     already price without the button → `skipped`, by name;
+ *   - a SET (`flip` 0) of a target the clear would open → REFUSED by name (it would need `Not(event)`).
+ * An event already minted with the same `event_id` is reused (refused by name if its name or side differs).
+ *
+ * @param {object[]} rows `crossRoomButtonsOf(map)`
+ * @param {object} ctx
+ * @param {(target:object) => {effect:'opens'|'closes'|null, why:string}} ctx.effect what a clear does to its solid
+ * @param {(target:object) => {free:boolean, why:string}} ctx.pricedByButton does the transcription price it free
+ *   only because of the button
+ * @param {(presser:object) => {region_id, sub_region?, side}} ctx.place the presser's AP region
+ * @param {(presser:object) => object|null} ctx.reach standing on the presser within `side` (null = True_)
+ * @param {(target:object, eventName:string) => {region_id:string, exit_id:string}[]} ctx.gates the crossings
+ *   through the target, as departures (throws by name when it cannot say)
+ * @param {object[]} [ctx.existing] events already minted
+ * @returns {{events:object[], exitGates:object[], skipped:string[], reused:string[]}}
+ */
+export function deriveButtonEvents(rows, ctx) {
+    const existing = new Map((ctx.existing ?? []).map((e) => [e.fields?.event_id, e]));
+    const events = new Map();
+    const exitGates = [];
+    const skipped = [];
+    const refused = [];
+    const reused = new Set();
+    for (const { presser: p, write, targets } of rows) {
+        const who = `L${p.level} buttonroom@${p.x},${p.y} -> {${write.level},${write.tag}}`;
+        if (targets.length === 0) { skipped.push(`${who}: no entity of L${write.level} carries tag ${write.tag}`); continue; }
+        for (const t of targets) {
+            const what = `${who} ${t.type}@${t.x},${t.y}`;
+            const { effect, why } = ctx.effect(t);
+            if (write.value) {
+                if (effect === 'opens') refused.push(`${what}: the press SETS the flag that opens it (${why}) — the gate would need NOT(event)`);
+                else skipped.push(`${what}: the press sets the flag (flip 0)`);
+                continue;
+            }
+            if (effect === 'closes') { skipped.push(`${what}: a clear ADDS this solid (${why}) — no event can say NOT(event)`); continue; }
+            if (effect !== 'opens') { skipped.push(`${what}: solid in neither state (${why})`); continue; }
+            const priced = ctx.pricedByButton(t);
+            if (!priced.free) { skipped.push(`${what}: the rules do not price it free on the button's account (${priced.why})`); continue; }
+            const id = obstacleEventId({ level: t.level, tag: t.tag });
+            const name = obstacleEventName({ level: t.level, tag: t.tag, cls: t.type, x: t.x, y: t.y });
+            if (events.has(id)) { refused.push(`${what}: ${id} is already this slice's event for another button`); continue; }
+            const place = ctx.place(p);
+            const prior = existing.get(id);
+            if (prior) {
+                if (prior.name !== name || prior.fields.side !== place.side) {
+                    refused.push(`${what}: ${id} is already the event "${prior.name}" @ ${prior.fields.side}; `
+                        + `the button would make "${name}" @ ${place.side}`);
+                    continue;
+                }
+                reused.add(id);
+            } else {
+                events.set(id, {
+                    region_id: place.region_id,
+                    ...(place.sub_region === undefined ? {} : { sub_region: place.sub_region }),
+                    name,
+                    access_rule: ctx.reach(p) ?? null,
+                    fields: {
+                        event_id: id,
+                        event_kind: OBSTACLE_EVENT_KIND,
+                        obstacle: { level: t.level, tag: t.tag, class: t.type, x: t.x, y: t.y },
+                        action: { verb: 'press', item: null, presser: { level: p.level, class: 'buttonroom', x: p.x, y: p.y } },
+                        side: place.side,
+                        across: [],
+                    },
+                });
+            }
+            for (const dep of ctx.gates(t, name)) exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: name } } });
+        }
+    }
+    if (refused.length > 0) {
+        throw new Error(`button events: ${refused.length} cross-room write(s) refused —\n  ${refused.join('\n  ')}`);
+    }
+    const byId = (a, b) => a.fields.event_id.localeCompare(b.fields.event_id, 'en', { numeric: true });
+    exitGates.sort((a, b) => a.region_id.localeCompare(b.region_id, 'en', { numeric: true })
+        || a.exit_id.localeCompare(b.exit_id, 'en', { numeric: true }));
+    return { events: [...events.values()].sort(byId), exitGates, skipped, reused: [...reused].sort() };
+}
+
+/**
+ * Every cross-room `ButtonRoom` of a map extract (`room >= 0`) and what its write reaches: `{presser: {level, x, y,
+ * t, tag, flip, room}, write: {level, tag, value}, targets: [{level, type, x, y, tset, tag}]}`. `value` is the
+ * persistence the press writes (`!flip`, `ButtonRoom.as:80-93`): false = CLEARED, the only value
+ * `persistence_cleared` shows. The targets are the entities of the written level carrying that tag.
+ */
+export function crossRoomButtonsOf(map) {
+    const levelOf = (n) => map.levels.find((l) => l.level === n);
+    return map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === 'buttonroom'
+        && Number.isInteger(Number(e.attrs?.room)) && Number(e.attrs.room) >= 0).map((e) => {
+        const room = Number(e.attrs.room);
+        const t = Number(e.attrs.tset);
+        const flip = Number(e.attrs.flip) === 1;
+        return {
+            presser: { level: l.level, x: e.x, y: e.y, t, tag: Number(e.attrs.tag), flip, room },
+            write: { level: room, tag: t, value: !flip },
+            targets: (levelOf(room)?.entities ?? []).filter((x) => Number(x.attrs?.tag) === t).map((x) => ({
+                level: room, type: x.type, x: x.x, y: x.y, tset: Number(x.attrs?.tset), tag: t,
+            })),
+        };
+    }));
+}
+
+/**
+ * What a CLEARED tag does to a target's solidity, read off the model's per-class answer
+ * (`seedlingDemo/levelWorld.PERSISTENCE_RESPONSE`, passed in as `response`): `'opens'` for `despawn` (and
+ * `lock-despawn` with `tSet < 0`, `Lock.as:42`), `'closes'` for `arm` (a FallRock built FALLEN), else null.
+ */
+export function persistenceEffect(target, response) {
+    if (response === 'despawn') return { effect: 'opens', why: 'despawn' };
+    if (response === 'lock-despawn') {
+        return target.tset < 0 ? { effect: 'opens', why: 'lock-despawn, tSet < 0' }
+            : { effect: null, why: `lock-despawn, but tSet ${target.tset} >= 0: check() ignores the tag` };
+    }
+    if (response === 'arm') return { effect: 'closes', why: 'arm: built FALLEN, Solid' };
+    return { effect: null, why: response ? `response '${response}'` : 'no declared persistence response' };
+}

@@ -8,9 +8,9 @@
  *
  *   PRESS  booted ON the button (the game presses it on contact, `ButtonRoom.update`), idle: the game WRITES
  *          `{room, t}` into `persistence_cleared` when the write clears (`flip`), the store the collector reads;
- *   BUILT  for a target entity that is SOLID in one of its two states — a `Lock`-family entity (`Lock.check()`
- *          removes it when `tag >= 0 && tSet < 0 && !checkPersistence(tag)`) or a `FallRock` (`FallRock.as:42-45`
- *          builds it FALLEN, type "Solid", when its tag is cleared) — booted at every door landing into the
+ *   BUILT  for a target entity that is SOLID in one of its two states (`seedlingObstacleEvents.persistenceEffect`
+ *          over the model's `PERSISTENCE_RESPONSE`: a `tSet < 0` Lock is left out of the build, `Lock.as:42`; a
+ *          `FallRock` is built FALLEN, type "Solid", `FallRock.as:42-45`) — booted at every door landing into the
  *          target's level that stands on the target's column within two tiles, holding TOWARD it: once with
  *          exactly the flags PRESS read back from the game staged as persistence, once BARE (no flag). A lock is
  *          built gone with the flag (the player passes) and standing without it (stopped); a fall rock the other
@@ -35,43 +35,15 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
+import { crossRoomButtonsOf, persistenceEffect } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
+import { PERSISTENCE_RESPONSE } from '../../frontend/modules/seedlingDemo/levelWorld.js';
 
 argvHelp(import.meta.url);
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const TILE = 16;
-/** The classes `Lock.check()`'s persistence guard removes (`Lock` and its subclasses that keep `check()`). */
-const LOCK_CLASSES = new Set(['lock', 'wandlock', 'grasslock']);
 const DOOR_TYPES = new Set(['teleporter', 'stairsup', 'stairsdown']);
-
-/**
- * Every cross-room `ButtonRoom` of a map extract and what its write reaches: `{presser: {level, x, y, t, tag, flip,
- * room}, write: {level, tag, value}, targets: [{level, type, x, y, tset, tag}]}`. `value` is the persistence the
- * press writes (`!flip`): false = CLEARED, the only value `persistence_cleared` can show.
- */
-export function crossRoomButtonsOf(map) {
-    const levelOf = (n) => map.levels.find((l) => l.level === n);
-    return map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === 'buttonroom'
-        && Number.isInteger(Number(e.attrs?.room)) && Number(e.attrs.room) >= 0).map((e) => {
-        const room = Number(e.attrs.room);
-        const t = Number(e.attrs.tset);
-        return {
-            presser: { level: l.level, x: e.x, y: e.y, t, tag: Number(e.attrs.tag), flip: Number(e.attrs.flip) === 1, room },
-            write: { level: room, tag: t, value: Number(e.attrs.flip) !== 1 },
-            targets: (levelOf(room)?.entities ?? []).filter((x) => Number(x.attrs?.tag) === t).map((x) => ({
-                level: room, type: x.type, x: x.x, y: x.y, tset: Number(x.attrs?.tset), tag: t,
-            })),
-        };
-    }));
-}
-
-/** How a target's SOLIDITY answers its flag: `'opens'` (a cleared tag removes it), `'closes'` (adds it), or null. */
-export function flagEffect(target) {
-    if (LOCK_CLASSES.has(target.type) && target.tset < 0) return 'opens';
-    if (target.type === 'fallrock') return 'closes';
-    return null;
-}
 
 /** Door landings into `level` on the target's column, within two tiles: `{from, door, x, y, dir}`. */
 export function landingsToward(map, target) {
@@ -158,7 +130,7 @@ async function main() {
                 + `${b.write.value ? 'absent from' : 'written to'} persistence_cleared`, b.write.value ? !wrote : wrote,
                 JSON.stringify(press.cleared));
             for (const t of b.targets) {
-                const effect = flagEffect(t);
+                const { effect } = persistenceEffect(t, PERSISTENCE_RESPONSE[t.type]);
                 if (!effect || b.write.value) continue;
                 for (const L of landingsToward(MAP, t)) {
                     const ys = (r) => r.ticks.filter((o) => o.level === t.level).map((o) => o.y);
