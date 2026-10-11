@@ -126,16 +126,18 @@ Implemented by `maze` (tile-grid helpers in `adapterPrimitives.js`), `text_adven
 
 ### Build-time — content sources (zone-based substrates)
 
-A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)). The content sources are the zone games (`jta`, `bounce`, `runner`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
+A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)), except a source that takes scenario-pool items (`absorbsScenarioItems`), which draws them as a procedural region does, and only while the pool holds items. The content sources are the zone games (`jta`, `bounce`, `runner`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
 
 | Field | Meaning |
 |-------|---------|
 | `zoneCount` | Pool size. `arrangeShuffledSpiral` allocates no more regions than this, and the APWorld editor's *Zone N* source (`apworldEditor/regionContent.js`) offers `0..zoneCount-1`. |
-| `extractZoneRules(zoneIdx, ctx)` | Instantiate one entry: locations, per-side exit rules, obstacle defs and `playable_payload` fragment. |
+| `extractZoneRules(zoneIdx, ctx)` | Instantiate one entry: locations, per-side exit rules, obstacle defs and `playable_payload` fragment. With `ctx.itemsToPlace` (an `absorbsScenarioItems` source) it also answers `placedItems`, the pool items it put on its locations. |
+| `absorbsScenarioItems` | When true, the spiral hands each of this source's regions up to `maxItemsPerRegion` items from the scenario pool (`ScenarioPool.planPlacement`), which the region marks placed. jta, with its zone locations on. |
+| `placeVictoryIfMissing(region)` | The victory fallback. After every spiral region is built, a world in which no location holds a victory item (any `is_victory` item of the item library or of a quota substrate's `libraryItems`) offers each region to this hook; the first that answers `true` placed one. jta's goal zone puts its `Victory` on its Travel task. |
 | `getSpiralContent()` | The installed content document, for the stepped pipeline's content step; `null` when none is installed. |
 | `applyPipelineConfig(cfg)` | Install this source's pipeline config (called via `applySubstrateConfig`); `applyPipelineConfig({})` restores defaults. See [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). |
 | `pipelineConfigKeys` | The keys `applyPipelineConfig` reads, as a frozen array. Tested in `procgenCore/substrateConfigRecord.test.js`. |
-| `pipelineConfigFromParams({params})` | A panel-bag knob turned into this source's `growthParams.substrateConfig[id]` entry, merged by `presetRun.buildSpiralRun` for a quota substrate with no entry yet; `null` adds no key. `flash_seedling`'s `seedlingAtlasId` ([Flash Substrate](./flash.md#the-atlas-knob-and-the-swim-census)). |
+| `pipelineConfigFromParams({params, quota})` | A panel-bag knob turned into this source's `growthParams.substrateConfig[id]` entry, merged by `presetRun.buildSpiralRun` for a quota substrate with no entry yet; `null` adds no key. `quota` is the substrate's region count. `flash_seedling`'s `seedlingAtlasId` ([Flash Substrate](./flash.md#the-atlas-knob-and-the-swim-census)); jta's zone-location settings ([JtA](./jta.md#ap-locations-and-the-balance-solve)). |
 | `recordablePipelineConfig()` | The part of the installed config a document should record (defaults included). `buildRulesJson` writes it to `procgen_metadata[<player>].substrate_configs[id]` for each declarer that realised a region. |
 | `zoneConfigFromSlot({entries, locations, blocks, fetched})` | Read back the config one player slot's zones were built with, without installing it: `{ok, cfg, assumed, zoneCount, host}`, optionally `zoneNames` and `unplaceable`. The editor verifies `assumed` by re-extracting every zone. Returns `{ok: false, needs: [path]}` when served files are needed (`resolveZoneFetches` fetches them). A `recorded` config wins over read-back. |
 | `zoneOfPayload(payload, cfg)` | The zone a region's payload plays, or `null`; the editor refuses a zone already in use. |
@@ -225,7 +227,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**10 registered entries · 88 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**10 registered entries · 90 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -324,13 +326,15 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
+| `absorbsScenarioItems` | — | — | — | — | no | — | — | — | — | — |
 | `applyPipelineConfig` | — | — | fn | — | fn | — | — | fn | — | — |
 | `emitsSpiralContent` | — | — | — | — | yes | — | — | — | — | — |
 | `extractZoneRules` | fn | — | fn | — | fn | — | fn | fn | fn | — |
 | `getSpiralContent` | — | — | — | — | fn | — | — | — | — | — |
 | `onContentEdit` | — | — | — | — | fn | — | — | — | — | — |
-| `pipelineConfigFromParams` | — | — | fn | — | — | — | — | — | — | — |
-| `pipelineConfigKeys` | — | — | atlasDoc, atlasId | — | 6 items | — | — | 5 items | — | — |
+| `pipelineConfigFromParams` | — | — | fn | — | fn | — | — | — | — | — |
+| `pipelineConfigKeys` | — | — | atlasDoc, atlasId | — | 7 items | — | — | 5 items | — | — |
+| `placeVictoryIfMissing` | — | — | — | — | fn | — | — | — | — | — |
 | `recordablePipelineConfig` | — | — | — | — | fn | — | — | fn | — | — |
 | `restartWarp` | — | — | {cite, label, target} | {cite, label, target} | — | — | — | — | — | — |
 | `rulesJsonBlocks` | — | — | fn | fn | — | — | — | — | — | — |
@@ -381,7 +385,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `buildZoneSpecs` | fn | — | fn | — | — | — | — | — | fn | — |
 | `canHostExitGates` | fn | — | fn | fn | — | — | — | — | fn | — |
 | `canHostExitGatesBraid` | fn | — | — | — | — | — | — | — | — | — |
-| `defaultProcgenParams` | 10 keys | — | — | 7 keys | — | 7 keys | {noiz2saFinalSpan} | — | 8 keys | — |
+| `defaultProcgenParams` | 10 keys | — | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan} | — | 8 keys | — |
 | `driftItems` | Left arrow, Right arrow | — | — | — | — | — | — | — | — | — |
 | `exitGateVeto` | fn | — | fn | fn | — | — | — | — | fn | — |
 | `gateHostingHint` | fn | — | — | — | — | — | — | — | fn | — |
@@ -393,7 +397,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `prepareSphereGrowth` | fn | — | fn | — | — | — | — | — | — | — |
 | `procgenParamsFromPayload` | fn | — | — | fn | — | — | — | — | fn | — |
 | `renderLibraryProcgenParams` | — | — | — | — | — | fn | — | — | — | — |
-| `renderProcgenParams` | fn | — | fn | fn | — | fn | fn | — | fn | — |
+| `renderProcgenParams` | fn | — | fn | fn | fn | fn | fn | — | fn | — |
 | `startingInventory` | {needs} | — | — | — | — | — | — | — | — | — |
 
 **Which library registered which entry** — entries self-register on library import, and this is the order the generator imports them in.

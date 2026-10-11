@@ -32,6 +32,7 @@ import { normalizeEntry } from '../shared/actionQueue/actionTypes.js';
 import { envelopeExitNames, nameMapValues } from '../procgenCore/sidecarFields.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
+import { DEFAULT_JTA_PROCGEN_PARAMS, renderJtaProcgenParams } from './jtaProcgenParams.js';
 
 // Host-side PlaybackProxy, injected by index.js's initialize() once the
 // eventBus exists (setter injection rather than importing index.js so
@@ -228,6 +229,21 @@ export function setJtaGoalZone(zoneIdx) {
 }
 export function getJtaGoalZone() { return _goalZone; }
 
+// Whether the goal zone carries the `Victory` item. ⚖ The user, 2026-10-11:
+// JtA adds its victory only when the world has no victory item of its own.
+// The panel installs it OFF and the engine's victory fallback
+// (`placeVictoryIfMissing`, after every region is built) turns it on when no
+// region placed a victory. Off, the victory slot holds filler and stays free
+// of scenario items, so the fallback can fill it. Default true: every world
+// built before this flag had its Victory.
+let _goalVictory = true;
+export function setJtaGoalVictory(on) {
+    _goalVictory = on !== false;
+    _placementCache = null;
+    _universeCache = null;
+}
+export function getJtaGoalVictory() { return _goalVictory; }
+
 // Loose count-based zone gating, ported from the old worlds/jta apworld
 // (Rules.py + Options.py): zone Z requires
 //   max(0, Z - free_zones + 1 - starting_perks)
@@ -254,7 +270,7 @@ export function getJtaStartingPerks() { return _startingPerks; }
 
 /** ⛓ R6b — every key `applyPipelineConfig` reads (the registry's `pipelineConfigKeys`). */
 export const JTA_PIPELINE_CONFIG_KEYS = Object.freeze([
-    'datasetDoc', 'emitZoneLocations', 'goalZone', 'freeZones', 'startingPerks', 'perkShuffleSeed',
+    'datasetDoc', 'emitZoneLocations', 'goalZone', 'freeZones', 'startingPerks', 'perkShuffleSeed', 'goalVictory',
 ]);
 
 // --- Synthetic dataset mode (Phase 5d, jta-synthetic-data-plan §4.1) ---
@@ -307,6 +323,7 @@ function _zoneView() {
             zone: i,
             tasks: z.tasks.map((t) => ({
                 id: t.id,
+                type: t.type ?? null,
                 perk: t.perk != null ? (doc.perks[t.perk]?.name ?? null) : null,
             })),
         })),
@@ -377,7 +394,7 @@ function _placeIdentity(ensureZone) {
 // Map<zoneIdx, Map<taskId, itemName>>.
 function _computePlacement() {
     const view = _zoneView();
-    const key = `${_dataset?.dataset_id ?? ''}|${_perkShuffleSeed}|${_goalZone}`;
+    const key = `${_dataset?.dataset_id ?? ''}|${_perkShuffleSeed}|${_goalZone}|${_goalVictory}`;
     if (_placementCache && _placementCache.key === key) return _placementCache.byZone;
 
     const byZone = new Map();
@@ -414,20 +431,33 @@ function _computePlacement() {
         _placeIdentity(ensureZone);
     }
 
-    // Victory: one goal-zone task not already holding a perk (every zone has
-    // a Travel task, which has no perk, so a free slot always exists).
+    // Victory: the goal zone's Travel task — the check for leaving the final
+    // zone (⚖ user 2026-10-11). Every zone has a Travel task and Travel holds
+    // no perk, so it is free unless a perk shuffle dealt a perk onto it; then
+    // the first free task of the zone takes the Victory, as before. The slot
+    // is chosen even with the Victory off: scenario items keep clear of it.
+    let victorySlot = null;
     if (_goalZone != null) {
         const zone = view.zones[_goalZone];
         if (zone) {
             const zoneMap = ensureZone(_goalZone);
-            const slot = zone.tasks.find((t) =>
-                !view.excluded.has(t.id) && !zoneMap.has(t.id));
-            if (slot) zoneMap.set(slot.id, JTA_VICTORY_ITEM_NAME);
+            const free = (t) => !view.excluded.has(t.id) && !zoneMap.has(t.id);
+            const slot = zone.tasks.find((t) => t.type === 'Travel' && free(t)) ?? zone.tasks.find(free);
+            if (slot) {
+                victorySlot = slot.id;
+                if (_goalVictory) zoneMap.set(slot.id, JTA_VICTORY_ITEM_NAME);
+            }
         }
     }
 
-    _placementCache = { key, byZone };
+    _placementCache = { key, byZone, victorySlot };
     return byZone;
+}
+
+/** The goal zone's Victory task id (placed or reserved), or null. */
+function _victorySlot() {
+    _computePlacement();
+    return _placementCache.victorySlot;
 }
 
 // The perk item names that actually reach the AP pool: the perks placed on
@@ -469,10 +499,33 @@ function _perksRequiredForZone(zoneIdx, universeSize) {
 // perk-tasks. Exits are left to the layout driver (always-open) — jta
 // region transitions are driven by Travel-task completion, not gated
 // exits — so extractZoneRules emits no exitRules/exitPaths.
-function buildZoneLocations(zoneIdx, region_id) {
+// Which of a zone's filler tasks take the world's own (scenario) items, best
+// first. A JtA zone plays under the game's automation, which always finishes
+// the Mandatory tasks (Travel needs them) and Travel itself, but may never
+// reach a deep Normal task (the `other` threshold category — jta.md). Every
+// vanilla zone has at least two Mandatory tasks, so a default
+// maxItemsPerRegion of 2 never needs a Normal one.
+const POOL_SLOT_TYPE_ORDER = Object.freeze(['Mandatory', 'Travel', 'Normal', 'Boss']);
+function poolSlotRank(type) {
+    const i = POOL_SLOT_TYPE_ORDER.indexOf(type);
+    return i < 0 ? POOL_SLOT_TYPE_ORDER.length : i;
+}
+
+/**
+ * Build the zone-locations result for one zone.
+ *
+ * `itemsToPlace` — scenario-pool items the engine hands this zone (its
+ * `absorbsScenarioItems` channel); each goes on a filler task, best slot first
+ * (`POOL_SLOT_TYPE_ORDER`, then task order), and the ones placed come back as
+ * `placedItems`. `locationSpecs` — `{name, item}` the document already places
+ * (the APWorld hub's re-extraction): a filler task whose location the document
+ * gives another item answers that item, so a region that absorbed scenario
+ * items reproduces. Perk and Victory slots never move.
+ */
+function buildZoneLocations(zoneIdx, region_id, { itemsToPlace = [], locationSpecs = [] } = {}) {
     const view = _zoneView();
     const zone = view.zones[zoneIdx];
-    if (!zone) return { locations: [], payload: {} };
+    if (!zone) return { locations: [], payload: {}, placedItems: [] };
     const placement = _computePlacement().get(zoneIdx) ?? new Map();
     const universe = _perkUniverse();
     const required = _perksRequiredForZone(zoneIdx, universe.length);
@@ -485,10 +538,32 @@ function buildZoneLocations(zoneIdx, region_id) {
     const apLocations = {};
     const locations = [];
     const taskPatches = [];
+    const specItem = new Map(locationSpecs
+        .filter((sp) => typeof sp?.name === 'string' && typeof sp?.item === 'string')
+        .map((sp) => [sp.name, sp.item]));
+    const absorbed = new Map();
+    const placedItems = [];
+    if (itemsToPlace.length) {
+        const reserved = zoneIdx === _goalZone ? _victorySlot() : null;
+        const slots = zone.tasks
+            .map((t, order) => ({ t, order }))
+            .filter(({ t }) => !view.excluded.has(t.id) && !placement.has(t.id) && t.id !== reserved)
+            .sort((a, b) => (poolSlotRank(a.t.type) - poolSlotRank(b.t.type)) || (a.order - b.order));
+        itemsToPlace.slice(0, slots.length).forEach((item, i) => {
+            absorbed.set(slots[i].t.id, item);
+            placedItems.push(item);
+        });
+    }
     for (const task of zone.tasks) {
         if (view.excluded.has(task.id)) continue;
-        apLocations[task.id] = `${region_id}__${task.id}`;
-        const item = placement.get(task.id) ?? JTA_FILLER_ITEM_NAME;
+        const locationName = `${region_id}__${task.id}`;
+        apLocations[task.id] = locationName;
+        const own = placement.get(task.id);
+        const item = own
+            ?? absorbed.get(task.id)
+            ?? (specItem.has(locationName) && specItem.get(locationName) !== JTA_FILLER_ITEM_NAME
+                ? specItem.get(locationName) : null)
+            ?? JTA_FILLER_ITEM_NAME;
         locations.push({
             id: task.id, item, position: null,
             ...(accessRule ? { access_rule: accessRule } : {}),
@@ -513,7 +588,7 @@ function buildZoneLocations(zoneIdx, region_id) {
         };
         if (zoneIdx === 0) payload.jta_dataset = _dataset;
     }
-    return { locations, payload };
+    return { locations, payload, placedItems };
 }
 
 /**
@@ -539,7 +614,7 @@ function identityUniverses(doc, isDataset) {
  * ⛓ R6b — what the document cannot read back from its entries, at the setters'
  * own defaults: the `assumed` half of `zoneConfigFromSlot`'s answer.
  */
-const JTA_ASSUMED_CONFIG = Object.freeze({ perkShuffleSeed: null, freeZones: 1, startingPerks: 0 });
+const JTA_ASSUMED_CONFIG = Object.freeze({ perkShuffleSeed: null, freeZones: 1, startingPerks: 0, goalVictory: true });
 const JTA_UNREAD_CONFIG_KEYS = Object.freeze(Object.keys(JTA_ASSUMED_CONFIG));
 
 /**
@@ -891,11 +966,34 @@ export const substrateRegistryEntry = Object.freeze({
     // The zone-LOCATIONS half is opt-in (setJtaEmitZoneLocations): off,
     // the payload is just {jtaZone}; on, it also emits the zone's tasks
     // as AP locations (buildZoneLocations) alongside jtaZone.
-    extractZoneRules: (zoneIdx, { region_id } = {}) => {
+    extractZoneRules: (zoneIdx, { region_id, itemsToPlace, locationSpecs } = {}) => {
         if (!_emitZoneLocations) return { locations: [], payload: { jtaZone: zoneIdx } };
-        const result = buildZoneLocations(zoneIdx, region_id);
+        const result = buildZoneLocations(zoneIdx, region_id, { itemsToPlace, locationSpecs });
         return { ...result, payload: { jtaZone: zoneIdx, ...result.payload } };
     },
+
+    // The engine's victory fallback, run once every region is built: when no
+    // region placed a victory item, the goal zone's region takes the Victory
+    // on its reserved slot (the Travel task), and the installed config says so
+    // (`goalVictory` on — what a re-extraction reproduces). Answers whether it
+    // placed it; any other region, or a world whose Victory is already on,
+    // answers false.
+    placeVictoryIfMissing: (region) => {
+        if (!_emitZoneLocations || _goalVictory || _goalZone == null) return false;
+        if (region?.playable_payload?.jtaZone !== _goalZone) return false;
+        const slot = _victorySlot();
+        const loc = (region.extracted_rules?.locations ?? []).find((l) => l.id === slot);
+        if (slot == null || !loc) return false;
+        setJtaGoalVictory(true);
+        loc.item = JTA_VICTORY_ITEM_NAME;
+        return true;
+    },
+
+    // Scenario items: with the zone locations on, the engine hands each jta
+    // zone up to maxItemsPerRegion items from the scenario pool, which go on
+    // filler tasks (⚖ user 2026-10-11, option b — before, a jta-only world
+    // dropped them silently). Off, a zone has no locations to hold them.
+    get absorbsScenarioItems() { return _emitZoneLocations; },
 
     // --- Stepped-spiral ② content seam (stepped-spiral-parity plan Part 3) ---
     //
@@ -935,7 +1033,33 @@ export const substrateRegistryEntry = Object.freeze({
         setJtaFreeZones(c.freeZones);
         setJtaStartingPerks(c.startingPerks);
         setJtaPerkShuffleSeed(c.perkShuffleSeed);
+        setJtaGoalVictory(c.goalVictory);
         return getJtaDataset();
+    },
+
+    // The panel's JtA knobs (jtaProcgenParams.js), turned into the
+    // `substrateConfig.jta` spiral ① installs (presetRun.buildSpiralRun asks
+    // every quota substrate). `quota` = how many jta regions the world has:
+    // the spiral gives the Nth one zone N, so the goal is the last of them.
+    // The Victory starts OFF: the engine's victory fallback turns it on only
+    // when no region placed a victory (⚖ user 2026-10-11). Zone locations off
+    // answers null, so the library's defaults apply — the world is the
+    // location-less one it always was.
+    defaultProcgenParams: DEFAULT_JTA_PROCGEN_PARAMS,
+    renderProcgenParams: renderJtaProcgenParams,
+    pipelineConfigFromParams: ({ params = {}, quota = 0 } = {}) => {
+        const on = params.jtaZoneLocations ?? DEFAULT_JTA_PROCGEN_PARAMS.jtaZoneLocations;
+        if (!on) return null;
+        const zones = Math.min(Math.floor(Number(quota) || 0), (_dataset ?? JTA_VANILLA_DATASET).zones.length);
+        const seed = Number(params.seed);
+        return {
+            emitZoneLocations: true,
+            goalZone: zones > 0 ? zones - 1 : null,
+            goalVictory: false,
+            freeZones: params.jtaFreeZones ?? DEFAULT_JTA_PROCGEN_PARAMS.jtaFreeZones,
+            startingPerks: params.jtaStartingPerks ?? DEFAULT_JTA_PROCGEN_PARAMS.jtaStartingPerks,
+            perkShuffleSeed: (params.jtaShufflePerks && Number.isFinite(seed)) ? seed : null,
+        };
     },
 
     // ⛓ APWORLD SUBSTRATE CHANGE R6b — the keys `applyPipelineConfig` reads,
@@ -955,6 +1079,7 @@ export const substrateRegistryEntry = Object.freeze({
         freeZones: getJtaFreeZones(),
         startingPerks: getJtaStartingPerks(),
         perkShuffleSeed: getJtaPerkShuffleSeed(),
+        goalVictory: getJtaGoalVictory(),
     }),
 
     // ⛓⛓ APWORLD SUBSTRATE CHANGE R5b — **THE CONFIG A DOCUMENT RECORDS FOR ITS

@@ -48,7 +48,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
         },
         {
-            "fields": 31,
+            "fields": 36,
             "id": "jta",
             "label": "JtA",
             "registeredBy": "frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js"
@@ -175,6 +175,7 @@ export const REGISTRY = frz({
         },
         {
             "rows": [
+                "absorbsScenarioItems",
                 "applyPipelineConfig",
                 "emitsSpiralContent",
                 "extractZoneRules",
@@ -182,6 +183,7 @@ export const REGISTRY = frz({
                 "onContentEdit",
                 "pipelineConfigFromParams",
                 "pipelineConfigKeys",
+                "placeVictoryIfMissing",
                 "recordablePipelineConfig",
                 "restartWarp",
                 "rulesJsonBlocks",
@@ -332,6 +334,86 @@ export const REGISTRY = frz({
         }
     ],
     "rows": [
+        {
+            "carriedBy": [
+                "jta"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "no",
+                    "type": "boolean",
+                    "value": false
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "absorbsScenarioItems"
+        },
         {
             "carriedBy": [
                 "bounce",
@@ -1585,6 +1667,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "flash_seedling_gen",
+                "jta",
                 "maze",
                 "noiz2sa",
                 "runner"
@@ -1639,10 +1722,15 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "jta",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "4 keys",
+                    "type": "object",
+                    "value": [
+                        "jtaFreeZones",
+                        "jtaShufflePerks",
+                        "jtaStartingPerks",
+                        "jtaZoneLocations"
+                    ]
                 },
                 {
                     "id": "maze",
@@ -5278,7 +5366,8 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
-                "flash_seedling"
+                "flash_seedling",
+                "jta"
             ],
             "cells": [
                 {
@@ -5311,9 +5400,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "jta",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -5397,7 +5486,7 @@ export const REGISTRY = frz({
                 {
                     "id": "jta",
                     "present": true,
-                    "short": "6 items",
+                    "short": "7 items",
                     "type": "array",
                     "value": [
                         "datasetDoc",
@@ -5405,7 +5494,8 @@ export const REGISTRY = frz({
                         "goalZone",
                         "freeZones",
                         "startingPerks",
-                        "perkShuffleSeed"
+                        "perkShuffleSeed",
+                        "goalVictory"
                     ]
                 },
                 {
@@ -5617,6 +5707,86 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Build-time — procedural substrates",
             "name": "placeFromRules"
+        },
+        {
+            "carriedBy": [
+                "jta"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "placeVictoryIfMissing"
         },
         {
             "carriedBy": [
@@ -6290,6 +6460,7 @@ export const REGISTRY = frz({
                 "bounce",
                 "flash_seedling",
                 "flash_seedling_gen",
+                "jta",
                 "maze",
                 "noiz2sa",
                 "runner"
@@ -6325,9 +6496,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "jta",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {

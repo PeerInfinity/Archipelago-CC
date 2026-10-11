@@ -3285,7 +3285,8 @@
           "goalZone": 2,
           "freeZones": 1,
           "startingPerks": 0,
-          "perkShuffleSeed": null
+          "perkShuffleSeed": null,
+          "goalVictory": true
         }
       }
     }

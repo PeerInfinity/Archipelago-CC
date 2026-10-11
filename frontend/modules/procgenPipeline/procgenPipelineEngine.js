@@ -3031,17 +3031,24 @@ export function perimeterMidpoint(side, size) {
  * will implement this same hook.
  */
 function synthesizeZoneRegion({
-    substrate, region_id, zoneIdx, regionSize, exitSides, adapter,
+    substrate, region_id, zoneIdx, regionSize, exitSides, adapter, itemsToPlace = [],
 }) {
     const zoneRules = adapter.extractZoneRules
-        ? adapter.extractZoneRules(zoneIdx, { region_id, exitSides, regionSize })
+        ? adapter.extractZoneRules(zoneIdx, {
+            region_id, exitSides, regionSize, ...(itemsToPlace.length ? { itemsToPlace } : {}),
+        })
         : null;
     // Zone payload comes entirely from the extractZoneRules channel now
     // (region-library C1): jta folds its `jtaZone` ordinal into that
     // channel's payload, so no separate synthesizeZonePayload hook.
-    return assembleZoneRegion({
+    const region = assembleZoneRegion({
         substrate, region_id, regionSize, exitSides, zoneRules, zonePayload: {},
     });
+    // The scenario items the channel took (`absorbsScenarioItems`), in the
+    // procedural regions' shape, so the pool marks them placed.
+    const placed = zoneRules?.placedItems ?? [];
+    if (placed.length) region.placed_items = placed.map((item_id) => ({ item_id }));
+    return region;
 }
 
 // Shared tail of zone-region synthesis: synthetic exit scaffolding
@@ -3816,7 +3823,11 @@ function resolveSpiralContentSource(id, config = {}) {
     if (adapter && typeof adapter.zoneCount === 'number') {
         return {
             poolSize: adapter.zoneCount,
-            instantiate: ({ region_id, ordinal, regionSize, exitSides }) =>
+            // A zone substrate that takes scenario-pool items onto its own
+            // locations (jta with its zone locations on). Off for every other
+            // zone substrate, which keeps drawing no rng.
+            absorbsScenarioItems: adapter.absorbsScenarioItems === true,
+            instantiate: ({ region_id, ordinal, regionSize, exitSides, itemsToPlace }) =>
                 synthesizeZoneRegion({
                     substrate: id,
                     region_id,
@@ -3824,6 +3835,7 @@ function resolveSpiralContentSource(id, config = {}) {
                     regionSize,
                     exitSides,
                     adapter,
+                    itemsToPlace,
                 }),
         };
     }
@@ -3971,9 +3983,19 @@ export function realiseSpiralRegions(plan, config) {
         const source = (sourceCache[substrate] ??= resolveSpiralContentSource(substrate, config) ?? null);
         let region;
         if (source) {
-            // Content source: instantiate its Nth entry (draws no rng).
-            region = source.instantiate({ region_id, ordinal, regionSize, exitSides });
+            // Content source: instantiate its Nth entry. It draws no rng —
+            // unless it takes scenario-pool items (`absorbsScenarioItems`),
+            // which it draws exactly as a procedural region does, and only
+            // while the pool still holds items (an empty pool draws none).
+            let itemsToPlace = [];
+            if (source.absorbsScenarioItems && pool.itemsRemaining() > 0) {
+                itemsToPlace = pool.planPlacement({
+                    arrivalInventory: accumulatedInventory(grid), rng, maxItems: maxItemsPerRegion,
+                }).items_to_place;
+            }
+            region = source.instantiate({ region_id, ordinal, regionSize, exitSides, itemsToPlace });
             if (region.notes?.length) contentNotes.push(...region.notes);
+            if (region.placed_items?.length) pool.markPlaced({ placed_items: region.placed_items });
         } else {
             // Procedural substrate: grow geometry from the rng stream.
             getAdapter(substrate); // preserve the "unregistered id" throw
@@ -4002,6 +4024,8 @@ export function realiseSpiralRegions(plan, config) {
         grid.placeRegion(cell, region);
     }
 
+    placeVictoryIfMissing(grid, itemLib, [...new Set(sequence)]);
+
     // Resolve exit targets to neighbor region ids. Same pass the
     // grid-growth driver uses; it matches exits_placed to extracted exits
     // by ID, so zone regions' synthetic tile positions are irrelevant to it.
@@ -4020,6 +4044,28 @@ export function realiseSpiralRegions(plan, config) {
         ...(contentNotes.length ? { contentNotes } : {}),
     };
     return { grid, pool, stats, startCell };
+}
+
+// The victory fallback (⚖ user 2026-10-11, for jta): once every region is
+// built, a world in which no location holds a victory item — the scenario
+// pool's, or one a substrate places itself — gets one from the first region
+// whose substrate offers `placeVictoryIfMissing(region)` (jta's goal zone).
+// A world that already has its victory is left alone, so no substrate adds a
+// second one. Draws no rng.
+function placeVictoryIfMissing(grid, itemLib, substrateIds) {
+    const offers = substrateIds
+        .map((id) => substrateRegistry.get(id))
+        .filter((a) => typeof a?.placeVictoryIfMissing === 'function');
+    if (offers.length === 0) return;
+    const libs = [itemLib, ...substrateIds.map((id) => substrateRegistry.get(id)?.libraryItems)].filter(Boolean);
+    const isVictory = (item) => item != null && libs.some((lib) => lib?.[item]?.is_victory === true);
+    const regions = grid.allRegions();
+    const placed = regions.some((r) => (r.extracted_rules?.locations ?? []).some((l) => isVictory(l.item)));
+    if (placed) return;
+    for (const region of regions) {
+        const adapter = substrateRegistry.get(region.substrate);
+        if (adapter?.placeVictoryIfMissing?.(region)) return;
+    }
 }
 
 export function arrangeShuffledSpiral(config) {

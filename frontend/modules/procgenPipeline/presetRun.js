@@ -466,9 +466,10 @@ export function buildSpiralRun(state, { resolvedLibraries = [] } = {}) {
     //   `substrateConfig[id]` entry (`pipelineConfigFromParams`), which ①'s
     //   `applyPipelineConfig` installs. An entry answering null adds no key, so a
     //   world that sets no such knob keeps its bytes.
+    //   `quota` (its region count) lets a zone substrate size its goal (jta).
     for (const [id, count] of Object.entries(substrateQuotas)) {
         if (!(Number(count) > 0) || substrateConfig[id] !== undefined) continue;
-        const own = substrateRegistry.get(id)?.pipelineConfigFromParams?.({ params });
+        const own = substrateRegistry.get(id)?.pipelineConfigFromParams?.({ params, quota: Number(count) });
         if (own) substrateConfig[id] = own;
     }
     if (Object.keys(substrateQuotas).length === 0) {
