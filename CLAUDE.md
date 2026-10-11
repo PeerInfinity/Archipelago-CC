@@ -207,7 +207,8 @@ npm test -- --mode=test-substrates --batch=apworld       # the apworld editor ro
 npm test -- --mode=test-substrates --batch=bot-walks     # MANUAL: the real-time bot legs only
 npm test -- --mode=test-substrates --batch=noiz2sa       # MANUAL: the noiz2sa substrate rows
 npm test -- --mode=test-substrates --batch=runner        # MANUAL: runnerDemo + Runner block modes
-npm test -- --mode=test-substrates --batch=tutorials     # MANUAL: the Tutorial panel rows + one walk row per tutorial
+npm test -- --mode=test-substrates --batch=tutorials     # MANUAL: the Tutorial panel rows + one walk row per tutorial (but procgen's)
+npm test -- --mode=test-substrates --batch=tutorials-procgen  # MANUAL: the procgen tutorials' walk rows
 ```
 ⛔ **No roster counts or durations are quoted here on purpose** — they go stale
 silently and then get trusted. To derive today's numbers, read

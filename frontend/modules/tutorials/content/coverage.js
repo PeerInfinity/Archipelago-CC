@@ -37,24 +37,7 @@ export const NOT_COVERED_YET = Object.freeze({
     settingsPanel: 'Your workbench',
     // Procgen
     mazeGameDataPanel: 'Procgen: each pipeline mode, with Maze',
-    flashSubstratePanel: 'Procgen: the Seedling features',
-    procgenLabPanel: 'Procgen: the Seedling features',
-    textAdventureSubstrateWrapperPanel: 'Procgen: a mixed world',
-    bounceDemoPanel: 'Procgen: a mixed world',
-    noiz2saSubstratePanel: 'Procgen: a mixed world',
-    runnerDemoPanel: 'Procgen: a mixed world',
-    substrateRegistryPanel: 'Procgen: a mixed world',
-    bounceRegionEditorPanel: 'Procgen: the Bounce Region Editor',
-    jtaSubstrateWrapperPanel: 'Procgen: Journey to Ascension in Loop mode',
-    omsiSubstrateWrapperPanel: 'Procgen: everything, in Loop mode',
-    // Seedling
-    flashPanel: 'Seedling: recompile the original SWF and run it',
-    // Loop mode
-    loopsPanel: 'Loop mode: Adventure',
-    loopStatsPanel: 'Loop mode: Adventure',
-    discoveryPanel: 'Loop mode: Adventure',
-    gameStatePanel: 'Loop mode: Adventure',
-    menuPanel: 'Loop mode: Adventure',
+    runnerDemoPanel: 'Procgen: a runner world (not in the mixed world: its generation is heavy)',
     // MetaMath, DepGraph, APCalc
     proofQueuePanel: 'MetaMath: play a demo preset',
     proofGraphPanel: 'MetaMath: play a demo preset',
@@ -95,7 +78,7 @@ export const FEATURES = Object.freeze([
     { id: 'tutorial-links', title: 'Opening a tutorial from a ?tutorial= link', tutorial: 'guided-tour' },
     { id: 'layouts', title: 'Moving, splitting and closing panels; layout presets', tutorial: null, planned: 'Your workbench' },
     { id: 'modes', title: 'App modes (?mode=…)', tutorial: null, planned: 'MetaMath, DepGraph and APCalc tutorials' },
-    { id: 'loop-mode', title: 'Loop mode', tutorial: null, planned: 'Loop mode: Adventure' },
-    { id: 'lab-pages', title: 'The procgen lab pages (demos.html, the Seedling lab)', tutorial: null, planned: 'Procgen: the Seedling features' },
+    { id: 'loop-mode', title: 'Loop mode', tutorial: 'procgen-loop-mode-jta' },
+    { id: 'lab-pages', title: 'The procgen lab pages (demos.html, the Seedling lab)', tutorial: 'procgen-seedling' },
     { id: 'local-multiworld', title: 'Generating a multiworld and connecting to a local server', tutorial: 'procgen-to-multiworld' },
 ]);

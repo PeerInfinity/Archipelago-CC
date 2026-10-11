@@ -181,7 +181,17 @@ async function press(el, opts) {
     if (!el) throw new Error('nothing to press');
     el.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
     if (opts.animate) await moveCursorTo(el, opts.moveMs);
-    el.click();
+    if (el instanceof HTMLCanvasElement) {
+        // A canvas hit-tests the pointer's position, and el.click() sends
+        // (0,0): press its centre, as a person's click would.
+        const r = el.getBoundingClientRect();
+        const at = { clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 };
+        for (const type of ['mousedown', 'mouseup', 'click']) {
+            el.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, view: window, ...at }));
+        }
+    } else {
+        el.click();
+    }
     await FRAME();
 }
 

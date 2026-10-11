@@ -77,6 +77,21 @@ export function buildContext({ eventBus }) {
             if (!mark.seen.has(key) && predicate()) mark.seen.add(key);
             return mark.seen.has(key);
         },
+        /**
+         * True when `value` has been the same for `ms` since the step began
+         * (remembered under `key`; any change restarts the clock). A `failed`
+         * check's "it has stopped moving".
+         */
+        unchangedFor(key, value, ms) {
+            const now = Date.now();
+            const last = mark.unchanged?.get(key);
+            mark.unchanged ??= new Map();
+            if (!last || last.value !== value) {
+                mark.unchanged.set(key, { value, since: now });
+                return false;
+            }
+            return now - last.since >= ms;
+        },
         dispose() {
             for (const u of unsubs) u?.();
         },

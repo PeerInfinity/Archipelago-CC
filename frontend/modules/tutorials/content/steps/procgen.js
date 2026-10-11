@@ -35,14 +35,21 @@ const sectionOpen = (ctx, sectionId) => ctx.exists({
     ...PIPELINE, selector: `.procgen-pipeline-collapsible.is-expanded[data-section-id="${sectionId}"]`,
 });
 
+/** How long the bot's status may stay the same before a walk calls it stalled. */
+export const BOT_STALL_MS = 60000;
+
 /**
- * The bot cannot finish: its status is an error, or the Maze Room it drives
+ * The bot cannot finish: its status is an error, it has said the same thing
+ * for BOT_STALL_MS, or the Maze Room it drives
  * says its walker is stuck ("Stuck — reset to retry.", after a "no path …
  * under current inventory"; it does not move again). → the app's own words.
  */
 export function botCannotFinish(ctx) {
     const status = ctx.text(botStatus);
     if (status.startsWith('error')) return `the Playback Bot says "${status}"`;
+    if (ctx.unchangedFor('bot-status', status, BOT_STALL_MS)) {
+        return `the Playback Bot has said "${status}" for ${BOT_STALL_MS / 1000} s`;
+    }
     if (ctx.text({ ...MAZE, selector: '.playback-control-bar-status' }) !== 'Stuck — reset to retry.') return null;
     const blocked = [...(ctx.query({ ...MAZE, selector: '.maze-room-playback-log' })
         ?.querySelectorAll('.maze-room-playback-log-blocked') ?? [])].pop()?.textContent.trim();
@@ -193,7 +200,7 @@ export function loadPresetWorld(id, game, seed, title) {
 }
 
 /** Watch the Playback Bot play the loaded world to the end, in the Maze Room. */
-export function botPlaysToTheEnd(id) {
+export function botPlaysToTheEnd(id, { watch = MAZE, watchName = 'Maze Room', how = 'walk the world' } = {}) {
     const finished = (ctx) => ctx.text(botStatus).startsWith('finished');
     return [
         {
@@ -207,8 +214,8 @@ export function botPlaysToTheEnd(id) {
         {
             step: {
                 id,
-                text: 'Press **▶** (Play), then open the **Maze Room** tab to watch the bot walk the world, collect each sphere\'s items and finish.',
-                actions: [{ click: botButton('play') }, { activate: MAZE }],
+                text: `Press **▶** (Play), then open the **${watchName}** tab to watch the bot ${how}, collect each sphere's items and finish.`,
+                actions: [{ click: botButton('play') }, { activate: watch }],
                 done: (ctx) => ctx.seenSinceStep('running', () => !finished(ctx)) && finished(ctx),
                 failed: botCannotFinish,
                 doneTimeoutMs: 180000,
@@ -216,3 +223,31 @@ export function botPlaysToTheEnd(id) {
         },
     ];
 }
+
+/** Bring a panel forward and say what it shows (a "look" step). */
+export function look(id, target, text, extraDone = null) {
+    return [{
+        step: {
+            id,
+            text,
+            actions: [{ activate: target }],
+            done: (ctx) => ctx.isPanelShowing(target) && (!extraDone || extraDone(ctx)),
+        },
+    }];
+}
+
+/** Tick one of the Parameters section's checkboxes (e.g. Enable loop mode). */
+export function tickParam(id, key, label) {
+    const box = { ...PIPELINE, selector: `.procgen-pipeline-params input[type="checkbox"][data-param-key="${key}"]` };
+    return [{
+        step: {
+            id,
+            text: `In **Parameters**, tick **${label}**.`,
+            actions: [{ click: box }],
+            done: (ctx) => ctx.query(box)?.checked === true,
+        },
+    }];
+}
+
+/** The Flash runtime note every Seedling-carrying tutorial gives (⚖ the user, 2026-10-10: wasm, mention the switch). */
+export const SEEDLING_RUNTIME_NOTE = 'Seedling rooms play in the **wasm** build of the original game (the default). The **Settings** panel\'s Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime, where the Playback Bot already walks them; this tutorial stays on wasm, where that work is in progress.';

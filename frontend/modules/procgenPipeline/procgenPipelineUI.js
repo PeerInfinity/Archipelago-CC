@@ -2213,6 +2213,8 @@ export class ProcgenPipelineUI {
         loopModeLabel.title = 'Embed loop_costs in rules.json and turn on per-region mana deduction';
         const loopModeInput = document.createElement('input');
         loopModeInput.type = 'checkbox';
+        // The bag key it edits, as the number boxes carry it (a tutorial handle).
+        loopModeInput.dataset.paramKey = 'enableLoopMode';
         loopModeInput.checked = !!this.params.enableLoopMode;
         loopModeInput.addEventListener('change', () => {
             this.params.enableLoopMode = !!loopModeInput.checked;
@@ -2254,6 +2256,14 @@ export class ProcgenPipelineUI {
     _renderActions() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-actions';
+        // ⛓ When a loadable world last appeared — a new result.rulesJson, by
+        // Run all or by a single step — drawn on the actions row: a tutorial
+        // step's done check compares it with when the step began, so the
+        // previous run's "Pipeline complete" cannot pass for this one's
+        // (tutorialContext.js `sinceStep`).
+        const rules = this.result?.rulesJson ?? null;
+        if (rules && rules !== this._stampedRulesJson) this.lastGeneratedAt = Date.now();
+        this._stampedRulesJson = rules;
         section.dataset.generatedAt = String(this.lastGeneratedAt ?? 0);
         const sphere = this.mode === 'sphereGrowth';
         const topDown = this.mode === 'topDown';
@@ -3895,11 +3905,6 @@ export class ProcgenPipelineUI {
             this.message = `ERROR: ${e.message}`;
         }
 
-        // ⛓ When a run last produced a loadable world, drawn on the actions
-        // row (`data-generated-at`): a tutorial step's done check compares it
-        // with when the step began, so the previous run's "Pipeline complete"
-        // cannot pass for this one's (tutorialContext.js `sinceStep`).
-        if (this.result?.rulesJson) this.lastGeneratedAt = Date.now();
         this.isGenerating = false;
         this._progressState = null;
         this.render();

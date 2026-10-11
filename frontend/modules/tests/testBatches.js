@@ -91,6 +91,15 @@ export const TEST_BATCHES = Object.freeze({
         manual: true,
         categories: Object.freeze(['Tutorials', 'Tutorial walks']),
     }),
+    'tutorials-procgen': Object.freeze({
+        description:
+            'The Procgen track\'s tutorial walk rows: each generates a world, '
+            + 'loads it and plays it to the end (or to its recorded first failing '
+            + 'step). Split from tutorials on 2026-10-10, when the walks reached '
+            + '81 % of that batch\'s budget. Manual, like tutorials.',
+        manual: true,
+        categories: Object.freeze(['Tutorial walks: procgen']),
+    }),
 });
 
 /** The batch that claims categories no other batch lists. */

@@ -26,6 +26,13 @@ import { buildContext } from '../../tutorials/tutorialContext.js';
 
 const CATEGORY = 'Tutorials';
 const WALK_CATEGORY = 'Tutorial walks';
+/**
+ * A track whose walk rows run in a batch of their own (testBatches.js): the
+ * procgen walks generate worlds and play them to the end, and together they
+ * outgrew the tutorials batch's budget (81 % of it on 2026-10-10).
+ */
+const WALK_CATEGORY_BY_TRACK = Object.freeze({ procgen: 'Tutorial walks: procgen' });
+const walkCategory = (tutorial) => WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
 const walkId = (id) => `tutorial-walk-${id}`;
 const MOUNT_TIMEOUT_MS = 10000;
 const POLL_MS = 100;
@@ -395,7 +402,7 @@ for (const { tutorial } of TUTORIALS) {
                 : `in progress: firstFailingStep ${tutorial.firstFailingStep ?? 'null'}`}). Reloads the world loaded before.`,
         // Named per row: the registry tells test functions apart by name.
         testFunction: { [`walk_${tutorial.id.replace(/-/g, '_')}`]: (tc) => tutorialWalkRow(tc, tutorial) }[`walk_${tutorial.id.replace(/-/g, '_')}`],
-        category: WALK_CATEGORY,
+        category: walkCategory(tutorial),
         enabled: false,
     });
 }
