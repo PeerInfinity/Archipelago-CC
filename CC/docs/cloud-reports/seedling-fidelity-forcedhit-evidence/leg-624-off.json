@@ -1,0 +1,32 @@
+{
+ "id": 624,
+ "ok": false,
+ "ms": 12234,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 6407
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 5827
+  }
+ ],
+ "keys": [
+  "ok",
+  "kind",
+  "message",
+  "obstacle",
+  "pass",
+  "passes"
+ ],
+ "kind": "refusal",
+ "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (232.2,119.6) \u2014 chaser:lavarunner@208,96 (inside leash 80 (d=9.3), box grown 1.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 3 volume(s) forbidden \u2014 no walkable tile path in level 74 from tile (18,8) to (1,9). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water,\n  time: the aim is 272 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: no stance within bulb@48,112's leash (80) both pulls its straight line through a kill region and is itself danger-free: 0 cell(s) in leash, 0 of them crossing a region, none of those reachable. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.\n  kill: no presser in level 74 arms a trap whose lane covers bulb@48,112 \u2014 the room has 1 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: no stance derives for bulb@48,112 on level 74: the 8-cell box around the player's node held 0 leash cells, so the box around the TARGET was scanned: 81 cell(s) inside its 80 px leash, 20 of those reachable and with a corridor onward, and 20 of THOSE refused by the forecast [(104,56): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (88,72): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (88,56): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant.\n  detour: no corridor bent through at most 2 via cell(s) of the 50 the walk can plan to probes clean: 246 candidate corridor(s) previewed with the bodies stepped against each, 46 prefix(es) dangerous before their last via, 246 preview(s) of the 300 bound spent and 445 leg(s) of the 500 planned.",
+ "forcedRung": []
+}
