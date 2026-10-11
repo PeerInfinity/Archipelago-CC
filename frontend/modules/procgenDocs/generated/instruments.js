@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 77,
+            "count": 80,
             "id": "plan"
         },
         {
-            "browser": 68,
-            "count": 113,
+            "browser": 71,
+            "count": 116,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 396,
-        "browser": 133,
-        "cited": 196,
-        "files": 408,
+        "blockStyle": 403,
+        "browser": 136,
+        "cited": 201,
+        "files": 415,
         "lineStyle": 12,
-        "withDocblock": 408,
-        "withFlags": 326
+        "withDocblock": 415,
+        "withFlags": 333
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7223,6 +7223,42 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/plan-seedling-bobsoldier2.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "out"
+            ],
+            "file": "plan-seedling-bulb.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-bulb — ⛓⛓⛓ seedling-fidelity-bulb: THE BULB'S DRIVEN WITNESSES.",
+            "path": "scripts/procgen/plan-seedling-bulb.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
@@ -7786,6 +7822,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-proximity-witness — ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY: THE GAME WITNESSES FOR THE PROXIMITY-HAZARD ROWS.",
             "path": "scripts/procgen/plan-seedling-proximity-witness.mjs"
+        },
+        {
+            "argvHelpers": [
+                "xAt"
+            ],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-pushblock-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-pushblock-witness — ⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK: A `PushableBlockSpear` ON THE FRONTIER OF A REACH-EXIT, MOVED BY THE SOLVER'S `shove` VERB'S THRUST ARM.",
+            "path": "scripts/procgen/plan-seedling-pushblock-witness.mjs"
         },
         {
             "argvHelpers": [],
@@ -9349,6 +9414,46 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/plan-seedling-wallflyer.mjs"
         },
         {
+            "argvHelpers": [
+                "arg",
+                "sameTape"
+            ],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "out"
+            ],
+            "file": "plan-seedling-wand-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-wand-witness — ⛓⛓⛓ SEEDLING FIDELITY WAND: THE TWO TAPES THE WAND WITNESSES EMBED.",
+            "path": "scripts/procgen/plan-seedling-wand-witness.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
@@ -10409,6 +10514,100 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-divergence-sweep.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-encounter-ticks.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "configure"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "from"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "hold-at"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "hold-block"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "hold-live"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tail"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape-file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "to"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "write-at"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-encounter-ticks — ⛓⛓ seedling-fidelity-encounters2: AN ENCOUNTER, ASKED OF THE GAME TICK BY SAMPLED TICK (the BobSoldier probe's harness, `probe-seedling-bobsoldier-mobiles.mjs`, pointed at the two encounters).",
+            "path": "scripts/procgen/probe-seedling-encounter-ticks.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": true,
             "category": "probe",
@@ -11192,6 +11391,37 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling: DOES A STAGED PERSISTENCE FLAG REACH THE ENTITIES, PER BOOT PATH? (slice `seedling-js-persistence`, after the rules arc's W0 finding: several tapes on ONE page leaked bosslock state across `botStart`).",
             "path": "scripts/procgen/probe-seedling-persistence-rebuild.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-pushblock-weapon.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "model-only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-pushblock-weapon — does a SWORD slash move a `PushableBlockSpear`, or only a spear thrust?",
+            "path": "scripts/procgen/probe-seedling-pushblock-weapon.mjs"
         },
         {
             "argvHelpers": [
@@ -12882,6 +13112,64 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-wallflyer-mobiles — ⛓⛓⛓ seedling-fidelity-wallflyer: THE WALLFLYER'S OWN BODY, AND ITS DEATH, ASKED OF THE GAME TICK BY SAMPLED TICK (BOBSOLDIER's `probe-seedling-bobsoldier-mobiles.mjs`, one class over).",
             "path": "scripts/procgen/probe-seedling-wallflyer-mobiles.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-wand-mobiles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "witness"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-wand-mobiles — ⛓⛓⛓ seedling-fidelity-wand D1: A WAND SHOT AND WHAT IT OPENS, ASKED OF THE GAME TICK BY SAMPLED TICK (`probe-seedling-darktrap-mobiles.mjs`'s shape, one class over).",
+            "path": "scripts/procgen/probe-seedling-wand-mobiles.mjs"
         },
         {
             "argvHelpers": [
