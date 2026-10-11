@@ -48,18 +48,39 @@ export let activeProgress = null;
  * @param {?string} [o.pass]  the anytime pass this solve is (`segment.pass` in the snapshot), when the caller knows it
  */
 export function withSolveProgress(onProgress, fn, { pass = null } = {}) {
-    if (typeof onProgress !== 'function') {
-        throw new Error(`withSolveProgress: onProgress must be a function (site, peek) => void, got ${typeof onProgress}`);
-    }
     const outer = activeProgress;
-    const p = { hook: onProgress, pass, segments: 0, depth: 0, seg: null, peek: null };
-    p.peek = () => (p.seg === null ? null : snapshotOf(p));
-    activeProgress = p;
+    activeProgress = installOf(onProgress, pass, 'withSolveProgress');
     try {
         return fn();
     } finally {
         activeProgress = outer;
     }
+}
+
+/**
+ * Install `onProgress` until the returned function is called — for a caller whose solves are not one synchronous
+ * call (a whole process: `scripts/procgen/seedling-solve-progress-hook.mjs` preloads a silent hook this way, so a
+ * producer's `--check` runs under one). The uninstall restores what was installed before, and only if this install
+ * is still the active one.
+ *
+ * @returns {() => void}
+ */
+export function installSolveProgress(onProgress, { pass = null } = {}) {
+    const outer = activeProgress;
+    const p = installOf(onProgress, pass, 'installSolveProgress');
+    activeProgress = p;
+    return () => {
+        if (activeProgress === p) activeProgress = outer;
+    };
+}
+
+function installOf(onProgress, pass, who) {
+    if (typeof onProgress !== 'function') {
+        throw new Error(`${who}: onProgress must be a function (site, peek) => void, got ${typeof onProgress}`);
+    }
+    const p = { hook: onProgress, pass, segments: 0, depth: 0, seg: null, peek: null };
+    p.peek = () => (p.seg === null ? null : snapshotOf(p));
+    return p;
 }
 
 // ── the tree ───────────────────────────────────────────────────────────
