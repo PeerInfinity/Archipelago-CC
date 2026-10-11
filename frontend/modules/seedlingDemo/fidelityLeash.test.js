@@ -146,10 +146,11 @@ function solve629(items = ITEMS_73) {
 }
 
 describe('LEASH D2 — `BAIT_FORECAST`: a bait is verified on the chaser forecast', () => {
-    it('ships OFF, and `withBaitForecast` restores it', () => {
-        expect(BAIT_FORECAST.enabled).toBe(false);
-        expect(withBaitForecast(true, () => BAIT_FORECAST.enabled)).toBe(true);
-        expect(BAIT_FORECAST.enabled).toBe(false);
+    // ⚖ (user, 2026-10-11) ON since the wave-12 harvest; the OFF halves below pin OFF themselves.
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_BAIT_FORECAST)('ships ON, and `withBaitForecast` restores it', () => {
+        expect(BAIT_FORECAST.enabled).toBe(true);
+        expect(withBaitForecast(false, () => BAIT_FORECAST.enabled)).toBe(false);
+        expect(BAIT_FORECAST.enabled).toBe(true);
     });
     /**
      * The solve asks this bait AFTER its first one: the player stands at the arrival while `bulb@48,112` chases it into
@@ -176,7 +177,7 @@ describe('LEASH D2 — `BAIT_FORECAST`: a bait is verified on the chaser forecas
         expect(run.playerHits).toEqual([]);
     });
     it('the derivation at 629\'s stance: OFF offers the straight line\'s 84-tick bait; ON refuses it by the forecast\'s pin', () => {
-        const off = (() => { const run = stood(); return deriveBaitStance(run, lavarunner(run), new Set()); })();
+        const off = withBaitForecast(false, () => { const run = stood(); return deriveBaitStance(run, lavarunner(run), new Set()); });
         expect(off.stance).toEqual({ x: 24, y: 136 });
         // ceil(63 / 1.5) + MOBILE_DEATH_FADE + BAIT_SLACK — the bound the leg refused on
         expect(off.ticks).toBe(84);
@@ -185,7 +186,7 @@ describe('LEASH D2 — `BAIT_FORECAST`: a bait is verified on the chaser forecas
         expect(on.forecastRejected[0]).toMatch(/^\(24,136\): the forecast still has lavarunner@24,56 in the world after the whole 168-tick dwell .* at \(3[01]\.\d+,73\.06\)/);
     });
     it('leg 629 (L74 from L75 → the Darkshield): OFF refuses on the dwell; ON SOLVES — and the plan is the witness\'s tape', () => {
-        const off = solve629();
+        const off = withBaitForecast(false, () => solve629());
         expect(off.ok).toBe(false);
         expect(off.message).toMatch(/bait \(lavarunner@24,56\): the dwell's condition .* never became true inside its 84-tick bound/);
         const on = withBaitForecast(true, () => solve629());

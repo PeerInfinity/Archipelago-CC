@@ -34,8 +34,9 @@ async function countedSolve(on) {
 }
 
 describe('SOLVECOST D2b — the axe-dodge site, asked per preview', () => {
-    it('ships OFF', () => {
-        expect(AXE_DODGE_ASK_PER_PREVIEW.enabled).toBe(false);
+    // ⚖ (user, 2026-10-11) ON since the wave-12 harvest; the default is the module's literal, which the page reads.
+    it.skipIf(process.env.SEEDLING_AXE_DODGE_ASK_PER_PREVIEW === '0')('ships ON', () => {
+        expect(AXE_DODGE_ASK_PER_PREVIEW.enabled).toBe(true);
     });
 
     it('route step 128: the same plan either way; ON asks `axe-dodge` fewer times, and still asks it', async () => {

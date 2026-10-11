@@ -39,6 +39,7 @@ import { ROLES } from './levelWorld.js';
 import {
     DEADLINE_SITES, SolverRefusal, WALK_CHECK_TICKS, deriveBlockRoute, deriveKillByChaser, solveSegment,
     withSolveDeadline,
+    withBaitForecast,
 } from './solverBot.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
 import { DEFAULT_CHECK_EVERY, chebyshevHeuristic, findEarliestArrival } from './mover.js';
@@ -312,14 +313,17 @@ describe('fidelity CHECKPOINTS — the FINE sites are opt-in, inert until they t
     it('`time` in a solve: bare L6 from (208,32) runs the TIME rung\'s search; a trip there FALLS THROUGH to BAIT, and the climb says why', () => {
         const boot = { level: 6, x: 208, y: 32 };
         const goals = [{ kind: 'reach-exit', exit: { x: 32, y: 0 } }];
+        // ⛓ wave-12 harvest: pinned with `baitForecast` OFF — ON (the shipped default since then) moves the bait stance for
+        // bob@112,48 to (120,24), and the nested climb's aim is then 51 px away, so the TIME rung's search (the site this
+        // row trips) is not reached. The row is about the site, not the bait.
         const tripTimeAt = (n) => {
             const asked = [];
             try {
-                solveSegment({ run: freshRun(boot), goals, name: 'time-deadline', boot, fineCheckpoints: true,
+                withBaitForecast(false, () => solveSegment({ run: freshRun(boot), goals, name: 'time-deadline', boot, fineCheckpoints: true,
                     shouldStop: (site) => {
                         asked.push(site);
                         return site === 'time' && asked.filter((x) => x === 'time').length > n;
-                    } });
+                    } }));
             } catch (e) { return { e, asked }; }
             return { e: null, asked };
         };

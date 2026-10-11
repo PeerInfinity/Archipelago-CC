@@ -162,20 +162,27 @@ describe('composites probe X — wave 8: L30 crosses past the live BobSoldier (B
         expect(off.plan.verbs).toEqual(['walk']);
         expect(off.plan.solution.length).toBe(162);
     });
-    it('residue L45: the solver refuses BY NAME — the route needs FIRE for the tree at (48,64); jellyfishLive OFF plans the old 720 t walk', () => {
-        expect(l45.clause).toBe('burnabletree@48,64 cannot be burned by this run — this run does not hold FIRE');
+    it('residue L45: the solver refuses BY NAME — no jellyfish bait survives the forecast (baitForecast OFF: the route needs FIRE for the tree at (48,64)); jellyfishLive OFF plans the old 720 t walk', () => {
+        // ⛓ wave-12 harvest: `baitForecast` ON by default — the BAIT rung refuses every jellyfish@224,176 stance on the
+        // forecast, so the ladder is EXHAUSTED before the bait's burn is asked.
+        expect(l45.clause).toBe('no bait stance for jellyfish@224,176 survives the chaser forecast');
         const { result } = serve(l45);
         expect(result.ok).toBe(false);
-        expect(String(result.message)).toMatch(/reach-exit \(112,0\)->L46 -> bait \(jellyfish@224,176\) stance -> burn: /);
+        expect(String(result.message)).toMatch(/^solverBot\(wasm-arrival-solve\) reach-exit \(112,0\)->L46: the combat ladder is EXHAUSTED/);
         expect(String(result.message)).toContain(l45.clause);
+        // the control: `baitForecast` OFF (the BEFORE of LEASH) — the straight-line bait stance, then the FIRE refusal
+        const fire = withContactFidelity({ baitForecast: false }, () => serve(l45).result);
+        expect(fire.ok).toBe(false);
+        expect(String(fire.message)).toMatch(/reach-exit \(112,0\)->L46 -> bait \(jellyfish@224,176\) stance -> burn: /);
+        expect(String(fire.message)).toContain('burnabletree@48,64 cannot be burned by this run — this run does not hold FIRE');
         // the control: the jellyfish not a live body (the BEFORE of K1) — the walk the game left at t119
         const off = withKillLockBodies({ jellyfishLive: false }, () => serve(l45).result);
         expect(off.ok, off.message).toBe(true);
         expect(off.plan.solution.length).toBe(720);
         expect(off.plan.expected.at(-1).level).toBe(46);
-    });
-    const named = `the solver declined ${l45.goal.name} in level 45 (refusal): solverBot(wasm-exit-45) reach-exit (112,0)->L46 -> `
-        + `bait (jellyfish@224,176) stance -> burn: ${l45.clause}. …`;
+    }, 300_000); // three solves since the wave-12 harvest (ON, the baitForecast-OFF control, the jellyfishLive-OFF control)
+    const named = `the solver declined ${l45.goal.name} in level 45 (refusal): solverBot(wasm-exit-45) reach-exit (112,0)->L46: `
+        + `the combat ladder is EXHAUSTED. … bait: ${l45.clause}: 111 cell(s) in its leash (160) …`;
     const base = { answer: { ok: true, action: 'force-re-arrival' }, end: 'failed', level: 45, failed: named, legs: [{ outcome: 'failed' }] };
     it('residue L45: the verdict holds on the live run\'s shape (CI seedling-probe 37648075682 at 3a0614dd81)', () => {
         expect(declinedHolds(l45, base)).toBe(true);

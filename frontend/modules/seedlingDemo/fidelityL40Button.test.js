@@ -46,8 +46,9 @@ async function solveFrom(boot, on) {
 }
 
 describe('L40BUTTON D2 — the switch and the hypothesis', () => {
-    it('STANCE_ROCKS ships OFF', () => {
-        expect(STANCE_ROCKS.enabled).toBe(false);
+    // ⚖ (user, 2026-10-11) ON since the wave-12 harvest (`SEEDLING_STANCE_ROCKS=0` opts a node run out).
+    it.skipIf(process.env.SEEDLING_STANCE_ROCKS === '0')('STANCE_ROCKS ships ON', () => {
+        expect(STANCE_ROCKS.enabled).toBe(true);
     });
 
     it('OFF the hypothesis at leg 378\'s arrival holds the cluster\'s wandlocks and no rock; ON it adds the three', async () => {

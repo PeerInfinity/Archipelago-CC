@@ -7998,7 +7998,8 @@ function rockHypothesis(run, wall) {
  * The switch for `rockHypothesis` — OFF by default; `SEEDLING_STANCE_ROCKS=1` turns it on for a process,
  * `withStanceRocks` for a test. The browser has no `process` and takes the default.
  */
-export const STANCE_ROCKS = { enabled: globalThis.process?.env?.SEEDLING_STANCE_ROCKS === '1' };
+// ⚖ ON by default since the wave-12 harvest (user, 2026-10-11: "ON at harvest"); `SEEDLING_STANCE_ROCKS=0` opts out.
+export const STANCE_ROCKS = { enabled: globalThis.process?.env?.SEEDLING_STANCE_ROCKS !== '0' };
 
 /** Run `fn` with `STANCE_ROCKS` set to `enabled`, restoring the previous value. */
 export function withStanceRocks(enabled, fn) {
@@ -14950,7 +14951,9 @@ const DODGE_RUNG = Object.freeze({ step: 4, maxTicks: 30, maxPerSegment: 12 });
  * solve's units — and so where its deadlines trip — move with it. The movers are listed in the SOLVECOST report;
  * the default is the user's to flip.
  */
-export const AXE_DODGE_ASK_PER_PREVIEW = { enabled: false };
+// ⚖ ON by default since the wave-12 harvest (user, 2026-10-11: "ON at harvest"). The default is this literal
+// (the page and its worker read it; no env read decides it); `SEEDLING_AXE_DODGE_ASK_PER_PREVIEW=0` opts a node run out.
+export const AXE_DODGE_ASK_PER_PREVIEW = { enabled: globalThis.process?.env?.SEEDLING_AXE_DODGE_ASK_PER_PREVIEW !== '0' };
 
 export const AXE_DODGE_RUNG = Object.freeze({ step: 4, offsets: 8, detourOffsets: 2, detourPreviews: 60,
     rest: 12, maxPerSegment: DODGE_RUNG.maxPerSegment });
