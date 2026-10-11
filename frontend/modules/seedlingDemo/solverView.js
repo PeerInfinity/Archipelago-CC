@@ -65,6 +65,8 @@ export { hasDropDeath, tileUnder } from './bulb.js';
 
 // ⛓ seedling-fidelity-bulb D3: the contact-fidelity switches (`bulbLive` gates the kill veto's needs).
 export { CONTACT_FIDELITY } from './contactFidelity.js';
+// ⛓ seedling-fidelity-bombpusher D3: the lobber's own stepping, for the danger map's WAIT arm.
+export { BOMB, stepBomb, stepBombPusher } from './bombPusher.js';
 // chest.js — botDriverV2, solverBot · seedling 3
 export { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 // combat.js — dangerMap, encounters, solverBot, strikePolicy · seedling 9
