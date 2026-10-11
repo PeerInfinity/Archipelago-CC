@@ -125,6 +125,11 @@ export function nextTask(view) {
     return { kind: 'explore', region: frontier, hops: findRoute(startRegion, frontier, exitsOf, discovered) ?? prefix };
 }
 
+/** A cost for a status line: XP discounts make them fractional. */
+function fmt(cost) {
+    return String(Math.round(cost * 10) / 10);
+}
+
 function taskKey(task) {
     return task.kind === 'check' ? `check:${task.location}` : `explore:${task.region}`;
 }
@@ -172,20 +177,20 @@ function planTaskLoop(view, task, strategy) {
     };
     if (affordable || strategy === MANA_STRATEGIES.KEEP_ATTEMPTING) {
         return plan(task.kind, task.region, task.hops,
-            affordable ? what : `${what} (costs ${cost}, ${view.maxMana} mana: attempting anyway)`,
+            affordable ? what : `${what} (costs ${fmt(cost)}, ${view.maxMana} mana: attempting anyway)`,
             task.kind === 'check' ? { location: task.location } : {});
     }
     if (strategy === MANA_STRATEGIES.EXPLORE_TARGET) {
         // Straight for the task's region; only when even the walk is out of reach, farm XP at the start.
         const walk = buildLoopPath(task.hops, { kind: 'explore', region: task.region });
         if (pathCost(walk, view.costOf) <= view.maxMana) {
-            return plan('explore', task.region, task.hops, `${what} costs ${cost} > ${view.maxMana}: exploring ${task.region} for XP`);
+            return plan('explore', task.region, task.hops, `${what} costs ${fmt(cost)} > ${view.maxMana}: exploring ${task.region} for XP`);
         }
         return plan('explore', view.startRegion, [], `${what} is out of reach: exploring ${view.startRegion} for XP`);
     }
     // EXPLORE_FURTHEST.
     const far = furthestAffordable(view, task.hops);
-    return plan('explore', far.region, far.hops, `${what} costs ${cost} > ${view.maxMana}: exploring ${far.region} for XP`);
+    return plan('explore', far.region, far.hops, `${what} costs ${fmt(cost)} > ${view.maxMana}: exploring ${far.region} for XP`);
 }
 
 function planRandomLoop(view) {

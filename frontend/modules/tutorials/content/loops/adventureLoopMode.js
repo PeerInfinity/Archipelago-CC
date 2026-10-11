@@ -1,9 +1,10 @@
 /**
  * Loop mode L1: Adventure in Loop Mode, by hand (catalogue "Loop mode").
- * ⚖ The user, 2026-10-10: the Playback Bot does not play this mode, and the
- * costs come from **Generate Costs**; the tutorial covers one or more moves,
- * explores and location checks — not a whole playthrough. In progress: its
- * walk row measures `firstFailingStep`. Shape: ../../tutorialShape.js.
+ * ⚖ The user, 2026-10-10: the costs come from **Generate Costs**; the tutorial
+ * covers one or more moves, explores and location checks by hand. ⚖ 2026-10-11
+ * (loop-mode-bot): the Playback Bot now plays Loop mode by writing the queue,
+ * so a section lets it play the rest. In progress: its walk row measures
+ * `firstFailingStep`. Shape: ../../tutorialShape.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
  */
@@ -13,6 +14,10 @@ const LOOPS = { panel: 'loopsPanel' };
 const STATS = { panel: 'loopStatsPanel' };
 const GAME_STATE = { panel: 'gameStatePanel' };
 const MENU = { panel: 'menuPanel' };
+const BOT = { panel: 'playbackBotPanel' };
+const botStatus = { ...BOT, selector: '.playback-bot .playback-bot-status' };
+const botPlay = { ...BOT, selector: '.playback-bot .playback-control-bar-button-play' };
+const botFinished = (ctx) => ctx.text(botStatus).startsWith('finished');
 const REGION = 'Overworld';
 const block = `.loop-region-block[data-region="${REGION}"]`;
 const toggle = { ...LOOPS, selector: '#loop-ui-toggle-loop-mode' };
@@ -66,7 +71,7 @@ export const LOOPS_ADVENTURE = Object.freeze({
     doc: null,
     intro: [
         { prose: 'In **Loop mode** a world becomes an incremental game. You do not walk it — you queue actions (move, explore a region, check a location), and each costs **mana**. When the mana runs out, the loop resets: you are back at the start, with what you discovered and the experience you gained, and the queue runs again.' },
-        { prose: 'This tutorial plays a few actions of the *Adventure* world by hand. (The Playback Bot does not play Loop mode here; the procgen Loop-mode tutorials show worlds whose games drive themselves.)' },
+        { prose: 'This tutorial plays a few actions of the *Adventure* world by hand, then lets the **Playback Bot** play the rest: in Loop mode it writes the queue itself, one loop at a time.' },
     ],
     sections: [
         {
@@ -196,6 +201,38 @@ export const LOOPS_ADVENTURE = Object.freeze({
                     },
                 },
                 { prose: 'When the mana runs out, the loop resets: back to the start, with everything you explored still known, and the queue runs again from the top. **Restart** in the Controls starts a new loop at once.' },
+            ],
+        },
+        {
+            id: 'bot',
+            title: 'Let the Playback Bot play',
+            blocks: [
+                { prose: 'The **Playback Bot** follows the world\'s solution (its sphere log). In Loop mode it does not walk: it writes the queue, one loop at a time — explore until it finds the next location it needs, then a loop that checks it — and starts each loop itself. When a loop cannot afford its task yet, it spends the mana exploring as far as it can reach, so the experience makes the next try cheaper (the bot\'s panel has other choices for this).' },
+                {
+                    step: {
+                        id: 'bot-instant',
+                        text: 'In the **Loops** Controls, tick **Instant** again, so the loops do not take long.',
+                        actions: [
+                            { activate: LOOPS },
+                            { click: { ...LOOPS, selector: controlsFolded, optional: true } },
+                            { click: { ...LOOPS, selector: '#loop-ui-toggle-instant:not(:checked)', optional: true } },
+                        ],
+                        done: (ctx) => ctx.query({ ...LOOPS, selector: '#loop-ui-toggle-instant' })?.checked === true,
+                    },
+                },
+                {
+                    step: {
+                        id: 'bot-play',
+                        text: 'Open the **Playback Bot** tab and press **▶** (Play). Its status names each loop it plans; watch the **Loops** tab if you like. It stops by itself when every location of the solution is checked ("finished").',
+                        actions: [{ activate: BOT }, { click: botPlay }],
+                        done: (ctx) => ctx.seenSinceStep('running', () => !botFinished(ctx)) && botFinished(ctx),
+                        failed: (ctx) => {
+                            const status = ctx.text(botStatus);
+                            return status.startsWith('error') ? `the Playback Bot says "${status}"` : null;
+                        },
+                        doneTimeoutMs: 180000,
+                    },
+                },
             ],
         },
         {

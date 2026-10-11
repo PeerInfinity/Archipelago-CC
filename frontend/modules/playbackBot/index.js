@@ -35,6 +35,7 @@ export const moduleInfo = {
     storage: [
         { key: 'playbackBot_intercept', kind: STORAGE_KINDS.state, label: 'Playback Bot: intercept toggle' },
         { key: 'playbackBot_mazeCollect', kind: STORAGE_KINDS.state, label: 'Playback Bot: maze collect policy' },
+        { key: 'playbackBot_manaStrategy', kind: STORAGE_KINDS.state, label: 'Playback Bot: loop-mode mana strategy' },
     ],
 };
 

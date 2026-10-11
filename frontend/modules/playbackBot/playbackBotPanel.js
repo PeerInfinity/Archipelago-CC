@@ -25,6 +25,10 @@ import { PathFinder } from '../shared/pathfinder.js';
 // PlaybackBotPanel.moduleApis. Mirrors the workaround in mazeRoomUI.
 import eventBus from '../../app/core/eventBus.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import settingsManager from '../../app/core/settingsManager.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
+import { evaluateRule } from '../shared/ruleEngine.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 
 export class PlaybackBotPanel {
     static moduleApis = null;
@@ -206,7 +210,56 @@ export class PlaybackBotPanel {
                 ?.publish?.(eventName, payload, { initialTarget: 'bottom' }),
             getCurrentRegion: () => centralRegistry.getPublicFunction?.('gameState', 'getCurrentRegion')?.() ?? null,
             isLoopModeActive: () => !!centralRegistry.getPublicFunction?.('loops', 'isLoopModeActive')?.(),
+            loopRunnerDeps: this._loopRunnerDeps(),
         });
+    }
+
+    /**
+     * ⛓ LOOP MODE (loop-mode-bot S3) — what the bot's LoopModeRunner reads from the live game: the Loops module,
+     * gameState, discovery, and the rules evaluated against the latest snapshot. Generic over any rules.json.
+     */
+    _loopRunnerDeps() {
+        const api = (mod, fn) => centralRegistry.getPublicFunction?.(mod, fn) ?? null;
+        let discoveryActive = false;
+        settingsManager.getSetting?.('moduleSettings.discovery.enableDiscoveryMode', false)
+            ?.then?.((v) => { discoveryActive = !!v; })?.catch?.(() => {});
+        const onDiscoveryMode = (data) => {
+            if (typeof data?.active === 'boolean') discoveryActive = data.active;
+        };
+        eventBus.subscribe('discovery:modeChanged', onDiscoveryMode, 'playbackBot');
+        this._sphereDataSubscriptions.push(() => eventBus.unsubscribe?.('discovery:modeChanged', onDiscoveryMode, 'playbackBot'));
+        const regionOf = (name) => stateManager?.getStaticData?.()?.regions?.get?.(name) ?? null;
+        const ruleHolds = (rule) => {
+            if (rule === undefined || rule === null) return true;
+            const staticData = stateManager?.getStaticData?.();
+            const snapshot = stateManager?.getLatestStateSnapshot?.();
+            if (!staticData || !snapshot) return false;
+            try { return evaluateRule(rule, createSnapshotInterface(snapshot, staticData)) === true; } catch { return false; }
+        };
+        return {
+            getLoopState: () => api('loops', 'getLoopState')?.() ?? null,
+            getGameState: () => api('gameState', 'getState')?.() ?? null,
+            getStartRegion: () => api('loops', 'getLoopStartRegion')?.() ?? null,
+            exitsOf: (region) => (regionOf(region)?.exits ?? [])
+                .filter((e) => e?.name && e.connected_region && ruleHolds(e.access_rule))
+                .map((e) => ({ name: e.name, to: e.connected_region })),
+            locationsOf: (region) => (regionOf(region)?.locations ?? []).map((l) => l?.name).filter(Boolean),
+            isLocationCheckable: (name) => {
+                const snapshot = stateManager?.getLatestStateSnapshot?.();
+                return !!snapshot && !(snapshot.checkedLocations ?? []).includes(name)
+                    && snapshot.locationReachability?.[name] === 'reachable';
+            },
+            discovery: discoveryStateSingleton,
+            isDiscoveryActive: () => discoveryActive,
+            isSubstrateRegion: (region) => {
+                const pid = String(this._cachedPlayerId ?? '1');
+                return !!this._cachedRulesJson?.preset_sidecars?.[pid]?.[region];
+            },
+            subscribe: (eventName, handler) => {
+                eventBus.subscribe(eventName, handler, 'playbackBot');
+                return () => eventBus.unsubscribe?.(eventName, handler, 'playbackBot');
+            },
+        };
     }
 
     _render() {

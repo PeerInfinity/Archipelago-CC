@@ -22,6 +22,8 @@ import { returnToMenu } from '../procgenCore/restartWarp.js';
 import { creditsOfHop, eventPathFinder, gameStateEventsOf, isBreakStep } from '../procgenCore/eventRoute.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { LoopModeRunner } from './loopModeRunner.js';
+import { DEFAULT_MANA_STRATEGY, MANA_STRATEGIES, MANA_STRATEGY_LABELS } from './loopDriver.js';
 
 const DEFAULT_RATE_HZ = 4;
 // LS key for the click-intercept toggle. Persisted separately from
@@ -38,6 +40,8 @@ const LS_INTERCEPT_KEY = 'playbackBot_intercept';
 // mana) is a recorded FUTURE item, not built: it needs cost/benefit
 // modelling and its own slice.
 const LS_MAZE_COLLECT_KEY = 'playbackBot_mazeCollect';
+// ⛓ LOOP MODE — what a loop does when its task is not affordable yet (⚖ the user: a setting). loopDriver.js.
+const LS_MANA_STRATEGY_KEY = 'playbackBot_manaStrategy';
 const COLLECT_NEVER = 'never';
 const COLLECT_ALWAYS = 'always';
 // Cap on how many dispatcher events to keep in the event log so the
@@ -171,7 +175,13 @@ export class PlaybackBotUI {
         publish = null,
         getCurrentRegion = null,
         isLoopModeActive = null,
+        loopRunnerDeps = null,
     } = {}) {
+        // ⛓ LOOP MODE (loop-mode-bot S3) — in loop mode the bot plays by AUTHORING THE LOOPS QUEUE, one loop at a
+        // time (LoopModeRunner over loopDriver.js); `loopRunnerDeps` is what the runner reads from the live game.
+        this._loopRunnerDeps = loopRunnerDeps;
+        this._loopRunner = null;
+        this._manaStrategy = loadManaStrategyFromLS();
         // ⛓ DIRECT PLAY (loop-mode-bot S1) — a region with no substrate and no controller (a plain rules.json:
         // Adventure, any non-procgen preset without the Maze panel) is played straight through the dispatcher:
         // `publish(eventName, payload)` sends the bot's own user:locationCheck / user:regionMove, one per tick.
@@ -297,6 +307,7 @@ export class PlaybackBotUI {
     }
 
     destroy() {
+        this._loopRunner?.stop();
         if (this._controlBar) this._controlBar.destroy();
         if (this._element?.parentNode) {
             this._element.parentNode.removeChild(this._element);
@@ -315,6 +326,7 @@ export class PlaybackBotUI {
 
     async play(rateHz = this._rate) {
         this._rate = rateHz;
+        if (this._inLoopMode()) return this._playLoops();
         this._instantMode = false;
         this._syncCurrentRegion();
         this._ensureQueueBuilt();
@@ -344,10 +356,12 @@ export class PlaybackBotUI {
         this._dropRestartDeferral();
         this._cancelDirectTimer();
         this._directOnce = false;
+        this._loopRunner?.stop();
         this._dispatch('stop');
     }
 
     async step() {
+        if (this._inLoopMode()) return this._playLoops({ once: true });
         this._syncCurrentRegion();
         this._ensureQueueBuilt();
         this._seedCheckedFromSnapshot();
@@ -367,6 +381,8 @@ export class PlaybackBotUI {
     }
 
     async instant() {
+        // Loop mode keeps the user's Loops speed settings (⚖): Instant there is Play.
+        if (this._inLoopMode()) return this._playLoops();
         this._instantMode = true;
         this._syncCurrentRegion();
         this._ensureQueueBuilt();
@@ -403,6 +419,8 @@ export class PlaybackBotUI {
         this._cancelDirectTimer();
         this._directOnce = false;
         this._instantMode = false;
+        this._loopRunner?.stop();
+        this._loopRunner = null;
         this._dispatch('reset');
         this._render();
     }
@@ -672,8 +690,10 @@ export class PlaybackBotUI {
             this._flushSnapshot().then(() => {
                 const checked = proxy.getLatestStateSnapshot()?.checkedLocations;
                 if (Array.isArray(checked) && !checked.includes(name)) {
-                    this._setStatus(`blocked: the check of "${name}" did not land`);
-                    this._render();
+                    if (this._walking()) {
+                        this._setStatus(`blocked: the check of "${name}" did not land`);
+                        this._render();
+                    }
                     return;
                 }
                 this._acceptLocationCheck(name);
@@ -690,7 +710,7 @@ export class PlaybackBotUI {
         if (this._pendingManualTarget?.name === name) {
             this._pendingManualTarget = null;
         }
-        if (this._isActive) this._publishNextWalkTo();
+        if (this._walking()) this._publishNextWalkTo();
         this._render();
     }
 
@@ -702,8 +722,10 @@ export class PlaybackBotUI {
         // player never reached).
         const actual = this._getCurrentRegion?.() ?? null;
         if (target && actual && actual !== target) {
-            this._setStatus(`blocked: the move to ${target} did not land (still in ${actual})`);
-            this._render();
+            if (this._walking()) {
+                this._setStatus(`blocked: the move to ${target} did not land (still in ${actual})`);
+                this._render();
+            }
             return;
         }
         // ⛓ WALK IDENTITY (b) — the leg moved the player while a Restart waited on it: the route is re-planned from here.
@@ -733,7 +755,7 @@ export class PlaybackBotUI {
             }
             this._restartPending = null;
         }
-        if (this._isActive) this._publishNextWalkTo();
+        if (this._walking()) this._publishNextWalkTo();
         // Manual cross-region routes are progressed one exit at a
         // time; re-dispatch the pending target now that the bot is
         // in a new region (it'll either walk to the location or
@@ -774,6 +796,67 @@ export class PlaybackBotUI {
      * Called at the play/step/instant entry points; mid-run checks
      * arrive through the normal event path.
      */
+    /** True while the bot walks the sphere queue itself (not while the Loop runner plays loops). */
+    _walking() {
+        return this._isActive && !this._loopRunner?.isActive();
+    }
+
+    /** Loop mode, and the panel gave the bot what the Loop runner needs. */
+    _inLoopMode() {
+        return !!this._loopRunnerDeps && !!this._isLoopModeActive?.();
+    }
+
+    getManaStrategy() { return this._manaStrategy; }
+
+    setManaStrategy(strategy) {
+        if (!Object.values(MANA_STRATEGIES).includes(strategy)) return;
+        this._manaStrategy = strategy;
+        saveManaStrategyToLS(strategy);
+        if (this._manaStrategySelect) this._manaStrategySelect.value = strategy;
+    }
+
+    /** The Loop runner (made on first use, and again after a reset). */
+    getLoopRunner() {
+        if (!this._loopRunner && this._loopRunnerDeps) {
+            this._loopRunner = new LoopModeRunner({
+                ...this._loopRunnerDeps,
+                flush: () => this._flushSnapshot(),
+                nextTarget: () => this._nextLoopTarget(),
+                getStrategy: () => this._manaStrategy,
+                onStatus: (text) => { this._setStatus(text); this._render(); },
+                onFinished: () => { this._isActive = false; this._render(); },
+            });
+        }
+        return this._loopRunner;
+    }
+
+    /**
+     * ⛓ LOOP MODE — play loops: the runner writes one loop at a time into the Loops queue and runs it, until every
+     * sphere-log location is checked (or the user stops it — it never gives up). `once` plays a single loop.
+     */
+    async _playLoops({ once = false } = {}) {
+        this._ensureQueueBuilt();
+        if (!this._queue.length) {
+            this._setStatus('no sphere log');
+            this._render();
+            return;
+        }
+        const runner = this.getLoopRunner();
+        if (runner.isActive()) return;
+        this._isActive = !once;
+        runner.start({ once });
+        this._render();
+    }
+
+    /** The next sphere-log location the snapshot does not hold as checked, or null when all are. */
+    _nextLoopTarget() {
+        const checked = new Set(this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations ?? []);
+        for (const name of checked) this._checkedSoFar.add(name);
+        this._advanceCursor();
+        const head = this._queue?.[this._cursor];
+        return head ? { locationName: head.locationName, regionName: head.regionName } : null;
+    }
+
     /**
      * Seed `_currentRegion` from gameState when the bot has not heard a move yet: a plain preset's start region
      * arrives before the panel's receivers are wired, and a direct-play run has no substrate to report it.
@@ -1466,6 +1549,7 @@ export class PlaybackBotUI {
         // is consulted by the dispatcher receivers in
         // playbackBot/index.js via isInterceptEnabled().
         root.appendChild(this._mountInterceptToggle());
+        root.appendChild(this._mountManaStrategy());
 
         // Phase 2 — current target line. Mirrors the bot's queue head
         // (or an active manual walkTo target) in plain text below the
@@ -1518,6 +1602,26 @@ export class PlaybackBotUI {
 
         this._element = root;
         this._render();
+    }
+
+    _mountManaStrategy() {
+        const wrap = document.createElement('label');
+        wrap.className = 'playback-bot-mana-strategy';
+        const text = document.createElement('span');
+        text.textContent = 'Loop mode, when a task is not affordable: ';
+        wrap.appendChild(text);
+        const select = document.createElement('select');
+        for (const value of Object.values(MANA_STRATEGIES)) {
+            const opt = document.createElement('option');
+            opt.value = value;
+            opt.textContent = MANA_STRATEGY_LABELS[value];
+            select.appendChild(opt);
+        }
+        select.value = this._manaStrategy;
+        select.addEventListener('change', () => this.setManaStrategy(select.value));
+        wrap.appendChild(select);
+        this._manaStrategySelect = select;
+        return wrap;
     }
 
     _mountInterceptToggle() {
@@ -1748,6 +1852,21 @@ export class PlaybackBotUI {
         row.textContent = `[${time}] ${entry.eventName} "${entry.target}" (${entry.disposition})`;
         return row;
     }
+}
+
+function loadManaStrategyFromLS() {
+    try {
+        const v = typeof localStorage === 'undefined' ? null : localStorage.getItem(LS_MANA_STRATEGY_KEY);
+        return Object.values(MANA_STRATEGIES).includes(v) ? v : DEFAULT_MANA_STRATEGY;
+    } catch (_e) {
+        return DEFAULT_MANA_STRATEGY;
+    }
+}
+
+function saveManaStrategyToLS(strategy) {
+    try {
+        if (typeof localStorage !== 'undefined') localStorage.setItem(LS_MANA_STRATEGY_KEY, strategy);
+    } catch (_e) { /* storage unavailable */ }
 }
 
 function loadMazeCollectFromLS() {

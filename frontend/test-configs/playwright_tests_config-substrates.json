@@ -1724,6 +1724,12 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "loop-mode-bot S1: the Playback Bot plays a PLAIN rules.json directly (Adventure, loop mode off, no substrate, no controller): its own checks and moves, counted only when they land. Done = every sphere-log location checked. Fast batch."
+        },
+        {
+            "id": "playback-bot-loop-mode-adventure",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "loop-mode-bot S3 (⚖ first target): Adventure in Loop mode, no procgen. Generate Costs (enters Loop mode), Loops queue on Instant, bot Play: the bot writes the Loops queue one loop at a time (explore until found, then check) until every sphere-log location is checked."
         }
     ]
 }
