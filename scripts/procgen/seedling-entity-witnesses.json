@@ -3,7 +3,7 @@
   "head": "af79da5e043b6ad81e63887b8995c560984814ca",
   "treeClean": true,
   "tier": "fast",
-  "entitiesMd5": "322c896f1018c5eada17ec6d79279adc",
+  "entitiesMd5": "74dbffa22139c03f1e124a6e55d7ffa5",
   "method": "per record number leaf x magnitude, a child process with the entity-records override installed runs every fast-tier tape through runTapeToStream; a tape moves when its stream md5 differs from the control run or it throws. ulp = +1 ULP; pct10 = x1.1, or +1 for an integer default. corpus-blind = neither magnitude moved any tape.",
   "jobs": 4,
   "wallSeconds": 2957,
@@ -9919,12 +9919,425 @@
         "movedTapes": []
       },
       "verdict": "corpus-blind"
+    },
+    "bomb.hitbox.w": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bomb.hitbox.h": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bomb.hitbox.originX": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bomb.hitbox.originY": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bomb.tMax": {
+      "ulp": {
+        "value": 30.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 31,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bomb.frictionZero": {
+      "ulp": {
+        "value": 0.05000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.05500000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bomb.explosionRadiusArg": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bomb.radiusCoeff": {
+      "ulp": {
+        "value": 0.6500000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.7150000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bomb.explosionHitRadius": {
+      "ulp": {
+        "value": 15.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 16,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bomb.force": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bomb.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bombPusher.ctor.dx": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bombPusher.ctor.dy": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bombPusher.hitbox.w": {
+      "ulp": {
+        "value": 48.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 49,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bombPusher.hitbox.h": {
+      "ulp": {
+        "value": 48.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 49,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bombPusher.hitbox.originX": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bombPusher.hitbox.originY": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bombPusher.maxDistance": {
+      "ulp": {
+        "value": 256.00000000000006,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 257,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bombPusher.shotTimeMax": {
+      "ulp": {
+        "value": 15.000000000000002,
+        "moved": 0,
+        "threw": 183,
+        "same": 0,
+        "movedTapes": [
+          "axe-l48-reach-l49",
+          "axe-l61-reach-l62",
+          "axe-l61-reach-l63",
+          "axe-l71-reach-l76",
+          "bobsoldier-corpse",
+          "bobsoldier-kill",
+          "bobsoldier-sword",
+          "burn-l24-reach-exit",
+          "burn-l44-reach-exit",
+          "cancross-l16-sword-none"
+        ]
+      },
+      "pct10": {
+        "value": 16,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "moves"
+    },
+    "bombPusher.anims.shoot.frames": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 183,
+        "same": 0,
+        "movedTapes": [
+          "axe-l48-reach-l49",
+          "axe-l61-reach-l62",
+          "axe-l61-reach-l63",
+          "axe-l71-reach-l76",
+          "bobsoldier-corpse",
+          "bobsoldier-kill",
+          "bobsoldier-sword",
+          "burn-l24-reach-exit",
+          "burn-l44-reach-exit",
+          "cancross-l16-sword-none"
+        ]
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "moves"
+    },
+    "bombPusher.anims.shoot.rate": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bombPusher.anims.sit.frames": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bombPusher.anims.sit.rate": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
     }
   },
   "summary": {
     "verdicts": {
-      "moves": 97,
-      "corpus-blind": 438
+      "moves": 99,
+      "corpus-blind": 459
     },
     "byClass": {
       "arrow": {
@@ -10030,6 +10443,14 @@
       "wallFlyer": {
         "moves": 5,
         "corpus-blind": 13
+      },
+      "bomb": {
+        "moves": 0,
+        "corpus-blind": 11
+      },
+      "bombPusher": {
+        "moves": 2,
+        "corpus-blind": 10
       }
     },
     "threw": [
@@ -10059,7 +10480,9 @@
       "puzzlementHazards.pulser.ctor.dy",
       "spinner.heading",
       "turret.anims.startshot.frames",
-      "turret.anims.finishshot.frames"
+      "turret.anims.finishshot.frames",
+      "bombPusher.shotTimeMax",
+      "bombPusher.anims.shoot.frames"
     ]
   },
   "partialRemeasure": {
@@ -10081,7 +10504,36 @@
       "chasers.bulb.dropDeath.die.rate",
       "chasers.bulb.dropDeath.becomes"
     ],
-    "why": "seedling-fidelity-killlock added CHASERS.lavarunner; these 8 leaves were measured with --only over today's 180-tape fast tier (0 moved, 0 threw at both magnitudes), which contains every one of this file's 139 tapes, so the rows state 0 moved of those 139. CONTROL stable; its one expectation divergence (r5-l60-kill) is pre-existing at the base 0f952e9a9e. Every other row is the earlier full --write. ⛓ wave-8 harvest: BOBSOLDIER's full --write (183 tapes) is the base of this file; the 8 lavarunner rows are carried into it and restated over its 183 tapes (KILLLOCK's switch K2 lavaRunnerLive stays OFF, so no tape bridges a lavarunner; re-checked with --only at the harvest tip d9f182f71d with K1/K3/K4/K5 ON: the 4 chasers.jellyfish.* and the 8 chasers.lavarunner.* leaves, 0 moved / 0 threw at both magnitudes over the 189-tape fast tier, CONTROL stable). entitiesMd5 is the union's (33ae40cd: BOBSOLDIER's 0655b315 + the lavarunner row); every other row is BOBSOLDIER's full --write. ⛓ 2026-10-10 seedling-fidelity-bulb: CHASERS.bulb added 7 leaves, measured with --only over the 204-tape fast tier at cf7a0eb (a superset of this file's 183 — checked: 0 of the 183 missing), 0 moved / 0 threw at both magnitudes (contactFidelity.bulbLive ships OFF, so no tape steps a Bulb); CONTROL stable, its one divergence r5-l60-kill as before. Restated over the 183. entitiesMd5 is 322c896f (33ae40cd + the bulb row)."
+    "why": "seedling-fidelity-killlock added CHASERS.lavarunner; these 8 leaves were measured with --only over today's 180-tape fast tier (0 moved, 0 threw at both magnitudes), which contains every one of this file's 139 tapes, so the rows state 0 moved of those 139. CONTROL stable; its one expectation divergence (r5-l60-kill) is pre-existing at the base 0f952e9a9e. Every other row is the earlier full --write. ⛓ wave-8 harvest: BOBSOLDIER's full --write (183 tapes) is the base of this file; the 8 lavarunner rows are carried into it and restated over its 183 tapes (KILLLOCK's switch K2 lavaRunnerLive stays OFF, so no tape bridges a lavarunner; re-checked with --only at the harvest tip d9f182f71d with K1/K3/K4/K5 ON: the 4 chasers.jellyfish.* and the 8 chasers.lavarunner.* leaves, 0 moved / 0 threw at both magnitudes over the 189-tape fast tier, CONTROL stable). entitiesMd5 is the union's (33ae40cd: BOBSOLDIER's 0655b315 + the lavarunner row); every other row is BOBSOLDIER's full --write. ⛓ 2026-10-10 seedling-fidelity-bulb: CHASERS.bulb added 7 leaves, measured with --only over the 204-tape fast tier at cf7a0eb (a superset of this file's 183 — checked: 0 of the 183 missing), 0 moved / 0 threw at both magnitudes (contactFidelity.bulbLive ships OFF, so no tape steps a Bulb); CONTROL stable, its one divergence r5-l60-kill as before. Restated over the 183. entitiesMd5 is 322c896f (33ae40cd + the bulb row).",
+    "bombpusher": {
+      "at": "2026-10-11",
+      "leaves": [
+        "bomb.hitbox.w",
+        "bomb.hitbox.h",
+        "bomb.hitbox.originX",
+        "bomb.hitbox.originY",
+        "bomb.tMax",
+        "bomb.frictionZero",
+        "bomb.explosionRadiusArg",
+        "bomb.radiusCoeff",
+        "bomb.explosionHitRadius",
+        "bomb.force",
+        "bomb.damage",
+        "bombPusher.ctor.dx",
+        "bombPusher.ctor.dy",
+        "bombPusher.hitbox.w",
+        "bombPusher.hitbox.h",
+        "bombPusher.hitbox.originX",
+        "bombPusher.hitbox.originY",
+        "bombPusher.maxDistance",
+        "bombPusher.shotTimeMax",
+        "bombPusher.anims.shoot.frames",
+        "bombPusher.anims.shoot.rate",
+        "bombPusher.anims.sit.frames",
+        "bombPusher.anims.sit.rate"
+      ],
+      "why": "seedling-fidelity-bombpusher added the bombPusher and bomb records (CONTACT_FIDELITY.bombPusherLive, OFF); these 23 leaves were measured with --only over today's 211-tape fast tier, a superset of the 183 listed here, at the defaults (the switch OFF): 21 corpus-blind; bombPusher.shotTimeMax and bombPusher.anims.shoot.frames THREW on every tape at +1 ULP (BOMB_PUSHER_CADENCE, simulated at import, never fires twice on a non-integer clock — the turret.anims.startshot.frames row's shape) and were blind at pct10. Counts are recorded against the 183 listed."
+    }
   },
   "note": "⛓ fidelity-bulb: the seven chasers.bulb leaves were measured with --only (14 runs over today's 204-tape fast tier, a superset of the 183 listed here: 0 moved, 0 threw) and merged; every other row is the measurement at af79da5e0."
 }
