@@ -64,7 +64,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // `darkTrapLight` (DARKTRAP2 re-witnessed L62/L65/L63).
             spearingWindow: true, fallBurnsPress: true,
             // ⛓ fidelity BULB: W8 `bulbLive` — ⚖ (user, 2026-10-10, "Yes to all") ON since the wave-11 harvest.
-            bulbLive: true });
+            bulbLive: true,
+            // ⛓ fidelity LEASH D2: `baitForecast` (`solverBot.BAIT_FORECAST`) ships OFF — its flip is the user's licence.
+            baitForecast: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
