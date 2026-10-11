@@ -30,6 +30,15 @@
  * runtime's "flags flow game → AP only" is unchanged and production never stages a flag the game did not set.
  * A staged flag outlives its leg, so every staging leg gets its OWN fresh page (`orderLegs`), whatever --page-legs.
  *   --no-stage-events    the MUTANT / control: stage nothing (the legs land inside their obstacles)
+ *   --stage-flags=<key>=><level>:<tag>[,<level>:<tag>…][|<key>=>…]  ⚖ MEASUREMENT ONLY (a WITNESS of a model row
+ *                        whose state no route reaches at that arrival, e.g. F1's L5 open-lock DETOUR): those legs
+ *                        (by KEY, '|'-separated like --keys) ALSO stage the named removed flags, through the SAME
+ *                        channel (the game's setter, the read-back, `stage-failed`, a page of its own). Their rows
+ *                        carry `stagedFlags` (the requested set), so a staged row is never read as the natural leg.
+ *                        An unknown key or a malformed flag fails the run (the CI plan) by name. ⛔ Production never
+ *                        stages: this is the harness's instrument, as the event staging is.
+ *   SWEEP_STAGE_MUTANT=skip-write  TEST-ONLY (env; INERT when unset): the staging is requested but never written —
+ *                        the read-back must end the leg `stage-failed` by name. ⛔ Never in a real sweep.
  * A leg the list marks `skip` (a gate that maps to no flag, or a goal that IS its gating event) is emitted as
  * `end: 'skipped'` with its reason, and never run.
  *   --shard=i/n          only shard i of n (`partitionLegs`: price-balanced, longest first — CI's matrix)
@@ -59,7 +68,7 @@
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--contact-fidelity=<keys>|all|none] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -190,8 +199,55 @@ export function parseInjectHang(spec) {
 /** The row of a leg its page's hang cost: the leg's identity, `end: 'harness-hang'`, the step and whether it began. */
 export function hangRow(leg, { mode, producer, page, pageLeg, step, ms, started }) {
     return { id: leg.id, key: leg.key ?? null, mode, producer, page, pageLeg, level: leg.level, goal: leg.goal.name,
-        kind: leg.goal.kind, sphere: leg.sphere?.label ?? null, end: 'harness-hang', hang: { step, boundS: ms / 1000, started },
+        kind: leg.goal.kind, sphere: leg.sphere?.label ?? null, ...stamp(leg), end: 'harness-hang', hang: { step, boundS: ms / 1000, started },
         error: `the page hung in ${step} (bound ${ms / 1000} s)${started ? ' after this leg started' : ' before this leg started'}` };
+}
+
+/**
+ * `--stage-flags` → Map(leg key → [{eventId, level, tag}]). The spec is `<key>=><level>:<tag>[,…]`, legs
+ * '|'-separated (a key holds `->`, never `=>`). Empty = no staging. A malformed entry throws by name.
+ */
+export function parseStageFlags(spec) {
+    const out = new Map();
+    for (const part of String(spec ?? '').split('|').map((x) => x.trim()).filter(Boolean)) {
+        const at = part.lastIndexOf('=>');
+        const key = at > 0 ? part.slice(0, at).trim() : '';
+        const flags = at > 0 ? part.slice(at + 2).split(',').map((x) => x.trim()).filter(Boolean) : [];
+        if (!key || !flags.length || flags.some((f) => !/^\d+:\d+$/.test(f))) {
+            throw new Error(`--stage-flags: ${JSON.stringify(part)} is not <leg key>=><level>:<tag>[,<level>:<tag>…]`);
+        }
+        if (out.has(key)) throw new Error(`--stage-flags: the leg ${JSON.stringify(key)} is named twice`);
+        out.set(key, flags.map((f) => {
+            const [level, tag] = f.split(':').map(Number);
+            return { eventId: `flag:L${level}:${tag}`, level, tag };
+        }));
+    }
+    return out;
+}
+
+/**
+ * The legs with `--stage-flags` applied: each named leg's `stagedEvents` gains the flags (deduplicated; `otherLevel`
+ * as the leg list writes it) and it is STAMPED `stagedFlags` (the requested set — its rows carry it). The input is
+ * untouched. A key no leg has throws by name (a stale key must not stage nothing silently).
+ */
+export function withStageFlags(legs, plan) {
+    if (!plan?.size) return legs;
+    const known = new Set(legs.map((l) => l.key));
+    const missing = [...plan.keys()].filter((k) => !known.has(k));
+    if (missing.length) throw new Error(`--stage-flags: no leg has the key(s) ${JSON.stringify(missing)}`);
+    return legs.map((l) => {
+        const flags = plan.get(l.key);
+        if (!flags) return l;
+        const have = l.stagedEvents ?? [];
+        const add = flags.filter((f) => !have.some((h) => h.level === f.level && h.tag === f.tag))
+            .map((f) => ({ ...f, otherLevel: f.level !== l.level }));
+        return { ...l, stagedEvents: [...have, ...add], stagedFlags: flags };
+    });
+}
+
+/** A `--stage-flags` leg's row stamp (`{}` for a natural leg): every row of it, whatever its end, says so. */
+export function stamp(leg) {
+    return leg.stagedFlags ? { stagedFlags: leg.stagedFlags } : {};
 }
 
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
@@ -204,7 +260,8 @@ async function main() {
     const PLAN = arg('shard-plan', '');
     if (PLAN) {
         // the plan job: no browser, no box — the partition and the leg count, for the matrix and the merge
-        const legs0 = readFileSync(arg('legs', ''), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+        const legs0 = withStageFlags(readFileSync(arg('legs', ''), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)),
+            parseStageFlags(arg('stage-flags', '')));
         const shards = partitionLegs(legs0, Number(PLAN), roomAreas(REPO));
         // ⛓ a page boot is paid once per `--page-legs` legs (CI measured 18–21 s; priced 30 s)
         const perPage = Number(arg('page-legs', '60'));
@@ -238,6 +295,10 @@ async function main() {
     const DUMP = arg('dump', '');
     const PRODUCER = arg('producer', 'solver');
     const STAGE_EVENTS = !process.argv.includes('--no-stage-events');
+    // ⛓ parsed before the box, so a bad spec fails first. TEST-ONLY mutant: requested, never written
+    const STAGE_FLAGS = parseStageFlags(arg('stage-flags', ''));
+    const STAGE_MUTANT = process.env.SWEEP_STAGE_MUTANT ?? '';
+    if (STAGE_MUTANT && STAGE_MUTANT !== 'skip-write') throw new Error(`SWEEP_STAGE_MUTANT: ${JSON.stringify(STAGE_MUTANT)} is not skip-write`);
     const SHARD = arg('shard', '');
     // ⛓ CONTACT HOOK — the set, parsed here so a bad key fails before a browser starts
     const CONTACT_ARG = arg('contact-fidelity', '');
@@ -254,7 +315,7 @@ async function main() {
         console.log(`SKIP: seedling wasm artifact not staged (${JSON.stringify(WASM_PAGE)})`);
         process.exit(0);
     }
-    const all = readFileSync(arg('legs', ''), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+    const all = withStageFlags(readFileSync(arg('legs', ''), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)), STAGE_FLAGS);
     let pick = pickLegs(all, legSelectors(arg));
     if (SHARD) {
         const [i, n] = SHARD.split('/').map(Number);
@@ -266,6 +327,8 @@ async function main() {
     // the window, over the flattened order (pages kept)
     let n = 0;
     const windowed = pages.map((p) => p.filter(() => { const keep = n >= FROM && n < FROM + LIMIT; n += 1; return keep; })).filter((p) => p.length);
+    if (STAGE_FLAGS.size) console.log(`STAGE-FLAGS: ${[...STAGE_FLAGS].map(([k, f]) => `${k} => ${f.map((x) => x.eventId).join(',')}`).join(' | ')} (measurement only)`);
+    if (STAGE_MUTANT) console.log(`TEST-ONLY: SWEEP_STAGE_MUTANT=${STAGE_MUTANT} (the staging is requested, never written)`);
     if (INJECT.length || !BOUND_ON) console.log(`TEST-ONLY: SWEEP_INJECT_HANG=${JSON.stringify(INJECT)} SWEEP_HANG_BOUND=${BOUND_ON ? 'on' : 'off'}`);
     console.log(`INFO: mode ${MODE}: ${windowed.reduce((a, p) => a + p.length, 0)} legs in ${windowed.length} page(s) (of ${all.length} legs)`);
     // ⛔ a FRESH BROWSER per page: a second page in the same browser never reached 'ready' (measured, the trial)
@@ -395,7 +458,7 @@ async function main() {
             console.log(logs.filter((l) => !/initialState|testLogic|Test discovery/.test(l)).slice(-8).join('\n'));
         }
         if (!booted) {
-            for (const leg of legs) emit({ id: leg.id, mode: MODE, page: pageNo, end: 'page-boot-failed', error: String(bootErr?.message).slice(0, 300) });
+            for (const leg of legs) emit({ id: leg.id, mode: MODE, page: pageNo, ...stamp(leg), end: 'page-boot-failed', error: String(bootErr?.message).slice(0, 300) });
             await step('pageClose', () => page.close());
             return;
         }
@@ -416,7 +479,7 @@ async function main() {
         let swaps = 0;
         for (const [i, leg] of legs.entries()) {
             const row = { id: leg.id, key: leg.key ?? null, mode: MODE, producer: PRODUCER, page: pageNo, pageLeg: i, level: leg.level,
-                arrive: [leg.arrive.x, leg.arrive.y], goal: leg.goal.name, kind: leg.goal.kind, sphere: leg.sphere?.label ?? null };
+                arrive: [leg.arrive.x, leg.arrive.y], goal: leg.goal.name, kind: leg.goal.kind, sphere: leg.sphere?.label ?? null, ...stamp(leg) };
             // ⛔ an arrival needing a game_state event the jump would not stage: named, never run
             if (leg.skip) {
                 emit({ ...row, end: 'skipped', skip: leg.skip, events: leg.arrive.events ?? [] });
@@ -507,7 +570,7 @@ async function main() {
 
         /** Write each flag through the game's own `Game.setPersistence(tag, false, level)`; poll the table for them. */
         async function stageEvents(flags) {
-            await rp.gameFrame().evaluate((fs) => {
+            if (STAGE_MUTANT !== 'skip-write') await rp.gameFrame().evaluate((fs) => {
                 window.__swfBridge.queueItems(fs.map((f) => ({ invocation: 'method_call', path: [{ class: 'Game' }],
                     method: 'setPersistence', args: [f.tag, false, f.level] })));
             }, flags.map(({ level, tag }) => ({ level, tag })));
