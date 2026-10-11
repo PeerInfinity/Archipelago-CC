@@ -2,7 +2,7 @@
  * Procgen: the Bounce Region Editor (catalogue: part of procgen, ⚖ the user,
  * 2026-10-10): a bounce region of a generated world opened in the editor from
  * the pipeline's step 3, a platform changed, saved back, recompiled, played.
- * In progress: its walk row measures `firstFailingStep`.
+ * Ready (⚖ the user, 2026-10-10); its walk row holds it.
  * Shape: ../../tutorialShape.js; shared steps: ../steps/procgen.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -21,9 +21,8 @@ export const PROCGEN_BOUNCE_REGION_EDITOR = Object.freeze({
     title: 'Procgen: editing a bounce region',
     summary: 'Open a generated world\'s bounce zone in the Bounce Region Editor, change a platform, save it back to the pipeline, and play the result.',
     track: 'procgen',
-    status: 'in-progress',
-    firstFailingStep: null, // every step works since the bounce sole-free-arrow fix; ready = the user's call
-    doc: null,
+    status: 'ready', // ⚖ the user, 2026-10-10 (tutorial-bugs)
+    doc: 'docs/json/user/tutorials/procgen-bounce-region-editor.md',
     intro: [
         { prose: 'A generated region is not final: the pipeline\'s step 3 lists every region it built, and **Edit ▸** opens one in its substrate\'s editor. For a bounce zone that is the **Bounce Region Editor** — its platforms, pickups and portals on a canvas, and the access rules they imply, re-derived as you edit.' },
     ],

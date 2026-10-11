@@ -48,6 +48,9 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 - **Procgen: Sphere growth, with Maze** ([guide](../tutorials/procgen-sphere-growth.md)) — Generate a maze-only world with the Sphere growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-sphere-growth`
 - **Procgen: Shuffled spiral, with Maze** ([guide](../tutorials/procgen-shuffled-spiral.md)) — Generate a maze-only world with the Shuffled spiral mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-shuffled-spiral`
 - **Procgen: Grid growth, with Maze** ([guide](../tutorials/procgen-grid-growth.md)) — Generate a maze-only world with the legacy Grid growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-grid-growth`
+- **Procgen: Top-down, with Maze** ([guide](../tutorials/procgen-top-down.md)) — Turn an existing game's region graph (Adventure) into a world of mazes with the Top-down mode, and watch the Playback Bot finish it. `?tutorial=procgen-top-down`
+- **Procgen: settings and the Playback Bot** ([guide](../tutorials/procgen-settings-and-bot.md)) — Change a generated world's seed and size, run the pipeline one step at a time, and drive the Playback Bot by hand. `?tutorial=procgen-settings-and-bot`
+- **Procgen: editing a bounce region** ([guide](../tutorials/procgen-bounce-region-editor.md)) — Open a generated world's bounce zone in the Bounce Region Editor, change a platform, save it back to the pipeline, and play the result. `?tutorial=procgen-bounce-region-editor`
 - **Procgen: Seedling rooms** ([guide](../tutorials/procgen-seedling.md)) — Put generated Seedling rooms into a procgen world, play them in the original game, look at a room in the Procgen Lab, and watch the bot. `?tutorial=procgen-seedling`
 - **Procgen: a mixed world** ([guide](../tutorials/procgen-mixed-world.md)) — Build one world from a maze, a text adventure, a bounce zone, a Noiz2sa stage and a generated Seedling room, and watch the Playback Bot play every kind. `?tutorial=procgen-mixed-world`
 
@@ -59,10 +62,7 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 
 Written, but not working all the way through yet. The panel lists these in a collapsed section and marks the step where each one stops.
 
-- **Procgen: Top-down, with Maze** — Turn an existing game's region graph (Adventure) into a world of mazes with the Top-down mode, and watch the Playback Bot finish it. `?tutorial=procgen-top-down`
-- **Procgen: settings and the Playback Bot** — Change a generated world's seed and size, run the pipeline one step at a time, and drive the Playback Bot by hand. `?tutorial=procgen-settings-and-bot`
 - **Procgen: from a generated world to a multiworld** — Take a generated world through the APWorld Editor to a .apworld, play it on a local Archipelago server, and let the Playback Bot send the checks. `?tutorial=procgen-to-multiworld`
-- **Procgen: editing a bounce region** — Open a generated world's bounce zone in the Bounce Region Editor, change a platform, save it back to the pipeline, and play the result. `?tutorial=procgen-bounce-region-editor`
 - **Procgen: Journey to Ascension in Loop mode** — Generate a world of Journey to Ascension zones with loop mode on, see the loop panels, and watch the bot finish it. `?tutorial=procgen-loop-mode-jta`
 - **Procgen: everything, in Loop mode** — Mix every substrate — Idle Loops included — into one loop-mode world sharing one mana pool, and watch the bot finish it. `?tutorial=procgen-loop-mode-everything`
 - **MetaMath: prove 2 + 2 = 4** — Play a MetaMath proof as an Archipelago game: each proof step is a location, unlocked when the steps it depends on are proved. `?tutorial=metamath-demo`

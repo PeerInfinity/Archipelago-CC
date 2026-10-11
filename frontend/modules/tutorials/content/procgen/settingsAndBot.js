@@ -1,7 +1,7 @@
 /**
  * Procgen: settings and the Playback Bot (catalogue P1's "other settings, the
- * playback bot" — its own tutorial, ⚖ the user, 2026-10-10). In progress: its
- * walk row measures `firstFailingStep`.
+ * playback bot" — its own tutorial, ⚖ the user, 2026-10-10). Ready (⚖ the
+ * user, 2026-10-10); its walk row holds it.
  * Shape: ../../tutorialShape.js; shared steps: ../steps/procgen.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -33,9 +33,8 @@ export const PROCGEN_SETTINGS_AND_BOT = Object.freeze({
     title: 'Procgen: settings and the Playback Bot',
     summary: 'Change a generated world\'s seed and size, run the pipeline one step at a time, and drive the Playback Bot by hand.',
     track: 'procgen',
-    status: 'in-progress',
-    firstFailingStep: null,
-    doc: null,
+    status: 'ready', // ⚖ the user, 2026-10-10 (tutorial-bugs)
+    doc: 'docs/json/user/tutorials/procgen-settings-and-bot.md',
     intro: [
         { prose: 'The mode tutorials press **Run all** and **▶**. This one opens up both: the parameters that shape a world, the pipeline\'s steps one at a time, and the bot\'s other controls.' },
     ],
