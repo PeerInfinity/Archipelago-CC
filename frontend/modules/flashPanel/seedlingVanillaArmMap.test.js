@@ -69,7 +69,7 @@ describe('the vanilla arm\'s map — seedling_playthrough, every name accounted 
         expect(MAP?.arm).toBe('vanilla');
     });
 
-    it('every location: a goal at the DELIVERED apitem (the table\'s entries), or an encounter refused by name', () => {
+    it('every location: a goal at the DELIVERED apitem (the table\'s entries), or a BOUND encounter (⛓ ENCOUNTERS)', () => {
         const locations = locationsOf(PT);
         const goals = [];
         const refused = [];
@@ -83,17 +83,16 @@ describe('the vanilla arm\'s map — seedling_playthrough, every name accounted 
         }
         expect(events.length).toBe([...locations.values()].filter((l) => l.id === null).length);
         expect(goals.length + refused.length + events.length).toBe(locations.size);
-        expect(goals.map((g) => g.name).sort()).toEqual(LOADED.entries.map((e) => e.location).sort());
+        // ⛓ ENCOUNTERS — the table's entries AND both encounter rows (each has an executor); nothing is refused.
+        expect(goals.map((g) => g.name).sort())
+            .toEqual([...LOADED.entries, ...LOADED.encounters].map((e) => e.location).sort());
+        expect(refused).toEqual([]);
         // ⛔ The game plays the REWRITE: each goal names the entity the delivered room holds — the rewriter's
         // own type — at the table's (level, tag); the map document's vanilla type would not be found there.
         for (const g of goals) {
             const e = LOADED.entries.find((x) => x.location === g.name);
+            if (!e) continue;
             expect(g.goal).toEqual({ kind: 'location', level: e.level, tag: e.tag, entityType: AP_ITEM_TYPE, name: g.name });
-        }
-        expect(refused.map((r) => r.name).sort()).toEqual(LOADED.encounters.map((e) => e.location).sort());
-        for (const r of refused) {
-            const enc = LOADED.encounters.find((e) => e.location === r.name);
-            expect(r.refused).toBe(`"${r.name}" is a location the vanilla arm's map did NOT bind — ${ENCOUNTER_REFUSAL(enc)}`);
         }
     });
 
@@ -177,7 +176,7 @@ describe('⛓ OBSTACLE EVENTS — a game-state event is the map\'s THIRD class (
 describe('the mutants\' rows', () => {
     it('THE MAP NOT BOUND: the panel\'s one decision binds a map for the vanilla arm (null was "no name → cell map")', () => {
         expect(realRoomPlaybackMap(LOADED, PT)).not.toBeNull();
-        expect(realRoomPlaybackMap(LOADED, PT).entries.length).toBe(LOADED.entries.length);
+        expect(realRoomPlaybackMap(LOADED, PT).entries.length).toBe(LOADED.entries.length + LOADED.encounters.length);
         // …and none for a refused load, or the generated arm (that map is the other instance's report).
         expect(realRoomPlaybackMap({ ...LOADED, eligibility: { eligible: false } }, PT)).toBeNull();
         expect(realRoomPlaybackMap({ ...LOADED, arm: 'generated' }, PT)).toBeNull();

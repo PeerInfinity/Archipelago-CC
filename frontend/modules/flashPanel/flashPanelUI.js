@@ -338,6 +338,8 @@ export class FlashPanelUI {
           writesOf: (counts) => this.adapter?._itemWritesFor?.(counts, { quiet: true }) ?? [],
           inventory: () => this.adapter?.liveInventory?.() ?? null,
           push: () => this.adapter?._pushTick?.(),
+          // ⛓ DELIVERY TICK — the bot's own location check settled? (the state manager's checked set; null = unknown)
+          checked: (name) => this.adapter?.isLocationChecked?.(name) ?? null,
         },
       } : null,
       // ⛓ SHOULD-STOP — the upgrade window (work units), both runtimes: undefined until the setting is read,

@@ -12,7 +12,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    DELIVERY_CLAUSES, deliveredSaveArrays, deliveryRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites, liveSaveArrays, mergeSaveArrays,
+    DELIVERY_CLAUSES, deliveredItems, deliveredSaveArrays, deliveryRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites, liveSaveArrays, mergeSaveArrays,
     SAVE_ARRAY_MERGE, saveArraysOfWrites, saveDelta, slotItemAt, slotsAfterDelivery, stageItems, stageSaveArrays, UNION_SAVE_ARRAYS,
 } from './wasmDelivery.js';
 import { stagingFromWasmArrival } from './wasmArrival.js';
@@ -40,6 +40,14 @@ describe('wasmDelivery — what a delivery writes', () => {
         expect(after).toEqual({ hasSword: true, hitsMax: 4 });
         expect(itemDelta({ hasSword: false, hitsMax: 3 }, after)).toEqual([{ property: 'hasSword', from: false, to: true },
             { property: 'hitsMax', from: 3, to: 4 }]);
+    });
+
+    it('⛓ ENCOUNTERS-2 — deliveredItems is what a re-staging may put at the ARRIVAL: the changed rows only, never the room\'s own grant', () => {
+        // the game holds the Fire the room granted mid-room; AP delivers the shield (and its own copy of the Fire)
+        const game = { ...HOUSE.status.items, hasFire: true };
+        expect(deliveredItems(game, { ...game, hasShield: true })).toEqual({ hasShield: true });
+        expect(deliveredItems(game, game)).toEqual({});
+        expect(deliveredItems({ hitsMax: 3 }, { hitsMax: 4 })).toEqual({ hitsMax: 4 });
     });
 
     it('stageItems writes the arrival\'s rows: `seam.items` booleans, and hitsMax where the block keeps it (`hits_max` in a latch block)', () => {

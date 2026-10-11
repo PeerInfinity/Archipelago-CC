@@ -902,6 +902,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         }
         const record = roomRecord(goal.level);
         if (!record) return { ok: false, reason: `the ${mounted ? 'mounted set' : 'vanilla map'} has no level ${goal.level}` };
+        if (goal.kind === 'location' && goal.encounter) {
+            // ⛓ ENCOUNTERS — the page's walker completes a location by its collected TAG; an encounter has none
+            // (its check is the game's flag). The wasm runtime serves it (the solver's plan is the whole leg).
+            return { ok: false, reason: `"${goal.name ?? 'the location'}" is an ENCOUNTER (the ${goal.encounter.drop?.item} `
+                + `drop in level ${goal.level}): the JS page's walker completes a location by its collected tag, and an `
+                + 'encounter has none — it is walked on the wasm runtime' };
+        }
         if (goal.kind === 'location') {
             if ((mounted?.apItems.get(goal.level) ?? []).some((a) => a.tag === goal.tag)) return { ok: true };
             // ⛓ J3 — a real room's location: the entity holding the tag.

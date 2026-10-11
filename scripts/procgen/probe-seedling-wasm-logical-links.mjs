@@ -389,7 +389,9 @@ async function main() {
                 if (!e) return null;
                 const st = e.stats;
                 return JSON.parse(JSON.stringify({ swapPushes: st.swapPushes, shipClock: st.shipClock, deliveries: st.deliveries, deliveryDeferred: st.deliveryDeferred, holdBlocked: st.holdBlocked,
-                    fallbacks: st.fallbacks, forcedBy: st.forcedBy, adoptClock: st.adoptClock ?? null, arrivalWatch: st.arrivalWatch ?? null, heldChecks: st.heldChecks, adoptRefused: st.adoptRefused,
+                    fallbacks: st.fallbacks, forcedBy: st.forcedBy, adoptClock: st.adoptClock ?? null,
+                    // ⛓ DELIVERY TICK — each self-check the next goal waited on, and the deliveries the game already showed
+                    selfChecks: st.selfChecks ?? null, deliveryInGame: st.deliveryInGame ?? null, arrivalWatch: st.arrivalWatch ?? null, heldChecks: st.heldChecks, adoptRefused: st.adoptRefused,
                     history: st.history.map((h) => ({ ...h, goal: { name: h.goal?.name ?? null, kind: h.goal?.kind ?? null, level: h.goal?.level ?? null } })),
                     arrivalReads: e.arrivalReads }));
             });
@@ -405,6 +407,7 @@ async function main() {
             writeFileSync(TRACE, JSON.stringify({ verbs, engine: eng, solves, restartDeferrals: bot.restartDeferrals, restartGlue }));
             out('B trace written', { file: TRACE, verbs: verbs?.length ?? null, tapes: (verbs ?? []).filter((v) => v.verb === 'botLoadTape').length,
                 solves: (solves ?? []).filter((x) => x.t === 'solve').length, workers: (solves ?? []).filter((x) => x.t === 'new').length });
+            out('B self-checks', (eng?.selfChecks ?? []).map((r) => ({ location: r.location, tick: r.tick, settled: r.settled, delivered: r.delivered, waitedMs: r.waitedMs })));
         }
 
         /** B — the bot to the Sword on the rules' declared directed graph: doors only, no logical link. */

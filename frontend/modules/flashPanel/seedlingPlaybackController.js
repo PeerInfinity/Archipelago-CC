@@ -100,6 +100,9 @@ import { ATLAS_CHECK_PLAYER, atlasRoomRegions } from '../seedlingDemo/seedlingAt
 import { arrivalEscape } from './seedlingArrivalEscape.js';
 // ⛓ OBSTACLE EVENTS — import-free (the rules' game-state events, read off the raw rules).
 import { GAME_STATE_EVENT_KIND } from '../procgenCore/eventRoute.js';
+// ⛓ ENCOUNTERS — data, not a model: the playthrough atlas is where an encounter location's tile is written (the
+// survey's `encounterCoords` reads the same document). The same spelling `flashSeedlingLibrary.js` imports it by.
+import SEEDLING_PLAYTHROUGH_ATLAS_DOC from './atlases/seedling-playthrough.json' with { type: 'json' };
 
 /** The substrate this controller walks (the default instance; J3 builds a second for the atlas rooms). */
 export const SEEDLING_PLAYBACK_SUBSTRATE = 'flash_seedling_gen';
@@ -144,6 +147,20 @@ export function resolveSeedlingGoal(target, report, { liveLevel = null, region =
 }
 
 /**
+ * ⛓ J3 — a bound map entry's walk goal: `{kind: 'location', level, tag, entityType, name}`. ⛓ ENCOUNTERS — an
+ * `encounter` entry is still a `location` goal (the engines, the queue and the bot read it as one), with no tag
+ * and an `encounter: {at, drop: {item}}` the solver mapping reads (`jsRuntimeSolver.solverGoalFor`). One spelling
+ * for the page and the node instruments (`seedling-divergence-bare.mjs`).
+ */
+export function atlasLocationGoal(e, name = e.location) {
+    if (e.kind === 'encounter') {
+        return { kind: 'location', level: e.level, tag: null, entityType: e.entityType ?? null, name,
+            encounter: { at: { ...e.at }, drop: { ...e.drop } } };
+    }
+    return { kind: 'location', level: e.level, tag: e.tag, entityType: e.entityType ?? null, name };
+}
+
+/**
  * ⛓ J3 — map an AP-vocabulary target to a goal in a REAL room: `atlas` is the
  * panel's `{entries, refused, regions}` (the atlas arm's bound table, its
  * refusals, and `regionId → flash_seedling payload`).
@@ -164,7 +181,7 @@ export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, regi
             return { refused: why ? `"${name}" is a location the ${arm} arm's map did NOT bind — ${why}`
                 : `"${name}" is not a bound AP location of the atlas rooms` };
         }
-        return { goal: { kind: 'location', level: e.level, tag: e.tag, entityType: e.entityType ?? null, name } };
+        return { goal: atlasLocationGoal(e, name) };
     }
     if (target?.kind === 'exit') {
         const regions = atlas?.regions instanceof Map ? atlas.regions : new Map(Object.entries(atlas?.regions ?? {}));
@@ -273,10 +290,44 @@ export const EVENT_GOAL_REFUSAL = (e) => `"${e.location}" is a saved-obstacle EV
     + `on purpose is the solver goal \`clear-tag {tag: {level: ${e.level}, tag: ${e.tag}}, at: {x: ${e.obstacle?.x}, `
     + `y: ${e.obstacle?.y}}}\`, which the solver does not execute yet (fidelity's executor)`;
 
-/** ⛓ VANILLA MAP — why the vanilla arm's encounter rows have no cell. */
+/** ⛓ VANILLA MAP — why a vanilla-arm encounter row has no cell (⛓ ENCOUNTERS: one whose drop has no executor). */
 export const ENCOUNTER_REFUSAL = (e) => `"${e.location}" is an ENCOUNTER (a ${e.entityType} in level ${e.level}): `
     + 'the vanilla arm does not rewrite it (it grants through a fight or a trade, not a pickup) and its check '
     + 'comes from the property path — there is no entity to walk onto';
+
+/**
+ * ⛓⛓ ENCOUNTERS — the drops the solver has an encounter EXECUTOR for: `solverBot.ENCOUNTER_EXECUTORS`'s keys
+ * (L32's Bob Boss → `Fire`, L12's Witch → `Progressive Sword`, the dark sword). This file imports no model, so
+ * the list is restated here and PINNED equal to the registry (`seedlingVanillaArmMap.test.js`): a new executor
+ * fails that row until it is bound. An encounter row whose drop is NOT here stays refused by name
+ * (`ENCOUNTER_REFUSAL`).
+ */
+export const BOUND_ENCOUNTER_DROPS = Object.freeze(['Fire', 'Progressive Sword']);
+
+/** ⛓ ENCOUNTERS — why an encounter with an executor still has no cell: the atlas writes no tile for it. */
+export const ENCOUNTER_ANCHOR_REFUSAL = (e, atlasId) => `"${e.location}" is an ENCOUNTER (a ${e.entityType} in level `
+    + `${e.level}) the solver can serve, but ${atlasId ? `the atlas \`${atlasId}\` writes no tile for it`
+        : 'the rules name no atlas this page carries'} — its goal is anchored at the location's atlas tile, and `
+    + 'none is guessed';
+
+/**
+ * ⛓⛓ ENCOUNTERS — an encounter location's ANCHOR: its tile in the atlas (`regions[map_ref = level].locations[name]
+ * .tile` × `tile_space.tile_size`), the coordinates the route survey's `encounterCoords` hands the solver as the
+ * `encounter` goal's `at`. null when the atlas writes none.
+ */
+export function encounterAnchorOf(atlasDoc, e) {
+    const size = Number(atlasDoc?.tile_space?.tile_size);
+    const region = (atlasDoc?.regions ?? []).find((r) => r.map_ref === e.level);
+    const tile = (region?.locations ?? []).find((l) => l.name === e.location)?.tile;
+    if (!Number.isInteger(size) || !Array.isArray(tile) || !tile.every(Number.isInteger)) return null;
+    return { x: tile[0] * size, y: tile[1] * size };
+}
+
+/** ⛓ ENCOUNTERS — the atlas a rules document names (`region_atlas[p].atlas_id`) among `atlases`, or null. */
+export function rulesAtlasOf(rules, atlases = [SEEDLING_PLAYTHROUGH_ATLAS_DOC], playerId = ATLAS_CHECK_PLAYER) {
+    const id = rules?.region_atlas?.[String(playerId)]?.atlas_id ?? null;
+    return { atlasId: id, atlasDoc: id ? (atlases.find((a) => a?.atlas_id === id) ?? null) : null };
+}
 
 /**
  * ⛓⛓ VANILLA MAP — the Playback Bot's name → cell map for the VANILLA randomizer arm
@@ -286,7 +337,11 @@ export const ENCOUNTER_REFUSAL = (e) => `"${e.location}" is an ENCOUNTER (a ${e.
  *   locations  the arm's own placement table (`loaded.entries`: location → `{level, tag, entity}`),
  *              each entry's `entityType` read off the DELIVERED set — the room the game plays holds the
  *              rewrite's entity at that tag and position, not the vanilla one. An entry the delivered room
- *              does not hold, and every `encounters` row, is REFUSED by name.
+ *              does not hold is REFUSED by name. ⛓ ENCOUNTERS — an `encounters` row whose drop has an executor
+ *              (`BOUND_ENCOUNTER_DROPS`) is BOUND as `{location, level, kind: 'encounter', at, drop: {item}, flag}`:
+ *              `at` the location's atlas tile (`encounterAnchorOf`), `item` the row's vanilla item (the game's
+ *              own drop — the row is never rewritten), `flag` the ledger's game flag (the check's source). Any
+ *              other encounter row stays REFUSED by name.
  *   exits      the rules' own `flash_seedling` sidecars (`regions`), as on the atlas arm, plus the logical
  *              sub-region links (`realRoomLinks`), each refused by name.
  *   events     ⛓ OBSTACLE EVENTS — the rules' game-state events (`runtimeEventsOf`); an unknown kind is refused.
@@ -297,11 +352,27 @@ export const ENCOUNTER_REFUSAL = (e) => `"${e.location}" is an ENCOUNTER (a ${e.
  * @param {object} o.set         the delivered (rewritten) level set: `rooms[]` of `{id, source:{record}}`
  * @param {Map<string, object>} o.regions  regionId → `flash_seedling` payload
  * @param {object} o.rules       the raw rules.json (for the links)
+ * @param {object} [o.atlasDoc]  ⛓ ENCOUNTERS — the atlas the rules name (`rulesAtlasOf`): the encounters' anchors
+ * @param {string} [o.atlasId]   the id the rules name (for the refusal's wording)
  */
-export function vanillaArmPlaybackMap({ entries = [], encounters = [], set = null, regions, rules = null }) {
+export function vanillaArmPlaybackMap({ entries = [], encounters = [], set = null, regions, rules = null,
+    atlasDoc = null, atlasId = null }) {
     const rooms = new Map((set?.rooms ?? []).map((r) => [r.id, r]));
     const bound = [];
-    const refused = encounters.map((e) => ({ location: e.location, why: ENCOUNTER_REFUSAL(e) }));
+    const refused = [];
+    for (const e of encounters) {
+        if (!BOUND_ENCOUNTER_DROPS.includes(e.vanillaItem)) {
+            refused.push({ location: e.location, why: ENCOUNTER_REFUSAL(e) });
+            continue;
+        }
+        const at = encounterAnchorOf(atlasDoc, e);
+        if (!at) {
+            refused.push({ location: e.location, why: ENCOUNTER_ANCHOR_REFUSAL(e, atlasDoc ? atlasDoc.atlas_id : atlasId) });
+            continue;
+        }
+        bound.push({ location: e.location, level: e.level, kind: 'encounter', at, drop: { item: e.vanillaItem },
+            flag: e.flag ?? null, entityType: e.entityType });
+    }
     for (const e of entries) {
         const record = rooms.get(e.level)?.source?.record ?? null;
         const held = (record?.entities ?? []).find((x) => x.x === e.entity?.x && x.y === e.entity?.y
@@ -328,8 +399,10 @@ export function vanillaArmPlaybackMap({ entries = [], encounters = [], set = nul
  *
  * @param {object} loaded    the load's result (`arm`, `entries`, `refused`, `encounters`, `set`)
  * @param {object} rawRules  the raw rules.json
+ * @param {object} [o]
+ * @param {object[]} [o.atlases]  ⛓ ENCOUNTERS — the atlases this page carries (the encounters' anchors)
  */
-export function realRoomPlaybackMap(loaded, rawRules) {
+export function realRoomPlaybackMap(loaded, rawRules, { atlases = [SEEDLING_PLAYTHROUGH_ATLAS_DOC] } = {}) {
     if (!loaded?.eligibility?.eligible || loaded.arm === RANDOMIZER_ARMS.GENERATED) return null;
     const regions = new Map(atlasRoomRegions(rawRules).map(({ region }) => [region,
         rawRules.preset_sidecars[ATLAS_CHECK_PLAYER][region].playable_payload]));
@@ -342,7 +415,7 @@ export function realRoomPlaybackMap(loaded, rawRules) {
     // whose load DELIVERED a rewritten set.
     if (!loaded.set) return null;
     return vanillaArmPlaybackMap({ entries: loaded.entries ?? [], encounters: loaded.encounters ?? [],
-        set: loaded.set, regions, rules: rawRules });
+        set: loaded.set, regions, rules: rawRules, ...rulesAtlasOf(rawRules, atlases) });
 }
 
 const ROOMS_OF = Object.freeze({ flash_seedling_gen: 'generated rooms', flash_seedling: 'atlas rooms' });

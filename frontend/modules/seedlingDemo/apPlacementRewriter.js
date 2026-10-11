@@ -255,8 +255,11 @@ export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer 
         if (row.kind === 'encounter') {
             // ⚖ NOT REWRITTEN, and REPORTED. Its entity is the thing that
             // grants the item (a falling rock, a witch), not a pickup.
+            // ⛓ ENCOUNTERS — `flag` is the ledger's own game flag (`hasFire` /
+            // `hasDarkSword`): the check binding reads the location's CHECK
+            // off it, since no pickup report ever names the location.
             encounters.push({ ledgerId: row.id, level: row.level, location,
-                entityType: entity.type, vanillaItem: item });
+                entityType: entity.type, vanillaItem: item, flag: row.flag ?? null });
             continue;
         }
         const look = lookOfRow(row, entity, item);

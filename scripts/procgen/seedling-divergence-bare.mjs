@@ -94,6 +94,7 @@ async function oneLeg(leg, dumpPath) {
     const { wasmGoalRefusal } = await M('seedlingDemo/wasmPlayback.js');
     const { createInPlaceProduceService, mountedRecordsOf } = await M('seedlingDemo/wasmWalkTape.js');
     const { ANYTIME_PASSES } = await M('seedlingDemo/jsRuntimeSolver.js');
+    const { atlasLocationGoal } = await M('flashPanel/seedlingPlaybackController.js');
     const { indexLevels, levelSourceFromAtlas } = await M('seedlingDemo/atlasSource.js');
     const MAP = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
     const dump = JSON.parse(readFileSync(dumpPath, 'utf8'));
@@ -113,7 +114,8 @@ async function oneLeg(leg, dumpPath) {
                 out.ms = Date.now() - t0;
                 return out;
             }
-            goal = { kind: 'location', level: e.level, tag: e.tag, entityType: e.entityType ?? null, name: leg.goal.name };
+            // the controller's own spelling of a bound entry's goal (⛓ ENCOUNTERS: an encounter entry carries `encounter`)
+            goal = atlasLocationGoal(e, leg.goal.name);
         }
         const ref = wasmGoalRefusal(goal, RECS.get(leg.level) ?? null);
         if (ref) { out.outcome = 'wasm-refused'; out.err = ref; return out; }

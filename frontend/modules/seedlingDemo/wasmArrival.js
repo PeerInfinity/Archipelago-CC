@@ -444,7 +444,9 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record, run: giv
             resolved = pit ? { allowTeleporter: null, pit: { tx: pit.tx, ty: pit.ty } } : { allowTeleporter: null };
         }
     }
-    const placement = goal.kind === 'location' ? locationEntityOf(record, goal.tag, goal.entityType ?? null) : null;
+    // ⛓ ENCOUNTERS — an encounter location names no entity (`solverGoalFor` maps it to the `encounter` goal).
+    const placement = goal.kind === 'location' && !goal.encounter
+        ? locationEntityOf(record, goal.tag, goal.entityType ?? null) : null;
     return solverGoalFor(goal, { run, resolved, placement, generated: false });
 }
 
