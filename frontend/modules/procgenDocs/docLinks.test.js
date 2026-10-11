@@ -280,20 +280,22 @@ describe('the corpus census — printed, then pinned', () => {
          *              seedling-bot.md's progress paragraph → it (`doc` 274 → 276).
          *   358 → 359  SOLVE PROGRESS, JS half (2026-10-11): flash.md's "Solve progress" bullet → the progress
          *              stream's §7 (`doc` 276 → 277).
+         *   359 → 360  JtA zone locations (2026-10-11): substrate-registry.md's `pipelineConfigFromParams`
+         *              row → jta.md's AP-locations section (`doc` 277 → 278).
          */
         expect(by).toEqual({
             'same-doc': 22,
-            doc: 277,
+            doc: 278,
             external: 22,
             repo: 38,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(359);
+        expect(CORPUS.length).toBe(360);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(277);
+        expect(docs).toHaveLength(278);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

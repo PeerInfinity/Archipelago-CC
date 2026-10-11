@@ -51,7 +51,7 @@ const load = (game) => JSON.parse(readFileSync(
 const FIXTURES = ['jta_locations_test', 'jta_randomized_test', 'jta_prestige_test', 'jta_dataset_test', 'jta_schedule_test'];
 /** ⛓ The record each carries once regenerated (the generator's own config, §17's diff). */
 const RECORD = (goalZone, perkShuffleSeed) => ({
-    emitZoneLocations: true, goalZone, freeZones: 1, startingPerks: 0, perkShuffleSeed,
+    emitZoneLocations: true, goalZone, freeZones: 1, startingPerks: 0, perkShuffleSeed, goalVictory: true,
 });
 const slotOf = (doc) => Object.keys(doc.preset_sidecars)[0];
 /** ⛓ P1a — the record lives in the SLOT's block, `procgen_metadata[p]`. */
@@ -74,12 +74,12 @@ const otherLabel = () => substrateRegistry.getAll().find((e) => !zoneSourceFacts
 afterAll(() => jta.applyPipelineConfig({}));
 
 describe('⛓⛓ a fixture WITHOUT its record (the block stripped) — the read-back assumes, and the shuffled one is refused', () => {
-    it.each(FIXTURES.map((g) => [g]))('%s stripped: recorded = [], assumed = the three unread fields', (g) => {
+    it.each(FIXTURES.map((g) => [g]))('%s stripped: recorded = [], assumed = the four unread fields', (g) => {
         const doc = withoutProcgenMetadata(load(g), slotOf(load(g)));
         const rec = installedZoneConfigFrom(doc, slotOf(doc), JTA);
         expect(rec.ok).toBe(true);
         expect(rec.recorded).toEqual([]);
-        expect(rec.assumed).toEqual({ perkShuffleSeed: null, freeZones: 1, startingPerks: 0 });
+        expect(rec.assumed).toEqual({ perkShuffleSeed: null, freeZones: 1, startingPerks: 0, goalVictory: true });
     });
 
     it('jta_randomized_test stripped of its record is REFUSED, naming the assumed shuffle seed', () => {
@@ -98,7 +98,7 @@ describe('⛓⛓ a RECORDED config is preferred over the assumption — and stil
         const doc = withRecord(load('jta_randomized_test'), RECORD(3, 1));
         const p = slotOf(doc);
         const rec = installedZoneConfigFrom(doc, p, JTA);
-        expect(rec.recorded).toEqual(['emitZoneLocations', 'goalZone', 'freeZones', 'startingPerks', 'perkShuffleSeed']);
+        expect(rec.recorded).toEqual(['emitZoneLocations', 'goalZone', 'freeZones', 'startingPerks', 'perkShuffleSeed', 'goalVictory']);
         expect(rec.assumed).toEqual({});
         expect(rec.cfg.perkShuffleSeed).toBe(1);
         const region = jtaRegions(doc, p)[0];
@@ -139,10 +139,10 @@ describe('⛓⛓ a RECORDED config is preferred over the assumption — and stil
         const p = slotOf(doc);
         const rec = installedZoneConfigFrom(doc, p, JTA);
         expect(rec.recorded).toEqual(['perkShuffleSeed']);
-        expect(rec.assumed).toEqual({ freeZones: 1, startingPerks: 0 });
+        expect(rec.assumed).toEqual({ freeZones: 1, startingPerks: 0, goalVictory: true });
         const got = zoneContentFor(doc, p, jtaRegions(doc, p)[0], JTA, freeZone(doc, p));
         expect(got.ok, got.why).toBe(true);
-        expect(got.config).toEqual({ recorded: ['perkShuffleSeed'], assumed: ['freeZones', 'startingPerks'] });
+        expect(got.config).toEqual({ recorded: ['perkShuffleSeed'], assumed: ['freeZones', 'startingPerks', 'goalVictory'] });
     });
 
     it('the record is read by the ENTRY\'s id — a record under another id is not this one\'s', () => {
@@ -182,7 +182,7 @@ describe('⛓⛓ writer → reader, end to end — a world built under a NON-def
             procgenMetadata: { driver: 'shuffled-spiral', stop_reason: stats.stopReason },
         });
     };
-    const CFG = { emitZoneLocations: true, goalZone: 3, freeZones: 2, startingPerks: 1, perkShuffleSeed: 7 };
+    const CFG = { emitZoneLocations: true, goalZone: 3, freeZones: 2, startingPerks: 1, perkShuffleSeed: 7, goalVictory: true };
 
     it('the record is the installed config; the hub installs it (from a reset) and every region verifies', () => {
         const doc = buildJta(CFG, 4);
@@ -236,7 +236,7 @@ describe('⛓ the hub\'s sentence and record name the split', () => {
         const source = { kind: REGION_SOURCE_KINDS.ZONE, substrate: JTA, zoneIdx: freeZone(doc, p) };
         const ans = await zoneJobAnswer({ doc, player: p, region, substrate: JTA, source });
         expect(ans.ok, ans.threw).toBe(true);
-        expect(ans.config).toEqual({ recorded: ['emitZoneLocations', 'goalZone', 'freeZones', 'startingPerks', 'perkShuffleSeed'], assumed: [] });
+        expect(ans.config).toEqual({ recorded: ['emitZoneLocations', 'goalZone', 'freeZones', 'startingPerks', 'perkShuffleSeed', 'goalVictory'], assumed: [] });
         const prov = regenerationProvenance({ substrate: JTA, source }, { ...ans, ms: 1 });
         expect(prov.op).toBe(REPLACE_REGION_CONTENT_OP);
         expect(prov.config).toEqual(ans.config);

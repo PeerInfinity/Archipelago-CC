@@ -10,7 +10,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**29 statements · 10 substrates · 38 registry fields read (41 of the developer matrix's 88, counting the parents of the fields read) · 47 not yet read.**
+**29 statements · 10 substrates · 38 registry fields read (41 of the developer matrix's 90, counting the parents of the fields read) · 49 not yet read.**
 
 ## Play
 
@@ -51,7 +51,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 | G3 | Generates quickly | ✓ | n/a | ✓ | ✓ | n/a | ✓ | n/a | n/a | ✗ its generation cost is declared `heavy` | ✓ |
 | G4 | Its rooms can be captured into a library and reused | ✓ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✓ | ✗ |
 | G5 | Exits can be locked behind items | ✓ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ | ✓ | ✓ |
-| G6 | It has its own settings in the generation form | ✓ | ✗ | ✓ | ✓ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ |
+| G6 | It has its own settings in the generation form | ✓ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ |
 | G7 | A world of it can start with an empty inventory | ✗ (note 1) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | G8 | Any number of locations fits in one room | n/a | n/a | n/a | ✗ (note 2) | n/a | ✗ (note 3) | n/a | n/a | n/a | ✓ |
 
@@ -194,6 +194,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Loop mode* — It shares consumable items with other substrates: its list comes from the running game — see the Substrate Registry panel
 - *Loop mode* — Recorded actions are named in the game's own words
 - *Generate* — How many ready-made rooms / levels it brings: 30
+- *Generate* — It has its own settings in the generation form
 - *Generate* — A world of it can start with an empty inventory
 - *Edit* — An exit can be moved to another side (and a side can hold more than one): and a side can hold more than one
 - *Edit* — The editor's validity report checks its location and exit names
@@ -312,8 +313,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 ## Fields no statement reads yet
 
-47 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
+49 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
 
-`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `loopSupport.playClock`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionGeometry`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
+`absorbsScenarioItems`, `applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `loopSupport.playClock`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `placeVictoryIfMissing`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionGeometry`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
 
 <!-- GENERATED:substrate-capability-chart END -->

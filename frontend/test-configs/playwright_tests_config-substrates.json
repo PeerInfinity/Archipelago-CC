@@ -225,6 +225,12 @@
             "category": "JtA substrate"
         },
         {
+            "id": "jta-bot-walkto-location",
+            "enabled": true,
+            "_comment": "JtA investigation B (2026-10-11): the Playback Bot's walk to a zone location. Another zone's location and a tile are refused through playback:walkFailed; the loaded zone's perk location is played to its check by the zone's own automation, and the walk then ends.",
+            "category": "JtA substrate"
+        },
+        {
             "id": "jta-synthetic-exit-task-id-stability",
             "enabled": true,
             "category": "JtA substrate",

@@ -59,11 +59,16 @@ The registry entry's PlaybackController is the shared `PlaybackProxy` on the `jt
 | `startInstantPump` / `stopInstantPump` | fast `stepTick` batches (Playback path) |
 | `reset` | `doEnergyReset`, which cascades to a loop reset |
 | `walkTo({kind:'exit', name})` | designate the exit; see below |
+| `walkTo({kind:'location', name})` | play the zone until that location is checked; see below |
 
 `walkTo` only designates the exit. The game's own automation engine (the mods, thresholds and priorities the player configures on the JtA page) completes the zone, and the exit is taken when the zone's Travel task completes; on an already-completed zone the exit is taken directly. The host setting `jtaSubstrateWrapper.playbackAutomation` picks the policy:
 
 - `activate` (default): the bridge switches automation on for the walk (`_armWalkAutomation`), fills the zone's priorities only if the player set none, and restores the previous mode afterwards.
 - `respect`: zone completion is left to the player's own automation settings. With the all-off defaults the walk waits forever.
+
+A location walk targets one of the loaded zone's AP locations (a zone task). The same automation plays the zone, in its own order, and the walk ends when the target is checked. Checks of other tasks land on the way. A completed Travel task leaves the zone as usual, even when the target is still unchecked. The bridge does not hold the zone: JtA spends energy only while a task runs, so a held zone whose target the automation never runs would never end its loop. A walk to a location of a zone already completed this loop waits for the loop reset, which brings the zone's tasks back. A reset that reloads the region plays the walk then; one that lands elsewhere ends it, like any walk.
+
+The bridge refuses a walk it cannot play through `playback:walkFailed`, which the Playback Bot shows as an error, rather than leaving the bot waiting. It refuses a location of another zone, an exit the region does not have, and any other target kind. A walk has no give-up rule: one that never reaches its target keeps going until the player stops it. Covered in-app by `jta-bot-walkto-location`.
 
 **Walks that span resets.** Playing a zone with fresh skills often costs more than one pool, so a walk usually spans several loop resets. Skills persist, so each attempt is cheaper. jta carries the walk across a reset in the bridge: on a same-region reload it keeps `_pendingWalkExit` and re-arms automation, so loops does not re-issue anything. Solvers without such memory (runner, bounce) rely on the generic queue-restart retry instead; the loops side of both paths is in [The Bot flow](./loop-recording.md#the-bot-flow).
 
@@ -102,7 +107,12 @@ The host owns zone transitions, so in managed mode the fork never calls `advance
 
 ## AP locations and the balance solve
 
-Every zone task is an AP location when `setJtaEmitZoneLocations` is on (`extractZoneRules` emits them). Perk tasks carry shuffled perk items, the others a do-nothing `JtA Filler`, and the goal zone one `Victory`. Access rules are loose counts (`HasFromListUnique`: zone Z needs Z perks) that shape the sphere order. Grants are AP-authoritative: per-zone `task_patches` suppress each perk task's own grant (`perk → Count`), and the bridge grants perks from received AP items.
+Every zone task is an AP location when the zone locations are on (`emitZoneLocations`; `extractZoneRules` emits them), checked the first time the task fully completes. Perk tasks carry perk items, the others a do-nothing `JtA Filler`, and the goal zone's Travel task one `Victory`. Access rules are loose counts (`HasFromListUnique`: zone Z needs Z perks) that shape the sphere order. Grants are AP-authoritative: per-zone `task_patches` suppress each perk task's own grant (`perk → Count`), and the bridge grants perks from received AP items.
+
+**From the Procgen Pipeline panel** the zone locations are on by default. The JtA subsection of Parameters (`jtaProcgenParams.js`) has four settings: **Zone locations** (off builds the location-less zones), **Free zones**, **Starting perks** (the access rules' `freeZones` / `startingPerks`) and **Shuffle perks** (a perk shuffle seeded by the world seed). The registry's `pipelineConfigFromParams` turns them into `substrateConfig.jta`; the goal zone is the last jta zone, since the spiral gives the Nth jta region zone N.
+- **The Victory.** The panel installs the goal zone's Victory off. Once every region is built, the engine's victory fallback (`placeVictoryIfMissing`) gives the goal zone's Travel task the `Victory` only when no location in the world holds a victory item. A scenario victory, or one another substrate places, means jta adds none.
+- **Scenario items.** With the zone locations on, jta takes items from the scenario pool like a procedural region (`absorbsScenarioItems`, up to `maxItemsPerRegion` per zone) and puts them on filler tasks: Mandatory first, then Travel, Normal and Boss. Automation always finishes the Mandatory tasks and Travel, but may never reach a deep Normal task (below). The goal zone's Victory slot never takes one. Their paired obstacles stay in the pool, since a jta zone has no doors.
+- Scripts and committed presets install their config directly (`applyPipelineConfig`), where the defaults are unchanged: locations off unless asked for, and the Victory on whenever a goal zone is set.
 
 **Raw-value economy.** Generated datasets default to `economy.value_mode: "raw"`: absolute `raw_cost` / `raw_xp` per task and `raw_drain` per zone, so difficulty does not follow zone position. A dataset's id includes a content hash; after a hand edit run `datasetValidator.js --restamp`, or the stale id poisons the solve cache and save slot, both keyed by `dataset_id`.
 

@@ -412,6 +412,11 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "generate",
+                    "statement": "It has its own settings in the generation form",
+                    "text": null
+                },
+                {
+                    "group": "generate",
                     "statement": "A world of it can start with an empty inventory",
                     "text": null
                 },
@@ -986,9 +991,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 88,
+        "fields": 90,
         "fieldsRead": 38,
-        "fieldsUnread": 47,
+        "fieldsUnread": 49,
         "statements": 29,
         "substrates": 10
     },
@@ -4464,12 +4469,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "jta",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "renderProcgenParams",
-                            "value": "—"
+                            "value": "fn"
                         }
                     ]
                 },
@@ -5299,6 +5304,7 @@ export const CAPABILITIES = frz({
         }
     ],
     "uncovered": [
+        "absorbsScenarioItems",
         "applyContentModules",
         "applyPipelineConfig",
         "backPortalGated",
@@ -5331,6 +5337,7 @@ export const CAPABILITIES = frz({
         "pipelineConfigKeys",
         "placeFromItems",
         "placeFromRules",
+        "placeVictoryIfMissing",
         "prepareSphereGrowth",
         "priceRegions",
         "procgenParamsFromPayload",
