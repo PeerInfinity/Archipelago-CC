@@ -10052,7 +10052,8 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "only",
-                "record"
+                "record",
+                "set"
             ],
             "file": "probe-seedling-cleartag.mjs",
             "flags": [
@@ -10073,6 +10074,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "scan"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "set"
                 }
             ],
             "inheritedFlags": [
