@@ -27,6 +27,21 @@ export const PRESS_KILL_COST = {
 };
 export const PRESS_KILL_COST_DEFAULT = true;
 
+/**
+ * How often each cache answered (`hit`) or computed (`miss`) — an INSTRUMENT, read by the gate rows to prove a cache
+ * was exercised (a differential over a walk that never hit would be vacuous) and by the report for its hit rates.
+ * Written only with the switch ON; nothing reads it to decide anything. `resetPressKillCostCounts()` zeroes it.
+ */
+export const PRESS_KILL_COST_COUNTS = {
+    cellsHit: 0, cellsMiss: 0,
+    forecastShifted: 0, forecastCut: 0,
+    hammerSkipped: 0, hammerAsked: 0,
+    lineHit: 0, lineMiss: 0,
+};
+export function resetPressKillCostCounts() {
+    for (const k of Object.keys(PRESS_KILL_COST_COUNTS)) PRESS_KILL_COST_COUNTS[k] = 0;
+}
+
 /** Run `fn` with `PRESS_KILL_COST` set to `enabled`, restoring the previous value (`withGhostSpinnerPress`'s shape). */
 export function withPressKillCost(enabled, fn) {
     const was = PRESS_KILL_COST.enabled;

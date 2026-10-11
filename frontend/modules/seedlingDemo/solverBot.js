@@ -111,7 +111,7 @@ import {
     // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (behind `GHOST_SPINNER_PRESS`, ON by default).
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
     // ⛓⛓⛓ hammer-phase P1: the press kill's exact caches (behind `PRESS_KILL_COST`, ON; OFF bypasses every one).
-    PRESS_KILL_COST, UNCACHEABLE, sameValue, snapshotValue,
+    PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
@@ -8929,13 +8929,20 @@ function strikeHorizon(run) {
  */
 const WALKABLE_CELLS_MEMO = new WeakMap();
 
-/** Every walkable lattice cell of the current level, with its player box. */
-function walkableCells(run, contacts) {
+/**
+ * Every walkable lattice cell of the current level, with its player box. ⛓ hammer-phase P1: exported for
+ * `pressKillCost.test.js`, which drives the memo's invalidation (a contact set mutated in place, a new world).
+ */
+export function walkableCells(run, contacts) {
     const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
     let key = UNCACHEABLE;
     if (PRESS_KILL_COST.enabled) {
         const memo = WALKABLE_CELLS_MEMO.get(run);
-        if (memo !== undefined && memo.world === run.world && sameValue(opts, memo.key)) return memo.cells;
+        if (memo !== undefined && memo.world === run.world && sameValue(opts, memo.key)) {
+            PRESS_KILL_COST_COUNTS.cellsHit += 1;
+            return memo.cells;
+        }
+        PRESS_KILL_COST_COUNTS.cellsMiss += 1;
         key = snapshotValue(opts);
     }
     const out = walkableCellsOf(run, opts);
@@ -9049,8 +9056,14 @@ export function clearOfHammersAt(run, box, forecast, i) {
         if (box.right > r.x && box.x < r.right && box.bottom > r.y && box.y < r.bottom) {
             return false;
         }
-        if (bounded && (box.x >= cx + HAMMER_LINE_BOUND || box.right <= cx - HAMMER_LINE_BOUND
-            || box.y >= cy + HAMMER_LINE_BOUND || box.bottom <= cy - HAMMER_LINE_BOUND)) continue;
+        if (bounded) {
+            if (box.x >= cx + HAMMER_LINE_BOUND || box.right <= cx - HAMMER_LINE_BOUND
+                || box.y >= cy + HAMMER_LINE_BOUND || box.bottom <= cy - HAMMER_LINE_BOUND) {
+                PRESS_KILL_COST_COUNTS.hammerSkipped += 1;
+                continue;
+            }
+            PRESS_KILL_COST_COUNTS.hammerAsked += 1;
+        }
         if (hammerHitsPlayer({ x: cx, y: cy }, at, box)) return false;
     }
     return true;
@@ -9280,13 +9293,18 @@ function lineOnce(lines, run, from, r) {
         byRect = new Map();
         lines.set(from, byRect);
     }
-    if (byRect.has(r)) return byRect.get(r);
+    if (byRect.has(r)) {
+        PRESS_KILL_COST_COUNTS.lineHit += 1;
+        return byRect.get(r);
+    }
+    PRESS_KILL_COST_COUNTS.lineMiss += 1;
     const blocker = run.collideLineSolid(from.x, from.y, r.x + SPINNER.originX, r.y + SPINNER.originY);
     byRect.set(r, blocker);
     return blocker;
 }
 
-function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = false } = {}) {
+/** ⛓ hammer-phase P1: exported for `pressKillCost.test.js` (one derivation, ON against OFF). */
+export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = false } = {}) {
     const index = (run.entities('spinnerBodies') ?? []).findIndex((b) => b.id === bodyId);
     if (index < 0) return null;
     const horizon = strikeHorizon(run);
