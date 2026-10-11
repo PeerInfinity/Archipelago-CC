@@ -99,6 +99,11 @@ export const TEST_BATCHES = Object.freeze({
             + '81 % of that batch\'s budget. Manual, like tutorials.',
         manual: true,
         categories: Object.freeze(['Tutorial walks: procgen']),
+        // Its Seedling walks boot the wasm game, which needs a WebGPU adapter:
+        // the run launches Chromium with the box gates' headless WebGPU args
+        // (scripts/procgen/headlessChromium.js) instead of --disable-gpu
+        // (tutorial-bugs, 2026-10-10: "Failed to get WebGPU adapter").
+        webgpu: true,
     }),
 });
 
@@ -219,6 +224,11 @@ export function assertRowOverrides(tests) {
         smoke.set(manual, test.id);
     }
     return smoke;
+}
+
+/** Does this batch launch the browser with WebGPU (its `webgpu` flag)? */
+export function batchNeedsWebgpu(name) {
+    return TEST_BATCHES[name]?.webgpu === true;
 }
 
 /** Names of all defined batches, for error messages and tooling. */

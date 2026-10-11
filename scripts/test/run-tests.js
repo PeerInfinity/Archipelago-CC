@@ -11,7 +11,7 @@ import { spawn, spawnSync } from 'child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
-import { listBatchNames } from '../../frontend/modules/tests/testBatches.js';
+import { batchNeedsWebgpu, listBatchNames } from '../../frontend/modules/tests/testBatches.js';
 import { resolveTestPort } from './testServer.js';
 import {
   WAIT_FOR_BOX_FLAG, endTreeState, resultsFiles, runLockName, stampResults, takeRunBox,
@@ -32,6 +32,7 @@ const { values } = parseArgs({
     test: { type: 'string' },
     port: { type: 'string' },
     bundled: { type: 'boolean' },
+    webgpu: { type: 'boolean' },
     'no-build': { type: 'boolean' },
     headed: { type: 'boolean' },
     debug: { type: 'boolean' },
@@ -92,6 +93,9 @@ const env = {
   TEST_BATCH: config.batch,
   TEST_IDS: config.testIds,
   TEST_BUNDLED: config.bundled ? '1' : '0',
+  // A browser WITH WebGPU (playwright.config.js): `--webgpu`, or a batch that
+  // declares `webgpu: true` (its rows boot the Seedling wasm game).
+  TEST_WEBGPU: (values.webgpu || process.env.npm_config_webgpu || batchNeedsWebgpu(config.batch)) ? '1' : '0',
   ...(config.port ? { TEST_PORT: config.port } : {})
 };
 
@@ -173,6 +177,7 @@ const additionalArgs = process.argv.slice(2).filter(arg =>
   !arg.startsWith('--test=') &&
   !arg.startsWith('--port=') &&
   arg !== '--bundled' &&
+  arg !== '--webgpu' &&
   arg !== '--no-build' &&
   !arg.startsWith(WAIT_FOR_BOX_FLAG) &&
   arg !== '--headed' &&
