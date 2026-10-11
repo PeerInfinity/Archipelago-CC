@@ -1,5 +1,6 @@
 import settingsManager from '../../app/core/settingsManager.js';
 import { getModuleEventBus } from './index.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -43,6 +44,15 @@ class SettingsUI {
       this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
     this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
+
+    // A panel opened AFTER boot (the default layout has no Settings tab, so
+    // Quick Launch opens it later) never hears app:readyForUiDataLoad, and
+    // stayed blank. As the Editor panel does: initialize now when the app is
+    // already loaded.
+    if (stateManager.getStaticData()) {
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.initialize();
+    }
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
