@@ -7,7 +7,7 @@ This is the one packing rule for generated worlds. Two callers share it:
 - ``scripts/build/pack_apworld.py`` packs a directory under ``worlds/``;
 - the frontend's apworld editor runs ``build_apworld`` inside Pyodide to turn
   the document being edited into a downloadable ``.apworld``
-  (``frontend/modules/apworldEditor/apworldBuild.js``).
+  (``frontend/modules/apworldBuild/apworldBuild.js``).
 
 Only the standard library is imported here, because the browser has nothing
 else.

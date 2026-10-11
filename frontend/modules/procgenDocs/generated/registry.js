@@ -1647,13 +1647,14 @@ export const REGISTRY = frz({
                 {
                     "id": "maze",
                     "present": true,
-                    "short": "6 keys",
+                    "short": "7 keys",
                     "type": "object",
                     "value": [
                         "enableHazards",
                         "hazardCount",
                         "hazardMaxConsecutiveFails",
                         "hazardWallOverlapAllowed",
+                        "mazeArrival",
                         "mazeRequireSameWall",
                         "mazeRequireTileAlign"
                     ]
@@ -7165,9 +7166,10 @@ export const REGISTRY = frz({
                 {
                     "id": "maze",
                     "present": true,
-                    "short": "18 keys",
+                    "short": "19 keys",
                     "type": "object",
                     "value": [
+                        "arrival",
                         "atlas_region",
                         "atlas_sub_region",
                         "consumableTiles",

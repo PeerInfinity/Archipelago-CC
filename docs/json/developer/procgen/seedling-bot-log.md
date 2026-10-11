@@ -13083,6 +13083,54 @@ byte-identical (`aa46950b…`). Instruments 336 → 337 (the probe).
   "vanilla"). Census the callers of the function, not only the readers of the
   file.
 
+### RULES l37-fallrock-patch — the delivered set drops L37's fallrock
+
+⚖ The user, 2026-10-10: *"This might require a change to the AS3, to make the
+path not close except in vanilla mode. Please investigate this."* No AS3 change
+was needed: the delivered set already has a patch table (MOONROCK, above), and
+the user approved a third row for it the same day.
+
+**The coupling.** L37's `teleporter@288,0` lands in L38 ON
+`buttonroom@144,288` (tset 4, flip 1, room 37). The game presses it on
+contact, which clears `{37,4}` (`ButtonRoom.as:93`). A cleared `{37,4}` builds
+L37's `fallrock@288,32` (tset 0, tag 4) FALLEN, a Solid (`FallRock.as:42-45`),
+in L37's 1-tile column-18 corridor. So after the first entry into L38, L37's
+door to L38 and L38's return landing (288,16) were sealed off from the rest of
+L37, while the rules price `level_37 <-> level_38` free both ways. It is the
+only such pair: nothing else in L37 has tset 0, and no other L38 button writes
+into 37.
+
+**The patch.** `PATCH_L37_FALLROCK_REMOVED` (`l37-fallrock-removed`, `op:
+'remove'`, level 37, the extract's exact attrs) is the table's second row.
+The button stays, and its write now reaches nothing. The one caller
+(`levelSetExporter.vanillaRecordSet`) carries it to every delivery. The
+delivered set id moves `329dd9d9` → `eb8cc643`. The built-in map, the atlas
+presets and generated sets keep the rock, as they keep the moonrock.
+
+**The game witness (PASS, p4f, headless logic-only, a fresh page per arm).**
+`probe-seedling-l37-fallrock.mjs` plays one tape booted below the rock at L37
+(288,96): up into L38, down through L38's teleporter back to L37, down the
+corridor, up into L38 again, and down again.
+- On the delivered set: L37→L38 t75, back t84, down to y 109 (past the rock's
+  tile), L38 again t280, back t348.
+- On the control (the delivery minus this patch): the press writes `{37,4}`,
+  and after the return the player stops at y 29 against the fallen rock.
+
+**What did not move.** In `AP_1_rules.json`, only `set_patches` moves; regions,
+exits and rules are byte-identical, and so is the atlas (`seedling-db0a4f7f`).
+The world, seed 1 (`.archipelago` 148ae8bf, Spoiler, sphere log), the sphere
+order, the partition, the starter atlas, the vanilla overlay, the restart-only
+census and the survey derives are all unchanged. The census never listed the
+seal, because the rules never had it. The moonrock oracle was re-recorded for
+the new set ids, and its 15 game rows came back identical.
+
+**The model gap (left to fidelity).** The model banks the button's
+cross-level write as a clear for L37's next build. On the delivered set that
+build refuses *"a clear which no entity in this level reads"*. On the control
+it refuses the fallen rock (*"BUILDS IT FALLEN"*). The game just writes the
+flag. So a model run that presses L38's button and re-enters L37 in one tape
+refuses by name on both. No committed survey step stages `{37,4}`.
+
 ### Seedling fidelity L14 — the swordless attempt
 
 ⚖ The user, 2026-10-04: *"Make an attempt to find a swordless strategy that

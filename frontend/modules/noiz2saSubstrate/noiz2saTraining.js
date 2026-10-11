@@ -197,15 +197,24 @@ export function worldPointsPerManaOf(payload) {
 /** the price of a track's next step, or null at 100 */
 export const nextStepCost = (tr, track) => (tr.tracks[track] >= TRACK_MAX ? null : stepCost(tr.settings, tr.tracks[track]));
 
+/** ⛓ Every track at TRACK_MAX — the Expert the bot plays as outside loop mode. */
+export const EXPERT_TRACKS = Object.freeze(Object.fromEntries(TRACKS.map((t) => [t, TRACK_MAX])));
+
 /**
  * The options the page's bot plays a walk with (the second argument of the bridge's botWalkTo): the knobs at the
  * current tracks, the tracks themselves (for the page's display), the visit's bot seed, the speed and the retry cap.
+ *
+ * ⚖ The user, 2026-10-10 (tutorial-bugs): "Outside loop mode, the bots should start with max stats." With
+ * `{expert: true}` (the host passes it while loop mode is off) the knobs and tracks are EXPERT_TRACKS' — the trainer
+ * itself is untouched, so loop mode still plays at the trained tracks. Measured why: an untrained bot outside loop
+ * mode retried a zone-table span for minutes with a new seed each visit (procgen-mixed-world, run to run).
  */
-export function botWalkOptions(tr, settings = {}, botSeed = BOT_SEED) {
+export function botWalkOptions(tr, settings = {}, botSeed = BOT_SEED, { expert = false } = {}) {
     const n = normalizeSettings(settings);
+    const tracks = expert ? { ...EXPERT_TRACKS } : { ...tr.tracks };
     return {
-        knobs: trainerKnobs(tr),
-        tracks: { ...tr.tracks },
+        knobs: trainerKnobs({ ...tr, tracks }),
+        tracks,
         botSeed,
         speed: n.botSpeed,
         retryCap: n.botRetryCap,
@@ -294,7 +303,7 @@ export function createTrainerService({ storage = null, settings = {}, onChange =
         },
         /** the bot's options at the current tracks and settings, for a visit's bot seed (the bridge's botWalkTo second
          *  argument, and the page's host state) */
-        botOptions: (botSeed = BOT_SEED) => botWalkOptions(tr, s, botSeed),
+        botOptions: (botSeed = BOT_SEED, { expert = false } = {}) => botWalkOptions(tr, s, botSeed, { expert }),
         /** a fresh trainer (every track 0, nothing earned) */
         reset(strategy = 'even') {
             pendingMana = 0; pendingSeconds = 0; gameTime.reset();

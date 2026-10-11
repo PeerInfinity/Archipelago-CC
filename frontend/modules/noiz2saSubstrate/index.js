@@ -98,8 +98,9 @@ let _botProxy = null;
 // ── N4b: the visit's bot seed, and the host state the page plays by ──
 let _visitSeed = drawBotSeed();
 let _pinnedSeed = null;
-/** the bot's options for the current visit (its seed, the knobs at the current tracks) */
-const visitBotOptions = () => getTrainerService().botOptions(_visitSeed);
+/** the bot's options for the current visit (its seed, the knobs at the current tracks — every track at its max
+ *  outside loop mode, ⚖ the user 2026-10-10) */
+const visitBotOptions = () => getTrainerService().botOptions(_visitSeed, { expert: !_loopMode });
 /** a new visit: a new bot seed (or the pinned one) */
 function newVisitSeed() {
     _visitSeed = _pinnedSeed ?? drawBotSeed();

@@ -12,6 +12,7 @@ import {
     DEFAULT_RULES_JSON_INDENT, RULES_JSON_INDENT_KEY,
 } from '../presets/documentBundle.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
+import { buildApworld, downloadBytes } from '../apworldBuild/apworldBuild.js';
 
 const LS_KEY = 'apcalcGenerator_params';
 
@@ -48,6 +49,8 @@ export class APCalcGeneratorUI {
          */
         this.rulesJsonIndent = DEFAULT_RULES_JSON_INDENT;
         this.isGenerating = false;
+        /** The `.apworld` build in flight (a promise), or null. */
+        this._apworldBuilding = null;
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'apcalc-gen-panel';
         setPanelInstance(this);
@@ -209,7 +212,17 @@ export class APCalcGeneratorUI {
         loadBtn.textContent = 'Load in Frontend';
         loadBtn.addEventListener('click', () => this._loadIntoFrontend());
 
+        // The same in-browser build as the APWorld Editor's (catalogue F1).
+        const apworldBtn = document.createElement('button');
+        apworldBtn.className = 'apcalc-gen-btn apcalc-gen-apworld';
+        apworldBtn.textContent = this._apworldBuilding ? 'Building .apworld…' : '⭳ .apworld';
+        apworldBtn.disabled = !!this._apworldBuilding;
+        apworldBtn.title = 'Generate an Archipelago world from this map and save it as an .apworld '
+            + '(runs world_generator in the browser; the first build loads Python, ~10 MB)';
+        apworldBtn.addEventListener('click', () => this._handleApworldDownload());
+
         btnRow.appendChild(downloadLink);
+        btnRow.appendChild(apworldBtn);
         btnRow.appendChild(loadBtn);
         section.appendChild(btnRow);
 
@@ -310,6 +323,48 @@ export class APCalcGeneratorUI {
 
         this.isGenerating = false;
         this.render();
+    }
+
+    // --- .apworld ---
+
+    /**
+     * Build the generated map into an `.apworld` and save it. Returns the
+     * build result (or null), so a row can await the promise the click starts.
+     */
+    async _handleApworldDownload() {
+        if (!this.generatedRulesJson) return null;
+        if (this._apworldBuilding) return this._apworldBuilding;
+        const stageText = {
+            'loading-python': 'loading Python (first build only)…',
+            'loading-generator': 'loading world_generator…',
+            'generating': 'generating…',
+        };
+        const say = (text) => {
+            this.logLines.push(`.apworld: ${text}`);
+            this.render();
+        };
+        const doc = this.generatedRulesJson;
+        // Deferred a tick, so a synchronous throw cannot run the `finally`
+        // before the promise is stored (which would leave it stored for good).
+        this._apworldBuilding = Promise.resolve().then(async () => {
+            try {
+                const built = await buildApworld(doc, {
+                    onProgress: stage => say(stageText[stage] ?? stage),
+                });
+                const written = downloadBytes(built.fileName, built.bytes);
+                say(`downloaded ${written.fileName} (${written.bytes.toLocaleString()} bytes, `
+                    + `game "${built.gameName}", ${built.ms} ms).`);
+                return built;
+            } catch (err) {
+                say(`build failed: ${err.message}`);
+                return null;
+            } finally {
+                this._apworldBuilding = null;
+                this.render();
+            }
+        });
+        say('starting…');
+        return this._apworldBuilding;
     }
 
     // --- Load into frontend ---

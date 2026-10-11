@@ -43,21 +43,28 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 
 - **Guided Tour** ([guide](../guided-tour.md)) — Watch a generated world play itself, see the logic underneath, and generate a world of your own. `?tutorial=guided-tour`
 
+### Procgen
+
+- **Procgen: Sphere growth, with Maze** ([guide](../tutorials/procgen-sphere-growth.md)) — Generate a maze-only world with the Sphere growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-sphere-growth`
+- **Procgen: Shuffled spiral, with Maze** ([guide](../tutorials/procgen-shuffled-spiral.md)) — Generate a maze-only world with the Shuffled spiral mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-shuffled-spiral`
+- **Procgen: Grid growth, with Maze** ([guide](../tutorials/procgen-grid-growth.md)) — Generate a maze-only world with the legacy Grid growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-grid-growth`
+- **Procgen: Top-down, with Maze** ([guide](../tutorials/procgen-top-down.md)) — Turn an existing game's region graph (Adventure) into a world of mazes with the Top-down mode, and watch the Playback Bot finish it. `?tutorial=procgen-top-down`
+- **Procgen: settings and the Playback Bot** ([guide](../tutorials/procgen-settings-and-bot.md)) — Change a generated world's seed and size, run the pipeline one step at a time, and drive the Playback Bot by hand. `?tutorial=procgen-settings-and-bot`
+- **Procgen: editing a bounce region** ([guide](../tutorials/procgen-bounce-region-editor.md)) — Open a generated world's bounce zone in the Bounce Region Editor, change a platform, save it back to the pipeline, and play the result. `?tutorial=procgen-bounce-region-editor`
+- **Procgen: Seedling rooms** ([guide](../tutorials/procgen-seedling.md)) — Put generated Seedling rooms into a procgen world, play them in the original game, look at a room in the Procgen Lab, and watch the bot. `?tutorial=procgen-seedling`
+- **Procgen: a mixed world** ([guide](../tutorials/procgen-mixed-world.md)) — Build one world from a maze, a text adventure, a bounce zone, a Noiz2sa stage and a generated Seedling room, and watch the Playback Bot play every kind. `?tutorial=procgen-mixed-world`
+
+### MetaMath, DepGraph and APCalc
+
+- **APCalc: generate a world** ([guide](../tutorials/apcalc-generator.md)) — Generate a new APCalc map with the APCalc Generator, play it, and package it as a .apworld. `?tutorial=apcalc-generator`
+
 ### In progress
 
 Written, but not working all the way through yet. The panel lists these in a collapsed section and marks the step where each one stops.
 
 - **Your workbench** — Find any panel with Quick Launch, arrange the tabs, follow a tutorial beside your work, and switch modules on and off. `?tutorial=start-workbench`
 - **Saving your setup** — Change the options and settings, save the layout and settings as a mode of your own, and clear what the app keeps in your browser. `?tutorial=start-saving-your-setup`
-- **Procgen: Sphere growth, with Maze** — Generate a maze-only world with the Sphere growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-sphere-growth`
-- **Procgen: Shuffled spiral, with Maze** — Generate a maze-only world with the Shuffled spiral mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-shuffled-spiral`
-- **Procgen: Grid growth, with Maze** — Generate a maze-only world with the legacy Grid growth mode, load it, and watch the Playback Bot finish it. `?tutorial=procgen-grid-growth`
-- **Procgen: Top-down, with Maze** — Turn an existing game's region graph (Adventure) into a world of mazes with the Top-down mode, and watch the Playback Bot finish it. `?tutorial=procgen-top-down`
-- **Procgen: settings and the Playback Bot** — Change a generated world's seed and size, run the pipeline one step at a time, and drive the Playback Bot by hand. `?tutorial=procgen-settings-and-bot`
 - **Procgen: from a generated world to a multiworld** — Take a generated world through the APWorld Editor to a .apworld, play it on a local Archipelago server, and let the Playback Bot send the checks. `?tutorial=procgen-to-multiworld`
-- **Procgen: editing a bounce region** — Open a generated world's bounce zone in the Bounce Region Editor, change a platform, save it back to the pipeline, and play the result. `?tutorial=procgen-bounce-region-editor`
-- **Procgen: Seedling rooms** — Put generated Seedling rooms into a procgen world, play them in the original game, look at a room in the Procgen Lab, and watch the bot. `?tutorial=procgen-seedling`
-- **Procgen: a mixed world** — Build one world from a maze, a text adventure, a bounce zone, a Noiz2sa stage and a generated Seedling room, and watch the Playback Bot play every kind. `?tutorial=procgen-mixed-world`
 - **Procgen: Journey to Ascension in Loop mode** — Generate a world of Journey to Ascension zones with loop mode on, see the loop panels, and watch the bot finish it. `?tutorial=procgen-loop-mode-jta`
 - **Procgen: everything, in Loop mode** — Mix every substrate — Idle Loops included — into one loop-mode world sharing one mana pool, and watch the bot finish it. `?tutorial=procgen-loop-mode-everything`
 - **Procgen: a runner world** — Play a generated world of auto-running platformer strips, where the jumps you can make are the items you hold. `?tutorial=procgen-runner-demo`
@@ -67,7 +74,6 @@ Written, but not working all the way through yet. The panel lists these in a col
 - **DepGraph: more graphs, and your own** — Load DepGraph's other bundled graphs, see one in the Region Graph, and turn a task list of your own into a game. `?tutorial=depgraph-extras`
 - **DepGraph: in a multiworld** — Host a DepGraph graph on a local Archipelago server and solve it from the app. `?tutorial=depgraph-multiworld`
 - **APCalc: the calculator game** — Play APCalc: a calculator whose number and operation keys are the items, and whose results are the locations. `?tutorial=apcalc-demo`
-- **APCalc: generate a world** — Generate a new APCalc map with the APCalc Generator, play it, and package it as a .apworld. `?tutorial=apcalc-generator`
 - **APCalc: in a multiworld** — Host APCalc on a local Archipelago server and play it from the app. `?tutorial=apcalc-multiworld`
 - **Track a game** — Load a game's logic, track items and checks by hand, see what is reachable, and connect to your multiworld's server. `?tutorial=tracker-track-a-game`
 - **Tracking: why can't I get there?** — Ask the Path Analyzer how to reach a region, and which items each way needs. `?tutorial=tracker-path-analyzer`

@@ -252,7 +252,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `panelComponentType` | bounceDemoPanel | flashSubstratePanel | flashPanel | flashPanel | jtaSubstrateWrapperPanel | mazeRoomPanel | noiz2saSubstratePanel | omsiSubstrateWrapperPanel | runnerDemoPanel | textAdventureSubstrateWrapperPanel |
 | `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn | fn |
 | `sharing` | — | — | — | — | {items, mana} | {mana} | — | {items, mana} | — | {mana} |
-| `sidecarFields` | 7 keys | 6 keys | 7 keys | 14 keys | 5 keys | 18 keys | 11 keys | 9 keys | 7 keys | 5 keys |
+| `sidecarFields` | 7 keys | 6 keys | 7 keys | 14 keys | 5 keys | 19 keys | 11 keys | 9 keys | 7 keys | 5 keys |
 | `supportedFeatures` | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations | arbitrary_ap_locations | arbitrary_ap_locations, seedling_items | 2 items | 7 items | arbitrary_ap_locations | 2 items | arbitrary_ap_locations, runner_abilities | 6 items |
 
 **Playback**
@@ -381,7 +381,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `buildZoneSpecs` | fn | — | fn | — | — | — | — | — | fn | — |
 | `canHostExitGates` | fn | — | fn | fn | — | — | — | — | fn | — |
 | `canHostExitGatesBraid` | fn | — | — | — | — | — | — | — | — | — |
-| `defaultProcgenParams` | 10 keys | — | — | 7 keys | — | 6 keys | {noiz2saFinalSpan} | — | 8 keys | — |
+| `defaultProcgenParams` | 10 keys | — | — | 7 keys | — | 7 keys | {noiz2saFinalSpan} | — | 8 keys | — |
 | `driftItems` | Left arrow, Right arrow | — | — | — | — | — | — | — | — | — |
 | `exitGateVeto` | fn | — | fn | fn | — | — | — | — | fn | — |
 | `gateHostingHint` | fn | — | — | — | — | — | — | — | fn | — |

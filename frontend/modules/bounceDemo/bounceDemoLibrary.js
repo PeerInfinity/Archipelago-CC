@@ -483,7 +483,13 @@ export function buildZoneSpecs(base, regionParams = {}) {
         if (regionParams.bounceJitter) out.jitter = regionParams.bounceJitter;
         if (regionParams.platformRows) out.platformRows = regionParams.platformRows;
         if (regionParams.bounceDecorChance) out.decorChance = regionParams.bounceDecorChance;
-        if (regionParams.bounceFreeArrow) out.freeArrow = regionParams.bounceFreeArrow;
+        // A world that names its free arrow holds ONLY that arrow (sphere
+        // growth grants one as a starting item) — the realiser must not verify
+        // an ungated zone with both arrows held (tutorial-bugs, 2026-10-10).
+        if (regionParams.bounceFreeArrow) {
+            out.freeArrow = regionParams.bounceFreeArrow;
+            out.soleFreeArrow = true;
+        }
     }
     return out;
 }
@@ -591,6 +597,9 @@ export function* generateZoneForSpecsGen({
     // The free starting arrow ('left'|'right') the player always holds — gated
     // braid portals ride tips toward it, and the verifier treats it as free.
     freeArrow = 'right',
+    // true: the player holds ONLY `freeArrow` (a sphere world) — see
+    // generateBraidFromSpecsGen. false: Regime 1's both-arrows-free world.
+    soleFreeArrow = false,
     // Extra plain climb rungs per region after the gating content (gated braid).
     platformRows = 0,
 } = {}) {
@@ -625,6 +634,7 @@ export function* generateZoneForSpecsGen({
         braidWidth,
         decorChance,
         freeArrow,
+        soleFreeArrow,
         platformRows,
     });
     return assembleBounceRegionFromLevel(level, {

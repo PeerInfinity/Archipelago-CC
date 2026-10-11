@@ -201,6 +201,16 @@ describe('the bot\'s walk options', () => {
         expect(sv.botOptions().botSeed).toBe(BOT_SEED);
         expect(sv.botOptions(42).botSeed).toBe(42);
     });
+    it('⚖ outside loop mode ({expert: true}) the bot plays as the Expert; the trainer is untouched', () => {
+        const tr = freshTrainer();
+        const expert = botWalkOptions(tr, {}, BOT_SEED, { expert: true });
+        expect(expert.knobs).toEqual(EXPERT_KNOBS);
+        expect(expert.tracks).toEqual(Object.fromEntries(TRACKS.map((k) => [k, 100])));
+        expect(tr.tracks).toEqual(zeros());
+        const sv = createTrainerService({ storage: memoryStorage() });
+        expect(sv.botOptions(7, { expert: true }).knobs).toEqual(EXPERT_KNOBS);
+        expect(sv.botOptions(7).tracks).toEqual(zeros());
+    });
 });
 
 describe('N4b — a bot seed per visit (drawBotSeed)', () => {

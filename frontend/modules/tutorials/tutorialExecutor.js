@@ -52,9 +52,15 @@ function visible(el) {
     return r.width > 0 && r.height > 0;
 }
 
-/** The control a click/key target names, inside its panel (`text` picks one of several matches). */
+/**
+ * The control a click/key target names, inside its panel (`text` picks one of several matches). A target with
+ * `frame` (a selector for an iframe in the panel) is looked up in that frame's document — the wasm game's ▶ Start.
+ */
 export function findControl(target) {
-    const root = panelElement(findItem(target));
+    let root = panelElement(findItem(target));
+    if (root && target.frame) {
+        try { root = root.querySelector(target.frame)?.contentDocument ?? null; } catch { root = null; }
+    }
     if (!root || !target.selector) return root;
     const all = [...root.querySelectorAll(target.selector)];
     if (target.text === undefined) return all[0] ?? null;
@@ -88,8 +94,17 @@ export function hideCursor() {
     cursorEl = null;
 }
 
-function centre(el) {
+/** An element's rect on THIS page — one inside a (same-origin) iframe is offset by the frame's own. */
+function pageRect(el) {
     const r = el.getBoundingClientRect();
+    const frame = el.ownerDocument?.defaultView?.frameElement;
+    if (!frame || el.ownerDocument === document) return r;
+    const f = frame.getBoundingClientRect();
+    return { left: r.left + f.left, top: r.top + f.top, width: r.width, height: r.height };
+}
+
+function centre(el) {
+    const r = pageRect(el);
     return { x: r.left + Math.min(r.width / 2, 40), y: r.top + r.height / 2 };
 }
 
@@ -113,7 +128,7 @@ function placeOutline() {
         outlineEl.style.display = 'none';
         return;
     }
-    const r = el.getBoundingClientRect();
+    const r = pageRect(el);
     outlineEl.style.display = '';
     outlineEl.style.left = `${r.left - 3}px`;
     outlineEl.style.top = `${r.top - 3}px`;

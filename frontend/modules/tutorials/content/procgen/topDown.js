@@ -1,7 +1,7 @@
 /**
  * Procgen: Top-down, with Maze (catalogue P1, one tutorial per mode — ⚖ the
- * user, 2026-10-10; the source world is Adventure seed 1, ⚖ 2026-10-10). In
- * progress: its walk row measures `firstFailingStep`.
+ * user, 2026-10-10; the source world is Adventure seed 1, ⚖ 2026-10-10).
+ * Ready (⚖ the user, 2026-10-10); its walk row holds it.
  * Shape: ../../tutorialShape.js; shared steps: ../steps/procgen.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -15,9 +15,8 @@ export const PROCGEN_TOP_DOWN = Object.freeze({
     title: 'Procgen: Top-down, with Maze',
     summary: 'Turn an existing game\'s region graph (Adventure) into a world of mazes with the Top-down mode, and watch the Playback Bot finish it.',
     track: 'procgen',
-    status: 'in-progress',
-    firstFailingStep: null,
-    doc: null,
+    status: 'ready', // ⚖ the user, 2026-10-10 (tutorial-bugs)
+    doc: 'docs/json/user/tutorials/procgen-top-down.md',
     intro: [
         { prose: '**Top-down** starts from a world that already exists — any game\'s rules.json — and *realises* it: every region becomes a generated room, and the source\'s access rules stay on the exits. This tutorial realises Atari 2600 *Adventure* as mazes.' },
     ],

@@ -940,6 +940,60 @@ export const DOCS_INDEX = Object.freeze([
         "title": "Tips, Tricks, and FAQs",
         "section": "user",
         "summary": "This guide provides a collection of useful tips, advanced interactions, and answers to frequently asked questions to help you get the most out of the JSON Web Client."
+    },
+    {
+        "path": "docs/json/user/tutorials/apcalc-generator.md",
+        "title": "APCalc: generate a world",
+        "section": "user/tutorials",
+        "summary": "The APCalc Generator builds APCalc maps in the browser: how many spheres, how many operations and numbers each one adds, how branchy the map is. The result plays at once, saves as a rules.json, and…"
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-bounce-region-editor.md",
+        "title": "Procgen: editing a bounce region",
+        "section": "user/tutorials",
+        "summary": "A generated region is not final: the pipeline's step 3 lists every region it built, and Edit ▸ opens one in its substrate's editor. For a bounce zone that is the Bounce Region Editor — its…"
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-grid-growth.md",
+        "title": "Procgen: Grid growth, with Maze",
+        "section": "user/tutorials",
+        "summary": "Grid growth is the pipeline's first mode, kept as the legacy grower: it grows regions cell by cell on a grid, drawing from the scenario pool, until the pool or the frontier runs out. How many…"
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-mixed-world.md",
+        "title": "Procgen: a mixed world",
+        "section": "user/tutorials",
+        "summary": "Each region of a generated world is drawn by a *substrate* — a kind of game that knows how to make a room, put items in it, and gate its exits. One world can mix them: the logic underneath does not…"
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-seedling.md",
+        "title": "Procgen: Seedling rooms",
+        "section": "user/tutorials",
+        "summary": "*Seedling* is a Flash game this project runs in the browser, recompiled from its SWF. Its rooms can be regions of a generated world: either real rooms from the game (the *region atlas*) or new rooms…"
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-settings-and-bot.md",
+        "title": "Procgen: settings and the Playback Bot",
+        "section": "user/tutorials",
+        "summary": "The mode tutorials press Run all and ▶. This one opens up both: the parameters that shape a world, the pipeline's steps one at a time, and the bot's other controls."
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-shuffled-spiral.md",
+        "title": "Procgen: Shuffled spiral, with Maze",
+        "section": "user/tutorials",
+        "summary": "Shuffled spiral lays its regions out from a centre cell outwards, in shuffled zones, and then places the scenario's items so the world can be finished. You choose how many regions of each substrate…"
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-sphere-growth.md",
+        "title": "Procgen: Sphere growth, with Maze",
+        "section": "user/tutorials",
+        "summary": "Sphere growth is the pipeline's default mode: it plans the item progression first — which items unlock which, sphere by sphere — and then grows a world to match. This tutorial builds a world from…"
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-top-down.md",
+        "title": "Procgen: Top-down, with Maze",
+        "section": "user/tutorials",
+        "summary": "Top-down starts from a world that already exists — any game's rules.json — and *realises* it: every region becomes a generated room, and the source's access rules stay on the exits. This tutorial…"
     }
 ].map(Object.freeze));
 
@@ -1003,7 +1057,24 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/standard-client.md",
             "docs/json/user/tips-and-tricks.md"
         ],
-        "children": []
+        "children": [
+            {
+                "dir": "user/tutorials",
+                "label": "tutorials",
+                "docs": [
+                    "docs/json/user/tutorials/apcalc-generator.md",
+                    "docs/json/user/tutorials/procgen-bounce-region-editor.md",
+                    "docs/json/user/tutorials/procgen-grid-growth.md",
+                    "docs/json/user/tutorials/procgen-mixed-world.md",
+                    "docs/json/user/tutorials/procgen-seedling.md",
+                    "docs/json/user/tutorials/procgen-settings-and-bot.md",
+                    "docs/json/user/tutorials/procgen-shuffled-spiral.md",
+                    "docs/json/user/tutorials/procgen-sphere-growth.md",
+                    "docs/json/user/tutorials/procgen-top-down.md"
+                ],
+                "single": false
+            }
+        ]
     },
     {
         "dir": "features",

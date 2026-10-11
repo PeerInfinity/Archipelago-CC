@@ -21,7 +21,7 @@ import { serializeMazeWorld } from './mazeSerializer.js';
 function withFakeDocument(fn) {
     const make = (tag) => {
         const el = {
-            tagName: tag.toUpperCase(), children: [], parent: null, listeners: {}, style: {},
+            tagName: tag.toUpperCase(), children: [], parent: null, listeners: {}, style: {}, dataset: {},
             className: '', textContent: '', title: '',
             appendChild(child) { child.parent = el; el.children.push(child); return child; },
             remove() { if (el.parent) el.parent.children.splice(el.parent.children.indexOf(el), 1); el.parent = null; },

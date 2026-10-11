@@ -1,5 +1,5 @@
 /**
- * apworldEditor/apworldBuildWorker — runs `world_generator` under Pyodide
+ * apworldBuild/apworldBuildWorker — runs `world_generator` under Pyodide
  * (see `apworldBuild.js` for the why). One Pyodide per worker, booted on the
  * first build and kept.
  *

@@ -15,6 +15,12 @@
  *     a room with no exit skips wall generation altogether. Its floor is every
  *     tile but the entrance and the exits: `width × height − 1 − exits`.
  *     Measured at C2 over 8×6 … 27×27 × 0–4 exits × 40 seeds: exact, every seed.
+ *     ⚠ Since tutorial-bugs (2026-10-10) it is an UPPER BOUND, short by the
+ *     corners whose two neighbours are both exits: an exit tile is a dead end
+ *     to the generator (mazeRoomEngine `isDeadEndExit`), so such a corner is
+ *     reached only by crossing. Where the exits land is a draw, so no function
+ *     of the size can subtract it; it is rare past the smallest rooms (the
+ *     unit row meets it on a handful of 3- and 4-exit rooms of 8×6 … 15×11).
  *   · a WALLED room (any other params or biome) answers `null`: its floor is the
  *     wall draw's (a 27×27 corridor room with one exit held 15–83 candidates over
  *     40 seeds), so no function of the size can hold it.

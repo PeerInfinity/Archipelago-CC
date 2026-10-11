@@ -208,7 +208,7 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   in-browser `⭳ .apworld` button.
 
 - **`build/world-generator-files.mjs`** - The file list the APWorld Editor's
-  in-browser build fetches (`frontend/modules/apworldEditor/worldGeneratorFiles.json`,
+  in-browser build fetches (`frontend/modules/apworldBuild/worldGeneratorFiles.json`,
   derived from `git ls-files world_generator`). Re-run with `--write` after
   adding or removing a file under `world_generator/`; `apworldBuild.test.js`
   fails while it is stale.

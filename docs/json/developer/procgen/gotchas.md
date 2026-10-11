@@ -41,6 +41,10 @@ A flood fill (`componentsOf` in `scripts/procgen/seedlingRouteGraph.mjs`) treats
 
 `arrangeShuffledSpiral` and `buildRulesJson` (`procgenPipelineEngine.js`) run synchronously on the main thread, and expensive substrates' level generators can block it for minutes. The iframe adapter then declares every substrate bridge dead on heartbeat timeout, and an unrelated test fails. Cheap substrates are fine (`taswBlockModeTests.js` builds a spiral in-page); for an expensive one load a committed preset and generate only the piece you need, as `runnerBlockModeTests.js` does with `runner_worldgen` and `generateLoopCosts`.
 
+### A maze exit tile is a dead end to the generator
+
+In play, stepping onto a maze exit tile is the crossing (`detectStepEvents` fires `exit_cross`), so no walk can pass over one exit on its way to another target. The generator's floods used to pass over them, and about one maze room in eleven over the shipped presets was carved with a target reachable only across another exit; the Maze demo preset's room deadlocked the Playback Bot that way. `floorReachableSet`, the placer's reachable set and the rule extraction in `frontend/modules/mazeRoom/mazeRoomEngine.js` now reach an exit tile and stop there (`isDeadEndExit`). One consequence: an open room's declared location capacity (`mazeLocationCapacity.js`) is an upper bound, short by any corner whose two neighbours are both exits.
+
 ## Substrates and runtime
 
 ### bounceDemo shares flashSubstrate's code, not its identity

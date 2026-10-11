@@ -79,6 +79,7 @@ import { resolveMazeArrival } from './mazeArrival.js';
  * INTRINSIC `TILE_PX` instead, which is a live bug under any CSS scaling.
  */
 import { tileAtPoint } from '../procgenCore/labView.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 import {
     tickHazards,
     resetHazards,
@@ -327,6 +328,9 @@ export class MazeRoomUI {
         // explore is walking, false otherwise. Mutually exclusive with
         // _loopsDrivenAction so the two chains don't fight.
         this._directExploreActive = false;
+        // The Playback Bot's current walkTo target, until its leg finishes or
+        // sticks (`_reportBotWalk`).
+        this._botWalkTarget = null;
 
         // Phase 8 panel cleanup. genControlsVisible hides the
         // generation-only sections (Parameters, Generate / Reset
@@ -1880,6 +1884,9 @@ export class MazeRoomUI {
         // could disagree about any gate the subset cannot express — and did.
         const ruleEvaluator = this._currentRuleEvaluator();
         this._visualizer.setClearanceOpts?.(ruleEvaluator ? { evaluateRule: ruleEvaluator } : null);
+        // Set BEFORE walkToTile: an unreachable tile sets the visualizer stuck
+        // synchronously, and _onVisualizerChange reports it to the bot then.
+        this._botWalkTarget = { ...target };
         this._visualizer.walkToTile({ x: tile.x, y: tile.y, name: target.name ?? null });
         return true;
     }
@@ -2499,7 +2506,32 @@ export class MazeRoomUI {
         ) {
             this._chainDirectExplore();
         }
+        this._reportBotWalk(vState);
         this.render();
+    }
+
+    /**
+     * The Playback Bot's walkTo (`_handleWalkToCommand`) ended STUCK — the
+     * planner found no path, or the engine refused a step — so tell the bot,
+     * in the walker's own words, through the controller contract's
+     * `playback:walkFailed`: the bot's status becomes a named `error:` at once,
+     * instead of "walking to …" until something notices nothing moves. Once
+     * per walk; a finished leg (no target, not stuck) forgets the walk.
+     */
+    _reportBotWalk(vState) {
+        const target = this._botWalkTarget;
+        if (!target || !vState) return;
+        if (!vState.stuck) {
+            if (!vState.target) this._botWalkTarget = null;
+            return;
+        }
+        this._botWalkTarget = null;
+        const blocked = [...(vState.log ?? [])].reverse().find((e) => e?.type === 'blocked');
+        eventBus.publish(PLAYBACK_WALK_FAILED_EVENT, {
+            substrate: 'maze',
+            target,
+            reason: blocked?.description ?? 'the Maze Room walker is stuck',
+        }, 'mazeRoom');
     }
 
     _chainExploreOrComplete() {

@@ -20,6 +20,8 @@ import {
 import { mazeWorldDigest } from './mazeQueueExecutor.js';
 import { TILE_PX } from './mazeRoomRender.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import eventBus from '../../app/core/eventBus.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 
 /**
  * Put entries through the panel's live queue as if they had RUN, without the
@@ -428,6 +430,28 @@ describe('MazeRoomUI — walkTo command resolution', () => {
             panel._handleWalkToCommand({ kind: 'exit', name: 'no_such_exit' });
         }).not.toThrow();
         expect(calls).toEqual([]);
+    });
+
+    it('a bot walkTo that sticks is reported to the bot as playback:walkFailed, in the walker\'s own words, once', () => {
+        // Refactor (tutorial-bugs): the Maze Room's "no path … under current
+        // inventory" used to stay in the room's log while the bot kept saying
+        // "walking to …"; the walk rows waited out a 60 s freeze to notice.
+        const { panel } = panelWithLoadedWorld();
+        delete panel._visualizer.walkToTile; // the real one, on the prototype
+        panel._visualizer._planTilePath = () => null; // the tile cannot be planned
+        const published = [];
+        const spy = vi.spyOn(eventBus, 'publish').mockImplementation((name, data) => { published.push([name, data]); });
+        try {
+            panel._handleWalkToCommand({ kind: 'location', name: 'Bridge Key' });
+            panel._onVisualizerChange(); // a later tick: already reported
+        } finally {
+            spy.mockRestore();
+        }
+        const failed = published.filter(([name]) => name === PLAYBACK_WALK_FAILED_EVENT).map(([, d]) => d);
+        expect(failed).toHaveLength(1);
+        expect(failed[0].substrate).toBe('maze');
+        expect(failed[0].target).toEqual({ kind: 'location', name: 'Bridge Key' });
+        expect(failed[0].reason).toMatch(/^walkToTile: no path from \(\d+,\d+\) to \(5,4\) under current inventory\.$/);
     });
 
     it('drops walkTo when no world is loaded (early call)', () => {

@@ -1,5 +1,6 @@
 import { defineConfig } from '@playwright/test';
 import { TEST_BASE_URL, SERVER_COMMAND } from './scripts/test/testServer.js';
+import { headlessWebgpuArgs } from './scripts/procgen/headlessChromium.js';
 
 export default defineConfig({
   // Directory where your test files are located
@@ -66,7 +67,10 @@ export default defineConfig({
         '--disable-dev-shm-usage',
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        '--disable-gpu',
+        // TEST_WEBGPU=1 (run-tests.js `--webgpu`, or a batch declaring
+        // `webgpu: true`): the box gates' headless WebGPU launch, so the
+        // Seedling wasm game can boot; every other run keeps --disable-gpu.
+        ...(process.env.TEST_WEBGPU === '1' ? headlessWebgpuArgs() : ['--disable-gpu']),
         // Only use --single-process for non-multiclient tests (it's incompatible with multi-context tests)
         ...(process.env.TEST_GAME && !process.env.DISABLE_SINGLE_PROCESS ? ['--single-process'] : []),
       ],

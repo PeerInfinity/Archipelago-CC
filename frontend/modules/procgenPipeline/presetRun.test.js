@@ -75,6 +75,8 @@ describe('buildRunFromState — shuffled spiral', () => {
                 enableLoopMode: false,
                 regionXpEffect: 'cost',
                 completionConditionItem: 'victory',
+                // tutorial-bugs: the panel default `mazeArrival: 'zone'`.
+                arrival: 'zone',
             },
         });
     });

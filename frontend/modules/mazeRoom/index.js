@@ -13,6 +13,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 
 export * from './mazeRoomEngine.js';
 export { substrateRegistryEntry } from './mazeRoomLibrary.js';
@@ -110,6 +111,10 @@ export function register(registrationApi) {
     // no AP-level event (not locations, no region change), so this is
     // the only signal a collect-detouring playback bot can wake on.
     registrationApi.registerEventBusPublisher('maze:consumableCollected');
+
+    // The Playback Bot's walkTo got stuck in this room ("no path … under
+    // current inventory", a refused step): the bot's named error status.
+    registrationApi.registerEventBusPublisher(PLAYBACK_WALK_FAILED_EVENT);
 
     // X1: the panel clears collected consumable / mana tiles on every
     // loop reset so they respawn (X1-R1). Declared here rather than

@@ -877,12 +877,11 @@ describe('PlaybackBotUI — append-only log', () => {
         // with pingWorker is round-tripped before findPathWithExits runs,
         // and that findPathWithExits is called only after the ping resolves.
         const calls = [];
-        let resolvePing;
-        const pingPromise = new Promise((r) => { resolvePing = r; });
+        const pings = [];
         const proxy = {
             pingWorker: (label) => {
                 calls.push(`ping:${label}`);
-                return pingPromise;
+                return new Promise((r) => { pings.push(r); });
             },
         };
         const bot = new PlaybackBotUI({
@@ -905,30 +904,65 @@ describe('PlaybackBotUI — append-only log', () => {
             stateManagerProxy: proxy,
         });
         bot.onRegionMove({ targetRegion: 'region_a' });
-        await bot.play();                                    // walk to Loc A (same region — no ping)
-        expect(calls).toEqual([]);
+        const playing = bot.play();                          // walk to Loc A (same region — flushed too)
+        pings.shift()();
+        await playing;
+        calls.length = 0;
         bot.onLocationCheck({ locationName: 'Loc A' });      // cross-region — should ping then path-find
         // Before the ping resolves, only the ping is recorded.
         expect(calls).toEqual(['ping:playbackBot:flush']);
-        resolvePing();
-        await pingPromise;
-        // Yield once more so the awaited continuation in _publishNextWalkTo runs.
-        await Promise.resolve();
+        pings.shift()();
+        await new Promise((r) => setTimeout(r, 0));
         expect(calls).toEqual(['ping:playbackBot:flush', 'findPath:region_a->region_b']);
     });
 
+    it('flushes the stateManager worker before a SAME-region walkTo', async () => {
+        // Regression (tutorial drafts procgen-shuffled-spiral and
+        // procgen-grid-growth, 2026-10-10): the Maze panel hands the
+        // snapshot's inventory to its tile planner on every walkTo. The
+        // bot published a same-region walkTo synchronously after
+        // onLocationCheck, so the planner saw the snapshot from BEFORE the
+        // pickup — no key, door shut — and stuck with "walkToTile: no path
+        // … under current inventory". The walkTo must wait for the flush.
+        const pings = [];
+        const proxy = { pingWorker: () => new Promise((r) => { pings.push(r); }) };
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [
+                { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
+                { sphereIndex: 0, fractionalIndex: 2, locations: ['Loc A2'] },
+            ],
+            getStaticData: () => ({ regions: new Map([
+                ['region_a', { locations: [{ name: 'Loc A' }, { name: 'Loc A2' }] }],
+            ]) }),
+            getActiveController: () => controller,
+            stateManagerProxy: proxy,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        const playing = bot.play();
+        pings.shift()();
+        await playing;
+        const walkTos = () => controller.calls.filter((c) => c.method === 'walkTo').map((c) => c.args[0].name);
+        expect(walkTos()).toEqual(['Loc A']);
+        bot.onLocationCheck({ locationName: 'Loc A' });
+        // The ping is outstanding: nothing may have been published yet.
+        expect(pings.length).toBe(1);
+        expect(walkTos()).toEqual(['Loc A']);
+        pings.shift()();
+        await new Promise((r) => setTimeout(r, 0));
+        expect(walkTos()).toEqual(['Loc A', 'Loc A2']);
+    });
+
     it('takes the same-region branch when onRegionMove fires during the flush await', async () => {
-        // Race regression: the same-region check happens before the
-        // flush await, but onRegionMove can fire while we await
+        // Race regression: onRegionMove can fire while we await
         // pingWorker — the visualizer crosses an exit on its own
-        // clock — and currentRegion ends up matching the head region
-        // by the time PathFinder is called. Without re-checking after
-        // the await, PathFinder sees (X, X), returns a length-0 path,
-        // and the bot errors with "no path from X to X".
+        // clock — and currentRegion ends up matching the head region.
+        // Deciding the branch BEFORE the await sent PathFinder (X, X),
+        // a length-0 path, and the error "no path from X to X"; every
+        // branch is now decided after the flush.
         const findPathCalls = [];
-        let resolvePing;
-        const pingPromise = new Promise((r) => { resolvePing = r; });
-        const proxy = { pingWorker: () => pingPromise };
+        const pings = [];
+        const proxy = { pingWorker: () => new Promise((r) => { pings.push(r); }) };
         const controller = makeFakeController();
         const bot = new PlaybackBotUI({
             getSphereData: () => [
@@ -950,15 +984,16 @@ describe('PlaybackBotUI — append-only log', () => {
             stateManagerProxy: proxy,
         });
         bot.onRegionMove({ targetRegion: 'region_a' });
-        await bot.play();                                    // walk to Loc A
+        const playing = bot.play();                          // walk to Loc A
+        pings.shift()();
+        await playing;
         bot.onLocationCheck({ locationName: 'Loc A' });      // sphere 0.2 wants region_b — cross-region path
         // While awaiting flush, the visualizer crosses an exit and
         // updates currentRegion to region_b — just as it would in
         // production when the visualizer's clock runs concurrently.
         bot.onRegionMove({ targetRegion: 'region_b' });
-        resolvePing();
-        await pingPromise;
-        await Promise.resolve();
+        pings.shift()();
+        await new Promise((r) => setTimeout(r, 0));
         // PathFinder should NOT have been called (post-flush re-check
         // saw region match), and the bot should have walked to Loc B
         // directly instead of erroring with "no path from X to X".

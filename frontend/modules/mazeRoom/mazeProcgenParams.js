@@ -51,7 +51,22 @@ export const DEFAULT_MAZE_PROCGEN_PARAMS = Object.freeze({
     hazardCount: 3,
     hazardMaxConsecutiveFails: 10,
     hazardWallOverlapAllowed: false,
+    // How a SPIRAL world's maze rooms are entered (⚖ the user, 2026-10-10,
+    // tutorial-bugs): 'zone' = every arrival lands on the room's entrance, the
+    // point its compiled logic is measured from; 'region' = land on the exit
+    // leading back to where the player came from (the seedling-pipeline T2b
+    // arm, which the logic does not model). Stamped as the payload's `arrival`
+    // only for 'zone', only in a world with no linked reverse exits (the
+    // spiral): a linked world's arrival exit is already the one its logic
+    // uses. The APWorld Editor can set it per room.
+    mazeArrival: 'zone',
 });
+
+/** ⛓ The values of `mazeArrival` (and of a maze payload's `arrival`). */
+export const MAZE_ARRIVALS = Object.freeze(['zone', 'region']);
+
+/** ⛓ The class the *Maze rooms play as* row carries (the R1 pins splice it out by it). */
+export const MAZE_ARRIVAL_ROW_CLASS = 'procgen-pipeline-maze-arrival-row';
 
 /**
  * The hazard sub-fields shown while hazards are enabled: count per region, max
@@ -89,6 +104,25 @@ function renderHazardSubFields(params, onChange) {
  */
 export function renderMazeProcgenParams({ params, onChange = () => {} } = {}) {
     const wrap = document.createElement('div');
+    const arrival = document.createElement('select');
+    arrival.className = 'procgen-pipeline-maze-arrival';
+    arrival.dataset.paramKey = 'mazeArrival';
+    for (const [value, text] of [['zone', 'zones (arrive at the entrance)'], ['region', 'regions (arrive at the exit back)']]) {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = text;
+        arrival.appendChild(option);
+    }
+    arrival.value = MAZE_ARRIVALS.includes(params.mazeArrival) ? params.mazeArrival : 'zone';
+    arrival.addEventListener('change', () => {
+        params.mazeArrival = arrival.value;
+        onChange();
+    });
+    const arrivalRow = wrap.appendChild(fieldRow('Maze rooms play as',
+        'Shuffled spiral: zones always start at the room\'s entrance, where its logic is measured from; '
+        + 'regions start at the exit that leads back to where you came from (the logic does not model that yet). '
+        + 'The APWorld Editor can set it per room.', arrival));
+    arrivalRow.className = `${arrivalRow.className} ${MAZE_ARRIVAL_ROW_CLASS}`;
     const hazardInput = document.createElement('input');
     hazardInput.type = 'checkbox';
     hazardInput.checked = !!params.enableHazards;
