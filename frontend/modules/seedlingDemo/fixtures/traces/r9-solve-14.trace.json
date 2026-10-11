@@ -27,7 +27,10 @@
             },
             "obstacle": {
                 "kind": "danger",
-                "id": "bob@128,64"
+                "id": "bob@128,64",
+                "sources": [
+                    "chaser:bob@128,64"
+                ]
             },
             "strategy": {
                 "verb": "walk",

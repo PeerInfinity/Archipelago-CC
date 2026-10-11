@@ -94,7 +94,10 @@
             },
             "obstacle": {
                 "kind": "danger",
-                "id": "sandtrap@96,80"
+                "id": "sandtrap@96,80",
+                "sources": [
+                    "enemy:sandtrap@96,80"
+                ]
             },
             "strategy": {
                 "verb": "kill",
@@ -276,7 +279,10 @@
             },
             "obstacle": {
                 "kind": "danger",
-                "id": "sandtrap@96,128"
+                "id": "sandtrap@96,128",
+                "sources": [
+                    "enemy:sandtrap@96,128"
+                ]
             },
             "strategy": {
                 "verb": "kill",
