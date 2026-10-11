@@ -67,7 +67,7 @@ Because ② never draws from ①'s rng stream, re-running ② after a hand edit 
 
 The spiral plans its items up front, the way sphere growth does (⚖ the user, 2026-10-11). `planSpiralItems` in the engine:
 
-- **Capacity.** Each cell can hold `spiralCellCapacity` pool items: a procedural substrate `maxItemsPerRegion`, a content source what its `spiralItemCapacity(ordinal)` answers (capped), and a source without that hook, or a region library, none. The ruled known gaps are bounce, runner, `flash_seedling` and omsi; `spiralItemHolders()` lists the registered spiral substrates on each side.
+- **Capacity.** Each cell can hold `spiralCellCapacity` pool items: a procedural substrate `maxItemsPerRegion`, a content source what its `spiralItemCapacity(ordinal)` answers (capped), and a source without that hook, or a region library, none. The ruled known gaps are bounce, runner, `flash_seedling` and omsi; `spiralItemHolders()` lists the registered spiral substrates on each side, and `frontend/modules/procgenPipeline/goalCapability.test.js` pins both gap lists (spiral, and sphere: omsi has no realiser) by name, beside a check that every sphere realiser places a spec's goal.
 - **The goal.** A world has a goal when `config.goalItem` says so, or else when its pool holds a victory item or an in-quota substrate declares a `victoryItem`. The goal is always the one item `Victory` (`procgenCore/goalItem.js`), and it goes on the LAST cell in spiral order that can hold an item.
 - **The deal is spread evenly.** The regular items, in a seeded shuffle, go to evenly spaced item-holding cells, at most `maxItemsPerRegion` each. A pool larger than the slots is refused with a sentence naming the shortfall and the substrates that hold none.
 
