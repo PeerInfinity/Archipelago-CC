@@ -23,11 +23,28 @@ import sys
 import textwrap
 from pathlib import Path
 
-import jsonschema
 import pytest
+
+try:  # absent in CI's dependency-free unittests tier (as test_schema_validation.py)
+    import jsonschema
+except ImportError:
+    jsonschema = None
 
 ROOT = Path(__file__).resolve().parent.parent
 SCHEMA = json.loads((ROOT / "frontend/schema/rules.schema.json").read_text(encoding="utf-8"))
+RECORD_SCHEMA = SCHEMA["properties"]["exporter"]["patternProperties"]["^[0-9]+$"]["properties"]["format_fallback"]
+
+
+def _check_record_against_schema(record):
+    """The record against its schema declaration, without jsonschema: required
+    keys, no undeclared key, strings, enums."""
+    props = RECORD_SCHEMA["properties"]
+    assert set(RECORD_SCHEMA["required"]) <= set(record), record
+    assert RECORD_SCHEMA["additionalProperties"] is False and set(record) <= set(props), record
+    for key, value in record.items():
+        assert isinstance(value, str), (key, value)
+        if "enum" in props[key]:
+            assert value in props[key]["enum"], (key, value)
 
 DRIVER = textwrap.dedent(r'''
     import importlib.abc, importlib.machinery, json, logging, sys
@@ -157,10 +174,12 @@ def test_a_fallback_is_logged_recorded_and_summarised(tmp_path, mode, fmt, cause
         assert "rules_combined_ast" not in written  # behaviour unchanged: no _rules-ast.json
     for key, path in written.items():
         doc = json.loads(Path(path).read_text(encoding="utf-8"))
-        jsonschema.validate(doc, SCHEMA)
+        if jsonschema is not None:
+            jsonschema.validate(doc, SCHEMA)
         slots = ["1", "2"] if key.endswith("combined") or key.endswith("combined_ast") else [key[len("rules_p"):].split("_")[0]]
         for slot in slots:
             record = doc["exporter"][slot]["format_fallback"]
+            _check_record_against_schema(record)
             assert record["requested"] == fmt
             assert record["written"] == "ast"
             assert cause in record["reason"]
