@@ -60,4 +60,5 @@ item_table: Dict[str, ItemData] = {
     "L40 flag 8: bosslock@480,352 cleared": ItemData(None, ItemClassification.progression),
     "L48 flag 1: bosslock@48,144 cleared": ItemData(None, ItemClassification.progression),
     "L68 flag 0: bosslock@16,32 cleared": ItemData(None, ItemClassification.progression),
+    "L39 flag 8: wandlock@144,592 cleared": ItemData(None, ItemClassification.progression),
 }

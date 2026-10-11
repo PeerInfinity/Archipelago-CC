@@ -104,7 +104,6 @@ that must handle it.
 | `OptionValue` | Get user-configurable option value (Rule Builder) | `option` | `{"rule": "OptionValue", "args": {"option": "difficulty"}}` |
 | `world_attribute` | Get runtime world attribute | `attribute`, `index` (optional) | `{"type": "world_attribute", "attribute": "required_medallions", "index": 0}` |
 | `WorldAttribute` | Get runtime world attribute (Rule Builder) | `attribute`, `index` (optional) | `{"rule": "WorldAttribute", "args": {"attribute": "shop_items", "index": 0}}` |
-| `setting_value` | Get setting value (legacy) | `setting` | `{"type": "setting_value", "setting": "difficulty"}` |
 | `setting_check` | Check if setting equals value | `setting`, `value` | `{"type": "setting_check", "setting": "mode", "value": "hard"}` |
 | `f_string` | String formatting | `parts: [{type, value}]` | `{"type": "f_string", "parts": [...]}` |
 
@@ -251,7 +250,7 @@ For worlds using class-based helpers (e.g., KH2), the following references are s
 | `world.options.*` | `option_value` | Access user-configurable options |
 | `world.*` (non-option) | `world_attribute` | Access runtime world attributes |
 
-**Note:** The `setting_value` type is legacy and covers both options and world attributes. New exports use the more specific `option_value` and `world_attribute` types.
+**Note:** The legacy `setting_value` type (which covered both options and world attributes) is retired: the schema refuses it, `test_schema_validation.py` refuses it anywhere in a committed preset, and the runtime has no handler for it. Exports use `option_value` and `world_attribute`.
 
 ## Internal/Supporting Types
 

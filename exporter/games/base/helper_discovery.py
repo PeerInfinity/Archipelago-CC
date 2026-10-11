@@ -678,7 +678,7 @@ class HelperDiscoveryMixin:
                     },
                     'iterator': {
                         'type': 'method_call',
-                        'object': {'type': 'setting_value', 'setting': mapping_name},
+                        'object': {'type': 'world_attribute', 'attribute': mapping_name},
                         'method': 'items',
                         'args': []
                     }

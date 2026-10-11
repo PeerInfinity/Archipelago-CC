@@ -228,7 +228,7 @@ class BaseGameExportHandler(
     # Example: {'ow_boss_req': 'ow_boss_requirement'}
     NAME_REMAPPING: Dict[str, str] = {}
 
-    # Set of setting names that should be converted from 'name' type to 'setting_value' type.
+    # Set of setting names that should be converted from 'name' type to 'option_value' type.
     # This ensures they are looked up via getSetting which checks the options.* path.
     # Example: {'open_world', 'ow_boss_requirement'}
     SETTINGS_TO_CONVERT: Set[str] = set()
@@ -236,15 +236,15 @@ class BaseGameExportHandler(
     # Mapping of state_method names to their replacement rule structures.
     # This allows games to declaratively replace game-specific state methods with
     # equivalent rule structures without overriding expand_rule.
-    # Example: {'_my_game_setting': {'type': 'setting_value', 'setting': 'my_setting'}}
+    # Example: {'_my_game_setting': {'type': 'option_value', 'option': 'my_setting'}}
     # Replacements are applied recursively during rule expansion.
     # Manual entries here take precedence over auto-detected replacements.
     STATE_METHOD_REPLACEMENTS: Dict[str, Dict[str, Any]] = {}
 
     # Whether to auto-detect LogicMixin state method replacements.
     # When True, analyzes LogicMixin subclasses to detect common patterns like:
-    # - return self.multiworld.worlds[player].<attr> -> setting_value
-    # - return not self.multiworld.worlds[player].<attr> -> not(setting_value)
+    # - return self.multiworld.worlds[player].<attr> -> world_attribute
+    # - return not self.multiworld.worlds[player].<attr> -> not(world_attribute)
     # Manual STATE_METHOD_REPLACEMENTS always take precedence over auto-detected ones.
     AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS: bool = True
 
@@ -260,7 +260,7 @@ class BaseGameExportHandler(
     PROG_ITEMS_INIT: Dict[str, Any] = {}
 
     # Mapping of self.<attr> patterns to setting configurations.
-    # Used by the analyzer to convert self.attr access to setting_value rules.
+    # Used by the analyzer to convert self.attr access to option_value rules.
     # This is useful for games where the world class stores option values in instance attributes.
     # Values can be:
     #   - str: setting name (uses numeric value)
@@ -2244,7 +2244,7 @@ class BaseGameExportHandler(
             def make_accumulator_item(name: str, is_target: bool = False) -> Dict[str, Any]:
                 return {
                     'name': name, 'id': None, 'groups': [group],
-                    'advancement': True, 'useful': False, 'trap': False,
+                    'classification': 'progression',
                     'type': item_type,
                     'max_count': max_count if is_target else 1
                 }

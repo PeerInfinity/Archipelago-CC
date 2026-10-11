@@ -10,11 +10,11 @@
     },
     "game_name": {
       "type": "string",
-      "description": "The name of the game."
+      "description": "The DOCUMENT's game label: the slot's game for a one-slot document, \"Multiworld\" for a combined one. It is a label, not the slot's identity: the loaded slot's game is world[\"<p>\"].game, and logic, inventory and the snapshot resolve from that (rules F4)."
     },
     "game_directory": {
       "type": "string",
-      "description": "The world directory name for the game."
+      "description": "The DOCUMENT's world-directory label (a combined document's is \"multiworld\"). The slot's own directory is world[\"<p>\"].world_directory (rules F4)."
     },
     "archipelago_version": {
       "type": "string",
@@ -156,7 +156,12 @@
           "properties": {
             "game": {
               "type": "string",
-              "description": "Name of the game this world is for."
+              "description": "Name of the game this world is for: the slot's game, which every reader that resolves logic, inventory or the slot's identity uses (top-level game_name is only the document's label)."
+            },
+            "world_directory": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The slot's world directory under worlds/ (the export handler's lookup key; exporter.py's export_game_rules adds it, as do the JS producers rulesExporter.js, regionAtlasCompiler.js and apcalcGeneratorEngine.js). Optional: older documents omit it."
             },
             "slot_data": {
               "type": "object",
@@ -237,7 +242,8 @@
     },
     "game_info": {
       "type": "object",
-      "description": "Game-specific information and accumulator patterns, keyed by player slot ID (string). Contains custom game data that doesn't fit in world/exporter sections.",
+      "description": "Game-specific information and accumulator patterns, keyed by player slot ID (string). Contains custom game data that doesn't fit in world/exporter sections. At least one slot row (rules S12): every producer writes the slot's completion_condition, so an empty map is a writer that forgot the slot.",
+      "minProperties": 1,
       "patternProperties": {
         "^[0-9]+$": {
           "type": "object",
@@ -609,7 +615,11 @@
       "description": "An AST-format rule object defining access conditions.",
       "type": "object",
       "properties": {
-        "type": { "type": "string" },
+        "type": {
+          "type": "string",
+          "not": { "const": "setting_value" },
+          "description": "The node type. `setting_value` is retired (rules S7, user 2026-10-03) and refused by name: an option is `option_value` (`option`), a world attribute `world_attribute` (`attribute`)."
+        },
         "value": { "description": "Used for 'constant' type." },
         "name": {
           "type": "string",
@@ -722,10 +732,6 @@
         "location": {
           "oneOf": [{ "type": "string" }, { "$ref": "#/$defs/rule" }],
           "description": "Location name for 'location_check', 'placement_lookup'."
-        },
-        "setting": {
-          "type": "string",
-          "description": "Setting name for 'setting_value' (legacy)."
         },
         "option": {
           "type": "string",
@@ -991,6 +997,10 @@
       "required": ["name"]
     },
     "itemDefinition": {
+      "$comment": "rules S6: the retired boolean flags advancement/useful/trap are REFUSED by name (propertyNames), not merely undeclared, since additionalProperties is open; 'classification' is the one shape. The exporter's items step converts a handler's flags, and the accumulator items (handler.py make_accumulator_item) write classification directly.",
+      "propertyNames": {
+        "not": { "enum": ["advancement", "useful", "trap"] }
+      },
       "type": "object",
       "properties": {
         "name": { "type": "string" },
@@ -1010,18 +1020,6 @@
         "classification": {
           "type": "string",
           "description": "Item classification string (e.g., 'progression', 'useful', 'trap', 'filler', 'progression_skip_balancing')."
-        },
-        "advancement": {
-          "type": "boolean",
-          "description": "Legacy: whether item is progression. Replaced by 'classification' in newer exports."
-        },
-        "useful": {
-          "type": "boolean",
-          "description": "Legacy: whether item is useful. Replaced by 'classification' in newer exports."
-        },
-        "trap": {
-          "type": "boolean",
-          "description": "Legacy: whether item is a trap. Replaced by 'classification' in newer exports."
         },
         "event": { "type": "boolean" },
         "type": {

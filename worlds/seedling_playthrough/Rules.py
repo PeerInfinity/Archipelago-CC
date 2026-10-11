@@ -461,8 +461,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_38__r0c9 -> level_39__r2c11", player),
+        Has('L39 flag 8: wandlock@144,592 cleared', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_38__r12c5 -> level_38__r0c9", player),
         Has('Fire', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_39__r2c11 -> level_38__r0c9", player),
+        Has('L39 flag 8: wandlock@144,592 cleared', 1)
     )
 
     world.set_rule(

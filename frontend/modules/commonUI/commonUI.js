@@ -1512,12 +1512,6 @@ class CommonUI {
         break;
       }
 
-      case 'setting_value': {
-        const settingName = rule.setting || '?';
-        root.appendChild(document.createTextNode(` setting: ${settingName}`));
-        break;
-      }
-
       case 'setting_check': {
         const settingName = rule.setting || '?';
         const value = rule.value;

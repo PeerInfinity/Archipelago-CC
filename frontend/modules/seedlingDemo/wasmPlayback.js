@@ -106,6 +106,17 @@ export const FALLBACK_POLICY = 'forced-re-arrival';
 export const endsHeld = (goal) => goal?.kind === 'location';
 
 /**
+ * ⛓ CROSS-LEVEL END — the level a LOCATION plan ends in when that is NOT the goal's room (the plan's own last
+ * `expected` row; L32's Bob Boss ends in L30 after the pit), else null. Such a plan is a crossing in flight: the
+ * engine holds its landing (the arrival watch), not its end. An exit plan, or a plan without expected rows, is null.
+ */
+export function crossLevelEnd(goal, plan) {
+    if (!endsHeld(goal)) return null;
+    const end = plan?.expected?.at?.(-1)?.level;
+    return Number.isInteger(end) && end !== goal.level ? end : null;
+}
+
+/**
  * ⛓ W8 — ADOPT the cold start (plan `seedling-js-solver-walk-plan.md` §5.13;
  * ⚖ the user 2026-10-03: the solver must not need to exit and re-enter a room
  * to solve it). The bot's first goal finds a room that ran UNWATCHED: no

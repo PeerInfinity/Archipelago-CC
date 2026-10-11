@@ -73,7 +73,7 @@ const { R7_GOAL_LEDGER } = await imp('frontend/modules/seedlingDemo/r7Acceptance
 //   only the OVERLAY below is authored. The vanilla 116 and an edited level set
 //   now go through ONE `deriveAtlas`.
 const { deriveAtlas, regionIdFor, outExitId, inExitId, LINK_TAGS, VICTORY_ITEM } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
-const { buildLevelWorld, ROLES, maskHitsBox } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
+const { buildLevelWorld, ROLES, maskHitsBox, PERSISTENCE_RESPONSE } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
 const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fidelityDescent.js');
 const { playerBoxAt } = await imp('frontend/modules/seedlingDemo/playerPhysicsV2.js');
 const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
@@ -81,9 +81,11 @@ const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/s
 const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seedlingDemo/seedlingLethalArrivals.js');
 
 const { patchedMapDocument, SEEDLING_SET_PATCHES } = await imp('frontend/modules/seedlingDemo/seedlingSetPatches.js');
-const { arrivalSolidCensus } = await imp('frontend/modules/seedlingDemo/fidelityArrival.js');
+const { arrivalSolidCensus, gameLandings } = await imp('frontend/modules/seedlingDemo/fidelityArrival.js');
 const { levelSourceFromAtlas } = await imp('frontend/modules/seedlingDemo/atlasSource.js');
-const { deriveObstacleEvents, deriveLockEvents, obstacleEventName, parseSolidId } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
+const {
+    deriveObstacleEvents, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
+} = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
 const { FLAG_ACTIONS } = await imp('frontend/modules/seedlingDemo/arrivalSolid.js');
 const { apRegionName } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
 const { pitChainsFromCensus } = await import('./seedlingPitChains.js');
@@ -1147,6 +1149,117 @@ export function playthroughLockEvents(doc, { existing = [] } = {}) {
     });
 }
 
+/**
+ * ⛓⛓ RULES l38-button-event — **THE CROSS-ROOM BUTTON PRESSES AS AP EVENTS** (`flashPanel/seedlingObstacleEvents.js`
+ * `deriveButtonEvents` holds the schema and the why). The rows are every cross-room `ButtonRoom` of the delivered
+ * map (`crossRoomButtonsOf`), so the set is derived; this answers the atlas-side questions:
+ *   - EFFECT: what a cleared tag does to the target, from the model's `PERSISTENCE_RESPONSE`;
+ *   - PRICED BY THE BUTTON: the overlay rules the target FREE with the cross-level openers and NOT without them
+ *     (`OV.lockRuling`'s cross-level arm) — the one ruling that assumed the press;
+ *   - PLACE: the presser's sub-region (the component its tile is in; none = a refusal by name);
+ *   - GATES, measured on the physics model: for every game landing into the target's level, the box's flood with
+ *     the target standing (the default build: the flag held) against a copy of the level without it (the build
+ *     once the flag is cleared). A landing whose standing flood is strictly smaller is SEALED IN by the target:
+ *     that pocket is reached only through it. Its departure, and every departure standing in the pocket, cost the
+ *     event — entering the room from the landing and leaving through the pocket both cross the target. Refused by
+ *     name: a location in the pocket (it would need its own AP region), a pocket door leading anywhere but back to
+ *     a sealed landing's own level, a kill-lock body in the pocket (the kill arm would open it from there), or a
+ *     target that seals no landing (its crossing would be internal: an atlas split, not a gate).
+ * The atlas carries NO event or gate (a rules-layer projection, as for the obstacle and lock events).
+ */
+export function playthroughButtonEvents(doc, { existing = [] } = {}) {
+    const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
+    const conns = (doc.vanilla_layout?.connections ?? []);
+    const entityOf = (t) => {
+        const e = (levelOf(t.level)?.entities ?? []).find((x) => x.type === t.type && x.x === t.x && x.y === t.y);
+        if (!e) throw new Error(`button events: L${t.level} has no ${t.type}@${t.x},${t.y}`);
+        return e;
+    };
+    const ruling = (t, crossLevelOpeners) => OV.overlayEntitySemantics(entityOf(t), SEM.entitySemantics(entityOf(t)), {
+        level: t.level, crossLevelOpeners, groupOpeners: GROUP_OPENERS, killLocks: KILL_LOCKS,
+    });
+    const tileOf = ({ x, y }) => [Math.floor(x / TILE), Math.floor(y / TILE)];
+    const key = ([x, y]) => `${x},${y}`;
+    return deriveButtonEvents(crossRoomButtonsOf(MAP), {
+        existing,
+        effect: (t) => persistenceEffect(t, PERSISTENCE_RESPONSE[t.type]),
+        pricedByButton: (t) => {
+            const withButton = ruling(t, CROSS_LEVEL_OPENERS);
+            const without = ruling(t, new Set());
+            return {
+                free: withButton?.kind === 'open' && without?.kind !== 'open',
+                why: `with the button: ${withButton?.kind ?? 'no ruling'}; without: ${without?.kind ?? 'no ruling'}`,
+            };
+        },
+        place: (p) => {
+            const regionId = regionIdFor(p.level);
+            const region = regionOf(regionId);
+            if (!region) throw new Error(`button events: ${regionId} is not in the atlas`);
+            const subs = region.subgraph?.sub_regions;
+            if (!subs) return { region_id: regionId, side: apRegionName(regionId) };
+            const grid = gridFor(levelOf(p.level));
+            const { indexOf, components } = regionAnalyses.get(regionId).componentsResult;
+            const [x, y] = tileOf(p);
+            const gx = x - (grid.origin?.x ?? 0);
+            const gy = y - (grid.origin?.y ?? 0);
+            const i = gx >= 0 && gy >= 0 && gx < grid.width && gy < grid.height ? indexOf[gy * grid.width + gx] : -1;
+            const c = i >= 0 ? components[i].id : null;
+            if (!c || !subs.includes(c)) {
+                throw new Error(`button events: L${p.level} buttonroom@${p.x},${p.y} stands in no sub-region of ${regionId} `
+                    + `(tile [${x},${y}]) — where the event sits cannot be said`);
+            }
+            return { region_id: regionId, sub_region: c, side: apRegionName(regionId, c) };
+        },
+        // ButtonRoom.update: any body on it presses it — standing in its sub-region is the whole cost.
+        reach: () => null,
+        gates: (t, eventName) => {
+            const level = levelOf(t.level);
+            const without = { ...level, entities: level.entities.filter((e) => e !== entityOf(t)) };
+            const regionId = regionIdFor(t.level);
+            const region = regionOf(regionId);
+            const all = () => true;
+            const out = [];
+            const sealedFrom = new Set();
+            const pockets = [];
+            for (const L of gameLandings(MAP).filter((g) => g.level === t.level)) {
+                const held = modelFloodTiles(level, [tileOf(L)], all);
+                const cleared = modelFloodTiles(without, [tileOf(L)], all);
+                if (held.length >= cleared.length) continue;
+                const door = parseSolidId(L.door);
+                const dep = { region_id: regionIdFor(L.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) };
+                if (!conns.some((c) => c.from[0] === dep.region_id && c.from[1] === dep.exit_id && c.to[0] === regionId)) {
+                    throw new Error(`button events: the atlas has no connection ${dep.region_id}/${dep.exit_id} -> ${regionId} for ${eventName}`);
+                }
+                out.push(dep);
+                sealedFrom.add(L.from);
+                pockets.push(new Set(held.map(key)));
+            }
+            if (out.length === 0) {
+                throw new Error(`button events: ${eventName} seals no landing of L${t.level} on the model — its crossing would be `
+                    + 'internal to the region (an atlas split, not a gate)');
+            }
+            const inPocket = (tile) => pockets.some((p) => p.has(key(tile)));
+            for (const loc of region.locations ?? []) {
+                if (inPocket(loc.tile)) throw new Error(`button events: "${loc.name}" lies in ${eventName}'s pocket — it needs its own AP region`);
+            }
+            for (const b of KILL_LOCKS.get(t.level)?.bodies ?? []) {
+                const at = parseSolidId(b.at);
+                if (inPocket(tileOf(at))) throw new Error(`button events: ${b.at} lies in ${eventName}'s pocket — the kill arm opens it from there`);
+            }
+            for (const e of region.exits ?? []) {
+                if (!e.exit_id.startsWith('out_') || !inPocket(e.entrance_tile)) continue;
+                const to = conns.find((c) => c.from[0] === regionId && c.from[1] === e.exit_id)?.to[0];
+                if (!to || !sealedFrom.has(Number(String(to).replace(/^level_/, '')))) {
+                    throw new Error(`button events: ${regionId}/${e.exit_id} stands in ${eventName}'s pocket and leads to ${to ?? 'nowhere'}, `
+                        + 'not back to a sealed landing\'s level — gating it would seal a way the game gives without the event');
+                }
+                out.push({ region_id: regionId, exit_id: e.exit_id });
+            }
+            return out;
+        },
+    });
+}
+
 /** Every exit whose arrival spawn is NOT its entrance tile, and why — derived, printed, never typed. */
 export const movedArrivalSpawns = [];
 
@@ -1320,6 +1433,7 @@ function main() {
     setPlaythroughLandingAtlas(doc);
     const obstacle = playthroughObstacleEvents(doc);
     const locks = playthroughLockEvents(doc, { existing: obstacle.events });
+    const buttons = playthroughButtonEvents(doc, { existing: [...obstacle.events, ...locks.events] });
     const landingGates = playthroughLandingGates(doc);
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
@@ -1337,11 +1451,12 @@ function main() {
         // the menu is always possible — a per-player flag, never an edge. Read off the substrate's declaration.
         returnToMenu: Boolean(SEEDLING_ENTRY.restartWarp),
         // ⛓ RULES obstacle-events: the saved obstacles' events and the landing edges they gate.
-        events: [...obstacle.events, ...locks.events],
+        // ⛓ RULES l38-button-event: and the cross-room button presses (obstacle = the target, side = the button).
+        events: [...obstacle.events, ...locks.events, ...buttons.events],
         // ⛓ RULES lock-events: a latched lock's far-side return costs its event, not the reach of its open side.
         internalExitRules: locks.internalExitRules,
         // ⛓ RULES game-truth-gaps (R2): and the landings on lethal terrain.
-        exitGates: [...obstacle.exitGates, ...landingGates],
+        exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...landingGates],
     });
     const rulesText = stringifyRulesJson(rules);
 
@@ -1385,6 +1500,12 @@ function main() {
         + `${quiet ? '' : locks.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side} `
             + `across [${e.fields.across.join(', ')}] rule ${JSON.stringify(e.access_rule)}`).join('')}`
         + `${quiet ? '' : locks.internalExitRules.map((r) => `\n  ${r.region_id} ${r.from} -> ${r.to}: ${JSON.stringify(r.rule)}`).join('')}`);
+    console.log(`${buttons.events.length} cross-room button event(s), ${buttons.exitGates.length} crossing(s) through their targets gated`
+        + `${buttons.reused.length ? ` (${buttons.reused.join(', ')} reused)` : ''}`
+        + `${quiet ? '' : buttons.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side} `
+            + `(pressed at L${e.fields.action.presser.level} buttonroom@${e.fields.action.presser.x},${e.fields.action.presser.y})`).join('')}`
+        + `${quiet ? '' : buttons.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}`
+        + `${buttons.skipped.length ? `; ${buttons.skipped.length} skipped: ${buttons.skipped.join('; ')}` : ''}`);
     console.log(`${landingGates.length} landing edge(s) gated on the lethal terrain they land on; `
         + `${lethalLandings.filter((l) => !l.gated).length} lethal-terrain landing(s) not gated`
         + `${quiet ? '' : lethalLandings.map((l) => `\n  ${l.gated ? 'GATED' : 'not gated'} ${l.where}: ${l.why}`).join('')}`);

@@ -63,6 +63,11 @@ const ASSERTION_KEYWORDS = [
     // ⛓ D0b — the six `region-atlas.schema.json` uses and the promoted
     //   checker lacked, each with draft-07 semantics:
     'minLength', 'minItems', 'maxItems', 'uniqueItems', 'pattern',
+    // ⛓ rules S6/S7/S12 — `propertyNames` (itemDefinition refuses the retired
+    //   advancement/useful/trap flags BY NAME), `not` (that refusal, and the
+    //   astRule's retired `setting_value` type), `minProperties` (`game_info`
+    //   needs a slot row), each with draft-07 semantics:
+    'not', 'propertyNames', 'minProperties',
 ];
 const ANNOTATION_KEYWORDS = [
     'description', 'title', 'examples', 'default', '$comment',
@@ -139,6 +144,9 @@ export function schemaErrors(value, schema, root, path = '$') {
     for (const branch of schema.allOf ?? []) {
         errs.push(...schemaErrors(value, branch, root, path));
     }
+    if (schema.not && schemaErrors(value, schema.not, root, path).length === 0) {
+        errs.push(`${path}: ${JSON.stringify(value)} must NOT match ${JSON.stringify(schema.not)}`);
+    }
     if (schema.const !== undefined && value !== schema.const) {
         errs.push(`${path}: expected const ${JSON.stringify(schema.const)}`);
     }
@@ -183,6 +191,15 @@ export function schemaErrors(value, schema, root, path = '$') {
     if (typeOf(value) === 'object') {
         for (const req of schema.required ?? []) {
             if (!(req in value)) errs.push(`${path}: missing required '${req}'`);
+        }
+        if (schema.minProperties !== undefined && Object.keys(value).length < schema.minProperties) {
+            errs.push(`${path}: ${Object.keys(value).length} properties < minProperties ${schema.minProperties}`);
+        }
+        if (schema.propertyNames) {
+            // Each KEY is validated as a string instance against the subschema.
+            for (const key of Object.keys(value)) {
+                errs.push(...schemaErrors(key, schema.propertyNames, root, `${path}.${key} (property name)`));
+            }
         }
         for (const [key, sub] of Object.entries(value)) {
             let matched = false;

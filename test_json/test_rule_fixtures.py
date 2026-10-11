@@ -379,10 +379,6 @@ def evaluate_rule_python(rule, context):
 
         return None
 
-    elif rule_type == 'setting_value':
-        setting = rule.get('setting')
-        return context.getSetting(setting)
-
     elif rule_type == 'helper':
         helper_name = rule.get('name')
         args = rule.get('args', [])
@@ -1163,7 +1159,7 @@ def get_unsupported_rule_types(rule):
         'item_check', 'count_item', 'group_check', 'group_count', 'counts', 'count_true',
         'weighted_count_true', 'unique_count', 'total_items_count', 'prog_item_count',
         # Settings/world
-        'setting_value', 'option_value', 'setting_check', 'world_attribute', 'world_reference',
+        'option_value', 'setting_check', 'world_attribute', 'world_reference',
         # Regions
         'can_reach', 'region_reference', 'region_attribute',
         # Helpers/methods

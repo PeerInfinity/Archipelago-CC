@@ -56,7 +56,7 @@ class KDL3GameExportHandler(GenericGameExportHandler):
         'ow_boss_req': 'ow_boss_requirement',
     }
 
-    # Setting names that should be converted from 'name' type to 'setting_value' type
+    # Setting names that should be converted from 'name' type to 'option_value' type
     SETTINGS_TO_CONVERT = {
         'open_world',
         'ow_boss_requirement',

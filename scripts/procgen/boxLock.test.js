@@ -475,7 +475,8 @@ describe('who takes the box', () => {
          * fidelity WALLFLYER the body-and-death witness, `probe-seedling-wallflyer-mobiles.mjs`;
          * fidelity STATICLADDER the DarkTrap light-death witness, `probe-seedling-darktrap-mobiles.mjs`, and the
          * class-parametric chaser witness (K2's lavarunner), `probe-seedling-chaser-mobiles.mjs`;
-         * hammer-phase C1 the static sword-kill witness, `probe-seedling-static-sword-mobiles.mjs`.)
+         * hammer-phase C1 the static sword-kill witness, `probe-seedling-static-sword-mobiles.mjs`;
+         * RULES l38-button-event the cross-room ButtonRoom write witness, `probe-seedling-cross-room-button.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -498,7 +499,7 @@ describe('who takes the box', () => {
             'probe-seedling-restart-warp.mjs', 'probe-seedling-divergence-sweep.mjs', 'probe-seedling-slot-order.mjs',
             'probe-seedling-contact-divergence.mjs', 'probe-seedling-axe-phase.mjs', 'probe-seedling-arrival-solid.mjs',
             'probe-seedling-restart-route.mjs', 'probe-seedling-restart-held-items.mjs', 'probe-seedling-arrival-escape.mjs',
-            'probe-seedling-obstacle-events.mjs', 'probe-seedling-lethal-landings.mjs', 'probe-seedling-tentacle-mouth.mjs', 'probe-seedling-loop-restart.mjs', 'probe-seedling-bosslock-latch.mjs', 'probe-seedling-persistence-rebuild.mjs', 'probe-seedling-killlock.mjs', 'probe-seedling-cleartag.mjs', 'probe-seedling-ladder2-phase.mjs', 'probe-seedling-bobsoldier-mobiles.mjs', 'probe-seedling-wallflyer-mobiles.mjs', 'probe-seedling-darktrap-mobiles.mjs', 'probe-seedling-chaser-mobiles.mjs', 'probe-seedling-static-sword-mobiles.mjs'];
+            'probe-seedling-obstacle-events.mjs', 'probe-seedling-lethal-landings.mjs', 'probe-seedling-tentacle-mouth.mjs', 'probe-seedling-loop-restart.mjs', 'probe-seedling-bosslock-latch.mjs', 'probe-seedling-persistence-rebuild.mjs', 'probe-seedling-killlock.mjs', 'probe-seedling-cleartag.mjs', 'probe-seedling-ladder2-phase.mjs', 'probe-seedling-bobsoldier-mobiles.mjs', 'probe-seedling-wallflyer-mobiles.mjs', 'probe-seedling-darktrap-mobiles.mjs', 'probe-seedling-chaser-mobiles.mjs', 'probe-seedling-static-sword-mobiles.mjs', 'probe-seedling-cross-room-button.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

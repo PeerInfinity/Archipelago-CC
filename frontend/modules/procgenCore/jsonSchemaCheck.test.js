@@ -342,21 +342,46 @@ describe('the six keywords D0b added, with draft-07 semantics', () => {
     });
 });
 
+// ── the three keywords rules S6/S7/S12 added ─────────────────────────────
+
+describe('not / propertyNames / minProperties, with draft-07 semantics', () => {
+    const check = (schema, value) => schemaErrors(value, schema, schema);
+
+    it('not refuses exactly what its subschema accepts', () => {
+        expect(check({ not: { const: 'setting_value' } }, 'option_value')).toEqual([]);
+        expect(check({ not: { const: 'setting_value' } }, 'setting_value')).toHaveLength(1);
+    });
+
+    it('propertyNames validates each KEY as a string, naming it', () => {
+        const schema = { propertyNames: { not: { enum: ['advancement', 'useful', 'trap'] } } };
+        expect(check(schema, { classification: 'progression' })).toEqual([]);
+        const errs = check(schema, { name: 'x', advancement: true });
+        expect(errs).toHaveLength(1);
+        expect(errs[0]).toContain('advancement');
+        expect(check(schema, 'not an object')).toEqual([]);           // non-object: no-op
+    });
+
+    it('minProperties counts own keys of an object, and nothing else', () => {
+        expect(check({ minProperties: 1 }, { 1: {} })).toEqual([]);
+        expect(check({ minProperties: 1 }, {})).toHaveLength(1);
+        expect(check({ minProperties: 1 }, [])).toEqual([]);           // non-object: no-op
+    });
+});
+
 // ── the law: an unknown ASSERTION throws by name ──────────────────────────
 
 describe('⛔ an unimplemented keyword THROWS, by name', () => {
     /**
-     * The keyword is `not` on purpose: it is a real draft-07 assertion this
-     * evaluator does NOT implement, so the row stays honest if the keyword set
-     * grows — the day somebody adds `not`, this row goes red and asks for a
-     * different unimplemented one, which is the reminder that the law is about
-     * the SET and not about this word.
+     * The keyword is `maxProperties` on purpose: it is a real draft-07
+     * assertion this evaluator does NOT implement. (It was `not` until rules
+     * S6/S7 added `not`, which turned this row red exactly as it promised —
+     * the law is about the SET, not about one word.)
      */
-    it('a schema using `not` is refused, naming the keyword and the path', () => {
-        expect(KNOWN_KEYWORDS.has('not')).toBe(false);
-        const schema = { type: 'object', properties: { a: { not: { type: 'string' } } } };
-        expect(() => schemaErrors({ a: 1 }, schema, schema))
-            .toThrow(/unimplemented keyword 'not' at \$\.a/);
+    it('a schema using `maxProperties` is refused, naming the keyword and the path', () => {
+        expect(KNOWN_KEYWORDS.has('maxProperties')).toBe(false);
+        const schema = { type: 'object', properties: { a: { maxProperties: 1 } } };
+        expect(() => schemaErrors({ a: {} }, schema, schema))
+            .toThrow(/unimplemented keyword 'maxProperties' at \$\.a/);
     });
 
     it('the throw happens even when the value would have passed everything else', () => {

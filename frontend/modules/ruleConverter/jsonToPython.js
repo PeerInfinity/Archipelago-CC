@@ -122,7 +122,6 @@ export class JSONToPython {
       attribute: this._convertAttribute,
       name: this._convertName,
       subscript: this._convertSubscript,
-      setting_value: this._convertSettingValue,
       player_id: this._convertPlayerId,
 
       // Collections
@@ -421,11 +420,6 @@ export class JSONToPython {
     const index = rule.index || rule.slice || {};
 
     return `${this._convertRule(obj)}[${this._convertRule(index)}]`;
-  }
-
-  _convertSettingValue(rule) {
-    const setting = rule.setting || '';
-    return `world.options.${setting}.value`;
   }
 
   _convertPlayerId() {

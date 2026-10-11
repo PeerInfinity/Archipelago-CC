@@ -1740,9 +1740,7 @@
         "groups": [
           "coins"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "type": "coins",
         "max_count": 999999
       },
@@ -1752,9 +1750,7 @@
         "groups": [
           "coins"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "type": "coins",
         "max_count": 999999
       }
