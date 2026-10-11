@@ -1903,15 +1903,13 @@ class CallVisitorMixin(BaseVisitorMixin):
             # We evaluate to_bool() at analysis time since it only depends on settings, not game state.
             elif method_name == 'to_bool':
                 logging.debug(f"Processing potential option to_bool call")
-                # Check if the object is a setting_value or option_value (options access pattern)
-                # Note: expression_visitors.py creates 'option_value' type, but older code may use 'setting_value'
+                # Check if the object is an option_value (options access pattern, created by expression_visitors.py)
                 # Also handle 'attribute' type from AST chains like world.worlds[player].options.X
                 func_object = func_info.get('object', {})
                 func_obj_type = func_object.get('type')
                 setting_name = None
-                if func_obj_type in ('setting_value', 'option_value'):
-                    # Handle both key names: 'setting' (legacy) and 'option' (current)
-                    setting_name = func_object.get('setting') or func_object.get('option')
+                if func_obj_type == 'option_value':
+                    setting_name = func_object.get('option')
                 elif func_obj_type == 'attribute':
                     # Handle attribute chain like {attr: 'open_pyramid', object: {attr: 'options', ...}}
                     # Extract setting name if this is an options.X access pattern

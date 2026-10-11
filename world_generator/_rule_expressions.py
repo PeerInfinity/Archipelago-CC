@@ -410,14 +410,6 @@ class RuleExpressionMixin:
             }
             return self._convert_binary_op(binary_op_rule)
 
-        if rb_rule == 'SettingValue':
-            # Convert Rule Builder format SettingValue (legacy)
-            setting_rule = {
-                'type': 'setting_value',
-                'setting': args.get('setting', '')
-            }
-            return self._convert_setting_value(setting_rule)
-
         if rb_rule == 'OptionValue':
             # Convert Rule Builder format OptionValue to OptionValue Rule
             # This allows runtime evaluation of options in set_rules context
@@ -662,32 +654,6 @@ class RuleExpressionMixin:
                 return self._convert_arithmetic_operand(max_args[0])
             return '0'
 
-        if rb_rule == 'SettingValue':
-            # Handle SettingValue in Compare operand - preserve numeric value
-            # Unlike _convert_setting_value which converts to boolean rules,
-            # Compare operands need the actual numeric value for arithmetic comparisons
-            setting = rb_args.get('setting', '')
-            if setting in self.settings:
-                value = self.settings[setting]
-                # For numeric settings in Compare context, return the raw value
-                if isinstance(value, (int, float)):
-                    return repr(value)
-                # For boolean-like settings, convert to True_/False_
-                if isinstance(value, bool):
-                    self.required_imports.add('True_' if value else 'False_')
-                    return 'True_()' if value else 'False_()'
-                if isinstance(value, str):
-                    if value.lower() == 'true':
-                        self.required_imports.add('True_')
-                        return 'True_()'
-                    elif value.lower() == 'false':
-                        self.required_imports.add('False_')
-                        return 'False_()'
-                # Other values (strings, etc.) - return as string literal
-                return repr(value)
-            # Unknown setting - return 0 as safe fallback
-            return '0'
-
         if rb_rule == 'OptionValue':
             # Handle OptionValue in Compare operand - use OptionValue rule for runtime evaluation
             option_name = rb_args.get('option', '')
@@ -820,12 +786,6 @@ class RuleExpressionMixin:
                             arg_strs.append(repr(arg.get('args', {}).get('value')))
                         elif arg.get('type') == 'constant':
                             arg_strs.append(repr(arg.get('value')))
-                        elif arg.get('rule') == 'SettingValue':
-                            setting = arg.get('args', {}).get('setting', '')
-                            if setting in self.settings:
-                                arg_strs.append(repr(self.settings[setting]))
-                            else:
-                                arg_strs.append('None')
                         else:
                             # For other complex expressions, try to convert
                             arg_strs.append(self._convert_arithmetic_operand(arg))
@@ -901,18 +861,6 @@ class RuleExpressionMixin:
                 return 'None'
             # For other names, return as variable reference
             return name
-
-        # Handle Rule Builder format SettingValue in arithmetic operand
-        if rb_rule == 'SettingValue':
-            rb_args = operand.get('args', {})
-            setting = rb_args.get('setting', '')
-            if setting in self.settings:
-                value = self.settings[setting]
-                # For numeric settings in arithmetic context, return the raw value
-                if isinstance(value, (int, float)):
-                    return repr(value)
-            # Unknown or non-numeric setting - return 0 as safe fallback
-            return '0'
 
         # Handle Rule Builder format OptionValue in arithmetic operand
         if rb_rule == 'OptionValue':

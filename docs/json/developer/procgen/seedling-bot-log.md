@@ -15276,6 +15276,93 @@ just after its light thrust). That is handed over, with the tapes and recordings
 - **A survey SOLVED is a model verdict.** Both new solves walk through a leg the game refutes; only a recording says
   which half of a solve is game-exact.
 
+### Seedling hammer-phase C1-ON — the two switches ship ON
+
+⚖ The user (2026-10-10): *"Yes, please turn both of them on."* `STATIC_SWORD_ARM` (`enemyDamage`) and
+`CHOOSER_HIT_SOURCES` (`solverBot`, mode `empty`) are ON by default; the env var is an opt-OUT
+(`SEEDLING_STATIC_SWORD_ARM=0`, `SEEDLING_CHOOSER_HIT_SOURCES=0`). `withStaticSwordArm` / `withChooserHitSources`
+and every OFF row stay as the controls. The report is `CC/docs/cloud-reports/seedling-hammer-c1on.md`.
+
+**W0** at `e45c9d2a9f`: the identity block is C1's base row for row (md5 `4647e1e0`), tapeRunner 589 `e6c073f9`,
+surface GREEN 237, constants 5,506, entities 528, profile 138, roster 266, bounded vitest 1438/1438.
+
+**D2 — the node movers are exactly C1 §D4.4's.** With the flip the identity block moves two rows and nothing else:
+- ENEMY census `30bcc49c` → `ad84493c`: the turret corridor row REFUSED → SOLVED 221 t (kill, collect); the
+  CORRIDOR arm 15/7/1 → 14/8/1. With both `=0` it is `30bcc49c` again.
+- `solve-seedling-r9-campaign --check` `b064c264` → exit 1 on exactly the six traces (`r8-solve-6`, `-8`;
+  `r9-solve-12`, `-14`, `-16`, `-29`). Re-recorded by the producer's own write: each diff only adds the obstacle's
+  `sources` array. `--check` is `712f0ead` exit 0; the chain is still 10,931 t, and every tape is unchanged.
+- `ropeSword.test.js`'s climb pin now carries `sources: ['arrowLane:arrowtrap@96,32']`.
+- `fidelityStaticSword.test.js`'s "ships OFF" rows now pin ON. The monotonicity checker's `off` mode holds both
+  switches `=0` in its capture child, so `off` still means OFF on both sides.
+- tapeRunner pairs are `e6c073f9`, unchanged.
+- ⛔ **STOP: two unit rows C1 did not list** (CI JS Unit Tests 19,555/19,557; both pass with the switches `=0`):
+  - `fidelityStance.test.js`'s leg-85 row moves with `STATIC_SWORD_ARM` ALONE: the kill line now leads with the
+    static arm's *"`primary` slot holds NOTHING"*.
+  - `turretSolver.test.js`'s DODGE row moves with the `sources` field.
+  - Neither is re-recorded; they wait for the planner (patches in the report).
+
+**D3 — the page.** CI dispatch was refused for the session (403), so the page legs ran locally (p4f, headless
+logic-only, the worker served from the branch). ⚠ **The sweep's leg ids shifted** since sweep-3 (843 legs now, 841
+then), so the comparison is by leg KEY. Sweep-3's target legs land as C1 predicted:
+- 544, 550, 551 and 553 go `failed` → `done`.
+- 539 and 549 stay refused with a new text (no corridor: `bonetorch@128,288`); 552 stays refused, now on
+  `darktrap@112,208`.
+- 76 is byte-identical; 85 gains the sword sub-order text.
+- Survey step 31 moves past its t0 refusal to the chest's own stance walk (STANCE's family).
+- The `standard` probe battery: 10/10 probes, 328 checks, 0 failed.
+- The rooms either switch can reach hold a spinner, `SandTrap` or `Turret`: 12 levels, **130 of 843 legs**,
+  all swept by key against sweep-3.
+  - **0 solved → refused.**
+  - The 4 refused → solved above (page ticks 335/347/326/361, every end equal to C1's node end, no divergence, no
+    recovery).
+  - The 4 new texts above.
+  - 4 L40 legs (sweep-3 376, 388, 395, 412) go `failed` → `timeout`. The chooser carries the L40 climbs past t0
+    into the spinner press kill (C1's A and its cost), and the leg's wall clock runs out. 376 now PLANS
+    (1,832 t, hold + kill + walk, 50.6 s) and was stopped mid-playback at 1,141 t. BUDGET-BOUND, not a verdict.
+  - The other 118 legs are identical.
+
+**D4.** The two `static-sword-witness` tapes are not enrolled: joining the roster means moving them into
+`fixtures/tapes/`, plus index and tier rows and a re-quoted composite. That is more than a one-line union.
+
+### Seedling hammer-phase D1 — the solver's progress emitter
+
+⚖ The user (2026-10-11), on the progress display: *"Both, plus extras"*: a tree of goals and rungs with attempts,
+successes and rejection tallies, a tile map with a count and an earliest tick per tile, and a work-budget meter, over
+one channel, live. This slice is the solver's half. The worker → page transport and the `flashPanel` display are the
+JS arc's, built against the schema `seedling-solve-progress.md`, which was published (D0) before the emitter landed.
+The report is `CC/docs/cloud-reports/seedling-hammer-d1.md`.
+
+**The emitter** (`solveProgress.js`). `withSolveProgress(onProgress, fn)` is installed like the deadline (nested
+installs restore the outer, and solverBot re-exports it); `solveSegment` takes `onProgress`; `installSolveProgress`
+installs until its uninstall, for a whole process. `onProgress(site, peek)` is called only at fixed points: every
+deadline site's ask point (with or without a deadline), and the count points segment, goal, walk, verb, climb, rung,
+arm, search, preview and done. It is never called on a timer. `peek()` builds a plain-JSON copy.
+- **Tree.** Nodes are keyed by role path. A rung's rejection is the refusal the next rung's row carries, keyed by the
+  solver's own words (a code, a bound, or the deciding clause with numbers as `#`).
+- **Tiles.** The unit is the previewed player state, `previewWalk`'s samples and `spaceTimeReach`'s kept states (a
+  new `onNode` option), because every corridor, stall, detour and dash candidate is certified by a preview, and both
+  carry an absolute tick already.
+- **Budget.** The site asks, and the work units the solver already counts. `shouldStop` calls are the JS arc's work
+  clock, measured equal to the caller's own count.
+
+No count point sits inside C2's four functions or fidelity's list; their callers count them.
+
+**Observation only, measured.** With no hook each count point is one null check. With one, the answers are
+byte-identical: no hook, a hook that peeks at every call, a silent hook and a throwing hook all give the same bytes on
+the L18 hammer room (residue 21, three two-pass segments), an L6 climb and an L3 walk, under no deadline and under a
+never-tripping fine deadline. `r9-campaign --check` and the identity block are unmoved under the silent-hook preload
+(`seedling-solve-progress-hook.mjs`). **No committed artifact moved**; the surface census re-recorded line numbers and
+`solveProgress.js` in four rows' file lists.
+
+**What the stream is like** (D2, three streams committed under `seedling-hammer-d1-evidence/`):
+- A final snapshot is 0.9–3.0 KB, and `peek()` costs ~0.05–0.17 ms median, ~0.6 ms max.
+- ⚠ **The hook is not called evenly.** The L40 leg (675 t, ~24 s) makes only 276 calls, with up to 1.2 s between two
+  of them, inside the kill-chaser stance scan. The far L40 totem part's refusal went 3.5 s without one. A 1 Hz display
+  is bounded by the solver's own ask density, not by the worker's throttle.
+- The overhead was not resolvable below ~±10% on the loaded box: the identical no-hook code read −2% to +12% against
+  the base. A silent hook read +2% (L18) and +8% (L40, where no-hook read +12%).
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

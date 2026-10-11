@@ -226,6 +226,8 @@ describe('D2 — the PULL rung: the silencer is derived, the latch is asserted o
         expect(climbRows).toHaveLength(1);
         expect(climbRows[0].rejected.map((j) => j.option)
             .filter((o) => ESCALATION_LADDER.includes(o))).toEqual(['avoid']);
-        expect(climbRows[0].obstacle).toEqual({ kind: 'danger', id: 'arrowtrap@96,32' });
+        // ⛓ C1-ON: `CHOOSER_HIT_SOURCES` ships ON, so the trace's obstacle carries the probe's whole `sources` array
+        expect(climbRows[0].obstacle).toEqual({ kind: 'danger', id: 'arrowtrap@96,32',
+            sources: ['arrowLane:arrowtrap@96,32'] });
     }, 60000);
 });

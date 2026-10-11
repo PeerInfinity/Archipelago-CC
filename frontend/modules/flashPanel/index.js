@@ -1,5 +1,6 @@
 import { FlashPanelUI } from './flashPanelUI.js';
 import { killLockSchemaProps } from './seedlingKillLockSettings.js';
+import { contactSchemaProps } from './seedlingContactSettings.js';
 import eventBus from '../../app/core/eventBus.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 // Import side effect registers `flash_seedling` (region-atlas Phase 4).
@@ -212,6 +213,9 @@ export function register(registrationApi) {
       // ⛓ KILLLOCK HOOK — the model's kill-lock body switches K1–K5, one boolean each, defaulted to
       // `KILLLOCK_BODIES_DEFAULTS` (`seedlingKillLockSettings.js`).
       ...killLockSchemaProps(),
+      // ⛓ CONTACT HOOK — the model's contact switches, one boolean each, generated from `CONTACT_FIDELITY_KEYS` and
+      // defaulted to `CONTACT_FIDELITY_DEFAULTS` (`seedlingContactSettings.js`).
+      ...contactSchemaProps(),
     },
   });
 

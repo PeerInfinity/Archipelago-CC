@@ -27,7 +27,10 @@
             },
             "obstacle": {
                 "kind": "danger",
-                "id": "turret@80,176#3"
+                "id": "turret@80,176#3",
+                "sources": [
+                    "spit:turret@80,176#3"
+                ]
             },
             "strategy": {
                 "verb": "dodge",

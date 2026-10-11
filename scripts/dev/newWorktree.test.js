@@ -109,7 +109,7 @@ describe('new-worktree.sh --dry-run', () => {
     `+ PY=$(cd ${dest} && node scripts/procgen/repoPython.js --generate)`,
     `+ (cd ${dest} && $PY -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')")`,
     `+ (cd ${dest} && $PY Launcher.py --update_settings)`,
-    `+ (cd ${dest} && $PY scripts/setup/update_host_settings.py full-spoilers)`,
+    `+ (cd ${dest} && $PY scripts/setup/update_host_settings.py minimal-spoilers)`,
   ];
 
   it('step 6: the ladder asked, then the three provisioning commands, in order, after npm ci', () => {
@@ -121,7 +121,10 @@ describe('new-worktree.sh --dry-run', () => {
     /* step 6 closes the plan: nothing from steps 1–5 comes after it */
     expect(plan.slice(npm + 2)).toEqual(STEP6(dest));
     const presets = readFileSync(join(REPO, 'scripts', 'setup', 'update_host_settings.py'), 'utf8');
-    expect(presets).toMatch(/^PRESETS = \{[\s\S]*^ {4}'full-spoilers': \{/m);
+    expect(presets).toMatch(/^PRESETS = \{[\s\S]*^ {4}'minimal-spoilers': \{/m);
+    /* ⛓ the preset IS the recipe's: the one generate-presets.yml made the committed presets under */
+    const recipe = readFileSync(join(REPO, '.github', 'workflows', 'generate-presets.yml'), 'utf8');
+    expect([...recipe.matchAll(/update_host_settings\.py (\S+)/g)].map((m) => m[1])).toEqual(['minimal-spoilers']);
     /* the tail: serve/test unchanged in shape, and the venv a worktree shares */
     const primary = dirname(git(['rev-parse', '--path-format=absolute', '--git-common-dir']));
     expect(r.out).toMatch(/^# serve it: {2}\(cd .* && python -m http\.server \d+\)$/m);

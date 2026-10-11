@@ -148,6 +148,10 @@ import {
 import { dropKillVetoFor, setDropKillNeeds } from './bulbPlacement.js';
 import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestFirstQueue, coarseKey,
     spaceTimeReach } from './spaceTimeReach.js';
+// ⛓ hammer-phase D1 — the progress emitter: every count point below is `activeProgress !== null` first.
+import { activeProgress, progressAsked, progressEnter, progressGoal, progressLeave, progressPreview,
+    progressReaders, progressRow, progressRun, progressRung, progressSearch, progressSegment, progressSite,
+    progressStatesFor, progressTick, withSolveProgress } from './solveProgress.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
@@ -5308,6 +5312,8 @@ export function previewWalk(run, wps, tolerance = 0,
             }
         }
     }
+    // ⛓ hammer-phase D1 — every sample is a previewed player state: the progress tile map's unit
+    if (activeProgress !== null) progressPreview(run, samples);
     return { samples, startTick, truncated, stood: standFor, plannedStruck };
 }
 
@@ -10161,6 +10167,8 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     const safe = safeIn(first.rows);
     const traced = (phase, r) => {
         if (trace !== null) trace.push({ phase, expansions: r.expansions, ok: r.ok, bound: r.bound ?? null });
+        // ⛓ hammer-phase D1 — the escape search is a progress leaf
+        if (activeProgress !== null) progressSearch(`escape-${phase}`, r);
         return r;
     };
     for (let t = at + 1; t <= L; t += 1) {
@@ -10176,6 +10184,7 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         // preference, `discClearanceAt` — a robustness score, never the safety test)
         rank: (q, i) => discClearanceAt(playerBoxAt(q.x, q.y), rows, i),
         shouldStop: deadline && activeDeadline !== null ? () => deadlineReached('hammer-escape') : null,
+        onNode: activeProgress === null ? null : progressStatesFor(run, n),
     }));
     const verdict = (r, from, pre) => {
         if (r.ok) return null;
@@ -10452,7 +10461,10 @@ export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMM
             return rect ? -distanceRectPoint(q.x, q.y, rect) : -Infinity;
         },
         shouldStop: activeDeadline !== null ? () => deadlineReached('hammer-approach') : null,
+        onNode: activeProgress === null ? null : progressStatesFor(run, n),
     });
+    // ⛓ hammer-phase D1 — the approach search is a progress leaf
+    if (activeProgress !== null) progressSearch('approach', r);
     if (!r.ok) return done({ ok: false, bound: r.bound, why: r.why, expansions: r.expansions });
     const i = r.endIndex;
     const aim = r.states[r.states.length - 1];
@@ -10613,11 +10625,12 @@ export function withHammerFightFallback(enabled, fn, mode = null) {
  *   - `mode: 'order'`: the admitted sources are put FIRST, ahead of the chooser's own list (a measurement arm).
  * The trace's ladder rows and the EXHAUSTED refusal also carry the whole `sources` array (`obstacle.sources`).
  *
- * OFF by default (`SEEDLING_CHOOSER_HIT_SOURCES=1`, `..._MODE=order`, or `withChooserHitSources(true, fn, mode)`):
- * nothing below is asked and every walk and trace is byte-identical.
+ * ON by default since C1-ON (⚖ the user 2026-10-10: *"Yes, please turn both of them on"*), mode `empty`. Opt out with
+ * `SEEDLING_CHOOSER_HIT_SOURCES=0` or `withChooserHitSources(false, fn)` (the control): then nothing below is asked
+ * and every walk and trace is C1's base, byte for byte. `..._MODE=order` selects the measurement arm.
  */
 export const CHOOSER_HIT_SOURCES = {
-    enabled: globalThis.process?.env?.SEEDLING_CHOOSER_HIT_SOURCES === '1',
+    enabled: globalThis.process?.env?.SEEDLING_CHOOSER_HIT_SOURCES !== '0',
     mode: globalThis.process?.env?.SEEDLING_CHOOSER_HIT_SOURCES_MODE === 'order' ? 'order' : 'empty',
 };
 
@@ -10800,6 +10813,8 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         if (HAMMER_FIGHT_TRACE.sink !== null) {
             HAMMER_FIGHT_TRACE.sink({ run, ...record, ms: globalThis.performance.now() - t0, out });
         }
+        // ⛓ hammer-phase D1 — the fight search is a progress leaf (its expansions, its bound)
+        if (activeProgress !== null) progressSearch('fight', { ok: out.ok, bound: out.bound, expansions: stats.expansions });
         return { ...out, record };
     };
     const no = (claim, bound, why) => done({ ok: false, claim, bound, why });
@@ -11485,8 +11500,15 @@ function censusRowFor(run, id) {
  * never enter the bait arm at all, and the record says which happened.
  */
 function execKill(run, perTick, resolved, ctx) {
-    if (resolved.arm === 'press') return execKillByPress(run, perTick, resolved, ctx);
-    if (resolved.arm === 'chaser') return execKillByChaser(run, perTick, resolved, ctx);
+    // ⛓ hammer-phase D1 — the arm is a progress node, counted here at its caller
+    if (resolved.arm === 'press') {
+        return activeProgress === null ? execKillByPress(run, perTick, resolved, ctx)
+            : progressRun('arm:press', 'arm', 'press', () => execKillByPress(run, perTick, resolved, ctx));
+    }
+    if (resolved.arm === 'chaser') {
+        return activeProgress === null ? execKillByChaser(run, perTick, resolved, ctx)
+            : progressRun('arm:chaser', 'arm', 'chaser', () => execKillByChaser(run, perTick, resolved, ctx));
+    }
     if (!resolved.presser) {
         /**
          * ⛓⛓ HAMMER-PHASE B3 — THE ADMISSION ARM AT THE KILL-LOCK ORDER (`HAMMER_FIGHT_FALLBACK`, rewind mode). This
@@ -16064,6 +16086,12 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  * trace (the first site, and per-site counts), and a refusal raised after a
  * trip carries the same object and says so in its words.
  */
+/**
+ * ⛓ hammer-phase D1 — the progress hook's install (`solveProgress.withSolveProgress`), beside the deadline's: the same
+ * shape (`withSolveProgress(onProgress, fn)`, nested installs restore the outer), and `solveSegment`'s `onProgress`.
+ */
+export { withSolveProgress };
+
 export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
     'block-route', 'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk', 'phase-dodge', 'hammer-escape',
     'hammer-approach', 'hammer-fight', 'crusher-fork']);
@@ -16180,17 +16208,32 @@ let activeDeadline = null;
  */
 const fineActive = () => activeDeadline !== null && activeDeadline.fine === true;
 
-/** ⛓ FIDELITY CHECKPOINTS — `deadlineReached`, for a FINE ask (opt-in). */
-const fineDeadlineReached = (site) => fineActive() && deadlineReached(site);
+/**
+ * ⛓ FIDELITY CHECKPOINTS — `deadlineReached`, for a FINE ask (opt-in). ⛓ hammer-phase D1: the site is a progress
+ * count point whether or not a deadline (or its fine opt-in) is installed.
+ */
+const fineDeadlineReached = (site) => {
+    if (activeProgress !== null) progressSite(site);
+    return fineActive() && askDeadline(site);
+};
 
 /**
  * Has the active deadline been reached for `site`? Asked by a site, before its
  * optional work. ⛔ With no deadline active this returns false and calls nothing.
+ * ⛓ hammer-phase D1: the site is a progress count point (one null check without a hook).
  */
 function deadlineReached(site) {
+    if (activeProgress !== null) progressSite(site);
+    return askDeadline(site);
+}
+
+/** `deadlineReached`'s ask, after the progress count point. */
+function askDeadline(site) {
     const d = activeDeadline;
     if (d === null) return false;
     if (!d.tripped.has(site)) {
+        // ⛓ hammer-phase D1 — a call to the caller's `shouldStop` is the JS arc's work unit
+        if (activeProgress !== null) progressAsked();
         if (!d.shouldStop(site)) return false;
         d.tripped.add(site);
         d.first ??= site;
@@ -16227,12 +16270,24 @@ const deadlineClause = (d) => ` ⏱ DEADLINE: the caller's \`shouldStop\` trippe
  *   FINE sites (`time`, `walk`, and `detour` inside its via set), so no long
  *   stretch of the solve runs without an ask. Default false: the consult
  *   sequence of every existing caller, exactly. Meaningless without a hook.
+ * @param {?function} [o.onProgress] ⛓ hammer-phase D1 — the progress hook, `(site, peek) => void`
+ *   (`solveProgress.withSolveProgress`, installed for this segment). Observation only: omitted or `null`, the solve
+ *   is today's; given, it is byte-identical. The schema is `seedling-solve-progress.md`.
  * @returns {{perTick: Array<Set>, trace: object, transitions: Array,
  *            waypointsPlanned: number, replans: number, records: Array,
  *            deadline?: {tripped: true, first: string, sites: object}}}
  *   `deadline` is present only when the hook tripped.
  */
 export function solveSegment(o) {
+    const onProgress = o?.onProgress ?? null;
+    if (onProgress !== null) return withSolveProgress(onProgress, () => solveSegment({ ...o, onProgress: null }));
+    // ⛓ hammer-phase D1 — under an installed hook the segment is a progress segment (its tree, tiles and budget)
+    if (activeProgress !== null) return progressSegment(o?.name, o?.run, () => solveSegmentDeadlined(o));
+    return solveSegmentDeadlined(o);
+}
+
+/** `solveSegment` after the progress install: the deadline install, then the loop. */
+function solveSegmentDeadlined(o) {
     const shouldStop = o?.shouldStop ?? null;
     // ⛔ No hook: the segment runs under whatever deadline is already active —
     // none at all for every committed caller — so the default is untouched.
@@ -16476,11 +16531,12 @@ function solveSegmentUnder({
              * ticks this segment drives (counted from its own first tick, so the
              * asks are a function of the solve alone). A trip refuses by name.
              */
-            if (activeDeadline !== null && tapeTick > prefix.length
+            if ((activeDeadline !== null || activeProgress !== null) && tapeTick > prefix.length
                 && (tapeTick - prefix.length) % WALK_CHECK_TICKS === 0 && fineDeadlineReached('walk')) {
                 refuseWalkDeadline(`after ${tapeTick - prefix.length} tick(s) of the segment's drive`);
             }
             const out = inner.advance(held);
+            if (activeProgress !== null) progressTick(inner.level);
             if (!dashedBefore && inner.progress('slashInfo').state.slashDashed === true) {
                 dashesPressed += 1;
                 dashTicks.push(tapeTick);
@@ -16573,6 +16629,11 @@ function solveSegmentUnder({
     };
     let replans = 0;
     let waypointsPlanned = 0;
+    // ⛓ hammer-phase D1 — the counts this segment already keeps, read by a progress snapshot
+    if (activeProgress !== null) {
+        progressReaders({ waypointsPlanned: () => waypointsPlanned, replans: () => replans,
+            dashesPressed: () => dashesPressed });
+    }
     /**
      * ⛓⛓⛓ WHICH CLIMB — and it is a counter rather than a flag because the
      * ladder is cheapest-first WITHIN one climb and a NEW obstacle starts a
@@ -17383,7 +17444,7 @@ function solveSegmentUnder({
     const stanceWalks = new Set();
     /** ⛓ U15-swim D2 — the DODGE rung's stalls this segment (`DODGE_RUNG.maxPerSegment`). */
     let dodgesSpent = 0;
-    const climbLadder = ({ goal, aim, contacts, allowTeleporter, what, hit,
+    const climbLadderUnder = ({ goal, aim, contacts, allowTeleporter, what, hit,
         dangerExcept = null, corridor = null, axisAligned = false,
         // ⛓ FRONTIER3 — the AVOID rung re-plans on the lattice the walk was
         // planned on (`FINE_LATTICE` only after a frontier refusal).
@@ -17412,6 +17473,7 @@ function solveSegmentUnder({
          */
         const priorRefusals = [];
         const rowFor = (rung, refused, extra = {}) => {
+            if (activeProgress !== null) progressRow(rung, refused, extra);
             escalations.push(refused ? { rung, refused } : { rung });
             if (refused) priorRefusals.push(refused);
             seeRow({
@@ -17522,6 +17584,7 @@ function solveSegmentUnder({
         };
 
         // ── rung 1: AVOID — a static re-plan with the threatened cells out ──
+        if (activeProgress !== null) progressRung('avoid');
         const vols = dangerVolumes(run, 0)
             .filter((v) => !(dangerExcept && dangerExcept.has(v.id)));
         let refused = null;
@@ -17594,6 +17657,7 @@ function solveSegmentUnder({
          * a spit climbs again; `DODGE_RUNG.maxPerSegment` bounds the stalls.
          */
         if (spitOnly && corridor) {
+            if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
             if (dodgesSpent >= DODGE_RUNG.maxPerSegment) {
@@ -17650,6 +17714,7 @@ function solveSegmentUnder({
          * (`axe-dodge`).
          */
         if (axeOnly && corridor) {
+            if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
             let previews = 0;
@@ -17845,6 +17910,7 @@ function solveSegmentUnder({
         const phaseOnly = hit.sources.length > 0
             && hit.sources.every((s) => s.kind === 'hazard' && s.phase);
         if (phaseOnly && corridor) {
+            if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
             let previews = 0;
@@ -18030,6 +18096,7 @@ function solveSegmentUnder({
          * (`R8_STRATEGY_EXECUTORS.ladder` marks it `conditional`, and
          * `assertEscalationIsOrdered` lets an escalation skip only that kind).
          */
+        if (activeProgress !== null) progressRung('pull');
         let silencer = deriveLaneSilencer(run, hit, what, pullingRopes);
         /**
          * ⛓⛓⛓ SEEDLING FIDELITY ROBUST, D2 + D3 — **A LANE FURTHER ALONG THE
@@ -18126,6 +18193,7 @@ function solveSegmentUnder({
         }
 
         // ── rung 2: TIME — the mover, against the danger TIMELINE ──────────
+        if (activeProgress !== null) progressRung('time');
         const timeline = `dangerMap over L${run.level} at model tick `
             + `${run.ticksCompleted}`;
         const reachable = Math.hypot(aim.x - run.state.x, aim.y - run.state.y)
@@ -18212,6 +18280,7 @@ function solveSegmentUnder({
          * actually has a strategy for (a LIVE stepped body; a static census
          * row is a wall for this quantifier).
          */
+        if (activeProgress !== null) progressRung('bait');
         let removable = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
         /**
          * ⛓⛓ HAMMER-PHASE C1 (`CHOOSER_HIT_SOURCES`) — where the chooser cannot speak (an EMPTY list: no body's
@@ -18302,6 +18371,7 @@ function solveSegmentUnder({
         refused = { rung: 'bait', why: baitWhy };
 
         // ── rung 4: KILL — the room's own weapon, held until the count moves ─
+        if (activeProgress !== null) progressRung('kill');
         let killWhy = null;
         const target = body ?? null;
         if (target && target.stepped === false) {
@@ -18833,6 +18903,7 @@ function solveSegmentUnder({
         let lastOption = 'kill';
         let lastBound;
         if (hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser')) {
+            if (activeProgress !== null) progressRung('detour');
             const detour = deriveChaserDetour(run, {
                 aim, allowTeleporter,
                 planOpts: solverPlanOpts(run, contacts, goalPlanExtra),
@@ -18889,6 +18960,9 @@ function solveSegmentUnder({
         });
         return {};
     };
+    /** ⛓ hammer-phase D1 — a climb is a progress node (its rungs and arms are its children). */
+    const climbLadder = (o) => (activeProgress === null ? climbLadderUnder(o)
+        : progressRun('climb', 'climb', 'climb', () => climbLadderUnder(o)));
 
     /**
      * Walk to `aim` through a planned corridor, re-planning ONCE per failure
@@ -18896,7 +18970,7 @@ function solveSegmentUnder({
      * silent re-plan hides a model divergence; a TRACED one is a decision a
      * reader can audit).
      */
-    const walkTo = (goal, aim, {
+    const walkToUnder = (goal, aim, {
         allowTeleporter = null, crossTo = null, what, contactsOverride = null,
         dangerExcept = null,
         /**
@@ -19168,6 +19242,9 @@ function solveSegmentUnder({
                          */
                         chests: run.entities('openChests'),
                     };
+                    // ⛓ hammer-phase D1 — the verb applied (its stance walk, then its executor) is a progress node
+                    const verbFrame = activeProgress === null ? null
+                        : progressEnter(`verb:${plan.strategy}`, 'verb', plan.strategy);
                     // The stance first — planned with whatever exemptions the
                     // strategy's own resolution earned (trap 147: a hold is what
                     // ADDS its presser to the exemptions, so the stance and the
@@ -19214,6 +19291,7 @@ function solveSegmentUnder({
                         fork, rewind,
                     });
                     records.push({ goal: goal.kind, strategy: plan.strategy, ...record });
+                    if (verbFrame !== null) progressLeave(verbFrame);
                     // ⛓ THE EXEMPTION SURVIVES THE VERB. A `hold` leaves the
                     // player standing in the presser's volume, so every later
                     // plan of this segment carries it — which is what
@@ -19414,6 +19492,12 @@ function solveSegmentUnder({
             }
         }
     };
+    /**
+     * ⛓ hammer-phase D1 — a walk is a progress node: its climbs, the frontier verbs it applies and the walks those
+     * make nest under it. Every caller (the goals, the rungs, the executors handed `walkTo`) reaches this one.
+     */
+    const walkTo = (goal, aim, opts) => (activeProgress === null ? walkToUnder(goal, aim, opts)
+        : progressRun('walk', 'walk', 'walk', () => walkToUnder(goal, aim, opts)));
 
     /**
      * ⛓⛓⛓ U12-swim D2 — THE PULLS THAT ARE A RIDE INTO PIT (tx, ty): every
@@ -19957,6 +20041,8 @@ function solveSegmentUnder({
     // ── the goals, in order ───────────────────────────────────────────
     let dropKillGoal = 0;
     for (const goal of goals) {
+        // ⛓ hammer-phase D1 — each goal of the list is a progress node (the previous one has succeeded)
+        if (activeProgress !== null) progressGoal(dropKillGoal, goal);
         /**
          * ⛓⛓⛓ seedling-fidelity-bulb D3 — WHAT THE REST OF THE SEGMENT NEEDS, handed to the run for the strike
          * policy's veto (`bulbPlacement`): this goal and every one after it, as planner aims. Only while a class

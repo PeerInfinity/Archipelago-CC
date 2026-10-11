@@ -27,7 +27,10 @@
             },
             "obstacle": {
                 "kind": "danger",
-                "id": "arrowtrap@96,32"
+                "id": "arrowtrap@96,32",
+                "sources": [
+                    "arrowLane:arrowtrap@96,32"
+                ]
             },
             "strategy": {
                 "verb": "pull",
@@ -95,7 +98,10 @@
             },
             "obstacle": {
                 "kind": "danger",
-                "id": "bob@208,32"
+                "id": "bob@208,32",
+                "sources": [
+                    "chaser:bob@208,32"
+                ]
             },
             "strategy": {
                 "verb": "detour",

@@ -78,7 +78,7 @@ describe('route step 27 solves by the spit\'s name', () => {
         const { out } = solve();
         expect(ESCALATION_LADDER.slice(0, 2)).toEqual(['avoid', 'dodge']);
         const dodge = out.trace.rows.find((r) => r.strategy?.rung === 'dodge');
-        expect(dodge.obstacle).toEqual({ kind: 'danger', id: 'turret@80,176#3' });
+        expect(dodge.obstacle).toEqual({ kind: 'danger', id: 'turret@80,176#3', sources: ['spit:turret@80,176#3'] });
         expect(dodge.strategy.stall.ticks).toBeGreaterThan(0);
         const avoid = dodge.rejected.find((j) => j.option === 'avoid');
         expect(avoid.why).toMatch(/every reason the probe gave is a TurretSpit/);

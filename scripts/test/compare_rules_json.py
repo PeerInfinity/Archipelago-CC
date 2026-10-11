@@ -304,7 +304,7 @@ def normalize_nested_world_attribute(obj: Any) -> Any:
                 path_parts.insert(0, current.get('attr', ''))
                 current = current.get('object', {})
 
-            # Check if we've reached world (name, world_attribute, or setting_value)
+            # Check if we've reached world (name or world_attribute)
             if isinstance(current, dict):
                 if current.get('type') == 'name' and current.get('name') == 'world':
                     # Convert nested world.x.y to world_attribute with x.y
@@ -319,15 +319,6 @@ def normalize_nested_world_attribute(obj: Any) -> Any:
                     # Base is already a world_attribute, extend the path
                     base_attr = current.get('attribute', '')
                     full_path = '.'.join([base_attr] + path_parts)
-                    result = {'type': 'world_attribute', 'attribute': full_path}
-                    for k, v in obj.items():
-                        if k not in ('type', 'object', 'attr'):
-                            result[k] = normalize_nested_world_attribute(v)
-                    return result
-                elif current.get('type') == 'setting_value':
-                    # Base is a setting_value, extend the path
-                    base_setting = current.get('setting', '')
-                    full_path = '.'.join([base_setting] + path_parts)
                     result = {'type': 'world_attribute', 'attribute': full_path}
                     for k, v in obj.items():
                         if k not in ('type', 'object', 'attr'):
@@ -367,39 +358,6 @@ def normalize_all_of_iterable(obj: Any) -> Any:
         return {k: normalize_all_of_iterable(v) for k, v in obj.items()}
     elif isinstance(obj, list):
         return [normalize_all_of_iterable(item) for item in obj]
-    else:
-        return obj
-
-
-def normalize_setting_to_world_attribute(obj: Any) -> Any:
-    """
-    Normalize setting_value to world_attribute format.
-
-    Original may export:
-        {"type": "setting_value", "setting": "boss_reqs.required_boss_item_locations"}
-
-    WorldGen may export:
-        {"type": "world_attribute", "attribute": "boss_reqs.required_boss_item_locations"}
-
-    Both are semantically equivalent for world instance attributes. Normalize to world_attribute.
-    """
-    if isinstance(obj, dict):
-        obj_type = obj.get('type')
-
-        # Convert setting_value to world_attribute
-        if obj_type == 'setting_value':
-            setting = obj.get('setting', '')
-            result = {'type': 'world_attribute', 'attribute': setting}
-            # Preserve any other keys (like index)
-            for k, v in obj.items():
-                if k not in ('type', 'setting'):
-                    result[k] = normalize_setting_to_world_attribute(v)
-            return result
-
-        # Recursively normalize nested objects
-        return {k: normalize_setting_to_world_attribute(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [normalize_setting_to_world_attribute(item) for item in obj]
     else:
         return obj
 
@@ -828,7 +786,7 @@ def normalize_and_with_false(obj: Any) -> Any:
         And(Constant(0), X) -> False_()
         And(X, False_(), Y) -> False_()
 
-    This handles the case where a SettingValue evaluates to False at export time,
+    This handles the case where an option evaluates to False at export time,
     creating And(False_(), other_rules) which always evaluates to False.
     """
     if isinstance(obj, dict):
@@ -855,50 +813,6 @@ def normalize_and_with_false(obj: Any) -> Any:
         return [normalize_and_with_false(item) for item in obj]
     else:
         return obj
-
-
-def make_setting_value_normalizer(option_values: dict):
-    """
-    Create a normalizer that evaluates SettingValue rules based on option values.
-
-    This is used to normalize rules that contain SettingValue(option_name) checks.
-    The normalizer replaces these with True_() or False_() based on the actual
-    option value, which allows subsequent normalizers to simplify the rules.
-
-    Args:
-        option_values: Dict mapping option names to their values
-
-    Returns:
-        A normalizer function that replaces SettingValue rules with True_/False_
-    """
-    def normalize_setting_value_rules(obj: Any) -> Any:
-        """
-        Evaluate SettingValue rules based on option values.
-
-        Examples:
-            SettingValue(calamity) -> False_() if calamity=False
-            SettingValue(calamity) -> True_() if calamity=True
-        """
-        if isinstance(obj, dict):
-            # Check if this is a SettingValue rule
-            if obj.get('rule') == 'SettingValue':
-                setting = obj.get('args', {}).get('setting')
-                if setting and setting in option_values:
-                    value = option_values[setting]
-                    # Convert to True_/False_ based on truthiness
-                    if value:
-                        return {'rule': 'True_', 'args': {}}
-                    else:
-                        return {'rule': 'False_', 'args': {}}
-
-            # Recursively normalize nested objects
-            return {k: normalize_setting_value_rules(v) for k, v in obj.items()}
-        elif isinstance(obj, list):
-            return [normalize_setting_value_rules(item) for item in obj]
-        else:
-            return obj
-
-    return normalize_setting_value_rules
 
 
 def normalize_hasall_single_item(obj: Any) -> Any:
@@ -1359,34 +1273,21 @@ def normalize_world_attribute_format(obj: Any) -> Any:
 
 def normalize_setting_types(obj: Any) -> Any:
     """
-    Normalize option_value/world_attribute types to setting_value for comparison.
+    Normalize option_value to world_attribute for comparison.
 
-    This allows comparing rules using the new split types with rules using
-    the legacy setting_value type:
-    - {"type": "option_value", "option": "X"} -> {"type": "setting_value", "setting": "X"}
-    - {"type": "world_attribute", "attribute": "X"} -> {"type": "setting_value", "setting": "X"}
-    - {"type": "world_attribute", "attribute": "X", "index": N} -> {"type": "setting_value", "setting": "X", "index": N}
+    The exporter writes an option as option_value and a top-level world
+    attribute as world_attribute; a worldgen round trip may land the same name
+    on the other one, so both compare as world_attribute:
+    - {"type": "option_value", "option": "X"} -> {"type": "world_attribute", "attribute": "X"}
     """
     if isinstance(obj, dict):
         obj_type = obj.get('type')
 
-        # Normalize option_value to setting_value
         if obj_type == 'option_value' and 'option' in obj:
-            result = {'type': 'setting_value', 'setting': obj['option']}
+            result = {'type': 'world_attribute', 'attribute': obj['option']}
             # Preserve any other keys (unlikely but for safety)
             for k, v in obj.items():
                 if k not in ('type', 'option'):
-                    result[k] = normalize_setting_types(v)
-            return result
-
-        # Normalize world_attribute to setting_value
-        if obj_type == 'world_attribute' and 'attribute' in obj:
-            result = {'type': 'setting_value', 'setting': obj['attribute']}
-            if 'index' in obj:
-                result['index'] = obj['index']
-            # Preserve any other keys
-            for k, v in obj.items():
-                if k not in ('type', 'attribute', 'index'):
                     result[k] = normalize_setting_types(v)
             return result
 
@@ -1476,7 +1377,7 @@ def normalize_sum_of_helpers(obj: Any) -> Any:
             "type": "sum_of",
             "iterator_info": {
                 "target": {...},
-                "iterator": {"type": "method_call", "object": {"type": "setting_value", "setting": "X"}, "method": "items", "args": []}
+                "iterator": {"type": "method_call", "object": {"type": "world_attribute", "attribute": "X"}, "method": "items", "args": []}
             },
             "element_rule": {...}
         }
@@ -1496,7 +1397,7 @@ def normalize_sum_of_helpers(obj: Any) -> Any:
     This function normalizes both to a common format by:
     1. Unwrapping {"params": [], "body": X} to just X
     2. Removing "type": "comprehension_details" from iterator_info
-    3. Converting function_call+attribute to method_call+setting_value
+    3. Converting function_call+attribute to method_call+world_attribute
     """
     if isinstance(obj, dict):
         result = obj
@@ -1525,7 +1426,7 @@ def normalize_sum_of_helpers(obj: Any) -> Any:
                 # Normalize the iterator structure
                 iterator = new_iterator_info.get('iterator', {})
                 if isinstance(iterator, dict):
-                    # Convert function_call+attribute chain to method_call+setting_value
+                    # Convert function_call+attribute chain to method_call+world_attribute
                     # function_call pattern: {"type": "function_call", "function": {"type": "attribute", "object": {...}, "attr": "items"}}
                     # method_call pattern: {"type": "method_call", "object": {...}, "method": "items", "args": []}
                     if iterator.get('type') == 'function_call':
@@ -1541,15 +1442,15 @@ def normalize_sum_of_helpers(obj: Any) -> Any:
                                 if inner_obj.get('object', {}).get('type') == 'name':
                                     setting_name = inner_obj.get('attr')
 
-                            # Pattern 2: {"type": "setting_value", "setting": "qp_items"}
+                            # Pattern 2: {"type": "world_attribute", "attribute": "qp_items"}
                             # This happens when normalize_setting_types runs before this normalizer
-                            elif inner_obj.get('type') == 'setting_value':
-                                setting_name = inner_obj.get('setting')
+                            elif inner_obj.get('type') == 'world_attribute':
+                                setting_name = inner_obj.get('attribute')
 
                             if setting_name:
                                 new_iterator_info['iterator'] = {
                                     'type': 'method_call',
-                                    'object': {'type': 'setting_value', 'setting': setting_name},
+                                    'object': {'type': 'world_attribute', 'attribute': setting_name},
                                     'method': 'items',
                                     'args': []
                                 }
@@ -2356,20 +2257,7 @@ def main():
     original_normalized = normalize_and_or_args_to_children(original_normalized)
     worldgen_normalized = normalize_and_or_args_to_children(worldgen_normalized)
 
-    # Evaluate SettingValue rules based on actual option values (if --ignore-canonical)
-    # This allows comparing rules that have option-dependent branches
-    # Original: Or(And(SettingValue(calamity), Has(X)), Has(Y))
-    # WorldGen: Has(Y)  (because calamity=False, the And branch becomes False and is removed)
-    if ignore_canonical:
-        # Get option values from the original (they should be the same in both)
-        option_values = original_normalized.get('world', {}).get('1', {}).get('options', {})
-        if option_values:
-            normalize_setting_values = make_setting_value_normalizer(option_values)
-            original_normalized = normalize_setting_values(original_normalized)
-            worldgen_normalized = normalize_setting_values(worldgen_normalized)
-
     # Normalize And rules containing False_ by short-circuiting to False_
-    # (e.g., And(False_(), X) -> False_(), needed after SettingValue normalization)
     original_normalized = normalize_and_with_false(original_normalized)
     worldgen_normalized = normalize_and_with_false(worldgen_normalized)
 
@@ -2432,7 +2320,7 @@ def main():
     original_normalized = normalize_not_expression_format(original_normalized)
     worldgen_normalized = normalize_not_expression_format(worldgen_normalized)
 
-    # Normalize setting types (option_value/world_attribute -> setting_value)
+    # Normalize setting types (option_value -> world_attribute)
     original_normalized = normalize_setting_types(original_normalized)
     worldgen_normalized = normalize_setting_types(worldgen_normalized)
 
@@ -2479,10 +2367,6 @@ def main():
     # Normalize all_of by removing redundant iterable field
     original_normalized = normalize_all_of_iterable(original_normalized)
     worldgen_normalized = normalize_all_of_iterable(worldgen_normalized)
-
-    # Normalize setting_value to world_attribute (semantically equivalent)
-    original_normalized = normalize_setting_to_world_attribute(original_normalized)
-    worldgen_normalized = normalize_setting_to_world_attribute(worldgen_normalized)
 
     # Sort starting_items lists for consistent comparison
     # WorldGen may produce starting items in a different order than the original

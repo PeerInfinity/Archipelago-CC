@@ -243,7 +243,7 @@ class ExpressionVisitorMixin(BaseVisitorMixin):
                 elif isinstance(value, dict) and value.get('type') in (
                     'helper', 'item_check', 'state_method', 'can_reach', 'location_check',
                     'and', 'or', 'not', 'conditional', 'compare', 'has_all', 'has_any',
-                    'constant', 'name', 'attribute', 'subscript', 'setting_value'
+                    'constant', 'name', 'attribute', 'subscript'
                 ):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to rule dict of type '{value.get('type')}'")
                     return value  # Return the rule dict directly

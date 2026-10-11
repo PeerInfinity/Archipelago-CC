@@ -141,7 +141,7 @@ def _rule_needs_lambda(rule: dict) -> bool:
 
     Returns True if the rule contains:
     - Block statements (loops, assignments, etc.) that aren't AST_block
-    - Dynamic references (setting_value, placement_lookup, etc.) that need
+    - Dynamic references (option_value, placement_lookup, etc.) that need
       runtime access to world options/attributes
 
     Note: Most rule types including helpers, not, compare, and conditional
@@ -166,10 +166,9 @@ def _rule_needs_lambda(rule: dict) -> bool:
     # Dynamic references need lambda to generate proper runtime access patterns
     # These are evaluated to constants in Rule Builder but should be preserved
     # as dynamic option/attribute access for proper re-export
-    # - setting_value: legacy setting access
     # - placement_lookup: location_item_name() calls require state
     # - option_value: world options require state.multiworld access
-    if rule_type in ('setting_value', 'placement_lookup', 'option_value'):
+    if rule_type in ('placement_lookup', 'option_value'):
         return True
 
     # AST format dynamic references also need lambda
@@ -178,7 +177,7 @@ def _rule_needs_lambda(rule: dict) -> bool:
     # to be defined (only available in lambda context).
     # AST_capability needs lambda because it calls helper functions with runtime arguments
     # from options/world attributes.
-    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'WorldAttribute', 'OptionValue', 'AST_capability'):
+    if rule_name in ('AST_placement_lookup', 'AST_placement_search', 'WorldAttribute', 'OptionValue', 'AST_capability'):
         return True
 
     # AST_function_call may need lambda, but not if the function is a Rule Builder rule

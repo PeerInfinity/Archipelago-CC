@@ -1512,13 +1512,6 @@ class CommonUI {
         break;
       }
 
-      case 'setting_check': {
-        const settingName = rule.setting || '?';
-        const value = rule.value;
-        root.appendChild(document.createTextNode(` setting: ${settingName} == ${JSON.stringify(value)}`));
-        break;
-      }
-
       case 'can_reach': {
         const regionName = typeof rule.region === 'string' ? rule.region : '(complex)';
         root.appendChild(document.createTextNode(` can_reach region: ${regionName}`));
@@ -2539,13 +2532,6 @@ class CommonUI {
         break;
       }
 
-      // AST_setting_value: setting value lookup
-      case 'AST_setting_value': {
-        const settingName = args.setting || args.name;
-        root.appendChild(document.createTextNode(` setting: ${settingName}`));
-        break;
-      }
-
       // AST_prog_item_count: progressive item count
       case 'AST_prog_item_count': {
         const itemName = args.item;
@@ -2720,13 +2706,6 @@ class CommonUI {
       case 'CountGroupUnique': {
         const groupName = args.group;
         root.appendChild(document.createTextNode(` count unique in group: ${groupName}`));
-        break;
-      }
-
-      // SettingValue: get setting value
-      case 'SettingValue': {
-        const settingName = args.setting;
-        root.appendChild(document.createTextNode(` setting: ${settingName}`));
         break;
       }
 

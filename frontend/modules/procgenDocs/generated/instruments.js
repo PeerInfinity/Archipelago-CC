@@ -134,7 +134,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 74,
-            "count": 119,
+            "count": 120,
             "id": "probe"
         },
         {
@@ -184,7 +184,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 4,
+            "count": 5,
             "id": "seedling"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 408,
+        "blockStyle": 410,
         "browser": 139,
-        "cited": 204,
-        "files": 420,
+        "cited": 206,
+        "files": 422,
         "lineStyle": 12,
-        "withDocblock": 420,
-        "withFlags": 338
+        "withDocblock": 422,
+        "withFlags": 339
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10486,6 +10486,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "contact-fidelity",
                 "from",
                 "host",
                 "ids",
@@ -10503,6 +10504,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "probe-seedling-divergence-sweep.mjs",
             "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "contact-fidelity"
+                },
                 {
                     "how": [
                         "arg"
@@ -12757,6 +12764,93 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling fidelity SLOTS, D1: **THE SLOT ARRAY IS SESSION STATE, ON THE GAME.** `Inventory.items` is static (`Inventory.as:51`); `addItemsFromSave` (`:291-332`) only appends what the item flags imply and the array lacks, and its two fusions splice; only `Main.clearSave` / `freshSaveForLevelSet` (`Inventory.clearItems…",
             "path": "scripts/procgen/probe-seedling-slot-order.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md",
+                "docs/json/developer/procgen/seedling-solve-progress.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "deadline",
+                "every",
+                "goal",
+                "hook",
+                "out",
+                "repeat",
+                "residue",
+                "tape"
+            ],
+            "file": "probe-seedling-solve-progress.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "compare"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "deadline"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "every"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "goal"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "hook"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "residue"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-solve-progress — Measure-only (SEEDLING HAMMER-PHASE D1): THE SOLVER'S PROGRESS STREAM, without a page.",
+            "path": "scripts/procgen/probe-seedling-solve-progress.mjs"
         },
         {
             "argvHelpers": [
@@ -15544,6 +15638,30 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only (the divergence sweep, planner `seedling-js-planning-2`) — THE LEG LIST: every exit and location leg of the committed Seedling atlas worlds + `seedling_playthrough`, from each region's RESOLVED arrivals, with the inventory the AP route holds there.",
             "path": "scripts/procgen/seedling-divergence-legs.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "seedling",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "import"
+            ],
+            "file": "seedling-solve-progress-hook.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "seedling-solve-progress-hook — a NODE PRELOAD (SEEDLING HAMMER-PHASE D3): every solve in the process runs under a progress hook that never peeks, so any producer or instrument can be shown byte-identical under one without editing it.",
+            "path": "scripts/procgen/seedling-solve-progress-hook.mjs"
         },
         {
             "argvHelpers": [

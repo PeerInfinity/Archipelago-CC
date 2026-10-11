@@ -7197,7 +7197,10 @@ export function createLevelRun({
              * `endAnim` sets `destroy` (no removal, no tag). The eleventh fade call removes the body.
              */
             if (STATIC_SWORD_ARM.enabled && STATIC_SWORD_DEATH[b.as3]?.end === 'destroy-fade') {
-                const on = onScreenNow(b.rect, b.id);
+                /* ⛓ asked only when its answer is read (the fade, or the i-frames), as the SandTrap path below asks:
+                 * an idle turret at the screen edge inside `Game.shake`'s band is not a question (C1-ON harvest:
+                 * the L65 `darktrap2-l65-spear-in-swing` witness threw on `turret@64,112` at tick 157). */
+                const on = (b.destroy || b.hitsTimer > 0) ? onScreenNow(b.rect, b.id) : false;
                 if (on && b.destroy) {
                     b.fadeCalls = (b.fadeCalls ?? 0) + 1;
                     if (b.fadeCalls >= MOBILE_DEATH_FADE.ticks) {
