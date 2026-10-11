@@ -504,29 +504,6 @@
         }
       ]
     },
-    "setting_value": {
-      "description": "Setting value lookup tests",
-      "tests": [
-        {
-          "name": "get_existing_setting",
-          "rule": {"type": "setting_value", "setting": "difficulty"},
-          "context": {"settings": {"difficulty": "hard"}},
-          "expected": "hard"
-        },
-        {
-          "name": "get_boolean_setting",
-          "rule": {"type": "setting_value", "setting": "enable_glitches"},
-          "context": {"settings": {"enable_glitches": true}},
-          "expected": true
-        },
-        {
-          "name": "get_numeric_setting",
-          "rule": {"type": "setting_value", "setting": "starting_hearts"},
-          "context": {"settings": {"starting_hearts": 3}},
-          "expected": 3
-        }
-      ]
-    },
     "helper": {
       "description": "Helper function call tests",
       "tests": [
@@ -923,7 +900,7 @@
           "rule": {"type": "world_attribute", "setting": "difficulty"},
           "context": {"settings": {"difficulty": "normal"}},
           "expected": "normal",
-          "note": "world_attribute behaves like setting_value"
+          "note": "world_attribute behaves like option_value"
         }
       ]
     },

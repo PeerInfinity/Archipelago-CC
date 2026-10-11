@@ -11420,8 +11420,8 @@
             "iterator": {
               "type": "method_call",
               "object": {
-                "type": "setting_value",
-                "setting": "qp_items"
+                "type": "world_attribute",
+                "attribute": "qp_items"
               },
               "method": "items",
               "args": []

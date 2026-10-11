@@ -258,7 +258,7 @@ Supported operators: `+`, `-`, `*`, `/`, `//`, `%`, `**`
 ```json
 {
   "type": "conditional",
-  "test": {"type": "setting_value", "setting": "hard_mode"},
+  "test": {"type": "option_value", "option": "hard_mode"},
   "if_true": {"type": "item_check", "item": "Master Sword"},
   "if_false": {"type": "item_check", "item": "Sword"}
 }
@@ -300,13 +300,15 @@ Supported operators: `+`, `-`, `*`, `/`, `//`, `%`, `**`
 }
 ```
 
-**`setting_value`** - Game option/setting reference
+**`option_value`** - Game option reference (a computed world attribute is `world_attribute` with `attribute`)
 ```json
 {
-  "type": "setting_value",
-  "setting": "shuffle_keys"
+  "type": "option_value",
+  "option": "shuffle_keys"
 }
 ```
+
+The older `setting_value` node (`setting`) is retired: the schema refuses it and no exporter writes it.
 
 #### Rarely Used Types
 

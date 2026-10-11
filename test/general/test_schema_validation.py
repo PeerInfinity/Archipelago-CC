@@ -37,3 +37,34 @@ class TestSchemaValidation(unittest.TestCase):
                 with open(path) as f:
                     data = json.load(f)
                 jsonschema.validate(instance=data, schema=self.schema)
+
+    def test_no_retired_setting_value_node(self):
+        """rules S7 (user 2026-10-03): the `setting_value` rule node is retired.
+
+        The schema's astRule refuses it where it validates a rule, but AST
+        nodes nested in a Rule Builder rule's free-form `args` (kh2's
+        Compare/Conditional operands) are not descended into, so this walks
+        every node of every committed preset and names the first one found.
+        Writers emit `option_value` (option) or `world_attribute` (attribute).
+        """
+        def first_retired(node, pointer):
+            if isinstance(node, dict):
+                if node.get("type") == "setting_value":
+                    return pointer
+                children = node.items()
+            elif isinstance(node, list):
+                children = enumerate(node)
+            else:
+                return None
+            for key, value in children:
+                found = first_retired(value, f"{pointer}/{key}")
+                if found:
+                    return found
+            return None
+
+        for path in sorted(glob.glob(self.presets_pattern)):
+            with self.subTest(path=path):
+                with open(path) as f:
+                    found = first_retired(json.load(f), "")
+                self.assertIsNone(found, f"{path}: retired `setting_value` node at {found} "
+                                         "(write option_value / world_attribute)")
