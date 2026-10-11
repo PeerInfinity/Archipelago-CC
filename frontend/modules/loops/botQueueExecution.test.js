@@ -214,6 +214,16 @@ describe('Bot-backed queue execution (loopSupport.executeVia = solver)', () => {
         expect(bus.events.some((e) => e.name === 'loopState:botWalkFailed')).toBe(false);
     });
 
+    it('listens for walkFailed only while a walk is parked', () => {
+        const listening = () => !!loopState._botWalkFailedListener;
+        expect(listening()).toBe(false);
+        setupBounceQueue(1);
+        tick(loopState);
+        expect(listening()).toBe(true);
+        loopState._handleBotWake_locationCheck('Coin');
+        expect(listening()).toBe(false);
+    });
+
     it('a walkFailed with no walk parked is ignored', () => {
         bus.publish('playback:walkFailed', { substrate: 'bounce_test', reason: 'x' });
         expect(bus.events.some((e) => e.name === 'loopState:botWalkFailed')).toBe(false);

@@ -432,12 +432,6 @@ export class LoopState {
     this.eventBus.subscribe('loops:substrateActionCompleted', (data) => {
       this._handleSubstrateActionCompleted(data);
     });
-    // Bot block (loop-mode-bot): a solver that ACCEPTED the walk and only
-    // later found it cannot be walked says so here. The park would otherwise
-    // wait forever for a completion that never comes.
-    this.eventBus.subscribe(PLAYBACK_WALK_FAILED_EVENT, (data) => {
-      this._handleBotWalkFailed(data);
-    });
     // Phase 6h followup: when the substrate-driven path triggers a
     // loop reset (out-of-mana, fired via gameState.triggerLoopReset),
     // the queue's per-action progress tracking is now stale — the
@@ -3026,6 +3020,16 @@ export class LoopState {
         this._failBotExecutedAction(why);
         return;
       }
+      // A solver that ACCEPTED the walk and only later finds it cannot be
+      // walked says so on playback:walkFailed. Listened to ONLY while this
+      // walk is parked (dropped in _stopBotExecutedAction): an always-on
+      // subscription measurably perturbed an unrelated cross-substrate grant
+      // row (omsi-award-schedule, 6/13 red vs 0/9 without it, mechanism not
+      // identified), and outside a park the event is never ours anyway.
+      if (!this._botWalkFailedListener && this.eventBus?.subscribe) {
+        this._botWalkFailedListener = (data) => this._handleBotWalkFailed(data);
+        this.eventBus.subscribe(PLAYBACK_WALK_FAILED_EVENT, this._botWalkFailedListener);
+      }
       log('info', `[LoopState] Bot walking to ${target.kind} '${target.name}' in ${action.sourceRegion}`);
     } catch (err) {
       log('warn', '[LoopState] Bot walkTo threw:', err);
@@ -3077,7 +3081,14 @@ export class LoopState {
     });
   }
 
+  _dropBotWalkFailedListener() {
+    if (!this._botWalkFailedListener) return;
+    this.eventBus?.unsubscribe?.(PLAYBACK_WALK_FAILED_EVENT, this._botWalkFailedListener);
+    this._botWalkFailedListener = null;
+  }
+
   _stopBotExecutedAction() {
+    this._dropBotWalkFailedListener();
     const action = this._botExecutedAction;
     if (!action) return;
     this._botExecutedAction = null;
@@ -3204,6 +3215,7 @@ export class LoopState {
    * way, because the depletion wake ignores a non-manual park.
    */
   _completeBotExecutedAction({ viaRegionMove = false } = {}) {
+    this._dropBotWalkFailedListener();
     const action = this._botExecutedAction;
     this._botExecutedAction = null;
     if (!action || this.currentAction !== action) return;
