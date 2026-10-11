@@ -15,7 +15,7 @@ export const PROCGEN_SHUFFLED_SPIRAL = Object.freeze({
     summary: 'Generate a maze-only world with the Shuffled spiral mode, load it, and watch the Playback Bot finish it.',
     track: 'procgen',
     status: 'in-progress',
-    firstFailingStep: 'bot-plays',
+    firstFailingStep: null, // every step works since the bot's same-region flush; ready = the user's call
     doc: null,
     intro: [
         { prose: '**Shuffled spiral** lays its regions out from a centre cell outwards, in shuffled zones, and then places the scenario\'s items so the world can be finished. You choose how many regions of each substrate it makes — here, mazes only.' },

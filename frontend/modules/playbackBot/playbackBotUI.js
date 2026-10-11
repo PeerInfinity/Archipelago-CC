@@ -329,14 +329,16 @@ export class PlaybackBotUI {
         this._dispatch('stop');
     }
 
-    step() {
+    async step() {
         this._ensureQueueBuilt();
         this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
             this._dispatch('step');
             return;
         }
-        this._publishNextWalkTo();
+        // Awaited, as play() does: the walkTo is published after the
+        // snapshot flush, and the step must not tick before it lands.
+        await this._publishNextWalkTo();
         this._dispatch('step');
     }
 
@@ -870,6 +872,22 @@ export class PlaybackBotUI {
      */
     async _publishNextWalkTo() {
         if (!this._queue) return;
+        // Flush any pending worker snapshot FIRST, before any branch decides.
+        // Every branch reads it: the cross-region one through PathFinder (a
+        // just-unlocked region would read 'unreachable'), and the same-region
+        // one through the controller — the Maze panel hands the snapshot's
+        // inventory to its tile planner on each walkTo, so a walk published
+        // right after a pickup planned without the key just picked up and
+        // stuck: "walkToTile: no path … under current inventory" (the
+        // tutorial drafts' procgen-shuffled-spiral and procgen-grid-growth,
+        // 2026-10-10: the next location sat behind the door that key opens).
+        // Everything below is decided AFTER the round trip, from the state as
+        // it is then — a check or a crossing may have landed meanwhile.
+        const flush = this._flushSnapshot();
+        if (flush) {
+            await flush;
+            if (!this._queue) return;
+        }
         this._advanceCursor();
         const head = this._queue[this._cursor];
         if (!head) {
@@ -915,25 +933,8 @@ export class PlaybackBotUI {
             return;
         }
         // Cross-region: route via the PathFinder against the real
-        // snapshot, so accessibility reflects keys collected so far.
-        // Flush any pending worker snapshot first — without this, the
-        // bot can race ahead of the just-collected pickup, leaving the
-        // newly-unlocked region marked 'unreachable' in the snapshot
-        // and PathFinder unable to find a route through it.
-        const flush = this._flushSnapshot();
-        if (flush) await flush;
-        // Re-check current region after the flush: an onRegionMove
-        // may have fired while we were awaiting the worker round-trip
-        // (visualizer crossed an exit on its own clock), and the
-        // sphere's target region may now match — in which case we
-        // should walk to the location, not call PathFinder with
-        // (X, X) and treat its zero-length return as an error.
-        if (head.regionName === this._currentRegion) {
-            this._setStatus(`${sphereTag}walking to "${head.locationName}" ${progress}`);
-            this._publishWalkTo({ kind: 'location', name: head.locationName });
-            this._render();
-            return;
-        }
+        // snapshot (flushed above), so accessibility reflects keys
+        // collected so far.
         const { route: path, why } = this._planRoute(this._currentRegion, head.regionName);
         if (!path) {
             this._setStatus(`error: ${why}`);

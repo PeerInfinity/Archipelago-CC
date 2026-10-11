@@ -15,7 +15,7 @@ export const PROCGEN_GRID_GROWTH = Object.freeze({
     summary: 'Generate a maze-only world with the legacy Grid growth mode, load it, and watch the Playback Bot finish it.',
     track: 'procgen',
     status: 'in-progress',
-    firstFailingStep: 'bot-plays',
+    firstFailingStep: null, // every step works since the bot's same-region flush; ready = the user's call
     doc: null,
     intro: [
         { prose: '**Grid growth** is the pipeline\'s first mode, kept as the legacy grower: it grows regions cell by cell on a grid, drawing from the scenario pool, until the pool or the frontier runs out. How many regions you get is emergent.' },
