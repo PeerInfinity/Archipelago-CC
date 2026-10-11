@@ -45,6 +45,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { chromium } from 'playwright';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
@@ -164,7 +165,6 @@ async function record(arms, fileOf) {
         console.log(`SKIP: seedling wasm build ${PAGE_NAME} not staged`);
         process.exit(0);
     }
-    const { chromium } = await import('playwright');
     const { takeBoxLockOrExit } = await import('./boxLock.js');
     takeBoxLockOrExit({ name: 'probe-seedling-iceturret-spear.mjs', kind: 'browser' });
     const { HEADLESS_LOGIC_ONLY_ARGS } = await import('./headlessChromium.js');
