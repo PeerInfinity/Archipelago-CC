@@ -1,0 +1,149 @@
+{
+ "name": "leash-l73-622-up-lavarunner",
+ "class": "LavaRunner",
+ "source": "/tmp/claude-0/w/tapes/leash-l73-622-up.json",
+ "page": "seedling_bot_ap_p4f",
+ "recordedBy": "scripts/procgen/probe-seedling-chaser-mobiles.mjs --record",
+ "switches": {
+  "SEEDLING_KILLLOCK_BODIES": null
+ },
+ "note": "the GAME's LavaRunner rows (`botMobiles()`) and the player at each sampled tick",
+ "samples": [
+  {
+   "t": 0,
+   "level": 73,
+   "player": {
+    "x": 72,
+    "y": 24,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 80,
+     "y": 32,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 1,
+   "level": 73,
+   "player": {
+    "x": 72,
+    "y": 23.2,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 80,
+     "y": 32,
+     "vx": -1.0606601717798214,
+     "vy": -1.0606601717798214,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 2,
+   "level": 73,
+   "player": {
+    "x": 70.13236663306107,
+    "y": 20.377433657575743,
+    "hits": 1,
+    "hits_timer": 19
+   },
+   "bodies": [
+    {
+     "x": 79.11611652351681,
+     "y": 31.116116523516816,
+     "vx": -1.0606601717798214,
+     "vy": -1.0606601717798214,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 3,
+   "level": 73,
+   "player": {
+    "x": 68.40268758954751,
+    "y": 17.76335857311749,
+    "hits": 1,
+    "hits_timer": 18
+   },
+   "bodies": [
+    {
+     "x": 78.23223304703362,
+     "y": 30.23223304703363,
+     "vx": -1.0606601717798214,
+     "vy": -1.0606601717798214,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  }
+ ],
+ "tape": {
+  "tape_version": 8,
+  "game": "seedling",
+  "boot": {
+   "level": 73,
+   "x": 64,
+   "y": 16
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
+  "despawn": [],
+  "equips": [],
+  "pins": [
+   "sound",
+   "dead_frames"
+  ],
+  "save": {
+   "totem_parts": [],
+   "keys": [],
+   "seal_parts": []
+  },
+  "rng": {
+   "seed": 1,
+   "split": false,
+   "cosmetic": 0,
+   "fp": 0
+  },
+  "seam": {
+   "items": {
+    "canSwim": true,
+    "hasFeather": true,
+    "hasFire": true,
+    "hasShield": true,
+    "hasSpear": true,
+    "hasSword": true,
+    "hasTorch": true,
+    "hasWand": true
+   }
+  },
+  "tick0": null,
+  "hold": false,
+  "tick_count": 3,
+  "inputs": [
+   {
+    "key": "up",
+    "from": 0,
+    "to": 3
+   }
+  ],
+  "name": "leash-l73-622-up",
+  "description": "⛓ seedling-fidelity-leash D1 — leg 622's crossing as the WALKER walks it: L73, the arrival from L74 at (72,24), `up` held into teleporter@64,0. `lavarunner@72,24` (centre (80,32)) is diagonally adjacent; it chases from t1 and moves at t2, and the GAME bills the player's hit at t2 (hits 0 -> 1). Stops before the teleport (t4).",
+  "note": ""
+ }
+}
