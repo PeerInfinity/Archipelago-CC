@@ -78,7 +78,11 @@
  *     TARGET_PANEL   = { panel: '<componentType>', title?: '<tab title>' }
  *     TARGET_CONTROL = { panel, title?, selector: '<CSS, scoped to the panel>',
  *                        text?: '<exact textContent, to pick one of several>',
- *                        optional?: true }
+ *                        optional?: true, frame?: '<CSS of an iframe in the panel>' }
+ *
+ *   `frame` (click only): the selector is looked up in that same-origin
+ *   iframe's document instead — a button the panel's game page draws (the
+ *   Seedling wasm page's ▶ Start).
  *
  *   `optional` (click only): when the control is not there, the action is
  *   skipped instead of failing — "unfold the section if it is folded", where
@@ -135,6 +139,7 @@ function checkAction(a, where) {
     if ((kind === 'select' || kind === 'fill') && typeof t.value !== 'string') fail(where, `a ${kind} needs \`value\` (a string)`);
     if (t.optional !== undefined && !(t.optional === true && kind === 'click')) fail(where, '`optional` is true, on a click only');
     if (t.text !== undefined && typeof t.text !== 'string') fail(where, '`text` must be a string');
+    if (t.frame !== undefined && !(kind === 'click' && typeof t.frame === 'string' && t.frame)) fail(where, '`frame` is a selector, on a click only');
 }
 
 function checkBlock(b, where, stepIds, { stepsAllowed }) {

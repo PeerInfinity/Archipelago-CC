@@ -247,4 +247,37 @@ export function tickParam(id, key, label) {
 }
 
 /** The Flash runtime note every Seedling-carrying tutorial gives (⚖ the user, 2026-10-10: wasm, mention the switch). */
+const FLASH = Object.freeze({ panel: 'flashPanel' });
+const flashStatus = { ...FLASH, selector: '.flash-panel-status' };
+const WASM_START_PROMPT = 'click ▶ Start in the game';
+
+/**
+ * Start the Seedling wasm game in the Flash Panel. The page waits for a click on its own ▶ Start (a browser lets
+ * sound and graphics start only from one), and until then it has not loaded the world's rooms, so the Playback Bot
+ * has nothing to walk ("no name → cell map for the generated rooms" — measured, tutorial-bugs 2026-10-10). Two
+ * steps: wait for the page (the first load fetches the runtime), then press it.
+ */
+export function startSeedlingGame(id) {
+    return [
+        {
+            step: {
+                id: `${id}-page`,
+                text: 'Open the **Flash Panel** tab and wait for the game page: the panel\'s status reads *click ▶ Start in the game* (the first time, the browser fetches the game\'s runtime).',
+                actions: [{ activate: FLASH }],
+                done: (ctx) => ctx.text(flashStatus) === WASM_START_PROMPT,
+                doneTimeoutMs: 120000,
+            },
+        },
+        {
+            step: {
+                id,
+                text: 'Press **▶ Start** in the game. The panel\'s status moves on to *configured*, and it loads the world\'s Seedling rooms into the game.',
+                actions: [{ click: { ...FLASH, frame: 'iframe', selector: '#btn-start' } }],
+                done: (ctx) => ['configured', 'ready'].includes(ctx.text(flashStatus)),
+                doneTimeoutMs: 60000,
+            },
+        },
+    ];
+}
+
 export const SEEDLING_RUNTIME_NOTE = 'Seedling rooms play in the **wasm** build of the original game (the default). The **Settings** panel\'s Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime, where the Playback Bot already walks them; this tutorial stays on wasm, where that work is in progress.';

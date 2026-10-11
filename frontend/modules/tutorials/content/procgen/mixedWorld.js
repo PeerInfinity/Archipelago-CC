@@ -10,7 +10,7 @@
  */
 import {
     SEEDLING_RUNTIME_NOTE, addSubstrate, botPlaysToTheEnd, chooseMode, loadIntoFrontend, look, openSection,
-    resetPipeline, runAll,
+    resetPipeline, runAll, startSeedlingGame,
 } from '../steps/procgen.js';
 
 const REGISTRY = { panel: 'substrateRegistryPanel' };
@@ -22,7 +22,7 @@ export const PROCGEN_MIXED_WORLD = Object.freeze({
     summary: 'Build one world from a maze, a text adventure, a bounce zone, a Noiz2sa stage and a generated Seedling room, and watch the Playback Bot play every kind.',
     track: 'procgen',
     status: 'in-progress',
-    firstFailingStep: 'bot-plays',
+    firstFailingStep: null, // every step works since the ▶ Start step + a WebGPU test browser; ready = the user's call
     doc: null,
     intro: [
         { prose: 'Each region of a generated world is drawn by a *substrate* — a kind of game that knows how to make a room, put items in it, and gate its exits. One world can mix them: the logic underneath does not care whether a key sits at the end of a maze, a text adventure\'s room or a platform.' },
@@ -60,6 +60,7 @@ export const PROCGEN_MIXED_WORLD = Object.freeze({
                 ...look('look-bounce', { panel: 'bounceDemoPanel' }, 'The **Bounce Demo** tab plays bounce zones: a platformer whose jumps are the progression.'),
                 ...look('look-noiz2sa', { panel: 'noiz2saSubstratePanel' }, 'The **Noiz2sa** tab plays Noiz2sa stages: a bullet-hell shooter, where surviving a stage opens its exit.'),
                 ...look('look-seedling', { panel: 'flashPanel' }, 'The **Flash Panel** plays the generated Seedling room in the original game.'),
+                ...startSeedlingGame('start-game'),
                 { prose: 'Mazes play in the **Maze Room**, as before. When the player walks into a region, the app brings its panel forward.' },
             ],
         },

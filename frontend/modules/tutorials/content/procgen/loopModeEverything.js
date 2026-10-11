@@ -9,7 +9,7 @@
  */
 import {
     SEEDLING_RUNTIME_NOTE, addSubstrate, botPlaysToTheEnd, chooseMode, loadIntoFrontend, look, openSection,
-    resetPipeline, runAll, tickParam,
+    resetPipeline, runAll, startSeedlingGame, tickParam,
 } from '../steps/procgen.js';
 
 const loopToggle = { panel: 'loopsPanel', selector: '#loop-ui-toggle-loop-mode' };
@@ -54,6 +54,7 @@ export const PROCGEN_LOOP_MODE_EVERYTHING = Object.freeze({
                 ...look('look-loops', { panel: 'loopsPanel' }, 'Open the **Loops** tab: loop mode is on (**Exit Loop Mode** in its controls), and every region\'s block is there to queue.',
                     (ctx) => ctx.text(loopToggle) === 'Exit Loop Mode'),
                 ...look('look-omsi', { panel: 'omsiSubstrateWrapperPanel' }, 'The **Idle Loops** tab plays its region: the whole town of the idle game, spending the shared mana.'),
+                ...startSeedlingGame('start-game'),
                 ...botPlaysToTheEnd('bot-plays', { watch: { panel: 'loopsPanel' }, watchName: 'Loops', how: 'queue and run each region' }),
             ],
         },

@@ -11,6 +11,7 @@
  */
 import {
     SEEDLING_RUNTIME_NOTE, botPlaysToTheEnd, choosePreset, loadIntoFrontend, look, resetPipeline, runAll,
+    startSeedlingGame,
 } from '../steps/procgen.js';
 
 const LAB = { panel: 'procgenLabPanel', title: 'Procgen Lab — Seedling' };
@@ -22,7 +23,7 @@ export const PROCGEN_SEEDLING = Object.freeze({
     summary: 'Put generated Seedling rooms into a procgen world, play them in the original game, look at a room in the Procgen Lab, and watch the bot.',
     track: 'procgen',
     status: 'in-progress',
-    firstFailingStep: 'bot-plays',
+    firstFailingStep: null, // every step works since the ▶ Start step + a WebGPU test browser; ready = the user's call
     doc: null,
     intro: [
         { prose: '*Seedling* is a Flash game this project runs in the browser, recompiled from its SWF. Its rooms can be regions of a generated world: either real rooms from the game (the *region atlas*) or new rooms generated in its style, with the game\'s own physics deciding what is reachable.' },
@@ -46,6 +47,7 @@ export const PROCGEN_SEEDLING = Object.freeze({
             blocks: [
                 ...look('look-flash', { panel: 'flashPanel' }, 'Open the **Flash Panel** tab: the Seedling regions play here, in the original game.'),
                 ...look('look-flash-substrate', { panel: 'flashSubstratePanel' }, 'The **Flash Substrate** tab is the other way a SWF can be a region — a plain recompiled SWF, without Seedling\'s room model (the bot cannot walk those).'),
+                ...startSeedlingGame('start-game'),
                 ...botPlaysToTheEnd('bot-plays'),
             ],
         },
