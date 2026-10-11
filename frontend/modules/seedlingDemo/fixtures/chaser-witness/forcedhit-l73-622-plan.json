@@ -1,0 +1,162 @@
+{
+ "name": "forcedhit-l73-622-plan",
+ "class": "LavaRunner",
+ "source": "/tmp/claude-0/-home-user-Archipelago-CC/efeb2732-89bd-59c0-9c12-9ccc654384cf/scratchpad/census/tape-l73-622-forced3.json",
+ "page": "seedling_bot_ap_p4f",
+ "recordedBy": "scripts/procgen/probe-seedling-chaser-mobiles.mjs --record",
+ "switches": {
+  "SEEDLING_KILLLOCK_BODIES": null
+ },
+ "note": "the GAME's LavaRunner rows (`botMobiles()`) and the player at each sampled tick",
+ "samples": [
+  {
+   "t": 0,
+   "level": 73,
+   "player": {
+    "x": 72,
+    "y": 24,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 80,
+     "y": 32,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 1,
+   "level": 73,
+   "player": {
+    "x": 72,
+    "y": 23.2,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 80,
+     "y": 32,
+     "vx": -1.0606601717798214,
+     "vy": -1.0606601717798214,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 2,
+   "level": 73,
+   "player": {
+    "x": 70.13236663306107,
+    "y": 20.377433657575743,
+    "hits": 1,
+    "hits_timer": 19
+   },
+   "bodies": [
+    {
+     "x": 79.11611652351681,
+     "y": 31.116116523516816,
+     "vx": -1.0606601717798214,
+     "vy": -1.0606601717798214,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 3,
+   "level": 73,
+   "player": {
+    "x": 68.40268758954751,
+    "y": 17.76335857311749,
+    "hits": 1,
+    "hits_timer": 18
+   },
+   "bodies": [
+    {
+     "x": 78.23223304703362,
+     "y": 30.23223304703363,
+     "vx": -1.0606601717798214,
+     "vy": -1.0606601717798214,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  }
+ ],
+ "tape": {
+  "game": "seedling",
+  "name": "forcedhit-l73-622-plan",
+  "boot": {
+   "level": 73,
+   "x": 64,
+   "y": 16
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+   "dead_frames",
+   "sound"
+  ],
+  "save": {
+   "totem_parts": [],
+   "keys": [],
+   "seal_parts": []
+  },
+  "rng": {
+   "seed": 0,
+   "split": false,
+   "cosmetic": 0,
+   "fp": 987286273
+  },
+  "seam": {
+   "items": {
+    "hasSword": true,
+    "hasDarkSword": false,
+    "hasGhostSword": false,
+    "hasShield": true,
+    "hasDarkShield": false,
+    "hasFire": true,
+    "hasWand": true,
+    "hasFireWand": false,
+    "canSwim": true,
+    "hasFeather": true,
+    "hasSpear": true,
+    "hasDarkSuit": false,
+    "hasTorch": true
+   },
+   "time": 4800,
+   "primary": 0
+  },
+  "tick_count": 3,
+  "inputs": [
+   {
+    "key": "up",
+    "from": 0,
+    "to": 2
+   },
+   {
+    "key": "right",
+    "from": 2,
+    "to": 3
+   },
+   {
+    "key": "down",
+    "from": 2,
+    "to": 3
+   }
+  ],
+  "tape_version": 8,
+  "description": "⛓ seedling-fidelity-forcedhit D3 — leg 622's FORCED-HIT plan (FORCED_HITS ON): L73, the arrival from L74, the solver's crossing `up up down+right down+right` into teleporter@64,0, cut before the teleport (t4). `lavarunner@72,24` is proven to hit every input; the plan bills it at t2."
+ }
+}
