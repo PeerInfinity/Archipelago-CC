@@ -12300,7 +12300,8 @@
         "license": "MIT (Seedling source, redistributable)"
       },
       "set_patches": [
-        "moonrock-removed"
+        "moonrock-removed",
+        "l37-fallrock-removed"
       ],
       "pit_chains": "frontend/modules/seedlingDemo/fidelityDescent.js censusFallsOntoDoors",
       "semantics": "frontend/modules/flashPanel/seedlingSemantics.js",
