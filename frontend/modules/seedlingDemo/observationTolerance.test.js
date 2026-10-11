@@ -126,7 +126,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity ENCOUNTERS2 D2: +1 (270) — `enc-l32-live-arrival`, inert.
         // ⛓ fidelity L12KEYLINE: +1 (271) — `l12keyline-134-round`.
         // ⛓ fidelity L30KEYLOCK: +3 (274) — `l30keylock-pit224-before`, `l30keylock-pit224`, `l30keylock-pit240`.
-        expect(names.length).toBe(274);
+        // ⛓ fidelity L40BUTTON: +2 (276) — `l40button-l41-part0`, `l40button-l42-part0`.
+        expect(names.length).toBe(276);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -187,7 +188,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity ENCOUNTERS2 D2: 270 — the live-arrival witness falls to L30.
         // ⛓ fidelity L12KEYLINE: 271 — `l12keyline-134-round` crosses to L95.
         // ⛓ fidelity L30KEYLOCK: 274 with `l30keylock-pit224-before`, `l30keylock-pit224`, `l30keylock-pit240`.
-        expect(tally.swapped).toBe(274);
+        // ⛓ fidelity L40BUTTON: 276 (measured) — both `l40button-*` witnesses swap too.
+        expect(tally.swapped).toBe(276);
     }, 600_000);
 });
 

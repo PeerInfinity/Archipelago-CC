@@ -385,6 +385,20 @@
       "noHazards": []
     },
     {
+      "file": "l40button-l41-part0.json",
+      "tickCount": 1543,
+      "bootLevel": 40,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "l40button-l42-part0.json",
+      "tickCount": 1597,
+      "bootLevel": 40,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "l71-button-lock.json",
       "tickCount": 160,
       "bootLevel": 71,
