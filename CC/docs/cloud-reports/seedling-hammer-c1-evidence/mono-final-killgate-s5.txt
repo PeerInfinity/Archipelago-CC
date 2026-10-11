@@ -1,0 +1,3 @@
+# capture: row killgate-s5 (path off) exit 0, stdout md5 7d4cb820c71a476abfb89a10b6d1ece6, 7.3 s
+# 9 spinner record(s); modes off, chooser, chooserorder, c1
+# 9 record(s); solved {"off":9,"chooser":9,"chooserorder":9,"c1":9}; chooser: refused→solved 0; chooserorder: refused→solved 0; c1: refused→solved 0; seconds {"off":6.4,"chooser":6,"chooserorder":6.2,"c1":6.3}; replay mismatches 0; ⛔ solved→refused 0

@@ -15134,9 +15134,9 @@ is the static scan's, and it writes no tag. The model then agrees on 0 sampled d
 watch die AND the chooser could not speak for: a live spinner (no danger volume, so its hypothesis is vacuous), or,
 with `STATIC_SWORD_ARM`, a static body in a STEPPED room (never hypothesised). It is never a chaser. Measured: the
 first cut admitted chasers, and on `r9-solve-16` (L16, solved OFF by DETOUR) it handed `bob@208,32` to BAIT, whose
-dwell was hit. Only the empty list is consulted (`mode: 'order'` is the measurement arm). Over 324 generated spinner
-records (c3/c6/acceptance/killgate/ENEMY) both modes equal OFF in verdict and ticks, and the L39/L92 legs are
-unchanged, so A's "no wrong kill" stands.
+dwell was hit. Only the empty list is consulted (`mode: 'order'` is the measurement arm). Over 462 generated spinner
+records (c3, c6, c4, acceptance, killgate s2/s5/s9, ENEMY; 424 solved OFF) both modes, and both switches together,
+equal OFF in verdict and ticks, and the L39/L92 legs are unchanged, so A's "no wrong kill" stands.
 
 **D3 — the static sword arm.** `killStaticBySword`, asked before the ceiling, is K4's in-place shape. No spinner
 forecast, hammer escape, approach or fight applies: `execKillByPress` and `deriveStrike` are bypassed.
