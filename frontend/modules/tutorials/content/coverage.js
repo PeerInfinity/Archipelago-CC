@@ -29,11 +29,6 @@ export const NO_TUTORIAL = Object.freeze({
 
 /** Panels a tutorial is planned for, not written yet: componentType → the planned tutorial. */
 export const NOT_COVERED_YET = Object.freeze({
-    // Procgen
-    mazeGameDataPanel: 'Procgen: each pipeline mode, with Maze',
-    runnerDemoPanel: 'Procgen: a runner world (not in the mixed world: its generation is heavy)',
-    // Other
-    vibeCodingSimPanel: 'Other: the Vibe Coding Simulator (low priority; kept out of the main indexes)',
 });
 
 /**

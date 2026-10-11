@@ -44,7 +44,7 @@ export const OTHER_EMBEDDING = Object.freeze({
                         id: 'load-iframe',
                         text: 'Press **Load Iframe**, then open the **Iframe Panel** tab: the page loads, and its status turns to *Connected*. The manager lists it, with its heartbeat.',
                         actions: [{ click: { ...IFRAMES, selector: '.load-button' } }, { activate: IFRAME }],
-                        done: (ctx) => ctx.text({ ...IFRAME, selector: '.iframe-status' }).startsWith('Connected'),
+                        done: (ctx) => ctx.text({ ...IFRAME, selector: '.iframe-status' }).startsWith('Connected') && ctx.text({ ...IFRAME, selector: '.iframe-status' }).includes('iframe-base'),
                         doneTimeoutMs: 30000,
                     },
                 },

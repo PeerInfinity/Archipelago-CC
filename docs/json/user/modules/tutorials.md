@@ -60,6 +60,7 @@ Written, but not working all the way through yet. The panel lists these in a col
 - **Procgen: a mixed world** — Build one world from a maze, a text adventure, a bounce zone, a Noiz2sa stage and a generated Seedling room, and watch the Playback Bot play every kind. `?tutorial=procgen-mixed-world`
 - **Procgen: Journey to Ascension in Loop mode** — Generate a world of Journey to Ascension zones with loop mode on, see the loop panels, and watch the bot finish it. `?tutorial=procgen-loop-mode-jta`
 - **Procgen: everything, in Loop mode** — Mix every substrate — Idle Loops included — into one loop-mode world sharing one mana pool, and watch the bot finish it. `?tutorial=procgen-loop-mode-everything`
+- **Procgen: a runner world** — Play a generated world of auto-running platformer strips, where the jumps you can make are the items you hold. `?tutorial=procgen-runner-demo`
 - **MetaMath: prove 2 + 2 = 4** — Play a MetaMath proof as an Archipelago game: each proof step is a location, unlocked when the steps it depends on are proved. `?tutorial=metamath-demo`
 - **MetaMath: in a multiworld** — Host a MetaMath proof on a local Archipelago server and prove it from the app. `?tutorial=metamath-multiworld`
 - **DepGraph: a coding adventure** — Play a dependency graph as an Archipelago game: each task is a location, unlocked when the tasks it depends on are done. `?tutorial=depgraph-demo`
@@ -78,6 +79,8 @@ Written, but not working all the way through yet. The panel lists these in a col
 - **Tracking: the rules in the Editor** — Read the loaded game's rules JSON — and other data — in the Editor. `?tutorial=tracker-editor`
 - **Adventure in Loop Mode** — Turn a world into an incremental game: queue moves, explores and checks, spend mana, and start again when it runs out. `?tutorial=loops-adventure`
 - **Embedding pages and windows** — Load a page into an Iframe panel, or open it in a window of its own, and watch it connect to the app. `?tutorial=other-embedding`
+- **A-Mazing-Idle and the Maze Game Data panel** — Load the incremental maze game A-Mazing-Idle into an Iframe Panel and watch its state in the Maze Game Data panel. `?tutorial=other-maze-game-data`
+- **The Vibe Coding Simulator** — Manage unreliable AI agents building a project, one feature (one location) at a time — a joke game, fully playable. `?tutorial=other-vibe-coding`
 
 ### For developers (a collapsed section in the panel)
 

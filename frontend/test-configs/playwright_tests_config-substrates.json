@@ -1670,6 +1670,24 @@
             "enabled": true,
             "category": "Tutorial walks",
             "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-region-marking-tool; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-other-maze-game-data",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft other-maze-game-data; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-other-vibe-coding",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft other-vibe-coding; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-procgen-runner-demo",
+            "enabled": true,
+            "category": "Tutorial walks: procgen",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft procgen-runner-demo; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen."
         }
     ]
 }

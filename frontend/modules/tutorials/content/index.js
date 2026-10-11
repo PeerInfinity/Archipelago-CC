@@ -9,6 +9,9 @@ import { START_SAVING_YOUR_SETUP, START_WORKBENCH } from './start/workbench.js';
 import { TRACKER_TRACK_A_GAME } from './tracker/trackAGame.js';
 import { LOOPS_ADVENTURE } from './loops/adventureLoopMode.js';
 import { OTHER_EMBEDDING } from './other/embedding.js';
+import { OTHER_MAZE_GAME_DATA } from './other/mazeGameData.js';
+import { OTHER_VIBE_CODING } from './other/vibeCoding.js';
+import { PROCGEN_RUNNER_DEMO } from './procgen/runnerDemo.js';
 import {
     DEV_EVENTS, DEV_LOOPS_COST_DEBUGGER, DEV_REGION_MARKING_TOOL, DEV_SPOILER_TEST, DEV_TESTS,
 } from './developer/developer.js';
@@ -50,6 +53,7 @@ export const TUTORIALS = Object.freeze([
     entry('procgen/mixedWorld.js', PROCGEN_MIXED_WORLD),
     entry('procgen/loopModeJta.js', PROCGEN_LOOP_MODE_JTA),
     entry('procgen/loopModeEverything.js', PROCGEN_LOOP_MODE_EVERYTHING),
+    entry('procgen/runnerDemo.js', PROCGEN_RUNNER_DEMO),
     entry('games/metamath.js', METAMATH_DEMO),
     entry('games/multiworld.js', METAMATH_MULTIWORLD),
     entry('games/depgraph.js', DEPGRAPH_DEMO),
@@ -68,6 +72,8 @@ export const TUTORIALS = Object.freeze([
     entry('tracker/panels.js', TRACKER_EDITOR),
     entry('loops/adventureLoopMode.js', LOOPS_ADVENTURE),
     entry('other/embedding.js', OTHER_EMBEDDING),
+    entry('other/mazeGameData.js', OTHER_MAZE_GAME_DATA),
+    entry('other/vibeCoding.js', OTHER_VIBE_CODING),
     entry('developer/developer.js', DEV_TESTS),
     entry('developer/developer.js', DEV_SPOILER_TEST),
     entry('developer/developer.js', DEV_EVENTS),
