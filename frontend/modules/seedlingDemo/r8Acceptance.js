@@ -3485,6 +3485,14 @@ export const R8_D2_SHIELD = Object.freeze({
                     + 'both spinners\' six landings in ONE certificate found at the kill\'s admission and held '
                     + 'tick for tick, `lock@144,112` opened. Named by this assertion driving the roster.',
             }),
+            Object.freeze({
+                name: 'hammer-c2-l18-ghostspinner',
+                level: 18,
+                addedBy: 'Seedling hammer-phase C2 D1 (the ghost sword against a spinner, on the game)',
+                why: '`r9-solve-18`\'s frozen staging with the ghost sword: a hand-chosen walk whose ghost presses '
+                    + '(24 x 48, reach 24, 2 damage) land twice on `spinner@48,96` and kill it. Named by this '
+                    + 'assertion driving the roster.',
+            }),
         ]),
     }),
 
