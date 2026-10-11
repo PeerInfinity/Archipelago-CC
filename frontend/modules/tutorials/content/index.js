@@ -16,6 +16,11 @@ import { PROCGEN_SEEDLING } from './procgen/seedling.js';
 import { PROCGEN_MIXED_WORLD } from './procgen/mixedWorld.js';
 import { PROCGEN_LOOP_MODE_JTA } from './procgen/loopModeJta.js';
 import { PROCGEN_LOOP_MODE_EVERYTHING } from './procgen/loopModeEverything.js';
+import { METAMATH_DEMO } from './games/metamath.js';
+import { DEPGRAPH_DEMO } from './games/depgraph.js';
+import { DEPGRAPH_EXTRAS } from './games/depgraphExtras.js';
+import { APCALC_DEMO, APCALC_GENERATOR } from './games/apcalc.js';
+import { APCALC_MULTIWORLD, DEPGRAPH_MULTIWORLD, METAMATH_MULTIWORLD } from './games/multiworld.js';
 
 const entry = (source, tutorial) => Object.freeze({ source: `frontend/modules/tutorials/content/${source}`, tutorial });
 
@@ -32,4 +37,12 @@ export const TUTORIALS = Object.freeze([
     entry('procgen/mixedWorld.js', PROCGEN_MIXED_WORLD),
     entry('procgen/loopModeJta.js', PROCGEN_LOOP_MODE_JTA),
     entry('procgen/loopModeEverything.js', PROCGEN_LOOP_MODE_EVERYTHING),
+    entry('games/metamath.js', METAMATH_DEMO),
+    entry('games/multiworld.js', METAMATH_MULTIWORLD),
+    entry('games/depgraph.js', DEPGRAPH_DEMO),
+    entry('games/depgraphExtras.js', DEPGRAPH_EXTRAS),
+    entry('games/multiworld.js', DEPGRAPH_MULTIWORLD),
+    entry('games/apcalc.js', APCALC_DEMO),
+    entry('games/apcalc.js', APCALC_GENERATOR),
+    entry('games/multiworld.js', APCALC_MULTIWORLD),
 ]);

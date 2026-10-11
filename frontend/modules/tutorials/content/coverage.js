@@ -32,17 +32,11 @@ export const NOT_COVERED_YET = Object.freeze({
     tutorialPanel: 'Your workbench',
     jsonPanel: 'Your workbench',
     storagePanel: 'Your workbench',
-    modulesPanel: 'Your workbench',
     optionsPanel: 'Your workbench',
     settingsPanel: 'Your workbench',
     // Procgen
     mazeGameDataPanel: 'Procgen: each pipeline mode, with Maze',
     runnerDemoPanel: 'Procgen: a runner world (not in the mixed world: its generation is heavy)',
-    // MetaMath, DepGraph, APCalc
-    proofQueuePanel: 'MetaMath: play a demo preset',
-    proofGraphPanel: 'MetaMath: play a demo preset',
-    apcalcPanel: 'APCalc: play a demo preset',
-    apcalcGeneratorPanel: 'APCalc: generate a seed, to an .apworld',
     // Tracking a game (ALTTP)
     presetsPanel: 'Tracking: ALTTP',
     exitsPanel: 'Tracking: ALTTP',
@@ -77,7 +71,7 @@ export const NOT_COVERED_YET = Object.freeze({
 export const FEATURES = Object.freeze([
     { id: 'tutorial-links', title: 'Opening a tutorial from a ?tutorial= link', tutorial: 'guided-tour' },
     { id: 'layouts', title: 'Moving, splitting and closing panels; layout presets', tutorial: null, planned: 'Your workbench' },
-    { id: 'modes', title: 'App modes (?mode=…)', tutorial: null, planned: 'MetaMath, DepGraph and APCalc tutorials' },
+    { id: 'modes', title: 'App modes (?mode=…)', tutorial: 'metamath-demo' },
     { id: 'loop-mode', title: 'Loop mode', tutorial: 'procgen-loop-mode-jta' },
     { id: 'lab-pages', title: 'The procgen lab pages (demos.html, the Seedling lab)', tutorial: 'procgen-seedling' },
     { id: 'local-multiworld', title: 'Generating a multiworld and connecting to a local server', tutorial: 'procgen-to-multiworld' },

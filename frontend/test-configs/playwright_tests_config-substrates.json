@@ -1407,6 +1407,12 @@
             "_comment": "SUBSTRATE CHART S4. The pipeline's Substrates (click to add) rows, a selected row and the sphere per-region override options show the live entry's label and hover cardText(cardOf(entry, capabilityRows(getAll()))) computed in the row; the stored value stays the id. Category procgenPipeline is claimed by no batch, so it runs in the default batch (fast). Restores the Scenario Pool collapse state and the active substrate dict."
         },
         {
+            "id": "quick-launch-button-opens-panel-never-in-layout",
+            "enabled": true,
+            "category": "Quick Launch",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): an enabled module whose panel the layout never had (Discovery in the default layout) — its Quick Launch button did nothing; enableModule now creates the panel in its declared column. Here (not the regression roster) because the full default layout is the one that lacks Discovery. Category Quick Launch is claimed by no batch, so it runs in fast."
+        },
+        {
             "id": "tutorial-panel-lists-every-tutorial",
             "enabled": true,
             "category": "Tutorials",
@@ -1508,6 +1514,54 @@
             "enabled": true,
             "category": "Tutorial walks: procgen",
             "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-loop-mode-everything; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-metamath-demo",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft metamath-demo; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-metamath-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft metamath-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-depgraph-demo",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft depgraph-demo; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-depgraph-extras",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft depgraph-extras; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-depgraph-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft depgraph-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-apcalc-demo",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-demo; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-apcalc-generator",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-generator; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-apcalc-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
         }
     ]
 }

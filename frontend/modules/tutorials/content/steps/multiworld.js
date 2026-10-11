@@ -21,9 +21,10 @@ export const LOCAL_SERVER = 'ws://localhost:38281';
  *   idPrefix     keeps step ids unique within the tutorial
  *   gameName     the game the .apworld registers (the YAML's `game:`)
  *   apworldFile  the downloaded file's name
+ *   install      optional { text, command } in place of "copy the .apworld"
  *   slot         the slot (player) name the YAML gives
  */
-export function localMultiworld({ idPrefix = 'mw', gameName, apworldFile, slot = 'Tutorial' }) {
+export function localMultiworld({ idPrefix = 'mw', gameName, apworldFile, slot = 'Tutorial', install = null }) {
     const id = (s) => `${idPrefix}-${s}`;
     const serverStatus = { ...CLIENT, selector: '#server-status' };
     return [
@@ -32,8 +33,9 @@ export function localMultiworld({ idPrefix = 'mw', gameName, apworldFile, slot =
             step: {
                 id: id('install'),
                 outside: true,
-                text: `Copy the downloaded \`${apworldFile}\` into the \`custom_worlds/\` folder, so Archipelago can load the game "${gameName}".`,
-                command: `cp ~/Downloads/${apworldFile} custom_worlds/`,
+                // `install` replaces the default "copy the downloaded .apworld" (a game shipped another way).
+                text: install?.text ?? `Copy the downloaded \`${apworldFile}\` into the \`custom_worlds/\` folder, so Archipelago can load the game "${gameName}".`,
+                command: install?.command ?? `cp ~/Downloads/${apworldFile} custom_worlds/`,
             },
         },
         {

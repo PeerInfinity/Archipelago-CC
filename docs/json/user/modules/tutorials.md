@@ -58,6 +58,14 @@ Written, but not working all the way through yet. The panel lists these in a col
 - **Procgen: a mixed world** — Build one world from a maze, a text adventure, a bounce zone, a Noiz2sa stage and a generated Seedling room, and watch the Playback Bot play every kind. `?tutorial=procgen-mixed-world`
 - **Procgen: Journey to Ascension in Loop mode** — Generate a world of Journey to Ascension zones with loop mode on, see the loop panels, and watch the bot finish it. `?tutorial=procgen-loop-mode-jta`
 - **Procgen: everything, in Loop mode** — Mix every substrate — Idle Loops included — into one loop-mode world sharing one mana pool, and watch the bot finish it. `?tutorial=procgen-loop-mode-everything`
+- **MetaMath: prove 2 + 2 = 4** — Play a MetaMath proof as an Archipelago game: each proof step is a location, unlocked when the steps it depends on are proved. `?tutorial=metamath-demo`
+- **MetaMath: in a multiworld** — Host a MetaMath proof on a local Archipelago server and prove it from the app. `?tutorial=metamath-multiworld`
+- **DepGraph: a coding adventure** — Play a dependency graph as an Archipelago game: each task is a location, unlocked when the tasks it depends on are done. `?tutorial=depgraph-demo`
+- **DepGraph: more graphs, and your own** — Load DepGraph's other bundled graphs, see one in the Region Graph, and turn a task list of your own into a game. `?tutorial=depgraph-extras`
+- **DepGraph: in a multiworld** — Host a DepGraph graph on a local Archipelago server and solve it from the app. `?tutorial=depgraph-multiworld`
+- **APCalc: the calculator game** — Play APCalc: a calculator whose number and operation keys are the items, and whose results are the locations. `?tutorial=apcalc-demo`
+- **APCalc: generate a world** — Generate a new APCalc map with the APCalc Generator, play it, and package it as a .apworld. `?tutorial=apcalc-generator`
+- **APCalc: in a multiworld** — Host APCalc on a local Archipelago server and play it from the app. `?tutorial=apcalc-multiworld`
 
 ### Panels with no tutorial
 

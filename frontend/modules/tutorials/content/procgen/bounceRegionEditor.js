@@ -22,12 +22,7 @@ export const PROCGEN_BOUNCE_REGION_EDITOR = Object.freeze({
     summary: 'Open a generated world\'s bounce zone in the Bounce Region Editor, change a platform, save it back to the pipeline, and play the result.',
     track: 'procgen',
     status: 'in-progress',
-    // ⚠ pick-platform is where the WALK cannot go on, not (as far as is known)
-    // the editor: the canvas hit-tests the click's position (±14 px of a
-    // platform bar) on a 340×1601 canvas, and the executor clicks its centre.
-    // A platform picker in the sidebar would let a step choose one (asked,
-    // 2026-10-10).
-    firstFailingStep: 'pick-platform',
+    firstFailingStep: 'bot-plays',
     doc: null,
     intro: [
         { prose: 'A generated region is not final: the pipeline\'s step 3 lists every region it built, and **Edit ▸** opens one in its substrate\'s editor. For a bounce zone that is the **Bounce Region Editor** — its platforms, pickups and portals on a canvas, and the access rules they imply, re-derived as you edit.' },
@@ -64,9 +59,9 @@ export const PROCGEN_BOUNCE_REGION_EDITOR = Object.freeze({
                 {
                     step: {
                         id: 'pick-platform',
-                        text: 'Click a platform on the canvas. The sidebar shows its fields — position, width, kind — and **Derived access rules** lists what reaching each exit needs.',
-                        actions: [{ click: { ...EDITOR, selector: 'canvas.bre-canvas' } }],
-                        done: (ctx) => ctx.exists(editorSide) && !ctx.text(editorSide).includes('Click a platform to edit it.'),
+                        text: 'Pick a platform — click it on the canvas, or choose it in the sidebar\'s **pick** drop-down (here **b1**, the second from the bottom). The sidebar shows its fields — position, width, kind — and **Derived access rules** lists what reaching each exit needs.',
+                        actions: [{ select: { ...EDITOR, selector: 'select.bre-platform-pick', value: 'b1' } }],
+                        done: (ctx) => ctx.text(editorSide).includes('selected: b1'),
                     },
                 },
                 { prose: 'Change a field — move the platform, widen it — and watch the rules update; **↶ Undo** takes an edit back.' },

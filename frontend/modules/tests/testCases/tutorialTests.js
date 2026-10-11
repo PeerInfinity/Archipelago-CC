@@ -291,6 +291,7 @@ async function tutorialWalkRow(tc, tutorial) {
     const ctx = buildContext({ eventBus });
     const before = ctx.rulesSource();
     const pipelineSetup = readPipelineSetup();
+    const modulesBefore = moduleStates();
     const ui = await freshPanel(tc, { autoAdvance: false, animateCursor: false, showOutline: false });
     if (!ui) return tc.getOverallResult();
     try {
@@ -327,12 +328,29 @@ async function tutorialWalkRow(tc, tutorial) {
         await restore(ui, settings);
         restoreActiveTabs(tabs);
         restorePipelineSetup(pipelineSetup, tc);
+        await restoreModules(modulesBefore, tc);
         if (typeof before === 'string' && before.startsWith('./presets/') && ctx.rulesSource() !== before) {
             try { await ctx.loadRulesPath(before); } catch (e) { tc.log?.(`could not reload ${before}: ${e.message}`); }
         }
         ctx.dispose();
     }
     return tc.getOverallResult();
+}
+
+// The generator games' tutorials switch modules on in the Modules panel and
+// off again at their end — but a walk that stops early never reaches the end.
+// A row switches off what it found off.
+function moduleStates() {
+    const all = window.moduleManagerApi?.getAllModuleStates?.() ?? {};
+    return Object.fromEntries(Object.entries(all).map(([id, st]) => [id, st?.enabled === true]));
+}
+
+async function restoreModules(before, tc) {
+    for (const [id, on] of Object.entries(moduleStates())) {
+        if (on && before[id] === false) {
+            try { await window.moduleManagerApi.disableModule(id); } catch (e) { tc.log?.(`could not switch ${id} off: ${e.message}`); }
+        }
+    }
 }
 
 // The Procgen Pipeline auto-saves its setup, and the procgen tutorials change

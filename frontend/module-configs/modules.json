@@ -248,6 +248,10 @@
       "path": "./modules/apcalc/index.js",
       "enabled": false
     },
+    "apcalcGenerator": {
+      "path": "./modules/apcalcGenerator/index.js",
+      "enabled": false
+    },
     "apworldEditor": {
       "path": "./modules/apworldEditor/index.js",
       "enabled": true
@@ -380,6 +384,7 @@
     "jtaArchipelago",
     "vibeCodingSim",
     "apcalc",
+    "apcalcGenerator",
     "apworldEditor",
     "mazeRoom",
     "procgenLabPanel",
