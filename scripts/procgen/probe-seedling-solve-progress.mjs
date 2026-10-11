@@ -15,11 +15,15 @@
  * solve that many times and prints each wall time. `--compare` solves once without and once with the hook and checks
  * the plan, trace, records and verdict are byte-identical.
  *
+ * ⛓ SOLVE PROGRESS (JS half) — `--hook=tap` installs the JS worker's own hook (`solveProgressTap.createProgressTap`,
+ * throttled to one post a second by this process's clock, a `structuredClone` per post standing in for the worker's
+ * `postMessage`), so `--hook=none` vs `--hook=tap` is the solve-time overhead of the panel's view being open.
+ *
  * ⚠ It changes nothing tracked.
  *
  * Run:
  *   node scripts/procgen/probe-seedling-solve-progress.mjs --tape=r9-solve-18 --goal=exit:176,112 [--residue=21]
- *       [--every=200] [--out=<jsonl>] [--deadline=none|never] [--hook=peek|silent|none] [--repeat=1] [--compare]
+ *       [--every=200] [--out=<jsonl>] [--deadline=none|never] [--hook=peek|silent|tap|none] [--repeat=1] [--compare]
  *   (`--goal=collect:x,y`, `exit:x,y` or `pit:tx,ty`; several joined by `;`)
  */
 
@@ -86,6 +90,7 @@ async function main() {
     const { withSolveDeadline } = await import(join(MODULE, 'solverBot.js'));
     const { withSolveProgress } = await import(join(MODULE, 'solveProgress.js'));
     const { SPINNER } = await import(join(MODULE, 'spinner.js'));
+    const { createProgressTap } = await import(join(MODULE, 'solveProgressTap.js'));
 
     const tape = tapeName.endsWith('.json') ? parseTape(readFileSync(tapeName, 'utf8')) : loadTape(tapeName);
     const base = stagingFromTape(tape);
@@ -152,9 +157,18 @@ async function main() {
             peekMs.push(performance.now() - t0);
             if (snap) lines.push(JSON.stringify({ call: calls, site, snapshot: snap }));
         };
+        // ⛓ SOLVE PROGRESS — the worker's tap: its throttle, its peeks, and a clone per post (the postMessage cost)
+        const tapPosts = { n: 0, bytes: 0, ms: 0 };
+        const tap = hookMode === 'tap' ? createProgressTap({ passes: [{ pass: 'probe', stop: 'all' }],
+            clock: () => performance.now(), budgetWork: null,
+            post: (snap) => { tapPosts.n += 1; tapPosts.bytes += JSON.stringify(structuredClone(snap)).length; } }) : null;
         const t0 = performance.now();
         lastCall = t0;
-        const r = await solveOnce(hookMode === 'none' ? null : hook);
+        // the tap's own time (its clock reads, peeks and clones): the overhead itself, readable on a loaded box
+        const timed = (fn) => { const a = performance.now(); fn(); tapPosts.ms += performance.now() - a; };
+        const r = await solveOnce(hookMode === 'none' ? null
+            : tap ? (site, peek) => { calls += 1; timed(() => tap.hook(site, peek)); } : hook);
+        if (tap) timed(() => tap.finish());
         const ms = performance.now() - t0;
         let last = null;
         if (hookMode === 'peek' && peekFn) {
@@ -168,7 +182,9 @@ async function main() {
         console.log(`${name} L${staging.boot.level} hook=${hookMode} deadline=${deadlineMode} `
             + `run ${k + 1}/${repeat}: ${ms.toFixed(0)} ms — ${verdict}`);
         console.log(`  answer ${answerDigest(r)} · hook calls ${calls}`
-            + (hookMode === 'none' ? '' : ` · longest gap ${maxGap.ms.toFixed(0)} ms (before call ${maxGap.call}, `
+            + (tap ? ` · tap posts ${tapPosts.n} (${tapPosts.bytes} bytes) · peeks ${tap.stats.peeks}`
+                + ` · in the tap ${tapPosts.ms.toFixed(1)} ms (${((100 * tapPosts.ms) / ms).toFixed(3)}% of the solve)` : '')
+            + (hookMode === 'none' || tap ? '' : ` · longest gap ${maxGap.ms.toFixed(0)} ms (before call ${maxGap.call}, `
                 + `${maxGap.site})`)
             + (hookMode === 'peek' ? ` · snapshots ${lines.length} · final ${last ? JSON.stringify(last).length : 0} bytes`
                 + ` · peek ms median ${median?.toFixed(3) ?? '-'} max ${sorted.length ? sorted.at(-1).toFixed(3) : '-'}`
