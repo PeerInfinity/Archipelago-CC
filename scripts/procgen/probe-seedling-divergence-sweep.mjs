@@ -43,6 +43,17 @@
  *                        panel's instance is read back and printed as a `CONTACT:` line (a mismatch fails the boot);
  *                        each plan the worker solved under an off-default set carries its `contactFidelity` stamp.
  *
+ * ⛓ THE HANG BOUND (H1: sweep-4 shard 9, CI run 38110831520, sat ~5 h after its 18th page and named nothing). Every
+ * harness step between legs — a page's teardown, the browser's close, the launch, the new page, a boot attempt and a
+ * leg — runs under a wall-clock bound (`HANG_BOUNDS_MS`, each derived from measured CI times). A bound that expires
+ * prints `HANG: page <n> <step> exceeded <s> s … lost=<ids|none>`, SIGKILLs the browser's process group (Playwright's
+ * `browser.close()` can hang itself), emits every leg of that page with no row as `end: 'harness-hang'` (its step;
+ * `started` when the leg had begun), and relaunches for the next page. Each leg prints `LEG <id> start` first, so a
+ * hang anywhere names its leg and page; each page prints a `RECYCLE:` line of its step times (the next derivation).
+ *   SWEEP_INJECT_HANG=<page>:<step>[,…]  TEST-ONLY fault injection (env; INERT when unset): that page's step never
+ *                        resolves (steps: pageClose browserClose launch newPage boot leg). ⛔ Never in a real sweep.
+ *   SWEEP_HANG_BOUND=off TEST-ONLY: the MUTANT — no bound (an injected hang then sits until the job's timeout)
+ *
  * Location legs: a location opened once stays open for the session, so a page takes at most ONE arrival per
  * location; the k-th arrivals of every location share the k-th location page.
  *
@@ -128,6 +139,61 @@ export function roomAreas(repo) {
     return (level) => areas.get(level);
 }
 
+/**
+ * ⛓ THE HANG BOUNDS, ms — each MEASURED (⚖ a margin is measured, never assumed), from the timestamped job logs of the
+ * 40 solver-shard jobs of CI runs 38110831520, 38128698078, 38128782757, 38129317003, 38129323711 (2026-10-11):
+ *   · a whole RECYCLE (page.close + browser.close + launch + newPage, read as the gap between a page's last line and
+ *     the next page's `booted in` line minus its boot seconds) ≤ 0.95 s over 943 recycles (+ 0.5 s for the boot's
+ *     rounding: ≤ 1.5 s). Each of the four steps is bounded at 30 s: ≥ 20× that whole recycle.
+ *   · a BOOT attempt (`booted in`) ≤ 34 s over 975 boots → 340 s (×10).
+ *   · a LEG (the boot line or the previous ROW to its ROW: grants, jump, serve) ≤ 119.3 s over 975 legs → 1200 s (×10).
+ * A bound that fires names its step and costs the page's legs a re-dispatch; one that never fires cost the sweep
+ * 5 h. ⛓ The `RECYCLE:` line now measures the four recycle steps one by one: re-derive from it, not from this gap.
+ */
+export const HANG_BOUNDS_MS = Object.freeze({
+    pageClose: 30000, browserClose: 30000, launch: 30000, newPage: 30000, boot: 340000, leg: 1200000,
+});
+
+/** A harness step that outlived its bound (`bounded`). */
+export class SweepHang extends Error {
+    constructor(step, ms) {
+        super(`${step} exceeded ${ms / 1000} s`);
+        this.step = step;
+        this.ms = ms;
+    }
+}
+
+/**
+ * `work()` raced against `ms` (a `SweepHang(step)` when it loses). The abandoned promise's late rejection is
+ * swallowed: the caller kills the browser under it. `enabled: false` is the MUTANT (SWEEP_HANG_BOUND=off): no bound.
+ */
+export async function bounded(step, ms, work, { enabled = true } = {}) {
+    const p = Promise.resolve().then(work);
+    if (!enabled) return p;
+    p.catch(() => {});
+    let t = null;
+    const timer = new Promise((_, reject) => { t = setTimeout(() => reject(new SweepHang(step, ms)), ms); });
+    try { return await Promise.race([p, timer]); } finally { clearTimeout(t); }
+}
+
+/** `SWEEP_INJECT_HANG` → [{ page, step }] (empty when unset — INERT). An unknown step or a bad page throws, by name. */
+export function parseInjectHang(spec) {
+    return String(spec ?? '').split(',').map((x) => x.trim()).filter(Boolean).map((x) => {
+        const [pg, step, ...rest] = x.split(':');
+        if (rest.length || !/^[1-9]\d*$/.test(pg ?? '') || !Object.hasOwn(HANG_BOUNDS_MS, step ?? '')) {
+            throw new Error(`SWEEP_INJECT_HANG: ${JSON.stringify(x)} is not <page>:<step> (steps: ${Object.keys(HANG_BOUNDS_MS).join(' ')})`);
+        }
+        return { page: Number(pg), step };
+    });
+}
+
+/** The row of a leg its page's hang cost: the leg's identity, `end: 'harness-hang'`, the step and whether it began. */
+export function hangRow(leg, { mode, producer, page, pageLeg, step, ms, started }) {
+    return { id: leg.id, key: leg.key ?? null, mode, producer, page, pageLeg, level: leg.level, goal: leg.goal.name,
+        kind: leg.goal.kind, sphere: leg.sphere?.label ?? null, end: 'harness-hang', hang: { step, boundS: ms / 1000, started },
+        error: `the page hung in ${step} (bound ${ms / 1000} s)${started ? ' after this leg started' : ' before this leg started'}` };
+}
+
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
 if (isEntryPoint(import.meta.url)) await main();
 
@@ -159,6 +225,9 @@ async function main() {
         }
         process.exit(0);
     }
+    // ⛓ TEST-ONLY (see the head): parsed before the box, so a bad spec fails first
+    const INJECT = parseInjectHang(process.env.SWEEP_INJECT_HANG);
+    const BOUND_ON = process.env.SWEEP_HANG_BOUND !== 'off';
     takeBoxLockOrExit({ name: 'probe-seedling-divergence-sweep.mjs', kind: 'browser' });
     const HOST = arg('host', 'http://localhost:8000').replace(/\/+$/, '');
     const MODE = arg('mode', 'bare');
@@ -197,29 +266,69 @@ async function main() {
     // the window, over the flattened order (pages kept)
     let n = 0;
     const windowed = pages.map((p) => p.filter(() => { const keep = n >= FROM && n < FROM + LIMIT; n += 1; return keep; })).filter((p) => p.length);
+    if (INJECT.length || !BOUND_ON) console.log(`TEST-ONLY: SWEEP_INJECT_HANG=${JSON.stringify(INJECT)} SWEEP_HANG_BOUND=${BOUND_ON ? 'on' : 'off'}`);
     console.log(`INFO: mode ${MODE}: ${windowed.reduce((a, p) => a + p.length, 0)} legs in ${windowed.length} page(s) (of ${all.length} legs)`);
     // ⛔ a FRESH BROWSER per page: a second page in the same browser never reached 'ready' (measured, the trial)
     let browser = null;
+    let reported = new Set();
     const emit = (row) => {
+        reported.add(row.id);
         const line = JSON.stringify(row);
         console.log(`ROW ${line.length > 600 ? `${line.slice(0, 600)}…` : line}`);
         if (OUT) appendFileSync(OUT, `${line}\n`);
     };
     let pageNo = 0;
+    let times = {};
+    let current = null;
+    /** One harness step of this page, under its bound (an injected hang: the step never resolves). */
+    const step = async (name, work) => {
+        const t0 = Date.now();
+        const injected = INJECT.some((x) => x.page === pageNo && x.step === name);
+        const v = await bounded(name, HANG_BOUNDS_MS[name], injected ? () => new Promise(() => {}) : work, { enabled: BOUND_ON });
+        times[name] = (times[name] ?? 0) + (Date.now() - t0);
+        return v;
+    };
     for (const legs of windowed) {
         pageNo += 1;
-        // eslint-disable-next-line no-await-in-loop
-        browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
-        // eslint-disable-next-line no-await-in-loop
-        await runPage(legs, pageNo);
-        // eslint-disable-next-line no-await-in-loop
-        await browser.close();
+        reported = new Set();
+        times = {};
+        current = null;
+        let launching = null;
+        try {
+            // eslint-disable-next-line no-await-in-loop
+            browser = await step('launch', () => (launching = chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS })));
+            // eslint-disable-next-line no-await-in-loop
+            await runPage(legs, pageNo);
+            // eslint-disable-next-line no-await-in-loop
+            await step('browserClose', () => browser.close());
+            console.log(`RECYCLE: page ${pageNo}: ${['launch', 'newPage', 'pageClose', 'browserClose'].map((k) => `${k} ${times[k] ?? '-'} ms`).join(', ')}`);
+        } catch (e) {
+            if (!(e instanceof SweepHang)) throw e;
+            const lost = legs.filter((l) => !reported.has(l.id));
+            console.log(`HANG: page ${pageNo} ${e.step} exceeded ${e.ms / 1000} s${current ? ` (leg ${current.leg.id})` : ''} — the browser SIGKILLed; lost=${lost.map((l) => l.id).join(',') || 'none'}`);
+            killBrowser(browser);
+            // a launch that resolves after its bound: that browser is killed too
+            launching?.then(killBrowser, () => {});
+            for (const leg of lost) {
+                emit(hangRow(leg, { mode: MODE, producer: PRODUCER, page: pageNo, pageLeg: legs.indexOf(leg), step: e.step, ms: e.ms,
+                    started: current?.leg === leg }));
+            }
+        }
+        browser = null;
     }
     console.log('INFO: sweep done');
     process.exit(0);
 
+    /** SIGKILL the browser's process GROUP (Playwright launches it detached), then the process itself. */
+    function killBrowser(b) {
+        const pid = b?.process?.()?.pid;
+        if (!pid) return;
+        try { process.kill(-pid, 'SIGKILL'); } catch { /* no group */ }
+        try { process.kill(pid, 'SIGKILL'); } catch { /* gone */ }
+    }
+
     async function runPage(legs, pageNo) {
-        const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+        const page = await step('newPage', () => browser.newPage({ viewport: { width: 1400, height: 900 } }));
         const logs = [];
         page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
         page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
@@ -239,7 +348,7 @@ async function main() {
         const tb = Date.now();
         let booted = false;
         let bootErr = null;
-        for (let attempt = 1; attempt <= 2 && !booted; attempt++) try {
+        for (let attempt = 1; attempt <= 2 && !booted; attempt++) try { await step('boot', async () => {
             if (attempt > 1) await page.goto('about:blank');
             await page.goto(`${HOST}/frontend/?rules=./presets/${GAME}/AP_1/AP_1_rules.json`, { waitUntil: 'domcontentloaded' });
             await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
@@ -279,16 +388,18 @@ async function main() {
                 window.__div = await createLab();
             });
             booted = true;
-        } catch (e) {
+        }); } catch (e) {
+            if (e instanceof SweepHang) throw e;
             bootErr = e;
             console.log(`FAIL: page ${pageNo} boot (attempt ${attempt}): ${e.message.split('\n')[0]}`);
             console.log(logs.filter((l) => !/initialState|testLogic|Test discovery/.test(l)).slice(-8).join('\n'));
         }
         if (!booted) {
             for (const leg of legs) emit({ id: leg.id, mode: MODE, page: pageNo, end: 'page-boot-failed', error: String(bootErr?.message).slice(0, 300) });
-            await page.close();
+            await step('pageClose', () => page.close());
             return;
         }
+        const peek = await step('boot', async () => {
         if (DUMP && pageNo === 1) {
             // the rooms the game PLAYS (the vanilla arm's delivered set) + the name → cell map, for the node bare pass
             const d = await page.evaluate(() => {
@@ -298,7 +409,8 @@ async function main() {
             writeFileSync(DUMP, d);
             console.log(`INFO: dumped the delivered set + the name map → ${DUMP}`);
         }
-        const peek = await page.evaluate(() => JSON.parse(JSON.stringify(window.__div.peek())));
+        return page.evaluate(() => JSON.parse(JSON.stringify(window.__div.peek())));
+        });
         console.log(`INFO: page ${pageNo} booted in ${Math.round((Date.now() - tb) / 1000)} s; botStatus fields: ${Object.keys(peek.status ?? {}).join(',')}`);
         const granted = [];
         let swaps = 0;
@@ -310,7 +422,10 @@ async function main() {
                 emit({ ...row, end: 'skipped', skip: leg.skip, events: leg.arrive.events ?? [] });
                 continue;
             }
-            try {
+            console.log(`LEG ${leg.id} start (page ${pageNo}, pageLeg ${i})`);
+            current = { leg };
+            // eslint-disable-next-line no-await-in-loop
+            try { await step('leg', async () => {
                 // ⛔ THE CLEAN START (planner-3's trace, 2026-10-05): the game's `Inventory.items` is STATIC and
                 // append-only for the session — an item an earlier leg PICKED UP stays in the game for every later leg
                 // on the page (legs 174/184 held the sword with a granted set of []). So the game's held items are read
@@ -373,8 +488,9 @@ async function main() {
                     { leg, budgetMs: 90000, producer: PRODUCER });
                 Object.assign(row, r);
                 swaps += (r.history ?? []).length;
-            } catch (e) {
-                if (e.byName) { emit(row); continue; }
+            }); } catch (e) {
+                if (e instanceof SweepHang) throw e;
+                if (e.byName) { emit(row); current = null; continue; }
                 row.end = 'probe-error';
                 row.error = e.message.split('\n')[0].slice(0, 400);
                 row.consoleTail = logs.slice(-12);
@@ -383,10 +499,11 @@ async function main() {
             if (exits.length) row.gameMemory = exits.slice(-3);
             row.swapsOnPage = swaps;
             emit(row);
+            current = null;
             if (row.gameMemory) { console.log('INFO: the game ran out of memory — a fresh page for the rest'); break; }
         }
         console.log(`INFO: page ${pageNo}: ${logs.filter((l) => l.startsWith('[pageerror]')).length} page error(s), ~${swaps} swaps`);
-        await page.close();
+        await step('pageClose', () => page.close());
 
         /** Write each flag through the game's own `Game.setPersistence(tag, false, level)`; poll the table for them. */
         async function stageEvents(flags) {
