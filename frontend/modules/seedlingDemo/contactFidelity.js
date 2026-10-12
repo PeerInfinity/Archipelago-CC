@@ -294,6 +294,18 @@ export const CONTACT_FIDELITY = {
      * the player 58–77 px away; no verdict differs.
      */
     totemShotBlastInt: false,
+    /**
+     * fidelity MOVINGWAIT D4 — A DEATH REBOOT SETTLES THE CAMERA THROUGH THE SHAKE (`levelRun.settleCameraForLoad`).
+     *
+     *     Player.as:1487    die(): dying = true; (FP.world as Game).restartLevel()   — no fade before the swap
+     *     Game.as:538,2007  public static var shake; view(): if (shake > 0) jiggle FP.camera, shake -= 1
+     *
+     * OFF: every load drains the shake before its settle frames and the camera is exact. ON: a death reboot carries
+     * the killing hit's shake into its settle frames as the shake band (⚖ the jiggle's VALUE is never modelled).
+     * Measured on the game: BOMBPUSHER's L42 damage walk respawns at t1221 with `shake` 4 and settles at (777, 0)
+     * where the drained settle says (776, 0).
+     */
+    rebootShake: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
