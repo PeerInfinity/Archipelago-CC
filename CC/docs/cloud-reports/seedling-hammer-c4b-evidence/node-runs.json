@@ -1,0 +1,3856 @@
+{
+ "note": "C4b D1 census matrix: legs 622/624/626/628/629 x lapse (L0 OFF, L1 = SEEDLING_STRIKE_IFRAME_LAPSE=1) x lab mode (none | append = C4_APPEND verbatim | probe = the brief rule: append the chasers that hit the HEAD body's admitted corridor, non-empty list only). Node, BUDGET=2560, ANYTIME_PASSES, base 926cc2a86f. climbs = every combat-ladder climb: the chooser list, the head's probed corridor, the list after the arm, and the kill rung's interceptOrder head.",
+ "runs": {
+  "m-622-L0-append": {
+   "id": 622,
+   "key": "level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0",
+   "ok": true,
+   "ms": 6695,
+   "ticks": 4,
+   "verbs": [
+    "forced-hit"
+   ],
+   "end": {
+    "level": 74,
+    "x": 296,
+    "y": 136,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": [
+    {
+     "tick": 0,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "proof": {
+      "proven": true,
+      "depth": 2,
+      "nodes": 1332,
+      "leaves": 1296,
+      "alphabet": 36,
+      "minHits": 1
+     },
+     "candidate": "corridor-unarmed",
+     "billed": [
+      {
+       "t": 2,
+       "level": 73,
+       "source": "chaser",
+       "id": "lavarunner@72,24",
+       "hits": 1
+      }
+     ],
+     "ticks": 4,
+     "damage": {
+      "hits": 0,
+      "lastHitAt": null,
+      "id": null
+     }
+    }
+   ],
+   "dashMode": "none",
+   "solutionMd5": "0191cbb1861f1ddb2b658804802e05a2",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 73,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "aim": {
+      "x": 72,
+      "y": 8
+     },
+     "hit": {
+      "at": [
+       72.8,
+       24
+      ],
+      "sources": [
+       "chaser:lavarunner@72,24"
+      ]
+     },
+     "chooser": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 1
+     },
+     "removable": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "hunted": "lavarunner@72,24"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 73,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "aim": {
+      "x": 72,
+      "y": 8
+     },
+     "hit": {
+      "at": [
+       72.8,
+       24
+      ],
+      "sources": [
+       "chaser:lavarunner@72,24"
+      ]
+     },
+     "chooser": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 1
+     },
+     "removable": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "hunted": "lavarunner@72,24"
+    }
+   ]
+  },
+  "m-622-L0-none": {
+   "id": 622,
+   "key": "level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0",
+   "ok": true,
+   "ms": 6663,
+   "ticks": 4,
+   "verbs": [
+    "forced-hit"
+   ],
+   "end": {
+    "level": 74,
+    "x": 296,
+    "y": 136,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": [
+    {
+     "tick": 0,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "proof": {
+      "proven": true,
+      "depth": 2,
+      "nodes": 1332,
+      "leaves": 1296,
+      "alphabet": 36,
+      "minHits": 1
+     },
+     "candidate": "corridor-unarmed",
+     "billed": [
+      {
+       "t": 2,
+       "level": 73,
+       "source": "chaser",
+       "id": "lavarunner@72,24",
+       "hits": 1
+      }
+     ],
+     "ticks": 4,
+     "damage": {
+      "hits": 0,
+      "lastHitAt": null,
+      "id": null
+     }
+    }
+   ],
+   "dashMode": "none",
+   "solutionMd5": "0191cbb1861f1ddb2b658804802e05a2",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 73,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "aim": {
+      "x": 72,
+      "y": 8
+     },
+     "hit": {
+      "at": [
+       72.8,
+       24
+      ],
+      "sources": [
+       "chaser:lavarunner@72,24"
+      ]
+     },
+     "chooser": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 1
+     },
+     "removable": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "hunted": "lavarunner@72,24"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 73,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "aim": {
+      "x": 72,
+      "y": 8
+     },
+     "hit": {
+      "at": [
+       72.8,
+       24
+      ],
+      "sources": [
+       "chaser:lavarunner@72,24"
+      ]
+     },
+     "chooser": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 1
+     },
+     "removable": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "hunted": "lavarunner@72,24"
+    }
+   ]
+  },
+  "m-622-L0-probe": {
+   "id": 622,
+   "key": "level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0",
+   "ok": true,
+   "ms": 6473,
+   "ticks": 4,
+   "verbs": [
+    "forced-hit"
+   ],
+   "end": {
+    "level": 74,
+    "x": 296,
+    "y": 136,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": [
+    {
+     "tick": 0,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "proof": {
+      "proven": true,
+      "depth": 2,
+      "nodes": 1332,
+      "leaves": 1296,
+      "alphabet": 36,
+      "minHits": 1
+     },
+     "candidate": "corridor-unarmed",
+     "billed": [
+      {
+       "t": 2,
+       "level": 73,
+       "source": "chaser",
+       "id": "lavarunner@72,24",
+       "hits": 1
+      }
+     ],
+     "ticks": 4,
+     "damage": {
+      "hits": 0,
+      "lastHitAt": null,
+      "id": null
+     }
+    }
+   ],
+   "dashMode": "none",
+   "solutionMd5": "0191cbb1861f1ddb2b658804802e05a2",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 73,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "aim": {
+      "x": 72,
+      "y": 8
+     },
+     "hit": {
+      "at": [
+       72.8,
+       24
+      ],
+      "sources": [
+       "chaser:lavarunner@72,24"
+      ]
+     },
+     "chooser": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 1
+     },
+     "removable": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "hunted": "lavarunner@72,24"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 73,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "aim": {
+      "x": 72,
+      "y": 8
+     },
+     "hit": {
+      "at": [
+       72.8,
+       24
+      ],
+      "sources": [
+       "chaser:lavarunner@72,24"
+      ]
+     },
+     "chooser": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 1
+     },
+     "removable": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "hunted": "lavarunner@72,24"
+    }
+   ]
+  },
+  "m-622-L1-append": {
+   "id": 622,
+   "key": "level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0",
+   "ok": true,
+   "ms": 4182,
+   "ticks": 4,
+   "verbs": [
+    "forced-hit"
+   ],
+   "end": {
+    "level": 74,
+    "x": 296,
+    "y": 136,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": [
+    {
+     "tick": 0,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "proof": {
+      "proven": true,
+      "depth": 2,
+      "nodes": 1332,
+      "leaves": 1296,
+      "alphabet": 36,
+      "minHits": 1
+     },
+     "candidate": "corridor-unarmed",
+     "billed": [
+      {
+       "t": 2,
+       "level": 73,
+       "source": "chaser",
+       "id": "lavarunner@72,24",
+       "hits": 1
+      }
+     ],
+     "ticks": 4,
+     "damage": {
+      "hits": 0,
+      "lastHitAt": null,
+      "id": null
+     }
+    }
+   ],
+   "dashMode": "none",
+   "solutionMd5": "0191cbb1861f1ddb2b658804802e05a2",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 73,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "aim": {
+      "x": 72,
+      "y": 8
+     },
+     "hit": {
+      "at": [
+       72.8,
+       24
+      ],
+      "sources": [
+       "chaser:lavarunner@72,24"
+      ]
+     },
+     "chooser": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 1
+     },
+     "removable": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "hunted": "lavarunner@72,24"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 73,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "aim": {
+      "x": 72,
+      "y": 8
+     },
+     "hit": {
+      "at": [
+       72.8,
+       24
+      ],
+      "sources": [
+       "chaser:lavarunner@72,24"
+      ]
+     },
+     "chooser": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 1
+     },
+     "removable": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "hunted": "lavarunner@72,24"
+    }
+   ]
+  },
+  "m-622-L1-none": {
+   "id": 622,
+   "key": "level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0",
+   "ok": true,
+   "ms": 6350,
+   "ticks": 4,
+   "verbs": [
+    "forced-hit"
+   ],
+   "end": {
+    "level": 74,
+    "x": 296,
+    "y": 136,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": [
+    {
+     "tick": 0,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "proof": {
+      "proven": true,
+      "depth": 2,
+      "nodes": 1332,
+      "leaves": 1296,
+      "alphabet": 36,
+      "minHits": 1
+     },
+     "candidate": "corridor-unarmed",
+     "billed": [
+      {
+       "t": 2,
+       "level": 73,
+       "source": "chaser",
+       "id": "lavarunner@72,24",
+       "hits": 1
+      }
+     ],
+     "ticks": 4,
+     "damage": {
+      "hits": 0,
+      "lastHitAt": null,
+      "id": null
+     }
+    }
+   ],
+   "dashMode": "none",
+   "solutionMd5": "0191cbb1861f1ddb2b658804802e05a2",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 73,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "aim": {
+      "x": 72,
+      "y": 8
+     },
+     "hit": {
+      "at": [
+       72.8,
+       24
+      ],
+      "sources": [
+       "chaser:lavarunner@72,24"
+      ]
+     },
+     "chooser": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 1
+     },
+     "removable": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "hunted": "lavarunner@72,24"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 73,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "aim": {
+      "x": 72,
+      "y": 8
+     },
+     "hit": {
+      "at": [
+       72.8,
+       24
+      ],
+      "sources": [
+       "chaser:lavarunner@72,24"
+      ]
+     },
+     "chooser": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 1
+     },
+     "removable": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "hunted": "lavarunner@72,24"
+    }
+   ]
+  },
+  "m-622-L1-probe": {
+   "id": 622,
+   "key": "level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0",
+   "ok": true,
+   "ms": 4787,
+   "ticks": 4,
+   "verbs": [
+    "forced-hit"
+   ],
+   "end": {
+    "level": 74,
+    "x": 296,
+    "y": 136,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": [
+    {
+     "tick": 0,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "proof": {
+      "proven": true,
+      "depth": 2,
+      "nodes": 1332,
+      "leaves": 1296,
+      "alphabet": 36,
+      "minHits": 1
+     },
+     "candidate": "corridor-unarmed",
+     "billed": [
+      {
+       "t": 2,
+       "level": 73,
+       "source": "chaser",
+       "id": "lavarunner@72,24",
+       "hits": 1
+      }
+     ],
+     "ticks": 4,
+     "damage": {
+      "hits": 0,
+      "lastHitAt": null,
+      "id": null
+     }
+    }
+   ],
+   "dashMode": "none",
+   "solutionMd5": "0191cbb1861f1ddb2b658804802e05a2",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 73,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "aim": {
+      "x": 72,
+      "y": 8
+     },
+     "hit": {
+      "at": [
+       72.8,
+       24
+      ],
+      "sources": [
+       "chaser:lavarunner@72,24"
+      ]
+     },
+     "chooser": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 1
+     },
+     "removable": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "hunted": "lavarunner@72,24"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 73,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "aim": {
+      "x": 72,
+      "y": 8
+     },
+     "hit": {
+      "at": [
+       72.8,
+       24
+      ],
+      "sources": [
+       "chaser:lavarunner@72,24"
+      ]
+     },
+     "chooser": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 1
+     },
+     "removable": [
+      "lavarunner@72,24",
+      "bulb@80,80"
+     ],
+     "hunted": "lavarunner@72,24"
+    }
+   ]
+  },
+  "m-624-L0-append": {
+   "id": 624,
+   "key": "level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144",
+   "ok": false,
+   "ms": 12573,
+   "kind": "refusal",
+   "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the danger map forbids (222.70589296504838,120.1793485888045) \u2014 chaser:lavarunner@208,96 (inside leash 80 (d=9.5), box grown 1.5 px/tick x 0 + pad 0). Slice 2 has NO DODGE POLICY (kickoff \u00a74: combat is slice 3); sensing and refusing loudly is the whole of this slice's danger response.",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       232.2,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       232.2,
+       119.6
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       232.2,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       232.2,
+       119.6
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    }
+   ]
+  },
+  "m-624-L0-none": {
+   "id": 624,
+   "key": "level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144",
+   "ok": false,
+   "ms": 16574,
+   "kind": "refusal",
+   "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the danger map forbids (222.70589296504838,120.1793485888045) \u2014 chaser:lavarunner@208,96 (inside leash 80 (d=9.5), box grown 1.5 px/tick x 0 + pad 0). Slice 2 has NO DODGE POLICY (kickoff \u00a74: combat is slice 3); sensing and refusing loudly is the whole of this slice's danger response.",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       232.2,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       232.2,
+       119.6
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       232.2,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       232.2,
+       119.6
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    }
+   ]
+  },
+  "m-624-L0-probe": {
+   "id": 624,
+   "key": "level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144",
+   "ok": false,
+   "ms": 12348,
+   "kind": "refusal",
+   "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the danger map forbids (222.70589296504838,120.1793485888045) \u2014 chaser:lavarunner@208,96 (inside leash 80 (d=9.5), box grown 1.5 px/tick x 0 + pad 0). Slice 2 has NO DODGE POLICY (kickoff \u00a74: combat is slice 3); sensing and refusing loudly is the whole of this slice's danger response.",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       232.2,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       232.2,
+       119.6
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       232.2,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       232.2,
+       119.6
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    }
+   ]
+  },
+  "m-624-L1-append": {
+   "id": 624,
+   "key": "level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144",
+   "ok": true,
+   "ms": 8318,
+   "ticks": 752,
+   "verbs": [
+    "kill",
+    "walk"
+   ],
+   "end": {
+    "level": 75,
+    "x": 72,
+    "y": 24,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "all",
+   "solutionMd5": "56a407aaa4e4db9e6c598d89aff9f3c3",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       231.87239364061273,
+       120.33318037465604
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       231.9,
+       120.3
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 106,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       71.60521687525979,
+       119.98562899200343
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [],
+     "headProbe": null,
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       231.87239364061273,
+       120.33318037465604
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       231.9,
+       120.3
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 106,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       71.60521687525979,
+       119.98562899200343
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [],
+     "headProbe": null,
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    }
+   ]
+  },
+  "m-624-L1-none": {
+   "id": 624,
+   "key": "level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144",
+   "ok": true,
+   "ms": 23741,
+   "ticks": 331,
+   "verbs": [
+    "detour"
+   ],
+   "end": {
+    "level": 75,
+    "x": 72,
+    "y": 24,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "all",
+   "solutionMd5": "5b6de60aee5cc7f2ed68bee032dce05c",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       231.87239364061273,
+       120.33318037465604
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       231.9,
+       120.3
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       231.87239364061273,
+       120.33318037465604
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       231.9,
+       120.3
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    }
+   ]
+  },
+  "m-624-L1-probe": {
+   "id": 624,
+   "key": "level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144",
+   "ok": true,
+   "ms": 11315,
+   "ticks": 481,
+   "verbs": [
+    "detour",
+    "kill"
+   ],
+   "end": {
+    "level": 75,
+    "x": 72,
+    "y": 24,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "none",
+   "solutionMd5": "22edb073201b959b170c86c86071f019",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       231.87239364061273,
+       120.33318037465604
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       231.9,
+       120.3
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 106,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       71.60521687525979,
+       119.98562899200343
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [],
+     "headProbe": null,
+     "removable": [],
+     "hunted": null
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       231.87239364061273,
+       120.33318037465604
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       231.9,
+       120.3
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 106,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75",
+     "aim": {
+      "x": 24,
+      "y": 152
+     },
+     "hit": {
+      "at": [
+       71.60521687525979,
+       119.98562899200343
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [],
+     "headProbe": null,
+     "removable": [],
+     "hunted": null
+    }
+   ]
+  },
+  "m-626-L0-append": {
+   "id": 626,
+   "key": "level_74 <- in_L73_64_0 -> location:Level 074 - Darkshield",
+   "ok": true,
+   "ms": 10560,
+   "ticks": 344,
+   "verbs": [
+    "detour"
+   ],
+   "end": {
+    "level": 74,
+    "x": 56.19097799363413,
+    "y": 40.38407667168494,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "none",
+   "solutionMd5": "e7a85e7fa2559aa9b1a271982116aad1",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       232.2,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       232.2,
+       119.6
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       232.2,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       232.2,
+       119.6
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    }
+   ]
+  },
+  "m-626-L0-none": {
+   "id": 626,
+   "key": "level_74 <- in_L73_64_0 -> location:Level 074 - Darkshield",
+   "ok": true,
+   "ms": 10617,
+   "ticks": 344,
+   "verbs": [
+    "detour"
+   ],
+   "end": {
+    "level": 74,
+    "x": 56.19097799363413,
+    "y": 40.38407667168494,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "none",
+   "solutionMd5": "e7a85e7fa2559aa9b1a271982116aad1",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       232.2,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       232.2,
+       119.6
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       232.2,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       232.2,
+       119.6
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    }
+   ]
+  },
+  "m-626-L0-probe": {
+   "id": 626,
+   "key": "level_74 <- in_L73_64_0 -> location:Level 074 - Darkshield",
+   "ok": true,
+   "ms": 10167,
+   "ticks": 344,
+   "verbs": [
+    "detour"
+   ],
+   "end": {
+    "level": 74,
+    "x": 56.19097799363413,
+    "y": 40.38407667168494,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "none",
+   "solutionMd5": "e7a85e7fa2559aa9b1a271982116aad1",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       232.2,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       232.2,
+       119.6
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       232.2,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       232.2,
+       119.6
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    }
+   ]
+  },
+  "m-626-L1-append": {
+   "id": 626,
+   "key": "level_74 <- in_L73_64_0 -> location:Level 074 - Darkshield",
+   "ok": true,
+   "ms": 4254,
+   "ticks": 284,
+   "verbs": [
+    "kill",
+    "walk"
+   ],
+   "end": {
+    "level": 74,
+    "x": 55.65758751793709,
+    "y": 40.39110395024882,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "all",
+   "solutionMd5": "8483c1e32d2965d1dd8f3c6bbef101a4",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       231.87239364061273,
+       120.33318037465604
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       231.9,
+       120.3
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       231.87239364061273,
+       120.33318037465604
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       231.9,
+       120.3
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    }
+   ]
+  },
+  "m-626-L1-none": {
+   "id": 626,
+   "key": "level_74 <- in_L73_64_0 -> location:Level 074 - Darkshield",
+   "ok": true,
+   "ms": 5194,
+   "ticks": 284,
+   "verbs": [
+    "kill",
+    "walk"
+   ],
+   "end": {
+    "level": 74,
+    "x": 55.65758751793709,
+    "y": 40.39110395024882,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "all",
+   "solutionMd5": "8483c1e32d2965d1dd8f3c6bbef101a4",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       231.87239364061273,
+       120.33318037465604
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       231.9,
+       120.3
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       231.87239364061273,
+       120.33318037465604
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       231.9,
+       120.3
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    }
+   ]
+  },
+  "m-626-L1-probe": {
+   "id": 626,
+   "key": "level_74 <- in_L73_64_0 -> location:Level 074 - Darkshield",
+   "ok": true,
+   "ms": 5079,
+   "ticks": 284,
+   "verbs": [
+    "kill",
+    "walk"
+   ],
+   "end": {
+    "level": 74,
+    "x": 55.65758751793709,
+    "y": 40.39110395024882,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "all",
+   "solutionMd5": "8483c1e32d2965d1dd8f3c6bbef101a4",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       231.87239364061273,
+       120.33318037465604
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       231.9,
+       120.3
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       231.87239364061273,
+       120.33318037465604
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       231.9,
+       120.3
+      ],
+      "eta": 87,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@208,96"
+    }
+   ]
+  },
+  "m-628-L0-append": {
+   "id": 628,
+   "key": "level_74 <- in_L75_64_0 -> exit:out_teleporter_288_144",
+   "ok": false,
+   "ms": 5179,
+   "kind": "refusal",
+   "message": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt (button@288,128, east lane x=302): no x-input sequence of at most 16 ticks takes the stance state (x=301.51174451057744, vx=0) EXACTLY onto x=302 at rest \u2014 the lane admits that one x and the model keeps sub-pixel remainders.",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       186.6,
+       59.2
+      ],
+      "eta": 241,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       71.15000000000002,
+       72.64999999999996
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 7
+     },
+     "removable": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "hunted": "lavarunner@24,56"
+    },
+    {
+     "at": "climb",
+     "t": 231,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       203.46728808151667,
+       56.019478566586415
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 6
+     },
+     "removable": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       186.6,
+       59.2
+      ],
+      "eta": 241,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       71.15000000000002,
+       72.64999999999996
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 7
+     },
+     "removable": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "hunted": "lavarunner@24,56"
+    },
+    {
+     "at": "climb",
+     "t": 231,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       203.46728808151667,
+       56.019478566586415
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 6
+     },
+     "removable": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "hunted": "lavarunner@208,96"
+    }
+   ]
+  },
+  "m-628-L0-none": {
+   "id": 628,
+   "key": "level_74 <- in_L75_64_0 -> exit:out_teleporter_288_144",
+   "ok": false,
+   "ms": 4837,
+   "kind": "refusal",
+   "message": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt (button@288,128, east lane x=302): no x-input sequence of at most 16 ticks takes the stance state (x=301.51174451057744, vx=0) EXACTLY onto x=302 at rest \u2014 the lane admits that one x and the model keeps sub-pixel remainders.",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       186.6,
+       59.2
+      ],
+      "eta": 241,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       71.15000000000002,
+       72.64999999999996
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 7
+     },
+     "removable": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "hunted": "lavarunner@24,56"
+    },
+    {
+     "at": "climb",
+     "t": 231,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       203.46728808151667,
+       56.019478566586415
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 6
+     },
+     "removable": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       186.6,
+       59.2
+      ],
+      "eta": 241,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       71.15000000000002,
+       72.64999999999996
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 7
+     },
+     "removable": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "hunted": "lavarunner@24,56"
+    },
+    {
+     "at": "climb",
+     "t": 231,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       203.46728808151667,
+       56.019478566586415
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 6
+     },
+     "removable": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "hunted": "lavarunner@208,96"
+    }
+   ]
+  },
+  "m-628-L0-probe": {
+   "id": 628,
+   "key": "level_74 <- in_L75_64_0 -> exit:out_teleporter_288_144",
+   "ok": false,
+   "ms": 5494,
+   "kind": "refusal",
+   "message": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt (button@288,128, east lane x=302): no x-input sequence of at most 16 ticks takes the stance state (x=301.51174451057744, vx=0) EXACTLY onto x=302 at rest \u2014 the lane admits that one x and the model keeps sub-pixel remainders.",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       186.6,
+       59.2
+      ],
+      "eta": 241,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       71.15000000000002,
+       72.64999999999996
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 7
+     },
+     "removable": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "hunted": "lavarunner@24,56"
+    },
+    {
+     "at": "climb",
+     "t": 231,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       203.46728808151667,
+       56.019478566586415
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 6
+     },
+     "removable": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "hunted": "lavarunner@208,96"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       186.6,
+       59.2
+      ],
+      "eta": 241,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@208,96"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112",
+      "lavarunner@208,96"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       71.15000000000002,
+       72.64999999999996
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 7
+     },
+     "removable": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "hunted": "lavarunner@24,56"
+    },
+    {
+     "at": "climb",
+     "t": 231,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       203.46728808151667,
+       56.019478566586415
+      ],
+      "sources": [
+       "chaser:lavarunner@208,96"
+      ]
+     },
+     "chooser": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 6
+     },
+     "removable": [
+      "lavarunner@208,96",
+      "lavarunner@24,56"
+     ],
+     "hunted": "lavarunner@208,96"
+    }
+   ]
+  },
+  "m-628-L1-append": {
+   "id": 628,
+   "key": "level_74 <- in_L75_64_0 -> exit:out_teleporter_288_144",
+   "ok": false,
+   "ms": 1592,
+   "kind": "refusal",
+   "message": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128): the re-planned corridor failed too \u2014 solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128) waypoint 2 (72,72): not reached within 400 ticks; stalled at (24,109.74999999999999) v=(-0.30901699437494734,1.9021130325903073) in level 74, aiming at (72,72).",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 8
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 8
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    }
+   ]
+  },
+  "m-628-L1-none": {
+   "id": 628,
+   "key": "level_74 <- in_L75_64_0 -> exit:out_teleporter_288_144",
+   "ok": false,
+   "ms": 1654,
+   "kind": "refusal",
+   "message": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128): the re-planned corridor failed too \u2014 solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128) waypoint 2 (72,72): not reached within 400 ticks; stalled at (24,109.74999999999999) v=(-0.30901699437494734,1.9021130325903073) in level 74, aiming at (72,72).",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 8
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 8
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    }
+   ]
+  },
+  "m-628-L1-probe": {
+   "id": 628,
+   "key": "level_74 <- in_L75_64_0 -> exit:out_teleporter_288_144",
+   "ok": false,
+   "ms": 1678,
+   "kind": "refusal",
+   "message": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128): the re-planned corridor failed too \u2014 solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128) waypoint 2 (72,72): not reached within 400 ticks; stalled at (24,109.74999999999999) v=(-0.30901699437494734,1.9021130325903073) in level 74, aiming at (72,72).",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 8
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128)",
+     "aim": {
+      "x": 302,
+      "y": 120
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 8
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    }
+   ]
+  },
+  "m-629-L0-append": {
+   "id": 629,
+   "key": "level_74 <- in_L75_64_0 -> location:Level 074 - Darkshield",
+   "ok": true,
+   "ms": 3567,
+   "ticks": 253,
+   "verbs": [
+    "bait",
+    "kill",
+    "walk"
+   ],
+   "end": {
+    "level": 74,
+    "x": 56.367288081516634,
+    "y": 39.41947856658646,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "all",
+   "solutionMd5": "8da3bee85790529e2215979a3f4f31b9",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       72.5,
+       58.1
+      ],
+      "eta": 127,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@24,56"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       72.04671103069875,
+       55.28436173974428
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@24,56"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       72.5,
+       58.1
+      ],
+      "eta": 127,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@24,56"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       72.04671103069875,
+       55.28436173974428
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@24,56"
+    }
+   ]
+  },
+  "m-629-L0-none": {
+   "id": 629,
+   "key": "level_74 <- in_L75_64_0 -> location:Level 074 - Darkshield",
+   "ok": true,
+   "ms": 3837,
+   "ticks": 253,
+   "verbs": [
+    "bait",
+    "kill",
+    "walk"
+   ],
+   "end": {
+    "level": 74,
+    "x": 56.367288081516634,
+    "y": 39.41947856658646,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "all",
+   "solutionMd5": "8da3bee85790529e2215979a3f4f31b9",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       72.5,
+       58.1
+      ],
+      "eta": 127,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@24,56"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       72.04671103069875,
+       55.28436173974428
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@24,56"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       72.5,
+       58.1
+      ],
+      "eta": 127,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@24,56"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       72.04671103069875,
+       55.28436173974428
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@24,56"
+    }
+   ]
+  },
+  "m-629-L0-probe": {
+   "id": 629,
+   "key": "level_74 <- in_L75_64_0 -> location:Level 074 - Darkshield",
+   "ok": true,
+   "ms": 3415,
+   "ticks": 253,
+   "verbs": [
+    "bait",
+    "kill",
+    "walk"
+   ],
+   "end": {
+    "level": 74,
+    "x": 56.367288081516634,
+    "y": 39.41947856658646,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "all",
+   "solutionMd5": "8da3bee85790529e2215979a3f4f31b9",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       72.5,
+       58.1
+      ],
+      "eta": 127,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@24,56"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112",
+      "lavarunner@24,56"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       72.04671103069875,
+       55.28436173974428
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@24,56"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": true,
+      "at": [
+       72.5,
+       58.1
+      ],
+      "eta": 127,
+      "sources": [
+       {
+        "kind": "chaser",
+        "id": "lavarunner@24,56"
+       }
+      ]
+     },
+     "removable": [
+      "bulb@48,112",
+      "lavarunner@24,56"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       72.04671103069875,
+       55.28436173974428
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@24,56"
+    }
+   ]
+  },
+  "m-629-L1-append": {
+   "id": 629,
+   "key": "level_74 <- in_L75_64_0 -> location:Level 074 - Darkshield",
+   "ok": true,
+   "ms": 2768,
+   "ticks": 252,
+   "verbs": [
+    "bait",
+    "kill",
+    "walk"
+   ],
+   "end": {
+    "level": 74,
+    "x": 55.70118305533825,
+    "y": 40.249537503415304,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "all",
+   "solutionMd5": "2e6c4c529e1879253b0374b55f965f42",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       72.04671103069875,
+       55.0849797884146
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@24,56"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       72.04671103069875,
+       55.0849797884146
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@24,56"
+    }
+   ]
+  },
+  "m-629-L1-none": {
+   "id": 629,
+   "key": "level_74 <- in_L75_64_0 -> location:Level 074 - Darkshield",
+   "ok": true,
+   "ms": 2849,
+   "ticks": 252,
+   "verbs": [
+    "bait",
+    "kill",
+    "walk"
+   ],
+   "end": {
+    "level": 74,
+    "x": 55.70118305533825,
+    "y": 40.249537503415304,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "all",
+   "solutionMd5": "2e6c4c529e1879253b0374b55f965f42",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       72.04671103069875,
+       55.0849797884146
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@24,56"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       72.04671103069875,
+       55.0849797884146
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@24,56"
+    }
+   ]
+  },
+  "m-629-L1-probe": {
+   "id": 629,
+   "key": "level_74 <- in_L75_64_0 -> location:Level 074 - Darkshield",
+   "ok": true,
+   "ms": 2585,
+   "ticks": 252,
+   "verbs": [
+    "bait",
+    "kill",
+    "walk"
+   ],
+   "end": {
+    "level": 74,
+    "x": 55.70118305533825,
+    "y": 40.249537503415304,
+    "deaths": 0
+   },
+   "hits": 0,
+   "forcedHits": null,
+   "dashMode": "all",
+   "solutionMd5": "2e6c4c529e1879253b0374b55f965f42",
+   "climbs": [
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       72.04671103069875,
+       55.0849797884146
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@24,56"
+    },
+    {
+     "at": "climb",
+     "t": 0,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       65.69999999999999,
+       119.59999999999998
+      ],
+      "sources": [
+       "chaser:bulb@48,112"
+      ]
+     },
+     "chooser": [
+      "bulb@48,112"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "bulb@48,112"
+     ],
+     "hunted": "bulb@48,112"
+    },
+    {
+     "at": "climb",
+     "t": 82,
+     "level": 74,
+     "what": "solverBot(wasm-arrival-solve) apitem (48,32) contact",
+     "aim": {
+      "x": 56,
+      "y": 40
+     },
+     "hit": {
+      "at": [
+       72.04671103069875,
+       55.0849797884146
+      ],
+      "sources": [
+       "chaser:lavarunner@24,56"
+      ]
+     },
+     "chooser": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "headProbe": {
+      "hit": false,
+      "wps": 5
+     },
+     "removable": [
+      "lavarunner@24,56",
+      "lavarunner@208,96"
+     ],
+     "hunted": "lavarunner@24,56"
+    }
+   ]
+  }
+ }
+}
