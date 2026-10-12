@@ -652,7 +652,29 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
     const verbs = [...new Set((out.trace?.rows ?? []).map((r) => r.strategy?.verb).filter(Boolean))].sort();
     return { solution, expected, equipsAt, equipItems, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode,
         // ⛓ SHOULD-STOP — `{tripped, first, sites}` when the pass's deadline tripped (named in the history), else null
-        deadline: out.deadline ?? null };
+        deadline: out.deadline ?? null,
+        ...forcedHitFieldsOf(out) };
+}
+
+/**
+ * ⛓ FORCED-HIT CONSUMER — `solveSegment`'s two optional FORCEDHIT fields, as a plan carries them (plain rows: the
+ * worker posts the plan structured-cloned): `forcedHits` (one row per billed crossing `{tick, what, proof, billed,
+ * candidate, ticks, damage}`) and `damage` (the player's `{hits, lastHitAt, id}` in the world the segment ends in).
+ * Present only when the solver billed a crossing; absent = today's plan, byte for byte.
+ */
+export function forcedHitFieldsOf(out) {
+    return out?.forcedHits?.length ? { forcedHits: out.forcedHits, damage: out.damage ?? null } : {};
+}
+
+/** ⛓ FORCED-HIT CONSUMER — the hits a plan's forced crossings billed (the sum of each row's `billed`), or 0. */
+export const billedHitsOf = (plan) => (plan?.forcedHits ?? []).reduce((n, f) => n + (f.billed?.length ?? 0), 0);
+
+/** ⛓ FORCED-HIT CONSUMER — the note's tail for a plan that billed a forced crossing ('' for any other plan). */
+export function forcedHitNote(plan) {
+    if (!plan?.forcedHits?.length) return '';
+    const d = plan.damage;
+    return `; forced hit: ${billedHitsOf(plan)} hit(s) billed over ${plan.forcedHits.length} crossing(s)`
+        + `${d ? `, the player ends on ${d.hits} hit(s)${d.id ? ` (last ${d.id} at t${d.lastHitAt})` : ''}` : ''}`;
 }
 
 /**
@@ -899,11 +921,13 @@ export function createRuntimeSolver({
             // ⛓ ANYTIME — which pass made the plan, whether a later pass was cut at the budget, and every pass's row
             pass: plan0.pass ?? null, expired, passes: plan0.passes ?? p.handle.passes ?? null,
             /** Where the solved shadow ended — the live run must end there too. */
-            end: { ...plan0.expected[plan0.expected.length - 1] } };
+            end: { ...plan0.expected[plan0.expected.length - 1] },
+            // ⛓ FORCED-HIT CONSUMER — the billed crossings and the damage the plan ends on (absent = none billed)
+            ...forcedHitFieldsOf(plan0) };
         emit({ type: 'solved', message: `[js runtime] solved ${p.solverGoal.kind} in level ${p.goal.level}: `
             + `${plan0.solution.length} tick(s), verbs ${plan0.verbs.join(', ') || '—'} (replay ${plan0.replayMs} ms over `
             + `${plan0.prefixLength} tick(s), solve ${plan0.solveMs} ms${service ? `, ${service.kind}` : ''}`
-            + `${plan0.pass ? `; ${passNote(plan0, { expired })}` : ''})` });
+            + `${plan0.pass ? `; ${passNote(plan0, { expired })}` : ''}${forcedHitNote(plan0)})` });
         plan = { ...plan0, run, i: 0 };
         return null;
     }

@@ -642,6 +642,31 @@ export function liveDeclarations(staging, status, { granted = null } = {}) {
     };
 }
 
+/** ⛓ FORCED-HIT CONSUMER — the wave-14 staging field that retires `forcedHitContinuationRefusal` (fidelity's queue). */
+export const STAGED_PLAYER_HITS_FIELD = 'STAGED PLAYER HITS';
+
+/**
+ * ⛓ FORCED-HIT CONSUMER (interim) — a CONTINUATION in a world where a forced crossing billed a hit. `damage` is the
+ * last plan's `damage` shipped in the held room (`{hits, lastHitAt, id}`, the solver's `worldHitsOf` at the segment's
+ * end), kept on the room until a door or a re-arrival replaces it (a new `Player`: the game's hits start at 0).
+ *
+ * No staging field carries the player's hits: an arrival staging is taken at 0, and a continuation's hits are only
+ * what the replay of the shipped prefix re-bills. A room re-staged in this world (a delivery's items, from tick 0)
+ * or any replay that misses the hit would plan from 0 hits while the game holds ≥ 1 — so it is refused, by name,
+ * and served from a forced re-arrival. ⚖ State comes from the GAME: when STAGED PLAYER HITS lands, the
+ * (re)staging reads `botStatus.hits` and this refusal retires (the model's `damage` is never carried).
+ *
+ * @param {{hits:number, lastHitAt:number|null, id:string|null}|null} damage
+ * @returns {string|null}
+ */
+export function forcedHitContinuationRefusal(damage) {
+    if (!(Number(damage?.hits) > 0)) return null;
+    return `a continuation after a FORCED HIT: the player carries ${damage.hits} hit(s) in this world`
+        + `${damage.id ? ` (${damage.id} at t${damage.lastHitAt})` : ''}, and no staging field carries the player's hits `
+        + `(fidelity's wave-14 candidate ${STAGED_PLAYER_HITS_FIELD}) — a plan from this room could start from 0 hits `
+        + 'while the game holds them';
+}
+
 /**
  * ⛓ W7 — the X-SPLIT RULE (§1.3: "not measured: `primary` held across a
  * seam"). A tape's span ending at its last tick RELEASES the key at the finish

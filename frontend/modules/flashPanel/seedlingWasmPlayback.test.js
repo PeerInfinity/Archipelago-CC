@@ -18,7 +18,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { ADOPT_WAIT_MS, createWasmPlayback, loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
-import { SHIPPED_RNG, SOLVE_RETRY_BUDGET_FACTOR, TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
+import { forcedHitContinuationRefusal, SHIPPED_RNG, SOLVE_RETRY_BUDGET_FACTOR, STAGED_PLAYER_HITS_FIELD, TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
 import { ANYTIME_PASSES, solveAnytime, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK } from '../seedlingDemo/jsRuntimeSolver.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService, mountedRecordsOf } from '../seedlingDemo/wasmWalkTape.js';
@@ -1712,5 +1712,104 @@ describe('⛓ RNG-SPLIT STAGING — the arrival, hold, adoption and continuation
         expect(e.failures).toEqual([]);
         expect(rngOf(e.service.seen[0].request.staging)).toEqual(WANT);
         expect(rngOf(e.engine.room.staging)).toEqual(WANT);
+    });
+});
+
+/**
+ * ⛓ FORCED-HIT CONSUMER — a plan that billed a forced crossing (`solveSegment`'s optional `forcedHits` / `damage`)
+ * carries both into the engine's history and notes; a CONTINUATION in the same world after it is refused BY NAME
+ * (interim, until fidelity's wave-14 STAGED PLAYER HITS) and served from a forced re-arrival. A door replaces the room,
+ * and with it the record. The plans are the real solver's, edited to bill a hit (the house has no forced crossing).
+ *
+ * MUTANTS (run during development, each red by name here):
+ *   g1 the guard off (`forcedHitContinuationRefusal` → null)          → 'the refusal…' and '…REFUSED by name…' red
+ *   g2 the guard fires after a door (the damage kept on the ENGINE, not the room) → '…a DOOR replaces the room…' reds
+ *   g3 the fields dropped from the history rows (`solvedBy`)           → the three engine rows that read a done row red
+ */
+describe('⛓ FORCED-HIT CONSUMER — the plan\'s forced crossings, and the continuation guard', () => {
+    const ROW = { tick: 0, what: 'chaser:lavarunner@72,24', proof: { proven: true, depth: 2, nodes: 1332, minHits: 1 },
+        billed: [{ t: 2, level: HOUSE, source: 'chaser', id: 'lavarunner@72,24', hits: 1 }], candidate: 'corridor-unarmed', ticks: 4,
+        damage: { hits: 1, lastHitAt: 2, id: 'lavarunner@72,24' } };
+    const billing = (hits) => (plan) => ({ ...plan, verbs: [...new Set([...plan.verbs, 'forced-hit'])].sort(),
+        forcedHits: [{ ...ROW, damage: { ...ROW.damage, hits } }], damage: hits ? { ...ROW.damage, hits } : { hits: 0, lastHitAt: null, id: null } });
+
+    it('the refusal: none at no damage / 0 hits; at ≥ 1 hit it names the hits, the hitter and the wave-14 field', () => {
+        expect(forcedHitContinuationRefusal(null)).toBe(null);
+        expect(forcedHitContinuationRefusal(undefined)).toBe(null);
+        expect(forcedHitContinuationRefusal({ hits: 0, lastHitAt: null, id: null })).toBe(null);
+        const why = forcedHitContinuationRefusal({ hits: 2, lastHitAt: 7, id: 'lavarunner@72,24' });
+        expect(why).toMatch(/^a continuation after a FORCED HIT: the player carries 2 hit\(s\) in this world \(lavarunner@72,24 at t7\)/);
+        expect(why).toContain(`fidelity's wave-14 candidate ${STAGED_PLAYER_HITS_FIELD}`);
+        expect(STAGED_PLAYER_HITS_FIELD).toBe('STAGED PLAYER HITS');
+    });
+
+    it('a plan with NO forced crossing carries neither field — its history rows are today\'s', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        for (const s of e.service.seen) expect(Object.keys(s.result.plan)).not.toEqual(expect.arrayContaining(['forcedHits']));
+        for (const s of e.service.seen) expect(s.result.plan).not.toHaveProperty('damage');
+        for (const h of e.engine.stats.history) { expect(h).not.toHaveProperty('forcedHits'); expect(h).not.toHaveProperty('damage'); }
+        expect(e.notes.some((n) => /forced hit/.test(n ?? ''))).toBe(false);
+    });
+
+    it('a forced hit in the held room, then a goal in the SAME world → the continuation is REFUSED by name and served from a forced re-arrival', () => {
+        const e = engineOver(A, { editPlan: (plan) => (e.service.seen.length === 0 ? billing(1)(plan) : plan) });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        // the forced plan's fields reached the history row and the note
+        expect(e.dones[0]).toMatchObject({ forcedHits: [expect.objectContaining({ candidate: 'corridor-unarmed' })],
+            damage: { hits: 1, lastHitAt: 2, id: 'lavarunner@72,24' } });
+        expect(e.notes.some((n) => /forced hit: 1 hit\(s\) billed over 1 crossing\(s\), the player ends on 1 hit\(s\) \(last lavarunner@72,24 at t2\)/.test(n ?? ''))).toBe(true);
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['forced-hit-continuation']);
+        expect(e.engine.stats.fallbacks[0].why).toMatch(/FORCED HIT.*1 hit\(s\).*STAGED PLAYER HITS/);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1, 'forced-hit-continuation': 1 });
+        expect(e.engine.stats.continuations).toBe(0);
+        // never solved as a continuation: freeze, the forced plan, (re-arrival) freeze, the door from its arrival
+        expect(e.service.seen.map((s) => s.request.perTick?.length ?? 0)).toEqual([0, 0]);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'freeze', 'plan']);
+        expect(e.dones[1]).toMatchObject({ continuation: false });
+    });
+
+    it('…but NOT when the forced crossing left 0 hits in this world: the continuation is served', () => {
+        const e = engineOver(A, { editPlan: (plan) => (e.service.seen.length === 0 ? billing(0)(plan) : plan) });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        expect(e.dones[0].damage).toEqual({ hits: 0, lastHitAt: null, id: null });
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks).toEqual([]);
+        expect(e.engine.stats.continuations).toBe(1);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'continuation']);
+    });
+
+    it('…and NOT after a DOOR: a DOOR replaces the room (a new Player, 0 hits) — the next room\'s continuation is served', () => {
+        // the door plan bills (a crossing that hits on its way out); the landing is held; the chest is solved from that
+        // arrival and the door after it is a CONTINUATION in the new world — never refused for the old world's hit
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 },
+            editPlan: (plan) => (e.service.seen.length === 0 ? billing(1)(plan) : plan) });
+        e.game.gameTimeFromBegin = true;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 1);
+        expect(e.dones[0].damage).toMatchObject({ hits: 1 });
+        e.game.pos = null; // the crossing landed: the player stands at the new room's arrival
+        e.game.be = { ...A.seam.beginEntry, 'save.time': A.seam.beginEntry['save.time'] - 7 };
+        runUntil(e, () => e.engine.status().phase === 'held');
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, shipped: 0 } });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 3 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks).toEqual([]);
+        expect(e.engine.stats.continuations).toBe(1);
+        expect(e.dones.map((d) => d.continuation)).toEqual([false, false, true]);
     });
 });
