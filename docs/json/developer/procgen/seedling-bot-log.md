@@ -16374,6 +16374,47 @@ Survey steps 78/124/126/139: no row moves.
 - **A refusal with no cause is a model that caught the hit and did not say so.** Before D3 the hold failed "MOVED" at
   the game's exact knockback tick.
 
+### Seedling fidelity STAGEDHITS — the player's damage is staged from the game, and the re-stage that needs it is the one with no prefix
+
+Wave 14 (model coverage), planner `seedling-fidelity-planning-6`. ⚖ The user (2026-10-05): the solver must know which
+state it is in, without clearing the save and without leaving and re-entering the room. After FORCEDHIT a plan may
+take a billed hit, so the player's damage is state a later plan inherits. The report is
+`CC/docs/cloud-reports/seedling-fidelity-stagedhits.md`.
+
+**D1 — the census** (`…-evidence/census-d1.md`). The game exposes `hits` and `hits_timer` on `botStatus`
+(`Bot.as:2124-2125`), not the parked facing (`directionFace`). `hits_timer` is not cosmetic: it blocks the arrows and
+swallows the next hit. The two re-stage points are different in kind. The wasm engine's continuation and a delivery
+re-stage AT THE ARRIVAL and replay the shipped prefix, which re-bills the hit, so they need a CHECK against the game
+(`shadowMismatch` has no hits row), not a field. An in-place re-stage (`jsRuntimeCore.rebootInPlace`, a cold
+adoption) has no prefix, so the game's damage must be STAGED there. `botStart` keeps the game's `Player` when the
+tape's boot is the current ctor args (the skip path, `Bot.as:1843`).
+
+**D2 — the field.** `player_damage: {hits, hits_timer, direction_face?}` (`botStatus`'s spelling, on `inventory_slots`'
+precedent; no tape carries it) through `createRunForStaging` → `createLevelRun`'s initial `damage`, validated by
+`playerDamage.stagedPlayerDamage` against the run's `hitsMax`. Absent is a fresh `Player`, byte-identical (identity
+block, six `--check`s and tapeRunner's 611 pairs all equal). `run.stagedDamage` exposes it, and `worldHitsOf` returns
+it (`staged: true`) until a hit, a door or a death, so the forced-hit budget reads it. On leg 622: staged hits 1
+refuses the crossing by name ("over the budget's 0"), and staged hits 2 makes every proof leaf a death ("every proof
+leaf dies"). Helpers for the JS arc: `playerDamageFromStatus(status)` and `stagedHitsMismatch(run, status)`.
+
+**D3 — on the game** (`probe-seedling-staged-hits.mjs`, p4f headless; witness `stagedhits-l73-restage`). Leg 622's
+own keys carry the player through the door by t4, so the slice used `down+right ×2` from the same arrival: the same
+hit (`lavarunner@72,24`, t2), and the player comes to rest in L73. Held at t12 (hits 1, hits_timer 9), then the
+engine's continuation tape (the skip path) holds `left` for 25 ticks. The game does not move until the window lapses
+and takes a second hit at t10. The shadow (arrival + every shipped key) is the game at every tick, damage included. An
+in-place re-stage staged with the hold's `botStatus` is the game at 0 px through t9 and takes the second hit on the
+game's tick; its knockback is off from t10 because the re-stage rebuilt the lavarunner at its spawn. The control
+without the field is off at t1: it steers through the game's i-frame.
+
+**Trap candidates.**
+- **A re-stage that replays a prefix must NOT stage the live hits.** The replay re-bills them; staging them too bills
+  twice. Stage `player_damage` only where nothing is replayed.
+- **A staged i-frame swallows contacts.** With `hits_timer` 5 staged on L73's arrival, the lavarunner's t2 contact
+  is suppressed and the hit lands on t6, the first tick after the lapse. A model that dropped the timer bills the
+  wrong tick as well as the wrong count.
+- **An in-place re-stage rebuilds the room's bodies at their spawns.** Hits staged exactly do not make the enemies
+  exact: the first contact after the lapse lands on the game's tick, with another knockback.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
