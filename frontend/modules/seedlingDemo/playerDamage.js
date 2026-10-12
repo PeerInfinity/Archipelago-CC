@@ -494,3 +494,99 @@ export const DEATH_REBOOT = Object.freeze({
      */
     darkSuitArm: 'Player.as:481-490 — inert without hasDarkSuit; not modelled',
 });
+
+/** ⛓ STAGEDHITS — the keys a staging's `player_damage` may carry (`botStatus`'s spelling; see `stagedPlayerDamage`). */
+export const STAGED_PLAYER_DAMAGE_KEYS = Object.freeze(['hits', 'hits_timer', 'direction_face']);
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY STAGEDHITS (wave 14, planner `seedling-fidelity-planning-6`) — THE PLAYER'S DAMAGE AT A
+ * STAGING, AND IT IS READ FROM THE GAME.
+ *
+ * ⚖ The user's standard (2026-10-05): the solver must KNOW which state it is in, without clearing the save and without
+ * leaving and re-entering the room. Since FORCEDHIT the solver may take a billed hit, so the player's damage is state a
+ * later plan inherits — and a staging built anywhere but at a world's construction must say what it is.
+ *
+ * ── WHAT A STAGING CARRIES (`player_damage`, an OPTIONAL staging field) ─────────────────────────────────────────
+ *
+ *   `hits`            `Player.hits` — `botStatus.hits` (`Bot.as:2124`)
+ *   `hits_timer`      `Player.hitsTimer`, the i-frame countdown — `botStatus.hits_timer` (`Bot.as:2125`). It gates
+ *                     the ARROWS (`canSteer`) and swallows the next hit from any source, so a staging that dropped it
+ *                     plans steering the game ignores (measured, D3: the control moves on the re-stage's first tick)
+ *   `direction_face`  `Player.directionFace`, the facing a knockback PARKED (`Player.as:1500`), −1 when none.
+ *                     ⚠ NOT on `botStatus` (`direction` is private — `Bot.as:597`); it moves the FACING only
+ *                     (`nextDirection`), never a position. Absent = −1. Read it off `botMobiles`' player `anim` when a
+ *                     staged i-frame matters to a press (the facing the parked window swings by).
+ *
+ * The snake_case is `botStatus`'s, on `inventory_slots`' precedent: a field a live staging reads straight off the game.
+ * No tape carries it (`stagingFromTape` does not copy it, `buildStagedTape` does not write it), so every committed
+ * replay is a fresh `Player`'s — byte-identical by construction.
+ *
+ * ⛔ WHEN TO STAGE IT — AND WHEN STAGING IT IS A DOUBLE BILL:
+ *   · an ARRIVAL staging (`wasmArrival.stagingFromWasmArrival`, read at the begin record) is a new `Player`: 0, and
+ *     the field is never needed there;
+ *   · a re-stage that REPLAYS the shipped prefix over the arrival (`continuationSolveRequest`, a delivery's
+ *     `stageItems` + `deliveryRefusal`'s `prefix`) re-bills every hit the prefix took — staging the LIVE hits there
+ *     would bill them twice. The replay is checked against the game instead (`stagedHitsMismatch`);
+ *   · a staging with NO prefix at a point the game did not construct (an in-place reboot at the player's position —
+ *     `jsRuntimeCore.rebootInPlace` — or a cold adoption of a room someone else walked) is where the game's damage
+ *     must be staged, from `botStatus` at that point (`playerDamageFromStatus`).
+ *
+ * @param {object|null|undefined} staged  the staging's `player_damage`, or null/undefined (a fresh `Player`)
+ * @param {object} o
+ * @param {number} o.hitsMax  the RUN's `Main.hitsMax`
+ * @returns {{hits:number, hitsTimer:number, directionFace:number}} the run's initial damage state
+ */
+export function stagedPlayerDamage(staged, { hitsMax }) {
+    if (staged === null || staged === undefined) return createPlayerDamage();
+    const why = (s) => fail(`playerDamage: the staged \`player_damage\` ${s} — refused by name rather than staged `
+        + `(got ${JSON.stringify(staged)})`);
+    if (typeof staged !== 'object' || Array.isArray(staged)) why('is not an object');
+    const unknown = Object.keys(staged).filter((k) => !STAGED_PLAYER_DAMAGE_KEYS.includes(k));
+    if (unknown.length) why(`names ${JSON.stringify(unknown)}, which it does not carry (${STAGED_PLAYER_DAMAGE_KEYS.join(', ')})`);
+    const { hits, hits_timer: hitsTimer, direction_face: directionFace = -1 } = staged;
+    if (!Number.isInteger(hits) || hits < 0) why('`hits` is not a non-negative integer');
+    if (!Number.isInteger(hitsTimer) || hitsTimer < 0 || hitsTimer > PLAYER_DAMAGE.hitsTimerMax) {
+        why(`\`hits_timer\` is not an integer in 0..${PLAYER_DAMAGE.hitsTimerMax} (\`hitsTimerMax\`, Player.as:336)`);
+    }
+    if (!Number.isInteger(directionFace) || directionFace < -1 || directionFace > 3) {
+        why('`direction_face` is not −1 (none) or a facing 0..3');
+    }
+    if (!Number.isFinite(hitsMax)) {
+        why('cannot be checked: `hitsMax` is the RUN\'s `Main.hitsMax` and has no default here');
+    }
+    // `Player.hit` dies at `hits >= hitsMax` and the death reboots the world (a new `Player` at 0): a live player
+    // never stands there, so a staging that says so is a misread, not a state.
+    if (hits >= hitsMax) why(`says \`hits\` ${hits} ≥ \`hitsMax\` ${hitsMax}: that player is dead (\`die()\`, Player.as:1487)`);
+    return { hits, hitsTimer, directionFace };
+}
+
+/**
+ * The `player_damage` block a live staging takes from ONE `botStatus` read — the two keys the game exposes, as it
+ * names them. ⚖ State comes from the GAME: never from a plan's predicted `damage` (`solveSegment`'s result field).
+ */
+export function playerDamageFromStatus(status) {
+    const hits = status?.hits;
+    const hitsTimer = status?.hits_timer;
+    if (!Number.isInteger(hits) || !Number.isInteger(hitsTimer)) {
+        fail(`playerDamage: botStatus carries no integer \`hits\` / \`hits_timer\` (got ${JSON.stringify(hits)} / `
+            + `${JSON.stringify(hitsTimer)}) — the player's damage cannot be staged from it`);
+    }
+    return { hits, hits_timer: hitsTimer };
+}
+
+/**
+ * ⛓ `wasmPlayback.shadowMismatch`'s missing half: the model's damage (a run, or its `damage`) against ONE `botStatus`
+ * read — null when `hits` and `hits_timer` are equal, else `{expected, got}` (the model, the game), the same shape.
+ * A shadow that re-billed a different hit count, or a re-stage that dropped the i-frame, is a STAGING BUG, named.
+ *
+ * @param {{damage:object}|{hits:number, hitsTimer:number}} run
+ * @param {{hits:number, hits_timer:number}} status
+ * @returns {null|{expected:{hits:number, hits_timer:number}, got:{hits:number, hits_timer:number}|null}}
+ */
+export function stagedHitsMismatch(run, status) {
+    const d = run?.damage ?? run ?? null;
+    const expected = d ? { hits: d.hits, hits_timer: d.hitsTimer } : null;
+    if (!expected || !status) return { expected, got: null };
+    const got = { hits: status.hits, hits_timer: status.hits_timer };
+    return expected.hits === got.hits && expected.hits_timer === got.hits_timer ? null : { expected, got };
+}

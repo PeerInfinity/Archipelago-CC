@@ -201,7 +201,7 @@ import {
 // contact source that calls them. `noDamage` stops being a refusal here.
 import {
     DARK_SUIT_DAMAGE, DARK_SUIT_FORCE, DEATH_REBOOT, PLAYER_DAMAGE, PlayerDamageError, canSteer,
-    createPlayerDamage, playerHit, stepPlayerDamage,
+    createPlayerDamage, playerHit, stagedPlayerDamage, stepPlayerDamage,
 } from './playerDamage.js';
 import {
     ENEMY_CLASSES, TYPE_REWRITING_ENEMIES, contactPricing, contactRect, enemyHitPlayerFires,
@@ -655,6 +655,15 @@ export function createLevelRun({
      * item arrives (`slotOrder`).
      */
     inventorySlots = null,
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY STAGEDHITS — the player's DAMAGE at the boot (`{hits, hits_timer, direction_face?}`,
+     * `botStatus`'s spelling — `playerDamage.stagedPlayerDamage` has the rules), or `null` for a fresh `Player`.
+     *
+     * ⛔ PER WORLD, so it is the BOOT world's only: a door or a death builds a new `Player` at 0 exactly as before
+     * (`arriveIn`'s `createPlayerDamage()`). A staging takes it only where the game kept its `Player` across a re-stage
+     * (an in-place reboot, a cold adoption) — never over a replayed prefix, which re-bills its own hits.
+     */
+    playerDamage = null,
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -2853,6 +2862,12 @@ export function createLevelRun({
      * it is read from the inventory mirror and not carried here.
      */
     let damage = createPlayerDamage();
+    /**
+     * ⛓ STAGEDHITS: the boot world's staged damage (validated against the run's `hitsMax`), or null. `null` leaves
+     * `damage` the fresh `Player`'s above, so an unstaged run is byte-identical.
+     */
+    const stagedDamage = playerDamage === null ? null : stagedPlayerDamage(playerDamage, { hitsMax: inventory.hitsMax });
+    if (stagedDamage !== null) damage = { ...stagedDamage };
     /** One per landed `Player.hit` — `{t, level, source, id, hits, ...}`. */
     const playerHits = [];
     /**
@@ -16231,6 +16246,8 @@ export function createLevelRun({
         get contactsSuppressed() { return contactsSuppressed.map((c) => ({ ...c })); },
         /** `{hits, hitsTimer, directionFace}` right now. */
         get damage() { return { ...damage }; },
+        /** ⛓ STAGEDHITS: the boot's staged `{hits, hitsTimer, directionFace}`, or null (a fresh `Player`). */
+        get stagedDamage() { return stagedDamage === null ? null : { ...stagedDamage }; },
         /** `Game.shake` right now — a static, so it outlives every world. */
         get shake() { return shake; },
         /** ⛓ K2PREP D2: the camera the NEXT update's `onScreen` reads — exact `{x, y}`, or the shake band. */
