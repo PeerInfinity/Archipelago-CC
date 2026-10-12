@@ -791,6 +791,22 @@ export const substrateRegistryEntry = Object.freeze({
     serializeWorld,
     getPlaybackController: () => _playbackController,
     playbackScope: SEEDLING_ATLAS_PLAYBACK_SCOPE,
+    /**
+     * ⛓ SEEDLING LOOP MODE — a Loops **Bot** block plays these rooms through the
+     * controller above (`executeVia: 'solver'` → `loopState.regionSolver` answers
+     * 'walkTo'). Declared HERE, never on `createFlashSubstrateEntry`: the generic
+     * flash entry and every other flash game keep the factory's manual-only shape.
+     * `locationCheck` joins `regionMove` (⚖ user, 2026-10-11: "Yes, allow it" — a
+     * check loop queues the location and the Seedling solver walks to it under the
+     * Bot block; JtA/omsi stay move-only): a queued check checks nothing itself, the
+     * controller walks to the location and the game's own check, collected by the
+     * runtime, completes it. No `playClock`.
+     */
+    loopSupport: Object.freeze({
+        ...runtime.loopSupport,
+        queueActions: Object.freeze(['regionMove', 'locationCheck']),
+        executeVia: 'solver',
+    }),
     // ⛓ RESTART WARP: the Menu panel's Restart re-takes the start hop and warps the game to seedlingStartSpawn
     //   (seedlingRegionGlue), so a world with this room declares exporter[p].return_to_menu (procgenCore/restartWarp.js).
     restartWarp: RESTART_WARP,

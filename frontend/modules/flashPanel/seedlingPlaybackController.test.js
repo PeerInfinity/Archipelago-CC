@@ -254,6 +254,45 @@ describe('SeedlingPlaybackController — the atlas rooms (J3)', () => {
             .toMatchObject({ fromLevel: 86, type: 'teleporter', x: 48, y: 64, to: 0 });
         expect(c.status()).toMatchObject({ state: 'done' });
     });
+
+    it('⛓ SEEDLING LOOP MODE — walkTo ALONE walks (the Loops Bot block sends no play): the chest, then the house door', () => {
+        const reports = [];
+        const rt = createJsRuntime({ onStateChanged: (p, v) => reports.push([p, v]) });
+        rt.game.configure(JSON.stringify({ classes: GAME_CONFIG.classes, state_properties: GAME_CONFIG.state_properties }));
+        rt.setVanilla(MAP);
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [86, 48, 48] }]);
+        rt.tick();
+        reports.length = 0;
+        const c = new SeedlingPlaybackController({
+            getSurface: () => ({ transport: 'js', atlas: ATLAS_MAP, jsRuntime: rt, region: 'region_2_2' }),
+            substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas,
+        });
+        const tickUntil = (pred, max = 3000) => { for (let i = 0; i < max && !pred(); i += 1) rt.tick(new Set()); };
+        // `loopState._handleBotExecutedAction`: walkTo, then park — no play().
+        expect(c.walkTo({ kind: 'location', name: 'Starting House - Chest' })).toBe(true);
+        expect(rt.playback.playing).toBe(true);
+        tickUntil(() => reports.some(([p]) => p === 'pendingCheck'));
+        expect(parsePendingCheck(reports.find(([p]) => p === 'pendingCheck')?.[1] ?? '')).toMatchObject({ level: 86, tag: 0 });
+        tickUntil(() => c.status().state === 'done');
+        expect(c.walkTo({ kind: 'exit', name: 'exit_S' })).toBe(true);
+        tickUntil(() => reports.some(([p]) => p === 'pendingExit'));
+        expect(parsePendingExit(reports.find(([p]) => p === 'pendingExit')?.[1] ?? '')).toMatchObject({ fromLevel: 86, to: 0 });
+        // stop() still stops it, and a HELD goal (no page yet) walks on arrival without a play() either.
+        c.stop();
+        expect(rt.playback.playing).toBe(false);
+    });
+
+    it('⛓ SEEDLING LOOP MODE — a HELD walkTo (the page not up yet) walks once handed over, with no play()', () => {
+        const { rt } = liveRuntime();
+        let surface = null;
+        const ft = fakeTimers();
+        const c = new SeedlingPlaybackController({ getSurface: () => surface, timers: ft.timers, now: ft.now });
+        expect(c.walkTo({ kind: 'location', name: 'region_0_0__key_blue_pickup' })).toBe(true);
+        surface = { transport: 'js', report, jsRuntime: rt };
+        ft.fire();
+        expect(rt.playback.goal).toMatchObject({ kind: 'location', level: 0, tag: 0 });
+        expect(rt.playback.playing).toBe(true);
+    });
 });
 
 describe('SeedlingPlaybackController — the solver mode (solver-walk S1)', () => {

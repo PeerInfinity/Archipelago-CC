@@ -1152,6 +1152,10 @@ export class FlashPanelUI {
       this._embedSwf(w, h);
       this._setStatus('waiting for bridge…');
 
+      // ⛓ SEEDLING LOOP MODE — the Flash (Ruffle / native) path says so. Left at the 'wasm' default, the
+      // playback surface told the atlas controller (built with `wasm: true`) that this was the wasm game, and a
+      // Bot block's walkTo went to the wasm engine against a Ruffle player instead of being refused by name.
+      this.transport = 'flash';
       this.adapter = new FlashBridgeAdapter({
         config: this.gameConfig,
         flashObjectId: this.flashObjectId,

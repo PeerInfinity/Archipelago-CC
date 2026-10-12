@@ -86,6 +86,11 @@ describe('testBatches', () => {
         expect(categoryInBatch('Tutorial walks: procgen', 'fast')).toBe(false);
     });
 
+    it('seedling-js asks for WebGPU: its Loops Bot rows boot the wasm game (Seedling loop mode, 2026-10-11)', () => {
+        expect(batchNeedsWebgpu('seedling-js')).toBe(true);
+        expect(categoryInBatch('Seedling JS runtime', 'seedling-js')).toBe(true);
+    });
+
     it('tutorials-seedling claims the Seedling walk rows and asks for WebGPU (2026-10-11)', () => {
         expect(categoryInBatch('Tutorial walks: seedling', 'tutorials-seedling')).toBe(true);
         expect(categoryInBatch('Tutorial walks: seedling', 'tutorials')).toBe(false);

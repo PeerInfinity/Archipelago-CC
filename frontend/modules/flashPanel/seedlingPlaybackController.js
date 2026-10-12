@@ -24,10 +24,13 @@
  *
  * ── WHAT `walkTo` ANSWERS ───────────────────────────────────────────────
  *
- *   false  + `lastRefusal`  the panel runs another runtime (wasm / flash):
- *                           only the JS runtime has feet; the name is not a
- *                           location / exit of the generated rooms; the page
- *                           refused the resolved goal.
+ *   false  + `lastRefusal`  the panel runs the Flash (Ruffle) runtime, the one
+ *                           runtime with no feet (⛓ W2/WG: the JS page and the
+ *                           wasm engine both walk); the wasm runtime on a goal
+ *                           it cannot tape (a moonrock room, a `tile` target in
+ *                           a generated room); the name is not a location /
+ *                           exit of the rooms; the page refused the resolved
+ *                           goal.
  *   true                    accepted — handed to the page, or HELD until the
  *                           page and the generated arm's report are up (the
  *                           bot's first walkTo can outrun both). A held goal
@@ -539,8 +542,16 @@ export class SeedlingPlaybackController {
         this.lastGoal = null;
     }
 
+    /**
+     * ⛓ SEEDLING LOOP MODE — a goal STARTS the walk: `walkTo` sets the clock running, as the Playback Bot's own
+     * `walkTo` → `play()` pair always has (`playbackBotUI._publishWalkTo`). The Loops Bot block sends `walkTo`
+     * alone (`loopState._handleBotExecutedAction`), and without this the JS page held its goal with a stopped
+     * clock — the block parked forever (measured in-app: STUCK 90 s, nothing walked; the wasm engine plays on
+     * `walkTo` already). `stop` / `reset` still stop it; `instant` keeps its mode.
+     */
     walkTo(target) {
         this.lastRefusal = null;
+        this._playing = true;
         const s = this._getSurface?.() ?? null;
         if (s && s.transport && !this._walks(s.transport)) return this._refuse(notJsRuntimeRefusal(s.transport, s.setting, this.substrate, this.wasm));
         const out = this._apply(target, s);

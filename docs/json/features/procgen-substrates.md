@@ -28,12 +28,12 @@ The columns here are in id order. In the app, every list of substrates — the p
 | | What you can do | Bounce Demo | Flash | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Runner Demo | Text Adventure |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | L1 | You can play it in loop mode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| L2 | What you can queue for it | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions | ✓ moves between regions | ✓ moves between regions | ✓ moves between regions, location checks, exploring | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks | ✓ moves between regions, location checks, exploring |
+| L2 | What you can queue for it | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions | ✓ moves between regions, location checks, exploring | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks | ✓ moves between regions, location checks, exploring |
 | L3 | You can record a visit and replay it | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | L4 | How a replay works | ✓ applies the result instantly | n/a | n/a | n/a | ✓ replays your exact moves | ✓ replays your exact moves | ✓ applies the result instantly | ✓ replays your exact moves | ✓ applies the result instantly | ✓ re-runs the queued actions |
 | L5 | Instant fast-forward | ✓ always — a replay is already instant | ✗ | ✗ | ✗ | ✓ a per-block toggle | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle |
-| L6 | A Bot block can play it for you | ✓ the game's own automation walks it | ✗ | ✗ | ✗ | ✓ the game's own automation walks it | ✓ the substrate walks it itself | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✗ |
-| L7 | The Bot honours Instant | n/a | n/a | n/a | n/a | ✓ | ✗ | n/a | ✓ | n/a | n/a |
+| L6 | A Bot block can play it for you | ✓ the game's own automation walks it | ✗ | ✓ the game's own automation walks it | ✗ | ✓ the game's own automation walks it | ✓ the substrate walks it itself | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✗ |
+| L7 | The Bot honours Instant | n/a | n/a | ✗ | n/a | ✓ | ✗ | n/a | ✓ | n/a | n/a |
 | L8 | You can play it outside loop mode | ✓ | ✓ | ✓ | ✓ | ✗ (note 1) | ✓ | ✓ | ✗ (note 2) | ✓ | ✓ |
 | L9 | It shares the loop-mode mana pool | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ | ✓ |
 | L10 | It shares consumable items with other substrates | ✗ | ✗ | ✗ | ✗ | ✓ its list comes from the running game — see the Substrate Registry panel | ✗ | ✗ | ✓ 18 item types: gold, reputation, herbs, … | ✗ | ✗ |
@@ -148,7 +148,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Play* — The Playback Bot can walk it (replaying a world's solution): with the Flash Panel's JS runtime, or its wasm runtime
 - *Play* — What the generator may do with it: locations placed anywhere
 - *Loop mode* — You can play it in loop mode
-- *Loop mode* — What you can queue for it: moves between regions
+- *Loop mode* — What you can queue for it: moves between regions, location checks
+- *Loop mode* — A Bot block can play it for you: the game's own automation walks it
 - *Loop mode* — You can play it outside loop mode
 - *Generate* — The pipeline can build regions of it: picked from its own levels to fit the plan
 - *Generate* — How many ready-made rooms / levels it brings: 4 Atlas rooms
