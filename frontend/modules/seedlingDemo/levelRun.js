@@ -8148,6 +8148,16 @@ export function createLevelRun({
                         // ⛓ fidelity-bulb: a killed Bulb (armed, dropping, dying) — harmless; and its lava tile.
                         ...(c.bulbPhase ? { dying: true, bulbPhase: c.bulbPhase, dropTile: c.dropTile ?? null,
                             ...(c.lavaTile ? { lavaTile: c.lavaTile, lavaAt: c.lavaAt } : {}) } : {}),
+                        /**
+                         * ⛓ fidelity STRIKELAPSE D2 (`CONTACT_FIDELITY.strikeIframeLapse` ON only): a body in its
+                         * "die" (a forecast kill's `dyingAt`, or a clone of a live `dying` body) is projected `dying`,
+                         * so `plannerContactFree` reads `Enemy.hitPlayer`'s `currentAnim != "die"` gate as the live
+                         * stepper does (`chaserContactNow`'s `dieAnim`). MEASURED on survey step 62 (L45): the walk's
+                         * own lapse-admitted press kills `jellyfish@224,176` at t204, and the transit probe priced the
+                         * dying body as a live contact from t238 (d=7.1), refusing the corridor the drive walks clean.
+                         */
+                        ...(CONTACT_FIDELITY.strikeIframeLapse && !c.bulbPhase && (c.dyingAt !== undefined || c.dying)
+                            ? { dying: true } : {}),
                     }));
                 // ⛓ fidelity-bobsoldier D3: a property of the ARRAY, present only when a corpse swings — so every
                 // other projection is the array it was.
