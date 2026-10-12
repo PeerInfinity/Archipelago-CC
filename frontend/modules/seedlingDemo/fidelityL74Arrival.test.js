@@ -10,6 +10,8 @@
  * on that frame. The model armed a button only from a post-move box, one tick late. Game witnesses (p4f headless,
  * `probe-seedling-chaser-mobiles.mjs --class=LavaRunner --player-hits --record`, recorded with the switch ON):
  *   - `l74arrival-624-on-plan`: leg 624's solved plan BOOTED on the button (L74LEG624's `game-l74-624-on-plan`), 332 t;
+ *   - `l74arrival-door-l73`: L73 booted at leg 622's staging, `up` through `teleporter@64,0` — a DOOR arrival at t4,
+ *     the game frozen at t5;
  *   - `fixtures/contact-witness/589.json`: the sweep's capture of the same arrival (t0–t2).
  */
 import { describe, expect, it } from 'vitest';
@@ -26,6 +28,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const levelSource = atlasLevelSource();
 const witness = (n) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'chaser-witness', `${n}.json`), 'utf8'));
 const W624 = witness('l74arrival-624-on-plan');
+const WDOOR = witness('l74arrival-door-l73');
 const WPOST = witness('l74leg624-postfall-reentry');
 const CAP589 = JSON.parse(readFileSync(join(HERE, 'fixtures', 'contact-witness', '589.json'), 'utf8'));
 
@@ -80,5 +83,21 @@ describe('L74ARRIVAL D1 — a boot on button@288,128 freezes on its first live f
     it('a boot onto the FALLEN rock\'s room ({74,2} staged) has nothing to drop: 0 px either way', () => {
         expect(parted(WPOST, true)).toEqual([]);
         expect(parted(WPOST, false)).toEqual([]);
+    });
+});
+
+describe('L74ARRIVAL D2 — a DOOR arrival onto the button (L73 → L74) freezes on the destination\'s first live frame', () => {
+    it('the witness: the door at t4, the game frozen at t5', () => {
+        expect(WDOOR.samples.length).toBe(131);
+        const at = (t) => WDOOR.samples.find((s) => s.t === t);
+        expect([at(3).level, at(4).level]).toEqual([73, 74]);
+        expect([at(4).player.y, at(5).player.y]).toEqual([136, 136]);
+        expect(at(6).player.y).toBeLessThan(136);
+    });
+    it('ON: every sample at 0 px, the L73 forced hit (t2) included', () => {
+        expect(parted(WDOOR, true)).toEqual([]);
+    });
+    it('OFF: the control parts at t5–t6 only', () => {
+        expect(parted(WDOOR, false)).toEqual([5, 6]);
     });
 });
