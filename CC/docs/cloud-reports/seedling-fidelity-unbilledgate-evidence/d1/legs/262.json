@@ -1,0 +1,1 @@
+{"id":262,"key":"level_22 <- in_L25_144_32 -> exit:out_teleporter_192_64","level":22,"goal":"level_22 -> level_29__r2c2","ms":1381,"ok":true,"passes":[{"pass":"dashless","ok":false,"kind":"refusal","ticks":null,"ms":574},{"pass":"full","ok":true,"kind":null,"ticks":229,"ms":807}],"ticks":229,"verbs":["walk"],"end":{"level":29,"x":24,"y":232,"deaths":0}}
