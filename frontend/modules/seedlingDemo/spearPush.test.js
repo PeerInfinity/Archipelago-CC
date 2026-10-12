@@ -19,6 +19,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 
 import { atlasLevelSource } from './levelSource.js';
 import { OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, solveSegment } from './solverBot.js';
@@ -63,7 +64,11 @@ describe('PUSHBLOCK: L65 (route steps 146 and 148)', () => {
         expect(run.playerHits).toEqual([]);
         // ⛓ wave-11 harvest: 541 → 539 with DARKTRAP2's `spearingWindow` ON (the light arm's sword presses inside the
         // spear's window are gated, as on the game) — DARKTRAP2's predicted "146 SOLVED 539", game-witnessed.
-        expect(out.perTick.length).toBe(539);
+        // ⛓ fidelity FLIP14: 539 → 546 with `strikeIframeLapse` ON (⚖ the wave-14 flip, user 2026-10-12; unwitnessed); the
+        // game-witnessed 539 stays as the OFF control.
+        expect(out.perTick.length).toBe(546);
+        expect(withContactFidelity({ strikeIframeLapse: false },
+            () => solve(65, 128, 16, { kind: 'reach-exit', exit: { x: 184, y: 64 } }).out.perTick.length)).toBe(539);
         const rec = out.records.find((r) => r.strategy === 'shove');
         expect(rec.steps.map((s) => [s.verb, s.to])).toEqual([
             ['press', { tx: 10, ty: 8 }], ['press', { tx: 10, ty: 7 }], ['press', { tx: 9, ty: 7 }],
