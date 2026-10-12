@@ -4596,13 +4596,39 @@ export function createLevelRun({
     // polled before the settle (measured: (0, 108) where the settled camera is (0, 80)), so a camera witness is
     // not asked there (`assertWitnessCamera`).
     let camFresh = true;
-    const settleCameraForLoad = () => {
+    const settleCameraForLoad = ({ reboot = false } = {}) => {
         camFresh = true;
         cam = initialCamera(state.x, state.y);
         // ⛓ A LOAD CLEARS THE BAND. `loadlevel` writes `FP.camera` from the
         // arrival position with no history, so whatever the jiggle had
         // accumulated is gone — the one thing that collapses it.
         camBand = null;
+        /**
+         * ⛓⛓ seedling-fidelity-movingwait D4 (behind `CONTACT_FIDELITY.rebootShake`, OFF) — A DEATH REBOOT HAS NO
+         * FADE BEFORE THE SWAP. `Player.die()` is `dying = true; restartLevel()`, and `Game.shake` is a static the new
+         * `Game` never resets, so the killing hit's shake is still live in the new world's own settle frames: each
+         * `view()` jiggles `FP.camera` and the next lerp compounds it. Measured on the game (the L42 damage witness's
+         * tape, t1221 → t1222): the reboot's first sample reads `shake` 4 and the settled camera is (777, 0), where
+         * the drained settle below makes it exactly (776, 0). ON: the settle steps the shake band (`stepCameraBand`),
+         * so the camera after a shaken reboot is a band, read from a witness or refused by name like any other.
+         */
+        if (reboot && shake > 0 && CONTACT_FIDELITY.rebootShake === true) {
+            const w = worldFor(level).world;
+            for (let i = 0; i < CAMERA_LOAD_SETTLE_TICKS; i += 1) {
+                if (camBand === null && shake === 0) { cam = stepCamera(cam, state, w); continue; }
+                if (camBand === null) camBand = cameraBand(cam);
+                const r = stepCameraBand(camBand, state, w, { shake });
+                camBand = r.band;
+                shake = r.shake;
+                if (bandIsExact(camBand)) {
+                    cam = { x: camBand.x.lo, y: camBand.y.lo };
+                    camBand = null;
+                } else {
+                    cam = null;
+                }
+            }
+            return;
+        }
         // ...and the fade DRAINS the shake, at one per engine frame. The
         // fade's length is a BAND, so this is only knowable when the shake
         // cannot survive the shortest one; `shakeAcrossLoad` refuses
@@ -4829,7 +4855,7 @@ export function createLevelRun({
      * @param {{x:number,y:number}} o.ctor the NEW `Game`'s constructor args
      * @returns {?object} the grant record this entry fired, if any
      */
-    const enterWorld = ({ toLevel, fromLevel, carriedSwim, arrivalFor, ctor }) => {
+    const enterWorld = ({ toLevel, fromLevel, carriedSwim, arrivalFor, ctor, reboot = false }) => {
         level = toLevel;
         worldEntries += 1;
         // A `Game` is constructed here, so this is where `Lock.check()` runs
@@ -4916,7 +4942,7 @@ export function createLevelRun({
         // from the arrival position and the fade's own `view()` calls settle
         // it, which is `cameraTrack`'s level-change arm as a live step. It
         // also drains `Game.shake` and clears the band; see the function.
-        settleCameraForLoad();
+        settleCameraForLoad({ reboot });
         // `ticksCompleted` is already the arrival observation's index, so the
         // grant's `t` is that observation — the same tick the transition
         // record carries, and the same tick `Bot.as` applies it on. Applied
@@ -19593,6 +19619,8 @@ export function createLevelRun({
                     // a second death respawns in exactly the same place —
                     // which is what makes a death loop a loop.
                     ctor: worldCtor,
+                    // ⛓ movingwait D4: no fade before a death's swap (`settleCameraForLoad`, `rebootShake`).
+                    reboot: true,
                 });
                 pendingDeath = null;
                 firstTickInWorld = true;
