@@ -64,11 +64,12 @@ describe('pressKillCost — walkableCells', () => {
         const key = contactKey({ kind: 'teleporter', blocker: tp });
         const contacts = new Set();
         resetPressKillCostCounts();
-        const before = walkableCells(run, contacts).map((c) => `${c.x},${c.y}`);
-        expect(walkableCells(run, contacts).map((c) => `${c.x},${c.y}`)).toEqual(before);
+        const cellsOn = () => withPressKillCost(true, () => walkableCells(run, contacts)).map((c) => `${c.x},${c.y}`);
+        const before = cellsOn();
+        expect(cellsOn()).toEqual(before);
         expect(PRESS_KILL_COST_COUNTS.cellsHit).toBe(1);
         contacts.add(key);
-        const after = walkableCells(run, contacts).map((c) => `${c.x},${c.y}`);
+        const after = cellsOn();
         const fresh = withPressKillCost(false, () => walkableCells(run, new Set([key]))).map((c) => `${c.x},${c.y}`);
         expect(after).toEqual(fresh);
         expect(after.length).toBeGreaterThan(before.length);
@@ -82,9 +83,9 @@ describe('pressKillCost — walkableCells', () => {
         const run = new Proxy({}, { get: (_, k) => (k === 'world' ? world
             : (typeof a[k] === 'function' ? a[k].bind(a) : a[k])) });
         const cell = (c) => `${c.x},${c.y}`;
-        const first = walkableCells(run, new Set()).map(cell);
+        const first = withPressKillCost(true, () => walkableCells(run, new Set())).map(cell);
         world = b.world;
-        const second = walkableCells(run, new Set()).map(cell);
+        const second = withPressKillCost(true, () => walkableCells(run, new Set())).map(cell);
         expect(second).toEqual(withPressKillCost(false, () => walkableCells(run, new Set())).map(cell));
         expect(second).not.toEqual(first);
     });
