@@ -16614,6 +16614,59 @@ preview and drive parted at t53: `chaserForecastNow` never ran K2's `LavaRunner`
 - **A body read through the player is still a witness.** The game cannot report a `FallRock`; a player who rests on
   its top for twelve ticks at 0 px is the rock's position and solidity, measured.
 
+### Seedling fidelity STRIKELAPSE — the lapse's two survey losses were a ceremony nobody priced and a dying body priced as alive
+
+Wave 15 (model coverage). `CONTACT_FIDELITY.strikeIframeLapse` (L74LEG624 D3) was the one wave-14 switch left OFF: ON it
+cost route-survey steps 50 and 62 (FLIP14). Both are repaired behind the switch (OFF byte-identical: identity block,
+six `--check`s, tapeRunner 611 `86af8525`, bounded vitest all unchanged). The report is
+`CC/docs/cloud-reports/seedling-fidelity-strikelapse.md`.
+
+**D1 — step 50 (L30 Torchpickup → L32).** Not the danger map's sword arm, as the refusal text suggested. With the lapse
+ON the walk's own presses land on the lapsing i-frame, so the undashed probe kills `bobsoldier@48,80` on the way and the
+corridor is clean; the kill arm is never asked. The walk driven is the DASHED one (106 t, certified on its transit only),
+which leaves the body alive on one hit 22 px from the stance; the collect's 8-tick approach walks into it, the torch
+ceremony freezes it adjacent, and the exit walk's gate refuses at (71.04,67.07). Fix (`solverBot`): the collect's
+approach is the stance walk's priced tail (`collectStandWalk`, `KEYLOCK_WAIT_PRICED`'s `stand`), and the tail ends on the
+ceremony's start, which the probe asks `ceremonyBesideLiveBody`'s question: no live body inside its pad, no i-framed
+body, no corpse still in the room (`createCorpseClock`: the forecast drops a corpse at the blow; the run keeps it
+`removalTicksAfterHit` more ticks, and the fencepost is `<=`, measured). The game showed why the ceremony needs its own
+question: `Player.shieldBump` has no freeze gate and the player's `v` is frozen non-zero, so a touching BobSoldier is
+shoved on every unstepped frame of the ceremony's lump (game v (358.8, 663.4) one tick in, the model's steps (4.2, 8.2))
+and leaves the freeze at (91.8, 282.0), not the model's (91.8, 197.7). ON: **413 t** (was 460 OFF), 0 hits, the body
+killed t143 and removed t154 before the ceremony. Game witness (p4f, `differential --record`): the model reproduces the
+414-observation recording; BobSoldier bit-exact (154 comparisons).
+
+**D2 — step 62 (L45 → L46).** Not a walk stall at root. The walk's own lapse-admitted press kills `jellyfish@224,176`
+at t204, and the chaser forecast's projection drops the kill's `dyingAt`, so `plannerContactFree` never reads
+`Enemy.hitPlayer`'s `currentAnim != "die"` gate and the transit probe prices the dying body as a live contact from
+t238 (d=7.1). The ladder then took the chaser kill arm onto a corridor that limit-cycles. Fix (`levelRun`'s forecast
+projection, ON only): a body in its death is projected `dying`. ON: **748 t** (386 OFF). The residue is the walker's:
+the undashed corridor limit-cycles ~400 t on sliding terrain at the intermediate waypoint (120,72) (|v| 1.5 px/tick,
+friction 0.02, `drive`'s "within tolerance AND stopped") before the re-plan, the drive and the preview alike. Game
+witness: 749 observations reproduced. The same fix newly solves step 147 (L63 → L65, a jellyfish): 504 t, witnessed.
+
+**D3 — the survey and sweep ON.** Local `--through=end --route=full` ON vs CI 38310171450: SOLVED 169 → **170**,
+REFUSED 51 → 49, no solved step lost (step 156 read TIMEOUT under a loaded box and refuses solo with the OFF text). Sweep
+(L74 key set): ON 622/624/626/629 done, 628 refused; OFF 624 refused.
+
+**D4 — the flip package (held).** At this head, lapse default ON + FLIP14's strike re-pins + FLIP14's campaign patch
+(re-measured, not copied: `r9-campaign --check` ON reads `dce96321` before it and `6b1bf15c` exit 0 after, FLIP14's
+digests exactly): the bounded set (126 files, the 36 naming a moved tape included) is green but one row, the hammer
+arc's `fidelityF1c` residue 40 → 12, re-pinned in the candidate. `seedling-fidelity-strikelapse-evidence/flip-candidate.patch`.
+
+**Trap candidates.**
+- **A walk certified on its transit hands the next verb a room nobody priced.** The dashed walk was safe to walk and
+  left a live body beside the pickup; the approach and the ceremony are the walk's consequences, not a new decision.
+- **A freeze is not a pause.** `Player.shieldBump` and `Enemy.hitUpdate` run through `Game.freezeObjects`, and a
+  ceremony's lump is frames the model does not step. A ceremony beside a live or dying body is unmodellable, so the plan
+  must not start one there.
+- **A forecast that drops a corpse at the blow is not the room.** The run keeps it until `FP.world.remove`; ask the
+  removal clock, not the projection.
+- **A projection that drops a field drops a gate.** The forecast copied `hits` and `hitsTimer` and not the death, so a
+  dying body was a live contact to the probe only.
+- **A refusal's text names where it was caught, not why.** Step 50's "the danger map forbids … its sword is timed" and
+  step 62's "waypoint (120,72) not reached" were both two decisions downstream of the cause.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
