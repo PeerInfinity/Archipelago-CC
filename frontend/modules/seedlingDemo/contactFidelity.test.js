@@ -52,7 +52,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
 
     // ⛓ a measuring run sets SEEDLING_CONTACT_FIDELITY on purpose; the default is what this pins
     // ⛓ TERRAIN D3 shipped W2 and W3 ON; LINEFLIP turned W1 ON (licensed: r9-solve-18 re-recorded on the game, 510 → 519 t)
-    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('the shipped defaults: all three ON', () => {
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_STRIKE_IFRAME_LAPSE
+        || !!process.env.SEEDLING_FALLROCK_POSTFALL || !!process.env.SEEDLING_FORECAST_SPEED_BY_TERRAIN)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -71,7 +72,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity FORCEDHIT D2: `forcedHits` (`forcedHit.FORCED_HITS`) — ⚖ ON since the wave-13 harvest.
             forcedHits: true,
             // ⛓ fidelity BOMBPUSHER D2: `bombPusherLive` (the lobber, its Bomb and its Explosion) — ⚖ ON since the wave-13 harvest.
-            bombPusherLive: true });
+            bombPusherLive: true,
+            // ⛓ fidelity L74LEG624: `strikeIframeLapse` (D3), `fallRockPostFall` (D2), `forecastSpeedByTerrain` (D4) — OFF.
+            strikeIframeLapse: false, fallRockPostFall: false, forecastSpeedByTerrain: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
