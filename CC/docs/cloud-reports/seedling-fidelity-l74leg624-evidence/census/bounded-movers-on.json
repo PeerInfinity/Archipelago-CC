@@ -1,0 +1,103 @@
+{
+ "strikeIframeLapse": [
+  {
+   "row": "frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js > BOBSOLDIER2 D2 \u2014 the solver, switch by switch, on survey step 50's staging D2a alone: the stance walk keeps the forecast, and the corpse's PAD refuses the next walk's gate",
+   "why": "AssertionError: expected 'solverBot(survey-step-50) reach-exit \u2026' to match /collect \\(64,64\\)\u2026/tick x 0 \\+ pad 16\\)     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js:102:33     at processTicksAndRejections (node:internal/process/task_queues:105:5)     at file"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js > BOBSOLDIER2 D2 \u2014 the solver, switch by switch, on survey step 50's staging D2b alone: the dashed stance walk still runs the dwell out",
+   "why": "AssertionError: expected 'solverBot(survey-step-50) reach-exit \u2026' to match /the dwell's condition .* never became\u2026/     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js:107:33     at processTicksAndRejections (node:internal/process/task_queues:105:5)     at file"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js > BOBSOLDIER2 D2 \u2014 the solver, switch by switch, on survey step 50's staging both OFF: the dwell refuses (the survey's text), and the keys it drove are `bobsoldier2-l30-dash-stance`",
+   "why": "AssertionError: expected 'solverBot(survey-step-50) reach-exit \u2026' to match /the dwell's condition .* never became\u2026/     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js:96:33     at processTicksAndRejections (node:internal/process/task_queues:105:5)     at file:"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js > BOBSOLDIER2 D2 \u2014 the solver, switch by switch, on survey step 50's staging both ON: the solver's own plan IS the witness `bobsoldier2-l30-torch`",
+   "why": "TypeError: Cannot read properties of null (reading 'out')     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js:88:23     at processTicksAndRejections (node:internal/process/task_queues:105:5)     at file:///home/user/Archipelago-CC/node_modules/@vitest/runner/di"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/fidelityIceTurretSpear.test.js > C3 D2 \u2014 `ICE_TURRET_SPEAR_ARM` (ON by default): the solver's ON plan crosses on the game (c3-l98-spear-l93) OFF the staging refuses with the sweep's words; ON it re-derives the committed tape byte for byte",
+   "why": "AssertionError: expected '{\"tape_version\":9,\"game\":\"seedling\",\"\u2026' to be '{\"tape_version\":9,\"game\":\"seedling\",\"\u2026' // Object.is equality     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fidelityIceTurretSpear.test.js:110:52     at processTicksAndRejections (node:internal/process/task_que"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js > L30KEYLOCK D2 \u2014 the solver, switch by switch, from both pit landings RESCAN alone: (224,80) solves (its corridor probe already climbs); (240,80) still dies on the unpriced wait",
+   "why": "AssertionError: expected { Object (solved, hits, ...) } to match object { solved: 347, hits: +0 } (1 matching property omitted from actual)     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1216:10)     at Proxy.<anonymous> (file:///home/user/Archip"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js > L30KEYLOCK D2 \u2014 the solver, switch by switch, from both pit landings WAIT alone: nothing is hit \u2014 (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick",
+   "why": "AssertionError: expected { Object (solved, hits, ...) } to match object { solved: 309, hits: +0 } (1 matching property omitted from actual)     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1216:10)     at Proxy.<anonymous> (file:///home/user/Archip"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js > L30KEYLOCK D2 \u2014 the solver, switch by switch, from both pit landings both ON, (224,80): the solver's own plan IS the witness `l30keylock-pit224` (kill, lock, crossing)",
+   "why": "AssertionError: expected { Object (solved, hits, ...) } to match object { solved: 347, hits: +0 } (1 matching property omitted from actual)     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1216:10)     at Proxy.<anonymous> (file:///home/user/Archip"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js > L30KEYLOCK D2 \u2014 the solver, switch by switch, from both pit landings both ON, (240,80): the solver's own plan IS the witness `l30keylock-pit240` (kill, lock, crossing)",
+   "why": "AssertionError: expected { Object (solved, hits, ...) } to match object { solved: 360, hits: +0 } (1 matching property omitted from actual)     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1216:10)     at Proxy.<anonymous> (file:///home/user/Archip"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js > L30KEYLOCK D2 \u2014 the two mechanisms, asked directly the chaser arm at the pit landing: the player's box prices nothing; the body's box finds (88,120)",
+   "why": "AssertionError: expected { x: 88, y: 88 } to deeply equal { x: 88, y: 120 }     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js:159:27     at processTicksAndRejections (node:internal/process/task_queues:105:5)     at file:///home/user/Archipelago-CC/node_modules"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/fidelityLeash.test.js > LEASH D2 \u2014 `BAIT_FORECAST`: a bait is verified on the chaser forecast leg 629 (L74 from L75 \u2192 the Darkshield): OFF refuses on the dwell; ON SOLVES \u2014 and the plan is the witness's tape",
+   "why": "AssertionError: expected 290 to be 307 // Object.is equality     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fidelityLeash.test.js:197:41     at file:///home/user/Archipelago-CC/node_modules/@vitest/runner/dist/index.js:145:11     at file:///home/user/Archipelago-CC/node_modules/@vite"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/ropeSword.test.js > D2 \u2014 the PULL rung: the silencer is derived, the latch is asserted on the live run \u26d3\u26d3\u26d3 climbs AVOID \u2192 PULL: one swing at rope@32,16 from (5,2), group 0 latched, the lanes gone, no hit",
+   "why": "AssertionError: expected { goal: 'reach-exit', \u2026(10) } to match object { from: 99, ticks: 3, pressedAt: 100 } (10 matching properties omitted from actual)     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1216:10)     at Proxy.<anonymous> (file:///h"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/seedlingCanCross.test.js > the game witness \u2014 a door-built arrival's `can`, recorded on the game (D3) `cancross-l16-sword-none` IS canCross's `none` witness for L16 \u2192 L17 with the Sword, byte for byte",
+   "why": "AssertionError: expected { Object (ticks, hash, ...) } to match object { ticks: 206, landed: 17, \u2026(2) } (2 matching properties omitted from actual)     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1216:10)     at Proxy.<anonymous> (file:///home/use"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/seedlingCanCross.test.js > the game witness \u2014 a door-built arrival's `can`, recorded on the game (D3) the default dash mode is the solver's, and its L16 \u2192 L17 plan IS `dash-l16-sword-all`, every field but its prose",
+   "why": "AssertionError: expected { Object (ticks, hash, ...) } to match object { Object (ticks, hash, ...) } (1 matching property omitted from actual)     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1216:10)     at Proxy.<anonymous> (file:///home/user/Arc"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/solverBot.test.js > R9 slice 12b\u2032: the DERIVED STANCE \u2014 scored, iterative, refuses by name \u26d3 takes the BEST stance, not the first viable one \u2014 and carries the runners-up",
+   "why": "AssertionError: expected { x: 184, y: 104 } to deeply equal { x: 168, y: 120 }     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.test.js:2603:24     at file:///home/user/Archipelago-CC/node_modules/@vitest/runner/dist/index.js:145:11     at file:///home/user/Archipelago-CC/nod"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/solverBot.test.js > R9 slice 12b\u2032: the DERIVED STANCE \u2014 scored, iterative, refuses by name \u26d3\u26d3 the WAIT refusal for `bob@64,64` is RETIRED by the harmless window \u2014 it derives a stance now, and says why",
+   "why": "AssertionError: expected { x: 88, y: 40 } to deeply equal { x: 72, y: 88 }     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.test.js:2570:24     at file:///home/user/Archipelago-CC/node_modules/@vitest/runner/dist/index.js:145:11     at file:///home/user/Archipelago-CC/node_mo"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/solverBot.test.js > R9 slice 12b\u2032: the DERIVED STANCE \u2014 scored, iterative, refuses by name \u26d4 derives a stance for the body that CANNOT reach where the walk stands",
+   "why": "AssertionError: expected { x: 40, y: 24 } to deeply equal { x: 40, y: 56 }     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.test.js:2524:24     at file:///home/user/Archipelago-CC/node_modules/@vitest/runner/dist/index.js:145:11     at file:///home/user/Archipelago-CC/node_mo"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/solverBot.test.js > R9 slice 12b\u2032: the DERIVED STANCE \u2014 scored, iterative, refuses by name \u26d4 the dwell bound is the forecast's own death tick, not a per-class constant",
+   "why": "AssertionError: expected 106 to be 115 // Object.is equality     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.test.js:2641:38     at file:///home/user/Archipelago-CC/node_modules/@vitest/runner/dist/index.js:145:11     at file:///home/user/Archipelago-CC/node_modules/@vitest/"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/solverBot.test.js > R9 slice 12c: the DASH, MODELLED \u2014 the oracle steps it and the policy prices it \u26d3 \u2026and at \u00a723b.3's stance the certification still TAKES dashes \u2014 it is not a blanket no, and the stand is HIT ONCE in 400 ticks",
+   "why": "AssertionError: expected 55 to be 45 // Object.is equality     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.test.js:1934:31     at file:///home/user/Archipelago-CC/node_modules/@vitest/runner/dist/index.js:145:11     at file:///home/user/Archipelago-CC/node_modules/@vitest/ru"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/solverBot.test.js > R9 slice 12c: the DASH, MODELLED \u2014 the oracle steps it and the policy prices it \u26d4\u26d4 a PLANNED dash chain takes L14's boot to ZERO hits THROUGH 120 \u2014 and is HIT by 130, which is the horizon this slice measured",
+   "why": "AssertionError: expected [ { tick: 18, \u2026(4) }, \u2026(26) ] to have a length of 22 but got 27     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1322:20)     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/solverDeadline.test.js > the kill-chaser stance scan asks once per cell (opt-in) untripped, opted out: one ask (the entry), the stance unchanged; opted in: one ask per cell and per candidate, the stance unchanged",
+   "why": "AssertionError: expected { x: 40, y: 24 } to deeply equal { x: 40, y: 56 }     at /home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverDeadline.test.js:389:29     at file:///home/user/Archipelago-CC/node_modules/@vitest/runner/dist/index.js:145:11     at file:///home/user/Archipelago-CC/nod"
+  }
+ ],
+ "fallRockPostFall": [
+  {
+   "row": "frontend/modules/seedlingDemo/fallRock.test.js > \u26d4\u26d4 the R2 refusal this finding turns into a CONSTRAINT ON WINDOWS \u26d4\u26d4 and a tape MAY NOT DECLARE {39,10} \u2014 `REFUSED_CLEAR_RESPONSES.arm` throws",
+   "why": "AssertionError: expected [Function] to throw an error     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1485:16)     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1090:14)     at Proxy.methodWrapper"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/fidelityCrossRoom.test.js > fidelity CROSSROOM \u2014 D2: a cross-room write into a level nothing reads is a ledger entry vanilla: the same press banks as before \u2014 L37's fallrock reads it, and the build meets its arm",
+   "why": "AssertionError: expected [Function] to throw an error     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1485:16)     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1090:14)     at Proxy.methodWrapper"
+  },
+  {
+   "row": "frontend/modules/seedlingDemo/levelWorld.test.js > census: every fixture level is fully classified a CLEARED tag despawns, shrinks, or is refused \u2014 never \"removed by tag\"",
+   "why": "AssertionError: expected [Function] to throw an error     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1485:16)     at Proxy.<anonymous> (file:///home/user/Archipelago-CC/node_modules/@vitest/expect/dist/index.js:1090:14)     at Proxy.methodWrapper"
+  }
+ ],
+ "forecastSpeedByTerrain": []
+}
