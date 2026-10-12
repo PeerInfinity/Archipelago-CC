@@ -145,6 +145,24 @@ describe('LoopModeRunner', () => {
         expect(game.paths).toHaveLength(2);
     });
 
+    it('a loop that ended without a reset resets the run before the next loop; a mana-out does not owe one', () => {
+        const { game, runner } = makeGame();
+        game.gameState.triggerLoopReset = vi.fn();
+        runner.start();
+        expect(game.gameState.triggerLoopReset).not.toHaveBeenCalled();     // the first loop owes nothing
+        game.publish('loopState:loopReset');                                 // mana-out: the run was reset
+        vi.advanceTimersByTime(0);
+        expect(game.gameState.triggerLoopReset).not.toHaveBeenCalled();
+        game.publish('loopState:queueCompleted');                            // the queue ran out first
+        vi.advanceTimersByTime(0);
+        expect(game.gameState.triggerLoopReset).toHaveBeenCalledTimes(1);
+        expect(game.paths).toHaveLength(3);
+        game.exits.add('Menu:GameStart');                                    // ended early (explored)
+        game.publish('loopState:actionCompleted');
+        vi.advanceTimersByTime(0);
+        expect(game.gameState.triggerLoopReset).toHaveBeenCalledTimes(2);
+    });
+
     it('ends an explore loop as soon as its region hides nothing more', () => {
         const { game, runner } = makeGame();
         runner.start();

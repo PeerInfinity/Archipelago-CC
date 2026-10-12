@@ -58,6 +58,8 @@ export class LoopModeRunner {
         this._timer = null;
         this._unsubs = [];
         this._loops = 0;
+        // The last loop ended WITHOUT a loop reset (its queue completed, or the runner ended it early).
+        this._runResetOwed = false;
         this._lastKey = null;
         this._savedAutoRestart = null;
         this._savedRepeat = new Map();
@@ -216,6 +218,15 @@ export class LoopModeRunner {
             if (!this._savedRepeat.has(plan.region)) this._savedRepeat.set(plan.region, !!loopState.getRepeatExplore?.(plan.region));
             loopState.setRepeatExplore?.(plan.region, true);
         }
+        // ⛓ A loop that ended without a reset (its queue completed, or the runner ended it) left every substrate's
+        // RUN as it was: restartFromStart refills the mana but publishes no gameState:loopReset, which is what a
+        // substrate resets on. JtA then loads each zone already completed and every later pass crosses it for free
+        // — a task unlocked after the zone's first completion never runs (measured: 1790 loops in 300 s). Reset
+        // the run first, as a mana-out would.
+        if (this._runResetOwed) {
+            this._runResetOwed = false;
+            gameState.triggerLoopReset?.();
+        }
         this._lastKey = plan.key;
         this._loops += 1;
         this._status(`loop ${this._loops}: ${plan.reason}`);
@@ -242,6 +253,7 @@ export class LoopModeRunner {
             const to = data?.newRegion;
             if (!to || planned.has(to)) return;
             loopState.stopProcessing?.();
+            this._runResetOwed = true;
             ended(`left the plan for ${to}`);
         };
         const onActionCompleted = () => {
@@ -257,6 +269,7 @@ export class LoopModeRunner {
             }
             if (!why) return;
             loopState.stopProcessing?.();
+            this._runResetOwed = true;
             ended(why);
         };
         const ended = (why = null) => {
@@ -276,7 +289,7 @@ export class LoopModeRunner {
             if (flush && typeof flush.then === 'function') flush.then(next, next);
             else next();
         };
-        this._unsubs.push(d.subscribe('loopState:queueCompleted', () => ended()));
+        this._unsubs.push(d.subscribe('loopState:queueCompleted', () => { this._runResetOwed = true; ended(); }));
         this._unsubs.push(d.subscribe('loopState:loopReset', () => ended()));
         this._unsubs.push(d.subscribe('loopState:actionCompleted', onActionCompleted));
         this._unsubs.push(d.subscribe('gameState:regionChanged', onRegionChanged));
