@@ -1611,6 +1611,13 @@ async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000, substrat
     const onClock = (e) => note({ kind: 'clock', at: performance.now(), region: e?.region ?? null,
         running: e?.running ?? null, gameSeconds: e?.stats?.gameSeconds ?? null });
     const onRegion = (e) => regions.push(e?.newRegion ?? null);
+    // Loops' NAMED STOP (a Bot walk that failed): it ends the wait at once, its reason in the row's facts.
+    let walkFailed = null;
+    let onWalkFailed = null;
+    const failedStop = new Promise((resolve) => {
+        onWalkFailed = (e) => { walkFailed = e?.reason ?? 'no reason given'; resolve(null); };
+    });
+    tc.eventBus.subscribe('loopState:botWalkFailed', onWalkFailed);
     const manaTrace = [];
     const onMana = () => manaTrace.push(Math.round(gs.getCurrentMana() * 100) / 100);
     const prices = new Map(queue.map((a) => [queueLine(a), loopStateSingleton._calculateActionCost(a)]));
@@ -1643,14 +1650,14 @@ async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000, substrat
             if (key && goals[goals.length - 1] !== key) goals.push(key);
         };
         const sampler = setInterval(sample, 20);
-        const ended = await completed;
+        const ended = await Promise.race([completed, failedStop]);
         clearInterval(sampler);
         // A link credit, its regionMove and the queue's end can all land inside one sample interval.
         sample();
         const out = {
             queueCompleted: !!ended, reason: ended?.reason ?? loopStateSingleton._queueCompletedReason ?? null,
             processing: loopStateSingleton.isProcessing, parkedAfter: loopStateSingleton.botSolverRegion?.() ?? null,
-            pausedUntilReset: loopStateSingleton._queuePausedUntilReset === true,
+            pausedUntilReset: loopStateSingleton._queuePausedUntilReset === true, walkFailed,
             spent: manaBefore - gs.getCurrentMana(), manaBefore, manaTrace, spends, regions, goals,
             wallSeconds: (performance.now() - t0) / 1000, log, drainBefore, drainAfter: drainPrice(),
             // What each queued Seedling action costs at its loop price (the expected charges, in queue order).
@@ -1668,11 +1675,13 @@ async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000, substrat
         tc.eventBus.unsubscribe?.(PLAY_CLOCK_EVENT, onClock);
         tc.eventBus.unsubscribe?.('gameState:regionChanged', onRegion);
         tc.eventBus.unsubscribe?.('gameState:manaChanged', onMana);
+        tc.eventBus.unsubscribe?.('loopState:botWalkFailed', onWalkFailed);
     }
 }
 
 /** The queue's end, asserted the same way on every row: on its own (`queueEnd`), the park released, no hard pause. */
 function assertLoopEndedOnItsOwn(tc, label, r) {
+    tc.assertEqual(`[${label}] no Bot walk failed (loopState:botWalkFailed)`, null, r.walkFailed);
     tc.assertEqual(`[${label}] the last regionMove resumed the park and the queue ended on its own (queueEnd)`,
         'true/queueEnd/false/null/false', `${r.queueCompleted}/${r.reason}/${r.processing}/${r.parkedAfter}/${r.pausedUntilReset}`);
 }
