@@ -388,3 +388,16 @@ switch at its default, nothing calls either search:
   `75a3c41f`; identity block `3a48647f`.
 - If the user flips `GHOST_SEARCH_BUCKETS`, nothing committed moves (D4), so nothing needs re-pinning. The measurement
   argues against flipping it.
+
+## Harvest note (planner, on main 1ef20d8b44)
+
+- **Residue 2 is resolved: the shove is fidelity wave 13's bomb lobber, not a new mechanic.** Measured at the harvest:
+  `d1-378-base-sword.tape.json` replayed through the model at `1ef20d8b44` (`bombPusherLive` ON) stands at
+  (280.0835…, 216.232…) to t1153, and at t1154 sits at x = 276.6877726065641, the game's value in
+  `d1-378-sword-control-game.txt` to the last digit (dx −3.3958). The full tape then throws at t1154 on the camera-shake
+  band, which fits legs 378/381 now refusing at the hold by name (wave 13). This slice's base, `5b92583a7f`, predates
+  `bombPusherLive`, so the model then had no emitter.
+- The D1 table was measured at `5b92583a7f`. With wave 13's `forcedHits` and `bombPusherLive` ON, the L40 r0c53 rows
+  (376–381) are expected to differ; the ghost-vs-sword verdicts that this report hands over (the kill rung's weapon
+  gate) do not depend on them.
+- Residue 3 (the ghost rope arm's test count) is queued in fidelity's wave 14.
