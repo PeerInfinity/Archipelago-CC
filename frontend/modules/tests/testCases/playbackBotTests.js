@@ -375,7 +375,26 @@ async function playbackBotLoopModeJtaTest(testController) {
   }
 }
 
-async function playbackBotLoopModeWorld(testController, { quotas, start, seed, solvers, watchPanel, itemPool }) {
+/**
+ * ⛓ jta-loop-mode — a JtA-only world whose loops START in a JtA zone (the tutorial's shape): three zones, so a hidden
+ * task a Boss unlocks (zone 2's Save the Village) is among the targets. Each loop's walk starts in the region already loaded (no loadRegion
+ * resumes the clock), a loop that ends with its queue resets the run, and a task unlocked mid-game joins the zone's
+ * automation priorities — without any one of them the bot never finishes (jta-loop-mode A–C, 2026-10-12).
+ */
+async function playbackBotLoopModeJtaStartTest(testController) {
+  const before = getJtaEmitZoneLocations();
+  setJtaEmitZoneLocations(true);
+  try {
+    return await playbackBotLoopModeWorld(testController, {
+      quotas: { jta: 3 }, start: 'jta', seed: 3, solvers: null, watchPanel: null,
+      itemPool: { victory: 1 }, budgetMs: 180000,
+    });
+  } finally {
+    setJtaEmitZoneLocations(before);
+  }
+}
+
+async function playbackBotLoopModeWorld(testController, { quotas, start, seed, solvers, watchPanel, itemPool, budgetMs = 120000 }) {
   const api = (mod, fn) => centralRegistry.getPublicFunction(mod, fn);
   const loopModeOn = () => api('loops', 'isLoopModeActive')?.() === true;
   testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
@@ -433,7 +452,7 @@ async function playbackBotLoopModeWorld(testController, { quotas, start, seed, s
     trace.push(`start=${api('loops', 'getLoopStartRegion')?.()} here=${api('gameState', 'getCurrentRegion')?.()}`);
     await bot.play();
     const finished = await testController.pollForCondition(
-      () => (bot.getStatus() || '').startsWith('finished'), 'bot finishes the world in loop mode', 120000, 500);
+      () => (bot.getStatus() || '').startsWith('finished'), 'bot finishes the world in loop mode', budgetMs, 500);
     testController.eventBus.unsubscribe('gameState:regionChanged', onRC, 'tests');
     testController.eventBus.unsubscribe('loopState:actionCompleted', onAC, 'tests');
     if (!finished) testController.log(`TRACE ${JSON.stringify(trace.slice(0, 60))}`);
@@ -446,6 +465,18 @@ async function playbackBotLoopModeWorld(testController, { quotas, start, seed, s
         + `delegated=${!!loopState._delegatedAction} bot=${!!loopState._botExecutedAction} manual=${!!loopState._manualActionEntered} `
         + `mana=${api('gameState', 'getCurrentMana')?.()} here=${api('gameState', 'getCurrentRegion')?.()} `
         + `mode=${loopState.getBlockMode?.(cur?.sourceRegion, cur?.instanceNumber)}`);
+    }
+    if (!finished) {
+      try {
+        const { getJtaIframe } = await import('../../jtaSubstrateWrapper/test-helpers.js');
+        const w = getJtaIframe()?.contentWindow;
+        const fs = w?.getFullState?.();
+        const qc = w?.getQueueConfigs?.();
+        testController.log(`DIAG jta: paused=${w?.isGameLoopPaused?.()} auto=${w?.getAutomationMode?.()} instant=${w?.isInstantMode?.()} `
+          + `energy=${fs?.currentEnergy}/${fs?.maxEnergy} latch=${fs?.isInEnergyReset} resets=${fs?.energyResetCount} zone=${fs?.currentZone} `
+          + `active=${fs?.activeTaskId} perks=${JSON.stringify(fs?.perks)} tasks=${JSON.stringify(fs?.tasks)} `
+          + `prios=${JSON.stringify(qc)?.slice(0, 1500)}`);
+      } catch (e) { testController.log(`DIAG jta failed: ${e}`); }
     }
     const runner = bot.getLoopRunner?.();
     testController.reportCondition(
@@ -498,6 +529,17 @@ registerTest({
     'Generates a small loop-mode world with JtA zones (locations on) and a maze region and presses the bot\'s Play: '
     + 'a target in a JtA zone is a pass-through loop whose Bot walk lets the zone\'s automation take the check.',
   testFunction: playbackBotLoopModeJtaTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+registerTest({
+  id: 'playback-bot-loop-mode-jta-start',
+  name: 'Playback Bot: Loop mode in a JtA-only world that starts in a JtA zone',
+  description:
+    'Generates a three-zone JtA world whose loops start in a JtA zone and presses the bot\'s Play: each loop is a '
+    + 'pass-through whose Bot walk plays the zone, until every sphere-log location is checked.',
+  testFunction: playbackBotLoopModeJtaStartTest,
   category: 'Playback Bot',
   enabled: false,
 });

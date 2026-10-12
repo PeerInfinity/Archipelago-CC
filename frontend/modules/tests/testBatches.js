@@ -54,6 +54,14 @@ export const TEST_BATCHES = Object.freeze({
         // unaffected (the JS page draws no WebGPU).
         webgpu: true,
     }),
+    'playback-bot': Object.freeze({
+        description:
+            'The Playback Bot rows: generated worlds played through to the end, '
+            + 'Loop mode included (the JtA loop-mode rows are minutes of game '
+            + 'between them). Split from fast on 2026-10-12, when the JtA rows '
+            + 'took fast to 80 % of its budget. On push.',
+        categories: Object.freeze(['Playback Bot']),
+    }),
     apworld: Object.freeze({
         description:
             'The apworld editor rows. Over half of the substrate roster, so '

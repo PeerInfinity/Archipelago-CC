@@ -65,6 +65,12 @@ describe('testBatches', () => {
         }
     });
 
+    it('playback-bot claims the Playback Bot rows, on push', () => {
+        expect(categoryInBatch('Playback Bot', 'playback-bot')).toBe(true);
+        expect(categoryInBatch('Playback Bot', 'fast')).toBe(false);
+        expect(listOnPushBatches()).toContain('playback-bot');
+    });
+
     it('seedling-js claims the Seedling JS runtime rows, on push', () => {
         expect(categoryInBatch('Seedling JS runtime', 'seedling-js')).toBe(true);
         expect(categoryInBatch('Seedling JS runtime', 'fast')).toBe(false);

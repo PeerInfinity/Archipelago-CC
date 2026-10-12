@@ -1799,9 +1799,15 @@
         },
         {
             "id": "playback-bot-loop-mode-jta",
-            "enabled": false,
+            "enabled": true,
             "category": "Playback Bot",
-            "_comment": "loop-mode-bot S6: a generated loop-mode world with JtA zones (locations on) + a maze region; JtA targets are pass-through loops (⚖ the zone's own automation takes the check). DISABLED (2026-10-12): measured 584 pass loops in 120 s with region_1_0__10 never taken by the automation (11–16 were) — open with the JtA session."
+            "_comment": "loop-mode-bot S6: a generated loop-mode world with JtA zones (locations on) + a maze region; JtA targets are pass-through loops (⚖ the zone's own automation takes the check). Re-enabled by jta-loop-mode (2026-10-12) once the Travel check landed before its regionMove (44bb4af629)."
+        },
+        {
+            "id": "playback-bot-loop-mode-jta-start",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "jta-loop-mode (2026-10-12): a three-zone JtA-only world starting in a JtA zone (the procgen-loop-mode-jta tutorial's shape)."
         }
     ]
 }
