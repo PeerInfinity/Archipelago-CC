@@ -17,7 +17,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
-import { CONTACT_READING_LAG, iframeLapse, projectedHitsTimer, strikeCandidates, vetoedInRect } from './strikePolicy.js';
+import { CONTACT_READING_LAG, IFRAME_LAPSE_SPARE_TESTS, iframeLapse, projectedHitsTimer, strikeCandidates, vetoedInRect }
+    from './strikePolicy.js';
 import { SLASH_HIT_TICKS, SLASH_SCALE_NORMAL } from './solverView.js';
 import { atlasLevelSource } from './levelSource.js';
 import { buildLevelWorld, postFallRockOf } from './levelWorld.js';
@@ -47,15 +48,18 @@ describe('L74LEG624 D3 — `iframeLapse`: the window reaches the lapse, derived 
         expect(iframeLapse(5, 83)).toEqual({ hitsTimer: 5, firstTest: 3, firstTick: 87 });
         expect(iframeLapse(4, 84)).toEqual({ hitsTimer: 4, firstTest: 2, firstTick: 87 });
     });
-    it('an aim admits a reading up to SLASH_HIT_TICKS + 2, a press on this tick up to SLASH_HIT_TICKS + 1', () => {
-        const aimMax = SLASH_HIT_TICKS + CONTACT_READING_LAG + 1;
-        expect(iframeLapse(aimMax, 0)).toMatchObject({ firstTest: SLASH_HIT_TICKS });
-        expect(iframeLapse(aimMax + 1, 0)).toBeNull();
-        expect(iframeLapse(aimMax - 1, 0, 0)).toMatchObject({ firstTest: SLASH_HIT_TICKS });
+    it('one spare test: an aim admits a reading ≤ 6 (lapse on test 4 of 5), a press on this tick ≤ 5', () => {
+        expect(IFRAME_LAPSE_SPARE_TESTS).toBe(1);
+        const last = SLASH_HIT_TICKS - IFRAME_LAPSE_SPARE_TESTS;
+        const aimMax = last + CONTACT_READING_LAG + 1;
+        expect(aimMax).toBe(6);
+        expect(iframeLapse(aimMax, 0)).toMatchObject({ firstTest: last });
+        expect(iframeLapse(aimMax + 1, 0)).toBeNull(); // L6: reading 7 lands nothing on the game's drain
+        expect(iframeLapse(aimMax - 1, 0, 0)).toMatchObject({ firstTest: last });
         expect(iframeLapse(aimMax, 0, 0)).toBeNull();
-        // one derivation: the last test's projection is ≤ 0 exactly when admitted
+        // one derivation: admitted exactly when the projection at test `last` is ≤ 0
         for (let r = 1; r <= 12; r += 1) {
-            expect(iframeLapse(r, 0) !== null).toBe(projectedHitsTimer(r, SLASH_HIT_TICKS) <= 0);
+            expect(iframeLapse(r, 0) !== null).toBe(projectedHitsTimer(r, last) <= 0);
         }
     });
 });
@@ -79,7 +83,7 @@ describe('L74LEG624 D3 — `strikeCandidates` under the switch', () => {
             const r = ask(body());
             expect(r.chosen.map((c) => c.id)).toEqual(['lavarunner@0,0']);
             expect(r.chosen[0].iframeLapse).toEqual({ hitsTimer: 4, firstTest: 2, firstTick: 87 });
-            expect(ask(body({ hitsTimer: 8 })).chosen).toEqual([]);
+            expect(ask(body({ hitsTimer: 7 })).chosen).toEqual([]);
         });
     });
     it('ON: the `owed` rule still holds, and a body in its death (`spent`) is refused at any reading', () => {
@@ -99,7 +103,9 @@ describe('L74LEG624 D3 — `strikeCandidates` under the switch', () => {
         });
         withContactFidelity({ strikeIframeLapse: true }, () => {
             expect(vetoedInRect(player, [bulb], 0, SLASH_SCALE_NORMAL, veto)).toMatchObject({ id: 'bulb@0,0' });
-            expect(vetoedInRect(player, [{ ...bulb, hitsTimer: 9 }], 0, SLASH_SCALE_NORMAL, veto)).toBeNull();
+            // the veto takes no spare test: a lapse on the window's last test is still a possible death
+            expect(vetoedInRect(player, [{ ...bulb, hitsTimer: 7 }], 0, SLASH_SCALE_NORMAL, veto)).toMatchObject({ id: 'bulb@0,0' });
+            expect(vetoedInRect(player, [{ ...bulb, hitsTimer: 8 }], 0, SLASH_SCALE_NORMAL, veto)).toBeNull();
         });
     });
 });
