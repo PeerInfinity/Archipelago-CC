@@ -21,10 +21,12 @@
  *   node scripts/procgen/probe-seedling-u9-shield-mobiles.mjs --tape=u9-shield-bob-shove --class=Bob
  *   … --out=<file.json>    write every sample with both readings
  *   … --upto=<tick>        compare only samples at or before this tick
+ *   … --tape-file=<path>   a tape outside the roster (a witness kept beside its samples; hammer-phase D's
+ *                          `fixtures/hammer-d-ghostwall-witness/`); `--tape` then only names it in the output
  */
 
 import { chromium } from 'playwright';
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
@@ -35,9 +37,10 @@ import { argvHelp } from './argvHelp.js';
 argvHelp(import.meta.url);
 
 const arg = (k) => process.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3) ?? null;
-const TAPE = arg('tape');
+const TAPE_FILE = arg('tape-file');
+const TAPE = arg('tape') ?? TAPE_FILE;
 if (!TAPE) {
-    console.error('probe-seedling-u9-shield-mobiles: --tape=<fixture name> is required');
+    console.error('probe-seedling-u9-shield-mobiles: --tape=<fixture name> (or --tape-file=<path>) is required');
     process.exit(2);
 }
 const CLASS = arg('class') ?? 'Bob';
@@ -59,11 +62,11 @@ const PAGE_URL = `http://localhost:${process.env.SEEDLING_PORT || '8000'}`
     + `/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 
 const { loadTape } = await import(join(MODULE, 'fixtures', 'index.js'));
-const { gameVisibleTape } = await import(join(MODULE, 'tapeFormat.js'));
+const { gameVisibleTape, parseTape } = await import(join(MODULE, 'tapeFormat.js'));
 const { createTapeStepper } = await import(join(MODULE, 'tapeRunner.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 
-const tape = loadTape(TAPE);
+const tape = TAPE_FILE ? parseTape(readFileSync(TAPE_FILE, 'utf8')) : loadTape(TAPE);
 
 // ── the MODEL: the run's own chaser state after each tick (index 0 = boot) ──
 const col = [];
@@ -154,6 +157,19 @@ for (let shift = -3; shift <= 3; shift += 1) {
     if (ok) fits.push(shift);
 }
 const calibrated = fits.length === 1 && fits[0] === 0;
+// the first sample shift 0 does not fit, named (a calibration FAIL otherwise says nothing about where)
+const misses0 = samples.filter((f) => {
+    const m = col[tickOf(f)];
+    const p = playerOf(f);
+    return !(m && Math.abs(m.px - p.x) < 1e-9 && Math.abs(m.py - p.y) < 1e-9);
+});
+const miss0 = misses0[0];
+if (miss0) {
+    console.log(`      shift 0 misses ${misses0.length} of ${samples.length} sample(s): t ${misses0.map(tickOf).join(', ')}`);
+    const m = col[tickOf(miss0)];
+    const p = playerOf(miss0);
+    console.log(`      shift 0's first miss: t ${tickOf(miss0)} game player (${p.x}, ${p.y}) model (${m?.px}, ${m?.py})`);
+}
 console.log(`${calibrated ? 'PASS' : 'FAIL'}: the sample clock is the model's — `
     + `${samples.length} sampled tick(s) inside the tape; shifts that fit every player x: `
     + `[${fits.join(', ')}] (must be exactly [0])`);

@@ -1,0 +1,14 @@
+# box lock: TAKEN by probe-seedling-dash-window.mjs (browser, pid 5296) — head 5b92583a7, 1 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the tape ran to its end on the game
+FAIL: the game's `Bot.slashTests` is the model's cumulative sword hit-test count at every sampled tick — 583 sampled tick(s) of 591; first off at obs 185: game 7, model 2 (5 tick(s) off)
+ROW arrows: 0 of 583 sampled tick(s) differ
+PASS: the drained stream is the model's, tick for tick — 591 observations, transitions []
+ROW game: hits 0, hits_timer 0, level 39, slash {"hits":65,"tests":14}, cleared [{"tag":0,"level":5},{"tag":0,"level":8},{"tag":1,"level":8},{"tag":0,"level":10},{"tag":8,"level":39},{"tag":9,"level":39},{"tag":10,"level":39}]
+wrote CC/docs/cloud-reports/seedling-hammer-d-evidence/d2-game-slashtests.json
+1 CHECK(S) FAILED
+# box lock: TAKEN by probe-seedling-u9-shield-mobiles.mjs (browser, pid 5418) — head 5b92583a7, 1 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+FAIL: the sample clock is the model's — 591 sampled tick(s) inside the tape; shifts that fit every player x: [] (must be exactly [0])
+PASS: the Spinner's position, velocity, hits and hits_timer are the model's at every sampled tick, and it exists exactly when the model's does — 1773 comparison(s), worst |Δ| 2.842170943040401e-14
+wrote CC/docs/cloud-reports/seedling-hammer-d-evidence/d2-game-bodies.json
