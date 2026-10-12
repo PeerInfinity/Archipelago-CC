@@ -3818,8 +3818,9 @@ export function arrangeSpiralPlan(config) {
 // last. Now it works like sphere growth: plan the items first, pin the goal to
 // the LAST region in spiral order that can hold an item, then build each region
 // from the items it was dealt. ⚖ The deal is SPREAD EVENLY: the regular items,
-// in seeded-shuffled order, go to evenly spaced item-holding cells, at most
-// maxItemsPerRegion each.
+// in seeded-shuffled order, go to evenly spaced item-holding cells starting at
+// the first (item k of R → holder ⌊k·H/R⌋, or the next with room), at most
+// maxItemsPerRegion each — so a lone item lands in the first holder.
 
 /**
  * How many pool items a spiral cell of `substrate` can hold, as its `ordinal`th
@@ -3881,11 +3882,15 @@ export function planSpiralItems({ sequence, config, rng }) {
     const maxItemsPerRegion = growthParams.maxItemsPerRegion ?? 2;
     const itemLib = config.itemLib ?? DEFAULT_ITEMS;
     const pool = goalItemPool(config.itemPool ?? {}, itemLib, false);
-    const regular = [];
+    const remaining = [];
     for (const [id, count] of Object.entries(pool)) {
-        for (let k = 0; k < Number(count); k++) regular.push(id);
+        for (let k = 0; k < Number(count); k++) remaining.push(id);
     }
-    rng.shuffle(regular);
+    // The seeded order: pick uniformly from what is left, one draw per item —
+    // ScenarioPool.planPlacement's own draw, so a world whose pool the old
+    // per-region deal emptied into its first holder (one item) keeps its bytes.
+    const regular = [];
+    while (remaining.length) regular.push(remaining.splice(Math.floor(rng.next() * remaining.length), 1)[0]);
 
     const ordinals = {};
     const caps = sequence.map((sub) => {
@@ -3911,7 +3916,7 @@ export function planSpiralItems({ sequence, config, rng }) {
             + ' — raise maxItemsPerRegion, add regions, or take items out of the pool');
     }
     regular.forEach((item, k) => {
-        const target = Math.floor(((k + 0.5) * holders.length) / regular.length);
+        const target = Math.floor((k * holders.length) / regular.length);
         let pick = -1;
         for (let step = 0; step < holders.length; step++) {
             const i = holders[(target + step) % holders.length];

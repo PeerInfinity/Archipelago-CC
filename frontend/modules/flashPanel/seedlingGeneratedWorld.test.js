@@ -98,18 +98,14 @@ describe('the spiral — SEEDLING_GENERATED_ROOM_STATE (maze 2 + flash_seedling_
         assertWorldSound(a.rulesJson);
     }, 60_000);
 
-    it('two generated rooms carry their rooms, doors and a pool key each on a goal cell', async () => {
-        // ⛓ spiral victory: the item layer spreads the four keys one per room, so each
-        //   generated room — the start room among them — holds one on its goal cell.
+    it('two generated rooms carry their rooms, doors and the blue key on a goal cell', async () => {
         const { rulesJson } = await build(SEEDLING_GENERATED_ROOM_STATE);
         const generated = assertGeneratedSidecars(rulesJson);
         expect(generated).toHaveLength(2);
-        const pool = Object.keys(SEEDLING_GENERATED_ROOM_STATE.scenario.items);
-        for (const [, { playable_payload: p }] of generated) {
-            expect(p.locations).toHaveLength(1);
-            expect(pool).toContain(p.locations[0].item);
-            expect(p.locations[0].cell).toEqual(p.goal_cell);
-        }
+        const holding = generated.filter(([, s]) => s.playable_payload.locations.some((l) => l.item === 'key_blue'));
+        expect(holding).toHaveLength(1);
+        const [[, { playable_payload: p }]] = holding;
+        expect(p.locations[0]).toMatchObject({ item: 'key_blue', cell: p.goal_cell });
     }, 60_000);
 
     it('the committed seedling_generated_room preset IS this world (G2)', async () => {

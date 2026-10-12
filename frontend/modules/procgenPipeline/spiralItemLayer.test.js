@@ -70,11 +70,16 @@ describe('the spiral item layer', () => {
         expect(goalCells).toEqual([holders[holders.length - 1]]);
         // The scenario's `victory` became the one goal item.
         expect(plan.items.flat().filter((it) => it === 'victory')).toEqual([]);
-        // 3 regular items over 6 holders: every other holder, one each.
+        // 3 regular items over 6 holders: every other holder from the first, one each.
         const regularCells = plan.items.map((list, i) => (list.some((it) => it !== GOAL_ITEM) ? i : -1))
             .filter((i) => i >= 0);
-        expect(regularCells).toEqual([holders[1], holders[3], holders[5]]);
+        expect(regularCells).toEqual([holders[0], holders[2], holders[4]]);
         expect(plan.items[plan.sequence.indexOf('bounce')]).toEqual([]);
+    });
+
+    it('a lone item lands in the first holder', () => {
+        const plan = arrangeSpiralPlan(config({ quotas: { maze: 4 }, items: { key_blue: 1 } }));
+        expect(plan.items).toEqual([['key_blue'], [], [], []]);
     });
 
     it('never deals a cell more than maxItemsPerRegion', () => {
