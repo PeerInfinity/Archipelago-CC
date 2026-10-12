@@ -291,9 +291,10 @@ export const CONTACT_FIDELITY = {
      *
      * OFF: the blast at the Number point with r 15.6, as before. ON: the truncated point with r 15. Measured over all
      * 277 committed tapes the runner plays: four shot blasts (`r6-totem-kill`/`-control` t387, at (122|182, 379.05)),
-     * the player 58–77 px away; no verdict differs.
+     * the player 58–77 px away; no verdict differs. ⚖ ON since the wave-14 flip, user 2026-10-12 ("Both ON";
+     * byte-inert on tapes and sweeps, CI 38284542195).
      */
-    totemShotBlastInt: false,
+    totemShotBlastInt: true,
     /**
      * fidelity MOVINGWAIT D4 — A DEATH REBOOT SETTLES THE CAMERA THROUGH THE SHAKE (`levelRun.settleCameraForLoad`).
      *
@@ -303,9 +304,9 @@ export const CONTACT_FIDELITY = {
      * OFF: every load drains the shake before its settle frames and the camera is exact. ON: a death reboot carries
      * the killing hit's shake into its settle frames as the shake band (⚖ the jiggle's VALUE is never modelled).
      * Measured on the game: BOMBPUSHER's L42 damage walk respawns at t1221 with `shake` 4 and settles at (777, 0)
-     * where the drained settle says (776, 0).
+     * where the drained settle says (776, 0). ⚖ ON since the wave-14 flip, user 2026-10-12 ("Both ON").
      */
-    rebootShake: false,
+    rebootShake: true,
     /**
      * fidelity L74LEG624 D3 — STRIKE_IFRAME_LAPSE: A PRESS IS GATED ON ITS HIT TESTS, NOT ON ITS PRESS TICK.
      *
@@ -318,10 +319,11 @@ export const CONTACT_FIDELITY = {
      * a press at t84/t85 kills it at t87 with no player hit, game and model at 0 px; the policy's own press goes in
      * at t88 and the body hits the player at t87. ON: a body is admitted when `projectedHitsTimer` at the press's
      * LAST test tick is ≤ 0 (`strikePolicy.iframeLapsesInWindow`); the `owed` rule and `ORDINARY_SWING_PERIOD`'s dash
-     * refusal are untouched. OFF: the `hitsTimer > 0` refusal, byte-identical. ⛔ OFF by default: it moves strikes
-     * roster-wide, and the flip is the user's licence (`SEEDLING_STRIKE_IFRAME_LAPSE=0|1` for a node measurement).
+     * refusal are untouched. OFF: the `hitsTimer > 0` refusal, byte-identical. ⚖ ON since the wave-14 flip, user
+     * 2026-10-12 ("All three ON", with `fallRockPostFall` and `forecastSpeedByTerrain`: CI sweep 38289124638 solves
+     * L74 leg 624); it moves strikes roster-wide (fidelity FLIP14's re-pins). `SEEDLING_STRIKE_IFRAME_LAPSE=0` opts out.
      */
-    strikeIframeLapse: false,
+    strikeIframeLapse: true,
     /**
      * fidelity L74LEG624 D2 — FALLROCK_POSTFALL: A CLEARED NON-ARENA `FallRock` IS BUILT AS THE GAME LEAVES IT.
      *
@@ -333,9 +335,9 @@ export const CONTACT_FIDELITY = {
      * rock is built fallen — a 16x16 Solid at its cell, `_active` (a publication cannot drop it again), on the run's
      * `fallenRocks` arm (`levelWorld` marks the roster row `postFall`, `levelRun.fallRockStateFor` builds it landed).
      * `FallRockLarge` stays refused outside the arena (L82's `bossrock`). OFF: the refusal, byte-identical.
-     * ⛔ OFF by default (`SEEDLING_FALLROCK_POSTFALL=0|1` for a node measurement).
+     * ⚖ ON since the wave-14 flip, user 2026-10-12 ("All three ON"); `SEEDLING_FALLROCK_POSTFALL=0` opts out.
      */
-    fallRockPostFall: false,
+    fallRockPostFall: true,
     /**
      * fidelity L74LEG624 D4 — THE CHASER FORECAST RE-CHOOSES A LAVARUNNER'S SPEED BY TERRAIN, as the live run does.
      *
@@ -344,9 +346,10 @@ export const CONTACT_FIDELITY = {
      * K2 put the tail in `levelRun.stepChasersNow` and not in `chaserForecastNow`, so a preview's lavarunner kept the
      * speed it was seeded with across lava and water. Measured on L74 leg 624: the detour's certified preview and its
      * drive part at t53 (`lavarunner@208,96`, 243.26 vs 242.2 px); the drive is the game's (0 px). ON: the clone runs
-     * the same tail. OFF: as before (`SEEDLING_FORECAST_SPEED_BY_TERRAIN=0|1` for a node measurement).
+     * the same tail. OFF: as before. ⚖ ON since the wave-14 flip, user 2026-10-12 ("All three ON");
+     * `SEEDLING_FORECAST_SPEED_BY_TERRAIN=0` opts out.
      */
-    forecastSpeedByTerrain: false,
+    forecastSpeedByTerrain: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

@@ -20,6 +20,7 @@
  */
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 
 import { loadTape } from './fixtures/index.js';
 import { stagingFromTape, createRunForStaging } from './tapeRunner.js';
@@ -214,7 +215,10 @@ describe('deriveMinimalSets — the derivation question, with its caveats visibl
 
 describe('the game witness — a door-built arrival\'s `can`, recorded on the game (D3)', () => {
     // ⛓ DASHFLIP: the default returned to the solver's `all`, so this row names `none`.
-    it('`cancross-l16-sword-none` IS canCross\'s `none` witness for L16 → L17 with the Sword, byte for byte', () => {
+    // ⛓ fidelity FLIP14: the witness was planned and recorded on the game under the pre-flip strike gate, so this row runs
+    // `strikeIframeLapse` OFF; ON (⚖ the wave-14 flip, user 2026-10-12) the plan is 222 t, rungs ['avoid'] (no
+    // PULL climb), 0 hits — unwitnessed (FLIP14 report, D1).
+    it('`cancross-l16-sword-none` IS canCross\'s `none` witness for L16 → L17 with the Sword, byte for byte', () => withContactFidelity({ strikeIframeLapse: false }, () => {
         const r = canCross({ level: 16, exit: 17, arrival: { from: 15 }, inventory: ['sword'],
             dashMode: 'none', name: 'cancross-l16-sword-none' });
         expect(r.verdict).toBe('can');
@@ -222,7 +226,7 @@ describe('the game witness — a door-built arrival\'s `can`, recorded on the ga
         const path = new URL('./fixtures/tapes/cancross-l16-sword-none.json', import.meta.url);
         expect(`${JSON.stringify(r.witness.tape, null, 4)}\n`).toBe(readFileSync(path, 'utf8'));
         expect(r.witness.replayed).toEqual({ observations: 207, landed: 17, agrees: true });
-    });
+    }));
 
     /**
      * ⛓ SEEDLING FIDELITY DASHFLIP — the DEFAULT is the solver's `all` again, and its
@@ -230,7 +234,9 @@ describe('the game witness — a door-built arrival\'s `can`, recorded on the ga
      * DASH D2's `--record`), byte for byte but its prose. At the legacy dash window
      * this plan was the refuted 111 t.
      */
-    it('the default dash mode is the solver\'s, and its L16 → L17 plan IS `dash-l16-sword-all`, every field but its prose', () => {
+    // ⛓ fidelity FLIP14: as above — `dash-l16-sword-all` was recorded under the pre-flip strike gate; `strikeIframeLapse` OFF.
+    // ON the default-dash plan is 124 t, rungs ['avoid'], 0 hits — unwitnessed.
+    it('the default dash mode is the solver\'s, and its L16 → L17 plan IS `dash-l16-sword-all`, every field but its prose', () => withContactFidelity({ strikeIframeLapse: false }, () => {
         expect(CAN_CROSS_DASH_MODE).toBe(DEFAULT_DASH_MODE);
         expect(CAN_CROSS_DASH_MODE).toBe('all');
         const r = canCross({ level: 16, exit: 17, arrival: { from: 15 }, inventory: ['sword'],
@@ -245,5 +251,5 @@ describe('the game witness — a door-built arrival\'s `can`, recorded on the ga
         delete planned.description;
         expect(JSON.stringify(planned, null, 4)).toBe(JSON.stringify(committed, null, 4));
         expect(r.witness.replayed).toEqual({ observations: 118, landed: 17, agrees: true });
-    });
+    }));
 });

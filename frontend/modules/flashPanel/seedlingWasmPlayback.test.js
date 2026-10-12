@@ -24,6 +24,7 @@ import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.j
 import { createInPlaceProduceService, mountedRecordsOf } from '../seedlingDemo/wasmWalkTape.js';
 import { assembleGeneratedSeedlingSet } from '../seedlingDemo/seedlingGeneratedSet.js';
 import { AXE_DODGE_ASK_PER_PREVIEW } from '../seedlingDemo/solverBot.js';
+import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
 import { AXE_DODGE_ASK_PER_PREVIEW_DEFAULT, applyAxeDodgeAsk, formatAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskHook.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -1852,7 +1853,9 @@ describe('⛓ L74 SILENT STALL — a throw the room build makes is a NAMED failu
         return records;
     };
 
-    it('the held arrival\'s room build throws → onFailed carries the MODEL\'s refusal text; the engine is idle, no timer left', () => {
+    // ⛓ fidelity FLIP14: the room build's fallrock refusal is `fallRockPostFall`'s OFF arm (⚖ ON since the wave-14
+    // flip, user 2026-10-12: ON the rock is built fallen and nothing throws), so this control runs OFF, whole.
+    it('the held arrival\'s room build throws → onFailed carries the MODEL\'s refusal text; the engine is idle, no timer left', () => withContactFidelity({ fallRockPostFall: false }, () => {
         const e = engineOver(A, { records: withRock() });
         e.game.cleared = [{ level: HOUSE, tag: ROCK_TAG }];
         expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
@@ -1864,7 +1867,7 @@ describe('⛓ L74 SILENT STALL — a throw the room build makes is a NAMED failu
         expect(e.engine.status().phase).toBe('idle');
         expect(e.engine.stats.history.at(-1)).toMatchObject({ outcome: 'failed' });
         expect(e.timers.pending).toBe(0);
-    });
+    }));
 
     it('any OTHER throw inside an engine timer callback is a named failure too (the safety net under every scheduler)', () => {
         const e = engineOver(A);
