@@ -81,6 +81,50 @@ describe(`WASM EQUIPS — the BURN plan (route step 93) ships its ${WITNESS.equi
     it('an equip past the tape\'s last tick is refused by name (it would never fire)', () => {
         expect(() => shippedTape({ staging: STAGING, keys: PLAN.solution.slice(0, 60), equips: [{ t: 60, slot: 1 }] }))
             .toThrow(/an equip at tick 60 of a 60-tick tape never fires/);
+        expect(() => shippedTape({ staging: STAGING, keys: PLAN.solution.slice(0, 60), equips: [{ t: 61, slot: 1 }] }))
+            .toThrow(/an equip at tick 61 of a 60-tick tape never fires/);
+    });
+});
+
+/**
+ * ⛓ TRAILING EQUIP — sweep leg 282 (L24:0, the burnabletree EVENT goal, `clear-tag`): the burn is the whole goal, so
+ * BURN's sword re-select lands AFTER its last tick (equips [60,1],[114,0] over 114 ticks) and the shipped tape refused
+ * it ("an equip at tick 114 of a 114-tick tape never fires"). `solveFromTape` now appends ONE idle tick the model
+ * plays, so the tape fires the equip and the game ends on the sword's slot; the JS page plays the same plan.
+ */
+describe('⛓ TRAILING EQUIP — L24:0\'s burn (sweep leg 282) ends on the sword\'s slot', () => {
+    const CLEAR = { kind: 'clear-tag', tag: { level: 24, tag: 0 }, at: { x: 32, y: 128 }, obstacle: 'burnabletree@32,128' };
+    const BURN = solveFromTape(arrivalSolveRequest({ staging: STAGING, solverGoal: CLEAR, levelSource: SRC, records: new Map(),
+        scratchPersistence: true }));
+
+    it('the plan selects the sword at its last observation and carries ONE idle tick for it (115 ticks, not 114)', () => {
+        expect(BURN.verbs).toEqual(['burn']);
+        expect([...BURN.equipsAt]).toEqual([[60, 1], [114, 0]]);
+        expect(BURN.trailingEquip).toBe(true);
+        expect(BURN.solution).toHaveLength(115);
+        expect(BURN.solution.at(-1).size).toBe(0);
+        expect(BURN.expected).toHaveLength(116); // the idle tick's row is the model's, checked like any other
+    });
+
+    it('the shipped tape fires the equip on its idle tick: the game replays the plan row for row and ends on slot 0', () => {
+        const tape = ship(BURN.solution, tapeEquips(BURN.equipsAt));
+        expect(tape.tick_count).toBe(115);
+        expect(tape.equips).toEqual([{ t: 60, slot: 1 }, { t: 114, slot: 0 }]);
+        const game = createRunForStaging(STAGING, SRC, { scratchPersistence: true });
+        expect(playTape(game, tape)).toEqual(BURN.expected);
+        expect(game.primary).toBe(0);
+        expect(game.ledger('earnedClears')).toContainEqual(expect.objectContaining({ level: 24, tag: 0 }));
+    });
+
+    it('MUTANT (the idle tick dropped): the tape is refused by name, as it was before', () => {
+        expect(() => ship(BURN.solution.slice(0, -1), tapeEquips(BURN.equipsAt)))
+            .toThrow(/an equip at tick 114 of a 114-tick tape never fires/);
+    });
+
+    it('a plan whose last selection precedes its last tick gets no idle tick (the reach-exit burn: 114 < its length)', () => {
+        expect(PLAN.trailingEquip).toBeUndefined();
+        expect(PLAN.solution.length).toBeGreaterThan(114);
+        expect(PLAN.solution.length).toBe(WITNESS.tick_count);
     });
 });
 

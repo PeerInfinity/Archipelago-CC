@@ -649,8 +649,19 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
         throw new ShadowDivergence(`the solve returned ${solution.length} key set(s) but the shadow advanced `
             + `${expected.length - 1} time(s) — the expected trajectory cannot be checked`);
     }
+    // ⛓ TRAILING EQUIP — a selection AFTER the last tick (BURN's sword re-select when the burn is the whole goal:
+    // L24:0's clear-tag, equips [60,1],[114,0] over 114 ticks) is made on an observation no tick follows, so a
+    // tape never fires it and the game would end on the wrong slot. The PLAN gets one idle tick the model plays
+    // (its row checked like any other), so the wasm tape and the JS page play the same plan and both end on the
+    // planned slot. `trailingEquip` names the tick for the JS walker, which settles a done goal before asking.
+    const trailingEquip = equipsAt.has(solution.length);
+    if (trailingEquip) {
+        run.advance(new Set());
+        solution.push(new Set());
+    }
     const verbs = [...new Set((out.trace?.rows ?? []).map((r) => r.strategy?.verb).filter(Boolean))].sort();
     return { solution, expected, equipsAt, equipItems, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode,
+        ...(trailingEquip ? { trailingEquip } : {}),
         // ⛓ SHOULD-STOP — `{tripped, first, sites}` when the pass's deadline tripped (named in the history), else null
         deadline: out.deadline ?? null,
         ...forcedHitFieldsOf(out) };
@@ -944,6 +955,14 @@ export function createRuntimeSolver({
         get solving() { return pending !== null; },
         /** Planned keys not yet played. */
         get remaining() { return plan ? plan.solution.length - plan.i : 0; },
+        /**
+         * ⛓ TRAILING EQUIP — true while `run`'s plan still owes its trailing equip tick (the idle tick
+         * `solveFromTape` appends for a selection after the last one): the walker plays it before settling
+         * a goal that is already done, so the page ends on the planned slot, as the wasm tape does.
+         */
+        owesTrailingTick(run) {
+            return Boolean(plan?.trailingEquip && plan.run === run && plan.i === plan.solution.length - 1);
+        },
         get stats() { return { ...stats, refutations: stats.refutations, current: refutations, lastRefutation, budgetWork: budget }; },
         /** ⛓ DETERMINISTIC BUDGET — one solve's budget, in work units (a test knob and the page's `?solverBudgetWork=`). */
         get budgetWork() { return budget; },

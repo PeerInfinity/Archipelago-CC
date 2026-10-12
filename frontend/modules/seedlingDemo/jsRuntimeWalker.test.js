@@ -225,6 +225,40 @@ describe('jsRuntimeWalker — an arrival inside a solid', () => {
     });
 });
 
+/**
+ * ⛓ TRAILING EQUIP — a goal already done whose solver plan still owes its trailing equip tick (`solveFromTape`'s idle
+ * tick for a selection after the last one) plays that tick before settling DONE: the page ends on the planned slot.
+ */
+describe('jsRuntimeWalker — a done goal plays the plan\'s trailing equip tick first', () => {
+    const IDLE = new Set();
+    const solverOwing = (owes) => ({ enabled: true, budgetWork: 0, keysFor: () => ({ held: IDLE }), cancel() {}, clear() {},
+        owesTrailingTick: () => owes.shift() ?? false });
+
+    it('owed: the idle tick is played (DRIVEN by the solver), then the goal settles DONE', () => {
+        const w = createRuntimeWalker({ apItemOf: () => ({ rect: { x: 64, y: 16, right: 72, bottom: 24 } }), isCollected: () => true,
+            solver: solverOwing([true]) });
+        const { rt } = started();
+        w.setGoal(AP_GOAL);
+        w.play();
+        expect(w.heldFor(rt.run)).toBe(IDLE);
+        expect(w.solverDriving).toBe(true);
+        expect(w.heldFor(rt.run)).toBeNull();
+        expect(w.state).toBe(WALK_STATES.DONE);
+    });
+
+    it('not owed (or no solver): a done goal settles DONE at once, as before', () => {
+        for (const solver of [solverOwing([]), null]) {
+            const w = createRuntimeWalker({ apItemOf: () => ({ rect: { x: 64, y: 16, right: 72, bottom: 24 } }), isCollected: () => true,
+                solver });
+            const { rt } = started();
+            w.setGoal(AP_GOAL);
+            w.play();
+            expect(w.heldFor(rt.run)).toBeNull();
+            expect(w.state).toBe(WALK_STATES.DONE);
+        }
+    });
+});
+
 describe('botDriverV2 — the two J2 lifts are inert for every existing caller', () => {
     it('driveStepHeld IS drive\'s choice: a hand loop over it emits drive\'s held sequence tick for tick', () => {
         const a = started().rt.run;

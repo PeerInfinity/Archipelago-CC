@@ -353,7 +353,8 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                 if (state !== WALK_STATES.WAITING) settle(WALK_STATES.WAITING, `the run is in level ${run.level}`);
                 return null;
             }
-            if (done(run)) { settle(WALK_STATES.DONE, null); return null; }
+            // ⛓ TRAILING EQUIP — a done goal whose plan still owes its trailing equip tick plays it first.
+            if (done(run) && !solver?.owesTrailingTick?.(run)) { settle(WALK_STATES.DONE, null); return null; }
             let r = resolve(run);
             if (r.refused) { settle(WALK_STATES.FAILED, r.refused); return null; }
             via = r.pit ? 'pit' : 'door';
