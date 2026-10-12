@@ -1,0 +1,66 @@
+{
+ "verdict": "SOLVED",
+ "ticks": 336,
+ "hits": 0,
+ "transitions": [
+  19
+ ],
+ "spinnerPressHits": [
+  {
+   "t": 37,
+   "level": 18,
+   "id": "spinner@48,96",
+   "weapon": "ghostsword",
+   "landed": true,
+   "killed": false,
+   "reach": 19.58731298325096,
+   "hits": 2,
+   "hitsTimer": 30,
+   "why": null
+  },
+  {
+   "t": 92,
+   "level": 18,
+   "id": "spinner@48,96",
+   "weapon": "ghostsword",
+   "landed": true,
+   "killed": true,
+   "reach": 20.43812669372479,
+   "hits": 4,
+   "hitsTimer": 30,
+   "why": null
+  },
+  {
+   "t": 113,
+   "level": 18,
+   "id": "spinner@112,48",
+   "weapon": "ghostsword",
+   "landed": true,
+   "killed": false,
+   "reach": 19.193553824682,
+   "hits": 2,
+   "hitsTimer": 30,
+   "why": null
+  },
+  {
+   "t": 159,
+   "level": 18,
+   "id": "spinner@112,48",
+   "weapon": "ghostsword",
+   "landed": true,
+   "killed": true,
+   "reach": 20.20009720091101,
+   "hits": 4,
+   "hitsTimer": 30,
+   "why": null
+  }
+ ],
+ "presses": 76,
+ "weapons": [
+  "ghostsword"
+ ],
+ "cycles": 5,
+ "tape": "r8-solve-18",
+ "ghost": true,
+ "seconds": 3.352
+}

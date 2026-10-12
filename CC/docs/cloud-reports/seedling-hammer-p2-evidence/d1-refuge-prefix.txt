@@ -1,0 +1,1 @@
+{"lens":[0,26,35,400,400,400,400,6,6,400,400,48],"firstKeys":[null,"up","up","left","right","left+up","right+up","down+left","down+right","left+up","right+up","up"],"pairs":66,"meanSharedPrefix":1.0757575757575757,"meanShorter":103.86363636363636}

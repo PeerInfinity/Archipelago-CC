@@ -1,0 +1,13 @@
+     ✓ ships ON (a cost change, not a behaviour change: no flip), and OFF is one call away 1ms
+     ✓ every box, in the list order, over random lattices (edges inclusive) 76ms
+     ✓ a list that is not row-major, or holds a non-finite coordinate, gets no index (the scan reads the whole list) 1ms
+     ✓ a line an earlier derivation asked is carried, and answers what the query answers 1ms
+     × a bag changed IN PLACE is a new book (the key is a copy): the line is asked again 11ms
+     ✓ a new bag value, or a new world, is a new book 0ms
+     × a bag that cannot be copied, or a run that refuses one, gets no book: every line is asked, nothing thrown 2ms
+     ✓ the kill-start derivation, then two refused ones on the same run (lines carried): the same answers  2004ms
+     ✓ r9-solve-18 at residue 5: the same keys, records and trace with P2 ON and OFF (P1 ON both), the levers exercised  6203ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/pressKillCost.test.js > strikeScanCost (P2) — the carried line book > a bag changed IN PLACE is a new book (the key is a copy): the line is asked again
+ FAIL  frontend/modules/seedlingDemo/pressKillCost.test.js > strikeScanCost (P2) — the carried line book > a bag that cannot be copied, or a run that refuses one, gets no book: every line is asked, nothing thrown
+      Tests  2 failed | 7 passed | 9 skipped (18)

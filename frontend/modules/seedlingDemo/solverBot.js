@@ -116,6 +116,8 @@ import {
     searchPressFor,
     // ⛓⛓⛓ hammer-phase P1: the press kill's exact caches (behind `PRESS_KILL_COST`, ON; OFF bypasses every one).
     PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
+    // ⛓⛓⛓ hammer-phase P2: the strike scan's two exact levers (behind `STRIKE_SCAN_COST`, ON; OFF bypasses both).
+    STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
@@ -9516,7 +9518,7 @@ function strikePressOf(run) {
  *
  * @returns {?{tag, at:{x, y}}} the first blocker, or null
  */
-function strikeLineBlocked(run, from, dir, forecast, i, lines = null) {
+function strikeLineBlocked(run, from, dir, forecast, i, lines = null, carried = null) {
     const press = strikePressOf(run);
     if (!press.lineOfSight) return null;
     const rect = press.rect(from.x, from.y, dir);
@@ -9524,9 +9526,9 @@ function strikeLineBlocked(run, from, dir, forecast, i, lines = null) {
         for (const r of forecast[i + k] ?? []) {
             if (!rectsOverlapLocal(rect, r)) continue;
             if (distanceRectPoint(from.x, from.y, r) > press.reach) continue;
-            const blocker = lines === null
+            const blocker = lines === null && carried === null
                 ? run.collideLineSolid(from.x, from.y, r.x + SPINNER.originX, r.y + SPINNER.originY)
-                : lineOnce(lines, run, from, r);
+                : lineOnce(lines, run, from, r, carried);
             if (blocker) return blocker;
         }
     }
@@ -9540,20 +9542,138 @@ function strikeLineBlocked(run, from, dir, forecast, i, lines = null) {
  * `run.collideLineSolid` cannot answer differently the second time. Keyed by the cell object and the row's rect object
  * (the forecast's rows are shared, `spinnerForecast`'s note), whose coordinates are the whole question.
  */
-function lineOnce(lines, run, from, r) {
-    let byRect = lines.get(from);
-    if (byRect === undefined) {
-        byRect = new Map();
-        lines.set(from, byRect);
+/** ⛓ hammer-phase P2: exported for `pressKillCost.test.js`, which drives the carried book's key with a hand-built run. */
+export function lineOnce(lines, run, from, r, carried = null) {
+    let byRect = null;
+    if (lines !== null) {
+        byRect = lines.get(from);
+        if (byRect === undefined) {
+            byRect = new Map();
+            lines.set(from, byRect);
+        }
+        if (byRect.has(r)) {
+            PRESS_KILL_COST_COUNTS.lineHit += 1;
+            return byRect.get(r);
+        }
+        PRESS_KILL_COST_COUNTS.lineMiss += 1;
     }
-    if (byRect.has(r)) {
-        PRESS_KILL_COST_COUNTS.lineHit += 1;
-        return byRect.get(r);
+    const toX = r.x + SPINNER.originX;
+    const toY = r.y + SPINNER.originY;
+    const book = carried === null ? null : carriedLineBook(carried);
+    let blocker;
+    if (book === null) {
+        blocker = run.collideLineSolid(from.x, from.y, toX, toY);
+    } else {
+        const key = `${Math.trunc(from.x)},${Math.trunc(from.y)},${Math.trunc(toX)},${Math.trunc(toY)}`;
+        if (book.has(key)) {
+            STRIKE_SCAN_COST_COUNTS.lineCarried += 1;
+            blocker = book.get(key);
+        } else {
+            STRIKE_SCAN_COST_COUNTS.lineAsked += 1;
+            blocker = run.collideLineSolid(from.x, from.y, toX, toY);
+            book.set(key, blocker);
+        }
     }
-    PRESS_KILL_COST_COUNTS.lineMiss += 1;
-    const blocker = run.collideLineSolid(from.x, from.y, r.x + SPINNER.originX, r.y + SPINNER.originY);
-    byRect.set(r, blocker);
+    if (byRect !== null) byRect.set(r, blocker);
     return blocker;
+}
+
+/**
+ * ⛓⛓⛓ hammer-phase P2 — THE STRIKE LINE, CARRIED ACROSS DERIVATIONS (`STRIKE_SCAN_COST`). P1's `lineOnce` asks each
+ * (cell, rect) once per derivation, and the executor derives on every refuge tick: on C1's staging A 97 % of what was
+ * left were lines an EARLIER derivation had asked, unchanged.
+ *
+ * ⛔ WHAT THE ANSWER READS, ENUMERATED. `run.collideLineSolid` truncates its four coordinates first, then walks them
+ * against `world.solidBoxesForMover(normalizeLiveOpts(liveSolidOpts()))` — the run's current world and the live bag
+ * `run.liveGeometryOpts()` returns. So the book is keyed by the world BY IDENTITY (a tile write re-wraps it), the bag BY
+ * VALUE through a copy (`snapshotValue`: the bag aliases run state — `pulledRopeIdsNow` is the rope map itself), and
+ * each line by its four truncated integers. A bag that cannot be copied, or a run that cannot report one, gets no book:
+ * every line is asked, as before.
+ *
+ * ⚠ LAZY, at the first line a derivation reaches the book: that is where the base calls `collideLineSolid`, which
+ * reads the same bag, so the extra read happens only where the base was already reading. ⚠ The blocker object is
+ * shared between derivations; its one reader (`opportunityAt`) asks only whether there is one.
+ */
+const CARRIED_LINES = new WeakMap();
+
+function carriedLineBook(carried) {
+    if (carried.book !== undefined) return carried.book;
+    const { run } = carried;
+    carried.book = null;
+    if (typeof run.liveGeometryOpts !== 'function') return null;
+    let bag;
+    try {
+        bag = run.liveGeometryOpts();
+    } catch {
+        // ⚠ a noclip run refuses the bag by name while its `collideLineSolid` still answers: no book, every line asked
+        // (an error in the bag's own readers is not hidden — the base's `collideLineSolid` reads them next and throws)
+        return null;
+    }
+    const memo = CARRIED_LINES.get(run);
+    if (memo !== undefined && memo.world === run.world && sameValue(bag, memo.key)) {
+        carried.book = memo.book;
+        return carried.book;
+    }
+    const key = snapshotValue(bag);
+    if (key === UNCACHEABLE) return null;
+    STRIKE_SCAN_COST_COUNTS.booksOpened += 1;
+    carried.book = new Map();
+    CARRIED_LINES.set(run, { world: run.world, key, book: carried.book });
+    return carried.book;
+}
+
+/**
+ * ⛓⛓⛓ hammer-phase P2 — THE SCAN'S REACH BOX (`STRIKE_SCAN_COST`). `deriveStrike`'s scan asked every walkable cell at
+ * every tick, and `opportunityAt`'s FIRST test is `distanceRectPoint(cell, mine) > reach`: a pure read whose `false`
+ * is decided before anything is counted, spent or cached. A cell farther than `reach` from the rect on either axis
+ * fails it (both arms of `distanceRectPoint` are at least the axis gap), so only the cells inside the rect grown by
+ * `reach + 1` (the pixel is slack for the subtraction's rounding) can pass, and they are asked in the list's own order —
+ * the opportunities, the line answers and every count come out as before.
+ *
+ * ⛔ THE FLOOR'S SKIPS ARE STILL EVERY CELL'S. The base loop counts `unreachable` for each cell `i − 1 < floor` before
+ * it asks anything, inside or outside the box, and the refusal prints that count; so it is counted for the whole list
+ * (`unreachableAt`, over the floors sorted once per derivation), never for the box alone.
+ *
+ * `null` — the whole list scanned, as OFF — when the list is not row-major, a floor or the reach is not finite, and
+ * per tick (`cellsFor`) when the body's rect is not (the base's `distanceRectPoint` then throws at its first cell, as
+ * it always did).
+ */
+function strikeScanBox(cells, floor, reach) {
+    if (!Number.isFinite(reach)) return null;
+    const rows = cellRowsOf(cells);
+    if (rows === null) return null;
+    const floors = new Float64Array(cells.length);
+    for (let j = 0; j < cells.length; j += 1) {
+        const f = floor.get(cells[j]);
+        if (!Number.isFinite(f)) return null;
+        floors[j] = f;
+    }
+    floors.sort();
+    const pad = reach + 1;
+    return {
+        cellsFor(mine) {
+            if (!Number.isFinite(mine.x) || !Number.isFinite(mine.y)
+                || !Number.isFinite(mine.right) || !Number.isFinite(mine.bottom)) {
+                STRIKE_SCAN_COST_COUNTS.scansUnboxed += 1;
+                return null;
+            }
+            const out = cellsInBox(rows, mine.x - pad, mine.y - pad, mine.right + pad, mine.bottom + pad);
+            STRIKE_SCAN_COST_COUNTS.cellsBoxed += out.length;
+            STRIKE_SCAN_COST_COUNTS.cellsSkipped += cells.length - out.length;
+            return out;
+        },
+        /** How many cells the base loop counts `unreachable` at tick `i`: those with `i − 1 < floor`. */
+        unreachableAt(i) {
+            let lo = 0;
+            let hi = floors.length;
+            while (lo < hi) {
+                const mid = (lo + hi) >> 1;
+                if (floors[mid] <= i - 1) lo = mid + 1;
+                else hi = mid;
+            }
+            return floors.length - lo;
+        },
+    };
 }
 
 /** ⛓ hammer-phase P1: exported for `pressKillCost.test.js` (one derivation, ON against OFF). */
@@ -9567,8 +9687,12 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
     const press = strikePressOf(run);
     // ⛓ hammer-phase P1: this derivation's line answers (`lineOnce`), or none with the switch OFF
     const lines = PRESS_KILL_COST.enabled ? new Map() : null;
+    // ⛓ hammer-phase P2: the lines earlier derivations asked (`carriedLineBook`, resolved at the first line), or none OFF
+    const carried = STRIKE_SCAN_COST.enabled ? { run, book: undefined } : null;
     // ⛓ The admissible ETA floor, once per cell — see `minTicksBetween`.
     const floor = new Map(cells.map((c) => [c, minTicksBetween(run.state, c)]));
+    // ⛓ hammer-phase P2: the cells in reach of a body's rect, in the list's order (`strikeScanBox`), or none OFF
+    const near = STRIKE_SCAN_COST.enabled ? strikeScanBox(cells, floor, press.reach) : null;
     const opportunities = [];
     let unreachable = 0;
     /** ⛓ U3 D2 — how many (cell, tick) pairs the line of sight SKIPPED; a
@@ -9596,7 +9720,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         for (let k = -2; k <= press.hitTicks + 1; k += 1) {
             if (!clearOfHammersAt(run, c.box, forecast, i + k)) return false;
         }
-        if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i, lines)) {
+        if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i, lines, carried)) {
             if (countSighted) sighted += 1;
             return false;
         }
@@ -9640,11 +9764,21 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
     for (let i = Math.max(1, notBefore); i < horizon - press.hitTicks - 1; i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
-        for (const c of cells) {
-            // ⛔ BEFORE the truncation, never after: a candidate the movement
-            // model provably cannot reach must not consume one of the forty.
-            if (i - 1 < floor.get(c)) { unreachable += 1; continue; }
-            if (opportunityAt(i, c, mine)) opportunities.push({ i, cell: c });
+        const inReach = near === null ? null : near.cellsFor(mine);
+        if (inReach === null) {
+            for (const c of cells) {
+                // ⛔ BEFORE the truncation, never after: a candidate the movement
+                // model provably cannot reach must not consume one of the forty.
+                if (i - 1 < floor.get(c)) { unreachable += 1; continue; }
+                if (opportunityAt(i, c, mine)) opportunities.push({ i, cell: c });
+            }
+        } else {
+            // ⛓ hammer-phase P2: the floor's skips are every cell's, counted whole; only the box is asked
+            unreachable += near.unreachableAt(i);
+            for (const c of inReach) {
+                if (i - 1 < floor.get(c)) continue;
+                if (opportunityAt(i, c, mine)) opportunities.push({ i, cell: c });
+            }
         }
         if (opportunities.length >= STRIKE_CANDIDATES) { stoppedAt = i; break; }
     }
@@ -9757,7 +9891,8 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
-        for (const c of cells) {
+        // ⛓ hammer-phase P2: a cell outside the box fails `opportunityAt`'s first test with nothing counted or spent
+        for (const c of (near === null ? null : near.cellsFor(mine)) ?? cells) {
             if (i - 1 < floor.get(c)) continue;
             const known = walks.get(c);
             if (known && (known.walk.truncated || known.unsafe || known.eta > i - 1)) continue;
