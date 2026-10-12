@@ -2108,7 +2108,17 @@ function runHold(run, perTick, hold, what, before = null) {
             + 'reason is a number wearing a predicate\'s clothes.');
     }
     let heldFor = 0;
-    for (let i = 1; i <= ticks; i++) {
+    // ⛓ seedling-fidelity-movingwait D2: a LATCHED hold the solver chose to pace (`hold.pace`, `runPace`).
+    const pace = hold.pace ?? null;
+    let pacedFrom = null;
+    if (pace !== null) {
+        if (until === null) {
+            fail(`${what}: a paced hold needs an observed stopping condition — a cycle end is where it is asked, `
+                + 'and a hold with no `until` has nothing to ask there.');
+        }
+        ({ heldFor, from: pacedFrom } = runPace(run, perTick, pace, until, what));
+    }
+    for (let i = 1; pace === null && i <= ticks; i++) {
         perTick.push(NO_HELD);
         heldFor = i;
         const { transition } = run.advance(NO_HELD);
@@ -2133,7 +2143,7 @@ function runHold(run, perTick, hold, what, before = null) {
         // zero ticks should not be asking for a hold at all.
         if (until !== null && until.test(run)) break;
     }
-    if (until !== null && !until.test(run)) {
+    if (pace === null && until !== null && !until.test(run)) {
         fail(`${what}: held ${presser.tag}@${presser.x},${presser.y} for the whole bound `
             + `of ${ticks} tick(s) and the condition never became true — ${until.why}. `
             + 'The bound is a CLAIM about the mechanism, so a hold that runs it out is a '
@@ -2244,7 +2254,72 @@ function runHold(run, perTick, hold, what, before = null) {
         // ⛓ …and the cross-room writes it made, which are the whole effect
         // of L38's entrance button.
         wrote: wrote === null ? [] : wrote.map((w) => ({ level: w.level, tag: w.tag, value: w.value })),
+        // ⛓ seedling-fidelity-movingwait: the pacing, only on a paced hold (a still hold's record is unchanged).
+        ...(pace === null ? {} : { paced: pacedSummary(pace, heldFor, pacedFrom) }),
     };
+}
+
+/**
+ * ⛓⛓⛓ seedling-fidelity-movingwait D2 — **THE PACED WAIT, DRIVEN**: `pace.keys` tick by tick, asserting the plan.
+ *
+ * A still wait's contract is "the player does not move" (`runHold`'s MOVED, `runLatchedWait`'s stance). A paced one
+ * moves by construction, so its contract is the PLAN instead — every tick's position is the one `planPacedWait`
+ * previewed on the run's own `previewStepper` (`pace.path[i]`, compared exactly), no tick crosses a level, no tick
+ * is hit, and every cycle end (`pace.ends`) is back on the stance at rest. The stopping condition is asked at the
+ * cycle ends only, so the wait always STOPS at the stance; running out of cycles with it still false is the
+ * still wait's bound refusal, by name.
+ *
+ * ⛔ A position off the plan is refused, never re-planned: the preview froze the world at the plan's tick (a lock
+ * fading open is still a wall to it), so a run that went elsewhere is a world the cert did not price.
+ */
+export function runPace(run, perTick, pace, until, what) {
+    const hitsBefore = run.ledger('playerHits').length;
+    const deathsBefore = run.ledger('playerDeaths').length;
+    const from = perTick.length;
+    let i = 0;
+    let met = false;
+    for (const end of pace.ends) {
+        for (; i < end; i += 1) {
+            const held = pace.keys[i];
+            perTick.push(held);
+            let transition;
+            try {
+                ({ transition } = run.advance(held));
+            } catch (e) {
+                // ⛔ the run's own refusal of a bomb blast on an "Enemy" body (`drainBombBlastsNow`), named as the wait's
+                if (!/is not staged on a bomb's blast/.test(String(e?.message))) throw e;
+                fail(`${what}: paced tick ${i + 1} of ${pace.keys.length}: ${e.message}`);
+            }
+            if (transition) {
+                fail(`${what}: paced tick ${i + 1} of ${pace.keys.length} crossed from level `
+                    + `${transition.from_level} to ${transition.to_level}. A wait stays in the room.`);
+            }
+            const s = run.state;
+            const want = pace.path[i];
+            if (s.x !== want.x || s.y !== want.y) {
+                fail(`${what}: paced tick ${i + 1} of ${pace.keys.length} is at (${s.x},${s.y}), not the previewed `
+                    + `(${want.x},${want.y}) — the run moved the player somewhere the pacing's cert did not price.`);
+            }
+            if (run.ledger('playerHits').length !== hitsBefore || run.ledger('playerDeaths').length !== deathsBefore) {
+                fail(`${what}: paced tick ${i + 1} of ${pace.keys.length} was HIT (hits ${hitsBefore} -> `
+                    + `${run.ledger('playerHits').length}). Every sample of the pacing was certified clean against `
+                    + 'the walk forecast; the run says otherwise.');
+            }
+        }
+        if (until.test(run)) { met = true; break; }
+    }
+    if (!met) {
+        fail(`${what}: paced ${pace.ends.length} cycle(s) (${i} tick(s), the bound ${pace.bound}) and the condition `
+            + `never became true at a cycle end — ${until.why}.`);
+    }
+    return { heldFor: i, from };
+}
+
+/** The record row a paced wait adds: what it paced, from which emitted tick, and how long. */
+export function pacedSummary(pace, heldFor, from) {
+    return { from, out: [...pace.out], back: [...pace.back], span: pace.span, gap: pace.gap,
+        cycles: pace.ends.filter((e) => e <= heldFor).length, ticks: heldFor, bound: pace.bound,
+        reach: pace.reach, still: pace.still };
 }
 
 /**

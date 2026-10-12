@@ -74,6 +74,8 @@ import {
 import { resolvePresser } from './botDriverV2.js';
 // ⛓ SEEDLING FIDELITY CRUSHER — the `bait` verb (behind `CRUSHER_BAIT`).
 import { runBait } from './botDriverV2.js';
+// ⛓ seedling-fidelity-movingwait — the paced wait's driver (behind `MOVING_WAIT`).
+import { pacedSummary, runPace } from './botDriverV2.js';
 import {
     BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherSightDanger, searchBaitOrdering,
 } from './crusherBait.js';
@@ -3069,9 +3071,19 @@ function latchedFadeWait(run, obstacle, alsoRejected = []) {
  * The latched arm of `execHold` — stand still until the latched responder is
  * open, inside the fade's own bound, or refuse by name.
  */
-function runLatchedWait(run, perTick, resolved, what) {
+function runLatchedWait(run, perTick, resolved, what, pace = null) {
     const { ticks, until } = resolved.hold;
     const start = { x: run.state.x, y: run.state.y };
+    // ⛓ seedling-fidelity-movingwait D2: the paced arm (`execHold` chose it; `runPace` drives and asserts it).
+    if (pace !== null) {
+        if (until.test(run)) {
+            throw new SolverRefusal(`${what}: the latched wait's condition is already true — ${until.why}; a paced `
+                + 'wait would spend a cycle for nothing.', { obstacle: { kind: 'solid', id: 'latched-wait' } });
+        }
+        const { heldFor, from } = runPace(run, perTick, pace, until, what);
+        return { presser: null, latched: true, ticks, heldFor, stoppedOn: until.why, at: start,
+            opened: [], armed: [], traps: [], volleys: 0, wrote: [], paced: pacedSummary(pace, heldFor, from) };
+    }
     const NO_KEYS = new Set();
     let heldFor = 0;
     while (!until.test(run) && heldFor < ticks) {
@@ -8164,15 +8176,225 @@ function lobberHoldRefusal(run, ticks, what) {
  * the stance from the presser's rect, the duration from the mechanism.
  */
 function execHold(run, perTick, resolved, ctx) {
-    lobberHoldRefusal(run, resolved.hold.ticks, ctx.what);
+    // ⛓ seedling-fidelity-movingwait D2: `null` unless MOVING_WAIT is ON and the still wait prices a bomb.
+    const pace = pacedHoldPlan(run, resolved, ctx.what);
+    if (pace === null) lobberHoldRefusal(run, resolved.hold.ticks, ctx.what);
     if (resolved.latched === true && resolved.stance === null) {
-        return runLatchedWait(run, perTick, resolved, ctx.what);
+        return runLatchedWait(run, perTick, resolved, ctx.what, pace);
     }
     return runHold(run, perTick, {
         presser: { x: resolved.target.x, y: resolved.target.y },
         ticks: resolved.hold.ticks,
         until: resolved.hold.until,
+        ...(pace === null ? {} : { pace }),
     }, ctx.what, ctx.before);
+}
+
+/**
+ * ⛓⛓⛓ seedling-fidelity-movingwait D2 — **A LATCHED WAIT INSIDE A LOBBER'S REACH PACES** (behind `MOVING_WAIT`,
+ * which is `CONTACT_FIDELITY.movingWait`, OFF).
+ *
+ * BOMBPUSHER measured the hit as AVOIDABLE: on the three damage-on L40 walks every would-be hit landed on a player
+ * who had moved 0–9 px in the 31 ticks after the launch, and every blast that landed on a walking player missed. A
+ * wait may move without breaking what it waits for only when the group is LATCHED — a `room = -1` ButtonRoom's
+ * setter is behind `if (a)` (*"Can't be reset to false!!"*, `ButtonRoom.as:66-91`) and `Lock`'s fade then runs
+ * whoever stands where; a plain `Button` republishes every tick, so stepping off it unpresses the group (never paced).
+ *
+ * ⇒ The still wait is asked first (`lobberHoldRefusal`'s question, unchanged); only when it prices a bomb is a paced
+ * one searched (`planPacedWait`), and only a pacing whose every previewed sample is clean is chosen. Otherwise the
+ * still refusal stands, with the pacings tried named.
+ */
+export const MOVING_WAIT = {
+    get enabled() { return CONTACT_FIDELITY.movingWait === true; },
+    set enabled(v) { CONTACT_FIDELITY.movingWait = v === true; },
+};
+
+/**
+ * The trace row of a paced wait: `verb: 'pace'` on the wait's first emitted tick (a still hold's row is unchanged;
+ * on a shared tick the merge keeps this later one and notes the hold). It names the still wait's bomb as the option
+ * rejected.
+ */
+function pacedTraceRow(paced, saw, goal, obstacle) {
+    return {
+        tick: paced.from,
+        saw,
+        goal: { kind: goal.kind, ...(goal.placement ? { placement: { ...goal.placement } } : {}) },
+        obstacle,
+        strategy: { verb: 'pace', out: paced.out, back: paced.back, span: paced.span, gap: paced.gap,
+            cycles: paced.cycles, ticks: paced.ticks, reach: paced.reach },
+        rejected: [{ option: 'stand still', why: paced.still }],
+        keys: [],
+    };
+}
+
+/** Run `fn` with `MOVING_WAIT` set to `enabled`, restoring the previous value. */
+export function withMovingWait(enabled, fn) {
+    return withSwitch(MOVING_WAIT, enabled, fn);
+}
+
+/**
+ * The pacing alphabet. A CYCLE holds `out` for `span` ticks, coasts to rest, holds `back` for `span`, coasts to rest
+ * — measured on L40's stance to return to the start BIT-EXACTLY (the speed curve is symmetric; `planPacedWait`
+ * asserts it per candidate, and a cycle that does not return is rejected) — then stands `gap` ticks. Candidates are
+ * ordered smallest motion first: span, then gap, then direction.
+ */
+export const PACE = Object.freeze({
+    dirs: Object.freeze([
+        ['left', 'right'], ['right', 'left'], ['up', 'down'], ['down', 'up'],
+        ['up+left', 'down+right'], ['up+right', 'down+left'], ['down+left', 'up+right'], ['down+right', 'up+left'],
+    ].map(([o, b]) => Object.freeze([Object.freeze(o.split('+')), Object.freeze(b.split('+'))]))),
+    spans: Object.freeze([6, 8, 10, 12, 14, 16, 20, 24]),
+    gaps: Object.freeze([0, 6, 12, 18]),
+    // a coast that has not come to rest in this many ticks is not a cycle
+    coast: 60,
+});
+
+/** The still wait's bomb, as `lobberHoldRefusal` asks it — `null` when the still wait is clean. */
+function stillWaitBomb(run, ticks) {
+    if (!CONTACT_FIDELITY.bombPusherLive || !Number.isFinite(ticks) || ticks <= 0) return null;
+    if ((run.entities('bombPushers') ?? []).length === 0) return null;
+    const d = dangerAt(run, run.ticksCompleted + ticks, playerBoxAt(run.state.x, run.state.y), { mode: 'wait' });
+    return d.sources.find((src) => src.kind === 'bomb') ?? null;
+}
+
+/**
+ * `execHold`'s question: the pacing for this hold, or `null` (OFF, not latched, or the still wait is clean). A
+ * latched hold whose still wait is a bomb and that NO pacing clears is refused here, by name, with every pacing's
+ * first danger (the still refusal's own `obstacle`).
+ */
+function pacedHoldPlan(run, resolved, what) {
+    if (!MOVING_WAIT.enabled) return null;
+    const hold = resolved.hold;
+    const latched = hold?.latched === true || resolved.latched === true;
+    if (!latched || !hold.until) return null;
+    const bomb = stillWaitBomb(run, hold.ticks);
+    if (!bomb) return null;
+    const keep = resolved.target ? (run.world.pressers ?? [])
+        .find((p) => p.x === resolved.target.x && p.y === resolved.target.y) ?? null : null;
+    const out = planPacedWait(run, { ticks: hold.ticks, keep });
+    if (out.plan) return { ...out.plan, still: bomb.why };
+    const lobber = String(bomb.id).split('#')[0];
+    throw new SolverRefusal(`${what}: the hold stands still for up to ${hold.ticks} tick(s) at `
+        + `(${run.state.x},${run.state.y}), inside ${lobber}'s 256 px reach — ${bomb.why}. The group is LATCHED, so `
+        + `the wait may pace, and no pacing is clean (MOVING_WAIT, ${out.tried.length} tried): `
+        + `${out.tried.slice(0, 4).join('; ')}${out.tried.length > 4 ? ' …' : ''}.`,
+    { obstacle: { kind: 'danger', id: lobber } });
+}
+
+/**
+ * ⛓⛓⛓ seedling-fidelity-movingwait D2 — **THE PACING, PLANNED AND PRICED** on the run's own `previewStepper`.
+ *
+ * Each candidate (`PACE`) is previewed for whole cycles until it covers `ticks` (the still wait's bound), every
+ * sample priced as a WALK prices it — `dangerDuringTransit` against the walk forecasts stepped with the previewed
+ * player (`run.spitForecast()` carries the lobber and its bombs, aimed at the PACED player; the chasers, arrows and
+ * grenades ride theirs), the pre-move box paired with the post-step bodies, as `previewWalk` pairs them — plus the
+ * end state once more. A candidate is rejected at its first danger, at a level crossing or a fall, on a box that
+ * touches any OTHER presser (a second latch would be a side effect the plan never chose), or at a cycle end that is
+ * not the stance at rest bit-for-bit.
+ *
+ * @returns {{plan: ?object, tried: string[]}} `plan` = `{keys, path, ends, out, back, span, gap, bound, reach}`
+ */
+export function planPacedWait(run, { ticks, keep = null }) {
+    const start = { ...run.state };
+    const tried = [];
+    if (start.vx !== 0 || start.vy !== 0 || start.fall) {
+        return { plan: null, tried: [`the wait begins at (${start.x},${start.y}) still moving`] };
+    }
+    const step = run.previewStepper();
+    const NONE = new Set();
+    const others = (run.world.pressers ?? []).filter((p) => p !== keep);
+    const t0 = run.ticksCompleted;
+    // The spinners' own forecast, once (row j = the top of tick t0 + 1 + j), long enough for the longest candidate.
+    const longest = ticks + 2 * (Math.max(...PACE.spans) + PACE.coast) + Math.max(...PACE.gaps) + 2;
+    const spinRows = (run.entities('spinnerBodies') ?? []).length ? run.spinnerForecast(longest) : null;
+    /**
+     * ⛔ A PACED PLAYER MOVES THE AIM, so a blast can land on a BODY the still wait never put one near — measured on
+     * the first cut at L40's cluster: `bombpusher@112,128#4` at (313,189) reached `bob@304,144`, and the run refuses
+     * the Explosion's `"Enemy"` arm by name (`drainBombBlastsNow`, not staged). So a pacing is rejected where its
+     * forecast blast meets a body by the run's own rule (the square, then the origin disc): the chasers as the
+     * forecast's previous step left them (the blast is drained at that tick's `updateLists()`), the spinners at
+     * their own row.
+     */
+    const blastMeetsBody = (spits, bodiesThen, j) => {
+        for (const b of spits ?? []) {
+            if (b.kind !== 'bomb') continue;
+            const inDisc = (px, py) => Math.sqrt((b.x - px) ** 2 + (b.y - py) ** 2) <= b.radius;
+            for (const c of bodiesThen ?? []) {
+                if (rectsOverlap(c.rect, b.rect) && inDisc(c.x, c.y)) return `${b.id}'s blast reaches ${c.id}`;
+            }
+            const row = spinRows?.[j] ?? [];
+            const ids = (run.entities('spinnerBodies') ?? []).map((sp) => sp.id);
+            for (let k = 0; k < row.length; k += 1) {
+                const r = row[k];
+                if (r && rectsOverlap(r, b.rect) && inDisc(r.x + SPINNER.originX, r.y + SPINNER.originY)) {
+                    return `${b.id}'s blast reaches ${ids[k] ?? 'a spinner'}`;
+                }
+            }
+        }
+        return null;
+    };
+    for (const span of PACE.spans) {
+        for (const gap of PACE.gaps) {
+            for (const [outKeys, backKeys] of PACE.dirs) {
+                const label = `${outKeys.join('+')}/${backKeys.join('+')} x${span} gap ${gap}`;
+                const out = new Set(outKeys);
+                const back = new Set(backKeys);
+                const arrowsF = run.arrowForecast?.() ?? null;
+                const chasersF = run.chaserForecast?.() ?? null;
+                const spitsF = run.spitForecast?.() ?? null;
+                const grenF = run.grenadeForecast?.() ?? null;
+                const keys = [];
+                const path = [];
+                const ends = [];
+                let st = start;
+                let reach = 0;
+                let why = null;
+                let bodiesBefore = null;
+                const tick = (held) => {
+                    const at = t0 + keys.length + 1;
+                    const arrows = arrowsF ? arrowsF.step(st) : null;
+                    const bodies = chasersF ? chasersF.step(st, { slashing: false }) : null;
+                    const spits = spitsF ? spitsF.step(st, { slashing: false }) : null;
+                    const grenades = grenF ? grenF.step(st) : null;
+                    const onBody = blastMeetsBody(spits, bodiesBefore, keys.length);
+                    bodiesBefore = bodies;
+                    if (onBody) return `${onBody} at paced tick ${keys.length}`;
+                    const box = playerBoxAt(st.x, st.y);
+                    const d = dangerDuringTransit(run, at, box, arrows, bodies, spits, grenades);
+                    if (d.danger) {
+                        const s = d.sources[0];
+                        return `${s.kind}:${s.id} at paced tick ${keys.length + 1} (${st.x.toFixed(2)},${st.y.toFixed(2)})`;
+                    }
+                    const touched = others.find((p) => rectsOverlap(box, p.rect));
+                    if (touched) return `touches ${touched.tag}@${touched.x},${touched.y} at paced tick ${keys.length + 1}`;
+                    if (held === null) return null;
+                    st = step(st, held);
+                    keys.push(held);
+                    path.push({ x: st.x, y: st.y });
+                    reach = Math.max(reach, Math.hypot(st.x - start.x, st.y - start.y));
+                    if (st.transition || st.fall) return `leaves the floor at paced tick ${keys.length}`;
+                    return null;
+                };
+                const hold = (held, n) => { for (let k = 0; k < n && !why; k += 1) why = tick(held); };
+                const coast = () => {
+                    for (let k = 0; k < PACE.coast && !why && (st.vx !== 0 || st.vy !== 0); k += 1) why = tick(NONE);
+                    if (!why && (st.vx !== 0 || st.vy !== 0)) why = `still moving ${PACE.coast} tick(s) into a coast`;
+                };
+                while (!why && keys.length < ticks) {
+                    hold(out, span); coast(); hold(back, span); coast(); hold(NONE, gap);
+                    if (!why && (st.x !== start.x || st.y !== start.y)) {
+                        why = `cycle ${ends.length + 1} ends at (${st.x},${st.y}), not the stance`;
+                    }
+                    if (!why) ends.push(keys.length);
+                }
+                if (!why) why = tick(null);
+                if (why) { tried.push(`${label}: ${why}`); continue; }
+                return { plan: { keys, path, ends, out: outKeys, back: backKeys, span, gap, bound: ticks,
+                    reach: Number(reach.toFixed(2)) }, tried };
+            }
+        }
+    }
+    return { plan: null, tried };
 }
 
 /**
@@ -21233,6 +21455,8 @@ function solveSegmentUnder({
                 before: null, walkTo, goal, equip, rewind,
             });
             records.push({ goal: goal.kind, strategy, ...rec });
+            // ⛓ seedling-fidelity-movingwait: a paced wait is its own decision row (absent on a still one).
+            if (rec?.paced) seeRow(pacedTraceRow(rec.paced, saw(), goal, { kind: blocker.kind, id: blocker.id }));
             for (const c of resolvedBlocker.exempt ?? []) exemptions.add(c);
             contacts = senseContacts(run);
         }
@@ -21290,6 +21514,7 @@ function solveSegmentUnder({
             rejected: resolved.rejected,
             keys: [],
         });
+        if (record?.paced) seeRow(pacedTraceRow(record.paced, saw(), goal, null));
     }
 
     // ── the trace, filled and validated ───────────────────────────────

@@ -138,6 +138,9 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // ⛓ Seedling fidelity FORCEDHIT: the `forced-hit` rung (`forcedHit.js`, behind `FORCED_HITS`) — every input
     // sequence from the state is proven hit, and the least-damage crossing is planned with its hit billed.
     'forced-hit',
+    // ⛓ Seedling fidelity MOVINGWAIT: the `pace` row (`solverBot.planPacedWait`, behind `MOVING_WAIT`) — a LATCHED
+    // wait inside a lobber's reach that paces an out-and-back cycle instead of standing still.
+    'pace',
 ]);
 
 const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
