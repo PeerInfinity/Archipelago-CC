@@ -32,6 +32,7 @@ import {
     flashNameForLedgerRow,
     RESET_MODES,
     loadSeedlingRandomizer,
+    pushedSwapPending,
     readWorld,
     resetTargetFor,
     resolveMapPath,
@@ -780,5 +781,67 @@ describe('the load sequence — overlay on, deliver, reset, overlay off', () => 
         // the poll asks the world; the delivery was handed the same callable
         expect(seen).toContain('botStatus');
         expect(seen).toContain('botMobiles');
+    });
+
+    /**
+     * ⛓⛓ WIND CUTSCENE — the set is NOT sent while a pushed teleport's world has not begun. `Game.level` reads
+     * the SAVE, so a mount between that world's constructor and its `begin()` makes the begin read −1 and play
+     * the wind scene (measured on CI, 1 of 14 cold starts of `tutorial-walk-procgen-seedling`). The glue's
+     * stamp (`pushedOn`, the begin record live when the teleport went) still being the LIVE record is the tell.
+     */
+    const B0 = { 'begin.level': 0, 'begin.tick': 0, 'rng.gameplay': 11 };
+    const B1 = { 'begin.level': 0, 'begin.tick': 0, 'rng.gameplay': 12 };
+    const inFlight = ({ landsAfterSleeps = 2 } = {}) => {
+        const order = [];
+        let live = B0;
+        let sleeps = 0;
+        const glue = fakeGlue(order);
+        glue.swapState = () => ({ marks: [], queued: 0, pushedOn: B0, pushes: 1 });
+        const loaded = loadedFor({ ok: true, chunks: 9, why: null }, undefined, order);
+        const send = loaded.delivery.deliver;
+        loaded.delivery.deliver = () => { order.push(`live:${live['rng.gameplay']}`); return send(); };
+        const bot = (n) => (n === 'botSeam' ? JSON.stringify({ beginEntry: live })
+            : n === 'botStatus' ? '{"level":0}' : '{"mobiles":[{"cls":"Player","x":88,"y":136}]}');
+        const logs = [];
+        return { order, glue, loaded, bot, logs,
+            sleep: async () => { sleeps += 1; if (sleeps >= landsAfterSleeps) live = B1; } };
+    };
+
+    it('⛓ WIND CUTSCENE — `pushedSwapPending`: only a stamp that IS the live record blocks', () => {
+        expect(pushedSwapPending({ pushedOn: B0, pushes: 3 }, B0)).toMatch(/teleport #3 .* has not begun/);
+        expect(pushedSwapPending({ pushedOn: B0 }, B1)).toBeNull();
+        expect(pushedSwapPending({ pushedOn: null }, B0)).toBeNull();
+        expect(pushedSwapPending({ pushedOn: B0 }, null)).toBeNull();
+        expect(pushedSwapPending(null, B0)).toBeNull();
+    });
+
+    it('⛓ WIND CUTSCENE — a teleport pushed and not yet begun: the delivery WAITS for its world, then sends', async () => {
+        const f = inFlight();
+        const { r } = await run({ order: f.order, glue: f.glue, loaded: f.loaded, bot: f.bot,
+            opts: { sleep: f.sleep, log: (m, c) => f.logs.push([c, m]) } });
+        expect(r.ok).toBe(true);
+        // The set went on the record the pushed world began with — never on the stamped one.
+        expect(f.order).toEqual(['setDelivery', 'live:12', 'deliver', 'setCheckBinding']);
+        const settle = r.steps.find((s) => s.name === 'swap-settle');
+        expect(settle?.detail).toMatchObject({ waited: true, landed: true, why: null });
+        expect(r.steps.map((s) => s.name).indexOf('swap-settle')).toBeLessThan(r.steps.map((s) => s.name).indexOf('deliver-end'));
+        expect(f.logs.filter(([c]) => c === 'warn')).toEqual([]);
+    });
+
+    it('⛓ WIND CUTSCENE — a world that never begins: bounded, then delivered anyway BY NAME', async () => {
+        const f = inFlight({ landsAfterSleeps: Infinity });
+        const { r } = await run({ order: f.order, glue: f.glue, loaded: f.loaded, bot: f.bot,
+            opts: { sleep: f.sleep, log: (m, c) => f.logs.push([c, m]), swapTimeoutMs: 50 } });
+        expect(f.order).toContain('deliver');
+        expect(r.steps.find((s) => s.name === 'swap-settle')?.detail).toMatchObject({ waited: true, landed: false, why: expect.stringMatching(/has not begun/) });
+        expect(f.logs.some(([c, m]) => c === 'warn' && /did not begin within 50 ms/.test(m))).toBe(true);
+    });
+
+    it('⛓ WIND CUTSCENE — nothing in flight: no wait, no step (the happy path\'s steps unchanged)', async () => {
+        const f = inFlight();
+        f.glue.swapState = () => ({ marks: [], queued: 0, pushedOn: B1, pushes: 1 });
+        const { r } = await run({ order: f.order, glue: f.glue, loaded: f.loaded, bot: f.bot, opts: { sleep: f.sleep } });
+        expect(f.order).toEqual(['setDelivery', 'live:11', 'deliver', 'setCheckBinding']);
+        expect(r.steps.map((s) => s.name)).not.toContain('swap-settle');
     });
 });

@@ -1470,6 +1470,8 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         expect(e.engine.stats.dismissed).toEqual([expect.objectContaining({ level: HOUSE, key: 'right' })]);
         expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ level: HOUSE, began: 'cutscene', adopted: true })]);
         expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['adopt', 'continuation']);
+        // ⛓ WIND CUTSCENE — the −1 record's scene is the arm's own ceremony, not a leak.
+        expect(e.engine.stats.sceneLeaks).toEqual([]);
         expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true, held: true })]);
         // The adoption waited for the Help's fade: more than TUTORIAL_FADE_FRAMES game frames after the press.
         expect(e.engine.arrivalReads.at(-1).status.game_time - e.engine.stats.dismissed[0].gameTime).toBeGreaterThan(TUTORIAL_FADE_FRAMES);
@@ -1485,6 +1487,9 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         expect(e.teleports).toEqual([]);
         expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, adoptRefused: [] });
         expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ level: HOUSE, began: 'cutscene', adopted: true })]);
+        // ⛓ WIND CUTSCENE — and it is COUNTED, by name, once: a resolved record never owns the scene (a leak).
+        expect(e.engine.stats.sceneLeaks).toEqual([expect.objectContaining({ level: HOUSE, begin: HOUSE })]);
+        expect(e.engine.stats.timeline.filter((r) => r.e === 'scene-leak')).toHaveLength(1);
         expect(e.dones).toHaveLength(1);
     });
     it('⛓ CUTSCENE UNDER ANY RECORD — a long scene re-says how far into its bounded wait it is (a same-words stall reader sees it move)', () => {
