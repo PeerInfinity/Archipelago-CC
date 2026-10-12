@@ -10,6 +10,8 @@ import {
     ruleGateCount,
     computeSeedName,
     cacheKey,
+    balanceCacheKey,
+    worldIdentity,
     partitionPatchesByRegion,
 } from './hostGlue.js';
 
@@ -221,6 +223,31 @@ describe('computeSeedName / cacheKey', () => {
         expect(cacheKey('AP_9999', null)).toBe('jtaBalance_patches_v1_AP_9999');
         expect(cacheKey(1, 'synthetic-x-s1-z3'))
             .toBe('jtaBalance_patches_v1_1__ds_synthetic-x-s1-z3');
+    });
+});
+
+describe('balanceCacheKey — one key per world', () => {
+    const world = (item, region = 'r') => ({
+        seed: 1,
+        preset_sidecars: { 1: { [region]: { playable_payload: { ap_locations: { 10: `${region}__10` } } } } },
+        regions: { 1: { [region]: { locations: [{ name: `${region}__10`, item: { name: item }, access_rule: { rule: 'True_' } }] } } },
+    });
+    it('a generated seed (seed_name) keeps its key', () => {
+        expect(balanceCacheKey({ ...world('A'), seed_name: 'AP_9999' }, '1')).toBe('jtaBalance_patches_v1_AP_9999');
+    });
+    it('worlds without a seed_name that share a seed key apart by layout and placement, and stably', () => {
+        const a = balanceCacheKey(world('A'), '1');
+        expect(a).toMatch(/^jtaBalance_patches_v1_1__w_[0-9a-f]{8}$/);
+        expect(balanceCacheKey(world('A'), '1')).toBe(a);
+        expect(balanceCacheKey(world('B'), '1')).not.toBe(a);
+        expect(balanceCacheKey(world('A', 'q'), '1')).not.toBe(a);
+        expect(balanceCacheKey(world('A'), '1', 'ds-x')).toMatch(/^jtaBalance_patches_v1_1__ds_ds-x__w_/);
+    });
+    it('worldIdentity reads only jta locations', () => {
+        const w = world('A');
+        const id = worldIdentity(w, '1');
+        w.regions[1].r.locations.push({ name: 'maze_loc', item: { name: 'Key' } });
+        expect(worldIdentity(w, '1')).toBe(id);
     });
 });
 

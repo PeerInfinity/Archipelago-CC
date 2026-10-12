@@ -17,7 +17,7 @@
 
 import { registerTest } from '../testRegistry.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
-import { computeSeedName, cacheKey } from '../../jtaBalance/hostGlue.js';
+import { balanceCacheKey, computeSeedName, detectJtaWorld } from '../../jtaBalance/hostGlue.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { JTA_PERK_ITEM_NAMES } from '../../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import { vanillaPerkNameByTaskId } from '../../jtaSubstrateWrapper/vanillaDataset.js';
@@ -63,7 +63,7 @@ async function balanceSolveAtRulesLoad(testController) {
     const rulesResp = await fetch(JTA_LOCTEST_PRESET_PATH);
     const rulesDoc = await rulesResp.json();
     const seed = computeSeedName(rulesDoc);
-    const key = cacheKey(seed);
+    const key = balanceCacheKey(rulesDoc, detectJtaWorld(rulesDoc).playerId);
     localStorage.removeItem(key);
     testController.log(`cleared balance cache for seed ${seed} (${key})`);
 
@@ -249,7 +249,7 @@ async function randomizedBalancedProgression(testController) {
     testController.assertEqual('perk placement is shuffled, not identity', true, movedPerks > 0);
 
     // Leg 1 — cold solve at rules load (cleared cache, so the worker really runs).
-    const key = cacheKey(computeSeedName(rulesDoc));
+    const key = balanceCacheKey(rulesDoc, detectJtaWorld(rulesDoc).playerId);
     localStorage.removeItem(key);
     await testController.loadRulesFromFile(JTA_RANDTEST_PRESET_PATH);
     await testController.stateManager.pingWorker('after-rules-load', 3000);

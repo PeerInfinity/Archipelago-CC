@@ -51,7 +51,7 @@ import {
     extractGateCounts,
     extractPerkHolderTaskIds,
     computeSeedName,
-    cacheKey,
+    balanceCacheKey,
     partitionPatchesByRegion,
 } from './hostGlue.js';
 import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
@@ -65,7 +65,7 @@ export const moduleInfo = {
     requires: ['stateManager', 'procgenPlayer', 'sphereState'],
     // NO componentType — headless, no panel.
     storage: [
-        { prefix: 'jtaBalance_patches_v1_', kind: STORAGE_KINDS.cache, label: 'Balance cost patches, one per seed (and dataset)' },
+        { prefix: 'jtaBalance_patches_v1_', kind: STORAGE_KINDS.cache, label: 'Balance cost patches, one per seed (and dataset; world)' },
     ],
 };
 
@@ -284,7 +284,7 @@ async function handleRulesLoaded() {
     const perkHolderIds = extractPerkHolderTaskIds(
         rulesDoc, playerId, apLocations, identity.perkItemNames);
     const seed = computeSeedName(rulesDoc);
-    const key = cacheKey(seed, dataset?.dataset_id ?? null);
+    const key = balanceCacheKey(rulesDoc, playerId, dataset?.dataset_id ?? null);
 
     // Cache hit: merge and skip the worker entirely.
     let cached = null;

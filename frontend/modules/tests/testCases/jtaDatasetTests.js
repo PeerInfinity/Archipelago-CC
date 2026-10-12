@@ -32,7 +32,7 @@
 import { registerTest } from '../testRegistry.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
-import { detectJtaWorld, computeSeedName, cacheKey } from '../../jtaBalance/hostGlue.js';
+import { detectJtaWorld, balanceCacheKey } from '../../jtaBalance/hostGlue.js';
 import {
     waitForJtaActive,
     resetJtaSaveAndReload,
@@ -150,7 +150,7 @@ async function datasetWorldProgression(testController) {
     // cleared cache so the worker really runs (cold), patches merge into the
     // warehouse and cache under the (seed, dataset_id) key — the dataset
     // dimension matters because every Pass-A test preset shares seed 1.
-    const key = cacheKey(computeSeedName(rulesDoc), dataset.dataset_id);
+    const key = balanceCacheKey(rulesDoc, detectJtaWorld(rulesDoc).playerId, dataset.dataset_id);
     localStorage.removeItem(key);
     testController.log(`cleared dataset balance cache (${key})`);
     await testController.loadRulesFromFile(JTA_DATASETTEST_PRESET_PATH);

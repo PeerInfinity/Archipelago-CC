@@ -182,9 +182,47 @@ export function computeSeedName(rulesDoc) {
  * wrong tasks. Vanilla keys are UNCHANGED (no datasetId ⇒ the pre-5e string —
  * existing caches and tests depend on it).
  */
-export function cacheKey(seedName, datasetId = null) {
+export function cacheKey(seedName, datasetId = null, worldId = null) {
     const base = `jtaBalance_patches_v1_${seedName}`;
-    return datasetId ? `${base}__ds_${datasetId}` : base;
+    const ds = datasetId ? `${base}__ds_${datasetId}` : base;
+    return worldId ? `${ds}__w_${worldId}` : ds;
+}
+
+/**
+ * A short hash of what the solve reads from a world: each jta location's task,
+ * item and access rule. Two worlds with one seed but a different layout or
+ * placement hash apart.
+ */
+export function worldIdentity(rulesDoc, playerId) {
+    const apLocations = extractApLocations(rulesDoc, playerId);
+    const names = new Set(Object.values(apLocations));
+    const rows = [];
+    for (const region of Object.values(rulesDoc?.regions?.[playerId] ?? {})) {
+        for (const loc of region?.locations ?? []) {
+            if (!names.has(loc?.name)) continue;
+            rows.push([loc.name, loc.item?.name ?? loc.item ?? null, loc.access_rule ?? null]);
+        }
+    }
+    rows.sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+    const text = JSON.stringify([Object.entries(apLocations).sort(), rows]);
+    let h = 0x811c9dc5;                                  // FNV-1a, 32 bit
+    for (let i = 0; i < text.length; i += 1) {
+        h ^= text.charCodeAt(i);
+        h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return h.toString(16).padStart(8, '0');
+}
+
+/**
+ * The cache key for this world's patches. A world without a `seed_name` — one
+ * the Procgen Pipeline panel built, whose seed is a small number every world
+ * built with it shares, or a Pass-A test preset — adds `worldIdentity`, so two
+ * such worlds never share patches. A generated seed's `seed_name` (AP_…) is
+ * unique already: its key is unchanged.
+ */
+export function balanceCacheKey(rulesDoc, playerId, datasetId = null) {
+    const worldId = rulesDoc?.seed_name ? null : worldIdentity(rulesDoc, playerId);
+    return cacheKey(computeSeedName(rulesDoc), datasetId, worldId);
 }
 
 /**
