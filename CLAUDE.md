@@ -210,6 +210,7 @@ npm test -- --mode=test-substrates --batch=noiz2sa       # MANUAL: the noiz2sa s
 npm test -- --mode=test-substrates --batch=runner        # MANUAL: runnerDemo + Runner block modes
 npm test -- --mode=test-substrates --batch=tutorials     # MANUAL: the Tutorial panel rows + one walk row per tutorial (but procgen's, the tracker's and Seedling's)
 npm test -- --mode=test-substrates --batch=tutorials-procgen  # MANUAL: the procgen tutorials' walk rows
+npm test -- --mode=test-substrates --batch=tutorials-procgen-loops  # MANUAL: the procgen loop-mode tutorials' walk rows (WebGPU)
 npm test -- --mode=test-substrates --batch=tutorials-tracker  # MANUAL: the tracker tutorials' walk rows
 npm test -- --mode=test-substrates --batch=tutorials-seedling  # MANUAL: the Seedling tutorials' walk rows (WebGPU)
 ```
