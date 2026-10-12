@@ -58,7 +58,7 @@ export {
 // camera.js — encounters · physics 2
 export { SCREEN_H, SCREEN_W } from './camera.js';
 // chasers.js — dangerMap, solverBot · seedling 4
-export { bridgedChaserTags, chaserBoxAt, chaserHasSword, isBridgedChaser, killWindowTicks, CHASERS } from './chasers.js';
+export { bridgedChaserTags, chaserBoxAt, chaserHasSword, deathTicks, isBridgedChaser, killWindowTicks, CHASERS } from './chasers.js';
 
 // ⛓ seedling-fidelity-bulb D3: the Bulb's drop death — which classes have one, and the tile under a centre.
 export { hasDropDeath, tileUnder } from './bulb.js';
@@ -84,7 +84,8 @@ export { collideLineSolid, CRUSHER, crusherRect, DIRECTIONS, scanCrusher } from 
 // endingChain.js — strikePolicy · seedling 1
 export { TALK_RANGE } from './endingChain.js';
 // enemyDamage.js — solverBot, strikePolicy · seedling 3
-export { DARKTRAP_LIGHT_DEATH, KILL_ARM_POLICY, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH, killArmModelled } from './enemyDamage.js';
+export { DARKTRAP_LIGHT_DEATH, KILL_ARM_POLICY, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH, killArmModelled,
+    removalTicksAfterHit } from './enemyDamage.js';
 // ⛓ hammer-phase C1: the static sword arm's switch and death table
 export { STATIC_SWORD_ARM, STATIC_SWORD_DEATH } from './enemyDamage.js';
 // killLockBodies.js — solverBot · seedling 1

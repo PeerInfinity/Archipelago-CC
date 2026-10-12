@@ -1,0 +1,583 @@
+[
+ {
+  "step": 16,
+  "level": 14,
+  "goals": [
+   "stairsdown@32,64 \u2192 L15"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   98,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   103,
+   ""
+  ]
+ },
+ {
+  "step": 24,
+  "level": 14,
+  "goals": [
+   "stairsdown@32,64 \u2192 L15"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   98,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   103,
+   ""
+  ]
+ },
+ {
+  "step": 35,
+  "level": 14,
+  "goals": [
+   "stairsdown@32,64 \u2192 L15"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   98,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   103,
+   ""
+  ]
+ },
+ {
+  "step": 69,
+  "level": 14,
+  "goals": [
+   "stairsdown@32,64 \u2192 L15"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   103,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   117,
+   ""
+  ]
+ },
+ {
+  "step": 18,
+  "level": 16,
+  "goals": [
+   "stairsdown@112,64 \u2192 L17"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   117,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   124,
+   ""
+  ]
+ },
+ {
+  "step": 19,
+  "level": 17,
+  "goals": [
+   "Level 017 - Chest (sphere 0.3) \u2192 Seal"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   122,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   132,
+   ""
+  ]
+ },
+ {
+  "step": 26,
+  "level": 16,
+  "goals": [
+   "stairsup@352,80 \u2192 L18"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   688,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   655,
+   ""
+  ]
+ },
+ {
+  "step": 37,
+  "level": 16,
+  "goals": [
+   "stairsup@352,80 \u2192 L18"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   688,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   655,
+   ""
+  ]
+ },
+ {
+  "step": 50,
+  "level": 30,
+  "goals": [
+   "Level 030 - Torchpickup (sphere 2.4) \u2192 Light",
+   "stairsup@224,160 \u2192 L32"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   460,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   413,
+   ""
+  ]
+ },
+ {
+  "step": 52,
+  "level": 30,
+  "goals": [
+   "teleporter@64,0 \u2192 L22"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   347,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   320,
+   ""
+  ]
+ },
+ {
+  "step": 57,
+  "level": 12,
+  "goals": [
+   "Level 012 - Chest (sphere 4.1) \u2192 Seal",
+   "teleporter@592,0 \u2192 L37"
+  ],
+  "kind": "text",
+  "before": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-57) chest (320,816) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-57) chest (320,816) stance waypoint 13 (328,834): the route entered a proximity-hazard \u2014 chest at (320,816) in level 12 \u2014 at (327.81855280227217,835.6399036521572). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws fo"
+  ],
+  "after": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-57) chest (320,816) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-57) chest (320,816) stance waypoint 13 (328,834): the route entered a proximity-hazard \u2014 chest at (320,816) in level 12 \u2014 at (328.6670530633372,835.8463944777346). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for"
+  ]
+ },
+ {
+  "step": 62,
+  "level": 45,
+  "goals": [
+   "teleporter@112,0 \u2192 L46"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   386,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   748,
+   ""
+  ]
+ },
+ {
+  "step": 71,
+  "level": 14,
+  "goals": [
+   "stairsup@176,64 \u2192 L13"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   66,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   55,
+   ""
+  ]
+ },
+ {
+  "step": 74,
+  "level": 12,
+  "goals": [
+   "teleporter@592,0 \u2192 L37"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   921,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   953,
+   ""
+  ]
+ },
+ {
+  "step": 80,
+  "level": 12,
+  "goals": [
+   "teleporter@592,0 \u2192 L37"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   921,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   953,
+   ""
+  ]
+ },
+ {
+  "step": 104,
+  "level": 60,
+  "goals": [
+   "teleporter@160,80 \u2192 L61"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   483,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   530,
+   ""
+  ]
+ },
+ {
+  "step": 145,
+  "level": 60,
+  "goals": [
+   "teleporter@160,80 \u2192 L61"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   523,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   497,
+   ""
+  ]
+ },
+ {
+  "step": 180,
+  "level": 60,
+  "goals": [
+   "teleporter@160,80 \u2192 L61"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   523,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   497,
+   ""
+  ]
+ },
+ {
+  "step": 110,
+  "level": 60,
+  "goals": [
+   "teleporter@0,80 \u2192 L59"
+  ],
+  "kind": "text",
+  "before": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-110) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 178-tick bound (0 guard step(s)); it stands at (122.0,86.2), 31.2 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+  ],
+  "after": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-110) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 179-tick bound (0 guard step(s)); it stands at (121.9,84.6), 31.3 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+  ]
+ },
+ {
+  "step": 153,
+  "level": 60,
+  "goals": [
+   "teleporter@0,80 \u2192 L59"
+  ],
+  "kind": "text",
+  "before": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-153) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 189-tick bound (0 guard step(s)); it stands at (122.0,82.7), 31.2 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+  ],
+  "after": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-153) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 191-tick bound (0 guard step(s)); it stands at (121.9,82.5), 31.4 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+  ]
+ },
+ {
+  "step": 184,
+  "level": 60,
+  "goals": [
+   "teleporter@0,80 \u2192 L59"
+  ],
+  "kind": "text",
+  "before": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-184) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 189-tick bound (0 guard step(s)); it stands at (122.0,82.7), 31.2 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+  ],
+  "after": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-184) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 191-tick bound (0 guard step(s)); it stands at (121.9,82.5), 31.4 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+  ]
+ },
+ {
+  "step": 135,
+  "level": 12,
+  "goals": [
+   "teleporter@592,0 \u2192 L37"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   925,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   957,
+   ""
+  ]
+ },
+ {
+  "step": 147,
+  "level": 63,
+  "goals": [
+   "teleporter@128,304 \u2192 L65"
+  ],
+  "kind": "verdict",
+  "before": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-147) reach-exit (128,304)->L65: the combat ladder is EXHAUSTED. The corridor passes through danger at (183.6,109.5) \u2014 chaser:jellyfish@160,64 (inside leash 160 (d=5.2), box grown 0.8 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 5 volume(s) forbidden \u2014 no walkable tile path in level 63 from tile (6,6) "
+  ],
+  "after": [
+   "SOLVED",
+   504,
+   ""
+  ]
+ },
+ {
+  "step": 148,
+  "level": 65,
+  "goals": [
+   "teleporter@184,64 \u2192 L68"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   539,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   546,
+   ""
+  ]
+ },
+ {
+  "step": 156,
+  "level": 12,
+  "goals": [
+   "teleporter@32,848 \u2192 L83"
+  ],
+  "kind": "verdict",
+  "before": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-156) reach-exit (32,848)->L83: applied 4 strategies for one goal [chest(chest@320,816), touch(shieldlocknorm@288,704), burn(burnabletree@480,640), keylock(bosslock@416,240)] and the corridor still does not plan. A policy that keeps clearing obstacles without a corridor appearing is not making progress."
+  ],
+  "after": [
+   "TIMEOUT",
+   null,
+   ""
+  ]
+ },
+ {
+  "step": 163,
+  "level": 75,
+  "goals": [
+   "teleporter@64,224 \u2192 L71"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   434,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   366,
+   ""
+  ]
+ },
+ {
+  "step": 170,
+  "level": 77,
+  "goals": [
+   "teleporter@0,32 \u2192 L76"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   480,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   475,
+   ""
+  ]
+ },
+ {
+  "step": 182,
+  "level": 63,
+  "goals": [
+   "Level 063 - Chest (sphere 10.1) \u2192 Seal",
+   "teleporter@0,96 \u2192 L61"
+  ],
+  "kind": "text",
+  "before": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-182) chest (224,80) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-182) chest (224,80) stance waypoint 8 (232,98): the route entered a proximity-hazard \u2014 chest at (224,80) in level 63 \u2014 at (231.42059232475253,99.56561631252897). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for t"
+  ],
+  "after": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-182) chest (224,80) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-182) chest (224,80) stance waypoint 8 (232,98): the route entered a proximity-hazard \u2014 chest at (224,80) in level 63 \u2014 at (231.07145863495577,99.57690978766065). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for t"
+  ]
+ },
+ {
+  "step": 192,
+  "level": 80,
+  "goals": [
+   "Level 080 - Chest (sphere 10.2) \u2192 Seal",
+   "teleporter@32,0 \u2192 L71"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   672,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   633,
+   ""
+  ]
+ },
+ {
+  "step": 201,
+  "level": 98,
+  "goals": [
+   "Level 098 - Chest (sphere 10.3) \u2192 Seal",
+   "stairsup@112,112 \u2192 L99"
+  ],
+  "kind": "text",
+  "before": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-201) chest (160,32) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-201) chest (160,32) stance waypoint 3 (168,50): the route entered a proximity-hazard \u2014 chest at (160,32) in level 98 \u2014 at (168.58410205373937,51.54667847399531). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for t"
+  ],
+  "after": [
+   "REFUSED",
+   null,
+   "solverBot(survey-step-201) chest (160,32) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-201) chest (160,32) stance waypoint 3 (168,50): the route entered a proximity-hazard \u2014 chest at (160,32) in level 98 \u2014 at (167.74495030824033,51.25719294972813). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for t"
+  ]
+ },
+ {
+  "step": 207,
+  "level": 104,
+  "goals": [
+   "teleporter@0,16 \u2192 L105"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   268,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   261,
+   ""
+  ]
+ },
+ {
+  "step": 208,
+  "level": 105,
+  "goals": [
+   "teleporter@80,144 \u2192 L106"
+  ],
+  "kind": "length",
+  "before": [
+   "SOLVED",
+   264,
+   ""
+  ],
+  "after": [
+   "SOLVED",
+   300,
+   ""
+  ]
+ }
+]
