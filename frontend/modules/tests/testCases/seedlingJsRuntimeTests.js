@@ -24,7 +24,8 @@
 
 import { registerTest } from '../testRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
-import { getActivePanelInstance, getSeedlingRegionGlue } from '../../flashPanel/index.js';
+import { getActivePanelInstance, getSeedlingPlayClock, getSeedlingRegionGlue } from '../../flashPanel/index.js';
+import { PLAY_CLOCK_EVENT } from '../../flashPanel/seedlingPlayClock.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import { getActivePanel as getBotPanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
@@ -1541,9 +1542,11 @@ registerTest({
 // `flash_seedling` controller (`executeVia: 'solver'` → `walkTo`) and parks; a location completes on the game's
 // OWN check (collected by the runtime), an exit on the crossing's `user:regionMove` — a door the page walks, or a
 // LOGICAL link the region binding credits (its regionMove lands on the next turn). The queue then ends on its own.
-// ⛓ MANA: a Seedling region is COARSE (no recorder, no summaryRecording), so a Bot park is not time-drained
-// (`loopState._timeDrainTick` drains SUMMARY regions only) — each action is charged once, at its completion, at
-// its own loop price (`_completeBotExecutedAction`). Measured here off `loops:manaSpent`, spend by spend.
+// ⛓ MANA: each action is charged once, at its completion, at its own loop price (`_completeBotExecutedAction`).
+// ⛓ PLAY CLOCK (⚖ "Drain play time too"): a Seedling region is COARSE, and flash_seedling declares
+// `loopSupport.playClock`, so the park is ALSO drained per GAME second the game reports (`seedlingPlayClock.js` →
+// `substrate:playClock`; `loopState._regionDrainsTime`). Measured here off `loops:manaSpent` and the reports, in bus
+// order.
 
 const HOUSE_REGION = 'region_2_2';
 const HOUSE_EXIT = 'exit_S';
@@ -1587,14 +1590,26 @@ async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000 } = {}) {
 
     const spends = [];
     const regions = [];
-    const onSpend = (e) => spends.push({ region: e?.region ?? null, mana: e?.mana ?? null });
+    // ⛓ PLAY CLOCK — the spends and the clock's reports in ONE sequence (bus order), each stamped with its time.
+    const log = [];
+    const onSpend = (e) => {
+        spends.push({ region: e?.region ?? null, mana: e?.mana ?? null });
+        log.push({ kind: 'spend', at: performance.now(), region: e?.region ?? null, mana: e?.mana ?? null });
+    };
+    const onClock = (e) => log.push({ kind: 'clock', at: performance.now(), region: e?.region ?? null,
+        running: e?.running ?? null, gameSeconds: e?.stats?.gameSeconds ?? null });
     const onRegion = (e) => regions.push(e?.newRegion ?? null);
     const manaTrace = [];
     const onMana = () => manaTrace.push(Math.round(gs.getCurrentMana() * 100) / 100);
     const prices = new Map(queue.map((a) => [queueLine(a), loopStateSingleton._calculateActionCost(a)]));
     tc.eventBus.subscribe('loops:manaSpent', onSpend);
+    tc.eventBus.subscribe(PLAY_CLOCK_EVENT, onClock);
     tc.eventBus.subscribe('gameState:regionChanged', onRegion);
     tc.eventBus.subscribe('gameState:manaChanged', onMana);
+    // The time-drain price of each Seedling region now (XP discounts it as the region is played, so read again after).
+    const drainPrice = () => Object.fromEntries(seedlingRegions.map((r) =>
+        [r, loopStateSingleton._calculateActionCost({ type: 'timeDrain', sourceRegion: r })]));
+    const drainBefore = drainPrice();
     const controller = substrateRegistry.get('flash_seedling')?.getPlaybackController?.() ?? null;
     const goals = [];
     // ⛔ The controller is ONE instance for the session: the goal it holds now is an earlier row's (measured on CI —
@@ -1625,7 +1640,7 @@ async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000 } = {}) {
             processing: loopStateSingleton.isProcessing, parkedAfter: loopStateSingleton.botSolverRegion?.() ?? null,
             pausedUntilReset: loopStateSingleton._queuePausedUntilReset === true,
             spent: manaBefore - gs.getCurrentMana(), manaBefore, manaTrace, spends, regions, goals,
-            wallSeconds: (performance.now() - t0) / 1000,
+            wallSeconds: (performance.now() - t0) / 1000, log, drainBefore, drainAfter: drainPrice(),
             // What each queued Seedling action costs at its loop price (the expected charges, in queue order).
             priced: queued.map((q) => ({ region: q.split(':')[1].split('>')[0], mana: prices.get(q) ?? null })),
         };
@@ -1638,6 +1653,7 @@ async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000 } = {}) {
         return out;
     } finally {
         tc.eventBus.unsubscribe?.('loops:manaSpent', onSpend);
+        tc.eventBus.unsubscribe?.(PLAY_CLOCK_EVENT, onClock);
         tc.eventBus.unsubscribe?.('gameState:regionChanged', onRegion);
         tc.eventBus.unsubscribe?.('gameState:manaChanged', onMana);
     }
@@ -1649,13 +1665,42 @@ function assertLoopEndedOnItsOwn(tc, label, r) {
         'true/queueEnd/false/null/false', `${r.queueCompleted}/${r.reason}/${r.processing}/${r.parkedAfter}/${r.pausedUntilReset}`);
 }
 
-/** ⛓ MANA — the Seedling spends are exactly the queued actions' own prices, one each, in order: no time drain. */
-function assertSeedlingChargedPerAction(tc, label, r, seedlingRegions) {
+/** Whether `sub` is an in-order subsequence of `seq` (by JSON). */
+function isSubsequence(sub, seq) {
+    let i = 0;
+    for (const x of seq) if (i < sub.length && JSON.stringify(x) === JSON.stringify(sub[i])) i += 1;
+    return i === sub.length;
+}
+
+/**
+ * ⛓ MANA — every queued Seedling action is charged once at its own price, in order; ⛓ PLAY CLOCK — the rest of the
+ * region's spend is the time drain, which the game's own reported seconds bound: at most the drain price of the
+ * whole seconds of each visit, at least that less two (a report and a drain tick each land once a second, so up to
+ * two of a visit's last seconds are unsettled when its region changes). Returns `{region: {drain, seconds}}`.
+ */
+function assertSeedlingCharged(tc, label, r, seedlingRegions) {
     const seedlingSpends = r.spends.filter((sp) => seedlingRegions.includes(sp.region));
-    tc.assertEqual(`[${label}] mana: one charge per queued Seedling action, at its own price — no per-second drain `
-        + `(a Seedling region is COARSE) over ${r.wallSeconds.toFixed(1)} s of walking`,
-        JSON.stringify(r.priced), JSON.stringify(seedlingSpends));
+    tc.assertEqual(`[${label}] mana: one charge per queued Seedling action at its own price, in order (the drain between)`,
+        true, isSubsequence(r.priced, seedlingSpends));
+    if (!isSubsequence(r.priced, seedlingSpends)) tc.log(`[${label}] priced ${JSON.stringify(r.priced)} vs spends ${JSON.stringify(seedlingSpends)}`, 'error');
     tc.assertEqual(`[${label}] the queue cost mana`, true, r.spent > 0);
+    const out = {};
+    for (const region of seedlingRegions) {
+        const spent = seedlingSpends.filter((sp) => sp.region === region).reduce((a, sp) => a + sp.mana, 0);
+        const priced = r.priced.filter((p) => p.region === region).reduce((a, p) => a + p.mana, 0);
+        const drain = Math.round((spent - priced) * 1000) / 1000;
+        // The visit's seconds: the last gameSeconds the game reported for the region (one visit per region here).
+        const reports = r.log.filter((e) => e.kind === 'clock' && e.region === region);
+        const seconds = reports.length ? reports[reports.length - 1].gameSeconds : 0;
+        const whole = Math.floor(seconds);
+        const hi = r.drainBefore[region] * whole;
+        const lo = r.drainAfter[region] * Math.max(0, whole - 2);
+        tc.assertEqual(`[${label}] ${region}: the drain (${drain}) is the game's ${seconds.toFixed(2)} s × its drain price `
+            + `(${r.drainBefore[region]}→${r.drainAfter[region]}/s): within [${lo}, ${hi}] — never the ${r.wallSeconds.toFixed(1)} wall seconds`,
+            true, drain >= lo - 1e-6 && drain <= hi + 1e-6);
+        out[region] = { drain, seconds };
+    }
+    return out;
 }
 
 async function seedlingLoopBotCleanup() {
@@ -1764,7 +1809,7 @@ const loopBotWalksAtlasRoom = (runtime) => async (tc) => withRuntimeRestored(tc,
         reportedExits(up.win).some((e) => e.fromLevel === 86 && e.type === 'teleporter'));
     tc.assertEqual(`[${runtime}] gameState moved into the maze child`, MAZE_CHILD, readCurrentRegion());
     assertLoopEndedOnItsOwn(tc, runtime, r);
-    assertSeedlingChargedPerAction(tc, runtime, r, [HOUSE_REGION]);
+    assertSeedlingCharged(tc, runtime, r, [HOUSE_REGION]);
     assertNoDeathNoHalt(tc, runtime, up.rt);
 });
 
@@ -1807,7 +1852,7 @@ const loopBotCrossesAtlasRooms = (runtime) => async (tc) => {
             tc.assertEqual(`[${runtime}] the game took the stairs and the descent, and no door for the link`,
                 JSON.stringify(['0:stairsdown', '2:teleporter']), JSON.stringify(reportedExits(up.win).map((e) => `${e.fromLevel}:${e.type}`)));
             assertLoopEndedOnItsOwn(tc, runtime, r);
-            assertSeedlingChargedPerAction(tc, runtime, r, [OVERWORLD, OWLS_NEST, DUNGEON]);
+            assertSeedlingCharged(tc, runtime, r, [OVERWORLD, OWLS_NEST, DUNGEON]);
             assertNoDeathNoHalt(tc, runtime, up.rt);
         });
     } finally {
@@ -1855,6 +1900,7 @@ export async function seedlingFlashRuntimeLoopBotBlockNamesItsStop(tc) {
         if (!block) return;
         loopStateSingleton.setBlockMode(HOUSE_REGION, block.instance, 'bot');
         gs.refillMana();
+        const clockReads = getSeedlingPlayClock()?.stats.reads ?? null;
         const stopped = tc.waitForEvent('loopState:botWalkFailed', 15000).catch(() => null);
         const t0 = performance.now();
         loopStateSingleton.startProcessing();
@@ -1870,6 +1916,9 @@ export async function seedlingFlashRuntimeLoopBotBlockNamesItsStop(tc) {
         tc.assertEqual('[flash] the refusal was synchronous (no held goal, no 60 s give-up)', true, ms < 5000);
         tc.assertEqual('[flash] the park was dropped and the queue paused (not parked on the house)', 'null/false',
             `${loopStateSingleton.botSolverRegion?.() ?? null}/${loopStateSingleton.isProcessing}`);
+        // ⛓ PLAY CLOCK — the Flash (Ruffle) runtime's game is never read for a clock (its SWF calls no setPlayClock).
+        tc.assertEqual('[flash] the play clock read nothing on the Flash runtime (loop mode on)', clockReads,
+            getSeedlingPlayClock()?.stats.reads ?? null);
     });
 }
 
@@ -1884,14 +1933,191 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+// ── ⛓ PLAY CLOCK: the game's own seconds drain mana (⚖ "Drain play time too") ─────────────────────────────────
+//
+// flash_seedling declares `loopSupport.playClock`; `seedlingPlayClock.js` reports `Game.time` (wasm) / the model's
+// steps (JS) as `substrate:playClock`, and Loops charges the parked region per GAME second. Two rows per runtime, each
+// on its own load:
+//   DRAIN + STOP (a Bot block) — every solve is HELD `PLAY_CLOCK_HOLD_MS` (`holdSolveWorker`, the row's own seam): the
+//      JS page holds the room while a solve is in flight, the wasm engine freezes it (`botHold`). While the clock is
+//      stopped nothing is charged; while it runs, the house is charged its drain price per game second reported.
+//   MANA OUT (a MANUAL block, nobody at the keys) — the pool is cut to half a second's drain once the park is up; the
+//      idle game's clock runs, its first whole second runs the pool out, and the loop ends (`loopState:loopReset`;
+//      auto-restart off: the queue stops). ⚠ Not a Bot block: measured, the JS bot reaches the chest (price 10) in
+//      under one game second, so a Bot walk's own price, not the drain, would empty a pool that small.
+
+const PLAY_CLOCK_HOLD_MS = 3000;
+
+/** Hold every solve of this row's runtime `holdMs` (a real worker, its answer delayed). Returns `{record, restore}`. */
+function holdSolvesOn(runtime, up, holdMs) {
+    if (runtime === 'js') return holdSolveWorker(up.win, up.rt.playback.solveService, { answer: true, holdMs });
+    // The wasm engine's service builds its worker off the HOST's `Worker` (lazily); one built earlier is dropped.
+    const engineService = () => substrateRegistry.get('flash_seedling')?.getPlaybackController?.()?.wasmSolveService?.() ?? null;
+    const hold = holdSolveWorker(window, engineService() ?? { stats: { live: false }, dispose() {} }, { answer: true, holdMs });
+    return {
+        record: hold.record,
+        restore() {
+            hold.restore();
+            // A service built DURING the hold holds a wrapped worker: drop it, so later rows solve unheld.
+            const svc = engineService();
+            if (svc?.stats?.live) svc.dispose();
+        },
+    };
+}
+
+/**
+ * The clock's STOPPED windows for `region`: a `running: false` report up to the next report. The stop's own settle
+ * (Loops charges the seconds played up to the stop, synchronously, in the same turn) is not inside the window.
+ */
+function stoppedWindows(log, region) {
+    const out = [];
+    log.forEach((e, i) => {
+        if (e.kind !== 'clock' || e.region !== region || e.running !== false) return;
+        const j = log.findIndex((f, k) => k > i && f.kind === 'clock');
+        const end = j < 0 ? null : log[j];
+        const inside = log.slice(i + 1, j < 0 ? log.length : j)
+            .filter((f) => f.kind === 'spend' && f.region === region && f.at - e.at > 20);
+        out.push({ ms: end ? Math.round(end.at - e.at) : null, seconds: e.gameSeconds, resumed: end?.region === region && end.running === true,
+            spent: inside.reduce((a, f) => a + f.mana, 0) });
+    });
+    return out;
+}
+
+const loopPlayClockDrains = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
+    const up = await atlasPresetOn(tc, runtime, ATLAS_LOCATION_PATH, HOUSE_REGION);
+    if (!up) return;
+    tc.assertEqual(`[${runtime}] the play clock reporter is up (flashPanel)`, true, !!getSeedlingPlayClock());
+    const hold = holdSolvesOn(runtime, up, PLAY_CLOCK_HOLD_MS);
+    let r = null;
+    try {
+        r = await seedlingLoopBotQueue(tc, runtime, [
+            { check: CHEST_LOCATION, region: HOUSE_REGION },
+            { exit: HOUSE_EXIT, from: HOUSE_REGION, to: MAZE_CHILD },
+        ]);
+    } finally {
+        hold.restore();
+    }
+    if (!r) return;
+    tc.log(`[${runtime}] hold ${JSON.stringify(hold.record)}`);
+    tc.assertEqual(`[${runtime}] the row's hold took the solves (a real worker, answers delayed ${PLAY_CLOCK_HOLD_MS} ms)`,
+        true, hold.record.wrapped > 0 && hold.record.started > 0 && hold.record.delivered > 0);
+    assertLoopEndedOnItsOwn(tc, runtime, r);
+    const charged = assertSeedlingCharged(tc, runtime, r, [HOUSE_REGION]);
+    tc.assertEqual(`[${runtime}] mana FELL with the game's seconds: ${charged[HOUSE_REGION].drain} for `
+        + `${charged[HOUSE_REGION].seconds.toFixed(2)} game seconds`, true, charged[HOUSE_REGION].drain > 0 && charged[HOUSE_REGION].seconds >= 1);
+    const house = r.log.filter((e) => e.kind === 'clock' && e.region === HOUSE_REGION).map((e) => e.gameSeconds);
+    tc.assertEqual(`[${runtime}] the house's gameSeconds never went back`, true, house.every((g, i) => i === 0 || g >= house[i - 1]));
+    const windows = stoppedWindows(r.log, HOUSE_REGION);
+    tc.log(`[${runtime}] stopped windows: ${JSON.stringify(windows)}`);
+    const held = windows.filter((w) => w.ms !== null && w.ms >= PLAY_CLOCK_HOLD_MS / 2);
+    tc.assertEqual(`[${runtime}] the clock was reported STOPPED for a held solve (a window ≥ ${PLAY_CLOCK_HOLD_MS / 2} ms)`, true, held.length > 0);
+    tc.assertEqual(`[${runtime}] …and resumed after it`, true, held.some((w) => w.resumed));
+    tc.assertEqual(`[${runtime}] no mana fell while the clock was stopped`, '0', String(windows.reduce((a, w) => a + w.spent, 0)));
+    assertNoDeathNoHalt(tc, runtime, up.rt);
+});
+
+const loopPlayClockManaOut = (runtime) => async (tc) => {
+    const restart = loopStateSingleton.autoRestartQueue;
+    const log = [];
+    const onSpend = (e) => log.push({ kind: 'spend', at: performance.now(), region: e?.region ?? null, mana: e?.mana ?? null });
+    const onClock = (e) => log.push({ kind: 'clock', at: performance.now(), region: e?.region ?? null,
+        running: e?.running ?? null, gameSeconds: e?.stats?.gameSeconds ?? null });
+    try {
+        return await withRuntimeRestored(tc, async () => {
+            const up = await atlasPresetOn(tc, runtime, ATLAS_LOCATION_PATH, HOUSE_REGION);
+            if (!up) return;
+            const gs = getGameStateSingleton();
+            loopStateSingleton.autoRestartQueue = false;
+            gs.setLoopModeActive(true);
+            const on = await tc.pollForCondition(() => gs.isLoopModeActive === true, `[${runtime}] loop mode on`, 5000, 100);
+            tc.reportCondition(`[${runtime}] loop mode on`, !!on);
+            if (!on) return;
+            gs.addLocationCheck(CHEST_LOCATION, HOUSE_REGION);
+            const block = loopBlockFor(HOUSE_REGION);
+            tc.assertEqual(`[${runtime}] resolved the house's queue block`, true, !!block);
+            if (!block) return;
+            loopStateSingleton.setBlockMode(HOUSE_REGION, block.instance, 'manual');
+            tc.eventBus.subscribe('loops:manaSpent', onSpend);
+            tc.eventBus.subscribe(PLAY_CLOCK_EVENT, onClock);
+            gs.refillMana();
+            loopStateSingleton.startProcessing();
+            const parked = await tc.pollForCondition(() => loopStateSingleton.livePlayRegion?.() === HOUSE_REGION,
+                `[${runtime}] the house's MANUAL block parked (live play)`, 15000, 20);
+            tc.reportCondition(`[${runtime}] the house's manual block parked (live play, nobody at the keys)`, !!parked);
+            if (!parked) return;
+            const price = loopStateSingleton._calculateActionCost({ type: 'timeDrain', sourceRegion: HOUSE_REGION });
+            const cut = { price, to: price / 2, at: performance.now() };
+            const reset = tc.waitForEvent('loopState:loopReset', 30000).catch(() => null);
+            gs.deductMana(gs.getCurrentMana() - cut.to);
+            const ended = await reset;
+            await tc.stateManager.pingWorker('after-mana-out', 5000);
+            const after = log.filter((e) => e.at >= cut.at);
+            const spends = after.filter((e) => e.kind === 'spend');
+            const ran = after.filter((e) => e.kind === 'clock' && e.region === HOUSE_REGION && e.running === true);
+            tc.log(`[${runtime}] cut ${JSON.stringify(cut)}; after it: ${JSON.stringify(after)}`);
+            tc.assertEqual(`[${runtime}] the drain price is positive (${price})`, true, price > 0);
+            tc.assertEqual(`[${runtime}] running mana out ENDED the loop (loopState:loopReset)`, true, !!ended);
+            tc.assertEqual(`[${runtime}] …the pool was run out by the house's DRAIN alone (whole drain-priced seconds, nothing queued completed)`,
+                true, spends.length > 0 && spends.every((e) => e.region === HOUSE_REGION
+                    && Math.abs(e.mana / price - Math.round(e.mana / price)) < 1e-6)
+                    && spends.reduce((a, e) => a + e.mana, 0) >= cut.to - 1e-6);
+            tc.assertEqual(`[${runtime}] …while the game's clock RAN (a running report for the house)`, true, ran.length > 0);
+            tc.assertEqual(`[${runtime}] the chest was not checked (nobody walked to it)`, false, snapshotFacts(tc).checked.has(CHEST_LOCATION));
+            tc.assertEqual(`[${runtime}] the reset refilled the pool and stopped the queue (no auto-restart)`,
+                `${gs.maxMana}/false`, `${gs.getCurrentMana()}/${loopStateSingleton.isProcessing}`);
+            assertNoDeathNoHalt(tc, runtime, up.rt);
+        });
+    } finally {
+        tc.eventBus.unsubscribe?.('loops:manaSpent', onSpend);
+        tc.eventBus.unsubscribe?.(PLAY_CLOCK_EVENT, onClock);
+        loopStateSingleton.autoRestartQueue = restart;
+    }
+};
+
+export const seedlingJsRuntimeLoopPlayClockDrains = loopPlayClockDrains('js');
+export const seedlingWasmRuntimeLoopPlayClockDrains = loopPlayClockDrains('wasm');
+export const seedlingJsRuntimeLoopPlayClockManaOut = loopPlayClockManaOut('js');
+export const seedlingWasmRuntimeLoopPlayClockManaOut = loopPlayClockManaOut('wasm');
+
+const PLAY_CLOCK_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on and `
+    + 'the house\'s block Bot (⚖ "Drain play time too"), every solve held 3 s by the row: the reported clock stops for '
+    + 'the hold and nothing is charged; the house is charged its drain price per GAME second reported (substrate:playClock), '
+    + 'each queued action its own price; the queue ends on its own.';
+const MANA_OUT_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on and `
+    + 'the house\'s block MANUAL with nobody at the keys: the pool cut to half a second\'s drain once parked — the idle '
+    + 'game\'s clock runs, its first whole second runs the pool out by the drain alone, and the loop ends '
+    + '(loopState:loopReset, auto-restart off).';
+
+for (const [id, name, fn, description] of [
+    ['seedling-js-runtime-loop-play-clock-drains-mana',
+        'Seedling JS runtime: a Loops Bot block is charged per GAME second (a stopped clock is free)',
+        seedlingJsRuntimeLoopPlayClockDrains, PLAY_CLOCK_DESCRIPTION('js')],
+    ['seedling-wasm-runtime-loop-play-clock-drains-mana',
+        'Seedling (wasm runtime): a Loops Bot block is charged per GAME second (a stopped clock is free)',
+        seedlingWasmRuntimeLoopPlayClockDrains, PLAY_CLOCK_DESCRIPTION('wasm')],
+    ['seedling-js-runtime-loop-play-clock-mana-out',
+        'Seedling JS runtime: the game\'s clock runs the mana out and the loop ends',
+        seedlingJsRuntimeLoopPlayClockManaOut, MANA_OUT_DESCRIPTION('js')],
+    ['seedling-wasm-runtime-loop-play-clock-mana-out',
+        'Seedling (wasm runtime): the game\'s clock runs the mana out and the loop ends',
+        seedlingWasmRuntimeLoopPlayClockManaOut, MANA_OUT_DESCRIPTION('wasm')],
+]) {
+    registerTest({
+        id, name, description,
+        testFunction: restoresSavedQueues(fn),
+        category: 'Seedling JS runtime',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
 const LOOP_ROOM_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on `
     + 'and the house\'s block set to Bot: loops hands the queued chest check and the departure to the flash_seedling '
     + 'controller (executeVia solver); the game\'s own check completes the first, the door crossing\'s user:regionMove '
-    + 'the second, and the queue ends on its own. Mana: one charge per action at its own price, no per-second drain (COARSE).';
+    + 'the second, and the queue ends on its own. Mana: one charge per action at its own price, plus the play clock\'s drain per GAME second.';
 const LOOP_CROSS_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas, loop mode on and every `
     + 'Seedling block set to Bot (the sword granted through the AP item path, removed after): the owl\'s-nest stairs, the '
     + 'descent into the dungeon, then the sword-gated LOGICAL link to its far sub-region (credited by the region binding, '
-    + 'its user:regionMove on the next turn) — each resuming its park; the queue ends on its own; one charge per action.';
+    + 'its user:regionMove on the next turn) — each resuming its park; the queue ends on its own; one charge per action, plus the play clock\'s drain.';
 
 for (const [id, name, fn, description] of [
     ['seedling-js-runtime-loop-bot-block-walks-atlas-room',
