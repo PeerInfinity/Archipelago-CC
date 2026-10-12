@@ -1435,9 +1435,12 @@ export function createLevelRun({
                 // the clear list may not name a fallrock tag, so a rock that
                 // boots fallen is a state no build reaches. Asserted by the
                 // refusal rather than by this comment.
+                // ⛓ fidelity L74LEG624 D2: …except a `postFall` row (`levelWorld.postFallRockOf`, the switch ON),
+                // which the ctor builds FALLEN — Solid at its cell, `_active`, so no publication drops it again.
+                const fallen = r.postFall === true;
                 st.set(r.id, {
-                    ...createFallRock(r.x, r.y, r.t, r.persistTag, false),
-                    landed: false,
+                    ...createFallRock(r.x, r.y, r.t, r.persistTag, fallen),
+                    landed: fallen,
                 });
             }
             fallRockStates.set(n, st);

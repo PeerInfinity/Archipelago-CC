@@ -80,6 +80,7 @@ import { PROFILE } from './seedlingProfile.js';
 // acceptance of a game-written `{L, 29}`. `outOfBandLedger.js` imports only
 // `breakableRocks.js` — leaf-ward again, not a cycle.
 import { outOfBandFlagForWriter } from './outOfBandLedger.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 /**
  * The player hitbox origin, for recovering the entity position from a box.
@@ -3038,6 +3039,16 @@ export function arenaRockOf(e) {
         && Boolean(Number(e.attrs?.thirdboss));
 }
 
+/**
+ * ⛓⛓ fidelity L74LEG624 D2 (`CONTACT_FIDELITY.fallRockPostFall`, OFF by default): is `e` a NON-ARENA `FallRock` whose
+ * cleared tag this build may BUILD FALLEN? `FallRock.as:42-47` is the whole post-fall state — `y = fallTo`, `type =
+ * "Solid"`, `_active = true` — and `fallRock.createFallRock(…, true)` already transcribes it; what refused it was this
+ * build, not the run. `FallRockLarge` stays out (L82's `bossrock` has its own `update` arm, unread here).
+ */
+export function postFallRockOf(e) {
+    return CONTACT_FIDELITY.fallRockPostFall === true && e?.type === 'fallrock';
+}
+
 export function clearedAwayByTag(e, clearedTags) {
     if (!clearedTags) return false;
     const entityTag = tagOf(e.type, e.attrs);
@@ -4250,6 +4261,8 @@ export function buildLevelWorld(levelRecord, {
     const fallRocks = [];
     /** ⛓ ENCOUNTERS D2: the arena rocks this build's clears leave FALLEN (`arenaRockOf`). */
     const arenaRockFallen = new Set();
+    /** ⛓ fidelity L74LEG624 D2: the non-arena `FallRock`s this build's clears leave FALLEN (`postFallRockOf`). */
+    const postFallRocks = new Set();
     /**
      * ⛔⛔ R5 slice 13: every live `Spinner` — the first ENEMY the run steps.
      *
@@ -4722,6 +4735,10 @@ export function buildLevelWorld(levelRecord, {
              */
             if (refusal && arenaRockOf(e)) {
                 arenaRockFallen.add(`${e.type}@${x},${y}`);
+            } else if (refusal && postFallRockOf(e)) {
+                // ⛓ fidelity L74LEG624 D2: the rock the game leaves after its fall (the clear list is the game's live
+                // `persistence_cleared`, so {74,2} after L74's arrival button is TRUE state, not a staging choice).
+                postFallRocks.add(`${e.type}@${x},${y}`);
             } else if (refusal) {
                 fail(`${where}: the tape clears tag ${entityTag}, which is a `
                     + `"${e.type}" at (${x},${y}) — response "${response}", and `
@@ -5346,6 +5363,8 @@ export function buildLevelWorld(levelRecord, {
                 } : {}),
                 // ⛓ ENCOUNTERS D2: present only when the build's clears felled it.
                 ...(arenaRockFallen.has(`${e.type}@${x},${y}`) ? { fallenAtBuild: true } : {}),
+                // ⛓ L74LEG624 D2: present only when the build's clears felled a non-arena rock (the switch ON).
+                ...(postFallRocks.has(`${e.type}@${x},${y}`) ? { postFall: true } : {}),
             });
         }
         /**
