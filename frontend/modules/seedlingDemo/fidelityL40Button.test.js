@@ -19,6 +19,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { withContactFidelity } from './contactFidelity.js';
 import { atlasLevelSource } from './levelSource.js';
 import { STANCE_ROCKS, SolverRefusal, stanceHypothesisProbe, withStanceRocks } from './solverBot.js';
 import { parseTape } from './tapeFormat.js';
@@ -73,18 +74,31 @@ describe('L40BUTTON D2 — the switch and the hypothesis', () => {
         expect(rocksIn(withStanceRocks(true, () => stanceHypothesisProbe(run)))).toEqual([]);
     });
 
-    it('from the cluster\'s own boot: OFF refuses with the legs\' sentence, ON latches t0, breaks, latches t1, collects', async () => {
+    // ⚖ wave-13 harvest (user, 2026-10-11: bombPusherLive "ON at harvest"): with the lobber live, the cluster's hold on
+    // buttonroom@272,208 stands inside bombpusher@112,128's reach and is refused BY NAME (the game bombs it — L40BUTTON's
+    // damage-on walks). The route itself (the rocks in the hypothesis) is pinned below with the lobber OFF.
+    it('from the cluster\'s own boot, bombPusherLive ON (the default): the hold inside the lobber\'s reach is refused by name', async () => {
         let refusal = null;
-        try { await solveFrom(CLUSTER_BOOT, false); } catch (e) { refusal = e; }
+        try { await solveFrom(CLUSTER_BOOT, true); } catch (e) { refusal = e; }
+        expect(refusal).toBeInstanceOf(SolverRefusal);
+        expect(refusal.message).toMatch(/inside bombpusher@112,128's 256 px reach/);
+    }, 360_000);
+
+    it('from the cluster\'s own boot (bombPusherLive OFF): OFF refuses with the legs\' sentence, ON latches t0, breaks, latches t1, collects', async () => {
+        let refusal = null;
+        try { await withContactFidelity({ bombPusherLive: false }, () => solveFrom(CLUSTER_BOOT, false)); } catch (e) { refusal = e; }
         expect(refusal).toBeInstanceOf(SolverRefusal);
         expect(refusal.message).toMatch(/no REACHABLE stance inside buttonroom@160,128/);
         expect(refusal.message).toMatch(/wandlock@448,432 — its group t=2 publishes only while a Solid sits on button@480,384/);
 
-        const solved = await solveFrom(CLUSTER_BOOT, true);
+        const solved = await withContactFidelity({ bombPusherLive: false }, () => solveFrom(CLUSTER_BOOT, true));
         expect(solved.out.records.map((r) => r.strategy)).toEqual(['hold', 'break', 'hold', 'collect']);
         const staging = await l40buttonStaging(CLUSTER_BOOT);
-        const run = createRunForStaging({ ...staging, persistence: solved.persistence }, levelSource);
-        for (const held of solved.out.perTick) run.advance(held);
+        const run = withContactFidelity({ bombPusherLive: false }, () => {
+            const r = createRunForStaging({ ...staging, persistence: solved.persistence }, levelSource);
+            for (const held of solved.out.perTick) r.advance(held);
+            return r;
+        });
         expect(run.playerHits.length).toBe(0);
         const at = Object.fromEntries(run.earnedClears.filter((c) => c.level === 40).map((c) => [c.tag, c.t]));
         expect(at[7]).toBeLessThan(Math.min(at[22], at[23], at[24]));

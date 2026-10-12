@@ -265,9 +265,10 @@ export const CONTACT_FIDELITY = {
      * range, hits at L42 t1064/t1156 and L41 t1153/t1291 (and t1337's kills). ON: `levelRun` steps the lobber
      * (`stepBombPushersNow`), its bombs (`stepBombsNow`) and their Explosions at `updateLists()`
      * (`drainBombBlastsNow`), billed through `applyPlayerHit`; an Explosion that would reach an `"Enemy"` body is
-     * refused by name. OFF: the quiet room, byte-identical. ⛔ OFF by default: the flip is the user's licence.
+     * refused by name. OFF: the quiet room, byte-identical. ⚖ ON by default since the wave-13 harvest (user,
+     * 2026-10-11: "ON at harvest"; L40 legs 378/381 refuse the hold by name — CI sweep 38185191405).
      */
-    bombPusherLive: false,
+    bombPusherLive: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

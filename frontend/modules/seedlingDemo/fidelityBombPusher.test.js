@@ -47,8 +47,9 @@ function replay(w) {
 }
 
 describe('BOMBPUSHER — the switch', () => {
-    it('bombPusherLive ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.bombPusherLive).toBe(false);
+    // ⚖ ON by default since the wave-13 harvest (user, 2026-10-11: "ON at harvest").
+    it('bombPusherLive ships ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.bombPusherLive).toBe(true);
     });
 });
 
