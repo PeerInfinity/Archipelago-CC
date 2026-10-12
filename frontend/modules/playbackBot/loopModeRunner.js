@@ -163,6 +163,7 @@ export class LoopModeRunner {
             || (d.exitsOf(region) ?? []).some((e) => !isExitDiscovered(region, e.name)));
         return {
             hasHidden,
+            canCheck: (region) => d.supportsQueueAction?.(region, 'locationCheck') !== false,
             startRegion,
             target: d.nextTarget(),
             exitsOf: d.exitsOf,

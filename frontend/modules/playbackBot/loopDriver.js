@@ -49,6 +49,7 @@ export const MANA_STRATEGY_LABELS = Object.freeze({
  * @property {(entry: Object) => number} costOf    the live, XP-discounted cost of one queue entry
  * @property {number} maxMana                      a loop's pool
  * @property {(region: string) => boolean} [hasHidden]  something left to discover there (default: assume yes)
+ * @property {(region: string) => boolean} [canCheck]   the region's queue takes a locationCheck (default: yes)
  * @property {string} [strategy]                   one of MANA_STRATEGIES
  * @property {() => Array<{kind: 'explore'|'check', region: string, location?: string}>} [availableTasks]  RANDOM only
  * @property {string|null} [lastTaskKey]           RANDOM only: the previous loop's task, avoided when possible
@@ -91,6 +92,10 @@ export function buildLoopPath(hops, last = null) {
             path.push({ type: 'customAction', actionName: 'explore', params: {}, sourceRegion: last.region, instanceNumber });
         } else if (last.kind === 'check') {
             path.push({ type: 'locationCheck', locationName: last.location, sourceRegion: last.region, instanceNumber });
+        } else if (last.kind === 'pass' && last.exit) {
+            const n = (instances.get(last.exit.to) ?? 0) + 1;
+            instances.set(last.exit.to, n);
+            path.push({ type: 'regionMove', sourceRegion: last.region, destinationRegion: last.exit.to, exitUsed: last.exit.name, instanceNumber: n });
         }
     }
     return path;
@@ -112,7 +117,7 @@ export function nextTask(view) {
     const known = findRoute(startRegion, target.regionName, exitsOf, discovered);
     if (known) {
         return isLocationDiscovered(target.locationName)
-            ? { kind: 'check', region: target.regionName, location: target.locationName, hops: known }
+            ? checkOrPass(view, target, known)
             : { kind: 'explore', region: target.regionName, hops: known };
     }
     const full = findRoute(startRegion, target.regionName, exitsOf);
@@ -131,7 +136,27 @@ function fmt(cost) {
     return String(Math.round(cost * 10) / 10);
 }
 
+/**
+ * ⚖ The user (2026-10-11): a substrate whose queue takes moves only (JtA, omsi) uses its own automation — the
+ * check is never assembled into the queue. So a target there is a PASS: move into the region and out through
+ * one of its exits; the walk (its Bot block) takes the checks on the way. A region with no exit cannot be passed.
+ */
+function checkOrPass(view, target, hops) {
+    if (view.canCheck?.(target.regionName) !== false) {
+        return { kind: 'check', region: target.regionName, location: target.locationName, hops };
+    }
+    const exit = (view.exitsOf(target.regionName) ?? []).find((e) => e?.to && e.to !== target.regionName) ?? null;
+    if (!exit) return { kind: 'unreachable', reason: `${target.regionName} takes no check and has no exit to pass through` };
+    return { kind: 'pass', region: target.regionName, location: target.locationName, exit, hops };
+}
+
+function describeTask(task) {
+    if (task.kind === 'pass') return `pass through ${task.region} via "${task.exit.name}" (its automation takes "${task.location}")`;
+    return task.kind === 'check' ? `check "${task.location}"` : `explore ${task.region}`;
+}
+
 function taskKey(task) {
+    if (task.kind === 'pass') return `pass:${task.location}`;
     return task.kind === 'check' ? `check:${task.location}` : `explore:${task.region}`;
 }
 
@@ -160,7 +185,7 @@ export function planNextLoop(view) {
     if (!view.target) return { kind: 'done' };
     const task = nextTask(view);
     if (task.kind === 'unreachable') {
-        return { kind: 'unreachable', reason: `no route from ${view.startRegion} to ${view.target.regionName}` };
+        return { kind: 'unreachable', reason: task.reason ?? `no route from ${view.startRegion} to ${view.target.regionName}` };
     }
     return planTaskLoop(view, task, strategy);
 }
@@ -169,9 +194,10 @@ function planTaskLoop(view, task, strategy) {
     const path = buildLoopPath(task.hops, task);
     const cost = pathCost(path, view.costOf);
     const affordable = cost <= view.maxMana;
-    const what = task.kind === 'check' ? `check "${task.location}"` : `explore ${task.region}`;
+    const what = describeTask(task);
     const plan = (kind, region, hops, reason, extra = {}) => {
-        const last = kind === 'check' ? { kind, region, location: task.location } : { kind: 'explore', region };
+        const last = kind === 'check' ? { kind, region, location: task.location }
+            : kind === 'pass' ? { kind, region, exit: task.exit } : { kind: 'explore', region };
         const p = buildLoopPath(hops, last);
         const c = pathCost(p, view.costOf);
         return { kind, region, ...extra, path: p, cost: c, affordable: c <= view.maxMana, task, key: taskKey(task), reason };
@@ -182,11 +208,11 @@ function planTaskLoop(view, task, strategy) {
     // 2026-10-12: 1255 free explores in one loop).
     const canFarm = (region) => view.hasHidden?.(region) !== false;
     const attempt = (why) => plan(task.kind, task.region, task.hops, `${what} (costs ${fmt(cost)}, ${view.maxMana} mana: ${why})`,
-        task.kind === 'check' ? { location: task.location } : {});
+        task.kind !== 'explore' ? { location: task.location } : {});
     if (affordable || strategy === MANA_STRATEGIES.KEEP_ATTEMPTING) {
         return plan(task.kind, task.region, task.hops,
             affordable ? what : `${what} (costs ${fmt(cost)}, ${view.maxMana} mana: attempting anyway)`,
-            task.kind === 'check' ? { location: task.location } : {});
+            task.kind !== 'explore' ? { location: task.location } : {});
     }
     if (strategy === MANA_STRATEGIES.EXPLORE_TARGET) {
         // Straight for the task's region; only when even the walk is out of reach, farm XP at the start.
@@ -223,7 +249,7 @@ function planRandomLoop(view) {
     const cost = pathCost(path, view.costOf);
     const what = task.kind === 'check' ? `check "${task.location}"` : `explore ${task.region}`;
     return {
-        kind: task.kind, region: task.region, ...(task.kind === 'check' ? { location: task.location } : {}),
+        kind: task.kind, region: task.region, ...(task.kind !== 'explore' ? { location: task.location } : {}),
         path, cost, affordable: cost <= view.maxMana, task, key: taskKey(task), reason: `random: ${what}`,
     };
 }

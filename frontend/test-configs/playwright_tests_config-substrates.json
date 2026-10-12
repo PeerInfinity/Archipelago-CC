@@ -1772,6 +1772,12 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "loop-mode-bot S5: a generated loop-mode world of maze (Bot/delegation), text adventure (coarse → Playback) and bounce (Bot/walkTo); every sphere-log location checked by the queue."
+        },
+        {
+            "id": "playback-bot-loop-mode-jta",
+            "enabled": false,
+            "category": "Playback Bot",
+            "_comment": "loop-mode-bot S6: a generated loop-mode world with JtA zones (locations on) + a maze region; JtA targets are pass-through loops (⚖ the zone's own automation takes the check). DISABLED (2026-10-12): measured 584 pass loops in 120 s with region_1_0__10 never taken by the automation (11–16 were) — open with the JtA session."
         }
     ]
 }

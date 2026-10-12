@@ -188,3 +188,26 @@ describe('loopDriver — availableTasks', () => {
         ]);
     });
 });
+
+describe('loopDriver — move-only regions (⚖ the substrate\'s own automation takes the check)', () => {
+    const target = { locationName: 'Hall', regionName: 'Castle' };
+    const known = ['Menu:GameStart', 'Overworld:Port', 'Castle:Stairs'];
+
+    it('a target in a region whose queue takes no check is a PASS: move in, and out through an exit', () => {
+        const plan = planNextLoop(makeView({ target, discoveredExits: known, discoveredLocations: ['Hall'], canCheck: (r) => r !== 'Castle' }));
+        expect(plan.kind).toBe('pass');
+        expect(kinds(plan.path)).toEqual(['move:Overworld', 'move:Castle', 'move:Vault']);
+        expect(plan.reason).toMatch(/pass through Castle via "Stairs"/);
+        expect(plan.key).toBe('pass:Hall');
+    });
+
+    it('a move-only region with no exit cannot be passed: unreachable, named', () => {
+        const view = makeView({
+            target: { locationName: 'Chest', regionName: 'Vault' }, discoveredExits: known, discoveredLocations: ['Chest'],
+            canCheck: (r) => r !== 'Vault',
+        });
+        const plan = planNextLoop(view);
+        expect(plan.kind).toBe('unreachable');
+        expect(plan.reason).toMatch(/Vault takes no check and has no exit/);
+    });
+});

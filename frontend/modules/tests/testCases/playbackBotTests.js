@@ -12,6 +12,7 @@ import { _testOnly_getWarehouse } from '../../procgenPlayer/index.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import { arrangeShuffledSpiral, buildRulesJson } from '../../procgenPipeline/procgenPipelineEngine.js';
 import { getPanelInstance as getMazePanel } from '../../mazeRoom/index.js';
+import { getJtaEmitZoneLocations, setJtaEmitZoneLocations } from '../../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 
 const APCALC_RULES = './presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 // The smallest procgen_maze tier — picked specifically because (a) it uses
@@ -357,6 +358,23 @@ async function playbackBotLoopModeMixedTest(testController) {
   });
 }
 
+/**
+ * ⛓ loop-mode-bot S6 — JtA zones in Loop mode. JtA's queue takes moves only, so a target there is a PASS (⚖ the
+ * zone's own automation takes the check on the way). The row turns JtA zone locations ON for its world and back.
+ */
+async function playbackBotLoopModeJtaTest(testController) {
+  const before = getJtaEmitZoneLocations();
+  setJtaEmitZoneLocations(true);
+  try {
+    return await playbackBotLoopModeWorld(testController, {
+      quotas: { jta: 2, maze: 1 }, start: 'maze', seed: 5, solvers: null, watchPanel: null,
+      itemPool: { victory: 1, key_red: 1 },
+    });
+  } finally {
+    setJtaEmitZoneLocations(before);
+  }
+}
+
 async function playbackBotLoopModeWorld(testController, { quotas, start, seed, solvers, watchPanel, itemPool }) {
   const api = (mod, fn) => centralRegistry.getPublicFunction(mod, fn);
   const loopModeOn = () => api('loops', 'isLoopModeActive')?.() === true;
@@ -469,6 +487,17 @@ registerTest({
     'Generates a small loop-mode world of maze, text adventure and bounce regions and presses the bot\'s Play: '
     + 'the runner gives each block the mode that lets the queue play it, until every sphere-log location is checked.',
   testFunction: playbackBotLoopModeMixedTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+registerTest({
+  id: 'playback-bot-loop-mode-jta',
+  name: 'Playback Bot: Loop mode with JtA zones (pass-through loops)',
+  description:
+    'Generates a small loop-mode world with JtA zones (locations on) and a maze region and presses the bot\'s Play: '
+    + 'a target in a JtA zone is a pass-through loop whose Bot walk lets the zone\'s automation take the check.',
+  testFunction: playbackBotLoopModeJtaTest,
   category: 'Playback Bot',
   enabled: false,
 });
