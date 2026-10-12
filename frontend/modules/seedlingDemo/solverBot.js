@@ -8199,7 +8199,7 @@ function execHold(run, perTick, resolved, ctx) {
  * BOMBPUSHER measured the hit as AVOIDABLE: on the three damage-on L40 walks every would-be hit landed on a player
  * who had moved 0–9 px in the 31 ticks after the launch, and every blast that landed on a walking player missed. A
  * wait may move without breaking what it waits for only when the group is LATCHED — a `room = -1` ButtonRoom's
- * setter is behind `if (a)` (*"Can't be reset to false!!"*, `ButtonRoom.as:66-91`) and `Lock`'s fade then runs
+ * setter is behind `if (a)` (*"Can't be reset to false!!"*, `ButtonRoom.as:67-98`) and `Lock`'s fade then runs
  * whoever stands where; a plain `Button` republishes every tick, so stepping off it unpresses the group (never paced).
  *
  * ⇒ The still wait is asked first (`lobberHoldRefusal`'s question, unchanged); only when it prices a bomb is a paced
