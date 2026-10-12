@@ -550,7 +550,7 @@ export class LoopState {
   _timeDrainTick() {
     const liveRegion = this.livePlayRegion();
     if (liveRegion) {
-      if (this._captureShapeForRegion(liveRegion) !== 'summary') return;
+      if (!this._regionDrainsTime(liveRegion)) return;
       // N3b: the game says its clock is not running (not started, paused,
       // cleared) — the second costs nothing and is not recorded. N4: a
       // game-time clock is charged the whole game seconds it played since
@@ -689,8 +689,22 @@ export class LoopState {
   _botDrainRegion() {
     const region = this.botSolverRegion();
     if (!region) return null;
-    if (this._captureShapeForRegion(region) !== 'summary') return null;
+    if (!this._regionDrainsTime(region)) return null;
     return region;
+  }
+
+  /**
+   * Whether time played in `region` costs mana: a SUMMARY substrate's
+   * (time is its economy, M5), or a COARSE one that declares
+   * `loopSupport.playClock` and so reports its own game clock (⚖ user
+   * 2026-10-12, Seedling: "Drain play time too"). A fine-grained substrate
+   * charges natively per tile and never drains time; a coarse one without a
+   * play clock is charged per queued action only.
+   */
+  _regionDrainsTime(region) {
+    const shape = this._captureShapeForRegion(region);
+    if (shape === 'summary') return true;
+    return shape === 'coarse' && this._regionReportsPlayClock(region);
   }
 
   /**
@@ -3848,7 +3862,12 @@ export class LoopState {
     // EXPLICITLY (user ruling 2026-07-23) — the 50/100 fallbacks below,
     // and the sidecar-level defaults behind them, must never reach a
     // summary action, or every visit would be charged twice.
-    if (action?.sourceRegion && this._captureShapeForRegion(action.sourceRegion) === 'summary') {
+    // A COARSE region whose substrate declares a play clock (Seedling) is
+    // ALSO time-drained (⚖ user 2026-10-12, "Drain play time too"): its
+    // timeDrain is priced like a summary region's; its queue actions keep
+    // their own prices below.
+    if (action?.sourceRegion && (this._captureShapeForRegion(action.sourceRegion) === 'summary'
+        || (action.type === 'timeDrain' && this._regionDrainsTime(action.sourceRegion)))) {
       baseCost = this._summaryBaseCost(action);
       return applyRegionXpCostEffect(
         baseCost,
