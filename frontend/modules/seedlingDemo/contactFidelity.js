@@ -366,6 +366,16 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no licence yet); `SEEDLING_ARRIVAL_BUTTON_ARM=0|1` for a node measurement.
      */
     arrivalButtonArm: false,
+    /**
+     * fidelity UNBILLEDGATE D2 — A SOLVE WHOSE DRIVE TOOK DAMAGE NO PLAN BILLED IS REFUSED (`solverBot.UNBILLED_DAMAGE`
+     * reads this key, so the page, its solve worker and the divergence sweep's `contact_fidelity=` set it like every
+     * switch here). OFF: `solveSegment` returns success on reaching its goals, whatever the drive took. ON: at success,
+     * a `playerHits` row of the segment's own ticks that `forcedHits` did not bill, or any `playerDeaths` row, refuses it
+     * with `obstacle.kind: 'unbilled-damage'` (tick, source, hit and death counts). ⛔ OFF by default: ON refuses steps
+     * the route survey solves today (the slice report lists them); the flip is the user's licence.
+     * `SEEDLING_UNBILLED_DAMAGE_GATE=0|1` for a node measurement.
+     */
+    unbilledDamageGate: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -448,6 +458,9 @@ if (globalThis.process?.env?.SEEDLING_FORECAST_SPEED_BY_TERRAIN === '0') CONTACT
 // ⛓ fidelity L74ARRIVAL: `SEEDLING_ARRIVAL_BUTTON_ARM=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ARRIVAL_BUTTON_ARM === '1') CONTACT_FIDELITY.arrivalButtonArm = true;
 if (globalThis.process?.env?.SEEDLING_ARRIVAL_BUTTON_ARM === '0') CONTACT_FIDELITY.arrivalButtonArm = false;
+// ⛓ fidelity UNBILLEDGATE: `SEEDLING_UNBILLED_DAMAGE_GATE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_UNBILLED_DAMAGE_GATE === '1') CONTACT_FIDELITY.unbilledDamageGate = true;
+if (globalThis.process?.env?.SEEDLING_UNBILLED_DAMAGE_GATE === '0') CONTACT_FIDELITY.unbilledDamageGate = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
