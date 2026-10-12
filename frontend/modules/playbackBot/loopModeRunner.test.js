@@ -22,7 +22,8 @@ function makeGame({ costsLoaded = true, loopMode = true, substrate = () => false
             _calculateActionCost: () => 10,
         },
         gameState: { isLoopModeActive: loopMode, getMaxMana: () => 100, setPath: (p) => game.paths.push(p) },
-        publish(event) { for (const h of [...(handlers.get(event) ?? [])]) h({}); },
+        publish(event, data = {}) { for (const h of [...(handlers.get(event) ?? [])]) h(data); },
+        publishData(event, data) { for (const h of [...(handlers.get(event) ?? [])]) h(data); },
         listeners: (event) => handlers.get(event)?.size ?? 0,
     };
     const runner = new LoopModeRunner({
@@ -75,6 +76,27 @@ describe('LoopModeRunner', () => {
         game.gameState.setPath = (p) => { order.push('setPath'); setPath(p); };
         runner.start();
         expect(order).toEqual(['clear', 'setPath']);
+    });
+
+    it('a region whose queue takes no explore counts as discovered: the loop checks instead of exploring there', () => {
+        const { game, runner } = makeGame();
+        game.exits.add('Menu:GameStart');
+        runner._d.supportsQueueAction = (region, type) => !(region === 'Overworld' && type === 'explore');
+        runner._d.regionOfLocation = (l) => (l === 'Gate' ? 'Overworld' : null);
+        runner.start();
+        expect(kinds(game.paths.at(-1))).toEqual(['move:Overworld', 'check:Gate']);
+    });
+
+    it('a loop that reaches a region it never planned is ended and planned again', () => {
+        const { game, runner } = makeGame();
+        game.exits.add('Menu:GameStart');
+        runner.start();
+        expect(kinds(game.paths.at(-1))).toEqual(['move:Overworld', 'explore:Overworld']);
+        game.publish('gameState:regionChanged', { newRegion: 'Overworld' });          // planned: fine
+        expect(game.loopState.stopProcessing).not.toHaveBeenCalled();
+        game.publishData('gameState:regionChanged', { newRegion: 'Elsewhere' });
+        expect(game.loopState.stopProcessing).toHaveBeenCalled();
+        expect(game.statuses.some((t) => /left the plan for Elsewhere/.test(t))).toBe(true);
     });
 
     it('waits while loop mode is off', () => {

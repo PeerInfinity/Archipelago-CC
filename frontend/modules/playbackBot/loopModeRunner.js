@@ -48,6 +48,8 @@ export class LoopModeRunner {
      * @param {() => Promise|null} [deps.flush]           settle the worker's snapshot before the next plan
      * @param {() => Array<{name: string, instance: number}>} [deps.queueBlocks]  the queue's blocks (resolveQueueBlocks)
      * @param {(region: string, instance: number) => string} [deps.blockKeyOf]
+     * @param {(region: string, actionType: string) => boolean} [deps.supportsQueueAction]  the region's queueActions
+     * @param {(location: string) => string|null} [deps.regionOfLocation]
      */
     constructor(deps) {
         this._d = deps;
@@ -149,9 +151,14 @@ export class LoopModeRunner {
         const gameState = d.getGameState?.();
         const discoveryOn = d.isDiscoveryActive?.() ?? true;
         const startRegion = d.getStartRegion();
-        const isExitDiscovered = (r, e) => !discoveryOn || !!d.discovery?.isExitDiscovered?.(r, e);
-        const isLocationDiscovered = (l) => !discoveryOn || !!d.discovery?.isLocationDiscovered?.(l);
-        const hasHidden = (region) => discoveryOn && !this._noYield.has(region) && (
+        // ⛓ A substrate whose queue takes no explore (bounce, runner) cannot be explored by the queue: what it
+        // holds is found by PLAYING it (its Bot walks to the target; a landed check discovers the location). For
+        // planning, its exits and locations count as discovered — planned explores there parked for live play.
+        const canExplore = (region) => !region || d.supportsQueueAction?.(region, 'explore') !== false;
+        const isExitDiscovered = (r, e) => !discoveryOn || !canExplore(r) || !!d.discovery?.isExitDiscovered?.(r, e);
+        const isLocationDiscovered = (l) => !discoveryOn || !canExplore(d.regionOfLocation?.(l))
+            || !!d.discovery?.isLocationDiscovered?.(l);
+        const hasHidden = (region) => discoveryOn && canExplore(region) && !this._noYield.has(region) && (
             (d.locationsOf(region) ?? []).some((l) => !isLocationDiscovered(l))
             || (d.exitsOf(region) ?? []).some((e) => !isExitDiscovered(region, e.name)));
         return {
@@ -225,6 +232,17 @@ export class LoopModeRunner {
         // Loops' own Restart path on the next plan.
         let freeSpins = 0;
         let manaSeen = gameState.currentMana;
+        // ⛓ OFF PLAN: the player reached a region this loop never planned (a substrate's walk crossed an exit it
+        // was not asked to — a maze explore, a bounce leg). The queue would follow it with blocks the runner never
+        // set; end the loop instead and plan again from the start.
+        const planned = new Set(regions);
+        const onRegionChanged = (data) => {
+            if (!this._active || data?.fromReset) return;
+            const to = data?.newRegion;
+            if (!to || planned.has(to)) return;
+            loopState.stopProcessing?.();
+            ended(`left the plan for ${to}`);
+        };
         const onActionCompleted = () => {
             if (!this._active) return;
             const mana = gameState.currentMana;
@@ -260,6 +278,7 @@ export class LoopModeRunner {
         this._unsubs.push(d.subscribe('loopState:queueCompleted', () => ended()));
         this._unsubs.push(d.subscribe('loopState:loopReset', () => ended()));
         this._unsubs.push(d.subscribe('loopState:actionCompleted', onActionCompleted));
+        this._unsubs.push(d.subscribe('gameState:regionChanged', onRegionChanged));
         // A substrate that charges mana itself (maze delegation, per tile) ends the loop on its own reset path:
         // gameState.triggerLoopReset publishes gameState:loopReset, and loops just stops (no loopState event).
         this._unsubs.push(d.subscribe('gameState:loopReset', () => ended()));

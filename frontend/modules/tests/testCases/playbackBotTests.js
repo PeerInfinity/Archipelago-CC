@@ -407,9 +407,18 @@ async function playbackBotLoopModeWorld(testController, { quotas, start, seed, s
   try {
     if (watchPanel) testController.eventBus.publish('ui:activatePanel', { panelId: watchPanel });
     testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+    const trace = [];
+    const onRC = (d) => trace.push(`RC ${d?.oldRegion}->${d?.newRegion}${d?.fromReset ? ' reset' : ''}${d?.exitName ? ` via ${d.exitName}` : ''}`);
+    const onAC = (d) => trace.push(`AC ${d?.action?.type}${d?.action?.actionName ? `:${d.action.actionName}` : ''} ${d?.action?.sourceRegion}${d?.action?.destinationRegion ? `->${d.action.destinationRegion}` : ''}`);
+    testController.eventBus.subscribe('gameState:regionChanged', onRC, 'tests');
+    testController.eventBus.subscribe('loopState:actionCompleted', onAC, 'tests');
+    trace.push(`start=${api('loops', 'getLoopStartRegion')?.()} here=${api('gameState', 'getCurrentRegion')?.()}`);
     await bot.play();
     const finished = await testController.pollForCondition(
       () => (bot.getStatus() || '').startsWith('finished'), 'bot finishes the world in loop mode', 120000, 500);
+    testController.eventBus.unsubscribe('gameState:regionChanged', onRC, 'tests');
+    testController.eventBus.unsubscribe('loopState:actionCompleted', onAC, 'tests');
+    if (!finished) testController.log(`TRACE ${JSON.stringify(trace.slice(0, 60))}`);
     if (!finished) {
       const maze = getMazePanel();
       const cur = loopState.currentAction;

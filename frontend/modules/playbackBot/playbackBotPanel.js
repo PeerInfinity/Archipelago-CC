@@ -30,6 +30,7 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { blockKeyOf, resolveQueueBlocks } from '../loops/blockIdentity.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 export class PlaybackBotPanel {
     static moduleApis = null;
@@ -261,6 +262,15 @@ export class PlaybackBotPanel {
                 return loopState ? resolveQueueBlocks(loopState.getActionQueue()).visits : [];
             },
             blockKeyOf,
+            supportsQueueAction: (region, actionType) => {
+                const substrate = api('procgenPlayer', 'getRegionInfo')?.(region)?.substrate;
+                if (!substrate) return true;    // AP-native: everything (loopBlockBuilder's rule)
+                return substrateRegistry.get(substrate)?.loopSupport?.queueActions?.includes(actionType) ?? false;
+            },
+            regionOfLocation: (name) => {
+                const loc = stateManager?.getStaticData?.()?.locations?.get?.(name);
+                return loc?.parent_region ?? loc?.region ?? null;
+            },
             subscribe: (eventName, handler) => {
                 eventBus.subscribe(eventName, handler, 'playbackBot');
                 return () => eventBus.unsubscribe?.(eventName, handler, 'playbackBot');
