@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
-    PLAY_CLOCK_EVENT, PLAY_CLOCK_POLL_MS, PLAY_CLOCK_TRANSPORTS, PlayClockReporter, SEEDLING_FRAMES_PER_GAME_SECOND,
+    PLAY_CLOCK_EVENT, PLAY_CLOCK_POLL_MS, PLAY_CLOCK_SAMPLE_EVENTS, PLAY_CLOCK_TRANSPORTS, PlayClockReporter, SEEDLING_FRAMES_PER_GAME_SECOND,
     SeedlingPlayClock, gameFramesOf,
 } from './seedlingPlayClock.js';
 import { TICKS_PER_SECOND } from '../seedlingDemo/jsRuntimePage.js';
@@ -177,8 +177,15 @@ describe('⛓ PLAY CLOCK — the wiring', () => {
         ]);
     });
 
-    it('subscribes to the region change (a read at once)', () => {
+    it('reads at once on a region change and when Loop mode turns on (Loops charges a silent clock per wall second)', () => {
         make();
-        expect(clock.eventBus.subscribe).toHaveBeenCalledWith('gameState:regionChanged', expect.any(Function));
+        expect([...PLAY_CLOCK_SAMPLE_EVENTS]).toEqual(['gameState:regionChanged', 'gameState:loopModeChanged']);
+        for (const event of PLAY_CLOCK_SAMPLE_EVENTS) {
+            expect(clock.eventBus.subscribe).toHaveBeenCalledWith(event, expect.any(Function));
+        }
+        const handler = clock.eventBus.subscribe.mock.calls.find(([e]) => e === 'gameState:loopModeChanged')[1];
+        published = [];
+        handler({ active: true });
+        expect(published.map((p) => p.data)).toEqual([{ region: 'A', running: false, stats: { gameSeconds: 0 } }]);
     });
 });

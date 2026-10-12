@@ -30,7 +30,7 @@ import { playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { PLAYBACK_WALK_FAILED_EVENT, PLAYBACK_WALK_NOTE_EVENT } from '../procgenCore/playbackEvents.js';
 import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, LOOP_RESET_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
-import { PLAY_CLOCK_EVENT, SeedlingPlayClock } from './seedlingPlayClock.js';
+import { PLAY_CLOCK_EVENT, PLAY_CLOCK_SAMPLE_EVENTS, SeedlingPlayClock } from './seedlingPlayClock.js';
 import { getLastRawJsonData, stateManagerProxySingleton } from '../stateManager/index.js';
 import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
@@ -247,8 +247,8 @@ export function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent(FLASH_SEEDLING_LOAD_REGION_EVENT);
   // ⛓ LOOP-MODE RESTART — the glue hears the loops' reset (`seedlingRegionGlue.handleLoopReset`).
   registrationApi.registerEventBusSubscriberIntent(LOOP_RESET_EVENT);
-  // ⛓ PLAY CLOCK — a region change reads the game's clock at once (`seedlingPlayClock.js`).
-  registrationApi.registerEventBusSubscriberIntent('gameState:regionChanged');
+  // ⛓ PLAY CLOCK — a region change and Loop mode turning on read the game's clock at once (`seedlingPlayClock.js`).
+  for (const event of PLAY_CLOCK_SAMPLE_EVENTS) registrationApi.registerEventBusSubscriberIntent(event);
 
   /**
    * ⛔⛔ **THE READOUT EVENT NEEDS A REGISTERED PUBLISHER, AND WITHOUT ONE THE

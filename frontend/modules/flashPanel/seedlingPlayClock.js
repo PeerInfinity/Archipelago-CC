@@ -39,7 +39,7 @@
  * ── CADENCE ───────────────────────────────────────────────────────────────────────────────────────────────────────
  *
  * One `botStatus` read every `PLAY_CLOCK_POLL_MS` (wasm: 14–16 ms of the page's main thread, ~1.5 %), plus one on a
- * region change; only in Loop mode, only on the JS or wasm runtime, only while the region binding is not parked. A
+ * region change and one when Loop mode turns on; only in Loop mode, only on the JS or wasm runtime, only while the region binding is not parked. A
  * report goes out on a running edge, on a new visit, and once per read while the clock runs — never per frame, and
  * nothing while a stopped clock stays stopped.
  *
@@ -56,6 +56,9 @@ export const SEEDLING_FRAMES_PER_GAME_SECOND = 30;
 
 /** How often the game's clock is read while Loop mode plays a Seedling region. */
 export const PLAY_CLOCK_POLL_MS = 1000;
+
+/** The events that read the game's clock at once (beside the poll). */
+export const PLAY_CLOCK_SAMPLE_EVENTS = Object.freeze(['gameState:regionChanged', 'gameState:loopModeChanged']);
 
 /** The runtimes whose `botStatus().game_time` is read (the panel's `transport`). */
 export const PLAY_CLOCK_TRANSPORTS = Object.freeze(['js', 'wasm']);
@@ -156,9 +159,13 @@ export class SeedlingPlayClock {
         if (this._timer) return;
         this._timer = this._timers.setInterval(() => this.sampleNow(), this.pollMs);
         if (this.eventBus?.subscribe) {
-            const h = () => this.sampleNow();
-            const off = this.eventBus.subscribe('gameState:regionChanged', h);
-            this._unsubs.push(typeof off === 'function' ? off : () => this.eventBus.unsubscribe?.('gameState:regionChanged', h));
+            // A region change and Loop mode turning on are read AT ONCE: until a region's first report Loops charges
+            // it per wall second (its rule for a clock that has not spoken), so the first report must not wait a poll.
+            for (const event of PLAY_CLOCK_SAMPLE_EVENTS) {
+                const h = () => this.sampleNow();
+                const off = this.eventBus.subscribe(event, h);
+                this._unsubs.push(typeof off === 'function' ? off : () => this.eventBus.unsubscribe?.(event, h));
+            }
         }
     }
 
