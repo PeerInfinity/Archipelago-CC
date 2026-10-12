@@ -16614,6 +16614,48 @@ preview and drive parted at t53: `chaserForecastNow` never ran K2's `LavaRunner`
 - **A body read through the player is still a witness.** The game cannot report a `FallRock`; a player who rests on
   its top for twelve ticks at 0 px is the rock's position and solidity, measured.
 
+### Seedling fidelity UNBILLEDGATE — a solve whose drive was hit where no plan billed it is refused, and every such hit on the route is the game's
+
+Wave 15 (model coverage). L74LEG624's residue 1 and the JS arc's sweep-5 (17 legs whose game took hits no plan
+billed): `solveSegment` returned success on reaching its goals whatever its drive took, because only the forced-hit
+rung bills a hit and the walk, kill and detour executors drive on through one. The report is
+`CC/docs/cloud-reports/seedling-fidelity-unbilledgate.md`. One switch, OFF: `CONTACT_FIDELITY.unbilledDamageGate`.
+
+**D1 — the census** (a read-only window, `UNBILLED_DAMAGE_TRACE.sink`, installed in every node process by a
+preload). Route survey at `926cc2a86f`: 170 segment successes, five with unbilled damage: steps 19 (L17,
+`bob@96,32` t101), 47 (L22, `wallflyer@64,80` t83), 53 (L22, six wallflyer hits and **two deaths**), 114 (L88,
+`drill@128,160` ×2) and 170 (L77, `lavarunner@112,256` t16). Every one is **real**: each staged walk played on p4f
+headless (clock shift [0]) takes each hit at the model's tick, and step 53 dies at t99 and t235 in the game too. No
+forced hit is billed anywhere on the route. The six producers (41 segments), the acceptance batch and the ENEMY census
+(682) carry none. Sweep-5's legs re-run in node at the base: 10 plans carry model-predicted unbilled hits (262, 265,
+283, 288/289 on the dashless pass only, 302 with a death, 696, 698, 703); 622's forced hit is billed; **633 and 635
+are model gaps** (the game's `hits_timer` rises with no body near, and the model sees nothing): a hand-over, not this
+gate's.
+
+**D2 — the gate.** At success, `unbilledDamageOf(run, ticked, forcedHits)` takes the run's `playerHits` and
+`playerDeaths` rows after the handover clock (a replayed prefix's hits are the prefix's), drops the `forcedHits[].billed`
+rows by `t:source:id`, and ON refuses the rest with `obstacle.kind: 'unbilled-damage'` (`id`, `tick`, `t`, `level`,
+`source`, `hits`, `deaths`, `billed`, `damage`, `died`). OFF the check is not asked. A candidate-level retry inside
+`solveSegment` would be an executor edit; the anytime passes already are one (legs 288/289: the gate refuses the
+dashless candidate, the full pass's clean plan stands), and on the five survey steps and seven legs no other candidate
+exists. Witness and test: `fidelityUnbilledGate.test.js` (step 47 OFF solves / ON refuses at t83; leg 622's billed hit
+still solves ON; a hit inside a replayed prefix is not the segment's).
+
+**D3 — the movers, ON.** The route survey loses exactly steps 19, 47, 53, 114, 170 (169 → 164 SOLVED, by level, goal and
+boot); `surveyFamily` files them `UNBILLED-DAMAGE`. The sweep legs ON in node: 262, 265, 283, 302, 696, 698, 703 refuse;
+288, 289, 622, 633, 635 answer as OFF. The bounded set (137 files) ON has no real red. The identity block and the
+six `--check`s are in the report.
+
+**Trap candidates.**
+- **A drive that returns is not a drive that was clean.** The success path asked "did we reach the goal?" and not "what
+  did the walk cost?": five route steps and ten sweep legs returned a plan with a hit, one with two deaths.
+- **Count a segment's damage from its handover, not from the run's boot.** A continuation replays its prefix onto the
+  run; a ledger read from t0 bills the prefix's hits to the segment that inherits them.
+- **A pin on "the default request" reds under any off-default env switch.** `axeDodgeAskHook`'s default-request row
+  fails with `SEEDLING_MOVING_WAIT=1` as with this switch; it is an environment artifact, not a mover.
+- **A scratch copy in `scripts/procgen/` is a box-lock finding.** `boxLock.test.js` audits every `.mjs` there;
+  measurement copies belong in the scratchpad.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
