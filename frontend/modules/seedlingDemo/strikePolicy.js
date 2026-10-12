@@ -151,6 +151,7 @@ import {
     TALK_RANGE,
 } from './solverView.js';
 import { chaseEnvelope } from './encounters.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 export class StrikePolicyError extends Error {
     constructor(message) { super(message); this.name = 'StrikePolicyError'; }
@@ -232,6 +233,11 @@ export function strikeCandidates(player, bodies, {
      * caller before this slice) asks nothing.
      */
     vetoBody = null,
+    /**
+     * ⛓ fidelity L74LEG624 D3 — the ticks from the READING's tick to the PRESS: 1 for an aim (the press is the next
+     * tick), 0 for a press taken on this tick (the planned press). Read only by `CONTACT_FIDELITY.strikeIframeLapse`.
+     */
+    pressAhead = 1,
 }) {
     /**
      * ⛓⛓⛓ R9 SLICE 12c — **THE SCAN ASKS WITH THE RECT THE PRESS WILL SWING.**
@@ -273,7 +279,18 @@ export function strikeCandidates(player, bodies, {
                 + `slash rect facing ${facing} does not cover it` });
             continue;
         }
-        if (b.hitsTimer > 0) {
+        // ⛓ fidelity L74LEG624 D3 (`STRIKE_IFRAME_LAPSE`): the gate is each TEST tick's, so a press whose window
+        // reaches the lapse is admitted; OFF, the press tick's reading refuses it, as before. ON, a body in its death
+        // (`spent`, `Enemy.hit`'s `hits < hitsMax`) is refused first: no test of any window lands on it, and the
+        // forecast drains its frozen i-frame where the drive's body has left `strikeBodies` (leg 624, t114).
+        if (b.spent && CONTACT_FIDELITY.strikeIframeLapse) {
+            rejected.push({ id: b.id, why: '`hits` has reached `hitsMax` (the body is in its death) — `Enemy.hit` '
+                + 'refuses every test' });
+            continue;
+        }
+        const lapse = (b.hitsTimer > 0 && CONTACT_FIDELITY.strikeIframeLapse)
+            ? iframeLapse(b.hitsTimer, tick, pressAhead) : null;
+        if (b.hitsTimer > 0 && !lapse) {
             rejected.push({ id: b.id, why: `hitsTimer ${b.hitsTimer} — \`Enemy.hit\` `
                 + 'refuses while it is up' });
             continue;
@@ -292,14 +309,14 @@ export function strikeCandidates(player, bodies, {
             continue;
         }
         if (vetoBody) {
-            const v = vetoedInRect(player, bodies, facing, scale, vetoBody);
+            const v = vetoedInRect(player, bodies, facing, scale, vetoBody, { pressAhead });
             if (v) {
                 rejected.push({ id: b.id, why: `the swing facing ${facing} would kill ${v.id}: ${v.why}`, veto: v });
                 continue;
             }
         }
         chosen.push({ id: b.id, as3: b.as3, enemyClass: b.enemyClass, reach,
-            direction: facing, rect: b.rect });
+            direction: facing, rect: b.rect, ...(lapse ? { iframeLapse: lapse } : {}) });
     }
     // NEAREST first, ties broken by id so the order is total and reproducible
     // on both sides of the preview/drive equality.
@@ -312,14 +329,16 @@ export function strikeCandidates(player, bodies, {
  * veto's reason; null when none. `Player.slash`'s own two gates (the rect, then the reach), and `Enemy.hit`'s
  * i-frame gate (a body inside its i-frame takes nothing, so its death is not this press's).
  */
-export function vetoedInRect(player, bodies, direction, scale, vetoBody) {
+export function vetoedInRect(player, bodies, direction, scale, vetoBody, { pressAhead = 1 } = {}) {
     if (!vetoBody) return null;
     const r = slashRect(player.x, player.y, direction, scale);
     const reachLimit = slashReachFor(scale);
     for (const o of bodies) {
         if (!rectsOverlap(r, o.rect)) continue;
         if (distanceRectPoint(player.x, player.y, o.rect) > reachLimit) continue;
-        if ((o.hitsTimer ?? 0) > 0) continue;
+        // ⛓ fidelity L74LEG624 D3: ON, a body whose i-frame lapses inside the window takes the hit, so it is asked.
+        if ((o.hitsTimer ?? 0) > 0
+            && !(CONTACT_FIDELITY.strikeIframeLapse && iframeLapse(o.hitsTimer, 0, pressAhead))) continue;
         const v = vetoBody(o, player);
         if (v) return { id: o.id, ...v };
     }
@@ -359,6 +378,34 @@ export const CONTACT_READING_LAG = 1;
  */
 export function projectedHitsTimer(hitsTimer, offset) {
     return (hitsTimer ?? 0) - (CONTACT_READING_LAG + 1 + offset);
+}
+
+/**
+ * ⛓⛓⛓ fidelity L74LEG624 D3 (`CONTACT_FIDELITY.strikeIframeLapse`) — **DOES THIS PRESS'S WINDOW REACH THE LAPSE?**
+ *
+ * `Enemy.hit`'s `hitsTimer > 0` gate is asked on every TEST tick, `T+1 … T+SLASH_HIT_TICKS` after the press at `T`,
+ * not on the press tick. The reading is `CONTACT_READING_LAG` old and the press is `pressAhead` ticks after the
+ * decision, so the test at `T+i` reads `projectedHitsTimer(hitsTimer, pressAhead + i - 1)` — derived from the same
+ * two lags as the dash's projection, not measured off a fixture. The press can damage iff the LAST test reads ≤ 0.
+ *
+ * ⛓ Measured: L74 leg 624 (`tape-l74-624-press84`/`-press85`, hammer C4): the body's i-frame from its t57 hit lapses at
+ * t87 (the reading 4 at t84's decision); an aim at t83 (reading 5) or t84 (reading 4) presses at t84/t85, and its
+ * test lands at t87 — `firstTick` below — killing `lavarunner@208,96` before its contact, game and model at 0 px.
+ *
+ * ⚠ THE FASTEST DRAIN, as `projectedHitsTimer` says: a timer frozen off screen lapses later, so an admitted press
+ * may land nothing. That costs the swing (and the `ORDINARY_SWING_PERIOD` after it), never a hit the model bills
+ * wrongly — the run's own `Enemy.hit` arm still gates each test.
+ *
+ * @returns {?{hitsTimer: number, firstTest: number, firstTick: number}} null when no test of the window reaches it.
+ *   `firstTest` is `i` (1-based) of the first test reading ≤ 0; `firstTick` is that test's tick, from `tick`.
+ */
+export function iframeLapse(hitsTimer, tick, pressAhead = 1) {
+    for (let i = 1; i <= SLASH_HIT_TICKS; i += 1) {
+        if (projectedHitsTimer(hitsTimer, pressAhead + i - 1) <= 0) {
+            return { hitsTimer, firstTest: i, firstTick: tick + pressAhead + i };
+        }
+    }
+    return null;
 }
 
 /**
@@ -867,7 +914,7 @@ export function createStrikePolicy({
                  * Dropped like the talk refusal (`owed` untouched).
                  */
                 const vetoed = vetoBody
-                    ? vetoedInRect(state, bodies, aimed.direction, SLASH_SCALE_NORMAL, vetoBody)
+                    ? vetoedInRect(state, bodies, aimed.direction, SLASH_SCALE_NORMAL, vetoBody, { pressAhead: 0 })
                     : null;
                 if (vetoed) {
                     aimed = null;
@@ -942,7 +989,7 @@ export function createStrikePolicy({
                     : { certified: true, why: null, worst: null };
                 // ⛓ seedling-fidelity-bulb D3: a scheduled press swings too, and kills what its rect covers.
                 const plannedVeto = (opens && vetoBody)
-                    ? vetoedInRect(state, bodies, state.direction ?? 0, now.scale, vetoBody) : null;
+                    ? vetoedInRect(state, bodies, state.direction ?? 0, now.scale, vetoBody, { pressAhead: 0 }) : null;
                 const verdict = plannedVeto
                     ? { certified: false, why: `the press would kill ${plannedVeto.id}: ${plannedVeto.why}`, worst: null }
                     : certified;
@@ -958,7 +1005,7 @@ export function createStrikePolicy({
                      */
                     const { chosen } = strikeCandidates(state, bodies, {
                         facingToward, owed, tick, scale: now.scale,
-                        direction: state.direction ?? 0,
+                        direction: state.direction ?? 0, pressAhead: 0,
                     });
                     const targets = chosen.map((c) => c.id);
                     for (const id of targets) owed.set(id, tick);
@@ -1157,6 +1204,8 @@ export function createStrikePolicy({
                 // not only "which one".
                 alsoInReach: chosen.slice(1).map((c) => ({ id: c.id, reach: c.reach })),
                 rejected,
+                // ⛓ fidelity L74LEG624 D3: present only when the pick was admitted INSIDE its i-frame (the switch ON).
+                ...(pick.iframeLapse ? { iframeLapse: pick.iframeLapse } : {}),
             });
             return {
                 held: new Set([facingKeys[pick.direction]]),
