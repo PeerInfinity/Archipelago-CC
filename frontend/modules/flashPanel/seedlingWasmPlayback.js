@@ -138,6 +138,8 @@ export const RESTART_LEG_WAIT_MS = 30000;
 export const SOLVE_POLL_MS = 20;
 /** ⛓ W8c — the new-game ceremony's poll (`awaitCeremony`). */
 export const CEREMONY_POLL_MS = 100;
+/** ⛓ How often a cutscene wait re-says how long it has waited (its note changes, so a reader sees it is not stuck). */
+export const CEREMONY_NOTE_EVERY_MS = 5000;
 export const DRAIN_MS = 100;
 /** ⛓ §5.19 — how long a cold start waits on a TRANSIENT adoption clause (`ADOPT_TRANSIENT_CLAUSES`), and its poll. */
 export const ADOPT_WAIT_MS = 15000;
@@ -628,7 +630,14 @@ export function createWasmPlayback({
         const se = newGame ? { ...arrived, beginEntry: newGame } : arrived;
         const be = se.beginEntry ?? null;
         // Always through `awaitCeremony`, even when none shows now: the scene's last frame queues the tutorial's Help.
-        if (newGame && !ceremonyOver) return { ceremony: newGameCeremony({ status: st, state }), begin: arrived.beginEntry };
+        // ⛓ CUTSCENE UNDER ANY RECORD — the wind scene can show under a record that is not the arm's −1, and
+        // `cutscene` is a static: a re-arrival replays it (the plan's tick 1 dead, the divergence an exact repeat).
+        // Measured on `tutorial-walk-procgen-seedling` (solo, 3 reds in 8 local runs): begin.level 0 (the generated
+        // set's explicit start), `cutscene[0]` true, `receive_input` false. So a showing scene is waited out under a
+        // resolved record too (an unresolved −1 keeps its named `begin` refusal).
+        const ceremony = newGameCeremony({ status: st, state });
+        const sceneUnderRecord = ceremony === 'cutscene' && Number(be?.['begin.level']) >= 0;
+        if ((newGame || sceneUnderRecord) && !ceremonyOver) return { ceremony, begin: arrived.beginEntry };
         let staging = null;
         let shadow = null;
         if (be && be['begin.level'] === st.level) {
@@ -697,7 +706,7 @@ export function createWasmPlayback({
     function awaitCeremony(first) {
         phase = 'ceremony';
         deadline = now() + CEREMONY_WAIT_MS;
-        const c = { level: goal.level, began: first.ceremony ?? 'none', cutscene: first.ceremony === 'cutscene', dismissedAt: null, quietSince: null, adopted: false };
+        const c = { level: goal.level, began: first.ceremony ?? 'none', cutscene: first.ceremony === 'cutscene', dismissedAt: null, quietSince: null, adopted: false, notedAt: null };
         stats.ceremonies.push(c);
         note(first.ceremony === 'cutscene' ? 'waiting out the new game\'s opening cutscene (no re-arrival: it would replay it)'
             : first.ceremony === 'tutorial' ? 'dismissing the new game\'s arrow-key tutorial' : 'checking the new game\'s room is past its ceremony');
@@ -712,7 +721,18 @@ export function createWasmPlayback({
             }
             const ceremony = newGameCeremony({ status: st, state });
             if (ceremony) c.quietSince = null;
-            if (ceremony === 'cutscene') { c.cutscene = true; schedule(step, CEREMONY_POLL_MS); return; }
+            if (ceremony === 'cutscene') {
+                c.cutscene = true;
+                // The scene can outlast a reader's same-words stall rule (the tutorial walk's 60 s, measured ~68 s at
+                // load 9): the note says how far into its bounded wait it is, every CEREMONY_NOTE_EVERY_MS.
+                const waited = Math.floor((now() - (deadline - CEREMONY_WAIT_MS)) / CEREMONY_NOTE_EVERY_MS) * CEREMONY_NOTE_EVERY_MS;
+                if (waited > 0 && waited !== c.notedAt) {
+                    c.notedAt = waited;
+                    note(`waiting out the new game's opening cutscene (no re-arrival: it would replay it) — ${waited / 1000} s of at most ${CEREMONY_WAIT_MS / 1000} s`);
+                }
+                schedule(step, CEREMONY_POLL_MS);
+                return;
+            }
             if (ceremony === 'tutorial') {
                 if (c.dismissedAt !== null) {
                     if (st.game_time - c.dismissedAt > TUTORIAL_FADE_FRAMES) {

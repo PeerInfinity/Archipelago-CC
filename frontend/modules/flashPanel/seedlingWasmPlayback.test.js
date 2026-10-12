@@ -1414,10 +1414,10 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
      * `cutsceneReads` botStatus reads, then the tutorial's freeze holds until an arrow (unless `stubborn`); every
      * read is one frame (`Game.time` +1).
      */
-    function newGameOver({ cutsceneReads = 4, stubborn = false, startLevel = HOUSE, endsCutscene = true, patchAfter = {}, opts = {} } = {}) {
+    function newGameOver({ cutsceneReads = 4, stubborn = false, startLevel = HOUSE, endsCutscene = true, patchAfter = {}, opts = {}, begin = { 'begin.level': -1 } } = {}) {
         const keys = [];
         let reads = 0;
-        const u = unwatched({ begin: { 'begin.level': -1 }, startLevel, state: { freezeObjects: true },
+        const u = unwatched({ begin, startLevel, state: { freezeObjects: true },
             patch: { cutscene: [true, false, false, false], receive_input: false },
             tick: (w) => {
                 reads += 1;
@@ -1448,6 +1448,29 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         // The adoption waited for the Help's fade: more than TUTORIAL_FADE_FRAMES game frames after the press.
         expect(e.engine.arrivalReads.at(-1).status.game_time - e.engine.stats.dismissed[0].gameTime).toBeGreaterThan(TUTORIAL_FADE_FRAMES);
         expect(e.dones).toHaveLength(1);
+    });
+    it('⛓ CUTSCENE UNDER ANY RECORD — the wind scene showing under a RESOLVED record (the explicit start\'s level, no −1) is WAITED OUT, not re-arrived into', () => {
+        // Measured on tutorial-walk-procgen-seedling: begin.level 0, cutscene[0] true, receive_input false. A re-arrival
+        // replays the static scene: the plan's tick 1 is dead and the divergence repeats exactly, so the goal failed.
+        const e = newGameOver({ begin: { 'begin.level': HOUSE } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, adoptRefused: [] });
+        expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ level: HOUSE, began: 'cutscene', adopted: true })]);
+        expect(e.dones).toHaveLength(1);
+    });
+    it('⛓ CUTSCENE UNDER ANY RECORD — a long scene re-says how far into its bounded wait it is (a same-words stall reader sees it move)', () => {
+        let t = 0;
+        const e = newGameOver({ begin: { 'begin.level': HOUSE }, cutsceneReads: 40, opts: { now: () => (t += 1000) } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        const waits = e.notes.filter((n) => /opening cutscene .* s of at most 180 s$/.test(n ?? ''));
+        expect(waits.length).toBeGreaterThan(1);
+        expect(new Set(waits).size).toBe(waits.length);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ began: 'cutscene', adopted: true })]);
     });
     it('⛓ W8c — …the adoption is the room\'s staging under the RESOLVED level, and its recorded reads restage (W5\'s probe)', () => {
         const e = newGameOver();
