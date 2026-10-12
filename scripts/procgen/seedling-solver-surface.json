@@ -3931,6 +3931,24 @@
     },
     {
       "surface": "import",
+      "name": "killRungPresses",
+      "module": "frontend/modules/seedlingDemo/ghostSpinnerPress.js",
+      "line": 148,
+      "class": "seedling",
+      "form": "function",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The kill rung's weapon gate in its lock-less spinner arm (hammer-phase G1): OFF (GHOST_KILL_RUNG, SEEDLING_GHOST_KILL_RUNG=1) it is weapon === 'sword', the gate it replaces, byte for byte; ON it also admits a weapon whose press derivePressKill admits (spinnerStrikePress(weapon) is not the sword's row: a ghostsword primary under GHOST_SPINNER_PRESS)."
+    },
+    {
+      "surface": "import",
       "name": "searchPressFor",
       "module": "frontend/modules/seedlingDemo/ghostSpinnerPress.js",
       "line": 108,

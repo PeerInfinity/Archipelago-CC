@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 85,
+            "count": 86,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 417,
+        "blockStyle": 418,
         "browser": 142,
-        "cited": 214,
-        "files": 429,
+        "cited": 215,
+        "files": 430,
         "lineStyle": 12,
-        "withDocblock": 429,
-        "withFlags": 345
+        "withDocblock": 430,
+        "withFlags": 346
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7786,6 +7786,34 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-hammer-d-ghostwall — ⛓⛓⛓ SEEDLING HAMMER-PHASE D, D2: THE GHOST SWORD PRESSES A SPINNER THROUGH A WALL.",
             "path": "scripts/procgen/plan-seedling-hammer-d-ghostwall.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "plan-seedling-hammer-g1-ghostkill.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-g1-ghostkill — ⛓⛓⛓ SEEDLING HAMMER-PHASE G1, D2: THE KILL RUNG'S GHOST PRESS KILL, ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs"
         },
         {
             "argvHelpers": [],

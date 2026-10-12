@@ -15682,6 +15682,42 @@ on all five.
 `step`, 15 bodies) is 41.3 % inclusive and the player's preview stepper 16.1 %; both are inside `previewWalk`, which
 is 68 %. A cross-tick preview key would need levelRun to expose (or hash) the state the stepper and the forecasts bind.
 
+### Seedling hammer-phase G1 — the kill rung's ghost-sword gate
+
+⚖ The user (2026-10-12), on D's finding: *"Small slice, new switch"*. One gate, behind one new switch, **OFF**, and OFF
+is byte-inert: `ghostSpinnerPress.GHOST_KILL_RUNG` (`SEEDLING_GHOST_KILL_RUNG=1`, `withGhostKillRung`). The report is
+`CC/docs/cloud-reports/seedling-hammer-g1.md`.
+
+**W0** at `11e113e2fe` (D's harvest; wave 13 on main): identity block = D's AFTER at every row but `acceptance batch`
+(`76602ae8` → `933c14f7`, moved on main since D's base); the six producers exit 0 at D's md5s; ENEMY `afdc6d1a`;
+surface GREEN 278, constants 5,808, entities 558, profile 138; roster 277; tapeRunner 611 pairs `75a3c41f`; bounded
+vitest 1498/1498 (29 files). The gate's refusal reproduces by name on 397 / 414 / staging A with the ghost. D1's L40
+table re-run (40 legs × {sword, ghost}): the same as D's but for **378 / 381, which now refuse on wave 13's bomb lobber
+`bombpusher@112,128` with EITHER weapon** (the sword's 1540 / 1592 t solves are gone; the ghost never reaches the gate
+there any more).
+
+**D1 — the switch.** The lock-less spinner arm asks `killRungPresses(weapon)`: OFF `weapon === 'sword'` (the gate
+it replaces); ON also a weapon whose press `derivePressKill` admits (`spinnerStrikePress(weapon)` not the sword's
+row). Wired through `solverView.js`. The refusal for a weapon still not admitted is unchanged.
+
+**D2 — the game witness `hammer-g1-l40-ghostkill`** (`plan-seedling-hammer-g1-ghostkill.mjs`;
+`fixtures/hammer-g1-ghostkill-witness/`, not the roster). The shortest game-replayable staging that reaches a ghost
+press kill is C1's staging A (P1's boot view) with the ghost sword: ON, every press the ghost's; kills at t2114
+(`spinner@880,848`) and t2182 (`spinner@816,848`), four of five landings from 19.5–23.8 px; three chaser hits and a
+death-and-respawn on the way (the plan's own); the solve refuses on `bob@736,752` at 2195. The game (p4f): the
+drained stream 2196/2196, `Bot.slashTests` equal, every Spinner row equal (10,836 comparisons, worst |Δ| 0) apart from
+the known removal fencepost (t2126, t2194). Gate `hammerGhostKillRung.test.js` (6 rows; ON's solve prefix = the tape,
+900 s timeout). Mutants: the switch ignored → 2 red (table, ON); OFF admitting the ghost → 2 red (table, OFF).
+⚠ Leg 397's page staging kills sooner (t1292, no hit), but a page leg stages the AP-DELIVERED levels (`apitem` for
+`chest`/`totempart`; a spinner bounces off the chest) and a tape boots the atlas: on the atlas that staging kills at
+t2323. So no page leg is a tape witness as it stands.
+
+**D3 — ON vs OFF:** the L40 table moves at **397-ghost and 414-ghost only** (REFUSED at the gate → REFUSED on a chaser
+after the kill); every sword row and every other ghost row is byte-equal; staging A's sword is equal, its ghost moves
+(t0 gate → the witness's 2195). Identity block ON = W0 (r9-campaign `712f0ead`, `r9-solve-16` PASS both ways, ENEMY
+`afdc6d1a`); L18 sweep 45/45 equal (lengths `1c019765`); C2's L18 ghost staging 45/45 byte-identical (its kill is the
+kill-lock order's). Nothing committed moves; nothing re-recorded. The flip is the user's.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
