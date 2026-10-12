@@ -1067,11 +1067,23 @@ async function botWalkToLocation(testController) {
 
         // Leg 3 — the loaded zone's perk location: automation plays the zone
         // until the target is checked, then the walk ends.
+        // Started the way Loops starts a loop's walk: after a `stop` (which
+        // pauses the clock) in the region already loaded — no loadRegion
+        // resumes it, so the walk must (jta-loop-mode A). The player's
+        // Pause on Block becomes Skip for the walk (D) and comes back after.
         const modeBefore = win.getAutomationMode?.();
+        const skipBefore = win.setAutomationSkipBlocked?.(false);
+        controller.stop();
+        const paused = await eventually(testController,
+            () => win.isGameLoopPaused?.() === true, 'stop paused the clock', 5000, 50);
+        testController.assertEqual('stop pauses the game clock', true, paused);
         controller.walkTo({ kind: 'location', name: JTA_LOCTEST_PERK_LOCATION });
         const armed = await eventually(testController,
             () => win.getAutomationMode?.() === 0, 'automation switched on for the walk', 5000, 50);
         testController.assertEqual('the location walk switches the zone\'s automation on', true, armed);
+        testController.assertEqual('a walk in the loaded region resumes the paused clock', false,
+            win.isGameLoopPaused?.());
+        testController.assertEqual('the walk runs Skip on Block', true, win.getAutomationSkipBlocked?.());
         const checked = await eventually(testController, () => {
             if (snapshotHasLocation(testController.stateManager.getSnapshot(), JTA_LOCTEST_PERK_LOCATION)) {
                 return true;
@@ -1086,6 +1098,9 @@ async function botWalkToLocation(testController) {
             'the walk ended (automation mode restored)', 5000, 50);
         testController.assertEqual('the walk ends on its check (the player\'s automation mode is back)',
             true, ended);
+        testController.assertEqual('the player\'s Pause on Block is back when the walk ends', false,
+            win.getAutomationSkipBlocked?.());
+        win.setAutomationSkipBlocked?.(skipBefore);
         testController.assertEqual('the in-zone walk was not refused', false,
             failures.some((f) => f?.target?.name === JTA_LOCTEST_PERK_LOCATION));
 

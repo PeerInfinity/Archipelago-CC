@@ -127,6 +127,9 @@ let _lastSampledEnergy = null;              // JtA's energy at the last poll
 
 // Per-loop completion tracking. Cleared on gameState:loopReset.
 const _completedThisLoop = new Set();
+// Whether the last jta:loadRegion loaded its zone completed (see
+// _refreshStaleCompletedZone).
+let _lastLoadCompleted = false;
 
 // Per-visit fine-recording slice window (M4). The fork's performed-actions
 // log (getCurrentRunActions) accumulates across a whole run — every region
@@ -182,6 +185,7 @@ const JTA_AUTOMATION_MODE_ALL = 0;   // simulation.ts AutomationMode.All
 let _pendingWalkExit = null;
 let _pendingWalkLocation = null;
 let _walkPrevAutomationMode = null;  // mode to restore when the walk ends (null = we didn't change it)
+let _walkPrevSkipBlocked = null;     // Skip/Pause on Block to restore when the walk ends (null = we didn't change it)
 let _playbackAutomationPolicy = 'activate';   // 'activate' | 'respect' (host setting)
 
 // Energy-bonus sync (host setting, default off). When on, JtA owns its
@@ -745,6 +749,7 @@ function _handleLoadRegion(payload) {
     _syncEnergyFromPool();
 
     const completed = _completedThisLoop.has(regionId);
+    _lastLoadCompleted = completed;
     if (typeof _w.loadZone === 'function') {
         const res = _w.loadZone(jtaZone, { completed });
         if (!res?.success) {
@@ -1173,6 +1178,12 @@ function _clearPendingWalk(reason = 'unspecified') {
         }
         _walkPrevAutomationMode = null;
     }
+    if (_walkPrevSkipBlocked !== null) {
+        if (typeof _w.setAutomationSkipBlocked === 'function') {
+            _w.setAutomationSkipBlocked(_walkPrevSkipBlocked);
+        }
+        _walkPrevSkipBlocked = null;
+    }
 }
 
 function _walkInFlight() {
@@ -1197,10 +1208,11 @@ function _publishWalkFailed(target, reason) {
 
 /**
  * Under the 'activate' policy: switch the automation engine on for the
- * in-flight walk (remembering what the player had so the walk's end
- * restores it) and give the zone a priority list if the player
- * configured none. Idempotent — called on walkTo and again when a
- * loop-reset reload re-enters the same region mid-walk.
+ * in-flight walk and to Skip on Block (remembering what the player had so
+ * the walk's end restores both), and give the zone a priority list if the
+ * player configured none, or slot newly unlocked tasks into theirs.
+ * Idempotent — called on walkTo and again when a loop-reset reload
+ * re-enters the same region mid-walk.
  */
 function _armWalkAutomation() {
     if (_playbackAutomationPolicy !== 'activate') return;
@@ -1211,9 +1223,50 @@ function _armWalkAutomation() {
         if (_walkPrevAutomationMode === null) _walkPrevAutomationMode = current;
         _w.setAutomationMode(JTA_AUTOMATION_MODE_ALL);
     }
+    // Skip on Block for the walk: under Pause on Block one blocked task (a
+    // Boss too strong for the energy, an uncosted task) stops the
+    // automation, and an idle zone spends no energy, so the loop never ends.
+    if (typeof _w.setAutomationSkipBlocked === 'function') {
+        const previous = _w.setAutomationSkipBlocked(true);
+        if (_walkPrevSkipBlocked === null) _walkPrevSkipBlocked = previous;
+    }
+    // Fills an empty list, and slots a task unlocked since (a Boss's hidden
+    // follow-up) into one that exists: the automation runs only listed tasks.
     if (typeof _w.ensureZoneAutomationPriorities === 'function') {
         _w.ensureZoneAutomationPriorities();
     }
+}
+
+/**
+ * Start playing an armed walk. A walk in the region already loaded gets no
+ * `jta:loadRegion` to resume the clock — and the walk it replaces was
+ * stopped (`playbackControl:stop` pauses the clock), as Loops does at every
+ * loop reset — so a walk in the loop's START region would otherwise wait
+ * on a paused game forever.
+ */
+function _startWalk() {
+    _armWalkAutomation();
+    if (typeof _w.resumeGameLoop === 'function') _w.resumeGameLoop();
+}
+
+/**
+ * A new world's start region can be loaded BEFORE its rules land:
+ * procgenPlayer sends jta:loadRegion first, so that load read the OLD world's
+ * completed set, and a same-named region the last world completed came up
+ * with every task done. rulesLoaded then clears the set, but the zone stays
+ * as loaded, and a walk there has nothing to play (measured: a bot row after
+ * a world sharing region_1_0 sat idle). Give the zone its tasks back before a
+ * walk reads it. Only then: reloading at rulesLoaded itself disturbed the
+ * energy mirroring of rows that never walk.
+ */
+function _refreshStaleCompletedZone() {
+    if (!_lastLoadCompleted || _completedThisLoop.has(_currentRegionId)) return;
+    if (typeof _w.loadZone !== 'function' || typeof _world?.jtaZone !== 'number') return;
+    log('debug', `re-loading ${_currentRegionId}'s zone un-completed: its completed mark belonged to another world`);
+    if (typeof _w.clearSyntheticTasks === 'function') _w.clearSyntheticTasks();
+    _w.loadZone(_world.jtaZone, { completed: false });
+    _lastLoadCompleted = false;
+    _applyTaskPatches();
 }
 
 function _handleWalkTo(target) {
@@ -1221,6 +1274,7 @@ function _handleWalkTo(target) {
         log('warn', 'walkTo ignored — no active jta region');
         return;
     }
+    _refreshStaleCompletedZone();
     if (target?.kind === 'location' && target?.name) {
         _walkToLocation(target);
         return;
@@ -1254,7 +1308,7 @@ function _handleWalkTo(target) {
     // entirely up to the player's own automation settings.
     _pendingWalkLocation = null;
     _pendingWalkExit = exit;
-    _armWalkAutomation();
+    _startWalk();
     log('debug', `walkTo: zone playing toward exit '${exit.exitName}' (policy=${_playbackAutomationPolicy})`);
 }
 
@@ -1290,7 +1344,7 @@ function _walkToLocation(target) {
             + `'${target.name}' waits for the loop reset`);
         return;
     }
-    _armWalkAutomation();
+    _startWalk();
     log('debug', `walkTo: zone playing toward location '${target.name}' (policy=${_playbackAutomationPolicy})`);
 }
 
