@@ -208,7 +208,7 @@ Nothing handed over. No hammer-owned function was touched.
 
 ## CI (`JavaScript Unit Tests`)
 
-At `245d83c`, the last code head (the report commits touch only `CC/docs/`): **pending** when this report was committed (`node scripts/procgen/ci-vitest-summary.mjs 245d83c7e6e55de10d50d923245c1513d2d1c2cb`). Updated below when read.
+At `245d83c`, the last code head (the report commits touch only `CC/docs/`, which the workflow's path filter skips): run **38279641805**, `completed success`; the suite (unfiltered) **20,044 / 20,044**, the slow battery 253 / 253.
 
 ## Rows to BANK
 
