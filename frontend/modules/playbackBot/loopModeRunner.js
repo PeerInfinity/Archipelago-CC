@@ -211,6 +211,11 @@ export class LoopModeRunner {
         this._lastKey = plan.key;
         this._loops += 1;
         this._status(`loop ${this._loops}: ${plan.reason}`);
+        // Back to the loop start by Loops' own path (clearQueue: stop, clear progress, and a fromReset regionMove to
+        // the start), so a substrate panel loads the start region. setPath alone moved the player SILENTLY: a maze
+        // panel left showing the last loop's region ignored the next loop's delegated move and the queue parked
+        // forever (measured on a mixed world, CI 0/3).
+        loopState.clearQueue?.();
         gameState.setPath(plan.path, d.getStartRegion());
         this._applyBlockModes(loopState);
         loopState.restartFromStart({ autoStart: true });

@@ -67,6 +67,16 @@ describe('LoopModeRunner', () => {
         expect(game.loopState.restartFromStart).toHaveBeenCalledTimes(1);
     });
 
+    it('each loop goes back to the start by Loops\' clearQueue before its path is written', () => {
+        const { game, runner } = makeGame();
+        const order = [];
+        game.loopState.clearQueue = () => order.push('clear');
+        const setPath = game.gameState.setPath;
+        game.gameState.setPath = (p) => { order.push('setPath'); setPath(p); };
+        runner.start();
+        expect(order).toEqual(['clear', 'setPath']);
+    });
+
     it('waits while loop mode is off', () => {
         const { game, runner } = makeGame({ loopMode: false });
         runner.start();
