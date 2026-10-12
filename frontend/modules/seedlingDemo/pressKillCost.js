@@ -266,3 +266,72 @@ export function sameValue(a, b) {
     }
     return true;
 }
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE BW — THE PRESS KILL'S WAITS SEE THE LOBBER'S BOMBS.
+ *
+ * Fidelity MOVINGWAIT's hand-over, measured again here: with `SEEDLING_MOVING_WAIT=1`, divergence leg 381 (L40) walks
+ * to the strike cell (248,184) on `spinner@192,128` that `deriveStrike` chose at t1099 (press +54), arrives about
+ * t1127 and STANDS there until the press at t1156. `bombpusher@112,128` launches `#7` at t1125 at the arriving
+ * player; it explodes at (255,187) on t1156, on the player. The strike's WALK was priced against the bombs
+ * (`dangerDuringTransit` reads the walk's own `spits`), but its DWELL and its TRAIN were priced against the hammers
+ * only, and so was every refuge.
+ *
+ * ⇒ ON, the press kill's waits read the lobber the way a walk does: the run's own lobber forecast
+ * (`run.spitForecast()`, the bombs aimed at the PREVIEWED player, `bombPusher.js`'s functions on copies) is stepped
+ * along the previewed walk and then with the player standing where the wait stands. A blast that lands on that
+ * stance is a wait the kill does not take:
+ *   · `deriveStrike` skips a (cell, tick) window whose dwell or train is inside a forecast blast
+ *     (`solverBot.strikeStandBlast`) — this is the arm that moves 381's t1156 hit out of the plan;
+ *   · `deriveRefuge` skips a refuge whose walk or wait is (`solverBot.refugeBlast`).
+ * Two more guards were built and MEASURED, and are not here: a live aim that refuses a train a blast lands on, and a
+ * held strike dropped when a bomb is aimed at its stance after the derivation. Over leg 381 (both stagings) neither
+ * refused once (0 of 66 asks) — the derivation's forecast already holds the stance — and alone neither removes the hit
+ * (the re-derivation picks the same stance). Unmeasured behaviour is not shipped (the BW report, D1).
+ *
+ * ⛓ THE SWITCH — `PRESS_KILL_BOMBS`, OFF (`SEEDLING_PRESS_KILL_BOMBS=1` opts a process in, or
+ * `withPressKillBombs(true, fn)`). OFF, nothing here is asked and every walk is byte-identical. It reads nothing
+ * while the room holds no lobber and no bomb (`solverBot.bombsInPlay`), and the forecast is `null` while
+ * `CONTACT_FIDELITY.bombPusherLive` is OFF, so ON it is inert outside the lobber's rooms too.
+ *
+ * ⛔ A BEHAVIOUR SWITCH IN A COST FILE, AND WHY HERE. P1/P2 above move not one plan; this one does, so it is its own
+ * switch, OFF, and the P1/P2 A/B stays theirs alone. It lives in this file because of the solver's door
+ * (`solverView.js`): the door re-exports only modules in `levelRun.js`'s import closure, and this file is one; a new
+ * module only `solverBot` imports would be a solver-FAMILY file instead (`census-seedling-solver-surface`). The two
+ * reads (`solverBot.bombsInPlay`, `solverBot.firstBlastOn`) read the run, so they live in the solver.
+ * No P1/P2 cache gains an input: every read is a fresh forecast per question, never memoised (P1's ⚠ "a stored key
+ * is a COPY" has nothing to copy here).
+ */
+
+export const PRESS_KILL_BOMBS = {
+    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_BOMBS === '1',
+};
+export const PRESS_KILL_BOMBS_DEFAULT = false;
+
+/** Run `fn` with `PRESS_KILL_BOMBS` set to `enabled`, restoring the previous value (`withPressKillCost`'s shape). */
+export function withPressKillBombs(enabled, fn) {
+    const was = PRESS_KILL_BOMBS.enabled;
+    PRESS_KILL_BOMBS.enabled = enabled === true;
+    const restore = () => { PRESS_KILL_BOMBS.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * How often each question was asked and refused (`*Asked` / `*Refused`) — an INSTRUMENT, written only with the
+ * switch ON and read by nothing that decides (the gate rows prove an arm was exercised; the report quotes it).
+ */
+export const PRESS_KILL_BOMBS_COUNTS = {
+    strikeAsked: 0, strikeRefused: 0,
+    refugeAsked: 0, refugeRefused: 0,
+};
+export function resetPressKillBombsCounts() {
+    for (const k of Object.keys(PRESS_KILL_BOMBS_COUNTS)) PRESS_KILL_BOMBS_COUNTS[k] = 0;
+}

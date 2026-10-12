@@ -122,6 +122,8 @@ import {
     PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
     // ⛓⛓⛓ hammer-phase P2: the strike scan's two exact levers (behind `STRIKE_SCAN_COST`, ON; OFF bypasses both).
     STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
+    // ⛓⛓⛓ hammer-phase BW: the press kill's waits see the lobber's bombs (behind `PRESS_KILL_BOMBS`, OFF).
+    PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
@@ -9382,7 +9384,8 @@ export function discClearanceAt(box, forecast, i) {
  * strike. That interval is derived — it is the strike schedule's own — and a
  * refuge that cannot cover it is a REFUSAL rather than a shorter window.
  */
-function deriveRefuge(run, contacts, untilIndex) {
+/** ⛓ hammer-phase BW: exported for `hammerPressBombs.test.js` (the refuge, OFF against ON). */
+export function deriveRefuge(run, contacts, untilIndex) {
     const forecast = run.spinnerForecast(Math.max(1, untilIndex));
     const clear = [];
     for (const c of walkableCells(run, contacts)) {
@@ -9419,10 +9422,19 @@ function deriveRefuge(run, contacts, untilIndex) {
      */
     clear.sort((a, b) => a.d - b.d || b.clearance - a.clearance);
     let best = null;
+    // ⛓ hammer-phase BW — the lobber's forecast, asked of each previewed refuge (`PRESS_KILL_BOMBS`, OFF)
+    const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);
     for (const c of clear.slice(0, REFUGE_CANDIDATES)) {
         const walk = previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
         if (walk.truncated) continue;
         const eta = walk.samples.length;
+        if (bombs) {
+            PRESS_KILL_BOMBS_COUNTS.refugeAsked += 1;
+            if (refugeBlast(run, walk, c, untilIndex) !== null) {
+                PRESS_KILL_BOMBS_COUNTS.refugeRefused += 1;
+                continue;
+            }
+        }
         if (!best || eta < best.eta
             || (eta === best.eta && c.clearance > best.clearance)) {
             best = { x: c.x, y: c.y, clearance: c.clearance, eta };
@@ -9433,6 +9445,62 @@ function deriveRefuge(run, contacts, untilIndex) {
 
 /** How many clear cells a refuge derivation previews. Named, not generous. */
 const REFUGE_CANDIDATES = 12;
+
+/** ⛓ hammer-phase BW (`PRESS_KILL_BOMBS`) — does the run's room hold a lobber or a bomb in flight (the only rooms the forecast below can say anything in)? */
+function bombsInPlay(run) {
+    return (run.entities('bombPushers') ?? []).length > 0
+        || (run.entities('bombs') ?? []).some((b) => !b.removed);
+}
+
+/**
+ * ⛓ hammer-phase BW — THE FIRST BLAST ON A WALK THEN A STAND — the run's lobber forecast stepped once per tick: step `k` is handed
+ * `path[k]` (a previewed walk's samples, each the PRE-move point of its tick, the pairing `previewWalk` steps its own
+ * `spitForecast` with) and, past the path, `stance`. A bomb's Explosion is returned by the step after the one that
+ * removed its bomb, tested against the point that step was handed — the end-of-tick player the game's
+ * `Explosion.added()` meets (`levelRun.bombForecastNow`). So `{step: k}` is the k-th tick from now.
+ *
+ * @param {object} run
+ * @param {Array<{x: number, y: number}>} path   the walk's points, tick by tick (empty for a stand from now)
+ * @param {{x: number, y: number}} stance        where the player stands once the path ends
+ * @param {number} until                         steps to forecast (exclusive)
+ * @returns {?{step: number, id: string, x: number, y: number, onWalk: boolean}} the first blast on the player, or null
+ *   (also null when the room steps no lobber: the forecast is `null`, or holds no bomb)
+ */
+function firstBlastOn(run, path, stance, until) {
+    const f = run.spitForecast?.() ?? null;
+    if (f === null) return null;
+    for (let k = 0; k < until; k += 1) {
+        const p = k < path.length ? path[k] : stance;
+        for (const b of f.step({ x: p.x, y: p.y })) {
+            if (b.kind === 'bomb' && b.hitsPlayer) {
+                return { step: k, id: b.id, x: b.x, y: b.y, onWalk: k < path.length };
+            }
+        }
+    }
+    return null;
+}
+
+/**
+ * ⛓⛓ hammer-phase BW — A REFUGE'S WALK AND WAIT, AGAINST THE LOBBER (`PRESS_KILL_BOMBS`). The refuge is a wait over
+ * `untilIndex` ticks from now (the window `deriveRefuge` prices the hammers over), reached by the previewed `walk`:
+ * the lobber's forecast is stepped along the walk and then with the player standing on the cell, through the window
+ * (or the walk's own end, when the walk is the longer). A blast on the player anywhere in that span is this refuge's.
+ */
+function refugeBlast(run, walk, cell, untilIndex) {
+    return firstBlastOn(run, walk.samples, cell, Math.max(untilIndex, walk.samples.length + 1));
+}
+
+/**
+ * ⛓⛓ hammer-phase BW — A STRIKE'S DWELL AND TRAIN, AGAINST THE LOBBER (`PRESS_KILL_BOMBS`). The walk to `cell` was
+ * already asked of the bombs (`dangerDuringTransit` reads its samples' own `spits`); what stood unpriced is the stand
+ * that follows it — from the arrival until the press's hit tests end, `+i + hitTicks + 1`, the wider end the hammer
+ * train is checked to (`opportunityAt`). A bomb launched while the walk arrives is aimed at the arriving player and
+ * lands one step past the aim (`lobberWaitDanger`'s sentence), so this is where leg 381's t1156 blast fell.
+ */
+function strikeStandBlast(run, walk, cell, until) {
+    const blast = firstBlastOn(run, walk.samples, cell, until);
+    return blast !== null && !blast.onWalk ? blast : null;
+}
 
 /**
  * ⛓⛓⛓ ONE STRIKE, DERIVED FROM WHERE THE PLAYER IS **NOW**.
@@ -9775,6 +9843,22 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         }
         return null;
     };
+    /**
+     * ⛓ hammer-phase BW — THE STAND'S BOMB (`PRESS_KILL_BOMBS`, OFF ⇒ never asked). Once per cell per derivation (the
+     * walk does not depend on the tick, U4b's note on `walkTo`): the first blast the lobber's forecast lands on a
+     * player who walks there and stands, to the horizon's train end. A window whose train ends at or after it is the
+     * hit 381 took.
+     */
+    const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);
+    let bombed = 0;
+    const standBlastAt = (c, walk, i) => {
+        const known = walks.get(c);
+        if (known.stand === undefined) {
+            PRESS_KILL_BOMBS_COUNTS.strikeAsked += 1;
+            known.stand = strikeStandBlast(run, walk, c, horizon + press.hitTicks + 2);
+        }
+        return known.stand !== null && known.stand.step <= i + press.hitTicks + 1 ? known.stand : null;
+    };
     for (let i = Math.max(1, notBefore); i < horizon - press.hitTicks - 1; i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
@@ -9853,6 +9937,17 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
                     + `body's 7x7 rect or ${hammerTestAt(run)}` });
             continue;
         }
+        // ⛓ hammer-phase BW — the stand against the lobber (`PRESS_KILL_BOMBS`; off ⇒ not reached)
+        const blast = bombs ? standBlastAt(o.cell, walk, o.i) : null;
+        if (blast !== null) {
+            bombed += 1;
+            PRESS_KILL_BOMBS_COUNTS.strikeRefused += 1;
+            rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
+                why: `the STAND meets a bomb: the walk arrives at +${eta} and stands until the train ends at `
+                    + `+${o.i + press.hitTicks + 1}, and at +${blast.step} ${blast.id}'s Explosion at `
+                    + `(${blast.x},${blast.y}) lands on the stance (the lobber's forecast, aimed at the previewed player)` });
+            continue;
+        }
         // ⛓ hammer-phase A — the ESCAPE admission (`HAMMER_ESCAPE`; off ⇒ not reached).
         if (HAMMER_ESCAPE.enabled) {
             const esc = strikeEscape(run, { cell: o.cell, i: o.i, eta, walk, mine: forecast[o.i + 1][index], bodyId,
@@ -9876,6 +9971,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
             sighted,
             dwelt,
             ...(HAMMER_ESCAPE.enabled ? { escaped } : {}),
+            ...(bombs ? { bombed } : {}),
         };
     }
     /**
@@ -9918,6 +10014,12 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
             const { walk, eta, unsafe } = walkTo(c);
             if (walk.truncated || unsafe || eta > i - 1) continue;
             if (dwellUnsafeAt(c, eta, i) !== null) { dwelt += 1; continue; }
+            // ⛓ hammer-phase BW — the stand against the lobber, as in the bounded pass
+            if (bombs && standBlastAt(c, walk, i) !== null) {
+                bombed += 1;
+                PRESS_KILL_BOMBS_COUNTS.strikeRefused += 1;
+                continue;
+            }
             if (HAMMER_ESCAPE.enabled) {
                 const esc = strikeEscape(run, { cell: c, i, eta, walk, mine, bodyId, caller: 'continuation' });
                 if (!esc.ok && esc.claim) {
@@ -9940,11 +10042,12 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
                 continued,
                 fromContinuation: true,
                 ...(HAMMER_ESCAPE.enabled ? { escaped } : {}),
+                ...(bombs ? { bombed } : {}),
             };
         }
     }
     // ⛓ hammer-phase A3 — no certified strike anywhere in the bounds: the pre-escape strike, as the switch OFF.
-    if (fallback !== null) return { ...fallback, escaped };
+    if (fallback !== null) return { ...fallback, escaped, ...(bombs ? { bombed } : {}) };
     return {
         cell: null,
         rejected,
@@ -9960,6 +10063,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         truncated: opportunities.length >= STRIKE_CANDIDATES,
         horizon,
         ...(HAMMER_ESCAPE.enabled ? { escaped } : {}),
+        ...(bombs ? { bombed } : {}),
     };
 }
 
@@ -13865,7 +13969,11 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                                 + 'clear of every live body\'s 7x7 rect and of '
                                 + `${hammerTestAt(run)} for the next ${window} tick(s), `
                                 + `and no strike on ${plan.id} is derivable. The room has `
-                                + 'nowhere to be.', { code: HAMMER_SAFETY });
+                                + 'nowhere to be.'
+                                // ⛓ hammer-phase BW — and under `PRESS_KILL_BOMBS` a refuge a forecast blast lands on is none
+                                + (PRESS_KILL_BOMBS.enabled && bombsInPlay(run)
+                                    ? ' (PRESS_KILL_BOMBS: a refuge whose walk or wait a forecast Bomb\'s Explosion '
+                                        + 'lands on is not counted.)' : ''), { code: HAMMER_SAFETY });
                         }
                     }
                 }

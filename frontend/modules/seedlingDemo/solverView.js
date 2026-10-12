@@ -108,12 +108,14 @@ export {
     // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, ON since the user's flip).
     killRungPresses,
 } from './ghostSpinnerPress.js';
-// pressKillCost.js — solverBot · seedling 4
+// pressKillCost.js — solverBot · seedling 6
 // ⛓⛓⛓ hammer-phase P1: the press kill's cost switch and the by-value key it compares (copy, compare, refuse).
 export {
     PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
     // ⛓⛓⛓ hammer-phase P2: the strike scan's sibling switch, its instrument and the scan's row index.
     STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
+    // ⛓⛓⛓ hammer-phase BW: the press kill's waits see the lobber's bombs (its switch and instrument, OFF).
+    PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
 } from './pressKillCost.js';
 // iceTurret.js — botDriverV2 · seedling 2
 export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
