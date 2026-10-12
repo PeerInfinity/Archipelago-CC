@@ -1,0 +1,12 @@
+12 {"level":21,"offsetX":496,"offsetY":608,"sign":1}
+16 {"level":17,"offsetX":80,"offsetY":16,"sign":-1}
+30 {"level":31,"offsetX":0,"offsetY":-320,"sign":-1}
+32 {"level":30,"offsetX":-160,"offsetY":-80,"sign":-1}
+40 {"level":43,"offsetX":160,"offsetY":112,"sign":-1}
+48 {"level":49,"offsetX":144,"offsetY":16,"sign":-1}
+56 {"level":57,"offsetX":0,"offsetY":-144,"sign":-1}
+70 {"level":69,"offsetX":-16,"offsetY":-88,"sign":-1}
+71 {"level":82,"offsetX":32,"offsetY":-64,"sign":-1}
+83 {"level":84,"offsetX":0,"offsetY":-16,"sign":-1}
+84 {"level":85,"offsetX":-16,"offsetY":-32,"sign":5}
+110 {"level":0,"offsetX":-192,"offsetY":-208,"sign":-1}
