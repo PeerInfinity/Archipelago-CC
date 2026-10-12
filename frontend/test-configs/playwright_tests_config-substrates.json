@@ -568,9 +568,9 @@
         },
         {
             "id": "seedling-wasm-runtime-loop-bot-block-walks-generated-room",
-            "enabled": false,
+            "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "⛔ DISABLED (2026-10-12) until the seedling-js-tutorial-walk-regression fix lands — RE-ENABLE OWED then. It flaked 2/14 on CI with the SAME signature as the tutorial-walk-procgen-seedling regression: 'wasm playback failed: the game left the plan on region_0_0__key_blue_pickup in level 0 at the SAME tick with the SAME game row 2 times in a row … at tick 1: expected {level:0,x:136,y:40.8}, game {level:0,x:136,y:40}'. The JS row's generated-room walk on the WASM runtime (WebGPU — the batch launches Chromium with it): the WG engine stages the mounted set, the solver produces the tapes; the game's Game.time drains the start room."
+            "_comment": "Re-enabled (2026-10-12) with the seedling-js-tutorial-walk-regression fix: its 2/14 CI flake (tick-1 exact-repeat divergence on region_0_0__key_blue_pickup, expected y 40.8, game y 40) was the wind cutscene leaking past the skip under the explicit start's record; the cold start now waits a showing scene out (seedlingWasmPlayback adoptLive) instead of re-arriving into it. The JS row's generated-room walk on the WASM runtime (WebGPU — the batch launches Chromium with it): the WG engine stages the mounted set, the solver produces the tapes; the game's Game.time drains the start room."
         },
         {
             "id": "seedling-js-runtime-loop-play-clock-drains-mana",
