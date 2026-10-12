@@ -9,7 +9,9 @@
  *                      SIGKILLed and the shard moved on) — named with its step;
  *   · never reported   a plan id with no row at all (a shard cancelled / timed out / crashed) — listed per shard, and
  *                      the union printed as one `REDISPATCH ids=` line, the re-dispatch input as is;
- *   · `stage-failed`, `dirty-start`, `page-boot-failed`, and a distinct-leg count short of the plan (as before).
+ *   · `stage-failed`, `dirty-start`, `page-boot-failed`, and a distinct-leg count short of the plan (as before);
+ *   · a MIXED-BUDGET merge (S5-1): rows whose `legBudgetMs` stamp (absent = the default) differs from another row's or
+ *                      from the plan's — a 90 s timeout and a 300 s one are not the same row, so they never merge silently.
  * A `HANG:` line in a shard log with no row behind it (a teardown that hung AFTER its legs reported) is a WARNING:
  * the rows are complete.
  *
@@ -18,6 +20,12 @@
  */
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
+
+/** ⛓ The probe's `LEG_BUDGET_MS_DEFAULT` (this module imports nothing: the merge job runs it off a sparse checkout). */
+export const LEG_BUDGET_MS_DEFAULT = 90000;
+
+/** A row's / the plan's leg budget: its `legBudgetMs` stamp, the default when absent. */
+export const legBudgetOf = (x) => x?.legBudgetMs ?? LEG_BUDGET_MS_DEFAULT;
 
 /**
  * The verdict. `plan` is `--shard-plan=<n> --json` (`{ legs, shards: [{ shard, ids }] }`); `hangLines` the `HANG:`
@@ -38,6 +46,20 @@ export function mergeVerdict({ rows, plan, hangLines = [] }) {
         fail(`${hung.length} leg(s) on a page that HUNG in a harness step (harness-hang): ${hung
             .map((r) => `${r.id} (page ${r.page}, ${r.hang?.step ?? '?'}${r.hang?.started ? ', leg started' : ''})`).join(', ')}`);
     }
+    // ⛓ THE LEG BUDGET — one budget per merge, and it is the plan's
+    const budgets = new Map();
+    for (const r of rows) {
+        const b = legBudgetOf(r);
+        if (!budgets.has(b)) budgets.set(b, []);
+        budgets.get(b).push(r.id);
+    }
+    const planBudget = legBudgetOf(plan);
+    const off = [...budgets.keys()].filter((b) => b !== planBudget);
+    if (off.length) {
+        fail(`a MIXED-BUDGET merge: the plan's leg budget is ${planBudget} ms, and ${off.map((b) => `${budgets.get(b).length} row(s) `
+            + `ran at ${b} ms (ids ${budgets.get(b).join(',')})`).join('; ')}`);
+    }
+    if (planBudget !== LEG_BUDGET_MS_DEFAULT) lines.push(`LEG-BUDGET: ${planBudget} ms per leg (off the ${LEG_BUDGET_MS_DEFAULT} ms default)`);
     lines.push(`MERGE: ${rows.length} rows, ${ids.size} distinct legs of ${plan.legs}; ends ${JSON.stringify(ends)}`);
     if (ids.size !== Number(plan.legs)) fail(`${ids.size} distinct legs, the plan holds ${plan.legs}`);
     if (count('page-boot-failed')) fail(`${count('page-boot-failed')} leg(s) on a page that never booted`);

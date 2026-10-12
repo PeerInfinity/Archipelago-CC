@@ -10700,6 +10700,7 @@ export const INSTRUMENTS = frz({
                 "host",
                 "ids",
                 "keys",
+                "leg-budget-ms",
                 "legs",
                 "limit",
                 "mode",
@@ -10749,6 +10750,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "leg-budget-ms"
                 },
                 {
                     "how": [

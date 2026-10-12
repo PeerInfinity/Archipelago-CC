@@ -11,7 +11,7 @@
  *   - `botLoadTape`: every tape the engine ships (ticks, equips);
  *   - `botDrain`: every raw drained row (all its fields), in order.
  *
- *   serveLeg({goal, budgetMs})   the engine serves ONE goal from where the player stands (the probe jumped first);
+ *   serveLeg({goal, budgetMs, nameCut})   the engine serves ONE goal from where the player stands (the probe jumped first);
  *                                returns the engine's history rows, the plans, the tapes, the raw rows, and
  *                                `roomHits`: the GAME's damage taken in the leg's room (`botStatus.hits`, sampled every
  *                                25 ms while the player is in it — a drained row carries no hits, and `Player.hits`
@@ -159,7 +159,7 @@ export async function createLab() {
         return diff;
     }
 
-    async function serveLeg({ leg, budgetMs = 90000, producer = 'solver' }) {
+    async function serveLeg({ leg, budgetMs = 90000, producer = 'solver', nameCut = false }) {
         const eng = producer === 'walker' ? walkerEngine() : engine;
         st.failed = null;
         st.notes = [];
@@ -168,6 +168,7 @@ export async function createLab() {
         const t0n = tap.tapes.length;
         const h0 = eng.stats.history.length;
         const done0 = eng.stats.done;
+        const backstops0 = eng.stats.backstops ?? 0;
         // ⛓ SERVED LOCATION — the delivery gate's own record for this leg (what a key at contact did)
         const g0 = { served: (eng.stats.deliveryServed ?? []).length, deliveries: (eng.stats.deliveries ?? []).length,
             released: eng.stats.releasedForSwap ?? 0 };
@@ -199,6 +200,10 @@ export async function createLab() {
                 if ((es.drained ?? 0) >= (es.ticks ?? Infinity) || performance.now() - leftAt > 500) { eng.stop(); end = 'crossed'; break; }
             }
         }
+        // ⛓ THE LEG BUDGET (S5-1, `nameCut`: an off-default budget) — a timeout names the bound that ended it, read
+        // BEFORE the stop: the engine's phase (`solving` = a solve still in flight) and the solver's own backstop
+        const cut = nameCut && end === 'timeout' ? { bound: 'leg-budget', budgetMs, phase: eng.status().phase,
+            solverBackstopMs: eng.backstopMs ?? null, backstops: (eng.stats.backstops ?? 0) - backstops0 } : null;
         if (end !== 'crossed') eng.stop();
         clearInterval(hitSampler);
         const after = status();
@@ -256,7 +261,7 @@ export async function createLab() {
             ...(goal.event ? { eventFlag: { ...goal.event.tag,
                 set: (after?.persistence_cleared ?? []).some((c) => c.level === goal.event.tag.level && c.tag === goal.event.tag.tag),
                 collected: glue?.eventCollector ? glue.eventCollector.collected.has(goal.name) : null } } : {}),
-            ms: Math.round(performance.now() - t0), roomHits,
+            ms: Math.round(performance.now() - t0), roomHits, ...(cut ? { cut } : {}),
             gate: { served: plain((eng.stats.deliveryServed ?? []).slice(g0.served)),
                 deliveries: plain((eng.stats.deliveries ?? []).slice(g0.deliveries)).map((d) => ({ phase: d.phase, tick: d.tick, outcome: d.outcome, save: d.save })),
                 releasedForSwap: (eng.stats.releasedForSwap ?? 0) - g0.released } };

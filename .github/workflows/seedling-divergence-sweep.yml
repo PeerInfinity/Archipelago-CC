@@ -15,7 +15,8 @@ name: Seedling divergence sweep (manual)
 #   merge  concatenates the shards' rows and fails BY NAME (`scripts/procgen/seedlingDivergenceMerge.js`) when the
 #          distinct leg ids != the plan's leg count, a leg's page never booted, a leg's page HUNG in a harness step
 #          (`end: 'harness-hang'`, H1), or a shard never reported ids of its plan — those are listed per shard, and
-#          their union printed as `REDISPATCH ids=…` (the `ids` input of the re-run, as is).
+#          their union printed as `REDISPATCH ids=…` (the `ids` input of the re-run, as is) — and a MIXED-BUDGET
+#          merge (rows whose `legBudgetMs` stamp differs from the plan's: S5-1's `leg_budget_ms`).
 #
 # ⛓ H1 (sweep-4 shard 9, run 38110831520, sat ~5 h after page 18 and named nothing): every harness step between
 # legs runs under a MEASURED wall-clock bound in the probe (`HANG_BOUNDS_MS`); one that expires prints `HANG:`,
@@ -89,6 +90,15 @@ on:
           AXE_DODGE line, and stamped on each plan the worker solved under an off-default value.
         type: string
         default: ''
+      leg_budget_ms:
+        description: >-
+          Empty = the harness's 90000 ms per leg (today's run). Otherwise the leg budget in ms (S5-1: a LONG search
+          reads `timeout` exactly like an impossible one at 90 s). Off the default every row is stamped legBudgetMs,
+          a timeout row names its bound (`cut`), the leg hang bound and the shard timeout grow with it, and the merge
+          refuses a mixed-budget merge by name. ⛔ The harness's clock only: the solver's work-unit budgets and its own
+          300 s backstop (a named failure) are untouched.
+        type: string
+        default: ''
       test_fault:
         description: >-
           TEST-ONLY, empty for every real sweep. The probe's fault injection SWEEP_INJECT_HANG=<page>:<step>[,…]
@@ -135,6 +145,7 @@ jobs:
           KEYS: ${{ inputs.keys }}
           PAGE_LEGS: ${{ inputs.page_legs }}
           STAGE_FLAGS: ${{ inputs.stage_flags }}
+          LEG_BUDGET: ${{ inputs.leg_budget_ms }}
         run: |
           set -o pipefail
           mkdir -p test-results/divergence-sweep
@@ -146,8 +157,8 @@ jobs:
             node --input-type=module -e "import fs from 'node:fs';import {pickLegs} from './scripts/procgen/seedling-divergence-legs.mjs';const legs=fs.readFileSync('$L','utf8').split('\n').filter(Boolean).map((l)=>JSON.parse(l));const pick=pickLegs(legs,{ids:(process.env.IDS||'').split(',').filter(Boolean).map(Number),keys:(process.env.KEYS||'').split('|').filter(Boolean)});console.log('SELECTED: '+pick.length+' leg(s)');fs.writeFileSync('$L.sub',pick.map((l)=>JSON.stringify(l)).join('\n')+'\n')"
             mv "$L.sub" "$L"
           fi
-          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" | tee -a plan.txt
-          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" --json > plan.json
+          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} | tee -a plan.txt
+          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} --json > plan.json
           # ⛓ the partition travels with the leg list: the merge compares each shard's ids against its rows
           cp plan.json test-results/divergence-sweep/plan.json
           echo "matrix=$(node -p "JSON.stringify(require('./plan.json').matrix)")" >> "$GITHUB_OUTPUT"
@@ -226,6 +237,7 @@ jobs:
           CONTACT: ${{ inputs.contact_fidelity }}
           STAGE_FLAGS: ${{ inputs.stage_flags }}
           AXE_DODGE: ${{ inputs.axe_dodge }}
+          LEG_BUDGET: ${{ inputs.leg_budget_ms }}
           TEST_FAULT: ${{ inputs.test_fault }}
         run: |
           set -o pipefail
@@ -250,7 +262,7 @@ jobs:
           set +e
           node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=$D/legs.jsonl --shard="$SHARD" --mode="$MODE" \
             --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP $STAGE ${CONTACT:+--contact-fidelity="$CONTACT"} \
-            --stage-flags="$STAGE_FLAGS" ${AXE_DODGE:+--axe-dodge="$AXE_DODGE"} 2>&1 | tee "$L"
+            --stage-flags="$STAGE_FLAGS" ${AXE_DODGE:+--axe-dodge="$AXE_DODGE"} ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} 2>&1 | tee "$L"
           RC=$?
           set -e
           echo "MEASURED: shard $SHARD rc=$RC wall $(( $(date +%s) - S ))s load $(cut -d' ' -f1-3 /proc/loadavg) nproc $(nproc) at ${GITHUB_SHA}"
@@ -272,7 +284,7 @@ jobs:
           {
             echo "## Divergence sweep — shard ${SHARD} — \`${{ steps.sweep.outcome }}\`"
             echo '```'
-            grep -aE '^SHARD |^CHANNEL:|^INFO: page|^FAIL|^HANG:' "$D/shard.log" 2>/dev/null | cut -c1-300 || true
+            grep -aE '^SHARD |^CHANNEL:|^LEG-BUDGET:|^INFO: page|^FAIL|^HANG:' "$D/shard.log" 2>/dev/null | cut -c1-300 || true
             echo "rows $(wc -l < "$D/rows-$I.jsonl" 2>/dev/null || echo 0)"
             node -e "const fs=require('fs');const m={};for(const l of fs.readFileSync('$D/rows-$I.jsonl','utf8').split('\n').filter(Boolean)){const e=JSON.parse(l).end;m[e]=(m[e]||0)+1}console.log(JSON.stringify(m))" 2>/dev/null || true
             echo '```'
