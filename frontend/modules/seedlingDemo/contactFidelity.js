@@ -270,6 +270,22 @@ export const CONTACT_FIDELITY = {
      */
     bombPusherLive: true,
     /**
+     * fidelity L74LEG624 D3 — STRIKE_IFRAME_LAPSE: A PRESS IS GATED ON ITS HIT TESTS, NOT ON ITS PRESS TICK.
+     *
+     *     Enemy.as:140    hit(): if (hitsTimer > 0) return …   — the gate runs on each TEST tick
+     *     Player.slash    the rect test runs on every tick `slashing` is up: T+1 … T+SLASH_HIT_TICKS
+     *
+     * `strikePolicy.strikeCandidates` refused any body whose (one-tick-old) `hitsTimer` read above 0, which is true
+     * of the press tick and not of the window: a press whose later tests land at or after the i-frame's lapse damages
+     * the body. Measured on L74 (leg 624, `lavarunner@208,96`, hammer C4's witnesses `tape-l74-624-press84`/`-press85`):
+     * a press at t84/t85 kills it at t87 with no player hit, game and model at 0 px; the policy's own press goes in
+     * at t88 and the body hits the player at t87. ON: a body is admitted when `projectedHitsTimer` at the press's
+     * LAST test tick is ≤ 0 (`strikePolicy.iframeLapsesInWindow`); the `owed` rule and `ORDINARY_SWING_PERIOD`'s dash
+     * refusal are untouched. OFF: the `hitsTimer > 0` refusal, byte-identical. ⛔ OFF by default: it moves strikes
+     * roster-wide, and the flip is the user's licence (`SEEDLING_STRIKE_IFRAME_LAPSE=0|1` for a node measurement).
+     */
+    strikeIframeLapse: false,
+    /**
      * fidelity L74LEG624 D2 — FALLROCK_POSTFALL: A CLEARED NON-ARENA `FallRock` IS BUILT AS THE GAME LEAVES IT.
      *
      *     FallRock.as:42-47   if (!Game.checkPersistence(tag)) { y = fallTo; type = "Solid"; _active = true; }
@@ -353,6 +369,8 @@ if (globalThis.process?.env?.SEEDLING_BAIT_FORECAST === '0') CONTACT_FIDELITY.ba
 if (globalThis.process?.env?.SEEDLING_FORCED_HITS === '1') CONTACT_FIDELITY.forcedHits = true;
 if (globalThis.process?.env?.SEEDLING_FORCED_HITS === '0') CONTACT_FIDELITY.forcedHits = false;
 // ⛓ fidelity L74LEG624: `SEEDLING_STRIKE_IFRAME_LAPSE=0|1` and `SEEDLING_FALLROCK_POSTFALL=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_STRIKE_IFRAME_LAPSE === '1') CONTACT_FIDELITY.strikeIframeLapse = true;
+if (globalThis.process?.env?.SEEDLING_STRIKE_IFRAME_LAPSE === '0') CONTACT_FIDELITY.strikeIframeLapse = false;
 if (globalThis.process?.env?.SEEDLING_FALLROCK_POSTFALL === '1') CONTACT_FIDELITY.fallRockPostFall = true;
 if (globalThis.process?.env?.SEEDLING_FALLROCK_POSTFALL === '0') CONTACT_FIDELITY.fallRockPostFall = false;
 
