@@ -564,6 +564,8 @@ frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemDeathBlastPrefilter|bos
 frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_WHITE_OUT|(module)|240,rule,magnitude,Enemies/BossTotem.as:rumblingTimeMax,
 frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_WHITE_OUT|(module)|43,rule,sentinel,,persistence level 43 tag 5
 frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_WHITE_OUT|(module)|5,rule,sentinel,,persistence level 43 tag 5
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h7b1a0130|24|0,rule,derivation,Projectiles/Explosion.as:radius,int(24 * 0.65) = 15: the totem shot blast hit radius (totemShotBlastInt)
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h7b1a0130|0.65|0,rule,derivation,Projectiles/Explosion.as:radius,int(24 * 0.65) = 15: the totem shot blast hit radius (totemShotBlastInt)
 frontend/modules/seedlingDemo/r7Acceptance.js|SEAM_SIGNATURE|(module),structural,,,seam save-array arity (format shape)
 frontend/modules/seedlingDemo/r7Acceptance.js|assertSeamChannelsTotal|assertSeamChannelsTotal,structural,,,acceptance/diagnostic arithmetic
 frontend/modules/seedlingDemo/r7Acceptance.js|seamRngPosture|seamRngPosture,structural,,,acceptance/diagnostic arithmetic
@@ -1461,6 +1463,11 @@ frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|hc184d55f|-1|0,rule,senti
 frontend/modules/seedlingDemo/moonrock.js|moonrockSpan|moonrockSpan,structural,,,the span simulator: counters
 frontend/modules/seedlingDemo/iceTurretBlast.js|(module)|h774b1553|5|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
 frontend/modules/seedlingDemo/playerDamage.js|(module)|h9d8ec539|5|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
+frontend/modules/seedlingDemo/playerDamage.js|stagedPlayerDamage|h3fa12f7c|-1|0,rule,sentinel,Player.as:directionFace,staged direction_face absent = -1 (not set)
+frontend/modules/seedlingDemo/playerDamage.js|stagedPlayerDamage|he6016319|0|0,rule,bound,,staged hits >= 0
+frontend/modules/seedlingDemo/playerDamage.js|stagedPlayerDamage|h3bcdbbb0|0|0,rule,bound,Player.as:hitsTimer,staged hits_timer >= 0 (upper bound is PLAYER_DAMAGE.hitsTimerMax)
+frontend/modules/seedlingDemo/playerDamage.js|stagedPlayerDamage|h3be68ca1|-1|0,rule,sentinel,Player.as:directionFace,staged direction_face -1 = not set
+frontend/modules/seedlingDemo/playerDamage.js|stagedPlayerDamage|h3be68ca1|3|0,rule,bound,Player.as:direction,staged direction_face facings 0..3
 frontend/modules/seedlingDemo/tapeEnvelope.js|*|*,structural,,,default: the envelope reader's validation floors and indices (engine prep B1 joined the closure through tapeFormat.js)
 frontend/modules/seedlingDemo/tapeEnvelope.js|*|inclusiveToHalfOpen|1,rule,magnitude,,the inclusive-to-half-open bridge: an engine span [a b] is the envelope span {from a; to b+1} (tape-envelope.md § 4)
 frontend/modules/seedlingDemo/tapeEnvelope.js|*|halfOpenToInclusive|1,rule,magnitude,,the reverse bridge: to - 1 (tape-envelope.md § 4)

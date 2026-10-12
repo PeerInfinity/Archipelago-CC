@@ -407,6 +407,20 @@ export const substrateRegistryEntry = Object.freeze({
     deserializeWorld: deserializeGenRoom,
     getPlaybackController: () => _playbackController,
     playbackScope: SEEDLING_PLAYBACK_SCOPE,
+    /**
+     * ⛓ SEEDLING LOOP MODE + PLAY CLOCK — `flash_seedling`'s declaration, here too: a Loops **Bot** block plays a
+     * generated room through the controller above (`executeVia: 'solver'` → `loopState.regionSolver` answers
+     * 'walkTo'; the J2 walker / the solver serves an exit and a location on JS and wasm, a tile target is refused by
+     * name), a queued `locationCheck` is walked to its apitem and completed by the game's own check, and `playClock`
+     * drains the region per GAME second `seedlingPlayClock.js` reports (⚖ "Drain play time too"). The generic flash
+     * entry still declares none of the three.
+     */
+    loopSupport: Object.freeze({
+        ...runtime.loopSupport,
+        queueActions: Object.freeze(['regionMove', 'locationCheck']),
+        executeVia: 'solver',
+        playClock: true,
+    }),
 
     /** A generated room's exits are SIDES — labels; the door stands where the flood put it. */
     regionGeometry: REGION_GEOMETRY.SIDES,

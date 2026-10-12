@@ -100,10 +100,20 @@ export {
 } from './ghostSword.js';
 // ghostSpinnerPress.js — solverBot · seedling 3
 // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (its switch, the sword's row, the chooser).
-export { GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress } from './ghostSpinnerPress.js';
+export {
+    GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
+    // ⛓⛓⛓ hammer-phase D: the approach's and the fight's per-weapon row (behind `GHOST_SEARCH_BUCKETS`, OFF).
+    searchPressFor,
+    // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, OFF).
+    killRungPresses,
+} from './ghostSpinnerPress.js';
 // pressKillCost.js — solverBot · seedling 4
 // ⛓⛓⛓ hammer-phase P1: the press kill's cost switch and the by-value key it compares (copy, compare, refuse).
-export { PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue } from './pressKillCost.js';
+export {
+    PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
+    // ⛓⛓⛓ hammer-phase P2: the strike scan's sibling switch, its instrument and the scan's row index.
+    STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
+} from './pressKillCost.js';
 // iceTurret.js — botDriverV2 · seedling 2
 export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
 // ⛓ U15-swim D2: the turret spit's box, for `dangerMap.spitDanger`'s WAIT sweep.

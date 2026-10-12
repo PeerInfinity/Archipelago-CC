@@ -1,0 +1,9 @@
+calls {'SC': 12, 'S': 5420, 'R': 15780}
+ms {'SC': 348, 'S': 47567, 'R': 57935}
+samples {'SC': 4787, 'S': 1557826, 'R': 2145515}
+ticks with previews 1329
+within-tick dup (first,second): {('S', 'R'): 1} {('S', 'R'): 1}
+cross-tick same state+target: {'S': 4880, 'R': 14434} {'S': 43181, 'R': 53709} same result: {'S': 4864, 'R': 14346}
+consecutive preview-ticks with identical state 1208 of 1328
+refuge truncations {None: 10074, 'stalled': 4627, 'crossed': 1079} previews past best 14457 samples past best+1 2118794
+strike truncations {'stalled': 2336, None: 3096}

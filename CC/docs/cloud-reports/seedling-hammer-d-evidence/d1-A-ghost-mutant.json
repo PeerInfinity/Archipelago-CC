@@ -1,0 +1,100 @@
+{
+ "view": "/home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/hammer-p1-l40-south-boot.json",
+ "boot": {
+  "level": 40,
+  "x": 480,
+  "y": 896
+ },
+ "goals": "collect:880,816",
+ "env": {},
+ "verdict": "REFUSED",
+ "name": "SolverRefusal",
+ "message": "solverBot(c1) chest (880,816) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (743.6,851.7) — chaser:bob@736,752 (inside leash 80 (d=3.0), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order refused:\n  avoid: no admissible corridor with the danger map's 17 volume(s) forbidden — A* goal tile (55,52) in level 40 — for (888,834) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The planner works in whole tiles, so both ends o\n  time: the aim is 222 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [chaser:bob@736,752] and this room's live roster is [bob@320,112, bob@288,112, bob@288,80, bob@304,144, bob@272,112, bobsoldier@880,832, bob@736,752, bob@736,800, bob@192,480, bob@352,448, bob@352,416, bob@208,448, bob@224,496, puncher@128,624, puncher@816,128]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and ⛔ a static \"Enemy\" body's own arrow death is REFUSED by name (§11.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)\n  detour: deadline — the caller's anytime deadline (`shouldStop`) was reached before the DETOUR search, so it was not run ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `detour`) and refused 1 `detour` scan(s) — this refusal may be the deadline's, not the room's.",
+ "refusalTicks": 2195,
+ "keysMd5": "b762a2e63cd1e0dd1c53c273116d6b14",
+ "at": {
+  "level": 40,
+  "t": 2195,
+  "x": 728.067125356909,
+  "y": 680.0338998172781,
+  "vx": 0,
+  "vy": 0
+ },
+ "rows": [
+  {
+   "tick": 0,
+   "strategy": {
+    "verb": "kill",
+    "rung": "kill",
+    "climb": 1,
+    "arm": "press",
+    "target": "spinner@880,848"
+   }
+  },
+  {
+   "tick": 2127,
+   "strategy": {
+    "verb": "kill",
+    "rung": "kill",
+    "climb": 2,
+    "arm": "press",
+    "target": "spinner@816,848"
+   }
+  },
+  {
+   "tick": 2195,
+   "strategy": {
+    "verb": "kill",
+    "rung": "kill",
+    "climb": 3
+   }
+  }
+ ],
+ "ghost": true,
+ "primary": "ghostsword",
+ "landings": [
+  {
+   "t": 501,
+   "id": "spinner@880,848",
+   "weapon": "ghostsword",
+   "hits": 2,
+   "reach": 19.54
+  },
+  {
+   "t": 2078,
+   "id": "spinner@880,848",
+   "weapon": "ghostsword",
+   "hits": 2,
+   "reach": 20.399
+  },
+  {
+   "t": 2114,
+   "id": "spinner@880,848",
+   "weapon": "ghostsword",
+   "hits": 4,
+   "reach": 23.786
+  },
+  {
+   "t": 2149,
+   "id": "spinner@816,848",
+   "weapon": "ghostsword",
+   "hits": 2,
+   "reach": 20.379
+  },
+  {
+   "t": 2182,
+   "id": "spinner@816,848",
+   "weapon": "ghostsword",
+   "hits": 4,
+   "reach": 11.579
+  }
+ ],
+ "weapons": [
+  "ghostsword"
+ ],
+ "ms": 127524,
+ "sites": {
+  "detour": 1
+ },
+ "msgMd5": "50952282e6e01654aa5b05ffccaaeb6f"
+}

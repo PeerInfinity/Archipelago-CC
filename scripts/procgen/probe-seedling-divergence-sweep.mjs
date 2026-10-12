@@ -517,6 +517,9 @@ async function main() {
             }
             console.log(`LEG ${leg.id} start (page ${pageNo}, pageLeg ${i})`);
             current = { leg };
+            // ⛓ L74 SILENT STALL — the page's uncaught errors DURING this leg go on its row (CI sweep 38185510484: three
+            // pageerrors, a throw that killed the engine's timer chain, and a row that said only `timeout`).
+            const logMark = logs.length;
             // eslint-disable-next-line no-await-in-loop
             try { await step('leg', async () => {
                 // ⛔ THE CLEAN START (planner-3's trace, 2026-10-05): the game's `Inventory.items` is STATIC and
@@ -588,6 +591,8 @@ async function main() {
                 row.error = e.message.split('\n')[0].slice(0, 400);
                 row.consoleTail = logs.slice(-12);
             }
+            const pageErrors = logs.slice(logMark).filter((l) => l.startsWith('[pageerror]'));
+            if (pageErrors.length) row.pageErrors = pageErrors.slice(0, 5).map((l) => l.slice(0, 400));
             const exits = logs.filter((l) => /heap_alloc|ExitStatus|out of memory/.test(l));
             if (exits.length) row.gameMemory = exits.slice(-3);
             row.swapsOnPage = swaps;

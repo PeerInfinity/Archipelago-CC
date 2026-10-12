@@ -201,7 +201,7 @@ import {
 // contact source that calls them. `noDamage` stops being a refusal here.
 import {
     DARK_SUIT_DAMAGE, DARK_SUIT_FORCE, DEATH_REBOOT, PLAYER_DAMAGE, PlayerDamageError, canSteer,
-    createPlayerDamage, playerHit, stepPlayerDamage,
+    createPlayerDamage, playerHit, stagedPlayerDamage, stepPlayerDamage,
 } from './playerDamage.js';
 import {
     ENEMY_CLASSES, TYPE_REWRITING_ENEMIES, contactPricing, contactRect, enemyHitPlayerFires,
@@ -655,6 +655,15 @@ export function createLevelRun({
      * item arrives (`slotOrder`).
      */
     inventorySlots = null,
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY STAGEDHITS — the player's DAMAGE at the boot (`{hits, hits_timer, direction_face?}`,
+     * `botStatus`'s spelling — `playerDamage.stagedPlayerDamage` has the rules), or `null` for a fresh `Player`.
+     *
+     * ⛔ PER WORLD, so it is the BOOT world's only: a door or a death builds a new `Player` at 0 exactly as before
+     * (`arriveIn`'s `createPlayerDamage()`). A staging takes it only where the game kept its `Player` across a re-stage
+     * (an in-place reboot, a cold adoption) — never over a replayed prefix, which re-bills its own hits.
+     */
+    playerDamage = null,
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -1435,9 +1444,12 @@ export function createLevelRun({
                 // the clear list may not name a fallrock tag, so a rock that
                 // boots fallen is a state no build reaches. Asserted by the
                 // refusal rather than by this comment.
+                // ⛓ fidelity L74LEG624 D2: …except a `postFall` row (`levelWorld.postFallRockOf`, the switch ON),
+                // which the ctor builds FALLEN — Solid at its cell, `_active`, so no publication drops it again.
+                const fallen = r.postFall === true;
                 st.set(r.id, {
-                    ...createFallRock(r.x, r.y, r.t, r.persistTag, false),
-                    landed: false,
+                    ...createFallRock(r.x, r.y, r.t, r.persistTag, fallen),
+                    landed: fallen,
                 });
             }
             fallRockStates.set(n, st);
@@ -2853,6 +2865,12 @@ export function createLevelRun({
      * it is read from the inventory mirror and not carried here.
      */
     let damage = createPlayerDamage();
+    /**
+     * ⛓ STAGEDHITS: the boot world's staged damage (validated against the run's `hitsMax`), or null. `null` leaves
+     * `damage` the fresh `Player`'s above, so an unstaged run is byte-identical.
+     */
+    const stagedDamage = playerDamage === null ? null : stagedPlayerDamage(playerDamage, { hitsMax: inventory.hitsMax });
+    if (stagedDamage !== null) damage = { ...stagedDamage };
     /** One per landed `Player.hit` — `{t, level, source, id, hits, ...}`. */
     const playerHits = [];
     /**
@@ -4596,13 +4614,39 @@ export function createLevelRun({
     // polled before the settle (measured: (0, 108) where the settled camera is (0, 80)), so a camera witness is
     // not asked there (`assertWitnessCamera`).
     let camFresh = true;
-    const settleCameraForLoad = () => {
+    const settleCameraForLoad = ({ reboot = false } = {}) => {
         camFresh = true;
         cam = initialCamera(state.x, state.y);
         // ⛓ A LOAD CLEARS THE BAND. `loadlevel` writes `FP.camera` from the
         // arrival position with no history, so whatever the jiggle had
         // accumulated is gone — the one thing that collapses it.
         camBand = null;
+        /**
+         * ⛓⛓ seedling-fidelity-movingwait D4 (behind `CONTACT_FIDELITY.rebootShake`, OFF) — A DEATH REBOOT HAS NO
+         * FADE BEFORE THE SWAP. `Player.die()` is `dying = true; restartLevel()`, and `Game.shake` is a static the new
+         * `Game` never resets, so the killing hit's shake is still live in the new world's own settle frames: each
+         * `view()` jiggles `FP.camera` and the next lerp compounds it. Measured on the game (the L42 damage witness's
+         * tape, t1221 → t1222): the reboot's first sample reads `shake` 4 and the settled camera is (777, 0), where
+         * the drained settle below makes it exactly (776, 0). ON: the settle steps the shake band (`stepCameraBand`),
+         * so the camera after a shaken reboot is a band, read from a witness or refused by name like any other.
+         */
+        if (reboot && shake > 0 && CONTACT_FIDELITY.rebootShake === true) {
+            const w = worldFor(level).world;
+            for (let i = 0; i < CAMERA_LOAD_SETTLE_TICKS; i += 1) {
+                if (camBand === null && shake === 0) { cam = stepCamera(cam, state, w); continue; }
+                if (camBand === null) camBand = cameraBand(cam);
+                const r = stepCameraBand(camBand, state, w, { shake });
+                camBand = r.band;
+                shake = r.shake;
+                if (bandIsExact(camBand)) {
+                    cam = { x: camBand.x.lo, y: camBand.y.lo };
+                    camBand = null;
+                } else {
+                    cam = null;
+                }
+            }
+            return;
+        }
         // ...and the fade DRAINS the shake, at one per engine frame. The
         // fade's length is a BAND, so this is only knowable when the shake
         // cannot survive the shortest one; `shakeAcrossLoad` refuses
@@ -4829,7 +4873,7 @@ export function createLevelRun({
      * @param {{x:number,y:number}} o.ctor the NEW `Game`'s constructor args
      * @returns {?object} the grant record this entry fired, if any
      */
-    const enterWorld = ({ toLevel, fromLevel, carriedSwim, arrivalFor, ctor }) => {
+    const enterWorld = ({ toLevel, fromLevel, carriedSwim, arrivalFor, ctor, reboot = false }) => {
         level = toLevel;
         worldEntries += 1;
         // A `Game` is constructed here, so this is where `Lock.check()` runs
@@ -4916,7 +4960,7 @@ export function createLevelRun({
         // from the arrival position and the fade's own `view()` calls settle
         // it, which is `cameraTrack`'s level-change arm as a live step. It
         // also drains `Game.shake` and clears the band; see the function.
-        settleCameraForLoad();
+        settleCameraForLoad({ reboot });
         // `ticksCompleted` is already the arrival observation's index, so the
         // grant's `t` is that observation — the same tick the transition
         // record carries, and the same tick `Bot.as` applies it on. Applied
@@ -7965,6 +8009,20 @@ export function createLevelRun({
                     c.x = r.x;
                     c.y = r.y;
                     c.v = r.v;
+                    /**
+                     * ⛓ fidelity L74LEG624 D4 (`CONTACT_FIDELITY.forecastSpeedByTerrain`) — K2's `LavaRunner` tail on
+                     * the clone: `stepChasersNow` re-chooses `moveSpeed` by the tile under the body after the chase
+                     * (swim 1 on water or lava, walk 1.5 elsewhere) and this forecast did not, so a previewed
+                     * lavarunner crossing lava kept walking at 1.5 (L74 leg 624: the drive and its certified preview
+                     * part at t53, `lavarunner@208,96`). OFF: the clone keeps the speed it was seeded with, as before.
+                     */
+                    if (CONTACT_FIDELITY.forecastSpeedByTerrain) {
+                        const sbt = CHASERS[c.tag]?.speedByTerrain;
+                        if (sbt && !c.dying && !c.destroy) {
+                            const here = world.nearestWalkableTile(c.x, c.y)?.t ?? 0;
+                            c.moveSpeed = sbt.swimTiles.includes(here) ? sbt.swim : sbt.walk;
+                        }
+                    }
                     // ⛓ fidelity-bulb: the armed update's last statement, then its first "drop" graphic update.
                     if (c.bulbPhase === 'armed') {
                         c.bulbPhase = 'drop';
@@ -8131,6 +8189,8 @@ export function createLevelRun({
                         enemyClass: ENEMY_CLASSES[c.tag]?.as3 ?? null,
                         hits: c.hits,
                         hitsTimer: c.hitsTimer,
+                        // ⛓ fidelity L74LEG624 D3: a body in its death takes no hit (`strikePolicy` reads it, ON only).
+                        ...(CONTACT_FIDELITY.strikeIframeLapse && c.dying ? { spent: true } : {}),
                     }));
             },
             /**
@@ -9041,9 +9101,12 @@ export function createLevelRun({
                 });
             }
             if (r.explodeAt) {
+                // ⛓ seedling-fidelity-movingwait D4: the Explosion's `int` origin and radius (OFF: the Number reading).
+                const intBlast = CONTACT_FIDELITY.totemShotBlastInt === true;
                 applyExplosion({
-                    x: r.explodeAt.x, y: r.explodeAt.y,
-                    radius: BOSS_TOTEM_SHOT.explosionHitRadius,
+                    x: intBlast ? Math.trunc(r.explodeAt.x) : r.explodeAt.x,
+                    y: intBlast ? Math.trunc(r.explodeAt.y) : r.explodeAt.y,
+                    radius: intBlast ? BOSS_TOTEM_SHOT.explosionHitRadiusInt : BOSS_TOTEM_SHOT.explosionHitRadius,
                     damage: BOSS_TOTEM_SHOT.explosionDamage,
                     force: BOSS_TOTEM_DEATH_BLAST.force,
                     source: 'bossShotBlast', id: s.id,
@@ -14502,6 +14565,9 @@ export function createLevelRun({
                 rect: chaserBoxAt(c.tag, c.x, c.y),
                 hits: c.hits,
                 hitsTimer: c.hitsTimer,
+                // ⛓ fidelity L74LEG624 D3: `Enemy.hit`'s `hits < hitsMax` — a body in its death takes no hit
+                // (`strikePolicy` reads it, `CONTACT_FIDELITY.strikeIframeLapse` ON only; OFF the shape is unchanged).
+                ...(CONTACT_FIDELITY.strikeIframeLapse && c.dying ? { spent: true } : {}),
             });
         }
         return out;
@@ -16231,6 +16297,8 @@ export function createLevelRun({
         get contactsSuppressed() { return contactsSuppressed.map((c) => ({ ...c })); },
         /** `{hits, hitsTimer, directionFace}` right now. */
         get damage() { return { ...damage }; },
+        /** ⛓ STAGEDHITS: the boot's staged `{hits, hitsTimer, directionFace}`, or null (a fresh `Player`). */
+        get stagedDamage() { return stagedDamage === null ? null : { ...stagedDamage }; },
         /** `Game.shake` right now — a static, so it outlives every world. */
         get shake() { return shake; },
         /** ⛓ K2PREP D2: the camera the NEXT update's `onScreen` reads — exact `{x, y}`, or the shake band. */
@@ -19590,6 +19658,8 @@ export function createLevelRun({
                     // a second death respawns in exactly the same place —
                     // which is what makes a death loop a loop.
                     ctor: worldCtor,
+                    // ⛓ movingwait D4: no fade before a death's swap (`settleCameraForLoad`, `rebootShake`).
+                    reboot: true,
                 });
                 pendingDeath = null;
                 firstTickInWorld = true;

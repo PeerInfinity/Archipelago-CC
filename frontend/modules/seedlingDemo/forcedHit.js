@@ -91,12 +91,19 @@ export const FORCED_HIT_ALPHABET = Object.freeze(DIRECTION_SETS
  * landed after the last world swap (a door's `transitions` row or a death), else 0 — `Player.hits` is per world, so a
  * door or a death starts the next one at 0. `{hits, lastHitAt, id}` (`lastHitAt`/`id` null at 0): the i-frame and
  * the knockback are that row's tick's (`levelRun.applyPlayerHit`).
+ *
+ * ⛓ STAGEDHITS: a run STAGED with the game's damage (`player_damage` → `run.stagedDamage`) starts its boot world at
+ * the staged `hits`, so with no hit and no swap since the boot the answer is that, marked `staged: true` (no tick, no
+ * body: the hit was the game's, before this run). A later hit's row already counts it (`playerHit` adds to the staged
+ * state); a door or a death replaces it with a fresh 0. Unstaged runs read exactly as before.
  */
 export function worldHitsOf(run) {
     const last = (run.ledger('playerHits') ?? []).at(-1) ?? null;
     const swapAt = Math.max(run.transitions.at(-1)?.t ?? -1, (run.ledger('playerDeaths') ?? []).at(-1)?.t ?? -1);
-    return last !== null && last.t > swapAt ? { hits: last.hits, lastHitAt: last.t, id: last.id }
-        : { hits: 0, lastHitAt: null, id: null };
+    if (last !== null && last.t > swapAt) return { hits: last.hits, lastHitAt: last.t, id: last.id };
+    const staged = run.stagedDamage ?? null;
+    if (swapAt < 0 && staged !== null && staged.hits > 0) return { hits: staged.hits, lastHitAt: null, id: null, staged: true };
+    return { hits: 0, lastHitAt: null, id: null };
 }
 
 const hitsOf = (r) => (r.ledger('playerHits') ?? []).length;

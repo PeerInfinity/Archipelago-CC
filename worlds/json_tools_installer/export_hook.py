@@ -35,6 +35,18 @@ def exporter_supports_staging_dir() -> Optional[bool]:
         return None
 
 
+@functools.lru_cache(maxsize=1)
+def exporter_supports_format_fallback() -> bool:
+    """Whether the installed exporter's export_game_rules accepts format_fallback_from
+    (it records and summarises a format fallback; an older exporter does not)."""
+    try:
+        import inspect
+        from exporter import export_game_rules
+        return "format_fallback_from" in inspect.signature(export_game_rules).parameters
+    except Exception:
+        return False
+
+
 def _warn_legacy_exporter() -> None:
     global _legacy_exporter_warned
     if _legacy_exporter_warned:
@@ -101,15 +113,27 @@ def export_post_output_hook(
     # Auto-detect Rule Builder availability and fall back to ast format if needed.
     # The rule_builder format requires the fork's extended rule_builder package;
     # without it, fall back to ast format which works with vanilla Archipelago.
+    # The exporter records and summarises the fallback (exporter/format_fallback.py).
     rules_format = jt.rules_json_format
+    fallback_kwargs = {}
     if rules_format in ("rule_builder", "both"):
         try:
             from rule_builder import BOOLEAN_RULE_TYPES  # noqa: F401
-        except (ImportError, AttributeError):
-            logger.info(
-                "Extended Rule Builder not available, falling back to 'ast' format "
-                "(was '%s')", rules_format
+        except (ImportError, AttributeError) as e:
+            reason = (
+                "the extended Rule Builder (rule_builder.BOOLEAN_RULE_TYPES) failed to import: "
+                f"{type(e).__name__}: {e}"
             )
+            if exporter_supports_format_fallback():
+                fallback_kwargs["format_fallback_from"] = {"requested": rules_format, "reason": reason}
+            else:
+                # Expected on a compiled install (the extended Rule Builder cannot load): WARNING there.
+                from Utils import is_frozen
+                logger.log(
+                    logging.WARNING if is_frozen() else logging.ERROR,
+                    "rules_json_format fallback: requested '%s', writing 'ast'. Cause: %s",
+                    rules_format, reason,
+                )
             rules_format = "ast"
 
     # Export rules data after create_playthrough so sphere_log.jsonl is included.
@@ -126,6 +150,7 @@ def export_post_output_hook(
             clear_game_presets=jt.clear_game_presets,
             clear_all_presets=jt.clear_all_presets,
             staging_dir=staging_dir,
+            **fallback_kwargs,
         )
     else:
         # Legacy exporter: no staging_dir parameter, and its preset copy

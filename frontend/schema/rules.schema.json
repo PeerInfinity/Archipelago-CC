@@ -233,6 +233,33 @@
             "use_resolved_items": {
               "type": "boolean",
               "description": "Whether to use resolved items in event processing."
+            },
+            "format_fallback": {
+              "type": "object",
+              "description": "Present ONLY when the exporter was asked for the Rule Builder format (`rules_json_format` `rule_builder` or `both`) and wrote AST format instead (the fallback is kept by the user's ruling, 2026-10-11, and made visible here, in an ERROR log line, and in a run-end WARNING summary). ABSENT on a normal export. Written into every slot's block of the file. Producer: exporter/format_fallback.py via exporter/exporter.py `export_game_rules`. No consumer changes behaviour on it; it is a record for the reader.",
+              "properties": {
+                "requested": {
+                  "type": "string",
+                  "enum": ["rule_builder", "both"],
+                  "description": "The rules_json_format the run asked for."
+                },
+                "written": {
+                  "type": "string",
+                  "enum": ["ast"],
+                  "description": "The format this file's rules are actually in."
+                },
+                "reason": {
+                  "type": "string",
+                  "description": "The cause: the exception type, message and raising frame (file:line) of the converter import or conversion failure."
+                },
+                "rule_builder_output": {
+                  "type": "string",
+                  "enum": ["not written", "dropped"],
+                  "description": "`dropped` when `both` was asked for and conversion failed: the primary file is AST and the _rules-ast.json is still written. `not written` otherwise."
+                }
+              },
+              "required": ["requested", "written", "reason", "rule_builder_output"],
+              "additionalProperties": false
             }
           },
           "additionalProperties": true

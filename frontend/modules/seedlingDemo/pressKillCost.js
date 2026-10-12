@@ -58,6 +58,117 @@ export function withPressKillCost(enabled, fn) {
     }
 }
 
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE P2 — THE STRIKE SCAN'S COST, A SIBLING SWITCH (`STRIKE_SCAN_COST`, ON).
+ *
+ * After P1, `previewWalk` is half of C1's staging A, and none of its cost is cacheable from here: the preview's
+ * stepper and its four forecasts bind run state no reader exposes (measured: the same `run.state` and target two ticks
+ * apart previewed to a different length 104 times). P2 takes the two EXACT levers left inside `deriveStrike`:
+ *   · the strike LINE, carried ACROSS derivations — `run.collideLineSolid` truncates its four coordinates and reads
+ *     the world's solids under `normalizeLiveOpts(liveSolidOpts())`, which is `run.liveGeometryOpts()`; so one answer
+ *     per (world by identity, the bag by value, the four integers) is the answer (97 % of P1's per-derivation misses
+ *     on staging A were lines an earlier derivation had asked);
+ *   · the scan's REACH BOX — a (cell, tick) pair whose cell lies outside the body's rect grown by the press's reach
+ *     fails `opportunityAt`'s first test, `distanceRectPoint > reach`, before anything is counted, so only the cells in
+ *     that box are asked (`cellRowsOf`, `cellsInBox`), in the list's own order; the ETA floor's skip count is counted
+ *     for every cell all the same (`unreachable` rides the refusal).
+ *
+ * ⛓ WHY A SIBLING AND NOT P1'S SWITCH: the A/B is then P2 alone (OFF is P1's head, byte for byte), and a mutant or a
+ * bisection can hold P1 ON while it moves P2. ON by default — a cost change, no flip; OFF is the control
+ * (`SEEDLING_STRIKE_SCAN_COST=0`, or `withStrikeScanCost(false, fn)`). OFF, both levers are bypassed and `deriveStrike`
+ * scans and asks exactly what it did at P1.
+ */
+export const STRIKE_SCAN_COST = {
+    enabled: globalThis.process?.env?.SEEDLING_STRIKE_SCAN_COST !== '0',
+};
+export const STRIKE_SCAN_COST_DEFAULT = true;
+
+/** P2's instrument, `PRESS_KILL_COST_COUNTS`' shape: written only with the switch ON, read by nothing that decides. */
+export const STRIKE_SCAN_COST_COUNTS = {
+    lineCarried: 0, lineAsked: 0, booksOpened: 0,
+    cellsBoxed: 0, cellsSkipped: 0, scansUnboxed: 0,
+};
+export function resetStrikeScanCostCounts() {
+    for (const k of Object.keys(STRIKE_SCAN_COST_COUNTS)) STRIKE_SCAN_COST_COUNTS[k] = 0;
+}
+
+/** Run `fn` with `STRIKE_SCAN_COST` set to `enabled`, restoring the previous value (`withPressKillCost`'s shape). */
+export function withStrikeScanCost(enabled, fn) {
+    const was = STRIKE_SCAN_COST.enabled;
+    STRIKE_SCAN_COST.enabled = enabled === true;
+    const restore = () => { STRIKE_SCAN_COST.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * ⛓ hammer-phase P2 — THE ROW INDEX OF A CELL LIST, or `null` when the list is not row-major (rows strictly increasing
+ * in `y`, `x` strictly increasing within a row, every coordinate finite). `walkableCells` builds its list that way
+ * (`ty` outer, `tx` inner); a list that is not is scanned whole, as before. Kept per list (`WeakMap`): P1's memo hands
+ * the SAME array out until its key moves, and nothing writes to it.
+ */
+const CELL_ROWS = new WeakMap();
+
+export function cellRowsOf(cells) {
+    let rows = CELL_ROWS.get(cells);
+    if (rows === undefined) {
+        rows = cellRowsBuild(cells);
+        CELL_ROWS.set(cells, rows);
+    }
+    return rows;
+}
+
+function cellRowsBuild(cells) {
+    const ys = [];
+    const starts = [];
+    for (let j = 0; j < cells.length; j += 1) {
+        const c = cells[j];
+        if (!Number.isFinite(c.x) || !Number.isFinite(c.y)) return null;
+        const last = ys.length - 1;
+        if (last < 0 || c.y !== ys[last]) {
+            if (last >= 0 && !(c.y > ys[last])) return null;
+            ys.push(c.y);
+            starts.push(j);
+        } else if (!(c.x > cells[j - 1].x)) {
+            return null;
+        }
+    }
+    starts.push(cells.length);
+    return { cells, ys, starts };
+}
+
+/** Every cell with `x0 <= x <= x1` and `y0 <= y <= y1`, in the list's own order (rows top-down, each left-right). */
+export function cellsInBox(rows, x0, y0, x1, y1) {
+    const { cells, ys, starts } = rows;
+    const out = [];
+    let lo = 0;
+    let hi = ys.length;
+    while (lo < hi) {
+        const mid = (lo + hi) >> 1;
+        if (ys[mid] < y0) lo = mid + 1;
+        else hi = mid;
+    }
+    for (let r = lo; r < ys.length && ys[r] <= y1; r += 1) {
+        let a = starts[r];
+        let b = starts[r + 1];
+        const end = b;
+        while (a < b) {
+            const mid = (a + b) >> 1;
+            if (cells[mid].x < x0) a = mid + 1;
+            else b = mid;
+        }
+        for (let j = a; j < end && cells[j].x <= x1; j += 1) out.push(cells[j]);
+    }
+    return out;
+}
+
 /** `snapshotValue`'s answer for a value it cannot copy: a key holding one is never stored, so it never hits. */
 export const UNCACHEABLE = Symbol('pressKillCost.uncacheable');
 

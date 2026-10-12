@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**72 files, 5808 literals.** Class × position:
+**72 files, 5841 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 5 | 1569 | 395 | 1969 |
-| rule | 7 | 995 | 469 | 1471 |
+| physics | 5 | 1569 | 396 | 1970 |
+| rule | 7 | 997 | 474 | 1478 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 14 | 365 | 1913 | 2292 |
+| structural | 14 | 371 | 1932 | 2317 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 26 | 2991 | 2791 | 5808 |
+| total | 26 | 2999 | 2816 | 5841 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1697 | 0 | 88 | 123 | 4 | 57 | 1969 |
-| rule | 476 | 136 | 232 | 22 | 515 | 90 | 1471 |
+| physics | 1697 | 0 | 89 | 123 | 4 | 57 | 1970 |
+| rule | 476 | 136 | 235 | 22 | 517 | 92 | 1478 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -582,7 +582,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `DEF_HEAD_POS` | seedlingDemo/bossTotemFight.js | 2 | 2 | physics | magnitude | Enemies/BossTotem.as:defHeadPos |
 | `BOSS_TOTEM_BODY` | seedlingDemo/bossTotemFight.js | 7 | 7 | physics/rule | magnitude | Enemies/BossTotem.as:setHitbox Enemies/Enemy.as:hitPlayer Enemies/BossTotem.as:hitsTimerMax |
 | `BOSS_TOTEM_KILL` | seedlingDemo/bossTotemFight.js | 4 | 4 | rule | count/magnitude | Enemies/BossTotem.as:hitsMax Enemies/BossTotem.as:hitsTimerMax |
-| `BOSS_TOTEM_SHOT` | seedlingDemo/bossTotemFight.js | 13 | 13 | physics/rule | bound/derivation/magnitude | Projectiles/BossTotemShot.as:setHitbox |
+| `BOSS_TOTEM_SHOT` | seedlingDemo/bossTotemFight.js | 15 | 15 | physics/rule | bound/derivation/magnitude | Projectiles/BossTotemShot.as:setHitbox Projectiles/Explosion.as:radius |
 | `BOSS_TOTEM_DEATH_BLAST` | seedlingDemo/bossTotemFight.js | 5 | 5 | physics/rule | derivation/magnitude | Projectiles/Explosion.as:radiusCoeff |
 | `BOSS_TOTEM_WHITE_OUT` | seedlingDemo/bossTotemFight.js | 3 | 3 | rule | magnitude/sentinel | Enemies/BossTotem.as:rumblingTimeMax |
 | `SHIELD_BOSS` | seedlingDemo/shieldBossFight.js | 15 | 14 | physics/rule | bound/count/derivation/magnitude | Enemies/ShieldBoss.as:setHitbox Enemies/Enemy.as:hitsMax Enemies/Enemy.as:hitsTimerMax Enemies/ShieldBoss.as:swingTimeMax Enemies/ShieldBoss.as:swingForce |

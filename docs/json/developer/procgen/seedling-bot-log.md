@@ -15571,6 +15571,153 @@ Mutants (`pressKillCost.test.js`, 9 rows):
 nearest-tile pass 1.9 %, beside GC 19.6 % (SOLVECOST's prefix-sharing lever). On A after P1: `collideLineSolid` (the
 strike line's raycast, self 6.2 %) and `solidBoxesForMover` (4.8 %, rebuilt per line).
 
+### Seedling hammer-phase D — the ghost sword in L39 / L40 / L92
+
+⚖ The user (2026-10-11): *"Please run them in the order you would recommend."* Measure first; a fix was optional.
+One switch, **OFF**, and OFF is byte-inert: `ghostSpinnerPress.GHOST_SEARCH_BUCKETS` (`SEEDLING_GHOST_SEARCH_BUCKETS=1`,
+`withGhostSearchBuckets`). The report is `CC/docs/cloud-reports/seedling-hammer-d.md`.
+
+**W0** at `5b92583a7f` (P1's merge): identity block non-`#` md5 `3a48647f` (= P1's W0, row for row; the six producers
+exit 0, reference ALL 7 + 5 MATCH); surface GREEN 274, constants 5,710, entities 535, profile 138; roster 277;
+bounded vitest 985/985 (15 files), tapeRunner 611 pairs `75a3c41f`.
+
+**D1 — the three rooms, 45 legs × {sword, sword + ghost}** (`seedling-divergence-legs.mjs`, C1/P1's node arrival path,
+15-minute cap). No route leg holds the ghost sword there; the ghost is the flag (`Main.hasGhostSword`), the sword kept.
+- **Two verdicts change, 378 and 381** (L40 r0c53 → Totem 64,144): the sword SOLVES (1540 / 1592 t), the ghost
+  REFUSES. **The cause is not the press**: the combat ladder's KILL rung (`solverBot.js`, the lock-less spinner arm)
+  asks `primaryWeapon === 'sword'` before it ever calls `derivePressKill`, and says *"fires `ghostsword` — the kill
+  this rung derives is a SWORD press"*. C2 admitted the ghost inside `derivePressKill` (the kill-lock order) but not
+  at this gate. 397 / 414 (→ the chest) and staging A refuse at the same gate in 1–3 s, where the sword refuses after
+  its kill, on a chaser.
+- **What the gate hides** (a scratch mutant in a worktree, never committed: the rung admits the ghost where
+  `derivePressKill` does): 378 with the ghost SOLVES in 1641 t, two ghost landings from ~21 px kill `spinner@192,144`;
+  staging A's ghost kills `spinner@880,848` at t2114 against the sword's t3100 (the sword's kill DOES land at base,
+  six landings, then the chaser `bob@736,752` refuses it at 3113 — P1's "the kill never lands" was the refuge's
+  3,113 ticks, not the kill); 414 reaches the chaser too; 381 meets the camera-shake band in `chaserForecast`.
+- **The game refutes that room's plans, the sword's too.** Played on p4f, the mutant's 378 ghost plan parts at t1121
+  and the base SWORD plan for the same room at t1154, both at (280, 216): the game shoves the standing player −3.40,
+  −3.15, −2.90 … px/tick with no damage; the model stands, and nothing it models is within 48 px. Fidelity's (tapes
+  in the report's evidence).
+- Everything else keeps its verdict. Ticks move on the dash walks (`pass: full`; the ghost's own dash clock, 70 → 105 t
+  and the like) and by 1–6 t on dashless ones, with no spinner pressed. L39's and L92's legs never meet a spinner.
+
+**D2 — the walled line, on the game (`hammer-d-l39-ghostwall`).** C2's M3 was blind; this is its witness. L39 from
+leg 375's arrival (144,608) on C1's tape staging with the sword and the ghost sword: climb the shaft, cut `rope@96,384`
+with a ghost press, walk to (168,184) beside the dark Blue Wall block, press right at t573. The landing at t574 on
+`spinner@224,112` is from 21.21 px, and the line from the player's point to the body's entity point crosses
+`tile:Blue Wall (dark)` at (176, 187.96). The game takes it: `hits` 0 → 2, `hits_timer` 30 at the next observation,
+every Spinner row equal (1,764 comparisons, worst |Δ| 2.8e-14), the drained stream exact (591 obs). Not a roster tape:
+`fixtures/hammer-d-ghostwall-witness/`, `plan-seedling-hammer-d-ghostwall.mjs` (`--check`), gate
+`hammerGhostWall.test.js`. M3 asked of the forecast → 2 rows red; of the run → it throws naming the wall; of the
+strike → blind (no ghost strike is ever derived at a walled stance). ⚠ On the game the rope press's `Bot.slashTests`
+counts 1 then 7 (t184/185) where the model counts one a tick; the player is unaffected. Fidelity's.
+
+**D3 — `GHOST_SEARCH_BUCKETS`.** `deriveFight` pre-filtered every press successor at the SWORD's 16 px and 5 tests
+before asking `pressReadyAt`, so the ghost was never offered the 16–24 px band; it also bucketed the window and
+bounded the gap with the sword's numbers, and `deriveApproach` sized its probe and goal margins by them. ON, both read
+`searchPressFor(strikePressOf(run))`; OFF it is the sword's row (the constants). On C2's L18 ghost staging with
+`HAMMER_FIGHT`: at t0 the fight meets 22 in-reach press nodes OFF, 653 ON; residue 40 324 → 321 t. **But across the 45
+residues ON is longer at 39** (mean 324.0 → 356.0 t; 45/45 solve both). `HAMMER_APPROACH` does not move (325 t).
+
+**D4 — ON vs OFF:** nothing committed moves (identity block = W0 but the unregenerated docs row, L18 sword sweep 45/45
+equal at the default and with `--fight`, leg 381's sword plan, vitest 996/996). Not flipped: the user's call, and the
+measurement argues against it.
+
+### Seedling hammer-phase P2 — the press kill's walk previews
+
+⚖ The user (2026-10-12): *"Press-kill speed, part 2"*. One sibling switch beside P1's, **ON**, and OFF is the control:
+`pressKillCost.STRIKE_SCAN_COST` (`SEEDLING_STRIKE_SCAN_COST=0`, `withStrikeScanCost`), with P1's `PRESS_KILL_COST`
+held ON. A cost change, so no flip. The report is `CC/docs/cloud-reports/seedling-hammer-p2.md`.
+
+**W0** at `11e113e2fe` (D's merge): identity block non-`#` md5 `77080c2e` (the acceptance row is `933c14f7`, moved
+since D's W0 by wave 13; the six producers exit 0, r9-campaign `712f0ead`, reference ALL 7 + 5 MATCH); tapeRunner 611
+pairs `75a3c41f`; surface GREEN 278, constants 5,808, entities 558, profile 138; roster 277; bounded vitest 1372/1372
+(30 files). Staging A (C1's L40 south door → chest, `fixtures/hammer-p1-l40-south-boot.json`) is unchanged: REFUSED,
+3,113 ticks, keys `af47d35d`. Its profile: `execKillByPress` 87.6 %, `previewWalk` 50.9 % (27.6 under `deriveRefuge`,
+23.2 under `deriveStrike`), inside it the chaser forecast's step 30.9 % and the player's stepper 12.3 %; the strike
+line (`collideLineSolid`) 13.1 %; `deriveStrike`'s own scan 9.4 % self.
+
+**D1 — the levers, measured before built.** Every press-kill preview was logged (21,212 of them over 1,329 ticks):
+- **A cross-tick memo for a standing player: not buildable from the solver.** (state, target) repeats across ticks for
+  91 % of the previews (97 of 106 s), but the same `run.state` and target previewed to a different length in 104
+  pairs: the stepper and the four forecasts bind run state no reader exposes (damage, the live bag, every forecast
+  subsystem's bodies). An exact key is levelRun's to provide.
+- **A one-entry stepper memo (a stuck walk's fixed point): 0 hits of 3.7 M.** A player pinned against a wall keeps
+  `x, y` while `vy` cycles and drifts (−1.10, −0.85, −1.40, −1.15, …), so no state repeats.
+- **Sharing one preview between strike and refuge on the same tick: 1 hit in 1,329 ticks.** Sharing the refuge's 12
+  candidates' common prefix: the mean shared key prefix is 1.08 ticks of ~104.
+- **The strike's walks across candidate ticks:** already one walk per cell per derivation (U4b D3's `walks`).
+- **Built:** the strike line carried across derivations (97 % of P1's per-derivation misses, 26.5 s), and the scan's
+  reach box (the scan's self time, ~9 %).
+- **Measured, not built:** the refuge's best-ETA cut. 4,627 refuge and 2,325 strike previews stall at 400 ticks
+  (2.78 M of the 3.71 M preview samples), and 99 % of the refuge's samples come after the best ETA so far. A scratch
+  cut kept staging A's answer and took it to 117 s on a loaded box, but it skips calls that can throw (a death in the
+  stepper, a forecast's own refusals) and changes the progress emitter's preview counts: a behaviour decision.
+
+**D2 — byte-identical, ON.** The line book is keyed by the world (identity), `run.liveGeometryOpts()` (by value, a
+copy) and the four truncated coordinates, which is everything `collideLineSolid` reads; the box asks only cells inside
+the body's rect grown by `reach + 1`, in `walkableCells`' own order, and counts `unreachable` over every cell. ON vs
+OFF, every row equal:
+- staging A × 3: REFUSED, 3,113 ticks, keys `af47d35d`, message `b02571c9`;
+- legs 378 / 381 × 3: the same refusals (both at the bomb hold, wave 13), resMd5 `49f6f3b8` / `879f1b18`;
+- legs 384 / 396 / 400 × 3: SOLVED 859 / 494 / 270, whole-plan md5 `fbbe9577` / `766ae746` / `b83f54ad` (= P1's);
+- the L18 sweep 45/45 and C2's ghost sweep 45/45, row for row; both ghost stagings SOLVED 336; r9-campaign green;
+- P2 OFF reproduces every P1 count on staging A (`hammerSkipped` 655,820,993 …): the same `opportunityAt` calls.
+
+Mutants (P2's rows in `pressKillCost.test.js`): caught — the bag key aliased, the bag ignored, the world ignored, the
+line key short a coordinate, `unreachable` counted on the box only, the box shrunk, the box reversed, the floor test
+dropped; the box pad at `reach − 1` red, at `reach` green (the measured edge; `reach + 1` ships).
+
+**Timings** (median / min of 3 interleaved, alone on 4 cores, load 1.05–1.93):
+
+| | OFF (P1) | ON (P1 + P2) |
+|---|---|---|
+| staging A | 162.0 / 160.5 s | **124.6 / 119.5 s (1.30×)** |
+| legs 378 / 381 / 384 / 396 / 400 | 163 / 188 / 108 / 41 / 15 s | 167 / 177 / 107 / 43 / 16 s (noise) |
+
+The legs do not run the press kill now: 378 and 381 refuse at the bomb hold before it, and every P1/P2 counter reads 0
+on all five.
+
+**For fidelity / levelRun:** on staging A after P2, the chaser forecast's step (`levelRun.js` `chaserForecastNow`'s
+`step`, 15 bodies) is 41.3 % inclusive and the player's preview stepper 16.1 %; both are inside `previewWalk`, which
+is 68 %. A cross-tick preview key would need levelRun to expose (or hash) the state the stepper and the forecasts bind.
+
+### Seedling hammer-phase G1 — the kill rung's ghost-sword gate
+
+⚖ The user (2026-10-12), on D's finding: *"Small slice, new switch"*. One gate, behind one new switch, **OFF**, and OFF
+is byte-inert: `ghostSpinnerPress.GHOST_KILL_RUNG` (`SEEDLING_GHOST_KILL_RUNG=1`, `withGhostKillRung`). The report is
+`CC/docs/cloud-reports/seedling-hammer-g1.md`.
+
+**W0** at `11e113e2fe` (D's harvest; wave 13 on main): identity block = D's AFTER at every row but `acceptance batch`
+(`76602ae8` → `933c14f7`, moved on main since D's base); the six producers exit 0 at D's md5s; ENEMY `afdc6d1a`;
+surface GREEN 278, constants 5,808, entities 558, profile 138; roster 277; tapeRunner 611 pairs `75a3c41f`; bounded
+vitest 1498/1498 (29 files). The gate's refusal reproduces by name on 397 / 414 / staging A with the ghost. D1's L40
+table re-run (40 legs × {sword, ghost}): the same as D's but for **378 / 381, which now refuse on wave 13's bomb lobber
+`bombpusher@112,128` with EITHER weapon** (the sword's 1540 / 1592 t solves are gone; the ghost never reaches the gate
+there any more).
+
+**D1 — the switch.** The lock-less spinner arm asks `killRungPresses(weapon)`: OFF `weapon === 'sword'` (the gate
+it replaces); ON also a weapon whose press `derivePressKill` admits (`spinnerStrikePress(weapon)` not the sword's
+row). Wired through `solverView.js`. The refusal for a weapon still not admitted is unchanged.
+
+**D2 — the game witness `hammer-g1-l40-ghostkill`** (`plan-seedling-hammer-g1-ghostkill.mjs`;
+`fixtures/hammer-g1-ghostkill-witness/`, not the roster). The shortest game-replayable staging that reaches a ghost
+press kill is C1's staging A (P1's boot view) with the ghost sword: ON, every press the ghost's; kills at t2114
+(`spinner@880,848`) and t2182 (`spinner@816,848`), four of five landings from 19.5–23.8 px; three chaser hits and a
+death-and-respawn on the way (the plan's own); the solve refuses on `bob@736,752` at 2195. The game (p4f): the
+drained stream 2196/2196, `Bot.slashTests` equal, every Spinner row equal (10,836 comparisons, worst |Δ| 0) apart from
+the known removal fencepost (t2126, t2194). Gate `hammerGhostKillRung.test.js` (6 rows; ON's solve prefix = the tape,
+900 s timeout). Mutants: the switch ignored → 2 red (table, ON); OFF admitting the ghost → 2 red (table, OFF).
+⚠ Leg 397's page staging kills sooner (t1292, no hit), but a page leg stages the AP-DELIVERED levels (`apitem` for
+`chest`/`totempart`; a spinner bounces off the chest) and a tape boots the atlas: on the atlas that staging kills at
+t2323. So no page leg is a tape witness as it stands.
+
+**D3 — ON vs OFF:** the L40 table moves at **397-ghost and 414-ghost only** (REFUSED at the gate → REFUSED on a chaser
+after the kill); every sword row and every other ghost row is byte-equal; staging A's sword is equal, its ghost moves
+(t0 gate → the witness's 2195). Identity block ON = W0 (r9-campaign `712f0ead`, `r9-solve-16` PASS both ways, ENEMY
+`afdc6d1a`); L18 sweep 45/45 equal (lengths `1c019765`); C2's L18 ghost staging 45/45 byte-identical (its kill is the
+kill-lock order's). Nothing committed moves; nothing re-recorded. The flip is the user's.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
@@ -16321,6 +16468,151 @@ Survey steps 78/124/126/139: no row moves.
   composed forecast was untestable; it is a refusal by name now.
 - **A refusal with no cause is a model that caught the hit and did not say so.** Before D3 the hold failed "MOVED" at
   the game's exact knockback tick.
+
+### Seedling fidelity STAGEDHITS — the player's damage is staged from the game, and the re-stage that needs it is the one with no prefix
+
+Wave 14 (model coverage), planner `seedling-fidelity-planning-6`. ⚖ The user (2026-10-05): the solver must know which
+state it is in, without clearing the save and without leaving and re-entering the room. After FORCEDHIT a plan may
+take a billed hit, so the player's damage is state a later plan inherits. The report is
+`CC/docs/cloud-reports/seedling-fidelity-stagedhits.md`.
+
+**D1 — the census** (`…-evidence/census-d1.md`). The game exposes `hits` and `hits_timer` on `botStatus`
+(`Bot.as:2124-2125`), not the parked facing (`directionFace`). `hits_timer` is not cosmetic: it blocks the arrows and
+swallows the next hit. The two re-stage points are different in kind. The wasm engine's continuation and a delivery
+re-stage AT THE ARRIVAL and replay the shipped prefix, which re-bills the hit, so they need a CHECK against the game
+(`shadowMismatch` has no hits row), not a field. An in-place re-stage (`jsRuntimeCore.rebootInPlace`, a cold
+adoption) has no prefix, so the game's damage must be STAGED there. `botStart` keeps the game's `Player` when the
+tape's boot is the current ctor args (the skip path, `Bot.as:1843`).
+
+**D2 — the field.** `player_damage: {hits, hits_timer, direction_face?}` (`botStatus`'s spelling, on `inventory_slots`'
+precedent; no tape carries it) through `createRunForStaging` → `createLevelRun`'s initial `damage`, validated by
+`playerDamage.stagedPlayerDamage` against the run's `hitsMax`. Absent is a fresh `Player`, byte-identical (identity
+block, six `--check`s and tapeRunner's 611 pairs all equal). `run.stagedDamage` exposes it, and `worldHitsOf` returns
+it (`staged: true`) until a hit, a door or a death, so the forced-hit budget reads it. On leg 622: staged hits 1
+refuses the crossing by name ("over the budget's 0"), and staged hits 2 makes every proof leaf a death ("every proof
+leaf dies"). Helpers for the JS arc: `playerDamageFromStatus(status)` and `stagedHitsMismatch(run, status)`.
+
+**D3 — on the game** (`probe-seedling-staged-hits.mjs`, p4f headless; witness `stagedhits-l73-restage`). Leg 622's
+own keys carry the player through the door by t4, so the slice used `down+right ×2` from the same arrival: the same
+hit (`lavarunner@72,24`, t2), and the player comes to rest in L73. Held at t12 (hits 1, hits_timer 9), then the
+engine's continuation tape (the skip path) holds `left` for 25 ticks. The game does not move until the window lapses
+and takes a second hit at t10. The shadow (arrival + every shipped key) is the game at every tick, damage included. An
+in-place re-stage staged with the hold's `botStatus` is the game at 0 px through t9 and takes the second hit on the
+game's tick; its knockback is off from t10 because the re-stage rebuilt the lavarunner at its spawn. The control
+without the field is off at t1: it steers through the game's i-frame.
+
+**Trap candidates.**
+- **A re-stage that replays a prefix must NOT stage the live hits.** The replay re-bills them; staging them too bills
+  twice. Stage `player_damage` only where nothing is replayed.
+- **A staged i-frame swallows contacts.** With `hits_timer` 5 staged on L73's arrival, the lavarunner's t2 contact
+  is suppressed and the hit lands on t6, the first tick after the lapse. A model that dropped the timer bills the
+  wrong tick as well as the wrong count.
+- **An in-place re-stage rebuilds the room's bodies at their spawns.** Hits staged exactly do not make the enemies
+  exact: the first contact after the lapse lands on the game's tick, with another knockback.
+
+### Seedling fidelity MOVINGWAIT — a latched wait paces out of a lobber's aim, and two residues are the game's ints and statics
+
+Wave 14 (model coverage). BOMBPUSHER refused L40's legs 378/381 at `buttonroom@272,208`'s 131-tick hold by name: a
+standing player within 256 px of `bombpusher@112,128` is always hit, every measured would-be hit was on a standing
+player, and both of the hold's waits stood still by contract. The report is
+`CC/docs/cloud-reports/seedling-fidelity-movingwait.md`.
+
+**D1 — which waits may move.** Read from the AS3: a `room = -1` ButtonRoom's setter is behind `if (a)` (*"Can't be
+reset to false!!"*), so once pressed its group stays published and `Lock.activationStep` fades whoever stands where —
+the hold and `runLatchedWait` may pace. A plain `Button` republishes `activate = tempCheck` every update, so stepping off
+unpresses it (never paced). A `BossLock` latches too (`activate = true` only), so a keylock's line could pace (not built:
+not in this slice's verbs). Measured on L40's stance: an out-and-back cycle (hold a direction `span` ticks, coast to
+rest, the opposite `span`, coast) returns to the start BIT-EXACTLY (16 cycles: 4 cardinal directions × spans 4–16; `planPacedWait` asserts it per candidate). The proof is the
+forecast clean at every sample, the latch held throughout (a static), and the end state the original stance.
+
+**D2 — the verb** (`MOVING_WAIT` = `CONTACT_FIDELITY.movingWait`, OFF). `execHold` asks the still wait first; only when it
+prices a bomb does `planPacedWait` search `PACE` (8 directions × spans 6..24 × gaps 0..18, smallest motion first), each
+candidate previewed on `previewStepper` for whole cycles covering the still bound, every sample priced by
+`dangerDuringTransit` against the walk forecasts. `runPace` drives the plan and asserts the exact previewed position each
+tick; the condition is asked at cycle ends, so the wait stops on the stance. Trace row `pace`.
+
+**D3 — witnessed on the game.** The solver's own inputs for both legs, damage on, played on p4f: leg 381 paces
+`left/right ×8, gap 18` from t1007 (56 pacings rejected first, every one by a bomb), leg 378 `down+left/up+right ×6,
+gap 18` from t1106 (30 rejected, one because its blast landed on `bob@304,144`). Both are 0 hits and 0 px on every
+sampled tick (1,150 / 1,287). Past the wait the legs stop elsewhere: 381 at a press kill's standing wait (`execKillByPress`,
+t1132–t1155 at (248.37,183.72), the blast at t1156 — the same tick the game hit the still plan), 378 at the t1 hold,
+where a bomb launched before the wait lands on `spinner@192,128` whatever the pacing.
+
+**D4 — residue.** (a) `totemShotBlastInt` (OFF): `BossTotemShot.as:71`'s `new Explosion(x + v.x, …)` truncates through
+the ctor's `_x:int, _y:int`, and `radius:int` makes the hit radius 15. All 277 committed tapes the runner plays hold four
+shot blasts (r6-totem t387, (122|182, 379.05)), the player 58–77 px away: no verdict moves. (b) `rebootShake` (OFF): after
+`restartLevel()` the game's camera is (777,0) / (800,22) and the model's exact (776,0) / (800,24). The game's reboot sample
+reads `Game.shake` 4 / 5: `Player.die()` swaps with no fade, and the static shake jiggles the NEW world's settle frames,
+which the model drained beforehand. ON, both BOMBPUSHER damage walks reproduce at 0 px through the death and the second
+life (`rebootshake-l4{1,2}-part0-damage`).
+
+**Trap candidates.**
+- **A wait that stands still inside a lobber is aimed at; a wait that moves on the lobber's own period is not.** Both
+  chosen pacings have a 46/48-tick cycle against the lobber's 46: the launch reads the stance, the blast lands at the
+  far end.
+- **Moving the aim moves where the blast lands — onto bodies.** The first cut sent a bomb onto `bob@304,144`; a pacing
+  is now rejected where its forecast blast meets a body by the run's own rule.
+- **A static survives a world swap, and a load with no fade drains nothing.** `Game.shake` across `restartLevel()`.
+- **A refusal moves downstream when its verb is fixed.** With the hold paced, the next standing wait inside the lobber
+  is a press kill's (another arc's verb); the sweep row changes family, not colour.
+
+### Seedling fidelity L74LEG624 — a press is gated on its hit tests, a fallen rock is built fallen, and the forecast's lavarunner swims
+
+Wave 14 (model coverage). Hammer C4 handed over divergence leg 624 (`level_74 <- in_L73_64_0 ->
+exit:out_teleporter_16_144`, the lavarunner fight): not the chooser, but two model walls, the strike policy's i-frame
+gate and the L74 fallrock re-entry. The report is `CC/docs/cloud-reports/seedling-fidelity-l74leg624.md`. Three
+switches, all OFF (`contactFidelity.js`): `strikeIframeLapse`, `fallRockPostFall`, `forecastSpeedByTerrain`.
+
+**D1 — the rock, on the game.** L74's arrival button (`button@288,128`, the L73 door's landing cell) drops
+`fallrock@288,144` (tag 2) onto the L73 teleporter; the game's live `persistence_cleared` then holds {74,2}, so every
+later build of L74 is asked for a FALLEN rock. `FallRock.as:42-47` is the whole post-fall state: `y = fallTo`, `type =
+"Solid"`, `_active = true` (the button cannot drop it again). `FallRock` is not a `Mobile`, so `botMobiles` never reports
+it: it is read through the player. Booted with {74,2} staged and held down from the landing cell, the game's player
+rests on the rock's top (y 141) and never reaches the teleporter; no arrival freeze (the clock calibrates at shift
+exactly [0]). Census of the `fallrock`/`fallrocklarge` a clear list can name: L28 (rope), L29 (button), L37 (totem;
+removed on the delivered set by `l37-fallrock-removed`), L39 (rope), L43 ×3 (wand), L74 (button), L82 `fallrocklarge`
+(non-arena boss rock, still refused), L32 `fallrocklarge` (the arena's, already built fallen). No divergence leg stages
+one; the page stages {74,2} from the game's own state after L74's arrival (and sweep 38185510484 by `stage_flags`).
+
+**D2 — the post-fall build** (`fallRockPostFall`). `buildLevelWorld` admits the clear for a non-arena `fallrock`
+(`postFallRockOf`) and marks its roster row `postFall`; `levelRun.fallRockStateFor` builds it with
+`createFallRock(…, true)` and `landed`, so `fallenRocksNow` hands the 16x16 Solid to `collidesSolid` and the button's
+arm skips it. Witness `l74leg624-postfall-reentry` (p4f, headless, `--player-hits`, recorded): 71 player samples and
+142 LavaRunner comparisons at 0 px. OFF the same tape is the old refusal.
+
+**D3 — the i-frame gate** (`strikeIframeLapse`). `Enemy.hit`'s `hitsTimer > 0` gate runs on each TEST tick, `T+1 …
+T+SLASH_HIT_TICKS`, not on the press tick. `strikePolicy.iframeLapse` admits a body when a test reads
+`projectedHitsTimer` ≤ 0 with `IFRAME_LAPSE_SPARE_TESTS` (1) tests still to run after it: an aim admits a reading ≤ 6,
+a press on this tick ≤ 5. The first cut admitted the window's last test (reading 7) and L6's equality room measured why
+not: the bob's timer still read 1 there, the press landed nothing, its contact billed at t43 and the preview/drive key
+equality parted; one spare test restores it. C4's witnesses (readings 5, 4) are inside. ON, a body in its death is
+refused (`spent`, `Enemy.hit`'s `hits < hitsMax`): the forecast drains a dying body's frozen i-frame where the drive's
+body has left `strikeBodies` (leg 624, t114). The veto asks a body whose i-frame lapses anywhere in the window (no spare
+test: the conservative end). Game witness: C4's stance (264,120) walk with the ON policy deciding the presses aims at
+reading 6 (t81), the shield shoves the body out of the swing, its lapse at t87 finds it 22 px away, and the t102 press
+kills it — 0 hits, LavaRunner 0 px (262 comparisons); OFF the same walk is C4's (presses t55/t88, hit t87).
+
+**D4 — leg 624 end to end: SOLVED, 0 hits, on the game.** With all three ON the anytime answer is the full pass's
+**331-t** detour (dashless refuses by name: fidelity-bulb's "killed and then destroyed by the terrain under it"). Played
+on p4f: the player at every tick but the known t1–t2 arrival frame, 0 hits, L75 (72,24); LavaRunner within 1.3e-15
+(445 comparisons); the Bulb's position at 0 px (its velocity in the death differs from t305). No forced hit is planned
+(OFF the forced-hit rung cannot prove one: the model refuses to step a press into the arrival freeze). Lapse + speed
+alone also answer 331 t; the forecast fix is what makes the certified detour the walked one. The way there, measured:
+lapse alone (no spare test, no `spent`) solved 458 t with a game-confirmed UNBILLED bulb hit at t362 (the detour's
+preview and drive parted at t53: `chaserForecastNow` never ran K2's `LavaRunner` speed tail); lapse + postfall "solves"
+1,442 t / 1,269 t with five and four lava DEATHS that `drive` never noticed.
+**Trap candidates.**
+- **A gate true of the press tick is not true of the window.** A press is five hit tests; a reading that refuses the
+  first can admit the last. Ask the window.
+- **A forecast clone runs the update's head and not its tail.** K2 put `LavaRunner`'s terrain speed below the chase in
+  the live step; the forecast copied the chase. Every tail written into `stepChasersNow` owes the clone.
+- **A drive that dies or takes an unforecast hit returns normally.** `walkTo`'s drive bills both and moves on; nothing
+  compares the drive with the preview it certified. Leg 624 returned a plan with a game-confirmed hit at t362, and one
+  with five lava deaths.
+- **An admission at the window's edge is a press with nothing in hand.** The fastest-drain projection is a bound, not
+  the timer; a press whose only landing test is the last one landed nothing on L6. Keep a spare test.
+- **A body read through the player is still a witness.** The game cannot report a `FallRock`; a player who rests on
+  its top for twelve ticks at 0 px is the rock's position and solidity, measured.
 
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 

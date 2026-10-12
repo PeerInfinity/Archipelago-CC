@@ -40,7 +40,8 @@ on:
         description: >-
           One row id (or a comma-separated few) to run SOLO each time
           (npm test --test=). Give this OR batch, not both; test-substrates
-          needs one of the two.
+          needs one of the two. A row whose batch launches with WebGPU (a wasm
+          row) gets it from that batch (scripts/test/testWebgpu.js).
         type: string
         default: ''
       batch:

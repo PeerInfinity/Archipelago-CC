@@ -1,0 +1,13 @@
+PASS: the tape ran to its end on the game
+FAIL: the game's `Bot.slashTests` is the model's cumulative sword hit-test count at every sampled tick — 1593 sampled tick(s) of 1642; first off at obs 1423: game 81, model 82 (219 tick(s) off)
+ROW arrows: 0 of 1593 sampled tick(s) differ
+FAIL: the drained stream is the model's, tick for tick — tick 1121 differs: expected (x=276.5735537829128, y=216.20304063056693, level=40), got (x=279.97593566193524, y=216.20304063056693, level=40) [dx=3.402381879022414, dy=0]
+ROW game: hits 0, hits_timer 0, level 41, slash {"hits":731,"tests":223}, cleared [{"tag":0,"level":5},{"tag":0,"level":8},{"tag":1,"level":8},{"tag":0,"level":10},{"tag":1,"level":40},{"tag":4,"level":40},{"tag":5,"level":40},{"tag":6,"level":40},{"tag":7,"level":40},{"tag":22,"level":40},{"tag":23,"level":40},{"tag":24,"level":40}]
+wrote /tmp/claude-0/-home-user-Archipelago-CC/d6227460-dd8c-5035-9885-b8dcb8e659c7/scratchpad/mut/378-game-slash.json
+2 CHECK(S) FAILED
+      t 1193: game hits 2/25 model 0/0
+      t 1194: game (227.80601791493976, 142.82510234288216) v (0.341165642671083, -4.206027227720483) model (221.2132034355966, 146.7867965644034) v (undefined, undefined)
+      t 1194: game hits 2/24 model 0/0
+      t 1195: game (228.12697156186437, 138.86825672609623) v (0.3209536469245934, -3.95684561678592) model (221.92031021678315, 146.07968978321685) v (undefined, undefined)
+      … 503 more
+wrote /tmp/claude-0/-home-user-Archipelago-CC/d6227460-dd8c-5035-9885-b8dcb8e659c7/scratchpad/mut/378-game-bodies.json

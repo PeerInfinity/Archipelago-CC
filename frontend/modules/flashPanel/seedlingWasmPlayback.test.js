@@ -1414,10 +1414,10 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
      * `cutsceneReads` botStatus reads, then the tutorial's freeze holds until an arrow (unless `stubborn`); every
      * read is one frame (`Game.time` +1).
      */
-    function newGameOver({ cutsceneReads = 4, stubborn = false, startLevel = HOUSE, endsCutscene = true, patchAfter = {}, opts = {} } = {}) {
+    function newGameOver({ cutsceneReads = 4, stubborn = false, startLevel = HOUSE, endsCutscene = true, patchAfter = {}, opts = {}, begin = { 'begin.level': -1 } } = {}) {
         const keys = [];
         let reads = 0;
-        const u = unwatched({ begin: { 'begin.level': -1 }, startLevel, state: { freezeObjects: true },
+        const u = unwatched({ begin, startLevel, state: { freezeObjects: true },
             patch: { cutscene: [true, false, false, false], receive_input: false },
             tick: (w) => {
                 reads += 1;
@@ -1448,6 +1448,29 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         // The adoption waited for the Help's fade: more than TUTORIAL_FADE_FRAMES game frames after the press.
         expect(e.engine.arrivalReads.at(-1).status.game_time - e.engine.stats.dismissed[0].gameTime).toBeGreaterThan(TUTORIAL_FADE_FRAMES);
         expect(e.dones).toHaveLength(1);
+    });
+    it('⛓ CUTSCENE UNDER ANY RECORD — the wind scene showing under a RESOLVED record (the explicit start\'s level, no −1) is WAITED OUT, not re-arrived into', () => {
+        // Measured on tutorial-walk-procgen-seedling: begin.level 0, cutscene[0] true, receive_input false. A re-arrival
+        // replays the static scene: the plan's tick 1 is dead and the divergence repeats exactly, so the goal failed.
+        const e = newGameOver({ begin: { 'begin.level': HOUSE } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, adoptRefused: [] });
+        expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ level: HOUSE, began: 'cutscene', adopted: true })]);
+        expect(e.dones).toHaveLength(1);
+    });
+    it('⛓ CUTSCENE UNDER ANY RECORD — a long scene re-says how far into its bounded wait it is (a same-words stall reader sees it move)', () => {
+        let t = 0;
+        const e = newGameOver({ begin: { 'begin.level': HOUSE }, cutsceneReads: 40, opts: { now: () => (t += 1000) } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        const waits = e.notes.filter((n) => /opening cutscene .* s of at most 180 s$/.test(n ?? ''));
+        expect(waits.length).toBeGreaterThan(1);
+        expect(new Set(waits).size).toBe(waits.length);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ began: 'cutscene', adopted: true })]);
     });
     it('⛓ W8c — …the adoption is the room\'s staging under the RESOLVED level, and its recorded reads restage (W5\'s probe)', () => {
         const e = newGameOver();
@@ -1811,5 +1834,47 @@ describe('⛓ FORCED-HIT CONSUMER — the plan\'s forced crossings, and the cont
         expect(e.engine.stats.fallbacks).toEqual([]);
         expect(e.engine.stats.continuations).toBe(1);
         expect(e.dones.map((d) => d.continuation)).toEqual([false, false, true]);
+    });
+});
+
+describe('⛓ L74 SILENT STALL — a throw the room build makes is a NAMED failure, never a dead timer chain', () => {
+    // The live case (CI sweep 38185510484, leg `level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144` with L74 tag 2
+    // staged): the arrival was HELD (`wasm-hold-74` shipped), then the model refused the room the game is in — the clear
+    // list names a non-arena `fallrock` (`levelWorld`'s "A clear list must never name it", a LevelWorldError) — and the
+    // throw left the engine's 0 ms timer callback: a pageerror, the phase stuck at `await-arrival`, no deadline read
+    // again, and the leg TIMED OUT at 90 s with no plan and no reason. Here: the house with a fallrock whose tag the
+    // game reports cleared — the same model refusal, at the same seam.
+    const ROCK_TAG = 9;
+    const withRock = () => {
+        const records = new Map(RECORDS);
+        const house = RECORDS.get(HOUSE);
+        records.set(HOUSE, { ...house, entities: [...house.entities, { type: 'fallrock', x: 16, y: 16, attrs: { tset: '0', tag: String(ROCK_TAG) } }] });
+        return records;
+    };
+
+    it('the held arrival\'s room build throws → onFailed carries the MODEL\'s refusal text; the engine is idle, no timer left', () => {
+        const e = engineOver(A, { records: withRock() });
+        e.game.cleared = [{ level: HOUSE, tag: ROCK_TAG }];
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        // ⛔ the mutant (the throw escapes the timer) fails HERE, by name: the run itself throws the model's error
+        expect(() => runUntil(e, () => e.failures.length > 0)).not.toThrow();
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/the model refused to build level 86 from the arrival/);
+        expect(e.failures[0]).toMatch(/clears tag 9, which is a "fallrock" at \(16,16\).*A clear list must never name it/);
+        expect(e.engine.status().phase).toBe('idle');
+        expect(e.engine.stats.history.at(-1)).toMatchObject({ outcome: 'failed' });
+        expect(e.timers.pending).toBe(0);
+    });
+
+    it('any OTHER throw inside an engine timer callback is a named failure too (the safety net under every scheduler)', () => {
+        const e = engineOver(A);
+        let thrown = false;
+        e.service.start = () => { thrown = true; throw new Error('the solve service is gone'); };
+        e.engine.walkTo(CHEST);
+        expect(() => runUntil(e, () => e.failures.length > 0)).not.toThrow();
+        expect(thrown).toBe(true);
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/the wasm playback engine threw in .*: the solve service is gone/);
+        expect(e.engine.status().phase).toBe('idle');
     });
 });

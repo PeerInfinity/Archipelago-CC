@@ -269,6 +269,84 @@ export const CONTACT_FIDELITY = {
      * 2026-10-11: "ON at harvest"; L40 legs 378/381 refuse the hold by name — CI sweep 38185191405).
      */
     bombPusherLive: true,
+    /**
+     * fidelity MOVINGWAIT D2 — A LATCHED WAIT MAY PACE (`solverBot.MOVING_WAIT` reads this key).
+     *
+     *     ButtonRoom.as:67-69   set activate(a): if (a) { … } — "Can't be reset to false!!", so walking off changes nothing
+     *     BombPusher.as:44-62   every bomb is aimed at the player's point at the wrap; Explosion.as:52-56 the 15 px disc
+     *
+     * A standing player within 256 px of a BombPusher is always hit (the blast lands ≤ 8.5 px past the aim), and on
+     * every measured L40BUTTON walk every blast that landed on a walking player missed (BOMBPUSHER § D3). OFF: a hold
+     * stands still by contract and one inside a lobber's reach is refused by name (`lobberHoldRefusal`). ON: when the
+     * still wait prices a bomb and the hold is LATCHED (`deriveHold`'s `latched`, or `runLatchedWait`'s group), the
+     * wait paces an out-and-back cycle from the stance, chosen only when every previewed sample is clean
+     * (`planPacedWait`), and returns to the stance bit-exactly at each cycle end.
+     */
+    movingWait: false,
+    /**
+     * fidelity MOVINGWAIT D4 — THE TOTEM SHOT'S EXPLOSION IS AN `int` (`bossTotemFight.BOSS_TOTEM_SHOT.explosionHitRadiusInt`).
+     *
+     *     BossTotemShot.as:71   new Explosion(x + v.x, y + v.y, hitables, 24, 1)   — the ctor's `_x:int, _y:int`
+     *     Explosion.as:22,40    private var radius:int; … radius *= radiusCoeff     — int(24 × 0.65) = 15
+     *
+     * OFF: the blast at the Number point with r 15.6, as before. ON: the truncated point with r 15. Measured over all
+     * 277 committed tapes the runner plays: four shot blasts (`r6-totem-kill`/`-control` t387, at (122|182, 379.05)),
+     * the player 58–77 px away; no verdict differs.
+     */
+    totemShotBlastInt: false,
+    /**
+     * fidelity MOVINGWAIT D4 — A DEATH REBOOT SETTLES THE CAMERA THROUGH THE SHAKE (`levelRun.settleCameraForLoad`).
+     *
+     *     Player.as:1487    die(): dying = true; (FP.world as Game).restartLevel()   — no fade before the swap
+     *     Game.as:538,2007  public static var shake; view(): if (shake > 0) jiggle FP.camera, shake -= 1
+     *
+     * OFF: every load drains the shake before its settle frames and the camera is exact. ON: a death reboot carries
+     * the killing hit's shake into its settle frames as the shake band (⚖ the jiggle's VALUE is never modelled).
+     * Measured on the game: BOMBPUSHER's L42 damage walk respawns at t1221 with `shake` 4 and settles at (777, 0)
+     * where the drained settle says (776, 0).
+     */
+    rebootShake: false,
+    /**
+     * fidelity L74LEG624 D3 — STRIKE_IFRAME_LAPSE: A PRESS IS GATED ON ITS HIT TESTS, NOT ON ITS PRESS TICK.
+     *
+     *     Enemy.as:140    hit(): if (hitsTimer > 0) return …   — the gate runs on each TEST tick
+     *     Player.slash    the rect test runs on every tick `slashing` is up: T+1 … T+SLASH_HIT_TICKS
+     *
+     * `strikePolicy.strikeCandidates` refused any body whose (one-tick-old) `hitsTimer` read above 0, which is true
+     * of the press tick and not of the window: a press whose later tests land at or after the i-frame's lapse damages
+     * the body. Measured on L74 (leg 624, `lavarunner@208,96`, hammer C4's witnesses `tape-l74-624-press84`/`-press85`):
+     * a press at t84/t85 kills it at t87 with no player hit, game and model at 0 px; the policy's own press goes in
+     * at t88 and the body hits the player at t87. ON: a body is admitted when `projectedHitsTimer` at the press's
+     * LAST test tick is ≤ 0 (`strikePolicy.iframeLapsesInWindow`); the `owed` rule and `ORDINARY_SWING_PERIOD`'s dash
+     * refusal are untouched. OFF: the `hitsTimer > 0` refusal, byte-identical. ⛔ OFF by default: it moves strikes
+     * roster-wide, and the flip is the user's licence (`SEEDLING_STRIKE_IFRAME_LAPSE=0|1` for a node measurement).
+     */
+    strikeIframeLapse: false,
+    /**
+     * fidelity L74LEG624 D2 — FALLROCK_POSTFALL: A CLEARED NON-ARENA `FallRock` IS BUILT AS THE GAME LEAVES IT.
+     *
+     *     FallRock.as:42-47   if (!Game.checkPersistence(tag)) { y = fallTo; type = "Solid"; _active = true; }
+     *
+     * `buildLevelWorld` refused a clear list naming a `fallrock` tag ("nothing here builds their fall"), and the page's
+     * clear list is the game's live `persistence_cleared`: L74's arrival button drops `fallrock@288,144` (tag 2), so
+     * every later build of L74 (a re-entry in the same run, a staged arrival after it) refused a TRUE state. ON: the
+     * rock is built fallen — a 16x16 Solid at its cell, `_active` (a publication cannot drop it again), on the run's
+     * `fallenRocks` arm (`levelWorld` marks the roster row `postFall`, `levelRun.fallRockStateFor` builds it landed).
+     * `FallRockLarge` stays refused outside the arena (L82's `bossrock`). OFF: the refusal, byte-identical.
+     * ⛔ OFF by default (`SEEDLING_FALLROCK_POSTFALL=0|1` for a node measurement).
+     */
+    fallRockPostFall: false,
+    /**
+     * fidelity L74LEG624 D4 — THE CHASER FORECAST RE-CHOOSES A LAVARUNNER'S SPEED BY TERRAIN, as the live run does.
+     *
+     *     LavaRunner.as:82-92   after super.update(): switch(getState()) { case 1, 17: swim() (1); default: walk() (1.5) }
+     *
+     * K2 put the tail in `levelRun.stepChasersNow` and not in `chaserForecastNow`, so a preview's lavarunner kept the
+     * speed it was seeded with across lava and water. Measured on L74 leg 624: the detour's certified preview and its
+     * drive part at t53 (`lavarunner@208,96`, 243.26 vs 242.2 px); the drive is the game's (0 px). ON: the clone runs
+     * the same tail. OFF: as before (`SEEDLING_FORECAST_SPEED_BY_TERRAIN=0|1` for a node measurement).
+     */
+    forecastSpeedByTerrain: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -338,6 +416,16 @@ if (globalThis.process?.env?.SEEDLING_BAIT_FORECAST === '0') CONTACT_FIDELITY.ba
 // ⛓ fidelity FORCEDHIT: `SEEDLING_FORCED_HITS=0|1` sets that one switch over the set above (a node measurement).
 if (globalThis.process?.env?.SEEDLING_FORCED_HITS === '1') CONTACT_FIDELITY.forcedHits = true;
 if (globalThis.process?.env?.SEEDLING_FORCED_HITS === '0') CONTACT_FIDELITY.forcedHits = false;
+// ⛓ fidelity MOVINGWAIT: `SEEDLING_MOVING_WAIT=0|1` sets that one switch over the set above (a node measurement).
+if (globalThis.process?.env?.SEEDLING_MOVING_WAIT === '1') CONTACT_FIDELITY.movingWait = true;
+if (globalThis.process?.env?.SEEDLING_MOVING_WAIT === '0') CONTACT_FIDELITY.movingWait = false;
+// ⛓ fidelity L74LEG624: `SEEDLING_STRIKE_IFRAME_LAPSE=0|1` and `SEEDLING_FALLROCK_POSTFALL=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_STRIKE_IFRAME_LAPSE === '1') CONTACT_FIDELITY.strikeIframeLapse = true;
+if (globalThis.process?.env?.SEEDLING_STRIKE_IFRAME_LAPSE === '0') CONTACT_FIDELITY.strikeIframeLapse = false;
+if (globalThis.process?.env?.SEEDLING_FALLROCK_POSTFALL === '1') CONTACT_FIDELITY.fallRockPostFall = true;
+if (globalThis.process?.env?.SEEDLING_FALLROCK_POSTFALL === '0') CONTACT_FIDELITY.fallRockPostFall = false;
+if (globalThis.process?.env?.SEEDLING_FORECAST_SPEED_BY_TERRAIN === '1') CONTACT_FIDELITY.forecastSpeedByTerrain = true;
+if (globalThis.process?.env?.SEEDLING_FORECAST_SPEED_BY_TERRAIN === '0') CONTACT_FIDELITY.forecastSpeedByTerrain = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

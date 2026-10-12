@@ -47,7 +47,7 @@ const fs = require('fs'); const path = require('path');
 const lockFile = ${JSON.stringify(join(cache, 'seedling-box', 'lock.json'))};
 const read = () => fs.existsSync(lockFile) ? JSON.parse(fs.readFileSync(lockFile, 'utf8')) : null;
 const saw = { argv: process.argv.slice(2), lockAtStart: read(), pid: process.pid,
-  bundled: process.env.TEST_BUNDLED };
+  bundled: process.env.TEST_BUNDLED, webgpu: process.env.TEST_WEBGPU };
 const out = path.join(process.cwd(), ${JSON.stringify(RESULTS_SUBDIR)});
 fs.mkdirSync(out, { recursive: true });
 fs.writeFileSync(path.join(out, 'test-results-9999-fake.json'), JSON.stringify({ mode: 'fake' }));
@@ -169,10 +169,11 @@ describe('the real runner and the box', () => {
     const sb = sandbox();
     const holder = fakeHolder(sb);
     try {
-      const r = runRunner(sb, ['--mode=test-substrates', '--test=some-row']);
+      /* A REAL row: an unknown id is refused before the lock (testWebgpu.js). */
+      const r = runRunner(sb, ['--mode=test-substrates', '--test=apworld-document-tab-lists-every-schema-key']);
       expect(r.exit).toBe(1);
       expect(r.out).toContain('⛔ THE BOX IS TAKEN');
-      expect(r.out).toContain('npm test test-substrates test=some-row (browser) refuses');
+      expect(r.out).toContain('npm test test-substrates test=apworld-document-tab-lists-every-schema-key (browser) refuses');
       expect(r.out).toMatch(/holder\s+a-foreign-holder \(measure\)/);
       expect(r.out).not.toContain('at takeBoxLock');
       expect(sb.saw()).toBe(null);
@@ -193,6 +194,15 @@ describe('the real runner and the box', () => {
     const sb2 = sandbox();
     expect(runRunner(sb2, ['--mode=test-regression']).exit).toBe(0);
     expect(sb2.saw().bundled).toBe('0');
+  });
+
+  it('a --test wasm row reaches Playwright as TEST_WEBGPU=1, a JS row as 0 (testWebgpu.js)', () => {
+    const sb = sandbox();
+    expect(runRunner(sb, ['--mode=test-substrates', '--test=seedling-wasm-runtime-loop-play-clock-drains-mana']).exit).toBe(0);
+    expect(sb.saw().webgpu).toBe('1');
+    const sb2 = sandbox();
+    expect(runRunner(sb2, ['--mode=test-substrates', '--test=apworld-document-tab-lists-every-schema-key']).exit).toBe(0);
+    expect(sb2.saw().webgpu).toBe('0');
   });
 
   it('takes the box for the run, names it, releases it, and stamps the head it froze', () => {

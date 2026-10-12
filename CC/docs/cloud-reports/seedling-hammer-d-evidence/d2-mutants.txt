@@ -1,0 +1,14 @@
+hammer-phase D, D2 — M3 mutants on `hammerGhostWall.test.js` (+ C2's `hammerGhostSpinner.test.js`), in a scratch worktree
+($S/wt2 at eb8df5f; copy → edit → measure → restore; levelRun.js md5 restored 92fa2402b329dff551ff712462da6b54)
+
+M3f  forecastSwordTest asks the line for a ghost test (`ghost ? null : collideLineSolid` → `collideLineSolid`)
+     predicted: the two forecast rows red, the run/game rows green; C2's file green (blind, as C2 measured)
+     measured: 2 failed | 15 passed — `spinnerForecastWithPress` row and `spinnerFightForecast` row, both diverge from t574 on
+M3r  the run asks the line for a ghost hit (`if (!ghost) assertSpinnerLineOfSight` → always)
+     predicted: the walk throws, every row of the file red
+     measured: the file fails to load — "levelRun: the swing at (169.096…, 184.286…) reaches spinner@224,112's rect but
+     `collideLine("Solid", …)` finds tile:Blue Wall (dark) at (176, 187.957) on the line to its entity point (192.402…, 197.075…)"
+M3s  the strike asks the line for the ghost (`strikeLineBlocked`'s `if (!press.lineOfSight) return null;` removed)
+     predicted: blind (no row derives a strike)
+     measured: 17/17 green — BLIND. The strike's waiver has no witness (no ghost strike is planned at a walled stance
+     anywhere measured: the D1 ghost legs refuse at the ladder's kill rung before any strike is derived)

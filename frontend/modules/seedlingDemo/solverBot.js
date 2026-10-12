@@ -74,6 +74,8 @@ import {
 import { resolvePresser } from './botDriverV2.js';
 // ⛓ SEEDLING FIDELITY CRUSHER — the `bait` verb (behind `CRUSHER_BAIT`).
 import { runBait } from './botDriverV2.js';
+// ⛓ seedling-fidelity-movingwait — the paced wait's driver (behind `MOVING_WAIT`).
+import { pacedSummary, runPace } from './botDriverV2.js';
 import {
     BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherSightDanger, searchBaitOrdering,
 } from './crusherBait.js';
@@ -110,8 +112,14 @@ import {
     GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
     // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (behind `GHOST_SPINNER_PRESS`, ON by default).
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
+    // ⛓⛓⛓ hammer-phase D: the approach's and the fight's per-weapon row (behind `GHOST_SEARCH_BUCKETS`, OFF).
+    searchPressFor,
+    // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, OFF).
+    killRungPresses,
     // ⛓⛓⛓ hammer-phase P1: the press kill's exact caches (behind `PRESS_KILL_COST`, ON; OFF bypasses every one).
     PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
+    // ⛓⛓⛓ hammer-phase P2: the strike scan's two exact levers (behind `STRIKE_SCAN_COST`, ON; OFF bypasses both).
+    STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
@@ -3069,9 +3077,19 @@ function latchedFadeWait(run, obstacle, alsoRejected = []) {
  * The latched arm of `execHold` — stand still until the latched responder is
  * open, inside the fade's own bound, or refuse by name.
  */
-function runLatchedWait(run, perTick, resolved, what) {
+function runLatchedWait(run, perTick, resolved, what, pace = null) {
     const { ticks, until } = resolved.hold;
     const start = { x: run.state.x, y: run.state.y };
+    // ⛓ seedling-fidelity-movingwait D2: the paced arm (`execHold` chose it; `runPace` drives and asserts it).
+    if (pace !== null) {
+        if (until.test(run)) {
+            throw new SolverRefusal(`${what}: the latched wait's condition is already true — ${until.why}; a paced `
+                + 'wait would spend a cycle for nothing.', { obstacle: { kind: 'solid', id: 'latched-wait' } });
+        }
+        const { heldFor, from } = runPace(run, perTick, pace, until, what);
+        return { presser: null, latched: true, ticks, heldFor, stoppedOn: until.why, at: start,
+            opened: [], armed: [], traps: [], volleys: 0, wrote: [], paced: pacedSummary(pace, heldFor, from) };
+    }
     const NO_KEYS = new Set();
     let heldFor = 0;
     while (!until.test(run) && heldFor < ticks) {
@@ -8164,15 +8182,225 @@ function lobberHoldRefusal(run, ticks, what) {
  * the stance from the presser's rect, the duration from the mechanism.
  */
 function execHold(run, perTick, resolved, ctx) {
-    lobberHoldRefusal(run, resolved.hold.ticks, ctx.what);
+    // ⛓ seedling-fidelity-movingwait D2: `null` unless MOVING_WAIT is ON and the still wait prices a bomb.
+    const pace = pacedHoldPlan(run, resolved, ctx.what);
+    if (pace === null) lobberHoldRefusal(run, resolved.hold.ticks, ctx.what);
     if (resolved.latched === true && resolved.stance === null) {
-        return runLatchedWait(run, perTick, resolved, ctx.what);
+        return runLatchedWait(run, perTick, resolved, ctx.what, pace);
     }
     return runHold(run, perTick, {
         presser: { x: resolved.target.x, y: resolved.target.y },
         ticks: resolved.hold.ticks,
         until: resolved.hold.until,
+        ...(pace === null ? {} : { pace }),
     }, ctx.what, ctx.before);
+}
+
+/**
+ * ⛓⛓⛓ seedling-fidelity-movingwait D2 — **A LATCHED WAIT INSIDE A LOBBER'S REACH PACES** (behind `MOVING_WAIT`,
+ * which is `CONTACT_FIDELITY.movingWait`, OFF).
+ *
+ * BOMBPUSHER measured the hit as AVOIDABLE: on the three damage-on L40 walks every would-be hit landed on a player
+ * who had moved 0–9 px in the 31 ticks after the launch, and every blast that landed on a walking player missed. A
+ * wait may move without breaking what it waits for only when the group is LATCHED — a `room = -1` ButtonRoom's
+ * setter is behind `if (a)` (*"Can't be reset to false!!"*, `ButtonRoom.as:67-98`) and `Lock`'s fade then runs
+ * whoever stands where; a plain `Button` republishes every tick, so stepping off it unpresses the group (never paced).
+ *
+ * ⇒ The still wait is asked first (`lobberHoldRefusal`'s question, unchanged); only when it prices a bomb is a paced
+ * one searched (`planPacedWait`), and only a pacing whose every previewed sample is clean is chosen. Otherwise the
+ * still refusal stands, with the pacings tried named.
+ */
+export const MOVING_WAIT = {
+    get enabled() { return CONTACT_FIDELITY.movingWait === true; },
+    set enabled(v) { CONTACT_FIDELITY.movingWait = v === true; },
+};
+
+/**
+ * The trace row of a paced wait: `verb: 'pace'` on the wait's first emitted tick (a still hold's row is unchanged;
+ * on a shared tick the merge keeps this later one and notes the hold). It names the still wait's bomb as the option
+ * rejected.
+ */
+function pacedTraceRow(paced, saw, goal, obstacle) {
+    return {
+        tick: paced.from,
+        saw,
+        goal: { kind: goal.kind, ...(goal.placement ? { placement: { ...goal.placement } } : {}) },
+        obstacle,
+        strategy: { verb: 'pace', out: paced.out, back: paced.back, span: paced.span, gap: paced.gap,
+            cycles: paced.cycles, ticks: paced.ticks, reach: paced.reach },
+        rejected: [{ option: 'stand still', why: paced.still }],
+        keys: [],
+    };
+}
+
+/** Run `fn` with `MOVING_WAIT` set to `enabled`, restoring the previous value. */
+export function withMovingWait(enabled, fn) {
+    return withSwitch(MOVING_WAIT, enabled, fn);
+}
+
+/**
+ * The pacing alphabet. A CYCLE holds `out` for `span` ticks, coasts to rest, holds `back` for `span`, coasts to rest
+ * — measured on L40's stance to return to the start BIT-EXACTLY (the speed curve is symmetric; `planPacedWait`
+ * asserts it per candidate, and a cycle that does not return is rejected) — then stands `gap` ticks. Candidates are
+ * ordered smallest motion first: span, then gap, then direction.
+ */
+export const PACE = Object.freeze({
+    dirs: Object.freeze([
+        ['left', 'right'], ['right', 'left'], ['up', 'down'], ['down', 'up'],
+        ['up+left', 'down+right'], ['up+right', 'down+left'], ['down+left', 'up+right'], ['down+right', 'up+left'],
+    ].map(([o, b]) => Object.freeze([Object.freeze(o.split('+')), Object.freeze(b.split('+'))]))),
+    spans: Object.freeze([6, 8, 10, 12, 14, 16, 20, 24]),
+    gaps: Object.freeze([0, 6, 12, 18]),
+    // a coast that has not come to rest in this many ticks is not a cycle
+    coast: 60,
+});
+
+/** The still wait's bomb, as `lobberHoldRefusal` asks it — `null` when the still wait is clean. */
+function stillWaitBomb(run, ticks) {
+    if (!CONTACT_FIDELITY.bombPusherLive || !Number.isFinite(ticks) || ticks <= 0) return null;
+    if ((run.entities('bombPushers') ?? []).length === 0) return null;
+    const d = dangerAt(run, run.ticksCompleted + ticks, playerBoxAt(run.state.x, run.state.y), { mode: 'wait' });
+    return d.sources.find((src) => src.kind === 'bomb') ?? null;
+}
+
+/**
+ * `execHold`'s question: the pacing for this hold, or `null` (OFF, not latched, or the still wait is clean). A
+ * latched hold whose still wait is a bomb and that NO pacing clears is refused here, by name, with every pacing's
+ * first danger (the still refusal's own `obstacle`).
+ */
+function pacedHoldPlan(run, resolved, what) {
+    if (!MOVING_WAIT.enabled) return null;
+    const hold = resolved.hold;
+    const latched = hold?.latched === true || resolved.latched === true;
+    if (!latched || !hold.until) return null;
+    const bomb = stillWaitBomb(run, hold.ticks);
+    if (!bomb) return null;
+    const keep = resolved.target ? (run.world.pressers ?? [])
+        .find((p) => p.x === resolved.target.x && p.y === resolved.target.y) ?? null : null;
+    const out = planPacedWait(run, { ticks: hold.ticks, keep });
+    if (out.plan) return { ...out.plan, still: bomb.why };
+    const lobber = String(bomb.id).split('#')[0];
+    throw new SolverRefusal(`${what}: the hold stands still for up to ${hold.ticks} tick(s) at `
+        + `(${run.state.x},${run.state.y}), inside ${lobber}'s 256 px reach — ${bomb.why}. The group is LATCHED, so `
+        + `the wait may pace, and no pacing is clean (MOVING_WAIT, ${out.tried.length} tried): `
+        + `${out.tried.slice(0, 4).join('; ')}${out.tried.length > 4 ? ' …' : ''}.`,
+    { obstacle: { kind: 'danger', id: lobber } });
+}
+
+/**
+ * ⛓⛓⛓ seedling-fidelity-movingwait D2 — **THE PACING, PLANNED AND PRICED** on the run's own `previewStepper`.
+ *
+ * Each candidate (`PACE`) is previewed for whole cycles until it covers `ticks` (the still wait's bound), every
+ * sample priced as a WALK prices it — `dangerDuringTransit` against the walk forecasts stepped with the previewed
+ * player (`run.spitForecast()` carries the lobber and its bombs, aimed at the PACED player; the chasers, arrows and
+ * grenades ride theirs), the pre-move box paired with the post-step bodies, as `previewWalk` pairs them — plus the
+ * end state once more. A candidate is rejected at its first danger, at a level crossing or a fall, on a box that
+ * touches any OTHER presser (a second latch would be a side effect the plan never chose), or at a cycle end that is
+ * not the stance at rest bit-for-bit.
+ *
+ * @returns {{plan: ?object, tried: string[]}} `plan` = `{keys, path, ends, out, back, span, gap, bound, reach}`
+ */
+export function planPacedWait(run, { ticks, keep = null }) {
+    const start = { ...run.state };
+    const tried = [];
+    if (start.vx !== 0 || start.vy !== 0 || start.fall) {
+        return { plan: null, tried: [`the wait begins at (${start.x},${start.y}) still moving`] };
+    }
+    const step = run.previewStepper();
+    const NONE = new Set();
+    const others = (run.world.pressers ?? []).filter((p) => p !== keep);
+    const t0 = run.ticksCompleted;
+    // The spinners' own forecast, once (row j = the top of tick t0 + 1 + j), long enough for the longest candidate.
+    const longest = ticks + 2 * (Math.max(...PACE.spans) + PACE.coast) + Math.max(...PACE.gaps) + 2;
+    const spinRows = (run.entities('spinnerBodies') ?? []).length ? run.spinnerForecast(longest) : null;
+    /**
+     * ⛔ A PACED PLAYER MOVES THE AIM, so a blast can land on a BODY the still wait never put one near — measured on
+     * the first cut at L40's cluster: `bombpusher@112,128#4` at (313,189) reached `bob@304,144`, and the run refuses
+     * the Explosion's `"Enemy"` arm by name (`drainBombBlastsNow`, not staged). So a pacing is rejected where its
+     * forecast blast meets a body by the run's own rule (the square, then the origin disc): the chasers as the
+     * forecast's previous step left them (the blast is drained at that tick's `updateLists()`), the spinners at
+     * their own row.
+     */
+    const blastMeetsBody = (spits, bodiesThen, j) => {
+        for (const b of spits ?? []) {
+            if (b.kind !== 'bomb') continue;
+            const inDisc = (px, py) => Math.sqrt((b.x - px) ** 2 + (b.y - py) ** 2) <= b.radius;
+            for (const c of bodiesThen ?? []) {
+                if (rectsOverlap(c.rect, b.rect) && inDisc(c.x, c.y)) return `${b.id}'s blast reaches ${c.id}`;
+            }
+            const row = spinRows?.[j] ?? [];
+            const ids = (run.entities('spinnerBodies') ?? []).map((sp) => sp.id);
+            for (let k = 0; k < row.length; k += 1) {
+                const r = row[k];
+                if (r && rectsOverlap(r, b.rect) && inDisc(r.x + SPINNER.originX, r.y + SPINNER.originY)) {
+                    return `${b.id}'s blast reaches ${ids[k] ?? 'a spinner'}`;
+                }
+            }
+        }
+        return null;
+    };
+    for (const span of PACE.spans) {
+        for (const gap of PACE.gaps) {
+            for (const [outKeys, backKeys] of PACE.dirs) {
+                const label = `${outKeys.join('+')}/${backKeys.join('+')} x${span} gap ${gap}`;
+                const out = new Set(outKeys);
+                const back = new Set(backKeys);
+                const arrowsF = run.arrowForecast?.() ?? null;
+                const chasersF = run.chaserForecast?.() ?? null;
+                const spitsF = run.spitForecast?.() ?? null;
+                const grenF = run.grenadeForecast?.() ?? null;
+                const keys = [];
+                const path = [];
+                const ends = [];
+                let st = start;
+                let reach = 0;
+                let why = null;
+                let bodiesBefore = null;
+                const tick = (held) => {
+                    const at = t0 + keys.length + 1;
+                    const arrows = arrowsF ? arrowsF.step(st) : null;
+                    const bodies = chasersF ? chasersF.step(st, { slashing: false }) : null;
+                    const spits = spitsF ? spitsF.step(st, { slashing: false }) : null;
+                    const grenades = grenF ? grenF.step(st) : null;
+                    const onBody = blastMeetsBody(spits, bodiesBefore, keys.length);
+                    bodiesBefore = bodies;
+                    if (onBody) return `${onBody} at paced tick ${keys.length}`;
+                    const box = playerBoxAt(st.x, st.y);
+                    const d = dangerDuringTransit(run, at, box, arrows, bodies, spits, grenades);
+                    if (d.danger) {
+                        const s = d.sources[0];
+                        return `${s.kind}:${s.id} at paced tick ${keys.length + 1} (${st.x.toFixed(2)},${st.y.toFixed(2)})`;
+                    }
+                    const touched = others.find((p) => rectsOverlap(box, p.rect));
+                    if (touched) return `touches ${touched.tag}@${touched.x},${touched.y} at paced tick ${keys.length + 1}`;
+                    if (held === null) return null;
+                    st = step(st, held);
+                    keys.push(held);
+                    path.push({ x: st.x, y: st.y });
+                    reach = Math.max(reach, Math.hypot(st.x - start.x, st.y - start.y));
+                    if (st.transition || st.fall) return `leaves the floor at paced tick ${keys.length}`;
+                    return null;
+                };
+                const hold = (held, n) => { for (let k = 0; k < n && !why; k += 1) why = tick(held); };
+                const coast = () => {
+                    for (let k = 0; k < PACE.coast && !why && (st.vx !== 0 || st.vy !== 0); k += 1) why = tick(NONE);
+                    if (!why && (st.vx !== 0 || st.vy !== 0)) why = `still moving ${PACE.coast} tick(s) into a coast`;
+                };
+                while (!why && keys.length < ticks) {
+                    hold(out, span); coast(); hold(back, span); coast(); hold(NONE, gap);
+                    if (!why && (st.x !== start.x || st.y !== start.y)) {
+                        why = `cycle ${ends.length + 1} ends at (${st.x},${st.y}), not the stance`;
+                    }
+                    if (!why) ends.push(keys.length);
+                }
+                if (!why) why = tick(null);
+                if (why) { tried.push(`${label}: ${why}`); continue; }
+                return { plan: { keys, path, ends, out: outKeys, back: backKeys, span, gap, bound: ticks,
+                    reach: Number(reach.toFixed(2)) }, tried };
+            }
+        }
+    }
+    return { plan: null, tried };
 }
 
 /**
@@ -9292,7 +9520,7 @@ function strikePressOf(run) {
  *
  * @returns {?{tag, at:{x, y}}} the first blocker, or null
  */
-function strikeLineBlocked(run, from, dir, forecast, i, lines = null) {
+function strikeLineBlocked(run, from, dir, forecast, i, lines = null, carried = null) {
     const press = strikePressOf(run);
     if (!press.lineOfSight) return null;
     const rect = press.rect(from.x, from.y, dir);
@@ -9300,9 +9528,9 @@ function strikeLineBlocked(run, from, dir, forecast, i, lines = null) {
         for (const r of forecast[i + k] ?? []) {
             if (!rectsOverlapLocal(rect, r)) continue;
             if (distanceRectPoint(from.x, from.y, r) > press.reach) continue;
-            const blocker = lines === null
+            const blocker = lines === null && carried === null
                 ? run.collideLineSolid(from.x, from.y, r.x + SPINNER.originX, r.y + SPINNER.originY)
-                : lineOnce(lines, run, from, r);
+                : lineOnce(lines, run, from, r, carried);
             if (blocker) return blocker;
         }
     }
@@ -9316,20 +9544,138 @@ function strikeLineBlocked(run, from, dir, forecast, i, lines = null) {
  * `run.collideLineSolid` cannot answer differently the second time. Keyed by the cell object and the row's rect object
  * (the forecast's rows are shared, `spinnerForecast`'s note), whose coordinates are the whole question.
  */
-function lineOnce(lines, run, from, r) {
-    let byRect = lines.get(from);
-    if (byRect === undefined) {
-        byRect = new Map();
-        lines.set(from, byRect);
+/** ⛓ hammer-phase P2: exported for `pressKillCost.test.js`, which drives the carried book's key with a hand-built run. */
+export function lineOnce(lines, run, from, r, carried = null) {
+    let byRect = null;
+    if (lines !== null) {
+        byRect = lines.get(from);
+        if (byRect === undefined) {
+            byRect = new Map();
+            lines.set(from, byRect);
+        }
+        if (byRect.has(r)) {
+            PRESS_KILL_COST_COUNTS.lineHit += 1;
+            return byRect.get(r);
+        }
+        PRESS_KILL_COST_COUNTS.lineMiss += 1;
     }
-    if (byRect.has(r)) {
-        PRESS_KILL_COST_COUNTS.lineHit += 1;
-        return byRect.get(r);
+    const toX = r.x + SPINNER.originX;
+    const toY = r.y + SPINNER.originY;
+    const book = carried === null ? null : carriedLineBook(carried);
+    let blocker;
+    if (book === null) {
+        blocker = run.collideLineSolid(from.x, from.y, toX, toY);
+    } else {
+        const key = `${Math.trunc(from.x)},${Math.trunc(from.y)},${Math.trunc(toX)},${Math.trunc(toY)}`;
+        if (book.has(key)) {
+            STRIKE_SCAN_COST_COUNTS.lineCarried += 1;
+            blocker = book.get(key);
+        } else {
+            STRIKE_SCAN_COST_COUNTS.lineAsked += 1;
+            blocker = run.collideLineSolid(from.x, from.y, toX, toY);
+            book.set(key, blocker);
+        }
     }
-    PRESS_KILL_COST_COUNTS.lineMiss += 1;
-    const blocker = run.collideLineSolid(from.x, from.y, r.x + SPINNER.originX, r.y + SPINNER.originY);
-    byRect.set(r, blocker);
+    if (byRect !== null) byRect.set(r, blocker);
     return blocker;
+}
+
+/**
+ * ⛓⛓⛓ hammer-phase P2 — THE STRIKE LINE, CARRIED ACROSS DERIVATIONS (`STRIKE_SCAN_COST`). P1's `lineOnce` asks each
+ * (cell, rect) once per derivation, and the executor derives on every refuge tick: on C1's staging A 97 % of what was
+ * left were lines an EARLIER derivation had asked, unchanged.
+ *
+ * ⛔ WHAT THE ANSWER READS, ENUMERATED. `run.collideLineSolid` truncates its four coordinates first, then walks them
+ * against `world.solidBoxesForMover(normalizeLiveOpts(liveSolidOpts()))` — the run's current world and the live bag
+ * `run.liveGeometryOpts()` returns. So the book is keyed by the world BY IDENTITY (a tile write re-wraps it), the bag BY
+ * VALUE through a copy (`snapshotValue`: the bag aliases run state — `pulledRopeIdsNow` is the rope map itself), and
+ * each line by its four truncated integers. A bag that cannot be copied, or a run that cannot report one, gets no book:
+ * every line is asked, as before.
+ *
+ * ⚠ LAZY, at the first line a derivation reaches the book: that is where the base calls `collideLineSolid`, which
+ * reads the same bag, so the extra read happens only where the base was already reading. ⚠ The blocker object is
+ * shared between derivations; its one reader (`opportunityAt`) asks only whether there is one.
+ */
+const CARRIED_LINES = new WeakMap();
+
+function carriedLineBook(carried) {
+    if (carried.book !== undefined) return carried.book;
+    const { run } = carried;
+    carried.book = null;
+    if (typeof run.liveGeometryOpts !== 'function') return null;
+    let bag;
+    try {
+        bag = run.liveGeometryOpts();
+    } catch {
+        // ⚠ a noclip run refuses the bag by name while its `collideLineSolid` still answers: no book, every line asked
+        // (an error in the bag's own readers is not hidden — the base's `collideLineSolid` reads them next and throws)
+        return null;
+    }
+    const memo = CARRIED_LINES.get(run);
+    if (memo !== undefined && memo.world === run.world && sameValue(bag, memo.key)) {
+        carried.book = memo.book;
+        return carried.book;
+    }
+    const key = snapshotValue(bag);
+    if (key === UNCACHEABLE) return null;
+    STRIKE_SCAN_COST_COUNTS.booksOpened += 1;
+    carried.book = new Map();
+    CARRIED_LINES.set(run, { world: run.world, key, book: carried.book });
+    return carried.book;
+}
+
+/**
+ * ⛓⛓⛓ hammer-phase P2 — THE SCAN'S REACH BOX (`STRIKE_SCAN_COST`). `deriveStrike`'s scan asked every walkable cell at
+ * every tick, and `opportunityAt`'s FIRST test is `distanceRectPoint(cell, mine) > reach`: a pure read whose `false`
+ * is decided before anything is counted, spent or cached. A cell farther than `reach` from the rect on either axis
+ * fails it (both arms of `distanceRectPoint` are at least the axis gap), so only the cells inside the rect grown by
+ * `reach + 1` (the pixel is slack for the subtraction's rounding) can pass, and they are asked in the list's own order —
+ * the opportunities, the line answers and every count come out as before.
+ *
+ * ⛔ THE FLOOR'S SKIPS ARE STILL EVERY CELL'S. The base loop counts `unreachable` for each cell `i − 1 < floor` before
+ * it asks anything, inside or outside the box, and the refusal prints that count; so it is counted for the whole list
+ * (`unreachableAt`, over the floors sorted once per derivation), never for the box alone.
+ *
+ * `null` — the whole list scanned, as OFF — when the list is not row-major, a floor or the reach is not finite, and
+ * per tick (`cellsFor`) when the body's rect is not (the base's `distanceRectPoint` then throws at its first cell, as
+ * it always did).
+ */
+function strikeScanBox(cells, floor, reach) {
+    if (!Number.isFinite(reach)) return null;
+    const rows = cellRowsOf(cells);
+    if (rows === null) return null;
+    const floors = new Float64Array(cells.length);
+    for (let j = 0; j < cells.length; j += 1) {
+        const f = floor.get(cells[j]);
+        if (!Number.isFinite(f)) return null;
+        floors[j] = f;
+    }
+    floors.sort();
+    const pad = reach + 1;
+    return {
+        cellsFor(mine) {
+            if (!Number.isFinite(mine.x) || !Number.isFinite(mine.y)
+                || !Number.isFinite(mine.right) || !Number.isFinite(mine.bottom)) {
+                STRIKE_SCAN_COST_COUNTS.scansUnboxed += 1;
+                return null;
+            }
+            const out = cellsInBox(rows, mine.x - pad, mine.y - pad, mine.right + pad, mine.bottom + pad);
+            STRIKE_SCAN_COST_COUNTS.cellsBoxed += out.length;
+            STRIKE_SCAN_COST_COUNTS.cellsSkipped += cells.length - out.length;
+            return out;
+        },
+        /** How many cells the base loop counts `unreachable` at tick `i`: those with `i − 1 < floor`. */
+        unreachableAt(i) {
+            let lo = 0;
+            let hi = floors.length;
+            while (lo < hi) {
+                const mid = (lo + hi) >> 1;
+                if (floors[mid] <= i - 1) lo = mid + 1;
+                else hi = mid;
+            }
+            return floors.length - lo;
+        },
+    };
 }
 
 /** ⛓ hammer-phase P1: exported for `pressKillCost.test.js` (one derivation, ON against OFF). */
@@ -9343,8 +9689,12 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
     const press = strikePressOf(run);
     // ⛓ hammer-phase P1: this derivation's line answers (`lineOnce`), or none with the switch OFF
     const lines = PRESS_KILL_COST.enabled ? new Map() : null;
+    // ⛓ hammer-phase P2: the lines earlier derivations asked (`carriedLineBook`, resolved at the first line), or none OFF
+    const carried = STRIKE_SCAN_COST.enabled ? { run, book: undefined } : null;
     // ⛓ The admissible ETA floor, once per cell — see `minTicksBetween`.
     const floor = new Map(cells.map((c) => [c, minTicksBetween(run.state, c)]));
+    // ⛓ hammer-phase P2: the cells in reach of a body's rect, in the list's order (`strikeScanBox`), or none OFF
+    const near = STRIKE_SCAN_COST.enabled ? strikeScanBox(cells, floor, press.reach) : null;
     const opportunities = [];
     let unreachable = 0;
     /** ⛓ U3 D2 — how many (cell, tick) pairs the line of sight SKIPPED; a
@@ -9372,7 +9722,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         for (let k = -2; k <= press.hitTicks + 1; k += 1) {
             if (!clearOfHammersAt(run, c.box, forecast, i + k)) return false;
         }
-        if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i, lines)) {
+        if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i, lines, carried)) {
             if (countSighted) sighted += 1;
             return false;
         }
@@ -9416,11 +9766,21 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
     for (let i = Math.max(1, notBefore); i < horizon - press.hitTicks - 1; i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
-        for (const c of cells) {
-            // ⛔ BEFORE the truncation, never after: a candidate the movement
-            // model provably cannot reach must not consume one of the forty.
-            if (i - 1 < floor.get(c)) { unreachable += 1; continue; }
-            if (opportunityAt(i, c, mine)) opportunities.push({ i, cell: c });
+        const inReach = near === null ? null : near.cellsFor(mine);
+        if (inReach === null) {
+            for (const c of cells) {
+                // ⛔ BEFORE the truncation, never after: a candidate the movement
+                // model provably cannot reach must not consume one of the forty.
+                if (i - 1 < floor.get(c)) { unreachable += 1; continue; }
+                if (opportunityAt(i, c, mine)) opportunities.push({ i, cell: c });
+            }
+        } else {
+            // ⛓ hammer-phase P2: the floor's skips are every cell's, counted whole; only the box is asked
+            unreachable += near.unreachableAt(i);
+            for (const c of inReach) {
+                if (i - 1 < floor.get(c)) continue;
+                if (opportunityAt(i, c, mine)) opportunities.push({ i, cell: c });
+            }
         }
         if (opportunities.length >= STRIKE_CANDIDATES) { stoppedAt = i; break; }
     }
@@ -9533,7 +9893,8 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
-        for (const c of cells) {
+        // ⛓ hammer-phase P2: a cell outside the box fails `opportunityAt`'s first test with nothing counted or spent
+        for (const c of (near === null ? null : near.cellsFor(mine)) ?? cells) {
             if (i - 1 < floor.get(c)) continue;
             const known = walks.get(c);
             if (known && (known.walk.truncated || known.unsafe || known.eta > i - 1)) continue;
@@ -10597,7 +10958,9 @@ export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMM
         }
         return stood[t - n] ?? null;
     };
-    const need = horizon + SLASH_HIT_TICKS + 4;
+    // ⛓ hammer-phase D: the train this search sizes its probe and its goal's rows by (`searchPressFor`: the sword's OFF)
+    const searchRow = searchPressFor(strikePressOf(run));
+    const need = horizon + searchRow.hitTicks + 4;
     // ⚠ a test due at `n` itself (the press's pending thrust fires at the top of the next tick) is in flight too:
     // it needs no stood tick, but the bodies after it are the hit-aware forecast's
     let windowEnd = null;
@@ -10608,7 +10971,7 @@ export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMM
         } });
     let hitAware = null;
     try {
-        probe(SLASH_HIT_TICKS + 2);
+        probe(searchRow.hitTicks + 2);
         if (windowEnd !== null) hitAware = probe(need);
     } catch (e) {
         if (!(e instanceof Error) || !/no player position/.test(e.message)) throw e;
@@ -10618,7 +10981,7 @@ export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMM
     if (hitAware !== null && hitAware.bodies.some((row) => row[index]?.destroy)) {
         return done({ ok: false, bound: 'dying', why: `the press in flight kills ${bodyId}` });
     }
-    // the goal's train previews read `SLASH_HIT_TICKS + 3` rows past the goal's index
+    // the goal's train previews read `searchRow.hitTicks + 3` rows past the goal's index (the sword's 5 + 3 OFF)
     const rows = hitAware?.rows ?? run.spinnerForecast(need);
     const prefix = windowEnd === null ? 0 : windowEnd - n;
     const lethalFloor = lethalFloorFrom(run, run.state);
@@ -10649,7 +11012,7 @@ export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMM
     let escape = null;
     const goal = (q, i, path) => {
         const rect = bodyAt(i);
-        if (!rect || !rows[i + SLASH_HIT_TICKS + 2]) return false;
+        if (!rect || !rows[i + searchRow.hitTicks + 2]) return false;
         const iframe = iframeAt(i);
         if (iframe === null) return false;
         const view = previewViewAt(run, i, q, live, rawStep, hitAware?.rows ?? null);
@@ -11053,6 +11416,8 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
     const { cell, iframe, tail } = bounds;
     const NO_KEYS = new Set();
     const PRESS = new Set(['primary']);
+    // ⛓ hammer-phase D: the reach and train this search scores with (`searchPressFor`: the sword's OFF)
+    const searchRow = searchPressFor(strikePressOf(run));
     const rawStep = run.previewStepper();
     const step = previewOrDeath(rawStep);
     const lethalFloor = lethalFloorFrom(run, run.state);
@@ -11097,7 +11462,7 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         for (let k = 0; k < row.length; k += 1) {
             const b = row[k];
             if (!order.has(b.id) || b.destroy) continue;
-            const gap = distanceRectPoint(q.x, q.y, cur.rows[i][k]) - SLASH_REACH;
+            const gap = distanceRectPoint(q.x, q.y, cur.rows[i][k]) - searchRow.reach;
             const reach = gap > 0 ? Math.ceil(gap / (WALK_SPEED + SPINNER.moveSpeed)) : 0;
             const first = Math.max(2, b.hitsTimer, reach);
             const all = first + (SPINNER.hitsMax - b.hits - 1) * SPINNER.hitsTimerMax;
@@ -11111,7 +11476,7 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         const since = n + i - lastPress;
         const fightState = cur.bodies[i].map((b) => `${b.hits}.${b.destroy ? 1 : 0}.${Math.ceil(b.hitsTimer / iframe)}`)
             .join(',');
-        return `${playerKey(q)}|${fightState}|${since <= SLASH_HIT_TICKS ? 'w' : (since <= 19 ? 'd' : 'f')}`;
+        return `${playerKey(q)}|${fightState}|${since <= searchRow.hitTicks ? 'w' : (since <= 19 ? 'd' : 'f')}`;
     };
     // ⛓ THE ROOT: a press of mine in flight stands its window out (the train's convention; its points are the stood
     // states), so every node below holds a quiet cursor
@@ -11262,10 +11627,10 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         // ⛓ THE PRESS, where the executor's own arm would take it (`pressReadyAt`, the one predicate)
         const aims = new Map();
         for (const b of owedAt(node.cur, node.i)) {
-            if (!(n + node.i - node.lastPress > SLASH_HIT_TICKS && b.hitsTimer === 0
-                && distanceRectPoint(node.q.x, node.q.y, b.rect) <= SLASH_REACH)) continue;
+            if (!(n + node.i - node.lastPress > searchRow.hitTicks && b.hitsTimer === 0
+                && distanceRectPoint(node.q.x, node.q.y, b.rect) <= searchRow.reach)) continue;
             stats.inReach += 1;
-            node.cur.ensure(node.i + SLASH_HIT_TICKS + 4);
+            node.cur.ensure(node.i + searchRow.hitTicks + 4);
             const view = previewViewAt(run, node.i, node.q, live, rawStep, node.cur.rows);
             if (!pressReadyAt(view, node.q, b.rect, b.hitsTimer, node.lastPress, strikePressOf(run))) continue;
             const key = FACING_KEYS[facingToward(node.q, b.rect)];
@@ -19190,11 +19555,16 @@ function solveSegmentUnder({
              *
              * ⛔ NO SWORD IS A REFUSAL BY NAME, the strong grade's shape: the
              * weapon is a SUB-ORDER the macro layer owes.
+             *
+             * ⛓⛓⛓ HAMMER-PHASE G1 — the weapon is asked by `killRungPresses`
+             * (`GHOST_KILL_RUNG`, OFF): OFF it is `weapon === 'sword'`; ON it
+             * also admits the ghost's press, where `derivePressKill` does.
              */
             const weapon = run.progress('primaryWeapon');
             const [tagPart, xy] = target.id.split('@');
             const [cx, cy] = xy.split(',').map(Number);
-            let press = weapon === 'sword'
+            const rungPresses = killRungPresses(weapon);
+            let press = rungPresses
                 ? derivePressKill(run, [{ tag: tagPart, x: cx, y: cy }], contacts)
                 : null;
             /**
@@ -19221,7 +19591,7 @@ function solveSegmentUnder({
                     admitted.why = 'the admission with the fight on found no strike either';
                 }
             }
-            if (weapon !== 'sword') {
+            if (!rungPresses) {
                 killWhy = `${target.id} is a live Spinner whose removal the run OBSERVES (the `
                     + '`spinnerBodies` roster, and `spinnerWrites` for a tagged body), but the '
                     + `run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``}`
@@ -21233,6 +21603,8 @@ function solveSegmentUnder({
                 before: null, walkTo, goal, equip, rewind,
             });
             records.push({ goal: goal.kind, strategy, ...rec });
+            // ⛓ seedling-fidelity-movingwait: a paced wait is its own decision row (absent on a still one).
+            if (rec?.paced) seeRow(pacedTraceRow(rec.paced, saw(), goal, { kind: blocker.kind, id: blocker.id }));
             for (const c of resolvedBlocker.exempt ?? []) exemptions.add(c);
             contacts = senseContacts(run);
         }
@@ -21290,6 +21662,7 @@ function solveSegmentUnder({
             rejected: resolved.rejected,
             keys: [],
         });
+        if (record?.paced) seeRow(pacedTraceRow(record.paced, saw(), goal, null));
     }
 
     // ── the trace, filled and validated ───────────────────────────────

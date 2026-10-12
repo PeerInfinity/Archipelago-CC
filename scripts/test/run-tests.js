@@ -11,8 +11,9 @@ import { spawn, spawnSync } from 'child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
-import { batchNeedsWebgpu, listBatchNames } from '../../frontend/modules/tests/testBatches.js';
+import { listBatchNames } from '../../frontend/modules/tests/testBatches.js';
 import { resolveTestPort } from './testServer.js';
+import { runNeedsWebgpu } from './testWebgpu.js';
 import {
   WAIT_FOR_BOX_FLAG, endTreeState, resultsFiles, runLockName, stampResults, takeRunBox,
   trackChild, waitSecFrom
@@ -80,6 +81,25 @@ if (config.port) {
   }
 }
 
+// The browser's WebGPU (testWebgpu.js): `--webgpu`, a `webgpu: true` batch, or
+// a `--test=` row whose batch is one — so a solo wasm row boots with no caller
+// knowledge and a JS row keeps --disable-gpu. A row whose batch cannot be
+// resolved is refused here, before the lock, like a bad --batch.
+let webgpu;
+try {
+  const decision = runNeedsWebgpu({
+    explicit: !!(values.webgpu || process.env.npm_config_webgpu),
+    batch: config.batch, testIds: config.testIds, mode: config.mode
+  });
+  webgpu = decision.webgpu;
+  if (decision.batches.length > 0) {
+    console.log(`--test: ${decision.batches.map((b) => `${b.id} → batch ${b.batch}${b.webgpu ? ' (WebGPU)' : ''}`).join('; ')}`);
+  }
+} catch (err) {
+  console.error(err.message);
+  process.exit(2);
+}
+
 // Build environment variables
 const env = {
   ...process.env,
@@ -93,9 +113,10 @@ const env = {
   TEST_BATCH: config.batch,
   TEST_IDS: config.testIds,
   TEST_BUNDLED: config.bundled ? '1' : '0',
-  // A browser WITH WebGPU (playwright.config.js): `--webgpu`, or a batch that
-  // declares `webgpu: true` (its rows boot the Seedling wasm game).
-  TEST_WEBGPU: (values.webgpu || process.env.npm_config_webgpu || batchNeedsWebgpu(config.batch)) ? '1' : '0',
+  // A browser WITH WebGPU (playwright.config.js): `--webgpu`, a batch that
+  // declares `webgpu: true` (its rows boot the Seedling wasm game), or a
+  // `--test=` row whose batch does.
+  TEST_WEBGPU: webgpu ? '1' : '0',
   ...(config.port ? { TEST_PORT: config.port } : {})
 };
 

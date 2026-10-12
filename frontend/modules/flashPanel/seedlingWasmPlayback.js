@@ -138,6 +138,8 @@ export const RESTART_LEG_WAIT_MS = 30000;
 export const SOLVE_POLL_MS = 20;
 /** ⛓ W8c — the new-game ceremony's poll (`awaitCeremony`). */
 export const CEREMONY_POLL_MS = 100;
+/** ⛓ How often a cutscene wait re-says how long it has waited (its note changes, so a reader sees it is not stuck). */
+export const CEREMONY_NOTE_EVERY_MS = 5000;
 export const DRAIN_MS = 100;
 /** ⛓ §5.19 — how long a cold start waits on a TRANSIENT adoption clause (`ADOPT_TRANSIENT_CLAUSES`), and its poll. */
 export const ADOPT_WAIT_MS = 15000;
@@ -319,6 +321,8 @@ export function createWasmPlayback({
         forcedBy: {}, held: 0, continuations: 0, fallbacks: [], heldChecks: [], holdBlocked: [], releasedForSwap: 0,
         // ⛓ W8 — cold starts adopted as they stand, and the clause each refused one failed
         adopted: 0, adoptRefused: [],
+        // ⛓ L74 SILENT STALL — a throw that left an engine timer callback (`guarded`): `{at, phase, message}`, each one failed by name
+        timerThrows: [],
         // ⛓ WALK IDENTITY (a) — each adoption put on the live clock: begin-staged, shadow and held clocks, the shift (or why not)
         adoptClock: [],
         // ⛓ WALK IDENTITY — arrivals the glue told the engine to expect (a Restart's start hop)
@@ -363,10 +367,21 @@ export function createWasmPlayback({
         try { win = getWin?.() ?? null; } catch { win = null; }
         return win?.setTimeout ? win : globalThis;
     };
+    /**
+     * ⛓ L74 SILENT STALL — every engine timer callback runs under this: a throw that leaves a 0 ms callback kills the
+     * chain that would have read the deadline (a pageerror, the phase frozen, the leg a silent timeout — CI sweep
+     * 38185510484, leg 624). It becomes the goal's NAMED failure instead.
+     */
+    function guarded(fn) {
+        try { fn(); } catch (err) {
+            stats.timerThrows.push({ at: fn.name || 'anonymous', phase, message: String(err?.message ?? err).split('\n')[0] });
+            fail(`the wasm playback engine threw in ${fn.name || 'a timer callback'} (phase ${phase}): ${String(err?.message ?? err).split('\n')[0]}`);
+        }
+    }
     function schedule(fn, ms) {
         const my = token;
         const t = T();
-        timer = { t, h: t.setTimeout(() => { if (my === token) fn(); }, ms) };
+        timer = { t, h: t.setTimeout(() => { if (my === token) guarded(fn); }, ms) };
     }
     function cancelTimer() {
         if (timer) { try { timer.t.clearTimeout(timer.h); } catch { /* gone */ } timer = null; }
@@ -615,7 +630,14 @@ export function createWasmPlayback({
         const se = newGame ? { ...arrived, beginEntry: newGame } : arrived;
         const be = se.beginEntry ?? null;
         // Always through `awaitCeremony`, even when none shows now: the scene's last frame queues the tutorial's Help.
-        if (newGame && !ceremonyOver) return { ceremony: newGameCeremony({ status: st, state }), begin: arrived.beginEntry };
+        // ⛓ CUTSCENE UNDER ANY RECORD — the wind scene can show under a record that is not the arm's −1, and
+        // `cutscene` is a static: a re-arrival replays it (the plan's tick 1 dead, the divergence an exact repeat).
+        // Measured on `tutorial-walk-procgen-seedling` (solo, 3 reds in 8 local runs): begin.level 0 (the generated
+        // set's explicit start), `cutscene[0]` true, `receive_input` false. So a showing scene is waited out under a
+        // resolved record too (an unresolved −1 keeps its named `begin` refusal).
+        const ceremony = newGameCeremony({ status: st, state });
+        const sceneUnderRecord = ceremony === 'cutscene' && Number(be?.['begin.level']) >= 0;
+        if ((newGame || sceneUnderRecord) && !ceremonyOver) return { ceremony, begin: arrived.beginEntry };
         let staging = null;
         let shadow = null;
         if (be && be['begin.level'] === st.level) {
@@ -684,7 +706,7 @@ export function createWasmPlayback({
     function awaitCeremony(first) {
         phase = 'ceremony';
         deadline = now() + CEREMONY_WAIT_MS;
-        const c = { level: goal.level, began: first.ceremony ?? 'none', cutscene: first.ceremony === 'cutscene', dismissedAt: null, quietSince: null, adopted: false };
+        const c = { level: goal.level, began: first.ceremony ?? 'none', cutscene: first.ceremony === 'cutscene', dismissedAt: null, quietSince: null, adopted: false, notedAt: null };
         stats.ceremonies.push(c);
         note(first.ceremony === 'cutscene' ? 'waiting out the new game\'s opening cutscene (no re-arrival: it would replay it)'
             : first.ceremony === 'tutorial' ? 'dismissing the new game\'s arrow-key tutorial' : 'checking the new game\'s room is past its ceremony');
@@ -699,7 +721,18 @@ export function createWasmPlayback({
             }
             const ceremony = newGameCeremony({ status: st, state });
             if (ceremony) c.quietSince = null;
-            if (ceremony === 'cutscene') { c.cutscene = true; schedule(step, CEREMONY_POLL_MS); return; }
+            if (ceremony === 'cutscene') {
+                c.cutscene = true;
+                // The scene can outlast a reader's same-words stall rule (the tutorial walk's 60 s, measured ~68 s at
+                // load 9): the note says how far into its bounded wait it is, every CEREMONY_NOTE_EVERY_MS.
+                const waited = Math.floor((now() - (deadline - CEREMONY_WAIT_MS)) / CEREMONY_NOTE_EVERY_MS) * CEREMONY_NOTE_EVERY_MS;
+                if (waited > 0 && waited !== c.notedAt) {
+                    c.notedAt = waited;
+                    note(`waiting out the new game's opening cutscene (no re-arrival: it would replay it) — ${waited / 1000} s of at most ${CEREMONY_WAIT_MS / 1000} s`);
+                }
+                schedule(step, CEREMONY_POLL_MS);
+                return;
+            }
             if (ceremony === 'tutorial') {
                 if (c.dismissedAt !== null) {
                     if (st.game_time - c.dismissedAt > TUTORIAL_FADE_FRAMES) {
@@ -848,7 +881,7 @@ export function createWasmPlayback({
     function scheduleWatch(fn, ms) {
         const my = watchToken;
         const t = T();
-        watchTimer = { t, h: t.setTimeout(() => { if (my === watchToken) fn(); }, ms) };
+        watchTimer = { t, h: t.setTimeout(() => { if (my === watchToken) guarded(fn); }, ms) };
     }
     /** Start watching for arrivals from the begin record live NOW (after a `botLoadTape` it reads null). */
     function startWatch(at = null) {
@@ -1088,15 +1121,26 @@ export function createWasmPlayback({
         const record = records.get(goal.level) ?? null;
         spawn = r.spawn;
         if (r.shipped.length === 0) {
-            const mapped = arrivalSolverGoal(goal, { staging: r.staging, levelSource, record });
+            // ⛓ L74 SILENT STALL — the model may REFUSE the room the game is in (a `LevelWorldError`: e.g. a clear list
+            // naming a non-arena fallrock, "A clear list must never name it"). That refusal is the goal's, by name.
+            let mapped;
+            let request;
+            try {
+                mapped = arrivalSolverGoal(goal, { staging: r.staging, levelSource, record });
+                if (mapped.goal) {
+                    request = arrivalSolveRequest({ staging: r.staging, solverGoal: mapped.goal, levelSource, records,
+                        name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true });
+                }
+            } catch (err) {
+                fail(`the model refused to build level ${goal.level} from the arrival: ${String(err?.message ?? err).split('\n')[0]}`);
+                return;
+            }
             if (!mapped.goal) {
                 // ⛓ EVENT GOALS — an event the solver's clear-tag refuses carries its reason (`obstacle.kind 'clear-tag'`)
                 fail(`the solver has no goal for ${goal.name ?? goal.kind}: ${mapped.walker}`,
                     mapped.refusal ? { obstacle: mapped.refusal } : null);
                 return;
             }
-            const request = arrivalSolveRequest({ staging: r.staging, solverGoal: mapped.goal, levelSource, records,
-                name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true });
             startSolve(request, { staging: r.staging, continuation: false });
             return;
         }
@@ -1721,7 +1765,7 @@ export function createWasmPlayback({
     function scheduleDelivery(fn, ms) {
         const my = deliveryToken;
         const t = T();
-        deliveryTimer = { t, h: t.setTimeout(() => { if (my === deliveryToken) fn(); }, ms) };
+        deliveryTimer = { t, h: t.setTimeout(() => { if (my === deliveryToken) guarded(fn); }, ms) };
     }
     function kickDelivery() { if (!deliveryTimer && !landing) scheduleDelivery(deliveryStep, 0); }
     const later = () => scheduleDelivery(deliveryStep, DRAIN_MS);
@@ -2065,7 +2109,7 @@ export function createWasmPlayback({
         get stats() {
             return { ...stats, hostStarts: [...stats.hostStarts], keyReleases: [...stats.keyReleases], history: [...history],
                 forcedBy: { ...stats.forcedBy }, fallbacks: [...stats.fallbacks], heldChecks: [...stats.heldChecks],
-                holdBlocked: [...stats.holdBlocked], adoptRefused: [...stats.adoptRefused],
+                holdBlocked: [...stats.holdBlocked], adoptRefused: [...stats.adoptRefused], timerThrows: stats.timerThrows.map((r) => ({ ...r })),
                 ceremonies: stats.ceremonies.map((c) => ({ ...c })), dismissed: [...stats.dismissed],
                 deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred],
                 swapPushes: stats.swapPushes.map((r) => ({ ...r })), shipClock: stats.shipClock.map((r) => ({ ...r })),

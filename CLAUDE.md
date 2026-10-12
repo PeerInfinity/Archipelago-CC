@@ -261,7 +261,7 @@ A subscriber that threw inside the event bus fails the run even when every row i
 green (zero tolerance): an `IN-APP HANDLER ERRORS` block names the row(s). A flake's
 RATE comes from CI, not the box: dispatch `test-substrates-repeat.yml` (`-f test=<id>
 -f repeat=8`; its summary's first line is `Rate: k/N passed` — a green job only means
-it ran N times). Detail: `docs/json/developer/guides/testing-pipeline.md`.
+it ran N times; a `--test` row takes WebGPU from its batch, so a wasm row needs no flag). Detail: `docs/json/developer/guides/testing-pipeline.md`.
 
 A poll that times out reports why, so a red run does not need a rerun to
 attribute:

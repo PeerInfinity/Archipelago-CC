@@ -9,6 +9,7 @@ import { substrateRegistryEntry as genericFlashEntry } from '../flashSubstrate/f
 import { substrateRegistryEntry as flashSeedlingGenEntry } from './flashSeedlingGenLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateIdFor } from '../procgenPipeline/regionAtlasCompiler.js';
+import { captureShapeOf, solverKindOf } from '../procgenCore/substratePredicates.js';
 
 describe('flash_seedling substrate entry', () => {
     it('registers itself on import — headless callers get it from the import alone', () => {
@@ -59,10 +60,45 @@ describe('flash_seedling substrate entry', () => {
     it('⛓ PLAY CLOCK (⚖ "Drain play time too"): it declares playClock, so Loops drains its coarse regions per GAME second', () => {
         // The host reports the game's own clock (`seedlingPlayClock.js`); `loopState._regionDrainsTime` reads this flag.
         expect(substrateRegistryEntry.loopSupport.playClock).toBe(true);
-        // Beside §5.63's executeVia, and on THIS entry only: the generated entry and the generic flash entry declare none.
+        // Beside §5.63's executeVia; the generic flash entry declares none (the generated entry: the block below).
         expect(substrateRegistryEntry.loopSupport.executeVia).toBe('solver');
-        expect(flashSeedlingGenEntry.loopSupport?.playClock).toBeUndefined();
         expect(genericFlashEntry.loopSupport.playClock).toBeUndefined();
+    });
+
+    describe('⛓ GENERATED ROOMS IN LOOP MODE: flash_seedling_gen declares what flash_seedling does', () => {
+        /**
+         * What Loops reads off an entry, each through Loops' own reader: `regionSolver`'s half (solverKindOf),
+         * `_shouldBotExecuteCurrentAction`'s queueActions gate for a check, and `_regionDrainsTime` (a COARSE
+         * capture shape that declares playClock). Each fact names the declaration it rests on.
+         */
+        const loopFacts = (entry) => ({
+            executeVia: solverKindOf(entry) === 'walkTo',
+            locationCheck: !!entry.loopSupport?.queueActions?.includes('locationCheck'),
+            playClock: captureShapeOf(entry) === 'coarse' && entry.loopSupport?.playClock === true,
+        });
+        const ALL = { executeVia: true, locationCheck: true, playClock: true };
+
+        it('a Bot block walks a generated room, a queued check is walked, and its play time drains', () => {
+            expect(loopFacts(flashSeedlingGenEntry)).toEqual(ALL);
+            expect(loopFacts(substrateRegistryEntry)).toEqual(ALL);
+            // The same loopSupport, field for field — one declaration, two entries.
+            expect({ ...flashSeedlingGenEntry.loopSupport, queueActions: [...flashSeedlingGenEntry.loopSupport.queueActions] })
+                .toEqual({ ...substrateRegistryEntry.loopSupport, queueActions: [...substrateRegistryEntry.loopSupport.queueActions] });
+            // The controller the Bot block drives is the entry's own (null headless; flashPanel injects it).
+            expect(typeof flashSeedlingGenEntry.getPlaybackController).toBe('function');
+        });
+
+        // ⛓ MUTANTS — each declaration dropped from the generated entry turns exactly its own fact red, by name.
+        for (const [key, drop] of [
+            ['executeVia', ({ executeVia: _x, ...rest }) => rest],
+            ['locationCheck', (ls) => ({ ...ls, queueActions: ['regionMove'] })],
+            ['playClock', ({ playClock: _x, ...rest }) => rest],
+        ]) {
+            it(`mutant: ${key} dropped → only "${key}" is lost`, () => {
+                const mutant = { ...flashSeedlingGenEntry, loopSupport: drop(flashSeedlingGenEntry.loopSupport) };
+                expect(loopFacts(mutant)).toEqual({ ...ALL, [key]: false });
+            });
+        }
     });
 
     it('round-trips an atlas payload, keying exits on the AP exit name', () => {

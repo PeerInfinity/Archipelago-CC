@@ -16,11 +16,23 @@ import Utils
 from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
+from . import format_fallback
+# The import failure, kept AS TEXT: when it is set, a rule_builder/both export
+# falls back to AST format and says why (format_fallback.py).
+# ⛔ Never keep the exception object itself: its traceback's frames chain (f_back)
+# up to whoever imported this module — the JSON Tools export hook, whose frame
+# holds the Spoiler and so the MultiWorld — and Generate.py's leak assert fires.
+_CONVERTER_IMPORT_ERROR: Optional[str] = None
+_CONVERTER_IMPORT_TRACEBACK: Optional[str] = None
 try:
     from .converter import convert_rules_file_to_rule_builder
-except (ImportError, AttributeError):
-    # Converter requires the fork's extended rule_builder package.
-    # When unavailable, rule_builder format is not supported — ast format still works.
+except (ImportError, AttributeError) as _e:
+    # Converter requires the fork's extended rule_builder package. When it does
+    # not import, the rule_builder format is not supported — ast format still
+    # works. The cause may be a missing module OR a bug in the import chain, so
+    # it is kept and named rather than assumed.
+    _CONVERTER_IMPORT_ERROR = format_fallback.describe_exception(_e)
+    _CONVERTER_IMPORT_TRACEBACK = format_fallback.format_traceback(_e)
     convert_rules_file_to_rule_builder = None  # type: ignore[assignment]
 from .foreign_rule_builder import (
     ForeignRuleSerializationError,
@@ -2831,7 +2843,7 @@ def create_ordered_export_data(data, game_name=None, player_id=None):
 
 
 # --- Game Rules Export ---
-def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False, staging_dir: Optional[str] = None) -> Dict[str, str]:
+def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False, staging_dir: Optional[str] = None, format_fallback_from: Optional[Dict[str, str]] = None) -> Dict[str, str]:
     """
     Exports game rules to JSON files for frontend consumption.
     Also saves a copy of rules to frontend/presets with game name as prefix if save_presets is True.
@@ -2849,6 +2861,9 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         clear_all_presets: If True, delete all existing presets for ALL games before generating
         staging_dir: Optional per-seed staging directory (Main's zip staging folder) whose
             files are mirrored into the preset directory alongside this seed's artifacts.
+        format_fallback_from: Set by a caller that already fell back to "ast" before
+            calling ({"requested": ..., "reason": ...}); the export is then recorded
+            and summarised as a fallback (format_fallback.py).
 
     Returns:
         Dict containing paths to generated files
@@ -2898,9 +2913,29 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     ast_data = cleaned_data
     rb_data = None
 
+    # A fallback from the requested format, when one happens: the record that
+    # goes into every slot's exporter block and the end-of-run summary.
+    fallback_record = None
+    if format_fallback_from is not None:
+        # The caller (the JSON Tools export hook) already fell back before calling.
+        fallback_record = format_fallback.make_record(
+            format_fallback_from.get("requested", "rule_builder"), "ast",
+            format_fallback_from.get("reason", "unknown"))
+        # An import-time fallback: expected on a compiled install (WARNING there).
+        format_fallback.log_fallback(fallback_record, expected=format_fallback.is_compiled_install())
+
     if rules_json_format in ("rule_builder", "both"):
         if convert_rules_file_to_rule_builder is None:
-            logger.warning("Rule Builder converter not available (extended rule_builder not installed), falling back to AST format")
+            expected = format_fallback.is_compiled_install()
+            if _CONVERTER_IMPORT_ERROR is not None:
+                reason = "the Rule Builder converter failed to import: " + _CONVERTER_IMPORT_ERROR
+                format_fallback.log_traceback_once(
+                    "exporter.converter import failed", _CONVERTER_IMPORT_TRACEBACK or "", expected)
+            else:
+                reason = "the Rule Builder converter is not available"
+            fallback_record = format_fallback.make_record(rules_json_format, "ast", reason)
+            # An import-time fallback: expected on a compiled install (WARNING there).
+            format_fallback.log_fallback(fallback_record, expected=expected)
             rules_json_format = "ast"
 
     if rules_json_format in ("rule_builder", "both"):
@@ -2915,13 +2950,16 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                     if len(conversion_warnings) > 5:
                         logger.debug(f"  ... and {len(conversion_warnings) - 5} more warnings")
             except Exception as e:
-                logger.error(f"Error converting to Rule Builder format: {e}")
+                reason = "converting to Rule Builder format raised " + format_fallback.describe_exception(e)
+                logger.debug("Rule Builder conversion traceback", exc_info=True)
                 if rules_json_format == "rule_builder":
-                    logger.warning("Falling back to AST format due to conversion error")
+                    fallback_record = format_fallback.make_record("rule_builder", "ast", reason)
                     rules_json_format = "ast"
                 else:
-                    logger.warning("Skipping Rule Builder output due to conversion error")
+                    # "both": the primary file is AST as well; the _rules-ast.json is still written.
+                    fallback_record = format_fallback.make_record("both", "ast", reason, "dropped")
                     rb_data = None
+                format_fallback.log_fallback(fallback_record)
 
     # --- Helper function to write export data to a file ---
     def write_export_data(data, filepath):
@@ -3016,6 +3054,9 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         # For "rule_builder" or "both", use Rule Builder format as primary
         primary_data = rb_data if rb_data is not None else ast_data
 
+    if fallback_record is not None:
+        format_fallback.stamp(primary_data, fallback_record, multiworld.player_ids)
+
     combined_rules_path = os.path.join(output_dir, f"{filename_base}_rules.json")
     ordered_data = create_ordered_export_data(primary_data, game_name=combined_game_name)
 
@@ -3057,6 +3098,13 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                 player_ast_data = create_ordered_export_data(ast_data, game_name=player_game_name, player_id=player_str)
                 if write_export_data(player_ast_data, player_ast_path):
                     results[f"rules_p{player_str}_ast"] = player_ast_path
+
+    if fallback_record is not None:
+        # The files written in a format other than the one asked for: the
+        # primary rules.json and the per-player files (never the _rules-ast.json).
+        format_fallback.note(fallback_record, [
+            path for key, path in results.items()
+            if not key.endswith('_ast') and not str(path).startswith('ERROR')])
 
     # If save_presets is False, skip the preset saving parts
     if not save_presets:

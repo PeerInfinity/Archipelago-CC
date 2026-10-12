@@ -442,7 +442,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
 
   // ⛓ PLAY CLOCK (⚖ "Drain play time too") — in Loop mode, the GAME's clock (`botStatus().game_time`) on the JS and
   // wasm runtimes, reported as `substrate:playClock` for the AP region the game plays. Loops keeps a report only for
-  // a substrate that declares `loopSupport.playClock` (flash_seedling).
+  // a substrate that declares `loopSupport.playClock` (flash_seedling, flash_seedling_gen).
   seedlingPlayClock = new SeedlingPlayClock({
     eventBus: getModuleEventBus(),
     getSurface: () => activePanelInstance?.seedlingPlaybackSurface?.() ?? null,

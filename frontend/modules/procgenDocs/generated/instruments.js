@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 84,
+            "count": 86,
             "id": "plan"
         },
         {
-            "browser": 76,
-            "count": 123,
+            "browser": 77,
+            "count": 124,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 415,
-        "browser": 141,
-        "cited": 211,
-        "files": 427,
+        "blockStyle": 418,
+        "browser": 142,
+        "cited": 215,
+        "files": 430,
         "lineStyle": 12,
-        "withDocblock": 427,
-        "withFlags": 343
+        "withDocblock": 430,
+        "withFlags": 346
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7762,6 +7762,64 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "plan",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-hammer-d-ghostwall.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-d-ghostwall — ⛓⛓⛓ SEEDLING HAMMER-PHASE D, D2: THE GHOST SWORD PRESSES A SPINNER THROUGH A WALL.",
+            "path": "scripts/procgen/plan-seedling-hammer-d-ghostwall.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "plan-seedling-hammer-g1-ghostkill.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-g1-ghostkill — ⛓⛓⛓ SEEDLING HAMMER-PHASE G1, D2: THE KILL RUNG'S GHOST PRESS KILL, ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -13219,6 +13277,63 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "probe",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-staged-hits.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "keys2"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "n2"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "t1"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-staged-hits — ⛓ seedling-fidelity-stagedhits D3: THE PLAYER'S DAMAGE ACROSS A RE-STAGE IN ONE WORLD, ASKED OF THE GAME.",
+            "path": "scripts/procgen/probe-seedling-staged-hits.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -13529,6 +13644,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape-file"
                 },
                 {
                     "how": [
@@ -15823,7 +15944,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "seedling",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "out",
