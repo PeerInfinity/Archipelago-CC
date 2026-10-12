@@ -17204,6 +17204,46 @@ export function replayOntoFork(r, perTick, equips, { stop = null, to = perTick.l
     return r;
 }
 
+/**
+ * ⛓ seedling-fidelity-unbilledgate D2 — UNBILLED_DAMAGE: A SEGMENT WHOSE DRIVE TOOK DAMAGE NOTHING BILLED IS NOT A SOLVE.
+ *
+ * `solveSegment` returned success on reaching its goals. The forced-hit rung (`FORCED_HITS`) BILLS the hits it proved
+ * unavoidable (`forcedHits[].billed`); the walk, kill and detour executors drive on through a hit or a death their own
+ * preview did not see — L74LEG624's leg-624 drafts (a game-confirmed bulb hit at t362; 4–5 lava deaths) and the JS
+ * arc's sweep-5 (17 legs with game hits no plan billed) came back as successes.
+ * ON: at success, any `playerHits` row of THIS segment that `forcedHits` did not bill, or any `playerDeaths` row,
+ * refuses the segment by name (`obstacle.kind: 'unbilled-damage'`). "This segment" is the run clock after the caller's
+ * handover (`run.ticksCompleted` at entry): a replayed `prefix`'s hits are the prefix's (STAGEDHITS), not this one's.
+ * OFF: byte-identical — the check is not asked (the census window below is read-only and null by default).
+ * `CONTACT_FIDELITY.unbilledDamageGate`; `SEEDLING_UNBILLED_DAMAGE_GATE=0|1` for a node measurement.
+ */
+export const UNBILLED_DAMAGE = {
+    get enabled() { return CONTACT_FIDELITY.unbilledDamageGate === true; },
+    set enabled(v) { CONTACT_FIDELITY.unbilledDamageGate = v === true; },
+};
+
+/**
+ * The census window (D1): `sink({name, boot, prefix, ticks, unbilled, deaths, billed, gate})`, called at every segment
+ * that reached its goals, before the gate is asked; `null` (the default) asks nothing. Read-only: it never decides.
+ */
+export const UNBILLED_DAMAGE_TRACE = { sink: null };
+
+/**
+ * The damage a segment took that no plan billed: its `playerHits` rows after run clock `since` not in
+ * `forcedHits[].billed` (matched on `t:source:id`), and its `playerDeaths` rows after `since`. `tapeOf(t)` maps a run
+ * clock to the tape tick (`perTick` index) of the advance that reached it (dead frames make them differ).
+ */
+export function unbilledDamageOf(run, since, forcedHits = [], tapeOf = () => null) {
+    const key = (h) => `${h.t}:${h.source}:${h.id}`;
+    const billed = new Set(forcedHits.flatMap((f) => f.billed ?? []).map(key));
+    const unbilled = (run.ledger('playerHits') ?? []).filter((h) => h.t > since && !billed.has(key(h)))
+        .map((h) => ({ t: h.t, tick: tapeOf(h.t), level: h.level, source: h.source, id: h.id ?? null, hits: h.hits,
+            died: h.died === true }));
+    const deaths = (run.ledger('playerDeaths') ?? []).filter((d) => d.t > since)
+        .map((d) => ({ t: d.t, tick: tapeOf(d.t), level: d.level, source: d.source, id: d.id ?? null }));
+    return { unbilled, deaths, billed: billed.size };
+}
+
 /** The deadline the segment being solved runs under — `null` is "none". */
 let activeDeadline = null;
 
@@ -17515,6 +17555,12 @@ function solveSegmentUnder({
     /** ⛓ hammer-phase B3 — the tape tick of every dash `dashesPressed` counted, so a rewind can un-count the tail. */
     const dashTicks = [];
     /**
+     * ⛓ UNBILLEDGATE D2 — run clock → tape tick, kept only when the gate or its census asks (`UNBILLED_DAMAGE`): each
+     * advance records the clock it ended on; a later advance to the same clock (after a rewind) overwrites it.
+     */
+    const watchDamage = UNBILLED_DAMAGE.enabled || UNBILLED_DAMAGE_TRACE.sink !== null;
+    const tapeAtClock = watchDamage ? new Map() : null;
+    /**
      * ⛓ hammer-phase B3 — the run as the segment drives it is a VIEW over an inner run, and a rewind builds the same
      * view over a fresh one (`tapeTick` resumes at the rewind's tick). One function, so the two cannot differ.
      */
@@ -17562,6 +17608,7 @@ function solveSegmentUnder({
                     inner.takeApItem({ level: pre.level, id: a.id, tag: a.tag });
                 }
             }
+            if (tapeAtClock !== null) tapeAtClock.set(inner.ticksCompleted, tapeTick);
             tapeTick += 1;
             return out;
         };
@@ -21726,6 +21773,38 @@ function solveSegmentUnder({
         builder.record({ ...row, keys: [...perTick[row.tick]].sort() });
     }
     const trace = builder.finish(perTick.length);
+
+    /**
+     * ⛓ UNBILLEDGATE D2 — THE ACCEPTANCE CHECK (`UNBILLED_DAMAGE`, above): the goals are met; was the drive hit where
+     * no plan billed it, or did it die? Counted from the handover (`ticked`), so a replayed prefix's hits stay out.
+     */
+    if (watchDamage) {
+        const tapeOf = (t) => {
+            let best = null;
+            for (const [clock, tick] of tapeAtClock) if (clock >= t && (best === null || clock < best[0])) best = [clock, tick];
+            return best === null ? null : best[1];
+        };
+        const dmg = unbilledDamageOf(run, ticked, forcedHits, tapeOf);
+        const gate = UNBILLED_DAMAGE.enabled;
+        UNBILLED_DAMAGE_TRACE.sink?.({ name, boot: { level: boot.level, x: boot.x, y: boot.y }, prefix: prefix.length,
+            ticks: perTick.length, ...dmg, gate });
+        if (gate && (dmg.unbilled.length > 0 || dmg.deaths.length > 0)) {
+            const first = dmg.unbilled[0] ?? dmg.deaths[0];
+            const during = rows.filter((r) => first.tick !== null && r.tick <= first.tick).at(-1) ?? null;
+            const said = (h) => `t${h.tick ?? '?'} (run t${h.t}, L${h.level}) ${h.source}:${h.id ?? '?'}`;
+            refuse(`solverBot(${name}): UNBILLED DAMAGE — the segment reached its ${goals.length} goal(s), but its drive `
+                + `took ${dmg.unbilled.length} hit(s) no plan billed [${dmg.unbilled.map(said).join(', ')}]`
+                + (dmg.deaths.length ? ` and died ${dmg.deaths.length} time(s) [${dmg.deaths.map(said).join(', ')}]` : '')
+                + ` (the forced-hit rung billed ${dmg.billed}). A walk, kill or detour certified clean by its preview and `
+                + 'hit on its drive is not the plan the preview certified: the segment is refused rather than returned '
+                + 'as a solve (`UNBILLED_DAMAGE`).', {
+                goal: during?.goal ?? null,
+                obstacle: { kind: 'unbilled-damage', id: first.id, tick: first.tick, t: first.t, level: first.level,
+                    source: first.source, hits: dmg.unbilled.length, deaths: dmg.deaths.length, billed: dmg.billed,
+                    damage: [...dmg.unbilled], died: [...dmg.deaths] },
+            });
+        }
+    }
 
     const result = {
         perTick,
