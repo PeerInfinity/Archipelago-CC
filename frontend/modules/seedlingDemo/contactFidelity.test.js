@@ -21,7 +21,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { replayCapture } from '../../../scripts/procgen/replay-seedling-contact-capture.mjs';
-import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
+import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
 
 const DIR = join(dirname(fileURLToPath(import.meta.url)), 'fixtures', 'contact-witness');
 const load = (id) => JSON.parse(readFileSync(join(DIR, `${id}.json`), 'utf8'));
@@ -94,11 +94,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
-    // ⛓ fidelity L74ARRIVAL: a row whose switch ships OFF is still at its tick at the defaults
+    // ⛓ fidelity L74ARRIVAL: a row whose switch is OFF in this process (589's ships OFF) is still at its tick
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY).each(Object.entries(ROWS))('leg %s — the shipped defaults: fixed rows at 0 px, residue at its tick', async (id, [t, sw]) => {
         const r = await replayCapture(load(id));
         expect(r.error).toBeNull();
-        if (sw && CONTACT_FIDELITY_DEFAULTS[sw]) expect(r.worst).toBe(0);
+        if (sw && CONTACT_FIDELITY[sw]) expect(r.worst).toBe(0);
         else expect(r.firstDiff?.t).toBe(t);
     });
 

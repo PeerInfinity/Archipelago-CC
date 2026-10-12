@@ -16614,6 +16614,46 @@ preview and drive parted at t53: `chaserForecastNow` never ran K2's `LavaRunner`
 - **A body read through the player is still a witness.** The game cannot report a `FallRock`; a player who rests on
   its top for twelve ticks at 0 px is the rock's position and solidity, measured.
 
+### Seedling fidelity L74ARRIVAL — a button under a room arrival presses on the first live frame
+
+Wave 15 (model coverage). The JS arc (js-6) handed over the L74 arrival frame: every leg-624 witness parted from the game
+at t1–t2 (Δy +0.8/−1.35, re-converging at t3). The report is `CC/docs/cloud-reports/seedling-fidelity-l74arrival.md`.
+One switch, OFF (`contactFidelity.js`): `arrivalButtonArm` (`SEEDLING_ARRIVAL_BUTTON_ARM=0|1`).
+
+**D1 — the arrival arm.** `Button.update` (`Button.as:27-39`) collides `["Player","Enemy","Solid"]` at its own cell on
+every update, and on a world's first live frame it runs BEFORE `Player.update` against the cell the player was built
+in; `FallRock.fall` (`FallRock.as:103-109`) raises `Game.freezeObjects` on that frame. `levelRun` armed a button only
+from a POST-MOVE box (the end of a tick, both call sites), so the first frame never pressed one and the freeze came a
+tick late. ON: `advance` arms from the arrival box when `firstTickInWorld`, before the pending-fall resolve, so the
+first live tick is the drop's frame A. Witness `l74arrival-624-on-plan` (p4f headless, leg 624's solved plan booted on
+`button@288,128`, 332 samples, recorded ON): every sample at 0 px; OFF parts at t1–t2 only. The sweep's capture
+`contact-witness/589` (the same arrival, t0–t2) reproduces ON; its residue row names the switch. The four L74LEG624
+evidence tapes (`on-plan`, `lapse-plan`, `lapse7-stance-88-72`, `policy-walk-lapse`) go 2 mismatched ticks → 0 against
+their recorded game rows; `postfall-reentry` ({74,2} staged, the rock already down) is 0 px either way.
+
+**D2 — the door arrival.** Census (`arrival-census.json`: 116 levels, 280 doors, 34 pressers, 10 fallrocks): three door
+landings overlap a presser (L37→L38 `buttonroom@144,288`, L108→L107 `buttonroom@288,176`, L73→L74 `button@288,128`) and
+ONE reaches a rock, the D1 cell. No pit fall lands in L29 or L74 (the twelve `fallthrough` blocks), and a death
+respawns at its world's ctor cell, so that button is the switch's whole reachable set. Witness `l74arrival-door-l73`
+(p4f): L73 at leg 622's staging, `up` through `teleporter@64,0`, the arrival at t4, the game frozen at t5; ON every one
+of 131 samples at 0 px (the L73 forced hit at t2 included), OFF parts at t5–t6. js-6's scratch gate
+(`ticksCompleted === 0`) covers a boot only: mutant M2 (that gate) reddens exactly the door row.
+
+**D3 — movers.** Every committed tape: tapeRunner 611 rows `86af8525…` ON and OFF (no roster tape boots on, or crosses
+into, a rock-dropping button). The survey's two button rooms (steps 48 L29, 162 L74) boot elsewhere; run locally ON and
+OFF their rows are byte-equal (379 t, 321 t, = CI 38310171450). Divergence legs that boot on the button: 624, 625, 626
+(`in_L73_64_0`). Node solves (589's staging, items + slots `[0,1,3,2]`): 624 REFUSED both ways, the same refusal (it
+needs `strikeIframeLapse`); 625 REFUSED both ways, OFF on a model artifact (a t0 sword press into the late freeze), ON
+because its exit (`teleporter@288,144`) lies under the fallen rock — the game's own state; 626 SOLVED 396 t both ways,
+the same keys (the full pass REFUSED → 399 t). 626's plan on p4f: ON 0 px at every tick but the last (t396, the
+collect; the same in OFF), OFF also t1–t2. A default flip moves two bounded rows (the defaults pin, `ships OFF`).
+
+**Trap candidates.**
+- **A post-move box has no tick 0.** An arm derived from where the previous tick LEFT the player cannot see the frame
+  that no previous tick produced; the build cell is that frame's position, and the game's update order reads it.
+- **"Tick 0" is not "the world's first tick".** A boot, a door, a death and an ending reboot each begin a world;
+  `firstTickInWorld` names all four, `ticksCompleted === 0` only the first.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
