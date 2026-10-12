@@ -23,6 +23,8 @@ import { ANYTIME_PASSES, solveAnytime, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService, mountedRecordsOf } from '../seedlingDemo/wasmWalkTape.js';
 import { assembleGeneratedSeedlingSet } from '../seedlingDemo/seedlingGeneratedSet.js';
+import { AXE_DODGE_ASK_PER_PREVIEW } from '../seedlingDemo/solverBot.js';
+import { AXE_DODGE_ASK_PER_PREVIEW_DEFAULT, applyAxeDodgeAsk, formatAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskHook.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -167,6 +169,7 @@ function engineOver(arrival, opts = {}) {
         records: opts.records ?? RECORDS, generated: opts.generated ?? false, producer: opts.producer ?? null, solveService: service, timers, now: opts.now ?? (() => (t += 1)),
         ...(opts.getBudgetWork ? { getBudgetWork: opts.getBudgetWork } : {}),
         ...(opts.getUpgradeWindowWork ? { getUpgradeWindowWork: opts.getUpgradeWindowWork } : {}),
+        ...(opts.getAxeDodgeAskPerPreview ? { getAxeDodgeAskPerPreview: opts.getAxeDodgeAskPerPreview } : {}),
         ...(opts.backstopMs ? { backstopMs: opts.backstopMs } : {}),
         onNote: (n) => notes.push(n), onFailed: (r, x) => { failures.push(r); failExtras.push(x ?? null); }, onDone: (d) => dones.push(d),
     });
@@ -603,6 +606,23 @@ describe('⛓ ANYTIME / O2 / O3 → DETERMINISTIC BUDGET — a solve cut at its 
         runUntil(e, () => e.failures.length > 0, 80000);
         expect(e.failures[0]).toBe('the solver declined Starting House - Chest in level 86 (pass dashless): combat ladder exhausted '
             + `— and the solver ran out of ${SOLVER_BUDGET_WORK}, then ${R} work units on its held retry on location in level 86`);
+    });
+
+    it('⛓ AXE_DODGE HOOK — the knob (`getAxeDodgeAskPerPreview`, the setting) reaches the solve: an off-default value is applied to the model at the solve\'s start and stamped on its answer; `default` stamps nothing', () => {
+        const off = formatAxeDodgeAsk(!AXE_DODGE_ASK_PER_PREVIEW_DEFAULT);
+        let knob = off;
+        try {
+            const e = engineOver(A, { getAxeDodgeAskPerPreview: () => knob });
+            e.engine.walkTo(CHEST);
+            runUntil(e, () => e.service.seen.length > 0, 20000);
+            expect(e.service.seen[0].result.axeDodgeAskPerPreview).toBe(!AXE_DODGE_ASK_PER_PREVIEW_DEFAULT);
+            knob = 'default';
+            const d = engineOver(A, { getAxeDodgeAskPerPreview: () => knob });
+            d.engine.walkTo(CHEST);
+            runUntil(d, () => d.service.seen.length > 0, 20000);
+            expect(d.service.seen[0].result.axeDodgeAskPerPreview).toBeUndefined();
+            expect(AXE_DODGE_ASK_PER_PREVIEW.enabled).toBe(AXE_DODGE_ASK_PER_PREVIEW_DEFAULT);
+        } finally { applyAxeDodgeAsk(null); }
     });
 
     it('⛓ O3 — the knob (`getBudgetWork`, the setting) is the budget: read at each solve, shown, and what is cut', () => {

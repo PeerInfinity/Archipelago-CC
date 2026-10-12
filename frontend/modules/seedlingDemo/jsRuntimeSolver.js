@@ -58,11 +58,12 @@
  */
 
 import { createRunForStaging } from './tapeRunner.js';
-import { DEFAULT_DASH_MODE, solveSegment } from './solverBot.js';
+import { AXE_DODGE_ASK_PER_PREVIEW, DEFAULT_DASH_MODE, solveSegment } from './solverBot.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { TILE_SIZE } from './levelWorld.js';
 import { KILLLOCK_BODIES, killLockBodiesStamp, normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js';
 import { CONTACT_FIDELITY, contactFidelityStamp, normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
+import { axeDodgeAskStamp, withAxeDodgeAsk } from './axeDodgeAskHook.js';
 
 /** Refutations of one goal's plans before the goal FAILS, by name (§2.2 step 5). */
 export const MAX_REFUTATIONS = 3;
@@ -299,6 +300,24 @@ export function betterAnswer(best, next) {
  * `passes`: one `{pass, ok, kind, ticks, ms}` row per pass that ran.
  */
 export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => {}, clock = request.clock ?? (() => Date.now()) } = {}) {
+    // ⛓ AXE_DODGE HOOK — the CONTACT arm below, for fidelity's `AXE_DODGE_ASK_PER_PREVIEW` (`axeDodgeAskPerPreview`,
+    // a boolean, off-default only): solved under it in whichever module instance runs it, and every answer says so.
+    if (typeof request.axeDodgeAskPerPreview === 'boolean') {
+        const { axeDodgeAskPerPreview, ...rest } = request;
+        // The stamp is the value this instance's switch READ while it solved, not the request's echo.
+        let ran = null;
+        const stamp = (a) => {
+            if (!a || ran === null) return a;
+            a.axeDodgeAskPerPreview = ran;
+            if (a.ok && a.plan) a.plan.axeDodgeAskPerPreview = ran;
+            return a;
+        };
+        const out = withAxeDodgeAsk(axeDodgeAskPerPreview, () => {
+            ran = AXE_DODGE_ASK_PER_PREVIEW.enabled;
+            return solveAnytime(rest, { passes, clock, onPass: (one, best, index) => onPass(stamp(one), stamp(best), index) });
+        });
+        return stamp(out);
+    }
     // ⛓ CONTACT HOOK — the KILLLOCK arm below, for the model's contact switches (`contactFidelity`, off-default
     // only): solved under the stamped set in whichever module instance runs it, and every answer says so.
     if (request.contactFidelity) {
@@ -649,8 +668,11 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
             const killLock = rest.killLockBodies ?? killLockBodiesStamp();
             // ⛓ CONTACT HOOK — and the contact switches' set, the same way.
             const contact = rest.contactFidelity ?? contactFidelityStamp();
+            // ⛓ AXE_DODGE HOOK — and an off-default `AXE_DODGE_ASK_PER_PREVIEW`, the same way.
+            const axe = rest.axeDodgeAskPerPreview ?? axeDodgeAskStamp();
             const result = solveAnytime({ ...rest, ...(killLock ? { killLockBodies: killLock } : {}),
-                ...(contact ? { contactFidelity: contact } : {}), levelSource, clock }, { passes, clock });
+                ...(contact ? { contactFidelity: contact } : {}), ...(axe !== null ? { axeDodgeAskPerPreview: axe } : {}),
+                levelSource, clock }, { passes, clock });
             return { settled: true, started: true, result, cancel() {} };
         },
         warm() {},

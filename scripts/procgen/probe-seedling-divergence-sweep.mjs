@@ -51,6 +51,10 @@
  *                        settings (`seedlingContact<Key>`, the ON keys; every other OFF) before the panel boots. The
  *                        panel's instance is read back and printed as a `CONTACT:` line (a mismatch fails the boot);
  *                        each plan the worker solved under an off-default set carries its `contactFidelity` stamp.
+ *   --axe-dodge=on|off   ⛓ AXE_DODGE HOOK: set fidelity's `AXE_DODGE_ASK_PER_PREVIEW` through the flashPanel setting
+ *                        `seedlingAxeDodgeAskPerPreview` before the panel boots (absent = `default`, today's run). The
+ *                        panel's value and the model's own default are printed as an `AXE_DODGE:` line (a mismatch
+ *                        fails the boot); each plan the worker solved off-default carries its `axeDodgeAskPerPreview` stamp.
  *
  * ⛓ THE HANG BOUND (H1: sweep-4 shard 9, CI run 38110831520, sat ~5 h after its 18th page and named nothing). Every
  * harness step between legs — a page's teardown, the browser's close, the launch, the new page, a boot attempt and a
@@ -68,7 +72,7 @@
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -305,6 +309,10 @@ async function main() {
     const { parseContactFidelity, formatContactFidelity } = await import('../../frontend/modules/seedlingDemo/contactFidelity.js');
     const CONTACT = CONTACT_ARG ? parseContactFidelity(CONTACT_ARG, '--contact-fidelity') : null;
     const { CONTACT_SETTING_KEYS } = await import('../../frontend/modules/flashPanel/seedlingContactSettings.js');
+    // ⛓ AXE_DODGE HOOK — `on` / `off`, checked here so a bad value fails before a browser starts
+    const AXE_DODGE = arg('axe-dodge', '') || null;
+    if (AXE_DODGE !== null && AXE_DODGE !== 'on' && AXE_DODGE !== 'off') throw new Error(`--axe-dodge is "${AXE_DODGE}"; the values are on, off`);
+    const { AXE_DODGE_SETTING_KEY } = await import('../../frontend/modules/flashPanel/seedlingAxeDodgeSettings.js');
     const GAME = 'seedling_playthrough';
     const RULES = `frontend/presets/${GAME}/AP_1/AP_1_rules.json`;
     const PRESET = JSON.parse(readFileSync(join(REPO, RULES), 'utf8'));
@@ -421,6 +429,12 @@ async function main() {
                     for (const [key, value] of writes) await settingsManager.updateSetting(key, value);
                 }, Object.entries(CONTACT_SETTING_KEYS).map(([k, key]) => [key, CONTACT[k]]));
             }
+            if (AXE_DODGE) {
+                await page.evaluate(async ([key, value]) => {
+                    const { default: settingsManager } = await import('./app/core/settingsManager.js');
+                    await settingsManager.updateSetting(key, value);
+                }, [AXE_DODGE_SETTING_KEY, AXE_DODGE]);
+            }
             await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
             await rp.waitFor('wasm iframe mounted', async () => page.frames().some((fr) => fr.url().includes(WASM_PAGE)), 180000);
             await rp.waitFor('start button enabled', () => rp.gameFrame().evaluate(() => {
@@ -445,6 +459,19 @@ async function main() {
             console.log(`CONTACT: page ${pageNo}: ${formatContactFidelity(contactNow)}${CONTACT ? ' (--contact-fidelity)' : ''}`);
             if (CONTACT && formatContactFidelity(contactNow) !== formatContactFidelity(CONTACT)) {
                 throw new Error(`--contact-fidelity asked ${formatContactFidelity(CONTACT)}; the page holds ${formatContactFidelity(contactNow)}`);
+            }
+            // ⛓ AXE_DODGE HOOK — the value the panel hands its wasm engine (applied to the engine's model at each solve),
+            // and the model's own default, read back
+            const axeNow = await page.evaluate(async () => {
+                const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
+                const { AXE_DODGE_ASK_PER_PREVIEW_DEFAULT } = await import('./modules/seedlingDemo/axeDodgeAskHook.js');
+                return { setting: p?.seedlingPlaybackSurface?.()?.wasm?.axeDodgeAskPerPreview ?? null,
+                    modelDefault: AXE_DODGE_ASK_PER_PREVIEW_DEFAULT };
+            });
+            console.log(`AXE_DODGE: page ${pageNo}: setting ${axeNow.setting} (model default ${axeNow.modelDefault ? 'on' : 'off'})`
+                + `${AXE_DODGE ? ' (--axe-dodge)' : ''}`);
+            if ((AXE_DODGE ?? 'default') !== axeNow.setting) {
+                throw new Error(`--axe-dodge asked ${AXE_DODGE ?? 'default'}; the panel holds ${axeNow.setting}`);
             }
             await page.evaluate(async () => {
                 const { createLab } = await import('/scripts/procgen/seedlingDivergenceLab.js');

@@ -101,6 +101,8 @@ export async function createLab() {
         getSwapState: () => glue?.swapState?.() ?? null,
         getBudgetWork: () => surface()?.wasm?.solverBudgetWork ?? null,
         getUpgradeWindowWork: () => surface()?.solverUpgradeWindowWork ?? null,
+        // ⛓ AXE_DODGE HOOK — the panel's setting, applied to this engine's model at each solve (the production wiring's)
+        getAxeDodgeAskPerPreview: () => surface()?.wasm?.axeDodgeAskPerPreview ?? null,
         getDelivery: () => surface()?.wasm?.delivery ?? null,
         solveService: service,
         log: (m, level) => { if (level === 'warn') st.notes.push(String(m).slice(0, 400)); },
@@ -211,7 +213,9 @@ export async function createLab() {
             // the split the solve was STAGED with (`stagingFromWasmArrival` reads `static.Rng.split` off botStatus)
             split: s.req.staging?.rng?.split ?? null,
             // ⛓ CONTACT HOOK — the contact set the WORKER solved under, when off-default (its stamp; absent at the defaults)
-            ...(s.res?.contactFidelity ? { contactFidelity: plain(s.res.contactFidelity) } : {}) }));
+            ...(s.res?.contactFidelity ? { contactFidelity: plain(s.res.contactFidelity) } : {}),
+            // ⛓ AXE_DODGE HOOK — the `AXE_DODGE_ASK_PER_PREVIEW` the WORKER solved under, when off-default (its stamp)
+            ...(typeof s.res?.axeDodgeAskPerPreview === 'boolean' ? { axeDodgeAskPerPreview: s.res.axeDodgeAskPerPreview } : {}) }));
         const rows = tap.rows.slice(r0);
         // Divergence detail per diverged play: match it to its plan by order (one ok plan per play)
         const okSolves = solves.filter((s) => s.res?.ok && s.res.plan?.expected);

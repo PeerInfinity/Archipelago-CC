@@ -1,6 +1,7 @@
 import { FlashPanelUI } from './flashPanelUI.js';
 import { killLockSchemaProps } from './seedlingKillLockSettings.js';
 import { contactSchemaProps } from './seedlingContactSettings.js';
+import { axeDodgeSchemaProps } from './seedlingAxeDodgeSettings.js';
 import eventBus from '../../app/core/eventBus.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 // Import side effect registers `flash_seedling` (region-atlas Phase 4).
@@ -229,6 +230,9 @@ export function register(registrationApi) {
       // ⛓ CONTACT HOOK — the model's contact switches, one boolean each, generated from `CONTACT_FIDELITY_KEYS` and
       // defaulted to `CONTACT_FIDELITY_DEFAULTS` (`seedlingContactSettings.js`).
       ...contactSchemaProps(),
+      // ⛓ AXE_DODGE HOOK — fidelity's `solverBot.AXE_DODGE_ASK_PER_PREVIEW`: default | on | off, `default` = the
+      // model's own value (`seedlingAxeDodgeSettings.js` says why it is not a boolean).
+      ...axeDodgeSchemaProps(),
     },
   });
 

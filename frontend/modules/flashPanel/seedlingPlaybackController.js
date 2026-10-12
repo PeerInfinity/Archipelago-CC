@@ -611,6 +611,8 @@ export class SeedlingPlaybackController {
             getBudgetWork: () => this._getSurface?.()?.wasm?.solverBudgetWork ?? null,
             // ⛓ SHOULD-STOP — the upgrade window (work units), read live at each solve's start (null = the engine's own).
             getUpgradeWindowWork: () => this._getSurface?.()?.solverUpgradeWindowWork ?? null,
+            // ⛓ AXE_DODGE HOOK — `on` / `off` / `default`, applied to the engine's own model at each solve.
+            getAxeDodgeAskPerPreview: () => this._getSurface?.()?.wasm?.axeDodgeAskPerPreview ?? null,
             // ⛓ MID-ROOM REPLAN — the delivery gate's handle (re-read per call: a remount is a new adapter).
             getDelivery: () => this._getSurface?.()?.wasm?.delivery ?? null,
             log: this._log,

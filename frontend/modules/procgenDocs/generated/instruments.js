@@ -10566,6 +10566,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "axe-dodge",
                 "contact-fidelity",
                 "from",
                 "host",
@@ -10585,6 +10586,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "probe-seedling-divergence-sweep.mjs",
             "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "axe-dodge"
+                },
                 {
                     "how": [
                         "arg"
