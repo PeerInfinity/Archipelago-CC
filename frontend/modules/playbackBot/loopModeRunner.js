@@ -12,9 +12,9 @@
  * own choice is put back when it stops.
  *
  * ⛓ SUBSTRATE REGIONS (⚖ the user, 2026-10-11): the queue is the only actor, and each substrate block gets the
- * mode that lets the queue's OWN entries be played there — a COARSE substrate (text adventure: its actions ARE the
- * Loops actions) runs them under Playback; a substrate with a Bot solver (maze delegation, the walkTo solvers) runs
- * them under Bot. A substrate with neither cannot be played by the queue yet: the runner waits, naming the region.
+ * mode that lets the queue's OWN entries be played there — a substrate with a Bot solver (maze delegation, the
+ * walkTo solvers, Seedling) runs them under Bot; a COARSE substrate without one (text adventure: its actions ARE the
+ * Loops actions) runs them under Playback. A substrate with neither cannot be played by the queue yet: the runner waits, naming the region.
  * The modes it set are put back on Stop (the user's explicit ones, or none).
  *
  * Every dependency is injected, so the runner is exercised in vitest without the app.
@@ -112,8 +112,10 @@ export class LoopModeRunner {
      */
     _modeFor(loopState, region) {
         if (!this._d.isSubstrateRegion(region)) return 'plain';
-        if (loopState.getRegionCaptureShape?.(region) === 'coarse') return 'playback';
+        // A Bot solver WINS over the coarse shape: a coarse substrate whose game can play the action (Seedling) must
+        // play it — Playback would complete the entry on the generic timer with the game not participating.
         if (loopState.regionSolver?.(region)) return 'bot';
+        if (loopState.getRegionCaptureShape?.(region) === 'coarse') return 'playback';
         return null;
     }
 

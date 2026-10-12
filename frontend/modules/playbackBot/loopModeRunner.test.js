@@ -182,4 +182,18 @@ describe('LoopModeRunner', () => {
         expect(modes.get('Menu#1')).toBe('manual');
         expect(modes.has('Overworld#1')).toBe(false);
     });
+
+    it('a coarse region WITH a Bot solver (Seedling) gets Bot, not Playback', () => {
+        const { game, runner } = makeGame({ substrate: (r) => r === 'Menu' });
+        const modes = new Map();
+        Object.assign(game.loopState, {
+            getRegionCaptureShape: () => 'coarse',
+            regionSolver: () => 'walkTo',
+            blockModeStates: modes,
+            setBlockMode: (r, i, m) => modes.set(`${r}#${i}`, m),
+        });
+        runner._d.queueBlocks = () => [{ name: 'Menu', instance: 1 }];
+        runner.start();
+        expect(modes.get('Menu#1')).toBe('bot');
+    });
 });
