@@ -39,6 +39,7 @@ import { loadAtlas } from './levelSource.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { patchedMapDocument } from './seedlingSetPatches.js';
 import { createLevelRun } from './levelRun.js';
+import { withContactFidelity } from './contactFidelity.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { arrivalStaging } from './fidelityArrival.js';
 import { assertGoal, solveSegment, SolverRefusal } from './solverBot.js';
@@ -97,10 +98,18 @@ describe('fidelity CROSSROOM — D2: a cross-room write into a level nothing rea
         // ⛔ UNCHANGED, and not this slice's: the banked clear reaches L37's build, whose fallrock is an `arm`
         // (built FALLEN), which the clear list refuses — the text CI's survey step 59 showed before the rules
         // arc's delivered-set patch removed the fallrock.
+        // ⛓ fidelity FLIP14: the refusal is `fallRockPostFall`'s OFF arm (⚖ ON since the wave-14 flip, user
+        // 2026-10-12), kept as the control; ON the walk enters L37 at t6 with the rock built FALLEN.
         let run = null;
-        expect(() => { run = walkIntoL37(VANILLA); })
-            .toThrow(/level 37: the tape clears tag 4, which is a "fallrock" at \(288,32\) — response "arm"/);
+        withContactFidelity({ fallRockPostFall: false }, () => {
+            expect(() => { run = walkIntoL37(VANILLA); })
+                .toThrow(/level 37: the tape clears tag 4, which is a "fallrock" at \(288,32\) — response "arm"/);
+        });
         expect(run).toBe(null);
+        const on = walkIntoL37(VANILLA);
+        expect(on.level).toBe(37);
+        expect(on.world.fallRocks.filter((r) => r.postFall))
+            .toEqual([expect.objectContaining({ id: 'fallrock@288,32', persistTag: 4 })]);
         const probe = createLevelRun({ levelSource: VANILLA, boot: { ...L38_BUTTON }, noDamage: true });
         for (let t = 0; t < 3; t += 1) probe.advance(new Set());
         expect(probe.ledger('roomWrites').find((r) => r.level === 37 && r.tag === 4)).not.toHaveProperty('unread');

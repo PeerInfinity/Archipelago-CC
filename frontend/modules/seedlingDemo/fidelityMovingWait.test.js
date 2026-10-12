@@ -197,8 +197,9 @@ describe('MOVINGWAIT D4 — the totem shot\'s Explosion is an int (`totemShotBla
         return { blasts: run.bossBlasts.filter((b) => b.source === 'bossShotBlast'), obs, hits: run.ledger('playerHits') };
     });
 
-    it('ships OFF; the int radius is int(24 × 0.65) = 15 beside the Number reading 15.6', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.totemShotBlastInt).toBe(false);
+    // ⛓ fidelity FLIP14: shipped OFF; ⚖ (user, 2026-10-12, "Both ON") ON since the wave-14 flip.
+    it('ships ON (the wave-14 flip); the int radius is int(24 × 0.65) = 15 beside the Number reading 15.6', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.totemShotBlastInt).toBe(true);
         expect(BOSS_TOTEM_SHOT.explosionHitRadiusInt).toBe(15);
         expect(BOSS_TOTEM_SHOT.explosionHitRadius).toBeCloseTo(15.6, 10);
     });
@@ -221,8 +222,9 @@ describe('MOVINGWAIT D4 — a death reboot settles the camera through the shake 
         { name: 'rebootshake-l41-part0-damage', death: 1337, offCam: [800, 24], gameCam: [800, 22] },
     ];
 
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.rebootShake).toBe(false);
+    // ⛓ fidelity FLIP14: shipped OFF; ⚖ (user, 2026-10-12, "Both ON") ON since the wave-14 flip.
+    it('ships ON (the wave-14 flip)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.rebootShake).toBe(true);
     });
 
     it.each(REBOOTS)('$name: the GAME respawns with the killing hit\'s shake live, and settles at its own camera', ({ name, death, gameCam }) => {

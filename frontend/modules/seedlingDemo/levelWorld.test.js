@@ -23,6 +23,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { SPINNER } from './spinner.js';
+import { withContactFidelity } from './contactFidelity.js';
 import {
     ACTIVATOR_RESPONDERS,
     CLIFFSIDE_CLASS,
@@ -264,8 +265,14 @@ describe('census: every fixture level is fully classified', () => {
 
         // ARM: clearing a FallRock tag is refused by name, because it would
         // ADD a live blocker rather than remove one.
-        expect(() => buildLevelWorld(levelRecord(74), { cleared: [2] }))
-            .toThrow(/BUILDS IT FALLEN/);
+        // ⛓ fidelity FLIP14: the refusal is the OFF arm of `fallRockPostFall` (⚖ ON since the wave-14 flip, user
+        // 2026-10-12); ON the same clear builds the rock FALLEN, as `FallRock.as:42-47` does.
+        withContactFidelity({ fallRockPostFall: false }, () => {
+            expect(() => buildLevelWorld(levelRecord(74), { cleared: [2] }))
+                .toThrow(/BUILDS IT FALLEN/);
+        });
+        expect(buildLevelWorld(levelRecord(74), { cleared: [2] }).fallRocks.filter((r) => r.postFall))
+            .toEqual([expect.objectContaining({ id: 'fallrock@288,144', persistTag: 2 })]);
     });
 
     /**
