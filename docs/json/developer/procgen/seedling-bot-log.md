@@ -15718,6 +15718,53 @@ after the kill); every sword row and every other ghost row is byte-equal; stagin
 `afdc6d1a`); L18 sweep 45/45 equal (lengths `1c019765`); C2's L18 ghost staging 45/45 byte-identical (its kill is the
 kill-lock order's). Nothing committed moves; nothing re-recorded. The flip is the user's.
 
+### Seedling hammer-phase C4b — the chooser's other hitter
+
+C4's residue 3 proposed a chooser change: when the head body's removal admits a corridor that the probe still finds hit
+by ANOTHER body, list that other body (a chaser) after the head, so that BAIT keeps the head and `interceptOrder` hands
+the kill rung the chaser. C4b measured it first, at `926cc2a86f` (wave-14 flip), with `SEEDLING_STRIKE_IFRAME_LAPSE=1`
+scoped by env beside OFF. **STOP after D1: no switch, no code.** No refused leg moves, and the one leg that does move
+(624) gets slower. The report is `CC/docs/cloud-reports/seedling-hammer-c4b.md`.
+
+**Two lab arms** (a scratch copy, `…-c4b-evidence/drivers/lab-instrumentation.diff`; with no arm selected the lab is
+byte-identical to the tree on 624 and on the whole r9 chain):
+- `append`: C4's `C4_APPEND`, verbatim. Every chaser in `hit.sources` not already listed is appended, **including to
+  an empty list**.
+- `probe`: the brief's rule. Only when the chooser lists a head, the head's admitted corridor is planned and probed
+  (`probeCorridor`, the head excepted), and the chasers that probe names are appended.
+
+**The census** (node, `BUDGET=2560`, both anytime passes; the L74 sweep keys 622/624/626/628/629, the only legs in
+sweeps 38307493688 and 38289124638):
+
+| leg | lapse | fires? (head → other hitter) | none | `append` | `probe` |
+|---|---|---|---|---|---|
+| 622 | OFF / ON | no | forced-hit 4 t | = | = |
+| 624 | OFF | yes: `bulb@48,112` → `lavarunner@208,96` (eta 87) | REFUSED (*"the danger map forbids (222.7,120.2)"*) | = (byte-identical) | = |
+| 624 | ON | yes, the same | **DONE 331 t `detour`** (= fidelity's game-witnessed plan) | DONE **752 t** `kill, walk` | DONE **481 t** `detour, kill` |
+| 626 | OFF / ON | no | DONE 344 t / 284 t | = | = |
+| 628 | OFF | yes, the same pair | REFUSED (the skirt lane x = 302) | = | = |
+| 628 | ON | no | REFUSED (the skirt-stance waypoint stall) | = | = |
+| 629 | OFF | yes: `bulb@48,112` → `lavarunner@24,56` | DONE 253 t (BAIT on the head solves first) | = | = |
+| 629 | ON | no | DONE 252 t | = | = |
+
+All three 624 lapse-ON plans replay in the model with 0 player hits and 0 deaths and arrive in L75 at (72,24). With an
+arm on, the t0 climb hands the kill rung `lavarunner@208,96` before DETOUR, and the kill is the longer route.
+
+**Controls** (`solve-seedling-r9-campaign --check`, the lab in a scratch worktree):
+- `probe` = base under both lapse settings (`712f0ead` exit 0; lapse ON `dce96321`, fidelity's lapse-ON value).
+  `r9-solve-16` and `r8-solve-6` are byte-identical.
+- `append` with the lapse OFF moves `r9-solve-16` 688 → **687 t** (0 hits, calm; tape and trace drift, `r9-solve-18`'s
+  clock oracle follows). The cause is the shape C1 measured: a chaser admitted into an EMPTY list. Under the lapse,
+  `append` = base.
+
+**Trap candidates:**
+- **An appended chaser takes the kill rung ahead of DETOUR, and that is not shorter.** `interceptOrder` reads the probe
+  first, so any chaser on the list becomes the kill target. Where DETOUR already solves, that is a slower plan: on 624,
+  331 → 481 / 752 t.
+- **C4's `C4_APPEND` appends to an empty list too**, which is C1's trap again: on 624 at t106 it admits
+  `bulb@48,112` from an empty chooser list, and on `r9-solve-16` it moves the walk. A chooser tweak that lists another
+  hitter must require a head.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
