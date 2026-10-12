@@ -336,6 +336,17 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (`SEEDLING_FALLROCK_POSTFALL=0|1` for a node measurement).
      */
     fallRockPostFall: false,
+    /**
+     * fidelity L74LEG624 D4 — THE CHASER FORECAST RE-CHOOSES A LAVARUNNER'S SPEED BY TERRAIN, as the live run does.
+     *
+     *     LavaRunner.as:82-92   after super.update(): switch(getState()) { case 1, 17: swim() (1); default: walk() (1.5) }
+     *
+     * K2 put the tail in `levelRun.stepChasersNow` and not in `chaserForecastNow`, so a preview's lavarunner kept the
+     * speed it was seeded with across lava and water. Measured on L74 leg 624: the detour's certified preview and its
+     * drive part at t53 (`lavarunner@208,96`, 243.26 vs 242.2 px); the drive is the game's (0 px). ON: the clone runs
+     * the same tail. OFF: as before (`SEEDLING_FORECAST_SPEED_BY_TERRAIN=0|1` for a node measurement).
+     */
+    forecastSpeedByTerrain: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -413,6 +424,8 @@ if (globalThis.process?.env?.SEEDLING_STRIKE_IFRAME_LAPSE === '1') CONTACT_FIDEL
 if (globalThis.process?.env?.SEEDLING_STRIKE_IFRAME_LAPSE === '0') CONTACT_FIDELITY.strikeIframeLapse = false;
 if (globalThis.process?.env?.SEEDLING_FALLROCK_POSTFALL === '1') CONTACT_FIDELITY.fallRockPostFall = true;
 if (globalThis.process?.env?.SEEDLING_FALLROCK_POSTFALL === '0') CONTACT_FIDELITY.fallRockPostFall = false;
+if (globalThis.process?.env?.SEEDLING_FORECAST_SPEED_BY_TERRAIN === '1') CONTACT_FIDELITY.forecastSpeedByTerrain = true;
+if (globalThis.process?.env?.SEEDLING_FORECAST_SPEED_BY_TERRAIN === '0') CONTACT_FIDELITY.forecastSpeedByTerrain = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
