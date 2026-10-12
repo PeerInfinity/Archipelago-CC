@@ -1730,6 +1730,12 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "loop-mode-bot S3 (⚖ first target): Adventure in Loop mode, no procgen. Generate Costs (enters Loop mode), Loops queue on Instant, bot Play: the bot writes the Loops queue one loop at a time (explore until found, then check) until every sphere-log location is checked."
+        },
+        {
+            "id": "playback-bot-loop-mode-maze",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "loop-mode-bot S4 (⚖ first substrate target): a generated maze-only world in Loop mode; the runner sets each maze block to Bot and Loops' maze delegation plays the queue until every sphere-log location is checked."
         }
     ]
 }

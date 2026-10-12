@@ -29,6 +29,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { blockKeyOf, resolveQueueBlocks } from '../loops/blockIdentity.js';
 
 export class PlaybackBotPanel {
     static moduleApis = null;
@@ -255,6 +256,11 @@ export class PlaybackBotPanel {
                 const pid = String(this._cachedPlayerId ?? '1');
                 return !!this._cachedRulesJson?.preset_sidecars?.[pid]?.[region];
             },
+            queueBlocks: () => {
+                const loopState = api('loops', 'getLoopState')?.();
+                return loopState ? resolveQueueBlocks(loopState.getActionQueue()).visits : [];
+            },
+            blockKeyOf,
             subscribe: (eventName, handler) => {
                 eventBus.subscribe(eventName, handler, 'playbackBot');
                 return () => eventBus.unsubscribe?.(eventName, handler, 'playbackBot');

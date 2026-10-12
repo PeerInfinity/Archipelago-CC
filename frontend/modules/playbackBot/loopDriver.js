@@ -48,6 +48,7 @@ export const MANA_STRATEGY_LABELS = Object.freeze({
  * @property {(location: string) => boolean} isLocationDiscovered
  * @property {(entry: Object) => number} costOf    the live, XP-discounted cost of one queue entry
  * @property {number} maxMana                      a loop's pool
+ * @property {(region: string) => boolean} [hasHidden]  something left to discover there (default: assume yes)
  * @property {string} [strategy]                   one of MANA_STRATEGIES
  * @property {() => Array<{kind: 'explore'|'check', region: string, location?: string}>} [availableTasks]  RANDOM only
  * @property {string|null} [lastTaskKey]           RANDOM only: the previous loop's task, avoided when possible
@@ -175,6 +176,13 @@ function planTaskLoop(view, task, strategy) {
         const c = pathCost(p, view.costOf);
         return { kind, region, ...extra, path: p, cost: c, affordable: c <= view.maxMana, task, key: taskKey(task), reason };
     };
+    // ⛓ An explore that has nothing left to find can cost NOTHING (maze: no fog left → no walk → no charge), and a
+    // repeating one then never ends the loop. So an XP-farming explore goes only where something is still hidden;
+    // otherwise the loop attempts the task itself, whose walking spends the mana (measured on a maze world,
+    // 2026-10-12: 1255 free explores in one loop).
+    const canFarm = (region) => view.hasHidden?.(region) !== false;
+    const attempt = (why) => plan(task.kind, task.region, task.hops, `${what} (costs ${fmt(cost)}, ${view.maxMana} mana: ${why})`,
+        task.kind === 'check' ? { location: task.location } : {});
     if (affordable || strategy === MANA_STRATEGIES.KEEP_ATTEMPTING) {
         return plan(task.kind, task.region, task.hops,
             affordable ? what : `${what} (costs ${fmt(cost)}, ${view.maxMana} mana: attempting anyway)`,
@@ -183,13 +191,17 @@ function planTaskLoop(view, task, strategy) {
     if (strategy === MANA_STRATEGIES.EXPLORE_TARGET) {
         // Straight for the task's region; only when even the walk is out of reach, farm XP at the start.
         const walk = buildLoopPath(task.hops, { kind: 'explore', region: task.region });
-        if (pathCost(walk, view.costOf) <= view.maxMana) {
+        if (pathCost(walk, view.costOf) <= view.maxMana && canFarm(task.region)) {
             return plan('explore', task.region, task.hops, `${what} costs ${fmt(cost)} > ${view.maxMana}: exploring ${task.region} for XP`);
         }
-        return plan('explore', view.startRegion, [], `${what} is out of reach: exploring ${view.startRegion} for XP`);
+        if (canFarm(view.startRegion)) {
+            return plan('explore', view.startRegion, [], `${what} is out of reach: exploring ${view.startRegion} for XP`);
+        }
+        return attempt(`nothing left to explore for XP, attempting anyway`);
     }
     // EXPLORE_FURTHEST.
     const far = furthestAffordable(view, task.hops);
+    if (!canFarm(far.region)) return attempt(`nothing left to explore in ${far.region}, attempting anyway`);
     return plan('explore', far.region, far.hops, `${what} costs ${fmt(cost)} > ${view.maxMana}: exploring ${far.region} for XP`);
 }
 

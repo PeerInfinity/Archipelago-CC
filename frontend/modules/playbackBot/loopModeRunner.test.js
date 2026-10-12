@@ -133,11 +133,30 @@ describe('LoopModeRunner', () => {
         expect(game.paths).toHaveLength(1);
     });
 
-    it('a substrate region on the loop is out of scope: it waits and names it', () => {
+    it('a substrate region the queue cannot play (no coarse shape, no Bot solver) waits and names it', () => {
         const { game, runner } = makeGame({ substrate: (r) => r === 'Overworld' });
         game.exits.add('Menu:GameStart');
         runner.start();
-        expect(game.statuses.at(-1)).toMatch(/Overworld is a substrate region/);
+        expect(game.statuses.at(-1)).toMatch(/Overworld is a substrate region the Loops queue cannot play yet/);
         expect(game.loopState.restartFromStart).not.toHaveBeenCalled();
+    });
+
+    it('sets Bot on solver regions and Playback on coarse ones, and puts the user\'s modes back on stop', () => {
+        const { game, runner } = makeGame({ substrate: (r) => r === 'Overworld' || r === 'Menu' });
+        game.exits.add('Menu:GameStart');
+        const modes = new Map([['Menu#1', 'manual']]);
+        Object.assign(game.loopState, {
+            getRegionCaptureShape: (r) => (r === 'Menu' ? 'coarse' : 'fine'),
+            regionSolver: (r) => (r === 'Overworld' ? 'delegation' : null),
+            blockModeStates: modes,
+            setBlockMode: (r, i, m) => modes.set(`${r}#${i}`, m),
+        });
+        runner._d.queueBlocks = () => [{ name: 'Menu', instance: 1 }, { name: 'Overworld', instance: 1 }];
+        runner.start();
+        expect(modes.get('Menu#1')).toBe('playback');
+        expect(modes.get('Overworld#1')).toBe('bot');
+        runner.stop();
+        expect(modes.get('Menu#1')).toBe('manual');
+        expect(modes.has('Overworld#1')).toBe(false);
     });
 });

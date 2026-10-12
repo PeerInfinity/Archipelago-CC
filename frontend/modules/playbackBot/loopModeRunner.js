@@ -11,8 +11,11 @@
  * first" and waits. Auto-restart is the runner's to drive while it plays (it decides every loop), and the user's
  * own choice is put back when it stops.
  *
- * Out of scope for now: regions a substrate owns (gated in loop mode; they would need Bot blocks). The runner
- * waits with a status naming the region.
+ * ⛓ SUBSTRATE REGIONS (⚖ the user, 2026-10-11): the queue is the only actor, and each substrate block gets the
+ * mode that lets the queue's OWN entries be played there — a COARSE substrate (text adventure: its actions ARE the
+ * Loops actions) runs them under Playback; a substrate with a Bot solver (maze delegation, the walkTo solvers) runs
+ * them under Bot. A substrate with neither cannot be played by the queue yet: the runner waits, naming the region.
+ * The modes it set are put back on Stop (the user's explicit ones, or none).
  *
  * Every dependency is injected, so the runner is exercised in vitest without the app.
  */
@@ -39,6 +42,8 @@ export class LoopModeRunner {
      * @param {() => void} [deps.onFinished]
      * @param {() => number} [deps.random]
      * @param {() => Promise|null} [deps.flush]           settle the worker's snapshot before the next plan
+     * @param {() => Array<{name: string, instance: number}>} [deps.queueBlocks]  the queue's blocks (resolveQueueBlocks)
+     * @param {(region: string, instance: number) => string} [deps.blockKeyOf]
      */
     constructor(deps) {
         this._d = deps;
@@ -50,6 +55,9 @@ export class LoopModeRunner {
         this._lastKey = null;
         this._savedAutoRestart = null;
         this._savedRepeat = new Map();
+        // block key → {region, instance, prior} for every block mode the runner set (prior: the explicit mode, or
+        // undefined when the block had none).
+        this._savedBlockModes = new Map();
         this._lastPlan = null;
     }
 
@@ -83,9 +91,39 @@ export class LoopModeRunner {
         this._savedAutoRestart = null;
         for (const [region, repeat] of this._savedRepeat) loopState?.setRepeatExplore?.(region, repeat);
         this._savedRepeat.clear();
+        for (const [key, { region, instance, prior }] of this._savedBlockModes) {
+            if (prior === undefined) loopState?.blockModeStates?.delete?.(key);
+            else loopState?.setBlockMode?.(region, instance, prior);
+        }
+        this._savedBlockModes.clear();
     }
 
     _status(text) { this._d.onStatus?.(text); }
+
+    /**
+     * How the queue plays a region: 'plain' (no substrate — the queue's entries run as they are), 'playback' (a
+     * coarse substrate runs the entries), 'bot' (the substrate's Bot solver plays them), or null (no way yet).
+     */
+    _modeFor(loopState, region) {
+        if (!this._d.isSubstrateRegion(region)) return 'plain';
+        if (loopState.getRegionCaptureShape?.(region) === 'coarse') return 'playback';
+        if (loopState.regionSolver?.(region)) return 'bot';
+        return null;
+    }
+
+    _applyBlockModes(loopState) {
+        const keyOf = this._d.blockKeyOf ?? ((region, instance) => `${region}#${instance}`);
+        for (const { name, instance } of this._d.queueBlocks?.() ?? []) {
+            const mode = this._modeFor(loopState, name);
+            if (mode !== 'playback' && mode !== 'bot') continue;
+            const key = keyOf(name, instance);
+            if (!this._savedBlockModes.has(key)) {
+                const states = loopState.blockModeStates;
+                this._savedBlockModes.set(key, { region: name, instance, prior: states?.has?.(key) ? states.get(key) : undefined });
+            }
+            loopState.setBlockMode(name, instance, mode);
+        }
+    }
 
     _retry(text) {
         this._status(text);
@@ -105,7 +143,11 @@ export class LoopModeRunner {
         const startRegion = d.getStartRegion();
         const isExitDiscovered = (r, e) => !discoveryOn || !!d.discovery?.isExitDiscovered?.(r, e);
         const isLocationDiscovered = (l) => !discoveryOn || !!d.discovery?.isLocationDiscovered?.(l);
+        const hasHidden = (region) => discoveryOn && (
+            (d.locationsOf(region) ?? []).some((l) => !isLocationDiscovered(l))
+            || (d.exitsOf(region) ?? []).some((e) => !isExitDiscovered(region, e.name)));
         return {
+            hasHidden,
             startRegion,
             target: d.nextTarget(),
             exitsOf: d.exitsOf,
@@ -123,9 +165,7 @@ export class LoopModeRunner {
                 locationsOf: d.locationsOf,
                 isLocationDiscovered,
                 isLocationCheckable: d.isLocationCheckable,
-                hasHidden: (region) => discoveryOn && (
-                    (d.locationsOf(region) ?? []).some((l) => !isLocationDiscovered(l))
-                    || (d.exitsOf(region) ?? []).some((e) => !isExitDiscovered(region, e.name))),
+                hasHidden,
             }),
         };
     }
@@ -150,8 +190,11 @@ export class LoopModeRunner {
             return undefined;
         }
         if (plan.kind === 'unreachable') return this._retry(`waiting: ${plan.reason}`);
-        const gated = plan.path.map((e) => e.destinationRegion ?? e.sourceRegion).find((r) => r && d.isSubstrateRegion(r));
-        if (gated) return this._retry(`waiting: ${gated} is a substrate region — the bot does not play those in loop mode yet`);
+        const regions = new Set(plan.path.flatMap((e) => [e.sourceRegion, e.destinationRegion]).filter(Boolean));
+        const unplayable = [...regions].find((r) => this._modeFor(loopState, r) === null);
+        if (unplayable) {
+            return this._retry(`waiting: ${unplayable} is a substrate region the Loops queue cannot play yet (no Bot player)`);
+        }
 
         if (plan.kind === 'explore') {
             if (!this._savedRepeat.has(plan.region)) this._savedRepeat.set(plan.region, !!loopState.getRepeatExplore?.(plan.region));
@@ -161,6 +204,7 @@ export class LoopModeRunner {
         this._loops += 1;
         this._status(`loop ${this._loops}: ${plan.reason}`);
         gameState.setPath(plan.path, d.getStartRegion());
+        this._applyBlockModes(loopState);
         loopState.restartFromStart({ autoStart: true });
         // Subscribed AFTER the restart: restartFromStart publishes its own loopState:loopReset.
         const ended = () => {
@@ -181,6 +225,15 @@ export class LoopModeRunner {
         };
         this._unsubs.push(d.subscribe('loopState:queueCompleted', ended));
         this._unsubs.push(d.subscribe('loopState:loopReset', ended));
+        // A substrate that charges mana itself (maze delegation, per tile) ends the loop on its own reset path:
+        // gameState.triggerLoopReset publishes gameState:loopReset, and loops just stops (no loopState event).
+        this._unsubs.push(d.subscribe('gameState:loopReset', ended));
+        // Loops' named stop for a Bot block whose walk cannot happen: say why, and try again next loop.
+        this._unsubs.push(d.subscribe('loopState:botWalkFailed', (data) => {
+            this._clearWait();
+            if (!this._active) return;
+            this._retry(`waiting: the Bot block in ${data?.region ?? '?'} stopped — ${data?.reason ?? 'its walk failed'}`);
+        }));
         return undefined;
     }
 }
