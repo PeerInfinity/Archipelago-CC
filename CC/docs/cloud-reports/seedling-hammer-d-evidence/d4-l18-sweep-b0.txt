@@ -1,0 +1,10 @@
+# r9-solve-18 at seam.time 9940 (committed residue 40); HAMMER_ESCAPE ON; HAMMER_ESCAPE_FALLBACK ON; HAMMER_APPROACH OFF; HAMMER_FIGHT OFF; 45 residue(s)
+r 0  SOLVE                   462     2.9s  digest 7c6b1eabe3d3 stalls 0 escapes 6 fellBack 0/0 hits 0
+r 1  SOLVE                   509     2.1s  digest 03de6121b4dd stalls 0 escapes 6 fellBack 0/0 hits 0
+r 2  SOLVE                   447     1.5s  digest a1e3696e6f36 stalls 0 escapes 6 fellBack 0/0 hits 0
+r 3  SOLVE                   491     1.5s  digest 646998991cb4 stalls 0 escapes 6 fellBack 0/0 hits 0
+r 4  SOLVE                   491     1.3s  digest 5372f150f409 stalls 0 escapes 6 fellBack 0/0 hits 0
+r 5  SOLVE                   515     1.7s  digest 15b0b1e22d09 stalls 0 escapes 6 fellBack 0/0 hits 0
+r 6  SOLVE                   447     1.8s  digest b41ad7da2a6d stalls 0 escapes 6 fellBack 0/0 hits 0
+r 7  SOLVE                   418     3.2s  digest c972f6af1b4d stalls 0 escapes 6 fellBack 0/0 hits 0
+r 8  SOLVE                   514     1.8s  digest 70ec0b3ab82f stalls 0 escapes 6 fellBack 0/0 hits 0

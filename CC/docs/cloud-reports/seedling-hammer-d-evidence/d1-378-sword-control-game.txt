@@ -1,0 +1,6 @@
+FAIL: the game's `Bot.slashTests` is the model's cumulative sword hit-test count at every sampled tick — 1544 sampled tick(s) of 1544; first off at obs 1369: game 83, model 84 (175 tick(s) off)
+ROW arrows: 0 of 1544 sampled tick(s) differ
+FAIL: the drained stream is the model's, tick for tick — tick 1154 differs: expected (x=276.6877726065641, y=216.2321037687089, level=40), got (x=280.0835434089258, y=216.2321037687089, level=40) [dx=3.3957708023616533, dy=0]
+ROW game: hits 0, hits_timer 0, level 40, slash {"hits":347,"tests":160}, cleared [{"tag":0,"level":5},{"tag":0,"level":8},{"tag":1,"level":8},{"tag":0,"level":10},{"tag":1,"level":40},{"tag":4,"level":40},{"tag":5,"level":40},{"tag":6,"level":40},{"tag":7,"level":40},{"tag":22,"level":40},{"tag":23,"level":40},{"tag":24,"level":40}]
+wrote /tmp/claude-0/-home-user-Archipelago-CC/d6227460-dd8c-5035-9885-b8dcb8e659c7/scratchpad/mut/378-sword-game-slash.json
+2 CHECK(S) FAILED
