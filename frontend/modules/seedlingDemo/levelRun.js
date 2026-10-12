@@ -9041,9 +9041,12 @@ export function createLevelRun({
                 });
             }
             if (r.explodeAt) {
+                // ⛓ seedling-fidelity-movingwait D4: the Explosion's `int` origin and radius (OFF: the Number reading).
+                const intBlast = CONTACT_FIDELITY.totemShotBlastInt === true;
                 applyExplosion({
-                    x: r.explodeAt.x, y: r.explodeAt.y,
-                    radius: BOSS_TOTEM_SHOT.explosionHitRadius,
+                    x: intBlast ? Math.trunc(r.explodeAt.x) : r.explodeAt.x,
+                    y: intBlast ? Math.trunc(r.explodeAt.y) : r.explodeAt.y,
+                    radius: intBlast ? BOSS_TOTEM_SHOT.explosionHitRadiusInt : BOSS_TOTEM_SHOT.explosionHitRadius,
                     damage: BOSS_TOTEM_SHOT.explosionDamage,
                     force: BOSS_TOTEM_DEATH_BLAST.force,
                     source: 'bossShotBlast', id: s.id,

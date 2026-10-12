@@ -564,6 +564,8 @@ frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemDeathBlastPrefilter|bos
 frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_WHITE_OUT|(module)|240,rule,magnitude,Enemies/BossTotem.as:rumblingTimeMax,
 frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_WHITE_OUT|(module)|43,rule,sentinel,,persistence level 43 tag 5
 frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_WHITE_OUT|(module)|5,rule,sentinel,,persistence level 43 tag 5
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h7b1a0130|24|0,rule,derivation,Projectiles/Explosion.as:radius,int(24 * 0.65) = 15: the totem shot blast hit radius (totemShotBlastInt)
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h7b1a0130|0.65|0,rule,derivation,Projectiles/Explosion.as:radius,int(24 * 0.65) = 15: the totem shot blast hit radius (totemShotBlastInt)
 frontend/modules/seedlingDemo/r7Acceptance.js|SEAM_SIGNATURE|(module),structural,,,seam save-array arity (format shape)
 frontend/modules/seedlingDemo/r7Acceptance.js|assertSeamChannelsTotal|assertSeamChannelsTotal,structural,,,acceptance/diagnostic arithmetic
 frontend/modules/seedlingDemo/r7Acceptance.js|seamRngPosture|seamRngPosture,structural,,,acceptance/diagnostic arithmetic

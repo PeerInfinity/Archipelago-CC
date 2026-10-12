@@ -420,6 +420,12 @@ export const BOSS_TOTEM_SHOT = Object.freeze({
     /** The death `Explosion(x + v.x, y + v.y, hitables, 24, 1)` ⇒ radius 15.6. */
     explosionRadius: 24,
     explosionHitRadius: 24 * 0.65,
+    /**
+     * ⛓ seedling-fidelity-movingwait D4 (behind `CONTACT_FIDELITY.totemShotBlastInt`, OFF): `Explosion.radius` is an
+     * `int` field, so `radius *= 0.65` truncates — `int(24 × 0.65)` = 15 (BOMBPUSHER measured the same class at 15 on
+     * the game) — and the ctor's `_x:int, _y:int` truncate `x + v.x` / `y + v.y` (`BossTotemShot.as:71`).
+     */
+    explosionHitRadiusInt: Math.trunc(24 * 0.65),
     explosionDamage: 1,
     /** `onScreen((graphic as Spritemap).width)` — a 20 px margin, camera-relative. */
     onScreenMargin: 20,

@@ -19,7 +19,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { BotDriverV2Error, runHold } from './botDriverV2.js';
-import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS } from './contactFidelity.js';
+import { BOSS_TOTEM_SHOT } from './bossTotemFight.js';
+import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { dangerAt } from './dangerMap.js';
 import { KNOWN_STRATEGY_VERBS } from './decisionTrace.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -184,4 +185,32 @@ describe('MOVINGWAIT — the paced contract refuses by name', () => {
             pace: { ...plan, ends: plan.ends.slice(0, 1) }, until }, 'mw'))
             .toThrow(/paced 1 cycle\(s\) \(46 tick\(s\), the bound 131\) and the condition never became true/);
     });
+});
+
+describe('MOVINGWAIT D4 — the totem shot\'s Explosion is an int (`totemShotBlastInt`, OFF)', () => {
+    const shotBlasts = (over) => withContactFidelity(over, () => {
+        const tape = parseTape(readFileSync(join(HERE, 'fixtures', 'tapes', 'r6-totem-kill.json'), 'utf8'));
+        let run = null;
+        const st = createTapeStepper(tape, { levelSource: atlasLevelSource(), onTick: (t, s, h, rn) => { run = rn; } });
+        const obs = [];
+        for (let r = st.next(); !r.done; r = st.next()) obs.push([r.value.observation.x, r.value.observation.y]);
+        return { blasts: run.bossBlasts.filter((b) => b.source === 'bossShotBlast'), obs, hits: run.ledger('playerHits') };
+    });
+
+    it('ships OFF; the int radius is int(24 × 0.65) = 15 beside the Number reading 15.6', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.totemShotBlastInt).toBe(false);
+        expect(BOSS_TOTEM_SHOT.explosionHitRadiusInt).toBe(15);
+        expect(BOSS_TOTEM_SHOT.explosionHitRadius).toBeCloseTo(15.6, 10);
+    });
+
+    it('r6-totem-kill: ON the two t387 blasts land at the truncated point with r 15, and nothing else moves', () => {
+        const off = shotBlasts({ totemShotBlastInt: false });
+        const on = shotBlasts({ totemShotBlastInt: true });
+        expect(off.blasts.map((b) => [b.x, b.y, b.radius])).toEqual([[182, 379.04999999999995, 15.600000000000001],
+            [122, 379.04999999999995, 15.600000000000001]]);
+        expect(on.blasts.map((b) => [b.x, b.y, b.radius])).toEqual([[182, 379, 15], [122, 379, 15]]);
+        expect(on.blasts.map((b) => b.hitPlayer)).toEqual(off.blasts.map((b) => b.hitPlayer));
+        expect(on.obs).toEqual(off.obs);
+        expect(on.hits).toEqual(off.hits);
+    }, 60_000);
 });
