@@ -16415,6 +16415,52 @@ without the field is off at t1: it steers through the game's i-frame.
 - **An in-place re-stage rebuilds the room's bodies at their spawns.** Hits staged exactly do not make the enemies
   exact: the first contact after the lapse lands on the game's tick, with another knockback.
 
+### Seedling fidelity MOVINGWAIT — a latched wait paces out of a lobber's aim, and two residues are the game's ints and statics
+
+Wave 14 (model coverage). BOMBPUSHER refused L40's legs 378/381 at `buttonroom@272,208`'s 131-tick hold by name: a
+standing player within 256 px of `bombpusher@112,128` is always hit, every measured would-be hit was on a standing
+player, and both of the hold's waits stood still by contract. The report is
+`CC/docs/cloud-reports/seedling-fidelity-movingwait.md`.
+
+**D1 — which waits may move.** Read from the AS3: a `room = -1` ButtonRoom's setter is behind `if (a)` (*"Can't be
+reset to false!!"*), so once pressed its group stays published and `Lock.activationStep` fades whoever stands where —
+the hold and `runLatchedWait` may pace. A plain `Button` republishes `activate = tempCheck` every update, so stepping off
+unpresses it (never paced). A `BossLock` latches too (`activate = true` only), so a keylock's line could pace (not built:
+not in this slice's verbs). Measured on L40's stance: an out-and-back cycle (hold a direction `span` ticks, coast to
+rest, the opposite `span`, coast) returns to the start BIT-EXACTLY (16 cycles: 4 cardinal directions × spans 4–16; `planPacedWait` asserts it per candidate). The proof is the
+forecast clean at every sample, the latch held throughout (a static), and the end state the original stance.
+
+**D2 — the verb** (`MOVING_WAIT` = `CONTACT_FIDELITY.movingWait`, OFF). `execHold` asks the still wait first; only when it
+prices a bomb does `planPacedWait` search `PACE` (8 directions × spans 6..24 × gaps 0..18, smallest motion first), each
+candidate previewed on `previewStepper` for whole cycles covering the still bound, every sample priced by
+`dangerDuringTransit` against the walk forecasts. `runPace` drives the plan and asserts the exact previewed position each
+tick; the condition is asked at cycle ends, so the wait stops on the stance. Trace row `pace`.
+
+**D3 — witnessed on the game.** The solver's own inputs for both legs, damage on, played on p4f: leg 381 paces
+`left/right ×8, gap 18` from t1007 (56 pacings rejected first, every one by a bomb), leg 378 `down+left/up+right ×6,
+gap 18` from t1106 (30 rejected, one because its blast landed on `bob@304,144`). Both are 0 hits and 0 px on every
+sampled tick (1,150 / 1,287). Past the wait the legs stop elsewhere: 381 at a press kill's standing wait (`execKillByPress`,
+t1132–t1155 at (248.37,183.72), the blast at t1156 — the same tick the game hit the still plan), 378 at the t1 hold,
+where a bomb launched before the wait lands on `spinner@192,128` whatever the pacing.
+
+**D4 — residue.** (a) `totemShotBlastInt` (OFF): `BossTotemShot.as:71`'s `new Explosion(x + v.x, …)` truncates through
+the ctor's `_x:int, _y:int`, and `radius:int` makes the hit radius 15. All 277 committed tapes the runner plays hold four
+shot blasts (r6-totem t387, (122|182, 379.05)), the player 58–77 px away: no verdict moves. (b) `rebootShake` (OFF): after
+`restartLevel()` the game's camera is (777,0) / (800,22) and the model's exact (776,0) / (800,24). The game's reboot sample
+reads `Game.shake` 4 / 5: `Player.die()` swaps with no fade, and the static shake jiggles the NEW world's settle frames,
+which the model drained beforehand. ON, both BOMBPUSHER damage walks reproduce at 0 px through the death and the second
+life (`rebootshake-l4{1,2}-part0-damage`).
+
+**Trap candidates.**
+- **A wait that stands still inside a lobber is aimed at; a wait that moves on the lobber's own period is not.** Both
+  chosen pacings have a 46/48-tick cycle against the lobber's 46: the launch reads the stance, the blast lands at the
+  far end.
+- **Moving the aim moves where the blast lands — onto bodies.** The first cut sent a bomb onto `bob@304,144`; a pacing
+  is now rejected where its forecast blast meets a body by the run's own rule.
+- **A static survives a world swap, and a load with no fade drains nothing.** `Game.shake` across `restartLevel()`.
+- **A refusal moves downstream when its verb is fixed.** With the hold paced, the next standing wait inside the lobber
+  is a press kill's (another arc's verb); the sweep row changes family, not colour.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
