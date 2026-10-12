@@ -306,6 +306,20 @@ export const CONTACT_FIDELITY = {
      * where the drained settle says (776, 0).
      */
     rebootShake: false,
+    /**
+     * fidelity L74LEG624 D2 — FALLROCK_POSTFALL: A CLEARED NON-ARENA `FallRock` IS BUILT AS THE GAME LEAVES IT.
+     *
+     *     FallRock.as:42-47   if (!Game.checkPersistence(tag)) { y = fallTo; type = "Solid"; _active = true; }
+     *
+     * `buildLevelWorld` refused a clear list naming a `fallrock` tag ("nothing here builds their fall"), and the page's
+     * clear list is the game's live `persistence_cleared`: L74's arrival button drops `fallrock@288,144` (tag 2), so
+     * every later build of L74 (a re-entry in the same run, a staged arrival after it) refused a TRUE state. ON: the
+     * rock is built fallen — a 16x16 Solid at its cell, `_active` (a publication cannot drop it again), on the run's
+     * `fallenRocks` arm (`levelWorld` marks the roster row `postFall`, `levelRun.fallRockStateFor` builds it landed).
+     * `FallRockLarge` stays refused outside the arena (L82's `bossrock`). OFF: the refusal, byte-identical.
+     * ⛔ OFF by default (`SEEDLING_FALLROCK_POSTFALL=0|1` for a node measurement).
+     */
+    fallRockPostFall: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -378,6 +392,9 @@ if (globalThis.process?.env?.SEEDLING_FORCED_HITS === '0') CONTACT_FIDELITY.forc
 // ⛓ fidelity MOVINGWAIT: `SEEDLING_MOVING_WAIT=0|1` sets that one switch over the set above (a node measurement).
 if (globalThis.process?.env?.SEEDLING_MOVING_WAIT === '1') CONTACT_FIDELITY.movingWait = true;
 if (globalThis.process?.env?.SEEDLING_MOVING_WAIT === '0') CONTACT_FIDELITY.movingWait = false;
+// ⛓ fidelity L74LEG624: `SEEDLING_STRIKE_IFRAME_LAPSE=0|1` and `SEEDLING_FALLROCK_POSTFALL=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FALLROCK_POSTFALL === '1') CONTACT_FIDELITY.fallRockPostFall = true;
+if (globalThis.process?.env?.SEEDLING_FALLROCK_POSTFALL === '0') CONTACT_FIDELITY.fallRockPostFall = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
