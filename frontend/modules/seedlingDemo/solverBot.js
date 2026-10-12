@@ -110,6 +110,8 @@ import {
     GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
     // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (behind `GHOST_SPINNER_PRESS`, ON by default).
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
+    // ⛓⛓⛓ hammer-phase P1: the press kill's exact caches (behind `PRESS_KILL_COST`, ON; OFF bypasses every one).
+    PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
@@ -8913,9 +8915,42 @@ function strikeHorizon(run) {
         / SPINNER.moveSpeed);
 }
 
-/** Every walkable lattice cell of the current level, with its player box. */
-function walkableCells(run, contacts) {
+/**
+ * ⛓⛓⛓ hammer-phase P1 — `walkableCells`' MEMO, one per run (`PRESS_KILL_COST`). The press kill asks for the cells
+ * twice a tick (`deriveStrike`, then `deriveRefuge`) and again every tick after, and on C1's staging A that was 24.4 %
+ * of the solve for an answer that had not changed.
+ *
+ * ⛔ WHAT THE ANSWER READS, ENUMERATED — and the key is all of it. The lattice walk reads `run.world` (its extent, and
+ * every static list `plannerObstacleAt` and `plannerBlockerAt` consult) and `opts`; `opts` is the live bag, the keys,
+ * the contacts, the inventory, `noHazards` and the planner's constants. So the key is the world BY IDENTITY (a rebuilt
+ * world is a new object) and `opts` BY VALUE, copied (`snapshotValue`: the bag can alias the run's own state, so a
+ * stored reference would compare equal to the very map that moved). A key that cannot be copied is never stored.
+ * ⚠ PER RUN, not per world: a test that flips a geometry switch builds a new run, and a world can outlive one.
+ */
+const WALKABLE_CELLS_MEMO = new WeakMap();
+
+/**
+ * Every walkable lattice cell of the current level, with its player box. ⛓ hammer-phase P1: exported for
+ * `pressKillCost.test.js`, which drives the memo's invalidation (a contact set mutated in place, a new world).
+ */
+export function walkableCells(run, contacts) {
     const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+    let key = UNCACHEABLE;
+    if (PRESS_KILL_COST.enabled) {
+        const memo = WALKABLE_CELLS_MEMO.get(run);
+        if (memo !== undefined && memo.world === run.world && sameValue(opts, memo.key)) {
+            PRESS_KILL_COST_COUNTS.cellsHit += 1;
+            return memo.cells;
+        }
+        PRESS_KILL_COST_COUNTS.cellsMiss += 1;
+        key = snapshotValue(opts);
+    }
+    const out = walkableCellsOf(run, opts);
+    if (key !== UNCACHEABLE) WALKABLE_CELLS_MEMO.set(run, { world: run.world, key, cells: out });
+    return out;
+}
+
+function walkableCellsOf(run, opts) {
     const pitch = DEFAULT_LATTICE;
     const out = [];
     for (let ty = 0; ty < run.world.height * TILE_SIZE / pitch; ty += 1) {
@@ -8990,10 +9025,23 @@ function hammerTestAt(run) {
         : `the ${SPINNER.hammerLength} px hammer line at that tick's own phase`;
 }
 
+/**
+ * ⛓⛓⛓ hammer-phase P1 — THE LINE'S REACH, AS A BOUND THAT DECIDES NOTHING (`PRESS_KILL_COST`). `hammerHitsPlayer` is
+ * `collideLineSolid([box], c, c + L·(cos a, sin a))`: the end points are `trunc`ed (each moves < 1 px), the samples lie
+ * between them, and each sample is tested at itself or `trunc`ed again (< 1 px more). So every point the line can test
+ * is strictly inside the centre's square of half-side `L + 2`, and a box wholly outside that square on one axis is
+ * missed at every phase. The third pixel is slack for the doubles (`cx + L·cos a` rounds). A skipped call could only
+ * have returned null, so the answer is the same; on C1's staging A the refuge's 107 s in this test was the line.
+ */
+const HAMMER_LINE_BOUND = SPINNER.hammerLength + 3;
+
 export function clearOfHammersAt(run, box, forecast, i) {
     const step = forecast[i];
     if (!step) return false;
     const at = typeof run?.gameTimeAt === 'function' ? run.gameTimeAt(i) : null;
+    // ⚠ only where the call would not have thrown (`hammerHitsPlayer`'s own two guards), so no refusal is skipped
+    const bounded = PRESS_KILL_COST.enabled && Number.isFinite(at)
+        && Number.isFinite(box.x) && Number.isFinite(box.y) && Number.isFinite(box.right) && Number.isFinite(box.bottom);
     for (const r of step) {
         const cx = r.x + SPINNER.originX;
         const cy = r.y + SPINNER.originY;
@@ -9007,6 +9055,14 @@ export function clearOfHammersAt(run, box, forecast, i) {
         // `Enemy.hitPlayer` — the body, force 3 — then the hammer's line.
         if (box.right > r.x && box.x < r.right && box.bottom > r.y && box.y < r.bottom) {
             return false;
+        }
+        if (bounded) {
+            if (box.x >= cx + HAMMER_LINE_BOUND || box.right <= cx - HAMMER_LINE_BOUND
+                || box.y >= cy + HAMMER_LINE_BOUND || box.bottom <= cy - HAMMER_LINE_BOUND) {
+                PRESS_KILL_COST_COUNTS.hammerSkipped += 1;
+                continue;
+            }
+            PRESS_KILL_COST_COUNTS.hammerAsked += 1;
         }
         if (hammerHitsPlayer({ x: cx, y: cy }, at, box)) return false;
     }
@@ -9207,7 +9263,7 @@ function strikePressOf(run) {
  *
  * @returns {?{tag, at:{x, y}}} the first blocker, or null
  */
-function strikeLineBlocked(run, from, dir, forecast, i) {
+function strikeLineBlocked(run, from, dir, forecast, i, lines = null) {
     const press = strikePressOf(run);
     if (!press.lineOfSight) return null;
     const rect = press.rect(from.x, from.y, dir);
@@ -9215,15 +9271,40 @@ function strikeLineBlocked(run, from, dir, forecast, i) {
         for (const r of forecast[i + k] ?? []) {
             if (!rectsOverlapLocal(rect, r)) continue;
             if (distanceRectPoint(from.x, from.y, r) > press.reach) continue;
-            const blocker = run.collideLineSolid(from.x, from.y,
-                r.x + SPINNER.originX, r.y + SPINNER.originY);
+            const blocker = lines === null
+                ? run.collideLineSolid(from.x, from.y, r.x + SPINNER.originX, r.y + SPINNER.originY)
+                : lineOnce(lines, run, from, r);
             if (blocker) return blocker;
         }
     }
     return null;
 }
 
-function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = false } = {}) {
+/**
+ * ⛓⛓⛓ hammer-phase P1 — ONE LINE PER (cell, body rect) PER DERIVATION (`PRESS_KILL_COST`). The train window slides one
+ * row per candidate tick, so `strikeLineBlocked` asked the same cell against the same forecast rect up to
+ * `hitTicks + 1` times; nothing advances the run inside a derivation (`previewWalk` and the escape are previews), so
+ * `run.collideLineSolid` cannot answer differently the second time. Keyed by the cell object and the row's rect object
+ * (the forecast's rows are shared, `spinnerForecast`'s note), whose coordinates are the whole question.
+ */
+function lineOnce(lines, run, from, r) {
+    let byRect = lines.get(from);
+    if (byRect === undefined) {
+        byRect = new Map();
+        lines.set(from, byRect);
+    }
+    if (byRect.has(r)) {
+        PRESS_KILL_COST_COUNTS.lineHit += 1;
+        return byRect.get(r);
+    }
+    PRESS_KILL_COST_COUNTS.lineMiss += 1;
+    const blocker = run.collideLineSolid(from.x, from.y, r.x + SPINNER.originX, r.y + SPINNER.originY);
+    byRect.set(r, blocker);
+    return blocker;
+}
+
+/** ⛓ hammer-phase P1: exported for `pressKillCost.test.js` (one derivation, ON against OFF). */
+export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = false } = {}) {
     const index = (run.entities('spinnerBodies') ?? []).findIndex((b) => b.id === bodyId);
     if (index < 0) return null;
     const horizon = strikeHorizon(run);
@@ -9231,6 +9312,8 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
     const cells = walkableCells(run, contacts);
     // ⛓ hammer-phase C2: the press's rect, reach and train length (the sword's, unless the ghost's under the switch)
     const press = strikePressOf(run);
+    // ⛓ hammer-phase P1: this derivation's line answers (`lineOnce`), or none with the switch OFF
+    const lines = PRESS_KILL_COST.enabled ? new Map() : null;
     // ⛓ The admissible ETA floor, once per cell — see `minTicksBetween`.
     const floor = new Map(cells.map((c) => [c, minTicksBetween(run.state, c)]));
     const opportunities = [];
@@ -9260,7 +9343,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
         for (let k = -2; k <= press.hitTicks + 1; k += 1) {
             if (!clearOfHammersAt(run, c.box, forecast, i + k)) return false;
         }
-        if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i)) {
+        if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i, lines)) {
             if (countSighted) sighted += 1;
             return false;
         }
