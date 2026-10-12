@@ -8175,6 +8175,8 @@ export function createLevelRun({
                         enemyClass: ENEMY_CLASSES[c.tag]?.as3 ?? null,
                         hits: c.hits,
                         hitsTimer: c.hitsTimer,
+                        // ⛓ fidelity L74LEG624 D3: a body in its death takes no hit (`strikePolicy` reads it, ON only).
+                        ...(CONTACT_FIDELITY.strikeIframeLapse && c.dying ? { spent: true } : {}),
                     }));
             },
             /**
@@ -14549,6 +14551,9 @@ export function createLevelRun({
                 rect: chaserBoxAt(c.tag, c.x, c.y),
                 hits: c.hits,
                 hitsTimer: c.hitsTimer,
+                // ⛓ fidelity L74LEG624 D3: `Enemy.hit`'s `hits < hitsMax` — a body in its death takes no hit
+                // (`strikePolicy` reads it, `CONTACT_FIDELITY.strikeIframeLapse` ON only; OFF the shape is unchanged).
+                ...(CONTACT_FIDELITY.strikeIframeLapse && c.dying ? { spent: true } : {}),
             });
         }
         return out;
