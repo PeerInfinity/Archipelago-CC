@@ -272,7 +272,7 @@ export const CONTACT_FIDELITY = {
     /**
      * fidelity MOVINGWAIT D2 — A LATCHED WAIT MAY PACE (`solverBot.MOVING_WAIT` reads this key).
      *
-     *     ButtonRoom.as:66-71   set activate(a): if (a) { … } — "Can't be reset to false!!", so walking off changes nothing
+     *     ButtonRoom.as:67-69   set activate(a): if (a) { … } — "Can't be reset to false!!", so walking off changes nothing
      *     BombPusher.as:44-62   every bomb is aimed at the player's point at the wrap; Explosion.as:52-56 the 15 px disc
      *
      * A standing player within 256 px of a BombPusher is always hit (the blast lands ≤ 8.5 px past the aim), and on
