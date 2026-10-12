@@ -127,7 +127,10 @@ def export_post_output_hook(
             if exporter_supports_format_fallback():
                 fallback_kwargs["format_fallback_from"] = {"requested": rules_format, "reason": reason}
             else:
-                logger.error(
+                # Expected on a compiled install (the extended Rule Builder cannot load): WARNING there.
+                from Utils import is_frozen
+                logger.log(
+                    logging.WARNING if is_frozen() else logging.ERROR,
                     "rules_json_format fallback: requested '%s', writing 'ast'. Cause: %s",
                     rules_format, reason,
                 )

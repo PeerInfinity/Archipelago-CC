@@ -2921,18 +2921,21 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         fallback_record = format_fallback.make_record(
             format_fallback_from.get("requested", "rule_builder"), "ast",
             format_fallback_from.get("reason", "unknown"))
-        format_fallback.log_fallback(fallback_record)
+        # An import-time fallback: expected on a compiled install (WARNING there).
+        format_fallback.log_fallback(fallback_record, expected=format_fallback.is_compiled_install())
 
     if rules_json_format in ("rule_builder", "both"):
         if convert_rules_file_to_rule_builder is None:
+            expected = format_fallback.is_compiled_install()
             if _CONVERTER_IMPORT_ERROR is not None:
                 reason = "the Rule Builder converter failed to import: " + _CONVERTER_IMPORT_ERROR
                 format_fallback.log_traceback_once(
-                    "exporter.converter import failed", _CONVERTER_IMPORT_TRACEBACK or "")
+                    "exporter.converter import failed", _CONVERTER_IMPORT_TRACEBACK or "", expected)
             else:
                 reason = "the Rule Builder converter is not available"
             fallback_record = format_fallback.make_record(rules_json_format, "ast", reason)
-            format_fallback.log_fallback(fallback_record)
+            # An import-time fallback: expected on a compiled install (WARNING there).
+            format_fallback.log_fallback(fallback_record, expected=expected)
             rules_json_format = "ast"
 
     if rules_json_format in ("rule_builder", "both"):

@@ -7,8 +7,11 @@ exporter cannot produce it, the exporter still writes AST format (the user's
 ruling, 2026-10-11: keep the fallback). This module makes that visible in three
 places:
 
-1. the log: one ERROR line per fallback naming requested vs written format and
-   the real cause (the exception type, message and raising frame);
+1. the log: one line per fallback naming requested vs written format and
+   the real cause (the exception type, message and raising frame). ERROR, except
+   an import-time fallback on a compiled (frozen) install, where the extended
+   Rule Builder cannot load and the fallback is expected: WARNING (the user's
+   ruling, 2026-10-12);
 2. the output file: a ``format_fallback`` record in every slot's
    ``exporter["<player>"]`` block (declared in frontend/schema/rules.schema.json);
    absent on a normal export, so normal output is byte-identical;
@@ -31,8 +34,8 @@ RECORD_KEY = "format_fallback"
 _fallbacks: List[Dict[str, Any]] = []
 
 # The full traceback of an import failure is logged once per process (at
-# ERROR, so it is seen at the default log level); every later fallback for the
-# same cause logs only its one-line cause.
+# ERROR, so it is seen at the default log level; at DEBUG when the fallback is
+# expected); every later fallback for the same cause logs only its one-line cause.
 _traceback_logged: set = set()
 
 
@@ -57,11 +60,22 @@ def format_traceback(exc: BaseException) -> str:
     return "".join(traceback.format_exception(type(exc), exc, exc.__traceback__)).rstrip()
 
 
-def log_traceback_once(what: str, traceback_text: str) -> None:
+def is_compiled_install() -> bool:
+    """A compiled (frozen) Archipelago, where the extended Rule Builder cannot
+    load, so an import-time fallback is expected on every run."""
+    try:
+        from Utils import is_frozen
+        return bool(is_frozen())
+    except Exception:
+        return False
+
+
+def log_traceback_once(what: str, traceback_text: str, expected: bool = False) -> None:
     if what in _traceback_logged:
         return
     _traceback_logged.add(what)
-    logger.error("%s — full traceback:\n%s", what, traceback_text)
+    logger.log(logging.DEBUG if expected else logging.ERROR,
+               "%s — full traceback:\n%s", what, traceback_text)
 
 
 def make_record(requested: str, written: str, reason: str,
@@ -74,8 +88,10 @@ def make_record(requested: str, written: str, reason: str,
     }
 
 
-def log_fallback(record: Dict[str, str]) -> None:
-    logger.error(
+def log_fallback(record: Dict[str, str], expected: bool = False) -> None:
+    """ERROR, or WARNING when ``expected`` (an import-time fallback on a compiled install)."""
+    logger.log(
+        logging.WARNING if expected else logging.ERROR,
         "rules_json_format fallback: requested '%s', writing '%s' (Rule Builder output %s). Cause: %s",
         record["requested"], record["written"], record["rule_builder_output"], record["reason"],
     )

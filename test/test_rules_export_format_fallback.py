@@ -49,6 +49,7 @@ def _check_record_against_schema(record):
 DRIVER = textwrap.dedent(r'''
     import importlib.abc, importlib.machinery, json, logging, sys
     mode, fmt, outdir = sys.argv[1:4]
+    compiled = len(sys.argv) > 4 and sys.argv[4] == "compiled"
 
     if mode in ("AttributeError", "ImportError"):
         # exporter.converter raises while it executes: the shape of a real bug in
@@ -90,6 +91,10 @@ DRIVER = textwrap.dedent(r'''
 
     def export(multiworld):
         import exporter.exporter as ex
+        if compiled:
+            # A compiled (frozen) install, without freezing the interpreter itself.
+            from exporter import format_fallback as ff
+            ff.is_compiled_install = lambda: True
         if mode == "convert":
             def _broken_convert(data):
                 raise ValueError("conversion forced to fail by the test")
@@ -119,12 +124,12 @@ DRIVER = textwrap.dedent(r'''
 ''')
 
 
-def _run(tmp_path, mode, fmt):
+def _run(tmp_path, mode, fmt, compiled=False):
     driver = tmp_path / "driver.py"
     driver.write_text(DRIVER, encoding="utf-8")
     out = tmp_path / "out"
     proc = subprocess.run(
-        [sys.executable, str(driver), mode, fmt, str(out)],
+        [sys.executable, str(driver), mode, fmt, str(out)] + (["compiled"] if compiled else []),
         cwd=ROOT, capture_output=True, text=True, timeout=600,
         env={**os.environ, "PYTHONPATH": str(ROOT)},
     )
@@ -190,6 +195,25 @@ def test_a_fallback_is_logged_recorded_and_summarised(tmp_path, mode, fmt, cause
     expected_paths = [written["rules_combined"], written["rules_p1"], written["rules_p2"]]
     assert payload["summary"] == (
         f"WARNING: 3 rules file(s) written in ast instead of {fmt}: {', '.join(expected_paths)}")
+
+
+@pytest.mark.parametrize("mode", ["AttributeError", "ImportError", "hook", "convert"])
+def test_on_a_compiled_install_an_import_fallback_is_a_warning(tmp_path, mode):
+    """The user's ruling (2026-10-12): on a compiled install the extended Rule
+    Builder cannot load, so an IMPORT-time fallback is expected and logs at
+    WARNING (its traceback at DEBUG). A conversion error is never expected: ERROR.
+    The record and the summary are unchanged."""
+    payload, stderr, _ = _run(tmp_path, mode, "rule_builder", compiled=True)
+    lines = stderr.splitlines()
+    warnings = [l for l in lines if l.startswith("WARNING rules_json_format fallback:")]
+    errors = [l for l in lines if l.startswith("ERROR rules_json_format fallback:")]
+    if mode == "convert":
+        assert len(errors) == 1 and not warnings, stderr[-4000:]
+    else:
+        assert len(warnings) == 1 and not errors, stderr[-4000:]
+        assert "requested 'rule_builder', writing 'ast'" in warnings[0]
+        assert not [l for l in lines if l.startswith("ERROR ")], stderr[-4000:]
+    assert payload["entries"] and payload["summary"].startswith("WARNING: 3 rules file(s) written in ast")
 
 
 def test_a_normal_export_has_no_record_and_no_summary(tmp_path):
