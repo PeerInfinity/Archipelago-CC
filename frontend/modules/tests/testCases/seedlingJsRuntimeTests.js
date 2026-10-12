@@ -1119,20 +1119,78 @@ async function slowRoomOnPage(tc) {
     return there ? { rt, win, exitTile: tile(SLOW_ROOM.exit) } : null;
 }
 
+/**
+ * ⛓ IN-APP TIMING CONTROLS — the rows below need a solve IN FLIGHT past a bound (the 300 ms backstop; ≥ 500 ms of a
+ * held room). A real solve's length is not a control: wave 12's SOLVECOST made L12 5.8–12.7× faster and both rows
+ * went red. So the ROW owns the hold, through the seam the page already has — its service builds each worker with
+ * `new win.Worker(…)` when it needs one (`jsRuntimePage.js`): while installed, the page's next worker is a REAL solve
+ * worker wrapped here. `started` passes straight through (the backstop counts from it); then —
+ *   `{ answer: false }`        nothing more reaches the page (no pass, no progress, no result): it never answers;
+ *   `{ answer: true, holdMs }` the real result is delivered no sooner than `holdMs` after `started` (passes and
+ *                              progress pass through; a terminated worker's held result is dropped).
+ * The solve itself is untouched (the worker runs the request it was sent), and nothing in production changes.
+ * `restore()` puts the page's Worker back and drops a wrapped worker that is still live (`dispose`), so the next
+ * solve on this page builds a real one.
+ */
+function holdSolveWorker(win, svc, { answer, holdMs = 0 }) {
+    const RealWorker = win.Worker;
+    const record = { wrapped: 0, started: 0, swallowed: 0, held: 0, delivered: 0, solveMs: null, disposedFirst: false };
+    // A worker built before the hold would bypass it: drop it, so the next solve builds a wrapped one.
+    if (svc.stats.live) { svc.dispose(); record.disposedFirst = true; }
+    class HeldWorker {
+        constructor(url, opts) {
+            const real = new RealWorker(url, opts);
+            record.wrapped += 1;
+            let startedAt = null;
+            let dead = false;
+            this.onmessage = null;
+            this.onerror = null;
+            const pass = (event) => { if (!dead) this.onmessage?.(event); };
+            real.onmessage = (event) => {
+                const type = event.data?.type;
+                if (type === 'started') { startedAt = win.performance.now(); record.started += 1; pass(event); return; }
+                if (!answer) { record.swallowed += 1; return; }
+                if (type !== 'result') { pass(event); return; }
+                record.solveMs = Math.round(win.performance.now() - startedAt);
+                const wait = holdMs - (win.performance.now() - startedAt);
+                if (wait <= 0) { record.delivered += 1; pass(event); return; }
+                record.held += 1;
+                win.setTimeout(() => { if (!dead) { record.delivered += 1; pass(event); } }, wait);
+            };
+            real.onerror = (event) => { if (!dead) this.onerror?.(event); };
+            this.postMessage = (msg) => real.postMessage(msg);
+            this.terminate = () => { dead = true; real.terminate(); };
+        }
+    }
+    win.Worker = HeldWorker;
+    return {
+        record,
+        restore() {
+            if (win.Worker === HeldWorker) win.Worker = RealWorker;
+            if (svc.stats.live) svc.dispose();
+        },
+    };
+}
+
 export async function seedlingJsRuntimeSolverBudgetFallsBack(tc) {
     let previousRuntime = 'auto';
     let previousSolver = false;
     try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
     try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
     let rt = null;
+    let hold = null;
     try {
         const up = await slowRoomOnPage(tc);
         if (!up) return tc.getOverallResult();
         ({ rt } = up);
         // ⛓ DETERMINISTIC BUDGET — the solve's budget is WORK (the same answer on every machine), so the only
         // wall-clock cut left is the BACKSTOP, shortened here (the test knob; the page also reads
-        // ?solverBackstopMs=) — the door solve needs ~5 s. Past it the goal FAILS by name: nothing is played,
-        // nothing is walked instead (a slow machine never changes the outcome into a different one).
+        // ?solverBackstopMs=). Past it the goal FAILS by name: nothing is played, nothing is walked instead (a slow
+        // machine never changes the outcome into a different one).
+        // ⛓ IN-APP TIMING CONTROLS — the solve is kept in flight past the backstop by the ROW (its worker starts and
+        // never answers, `holdSolveWorker`), not by the solve being slow: the door solve took ~5 s, and since wave
+        // 12's SOLVECOST it finishes inside 300 ms, so this row went red.
+        hold = holdSolveWorker(up.win, rt.playback.solveService, { answer: false });
         const backstop = rt.playback.solverBackstopMs;
         rt.playback.setSolverBackstopMs(300);
         const solves0 = rt.playback.solveService.stats.terminated;
@@ -1141,15 +1199,15 @@ export async function seedlingJsRuntimeSolverBudgetFallsBack(tc) {
         // ⚠ NOT the run's total tick count: once the goal has FAILED the walker hands back no keys, so the page's
         // clock steps the room IDLE (as it does with no goal at all) — from the very tick that failed (measured on
         // CI: 3 → 4, every run). The hold is sampled WHILE the solve is in flight instead.
-        const hold = { first: null, last: null, samples: 0 };
+        const held = { first: null, last: null, samples: 0 };
         rt.playback.walkTo({ kind: 'exit', level: SLOW_ROOM.level, tiles: [up.exitTile] });
         rt.playback.play();
         const failed = await tc.pollForCondition(() => {
             if (rt.playback.solving) {
                 const t = rt.run.ticksCompleted;
-                hold.first ??= t;
-                hold.last = t;
-                hold.samples += 1;
+                held.first ??= t;
+                held.last = t;
+                held.samples += 1;
             }
             return rt.playback.state === 'failed';
         }, 'the solve was cut off at the backstop and the goal FAILED', 15000, 50);
@@ -1162,9 +1220,12 @@ export async function seedlingJsRuntimeSolverBudgetFallsBack(tc) {
         tc.assertEqual('one backstop, no solve, no decline, nothing played', '1/0/0/0', `${s.backstops}/${s.solves}/${s.declines}/${s.played}`);
         tc.assertEqual('the worker was TERMINATED', solves0 + 1, rt.playback.solveService.stats.terminated);
         tc.assertEqual('cut off at the backstop, not before it', true, s.lastWaitMs >= 300 && s.lastWaitMs < 3000);
-        tc.log(`held ${hold.samples} sample(s) at run tick ${hold.first}..${hold.last}; walker ${JSON.stringify(rt.playback.stats)}`);
+        tc.log(`held ${held.samples} sample(s) at run tick ${held.first}..${held.last}; walker ${JSON.stringify(rt.playback.stats)}; `
+            + `row's worker ${JSON.stringify(hold.record)}`);
+        tc.assertEqual('the solve ran in the row\'s held worker (one real worker wrapped, it STARTED, it never answered)',
+            '1/1/0', `${hold.record.wrapped}/${hold.record.started}/${hold.record.delivered}`);
         tc.assertEqual('the room was HELD while the solve was in flight (sampled; the run never stepped under it)', true,
-            hold.samples > 0 && hold.first === hold.last);
+            held.samples > 0 && held.first === held.last);
         const { driven, plans } = rt.playback.stats;
         tc.assertEqual('the page did not walk the goal instead (the walker drove 0 ticks, planned 0 routes)', '0/0',
             `${driven}/${plans}`);
@@ -1178,6 +1239,7 @@ export async function seedlingJsRuntimeSolverBudgetFallsBack(tc) {
         tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
     } finally {
         try { rt?.playback.reset(); } catch { /* best effort */ }
+        try { hold?.restore(); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
     }
@@ -1189,8 +1251,9 @@ registerTest({
     // ⛓ DETERMINISTIC BUDGET — the id is kept (a rename would re-enrol the row); its subject is now the BACKSTOP.
     name: 'Seedling JS runtime: a solve past the wall-clock backstop is terminated and the goal FAILS by name (never walked, never played)',
     description: 'With flashPanel.runtime = js and flashPanel.seedlingSolverWalk ON, on seedling_atlas: the page is '
-        + 'teleported to level 12\'s door (the slowest measured solve, ~5 s) and its wall-clock backstop shortened to 300 ms '
-        + '(playback.setSolverBackstopMs, the test knob; the solve\'s own budget is work units, the same on every machine). '
+        + 'teleported to level 12\'s door and its wall-clock backstop shortened to 300 ms (playback.setSolverBackstopMs, the '
+        + 'test knob; the solve\'s own budget is work units, the same on every machine). The ROW keeps the solve in flight: '
+        + 'the page\'s next worker is a real one wrapped so it starts and never answers (never the solve\'s speed). '
         + 'The worker is terminated at the backstop and the goal FAILS with "the solve exceeded the backstop on this machine '
         + '(0.3 s) …"; nothing of the solve is played and the walker does not take the goal instead.',
     testFunction: seedlingJsRuntimeSolverBudgetFallsBack,
@@ -1204,6 +1267,7 @@ export async function seedlingJsRuntimeSolverKeepsTheFrameClock(tc) {
     try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
     try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
     let rt = null;
+    let hold = null;
     try {
         const up = await slowRoomOnPage(tc);
         if (!up) return tc.getOverallResult();
@@ -1235,6 +1299,11 @@ export async function seedlingJsRuntimeSolverKeepsTheFrameClock(tc) {
         win.requestAnimationFrame(frame);
         let solveStart = null;
         let runTicksAtStart = null;
+        // ⛓ IN-APP TIMING CONTROLS — the solve is kept in flight ≥ HOLD_MS by the ROW (the real worker's real answer is
+        // delivered no sooner, `holdSolveWorker`), not by the solve being slow: it took ~2 s, and since wave 12's
+        // SOLVECOST it can finish inside the 500 ms this row needs to watch the clock, so the row went red.
+        const HOLD_MS = 800;
+        hold = holdSolveWorker(win, rt.playback.solveService, { answer: true, holdMs: HOLD_MS });
         // ⛓ DETERMINISTIC BUDGET — no budget override: the work budget gives this solve the same answer under any load.
         try {
             rt.playback.setSolverWalk(true);
@@ -1258,11 +1327,14 @@ export async function seedlingJsRuntimeSolverKeepsTheFrameClock(tc) {
         const s = rt.playback.solverStats;
         tc.log(`solve ${s.lastSolve?.solveMs} ms in the worker (waited ${s.lastSolve?.waitMs} ms, observed ${Math.round(clock.solvingMs)} ms); `
             + `max heartbeat gap while solving ${Math.round(clock.maxBeatGap)} ms; max animation-frame gap ${Math.round(clock.maxFrameGap)} ms `
-            + `over ${clock.frames} frame(s)`);
+            + `over ${clock.frames} frame(s); row's worker ${JSON.stringify(hold.record)}`);
         tc.assertEqual('the walk is DONE (level 12 → 36)', 'done', rt.playback.state);
         tc.assertEqual('solved once in the worker, no decline, no refutation', '1/0/0/worker',
             `${s.solves}/${s.declines}/${s.refutations}/${s.lastSolve?.where}`);
-        tc.assertEqual('a real solve was in flight (≥ 500 ms)', true, clock.solvingMs >= 500);
+        tc.assertEqual('the solve ran in the row\'s held worker (one real worker wrapped, it STARTED, its one answer delivered)',
+            '1/1/1', `${hold.record.wrapped}/${hold.record.started}/${hold.record.delivered}`);
+        tc.assertEqual(`a solve was in flight ≥ 500 ms (its real answer held to ${HOLD_MS} ms; the worker answered in ${hold.record.solveMs} ms)`,
+            true, clock.solvingMs >= 500);
         tc.assertEqual(`the room was HELD while it was (the run did not step over ${clock.held} sample(s))`, 0, clock.ticksWhileSolving);
         tc.assertEqual('⛔ the page\'s frame clock did not stall: every heartbeat gap < 250 ms while solving', true,
             clock.maxBeatGap > 0 && clock.maxBeatGap < 250);
@@ -1270,6 +1342,7 @@ export async function seedlingJsRuntimeSolverKeepsTheFrameClock(tc) {
         tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
     } finally {
         try { rt?.playback.reset(); } catch { /* best effort */ }
+        try { hold?.restore(); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
     }
@@ -1280,7 +1353,8 @@ registerTest({
     id: 'seedling-js-runtime-solver-keeps-the-frame-clock',
     name: 'Seedling JS runtime: the solver thinks in a worker — the page\'s frame clock never stalls',
     description: 'With flashPanel.runtime = js and flashPanel.seedlingSolverWalk ON, on seedling_atlas: level 12, 120 '
-        + 'walker ticks in (a ~2 s solve, S1 froze the page for it). The solve runs in the worker; the page\'s 20 ms '
+        + 'walker ticks in (S1 froze the page for its solve). The solve runs in the worker — the ROW holds its real answer to '
+        + '800 ms, so the page waits that long whatever the solve\'s speed; the page\'s 20 ms '
         + 'heartbeat never gaps past 250 ms while it does, the room is held (the run does not step), and the plan then '
         + 'plays to level 36 — solved once, no decline, no refutation.',
     testFunction: seedlingJsRuntimeSolverKeepsTheFrameClock,
