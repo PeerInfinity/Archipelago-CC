@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1064,
         "indexHeadings": 2,
-        "lines": 27927,
+        "lines": 27931,
         "pages": 4,
-        "words": 365064
+        "words": 365522
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -169,7 +169,7 @@ export const DOCS_INDEX = frz({
             "file": "playback-and-debugging.md",
             "h1": "Playback and Debugging Tools",
             "headings": 9,
-            "lines": 112,
+            "lines": 114,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -178,7 +178,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/playback-and-debugging.md",
-            "words": 3313
+            "words": 3474
         },
         {
             "description": "How loop mode records what a player does in a region and plays it back: per-block modes (Manual, Record, Playback, Bot) and the Instant toggle, the saved-recording store, the capture contract that decides who records, queue annotations, summary substrates, reset handling and multi-run replay, and the strict action gate.",
@@ -426,7 +426,7 @@ export const DOCS_INDEX = frz({
             "file": "jta.md",
             "h1": "JtA Substrate",
             "headings": 14,
-            "lines": 161,
+            "lines": 163,
             "links": [
                 "architecture.md",
                 "gotchas.md",
@@ -435,7 +435,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/jta.md",
-            "words": 3510
+            "words": 3807
         },
         {
             "description": "The omsi substrate (`frontend/modules/omsiSubstrateWrapper/`, id `omsi`) runs the `PeerInfinity/omsi-loops` fork of Idle Loops, from the `frontend/modules/omsi-loops/` submodule, in a same-origin iframe as a loop-mode substrate. The host owns the game clock, and the game's per-loop mana budget is the shared mana pool.",

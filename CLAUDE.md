@@ -203,6 +203,7 @@ The in-app runner races the whole roster against one wall-clock budget
 ```
 npm test -- --mode=test-substrates --batch=fast          # everything no other batch claims (+ the smoke rows)
 npm test -- --mode=test-substrates --batch=seedling-js   # the Seedling JS/wasm runtime rows
+npm test -- --mode=test-substrates --batch=playback-bot  # the Playback Bot rows (generated worlds played to the end, Loop mode too)
 npm test -- --mode=test-substrates --batch=apworld       # the apworld editor rows only
 npm test -- --mode=test-substrates --batch=bot-walks     # MANUAL: the real-time bot legs only
 npm test -- --mode=test-substrates --batch=noiz2sa       # MANUAL: the noiz2sa substrate rows
