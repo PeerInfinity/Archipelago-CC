@@ -417,6 +417,11 @@ export function createRunForStaging(staging, levelSource, { scratchPersistence =
         // session state the items alone cannot rebuild: Fire received before
         // the sword is `[1, 0]` there for good (`levelRun`'s `inventorySlots`).
         inventorySlots: staging.inventory_slots ?? null,
+        // ⛓⛓⛓ SEEDLING FIDELITY STAGEDHITS: and the player's DAMAGE, another OPTIONAL field no tape carries
+        // (`stagingFromTape` does not copy it): `{hits, hits_timer, direction_face?}` off the game's `botStatus` at a
+        // staging where the game KEPT its `Player` (an in-place re-stage — `playerDamage.stagedPlayerDamage`). Absent
+        // = a fresh `Player`'s 0/0/−1, which is every replay.
+        playerDamage: staging.player_damage ?? null,
         // ⚠ The runner consults the SAME census the driver plans with,
         // and `noclip` is what decides it on both sides. A noclip tape
         // asks no collider question, so requiring a blocking
