@@ -456,7 +456,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         return { slots, primary: Number.isInteger(run.primary) ? run.primary : 0 };
     }
 
-    function boot({ level, x, y }, why) {
+    function boot({ level, x, y }, why, { playerDamage = null } = {}) {
         const src = roomSource();
         if (!src) throw new Error('jsRuntimeCore: no level set is mounted and no vanilla map is loaded — nothing to boot');
         if (!src.records.has(level)) {
@@ -477,6 +477,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             staging.inventory_slots = slots.slots;
             staging.seam = { ...(staging.seam ?? {}), primary: slots.primary };
         }
+        // ⛓ STAGEDHITS CONSUMER — an in-place reboot keeps the game's `Player` (an item flag rebuilds no world), so
+        // its damage is STAGED (`playerDamage.stagedPlayerDamage`); absent everywhere else (a new `Player`, 0 hits).
+        if (playerDamage) staging.player_damage = playerDamage;
         bootItems = { ...flags };
         try {
             session = createManualSession({ levelSource: src.source, staging, name: 'js-runtime', scratchPersistence: true });
@@ -669,12 +672,23 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         return [...all.values()].map((c) => ({ level: c.level, tag: c.tag })).sort((a, b) => a.level - b.level || a.tag - b.tag);
     }
 
+    /**
+     * ⛓ STAGEDHITS CONSUMER — the run's damage as a staging's `player_damage` (fidelity wave 14): on this page the
+     * run IS the game, and the game keeps its `Player` through an item-flag reboot. null when the player carries
+     * none (0 hits, no i-frame, no parked facing): the staging stays byte-identical to a fresh `Player`'s.
+     */
+    function carriedDamage(run) {
+        const d = run.damage;
+        if (!(d.hits > 0 || d.hitsTimer > 0 || d.directionFace !== -1)) return null;
+        return { hits: d.hits, hits_timer: d.hitsTimer, direction_face: d.directionFace };
+    }
+
     function rebootInPlace(why) {
         const run = session.run;
         // The player's tick-0 state is the ctor args plus the half tile.
         const half = 8;
         const keep = arrival;
-        boot({ level: run.level, x: run.state.x - half, y: run.state.y - half }, why);
+        boot({ level: run.level, x: run.state.x - half, y: run.state.y - half }, why, { playerDamage: carriedDamage(run) });
         arrival = keep;
     }
 
@@ -1009,6 +1023,10 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             x: session ? session.run.state.x : null,
             y: session ? session.run.state.y : null,
             deaths: deaths.length,
+            // ⛓ STAGEDHITS CONSUMER — the player's damage, as the wasm game's `botStatus` names it (`Bot.as:2124-2125`),
+            // so `playerDamage.playerDamageFromStatus` reads the same keys on both runtimes.
+            hits: session ? session.run.damage.hits : 0,
+            hits_timer: session ? session.run.damage.hitsTimer : 0,
             halted: halted ? halted.message : null,
             // ⛓ OBSTACLE EVENTS — the game's cleared persistence slots, as the wasm game's `botStatus` reports them
             // (`persistence_cleared`): what earlier runs carried + what this run cleared. The collector's load read.

@@ -106,7 +106,7 @@ import {
 import {
     adoptedClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, locationGoalServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
-    forcedHitContinuationRefusal, primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
+    primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
 } from '../seedlingDemo/wasmPlayback.js';
 import {
@@ -119,6 +119,7 @@ import { axeDodgeOverride } from './seedlingAxeDodgeSettings.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
+import { playerDamageFromStatus, stagedHitsMismatch } from '../seedlingDemo/playerDamage.js';
 import {
     deliveredItems, deliveredSaveArrays, deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, equipSlotRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites,
     liveSaveArrays, mergeSaveArrays, saveArraysOfWrites, saveDelta, slotsAfterDelivery, stageItems, stageSaveArrays,
@@ -266,8 +267,7 @@ export function createWasmPlayback({
      * `{level, staging, shipped, spawn, begin}` — the arrival's staging and
      * every key set shipped since, i.e. the SHADOW's recipe. null = no exact
      * staging of the room the player is in (the cold start, a fallback, a
-     * crossing in flight). ⛓ FORCED-HIT CONSUMER — `damage`: the last forced plan shipped here
-     * (`forcedHitContinuationRefusal`).
+     * crossing in flight).
      */
     let room = null;
     /**
@@ -644,8 +644,12 @@ export function createWasmPlayback({
             try {
                 ({ staging } = stagingFromWasmArrival({ seam: se, status: st, state, record }));
                 staging = withApSave(staging);
+                // ⛓ STAGEDHITS CONSUMER — a room someone else walked keeps its `Player`: hits the game reports are
+                // STAGED from it (`playerDamageFromStatus`), never refused. A running i-frame still refuses
+                // (`adoptionRefusal`): it counts down with the frames, so the shadow would depend on N.
+                if (st.hits) staging = { ...staging, player_damage: playerDamageFromStatus(st) };
                 const one = replayTape({ staging, perTick: [new Set()], levelSource, scratchPersistence: true });
-                shadow = { x: one.state.x, y: one.state.y, direction: one.state.direction };
+                shadow = { x: one.state.x, y: one.state.y, direction: one.state.direction, hits: one.damage.hits };
             } catch (err) { return refused('staging', String(err?.message ?? err).split('\n')[0]); }
         }
         const mobiles = J(game()?.botMobiles?.());
@@ -1144,10 +1148,6 @@ export function createWasmPlayback({
             startSolve(request, { staging: r.staging, continuation: false });
             return;
         }
-        // ⛓ FORCED-HIT CONSUMER (interim) — a forced hit in this world and no door since: no staging carries the
-        // player's hits (wave-14 STAGED PLAYER HITS), so the continuation is refused by name → the forced re-arrival.
-        const hitWhy = forcedHitContinuationRefusal(r.damage);
-        if (hitWhy) { contFallback(hitWhy, 'forced-hit-continuation'); return; }
         const st = status();
         let c;
         // ⛓ MID-ROOM REPLAN — a room frozen MID-SPAN continues with a LEAD tick holding exactly the keys the frozen
@@ -1155,6 +1155,7 @@ export function createWasmPlayback({
         // releases them, so the solve starts from the shadow one tick later. The held check reads the shadow BEFORE it.
         const lead = r.lead ?? [];
         let heldRow = null;
+        let heldDamage = null;
         try {
             c = continuationSolveRequest({ staging: r.staging, shipped: [...r.shipped, ...lead], goal, levelSource, records, record,
                 name: `wasm-continue-${goal.kind}-${goal.level}`, equips: roomEquips(r) });
@@ -1162,12 +1163,15 @@ export function createWasmPlayback({
                 const before = replayTape({ staging: r.staging, perTick: r.shipped.map((h) => new Set(h)), levelSource, scratchPersistence: true,
                     equips: roomEquips(r) });
                 heldRow = { level: before.level, x: before.state.x, y: before.state.y, deaths: before.playerDeaths.length, primary: before.primary };
+                heldDamage = before.damage;
             }
         } catch (err) {
             contFallback(`the continuation could not be built: ${String(err?.message ?? err).split('\n')[0]}`, 'continuation-error');
             return;
         }
-        const mismatch = shadowMismatch(heldRow ?? c.shadowRow, st);
+        // ⛓ STAGEDHITS CONSUMER — the shadow RE-BILLS the prefix's hits (a forced crossing included); the game's
+        // `{hits, hits_timer}` must equal it, or the room is not the shadow: the same STOP, named with both.
+        const mismatch = shadowMismatch(heldRow ?? c.shadowRow, st) ?? stagedHitsMismatch(heldDamage ?? c.shadowDamage, st);
         stats.heldChecks.push({ level: r.level, shipped: r.shipped.length, shadow: heldRow ?? c.shadowRow, game: st && { level: st.level, x: st.x, y: st.y },
             held: st?.held ?? null, frozen: st?.frozen ?? null, equal: !mismatch });
         if (mismatch) {
@@ -1493,9 +1497,6 @@ export function createWasmPlayback({
             room.equips = [...(room.equips ?? []), ...tapeEquips(plan.equipsAt, room.shipped.length)];
             room.shipped = [...room.shipped, ...plan.solution.map((h) => [...h])];
             room.plans = (room.plans ?? 0) + 1;
-            // ⛓ FORCED-HIT CONSUMER — the damage this world now carries (the last forced plan's; a door or a
-            // re-arrival replaces the room, and with it this record: a new `Player` starts at 0 hits).
-            if (plan.damage) room.damage = { ...plan.damage };
             if (talk?.left) room.talkCircles = [];
         }
         note(`playing ${play.ticks} ticks (${(plan.verbs ?? []).join(',') || 'walk'}`
