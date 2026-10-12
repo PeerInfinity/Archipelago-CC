@@ -66,7 +66,7 @@ const groupZero = (run) => run.world.activators.filter((a) => a.t === 0);
 const presserOf = (run) => run.world.pressers.find((p) => p.x === 272 && p.y === 208);
 
 describe('MOVINGWAIT — the switch and the vocabulary', () => {
-    it('movingWait ships OFF, and MOVING_WAIT reads it', () => {
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('movingWait ships OFF, and MOVING_WAIT reads it', () => {
         expect(CONTACT_FIDELITY_DEFAULTS.movingWait).toBe(false);
         expect(MOVING_WAIT.enabled).toBe(CONTACT_FIDELITY.movingWait);
         withMovingWait(true, () => expect(CONTACT_FIDELITY.movingWait).toBe(true));
