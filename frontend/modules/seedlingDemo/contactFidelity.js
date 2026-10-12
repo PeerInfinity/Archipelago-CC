@@ -351,6 +351,21 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_FORECAST_SPEED_BY_TERRAIN=0` opts out.
      */
     forecastSpeedByTerrain: true,
+    /**
+     * fidelity L74ARRIVAL — A BUTTON UNDER A ROOM ARRIVAL PRESSES ON THE WORLD'S FIRST LIVE FRAME (`levelRun.advance`).
+     *
+     *     Button.as:27-39     update(): collideTypesInto(["Player","Enemy","Solid"], x, y, v) … activate = tempCheck
+     *     FallRock.as:103-109 fall(): … Game.freezeObjects = true
+     *     Game.loadlevel      the Player is added before the buttons and `World.addUpdate` prepends, so on the first
+     *                         live frame `Button.update` reads the cell the player was BUILT in, before `Player.update`
+     *
+     * The model armed a button only from a POST-MOVE box (the end of a tick), so a world's first live frame never
+     * pressed one: L74 from the L73 door lands on `button@288,128`, the game freezes on t1 and the model moved on t1
+     * and froze on t2 (every leg-624 witness: Δy +0.8/−1.35 at t1–t2). ON: `firstTickInWorld` arms from the arrival
+     * box before the pending-fall resolve (a boot, a door arrival, a death or ending reboot). OFF: byte-identical.
+     * ⛔ OFF by default (no licence yet); `SEEDLING_ARRIVAL_BUTTON_ARM=0|1` for a node measurement.
+     */
+    arrivalButtonArm: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -430,6 +445,9 @@ if (globalThis.process?.env?.SEEDLING_FALLROCK_POSTFALL === '1') CONTACT_FIDELIT
 if (globalThis.process?.env?.SEEDLING_FALLROCK_POSTFALL === '0') CONTACT_FIDELITY.fallRockPostFall = false;
 if (globalThis.process?.env?.SEEDLING_FORECAST_SPEED_BY_TERRAIN === '1') CONTACT_FIDELITY.forecastSpeedByTerrain = true;
 if (globalThis.process?.env?.SEEDLING_FORECAST_SPEED_BY_TERRAIN === '0') CONTACT_FIDELITY.forecastSpeedByTerrain = false;
+// ⛓ fidelity L74ARRIVAL: `SEEDLING_ARRIVAL_BUTTON_ARM=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ARRIVAL_BUTTON_ARM === '1') CONTACT_FIDELITY.arrivalButtonArm = true;
+if (globalThis.process?.env?.SEEDLING_ARRIVAL_BUTTON_ARM === '0') CONTACT_FIDELITY.arrivalButtonArm = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

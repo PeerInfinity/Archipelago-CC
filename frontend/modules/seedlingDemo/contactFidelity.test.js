@@ -21,7 +21,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { replayCapture } from '../../../scripts/procgen/replay-seedling-contact-capture.mjs';
-import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
+import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 
 const DIR = join(dirname(fileURLToPath(import.meta.url)), 'fixtures', 'contact-witness');
 const load = (id) => JSON.parse(readFileSync(join(DIR, `${id}.json`), 'utf8'));
@@ -40,8 +40,10 @@ const ROWS = {
     308: [67, 'bobSoldierLive'], // L30 BobSoldier@48,80 — its sword (fidelity BOBSOLDIER W4)
     309: [66, 'bobSoldierLive'], // L30 BobSoldier — its sword
     576: [141, null], // L71 — no Mobile near the player (the spinning axe: the AXE slice's region)
-    589: [1, null], // L74 — the arrival's frozen tick a tick early (the ARRIVAL slice's region)
+    589: [1, 'arrivalButtonArm'], // L74 — the arrival's frozen tick a tick early (fidelity L74ARRIVAL; its switch ships OFF)
 };
+/** ⛓ fidelity L74ARRIVAL: a capture shorter than the usual window (589 holds the game's t0–t2 only). */
+const SHORT = { 589: 3 };
 const ALL_OFF = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, false]));
 
 describe('contact witnesses (fixtures/contact-witness)', () => {
@@ -53,7 +55,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     // ⛓ a measuring run sets SEEDLING_CONTACT_FIDELITY on purpose; the default is what this pins
     // ⛓ TERRAIN D3 shipped W2 and W3 ON; LINEFLIP turned W1 ON (licensed: r9-solve-18 re-recorded on the game, 510 → 519 t)
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_STRIKE_IFRAME_LAPSE
-        || !!process.env.SEEDLING_FALLROCK_POSTFALL || !!process.env.SEEDLING_FORECAST_SPEED_BY_TERRAIN)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_FALLROCK_POSTFALL || !!process.env.SEEDLING_FORECAST_SPEED_BY_TERRAIN
+        || !!process.env.SEEDLING_ARRIVAL_BUTTON_ARM)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -84,14 +87,18 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L74LEG624: `fallRockPostFall` (D2), `forecastSpeedByTerrain` (D4) shipped OFF — ⚖ (user,
             // 2026-10-12) ON since the wave-14 flip; `strikeIframeLapse` (D3) stays OFF ("Four now, strike later":
             // ON it costs survey steps 50 and 62).
-            strikeIframeLapse: false, fallRockPostFall: true, forecastSpeedByTerrain: true });
+            strikeIframeLapse: false, fallRockPostFall: true, forecastSpeedByTerrain: true,
+            // ⛓ fidelity L74ARRIVAL: `arrivalButtonArm` (a button under a room arrival presses on the first live
+            // frame) ships OFF.
+            arrivalButtonArm: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
+    // ⛓ fidelity L74ARRIVAL: a row whose switch ships OFF is still at its tick at the defaults
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY).each(Object.entries(ROWS))('leg %s — the shipped defaults: fixed rows at 0 px, residue at its tick', async (id, [t, sw]) => {
         const r = await replayCapture(load(id));
         expect(r.error).toBeNull();
-        if (sw) expect(r.worst).toBe(0);
+        if (sw && CONTACT_FIDELITY_DEFAULTS[sw]) expect(r.worst).toBe(0);
         else expect(r.firstDiff?.t).toBe(t);
     });
 
@@ -116,7 +123,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     it.each(Object.entries(ROWS).filter(([, [, sw]]) => sw))('leg %s — its own switch alone reproduces the game at 0 px', async (id, [, sw]) => {
         const r = await withContactFidelity({ ...ALL_OFF, [sw]: true }, () => replayCapture(load(id)));
         expect(r.error).toBeNull();
-        expect(r.compared).toBeGreaterThan(15);
+        expect(r.compared).toBeGreaterThan(SHORT[id] ? SHORT[id] - 1 : 15);
         expect(r.worst).toBe(0);
         expect(r.firstDiff).toBeNull();
     });
