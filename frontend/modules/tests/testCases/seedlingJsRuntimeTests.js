@@ -1592,11 +1592,21 @@ async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000 } = {}) {
     const regions = [];
     // ⛓ PLAY CLOCK — the spends and the clock's reports in ONE sequence (bus order), each stamped with its time.
     const log = [];
+    // Each entry also carries the game seconds Loops has CHARGED as time (`loopState._gameClockCharged`), read once
+    // the publish has finished (a stop report settles synchronously, in the same dispatch): a queued action's price
+    // never moves it, only the time drain does.
+    const note = (entry) => {
+        log.push(entry);
+        queueMicrotask(() => {
+            const c = loopStateSingleton._gameClockCharged;
+            entry.charged = c ? { region: c.region, seconds: c.seconds } : null;
+        });
+    };
     const onSpend = (e) => {
         spends.push({ region: e?.region ?? null, mana: e?.mana ?? null });
-        log.push({ kind: 'spend', at: performance.now(), region: e?.region ?? null, mana: e?.mana ?? null });
+        note({ kind: 'spend', at: performance.now(), region: e?.region ?? null, mana: e?.mana ?? null });
     };
-    const onClock = (e) => log.push({ kind: 'clock', at: performance.now(), region: e?.region ?? null,
+    const onClock = (e) => note({ kind: 'clock', at: performance.now(), region: e?.region ?? null,
         running: e?.running ?? null, gameSeconds: e?.stats?.gameSeconds ?? null });
     const onRegion = (e) => regions.push(e?.newRegion ?? null);
     const manaTrace = [];
@@ -1966,8 +1976,11 @@ function holdSolvesOn(runtime, up, holdMs) {
 }
 
 /**
- * The clock's STOPPED windows for `region`: a `running: false` report up to the next report. The stop's own settle
- * (Loops charges the seconds played up to the stop, synchronously, in the same turn) is not inside the window.
+ * The clock's STOPPED windows for `region`: a `running: false` report up to the next clock report (or the end of the
+ * log). `timeCharged` = the game seconds Loops charged AS TIME inside the window (`loopState._gameClockCharged`, read
+ * after each event's dispatch — the stop's own settle is already in the stop entry's reading). A queued action that
+ * completes in the window (the game resumed and crossed before the next read) moves mana, never that counter, so
+ * `spent` is reported for the record and only `timeCharged` is the check.
  */
 function stoppedWindows(log, region) {
     const out = [];
@@ -1975,10 +1988,12 @@ function stoppedWindows(log, region) {
         if (e.kind !== 'clock' || e.region !== region || e.running !== false) return;
         const j = log.findIndex((f, k) => k > i && f.kind === 'clock');
         const end = j < 0 ? null : log[j];
-        const inside = log.slice(i + 1, j < 0 ? log.length : j)
-            .filter((f) => f.kind === 'spend' && f.region === region && f.at - e.at > 20);
+        const inside = log.slice(i + 1, j < 0 ? log.length : j);
+        const base = e.charged?.region === region ? e.charged.seconds : 0;
+        const charged = inside.filter((f) => f.charged?.region === region).map((f) => f.charged.seconds - base);
         out.push({ ms: end ? Math.round(end.at - e.at) : null, seconds: e.gameSeconds, resumed: end?.region === region && end.running === true,
-            spent: inside.reduce((a, f) => a + f.mana, 0) });
+            timeCharged: Math.max(0, ...charged),
+            spent: inside.filter((f) => f.kind === 'spend' && f.region === region).reduce((a, f) => a + f.mana, 0) });
     });
     return out;
 }
@@ -2012,7 +2027,8 @@ const loopPlayClockDrains = (runtime) => async (tc) => withRuntimeRestored(tc, a
     const held = windows.filter((w) => w.ms !== null && w.ms >= PLAY_CLOCK_HOLD_MS / 2);
     tc.assertEqual(`[${runtime}] the clock was reported STOPPED for a held solve (a window ≥ ${PLAY_CLOCK_HOLD_MS / 2} ms)`, true, held.length > 0);
     tc.assertEqual(`[${runtime}] …and resumed after it`, true, held.some((w) => w.resumed));
-    tc.assertEqual(`[${runtime}] no mana fell while the clock was stopped`, '0', String(windows.reduce((a, w) => a + w.spent, 0)));
+    tc.assertEqual(`[${runtime}] no TIME was charged while the clock was stopped (Loops' charged game seconds never moved in a window)`,
+        '0', String(windows.reduce((a, w) => a + w.timeCharged, 0)));
     assertNoDeathNoHalt(tc, runtime, up.rt);
 });
 
