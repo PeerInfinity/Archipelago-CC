@@ -1,0 +1,27 @@
+const M = (p) => import(`/home/user/Archipelago-CC/frontend/modules/seedlingDemo/${p}`);
+const { createLevelRun } = await M('levelRun.js');
+const { previewWalk, strikePolicyFor } = await M('solverBot.js'); const { DEFAULT_TOLERANCE } = await M('botDriverV1.js');
+const { drive } = await M('botDriverV2.js');
+const { atlasLevelSource } = await M('levelSource.js');
+const { ROLES } = await M('levelWorld.js').catch(() => ({}));
+const levelSource = atlasLevelSource();
+const l6 = () => createLevelRun({ levelSource, boot: { level: 6, x: 80, y: 48 }, noclip: false, noHazards: [], noDamage: false, grants: [], persistence: [], despawn: [], equips: [], pins: ['dead_frames'], save: { totem_parts: [], keys: [], seal_parts: [] }, rng: null, seam: { items: { hasSword: true } }, ...(ROLES ? { roles: ROLES } : {}) });
+const WPS = [{ x: 128, y: 56 }];
+const key = (h) => [...h].sort().join('+') || '-';
+const a = l6();
+const sa = strikePolicyFor(a);
+const pv = previewWalk(a, WPS, DEFAULT_TOLERANCE, { strike: sa });
+const ph = pv.samples.map((x) => key(x.held ?? new Set()));
+const b = l6(); const perTick = []; const sb = strikePolicyFor(b);
+try { drive(b, WPS[0], perTick, { until: 'arrival', tolerance: DEFAULT_TOLERANCE, maxTicks: 200, what: 'eq', avoidVolumes: false, strike: sb }); } catch (e) { console.log('drive threw', e.message.slice(0, 200)); }
+const dh = perTick.map(key);
+let i = 0; while (i < Math.min(ph.length, dh.length) && ph[i] === dh[i]) i++;
+console.log('preview', ph.length, 'drive', dh.length, 'agree', i);
+console.log('P', ph.slice(Math.max(0, i - 5), i + 6).join(' '));
+console.log('D', dh.slice(Math.max(0, i - 5), i + 6).join(' '));
+const tr = (s) => s.trace.filter((r) => (r.decision !== 'none' || r.rejected) && r.tick >= Number(process.env.FROM ?? 0)).slice(0, 14).map((r) => `${r.tick}:${r.decision}:${r.target ?? ''}${r.iframeLapse ? ' L' + JSON.stringify(r.iframeLapse) : ''}${r.rejected ? ' rej ' + r.rejected.map((x) => x.id + ' ' + x.why.slice(0, 40)).join(';') : ''}`);
+console.log('PT', tr(sa).join('\n   '));
+console.log('DT', tr(sb).join('\n   '));
+console.log('hits drive', JSON.stringify(b.playerHits), JSON.stringify(b.chaserPressHits?.slice(0, 6)));
+const pvx = pv.samples.map((s) => `${s.tick}:${s.x.toFixed(2)},${s.y.toFixed(2)}:${(s.chasers ?? []).filter((c) => c.id === 'bob@112,48').map((c) => `${c.x.toFixed(1)},${c.y.toFixed(1)} h${c.hits}/${c.hitsTimer}`).join('')}`);
+console.log('PV', pvx.slice(36, 44).join(' | '));
