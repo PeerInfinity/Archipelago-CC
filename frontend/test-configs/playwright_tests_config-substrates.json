@@ -567,6 +567,12 @@
             "_comment": "Seedling loop mode, the WASM runtime (WebGPU): the JS row's stairs, descent and logical-link credit under Bot blocks."
         },
         {
+            "id": "seedling-flash-runtime-loop-bot-block-names-its-stop",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode, the Flash (Ruffle) runtime: a Bot block's walkTo is refused by name (no feet), and loops' named stop (loopState:botWalkFailed, loop-mode-bot's fix) carries the controller's lastRefusal. Ruffle is fetched from its CDN; the SWF is not committed, so no game boots."
+        },
+        {
             "id": "apworld-document-tab-lists-every-schema-key",
             "enabled": true,
             "category": "apworldEditor",
