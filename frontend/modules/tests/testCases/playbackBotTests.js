@@ -340,6 +340,24 @@ registerTest({
  * block to Bot, so Loops' own maze delegation plays the queue's entries; done = every sphere-log location checked.
  */
 async function playbackBotLoopModeMazeTest(testController) {
+  return playbackBotLoopModeWorld(testController, {
+    quotas: { maze: 4 }, start: 'maze', seed: 7, solvers: ['delegation'], watchPanel: 'mazeRoomPanel',
+    itemPool: { victory: 1, key_red: 1, key_green: 1 },
+  });
+}
+
+/**
+ * ⛓ loop-mode-bot S5 — a MIXED world in Loop mode: maze (Bot / delegation), text adventure (coarse → Playback) and
+ * bounce (Bot / walkTo). Same contract as the maze row: every sphere-log location checked by the queue.
+ */
+async function playbackBotLoopModeMixedTest(testController) {
+  return playbackBotLoopModeWorld(testController, {
+    quotas: { maze: 2, text_adventure: 2, bounce: 1 }, start: 'maze', seed: 11, solvers: null, watchPanel: null,
+    itemPool: { victory: 1, key_red: 1, key_green: 1, key_blue: 1 },
+  });
+}
+
+async function playbackBotLoopModeWorld(testController, { quotas, start, seed, solvers, watchPanel, itemPool }) {
   const api = (mod, fn) => centralRegistry.getPublicFunction(mod, fn);
   const loopModeOn = () => api('loops', 'isLoopModeActive')?.() === true;
   testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
@@ -349,14 +367,13 @@ async function playbackBotLoopModeMazeTest(testController) {
   if (!bot) return testController.getOverallResult();
   bot.reset();
 
-  const seed = 7;
   const { grid, startCell, stats } = arrangeShuffledSpiral({
     regionSize: { width: 7, height: 7 },
-    itemPool: { victory: 1, key_red: 1, key_green: 1 },
+    itemPool,
     obstaclePool: {},
     seed,
     regionParams: {},
-    growthParams: { substrateQuotas: { maze: 4 }, maxItemsPerRegion: 2, startSubstrate: 'maze' },
+    growthParams: { substrateQuotas: quotas, maxItemsPerRegion: 2, startSubstrate: start },
     hazardOpts: {},
   });
   const rulesJson = buildRulesJson(grid, {
@@ -376,19 +393,23 @@ async function playbackBotLoopModeMazeTest(testController) {
   testController.reportCondition('loop mode on (auto-enabled by loop_costs)', on);
   const loopState = api('loops', 'getLoopState')?.();
   const regions = Object.keys(rulesJson.preset_sidecars?.['1'] ?? {});
-  testController.reportCondition(`every maze region has a Bot solver (${regions.map((r) => `${r}:${loopState?.regionSolver?.(r)}`).join(', ')})`,
-    regions.length > 0 && regions.every((r) => loopState?.regionSolver?.(r) === 'delegation'));
+  const how = regions.map((r) => `${r}:${rulesJson.preset_sidecars['1'][r].substrate}/${loopState?.getRegionCaptureShape?.(r)}/${loopState?.regionSolver?.(r)}`);
+  testController.log(`regions: ${how.join(', ')}`);
+  if (solvers) {
+    testController.reportCondition(`every region has a ${solvers.join('/')} Bot solver (${how.join(', ')})`,
+      regions.length > 0 && regions.every((r) => solvers.includes(loopState?.regionSolver?.(r))));
+  }
   if (!on || !loopState) return testController.getOverallResult();
   bot.refresh();
 
   const instantBefore = !!loopState.instantMode;
   loopState.setInstantMode(true);
   try {
-    testController.eventBus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' });
+    if (watchPanel) testController.eventBus.publish('ui:activatePanel', { panelId: watchPanel });
     testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
     await bot.play();
     const finished = await testController.pollForCondition(
-      () => (bot.getStatus() || '').startsWith('finished'), 'bot finishes the maze world in loop mode', 120000, 500);
+      () => (bot.getStatus() || '').startsWith('finished'), 'bot finishes the world in loop mode', 120000, 500);
     if (!finished) {
       const maze = getMazePanel();
       const cur = loopState.currentAction;
@@ -428,6 +449,17 @@ registerTest({
     + 'Play: the runner sets each maze block to Bot and Loops\' maze delegation plays the queue until every '
     + 'sphere-log location is checked.',
   testFunction: playbackBotLoopModeMazeTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+registerTest({
+  id: 'playback-bot-loop-mode-mixed',
+  name: 'Playback Bot: Loop mode on a mixed procgen world (maze, text adventure, bounce)',
+  description:
+    'Generates a small loop-mode world of maze, text adventure and bounce regions and presses the bot\'s Play: '
+    + 'the runner gives each block the mode that lets the queue play it, until every sphere-log location is checked.',
+  testFunction: playbackBotLoopModeMixedTest,
   category: 'Playback Bot',
   enabled: false,
 });

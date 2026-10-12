@@ -1736,6 +1736,12 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "loop-mode-bot S4 (⚖ first substrate target): a generated maze-only world in Loop mode; the runner sets each maze block to Bot and Loops' maze delegation plays the queue until every sphere-log location is checked."
+        },
+        {
+            "id": "playback-bot-loop-mode-mixed",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "loop-mode-bot S5: a generated loop-mode world of maze (Bot/delegation), text adventure (coarse → Playback) and bounce (Bot/walkTo); every sphere-log location checked by the queue."
         }
     ]
 }
