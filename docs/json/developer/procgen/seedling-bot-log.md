@@ -15512,6 +15512,65 @@ and so does the switch OFF.
   `solve-seedling-r9-campaign --check` throws at `r8-solve-6`. With `SEEDLING_STATIC_SWORD_ARM=0`, `order` is the
   base (`712f0ead`; `r9-solve-16` byte-identical, 688 t).
 
+### Seedling hammer-phase P1 — the L40 press-kill cost
+
+⚖ The user (2026-10-11): *"Please run them in the order you would recommend."* One switch, **ON**, and OFF is the
+control: `pressKillCost.PRESS_KILL_COST` (`SEEDLING_PRESS_KILL_COST=0`, `withPressKillCost`). Not a behaviour change,
+so no flip. The report is `CC/docs/cloud-reports/seedling-hammer-p1.md`.
+
+**W0** at `db221dc093` (wave 12's bank; `SOLID_GRID` present): identity block non-`#` md5 `3a48647f` (= C2's, row for
+row; r9-campaign `712f0ead`, the six producers exit 0, reference ALL 7 + 5 MATCH); tapeRunner 611 pairs `75a3c41f`;
+surface GREEN 268, constants 5,684, entities 535, profile 138; roster 277; bounded vitest 1161/1161 (16 files).
+**The five L40 legs all SOLVE in node now** (ids shifted +2 since sweep-3: 376 → 378 … 398 → 400; keys equal):
+158 / 202 / 108 / 37 / 12 s, against C1's > 900 / > 900 / 761 / 195 / 61 s. Wave 12's broad phase did it. Their
+profiles are `planSwordDash` 70–77 %. The press kill runs only in 381, at 4.9 %. ⚠ So the brief's split is not
+today's. The press-kill-bound workload is C1's own profiled staging A (survey step 78 = C1's 61, goal
+`collect:880,816`; C1's switches are ON now), at 90.7 % in `execKillByPress`: `deriveStrike` 50.2 %, `deriveRefuge`
+39.6 %, `walkableCells` 24.4 % (12.6 + 11.8, asked by both on the same tick), the forecast 18.0 %, the refuge's hammer
+test 16.2 %, the strike line 10.8 %, `previewWalk` 12 %.
+
+**D1 — the levers.** Of the four candidates, three were real:
+- **`walkableCells` per run.** It reads the world plus `solverPlanOpts` (the live bag, keys, inventory, `noHazards`,
+  contacts). Moving chasers are not among its inputs, so the cells hold across ticks. Predicted −24 %, measured −24 %.
+- **The forecast shifted one row a tick.** Valid when the bodies are row 0's and the ctx inputs are equal. Predicted
+  −18 %, measured −17 %; shifted 332/350 on leg 381.
+- **A bound in `clearOfHammersAt`.** No precomputed wall answer was needed. The refuge's cost was the hammer LINE, and
+  a box outside L+2 cannot be hit. Predicted −14 %, measured −15 %; 3.03 M of 3.06 M tests skipped on 381.
+- **The strike line once per (cell, rect) per derivation.** The train window slides a row per candidate. Measured
+  71.6 → 21.7 s (−7.5 %); 75 % of asks hit on 381.
+
+The horizon is not the cost: `opportunityAt` filters by reach first, so `clearOfHammersAt` under `deriveStrike` is
+0.9 s of 665 s. What is left on A is `previewWalk` (54 %: the refuge's 12 previews a tick, the strike's walks). It
+depends on the player's own position, so it was not touched.
+
+**D2 — byte-identical, ON.** ON vs OFF, every row equal:
+- the five legs × 3 interleaved rounds each: verdict, ticks, keys md5, whole-plan md5 (`*Ms` stripped), one
+  distinct answer per leg;
+- staging A × 3: refusal, 3,113 ticks, keys `af47d35d`;
+- the L18 sweep: 45/45, rows identical, lengths `1c019765`;
+- r9-campaign `712f0ead`;
+- the bounded vitest set.
+
+Mutants (`pressKillCost.test.js`, 9 rows):
+- caught: the cells key aliased, opts ignored, the world ignored; the bound at L−3, L−2, L−1; the state clause and
+  the ctx clause dropped; the line keyed by cell only (caught by the L40 derivation row and by staging A, not by the
+  L18 sweep);
+- blind: the forecast key aliased (no spinner room holds a bag family that changes in place);
+- equivalent: the tick clause (prev can only be the last tick's memo or null), and the bound at L (the grid's edge;
+  L+3 ships).
+
+**Timings** (median / min of 3, load 0.5–2.0 on 4 cores):
+
+| | OFF | ON |
+|---|---|---|
+| staging A | 648.7 / 645.1 s | 152.0 / 150.4 s (4.27×) |
+| legs 378 / 381 / 384 / 396 / 400 | 146 / 177 / 107 / 36 / 15 s | 152 / 173 / 112 / 36 / 16 s (noise: 0.95–1.02×) |
+
+**For fidelity:** on the legs the cost is `planSwordDash`'s previews. On leg 381 the `levelWorld` self rows are
+`solidCandidates` 4.8 %, `collidesSolid` 4.1 %, `liveRectOf` 3.0 %, `assertNormalizedLiveOpts` 2.4 % and the indexed
+nearest-tile pass 1.9 %, beside GC 19.6 % (SOLVECOST's prefix-sharing lever). On A after P1: `collideLineSolid` (the
+strike line's raycast, self 6.2 %) and `solidBoxesForMover` (4.8 %, rebuilt per line).
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
