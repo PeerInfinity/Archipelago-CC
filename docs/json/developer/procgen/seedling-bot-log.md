@@ -15623,6 +15623,65 @@ residues ON is longer at 39** (mean 324.0 → 356.0 t; 45/45 solve both). `HAMME
 equal at the default and with `--fight`, leg 381's sword plan, vitest 996/996). Not flipped: the user's call, and the
 measurement argues against it.
 
+### Seedling hammer-phase P2 — the press kill's walk previews
+
+⚖ The user (2026-10-12): *"Press-kill speed, part 2"*. One sibling switch beside P1's, **ON**, and OFF is the control:
+`pressKillCost.STRIKE_SCAN_COST` (`SEEDLING_STRIKE_SCAN_COST=0`, `withStrikeScanCost`), with P1's `PRESS_KILL_COST`
+held ON. A cost change, so no flip. The report is `CC/docs/cloud-reports/seedling-hammer-p2.md`.
+
+**W0** at `11e113e2fe` (D's merge): identity block non-`#` md5 `77080c2e` (the acceptance row is `933c14f7`, moved
+since D's W0 by wave 13; the six producers exit 0, r9-campaign `712f0ead`, reference ALL 7 + 5 MATCH); tapeRunner 611
+pairs `75a3c41f`; surface GREEN 278, constants 5,808, entities 558, profile 138; roster 277; bounded vitest 1372/1372
+(30 files). Staging A (C1's L40 south door → chest, `fixtures/hammer-p1-l40-south-boot.json`) is unchanged: REFUSED,
+3,113 ticks, keys `af47d35d`. Its profile: `execKillByPress` 87.6 %, `previewWalk` 50.9 % (27.6 under `deriveRefuge`,
+23.2 under `deriveStrike`), inside it the chaser forecast's step 30.9 % and the player's stepper 12.3 %; the strike
+line (`collideLineSolid`) 13.1 %; `deriveStrike`'s own scan 9.4 % self.
+
+**D1 — the levers, measured before built.** Every press-kill preview was logged (21,212 of them over 1,329 ticks):
+- **A cross-tick memo for a standing player: not buildable from the solver.** (state, target) repeats across ticks for
+  91 % of the previews (97 of 106 s), but the same `run.state` and target previewed to a different length in 104
+  pairs: the stepper and the four forecasts bind run state no reader exposes (damage, the live bag, every forecast
+  subsystem's bodies). An exact key is levelRun's to provide.
+- **A one-entry stepper memo (a stuck walk's fixed point): 0 hits of 3.7 M.** A player pinned against a wall keeps
+  `x, y` while `vy` cycles and drifts (−1.10, −0.85, −1.40, −1.15, …), so no state repeats.
+- **Sharing one preview between strike and refuge on the same tick: 1 hit in 1,329 ticks.** Sharing the refuge's 12
+  candidates' common prefix: the mean shared key prefix is 1.08 ticks of ~104.
+- **The strike's walks across candidate ticks:** already one walk per cell per derivation (U4b D3's `walks`).
+- **Built:** the strike line carried across derivations (97 % of P1's per-derivation misses, 26.5 s), and the scan's
+  reach box (the scan's self time, ~9 %).
+- **Measured, not built:** the refuge's best-ETA cut. 4,627 refuge and 2,325 strike previews stall at 400 ticks
+  (2.78 M of the 3.71 M preview samples), and 99 % of the refuge's samples come after the best ETA so far. A scratch
+  cut kept staging A's answer and took it to 117 s on a loaded box, but it skips calls that can throw (a death in the
+  stepper, a forecast's own refusals) and changes the progress emitter's preview counts: a behaviour decision.
+
+**D2 — byte-identical, ON.** The line book is keyed by the world (identity), `run.liveGeometryOpts()` (by value, a
+copy) and the four truncated coordinates, which is everything `collideLineSolid` reads; the box asks only cells inside
+the body's rect grown by `reach + 1`, in `walkableCells`' own order, and counts `unreachable` over every cell. ON vs
+OFF, every row equal:
+- staging A × 3: REFUSED, 3,113 ticks, keys `af47d35d`, message `b02571c9`;
+- legs 378 / 381 × 3: the same refusals (both at the bomb hold, wave 13), resMd5 `49f6f3b8` / `879f1b18`;
+- legs 384 / 396 / 400 × 3: SOLVED 859 / 494 / 270, whole-plan md5 `fbbe9577` / `766ae746` / `b83f54ad` (= P1's);
+- the L18 sweep 45/45 and C2's ghost sweep 45/45, row for row; both ghost stagings SOLVED 336; r9-campaign green;
+- P2 OFF reproduces every P1 count on staging A (`hammerSkipped` 655,820,993 …): the same `opportunityAt` calls.
+
+Mutants (P2's rows in `pressKillCost.test.js`): caught — the bag key aliased, the bag ignored, the world ignored, the
+line key short a coordinate, `unreachable` counted on the box only, the box shrunk, the box reversed, the floor test
+dropped; the box pad at `reach − 1` red, at `reach` green (the measured edge; `reach + 1` ships).
+
+**Timings** (median / min of 3 interleaved, alone on 4 cores, load 1.05–1.93):
+
+| | OFF (P1) | ON (P1 + P2) |
+|---|---|---|
+| staging A | 162.0 / 160.5 s | **124.6 / 119.5 s (1.30×)** |
+| legs 378 / 381 / 384 / 396 / 400 | 163 / 188 / 108 / 41 / 15 s | 167 / 177 / 107 / 43 / 16 s (noise) |
+
+The legs do not run the press kill now: 378 and 381 refuse at the bomb hold before it, and every P1/P2 counter reads 0
+on all five.
+
+**For fidelity / levelRun:** on staging A after P2, the chaser forecast's step (`levelRun.js` `chaserForecastNow`'s
+`step`, 15 bodies) is 41.3 % inclusive and the player's preview stepper 16.1 %; both are inside `previewWalk`, which
+is 68 %. A cross-tick preview key would need levelRun to expose (or hash) the state the stepper and the forecasts bind.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

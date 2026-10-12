@@ -274,9 +274,9 @@
       "class": "seedling",
       "form": "geometry-query",
       "files": {
-        "solverBot.js": 7
+        "solverBot.js": 8
       },
-      "sites": 7,
+      "sites": 8,
       "seen": "static",
       "via": [
         "direct"
@@ -752,9 +752,9 @@
       "form": "geometry-query",
       "files": {
         "dangerMap.js": 1,
-        "solverBot.js": 11
+        "solverBot.js": 13
       },
-      "sites": 12,
+      "sites": 14,
       "seen": "both",
       "via": [
         "direct"
@@ -5241,6 +5241,42 @@
     },
     {
       "surface": "import",
+      "name": "cellRowsOf",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 119,
+      "class": "seedling",
+      "form": "function",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The row index of walkableCells' row-major list (rows strictly increasing in y, x strictly increasing within a row), kept per list; null for any other list, which is then scanned whole."
+    },
+    {
+      "surface": "import",
+      "name": "cellsInBox",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 148,
+      "class": "seedling",
+      "form": "function",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The cells of a row index inside an axis box (edges inclusive), in the list's own order: the strike scan's candidates within reach of a body's rect."
+    },
+    {
+      "surface": "import",
       "name": "PRESS_KILL_COST",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
       "line": 25,
@@ -5279,13 +5315,13 @@
       "surface": "import",
       "name": "sameValue",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
-      "line": 120,
+      "line": 231,
       "class": "seedling",
       "form": "function",
       "files": {
-        "solverBot.js": 1
+        "solverBot.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "import"
@@ -5297,13 +5333,13 @@
       "surface": "import",
       "name": "snapshotValue",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
-      "line": 70,
+      "line": 181,
       "class": "seedling",
       "form": "function",
       "files": {
-        "solverBot.js": 1
+        "solverBot.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "import"
@@ -5313,15 +5349,51 @@
     },
     {
       "surface": "import",
-      "name": "UNCACHEABLE",
+      "name": "STRIKE_SCAN_COST",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
-      "line": 62,
+      "line": 81,
       "class": "seedling",
       "form": "constant",
       "files": {
         "solverBot.js": 2
       },
       "sites": 2,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The sibling switch (hammer-phase P2; ON, SEEDLING_STRIKE_SCAN_COST=0 opts out) under which deriveStrike carries strike-line answers across derivations and asks only the cells inside the body's reach box; OFF it scans and asks exactly as at P1."
+    },
+    {
+      "surface": "import",
+      "name": "STRIKE_SCAN_COST_COUNTS",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 87,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 6
+      },
+      "sites": 6,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "Counts of the two P2 levers (lines carried / asked, books opened, cells boxed / skipped, scans left unboxed), an instrument the gate rows read to prove each lever fired; written only with the switch ON, read by nothing that decides."
+    },
+    {
+      "surface": "import",
+      "name": "UNCACHEABLE",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 173,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 3
+      },
+      "sites": 3,
       "seen": "static",
       "via": [
         "import"
