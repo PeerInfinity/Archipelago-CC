@@ -97,18 +97,19 @@ describe('⛓ TRAILING EQUIP — L24:0\'s burn (sweep leg 282) ends on the sword
     const BURN = solveFromTape(arrivalSolveRequest({ staging: STAGING, solverGoal: CLEAR, levelSource: SRC, records: new Map(),
         scratchPersistence: true }));
 
-    it('the plan selects the sword at its last observation and carries ONE idle tick for it (115 ticks, not 114)', () => {
+    it('the plan selects the sword at its last observation and carries ONE idle tick after it (the tick the equip fires on)', () => {
         expect(BURN.verbs).toEqual(['burn']);
         expect([...BURN.equipsAt]).toEqual([[60, 1], [114, 0]]);
         expect(BURN.trailingEquip).toBe(true);
-        expect(BURN.solution).toHaveLength(115);
+        const lastSelection = Math.max(...BURN.equipsAt.keys());
+        expect(BURN.solution.length).toBe(lastSelection + 1);
         expect(BURN.solution.at(-1).size).toBe(0);
-        expect(BURN.expected).toHaveLength(116); // the idle tick's row is the model's, checked like any other
+        expect(BURN.expected.length).toBe(BURN.solution.length + 1); // the idle tick's row is the model's, checked like any other
     });
 
     it('the shipped tape fires the equip on its idle tick: the game replays the plan row for row and ends on slot 0', () => {
         const tape = ship(BURN.solution, tapeEquips(BURN.equipsAt));
-        expect(tape.tick_count).toBe(115);
+        expect(tape.tick_count).toBe(BURN.solution.length);
         expect(tape.equips).toEqual([{ t: 60, slot: 1 }, { t: 114, slot: 0 }]);
         const game = createRunForStaging(STAGING, SRC, { scratchPersistence: true });
         expect(playTape(game, tape)).toEqual(BURN.expected);
