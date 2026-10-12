@@ -201,6 +201,17 @@ export const FAMILY_RULES = [
     [/inside (bombpusher@\d+,\d+)'s 256 px reach — a Bomb's Explosion/,
         (m) => `BOMB — the wait stands still inside ${m[1]}'s reach (a standing player is always hit; no verb `
             + 'waits while moving)'],
+    /**
+     * ⛓ seedling-fidelity-unbilledgate D2 — THE SOLVE REACHED ITS GOALS AND ITS DRIVE WAS HIT WHERE NO PLAN BILLED IT
+     * (`solverBot.UNBILLED_DAMAGE`, `CONTACT_FIDELITY.unbilledDamageGate`; `obstacle.kind: 'unbilled-damage'`). Witnesses:
+     * route steps 19, 47, 53, 114 and 170 with the gate ON (each hit taken by the game at the same tick). The work order
+     * is the executor whose preview certified the hit-taking walk (the danger map's reading of the named body), not
+     * the goal.
+     */
+    [/UNBILLED DAMAGE — the segment reached its \d+ goal\(s\), but its drive took (\d+) hit\(s\) no plan billed \[t(\d+) \(run t\d+, L\d+\) ([a-z]+):([^\s,\]]+@\d+,\d+|[^\s,\]]+)(?:[^\n]*? and died (\d+) time\(s\))?/,
+        (m) => `UNBILLED-DAMAGE — the walk reached its goal but took ${m[1]} hit(s)${m[5] ? ` and ${m[5]} death(s)` : ''} `
+            + `no plan billed, the first at t${m[2]} (${m[3]} ${m[4]}): the danger map's reading of that body certified a `
+            + 'walk the drive was hit on'],
 ];
 
 /**
