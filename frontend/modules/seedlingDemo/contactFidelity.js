@@ -323,7 +323,7 @@ export const CONTACT_FIDELITY = {
      * 2026-10-12 ("All three ON", with `fallRockPostFall` and `forecastSpeedByTerrain`: CI sweep 38289124638 solves
      * L74 leg 624); it moves strikes roster-wide (fidelity FLIP14's re-pins). `SEEDLING_STRIKE_IFRAME_LAPSE=0` opts out.
      */
-    strikeIframeLapse: true,
+    strikeIframeLapse: false, // MEASUREMENT BRANCH ONLY (planning-6): flip14 minus the lapse
     /**
      * fidelity L74LEG624 D2 — FALLROCK_POSTFALL: A CLEARED NON-ARENA `FallRock` IS BUILT AS THE GAME LEAVES IT.
      *
