@@ -16730,8 +16730,9 @@ still solves ON; a hit inside a replayed prefix is not the segment's).
 
 **D3 — the movers, ON.** The route survey loses exactly steps 19, 47, 53, 114, 170 (169 → 164 SOLVED, by level, goal and
 boot); `surveyFamily` files them `UNBILLED-DAMAGE`. The sweep legs ON in node: 262, 265, 283, 302, 696, 698, 703 refuse;
-288, 289, 622, 633, 635 answer as OFF. The bounded set (137 files) ON has no real red. The identity block and the
-six `--check`s are in the report.
+288, 289, 622, 633, 635 answer as OFF. The bounded set (137 files) ON has no real red. The six `--check`s do not
+move; the identity block moves **three procgen rows** (empty pairs c3/c6 and carved c4, one `seed=7` post-sword level
+each): the generator's solve of a candidate took unbilled `spinner@16,32` hits, so ON it keeps the next candidate.
 
 **Trap candidates.**
 - **A drive that returns is not a drive that was clean.** The success path asked "did we reach the goal?" and not "what
@@ -16740,6 +16741,9 @@ six `--check`s are in the report.
   run; a ledger read from t0 bills the prefix's hits to the segment that inherits them.
 - **A pin on "the default request" reds under any off-default env switch.** `axeDodgeAskHook`'s default-request row
   fails with `SEEDLING_MOVING_WAIT=1` as with this switch; it is an environment artifact, not a mover.
+- **A gate on the solver's acceptance reaches the level generator.** `dump-seedling-kind-pairs` keeps the first
+  candidate the solver accepts; refusing one moves the kept level, so a solver-policy switch owes the procgen identity
+  rows, not only the route and the tapes.
 - **A scratch copy in `scripts/procgen/` is a box-lock finding.** `boxLock.test.js` audits every `.mjs` there;
   measurement copies belong in the scratchpad.
 
