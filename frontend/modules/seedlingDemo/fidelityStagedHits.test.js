@@ -28,6 +28,7 @@ import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const json = (...p) => JSON.parse(readFileSync(join(HERE, ...p), 'utf8'));
 const W622 = json('fixtures', 'chaser-witness', 'forcedhit-l73-622-plan.json');
+const WIT = json('fixtures', 'staged-hits-witness', 'stagedhits-l73-restage.json');
 const levelSource = atlasLevelSource();
 const ARRIVAL = stagingFromTape(parseTape(JSON.stringify(W622.tape)));
 const run = (staging = ARRIVAL) => createRunForStaging(staging, levelSource);
@@ -203,5 +204,69 @@ describe('STAGEDHITS — the helpers the JS arc wires', () => {
         expect(stagedHitsMismatch(run(), { hits: 1, hits_timer: 9 })).toMatchObject({ expected: { hits: 0, hits_timer: 0 } });
         expect(stagedHitsMismatch(r, null)).toEqual({ expected: { hits: 1, hits_timer: 9 }, got: null });
         expect(PLAYER_DAMAGE.hitsTimerMax).toBe(20);
+    });
+});
+
+describe('STAGEDHITS D3 — the GAME witness: a hit, a hold inside its i-frame, the continuation on the skip path (0 px)', () => {
+    const keysFrom = (tape) => {
+        const t = parseTape(JSON.stringify(tape));
+        const ks = Array.from({ length: t.tick_count }, () => []);
+        for (const i of tape.inputs) for (let k = i.from; k < i.to; k += 1) ks[k].push(i.key);
+        return ks;
+    };
+    const K1 = keysFrom(WIT.tape1);
+    const K2 = keysFrom(WIT.tape2);
+    const pos = (r) => ({ x: r.state.x, y: r.state.y, level: r.level, hits: r.damage.hits, hits_timer: r.damage.hitsTimer });
+    /** the model column over tape 2 (index 0 = the re-stage point) */
+    const column = (r) => [pos(r), ...K2.map((k) => { r.advance(keysOf(k)); return pos(r); })];
+    const game2 = WIT.game.tape2.drain.map((g) => {
+        const p = WIT.game.tape2.polled.find((q) => q.tick === g.t);
+        return { x: g.x, y: g.y, level: g.level, hits: p.hits, hits_timer: p.hits_timer };
+    });
+    const firstOff = (col, upto = Infinity) => col.findIndex((m, t) => t <= upto && JSON.stringify(m) !== JSON.stringify(game2[t]));
+    const shadow = () => {
+        const S = run();
+        for (const k of K1) S.advance(keysOf(k));
+        return S;
+    };
+    const restage = { ...ARRIVAL, boot: { level: WIT.hold.level, x: WIT.hold.x - 8, y: WIT.hold.y - 8 } };
+
+    it('the recording: the hold is inside the hit\'s i-frame, at rest, and the game takes a SECOND hit at t10 of the continuation', () => {
+        expect(WIT.args).toEqual({ t1: 12, keys2: ['left'], n2: 25 });
+        expect(WIT.hold).toMatchObject({ level: 73, hits: 1, hits_timer: 9, held: true, player: { vx: 0, vy: 0 } });
+        expect(game2.length).toBe(26);
+        expect(game2.slice(0, 11).map((g) => [g.hits, g.hits_timer])).toEqual([[1, 9], [1, 8], [1, 7], [1, 6], [1, 5], [1, 4],
+            [1, 3], [1, 2], [1, 1], [1, 0], [2, 19]]);
+        // the game does not steer inside the window: `left` held, the player still at the hold through t9
+        expect(game2.slice(0, 10).every((g) => g.x === WIT.hold.x && g.y === WIT.hold.y)).toBe(true);
+    });
+    it('S, the SHADOW (the arrival + every shipped key): the game at every tick of both tapes, damage included', () => {
+        const S = run();
+        const col1 = [pos(S), ...K1.map((k) => { S.advance(keysOf(k)); return pos(S); })];
+        expect(WIT.game.tape1.drain.every((g) => col1[g.t].x === g.x && col1[g.t].y === g.y)).toBe(true);
+        expect(stagedHitsMismatch(S, WIT.hold)).toBe(null);
+        expect(firstOff(column(S))).toBe(-1);
+        expect(stagedHitsMismatch(S, WIT.end)).toBe(null);
+    });
+    it('P, an IN-PLACE re-stage with the game\'s damage (`playerDamageFromStatus` at the hold): 0 px and the same damage '
+        + 'through the lapse (t0..t9), and the second hit on the game\'s tick (t10)', () => {
+        const P = run({ ...restage, player_damage: playerDamageFromStatus(WIT.hold) });
+        const col = column(P);
+        expect(firstOff(col)).toBe(10);
+        // t10: the hit tick and the damage are the game's; the knockback is not — the re-stage REBUILT the lavarunner
+        // at its spawn (80, 32) while the game's had chased the player (named: a re-stage's enemy state, not its hits)
+        expect([col[10].hits, col[10].hits_timer]).toEqual([2, 19]);
+        expect(col[10].x).not.toBe(game2[10].x);
+    });
+    it('C, the same re-stage WITHOUT the field (a fresh Player): off at t1 — it steers through the game\'s i-frame', () => {
+        const C = run(restage);
+        const col = column(C);
+        expect(firstOff(col)).toBe(0); // its damage, at the re-stage itself
+        expect(col.slice(1).findIndex((m, i) => m.x !== game2[i + 1].x || m.y !== game2[i + 1].y) + 1).toBe(1);
+        expect(stagedHitsMismatch(C, WIT.hold)).toEqual({ expected: { hits: 0, hits_timer: 0 }, got: { hits: 1, hits_timer: 9 } });
+    });
+    it('the shadow\'s check catches a dropped hit: S\'s damage vs the hold, as the JS arc\'s held check would ask it', () => {
+        expect(stagedHitsMismatch(shadow(), { ...WIT.hold, hits: 0, hits_timer: 0 })).toEqual({
+            expected: { hits: 1, hits_timer: 9 }, got: { hits: 0, hits_timer: 0 } });
     });
 });
