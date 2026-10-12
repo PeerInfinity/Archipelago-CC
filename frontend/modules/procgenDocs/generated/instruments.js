@@ -169,7 +169,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "replay"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 418,
+        "blockStyle": 419,
         "browser": 142,
         "cited": 215,
-        "files": 430,
+        "files": 431,
         "lineStyle": 12,
-        "withDocblock": 430,
-        "withFlags": 346
+        "withDocblock": 431,
+        "withFlags": 347
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10695,6 +10695,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "axe-dodge",
+                "capture-requests",
                 "contact-fidelity",
                 "from",
                 "host",
@@ -10720,6 +10721,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "axe-dodge"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "capture-requests"
                 },
                 {
                     "how": [
@@ -15589,6 +15596,76 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only (slice `seedling-fidelity-terrain` D1/D3) — REPLAY A CAPTURED GAME WITNESS ON THE MODEL, in node, no browser, no box.",
             "path": "scripts/procgen/replay-seedling-contact-capture.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "replay",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "every",
+                "i",
+                "id",
+                "n",
+                "out",
+                "requests"
+            ],
+            "file": "replay-seedling-solve-request.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "every"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "i"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "id"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "live"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "one"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "requests"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Measure-only — REPLAY A CAPTURED SOLVE REQUEST in node, N times, each in a FRESH process: is the solver's answer a function of the request?",
+            "path": "scripts/procgen/replay-seedling-solve-request.mjs"
         },
         {
             "argvHelpers": [

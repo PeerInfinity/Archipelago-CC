@@ -56,6 +56,10 @@
  *                        a `timeout` row carries `cut` (the bound that ended it, the engine's phase, the solver's own
  *                        backstop), and the `leg` hang bound and the shard timeout grow with it. ⛔ The solver's work-unit
  *                        budgets and its 300 s backstop are not this: a budget above the backstop lets that NAME surface.
+ *   --capture-requests=<jsonl>  ⛓ REQUEST CAPTURE (default OFF): append every solve request each leg made, in order, AS THE
+ *                        WORKER RECEIVED IT (`seedlingSolveRequestCodec.captureRequest`: no `levelSource`; Map/Set tagged), with
+ *                        its pass rows and work units — one line per leg `{id, key, requests}`. The rows are unchanged
+ *                        (the requests never go on a row). Replay one in node: `replay-seedling-solve-request.mjs`.
  *   --axe-dodge=on|off   ⛓ AXE_DODGE HOOK: set fidelity's `AXE_DODGE_ASK_PER_PREVIEW` through the flashPanel setting
  *                        `seedlingAxeDodgeAskPerPreview` before the panel boots (absent = `default`, today's run). The
  *                        panel's value and the model's own default are printed as an `AXE_DODGE:` line (a mismatch
@@ -77,7 +81,7 @@
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--leg-budget-ms=<ms>] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--leg-budget-ms=<ms>] [--capture-requests=<jsonl>] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -359,6 +363,8 @@ async function main() {
     const HOST = arg('host', 'http://localhost:8000').replace(/\/+$/, '');
     const MODE = arg('mode', 'bare');
     const OUT = arg('out', '');
+    // ⛓ REQUEST CAPTURE — empty = off (today's run: no request is serialized)
+    const CAPTURE = arg('capture-requests', '');
     const FROM = Number(arg('from', '0'));
     const LIMIT = Number(arg('limit', '100000'));
     const PAGE_LEGS = Number(arg('page-legs', '60'));
@@ -654,8 +660,12 @@ async function main() {
                 row.rngSplitAtArrival = await page.evaluate(() => window.__div.rngSplit());
                 // eslint-disable-next-line no-await-in-loop
                 const r = await page.evaluate((a) => window.__div.serveLeg(a).then((x) => JSON.parse(JSON.stringify(x))),
-                    { leg, budgetMs: LEG_BUDGET, producer: PRODUCER, nameCut: LEG_BUDGET !== LEG_BUDGET_MS_DEFAULT });
-                Object.assign(row, r);
+                    { leg, budgetMs: LEG_BUDGET, producer: PRODUCER, nameCut: LEG_BUDGET !== LEG_BUDGET_MS_DEFAULT,
+                        ...(CAPTURE ? { captureRequests: true } : {}) });
+                // ⛓ REQUEST CAPTURE — off the row, into their own file
+                const { requests, ...served } = r;
+                if (CAPTURE) appendFileSync(CAPTURE, `${JSON.stringify({ id: leg.id, key: leg.key ?? null, requests: requests ?? [] })}\n`);
+                Object.assign(row, served);
                 swaps += (r.history ?? []).length;
             }); } catch (e) {
                 if (e instanceof SweepHang) throw e;

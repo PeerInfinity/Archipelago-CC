@@ -99,6 +99,13 @@ on:
           300 s backstop (a named failure) are untouched.
         type: string
         default: ''
+      capture_requests:
+        description: >-
+          Off = today's run. On = each shard also writes requests-<i>.jsonl (in its artifact): every solve request a
+          leg made, in order, as the worker received it, with its pass rows and work units — the input
+          replay-seedling-solve-request.mjs replays in node. The rows are unchanged.
+        type: boolean
+        default: false
       test_fault:
         description: >-
           TEST-ONLY, empty for every real sweep. The probe's fault injection SWEEP_INJECT_HANG=<page>:<step>[,…]
@@ -238,6 +245,7 @@ jobs:
           STAGE_FLAGS: ${{ inputs.stage_flags }}
           AXE_DODGE: ${{ inputs.axe_dodge }}
           LEG_BUDGET: ${{ inputs.leg_budget_ms }}
+          CAPTURE: ${{ inputs.capture_requests && 'on' || '' }}
           TEST_FAULT: ${{ inputs.test_fault }}
         run: |
           set -o pipefail
@@ -262,7 +270,8 @@ jobs:
           set +e
           node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=$D/legs.jsonl --shard="$SHARD" --mode="$MODE" \
             --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP $STAGE ${CONTACT:+--contact-fidelity="$CONTACT"} \
-            --stage-flags="$STAGE_FLAGS" ${AXE_DODGE:+--axe-dodge="$AXE_DODGE"} ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} 2>&1 | tee "$L"
+            --stage-flags="$STAGE_FLAGS" ${AXE_DODGE:+--axe-dodge="$AXE_DODGE"} ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} \
+            ${CAPTURE:+--capture-requests=$D/requests-$I.jsonl} 2>&1 | tee "$L"
           RC=$?
           set -e
           echo "MEASURED: shard $SHARD rc=$RC wall $(( $(date +%s) - S ))s load $(cut -d' ' -f1-3 /proc/loadavg) nproc $(nproc) at ${GITHUB_SHA}"

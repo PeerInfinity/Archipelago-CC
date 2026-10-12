@@ -61,11 +61,14 @@ describe('the STAMP', () => {
 
     it('the probe emits EVERY row through the stamp (the one door: run, skipped, boot-failed, hang rows)', () => {
         expect(SRC).toMatch(/const line = JSON\.stringify\(stampBudget\(row, LEG_BUDGET\)\);/);
-        expect(SRC.match(/appendFileSync\(/g)).toHaveLength(1); // emit's one write: no row reaches the file another way
+        // emit's one write: no row reaches the file another way (the other write is the REQUEST CAPTURE's own file)
+        expect(SRC.match(/appendFileSync\(OUT,/g)).toHaveLength(1);
+        expect(SRC.match(/appendFileSync\(/g)).toHaveLength(2);
+        expect(SRC).toMatch(/if \(CAPTURE\) appendFileSync\(CAPTURE, /);
     });
 
     it('the serve gets the budget (no literal 90000 left at the call) and names a cut only off the default', () => {
-        expect(SRC).toMatch(/\{ leg, budgetMs: LEG_BUDGET, producer: PRODUCER, nameCut: LEG_BUDGET !== LEG_BUDGET_MS_DEFAULT \}/);
+        expect(SRC).toMatch(/\{ leg, budgetMs: LEG_BUDGET, producer: PRODUCER, nameCut: LEG_BUDGET !== LEG_BUDGET_MS_DEFAULT,/);
         expect(SRC).not.toMatch(/budgetMs: 90000/);
         expect(LAB).toMatch(/const cut = nameCut && end === 'timeout' \? \{ bound: 'leg-budget', budgetMs, phase: eng\.status\(\)\.phase,/);
         expect(LAB).toMatch(/\.\.\.\(cut \? \{ cut \} : \{\}\)/);

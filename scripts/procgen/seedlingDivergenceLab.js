@@ -35,6 +35,8 @@ import { resolveSeedlingAtlasGoal } from '/frontend/modules/flashPanel/seedlingP
 import { parsePendingCheck } from '/frontend/modules/flashPanel/seedlingCheckBinding.js';
 import { mountedRecordsOf } from '/frontend/modules/seedlingDemo/wasmWalkTape.js';
 import { createHitRecorder } from '/scripts/procgen/seedlingHitTicks.js';
+// ⛓ REQUEST CAPTURE (`--capture-requests`, off-default only) — the request as the worker got it, as tagged JSON
+import { captureRequest } from '/scripts/procgen/seedlingSolveRequestCodec.js';
 
 const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
 const sleep = (ms) => new Promise((r) => { setTimeout(r, ms); });
@@ -164,7 +166,7 @@ export async function createLab() {
         return diff;
     }
 
-    async function serveLeg({ leg, budgetMs = 90000, producer = 'solver', nameCut = false }) {
+    async function serveLeg({ leg, budgetMs = 90000, producer = 'solver', nameCut = false, captureRequests = false }) {
         const eng = producer === 'walker' ? walkerEngine() : engine;
         st.failed = null;
         st.notes = [];
@@ -278,6 +280,11 @@ export async function createLab() {
                 set: (after?.persistence_cleared ?? []).some((c) => c.level === goal.event.tag.level && c.tag === goal.event.tag.tag),
                 collected: glue?.eventCollector ? glue.eventCollector.collected.has(goal.name) : null } } : {}),
             ms: Math.round(performance.now() - t0), roomHits, ...(cut ? { cut } : {}),
+            // ⛓ REQUEST CAPTURE — every solve request of this leg, in order, as the worker got it (the probe moves them
+            // off the row into their own file, so the row is the same with the switch on or off)
+            ...(captureRequests ? { requests: solves.map((s, i) => ({ i, request: captureRequest(s.req), passes: s.passes ?? null,
+                result: s.res ? { ok: s.res.ok ?? null, kind: s.res.kind ?? null, work: s.res.work ?? s.res.plan?.work ?? null,
+                    passes: s.res.passes ?? s.res.plan?.passes ?? null } : null })) } : {}),
             gate: { served: plain((eng.stats.deliveryServed ?? []).slice(g0.served)),
                 deliveries: plain((eng.stats.deliveries ?? []).slice(g0.deliveries)).map((d) => ({ phase: d.phase, tick: d.tick, outcome: d.outcome, save: d.save })),
                 releasedForSwap: (eng.stats.releasedForSwap ?? 0) - g0.released } };
