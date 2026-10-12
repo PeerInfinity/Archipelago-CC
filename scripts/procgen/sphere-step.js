@@ -94,7 +94,7 @@ import { rebuildEnvelopeFromRulesJson } from '../../frontend/modules/procgenPipe
 import {
     defaultProcgenParams, activeSubstrateIds,
     collectSphereGrowthPrep, assembleRegionParams,
-    mergeSubstrateItemLib, resolveVictoryItem,
+    mergeSubstrateItemLib, resolveSphereGoal,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
 
 // --- CLI parser ---
@@ -208,10 +208,14 @@ function parseArgs(argv) {
 function buildConfig(args) {
     const selectedSubs = new Set(Object.keys(args.quotas));
     if (args.start) selectedSubs.add(args.start);
-    const itemLib = mergeSubstrateItemLib(DEFAULT_ITEMS, selectedSubs);
-    const victory = resolveVictoryItem({
-        explicit: args.victory, itemPool: args.items, itemLib, selectedIds: selectedSubs,
+    // One goal item (`Victory`): the pool's victory items fold into it, and the
+    // library gains its row.
+    const goal = resolveSphereGoal({
+        explicit: args.victory, itemPool: args.items,
+        itemLib: mergeSubstrateItemLib(DEFAULT_ITEMS, selectedSubs), selectedIds: selectedSubs,
     });
+    const { itemLib } = goal;
+    const victory = goal.goalItem;
 
     // Substrate params: merged defaultProcgenParams overlaid with explicit CLI
     // flags (and --param). The bounce hooks read the bounce*-prefixed keys.
@@ -224,7 +228,7 @@ function buildConfig(args) {
     // bounceFreeArrow regionParam) + the full braid regionParams. --no-arrow-
     // entry skips ONLY the prep; regionParams still carry the braid layout.
     const activeIds = activeSubstrateIds(args.quotas, args.start);
-    const itemPool = { ...args.items };
+    const itemPool = { ...goal.itemPool };
     const prep = args.arrowEntry
         ? collectSphereGrowthPrep({
             activeIds, itemPool, quotas: args.quotas,

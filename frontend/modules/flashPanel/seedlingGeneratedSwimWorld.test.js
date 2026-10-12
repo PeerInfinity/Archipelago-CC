@@ -31,6 +31,7 @@ import { walkableCellsFrom } from '../seedlingDemo/levelSetExits.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { reachableRegions, regionsOf } from '../procgenCore/rulesGraph.js';
+import { GOAL_ITEM } from '../procgenCore/goalItem.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 for (const rel of REGISTRY_LIBRARIES) {
@@ -99,9 +100,9 @@ describe('sphere growth — SEEDLING_GENERATED_SWIM_STATE (a maze START; a gener
         const placed = rulesJson.canonical_placements['1'];
         expect(regions[start].locations.map((l) => l.name)).toContain(
             Object.keys(placed).find((loc) => placed[loc] === ITEM));
-        expect(placed[p.locations[0].name]).toBe('victory');
+        expect(placed[p.locations[0].name]).toBe(GOAL_ITEM); // ⛓ spiral victory: one goal item
         expect(p.locations[0].cell).toEqual(p.goal_cell);
-        expect(rulesJson.game_info['1'].completion_condition).toEqual({ type: 'item_check', item: 'victory' });
+        expect(rulesJson.game_info['1'].completion_condition).toEqual({ type: 'item_check', item: GOAL_ITEM });
         // every exit INTO the room is gated on the item, and nothing else is
         const into = Object.entries(regions).flatMap(([from, r]) => (r.exits ?? [])
             .filter((e) => e.connected_region === room).map((e) => [from, e.access_rule]));

@@ -215,7 +215,10 @@ export async function createLab() {
             // ⛓ CONTACT HOOK — the contact set the WORKER solved under, when off-default (its stamp; absent at the defaults)
             ...(s.res?.contactFidelity ? { contactFidelity: plain(s.res.contactFidelity) } : {}),
             // ⛓ AXE_DODGE HOOK — the `AXE_DODGE_ASK_PER_PREVIEW` the WORKER solved under, when off-default (its stamp)
-            ...(typeof s.res?.axeDodgeAskPerPreview === 'boolean' ? { axeDodgeAskPerPreview: s.res.axeDodgeAskPerPreview } : {}) }));
+            ...(typeof s.res?.axeDodgeAskPerPreview === 'boolean' ? { axeDodgeAskPerPreview: s.res.axeDodgeAskPerPreview } : {}),
+            // ⛓ FORCED-HIT CONSUMER — the crossings the plan BILLED and the damage it ends on (absent = none billed):
+            // a forced-hit leg's `roomHits.max` is measured against them
+            ...(s.res?.plan?.forcedHits ? { forcedHits: plain(s.res.plan.forcedHits), damage: plain(s.res.plan.damage) } : {}) }));
         const rows = tap.rows.slice(r0);
         // Divergence detail per diverged play: match it to its plan by order (one ok plan per play)
         const okSolves = solves.filter((s) => s.res?.ok && s.res.plan?.expected);

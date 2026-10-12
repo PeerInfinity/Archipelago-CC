@@ -85,6 +85,7 @@ import {
 // Recorded layout edits — the op vocabulary + replay. This module supplies the
 // SPHERE binding (below); layoutEdits.js stays envelope-agnostic.
 import { deriveSphereRerollSeed, reRollCountFor } from './layoutEdits.js';
+import { unplacedGoalSentence } from '../procgenCore/goalItem.js';
 
 /** Step names in run order; index === the `completed` value the step yields. */
 export const SPHERE_STEPS = Object.freeze([
@@ -513,6 +514,10 @@ function stepCompile(env) {
         },
     });
     const oracleErrors = compareSpheresToPlan(computeItemSpheres(rulesJson), env.plan);
+    // The goal invariant (⚖ 2026-10-11): completion names an item some location
+    // holds — else the world could never be beaten.
+    const unplaced = unplacedGoalSentence(rulesJson);
+    if (unplaced) throw new Error(`sphere growth: ${unplaced}`);
     env.compile = { rulesJson, oracleErrors };
     env.completed = 5;
     return env;

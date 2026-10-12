@@ -28,7 +28,9 @@ Each gate holds a single item. Host selection respects substrate gate compatibil
 
 ## Realisation (`growSpheres`)
 
-The tree is realised in wave order on a Grid, using the same machinery as the other drivers: cell adjacency where possible, teleporters where not, back-exits, `stitchGrid` to resolve exit targets, and `wallOffUnusedExits` at the end. Maze regions realise their gates via `placeFromRules` (the requirement-targeted placement path); zone-based substrates must expose `generateZoneForSpecs` (bounce's requirement-targeted zone generation — see [Bounce Substrate](./bounce.md#sphere-growth-integration)).
+The tree is realised in wave order on a Grid, using the same machinery as the other drivers: cell adjacency where possible, teleporters where not, back-exits, `stitchGrid` to resolve exit targets, and `wallOffUnusedExits` at the end. Maze regions realise their gates via `placeFromRules` (the requirement-targeted placement path); zone-based substrates must expose `generateZoneForSpecs` (bounce's requirement-targeted zone generation — see [Bounce Substrate](./bounce.md#sphere-growth-integration)). jta and noiz2sa realise their zones from the node's specs too, taking their Nth zone for their Nth node (`sphereZoneOrdinal`); their runtimes do not enforce exit rules, so the tree's gates on them are logic-only (⚖ the user, 2026-10-11). omsi has no spec path yet.
+
+**One goal item.** The plan pins `Victory` to the final sphere. The scenario's victory item is the switch: `presetRun.buildSphereConfig` (and `sphereConfigHooks.resolveSphereGoal` for the CLIs) folds the pool's victory items into one `Victory`, and adds it when only an in-quota substrate declares a goal, so a goal is always planned and placed.
 
 ## The three-phase split and the rng discipline
 

@@ -18,6 +18,7 @@ import { writeFileSync } from 'node:fs';
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
 import '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
+import '../../frontend/modules/noiz2saSubstrate/noiz2saSubstrateLibrary.js';
 import {
     arrangeShuffledSpiral, buildRulesJson, getRegionExits, getRegionEntrance,
 } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
@@ -50,19 +51,11 @@ function dumpGrid(grid) {
     return out;
 }
 
-// Resolve the completion item the way _runShuffledSpiral / dump-shuffled-spiral
-// do: the first quota'd substrate declaring a victoryItem on its registry entry.
-function resolveVictory(quotas) {
-    return Object.entries(quotas)
-        .map(([id, n]) => (n > 0 ? substrateRegistry.get(id)?.victoryItem : null))
-        .find(Boolean) ?? null;
-}
-
 // Build the { config, compileIn } pair a preset feeds to BOTH paths, so the only
 // variable under test is monolithic-vs-stepped, not the inputs.
 function preset({
     seed = 1, region = { width: 8, height: 6 }, quotas, start = null,
-    items = {}, obstacles = {},
+    items = {}, obstacles = {}, substrateConfig = null,
 }) {
     const config = {
         regionSize: region,
@@ -73,14 +66,16 @@ function preset({
         growthParams: {
             substrateQuotas: quotas,
             ...(start ? { startSubstrate: start } : {}),
+            ...(substrateConfig ? { substrateConfig } : {}),
         },
         hazardOpts: null,
     };
+    // The completion item is the goal ③ realises (both paths read it off the
+    // realisation), so compileIn names none.
     const compileIn = {
         seed,
         enableLoopMode: false,
         regionXpEffect: 'cost',
-        completionConditionItem: resolveVictory(quotas),
     };
     return { config, compileIn };
 }
@@ -88,13 +83,20 @@ function preset({
 // Path A — the monolith: arrangeShuffledSpiral + buildRulesJson with the exact
 // compile opts the ④ step uses.
 function monolith({ config, compileIn }) {
-    const { grid, stats, startCell } = arrangeShuffledSpiral(config);
+    // ① installs each quota substrate's config before arranging; the monolith
+    // takes the same config.
+    for (const [id, n] of Object.entries(config.growthParams.substrateQuotas)) {
+        if (n > 0) substrateRegistry.get(id)?.applyPipelineConfig?.(config.growthParams.substrateConfig?.[id]);
+    }
+    const {
+        grid, stats, startCell, goalItem,
+    } = arrangeShuffledSpiral(config);
     const rulesJson = buildRulesJson(grid, {
         startCell,
         seed: compileIn.seed,
         enableLoopMode: !!compileIn.enableLoopMode,
         regionXpEffect: compileIn.regionXpEffect ?? 'cost',
-        completionConditionItem: compileIn.completionConditionItem ?? null,
+        completionConditionItem: goalItem,
         procgenMetadata: { driver: 'shuffled-spiral', stop_reason: stats.stopReason },
     });
     return { grid: dumpGrid(grid), rulesJson };
@@ -118,7 +120,11 @@ async function steppedSerde({ config, compileIn }) {
 }
 
 const PRESETS = {
-    jtaOnly: preset({ quotas: { jta: 5 }, start: 'jta' }),
+    // Zone locations on: a jta zone then holds the world's goal (with them off
+    // the world has nowhere to put it, and ④ refuses it).
+    jtaOnly: preset({
+        quotas: { jta: 5 }, start: 'jta', substrateConfig: { jta: { emitZoneLocations: true, goalVictory: false } },
+    }),
     mazeOnly: preset({ quotas: { maze: 6 }, start: 'maze' }),
     mazeOnlyS7: preset({ seed: 7, quotas: { maze: 6 }, start: 'maze' }),
     // Mixed: a procedural substrate (maze) draws rng inside the spiral loop, so
@@ -130,6 +136,14 @@ const PRESETS = {
     mixedS3: preset({
         seed: 3, quotas: { maze: 5, jta: 3 }, start: 'maze',
         items: { key_red: 2, key_blue: 2, key_green: 1 },
+    }),
+    // The item layer across every kind of cell: procedural (maze), zone
+    // substrates that hold pool items (jta with locations, noiz2sa) and one
+    // that holds none (bounce), with the scenario's victory as the goal.
+    goalMix: preset({
+        seed: 5, quotas: { maze: 2, jta: 2, noiz2sa: 2, bounce: 1 }, start: 'maze',
+        items: { key_red: 1, key_blue: 1, key_green: 1, victory: 1 },
+        substrateConfig: { jta: { emitZoneLocations: true, goalVictory: false } },
     }),
 };
 

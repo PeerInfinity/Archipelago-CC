@@ -282,20 +282,23 @@ describe('the corpus census — printed, then pinned', () => {
          *              stream's §7 (`doc` 276 → 277).
          *   359 → 360  JtA zone locations (2026-10-11): substrate-registry.md's `pipelineConfigFromParams`
          *              row → jta.md's AP-locations section (`doc` 277 → 278).
+         *   360 → 362  spiral victory (2026-10-11): architecture.md's goal paragraph and
+         *              substrate-registry.md's content-source paragraph → stepped-pipeline.md
+         *              § The item layer (`doc` 278 → 280).
          */
         expect(by).toEqual({
             'same-doc': 22,
-            doc: 278,
+            doc: 280,
             external: 22,
             repo: 38,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(360);
+        expect(CORPUS.length).toBe(362);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(278);
+        expect(docs).toHaveLength(280);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

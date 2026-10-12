@@ -106,12 +106,12 @@ import {
 import {
     adoptedClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, locationGoalServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
-    primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
+    forcedHitContinuationRefusal, primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
 } from '../seedlingDemo/wasmPlayback.js';
 import {
-    ANYTIME_PASSES, betterAnswer, budgetCut, LOAD_BUDGET_MS, passesAfter, replayTape, SOLVE_BACKSTOP_MS, SOLVER_BUDGET_WORK,
-    SOLVER_UPGRADE_WINDOW_WORK,
+    ANYTIME_PASSES, betterAnswer, budgetCut, forcedHitFieldsOf, forcedHitNote, LOAD_BUDGET_MS, passesAfter, replayTape, SOLVE_BACKSTOP_MS,
+    SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK,
 } from '../seedlingDemo/jsRuntimeSolver.js';
 import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.js';
 import { applyAxeDodgeAsk, parseAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskHook.js';
@@ -264,7 +264,8 @@ export function createWasmPlayback({
      * `{level, staging, shipped, spawn, begin}` — the arrival's staging and
      * every key set shipped since, i.e. the SHADOW's recipe. null = no exact
      * staging of the room the player is in (the cold start, a fallback, a
-     * crossing in flight).
+     * crossing in flight). ⛓ FORCED-HIT CONSUMER — `damage`: the last forced plan shipped here
+     * (`forcedHitContinuationRefusal`).
      */
     let room = null;
     /**
@@ -1099,6 +1100,10 @@ export function createWasmPlayback({
             startSolve(request, { staging: r.staging, continuation: false });
             return;
         }
+        // ⛓ FORCED-HIT CONSUMER (interim) — a forced hit in this world and no door since: no staging carries the
+        // player's hits (wave-14 STAGED PLAYER HITS), so the continuation is refused by name → the forced re-arrival.
+        const hitWhy = forcedHitContinuationRefusal(r.damage);
+        if (hitWhy) { contFallback(hitWhy, 'forced-hit-continuation'); return; }
         const st = status();
         let c;
         // ⛓ MID-ROOM REPLAN — a room frozen MID-SPAN continues with a LEAD tick holding exactly the keys the frozen
@@ -1143,7 +1148,9 @@ export function createWasmPlayback({
         return { pass: p.pass ?? null, expired: p.expired === true, retries: p.retries ?? 0, budgets: p.budgets ? [...p.budgets] : [],
             passes: p.plan?.passes ?? null,
             // ⛓ SHOULD-STOP — the plan's own pass stopped at its deadline (`{tripped, first, sites}`), else null
-            deadline: p.plan?.deadline ?? null };
+            deadline: p.plan?.deadline ?? null,
+            // ⛓ FORCED-HIT CONSUMER — the plan's billed crossings and the damage it ends on (absent = none billed)
+            ...forcedHitFieldsOf(p.plan) };
     }
 
     function startSolve(request, playInit) {
@@ -1442,12 +1449,17 @@ export function createWasmPlayback({
             room.equips = [...(room.equips ?? []), ...tapeEquips(plan.equipsAt, room.shipped.length)];
             room.shipped = [...room.shipped, ...plan.solution.map((h) => [...h])];
             room.plans = (room.plans ?? 0) + 1;
+            // ⛓ FORCED-HIT CONSUMER — the damage this world now carries (the last forced plan's; a door or a
+            // re-arrival replaces the room, and with it this record: a new `Player` starts at 0 hits).
+            if (plan.damage) room.damage = { ...plan.damage };
             if (talk?.left) room.talkCircles = [];
         }
         note(`playing ${play.ticks} ticks (${(plan.verbs ?? []).join(',') || 'walk'}`
             + `${play.pass ? `; ${play.pass} pass${play.expired ? ', the later pass ran out of budget' : ''}` : ''}`
             // ⛓ SHOULD-STOP — a pass whose deadline tripped, by name (the site that tripped first)
-            + `${(plan.passes ?? []).filter((r) => r.deadline).map((r) => `; ${r.pass} stopped at its deadline (${r.deadline})`).join('')})`);
+            + `${(plan.passes ?? []).filter((r) => r.deadline).map((r) => `; ${r.pass} stopped at its deadline (${r.deadline})`).join('')}`
+            // ⛓ FORCED-HIT CONSUMER — the hits the plan bills, by name
+            + `${forcedHitNote(plan)})`);
         // ⛓ W7 — an exit plan's crossing: hold the arrival it leads to (the glue's redirect landing, if any).
         if (glueQuery && !hold) { arriving = true; startWatch(); }
         schedule(watch, DRAIN_MS);
@@ -1505,7 +1517,7 @@ export function createWasmPlayback({
         stats.recoveries += 1;
         history.push({ goal, outcome: 'diverged', producer: play.plan.producer ?? 'solver', recovery: recoveries, ticks: play.ticks, drained: play.progress.ticks,
             verbs: play.plan.verbs ?? null, solvedMs: play.solvedMs, divergence: d, input: st?.input ?? null,
-            continuation: play.continuation ?? false, equips: play.equips ?? [] });
+            continuation: play.continuation ?? false, equips: play.equips ?? [], ...forcedHitFieldsOf(play.plan) });
         const queuedGoal = queued;
         // The spawn the room's ARRIVAL recorded (W3), whatever the divergence carried the player to.
         if (room?.spawn) spawn = room.spawn;
@@ -1969,7 +1981,7 @@ export function createWasmPlayback({
                     phase, ticks: play?.ticks ?? null,
                     drained: play?.progress?.ticks ?? null, verbs: play?.plan?.verbs ?? null, solvedMs: play?.solvedMs ?? null,
                     divergence: play?.divergence ?? null, recoveries, lastRow: last, expectedEnd: play?.plan?.expected?.at(-1) ?? null,
-                    continuation: play?.continuation ?? false, prefix: play?.prefix ?? 0 });
+                    continuation: play?.continuation ?? false, prefix: play?.prefix ?? 0, ...forcedHitFieldsOf(play?.plan) });
             }
             queued = null;
             const heldLevel = room?.level ?? null;

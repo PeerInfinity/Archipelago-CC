@@ -280,7 +280,8 @@ describe('⛓ the links the render emits', () => {
         //   356 → 358: hammer-phase D1 — the README row for seedling-solve-progress.md and seedling-bot.md's link to it
         //   358 → 359: SOLVE PROGRESS (JS half) — flash.md's "Solve progress" bullet → seedling-solve-progress.md §7
         //   359 → 360: JtA zone locations — substrate-registry.md → jta.md.
-        expect(checked).toBe(360);
+        //   360 → 362: spiral victory — architecture.md and substrate-registry.md → stepped-pipeline.md § The item layer.
+        expect(checked).toBe(362);
     });
 
     it('tags each link with the kind that produced it', () => {

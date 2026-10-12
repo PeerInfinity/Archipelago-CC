@@ -31,6 +31,7 @@ import { computeLongestShortestPath } from './mazeGeometry.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
 import { isConceptRow } from '../procgenCore/concepts.js';
+import { GOAL_ITEM } from '../procgenCore/goalItem.js';
 
 const xy = Object.freeze({ x: Object.freeze({ type: 'integer' }), y: Object.freeze({ type: 'integer' }) });
 const atXY = (extra = {}, required = []) => Object.freeze({
@@ -283,9 +284,14 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
     // diff alone would drop it and play would draw the pickup in the foreign
     // hash colour. No library declares a marked row ⇒ a world that names no
     // concept carries exactly what it did.
+    // ⛓ spiral victory (⚖ 2026-10-11, one goal item) — the GOAL's row (`Victory`)
+    //   travels with the room that holds it, base or no base: the runtime reads
+    //   a room against the maze library, which has only the scenario's
+    //   `victory`, so without it the goal would draw in the foreign hash colour.
+    const holdsGoal = items.some((i) => i.id === GOAL_ITEM);
     const itemLibExtras = {};
     for (const [id, def] of Object.entries(world.itemLib || {})) {
-        if (!(id in baseItemLib) || isConceptRow(def)) {
+        if (!(id in baseItemLib) || isConceptRow(def) || (holdsGoal && id === GOAL_ITEM)) {
             itemLibExtras[id] = def;
         }
     }

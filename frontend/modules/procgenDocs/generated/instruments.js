@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 75,
-            "count": 122,
+            "browser": 76,
+            "count": 123,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 414,
-        "browser": 140,
-        "cited": 210,
-        "files": 426,
+        "blockStyle": 415,
+        "browser": 141,
+        "cited": 211,
+        "files": 427,
         "lineStyle": 12,
-        "withDocblock": 426,
-        "withFlags": 342
+        "withDocblock": 427,
+        "withFlags": 343
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9785,6 +9785,76 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-bobsoldier-mobiles — ⛓⛓⛓ seedling-fidelity-bobsoldier: THE BOBSOLDIER'S OWN POSITION, ASKED OF THE GAME, TICK BY SAMPLED TICK (U7's `probe-seedling-u7-puncher-mobiles.mjs`, one class over).",
             "path": "scripts/procgen/probe-seedling-bobsoldier-mobiles.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-bombpusher.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "game-only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "reuse"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "upto"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-bombpusher — ⛓ seedling-fidelity-bombpusher D1/D2: THE LOBBER, ASKED OF THE GAME TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-bombpusher.mjs"
         },
         {
             "argvHelpers": [],

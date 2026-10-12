@@ -546,19 +546,43 @@
             "id": "seedling-js-runtime-loop-bot-block-walks-atlas-room",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "Seedling loop mode. Runtime js on seedling_atlas_location, loop mode on, the house block set to Bot: loops' walkTo (executeVia solver) walks the queued chest check (the game's own check completes it) and the door (its user:regionMove resumes the park); the queue ends on its own (queueEnd); one mana charge per action at its own price, no per-second drain (COARSE)."
+            "_comment": "Seedling loop mode. Runtime js on seedling_atlas_location, loop mode on, the house block set to Bot: loops' walkTo (executeVia solver) walks the queued chest check (the game's own check completes it) and the door (its user:regionMove resumes the park); the queue ends on its own (queueEnd); one mana charge per action at its own price, plus the play clock's drain per GAME second (flash_seedling declares playClock)."
         },
         {
             "id": "seedling-js-runtime-loop-bot-blocks-cross-atlas-rooms",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "Seedling loop mode. Runtime js on seedling_atlas, every Seedling block Bot, the sword granted (AP item path) and removed after: the owl's-nest stairs, the descent, then the sword-gated LOGICAL link (credited, its regionMove on the next turn); the queue ends on its own; one charge per action."
+            "_comment": "Seedling loop mode. Runtime js on seedling_atlas, every Seedling block Bot, the sword granted (AP item path) and removed after: the owl's-nest stairs, the descent, then the sword-gated LOGICAL link (credited, its regionMove on the next turn); the queue ends on its own; one charge per action, plus the play clock's drain per game second."
         },
         {
             "id": "seedling-wasm-runtime-loop-bot-block-walks-atlas-room",
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "Seedling loop mode, the WASM runtime (WebGPU — the batch launches Chromium with it): the JS row's house walk under a Bot block, the tapes from the wasm playback engine."
+        },
+        {
+            "id": "seedling-js-runtime-loop-play-clock-drains-mana",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling play clock (⚖ Drain play time too). Runtime js on seedling_atlas_location, loop mode, the house block Bot, every solve held 3 s by the row: the reported clock stops and nothing is charged; the house is charged its drain price per GAME second (substrate:playClock), each action its own price; the queue ends on its own."
+        },
+        {
+            "id": "seedling-js-runtime-loop-play-clock-mana-out",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling play clock. Runtime js, the house block MANUAL with nobody at the keys: the pool cut to half a second's drain once parked; the idle game's clock runs it out by the drain alone and the loop ends (loopState:loopReset, auto-restart off)."
+        },
+        {
+            "id": "seedling-wasm-runtime-loop-play-clock-drains-mana",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling play clock, the WASM runtime (WebGPU): the JS row's drain and stopped-clock checks; the game's Game.time off botStatus, its solves held by the row (the engine freezes the room)."
+        },
+        {
+            "id": "seedling-wasm-runtime-loop-play-clock-mana-out",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling play clock, the WASM runtime (WebGPU): the JS row's mana-out — the idle game's Game.time runs the cut pool out and the loop ends."
         },
         {
             "id": "seedling-wasm-runtime-loop-bot-blocks-cross-atlas-rooms",

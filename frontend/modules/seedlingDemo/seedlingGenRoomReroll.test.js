@@ -518,11 +518,15 @@ describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, repla
      * ⛓ RE-MEASURED at RETURN TO MENU (2026-10-05): a realised flash_seedling_gen declares `restartWarp`, so each
      * build's exporter["1"] gains `return_to_menu: true`. With that one key deleted, all three hash to their F2
      * values (ded222c9 / 9556080c / cc038eaa — measured), so the flag is the whole move.
+     * ⛓ RE-MEASURED at SPIRAL VICTORY (2026-10-11, one goal item): the host state's scenario `victory` is placed as
+     * `Victory`, and the maze room holding it carries the goal's library row. With that row emptied and the name
+     * set back, the host build hashes to its previous value (5b7eb2d2 — measured), so those two are the whole move;
+     * the two grid builds hold no goal and do not move.
      */
     it.each([
         ['grid 8x6 seed 2', () => GRID(2, 8, 6), 'e3d1d044'],
         ['grid 10x10 seed 7', () => GRID(7, 10, 10), '1b2ff6ee'],
-        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), '5b7eb2d2'],
+        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), '938da86e'],
     ])('%s built before G8: byte-identical', async (_name, state, md5) => {
         const rulesJson = await build(state());
         expect(createHash('md5').update(JSON.stringify(rulesJson)).digest('hex').slice(0, 8)).toBe(md5);

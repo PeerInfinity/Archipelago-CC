@@ -13,6 +13,7 @@
 // so there is ONE assembly path.
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { GOAL_ITEM, goalItemPool, withGoalItemDef } from '../procgenCore/goalItem.js';
 
 /**
  * Merge `base` with every registered substrate's declared
@@ -161,4 +162,17 @@ export function resolveVictoryItem({ explicit, itemPool, itemLib, selectedIds })
         if (vi) return vi;
     }
     return null;
+}
+
+/**
+ * The sphere-growth goal (⚖ user 2026-10-11: one goal item, `Victory`):
+ * `resolveVictoryItem` says whether the world has a goal; the pool's victory
+ * items become one `Victory` (added when only a substrate declares the goal), and
+ * the library gains its row. Returns `{goalItem, itemPool, itemLib}`; with no
+ * goal the pool and library come back as they were.
+ */
+export function resolveSphereGoal({ explicit, itemPool, itemLib, selectedIds }) {
+    const goalItem = resolveVictoryItem({ explicit, itemPool, itemLib, selectedIds }) ? GOAL_ITEM : null;
+    if (!goalItem) return { goalItem, itemPool: { ...itemPool }, itemLib };
+    return { goalItem, itemPool: goalItemPool(itemPool, itemLib, true), itemLib: withGoalItemDef(itemLib) };
 }

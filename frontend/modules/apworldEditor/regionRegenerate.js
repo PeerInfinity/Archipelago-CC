@@ -431,6 +431,23 @@ export function strandedReferences(doc, player, region, newEntry) {
  *            exitsRelinked: number, spec: object, stranded: object[]}
  *          | {ok: false, threw: string, freeItems: string[], hostsSurplus: boolean, spec: object}}
  */
+/**
+ * Which zone a zone source whose regions are content (jta, noiz2sa: they read `ctx.ordinal`) builds a regenerated
+ * region from: the region's own, when it already is one of the target's and the entry reads it back
+ * (`zoneOfPayload`); else the first zone no other region of the target holds.
+ */
+function regenerateZoneOrdinal(doc, player, region, target, reg) {
+    const sidecars = doc.preset_sidecars?.[player] ?? {};
+    const zoneOf = (entry) => (typeof reg?.zoneOfPayload === 'function' ? reg.zoneOfPayload(entry?.playable_payload) : null);
+    const own = sidecars[region]?.substrate === target ? zoneOf(sidecars[region]) : null;
+    if (Number.isInteger(own)) return own;
+    const held = new Set(Object.entries(sidecars)
+        .filter(([r, e]) => r !== region && e?.substrate === target).map(([, e]) => zoneOf(e)));
+    let z = 0;
+    while (held.has(z)) z += 1;
+    return z;
+}
+
 export function regenerateRegionEntry({
     doc, player, region, substrate, seed, regionParams, hazardOpts, size, freeItems, source,
 }) {
@@ -471,6 +488,7 @@ export function regenerateRegionEntry({
             useSourceLocationName: true,
             stampEntrance: true,
             freeItems: free,
+            zoneOrdinal: regenerateZoneOrdinal(doc, player, region, target, reg),
         });
     } catch (e) {
         return { ok: false, threw: String(e?.message ?? e), freeItems: free, hostsSurplus, spec };

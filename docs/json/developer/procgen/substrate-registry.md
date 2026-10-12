@@ -126,14 +126,14 @@ Implemented by `maze` (tile-grid helpers in `adapterPrimitives.js`), `text_adven
 
 ### Build-time — content sources (zone-based substrates)
 
-A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)), except a source that takes scenario-pool items (`absorbsScenarioItems`), which draws them as a procedural region does, and only while the pool holds items. The content sources are the zone games (`jta`, `bounce`, `runner`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
+A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)). The pool items a content cell holds were dealt to it up front by the spiral's [item layer](./stepped-pipeline.md#the-item-layer). The content sources are the zone games (`jta`, `bounce`, `runner`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
 
 | Field | Meaning |
 |-------|---------|
 | `zoneCount` | Pool size. `arrangeShuffledSpiral` allocates no more regions than this, and the APWorld editor's *Zone N* source (`apworldEditor/regionContent.js`) offers `0..zoneCount-1`. |
-| `extractZoneRules(zoneIdx, ctx)` | Instantiate one entry: locations, per-side exit rules, obstacle defs and `playable_payload` fragment. With `ctx.itemsToPlace` (an `absorbsScenarioItems` source) it also answers `placedItems`, the pool items it put on its locations. |
-| `absorbsScenarioItems` | When true, the spiral hands each of this source's regions up to `maxItemsPerRegion` items from the scenario pool (`ScenarioPool.planPlacement`), which the region marks placed. jta, with its zone locations on. |
-| `placeVictoryIfMissing(region)` | The victory fallback. After every spiral region is built, a world in which no location holds a victory item (any `is_victory` item of the item library or of a quota substrate's `libraryItems`) offers each region to this hook; the first that answers `true` placed one. jta's goal zone puts its `Victory` on its Travel task. |
+| `extractZoneRules(zoneIdx, ctx)` | Instantiate one entry: locations, per-side exit rules, obstacle defs and `playable_payload` fragment. In a spiral, `ctx.itemsToPlace` holds the pool items the item layer dealt this cell (the goal, `Victory`, among them on the goal cell), and the region must hold every one of them or the spiral refuses it by name. `ctx.goalOwned` says the engine places the world's goal, so the entry must not place a victory item of its own. |
+| `spiralItemCapacity(ordinal)` | How many pool items the source's `ordinal`th region can hold (the engine caps it at `maxItemsPerRegion`; `Infinity` = as many as it is dealt). A source without it holds none, so it never receives the goal: bounce, runner, `flash_seedling` and omsi are the ruled known gaps. jta answers its perk-free tasks (none with zone locations off); noiz2sa grows a location per item. |
+| `fillerItem` | The item a location of this substrate holds when the engine takes a victory item off it (the spiral keeps ONE goal: a known-gap substrate's own victory becomes filler when the goal was placed elsewhere). Absent: the engine's slot filler, `Region Library Filler`. |
 | `getSpiralContent()` | The installed content document, for the stepped pipeline's content step; `null` when none is installed. |
 | `applyPipelineConfig(cfg)` | Install this source's pipeline config (called via `applySubstrateConfig`); `applyPipelineConfig({})` restores defaults. See [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). |
 | `pipelineConfigKeys` | The keys `applyPipelineConfig` reads, as a frozen array. Tested in `procgenCore/substrateConfigRecord.test.js`. |
@@ -142,10 +142,11 @@ A **content source** supplies existing region content by ordinal: its Nth planne
 | `zoneConfigFromSlot({entries, locations, blocks, fetched})` | Read back the config one player slot's zones were built with, without installing it: `{ok, cfg, assumed, zoneCount, host}`, optionally `zoneNames` and `unplaceable`. The editor verifies `assumed` by re-extracting every zone. Returns `{ok: false, needs: [path]}` when served files are needed (`resolveZoneFetches` fetches them). A `recorded` config wins over read-back. |
 | `zoneOfPayload(payload, cfg)` | The zone a region's payload plays, or `null`; the editor refuses a zone already in use. |
 | `zoneSourceLabel` | The editor's name for this zone source. If absent, *Zone N*. |
+| `regionSourceDefault` | `'zone'`: the editor's Region generation form opens on the zone source even though the entry also realises a spec (jta: its own zone keeps its perks, while Generate builds a sphere-style zone). Absent: the form opens on Generate unless the target has no realiser. |
 | `onContentEdit(doc)` | Restamp a hand-edited content document (hash, id suffix, validation); idempotent. A changed id clears downstream steps. See [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). |
 | `rulesJsonBlocks()` | `rules.json` blocks this substrate's runtime reads, merged by `buildRulesJson` (and the APWorld Editor's initialise op) for substrates that realised a region, each under the slot (`{"<p>": block}`, rules F2). A key already present is refused, so one world cannot realise both Seedling entries (both write `flash_panel`). |
 | `restartWarp` | Declared when this substrate's runtime answers the Menu panel's Restart by warping the player to the start region (`procgenCore/restartWarp.js`'s `RESTART_WARP`). If any substrate that realised a region declares it, `buildRulesJson` writes `exporter[p].return_to_menu: true`: returning to the menu is always possible. It is a flag, never an edge (no region gets an exit into `Menu`). `region-atlas-compile.mjs` and the playthrough generator ask the same declaration. Position-aware readers honour it: `scripts/procgen/census-soft-locks.mjs` lists Restart-only regions as a diagnostic, the route survey may Restart, and the client's route planners (the Playback Bot, the region graph's one-step move) begin a route with a RESTART step when no walk exists (`procgenCore/restartRoute.js`). Seedling's two entries declare it; a world of maze rooms only does not. |
-| `victoryItem` | The goal item, used as the completion item when the scenario pool has no `is_victory` item. |
+| `victoryItem` | Declares that a world with this substrate in its quota has a goal even when the scenario pool has no `is_victory` item. In the shuffled spiral and sphere growth the goal is always the one item `Victory` (`procgenCore/goalItem.js`); grid growth still completes on this item. |
 
 A source that feeds a *document* into the pipeline (jta's dataset) declares `emitsSpiralContent: true` and names its config field with `spiralContentConfigKey` (default `datasetDoc`). Only jta is truly pre-built (indices into one game build); bounce and runner generate their zones and store them by value.
 
@@ -155,7 +156,7 @@ A source that feeds a *document* into the pipeline (jta's dataset) declares `emi
 |-------|------|---------|
 | `regionGeometry` | `'tiles'` \| `'sides'` (optional) | `'tiles'` (the default): each exit stands on a tile, so the engine writes `exits[].x/y`, `exits_placed[].tile_position` and `extracted_rules.exits[].position`. `'sides'`: exits are only sides, and the engine writes none of those and no `entrance` tile. Declare it on the entry, never as a factory default. |
 
-`procgenCore/regionGeometry.js` holds `REGION_GEOMETRY`, `DEFAULT_REGION_GEOMETRY` and `geometryOf(entry)`, the only reader; unknown values are refused. When a tile region mirrors a sides-only neighbour's exit, the engine uses `perimeterMidpoint(side, regionSize)`, so maze regions do not change. jta and omsi reach the engine only through `assembleZoneRegion`; the sphere and top-down drivers refuse substrates without `generateRegionCore` or `generateZoneForSpecs`. A substrate with `generateZoneForSpecs` and no `generateRegionCore` (bounce, runner) is built through the zone path, which gives every exit its own side, so such a room has at most four exits (`ZONE_PATH_EXIT_CEILING`). The top-down driver refuses a region with more by name before it builds anything (`zoneExitCeilingRefusal`). A `'sides'` geometry alone sets no such limit: `text_adventure` is `'sides'` but is built through its own `generateRegionCore`, which this limit does not cover.
+`procgenCore/regionGeometry.js` holds `REGION_GEOMETRY`, `DEFAULT_REGION_GEOMETRY` and `geometryOf(entry)`, the only reader; unknown values are refused. When a tile region mirrors a sides-only neighbour's exit, the engine uses `perimeterMidpoint(side, regionSize)`, so maze regions do not change. omsi reaches the engine only through `assembleZoneRegion`; the sphere and top-down drivers refuse substrates without `generateRegionCore` or `generateZoneForSpecs`. A substrate with `generateZoneForSpecs` and no `generateRegionCore` (bounce, runner, jta, noiz2sa) is built through the zone path, which gives every exit its own side, so such a room has at most four exits (`ZONE_PATH_EXIT_CEILING`). The top-down driver refuses a region with more by name before it builds anything (`zoneExitCeilingRefusal`). A `'sides'` geometry alone sets no such limit: `text_adventure` is `'sides'` but is built through its own `generateRegionCore`, which this limit does not cover.
 
 ### Build-time — generation cost
 
@@ -197,11 +198,11 @@ A **region library** stores a generated region as an entry and re-instantiates i
 
 `regionLibraryValidator.js` keeps its own `LIBRARY_V1_SUBSTRATES` list because it runs with nothing registered; `procgenCore/sidecarFieldsRegistry.test.js` checks it against the registry.
 
-### Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)
+### Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)
 
 Optional hooks the sphere-growth driver and the Procgen Pipeline panel read, so the engine never names a substrate. Semantics are documented at the consumers, `procgenPipelineEngine.js` and `sphereConfigHooks.js`.
 
-- **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item).
+- **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item). The zone path calls the generator as `(zoneSpecs, {ordinal})`: `ordinal` is which of the substrate's zones the region is (sphere growth's `sphereZoneOrdinal`, top-down's running count, the APWorld editor's own or first free zone), read by a source whose regions are content (jta's zones, noiz2sa's spans). A substrate whose runtime does not enforce exit rules expresses the tree's gates as logic-only locks (`procgenCore/logicExitLocks.js`: jta, noiz2sa).
 - **Gate vetoes and hints:** `canHostExitGates`, `canHostExitGatesBraid`, `exitGateVeto`, `backPortalGated`, `hostsSurplusExitsNatively`, `gateHostingHint`.
 - **Region contract:** `buildRegionContract`, used by the panel's Edit flow.
 - **Panel parameters:** `defaultProcgenParams`, `prepareSphereGrowth`, `buildRegionParams`, `renderProcgenParams`; for a selected region library, `buildLibraryRegionParams` and `renderLibraryProcgenParams`. `procgenParamsFromPayload(payload)` recovers the params an existing payload records.
@@ -227,7 +228,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**10 registered entries · 90 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**10 registered entries · 91 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -281,12 +282,12 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `loopSupport` | 8 keys | {customQueues, manual, queueActions} | 4 keys | {customQueues, manual, queueActions} | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys | 6 keys |
+| `loopSupport` | 8 keys | {customQueues, manual, queueActions} | 5 keys | {customQueues, manual, queueActions} | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys | 6 keys |
 | `loopSupport.customQueues` | no | no | no | no | no | yes | no | no | no | no |
 | `loopSupport.executeVia` | solver | — | solver | — | solver | — | solver | solver | solver | — |
 | `loopSupport.instant` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.manual` | yes | yes | yes | yes | yes | yes | yes | yes | yes | yes |
-| `loopSupport.playClock` | — | — | — | — | — | — | yes | — | — | — |
+| `loopSupport.playClock` | — | — | yes | — | — | — | yes | — | — | — |
 | `loopSupport.playback` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.queueActions` | regionMove, locationCheck | regionMove | regionMove, locationCheck | regionMove | regionMove | regionMove, locationCheck, explore | regionMove, locationCheck | regionMove | regionMove, locationCheck | regionMove, locationCheck, explore |
 | `loopSupport.record` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
@@ -326,19 +327,20 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `absorbsScenarioItems` | — | — | — | — | no | — | — | — | — | — |
 | `applyPipelineConfig` | — | — | fn | — | fn | — | — | fn | — | — |
 | `emitsSpiralContent` | — | — | — | — | yes | — | — | — | — | — |
 | `extractZoneRules` | fn | — | fn | — | fn | — | fn | fn | fn | — |
+| `fillerItem` | — | — | — | — | — | — | Noiz2sa Star | — | — | — |
 | `getSpiralContent` | — | — | — | — | fn | — | — | — | — | — |
 | `onContentEdit` | — | — | — | — | fn | — | — | — | — | — |
 | `pipelineConfigFromParams` | — | — | fn | — | fn | — | — | — | — | — |
 | `pipelineConfigKeys` | — | — | atlasDoc, atlasId | — | 7 items | — | — | 5 items | — | — |
-| `placeVictoryIfMissing` | — | — | — | — | fn | — | — | — | — | — |
 | `recordablePipelineConfig` | — | — | — | — | fn | — | — | fn | — | — |
+| `regionSourceDefault` | — | — | — | — | zone | — | — | — | — | — |
 | `restartWarp` | — | — | {cite, label, target} | {cite, label, target} | — | — | — | — | — | — |
 | `rulesJsonBlocks` | — | — | fn | fn | — | — | — | — | — | — |
 | `spiralContentConfigKey` | — | — | — | — | datasetDoc | — | — | — | — | — |
+| `spiralItemCapacity` | — | — | — | — | fn | — | fn | — | — | — |
 | `victoryItem` | Victory | — | — | — | Victory | — | Victory | Victory | Victory | — |
 | `zoneConfigFromSlot` | — | — | fn | — | fn | — | — | — | — | — |
 | `zoneCount` | 5 | — | 4 | — | 30 | — | 3 | 1 | 6 | — |
@@ -374,7 +376,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `libraryEntryRefusal` | fn | — | — | — | — | fn | — | — | — | — |
 | `validateLibraryEntry` | fn | — | — | — | — | fn | — | — | fn | — |
 
-**Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)**
+**Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)**
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -390,7 +392,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `exitGateVeto` | fn | — | fn | fn | — | — | — | — | fn | — |
 | `gateHostingHint` | fn | — | — | — | — | — | — | — | fn | — |
 | `gateableItems` | `null` | — | — | — | — | — | — | — | 5 items | — |
-| `generateZoneForSpecs` | fn | — | fn | — | — | — | — | — | fn | — |
+| `generateZoneForSpecs` | fn | — | fn | — | fn | — | fn | — | fn | — |
 | `generateZoneForSpecsGen` | fn | — | — | — | — | — | — | — | fn | — |
 | `hostsSurplusExitsNatively` | fn | — | — | — | — | — | — | — | fn | — |
 | `libraryItems` | 7 keys | — | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | 6 keys | — |

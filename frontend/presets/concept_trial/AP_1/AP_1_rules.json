@@ -75,7 +75,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "victory",
+              "name": "Victory",
               "player": 1,
               "advancement": true,
               "type": "progression"
@@ -143,8 +143,8 @@
           "Everything"
         ]
       },
-      "victory": {
-        "name": "victory",
+      "Victory": {
+        "name": "Victory",
         "id": 2,
         "classification": "progression",
         "groups": [
@@ -169,7 +169,7 @@
   "itempool_counts": {
     "1": {
       "Progressive Sword": 1,
-      "victory": 1,
+      "Victory": 1,
       "Progressive Swim": 1
     }
   },
@@ -184,7 +184,7 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "victory"
+        "item": "Victory"
       }
     }
   },
@@ -197,7 +197,7 @@
   "canonical_placements": {
     "1": {
       "region_2_2__loc_0": "Progressive Sword",
-      "region_1_3__loc_0__6_0": "victory",
+      "region_1_3__loc_0__6_0": "Victory",
       "region_2_3__loc_0__4_1": "Progressive Swim"
     }
   },
@@ -502,7 +502,7 @@
             {
               "x": 6,
               "y": 0,
-              "id": "victory",
+              "id": "Victory",
               "locationName": "region_1_3__loc_0__6_0"
             }
           ],
@@ -525,6 +525,15 @@
               "symbol": "star",
               "feature": "concept_items",
               "concept": "swim"
+            },
+            "Victory": {
+              "name": "Victory",
+              "id": "Victory",
+              "classification": "progression",
+              "color": "#f5d020",
+              "symbol": "star",
+              "feature": "victory",
+              "is_victory": true
             }
           },
           "longestShortestPath": 1,
@@ -569,7 +578,7 @@
           {
             "sphere": 3,
             "items": [
-              "victory"
+              "Victory"
             ]
           }
         ]
@@ -774,10 +783,10 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "victory": 1
+              "Victory": 1
             },
             "resolved_items": {
-              "victory": 1
+              "Victory": 1
             }
           },
           "new_accessible_locations": [],
