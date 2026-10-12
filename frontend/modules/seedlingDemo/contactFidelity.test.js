@@ -74,7 +74,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             bombPusherLive: true,
             // ⛓ fidelity MOVINGWAIT D2: `movingWait` (`solverBot.MOVING_WAIT`, a latched wait inside a lobber's reach
             // paces) ships OFF.
-            movingWait: false });
+            movingWait: false,
+            // ⛓ fidelity MOVINGWAIT D4: `totemShotBlastInt` (the totem shot's Explosion at its int point, r 15) ships OFF.
+            totemShotBlastInt: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
