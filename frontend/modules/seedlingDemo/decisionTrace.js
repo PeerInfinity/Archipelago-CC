@@ -135,6 +135,9 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // ⛓ Seedling fidelity WAND: the `wand` verb (`solverBot.execWand`, a `MagicalLock` on the frontier, behind
     // `WAND_VERB`), listed in the slice that first drives it, for `break`'s reason.
     'wand',
+    // ⛓ Seedling fidelity FORCEDHIT: the `forced-hit` rung (`forcedHit.js`, behind `FORCED_HITS`) — every input
+    // sequence from the state is proven hit, and the least-damage crossing is planned with its hit billed.
+    'forced-hit',
 ]);
 
 const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);

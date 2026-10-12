@@ -1,6 +1,7 @@
 import { FlashPanelUI } from './flashPanelUI.js';
 import { killLockSchemaProps } from './seedlingKillLockSettings.js';
 import { contactSchemaProps } from './seedlingContactSettings.js';
+import { axeDodgeSchemaProps } from './seedlingAxeDodgeSettings.js';
 import eventBus from '../../app/core/eventBus.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 // Import side effect registers `flash_seedling` (region-atlas Phase 4).
@@ -29,6 +30,7 @@ import { playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { PLAYBACK_WALK_FAILED_EVENT, PLAYBACK_WALK_NOTE_EVENT } from '../procgenCore/playbackEvents.js';
 import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, LOOP_RESET_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
+import { PLAY_CLOCK_EVENT, PLAY_CLOCK_SAMPLE_EVENTS, SeedlingPlayClock } from './seedlingPlayClock.js';
 import { getLastRawJsonData, stateManagerProxySingleton } from '../stateManager/index.js';
 import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
@@ -229,6 +231,9 @@ export function register(registrationApi) {
       // ⛓ CONTACT HOOK — the model's contact switches, one boolean each, generated from `CONTACT_FIDELITY_KEYS` and
       // defaulted to `CONTACT_FIDELITY_DEFAULTS` (`seedlingContactSettings.js`).
       ...contactSchemaProps(),
+      // ⛓ AXE_DODGE HOOK — fidelity's `solverBot.AXE_DODGE_ASK_PER_PREVIEW`: default | on | off, `default` = the
+      // model's own value (`seedlingAxeDodgeSettings.js` says why it is not a boolean).
+      ...axeDodgeSchemaProps(),
     },
   });
 
@@ -242,6 +247,8 @@ export function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent(FLASH_SEEDLING_LOAD_REGION_EVENT);
   // ⛓ LOOP-MODE RESTART — the glue hears the loops' reset (`seedlingRegionGlue.handleLoopReset`).
   registrationApi.registerEventBusSubscriberIntent(LOOP_RESET_EVENT);
+  // ⛓ PLAY CLOCK — a region change and Loop mode turning on read the game's clock at once (`seedlingPlayClock.js`).
+  for (const event of PLAY_CLOCK_SAMPLE_EVENTS) registrationApi.registerEventBusSubscriberIntent(event);
 
   /**
    * ⛔⛔ **THE READOUT EVENT NEEDS A REGISTERED PUBLISHER, AND WITHOUT ONE THE
@@ -280,6 +287,8 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher(PLAYBACK_WALK_FAILED_EVENT);
   // ⛓ solver-walk S2 — the live walk's note ("solving…", a decline, a retry).
   registrationApi.registerEventBusPublisher(PLAYBACK_WALK_NOTE_EVENT);
+  // ⛓ PLAY CLOCK — the game's own clock, reported to Loops (`seedlingPlayClock.js`).
+  registrationApi.registerEventBusPublisher(PLAY_CLOCK_EVENT);
 
   log('info', '[FlashPanel Module] Registration complete.');
 }
@@ -319,6 +328,12 @@ export function setActivePanelInstance(instance) {
  */
 export function getSeedlingRegionGlue() {
   return seedlingRegionGlue;
+}
+
+/** ⛓ PLAY CLOCK — the reporter of the game's own clock (`seedlingPlayClock.js`), or null; the in-app rows read its stats. */
+let seedlingPlayClock = null;
+export function getSeedlingPlayClock() {
+  return seedlingPlayClock;
 }
 
 /**
@@ -425,6 +440,19 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   });
   seedlingRegionGlue.start();
 
+  // ⛓ PLAY CLOCK (⚖ "Drain play time too") — in Loop mode, the GAME's clock (`botStatus().game_time`) on the JS and
+  // wasm runtimes, reported as `substrate:playClock` for the AP region the game plays. Loops keeps a report only for
+  // a substrate that declares `loopSupport.playClock` (flash_seedling).
+  seedlingPlayClock = new SeedlingPlayClock({
+    eventBus: getModuleEventBus(),
+    getSurface: () => activePanelInstance?.seedlingPlaybackSurface?.() ?? null,
+    getGame: () => activePanelInstance?.adapter?._getFlash?.() ?? null,
+    getRegion: () => initializationApi.getModuleFunction?.('gameState', 'getCurrentRegion')?.() ?? null,
+    isLoopModeActive: () => initializationApi.getModuleFunction?.('loops', 'isLoopModeActive')?.() === true,
+    isParked: () => seedlingRegionGlue?.binding?.active === false,
+  });
+  seedlingPlayClock.start();
+
   // ⛓ Seedling JS J2 — the Playback Bot's controller for generated rooms. It
   // reads the live panel on every call (a preset switch replaces the iframe),
   // and refuses by name under any runtime but 'js' (⛓ W2: the atlas instance also walks on 'wasm').
@@ -486,6 +514,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     if (typeof offActivate === 'function') offActivate();
     else activationBus.unsubscribe?.(FLASH_SEEDLING_LOAD_REGION_EVENT, onLoadRegionActivate);
     if (seedlingRegionGlue) { seedlingRegionGlue.stop(); seedlingRegionGlue = null; }
+    if (seedlingPlayClock) { seedlingPlayClock.stop(); seedlingPlayClock = null; }
     setSeedlingPlaybackController(null);
     setSeedlingAtlasPlaybackController(null);
   };

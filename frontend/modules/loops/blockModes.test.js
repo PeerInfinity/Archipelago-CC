@@ -1471,7 +1471,7 @@ describe('M4 — coarse substrates get an ACTIONS-LESS annotations entry', () =>
 // declared, NO takeLastRecording, and a playback controller shaped like the
 // real runner/bounce PlaybackProxy: walkTo (the M6 bot path) but NO
 // replayActions, by design.
-function registerSummarySubstrate({ regions = ['A'], playClock = false } = {}) {
+function registerSummarySubstrate({ regions = ['A'], playClock = false, coarse = false } = {}) {
   try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
   try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getWarehouse'); } catch { /* ignore */ }
   try { substrateRegistry.clear?.(); } catch { /* ignore */ }
@@ -1485,7 +1485,9 @@ function registerSummarySubstrate({ regions = ['A'], playClock = false } = {}) {
       queueActions: ['regionMove', 'locationCheck'],
       executeVia: 'solver',
       manual: true, customQueues: false,
-      record: true, playback: true, instant: true, summaryRecording: true,
+      record: true, playback: true, instant: true,
+      // coarse: no summary recorder (and no fine recorder) → the COARSE capture shape (Seedling's)
+      ...(coarse ? {} : { summaryRecording: true }),
       ...(playClock ? { playClock: true } : {}),
     },
     getPlaybackController: () => ({
@@ -2044,6 +2046,62 @@ describe('N4 — the game-time play clock charges per game second', () => {
     vi.advanceTimersByTime(2000);
     expect(gs.getCurrentMana()).toBe(before - 6);
     expect(loopState._playClock).toEqual({ region: 'A', running: true });
+  });
+});
+
+describe('loop-mode-bot — a COARSE region with a play clock drains by game seconds (⚖ Seedling)', () => {
+  let loopState, gs, bus, tick;
+
+  function setUp({ playClock = true } = {}) {
+    ({ loopState, gs, bus } = wire());
+    tick = makeTicker();
+    registerSummarySubstrate({ regions: ['A', 'B'], playClock, coarse: true });
+    const cdm = new CostDataManager();
+    cdm.setCostData({ regions: { A: { timeDrainPerSecond: 3 } }, locations: { Loc1: 7 } }, 'test');
+    loopState.setCostDataManager(cdm);
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'bot');
+    gs.setLoopModeActive(true);
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+  const report = (region, running, gameSeconds) =>
+    bus.publish('substrate:playClock', { region, running, stats: { gameSeconds } }, 'test');
+
+  beforeEach(() => { resetSavedQueueStore(); clearRulesHashCache(); vi.useFakeTimers(); });
+  afterEach(() => { loopState?.stopTimeDrain(); vi.useRealTimers(); });
+
+  it('the fixture is coarse and the Bot block engaged', () => {
+    setUp();
+    expect(loopState.getRegionCaptureShape('A')).toBe('coarse');
+    expect(loopState._botExecutedAction).not.toBeNull();
+  });
+
+  it('a bot-driven coarse region with a play clock is charged per game second', () => {
+    setUp();
+    const before = gs.getCurrentMana();
+    report('A', true, 0);
+    report('A', true, 4.2);
+    vi.advanceTimersByTime(1000);
+    expect(gs.getCurrentMana()).toBe(before - 12);
+  });
+
+  it('a coarse region WITHOUT a play clock is never time-drained', () => {
+    setUp({ playClock: false });
+    const before = gs.getCurrentMana();
+    vi.advanceTimersByTime(5000);
+    expect(gs.getCurrentMana()).toBe(before);
+  });
+
+  it('its queue actions keep their own prices (only timeDrain is priced like a summary region)', () => {
+    setUp();
+    expect(loopState._calculateActionCost({ type: 'locationCheck', sourceRegion: 'A', locationName: 'Loc1' })).toBe(7);
+    expect(loopState._calculateActionCost({ type: 'timeDrain', sourceRegion: 'A' })).toBe(3);
   });
 });
 

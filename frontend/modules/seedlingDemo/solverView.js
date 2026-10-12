@@ -65,6 +65,8 @@ export { hasDropDeath, tileUnder } from './bulb.js';
 
 // ⛓ seedling-fidelity-bulb D3: the contact-fidelity switches (`bulbLive` gates the kill veto's needs).
 export { CONTACT_FIDELITY } from './contactFidelity.js';
+// ⛓ seedling-fidelity-bombpusher D3: the lobber's own stepping, for the danger map's WAIT arm.
+export { BOMB, stepBomb, stepBombPusher } from './bombPusher.js';
 // chest.js — botDriverV2, solverBot · seedling 3
 export { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 // combat.js — dangerMap, encounters, solverBot, strikePolicy · seedling 9
@@ -99,6 +101,9 @@ export {
 // ghostSpinnerPress.js — solverBot · seedling 3
 // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (its switch, the sword's row, the chooser).
 export { GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress } from './ghostSpinnerPress.js';
+// pressKillCost.js — solverBot · seedling 4
+// ⛓⛓⛓ hammer-phase P1: the press kill's cost switch and the by-value key it compares (copy, compare, refuse).
+export { PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue } from './pressKillCost.js';
 // iceTurret.js — botDriverV2 · seedling 2
 export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
 // ⛓ U15-swim D2: the turret spit's box, for `dangerMap.spitDanger`'s WAIT sweep.

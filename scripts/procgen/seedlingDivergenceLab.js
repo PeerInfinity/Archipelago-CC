@@ -101,6 +101,8 @@ export async function createLab() {
         getSwapState: () => glue?.swapState?.() ?? null,
         getBudgetWork: () => surface()?.wasm?.solverBudgetWork ?? null,
         getUpgradeWindowWork: () => surface()?.solverUpgradeWindowWork ?? null,
+        // ⛓ AXE_DODGE HOOK — the panel's setting, applied to this engine's model at each solve (the production wiring's)
+        getAxeDodgeAskPerPreview: () => surface()?.wasm?.axeDodgeAskPerPreview ?? null,
         getDelivery: () => surface()?.wasm?.delivery ?? null,
         solveService: service,
         log: (m, level) => { if (level === 'warn') st.notes.push(String(m).slice(0, 400)); },
@@ -211,7 +213,12 @@ export async function createLab() {
             // the split the solve was STAGED with (`stagingFromWasmArrival` reads `static.Rng.split` off botStatus)
             split: s.req.staging?.rng?.split ?? null,
             // ⛓ CONTACT HOOK — the contact set the WORKER solved under, when off-default (its stamp; absent at the defaults)
-            ...(s.res?.contactFidelity ? { contactFidelity: plain(s.res.contactFidelity) } : {}) }));
+            ...(s.res?.contactFidelity ? { contactFidelity: plain(s.res.contactFidelity) } : {}),
+            // ⛓ AXE_DODGE HOOK — the `AXE_DODGE_ASK_PER_PREVIEW` the WORKER solved under, when off-default (its stamp)
+            ...(typeof s.res?.axeDodgeAskPerPreview === 'boolean' ? { axeDodgeAskPerPreview: s.res.axeDodgeAskPerPreview } : {}),
+            // ⛓ FORCED-HIT CONSUMER — the crossings the plan BILLED and the damage it ends on (absent = none billed):
+            // a forced-hit leg's `roomHits.max` is measured against them
+            ...(s.res?.plan?.forcedHits ? { forcedHits: plain(s.res.plan.forcedHits), damage: plain(s.res.plan.damage) } : {}) }));
         const rows = tap.rows.slice(r0);
         // Divergence detail per diverged play: match it to its plan by order (one ok plan per play)
         const okSolves = solves.filter((s) => s.res?.ok && s.res.plan?.expected);
@@ -245,6 +252,10 @@ export async function createLab() {
         return { answer, end, failed: st.failed, notes: st.notes.slice(-6), history, plans, tapes: tap.tapes.slice(t0n),
             divs, rowsDrained: rows.length, level: after?.level, x: after?.x, y: after?.y, armed: after?.armed, held: after?.held,
             items: after?.items ?? null, slots: after?.inventory_slots ?? null, cleared: (after?.persistence_cleared ?? []).length,
+            // ⛓ EVENT GOALS — the event's own flag BY NAME: did the GAME set it, and did the runtime's collector collect it?
+            ...(goal.event ? { eventFlag: { ...goal.event.tag,
+                set: (after?.persistence_cleared ?? []).some((c) => c.level === goal.event.tag.level && c.tag === goal.event.tag.tag),
+                collected: glue?.eventCollector ? glue.eventCollector.collected.has(goal.name) : null } } : {}),
             ms: Math.round(performance.now() - t0), roomHits,
             gate: { served: plain((eng.stats.deliveryServed ?? []).slice(g0.served)),
                 deliveries: plain((eng.stats.deliveries ?? []).slice(g0.deliveries)).map((d) => ({ phase: d.phase, tick: d.tick, outcome: d.outcome, save: d.save })),

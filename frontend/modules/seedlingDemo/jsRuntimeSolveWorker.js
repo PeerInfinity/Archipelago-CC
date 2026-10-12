@@ -47,6 +47,7 @@ import { ANYTIME_PASSES, settleSolve, solveAnytime, upgradeWindowWork } from './
 import { walkTapeFromStaging, WALK_TAPE_PRODUCER } from './wasmWalkTape.js';
 import { normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js';
 import { normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
+import { withAxeDodgeAsk } from './axeDodgeAskHook.js';
 import { withSolveProgress } from './solveProgress.js';
 import { createProgressTap, SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
 
@@ -69,11 +70,11 @@ self.onmessage = (event) => {
     // door is a plain solve (`solveSegment` steps off a latched door itself, fidelity STEP-OFF).
     // ⛓ KILLLOCK HOOK — this worker's own `killLockBodies` copy runs the request's stamped set (none = defaults);
     // the solver path applies it inside `solveAnytime`, the walker instrument here. ⛓ CONTACT HOOK — the same for
-    // the request's `contactFidelity`.
+    // the request's `contactFidelity`. ⛓ AXE_DODGE HOOK — and its `axeDodgeAskPerPreview` (absent = the default).
     const produce = request.producer === WALK_TAPE_PRODUCER
-        ? () => withContactFidelity(normalizeContactFidelity(request.contactFidelity ?? {}),
+        ? () => withAxeDodgeAsk(request.axeDodgeAskPerPreview, () => withContactFidelity(normalizeContactFidelity(request.contactFidelity ?? {}),
             () => withKillLockBodies(normalizeKillLockBodies(request.killLockBodies ?? {}),
-                () => walkTapeFromStaging({ ...request, levelSource: held.levelSource, records: held.records, clock })))
+                () => walkTapeFromStaging({ ...request, levelSource: held.levelSource, records: held.records, clock }))))
         : null;
     let answer;
     if (!held) answer = { ok: false, kind: 'refusal', message: `the solver worker was never sent room source ${source.id}` };

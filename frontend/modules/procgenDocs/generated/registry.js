@@ -4202,11 +4202,13 @@ export const REGISTRY = frz({
                 {
                     "id": "flash_seedling",
                     "present": true,
-                    "short": "{customQueues, manual, queueActions}",
+                    "short": "5 keys",
                     "type": "object",
                     "value": [
                         "customQueues",
+                        "executeVia",
                         "manual",
+                        "playClock",
                         "queueActions"
                     ]
                 },
@@ -4411,6 +4413,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "flash_seedling",
                 "jta",
                 "noiz2sa",
                 "omsi",
@@ -4433,10 +4436,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "solver",
+                    "type": "string",
+                    "value": "solver"
                 },
                 {
                     "id": "flash_seedling_gen",
@@ -4669,6 +4672,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "flash_seedling",
                 "noiz2sa"
             ],
             "cells": [
@@ -4688,10 +4692,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "flash_seedling_gen",
@@ -4869,10 +4873,11 @@ export const REGISTRY = frz({
                 {
                     "id": "flash_seedling",
                     "present": true,
-                    "short": "regionMove",
+                    "short": "regionMove, locationCheck",
                     "type": "array",
                     "value": [
-                        "regionMove"
+                        "regionMove",
+                        "locationCheck"
                     ]
                 },
                 {

@@ -1,0 +1,49 @@
+total s 191.273484
+-- inclusive top (solver functions)
+  153.2 s  80.1%  solveSegmentDeadlined solverBot.js:16575
+  153.2 s  80.1%  solveSegment solverBot.js:16566
+  153.2 s  80.1%  solveSegmentUnder solverBot.js:16623
+  153.2 s  80.1%  walkToUnder solverBot.js:19271
+  153.2 s  80.1%  walkTo solverBot.js:19797
+  135.7 s  70.9%  planSwordDash solverBot.js:5515
+  135.5 s  70.8%  evaluateAt solverBot.js:5672
+  134.8 s  70.5%  previewWalk solverBot.js:4725
+  134.6 s  70.4%  previewFor solverBot.js:5582
+   67.4 s  35.2%  step levelRun.js:7713
+   24.9 s  13.0%  step levelRun.js:16583
+   22.9 s  12.0%  move levelRun.js:7743
+   22.5 s  11.8%  sweep levelRun.js:7762
+   21.0 s  11.0%  blocked levelRun.js:7746
+   18.5 s   9.7%  combatBefore solverBot.js:4885
+   17.3 s   9.0%  decide strikePolicy.js:837
+   13.0 s   6.8%  strikeCandidates strikePolicy.js:226
+   10.2 s   5.3%  climbLadder solverBot.js:19262
+   10.2 s   5.3%  climbLadderUnder solverBot.js:17732
+    9.4 s   4.9%  execKillByPress solverBot.js:12729
+    9.4 s   4.9%  execute solverBot.js:18880
+    9.4 s   4.9%  execKillByPressOnce solverBot.js:12788
+    7.5 s   3.9%  deriveStrike solverBot.js:9226
+    7.3 s   3.8%  (anon) levelRun.js:7908
+    6.9 s   3.6%  nextNow solverBot.js:12967
+    3.9 s   2.0%  identifyAndSelect solverBot.js:17211
+    3.8 s   2.0%  resolveObstacleStrategy solverBot.js:2331
+    3.8 s   2.0%  stanceReaches solverBot.js:8081
+    3.7 s   2.0%  resolveHoldStrategy solverBot.js:2984
+    3.7 s   1.9%  deriveHoldStance solverBot.js:7551
+    3.1 s   1.6%  bodies levelRun.js:7957
+-- self top
+   37.4 s  19.6%  (garbage collector) :0
+   22.2 s  11.6%  step levelRun.js:7713
+   18.7 s   9.8%  previewWalk solverBot.js:4725
+   12.3 s   6.4%  strikeCandidates strikePolicy.js:226
+    9.2 s   4.8%  solidCandidates levelWorld.js:3997
+    9.0 s   4.7%  blocked levelRun.js:7746
+    7.9 s   4.1%  collidesSolid levelWorld.js:6268
+    7.5 s   3.9%  plannerObstacleAt botDriverV2.js:313
+    7.2 s   3.8%  (anon) levelRun.js:7908
+    5.7 s   3.0%  liveRectOf levelWorld.js:4297
+    4.7 s   2.4%  assertNormalizedLiveOpts levelWorld.js:3797
+    4.2 s   2.2%  shieldBumpTouches bobBossFight.js:379
+    4.1 s   2.1%  chaserBoxAt chasers.js:525
+    3.7 s   1.9%  nearestTileScanIndexed levelWorld.js:3883
+    3.1 s   1.6%  step playerPhysicsV2.js:870

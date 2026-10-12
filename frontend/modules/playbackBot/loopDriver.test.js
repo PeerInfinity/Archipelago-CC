@@ -133,6 +133,17 @@ describe('loopDriver — planNextLoop and the mana strategies', () => {
         expect(kinds(plan.path)).toEqual(['explore:Menu']);
     });
 
+    it('explore-furthest never farms XP where nothing is hidden: it attempts the task instead', () => {
+        const plan = planNextLoop(makeView({ ...pricey, hasHidden: () => false }));
+        expect(kinds(plan.path)).toEqual(['move:Overworld', 'move:Castle', 'move:Vault', 'check:Chest']);
+        expect(plan.reason).toMatch(/nothing left to explore in Castle, attempting anyway/);
+    });
+
+    it('explore-target falls back to attempting when neither the task region nor the start hides anything', () => {
+        const plan = planNextLoop(makeView({ ...pricey, strategy: MANA_STRATEGIES.EXPLORE_TARGET, hasHidden: () => false }));
+        expect(kinds(plan.path)).toEqual(['move:Overworld', 'move:Castle', 'move:Vault', 'check:Chest']);
+    });
+
     it('keep-attempting: queues the whole task anyway', () => {
         const plan = planNextLoop(makeView({ ...pricey, strategy: MANA_STRATEGIES.KEEP_ATTEMPTING }));
         expect(kinds(plan.path)).toEqual(['move:Overworld', 'move:Castle', 'move:Vault', 'check:Chest']);

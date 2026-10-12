@@ -13,6 +13,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
+    atlasEventGoal,
     ENCOUNTER_REFUSAL,
     EVENT_GOAL_REFUSAL,
     runtimeEventsOf,
@@ -77,8 +78,17 @@ describe('the vanilla arm\'s map — seedling_playthrough, every name accounted 
         for (const [name, loc] of locations) {
             const r = resolveSeedlingAtlasGoal({ kind: 'location', name }, MAP, { region: loc.region });
             // ⛓ RULES obstacle-events: an AP EVENT (id-less, `event: true` — a saved obstacle's flag) is
-            //   no check: the map never binds it as a goal, so nothing on the check path ever sends it.
-            if (loc.event === true) { expect(r.goal, name).toBeFalsy(); events.push(name); continue; }
+            //   no check: the map never binds it as an ENTRY, so nothing on the check path ever sends it.
+            //   ⛓ EVENT GOALS — a `game_state` one IS a walk goal: the solver's clear-tag, carried as `event`
+            //   (its flag, never a tag to collect); any other AP event resolves to none.
+            if (loc.event === true) {
+                if (loc.event_kind === 'game_state') {
+                    expect(r.goal?.event?.eventId, name).toBe(loc.event_id);
+                    expect(r.goal.tag, name).toBeNull();
+                } else expect(r.goal, name).toBeFalsy();
+                events.push(name);
+                continue;
+            }
             (r.goal ? goals : refused).push({ name, ...r });
         }
         expect(events.length).toBe([...locations.values()].filter((l) => l.id === null).length);
@@ -148,12 +158,29 @@ describe('⛓ OBSTACLE EVENTS — a game-state event is the map\'s THIRD class (
         }
     });
 
-    it('a walk to an event is refused BY NAME: its check is the game\'s flag; breaking it on purpose is clear-tag (not executed)', () => {
+    it('⛓ EVENT GOALS — a walk to an event is the solver\'s clear-tag goal, in the room the rules reach it from', () => {
         const ev = MAP.events.find((e) => e.eventId === 'flag:L0:1');
         const r = resolveSeedlingAtlasGoal({ kind: 'location', name: ev.location }, MAP, { region: ev.side });
-        expect(r).toEqual({ refused: EVENT_GOAL_REFUSAL(ev) });
-        expect(r.refused).toContain('clear-tag {tag: {level: 0, tag: 1}, at: {x: 288, y: 176}}');
-        expect(r.refused).toContain('breakablerock@288,176');
+        expect(r).toEqual({ goal: atlasEventGoal(ev, 0) });
+        expect(r.goal).toEqual({ kind: 'location', level: 0, tag: null, entityType: null, name: ev.location,
+            event: { eventId: 'flag:L0:1', tag: { level: 0, tag: 1 }, at: { x: 288, y: 176 }, obstacle: 'breakablerock@288,176' } });
+        // ⛓ CROSSROOM — the one event whose flag is not its arrival room's: L39's wandlock, pressed from L38
+        const plug = MAP.events.find((e) => e.eventId === 'flag:L39:8');
+        expect(resolveSeedlingAtlasGoal({ kind: 'location', name: plug.location }, MAP, {}).goal).toMatchObject({
+            level: 38, event: { tag: { level: 39, tag: 8 }, obstacle: 'wandlock@144,592',
+                presser: { level: 38, class: 'buttonroom', x: 32, y: 48 } } });
+        // every event is a goal (none refused at the map) — whether the solver executes it is the mapping's question
+        for (const e of MAP.events) expect(resolveSeedlingAtlasGoal({ kind: 'location', name: e.location }, MAP, {}).goal?.event).toBeTruthy();
+    });
+
+    it('⛓ EVENT GOALS — an event record with no obstacle cell is refused BY NAME at the map (none is guessed)', () => {
+        const ev = MAP.events.find((e) => e.eventId === 'flag:L0:1');
+        const broken = { ...ev, obstacle: { ...ev.obstacle, x: undefined } };
+        const r = resolveSeedlingAtlasGoal({ kind: 'location', name: ev.location }, { ...MAP, events: [broken] }, {});
+        expect(r).toEqual({ refused: EVENT_GOAL_REFUSAL(broken) });
+        expect(r.refused).toContain('breakablerock@undefined,176 in level 0');
+        expect(r.refused).toContain('names no integer flag {level, tag} or no obstacle cell');
+        expect(r.refused).not.toContain('does not execute yet');
     });
 
     it('⛔ FAIL-CLOSED: an UNKNOWN event_kind is refused by name, never bound as a pickup (nor listed as an event)', () => {

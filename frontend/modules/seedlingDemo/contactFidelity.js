@@ -240,6 +240,35 @@ export const CONTACT_FIDELITY = {
      * ⚖ ON by default since the wave-12 harvest (user, 2026-10-11: "ON at harvest", on the slice's measured movers).
      */
     baitForecast: true,
+    /**
+     * fidelity FORCEDHIT D2 — A PROVEN-FORCED HIT IS BILLED, NOT REFUSED (`forcedHit.FORCED_HITS` reads this key).
+     * ⚖ The user, 2026-10-11 ("Allow forced hits"). OFF: a combat ladder with every rung refused is a refusal, as it
+     * was. ON: the ladder first asks the proof — every input sequence over 36 held sets from this state, stepped on
+     * the segment's fork, takes a hit within the bound — and then plans the least-damage crossing under the budget
+     * (no death, one hit of margin), replays it, and bills the hit in the trace (`verb: 'forced-hit'`). Measured on
+     * L73 (leg 622, `lavarunner@72,24`). ⚖ ON by default since the wave-13 harvest (user, 2026-10-11: "ON at
+     * harvest"; game witness `forcedhit-l73-622-plan` 0 px, CI sweep 38183630094 done); `SEEDLING_FORCED_HITS=0` opts out.
+     */
+    forcedHits: true,
+    /**
+     * fidelity BOMBPUSHER D2 — THE LOBBER IS A LIVE EMITTER (`bombPusher.js`, `Enemies/BombPusher.as`,
+     * `Projectiles/Bomb.as`, `Projectiles/Explosion.as`).
+     *
+     *     BombPusher.as:44-48   shotTime == 0 && FP.distance(x, y, p.x, p.y) <= 256 → play("shoot")
+     *     BombPusher.as:52-64   the "shoot" wrap: shotTime = 15; add(new Bomb(x, y, Point(p.x, p.y)))
+     *     Bomb.as:100-121       v = (p − pos) / 30; 30 updates onto the aim, the 31st one step past it and remove
+     *     Explosion.as:40-66    radius int(24 × 0.65) = 15; Player → hit(null, 4, Point(x, y), 1)
+     *
+     * The model stepped no emitter, so L40BUTTON's damage-on walks were game-refuted (legs 378/381: the player waits
+     * out group 0's fade on `buttonroom@272,208`, 157 px from `bombpusher@112,128`). Measured on the game
+     * (`probe-seedling-bombpusher.mjs`, the two `bomb-refuted-*` tapes): one bomb every 46 ticks from the first tick in
+     * range, hits at L42 t1064/t1156 and L41 t1153/t1291 (and t1337's kills). ON: `levelRun` steps the lobber
+     * (`stepBombPushersNow`), its bombs (`stepBombsNow`) and their Explosions at `updateLists()`
+     * (`drainBombBlastsNow`), billed through `applyPlayerHit`; an Explosion that would reach an `"Enemy"` body is
+     * refused by name. OFF: the quiet room, byte-identical. ⚖ ON by default since the wave-13 harvest (user,
+     * 2026-10-11: "ON at harvest"; L40 legs 378/381 refuse the hold by name — CI sweep 38185191405).
+     */
+    bombPusherLive: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -306,6 +335,9 @@ if (envFlags) Object.assign(CONTACT_FIDELITY, parseContactFidelity(envFlags));
 // ⛓ fidelity LEASH: `SEEDLING_BAIT_FORECAST=0|1` sets that one switch over the set above (a node measurement).
 if (globalThis.process?.env?.SEEDLING_BAIT_FORECAST === '1') CONTACT_FIDELITY.baitForecast = true;
 if (globalThis.process?.env?.SEEDLING_BAIT_FORECAST === '0') CONTACT_FIDELITY.baitForecast = false;
+// ⛓ fidelity FORCEDHIT: `SEEDLING_FORCED_HITS=0|1` sets that one switch over the set above (a node measurement).
+if (globalThis.process?.env?.SEEDLING_FORCED_HITS === '1') CONTACT_FIDELITY.forcedHits = true;
+if (globalThis.process?.env?.SEEDLING_FORCED_HITS === '0') CONTACT_FIDELITY.forcedHits = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

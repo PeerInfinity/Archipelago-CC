@@ -62,6 +62,28 @@ describe('SeedlingEventCollector — LIVE (a pendingCheck clear)', () => {
     });
 });
 
+describe('⛓ EVENT GOALS — RECONCILE: a write the single report slot lost is still the game\'s flag', () => {
+    const PLUG = EVENTS.find((e) => e.eventId === 'flag:L39:8');
+
+    it('liveClears counts every clear outside the arming window (an event\'s slot or not); a restore or a declaration is none', () => {
+        const c = collector({ insideHostStart: (seq) => seq === 5 });
+        c.onStateReport('pendingCheck', clear(1, 38, 4));
+        c.onStateReport('pendingCheck', restore(2, 38, 4));
+        c.onStateReport('pendingCheck', clear(5, 0, 1));
+        expect(c.liveClears).toBe(1);
+    });
+
+    it('onReconcile collects an event flag in the table that no report named (at: reconcile), once', () => {
+        const c = collector();
+        c.onStateReport('pendingCheck', clear(1, 0, 1));
+        expect(c.onReconcile([{ level: 0, tag: 1 }, { level: 38, tag: 4 }, { level: 39, tag: 8 }])).toEqual([{
+            type: 'eventCollect', location: PLUG.location, eventId: 'flag:L39:8', level: 39, tag: 8, at: 'reconcile' }]);
+        expect(c.onReconcile([{ level: 39, tag: 8 }])).toEqual([]);
+        expect(c.onReconcile(null)).toEqual([]);
+        expect(c.stats).toMatchObject({ live: 1, reconcile: 1, reconcileReads: 2, repeats: 0 });
+    });
+});
+
 describe('SeedlingEventCollector — AT LOAD (botStatus.persistence_cleared)', () => {
     it('a save where the rock is already broken collects at load; other cleared slots are not events', () => {
         const c = collector();
@@ -134,6 +156,22 @@ describe('the region glue — the collector is the third reader of the reports',
         h.emitLoad({ region_id: ROCK.side, world: null });
         h.emitLoad({ region_id: ROCK.across[0], world: null });
         expect(h.collected).toEqual([]);
+    });
+
+    it('⛓ EVENT GOALS — L38\'s press is REPORTED as {38,4} alone (ButtonRoom\'s second write); {39,8} is collected off the table', () => {
+        const PLUG = EVENTS.find((e) => e.eventId === 'flag:L39:8');
+        const h = harness({ cleared: [{ level: 38, tag: 4 }, { level: 39, tag: 8 }] });
+        h.glue.attachAdapter(h.adapter);
+        h.adapter.onStateReport('pendingCheck', clear(1, 38, 4));
+        expect(h.collected).toEqual([PLUG.location]);
+        expect(h.game.botStatus).toHaveBeenCalledTimes(1);
+        // a restore, another property, a declaration inside a host start's arming window: no re-read
+        h.glue.checkBinding = { insideHostStart: (seq) => seq === 3, onStateReport: () => [], onGameRestart: () => {} };
+        h.adapter.onStateReport('pendingCheck', restore(2, 38, 4));
+        h.adapter.onStateReport('pendingCheck', clear(3, 38, 4));
+        h.adapter.onStateReport('level', 38);
+        expect(h.game.botStatus).toHaveBeenCalledTimes(1);
+        expect(h.collected).toEqual([PLUG.location]);
     });
 
     it('a glue built without the collector deps has none (today\'s behaviour)', () => {

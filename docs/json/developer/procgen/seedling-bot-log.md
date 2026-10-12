@@ -15512,6 +15512,65 @@ and so does the switch OFF.
   `solve-seedling-r9-campaign --check` throws at `r8-solve-6`. With `SEEDLING_STATIC_SWORD_ARM=0`, `order` is the
   base (`712f0ead`; `r9-solve-16` byte-identical, 688 t).
 
+### Seedling hammer-phase P1 — the L40 press-kill cost
+
+⚖ The user (2026-10-11): *"Please run them in the order you would recommend."* One switch, **ON**, and OFF is the
+control: `pressKillCost.PRESS_KILL_COST` (`SEEDLING_PRESS_KILL_COST=0`, `withPressKillCost`). Not a behaviour change,
+so no flip. The report is `CC/docs/cloud-reports/seedling-hammer-p1.md`.
+
+**W0** at `db221dc093` (wave 12's bank; `SOLID_GRID` present): identity block non-`#` md5 `3a48647f` (= C2's, row for
+row; r9-campaign `712f0ead`, the six producers exit 0, reference ALL 7 + 5 MATCH); tapeRunner 611 pairs `75a3c41f`;
+surface GREEN 268, constants 5,684, entities 535, profile 138; roster 277; bounded vitest 1161/1161 (16 files).
+**The five L40 legs all SOLVE in node now** (ids shifted +2 since sweep-3: 376 → 378 … 398 → 400; keys equal):
+158 / 202 / 108 / 37 / 12 s, against C1's > 900 / > 900 / 761 / 195 / 61 s. Wave 12's broad phase did it. Their
+profiles are `planSwordDash` 70–77 %. The press kill runs only in 381, at 4.9 %. ⚠ So the brief's split is not
+today's. The press-kill-bound workload is C1's own profiled staging A (survey step 78 = C1's 61, goal
+`collect:880,816`; C1's switches are ON now), at 90.7 % in `execKillByPress`: `deriveStrike` 50.2 %, `deriveRefuge`
+39.6 %, `walkableCells` 24.4 % (12.6 + 11.8, asked by both on the same tick), the forecast 18.0 %, the refuge's hammer
+test 16.2 %, the strike line 10.8 %, `previewWalk` 12 %.
+
+**D1 — the levers.** Of the four candidates, three were real:
+- **`walkableCells` per run.** It reads the world plus `solverPlanOpts` (the live bag, keys, inventory, `noHazards`,
+  contacts). Moving chasers are not among its inputs, so the cells hold across ticks. Predicted −24 %, measured −24 %.
+- **The forecast shifted one row a tick.** Valid when the bodies are row 0's and the ctx inputs are equal. Predicted
+  −18 %, measured −17 %; shifted 332/350 on leg 381.
+- **A bound in `clearOfHammersAt`.** No precomputed wall answer was needed. The refuge's cost was the hammer LINE, and
+  a box outside L+2 cannot be hit. Predicted −14 %, measured −15 %; 3.03 M of 3.06 M tests skipped on 381.
+- **The strike line once per (cell, rect) per derivation.** The train window slides a row per candidate. Measured
+  71.6 → 21.7 s (−7.5 %); 75 % of asks hit on 381.
+
+The horizon is not the cost: `opportunityAt` filters by reach first, so `clearOfHammersAt` under `deriveStrike` is
+0.9 s of 665 s. What is left on A is `previewWalk` (54 %: the refuge's 12 previews a tick, the strike's walks). It
+depends on the player's own position, so it was not touched.
+
+**D2 — byte-identical, ON.** ON vs OFF, every row equal:
+- the five legs × 3 interleaved rounds each: verdict, ticks, keys md5, whole-plan md5 (`*Ms` stripped), one
+  distinct answer per leg;
+- staging A × 3: refusal, 3,113 ticks, keys `af47d35d`;
+- the L18 sweep: 45/45, rows identical, lengths `1c019765`;
+- r9-campaign `712f0ead`;
+- the bounded vitest set.
+
+Mutants (`pressKillCost.test.js`, 9 rows):
+- caught: the cells key aliased, opts ignored, the world ignored; the bound at L−3, L−2, L−1; the state clause and
+  the ctx clause dropped; the line keyed by cell only (caught by the L40 derivation row and by staging A, not by the
+  L18 sweep);
+- blind: the forecast key aliased (no spinner room holds a bag family that changes in place);
+- equivalent: the tick clause (prev can only be the last tick's memo or null), and the bound at L (the grid's edge;
+  L+3 ships).
+
+**Timings** (median / min of 3, load 0.5–2.0 on 4 cores):
+
+| | OFF | ON |
+|---|---|---|
+| staging A | 648.7 / 645.1 s | 152.0 / 150.4 s (4.27×) |
+| legs 378 / 381 / 384 / 396 / 400 | 146 / 177 / 107 / 36 / 15 s | 152 / 173 / 112 / 36 / 16 s (noise: 0.95–1.02×) |
+
+**For fidelity:** on the legs the cost is `planSwordDash`'s previews. On leg 381 the `levelWorld` self rows are
+`solidCandidates` 4.8 %, `collidesSolid` 4.1 %, `liveRectOf` 3.0 %, `assertNormalizedLiveOpts` 2.4 % and the indexed
+nearest-tile pass 1.9 %, beside GC 19.6 % (SOLVECOST's prefix-sharing lever). On A after P1: `collideLineSolid` (the
+strike line's raycast, self 6.2 %) and `solidBoxesForMover` (4.8 %, rebuilt per line).
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
@@ -16179,6 +16238,89 @@ iceturret@104,24 is reachable"* — after 31,559 and 24,730 units (~11 s). With 
   the rest of the ladder charges one per preview, so a cheap search exhausted a budget calibrated on expensive ones.
 - **A timing control rots with every speed-up.** `jsRuntimeSolveService`'s BACKSTOP row needs an L12 solve slower than
   300 ms; after D2a it passes alone but went red once under a parallel run.
+
+### Seedling fidelity FORCEDHIT — a hit every input takes is billed, not refused
+
+Wave 13 (model coverage), planner `seedling-fidelity-planning-6`. ⚖ The user, 2026-10-11 ("Allow forced hits"): when
+an exhaustive input search proves that every crossing takes a hit, the solver may plan the least-damage crossing and
+bill the hit. The measured case is LEASH's leg 622 (L73, the arrival from L74, `lavarunner@72,24` diagonally
+adjacent). The report is `CC/docs/cloud-reports/seedling-fidelity-forcedhit.md`.
+
+**D1 — the outcome, defined before it was coded (`forcedHit.js`).** The PROOF steps every input over 36 held sets (the
+8 directions + none, × primary, × secondary) on a fork of the segment — the run itself, not a forecast or a danger
+box. It holds at depth d when no hitless prefix of length d is left, so no input sequence from that state is hitless.
+It fails by name when a hitless prefix survives `depthMax` 3, when a depth would overrun the budget (2000 fork steps,
+or 600,000 run ticks counting each fork's replay), or when the model refuses to step an input. The BUDGET: a
+crossing must bill exactly the proven least hits, at most 1 per crossing and 2 per segment, with no death, and leave
+`hits ≤ hitsMax − 1 − margin` (margin 1). The VERDICT: a `forced-hit` trace row (`proof`, `billed`, `candidate`,
+`ticks`), distinct from a walk with 0 hits. The census (flag ON): leg 622 is proven at depth 2 (1,332 fork steps,
+least 1 hit). Legs 624 and 772 and the survey's 9 ladder-EXHAUSTED steps are not proven: standing still is hitless for
+two ticks, so no hit is imminent, and 624's arrival tick refuses a sword press. Legs 626 and 628 never reach the
+ladder, and 629 is already solved.
+
+**D2 — the rung (`CONTACT_FIDELITY.forcedHits`, OFF).** `climbLadderUnder` asks it after every rung refused, on a
+segment with a fork. It plans the crossing from the walk's corridor (armed, unarmed) and the proof's fewest-hit
+leaves as prefixes, each played on a fork through `botDriverV2.drive`. The fewest-hit, then shortest, crossing is
+replayed on the live run, whose new `playerHits` rows must be the fork's, and handed back to `walkTo` as its crossing.
+The hit count is per world (`worldHitsOf`, read off the ledger: a door or a death resets it), and the segment's result
+carries `forcedHits` and `damage`. Leg 622 ON solves in 4 ticks (`up up down+right down+right`), billing
+`lavarunner@72,24` at t2.
+
+**D3 — on the game.** The plan's first three ticks were recorded on the game (p4f headless, `--player-hits`; witness
+`forcedhit-l73-622-plan`). The game bills the hit at t2 (`hits` 1, `hits_timer` 19, then 18), and the knockback moves
+the player to (70.13, 20.38). The model is the same at 0 px: the player, its damage state, and the LavaRunner. On the
+page, with the switch added to the defaults, leg 622 is done in 4 ticks with no divergence, ending at L74 (296,136),
+the expected end. OFF, the page refuses it as before. ON, the survey moves none of its 222 steps.
+
+**Trap candidates.**
+- **The player's i-frame is 20 ticks, not 30.** `PLAYER_DAMAGE.hitsTimerMax` is 20 (the game reads 19 on the hit
+  tick); 30 is the enemies' `hitsTimerMax`.
+- **A proof needs an answer for every input.** `levelRun` refuses a press on a frozen tick rather than model it, so a
+  proof over an alphabet with a press is open there, not proven.
+- **A fork replays the whole segment.** Without a snapshot, a proof's cost is forks × the segment's ticks; budget it
+  in run ticks, not forks.
+
+### Seedling fidelity BOMBPUSHER — the lobber is a live emitter, and a hold inside its reach is a hit by construction
+
+Wave 13 (model coverage), the enemy-projectile slice. L40BUTTON's damage-on walks of sweep legs 378/381 (`Totem Part
+64,144` from L40's north arrivals) were refuted on the game by `bombpusher@112,128`'s bombs while the player waited out
+group 0's lock fade on `buttonroom@272,208`; the model stepped no emitter. The report is
+`CC/docs/cloud-reports/seedling-fidelity-bombpusher.md`.
+
+**D1 — measured on the game** (`probe-seedling-bombpusher.mjs`, the two `bomb-refuted-*` tapes, p4f). The lobber
+updates before the player and plays "shoot" on the first tick the PREVIOUS tick's player is within `FP.distance` 256
+(L42: t818 reads 255.52, t817 256.44; the play is t819). "shoot" is five frames at rate 5 × 0.0333: 7 updates, then 6,
+so the wrap — and the `Bomb` — is the play + 30; the next play is the wrap + 16. One bomb every 46 ticks. A bomb is aimed
+at `Point(p.x, p.y)`, `v = aim / 30`; thirty updates land it exactly on the aim, the 31st moves it one step more and
+removes it, and its `Explosion` (radius `int(24 × 0.65)` = **15**, an `int` field) is added in the same `updateLists()`,
+so it tests the player's END-of-tick origin. Hits: L42 t1064/t1156 (then the spinner's hammer kills at t1221), L41
+t1153/t1291, and t1337's third bomb kills. `knockback`'s `|centre.y| > 0.5` gate is why the measured `vy` is 0.
+
+**D2 — the model** (`bombPusher.js`, `CONTACT_FIDELITY.bombPusherLive`, OFF). `levelRun` steps the bombs first
+(run-time, prepended), the lobber in its `Game.as:2299` slot before the player, both through a pickup's frozen frames,
+and each Explosion at `updateLists()` through `applyPlayerHit`. An Explosion whose disc reaches a stepped chaser or a
+spinner, or whose square meets a static `"Enemy"` box, refuses by name (the `"Enemy"` arm is not staged). Witnessed: the
+two damage-on walks reproduce at 0 px through every bomb hit and the death (`fixtures/bomb-witness/`, the game's camera
+read on the shake band's uncertain ticks), every bomb bit-exact; OFF leaves the game the tick after the first hit.
+
+**D3 — the price.** `dangerMap.spitDanger` tests a blast square-then-disc against any box: in TRANSIT from the walk's
+own forecast (`levelRun.bombForecastNow`, carried by `run.spitForecast()`), in a WAIT by simulating the lobber against
+a player standing at the box. A standing player in range is always hit (the blast lands ≤ 8.5 px past the aim), so
+`solverBot.lobberHoldRefusal` refuses a hold or latched wait whose dwell prices as a hit, by name
+(`obstacle {kind: 'danger', id: 'bombpusher@112,128'}`, the survey family `BOMB`). ON, legs 378/381 refuse at the
+131-tick hold naming the blast the game landed ((284,218) at +47, (285,217) at +57; the game's hold ticks 48/58).
+Survey steps 78/124/126/139: no row moves.
+
+**Trap candidates.**
+- **An `int` field truncates a `Number` compound assignment.** `radius *= 0.65` on `radius:int` is 15, not 15.6.
+  `bossTotemFight.BOSS_TOTEM_SHOT.explosionHitRadius` carries 15.6 for the same AS3 (`Explosion.as:22,40`).
+- **A guard that reads a body the run does not step reads a placement.** Under `noDamage` no chaser is stepped, so an
+  Explosion "met" `bob@304,144` at its placement on the committed `noDamage` plans while the game's bob was 50 px away.
+  Ask the same gate the stepping asks.
+- **A forecast branch the data never reaches is a mutant that survives.** No room holds a turret and a lobber, so the
+  composed forecast was untestable; it is a refusal by name now.
+- **A refusal with no cause is a model that caught the hit and did not say so.** Before D3 the hold failed "MOVED" at
+  the game's exact knockback tick.
 
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 

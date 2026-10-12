@@ -909,6 +909,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
                 + `drop in level ${goal.level}): the JS page's walker completes a location by its collected tag, and an `
                 + 'encounter has none — it is walked on the wasm runtime' };
         }
+        if (goal.kind === 'location' && goal.event) {
+            // ⛓ EVENT GOALS — likewise: an event's check is the game's persistence flag, not a collected tag; the
+            // solver's `clear-tag` plan is the whole leg, and the wasm runtime walks it.
+            return { ok: false, reason: `"${goal.name ?? 'the location'}" is a saved-obstacle EVENT (clear-tag `
+                + `{${goal.event.tag?.level},${goal.event.tag?.tag}} ${goal.event.obstacle}): the JS page's walker completes a `
+                + 'location by its collected tag, and an event has none — it is walked on the wasm runtime' };
+        }
         if (goal.kind === 'location') {
             if ((mounted?.apItems.get(goal.level) ?? []).some((a) => a.tag === goal.tag)) return { ok: true };
             // ⛓ J3 — a real room's location: the entity holding the tag.
@@ -995,6 +1002,10 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             level: session ? session.run.level : -1,
             time: ticks,
             ticks,
+            // ⛓ PLAY CLOCK — the wasm game's `game_time` (`Game.time`, one per `Game.update()`) is this model's step
+            // count: what `flashPanel/seedlingPlayClock.js` reads on both runtimes. It stops where the run is not
+            // stepped (no session, a halt, a solve in flight — `tickOnce`).
+            game_time: ticks,
             x: session ? session.run.state.x : null,
             y: session ? session.run.state.y : null,
             deaths: deaths.length,

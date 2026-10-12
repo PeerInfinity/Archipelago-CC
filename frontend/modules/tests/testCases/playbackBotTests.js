@@ -10,6 +10,8 @@ import { getActivePanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { _testOnly_getWarehouse } from '../../procgenPlayer/index.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
+import { arrangeShuffledSpiral, buildRulesJson } from '../../procgenPipeline/procgenPipelineEngine.js';
+import { getPanelInstance as getMazePanel } from '../../mazeRoom/index.js';
 
 const APCALC_RULES = './presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 // The smallest procgen_maze tier — picked specifically because (a) it uses
@@ -327,6 +329,146 @@ registerTest({
     'Loads Adventure, presses Generate Costs (enters Loop mode), sets the Loops queue to Instant and presses the '
     + 'bot\'s Play: the bot writes the Loops queue one loop at a time until every sphere-log location is checked.',
   testFunction: playbackBotLoopModeAdventureTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+/**
+ * ⛓ SUBSTRATE REGIONS IN LOOP MODE (loop-mode-bot S4) — ⚖ first target: a procgen MAZE world in Loop mode. The row
+ * generates a small all-open maze-only world with loop mode ON (loop_costs + manaEnabled → maze delegation), loads
+ * its embedded sphere log, sets the Loops queue to Instant and presses the bot's Play. The runner sets each maze
+ * block to Bot, so Loops' own maze delegation plays the queue's entries; done = every sphere-log location checked.
+ */
+async function playbackBotLoopModeMazeTest(testController) {
+  return playbackBotLoopModeWorld(testController, {
+    quotas: { maze: 4 }, start: 'maze', seed: 7, solvers: ['delegation'], watchPanel: 'mazeRoomPanel',
+    itemPool: { victory: 1, key_red: 1, key_green: 1 },
+  });
+}
+
+/**
+ * ⛓ loop-mode-bot S5 — a MIXED world in Loop mode: maze (Bot / delegation), text adventure (coarse → Playback) and
+ * bounce (Bot / walkTo). Same contract as the maze row: every sphere-log location checked by the queue.
+ */
+async function playbackBotLoopModeMixedTest(testController) {
+  return playbackBotLoopModeWorld(testController, {
+    quotas: { maze: 2, text_adventure: 2, bounce: 1 }, start: 'maze', seed: 11, solvers: null, watchPanel: null,
+    itemPool: { victory: 1, key_red: 1, key_green: 1, key_blue: 1 },
+  });
+}
+
+async function playbackBotLoopModeWorld(testController, { quotas, start, seed, solvers, watchPanel, itemPool }) {
+  const api = (mod, fn) => centralRegistry.getPublicFunction(mod, fn);
+  const loopModeOn = () => api('loops', 'isLoopModeActive')?.() === true;
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+  const panel = await testController.pollForValue(() => getActivePanel(), 'playback bot panel instance', 5000, 100);
+  const bot = panel?.getBot?.();
+  testController.reportCondition('bot reachable', !!bot);
+  if (!bot) return testController.getOverallResult();
+  bot.reset();
+
+  const { grid, startCell, stats } = arrangeShuffledSpiral({
+    regionSize: { width: 7, height: 7 },
+    itemPool,
+    obstaclePool: {},
+    seed,
+    regionParams: {},
+    growthParams: { substrateQuotas: quotas, maxItemsPerRegion: 2, startSubstrate: start },
+    hazardOpts: {},
+  });
+  const rulesJson = buildRulesJson(grid, {
+    startCell, seed, enableLoopMode: true, regionXpEffect: 'cost', completionConditionItem: 'victory',
+    procgenMetadata: { driver: 'playback-bot-loop-mode-maze', stop_reason: stats.stopReason },
+  });
+  const loaded = testController.waitForEvent('stateManager:rulesLoaded', 8000);
+  testController.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: 'playbackBotLoopModeMaze' });
+  await loaded;
+  await testController.stateManager.pingWorker('after-rules-load', 3000);
+  const sphereState = getSphereStateSingleton();
+  await sphereState.loadSphereLog('embedded:playbackBotLoopModeMaze',
+    (rulesJson.sphere_log ?? []).map((e) => JSON.stringify(e)).join('\n'));
+  const sphereLocations = (sphereState.getSphereData() ?? []).flatMap((e) => e?.locations ?? []);
+  testController.reportCondition(`sphere log has locations (${sphereLocations.length})`, sphereLocations.length > 0);
+  const on = await testController.pollForCondition(loopModeOn, 'loop mode on (auto-enabled by loop_costs)', 8000, 100);
+  testController.reportCondition('loop mode on (auto-enabled by loop_costs)', on);
+  const loopState = api('loops', 'getLoopState')?.();
+  const regions = Object.keys(rulesJson.preset_sidecars?.['1'] ?? {});
+  const how = regions.map((r) => `${r}:${rulesJson.preset_sidecars['1'][r].substrate}/${loopState?.getRegionCaptureShape?.(r)}/${loopState?.regionSolver?.(r)}`);
+  testController.log(`regions: ${how.join(', ')}`);
+  if (solvers) {
+    testController.reportCondition(`every region has a ${solvers.join('/')} Bot solver (${how.join(', ')})`,
+      regions.length > 0 && regions.every((r) => solvers.includes(loopState?.regionSolver?.(r))));
+  }
+  if (!on || !loopState) return testController.getOverallResult();
+  bot.refresh();
+
+  const instantBefore = !!loopState.instantMode;
+  loopState.setInstantMode(true);
+  try {
+    if (watchPanel) testController.eventBus.publish('ui:activatePanel', { panelId: watchPanel });
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+    const trace = [];
+    const onRC = (d) => trace.push(`RC ${d?.oldRegion}->${d?.newRegion}${d?.fromReset ? ' reset' : ''}${d?.exitName ? ` via ${d.exitName}` : ''}`);
+    const onAC = (d) => trace.push(`AC ${d?.action?.type}${d?.action?.actionName ? `:${d.action.actionName}` : ''} ${d?.action?.sourceRegion}${d?.action?.destinationRegion ? `->${d.action.destinationRegion}` : ''}`);
+    testController.eventBus.subscribe('gameState:regionChanged', onRC, 'tests');
+    testController.eventBus.subscribe('loopState:actionCompleted', onAC, 'tests');
+    trace.push(`start=${api('loops', 'getLoopStartRegion')?.()} here=${api('gameState', 'getCurrentRegion')?.()}`);
+    await bot.play();
+    const finished = await testController.pollForCondition(
+      () => (bot.getStatus() || '').startsWith('finished'), 'bot finishes the world in loop mode', 120000, 500);
+    testController.eventBus.unsubscribe('gameState:regionChanged', onRC, 'tests');
+    testController.eventBus.unsubscribe('loopState:actionCompleted', onAC, 'tests');
+    if (!finished) testController.log(`TRACE ${JSON.stringify(trace.slice(0, 60))}`);
+    if (!finished) {
+      const maze = getMazePanel();
+      const cur = loopState.currentAction;
+      testController.log(`DIAG maze panel: ${maze ? 'mounted' : 'none'} region=${maze?.currentRegionId ?? '-'} `
+        + `loopsDriven=${JSON.stringify(maze?._loopsDrivenAction ?? null)}; loops: processing=${loopState.isProcessing} `
+        + `paused=${loopState.isPaused} index=${loopState.currentActionIndex} current=${JSON.stringify(cur ? { type: cur.type, actionName: cur.actionName, region: cur.sourceRegion } : null)} `
+        + `delegated=${!!loopState._delegatedAction} bot=${!!loopState._botExecutedAction} manual=${!!loopState._manualActionEntered} `
+        + `mana=${api('gameState', 'getCurrentMana')?.()} here=${api('gameState', 'getCurrentRegion')?.()} `
+        + `mode=${loopState.getBlockMode?.(cur?.sourceRegion, cur?.instanceNumber)}`);
+    }
+    const runner = bot.getLoopRunner?.();
+    testController.reportCondition(
+      `bot finished (status: "${bot.getStatus()}", loops: ${runner?.getLoopCount?.() ?? '?'})`, finished);
+    const checked = new Set(testController.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []);
+    const missing = sphereLocations.filter((n) => !checked.has(n));
+    testController.reportCondition(
+      `every sphere-log location checked (missing: ${missing.slice(0, 5).join(', ') || 'none'})`, missing.length === 0);
+    testController.log(`Bot loop log: ${JSON.stringify((bot.getLog?.() ?? []).map((e) => e.text ?? e).slice(-40))}`);
+    if (missing.length) {
+      const disc = (await import('../../discovery/singleton.js')).default;
+      testController.log(`DIAG discovery: locations ${JSON.stringify([...(disc.getDiscoveredLocations?.() ?? [])])} `
+        + `exits ${JSON.stringify([...(disc.getDiscoveredExits?.() ?? [])].map((e) => (Array.isArray(e) ? [e[0], [...e[1]]] : e)))}`);
+    }
+  } finally {
+    bot.stop();
+    loopState.setInstantMode(instantBefore);
+    testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
+  }
+  return testController.getOverallResult();
+}
+
+registerTest({
+  id: 'playback-bot-loop-mode-maze',
+  name: 'Playback Bot: Loop mode on a procgen maze world (Bot blocks)',
+  description:
+    'Generates a small maze-only world with loop mode on, sets the Loops queue to Instant and presses the bot\'s '
+    + 'Play: the runner sets each maze block to Bot and Loops\' maze delegation plays the queue until every '
+    + 'sphere-log location is checked.',
+  testFunction: playbackBotLoopModeMazeTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+registerTest({
+  id: 'playback-bot-loop-mode-mixed',
+  name: 'Playback Bot: Loop mode on a mixed procgen world (maze, text adventure, bounce)',
+  description:
+    'Generates a small loop-mode world of maze, text adventure and bounce regions and presses the bot\'s Play: '
+    + 'the runner gives each block the mode that lets the queue play it, until every sphere-log location is checked.',
+  testFunction: playbackBotLoopModeMixedTest,
   category: 'Playback Bot',
   enabled: false,
 });

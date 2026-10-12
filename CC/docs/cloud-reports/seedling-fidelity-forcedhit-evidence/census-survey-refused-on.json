@@ -1,0 +1,461 @@
+[
+ {
+  "step": 31,
+  "level": 36,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 46,
+  "level": 25,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 57,
+  "level": 12,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 66,
+  "level": 49,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 77,
+  "level": 39,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 78,
+  "level": 40,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-APPLY \u2014 the 'shove' strategy IS registered and did not apply here",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 87,
+  "level": 49,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-APPLY \u2014 the 'collect' strategy IS registered and did not apply here",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 90,
+  "level": 52,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 100,
+  "level": 88,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 106,
+  "level": 62,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "LADDER \u2014 every rung of \u2696 \u00a711.8a's order refused; see the per-rung reasons",
+  "sameRefusalHead": true,
+  "forcedHit": "no forced hit is proven from (56.0,296.0): 1296 prefix(es) of 2 tick(s) are still hitless (first [\u00b7 \u00b7]), and depth 3 needs 46656 more fork step(s) than the budget's 668 \u2014 a search that gave up is not a proof (1332 fork step(s))"
+ },
+ {
+  "step": 107,
+  "level": 64,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 110,
+  "level": 60,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 116,
+  "level": 89,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-APPLY \u2014 the 'collect' strategy IS registered and did not apply here",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 123,
+  "level": 39,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 124,
+  "level": 40,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "STANCE-REENTRY \u2014 the `hold` stance of wandlock@448,432 is behind wandlock@448,432 itself, on both lattices; applying the verb again would be the same walk again",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 125,
+  "level": 41,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 132,
+  "level": 67,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "LADDER \u2014 every rung of \u2696 \u00a711.8a's order refused; see the per-rung reasons",
+  "sameRefusalHead": true,
+  "forcedHit": "no forced hit is proven from (181.7,120.7): 1296 prefix(es) of 2 tick(s) are still hitless (first [\u00b7 \u00b7]), and depth 3 needs 46656 more fork step(s) than the budget's 668 \u2014 a search that gave up is not a proof (1332 fork step(s))"
+ },
+ {
+  "step": 138,
+  "level": 39,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 140,
+  "level": 43,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 147,
+  "level": 63,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "LADDER \u2014 every rung of \u2696 \u00a711.8a's order refused; see the per-rung reasons",
+  "sameRefusalHead": true,
+  "forcedHit": "no forced hit is proven from (105.1,104.9): 1296 prefix(es) of 2 tick(s) are still hitless (first [\u00b7 \u00b7]), and depth 3 needs 46656 more fork step(s) than the budget's 668 \u2014 a search that gave up is not a proof (1332 fork step(s))"
+ },
+ {
+  "step": 149,
+  "level": 68,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-APPLY \u2014 the 'collect' strategy IS registered and did not apply here",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 151,
+  "level": 63,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-APPLY \u2014 the 'shove' strategy IS registered and did not apply here",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 152,
+  "level": 61,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "LADDER \u2014 every rung of \u2696 \u00a711.8a's order refused; see the per-rung reasons",
+  "sameRefusalHead": true,
+  "forcedHit": "no forced hit is proven from (216.0,104.0): 1296 prefix(es) of 2 tick(s) are still hitless (first [\u00b7 \u00b7]), and depth 3 needs 46656 more fork step(s) than the budget's 668 \u2014 a search that gave up is not a proof (1332 fork step(s))"
+ },
+ {
+  "step": 153,
+  "level": 60,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 156,
+  "level": 12,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 158,
+  "level": 84,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 160,
+  "level": 71,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 161,
+  "level": 75,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "LADDER \u2014 every rung of \u2696 \u00a711.8a's order refused; see the per-rung reasons",
+  "sameRefusalHead": true,
+  "forcedHit": "no forced hit is proven from (72.0,216.0): 1296 prefix(es) of 2 tick(s) are still hitless (first [\u00b7 \u00b7]), and depth 3 needs 46656 more fork step(s) than the budget's 668 \u2014 a search that gave up is not a proof (1332 fork step(s))"
+ },
+ {
+  "step": 166,
+  "level": 77,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 167,
+  "level": 78,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 168,
+  "level": 79,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 173,
+  "level": 82,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 182,
+  "level": 63,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 183,
+  "level": 61,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "LADDER \u2014 every rung of \u2696 \u00a711.8a's order refused; see the per-rung reasons",
+  "sameRefusalHead": true,
+  "forcedHit": "no forced hit is proven from (216.0,104.0): 1296 prefix(es) of 2 tick(s) are still hitless (first [\u00b7 \u00b7]), and depth 3 needs 46656 more fork step(s) than the budget's 668 \u2014 a search that gave up is not a proof (1332 fork step(s))"
+ },
+ {
+  "step": 184,
+  "level": 60,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 187,
+  "level": 12,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 189,
+  "level": 84,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 191,
+  "level": 71,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 194,
+  "level": 82,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 200,
+  "level": 93,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 201,
+  "level": 98,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 202,
+  "level": 99,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 203,
+  "level": 100,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "unclassified \u2014 see the refusal text",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 204,
+  "level": 101,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "LADDER \u2014 every rung of \u2696 \u00a711.8a's order refused; see the per-rung reasons",
+  "sameRefusalHead": true,
+  "forcedHit": "no forced hit is proven from (296.0,248.0): 1296 prefix(es) of 2 tick(s) are still hitless (first [\u00b7 \u00b7]), and depth 3 needs 46656 more fork step(s) than the budget's 668 \u2014 a search that gave up is not a proof (1332 fork step(s))"
+ },
+ {
+  "step": 206,
+  "level": 103,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "LADDER \u2014 every rung of \u2696 \u00a711.8a's order refused; see the per-rung reasons",
+  "sameRefusalHead": true,
+  "forcedHit": "no forced hit is proven from (296.0,152.0): 1296 prefix(es) of 2 tick(s) are still hitless (first [\u00b7 \u00b7]), and depth 3 needs 46656 more fork step(s) than the budget's 668 \u2014 a search that gave up is not a proof (1332 fork step(s))"
+ },
+ {
+  "step": 210,
+  "level": 101,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "ITEM-GATE \u2014 the 'wand' verb is registered and magicallockfire@112,48 is gated on an item this run does not hold (or on a press the model refuses); the work order is the item, not the room",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 212,
+  "level": 107,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "LADDER \u2014 every rung of \u2696 \u00a711.8a's order refused; see the per-rung reasons",
+  "sameRefusalHead": true,
+  "forcedHit": "no forced hit is proven from (24.0,56.0): 1296 prefix(es) of 2 tick(s) are still hitless (first [\u00b7 \u00b7]), and depth 3 needs 46656 more fork step(s) than the budget's 668 \u2014 a search that gave up is not a proof (1332 fork step(s))"
+ },
+ {
+  "step": 213,
+  "level": 108,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "VERB-MISSING \u2014 the selected obstacle has NO strategy row at all",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 215,
+  "level": 101,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "ITEM-GATE \u2014 the 'wand' verb is registered and magicallockfire@96,48 is gated on an item this run does not hold (or on a press the model refuses); the work order is the item, not the room",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 220,
+  "level": 112,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "ENCOUNTER-GATE \u2014 rocklock@112,16 has no strategy row and its opener is not in this room (an encounter the route must win); the work order is the gate, not the room",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ },
+ {
+  "step": 221,
+  "level": 113,
+  "ci": "REFUSED",
+  "on": "REFUSED",
+  "family": "ITEM-GATE \u2014 finaldoor@112,0 has no strategy row and its opener is not in this room (an item the run must hold); the work order is the gate, not the room",
+  "sameRefusalHead": true,
+  "forcedHit": null
+ }
+]

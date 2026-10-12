@@ -6,6 +6,7 @@ import {
     FLASH_SEEDLING_LOAD_REGION_EVENT,
 } from './flashSeedlingLibrary.js';
 import { substrateRegistryEntry as genericFlashEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
+import { substrateRegistryEntry as flashSeedlingGenEntry } from './flashSeedlingGenLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateIdFor } from '../procgenPipeline/regionAtlasCompiler.js';
 
@@ -36,8 +37,32 @@ describe('flash_seedling substrate entry', () => {
         expect(substrateRegistryEntry.supportedFeatures).toEqual(['arbitrary_ap_locations']);
         // ⛓ Seedling JS J3: the Playback Bot's controller (injected by the panel; null headless).
         expect(substrateRegistryEntry.getPlaybackController()).toBeNull();
-        expect(substrateRegistryEntry.loopSupport.queueActions).toEqual(['regionMove']);
         expect(substrateRegistryEntry.generateRegionCore).toBeUndefined();
+    });
+
+    it('⛓ SEEDLING LOOP MODE: a Loops Bot block walks it (executeVia solver), the generic flash entry does not', () => {
+        // The Seedling truth: the walkTo solver on the factory's manual-play base,
+        // over exits AND locations (⚖ user 2026-10-11: a queued check is a solver walk).
+        expect(substrateRegistryEntry.loopSupport).toMatchObject({
+            executeVia: 'solver', manual: true, customQueues: false,
+        });
+        expect([...substrateRegistryEntry.loopSupport.queueActions]).toEqual(['regionMove', 'locationCheck']);
+        // No Record/Playback/Instant claim.
+        expect(substrateRegistryEntry.loopSupport.instant ?? false).toBe(false);
+        // ⛔ Declared on THIS entry, never on the factory: the generic entry (and every
+        // other flash game built on it) keeps the manual-only shape.
+        expect(genericFlashEntry.loopSupport.executeVia).toBeUndefined();
+        expect(genericFlashEntry.loopSupport.playClock).toBeUndefined();
+        expect([...genericFlashEntry.loopSupport.queueActions]).toEqual(['regionMove']);
+    });
+
+    it('⛓ PLAY CLOCK (⚖ "Drain play time too"): it declares playClock, so Loops drains its coarse regions per GAME second', () => {
+        // The host reports the game's own clock (`seedlingPlayClock.js`); `loopState._regionDrainsTime` reads this flag.
+        expect(substrateRegistryEntry.loopSupport.playClock).toBe(true);
+        // Beside §5.63's executeVia, and on THIS entry only: the generated entry and the generic flash entry declare none.
+        expect(substrateRegistryEntry.loopSupport.executeVia).toBe('solver');
+        expect(flashSeedlingGenEntry.loopSupport?.playClock).toBeUndefined();
+        expect(genericFlashEntry.loopSupport.playClock).toBeUndefined();
     });
 
     it('round-trips an atlas payload, keying exits on the AP exit name', () => {

@@ -110,6 +110,8 @@ import {
     GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
     // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (behind `GHOST_SPINNER_PRESS`, ON by default).
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
+    // ⛓⛓⛓ hammer-phase P1: the press kill's exact caches (behind `PRESS_KILL_COST`, ON; OFF bypasses every one).
+    PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
@@ -154,6 +156,8 @@ import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestF
 import { activeProgress, progressAsked, progressEnter, progressGoal, progressLeave, progressPreview,
     progressReaders, progressRow, progressRun, progressRung, progressSearch, progressSegment, progressSite,
     progressStatesFor, progressTick, withSolveProgress } from './solveProgress.js';
+// ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
+import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
@@ -8129,11 +8133,38 @@ const hypothesisRejection = (discharged) => (discharged?.length ? [{
 }] : []);
 
 /**
+ * ⛓⛓⛓ seedling-fidelity-bombpusher D3 — A HOLD INSIDE A LOBBER'S REACH IS REFUSED BY NAME, BEFORE IT STANDS.
+ *
+ * Both of the hold's waits (`runHold` on the presser, `runLatchedWait` wherever the latch left the player) stand
+ * still for their bound, by contract: a hold that moved is a failure. A `BombPusher` aims every bomb at the player
+ * and the blast lands one step past the aim (≤ 8.5 px, inside the 15 px disc), so a standing player within its
+ * 256 px is hit once the wait outlasts the next shot + 61 ticks — `dangerAt`'s WAIT arm simulates exactly that
+ * (`lobberWaitDanger`). Measured on the game: L40BUTTON's 131-tick hold of `buttonroom@272,208`, 157 px from
+ * `bombpusher@112,128`, is knocked at hold tick 48 (leg 378) / 58 (leg 381); without this the executor failed
+ * "MOVED" with no cause. ⛔ NO VERB WAITS WHILE MOVING, which is what a bomb-free hold would need, so this is a
+ * refusal and not a re-plan; a no-op while `CONTACT_FIDELITY.bombPusherLive` is OFF (no lobber is listed).
+ */
+function lobberHoldRefusal(run, ticks, what) {
+    if (!CONTACT_FIDELITY.bombPusherLive || !Number.isFinite(ticks) || ticks <= 0) return;
+    if ((run.entities('bombPushers') ?? []).length === 0) return;
+    const at = { x: run.state.x, y: run.state.y };
+    const d = dangerAt(run, run.ticksCompleted + ticks, playerBoxAt(at.x, at.y), { mode: 'wait' });
+    const bomb = d.sources.find((src) => src.kind === 'bomb');
+    if (!bomb) return;
+    const lobber = String(bomb.id).split('#')[0];
+    throw new SolverRefusal(`${what}: the hold stands still for up to ${ticks} tick(s) at (${at.x},${at.y}), `
+        + `inside ${lobber}'s 256 px reach — ${bomb.why}. A hold cannot move, and no verb waits while moving, so `
+        + 'every plan through this wait is a bomb hit (seedling-fidelity-bombpusher: a forced-hit candidate unless a '
+        + 'moving wait is built).', { obstacle: { kind: 'danger', id: lobber } });
+}
+
+/**
  * Executor: the `hold` verb, with everything a leg spec used to declare
  * derived from live state — the presser from the frontier's own blocker id,
  * the stance from the presser's rect, the duration from the mechanism.
  */
 function execHold(run, perTick, resolved, ctx) {
+    lobberHoldRefusal(run, resolved.hold.ticks, ctx.what);
     if (resolved.latched === true && resolved.stance === null) {
         return runLatchedWait(run, perTick, resolved, ctx.what);
     }
@@ -8913,9 +8944,42 @@ function strikeHorizon(run) {
         / SPINNER.moveSpeed);
 }
 
-/** Every walkable lattice cell of the current level, with its player box. */
-function walkableCells(run, contacts) {
+/**
+ * ⛓⛓⛓ hammer-phase P1 — `walkableCells`' MEMO, one per run (`PRESS_KILL_COST`). The press kill asks for the cells
+ * twice a tick (`deriveStrike`, then `deriveRefuge`) and again every tick after, and on C1's staging A that was 24.4 %
+ * of the solve for an answer that had not changed.
+ *
+ * ⛔ WHAT THE ANSWER READS, ENUMERATED — and the key is all of it. The lattice walk reads `run.world` (its extent, and
+ * every static list `plannerObstacleAt` and `plannerBlockerAt` consult) and `opts`; `opts` is the live bag, the keys,
+ * the contacts, the inventory, `noHazards` and the planner's constants. So the key is the world BY IDENTITY (a rebuilt
+ * world is a new object) and `opts` BY VALUE, copied (`snapshotValue`: the bag can alias the run's own state, so a
+ * stored reference would compare equal to the very map that moved). A key that cannot be copied is never stored.
+ * ⚠ PER RUN, not per world: a test that flips a geometry switch builds a new run, and a world can outlive one.
+ */
+const WALKABLE_CELLS_MEMO = new WeakMap();
+
+/**
+ * Every walkable lattice cell of the current level, with its player box. ⛓ hammer-phase P1: exported for
+ * `pressKillCost.test.js`, which drives the memo's invalidation (a contact set mutated in place, a new world).
+ */
+export function walkableCells(run, contacts) {
     const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+    let key = UNCACHEABLE;
+    if (PRESS_KILL_COST.enabled) {
+        const memo = WALKABLE_CELLS_MEMO.get(run);
+        if (memo !== undefined && memo.world === run.world && sameValue(opts, memo.key)) {
+            PRESS_KILL_COST_COUNTS.cellsHit += 1;
+            return memo.cells;
+        }
+        PRESS_KILL_COST_COUNTS.cellsMiss += 1;
+        key = snapshotValue(opts);
+    }
+    const out = walkableCellsOf(run, opts);
+    if (key !== UNCACHEABLE) WALKABLE_CELLS_MEMO.set(run, { world: run.world, key, cells: out });
+    return out;
+}
+
+function walkableCellsOf(run, opts) {
     const pitch = DEFAULT_LATTICE;
     const out = [];
     for (let ty = 0; ty < run.world.height * TILE_SIZE / pitch; ty += 1) {
@@ -8990,10 +9054,23 @@ function hammerTestAt(run) {
         : `the ${SPINNER.hammerLength} px hammer line at that tick's own phase`;
 }
 
+/**
+ * ⛓⛓⛓ hammer-phase P1 — THE LINE'S REACH, AS A BOUND THAT DECIDES NOTHING (`PRESS_KILL_COST`). `hammerHitsPlayer` is
+ * `collideLineSolid([box], c, c + L·(cos a, sin a))`: the end points are `trunc`ed (each moves < 1 px), the samples lie
+ * between them, and each sample is tested at itself or `trunc`ed again (< 1 px more). So every point the line can test
+ * is strictly inside the centre's square of half-side `L + 2`, and a box wholly outside that square on one axis is
+ * missed at every phase. The third pixel is slack for the doubles (`cx + L·cos a` rounds). A skipped call could only
+ * have returned null, so the answer is the same; on C1's staging A the refuge's 107 s in this test was the line.
+ */
+const HAMMER_LINE_BOUND = SPINNER.hammerLength + 3;
+
 export function clearOfHammersAt(run, box, forecast, i) {
     const step = forecast[i];
     if (!step) return false;
     const at = typeof run?.gameTimeAt === 'function' ? run.gameTimeAt(i) : null;
+    // ⚠ only where the call would not have thrown (`hammerHitsPlayer`'s own two guards), so no refusal is skipped
+    const bounded = PRESS_KILL_COST.enabled && Number.isFinite(at)
+        && Number.isFinite(box.x) && Number.isFinite(box.y) && Number.isFinite(box.right) && Number.isFinite(box.bottom);
     for (const r of step) {
         const cx = r.x + SPINNER.originX;
         const cy = r.y + SPINNER.originY;
@@ -9007,6 +9084,14 @@ export function clearOfHammersAt(run, box, forecast, i) {
         // `Enemy.hitPlayer` — the body, force 3 — then the hammer's line.
         if (box.right > r.x && box.x < r.right && box.bottom > r.y && box.y < r.bottom) {
             return false;
+        }
+        if (bounded) {
+            if (box.x >= cx + HAMMER_LINE_BOUND || box.right <= cx - HAMMER_LINE_BOUND
+                || box.y >= cy + HAMMER_LINE_BOUND || box.bottom <= cy - HAMMER_LINE_BOUND) {
+                PRESS_KILL_COST_COUNTS.hammerSkipped += 1;
+                continue;
+            }
+            PRESS_KILL_COST_COUNTS.hammerAsked += 1;
         }
         if (hammerHitsPlayer({ x: cx, y: cy }, at, box)) return false;
     }
@@ -9207,7 +9292,7 @@ function strikePressOf(run) {
  *
  * @returns {?{tag, at:{x, y}}} the first blocker, or null
  */
-function strikeLineBlocked(run, from, dir, forecast, i) {
+function strikeLineBlocked(run, from, dir, forecast, i, lines = null) {
     const press = strikePressOf(run);
     if (!press.lineOfSight) return null;
     const rect = press.rect(from.x, from.y, dir);
@@ -9215,15 +9300,40 @@ function strikeLineBlocked(run, from, dir, forecast, i) {
         for (const r of forecast[i + k] ?? []) {
             if (!rectsOverlapLocal(rect, r)) continue;
             if (distanceRectPoint(from.x, from.y, r) > press.reach) continue;
-            const blocker = run.collideLineSolid(from.x, from.y,
-                r.x + SPINNER.originX, r.y + SPINNER.originY);
+            const blocker = lines === null
+                ? run.collideLineSolid(from.x, from.y, r.x + SPINNER.originX, r.y + SPINNER.originY)
+                : lineOnce(lines, run, from, r);
             if (blocker) return blocker;
         }
     }
     return null;
 }
 
-function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = false } = {}) {
+/**
+ * ⛓⛓⛓ hammer-phase P1 — ONE LINE PER (cell, body rect) PER DERIVATION (`PRESS_KILL_COST`). The train window slides one
+ * row per candidate tick, so `strikeLineBlocked` asked the same cell against the same forecast rect up to
+ * `hitTicks + 1` times; nothing advances the run inside a derivation (`previewWalk` and the escape are previews), so
+ * `run.collideLineSolid` cannot answer differently the second time. Keyed by the cell object and the row's rect object
+ * (the forecast's rows are shared, `spinnerForecast`'s note), whose coordinates are the whole question.
+ */
+function lineOnce(lines, run, from, r) {
+    let byRect = lines.get(from);
+    if (byRect === undefined) {
+        byRect = new Map();
+        lines.set(from, byRect);
+    }
+    if (byRect.has(r)) {
+        PRESS_KILL_COST_COUNTS.lineHit += 1;
+        return byRect.get(r);
+    }
+    PRESS_KILL_COST_COUNTS.lineMiss += 1;
+    const blocker = run.collideLineSolid(from.x, from.y, r.x + SPINNER.originX, r.y + SPINNER.originY);
+    byRect.set(r, blocker);
+    return blocker;
+}
+
+/** ⛓ hammer-phase P1: exported for `pressKillCost.test.js` (one derivation, ON against OFF). */
+export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = false } = {}) {
     const index = (run.entities('spinnerBodies') ?? []).findIndex((b) => b.id === bodyId);
     if (index < 0) return null;
     const horizon = strikeHorizon(run);
@@ -9231,6 +9341,8 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
     const cells = walkableCells(run, contacts);
     // ⛓ hammer-phase C2: the press's rect, reach and train length (the sword's, unless the ghost's under the switch)
     const press = strikePressOf(run);
+    // ⛓ hammer-phase P1: this derivation's line answers (`lineOnce`), or none with the switch OFF
+    const lines = PRESS_KILL_COST.enabled ? new Map() : null;
     // ⛓ The admissible ETA floor, once per cell — see `minTicksBetween`.
     const floor = new Map(cells.map((c) => [c, minTicksBetween(run.state, c)]));
     const opportunities = [];
@@ -9260,7 +9372,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
         for (let k = -2; k <= press.hitTicks + 1; k += 1) {
             if (!clearOfHammersAt(run, c.box, forecast, i + k)) return false;
         }
-        if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i)) {
+        if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i, lines)) {
             if (countSighted) sighted += 1;
             return false;
         }
@@ -17033,6 +17145,8 @@ function solveSegmentUnder({
     const dashWalks = [];
     /** ⛓ FRONTIER3 — the walks planned on `FINE_LATTICE` after the frontier refused. */
     const fineLatticeWalks = [];
+    /** ⛓ FORCEDHIT D2 — one row per crossing the forced-hit rung billed (`FORCED_HITS`; empty with it OFF). */
+    const forcedHits = [];
     /** ⛓ hammer-phase B3 — the tape tick of every dash `dashesPressed` counted, so a rewind can un-count the tail. */
     const dashTicks = [];
     /**
@@ -17980,7 +18094,9 @@ function solveSegmentUnder({
         lattice = DEFAULT_LATTICE,
         // ⛓ L30KEYLOCK — the stance wait the walk's own probe priced (`KEYLOCK_WAIT_PRICED`); AVOID and DETOUR
         // certify their corridors with the same tail. `null` everywhere else.
-        stand = null }) => {
+        stand = null,
+        // ⛓ FORCEDHIT D2 — the walk's crossing (`walkTo`'s `crossTo`), read only by the forced-hit rung.
+        crossTo = null }) => {
         const escalations = [];
         climbNo += 1;
         const climb = climbNo;
@@ -19480,6 +19596,87 @@ function solveSegmentUnder({
             lastOption = 'detour';
             lastBound = detour.bound ?? null;
         }
+        /**
+         * ── rung 6: FORCED HIT (seedling-fidelity-forcedhit D2; ⚖ the user, 2026-10-11, "Allow forced hits") ──
+         * Asked ONLY here, after every rung above refused, and only behind `FORCED_HITS` (OFF: absent, no row, the
+         * refusal word for word the BEFORE one) on a segment with a fork (the proof steps the run itself).
+         *   1. THE PROOF (`proveForcedHit`): every input over 36 held sets from this state, stepped on the fork,
+         *      bills a hit within the bound — so no crossing from here is hitless. A hitless prefix that survives
+         *      the bound, or a budget that runs out, is NOT a proof and the ladder refuses as before.
+         *   2. THE CROSSING (`planForcedCrossing`): the corridor this walk planned (armed, unarmed) and the proof's
+         *      fewest-hit leaves as prefixes of it, each played on a fork; admitted only at EXACTLY the proven least
+         *      hits, under the budget (`FORCED_HITS`: never a death, one hit of margin, a per-segment cap).
+         *   3. THE BILL: the chosen keys are replayed on the live run, whose new `playerHits` rows must be the
+         *      fork's; the row says `verb: 'forced-hit'` with the proof and the hits, and `forcedHits` carries it.
+         */
+        if (FORCED_HITS.enabled && fork !== null && Array.isArray(corridor) && corridor.length > 0) {
+            if (activeProgress !== null) progressRung('forced-hit');
+            const lastRefused = { rung: lastOption, why: lastWhy };
+            const proof = proveForcedHit(fork, { replayTicks: perTick.length });
+            const proofRow = { proven: proof.proven, depth: proof.depth, nodes: proof.nodes,
+                leaves: proof.leaves, alphabet: proof.alphabet ?? null, minHits: proof.minHits ?? null };
+            let forcedWhy = null;
+            const at = { level: run.level, x: run.state.x, y: run.state.y, tick: perTick.length };
+            if (!proof.proven) {
+                forcedWhy = `no forced hit is proven from (${run.state.x.toFixed(1)},${run.state.y.toFixed(1)}): `
+                    + `${proof.why} (${proof.nodes} fork step(s))`;
+            } else {
+                const spent = forcedHits.reduce((n, f) => n + f.billed.length, 0);
+                const hitsMax = run.progress('inventory')?.hitsMax ?? 3;
+                const plan = planForcedCrossing(fork, proof, corridor, {
+                    crossTo, tolerance, maxTicks: maxTicksPerTarget, contacts, axisAligned,
+                    strikeFor: axisAligned ? null : (f) => strikePolicyFor(f, { dashMode }),
+                    hitsMax, hitsNow: worldHitsOf(run).hits, budgetLeft: FORCED_HITS.maxPerSegment - spent,
+                });
+                if (!plan.best) {
+                    forcedWhy = `every input from here is hit (proven at depth ${proof.depth} over `
+                        + `${proof.alphabet} held sets, ${proof.nodes} fork step(s); least ${proof.minHits} hit(s)), `
+                        + 'and no crossing was admitted: '
+                        + plan.rejected.map((r) => `${r.candidate}: ${r.why}`).join(' · ');
+                    FORCED_HIT_TRACE.sink?.({ what, at, proof: proofRow, outcome: 'no-crossing',
+                        rejected: plan.rejected, why: forcedWhy });
+                } else {
+                    const c = plan.best;
+                    rowFor('forced-hit', lastRefused, { proof: proofRow, candidate: c.label,
+                        billed: c.billed, ticks: c.ticks });
+                    const hitsBefore = run.ledger('playerHits').length;
+                    const from = perTick.length;
+                    let transition = null;
+                    for (let i = 0; i < c.keys.length; i += 1) {
+                        perTick.push(c.keys[i]);
+                        const o = run.advance(c.keys[i]);
+                        if (o.transition) {
+                            transition = o.transition;
+                            if (i !== c.keys.length - 1) {
+                                fail(`${what} -> forced-hit: the replay crossed to level ${transition.to_level} at `
+                                    + `tick ${i + 1} of ${c.keys.length} — the fork did not (the fork is not this run).`);
+                            }
+                        }
+                    }
+                    const got = run.ledger('playerHits').slice(hitsBefore)
+                        .map((h) => `${h.t}:${h.source}:${h.id}`).join(',');
+                    const want = c.billed.map((h) => `${h.t}:${h.source}:${h.id}`).join(',');
+                    if (got !== want || (c.transition === null) !== (transition === null)) {
+                        fail(`${what} -> forced-hit: the replay billed [${got}] where the fork billed [${want}] `
+                            + '— the fork is not this run.');
+                    }
+                    forcedHits.push({ tick: from, what, proof: proofRow, candidate: c.label, billed: c.billed,
+                        ticks: c.ticks, damage: worldHitsOf(run) });
+                    FORCED_HIT_TRACE.sink?.({ what, at, proof: proofRow, outcome: 'billed', candidate: c.label,
+                        billed: c.billed, ticks: c.ticks, keys: c.keys.map((k) => [...k].sort()),
+                        rejected: plan.rejected, damage: worldHitsOf(run) });
+                    return { forced: { transition }, escalations };
+                }
+            }
+            if (!proof.proven) {
+                FORCED_HIT_TRACE.sink?.({ what, at, proof: proofRow, outcome: 'not-proven', why: forcedWhy,
+                    hitless: proof.hitless ?? null });
+            }
+            rowFor('forced-hit', lastRefused, { proof: proofRow });
+            lastWhy = forcedWhy;
+            lastOption = 'forced-hit';
+            lastBound = undefined;
+        }
         refuse(`${what}: the combat ladder is EXHAUSTED. The corridor passes through `
             + `danger at (${hit.x.toFixed(1)},${hit.y.toFixed(1)}) — ${reasonsOf(hit)} — `
             + `and every rung of ⚖ §11.8a's order refused:\n`
@@ -19884,7 +20081,10 @@ function solveSegmentUnder({
                     dangerExcept: except, corridor: wps, axisAligned,
                     ...(fine ? { lattice: FINE_LATTICE } : {}),
                     ...(stand ? { stand } : {}),
+                    ...(crossTo ? { crossTo } : {}),
                 });
+                // ⛓ FORCEDHIT D2 — the forced-hit rung WALKED the crossing (its hit billed): the walk is done.
+                if (climbed.forced) return climbed.forced.transition;
                 if (climbed.wps) { wps = climbed.wps; } else { continue; }
             }
             /**
@@ -21203,6 +21403,13 @@ function solveSegmentUnder({
          * (`HAMMER_FIGHT_FALLBACK`): one row per fallback (`execKillByPress`'s `fightFallback` record).
          */
         ...(rewinds.length ? { fightFallbacks: rewinds } : {}),
+        /**
+         * ⛓ FORCEDHIT D2 — an optional result field, present only when the forced-hit rung billed a crossing
+         * (`FORCED_HITS`): one row per crossing `{tick, what, proof, billed, candidate, ticks}`, and `damage`, the
+         * player's `{hits, lastHitAt, id}` in the world the segment ends in (`forcedHit.worldHitsOf`) — the state a caller that continues this
+         * world must stage (⚠ `hits` is per world: a door or a death resets it to 0).
+         */
+        ...(forcedHits.length ? { forcedHits, damage: worldHitsOf(run) } : {}),
     };
     /**
      * ⛓ hammer-phase B3 — a REWOUND segment ends on a run the caller did not build: the fresh one the rewind adopted.

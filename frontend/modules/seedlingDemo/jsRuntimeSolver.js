@@ -58,11 +58,15 @@
  */
 
 import { createRunForStaging } from './tapeRunner.js';
-import { DEFAULT_DASH_MODE, solveSegment } from './solverBot.js';
+import {
+    AXE_DODGE_ASK_PER_PREVIEW, DEFAULT_DASH_MODE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, WAND_TARGET_TAGS, WAND_VERB,
+    solveSegment,
+} from './solverBot.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { TILE_SIZE } from './levelWorld.js';
 import { KILLLOCK_BODIES, killLockBodiesStamp, normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js';
 import { CONTACT_FIDELITY, contactFidelityStamp, normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
+import { axeDodgeAskStamp, withAxeDodgeAsk } from './axeDodgeAskHook.js';
 
 /** Refutations of one goal's plans before the goal FAILS, by name (§2.2 step 5). */
 export const MAX_REFUTATIONS = 3;
@@ -299,6 +303,24 @@ export function betterAnswer(best, next) {
  * `passes`: one `{pass, ok, kind, ticks, ms}` row per pass that ran.
  */
 export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => {}, clock = request.clock ?? (() => Date.now()) } = {}) {
+    // ⛓ AXE_DODGE HOOK — the CONTACT arm below, for fidelity's `AXE_DODGE_ASK_PER_PREVIEW` (`axeDodgeAskPerPreview`,
+    // a boolean, off-default only): solved under it in whichever module instance runs it, and every answer says so.
+    if (typeof request.axeDodgeAskPerPreview === 'boolean') {
+        const { axeDodgeAskPerPreview, ...rest } = request;
+        // The stamp is the value this instance's switch READ while it solved, not the request's echo.
+        let ran = null;
+        const stamp = (a) => {
+            if (!a || ran === null) return a;
+            a.axeDodgeAskPerPreview = ran;
+            if (a.ok && a.plan) a.plan.axeDodgeAskPerPreview = ran;
+            return a;
+        };
+        const out = withAxeDodgeAsk(axeDodgeAskPerPreview, () => {
+            ran = AXE_DODGE_ASK_PER_PREVIEW.enabled;
+            return solveAnytime(rest, { passes, clock, onPass: (one, best, index) => onPass(stamp(one), stamp(best), index) });
+        });
+        return stamp(out);
+    }
     // ⛓ CONTACT HOOK — the KILLLOCK arm below, for the model's contact switches (`contactFidelity`, off-default
     // only): solved under the stamped set in whichever module instance runs it, and every answer says so.
     if (request.contactFidelity) {
@@ -433,11 +455,78 @@ export function solverGoalFor(goal, { run, resolved, placement = null }) {
         return { goal: { kind: 'encounter', at: { x: at.x, y: at.y }, drop: { item: drop.item },
             then: arena ? 'reach-pit' : null } };
     }
+    if (goal?.kind === 'location' && goal.event) return eventSolverGoal(goal, run);
     if (goal?.kind === 'location') {
         if (!placement) return { walker: 'the location names no entity of the room' };
         return { goal: { kind: 'collect-placement', placement: { x: placement.x, y: placement.y } } };
     }
     return { walker: `a ${goal?.kind ?? 'missing'} goal has no solver goal kind` };
+}
+
+/**
+ * ⛓ EVENT GOALS — the verb the solver's `clear-tag` executor would select for an obstacle key, and whether it is
+ * REGISTERED there: `OBSTACLE_STRATEGIES[key]`, refined by the wand rows `refineStrategy` asks first
+ * (`WAND_VERB`: a `WAND_TARGET_TAGS` solid is the wand's; a `wandlock` is a `Lock`, so `hold`), looked up as
+ * `clearTagExecutor` looks it up (`STRATEGY_EXECUTORS`, plus `wand` while `WAND_VERB` is on — `bait` is NOT the
+ * clear-tag path's). Every later refinement of `hold` (skirt / pulse / kill / weigh) is a registered verb, so it
+ * cannot turn a registered row into a refusal. Read off the solver's own tables, nothing typed;
+ * `jsRuntimeSolverEventGoal.test.js` pins it against the solver's real `no-verb` refusals.
+ */
+export function clearTagVerbOf(key) {
+    const tag = key.slice(key.indexOf(':') + 1);
+    let verb = OBSTACLE_STRATEGIES[key] ?? null;
+    if (WAND_VERB.enabled && key.startsWith('solid:')) {
+        if (WAND_TARGET_TAGS.includes(tag)) verb = 'wand';
+        else if (verb === 'wand' && tag === 'wandlock') verb = 'hold';
+    }
+    const registered = verb !== null && (Object.prototype.hasOwnProperty.call(STRATEGY_EXECUTORS, verb)
+        || (verb === 'wand' && WAND_VERB.enabled));
+    return { verb, registered };
+}
+
+/**
+ * ⛓ EVENT GOALS — why an event goal gets no solver goal, BY THE SOLVER'S OWN REASON (`execClearTag`'s refusal
+ * vocabulary: `wrong-level`, `no-verb`): the location's check stays the game's flag, which nothing here writes.
+ */
+export const EVENT_CLEAR_TAG_REFUSAL = (goal, reason, why) => `"${goal.name ?? goal.event?.eventId ?? 'the event'}" is `
+    + `a saved-obstacle EVENT (clear-tag {${goal.event?.tag?.level},${goal.event?.tag?.tag}} ${goal.event?.obstacle}): `
+    + `the solver's clear-tag refuses it — ${reason}: ${why}. Its check stays the game's persistence flag `
+    + `{${goal.event?.tag?.level},${goal.event?.tag?.tag}} turning set, which nothing but the game writes`;
+
+/**
+ * ⛓ EVENT GOALS — an event location (`seedlingPlaybackController.atlasEventGoal`) → the solver's `clear-tag`
+ * (fidelity CLEARTAG + CROSSROOM D3): `{kind: 'clear-tag', tag: {level, tag}, at: {x, y}, obstacle, presser?}`.
+ * Refused here, BY NAME, only where the solver's executor would refuse before its first tick and the tables say so:
+ *   · `wrong-level` — the run stands in another level than the flag's and the goal names no presser of this level;
+ *   · `no-verb` — the verb the obstacle (or, cross-room, the presser) selects is not registered (`clearTagVerbOf`).
+ * Everything else (`cannot-act`, `unresolved`, `prerequisite`, `not-written`, `cross-room-presser`) is the SOLVE's
+ * answer, refused by the solver with its own `obstacle: {kind: 'clear-tag', reason}`. The completion is the game's:
+ * the run's flag is checked by the runtime's collector, never written here (⚖ flags flow game → AP only).
+ *
+ * @returns {{goal: object}|{walker: string, refusal: {kind: 'clear-tag', reason: string, flag: object, id: string}}}
+ */
+function eventSolverGoal(goal, run) {
+    const ev = goal.event;
+    const flag = { level: ev.tag.level, tag: ev.tag.tag };
+    const out = { kind: 'clear-tag', tag: flag, at: { x: ev.at.x, y: ev.at.y },
+        ...(ev.obstacle ? { obstacle: ev.obstacle } : {}), ...(ev.presser ? { presser: { ...ev.presser } } : {}) };
+    const id = ev.obstacle ?? `?@${ev.at.x},${ev.at.y}`;
+    const refused = (reason, why) => ({ walker: EVENT_CLEAR_TAG_REFUSAL(goal, reason, why),
+        refusal: { kind: 'clear-tag', reason, flag: { ...flag }, id } });
+    const here = Number.isInteger(run?.level) ? run.level : goal.level;
+    const crossRoom = here !== flag.level;
+    if (crossRoom && ev.presser?.level !== here) {
+        return refused('wrong-level', `the run stands in level ${here}; the flag is level ${flag.level}'s, and `
+            + (ev.presser ? `its presser ${ev.presser.class}@${ev.presser.x},${ev.presser.y} is in level ${ev.presser.level}`
+                : 'the event names no presser') + ' — only the flag\'s own level holds the obstacle');
+    }
+    const key = crossRoom ? `proximity-hazard:${ev.presser.class}` : `solid:${String(ev.obstacle ?? '').split('@')[0]}`;
+    const { verb, registered } = clearTagVerbOf(key);
+    if (!registered) {
+        return refused('no-verb', verb ? `${key} selects '${verb}', which no clear-tag executor is registered for`
+            : `no strategy row exists for ${key} — the catalogue names no verb that clears it`);
+    }
+    return { goal: out };
 }
 
 /** The session's tape replayed into a fresh run — a shadow, NOT yet checked against anything. */
@@ -563,7 +652,29 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
     const verbs = [...new Set((out.trace?.rows ?? []).map((r) => r.strategy?.verb).filter(Boolean))].sort();
     return { solution, expected, equipsAt, equipItems, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode,
         // ⛓ SHOULD-STOP — `{tripped, first, sites}` when the pass's deadline tripped (named in the history), else null
-        deadline: out.deadline ?? null };
+        deadline: out.deadline ?? null,
+        ...forcedHitFieldsOf(out) };
+}
+
+/**
+ * ⛓ FORCED-HIT CONSUMER — `solveSegment`'s two optional FORCEDHIT fields, as a plan carries them (plain rows: the
+ * worker posts the plan structured-cloned): `forcedHits` (one row per billed crossing `{tick, what, proof, billed,
+ * candidate, ticks, damage}`) and `damage` (the player's `{hits, lastHitAt, id}` in the world the segment ends in).
+ * Present only when the solver billed a crossing; absent = today's plan, byte for byte.
+ */
+export function forcedHitFieldsOf(out) {
+    return out?.forcedHits?.length ? { forcedHits: out.forcedHits, damage: out.damage ?? null } : {};
+}
+
+/** ⛓ FORCED-HIT CONSUMER — the hits a plan's forced crossings billed (the sum of each row's `billed`), or 0. */
+export const billedHitsOf = (plan) => (plan?.forcedHits ?? []).reduce((n, f) => n + (f.billed?.length ?? 0), 0);
+
+/** ⛓ FORCED-HIT CONSUMER — the note's tail for a plan that billed a forced crossing ('' for any other plan). */
+export function forcedHitNote(plan) {
+    if (!plan?.forcedHits?.length) return '';
+    const d = plan.damage;
+    return `; forced hit: ${billedHitsOf(plan)} hit(s) billed over ${plan.forcedHits.length} crossing(s)`
+        + `${d ? `, the player ends on ${d.hits} hit(s)${d.id ? ` (last ${d.id} at t${d.lastHitAt})` : ''}` : ''}`;
 }
 
 /**
@@ -649,8 +760,11 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
             const killLock = rest.killLockBodies ?? killLockBodiesStamp();
             // ⛓ CONTACT HOOK — and the contact switches' set, the same way.
             const contact = rest.contactFidelity ?? contactFidelityStamp();
+            // ⛓ AXE_DODGE HOOK — and an off-default `AXE_DODGE_ASK_PER_PREVIEW`, the same way.
+            const axe = rest.axeDodgeAskPerPreview ?? axeDodgeAskStamp();
             const result = solveAnytime({ ...rest, ...(killLock ? { killLockBodies: killLock } : {}),
-                ...(contact ? { contactFidelity: contact } : {}), levelSource, clock }, { passes, clock });
+                ...(contact ? { contactFidelity: contact } : {}), ...(axe !== null ? { axeDodgeAskPerPreview: axe } : {}),
+                levelSource, clock }, { passes, clock });
             return { settled: true, started: true, result, cancel() {} };
         },
         warm() {},
@@ -807,11 +921,13 @@ export function createRuntimeSolver({
             // ⛓ ANYTIME — which pass made the plan, whether a later pass was cut at the budget, and every pass's row
             pass: plan0.pass ?? null, expired, passes: plan0.passes ?? p.handle.passes ?? null,
             /** Where the solved shadow ended — the live run must end there too. */
-            end: { ...plan0.expected[plan0.expected.length - 1] } };
+            end: { ...plan0.expected[plan0.expected.length - 1] },
+            // ⛓ FORCED-HIT CONSUMER — the billed crossings and the damage the plan ends on (absent = none billed)
+            ...forcedHitFieldsOf(plan0) };
         emit({ type: 'solved', message: `[js runtime] solved ${p.solverGoal.kind} in level ${p.goal.level}: `
             + `${plan0.solution.length} tick(s), verbs ${plan0.verbs.join(', ') || '—'} (replay ${plan0.replayMs} ms over `
             + `${plan0.prefixLength} tick(s), solve ${plan0.solveMs} ms${service ? `, ${service.kind}` : ''}`
-            + `${plan0.pass ? `; ${passNote(plan0, { expired })}` : ''})` });
+            + `${plan0.pass ? `; ${passNote(plan0, { expired })}` : ''}${forcedHitNote(plan0)})` });
         plan = { ...plan0, run, i: 0 };
         return null;
     }

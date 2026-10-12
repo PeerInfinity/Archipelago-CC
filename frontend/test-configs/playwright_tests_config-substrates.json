@@ -522,13 +522,13 @@
             "id": "seedling-js-runtime-solver-budget-falls-back",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "Seedling solver-walk S2 → DETERMINISTIC BUDGET. Runtime js + the solver mode ON on seedling_atlas: level 12's door (the ~5 s solve) under a 300 ms wall-clock BACKSTOP (playback.setSolverBackstopMs; the solve's own budget is work units) — the worker is terminated at the backstop and the goal FAILS BY NAME (\"the solve exceeded the backstop on this machine (0.3 s) …\"); nothing of the solve is played, nothing walked instead."
+            "_comment": "Seedling solver-walk S2 → DETERMINISTIC BUDGET. Runtime js + the solver mode ON on seedling_atlas: level 12's door under a 300 ms wall-clock BACKSTOP, the solve held in flight by the ROW (a wrapped page worker that starts and never answers — never the solve's speed) (playback.setSolverBackstopMs; the solve's own budget is work units) — the worker is terminated at the backstop and the goal FAILS BY NAME (\"the solve exceeded the backstop on this machine (0.3 s) …\"); nothing of the solve is played, nothing walked instead."
         },
         {
             "id": "seedling-js-runtime-solver-keeps-the-frame-clock",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "Seedling solver-walk S2. Runtime js + the solver mode ON on seedling_atlas: level 12, 120 walker ticks in (a ~2 s solve that froze the S1 page). The solve runs in the worker: the page's 20 ms heartbeat never gaps past 250 ms while it does, the room is held, and the plan plays to level 36 — solved once, no decline, no refutation."
+            "_comment": "Seedling solver-walk S2. Runtime js + the solver mode ON on seedling_atlas: level 12, 120 walker ticks in (the solve that froze the S1 page). The solve runs in the worker, its real answer held to 800 ms by the ROW (a wrapped page worker — never the solve's speed): the page's 20 ms heartbeat never gaps past 250 ms while it does, the room is held, and the plan plays to level 36 — solved once, no decline, no refutation."
         },
         {
             "id": "seedling-js-runtime-solver-falls-through-pit",
@@ -541,6 +541,60 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "Seedling solver-walk S4. Runtime js + the solver mode ON on seedling_atlas: the page handle teleports to seedling_playthrough's level 17 arrival and the bot opens the chest (tag 0) through collect-placement (the chest verb); the clear reported once as pendingCheck <seq>|17|0|0, 0 HALT, no refutation."
+        },
+        {
+            "id": "seedling-js-runtime-loop-bot-block-walks-atlas-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode. Runtime js on seedling_atlas_location, loop mode on, the house block set to Bot: loops' walkTo (executeVia solver) walks the queued chest check (the game's own check completes it) and the door (its user:regionMove resumes the park); the queue ends on its own (queueEnd); one mana charge per action at its own price, plus the play clock's drain per GAME second (flash_seedling declares playClock)."
+        },
+        {
+            "id": "seedling-js-runtime-loop-bot-blocks-cross-atlas-rooms",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode. Runtime js on seedling_atlas, every Seedling block Bot, the sword granted (AP item path) and removed after: the owl's-nest stairs, the descent, then the sword-gated LOGICAL link (credited, its regionMove on the next turn); the queue ends on its own; one charge per action, plus the play clock's drain per game second."
+        },
+        {
+            "id": "seedling-wasm-runtime-loop-bot-block-walks-atlas-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode, the WASM runtime (WebGPU — the batch launches Chromium with it): the JS row's house walk under a Bot block, the tapes from the wasm playback engine."
+        },
+        {
+            "id": "seedling-js-runtime-loop-play-clock-drains-mana",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling play clock (⚖ Drain play time too). Runtime js on seedling_atlas_location, loop mode, the house block Bot, every solve held 3 s by the row: the reported clock stops and nothing is charged; the house is charged its drain price per GAME second (substrate:playClock), each action its own price; the queue ends on its own."
+        },
+        {
+            "id": "seedling-js-runtime-loop-play-clock-mana-out",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling play clock. Runtime js, the house block MANUAL with nobody at the keys: the pool cut to half a second's drain once parked; the idle game's clock runs it out by the drain alone and the loop ends (loopState:loopReset, auto-restart off)."
+        },
+        {
+            "id": "seedling-wasm-runtime-loop-play-clock-drains-mana",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling play clock, the WASM runtime (WebGPU): the JS row's drain and stopped-clock checks; the game's Game.time off botStatus, its solves held by the row (the engine freezes the room)."
+        },
+        {
+            "id": "seedling-wasm-runtime-loop-play-clock-mana-out",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling play clock, the WASM runtime (WebGPU): the JS row's mana-out — the idle game's Game.time runs the cut pool out and the loop ends."
+        },
+        {
+            "id": "seedling-wasm-runtime-loop-bot-blocks-cross-atlas-rooms",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode, the WASM runtime (WebGPU): the JS row's stairs, descent and logical-link credit under Bot blocks."
+        },
+        {
+            "id": "seedling-flash-runtime-loop-bot-block-names-its-stop",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode, the Flash (Ruffle) runtime: a Bot block's walkTo is refused by name (no feet), and loops' named stop (loopState:botWalkFailed, loop-mode-bot's fix) carries the controller's lastRefusal. Ruffle is fetched from its CDN; the SWF is not committed, so no game boots."
         },
         {
             "id": "apworld-document-tab-lists-every-schema-key",
@@ -1730,6 +1784,18 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "loop-mode-bot S3 (⚖ first target): Adventure in Loop mode, no procgen. Generate Costs (enters Loop mode), Loops queue on Instant, bot Play: the bot writes the Loops queue one loop at a time (explore until found, then check) until every sphere-log location is checked."
+        },
+        {
+            "id": "playback-bot-loop-mode-maze",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "loop-mode-bot S4 (⚖ first substrate target): a generated maze-only world in Loop mode; the runner sets each maze block to Bot and Loops' maze delegation plays the queue until every sphere-log location is checked."
+        },
+        {
+            "id": "playback-bot-loop-mode-mixed",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "loop-mode-bot S5: a generated loop-mode world of maze (Bot/delegation), text adventure (coarse → Playback) and bounce (Bot/walkTo); every sphere-log location checked by the queue."
         }
     ]
 }

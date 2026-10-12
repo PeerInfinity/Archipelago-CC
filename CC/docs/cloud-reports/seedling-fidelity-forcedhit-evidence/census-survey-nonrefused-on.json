@@ -1,0 +1,2059 @@
+{
+"base_run": 38168138687,
+"flag": "SEEDLING_FORCED_HITS=1",
+"moved": [],
+"rows": [
+{
+"step": 1,
+"level": 0,
+"ci": [
+"SOLVED",
+183
+],
+"on": [
+"SOLVED",
+183
+]
+},
+{
+"step": 2,
+"level": 2,
+"ci": [
+"SOLVED",
+47
+],
+"on": [
+"SOLVED",
+47
+]
+},
+{
+"step": 3,
+"level": 3,
+"ci": [
+"SOLVED",
+245
+],
+"on": [
+"SOLVED",
+245
+]
+},
+{
+"step": 4,
+"level": 4,
+"ci": [
+"SOLVED",
+255
+],
+"on": [
+"SOLVED",
+255
+]
+},
+{
+"step": 5,
+"level": 5,
+"ci": [
+"SOLVED",
+403
+],
+"on": [
+"SOLVED",
+403
+]
+},
+{
+"step": 6,
+"level": 6,
+"ci": [
+"SOLVED",
+294
+],
+"on": [
+"SOLVED",
+294
+]
+},
+{
+"step": 7,
+"level": 7,
+"ci": [
+"SOLVED",
+146
+],
+"on": [
+"SOLVED",
+146
+]
+},
+{
+"step": 8,
+"level": 8,
+"ci": [
+"SOLVED",
+827
+],
+"on": [
+"SOLVED",
+827
+]
+},
+{
+"step": 9,
+"level": 9,
+"ci": [
+"SOLVED",
+122
+],
+"on": [
+"SOLVED",
+122
+]
+},
+{
+"step": 10,
+"level": 10,
+"ci": [
+"SOLVED",
+83
+],
+"on": [
+"SOLVED",
+83
+]
+},
+{
+"step": 11,
+"level": 11,
+"ci": [
+"SOLVED",
+97
+],
+"on": [
+"SOLVED",
+97
+]
+},
+{
+"step": 12,
+"level": 3,
+"ci": [
+"SOLVED",
+152
+],
+"on": [
+"SOLVED",
+152
+]
+},
+{
+"step": 13,
+"level": 2,
+"ci": [
+"SOLVED",
+23
+],
+"on": [
+"SOLVED",
+23
+]
+},
+{
+"step": 14,
+"level": 0,
+"ci": [
+"SOLVED",
+145
+],
+"on": [
+"SOLVED",
+145
+]
+},
+{
+"step": 15,
+"level": 13,
+"ci": [
+"SOLVED",
+36
+],
+"on": [
+"SOLVED",
+36
+]
+},
+{
+"step": 16,
+"level": 14,
+"ci": [
+"SOLVED",
+98
+],
+"on": [
+"SOLVED",
+98
+]
+},
+{
+"step": 17,
+"level": 15,
+"ci": [
+"SOLVED",
+456
+],
+"on": [
+"SOLVED",
+456
+]
+},
+{
+"step": 18,
+"level": 16,
+"ci": [
+"SOLVED",
+117
+],
+"on": [
+"SOLVED",
+117
+]
+},
+{
+"step": 19,
+"level": 17,
+"ci": [
+"SOLVED",
+122
+],
+"on": [
+"SOLVED",
+122
+]
+},
+{
+"step": 20,
+"level": 0,
+"ci": [
+"SOLVED",
+196
+],
+"on": [
+"SOLVED",
+196
+]
+},
+{
+"step": 21,
+"level": 86,
+"ci": [
+"SOLVED",
+101
+],
+"on": [
+"SOLVED",
+101
+]
+},
+{
+"step": 22,
+"level": 0,
+"ci": [
+"SOLVED",
+203
+],
+"on": [
+"SOLVED",
+203
+]
+},
+{
+"step": 23,
+"level": 13,
+"ci": [
+"SOLVED",
+36
+],
+"on": [
+"SOLVED",
+36
+]
+},
+{
+"step": 24,
+"level": 14,
+"ci": [
+"SOLVED",
+98
+],
+"on": [
+"SOLVED",
+98
+]
+},
+{
+"step": 25,
+"level": 15,
+"ci": [
+"SOLVED",
+456
+],
+"on": [
+"SOLVED",
+456
+]
+},
+{
+"step": 26,
+"level": 16,
+"ci": [
+"SOLVED",
+688
+],
+"on": [
+"SOLVED",
+688
+]
+},
+{
+"step": 27,
+"level": 18,
+"ci": [
+"SOLVED",
+363
+],
+"on": [
+"SOLVED",
+363
+]
+},
+{
+"step": 28,
+"level": 19,
+"ci": [
+"SOLVED",
+568
+],
+"on": [
+"SOLVED",
+568
+]
+},
+{
+"step": 29,
+"level": 0,
+"ci": [
+"SOLVED",
+275
+],
+"on": [
+"SOLVED",
+275
+]
+},
+{
+"step": 30,
+"level": 12,
+"ci": [
+"SOLVED",
+328
+],
+"on": [
+"SOLVED",
+328
+]
+},
+{
+"step": 32,
+"level": 12,
+"ci": [
+"SOLVED",
+311
+],
+"on": [
+"SOLVED",
+311
+]
+},
+{
+"step": 33,
+"level": 0,
+"ci": [
+"SOLVED",
+198
+],
+"on": [
+"SOLVED",
+198
+]
+},
+{
+"step": 34,
+"level": 13,
+"ci": [
+"SOLVED",
+36
+],
+"on": [
+"SOLVED",
+36
+]
+},
+{
+"step": 35,
+"level": 14,
+"ci": [
+"SOLVED",
+98
+],
+"on": [
+"SOLVED",
+98
+]
+},
+{
+"step": 36,
+"level": 15,
+"ci": [
+"SOLVED",
+456
+],
+"on": [
+"SOLVED",
+456
+]
+},
+{
+"step": 37,
+"level": 16,
+"ci": [
+"SOLVED",
+688
+],
+"on": [
+"SOLVED",
+688
+]
+},
+{
+"step": 38,
+"level": 18,
+"ci": [
+"SOLVED",
+363
+],
+"on": [
+"SOLVED",
+363
+]
+},
+{
+"step": 39,
+"level": 19,
+"ci": [
+"SOLVED",
+687
+],
+"on": [
+"SOLVED",
+687
+]
+},
+{
+"step": 40,
+"level": 20,
+"ci": [
+"SOLVED",
+560
+],
+"on": [
+"SOLVED",
+560
+]
+},
+{
+"step": 41,
+"level": 13,
+"ci": [
+"SOLVED",
+48
+],
+"on": [
+"SOLVED",
+48
+]
+},
+{
+"step": 42,
+"level": 0,
+"ci": [
+"SOLVED",
+201
+],
+"on": [
+"SOLVED",
+201
+]
+},
+{
+"step": 43,
+"level": 12,
+"ci": [
+"SOLVED",
+2364
+],
+"on": [
+"SOLVED",
+2364
+]
+},
+{
+"step": 44,
+"level": 21,
+"ci": [
+"SOLVED",
+26
+],
+"on": [
+"SOLVED",
+26
+]
+},
+{
+"step": 45,
+"level": 22,
+"ci": [
+"SOLVED",
+113
+],
+"on": [
+"SOLVED",
+113
+]
+},
+{
+"step": 47,
+"level": 22,
+"ci": [
+"SOLVED",
+201
+],
+"on": [
+"SOLVED",
+201
+]
+},
+{
+"step": 48,
+"level": 29,
+"ci": [
+"SOLVED",
+379
+],
+"on": [
+"SOLVED",
+379
+]
+},
+{
+"step": 49,
+"level": 31,
+"ci": [
+"SOLVED",
+336
+],
+"on": [
+"SOLVED",
+336
+]
+},
+{
+"step": 50,
+"level": 30,
+"ci": [
+"SOLVED",
+460
+],
+"on": [
+"SOLVED",
+460
+]
+},
+{
+"step": 51,
+"level": 32,
+"ci": [
+"SOLVED",
+1056
+],
+"on": [
+"SOLVED",
+1056
+]
+},
+{
+"step": 52,
+"level": 30,
+"ci": [
+"SOLVED",
+347
+],
+"on": [
+"SOLVED",
+347
+]
+},
+{
+"step": 53,
+"level": 22,
+"ci": [
+"SOLVED",
+406
+],
+"on": [
+"SOLVED",
+406
+]
+},
+{
+"step": 54,
+"level": 21,
+"ci": [
+"SOLVED",
+31
+],
+"on": [
+"SOLVED",
+31
+]
+},
+{
+"step": 55,
+"level": 23,
+"ci": [
+"SOLVED",
+11
+],
+"on": [
+"SOLVED",
+11
+]
+},
+{
+"step": 56,
+"level": 24,
+"ci": [
+"SOLVED",
+124
+],
+"on": [
+"SOLVED",
+124
+]
+},
+{
+"step": 58,
+"level": 37,
+"ci": [
+"SOLVED",
+316
+],
+"on": [
+"SOLVED",
+316
+]
+},
+{
+"step": 59,
+"level": 38,
+"ci": [
+"SOLVED",
+371
+],
+"on": [
+"SOLVED",
+371
+]
+},
+{
+"step": 60,
+"level": 37,
+"ci": [
+"SOLVED",
+332
+],
+"on": [
+"SOLVED",
+332
+]
+},
+{
+"step": 61,
+"level": 44,
+"ci": [
+"SOLVED",
+212
+],
+"on": [
+"SOLVED",
+212
+]
+},
+{
+"step": 62,
+"level": 45,
+"ci": [
+"SOLVED",
+386
+],
+"on": [
+"SOLVED",
+386
+]
+},
+{
+"step": 63,
+"level": 46,
+"ci": [
+"SOLVED",
+298
+],
+"on": [
+"SOLVED",
+298
+]
+},
+{
+"step": 64,
+"level": 47,
+"ci": [
+"SOLVED",
+204
+],
+"on": [
+"SOLVED",
+204
+]
+},
+{
+"step": 65,
+"level": 48,
+"ci": [
+"SOLVED",
+368
+],
+"on": [
+"SOLVED",
+368
+]
+},
+{
+"step": 67,
+"level": 0,
+"ci": [
+"SOLVED",
+74
+],
+"on": [
+"SOLVED",
+74
+]
+},
+{
+"step": 68,
+"level": 13,
+"ci": [
+"SOLVED",
+36
+],
+"on": [
+"SOLVED",
+36
+]
+},
+{
+"step": 69,
+"level": 14,
+"ci": [
+"SOLVED",
+103
+],
+"on": [
+"SOLVED",
+103
+]
+},
+{
+"step": 70,
+"level": 15,
+"ci": [
+"SOLVED",
+326
+],
+"on": [
+"SOLVED",
+326
+]
+},
+{
+"step": 71,
+"level": 14,
+"ci": [
+"SOLVED",
+66
+],
+"on": [
+"SOLVED",
+66
+]
+},
+{
+"step": 72,
+"level": 13,
+"ci": [
+"SOLVED",
+48
+],
+"on": [
+"SOLVED",
+48
+]
+},
+{
+"step": 73,
+"level": 0,
+"ci": [
+"SOLVED",
+169
+],
+"on": [
+"SOLVED",
+169
+]
+},
+{
+"step": 74,
+"level": 12,
+"ci": [
+"SOLVED",
+921
+],
+"on": [
+"SOLVED",
+921
+]
+},
+{
+"step": 75,
+"level": 37,
+"ci": [
+"SOLVED",
+314
+],
+"on": [
+"SOLVED",
+314
+]
+},
+{
+"step": 76,
+"level": 38,
+"ci": [
+"SOLVED",
+480
+],
+"on": [
+"SOLVED",
+480
+]
+},
+{
+"step": 79,
+"level": 0,
+"ci": [
+"SOLVED",
+199
+],
+"on": [
+"SOLVED",
+199
+]
+},
+{
+"step": 80,
+"level": 12,
+"ci": [
+"SOLVED",
+921
+],
+"on": [
+"SOLVED",
+921
+]
+},
+{
+"step": 81,
+"level": 37,
+"ci": [
+"SOLVED",
+36
+],
+"on": [
+"SOLVED",
+36
+]
+},
+{
+"step": 82,
+"level": 44,
+"ci": [
+"SOLVED",
+120
+],
+"on": [
+"SOLVED",
+120
+]
+},
+{
+"step": 83,
+"level": 45,
+"ci": [
+"SOLVED",
+358
+],
+"on": [
+"SOLVED",
+358
+]
+},
+{
+"step": 84,
+"level": 46,
+"ci": [
+"SOLVED",
+1528
+],
+"on": [
+"SOLVED",
+1528
+]
+},
+{
+"step": 85,
+"level": 47,
+"ci": [
+"SOLVED",
+300
+],
+"on": [
+"SOLVED",
+300
+]
+},
+{
+"step": 86,
+"level": 48,
+"ci": [
+"SOLVED",
+1060
+],
+"on": [
+"SOLVED",
+1060
+]
+},
+{
+"step": 88,
+"level": 50,
+"ci": [
+"SOLVED",
+608
+],
+"on": [
+"SOLVED",
+608
+]
+},
+{
+"step": 89,
+"level": 51,
+"ci": [
+"SOLVED",
+459
+],
+"on": [
+"SOLVED",
+459
+]
+},
+{
+"step": 91,
+"level": 55,
+"ci": [
+"SOLVED",
+73
+],
+"on": [
+"SOLVED",
+73
+]
+},
+{
+"step": 92,
+"level": 52,
+"ci": [
+"SOLVED",
+429
+],
+"on": [
+"SOLVED",
+429
+]
+},
+{
+"step": 93,
+"level": 56,
+"ci": [
+"SOLVED",
+262
+],
+"on": [
+"SOLVED",
+262
+]
+},
+{
+"step": 94,
+"level": 57,
+"ci": [
+"NO-EDGE",
+null
+],
+"on": [
+"NO-EDGE",
+null
+]
+},
+{
+"step": 95,
+"level": 58,
+"ci": [
+"NO-ARRIVAL",
+null
+],
+"on": [
+"NO-ARRIVAL",
+null
+]
+},
+{
+"step": 96,
+"level": 46,
+"ci": [
+"SOLVED",
+342
+],
+"on": [
+"SOLVED",
+342
+]
+},
+{
+"step": 97,
+"level": 45,
+"ci": [
+"SOLVED",
+360
+],
+"on": [
+"SOLVED",
+360
+]
+},
+{
+"step": 98,
+"level": 44,
+"ci": [
+"SOLVED",
+92
+],
+"on": [
+"SOLVED",
+92
+]
+},
+{
+"step": 99,
+"level": 87,
+"ci": [
+"SOLVED",
+148
+],
+"on": [
+"SOLVED",
+148
+]
+},
+{
+"step": 101,
+"level": 12,
+"ci": [
+"SOLVED",
+208
+],
+"on": [
+"SOLVED",
+208
+]
+},
+{
+"step": 102,
+"level": 95,
+"ci": [
+"SOLVED",
+490
+],
+"on": [
+"SOLVED",
+490
+]
+},
+{
+"step": 103,
+"level": 59,
+"ci": [
+"SOLVED",
+150
+],
+"on": [
+"SOLVED",
+150
+]
+},
+{
+"step": 104,
+"level": 60,
+"ci": [
+"SOLVED",
+483
+],
+"on": [
+"SOLVED",
+483
+]
+},
+{
+"step": 105,
+"level": 61,
+"ci": [
+"SOLVED",
+284
+],
+"on": [
+"SOLVED",
+284
+]
+},
+{
+"step": 108,
+"level": 62,
+"ci": [
+"SOLVED",
+290
+],
+"on": [
+"SOLVED",
+290
+]
+},
+{
+"step": 109,
+"level": 61,
+"ci": [
+"SOLVED",
+303
+],
+"on": [
+"SOLVED",
+303
+]
+},
+{
+"step": 111,
+"level": 59,
+"ci": [
+"SOLVED",
+150
+],
+"on": [
+"SOLVED",
+150
+]
+},
+{
+"step": 112,
+"level": 95,
+"ci": [
+"SOLVED",
+511
+],
+"on": [
+"SOLVED",
+511
+]
+},
+{
+"step": 113,
+"level": 12,
+"ci": [
+"SOLVED",
+249
+],
+"on": [
+"SOLVED",
+249
+]
+},
+{
+"step": 114,
+"level": 88,
+"ci": [
+"SOLVED",
+476
+],
+"on": [
+"SOLVED",
+476
+]
+},
+{
+"step": 115,
+"level": 87,
+"ci": [
+"SOLVED",
+205
+],
+"on": [
+"SOLVED",
+205
+]
+},
+{
+"step": 117,
+"level": 90,
+"ci": [
+"SOLVED",
+137
+],
+"on": [
+"SOLVED",
+137
+]
+},
+{
+"step": 118,
+"level": 89,
+"ci": [
+"SOLVED",
+639
+],
+"on": [
+"SOLVED",
+639
+]
+},
+{
+"step": 119,
+"level": 87,
+"ci": [
+"SOLVED",
+250
+],
+"on": [
+"SOLVED",
+250
+]
+},
+{
+"step": 120,
+"level": 44,
+"ci": [
+"SOLVED",
+149
+],
+"on": [
+"SOLVED",
+149
+]
+},
+{
+"step": 121,
+"level": 37,
+"ci": [
+"SOLVED",
+522
+],
+"on": [
+"SOLVED",
+522
+]
+},
+{
+"step": 122,
+"level": 38,
+"ci": [
+"SOLVED",
+359
+],
+"on": [
+"SOLVED",
+359
+]
+},
+{
+"step": 126,
+"level": 40,
+"ci": [
+"SOLVED",
+70
+],
+"on": [
+"SOLVED",
+70
+]
+},
+{
+"step": 127,
+"level": 42,
+"ci": [
+"SOLVED",
+1294
+],
+"on": [
+"SOLVED",
+1294
+]
+},
+{
+"step": 128,
+"level": 0,
+"ci": [
+"SOLVED",
+199
+],
+"on": [
+"SOLVED",
+199
+]
+},
+{
+"step": 129,
+"level": 12,
+"ci": [
+"SOLVED",
+274
+],
+"on": [
+"SOLVED",
+274
+]
+},
+{
+"step": 130,
+"level": 95,
+"ci": [
+"SOLVED",
+490
+],
+"on": [
+"SOLVED",
+490
+]
+},
+{
+"step": 131,
+"level": 59,
+"ci": [
+"SOLVED",
+143
+],
+"on": [
+"SOLVED",
+143
+]
+},
+{
+"step": 133,
+"level": 59,
+"ci": [
+"SOLVED",
+131
+],
+"on": [
+"SOLVED",
+131
+]
+},
+{
+"step": 134,
+"level": 95,
+"ci": [
+"SOLVED",
+511
+],
+"on": [
+"SOLVED",
+511
+]
+},
+{
+"step": 135,
+"level": 12,
+"ci": [
+"SOLVED",
+925
+],
+"on": [
+"SOLVED",
+925
+]
+},
+{
+"step": 136,
+"level": 37,
+"ci": [
+"SOLVED",
+314
+],
+"on": [
+"SOLVED",
+314
+]
+},
+{
+"step": 137,
+"level": 38,
+"ci": [
+"SOLVED",
+359
+],
+"on": [
+"SOLVED",
+359
+]
+},
+{
+"step": 139,
+"level": 40,
+"ci": [
+"SOLVED",
+172
+],
+"on": [
+"SOLVED",
+172
+]
+},
+{
+"step": 141,
+"level": 37,
+"ci": [
+"SOLVED",
+234
+],
+"on": [
+"SOLVED",
+234
+]
+},
+{
+"step": 142,
+"level": 12,
+"ci": [
+"SOLVED",
+1705
+],
+"on": [
+"SOLVED",
+1705
+]
+},
+{
+"step": 143,
+"level": 95,
+"ci": [
+"SOLVED",
+490
+],
+"on": [
+"SOLVED",
+490
+]
+},
+{
+"step": 144,
+"level": 59,
+"ci": [
+"SOLVED",
+150
+],
+"on": [
+"SOLVED",
+150
+]
+},
+{
+"step": 145,
+"level": 60,
+"ci": [
+"SOLVED",
+523
+],
+"on": [
+"SOLVED",
+523
+]
+},
+{
+"step": 146,
+"level": 61,
+"ci": [
+"SOLVED",
+296
+],
+"on": [
+"SOLVED",
+296
+]
+},
+{
+"step": 148,
+"level": 65,
+"ci": [
+"SOLVED",
+539
+],
+"on": [
+"SOLVED",
+539
+]
+},
+{
+"step": 150,
+"level": 65,
+"ci": [
+"SOLVED",
+233
+],
+"on": [
+"SOLVED",
+233
+]
+},
+{
+"step": 154,
+"level": 59,
+"ci": [
+"SOLVED",
+150
+],
+"on": [
+"SOLVED",
+150
+]
+},
+{
+"step": 155,
+"level": 95,
+"ci": [
+"SOLVED",
+511
+],
+"on": [
+"SOLVED",
+511
+]
+},
+{
+"step": 157,
+"level": 83,
+"ci": [
+"SOLVED",
+85
+],
+"on": [
+"SOLVED",
+85
+]
+},
+{
+"step": 159,
+"level": 85,
+"ci": [
+"SOLVED",
+18
+],
+"on": [
+"SOLVED",
+18
+]
+},
+{
+"step": 162,
+"level": 74,
+"ci": [
+"SOLVED",
+321
+],
+"on": [
+"SOLVED",
+321
+]
+},
+{
+"step": 163,
+"level": 75,
+"ci": [
+"SOLVED",
+364
+],
+"on": [
+"SOLVED",
+364
+]
+},
+{
+"step": 164,
+"level": 71,
+"ci": [
+"SOLVED",
+327
+],
+"on": [
+"SOLVED",
+327
+]
+},
+{
+"step": 165,
+"level": 76,
+"ci": [
+"SOLVED",
+519
+],
+"on": [
+"SOLVED",
+519
+]
+},
+{
+"step": 169,
+"level": 78,
+"ci": [
+"SOLVED",
+392
+],
+"on": [
+"SOLVED",
+392
+]
+},
+{
+"step": 170,
+"level": 77,
+"ci": [
+"SOLVED",
+480
+],
+"on": [
+"SOLVED",
+480
+]
+},
+{
+"step": 171,
+"level": 76,
+"ci": [
+"SOLVED",
+434
+],
+"on": [
+"SOLVED",
+434
+]
+},
+{
+"step": 172,
+"level": 71,
+"ci": [
+"SOLVED",
+193
+],
+"on": [
+"SOLVED",
+193
+]
+},
+{
+"step": 174,
+"level": 96,
+"ci": [
+"SOLVED",
+5
+],
+"on": [
+"SOLVED",
+5
+]
+},
+{
+"step": 175,
+"level": 97,
+"ci": [
+"SOLVED",
+5
+],
+"on": [
+"SOLVED",
+5
+]
+},
+{
+"step": 176,
+"level": 37,
+"ci": [
+"SOLVED",
+780
+],
+"on": [
+"SOLVED",
+780
+]
+},
+{
+"step": 177,
+"level": 12,
+"ci": [
+"SOLVED",
+1269
+],
+"on": [
+"SOLVED",
+1269
+]
+},
+{
+"step": 178,
+"level": 95,
+"ci": [
+"SOLVED",
+490
+],
+"on": [
+"SOLVED",
+490
+]
+},
+{
+"step": 179,
+"level": 59,
+"ci": [
+"SOLVED",
+150
+],
+"on": [
+"SOLVED",
+150
+]
+},
+{
+"step": 180,
+"level": 60,
+"ci": [
+"SOLVED",
+523
+],
+"on": [
+"SOLVED",
+523
+]
+},
+{
+"step": 181,
+"level": 61,
+"ci": [
+"SOLVED",
+296
+],
+"on": [
+"SOLVED",
+296
+]
+},
+{
+"step": 185,
+"level": 59,
+"ci": [
+"SOLVED",
+150
+],
+"on": [
+"SOLVED",
+150
+]
+},
+{
+"step": 186,
+"level": 95,
+"ci": [
+"SOLVED",
+511
+],
+"on": [
+"SOLVED",
+511
+]
+},
+{
+"step": 188,
+"level": 83,
+"ci": [
+"SOLVED",
+85
+],
+"on": [
+"SOLVED",
+85
+]
+},
+{
+"step": 190,
+"level": 85,
+"ci": [
+"SOLVED",
+18
+],
+"on": [
+"SOLVED",
+18
+]
+},
+{
+"step": 192,
+"level": 80,
+"ci": [
+"SOLVED",
+666
+],
+"on": [
+"SOLVED",
+666
+]
+},
+{
+"step": 193,
+"level": 71,
+"ci": [
+"SOLVED",
+171
+],
+"on": [
+"SOLVED",
+171
+]
+},
+{
+"step": 195,
+"level": 96,
+"ci": [
+"SOLVED",
+5
+],
+"on": [
+"SOLVED",
+5
+]
+},
+{
+"step": 196,
+"level": 97,
+"ci": [
+"SOLVED",
+5
+],
+"on": [
+"SOLVED",
+5
+]
+},
+{
+"step": 197,
+"level": 37,
+"ci": [
+"SOLVED",
+767
+],
+"on": [
+"SOLVED",
+767
+]
+},
+{
+"step": 198,
+"level": 44,
+"ci": [
+"SOLVED",
+86
+],
+"on": [
+"SOLVED",
+86
+]
+},
+{
+"step": 199,
+"level": 87,
+"ci": [
+"SOLVED",
+223
+],
+"on": [
+"SOLVED",
+223
+]
+},
+{
+"step": 205,
+"level": 102,
+"ci": [
+"SOLVED",
+16
+],
+"on": [
+"SOLVED",
+16
+]
+},
+{
+"step": 207,
+"level": 104,
+"ci": [
+"SOLVED",
+268
+],
+"on": [
+"SOLVED",
+268
+]
+},
+{
+"step": 208,
+"level": 105,
+"ci": [
+"SOLVED",
+264
+],
+"on": [
+"SOLVED",
+264
+]
+},
+{
+"step": 209,
+"level": 106,
+"ci": [
+"SOLVED",
+185
+],
+"on": [
+"SOLVED",
+185
+]
+},
+{
+"step": 211,
+"level": 102,
+"ci": [
+"SOLVED",
+20
+],
+"on": [
+"SOLVED",
+20
+]
+},
+{
+"step": 214,
+"level": 109,
+"ci": [
+"SOLVED",
+158
+],
+"on": [
+"SOLVED",
+158
+]
+},
+{
+"step": 216,
+"level": 110,
+"ci": [
+"SOLVED",
+173
+],
+"on": [
+"SOLVED",
+173
+]
+},
+{
+"step": 217,
+"level": 2,
+"ci": [
+"SOLVED",
+26
+],
+"on": [
+"SOLVED",
+26
+]
+},
+{
+"step": 218,
+"level": 3,
+"ci": [
+"SOLVED",
+82
+],
+"on": [
+"SOLVED",
+82
+]
+},
+{
+"step": 219,
+"level": 111,
+"ci": [
+"SOLVED",
+112
+],
+"on": [
+"SOLVED",
+112
+]
+},
+{
+"step": 222,
+"level": 115,
+"ci": [
+"SOLVED",
+173
+],
+"on": [
+"SOLVED",
+173
+]
+}
+]
+}

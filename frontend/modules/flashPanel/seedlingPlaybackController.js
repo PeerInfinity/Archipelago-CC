@@ -24,10 +24,13 @@
  *
  * ── WHAT `walkTo` ANSWERS ───────────────────────────────────────────────
  *
- *   false  + `lastRefusal`  the panel runs another runtime (wasm / flash):
- *                           only the JS runtime has feet; the name is not a
- *                           location / exit of the generated rooms; the page
- *                           refused the resolved goal.
+ *   false  + `lastRefusal`  the panel runs the Flash (Ruffle) runtime, the one
+ *                           runtime with no feet (⛓ W2/WG: the JS page and the
+ *                           wasm engine both walk); the wasm runtime on a goal
+ *                           it cannot tape (a moonrock room, a `tile` target in
+ *                           a generated room); the name is not a location /
+ *                           exit of the rooms; the page refused the resolved
+ *                           goal.
  *   true                    accepted — handed to the page, or HELD until the
  *                           page and the generated arm's report are up (the
  *                           bot's first walkTo can outrun both). A held goal
@@ -171,8 +174,14 @@ export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, regi
     const name = target?.name;
     if (target?.kind === 'location') {
         // ⛓ OBSTACLE EVENTS — a saved obstacle's event is no pickup: its check is the game's flag (the collector's).
+        // ⛓ EVENT GOALS — it is walked as the solver's `clear-tag` (`atlasEventGoal`), anchored in the room the rules
+        // reach it from (its `side` region's level); a record that names no flag or no obstacle cell is refused.
         const ev = (atlas?.events ?? []).find((x) => x.location === name);
-        if (ev) return { refused: EVENT_GOAL_REFUSAL(ev) };
+        if (ev) {
+            const regions = atlas?.regions instanceof Map ? atlas.regions : new Map(Object.entries(atlas?.regions ?? {}));
+            const goal = atlasEventGoal(ev, regions.get(ev.side)?.level ?? null, name);
+            return goal ? { goal } : { refused: EVENT_GOAL_REFUSAL(ev) };
+        }
         const e = (atlas?.entries ?? []).find((x) => x.location === name);
         if (!e) {
             const why = (atlas?.refused ?? []).find((r) => r.location === name)?.why ?? null;
@@ -279,16 +288,41 @@ export function runtimeEventsOf(rules, playerId = ATLAS_CHECK_PLAYER) {
 }
 
 /**
- * ⛓ OBSTACLE EVENTS — why a walk to a game-state event stops: breaking an obstacle on purpose is the solver goal
- * `clear-tag {tag, at, obstacle}` (the route survey's), whose EXECUTOR is fidelity's and not built — solverBot
- * refuses the kind by name. The planner reaches here only when a route NEEDS the obstacle broken first
- * (`procgenCore/eventRoute.js`); a walk that passes through it breaks it without asking.
+ * ⛓ EVENT GOALS — a game-state event's walk goal: a `location` goal (the engines, the queue and the bot read it as
+ * one) with no tag and an `event` the solver mapping reads (`jsRuntimeSolver.solverGoalFor` → the solver's
+ * `clear-tag {tag, at, obstacle, presser?}`, fidelity's executor):
+ *   · `level` — the ARRIVAL's room: `arrivalLevel`, the level of the region the rules reach the event from (its
+ *     `side`), else the flag's own level. The bot plans one goal in one room, and that is the room it stands in;
+ *   · `event.tag` — the persistence flag `{level, tag}` the game writes when the obstacle goes (the CHECK: the
+ *     runtime's collector reads it off the game, `seedlingEventCollector.js`; nothing here writes it);
+ *   · `event.at` / `event.obstacle` — the obstacle's OEL cell and its `<class>@<x>,<y>` id;
+ *   · `event.presser` — ⛓ CROSSROOM: the rules' `action.presser` (`{level, class, x, y}`), passed ONLY when the
+ *     flag's level is not the arrival's room (L39's `wandlock` flag 8, pressed from L38's `buttonroom@32,48`).
+ * null when the record names no integer flag or no obstacle cell (`EVENT_GOAL_REFUSAL` says so).
+ */
+export function atlasEventGoal(e, arrivalLevel = null, name = e.location) {
+    const o = e?.obstacle;
+    if (!Number.isInteger(e?.level) || !Number.isInteger(e?.tag) || e.tag < 0 || typeof o?.class !== 'string'
+        || !Number.isFinite(o?.x) || !Number.isFinite(o?.y)) return null;
+    const level = Number.isInteger(arrivalLevel) ? arrivalLevel : e.level;
+    const p = e.action?.presser;
+    const presser = level !== e.level && p ? { level: p.level, class: p.class, x: p.x, y: p.y } : null;
+    return { kind: 'location', level, tag: null, entityType: null, name,
+        event: { eventId: e.eventId ?? null, tag: { level: e.level, tag: e.tag }, at: { x: o.x, y: o.y },
+            obstacle: `${o.class}@${o.x},${o.y}`, ...(presser ? { presser } : {}) } };
+}
+
+/**
+ * ⛓ OBSTACLE EVENTS → ⛓ EVENT GOALS — why a walk to a game-state event is refused AT THE MAP: its record names no
+ * integer flag `{level, tag}` or no obstacle cell, so there is no `clear-tag` goal to hand the solver (fail-closed —
+ * nothing is guessed). Every well-formed event is a goal (`atlasEventGoal`); whether the solver can execute it is the
+ * solver mapping's question, refused there BY THE SOLVER'S REASON (`jsRuntimeSolver.EVENT_CLEAR_TAG_REFUSAL`).
  */
 export const EVENT_GOAL_REFUSAL = (e) => `"${e.location}" is a saved-obstacle EVENT (${e.eventId}; `
     + `${e.obstacle?.class ?? '?'}@${e.obstacle?.x},${e.obstacle?.y} in level ${e.level}, ${e.action?.verb ?? 'no action named'}): `
-    + `its check is the game's persistence flag {${e.level},${e.tag}} turning set, which the runtime collects; breaking it `
-    + `on purpose is the solver goal \`clear-tag {tag: {level: ${e.level}, tag: ${e.tag}}, at: {x: ${e.obstacle?.x}, `
-    + `y: ${e.obstacle?.y}}}\`, which the solver does not execute yet (fidelity's executor)`;
+    + `its check is the game's persistence flag {${e.level},${e.tag}} turning set, which the runtime collects; but its `
+    + 'record names no integer flag {level, tag} or no obstacle cell {class, x, y}, so there is no solver `clear-tag` '
+    + 'goal to break it on purpose — none is guessed';
 
 /** ⛓ VANILLA MAP — why a vanilla-arm encounter row has no cell (⛓ ENCOUNTERS: one whose drop has no executor). */
 export const ENCOUNTER_REFUSAL = (e) => `"${e.location}" is an ENCOUNTER (a ${e.entityType} in level ${e.level}): `
@@ -508,8 +542,16 @@ export class SeedlingPlaybackController {
         this.lastGoal = null;
     }
 
+    /**
+     * ⛓ SEEDLING LOOP MODE — a goal STARTS the walk: `walkTo` sets the clock running, as the Playback Bot's own
+     * `walkTo` → `play()` pair always has (`playbackBotUI._publishWalkTo`). The Loops Bot block sends `walkTo`
+     * alone (`loopState._handleBotExecutedAction`), and without this the JS page held its goal with a stopped
+     * clock — the block parked forever (measured in-app: STUCK 90 s, nothing walked; the wasm engine plays on
+     * `walkTo` already). `stop` / `reset` still stop it; `instant` keeps its mode.
+     */
     walkTo(target) {
         this.lastRefusal = null;
+        this._playing = true;
         const s = this._getSurface?.() ?? null;
         if (s && s.transport && !this._walks(s.transport)) return this._refuse(notJsRuntimeRefusal(s.transport, s.setting, this.substrate, this.wasm));
         const out = this._apply(target, s);
@@ -611,6 +653,8 @@ export class SeedlingPlaybackController {
             getBudgetWork: () => this._getSurface?.()?.wasm?.solverBudgetWork ?? null,
             // ⛓ SHOULD-STOP — the upgrade window (work units), read live at each solve's start (null = the engine's own).
             getUpgradeWindowWork: () => this._getSurface?.()?.solverUpgradeWindowWork ?? null,
+            // ⛓ AXE_DODGE HOOK — `on` / `off` / `default`, applied to the engine's own model at each solve.
+            getAxeDodgeAskPerPreview: () => this._getSurface?.()?.wasm?.axeDodgeAskPerPreview ?? null,
             // ⛓ MID-ROOM REPLAN — the delivery gate's handle (re-read per call: a remount is a new adapter).
             getDelivery: () => this._getSurface?.()?.wasm?.delivery ?? null,
             log: this._log,

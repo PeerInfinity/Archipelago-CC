@@ -201,7 +201,12 @@ export const CAPABILITIES = frz({
                 {
                     "group": "loop",
                     "statement": "What you can queue for it",
-                    "text": "moves between regions"
+                    "text": "moves between regions, location checks"
+                },
+                {
+                    "group": "loop",
+                    "statement": "A Bot block can play it for you",
+                    "text": "the game's own automation walks it"
                 },
                 {
                     "group": "loop",
@@ -2115,11 +2120,11 @@ export const CAPABILITIES = frz({
                 {
                     "id": "flash_seedling",
                     "kind": "yes",
-                    "text": "moves between regions",
+                    "text": "moves between regions, location checks",
                     "why": [
                         {
                             "field": "loopSupport.queueActions",
-                            "value": "regionMove"
+                            "value": "regionMove, locationCheck"
                         }
                     ]
                 },
@@ -2725,12 +2730,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "the game's own automation walks it",
                     "why": [
                         {
                             "field": "loopSupport.executeVia",
-                            "value": "—"
+                            "value": "solver"
                         },
                         {
                             "field": "sharing.mana.loopActionDelegation",
@@ -2902,7 +2907,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "kind": "na",
+                    "kind": "no",
                     "text": null,
                     "why": [
                         {
@@ -2911,7 +2916,7 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.executeVia",
-                            "value": "—"
+                            "value": "solver"
                         },
                         {
                             "field": "takeLastRecording",

@@ -192,6 +192,15 @@ export const FAMILY_RULES = [
         (m) => `LIGHT-ARM — the DarkTrap light arm${m[1] ? ` at ${m[1]}` : ''} refused its own execution (the `
             + 'stance missed the pole\'s core, the death did not come, or the walk re-entered the arm): the light '
             + 'arm\'s region (`deriveLightPole` / `execLightArm`), not the body'],
+    /**
+     * ⛓ seedling-fidelity-bombpusher D3 — A WAIT INSIDE A LOBBER'S REACH (`CONTACT_FIDELITY.bombPusherLive`).
+     * `solverBot.lobberHoldRefusal`: a hold stands still, a standing player within 256 px of a `BombPusher` is
+     * always hit, and no verb waits while moving. Witness: L40BUTTON's legs 378/381 (the 131-tick hold of
+     * `buttonroom@272,208`). Not a damage-standard row: the hit is avoidable by a moving wait that is not built.
+     */
+    [/inside (bombpusher@\d+,\d+)'s 256 px reach — a Bomb's Explosion/,
+        (m) => `BOMB — the wait stands still inside ${m[1]}'s reach (a standing player is always hit; no verb `
+            + 'waits while moving)'],
 ];
 
 /**
