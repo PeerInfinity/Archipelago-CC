@@ -1,0 +1,3136 @@
+{
+ "name": "stagedhits-l73-restage",
+ "recordedBy": "scripts/procgen/probe-seedling-staged-hits.mjs --record",
+ "page": "seedling_bot_ap_p4f",
+ "args": {
+  "t1": 12,
+  "keys2": [
+   "left"
+  ],
+  "n2": 25
+ },
+ "tape1": {
+  "tape_version": 12,
+  "game": "seedling",
+  "boot": {
+   "level": 73,
+   "x": 64,
+   "y": 16
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
+  "despawn": [],
+  "equips": [],
+  "pins": [
+   "sound",
+   "dead_frames"
+  ],
+  "save": {
+   "totem_parts": [],
+   "keys": [],
+   "seal_parts": []
+  },
+  "rng": {
+   "seed": 0,
+   "split": false,
+   "cosmetic": 0,
+   "fp": 987286273
+  },
+  "seam": {
+   "items": {
+    "hasSword": true,
+    "hasGhostSword": false,
+    "hasShield": true,
+    "hasFire": true,
+    "hasWand": true,
+    "hasFireWand": false,
+    "canSwim": true,
+    "hasSpear": true,
+    "hasDarkShield": false,
+    "hasDarkSuit": false,
+    "hasDarkSword": false,
+    "hasFeather": true,
+    "hasTorch": true
+   },
+   "time": 4800,
+   "primary": 0
+  },
+  "tick0": null,
+  "hold": true,
+  "tick_count": 12,
+  "inputs": [
+   {
+    "key": "down",
+    "from": 0,
+    "to": 1
+   },
+   {
+    "key": "right",
+    "from": 0,
+    "to": 1
+   },
+   {
+    "key": "down",
+    "from": 1,
+    "to": 2
+   },
+   {
+    "key": "right",
+    "from": 1,
+    "to": 2
+   }
+  ],
+  "name": "stagedhits-l73-t1-12",
+  "description": "⛓ seedling-fidelity-stagedhits D3 — L73 (leg 622's arrival): down+right ×2 (the lavarunner's hit at t2), then nothing to t12, HELD."
+ },
+ "tape2": {
+  "tape_version": 12,
+  "game": "seedling",
+  "boot": {
+   "level": 73,
+   "x": 64,
+   "y": 16
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+   "sound",
+   "dead_frames"
+  ],
+  "save": {
+   "totem_parts": [],
+   "keys": [],
+   "seal_parts": []
+  },
+  "rng": {
+   "seed": 0,
+   "split": true,
+   "cosmetic": 0,
+   "fp": 0
+  },
+  "seam": null,
+  "tick_count": 25,
+  "inputs": [
+   {
+    "key": "left",
+    "from": 0,
+    "to": 25
+   }
+  ],
+  "name": "stagedhits-l73-continue-left-25",
+  "despawn": [],
+  "hold": true
+ },
+ "hold": {
+  "tick": 12,
+  "level": 73,
+  "x": 68.50050506338833,
+  "y": 20.500505063388335,
+  "hits": 1,
+  "hits_timer": 9,
+  "held": true,
+  "game_time": 4833,
+  "player": {
+   "x": 68.50050506338833,
+   "y": 20.500505063388335,
+   "vx": 0,
+   "vy": 0,
+   "anim": "side-stand"
+  }
+ },
+ "end": {
+  "tick": 25,
+  "level": 73,
+  "x": 66.11258539034364,
+  "y": 20.500505063388335,
+  "hits": 2,
+  "hits_timer": 4,
+  "held": true,
+  "game_time": 4858
+ },
+ "game": {
+  "tape1": {
+   "drain": [
+    {
+     "level": 73,
+     "y": 24,
+     "x": 72,
+     "t": 0
+    },
+    {
+     "level": 73,
+     "y": 24.8,
+     "x": 72.8,
+     "t": 1
+    },
+    {
+     "level": 73,
+     "y": 23.655456351736994,
+     "x": 71.65545635173699,
+     "t": 2
+    },
+    {
+     "level": 73,
+     "y": 22.687689398770626,
+     "x": 70.68768939877062,
+     "t": 3
+    },
+    {
+     "level": 73,
+     "y": 21.896699141100893,
+     "x": 69.89669914110088,
+     "t": 4
+    },
+    {
+     "level": 73,
+     "y": 21.282485578727798,
+     "x": 69.28248557872779,
+     "t": 5
+    },
+    {
+     "level": 73,
+     "y": 20.84504871165134,
+     "x": 68.84504871165133,
+     "t": 6
+    },
+    {
+     "level": 73,
+     "y": 20.58438853987152,
+     "x": 68.58438853987151,
+     "t": 7
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 8
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 9
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 10
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 11
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 12
+    }
+   ],
+   "polled": [
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 1,
+     "level": 73,
+     "x": 72.8,
+     "y": 24.8,
+     "hits": 0,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 2,
+     "level": 73,
+     "x": 71.65545635173699,
+     "y": 23.655456351736994,
+     "hits": 1,
+     "hits_timer": 19,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 2,
+     "level": 73,
+     "x": 71.65545635173699,
+     "y": 23.655456351736994,
+     "hits": 1,
+     "hits_timer": 19,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 2,
+     "level": 73,
+     "x": 71.65545635173699,
+     "y": 23.655456351736994,
+     "hits": 1,
+     "hits_timer": 19,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 2,
+     "level": 73,
+     "x": 71.65545635173699,
+     "y": 23.655456351736994,
+     "hits": 1,
+     "hits_timer": 19,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 2,
+     "level": 73,
+     "x": 71.65545635173699,
+     "y": 23.655456351736994,
+     "hits": 1,
+     "hits_timer": 19,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 3,
+     "level": 73,
+     "x": 70.68768939877062,
+     "y": 22.687689398770626,
+     "hits": 1,
+     "hits_timer": 18,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 3,
+     "level": 73,
+     "x": 70.68768939877062,
+     "y": 22.687689398770626,
+     "hits": 1,
+     "hits_timer": 18,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 4,
+     "level": 73,
+     "x": 69.89669914110088,
+     "y": 21.896699141100893,
+     "hits": 1,
+     "hits_timer": 17,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 4,
+     "level": 73,
+     "x": 69.89669914110088,
+     "y": 21.896699141100893,
+     "hits": 1,
+     "hits_timer": 17,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 4,
+     "level": 73,
+     "x": 69.89669914110088,
+     "y": 21.896699141100893,
+     "hits": 1,
+     "hits_timer": 17,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 4,
+     "level": 73,
+     "x": 69.89669914110088,
+     "y": 21.896699141100893,
+     "hits": 1,
+     "hits_timer": 17,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 4,
+     "level": 73,
+     "x": 69.89669914110088,
+     "y": 21.896699141100893,
+     "hits": 1,
+     "hits_timer": 17,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 4,
+     "level": 73,
+     "x": 69.89669914110088,
+     "y": 21.896699141100893,
+     "hits": 1,
+     "hits_timer": 17,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 5,
+     "level": 73,
+     "x": 69.28248557872779,
+     "y": 21.282485578727798,
+     "hits": 1,
+     "hits_timer": 16,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 5,
+     "level": 73,
+     "x": 69.28248557872779,
+     "y": 21.282485578727798,
+     "hits": 1,
+     "hits_timer": 16,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 5,
+     "level": 73,
+     "x": 69.28248557872779,
+     "y": 21.282485578727798,
+     "hits": 1,
+     "hits_timer": 16,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 5,
+     "level": 73,
+     "x": 69.28248557872779,
+     "y": 21.282485578727798,
+     "hits": 1,
+     "hits_timer": 16,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 5,
+     "level": 73,
+     "x": 69.28248557872779,
+     "y": 21.282485578727798,
+     "hits": 1,
+     "hits_timer": 16,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 5,
+     "level": 73,
+     "x": 69.28248557872779,
+     "y": 21.282485578727798,
+     "hits": 1,
+     "hits_timer": 16,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 6,
+     "level": 73,
+     "x": 68.84504871165133,
+     "y": 20.84504871165134,
+     "hits": 1,
+     "hits_timer": 15,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 6,
+     "level": 73,
+     "x": 68.84504871165133,
+     "y": 20.84504871165134,
+     "hits": 1,
+     "hits_timer": 15,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 6,
+     "level": 73,
+     "x": 68.84504871165133,
+     "y": 20.84504871165134,
+     "hits": 1,
+     "hits_timer": 15,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 6,
+     "level": 73,
+     "x": 68.84504871165133,
+     "y": 20.84504871165134,
+     "hits": 1,
+     "hits_timer": 15,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 6,
+     "level": 73,
+     "x": 68.84504871165133,
+     "y": 20.84504871165134,
+     "hits": 1,
+     "hits_timer": 15,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 7,
+     "level": 73,
+     "x": 68.58438853987151,
+     "y": 20.58438853987152,
+     "hits": 1,
+     "hits_timer": 14,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 7,
+     "level": 73,
+     "x": 68.58438853987151,
+     "y": 20.58438853987152,
+     "hits": 1,
+     "hits_timer": 14,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 7,
+     "level": 73,
+     "x": 68.58438853987151,
+     "y": 20.58438853987152,
+     "hits": 1,
+     "hits_timer": 14,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 7,
+     "level": 73,
+     "x": 68.58438853987151,
+     "y": 20.58438853987152,
+     "hits": 1,
+     "hits_timer": 14,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 8,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 13,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 8,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 13,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 8,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 13,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 8,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 13,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 8,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 13,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 9,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 12,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 9,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 12,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 9,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 12,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 10,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 11,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 10,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 11,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 10,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 11,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 11,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 10,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 12,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 9,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 12,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 9,
+     "finished": true,
+     "held": true
+    }
+   ]
+  },
+  "tape2": {
+   "drain": [
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 0
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 1
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 2
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 3
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 4
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 5
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 6
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 7
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 8
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 68.50050506338833,
+     "t": 9
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.50050506338833,
+     "t": 10
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.50050506338833,
+     "t": 11
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.50050506338833,
+     "t": 12
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.50050506338833,
+     "t": 13
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.50050506338833,
+     "t": 14
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.50050506338833,
+     "t": 15
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.50050506338833,
+     "t": 16
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.50050506338833,
+     "t": 17
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.50050506338833,
+     "t": 18
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.11258539034364,
+     "t": 19
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.11258539034364,
+     "t": 20
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.11258539034364,
+     "t": 21
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.11258539034364,
+     "t": 22
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.11258539034364,
+     "t": 23
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.11258539034364,
+     "t": 24
+    },
+    {
+     "level": 73,
+     "y": 20.500505063388335,
+     "x": 66.11258539034364,
+     "t": 25
+    }
+   ],
+   "polled": [
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 9,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 9,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 0,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 9,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 1,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 8,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 1,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 8,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 1,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 8,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 1,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 8,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 2,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 7,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 2,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 7,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 2,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 7,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 2,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 7,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 2,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 7,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 3,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 6,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 3,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 6,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 3,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 6,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 3,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 6,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 3,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 6,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 3,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 6,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 4,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 5,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 4,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 5,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 4,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 5,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 4,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 5,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 4,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 5,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 4,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 5,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 5,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 4,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 5,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 4,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 5,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 4,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 5,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 4,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 6,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 3,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 6,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 3,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 6,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 3,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 7,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 2,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 7,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 2,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 7,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 2,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 7,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 2,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 7,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 2,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 8,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 1,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 8,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 1,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 8,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 1,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 8,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 1,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 8,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 1,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 9,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 9,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 9,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 9,
+     "level": 73,
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 1,
+     "hits_timer": 0,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 10,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 19,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 10,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 19,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 10,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 19,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 10,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 19,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 10,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 19,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 10,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 19,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 11,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 18,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 11,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 18,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 11,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 18,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 11,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 18,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 11,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 18,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 12,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 17,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 12,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 17,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 12,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 17,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 12,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 17,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 12,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 17,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 13,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 16,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 13,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 16,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 13,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 16,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 13,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 16,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 14,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 15,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 14,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 15,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 14,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 15,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 14,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 15,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 14,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 15,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 14,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 15,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 15,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 14,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 15,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 14,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 15,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 14,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 15,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 14,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 15,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 14,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 16,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 13,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 16,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 13,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 16,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 13,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 16,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 13,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 17,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 12,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 17,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 12,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 17,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 12,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 17,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 12,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 17,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 12,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 17,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 12,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 18,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 11,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 18,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 11,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 18,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 11,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 18,
+     "level": 73,
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 11,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 19,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 10,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 19,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 10,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 19,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 10,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 19,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 10,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 19,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 10,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 20,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 9,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 20,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 9,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 20,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 9,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 21,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 8,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 21,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 8,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 21,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 8,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 22,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 7,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 22,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 7,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 22,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 7,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 22,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 7,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 22,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 7,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 22,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 7,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 23,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 6,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 23,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 6,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 23,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 6,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 23,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 6,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 23,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 6,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 24,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 5,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 24,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 5,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 24,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 5,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 25,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 4,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 25,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 4,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 25,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 4,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 25,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 4,
+     "finished": false,
+     "held": false
+    },
+    {
+     "tick": 25,
+     "level": 73,
+     "x": 66.11258539034364,
+     "y": 20.500505063388335,
+     "hits": 2,
+     "hits_timer": 4,
+     "finished": true,
+     "held": true
+    }
+   ]
+  }
+ },
+ "summary": {
+  "S": {
+   "firstOff": null,
+   "firstDamageOff": null
+  },
+  "P": {
+   "firstOff": {
+    "t": 10,
+    "game": {
+     "x": 66.50050506338833,
+     "y": 20.500505063388335,
+     "level": 73
+    },
+    "model": {
+     "x": 66.55596141512534,
+     "y": 18.555961415125314,
+     "level": 73
+    }
+   },
+   "firstDamageOff": {
+    "t": 12,
+    "game": {
+     "hits": 2,
+     "hits_timer": 17
+    },
+    "model": {
+     "hits": 0,
+     "hitsTimer": 0,
+     "directionFace": -1
+    }
+   }
+  },
+  "C": {
+   "firstOff": {
+    "t": 1,
+    "game": {
+     "x": 68.50050506338833,
+     "y": 20.500505063388335,
+     "level": 73
+    },
+    "model": {
+     "x": 67.70050506338833,
+     "y": 20.500505063388335,
+     "level": 73
+    }
+   },
+   "firstDamageOff": {
+    "t": 0,
+    "game": {
+     "hits": 1,
+     "hits_timer": 9
+    },
+    "model": {
+     "hits": 0,
+     "hitsTimer": 0,
+     "directionFace": -1
+    }
+   }
+  }
+ }
+}
