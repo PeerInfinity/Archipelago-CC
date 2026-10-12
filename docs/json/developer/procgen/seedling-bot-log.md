@@ -15571,6 +15571,58 @@ Mutants (`pressKillCost.test.js`, 9 rows):
 nearest-tile pass 1.9 %, beside GC 19.6 % (SOLVECOST's prefix-sharing lever). On A after P1: `collideLineSolid` (the
 strike line's raycast, self 6.2 %) and `solidBoxesForMover` (4.8 %, rebuilt per line).
 
+### Seedling hammer-phase D — the ghost sword in L39 / L40 / L92
+
+⚖ The user (2026-10-11): *"Please run them in the order you would recommend."* Measure first; a fix was optional.
+One switch, **OFF**, and OFF is byte-inert: `ghostSpinnerPress.GHOST_SEARCH_BUCKETS` (`SEEDLING_GHOST_SEARCH_BUCKETS=1`,
+`withGhostSearchBuckets`). The report is `CC/docs/cloud-reports/seedling-hammer-d.md`.
+
+**W0** at `5b92583a7f` (P1's merge): identity block non-`#` md5 `3a48647f` (= P1's W0, row for row; the six producers
+exit 0, reference ALL 7 + 5 MATCH); surface GREEN 274, constants 5,710, entities 535, profile 138; roster 277;
+bounded vitest 985/985 (15 files), tapeRunner 611 pairs `75a3c41f`.
+
+**D1 — the three rooms, 45 legs × {sword, sword + ghost}** (`seedling-divergence-legs.mjs`, C1/P1's node arrival path,
+15-minute cap). No route leg holds the ghost sword there; the ghost is the flag (`Main.hasGhostSword`), the sword kept.
+- **Two verdicts change, 378 and 381** (L40 r0c53 → Totem 64,144): the sword SOLVES (1540 / 1592 t), the ghost
+  REFUSES. **The cause is not the press**: the combat ladder's KILL rung (`solverBot.js`, the lock-less spinner arm)
+  asks `primaryWeapon === 'sword'` before it ever calls `derivePressKill`, and says *"fires `ghostsword` — the kill
+  this rung derives is a SWORD press"*. C2 admitted the ghost inside `derivePressKill` (the kill-lock order) but not
+  at this gate. 397 / 414 (→ the chest) and staging A refuse at the same gate in 1–3 s, where the sword refuses after
+  its kill, on a chaser.
+- **What the gate hides** (a scratch mutant in a worktree, never committed: the rung admits the ghost where
+  `derivePressKill` does): 378 with the ghost SOLVES in 1641 t, two ghost landings from ~21 px kill `spinner@192,144`;
+  staging A's ghost kills `spinner@880,848` at t2114 against the sword's t3100 (the sword's kill DOES land at base,
+  six landings, then the chaser `bob@736,752` refuses it at 3113 — P1's "the kill never lands" was the refuge's
+  3,113 ticks, not the kill); 414 reaches the chaser too; 381 meets the camera-shake band in `chaserForecast`.
+- **The game refutes that room's plans, the sword's too.** Played on p4f, the mutant's 378 ghost plan parts at t1121
+  and the base SWORD plan for the same room at t1154, both at (280, 216): the game shoves the standing player −3.40,
+  −3.15, −2.90 … px/tick with no damage; the model stands, and nothing it models is within 48 px. Fidelity's (tapes
+  in the report's evidence).
+- Everything else keeps its verdict. Ticks move on the dash walks (`pass: full`; the ghost's own dash clock, 70 → 105 t
+  and the like) and by 1–6 t on dashless ones, with no spinner pressed. L39's and L92's legs never meet a spinner.
+
+**D2 — the walled line, on the game (`hammer-d-l39-ghostwall`).** C2's M3 was blind; this is its witness. L39 from
+leg 375's arrival (144,608) on C1's tape staging with the sword and the ghost sword: climb the shaft, cut `rope@96,384`
+with a ghost press, walk to (168,184) beside the dark Blue Wall block, press right at t573. The landing at t574 on
+`spinner@224,112` is from 21.21 px, and the line from the player's point to the body's entity point crosses
+`tile:Blue Wall (dark)` at (176, 187.96). The game takes it: `hits` 0 → 2, `hits_timer` 30 at the next observation,
+every Spinner row equal (1,764 comparisons, worst |Δ| 2.8e-14), the drained stream exact (591 obs). Not a roster tape:
+`fixtures/hammer-d-ghostwall-witness/`, `plan-seedling-hammer-d-ghostwall.mjs` (`--check`), gate
+`hammerGhostWall.test.js`. M3 asked of the forecast → 2 rows red; of the run → it throws naming the wall; of the
+strike → blind (no ghost strike is ever derived at a walled stance). ⚠ On the game the rope press's `Bot.slashTests`
+counts 1 then 7 (t184/185) where the model counts one a tick; the player is unaffected. Fidelity's.
+
+**D3 — `GHOST_SEARCH_BUCKETS`.** `deriveFight` pre-filtered every press successor at the SWORD's 16 px and 5 tests
+before asking `pressReadyAt`, so the ghost was never offered the 16–24 px band; it also bucketed the window and
+bounded the gap with the sword's numbers, and `deriveApproach` sized its probe and goal margins by them. ON, both read
+`searchPressFor(strikePressOf(run))`; OFF it is the sword's row (the constants). On C2's L18 ghost staging with
+`HAMMER_FIGHT`: at t0 the fight meets 22 in-reach press nodes OFF, 653 ON; residue 40 324 → 321 t. **But across the 45
+residues ON is longer at 39** (mean 324.0 → 356.0 t; 45/45 solve both). `HAMMER_APPROACH` does not move (325 t).
+
+**D4 — ON vs OFF:** nothing committed moves (identity block = W0 but the unregenerated docs row, L18 sword sweep 45/45
+equal at the default and with `--fight`, leg 381's sword plan, vitest 996/996). Not flipped: the user's call, and the
+measurement argues against it.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

@@ -2,3 +2,4 @@ before files 15 passed 985 / 985 tapeRunner 611 75a3c41f0c91f6e71953e82d8259dc60
     hammerApproach.test.js hammerEscape.test.js hammerFight.test.js hammerFightFallback.test.js hammerGhostSpinner.test.js levelRun.test.js pressKillCost.test.js procgenRoam.test.js procgenScratchPersistence.test.js solveProgress.test.js solverBot.test.js solverBotLethalPit.test.js solverDeadline.test.js solverSpinnerKill.test.js tapeRunner.test.js
 on files 17 passed 996 / 996 tapeRunner 611 75a3c41f0c91f6e71953e82d8259dc60
     hammerApproach.test.js hammerEscape.test.js hammerFight.test.js hammerFightFallback.test.js hammerGhostSearch.test.js hammerGhostSpinner.test.js hammerGhostWall.test.js levelRun.test.js pressKillCost.test.js procgenRoam.test.js procgenScratchPersistence.test.js solveProgress.test.js solverBot.test.js solverBotLethalPit.test.js solverDeadline.test.js solverSpinnerKill.test.js tapeRunner.test.js
+after files 26 passed 1270 / 1270

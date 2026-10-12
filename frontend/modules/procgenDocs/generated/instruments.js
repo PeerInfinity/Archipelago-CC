@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 84,
+            "count": 85,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 415,
+        "blockStyle": 416,
         "browser": 141,
-        "cited": 211,
-        "files": 427,
+        "cited": 213,
+        "files": 428,
         "lineStyle": 12,
-        "withDocblock": 427,
-        "withFlags": 343
+        "withDocblock": 428,
+        "withFlags": 344
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7762,6 +7762,36 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "plan",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-hammer-d-ghostwall.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-d-ghostwall — ⛓⛓⛓ SEEDLING HAMMER-PHASE D, D2: THE GHOST SWORD PRESSES A SPINNER THROUGH A WALL.",
+            "path": "scripts/procgen/plan-seedling-hammer-d-ghostwall.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -13534,6 +13564,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "tape-file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "upto"
                 }
             ],
@@ -15823,7 +15859,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "seedling",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "out",
