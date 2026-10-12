@@ -149,9 +149,10 @@ import {
     // transcribed it. Two spellings of 24 would be two rules
     // ([[feedback_two_cost_models_must_agree]]).
     TALK_RANGE,
+    // ⛓ fidelity L74LEG624 D3: the contact switches, through the door (`STRIKE_IFRAME_LAPSE`).
+    CONTACT_FIDELITY,
 } from './solverView.js';
 import { chaseEnvelope } from './encounters.js';
-import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 export class StrikePolicyError extends Error {
     constructor(message) { super(message); this.name = 'StrikePolicyError'; }
@@ -336,9 +337,10 @@ export function vetoedInRect(player, bodies, direction, scale, vetoBody, { press
     for (const o of bodies) {
         if (!rectsOverlap(r, o.rect)) continue;
         if (distanceRectPoint(player.x, player.y, o.rect) > reachLimit) continue;
-        // ⛓ fidelity L74LEG624 D3: ON, a body whose i-frame lapses inside the window takes the hit, so it is asked.
+        // ⛓ fidelity L74LEG624 D3: ON, a body whose i-frame lapses anywhere inside the window may take the hit, so it
+        // is asked — with no spare test: the veto is the conservative reading, the opposite end of the admission's.
         if ((o.hitsTimer ?? 0) > 0
-            && !(CONTACT_FIDELITY.strikeIframeLapse && iframeLapse(o.hitsTimer, 0, pressAhead))) continue;
+            && !(CONTACT_FIDELITY.strikeIframeLapse && iframeLapse(o.hitsTimer, 0, pressAhead, 0))) continue;
         const v = vetoBody(o, player);
         if (v) return { id: o.id, ...v };
     }
@@ -381,12 +383,22 @@ export function projectedHitsTimer(hitsTimer, offset) {
 }
 
 /**
+ * ⛓ fidelity L74LEG624 D3 — **ONE SPARE TEST.** A press admitted on the window's LAST test at the fastest drain is a
+ * press with nothing in hand: measured on L6 (R9 slice 12b's equality room, `bob@112,48`), an aim at reading 7 pressed
+ * at t37, the body's timer still read 1 at the last test, the press landed nothing, the bob's contact billed at t43 and
+ * the preview/drive key equality parted. One spare test (an aim admits a reading ≤ 6) restores both rows; the L74
+ * witnesses (readings 5 and 4) are inside it.
+ */
+export const IFRAME_LAPSE_SPARE_TESTS = 1;
+
+/**
  * ⛓⛓⛓ fidelity L74LEG624 D3 (`CONTACT_FIDELITY.strikeIframeLapse`) — **DOES THIS PRESS'S WINDOW REACH THE LAPSE?**
  *
  * `Enemy.hit`'s `hitsTimer > 0` gate is asked on every TEST tick, `T+1 … T+SLASH_HIT_TICKS` after the press at `T`,
  * not on the press tick. The reading is `CONTACT_READING_LAG` old and the press is `pressAhead` ticks after the
  * decision, so the test at `T+i` reads `projectedHitsTimer(hitsTimer, pressAhead + i - 1)` — derived from the same
- * two lags as the dash's projection, not measured off a fixture. The press can damage iff the LAST test reads ≤ 0.
+ * two lags as the dash's projection, not measured off a fixture. The press can damage iff a test reads ≤ 0; it is
+ * ADMITTED iff one does with `IFRAME_LAPSE_SPARE_TESTS` tests still to run after it.
  *
  * ⛓ Measured: L74 leg 624 (`tape-l74-624-press84`/`-press85`, hammer C4): the body's i-frame from its t57 hit lapses at
  * t87 (the reading 4 at t84's decision); an aim at t83 (reading 5) or t84 (reading 4) presses at t84/t85, and its
@@ -396,11 +408,13 @@ export function projectedHitsTimer(hitsTimer, offset) {
  * may land nothing. That costs the swing (and the `ORDINARY_SWING_PERIOD` after it), never a hit the model bills
  * wrongly — the run's own `Enemy.hit` arm still gates each test.
  *
+ * @param {number} spare  tests that must remain after the first landing one (`IFRAME_LAPSE_SPARE_TESTS`; the veto
+ *   passes 0 — a body that MIGHT die is vetoed).
  * @returns {?{hitsTimer: number, firstTest: number, firstTick: number}} null when no test of the window reaches it.
  *   `firstTest` is `i` (1-based) of the first test reading ≤ 0; `firstTick` is that test's tick, from `tick`.
  */
-export function iframeLapse(hitsTimer, tick, pressAhead = 1) {
-    for (let i = 1; i <= SLASH_HIT_TICKS; i += 1) {
+export function iframeLapse(hitsTimer, tick, pressAhead = 1, spare = IFRAME_LAPSE_SPARE_TESTS) {
+    for (let i = 1; i <= SLASH_HIT_TICKS - spare; i += 1) {
         if (projectedHitsTimer(hitsTimer, pressAhead + i - 1) <= 0) {
             return { hitsTimer, firstTest: i, firstTick: tick + pressAhead + i };
         }
