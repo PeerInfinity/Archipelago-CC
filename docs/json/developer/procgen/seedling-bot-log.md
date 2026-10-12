@@ -16461,6 +16461,64 @@ life (`rebootshake-l4{1,2}-part0-damage`).
 - **A refusal moves downstream when its verb is fixed.** With the hold paced, the next standing wait inside the lobber
   is a press kill's (another arc's verb); the sweep row changes family, not colour.
 
+### Seedling fidelity L74LEG624 — a press is gated on its hit tests, a fallen rock is built fallen, and the forecast's lavarunner swims
+
+Wave 14 (model coverage). Hammer C4 handed over divergence leg 624 (`level_74 <- in_L73_64_0 ->
+exit:out_teleporter_16_144`, the lavarunner fight): not the chooser, but two model walls, the strike policy's i-frame
+gate and the L74 fallrock re-entry. The report is `CC/docs/cloud-reports/seedling-fidelity-l74leg624.md`. Three
+switches, all OFF (`contactFidelity.js`): `strikeIframeLapse`, `fallRockPostFall`, `forecastSpeedByTerrain`.
+
+**D1 — the rock, on the game.** L74's arrival button (`button@288,128`, the L73 door's landing cell) drops
+`fallrock@288,144` (tag 2) onto the L73 teleporter; the game's live `persistence_cleared` then holds {74,2}, so every
+later build of L74 is asked for a FALLEN rock. `FallRock.as:42-47` is the whole post-fall state: `y = fallTo`, `type =
+"Solid"`, `_active = true` (the button cannot drop it again). `FallRock` is not a `Mobile`, so `botMobiles` never reports
+it: it is read through the player. Booted with {74,2} staged and held down from the landing cell, the game's player
+rests on the rock's top (y 141) and never reaches the teleporter; no arrival freeze (the clock calibrates at shift
+exactly [0]). Census of the `fallrock`/`fallrocklarge` a clear list can name: L28 (rope), L29 (button), L37 (totem;
+removed on the delivered set by `l37-fallrock-removed`), L39 (rope), L43 ×3 (wand), L74 (button), L82 `fallrocklarge`
+(non-arena boss rock, still refused), L32 `fallrocklarge` (the arena's, already built fallen). No divergence leg stages
+one; the page stages {74,2} from the game's own state after L74's arrival (and sweep 38185510484 by `stage_flags`).
+
+**D2 — the post-fall build** (`fallRockPostFall`). `buildLevelWorld` admits the clear for a non-arena `fallrock`
+(`postFallRockOf`) and marks its roster row `postFall`; `levelRun.fallRockStateFor` builds it with
+`createFallRock(…, true)` and `landed`, so `fallenRocksNow` hands the 16x16 Solid to `collidesSolid` and the button's
+arm skips it. Witness `l74leg624-postfall-reentry` (p4f, headless, `--player-hits`, recorded): 71 player samples and
+142 LavaRunner comparisons at 0 px. OFF the same tape is the old refusal.
+
+**D3 — the i-frame gate** (`strikeIframeLapse`). `Enemy.hit`'s `hitsTimer > 0` gate runs on each TEST tick, `T+1 …
+T+SLASH_HIT_TICKS`, not on the press tick. `strikePolicy.iframeLapse` admits a body when a test reads
+`projectedHitsTimer` ≤ 0 with `IFRAME_LAPSE_SPARE_TESTS` (1) tests still to run after it: an aim admits a reading ≤ 6,
+a press on this tick ≤ 5. The first cut admitted the window's last test (reading 7) and L6's equality room measured why
+not: the bob's timer still read 1 there, the press landed nothing, its contact billed at t43 and the preview/drive key
+equality parted; one spare test restores it. C4's witnesses (readings 5, 4) are inside. ON, a body in its death is
+refused (`spent`, `Enemy.hit`'s `hits < hitsMax`): the forecast drains a dying body's frozen i-frame where the drive's
+body has left `strikeBodies` (leg 624, t114). The veto asks a body whose i-frame lapses anywhere in the window (no spare
+test: the conservative end). Game witness: C4's stance (264,120) walk with the ON policy deciding the presses aims at
+reading 6 (t81), the shield shoves the body out of the swing, its lapse at t87 finds it 22 px away, and the t102 press
+kills it — 0 hits, LavaRunner 0 px (262 comparisons); OFF the same walk is C4's (presses t55/t88, hit t87).
+
+**D4 — leg 624 end to end: SOLVED, 0 hits, on the game.** With all three ON the anytime answer is the full pass's
+**331-t** detour (dashless refuses by name: fidelity-bulb's "killed and then destroyed by the terrain under it"). Played
+on p4f: the player at every tick but the known t1–t2 arrival frame, 0 hits, L75 (72,24); LavaRunner within 1.3e-15
+(445 comparisons); the Bulb's position at 0 px (its velocity in the death differs from t305). No forced hit is planned
+(OFF the forced-hit rung cannot prove one: the model refuses to step a press into the arrival freeze). Lapse + speed
+alone also answer 331 t; the forecast fix is what makes the certified detour the walked one. The way there, measured:
+lapse alone (no spare test, no `spent`) solved 458 t with a game-confirmed UNBILLED bulb hit at t362 (the detour's
+preview and drive parted at t53: `chaserForecastNow` never ran K2's `LavaRunner` speed tail); lapse + postfall "solves"
+1,442 t / 1,269 t with five and four lava DEATHS that `drive` never noticed.
+**Trap candidates.**
+- **A gate true of the press tick is not true of the window.** A press is five hit tests; a reading that refuses the
+  first can admit the last. Ask the window.
+- **A forecast clone runs the update's head and not its tail.** K2 put `LavaRunner`'s terrain speed below the chase in
+  the live step; the forecast copied the chase. Every tail written into `stepChasersNow` owes the clone.
+- **A drive that dies or takes an unforecast hit returns normally.** `walkTo`'s drive bills both and moves on; nothing
+  compares the drive with the preview it certified. Leg 624 returned a plan with a game-confirmed hit at t362, and one
+  with five lava deaths.
+- **An admission at the window's edge is a press with nothing in hand.** The fastest-drain projection is a bound, not
+  the timer; a press whose only landing test is the last one landed nothing on L6. Keep a spare test.
+- **A body read through the player is still a witness.** The game cannot report a `FallRock`; a player who rests on
+  its top for twelve ticks at 0 px is the rock's position and solidity, measured.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the

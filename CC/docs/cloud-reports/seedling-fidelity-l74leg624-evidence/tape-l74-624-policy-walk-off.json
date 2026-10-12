@@ -1,0 +1,111 @@
+{
+ "game": "seedling",
+ "name": "l74leg624-policy-walk-lapse0",
+ "boot": {
+  "level": 74,
+  "x": 288,
+  "y": 128
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 0,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 987286273
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": true,
+   "canSwim": true,
+   "hasSpear": true,
+   "hasFeather": true,
+   "hasTorch": true
+  }
+ },
+ "tick_count": 130,
+ "inputs": [
+  {
+   "key": "up",
+   "from": 0,
+   "to": 11
+  },
+  {
+   "key": "down",
+   "from": 11,
+   "to": 12
+  },
+  {
+   "key": "up",
+   "from": 12,
+   "to": 14
+  },
+  {
+   "key": "down",
+   "from": 16,
+   "to": 19
+  },
+  {
+   "key": "up",
+   "from": 20,
+   "to": 22
+  },
+  {
+   "key": "left",
+   "from": 26,
+   "to": 53
+  },
+  {
+   "key": "left",
+   "from": 54,
+   "to": 55
+  },
+  {
+   "key": "primary",
+   "from": 55,
+   "to": 56
+  },
+  {
+   "key": "right",
+   "from": 56,
+   "to": 59
+  },
+  {
+   "key": "left",
+   "from": 60,
+   "to": 62
+  },
+  {
+   "key": "left",
+   "from": 87,
+   "to": 88
+  },
+  {
+   "key": "primary",
+   "from": 88,
+   "to": 89
+  },
+  {
+   "key": "down",
+   "from": 107,
+   "to": 108
+  }
+ ],
+ "tape_version": 8
+}

@@ -1,0 +1,57 @@
+--- /home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js	2026-10-12 15:52:05.362156237 +0000
++++ solverBot.js	2026-10-12 16:27:53.594244615 +0000
+@@ -5320,6 +5320,7 @@
+     }
+     // ⛓ hammer-phase D1 — every sample is a previewed player state: the progress tile map's unit
+     if (activeProgress !== null) progressPreview(run, samples);
++    if (globalThis.__LABP) globalThis.__LABP({ start: startTick, strike: !!strike, wps: wps.map((w) => [w.x, w.y]), held: samples.map((sm) => (sm.held ? [...sm.held].sort().join('+') : '')), xy: samples.map((sm) => [sm.x, sm.y]), bodies: samples.map((sm) => (sm.chasers ?? []).map((b) => [b.id, b.x, b.y, b.hitsTimer])) });
+     return { samples, startTick, truncated, stood: standFor, plannedStruck };
+ }
+ 
+@@ -16016,6 +16017,7 @@
+                 sm.arrows, sm.chasers, sm.spits ?? null, sm.grenades ?? null);
+             if (dg.danger) danger = { tick: sm.tick, phase: sm.phase ?? 'transit', ...dg };
+         }
++        if (globalThis.__C4 && globalThis.process?.env?.C4_ARM === '1') globalThis.__C4({ at: 'chaserArm', target: target.id, c: { x: c.x, y: c.y }, start: walk.startTick, danger: danger ? { tick: danger.tick - walk.startTick, src: danger.sources.map((x) => x.id) } : null, deathTick, samples: walk.samples.map((sm) => [sm.tick - walk.startTick, sm.phase ?? 't', +sm.x.toFixed(1), +sm.y.toFixed(1), (sm.chasers ?? []).filter((b) => b.id === target.id).map((b) => [+(b.x ?? b.rect?.x ?? 0).toFixed(1), +(b.y ?? b.rect?.y ?? 0).toFixed(1), b.hits ?? null, b.hitsTimer ?? null])[0] ?? null, sm.held ? [...sm.held].join('+') : null]) });
+         if (danger) {
+             rejected.push({ ...c, why: `${danger.phase === 'dwell' ? 'the WAIT' : 'the APPROACH'} `
+                 + `is dangerous at tick ${danger.tick - walk.startTick} — `
+@@ -18940,6 +18942,10 @@
+          */
+         if (activeProgress !== null) progressRung('bait');
+         let removable = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
++        if (globalThis.process?.env?.C4_APPEND === '1') {
++            const have = new Set(removable.map((b) => b.id));
++            for (const c of (run.entities('chasers') ?? [])) if (hit.sources.some((sx) => sx.id === c.id) && !have.has(c.id)) removable.push({ ...c, stepped: true, c4: 'appended' });
++        }
+         /**
+          * ⛓⛓ HAMMER-PHASE C1 (`CHOOSER_HIT_SOURCES`) — where the chooser cannot speak (an EMPTY list: no body's
+          * removal admits a corridor, which a body with no danger volume never can), the probe's own hit can: its
+@@ -19578,6 +19584,7 @@
+                         ? { strike: null, axisAligned, stopWhen: dangerous, ...tail }
+                         : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous, ...tail });
+                     const hit = probeSamples(walk.samples, dangerExcept);
++                    if (!hit && globalThis.__LAB) globalThis.__LAB({ at: 'detourClean', start: walk.startTick, wps: wps.map((w) => [w.x, w.y]), samples: walk.samples.map((sm) => [sm.tick, sm.phase ?? 't', +sm.x.toFixed(3), +sm.y.toFixed(3), (sm.chasers ?? []).map((b) => [b.id, +(b.x ?? 0).toFixed(2), +(b.y ?? 0).toFixed(2), b.hits ?? null, b.hitsTimer ?? null, b.removed ? 1 : 0]), sm.held ? [...sm.held].join('+') : null]) });
+                     return { hit, hitWp: hit ? walk.samples.at(-1).wp : null,
+                         truncated: hit ? null : (walk.truncated ?? null), ticks: walk.samples.length };
+                 },
+--- /home/user/Archipelago-CC/frontend/modules/seedlingDemo/botDriverV2.js	2026-10-12 15:52:05.166156225 +0000
++++ botDriverV2.js	2026-10-12 16:25:51.731349450 +0000
+@@ -5233,6 +5233,7 @@
+                     + `${touched.slice(0, 3).map((g) => g.what).join('; ')}` : ''}.`);
+         }
+         const held = driveStepHeld(run, target, tolerance, { strike, axisAligned });
++        if (globalThis.__LABD) globalThis.__LABD({ t: run.ticksCompleted, held: [...held].sort().join('+'), x: run.state.x, y: run.state.y, bodies: (run.strikeBodies ?? []).map((b) => [b.id, b.x, b.y, b.hitsTimer]) });
+         perTick.push(held);
+         // Where the player was when the edge could have fired. A pit's
+         // identity is the tile UNDER them, and after `advance` they are in
+--- /home/user/Archipelago-CC/frontend/modules/seedlingDemo/jsRuntimeSolver.js	2026-10-12 15:52:05.274156232 +0000
++++ jsRuntimeSolver.js	2026-10-12 16:14:29.826460525 +0000
+@@ -650,6 +650,7 @@
+             + `${expected.length - 1} time(s) — the expected trajectory cannot be checked`);
+     }
+     const verbs = [...new Set((out.trace?.rows ?? []).map((r) => r.strategy?.verb).filter(Boolean))].sort();
++    if (globalThis.__LAB) globalThis.__LAB({ at: 'trace', rows: out.trace?.rows ?? [] });
+     return { solution, expected, equipsAt, equipItems, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode,
+         // ⛓ SHOULD-STOP — `{tripped, first, sites}` when the pass's deadline tripped (named in the history), else null
+         deadline: out.deadline ?? null,
