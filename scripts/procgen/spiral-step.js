@@ -35,8 +35,9 @@
  *   --no-bidirectional      disable assumeBidirectional (default on)
  *   --enable-loop-mode      compute loop_costs in the rules.json
  *   --region-xp-effect E    loop-mode xp effect (default cost)
- *   --victory-item NAME     completion item (default: first quota'd substrate's
- *                           registry victoryItem)
+ *   --victory-item NAME     completion item for an envelope whose ③ predates the
+ *                           item layer; a fresh ③ names its own goal (`Victory`,
+ *                           or none), which ④ uses instead
  *
  * JtA ② content dataset flags (arrange / run; Part 3 — generation is Node-only):
  *   --jta-dataset-file F    install a pre-generated dataset document as ② content

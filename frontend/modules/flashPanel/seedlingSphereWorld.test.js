@@ -25,6 +25,7 @@ import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { regionsOf } from '../procgenCore/rulesGraph.js';
+import { GOAL_ITEM } from '../procgenCore/goalItem.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 for (const rel of REGISTRY_LIBRARIES) {
@@ -141,7 +142,8 @@ describe('the sphere-growth world with a real Seedling room as a LEAF (T3)', () 
             .toBe(w.room.playable_payload.atlas_region);
         const locs = w.roomRegion.locations ?? [];
         expect(locs.map((l) => l.name)).toEqual([region.locations[0].name]);
-        expect(Object.keys(state.scenario.items)).toContain(locs[0].item?.name);
+        // ⛓ spiral victory: the scenario's `victory` is placed as the one goal item, `Victory`.
+        expect([...Object.keys(state.scenario.items), GOAL_ITEM]).toContain(locs[0].item?.name);
     });
 
     it('the committed seedling_sphere_room preset IS this world', async () => {

@@ -31,6 +31,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
 import { CONCEPTS, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js';
 import { GENERATION_COST, generationCostOf } from '../procgenCore/substratePredicates.js';
+import { GOAL_ITEM, goalItemPool, withGoalItemDef } from '../procgenCore/goalItem.js';
 import {
     defaultProcgenParams, activeSubstrateIds, pricingParamsOf,
     collectSphereGrowthPrep, assembleRegionParams, assembleLibraryRegionParams,
@@ -298,6 +299,17 @@ export function resolveVictoryItemId(state) {
 }
 
 /**
+ * The goal a SPIRAL or SPHERE-GROWTH world places: the one item `Victory`
+ * (⚖ user 2026-10-11) whenever `resolveVictoryItemId` finds a goal at all — the
+ * scenario's victory item is the switch, and an in-quota substrate that declares
+ * a `victoryItem` gives the world one too. Null: no goal. Grid growth keeps
+ * `resolveVictoryItemId`'s own item.
+ */
+export function resolveGoalItem(state) {
+    return resolveVictoryItemId(state) ? GOAL_ITEM : null;
+}
+
+/**
  * Can a substrate host a sphere-growth library node? True when its registry
  * adapter provides the requirement-aware `instantiateLibraryEntryForSpecs` hook
  * — the exact predicate the engine's resolveSphereLibrarySources uses.
@@ -362,6 +374,10 @@ export function buildSphereConfig(state, resolvedLibraries = []) {
         quotas = merged.substrateQuotas;
         substrateConfig = merged.substrateConfig;
     }
+    // One goal item: the scenario's victory becomes `Victory`, and a goal only a
+    // substrate declares joins the pool, so the plan pins it to the final sphere.
+    const goal = resolveGoalItem(state);
+    const lib = mergedItemLib(state);
     return {
         seed,
         regionWidth, regionHeight,
@@ -374,9 +390,9 @@ export function buildSphereConfig(state, resolvedLibraries = []) {
         quotas,
         substrateConfig,
         activeIds: activeSubstrateIds(quotas, startSub),
-        itemLib: mergedItemLib(state),
-        itemPool: { ...state.scenario.items },
-        victoryItemId: resolveVictoryItemId(state),
+        itemLib: goal ? withGoalItemDef(lib) : lib,
+        itemPool: goalItemPool(state.scenario.items, lib, !!goal),
+        victoryItemId: goal,
         enableLoopMode: !!params.enableLoopMode,
         regionXpEffect: params.regionXpEffect ?? 'cost',
         hazardOpts: effectiveHazardOpts(params),
@@ -477,10 +493,13 @@ export function buildSpiralRun(state, { resolvedLibraries = [] } = {}) {
             + 'with a positive quota (set Substrate allocation to Quotas) '
             + 'or a selected region library');
     }
+    const goal = resolveGoalItem(state);
     const config = {
         regionSize: { width: regionWidth, height: regionHeight },
         itemPool: { ...state.scenario.items },
         obstaclePool: { ...state.scenario.obstacles },
+        // The goal the item layer pins to the last region that can hold one.
+        goalItem: goal,
         seed,
         // ⛓ seedling generated G3: the in-quota substrates' `buildRegionParams`
         //   hooks, in the default ('sphere') mode, as sphere growth passes them —
@@ -502,7 +521,7 @@ export function buildSpiralRun(state, { resolvedLibraries = [] } = {}) {
         seed,
         enableLoopMode: !!params.enableLoopMode,
         regionXpEffect: params.regionXpEffect ?? 'cost',
-        completionConditionItem: resolveVictoryItemId(state),
+        completionConditionItem: goal,
         // ⛓ bulletml N5: only when an in-quota substrate prices its regions (bytes kept otherwise)
         ...withPricingParams(Object.keys(substrateQuotas), params),
         // ⛓ tutorial-bugs: maze rooms play as zones — the payload's `arrival`

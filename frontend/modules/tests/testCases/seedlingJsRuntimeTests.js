@@ -30,6 +30,7 @@ import { getGameStateSingleton } from '../../gameState/singleton.js';
 import { getActivePanel as getBotPanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { returnKey, returnSpawnTable } from '../../flashPanel/seedlingReturnSpawns.js';
+import { GOAL_ITEM } from '../../procgenCore/goalItem.js';
 import loopStateSingleton from '../../loops/loopStateSingleton.js';
 import { resolveQueueBlocks } from '../../loops/blockIdentity.js';
 import { restoresSavedQueues } from '../savedQueueIsolation.js';
@@ -571,7 +572,7 @@ export async function seedlingJsRuntimeBotCompletesAtlasLocation(tc) {
         await tc.stateManager.pingWorker('after-bot-run', 5000);
         const facts = snapshotFacts(tc);
         tc.assertEqual('every sphere-log location is checked', '[]', JSON.stringify(expected.filter((n) => !facts.checked.has(n))));
-        tc.assertEqual('victory is held', true, facts.held('victory') > 0);
+        tc.assertEqual(`the goal (${GOAL_ITEM}) is held`, true, facts.held(GOAL_ITEM) > 0);
         const path = walkedRegions();
         tc.log(`gameState path (regionMove destinations): ${JSON.stringify(path)}`);
         tc.assertEqual('the bot crossed OUT of the atlas room through its door (gameState path: region_2_3, region_3_3)',

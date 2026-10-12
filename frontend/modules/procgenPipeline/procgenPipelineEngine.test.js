@@ -3774,8 +3774,11 @@ describe('arrangeShuffledSpiral', () => {
         const { grid } = arrangeShuffledSpiral(defaultConfig({
             seed: 3,
             growthParams: { substrateQuotas: { jta: 3, maze: 2 }, startSubstrate: 'jta' },
-            itemPool: { key_red: 4 },
-            obstaclePool: { door_red: 4 },
+            // ⚖ The item layer refuses a pool its item-holding regions cannot
+            // hold: two maze regions hold 2 × 2 slots, one of them the goal's
+            // (jta declares one; its zone locations are off here).
+            itemPool: { key_red: 3 },
+            obstaclePool: { door_red: 3 },
         }));
         const pairs = [];
         for (const region of grid.allRegions()) {
@@ -3794,8 +3797,11 @@ describe('arrangeShuffledSpiral', () => {
     it('start substrate pin lands on the startCell', () => {
         const { grid, startCell } = arrangeShuffledSpiral(defaultConfig({
             growthParams: { substrateQuotas: { jta: 3, maze: 2 }, startSubstrate: 'maze' },
-            itemPool: { key_red: 4 },
-            obstaclePool: { door_red: 4 },
+            // ⚖ The item layer refuses a pool its item-holding regions cannot
+            // hold: two maze regions hold 2 × 2 slots, one of them the goal's
+            // (jta declares one; its zone locations are off here).
+            itemPool: { key_red: 3 },
+            obstaclePool: { door_red: 3 },
         }));
         const startRegion = grid.getRegion(startCell);
         expect(startRegion.substrate).toBe('maze');
@@ -3804,8 +3810,11 @@ describe('arrangeShuffledSpiral', () => {
     it('runs end-to-end into buildRulesJson without errors', () => {
         const { grid, startCell } = arrangeShuffledSpiral(defaultConfig({
             growthParams: { substrateQuotas: { jta: 4, maze: 2 }, startSubstrate: 'jta' },
-            itemPool: { key_red: 4 },
-            obstaclePool: { door_red: 4 },
+            // ⚖ The item layer refuses a pool its item-holding regions cannot
+            // hold: two maze regions hold 2 × 2 slots, one of them the goal's
+            // (jta declares one; its zone locations are off here).
+            itemPool: { key_red: 3 },
+            obstaclePool: { door_red: 3 },
         }));
         const rules = buildRulesJson(grid, { startCell, seed: 1 });
         expect(rules.regions['1']).toBeTruthy();

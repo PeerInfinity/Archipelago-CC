@@ -75,7 +75,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "victory",
+              "name": "Victory",
               "player": 1,
               "advancement": true,
               "type": "progression"
@@ -103,8 +103,8 @@
           "Everything"
         ]
       },
-      "victory": {
-        "name": "victory",
+      "Victory": {
+        "name": "Victory",
         "id": 2,
         "classification": "progression",
         "groups": [
@@ -121,7 +121,7 @@
   "itempool_counts": {
     "1": {
       "Progressive Swim": 1,
-      "victory": 1
+      "Victory": 1
     }
   },
   "world": {
@@ -135,7 +135,7 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "victory"
+        "item": "Victory"
       }
     }
   },
@@ -149,7 +149,7 @@
   "canonical_placements": {
     "1": {
       "region_2_2__loc_0__5_3": "Progressive Swim",
-      "region_3_2__loc_0": "victory"
+      "region_3_2__loc_0": "Victory"
     }
   },
   "progression_mapping": {
@@ -643,7 +643,7 @@
           "locations": [
             {
               "name": "region_3_2__loc_0",
-              "item": "victory",
+              "item": "Victory",
               "cell": {
                 "tx": 2,
                 "ty": 3
@@ -704,7 +704,7 @@
           {
             "sphere": 2,
             "items": [
-              "victory"
+              "Victory"
             ]
           }
         ]
@@ -841,10 +841,10 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "victory": 1
+              "Victory": 1
             },
             "resolved_items": {
-              "victory": 1
+              "Victory": 1
             }
           },
           "new_accessible_locations": [],

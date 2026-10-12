@@ -48,7 +48,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
         },
         {
-            "fields": 36,
+            "fields": 37,
             "id": "jta",
             "label": "JtA",
             "registeredBy": "frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js"
@@ -60,7 +60,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
         },
         {
-            "fields": 23,
+            "fields": 26,
             "id": "noiz2sa",
             "label": "Noiz2sa",
             "registeredBy": "frontend/modules/noiz2saSubstrate/noiz2saSubstrateLibrary.js"
@@ -175,19 +175,20 @@ export const REGISTRY = frz({
         },
         {
             "rows": [
-                "absorbsScenarioItems",
                 "applyPipelineConfig",
                 "emitsSpiralContent",
                 "extractZoneRules",
+                "fillerItem",
                 "getSpiralContent",
                 "onContentEdit",
                 "pipelineConfigFromParams",
                 "pipelineConfigKeys",
-                "placeVictoryIfMissing",
                 "recordablePipelineConfig",
+                "regionSourceDefault",
                 "restartWarp",
                 "rulesJsonBlocks",
                 "spiralContentConfigKey",
+                "spiralItemCapacity",
                 "victoryItem",
                 "zoneConfigFromSlot",
                 "zoneCount",
@@ -249,7 +250,7 @@ export const REGISTRY = frz({
                 "renderProcgenParams",
                 "startingInventory"
             ],
-            "title": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)"
+            "title": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)"
         }
     ],
     "libraries": [
@@ -334,86 +335,6 @@ export const REGISTRY = frz({
         }
     ],
     "rows": [
-        {
-            "carriedBy": [
-                "jta"
-            ],
-            "cells": [
-                {
-                    "id": "bounce",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash_seedling_gen",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "jta",
-                    "present": true,
-                    "short": "no",
-                    "type": "boolean",
-                    "value": false
-                },
-                {
-                    "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "noiz2sa",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "text_adventure",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                }
-            ],
-            "documentedHow": "table",
-            "group": "Build-time — content sources (zone-based substrates)",
-            "name": "absorbsScenarioItems"
-        },
         {
             "carriedBy": [
                 "bounce",
@@ -832,7 +753,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "backPortalGated"
         },
         {
@@ -912,7 +833,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "buildLibraryRegionParams"
         },
         {
@@ -993,7 +914,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "buildRegionContract"
         },
         {
@@ -1076,7 +997,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "buildRegionParams"
         },
         {
@@ -1158,7 +1079,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "buildZoneSpecs"
         },
         {
@@ -1241,7 +1162,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "canHostExitGates"
         },
         {
@@ -1321,7 +1242,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "canHostExitGatesBraid"
         },
         {
@@ -1788,7 +1709,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "defaultProcgenParams"
         },
         {
@@ -2042,7 +1963,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "driftItems"
         },
         {
@@ -2205,7 +2126,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "exitGateVeto"
         },
         {
@@ -2488,6 +2409,86 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "noiz2sa"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": true,
+                    "short": "Noiz2sa Star",
+                    "type": "string",
+                    "value": "Noiz2sa Star"
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "fillerItem"
+        },
+        {
+            "carriedBy": [
                 "bounce",
                 "runner"
             ],
@@ -2564,7 +2565,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "gateHostingHint"
         },
         {
@@ -2651,7 +2652,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "gateableItems"
         },
         {
@@ -2740,6 +2741,8 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "flash_seedling",
+                "jta",
+                "noiz2sa",
                 "runner"
             ],
             "cells": [
@@ -2773,9 +2776,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "jta",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -2787,9 +2790,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "noiz2sa",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -2815,7 +2818,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "generateZoneForSpecs"
         },
         {
@@ -2896,7 +2899,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "generateZoneForSpecsGen"
         },
         {
@@ -3226,7 +3229,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "hostsSurplusExitsNatively"
         },
         {
@@ -3973,7 +3976,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "libraryItems"
         },
         {
@@ -5715,86 +5718,6 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
-                "jta"
-            ],
-            "cells": [
-                {
-                    "id": "bounce",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash_seedling_gen",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "jta",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
-                    "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "noiz2sa",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "text_adventure",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                }
-            ],
-            "documentedHow": "table",
-            "group": "Build-time — content sources (zone-based substrates)",
-            "name": "placeVictoryIfMissing"
-        },
-        {
-            "carriedBy": [
                 "flash_seedling",
                 "flash_seedling_gen"
             ],
@@ -5952,7 +5875,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "prepareSphereGrowth"
         },
         {
@@ -6114,7 +6037,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "procgenParamsFromPayload"
         },
         {
@@ -6382,6 +6305,86 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "jta"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "zone",
+                    "type": "string",
+                    "value": "zone"
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "regionSourceDefault"
+        },
+        {
+            "carriedBy": [
                 "maze"
             ],
             "cells": [
@@ -6457,7 +6460,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "renderLibraryProcgenParams"
         },
         {
@@ -6543,7 +6546,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "renderProcgenParams"
         },
         {
@@ -7517,6 +7520,87 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "jta",
+                "noiz2sa"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "spiralItemCapacity"
+        },
+        {
+            "carriedBy": [
                 "bounce"
             ],
             "cells": [
@@ -7594,7 +7678,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "table",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
             "name": "startingInventory"
         },
         {

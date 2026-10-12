@@ -11384,7 +11384,7 @@ async function freeAZoneAndOpenJtaForm(testController, panel, holder, onto) {
  * ⛓⛓ **(a) THE SOURCE ROW OFFERS ZONE N FOR A JTA TARGET AND NOT FOR A NON-ZONE ONE**
  * — `jta_dataset_test` `region_1_0`: pick a non-zone realiser (derived) → its
  * Source row has no Zone N; pick `jta` back → Generate · Zone N, opened on the
- * zone (jta has no realiser); no seed row under the zone.
+ * zone (jta's `regionSourceDefault`); no seed row under the zone.
  */
 export async function apworldTheSourceRowOffersZoneNForAJtaTargetOnly(testController) {
     try {
@@ -11403,7 +11403,7 @@ export async function apworldTheSourceRowOffersZoneNForAJtaTargetOnly(testContro
         testController.assertEqual('⛓⛓ `jta`: the Source row = the flow\'s sources for the target (derived)',
             JSON.stringify(want), JSON.stringify(sourcesOf()));
         testController.reportCondition('…and it includes Zone N', want.includes(REGION_SOURCE_KINDS.ZONE));
-        testController.assertEqual('⛓ the form opens on the zone (jta has no realiser)', REGION_SOURCE_KINDS.ZONE,
+        testController.assertEqual('⛓ the form opens on the zone (jta declares it its default)', REGION_SOURCE_KINDS.ZONE,
             String(regionGenSection(region)?.dataset.source));
         testController.reportCondition('⛓ no seed row under Zone N',
             !regionGenSection(region)?.querySelector('.procgen-region-generation-form'));
@@ -11780,8 +11780,9 @@ const rerollButton = (region, host = null) => document.querySelector(`${PANEL_SE
  * at the counter's seed and records nothing; Generate lands one op at that seed;
  * a second Re-roll opens at the NEXT seed and its Generate lands a DIFFERENT
  * entry (two re-rolls differ — the seed-not-advanced mutant's witness). A region
- * whose substrate has no realiser (`jta_dataset_test`): the button is disabled
- * with the op's own sentence in its title.
+ * whose substrate has no realiser (`omsi_substrate_test`'s omsi `region_1_1`;
+ * ⛓ spiral victory: jta realises a spec since, so a jta region no longer serves):
+ * the button is disabled with the op's own sentence in its title.
  */
 export async function apworldReRollOpensTheFormOnTheOwnSubstrateAtTheNextSeed(testController) {
     try {
@@ -11831,12 +11832,13 @@ export async function apworldReRollOpensTheFormOnTheOwnSubstrateAtTheNextSeed(te
         testController.assertEqual('⛓⛓⛓ the second re-roll is the NEXT seed', String(rolls[0].seed + 1), String(rolls[1].seed));
         testController.reportCondition('⛓⛓⛓ …and lands a DIFFERENT entry (two re-rolls differ)', rolls[0].entry !== rolls[1].entry);
 
-        const jta = await openHubOnDocument(testController, JTA_DATASET_PATH, '1', region);
-        if (!jta) return testController.getOverallResult();
-        const facts = regionRerollFacts(jta.rulesDoc, '1', region);
+        const noRealiser = 'region_1_1';
+        const omsi = await openHubOnDocument(testController, LOOP_COSTS_WRITEBACK_PRESET_PATH, '1', noRealiser);
+        if (!omsi) return testController.getOverallResult();
+        const facts = regionRerollFacts(omsi.rulesDoc, '1', noRealiser);
         testController.reportCondition(`⛓ premise: \`${facts.substrate}\` is refused by the op`, !!facts.refusal);
-        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, jta, '1'));
-        const off = await testController.pollForValue(() => rerollButton(region, 'regions'), 'Re-roll ▸ on the jta block', 8000, 50);
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, omsi, '1'));
+        const off = await testController.pollForValue(() => rerollButton(noRealiser, 'regions'), 'Re-roll ▸ on the omsi block', 8000, 50);
         testController.reportCondition('⛓⛓ a no-realiser region\'s Re-roll ▸ is DISABLED', !!off?.disabled);
         testController.assertEqual('⛓⛓ …with the op\'s own sentence in its title', String(facts.refusal), String(off?.title));
     } catch (error) {

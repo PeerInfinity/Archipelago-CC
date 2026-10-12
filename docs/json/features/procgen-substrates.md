@@ -10,7 +10,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**29 statements · 10 substrates · 38 registry fields read (41 of the developer matrix's 90, counting the parents of the fields read) · 49 not yet read.**
+**29 statements · 10 substrates · 38 registry fields read (41 of the developer matrix's 91, counting the parents of the fields read) · 50 not yet read.**
 
 ## Play
 
@@ -46,9 +46,9 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 | | What you can do | Bounce Demo | Flash | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Runner Demo | Text Adventure |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| G1 | The pipeline can build regions of it | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✗ only as content from its own game | ✓ grown to order | ✗ only as content from its own game | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ grown to order |
+| G1 | The pipeline can build regions of it | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ grown to order |
 | G2 | How many ready-made rooms / levels it brings | ✓ 5 | ✗ | ✓ 4 Atlas rooms | n/a | ✓ 30 | n/a | ✓ 3 Noiz2sa segments | ✓ 1 | ✓ 6 | n/a |
-| G3 | Generates quickly | ✓ | n/a | ✓ | ✓ | n/a | ✓ | n/a | n/a | ✗ its generation cost is declared `heavy` | ✓ |
+| G3 | Generates quickly | ✓ | n/a | ✓ | ✓ | ✓ | ✓ | ✓ | n/a | ✗ its generation cost is declared `heavy` | ✓ |
 | G4 | Its rooms can be captured into a library and reused | ✓ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✓ | ✗ |
 | G5 | Exits can be locked behind items | ✓ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ | ✓ | ✓ |
 | G6 | It has its own settings in the generation form | ✓ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ |
@@ -194,7 +194,9 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Loop mode* — It shares the loop-mode mana pool
 - *Loop mode* — It shares consumable items with other substrates: its list comes from the running game — see the Substrate Registry panel
 - *Loop mode* — Recorded actions are named in the game's own words
+- *Generate* — The pipeline can build regions of it: picked from its own levels to fit the plan
 - *Generate* — How many ready-made rooms / levels it brings: 30
+- *Generate* — Generates quickly
 - *Generate* — It has its own settings in the generation form
 - *Generate* — A world of it can start with an empty inventory
 - *Edit* — An exit can be moved to another side (and a side can hold more than one): and a side can hold more than one
@@ -240,7 +242,9 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Loop mode* — Instant fast-forward: always — a replay is already instant
 - *Loop mode* — A Bot block can play it for you: the game's own automation walks it
 - *Loop mode* — You can play it outside loop mode
+- *Generate* — The pipeline can build regions of it: picked from its own levels to fit the plan
 - *Generate* — How many ready-made rooms / levels it brings: 3 Noiz2sa segments
+- *Generate* — Generates quickly
 - *Generate* — It has its own settings in the generation form
 - *Generate* — A world of it can start with an empty inventory
 - *Edit* — An exit can be moved to another side (and a side can hold more than one): and a side can hold more than one
@@ -314,8 +318,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 ## Fields no statement reads yet
 
-49 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
+50 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
 
-`absorbsScenarioItems`, `applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `loopSupport.playClock`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `placeVictoryIfMissing`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionGeometry`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
+`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `fillerItem`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `loopSupport.playClock`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionGeometry`, `regionSourceDefault`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `spiralItemCapacity`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
 
 <!-- GENERATED:substrate-capability-chart END -->

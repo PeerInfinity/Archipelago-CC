@@ -3196,7 +3196,7 @@ export class ProcgenPipelineUI {
     // Registered substrates sphere growth can realise: procedural
     // (generateRegionCore) or spec-targeted zone (generateZoneForSpecs[Gen]). NOT
     // limited to the quota mix, so a per-region override can pick any usable
-    // substrate. Excludes zone-count-only (jta) and opaque (flash) substrates,
+    // substrate. Excludes zone-count-only (omsi) and opaque (flash) substrates,
     // which the grow loop rejects. The test is procgenCore's
     // regionRealiserKind — the hub's Initialise targets and the capability
     // chart ask the same function.
