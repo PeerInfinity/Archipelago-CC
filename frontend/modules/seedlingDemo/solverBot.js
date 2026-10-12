@@ -101,6 +101,8 @@ import {
     WAIT_AFTER_PRESS_TICKS, assertWaitCovers, rockBreaksUnder,
     ARROW, arrowLaneForPlacement, arrowLaneRect, arrowTrapFires,
     bridgedChaserTags, chaserBoxAt, chaserHasSword, killWindowTicks,
+    // ⛓ STRIKELAPSE D1: a corpse's removal clock (`createCorpseClock`).
+    deathTicks, removalTicksAfterHit,
     DESTROYING_TILE_TYPES,
     rect, rectsOverlap, TILE_SIZE,
     ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET, contactPricing, contactRect,
@@ -145,8 +147,6 @@ import {
     WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb,
     createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
 } from './solverView.js';
-import { deathTicks } from './chasers.js';
-import { removalTicksAfterHit } from './enemyDamage.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseHazardCanReach, phaseHazardHit,
