@@ -563,6 +563,7 @@ A host jump that crosses into a room the preset binds is a crossing to the regio
   - a continuation whose goal maps to no solver goal (`continuation-refused`);
   - a shadow mismatch (`shadow-mismatch`);
   - the X-split rule (`x-split`, `primarySplitRefusal`). A tape's span releases its keys at the finish, so a continuation that opens on `primary` (X) after a tape that held it would be a fresh `Input.pressed`, a swing the model never planned.
+  - a continuation after a forced hit (`forced-hit-continuation`, `forcedHitContinuationRefusal`). This is interim. A plan whose solve billed a forced crossing carries `forcedHits` and `damage` (the player's hits where the plan ends), and the held room keeps that `damage`. While it holds hits ≥ 1 and no door has replaced the room, the next goal there is refused by name. No staging field carries the player's hits, so a re-staged room would plan from 0 hits while the game holds them. The forced re-arrival builds a new `Player` with 0 hits, so the plan from it agrees with the game. When a staging field for the player's hits lands (fidelity's wave-14 candidate STAGED PLAYER HITS), the staging reads `botStatus.hits` and this rule retires.
 
   A divergence is W3's recovery, unchanged.
 - **Every pause releases.** `stop()` releases the hold, because a held room ignores human input. That covers the bot's ⏸, its `finished` and `error:` stops, and the substrate change on a crossing.
