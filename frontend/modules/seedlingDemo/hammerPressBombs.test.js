@@ -12,6 +12,11 @@
  * solver's own walk for leg 381 from the atlas arrival, recorded on the game to t1150) to the tick the press kill began
  * (t1099) and to t1150, six ticks before the blast, and ask the two derivations OFF against ON. The control is P1's
  * staging A, a room the lobber never reaches: ON derives exactly what OFF derives.
+ *
+ * ⛓ THE GAME WITNESS (D2): `fixtures/hammer-bw-bombstand-witness/` holds the ON plan for leg 381 (MOVING_WAIT ON;
+ * `scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs`, cut one tick before #10's blast on `bob@272,112`) and the
+ * GAME's rows of it (p4f, headless, damage on, `probe-seedling-bombpusher.mjs --out`, compacted by the plan script's
+ * `--samples`). The model replays the tape and meets the game's player, hits and bombs at every sampled tick.
  */
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
@@ -106,6 +111,45 @@ describe('PRESS_KILL_BOMBS — leg 381 (the MOVINGWAIT witness walk)', () => {
         });
         expect(Object.values(PRESS_KILL_BOMBS_COUNTS).every((n) => n === 0)).toBe(true);
     }, 120_000);
+});
+
+describe('PRESS_KILL_BOMBS — the ON plan for leg 381, on the game', () => {
+    const DIR = './fixtures/hammer-bw-bombstand-witness/hammer-bw-l42-381-bombstand';
+    const tape = parseTape(readFileSync(new URL(`${DIR}.tape.json`, import.meta.url), 'utf8'));
+    const game = JSON.parse(readFileSync(new URL(`${DIR}.game.json`, import.meta.url), 'utf8'));
+
+    it('the model replays the witness tape and meets the game at every sampled tick: the player to the bit, no hit, '
+        + 'every Bomb to the bit', () => {
+        const cams = new Map(game.samples.map((g) => [g.t, g.cam]));
+        let run = null;
+        const st = createTapeStepper(tape, { levelSource: atlasLevelSource(), onTick: (t, s, h, rn) => { run = rn; },
+            cameraWitness: (t) => cams.get(t) ?? null });
+        const model = new Map();
+        for (let r = st.next(); !r.done; r = st.next()) {
+            const o = r.value.observation;
+            model.set(o.t, { p: [o.x, o.y], hits: run.ledger('playerHits').filter((h) => h.t <= o.t).length,
+                bombs: run.entities('bombs').filter((b) => !b.removed).map((b) => [b.x, b.y, b.v.x, b.v.y]) });
+        }
+        expect(game.samples.length).toBe(1289);
+        const parted = [];
+        for (const g of game.samples) {
+            const m = model.get(g.t);
+            const same = m && m.p[0] === g.p[0] && m.p[1] === g.p[1] && m.hits === g.hits
+                && JSON.stringify(m.bombs) === JSON.stringify(g.bombs);
+            if (!same) parted.push(g.t);
+        }
+        expect(parted).toEqual([]);
+        expect(game.samples.every((g) => g.hits === 0)).toBe(true);
+        // t1156: #7 explodes at (255,187); the player stands on the new stance, outside its 15 px disc
+        const at = game.samples.find((g) => g.t === 1156);
+        expect(Math.hypot(at.p[0] - 255, at.p[1] - 187)).toBeGreaterThan(15);
+    }, 120_000);
+
+    it('the tape is the plan script\'s (its description names the blasts and the one landing)', () => {
+        expect(tape.tick_count).toBe(1293);
+        expect(tape.description).toMatch(/landings t1154 spinner@192,128 hits 1/);
+        expect(tape.description).toMatch(/player hits 0/);
+    });
 });
 
 describe('PRESS_KILL_BOMBS — a room the lobber does not reach derives as OFF', () => {
