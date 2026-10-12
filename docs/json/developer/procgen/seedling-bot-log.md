@@ -16519,6 +16519,41 @@ preview and drive parted at t53: `chaserForecastNow` never ran K2's `LavaRunner`
 - **A body read through the player is still a witness.** The game cannot report a `FallRock`; a player who rests on
   its top for twelve ticks at 0 px is the rock's position and solidity, measured.
 
+
+### Seedling fidelity FLIP14 — five switches ON; the flip moves more than its measured list, and the campaign's re-record reaches the hammer room
+
+Wave 14's flip (⚖ the user, 2026-10-12: `strikeIframeLapse`, `fallRockPostFall`, `forecastSpeedByTerrain` "All three
+ON"; `totemShotBlastInt`, `rebootShake` "Both ON"; `movingWait` stays OFF). Report:
+`CC/docs/cloud-reports/seedling-fidelity-flip14.md`.
+
+**D1 — the flip and its re-pins.** The five defaults ON in `contactFidelity.js`; the `SEEDLING_*=0` opt-outs kept. The
+licensed list (21 `strikeIframeLapse` rows, 3 `fallRockPostFall` controls, the default pins) was exact on the bounded
+set, plus one JS-arc control the list did not name (`seedlingWasmPlayback`'s L74 SILENT STALL: it provoked the room
+build's throw with a cleared non-arena `fallrock`, which ON is built fallen). CI then found **9 more** (`fidelityDash` 4,
+`seedlingRobust` 4, `spearPush` 1): all L16/L65 plans the game witnessed under the pre-flip gate. Rule applied: a row
+whose plan IS a game witness keeps its assertion as an OFF control (solve and replay both inside
+`withContactFidelity({strikeIframeLapse: false}, …)`); a model-only value is re-pinned with its old value named; an
+ON row is added where it is cheap. CI at `0168ce8`: 20,151 / 20,151, slow 253 / 253.
+
+**The survey, measured locally** (`survey-seedling-route.mjs --through=end --route=full`, base and head; the base
+reproduces CI run 38168138687 row for row): SOLVED 169 → **167**. Step 50 (L30 → L32, BOBSOLDIER2's staging) SOLVED
+460 → REFUSED (the walk gate at (71.04,67.07) for `bobsoldier@48,80`), step 62 (L45 → L46) SOLVED 386 → REFUSED (a walk
+stall at waypoint (120,72)); 22 rows change ticks; 7 refusals change their text. None newly solves.
+
+**D2 — the campaign re-record: STOP.** The producer cannot re-solve `r9-solve-14`/`-16` without the windows after them:
+`-18` boots from `-16`'s new GAME latch and re-solves 518 → **440 t** (L18 is phase-sensitive; its kill-lock clear moves
+t467 → t406, so `playthroughWalk`'s provenance row and `fidelityF1c`'s residue pin (40 → 12) move with it), and `-12`'s
+inputs move at the same 2364 t. Measured anyway, and held as a patch: every one of the 15 moved tapes recorded on p4f
+headless with the model reproducing it, the whole 30-window chain ALL CHECKS PASSED (879), the producer `--check` exit 0.
+
+**Trap candidates.**
+- **A `--check` that reads its committed boots cannot see a cascade.** The licensed digest moved 14 and 16; the write
+  path re-boots every successor from the game, and an L18 walk that depends on the clock moved with it.
+- **A measured mover list is a floor.** The bounded set found the licensed 21; CI found 9 more in the same room (L16)
+  under other names. A tape's name in a test (`dash-l16-sword-all`, `robust-*`) is a pin on the flip.
+- **A strike gate that admits earlier kills is not uniformly better for the plan.** Step 50 and step 62 newly refuse;
+  `bob`/`jellyfish` got slower in the ENEMY census.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the

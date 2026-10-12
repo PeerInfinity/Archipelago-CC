@@ -1,0 +1,854 @@
+[
+ {
+  "step": "16",
+  "level": 14,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 32,
+     "y": 64
+    },
+    "why": "stairsdown@32,64 \u2192 L15"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 98,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 103,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "18",
+  "level": 16,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 112,
+     "y": 64
+    },
+    "why": "stairsdown@112,64 \u2192 L17"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 117,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 124,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "19",
+  "level": 17,
+  "goals": [
+   {
+    "kind": "collect-placement",
+    "placement": {
+     "x": 128,
+     "y": 16
+    },
+    "why": "Level 017 - Chest (sphere 0.3) \u2192 Seal",
+    "location": "Level 017 - Chest"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 122,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 132,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "24",
+  "level": 14,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 32,
+     "y": 64
+    },
+    "why": "stairsdown@32,64 \u2192 L15"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 98,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 103,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "26",
+  "level": 16,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 352,
+     "y": 80
+    },
+    "why": "stairsup@352,80 \u2192 L18"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 688,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 655,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "35",
+  "level": 14,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 32,
+     "y": 64
+    },
+    "why": "stairsdown@32,64 \u2192 L15"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 98,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 103,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "37",
+  "level": 16,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 352,
+     "y": 80
+    },
+    "why": "stairsup@352,80 \u2192 L18"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 688,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 655,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "50",
+  "level": 30,
+  "goals": [
+   {
+    "kind": "collect-placement",
+    "placement": {
+     "x": 64,
+     "y": 64
+    },
+    "why": "Level 030 - Torchpickup (sphere 2.4) \u2192 Light",
+    "location": "Level 030 - Torchpickup"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 224,
+     "y": 160
+    },
+    "why": "stairsup@224,160 \u2192 L32"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 460,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-50) reach-exit (224,160)->L32: the danger map forbids (71.03592737459479,67.06629003787809) \u2014 chaser:bobsoldier@48,80 (the BobSoldier's 8x8 body, bare, one forecast tick on (its sword is timed)). Slice 2 has NO DODGE POLICY (kickoff \u00a74: combat is slice 3); sensing and refusing loudly is the whole of this slice's danger response.",
+   "family": "unclassified \u2014 see the refusal text"
+  }
+ },
+ {
+  "step": "52",
+  "level": 30,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 64,
+     "y": 0
+    },
+    "why": "teleporter@64,0 \u2192 L22"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 347,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 320,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "57",
+  "level": 12,
+  "goals": [
+   {
+    "kind": "collect-placement",
+    "placement": {
+     "x": 320,
+     "y": 816
+    },
+    "why": "Level 012 - Chest (sphere 4.1) \u2192 Seal",
+    "location": "Level 012 - Chest"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 592,
+     "y": 0
+    },
+    "why": "teleporter@592,0 \u2192 L37"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-57) chest (320,816) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-57) chest (320,816) stance waypoint 13 (328,834): the route entered a proximity-hazard \u2014 chest at (320,816) in level 12 \u2014 at (327.81855280227217,835.6399036521572). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught."
+  },
+  "after": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-57) chest (320,816) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-57) chest (320,816) stance waypoint 13 (328,834): the route entered a proximity-hazard \u2014 chest at (320,816) in level 12 \u2014 at (328.6670530633372,835.8463944777346). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.",
+   "family": "unclassified \u2014 see the refusal text"
+  }
+ },
+ {
+  "step": "62",
+  "level": 45,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 112,
+     "y": 0
+    },
+    "why": "teleporter@112,0 \u2192 L46"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 386,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-62) reach-exit (112,0)->L46: the re-planned corridor failed too \u2014 solverBot(survey-step-62) reach-exit (112,0)->L46 waypoint 4 (120,72): not reached within 400 ticks; stalled at (121.19103006512877,72.70922695507937) v=(0.95,0) in level 45, aiming at (120,72).",
+   "family": "unclassified \u2014 see the refusal text"
+  }
+ },
+ {
+  "step": "69",
+  "level": 14,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 32,
+     "y": 64
+    },
+    "why": "stairsdown@32,64 \u2192 L15"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 103,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 117,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "71",
+  "level": 14,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 176,
+     "y": 64
+    },
+    "why": "stairsup@176,64 \u2192 L13"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 66,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 55,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "74",
+  "level": 12,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 592,
+     "y": 0
+    },
+    "why": "teleporter@592,0 \u2192 L37"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 921,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 953,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "80",
+  "level": 12,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 592,
+     "y": 0
+    },
+    "why": "teleporter@592,0 \u2192 L37"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 921,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 953,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "104",
+  "level": 60,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 160,
+     "y": 80
+    },
+    "why": "teleporter@160,80 \u2192 L61"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 483,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 530,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "110",
+  "level": 60,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 0,
+     "y": 80
+    },
+    "why": "teleporter@0,80 \u2192 L59"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-110) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 178-tick bound (0 guard step(s)); it stands at (122.0,86.2), 31.2 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+  },
+  "after": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-110) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 179-tick bound (0 guard step(s)); it stands at (121.9,84.6), 31.3 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find).",
+   "family": "unclassified \u2014 see the refusal text"
+  }
+ },
+ {
+  "step": "135",
+  "level": 12,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 592,
+     "y": 0
+    },
+    "why": "teleporter@592,0 \u2192 L37"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 925,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 957,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "145",
+  "level": 60,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 160,
+     "y": 80
+    },
+    "why": "teleporter@160,80 \u2192 L61"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 523,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 497,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "148",
+  "level": 65,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 184,
+     "y": 64
+    },
+    "why": "teleporter@184,64 \u2192 L68"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 539,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 546,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "153",
+  "level": 60,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 0,
+     "y": 80
+    },
+    "why": "teleporter@0,80 \u2192 L59"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-153) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 189-tick bound (0 guard step(s)); it stands at (122.0,82.7), 31.2 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+  },
+  "after": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-153) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 191-tick bound (0 guard step(s)); it stands at (121.9,82.5), 31.4 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find).",
+   "family": "unclassified \u2014 see the refusal text"
+  }
+ },
+ {
+  "step": "161",
+  "level": 75,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 64,
+     "y": 0
+    },
+    "why": "teleporter@64,0 \u2192 L74"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-161) reach-exit (64,0)->L74: the combat ladder is EXHAUSTED. The corridor passes through danger at (104.3,160.6) \u2014 hazard:spinningaxe@80,144 (a SpinningAxe's 32 px blade on its update 124 of this visit (rate -6, 336\u00b0) \u2014 the exact `collideLine`/`collideRect` at THIS tick, not the disc) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 9 volume(s) forbidden \u2014 no walkable tile path in level 75 from tile (4,13) to (4,0). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water,\n  dodge: no stall of one revolution or less at the doorstep or 7 earlier walk-offset(s) (step 4) clears the corridor of hazard:spinningaxe@80,144 (a SpinningAxe's 32 px blade on its update 124 of this visit (rate -6, 336\u00b0) \u2014 the exact `collideLine`/`collideRect` at THIS tick, not the disc) (1664 preview(s)); and bent through via cells: no corridor bent through at most 2 via cell(s) of the 29 the walk can plan to probes clean: 60 candidate corridor(s) previewed with the bodies stepped against each, 2 prefix(es) dangerous before their last via, 60 preview(s) of the 60 bound spent and 355 leg(s) of the 500 planned, 193 candidate(s) left unasked.\n  time: the aim is 208 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor \u2014 the danger on this corridor is [hazard:spinningaxe@80,144] and this room's live roster is [lavarunner@8,112, lavarunner@104,64]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body this run can watch die \u2014 a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and \u26d4 a static \"Enemy\" body's own arrow death is REFUSED by name (\u00a711.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)\n  forced-hit: no forced hit is proven from (72.0,216.0): 1296 prefix(es) of 2 tick(s) are still hitless (first [\u00b7 \u00b7]), and depth 3 needs 46656 more fork step(s) than the budget's 668 \u2014 a search that gave up is not a proof (1332 fork step(s))"
+  },
+  "after": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-161) reach-exit (64,0)->L74: the combat ladder is EXHAUSTED. The corridor passes through danger at (104.3,160.6) \u2014 hazard:spinningaxe@80,144 (a SpinningAxe's 32 px blade on its update 124 of this visit (rate -6, 336\u00b0) \u2014 the exact `collideLine`/`collideRect` at THIS tick, not the disc) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 9 volume(s) forbidden \u2014 no walkable tile path in level 75 from tile (4,13) to (4,0). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water,\n  dodge: no stall of one revolution or less at the doorstep or 7 earlier walk-offset(s) (step 4) clears the corridor of hazard:spinningaxe@80,144 (a SpinningAxe's 32 px blade on its update 124 of this visit (rate -6, 336\u00b0) \u2014 the exact `collideLine`/`collideRect` at THIS tick, not the disc) (1711 preview(s)); and bent through via cells: no corridor bent through at most 2 via cell(s) of the 29 the walk can plan to probes clean: 60 candidate corridor(s) previewed with the bodies stepped against each, 2 prefix(es) dangerous before their last via, 60 preview(s) of the 60 bound spent and 355 leg(s) of the 500 planned, 193 candidate(s) left unasked.\n  time: the aim is 208 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor \u2014 the danger on this corridor is [hazard:spinningaxe@80,144] and this room's live roster is [lavarunner@8,112, lavarunner@104,64]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body this run can watch die \u2014 a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and \u26d4 a static \"Enemy\" body's own arrow death is REFUSED by name (\u00a711.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)\n  forced-hit: no forced hit is proven from (72.0,216.0): 1296 prefix(es) of 2 tick(s) are still hitless (first [\u00b7 \u00b7]), and depth 3 needs 46656 more fork step(s) than the budget's 668 \u2014 a search that gave up is not a proof (1332 fork step(s))",
+   "family": "LADDER \u2014 every rung of \u2696 \u00a711.8a's order refused; see the per-rung reasons"
+  }
+ },
+ {
+  "step": "163",
+  "level": 75,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 64,
+     "y": 224
+    },
+    "why": "teleporter@64,224 \u2192 L71"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 364,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 366,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "170",
+  "level": 77,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 0,
+     "y": 32
+    },
+    "why": "teleporter@0,32 \u2192 L76"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 480,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 475,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "180",
+  "level": 60,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 160,
+     "y": 80
+    },
+    "why": "teleporter@160,80 \u2192 L61"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 523,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 497,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "182",
+  "level": 63,
+  "goals": [
+   {
+    "kind": "collect-placement",
+    "placement": {
+     "x": 224,
+     "y": 80
+    },
+    "why": "Level 063 - Chest (sphere 10.1) \u2192 Seal",
+    "location": "Level 063 - Chest"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 0,
+     "y": 96
+    },
+    "why": "teleporter@0,96 \u2192 L61"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-182) chest (224,80) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-182) chest (224,80) stance waypoint 8 (232,98): the route entered a proximity-hazard \u2014 chest at (224,80) in level 63 \u2014 at (231.42059232475253,99.56561631252897). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught."
+  },
+  "after": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-182) chest (224,80) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-182) chest (224,80) stance waypoint 8 (232,98): the route entered a proximity-hazard \u2014 chest at (224,80) in level 63 \u2014 at (231.44803261173857,99.53174464956881). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.",
+   "family": "unclassified \u2014 see the refusal text"
+  }
+ },
+ {
+  "step": "184",
+  "level": 60,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 0,
+     "y": 80
+    },
+    "why": "teleporter@0,80 \u2192 L59"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-184) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 189-tick bound (0 guard step(s)); it stands at (122.0,82.7), 31.2 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+  },
+  "after": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-184) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 191-tick bound (0 guard step(s)); it stands at (121.9,82.5), 31.4 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find).",
+   "family": "unclassified \u2014 see the refusal text"
+  }
+ },
+ {
+  "step": "192",
+  "level": 80,
+  "goals": [
+   {
+    "kind": "collect-placement",
+    "placement": {
+     "x": 16,
+     "y": 128
+    },
+    "why": "Level 080 - Chest (sphere 10.2) \u2192 Seal",
+    "location": "Level 080 - Chest"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 32,
+     "y": 0
+    },
+    "why": "teleporter@32,0 \u2192 L71"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 666,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 671,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "201",
+  "level": 98,
+  "goals": [
+   {
+    "kind": "collect-placement",
+    "placement": {
+     "x": 160,
+     "y": 32
+    },
+    "why": "Level 098 - Chest (sphere 10.3) \u2192 Seal",
+    "location": "Level 098 - Chest"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 112,
+     "y": 112
+    },
+    "why": "stairsup@112,112 \u2192 L99"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-201) chest (160,32) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-201) chest (160,32) stance waypoint 3 (168,50): the route entered a proximity-hazard \u2014 chest at (160,32) in level 98 \u2014 at (168.58410205373937,51.54667847399531). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught."
+  },
+  "after": {
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-201) chest (160,32) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-201) chest (160,32) stance waypoint 3 (168,50): the route entered a proximity-hazard \u2014 chest at (160,32) in level 98 \u2014 at (168.27616840493704,51.13178205888758). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.",
+   "family": "unclassified \u2014 see the refusal text"
+  }
+ },
+ {
+  "step": "207",
+  "level": 104,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 0,
+     "y": 16
+    },
+    "why": "teleporter@0,16 \u2192 L105"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 268,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 261,
+   "refusal": null,
+   "family": null
+  }
+ },
+ {
+  "step": "208",
+  "level": 105,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 80,
+     "y": 144
+    },
+    "why": "teleporter@80,144 \u2192 L106"
+   }
+  ],
+  "boot": "r8-solve-11",
+  "before": {
+   "verdict": "SOLVED",
+   "ticks": 264,
+   "refusal": null
+  },
+  "after": {
+   "verdict": "SOLVED",
+   "ticks": 300,
+   "refusal": null,
+   "family": null
+  }
+ }
+]

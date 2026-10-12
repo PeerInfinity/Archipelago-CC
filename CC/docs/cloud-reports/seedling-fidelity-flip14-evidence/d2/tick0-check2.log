@@ -1,0 +1,143 @@
+## THE DERIVED SET — 35 segments over 3 multi-segment chains, read from PLAYTHROUGH_CHAINS
+  toy-west-pair  0/2 r7-ends-meet-1 bootL0   declared=NONE (true start) (never a continuation)
+  toy-west-pair  1/2 r7-ends-meet-2 bootL94  declared=4880 rng NOT COMPARABLE
+  r8-d2          0/3 r8-solve-18    bootL18  declared=8586 (never a continuation)
+  r8-d2          1/3 r8-d2-19       bootL19  declared=8969 rng ASSERTED
+  r8-d2          2/3 r8-d2-20       bootL20  declared=9885 rng ASSERTED
+  r9-campaign    0/30 r8-solve-1     bootL0   declared=NONE (true start) (never a continuation)
+  r9-campaign    1/30 r8-solve-2     bootL2   declared=5002 rng ASSERTED
+  r9-campaign    2/30 r8-solve-3     bootL3   declared=5069 rng ASSERTED
+  r9-campaign    3/30 r8-solve-4     bootL4   declared=5334 rng ASSERTED
+  r9-campaign    4/30 r8-solve-5     bootL5   declared=5609 rng ASSERTED
+  r9-campaign    5/30 r8-solve-6     bootL6   declared=6032 rng ASSERTED
+  r9-campaign    6/30 r8-solve-7     bootL7   declared=6346 rng ASSERTED
+  r9-campaign    7/30 r8-solve-8     bootL8   declared=6512 rng ASSERTED
+  r9-campaign    8/30 r8-solve-9     bootL9   declared=7359 rng ASSERTED
+  r9-campaign    9/30 r8-solve-10    bootL10  declared=7501 rng ASSERTED
+  r9-campaign   10/30 r9-solve-11    bootL11  declared=7754 rng ASSERTED
+  r9-campaign   11/30 r9-solve-3     bootL3   declared=8202 rng ASSERTED
+  r9-campaign   12/30 r9-solve-2     bootL2   declared=8374 rng ASSERTED
+  r9-campaign   13/30 r9-solve-0     bootL0   declared=8417 rng NOT COMPARABLE
+  r9-campaign   14/30 r9-solve-13    bootL13  declared=8582 rng ASSERTED
+  r9-campaign   15/30 r9-solve-14    bootL14  declared=8638 rng ASSERTED
+  r9-campaign   16/30 r9-solve-15    bootL15  declared=8761 rng ASSERTED
+  r9-campaign   17/30 r9-solve-16    bootL16  declared=9237 rng ASSERTED
+  r9-campaign   18/30 r9-solve-18    bootL18  declared=9912 rng ASSERTED
+  r9-campaign   19/30 r9-solve-19    bootL19  declared=10372 rng ASSERTED
+  r9-campaign   20/30 r9-solve-20    bootL20  declared=11288 rng ASSERTED
+  r9-campaign   21/30 r9-solve-13-v2 bootL13  declared=12018 rng ASSERTED
+  r9-campaign   22/30 r9-solve-0-v3  bootL0   declared=12086 rng NOT COMPARABLE
+  r9-campaign   23/30 r9-solve-12    bootL12  declared=12856 rng ASSERTED
+  r9-campaign   24/30 r9-solve-21    bootL21  declared=15160 rng ASSERTED
+  r9-campaign   25/30 r9-solve-22    bootL22  declared=15206 rng ASSERTED
+  r9-campaign   26/30 r9-solve-29    bootL29  declared=15315 rng ASSERTED
+  r9-campaign   27/30 r9-solve-31    bootL31  declared=15864 rng ASSERTED
+  r9-campaign   28/30 r9-solve-30    bootL30  declared=16220 rng ASSERTED
+  r9-campaign   29/30 r9-solve-32    bootL32  declared=16450 rng ASSERTED
+PASS: r7-ends-meet-1 carries a tick-0 latch — rng.seed 2258182, seam.time 4820
+PASS: r7-ends-meet-1 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+  ⚠ r7-ends-meet-1 is a TRUE START — it declares no `seam`, so its tick-0 clock (4820) has NO declared term to check against. The measured value is the whole answer.
+PASS: r7-ends-meet-2 carries a tick-0 latch — rng.seed 936602275, seam.time 4901
+PASS: r7-ends-meet-2 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r7-ends-meet-2's tick-0 clock is declared + bootCost — declared 4880 + 21 = 4901, measured 4901 (delta 21)
+PASS: r8-solve-18 carries a tick-0 latch — rng.seed 1310650305, seam.time 8607
+PASS: r8-solve-18 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r8-solve-18's tick-0 clock is declared + bootCost — declared 8586 + 21 = 8607, measured 8607 (delta 21)
+PASS: r8-d2-19 carries a tick-0 latch — rng.seed 1946990281, seam.time 8990
+PASS: r8-d2-19 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r8-d2-19's tick-0 clock is declared + bootCost — declared 8969 + 21 = 8990, measured 8990 (delta 21)
+PASS: r8-d2-20 carries a tick-0 latch — rng.seed 2032220659, seam.time 9906
+PASS: r8-d2-20 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r8-d2-20's tick-0 clock is declared + bootCost — declared 9885 + 21 = 9906, measured 9906 (delta 21)
+PASS: r8-solve-1 carries a tick-0 latch — rng.seed 2258182, seam.time 4820
+PASS: r8-solve-1 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+  ⚠ r8-solve-1 is a TRUE START — it declares no `seam`, so its tick-0 clock (4820) has NO declared term to check against. The measured value is the whole answer.
+PASS: r8-solve-2 carries a tick-0 latch — rng.seed 1410304934, seam.time 5023
+PASS: r8-solve-2 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r8-solve-2's tick-0 clock is declared + bootCost — declared 5002 + 21 = 5023, measured 5023 (delta 21)
+PASS: r8-solve-3 carries a tick-0 latch — rng.seed 1410304934, seam.time 5090
+PASS: r8-solve-3 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r8-solve-3's tick-0 clock is declared + bootCost — declared 5069 + 21 = 5090, measured 5090 (delta 21)
+PASS: r8-solve-4 carries a tick-0 latch — rng.seed 705152467, seam.time 5355
+PASS: r8-solve-4 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r8-solve-4's tick-0 clock is declared + bootCost — declared 5334 + 21 = 5355, measured 5355 (delta 21)
+PASS: r8-solve-5 carries a tick-0 latch — rng.seed 859895994, seam.time 5630
+PASS: r8-solve-5 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r8-solve-5's tick-0 clock is declared + bootCost — declared 5609 + 21 = 5630, measured 5630 (delta 21)
+PASS: r8-solve-6 carries a tick-0 latch — rng.seed 2051867618, seam.time 6053
+PASS: r8-solve-6 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r8-solve-6's tick-0 clock is declared + bootCost — declared 6032 + 21 = 6053, measured 6053 (delta 21)
+PASS: r8-solve-7 carries a tick-0 latch — rng.seed 2051867618, seam.time 6367
+PASS: r8-solve-7 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r8-solve-7's tick-0 clock is declared + bootCost — declared 6346 + 21 = 6367, measured 6367 (delta 21)
+PASS: r8-solve-8 carries a tick-0 latch — rng.seed 1452491000, seam.time 6533
+PASS: r8-solve-8 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r8-solve-8's tick-0 clock is declared + bootCost — declared 6512 + 21 = 6533, measured 6533 (delta 21)
+PASS: r8-solve-9 carries a tick-0 latch — rng.seed 1452491000, seam.time 7380
+PASS: r8-solve-9 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r8-solve-9's tick-0 clock is declared + bootCost — declared 7359 + 21 = 7380, measured 7380 (delta 21)
+PASS: r8-solve-10 carries a tick-0 latch — rng.seed 1452491000, seam.time 7522
+PASS: r8-solve-10 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r8-solve-10's tick-0 clock is declared + bootCost — declared 7501 + 21 = 7522, measured 7522 (delta 21)
+PASS: r9-solve-11 carries a tick-0 latch — rng.seed 1452491000, seam.time 7775
+PASS: r9-solve-11 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-11's tick-0 clock is declared + bootCost — declared 7754 + 21 = 7775, measured 7775 (delta 21)
+PASS: r9-solve-3 carries a tick-0 latch — rng.seed 726245500, seam.time 8223
+PASS: r9-solve-3 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-3's tick-0 clock is declared + bootCost — declared 8202 + 21 = 8223, measured 8223 (delta 21)
+PASS: r9-solve-2 carries a tick-0 latch — rng.seed 726245500, seam.time 8395
+PASS: r9-solve-2 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-2's tick-0 clock is declared + bootCost — declared 8374 + 21 = 8395, measured 8395 (delta 21)
+PASS: r9-solve-0 carries a tick-0 latch — rng.seed 1688770696, seam.time 8438
+PASS: r9-solve-0 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-0's tick-0 clock is declared + bootCost — declared 8417 + 21 = 8438, measured 8438 (delta 21)
+PASS: r9-solve-13 carries a tick-0 latch — rng.seed 1688770696, seam.time 8603
+PASS: r9-solve-13 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-13's tick-0 clock is declared + bootCost — declared 8582 + 21 = 8603, measured 8603 (delta 21)
+PASS: r9-solve-14 carries a tick-0 latch — rng.seed 328376930, seam.time 8659
+PASS: r9-solve-14 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-14's tick-0 clock is declared + bootCost — declared 8638 + 21 = 8659, measured 8659 (delta 21)
+PASS: r9-solve-15 carries a tick-0 latch — rng.seed 328376930, seam.time 8782
+PASS: r9-solve-15 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-15's tick-0 clock is declared + bootCost — declared 8761 + 21 = 8782, measured 8782 (delta 21)
+PASS: r9-solve-16 carries a tick-0 latch — rng.seed 463063377, seam.time 9258
+PASS: r9-solve-16 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-16's tick-0 clock is declared + bootCost — declared 9237 + 21 = 9258, measured 9258 (delta 21)
+PASS: r9-solve-18 carries a tick-0 latch — rng.seed 146381973, seam.time 9933
+PASS: r9-solve-18 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-18's tick-0 clock is declared + bootCost — declared 9912 + 21 = 9933, measured 9933 (delta 21)
+PASS: r9-solve-19 carries a tick-0 latch — rng.seed 1281150538, seam.time 10393
+PASS: r9-solve-19 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-19's tick-0 clock is declared + bootCost — declared 10372 + 21 = 10393, measured 10393 (delta 21)
+PASS: r9-solve-20 carries a tick-0 latch — rng.seed 1281150538, seam.time 11309
+PASS: r9-solve-20 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-20's tick-0 clock is declared + bootCost — declared 11288 + 21 = 11309, measured 11309 (delta 21)
+PASS: r9-solve-13-v2 carries a tick-0 latch — rng.seed 1281150538, seam.time 12039
+PASS: r9-solve-13-v2 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-13-v2's tick-0 clock is declared + bootCost — declared 12018 + 21 = 12039, measured 12039 (delta 21)
+PASS: r9-solve-0-v3 carries a tick-0 latch — rng.seed 1684541556, seam.time 12107
+PASS: r9-solve-0-v3 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-0-v3's tick-0 clock is declared + bootCost — declared 12086 + 21 = 12107, measured 12107 (delta 21)
+PASS: r9-solve-12 carries a tick-0 latch — rng.seed 1643690930, seam.time 12877
+PASS: r9-solve-12 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-12's tick-0 clock is declared + bootCost — declared 12856 + 21 = 12877, measured 12877 (delta 21)
+PASS: r9-solve-21 carries a tick-0 latch — rng.seed 1643690930, seam.time 15181
+PASS: r9-solve-21 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-21's tick-0 clock is declared + bootCost — declared 15160 + 21 = 15181, measured 15181 (delta 21)
+PASS: r9-solve-22 carries a tick-0 latch — rng.seed 1629551709, seam.time 15227
+PASS: r9-solve-22 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-22's tick-0 clock is declared + bootCost — declared 15206 + 21 = 15227, measured 15227 (delta 21)
+PASS: r9-solve-29 carries a tick-0 latch — rng.seed 1301078681, seam.time 15336
+PASS: r9-solve-29 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-29's tick-0 clock is declared + bootCost — declared 15315 + 21 = 15336, measured 15336 (delta 21)
+PASS: r9-solve-31 carries a tick-0 latch — rng.seed 1301078681, seam.time 15885
+PASS: r9-solve-31 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-31's tick-0 clock is declared + bootCost — declared 15864 + 21 = 15885, measured 15885 (delta 21)
+PASS: r9-solve-30 carries a tick-0 latch — rng.seed 958590141, seam.time 16241
+PASS: r9-solve-30 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-30's tick-0 clock is declared + bootCost — declared 16220 + 21 = 16241, measured 16241 (delta 21)
+PASS: r9-solve-32 carries a tick-0 latch — rng.seed 958590141, seam.time 16471
+PASS: r9-solve-32 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-32's tick-0 clock is declared + bootCost — declared 16450 + 21 = 16471, measured 16471 (delta 21)
+
+ALL CHECKS PASSED

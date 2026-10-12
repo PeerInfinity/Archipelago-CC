@@ -1,0 +1,417 @@
+# box lock: TAKEN by check-seedling-bot-differential.mjs (browser, pid 9782) — head 9b845313a, 19 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: bot control surface registered — botLoadTape/botStart/botStatus/botDrain/botReset
+PASS: bot reports a live player before any tape — x=88 y=136 level=0
+BUILD: seedling_bot_ap_p4f (the DEFAULT) — payload seedling_bot_ap_p4f.wasm — http://localhost:9655/frontend/modules/flashPanel/wasm/seedling_bot_ap_p4f/game.html
+PASS: fixture roster is non-empty — 277 tapes
+PASS: every DROWN_EXPECTED declaration names a real fixture — 1 declaration(s): r5-swim-drown
+PASS: every --only name is a real fixture — 15 selected
+PASS: the tier assignment still names real fixtures — 3 legacy, 274 gate; the three DERIVED categories PARTITION the roster — 39 campaign, 21 map-walk, 217 mechanic
+PASS: the playthrough chains still name real fixtures — 15 chain(s) (2 custody, 13 staged), 47 segment(s), 32 seam(s)
+PASS: r9-solve-0-v3: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 299 (46 signature rows)
+PASS: r9-solve-0-v3: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-0-v3: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-0-v3: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-0-v3: the dead frames are accounted for — 491 dead = 451 modelled (451 run freeze + 0 seal + 0 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-0-v3: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-0-v3: all 14 item properties match, positives and negatives — hitsMax=3, 2 flag(s) true
+PASS: r9-solve-0-v3: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-0-v3: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-0-v3: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-0-v3: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-0-v3: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-0-v3: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 299
+PASS: r9-solve-0-v3: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-0-v3: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-0-v3: the game's own `hasKey` array matches the model — game: [true,false,false,false,false], model: [true,false,false,false,false]
+PASS: r9-solve-0-v3: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-0-v3: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-0-v3: the game saw every edge the tape dispatched — primary x20, right x11, left x11, up x5, down x6 — all seen
+PASS: r9-solve-0-v3: the game's own latched `save.time` is the model's clock — game 12877, model 12877
+PASS: r9-solve-0-v3: the live `game_time` readout is at or past the model's clock — game 12888 >= model 12877 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-0-v3: observation count — 300 (expected tick_count+1 = 300), 1 transition(s) derived, 491 fade frames skipped, 32s
+RECORDED: r9-solve-0-v3.json (300 observations)
+PASS: r9-solve-0-v3: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 300 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-12: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 2364 (46 signature rows)
+PASS: r9-solve-12: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-12: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-12: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-12: the dead frames are accounted for — 40 dead = 0 modelled (0 run freeze + 0 seal + 0 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-12: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-12: all 14 item properties match, positives and negatives — hitsMax=3, 2 flag(s) true
+PASS: r9-solve-12: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-12: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-12: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-12: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-12: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-12: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 2364
+PASS: r9-solve-12: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-12: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-12: the game's own `hasKey` array matches the model — game: [true,false,false,false,false], model: [true,false,false,false,false]
+PASS: r9-solve-12: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-12: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-12: the game saw every edge the tape dispatched — right x49, left x45, down x40, up x40, primary x40 — all seen
+PASS: r9-solve-12: every touch-lock the player opened wrote its persistence flag — shieldlocknorm@288,704 -> 12:10 off, out of 26 flag(s) off in all
+PASS: r9-solve-12: the game's own latched `save.time` is the model's clock — game 15261, model 15261
+PASS: r9-solve-12: the live `game_time` readout is at or past the model's clock — game 15275 >= model 15261 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-12: the game refused input where the model says it must — 1 pit transport(s), shieldlocknorm@288,704 for 100 tick(s) modelled
+PASS: r9-solve-12: observation count — 2365 (expected tick_count+1 = 2365), 1 transition(s) derived, 40 fade frames skipped, 90s
+RECORDED: r9-solve-12.json (2365 observations)
+PASS: r9-solve-12: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 2365 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-13-v2: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 48 (46 signature rows)
+PASS: r9-solve-13-v2: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-13-v2: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-13-v2: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-13-v2: the dead frames are accounted for — 40 dead = 0 modelled (0 run freeze + 0 seal + 0 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-13-v2: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-13-v2: all 14 item properties match, positives and negatives — hitsMax=3, 2 flag(s) true
+PASS: r9-solve-13-v2: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-13-v2: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-13-v2: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-13-v2: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-13-v2: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-13-v2: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 48
+PASS: r9-solve-13-v2: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-13-v2: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-13-v2: the game's own `hasKey` array matches the model — game: [true,false,false,false,false], model: [true,false,false,false,false]
+PASS: r9-solve-13-v2: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-13-v2: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-13-v2: the game saw every edge the tape dispatched — primary x8, down x5, up x4, left x4, right x4 — all seen
+PASS: r9-solve-13-v2: the game's own latched `save.time` is the model's clock — game 12107, model 12107
+PASS: r9-solve-13-v2: the live `game_time` readout is at or past the model's clock — game 12118 >= model 12107 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-13-v2: observation count — 49 (expected tick_count+1 = 49), 1 transition(s) derived, 40 fade frames skipped, 6s
+RECORDED: r9-solve-13-v2.json (49 observations)
+PASS: r9-solve-13-v2: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 49 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-14: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 103 (46 signature rows)
+PASS: r9-solve-14: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-14: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-14: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-14: the dead frames are accounted for — 40 dead = 0 modelled (0 run freeze + 0 seal + 0 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-14: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-14: all 14 item properties match, positives and negatives — hitsMax=3, 1 flag(s) true
+PASS: r9-solve-14: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-14: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-14: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-14: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-14: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-14: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 103
+PASS: r9-solve-14: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-14: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-14: the game's own `hasKey` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-14: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-14: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-14: the game saw every edge the tape dispatched — primary x11, up x15, left x9, down x14, right x8 — all seen
+PASS: r9-solve-14: the game's own latched `save.time` is the model's clock — game 8782, model 8782
+PASS: r9-solve-14: the live `game_time` readout is at or past the model's clock — game 8791 >= model 8782 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-14: observation count — 104 (expected tick_count+1 = 104), 1 transition(s) derived, 40 fade frames skipped, 7s
+RECORDED: r9-solve-14.json (104 observations)
+PASS: r9-solve-14: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 104 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-15: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 456 (46 signature rows)
+PASS: r9-solve-15: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-15: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-15: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-15: the dead frames are accounted for — 40 dead = 0 modelled (0 run freeze + 0 seal + 0 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-15: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-15: all 14 item properties match, positives and negatives — hitsMax=3, 1 flag(s) true
+PASS: r9-solve-15: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-15: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-15: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-15: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-15: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-15: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 456
+PASS: r9-solve-15: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-15: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-15: the game's own `hasKey` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-15: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-15: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-15: the game saw every edge the tape dispatched — right x15, primary x25, left x14, down x11, up x13 — all seen
+PASS: r9-solve-15: the game's own latched `save.time` is the model's clock — game 9258, model 9258
+PASS: r9-solve-15: the live `game_time` readout is at or past the model's clock — game 9262 >= model 9258 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-15: observation count — 457 (expected tick_count+1 = 457), 1 transition(s) derived, 40 fade frames skipped, 20s
+RECORDED: r9-solve-15.json (457 observations)
+PASS: r9-solve-15: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 457 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-16: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 655 (46 signature rows)
+PASS: r9-solve-16: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-16: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-16: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-16: the dead frames are accounted for — 40 dead = 0 modelled (0 run freeze + 0 seal + 0 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-16: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-16: all 14 item properties match, positives and negatives — hitsMax=3, 1 flag(s) true
+PASS: r9-solve-16: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-16: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-16: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-16: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-16: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-16: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 655
+PASS: r9-solve-16: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-16: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-16: the game's own `hasKey` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-16: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-16: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-16: the game saw every edge the tape dispatched — primary x69, down x28, up x31, right x28, left x26 — all seen
+PASS: r9-solve-16: the game's own latched `save.time` is the model's clock — game 9933, model 9933
+PASS: r9-solve-16: the live `game_time` readout is at or past the model's clock — game 9945 >= model 9933 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-16: observation count — 656 (expected tick_count+1 = 656), 1 transition(s) derived, 40 fade frames skipped, 26s
+RECORDED: r9-solve-16.json (656 observations)
+PASS: r9-solve-16: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 656 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-18: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 440 (46 signature rows)
+PASS: r9-solve-18: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-18: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-18: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-18: the dead frames are accounted for — 40 dead = 0 modelled (0 run freeze + 0 seal + 0 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-18: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-18: all 14 item properties match, positives and negatives — hitsMax=3, 1 flag(s) true
+PASS: r9-solve-18: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-18: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-18: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-18: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-18: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-18: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 440
+PASS: r9-solve-18: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-18: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-18: the game's own `hasKey` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-18: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-18: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-18: the game saw every edge the tape dispatched — down x18, right x7, up x15, left x8, primary x13 — all seen
+PASS: r9-solve-18: the game's own latched `save.time` is the model's clock — game 10393, model 10393
+PASS: r9-solve-18: the live `game_time` readout is at or past the model's clock — game 10399 >= model 10393 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-18: observation count — 441 (expected tick_count+1 = 441), 1 transition(s) derived, 40 fade frames skipped, 19s
+RECORDED: r9-solve-18.json (441 observations)
+PASS: r9-solve-18: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 441 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-19: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 746 (46 signature rows)
+PASS: r9-solve-19: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-19: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-19: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-19: the dead frames are accounted for — 190 dead = 150 modelled (0 run freeze + 0 seal + 150 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-19: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-19: all 14 item properties match, positives and negatives — hitsMax=3, 1 flag(s) true
+PASS: r9-solve-19: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-19: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-19: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-19: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-19: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-19: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 746
+PASS: r9-solve-19: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-19: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-19: the game's own `hasKey` array matches the model — game: [true,false,false,false,false], model: [true,false,false,false,false]
+PASS: r9-solve-19: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-19: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-19: the game saw every edge the tape dispatched — primary x34, right x24, left x25, up x17, down x16 — all seen
+PASS: r9-solve-19: every ShieldBoss the run KILLED wrote its persistence flag — shieldboss@80,32 -> 19:0 off at tick 446 (destroy 469, removed 481)
+PASS: r9-solve-19: the game's own latched `save.time` is the model's clock — game 11309, model 11309
+PASS: r9-solve-19: the live `game_time` readout is at or past the model's clock — game 11310 >= model 11309 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-19: observation count — 747 (expected tick_count+1 = 747), 1 transition(s) derived, 190 fade frames skipped, 34s
+RECORDED: r9-solve-19.json (747 observations)
+PASS: r9-solve-19: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 747 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-20: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 560 (46 signature rows)
+PASS: r9-solve-20: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-20: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-20: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-20: the dead frames are accounted for — 190 dead = 150 modelled (0 run freeze + 0 seal + 150 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-20: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-20: all 14 item properties match, positives and negatives — hitsMax=3, 2 flag(s) true
+PASS: r9-solve-20: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-20: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-20: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-20: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-20: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-20: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 560
+PASS: r9-solve-20: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-20: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-20: the game's own `hasKey` array matches the model — game: [true,false,false,false,false], model: [true,false,false,false,false]
+PASS: r9-solve-20: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-20: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-20: the game saw every edge the tape dispatched — primary x56, down x21, up x23, left x24, right x20 — all seen
+PASS: r9-solve-20: every touch-lock the player opened wrote its persistence flag — shieldlocknorm@176,16 -> 20:0 off, out of 22 flag(s) off in all
+PASS: r9-solve-20: the game's own latched `save.time` is the model's clock — game 12039, model 12039
+PASS: r9-solve-20: the live `game_time` readout is at or past the model's clock — game 12046 >= model 12039 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-20: the game refused input where the model says it must — shieldlocknorm@176,16 for 100 tick(s) modelled
+PASS: r9-solve-20: observation count — 561 (expected tick_count+1 = 561), 1 transition(s) derived, 190 fade frames skipped, 28s
+RECORDED: r9-solve-20.json (561 observations)
+PASS: r9-solve-20: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 561 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-21: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 26 (46 signature rows)
+PASS: r9-solve-21: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-21: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-21: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-21: the dead frames are accounted for — 40 dead = 0 modelled (0 run freeze + 0 seal + 0 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-21: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-21: all 14 item properties match, positives and negatives — hitsMax=3, 2 flag(s) true
+PASS: r9-solve-21: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-21: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-21: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-21: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-21: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-21: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 26
+PASS: r9-solve-21: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-21: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-21: the game's own `hasKey` array matches the model — game: [true,false,false,false,false], model: [true,false,false,false,false]
+PASS: r9-solve-21: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-21: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-21: the game saw every edge the tape dispatched — primary x6, down x2, up x1 — all seen
+PASS: r9-solve-21: the game's own latched `save.time` is the model's clock — game 15227, model 15227
+PASS: r9-solve-21: the live `game_time` readout is at or past the model's clock — game 15239 >= model 15227 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-21: observation count — 27 (expected tick_count+1 = 27), 1 transition(s) derived, 40 fade frames skipped, 5s
+RECORDED: r9-solve-21.json (27 observations)
+PASS: r9-solve-21: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 27 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-22: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 89 (46 signature rows)
+PASS: r9-solve-22: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-22: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-22: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-22: the dead frames are accounted for — 40 dead = 0 modelled (0 run freeze + 0 seal + 0 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-22: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-22: all 14 item properties match, positives and negatives — hitsMax=3, 2 flag(s) true
+PASS: r9-solve-22: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-22: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-22: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-22: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-22: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-22: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 89
+PASS: r9-solve-22: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-22: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-22: the game's own `hasKey` array matches the model — game: [true,false,false,false,false], model: [true,false,false,false,false]
+PASS: r9-solve-22: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-22: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-22: the game saw every edge the tape dispatched — primary x17, down x5, up x5, right x4, left x2 — all seen
+PASS: r9-solve-22: the game's own latched `save.time` is the model's clock — game 15336, model 15336
+PASS: r9-solve-22: the live `game_time` readout is at or past the model's clock — game 15340 >= model 15336 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-22: observation count — 90 (expected tick_count+1 = 90), 1 transition(s) derived, 40 fade frames skipped, 7s
+RECORDED: r9-solve-22.json (90 observations)
+PASS: r9-solve-22: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 90 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-29: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 379 (46 signature rows)
+PASS: r9-solve-29: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-29: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-29: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-29: the dead frames are accounted for — 190 dead = 150 modelled (0 run freeze + 0 seal + 150 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-29: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-29: all 14 item properties match, positives and negatives — hitsMax=3, 2 flag(s) true
+PASS: r9-solve-29: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-29: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-29: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-29: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-29: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-29: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 379
+PASS: r9-solve-29: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-29: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-29: the game's own `hasKey` array matches the model — game: [true,true,false,false,false], model: [true,true,false,false,false]
+PASS: r9-solve-29: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-29: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-29: the game saw every edge the tape dispatched — right x18, left x12, up x16, down x15, primary x17 — all seen
+PASS: r9-solve-29: the game's own latched `save.time` is the model's clock — game 15885, model 15885
+PASS: r9-solve-29: the live `game_time` readout is at or past the model's clock — game 15895 >= model 15885 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-29: observation count — 380 (expected tick_count+1 = 380), 1 transition(s) derived, 190 fade frames skipped, 22s
+RECORDED: r9-solve-29.json (380 observations)
+PASS: r9-solve-29: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 380 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-30: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 210 (46 signature rows)
+PASS: r9-solve-30: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-30: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-30: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-30: the dead frames are accounted for — 40 dead = 0 modelled (0 run freeze + 0 seal + 0 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-30: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-30: all 14 item properties match, positives and negatives — hitsMax=3, 2 flag(s) true
+PASS: r9-solve-30: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-30: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-30: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-30: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-30: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-30: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 210
+PASS: r9-solve-30: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-30: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-30: the game's own `hasKey` array matches the model — game: [true,true,false,false,false], model: [true,true,false,false,false]
+PASS: r9-solve-30: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-30: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-30: the game saw every edge the tape dispatched — primary x22, left x14, down x5, right x13, up x6 — all seen
+PASS: r9-solve-30: the game's own latched `save.time` is the model's clock — game 16471, model 16471
+PASS: r9-solve-30: the live `game_time` readout is at or past the model's clock — game 16479 >= model 16471 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-30: observation count — 211 (expected tick_count+1 = 211), 1 transition(s) derived, 40 fade frames skipped, 11s
+RECORDED: r9-solve-30.json (211 observations)
+PASS: r9-solve-30: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 211 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-31: the seam latch fired and carries the whole signature, AT A CALM ARRIVAL — 47 field(s) latched at tick 336 (46 signature rows)
+PASS: r9-solve-31: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-31: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-31: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-31: the dead frames are accounted for — 40 dead = 0 modelled (0 run freeze + 0 seal + 0 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-31: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-31: all 14 item properties match, positives and negatives — hitsMax=3, 2 flag(s) true
+PASS: r9-solve-31: Main.primary matches the mirror — game: 0, expected: 0
+PASS: r9-solve-31: the inventory slot ARRAY matches the mirror — game: [0], expected: [0] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-31: the selected slot holds an item — primary=0 against 1 slot(s)
+PASS: r9-solve-31: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-31: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-31: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 336
+PASS: r9-solve-31: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-31: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-31: the game's own `hasKey` array matches the model — game: [true,true,false,false,false], model: [true,true,false,false,false]
+PASS: r9-solve-31: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-31: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-31: the game saw every edge the tape dispatched — primary x42, left x22, down x16, right x19, up x15 — all seen
+PASS: r9-solve-31: the game's own latched `save.time` is the model's clock — game 16241, model 16241
+PASS: r9-solve-31: the live `game_time` readout is at or past the model's clock — game 16246 >= model 16241 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-31: observation count — 337 (expected tick_count+1 = 337), 1 transition(s) derived, 40 fade frames skipped, 16s
+RECORDED: r9-solve-31.json (337 observations)
+PASS: r9-solve-31: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 337 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+PASS: r9-solve-32: the seam latch fired and carries the whole signature — 47 field(s) latched at tick 1056 (46 signature rows)
+PASS: r9-solve-32: botStatus's seam marker agrees with botSeam's block — marker {latched: true, partial: false} vs block {latched: true, partial: false}
+PASS: r9-solve-32: botStatus carries the R0 readout — 14 item properties, cutscene=[false,false,false,false], menu=false
+PASS: r9-solve-32: dialogue auto-advance is exactly what the route earns — saw_auto_advance=0, and the Help model earns 0
+PASS: r9-solve-32: the dead frames are accounted for — 364 dead = 324 modelled (174 run freeze + 0 seal + 150 pickup + 0 spawned + 0 declared) + 40 residue, against 2 load(s) at 19.2632/load −9.0 (floor min 9) +6.4 (4.5·√2) = [29.5,44.9]
+PASS: r9-solve-32: the game fired the grants the tape asked for, at the same ticks — game: [], expected: []
+PASS: r9-solve-32: all 14 item properties match, positives and negatives — hitsMax=3, 3 flag(s) true
+PASS: r9-solve-32: Main.primary matches the mirror — game: 1, expected: 1
+PASS: r9-solve-32: the inventory slot ARRAY matches the mirror — game: [0,1], expected: [0,1] (ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)
+PASS: r9-solve-32: the selected slot holds an item — primary=1 against 2 slot(s)
+PASS: r9-solve-32: the game never started drowning — drownTimer 0 — in the game's own accounting this walk never stood on water without canSwim or lava without hasDarkSuit
+PASS: r9-solve-32: the win statics are still false — menu=false, cutscene=[false,false,false,false]
+PASS: r9-solve-32: the seam latch carries the frozen terminal counters — hits 0, hits_timer 0, latched at tick 1056
+PASS: r9-solve-32: the game's own `hits` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-32: the game's own `hits_timer` matches the damage model — game (frozen at the last observation): 0, model: 0; polled 0 (no post-tape drift)
+PASS: r9-solve-32: the game's own `hasKey` array matches the model — game: [true,true,false,false,false], model: [true,true,false,false,false]
+PASS: r9-solve-32: the game's own `hasTotemPart` array matches the model — game: [false,false,false,false,false], model: [false,false,false,false,false]
+PASS: r9-solve-32: the game's own `hasSealPart` array has the shape the run earns — game: [8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] — 1 filled against 1 booted + 0 chest(s) opened (identities are RNG at chest OPEN and are not predicted)
+PASS: r9-solve-32: the game saw every edge the tape dispatched — up x10, primary x43, right x7, left x4, down x1 — all seen
+PASS: r9-solve-32: every BobBoss-encounter write the model made is off in the game — rock-armed -> 32:1, fire-removed -> 31:29
+PASS: r9-solve-32: the game's own latched `save.time` is the model's clock — game 17871, model 17871
+PASS: r9-solve-32: the live `game_time` readout is at or past the model's clock — game 17877 >= model 17871 (the status is served after the disarm and keeps advancing)
+PASS: r9-solve-32: the game refused input where the model says it must — 3 BobBoss form transition(s), 1 pit transport(s) modelled
+PASS: r9-solve-32: observation count — 1057 (expected tick_count+1 = 1057), 1 transition(s) derived, 364 fade frames skipped, 51s
+RECORDED: r9-solve-32.json (1057 observations)
+PASS: r9-solve-32: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE — 1057 observations, 1 transition(s) — the recording is an ORACLE and the model already agrees with it
+ROSTER-WIDE: the cross-tape acceptance findings over 15 replayed tape(s)
+SKIP: R2 headline walk: SKIPPED — this sweep did not replay r2-walk-full — run --tier=full (or --only) to assert the eight-item claim
+SKIP: R2 chain: SKIPPED — the chain needs all six segments — this sweep replayed 0 of 6 — run --tier=full to assert the partition
+SKIP: R3 headline walk: SKIPPED — this sweep did not replay r3-walk-full — run --tier=full (or --only) to assert the six-item claim and the crutch ledger
+SKIP: R3 chain: SKIPPED — the chain needs all six segments — this sweep replayed 0 of 6 — run --tier=full to assert the partition
+SKIP: R4 headline walk: SKIPPED — this sweep did not replay r4-walk-full — run --tier=full (or --only) to assert the five-item claim, the positive hitsMax and the two earned clears
+SKIP: R4 chain: SKIPPED — the chain needs all 6 segments — this sweep replayed 0 of 6 — run --tier=full to assert the partition
+SKIP: R5 L60 kill pair: SKIPPED — this sweep did not replay both arms — have neither — a pair asserted from one arm is not a pair
+SKIP: R5 key leg: SKIPPED — this sweep did not replay both arms — have neither — an opened-blocker claim without its shut-before control is a walk that stopped for some unexamined reason
+SKIP: R5 BobBoss: SKIPPED — this sweep did not replay both arms — have neither — "the walk ended holding fire" is not evidence that the sword did anything
+SKIP: R5 Karlore: SKIPPED — this sweep did not replay both arms — have neither — "the fire arm walked north" is not evidence that anything was ever in the way
+SKIP: R5 D5 walk: SKIPPED — this sweep did not replay it — run --only=r5-d5-conch (or --tier=full) to assert the conch
+SKIP: R5 swim pair: SKIPPED — this sweep did not replay both arms — have neither — "the swimmer crossed water" is not evidence that the water was armed
+SKIP: R5 swim latch: SKIPPED — this sweep did not replay it — run --only=r5-swim-latch to assert the swim term
+SKIP: R5 waterfall pair: SKIPPED — this sweep did not replay both arms — have neither — "the feather-holder climbed" is not evidence that anything was pushing down
+SKIP: R5 feather: SKIPPED — this sweep did not replay it — run --only=r5-feather (or --tier=full) to assert the feather
+SKIP: R5 totem entrance: SKIPPED — this sweep did not replay both arms — have neither — "the walk reached L39" is not evidence that anything was ever in the way
+SKIP: R5 press pair: SKIPPED — this sweep did not replay both arms — have neither — "the walk stood in (12,5)" is not evidence that a press put it there
+SKIP: R5 shaft pair: SKIPPED — this sweep did not replay both arms — have neither — "the walk reached the middle of the cross" is not evidence that eighteen presses put it there. Re-make both with `node scripts/procgen/plan-seedling-r5-shaft.mjs --write` and `check-seedling-bot-differential --record --win --only=r5-shaft,r5-shaft-control`.
+SKIP: R5 L40 part 1: SKIPPED — this sweep did not replay it — run --only=r5-l40-part1 (or --tier=full) to assert the second of the five ceremonies
+SKIP: R5 L41 part 3 pair: SKIPPED — this sweep did not replay both arms — have neither — "the walk collected a totem part" is not evidence that a crusher was ever in the way, and this room's whole claim is that the obstacle is the machine
+SKIP: R5 L42 part 4 pair: SKIPPED — this sweep did not replay both arms — have neither — "the walk collected a totem part and left the room" is not evidence that two crushers were ever across the corridor, and in a pursuit room that is the whole claim
+SKIP: R5 L43 wand pair: SKIPPED — this sweep did not replay both arms — have neither — "the walk took the wand" is not evidence that a boot field decided whether it could, and that is the whole claim of this pair
+SKIP: chain toy-west-pair: SKIPPED — this sweep did not replay r7-ends-meet-1, r7-ends-meet-2, r7-ends-meet-full — the chain needs all 2 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-battery-1: SKIPPED — this sweep did not replay r8-solve-1, r8-solve-1 — the chain needs all 1 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-battery-2: SKIPPED — this sweep did not replay r8-solve-2, r8-solve-2 — the chain needs all 1 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-battery-3: SKIPPED — this sweep did not replay r8-solve-3, r8-solve-3 — the chain needs all 1 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-battery-4: SKIPPED — this sweep did not replay r8-solve-4, r8-solve-4 — the chain needs all 1 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-battery-5: SKIPPED — this sweep did not replay r8-solve-5, r8-solve-5 — the chain needs all 1 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-battery-6: SKIPPED — this sweep did not replay r8-solve-6, r8-solve-6 — the chain needs all 1 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-battery-8: SKIPPED — this sweep did not replay r8-solve-8, r8-solve-8 — the chain needs all 1 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-battery-7: SKIPPED — this sweep did not replay r8-solve-7, r8-solve-7 — the chain needs all 1 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-battery-9: SKIPPED — this sweep did not replay r8-solve-9, r8-solve-9 — the chain needs all 1 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-battery-10: SKIPPED — this sweep did not replay r8-solve-10, r8-solve-10 — the chain needs all 1 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-battery-11: SKIPPED — this sweep did not replay r8-solve-11, r8-solve-11 — the chain needs all 1 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-d2-shield: SKIPPED — this sweep did not replay r8-solve-20, r8-solve-20 — the chain needs all 1 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r8-d2: SKIPPED — this sweep did not replay r8-solve-18, r8-d2-19, r8-d2-20, r8-d2 — the chain needs all 3 segment(s) and its headline; run --tier=full or --only with every name
+SKIP: chain r9-campaign: SKIPPED — this sweep did not replay r8-solve-1, r8-solve-2, r8-solve-3, r8-solve-4, r8-solve-5, r8-solve-6, r8-solve-7, r8-solve-8, r8-solve-9, r8-solve-10, r9-solve-11, r9-solve-3, r9-solve-2, r9-solve-0, r9-solve-13 — the chain needs all 30 segment(s) and its headline; run --tier=full or --only with every name
+
+ALL CHECKS PASSED (recording mode)

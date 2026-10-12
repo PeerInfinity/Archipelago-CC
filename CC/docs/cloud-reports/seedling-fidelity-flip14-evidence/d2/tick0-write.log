@@ -1,0 +1,195 @@
+# box lock: TAKEN by derive-seedling-tick0.mjs (windows, pid 11835) — head 0168ce898, 23 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+## THE DERIVED SET — 35 segments over 3 multi-segment chains, read from PLAYTHROUGH_CHAINS
+  toy-west-pair  0/2 r7-ends-meet-1 bootL0   declared=NONE (true start) (never a continuation)
+  toy-west-pair  1/2 r7-ends-meet-2 bootL94  declared=4880 rng NOT COMPARABLE
+  r8-d2          0/3 r8-solve-18    bootL18  declared=8586 (never a continuation)
+  r8-d2          1/3 r8-d2-19       bootL19  declared=8969 rng ASSERTED
+  r8-d2          2/3 r8-d2-20       bootL20  declared=9885 rng ASSERTED
+  r9-campaign    0/30 r8-solve-1     bootL0   declared=NONE (true start) (never a continuation)
+  r9-campaign    1/30 r8-solve-2     bootL2   declared=5002 rng ASSERTED
+  r9-campaign    2/30 r8-solve-3     bootL3   declared=5069 rng ASSERTED
+  r9-campaign    3/30 r8-solve-4     bootL4   declared=5334 rng ASSERTED
+  r9-campaign    4/30 r8-solve-5     bootL5   declared=5609 rng ASSERTED
+  r9-campaign    5/30 r8-solve-6     bootL6   declared=6032 rng ASSERTED
+  r9-campaign    6/30 r8-solve-7     bootL7   declared=6346 rng ASSERTED
+  r9-campaign    7/30 r8-solve-8     bootL8   declared=6512 rng ASSERTED
+  r9-campaign    8/30 r8-solve-9     bootL9   declared=7359 rng ASSERTED
+  r9-campaign    9/30 r8-solve-10    bootL10  declared=7501 rng ASSERTED
+  r9-campaign   10/30 r9-solve-11    bootL11  declared=7754 rng ASSERTED
+  r9-campaign   11/30 r9-solve-3     bootL3   declared=8202 rng ASSERTED
+  r9-campaign   12/30 r9-solve-2     bootL2   declared=8374 rng ASSERTED
+  r9-campaign   13/30 r9-solve-0     bootL0   declared=8417 rng NOT COMPARABLE
+  r9-campaign   14/30 r9-solve-13    bootL13  declared=8582 rng ASSERTED
+  r9-campaign   15/30 r9-solve-14    bootL14  declared=8638 rng ASSERTED
+  r9-campaign   16/30 r9-solve-15    bootL15  declared=8761 rng ASSERTED
+  r9-campaign   17/30 r9-solve-16    bootL16  declared=9237 rng ASSERTED
+  r9-campaign   18/30 r9-solve-18    bootL18  declared=9912 rng ASSERTED
+  r9-campaign   19/30 r9-solve-19    bootL19  declared=10372 rng ASSERTED
+  r9-campaign   20/30 r9-solve-20    bootL20  declared=11288 rng ASSERTED
+  r9-campaign   21/30 r9-solve-13-v2 bootL13  declared=12018 rng ASSERTED
+  r9-campaign   22/30 r9-solve-0-v3  bootL0   declared=12086 rng NOT COMPARABLE
+  r9-campaign   23/30 r9-solve-12    bootL12  declared=12856 rng ASSERTED
+  r9-campaign   24/30 r9-solve-21    bootL21  declared=15160 rng ASSERTED
+  r9-campaign   25/30 r9-solve-22    bootL22  declared=15206 rng ASSERTED
+  r9-campaign   26/30 r9-solve-29    bootL29  declared=15315 rng ASSERTED
+  r9-campaign   27/30 r9-solve-31    bootL31  declared=15864 rng ASSERTED
+  r9-campaign   28/30 r9-solve-30    bootL30  declared=16220 rng ASSERTED
+  r9-campaign   29/30 r9-solve-32    bootL32  declared=16450 rng ASSERTED
+
+## r9-solve-15 — zero-tick fresh-page run (boot L15, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.8 frames_per_sec=26.13
+    drove r9-solve-15: 1 observation(s), 20 dead, 3s
+PASS: r9-solve-15's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-15's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-15's tick-0 clock is declared + bootCost — declared 8761 + 21 = 8782, measured 8782 (delta 21)
+  tick0 rng {seed 328376930, cosmetic 1647950909, fp 2039186901} vs declared {seed 328376930, cosmetic 628985786, fp 1924513024}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-15.json (11121 -> 11121 bytes)
+
+## r9-solve-16 — zero-tick fresh-page run (boot L16, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.8 frames_per_sec=25.93
+    drove r9-solve-16: 1 observation(s), 20 dead, 3s
+PASS: r9-solve-16's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-16's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-16's tick-0 clock is declared + bootCost — declared 9237 + 21 = 9258, measured 9258 (delta 21)
+  tick0 rng {seed 463063377, cosmetic 2038704650, fp 1847462486} vs declared {seed 328376930, cosmetic 1298568318, fp 2039186901}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-16.json (21093 -> 21093 bytes)
+
+## r9-solve-18 — zero-tick fresh-page run (boot L18, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.8 frames_per_sec=26.57
+    drove r9-solve-18: 1 observation(s), 20 dead, 3s
+PASS: r9-solve-18's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-18's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-18's tick-0 clock is declared + bootCost — declared 9912 + 21 = 9933, measured 9933 (delta 21)
+  tick0 rng {seed 146381973, cosmetic 553766028, fp 2098665036} vs declared {seed 463063377, cosmetic 1023014874, fp 1847462486}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-18.json (10239 -> 10238 bytes)
+
+## r9-solve-19 — zero-tick fresh-page run (boot L19, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.8 frames_per_sec=25.83
+    drove r9-solve-19: 1 observation(s), 20 dead, 3s
+PASS: r9-solve-19's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-19's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-19's tick-0 clock is declared + bootCost — declared 10372 + 21 = 10393, measured 10393 (delta 21)
+  tick0 rng {seed 1281150538, cosmetic 1011367703, fp 1908765832} vs declared {seed 146381973, cosmetic 2101833856, fp 2098665036}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-19.json (15440 -> 15440 bytes)
+
+## r9-solve-20 — zero-tick fresh-page run (boot L20, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.8 frames_per_sec=26.05
+    drove r9-solve-20: 1 observation(s), 20 dead, 3s
+PASS: r9-solve-20's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-20's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-20's tick-0 clock is declared + bootCost — declared 11288 + 21 = 11309, measured 11309 (delta 21)
+  tick0 rng {seed 1281150538, cosmetic 1135277646, fp 1516619538} vs declared {seed 1281150538, cosmetic 246593575, fp 1908765832}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-20.json (18504 -> 18504 bytes)
+
+## r9-solve-13-v2 — zero-tick fresh-page run (boot L13, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.8 frames_per_sec=26.54
+    drove r9-solve-13-v2: 1 observation(s), 20 dead, 3s
+PASS: r9-solve-13-v2's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-13-v2's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-13-v2's tick-0 clock is declared + bootCost — declared 12018 + 21 = 12039, measured 12039 (delta 21)
+  tick0 rng {seed 1281150538, cosmetic 1584033245, fp 1341168923} vs declared {seed 1281150538, cosmetic 1432953580, fp 1516619538}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-13-v2.json (7233 -> 7233 bytes)
+
+## r9-solve-0-v3 — zero-tick fresh-page run (boot L0, render-COUPLED)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.9 frames_per_sec=23.85
+    drove r9-solve-0-v3: 1 observation(s), 20 dead, 4s
+PASS: r9-solve-0-v3's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-0-v3's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-0-v3's tick-0 clock is declared + bootCost — declared 12086 + 21 = 12107, measured 12107 (delta 21)
+  tick0 rng {seed 1684541556, cosmetic 803564689, fp 1037729949} vs declared {seed 1281150538, cosmetic 2038904118, fp 1341168923}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-0-v3.json (9932 -> 9932 bytes)
+
+## r9-solve-12 — zero-tick fresh-page run (boot L12, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=3.2 frames_per_sec=6.67
+    drove r9-solve-12: 1 observation(s), 20 dead, 6s
+PASS: r9-solve-12's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-12's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-12's tick-0 clock is declared + bootCost — declared 12856 + 21 = 12877, measured 12877 (delta 21)
+  tick0 rng {seed 1643690930, cosmetic 1626936179, fp 1746823055} vs declared {seed 1684541556, cosmetic 844537160, fp 352500171}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-12.json (25890 -> 25890 bytes)
+
+## r9-solve-21 — zero-tick fresh-page run (boot L21, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.8 frames_per_sec=26.48
+    drove r9-solve-21: 1 observation(s), 20 dead, 4s
+PASS: r9-solve-21's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-21's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-21's tick-0 clock is declared + bootCost — declared 15160 + 21 = 15181, measured 15181 (delta 21)
+  tick0 rng {seed 1643690930, cosmetic 430342732, fp 606147248} vs declared {seed 1643690930, cosmetic 732918753, fp 1746823055}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-21.json (6122 -> 6122 bytes)
+
+## r9-solve-22 — zero-tick fresh-page run (boot L22, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.8 frames_per_sec=25.12
+    drove r9-solve-22: 1 observation(s), 20 dead, 4s
+PASS: r9-solve-22's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-22's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-22's tick-0 clock is declared + bootCost — declared 15206 + 21 = 15227, measured 15227 (delta 21)
+  tick0 rng {seed 1629551709, cosmetic 2003613677, fp 466199780} vs declared {seed 1643690930, cosmetic 1169378564, fp 606147248}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-22.json (8351 -> 8351 bytes)
+
+## r9-solve-29 — zero-tick fresh-page run (boot L29, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.8 frames_per_sec=25.59
+    drove r9-solve-29: 1 observation(s), 20 dead, 3s
+PASS: r9-solve-29's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-29's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-29's tick-0 clock is declared + bootCost — declared 15315 + 21 = 15336, measured 15336 (delta 21)
+  tick0 rng {seed 1301078681, cosmetic 1519406550, fp 1287809510} vs declared {seed 1629551709, cosmetic 881082683, fp 466199780}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-29.json (12726 -> 12726 bytes)
+
+## r9-solve-31 — zero-tick fresh-page run (boot L31, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.8 frames_per_sec=25.76
+    drove r9-solve-31: 1 observation(s), 20 dead, 3s
+PASS: r9-solve-31's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-31's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-31's tick-0 clock is declared + bootCost — declared 15864 + 21 = 15885, measured 15885 (delta 21)
+  tick0 rng {seed 1301078681, cosmetic 747634406, fp 1874240104} vs declared {seed 1301078681, cosmetic 1408698641, fp 1287809510}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-31.json (16108 -> 16108 bytes)
+
+## r9-solve-30 — zero-tick fresh-page run (boot L30, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.9 frames_per_sec=23.71
+    drove r9-solve-30: 1 observation(s), 20 dead, 4s
+PASS: r9-solve-30's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-30's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-30's tick-0 clock is declared + bootCost — declared 16220 + 21 = 16241, measured 16241 (delta 21)
+  tick0 rng {seed 958590141, cosmetic 310696252, fp 1566327037} vs declared {seed 1301078681, cosmetic 667840368, fp 1874240104}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-30.json (11004 -> 11004 bytes)
+
+## r9-solve-32 — zero-tick fresh-page run (boot L32, render-CLEAN)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=1 dead_frames=20 seconds=0.8 frames_per_sec=26.50
+    drove r9-solve-32: 1 observation(s), 20 dead, 3s
+PASS: r9-solve-32's zero-tick run ends at a CALM ARRIVAL — latched at tick 0, 20 dead frames
+PASS: r9-solve-32's latch is at TICK 0 — latch.tick 0
+PASS: r9-solve-32's tick-0 clock is declared + bootCost — declared 16450 + 21 = 16471, measured 16471 (delta 21)
+  tick0 rng {seed 958590141, cosmetic 514796274, fp 1403965933} vs declared {seed 958590141, cosmetic 1490305563, fp 1566327037}
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-32.json (11872 -> 11872 bytes)
+
+## 14 tape(s) written of 14 driven. ⛔ Regenerate the manifest in the SAME commit: node scripts/procgen/generate-tape-index.mjs
+
+ALL CHECKS PASSED
