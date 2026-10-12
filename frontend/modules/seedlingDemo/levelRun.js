@@ -7968,6 +7968,20 @@ export function createLevelRun({
                     c.x = r.x;
                     c.y = r.y;
                     c.v = r.v;
+                    /**
+                     * ⛓ fidelity L74LEG624 D4 (`CONTACT_FIDELITY.forecastSpeedByTerrain`) — K2's `LavaRunner` tail on
+                     * the clone: `stepChasersNow` re-chooses `moveSpeed` by the tile under the body after the chase
+                     * (swim 1 on water or lava, walk 1.5 elsewhere) and this forecast did not, so a previewed
+                     * lavarunner crossing lava kept walking at 1.5 (L74 leg 624: the drive and its certified preview
+                     * part at t53, `lavarunner@208,96`). OFF: the clone keeps the speed it was seeded with, as before.
+                     */
+                    if (CONTACT_FIDELITY.forecastSpeedByTerrain) {
+                        const sbt = CHASERS[c.tag]?.speedByTerrain;
+                        if (sbt && !c.dying && !c.destroy) {
+                            const here = world.nearestWalkableTile(c.x, c.y)?.t ?? 0;
+                            c.moveSpeed = sbt.swimTiles.includes(here) ? sbt.swim : sbt.walk;
+                        }
+                    }
                     // ⛓ fidelity-bulb: the armed update's last statement, then its first "drop" graphic update.
                     if (c.bulbPhase === 'armed') {
                         c.bulbPhase = 'drop';
