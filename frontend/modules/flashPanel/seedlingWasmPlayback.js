@@ -319,6 +319,8 @@ export function createWasmPlayback({
         forcedBy: {}, held: 0, continuations: 0, fallbacks: [], heldChecks: [], holdBlocked: [], releasedForSwap: 0,
         // ⛓ W8 — cold starts adopted as they stand, and the clause each refused one failed
         adopted: 0, adoptRefused: [],
+        // ⛓ L74 SILENT STALL — a throw that left an engine timer callback (`guarded`): `{at, phase, message}`, each one failed by name
+        timerThrows: [],
         // ⛓ WALK IDENTITY (a) — each adoption put on the live clock: begin-staged, shadow and held clocks, the shift (or why not)
         adoptClock: [],
         // ⛓ WALK IDENTITY — arrivals the glue told the engine to expect (a Restart's start hop)
@@ -363,10 +365,21 @@ export function createWasmPlayback({
         try { win = getWin?.() ?? null; } catch { win = null; }
         return win?.setTimeout ? win : globalThis;
     };
+    /**
+     * ⛓ L74 SILENT STALL — every engine timer callback runs under this: a throw that leaves a 0 ms callback kills the
+     * chain that would have read the deadline (a pageerror, the phase frozen, the leg a silent timeout — CI sweep
+     * 38185510484, leg 624). It becomes the goal's NAMED failure instead.
+     */
+    function guarded(fn) {
+        try { fn(); } catch (err) {
+            stats.timerThrows.push({ at: fn.name || 'anonymous', phase, message: String(err?.message ?? err).split('\n')[0] });
+            fail(`the wasm playback engine threw in ${fn.name || 'a timer callback'} (phase ${phase}): ${String(err?.message ?? err).split('\n')[0]}`);
+        }
+    }
     function schedule(fn, ms) {
         const my = token;
         const t = T();
-        timer = { t, h: t.setTimeout(() => { if (my === token) fn(); }, ms) };
+        timer = { t, h: t.setTimeout(() => { if (my === token) guarded(fn); }, ms) };
     }
     function cancelTimer() {
         if (timer) { try { timer.t.clearTimeout(timer.h); } catch { /* gone */ } timer = null; }
@@ -848,7 +861,7 @@ export function createWasmPlayback({
     function scheduleWatch(fn, ms) {
         const my = watchToken;
         const t = T();
-        watchTimer = { t, h: t.setTimeout(() => { if (my === watchToken) fn(); }, ms) };
+        watchTimer = { t, h: t.setTimeout(() => { if (my === watchToken) guarded(fn); }, ms) };
     }
     /** Start watching for arrivals from the begin record live NOW (after a `botLoadTape` it reads null). */
     function startWatch(at = null) {
@@ -1088,15 +1101,26 @@ export function createWasmPlayback({
         const record = records.get(goal.level) ?? null;
         spawn = r.spawn;
         if (r.shipped.length === 0) {
-            const mapped = arrivalSolverGoal(goal, { staging: r.staging, levelSource, record });
+            // ⛓ L74 SILENT STALL — the model may REFUSE the room the game is in (a `LevelWorldError`: e.g. a clear list
+            // naming a non-arena fallrock, "A clear list must never name it"). That refusal is the goal's, by name.
+            let mapped;
+            let request;
+            try {
+                mapped = arrivalSolverGoal(goal, { staging: r.staging, levelSource, record });
+                if (mapped.goal) {
+                    request = arrivalSolveRequest({ staging: r.staging, solverGoal: mapped.goal, levelSource, records,
+                        name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true });
+                }
+            } catch (err) {
+                fail(`the model refused to build level ${goal.level} from the arrival: ${String(err?.message ?? err).split('\n')[0]}`);
+                return;
+            }
             if (!mapped.goal) {
                 // ⛓ EVENT GOALS — an event the solver's clear-tag refuses carries its reason (`obstacle.kind 'clear-tag'`)
                 fail(`the solver has no goal for ${goal.name ?? goal.kind}: ${mapped.walker}`,
                     mapped.refusal ? { obstacle: mapped.refusal } : null);
                 return;
             }
-            const request = arrivalSolveRequest({ staging: r.staging, solverGoal: mapped.goal, levelSource, records,
-                name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true });
             startSolve(request, { staging: r.staging, continuation: false });
             return;
         }
@@ -1721,7 +1745,7 @@ export function createWasmPlayback({
     function scheduleDelivery(fn, ms) {
         const my = deliveryToken;
         const t = T();
-        deliveryTimer = { t, h: t.setTimeout(() => { if (my === deliveryToken) fn(); }, ms) };
+        deliveryTimer = { t, h: t.setTimeout(() => { if (my === deliveryToken) guarded(fn); }, ms) };
     }
     function kickDelivery() { if (!deliveryTimer && !landing) scheduleDelivery(deliveryStep, 0); }
     const later = () => scheduleDelivery(deliveryStep, DRAIN_MS);
@@ -2065,7 +2089,7 @@ export function createWasmPlayback({
         get stats() {
             return { ...stats, hostStarts: [...stats.hostStarts], keyReleases: [...stats.keyReleases], history: [...history],
                 forcedBy: { ...stats.forcedBy }, fallbacks: [...stats.fallbacks], heldChecks: [...stats.heldChecks],
-                holdBlocked: [...stats.holdBlocked], adoptRefused: [...stats.adoptRefused],
+                holdBlocked: [...stats.holdBlocked], adoptRefused: [...stats.adoptRefused], timerThrows: stats.timerThrows.map((r) => ({ ...r })),
                 ceremonies: stats.ceremonies.map((c) => ({ ...c })), dismissed: [...stats.dismissed],
                 deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred],
                 swapPushes: stats.swapPushes.map((r) => ({ ...r })), shipClock: stats.shipClock.map((r) => ({ ...r })),

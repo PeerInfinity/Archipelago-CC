@@ -1813,3 +1813,45 @@ describe('⛓ FORCED-HIT CONSUMER — the plan\'s forced crossings, and the cont
         expect(e.dones.map((d) => d.continuation)).toEqual([false, false, true]);
     });
 });
+
+describe('⛓ L74 SILENT STALL — a throw the room build makes is a NAMED failure, never a dead timer chain', () => {
+    // The live case (CI sweep 38185510484, leg `level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144` with L74 tag 2
+    // staged): the arrival was HELD (`wasm-hold-74` shipped), then the model refused the room the game is in — the clear
+    // list names a non-arena `fallrock` (`levelWorld`'s "A clear list must never name it", a LevelWorldError) — and the
+    // throw left the engine's 0 ms timer callback: a pageerror, the phase stuck at `await-arrival`, no deadline read
+    // again, and the leg TIMED OUT at 90 s with no plan and no reason. Here: the house with a fallrock whose tag the
+    // game reports cleared — the same model refusal, at the same seam.
+    const ROCK_TAG = 9;
+    const withRock = () => {
+        const records = new Map(RECORDS);
+        const house = RECORDS.get(HOUSE);
+        records.set(HOUSE, { ...house, entities: [...house.entities, { type: 'fallrock', x: 16, y: 16, attrs: { tset: '0', tag: String(ROCK_TAG) } }] });
+        return records;
+    };
+
+    it('the held arrival\'s room build throws → onFailed carries the MODEL\'s refusal text; the engine is idle, no timer left', () => {
+        const e = engineOver(A, { records: withRock() });
+        e.game.cleared = [{ level: HOUSE, tag: ROCK_TAG }];
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        // ⛔ the mutant (the throw escapes the timer) fails HERE, by name: the run itself throws the model's error
+        expect(() => runUntil(e, () => e.failures.length > 0)).not.toThrow();
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/the model refused to build level 86 from the arrival/);
+        expect(e.failures[0]).toMatch(/clears tag 9, which is a "fallrock" at \(16,16\).*A clear list must never name it/);
+        expect(e.engine.status().phase).toBe('idle');
+        expect(e.engine.stats.history.at(-1)).toMatchObject({ outcome: 'failed' });
+        expect(e.timers.pending).toBe(0);
+    });
+
+    it('any OTHER throw inside an engine timer callback is a named failure too (the safety net under every scheduler)', () => {
+        const e = engineOver(A);
+        let thrown = false;
+        e.service.start = () => { thrown = true; throw new Error('the solve service is gone'); };
+        e.engine.walkTo(CHEST);
+        expect(() => runUntil(e, () => e.failures.length > 0)).not.toThrow();
+        expect(thrown).toBe(true);
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/the wasm playback engine threw in .*: the solve service is gone/);
+        expect(e.engine.status().phase).toBe('idle');
+    });
+});
