@@ -90,16 +90,35 @@ async function omsiAwardSchedule(testController) {
             if (key?.startsWith('incrementalGameSave_substrate')) ls.removeItem(key);
         }
     } catch { /* same-origin here; ignore */ }
-    getJtaIframe()?.contentWindow?.location?.reload();
+    // location.reload() is asynchronous: until the navigation commits, the
+    // OLD jta window keeps answering. If an earlier row left it on the
+    // vanilla catalog, a catalog poll alone passes at once, foodBefore is
+    // read from the old inventory, and grant 1 crosses while the reloaded
+    // bridge has not yet subscribed to the grant bus — so it is dropped
+    // (CI fast batch, 2026-10-11/12). The reloaded bridge subscribes
+    // BEFORE it sends appReady, so the host's iframe:appReady for this
+    // iframe, heard only after the reload was issued, marks the new window
+    // as the one that will receive grants.
+    let jtaReloaded = false;
+    const offAppReady = testController.eventBus.subscribe('iframe:appReady', (data) => {
+        if (data?.iframeId === 'jtaSubstrateWrapper') jtaReloaded = true;
+    }, 'tests');
+    let jtaReady;
+    try {
+        getJtaIframe()?.contentWindow?.location?.reload();
 
-    // Resolve jta's Food enum through the live jta catalog (enum 0 is a
-    // legitimate value — presence-test, never truthiness).
-    const jtaReady = await eventually(testController,
-        () => {
-            const w = getJtaIframe()?.contentWindow;
-            return (w?.getAllItems?.() ?? []).some((it) => it.name === 'Food');
-        },
-        "jta catalog serves 'Food' (vanilla boot)", 20000, 250);
+        // Resolve jta's Food enum through the live jta catalog (enum 0 is a
+        // legitimate value — presence-test, never truthiness).
+        jtaReady = await eventually(testController,
+            () => {
+                if (!jtaReloaded) return false;
+                const w = getJtaIframe()?.contentWindow;
+                return (w?.getAllItems?.() ?? []).some((it) => it.name === 'Food');
+            },
+            "reloaded jta bridge ready and its catalog serves 'Food' (vanilla boot)", 20000, 250);
+    } finally {
+        offAppReady?.();
+    }
     testController.assertEqual('jta iframe serves its item catalog', true, jtaReady);
     if (!jtaReady) return testController.getOverallResult();
     const foodEnum = getJtaIframe().contentWindow.getAllItems()
