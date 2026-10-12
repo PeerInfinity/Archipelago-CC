@@ -1248,9 +1248,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 220
+        "solverBot.js": 222
       },
-      "sites": 284,
+      "sites": 286,
       "seen": "both",
       "via": [
         "direct",
