@@ -283,6 +283,17 @@ export const CONTACT_FIDELITY = {
      * (`planPacedWait`), and returns to the stance bit-exactly at each cycle end.
      */
     movingWait: false,
+    /**
+     * fidelity MOVINGWAIT D4 — THE TOTEM SHOT'S EXPLOSION IS AN `int` (`bossTotemFight.BOSS_TOTEM_SHOT.explosionHitRadiusInt`).
+     *
+     *     BossTotemShot.as:71   new Explosion(x + v.x, y + v.y, hitables, 24, 1)   — the ctor's `_x:int, _y:int`
+     *     Explosion.as:22,40    private var radius:int; … radius *= radiusCoeff     — int(24 × 0.65) = 15
+     *
+     * OFF: the blast at the Number point with r 15.6, as before. ON: the truncated point with r 15. Measured over all
+     * 277 committed tapes the runner plays: four shot blasts (`r6-totem-kill`/`-control` t387, at (122|182, 379.05)),
+     * the player 58–77 px away; no verdict differs.
+     */
+    totemShotBlastInt: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
