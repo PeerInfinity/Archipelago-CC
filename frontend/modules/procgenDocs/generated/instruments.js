@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 76,
-            "count": 123,
+            "browser": 77,
+            "count": 124,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 415,
-        "browser": 141,
-        "cited": 211,
-        "files": 427,
+        "blockStyle": 416,
+        "browser": 142,
+        "cited": 212,
+        "files": 428,
         "lineStyle": 12,
-        "withDocblock": 427,
-        "withFlags": 343
+        "withDocblock": 428,
+        "withFlags": 344
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13211,6 +13211,63 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-span-ceiling — how many input SPANS can `botLoadTape` actually take before the recompiled runtime runs out of heap?",
             "path": "scripts/procgen/probe-seedling-span-ceiling.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-staged-hits.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "keys2"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "n2"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "t1"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-staged-hits — ⛓ seedling-fidelity-stagedhits D3: THE PLAYER'S DAMAGE ACROSS A RE-STAGE IN ONE WORLD, ASKED OF THE GAME.",
+            "path": "scripts/procgen/probe-seedling-staged-hits.mjs"
         },
         {
             "argvHelpers": [
