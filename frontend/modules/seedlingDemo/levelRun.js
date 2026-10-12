@@ -17830,6 +17830,17 @@ export function createLevelRun({
                 state = { ...state, y: pendingSnapY };
                 pendingSnapY = null;
             }
+            // ── ⛓ fidelity L74ARRIVAL (`CONTACT_FIDELITY.arrivalButtonArm`): THE ARRIVAL FRAME'S PRESS ──
+            // On a world's first live frame no previous tick left a post-move
+            // box: the game's `Button.update` (`Button.as:29-39`) runs BEFORE
+            // `Player.update` and collides the cell the player was BUILT in,
+            // so a button under the arrival drops its rock on this very frame
+            // (`FallRock.fall`, `Game.freezeObjects = true`). Armed here and
+            // resolved by the branch below, as frame A. OFF: armed only from
+            // a post-move box, one tick late.
+            if (CONTACT_FIDELITY.arrivalButtonArm && firstTickInWorld && !noclip) {
+                armButtonFallRocks(playerBoxAt(state.x, state.y));
+            }
             // ── ⛓⛓⛓ SWIM T3: THE BUTTON'S `fall()`, ONE TICK AFTER THE PRESS ──
             // Frame A of `pendingButtonFalls`' docblock: live to the tape,
             // frozen to the player. The dead span behind it is resolved after
