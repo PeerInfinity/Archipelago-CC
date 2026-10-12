@@ -108,3 +108,43 @@ export function withGhostSearchBuckets(enabled, fn) {
 export function searchPressFor(press) {
     return GHOST_SEARCH_BUCKETS.enabled ? press : SWORD_SPINNER_PRESS;
 }
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE G1 — **THE KILL RUNG ASKS THE PRESS KILL FOR THE GHOST TOO** (`GHOST_KILL_RUNG`, OFF by
+ * default: `SEEDLING_GHOST_KILL_RUNG=1` for a process, or `withGhostKillRung(true, fn)`).
+ *
+ * C2 admitted a `ghostsword` primary inside `derivePressKill` (the kill-lock order), but the combat ladder's KILL rung,
+ * in its lock-less spinner arm, asked `derivePressKill` only for `weapon === 'sword'` and refused every other primary by
+ * name ("the kill this rung derives is a SWORD press"). So a ghost run never reached the press kill from the ladder
+ * (measured, hammer-phase D: L40 legs 378 / 381 REFUSED at that gate, 397 / 414 and C1's staging A in 1–3 s).
+ *
+ * `killRungPresses(weapon)` is the rung's question. OFF it is `weapon === 'sword'`, exactly the gate it replaces
+ * (byte-inert). ON it also admits a weapon whose press `derivePressKill` itself admits — `spinnerStrikePress(weapon)`
+ * is not the sword's row, i.e. a `ghostsword` primary under `GHOST_SPINNER_PRESS`. A ghost sword without the sword is
+ * then refused inside `derivePressKill` by `ghostSwingRefusal`'s words; every other primary keeps the rung's refusal.
+ */
+export const GHOST_KILL_RUNG = {
+    enabled: globalThis.process?.env?.SEEDLING_GHOST_KILL_RUNG === '1',
+};
+export const GHOST_KILL_RUNG_DEFAULT = false;
+
+/** Run `fn` with `GHOST_KILL_RUNG` set to `enabled`, restoring the previous value (`withGhostSpinnerPress`'s shape). */
+export function withGhostKillRung(enabled, fn) {
+    const was = GHOST_KILL_RUNG.enabled;
+    GHOST_KILL_RUNG.enabled = enabled === true;
+    const restore = () => { GHOST_KILL_RUNG.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/** True when the lock-less kill rung asks `derivePressKill` for `weapon`: the sword; ON, also the ghost's press. */
+export function killRungPresses(weapon) {
+    return weapon === 'sword' || (GHOST_KILL_RUNG.enabled && spinnerStrikePress(weapon) !== SWORD_SPINNER_PRESS);
+}

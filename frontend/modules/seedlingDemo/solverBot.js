@@ -114,6 +114,8 @@ import {
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
     // ⛓⛓⛓ hammer-phase D: the approach's and the fight's per-weapon row (behind `GHOST_SEARCH_BUCKETS`, OFF).
     searchPressFor,
+    // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, OFF).
+    killRungPresses,
     // ⛓⛓⛓ hammer-phase P1: the press kill's exact caches (behind `PRESS_KILL_COST`, ON; OFF bypasses every one).
     PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
     // ⛓⛓⛓ hammer-phase P2: the strike scan's two exact levers (behind `STRIKE_SCAN_COST`, ON; OFF bypasses both).
@@ -19553,11 +19555,16 @@ function solveSegmentUnder({
              *
              * ⛔ NO SWORD IS A REFUSAL BY NAME, the strong grade's shape: the
              * weapon is a SUB-ORDER the macro layer owes.
+             *
+             * ⛓⛓⛓ HAMMER-PHASE G1 — the weapon is asked by `killRungPresses`
+             * (`GHOST_KILL_RUNG`, OFF): OFF it is `weapon === 'sword'`; ON it
+             * also admits the ghost's press, where `derivePressKill` does.
              */
             const weapon = run.progress('primaryWeapon');
             const [tagPart, xy] = target.id.split('@');
             const [cx, cy] = xy.split(',').map(Number);
-            let press = weapon === 'sword'
+            const rungPresses = killRungPresses(weapon);
+            let press = rungPresses
                 ? derivePressKill(run, [{ tag: tagPart, x: cx, y: cy }], contacts)
                 : null;
             /**
@@ -19584,7 +19591,7 @@ function solveSegmentUnder({
                     admitted.why = 'the admission with the fight on found no strike either';
                 }
             }
-            if (weapon !== 'sword') {
+            if (!rungPresses) {
                 killWhy = `${target.id} is a live Spinner whose removal the run OBSERVES (the `
                     + '`spinnerBodies` roster, and `spinnerWrites` for a tagged body), but the '
                     + `run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``}`
