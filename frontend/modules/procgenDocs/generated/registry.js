@@ -4199,12 +4199,13 @@ export const REGISTRY = frz({
                 {
                     "id": "flash_seedling",
                     "present": true,
-                    "short": "4 keys",
+                    "short": "5 keys",
                     "type": "object",
                     "value": [
                         "customQueues",
                         "executeVia",
                         "manual",
+                        "playClock",
                         "queueActions"
                     ]
                 },
@@ -4668,6 +4669,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "flash_seedling",
                 "noiz2sa"
             ],
             "cells": [
@@ -4687,10 +4689,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "flash_seedling_gen",

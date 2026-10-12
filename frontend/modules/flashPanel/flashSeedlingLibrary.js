@@ -800,12 +800,19 @@ export const substrateRegistryEntry = Object.freeze({
      * check loop queues the location and the Seedling solver walks to it under the
      * Bot block; JtA/omsi stay move-only): a queued check checks nothing itself, the
      * controller walks to the location and the game's own check, collected by the
-     * runtime, completes it. No `playClock`.
+     * runtime, completes it.
+     *
+     * ⛓ PLAY CLOCK (⚖ user, 2026-10-11: "Drain play time too") — `playClock`: the host reports the GAME's own clock
+     * (`seedlingPlayClock.js`: `Game.time` off `botStatus`, on the JS and wasm runtimes) as `substrate:playClock`, and
+     * Loops charges the region per GAME second played (`loopState._regionDrainsTime`: coarse + playClock), on top of
+     * each queued action's own price. Here only: `flash_seedling_gen` and the generic flash entry declare none. The
+     * Flash (Ruffle) runtime sends no report, so Loops' own rule for a clock that never spoke applies there.
      */
     loopSupport: Object.freeze({
         ...runtime.loopSupport,
         queueActions: Object.freeze(['regionMove', 'locationCheck']),
         executeVia: 'solver',
+        playClock: true,
     }),
     // ⛓ RESTART WARP: the Menu panel's Restart re-takes the start hop and warps the game to seedlingStartSpawn
     //   (seedlingRegionGlue), so a world with this room declares exporter[p].return_to_menu (procgenCore/restartWarp.js).

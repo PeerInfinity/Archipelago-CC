@@ -1002,6 +1002,10 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             level: session ? session.run.level : -1,
             time: ticks,
             ticks,
+            // ⛓ PLAY CLOCK — the wasm game's `game_time` (`Game.time`, one per `Game.update()`) is this model's step
+            // count: what `flashPanel/seedlingPlayClock.js` reads on both runtimes. It stops where the run is not
+            // stepped (no session, a halt, a solve in flight — `tickOnce`).
+            game_time: ticks,
             x: session ? session.run.state.x : null,
             y: session ? session.run.state.y : null,
             deaths: deaths.length,
