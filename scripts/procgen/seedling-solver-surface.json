@@ -3912,6 +3912,24 @@
     },
     {
       "surface": "import",
+      "name": "searchPressFor",
+      "module": "frontend/modules/seedlingDemo/ghostSpinnerPress.js",
+      "line": 108,
+      "class": "seedling",
+      "form": "function",
+      "files": {
+        "solverBot.js": 2
+      },
+      "sites": 2,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The row deriveApproach / deriveFight score with (hammer-phase D): the press's own (strikePressOf's: the ghost's reach 24 and seven tests for a ghost primary) only under GHOST_SEARCH_BUCKETS (OFF, SEEDLING_GHOST_SEARCH_BUCKETS=1), else the sword's row — SLASH_REACH and SLASH_HIT_TICKS themselves, byte for byte."
+    },
+    {
+      "surface": "import",
       "name": "spinnerStrikePress",
       "module": "frontend/modules/seedlingDemo/ghostSpinnerPress.js",
       "line": 67,
@@ -5007,10 +5025,10 @@
       "form": "constant",
       "files": {
         "bulbPlacement.js": 1,
-        "solverBot.js": 11,
+        "solverBot.js": 5,
         "strikePolicy.js": 2
       },
-      "sites": 14,
+      "sites": 8,
       "seen": "static",
       "via": [
         "import"
@@ -5027,9 +5045,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 2,
-        "solverBot.js": 12
+        "solverBot.js": 10
       },
-      "sites": 14,
+      "sites": 12,
       "seen": "static",
       "via": [
         "import"

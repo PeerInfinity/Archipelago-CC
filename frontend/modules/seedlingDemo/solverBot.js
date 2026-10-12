@@ -111,7 +111,7 @@ import {
     // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (behind `GHOST_SPINNER_PRESS`, ON by default).
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
     // ⛓⛓⛓ hammer-phase D: the approach's and the fight's per-weapon row (behind `GHOST_SEARCH_BUCKETS`, OFF).
-    GHOST_SEARCH_BUCKETS, searchPressFor,
+    searchPressFor,
     // ⛓⛓⛓ hammer-phase P1: the press kill's exact caches (behind `PRESS_KILL_COST`, ON; OFF bypasses every one).
     PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
