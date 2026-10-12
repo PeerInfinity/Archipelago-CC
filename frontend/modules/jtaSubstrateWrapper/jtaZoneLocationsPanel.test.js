@@ -125,3 +125,44 @@ describe('the engine: scenario items and the one goal', () => {
         expect(items.filter((i) => i === JTA_VICTORY_ITEM_NAME)).toHaveLength(1);
     });
 });
+
+describe('in-run gates the zone rules leave out (jta-loop-mode, 2026-10-12)', () => {
+    const zones = JTA_VANILLA_DATASET.zones;
+    const last = zones.length - 1;
+    const perkCount = (z) => {
+        const { locations } = jta.extractZoneRules(z, { region_id: `r${z}` });
+        const counts = new Set(locations.map((l) => l.access_rule?.args?.count ?? 0));
+        expect(counts.size).toBe(1);
+        return [...counts][0];
+    };
+
+    it('no SeeBeyondTheVeil-gated task is a location, zone 19\'s Gaze Beyond the Veil included', () => {
+        jta.applyPipelineConfig({ emitZoneLocations: true, goalZone: last });
+        const sbtv = JTA_VANILLA_DATASET.prestige.sbtv_unlock_task_ids;
+        expect(sbtv).toContain(209);
+        for (const id of sbtv) {
+            const z = zones.findIndex((zone) => zone.tasks.some((t) => t.id === id));
+            const { locations } = jta.extractZoneRules(z, { region_id: 'r' });
+            expect(locations.map((l) => l.id)).not.toContain(id);
+        }
+    });
+
+    it('a task that uses an item sits in or after a zone that makes it, and needs no fewer perks', () => {
+        // The rule of a task that consumes an item (Cast the Ring into the Fire, zone 21, the Magic Ring from
+        // zone 16's Boss) does not name the item: its zone's perk count orders it after the maker (items survive
+        // energy resets; the Nth jta region is zone N, so the maker's zone exists whenever the user's does).
+        // A dataset that breaks either half needs a real rule.
+        jta.applyPipelineConfig({ emitZoneLocations: true, goalZone: last });
+        const makers = new Map();
+        zones.forEach((zone, z) => zone.tasks.forEach((t) => {
+            if (t.item != null) makers.set(t.item, [...(makers.get(t.item) ?? []), z]);
+        }));
+        const users = zones.flatMap((zone, z) => zone.tasks.filter((t) => t.use_item != null).map((t) => ({ t, z })));
+        expect(users.length).toBeGreaterThan(0);
+        for (const { t, z } of users) {
+            const first = Math.min(...(makers.get(t.use_item) ?? [Infinity]));
+            expect(first, `task ${t.id} uses item ${t.use_item}`).toBeLessThanOrEqual(z);
+            expect(perkCount(first)).toBeLessThanOrEqual(perkCount(z));
+        }
+    });
+});

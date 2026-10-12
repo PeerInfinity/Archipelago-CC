@@ -311,10 +311,9 @@ export function getJtaDataset() { return _dataset; }
 // documents since unification U-a). Shape matches what the placement
 // machinery needs: zones[zoneIdx] = { zone, tasks: [{ id,
 // perk: <item name|null> }] }, plus the grant-suppression sentinel (the
-// source's perk count) and the excluded task ids. The exclusion set stays
-// source-specific: vanilla keeps the v1-scoped SBtV four (the fixture's
-// prestige.sbtv_unlock_task_ids also lists 209/zone-20, which the vanilla
-// channel has never excluded); synthetic datasets carry [] by generation.
+// source's perk count) and the excluded task ids: the source's
+// prestige.sbtv_unlock_task_ids (sbtvGatedTaskIds) — vanilla's five, [] for a
+// synthetic dataset by generation.
 let _zoneViewCache = null;
 let _libraryItemsCache = null;
 function _zoneView() {
@@ -330,9 +329,7 @@ function _zoneView() {
             })),
         })),
         perkCount: doc.perks.length,
-        excluded: _dataset
-            ? new Set(_dataset.prestige?.sbtv_unlock_task_ids ?? [])
-            : SBTV_GATED_TASK_IDS,
+        excluded: sbtvGatedTaskIds(doc),
     };
     return _zoneViewCache;
 }
@@ -341,13 +338,17 @@ function _zoneView() {
 let _placementCache = null; // { key, byZone: Map<zoneIdx, Map<taskId, itemName>> }
 let _universeCache = null;  // { key, names: string[] }
 
-// The four zone-0..14 tasks with no in-game unlocker
-// (Divinity/SeeBeyondTheVeil-gated): Use Secret Fishing Spot (17),
-// Training Dummy (28), Train at Every Guild (88), Write Down Some
-// Learnings (158). Unobtainable without prestige, which v1 (zones 0–14)
-// never reaches, so they are excluded from the location pool, the pacing
-// walk, and the verification universe (plan §6 open-q 10, RULED).
-const SBTV_GATED_TASK_IDS = new Set([17, 28, 88, 158]);
+// The tasks with no in-game unlocker (Divinity/SeeBeyondTheVeil-gated) — in
+// vanilla Use Secret Fishing Spot (17), Training Dummy (28), Train at Every
+// Guild (88), Write Down Some Learnings (158) and Gaze Beyond the Veil (209,
+// zone 19). Unobtainable without prestige, so they are excluded from the
+// location pool, the pacing walk, and the verification universe (plan §6
+// open-q 10, RULED). Read from the source document: v1 (zones 0–14) left 209
+// out, and a panel world with 20+ jta zones then carried a location nothing
+// in a run unlocks (jta-loop-mode, 2026-10-12).
+function sbtvGatedTaskIds(doc) {
+    return new Set(doc?.prestige?.sbtv_unlock_task_ids ?? []);
+}
 
 // v1 filler item (plan §6 open-q 7, RULED: filler items do nothing). Held
 // by every location that doesn't carry a perk or Victory, giving AP fill a
@@ -665,8 +666,8 @@ function generateZoneForSpecs({ region_id, exitSpecs = [], locationSpecs = [] } 
  * every g (sorted, as `_perkUniverse` sorts them). Pure: reads the document, not
  * the installed state. The excluded tasks follow `_zoneView`'s rule.
  */
-function identityUniverses(doc, isDataset) {
-    const excluded = isDataset ? new Set(doc.prestige?.sbtv_unlock_task_ids ?? []) : SBTV_GATED_TASK_IDS;
+function identityUniverses(doc) {
+    const excluded = sbtvGatedTaskIds(doc);
     const names = new Set();
     return doc.zones.map((z) => {
         for (const t of z.tasks) {
@@ -698,7 +699,7 @@ function recordedJtaConfig(recorded) {
         .map((k) => [k, recorded[k]]));
 }
 
-function goalZoneFromUniverse(doc, isDataset, payloads, locations) {
+function goalZoneFromUniverse(doc, payloads, locations) {
     const seen = new Set();
     for (const [region] of payloads) {
         for (const l of locations[region] ?? []) {
@@ -711,7 +712,7 @@ function goalZoneFromUniverse(doc, isDataset, payloads, locations) {
     if (!seen.size) return null;
     if (seen.size > 1) return { ambiguous: `its zone rules name ${seen.size} different perk universes` };
     const want = [...seen][0];
-    const universes = identityUniverses(doc, isDataset);
+    const universes = identityUniverses(doc);
     const g = universes.findIndex((u) => JSON.stringify(u) === want);
     return g < 0 ? null : { zone: g };
 }
@@ -1196,7 +1197,7 @@ export const substrateRegistryEntry = Object.freeze({
         const source = datasetDoc ?? JTA_VANILLA_DATASET;
         const goalZone = Object.hasOwn(rec, 'goalZone')
             ? (rec.goalZone === null ? null : { zone: rec.goalZone })
-            : (goalZoneFromUniverse(source, !!datasetDoc, payloads, locations)
+            : (goalZoneFromUniverse(source, payloads, locations)
                 ?? goalZoneFromVictory(payloads, locations));
         if (goalZone && goalZone.ambiguous) return { ok: false, why: goalZone.ambiguous };
         const emitZoneLocations = Object.hasOwn(rec, 'emitZoneLocations') ? rec.emitZoneLocations
