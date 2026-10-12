@@ -407,9 +407,11 @@ async function playbackBotLoopModeMazeTest(testController) {
     testController.reportCondition(
       `every sphere-log location checked (missing: ${missing.slice(0, 5).join(', ') || 'none'})`, missing.length === 0);
     testController.log(`Bot loop log: ${JSON.stringify((bot.getLog?.() ?? []).map((e) => e.text ?? e).slice(-40))}`);
-    const disc = (await import('../../discovery/singleton.js')).default;
-    testController.log(`DIAG discovery: locations ${JSON.stringify([...(disc.getDiscoveredLocations?.() ?? [])])} `
-      + `exits ${JSON.stringify([...(disc.getDiscoveredExits?.() ?? [])].map((e) => (Array.isArray(e) ? [e[0], [...e[1]]] : e)))}`);
+    if (missing.length) {
+      const disc = (await import('../../discovery/singleton.js')).default;
+      testController.log(`DIAG discovery: locations ${JSON.stringify([...(disc.getDiscoveredLocations?.() ?? [])])} `
+        + `exits ${JSON.stringify([...(disc.getDiscoveredExits?.() ?? [])].map((e) => (Array.isArray(e) ? [e[0], [...e[1]]] : e)))}`);
+    }
   } finally {
     bot.stop();
     loopState.setInstantMode(instantBefore);
