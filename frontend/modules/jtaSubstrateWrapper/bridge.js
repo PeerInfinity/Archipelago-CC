@@ -1572,6 +1572,13 @@ function _handleTravelTaskCompleted(zone, task) {
         log('warn', `travel task ${task?.id} completed but no current region`);
         return;
     }
+    // Report the Travel task's own check NOW, before any regionMove below.
+    // The fork fires this callback ahead of the general completion callback,
+    // so left to that one the check would reach the host AFTER the move —
+    // and Loop mode's action gate refuses a check from a region the player
+    // has already left. The general callback that follows is deduped.
+    _handleTaskCompleted({ id: task?.id, name: task?.name, synthetic: false });
+
     // Mark the region completed for this loop. Subsequent re-entries
     // load it in completed state (only exit tasks visible).
     _completedThisLoop.add(_currentRegionId);

@@ -29,6 +29,7 @@ export const JTA_LOCTEST_START_REGION = 'Menu';
 export const JTA_LOCTEST_PERK_LOCATION = 'region_0_0__13';  // holds 'How to Read'
 export const JTA_LOCTEST_PERK_ITEM = 'How to Read';
 export const JTA_LOCTEST_PERK_TASK_ID = 13;                 // task behind region_0_0__13
+export const JTA_LOCTEST_TRAVEL_TASK_ID = 10;               // zone 0's Travel task ('Join the Watch')
 
 // Phase-4 smoke preset: 4 jta zones with SHUFFLED perk placement (all 5 perks
 // sit off their native tasks), balanced at rules load by the jtaBalance module.

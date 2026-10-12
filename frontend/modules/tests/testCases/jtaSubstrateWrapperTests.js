@@ -50,6 +50,7 @@ import {
     JTA_LOCTEST_PERK_LOCATION,
     JTA_LOCTEST_PERK_ITEM,
     JTA_LOCTEST_PERK_TASK_ID,
+    JTA_LOCTEST_TRAVEL_TASK_ID,
     waitForJtaActive,
     moveToRegion,
     resetJtaSaveAndReload,
@@ -1087,6 +1088,28 @@ async function botWalkToLocation(testController) {
             true, ended);
         testController.assertEqual('the in-zone walk was not refused', false,
             failures.some((f) => f?.target?.name === JTA_LOCTEST_PERK_LOCATION));
+
+        // Leg 4 — out through the parked block's exit: the zone's TRAVEL task
+        // is what crosses it, and its check must still land. The fork fires
+        // the travel callback (→ the departing regionMove, which advances the
+        // parked block) BEFORE its general completion callback, so a check
+        // sent from the latter reaches the gate after live play has left the
+        // region and is refused. The bridge reports it ahead of the move.
+        const travelLocation = `${JTA_LOCTEST_REGION}__${JTA_LOCTEST_TRAVEL_TASK_ID}`;
+        controller.walkTo({ kind: 'exit', name: 'exit_E' });
+        const crossed = await eventually(testController, () => {
+            if (readCurrentRegion() === 'region_1_0') return true;
+            win.setEnergy(1e9);
+            pumpTicks(win);
+            return false;
+        }, 'the exit walk crossed into region_1_0', 60000, 20);
+        testController.assertEqual('the exit walk crossed out of the zone', true, crossed);
+        const travelChecked = crossed && await eventually(testController,
+            () => snapshotHasLocation(testController.stateManager.getSnapshot(), travelLocation),
+            `Travel location ${travelLocation} checked`, 5000, 50);
+        testController.assertEqual(
+            `the Travel task's location ${travelLocation} is checked although its completion crossed the exit`,
+            true, !!travelChecked);
     } finally {
         testController.eventBus.unsubscribe(PLAYBACK_WALK_FAILED_EVENT, onFailed, 'jta-walkto-location-test');
         parkHandle.gs.noManaDepletionReset = savedNoReset;
@@ -1101,7 +1124,8 @@ registerTest({
     description: 'Loads jta_locations_test. A walk to another zone\'s location and a walk to a tile are '
                + 'refused at once through playback:walkFailed; a walk to the loaded zone\'s perk location '
                + 'switches the zone\'s own automation on, the location is checked, and the walk ends '
-               + '(the automation mode the player had comes back).',
+               + '(the automation mode the player had comes back). An exit walk out of the zone then '
+               + 'checks the zone\'s Travel location although its completion is what crosses the exit.',
     testFunction: botWalkToLocation,
     category: 'JtA substrate',
     enabled: false, // off by default — runs only in the test-substrates mode
