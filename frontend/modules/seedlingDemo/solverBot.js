@@ -145,8 +145,10 @@ import {
     WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb,
     createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
 } from './solverView.js';
+import { deathTicks } from './chasers.js';
+import { removalTicksAfterHit } from './enemyDamage.js';
 import {
-    bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
+    bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseHazardCanReach, phaseHazardHit,
 } from './dangerMap.js';
 import { axeCanReach, axeHitsPlayer, SPINNING_AXE } from './hazards.js';
@@ -5317,6 +5319,16 @@ export function previewWalk(run, wps, tolerance = 0,
             if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
             samples.push(sample);
             let held = st.fall ? new Set() : (tailHeld ? tailHeld(st) : NO_HELD_PREVIEW);
+            /**
+             * ⛓ STRIKELAPSE D1 — a tail whose keys answer `null` ENDS HERE: the executor's ceremony starts on this
+             * sample (`collectStandWalk`), `Game.freezeObjects` holds every body where this sample has it, and the
+             * probe asks this sample the ceremony's own question (`probeSamples`' `ceremony` arm). Only that tail
+             * answers `null`; every other tail is unchanged.
+             */
+            if (held === null) {
+                sample.ceremony = true;
+                break;
+            }
             const combat = combatBefore(st, tick - 1, held, chaserBodies);
             held = combat.held;
             sample.held = held;
@@ -14814,6 +14826,112 @@ function keylockStandWalk(run, resolved) {
     return { stand: { ticks: resolved.hold.ticks, keys } };
 }
 
+/**
+ * ⛓⛓ SEEDLING FIDELITY STRIKELAPSE D1 (`CONTACT_FIDELITY.strikeIframeLapse` ON only) — **A COLLECT'S APPROACH IS
+ * PRICED AS ITS STANCE WALK'S TAIL**, by `KEYLOCK_WAIT_PRICED`'s instrument (`stand`): the walk's probe, the
+ * ladder's AVOID/DETOUR and every dash candidate are previewed with the approach `execCollect` will walk after the
+ * stance (lean onto the pickup at the drive's tolerance), on the same chaser forecast, and the tail ENDS on the
+ * sample where the player's box meets the pickup's — the ceremony's start, which `probeSamples` asks
+ * `ceremonyBesideLiveBody`'s question of.
+ *
+ * MEASURED on survey step 50 (L30 Torchpickup, `bobsoldier@48,80`): with the lapse ON the transit probe of the walk
+ * to the collect stance (72,56) is clean — the walk's own presses now land on the lapsing i-frame — so the kill arm
+ * is never asked. The walk then driven is the DASHED one (106 t, certified on its transit only), which leaves the
+ * body ALIVE on one hit 22 px off the stance; the 8-tick approach walks into it, the torch ceremony freezes it
+ * adjacent, and the exit walk's gate refuses at (71.04,67.07). OFF the same probe met the blade at the stance and
+ * the kill arm ran (460 t). A stance safe to pass is not safe to approach from (trap 154). With the tail and the
+ * ceremony arm the solve keeps the walk whose own presses kill the body and whose corpse is gone (`createCorpseClock`)
+ * when the ceremony starts: 413 t, game-witnessed (the strikelapse report, D1).
+ *
+ * The tail's length is a BOUND, not a measurement: the straight line to the pickup at `WALK_SPEED` (slower than any
+ * diagonal the walker takes) plus `HOLD_SLACK`, so a tail that never meets the pickup stands — the side to err on.
+ * `{}` (the walk unchanged) for a resolution with no target.
+ */
+export function collectStandWalk(run, resolved, stance) {
+    const t = resolved?.target;
+    if (!t || !stance) return {};
+    const aim = t.rect
+        ? { x: (t.rect.x + t.rect.right) / 2, y: (t.rect.y + t.rect.bottom) / 2 }
+        : { x: t.x, y: t.y };
+    const NO_KEYS = new Set();
+    // `null` = the ceremony starts on this sample (`previewWalk` ends the tail there): the player's box meets the
+    // pickup's, where the drive's own collection begins.
+    const keys = () => (st) => {
+        if (t.rect && rectsOverlap(playerBoxAt(st.x, st.y), t.rect)) return null;
+        return hasArrived(st, aim, DEFAULT_TOLERANCE) ? NO_KEYS : chooseHeld(st, aim, DEFAULT_TOLERANCE);
+    };
+    const ticks = Math.ceil(Math.hypot(aim.x - stance.x, aim.y - stance.y) / WALK_SPEED) + HOLD_SLACK;
+    return { stand: { ticks, keys } };
+}
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY STRIKELAPSE D1 — **A CEREMONY DOES NOT START BESIDE A LIVE BODY** (the tail sample
+ * `collectStandWalk` ends on, `ceremony: true`). `Game.freezeObjects` holds every body for the ceremony, and its
+ * phase A is a LUMP of frames this model does not step (`frozenFramesOwed`; `levelRun`'s
+ * `assertNoCeremonyBesideLiveChaser` refuses the i-framed and dying cases). Two things run through those frames
+ * that nothing here can price: `Player.shieldBump` (no freeze gate, `Player.as:1697`, and the player's `v` is frozen
+ * non-zero) knocks a touching body back once per frame, and the next walk begins against a body the freeze parked
+ * where it stood. MEASURED on the game (p4f, survey step 50's ON plan before this arm): the BobSoldier beside the
+ * Torchpickup reads v (358.8, 663.4) one tick into the ceremony where the model's steps read (4.2, 8.2), and leaves
+ * the freeze at (91.8, 282.0), not the model's (91.8, 197.7).
+ *
+ * ⇒ the sample asks the WAIT question, untimed (`chaserDanger` at horizon 0: each body's box grown by its
+ * `threatPad`), of the LIVE bodies the forecast carries — a corpse (`destroy`, a staged `dyingAt`) fades out through
+ * the freeze (`Mobile.death` runs outside it) and is not asked.
+ */
+export function ceremonyBesideLiveBody(run, sample, corpses = []) {
+    const present = [...(sample.chasers ?? []).filter((b) => !b.removed), ...corpses];
+    const dead = (b) => b.destroy || b.dying || b.dyingAt !== undefined;
+    // ⛔ `assertNoCeremonyBesideLiveChaser`'s own set, room-wide as it is: the run THROWS on these.
+    const sources = present.filter((b) => dead(b) || (b.hitsTimer ?? 0) > 0).map((b) => ({
+        kind: 'chaser', id: b.id,
+        why: `the collect's ceremony would start while ${b.id} is `
+            + `${dead(b) ? 'DYING' : `inside ${b.hitsTimer} ticks of i-frames`} — `
+            + '`Enemy.hitUpdate` and `Mobile.death` run through the freeze\'s unstepped frames, '
+            + 'and the run refuses that ceremony (`assertNoCeremonyBesideLiveChaser`)' }));
+    const live = present.filter((b) => !dead(b));
+    if (live.length > 0) {
+        sources.push(...chaserDanger(run, playerBoxAt(sample.x, sample.y), 0, live)
+            .map((x) => ({ ...x, why: `the collect's ceremony would start here beside a LIVE body (${x.why}) — the `
+                + 'freeze\'s unstepped frames shove it (`Player.shieldBump`) and park it for the next walk' })));
+    }
+    return { danger: sources.length > 0, sources };
+}
+
+/**
+ * ⛓ STRIKELAPSE D1 — **THE CORPSES A FORECAST NO LONGER CARRIES.** A forecast sample drops a killed body at the
+ * blow (`!c.destroy`, `dyingAt`), and the run keeps it — `dying`, fading — until `removalTicksAfterHit` later. So a
+ * clock over the samples, in order: a body the run holds that a sample no longer carries was killed at the last tick
+ * it was carried, and is a corpse in the room until that tick + its class's removal; a body the run already holds as
+ * a corpse is one for its whole removal from the probe's first tick (the side to err on). `at(tick)` lists those
+ * still in the room, flagged `dying`.
+ */
+export function createCorpseClock(run) {
+    const start = run.ticksCompleted;
+    const lastSeen = new Map();
+    const removal = (tag) => removalTicksAfterHit(ENEMY_CLASSES[tag]?.as3 ?? null, deathTicks(tag));
+    const roster = (run.entities('chasers') ?? []).filter((c) => !c.removed);
+    for (const c of roster) lastSeen.set(c.id, { tag: c.tag, x: c.x, y: c.y, t: start, dead: c.destroy || c.dying });
+    return {
+        see(sample) {
+            for (const b of sample.chasers ?? []) {
+                const row = lastSeen.get(b.id);
+                if (row && !row.dead) Object.assign(row, { x: b.x, y: b.y, t: sample.tick });
+            }
+        },
+        at(tick) {
+            const out = [];
+            for (const [id, row] of lastSeen) {
+                if (!row.dead && row.t >= tick) continue;
+                // ⚠ `<=`, MEASURED (step 50): killed on sample t140, removal 11 — the run's ceremony at t151 still
+                // meets the corpse (`FP.world.remove` is deferred to the end of the frame its fade ends on).
+                if (tick - row.t <= removal(row.tag)) out.push({ id, tag: row.tag, x: row.x, y: row.y, dying: true });
+            }
+            return out;
+        },
+    };
+}
+
 /** The held key set that leans from `state` toward `aim` on ONE axis. */
 function leanKeys(state, aim) {
     const dx = aim.x - state.x;
@@ -18312,6 +18430,8 @@ function solveSegmentUnder({
      * informed (or worse) than the walk, which is trap 567 from either side.
      */
     const probeSamples = (samples, except = null, { walkCheck = false } = {}) => {
+        // ⛓ STRIKELAPSE D1 — a ceremony sample's corpses (`ceremonyBesideLiveBody`), read only when one is present.
+        const corpses = samples.some((sm) => sm.ceremony) ? createCorpseClock(run) : null;
         for (let i = 0; i < samples.length; i += 1) {
             const s = samples[i];
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site, every `WALK_CHECK_TICKS`
@@ -18325,6 +18445,11 @@ function solveSegmentUnder({
                     s.spits ?? null, s.grenades ?? null),
                 except);
             if (d.danger) return { x: s.x, y: s.y, tick: s.tick, ...d };
+            corpses?.see(s);
+            if (s.ceremony) {
+                const c = withoutSources(ceremonyBesideLiveBody(run, s, corpses.at(s.tick)), except);
+                if (c.danger) return { x: s.x, y: s.y, tick: s.tick, ...c };
+            }
         }
         return null;
     };
@@ -21677,9 +21802,15 @@ function solveSegmentUnder({
             what: stance.corridor === false
                 ? `${what} stance (ladder-routed: ${stance.why})`
                 : `${what} stance`,
+            // ⛓ STRIKELAPSE D1: the collect's approach is the walk's priced tail (`collectStandWalk`; lapse ON only).
+            ...(CONTACT_FIDELITY.strikeIframeLapse && resolved.strategy === 'collect'
+                ? collectStandWalk(run, resolved, stance) : {}),
         });
         if (collectedInPassing('on the walk to its stance')) continue;
-        refuseDanger(run.state.x, run.state.y, goal, what);
+        // ⛓ STRIKELAPSE D1: the approach that follows was PROBED as the walk's tail (`collectStandWalk`), so the gate
+        // asks the probe's timed question (`SWORD_GATE_TIMED`'s walk-gate reading) rather than the untimed pad.
+        refuseDanger(run.state.x, run.state.y, goal, what, null,
+            CONTACT_FIDELITY.strikeIframeLapse && resolved.strategy === 'collect' ? { timedSword: true } : {});
         const verbTick = perTick.length;
         const exec = STRATEGY_EXECUTORS[resolved.strategy];
         if (!exec) {
