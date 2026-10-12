@@ -329,6 +329,8 @@ export function createWasmPlayback({
         expectedArrivals: 0,
         // ⛓ W8c — the new-game arm's ceremonies waited out, and the tutorial Helps dismissed (one arrow pair each)
         ceremonies: [], dismissed: [],
+        // ⛓ WIND CUTSCENE — cold starts that found the scene under a resolved record (each still waited out)
+        sceneLeaks: [],
         // ⛓ ANYTIME / O2 — expiries, the provisional plans they played, the held retries, and each plan's pass
         expiries: 0, provisionalPlays: 0, retries: 0, passes: {}, backstops: 0,
         // ⛓ MID-ROOM REPLAN — deliveries the gate held back, each one's outcome (freeze, land, replan), and the refused
@@ -637,6 +639,14 @@ export function createWasmPlayback({
         // resolved record too (an unresolved −1 keeps its named `begin` refusal).
         const ceremony = newGameCeremony({ status: st, state });
         const sceneUnderRecord = ceremony === 'cutscene' && Number(be?.['begin.level']) >= 0;
+        if (sceneUnderRecord && !newGame && !ceremonyOver) {
+            // ⛓ WIND CUTSCENE — the scene under a RESOLVED record is a LEAK (a save cleared under a world in
+            // flight, `seedlingRandomizerWiring.settlePushedSwap`): still waited out, now counted by name.
+            stats.sceneLeaks.push({ level: g.level, begin: be?.['begin.level'] ?? null, gt: st.game_time ?? null });
+            tl('scene-leak');
+            log(`[wasm playback] SCENE LEAK — the wind cutscene is playing under a begin record for level ${be?.['begin.level']}; waited out`, 'warn');
+            console.warn(`[wasm playback] SCENE LEAK #${stats.sceneLeaks.length} at level ${g.level} (begin.level ${be?.['begin.level']})`);
+        }
         if ((newGame || sceneUnderRecord) && !ceremonyOver) return { ceremony, begin: arrived.beginEntry };
         let staging = null;
         let shadow = null;
@@ -2112,6 +2122,7 @@ export function createWasmPlayback({
                 forcedBy: { ...stats.forcedBy }, fallbacks: [...stats.fallbacks], heldChecks: [...stats.heldChecks],
                 holdBlocked: [...stats.holdBlocked], adoptRefused: [...stats.adoptRefused], timerThrows: stats.timerThrows.map((r) => ({ ...r })),
                 ceremonies: stats.ceremonies.map((c) => ({ ...c })), dismissed: [...stats.dismissed],
+                sceneLeaks: stats.sceneLeaks.map((r) => ({ ...r })),
                 deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred],
                 swapPushes: stats.swapPushes.map((r) => ({ ...r })), shipClock: stats.shipClock.map((r) => ({ ...r })),
                 adoptClock: stats.adoptClock.map((r) => ({ ...r })), selfChecks: stats.selfChecks.map((r) => ({ ...r })),
