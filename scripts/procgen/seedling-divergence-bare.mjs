@@ -94,7 +94,7 @@ async function oneLeg(leg, dumpPath) {
     const { wasmGoalRefusal } = await M('seedlingDemo/wasmPlayback.js');
     const { createInPlaceProduceService, mountedRecordsOf } = await M('seedlingDemo/wasmWalkTape.js');
     const { ANYTIME_PASSES } = await M('seedlingDemo/jsRuntimeSolver.js');
-    const { atlasLocationGoal } = await M('flashPanel/seedlingPlaybackController.js');
+    const { atlasEventGoal, atlasLocationGoal } = await M('flashPanel/seedlingPlaybackController.js');
     const { indexLevels, levelSourceFromAtlas } = await M('seedlingDemo/atlasSource.js');
     const MAP = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
     const dump = JSON.parse(readFileSync(dumpPath, 'utf8'));
@@ -108,14 +108,23 @@ async function oneLeg(leg, dumpPath) {
         if (leg.goal.kind === 'exit') goal = { kind: 'exit', level: leg.level, tiles: leg.goal.tiles, name: leg.goal.name };
         else {
             const e = dump.entries.find((x) => x.location === leg.goal.name);
-            if (!e) {
+            // ⛓ EVENT GOALS — an event location is the controller's `clear-tag` goal (a dump without `events` has none)
+            const ev = (dump.events ?? []).find((x) => x.location === leg.goal.name);
+            if (ev) goal = atlasEventGoal(ev, ev.sideLevel, leg.goal.name);
+            if (ev && !goal) {
+                out.outcome = 'unresolved';
+                out.err = 'an event record with no integer flag or no obstacle cell';
+                out.ms = Date.now() - t0;
+                return out;
+            }
+            if (!e && !ev) {
                 out.outcome = 'unresolved';
                 out.err = dump.refused.find((r) => r.location === leg.goal.name)?.why ?? 'not a bound location';
                 out.ms = Date.now() - t0;
                 return out;
             }
             // the controller's own spelling of a bound entry's goal (⛓ ENCOUNTERS: an encounter entry carries `encounter`)
-            goal = atlasLocationGoal(e, leg.goal.name);
+            goal ??= atlasLocationGoal(e, leg.goal.name);
         }
         const ref = wasmGoalRefusal(goal, RECS.get(leg.level) ?? null);
         if (ref) { out.outcome = 'wasm-refused'; out.err = ref; return out; }
@@ -134,7 +143,12 @@ async function oneLeg(leg, dumpPath) {
             out.stagedEvents = leg.stagedEvents.map((e) => e.eventId);
         }
         const mapped = arrivalSolverGoal(goal, { staging, levelSource: SRC, record: RECS.get(leg.level) });
-        if (!mapped.goal) { out.outcome = 'no-solver-goal'; out.err = mapped.walker; return out; }
+        if (!mapped.goal) {
+            out.outcome = 'no-solver-goal';
+            out.err = mapped.walker;
+            if (mapped.refusal) out.refusal = mapped.refusal; // ⛓ EVENT GOALS — the solver's reason, by name
+            return out;
+        }
         const req = { ...arrivalSolveRequest({ staging, solverGoal: mapped.goal, levelSource: SRC, records: RECS,
             scratchPersistence: true }), passes: ANYTIME_PASSES };
         out.mapped = mapped.goal.kind;

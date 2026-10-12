@@ -249,6 +249,10 @@ export async function createLab() {
         return { answer, end, failed: st.failed, notes: st.notes.slice(-6), history, plans, tapes: tap.tapes.slice(t0n),
             divs, rowsDrained: rows.length, level: after?.level, x: after?.x, y: after?.y, armed: after?.armed, held: after?.held,
             items: after?.items ?? null, slots: after?.inventory_slots ?? null, cleared: (after?.persistence_cleared ?? []).length,
+            // ⛓ EVENT GOALS — the event's own flag BY NAME: did the GAME set it, and did the runtime's collector collect it?
+            ...(goal.event ? { eventFlag: { ...goal.event.tag,
+                set: (after?.persistence_cleared ?? []).some((c) => c.level === goal.event.tag.level && c.tag === goal.event.tag.tag),
+                collected: glue?.eventCollector ? glue.eventCollector.collected.has(goal.name) : null } } : {}),
             ms: Math.round(performance.now() - t0), roomHits,
             gate: { served: plain((eng.stats.deliveryServed ?? []).slice(g0.served)),
                 deliveries: plain((eng.stats.deliveries ?? []).slice(g0.deliveries)).map((d) => ({ phase: d.phase, tick: d.tick, outcome: d.outcome, save: d.save })),

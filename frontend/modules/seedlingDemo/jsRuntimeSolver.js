@@ -58,7 +58,10 @@
  */
 
 import { createRunForStaging } from './tapeRunner.js';
-import { AXE_DODGE_ASK_PER_PREVIEW, DEFAULT_DASH_MODE, solveSegment } from './solverBot.js';
+import {
+    AXE_DODGE_ASK_PER_PREVIEW, DEFAULT_DASH_MODE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, WAND_TARGET_TAGS, WAND_VERB,
+    solveSegment,
+} from './solverBot.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { TILE_SIZE } from './levelWorld.js';
 import { KILLLOCK_BODIES, killLockBodiesStamp, normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js';
@@ -452,11 +455,78 @@ export function solverGoalFor(goal, { run, resolved, placement = null }) {
         return { goal: { kind: 'encounter', at: { x: at.x, y: at.y }, drop: { item: drop.item },
             then: arena ? 'reach-pit' : null } };
     }
+    if (goal?.kind === 'location' && goal.event) return eventSolverGoal(goal, run);
     if (goal?.kind === 'location') {
         if (!placement) return { walker: 'the location names no entity of the room' };
         return { goal: { kind: 'collect-placement', placement: { x: placement.x, y: placement.y } } };
     }
     return { walker: `a ${goal?.kind ?? 'missing'} goal has no solver goal kind` };
+}
+
+/**
+ * ⛓ EVENT GOALS — the verb the solver's `clear-tag` executor would select for an obstacle key, and whether it is
+ * REGISTERED there: `OBSTACLE_STRATEGIES[key]`, refined by the wand rows `refineStrategy` asks first
+ * (`WAND_VERB`: a `WAND_TARGET_TAGS` solid is the wand's; a `wandlock` is a `Lock`, so `hold`), looked up as
+ * `clearTagExecutor` looks it up (`STRATEGY_EXECUTORS`, plus `wand` while `WAND_VERB` is on — `bait` is NOT the
+ * clear-tag path's). Every later refinement of `hold` (skirt / pulse / kill / weigh) is a registered verb, so it
+ * cannot turn a registered row into a refusal. Read off the solver's own tables, nothing typed;
+ * `jsRuntimeSolverEventGoal.test.js` pins it against the solver's real `no-verb` refusals.
+ */
+export function clearTagVerbOf(key) {
+    const tag = key.slice(key.indexOf(':') + 1);
+    let verb = OBSTACLE_STRATEGIES[key] ?? null;
+    if (WAND_VERB.enabled && key.startsWith('solid:')) {
+        if (WAND_TARGET_TAGS.includes(tag)) verb = 'wand';
+        else if (verb === 'wand' && tag === 'wandlock') verb = 'hold';
+    }
+    const registered = verb !== null && (Object.prototype.hasOwnProperty.call(STRATEGY_EXECUTORS, verb)
+        || (verb === 'wand' && WAND_VERB.enabled));
+    return { verb, registered };
+}
+
+/**
+ * ⛓ EVENT GOALS — why an event goal gets no solver goal, BY THE SOLVER'S OWN REASON (`execClearTag`'s refusal
+ * vocabulary: `wrong-level`, `no-verb`): the location's check stays the game's flag, which nothing here writes.
+ */
+export const EVENT_CLEAR_TAG_REFUSAL = (goal, reason, why) => `"${goal.name ?? goal.event?.eventId ?? 'the event'}" is `
+    + `a saved-obstacle EVENT (clear-tag {${goal.event?.tag?.level},${goal.event?.tag?.tag}} ${goal.event?.obstacle}): `
+    + `the solver's clear-tag refuses it — ${reason}: ${why}. Its check stays the game's persistence flag `
+    + `{${goal.event?.tag?.level},${goal.event?.tag?.tag}} turning set, which nothing but the game writes`;
+
+/**
+ * ⛓ EVENT GOALS — an event location (`seedlingPlaybackController.atlasEventGoal`) → the solver's `clear-tag`
+ * (fidelity CLEARTAG + CROSSROOM D3): `{kind: 'clear-tag', tag: {level, tag}, at: {x, y}, obstacle, presser?}`.
+ * Refused here, BY NAME, only where the solver's executor would refuse before its first tick and the tables say so:
+ *   · `wrong-level` — the run stands in another level than the flag's and the goal names no presser of this level;
+ *   · `no-verb` — the verb the obstacle (or, cross-room, the presser) selects is not registered (`clearTagVerbOf`).
+ * Everything else (`cannot-act`, `unresolved`, `prerequisite`, `not-written`, `cross-room-presser`) is the SOLVE's
+ * answer, refused by the solver with its own `obstacle: {kind: 'clear-tag', reason}`. The completion is the game's:
+ * the run's flag is checked by the runtime's collector, never written here (⚖ flags flow game → AP only).
+ *
+ * @returns {{goal: object}|{walker: string, refusal: {kind: 'clear-tag', reason: string, flag: object, id: string}}}
+ */
+function eventSolverGoal(goal, run) {
+    const ev = goal.event;
+    const flag = { level: ev.tag.level, tag: ev.tag.tag };
+    const out = { kind: 'clear-tag', tag: flag, at: { x: ev.at.x, y: ev.at.y },
+        ...(ev.obstacle ? { obstacle: ev.obstacle } : {}), ...(ev.presser ? { presser: { ...ev.presser } } : {}) };
+    const id = ev.obstacle ?? `?@${ev.at.x},${ev.at.y}`;
+    const refused = (reason, why) => ({ walker: EVENT_CLEAR_TAG_REFUSAL(goal, reason, why),
+        refusal: { kind: 'clear-tag', reason, flag: { ...flag }, id } });
+    const here = Number.isInteger(run?.level) ? run.level : goal.level;
+    const crossRoom = here !== flag.level;
+    if (crossRoom && ev.presser?.level !== here) {
+        return refused('wrong-level', `the run stands in level ${here}; the flag is level ${flag.level}'s, and `
+            + (ev.presser ? `its presser ${ev.presser.class}@${ev.presser.x},${ev.presser.y} is in level ${ev.presser.level}`
+                : 'the event names no presser') + ' — only the flag\'s own level holds the obstacle');
+    }
+    const key = crossRoom ? `proximity-hazard:${ev.presser.class}` : `solid:${String(ev.obstacle ?? '').split('@')[0]}`;
+    const { verb, registered } = clearTagVerbOf(key);
+    if (!registered) {
+        return refused('no-verb', verb ? `${key} selects '${verb}', which no clear-tag executor is registered for`
+            : `no strategy row exists for ${key} — the catalogue names no verb that clears it`);
+    }
+    return { goal: out };
 }
 
 /** The session's tape replayed into a fresh run — a shadow, NOT yet checked against anything. */

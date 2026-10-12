@@ -494,7 +494,10 @@ async function main() {
             // the rooms the game PLAYS (the vanilla arm's delivered set) + the name → cell map, for the node bare pass
             const d = await page.evaluate(() => {
                 const s = window.__div.surface();
-                return JSON.stringify({ deliveredSet: s.wasm.deliveredSet, entries: s.atlas.entries, refused: s.atlas.refused });
+                // ⛓ EVENT GOALS — and the events, each with its `side` region's level (the arrival `atlasEventGoal` reads)
+                const regions = s.atlas.regions instanceof Map ? s.atlas.regions : new Map(Object.entries(s.atlas.regions ?? {}));
+                const events = (s.atlas.events ?? []).map((e) => ({ ...e, sideLevel: regions.get(e.side)?.level ?? null }));
+                return JSON.stringify({ deliveredSet: s.wasm.deliveredSet, entries: s.atlas.entries, refused: s.atlas.refused, events });
             });
             writeFileSync(DUMP, d);
             console.log(`INFO: dumped the delivered set + the name map → ${DUMP}`);

@@ -522,13 +522,13 @@
             "id": "seedling-js-runtime-solver-budget-falls-back",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "Seedling solver-walk S2 → DETERMINISTIC BUDGET. Runtime js + the solver mode ON on seedling_atlas: level 12's door (the ~5 s solve) under a 300 ms wall-clock BACKSTOP (playback.setSolverBackstopMs; the solve's own budget is work units) — the worker is terminated at the backstop and the goal FAILS BY NAME (\"the solve exceeded the backstop on this machine (0.3 s) …\"); nothing of the solve is played, nothing walked instead."
+            "_comment": "Seedling solver-walk S2 → DETERMINISTIC BUDGET. Runtime js + the solver mode ON on seedling_atlas: level 12's door under a 300 ms wall-clock BACKSTOP, the solve held in flight by the ROW (a wrapped page worker that starts and never answers — never the solve's speed) (playback.setSolverBackstopMs; the solve's own budget is work units) — the worker is terminated at the backstop and the goal FAILS BY NAME (\"the solve exceeded the backstop on this machine (0.3 s) …\"); nothing of the solve is played, nothing walked instead."
         },
         {
             "id": "seedling-js-runtime-solver-keeps-the-frame-clock",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "Seedling solver-walk S2. Runtime js + the solver mode ON on seedling_atlas: level 12, 120 walker ticks in (a ~2 s solve that froze the S1 page). The solve runs in the worker: the page's 20 ms heartbeat never gaps past 250 ms while it does, the room is held, and the plan plays to level 36 — solved once, no decline, no refutation."
+            "_comment": "Seedling solver-walk S2. Runtime js + the solver mode ON on seedling_atlas: level 12, 120 walker ticks in (the solve that froze the S1 page). The solve runs in the worker, its real answer held to 800 ms by the ROW (a wrapped page worker — never the solve's speed): the page's 20 ms heartbeat never gaps past 250 ms while it does, the room is held, and the plan plays to level 36 — solved once, no decline, no refutation."
         },
         {
             "id": "seedling-js-runtime-solver-falls-through-pit",

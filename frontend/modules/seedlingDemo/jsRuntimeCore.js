@@ -909,6 +909,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
                 + `drop in level ${goal.level}): the JS page's walker completes a location by its collected tag, and an `
                 + 'encounter has none — it is walked on the wasm runtime' };
         }
+        if (goal.kind === 'location' && goal.event) {
+            // ⛓ EVENT GOALS — likewise: an event's check is the game's persistence flag, not a collected tag; the
+            // solver's `clear-tag` plan is the whole leg, and the wasm runtime walks it.
+            return { ok: false, reason: `"${goal.name ?? 'the location'}" is a saved-obstacle EVENT (clear-tag `
+                + `{${goal.event.tag?.level},${goal.event.tag?.tag}} ${goal.event.obstacle}): the JS page's walker completes a `
+                + 'location by its collected tag, and an event has none — it is walked on the wasm runtime' };
+        }
         if (goal.kind === 'location') {
             if ((mounted?.apItems.get(goal.level) ?? []).some((a) => a.tag === goal.tag)) return { ok: true };
             // ⛓ J3 — a real room's location: the entity holding the tag.
