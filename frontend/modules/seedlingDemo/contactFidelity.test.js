@@ -76,7 +76,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // paces) ships OFF.
             movingWait: false,
             // ⛓ fidelity MOVINGWAIT D4: `totemShotBlastInt` (the totem shot's Explosion at its int point, r 15) ships OFF.
-            totemShotBlastInt: false });
+            totemShotBlastInt: false,
+            // ⛓ fidelity MOVINGWAIT D4: `rebootShake` (a death reboot settles the camera through the shake) ships OFF.
+            rebootShake: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

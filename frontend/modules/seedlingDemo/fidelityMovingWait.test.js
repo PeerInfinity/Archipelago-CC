@@ -214,3 +214,48 @@ describe('MOVINGWAIT D4 — the totem shot\'s Explosion is an int (`totemShotBla
         expect(on.hits).toEqual(off.hits);
     }, 60_000);
 });
+
+describe('MOVINGWAIT D4 — a death reboot settles the camera through the shake (`rebootShake`, OFF)', () => {
+    const REBOOTS = [
+        { name: 'rebootshake-l42-part0-damage', death: 1221, offCam: [776, 0], gameCam: [777, 0] },
+        { name: 'rebootshake-l41-part0-damage', death: 1337, offCam: [800, 24], gameCam: [800, 22] },
+    ];
+
+    it('ships OFF', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.rebootShake).toBe(false);
+    });
+
+    it.each(REBOOTS)('$name: the GAME respawns with the killing hit\'s shake live, and settles at its own camera', ({ name, death, gameCam }) => {
+        const w = witness(name);
+        const at = (t) => w.samples.find((s) => s.t === t);
+        expect(at(death).hits).toBe(0);
+        expect(at(death).cam.shake).toBeGreaterThan(0);
+        expect([at(death + 1).cam.x, at(death + 1).cam.y]).toEqual(gameCam);
+        expect(w.upto).toBe(w.tape.tick_count);
+    });
+
+    it.each(REBOOTS)('$name ON: the model reproduces the whole damage walk at 0 px, through the death and the second life', ({ name, death }) => {
+        const w = witness(name);
+        const { cols, run } = withContactFidelity({ rebootShake: true }, () => replay(w));
+        const bad = [];
+        for (const s of w.samples) {
+            const m = cols.get(s.t);
+            if (!m) { bad.push(`t${s.t}: no model tick`); continue; }
+            if (m.p[0] !== s.p[0] || m.p[1] !== s.p[1]) bad.push(`t${s.t}: player ${s.p} vs ${m.p}`);
+            const gb = [...s.bombs].sort((a, b) => a[0] - b[0]);
+            const mb = [...m.bombs].sort((a, b) => a[0] - b[0]);
+            if (JSON.stringify(gb) !== JSON.stringify(mb)) bad.push(`t${s.t}: bombs ${JSON.stringify(gb)} vs ${JSON.stringify(mb)}`);
+            if ((s.anim ?? '') !== (m.anim ?? '')) bad.push(`t${s.t}: anim ${s.anim} vs ${m.anim}`);
+        }
+        expect(bad.slice(0, 5)).toEqual([]);
+        expect(run.ledger('playerDeaths').length).toBe(1);
+        expect(Math.max(...cols.keys())).toBeGreaterThan(death + 100);
+    }, 120_000);
+
+    it.each(REBOOTS)('$name OFF: the drained settle is exact and wrong — refused at the respawn by name', ({ name, death, offCam, gameCam }) => {
+        const w = witness(name);
+        expect(() => withContactFidelity({ rebootShake: false }, () => replay(w)))
+            .toThrow(`the witnessed game camera (${gameCam[0]}, ${gameCam[1]}) at tick ${death + 1} is not the model's exact `
+                + `camera (${offCam[0]}, ${offCam[1]})`);
+    }, 120_000);
+});
