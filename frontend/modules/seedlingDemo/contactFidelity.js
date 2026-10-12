@@ -269,6 +269,20 @@ export const CONTACT_FIDELITY = {
      * 2026-10-11: "ON at harvest"; L40 legs 378/381 refuse the hold by name — CI sweep 38185191405).
      */
     bombPusherLive: true,
+    /**
+     * fidelity MOVINGWAIT D2 — A LATCHED WAIT MAY PACE (`solverBot.MOVING_WAIT` reads this key).
+     *
+     *     ButtonRoom.as:66-71   set activate(a): if (a) { … } — "Can't be reset to false!!", so walking off changes nothing
+     *     BombPusher.as:44-62   every bomb is aimed at the player's point at the wrap; Explosion.as:52-56 the 15 px disc
+     *
+     * A standing player within 256 px of a BombPusher is always hit (the blast lands ≤ 8.5 px past the aim), and on
+     * every measured L40BUTTON walk every blast that landed on a walking player missed (BOMBPUSHER § D3). OFF: a hold
+     * stands still by contract and one inside a lobber's reach is refused by name (`lobberHoldRefusal`). ON: when the
+     * still wait prices a bomb and the hold is LATCHED (`deriveHold`'s `latched`, or `runLatchedWait`'s group), the
+     * wait paces an out-and-back cycle from the stance, chosen only when every previewed sample is clean
+     * (`planPacedWait`), and returns to the stance bit-exactly at each cycle end.
+     */
+    movingWait: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -338,6 +352,9 @@ if (globalThis.process?.env?.SEEDLING_BAIT_FORECAST === '0') CONTACT_FIDELITY.ba
 // ⛓ fidelity FORCEDHIT: `SEEDLING_FORCED_HITS=0|1` sets that one switch over the set above (a node measurement).
 if (globalThis.process?.env?.SEEDLING_FORCED_HITS === '1') CONTACT_FIDELITY.forcedHits = true;
 if (globalThis.process?.env?.SEEDLING_FORCED_HITS === '0') CONTACT_FIDELITY.forcedHits = false;
+// ⛓ fidelity MOVINGWAIT: `SEEDLING_MOVING_WAIT=0|1` sets that one switch over the set above (a node measurement).
+if (globalThis.process?.env?.SEEDLING_MOVING_WAIT === '1') CONTACT_FIDELITY.movingWait = true;
+if (globalThis.process?.env?.SEEDLING_MOVING_WAIT === '0') CONTACT_FIDELITY.movingWait = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

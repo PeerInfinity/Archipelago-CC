@@ -71,7 +71,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity FORCEDHIT D2: `forcedHits` (`forcedHit.FORCED_HITS`) — ⚖ ON since the wave-13 harvest.
             forcedHits: true,
             // ⛓ fidelity BOMBPUSHER D2: `bombPusherLive` (the lobber, its Bomb and its Explosion) — ⚖ ON since the wave-13 harvest.
-            bombPusherLive: true });
+            bombPusherLive: true,
+            // ⛓ fidelity MOVINGWAIT D2: `movingWait` (`solverBot.MOVING_WAIT`, a latched wait inside a lobber's reach
+            // paces) ships OFF.
+            movingWait: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
