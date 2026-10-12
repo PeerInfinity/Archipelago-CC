@@ -26,6 +26,13 @@ describe('familyOf — the text arm, unchanged by the extraction', () => {
             + '-> light (lightpole@64,88): the stance settled at (37.077550920162714,92.86188546045476) facing 0, and the '
             + 'spear rect from there does not reach the pole\'s core — the derivation\'s stance was (36,92) facing 0.'))
             .toMatch(/^LIGHT-ARM — the DarkTrap light arm at lightpole@64,88/);
+        // ⛓ fidelity UNBILLEDGATE: route step 47's refusal with the gate ON, verbatim (it read `unclassified`).
+        expect(familyOf('solverBot(survey-step-47): UNBILLED DAMAGE — the segment reached its 1 goal(s), but its drive '
+            + 'took 1 hit(s) no plan billed [t83 (run t84, L22) wallflyer:wallflyer@64,80] (the forced-hit rung billed 0). '
+            + 'A walk, kill or detour certified clean by its preview and hit on its drive is not the plan the preview '
+            + 'certified: the segment is refused rather than returned as a solve (`UNBILLED_DAMAGE`).'))
+            .toBe('UNBILLED-DAMAGE — the walk reached its goal but took 1 hit(s) no plan billed, the first at t83 '
+                + "(wallflyer wallflyer@64,80): the danger map's reading of that body certified a walk the drive was hit on");
         expect(familyOf("solverBot: Strategy 'shove' failed to apply to the obstacle"))
             .toBe("VERB-APPLY — the 'shove' strategy IS registered and did not apply here");
         expect(familyOf('twoPassSolve: this clear needs a GAME-sourced tick'))
