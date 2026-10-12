@@ -53,7 +53,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     // ⛓ a measuring run sets SEEDLING_CONTACT_FIDELITY on purpose; the default is what this pins
     // ⛓ TERRAIN D3 shipped W2 and W3 ON; LINEFLIP turned W1 ON (licensed: r9-solve-18 re-recorded on the game, 510 → 519 t)
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_STRIKE_IFRAME_LAPSE
-        || !!process.env.SEEDLING_FALLROCK_POSTFALL || !!process.env.SEEDLING_FORECAST_SPEED_BY_TERRAIN)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_FALLROCK_POSTFALL || !!process.env.SEEDLING_FORECAST_SPEED_BY_TERRAIN
+        || !!process.env.SEEDLING_UNBILLED_DAMAGE_GATE)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -84,7 +85,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L74LEG624: `fallRockPostFall` (D2), `forecastSpeedByTerrain` (D4) shipped OFF — ⚖ (user,
             // 2026-10-12) ON since the wave-14 flip; `strikeIframeLapse` (D3) stays OFF ("Four now, strike later":
             // ON it costs survey steps 50 and 62).
-            strikeIframeLapse: false, fallRockPostFall: true, forecastSpeedByTerrain: true });
+            strikeIframeLapse: false, fallRockPostFall: true, forecastSpeedByTerrain: true,
+            // ⛓ fidelity UNBILLEDGATE D2: `unbilledDamageGate` (`solverBot.UNBILLED_DAMAGE`) ships OFF.
+            unbilledDamageGate: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
