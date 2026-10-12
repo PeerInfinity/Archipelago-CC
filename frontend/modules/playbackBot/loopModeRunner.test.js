@@ -113,6 +113,29 @@ describe('LoopModeRunner', () => {
         expect(game.paths).toHaveLength(2);
     });
 
+    it('ends an explore loop as soon as its region hides nothing more', () => {
+        const { game, runner } = makeGame();
+        runner.start();
+        expect(kinds(game.paths.at(-1))).toEqual(['explore:Menu']);
+        game.publish('loopState:actionCompleted');          // still hidden: keeps going
+        expect(game.loopState.stopProcessing).not.toHaveBeenCalled();
+        game.exits.add('Menu:GameStart');                   // the explore found the exit
+        game.publish('loopState:actionCompleted');
+        expect(game.loopState.stopProcessing).toHaveBeenCalled();
+        vi.advanceTimersByTime(0);
+        expect(kinds(game.paths.at(-1))).toEqual(['move:Overworld', 'explore:Overworld']);
+        expect(game.statuses.some((t) => /ended early \(explored\)/.test(t))).toBe(true);
+    });
+
+    it('a loop whose actions spend no mana is ended after the free-spin limit', () => {
+        const { game, runner } = makeGame();
+        game.gameState.currentMana = 100;
+        runner.start();
+        for (let i = 0; i < 200; i += 1) game.publish('loopState:actionCompleted');
+        expect(game.loopState.stopProcessing).toHaveBeenCalled();
+        expect(game.statuses.some((t) => /200 actions spent no mana/.test(t))).toBe(true);
+    });
+
     it('once plays exactly one loop', () => {
         const { game, runner } = makeGame();
         runner.start({ once: true });

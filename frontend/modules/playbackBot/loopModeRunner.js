@@ -22,6 +22,10 @@
 import { DEFAULT_MANA_STRATEGY, availableTasks, planNextLoop } from './loopDriver.js';
 
 const RETRY_MS = 1000;
+// A loop whose actions keep completing without spending any mana never ends by itself (a substrate explore with
+// nothing left to find can be free — maze — and a repeating explore re-queues itself forever). After this many
+// free completions in a row the runner ends the loop and stops exploring that region for XP.
+const FREE_SPIN_LIMIT = 200;
 
 export class LoopModeRunner {
     /**
@@ -58,6 +62,8 @@ export class LoopModeRunner {
         // block key → {region, instance, prior} for every block mode the runner set (prior: the explicit mode, or
         // undefined when the block had none).
         this._savedBlockModes = new Map();
+        // Regions where exploring measurably yields nothing (free spins): never explored for XP again this run.
+        this._noYield = new Set();
         this._lastPlan = null;
     }
 
@@ -143,7 +149,7 @@ export class LoopModeRunner {
         const startRegion = d.getStartRegion();
         const isExitDiscovered = (r, e) => !discoveryOn || !!d.discovery?.isExitDiscovered?.(r, e);
         const isLocationDiscovered = (l) => !discoveryOn || !!d.discovery?.isLocationDiscovered?.(l);
-        const hasHidden = (region) => discoveryOn && (
+        const hasHidden = (region) => discoveryOn && !this._noYield.has(region) && (
             (d.locationsOf(region) ?? []).some((l) => !isLocationDiscovered(l))
             || (d.exitsOf(region) ?? []).some((e) => !isExitDiscovered(region, e.name)));
         return {
@@ -207,7 +213,27 @@ export class LoopModeRunner {
         this._applyBlockModes(loopState);
         loopState.restartFromStart({ autoStart: true });
         // Subscribed AFTER the restart: restartFromStart publishes its own loopState:loopReset.
-        const ended = () => {
+        // ⛓ An explore loop ends when it has done its work: the region hides nothing more (its repeating explore
+        // would otherwise run on — for free, in a maze — until the mana ends, or forever). The runner ends it by
+        // Loops' own Restart path on the next plan.
+        let freeSpins = 0;
+        let manaSeen = gameState.currentMana;
+        const onActionCompleted = () => {
+            if (!this._active) return;
+            const mana = gameState.currentMana;
+            freeSpins = mana === manaSeen ? freeSpins + 1 : 0;
+            manaSeen = mana;
+            let why = null;
+            if (plan.kind === 'explore' && !this._view().hasHidden(plan.region)) why = 'explored';
+            else if (freeSpins >= FREE_SPIN_LIMIT) {
+                this._noYield.add(plan.region);
+                why = `${FREE_SPIN_LIMIT} actions spent no mana`;
+            }
+            if (!why) return;
+            loopState.stopProcessing?.();
+            ended(why);
+        };
+        const ended = (why = null) => {
             this._clearWait();
             if (!this._active) return;
             if (this._once) {
@@ -216,6 +242,7 @@ export class LoopModeRunner {
                 this.stop();
                 return;
             }
+            if (why) this._status(`loop ${this._loops} ended early (${why}): ${plan.reason}`);
             // Deferred: the out-of-mana reset publishes BEFORE loops pauses itself. And planned only once the
             // worker's snapshot holds this loop's check — planned at once, the same check came round again.
             const next = () => { this._timer = setTimeout(() => { this._timer = null; this._runLoop(); }, 0); };
@@ -223,11 +250,12 @@ export class LoopModeRunner {
             if (flush && typeof flush.then === 'function') flush.then(next, next);
             else next();
         };
-        this._unsubs.push(d.subscribe('loopState:queueCompleted', ended));
-        this._unsubs.push(d.subscribe('loopState:loopReset', ended));
+        this._unsubs.push(d.subscribe('loopState:queueCompleted', () => ended()));
+        this._unsubs.push(d.subscribe('loopState:loopReset', () => ended()));
+        this._unsubs.push(d.subscribe('loopState:actionCompleted', onActionCompleted));
         // A substrate that charges mana itself (maze delegation, per tile) ends the loop on its own reset path:
         // gameState.triggerLoopReset publishes gameState:loopReset, and loops just stops (no loopState event).
-        this._unsubs.push(d.subscribe('gameState:loopReset', ended));
+        this._unsubs.push(d.subscribe('gameState:loopReset', () => ended()));
         // Loops' named stop for a Bot block whose walk cannot happen: say why, and try again next loop.
         this._unsubs.push(d.subscribe('loopState:botWalkFailed', (data) => {
             this._clearWait();
