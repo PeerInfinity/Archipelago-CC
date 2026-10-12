@@ -1562,10 +1562,11 @@ function loopBlockFor(region) {
 const queueLine = (a) => `${a.type}:${a.sourceRegion}>${a.destinationRegion ?? a.locationName ?? ''}`;
 
 /**
- * Queue `steps` (`{check, region}` | `{exit, from, to}`), set every flash_seedling block to BOT, fill the pool and
- * run the queue to its end. Returns the measured facts, or null (named).
+ * Queue `steps` (`{check, region}` | `{exit, from, to}`), set every Seedling block to BOT, fill the pool and
+ * run the queue to its end. Returns the measured facts, or null (named). `substrateId` = the entry whose controller
+ * walks the queue (`flash_seedling` for the atlas rooms, `flash_seedling_gen` for the generated ones).
  */
-async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000 } = {}) {
+async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000, substrateId = 'flash_seedling' } = {}) {
     const gs = getGameStateSingleton();
     gs.setLoopModeActive(true);
     const on = await tc.pollForCondition(() => gs.isLoopModeActive === true, `[${label}] loop mode on`, 5000, 100);
@@ -1578,7 +1579,7 @@ async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000 } = {}) {
     const queue = loopStateSingleton.getActionQueue?.() ?? [];
     const seedlingRegions = [...new Set(steps.map((st) => st.region ?? st.from))];
     for (const r of seedlingRegions) {
-        tc.assertEqual(`[${label}] ${r} is a walkTo-solver region (flash_seedling declares executeVia solver)`,
+        tc.assertEqual(`[${label}] ${r} is a walkTo-solver region (${substrateId} declares executeVia solver)`,
             'walkTo', loopStateSingleton.regionSolver(r));
     }
     const { visits } = resolveQueueBlocks(queue);
@@ -1621,7 +1622,7 @@ async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000 } = {}) {
     const drainPrice = () => Object.fromEntries(seedlingRegions.map((r) =>
         [r, loopStateSingleton._calculateActionCost({ type: 'timeDrain', sourceRegion: r })]));
     const drainBefore = drainPrice();
-    const controller = substrateRegistry.get('flash_seedling')?.getPlaybackController?.() ?? null;
+    const controller = substrateRegistry.get(substrateId)?.getPlaybackController?.() ?? null;
     const goals = [];
     // ⛔ The controller is ONE instance for the session: the goal it holds now is an earlier row's (measured on CI —
     // the previous row's last goal led the list). Only goals taken after this point are this queue's.
@@ -1873,6 +1874,125 @@ const loopBotCrossesAtlasRooms = (runtime) => async (tc) => {
 
 export const seedlingJsRuntimeLoopBotBlocksCrossAtlasRooms = loopBotCrossesAtlasRooms('js');
 export const seedlingWasmRuntimeLoopBotBlocksCrossAtlasRooms = loopBotCrossesAtlasRooms('wasm');
+
+// ── ⛓ GENERATED ROOMS IN LOOP MODE: a Bot block plays a `flash_seedling_gen` room ───────────────────────────────
+//
+// flash_seedling_gen declares flash_seedling's loopSupport (executeVia solver, locationCheck, playClock). On
+// seedling_generated_room the start room `region_0_0` holds the one apitem and two generated teleporter doors; the
+// queue is that apitem's check, then the door into the other generated room `region_0_1`. Under a Bot block the
+// generated rooms' controller walks both (JS: the page's solver; wasm: the WG engine, its tapes the solver's), the
+// game's own check completes the first, the crossing's user:regionMove the second, and Loops charges the start room
+// per GAME second played (`loopState._gameClockCharged` — the time drain alone, never a queued action's price).
+
+const GEN_START = 'region_0_0';
+const GEN_NEXT = 'region_0_1';
+const GEN_APITEM = 'region_0_0__key_blue_pickup';
+const GEN_EXIT = 'exit_0';
+
+/**
+ * Load seedling_generated_room on `runtime` by the production path and wait for the generated arm's AP load, the
+ * game running and gameState in its start room. Returns `{panel, win, rt?}` (rt = the JS page's core), or null.
+ */
+async function generatedPresetOn(tc, runtime) {
+    const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+    await settingsManager.updateSetting(RUNTIME_KEY, runtime, { persist: false });
+    const rulesJson = await (await fetch(PRESET_PATH)).json();
+    const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+    tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: PRESET_PATH });
+    await loaded;
+    await tc.stateManager.pingWorker('after-rules-load', 5000);
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+    const panel = await tc.pollForValue(() => {
+        const p = getActivePanelInstance();
+        return p?.transport === runtime && p.adapter && p.adapter !== staleAdapter && p._initRuntime === runtime ? p : null;
+    }, `[${runtime}] the flash panel mounted the ${runtime} runtime (a fresh adapter)`, 30000, 250);
+    tc.assertEqual(`[${runtime}] the panel is on the ${runtime} transport`, runtime, panel?.transport ?? null);
+    if (!panel) return null;
+    if (runtime === 'wasm') {
+        const startButton = await tc.pollForValue(() => {
+            if (panel.statusElement?.textContent !== 'click ▶ Start in the game') return null;
+            try { return frameOf(panel)?.document?.querySelector('#btn-start') ?? null; } catch { return null; }
+        }, '[wasm] the panel asks for ▶ Start (the game runtime is fetched)', 120000, 250);
+        tc.reportCondition('[wasm] the game page is up (▶ Start)', !!startButton);
+        if (!startButton) return null;
+        startButton.click();
+    }
+    const bound = await tc.pollForCondition(() => !!(panel._apLoadResult && panel.seedlingPlaybackSurface()?.report),
+        `[${runtime}] the panel bound the GENERATED arm and holds the assembly report`, 60000, 250);
+    if (!bound) {
+        tc.log(`[${runtime}] DIAG apLoad ${JSON.stringify(panel._apLoadResult ?? null)?.slice(0, 300)}; refusal `
+            + `${JSON.stringify(panel._apLoadRefusal ?? null)}; log: `
+            + `${(document.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-20).join(' | ')}`, 'error');
+    }
+    tc.reportCondition(`[${runtime}] the generated arm loaded`, !!bound);
+    if (!bound) return null;
+    const win = frameOf(panel);
+    const running = await tc.pollForCondition(() => readCurrentRegion() === GEN_START && (runtime === 'js'
+        ? !!frameOf(panel)?.__seedlingJsRuntime?.run : !!panel.seedlingPlaybackSurface()?.wasm?.getGame?.()),
+    `[${runtime}] the game runs and gameState is in ${GEN_START}`, 60000, 250);
+    tc.reportCondition(`[${runtime}] the game runs and gameState is in ${GEN_START}`, !!running);
+    if (!running) return null;
+    return { panel, win, rt: runtime === 'js' ? win.__seedlingJsRuntime : null };
+}
+
+/** A Bot block walks the generated start room: the queued apitem check, then its door into the next generated room. */
+const loopBotWalksGeneratedRoom = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
+    const up = await generatedPresetOn(tc, runtime);
+    if (!up) return;
+    tc.assertEqual(`[${runtime}] ${GEN_START} is a flash_seedling_gen region`, true,
+        loopStateSingleton._lookupSubstrateId?.(GEN_START) === 'flash_seedling_gen');
+    tc.assertEqual(`[${runtime}] the play clock reporter is up (flashPanel)`, true, !!getSeedlingPlayClock());
+    const r = await seedlingLoopBotQueue(tc, runtime, [
+        { check: GEN_APITEM, region: GEN_START },
+        { exit: GEN_EXIT, from: GEN_START, to: GEN_NEXT },
+    ], { substrateId: 'flash_seedling_gen' });
+    if (!r) return;
+    await tc.stateManager.pingWorker('after-loop', 5000);
+    tc.assertEqual(`[${runtime}] the Bot block walked to the apitem: the game's own check reached the state manager`, true,
+        snapshotFacts(tc).checked.has(GEN_APITEM));
+    tc.assertEqual(`[${runtime}] the generated rooms' controller took the apitem, then the door`,
+        JSON.stringify([`location:${GEN_APITEM}`, `exit:${GEN_EXIT}`]), JSON.stringify(r.goals));
+    const crossed = runtime === 'js'
+        ? up.rt.events.some((e) => e.type === 'transition' && e.teleporter)
+        : reportedExits(up.win).some((e) => e.type === 'teleporter');
+    tc.assertEqual(`[${runtime}] the game took a generated teleporter door itself`, true, crossed);
+    tc.assertEqual(`[${runtime}] gameState moved into the next generated room`, GEN_NEXT, readCurrentRegion());
+    assertLoopEndedOnItsOwn(tc, runtime, r);
+    const charged = assertSeedlingCharged(tc, runtime, r, [GEN_START]);
+    // ⛓ PLAY CLOCK — the TIME Loops charged the start room (`_gameClockCharged`, the drain alone), read off the log.
+    const timeCharged = Math.max(0, ...r.log.filter((e) => e.charged?.region === GEN_START).map((e) => e.charged.seconds));
+    tc.log(`[${runtime}] ${GEN_START}: ${JSON.stringify(charged[GEN_START])}; game seconds charged as time ${timeCharged}`);
+    tc.assertEqual(`[${runtime}] Loops charged the start room's GAME seconds as time (${timeCharged} of `
+        + `${charged[GEN_START].seconds.toFixed(2)}), and mana fell by that drain (${charged[GEN_START].drain})`, true,
+    timeCharged >= 1 && timeCharged <= Math.floor(charged[GEN_START].seconds)
+        && charged[GEN_START].drain > 0);
+    assertNoDeathNoHalt(tc, runtime, up.rt);
+});
+
+export const seedlingJsRuntimeLoopBotBlockWalksGeneratedRoom = loopBotWalksGeneratedRoom('js');
+export const seedlingWasmRuntimeLoopBotBlockWalksGeneratedRoom = loopBotWalksGeneratedRoom('wasm');
+
+const LOOP_GEN_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_generated_room, loop mode on `
+    + 'and the start room\'s block set to Bot: loops hands the queued apitem check and the generated teleporter door to '
+    + 'the flash_seedling_gen controller (executeVia solver); the game\'s own check completes the first, the crossing\'s '
+    + 'user:regionMove the second, and the queue ends on its own. Mana: one charge per action at its own price, plus '
+    + 'the play clock\'s drain per GAME second (loopState._gameClockCharged).';
+
+for (const [id, name, fn] of [
+    ['seedling-js-runtime-loop-bot-block-walks-generated-room',
+        'Seedling JS runtime: a Loops Bot block walks a generated room (its apitem, then its door; play time drains)',
+        seedlingJsRuntimeLoopBotBlockWalksGeneratedRoom],
+    ['seedling-wasm-runtime-loop-bot-block-walks-generated-room',
+        'Seedling (wasm runtime): a Loops Bot block walks a generated room (its apitem, then its door; play time drains)',
+        seedlingWasmRuntimeLoopBotBlockWalksGeneratedRoom],
+]) {
+    registerTest({
+        id, name, description: LOOP_GEN_DESCRIPTION(id.startsWith('seedling-js') ? 'js' : 'wasm'),
+        testFunction: restoresSavedQueues(fn),
+        category: 'Seedling JS runtime',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
 
 /**
  * ⛓ The Flash (Ruffle) runtime has no feet: a Bot block's walkTo there is refused BY NAME, and loops turns the

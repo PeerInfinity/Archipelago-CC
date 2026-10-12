@@ -561,6 +561,18 @@
             "_comment": "Seedling loop mode, the WASM runtime (WebGPU — the batch launches Chromium with it): the JS row's house walk under a Bot block, the tapes from the wasm playback engine."
         },
         {
+            "id": "seedling-js-runtime-loop-bot-block-walks-generated-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode on GENERATED rooms (flash_seedling_gen declares executeVia solver, locationCheck, playClock). Runtime js on seedling_generated_room, the start room's block Bot: the controller walks the queued apitem check (the game's own check completes it) and the generated teleporter door (its user:regionMove resumes the park); the queue ends on its own; one charge per action plus the play clock's drain per GAME second (loopState._gameClockCharged)."
+        },
+        {
+            "id": "seedling-wasm-runtime-loop-bot-block-walks-generated-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "The JS row's generated-room walk on the WASM runtime (WebGPU — the batch launches Chromium with it): the WG engine stages the mounted set, the solver produces the tapes; the game's Game.time drains the start room."
+        },
+        {
             "id": "seedling-js-runtime-loop-play-clock-drains-mana",
             "enabled": true,
             "category": "Seedling JS runtime",
