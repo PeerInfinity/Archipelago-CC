@@ -1800,7 +1800,7 @@
     },
     {
       "file": "r9-solve-14.json",
-      "tickCount": 98,
+      "tickCount": 103,
       "bootLevel": 14,
       "tapeVersion": 11,
       "noHazards": []
@@ -1814,14 +1814,14 @@
     },
     {
       "file": "r9-solve-16.json",
-      "tickCount": 688,
+      "tickCount": 655,
       "bootLevel": 16,
       "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r9-solve-18.json",
-      "tickCount": 518,
+      "tickCount": 440,
       "bootLevel": 18,
       "tapeVersion": 11,
       "noHazards": []

@@ -17,6 +17,7 @@
  */
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 
 import { LATER_LANE_PROBES } from './solverBot.js';
 import { CanCrossError, canCross } from './seedlingCanCross.js';
@@ -25,16 +26,20 @@ const committed = (name) => readFileSync(new URL(`./fixtures/tapes/${name}.json`
 const L17 = (o) => canCross({ level: 16, exit: 17, arrival: { from: 15 }, inventory: ['sword'], dashMode: 'none', ...o });
 
 describe('ROBUST D2 — one idle tick no longer flips L16', () => {
-    it('one idle tick: `can` (220 t, 0 hits), and the committed game witness IS the oracle\'s', () => {
+    // ⛓ fidelity FLIP14: ROBUST's game witnesses and pins were solved under the pre-flip strike gate — `strikeIframeLapse`
+    // OFF. ON (⚖ the wave-14 flip, user 2026-10-12): idle 1 223 t, {sword, conch} → L18 808 t, 0 hits, unwitnessed.
+    it('one idle tick: `can` (220 t, 0 hits), and the committed game witness IS the oracle\'s', () => withContactFidelity({ strikeIframeLapse: false }, () => {
         const r = L17({ idle: 1, name: 'robust-l16-sword-idle1' });
         expect(r.verdict).toBe('can');
         expect(r.request.idle).toBe(1);
         expect(r.plan).toMatchObject({ ticks: 220, hash: '1059d26ccf', landed: 17, deaths: 0, hits: 0 });
         expect(`${JSON.stringify(r.witness.tape, null, 4)}\n`).toBe(committed('robust-l16-sword-idle1'));
         expect(r.witness.replayed).toEqual({ observations: 221, landed: 17, agrees: true });
-    });
+    }));
 
-    it('every idle count asked crosses with 0 hits; idle 0 is the committed CANCROSS plan', () => {
+    // ⛓ fidelity FLIP14: ROBUST's game witnesses and pins were solved under the pre-flip strike gate — `strikeIframeLapse`
+    // OFF. ON (⚖ the wave-14 flip, user 2026-10-12): idle 1 223 t, {sword, conch} → L18 808 t, 0 hits, unwitnessed.
+    it('every idle count asked crosses with 0 hits; idle 0 is the committed CANCROSS plan', () => withContactFidelity({ strikeIframeLapse: false }, () => {
         const rows = [0, 1, 2, 3, 5, 8].map((idle) => {
             const r = L17({ idle, witness: false });
             return [idle, r.verdict, r.plan?.hits];
@@ -42,7 +47,7 @@ describe('ROBUST D2 — one idle tick no longer flips L16', () => {
         expect(rows).toEqual([[0, 'can', 0], [1, 'can', 0], [2, 'can', 0], [3, 'can', 0], [5, 'can', 0],
             [8, 'can', 0]]);
         expect(L17({ witness: false }).plan).toMatchObject({ ticks: 206, hash: '0c36d853aa', rungs: ['pull'] });
-    });
+    }));
 
     it('`idle` is a request field, checked', () => {
         expect(() => L17({ idle: -1 })).toThrow(CanCrossError);
@@ -52,20 +57,24 @@ describe('ROBUST D2 — one idle tick no longer flips L16', () => {
 });
 
 describe('ROBUST D3 — the Conch no longer loses L16 → L18', () => {
-    it('{sword, conch}: `can` (797 t, 0 hits), and the committed game witness IS the oracle\'s', () => {
+    // ⛓ fidelity FLIP14: ROBUST's game witnesses and pins were solved under the pre-flip strike gate — `strikeIframeLapse`
+    // OFF. ON (⚖ the wave-14 flip, user 2026-10-12): idle 1 223 t, {sword, conch} → L18 808 t, 0 hits, unwitnessed.
+    it('{sword, conch}: `can` (797 t, 0 hits), and the committed game witness IS the oracle\'s', () => withContactFidelity({ strikeIframeLapse: false }, () => {
         const r = canCross({ level: 16, exit: { x: 352, y: 80 }, arrival: { from: 15 }, inventory: ['sword', 'conch'],
             dashMode: 'none', name: 'robust-l16-l18-sword-conch' });
         expect(r.verdict).toBe('can');
         expect(r.plan).toMatchObject({ ticks: 797, hash: 'd6505110c3', landed: 18, deaths: 0, hits: 0 });
         expect(`${JSON.stringify(r.witness.tape, null, 4)}\n`).toBe(committed('robust-l16-l18-sword-conch'));
         expect(r.witness.replayed).toEqual({ observations: 798, landed: 18, agrees: true });
-    });
+    }));
 
-    it('{sword} alone is unmoved (878 t, PULL)', () => {
+    // ⛓ fidelity FLIP14: ROBUST's game witnesses and pins were solved under the pre-flip strike gate — `strikeIframeLapse`
+    // OFF. ON (⚖ the wave-14 flip, user 2026-10-12): idle 1 223 t, {sword, conch} → L18 808 t, 0 hits, unwitnessed.
+    it('{sword} alone is unmoved (878 t, PULL)', () => withContactFidelity({ strikeIframeLapse: false }, () => {
         const r = canCross({ level: 16, exit: { x: 352, y: 80 }, arrival: { from: 15 }, inventory: ['sword'],
             dashMode: 'none', witness: false });
         expect(r.plan).toMatchObject({ ticks: 878, hash: 'b9fc18ae79', hits: 0, rungs: ['pull'] });
-    });
+    }));
 
     it('the later-lane probe is bounded', () => {
         expect(LATER_LANE_PROBES).toBe(4);

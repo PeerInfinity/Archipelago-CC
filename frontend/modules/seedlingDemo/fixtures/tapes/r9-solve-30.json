@@ -192,10 +192,10 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 16326,
+        "time": 16220,
         "primary": 0,
         "secondary": 0,
-        "grass_cut": 504,
+        "grass_cut": 515,
         "cutscene": [
             false,
             false,
@@ -216,7 +216,7 @@
             "fp": 1566327037
         },
         "seam": {
-            "time": 16347
+            "time": 16241
         }
     },
     "tick_count": 210,

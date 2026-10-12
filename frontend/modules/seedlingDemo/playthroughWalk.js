@@ -1288,11 +1288,13 @@ const CHAIN_DECLARATIONS = Object.freeze([
              * and the window re-solved to 510 t.
              * ⛓ hammer-phase A2 (`HAMMER_ESCAPE` on, ⚖ user 2026-10-07): the window re-recorded 519 → 518 t;
              * the second spinner is removed at 367, so the clear is at 467 (was 450).
+             * ⛓ fidelity FLIP14 (`strikeIframeLapse` ON, ⚖ user 2026-10-12): the window re-solved from `r9-solve-16`'s
+             * new latch, 518 → 440 t; the second spinner is removed at 306, so the clear is at 406 (was 467).
              */
             Object.freeze({
                 level: 18, tag: 0, source: 'model',
                 evidence: Object.freeze({
-                    removedAt: 367,
+                    removedAt: 306,
                     fade: 100,
                     why: '`spinnerKillLockOpens`\'s removal (the second spinner dies to '
                         + 'the player\'s presses and `Game.totalEnemies()` reaches zero) '

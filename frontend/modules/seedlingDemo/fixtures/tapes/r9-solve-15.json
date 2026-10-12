@@ -84,7 +84,7 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 8756,
+        "time": 8761,
         "primary": 0,
         "secondary": 0,
         "grass_cut": 192,
@@ -96,8 +96,8 @@
         ],
         "menu_state": 0,
         "music": {
-            "set": "Room",
-            "index": 2
+            "set": "Sword",
+            "index": 1
         }
     },
     "tick0": {
@@ -108,7 +108,7 @@
             "fp": 2039186901
         },
         "seam": {
-            "time": 8777
+            "time": 8782
         }
     },
     "tick_count": 456,
