@@ -67,3 +67,44 @@ export const GHOST_SPINNER_PRESS_ROW = Object.freeze({
 export function spinnerStrikePress(weapon) {
     return ghostSpinnerPressFor(weapon) ? GHOST_SPINNER_PRESS_ROW : SWORD_SPINNER_PRESS;
 }
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE D (D3) — **THE APPROACH AND THE FIGHT SCORE WITH THE PRESS'S OWN ROW** (`GHOST_SEARCH_BUCKETS`,
+ * OFF by default: `SEEDLING_GHOST_SEARCH_BUCKETS=1` for a process, or `withGhostSearchBuckets(true, fn)`).
+ *
+ * C2 handed `pressReadyAt` the run's row, so both searches ASK the ghost's predicate at a goal or a press — but their
+ * own arithmetic around it stayed the sword's: `deriveFight` pre-filters a press successor at `SLASH_REACH` (16) and
+ * `SLASH_HIT_TICKS` (5) before `pressReadyAt` is asked, buckets the press window at 5 and lower-bounds the gap at 16;
+ * `deriveApproach` sizes its hit-aware probe and its goal's row margin at 5. Under the switch they read the row
+ * `strikePressOf(run)` gives (`searchPressFor`): the ghost's reach 24 and seven tests for a ghost primary, the sword's
+ * row — the very constants — for everything else. Measured (D3): C2's L18 staging with the ghost and `HAMMER_FIGHT` ON
+ * presses from the 16–24 px band only with the switch, 324 t → 321 t; `HAMMER_APPROACH` is unchanged (325 t).
+ *
+ * OFF, `searchPressFor` returns the sword's row whatever it is handed: every number either search reads is the constant
+ * it read before (byte-inert). ON, a sword run reads the sword's row too, so only a ghost run can move.
+ */
+export const GHOST_SEARCH_BUCKETS = {
+    enabled: globalThis.process?.env?.SEEDLING_GHOST_SEARCH_BUCKETS === '1',
+};
+export const GHOST_SEARCH_BUCKETS_DEFAULT = false;
+
+/** Run `fn` with `GHOST_SEARCH_BUCKETS` set to `enabled`, restoring the previous value (`withGhostSpinnerPress`'s shape). */
+export function withGhostSearchBuckets(enabled, fn) {
+    const was = GHOST_SEARCH_BUCKETS.enabled;
+    GHOST_SEARCH_BUCKETS.enabled = enabled === true;
+    const restore = () => { GHOST_SEARCH_BUCKETS.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/** The row `deriveApproach` / `deriveFight` score with: the press's own under the switch, the sword's OFF. */
+export function searchPressFor(press) {
+    return GHOST_SEARCH_BUCKETS.enabled ? press : SWORD_SPINNER_PRESS;
+}

@@ -1,0 +1,10 @@
+none ghost=0 SOLVED 518 hits 0 landings [(45, 'sword'), (78, 'sword'), (186, 'sword'), (225, 'sword'), (271, 'sword'), (355, 'sword')] 3.8 
+none ghost=1 SOLVED 336 hits 0 landings [(37, 'ghostsword'), (92, 'ghostsword'), (113, 'ghostsword'), (159, 'ghostsword')] 2.5 
+FIGHT ghost=0 SOLVED 342 hits 0 landings [(55, 'sword'), (114, 'sword'), (166, 'sword'), (168, 'sword'), (203, 'sword'), (205, 'sword')] 5.3 
+FIGHT ghost=1 SOLVED 324 hits 0 landings [(55, 'ghostsword'), (95, 'ghostsword'), (167, 'ghostsword'), (169, 'ghostsword')] 3.0 
+APPROACH ghost=0 SOLVED 362 hits 0 landings [(31, 'sword'), (64, 'sword'), (97, 'sword'), (127, 'sword'), (160, 'sword'), (193, 'sword')] 3.3 
+APPROACH ghost=1 SOLVED 325 hits 0 landings [(26, 'ghostsword'), (75, 'ghostsword'), (111, 'ghostsword'), (146, 'ghostsword')] 3.9 
+WIDENED FIGHT ghost=0 SOLVED 342 hits 0 landings [(55, 'sword'), (114, 'sword'), (166, 'sword'), (168, 'sword'), (203, 'sword'), (205, 'sword')] 5.5 
+WIDENED FIGHT ghost=1 SOLVED 321 hits 0 landings [(53, 'ghostsword'), (89, 'ghostsword'), (160, 'ghostsword'), (161, 'ghostsword')] 3.4 
+WIDENED APPROACH ghost=0 SOLVED 362 hits 0 landings [(31, 'sword'), (64, 'sword'), (97, 'sword'), (127, 'sword'), (160, 'sword'), (193, 'sword')] 3.4 
+WIDENED APPROACH ghost=1 SOLVED 325 hits 0 landings [(26, 'ghostsword'), (75, 'ghostsword'), (111, 'ghostsword'), (146, 'ghostsword')] 3.5 

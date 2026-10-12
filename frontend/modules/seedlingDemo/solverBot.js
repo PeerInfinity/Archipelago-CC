@@ -110,6 +110,8 @@ import {
     GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
     // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (behind `GHOST_SPINNER_PRESS`, ON by default).
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
+    // ⛓⛓⛓ hammer-phase D: the approach's and the fight's per-weapon row (behind `GHOST_SEARCH_BUCKETS`, OFF).
+    GHOST_SEARCH_BUCKETS, searchPressFor,
     // ⛓⛓⛓ hammer-phase P1: the press kill's exact caches (behind `PRESS_KILL_COST`, ON; OFF bypasses every one).
     PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
@@ -10597,7 +10599,9 @@ export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMM
         }
         return stood[t - n] ?? null;
     };
-    const need = horizon + SLASH_HIT_TICKS + 4;
+    // ⛓ hammer-phase D: the train this search sizes its probe and its goal's rows by (`searchPressFor`: the sword's OFF)
+    const searchRow = searchPressFor(strikePressOf(run));
+    const need = horizon + searchRow.hitTicks + 4;
     // ⚠ a test due at `n` itself (the press's pending thrust fires at the top of the next tick) is in flight too:
     // it needs no stood tick, but the bodies after it are the hit-aware forecast's
     let windowEnd = null;
@@ -10608,7 +10612,7 @@ export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMM
         } });
     let hitAware = null;
     try {
-        probe(SLASH_HIT_TICKS + 2);
+        probe(searchRow.hitTicks + 2);
         if (windowEnd !== null) hitAware = probe(need);
     } catch (e) {
         if (!(e instanceof Error) || !/no player position/.test(e.message)) throw e;
@@ -10618,7 +10622,7 @@ export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMM
     if (hitAware !== null && hitAware.bodies.some((row) => row[index]?.destroy)) {
         return done({ ok: false, bound: 'dying', why: `the press in flight kills ${bodyId}` });
     }
-    // the goal's train previews read `SLASH_HIT_TICKS + 3` rows past the goal's index
+    // the goal's train previews read `searchRow.hitTicks + 3` rows past the goal's index (the sword's 5 + 3 OFF)
     const rows = hitAware?.rows ?? run.spinnerForecast(need);
     const prefix = windowEnd === null ? 0 : windowEnd - n;
     const lethalFloor = lethalFloorFrom(run, run.state);
@@ -10649,7 +10653,7 @@ export function deriveApproach(run, { bodyId, lastPressAt, caller, bounds = HAMM
     let escape = null;
     const goal = (q, i, path) => {
         const rect = bodyAt(i);
-        if (!rect || !rows[i + SLASH_HIT_TICKS + 2]) return false;
+        if (!rect || !rows[i + searchRow.hitTicks + 2]) return false;
         const iframe = iframeAt(i);
         if (iframe === null) return false;
         const view = previewViewAt(run, i, q, live, rawStep, hitAware?.rows ?? null);
@@ -11053,6 +11057,8 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
     const { cell, iframe, tail } = bounds;
     const NO_KEYS = new Set();
     const PRESS = new Set(['primary']);
+    // ⛓ hammer-phase D: the reach and train this search scores with (`searchPressFor`: the sword's OFF)
+    const searchRow = searchPressFor(strikePressOf(run));
     const rawStep = run.previewStepper();
     const step = previewOrDeath(rawStep);
     const lethalFloor = lethalFloorFrom(run, run.state);
@@ -11097,7 +11103,7 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         for (let k = 0; k < row.length; k += 1) {
             const b = row[k];
             if (!order.has(b.id) || b.destroy) continue;
-            const gap = distanceRectPoint(q.x, q.y, cur.rows[i][k]) - SLASH_REACH;
+            const gap = distanceRectPoint(q.x, q.y, cur.rows[i][k]) - searchRow.reach;
             const reach = gap > 0 ? Math.ceil(gap / (WALK_SPEED + SPINNER.moveSpeed)) : 0;
             const first = Math.max(2, b.hitsTimer, reach);
             const all = first + (SPINNER.hitsMax - b.hits - 1) * SPINNER.hitsTimerMax;
@@ -11111,7 +11117,7 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         const since = n + i - lastPress;
         const fightState = cur.bodies[i].map((b) => `${b.hits}.${b.destroy ? 1 : 0}.${Math.ceil(b.hitsTimer / iframe)}`)
             .join(',');
-        return `${playerKey(q)}|${fightState}|${since <= SLASH_HIT_TICKS ? 'w' : (since <= 19 ? 'd' : 'f')}`;
+        return `${playerKey(q)}|${fightState}|${since <= searchRow.hitTicks ? 'w' : (since <= 19 ? 'd' : 'f')}`;
     };
     // ⛓ THE ROOT: a press of mine in flight stands its window out (the train's convention; its points are the stood
     // states), so every node below holds a quiet cursor
@@ -11262,10 +11268,10 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         // ⛓ THE PRESS, where the executor's own arm would take it (`pressReadyAt`, the one predicate)
         const aims = new Map();
         for (const b of owedAt(node.cur, node.i)) {
-            if (!(n + node.i - node.lastPress > SLASH_HIT_TICKS && b.hitsTimer === 0
-                && distanceRectPoint(node.q.x, node.q.y, b.rect) <= SLASH_REACH)) continue;
+            if (!(n + node.i - node.lastPress > searchRow.hitTicks && b.hitsTimer === 0
+                && distanceRectPoint(node.q.x, node.q.y, b.rect) <= searchRow.reach)) continue;
             stats.inReach += 1;
-            node.cur.ensure(node.i + SLASH_HIT_TICKS + 4);
+            node.cur.ensure(node.i + searchRow.hitTicks + 4);
             const view = previewViewAt(run, node.i, node.q, live, rawStep, node.cur.rows);
             if (!pressReadyAt(view, node.q, b.rect, b.hitsTimer, node.lastPress, strikePressOf(run))) continue;
             const key = FACING_KEYS[facingToward(node.q, b.rect)];

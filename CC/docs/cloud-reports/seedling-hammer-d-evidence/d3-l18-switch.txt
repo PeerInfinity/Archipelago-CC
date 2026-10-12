@@ -1,0 +1,8 @@
+FIGHT buckets=0 ghost=0 SOLVED 342 hits 0 landings [55, 114, 166, 168, 203, 205] reach [14.62, 4.82, 7.51, 6.15, 15.06, 13.83] 5.0
+FIGHT buckets=0 ghost=1 SOLVED 324 hits 0 landings [55, 95, 167, 169] reach [14.62, 12.32, 14.13, 23.76] 2.8
+FIGHT buckets=1 ghost=0 SOLVED 342 hits 0 landings [55, 114, 166, 168, 203, 205] reach [14.62, 4.82, 7.51, 6.15, 15.06, 13.83] 6.2
+FIGHT buckets=1 ghost=1 SOLVED 321 hits 0 landings [53, 89, 160, 161] reach [20.89, 19.99, 13.76, 23.58] 3.5
+APPROACH buckets=0 ghost=0 SOLVED 362 hits 0 landings [31, 64, 97, 127, 160, 193] reach [10.96, 14.15, 10.27, 11.09, 15.59, 6.15] 3.6
+APPROACH buckets=0 ghost=1 SOLVED 325 hits 0 landings [26, 75, 111, 146] reach [19.52, 18.14, 19.56, 18.29] 3.8
+APPROACH buckets=1 ghost=0 SOLVED 362 hits 0 landings [31, 64, 97, 127, 160, 193] reach [10.96, 14.15, 10.27, 11.09, 15.59, 6.15] 3.2
+APPROACH buckets=1 ghost=1 SOLVED 325 hits 0 landings [26, 75, 111, 146] reach [19.52, 18.14, 19.56, 18.29] 4.0

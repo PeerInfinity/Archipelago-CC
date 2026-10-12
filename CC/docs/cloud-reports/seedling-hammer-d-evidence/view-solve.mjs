@@ -5,7 +5,7 @@
 //   node view-solve.mjs --view=step-61-boot.json --goal=collect:880,816 [--at=x,y] [--dash=all] [--json=out.json]
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-const MODULE = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo';
+const MODULE = `${process.env.REPO ?? '/home/user/Archipelago-CC'}/frontend/modules/seedlingDemo`;
 const arg = (n, f) => process.argv.find((a) => a.startsWith(`--${n}=`))?.slice(n.length + 3) ?? f;
 const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
 const { solveSegment } = await import(join(MODULE, 'solverBot.js'));
