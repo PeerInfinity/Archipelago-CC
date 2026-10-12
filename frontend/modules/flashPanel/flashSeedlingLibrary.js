@@ -805,8 +805,9 @@ export const substrateRegistryEntry = Object.freeze({
      * ⛓ PLAY CLOCK (⚖ user, 2026-10-11: "Drain play time too") — `playClock`: the host reports the GAME's own clock
      * (`seedlingPlayClock.js`: `Game.time` off `botStatus`, on the JS and wasm runtimes) as `substrate:playClock`, and
      * Loops charges the region per GAME second played (`loopState._regionDrainsTime`: coarse + playClock), on top of
-     * each queued action's own price. Here only: `flash_seedling_gen` and the generic flash entry declare none. The
-     * Flash (Ruffle) runtime sends no report, so Loops' own rule for a clock that never spoke applies there.
+     * each queued action's own price. `flash_seedling_gen` declares the same three (its generated rooms); the generic
+     * flash entry declares none. The Flash (Ruffle) runtime sends no report, so Loops' own rule for a clock that never
+     * spoke applies there.
      */
     loopSupport: Object.freeze({
         ...runtime.loopSupport,
