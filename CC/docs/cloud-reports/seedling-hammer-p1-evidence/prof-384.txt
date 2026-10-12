@@ -1,0 +1,44 @@
+total s 142.87583
+-- inclusive top (solver functions)
+  111.3 s  77.9%  solveSegmentDeadlined solverBot.js:16575
+  111.3 s  77.9%  solveSegment solverBot.js:16566
+  111.3 s  77.9%  solveSegmentUnder solverBot.js:16623
+  111.3 s  77.9%  execReachPit solverBot.js:20498
+  111.3 s  77.9%  walkToUnder solverBot.js:19271
+  111.3 s  77.9%  walkTo solverBot.js:19797
+  109.3 s  76.5%  planSwordDash solverBot.js:5515
+  109.2 s  76.5%  evaluateAt solverBot.js:5672
+  108.6 s  76.0%  previewFor solverBot.js:5582
+  108.1 s  75.6%  previewWalk solverBot.js:4725
+   53.7 s  37.6%  step levelRun.js:7713
+   26.7 s  18.7%  combatBefore solverBot.js:4885
+   25.9 s  18.1%  decide strikePolicy.js:837
+   23.5 s  16.5%  strikeCandidates strikePolicy.js:226
+   16.5 s  11.6%  step levelRun.js:16583
+   12.0 s   8.4%  move levelRun.js:7743
+   11.8 s   8.3%  sweep levelRun.js:7762
+   11.2 s   7.8%  blocked levelRun.js:7746
+    4.4 s   3.1%  (anon) levelRun.js:7908
+    3.5 s   2.5%  onScreenAt levelRun.js:7675
+    1.9 s   1.3%  bodies levelRun.js:7957
+    1.4 s   1.0%  (anon) levelRun.js:7961
+    0.9 s   0.6%  slashPressForecast combatVerbs.js:542
+    0.8 s   0.5%  advance levelRun.js:17203
+    0.6 s   0.4%  vetoedInRect strikePolicy.js:315
+    0.6 s   0.4%  advance solverBot.js:16800
+-- self top
+   30.9 s  21.6%  (garbage collector) :0
+   15.4 s  10.8%  step levelRun.js:7713
+   14.6 s  10.2%  distanceRectPoint presses.js:378
+   12.7 s   8.9%  shieldBumpTouches bobBossFight.js:379
+    8.0 s   5.6%  strikeCandidates strikePolicy.js:226
+    7.5 s   5.3%  previewWalk solverBot.js:4725
+    5.8 s   4.0%  solidCandidates levelWorld.js:3997
+    5.3 s   3.7%  collidesSolid levelWorld.js:6268
+    4.4 s   3.1%  (anon) levelRun.js:7908
+    3.6 s   2.5%  onScreen camera.js:598
+    3.3 s   2.3%  blocked levelRun.js:7746
+    2.9 s   2.0%  liveRectOf levelWorld.js:4297
+    2.5 s   1.8%  chaserStep chasers.js:626
+    2.5 s   1.7%  step playerPhysicsV2.js:870
+    2.3 s   1.6%  assertNormalizedLiveOpts levelWorld.js:3797

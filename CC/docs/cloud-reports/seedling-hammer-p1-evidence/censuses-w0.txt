@@ -1,0 +1,13 @@
+GREEN: 268 rows match a fresh census
+census-seedling-constants --check — 5684 literals; green drift: 0 new + 0 vanished cosmetic/structural, 0 moved
+PASS
+--check: 79 colliders, exact
+PASS — scripts/procgen/seedling-profile-witnesses.json names all 138 keys
+PASS — scripts/procgen/seedling-profile-witnesses-full.json names all 138 keys
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import json;d=json.load(open('fixtures/tapes/index.json'));print('roster',len(d['tapes']))
+                            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'fixtures/tapes/index.json'
+PASS — scripts/procgen/seedling-entity-witnesses.json names all 535 number leaves
+roster 277
