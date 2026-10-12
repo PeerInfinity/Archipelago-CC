@@ -22,6 +22,8 @@ import { returnToMenu } from '../procgenCore/restartWarp.js';
 import { creditsOfHop, eventPathFinder, gameStateEventsOf, isBreakStep } from '../procgenCore/eventRoute.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { LoopModeRunner } from './loopModeRunner.js';
+import { DEFAULT_MANA_STRATEGY, MANA_STRATEGIES, MANA_STRATEGY_LABELS } from './loopDriver.js';
 
 const DEFAULT_RATE_HZ = 4;
 // LS key for the click-intercept toggle. Persisted separately from
@@ -38,6 +40,8 @@ const LS_INTERCEPT_KEY = 'playbackBot_intercept';
 // mana) is a recorded FUTURE item, not built: it needs cost/benefit
 // modelling and its own slice.
 const LS_MAZE_COLLECT_KEY = 'playbackBot_mazeCollect';
+// ⛓ LOOP MODE — what a loop does when its task is not affordable yet (⚖ the user: a setting). loopDriver.js.
+const LS_MANA_STRATEGY_KEY = 'playbackBot_manaStrategy';
 const COLLECT_NEVER = 'never';
 const COLLECT_ALWAYS = 'always';
 // Cap on how many dispatcher events to keep in the event log so the
@@ -168,7 +172,27 @@ export class PlaybackBotUI {
         getActiveController = null,
         getPlayerId = null,
         restart = null,
+        publish = null,
+        getCurrentRegion = null,
+        isLoopModeActive = null,
+        loopRunnerDeps = null,
     } = {}) {
+        // ⛓ LOOP MODE (loop-mode-bot S3) — in loop mode the bot plays by AUTHORING THE LOOPS QUEUE, one loop at a
+        // time (LoopModeRunner over loopDriver.js); `loopRunnerDeps` is what the runner reads from the live game.
+        this._loopRunnerDeps = loopRunnerDeps;
+        this._loopRunner = null;
+        this._manaStrategy = loadManaStrategyFromLS();
+        // ⛓ DIRECT PLAY (loop-mode-bot S1) — a region with no substrate and no controller (a plain rules.json:
+        // Adventure, any non-procgen preset without the Maze panel) is played straight through the dispatcher:
+        // `publish(eventName, payload)` sends the bot's own user:locationCheck / user:regionMove, one per tick.
+        // `getCurrentRegion` is gameState's — the AUTHORITY for where the player is (a gated move never lands,
+        // so the event alone says nothing); `isLoopModeActive` keeps direct play out of loop mode, where only
+        // the Loops queue may act honestly.
+        this._publish = publish;
+        this._getCurrentRegion = getCurrentRegion;
+        this._isLoopModeActive = isLoopModeActive;
+        this._directTimer = null;
+        this._instantMode = false;
         // ⛓ RETURN TO MENU (procgenCore/restartRoute.js): the slot's player id (default '1') and the Menu panel's
         // Restart (`menuPanel.restart`, the button's own path). A route whose first step is RESTART calls it; the
         // bot never walks an edge for it.
@@ -283,6 +307,7 @@ export class PlaybackBotUI {
     }
 
     destroy() {
+        this._loopRunner?.stop();
         if (this._controlBar) this._controlBar.destroy();
         if (this._element?.parentNode) {
             this._element.parentNode.removeChild(this._element);
@@ -301,6 +326,9 @@ export class PlaybackBotUI {
 
     async play(rateHz = this._rate) {
         this._rate = rateHz;
+        if (this._inLoopMode()) return this._playLoops();
+        this._instantMode = false;
+        this._syncCurrentRegion();
         this._ensureQueueBuilt();
         this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
@@ -326,10 +354,15 @@ export class PlaybackBotUI {
         this._isActive = false;
         this._restartPending = null;
         this._dropRestartDeferral();
+        this._cancelDirectTimer();
+        this._directOnce = false;
+        this._loopRunner?.stop();
         this._dispatch('stop');
     }
 
     async step() {
+        if (this._inLoopMode()) return this._playLoops({ once: true });
+        this._syncCurrentRegion();
         this._ensureQueueBuilt();
         this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
@@ -338,11 +371,20 @@ export class PlaybackBotUI {
         }
         // Awaited, as play() does: the walkTo is published after the
         // snapshot flush, and the step must not tick before it lands.
+        // A direct-play step performs exactly one action.
+        if (this._isPlainRegion()) {
+            this._directOnce = true;
+            this._lastPublishedTarget = null;
+        }
         await this._publishNextWalkTo();
         this._dispatch('step');
     }
 
     async instant() {
+        // Loop mode keeps the user's Loops speed settings (⚖): Instant there is Play.
+        if (this._inLoopMode()) return this._playLoops();
+        this._instantMode = true;
+        this._syncCurrentRegion();
         this._ensureQueueBuilt();
         this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
@@ -374,6 +416,11 @@ export class PlaybackBotUI {
         this._escapes = [];
         this._creditedEvents = new Set();
         this._dispatcherLog = [];       // dispatcher event log is run-scoped
+        this._cancelDirectTimer();
+        this._directOnce = false;
+        this._instantMode = false;
+        this._loopRunner?.stop();
+        this._loopRunner = null;
         this._dispatch('reset');
         this._render();
     }
@@ -634,18 +681,53 @@ export class PlaybackBotUI {
     onLocationCheck(data) {
         const name = data?.locationName;
         if (!name) return;
+        // ⛓ BLOCKED EVENTS (loop-mode-bot S1) — a user:locationCheck is a REQUEST: the loop-mode action gate (or the
+        // worker, for an inaccessible location) can refuse it after the bot heard it. The bot used to count it
+        // anyway and move its cursor past a location that was never checked (the JtA investigation, 2026-10-11:
+        // "8/23" with nothing checked). With a snapshot to ask, the check counts only once the snapshot holds it.
+        const proxy = this._stateManagerProxy;
+        if (proxy?.pingWorker && proxy?.getLatestStateSnapshot) {
+            this._flushSnapshot().then(() => {
+                const checked = proxy.getLatestStateSnapshot()?.checkedLocations;
+                if (Array.isArray(checked) && !checked.includes(name)) {
+                    if (this._walking()) {
+                        this._setStatus(`blocked: the check of "${name}" did not land`);
+                        this._render();
+                    }
+                    return;
+                }
+                this._acceptLocationCheck(name);
+            });
+            return;
+        }
+        this._acceptLocationCheck(name);
+    }
+
+    _acceptLocationCheck(name) {
         this._checkedSoFar.add(name);
         // If this matches the pending manual target, the route is
         // complete — clear it.
         if (this._pendingManualTarget?.name === name) {
             this._pendingManualTarget = null;
         }
-        if (this._isActive) this._publishNextWalkTo();
+        if (this._walking()) this._publishNextWalkTo();
         this._render();
     }
 
     onRegionMove(data) {
         const target = data?.targetRegion;
+        // ⛓ BLOCKED EVENTS (loop-mode-bot S1) — gameState moves the player synchronously inside the dispatcher chain
+        // the bot's receiver forwards on BEFORE calling here, so a move the gate swallowed has left the player where
+        // it was. Then nothing happened: keep the region and the cursor (the bot used to report "in" a region the
+        // player never reached).
+        const actual = this._getCurrentRegion?.() ?? null;
+        if (target && actual && actual !== target) {
+            if (this._walking()) {
+                this._setStatus(`blocked: the move to ${target} did not land (still in ${actual})`);
+                this._render();
+            }
+            return;
+        }
         // ⛓ WALK IDENTITY (b) — the leg moved the player while a Restart waited on it: the route is re-planned from here.
         if (target && this._restartDeferred && target !== this._restartDeferred.from) this._dropRestartDeferral();
         if (target) {
@@ -673,7 +755,7 @@ export class PlaybackBotUI {
             }
             this._restartPending = null;
         }
-        if (this._isActive) this._publishNextWalkTo();
+        if (this._walking()) this._publishNextWalkTo();
         // Manual cross-region routes are progressed one exit at a
         // time; re-dispatch the pending target now that the bot is
         // in a new region (it'll either walk to the location or
@@ -714,6 +796,77 @@ export class PlaybackBotUI {
      * Called at the play/step/instant entry points; mid-run checks
      * arrive through the normal event path.
      */
+    /** True while the bot walks the sphere queue itself (not while the Loop runner plays loops). */
+    _walking() {
+        return this._isActive && !this._loopRunner?.isActive();
+    }
+
+    /** Loop mode, and the panel gave the bot what the Loop runner needs. */
+    _inLoopMode() {
+        return !!this._loopRunnerDeps && !!this._isLoopModeActive?.();
+    }
+
+    getManaStrategy() { return this._manaStrategy; }
+
+    setManaStrategy(strategy) {
+        if (!Object.values(MANA_STRATEGIES).includes(strategy)) return;
+        this._manaStrategy = strategy;
+        saveManaStrategyToLS(strategy);
+        if (this._manaStrategySelect) this._manaStrategySelect.value = strategy;
+    }
+
+    /** The Loop runner (made on first use, and again after a reset). */
+    getLoopRunner() {
+        if (!this._loopRunner && this._loopRunnerDeps) {
+            this._loopRunner = new LoopModeRunner({
+                ...this._loopRunnerDeps,
+                flush: () => this._flushSnapshot(),
+                nextTarget: () => this._nextLoopTarget(),
+                getStrategy: () => this._manaStrategy,
+                onStatus: (text) => { this._setStatus(text); this._render(); },
+                onFinished: () => { this._isActive = false; this._render(); },
+            });
+        }
+        return this._loopRunner;
+    }
+
+    /**
+     * ⛓ LOOP MODE — play loops: the runner writes one loop at a time into the Loops queue and runs it, until every
+     * sphere-log location is checked (or the user stops it — it never gives up). `once` plays a single loop.
+     */
+    async _playLoops({ once = false } = {}) {
+        this._ensureQueueBuilt();
+        if (!this._queue.length) {
+            this._setStatus('no sphere log');
+            this._render();
+            return;
+        }
+        const runner = this.getLoopRunner();
+        if (runner.isActive()) return;
+        this._isActive = !once;
+        runner.start({ once });
+        this._render();
+    }
+
+    /** The next sphere-log location the snapshot does not hold as checked, or null when all are. */
+    _nextLoopTarget() {
+        const checked = new Set(this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations ?? []);
+        for (const name of checked) this._checkedSoFar.add(name);
+        this._advanceCursor();
+        const head = this._queue?.[this._cursor];
+        return head ? { locationName: head.locationName, regionName: head.regionName } : null;
+    }
+
+    /**
+     * Seed `_currentRegion` from gameState when the bot has not heard a move yet: a plain preset's start region
+     * arrives before the panel's receivers are wired, and a direct-play run has no substrate to report it.
+     */
+    _syncCurrentRegion() {
+        if (this._currentRegion) return;
+        const here = this._getCurrentRegion?.() ?? null;
+        if (here) this._currentRegion = here;
+    }
+
     _seedCheckedFromSnapshot() {
         const checked = this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations;
         if (!Array.isArray(checked)) return;
@@ -1174,6 +1327,10 @@ export class PlaybackBotUI {
         this._lastPublishedTarget = sig;
         // ⛓ S2 — a new target: the last walk's note is stale.
         this._walkNote = null;
+        if (this._isPlainRegion() && !this._resolveController()) {
+            this._directAct(target, tail);
+            return;
+        }
         // A substrate whose registry entry declares NO controller (flash and
         // both Seedling entries today) can never take this target. `_dispatch`
         // reads that as "no panel mounted yet" and returns undefined, so the
@@ -1197,6 +1354,12 @@ export class PlaybackBotUI {
         // bot waited for a transition that could never come: a SILENT STALL,
         // indistinguishable from slow progress. Make it terminal and named.
         if (this._dispatch('walkTo', [target]) === false) {
+            // ⛓ DIRECT PLAY — a plain region's controller (the Maze Room panel, mounted for another preset) has no
+            // tile for it: the bot plays the region itself.
+            if (this._isPlainRegion()) {
+                this._directAct(target, tail);
+                return;
+            }
             // ⛓ Seedling JS J2 — a controller that knows WHY it refused says
             // so (`lastRefusal`): e.g. a generated Seedling room under the wasm
             // runtime, which has no feet. Without one, the router's case.
@@ -1216,6 +1379,70 @@ export class PlaybackBotUI {
         // executes the plan instead of sitting on a target with a
         // stopped clock.
         this._dispatch('play', [this._rate]);
+    }
+
+    /**
+     * ⛓ DIRECT PLAY (loop-mode-bot S1) — true when the current region has no substrate (no preset sidecar) and the
+     * bot can publish: a plain rules.json region. It is played through the dispatcher when no controller resolves
+     * for it, or when the one that resolves (the maze fallback) refuses the walk. A region a substrate owns never
+     * qualifies (its controller may still be mounting).
+     */
+    _isPlainRegion() {
+        if (!this._publish || !this._currentRegion) return false;
+        const rulesJson = this._getRulesJson?.() ?? null;
+        const playerId = String(this._getPlayerId?.() ?? '1');
+        return !rulesJson?.preset_sidecars?.[playerId]?.[this._currentRegion];
+    }
+
+    /** The region an exit of `regionName` leads to, from static data (null when unknown). */
+    _exitTargetRegion(regionName, exitName) {
+        const exits = this._getStaticData?.()?.regions?.get?.(regionName)?.exits;
+        if (!Array.isArray(exits)) return null;
+        return exits.find((e) => e?.name === exitName)?.connected_region ?? null;
+    }
+
+    /**
+     * Perform `target` directly, one action per tick at the bot's rate (immediately under Instant, once under
+     * Step). The outcome comes back through the bot's own receivers (onLocationCheck / onRegionMove), which only
+     * count what LANDED, so a refused action leaves the cursor where it was and the status says why.
+     */
+    _directAct(target, tail) {
+        const here = this._currentRegion;
+        if (this._isLoopModeActive?.()) {
+            // Loop mode: only the Loops queue may act honestly (a direct check in a plain region would cost no mana).
+            this._setStatus(`waiting: ${here} is a plain region in loop mode — the bot does not play loop mode yet`);
+            return;
+        }
+        let eventName;
+        let payload;
+        if (target.kind === 'location') {
+            eventName = 'user:locationCheck';
+            payload = { locationName: target.name, regionName: here, originator: 'PlaybackBot', fromBot: true };
+        } else if (target.kind === 'exit') {
+            const to = this._exitTargetRegion(here, target.name);
+            if (!to) {
+                this._setStatus(`error: ${here} has no exit "${target.name}" in the static data`);
+                return;
+            }
+            eventName = 'user:regionMove';
+            payload = { sourceRegion: here, targetRegion: to, exitName: target.name, originator: 'PlaybackBot', fromBot: true };
+        } else {
+            this._setStatus(`error: ${here} is a plain region — it has no ${target.kind} "${tail}" to walk to`);
+            return;
+        }
+        this._cancelDirectTimer();
+        const delayMs = this._instantMode ? 0 : Math.round(1000 / Math.max(0.01, this._rate || DEFAULT_RATE_HZ));
+        this._directTimer = setTimeout(() => {
+            this._directTimer = null;
+            if (!this._isActive && !this._directOnce) return;
+            this._directOnce = false;
+            this._publish(eventName, payload);
+        }, delayMs);
+    }
+
+    _cancelDirectTimer() {
+        if (this._directTimer) clearTimeout(this._directTimer);
+        this._directTimer = null;
     }
 
     /**
@@ -1322,6 +1549,7 @@ export class PlaybackBotUI {
         // is consulted by the dispatcher receivers in
         // playbackBot/index.js via isInterceptEnabled().
         root.appendChild(this._mountInterceptToggle());
+        root.appendChild(this._mountManaStrategy());
 
         // Phase 2 — current target line. Mirrors the bot's queue head
         // (or an active manual walkTo target) in plain text below the
@@ -1374,6 +1602,26 @@ export class PlaybackBotUI {
 
         this._element = root;
         this._render();
+    }
+
+    _mountManaStrategy() {
+        const wrap = document.createElement('label');
+        wrap.className = 'playback-bot-mana-strategy';
+        const text = document.createElement('span');
+        text.textContent = 'Loop mode, when a task is not affordable: ';
+        wrap.appendChild(text);
+        const select = document.createElement('select');
+        for (const value of Object.values(MANA_STRATEGIES)) {
+            const opt = document.createElement('option');
+            opt.value = value;
+            opt.textContent = MANA_STRATEGY_LABELS[value];
+            select.appendChild(opt);
+        }
+        select.value = this._manaStrategy;
+        select.addEventListener('change', () => this.setManaStrategy(select.value));
+        wrap.appendChild(select);
+        this._manaStrategySelect = select;
+        return wrap;
     }
 
     _mountInterceptToggle() {
@@ -1604,6 +1852,21 @@ export class PlaybackBotUI {
         row.textContent = `[${time}] ${entry.eventName} "${entry.target}" (${entry.disposition})`;
         return row;
     }
+}
+
+function loadManaStrategyFromLS() {
+    try {
+        const v = typeof localStorage === 'undefined' ? null : localStorage.getItem(LS_MANA_STRATEGY_KEY);
+        return Object.values(MANA_STRATEGIES).includes(v) ? v : DEFAULT_MANA_STRATEGY;
+    } catch (_e) {
+        return DEFAULT_MANA_STRATEGY;
+    }
+}
+
+function saveManaStrategyToLS(strategy) {
+    try {
+        if (typeof localStorage !== 'undefined') localStorage.setItem(LS_MANA_STRATEGY_KEY, strategy);
+    } catch (_e) { /* storage unavailable */ }
 }
 
 function loadMazeCollectFromLS() {

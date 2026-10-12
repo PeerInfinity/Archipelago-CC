@@ -10580,6 +10580,7 @@ export const INSTRUMENTS = frz({
                 "producer",
                 "shard",
                 "shard-plan",
+                "stage-flags",
                 "wait-for-box"
             ],
             "file": "probe-seedling-divergence-sweep.mjs",
@@ -10673,6 +10674,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "shard-plan"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "stage-flags"
                 }
             ],
             "inheritedFlags": [

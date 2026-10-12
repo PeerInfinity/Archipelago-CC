@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { heldFlags, legPrice, orderLegs, partitionLegs } from './probe-seedling-divergence-sweep.mjs';
+import { hangRow, heldFlags, legPrice, orderLegs, parseStageFlags, partitionLegs, stamp, withStageFlags } from './probe-seedling-divergence-sweep.mjs';
 import { withStagedFlags } from './seedling-divergence-bare.mjs';
 import { triggersOf } from './seedlingFullTierWorkflow.test.js';
 import { slotBlockOf, withSlotBlock } from './seedlingRoomPlay.js';
@@ -95,11 +95,78 @@ describe('event STAGING — a staged flag outlives its leg in the game', () => {
     });
 });
 
+/**
+ * ⚖ --stage-flags (MEASUREMENT ONLY — the L5 open-lock witness): a chosen leg ALSO stages named removed flags,
+ * through the event staging's own channel (it only grows the leg's `stagedEvents`), and every row of it is stamped.
+ */
+describe('--stage-flags — an arbitrary removed flag set on chosen legs', () => {
+    const L5 = 'level_5__r1c5 <- in_L4_64_16 -> exit:out_teleporter_48_112';
+    const keyed = (l, key) => ({ ...l, key });
+
+    it('parses <key>=><level>:<tag>[,…], legs \'|\'-separated (a key holds `->`, never `=>`); empty = none', () => {
+        const p = parseStageFlags(`${L5}=>5:0| a <- b -> location:X=>3:1,12:7`);
+        expect([...p.keys()]).toEqual([L5, 'a <- b -> location:X']);
+        expect(p.get(L5)).toEqual([{ eventId: 'flag:L5:0', level: 5, tag: 0 }]);
+        expect(p.get('a <- b -> location:X').map((f) => f.eventId)).toEqual(['flag:L3:1', 'flag:L12:7']);
+        expect(parseStageFlags('').size).toBe(0);
+        expect(parseStageFlags(undefined).size).toBe(0);
+    });
+
+    it.each([[`${L5}`], [`${L5}=>`], [`${L5}=>5`], [`${L5}=>5:x`], ['=>5:0'], [`${L5}=>5:0|${L5}=>5:1`]])(
+        'a malformed spec fails BY NAME: %s', (spec) => {
+            expect(() => parseStageFlags(spec)).toThrow(/^--stage-flags: /);
+        });
+
+    it('an UNKNOWN key fails by name (a stale key must not stage nothing silently)', () => {
+        expect(() => withStageFlags([keyed(exit(0, 5), L5)], parseStageFlags('nope <- x -> exit:y=>5:0')))
+            .toThrow(/--stage-flags: no leg has the key\(s\) \["nope <- x -> exit:y"\]/);
+    });
+
+    it('the staged set REACHES the leg: its stagedEvents (deduplicated, otherLevel) + the stamp; the rest untouched', () => {
+        const natural = { ...keyed(exit(1, 5), 'other'), stagedEvents: [{ eventId: 'flag:L5:0', level: 5, tag: 0, otherLevel: false }] };
+        const legs = [keyed(exit(0, 5), L5), natural];
+        const out = withStageFlags(legs, parseStageFlags(`${L5}=>5:0,4:2|other=>5:0`));
+        expect(out[0].stagedEvents).toEqual([{ eventId: 'flag:L5:0', level: 5, tag: 0, otherLevel: false },
+            { eventId: 'flag:L4:2', level: 4, tag: 2, otherLevel: true }]);
+        expect(out[0].stagedFlags.map((f) => f.eventId)).toEqual(['flag:L5:0', 'flag:L4:2']);
+        expect(out[1].stagedEvents).toHaveLength(1); // already staged naturally: no duplicate write
+        expect(legs[0].stagedEvents).toBeUndefined(); // the input is untouched
+        expect(withStageFlags(legs, parseStageFlags(''))).toBe(legs);
+    });
+
+    it('a staged leg is a page of its OWN (the event staging\'s rule), whatever --page-legs', () => {
+        const legs = withStageFlags([keyed(exit(0, 5), L5), keyed(exit(1, 5), 'b'), keyed(exit(2, 5), 'c')], parseStageFlags(`${L5}=>5:0`));
+        expect(orderLegs(legs, 'inv', 60).map((p) => p.map((l) => l.id))).toEqual([[1, 2], [0]]);
+    });
+
+    it('every row of a staged leg is STAMPED (run, hang); a natural leg\'s is not', () => {
+        const [leg] = withStageFlags([keyed(exit(0, 5), L5)], parseStageFlags(`${L5}=>5:0`));
+        expect(stamp(leg)).toEqual({ stagedFlags: [{ eventId: 'flag:L5:0', level: 5, tag: 0 }] });
+        expect(stamp(exit(0, 5))).toEqual({});
+        const h = hangRow(leg, { mode: 'inv', producer: 'solver', page: 1, pageLeg: 0, step: 'leg', ms: 1000, started: true });
+        expect(h.stagedFlags).toEqual(stamp(leg).stagedFlags);
+        expect(hangRow(exit(0, 5), { mode: 'inv', page: 1, step: 'leg', ms: 1000 })).not.toHaveProperty('stagedFlags');
+    });
+
+    it('the probe stamps the run row and the boot-failed row, and the mutant skips ONLY the write', () => {
+        const src = readFileSync(join(REPO, 'scripts/procgen/probe-seedling-divergence-sweep.mjs'), 'utf8');
+        expect(src).toMatch(/sphere: leg\.sphere\?\.label \?\? null, \.\.\.stamp\(leg\) \};/);
+        expect(src).toMatch(/page: pageNo, \.\.\.stamp\(leg\), end: 'page-boot-failed'/);
+        expect(src).toMatch(/if \(STAGE_MUTANT !== 'skip-write'\) await rp\.gameFrame\(\)\.evaluate\(\(fs\) => \{\s*window\.__swfBridge\.queueItems/);
+    });
+});
+
 describe('seedling-divergence-sweep.yml', () => {
     const text = readFileSync(join(REPO, '.github/workflows/seedling-divergence-sweep.yml'), 'utf8');
 
     it('its only trigger is workflow_dispatch', () => {
         expect(triggersOf(text)).toEqual(['workflow_dispatch']);
+    });
+
+    it('stage_flags reaches the plan (an unknown key fails it) and every shard; nostagewrite; is the staging mutant', () => {
+        expect(text.match(/--stage-flags="\$STAGE_FLAGS"/g)).toHaveLength(3);
+        expect(text.match(/STAGE_FLAGS: \$\{\{ inputs\.stage_flags \}\}/g)).toHaveLength(2);
+        expect(text).toMatch(/nostagewrite\\;\*\) export SWEEP_STAGE_MUTANT=skip-write/);
     });
 
     it('the shard timeout and the leg count are DERIVED by the plan job, never typed', () => {

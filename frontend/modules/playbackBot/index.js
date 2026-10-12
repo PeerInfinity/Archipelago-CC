@@ -35,6 +35,7 @@ export const moduleInfo = {
     storage: [
         { key: 'playbackBot_intercept', kind: STORAGE_KINDS.state, label: 'Playback Bot: intercept toggle' },
         { key: 'playbackBot_mazeCollect', kind: STORAGE_KINDS.state, label: 'Playback Bot: maze collect policy' },
+        { key: 'playbackBot_manaStrategy', kind: STORAGE_KINDS.state, label: 'Playback Bot: loop-mode mana strategy' },
     ],
 };
 
@@ -95,7 +96,7 @@ export function register(registrationApi) {
         'user:locationCheck',
         (data) => {
             const bot = getActivePanel()?.getBot();
-            if (bot?.isInterceptEnabled?.()) {
+            if (bot?.isInterceptEnabled?.() && !data?.fromBot) {
                 bot.logDispatcherEvent?.('user:locationCheck', data, 'intercepted');
                 bot.walkToLocation?.(data?.locationName);
                 return; // swallow — do NOT propagate
@@ -144,7 +145,7 @@ export function register(registrationApi) {
         'user:exitClicked',
         (data) => {
             const bot = getActivePanel()?.getBot();
-            if (bot?.isInterceptEnabled?.()) {
+            if (bot?.isInterceptEnabled?.() && !data?.fromBot) {
                 bot.logDispatcherEvent?.('user:exitClicked', data, 'intercepted');
                 bot.walkToExit?.(data?.exitName);
                 return; // swallow — do NOT propagate

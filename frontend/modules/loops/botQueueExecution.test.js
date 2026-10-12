@@ -179,6 +179,56 @@ describe('Bot-backed queue execution (loopSupport.executeVia = solver)', () => {
         expect(walkToCalls).toEqual([{ kind: 'exit', name: 'bounceRegion__east' }]);
     });
 
+    // loop-mode-bot — the NAMED STOP: a refusal (sync false, or a late
+    // playback:walkFailed) must never leave the block parked forever.
+    it('a walkTo that answers false is a named stop with the controller\'s reason', () => {
+        controller.walkTo = (target) => { walkToCalls.push(target); return false; };
+        controller.lastRefusal = 'only the JS runtime has feet';
+        setupBounceQueue(1);
+        tick(loopState);
+        expect(loopState._botExecutedAction).toBeNull();
+        expect(loopState.isProcessing).toBe(false);
+        expect(loopState.isPaused).toBe(true);
+        const failed = bus.events.filter((e) => e.name === 'loopState:botWalkFailed');
+        expect(failed).toHaveLength(1);
+        expect(failed[0].data).toMatchObject({ region: 'bounceRegion', reason: 'only the JS runtime has feet' });
+    });
+
+    it('a late playback:walkFailed for the parked walk is the same named stop', () => {
+        setupBounceQueue(1);
+        tick(loopState);
+        expect(loopState._botExecutedAction).not.toBeNull();
+        bus.publish('playback:walkFailed', { substrate: 'bounce_test', target: { kind: 'location', name: 'Coin' }, reason: 'gave up' });
+        expect(loopState._botExecutedAction).toBeNull();
+        expect(loopState.isPaused).toBe(true);
+        expect(stopCalls).toEqual(['stop']);
+        expect(bus.events.find((e) => e.name === 'loopState:botWalkFailed')?.data.reason).toBe('gave up');
+    });
+
+    it('a walkFailed for another substrate or target leaves the park alone', () => {
+        setupBounceQueue(1);
+        tick(loopState);
+        bus.publish('playback:walkFailed', { substrate: 'maze', target: { kind: 'location', name: 'Coin' }, reason: 'x' });
+        bus.publish('playback:walkFailed', { substrate: 'bounce_test', target: { kind: 'location', name: 'Other' }, reason: 'x' });
+        expect(loopState._botExecutedAction).not.toBeNull();
+        expect(bus.events.some((e) => e.name === 'loopState:botWalkFailed')).toBe(false);
+    });
+
+    it('listens for walkFailed only while a walk is parked', () => {
+        const listening = () => !!loopState._botWalkFailedListener;
+        expect(listening()).toBe(false);
+        setupBounceQueue(1);
+        tick(loopState);
+        expect(listening()).toBe(true);
+        loopState._handleBotWake_locationCheck('Coin');
+        expect(listening()).toBe(false);
+    });
+
+    it('a walkFailed with no walk parked is ignored', () => {
+        bus.publish('playback:walkFailed', { substrate: 'bounce_test', reason: 'x' });
+        expect(bus.events.some((e) => e.name === 'loopState:botWalkFailed')).toBe(false);
+    });
+
     it('completes the locationCheck when its check event arrives, charging the fallback cost', () => {
         setupBounceQueue(1);
         tick(loopState);

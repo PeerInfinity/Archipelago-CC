@@ -67,6 +67,14 @@ on:
           staging); false = the MUTANT / control (--no-stage-events: the legs land inside their obstacles).
         type: boolean
         default: true
+      stage_flags:
+        description: >-
+          MEASUREMENT ONLY, empty for every real sweep. '<leg key>=><level>:<tag>[,<level>:<tag>…]', '|'-separated:
+          those legs ALSO stage the named removed flags through the event staging's channel (the game's setter, the
+          read-back, stage-failed, a page of their own); their rows carry `stagedFlags`. An unknown key fails the plan
+          by name. Pair it with `keys` to run only the staged leg(s).
+        type: string
+        default: ''
       contact_fidelity:
         description: >-
           Empty = the model's contact switches at their defaults (today's run). Otherwise the ON keys of
@@ -78,7 +86,9 @@ on:
         description: >-
           TEST-ONLY, empty for every real sweep. The probe's fault injection SWEEP_INJECT_HANG=<page>:<step>[,…]
           (steps pageClose browserClose launch newPage boot leg; the shard-local page number); a `nobound;` prefix
-          also runs the MUTANT (SWEEP_HANG_BOUND=off: no bound — the injected hang sits until the job timeout).
+          also runs the MUTANT (SWEEP_HANG_BOUND=off: no bound — the injected hang sits until the job timeout); a
+          `nostagewrite;` prefix runs the staging MUTANT (SWEEP_STAGE_MUTANT=skip-write: requested, never written —
+          a staging leg must end `stage-failed`).
         type: string
         default: ''
 
@@ -117,6 +127,7 @@ jobs:
           IDS: ${{ inputs.ids }}
           KEYS: ${{ inputs.keys }}
           PAGE_LEGS: ${{ inputs.page_legs }}
+          STAGE_FLAGS: ${{ inputs.stage_flags }}
         run: |
           set -o pipefail
           mkdir -p test-results/divergence-sweep
@@ -128,8 +139,8 @@ jobs:
             node --input-type=module -e "import fs from 'node:fs';import {pickLegs} from './scripts/procgen/seedling-divergence-legs.mjs';const legs=fs.readFileSync('$L','utf8').split('\n').filter(Boolean).map((l)=>JSON.parse(l));const pick=pickLegs(legs,{ids:(process.env.IDS||'').split(',').filter(Boolean).map(Number),keys:(process.env.KEYS||'').split('|').filter(Boolean)});console.log('SELECTED: '+pick.length+' leg(s)');fs.writeFileSync('$L.sub',pick.map((l)=>JSON.stringify(l)).join('\n')+'\n')"
             mv "$L.sub" "$L"
           fi
-          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" | tee -a plan.txt
-          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --json > plan.json
+          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" | tee -a plan.txt
+          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" --json > plan.json
           # ⛓ the partition travels with the leg list: the merge compares each shard's ids against its rows
           cp plan.json test-results/divergence-sweep/plan.json
           echo "matrix=$(node -p "JSON.stringify(require('./plan.json').matrix)")" >> "$GITHUB_OUTPUT"
@@ -206,15 +217,17 @@ jobs:
           PAGE_LEGS: ${{ inputs.page_legs }}
           STAGE: ${{ !inputs.stage_events && '--no-stage-events' || '' }}
           CONTACT: ${{ inputs.contact_fidelity }}
+          STAGE_FLAGS: ${{ inputs.stage_flags }}
           TEST_FAULT: ${{ inputs.test_fault }}
         run: |
           set -o pipefail
           # ⛔ TEST-ONLY (the `test_fault` input; empty = inert): the hang injection and the no-bound mutant
           if [ -n "$TEST_FAULT" ]; then
             TF="$TEST_FAULT"
+            case "$TF" in nostagewrite\;*) export SWEEP_STAGE_MUTANT=skip-write; TF="${TF#nostagewrite;}";; esac
             case "$TF" in nobound\;*) export SWEEP_HANG_BOUND=off; TF="${TF#nobound;}";; esac
             [ -n "$TF" ] && export SWEEP_INJECT_HANG="$TF"
-            echo "::warning::TEST-ONLY fault injection: SWEEP_INJECT_HANG=${SWEEP_INJECT_HANG:-} SWEEP_HANG_BOUND=${SWEEP_HANG_BOUND:-on}"
+            echo "::warning::TEST-ONLY fault injection: SWEEP_INJECT_HANG=${SWEEP_INJECT_HANG:-} SWEEP_HANG_BOUND=${SWEEP_HANG_BOUND:-on} SWEEP_STAGE_MUTANT=${SWEEP_STAGE_MUTANT:-}"
           fi
           python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
           echo $! > /tmp/httpd.pid
@@ -228,7 +241,8 @@ jobs:
           S=$(date +%s)
           set +e
           node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=$D/legs.jsonl --shard="$SHARD" --mode="$MODE" \
-            --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP $STAGE ${CONTACT:+--contact-fidelity="$CONTACT"} 2>&1 | tee "$L"
+            --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP $STAGE ${CONTACT:+--contact-fidelity="$CONTACT"} \
+            --stage-flags="$STAGE_FLAGS" 2>&1 | tee "$L"
           RC=$?
           set -e
           echo "MEASURED: shard $SHARD rc=$RC wall $(( $(date +%s) - S ))s load $(cut -d' ' -f1-3 /proc/loadavg) nproc $(nproc) at ${GITHUB_SHA}"

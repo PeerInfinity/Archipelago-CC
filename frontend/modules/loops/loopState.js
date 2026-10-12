@@ -46,6 +46,7 @@ import {
 // AND exactly one exit). A pure module (it imports only `rulesGraph`), so this
 // is not a dependency on the menu panel's wiring.
 import { SKIP_MENU_DEFAULT, skipsStart } from '../menuPanel/menuPanelEngine.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 
 /**
  * Tick period of the SUMMARY substrates' live-play time drain (M5). One
@@ -3009,7 +3010,26 @@ export class LoopState {
       if (this.regionBotHonorsInstant(action.sourceRegion)) {
         controller?.instant?.(this._currentBlockIsInstant());
       }
-      controller?.walkTo?.(target);
+      // A synchronous `false` is a REFUSAL (the PlaybackController contract):
+      // the walk will never happen, so the park would never wake. Stop by
+      // name instead, with the controller's own reason when it has one.
+      if (controller?.walkTo?.(target) === false) {
+        const why = typeof controller.lastRefusal === 'string' && controller.lastRefusal
+          ? controller.lastRefusal
+          : `the ${substrate} controller refused ${target.kind} '${target.name}'`;
+        this._failBotExecutedAction(why);
+        return;
+      }
+      // A solver that ACCEPTED the walk and only later finds it cannot be
+      // walked says so on playback:walkFailed. Listened to ONLY while this
+      // walk is parked (dropped in _stopBotExecutedAction): an always-on
+      // subscription measurably perturbed an unrelated cross-substrate grant
+      // row (omsi-award-schedule, 6/13 red vs 0/9 without it, mechanism not
+      // identified), and outside a park the event is never ours anyway.
+      if (!this._botWalkFailedListener && this.eventBus?.subscribe) {
+        this._botWalkFailedListener = (data) => this._handleBotWalkFailed(data);
+        this.eventBus.subscribe(PLAYBACK_WALK_FAILED_EVENT, this._botWalkFailedListener);
+      }
       log('info', `[LoopState] Bot walking to ${target.kind} '${target.name}' in ${action.sourceRegion}`);
     } catch (err) {
       log('warn', '[LoopState] Bot walkTo threw:', err);
@@ -3021,7 +3041,54 @@ export class LoopState {
    * action. Called on pause/stop, loop reset, and unexpected-region
    * detection.
    */
+  /**
+   * A late refusal (`playback:walkFailed`) for the parked Bot walk. Matched
+   * on the parked action's substrate and, when the event names one, its
+   * target — a failure from another controller (the standalone Playback Bot
+   * driving a different region) is not ours.
+   */
+  _handleBotWalkFailed(data) {
+    const action = this._botExecutedAction;
+    if (!action) return;
+    const substrate = this._lookupSubstrateId(action.sourceRegion);
+    if (data?.substrate && substrate && data.substrate !== substrate) return;
+    const want = action.type === 'locationCheck' ? action.locationName : action.exitUsed;
+    if (data?.target?.name && want && data.target.name !== want) return;
+    this._failBotExecutedAction(
+      typeof data?.reason === 'string' && data.reason ? data.reason : `the ${substrate} walk failed`);
+  }
+
+  /**
+   * The NAMED STOP of a Bot block whose walk cannot happen: drop the park,
+   * pause the queue, and publish `loopState:botWalkFailed` with the reason
+   * (never a silent wait). The user — or the Playback Bot's loop runner —
+   * decides what next.
+   */
+  _failBotExecutedAction(reason) {
+    const action = this._botExecutedAction;
+    this._stopBotExecutedAction();
+    log('warn', `[LoopState] Bot block in '${action?.sourceRegion}' stopped: ${reason}`);
+    this.stopProcessing();
+    this.isPaused = true;
+    this.eventBus?.publish?.('loopState:botWalkFailed', {
+      region: action?.sourceRegion ?? null,
+      action,
+      reason,
+    });
+    this.eventBus?.publish?.('loopState:pauseStateChanged', {
+      isPaused: this.isPaused,
+      processingState: this.getProcessingState(),
+    });
+  }
+
+  _dropBotWalkFailedListener() {
+    if (!this._botWalkFailedListener) return;
+    this.eventBus?.unsubscribe?.(PLAYBACK_WALK_FAILED_EVENT, this._botWalkFailedListener);
+    this._botWalkFailedListener = null;
+  }
+
   _stopBotExecutedAction() {
+    this._dropBotWalkFailedListener();
     const action = this._botExecutedAction;
     if (!action) return;
     this._botExecutedAction = null;
@@ -3148,6 +3215,7 @@ export class LoopState {
    * way, because the depletion wake ignores a non-manual park.
    */
   _completeBotExecutedAction({ viaRegionMove = false } = {}) {
+    this._dropBotWalkFailedListener();
     const action = this._botExecutedAction;
     this._botExecutedAction = null;
     if (!action || this.currentAction !== action) return;

@@ -472,6 +472,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('loopState:manualEntered');
   registrationApi.registerEventBusPublisher('loopState:manualResumed');
   registrationApi.registerEventBusPublisher('loopState:queuePausedUntilReset');
+  registrationApi.registerEventBusPublisher('loopState:botWalkFailed');
   // loopState activates the substrate panel on manual / playback entry
   // (loopState.js _handleManualRegionEntry / _handlePlaybackReplayEntry /
   // customQueue). Every other ui:activatePanel publisher registers itself;
