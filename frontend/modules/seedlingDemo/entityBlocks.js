@@ -309,7 +309,7 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'the room\'s `BombPusher`s in `.oel` order, each with its `shotTime` clock and its "shoot"/"sit" Spritemap (fidelity BOMBPUSHER: `levelRun.bombPushersNow`, `bombPusher.js`); empty while `CONTACT_FIDELITY.bombPusherLive` is off.' },
     { family: 'bombs', kind: RUN_ENTITIES, blocks: ['explode'],
-        solverReads: ['dangerMap'], strategies: [],
+        solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'the `Bomb`s in flight, newest first (fidelity BOMBPUSHER: `levelRun.bombsNow`): position, velocity and the 30-update count to the `Explosion` (r 15) the 31st update adds.' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */

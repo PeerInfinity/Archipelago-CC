@@ -21876,3 +21876,37 @@ this run did, so the pipeline stopped before spending any of the graphics
 budget, naming six files it had itself predicted would move. The check now reads
 the permission rather than the mechanism, and the offline rehearsal gained the
 scenario that reproduces it, which no existing scenario could.
+
+### Seedling hammer-phase BW — the press kill's waits see the lobber's bombs
+
+⚖ The user (2026-10-12): *"Both, in parallel"* — this slice beside the planner's G1 flip re-measure. One behaviour
+change behind one new switch, **OFF**, and OFF is byte-inert: `pressKillCost.PRESS_KILL_BOMBS`
+(`SEEDLING_PRESS_KILL_BOMBS=1`, `withPressKillBombs`). The report is `CC/docs/cloud-reports/seedling-hammer-bw.md`.
+
+**W0** at `b984872d3c`: identity block = the banked values (six producers exit 0 at `405d9c4b b76f6483 465a8b46
+35456fbc 6cd35fe1 712f0ead`, ENEMY `afdc6d1a`, reference ALL MATCH); surface GREEN 284, constants 5,841, entities 558,
+profile 138; roster 277; tapeRunner 611 `75a3c41f`; bounded vitest 1014/1014 (20 files). Fidelity's t1156 hit
+reproduces in node (the page's delivered set and the atlas staging alike): `deriveStrike` picks (248,184) for
+`spinner@192,128` at t1099 (press t1153), the walk arrives about t1127 and STANDS; the strike lapses, is re-derived for
+t1156 and pressed then; `#7` (launched t1125 at the arriving player) explodes at (255,187) on that tick. It is the
+**strike's dwell**, the one press-kill wait a bomb reaches in the L40 table (378 / 384 / 396 / 400 and staging A never
+reach a press kill near the lobber).
+
+**D1 — four candidates, each measured alone on 381 (MOVING_WAIT ON).** The strike's stand priced against the lobber's
+forecast removes the hit (it strikes from (232,184), landing t1154); the refuge priced, the live aim refused into a
+blast, and the held strike dropped when its stance is bombed each leave it (the re-derivation picks the same stance).
+All four together: 0 hits to the next stop; the aim and drop guards refused nothing there (0 of 66 asks), so only the
+strike stand and the refuge ship.
+
+**D2 — the switch** in `pressKillCost.js` (the door re-exports only `levelRun.js`'s import closure; a new module would be
+a family file), the reads `bombsInPlay` / `firstBlastOn` in `solverBot.js`. No P1/P2 cache gains an input. Game witness
+`hammer-bw-l42-381-bombstand` (`plan-seedling-hammer-bw-bombstand.mjs`; `fixtures/hammer-bw-bombstand-witness/`, not
+the roster): 1293 t, 0 hits; the game (p4f) equal at 1,290 sampled ticks (player, every Bomb, the lobber's anim, hits).
+Gate `hammerPressBombs.test.js` (8 rows); mutants: the stand arm removed → 2 red, the refuge arm removed → 1 red.
+
+**D3 — ON:** the L40 table moves at **381 with MOVING_WAIT ON only** (THREW `CAMERA BAND` after `#7`'s hit → REFUSED
+by name at t1248, `#9`'s blast on the chaser `bob@272,112`, the Explosion's unstaged `"Enemy"` arm; 0 player hits).
+Identity block ON (MOVING_WAIT OFF and ON) = W0 on every value row (r9-campaign `712f0ead`, `r9-solve-16` PASS ×3,
+ENEMY `afdc6d1a`); L18 sweep 45/45 and C2's L18 ghost staging 45/45 equal (timing stripped); staging A equal (keys
+`af47d35d`) and no slower. Nothing committed moves; nothing re-recorded. The page cannot see the switch (env-only).
+The flip is the user's.

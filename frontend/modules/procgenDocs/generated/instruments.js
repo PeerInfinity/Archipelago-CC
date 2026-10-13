@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 86,
+            "count": 87,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 419,
+        "blockStyle": 420,
         "browser": 142,
-        "cited": 215,
-        "files": 431,
+        "cited": 216,
+        "files": 432,
         "lineStyle": 12,
-        "withDocblock": 431,
-        "withFlags": 347
+        "withDocblock": 432,
+        "withFlags": 348
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7726,6 +7726,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-hammer-b2-fight — ⛓⛓⛓ SEEDLING HAMMER-PHASE B2 D2: THE FIGHT's SOLVE, HANDED TO THE GAME.",
             "path": "scripts/procgen/plan-seedling-hammer-b2-fight.mjs"
+        },
+        {
+            "argvHelpers": [
+                "check"
+            ],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "plan-seedling-hammer-bw-bombstand.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "samples"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-bw-bombstand — ⛓⛓⛓ SEEDLING HAMMER-PHASE BW, D2: THE PRESS KILL'S STAND, PRICED AGAINST THE LOBBER, ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs"
         },
         {
             "argvHelpers": [],
