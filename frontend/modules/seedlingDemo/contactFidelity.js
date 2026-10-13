@@ -360,7 +360,7 @@ export const CONTACT_FIDELITY = {
      * the route survey solves today (the slice report lists them); the flip is the user's licence.
      * `SEEDLING_UNBILLED_DAMAGE_GATE=0|1` for a node measurement.
      */
-    unbilledDamageGate: false,
+    unbilledDamageGate: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
