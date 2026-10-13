@@ -16,6 +16,7 @@
  * hits than its plans billed (hit ticks vs billed ticks vs the first divergence, and whether the hit IS it), a count
  * of rows with no hit ticks (`UNBILLED-HIT-UNKNOWN`, rows from before S5-2 — unknown, never 0), and the
  * `UNBILLED-GATE` refusal count (fidelity's `unbilled-damage` obstacle kind).
+ * Each row's `seamTime` (the arrival game clock its first solve was staged at) prints on one `SEAM-TIME:` line, `id@time:end`.
  * A `HANG:` line in a shard log with no row behind it (a teardown that hung AFTER its legs reported) is a WARNING:
  * the rows are complete.
  *
@@ -67,6 +68,9 @@ export function mergeVerdict({ rows, plan, hangLines = [] }) {
     }
     if (planBudget !== LEG_BUDGET_MS_DEFAULT) lines.push(`LEG-BUDGET: ${planBudget} ms per leg (off the ${LEG_BUDGET_MS_DEFAULT} ms default)`);
     lines.push(`MERGE: ${rows.length} rows, ${ids.size} distinct legs of ${plan.legs}; ends ${JSON.stringify(ends)}`);
+    // ⛓ SEAM TIME — each leg's arrival game clock beside its end: the same leg at another seam time is another request
+    const timed = rows.filter((r) => r.seamTime !== undefined);
+    if (timed.length) lines.push(`SEAM-TIME: ${timed.map((r) => `${r.id}@${r.seamTime ?? '-'}:${r.end}`).join(' ')}`);
     if (ids.size !== Number(plan.legs)) fail(`${ids.size} distinct legs, the plan holds ${plan.legs}`);
     if (count('page-boot-failed')) fail(`${count('page-boot-failed')} leg(s) on a page that never booted`);
     // ⛓ the plan against the rows, per shard: the ids a shard never reported (today's hand derivation, H1)

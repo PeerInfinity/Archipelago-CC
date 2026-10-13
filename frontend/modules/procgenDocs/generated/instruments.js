@@ -15609,12 +15609,20 @@ export const INSTRUMENTS = frz({
                 "every",
                 "i",
                 "id",
+                "jobs",
                 "n",
                 "out",
-                "requests"
+                "requests",
+                "seam-time-sweep"
             ],
             "file": "replay-seedling-solve-request.mjs",
             "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "at"
+                },
                 {
                     "how": [
                         "arg"
@@ -15632,6 +15640,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "id"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "jobs"
                 },
                 {
                     "how": [
@@ -15656,6 +15670,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "requests"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "seam-time-sweep"
                 }
             ],
             "inheritedFlags": [

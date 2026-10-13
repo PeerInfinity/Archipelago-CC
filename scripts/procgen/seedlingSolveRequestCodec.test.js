@@ -69,3 +69,28 @@ describe('--capture-requests is default OFF and never touches a row', () => {
         expect(WF).toMatch(/\$\{CAPTURE:\+--capture-requests=\$D\/requests-\$I\.jsonl\}/);
     });
 });
+
+describe('⛓ SEAM TIME — the arrival game clock is on every row, in the merge, and sweepable in the replay', async () => {
+    const { parseSeamSweep, atSeamTime } = await import('./replay-seedling-solve-request.mjs');
+    const { mergeVerdict } = await import('./seedlingDivergenceMerge.js');
+    it('the lab puts the first request\'s staging.seam.time on the row, unconditionally', () => {
+        expect(LAB).toMatch(/\n {12}seamTime: solves\[0\]\?\.req\?\.staging\?\.seam\?\.time \?\? null,\n/);
+    });
+    it('the merge prints id@time:end for every row that carries it', () => {
+        const plan = { legs: 2, shards: [{ shard: 1, ids: [397, 414] }] };
+        const v = mergeVerdict({ plan, rows: [{ id: 397, end: 'failed', seamTime: 5140 }, { id: 414, end: 'timeout', seamTime: null }] });
+        expect(v.lines).toContain('SEAM-TIME: 397@5140:failed 414@-:timeout');
+        expect(mergeVerdict({ plan, rows: [{ id: 397, end: 'failed' }, { id: 414, end: 'failed' }] }).lines.some((l) => l.startsWith('SEAM-TIME'))).toBe(false);
+    });
+    it('--seam-time-sweep parses an inclusive integer range and refuses anything else by name', () => {
+        expect(parseSeamSweep('')).toBe(null);
+        expect(parseSeamSweep('-2..1')).toEqual([-2, -1, 0, 1]);
+        for (const bad of ['3..1', '1', 'a..b', '-1..']) expect(() => parseSeamSweep(bad)).toThrow(/^--seam-time-sweep: /);
+    });
+    it('atSeamTime moves ONLY staging.seam.time (and never the captured request)', () => {
+        const c = { staging: { seam: { time: 5140, level: 40 }, x: 1 }, budgetWork: 640 };
+        const m = atSeamTime(c, 5135);
+        expect(m).toEqual({ staging: { seam: { time: 5135, level: 40 }, x: 1 }, budgetWork: 640 });
+        expect(c.staging.seam.time).toBe(5140);
+    });
+});

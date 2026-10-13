@@ -280,6 +280,10 @@ export async function createLab() {
                 set: (after?.persistence_cleared ?? []).some((c) => c.level === goal.event.tag.level && c.tag === goal.event.tag.tag),
                 collected: glue?.eventCollector ? glue.eventCollector.collected.has(goal.name) : null } } : {}),
             ms: Math.round(performance.now() - t0), roomHits, ...(cut ? { cut } : {}),
+            // ⛓ SEAM TIME — the game clock the leg's first solve was STAGED at (`staging.seam.time`). The harness's
+            // jump lands at whatever play time the page has reached, and the solver's answer can move with it
+            // (leg 397: 5135/5137 → the 640-unit cut, 5140 → the press refusal, 5141 → a swing refusal).
+            seamTime: solves[0]?.req?.staging?.seam?.time ?? null,
             // ⛓ REQUEST CAPTURE — every solve request of this leg, in order, as the worker got it (the probe moves them
             // off the row into their own file, so the row is the same with the switch on or off)
             ...(captureRequests ? { requests: solves.map((s, i) => ({ i, request: captureRequest(s.req), passes: s.passes ?? null,
