@@ -355,9 +355,9 @@
         "botDriverV2.js": 101,
         "crusherBait.js": 3,
         "dangerMap.js": 17,
-        "solverBot.js": 145
+        "solverBot.js": 147
       },
-      "sites": 266,
+      "sites": 268,
       "seen": "both",
       "via": [
         "direct"
@@ -394,10 +394,11 @@
         },
         "bombPushers": {
           "dangerMap.js": 1,
-          "solverBot.js": 2
+          "solverBot.js": 3
         },
         "bombs": {
-          "dangerMap.js": 1
+          "dangerMap.js": 1,
+          "solverBot.js": 1
         },
         "bosses": {
           "botDriverV2.js": 1
@@ -1029,9 +1030,9 @@
       "class": "seedling",
       "form": "forecast",
       "files": {
-        "solverBot.js": 2
+        "solverBot.js": 3
       },
-      "sites": 2,
+      "sites": 3,
       "seen": "static",
       "via": [
         "direct"
@@ -5328,6 +5329,42 @@
       ],
       "dynamic": null,
       "why": "The cells of a row index inside an axis box (edges inclusive), in the list's own order: the strike scan's candidates within reach of a body's rect."
+    },
+    {
+      "surface": "import",
+      "name": "PRESS_KILL_BOMBS",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 306,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 3
+      },
+      "sites": 3,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The switch (hammer-phase BW; OFF, SEEDLING_PRESS_KILL_BOMBS=1 opts in) under which the spinner press kill's strike stand and refuge are asked of the lobber's forecast (run.spitForecast stepped along the previewed walk, then standing); OFF nothing is asked."
+    },
+    {
+      "surface": "import",
+      "name": "PRESS_KILL_BOMBS_COUNTS",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 331,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 5
+      },
+      "sites": 5,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "hammer-phase BW's instrument: how many strike stands and refuges the lobber's forecast was asked about and refused; written only with the switch ON, read by nothing that decides."
     },
     {
       "surface": "import",
