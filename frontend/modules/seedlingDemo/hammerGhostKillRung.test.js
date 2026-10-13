@@ -23,9 +23,9 @@ import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, createTapeStepper, solveStaging, stagingFromTape } from './tapeRunner.js';
 
 describe('GHOST_KILL_RUNG — the switch (hammer-phase G1, D1)', () => {
-    it('is OFF by default and opted in by `SEEDLING_GHOST_KILL_RUNG=1`; the wrapper restores it', () => {
-        expect(GHOST_KILL_RUNG_DEFAULT).toBe(false);
-        expect(GHOST_KILL_RUNG.enabled).toBe(process.env.SEEDLING_GHOST_KILL_RUNG === '1');
+    it('is ON by default and opted out by `SEEDLING_GHOST_KILL_RUNG=0`; the wrapper restores it', () => {
+        expect(GHOST_KILL_RUNG_DEFAULT).toBe(true);
+        expect(GHOST_KILL_RUNG.enabled).toBe(process.env.SEEDLING_GHOST_KILL_RUNG !== '0');
         const was = GHOST_KILL_RUNG.enabled;
         expect(withGhostKillRung(true, () => GHOST_KILL_RUNG.enabled)).toBe(true);
         expect(withGhostKillRung(false, () => GHOST_KILL_RUNG.enabled)).toBe(false);

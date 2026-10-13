@@ -114,7 +114,7 @@ import {
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
     // ⛓⛓⛓ hammer-phase D: the approach's and the fight's per-weapon row (behind `GHOST_SEARCH_BUCKETS`, OFF).
     searchPressFor,
-    // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, OFF).
+    // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, ON since the user's flip).
     killRungPresses,
     // ⛓⛓⛓ hammer-phase P1: the press kill's exact caches (behind `PRESS_KILL_COST`, ON; OFF bypasses every one).
     PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
@@ -19557,7 +19557,7 @@ function solveSegmentUnder({
              * weapon is a SUB-ORDER the macro layer owes.
              *
              * ⛓⛓⛓ HAMMER-PHASE G1 — the weapon is asked by `killRungPresses`
-             * (`GHOST_KILL_RUNG`, OFF): OFF it is `weapon === 'sword'`; ON it
+             * (`GHOST_KILL_RUNG`, ON by default): OFF it is `weapon === 'sword'`; ON it
              * also admits the ghost's press, where `derivePressKill` does.
              */
             const weapon = run.progress('primaryWeapon');

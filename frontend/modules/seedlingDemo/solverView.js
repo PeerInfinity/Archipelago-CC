@@ -104,7 +104,7 @@ export {
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
     // ⛓⛓⛓ hammer-phase D: the approach's and the fight's per-weapon row (behind `GHOST_SEARCH_BUCKETS`, OFF).
     searchPressFor,
-    // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, OFF).
+    // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, ON since the user's flip).
     killRungPresses,
 } from './ghostSpinnerPress.js';
 // pressKillCost.js — solverBot · seedling 4

@@ -15718,6 +15718,12 @@ after the kill); every sword row and every other ghost row is byte-equal; stagin
 `afdc6d1a`); L18 sweep 45/45 equal (lengths `1c019765`); C2's L18 ghost staging 45/45 byte-identical (its kill is the
 kill-lock order's). Nothing committed moves; nothing re-recorded. The flip is the user's.
 
+**The flip (2026-10-12, the user: "Turn it ON").** `GHOST_KILL_RUNG` now defaults ON (`SEEDLING_GHOST_KILL_RUNG=0` opts a
+process out); `hammerGhostKillRung.test.js`'s default row is re-pinned. The planner measured the flip on CI before the
+licence (branch `hammer-flip/g1-candidate`): JavaScript Unit Tests 20,202 / 20,202 plus the slow battery 253 / 253, the
+Seedling full tier and the standard probe battery green, and the divergence sweep on 397 / 414 unchanged. Those two legs
+carry the sword on the page, and no route leg in L40 grants the ghost, so nothing committed moves.
+
 ### Seedling hammer-phase C4b — the chooser's other hitter
 
 C4's residue 3 proposed a chooser change: when the head body's removal admits a corridor that the probe still finds hit
