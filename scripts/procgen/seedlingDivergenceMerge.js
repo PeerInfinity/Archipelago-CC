@@ -1,7 +1,7 @@
 /**
  * The divergence sweep's MERGE verdict (`.github/workflows/seedling-divergence-sweep.yml`, the merge job): the
- * shards' rows against the plan job's partition. Pure (no browser, no repo imports), so the merge job runs it off a
- * sparse checkout and a unit test drives it.
+ * shards' rows against the plan job's partition. Pure (no browser; its one import, `seedlingHitTicks.js`, is pure
+ * too), so the merge job runs it off a sparse checkout and a unit test drives it.
  *
  * A row is not asserted about the MODEL (a refusal or a divergence is a row); the merge goes red only when the SWEEP
  * is incomplete, BY NAME:
@@ -12,6 +12,10 @@
  *   · `stage-failed`, `dirty-start`, `page-boot-failed`, and a distinct-leg count short of the plan (as before);
  *   · a MIXED-BUDGET merge (S5-1): rows whose `legBudgetMs` stamp (absent = the default) differs from another row's or
  *                      from the plan's — a 90 s timeout and a 300 s one are not the same row, so they never merge silently.
+ * Informational, never a fail (S5-2, `seedlingHitTicks.js`): one `UNBILLED-HIT:` line per leg whose game took more
+ * hits than its plans billed (hit ticks vs billed ticks vs the first divergence, and whether the hit IS it), a count
+ * of rows with no hit ticks (`UNBILLED-HIT-UNKNOWN`, rows from before S5-2 — unknown, never 0), and the
+ * `UNBILLED-GATE` refusal count (fidelity's `unbilled-damage` obstacle kind).
  * A `HANG:` line in a shard log with no row behind it (a teardown that hung AFTER its legs reported) is a WARNING:
  * the rows are complete.
  *
@@ -20,8 +24,10 @@
  */
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
+import { unbilledHitCensus } from './seedlingHitTicks.js';
 
-/** ⛓ The probe's `LEG_BUDGET_MS_DEFAULT` (this module imports nothing: the merge job runs it off a sparse checkout). */
+/** ⛓ The probe's `LEG_BUDGET_MS_DEFAULT` (this module imports only the pure `seedlingHitTicks.js`: the merge job runs
+ *  both off a sparse checkout). */
 export const LEG_BUDGET_MS_DEFAULT = 90000;
 
 /** A row's / the plan's leg budget: its `legBudgetMs` stamp, the default when absent. */
@@ -77,6 +83,9 @@ export function mergeVerdict({ rows, plan, hangLines = [] }) {
     if (redispatch.length) lines.push(`REDISPATCH ids=${redispatch.join(',')}`);
     // ⛓ the probe's HANG line ends `lost=<ids>` (the legs it emitted as harness-hang) or `lost=none`
     for (const h of hangLines) if (/\blost=none\b/.test(h)) lines.push(`MERGE-WARN: ${h.trim()} (every leg of that page had reported)`);
+    // ⛓ HIT TICKS (S5-2) — information about the model, so never a MERGE-FAIL
+    const hitCensus = unbilledHitCensus(rows);
+    lines.push(...hitCensus.lines);
     return { lines, failed: lines.some((l) => l.startsWith('MERGE-FAIL')), missing, redispatch };
 }
 

@@ -15,7 +15,11 @@
  *                                returns the engine's history rows, the plans, the tapes, the raw rows, and
  *                                `roomHits`: the GAME's damage taken in the leg's room (`botStatus.hits`, sampled every
  *                                25 ms while the player is in it — a drained row carries no hits, and `Player.hits`
- *                                is per instance, so the status after an exit crossing reads the NEXT room's player)
+ *                                is per instance, so the status after an exit crossing reads the NEXT room's player);
+ *                                `roomHits.hits` (S5-2): one entry per rise of `hits`, `{t, hits, d, hits_timer, x, y,
+ *                                clock, tick, exact, tape}` — `t` the first drained row carrying the hit, on the
+ *                                drained rows' clock (`seedlingHitTicks.js` derives it); `tape` the leg's tape index
+ *                                it fell in, which each diverged play's `divs[].tape` carries too
  *   divergenceDetail(...)        for each play that left its plan: the model rows and the game rows around the
  *                                tick, and the FIRST DIFFERING FIELD among the fields both sides carry
  *   heldCompare({...})           re-arrive, ship the SAME plan's first k keys HELD, and read the whole held game
@@ -30,6 +34,7 @@ import { createWorkerSolveService } from '/frontend/modules/seedlingDemo/jsRunti
 import { resolveSeedlingAtlasGoal } from '/frontend/modules/flashPanel/seedlingPlaybackController.js';
 import { parsePendingCheck } from '/frontend/modules/flashPanel/seedlingCheckBinding.js';
 import { mountedRecordsOf } from '/frontend/modules/seedlingDemo/wasmWalkTape.js';
+import { createHitRecorder } from '/scripts/procgen/seedlingHitTicks.js';
 
 const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
 const sleep = (ms) => new Promise((r) => { setTimeout(r, ms); });
@@ -177,11 +182,18 @@ export async function createLab() {
         const goal = resolved.goal;
         // ⛓ the game's hits in the leg's room (see the head): the arrival's, the max, the samples behind it
         const roomHits = { atArrival: status()?.hits ?? null, max: null, samples: 0 };
+        // ⛓ HIT TICKS (S5-2) — each rise of `hits` at its drained-row tick, tagged with the tape it fell in; the same
+        // read notes which tape each new history entry (a diverged play) closed on, so a hit and a divergence pair
+        const hitRec = createHitRecorder({ atArrival: roomHits.atArrival });
+        const tapeOf = () => tap.tapes.length - t0n - 1;
+        const historyTape = [];
         const hitSampler = setInterval(() => {
+            while (h0 + historyTape.length < eng.stats.history.length) historyTape.push(tapeOf());
             const s = status();
             if (s?.level !== goal.level || typeof s.hits !== 'number') return;
             roomHits.samples += 1;
             roomHits.max = Math.max(roomHits.max ?? 0, s.hits);
+            hitRec.observe(s, { tape: tapeOf() });
         }, 25);
         const answer = eng.walkTo(goal);
         const t0 = performance.now();
@@ -206,6 +218,8 @@ export async function createLab() {
             solverBackstopMs: eng.backstopMs ?? null, backstops: (eng.stats.backstops ?? 0) - backstops0 } : null;
         if (end !== 'crossed') eng.stop();
         clearInterval(hitSampler);
+        while (h0 + historyTape.length < eng.stats.history.length) historyTape.push(tapeOf());
+        roomHits.hits = hitRec.hits;
         const after = status();
         const history = plain(eng.stats.history.slice(h0)).map((h) => ({ ...h, goal: undefined }));
         // the plans: settled results of the solves this leg made
@@ -223,12 +237,14 @@ export async function createLab() {
             ...(typeof s.res?.axeDodgeAskPerPreview === 'boolean' ? { axeDodgeAskPerPreview: s.res.axeDodgeAskPerPreview } : {}),
             // ⛓ FORCED-HIT CONSUMER — the crossings the plan BILLED and the damage it ends on (absent = none billed):
             // a forced-hit leg's `roomHits.max` is measured against them
-            ...(s.res?.plan?.forcedHits ? { forcedHits: plain(s.res.plan.forcedHits), damage: plain(s.res.plan.damage) } : {}) }));
+            ...(s.res?.plan?.forcedHits ? { forcedHits: plain(s.res.plan.forcedHits), damage: plain(s.res.plan.damage) } : {}),
+            // ⛓ a refusal's obstacle (UNBILLEDGATE's `unbilled-damage` among them), as the worker carried it
+            ...(s.res?.ok === false && s.res?.obstacle ? { obstacle: plain(s.res.obstacle) } : {}) }));
         const rows = tap.rows.slice(r0);
         // Divergence detail per diverged play: match it to its plan by order (one ok plan per play)
         const okSolves = solves.filter((s) => s.res?.ok && s.res.plan?.expected);
         const divs = [];
-        const plays = history.filter((h) => h.divergence);
+        const plays = history.map((h, at) => ({ ...h, at })).filter((h) => h.divergence);
         plays.forEach((h, i) => {
             const s = okSolves[i] ?? okSolves.at(-1);
             if (!s) return;
@@ -249,7 +265,7 @@ export async function createLab() {
                 const d = firstField(g, m);
                 if (d.length) { first = { t: g.t, diff: d }; break; }
             }
-            divs.push({ play: i, t, expected: h.divergence.expected, got: h.divergence.got,
+            divs.push({ play: i, tape: historyTape[h.at] ?? null, t, expected: h.divergence.expected, got: h.divergence.got,
                 dx: h.divergence.got.x - h.divergence.expected.x, dy: h.divergence.got.y - h.divergence.expected.y,
                 expectedRowsAround: exp.slice(Math.max(0, t - 4), t + 3), modelRows: model, gameRows: game,
                 atT: gAt && mAt ? firstField(gAt, mAt) : null, firstFieldDiff: first, gameRowFields: gAt ? Object.keys(gAt) : null });

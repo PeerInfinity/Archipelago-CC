@@ -306,11 +306,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      # ⛓ the verdict module only (pure node, no npm)
+      # ⛓ the verdict module and the hit-tick census it imports (both pure node, no npm)
       - name: Checkout the merge verdict
         uses: actions/checkout@v6.0.2
         with:
-          sparse-checkout: scripts/procgen/seedlingDivergenceMerge.js
+          sparse-checkout: |
+            scripts/procgen/seedlingDivergenceMerge.js
+            scripts/procgen/seedlingHitTicks.js
           sparse-checkout-cone-mode: false
 
       - name: Download the partition
