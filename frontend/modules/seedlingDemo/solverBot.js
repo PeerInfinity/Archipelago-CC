@@ -14878,6 +14878,10 @@ export function collectStandWalk(run, resolved, stance) {
  * ⇒ the sample asks the WAIT question, untimed (`chaserDanger` at horizon 0: each body's box grown by its
  * `threatPad`), of the LIVE bodies the forecast carries — a corpse (`destroy`, a staged `dyingAt`) fades out through
  * the freeze (`Mobile.death` runs outside it) and is not asked.
+ *
+ * ⚖ INTERIM (user, 2026-10-12: "it would have been better to model the freeze interaction than to try to avoid it").
+ * This arm AVOIDS a game behaviour the model does not step; the queued CEREMONY SHOVE slice models the per-frame
+ * `shieldBump` through the lump (from the measurement above) and then retires this refusal. Keep `collectStandWalk`.
  */
 export function ceremonyBesideLiveBody(run, sample, corpses = []) {
     const present = [...(sample.chasers ?? []).filter((b) => !b.removed), ...corpses];
