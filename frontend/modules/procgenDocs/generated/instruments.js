@@ -15613,7 +15613,8 @@ export const INSTRUMENTS = frz({
                 "n",
                 "out",
                 "requests",
-                "seam-time-sweep"
+                "seam-time-sweep",
+                "summarize"
             ],
             "file": "replay-seedling-solve-request.mjs",
             "flags": [
@@ -15676,6 +15677,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "seam-time-sweep"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "summarize"
                 }
             ],
             "inheritedFlags": [

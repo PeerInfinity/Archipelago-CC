@@ -20,9 +20,12 @@
  * `captured + d` (`atSeamTime`: only `staging.seam.time` moves), and a `SEAM-SWEEP:` line saying whether the answer
  * VARIES WITH seam.time, then one line per time. `--jobs=N` runs N processes at once (default 1).
  *
- * Run: node scripts/procgen/replay-seedling-solve-request.mjs --requests=<jsonl> [--id=N] [--i=K] [--n=3] [--seam-time-sweep=<from>..<to>] [--jobs=N] [--every=5000] [--out=<jsonl>] [--live]
+ * `--summarize=<dir>` prints that report over every census jsonl in <dir> (the sweep workflow's `seam_census` summary).
+ *
+ * Run: node scripts/procgen/replay-seedling-solve-request.mjs --summarize=<dir> | --requests=<jsonl> [--id=N] [--i=K] [--n=3] [--seam-time-sweep=<from>..<to>] [--jobs=N] [--every=5000] [--out=<jsonl>] [--live]
  */
-import { readFileSync, appendFileSync } from 'node:fs';
+import { readFileSync, readdirSync, appendFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -78,6 +81,28 @@ export function atSeamTime(captured, time) {
     return { ...captured, staging: { ...captured.staging, seam: { ...captured.staging.seam, time } } };
 }
 
+/**
+ * ⛓ SEAM TIME CENSUS — census rows (one per leg × seam time) → the report lines: per leg a `SEAM-SWEEP:` line (distinct
+ * answers; `VARIES WITH seam.time` when more than one), then `t=<time> <kind> work=<units> [<pass>:<units>[/<deadline>]…]
+ * <message>` in time order. An answer is `kind:sha:work` — the same refusal text at another unit count is another answer.
+ */
+export function summarizeCensus(rows) {
+    const legs = new Map();
+    for (const r of rows) legs.set(r.id, [...(legs.get(r.id) ?? []), r]);
+    const out = [];
+    const answerOf = (r) => `${r.kind}:${r.answer}:${r.work}`;
+    for (const [id, rs] of [...legs].sort((a, b) => a[0] - b[0])) {
+        rs.sort((a, b) => a.seamTime - b.seamTime);
+        const n = new Set(rs.map(answerOf)).size;
+        out.push(`SEAM-SWEEP: leg ${id}: ${n} distinct answer(s) over ${rs.length} seam time(s)${n > 1 ? ' — VARIES WITH seam.time' : ''}`);
+        for (const r of rs) {
+            const d = r.passes?.map((x) => `${x.pass}:${x.work}${x.deadline ? `/${x.deadline}` : ''}`).join(',') ?? '';
+            out.push(`  t=${r.seamTime} ${r.kind ?? 'error'} work=${r.work ?? '-'} [${d}] ${String(r.message ?? (r.ok ? 'PLAN' : r.error ?? '')).slice(0, 140)}`);
+        }
+    }
+    return out;
+}
+
 /** One fresh process per run; at most `jobs` at once. */
 function runChild(args) {
     return new Promise((done) => {
@@ -103,6 +128,14 @@ async function pool(tasks, jobs) {
 
 async function main() {
     const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3) ?? fallback);
+    // ⛓ SEAM TIME CENSUS — `--summarize=<dir>`: every census jsonl in <dir> (a CI census's shards) → the report
+    const SUM = arg('summarize', '');
+    if (SUM) {
+        const rows = readdirSync(SUM).filter((f) => f.endsWith('.jsonl'))
+            .flatMap((f) => readFileSync(join(SUM, f), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)));
+        for (const l of summarizeCensus(rows)) console.log(l);
+        return;
+    }
     const FILE = arg('requests', '');
     const EVERY = Number(arg('every', '5000'));
     const lines = readFileSync(FILE, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
@@ -134,14 +167,8 @@ async function main() {
             }), JOBS);
             const answerOf = (r) => `${r.kind}:${r.answer}:${r.work}`;
             if (SWEEP) {
-                const answers = new Map();
-                for (const r of runs) answers.set(answerOf(r), [...(answers.get(answerOf(r)) ?? []), r.seamTime]);
-                console.log(`SEAM-SWEEP: leg ${leg.id} request ${c.i} (captured at ${base}, budget ${c.request.budgetWork ?? 'none'}): `
-                    + `${answers.size} distinct answer(s) over ${runs.length} seam time(s)${answers.size > 1 ? ' — VARIES WITH seam.time' : ''}`);
-                for (const r of runs) {
-                    const d = r.passes?.map((x) => `${x.pass}:${x.work}${x.deadline ? `/${x.deadline}` : ''}`).join(',') ?? r.error;
-                    console.log(`  t=${r.seamTime} ${r.kind} work=${r.work} [${d}] ${String(r.message ?? (r.ok ? 'PLAN' : '')).slice(0, 110)}`);
-                }
+                console.log(`CENSUS: leg ${leg.id} request ${c.i}, captured at seam time ${base}, budget ${c.request.budgetWork ?? 'none'}`);
+                for (const l of summarizeCensus(runs)) console.log(l);
                 continue;
             }
             const answers = new Set(runs.map(answerOf));

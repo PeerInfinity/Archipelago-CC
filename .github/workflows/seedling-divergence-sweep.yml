@@ -106,6 +106,14 @@ on:
           replay-seedling-solve-request.mjs replays in node. The rows are unchanged.
         type: boolean
         default: false
+      seam_census:
+        description: >-
+          Empty = off. Otherwise '<from>..<to>' (ticks): after the shards, each leg's FIRST captured request is
+          re-solved in node at every arrival game clock captured+d (only staging.seam.time moves;
+          replay-seedling-solve-request.mjs --seam-time-sweep), 4 offsets per job, and a census summary says per leg
+          whether the answer VARIES WITH seam.time. Needs capture_requests on.
+        type: string
+        default: ''
       test_fault:
         description: >-
           TEST-ONLY, empty for every real sweep. The probe's fault injection SWEEP_INJECT_HANG=<page>:<step>[,…]
@@ -125,6 +133,7 @@ jobs:
       matrix: ${{ steps.plan.outputs.matrix }}
       timeout: ${{ steps.plan.outputs.timeout }}
       legs: ${{ steps.plan.outputs.legs }}
+      census: ${{ steps.plan.outputs.census }}
     steps:
       # ⛓ NOT the wasm: the leg list reads the committed rules and the map document. ⛔ But it DOES import
       # `frontend/modules/shared/` (the sphere log's forward simulator), a SUBMODULE — the first dispatch's plan
@@ -153,8 +162,11 @@ jobs:
           PAGE_LEGS: ${{ inputs.page_legs }}
           STAGE_FLAGS: ${{ inputs.stage_flags }}
           LEG_BUDGET: ${{ inputs.leg_budget_ms }}
+          CENSUS: ${{ inputs.seam_census }}
+          CAPTURE: ${{ inputs.capture_requests && 'on' || '' }}
         run: |
           set -o pipefail
+          if [ -n "$CENSUS" ] && [ -z "$CAPTURE" ]; then echo "::error::seam_census needs capture_requests on"; exit 1; fi
           mkdir -p test-results/divergence-sweep
           L=test-results/divergence-sweep/legs.jsonl
           node scripts/procgen/seedling-divergence-legs.mjs --out="$L" --presets=seedling_playthrough --blocks | tee plan.txt
@@ -171,6 +183,12 @@ jobs:
           echo "matrix=$(node -p "JSON.stringify(require('./plan.json').matrix)")" >> "$GITHUB_OUTPUT"
           echo "timeout=$(node -p "require('./plan.json').timeoutMinutes")" >> "$GITHUB_OUTPUT"
           echo "legs=$(node -p "require('./plan.json').legs")" >> "$GITHUB_OUTPUT"
+          # ⛓ SEAM TIME CENSUS — (leg, 4-offset chunk) per job; `parseSeamSweep` refuses a bad range by name
+          if [ -n "$CENSUS" ]; then
+            echo "census=$(node --input-type=module -e "import {parseSeamSweep} from './scripts/procgen/replay-seedling-solve-request.mjs';import fs from 'node:fs';const d=parseSeamSweep(process.env.CENSUS);const ids=JSON.parse(fs.readFileSync('plan.json','utf8')).shards.flatMap((s)=>s.ids);const out=[];for(const id of ids)for(let k=0;k<d.length;k+=4)out.push({id,from:d[k],to:d[Math.min(d.length,k+4)-1]});console.log(JSON.stringify(out))")" >> "$GITHUB_OUTPUT"
+          else
+            echo "census=[]" >> "$GITHUB_OUTPUT"
+          fi
           echo "MEASURED: legs sha256 $(sha256sum "$L" | cut -c1-16) at ${GITHUB_SHA}"
           { echo '```'; cat plan.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
@@ -374,4 +392,91 @@ jobs:
           path: |
             merged/
             shards/*/shard.log
+          retention-days: 90
+
+  # ⛓ SEAM TIME CENSUS (input `seam_census`, off by default) — a leg's first captured request re-solved in node at each
+  # arrival game clock (leg 397: six first requests differed ONLY in staging.seam.time, and each replays to one answer).
+  # A 640-unit cut costs ~10 min of one core, so the offsets fan out, 4 replays per job at once.
+  census:
+    name: Divergence sweep — seam-time census leg ${{ matrix.c.id }} ${{ matrix.c.from }}..${{ matrix.c.to }}
+    needs: [plan, shard]
+    if: always() && inputs.seam_census != '' && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        c: ${{ fromJSON(needs.plan.outputs.census) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Initialise the shared submodule
+        run: git submodule update --init frontend/modules/shared
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download the captured requests
+        uses: actions/download-artifact@v8.0.1
+        with:
+          pattern: divergence-shard-*
+          path: captured
+
+      - name: Replay at each seam time
+        env:
+          ID: ${{ matrix.c.id }}
+          FROM: ${{ matrix.c.from }}
+          TO: ${{ matrix.c.to }}
+        run: |
+          set -o pipefail
+          F=$(grep -l "\"id\":$ID," $(find captured -name 'requests-*.jsonl') | head -1)
+          [ -n "$F" ] || { echo "::error::no captured request for leg $ID"; exit 1; }
+          mkdir -p census
+          node scripts/procgen/replay-seedling-solve-request.mjs --requests="$F" --id="$ID" --i=0 --seam-time-sweep="$FROM..$TO" \
+            --jobs=4 --out="census/census-$ID-$FROM.jsonl" | grep -v '^ROW '
+
+      - name: Upload the census rows
+        if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: divergence-census-${{ matrix.c.id }}-${{ matrix.c.from }}
+          path: census/
+          retention-days: 90
+
+  census-summary:
+    name: Divergence sweep — seam-time census summary
+    needs: census
+    if: always() && inputs.seam_census != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          sparse-checkout: scripts/procgen
+
+      - name: Download the census rows
+        uses: actions/download-artifact@v8.0.1
+        with:
+          pattern: divergence-census-*
+          path: census
+          merge-multiple: true
+
+      - name: Summarize
+        run: |
+          node scripts/procgen/replay-seedling-solve-request.mjs --summarize=census | tee census/summary.txt
+          { echo '```'; cat census/summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the summary
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: divergence-census-summary
+          path: census/
           retention-days: 90

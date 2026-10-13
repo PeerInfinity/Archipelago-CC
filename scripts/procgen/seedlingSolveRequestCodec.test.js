@@ -94,3 +94,24 @@ describe('⛓ SEAM TIME — the arrival game clock is on every row, in the merge
         expect(c.staging.seam.time).toBe(5140);
     });
 });
+
+describe('⛓ SEAM TIME CENSUS — the report and the workflow wiring', async () => {
+    const { summarizeCensus } = await import('./replay-seedling-solve-request.mjs');
+    const row = (id, seamTime, kind, answer, work, extra = {}) => ({ id, seamTime, kind, answer, work, ok: false, passes: [{ pass: 'dashless', work }], ...extra });
+    it('names a leg whose answer moves with seam.time, and one whose answer does not', () => {
+        const out = summarizeCensus([row(397, 5141, 'refusal', 'b', 96), row(397, 5135, 'refusal', 'a', 643), row(397, 5140, 'refusal', 'c', 72),
+            row(414, 5100, 'refusal', 'z', 10), row(414, 5101, 'refusal', 'z', 10)]);
+        expect(out[0]).toBe('SEAM-SWEEP: leg 397: 3 distinct answer(s) over 3 seam time(s) — VARIES WITH seam.time');
+        expect(out.slice(1, 4).map((l) => l.trim().split(' ')[0])).toEqual(['t=5135', 't=5140', 't=5141']);
+        expect(out[4]).toBe('SEAM-SWEEP: leg 414: 1 distinct answer(s) over 2 seam time(s)');
+    });
+    it('the same refusal text at another unit count is ANOTHER answer (a cut is not the quick refusal)', () => {
+        expect(summarizeCensus([row(1, 1, 'refusal', 'a', 72), row(1, 2, 'refusal', 'a', 643)])[0]).toMatch(/2 distinct answer/);
+    });
+    it('the workflow input is off by default, needs the capture, and the census replays only the FIRST request', () => {
+        expect(WF).toMatch(/seam_census:[\s\S]*?type: string\n\s+default: ''/);
+        expect(WF).toMatch(/seam_census needs capture_requests on/);
+        expect(WF).toMatch(/if: always\(\) && inputs\.seam_census != '' && needs\.plan\.result == 'success'/);
+        expect(WF).toMatch(/--i=0 --seam-time-sweep="\$FROM\.\.\$TO"/);
+    });
+});
