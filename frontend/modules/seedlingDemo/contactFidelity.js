@@ -394,6 +394,19 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no licence yet); `SEEDLING_BUTTON_FALL_RELEASE_STEP=0|1` for a node measurement.
      */
     buttonFallReleaseStep: false,
+    /**
+     * fidelity SMALLGAPS D2 — AN INTERMEDIATE WAYPOINT ON ICE IS PASSED, NOT PARKED ON (the walker:
+     * `botDriverV2.waypointReached`, read by `drive` and `solverBot.previewWalk` alike).
+     *
+     *     Player.as:516-537   onIce → friction = slidingFriction (0.025), moveSpeed = slidingSpeed
+     *
+     * `hasArrived` asks "within tolerance AND stopped" of every waypoint. On ice a one-tick tap from rest coasts tens
+     * of px, so a ±1 px STOP is reachable only by luck: L45 (120,72) limit-cycles x 117.3–122.9 for ~300 t (route
+     * step 62 with the strike lapse ON, 748 t vs 386 OFF). ON: a waypoint that is not the walk's last, reached while
+     * the player stands on ice, is reached at "within tolerance" whatever the velocity; the walk's final target still
+     * needs the stop. OFF: byte-identical. ⛔ OFF by default; `SEEDLING_WAYPOINT_SLIDE=0|1` for a node measurement.
+     */
+    waypointSlide: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -479,9 +492,11 @@ if (globalThis.process?.env?.SEEDLING_ARRIVAL_BUTTON_ARM === '0') CONTACT_FIDELI
 // ⛓ fidelity UNBILLEDGATE: `SEEDLING_UNBILLED_DAMAGE_GATE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_UNBILLED_DAMAGE_GATE === '1') CONTACT_FIDELITY.unbilledDamageGate = true;
 if (globalThis.process?.env?.SEEDLING_UNBILLED_DAMAGE_GATE === '0') CONTACT_FIDELITY.unbilledDamageGate = false;
-// ⛓ fidelity SMALLGAPS: `SEEDLING_BUTTON_FALL_RELEASE_STEP=0|1`, likewise.
+// ⛓ fidelity SMALLGAPS: `SEEDLING_BUTTON_FALL_RELEASE_STEP`, `SEEDLING_WAYPOINT_SLIDE` (0|1), likewise.
 if (globalThis.process?.env?.SEEDLING_BUTTON_FALL_RELEASE_STEP === '1') CONTACT_FIDELITY.buttonFallReleaseStep = true;
 if (globalThis.process?.env?.SEEDLING_BUTTON_FALL_RELEASE_STEP === '0') CONTACT_FIDELITY.buttonFallReleaseStep = false;
+if (globalThis.process?.env?.SEEDLING_WAYPOINT_SLIDE === '1') CONTACT_FIDELITY.waypointSlide = true;
+if (globalThis.process?.env?.SEEDLING_WAYPOINT_SLIDE === '0') CONTACT_FIDELITY.waypointSlide = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
