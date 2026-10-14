@@ -15,12 +15,18 @@ import { fileURLToPath } from 'node:url';
 
 import { afterAll, describe, expect, it } from 'vitest';
 
-import { BUILDS_JSON, checkSourcePin } from './check-seedling-source-pin.mjs';
+import {
+    BROWSER_SUBMODULE, BUILDS_JSON, BUILD_INPUT_ALLOWLIST, RELEASE_JSON, checkSourcePin,
+} from './check-seedling-source-pin.mjs';
 import { headlineOf } from './standingValues.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const GATE = join(HERE, 'check-seedling-source-pin.mjs');
 const FORK = 'PeerInfinity/Seedling';
+/** Two SWFRecomp-CC commits (full SHAs): the one every build records, and a later one. */
+const RECOMP = '4c450f076e8253c2e5fdc201a4b7cba2b51b6ad3';
+const RECOMP_LATER = 'c842bf0d33109eba165bc3b882fc5c56c8c627e2';
+const [OFL] = Object.keys(BUILD_INPUT_ALLOWLIST);
 
 const ID = ['-c', 'user.name=fixture', '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false'];
 const git = (cwd, ...args) => execFileSync('git', [...ID, ...args],
@@ -51,8 +57,15 @@ function forkRepo(dir) {
 /**
  * A fixture: `gitlink` recorded at HEAD, the checkout at `checkout`, and a
  * manifest whose default/demo builds name `manifest.default` / `manifest.demo`.
+ * `release` is the swfrecomp-browser `release.json` (row iv): `false` = the
+ * submodule uninitialised; by default, release 2's shape — stamped with the
+ * builds' recompiler, a page-only diff of the one allowlisted path.
  */
-function fixture({ gitlink, checkout, manifest, initialised = true, withManifest = true } = {}) {
+const RELEASE_2 = () => ({ source: { repo: 'PeerInfinity/SWFRecomp-CC', commit: RECOMP,
+    buildInputsUnchanged: { from: RECOMP, to: RECOMP_LATER, paths: ['SWFRecomp', 'SWFModernRuntime'], diff: [OFL],
+        allowlist: [{ path: OFL, reason: 'licence text' }] } } });
+
+function fixture({ gitlink, checkout, manifest, initialised = true, withManifest = true, release = RELEASE_2() } = {}) {
     const root = mkdtempSync(join(tmpdir(), 'source-pin-'));
     roots.push(root);
     git(root, 'init', '-q', '-b', 'main');
@@ -63,9 +76,10 @@ function fixture({ gitlink, checkout, manifest, initialised = true, withManifest
         mkdirSync(join(root, dirname(BUILDS_JSON)), { recursive: true });
         writeFileSync(join(root, BUILDS_JSON), JSON.stringify({ builds: [
             { name: 'bot_build', role: 'default',
-                source: { repo: FORK, branch: 'ap-m1', commit: pick(manifest?.default, 'pin') } },
+                source: { repo: FORK, branch: 'ap-m1', commit: pick(manifest?.default, 'pin'),
+                    recompiler: manifest?.recompiler ?? RECOMP } },
             { name: 'original_build', role: 'demo', demo: true,
-                source: { repo: FORK, branch: 'main', commit: pick(manifest?.demo, 'demo') } },
+                source: { repo: FORK, branch: 'main', commit: pick(manifest?.demo, 'demo'), recompiler: RECOMP } },
             { name: 'elsewhere', role: 'demo', source: { repo: 'someone/Else', commit: 'f'.repeat(40) } },
         ] }));
     }
@@ -73,6 +87,12 @@ function fixture({ gitlink, checkout, manifest, initialised = true, withManifest
     git(root, 'commit', '-q', '-m', 'fixture');
     git(sub, 'checkout', '-q', pick(checkout, gitlink ?? 'pin'));
     if (!initialised) rmSync(join(sub, '.git'), { recursive: true, force: true });
+    if (release) {
+        // A submodule checkout's `.git` is a gitfile; the gate asks only that it exists.
+        mkdirSync(join(root, BROWSER_SUBMODULE), { recursive: true });
+        writeFileSync(join(root, BROWSER_SUBMODULE, '.git'), 'gitdir: ../../../../.git/modules/browser\n');
+        writeFileSync(join(root, RELEASE_JSON), typeof release === 'string' ? release : JSON.stringify(release));
+    }
     return { root, sub, shas };
 }
 
@@ -83,13 +103,13 @@ const spawnGate = (root) => {
 };
 
 describe('check-seedling-source-pin', () => {
-    it('the agreeing pair: gitlink = default source, checkout at it, demo an ancestor → 3/0, exit 0', () => {
+    it('the agreeing pair: gitlink = default source, checkout at it, demo an ancestor, release = recompiler → 5/0, exit 0', () => {
         const { root } = fixture();
         const res = checkSourcePin({ repo: root });
-        expect(kinds(res.rows)).toEqual(['PASS', 'PASS', 'PASS']);
+        expect(kinds(res.rows)).toEqual(['PASS', 'PASS', 'PASS', 'PASS', 'PASS']);
         const g = spawnGate(root);
-        expect(g.head.value).toBe('3/0');
-        expect(g.head.total).toMatch(/^ALL PASS — 3 VERIFIED/);
+        expect(g.head.value).toBe('5/0');
+        expect(g.head.total).toMatch(/^ALL PASS — 5 VERIFIED/);
         expect(g.status).toBe(0);
     });
 
@@ -99,26 +119,26 @@ describe('check-seedling-source-pin', () => {
         expect(res.rows[0]).toMatchObject({ kind: 'FAIL' });
         expect(res.rows[0].msg).toMatch(/^\(i\) .* is NOT the default build bot_build's source\.commit/);
         const g = spawnGate(root);
-        expect(g.head.value).toBe('2/1');
+        expect(g.head.value).toBe('4/1');
         expect(g.status).toBe(1);
     });
 
     it('⛔ the manifest\'s commit EDITED with the gitlink unchanged → (i) FAIL', () => {
         const { root } = fixture({ manifest: { default: 'later' } });
-        expect(kinds(checkSourcePin({ repo: root }).rows)).toEqual(['FAIL', 'PASS', 'PASS']);
+        expect(kinds(checkSourcePin({ repo: root }).rows)).toEqual(['FAIL', 'PASS', 'PASS', 'PASS', 'PASS']);
     });
 
     it('⛔ a checkout that drifted off the gitlink → (ii) FAIL', () => {
         const { root } = fixture({ checkout: 'later' });
         const res = checkSourcePin({ repo: root });
-        expect(kinds(res.rows)).toEqual(['PASS', 'FAIL', 'PASS']);
+        expect(kinds(res.rows)).toEqual(['PASS', 'FAIL', 'PASS', 'PASS', 'PASS']);
         expect(res.rows[1].msg).toMatch(/NOT at the gitlink/);
     });
 
     it('⛔ a demo source that is NOT an ancestor of the gitlink → (iii) FAIL', () => {
         const { root } = fixture({ manifest: { demo: 'side' } });
         const res = checkSourcePin({ repo: root });
-        expect(kinds(res.rows)).toEqual(['PASS', 'PASS', 'FAIL']);
+        expect(kinds(res.rows)).toEqual(['PASS', 'PASS', 'FAIL', 'PASS', 'PASS']);
         expect(res.rows[2].msg).toMatch(/original_build.* is NOT an ancestor/);
     });
 
@@ -136,7 +156,7 @@ describe('check-seedling-source-pin', () => {
     const withCandidate = (root, commit) => {
         const m = JSON.parse(readFileSync(join(root, BUILDS_JSON), 'utf8'));
         m.builds.push({ name: 'next_build', role: 'candidate',
-            source: { repo: FORK, branch: 'ap-m1', commit } });
+            source: { repo: FORK, branch: 'ap-m1', commit, recompiler: RECOMP } });
         writeFileSync(join(root, BUILDS_JSON), JSON.stringify(m));
     };
 
@@ -144,7 +164,7 @@ describe('check-seedling-source-pin', () => {
         const { root, shas } = fixture({ gitlink: 'later' });
         withCandidate(root, shas.later);
         const res = checkSourcePin({ repo: root });
-        expect(kinds(res.rows)).toEqual(['PASS', 'PASS', 'PASS', 'PASS']);
+        expect(kinds(res.rows)).toEqual(['PASS', 'PASS', 'PASS', 'PASS', 'PASS', 'PASS']);
         expect(res.rows[0].msg).toMatch(/EQUALS the candidate build next_build's source\.commit/);
         expect(res.rows.some((r) => /bot_build's source\.commit .* IS an ancestor/.test(r.msg))).toBe(true);
     });
@@ -157,20 +177,22 @@ describe('check-seedling-source-pin', () => {
         expect(res.rows[0].msg).toMatch(/is NOT the candidate build next_build/);
     });
 
-    it('an UNINITIALISED submodule is a REFUSAL: SKIP, exit 0, 0/0/1', () => {
-        const { root } = fixture({ initialised: false });
+    it('an UNINITIALISED submodule (both) is a REFUSAL: SKIP, exit 0, 0/0/2', () => {
+        const { root } = fixture({ initialised: false, release: false });
         const res = checkSourcePin({ repo: root });
         expect(res.refused).toBe(true);
         expect(res.rows[0].msg).toMatch(/submodule is not initialised — git submodule update --init vendor\/seedling/);
         const g = spawnGate(root);
-        expect(g.head.value).toBe('0/0/1');
+        expect(g.head.value).toBe('0/0/2');
         expect(g.head.total).toMatch(/^ALL PASS — REFUSED/);
         expect(g.status).toBe(0);
     });
 
     it('no builds.json (the wasm submodule uninitialised) is a REFUSAL too', () => {
         const { root } = fixture({ withManifest: false });
-        expect(checkSourcePin({ repo: root })).toMatchObject({ refused: true });
+        const res = checkSourcePin({ repo: root });
+        expect(res).toMatchObject({ refused: true });
+        expect(kinds(res.rows)).toEqual(['SKIP', 'SKIP']);
     });
 
     it('a SHALLOW submodule answers (i) and (ii) and SKIPs (iii) by name', () => {
@@ -187,8 +209,125 @@ describe('check-seedling-source-pin', () => {
         git(root, 'update-index', '--cacheinfo', `160000,${shas.later},vendor/seedling`);
         git(root, 'commit', '-q', '-m', 'pin later');
         const res = checkSourcePin({ repo: root });
-        expect(kinds(res.rows)).toEqual(['PASS', 'PASS', 'SKIP']);
+        expect(kinds(res.rows)).toEqual(['PASS', 'PASS', 'SKIP', 'PASS', 'PASS']);
         expect(res.rows[2].msg).toMatch(/SHALLOW clone/);
-        expect(spawnGate(root).head.value).toBe('2/0/1');
+        expect(spawnGate(root).head.value).toBe('4/0/1');
+    });
+
+    // ── row (iv): swfrecomp-browser's release = the pinning build's recompiler (⚖ js-6) ──
+
+    const row = (res, tag) => res.rows.find((r) => r.msg.startsWith(`(${tag}) `));
+
+    it('(iv) EQUAL: the release\'s source.commit = the default build\'s source.recompiler, full SHAs named', () => {
+        const res = checkSourcePin({ repo: fixture().root });
+        expect(row(res, 'iv')).toMatchObject({ kind: 'PASS' });
+        expect(row(res, 'iv').msg).toContain(`${RECOMP} EQUALS the default build bot_build's source.recompiler ${RECOMP}`);
+    });
+
+    it('⛔ (iv) UNEQUAL: a release from another recompiler commit → FAIL naming both SHAs and the remedy', () => {
+        const rel = RELEASE_2();
+        rel.source.commit = RECOMP_LATER;
+        rel.source.buildInputsUnchanged.from = RECOMP_LATER;
+        const { root } = fixture({ release: rel });
+        const res = checkSourcePin({ repo: root });
+        expect(row(res, 'iv')).toMatchObject({ kind: 'FAIL' });
+        expect(row(res, 'iv').msg).toContain(RECOMP_LATER);
+        expect(row(res, 'iv').msg).toContain(RECOMP);
+        expect(row(res, 'iv').msg).toContain('re-release swfrecomp-browser from the default build\'s recompiler commit, '
+            + 'or a re-pin (user-gated)');
+        expect(spawnGate(root).status).toBe(1);
+    });
+
+    it('(iv) CANDIDATE: with a candidate pinned, the release is held to THE CANDIDATE\'s recompiler', () => {
+        const { root, shas } = fixture({ gitlink: 'later' });
+        withCandidate(root, shas.later);
+        const m = JSON.parse(readFileSync(join(root, BUILDS_JSON), 'utf8'));
+        m.builds.find((b) => b.role === 'candidate').source.recompiler = RECOMP_LATER;
+        writeFileSync(join(root, BUILDS_JSON), JSON.stringify(m));
+        let res = checkSourcePin({ repo: root });
+        expect(row(res, 'iv')).toMatchObject({ kind: 'FAIL' });
+        expect(row(res, 'iv').msg).toMatch(/is NOT the candidate build next_build's source\.recompiler/);
+        const rel = RELEASE_2();
+        rel.source.commit = RECOMP_LATER;
+        rel.source.buildInputsUnchanged.from = RECOMP_LATER;
+        writeFileSync(join(root, RELEASE_JSON), JSON.stringify(rel));
+        res = checkSourcePin({ repo: root });
+        expect(row(res, 'iv')).toMatchObject({ kind: 'PASS' });
+        expect(row(res, 'iv').msg).toMatch(/EQUALS the candidate build next_build's source\.recompiler/);
+    });
+
+    it('(iv) ABSENT: the browser submodule uninitialised → SKIP by name; rows (i)–(iii) still answer, exit 0', () => {
+        const { root } = fixture({ release: false });
+        const res = checkSourcePin({ repo: root });
+        expect(kinds(res.rows)).toEqual(['PASS', 'PASS', 'PASS', 'SKIP']);
+        expect(res.refused).toBe(false);
+        expect(row(res, 'iv').msg).toContain(`git submodule update --init ${BROWSER_SUBMODULE}`);
+        const g = spawnGate(root);
+        expect(g.head.value).toBe('3/0/1');
+        expect(g.status).toBe(0);
+    });
+
+    it('⛔ (iv) UNSTAMPED: release.json present with no full-SHA source.commit → a named FAIL', () => {
+        for (const commit of [undefined, '4c450f076', '']) {
+            const rel = RELEASE_2();
+            rel.source.commit = commit;
+            const res = checkSourcePin({ repo: fixture({ release: rel }).root });
+            expect(row(res, 'iv')).toMatchObject({ kind: 'FAIL' });
+            expect(row(res, 'iv').msg).toMatch(/is UNSTAMPED/);
+        }
+        const res = checkSourcePin({ repo: fixture({ release: '{ not json' }).root });
+        expect(row(res, 'iv')).toMatchObject({ kind: 'FAIL' });
+    });
+
+    it('⛔ (iv) a pinning build with no full-SHA source.recompiler → FAIL by name', () => {
+        const res = checkSourcePin({ repo: fixture({ manifest: { recompiler: '4c450f0' } }).root });
+        expect(row(res, 'iv')).toMatchObject({ kind: 'FAIL' });
+        expect(row(res, 'iv').msg).toMatch(/records source\.recompiler "4c450f0", not a full SHA/);
+    });
+
+    // ── (iv-b): the offline sub-row — a page-only release's build inputs did not move ──
+
+    it('(iv-b) ABSENT field = PASS (page and binaries from one commit)', () => {
+        const rel = RELEASE_2();
+        delete rel.source.buildInputsUnchanged;
+        const res = checkSourcePin({ repo: fixture({ release: rel }).root });
+        expect(row(res, 'iv-b')).toMatchObject({ kind: 'PASS' });
+        expect(row(res, 'iv-b').msg).toMatch(/no source\.buildInputsUnchanged/);
+    });
+
+    it('(iv-b) diff ⊆ the checker\'s allowlist and from = source.commit → PASS (an empty diff too)', () => {
+        expect(row(checkSourcePin({ repo: fixture().root }), 'iv-b')).toMatchObject({ kind: 'PASS' });
+        const rel = RELEASE_2();
+        rel.source.buildInputsUnchanged.diff = [];
+        expect(row(checkSourcePin({ repo: fixture({ release: rel }).root }), 'iv-b')).toMatchObject({ kind: 'PASS' });
+    });
+
+    it('⛔ (iv-b) a diff path outside the checker\'s allowlist → FAIL, even when the release\'s OWN allowlist lists it', () => {
+        const rel = RELEASE_2();
+        const sneak = 'SWFModernRuntime/src/avm2/vm.c';
+        rel.source.buildInputsUnchanged.diff.push(sneak);
+        rel.source.buildInputsUnchanged.allowlist.push({ path: sneak, reason: 'trust me' });
+        const res = checkSourcePin({ repo: fixture({ release: rel }).root });
+        expect(row(res, 'iv-b')).toMatchObject({ kind: 'FAIL' });
+        expect(row(res, 'iv-b').msg).toContain(`names ${sneak}, outside this checker's allowlist`);
+        expect(row(res, 'iv')).toMatchObject({ kind: 'PASS' });
+    });
+
+    it('⛔ (iv-b) from ≠ source.commit, or no diff list → FAIL', () => {
+        let rel = RELEASE_2();
+        rel.source.buildInputsUnchanged.from = RECOMP_LATER;
+        let res = checkSourcePin({ repo: fixture({ release: rel }).root });
+        expect(row(res, 'iv-b')).toMatchObject({ kind: 'FAIL' });
+        expect(row(res, 'iv-b').msg).toMatch(/its from .* is not source\.commit/);
+        rel = RELEASE_2();
+        delete rel.source.buildInputsUnchanged.diff;
+        res = checkSourcePin({ repo: fixture({ release: rel }).root });
+        expect(row(res, 'iv-b').msg).toMatch(/not a list of paths/);
+    });
+
+    it('(iv-b) with the browser submodule uninitialised there is no sub-row to answer (the (iv) SKIP names both)', () => {
+        const res = checkSourcePin({ repo: fixture({ release: false }).root });
+        expect(row(res, 'iv-b')).toBeUndefined();
+        expect(row(res, 'iv').msg).toMatch(/\(iv\) and its sub-row cannot be asked/);
     });
 });

@@ -882,6 +882,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Storage panel lists every key this site keeps in your browser's local storage. For each key it shows which part of the app owns it, what kind of data it is and how big it is. It lets you clear…"
     },
     {
+        "path": "docs/json/user/modules/swfRecompilerPanel.md",
+        "title": "SWF Recompiler",
+        "section": "user/modules",
+        "summary": "The SWF Recompiler panel recompiles a Flash movie (a .swf file) into a WebAssembly program, in your browser, and runs it. It is SWFRecomp's in-browser recompiler: the page the panel drives is the…"
+    },
+    {
         "path": "docs/json/user/modules/textAdventure.md",
         "title": "Text Adventure Panel",
         "section": "user/modules",
@@ -1038,6 +1044,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Here Seedling Playthrough is a slot of a multiworld you generate and host yourself, on your own computer; the app is its client."
     },
     {
+        "path": "docs/json/user/tutorials/seedling-recompile.md",
+        "title": "Seedling: recompile the original game in your browser",
+        "section": "user/tutorials",
+        "summary": "*Seedling* is a Flash game. Flash is gone from browsers, so this project recompiles the game: SWFRecomp turns its SWF into C, and the C into WebAssembly, which any browser runs. The builds the app…"
+    },
+    {
         "path": "docs/json/user/tutorials/tracker-track-a-game.md",
         "title": "Track a game",
         "section": "user/tutorials",
@@ -1084,6 +1096,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/spoilerChecklist.md",
             "docs/json/user/modules/spoilerTest.md",
             "docs/json/user/modules/storagePanel.md",
+            "docs/json/user/modules/swfRecompilerPanel.md",
             "docs/json/user/modules/textAdventure.md",
             "docs/json/user/modules/timerPanel.md",
             "docs/json/user/modules/tutorials.md",
@@ -1127,6 +1140,7 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/procgen-to-multiworld.md",
                     "docs/json/user/tutorials/procgen-top-down.md",
                     "docs/json/user/tutorials/seedling-multiworld.md",
+                    "docs/json/user/tutorials/seedling-recompile.md",
                     "docs/json/user/tutorials/tracker-track-a-game.md"
                 ],
                 "single": false

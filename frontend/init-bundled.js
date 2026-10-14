@@ -103,6 +103,7 @@ import * as progressBarPanelModule from './modules/progressBarPanel/index.js';
 import * as metaGameModule from './modules/metaGame/index.js';
 import * as metaGamePanelModule from './modules/metaGamePanel/index.js';
 import * as flashPanelModule from './modules/flashPanel/index.js';
+import * as swfRecompilerPanelModule from './modules/swfRecompilerPanel/index.js';
 import * as tileMapAnalyzerModule from './modules/tileMapAnalyzer/index.js';
 import * as regionMarkingToolModule from './modules/regionMarkingTool/index.js';
 import * as iframeAdapterModule from './modules/iframeAdapter/index.js';
@@ -235,6 +236,7 @@ const BUNDLED_MODULES = {
   metaGame: metaGameModule,
   metaGamePanel: metaGamePanelModule,
   flashPanel: flashPanelModule,
+  swfRecompilerPanel: swfRecompilerPanelModule,
   tileMapAnalyzer: tileMapAnalyzerModule,
   regionMarkingTool: regionMarkingToolModule,
   iframeAdapter: iframeAdapterModule,
