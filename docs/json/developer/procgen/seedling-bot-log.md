@@ -16806,6 +16806,51 @@ arc's `fidelityF1c` residue 40 → 12, re-pinned in the candidate. `seedling-fid
 - **A refusal's text names where it was caught, not why.** Step 50's "the danger map forbids … its sword is timed" and
   step 62's "waypoint (120,72) not reached" were both two decisions downstream of the cause.
 
+### Seedling fidelity LAPSECOST — the lapse's L40 cost was a wider walk and an expensive rung, and leg 773 was a Flyer's drop
+
+Wave 16 (model coverage), from STRIKELAPSE's flip measurement: lapse ON lost 11 L40 pit sweep legs (budget) and leg 773
+(t103 divergence), both confirmed ×2 on CI. Base `3a53894a9a`. Everything is behind switches; OFF is byte-identical
+(identity block, six `--check`s, bounded set). The report is `CC/docs/cloud-reports/seedling-fidelity-lapsecost.md`.
+
+**D1 — the L40 pit cost.** Reproduced in node from the page's own captured request (leg 403, budget 640): OFF 48 units,
+776 t; ON 2,562 units refused at `detour` (2,542 of them DETOUR's via-lattice asks). The lapse multiplies no site's cost:
+it widens the walk's strike admissions, and the wider walk is a different walk. Its press at t247 on `puncher@128,624`
+lands nothing (the walker leaves the swing before the lapse test); its press at t507 on `bob@208,448` kills at t512,
+one tick after the body's i-frame lapsed against the player (enemies step above the player). The probe flags the
+contact, AVOID / TIME / BAIT / KILL refuse cheaply, and DETOUR spends the budget. Fix (`solverBot`, ON only): a
+conditional **NARROW** rung between KILL and DETOUR (`R8_STRATEGY_EXECUTORS.ladder`, `KNOWN_STRATEGY_VERBS`), the same
+corridor walked with the pre-lapse admissions (`strikePolicyFor`'s `iframeLapse: false`), certified only if its preview
+arrives and only where the walk strikes at all; the dash planner and the drive take the same permission
+(`LAPSE_NARROW_RETRY`). All 10 captured pit legs solve ON in ≤ 91 units with OFF's plan key for key (CI's OFF sweep plays
+those to `done`). The first cut (before the ladder) shadowed leg 265 (the narrow walk is OFF's failing one: wallflyer
+hits the preview never priced); as a rung the 8 lapse-gained legs keep their answers. The ON route survey is unchanged
+(170 SOLVED, 0 movers against ON at base).
+
+**D2 — leg 773.** Not the lapse. Game witness (p4f, the ON plan as a tape): the player takes hits 0 → 2 at t103 from
+`flyer@104,8`, which hovers over the walk from t96: `Flyer.update` plays "fall" when the player's box holds (x, y+10),
+stands, and on frame 10 drops `p.hit(null, 1, (x,y), 2)`. The model never stepped a Flyer (a static body at its
+placement). `contactFidelity.flyerLive` (OFF) steps it (`CHASERS.flyer`: Bob's chase to the player + (0,−10) through no
+solids, the fall and the drop, an empty `hitPlayer`; the forecast reports the drop and the danger map prices it; the
+press arm reaches it). Game witness `lapsecost-l105-773-on-flyer`: the model reproduces the player at 1e-9 on 382 ticks
+and both Flyers at Δ 0 (614 comparisons); OFF parts at t103. The solver's own leg-773 plan under `flyerLive` meets a
+second gap the game shows at t205: `beamtower@48,40`'s Solid drifts in y (`BeamTower.update`'s `y += 0.3·sin(…)`), not
+modelled. Route survey on the Flyer levels: none lost, step 208 264 → 240 t.
+
+**D3 — the flip, re-measured (held).** STRIKELAPSE's `flip-candidate.patch` applied 3-way at this head (one conflict:
+`contactFidelity.test.js`'s defaults pin) plus the `procgenRoam` mover the list missed ([127,69] → [101,69]):
+`r9-campaign --check` `6b1bf15c` exit 0 (STRIKELAPSE's candidate digest); the 150-file bounded set green (the report
+has the counts). The refreshed patch is `seedling-fidelity-lapsecost-evidence/flip-candidate.patch`.
+
+**Trap candidates.**
+- **A wider option set is a different walk, not a superset of walks.** The lapse admits more presses; each costs
+  movement ticks and can land a tick after the body's own contact re-arms. "ON can only add solutions" was false.
+- **A fallback placed before the ladder shadows the ladder.** The narrow walk was OFF's walk, including OFF's failures.
+  A candidate earns its place by cost: it sits where it is cheaper than the rung it replaces, after the rungs that
+  already answer.
+- **A static body at its placement prices the wrong room for a mover.** The Flyer chased the walk; the map priced the
+  cell it left at t1.
+- **One fix's plan walks into the next gap.** The Flyer-aware plan met the BeamTower's drifting Solid at t205.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
