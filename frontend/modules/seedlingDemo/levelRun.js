@@ -11981,8 +11981,13 @@ export function createLevelRun({
      * so this is a BOUNDED VACUITY today, and it says so rather than being
      * left out on the strength of that.
      */
-    function assertNoCeremonyBesideLiveChaser(what) {
+    function assertNoCeremonyBesideLiveChaser(what, { stepped = false } = {}) {
         if (noclip || noDamage) return;
+        // ⛓ CEREMONYSHOVE D2: ON, a ceremony whose dead frames are stepped (`stepCeremonyLumpNow`) owes no refusal.
+        // A text-less one (`stepped` false) finishes on its start tick, so its frames are still a lump: refused, and
+        // ON the refusal also names the shove those frames would deal (`assertNoUnsteppedCeremonyShove`).
+        if (CONTACT_FIDELITY.ceremonyShove && stepped) return;
+        if (CONTACT_FIDELITY.ceremonyShove) assertNoUnsteppedCeremonyShove(what);
         for (const c of chaserStateFor(level).values()) {
             if (c.removed) continue;
             if (c.hitsTimer <= 0 && !c.dying) continue;
@@ -11993,6 +11998,86 @@ export function createLevelRun({
                 + 'frozen frame — and this model spends a ceremony\'s phase A as a LUMP '
                 + 'rather than as steps. Collect after the body is gone, or step the '
                 + 'freeze.');
+        }
+    }
+
+    /**
+     * ⛓⛓⛓ fidelity CEREMONYSHOVE D2 (`CONTACT_FIDELITY.ceremonyShove`) — A PICKUP CEREMONY'S DEAD FRAMES, STEPPED FOR
+     * THE CHASERS AND FOR THE PLAYER'S UNGATED LINES.
+     *
+     * ```as3
+     *   Pickup.pick_up:   Game.freezeObjects = true; if (specialTimer > 0) specialTimer--; …   // 150 frames, then the text
+     *   Player.update:    addShield(); shieldBump(); checkDrowning(); freezeStep(); … hitUpdate();  // outside mobileUpdate
+     *   Player.shieldBump: if (shieldObj && v.length > 0) for each o in the box: o.knockback(shieldForce, Point(x, y))
+     *   Enemy.knockback:  v += f·(cos a, sin a)       // no freeze gate; the move that would spend it is gated
+     *   Enemy.update:     terrain switch; super.update() (Mobile.death's fade); hitUpdate(); hitPlayer()  // ungated
+     * ```
+     *
+     * The player's `v` stays frozen non-zero, so a body inside the moving shield box takes `shieldForce` on EVERY dead
+     * frame and leaves the freeze with it. MEASURED on p4f (`ceremonyshove-l30-touch`, and STRIKELAPSE's
+     * `probe-bobsoldier-pre-ceremony-arm`): the game's dead frames fall between the observation ONE tick after the
+     * ceremony's start and the one TWO ticks after it (an i-framed body reads 21 → 20 → 0, a fading one 0.6 → 0.5 →
+     * gone), and across them the body's `v` grows by 745.0 px/tick = 149 × `shieldForce` beyond the one shove of the
+     * tick itself. So: `CEREMONY_LUMP_SHOVE_FRAMES` frames, at the top of that advance, each one the chasers' frozen
+     * update (`stepChasersNow`: `hitUpdate`, the fade, the terrain switch) then the player's lines (`shieldBumpNow`,
+     * `stepPlayerDamage` — the player's i-frame drains too: measured 18 → 0 on `ceremonyshove-l30-player-iframe`).
+     *
+     * ⚠ NOT STEPPED HERE, named: the camera (`view()`), the slash timer and the activators also run on a dead frame;
+     * the clock still spends the phase as the lump it always did (`spendCeremonyPhaseA`), and the turrets/bombs keep
+     * their own stepping at the ceremony's start.
+     */
+    const CEREMONY_LUMP_SHOVE_FRAMES = CEREMONY_DEAD_FRAMES.pickup - 1;
+    let pendingCeremonyLump = null;
+    function armCeremonyLumpNow(what) {
+        if (!CONTACT_FIDELITY.ceremonyShove || noclip || ceremony === null) return;
+        pendingCeremonyLump = { level, what, due: ticksCompleted + 1, frames: CEREMONY_LUMP_SHOVE_FRAMES };
+        ceremony.shoveLump = what;
+    }
+    /** ONE dead frame: the chasers' frozen update, then the player's ungated lines (`Player.update`'s order). */
+    function stepCeremonyDeadFrameNow() {
+        stepChasersNow();
+        shieldBumpNow();
+        const d = stepPlayerDamage(damage);
+        damage = d.state;
+        if (d.recovered && d.direction !== null) state = { ...state, direction: d.direction };
+    }
+    function stepCeremonyLumpNow() {
+        const lump = pendingCeremonyLump;
+        if (lump === null || lump.due !== ticksCompleted) return;
+        pendingCeremonyLump = null;
+        if (lump.level !== level || ceremony === null) return;
+        for (let k = 0; k < lump.frames; k += 1) stepCeremonyDeadFrameNow();
+        ceremonyLumps.push({ t: ticksCompleted, level, what: lump.what, frames: lump.frames });
+    }
+    /**
+     * ⛓ AND THE 150TH DEAD FRAME, AT THE RELEASE. MEASURED on `ceremonyshove-l30-touch`: with the lump stepped the body
+     * matches the game through every dialogue tick, and leaves the freeze one `shieldForce` short (Δv 5.0, from the
+     * release on). One more dead frame lands before the release frame; it is stepped there, on the finishing tick,
+     * above the live step the ceremony falls through to.
+     */
+    function stepCeremonyReleaseFrameNow() {
+        if (!ceremony?.shoveLump) return;
+        stepCeremonyDeadFrameNow();
+        ceremonyLumps.push({ t: ticksCompleted, level, what: ceremony.shoveLump, frames: 1, release: true });
+    }
+    const ceremonyLumps = [];
+    /**
+     * ⛓ CEREMONYSHOVE D2 (ON) — THE CEREMONIES WHOSE DEAD FRAMES ARE STILL A LUMP: a text-less pickup (it finishes on
+     * its start tick) and a chest's seal piece (`stepSealPieceNow`: 150 + the controller's 181, all dead). Their frames
+     * run `Player.shieldBump` exactly as a stepped ceremony's do, so a body the moving shield box touches would be
+     * shoved on every one of them; that is refused here by name rather than spent unshoved. (A still player shoves
+     * nothing: `shieldBump`'s `v.length > 0`.) Unwitnessed on the game: no committed tape or survey plan reaches it.
+     */
+    function assertNoUnsteppedCeremonyShove(what) {
+        if (!CONTACT_FIDELITY.ceremonyShove || noclip || noDamage || !inventory?.hasShield) return;
+        if (state.vx === 0 && state.vy === 0) return;
+        const rendered = shieldRenderState ?? state;
+        for (const c of chaserStateFor(level).values()) {
+            if (c.removed || c.destroy || c.dying || !chaserKnocksBack(c.tag)) continue;
+            if (!shieldBumpTouches(state, slashState.slashing, chaserBoxAt(c.tag, c.x, c.y), rendered)) continue;
+            throw new Error(`levelRun: a ${what} ceremony began in level ${level} with ${c.id} inside the moving `
+                + 'shield box. Its dead frames are not stepped (no text, or a seal piece), and `Player.shieldBump` '
+                + 'shoves the body on every one of them (CEREMONYSHOVE D2). Refused by name.');
         }
     }
 
@@ -12322,6 +12407,8 @@ export function createLevelRun({
         });
         sealPiece = r.piece;
         if (!r.contact) return;
+        // ⛓ CEREMONYSHOVE D2 (ON): its 331 dead frames stay a lump, so a hot or touched chaser is refused by name.
+        if (CONTACT_FIDELITY.ceremonyShove) assertNoCeremonyBesideLiveChaser('sealpiece');
         // ⛓ THE CEREMONY IS ALL DEAD FRAMES. Phase A is 150 and the
         // `SealController` behind it is 181 more, and the observation
         // stream sees neither — so this costs the tape NO ticks and the
@@ -17499,6 +17586,8 @@ export function createLevelRun({
          * whether or not the dialogue after it is ever dismissed.
          */
         get ceremonyStarts() { return ceremonyStarts.map((r) => ({ ...r })); },
+        /** ⛓ CEREMONYSHOVE D2: the dead frames `stepCeremonyLumpNow` stepped (ON only; empty OFF). */
+        get ceremonyLumps() { return ceremonyLumps.map((r) => ({ ...r })); },
         /**
          * ⛓⛓⛓ `{t, arm, id, fromLevel, toLevel, cutscene, respawn}` per
          * GAME-INITIATED ending reboot — the window's terminal, and the
@@ -17640,6 +17729,8 @@ export function createLevelRun({
                 x: state.x, y: state.y, vx: state.vx, vy: state.vy,
                 direction: state.direction,
             };
+            // ⛓ CEREMONYSHOVE D2: a ceremony's dead frames, before this tick's own frame (`stepCeremonyLumpNow`).
+            if (pendingCeremonyLump !== null) stepCeremonyLumpNow();
             // ⛓ R7 slice 6d: the witnessed mid-run clears, BEFORE anything
             // reads geometry this tick — the flag is already false when the
             // tick numbered `at` begins, which is what "the game cleared it
@@ -18479,7 +18570,7 @@ export function createLevelRun({
                     const pb = playerBoxAt(state.x, state.y);
                     const sb = darkSwordBox(witchSword);
                     if (pb.right > sb.x && pb.x < sb.right && pb.bottom > sb.y && pb.y < sb.bottom) {
-                        assertNoCeremonyBesideLiveChaser('darksword');
+                        assertNoCeremonyBesideLiveChaser('darksword', { stepped: true });
                         ceremonyStarts.push({ t: ticksCompleted, level, tag: 'darksword', runtime: true });
                         spendCeremonyPhaseA('darksword');
                         witchLedger.push({ t: ticksCompleted, level, what: 'darksword-contact',
@@ -18493,6 +18584,7 @@ export function createLevelRun({
                             totemPart: null,
                             dialogue: beginDialogue(DARK_SWORD.text, { framesThisCharacter }),
                         };
+                        armCeremonyLumpNow('darksword');
                     }
                 }
             }
@@ -18523,7 +18615,10 @@ export function createLevelRun({
                     // ⛓ R8 slice 1: and the chaser's narrower version of the
                     // same asymmetry — see `assertNoCeremonyBesideLiveChaser`
                     // for why it refuses two STATES rather than a class.
-                    if (!noclip) assertNoCeremonyBesideLiveChaser(hit.tag ?? 'pickup');
+                    if (!noclip) {
+                        assertNoCeremonyBesideLiveChaser(hit.tag ?? 'pickup',
+                            { stepped: ceremonyFor(hit).text !== '' });
+                    }
                     if (!noclip) assertNoCeremonyBesideLiveWallFlyer(hit.tag ?? 'pickup');
                     const entry = ceremonyFor(hit);
                     ceremonyStarts.push({
@@ -18557,6 +18652,8 @@ export function createLevelRun({
                         ...(hit.tag === 'seed'
                             ? { seed: { id: pickupKey(level, hit), arm: 'plain' } } : {}),
                     };
+                    // ⛓ CEREMONYSHOVE D2: and, ON, the chasers' and the player's — one tick later (see the arm).
+                    if (ceremony.dialogue !== null) armCeremonyLumpNow(hit.tag ?? 'pickup');
                     // ⛓ U15-swim D1: phase A's dead frames, frozen, for the turrets.
                     if (!noclip) stepShootersThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
                     // ⛓ seedling-fidelity-bombpusher: and for the lobber and its bombs.
@@ -18568,6 +18665,8 @@ export function createLevelRun({
                 prevHeld = new Set(held);
                 if (ceremony.dialogue) stepDialogue(ceremony.dialogue, released);
                 const finishing = ceremony.dialogue === null || ceremony.dialogue.done;
+                // ⛓ CEREMONYSHOVE D2: ON, the last dead frame, before the release (`stepCeremonyReleaseFrameNow`).
+                if (finishing && ceremony.shoveLump) stepCeremonyReleaseFrameNow();
                 if (finishing && ceremony.seed) {
                     /**
                      * ── ⛓⛓⛓ R6 SLICE 6d: `Seed.removeSelf()` — THE PICKUP
@@ -18868,6 +18967,9 @@ export function createLevelRun({
                     // one tick long and was the only divergence in the
                     // whole ceremony.
                 } else {
+                    // ⛓ CEREMONYSHOVE D2: ON, the chasers' frozen update (`hitUpdate`, the fade) runs on every
+                    // ceremony tick too — they update before the player, so above `runFrozenTick`'s shove.
+                    if (CONTACT_FIDELITY.ceremonyShove && !noclip) stepChasersNow();
                     // ⛓ R6 slice 6c: one implementation, two callers — see
                     // `runFrozenTick`, which is this arm, extracted verbatim.
                     return runFrozenTick(activators, 'a pickup ceremony');
