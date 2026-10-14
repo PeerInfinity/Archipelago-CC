@@ -394,7 +394,7 @@ export const CONTACT_FIDELITY = {
      * the chasers too, and `assertNoCeremonyBesideLiveChaser` stands down for what is now stepped. OFF: byte-identical.
      * ⛔ OFF by default (no licence yet); `SEEDLING_CEREMONY_SHOVE=0|1` for a node measurement.
      */
-    ceremonyShove: false,
+    ceremonyShove: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
