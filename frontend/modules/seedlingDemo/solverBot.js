@@ -103,6 +103,8 @@ import {
     bridgedChaserTags, chaserBoxAt, chaserHasSword, killWindowTicks,
     // ⛓ STRIKELAPSE D1: a corpse's removal clock (`createCorpseClock`).
     deathTicks, removalTicksAfterHit,
+    // ⛓ CEREMONYSHOVE D3: the classes a shield's bump moves (`ceremonyBesideLiveBody`).
+    chaserKnocksBack,
     DESTROYING_TILE_TYPES,
     rect, rectsOverlap, TILE_SIZE,
     ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET, contactPricing, contactRect,
@@ -5333,6 +5335,12 @@ export function previewWalk(run, wps, tolerance = 0,
              */
             if (held === null) {
                 sample.ceremony = true;
+                // ⛓ CEREMONYSHOVE D3: the player the freeze holds — its `v` and facing place the shield box whose bump
+                // the ceremony's dead frames deal (`ceremonyBesideLiveBody`, `ceremonyShove` ON).
+                if (CONTACT_FIDELITY.ceremonyShove) {
+                    sample.player = { x: st.x, y: st.y, vx: st.vx, vy: st.vy, direction: st.direction,
+                        slashing: slashState?.slashing === true };
+                }
                 break;
             }
             const combat = combatBefore(st, tick - 1, held, chaserBodies);
@@ -15004,6 +15012,17 @@ export function collectStandWalk(run, resolved, stance) {
  * `shieldBump` through the lump (from the measurement above) and then retires this refusal. Keep `collectStandWalk`.
  */
 export function ceremonyBesideLiveBody(run, sample, corpses = []) {
+    // ⛓ CEREMONYSHOVE D3 (`CONTACT_FIDELITY.ceremonyShove` ON): the run STEPS this ceremony's dead frames — the shove
+    // on every frame, the bodies' i-frames and fades, the player's own i-frame (`levelRun.stepCeremonyLumpNow`,
+    // game-witnessed at 0 on four p4f witnesses) — so the drive carries their outcome, and the walk after the
+    // ceremony is planned and probed from the state the shove left (a touched body leaves the freeze at ~750 px/tick
+    // and pins against the first wall). Nothing is left to refuse at the ceremony's start. A ceremony the run does
+    // NOT step (no text: it finishes on its start tick) keeps the refusal below.
+    if (CONTACT_FIDELITY.ceremonyShove) {
+        const box = playerBoxAt(sample.x, sample.y);
+        const p = (run.world?.pickups ?? []).find((q) => q.rect && rectsOverlap(box, q.rect));
+        if (p && run.ceremonyStepsDeadFrames?.(p)) return ceremonyAftermathDanger(run, sample);
+    }
     const present = [...(sample.chasers ?? []).filter((b) => !b.removed), ...corpses];
     const dead = (b) => b.destroy || b.dying || b.dyingAt !== undefined;
     // ⛔ `assertNoCeremonyBesideLiveChaser`'s own set, room-wide as it is: the run THROWS on these.
@@ -15019,6 +15038,39 @@ export function ceremonyBesideLiveBody(run, sample, corpses = []) {
             .map((x) => ({ ...x, why: `the collect's ceremony would start here beside a LIVE body (${x.why}) — the `
                 + 'freeze\'s unstepped frames shove it (`Player.shieldBump`) and park it for the next walk' })));
     }
+    return { danger: sources.length > 0, sources };
+}
+
+/**
+ * ⛓⛓ CEREMONYSHOVE D3 (`ceremonyShove` ON, a ceremony the run steps) — **THE PRICED QUESTION: WHERE THE CEREMONY
+ * LEAVES EACH BODY.** The dead frames run in the drive (`levelRun.stepCeremonyLumpNow`, game-witnessed at 0), so what
+ * the walk after the ceremony meets is decided by them, body by body, and the next walk starts from that:
+ *
+ *   · a corpse (`destroy`, `dying`, a staged `dyingAt`) finishes its fade inside the 149-frame lump (`Mobile.death`:
+ *     ten 0.1 steps) — gone, not asked;
+ *   · a live body the moving shield box touches (`Player.shieldBump`; a class whose `knockback` moves it) takes
+ *     `shieldForce` on every dead frame and leaves the freeze at ~750 px/tick, pinned on its first wall (measured,
+ *     `ceremonyshove-l30-touch`: (77.8, 72.6) → (91.8, 281.6)) — not beside the player, not asked;
+ *   · every other body — live, or i-framed (its i-frames drain to 0 in the lump) — stays where the freeze holds it,
+ *     and the walk after the ceremony begins beside it: the untimed WAIT question (`chaserDanger` at horizon 0) of
+ *     it as a live, un-i-framed body.
+ *
+ * The sample's `player` (the tail's ceremony sample) places the shield box; without one, no body counts as shoved —
+ * the side to err on.
+ */
+function ceremonyAftermathDanger(run, sample) {
+    const pl = sample.player ?? null;
+    const shield = run.progress?.('inventory')?.hasShield === true;
+    const dead = (b) => b.destroy || b.dying || b.dyingAt !== undefined;
+    const shoved = (b) => pl !== null && shield && chaserKnocksBack(b.tag)
+        && shieldBumpTouches(pl, pl.slashing, chaserBoxAt(b.tag, b.x, b.y), pl);
+    const parked = (sample.chasers ?? []).filter((b) => !b.removed && !dead(b) && !shoved(b))
+        .map((b) => ({ ...b, hitsTimer: 0 }));
+    if (parked.length === 0) return { danger: false, sources: [] };
+    const sources = chaserDanger(run, playerBoxAt(sample.x, sample.y), 0, parked)
+        .map((x) => ({ ...x, why: `the collect's ceremony would leave ${x.id ?? 'a body'} parked beside the player `
+            + `(${x.why}) — the freeze holds it there and the shield box does not reach it, so the walk after the `
+            + 'ceremony begins inside its reach' }));
     return { danger: sources.length > 0, sources };
 }
 

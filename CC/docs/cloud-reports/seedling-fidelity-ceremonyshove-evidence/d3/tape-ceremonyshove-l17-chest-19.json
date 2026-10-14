@@ -1,0 +1,248 @@
+{
+ "game": "seedling",
+ "name": "ceremonyshove-l17-chest-19",
+ "boot": {
+  "level": 17,
+  "x": 48,
+  "y": 48
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [
+  {
+   "level": 5,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 1,
+   "note": ""
+  },
+  {
+   "level": 10,
+   "tag": 0,
+   "note": ""
+  }
+ ],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": false,
+   "hasFire": false,
+   "hasWand": false,
+   "hasFireWand": false,
+   "canSwim": false,
+   "hasSpear": false,
+   "hasDarkShield": false,
+   "hasDarkSuit": false,
+   "hasDarkSword": false,
+   "hasFeather": false,
+   "hasTorch": false
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 3,
+  "first_use": false,
+  "extended": false,
+  "time": 8586,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick_count": 132,
+ "inputs": [
+  {
+   "key": "primary",
+   "from": 0,
+   "to": 1
+  },
+  {
+   "key": "primary",
+   "from": 2,
+   "to": 3
+  },
+  {
+   "key": "primary",
+   "from": 8,
+   "to": 9
+  },
+  {
+   "key": "right",
+   "from": 0,
+   "to": 15
+  },
+  {
+   "key": "primary",
+   "from": 14,
+   "to": 15
+  },
+  {
+   "key": "left",
+   "from": 15,
+   "to": 16
+  },
+  {
+   "key": "primary",
+   "from": 20,
+   "to": 21
+  },
+  {
+   "key": "right",
+   "from": 16,
+   "to": 29
+  },
+  {
+   "key": "left",
+   "from": 31,
+   "to": 33
+  },
+  {
+   "key": "right",
+   "from": 37,
+   "to": 39
+  },
+  {
+   "key": "up",
+   "from": 37,
+   "to": 40
+  },
+  {
+   "key": "primary",
+   "from": 40,
+   "to": 41
+  },
+  {
+   "key": "right",
+   "from": 41,
+   "to": 44
+  },
+  {
+   "key": "up",
+   "from": 41,
+   "to": 44
+  },
+  {
+   "key": "primary",
+   "from": 43,
+   "to": 44
+  },
+  {
+   "key": "left",
+   "from": 44,
+   "to": 46
+  },
+  {
+   "key": "down",
+   "from": 44,
+   "to": 46
+  },
+  {
+   "key": "right",
+   "from": 46,
+   "to": 47
+  },
+  {
+   "key": "up",
+   "from": 46,
+   "to": 47
+  },
+  {
+   "key": "left",
+   "from": 47,
+   "to": 48
+  },
+  {
+   "key": "down",
+   "from": 47,
+   "to": 48
+  },
+  {
+   "key": "right",
+   "from": 48,
+   "to": 49
+  },
+  {
+   "key": "up",
+   "from": 48,
+   "to": 49
+  },
+  {
+   "key": "left",
+   "from": 52,
+   "to": 53
+  },
+  {
+   "key": "down",
+   "from": 52,
+   "to": 53
+  },
+  {
+   "key": "up",
+   "from": 56,
+   "to": 59
+  },
+  {
+   "key": "left",
+   "from": 59,
+   "to": 60
+  },
+  {
+   "key": "down",
+   "from": 60,
+   "to": 61
+  },
+  {
+   "key": "primary",
+   "from": 60,
+   "to": 61
+  },
+  {
+   "key": "up",
+   "from": 61,
+   "to": 62
+  },
+  {
+   "key": "right",
+   "from": 62,
+   "to": 63
+  }
+ ],
+ "tape_version": 8,
+ "description": "SEEDLING FIDELITY CEREMONYSHOVE D3 game witness: survey step 19 (L17 Chest) solved with CONTACT_FIDELITY.strikeIframeLapse and ceremonyShove ON (132 t): the seal piece is collected while bob@96,32 is inside its i-frames, and its 331 dead frames are stepped. A measurement, not a roster tape."
+}

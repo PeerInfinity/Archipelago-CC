@@ -16,23 +16,26 @@ const max = +(process.argv[3] ?? 12);
 const game = new Map(); const gameLast = new Map();
 for (const f of G.frames) { const t = f.mobiles.tick ?? f.status.tick; if (!Number.isInteger(t)) continue; const first = !game.has(t);
   const rows = f.mobiles.mobiles ?? []; const p = rows.find(r => /Player$/.test(r.cls)); if (!p) continue;
-  const b = rows.find(r => /BobSoldier$/.test(r.cls));
-  (first ? game : gameLast).set(t, { px: p.x, py: p.y, pvx: p.vx, pvy: p.vy, pht: f.status.hits_timer, b: b ? { x: b.x, y: b.y, vx: b.vx, vy: b.vy, ht: b.enemy.hits_timer, h: b.enemy.hits, a: b.alpha } : null }); }
+  const CLS = new RegExp(`(^|[.:])${process.env.CLASS ?? 'BobSoldier'}$`);
+  const bs = rows.filter(r => CLS.test(r.cls)); const b = bs[0];
+  (first ? game : gameLast).set(t, { px: p.x, py: p.y, pvx: p.vx, pvy: p.vy, pht: f.status.hits_timer, b: b ? { x: b.x, y: b.y, vx: b.vx, vy: b.vy, ht: b.enemy.hits_timer, h: b.enemy.hits, a: b.alpha } : null,
+    all: bs.map(b => ({ x: b.x, y: b.y, vx: b.vx, vy: b.vy, ht: b.enemy.hits_timer, h: b.enemy.hits })) }); }
 let run = null; const model = new Map(); let err = null;
 const st = createTapeStepper(parseTape(JSON.stringify(G.tape)), { levelSource: atlasLevelSource(), onTick: (a, b, c, rn) => { run = rn; } });
-try { let r = st.next(); while (!r.done) { const o = r.value.observation; const c = (run?.entities('chasers') ?? []).find(c => !c.removed);
-  model.set(o.t, { px: o.x, py: o.y, pht: run?.damage?.hitsTimer, b: c ? { x: c.x, y: c.y, vx: c.vx, vy: c.vy, ht: c.hitsTimer, h: c.hits } : null }); r = st.next(); } } catch (e) { err = e.message.slice(0, 200); }
+try { let r = st.next(); while (!r.done) { const o = r.value.observation; const live = (run?.entities('chasers') ?? []).filter(c => !c.removed); const c = live[0];
+  model.set(o.t, { px: o.x, py: o.y, pht: run?.damage?.hitsTimer, b: c ? { x: c.x, y: c.y, vx: c.vx, vy: c.vy, ht: c.hitsTimer, h: c.hits } : null,
+    all: live.map(c => ({ x: c.x, y: c.y, vx: c.vx, vy: c.vy, ht: c.hitsTimer, h: c.hits })) }); r = st.next(); } } catch (e) { err = e.message.slice(0, 200); }
 let n = 0, worst = 0, cmp = 0;
 const d = (a, b) => Math.abs((a ?? 0) - (b ?? 0));
 const delta = (m, g) => { const pd = Math.max(d(m.px, g.px), d(m.py, g.py));
-  const bd = (m.b && g.b) ? Math.max(d(m.b.x, g.b.x), d(m.b.y, g.b.y), d(m.b.vx, g.b.vx), d(m.b.vy, g.b.vy), d(m.b.ht, g.b.ht), d(m.b.h, g.b.h)) : ((!!m.b) !== (!!g.b) ? 999 : 0);
+  const one = (a, b) => Math.max(d(a.x, b.x), d(a.y, b.y), d(a.vx, b.vx), d(a.vy, b.vy), d(a.ht, b.ht), d(a.h, b.h));
+  const bd = (m.all.length !== g.all.length) ? 999 : Math.max(0, ...g.all.map(gb => Math.min(...m.all.map(mb => one(mb, gb)))));
   return Math.max(pd, bd, d(m.pht, g.pht)); };
 const T = G.tape.tick_count;
 for (const [t, m] of [...model].sort((a, b) => a[0] - b[0])) { if (t >= T) continue; let g = game.get(t); if (!g) continue; cmp++;
   const gl = gameLast.get(t); if (process.env.EITHER && gl && delta(m, gl) < delta(m, g)) g = gl;
   const pd = Math.max(d(m.px, g.px), d(m.py, g.py));
-  const bd = (m.b && g.b) ? Math.max(d(m.b.x, g.b.x), d(m.b.y, g.b.y), d(m.b.vx, g.b.vx), d(m.b.vy, g.b.vy), d(m.b.ht, g.b.ht), d(m.b.h, g.b.h)) : ((!!m.b) !== (!!g.b) ? 999 : 0);
   const hd = d(m.pht, g.pht);
-  const w = Math.max(pd, bd, hd); worst = Math.max(worst, w);
+  const w = delta(m, g); const bd = w; worst = Math.max(worst, w);
   if (w > 1e-9 && n++ < max) console.log(`t${t} Δplayer ${pd.toFixed(3)} Δbody ${bd.toFixed(3)} Δpht ${hd} | model p(${m.px.toFixed(2)},${m.py.toFixed(2)}) ht${m.pht} b${JSON.stringify(m.b && Object.fromEntries(Object.entries(m.b).map(([k,v])=>[k,+(+v).toFixed(2)])))} | game p(${g.px.toFixed(2)},${g.py.toFixed(2)}) ht${g.pht} b${JSON.stringify(g.b && Object.fromEntries(Object.entries(g.b).map(([k,v])=>[k,+(+v).toFixed(2)])))}`); }
 console.log(`compared ${cmp} ticks, mismatching ${n}, worst ${worst}${err ? ' MODEL THREW: ' + err : ''}`);
