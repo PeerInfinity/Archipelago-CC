@@ -393,7 +393,7 @@ export const CONTACT_FIDELITY = {
      * step is taken inside the frozen tick under its held keys (the BobBoss rock's form). OFF: byte-identical.
      * ⛔ OFF by default (no licence yet); `SEEDLING_BUTTON_FALL_RELEASE_STEP=0|1` for a node measurement.
      */
-    buttonFallReleaseStep: false,
+    buttonFallReleaseStep: true,
     /**
      * fidelity SMALLGAPS D2 — AN INTERMEDIATE WAYPOINT ON ICE IS PASSED, NOT PARKED ON (the walker:
      * `botDriverV2.waypointReached`, read by `drive` and `solverBot.previewWalk` alike).
@@ -406,7 +406,7 @@ export const CONTACT_FIDELITY = {
      * the player stands on ice, is reached at "within tolerance" whatever the velocity; the walk's final target still
      * needs the stop. OFF: byte-identical. ⛔ OFF by default; `SEEDLING_WAYPOINT_SLIDE=0|1` for a node measurement.
      */
-    waypointSlide: false,
+    waypointSlide: true,
     /**
      * fidelity SMALLGAPS D3 — A LAVA CHAIN'S ARM HITS THE PLAYER (`levelRun.stepLavaChainsNow`, the `"Player"` arm).
      *
@@ -421,7 +421,7 @@ export const CONTACT_FIDELITY = {
      * skipped `Game.time`) touching the player is refused by name. OFF: byte-identical.
      * ⛔ OFF by default; `SEEDLING_LAVA_CHAIN_PLAYER_HIT=0|1` for a node measurement.
      */
-    lavaChainPlayerHit: false,
+    lavaChainPlayerHit: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
