@@ -335,3 +335,77 @@ export const PRESS_KILL_BOMBS_COUNTS = {
 export function resetPressKillBombsCounts() {
     for (const k of Object.keys(PRESS_KILL_BOMBS_COUNTS)) PRESS_KILL_BOMBS_COUNTS[k] = 0;
 }
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE RE — THE REFUGE'S BEST-ETA CUT (`REFUGE_ETA_CUT`, OFF).
+ *
+ * `deriveRefuge` previews its `REFUGE_CANDIDATES` (12) nearest clear cells on every tick the press kill has nowhere to
+ * stand, and keeps the one whose walk ARRIVES soonest (ties to the larger clearance). A candidate is previewed to its
+ * arrival, a crossing, a lethal floor or `DEFAULT_MAX_TICKS_PER_TARGET` (400) stalled ticks — and most are cells behind
+ * a wall, pressed into for 400 ticks. Measured on C1's staging A (sword): 2,145,515 previewed states, of which 26,721
+ * come before the best ETA found so far (P2, re-measured here to the state).
+ *
+ * ⇒ ON, once a best is held, each later candidate's preview is STOPPED at its `best.eta + 1`-th sample
+ * (`previewWalk`'s own `stopWhen`, `kind: 'stopped'`, which the refuge skips like any truncated walk). Such a walk
+ * cannot win: its ETA is at least `best.eta + 1`, and a tie must ARRIVE at `best.eta` (so `>`, never `>=`). The bound
+ * is the best's, and the best has passed every test a refuge passes (BW's `refugeBlast` included), so a refused
+ * candidate never cuts another. The CHOSEN cell is therefore never cut, and a guard that re-ran the chosen cell in full
+ * would never run.
+ *
+ * ⛔ WHAT THE CUT CAN CHANGE, BY NAME — it is a behaviour switch, not a cost one, because a cut preview skips every
+ * stepper and forecast call past the cut:
+ *   · a THROW past the cut, in a candidate that would have lost, is not raised: the stepper's death refusal
+ *     (`levelRun.deathRefusal`), a forecast's own refusal (`chaserForecast`'s shake band) — the full preview would have
+ *     aborted the solve there, and the cut lets it go on. MEASURED: 0 of 57,312 refuge previews on every D1 workload
+ *     (staging A sword and ghost, legs 397/414 ghost, 381 with MOVING_WAIT and PRESS_KILL_BOMBS) threw anywhere;
+ *   · a lethal pit or a drowning past the cut: none is raised and none could matter (the candidate is skipped either
+ *     way);
+ *   · `solveProgress`'s preview units (`progressPreview`): `previewStates` and the tile map count only the states taken
+ *     (the `previews` count is unchanged), and BW's instrument asks `refugeBlast` of fewer candidates (the cut ones are
+ *     skipped before it). No reader decides on either.
+ * The chosen refuge is the full preview's on every one of the 4,776 measured derivations.
+ *
+ * ⛓ THE SWITCH — `REFUGE_ETA_CUT`, OFF (`SEEDLING_REFUGE_ETA_CUT=1` opts a process in, or `withRefugeEtaCut(true, fn)`).
+ * OFF, every candidate is previewed with exactly the arguments it was before. The flip is the user's.
+ */
+export const REFUGE_ETA_CUT = {
+    enabled: globalThis.process?.env?.SEEDLING_REFUGE_ETA_CUT === '1',
+};
+export const REFUGE_ETA_CUT_DEFAULT = false;
+
+/** Run `fn` with `REFUGE_ETA_CUT` set to `enabled`, restoring the previous value (`withPressKillCost`'s shape). */
+export function withRefugeEtaCut(enabled, fn) {
+    const was = REFUGE_ETA_CUT.enabled;
+    REFUGE_ETA_CUT.enabled = enabled === true;
+    const restore = () => { REFUGE_ETA_CUT.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * The cut, as `previewWalk`'s `stopWhen`: `false` for the first `eta` samples, `true` from the `eta + 1`-th on. A walk
+ * that arrives at `eta` has taken `eta` samples and is never stopped, so a tie still reaches the clearance test. One
+ * predicate per preview (it counts its own calls).
+ */
+export function refugeEtaCut(eta) {
+    let taken = 0;
+    return () => {
+        taken += 1;
+        return taken > eta;
+    };
+}
+
+/** The cut's instrument (`PRESS_KILL_COST_COUNTS`' shape): written only with the switch ON, read by nothing that decides. */
+export const REFUGE_ETA_CUT_COUNTS = {
+    previews: 0, cut: 0,
+};
+export function resetRefugeEtaCutCounts() {
+    for (const k of Object.keys(REFUGE_ETA_CUT_COUNTS)) REFUGE_ETA_CUT_COUNTS[k] = 0;
+}
