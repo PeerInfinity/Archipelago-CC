@@ -44,8 +44,9 @@ const replay = (on) => withContactFidelity({ lavaChainPlayerHit: on }, () => {
 });
 
 describe('SMALLGAPS D3 — the switch', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.lavaChainPlayerHit).toBe(false);
+    // ⚖ (user, 2026-10-14) ON since the wave-16 harvest.
+    it('ships ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.lavaChainPlayerHit).toBe(true);
     });
 });
 
