@@ -1,0 +1,239 @@
+  pass 1: DISCOVERED kill-lock clear(s) [{5,0}] at tick 201
+  pass 2: MODEL-sourced {5,0} at 301 — `chaserKillLockOpens` computed the removal (the last body leaves the world) at 201, and `activators.opensOnTick(0.01)` is 101, which a declared v9 row spells 100
+  prefix agrees for the first 301 tick(s) below the declared 301 — {5,0}
+  pass 3: SOLVED in 403 ticks
+PASS: r8-solve-5: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-5: ends at the L6 ARRIVAL (§3.5) — ["403:L6"]
+PASS: r8-solve-5: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r8-solve-6: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-6: ends at the L7 ARRIVAL (§3.5) — ["294:L7"]
+PASS: r8-solve-6: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r8-solve-7: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-7: ends at the L8 ARRIVAL (§3.5) — ["146:L8"]
+PASS: r8-solve-7: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r8-solve-8: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-8: ends at the L9 ARRIVAL (§3.5) — ["827:L9"]
+PASS: r8-solve-8: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r8-solve-9: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-9: ends at the L10 ARRIVAL (§3.5) — ["122:L10"]
+PASS: r8-solve-9: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r8-solve-10: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-10: ends at the L11 ARRIVAL (§3.5) — ["83:L11"]
+PASS: r8-solve-10: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-11: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-11: ends at the L3 ARRIVAL (§3.5) — ["97:L3"]
+PASS: r9-solve-11: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-3: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-3: ends at the L2 ARRIVAL (§3.5) — ["152:L2"]
+PASS: r9-solve-3: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-2: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-2: ends at the L0 ARRIVAL (§3.5) — ["23:L0"]
+PASS: r9-solve-2: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-0: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-0: ends at the L13 ARRIVAL (§3.5) — ["145:L13"]
+PASS: r9-solve-0: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-13: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-13: ends at the L14 ARRIVAL (§3.5) — ["36:L14"]
+PASS: r9-solve-13: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-14: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-14: ends at the L15 ARRIVAL (§3.5) — ["103:L15"]
+PASS: r9-solve-14: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-15: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-15: ends at the L16 ARRIVAL (§3.5) — ["456:L16"]
+PASS: r9-solve-15: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-16: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-16: ends at the L18 ARRIVAL (§3.5) — ["655:L18"]
+PASS: r9-solve-16: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+  pass 1: DISCOVERED kill-lock clear(s) [{18,0}] at tick 407
+  pass 2: MODEL-sourced {18,0} at 406 — `spinnerKillLockOpens` computed the removal at 306 and `activators.opensOnTick(0.01)` is 101, which a declared v9 row spells 100
+  prefix agrees for the first 406 tick(s) below the declared 406 — {18,0}
+  pass 3: SOLVED in 440 ticks
+PASS: r9-solve-18: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-18: ends at the L19 ARRIVAL (§3.5) — ["440:L19"]
+PASS: r9-solve-18: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-19: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-19: ends at the L20 ARRIVAL (§3.5) — ["746:L20"]
+PASS: r9-solve-19: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-20: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-20: ends at the L13 ARRIVAL (§3.5) — ["560:L13"]
+PASS: r9-solve-20: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-13-v2: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-13-v2: ends at the L0 ARRIVAL (§3.5) — ["48:L0"]
+PASS: r9-solve-13-v2: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-0-v3: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-0-v3: ends at the L12 ARRIVAL (§3.5) — ["299:L12"]
+PASS: r9-solve-0-v3: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-12: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-12: ends at the L21 ARRIVAL (§3.5) — ["2284:L21"]
+PASS: r9-solve-12: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-21: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-21: ends at the L22 ARRIVAL (§3.5) — ["26:L22"]
+PASS: r9-solve-21: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-22: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-22: ends at the L29 ARRIVAL (§3.5) — ["89:L29"]
+PASS: r9-solve-22: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-29: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-29: ends at the L31 ARRIVAL (§3.5) — ["379:L31"]
+PASS: r9-solve-29: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-31: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-31: ends at the L30 ARRIVAL (§3.5) — ["336:L30"]
+PASS: r9-solve-31: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-30: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-30: ends at the L32 ARRIVAL (§3.5) — ["210:L32"]
+PASS: r9-solve-30: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-32: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-32: a TERMINAL segment crosses only its encounter's pit — it ends the route in L32 and falls to L30 — ["976:L30"] · ends in L30
+PASS: ⛓ sum(segment ticks) === the COMMITTED tapes' own sum — 183 + 47 + 245 + 255 + 403 + 294 + 146 + 827 + 122 + 83 + 97 + 152 + 23 + 145 + 36 + 103 + 456 + 655 + 440 + 746 + 560 + 48 + 299 + 2364 + 26 + 89 + 379 + 336 + 210 + 1056 = 10825; recorded 10825 against committed 10825
+PASS: ⛓ every RECORDED segment's solved length is its committed tape's own — 183,47,245,255,403,294,146,827,122,83,97,152,23,145,36,103,456,655,440,746,560,48,299,2364,26,89,379,336,210,1056 against 183,47,245,255,403,294,146,827,122,83,97,152,23,145,36,103,456,655,440,746,560,48,299,2364,26,89,379,336,210,1056
+
+## the chain: 10825 ticks over 30 rooms
+    1 r8-solve-1    L0   -> L2     183 t
+    2 r8-solve-2    L2   -> L3      47 t
+    3 r8-solve-3    L3   -> L4     245 t
+    4 r8-solve-4    L4   -> L5     255 t
+    5 r8-solve-5    L5   -> L6     403 t
+    6 r8-solve-6    L6   -> L7     294 t
+    7 r8-solve-7    L7   -> L8     146 t
+    8 r8-solve-8    L8   -> L9     827 t
+    9 r8-solve-9    L9   -> L10    122 t
+   10 r8-solve-10   L10  -> L11     83 t
+   11 r9-solve-11   L11  -> L3      97 t
+   12 r9-solve-3    L3   -> L2     152 t
+   13 r9-solve-2    L2   -> L0      23 t
+   14 r9-solve-0    L0   -> L13    145 t
+   15 r9-solve-13   L13  -> L14     36 t
+   16 r9-solve-14   L14  -> L15    103 t
+   17 r9-solve-15   L15  -> L16    456 t
+   18 r9-solve-16   L16  -> L18    655 t
+   19 r9-solve-18   L18  -> L19    440 t
+   20 r9-solve-19   L19  -> L20    746 t
+   21 r9-solve-20   L20  -> L13    560 t
+   22 r9-solve-13-v2 L13  -> L0      48 t
+   23 r9-solve-0-v3 L0   -> L12    299 t
+   24 r9-solve-12   L12  -> L21   2364 t
+   25 r9-solve-21   L21  -> L22     26 t
+   26 r9-solve-22   L22  -> L29     89 t
+   27 r9-solve-29   L29  -> L31    379 t
+   28 r9-solve-31   L31  -> L30    336 t
+   29 r9-solve-30   L30  -> L32    210 t
+   30 r9-solve-32   L32  -> END   1056 t
+## PLAYTHROUGH_CHAINS.r9-campaign: cuts [183, 230, 475, 730, 1133, 1427, 1573, 2400, 2522, 2605, 2702, 2854, 2877, 3022, 3058, 3161, 3617, 4272, 4712, 5458, 6018, 6066, 6365, 8729, 8755, 8844, 9223, 9559, 9769], endsAt 10825
+PASS: ⛓ the free oracle: r8-solve-3 declares seam.time 5069 — 5002 + 40 − LOAD_FADE_FRAMES + 47 = 5069
+PASS: ⛓ the free oracle: r8-solve-4 declares seam.time 5334 — 5069 + 40 − LOAD_FADE_FRAMES + 245 = 5334
+PASS: ⛓ the free oracle: r8-solve-5 declares seam.time 5609 — 5334 + 40 − LOAD_FADE_FRAMES + 255 = 5609
+PASS: ⛓ the free oracle: r8-solve-6 declares seam.time 6032 — 5609 + 40 − LOAD_FADE_FRAMES + 403 = 6032
+PASS: ⛓ the free oracle: r8-solve-7 declares seam.time 6346 — 6032 + 40 − LOAD_FADE_FRAMES + 294 = 6346
+PASS: ⛓ the free oracle: r8-solve-8 declares seam.time 6512 — 6346 + 40 − LOAD_FADE_FRAMES + 146 = 6512
+PASS: ⛓ the free oracle: r8-solve-9 declares seam.time 7359 — 6512 + 40 − LOAD_FADE_FRAMES + 827 = 7359
+PASS: ⛓ the free oracle: r8-solve-10 declares seam.time 7501 — 7359 + 40 − LOAD_FADE_FRAMES + 122 = 7501
+PASS: ⛓ the free oracle: r9-solve-11 declares seam.time 7754 — 7501 + 190 − LOAD_FADE_FRAMES + 83 = 7754
+PASS: ⛓ the free oracle: r9-solve-3 declares seam.time 8202 — 7754 + 371 − LOAD_FADE_FRAMES + 97 = 8202
+PASS: ⛓ the free oracle: r9-solve-2 declares seam.time 8374 — 8202 + 40 − LOAD_FADE_FRAMES + 152 = 8374
+PASS: ⛓ the free oracle: r9-solve-0 declares seam.time 8417 — 8374 + 40 − LOAD_FADE_FRAMES + 23 = 8417
+PASS: ⛓ the free oracle: r9-solve-13 declares seam.time 8582 — 8417 + 40 − LOAD_FADE_FRAMES + 145 = 8582
+PASS: ⛓ the free oracle: r9-solve-14 declares seam.time 8638 — 8582 + 40 − LOAD_FADE_FRAMES + 36 = 8638
+PASS: ⛓ the free oracle: r9-solve-15 declares seam.time 8761 — 8638 + 40 − LOAD_FADE_FRAMES + 103 = 8761
+PASS: ⛓ the free oracle: r9-solve-16 declares seam.time 9237 — 8761 + 40 − LOAD_FADE_FRAMES + 456 = 9237
+PASS: ⛓ the free oracle: r9-solve-18 declares seam.time 9912 — 9237 + 40 − LOAD_FADE_FRAMES + 655 = 9912
+PASS: ⛓ the free oracle: r9-solve-19 declares seam.time 10372 — 9912 + 40 − LOAD_FADE_FRAMES + 440 = 10372
+PASS: ⛓ the free oracle: r9-solve-20 declares seam.time 11288 — 10372 + 190 − LOAD_FADE_FRAMES + 746 = 11288
+PASS: ⛓ the free oracle: r9-solve-13-v2 declares seam.time 12018 — 11288 + 190 − LOAD_FADE_FRAMES + 560 = 12018
+PASS: ⛓ the free oracle: r9-solve-0-v3 declares seam.time 12086 — 12018 + 40 − LOAD_FADE_FRAMES + 48 = 12086
+PASS: ⛓ the free oracle: r9-solve-12 declares seam.time 12856 — 12086 + 491 − LOAD_FADE_FRAMES + 299 = 12856
+PASS: ⛓ the free oracle: r9-solve-21 declares seam.time 15160 — 12856 + 40 − LOAD_FADE_FRAMES + 2284 = 15160
+PASS: ⛓ the free oracle: r9-solve-22 declares seam.time 15206 — 15160 + 40 − LOAD_FADE_FRAMES + 26 = 15206
+PASS: ⛓ the free oracle: r9-solve-29 declares seam.time 15315 — 15206 + 40 − LOAD_FADE_FRAMES + 89 = 15315
+PASS: ⛓ the free oracle: r9-solve-31 declares seam.time 15864 — 15315 + 190 − LOAD_FADE_FRAMES + 379 = 15864
+PASS: ⛓ the free oracle: r9-solve-30 declares seam.time 16220 — 15864 + 40 − LOAD_FADE_FRAMES + 336 = 16220
+PASS: ⛓ the free oracle: r9-solve-32 declares seam.time 16450 — 16220 + 40 − LOAD_FADE_FRAMES + 210 = 16450
+## the clock column: r8-solve-1 -> r8-solve-2: UNASKED (no declared clock) r8-solve-3=5069 r8-solve-4=5334 r8-solve-5=5609 r8-solve-6=6032 r8-solve-7=6346 r8-solve-8=6512 r8-solve-9=7359 r8-solve-10=7501 r9-solve-11=7754 r9-solve-3=8202 r9-solve-2=8374 r9-solve-0=8417 r9-solve-13=8582 r9-solve-14=8638 r9-solve-15=8761 r9-solve-16=9237 r9-solve-18=9912 r9-solve-19=10372 r9-solve-20=11288 r9-solve-13-v2=12018 r9-solve-0-v3=12086 r9-solve-12=12856 r9-solve-21=15160 r9-solve-22=15206 r9-solve-29=15315 r9-solve-31=15864 r9-solve-30=16220 r9-solve-32=16450
+PASS: ⛓ segment 10 flips `hasSword` NOT-HELD -> HELD (the ledger's `sword@L10`) — false -> true
+PASS: ⛓ segment 11 OPENS the chest (the ledger's `chest@L11`) — 0 -> 1: [{"t":6,"level":11,"id":"chest@32,48","persistTag":0}]
+## r8-solve-1: PROMOTED, not re-authored — 183 ticks read from the committed tape
+## r8-solve-2: PROMOTED, not re-authored — 47 ticks read from the committed tape
+## r8-solve-3: PROMOTED, not re-authored — 245 ticks read from the committed tape
+## r8-solve-4: PROMOTED, not re-authored — 255 ticks read from the committed tape
+## r8-solve-5 budget: 17 span(s), 3 KB, 403 ticks
+PASS: r8-solve-5 is byte-identical to what this solver derives — 4661 bytes
+PASS: r8-solve-5 trace is byte-identical to what this solver derives — 5197 bytes
+## r8-solve-6 budget: 27 span(s), 3 KB, 294 ticks
+PASS: r8-solve-6 is byte-identical to what this solver derives — 5373 bytes
+PASS: r8-solve-6 trace is byte-identical to what this solver derives — 3615 bytes
+## r8-solve-7 budget: 14 span(s), 2 KB, 146 ticks
+PASS: r8-solve-7 is byte-identical to what this solver derives — 4131 bytes
+PASS: r8-solve-7 trace is byte-identical to what this solver derives — 1707 bytes
+## r8-solve-8 budget: 61 span(s), 5 KB, 827 ticks
+PASS: r8-solve-8 is byte-identical to what this solver derives — 8598 bytes
+PASS: r8-solve-8 trace is byte-identical to what this solver derives — 16634 bytes
+## r8-solve-9 budget: 6 span(s), 2 KB, 122 ticks
+PASS: r8-solve-9 is byte-identical to what this solver derives — 3551 bytes
+PASS: r8-solve-9 trace is byte-identical to what this solver derives — 1681 bytes
+## r8-solve-10 budget: 35 span(s), 4 KB, 83 ticks
+PASS: r8-solve-10 is byte-identical to what this solver derives — 6295 bytes
+PASS: r8-solve-10 trace is byte-identical to what this solver derives — 4476 bytes
+## r9-solve-11 budget: 9 span(s), 2 KB, 97 ticks
+PASS: r9-solve-11 is byte-identical to what this solver derives — 4175 bytes
+PASS: r9-solve-11 trace is byte-identical to what this solver derives — 6850 bytes
+## r9-solve-3 budget: 50 span(s), 5 KB, 152 ticks
+PASS: r9-solve-3 is byte-identical to what this solver derives — 8024 bytes
+PASS: r9-solve-3 trace is byte-identical to what this solver derives — 5502 bytes
+## r9-solve-2 budget: 7 span(s), 2 KB, 23 ticks
+PASS: r9-solve-2 is byte-identical to what this solver derives — 3942 bytes
+PASS: r9-solve-2 trace is byte-identical to what this solver derives — 2023 bytes
+## r9-solve-0 budget: 57 span(s), 5 KB, 145 ticks
+PASS: r9-solve-0 is byte-identical to what this solver derives — 8679 bytes
+PASS: r9-solve-0 trace is byte-identical to what this solver derives — 4145 bytes
+## r9-solve-13 budget: 22 span(s), 3 KB, 36 ticks
+PASS: r9-solve-13 is byte-identical to what this solver derives — 5394 bytes
+PASS: r9-solve-13 trace is byte-identical to what this solver derives — 2350 bytes
+## r9-solve-14 budget: 57 span(s), 5 KB, 103 ticks
+PASS: r9-solve-14 is byte-identical to what this solver derives — 8752 bytes
+PASS: r9-solve-14 trace is byte-identical to what this solver derives — 1799 bytes
+## r9-solve-15 budget: 78 span(s), 7 KB, 456 ticks
+PASS: r9-solve-15 is byte-identical to what this solver derives — 11121 bytes
+PASS: r9-solve-15 trace is byte-identical to what this solver derives — 16896 bytes
+## r9-solve-16 budget: 182 span(s), 14 KB, 655 ticks
+PASS: r9-solve-16 is byte-identical to what this solver derives — 21093 bytes
+PASS: r9-solve-16 trace is byte-identical to what this solver derives — 13229 bytes
+## r9-solve-18 budget: 61 span(s), 6 KB, 440 ticks
+PASS: r9-solve-18 is byte-identical to what this solver derives — 10238 bytes
+PASS: r9-solve-18 trace is byte-identical to what this solver derives — 3886 bytes
+## r9-solve-19 budget: 116 span(s), 10 KB, 746 ticks
+PASS: r9-solve-19 is byte-identical to what this solver derives — 15440 bytes
+PASS: r9-solve-19 trace is byte-identical to what this solver derives — 10225 bytes
+## r9-solve-20 budget: 144 span(s), 12 KB, 560 ticks
+PASS: r9-solve-20 is byte-identical to what this solver derives — 18504 bytes
+PASS: r9-solve-20 trace is byte-identical to what this solver derives — 13496 bytes
+## r9-solve-13-v2 budget: 25 span(s), 4 KB, 48 ticks
+PASS: r9-solve-13-v2 is byte-identical to what this solver derives — 7233 bytes
+PASS: r9-solve-13-v2 trace is byte-identical to what this solver derives — 2459 bytes
+## r9-solve-0-v3 budget: 53 span(s), 6 KB, 299 ticks
+PASS: r9-solve-0-v3 is byte-identical to what this solver derives — 9932 bytes
+PASS: r9-solve-0-v3 trace is byte-identical to what this solver derives — 3929 bytes
+## r9-solve-12 budget: 214 span(s), 17 KB, 2364 ticks
+PASS: r9-solve-12 is byte-identical to what this solver derives — 25890 bytes
+PASS: r9-solve-12 trace is byte-identical to what this solver derives — 13116 bytes
+## r9-solve-21 budget: 9 span(s), 3 KB, 26 ticks
+PASS: r9-solve-21 is byte-identical to what this solver derives — 6122 bytes
+PASS: r9-solve-21 trace is byte-identical to what this solver derives — 2257 bytes
+## r9-solve-22 budget: 33 span(s), 5 KB, 89 ticks
+PASS: r9-solve-22 is byte-identical to what this solver derives — 8351 bytes
+PASS: r9-solve-22 trace is byte-identical to what this solver derives — 3500 bytes
+## r9-solve-29 budget: 78 span(s), 8 KB, 379 ticks
+PASS: r9-solve-29 is byte-identical to what this solver derives — 12726 bytes
+PASS: r9-solve-29 trace is byte-identical to what this solver derives — 9498 bytes
+## r9-solve-31 budget: 114 span(s), 10 KB, 336 ticks
+PASS: r9-solve-31 is byte-identical to what this solver derives — 16108 bytes
+PASS: r9-solve-31 trace is byte-identical to what this solver derives — 5201 bytes
+## r9-solve-30 budget: 60 span(s), 6 KB, 210 ticks
+PASS: r9-solve-30 is byte-identical to what this solver derives — 11004 bytes
+PASS: r9-solve-30 trace is byte-identical to what this solver derives — 3941 bytes
+## r9-solve-32 budget: 65 span(s), 7 KB, 1056 ticks
+PASS: r9-solve-32 is byte-identical to what this solver derives — 11872 bytes
+PASS: r9-solve-32 trace is byte-identical to what this solver derives — 12474 bytes
+
+## r9-campaign: 10825t = r8-solve-1 183t + r8-solve-2 47t + r8-solve-3 245t + r8-solve-4 255t + r8-solve-5 403t + r8-solve-6 294t + r8-solve-7 146t + r8-solve-8 827t + r8-solve-9 122t + r8-solve-10 83t + r9-solve-11 97t + r9-solve-3 152t + r9-solve-2 23t + r9-solve-0 145t + r9-solve-13 36t + r9-solve-14 103t + r9-solve-15 456t + r9-solve-16 655t + r9-solve-18 440t + r9-solve-19 746t + r9-solve-20 560t + r9-solve-13-v2 48t + r9-solve-0-v3 299t + r9-solve-12 2364t + r9-solve-21 26t + r9-solve-22 89t + r9-solve-29 379t + r9-solve-31 336t + r9-solve-30 210t + r9-solve-32 1056t, 29 internal seam(s)
+## goal ledger rows this chain CREDITS: sword@L10, chest@L11
+## there is NO hand answer for the four new legs — the differential is the gate.
+
+all checks green
