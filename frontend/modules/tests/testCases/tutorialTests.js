@@ -12,6 +12,7 @@
  * world that was loaded before it.
  */
 import { registerTest } from '../testRegistry.js';
+import { startAppBotTestSpeed } from '../botTestSpeed.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import eventBus from '../../../app/core/eventBus.js';
 import { TUTORIALS } from '../../tutorials/content/index.js';
@@ -39,7 +40,16 @@ const WALK_CATEGORY_BY_TRACK = Object.freeze({
     // The Seedling walks boot the wasm game (WebGPU) — a batch of their own.
     seedling: 'Tutorial walks: seedling',
 });
-const walkCategory = (tutorial) => WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
+/**
+ * Walks that play long enough to need a batch of their own, whatever their
+ * track. 2026-10-12: the procgen walks reached 96 % of their batch's budget,
+ * and the loop-mode ones play the longest (loops restart).
+ */
+const WALK_CATEGORY_BY_TUTORIAL = Object.freeze({
+    'procgen-loop-mode-jta': 'Tutorial walks: procgen loops',
+    'procgen-loop-mode-everything': 'Tutorial walks: procgen loops',
+});
+const walkCategory = (tutorial) => WALK_CATEGORY_BY_TUTORIAL[tutorial.id] ?? WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
 const walkId = (id) => `tutorial-walk-${id}`;
 const MOUNT_TIMEOUT_MS = 10000;
 const POLL_MS = 100;
@@ -302,6 +312,8 @@ async function tutorialWalkRow(tc, tutorial) {
     const loopModeBefore = loopModeActive();
     const ui = await freshPanel(tc, { autoAdvance: false, animateCursor: false, showOutline: false });
     if (!ui) return tc.getOverallResult();
+    // A bot step plays at test speed (botTestSpeed.js); the person's saved settings are untouched.
+    const restoreSpeed = await startAppBotTestSpeed();
     try {
         ui.start(tutorial.id);
         const outcome = await walkTutorial(tutorial, {
@@ -333,6 +345,7 @@ async function tutorialWalkRow(tc, tutorial) {
         tc.log?.(`${tutorial.id}: ${verdict.message}`);
         tc.reportCondition(`${tutorial.id} — ${verdict.message}`, verdict.ok);
     } finally {
+        await restoreSpeed();
         await restore(ui, settings);
         restoreActiveTabs(tabs);
         restorePipelineSetup(pipelineSetup, tc);

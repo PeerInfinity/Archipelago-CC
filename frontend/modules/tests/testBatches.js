@@ -127,6 +127,18 @@ export const TEST_BATCHES = Object.freeze({
         categories: Object.freeze(['Tutorial walks: seedling']),
         webgpu: true,
     }),
+    'tutorials-procgen-loops': Object.freeze({
+        description:
+            'The Procgen track\'s loop-mode tutorial walk rows (JtA, and every '
+            + 'substrate, in loop mode): the longest plays. Split from '
+            + 'tutorials-procgen on 2026-10-12, when that batch reached 96 % of '
+            + 'its budget. Manual, like tutorials.',
+        manual: true,
+        categories: Object.freeze(['Tutorial walks: procgen loops']),
+        // The everything world mixes in Seedling zones (wasm): WebGPU, like
+        // tutorials-procgen.
+        webgpu: true,
+    }),
     'tutorials-tracker': Object.freeze({
         description:
             'The Tracking track\'s tutorial walk rows (ALTTP seed 1, loaded fresh '

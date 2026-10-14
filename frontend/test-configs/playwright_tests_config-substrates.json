@@ -1584,14 +1584,14 @@
         {
             "id": "tutorial-walk-procgen-loop-mode-jta",
             "enabled": true,
-            "category": "Tutorial walks: procgen",
-            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-loop-mode-jta; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+            "category": "Tutorial walks: procgen loops",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-loop-mode-jta; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen-loops (split from tutorials-procgen, 2026-10-12). Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
         },
         {
             "id": "tutorial-walk-procgen-loop-mode-everything",
             "enabled": true,
-            "category": "Tutorial walks: procgen",
-            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-loop-mode-everything; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+            "category": "Tutorial walks: procgen loops",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-loop-mode-everything; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen-loops (split from tutorials-procgen, 2026-10-12). Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
         },
         {
             "id": "tutorial-walk-metamath-demo",
