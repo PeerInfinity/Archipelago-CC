@@ -18585,7 +18585,7 @@ function solveSegmentUnder({
     };
 
     const probeCorridor = (wps, except = null, { axisAligned = false, walkCheck = false, stand = null,
-        iframeLapse = true } = {}) => {
+        iframeLapse = true, requireArrival = false } = {}) => {
         // ⛔ THE SAME TOLERANCE `drive` WILL USE. A preview that arrived on a
         // different criterion would spend different ticks, and the ETAs are
         // the whole product.
@@ -18616,6 +18616,12 @@ function solveSegmentUnder({
             return { ...hit, eta: hit.tick - walk.startTick,
                 ...(stand && walk.samples.find((sm) => sm.tick === hit.tick)?.phase === 'dwell'
                     ? { waiting: true } : {}) };
+        }
+        // ⛓ LAPSECOST D1 — a CANDIDATE corridor (`requireArrival`, the narrow policy's) is clean only if its preview
+        // ARRIVES: a stall or a wall is a walk the drive would refute (leg 265: the narrow walk stalls 400 t on L22's
+        // rocks and the re-plan refuses, where the ladder's corridor crosses). A crossing is an arrival.
+        if (requireArrival && walk.truncated && walk.truncated.kind !== 'crossed') {
+            return { danger: false, truncated: walk.truncated, sources: [] };
         }
         /**
          * ⛔ THE NON-VACUITY CHECK RUNS ON THE CLEAN PATH, not only on the
@@ -20233,6 +20239,48 @@ function solveSegmentUnder({
         let lastWhy = killWhy;
         let lastOption = 'kill';
         let lastBound;
+        /**
+         * ⛓⛓ SEEDLING FIDELITY LAPSECOST D1 — rung 4½: NARROW, the same corridor walked with the PRE-LAPSE strike
+         * admissions (`strikePolicyFor`'s `iframeLapse: false`). CONDITIONAL: present only with
+         * `CONTACT_FIDELITY.strikeIframeLapse` ON (and `LAPSE_NARROW_RETRY`) on a corridor the walk planned and not
+         * axis-aligned; OFF it is absent — no row, the refusal word for word the BEFORE one.
+         *
+         * The lapse WIDENS the walk's admissions, and the wider walk is a different walk: every admitted press costs
+         * an aim tick and a press tick of movement, and a press landing one tick after the body's own contact re-arms
+         * (`Enemy.update` steps above the player) defends nothing. MEASURED on L40 (sweep legs `level_40__r23c29 <- …
+         * -> exit:out_pit_*`, 11 keys, CI ON failed ×12 twice): the walk's lapse presses at t247 (`puncher@128,624`,
+         * lands nothing) and t507 (`bob@208,448`, kills at t512, its timer lapsed against the player at t511) leave the
+         * player beside a re-armed bob; AVOID / TIME / BAIT / KILL refuse cheaply and DETOUR's L40 via lattice spends
+         * the whole page budget (2,542 of 2,562 asks at 2,560). The same corridor walked narrow probes clean: OFF's
+         * plan, key for key.
+         *
+         * ⛔ ABOVE DETOUR AND BELOW KILL, and that is measured too: as a pre-ladder candidate it shadowed the cheap
+         * rungs (leg 265, L22: ON's KILL/AVOID corridor crosses; the narrow walk is OFF's, whose drive takes three
+         * wallflyer hits the preview never priced and stalls). Certified as `probeCorridor` certifies, and only if
+         * its preview ARRIVES (`requireArrival`). The caller walks it with that permission — dash candidates and
+         * drive alike (⚖ ruling 30(c)).
+         */
+        if (Array.isArray(corridor) && corridor.length > 0 && !axisAligned
+            && CONTACT_FIDELITY.strikeIframeLapse && LAPSE_NARROW_RETRY.enabled) {
+            if (activeProgress !== null) progressRung('narrow');
+            const killRefused = { rung: 'kill', why: killWhy };
+            const again = probeCorridor(corridor, dangerExcept, { axisAligned, walkCheck: true,
+                ...(stand ? { stand } : {}), iframeLapse: false, requireArrival: true });
+            if (!again) {
+                rowFor('narrow', killRefused, { waypoints: corridor.length });
+                lapseNarrowWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
+                    hit: { tick: hit.tick, x: hit.x, y: hit.y, sources: (hit.sources ?? []).map((x) => x.id ?? x.kind) } });
+                return { wps: corridor, escalations, narrow: true };
+            }
+            const narrowWhy = again.truncated
+                ? `the corridor walked with the pre-lapse strike admissions does not ARRIVE (${again.truncated.kind}: `
+                    + `${again.truncated.why ?? '-'})`
+                : `the corridor walked with the pre-lapse strike admissions is dangerous too — ${reasonsOf(again)} at `
+                    + `(${again.x.toFixed(1)},${again.y.toFixed(1)})`;
+            rowFor('narrow', killRefused);
+            lastWhy = narrowWhy;
+            lastOption = 'narrow';
+        }
         if (hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser')) {
             if (activeProgress !== null) progressRung('detour');
             const detour = deriveChaserDetour(run, {
@@ -20255,7 +20303,8 @@ function solveSegmentUnder({
                         truncated: hit ? null : (walk.truncated ?? null), ticks: walk.samples.length };
                 },
             });
-            const killRefused = { rung: 'kill', why: killWhy };
+            // ⛓ LAPSECOST D1: the rung below DETOUR that ran — NARROW when it was asked and refused, else KILL.
+            const killRefused = { rung: lastOption, why: lastWhy };
             if (detour.wps) {
                 rowFor('detour', killRefused, { vias: detour.vias, previews: detour.previews,
                     planned: detour.planned, waypoints: detour.wps.length, ticks: detour.ticks });
@@ -20740,37 +20789,8 @@ function solveSegmentUnder({
             if (fineDeadlineReached('walk')) refuseWalkDeadline(`after ${what}'s corridor was planned (attempt ${attempt + 1})`);
             let hit = probeCorridor(wps, except,
                 { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
-            /**
-             * ⛓⛓ SEEDLING FIDELITY LAPSECOST D1 (`CONTACT_FIDELITY.strikeIframeLapse` ON only) — **THE NARROW
-             * POLICY IS A CANDIDATE BEFORE THE LADDER.** The lapse WIDENS the walk's strike admissions (a body
-             * inside its i-frame is struck when a test of the window reaches the lapse), and a wider policy walks a
-             * DIFFERENT walk: every admitted press costs an aim tick and a press tick of movement, and a press that
-             * lands one tick after the body's own contact re-arms (`Enemy.update` steps above the player) defends
-             * nothing. Measured on L40 (sweep legs `level_40__r23c29 <- … -> exit:out_pit_*`, 11 legs): the walk's
-             * lapse presses at t247 (`puncher@128,624`, lands nothing) and t507 (`bob@208,448`, kills at t512, its
-             * timer lapsed at t511 against the player) leave the player beside a re-armed bob, the probe flags it,
-             * and the ladder reaches only DETOUR, whose L40 via lattice spent the whole 2,560-unit budget. The
-             * SAME corridor walked with the pre-lapse admissions probes clean (the OFF plan, 776 t).
-             *
-             * ⇒ when the probe of the lapse-admitting walk is dangerous, the same corridor is probed ONCE more
-             * with the lapse admissions withheld (`iframeLapse: false`: `strikeCandidates` asks the pre-lapse
-             * question); a clean answer is walked with that policy — its dash candidates (`planSwordDash`) and its
-             * drive (`strikePolicyFor`) take the same permission, so the preview and the drive are one policy
-             * (⚖ ruling 30(c)). A dangerous one climbs the ladder on the FIRST hit, as before. Both policies are
-             * the model's: nothing here avoids a game interaction, it chooses which modelled presses the walk makes.
-             * OFF the switch (or `SEEDLING_LAPSE_NARROW_RETRY=0`) the branch is never entered: byte-identical.
-             */
+            // ⛓ LAPSECOST D1: set when the ladder's NARROW rung certified this corridor (`climbed.narrow`).
             let narrow = false;
-            if (hit && !axisAligned && CONTACT_FIDELITY.strikeIframeLapse && LAPSE_NARROW_RETRY.enabled) {
-                const again = probeCorridor(wps, except,
-                    { axisAligned, walkCheck: true, ...(stand ? { stand } : {}), iframeLapse: false });
-                if (!again) {
-                    narrow = true;
-                    lapseNarrowWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
-                        hit: { tick: hit.tick, x: hit.x, y: hit.y, sources: (hit.sources ?? []).map((x) => x.id ?? x.kind) } });
-                    hit = null;
-                }
-            }
             if (hit) {
                 /**
                  * ⛓⛓⛓ ⚖ §11.8a RULING 2 — THE LADDER REPLACES SLICE 2's
@@ -20789,7 +20809,7 @@ function solveSegmentUnder({
                 });
                 // ⛓ FORCEDHIT D2 — the forced-hit rung WALKED the crossing (its hit billed): the walk is done.
                 if (climbed.forced) return climbed.forced.transition;
-                if (climbed.wps) { wps = climbed.wps; } else { continue; }
+                if (climbed.wps) { wps = climbed.wps; narrow = climbed.narrow === true; } else { continue; }
             }
             /**
              * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 35 — **THE PLANNER IS ASKED ONCE

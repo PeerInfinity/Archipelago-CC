@@ -7,9 +7,11 @@
  * lapse presses at t247 (`puncher@128,624`, lands nothing) and t507 (`bob@208,448`, kills at t512 after the body's
  * timer lapsed against the player at t511) leave the player beside a re-armed bob; the probe flags it, AVOID / TIME /
  * BAIT / KILL refuse, and DETOUR's L40 via lattice spends the whole 640-unit budget (2,542 of 2,562 asks at 2,560).
- * The same corridor walked with the pre-lapse admissions probes clean. `walkTo` now probes that NARROW policy once
- * before the ladder (`LAPSE_NARROW_RETRY`; `strikePolicyFor`'s `iframeLapse: false`), and walks it when clean: the
- * plan is OFF's plan, key for key, which CI's OFF sweep played to `done` on the game.
+ * The same corridor walked with the pre-lapse admissions probes clean. The ladder now asks that NARROW policy as a
+ * rung between KILL and DETOUR (`LAPSE_NARROW_RETRY`; `strikePolicyFor`'s `iframeLapse: false`, certified only if its
+ * preview arrives), and walks it when clean: the plan is OFF's plan, key for key, which CI's OFF sweep played to `done`
+ * on the game. ⛔ Not BEFORE the ladder: as a pre-ladder candidate it shadowed the cheap rungs on leg 265 (L22), where
+ * ON's corridor crosses and the narrow walk is OFF's failing one.
  *
  * The fixture is the page's own captured request (`probe-seedling-divergence-sweep --capture-requests`, the lapse ON,
  * seam time 5085), replayed as the worker replays it (`replay-seedling-solve-request.mjs`).
@@ -44,6 +46,13 @@ const solve = (req, over = {}) => {
 };
 
 const keysOf = (answer) => answer.plan.solution.map((k) => [...k].sort().join('+'));
+
+const leg265 = () => {
+    const line = JSON.parse(gunzipSync(readFileSync(join(EVIDENCE, 'd1', 'leg-265-requests.jsonl.gz')))
+        .toString('utf8').split('\n')[0]);
+    expect(line.key).toBe('level_22 <- in_L29_0_224 -> exit:out_teleporter_96_192');
+    return restoreRequest(line.requests[0].request);
+};
 
 describe('LAPSECOST D1 — the narrow strike policy', () => {
     // a bob 10 px right of the player, its i-frame at reading 4: a lapse press's window reaches the lapse
@@ -81,6 +90,21 @@ describe('LAPSECOST D1 — the narrow strike policy', () => {
         expect(on.plan.solution.length).toBe(776);
         expect(on.work).toBeLessThan(req.budgetWork);
         expect(keysOf(on)).toEqual(keysOf(off));
+    }, 60000);
+
+    it('ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (215 t)', () => {
+        const req = leg265();
+        const on = withContactFidelity({ strikeIframeLapse: true }, () => solve(req));
+        LAPSE_NARROW_RETRY.enabled = false;
+        let base;
+        try {
+            base = withContactFidelity({ strikeIframeLapse: true }, () => solve(req));
+        } finally {
+            LAPSE_NARROW_RETRY.enabled = true;
+        }
+        expect(on.ok).toBe(true);
+        expect(on.plan.solution.length).toBe(215);
+        expect(keysOf(on)).toEqual(keysOf(base));
     }, 60000);
 
     it('MUTANT (the companion off): ON, the same request is refused at the DETOUR rung\'s budget', () => {
