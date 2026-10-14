@@ -2284,6 +2284,20 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
                 + 'has no modelled kill arm and no ceiling covers it',
         }),
         /**
+         * ⛓⛓ SEEDLING FIDELITY LAPSECOST D1 — asked only when KILL refused, before DETOUR: the same corridor walked
+         * with the PRE-LAPSE strike admissions (`solverBot.LAPSE_NARROW_RETRY`). CONDITIONAL: present only with
+         * `CONTACT_FIDELITY.strikeIframeLapse` ON.
+         */
+        Object.freeze({
+            rung: 'narrow',
+            conditional: true,
+            tool: 'the corridor the walk planned, previewed with the strike policy\'s i-frame-lapse admissions '
+                + 'withheld (`strikePolicyFor`\'s `iframeLapse: false`) and certified by the corridor probe\'s own '
+                + 'predicate, only if its preview arrives; walked with that policy, dash candidates and drive alike',
+            refusesWith: 'the narrow walk is dangerous too, or its preview does not arrive (the rung is ABSENT, not '
+                + 'refused, with the lapse OFF)',
+        }),
+        /**
          * ⛓⛓ SEEDLING FIDELITY L14 — THE LAST RUNG, asked only when KILL refused:
          * a LONGER corridor bent through via cells, previewed with the chasers
          * stepped against it (`solverBot.deriveChaserDetour`). L14 swordless.
