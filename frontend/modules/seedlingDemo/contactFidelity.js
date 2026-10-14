@@ -376,6 +376,24 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_UNBILLED_DAMAGE_GATE=0|1` for a node measurement.
      */
     unbilledDamageGate: false,
+    /**
+     * fidelity SMALLGAPS D1 — A BUTTON-DROPPED FALLROCK'S RELEASE STEP LANDS IN THE FROZEN TICK, NOT THE NEXT ONE
+     * (`levelRun.advance`'s `pendingButtonFalls` branch).
+     *
+     *     Bot.as:3201         if (game.blackCover > 0 || Game.freezeObjects) { deadFrames++; return; }   — at the TOP
+     *     FallRock.as:91-96   cameraTimer == 0 → Game.freezeObjects = false   — the rock updates BEFORE the Player
+     *
+     * The press frame is a live tape tick on which the player does not move; every freeze frame after it is DEAD to
+     * the tape, and on the last one (the release) the player takes one step under the held keys — before the next
+     * observation. So to the tape a button freeze costs the player NOTHING: one step per tick, no stall. The model
+     * banked that step in `pendingFreeSteps`, which lands one tick late (the BobBoss rock's measured lesson), so it
+     * stood one tick (t1 ON with `arrivalButtonArm`, t2 OFF) where the page's `Bot` reads no stall (leg 624: 136,
+     * 135.2, 133.85). ⚠ The p4f chaser witnesses that read "frozen at t1" took their FIRST poll at each tick, 20 dead
+     * frames into the 175-frame freeze; the `Bot`'s own observation (`botDrain`) at the same tick is 135.2. ON: the
+     * step is taken inside the frozen tick under its held keys (the BobBoss rock's form). OFF: byte-identical.
+     * ⛔ OFF by default (no licence yet); `SEEDLING_BUTTON_FALL_RELEASE_STEP=0|1` for a node measurement.
+     */
+    buttonFallReleaseStep: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -461,6 +479,9 @@ if (globalThis.process?.env?.SEEDLING_ARRIVAL_BUTTON_ARM === '0') CONTACT_FIDELI
 // ⛓ fidelity UNBILLEDGATE: `SEEDLING_UNBILLED_DAMAGE_GATE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_UNBILLED_DAMAGE_GATE === '1') CONTACT_FIDELITY.unbilledDamageGate = true;
 if (globalThis.process?.env?.SEEDLING_UNBILLED_DAMAGE_GATE === '0') CONTACT_FIDELITY.unbilledDamageGate = false;
+// ⛓ fidelity SMALLGAPS: `SEEDLING_BUTTON_FALL_RELEASE_STEP=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BUTTON_FALL_RELEASE_STEP === '1') CONTACT_FIDELITY.buttonFallReleaseStep = true;
+if (globalThis.process?.env?.SEEDLING_BUTTON_FALL_RELEASE_STEP === '0') CONTACT_FIDELITY.buttonFallReleaseStep = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

@@ -44,6 +44,13 @@ const ROWS = {
 };
 /** ⛓ fidelity L74ARRIVAL: a capture shorter than the usual window (589 holds the game's t0–t2 only). */
 const SHORT = { 589: 3 };
+/**
+ * ⛓ fidelity SMALLGAPS D1: a capture that samples INSIDE a dead span. 589's game rows are polled at the frame each tick's
+ * own update left, so its t1 stands 20 frames into the arrival button's 175-frame freeze (y 136, vy 0); the `Bot`'s own
+ * observation at that tick is 135.2 (the freeze's release step, `botDrain` on the same p4f run). With the named switch
+ * ON the model is the `Bot`'s, and the capture parts at t1 — the capture's clock, not the model (the JS arc's to move).
+ */
+const CAPTURE_INSIDE_FREEZE = { 589: 'buttonFallReleaseStep' };
 const ALL_OFF = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, false]));
 
 describe('contact witnesses (fixtures/contact-witness)', () => {
@@ -57,7 +64,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_STRIKE_IFRAME_LAPSE
         || !!process.env.SEEDLING_FALLROCK_POSTFALL || !!process.env.SEEDLING_FORECAST_SPEED_BY_TERRAIN
         || !!process.env.SEEDLING_ARRIVAL_BUTTON_ARM
-        || !!process.env.SEEDLING_UNBILLED_DAMAGE_GATE)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_UNBILLED_DAMAGE_GATE || !!process.env.SEEDLING_BUTTON_FALL_RELEASE_STEP)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -93,7 +100,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // frame) ships OFF.
             arrivalButtonArm: false,
             // ⛓ fidelity UNBILLEDGATE D2: `unbilledDamageGate` (`solverBot.UNBILLED_DAMAGE`) ships OFF.
-            unbilledDamageGate: false });
+            unbilledDamageGate: false,
+            // ⛓ fidelity SMALLGAPS: `buttonFallReleaseStep` (D1) ships OFF.
+            buttonFallReleaseStep: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
@@ -141,7 +150,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         const all = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, true]));
         const r = await withContactFidelity(all, () => replayCapture(load(id)));
         expect(r.error).toBeNull();
-        if (sw) expect(r.worst).toBe(0);
+        if (CAPTURE_INSIDE_FREEZE[id]) expect(r.firstDiff?.t).toBe(1);
+        else if (sw) expect(r.worst).toBe(0);
         else expect(r.firstDiff?.t).toBe(t);
     });
 });
