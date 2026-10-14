@@ -55,7 +55,9 @@ export const PROCGEN_LOOP_MODE_EVERYTHING = Object.freeze({
                     (ctx) => ctx.text(loopToggle) === 'Exit Loop Mode'),
                 ...look('look-omsi', { panel: 'omsiSubstrateWrapperPanel' }, 'The **Idle Loops** tab plays its region: the whole town of the idle game, spending the shared mana.'),
                 ...startSeedlingGame('start-game'),
-                ...botPlaysToTheEnd('bot-plays', { watch: { panel: 'loopsPanel' }, watchName: 'Loops', how: 'queue and run each region' }),
+                // Measured 2026-10-14 (jta-loop-mode, with the Noiz2sa pricing fix): 13 loops
+                // in ~178.5 s, at the edge of the default 180 s.
+                ...botPlaysToTheEnd('bot-plays', { watch: { panel: 'loopsPanel' }, watchName: 'Loops', how: 'queue and run each region', doneTimeoutMs: 300000 }),
             ],
         },
         {
