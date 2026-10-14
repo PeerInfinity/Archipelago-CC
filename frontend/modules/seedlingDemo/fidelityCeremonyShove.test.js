@@ -83,8 +83,9 @@ const on = (fn) => withContactFidelity({ ceremonyShove: true }, fn);
 const off = (fn) => withContactFidelity({ ceremonyShove: false }, fn);
 
 describe('CEREMONYSHOVE — the switch', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.ceremonyShove).toBe(false);
+    // ⚖ (user, 2026-10-14) ON since the wave-16 harvest.
+    it('ships ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.ceremonyShove).toBe(true);
     });
 });
 

@@ -64,8 +64,9 @@ describe('L74ARRIVAL — the switch', () => {
     it('ships OFF', () => {
         expect(CONTACT_FIDELITY_DEFAULTS.arrivalButtonArm).toBe(false);
     });
-    it('SMALLGAPS D1: the release step ships OFF too', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.buttonFallReleaseStep).toBe(false);
+    // ⚖ (user, 2026-10-14) the release step is ON since the wave-16 harvest; the arm stays OFF.
+    it('SMALLGAPS D1: the release step ships ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.buttonFallReleaseStep).toBe(true);
     });
 });
 

@@ -22282,3 +22282,29 @@ ALREADY TRUE". At the defaults (lapse OFF) the switch costs nothing.
    by one shove after the release. Only the witnesses' per-tick readings place them.
 3. *An avoidance's retirement can surface a different planner bug.* Step 50's loss is not the shove: it is a kill arm
    entered for a body the walk already killed.
+
+### Seedling fidelity wave-16 harvest — four switches ON, the lapse and the Flyer held
+
+⚖ The user's rulings (2026-10-14), at the harvest of SMALLGAPS, CEREMONYSHOVE and LAPSECOST:
+
+- **ON by default:** `buttonFallReleaseStep`, `waypointSlide`, `lavaChainPlayerHit` ("Flip all three") and
+  `ceremonyShove` ("Flip now").
+- **Held OFF:** `strikeIframeLapse` ("Flip after DD lands": with `ceremonyShove` ON, the lapse's survey step 50
+  refuses in `execKillByPress`'s dwell, which the hammer arc's DWELL-DONE slice owns), and `flyerLive` ("Hold; model
+  BeamTower drift": ON it gains legs 754 and 773 but loses 776 to a drifting BeamTower Solid the model holds still).
+
+What the measurements said before the flip (CI, by key):
+
+- `ceremonyShove` ON, lapse OFF: the route survey and the full sweep moved nothing.
+- `waypointSlide` ON: six survey steps shorter, no verdict moved. Five ice legs were played shorter on the game, still
+  `done` (448 509→310, 451 792→258, 452 665→403, 455 934→366, 459 423→308).
+- `lavaChainPlayerHit` ON: leg 633 refuses by name; survey step 163 434→476.
+- `buttonFallReleaseStep` ON: leg 626 is `done` with no t1 parting.
+
+Re-pins the flip owed, each with its reason in the row:
+
+- the four "ships OFF" rows, plus `contactFidelity`'s defaults pin;
+- `fallRockButton`'s press-tick stall becomes the game's step;
+- `fidelityStance`'s two chest rows and the L48 keylock-OPEN row pin `waypointSlide` OFF: their committed tapes walk
+  the ice parked;
+- `fidelityStrikeLapse`'s interim and step-50 rows pin `ceremonyShove` OFF.
