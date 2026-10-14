@@ -8,7 +8,8 @@
  *     the whole map) on wasm, mentioning the JS switch;
  *   - S3's multiworld uses the **Seedling Playthrough** world;
  *   - S5 (entrance shuffle) is not written yet — Seedling has none.
- * In progress: each walk row measures `firstFailingStep`; the walks need a
+ * S3 needs a terminal (its walk stops at its first terminal step); the others
+ * are in progress (each walk row measures `firstFailingStep`). The walks need a
  * WebGPU browser (their batch's flag). Shape: ../../tutorialShape.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -185,7 +186,8 @@ export const SEEDLING_MULTIWORLD = seedling({
     id: 'seedling-multiworld',
     title: 'Seedling: in a multiworld',
     summary: 'Generate a multiworld with Seedling Playthrough, host it locally, and connect the app to play it.',
-    firstFailingStep: 'mw-install',
+    status: 'terminal', // ⚖ the user, 2026-10-14 (seedling-tut-tc): its walk stops at the first terminal step
+    doc: 'docs/json/user/tutorials/seedling-multiworld.md',
     intro: [
         { prose: 'Here Seedling Playthrough is a slot of a multiworld you generate and host yourself, on your own computer; the app is its client.' },
         { prose: SEEDLING_RUNTIME_NOTE },

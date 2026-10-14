@@ -7033,7 +7033,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "has_procgen_data": true
       }
     }
   },

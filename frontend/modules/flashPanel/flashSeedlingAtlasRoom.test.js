@@ -88,7 +88,10 @@ const byGame = (g) => DOCS.find((d) => d.game === g);
  */
 const REPRODUCES = ['seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host', 'seedling_atlas_location'];
 const ITEM_REFUSED = [];
-const PROJECTION = ['seedling_atlas', 'seedling_playthrough'];
+// ⛓ `seedling_playthrough` TWICE since rules-playthrough-blocks (2026-10-14): AP_1
+// and its seed-1 Generate.py export, which now carries AP_1's sidecars through
+// the Python round trip — the same projection, refused by the same sentence.
+const PROJECTION = ['seedling_atlas', 'seedling_playthrough', 'seedling_playthrough'];
 const RECORDS = [...REPRODUCES, ...ITEM_REFUSED];
 
 /** ⛓ The sphere room with a MAZE leaf relabelled to `flash_seedling` (D1's picker: the label only). */

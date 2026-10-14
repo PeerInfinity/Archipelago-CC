@@ -197,13 +197,17 @@ Which substrates are live depends on the launch mode: `frontend/modes.json` maps
 
 A procgen `rules.json` goes through the standard toolchain with its extra keys preserved:
 
-1. `python -m world_generator <rules.json>` creates a world package under `worlds/` and writes the extra keys to package files: `_worldgen_sidecars.json`, `_worldgen_procgen_metadata.json`, `_worldgen_loop_costs.json` (`world_generator/generator.py`).
+1. `python -m world_generator <rules.json>` creates a world package under `worlds/` and writes the extra keys to package files: `_worldgen_sidecars.json`, `_worldgen_procgen_metadata.json`, `_worldgen_loop_costs.json`, `_worldgen_flash_panel.json` and `_worldgen_region_atlas.json` (`world_generator/generator.py`).
 2. `python Generate.py` runs normal Archipelago generation for that world.
-3. The exporter's base handler (`exporter/games/base/handler.py`, `_inject_worldgen_*`) puts those files back as top-level keys of the new `rules.json`.
+3. The exporter's base handler (`exporter/games/base/handler.py`, `preprocess_world_data` → `_inject_worldgen_*`) puts those files back as top-level keys of the new `rules.json`.
 
 The result has real multiworld item distribution and still plays as a procgen world.
 
 A world package is one slot's world, so each package file holds one block: the generator writes the source's entry for that player (and no file if there is none), and the handler merges each package's block under its exporting player, `export_data[KEY][str(player)]`. All three keys are in the exporter's `PLAYER_SPECIFIC_KEYS`, so a per-player (`_P<n>`) export carries only its own slot's entry. `test/test_export_player_slicing.py` checks this against a committed fixture.
+
+**The handler re-injects a file because the package ships it, not because of the package's name.** A world_generator package need not carry the `_worldgen` module suffix: `worlds/seedling_playthrough` has none. Until 2026-10-14 the re-injection was gated on that suffix (`is_worldgen_world`), so this package's `_worldgen_sidecars.json` was skipped without a warning and its seed-1 export shipped `preset_sidecars: {}`. Every reader is a no-op when its file is absent, so an upstream world's export does not change. `is_worldgen_world` still gates the Rules.py helper preservation. `test/test_loop_costs_export_roundtrip.py` covers both halves: a package without the suffix is re-injected, and a package that ships no file is unchanged.
+
+**The page blocks.** `flash_panel` (which game page the flash panel boots) and `region_atlas` (the atlas id and map document that the Seedling page and bot anchor on) are carried the same way. Without them, a Generate.py export of a Seedling world cannot drive the wasm game. The source's `provenance` is not carried, because it describes how the source document was made. `frontend/modules/flashPanel/seedlingPlaythroughExportLoad.test.js` checks the result on `seedling_playthrough`: the seed-1 export loads exactly as `AP_1` does (the same delivered set, placement table and bot map).
 
 **The four-player fixture.** `frontend/presets/multiworld/AP_05594871498841892311/` (seed 4) is the round trip for four slots across two games: two `Procgen Maze WorldGen` (`worlds/procgen_maze_worldgen`) and two `Bounce Demo WorldGen` (`worlds/bounce_worldgen`). It is the committed document whose `preset_sidecars` carry more than one slot. The bounce package ships no metadata file, so slots 3 and 4 carry no `procgen_metadata`.
 

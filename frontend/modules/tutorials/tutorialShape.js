@@ -14,9 +14,15 @@
  *   summary   one plain sentence: what the tutorial teaches (the list's card,
  *             the docs' list)
  *   track     which heading of the list it sits under: a key of TRACKS
- *   status    'ready', or 'in-progress' (⚖ the user, 2026-10-10: every
- *             tutorial is written now, finished feature or not; the panel lists
- *             in-progress ones in a collapsed section)
+ *   status    'ready', 'terminal' or 'in-progress' (⚖ the user, 2026-10-10:
+ *             every tutorial is written now, finished feature or not; the panel
+ *             lists in-progress ones in a collapsed section).
+ *             'terminal' (⚖ the user, 2026-10-14: "a separate category for
+ *             tutorials that require terminal steps"): every in-app step up to
+ *             its first outside step with no stand-in works, and the walk stops
+ *             there. That step is DERIVED (`terminalStep`), not recorded. Steps
+ *             after it are never walked. Listed in a collapsed section of its
+ *             own; its guide is written like a ready one's
  *   firstFailingStep  in-progress only: the id of the first step that does
  *             not work yet (it fails, or it is an outside step the test cannot
  *             stand in for), or null when every step works. THE RATCHET: the
@@ -26,7 +32,7 @@
  *   covers    optional componentTypes the tutorial shows without naming them
  *             in an action (the coverage check, content/coverage.js)
  *   doc       repo path of the generated guide (`docs/json/user/….md`), or
- *             null. Only a READY tutorial's guide is written
+ *             null. Only a READY or TERMINAL tutorial's guide is written
  *   intro     prose before the first section (an array of prose strings)
  *   outro     { title, blocks } — the closing section; prose only, no steps
  *
@@ -98,7 +104,7 @@
  */
 
 export const DEFAULT_DONE_TIMEOUT_MS = 15000;
-export const STATUSES = Object.freeze(['ready', 'in-progress']);
+export const STATUSES = Object.freeze(['ready', 'terminal', 'in-progress']);
 /**
  * The list's headings, in order. `collapsed`: the panel shows the track in a
  * collapsed section of its own (⚖ the user, 2026-10-10: developer tutorials,
@@ -201,6 +207,10 @@ export function validateTutorial(t) {
     if (!Object.prototype.hasOwnProperty.call(TRACKS, t.track)) fail(where, `track ${JSON.stringify(t.track)} is not one of ${Object.keys(TRACKS).join(', ')}`);
     if (!STATUSES.includes(t.status)) fail(where, `status is one of ${STATUSES.join(', ')}`);
     if (t.status === 'ready' && t.firstFailingStep !== undefined) fail(where, 'a ready tutorial has no firstFailingStep');
+    if (t.status === 'terminal') {
+        if (t.firstFailingStep !== undefined) fail(where, 'a terminal tutorial has no firstFailingStep (its stop is terminalStep)');
+        if (!terminalStep(t)) fail(where, 'a terminal tutorial has an outside step with no standIn');
+    }
     if (t.status === 'in-progress') {
         if (t.firstFailingStep === undefined) fail(where, 'an in-progress tutorial records firstFailingStep (a step id, or null)');
         if (t.firstFailingStep !== null && !panelSteps(t).some(({ step }) => step.id === t.firstFailingStep)) {
@@ -228,6 +238,14 @@ export function panelSteps(t) {
         }
     });
     return out;
+}
+
+/**
+ * Where a walk of `t` must stop: the first step the panel walks that happens
+ * outside the app and has no `standIn` → its panelSteps entry, or null.
+ */
+export function terminalStep(t, steps = panelSteps(t)) {
+    return steps.find(({ step }) => step.outside && !step.standIn) ?? null;
 }
 
 /** The blocks a reader sees on one surface: `'doc'` drops panelOnly ones, `'panel'` drops docOnly ones. */

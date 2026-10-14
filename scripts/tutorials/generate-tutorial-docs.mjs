@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * generate-tutorial-docs — writes the user guide `.md` of every READY tutorial
- * that names one (`doc`; an in-progress tutorial's guide is not written until
- * it is ready), and the generated lists in the Tutorial panel's own doc
+ * generate-tutorial-docs — writes the user guide `.md` of every READY or
+ * TERMINAL tutorial that names one (`doc`; an in-progress tutorial's guide is
+ * not written until it is ready; ⚖ the user, 2026-10-14: a terminal one's is,
+ * since a guide reader has the terminal), and the generated lists in the Tutorial panel's own doc
  * (MODULE_DOC: the tutorials by track, and the panels deliberately given no
  * tutorial — ⚖ the user, 2026-10-10), from the tutorial data
  * (`frontend/modules/tutorials/content/`). The Tutorial panel reads the same
@@ -36,16 +37,19 @@ export const MODULE_DOC = 'docs/json/user/modules/tutorials.md';
 export const LIST_BEGIN = '<!-- BEGIN GENERATED tutorial lists (scripts/tutorials/generate-tutorial-docs.mjs; edit the tutorial data, not this) -->';
 export const LIST_END = '<!-- END GENERATED tutorial lists -->';
 
-/** `[{ doc, text }]` — every guide the READY tutorials declare, as it should read. */
+/** Is `t`'s guide written? Ready and terminal tutorials that name a `doc`. */
+export const hasGuide = (t) => Boolean(t.doc) && (t.status === 'ready' || t.status === 'terminal');
+
+/** `[{ doc, text }]` — every guide the READY and TERMINAL tutorials declare, as it should read. */
 export function renderGuides(entries = TUTORIALS) {
-    return entries.filter((e) => e.tutorial.doc && e.tutorial.status === 'ready').map(({ source, tutorial }) => {
+    return entries.filter((e) => hasGuide(e.tutorial)).map(({ source, tutorial }) => {
         validateTutorial(tutorial);
         return { doc: tutorial.doc, text: tutorialMarkdown(tutorial, source) };
     });
 }
 
 function entryLine(t) {
-    const guide = t.doc && t.status === 'ready'
+    const guide = hasGuide(t)
         ? ` ([guide](${posix.relative(posix.dirname(MODULE_DOC), t.doc)}))` : '';
     return `- **${t.title}**${guide} — ${t.summary} \`?tutorial=${t.id}\``;
 }
@@ -61,6 +65,13 @@ export function renderModuleLists(entries = TUTORIALS, noTutorial = NO_TUTORIAL)
     for (const [key, track] of Object.entries(TRACKS)) {
         if (track.collapsed) continue;
         section(track.title, all.filter((t) => t.track === key && t.status === 'ready'));
+    }
+    const terminal = all.filter((t) => t.status === 'terminal' && !TRACKS[t.track].collapsed);
+    if (terminal.length) {
+        out.push('### Needs a terminal', '', 'Each of these runs a command in a terminal partway through. The panel can do '
+            + 'every step before that one, and its test checks those steps. At the terminal step, copy the command and run it '
+            + 'yourself. The test cannot run a terminal, so it does not check the steps after that one. The panel lists these in '
+            + 'a collapsed section.', '', ...terminal.map(entryLine), '');
     }
     const drafts = all.filter((t) => t.status === 'in-progress' && !TRACKS[t.track].collapsed);
     if (drafts.length) {

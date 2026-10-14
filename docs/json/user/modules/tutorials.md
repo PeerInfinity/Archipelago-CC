@@ -4,7 +4,7 @@ The Tutorial panel walks you through the app one step at a time — and can do e
 
 ## Starting a tutorial
 
-The panel opens on a list of tutorials, grouped by what they teach. Two groups are collapsed until you open them: **In progress** (tutorials that are written but do not work all the way through yet) and **For developers**. Press **Start** on one. The panel then moves into a stack of its own *below* the panels it shared a stack with, so it stays visible while you open other panels on the left. (The default layout is not split until you start a tutorial.) If you stopped part-way through, the list offers **Resume** at the step you were on.
+The panel opens on a list of tutorials, grouped by what they teach. Three groups are collapsed until you open them: **Needs a terminal** (tutorials with a step you run in a terminal yourself), **In progress** (tutorials that are written but do not work all the way through yet) and **For developers**. Press **Start** on one. The panel then moves into a stack of its own *below* the panels it shared a stack with, so it stays visible while you open other panels on the left. (The default layout is not split until you start a tutorial.) If you stopped part-way through, the list offers **Resume** at the step you were on.
 
 Each step shows its section of the tutorial, with the current step marked. You can:
 
@@ -18,6 +18,8 @@ Each step shows its section of the tutorial, with the current step marked. You c
 A step whose result the panel can check is ticked (✓) once it is done — whether the panel did it or you did it yourself. With *Auto-advance* on, the panel then moves to the next step on its own.
 
 Some steps happen **outside the app**, such as starting a local Archipelago server. Their command is shown in a box with a **Copy** button. The panel cannot do these for you, so **Do it** is off; **Play** waits until the app can see the step is done (for example, the Console connecting), or stops so you can do the step and press **Next ▶**.
+
+A tutorial that **needs a terminal** is marked with a badge, and its card and first screen name the first step you run in a terminal. The panel does every step before that one, and its test checks them. The test cannot run a terminal, so the steps after it are not checked.
 
 An **in-progress** tutorial is marked with a badge. Its card and its first screen say which step does not work yet, and that step is marked in the list of steps.
 
@@ -58,28 +60,33 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 
 - **APCalc: generate a world** ([guide](../tutorials/apcalc-generator.md)) — Generate a new APCalc map with the APCalc Generator, play it, and package it as a .apworld. `?tutorial=apcalc-generator`
 
+### Needs a terminal
+
+Each of these runs a command in a terminal partway through. The panel can do every step before that one, and its test checks those steps. At the terminal step, copy the command and run it yourself. The test cannot run a terminal, so it does not check the steps after that one. The panel lists these in a collapsed section.
+
+- **Procgen: from a generated world to a multiworld** ([guide](../tutorials/procgen-to-multiworld.md)) — Take a generated world through the APWorld Editor to a .apworld, play it on a local Archipelago server, and let the Playback Bot send the checks. `?tutorial=procgen-to-multiworld`
+- **Seedling: in a multiworld** ([guide](../tutorials/seedling-multiworld.md)) — Generate a multiworld with Seedling Playthrough, host it locally, and connect the app to play it. `?tutorial=seedling-multiworld`
+- **MetaMath: in a multiworld** ([guide](../tutorials/metamath-multiworld.md)) — Host a MetaMath proof on a local Archipelago server and prove it from the app. `?tutorial=metamath-multiworld`
+- **DepGraph: more graphs, and your own** ([guide](../tutorials/depgraph-extras.md)) — Load DepGraph's other bundled graphs, see one in the Region Graph, and turn a task list of your own into a game. `?tutorial=depgraph-extras`
+- **DepGraph: in a multiworld** ([guide](../tutorials/depgraph-multiworld.md)) — Host a DepGraph graph on a local Archipelago server and solve it from the app. `?tutorial=depgraph-multiworld`
+- **APCalc: in a multiworld** ([guide](../tutorials/apcalc-multiworld.md)) — Host APCalc on a local Archipelago server and play it from the app. `?tutorial=apcalc-multiworld`
+- **Track a game** ([guide](../tutorials/tracker-track-a-game.md)) — Load a game's logic, track items and checks by hand, see what is reachable, and connect to your multiworld's server. `?tutorial=tracker-track-a-game`
+
 ### In progress
 
 Written, but not working all the way through yet. The panel lists these in a collapsed section and marks the step where each one stops.
 
 - **Your workbench** — Find any panel with Quick Launch, arrange the tabs, follow a tutorial beside your work, and switch modules on and off. `?tutorial=start-workbench`
 - **Saving your setup** — Change the options and settings, save the layout and settings as a mode of your own, and clear what the app keeps in your browser. `?tutorial=start-saving-your-setup`
-- **Procgen: from a generated world to a multiworld** — Take a generated world through the APWorld Editor to a .apworld, play it on a local Archipelago server, and let the Playback Bot send the checks. `?tutorial=procgen-to-multiworld`
 - **Procgen: Journey to Ascension in Loop mode** — Generate a world of Journey to Ascension zones with loop mode on, see the loop panels, and watch the bot finish it. `?tutorial=procgen-loop-mode-jta`
 - **Procgen: everything, in Loop mode** — Mix every substrate — Idle Loops included — into one loop-mode world sharing one mana pool, and watch the bot finish it. `?tutorial=procgen-loop-mode-everything`
 - **Procgen: a runner world** — Play a generated world of auto-running platformer strips, where the jumps you can make are the items you hold. `?tutorial=procgen-runner-demo`
 - **Seedling: recompile the original game in your browser** — Turn a Flash file into a WebAssembly program in the browser and run it — then, if you like, all of Seedling. `?tutorial=seedling-recompile`
 - **Seedling: watch the bot play** — Load the whole of Seedling as an Archipelago world and watch the Playback Bot take its first checks in the original game. `?tutorial=seedling-bot`
-- **Seedling: in a multiworld** — Generate a multiworld with Seedling Playthrough, host it locally, and connect the app to play it. `?tutorial=seedling-multiworld`
 - **Seedling: the bot through the whole game** — Watch the Playback Bot play the original Seedling from the first chest to the end. `?tutorial=seedling-whole-game`
 - **MetaMath: prove 2 + 2 = 4** — Play a MetaMath proof as an Archipelago game: each proof step is a location, unlocked when the steps it depends on are proved. `?tutorial=metamath-demo`
-- **MetaMath: in a multiworld** — Host a MetaMath proof on a local Archipelago server and prove it from the app. `?tutorial=metamath-multiworld`
 - **DepGraph: a coding adventure** — Play a dependency graph as an Archipelago game: each task is a location, unlocked when the tasks it depends on are done. `?tutorial=depgraph-demo`
-- **DepGraph: more graphs, and your own** — Load DepGraph's other bundled graphs, see one in the Region Graph, and turn a task list of your own into a game. `?tutorial=depgraph-extras`
-- **DepGraph: in a multiworld** — Host a DepGraph graph on a local Archipelago server and solve it from the app. `?tutorial=depgraph-multiworld`
 - **APCalc: the calculator game** — Play APCalc: a calculator whose number and operation keys are the items, and whose results are the locations. `?tutorial=apcalc-demo`
-- **APCalc: in a multiworld** — Host APCalc on a local Archipelago server and play it from the app. `?tutorial=apcalc-multiworld`
-- **Track a game** — Load a game's logic, track items and checks by hand, see what is reachable, and connect to your multiworld's server. `?tutorial=tracker-track-a-game`
 - **Tracking: why can't I get there?** — Ask the Path Analyzer how to reach a region, and which items each way needs. `?tutorial=tracker-path-analyzer`
 - **Tracking: the Region Graph** — Track a game on the Region Graph: regions coloured by reachability, clicked to move, check and show. `?tutorial=tracker-region-graph`
 - **Tracking: dungeons** — See a dungeon's regions and boss in the Dungeons panel. `?tutorial=tracker-dungeons`

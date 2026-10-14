@@ -948,6 +948,30 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The APCalc Generator builds APCalc maps in the browser: how many spheres, how many operations and numbers each one adds, how branchy the map is. The result plays at once, saves as a rules.json, and…"
     },
     {
+        "path": "docs/json/user/tutorials/apcalc-multiworld.md",
+        "title": "APCalc: in a multiworld",
+        "section": "user/tutorials",
+        "summary": "APCalc is an Archipelago world in this project's repository (worlds/apcalc); no released .apworld yet — *APCalc: generate a world* will make one from any map."
+    },
+    {
+        "path": "docs/json/user/tutorials/depgraph-extras.md",
+        "title": "DepGraph: more graphs, and your own",
+        "section": "user/tutorials",
+        "summary": "DepGraph ships seven graphs — the coding and baking adventures, a tech tree, a skill tree, a recipe chain, the SWFRecomp vibe-coding plan and a task-flow example — and reads graphs of your own as…"
+    },
+    {
+        "path": "docs/json/user/tutorials/depgraph-multiworld.md",
+        "title": "DepGraph: in a multiworld",
+        "section": "user/tutorials",
+        "summary": "DepGraph is an Archipelago game like any other: its .apworld is released with this project, and any graph — a bundled one or your own — can be shuffled with other games."
+    },
+    {
+        "path": "docs/json/user/tutorials/metamath-multiworld.md",
+        "title": "MetaMath: in a multiworld",
+        "section": "user/tutorials",
+        "summary": "MetaMath is an Archipelago game like any other: its .apworld is released with this project, and its proofs can be shuffled with other games."
+    },
+    {
         "path": "docs/json/user/tutorials/procgen-bounce-region-editor.md",
         "title": "Procgen: editing a bounce region",
         "section": "user/tutorials",
@@ -990,10 +1014,28 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Sphere growth is the pipeline's default mode: it plans the item progression first — which items unlock which, sphere by sphere — and then grows a world to match. This tutorial builds a world from…"
     },
     {
+        "path": "docs/json/user/tutorials/procgen-to-multiworld.md",
+        "title": "Procgen: from a generated world to a multiworld",
+        "section": "user/tutorials",
+        "summary": "A world the pipeline generates is a real Archipelago game: the APWorld Editor can package it as a .apworld, which Archipelago's own generator and server load like any other game. This tutorial goes…"
+    },
+    {
         "path": "docs/json/user/tutorials/procgen-top-down.md",
         "title": "Procgen: Top-down, with Maze",
         "section": "user/tutorials",
         "summary": "Top-down starts from a world that already exists — any game's rules.json — and *realises* it: every region becomes a generated room, and the source's access rules stay on the exits. This tutorial…"
+    },
+    {
+        "path": "docs/json/user/tutorials/seedling-multiworld.md",
+        "title": "Seedling: in a multiworld",
+        "section": "user/tutorials",
+        "summary": "Here Seedling Playthrough is a slot of a multiworld you generate and host yourself, on your own computer; the app is its client."
+    },
+    {
+        "path": "docs/json/user/tutorials/tracker-track-a-game.md",
+        "title": "Track a game",
+        "section": "user/tutorials",
+        "summary": "The app is also a tracker for an ordinary Archipelago game: it knows the game's logic, so it can show which locations you can reach with the items you have — and, connected to the multiworld's…"
     }
 ].map(Object.freeze));
 
@@ -1064,6 +1106,10 @@ export const HELP_SECTIONS = Object.freeze([
                 "label": "tutorials",
                 "docs": [
                     "docs/json/user/tutorials/apcalc-generator.md",
+                    "docs/json/user/tutorials/apcalc-multiworld.md",
+                    "docs/json/user/tutorials/depgraph-extras.md",
+                    "docs/json/user/tutorials/depgraph-multiworld.md",
+                    "docs/json/user/tutorials/metamath-multiworld.md",
                     "docs/json/user/tutorials/procgen-bounce-region-editor.md",
                     "docs/json/user/tutorials/procgen-grid-growth.md",
                     "docs/json/user/tutorials/procgen-mixed-world.md",
@@ -1071,7 +1117,10 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/procgen-settings-and-bot.md",
                     "docs/json/user/tutorials/procgen-shuffled-spiral.md",
                     "docs/json/user/tutorials/procgen-sphere-growth.md",
-                    "docs/json/user/tutorials/procgen-top-down.md"
+                    "docs/json/user/tutorials/procgen-to-multiworld.md",
+                    "docs/json/user/tutorials/procgen-top-down.md",
+                    "docs/json/user/tutorials/seedling-multiworld.md",
+                    "docs/json/user/tutorials/tracker-track-a-game.md"
                 ],
                 "single": false
             }

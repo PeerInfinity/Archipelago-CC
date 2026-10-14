@@ -2080,9 +2080,33 @@ class BaseGameExportHandler(
         # helpers like "has_fire_arrows" to Has("Fire_Arrows") via pattern matching.
         if self.is_worldgen_world(world):
             self._discover_worldgen_helpers_for_preservation(world)
-            self._inject_worldgen_sidecars(world, export_data, player)
-            self._inject_worldgen_procgen_metadata(world, export_data, player)
-            self._inject_worldgen_loop_costs(world, export_data, player)
+        # The package files are re-injected by PRESENCE, not by the
+        # `_worldgen` module suffix: a world_generator package may be named
+        # anything (worlds/seedling_playthrough is one), and gating on the
+        # suffix silently dropped its `_worldgen_sidecars.json`. Each reader
+        # is a no-op when the package ships no such file.
+        self._inject_worldgen_sidecars(world, export_data, player)
+        self._inject_worldgen_procgen_metadata(world, export_data, player)
+        self._inject_worldgen_loop_costs(world, export_data, player)
+        self._inject_worldgen_page_blocks(world, export_data, player)
+
+    def _inject_worldgen_page_blocks(self, world, export_data: Dict[str, Any], player: int) -> None:
+        """Load `_worldgen_flash_panel.json` / `_worldgen_region_atlas.json`
+        from the package and set export_data['flash_panel' / 'region_atlas'][str(player)].
+
+        Both are per-player maps (`{"<p>": block}`); world_generator writes the
+        source slot's block, and it lands under the exporting player. They are
+        what the flash panel boots (`flash_panel`) and what the Seedling page
+        and bot anchor the atlas on (`region_atlas`), so without them a
+        Generate.py export of a Seedling world cannot drive the wasm game.
+        """
+        for key, filename in (
+            ('flash_panel', '_worldgen_flash_panel.json'),
+            ('region_atlas', '_worldgen_region_atlas.json'),
+        ):
+            block = self._read_worldgen_package_json(world, filename, f'worldgen {key}')
+            if block is not None:
+                export_data.setdefault(key, {})[str(player)] = block
 
     def _inject_worldgen_sidecars(self, world, export_data: Dict[str, Any], player: int) -> None:
         """Load `_worldgen_sidecars.json` from the worldgen world's package
