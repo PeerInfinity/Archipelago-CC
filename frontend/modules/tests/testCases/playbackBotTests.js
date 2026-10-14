@@ -6,6 +6,7 @@
 // (with the bot as the deterministic driver).
 
 import { registerTest } from '../testRegistry.js';
+import { startAppBotTestSpeed } from '../botTestSpeed.js';
 import { getActivePanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { _testOnly_getWarehouse } from '../../procgenPlayer/index.js';
@@ -441,6 +442,8 @@ async function playbackBotLoopModeWorld(testController, { quotas, start, seed, s
 
   const instantBefore = !!loopState.instantMode;
   loopState.setInstantMode(true);
+  // The global flag above completes the timer-run entries; the Bot walks take their block's own Instant flag.
+  const restoreSpeed = await startAppBotTestSpeed();
   try {
     if (watchPanel) testController.eventBus.publish('ui:activatePanel', { panelId: watchPanel });
     testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
@@ -493,6 +496,7 @@ async function playbackBotLoopModeWorld(testController, { quotas, start, seed, s
     }
   } finally {
     bot.stop();
+    await restoreSpeed();
     loopState.setInstantMode(instantBefore);
     testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
   }
