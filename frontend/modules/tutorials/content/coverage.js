@@ -34,7 +34,6 @@ export const NO_TUTORIAL = Object.freeze({
  * one; the census refuses the entry once the panel is registered.
  */
 export const PLANNED_PANELS = Object.freeze({
-    swfRecompilerPanel: 'F2 — the in-browser SWF recompiler (SWFRecomp-CC), not built yet',
 });
 
 /** Panels a tutorial is planned for, not written yet: componentType → the planned tutorial. */

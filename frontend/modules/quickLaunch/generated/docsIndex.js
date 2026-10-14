@@ -882,6 +882,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Storage panel lists every key this site keeps in your browser's local storage. For each key it shows which part of the app owns it, what kind of data it is and how big it is. It lets you clear…"
     },
     {
+        "path": "docs/json/user/modules/swfRecompilerPanel.md",
+        "title": "SWF Recompiler",
+        "section": "user/modules",
+        "summary": "The SWF Recompiler panel recompiles a Flash movie (a .swf file) into a WebAssembly program, in your browser, and runs it. It is SWFRecomp's in-browser recompiler: the page the panel drives is the…"
+    },
+    {
         "path": "docs/json/user/modules/textAdventure.md",
         "title": "Text Adventure Panel",
         "section": "user/modules",
@@ -1030,6 +1036,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/spoilerChecklist.md",
             "docs/json/user/modules/spoilerTest.md",
             "docs/json/user/modules/storagePanel.md",
+            "docs/json/user/modules/swfRecompilerPanel.md",
             "docs/json/user/modules/textAdventure.md",
             "docs/json/user/modules/timerPanel.md",
             "docs/json/user/modules/tutorials.md",
