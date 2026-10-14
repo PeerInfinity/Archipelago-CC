@@ -168,6 +168,10 @@
       "path": "./modules/metaGamePanel/index.js",
       "enabled": false
     },
+    "swfRecompilerPanel": {
+      "path": "./modules/swfRecompilerPanel/index.js",
+      "enabled": true
+    },
     "flashPanel": {
       "path": "./modules/flashPanel/index.js",
       "enabled": true
@@ -361,6 +365,7 @@
     "metaGame",
     "metaGamePanel",
     "flashPanel",
+    "swfRecompilerPanel",
     "tileMapAnalyzer",
     "regionMarkingTool",
     "iframeAdapter",

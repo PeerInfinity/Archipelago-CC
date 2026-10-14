@@ -21946,3 +21946,46 @@ exact. **Staging A's sword prefix is NOT:** at t1801 the game stops `bob@736,752
 (`chaserStaticEnemyBoxesNow`) carries no live Spinner, though a Spinner's type is "Enemy" and Bob's solids include it. A
 scratch wall freezes the bob on the game's tick; the next parting moves to t1989. (d),
 fidelity's; the hand-over tape is in the report's evidence folder.
+
+### Seedling hammer-phase RE — the refuge's best-ETA cut
+
+⚖ The user (2026-10-14): *"Both, in parallel"* — this slice beside CW (the L40 chaser wall). One behaviour lever behind
+one new switch, **OFF**, measured before it was built: `pressKillCost.REFUGE_ETA_CUT` (`SEEDLING_REFUGE_ETA_CUT=1`,
+`withRefugeEtaCut`). The report is `CC/docs/cloud-reports/seedling-hammer-re.md`.
+
+**W0** at `3a53894a9a`: identity block `77080c2e` (six producers exit 0 at `405d9c4b b76f6483 465a8b46 35456fbc
+6cd35fe1 712f0ead`, ENEMY `afdc6d1a`, reference ALL MATCH); surface GREEN 288, constants 5,846, entities 558, profile
+138; roster 277; tapeRunner 611 `75a3c41f`; bounded vitest 1078/1078 (20 files). Staging A (sword) profiled at the
+base: `deriveRefuge` 33.9 % inclusive, its `previewWalk` 26.4 %.
+
+**D1 — the census.** A scratch copy of `deriveRefuge` ran every candidate's FULL preview and recorded where the cut
+(stop once the walk passes the best ETA held) would have stopped it, beside the cut's own simulated choice:
+
+| workload | derivations | previews | threw | hidden by the cut | cell changes | states, full → cut |
+|---|---|---|---|---|---|---|
+| staging A, sword | 1,315 | 15,780 | 0 | 0 | 0 | 2,145,515 → 26,721 |
+| staging A, ghost | 1,071 | 12,852 | 0 | 0 | 0 | 1,991,430 → 18,132 |
+| leg 397, ghost | 1,144 | 13,728 | 0 | 0 | 0 | 523,658 → 58,796 |
+| leg 414, ghost | 1,244 | 14,928 | 0 | 0 | 0 | 582,938 → 72,348 |
+| leg 381, MOVING_WAIT + BOMBS | 2 | 24 | 0 | 0 | 0 | 648 → 496 |
+| L18 sweep (45), C2's ghost staging (45), `r9-campaign --check`, legs 378 / 381 / 384 / 396 / 400 | 0 | 0 | — | — | — | — |
+
+No refuge preview ended on a lethal pit or a drowning (arrived, stalled or crossed only). The chosen cell's preview is
+never cut (a winner arrives at or before the bound), so a guard that re-ran it in full would never run. Two pre-filters
+were measured and refused: `minTicksBetween` (the strike's "admissible" ETA floor) is not a lower bound for a refuge
+walk — it divides by `WALK_SPEED` 0.8 and the walk runs faster (7,932 of 13,728 previews on 397 arrive sooner than it allows, even with the tolerance taken off) — and as
+a pre-filter it moves 6 + 4 chosen cells on 397 / 414; dropping a cell whose straight line from the player is blocked
+is not exact (461–3,318 such cells arrive per large workload, none chosen) and saved nothing over the cut alone.
+
+**D2 — the switch** in `pressKillCost.js` (`REFUGE_ETA_CUT`, `refugeEtaCut`, `REFUGE_ETA_CUT_COUNTS`), wired through
+`solverView.js`; `deriveRefuge` passes `stopWhen: refugeEtaCut(best.eta)` once a best is held. OFF calls `previewWalk`
+with the arguments it had. Named in the switch: a throw past the cut in a losing candidate is not raised;
+`progressPreview`'s `previewStates` and BW's refuge counts drop. Gate `hammerRefugeCut.test.js` (6 rows: the switch,
+the predicate's edge, OFF writes nothing, G1's ghost witness at 7 refuge ticks, leg 381's MOVINGWAIT witness at t1150
+with BOMBS both ways — (216,168), BW's refused count 11 → 9). Mutants: the bound taken from a bomb-refused candidate,
+off-by-one, half the ETA, the cut never taken, the cut before a best — each red.
+
+**D3 — ON:** no mover. The 13 workloads (BW OFF and ON), the identity block (BW OFF and ON: every value row W0's),
+`r9-campaign --check` and the ENEMY census are byte-equal to OFF. Timed, 3 interleaved rounds (load 1.01–1.18):
+staging A 196.0 → 138.7 s (sword) and 188.8 → 124.3 s (ghost), legs 397 / 414 180.6 → 166.8 / 193.8 → 169.8 s
+(medians). The flip is the user's.

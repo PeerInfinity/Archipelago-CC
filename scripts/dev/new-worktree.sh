@@ -19,6 +19,9 @@ PARENT="${NEW_WORKTREE_PARENT:-$(dirname "$PRIMARY")}"
 FAMILY="$(basename "$PRIMARY")"
 
 # The one submodule left out unless asked for: the Seedling wasm builds.
+# Every other submodule in <base>'s .gitmodules is initialised BY DEFAULT — read off
+# the file, never listed here (so frontend/modules/swfRecompilerPanel/browser, ~5 MB,
+# joined by its .gitmodules entry alone; ⚖ js-6, 2026-10-14).
 WASM_SUBMODULE="frontend/modules/flashPanel/wasm"
 # The worktree-slice port convention: the first free port from here, in steps.
 PORT_BASE=8130

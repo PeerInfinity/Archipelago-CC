@@ -26,6 +26,11 @@ const RETRY_MS = 1000;
 // nothing left to find can be free — maze — and a repeating explore re-queues itself forever). After this many
 // free completions in a row the runner ends the loop and stops exploring that region for XP.
 const FREE_SPIN_LIMIT = 200;
+// How often a running loop's status line is refreshed. ⚖ (user, 2026-10-14, "I choose b"): the line shows the loop's
+// live progress — the queue action it is on and the mana left — so a "same status for N s" check (the tutorials')
+// sees a loop that is really running move, and a stuck one stay still. The text changes ONLY when one of those
+// moves: no clock, no counter of its own.
+const PROGRESS_MS = 2000;
 
 export class LoopModeRunner {
     /**
@@ -56,6 +61,7 @@ export class LoopModeRunner {
         this._active = false;
         this._once = false;
         this._timer = null;
+        this._progressTimer = null;
         this._unsubs = [];
         this._loops = 0;
         // The last loop ended WITHOUT a loop reset (its queue completed, or the runner ended it early).
@@ -145,6 +151,22 @@ export class LoopModeRunner {
     _clearWait() {
         for (const off of this._unsubs) { try { off?.(); } catch { /* already gone */ } }
         this._unsubs = [];
+        if (this._progressTimer) clearInterval(this._progressTimer);
+        this._progressTimer = null;
+    }
+
+    /**
+     * A running loop's status: its plan, the queue action it is on and the mana left. Rounded to whole mana, so a
+     * line changes only when at least one mana moved — a loop whose game is not spending stays word for word the same.
+     */
+    _progressText(plan, loopState, gameState) {
+        const parts = [];
+        const total = loopState.getActionQueue?.()?.length ?? plan.path.length;
+        const index = loopState.currentActionIndex;
+        if (Number.isInteger(index) && total > 1) parts.push(`action ${Math.min(index + 1, total)} of ${total}`);
+        const mana = Number(gameState.currentMana);
+        if (Number.isFinite(mana)) parts.push(`mana ${Math.round(mana)} left`);
+        return `loop ${this._loops}: ${plan.reason}${parts.length ? ` (${parts.join(', ')})` : ''}`;
     }
 
     _view() {
@@ -229,7 +251,6 @@ export class LoopModeRunner {
         }
         this._lastKey = plan.key;
         this._loops += 1;
-        this._status(`loop ${this._loops}: ${plan.reason}`);
         // Back to the loop start by Loops' own path (clearQueue: stop, clear progress, and a fromReset regionMove to
         // the start), so a substrate panel loads the start region. setPath alone moved the player SILENTLY: a maze
         // panel left showing the last loop's region ignored the next loop's delegated move and the queue parked
@@ -238,6 +259,15 @@ export class LoopModeRunner {
         gameState.setPath(plan.path, d.getStartRegion());
         this._applyBlockModes(loopState);
         loopState.restartFromStart({ autoStart: true });
+        let shown = this._progressText(plan, loopState, gameState);
+        this._status(shown);
+        this._progressTimer = setInterval(() => {
+            if (!this._active) return;
+            const text = this._progressText(plan, loopState, gameState);
+            if (text === shown) return;
+            shown = text;
+            this._status(text);
+        }, PROGRESS_MS);
         // Subscribed AFTER the restart: restartFromStart publishes its own loopState:loopReset.
         // ⛓ An explore loop ends when it has done its work: the region hides nothing more (its repeating explore
         // would otherwise run on — for free, in a maze — until the mana ends, or forever). The runner ends it by
@@ -279,6 +309,7 @@ export class LoopModeRunner {
                 this._status(`stepped one loop (${plan.reason})`);
                 this._active = false;
                 this.stop();
+                d.onFinished?.();
                 return;
             }
             if (why) this._status(`loop ${this._loops} ended early (${why}): ${plan.reason}`);
