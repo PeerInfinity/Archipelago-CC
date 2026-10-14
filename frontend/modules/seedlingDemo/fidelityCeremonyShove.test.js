@@ -21,14 +21,17 @@ import { fileURLToPath } from 'node:url';
 
 import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
-import { createTapeStepper } from './tapeRunner.js';
+import { createRunForStaging, createTapeStepper, stagingFromTape } from './tapeRunner.js';
+import { playerBoxAt } from './playerPhysicsV2.js';
+import { rectsOverlap } from './levelWorld.js';
+import { ceremonyBesideLiveBody } from './solverBot.js';
 import { CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { CEREMONY_DEAD_FRAMES } from './sealCeremony.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = atlasLevelSource();
-const witness = (n) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'chaser-witness', `ceremonyshove-l30-${n}.json`),
-    'utf8'));
+const witness = (n) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'chaser-witness',
+    `${n.startsWith('l17') ? 'ceremonyshove-' : 'ceremonyshove-l30-'}${n}.json`), 'utf8'));
 
 /** The model's readings per observation tick, and the run (or the throw). */
 function replay(w) {
@@ -41,9 +44,9 @@ function replay(w) {
     try {
         for (let r = st.next(); !r.done; r = st.next()) {
             const o = r.value.observation;
-            const c = (run?.entities('chasers') ?? []).find((b) => !b.removed) ?? null;
+            const live = (run?.entities('chasers') ?? []).filter((b) => !b.removed);
             rows.set(o.t, { px: o.x, py: o.y, pht: run.damage.hitsTimer,
-                body: c && { x: c.x, y: c.y, vx: c.vx, vy: c.vy, hits: c.hits, hitsTimer: c.hitsTimer } });
+                bodies: live.map((c) => ({ x: c.x, y: c.y, vx: c.vx, vy: c.vy, hits: c.hits, hitsTimer: c.hitsTimer })) });
         }
     } catch (e) {
         threw = e.message;
@@ -51,16 +54,14 @@ function replay(w) {
     return { run, rows, threw };
 }
 
-/** The worst |Δ| of one model row against one game poll. */
+/** The worst |Δ| of one model row against one game poll: the player, and each game body against its nearest model one. */
 function delta(m, g) {
     const d = (a, b) => Math.abs((a ?? 0) - (b ?? 0));
-    let w = Math.max(d(m.px, g.px), d(m.py, g.py), d(m.pht, g.pht));
-    if (!!m.body !== !!g.body) return Infinity;
-    if (m.body) {
-        w = Math.max(w, d(m.body.x, g.body.x), d(m.body.y, g.body.y), d(m.body.vx, g.body.vx), d(m.body.vy, g.body.vy),
-            d(m.body.hits, g.body.hits), d(m.body.hitsTimer, g.body.hitsTimer));
-    }
-    return w;
+    const one = (a, b) => Math.max(d(a.x, b.x), d(a.y, b.y), d(a.vx, b.vx), d(a.vy, b.vy), d(a.hits, b.hits),
+        d(a.hitsTimer, b.hitsTimer));
+    if (m.bodies.length !== g.bodies.length) return Infinity;
+    return Math.max(d(m.px, g.px), d(m.py, g.py), d(m.pht, g.pht),
+        ...g.bodies.map((gb) => Math.min(...m.bodies.map((mb) => one(mb, gb)))));
 }
 
 /** Every tick against the closer of its first and last game poll: `{worst, at}`. */
@@ -111,8 +112,8 @@ describe('CEREMONYSHOVE D2 — the same witnesses, OFF: the controls', () => {
         expect(threw).toBeNull();
         const c = compare(w, rows);
         expect(c.at).toBeGreaterThan(150);
-        const g = w.ticks.find((r) => r.t === 157).first.body;
-        const m = rows.get(157).body;
+        const g = w.ticks.find((r) => r.t === 157).first.bodies[0];
+        const m = rows.get(157).bodies[0];
         expect(Math.hypot(g.vx - m.vx, g.vy - m.vy)).toBeCloseTo(149 * 5, 6);
     });
     it('iframe and dying: the ceremony is refused (`assertNoCeremonyBesideLiveChaser`)', () => {
@@ -127,5 +128,68 @@ describe('CEREMONYSHOVE D2 — the same witnesses, OFF: the controls', () => {
     });
     it('OFF steps no lump', () => {
         expect(off(() => replay(witness('touch'))).run.ceremonyLumps).toEqual([]);
+    });
+});
+
+describe('CEREMONYSHOVE D3 — a chest\'s seal piece: its 331 dead frames, stepped inside the collecting tick', () => {
+    it('ceremonyshove-l17-chest-19 (survey step 19\'s lapse-ON plan; three Bobs, one i-framed): ON exact', () => {
+        const w = witness('l17-chest-19');
+        const { rows, threw, run } = on(() => replay(w));
+        expect(threw).toBeNull();
+        expect(compare(w, rows)).toEqual({ worst: 0, at: null, n: w.ticks.length });
+        expect(run.ceremonyLumps).toEqual([{ t: 71, level: 17, what: 'sealpiece', frames: CEREMONY_DEAD_FRAMES.total - 1,
+            seal: true }]);
+    });
+    it('OFF: the i-framed Bob keeps 19 ticks the game drained', () => {
+        const w = witness('l17-chest-19');
+        const { rows } = off(() => replay(w));
+        const c = compare(w, rows);
+        expect(c.worst).toBe(19);
+        expect(c.at).toBe(73);
+    });
+});
+
+describe('CEREMONYSHOVE D3 — `ceremonyBesideLiveBody` asks where the ceremony LEAVES each body', () => {
+    const tape = (name) => parseTape(readFileSync(join(HERE, 'fixtures', 'tapes', `${name}.json`), 'utf8'));
+    const run = createRunForStaging(stagingFromTape(tape('bobsoldier2-l30-torch')), SRC);
+    const torch = run.world.pickups.find((p) => p.tag === 'torchpickup');
+    // the torch ceremony's start, the player moving down onto it (its shield box below it: (71,66)–(78,73))
+    const player = { x: 72, y: 66, vx: 0, vy: 1.2, direction: 3, slashing: false };
+    const at = { x: 72, y: 66, ceremony: true, player };
+    const body = (x, y, over = {}) => ({ id: 'bobsoldier@48,80', tag: 'bobsoldier', x, y, hits: 1, hitsTimer: 0, ...over });
+    const ask = (sw, sample, corpses = []) => withContactFidelity({ ceremonyShove: sw },
+        () => ceremonyBesideLiveBody(run, sample, corpses));
+
+    it('the run steps the torch ceremony\'s dead frames ON (a ceremony with text), not OFF', () => {
+        expect(rectsOverlap(playerBoxAt(at.x, at.y), torch.rect)).toBe(true);
+        expect(withContactFidelity({ ceremonyShove: true }, () => run.ceremonyStepsDeadFrames(torch))).toBe(true);
+        expect(withContactFidelity({ ceremonyShove: false }, () => run.ceremonyStepsDeadFrames(torch))).toBe(false);
+    });
+    it('a live body inside the moving shield box is shoved away: refused OFF, not asked ON', () => {
+        const s = { ...at, chasers: [body(75, 71)] };
+        expect(ask(false, s).danger).toBe(true);
+        expect(ask(true, s)).toEqual({ danger: false, sources: [] });
+    });
+    it('the same body beside a STILL player is not shoved: ON it is parked there and asked the WAIT question', () => {
+        const s = { ...at, player: { ...player, vy: 0 }, chasers: [body(75, 71)] };
+        const r = ask(true, s);
+        expect(r.danger).toBe(true);
+        expect(r.sources[0].why).toMatch(/parked beside the player/);
+    });
+    it('a body below the shield box is parked: asked ON', () => {
+        const r = ask(true, { ...at, chasers: [body(72, 78)] });
+        expect(r.danger).toBe(true);
+        expect(r.sources[0].why).toMatch(/parked beside the player/);
+    });
+    it('an i-framed body far off and a corpse: refused OFF (the lump was unstepped), clean ON (drained, faded)', () => {
+        const iframed = { ...at, chasers: [body(200, 200, { hitsTimer: 12 })] };
+        expect(ask(false, iframed).danger).toBe(true);
+        expect(ask(true, iframed).danger).toBe(false);
+        const corpse = [{ id: 'bobsoldier@48,80', tag: 'bobsoldier', x: 75, y: 71, dying: true }];
+        expect(ask(false, { ...at, chasers: [] }, corpse).danger).toBe(true);
+        expect(ask(true, { ...at, chasers: [] }, corpse).danger).toBe(false);
+    });
+    it('without the sample\'s player no body counts as shoved (the side to err on)', () => {
+        expect(ask(true, { x: 72, y: 66, ceremony: true, chasers: [body(75, 71)] }).danger).toBe(true);
     });
 });
