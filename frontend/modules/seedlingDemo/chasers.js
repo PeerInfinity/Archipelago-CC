@@ -395,6 +395,46 @@ export const CHASERS = defineRecord('chasers', {
         liveSwitch: 'bulbLive',
         src: 'Enemies/Bulb.as:35-61 (+ Enemies/Bob.as:44-83 via super.update())',
     }),
+    /**
+     * ⛓⛓ seedling-fidelity-lapsecost D2 — THE SEVENTH ROW: the Flyer (`Flyer extends Bob`). Alive and not falling it
+     * runs `super.update()` — `Bob.update`'s chase (`chaseImpulse`, moveSpeed 1, runRange 80) to the player PLUS
+     * `targetOffset` (0,-10), so it hovers ten pixels above them. What is NOT Bob's:
+     *
+     *   · `update()` opens with `if (Game.freezeObjects) return;` (`Flyer.as:51-52`), above everything
+     *     (`freezeSkipsUpdate`);
+     *   · `solids = new Array()` (`:45`) — it flies through tiles, Solids and Enemies (`SOLIDS_BY_MOVER.none`);
+     *   · `hitPlayer()` is overridden EMPTY (`:83-85`) — its body never damages (`contactHits: false`);
+     *   · THE DROP (`drop`, `:59-69`): when the player's box holds the point (x, y+10) it plays "fall"; while "fall"
+     *     plays it stands (`v = 0`), runs `hitUpdate()` and NOT `super.update()`, and on the update where the
+     *     Spritemap shows frame 10 (`droppedFrame`; "fall" is frames 4..22, so index 6) a player still on that point
+     *     takes `p.hit(null, dropForce 1, (x,y), damage 2)` — no enemy i-frame gate and no `e` (no dark-suit shove);
+     *     `Bob.endAnim` ends the anim (`play("")`) and the next update may fall again;
+     *   · its terrain is the census row's (`dieInWater`/`dieInLava` false, `canFallInPit` false — `terrainFromCensus`);
+     *   · "die" is four frames at rate 10 (`:42`), Bob's `startDeath`.
+     */
+    flyer: Object.freeze({
+        as3: 'Flyer',
+        targetOffset: Object.freeze({ x: 0, y: -10 }),
+        freezesOnGameFreeze: true,
+        freezeSkipsUpdate: true,
+        dieAnim: Object.freeze({ frames: 4, rate: 10, src: 'Flyer.as:42 add("die", [23,24,25,26], 10)' }),
+        solidsMover: 'none',
+        // `Enemy.knockback`, inherited.
+        knocksBack: true,
+        // ⛔ `override public function hitPlayer():void { }` (`Flyer.as:83-85`).
+        contactHits: false,
+        terrainFromCensus: true,
+        drop: Object.freeze({
+            anim: Object.freeze({ frames: 19, rate: 30 }),
+            // `droppedFrame` 10 in "fall"'s list [4..22].
+            hitIndex: 6,
+            force: 1,
+            src: 'Enemies/Flyer.as:17-19,40,58-69',
+        }),
+        /** ⛓ Bridged only while `contactFidelity.CONTACT_FIDELITY.flyerLive` is on (OFF = the BEFORE model). */
+        liveSwitch: 'flyerLive',
+        src: 'Enemies/Flyer.as:47-77 (+ Enemies/Bob.as:44-83 via super.update())',
+    }),
 }, { doc: ['src'], src: 'chasers.js' });
 
 /**
@@ -489,6 +529,40 @@ export function chaserChasesWhileDying(tag) {
     const c = CHASERS[tag];
     if (!c) fail(`chaserChasesWhileDying: "${tag}" is not a transcribed chaser`);
     return c.chasesWhileDying === true;
+}
+
+/** ⛓ fidelity LAPSECOST D2: the class's drop (`CHASERS[tag].drop`, the Flyer's), or null. */
+export function chaserDropOf(tag) {
+    return CHASERS[tag]?.drop ?? null;
+}
+
+/** ⛓ fidelity LAPSECOST D2: does this class's body damage on contact (`Enemy.hitPlayer`)? False for the Flyer. */
+export function chaserContactHits(tag) {
+    const c = CHASERS[tag];
+    if (!c) fail(`chaserContactHits: "${tag}" is not a transcribed chaser`);
+    return c.contactHits !== false;
+}
+
+/**
+ * ⛓ fidelity LAPSECOST D2 — the point a dropping class tests the player against (`Flyer.as:58`
+ * `collidePoint("Player", x - targetOffset.x, y - targetOffset.y)`), and whether the player's box holds it
+ * (`Entity.collidePoint`: the half-open box, `playerBox` from `playerPhysicsV2.playerBoxAt`).
+ */
+export function dropPoint(tag, enemy) {
+    const c = CHASERS[tag];
+    if (!c?.drop) fail(`dropPoint: "${tag}" has no drop`);
+    return { x: enemy.x - c.targetOffset.x, y: enemy.y - c.targetOffset.y };
+}
+export function dropPointCovered(tag, enemy, playerBox) {
+    const p = dropPoint(tag, enemy);
+    return p.x >= playerBox.x && p.x < playerBox.right && p.y >= playerBox.y && p.y < playerBox.bottom;
+}
+
+/** ⛓ fidelity LAPSECOST D2: a fresh "fall" Spritemap for a dropping class. */
+export function createDropFallAnim(tag) {
+    const d = chaserDropOf(tag);
+    if (!d) fail(`createDropFallAnim: "${tag}" has no drop`);
+    return createSpriteAnim(d.anim.frames, d.anim.rate);
 }
 
 /** ⛓ fidelity-bobsoldier: does this class carry the BobSoldier's spinning sword (`bobSoldier.js`)? */

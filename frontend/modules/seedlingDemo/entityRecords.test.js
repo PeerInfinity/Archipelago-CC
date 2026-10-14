@@ -185,7 +185,8 @@ describe('entityRecords — the dump and its md5', () => {
         // ⛓ wave-8 harvest: KILLLOCK's `chasers.lavarunner` row + BOBSOLDIER's → 33ae40cd (the union).
         // ⛓ fidelity BULB: 33ae40cd → 322c896f, the `chasers.bulb` row (`dropDeath`, `liveSwitch`).
         // ⛓ fidelity BOMBPUSHER: 322c896f → 74dbffa2, the `bombPusher` and `bomb` records.
-        expect(entitiesMd5()).toBe('74dbffa22139c03f1e124a6e55d7ffa5');
+        // ⛓ fidelity LAPSECOST D2: 74dbffa2 → fe5051f6, the `chasers.flyer` row (`drop`, `liveSwitch`).
+        expect(entitiesMd5()).toBe('fe5051f6661c9ebd56d4839b4cf4e4fd');
         expect(entitiesStamp()).toEqual({ md5: entitiesMd5(), records: entityRecordNames().length });
     });
 });

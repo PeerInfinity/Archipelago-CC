@@ -57,7 +57,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_STRIKE_IFRAME_LAPSE
         || !!process.env.SEEDLING_FALLROCK_POSTFALL || !!process.env.SEEDLING_FORECAST_SPEED_BY_TERRAIN
         || !!process.env.SEEDLING_ARRIVAL_BUTTON_ARM
-        || !!process.env.SEEDLING_UNBILLED_DAMAGE_GATE)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_UNBILLED_DAMAGE_GATE
+        || !!process.env.SEEDLING_FLYER_LIVE)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -93,7 +94,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // frame) ships OFF.
             arrivalButtonArm: false,
             // ⛓ fidelity UNBILLEDGATE D2: `unbilledDamageGate` (`solverBot.UNBILLED_DAMAGE`) ships OFF.
-            unbilledDamageGate: false });
+            unbilledDamageGate: false,
+            // ⛓ fidelity LAPSECOST D2: `flyerLive` (the Flyer stepped: its chase, its "fall" and its drop) ships OFF.
+            flyerLive: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

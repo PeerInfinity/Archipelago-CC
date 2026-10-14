@@ -59,6 +59,8 @@ export {
 export { SCREEN_H, SCREEN_W } from './camera.js';
 // chasers.js — dangerMap, solverBot · seedling 4
 export { bridgedChaserTags, chaserBoxAt, chaserHasSword, deathTicks, isBridgedChaser, killWindowTicks, CHASERS } from './chasers.js';
+// ⛓ fidelity LAPSECOST D2: the Flyer's drop, for `dangerMap.chaserDanger`.
+export { chaserDropOf } from './chasers.js';
 
 // ⛓ seedling-fidelity-bulb D3: the Bulb's drop death — which classes have one, and the tile under a centre.
 export { hasDropDeath, tileUnder } from './bulb.js';
