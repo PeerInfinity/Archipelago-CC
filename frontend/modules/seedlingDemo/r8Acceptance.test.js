@@ -1595,10 +1595,11 @@ describe('R8_STRATEGY_EXECUTORS — ⚖ §11.8a as data, and the checks that kee
         // ⛓ R9 slice L16: PULL is the one CONDITIONAL rung (§59.4 D2).
         // ⛓ U15-swim D2: DODGE is the second (a spit-only danger, a stall on the walk).
         // ⛓ Fidelity L14: DETOUR is the last (a longer corridor, asked after KILL refused).
+        // ⛓ Fidelity LAPSECOST D1: NARROW sits between KILL and DETOUR (conditional: `strikeIframeLapse` ON only).
         expect(R8_STRATEGY_EXECUTORS.ladder.map((r) => r.rung))
-            .toEqual(['avoid', 'dodge', 'pull', 'time', 'bait', 'kill', 'detour']);
+            .toEqual(['avoid', 'dodge', 'pull', 'time', 'bait', 'kill', 'narrow', 'detour']);
         expect(R8_STRATEGY_EXECUTORS.ladder.filter((r) => r.conditional).map((r) => r.rung))
-            .toEqual(['dodge', 'pull', 'detour']);
+            .toEqual(['dodge', 'pull', 'narrow', 'detour']);
         for (const r of R8_STRATEGY_EXECUTORS.ladder) {
             expect(r.tool.length).toBeGreaterThan(20);
             expect(r.refusesWith.length).toBeGreaterThan(20);
