@@ -56,6 +56,10 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 - **Procgen: Seedling rooms** ([guide](../tutorials/procgen-seedling.md)) — Put generated Seedling rooms into a procgen world, play them in the original game, look at a room in the Procgen Lab, and watch the bot. `?tutorial=procgen-seedling`
 - **Procgen: a mixed world** ([guide](../tutorials/procgen-mixed-world.md)) — Build one world from a maze, a text adventure, a bounce zone, a Noiz2sa stage and a generated Seedling room, and watch the Playback Bot play every kind. `?tutorial=procgen-mixed-world`
 
+### Seedling
+
+- **Seedling: recompile the original game in your browser** ([guide](../tutorials/seedling-recompile.md)) — Turn a Flash file into a WebAssembly program in the browser and run it — then, if you like, all of Seedling. `?tutorial=seedling-recompile`
+
 ### MetaMath, DepGraph and APCalc
 
 - **APCalc: generate a world** ([guide](../tutorials/apcalc-generator.md)) — Generate a new APCalc map with the APCalc Generator, play it, and package it as a .apworld. `?tutorial=apcalc-generator`
@@ -81,7 +85,6 @@ Written, but not working all the way through yet. The panel lists these in a col
 - **Procgen: Journey to Ascension in Loop mode** — Generate a world of Journey to Ascension zones with loop mode on, see the loop panels, and watch the bot finish it. `?tutorial=procgen-loop-mode-jta`
 - **Procgen: everything, in Loop mode** — Mix every substrate — Idle Loops included — into one loop-mode world sharing one mana pool, and watch the bot finish it. `?tutorial=procgen-loop-mode-everything`
 - **Procgen: a runner world** — Play a generated world of auto-running platformer strips, where the jumps you can make are the items you hold. `?tutorial=procgen-runner-demo`
-- **Seedling: recompile the original game in your browser** — Turn a Flash file into a WebAssembly program in the browser and run it — then, if you like, all of Seedling. `?tutorial=seedling-recompile`
 - **Seedling: watch the bot play** — Load the whole of Seedling as an Archipelago world and watch the Playback Bot take its first checks in the original game. `?tutorial=seedling-bot`
 - **Seedling: the bot through the whole game** — Watch the Playback Bot play the original Seedling from the first chest to the end. `?tutorial=seedling-whole-game`
 - **MetaMath: prove 2 + 2 = 4** — Play a MetaMath proof as an Archipelago game: each proof step is a location, unlocked when the steps it depends on are proved. `?tutorial=metamath-demo`

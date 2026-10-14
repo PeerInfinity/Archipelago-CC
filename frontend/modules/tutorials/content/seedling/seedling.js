@@ -8,8 +8,8 @@
  *     the whole map) on wasm, mentioning the JS switch;
  *   - S3's multiworld uses the **Seedling Playthrough** world;
  *   - S5 (entrance shuffle) is not written yet — Seedling has none.
- * S3 needs a terminal (its walk stops at its first terminal step); the others
- * are in progress (each walk row measures `firstFailingStep`). The walks need a
+ * S1 is ready; S3 needs a terminal (its walk stops at its first terminal
+ * step); S2 and S4 are in progress (each walk row measures `firstFailingStep`). The walks need a
  * WebGPU browser (their batch's flag). Shape: ../../tutorialShape.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -47,9 +47,11 @@ export const SEEDLING_RECOMPILE = seedling({
     id: 'seedling-recompile',
     title: 'Seedling: recompile the original game in your browser',
     summary: 'Turn a Flash file into a WebAssembly program in the browser and run it — then, if you like, all of Seedling.',
-    // Measured 2026-10-14 (slice F2b-2): every step works, on the new-tab route
-    // under npm test's headless shell. ⚖ null → ready is the planner's call.
-    firstFailingStep: null,
+    // ⚖ READY (the user, 2026-10-14): every step measured working (slice F2b-2) —
+    // the new-tab route under npm test's headless shell, the panel route under
+    // full Chromium.
+    status: 'ready',
+    doc: 'docs/json/user/tutorials/seedling-recompile.md',
     intro: [
         { prose: '*Seedling* is a Flash game. Flash is gone from browsers, so this project **recompiles** the game: SWFRecomp turns its SWF into C, and the C into WebAssembly, which any browser runs. The builds the app uses are prebuilt (see the [seedling-wasm README](' + WASM_README + ')); this tutorial does the recompile itself, in the browser, with the same SWFRecomp commit that built them.' },
         { prose: 'It starts with a **small** SWF, a one-frame test that draws four shapes and prints what it drew, so the whole pipeline takes about half a minute. Seedling itself is the optional last step: the same buttons, but minutes rather than seconds.' },

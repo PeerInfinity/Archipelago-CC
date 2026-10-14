@@ -1032,6 +1032,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Here Seedling Playthrough is a slot of a multiworld you generate and host yourself, on your own computer; the app is its client."
     },
     {
+        "path": "docs/json/user/tutorials/seedling-recompile.md",
+        "title": "Seedling: recompile the original game in your browser",
+        "section": "user/tutorials",
+        "summary": "*Seedling* is a Flash game. Flash is gone from browsers, so this project recompiles the game: SWFRecomp turns its SWF into C, and the C into WebAssembly, which any browser runs. The builds the app…"
+    },
+    {
         "path": "docs/json/user/tutorials/tracker-track-a-game.md",
         "title": "Track a game",
         "section": "user/tutorials",
@@ -1120,6 +1126,7 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/procgen-to-multiworld.md",
                     "docs/json/user/tutorials/procgen-top-down.md",
                     "docs/json/user/tutorials/seedling-multiworld.md",
+                    "docs/json/user/tutorials/seedling-recompile.md",
                     "docs/json/user/tutorials/tracker-track-a-game.md"
                 ],
                 "single": false
