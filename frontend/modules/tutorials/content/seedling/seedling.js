@@ -139,9 +139,9 @@ export const SEEDLING_BOT = seedling({
     id: 'seedling-bot',
     title: 'Seedling: watch the bot play',
     summary: 'Load the whole of Seedling as an Archipelago world and watch the Playback Bot take its first checks in the original game.',
-    // Measured 2026-10-14 on CI (run 38633423493): first-checks passes; the
-    // walk failed at its closing step (Stop is never enabled, so it is Reset now).
-    // A slow software-WebGPU box does not reach a check inside 180 s.
+    // Measured 2026-10-14 on CI: every step works (Stop since the Playback Bot's
+    // control bar follows the bot, 36992b4dfb). A slow software-WebGPU box does
+    // not reach a check inside first-checks' timeout; grade this row on CI.
     firstFailingStep: null,
     intro: [
         { prose: '*Seedling Playthrough* is the whole map of the original game as an Archipelago world: its 113 levels are the regions, its chests and bosses the locations. The Playback Bot plays it from the world\'s solution, sphere by sphere, by driving the real game.' },
@@ -168,20 +168,18 @@ export const SEEDLING_BOT = seedling({
                     actions: [{ click: botButton('play') }, { activate: { panel: 'flashPanel' } }],
                     done: (ctx) => (ctx.snapshot()?.checkedLocations ?? []).length > 0,
                     failed: botCannotFinish,
-                    // Measured on CI 2026-10-14 (the walk row's [tutorial-walk-timing] line): 104.3 s in the
-                    // batch, 130.4–133.2 s solo ×4; an earlier ×4 put it near 163–169 s (walk total less the
-                    // other steps). 360 s = ≥2.1× the highest. A stalled bot still ends it early (`failed`).
+                    // Measured on CI 2026-10-14 (the walk row's [tutorial-walk-timing] line), five runs:
+                    // 97.9–165.5 s, the max in a tutorials-seedling batch. 360 s = 2.18× the max.
+                    // A stalled bot still ends it early (`failed`).
                     doneTimeoutMs: 360000,
                 },
             },
             {
                 step: {
-                    // Not ⏹ (Stop): measured 2026-10-14, the Playback Bot panel never tells its control
-                    // bar it is running, so Stop stays disabled while the bot plays. Reset does stop it.
-                    id: 'reset-bot',
-                    text: 'Back in the **Playback Bot** tab, press **↺** (Reset): the bot stops and rewinds to the first sphere, and it says "Sphere log loaded" again. The *Seedling: the bot through the whole game* tutorial lets it run to the end.',
-                    actions: [{ activate: BOT }, { click: botButton('reset') }],
-                    done: (ctx) => ctx.text(botStatus).startsWith('Sphere log loaded'),
+                    id: 'stop-bot',
+                    text: 'Back in the **Playback Bot** tab, press **⏹** (Stop): the bot pauses where it is, and **▶** would resume it. The *Seedling: the bot through the whole game* tutorial lets it run to the end.',
+                    actions: [{ activate: BOT }, { click: botButton('stop') }],
+                    done: (ctx) => ctx.query(botButton('play'))?.disabled === false,
                 },
             },
         ],
