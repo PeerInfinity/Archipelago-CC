@@ -65,7 +65,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_FALLROCK_POSTFALL || !!process.env.SEEDLING_FORECAST_SPEED_BY_TERRAIN
         || !!process.env.SEEDLING_ARRIVAL_BUTTON_ARM
         || !!process.env.SEEDLING_UNBILLED_DAMAGE_GATE || !!process.env.SEEDLING_BUTTON_FALL_RELEASE_STEP
-        || !!process.env.SEEDLING_WAYPOINT_SLIDE)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_WAYPOINT_SLIDE || !!process.env.SEEDLING_LAVA_CHAIN_PLAYER_HIT)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -102,8 +102,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             arrivalButtonArm: false,
             // ⛓ fidelity UNBILLEDGATE D2: `unbilledDamageGate` (`solverBot.UNBILLED_DAMAGE`) ships OFF.
             unbilledDamageGate: false,
-            // ⛓ fidelity SMALLGAPS: `buttonFallReleaseStep` (D1), `waypointSlide` (D2) ship OFF.
-            buttonFallReleaseStep: false, waypointSlide: false });
+            // ⛓ fidelity SMALLGAPS: `buttonFallReleaseStep` (D1), `waypointSlide` (D2), `lavaChainPlayerHit` (D3) ship OFF.
+            buttonFallReleaseStep: false, waypointSlide: false, lavaChainPlayerHit: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

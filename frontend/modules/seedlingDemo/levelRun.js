@@ -10504,7 +10504,9 @@ export function createLevelRun({
         const chains = (world.combat?.hazards ?? []).filter((h) => h.tag === 'lavachain');
         if (chains.length === 0) return;
         const st = chaserStateFor(level);
-        if (st.size === 0) return;
+        // ⛓ fidelity SMALLGAPS D3 (`CONTACT_FIDELITY.lavaChainPlayerHit`): the `"Player"` arm steps every chain room.
+        const playerArm = CONTACT_FIDELITY.lavaChainPlayerHit;
+        if (st.size === 0 && !playerArm) return;
         let list = lavaChainStates.get(level);
         if (!list) {
             list = chains.map((h) => ({ h, id: `${h.tag}@${h.x},${h.y}`, anim: createLavaChainState(),
@@ -10523,6 +10525,25 @@ export function createLevelRun({
             const reaching = ch.unknown ? null : stepLavaChain(ch.anim, now);
             if (reaching === false) continue;
             const arm = lavaChainRect(ch.h.cx, ch.h.cy, ch.h.attrs?.dir ?? 0);
+            // ── ⛓ fidelity SMALLGAPS D3: `reach()` walks `hitables` IN ORDER, `"Player"` first — one
+            // `collideRect` per type, so the player and one body can both be hit on the same update. The
+            // chain is added after the Player, so it tests the PRE-move box; `getHitPos` is the chain's point.
+            if (playerArm && rectTouchesBox(arm, playerBoxAt(state.x, state.y))) {
+                if (reaching === null) {
+                    const why = now === null ? 'no Game.time' : 'a skipped Game.time since its last update';
+                    throw new Error(`levelRun: the player touches ${ch.id}'s arm at tick ${ticksCompleted + 1} in level `
+                        + `${level}, and the chain's anim is unknown (${why}) — whether \`LavaChain.reach\` hits the `
+                        + 'player this update is not derivable until the next trigger. Refused by name, never guessed.');
+                }
+                applyPlayerHit({
+                    source: 'lavachain',
+                    id: ch.id,
+                    force: LAVA_CHAIN.force,
+                    damage: LAVA_CHAIN.damage,
+                    from: { x: ch.h.cx, y: ch.h.cy },
+                    retaliate: null, // `LavaChain.as:90` — `hit(null, …)`
+                });
+            }
             const touching = ids.map((id) => st.get(id))
                 .filter((c) => !c.removed && rectTouchesBox(arm, chaserBoxAt(c.tag, c.x, c.y)));
             if (touching.length === 0) continue;
