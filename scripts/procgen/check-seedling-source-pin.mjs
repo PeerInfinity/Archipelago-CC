@@ -21,7 +21,25 @@
  *         feeds every extractor a different tree than the one pinned);
  *   (iii) every OTHER build compiled from the fork has a `source.commit` that
  *         is an ANCESTOR of the gitlink — the pinned tree contains each
- *         build's source, so one submodule serves them all.
+ *         build's source, so one submodule serves them all;
+ *   (iv)  ⚖ js-6's pin ruling (slice seedling-tut-F2b-2, 2026-10-14): the
+ *         in-browser recompiler the app ships (`swfrecomp-browser`, the
+ *         submodule at BROWSER_SUBMODULE) was built from the SAME SWFRecomp-CC
+ *         commit as the build row (i) selects — its `release.json`
+ *         `source.commit` EQUALS that build's `source.recompiler`, FULL SHAs on
+ *         both sides. So the S1 tutorial can say truthfully that the page
+ *         recompiles with the recompiler that built the game the reader plays.
+ *         A release present but UNSTAMPED is a named FAIL; an uninitialised
+ *         submodule (or no `release.json`) is a `SKIP:` by name.
+ *         ⛓ Its OFFLINE SUB-ROW (iv-b): a page-only release records
+ *         `source.buildInputsUnchanged` (`from`, `to`, `diff`): the build
+ *         inputs did not move between the commit the binaries came from and
+ *         the commit the page came from. `from` must equal `source.commit`,
+ *         and every `diff` path must be in THIS FILE'S literal
+ *         BUILD_INPUT_ALLOWLIST — the release's own `allowlist` field is
+ *         informational only, so a release cannot vouch for itself. The field
+ *         absent = PASS (the page and the binaries share one commit). No git
+ *         diff is run: CI has no SWFRecomp-CC history.
  *
  * ⛓ The builds are selected by DATA (`role`, `source.repo`), never by name,
  * so a renamed or added build needs no edit here.
@@ -42,7 +60,7 @@
  * key held the wasm gitlink and not this one, so a bumped pin would have left
  * this row's key unmoved. Declared:
  *
- * @key-inputs build: vendor/seedling
+ * @key-inputs build: vendor/seedling frontend/modules/swfRecompilerPanel/browser
  *
  * ⛓ NO `@ci-shallow` DECLARATION, SINCE G1 (`8ce80b7819`): row (iii) asks
  *    `merge-base --is-ancestor` of the submodule, which a depth-1 submodule
@@ -72,6 +90,21 @@ import { SEEDLING_REPO, SEEDLING_SUBMODULE } from './seedlingSource.js';
 
 /** The pin manifest, inside the wasm submodule. */
 export const BUILDS_JSON = 'frontend/modules/flashPanel/wasm/builds.json';
+/** Row (iv): the in-browser recompiler release (`PeerInfinity/swfrecomp-browser`) and its manifest. */
+export const BROWSER_SUBMODULE = 'frontend/modules/swfRecompilerPanel/browser';
+export const RELEASE_JSON = `${BROWSER_SUBMODULE}/release.json`;
+/**
+ * Row (iv-b): the SWFRecomp-CC paths a page-only release may show changed
+ * between `source.commit` and the page's commit, each with the reason it
+ * cannot reach a built file. ⛔ Literal on purpose: the release's own
+ * `allowlist` is informational, so it cannot widen this.
+ */
+export const BUILD_INPUT_ALLOWLIST = Object.freeze({
+    'SWFRecomp/assets/NotoSans-OFL.txt':
+        'the licence text beside the font; CMake embeds only assets/NotoSans.ttf (--embed-file of that one file)',
+});
+const FULL_SHA = /^[0-9a-f]{40}$/;
+const RERELEASE = 're-release swfrecomp-browser from the default build\'s recompiler commit, or a re-pin (user-gated)';
 
 const git = (cwd, args) => execFileSync('git', args,
     { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
@@ -87,33 +120,46 @@ const short = (sha) => String(sha).slice(0, 10);
 export function checkSourcePin({ repo }) {
     const rows = [];
     const row = (kind, msg) => rows.push({ kind, msg });
-    const sub = join(repo, SEEDLING_SUBMODULE);
+    const manifestPath = join(repo, BUILDS_JSON);
+    const builds = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, 'utf8')).builds ?? [] : null;
+    const pinning = builds ? pinningBuilds(builds) : null;
 
+    sourceRows({ repo, builds, pinning, row });
+    recompilerRows({ repo, builds, pinning, row });
+    // ⛔ REFUSED = no pin was compared at all (every row a SKIP).
+    return { rows, refused: rows.every((r) => r.kind === 'SKIP') };
+}
+
+/**
+ * ⛓ P4E: a candidate, when there is one, is the build the submodule pins;
+ * otherwise the default is. Two is a FAIL by name in row (i).
+ */
+function pinningBuilds(builds) {
+    const fromFork = builds.filter((b) => b.source?.repo === SEEDLING_REPO);
+    const pinRole = fromFork.some((b) => b.role === 'candidate') ? 'candidate' : 'default';
+    return { fromFork, pinRole, defaults: fromFork.filter((b) => b.role === pinRole) };
+}
+
+/** Rows (i)–(iii): the `vendor/seedling` gitlink against the builds' AS3 sources. */
+function sourceRows({ repo, builds, pinning, row }) {
+    const sub = join(repo, SEEDLING_SUBMODULE);
     if (!existsSync(join(sub, '.git'))) {
         row('SKIP', `the ${SEEDLING_SUBMODULE} submodule is not initialised — git submodule update --init ${SEEDLING_SUBMODULE}`);
-        return { rows, refused: true };
+        return;
     }
-    const manifestPath = join(repo, BUILDS_JSON);
-    if (!existsSync(manifestPath)) {
+    if (!builds) {
         row('SKIP', `no ${BUILDS_JSON} — the wasm submodule is not initialised, so no build names a source`);
-        return { rows, refused: true };
+        return;
     }
 
     const lsTree = git(repo, ['ls-tree', 'HEAD', SEEDLING_SUBMODULE]);
     const m = /^160000 commit ([0-9a-f]{40})\t/.exec(lsTree);
     if (!m) {
         row('FAIL', `HEAD carries no gitlink at ${SEEDLING_SUBMODULE} (ls-tree: ${JSON.stringify(lsTree)})`);
-        return { rows, refused: false };
+        return;
     }
     const gitlink = m[1];
-
-    const builds = JSON.parse(readFileSync(manifestPath, 'utf8')).builds ?? [];
-    const fromFork = builds.filter((b) => b.source?.repo === SEEDLING_REPO);
-    const candidates = fromFork.filter((b) => b.role === 'candidate');
-    // ⛓ P4E: a candidate, when there is exactly one, is the build the submodule
-    // pins; otherwise the default is. Two candidates is a refusal by name.
-    const pinRole = candidates.length > 0 ? 'candidate' : 'default';
-    const defaults = fromFork.filter((b) => b.role === pinRole);
+    const { fromFork, pinRole, defaults } = pinning;
 
     // (i) the gitlink is the pinning build's source
     if (defaults.length !== 1) {
@@ -148,7 +194,73 @@ export function checkSourcePin({ repo }) {
             `(iii) ${b.name}'s source.commit ${short(c)} ${ancestor ? 'IS' : 'is NOT'} an ancestor of the gitlink `
             + `${short(gitlink)}` + (ancestor ? '' : ' (or is not in the submodule\'s history at all)'));
     }
-    return { rows, refused: false };
+}
+
+/** Row (iv) and its offline sub-row (iv-b): the in-browser recompiler release against the pinning build. */
+function recompilerRows({ repo, builds, pinning, row }) {
+    const releasePath = join(repo, RELEASE_JSON);
+    if (!existsSync(join(repo, BROWSER_SUBMODULE, '.git')) || !existsSync(releasePath)) {
+        row('SKIP', `(iv) the ${BROWSER_SUBMODULE} submodule is not initialised (no ${RELEASE_JSON}), so (iv) and `
+            + `its sub-row cannot be asked — git submodule update --init ${BROWSER_SUBMODULE}`);
+        return;
+    }
+    if (!builds) {
+        row('SKIP', `(iv) no ${BUILDS_JSON} — the wasm submodule is not initialised, so no build names a recompiler`);
+        return;
+    }
+    let release;
+    try {
+        release = JSON.parse(readFileSync(releasePath, 'utf8'));
+    } catch (e) {
+        row('FAIL', `(iv) ${RELEASE_JSON} is not JSON: ${e.message}`);
+        return;
+    }
+    const commit = release?.source?.commit;
+    if (typeof commit !== 'string' || !FULL_SHA.test(commit)) {
+        row('FAIL', `(iv) ${RELEASE_JSON} is UNSTAMPED: source.commit is ${JSON.stringify(commit ?? null)}, not a full `
+            + 'SHA — the release must name the SWFRecomp-CC commit its built files came from');
+        return;
+    }
+    const { pinRole, defaults } = pinning;
+    if (defaults.length !== 1) {
+        row('FAIL', `(iv) ${BUILDS_JSON} names ${defaults.length} build(s) with role "${pinRole}" compiled from `
+            + `${SEEDLING_REPO}, so no one recompiler is pinned`);
+    } else {
+        const [d] = defaults;
+        const recompiler = d.source?.recompiler;
+        if (typeof recompiler !== 'string' || !FULL_SHA.test(recompiler)) {
+            row('FAIL', `(iv) the ${pinRole} build ${d.name} records source.recompiler ${JSON.stringify(recompiler ?? null)}, `
+                + 'not a full SHA — the manifest must name the SWFRecomp-CC commit it was built with');
+        } else {
+            const equal = commit === recompiler;
+            row(equal ? 'PASS' : 'FAIL',
+                `(iv) swfrecomp-browser's source.commit ${commit} ${equal ? 'EQUALS' : 'is NOT'} the ${pinRole} build `
+                + `${d.name}'s source.recompiler ${recompiler}` + (equal ? '' : ` — ${RERELEASE}`));
+        }
+    }
+
+    // (iv-b) a page-only release: its build inputs did not move
+    const unchanged = release.source.buildInputsUnchanged;
+    if (unchanged === undefined) {
+        row('PASS', '(iv-b) no source.buildInputsUnchanged: the release\'s page and built files come from source.commit itself');
+        return;
+    }
+    const problems = [];
+    if (unchanged?.from !== commit) {
+        problems.push(`its from ${JSON.stringify(unchanged?.from ?? null)} is not source.commit ${short(commit)}`);
+    }
+    if (!Array.isArray(unchanged?.diff)) {
+        problems.push(`its diff is ${JSON.stringify(unchanged?.diff ?? null)}, not a list of paths`);
+    } else {
+        const outside = unchanged.diff.filter((p) => !Object.prototype.hasOwnProperty.call(BUILD_INPUT_ALLOWLIST, p));
+        if (outside.length) problems.push(`its diff names ${outside.join(', ')}, outside this checker's allowlist`);
+    }
+    row(problems.length ? 'FAIL' : 'PASS',
+        problems.length
+            ? `(iv-b) source.buildInputsUnchanged does not hold: ${problems.join('; ')} — ${RERELEASE}`
+            : `(iv-b) source.buildInputsUnchanged holds: from = source.commit, and its diff `
+                + `(${unchanged.diff.length} path(s)${unchanged.diff.length ? `: ${unchanged.diff.join(', ')}` : ''}) `
+                + `is inside this checker's allowlist, to ${short(unchanged.to)}`);
 }
 
 async function main() {

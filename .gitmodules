@@ -27,3 +27,6 @@
 	path = frontend/modules/bulletml-dodge
 	url = https://github.com/PeerInfinity/bulletml-dodge.git
 	branch = substrate
+[submodule "frontend/modules/swfRecompilerPanel/browser"]
+	path = frontend/modules/swfRecompilerPanel/browser
+	url = https://github.com/PeerInfinity/swfrecomp-browser.git
