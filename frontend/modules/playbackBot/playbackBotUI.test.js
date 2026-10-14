@@ -1985,6 +1985,32 @@ describe('PlaybackBotUI — direct play and blocked events (loop-mode-bot S1)', 
         expect(bot.getStatus()).toMatch(/does not play loop mode yet/);
     });
 
+    it('the control bar shows the bot running: Stop enabled while it plays, Play back once it ends', async () => {
+        const { bot } = makeWorld({ refuse: (ev) => ev === 'user:regionMove' });
+        const button = (title) => bot.getElement().queryAll((el) => el.tagName === 'BUTTON' && el.title === title)[0];
+        expect(button('Stop').disabled).toBe(true);
+        expect(button('Play').disabled).toBe(false);
+        // The refused move parks the walk (blocked), so the bot is still playing.
+        await bot.play();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/blocked: the move/));
+        expect(bot.isActive()).toBe(true);
+        expect(button('Stop').disabled).toBe(false);
+        expect(button('Play').disabled).toBe(true);
+        button('Stop').onclick();
+        expect(bot.isActive()).toBe(false);
+        expect(button('Stop').disabled).toBe(true);
+        expect(button('Play').disabled).toBe(false);
+    });
+
+    it('a walk that finishes on its own hands the bar back to Play', async () => {
+        const { bot } = makeWorld();
+        const button = (title) => bot.getElement().queryAll((el) => el.tagName === 'BUTTON' && el.title === title)[0];
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/^finished/));
+        expect(button('Stop').disabled).toBe(true);
+        expect(button('Play').disabled).toBe(false);
+    });
+
     it('a region with a sidecar never plays directly', async () => {
         const { bot, world } = makeWorld();
         bot._getRulesJson = () => ({ preset_sidecars: { 1: { region_a: { substrate: 'maze' } } } });
