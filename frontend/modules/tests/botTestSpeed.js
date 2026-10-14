@@ -12,7 +12,9 @@
  *    the run. Mana is charged per game second, so the run's costs are unchanged.
  *
  * Neither touches the person's SAVED settings: Instant flags set here are removed again (only the ones this set), and
- * Noiz2sa's speed is applied to the trainer service in memory and restored from the saved setting.
+ * Noiz2sa's speed is applied to the trainer service in memory and restored from the saved setting. A Bot walk's
+ * `instant()` is STICKY in the game (jta's setInstantMode has no unset of its own), so the restore also turns it off
+ * on each substrate whose blocks it ticked — what the next non-Instant Bot walk would do.
  */
 import { resolveQueueBlocks } from '../loops/blockIdentity.js';
 
@@ -22,9 +24,11 @@ const NOIZ2SA_BOT_SPEED_KEY = 'moduleSettings.noiz2saSubstrate.botSpeed';
 /**
  * Start the speed-up. → `restore()` (async), which undoes it. Dependencies are injected so the logic is unit-tested:
  * `eventBus` ({subscribe, unsubscribe}), `getLoopState()`, `getNoiz2saService()` (→ the trainer service or null),
- * `readSavedSetting(key, fallback)` (async).
+ * `readSavedSetting(key, fallback)` (async), `controllerFor(region)` (→ the region's substrate playback controller).
  */
-export function startBotTestSpeed({ eventBus, getLoopState, getNoiz2saService = () => null, readSavedSetting = null }) {
+export function startBotTestSpeed({
+    eventBus, getLoopState, getNoiz2saService = () => null, readSavedSetting = null, controllerFor = () => null,
+}) {
     const mine = new Map(); // blockKey → {region, instance}: the Instant flags this set
     let noiz2saBefore = null;
 
@@ -53,8 +57,16 @@ export function startBotTestSpeed({ eventBus, getLoopState, getNoiz2saService = 
     return async function restore() {
         eventBus.unsubscribe('loopState:queueUpdated', apply, 'tests');
         const loopState = getLoopState?.();
-        for (const { region, instance } of mine.values()) loopState?.setBlockInstant?.(region, instance, false);
+        const controllers = new Set();
+        for (const { region, instance } of mine.values()) {
+            loopState?.setBlockInstant?.(region, instance, false);
+            const controller = controllerFor(region);
+            if (controller) controllers.add(controller);
+        }
         mine.clear();
+        for (const controller of controllers) {
+            try { controller.instant?.(false); } catch { /* a controller that is gone keeps nothing */ }
+        }
         const service = getNoiz2saService?.();
         if (service?.settings && noiz2saBefore !== null) {
             let speed = noiz2saBefore;
@@ -68,16 +80,25 @@ export function startBotTestSpeed({ eventBus, getLoopState, getNoiz2saService = 
 
 /** The app's own dependencies, for the in-app rows. */
 export async function startAppBotTestSpeed() {
-    const [{ default: eventBus }, { centralRegistry }, { default: settingsManager }, noiz2sa] = await Promise.all([
-        import('../../app/core/eventBus.js'),
-        import('../../app/core/centralRegistry.js'),
-        import('../../app/core/settingsManager.js'),
-        import('../noiz2saSubstrate/index.js'),
-    ]);
+    const [{ default: eventBus }, { centralRegistry }, { default: settingsManager }, noiz2sa, { substrateRegistry }] =
+        await Promise.all([
+            import('../../app/core/eventBus.js'),
+            import('../../app/core/centralRegistry.js'),
+            import('../../app/core/settingsManager.js'),
+            import('../noiz2saSubstrate/index.js'),
+            import('../shared/procgen/substrateRegistry.js'),
+        ]);
+    const getLoopState = () => {
+        try { return centralRegistry.getPublicFunction('loops', 'getLoopState')?.() ?? null; } catch { return null; }
+    };
     return startBotTestSpeed({
         eventBus,
-        getLoopState: () => {
-            try { return centralRegistry.getPublicFunction('loops', 'getLoopState')?.() ?? null; } catch { return null; }
+        getLoopState,
+        controllerFor: (region) => {
+            try {
+                const id = getLoopState()?._lookupSubstrateId?.(region);
+                return id ? substrateRegistry.get(id)?.getPlaybackController?.() ?? null : null;
+            } catch { return null; }
         },
         // Only while the module is on: an off module's trainer is not the page's to touch.
         getNoiz2saService: () => {

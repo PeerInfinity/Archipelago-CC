@@ -38,7 +38,9 @@ describe('startBotTestSpeed', () => {
     it('ticks Instant on the blocks whose Bot honours it, again on every queue write, and removes only its own', async () => {
         const ls = loopState({ honours: ['J1', 'J2'], queue: [move('Menu', 'J1'), move('J1', 'M1')] });
         const eventBus = bus();
-        const restore = startBotTestSpeed({ eventBus, getLoopState: () => ls });
+        const calls = [];
+        const jta = { instant: (on) => calls.push(on) };
+        const restore = startBotTestSpeed({ eventBus, getLoopState: () => ls, controllerFor: (r) => (r.startsWith('J') ? jta : null) });
         const keys = () => [...ls.blockInstantStates.keys()].sort();
         expect(keys()).toEqual(['J1#1']);
 
@@ -50,6 +52,8 @@ describe('startBotTestSpeed', () => {
 
         await restore();
         expect(keys()).toEqual(['J2#1']);
+        // The game's instant mode is sticky: turned off once per substrate it ticked.
+        expect(calls).toEqual([false]);
         expect(eventBus.count('loopState:queueUpdated')).toBe(0);
     });
 

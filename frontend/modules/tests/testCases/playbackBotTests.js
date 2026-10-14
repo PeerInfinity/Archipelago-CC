@@ -497,6 +497,11 @@ async function playbackBotLoopModeWorld(testController, { quotas, start, seed, s
   } finally {
     bot.stop();
     await restoreSpeed();
+    try {
+      const { getJtaIframe } = await import('../../jtaSubstrateWrapper/test-helpers.js');
+      testController.reportCondition('the JtA game is not left in instant mode',
+        getJtaIframe()?.contentWindow?.isInstantMode?.() !== true);
+    } catch (e) { testController.log(`instant check failed: ${e}`); }
     loopState.setInstantMode(instantBefore);
     testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
   }
