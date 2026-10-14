@@ -141,6 +141,9 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // ⛓ Seedling fidelity MOVINGWAIT: the `pace` row (`solverBot.planPacedWait`, behind `MOVING_WAIT`) — a LATCHED
     // wait inside a lobber's reach that paces an out-and-back cycle instead of standing still.
     'pace',
+    // ⛓ Seedling fidelity LAPSECOST D1: the `narrow` rung (`solverBot`'s ladder, behind `strikeIframeLapse` ON) — the
+    // corridor walked with the pre-lapse strike admissions, listed in the slice that first drives it.
+    'narrow',
 ]);
 
 const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
