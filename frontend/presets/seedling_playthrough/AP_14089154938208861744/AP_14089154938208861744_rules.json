@@ -11408,6 +11408,19 @@
   "starting_items": {
     "1": []
   },
+  "region_atlas": {
+    "1": {
+      "atlas_id": "seedling-db0a4f7f",
+      "game": "seedling",
+      "map_document": "seedling-map.json"
+    }
+  },
+  "flash_panel": {
+    "1": {
+      "config": "seedling.json",
+      "wasm": "seedling_bot_ap_p4f/game.html"
+    }
+  },
   "preset_sidecars": {
     "1": {
       "level_0__r1c6": {

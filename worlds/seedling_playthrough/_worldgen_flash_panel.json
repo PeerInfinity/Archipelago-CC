@@ -1,0 +1,4 @@
+{
+  "config": "seedling.json",
+  "wasm": "seedling_bot_ap_p4f/game.html"
+}
