@@ -169,9 +169,36 @@ def test_generator_writes_the_players_block_alone_or_none(tmp_path):
     assert json.loads(written.read_text(encoding="utf-8")) == source["procgen_metadata"]["2"]
     assert not (tmp_path / "p3" / "_worldgen_procgen_metadata.json").exists()
     assert not (tmp_path / "p2" / "_worldgen_loop_costs.json").exists()  # the fixture carries no loop_costs
+    for name in ("_worldgen_flash_panel.json", "_worldgen_region_atlas.json"):
+        assert not (tmp_path / "p2" / name).exists(), name  # nor the page blocks
+
+
+PLAYTHROUGH = ROOT / "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json"
+
+
+def test_generator_writes_the_slots_page_blocks_and_not_provenance(tmp_path):
+    """The write half of the page blocks, on the seedling_playthrough source
+    (AP_1): `flash_panel` and `region_atlas` are per-player maps, and the
+    package files hold the SLOT's block. `provenance` describes how the source
+    was made, so it is deliberately not carried."""
+    from world_generator.generator import WorldGenerator
+
+    source = json.loads(PLAYTHROUGH.read_text(encoding="utf-8"))
+    assert {"flash_panel", "region_atlas", "provenance"} <= set(source)  # the premise
+
+    gen = WorldGenerator(str(PLAYTHROUGH), output_dir=str(tmp_path / "sp"), force=True, player_id="1")
+    gen.load()
+    gen.generate()
+
+    for key in ("flash_panel", "region_atlas"):
+        written = tmp_path / "sp" / f"_worldgen_{key}.json"
+        assert json.loads(written.read_text(encoding="utf-8")) == source[key]["1"], key
+    assert not list((tmp_path / "sp").glob("_worldgen_provenance*"))
 
 
 SAMPLE_SIDECARS = {"region_a": {"substrate": "flash_seedling", "payload": {"level": 10}}}
+SAMPLE_FLASH_PANEL = {"config": "seedling.json", "wasm": "seedling_bot_ap_p4f/game.html"}
+SAMPLE_REGION_ATLAS = {"atlas_id": "seedling-db0a4f7f", "game": "seedling", "map_document": "seedling-map.json"}
 
 
 def test_a_package_without_the_worldgen_suffix_is_reinjected_by_presence(tmp_path, cleanup_fake_module):
@@ -185,6 +212,8 @@ def test_a_package_without_the_worldgen_suffix_is_reinjected_by_presence(tmp_pat
         "_worldgen_sidecars.json": SAMPLE_SIDECARS,
         "_worldgen_procgen_metadata.json": SAMPLE_METADATA,
         "_worldgen_loop_costs.json": SAMPLE_LOOP_COSTS,
+        "_worldgen_flash_panel.json": SAMPLE_FLASH_PANEL,
+        "_worldgen_region_atlas.json": SAMPLE_REGION_ATLAS,
     })
     handler = BaseGameExportHandler()
     assert not handler.is_worldgen_world(world)  # the premise: the suffix gate says no
@@ -196,6 +225,8 @@ def test_a_package_without_the_worldgen_suffix_is_reinjected_by_presence(tmp_pat
         "preset_sidecars": {"2": SAMPLE_SIDECARS},
         "procgen_metadata": {"2": SAMPLE_METADATA},
         "loop_costs": {"2": SAMPLE_LOOP_COSTS},
+        "flash_panel": {"2": SAMPLE_FLASH_PANEL},
+        "region_atlas": {"2": SAMPLE_REGION_ATLAS},
     }
 
 

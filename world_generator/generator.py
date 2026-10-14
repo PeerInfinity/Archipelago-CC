@@ -264,9 +264,12 @@ class WorldGenerator:
 
         # Preserve preset_sidecars (per-region playable payloads emitted
         # by the procgen pipeline) into a package-local JSON file. The
-        # generated __init__.py reads it back at export time and
-        # injects it into export_data so multiworld rules.json carries
-        # the sidecar through to every player's frontend. See
+        # export handler (BaseGameExportHandler.preprocess_world_data)
+        # reads it back at export time and injects it into export_data so
+        # multiworld rules.json carries the sidecar through to every
+        # player's frontend. It does so for ANY package that ships the
+        # file, with or without a `_worldgen` module suffix (the
+        # seedling_playthrough package has none). See
         # docs/json/developer/procgen/architecture.md §"The Python
         # round-trip".
         sidecars_all = source_json.get('preset_sidecars', {})
@@ -321,6 +324,29 @@ class WorldGenerator:
                 logger.info(f"Wrote loop costs to {loop_costs_path}")
             else:
                 logger.info(f"Would write: {loop_costs_path}")
+
+        # Preserve this player's flash_panel (which game page the flash
+        # panel boots) and region_atlas (the atlas id + map document the
+        # Seedling page and bot anchor on) the same way: both are per-player
+        # maps (`{"<p>": block}`), the package holds its ONE slot's block and
+        # the export handler re-injects it under the exporting player. Before
+        # this the round trip dropped both, so a Generate.py export of a
+        # Seedling world could not boot the wasm game. The source's
+        # `provenance` is NOT carried: it describes how the SOURCE document
+        # was made (no page reads it), so it would mislabel an export.
+        for key, filename in (
+            ('flash_panel', '_worldgen_flash_panel.json'),
+            ('region_atlas', '_worldgen_region_atlas.json'),
+        ):
+            block = source_json.get(key, {}).get(self.player_id)
+            if not block:
+                continue
+            block_path = output_dir / filename
+            if not dry_run:
+                block_path.write_text(json.dumps(block, indent=2), encoding='utf-8')
+                logger.info(f"Wrote {key} to {block_path}")
+            else:
+                logger.info(f"Would write: {block_path}")
 
         for filename, content in files.items():
             file_path = output_dir / filename
