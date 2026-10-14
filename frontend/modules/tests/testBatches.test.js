@@ -92,6 +92,13 @@ describe('testBatches', () => {
         expect(categoryInBatch('Tutorial walks: procgen', 'fast')).toBe(false);
     });
 
+    it('tutorials-procgen-loops claims the loop-mode procgen walk rows and asks for WebGPU (split from tutorials-procgen, 2026-10-12)', () => {
+        expect(categoryInBatch('Tutorial walks: procgen loops', 'tutorials-procgen-loops')).toBe(true);
+        expect(categoryInBatch('Tutorial walks: procgen loops', 'tutorials-procgen')).toBe(false);
+        expect(categoryInBatch('Tutorial walks: procgen loops', 'fast')).toBe(false);
+        expect(batchNeedsWebgpu('tutorials-procgen-loops')).toBe(true);
+    });
+
     it('seedling-js asks for WebGPU: its Loops Bot rows boot the wasm game (Seedling loop mode, 2026-10-11)', () => {
         expect(batchNeedsWebgpu('seedling-js')).toBe(true);
         expect(categoryInBatch('Seedling JS runtime', 'seedling-js')).toBe(true);
@@ -118,7 +125,7 @@ describe('testBatches', () => {
 
     describe('manual vs on push', () => {
         it('the user\'s manual batches are manual (rulings 2026-09-27, 2026-10-09, 2026-10-10)', () => {
-            expect(listManualBatches()).toEqual(expect.arrayContaining(['bot-walks', 'noiz2sa', 'runner', 'tutorials', 'tutorials-procgen', 'tutorials-tracker', 'tutorials-seedling']));
+            expect(listManualBatches()).toEqual(expect.arrayContaining(['bot-walks', 'noiz2sa', 'runner', 'tutorials', 'tutorials-procgen', 'tutorials-procgen-loops', 'tutorials-tracker', 'tutorials-seedling']));
         });
 
         it('on push = every batch not marked manual, the default among them', () => {

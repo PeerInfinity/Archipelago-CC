@@ -20,7 +20,7 @@ export const PROCGEN_LOOP_MODE_JTA = Object.freeze({
     summary: 'Generate a world of Journey to Ascension zones with loop mode on, see the loop panels, and watch the bot finish it.',
     track: 'procgen',
     status: 'in-progress',
-    firstFailingStep: 'bot-plays',
+    firstFailingStep: null,
     doc: null,
     intro: [
         { prose: '*Loop mode* turns a world into an incremental game: every action costs mana, and when the mana runs out the loop restarts — keeping what you have learned. *Journey to Ascension* (JtA) is an idle game whose zones make natural regions; this tutorial builds a world of them with loop mode on.' },
@@ -45,7 +45,9 @@ export const PROCGEN_LOOP_MODE_JTA = Object.freeze({
             id: 'play',
             title: 'Watch it played',
             blocks: [
-                ...botPlaysToTheEnd('bot-plays', { watch: { panel: 'jtaSubstrateWrapperPanel' }, watchName: 'JtA', how: 'work through the zones' }),
+                // Measured 2026-10-12 at a76788236d: the play takes ~185–195 s (13+ loops),
+                // past the default 180 s; it then finishes.
+                ...botPlaysToTheEnd('bot-plays', { watch: { panel: 'jtaSubstrateWrapperPanel' }, watchName: 'JtA', how: 'work through the zones', doneTimeoutMs: 300000 }),
             ],
         },
         {

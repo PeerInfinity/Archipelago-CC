@@ -196,8 +196,12 @@ export function loadPresetWorld(id, game, seed, title) {
     }];
 }
 
-/** Watch the Playback Bot play the loaded world to the end, in the Maze Room. */
-export function botPlaysToTheEnd(id, { watch = MAZE, watchName = 'Maze Room', how = 'walk the world' } = {}) {
+/**
+ * Watch the Playback Bot play the loaded world to the end, in the Maze Room.
+ * `doneTimeoutMs`: how long the play may take (a loop-mode world restarts its
+ * loops, so it plays longer than a plain one).
+ */
+export function botPlaysToTheEnd(id, { watch = MAZE, watchName = 'Maze Room', how = 'walk the world', doneTimeoutMs = 180000 } = {}) {
     const finished = (ctx) => ctx.text(botStatus).startsWith('finished');
     return [
         {
@@ -215,7 +219,7 @@ export function botPlaysToTheEnd(id, { watch = MAZE, watchName = 'Maze Room', ho
                 actions: [{ click: botButton('play') }, { activate: watch }],
                 done: (ctx) => ctx.seenSinceStep('running', () => !finished(ctx)) && finished(ctx),
                 failed: botCannotFinish,
-                doneTimeoutMs: 180000,
+                doneTimeoutMs,
             },
         },
     ];
