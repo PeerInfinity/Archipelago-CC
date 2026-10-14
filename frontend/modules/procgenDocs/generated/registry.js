@@ -1671,10 +1671,11 @@ export const REGISTRY = frz({
                 {
                     "id": "noiz2sa",
                     "present": true,
-                    "short": "{noiz2saFinalSpan}",
+                    "short": "{noiz2saFinalSpan, noiz2saVictorySkill}",
                     "type": "object",
                     "value": [
-                        "noiz2saFinalSpan"
+                        "noiz2saFinalSpan",
+                        "noiz2saVictorySkill"
                     ]
                 },
                 {

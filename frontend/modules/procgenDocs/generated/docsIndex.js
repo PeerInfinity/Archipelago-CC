@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1077,
         "indexHeadings": 2,
-        "lines": 28562,
+        "lines": 28563,
         "pages": 4,
-        "words": 378078
+        "words": 378245
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -458,7 +458,7 @@ export const DOCS_INDEX = frz({
             "file": "noiz2sa.md",
             "h1": "Noiz2sa Substrate",
             "headings": 13,
-            "lines": 175,
+            "lines": 176,
             "links": [
                 "flash.md",
                 "loop-recording.md",
@@ -466,7 +466,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/noiz2sa.md",
-            "words": 7453
+            "words": 7620
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",

@@ -8,7 +8,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    DEFAULT_FINAL_SPAN, TARGET_FINAL_SKILL, DEFAULT_POINTS_PER_MANA, FINAL_SPAN_PARAM,
+    DEFAULT_FINAL_SPAN, TARGET_FINAL_SKILL, DEFAULT_POINTS_PER_MANA, FINAL_SPAN_PARAM, VICTORY_SKILL_PARAM, victorySkillOf,
     skillForPoints, predictedSkill, pointsForSkill, pointsPerManaFor, noiz2saWalkEvents, checkSpanFor, pickShrinking,
     finalRegionOf, victoryLocationOf, VICTORY_ITEM, manaBeforeVictory,
     planNoiz2saWorld, applyNoiz2saPricing, priceNoiz2saRegions,
@@ -252,11 +252,11 @@ describe('⚖ the FINAL region is Victory\'s (follow-up)', () => {
         const events = [ev('region', 'N1'), ev('region', 'N2'), ev('region', 'N3')];
         expect(finalRegionOf({ events, victoryLocation: 'N2__check1', regionOfLocation, isNoiz2sa: isN, reachedOrder: ['N1', 'N2', 'N3'] })).toBe('N2');
     });
-    it('Victory elsewhere: the last Noiz2sa region the walk reaches before the step that checks it', () => {
-        const events = [ev('region', 'N1'), ev('region', 'N2'), ev('spend', 'N2', { checks: 'M__v' }), ev('region', 'N3')];
-        expect(finalRegionOf({ events, victoryLocation: 'M__v', regionOfLocation, isNoiz2sa: isN, reachedOrder: ['N1', 'N2', 'N3'] })).toBe('N2');
-        // no step checks it (an event, or not on the walk): the last reached
-        expect(finalRegionOf({ events, victoryLocation: 'M__x', regionOfLocation, isNoiz2sa: isN, reachedOrder: ['N1', 'N2', 'N3'] })).toBe('N3');
+    it('⚖ option 3 (2026-10-14): Victory elsewhere, or nowhere, or on an unreached region — no final region', () => {
+        const reachedOrder = ['N1', 'N2', 'N3'];
+        expect(finalRegionOf({ victoryLocation: 'M__v', regionOfLocation, isNoiz2sa: isN, reachedOrder })).toBe(null);
+        expect(finalRegionOf({ victoryLocation: null, regionOfLocation, isNoiz2sa: isN, reachedOrder })).toBe(null);
+        expect(finalRegionOf({ victoryLocation: 'N9__v', regionOfLocation, isNoiz2sa: isN, reachedOrder })).toBe(null);
     });
     it('VICTORY_ITEM is the substrate\'s victory item', () => {
         expect(VICTORY_ITEM).toBe(NOIZ2SA_VICTORY_ITEM_NAME);
@@ -276,6 +276,54 @@ describe('⚖ the FINAL region is Victory\'s (follow-up)', () => {
 });
 const finalScenesOf = () => spanLength(parseSpan(DEFAULT_FINAL_SPAN));
 
+describe('⚖ option 3 (2026-10-14): only a Noiz2sa region holding Victory is final', () => {
+    // the procgen-loop-mode-everything shape: Menu → R0, the world's SOLE Noiz2sa region and the only way on; Victory on
+    // a later region of another substrate. Before, R0 was "the last Noiz2sa region before Victory": final, priced at
+    // skill 95 on 10:7–10:boss — a wall at skill 0 on the route out of Menu.
+    const soleNoiz2sa = () => {
+        const rules = world();
+        for (let i = 1; i < N; i++) delete rules.preset_sidecars[1][`R${i}`];
+        rules.regions[1].R0.locations[0].item = { name: 'Noiz2sa Star' };
+        rules.regions[1].R5.locations[0].item = { name: 'Victory' };
+        return rules;
+    };
+    it('a sole Noiz2sa region with Victory elsewhere is NOT final: one scene by the 50% rule at its first-reach skill', () => {
+        const rules = soleNoiz2sa();
+        const plan = planNoiz2saWorld({ rulesJson: rules, sphereLog: sphereLog(), playerId: '1' });
+        expect(plan.finalRegion).toBe(null);
+        expect(plan.regions).toHaveLength(1);
+        const r0 = plan.regions[0];
+        expect(r0).toMatchObject({ region: 'R0', final: false, pricedAt: 'first-reach', mana: 0, skill: 0, target: 1, scenes: 1 });
+        expect(r0.span).toEqual(pickShrinking(1, 0).span);
+        expect(r0.p).toBeGreaterThan(0.3);
+        applyNoiz2saPricing(rules, '1', plan);
+        expect(rules.preset_sidecars[1].R0.playable_payload.pricing).toMatchObject({ final: false, pricedAt: 'first-reach' });
+        expect(showSpan(rules.preset_sidecars[1].R0.playable_payload.move)).not.toBe(DEFAULT_FINAL_SPAN);
+    });
+    it('Victory ON a Noiz2sa region: that region is final, plays the final span at the Victory skill setting', () => {
+        for (const victorySkill of [TARGET_FINAL_SKILL, 80]) {
+            const rules = world();
+            rules.sphere_log = sphereLog();
+            const plan = priceNoiz2saRegions({ rulesJson: rules, sphereLog: rules.sphere_log, playerId: '1',
+                params: { [VICTORY_SKILL_PARAM]: victorySkill } });
+            const fin = plan.regions.find((r) => r.final);
+            expect(fin.region).toBe('R5');
+            expect(plan.victorySkill).toBe(victorySkill);
+            expect(plan.pointsPerMana).toBe(pointsPerManaFor(plan.paceMana, { target: victorySkill }));
+            expect(fin.skill).toBeGreaterThanOrEqual(victorySkill);
+            expect(fin.skill).toBeLessThan(victorySkill + 1);
+            expect(showSpan(fin.span)).toBe(DEFAULT_FINAL_SPAN);
+            expect(fin.p).toBeCloseTo(spanDifficulty(fin.span, fin.skill).p, 10);
+        }
+    });
+    it('victorySkillOf: an integer 1–100 from the bag, else the default', () => {
+        expect(victorySkillOf(null)).toBe(TARGET_FINAL_SKILL);
+        expect(victorySkillOf({ [VICTORY_SKILL_PARAM]: 80 })).toBe(80);
+        expect(victorySkillOf({ [VICTORY_SKILL_PARAM]: '70' })).toBe(70);
+        for (const bad of [0, 101, 50.5, 'x', null]) expect(victorySkillOf({ [VICTORY_SKILL_PARAM]: bad })).toBe(TARGET_FINAL_SKILL);
+    });
+});
+
 describe('the payloads and the pipeline hook', () => {
     it('applyNoiz2saPricing writes move, check, the rate and pricing; the payload still loads', () => {
         const rules = world();
@@ -294,7 +342,9 @@ describe('the payloads and the pipeline hook', () => {
     });
     it('the registry hook reads the final span from the params bag', () => {
         expect(substrateRegistryEntry.priceRegions).toBe(priceNoiz2saRegions);
-        expect(substrateRegistryEntry.defaultProcgenParams).toEqual({ [FINAL_SPAN_PARAM]: DEFAULT_FINAL_SPAN });
+        expect(substrateRegistryEntry.defaultProcgenParams).toEqual({
+            [FINAL_SPAN_PARAM]: DEFAULT_FINAL_SPAN, [VICTORY_SKILL_PARAM]: TARGET_FINAL_SKILL,
+        });
         const rules = world();
         rules.sphere_log = sphereLog();
         priceNoiz2saRegions({ rulesJson: rules, sphereLog: rules.sphere_log, playerId: '1', params: { [FINAL_SPAN_PARAM]: '9:boss' } });
