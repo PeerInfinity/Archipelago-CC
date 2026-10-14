@@ -12,6 +12,7 @@
  * world that was loaded before it.
  */
 import { registerTest } from '../testRegistry.js';
+import { startAppBotTestSpeed } from '../botTestSpeed.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import eventBus from '../../../app/core/eventBus.js';
 import { TUTORIALS } from '../../tutorials/content/index.js';
@@ -314,6 +315,8 @@ async function tutorialWalkRow(tc, tutorial) {
     const loopModeBefore = loopModeActive();
     const ui = await freshPanel(tc, { autoAdvance: false, animateCursor: false, showOutline: false });
     if (!ui) return tc.getOverallResult();
+    // A bot step plays at test speed (botTestSpeed.js); the person's saved settings are untouched.
+    const restoreSpeed = await startAppBotTestSpeed();
     try {
         ui.start(tutorial.id);
         const outcome = await walkTutorial(tutorial, {
@@ -345,6 +348,7 @@ async function tutorialWalkRow(tc, tutorial) {
         tc.log?.(`${tutorial.id}: ${verdict.message}`);
         tc.reportCondition(`${tutorial.id} — ${verdict.message}`, verdict.ok);
     } finally {
+        await restoreSpeed();
         await restore(ui, settings);
         restoreActiveTabs(tabs);
         restorePipelineSetup(pipelineSetup, tc);
