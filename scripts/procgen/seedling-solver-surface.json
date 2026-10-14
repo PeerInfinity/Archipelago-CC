@@ -5404,6 +5404,60 @@
     },
     {
       "surface": "import",
+      "name": "REFUGE_ETA_CUT",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 371,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The switch (hammer-phase RE; OFF, SEEDLING_REFUGE_ETA_CUT=1 opts in) under which deriveRefuge stops a later candidate's preview once it cannot beat the best held (previewWalk's stopWhen); a behaviour switch: a throw past the cut in a losing candidate is not raised, and the preview counts change. OFF every candidate is previewed as before."
+    },
+    {
+      "surface": "import",
+      "name": "REFUGE_ETA_CUT_COUNTS",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 406,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 2
+      },
+      "sites": 2,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "hammer-phase RE's instrument: how many refuge previews ran with the switch ON and how many the cut stopped; written only with the switch ON, read by nothing that decides."
+    },
+    {
+      "surface": "import",
+      "name": "refugeEtaCut",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 397,
+      "class": "seedling",
+      "form": "function",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The refuge cut as a previewWalk stopWhen: false for the first eta samples, true from the eta+1-th on (a walk that arrives at the best's ETA is never stopped, so a tie reaches the clearance test)."
+    },
+    {
+      "surface": "import",
       "name": "sameValue",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
       "line": 231,
