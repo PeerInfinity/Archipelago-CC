@@ -422,6 +422,25 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default; `SEEDLING_LAVA_CHAIN_PLAYER_HIT=0|1` for a node measurement.
      */
     lavaChainPlayerHit: false,
+    /**
+     * fidelity CEREMONYSHOVE D2 — A PICKUP CEREMONY'S PHASE A IS STEPPED FOR THE CHASERS AND THE PLAYER'S OWN LINES
+     * (`levelRun.stepCeremonyLumpNow`), not spent as a lump.
+     *
+     *     Pickup.as:91-108   pick_up(): Game.freezeObjects = true; specialTimer-- … (150 frames, then the text)
+     *     Player.as:529-532  addShield(); shieldBump(); checkDrowning(); freezeStep();   ← ABOVE the gated move
+     *     Player.as:1697     shieldBump(): if (shieldObj && v.length > 0) … o.knockback(shieldForce, (x, y))
+     *     Enemy.as:247       knockback(): v += 5·unit(body − player)            ← no freeze gate
+     *     Enemy.update       terrain switch, Mobile.death()'s fade, hitUpdate()  ← no freeze gate (the move is gated)
+     *
+     * The player's `v` is frozen non-zero, so a body inside the moving shield box is shoved on EVERY dead frame; the
+     * game's chasers drain their i-frames and finish a death fade through the same frames, and so does the player's
+     * own `hitUpdate`. MEASURED on p4f (`ceremonyshove-l30-*`): the dead frames fall between the observations one and
+     * two ticks after the ceremony starts, and they shove 149 times (745.0 px/tick = 149 × 5 on two witnesses).
+     * ON: those frames are stepped there (chasers, the shove, the player's i-frame), the dialogue's frozen ticks step
+     * the chasers too, and `assertNoCeremonyBesideLiveChaser` stands down for what is now stepped. OFF: byte-identical.
+     * ⛔ OFF by default (no licence yet); `SEEDLING_CEREMONY_SHOVE=0|1` for a node measurement.
+     */
+    ceremonyShove: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -514,6 +533,9 @@ if (globalThis.process?.env?.SEEDLING_WAYPOINT_SLIDE === '1') CONTACT_FIDELITY.w
 if (globalThis.process?.env?.SEEDLING_WAYPOINT_SLIDE === '0') CONTACT_FIDELITY.waypointSlide = false;
 if (globalThis.process?.env?.SEEDLING_LAVA_CHAIN_PLAYER_HIT === '1') CONTACT_FIDELITY.lavaChainPlayerHit = true;
 if (globalThis.process?.env?.SEEDLING_LAVA_CHAIN_PLAYER_HIT === '0') CONTACT_FIDELITY.lavaChainPlayerHit = false;
+// ⛓ fidelity CEREMONYSHOVE: `SEEDLING_CEREMONY_SHOVE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CEREMONY_SHOVE === '1') CONTACT_FIDELITY.ceremonyShove = true;
+if (globalThis.process?.env?.SEEDLING_CEREMONY_SHOVE === '0') CONTACT_FIDELITY.ceremonyShove = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
