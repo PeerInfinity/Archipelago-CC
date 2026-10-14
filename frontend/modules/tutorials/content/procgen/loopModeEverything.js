@@ -20,7 +20,7 @@ export const PROCGEN_LOOP_MODE_EVERYTHING = Object.freeze({
     summary: 'Mix every substrate — Idle Loops included — into one loop-mode world sharing one mana pool, and watch the bot finish it.',
     track: 'procgen',
     status: 'in-progress',
-    firstFailingStep: 'bot-plays',
+    firstFailingStep: null,
     doc: null,
     intro: [
         { prose: 'The last procgen tutorial puts it all together: JtA zones, a generated Seedling room, mazes, a text adventure, a bounce zone, a Noiz2sa stage and *Idle Loops* — another idle game, which only runs in loop mode — in one world, every action spending the same mana.' },
