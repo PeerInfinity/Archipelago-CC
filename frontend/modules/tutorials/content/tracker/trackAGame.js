@@ -2,7 +2,7 @@
  * Tracking: the base tutorial — track a real game (catalogue "Tracker (ALTTP)
  * base"; it replaces the quick-start guide's steps). ⚖ The user, 2026-10-10:
  * track BY HAND first, so the walk measures every in-app step, and connect to
- * a LOCAL server last. In progress: its walk row measures `firstFailingStep`.
+ * a LOCAL server last. Needs a terminal: its walk row stops at `serve`.
  * Shape: ../../tutorialShape.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -23,9 +23,8 @@ export const TRACKER_TRACK_A_GAME = Object.freeze({
     title: 'Track a game',
     summary: 'Load a game\'s logic, track items and checks by hand, see what is reachable, and connect to your multiworld\'s server.',
     track: 'tracker',
-    status: 'in-progress',
-    firstFailingStep: 'serve',
-    doc: null,
+    status: 'terminal', // ⚖ the user, 2026-10-14 (seedling-tut-tc): its walk stops at the first terminal step
+    doc: 'docs/json/user/tutorials/tracker-track-a-game.md',
     intro: [
         { prose: 'The app is also a tracker for an ordinary Archipelago game: it knows the game\'s logic, so it can show which locations you can reach with the items you have — and, connected to the multiworld\'s server, it follows your game as you play.' },
         { prose: `This tutorial uses an exported seed of *${ALTTP.title}*; every step works the same with your own game's logic.` },

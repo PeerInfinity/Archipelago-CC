@@ -1,8 +1,8 @@
 /**
  * The generator games in a multiworld (catalogue M2, D2, A3): the game on a
  * LOCAL server (⚖ the user, 2026-10-10), connected from the Client, played in
- * its panels. The terminal steps have no stand-in, so each walk STOPS at its
- * install step until a harness can start MultiServer.py.
+ * its panels. Needs a terminal: the terminal steps have no stand-in, so each
+ * walk STOPS at its install step until a harness can start MultiServer.py.
  * Shape: ../../tutorialShape.js; shared steps: ../steps/.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -20,9 +20,8 @@ function multiworldTutorial({ id, title, game, gameName, modules, modeUrl, modeN
         title,
         summary,
         track: 'games',
-        status: 'in-progress',
-        firstFailingStep: 'mw-install', // the first terminal step (no stand-in)
-        doc: null,
+        status: 'terminal', // ⚖ the user, 2026-10-14 (seedling-tut-tc): its walk stops at the first terminal step
+        doc: `docs/json/user/tutorials/${id}.md`,
         intro: [
             { prose: intro },
             { prose: 'Hosting is the same for every game: a player file, `Generate.py`, a local `MultiServer.py`, and the app\'s **Console** connects to it. Each location you check is sent to the server.' },
