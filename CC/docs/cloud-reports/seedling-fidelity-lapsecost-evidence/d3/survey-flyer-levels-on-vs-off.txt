@@ -1,0 +1,4 @@
+counts {'flyerOFF': {'REFUSED': 5, 'SOLVED': 1}, 'flyerON': {'REFUSED': 5, 'SOLVED': 1}}
+step  204 L101  text moves (REFUSED)
+step  208 L105  flyerOFF=('SOLVED', 264)  flyerON=('SOLVED', 240)
+2 movers
