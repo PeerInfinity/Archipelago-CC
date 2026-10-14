@@ -6,11 +6,11 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { REPO, renderAll, renderGuides } from '../../../scripts/tutorials/generate-tutorial-docs.mjs';
+import { REPO, hasGuide, renderAll, renderGuides } from '../../../scripts/tutorials/generate-tutorial-docs.mjs';
 import { FEATURES, NOT_COVERED_YET, NO_TUTORIAL, PLANNED_PANELS } from './content/coverage.js';
 import { TUTORIALS } from './content/index.js';
 import { generatedMarker, tutorialMarkdown } from './tutorialMarkdown.js';
-import { blocksFor, panelSteps, panelsCovered, validateTutorial } from './tutorialShape.js';
+import { blocksFor, panelSteps, panelsCovered, terminalStep, validateTutorial } from './tutorialShape.js';
 import { ratchetVerdict, walkTutorial } from './tutorialWalk.js';
 
 const tiny = (over = {}) => ({
@@ -52,6 +52,7 @@ describe('validateTutorial', () => {
         ['a ready tutorial with a firstFailingStep', { firstFailingStep: 'a' }],
         ['an in-progress tutorial with no record', { status: 'in-progress' }],
         ['a record naming no step', { status: 'in-progress', firstFailingStep: 'zz' }],
+        ['a terminal tutorial with no outside step', { status: 'terminal' }],
     ])('refuses %s', (_, over) => {
         expect(() => validateTutorial(tiny(over))).toThrow(/tutorial/);
     });
@@ -114,6 +115,28 @@ describe('outside steps', () => {
     });
 });
 
+/** tiny() with outside steps after `a`: `o1` (given a stand-in when `standIn`), then `o2` with none. */
+const withTerminal = (over = {}, { standIn = false } = {}) => {
+    const t = tiny({ status: 'terminal', ...over });
+    t.sections[0].blocks.splice(2, 0,
+        { step: { id: 'o1', text: 'Generate.', outside: true, command: 'python Generate.py', ...(standIn ? { standIn: async () => {} } : {}) } },
+        { step: { id: 'o2', text: 'Serve.', outside: true, command: 'python MultiServer.py' } });
+    return t;
+};
+
+describe('a terminal tutorial (⚖ 2026-10-14)', () => {
+    it('is valid with an outside step that has no stand-in, and records no firstFailingStep', () => {
+        expect(() => validateTutorial(withTerminal())).not.toThrow();
+        expect(() => validateTutorial(withTerminal({ firstFailingStep: 'o1' }))).toThrow(/no firstFailingStep/);
+    });
+
+    it('terminalStep is the first outside step with no stand-in (derived, not recorded)', () => {
+        expect(terminalStep(withTerminal())).toMatchObject({ index: 1, step: { id: 'o1' } });
+        expect(terminalStep(withTerminal({}, { standIn: true }))).toMatchObject({ index: 2, step: { id: 'o2' } });
+        expect(terminalStep(tiny())).toBeNull();
+    });
+});
+
 describe('the ratchet (tutorialWalk.js)', () => {
     // a, b, c walk; b is the record in the in-progress variant.
     const draft = (record) => tiny({ status: 'in-progress', firstFailingStep: record });
@@ -156,6 +179,20 @@ describe('the ratchet (tutorialWalk.js)', () => {
         expect(ratchetVerdict(t, stop)).toEqual({ ok: true, message: expect.stringMatching(/stops at step 4 of 4/) });
         const never = await walk(tiny(), null, { waitDone: async ({ step }) => step.id !== 'b' });
         expect(never).toMatchObject({ end: 'failed', stepId: 'b', why: 'its done check never held' });
+    });
+
+    it('a terminal tutorial passes when it stops exactly at terminalStep', async () => {
+        const t = withTerminal({}, { standIn: true });
+        const out = await walk(t, null);
+        expect(out).toMatchObject({ end: 'stopped', stepId: 'o2' });
+        expect(ratchetVerdict(t, out)).toEqual({ ok: true, message: expect.stringMatching(/^needs a terminal: stops at step 3 of 5 \(o2\)/) });
+    });
+
+    it('a terminal tutorial that ends earlier is a REGRESSION; one that completes can be ready', async () => {
+        const t = withTerminal();
+        const v = ratchetVerdict(t, await walk(t, 'a'));
+        expect(v).toEqual({ ok: false, message: expect.stringMatching(/^REGRESSION: it fails at step 1 .*stops at step 2 \(o1\)/) });
+        expect(ratchetVerdict(t, { end: 'complete' })).toEqual({ ok: false, message: expect.stringMatching(/can be ready \(ask the user\)/) });
     });
 
     it('runs an outside step\'s stand-in instead of performing it', async () => {
@@ -209,8 +246,8 @@ describe('the tutorials', () => {
         }
     });
 
-    it('only READY tutorials get a guide written', () => {
-        const ready = TUTORIALS.filter((e) => e.tutorial.doc && e.tutorial.status === 'ready').map((e) => e.tutorial.doc);
+    it('only READY and TERMINAL tutorials get a guide written', () => {
+        const ready = TUTORIALS.filter((e) => hasGuide(e.tutorial)).map((e) => e.tutorial.doc);
         expect(renderGuides().map((g) => g.doc)).toEqual(ready);
     });
 

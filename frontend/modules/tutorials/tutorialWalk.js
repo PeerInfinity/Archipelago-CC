@@ -15,10 +15,15 @@
  * run a terminal. It is recorded in `firstFailingStep` the same way, and the
  * verdict names it as a stop.
  *
+ * A TERMINAL tutorial (⚖ the user, 2026-10-14) records no step: its walk must
+ * stop exactly at `terminalStep` — the first outside step with no stand-in.
+ * Ending earlier is a regression; completing means every outside step gained a
+ * stand-in, so it can be ready (the user's call).
+ *
  * Pure: the walk is handed the functions that perform a step, so the loop and
  * the verdict are unit-tested in node; the in-app row hands it the panel's.
  */
-import { panelSteps } from './tutorialShape.js';
+import { panelSteps, terminalStep } from './tutorialShape.js';
 
 /**
  * Walk every step the panel walks, in order.
@@ -57,8 +62,9 @@ function describe(tutorial, outcome) {
 
 /**
  * Grade a walk against the tutorial's record → { ok, message }.
- * `ready` must complete. `in-progress` must end exactly at
- * `firstFailingStep` (null = it must complete).
+ * `ready` must complete. `terminal` must stop exactly at `terminalStep`.
+ * `in-progress` must end exactly at `firstFailingStep` (null = it must
+ * complete).
  */
 export function ratchetVerdict(tutorial, outcome) {
     const now = describe(tutorial, outcome);
@@ -68,6 +74,16 @@ export function ratchetVerdict(tutorial, outcome) {
             : { ok: false, message: `ready, but it ${now}` };
     }
     const steps = panelSteps(tutorial);
+    if (tutorial.status === 'terminal') {
+        const stop = terminalStep(tutorial, steps);
+        if (outcome.end === 'stopped' && outcome.index === stop?.index) {
+            return { ok: true, message: `needs a terminal: ${now}` };
+        }
+        if (outcome.end === 'complete') {
+            return { ok: false, message: `needs a terminal, but ${now}: it can be ready (ask the user)` };
+        }
+        return { ok: false, message: `REGRESSION: it ${now}; a terminal tutorial stops at step ${stop.index + 1} (${stop.step.id})` };
+    }
     const recorded = tutorial.firstFailingStep;
     const recordedIndex = recorded === null ? steps.length : steps.findIndex(({ step }) => step.id === recorded);
     const reached = outcome.end === 'complete' ? steps.length : outcome.index;

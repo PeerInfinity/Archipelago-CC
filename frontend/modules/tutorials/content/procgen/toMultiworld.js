@@ -1,9 +1,9 @@
 /**
  * Procgen: from a generated world to a multiworld (catalogue P2): the
  * pipeline's world → the APWorld Editor (look, edit) → a `.apworld` → a LOCAL
- * multiworld → the Client → the Playback Bot. In progress: its walk row
- * measures `firstFailingStep` — it STOPS at the first terminal step (no
- * stand-in, ⚖ the user, 2026-10-10) until a harness can start a server.
+ * multiworld → the Client → the Playback Bot. Needs a terminal: its walk row
+ * STOPS at the first terminal step (no stand-in, ⚖ the user, 2026-10-10)
+ * until a harness can start a server.
  * Shape: ../../tutorialShape.js; shared steps: ../steps/.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -25,9 +25,8 @@ export const PROCGEN_TO_MULTIWORLD = Object.freeze({
     title: 'Procgen: from a generated world to a multiworld',
     summary: 'Take a generated world through the APWorld Editor to a .apworld, play it on a local Archipelago server, and let the Playback Bot send the checks.',
     track: 'procgen',
-    status: 'in-progress',
-    firstFailingStep: 'mw-install',
-    doc: null,
+    status: 'terminal', // ⚖ the user, 2026-10-14 (seedling-tut-tc): its walk stops at the first terminal step
+    doc: 'docs/json/user/tutorials/procgen-to-multiworld.md',
     intro: [
         { prose: 'A world the pipeline generates is a real Archipelago game: the **APWorld Editor** can package it as a `.apworld`, which Archipelago\'s own generator and server load like any other game. This tutorial goes the whole way — generate, look, edit, package, host it locally, connect, and play.' },
         { prose: 'You need a copy of Archipelago (or this project\'s repository) on your computer for the middle part; everything else is in the browser.' },
