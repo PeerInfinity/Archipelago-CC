@@ -324,7 +324,7 @@ export const CONTACT_FIDELITY = {
      * survey 38307482259 vs 38307485234) — ⚖ (user, 2026-10-12, "Four now, strike later") it waits for a fix slice
      * (`SEEDLING_STRIKE_IFRAME_LAPSE=0|1` for a node measurement).
      */
-    strikeIframeLapse: false,
+    strikeIframeLapse: true,
     /**
      * fidelity L74LEG624 D2 — FALLROCK_POSTFALL: A CLEARED NON-ARENA `FallRock` IS BUILT AS THE GAME LEAVES IT.
      *
