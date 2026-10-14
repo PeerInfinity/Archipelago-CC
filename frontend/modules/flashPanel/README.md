@@ -74,10 +74,22 @@ this block**, the way `regionAtlasCompiler` already does for `seedling_atlas`.
 Until then a preset regeneration is a two-step, and the second step is manual.
 ⛔ Do not build anything that assumes the block is durable.
 
+✅ **`seedling_playthrough` HAS A PRODUCER (2026-10-14, rules-playthrough-blocks).**
+Its seed-1 export is no longer hand-kept. `make-seedling-playthrough-rules` compiles
+`AP_1` with the block, `world_generator` carries the slot's `flash_panel` and
+`region_atlas` into the package (`worlds/seedling_playthrough/_worldgen_flash_panel.json`,
+`_worldgen_region_atlas.json`), and the export handler re-injects them. So every
+`Generate.py` seed of that world carries the wiring, and a regeneration keeps it.
+`seedlingPlaythroughExportLoad.test.js` fails if the export loses a block. The
+ruling above still applies to the seed-1 **`seedling`** preset (the upstream
+world): its block is still hand-kept.
+
 ⛓ The ONE code path that emits a `flash_panel` block today is
 `procgenPipeline/regionAtlasCompiler.js:161` — `FLASH_PANEL_WIRING.seedling`,
 the compiler's own wiring table. It is the only CODE source of the presets'
-wiring; every other block in `frontend/presets/` was written by hand.
+wiring. `world_generator` only CARRIES a source's block through the Python round
+trip, as described above. Every other block in `frontend/presets/` was written by
+hand.
 
 The module is enabled in the default module config (as of the region-atlas
 Phase-4 work) as well as in `modules-flash.json`. It stays idle — status "no
