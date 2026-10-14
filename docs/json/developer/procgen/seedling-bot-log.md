@@ -21910,3 +21910,37 @@ Identity block ON (MOVING_WAIT OFF and ON) = W0 on every value row (r9-campaign 
 ENEMY `afdc6d1a`); L18 sweep 45/45 and C2's L18 ghost staging 45/45 equal (timing stripped); staging A equal (keys
 `af47d35d`) and no slower. Nothing committed moves; nothing re-recorded. The page cannot see the switch (env-only).
 The flip is the user's.
+
+### Seedling fidelity SMALLGAPS — a freeze frame is not a tick, an icy waypoint is passed, and a lava chain hits the player
+
+Wave 16 (planner `seedling-fidelity-planning-7`), three small gaps, each behind its own switch, **all OFF** and OFF
+byte-inert. The report is `CC/docs/cloud-reports/seedling-fidelity-smallgaps.md`.
+
+**D1 — the two instruments disagreed because one of them polled inside the freeze.** On one p4f run of leg 624's tape
+the `Bot`'s own observations (`botDrain`) read 136, 135.2, 133.85 (no stall); `probe-seedling-chaser-mobiles`'s FIRST
+poll at tick 1 stood 20 frames into the 175-frame freeze (y 136), and its LAST poll at tick 1 equals the `Bot`'s. Over
+the 13 committed chaser witnesses only the two `l74arrival-*` part (t1, t5); the probe now samples at the `Bot`'s point
+and those two were re-recorded (one sample each). In tape ticks a button freeze costs the player nothing: frame A is
+frozen and the release frame (the rock clears the flag above the Player) takes the step. `levelRun` banked that step
+in `pendingFreeSteps`, landing a tick late; `CONTACT_FIDELITY.buttonFallReleaseStep` takes it inside the frozen tick
+(the BobBoss rock's form). ON: 0 px on the `Bot`'s ticks for both witnesses and `l74leg624-postfall-reentry`, with the
+arm ON or OFF; `arrivalButtonArm` still decides which tick is frozen. A MID-ROOM press is the same rule: L29
+`button@112,128` walked north (`fallRockButton`'s `walkNorth(120, 60)`) does not stand on the game (witness
+`smallgaps-l29-button-walk`, 0 px ON; OFF stands t11, the stall that test pins — a flip mover). The 589 contact capture samples like the old
+probe (its t1 is 136) — the JS arc's to move. Not this switch: the wand's drop (the pickup ceremony's lump) and the
+rope's `dropRock` (no release step; exact only from a dead stop).
+
+**D2 — `botDriverV2.waypointReached`** (`waypointSlide`): `drive` and `previewWalk` ask one predicate; ON, a waypoint
+that is not the walk's last is reached within tolerance at any velocity while the player is on ice (friction 0.025,
+where a ±1 px stop is luck). Survey (local, `--through=end --route=full`): steps 62 (386 → 249; lapse ON 748 → 239),
+63 (298 → 208), 65 (368 → 330), 84 (1528 → 1352), 86 (1060 → 681), 89 (459 → 378); no verdict moves, lapse OFF or ON.
+Sweep legs in the ten ice rooms (34, node at each row's `seamTime`): 448, 451, 452, 455, 459 shorten. Every mover is
+game-witnessed at 0 px with no hit. `synthesizeTapeV2` and `jsRuntimeWalker` still ask `hasArrived`.
+
+**D3 — leg 633's attacker is `lavachain@80,80`.** `LavaChain.reach` walks `["Player", "Enemy"]`; K2PREP transcribed
+only the Enemy arm. `lavaChainPlayerHit` bills the Player arm (pre-move box, force 5 from the chain's point). The leg's
+own plan (449 t) on the game: 0 px ON (t162 and t447 billed), OFF parts at t162; ON the leg refuses by name. Survey
+step 163 (L75) moves SOLVED 434 → 476: the 434-t plan takes four chain hits and dies in lava on the game (reproduced
+at 0 px ON). With `unbilledDamageGate` also ON the step refuses — the only verdict the game agrees with. Residue: the
+476-t plan meets `spinningaxe@80,144` at t357 on the game, which the live run never bills (the axe's player arm, like
+the chain's, is only priced by the danger map).
