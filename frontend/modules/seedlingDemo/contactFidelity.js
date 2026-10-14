@@ -407,6 +407,21 @@ export const CONTACT_FIDELITY = {
      * needs the stop. OFF: byte-identical. ⛔ OFF by default; `SEEDLING_WAYPOINT_SLIDE=0|1` for a node measurement.
      */
     waypointSlide: false,
+    /**
+     * fidelity SMALLGAPS D3 — A LAVA CHAIN'S ARM HITS THE PLAYER (`levelRun.stepLavaChainsNow`, the `"Player"` arm).
+     *
+     *     LavaChain.as:21,76-93   hitables = ["Player", "Enemy"]; reach(): … else if (hit is Player)
+     *                             (hit as Player).hit(null, force 5, getHitPos → the chain's own point, damage 1)
+     *
+     * K2PREP transcribed the `"Enemy"` arm and left the player to `dangerMap`'s pricing, so the live run never billed
+     * a chain: on L75 (sweep leg 633, `level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224`) the game takes a hit at
+     * t162 from `lavachain@80,80` (its west arm, 32–80 × 86–90) and is thrown 4.72 px west where the model walks on.
+     * ON: every chain in the room steps its anim (with or without bodies), and an arm that touches the PRE-move player
+     * box on an update `reach()` runs bills `applyPlayerHit` from the chain's point; an arm whose anim is unknown (a
+     * skipped `Game.time`) touching the player is refused by name. OFF: byte-identical.
+     * ⛔ OFF by default; `SEEDLING_LAVA_CHAIN_PLAYER_HIT=0|1` for a node measurement.
+     */
+    lavaChainPlayerHit: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -492,11 +507,13 @@ if (globalThis.process?.env?.SEEDLING_ARRIVAL_BUTTON_ARM === '0') CONTACT_FIDELI
 // ⛓ fidelity UNBILLEDGATE: `SEEDLING_UNBILLED_DAMAGE_GATE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_UNBILLED_DAMAGE_GATE === '1') CONTACT_FIDELITY.unbilledDamageGate = true;
 if (globalThis.process?.env?.SEEDLING_UNBILLED_DAMAGE_GATE === '0') CONTACT_FIDELITY.unbilledDamageGate = false;
-// ⛓ fidelity SMALLGAPS: `SEEDLING_BUTTON_FALL_RELEASE_STEP`, `SEEDLING_WAYPOINT_SLIDE` (0|1), likewise.
+// ⛓ fidelity SMALLGAPS: `SEEDLING_BUTTON_FALL_RELEASE_STEP`, `SEEDLING_WAYPOINT_SLIDE`, `SEEDLING_LAVA_CHAIN_PLAYER_HIT` (0|1), likewise.
 if (globalThis.process?.env?.SEEDLING_BUTTON_FALL_RELEASE_STEP === '1') CONTACT_FIDELITY.buttonFallReleaseStep = true;
 if (globalThis.process?.env?.SEEDLING_BUTTON_FALL_RELEASE_STEP === '0') CONTACT_FIDELITY.buttonFallReleaseStep = false;
 if (globalThis.process?.env?.SEEDLING_WAYPOINT_SLIDE === '1') CONTACT_FIDELITY.waypointSlide = true;
 if (globalThis.process?.env?.SEEDLING_WAYPOINT_SLIDE === '0') CONTACT_FIDELITY.waypointSlide = false;
+if (globalThis.process?.env?.SEEDLING_LAVA_CHAIN_PLAYER_HIT === '1') CONTACT_FIDELITY.lavaChainPlayerHit = true;
+if (globalThis.process?.env?.SEEDLING_LAVA_CHAIN_PLAYER_HIT === '0') CONTACT_FIDELITY.lavaChainPlayerHit = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
