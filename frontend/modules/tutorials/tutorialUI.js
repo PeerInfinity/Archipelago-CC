@@ -16,6 +16,9 @@
  *   - the list is grouped by TRACK (tutorialShape.js TRACKS); in-progress
  *     tutorials, and the developer track, sit in COLLAPSED sections of their
  *     own. An in-progress tutorial marks the step where it stops working.
+ *   - (⚖ 2026-10-14) tutorials that need a terminal (status 'terminal') sit
+ *     in a collapsed section of their own, before the in-progress one, and
+ *     mark the first step that happens outside the app.
  *   - an OUTSIDE step (a terminal command, e.g. a local MultiServer) shows its
  *     command with a Copy button; Do it is off for it, and Play waits for its
  *     done check (or stops, when it has none).
@@ -29,7 +32,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { DOCS_LINK_TARGETS, docsHref } from '../../app/config/docsBase.js';
 import { inline } from '../procgenDocs/markdownLite.js';
 import { TUTORIALS } from './content/index.js';
-import { TRACKS, blocksFor, panelSteps } from './tutorialShape.js';
+import { TRACKS, blocksFor, panelSteps, terminalStep } from './tutorialShape.js';
 import { buildContext } from './tutorialContext.js';
 import {
     hideCursor, nextPressable, performAction, performStep, setOutline, waitFor,
@@ -69,6 +72,7 @@ export const CONTROLS = Object.freeze({
     current: 'tut-current',
     done: 'tut-done',
     drafts: 'tut-drafts',
+    terminal: 'tut-terminal',
     developer: 'tut-developer',
     badge: 'tut-badge',
     command: 'tut-command',
@@ -90,6 +94,10 @@ export const TEXT = Object.freeze({
     resume: 'Resume',
     inProgress: 'In progress',
     drafts: 'In progress',
+    terminal: 'Needs a terminal',
+    terminalIntro: 'Each of these runs a command in a terminal partway through. The panel can do every step '
+        + 'before that one, and the test checks those steps. At the terminal step, copy the command and run it yourself. '
+        + 'The test cannot run a terminal, so it does not check the steps after that one.',
     copy: 'Copy',
     copied: 'Copied',
     outsideWaiting: 'Do this step yourself, outside the app — Play carries on once it is done.',
@@ -106,6 +114,12 @@ function blockedText(blocked, n) {
 export function blockedStep(t, steps = panelSteps(t)) {
     if (t.status !== 'in-progress' || !t.firstFailingStep) return null;
     return steps.find(({ step }) => step.id === t.firstFailingStep) ?? null;
+}
+
+/** "Step 7 of 14 happens in a terminal; the panel does the steps before it." */
+function terminalText(stop, n) {
+    const which = `Step ${stop.index + 1} of ${n} happens in a terminal`;
+    return stop.index === 0 ? `${which}.` : `${which}; the panel does the steps before it.`;
 }
 
 function el(tag, cls, text) {
@@ -520,7 +534,20 @@ export class TutorialUI {
             wrap.append(el('h4', 'tut-track', track.title));
             for (const t of list) wrap.append(this._card(t));
         }
-        // ⚖ 2026-10-10: in-progress tutorials in a collapsed section …
+        // ⚖ 2026-10-14: tutorials that need a terminal in a collapsed section …
+        const terminal = all.filter((t) => t.status === 'terminal' && !TRACKS[t.track].collapsed);
+        if (terminal.length) {
+            const box = this._section(CONTROLS.terminal, `${TEXT.terminal} (${terminal.length})`);
+            box.append(el('div', 'tut-collapsed-intro', TEXT.terminalIntro));
+            for (const [key, track] of tracks) {
+                const list = terminal.filter((t) => t.track === key);
+                if (!list.length) continue;
+                box.append(el('h4', 'tut-track', track.title));
+                for (const t of list) box.append(this._card(t));
+            }
+            wrap.append(box);
+        }
+        // … so are the in-progress ones (⚖ 2026-10-10) …
         const drafts = all.filter((t) => t.status === 'in-progress' && !TRACKS[t.track].collapsed);
         if (drafts.length) {
             const box = this._section(CONTROLS.drafts, `${TEXT.drafts} (${drafts.length})`);
@@ -561,12 +588,15 @@ export class TutorialUI {
         card.dataset.tutorialId = tutorial.id;
         const title = el('div', 'tut-card-title', tutorial.title);
         if (tutorial.status === 'in-progress') title.append(' ', el('span', CONTROLS.badge, TEXT.inProgress));
+        if (tutorial.status === 'terminal') title.append(' ', el('span', `${CONTROLS.badge} tut-badge-terminal`, TEXT.terminal));
         card.append(title, el('div', 'tut-card-text', tutorial.summary));
         const steps = panelSteps(tutorial);
         const blocked = blockedStep(tutorial, steps);
         if (blocked) {
             card.append(el('div', 'tut-card-blocked', blockedText(blocked, steps.length)));
         }
+        const stop = tutorial.status === 'terminal' ? terminalStep(tutorial, steps) : null;
+        if (stop) card.append(el('div', 'tut-card-terminal', terminalText(stop, steps.length)));
         const resume = this.saved?.id === tutorial.id;
         const row = el('div', 'tut-card-row');
         row.append(el('span', 'tut-card-count', `${steps.length} steps`));
@@ -619,6 +649,11 @@ export class TutorialUI {
             wrap.append(el('div', CONTROLS.banner, blocked
                 ? `In progress: ${blockedText(blocked, this.steps.length)}`
                 : 'In progress: every step works, but the tutorial is not finished yet.'));
+        }
+        const stop = t.status === 'terminal' ? terminalStep(t, this.steps) : null;
+        if (stop) {
+            wrap.append(el('div', `${CONTROLS.banner} tut-banner-terminal`, `${TEXT.terminal}: ${terminalText(stop, this.steps.length)} `
+                + 'Run its command yourself, then press Next ▶. The test does not check the steps after it.'));
         }
 
         const sec = entry.section;

@@ -20,7 +20,10 @@ describe('check-worldgen-package-sidecars — the packages carry what their pres
         expect(pairs.length).toBeGreaterThanOrEqual(11);
         expect(pairs.filter((p) => !sameJson(p.presetSidecars, p.packageSidecars)).map((p) => `${p.pkg} ${p.doc} ${p.slot}`))
             .toEqual([]);
+        // ⛓ + `seedling_playthrough` since rules-playthrough-blocks (2026-10-14): its seed-1
+        //   export now carries the package's sidecars (the handler re-injects by presence,
+        //   not by the `_worldgen` suffix); before, it was "not compared".
         expect(new Set(pairs.map((p) => p.pkg))).toEqual(new Set(['bounce_worldgen', 'procgen_maze_worldgen',
-            'runner_sphere_worldgen', 'runner_worldgen']));
+            'runner_sphere_worldgen', 'runner_worldgen', 'seedling_playthrough']));
     });
 });

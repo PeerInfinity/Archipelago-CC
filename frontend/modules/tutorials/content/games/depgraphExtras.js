@@ -1,8 +1,8 @@
 /**
  * DepGraph: more graphs (catalogue D3, "extra features"): the other bundled
  * graphs as presets, the Region Graph view, and making a graph of your own
- * (the Task List converter — a terminal step). In progress: its walk row
- * measures `firstFailingStep`. Shape: ../../tutorialShape.js.
+ * (the Task List converter — a terminal step). Needs a terminal: its walk
+ * row stops at that step. Shape: ../../tutorialShape.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
  */
@@ -18,9 +18,8 @@ export const DEPGRAPH_EXTRAS = Object.freeze({
     title: 'DepGraph: more graphs, and your own',
     summary: 'Load DepGraph\'s other bundled graphs, see one in the Region Graph, and turn a task list of your own into a game.',
     track: 'games',
-    status: 'in-progress',
-    firstFailingStep: 'convert', // a terminal step (no stand-in)
-    doc: null,
+    status: 'terminal', // ⚖ the user, 2026-10-14 (seedling-tut-tc): its walk stops at the first terminal step
+    doc: 'docs/json/user/tutorials/depgraph-extras.md',
     intro: [
         { prose: 'DepGraph ships seven graphs — the coding and baking adventures, a tech tree, a skill tree, a recipe chain, the SWFRecomp vibe-coding plan and a task-flow example — and reads graphs of your own as JSON, DOT or CSV.' },
     ],

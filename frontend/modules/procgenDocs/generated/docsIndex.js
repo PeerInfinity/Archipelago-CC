@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1076,
         "indexHeadings": 2,
-        "lines": 28513,
+        "lines": 28518,
         "pages": 4,
-        "words": 376889
+        "words": 377245
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -37,7 +37,7 @@ export const DOCS_INDEX = frz({
             "file": "architecture.md",
             "h1": "Procedural Generation Architecture",
             "headings": 18,
-            "lines": 257,
+            "lines": 261,
             "links": [
                 "demos.md",
                 "editing-core.md",
@@ -51,7 +51,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 4164
+            "words": 4353
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` connects the pipeline, the runtime player and the substrates: each substrate registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This page documents the entry fields, the generated capability matrix, and how to add a substrate.",
@@ -458,7 +458,7 @@ export const DOCS_INDEX = frz({
             "file": "noiz2sa.md",
             "h1": "Noiz2sa Substrate",
             "headings": 13,
-            "lines": 175,
+            "lines": 176,
             "links": [
                 "flash.md",
                 "loop-recording.md",
@@ -466,7 +466,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/noiz2sa.md",
-            "words": 7453
+            "words": 7620
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",
