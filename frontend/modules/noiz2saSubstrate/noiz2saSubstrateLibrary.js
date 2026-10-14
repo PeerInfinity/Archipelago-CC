@@ -39,7 +39,9 @@
  * Pricing (N5): when the pipeline builds a LOOP-MODE world, the `priceRegions` hook (`noiz2saPricing.js`) walks the one
  * cost model's plan and rewrites each region's spans (`move`, every location's `check`) and drain rate
  * (`timeDrainPerSecond`, which the shared cost writer passes into `loop_costs`), recording what it predicted in
- * `pricing`. The final region's span is the generation-form setting `noiz2saFinalSpan`. The zone table's spans are what a
+ * `pricing`. The Victory region's span is the generation-form setting `noiz2saFinalSpan`, priced at the setting
+ * `noiz2saVictorySkill` (the skill the bot is trained to when Victory is needed; only a Noiz2sa region holding Victory
+ * is the final one). The zone table's spans are what a
  * world without loop mode (and the hand-built test preset) plays. The hook imports two leaf files of the game submodule
  * (`tracks.js`, `human.js`: no engine), so this file still loads headless.
  */
@@ -51,7 +53,9 @@ import {
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
 import { defaultCheckSpans, parsePosition, regionSpanOf, regionSpansOf, showSpan } from './noiz2saRegion.js';
-import { DEFAULT_FINAL_SPAN, FINAL_SPAN_PARAM, priceNoiz2saRegions } from './noiz2saPricing.js';
+import {
+    DEFAULT_FINAL_SPAN, FINAL_SPAN_PARAM, TARGET_FINAL_SKILL, VICTORY_SKILL_PARAM, priceNoiz2saRegions, victorySkillOf,
+} from './noiz2saPricing.js';
 import { parseSpan } from './noiz2saDifficulty.js';
 import { fieldRow } from '../procgenCore/regionGenerationForm.js';
 import { logicOnlyExitLocks } from '../procgenCore/logicExitLocks.js';
@@ -325,12 +329,17 @@ export function zoneForSpecsOf(zones, { region_id, exitSpecs = [], locationSpecs
 }
 
 /** N5: the generation form's Noiz2sa knobs (the procgen params bag) */
-export const NOIZ2SA_PROCGEN_PARAMS = Object.freeze({ [FINAL_SPAN_PARAM]: DEFAULT_FINAL_SPAN });
+export const NOIZ2SA_PROCGEN_PARAMS = Object.freeze({
+    [FINAL_SPAN_PARAM]: DEFAULT_FINAL_SPAN,
+    [VICTORY_SKILL_PARAM]: TARGET_FINAL_SKILL,
+});
 
 /**
  * The generation form's Noiz2sa section: the final region's span (⚖ "In the generation settings, there should be a
  * control for the set of scenes to use for the final region"). A text box, STAGE:SCENE–STAGE:SCENE in stages 1–10; a
- * span that does not parse is not stored (the box turns red and the bag keeps the last good one).
+ * span that does not parse is not stored (the box turns red and the bag keeps the last good one). And the Victory
+ * skill (⚖ 2026-10-14: "there should be a setting for what difficulty it assigns to the victory region"): a number box,
+ * an integer 1–100; anything else is not stored either.
  */
 function renderNoiz2saProcgenParams({ params, onChange = () => {} } = {}) {
     const wrap = document.createElement('div');
@@ -349,8 +358,27 @@ function renderNoiz2saProcgenParams({ params, onChange = () => {} } = {}) {
         params[FINAL_SPAN_PARAM] = input.value.trim();
         onChange();
     });
-    wrap.appendChild(fieldRow('Final region span', 'The scenes the last Noiz2sa region reached plays (loop mode prices the '
+    wrap.appendChild(fieldRow('Final region span', 'The scenes the Noiz2sa region holding Victory plays (loop mode prices the '
         + 'other regions toward it), e.g. 10:7–10:boss', input));
+    const skill = document.createElement('input');
+    skill.type = 'number';
+    skill.min = '1';
+    skill.max = '100';
+    skill.step = '1';
+    skill.value = String(victorySkillOf(params));
+    skill.dataset.param = VICTORY_SKILL_PARAM;
+    skill.addEventListener('change', () => {
+        const v = Number(skill.value);
+        if (!(Number.isInteger(v) && v >= 1 && v <= 100)) {
+            skill.style.outline = '1px solid #c33';
+            return;
+        }
+        skill.style.outline = '';
+        params[VICTORY_SKILL_PARAM] = v;
+        onChange();
+    });
+    wrap.appendChild(fieldRow('Victory skill', 'The bot skill (1–100) loop mode trains to by the time Victory is needed; '
+        + 'the Victory region\'s span is priced at it, so a higher skill makes the Victory region easier', skill));
     return wrap;
 }
 
