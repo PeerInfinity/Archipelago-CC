@@ -169,3 +169,43 @@ def test_generator_writes_the_players_block_alone_or_none(tmp_path):
     assert json.loads(written.read_text(encoding="utf-8")) == source["procgen_metadata"]["2"]
     assert not (tmp_path / "p3" / "_worldgen_procgen_metadata.json").exists()
     assert not (tmp_path / "p2" / "_worldgen_loop_costs.json").exists()  # the fixture carries no loop_costs
+
+
+SAMPLE_SIDECARS = {"region_a": {"substrate": "flash_seedling", "payload": {"level": 10}}}
+
+
+def test_a_package_without_the_worldgen_suffix_is_reinjected_by_presence(tmp_path, cleanup_fake_module):
+    """The re-injection is keyed on "the package ships the file", not on a
+    `_worldgen` module suffix. `worlds/seedling_playthrough` is a
+    world_generator package with no suffix; the suffix gate used to skip its
+    `_worldgen_sidecars.json` silently, so its export shipped
+    `preset_sidecars: {}`. The fake package here is named without the suffix
+    and goes through the handler's real entry point."""
+    world, _ = _make_fake_world(tmp_path, "fake_playthrough", files={
+        "_worldgen_sidecars.json": SAMPLE_SIDECARS,
+        "_worldgen_procgen_metadata.json": SAMPLE_METADATA,
+        "_worldgen_loop_costs.json": SAMPLE_LOOP_COSTS,
+    })
+    handler = BaseGameExportHandler()
+    assert not handler.is_worldgen_world(world)  # the premise: the suffix gate says no
+    export_data = {}
+
+    handler.preprocess_world_data(world, export_data, 2)
+
+    assert export_data == {
+        "preset_sidecars": {"2": SAMPLE_SIDECARS},
+        "procgen_metadata": {"2": SAMPLE_METADATA},
+        "loop_costs": {"2": SAMPLE_LOOP_COSTS},
+    }
+
+
+def test_a_package_that_ships_none_is_unchanged_by_preprocess(tmp_path, cleanup_fake_module):
+    """The other half: a package (suffix or not) shipping no package file adds
+    no key, so every upstream world's export stays byte-identical."""
+    world, _ = _make_fake_world(tmp_path, "fake_upstream", files={})
+    handler = BaseGameExportHandler()
+    export_data = {"preset_sidecars": {}}
+
+    handler.preprocess_world_data(world, export_data, 1)
+
+    assert export_data == {"preset_sidecars": {}}

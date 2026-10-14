@@ -2080,9 +2080,14 @@ class BaseGameExportHandler(
         # helpers like "has_fire_arrows" to Has("Fire_Arrows") via pattern matching.
         if self.is_worldgen_world(world):
             self._discover_worldgen_helpers_for_preservation(world)
-            self._inject_worldgen_sidecars(world, export_data, player)
-            self._inject_worldgen_procgen_metadata(world, export_data, player)
-            self._inject_worldgen_loop_costs(world, export_data, player)
+        # The package files are re-injected by PRESENCE, not by the
+        # `_worldgen` module suffix: a world_generator package may be named
+        # anything (worlds/seedling_playthrough is one), and gating on the
+        # suffix silently dropped its `_worldgen_sidecars.json`. Each reader
+        # is a no-op when the package ships no such file.
+        self._inject_worldgen_sidecars(world, export_data, player)
+        self._inject_worldgen_procgen_metadata(world, export_data, player)
+        self._inject_worldgen_loop_costs(world, export_data, player)
 
     def _inject_worldgen_sidecars(self, world, export_data: Dict[str, Any], player: int) -> None:
         """Load `_worldgen_sidecars.json` from the worldgen world's package
