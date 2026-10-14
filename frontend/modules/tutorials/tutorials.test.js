@@ -6,7 +6,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { REPO, renderAll, renderGuides } from '../../../scripts/tutorials/generate-tutorial-docs.mjs';
+import { REPO, hasGuide, renderAll, renderGuides } from '../../../scripts/tutorials/generate-tutorial-docs.mjs';
 import { FEATURES, NOT_COVERED_YET, NO_TUTORIAL, PLANNED_PANELS } from './content/coverage.js';
 import { TUTORIALS } from './content/index.js';
 import { generatedMarker, tutorialMarkdown } from './tutorialMarkdown.js';
@@ -247,7 +247,7 @@ describe('the tutorials', () => {
     });
 
     it('only READY and TERMINAL tutorials get a guide written', () => {
-        const ready = TUTORIALS.filter((e) => e.tutorial.doc && ['ready', 'terminal'].includes(e.tutorial.status)).map((e) => e.tutorial.doc);
+        const ready = TUTORIALS.filter((e) => hasGuide(e.tutorial)).map((e) => e.tutorial.doc);
         expect(renderGuides().map((g) => g.doc)).toEqual(ready);
     });
 
