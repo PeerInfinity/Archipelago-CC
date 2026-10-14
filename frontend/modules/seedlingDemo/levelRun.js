@@ -95,6 +95,8 @@ import {
     ENEMY_PIT_TILE, ENEMY_TERRAIN_DESTROYS, chaserAttackDecision, chaserBoxAt, chaserSolids,
     chaserKnocksBack, chaserStep, createDieAnim, createSpriteAnim, deathTicks, isBridgedChaser,
     puncherPunchRect, stepSpriteAnim, CHASERS, chaseImpulse, chaserChasesWhileDying, chaserHasSword,
+    // ⛓ fidelity LAPSECOST D2: the Flyer's drop (`CHASERS.flyer`, `contactFidelity.flyerLive`).
+    chaserDropOf, chaserContactHits, dropPoint, dropPointCovered, createDropFallAnim,
 } from './chasers.js';
 import { KILLLOCK_BODIES, killLockBridged } from './killLockBodies.js';
 import {
@@ -3988,6 +3990,8 @@ export function createLevelRun({
                      * class that carries one, so every other chaser's record keeps its shape.
                      */
                     ...(chaserHasSword(e.tag) ? { sword: createBobSoldierSword() } : {}),
+                    /** ⛓ fidelity LAPSECOST D2: the Flyer's "fall" Spritemap while it plays (null otherwise); only on that class. */
+                    ...(chaserDropOf(e.tag) ? { drop: null } : {}),
                     /**
                      * `Enemy.fallInPit` — a LATCH, armed by the terrain
                      * switch's `case 6`, and `fell` is what `removed()`
@@ -4045,7 +4049,9 @@ export function createLevelRun({
         // ⛓ U7-swim: PER BRIDGED TAG, not the first one found — a room can hold a
         // bob and a puncher, and their lists differ (the puncher's carries
         // "Player"). The over-reach is the union of what any of them lacks.
-        const overReach = [...new Set([...new Set(census.filter((e) => isBridgedChaser(e.tag))
+        // ⛓ fidelity LAPSECOST D2: a tag whose list is EMPTY (the Flyer) is swept free — `collidesSolid` is never asked.
+        const overReach = [...new Set([...new Set(census.filter((e) => isBridgedChaser(e.tag)
+            && chaserSolids(e.tag).length > 0)
             .map((e) => e.tag))]
             .flatMap((tag) => {
                 const chaserTypes = new Set(chaserSolids(tag));
@@ -4085,7 +4091,7 @@ export function createLevelRun({
          * stepped turret's `type == "Solid"` latch), which `enemyBoxStopsChaser` reads per mover. So the flip is
          * answerable for every tag that carries "Solid"; one that carried neither would still refuse here.
          */
-        const flipBlind = [...new Set(census.filter((e) => isBridgedChaser(e.tag))
+        const flipBlind = [...new Set(census.filter((e) => isBridgedChaser(e.tag) && chaserSolids(e.tag).length > 0)
             .map((e) => e.tag))]
             .every((tag) => chaserSolids(tag).includes('Solid'));
         const shifty = census.filter((e) => TYPE_REWRITING_ENEMIES.includes(e.as3)
@@ -7837,6 +7843,8 @@ export function createLevelRun({
                 // ⛓ fidelity-bulb: the drop death's Spritemap is stepped on the clone — its own copy.
                 ...(c.bulbPhase !== undefined ? { anim: c.anim ? { ...c.anim } : null,
                     dropTile: c.dropTile ? { ...c.dropTile } : null } : {}),
+                // ⛓ fidelity LAPSECOST D2: the Flyer's "fall" Spritemap — its own copy.
+                ...(c.drop !== undefined ? { drop: c.drop ? { ...c.drop } : null } : {}),
             });
         }
         // ⚠ ONCE, not per tick: the previewed world is FROZEN at this tick's
@@ -7947,10 +7955,13 @@ export function createLevelRun({
                     // previewed player's start-of-tick box.
                     const playerWall = chaserSolids(c.tag).includes('Player')
                         ? playerBoxAt(playerPos.x, playerPos.y) : null;
+                    // ⛓ fidelity LAPSECOST D2: the Flyer's empty list — `stepChaserEntity`'s free sweep.
+                    const freeMover = chaserSolids(c.tag).length === 0;
                     const move = (mx, my, dx, dy) => {
                         let x = mx;
                         let y = my;
                         const blocked = (px, py) => {
+                            if (freeMover) return false;
                             const r = chaserBoxAt(c.tag, px, py);
                             if (world.collidesSolid(r, solidOpts)) return true;
                             if (playerWall && rectsOverlap(r, playerWall)) return true;
@@ -7997,6 +8008,30 @@ export function createLevelRun({
                         if (ev?.event === 'lava') { c.lavaTile = ev.tile; c.lavaAt = tickOffset + 1; }
                         if (ev?.event === 'removed') c.removed = true;
                         continue;
+                    }
+                    /**
+                     * ⛓⛓ fidelity LAPSECOST D2 — THE FLYER'S DROP, ON THE CLONE (`stepChaserEntity`'s branch and its
+                     * graphic half): the "fall" starts, stands and steps exactly as live, and the update where it
+                     * shows frame 10 is REPORTED (`drop`: the point and whether the previewed player's start-of-tick box
+                     * holds it), never billed. `dangerMap.chaserDanger` prices it per tick. A forecast kill (`dyingAt`)
+                     * plays "die" over it.
+                     */
+                    if (c.drop !== undefined) {
+                        c.dropReport = null;
+                        if (!c.dying && c.dyingAt === undefined) {
+                            const covered = dropPointCovered(c.tag, c, playerBoxAt(playerPos.x, playerPos.y));
+                            if (covered && c.drop === null) c.drop = createDropFallAnim(c.tag);
+                            if (c.drop !== null) {
+                                c.v = { x: 0, y: 0 };
+                                if (c.drop.index === chaserDropOf(c.tag).hitIndex) {
+                                    c.dropReport = { point: dropPoint(c.tag, c), hitsPlayer: covered };
+                                }
+                                if (stepSpriteAnim(c.drop)) c.drop = null;
+                                continue;
+                            }
+                        } else {
+                            c.drop = null;
+                        }
                     }
                     const r = chaserStep(c.tag, c.bulbPhase === 'armed' ? { ...c, dying: false } : c, playerPos, {
                         onScreen: onScreenAt(box, `${c.tag} ${c.id}`),
@@ -8145,6 +8180,8 @@ export function createLevelRun({
                         ...(c.punch !== undefined ? { punch: c.punch } : {}),
                         // ⛓ fidelity-bobsoldier D3: this tick's sword lines, for a class that has one.
                         ...(c.swordLines !== undefined ? { sword: { lines: c.swordLines } } : {}),
+                        // ⛓ fidelity LAPSECOST D2: this tick's drop (null when none lands this update), for the Flyer.
+                        ...(c.drop !== undefined ? { drop: c.dropReport ?? null } : {}),
                         // ⛓ fidelity-bulb: a killed Bulb (armed, dropping, dying) — harmless; and its lava tile.
                         ...(c.bulbPhase ? { dying: true, bulbPhase: c.bulbPhase, dropTile: c.dropTile ?? null,
                             ...(c.lavaTile ? { lavaTile: c.lavaTile, lavaAt: c.lavaAt } : {}) } : {}),
@@ -11443,6 +11480,14 @@ export function createLevelRun({
             // not at the killing hit. The third fencepost of the three
             // (`dying` -> `destroy` -> `removed`).
             if (c.anim && stepSpriteAnim(c.anim)) c.destroy = true;
+            /**
+             * ⛓ fidelity LAPSECOST D2 — the Flyer's "fall" Spritemap, in the graphic half; `Bob.endAnim` ends it
+             * (`play("")`). A kill plays "die" over it (`Bob.startDeath`), so a dying body's "fall" is gone.
+             */
+            if (c.drop) {
+                if (c.dying || c.destroy) c.drop = null;
+                else if (stepSpriteAnim(c.drop)) c.drop = null;
+            }
             if (stop === 'player-died') return;
             /**
              * ⛓⛓⛓ U7-swim D2 — THE PUNCH, in the GRAPHIC half: the "attack-*"
@@ -11548,6 +11593,26 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓ fidelity LAPSECOST D2 — `Flyer.update`'s drop (`Flyer.as:64-67`): `p.hit(null, dropForce, new Point(x, y),
+     * damage)` — `e` is null (no dark-suit retaliation) and NOTHING of the flyer's own state gates it (no i-frame
+     * test). `Player.hit`'s own gates decide, through the run's one `applyPlayerHit` funnel.
+     *
+     * @returns {?string} `'player-died'` when the drop killed the player.
+     */
+    function dropNow(c) {
+        const d = chaserDropOf(c.tag);
+        applyPlayerHit({
+            source: 'drop',
+            id: c.id,
+            force: d.force,
+            damage: c.damage,
+            from: { x: c.x, y: c.y },
+            retaliate: null,
+        });
+        return pendingDeath ? 'player-died' : null;
+    }
+
+    /**
      * ONE `Enemy.update()` + `Bob.update()` for one body — the ENTITY half.
      * See `stepChasersNow`'s loop for why the graphic half is its caller's.
      *
@@ -11566,6 +11631,7 @@ export function createLevelRun({
              */
             const playerWall = chaserSolids(c.tag).includes('Player')
                 ? playerBoxAt(state.x, state.y) : null;
+            const freeMover = chaserSolids(c.tag).length === 0;
             /**
              * `Mobile.moveX`/`moveY`, transcribed as the sweep this world
              * really is — 1 px at a time, the last step `min(1, |rel| - i)`,
@@ -11575,6 +11641,8 @@ export function createLevelRun({
                 let x = mx;
                 let y = my;
                 const blocked = (px, py) => {
+                    // ⛓ fidelity LAPSECOST D2: `solids = new Array()` (the Flyer) — nothing blocks it.
+                    if (freeMover) return false;
                     const r = chaserBoxAt(c.tag, px, py);
                     if (world.collidesSolid(r, solidOpts)) return true;
                     if (playerWall && rectsOverlap(r, playerWall)) return true;
@@ -11620,6 +11688,24 @@ export function createLevelRun({
              */
             if (CHASERS[c.tag]?.freezeSkipsUpdate && ceremony !== null) return null;
             /**
+             * ⛓⛓ fidelity LAPSECOST D2 — `Flyer.update` BELOW ITS FREEZE RETURN (`Flyer.as:53-75`). Dying or destroyed it
+             * runs `super.update()` (the generic path below). Alive: `p = collidePoint("Player", x, y + 10)` against the
+             * player where the previous tick left it (`state`: the player updates last); `p` plays "fall" (a running
+             * "fall" is not restarted); while "fall" plays the body stands (`v = 0`), drops on a `p` at frame 10
+             * (`dropNow`), runs `hitUpdate()` — and NOT `super.update()`: no off-screen gate, no terrain, no move, no
+             * contact. The Spritemap is the graphic half's (`stepChasersNow`).
+             */
+            if (c.drop !== undefined && !c.destroy && !c.dying) {
+                const covered = dropPointCovered(c.tag, c, playerBoxAt(state.x, state.y));
+                if (covered && c.drop === null) c.drop = createDropFallAnim(c.tag);
+                if (c.drop !== null) {
+                    c.v = { x: 0, y: 0 };
+                    const out = covered && c.drop.index === chaserDropOf(c.tag).hitIndex ? dropNow(c) : null;
+                    if (c.hitsTimer > 0) c.hitsTimer -= 1;
+                    return out;
+                }
+            }
+            /**
              * ⛓⛓⛓ fidelity-bulb D2 — A BULB IN "drop" OR "die" RUNS NO `Enemy.update` AT ALL (`Bulb.as:37-45`): no
              * off-screen return, no terrain switch, no `hitUpdate`, no `hitPlayer`. It slides toward its tile's
              * centre through `mobileUpdate` (freeze-gated), on its own `solids`, and bills nothing.
@@ -11642,7 +11728,8 @@ export function createLevelRun({
              * `canFallInPit`), read from `combat.ENEMY_CLASSES[tag].terrain` for a class a KILLLOCK switch
              * bridges; Bob and the puncher keep the base class's `true`s exactly as before.
              */
-            const terr = killLockBridged(c.tag) ? ENEMY_CLASSES[c.tag].terrain : null;
+            const terr = (killLockBridged(c.tag) || CHASERS[c.tag]?.terrainFromCensus === true)
+                ? ENEMY_CLASSES[c.tag].terrain : null;
             const diesIn = (t) => (terr === null ? true
                 : (t === ENEMY_TERRAIN_DESTROYS.water ? terr.water === 'dies' : terr.lava === 'dies'));
             const fallsInPit = terr === null || terr.pit === 'falls';
@@ -11881,7 +11968,8 @@ export function createLevelRun({
                     // `Enemy.update`'s tail, in its own order: `hitUpdate()` then
                     // `hitPlayer()`, and BOTH are inside `if (!destroy)`.
                     if (mid.iframesTicked && c.hitsTimer > 0) c.hitsTimer -= 1;
-                    contact = chaserContactNow(c);
+                    // ⛓ fidelity LAPSECOST D2: `hitPlayer` is the Flyer's EMPTY override — its body bills nothing.
+                    contact = chaserContactHits(c.tag) ? chaserContactNow(c) : null;
                     return { v: c.v, dying: c.dying && c.bulbPhase !== 'armed' };
                 },
             });

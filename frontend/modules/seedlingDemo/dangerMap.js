@@ -66,7 +66,7 @@
 import {
     arrowLaneForPlacement, arrowLaneRect, arrowRect, ARROW, stepArrow,
     contactPricing, contactRect, ENEMY_CLASSES, plannerContactFree, stepBoundFor,
-    chaserBoxAt, chaserHasSword, collideLineSolid, isBridgedChaser,
+    chaserBoxAt, chaserHasSword, collideLineSolid, isBridgedChaser, chaserDropOf,
     rect, rectsOverlap,
     SPINNER, hammerHitsPlayer, spinnerRect,
     TURRET_SPIT,
@@ -842,6 +842,40 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
          * eleven-tick fade. So for a class with a sword the i-frame skip removes only the BODY term, and a
          * destroyed body keeps its sword term.
          */
+        /**
+         * ⛓⛓ fidelity LAPSECOST D2 (`contactFidelity.flyerLive`) — A FLYER IS PRICED BY ITS DROP, NEVER BY ITS BODY.
+         * `Flyer.hitPlayer` is overridden EMPTY, and the drop has no enemy i-frame gate (`Flyer.as:64-67`), so neither
+         * `plannerContactFree` nor the leash pad is its question. A FORECAST body carries `drop` — the update where its
+         * "fall" shows frame 10 (`chaserForecastNow`): danger iff the previewed player's start-of-tick box holds the
+         * point, which is this sample's `box`. The WAIT arm and the live bodies have no clock: they price the column
+         * from the body's top down to its drop point, grown as every untimed body is.
+         */
+        const drop = chaserDropOf(c.tag);
+        if (drop) {
+            if (c.destroy || c.dying) continue;
+            if (perTick && bodies !== null && c.drop !== undefined) {
+                const p = c.drop?.point;
+                if (c.drop && (c.drop.hitsPlayer || (p.x >= box.x && p.x < box.right && p.y >= box.y && p.y < box.bottom))) {
+                    out.push({ kind: 'chaser', id: c.id,
+                        why: 'the drop: its "fall" shows frame 10 THIS tick and the player\'s box holds (x, y+10) — '
+                            + '`p.hit(null, dropForce, …, damage 2)`, no enemy i-frame gate' });
+                }
+                continue;
+            }
+            const bound = stepBoundFor(c.tag);
+            const hb = ENEMY_CLASSES[c.tag].hitbox;
+            const column = rect(c.x - hb.ox, c.y - hb.oy, hb.w, hb.oy + 11);
+            const leash = ENEMY_CLASSES[c.tag].aggro?.range ?? 0;
+            const px = (box.x + box.right) / 2;
+            const py = (box.y + box.bottom) / 2;
+            const d = Math.hypot(px - c.x, py - c.y);
+            const r = d <= leash ? bound * horizon : 0;
+            if (rectsOverlap(box, grow(column, r))) {
+                out.push({ kind: 'chaser', id: c.id,
+                    why: `the drop column (body to its (x, y+10) point), untimed: grown ${bound} px/tick x ${horizon}` });
+            }
+            continue;
+        }
         const sworded = chaserHasSword(c.tag);
         if (swordTimedNow && sworded) {
             // A corpse's blade was priced above (the forecast drops `destroy` from the projection).

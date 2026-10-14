@@ -199,6 +199,11 @@ export const SOLIDS_BY_MOVER = Object.freeze({
     // ⛓ fidelity-bobsoldier: and the BobSoldier's — `BobSoldier.as`'s ctor pushes nothing either.
     enemy: Object.freeze([...SOLID_ENTITY_TYPES]),
     /**
+     * ⛓ fidelity LAPSECOST D2 — `Flyer.as:45` `solids = new Array()`: NOTHING stops it (no tile, no Solid, no Enemy).
+     * A chaser whose list is empty is swept free (`levelRun`'s chaser sweep asks nothing).
+     */
+    none: Object.freeze([]),
+    /**
      * ⛓⛓⛓ R8 SLICE 1 — THE CHASER, AND THE ONE TYPE THAT SEPARATES IT.
      *
      * `Mobile.solids` plus `"Enemy"` (`Bob.as:39`). It is not decoration and

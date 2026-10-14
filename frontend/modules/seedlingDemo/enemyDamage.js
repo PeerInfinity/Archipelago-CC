@@ -340,7 +340,15 @@ export const KILL_ARM_POLICY = Object.freeze({
             + 'move is ledgered at the removal.',
     }),
     BobBoss: Object.freeze({ policy: 'refused', why: 'boss damage — the encounter SCRIPT owns it (`bobBoss.js`), not a press arm' }),
-    Flyer: Object.freeze({ policy: 'refused', why: 'the Bob cost, plus the LOS exemption (`v[i] is Flyer` skips the collideLine)' }),
+    /**
+     * ⛓ fidelity LAPSECOST D2 — `modelled` while `CONTACT_FIDELITY.flyerLive` is ON (the run steps the body as a bridged
+     * chaser, `chasers.CHASERS.flyer`; a press reaches it through the chaser arm's `enemyHit`, its death is Bob's "die" +
+     * fade through `stageChaserKill`, its removal ledgered), `refused` with the old words while it is OFF.
+     */
+    Flyer: Object.freeze({
+        get policy() { return CONTACT_FIDELITY.flyerLive ? 'modelled' : 'refused'; },
+        why: 'the Bob cost, plus the LOS exemption (`v[i] is Flyer` skips the collideLine)',
+    }),
     /**
      * ⛓ SEEDLING FIDELITY KILLLOCK K1 — `modelled` while `KILLLOCK_BODIES.jellyfishLive` is ON (the run then steps
      * the body as a bridged chaser, stages its eight-frame "die" through `stageChaserKill` and ledgers its removal),
@@ -666,6 +674,12 @@ export const CORPSE_COUNTING = Object.freeze({
             + 'running on the corpse (no `destroy` gate): it chases and its sword still hits until the removal.',
         src: 'Enemies/BobSoldier.as:72-82 (update), Enemies/Enemy.as:182-186 (startDeath)',
     }),
+    // ⛓ fidelity LAPSECOST D2: `Flyer extends Bob` and inherits `startDeath` / `endAnim` — four frames at rate 10.
+    Flyer: Object.freeze({
+        shape: 'anim+fade', removesBody: true, chaserTag: 'flyer',
+        why: 'Bob\'s two-stage shape (inherited), with `add("die", [23..26], 10)`.',
+        src: 'Enemies/Bob.as:84-97, Enemies/Flyer.as:42',
+    }),
     // ⛓ U7-swim D3: Bob's shape, with a ten-frame animation at rate 10.
     Puncher: Object.freeze({
         shape: 'anim+fade', removesBody: true, chaserTag: 'puncher',
@@ -866,6 +880,10 @@ export const KILL_SIDE_WRITES = Object.freeze({
         writes: 'none',
         why: '⛓ fidelity-bulb: inherits `Bob.removed()`\'s empty override; no `setPersistence` in the class. ⛔ Its kill '
             + 'DOES write — a Tile\'s `t`, to lava, for the visit (`bulb.js`) — which is terrain, not persistence.',
+    }),
+    Flyer: Object.freeze({
+        writes: 'none',
+        why: '⛓ fidelity LAPSECOST D2: inherits `Bob.removed()`\'s empty override; no `setPersistence` in the class.',
     }),
     WallFlyer: Object.freeze({
         writes: 'none',

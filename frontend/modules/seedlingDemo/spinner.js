@@ -873,6 +873,18 @@ export const MODELLED_ENEMY_CLASSES = Object.freeze({
         // ⛔ FALSE for Bob's reason: `pushableCtx().collides` sees spinners only.
         wedgeVisible: false,
     }),
+    /**
+     * ⛓⛓ seedling-fidelity-lapsecost D2 — THE SEVENTH ROW: the Flyer, bridged through `chasers.js` (gated by
+     * `contactFidelity.flyerLive` via `CHASERS.flyer.liveSwitch`). Sweep leg 773 (L105) diverged on its drop.
+     */
+    Flyer: Object.freeze({
+        module: 'chasers.js',
+        why: 'Bob\'s chase to the player + (0,-10) through no solids, and a "fall" whose frame 10 drops on a player still '
+            + 'under it — every term a function of the body, its Spritemap and the player box the run already holds',
+        stepped: 'levelRun.advance, in the chaser slot beside the Bobs',
+        // ⛔ FALSE for Bob's reason: `pushableCtx().collides` sees spinners only.
+        wedgeVisible: false,
+    }),
 });
 
 /**

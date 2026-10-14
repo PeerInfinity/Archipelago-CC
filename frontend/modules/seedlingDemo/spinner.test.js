@@ -461,7 +461,9 @@ describe('the refusal predicate `runFire` narrows to', () => {
         // ⛓ R2-swim D1: `WallFlyer` (`wallFlyer.js`) is the fourth row.
         // ⛓ fidelity-bobsoldier: `BobSoldier` (through `chasers.js`, its sword in `bobSoldier.js`) is the fifth.
         // ⛓ fidelity-bulb: `Bulb` (through `chasers.js`, gated by `contactFidelity.bulbLive`) is the sixth.
-        expect(Object.keys(MODELLED_ENEMY_CLASSES).sort()).toEqual(['Bob', 'BobSoldier', 'Bulb', 'Puncher', 'Spinner', 'WallFlyer']);
+        // ⛓ fidelity LAPSECOST D2: `Flyer` (through `chasers.js`, gated by `contactFidelity.flyerLive`) is the seventh.
+        expect(Object.keys(MODELLED_ENEMY_CLASSES).sort())
+            .toEqual(['Bob', 'BobSoldier', 'Bulb', 'Flyer', 'Puncher', 'Spinner', 'WallFlyer']);
     });
 });
 
