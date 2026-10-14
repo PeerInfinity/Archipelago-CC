@@ -346,8 +346,9 @@ describe('the kill schedule', () => {
         // `flyer` has a census row but no `chasers.js` entry, so its
         // death length is unknown — and the window floor is mostly that
         // length. ⛓ fidelity-bulb: this row named `bulb` until the Bulb was
-        // transcribed (`CHASERS.bulb`); `flyer` is the next untranscribed one.
-        expect(() => killSchedule({ tag: 'flyer', cx: 0, cy: 0 }, 0))
+        // transcribed (`CHASERS.bulb`); `flyer` is the next untranscribed one. ⛓ fidelity LAPSECOST D2: and `flyer`
+        // until `CHASERS.flyer`; `drill` (its own `drill.js`, no `chasers.js` row) is the next.
+        expect(() => killSchedule({ tag: 'drill', cx: 0, cy: 0 }, 0))
             .toThrow(/no chaser transcription/);
     });
 
