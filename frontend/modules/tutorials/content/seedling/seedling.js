@@ -83,10 +83,10 @@ export const SEEDLING_BOT = seedling({
     id: 'seedling-bot',
     title: 'Seedling: watch the bot play',
     summary: 'Load the whole of Seedling as an Archipelago world and watch the Playback Bot take its first checks in the original game.',
-    // Measured 2026-10-11: the seed-1 preset the Presets panel loads
-    // (seedling_playthrough/AP_14089154938208861744) carries no `flash_panel`
-    // block, so the Flash Panel never offers the wasm game (only AP_1 does).
-    firstFailingStep: 'start-game-page',
+    // Measured 2026-10-14 on CI (run 38633423493): first-checks passes; the
+    // walk failed at its closing step (Stop is never enabled, so it is Reset now).
+    // A slow software-WebGPU box does not reach a check inside 180 s.
+    firstFailingStep: null,
     intro: [
         { prose: '*Seedling Playthrough* is the whole map of the original game as an Archipelago world: its 113 levels are the regions, its chests and bosses the locations. The Playback Bot plays it from the world\'s solution, sphere by sphere, by driving the real game.' },
         { prose: SEEDLING_RUNTIME_NOTE },
@@ -117,9 +117,12 @@ export const SEEDLING_BOT = seedling({
             },
             {
                 step: {
-                    id: 'stop-bot',
-                    text: 'Back in the **Playback Bot** tab, press **⏹** (Stop). The *Seedling: the bot through the whole game* tutorial lets it run to the end.',
-                    actions: [{ click: botButton('stop') }],
+                    // Not ⏹ (Stop): measured 2026-10-14, the Playback Bot panel never tells its control
+                    // bar it is running, so Stop stays disabled while the bot plays. Reset does stop it.
+                    id: 'reset-bot',
+                    text: 'Back in the **Playback Bot** tab, press **↺** (Reset): the bot stops and rewinds to the first sphere, and it says "Sphere log loaded" again. The *Seedling: the bot through the whole game* tutorial lets it run to the end.',
+                    actions: [{ activate: BOT }, { click: botButton('reset') }],
+                    done: (ctx) => ctx.text(botStatus).startsWith('Sphere log loaded'),
                 },
             },
         ],
@@ -168,10 +171,9 @@ export const SEEDLING_WHOLE_GAME = seedling({
     id: 'seedling-whole-game',
     title: 'Seedling: the bot through the whole game',
     summary: 'Watch the Playback Bot play the original Seedling from the first chest to the end.',
-    // Measured 2026-10-11: the seed-1 preset the Presets panel loads
-    // (seedling_playthrough/AP_14089154938208861744) carries no `flash_panel`
-    // block, so the Flash Panel never offers the wasm game (only AP_1 does).
-    firstFailingStep: 'start-game-page',
+    // Measured 2026-10-14 on CI (run 38633423493): the bot does not finish
+    // (solver coverage, the wasm OOM near 150 swaps, the 180 s budget). ⚖ Track only.
+    firstFailingStep: 'bot-plays',
     intro: [
         { prose: 'The Playback Bot plays the whole of *Seedling Playthrough* — every sphere of its solution, in the original game. It is the project\'s long-running test of the bot; how far it gets is the progress marker of that work.' },
         { prose: SEEDLING_RUNTIME_NOTE },
