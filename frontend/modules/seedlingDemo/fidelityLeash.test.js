@@ -17,6 +17,7 @@
  * ⚠ The tapes are EMBEDDED, not roster tapes.
  */
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -185,7 +186,9 @@ describe('LEASH D2 — `BAIT_FORECAST`: a bait is verified on the chaser forecas
         expect(on.stance).toBe(null);
         expect(on.forecastRejected[0]).toMatch(/^\(24,136\): the forecast still has lavarunner@24,56 in the world after the whole 168-tick dwell .* at \(3[01]\.\d+,73\.06\)/);
     });
-    it('leg 629 (L74 from L75 → the Darkshield): OFF refuses on the dwell; ON SOLVES — and the plan is the witness\'s tape', () => {
+    // ⛓ fidelity FLIP14: BAIT_FORECAST's control, its ON plan game-witnessed under the pre-flip strike gate — so it runs
+    // `strikeIframeLapse` OFF; with the wave-14 defaults (⚖ user 2026-10-12) leg 629 solves in 290 t (FLIP14 report, D1).
+    it('leg 629 (L74 from L75 → the Darkshield): OFF refuses on the dwell; ON SOLVES — and the plan is the witness\'s tape', () => withContactFidelity({ strikeIframeLapse: false }, () => {
         const off = withBaitForecast(false, () => solve629());
         expect(off.ok).toBe(false);
         expect(off.message).toMatch(/bait \(lavarunner@24,56\): the dwell's condition .* never became true inside its 84-tick bound/);
@@ -196,7 +199,7 @@ describe('LEASH D2 — `BAIT_FORECAST`: a bait is verified on the chaser forecas
         const tape = parseTape(JSON.stringify(W629ON.tape));
         expect(on.plan.solution.length).toBe(tape.tick_count);
         on.plan.solution.forEach((k, t) => expect([...heldKeysAt(tape, t)].sort(), `tick ${t}`).toEqual([...k].sort()));
-    });
+    }));
     it('…and that tape on the GAME: the player at every tick, unhit, every LavaRunner and Bulb at 0 px; the Darkshield taken', () => {
         expect(W629ON.end.items.hasDarkShield).toBe(true);
         expect(W629ON.end.persistence_cleared).toEqual([{ tag: 0, level: 74 }]);

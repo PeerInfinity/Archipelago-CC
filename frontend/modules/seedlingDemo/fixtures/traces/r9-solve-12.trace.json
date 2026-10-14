@@ -116,13 +116,13 @@
             "note": "merged: bait decided on the same tick; merged: walk decided on the same tick"
         },
         {
-            "tick": 1766,
+            "tick": 1760,
             "saw": {
                 "level": 12,
                 "x": 377.3816336070892,
-                "y": 252.1066377639859,
+                "y": 251.3066377639859,
                 "vx": 0,
-                "vy": 0.8,
+                "vy": 0,
                 "danger": []
             },
             "goal": {
@@ -137,19 +137,19 @@
                 "waypoints": 2,
                 "swordDash": {
                     "planned": true,
-                    "ticks": 51,
+                    "ticks": 53,
                     "baseline": 74,
-                    "saved": 23,
+                    "saved": 21,
                     "windows": [
                         {
-                            "at": 2,
+                            "at": 0,
                             "prefix": [
                                 0,
                                 2
                             ]
                         },
                         {
-                            "at": 22,
+                            "at": 20,
                             "prefix": [
                                 0,
                                 2,
@@ -160,9 +160,9 @@
                     ],
                     "legs": [
                         14,
-                        37
+                        39
                     ],
-                    "scanned": 52,
+                    "scanned": 60,
                     "why": null
                 }
             },
@@ -183,20 +183,21 @@
                 },
                 {
                     "option": "sword-dash window: not-faster",
-                    "why": "48 of 52 scanned preview(s) — first at walk-offset 0: 74 tick(s) against 74 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                    "why": "56 of 60 scanned preview(s) — first at walk-offset 0: 74 tick(s) against 74 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
                 }
             ],
             "keys": [
                 "down",
-                "left"
+                "left",
+                "primary"
             ]
         },
         {
-            "tick": 1901,
+            "tick": 1897,
             "saw": {
                 "level": 12,
-                "x": 439.8808806760107,
-                "y": 258.1026056778321,
+                "x": 439.72408112271097,
+                "y": 258.01470214609634,
                 "vx": 0,
                 "vy": 0,
                 "danger": []
@@ -213,12 +214,12 @@
                 "waypoints": 7,
                 "swordDash": {
                     "planned": true,
-                    "ticks": 375,
-                    "baseline": 561,
-                    "saved": 186,
+                    "ticks": 379,
+                    "baseline": 556,
+                    "saved": 177,
                     "windows": [
                         {
-                            "at": 151,
+                            "at": 152,
                             "prefix": [
                                 0,
                                 2,
@@ -227,7 +228,7 @@
                             ]
                         },
                         {
-                            "at": 171,
+                            "at": 172,
                             "prefix": [
                                 0,
                                 2,
@@ -236,7 +237,7 @@
                             ]
                         },
                         {
-                            "at": 191,
+                            "at": 192,
                             "prefix": [
                                 0,
                                 2,
@@ -245,22 +246,23 @@
                             ]
                         },
                         {
-                            "at": 211,
+                            "at": 212,
                             "prefix": [
                                 0,
                                 2,
-                                8
+                                8,
+                                14
                             ]
                         },
                         {
-                            "at": 244,
+                            "at": 241,
                             "prefix": [
                                 0,
                                 2
                             ]
                         },
                         {
-                            "at": 264,
+                            "at": 261,
                             "prefix": [
                                 0,
                                 2,
@@ -269,21 +271,7 @@
                             ]
                         },
                         {
-                            "at": 284,
-                            "prefix": [
-                                0,
-                                2
-                            ]
-                        },
-                        {
-                            "at": 307,
-                            "prefix": [
-                                0,
-                                2
-                            ]
-                        },
-                        {
-                            "at": 339,
+                            "at": 281,
                             "prefix": [
                                 0,
                                 2,
@@ -292,7 +280,23 @@
                             ]
                         },
                         {
-                            "at": 360,
+                            "at": 310,
+                            "prefix": [
+                                0,
+                                2
+                            ]
+                        },
+                        {
+                            "at": 344,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 364,
                             "prefix": [
                                 0
                             ]
@@ -300,14 +304,14 @@
                     ],
                     "legs": [
                         44,
-                        89,
+                        90,
                         21,
-                        92,
-                        16,
-                        46,
-                        67
+                        88,
+                        18,
+                        50,
+                        68
                     ],
-                    "scanned": 760,
+                    "scanned": 776,
                     "why": null
                 }
             },
@@ -348,11 +352,11 @@
                 },
                 {
                     "option": "sword-dash window: leg-bound",
-                    "why": "607 of 760 scanned preview(s) — first at walk-offset 0: its longest leg is 211 tick(s), past the preview/drive agreement bound of 195 (§27.8) — past that the walk would be certified against a preview the drive stops matching"
+                    "why": "611 of 776 scanned preview(s) — first at walk-offset 0: its longest leg is 206 tick(s), past the preview/drive agreement bound of 195 (§27.8) — past that the walk would be certified against a preview the drive stops matching"
                 },
                 {
                     "option": "sword-dash window: not-faster",
-                    "why": "128 of 760 scanned preview(s) — first at walk-offset 171: 556 tick(s) against 556 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 5 press(es), 3 of them dashes, and 0 were YIELDED"
+                    "why": "142 of 776 scanned preview(s) — first at walk-offset 172: 535 tick(s) against 535 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 5 press(es), 3 of them dashes, and 0 were YIELDED"
                 }
             ],
             "keys": [

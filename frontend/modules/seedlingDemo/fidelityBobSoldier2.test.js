@@ -10,6 +10,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -82,30 +83,34 @@ describe('BOBSOLDIER2 D1 — the game witnesses', () => {
     });
 });
 
+// ⛓ fidelity FLIP14: these four are BOBSOLDIER2's switch-by-switch CONTROLS, measured (and the both-ON plan
+// game-witnessed) under the pre-flip strike gate, so they run `strikeIframeLapse` OFF, solve and replay alike. ON (⚖ the
+// wave-14 flip, user 2026-10-12) step 50 REFUSES at every switch setting: the walk gate forbids (71.04,67.07) for
+// `bobsoldier@48,80` (FLIP14 report, D1 — a survey-row mover).
 describe('BOBSOLDIER2 D2 — the solver, switch by switch, on survey step 50\'s staging', () => {
-    it('both ON: the solver\'s own plan IS the witness `bobsoldier2-l30-torch`', async () => {
+    it('both ON: the solver\'s own plan IS the witness `bobsoldier2-l30-torch`', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
         const { solved } = await bobsoldier2Plan(true);
         expect(solved.out.perTick.length).toBe(tape('bobsoldier2-l30-torch').tick_count);
         const kill = solved.out.records.find((r) => r.strategy === 'kill' && r.arm === 'chaser');
         expect(kill).toMatchObject({ target: BODY, stance: { x: 88, y: 56 }, ticks: 22, bound: 53 });
-    }, 120_000);
+    }), 120_000);
 
-    it('both OFF: the dwell refuses (the survey\'s text), and the keys it drove are `bobsoldier2-l30-dash-stance`', async () => {
+    it('both OFF: the dwell refuses (the survey\'s text), and the keys it drove are `bobsoldier2-l30-dash-stance`', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
         const { solved, refusal, driven } = await bobsoldier2Plan(false);
         expect(solved).toBeNull();
         expect(refusal.message).toMatch(/the dwell's condition .* never became true inside its 53-tick bound/);
         expect(driven).toHaveLength(tape('bobsoldier2-l30-dash-stance').tick_count);
-    }, 120_000);
+    }), 120_000);
 
-    it('D2a alone: the stance walk keeps the forecast, and the corpse\'s PAD refuses the next walk\'s gate', async () => {
+    it('D2a alone: the stance walk keeps the forecast, and the corpse\'s PAD refuses the next walk\'s gate', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
         const { refusal } = await bobsoldier2Plan(true, { swordGate: false });
         expect(refusal.message).toMatch(/collect \(64,64\) stance: the danger map forbids \(87\.86\d*,58\.05\d*\) — chaser:bobsoldier@48,80 \(inside leash 80 \(d=15\.8\), box grown 0\.8 px\/tick x 0 \+ pad 16\)/);
-    }, 120_000);
+    }), 120_000);
 
-    it('D2b alone: the dashed stance walk still runs the dwell out', async () => {
+    it('D2b alone: the dashed stance walk still runs the dwell out', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
         const { refusal } = await bobsoldier2Plan(true, { killStance: false });
         expect(refusal.message).toMatch(/the dwell's condition .* never became true inside its 53-tick bound/);
-    }, 120_000);
+    }), 120_000);
 });
 
 describe('BOBSOLDIER2 D2b — the walk gate prices the corpse\'s blade by its clock', () => {

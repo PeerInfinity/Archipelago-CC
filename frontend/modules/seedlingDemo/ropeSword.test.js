@@ -16,6 +16,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -197,7 +198,9 @@ describe('D2 — the PULL rung: the silencer is derived, the latch is asserted o
         return { run, out };
     };
 
-    it('⛓⛓⛓ climbs AVOID → PULL: one swing at rope@32,16 from (5,2), group 0 latched, the lanes gone, no hit', () => {
+    // ⛓ fidelity FLIP14: the PULL rung's row, measured under the pre-flip strike gate — `strikeIframeLapse` OFF. ON (⚖ the
+    // wave-14 flip, user 2026-10-12) the approach's own swing pulls rope@32,16 (write t90), so PULL never climbs; 0 hits, L17.
+    it('⛓⛓⛓ climbs AVOID → PULL: one swing at rope@32,16 from (5,2), group 0 latched, the lanes gone, no hit', () => withContactFidelity({ strikeIframeLapse: false }, () => {
         const { run, out } = solveToEastOfLanes();
         const pulls = out.records.filter((r) => r.strategy === 'pull');
         expect(pulls).toHaveLength(1);
@@ -229,5 +232,5 @@ describe('D2 — the PULL rung: the silencer is derived, the latch is asserted o
         // ⛓ C1-ON: `CHOOSER_HIT_SOURCES` ships ON, so the trace's obstacle carries the probe's whole `sources` array
         expect(climbRows[0].obstacle).toEqual({ kind: 'danger', id: 'arrowtrap@96,32',
             sources: ['arrowLane:arrowtrap@96,32'] });
-    }, 60000);
+    }), 60000);
 });
