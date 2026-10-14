@@ -134,7 +134,8 @@ async function main() {
     {
         let run = null;
         // ⛓ K2PREP D2: with --camera the replay reads the GAME's camera on the shake band's uncertain ticks
-        // (`levelRun.witnessCamera`) — the first sample at each tick, as the join below takes. ⚠ NOT tick 0: the
+        // (`levelRun.witnessCamera`) — the first sample at each tick (⚠ the join below now takes the LAST before the
+        // tick advanced, fidelity SMALLGAPS D1; the camera keeps its first sample, unmeasured past a dead span). ⚠ NOT tick 0: the
         // boot sample is polled before the level's first `view()` (measured on L75: (0, 108) at t0, then the
         // model's (0, 80) at every exact tick from t1), so it is not the camera update 1 reads.
         const cams = new Map();
@@ -172,9 +173,18 @@ async function main() {
         const t = tickOf(f);
         return Number.isInteger(t) && t >= 0 && t <= tape.tick_count && col[t] && playerOf(f);
     });
-    // one sample per tick (the first one at it — later ones may straddle the update)
+    // ⛓ fidelity SMALLGAPS D1 — one sample per tick, at the `Bot`'s OWN OBSERVATION POINT: the LAST poll before the
+    // tick advanced. `Bot.update` records `obsX/obsY` at the top of the first LIVE frame after the previous tick, so
+    // every DEAD frame between (a freeze, a fade) is behind it. The first poll at a tick reads the state the tick's
+    // own frame left, which is the same thing on a live frame and NOT inside a freeze: on L74's arrival button the
+    // first poll at t1 stood 20 frames into the 175-frame freeze (y 136) where the `Bot` observed 135.2 (`botDrain`, the
+    // same run). Measured over the 13 committed witnesses: only `l74arrival-*` part (t1, t5); the tape's FINAL tick
+    // keeps the first poll (the polls after `finished` are frames the tape never observed).
     const byTick = new Map();
-    for (const f of inTape) if (!byTick.has(tickOf(f))) byTick.set(tickOf(f), f);
+    const finalTick = inTape.reduce((m, f) => Math.max(m, tickOf(f)), -Infinity);
+    for (const f of inTape) {
+        if (tickOf(f) !== finalTick || !byTick.has(tickOf(f))) byTick.set(tickOf(f), f);
+    }
     const samples = [...byTick.values()];
 
     const fits = [];
