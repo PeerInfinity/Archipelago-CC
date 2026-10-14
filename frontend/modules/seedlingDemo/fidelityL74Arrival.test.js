@@ -13,6 +13,15 @@
  *   - `l74arrival-door-l73`: L73 booted at leg 622's staging, `up` through `teleporter@64,0` — a DOOR arrival at t4,
  *     the game frozen at t5;
  *   - `fixtures/contact-witness/589.json`: the sweep's capture of the same arrival (t0–t2).
+ *
+ * ⛓ fidelity SMALLGAPS D1 — THE TAPE TICK IS THE `Bot`'S, AND A FREEZE FRAME IS NOT ONE (`buttonFallReleaseStep`).
+ * `Bot.update` counts every `Game.freezeObjects` frame DEAD and observes at the top of the first live frame after it,
+ * so the freeze's release step (the rock clears the flag above the Player) lands BEFORE the next observation: the
+ * `Bot`'s own observations of leg 624's tape read 136, 135.2, 133.85 — no stall (`botDrain`, the same p4f run). Both
+ * witnesses above were first recorded from the probe's FIRST poll at each tick, 20 frames into the 175-frame freeze
+ * (y 136 at t1 / t5); re-recorded at the `Bot`'s observation point, exactly that one sample each moved to 135.2.
+ * Release ON reads 0 px with either arm; `arrivalButtonArm` still decides WHICH tick is the frozen one (a press there
+ * is lost: `useItem` is inside the gated `mobileUpdate`). The 589 capture samples like the old probe (t1 at 136).
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -43,8 +52,8 @@ const replay = (w) => {
     }
     return col;
 };
-/** The sampled ticks where the model's player is not the game's, to the bit. */
-const parted = (w, arm) => withContactFidelity({ arrivalButtonArm: arm }, () => {
+/** The sampled ticks where the model's player is not the game's, to the bit (`release`: `buttonFallReleaseStep`). */
+const parted = (w, arm, release = false) => withContactFidelity({ arrivalButtonArm: arm, buttonFallReleaseStep: release }, () => {
     const col = replay(w);
     return w.samples.filter((s) => !col[s.t] || col[s.t].x !== s.player.x || col[s.t].y !== s.player.y
         || col[s.t].level !== s.level).map((s) => s.t);
@@ -54,21 +63,25 @@ describe('L74ARRIVAL — the switch', () => {
     it('ships OFF', () => {
         expect(CONTACT_FIDELITY_DEFAULTS.arrivalButtonArm).toBe(false);
     });
+    it('SMALLGAPS D1: the release step ships OFF too', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.buttonFallReleaseStep).toBe(false);
+    });
 });
 
 describe('L74ARRIVAL D1 — a boot on button@288,128 freezes on its first live frame', () => {
-    it('the witness: L74 booted on the button, 332 samples, the game frozen at t1', () => {
+    it('the witness: L74 booted on the button, 332 samples, NO stall at the `Bot`\'s ticks (136, 135.2, 133.85)', () => {
         expect(W624.samples.length).toBe(332);
         expect(W624.tape.boot).toEqual({ level: 74, x: 288, y: 128 });
         const y = (t) => W624.samples.find((s) => s.t === t).player.y;
-        expect([y(0), y(1)]).toEqual([136, 136]);
-        expect(y(2)).toBeLessThan(136);
+        expect([y(0), y(1), y(2)]).toEqual([136, 135.2, 133.85]);
     });
-    it('ON: every sample at 0 px', () => {
-        expect(parted(W624, true)).toEqual([]);
+    it('SMALLGAPS D1 — the release step ON: every sample at 0 px, with the arm ON or OFF', () => {
+        expect(parted(W624, true, true)).toEqual([]);
+        expect(parted(W624, false, true)).toEqual([]);
     });
-    it('OFF: the control parts at t1–t2 only (Δy +0.8 / −1.35) and re-converges', () => {
-        expect(parted(W624, false)).toEqual([1, 2]);
+    it('the arm alone stands t1, the defaults stand t2 — each one tick, and each re-converges', () => {
+        expect(parted(W624, true)).toEqual([1]);
+        expect(parted(W624, false)).toEqual([2]);
     });
     it('the sweep\'s capture of leg 589 (the same arrival): ON 0 px, OFF parts at t1 on y/vy', async () => {
         const on = await withContactFidelity({ arrivalButtonArm: true }, () => replayCapture(CAP589));
@@ -80,24 +93,34 @@ describe('L74ARRIVAL D1 — a boot on button@288,128 freezes on its first live f
         expect(off.firstDiff.fields).toEqual(expect.arrayContaining([
             expect.objectContaining({ field: 'y', game: 136, model: 135.2 })]));
     });
+    it('SMALLGAPS D1: the capture samples INSIDE the freeze — release ON parts it at t1 (136 vs the `Bot`\'s 135.2)', async () => {
+        const r = await withContactFidelity({ arrivalButtonArm: true, buttonFallReleaseStep: true }, () => replayCapture(CAP589));
+        expect(r.error).toBeNull();
+        expect(r.firstDiff?.t).toBe(1);
+        expect(r.firstDiff.fields).toEqual(expect.arrayContaining([
+            expect.objectContaining({ field: 'y', game: 136, model: 135.2 })]));
+        expect(W624.samples.find((s) => s.t === 1).player.y).toBe(135.2);
+    });
     it('a boot onto the FALLEN rock\'s room ({74,2} staged) has nothing to drop: 0 px either way', () => {
         expect(parted(WPOST, true)).toEqual([]);
         expect(parted(WPOST, false)).toEqual([]);
+        expect(parted(WPOST, true, true)).toEqual([]);
     });
 });
 
 describe('L74ARRIVAL D2 — a DOOR arrival onto the button (L73 → L74) freezes on the destination\'s first live frame', () => {
-    it('the witness: the door at t4, the game frozen at t5', () => {
+    it('the witness: the door at t4, NO stall at the `Bot`\'s ticks (136, 135.2, 133.85 at t4–t6)', () => {
         expect(WDOOR.samples.length).toBe(131);
         const at = (t) => WDOOR.samples.find((s) => s.t === t);
         expect([at(3).level, at(4).level]).toEqual([73, 74]);
-        expect([at(4).player.y, at(5).player.y]).toEqual([136, 136]);
-        expect(at(6).player.y).toBeLessThan(136);
+        expect([at(4).player.y, at(5).player.y, at(6).player.y]).toEqual([136, 135.2, 133.85]);
     });
-    it('ON: every sample at 0 px, the L73 forced hit (t2) included', () => {
-        expect(parted(WDOOR, true)).toEqual([]);
+    it('SMALLGAPS D1 — the release step ON: every sample at 0 px (the L73 forced hit at t2 included), arm ON or OFF', () => {
+        expect(parted(WDOOR, true, true)).toEqual([]);
+        expect(parted(WDOOR, false, true)).toEqual([]);
     });
-    it('OFF: the control parts at t5–t6 only', () => {
-        expect(parted(WDOOR, false)).toEqual([5, 6]);
+    it('the arm alone stands t5, the defaults stand t6', () => {
+        expect(parted(WDOOR, true)).toEqual([5]);
+        expect(parted(WDOOR, false)).toEqual([6]);
     });
 });

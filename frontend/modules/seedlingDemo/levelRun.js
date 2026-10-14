@@ -17870,6 +17870,35 @@ export function createLevelRun({
                 const tick = runFrozenTick(activators, 'a button-dropped fallrock');
                 buttonFallsInFlight = new Set();
                 resolveButtonFalls(ids);
+                // ── ⛓ fidelity SMALLGAPS D1 (`CONTACT_FIDELITY.buttonFallReleaseStep`): THE RELEASE STEP, IN THIS TICK ──
+                // The rock clears `Game.freezeObjects` above the Player on the
+                // span's last (dead) frame, so the player steps once under the
+                // held keys BEFORE the next observation — the BobBoss rock's
+                // form. `pendingFreeSteps` lands it a tick late: measured on
+                // leg 624's tape, the `Bot`'s own observations read 136, 135.2,
+                // 133.85 (no stall) where the deferred step stands one tick.
+                // The release frame is a whole world update, so the world's
+                // first frame is behind it. OFF: deferred, byte-identical.
+                if (CONTACT_FIDELITY.buttonFallReleaseStep && pendingFreeSteps > 0) {
+                    pendingFreeSteps -= 1;
+                    const keys = (lockSnap || frozenTimer > 0 || cutsceneWalk || bobNoInput
+                        || state.drown?.drowning === true) ? NO_KEYS : held;
+                    const freed = stepV2(state, keys, stepOptsFor({
+                        beforeTypeFlip: false,
+                        openActivators: openActivatorIds(activatorStateFor(level)),
+                        inputBlocked: frozenTimer > 0,
+                        steerBlocked: !canSteer(damage),
+                        dashImpulse: null,
+                        directionFace: damage.directionFace,
+                    }));
+                    if (freed.transition || freed.death) {
+                        throw new Error('levelRun: a button-dropped fallrock\'s release frame at tick '
+                            + `${ticksCompleted} produced a ${freed.transition ? 'TRANSITION' : 'DEATH'}, which a `
+                            + 'dead frame cannot show. Refused.');
+                    }
+                    state = freed;
+                    firstTickInWorld = false;
+                }
                 return tick;
             }
 
