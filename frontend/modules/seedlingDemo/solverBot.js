@@ -4699,7 +4699,9 @@ export const ECONOMIES_ROSTER_WIDE = false;
  * slashing`'s outer gate refuses every press anyway.
  */
 export function strikePolicyFor(run, { dashPlan = null,
-    dashMode = DEFAULT_DASH_MODE } = {}) {
+    dashMode = DEFAULT_DASH_MODE,
+    // ⛓ LAPSECOST D1 — the walk's i-frame-lapse permission (`createStrikePolicy`); `true`: the switch decides.
+    iframeLapse = true } = {}) {
     assertDashMode(dashMode, 'strikePolicyFor');
     const hasSword = run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword || false;
     if (!hasSword) return null;
@@ -4737,8 +4739,20 @@ export function strikePolicyFor(run, { dashPlan = null,
          * byte-identical — on a run with no needs (no `solveSegment`, or `contactFidelity.bulbLive` OFF).
          */
         vetoBody: dropKillVetoFor(run),
+        ...(iframeLapse === false ? { iframeLapse: false } : {}),
     });
 }
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY LAPSECOST D1 — **THE WALK'S NARROW-POLICY CANDIDATE** (`CONTACT_FIDELITY.strikeIframeLapse`
+ * ON only; `walkTo`'s probe has the measurement). When the lapse-admitting walk probes dangerous, the same corridor
+ * is probed once with the pre-lapse admissions (`strikePolicyFor`'s `iframeLapse: false`) before the ladder climbs,
+ * and a clean answer is walked with that policy. ON by default UNDER the switch (the switch itself is OFF, so the
+ * roster is byte-identical); `SEEDLING_LAPSE_NARROW_RETRY=0` turns it off for a node A/B.
+ */
+export const LAPSE_NARROW_RETRY = {
+    enabled: globalThis.process?.env?.SEEDLING_LAPSE_NARROW_RETRY !== '0',
+};
 
 /**
  * ⛓ EXPORTED FOR ONE REASON, and it is the same reason `facingToward` and
@@ -5556,7 +5570,9 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
      * tail's samples after the walk's, so a dash that arrives early is priced on the wait it arrives into; every
      * other number here (ticks, legs, the comparisons) reads the walk's own samples. `null` changes nothing.
      */
-    stand = null } = {}) {
+    stand = null,
+    /** ⛓ LAPSECOST D1 — the walk's i-frame-lapse permission, handed to every candidate's policy (`strikePolicyFor`). */
+    iframeLapse = true } = {}) {
     /**
      * ⛓⛓⛓ R9 SLICE 12i — **THE PASS READS ITS CANDIDATE SET, NEVER THE
      * CONSTANT**, and the set is the mode's own derivation.
@@ -5616,7 +5632,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
         return [...legs].map((n) => n ?? 0);
     };
     const previewFor = (dashPlan) => {
-        const strike = strikePolicyFor(run, { dashPlan, dashMode });
+        const strike = strikePolicyFor(run, { dashPlan, dashMode, iframeLapse });
         if (!stand) return { walk: previewWalk(run, wps, tolerance, { strike }), strike };
         const whole = previewWalk(run, wps, tolerance, { strike, standFor: stand.ticks, standKeys: stand.keys });
         const walk = { ...whole, samples: whole.samples.filter((sm) => sm.phase !== 'dwell'),
@@ -17780,6 +17796,8 @@ function solveSegmentUnder({
     const dashWalks = [];
     /** ⛓ FRONTIER3 — the walks planned on `FINE_LATTICE` after the frontier refused. */
     const fineLatticeWalks = [];
+    /** ⛓ LAPSECOST D1 — the walks the narrow strike policy certified (`LAPSE_NARROW_RETRY`; empty with the lapse OFF). */
+    const lapseNarrowWalks = [];
     /** ⛓ FORCEDHIT D2 — one row per crossing the forced-hit rung billed (`FORCED_HITS`; empty with it OFF). */
     const forcedHits = [];
     /** ⛓ hammer-phase B3 — the tape tick of every dash `dashesPressed` counted, so a rewind can un-count the tail. */
@@ -18566,7 +18584,8 @@ function solveSegmentUnder({
         return null;
     };
 
-    const probeCorridor = (wps, except = null, { axisAligned = false, walkCheck = false, stand = null } = {}) => {
+    const probeCorridor = (wps, except = null, { axisAligned = false, walkCheck = false, stand = null,
+        iframeLapse = true } = {}) => {
         // ⛔ THE SAME TOLERANCE `drive` WILL USE. A preview that arrived on a
         // different criterion would spend different ticks, and the ETAs are
         // the whole product.
@@ -18591,7 +18610,7 @@ function solveSegmentUnder({
         const tail = stand ? { standFor: stand.ticks, standKeys: stand.keys } : {};
         const walk = previewWalk(run, wps, tolerance, axisAligned
             ? { strike: null, axisAligned, ...tail }
-            : { strike: strikePolicyFor(run, { dashMode }), ...tail });
+            : { strike: strikePolicyFor(run, { dashMode, iframeLapse }), ...tail });
         const hit = probeSamples(walk.samples, except, { walkCheck });
         if (hit) {
             return { ...hit, eta: hit.tick - walk.startTick,
@@ -20719,8 +20738,39 @@ function solveSegmentUnder({
              */
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site between the plan and its probe.
             if (fineDeadlineReached('walk')) refuseWalkDeadline(`after ${what}'s corridor was planned (attempt ${attempt + 1})`);
-            const hit = probeCorridor(wps, except,
+            let hit = probeCorridor(wps, except,
                 { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
+            /**
+             * ⛓⛓ SEEDLING FIDELITY LAPSECOST D1 (`CONTACT_FIDELITY.strikeIframeLapse` ON only) — **THE NARROW
+             * POLICY IS A CANDIDATE BEFORE THE LADDER.** The lapse WIDENS the walk's strike admissions (a body
+             * inside its i-frame is struck when a test of the window reaches the lapse), and a wider policy walks a
+             * DIFFERENT walk: every admitted press costs an aim tick and a press tick of movement, and a press that
+             * lands one tick after the body's own contact re-arms (`Enemy.update` steps above the player) defends
+             * nothing. Measured on L40 (sweep legs `level_40__r23c29 <- … -> exit:out_pit_*`, 11 legs): the walk's
+             * lapse presses at t247 (`puncher@128,624`, lands nothing) and t507 (`bob@208,448`, kills at t512, its
+             * timer lapsed at t511 against the player) leave the player beside a re-armed bob, the probe flags it,
+             * and the ladder reaches only DETOUR, whose L40 via lattice spent the whole 2,560-unit budget. The
+             * SAME corridor walked with the pre-lapse admissions probes clean (the OFF plan, 776 t).
+             *
+             * ⇒ when the probe of the lapse-admitting walk is dangerous, the same corridor is probed ONCE more
+             * with the lapse admissions withheld (`iframeLapse: false`: `strikeCandidates` asks the pre-lapse
+             * question); a clean answer is walked with that policy — its dash candidates (`planSwordDash`) and its
+             * drive (`strikePolicyFor`) take the same permission, so the preview and the drive are one policy
+             * (⚖ ruling 30(c)). A dangerous one climbs the ladder on the FIRST hit, as before. Both policies are
+             * the model's: nothing here avoids a game interaction, it chooses which modelled presses the walk makes.
+             * OFF the switch (or `SEEDLING_LAPSE_NARROW_RETRY=0`) the branch is never entered: byte-identical.
+             */
+            let narrow = false;
+            if (hit && !axisAligned && CONTACT_FIDELITY.strikeIframeLapse && LAPSE_NARROW_RETRY.enabled) {
+                const again = probeCorridor(wps, except,
+                    { axisAligned, walkCheck: true, ...(stand ? { stand } : {}), iframeLapse: false });
+                if (!again) {
+                    narrow = true;
+                    lapseNarrowWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
+                        hit: { tick: hit.tick, x: hit.x, y: hit.y, sources: (hit.sources ?? []).map((x) => x.id ?? x.kind) } });
+                    hit = null;
+                }
+            }
             if (hit) {
                 /**
                  * ⛓⛓⛓ ⚖ §11.8a RULING 2 — THE LADDER REPLACES SLICE 2's
@@ -20769,7 +20819,7 @@ function solveSegmentUnder({
                 ? null
                 : planSwordDash(run, wps, { tolerance, dashMode,
                     certify: (samples) => probeSamples(samples, except),
-                    ...(stand ? { stand } : {}) });
+                    ...(stand ? { stand } : {}), ...(narrow ? { iframeLapse: false } : {}) });
             seeRow({
                 tick: perTick.length,
                 saw: saw(),
@@ -20779,6 +20829,8 @@ function solveSegmentUnder({
                     waypoints: wps.length,
                     // ⛓ FRONTIER3 — present only on a fine-lattice walk.
                     ...(fine ? { lattice: FINE_LATTICE } : {}),
+                    // ⛓ LAPSECOST D1 — present only on a walk the narrow policy certified (the lapse ON).
+                    ...(narrow ? { strikeLapse: 'withheld' } : {}),
                     /**
                      * ⛓⛓ R9 SLICE 12i — **THE MODE IS ON THE ROW, AND ONLY
                      * WHEN IT IS NOT THE ROSTER'S.** A trace that did not say
@@ -20832,7 +20884,8 @@ function solveSegmentUnder({
              */
             const strike = axisAligned
                 ? null
-                : strikePolicyFor(run, { dashPlan: dash?.plan ?? null, dashMode });
+                : strikePolicyFor(run, { dashPlan: dash?.plan ?? null, dashMode,
+                    ...(narrow ? { iframeLapse: false } : {}) });
             // ⛓ D3: the walk's dash record — see `dashWalks`. `pressed` is filled
             // as the walk's ticks run, so a refuted attempt keeps what it pressed.
             const dashWalk = dash ? {
@@ -22093,6 +22146,7 @@ function solveSegmentUnder({
          * replaced, cut to 200 characters).
          */
         ...(fineLatticeWalks.length ? { fineLatticeWalks } : {}),
+        ...(lapseNarrowWalks.length ? { lapseNarrowWalks } : {}),
         /**
          * ⛓ hammer-phase B3 — an optional result field, present only when a press kill's fight fallback ran
          * (`HAMMER_FIGHT_FALLBACK`): one row per fallback (`execKillByPress`'s `fightFallback` record).
