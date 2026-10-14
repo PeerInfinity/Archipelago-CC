@@ -39,6 +39,7 @@ const witness = (n) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'chaser-wi
 const W624 = witness('l74arrival-624-on-plan');
 const WDOOR = witness('l74arrival-door-l73');
 const WPOST = witness('l74leg624-postfall-reentry');
+const WL29 = witness('smallgaps-l29-button-walk');
 const CAP589 = JSON.parse(readFileSync(join(HERE, 'fixtures', 'contact-witness', '589.json'), 'utf8'));
 
 /** The model's observations of a witness's tape, by tick. */
@@ -84,11 +85,11 @@ describe('L74ARRIVAL D1 — a boot on button@288,128 freezes on its first live f
         expect(parted(W624, false)).toEqual([2]);
     });
     it('the sweep\'s capture of leg 589 (the same arrival): ON 0 px, OFF parts at t1 on y/vy', async () => {
-        const on = await withContactFidelity({ arrivalButtonArm: true }, () => replayCapture(CAP589));
+        const on = await withContactFidelity({ arrivalButtonArm: true, buttonFallReleaseStep: false }, () => replayCapture(CAP589));
         expect(on.error).toBeNull();
         expect(on.compared).toBe(3);
         expect(on.firstDiff).toBeNull();
-        const off = await withContactFidelity({ arrivalButtonArm: false }, () => replayCapture(CAP589));
+        const off = await withContactFidelity({ arrivalButtonArm: false, buttonFallReleaseStep: false }, () => replayCapture(CAP589));
         expect(off.firstDiff?.t).toBe(1);
         expect(off.firstDiff.fields).toEqual(expect.arrayContaining([
             expect.objectContaining({ field: 'y', game: 136, model: 135.2 })]));
@@ -122,5 +123,17 @@ describe('L74ARRIVAL D2 — a DOOR arrival onto the button (L73 → L74) freezes
     it('the arm alone stands t5, the defaults stand t6', () => {
         expect(parted(WDOOR, true)).toEqual([5]);
         expect(parted(WDOOR, false)).toEqual([6]);
+    });
+});
+
+describe('SMALLGAPS D1 — a MID-ROOM press (L29 button@112,128, `fallRockButton.test.js`\'s walkNorth(120, 60))', () => {
+    it('the witness: the game does not stand after the press (t10 140.85, t11 139.35)', () => {
+        expect(WL29.samples.length).toBe(61);
+        const y = (t) => WL29.samples.find((s) => s.t === t).player.y;
+        [140.85, 139.35, 138.1].forEach((v, i) => expect(y(10 + i)).toBeCloseTo(v, 9));
+    });
+    it('release ON: every sample at 0 px; OFF the deferred step stands t11 (the stall `fallRockButton` pins)', () => {
+        expect(parted(WL29, false, true)).toEqual([]);
+        expect(parted(WL29, false)).toEqual([11]);
     });
 });
