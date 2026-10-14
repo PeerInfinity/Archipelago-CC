@@ -65,6 +65,9 @@ describe('R4-swim D2: the IceTurret\'s flip is invisible to every bridged chaser
         const tags = bridgedChaserTags();
         expect(tags.length).toBeGreaterThan(0);
         for (const tag of tags) {
+            // ⛓ fidelity LAPSECOST D2: the Flyer (`flyerLive`) carries NO solids — nothing blocks it, so the flip is
+            // invisible to it by construction (`assertChaserSolidsBound` excludes an empty list the same way).
+            if (chaserSolids(tag).length === 0) continue;
             expect(chaserSolids(tag), tag).toEqual(expect.arrayContaining(['Solid']));
             if (tag === 'bobsoldier') expect(chaserSolids(tag)).not.toContain('Enemy');
             else expect(chaserSolids(tag), tag).toEqual(expect.arrayContaining(['Enemy', 'Solid']));

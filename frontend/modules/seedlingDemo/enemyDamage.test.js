@@ -19,6 +19,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 
 import {
     CORPSE_COUNTING, ENEMY_DAMAGE_DEFAULTS, EnemyDamageError, KILL_ARM_POLICY,
@@ -131,7 +132,8 @@ describe('the policy — an ENUMERATION, checked against `combat.js`', () => {
      * AS3 — which is exactly how `BurnableTree` and `BombPusher` fell out of
      * the press census in slice 11.
      */
-    it('⛔ every refusal carries its OWN reason, not a shared one', () => {
+    // ⛓ fidelity LAPSECOST D2: asked with `flyerLive` OFF (ON, the Flyer's row is `modelled`).
+    it('⛔ every refusal carries its OWN reason, not a shared one', () => withContactFidelity({ flyerLive: false }, () => {
         const refused = Object.entries(KILL_ARM_POLICY)
             .filter(([, p]) => p.policy === 'refused');
         expect(refused.length).toBeGreaterThan(15);
@@ -142,7 +144,7 @@ describe('the policy — an ENUMERATION, checked against `combat.js`', () => {
         // duplicates are bounded and named rather than forbidden.
         const shared = whys.filter((w) => w === 'the Bob cost; off every R5 route');
         expect(shared.length).toBeLessThanOrEqual(4);
-    });
+    }));
 
     /**
      * ⛔ `Turret` IS NOT `IceTurret`. The plain one has no `death()`
