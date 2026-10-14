@@ -1527,6 +1527,16 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             switch: 'bulbLive',
             exposedAdded: Object.freeze([]),
         }),
+        /**
+         * ⛓ fidelity LAPSECOST D2 — `flyer` joins under `contactFidelity.flyerLive` (OFF): skipped by name in
+         * `stepContactsNow` like the Bulb (its contact is empty; `dropNow` bills its drop). Its rows are the committed
+         * tapes that retire `noDamage` and enter a Flyer room (L100/101/103/105) — none at this head.
+         */
+        flyer: Object.freeze({
+            table: 'contactFidelity',
+            switch: 'flyerLive',
+            exposedAdded: Object.freeze([]),
+        }),
     }),
 
     /** The roster tally the exposure was derived from, at `153f5100b`. */
