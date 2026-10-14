@@ -12,7 +12,7 @@
  *   node scripts/test/measure-noiz2sa-grid.mjs --skills 90,95 --spans "10:7–10:boss,1:9,pick:3" [--visits 200]
  *        [--max-attempts 100] [--attempt-cap 2000] [--chunk 5] [--jobs 4] [--out raw.json]
  *   node scripts/test/measure-noiz2sa-grid.mjs --rules path/to/rules.json [same options]   (each priced region's move
- *        span at its pricing skill, rounded, with its rate and planned cost)
+ *        span at its pricing skill, rounded, with its rate and planned cost; `--skip-final` leaves out the Victory region)
  *
  * A span is STAGE:SCENE–STAGE:SCENE, one position, or pick:N — the span `pickSpan(N, skill)` picks (the 50% rule).
  * `--attempt-cap`: stop starting visits in a cell once it has played this many attempts (a hopeless cell would play
@@ -66,6 +66,7 @@ if (process.env.N5_GRID_WORKER) {
         for (const [region, sc] of Object.entries(doc.preset_sidecars?.[pid] ?? {})) {
             const p = sc.playable_payload;
             if (sc.substrate !== 'noiz2sa' || !p?.pricing) continue;
+            if (args.includes('--skip-final') && p.pricing.final) continue; // the same visits as the grid's cell at that span and skill
             cells.push({ label: `${opt('label', path.basename(opt('rules')))}:${region}`, region, skill: Math.round(p.pricing.skill), span: p.move,
                 rate: p.timeDrainPerSecond, planned: p.pricing.cost, pricing: p.pricing });
         }
