@@ -1,8 +1,9 @@
 /**
  * The Seedling track (catalogue S1–S4): the ORIGINAL Seedling, recompiled
  * from its SWF, as an Archipelago game. ⚖ The user, 2026-10-10/11:
- *   - S1 needs F2 (the in-browser SWFRecomp-CC), which is not built: its
- *     steps are the planned ones, and the first is the recorded failure;
+ *   - S1 drives the SWF Recompiler panel (F2: the in-browser SWFRecomp-CC,
+ *     the swfrecomp-browser submodule); its walk recompiles a SMALL AVM2
+ *     SWF, and Seedling itself is an optional step in the prose;
  *   - S2 / S4 play **seedling_playthrough** (the 113-level region atlas of
  *     the whole map) on wasm, mentioning the JS switch;
  *   - S3's multiworld uses the **Seedling Playthrough** world;
@@ -26,54 +27,107 @@ const loadPlaythrough = (id) => loadPresetWorld(id, PLAYTHROUGH.game, PLAYTHROUG
 
 // ── S1: recompile the SWF in the browser ─────────────────────────────────
 
+// The SWF Recompiler panel (swfRecompilerPanel/swfRecompilerUI.js CONTROLS).
+const swfr = (selector) => ({ ...RECOMPILER, selector });
+const S1_EXAMPLE = 'avm2_graphics_runtime';
+/** A stage of the panel's list finished (✓) since the step began — not a previous run's. */
+const stageDone = (ctx, stage) => {
+    const row = ctx.query(swfr(`.swfr-stage[data-stage="${stage}"]`));
+    return row?.dataset.state === 'done' && ctx.sinceStep(row.dataset.at);
+};
+/** The panel's error for a stage that failed since the step began. */
+const stageFailed = (stage) => (ctx) => {
+    const row = ctx.query(swfr(`.swfr-stage[data-stage="${stage}"]`));
+    return row?.dataset.state === 'error' && ctx.sinceStep(row.dataset.at)
+        ? `${stage}: ${row.querySelector('.swfr-stage-text')?.textContent ?? 'failed'}` : null;
+};
+
 export const SEEDLING_RECOMPILE = seedling({
     id: 'seedling-recompile',
     title: 'Seedling: recompile the original game in your browser',
-    summary: 'Turn Seedling\'s Flash file into a WebAssembly game, in the browser, and play it.',
-    firstFailingStep: 'open-recompiler',
+    summary: 'Turn a Flash file into a WebAssembly program in the browser and run it — then, if you like, all of Seedling.',
+    // Measured 2026-10-14 (slice F2b-2): every step works, on the new-tab route
+    // under npm test's headless shell. ⚖ null → ready is the planner's call.
+    firstFailingStep: null,
     intro: [
-        { prose: '*Seedling* is a Flash game. Flash is gone from browsers, so this project **recompiles** the game: SWFRecomp turns its SWF into C, and the C into WebAssembly, which any browser runs. The builds the app uses are prebuilt (see the [seedling-wasm README](' + WASM_README + ')); this tutorial does the recompile itself, in the browser.' },
-        { prose: '⚠ The in-browser recompiler is planned, not built yet: these steps describe it, and the first one does not work yet.' },
+        { prose: '*Seedling* is a Flash game. Flash is gone from browsers, so this project **recompiles** the game: SWFRecomp turns its SWF into C, and the C into WebAssembly, which any browser runs. The builds the app uses are prebuilt (see the [seedling-wasm README](' + WASM_README + ')); this tutorial does the recompile itself, in the browser, with the same SWFRecomp commit that built them.' },
+        { prose: 'It starts with a **small** SWF, a one-frame test that draws four shapes and prints what it drew, so the whole pipeline takes about half a minute. Seedling itself is the optional last step: the same buttons, but minutes rather than seconds.' },
+        { prose: 'The compile runs **clang** in your browser. The first time, it downloads the compiler package (about 110 MB, from cdn.wasmer.io); the browser keeps it after that. It needs a recent Chrome or Edge with WebGPU.' },
     ],
-    sections: [{
-        id: 'recompile',
-        title: 'Recompile and run',
-        blocks: [
-            {
-                step: {
-                    id: 'open-recompiler',
-                    text: 'Open the **SWF Recompiler** tab (Quick Launch lists it).',
-                    actions: [{ activate: RECOMPILER }],
-                    done: (ctx) => ctx.isPanelShowing(RECOMPILER),
+    sections: [
+        {
+            id: 'recompile',
+            title: 'Recompile, compile, run',
+            blocks: [
+                {
+                    step: {
+                        id: 'open-recompiler',
+                        text: 'Open the **SWF Recompiler** tab (Quick Launch lists it). It loads the recompiler page and says whether it can compile **in the panel** (Chrome) or will use **a new tab** (other browsers).',
+                        actions: [{ activate: RECOMPILER }],
+                        done: (ctx) => ctx.isPanelShowing(RECOMPILER) && ctx.query(swfr('.swfr-panel'))?.dataset.ready === 'true',
+                        // The page's first visit installs its service worker and reloads once.
+                        doneTimeoutMs: 60000,
+                    },
                 },
-            },
-            {
-                step: {
-                    id: 'choose-swf',
-                    text: 'Choose **Seedling** among its SWFs (or drop a `.swf` of your own on it).',
-                    actions: [{ select: { ...RECOMPILER, selector: 'select.swfr-source', value: 'seedling' } }],
-                    done: (ctx) => ctx.query({ ...RECOMPILER, selector: 'select.swfr-source' })?.value === 'seedling',
+                {
+                    step: {
+                        id: 'choose-swf',
+                        text: `Choose the example **${S1_EXAMPLE}** in the **SWF** list.`,
+                        actions: [{ select: { ...swfr('select.swfr-source'), value: S1_EXAMPLE } }],
+                        done: (ctx) => ctx.query(swfr('select.swfr-source'))?.value === S1_EXAMPLE,
+                    },
                 },
-            },
-            {
-                step: {
-                    id: 'recompile',
-                    text: 'Press **Recompile**: SWF → C → WebAssembly, with its progress below.',
-                    actions: [{ click: { ...RECOMPILER, selector: 'button.swfr-recompile' } }],
-                    done: (ctx) => ctx.text({ ...RECOMPILER, selector: '.swfr-status' }).startsWith('Done'),
-                    doneTimeoutMs: 600000,
+                {
+                    step: {
+                        id: 'recompile',
+                        text: 'Press **Recompile**: SWFRecomp, itself compiled to WebAssembly, turns the SWF into C. Where the panel cannot compile, this opens the recompiler in a new tab first — keep this tab in front.',
+                        actions: [{ click: swfr('button.swfr-recompile') }],
+                        done: (ctx) => stageDone(ctx, 'recompile'),
+                        failed: (ctx) => stageFailed('load')(ctx) || stageFailed('recompile')(ctx),
+                        doneTimeoutMs: 90000,
+                    },
                 },
-            },
-            {
-                step: {
-                    id: 'run',
-                    text: 'Press **Run**: the recompiled game opens in the **Flash Panel**.',
-                    actions: [{ click: { ...RECOMPILER, selector: 'button.swfr-run' } }],
-                    done: (ctx) => ctx.exists({ panel: 'flashPanel', selector: 'iframe' }),
+                {
+                    step: {
+                        id: 'compile',
+                        text: 'Press **Compile**: clang turns the C into WebAssembly. Its progress shows in the **Compile** row (the first time, most of it is the compiler download).',
+                        actions: [{ click: swfr('button.swfr-compile') }],
+                        done: (ctx) => stageDone(ctx, 'compile'),
+                        failed: stageFailed('compile'),
+                        doneTimeoutMs: 300000,
+                    },
                 },
-            },
-        ],
-    }],
+                {
+                    step: {
+                        id: 'run',
+                        text: 'Press **Run**: the movie starts — below the buttons, or in the recompiler tab. A red square, a cyan quad, a red-to-green gradient and a blue line.',
+                        actions: [{ click: swfr('button.swfr-run') }],
+                        done: (ctx) => stageDone(ctx, 'run'),
+                        failed: stageFailed('run'),
+                        doneTimeoutMs: 60000,
+                    },
+                },
+                {
+                    step: {
+                        id: 'check',
+                        text: 'Press **Check**: the panel compares what the movie printed (its **Trace**) with the example\'s expected output, and reads six pixels back from its canvas.',
+                        actions: [{ click: swfr('button.swfr-check') }],
+                        done: (ctx) => stageDone(ctx, 'check') && ctx.query(swfr('.swfr-panel'))?.dataset.verdict === 'pass',
+                        failed: stageFailed('check'),
+                        doneTimeoutMs: 30000,
+                    },
+                },
+            ],
+        },
+        {
+            id: 'seedling',
+            title: 'Optional: all of Seedling',
+            blocks: [
+                { prose: 'The same buttons recompile the whole game. Choose **A SWF file of your own…** and pick Seedling\'s SWF (build it from its AS3 source, [PeerInfinity/Seedling](https://github.com/PeerInfinity/Seedling), or use a copy of the original game you have), then Recompile, Compile and Run.' },
+                { prose: '- It is big: on a fast desktop Chrome the recompile took about a minute and the compile about five; on a slow machine allow 20 minutes and 3 GB of memory.\n- The result is the original game, title screen and all — the same game the prebuilt `seedling_original` build plays.\n- The tutorial\'s own test does not take this step; it would run for about 18 minutes.' },
+            ],
+        },
+    ],
 });
 
 // ── S2: the bot on it ────────────────────────────────────────────────────
