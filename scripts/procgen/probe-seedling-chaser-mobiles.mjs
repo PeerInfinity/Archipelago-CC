@@ -22,6 +22,10 @@
  *                            can read a shake band's 'uncertain' on-screen ticks off the game (`cameraWitness`)
  *   … --player-hits          (⛓ LEASH D3) also record the GAME's player `hits` / `hits_timer` (`botStatus()`) in each
  *                            recorded sample's `player`, so a witness can say WHEN the game billed a contact
+ *   … --frames=<file.json>   (⛓ HAMMER-PHASE DD) write EVERY polled frame (status, player, rows of the class) — the
+ *                            join above keeps the FIRST frame at each tick, and a pickup ceremony's frozen frames share
+ *                            one tick number (measured: 5 frames carry t135 on L30's Torchpickup, the first 2 still at
+ *                            t134's position), so a witness that reads the LAST frame per tick needs them all
  */
 import { chromium } from 'playwright';
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -58,6 +62,7 @@ async function main() {
     const UPTO = arg('upto') === null ? Infinity : Number(arg('upto'));
     const CAMERA = process.argv.includes('--camera');
     const PLAYER_HITS = process.argv.includes('--player-hits');
+    const FRAMES = arg('frames');
 
     takeBoxLockOrExit({ name: 'probe-seedling-chaser-mobiles.mjs', kind: 'browser' });
 
@@ -238,6 +243,12 @@ async function main() {
         writeFileSync(OUT, `${JSON.stringify({ tape: TAPE ?? FILE, class: CLASS, page: PAGE_NAME, calibrated, fits, compared, worst, disagreements, rows,
             ...(CAMERA ? { cameras: samples.map((f) => [tickOf(f), f.status.camera]) } : {}) }, null, 1)}\n`);
         console.log(`wrote ${OUT}`);
+    }
+    if (FRAMES) {
+        writeFileSync(FRAMES, `${JSON.stringify({ tape: TAPE ?? FILE, class: CLASS, page: PAGE_NAME,
+            frames: frames.map((f) => ({ tick: tickOf(f), status: f.status, player: playerOf(f) ?? null,
+                bodies: bodiesOf(f) })) })}\n`);
+        console.log(`wrote ${FRAMES}`);
     }
     if (RECORD) {
         if (!(calibrated && agree)) {
