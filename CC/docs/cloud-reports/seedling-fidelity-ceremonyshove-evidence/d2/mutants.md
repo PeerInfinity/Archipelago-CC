@@ -10,3 +10,4 @@
 
 M1/M3: the prediction missed the test's own lump-row pin (`[149, 1]`), asserted on every ON row; the behaviour
 (the comparison alone) is red exactly where predicted. Every mutant was restored (`cmp` against the saved copy).
+| M6 seal lump deferred one tick (the first cut) | l17 ON red only | l17 ON red only (and the lump row's `t`) |
