@@ -20,10 +20,14 @@
 .tut-card-row { display: flex; gap: 6px; align-items: center; margin-top: 6px; }
 .tut-card-count { color: #8a8a98; font-size: 12px; flex: 1 1 auto; }
 .tut-card-blocked { color: #e0b070; font-size: 12px; margin-top: 4px; }
+.tut-card-terminal { color: #8fc0e0; font-size: 12px; margin-top: 4px; }
 .tut-track { margin: 12px 0 2px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: #9a9aac; }
 .tut-collapsed { margin: 10px 0; border-top: 1px solid #3a3a48; padding-top: 6px; }
 .tut-collapsed-title { cursor: pointer; font-weight: 600; color: #c8c8d4; }
 .tut-badge { font-size: 10px; font-weight: 600; color: #1a1a1a; background: #e0b070; border-radius: 3px; padding: 1px 4px; vertical-align: middle; }
+.tut-badge-terminal { background: #8fc0e0; }
+.tut-banner-terminal { border-left-color: #8fc0e0; background: rgba(143, 192, 224, 0.08); color: #c0d8e8; }
+.tut-collapsed-intro { font-size: 12px; opacity: 0.8; margin: 4px 0 6px; }
 .tut-banner { margin: 6px 0; padding: 4px 6px; border-left: 3px solid #e0b070; background: rgba(224, 176, 112, 0.08); color: #e0c8a0; font-size: 12px; }
 .tut-step.tut-blocked { border-left-color: #e0b070; }
 .tut-step.tut-blocked::after { content: ' — does not work yet'; color: #e0b070; font-size: 11px; }

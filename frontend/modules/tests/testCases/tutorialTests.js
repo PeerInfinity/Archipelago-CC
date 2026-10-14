@@ -15,7 +15,7 @@ import { registerTest } from '../testRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import eventBus from '../../../app/core/eventBus.js';
 import { TUTORIALS } from '../../tutorials/content/index.js';
-import { DEFAULT_DONE_TIMEOUT_MS, TRACKS, panelSteps, validateTutorial } from '../../tutorials/tutorialShape.js';
+import { DEFAULT_DONE_TIMEOUT_MS, TRACKS, panelSteps, terminalStep, validateTutorial } from '../../tutorials/tutorialShape.js';
 import { ratchetVerdict, walkTutorial } from '../../tutorials/tutorialWalk.js';
 import { COMPONENT_TYPE, CONTROLS, DEFAULTS, MODULE_ID, TutorialUI } from '../../tutorials/tutorialUI.js';
 import { TUTORIAL_STACK_ID, componentItems, isSplit, mergeBack } from '../../tutorials/tutorialLayout.js';
@@ -120,16 +120,19 @@ async function tutorialPanelListsEveryTutorial(tc) {
             try { validateTutorial(tutorial); } catch (e) { valid = false; tc.log?.(e.message); }
             tc.reportCondition(`tutorial ${tutorial.id} has the tutorial shape`, valid);
         }
-        // Where each card belongs (⚖ 2026-10-10): ready ones under their track,
-        // in-progress ones in the collapsed In progress section, the developer
-        // track in a collapsed section of its own — in that order.
+        // Where each card belongs (⚖ 2026-10-10, 2026-10-14): ready ones under
+        // their track, then the collapsed Needs a terminal section, the
+        // collapsed In progress section, and the developer track in a collapsed
+        // section of its own — in that order.
         const all = TUTORIALS.map((e) => e.tutorial);
         const order = Object.keys(TRACKS);
         const byTrack = (list) => order.flatMap((k) => list.filter((t) => t.track === k));
         const where = (t) => (TRACKS[t.track].collapsed ? `.${CONTROLS.developer}`
-            : t.status === 'in-progress' ? `.${CONTROLS.drafts}` : null);
+            : t.status === 'terminal' ? `.${CONTROLS.terminal}`
+                : t.status === 'in-progress' ? `.${CONTROLS.drafts}` : null);
         const expected = [
             ...byTrack(all.filter((t) => !where(t))),
+            ...byTrack(all.filter((t) => where(t) === `.${CONTROLS.terminal}`)),
             ...byTrack(all.filter((t) => where(t) === `.${CONTROLS.drafts}`)),
             ...byTrack(all.filter((t) => where(t) === `.${CONTROLS.developer}`)),
         ].map((t) => t.id);
@@ -447,7 +450,8 @@ for (const { tutorial } of TUTORIALS) {
         name: `Tutorial walk: ${tutorial.title}`,
         description: `Performs every step of "${tutorial.title}" with Do it (outside steps: their stand-in) and grades `
             + `the result by its record (${tutorial.status === 'ready' ? 'ready: every step must work'
-                : `in progress: firstFailingStep ${tutorial.firstFailingStep ?? 'null'}`}). Reloads the world loaded before.`,
+                : tutorial.status === 'terminal' ? `needs a terminal: it must stop at ${terminalStep(tutorial)?.step.id}`
+                    : `in progress: firstFailingStep ${tutorial.firstFailingStep ?? 'null'}`}). Reloads the world loaded before.`,
         // Named per row: the registry tells test functions apart by name.
         testFunction: { [`walk_${tutorial.id.replace(/-/g, '_')}`]: (tc) => tutorialWalkRow(tc, tutorial) }[`walk_${tutorial.id.replace(/-/g, '_')}`],
         category: walkCategory(tutorial),
