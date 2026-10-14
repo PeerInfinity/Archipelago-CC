@@ -391,7 +391,7 @@ export const CONTACT_FIDELITY = {
      * prices its drop (timed) instead of a placement. ⛔ OFF by default (no licence); `SEEDLING_FLYER_LIVE=0|1` for a
      * node measurement.
      */
-    flyerLive: false,
+    flyerLive: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
