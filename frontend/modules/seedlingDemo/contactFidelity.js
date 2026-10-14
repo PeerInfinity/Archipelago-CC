@@ -391,9 +391,9 @@ export const CONTACT_FIDELITY = {
      * 135.2, 133.85). ⚠ The p4f chaser witnesses that read "frozen at t1" took their FIRST poll at each tick, 20 dead
      * frames into the 175-frame freeze; the `Bot`'s own observation (`botDrain`) at the same tick is 135.2. ON: the
      * step is taken inside the frozen tick under its held keys (the BobBoss rock's form). OFF: byte-identical.
-     * ⛔ OFF by default (no licence yet); `SEEDLING_BUTTON_FALL_RELEASE_STEP=0|1` for a node measurement.
+     * ⚖ ON since the wave-16 harvest (user, 2026-10-14); `SEEDLING_BUTTON_FALL_RELEASE_STEP=0|1` for a node measurement.
      */
-    buttonFallReleaseStep: false,
+    buttonFallReleaseStep: true,
     /**
      * fidelity SMALLGAPS D2 — AN INTERMEDIATE WAYPOINT ON ICE IS PASSED, NOT PARKED ON (the walker:
      * `botDriverV2.waypointReached`, read by `drive` and `solverBot.previewWalk` alike).
@@ -404,9 +404,9 @@ export const CONTACT_FIDELITY = {
      * of px, so a ±1 px STOP is reachable only by luck: L45 (120,72) limit-cycles x 117.3–122.9 for ~300 t (route
      * step 62 with the strike lapse ON, 748 t vs 386 OFF). ON: a waypoint that is not the walk's last, reached while
      * the player stands on ice, is reached at "within tolerance" whatever the velocity; the walk's final target still
-     * needs the stop. OFF: byte-identical. ⛔ OFF by default; `SEEDLING_WAYPOINT_SLIDE=0|1` for a node measurement.
+     * needs the stop. OFF: byte-identical. ⚖ ON since the wave-16 harvest (user, 2026-10-14); `SEEDLING_WAYPOINT_SLIDE=0|1` for a node measurement.
      */
-    waypointSlide: false,
+    waypointSlide: true,
     /**
      * fidelity SMALLGAPS D3 — A LAVA CHAIN'S ARM HITS THE PLAYER (`levelRun.stepLavaChainsNow`, the `"Player"` arm).
      *
@@ -419,9 +419,9 @@ export const CONTACT_FIDELITY = {
      * ON: every chain in the room steps its anim (with or without bodies), and an arm that touches the PRE-move player
      * box on an update `reach()` runs bills `applyPlayerHit` from the chain's point; an arm whose anim is unknown (a
      * skipped `Game.time`) touching the player is refused by name. OFF: byte-identical.
-     * ⛔ OFF by default; `SEEDLING_LAVA_CHAIN_PLAYER_HIT=0|1` for a node measurement.
+     * ⚖ ON since the wave-16 harvest (user, 2026-10-14); `SEEDLING_LAVA_CHAIN_PLAYER_HIT=0|1` for a node measurement.
      */
-    lavaChainPlayerHit: false,
+    lavaChainPlayerHit: true,
     /**
      * fidelity CEREMONYSHOVE D2 — A PICKUP CEREMONY'S PHASE A IS STEPPED FOR THE CHASERS AND THE PLAYER'S OWN LINES
      * (`levelRun.stepCeremonyLumpNow`), not spent as a lump.
@@ -438,9 +438,9 @@ export const CONTACT_FIDELITY = {
      * two ticks after the ceremony starts, and they shove 149 times (745.0 px/tick = 149 × 5 on two witnesses).
      * ON: those frames are stepped there (chasers, the shove, the player's i-frame), the dialogue's frozen ticks step
      * the chasers too, and `assertNoCeremonyBesideLiveChaser` stands down for what is now stepped. OFF: byte-identical.
-     * ⛔ OFF by default (no licence yet); `SEEDLING_CEREMONY_SHOVE=0|1` for a node measurement.
+     * ⚖ ON since the wave-16 harvest (user, 2026-10-14); `SEEDLING_CEREMONY_SHOVE=0|1` for a node measurement.
      */
-    ceremonyShove: false,
+    ceremonyShove: true,
     /**
      * fidelity LAPSECOST D2 — THE FLYER IS STEPPED (`chasers.CHASERS.flyer`, bridged under this key).
      *

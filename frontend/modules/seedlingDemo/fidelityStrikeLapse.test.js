@@ -47,7 +47,9 @@ describe('STRIKELAPSE D1 — the collect stand and the ceremony arm', () => {
         expect(keys(onIt)).toBeNull();
     });
 
-    it('`ceremonyBesideLiveBody`: a live body inside its pad, a dying body anywhere and an i-framed body refuse', () => {
+    // ⛓ fidelity wave-16 harvest: `ceremonyShove` is ON by default (⚖ 2026-10-14) and retires these refusals to
+    // CEREMONYSHOVE's priced question (`fidelityCeremonyShove`); this row pins the INTERIM, the lapse's arm with it OFF.
+    it('`ceremonyBesideLiveBody`: a live body inside its pad, a dying body anywhere and an i-framed body refuse', () => withContactFidelity({ ceremonyShove: false }, () => {
         const at = { x: 72, y: 66 };
         const live = (x, y, over = {}) => ({ id: BODY, tag: 'bobsoldier', x, y, hits: 1, hitsTimer: 0, ...over });
         expect(ceremonyBesideLiveBody(run, { ...at, chasers: [] }).danger).toBe(false);
@@ -58,15 +60,17 @@ describe('STRIKELAPSE D1 — the collect stand and the ceremony arm', () => {
             .toMatch(/inside 12 ticks of i-frames.*assertNoCeremonyBesideLiveChaser/);
         expect(ceremonyBesideLiveBody(run, { ...at, chasers: [] }, [{ id: BODY, tag: 'bobsoldier', x: 200, y: 200,
             dying: true }]).sources[0].why).toMatch(/is DYING/);
-    });
+    }));
 
+    // ⛓ fidelity wave-16 harvest: with `ceremonyShove` ON as well the lapse's step 50 REFUSES (CEREMONYSHOVE's STOP:
+    // `execKillByPress` dwells on a body its own walk killed — hammer DD), so this row pins the lapse with it OFF.
     it('ON: survey step 50 solves in 413 t with zero hits; the body dies on the walk, gone before the ceremony', async () => {
-        const { solved } = await withContactFidelity({ strikeIframeLapse: true }, () => bobsoldier2Plan(true));
+        const { solved } = await withContactFidelity({ strikeIframeLapse: true, ceremonyShove: false }, () => bobsoldier2Plan(true));
         expect(solved.out.perTick.length).toBe(413);
         expect(solved.out.records.some((r) => r.strategy === 'kill')).toBe(false);
         const collect = solved.out.records.find((r) => r.strategy === 'collect');
         expect(collect).toMatchObject({ item: 'torch', from: 147, approach: 10, ceremony: 29 });
-        const st = withContactFidelity({ strikeIframeLapse: true }, () => {
+        const st = withContactFidelity({ strikeIframeLapse: true, ceremonyShove: false }, () => {
             let killedAt = null;
             let removedAt = null;
             let run2 = null;

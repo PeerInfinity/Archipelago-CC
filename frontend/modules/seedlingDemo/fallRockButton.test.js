@@ -82,10 +82,13 @@ describe('levelRun — the button arm', () => {
             // The wand's span: every `FallRock.update` call is dead.
             deadFrames: fallRockFreezeTicks(120).total,
         });
-        // Frame A: live to the tape, frozen to the player — the tick after
-        // the press does not move.
+        // Frame A is frozen, but the release frame (the freeze's last dead
+        // frame) takes the player's step before the next observation, so to
+        // the tape the walk does not stall (SMALLGAPS D1, `buttonFallReleaseStep`,
+        // ⚖ ON since the wave-16 harvest; the L29 game witness reads 140.85,
+        // 139.35, 138.1 at t10–t12).
         const pressTick = falls[0].t - 1;
-        expect(ys[pressTick]).toBe(ys[pressTick - 1]);
+        expect(ys[pressTick]).toBeLessThan(ys[pressTick - 1]);
         // The rock is Solid in the run's own view, and the walk stops under it.
         const live = run.liveGeometryOpts();
         expect([...live.fallenRocks.keys()]).toEqual(['fallrock@112,112']);

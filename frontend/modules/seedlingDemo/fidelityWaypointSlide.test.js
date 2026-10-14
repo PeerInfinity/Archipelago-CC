@@ -66,8 +66,9 @@ const both = (x, y) => {
 };
 
 describe('SMALLGAPS D2 — the switch', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.waypointSlide).toBe(false);
+    // ⚖ (user, 2026-10-14) ON since the wave-16 harvest.
+    it('ships ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.waypointSlide).toBe(true);
     });
 });
 
