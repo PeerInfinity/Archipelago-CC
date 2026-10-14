@@ -3,7 +3,7 @@
   "head": "af79da5e043b6ad81e63887b8995c560984814ca",
   "treeClean": true,
   "tier": "fast",
-  "entitiesMd5": "74dbffa22139c03f1e124a6e55d7ffa5",
+  "entitiesMd5": "fe5051f6661c9ebd56d4839b4cf4e4fd",
   "method": "per record number leaf x magnitude, a child process with the entity-records override installed runs every fast-tier tape through runTapeToStream; a tape moves when its stream md5 differs from the control run or it throws. ulp = +1 ULP; pct10 = x1.1, or +1 for an integer default. corpus-blind = neither magnitude moved any tape.",
   "jobs": 4,
   "wallSeconds": 2957,
@@ -10332,12 +10332,148 @@
         "movedTapes": []
       },
       "verdict": "corpus-blind"
+    },
+    "chasers.flyer.targetOffset.x": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.flyer.targetOffset.y": {
+      "ulp": {
+        "value": -9.999999999999998,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": -9,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.flyer.dieAnim.frames": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.flyer.dieAnim.rate": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.flyer.drop.anim.frames": {
+      "ulp": {
+        "value": 19.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 20,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.flyer.drop.anim.rate": {
+      "ulp": {
+        "value": 30.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 31,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.flyer.drop.hitIndex": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.flyer.drop.force": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 183,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
     }
   },
   "summary": {
     "verdicts": {
       "moves": 99,
-      "corpus-blind": 459
+      "corpus-blind": 467
     },
     "byClass": {
       "arrow": {
@@ -10366,7 +10502,7 @@
       },
       "chasers": {
         "moves": 11,
-        "corpus-blind": 23
+        "corpus-blind": 31
       },
       "crusher": {
         "moves": 0,
@@ -10533,6 +10669,20 @@
         "bombPusher.anims.sit.rate"
       ],
       "why": "seedling-fidelity-bombpusher added the bombPusher and bomb records (CONTACT_FIDELITY.bombPusherLive, OFF); these 23 leaves were measured with --only over today's 211-tape fast tier, a superset of the 183 listed here, at the defaults (the switch OFF): 21 corpus-blind; bombPusher.shotTimeMax and bombPusher.anims.shoot.frames THREW on every tape at +1 ULP (BOMB_PUSHER_CADENCE, simulated at import, never fires twice on a non-integer clock — the turret.anims.startshot.frames row's shape) and were blind at pct10. Counts are recorded against the 183 listed."
+    },
+    "lapsecost": {
+      "at": "2026-10-14",
+      "leaves": [
+        "chasers.flyer.targetOffset.x",
+        "chasers.flyer.targetOffset.y",
+        "chasers.flyer.dieAnim.frames",
+        "chasers.flyer.dieAnim.rate",
+        "chasers.flyer.drop.anim.frames",
+        "chasers.flyer.drop.anim.rate",
+        "chasers.flyer.drop.hitIndex",
+        "chasers.flyer.drop.force"
+      ],
+      "why": "seedling-fidelity-lapsecost D2 added CHASERS.flyer; these 8 leaves were measured with --only over today's 211-tape fast tier (16 runs, jobs 2, 244 s: 0 moved, 0 threw at both magnitudes; contactFidelity.flyerLive ships OFF, so no tape steps a Flyer), a superset of this file's 183 (checked: 0 of the 183 missing), so the rows state 0 moved of those 183. CONTROL stable; its one divergence r5-l60-kill as before. entitiesMd5 is the union's."
     }
   },
   "note": "⛓ fidelity-bulb: the seven chasers.bulb leaves were measured with --only (14 runs over today's 204-tape fast tier, a superset of the 183 listed here: 0 moved, 0 threw) and merged; every other row is the measurement at af79da5e0."

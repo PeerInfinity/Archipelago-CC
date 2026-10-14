@@ -441,6 +441,22 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no licence yet); `SEEDLING_CEREMONY_SHOVE=0|1` for a node measurement.
      */
     ceremonyShove: false,
+    /**
+     * fidelity LAPSECOST D2 — THE FLYER IS STEPPED (`chasers.CHASERS.flyer`, bridged under this key).
+     *
+     *     Flyer.as:58-69   p = collidePoint("Player", x, y + 10); if (p) play("fall");
+     *                      if (fall) { v = 0; if (p && frame == droppedFrame) p.hit(null, dropForce, (x,y), damage); hitUpdate(); }
+     *                      else super.update()          — Bob's chase to the player + targetOffset (0,-10), moveSpeed 1
+     *     Flyer.as:45,83   solids = new Array(); hitPlayer() {}   — it flies through everything, and contact is harmless
+     *
+     * OFF the model never stepped a Flyer: the danger map priced it as a static body at its PLACEMENT, so a plan could
+     * walk under a flyer that had chased it. MEASURED (sweep leg 773, L105, the lapse ON): `flyer@104,8` hovers above
+     * the walk from t96, its "fall" reaches frame 10 at t103 and drops on the player (game `hits` 0 → 2, Δy +0.82), where
+     * the model billed nothing. ON: the flyer chases, falls and drops as above (run and forecast), and the danger map
+     * prices its drop (timed) instead of a placement. ⛔ OFF by default (no licence); `SEEDLING_FLYER_LIVE=0|1` for a
+     * node measurement.
+     */
+    flyerLive: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -536,6 +552,9 @@ if (globalThis.process?.env?.SEEDLING_LAVA_CHAIN_PLAYER_HIT === '0') CONTACT_FID
 // ⛓ fidelity CEREMONYSHOVE: `SEEDLING_CEREMONY_SHOVE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_CEREMONY_SHOVE === '1') CONTACT_FIDELITY.ceremonyShove = true;
 if (globalThis.process?.env?.SEEDLING_CEREMONY_SHOVE === '0') CONTACT_FIDELITY.ceremonyShove = false;
+// ⛓ fidelity LAPSECOST D2: `SEEDLING_FLYER_LIVE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '1') CONTACT_FIDELITY.flyerLive = true;
+if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '0') CONTACT_FIDELITY.flyerLive = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
