@@ -65,7 +65,7 @@ import {
     DEFAULT_TOLERANCE, DEFAULT_MAX_TICKS_PER_TARGET, chooseHeld, hasArrived,
 } from './botDriverV1.js';
 import {
-    BotDriverV2Error, DEFAULT_LATTICE, coastThroughTransport, contactsAt, drive, findExit,
+    BotDriverV2Error, DEFAULT_LATTICE, coastThroughTransport, contactsAt, drive, findExit, waypointReached,
     holdOneAxis, isWalkableTile, nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, plansReach, runChest, runCollect,
     runHold,
     runShove, runDwell, SHOVE_STEP,
@@ -5154,11 +5154,13 @@ export function previewWalk(run, wps, tolerance = 0,
     for (const wp of wps) {
         wpIndex += 1;
         let spent = 0;
-        while (!hasArrived(st, wp, tolerance)) {
+        // ⛓ fidelity SMALLGAPS D2: `drive`'s own predicate (`waypointReached`), the walk's last waypoint excepted.
+        const intermediate = wpIndex < wps.length - 1;
+        while (!waypointReached(st, wp, tolerance, intermediate)) {
             if (!stalled && tick - startTick === stall.at) {
                 stallHere();
                 if (truncated) break;
-                if (hasArrived(st, wp, tolerance)) break;
+                if (waypointReached(st, wp, tolerance, intermediate)) break;
             }
             if (spent >= DEFAULT_MAX_TICKS_PER_TARGET) {
                 truncated = {
@@ -20862,6 +20864,7 @@ function solveSegmentUnder({
                         grazes,
                         strike,
                         axisAligned,
+                        intermediate: !last,
                         what: `${what} waypoint ${wi} (${wps[wi].x},${wps[wi].y})`,
                     });
                     if (t && crossTo) return t;

@@ -98,6 +98,8 @@ import {
     // passed its own check and hit nothing.
     DARK_SWORD_DAMAGE, SLASH_REACH, SWORD_DAMAGE, distanceRectPoint, slashRect,
     KILL_PRESS_CADENCE,
+    // ⛓ fidelity SMALLGAPS D2: `waypointSlide` (`waypointReached`).
+    CONTACT_FIDELITY,
 } from './solverView.js';
 import {
     DEFAULT_MAX_TICKS_PER_TARGET,
@@ -5270,6 +5272,28 @@ export function driveStepHeld(run, target, tolerance, { strike = null, axisAlign
 }
 
 /**
+ * ⛓ fidelity SMALLGAPS D2 (`CONTACT_FIDELITY.waypointSlide`) — **HAS THE WALK REACHED THIS WAYPOINT?**, the one
+ * predicate `drive` and `solverBot.previewWalk` both ask (⚖ ruling 30(c): what the preview certifies is what the drive
+ * does).
+ *
+ * `hasArrived` — within tolerance AND stopped — for every waypoint, unless the switch is ON, the waypoint is
+ * `intermediate` (another follows it on the same walk) and the player stands on ice (`state.hazard.onIce`,
+ * `Player.as:516-537`: friction 0.025): then within tolerance is enough. On ice a one-tick tap from rest coasts tens of
+ * px, so a ±1 px STOP is reachable only by luck — measured at L45 (120,72), route step 62 with the strike lapse ON, x
+ * 117.3–122.9 for ~300 t before a lucky stop. The walk's LAST waypoint (a stance, a trigger's aim) still needs the stop.
+ *
+ * @param {object} state the player state
+ * @param {{x:number, y:number}} wp
+ * @param {number} tolerance
+ * @param {boolean} intermediate another waypoint follows this one on the same walk
+ */
+export function waypointReached(state, wp, tolerance, intermediate) {
+    if (hasArrived(state, wp, tolerance)) return true;
+    return CONTACT_FIDELITY.waypointSlide && intermediate === true && state.hazard?.onIce === true
+        && Math.abs(wp.x - state.x) <= tolerance && Math.abs(wp.y - state.y) <= tolerance;
+}
+
+/**
  * Drive the run to `target`, one bang-bang tick at a time.
  *
  * `until` is `'arrival'` (v1's criterion: within tolerance AND stopped) or
@@ -5289,11 +5313,13 @@ function drive(run, target, perTick, {
     until, tolerance, maxTicks, what, avoidVolumes, contacts = EMPTY_CONTACTS,
     extraVolumes = EMPTY_VOLUMES, crossTo = null, grazes = null, strike = null,
     axisAligned = false,
+    // ⛓ fidelity SMALLGAPS D2: another waypoint follows this one on the walk (`waypointReached`); false = `hasArrived`.
+    intermediate = false,
 }) {
     let ticks = 0;
     const touched = [];
     for (;;) {
-        if (until === 'arrival' && hasArrived(run.state, target, tolerance)) {
+        if (until === 'arrival' && waypointReached(run.state, target, tolerance, intermediate)) {
             // ⚠ A GRAZE THAT STILL ARRIVES IS NOT A RE-PLAN, and that is the
             // whole of the distinction. See the `grazes` docblock.
             if (touched.length > 0) grazes.push(...touched);
