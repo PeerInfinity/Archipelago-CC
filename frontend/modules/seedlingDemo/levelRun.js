@@ -10709,6 +10709,9 @@ export function createLevelRun({
             // ⛓ fidelity-bulb: the same skip for the switch-bridged Bulb (`contactPricing` keeps it a `mover`, so the
             // `stepped` contact tables — and `r8Acceptance`'s partition over them — are untouched with the switch OFF).
             if (hasDropDeath(inst.tag) && isBridgedChaser(inst.tag) && chaserRoomVerdict(level).stepped) continue;
+            // ⛓ fidelity LAPSECOST D2: and for the switch-bridged Flyer (`contactFidelity.flyerLive`): its `hitPlayer` is
+            // EMPTY and its drop is billed by `stepChasersNow` at its live position (`dropNow`).
+            if (chaserDropOf(inst.tag) && isBridgedChaser(inst.tag) && chaserRoomVerdict(level).stepped) continue;
             if (pricing.kind === 'stepped' && pricing.pricedBy) {
                 /**
                  * ⛓⛓⛓ R8 SLICE 6 — A SPINNER'S PRICER IS A REFUSAL AT THE

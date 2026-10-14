@@ -36,7 +36,8 @@ describe('the defaults are the user\'s ruling, and all-OFF is the BEFORE model',
         expect({ ...KILLLOCK_BODIES }).toEqual(KILLLOCK_BODIES_DEFAULTS);
     });
     // ⛓ wave-11 harvest: asked with the Bulb's own switch (`contactFidelity.bulbLive`, ON) OFF — this row is KILLLOCK's.
-    it('the bridge roster and the kill policy are the old ones with every switch OFF, and widen ON', () => withContactFidelity({ bulbLive: false }, () => {
+    // ⛓ fidelity LAPSECOST D2: and with the Flyer's (`flyerLive`) OFF.
+    it('the bridge roster and the kill policy are the old ones with every switch OFF, and widen ON', () => withContactFidelity({ bulbLive: false, flyerLive: false }, () => {
         const ALL_OFF = Object.fromEntries(KILLLOCK_BODIES_KEYS.map((k) => [k, false]));
         withKillLockBodies(ALL_OFF, () => {
             expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'puncher']);
