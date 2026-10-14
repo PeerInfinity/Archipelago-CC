@@ -1,0 +1,86 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 1b83996..9106f29 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -18681,8 +18681,17 @@ function solveSegmentUnder({
+          * `bob@32,32`, 127 px away behind four bobs that are already coming.
+          */
+         const admits = [];
++        // CW SCRATCH: CW_AIM_COVER=1 hypothesises each body together with the bodies whose volume covers the aim
++        const _vols = dangerVolumes(run, 0);
++        const _aimBox = { x: aim.x - 1, y: aim.y - 1, right: aim.x + 1, bottom: aim.y + 1 };
++        const _tx = Math.floor(aim.x / 16) * 16; const _ty = Math.floor(aim.y / 16) * 16;
++        const _cover = new Set(_vols.filter((v) => v.rect && v.rect.x < _tx + 16 && _tx < v.rect.right
++            && v.rect.y < _ty + 16 && _ty < v.rect.bottom).map((v) => v.id));
++        if (process.env.CW_CHOOSER_LOG) console.error(`CWCHOOSE t${run.ticksCompleted} at (${run.state.x.toFixed(1)},${run.state.y.toFixed(1)}) aim (${aim.x},${aim.y}) cover [${[..._cover]}] vols ${_vols.length} cands ${all.length}`);
+         for (const c of all) {
+-            const without = dangerVolumes(run, 0).filter((v) => v.id !== c.id);
++            const drop = process.env.CW_AIM_COVER === '1' ? new Set([c.id, ..._cover]) : new Set([c.id]);
++            for (const x of (process.env.CW_EXTRA_DROP ?? '').split(';').filter(Boolean)) drop.add(x);
++            const without = _vols.filter((v) => !drop.has(v.id));
+             const opts = solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: without });
+             /**
+              * ⛓⛓ SEEDLING FIDELITY CRUSHER (L40) — only the EXISTENCE of a corridor is
+@@ -18692,16 +18701,22 @@ function solveSegmentUnder({
+              */
+             const reach = plansReach(run.world, allowTeleporter, opts);
+             if (reach) {
+-                if (reach.from(run.state)(aim)) admits.push(c);
++                const ok = reach.from(run.state)(aim);
++                if (process.env.CW_CHOOSER_LOG) console.error(`CWCHOOSE   ${c.id} (${c.kind ?? (c.stepped ? 'chaser' : 'static')}) drop[${[...drop]}] reach=${ok}`);
++                if (ok) admits.push(c);
+                 continue;
+             }
+             try {
+                 planWaypoints(run.world, run.state, aim, allowTeleporter, opts);
++                if (process.env.CW_CHOOSER_LOG) console.error(`CWCHOOSE   ${c.id} drop[${[...drop]}] plan=ok`);
+                 admits.push(c);
+             } catch (e) {
+                 if (!(e instanceof BotDriverV2Error)) throw e;
++                if (process.env.CW_CHOOSER_LOG) console.error(`CWCHOOSE   ${c.id} drop[${[...drop]}] plan=FAIL ${String(e.message).slice(0, 260)}`);
+             }
+         }
++        if (process.env.CW_CHOOSER_LOG) console.error(`CWCHOOSE   => admits [${admits.map((c) => c.id)}]`);
++        if (process.env.CW_CHOOSER_EXIT === '1') process.exit(0);
+         return admits;
+     };
+ 
+@@ -19599,6 +19614,38 @@ function solveSegmentUnder({
+             const ids = new Set(admitted.map((b) => b.id));
+             removable = [...admitted, ...removable.filter((b) => !ids.has(b.id))];
+         }
++        // CW SCRATCH (D1.3): CW_JOINT=1 — where the list is still EMPTY, hypothesise the aim's cover bodies and the
++        // hit's chasers ABSENT TOGETHER, growing the set greedily by one live body at a time until a corridor exists.
++        if (process.env.CW_JOINT === '1' && removable.length === 0) {
++            const vols = dangerVolumes(run, 0);
++            const tx = Math.floor(aim.x / 16) * 16; const ty = Math.floor(aim.y / 16) * 16;
++            const liveCh = new Map((run.entities('chasers') ?? []).map((c) => [c.id, { ...c, stepped: true }]));
++            const cover = vols.filter((v) => v.rect && v.rect.x < tx + 16 && tx < v.rect.right && v.rect.y < ty + 16
++                && ty < v.rect.bottom && liveCh.has(v.id)).map((v) => v.id);
++            const hitCh = hit.sources.filter((sx) => sx.kind === 'chaser' && liveCh.has(sx.id)).map((sx) => sx.id);
++            const reachWithout = (ids) => {
++                const opts = solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: vols.filter((v) => !ids.has(v.id)) });
++                const r = plansReach(run.world, allowTeleporter, opts);
++                if (r) return r.from(run.state)(aim);
++                try { planWaypoints(run.world, run.state, aim, allowTeleporter, opts); return true; } catch (e) {
++                    if (!(e instanceof BotDriverV2Error)) throw e; return false; }
++            };
++            if (cover.length > 0) {
++                const set = new Set([...hitCh, ...cover]);
++                const order = [...liveCh.values()].sort((a, b) => Math.hypot(a.x - aim.x, a.y - aim.y)
++                    - Math.hypot(b.x - aim.x, b.y - aim.y) || (a.id < b.id ? -1 : 1));
++                let ok = reachWithout(set);
++                for (let k = 0; !ok && k < 3; k += 1) {
++                    const add = order.find((c) => !set.has(c.id) && reachWithout(new Set([...set, c.id])));
++                    if (add) { set.add(add.id); ok = true; break; }
++                    // no single addition: take the nearest-to-aim body and grow again
++                    const next = order.find((c) => !set.has(c.id)); if (!next) break; set.add(next.id);
++                    ok = reachWithout(set);
++                }
++                if (process.env.CW_CHOOSER_LOG) console.error(`CWJOINT t${run.ticksCompleted} cover [${cover}] hit [${hitCh}] set [${[...set]}] ok=${ok}`);
++                if (ok) removable = [...set].map((id) => liveCh.get(id));
++            }
++        }
+         // ⛓ BAIT and the ceiling arm read the head of the ordered set, which
+         // is the body the single-return chooser used to hand them.
+         const body = removable[0] ?? null;

@@ -21910,3 +21910,39 @@ Identity block ON (MOVING_WAIT OFF and ON) = W0 on every value row (r9-campaign 
 ENEMY `afdc6d1a`); L18 sweep 45/45 and C2's L18 ghost staging 45/45 equal (timing stripped); staging A equal (keys
 `af47d35d`) and no slower. Nothing committed moves; nothing re-recorded. The page cannot see the switch (env-only).
 The flip is the user's.
+
+### Seedling hammer-phase CW — the L40 chaser wall
+
+⚖ The user (2026-10-14): *"Both, in parallel"* — this slice beside RE. Measure first; build only where the wall is the
+hammer arc's. **Outcome: STOP after D1, records only, no switch.** The wall is fidelity's (the chaser arm on the chest's
+guard), behind a chooser layer that has no verdict value alone, and the sword staging parts from the game first. The
+report is `CC/docs/cloud-reports/seedling-hammer-cw.md`.
+
+**W0** at `3a53894a9a`: surface GREEN 288, constants 5,846, entities 558, profile 138; roster 277. Every L40 chest-side
+workload reproduces (the report's evidence driver, one `solveSegment`, `dashMode: 'all'`): staging A sword REFUSED 3113 (keys
+`af47d35d`), staging A ghost 2195 (`b762a2e6` = G1's witness), 397 / 414 page ghost 1305 / 1379, 397 atlas ghost 2336,
+each on `bob@736,752` or `bob@736,800`. **414 on the atlas now THROWS at t2439** inside the press kill (the chaser
+forecast's camera-shake band, `chaserForecast: whether bob … is on screen depends on … Game.shake`; G1 had REFUSED 5672).
+`SEEDLING_STRIKE_IFRAME_LAPSE=1`: every prefix byte-identical (keys), only the refusal text moves (397 page: the probe
+meets the bobsoldier's sword first). `SEEDLING_PRESS_KILL_BOMBS=1`: byte-identical on all six (the lobber is in the
+room, no bomb is ever live).
+
+**D1 — whose wall.** The refusal is `climbLadderUnder`'s: the chooser's list is EMPTY, so the kill rung has no target
+and DETOUR previews nothing. Why: the chest stance's tile ((55,52) / (55,51)) lies inside `bobsoldier@880,832`'s live
+volume, so no corridor can ever reach the aim while it stands, and a single-body hypothesis cannot speak (measured at
+staging A's boot: a corridor exists only with `bobsoldier@880,832`, `bob@736,752` AND `bob@736,800` hypothesised
+absent together). C1's `hitSourceBodies` admits no chaser by design. Not the press kill: it returns on the tick its
+body leaves the roster (lock-less), and AVOID's refusal is the goal tile, wherever the kill ended. A scratch chooser
+that hypothesises the aim's cover bodies and the hit's chasers jointly (scratch, the report's evidence) gets past it on
+every workload and **solves none**: the chaser arm kills `bob@736,752` (sword) or both bobs (414) on the way, then every
+run stops on the guard — *"no stance derives for bobsoldier@880,832 … refused by the forecast … it does not reach this
+stance inside its own travel time plus three kill windows"*; BAIT also refuses it. (c), fidelity's. On 414 the arm's
+dwell also throws *"ALREADY TRUE before a tick is spent"* (the walk to the stance killed both bobs).
+
+**The game.** Staging A ghost (G1's witness, 2195 t; Bob rows 20,772 comparisons, worst 0), 397 on the atlas (2336 t;
+28,044, worst 0) and the override's staging-A-ghost prefix through the chaser arm's walk (2320 t; 27,828, worst 0) are
+exact. **Staging A's sword prefix is NOT:** at t1801 the game stops `bob@736,752` at (743.929, 753.416) where the live
+`spinner@880,848` passes 6.4 px north of it; the model walks it on. The chaser sweep's "Enemy" list
+(`chaserStaticEnemyBoxesNow`) carries no live Spinner, though a Spinner's type is "Enemy" and Bob's solids include it. A
+scratch wall freezes the bob on the game's tick; the next parting moves to t1989. (d),
+fidelity's; the hand-over tape is in the report's evidence folder.
