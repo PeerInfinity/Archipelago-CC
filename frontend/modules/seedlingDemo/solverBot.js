@@ -16356,7 +16356,7 @@ export function withKeylockWaitPriced(enabled, fn) {
  * survey step 50 (L30 Torchpickup → L32) under `strikeIframeLapse` + `ceremonyShove`: the walk's sword press (pressed
  * t169, fired t170, `killed: true`) kills `bobsoldier@48,80`, and the dwell refuses at t192.
  *
- * ON: when the target has left `strikeBodies` at the dwell's start AND the run's press ledger (`run.presses`) holds a
+ * ON: when the target has left `strikeBodies` at the dwell's start AND the run's press ledger (`run.ledger('presses')`) holds a
  * press fired during this arm's walk that KILLED it (`killedOnWalk`), the arm records the kill as done (the record
  * carries `killedOnWalk`: the killing press's tick, fire tick, weapon and direction; `ticks: 0`) and returns to the
  * ladder exactly as a finished dwell does. Any other "already true" (gone, but no press of this walk killed it)
@@ -16375,11 +16375,11 @@ export function withPressKillDoneOnWalk(enabled, fn) {
 }
 
 /**
- * The press of THIS walk that killed `id`: the last `run.presses` row fired after `since` whose hit on `id` says
+ * The press of THIS walk that killed `id`: the last `run.ledger('presses')` row fired after `since` whose hit on `id` says
  * `killed`, as `{pressedAt, firedAt, weapon, direction}`; `null` when no press of the walk killed it.
  */
 export function killedOnWalk(run, id, since) {
-    const kill = (run.presses ?? []).filter((p) => p.fired > since
+    const kill = (run.ledger('presses') ?? []).filter((p) => p.fired > since
         && p.hits.some((h) => h.id === id && h.killed === true)).at(-1);
     return kill ? { pressedAt: kill.t, firedAt: kill.fired, weapon: kill.weapon, direction: kill.direction } : null;
 }

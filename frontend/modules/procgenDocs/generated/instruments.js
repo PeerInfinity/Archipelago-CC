@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 87,
+            "count": 88,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 420,
+        "blockStyle": 421,
         "browser": 142,
         "cited": 216,
-        "files": 432,
+        "files": 433,
         "lineStyle": 12,
-        "withDocblock": 432,
-        "withFlags": 348
+        "withDocblock": 433,
+        "withFlags": 349
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7827,6 +7827,37 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "plan-seedling-hammer-dd-walkkill.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "samples"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-dd-walkkill — ⛓⛓⛓ SEEDLING HAMMER-PHASE DD: A PRESS KILL WHOSE TARGET DIED ON THE WALK, ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-hammer-dd-walkkill.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
             "citedBy": [
                 "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
@@ -10226,6 +10257,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "frames"
                 },
                 {
                     "how": [

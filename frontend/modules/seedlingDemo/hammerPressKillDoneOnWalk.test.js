@@ -49,22 +49,24 @@ describe('DD — the switch\'s contract', () => {
 
     it('`killedOnWalk` names the press of THIS walk that KILLED the body, and nothing else', () => {
         const hit = (id, killed) => ({ as3: 'Enemy', id, landed: true, killed });
-        const run = { presses: [
+        const ledgerOf = (presses) => ({ ledger: (kind) => (kind === 'presses' ? presses : []) });
+        const P = [
             { t: 9, fired: 10, weapon: 'sword', direction: 1, hits: [hit('a', true)] }, // before the walk
             { t: 20, fired: 21, weapon: 'sword', direction: 2, hits: [hit('a', false)] }, // landed, not a kill
             { t: 30, fired: 31, weapon: 'sword', direction: 3, hits: [hit('b', true)] }, // another body
             { t: 40, fired: 41, weapon: 'ghostsword', direction: 0, hits: [hit('a', true)] },
-        ] };
+        ];
+        const run = ledgerOf(P);
         expect(killedOnWalk(run, 'a', 15)).toEqual({ pressedAt: 40, firedAt: 41, weapon: 'ghostsword', direction: 0 });
         expect(killedOnWalk(run, 'a', 41)).toBe(null);
         expect(killedOnWalk(run, 'c', 0)).toBe(null);
         expect(killedOnWalk(run, 'a', 5)?.firedAt).toBe(41);
-        expect(killedOnWalk({ presses: [run.presses[0]] }, 'a', 5)?.firedAt).toBe(10);
-        expect(killedOnWalk({}, 'a', 0)).toBe(null);
+        expect(killedOnWalk(ledgerOf([P[0]]), 'a', 5)?.firedAt).toBe(10);
+        expect(killedOnWalk(ledgerOf([]), 'a', 0)).toBe(null);
         // a press that lands on the body without killing it is not its kill, before or after the kill
-        const after = { presses: [run.presses[3], { t: 50, fired: 51, weapon: 'sword', direction: 1, hits: [hit('a', false)] }] };
+        const after = ledgerOf([P[3], { t: 50, fired: 51, weapon: 'sword', direction: 1, hits: [hit('a', false)] }]);
         expect(killedOnWalk(after, 'a', 0)?.firedAt).toBe(41);
-        expect(killedOnWalk({ presses: [run.presses[1]] }, 'a', 0)).toBe(null);
+        expect(killedOnWalk(ledgerOf([P[1]]), 'a', 0)).toBe(null);
     });
 });
 
