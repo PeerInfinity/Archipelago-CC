@@ -20324,8 +20324,12 @@ function solveSegmentUnder({
          * its preview ARRIVES (`requireArrival`). The caller walks it with that permission — dash candidates and
          * drive alike (⚖ ruling 30(c)).
          */
+        // ⛔ AND ONLY WHERE THE WALK STRIKES AT ALL: with no strike policy (no sword, no strike body —
+        // `strikePolicyFor` is null) the narrow walk IS the walk, and asking it again only renames the rung DETOUR
+        // escalates from (measured under the flip: fidelity L14's swordless arrival).
         if (Array.isArray(corridor) && corridor.length > 0 && !axisAligned
-            && CONTACT_FIDELITY.strikeIframeLapse && LAPSE_NARROW_RETRY.enabled) {
+            && CONTACT_FIDELITY.strikeIframeLapse && LAPSE_NARROW_RETRY.enabled
+            && strikePolicyFor(run, { dashMode }) !== null) {
             if (activeProgress !== null) progressRung('narrow');
             const killRefused = { rung: 'kill', why: killWhy };
             const again = probeCorridor(corridor, dangerExcept, { axisAligned, walkCheck: true,
