@@ -984,6 +984,18 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Grid growth is the pipeline's first mode, kept as the legacy grower: it grows regions cell by cell on a grid, drawing from the scenario pool, until the pool or the frontier runs out. How many…"
     },
     {
+        "path": "docs/json/user/tutorials/procgen-loop-mode-everything.md",
+        "title": "Procgen: everything, in Loop mode",
+        "section": "user/tutorials",
+        "summary": "The last procgen tutorial puts it all together: JtA zones, a generated Seedling room, mazes, a text adventure, a bounce zone, a Noiz2sa stage and *Idle Loops* — another idle game, which only runs in…"
+    },
+    {
+        "path": "docs/json/user/tutorials/procgen-loop-mode-jta.md",
+        "title": "Procgen: Journey to Ascension in Loop mode",
+        "section": "user/tutorials",
+        "summary": "*Loop mode* turns a world into an incremental game: every action costs mana, and when the mana runs out the loop restarts — keeping what you have learned. *Journey to Ascension* (JtA) is an idle…"
+    },
+    {
         "path": "docs/json/user/tutorials/procgen-mixed-world.md",
         "title": "Procgen: a mixed world",
         "section": "user/tutorials",
@@ -1118,6 +1130,8 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/metamath-multiworld.md",
                     "docs/json/user/tutorials/procgen-bounce-region-editor.md",
                     "docs/json/user/tutorials/procgen-grid-growth.md",
+                    "docs/json/user/tutorials/procgen-loop-mode-everything.md",
+                    "docs/json/user/tutorials/procgen-loop-mode-jta.md",
                     "docs/json/user/tutorials/procgen-mixed-world.md",
                     "docs/json/user/tutorials/procgen-seedling.md",
                     "docs/json/user/tutorials/procgen-settings-and-bot.md",

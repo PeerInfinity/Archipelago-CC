@@ -246,4 +246,39 @@ describe('LoopModeRunner', () => {
         runner.start();
         expect(modes.get('Menu#1')).toBe('bot');
     });
+    it('a running loop says its live progress, and its words change only when the action or the mana moves', () => {
+        const { game, runner } = makeGame();
+        game.gameState.currentMana = 100;
+        game.loopState.currentActionIndex = 0;
+        game.loopState.getActionQueue = () => game.paths.at(-1) ?? [];
+        game.exits.add('Menu:GameStart');
+        game.locations.add('Gate');
+        runner.start();
+        expect(game.statuses.at(-1)).toMatch(/^loop 1: .*\(action 1 of 2, mana 100 left\)$/);
+        const count = () => game.statuses.length;
+        const before = count();
+
+        // Nothing moves: the clock alone never changes the line (a stuck loop stays word for word the same).
+        vi.advanceTimersByTime(60000);
+        expect(count()).toBe(before);
+        // A fraction of a mana is not motion either.
+        game.gameState.currentMana = 99.8;
+        vi.advanceTimersByTime(2000);
+        expect(count()).toBe(before);
+
+        // The game spends: the line follows.
+        game.gameState.currentMana = 87.4;
+        vi.advanceTimersByTime(2000);
+        expect(game.statuses.at(-1)).toMatch(/\(action 1 of 2, mana 87 left\)$/);
+        game.loopState.currentActionIndex = 1;
+        vi.advanceTimersByTime(2000);
+        expect(game.statuses.at(-1)).toMatch(/\(action 2 of 2, mana 87 left\)$/);
+
+        // The loop ends: no refresh outlives it.
+        runner.stop();
+        const after = count();
+        game.gameState.currentMana = 10;
+        vi.advanceTimersByTime(10000);
+        expect(count()).toBe(after);
+    });
 });
