@@ -1,0 +1,59 @@
+{
+ "game": "seedling",
+ "name": "smallgaps-l29-button-walk",
+ "boot": {
+  "level": 29,
+  "x": 112,
+  "y": 144
+ },
+ "noclip": false,
+ "noDamage": true,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "dead_frames",
+  "sound"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 0,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 987286273
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasDarkSword": false,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasDarkShield": false,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasFeather": true,
+   "hasSpear": true,
+   "hasDarkSuit": false,
+   "hasTorch": true
+  },
+  "time": 4800,
+  "primary": 0
+ },
+ "tick_count": 60,
+ "inputs": [
+  {
+   "key": "up",
+   "from": 0,
+   "to": 60
+  }
+ ],
+ "tape_version": 8,
+ "description": "fidelity SMALLGAPS D1 \u2014 fallRockButton.test.js's walkNorth(120, 60): L29 booted at (112,144), up held 60 ticks over button@112,128 (a MID-ROOM press)."
+}
