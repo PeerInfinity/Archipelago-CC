@@ -182,7 +182,10 @@ describe('⚖ F7b — the override has no instance in the tree, and no channel t
         //   same world with the placed room a HOST, carries it the same way.
         // ⛓ 7 since seedling generated G7 (2026-09-26): `seedling_atlas_location`,
         //   whose START is the real starting house, carries it the same way.
-        expect(named).toHaveLength(7);
+        // ⛓ 8 since rules-playthrough-blocks (2026-10-14): the `seedling_playthrough`
+        //   seed-1 EXPORT, whose block world_generator now carries through the
+        //   Python round trip (the package's `_worldgen_region_atlas.json`).
+        expect(named).toHaveLength(8);
         for (const doc of named) expect(doc).toBe(DEFAULT_MAP_DOCUMENT);
     });
 
