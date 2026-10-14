@@ -1,0 +1,16 @@
+{"mode":"base","wl":"A-sword","rc":0,"load":0.99,"wall":201.2}
+{"mode":"cut","wl":"A-sword","rc":0,"load":1.14,"wall":140.1}
+{"mode":"wall","wl":"A-sword","rc":0,"load":1.01,"wall":150.1}
+{"mode":"base","wl":"A-ghost","rc":0,"load":1.03,"wall":187.7}
+{"mode":"cut","wl":"A-ghost","rc":0,"load":1.01,"wall":126.6}
+{"mode":"wall","wl":"A-ghost","rc":0,"load":1.00,"wall":127.9}
+{"mode":"base","wl":"leg-397-ghost","rc":0,"load":1.07,"wall":202.4}
+{"mode":"cut","wl":"leg-397-ghost","rc":0,"load":1.05,"wall":178.1}
+{"mode":"wall","wl":"leg-397-ghost","rc":0,"load":1.10,"wall":184.9}
+{"mode":"base","wl":"leg-414-ghost","rc":0,"load":1.27,"wall":201.2}
+{"mode":"cut","wl":"leg-414-ghost","rc":0,"load":1.39,"wall":179.5}
+{"mode":"wall","wl":"leg-414-ghost","rc":0,"load":1.17,"wall":183.6}
+{"mode":"base","wl":"leg381-mwbombs","rc":0,"load":1.23,"wall":226.1}
+{"mode":"cut","wl":"leg381-mwbombs","rc":0,"load":1.39,"wall":223.1}
+{"mode":"wall","wl":"leg381-mwbombs","rc":0,"load":1.48,"wall":231.3}
+{"mode":"lb","wl":"A-sword","rc":0,"load":2.61,"wall":141.8}
