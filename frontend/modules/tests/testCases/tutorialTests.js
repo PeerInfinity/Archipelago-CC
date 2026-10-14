@@ -319,8 +319,10 @@ async function tutorialWalkRow(tc, tutorial) {
     const restoreSpeed = await startAppBotTestSpeed();
     try {
         ui.start(tutorial.id);
+        // Each step's own time (its action + its done wait), so a doneTimeoutMs margin is measured, not assumed.
+        const stepStarts = [];
         const outcome = await walkTutorial(tutorial, {
-            onStep: ({ index }) => ui._goTo(index),
+            onStep: ({ index, step }) => { stepStarts.push({ id: step.id, at: performance.now() }); ui._goTo(index); },
             perform: async () => {
                 if (!(await ui.doIt())) throw new Error(ui.lastError?.message ?? ui.status);
             },
@@ -344,6 +346,11 @@ async function tutorialWalkRow(tc, tutorial) {
             tc.log?.(`walk ended at ${outcome.stepId}: panel status "${ui.status}"; rulesSource ${JSON.stringify(ui.ctx.rulesSource())}`
                 + (bot ? `; Playback Bot status "${bot}"` : ''));
         }
+        const walkEnd = performance.now();
+        const timings = stepStarts.map(({ id, at }, i) => `${id} ${(((stepStarts[i + 1]?.at ?? walkEnd) - at) / 1000).toFixed(1)}s`);
+        const timingLine = `[tutorial-walk-timing] ${tutorial.id}: ${timings.join(', ')}`;
+        tc.log?.(timingLine);
+        console.log(timingLine);
         const verdict = ratchetVerdict(tutorial, outcome);
         tc.log?.(`${tutorial.id}: ${verdict.message}`);
         tc.reportCondition(`${tutorial.id} — ${verdict.message}`, verdict.ok);
