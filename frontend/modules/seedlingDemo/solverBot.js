@@ -124,7 +124,7 @@ import {
     STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
     // ⛓⛓⛓ hammer-phase BW: the press kill's waits see the lobber's bombs (behind `PRESS_KILL_BOMBS`, OFF).
     PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
-    // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (behind `REFUGE_ETA_CUT`, OFF; a behaviour switch, see its file).
+    // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (behind `REFUGE_ETA_CUT`, ON by default since the user's flip; a behaviour switch, see its file).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
@@ -9426,7 +9426,7 @@ export function deriveRefuge(run, contacts, untilIndex) {
     let best = null;
     // ⛓ hammer-phase BW — the lobber's forecast, asked of each previewed refuge (`PRESS_KILL_BOMBS`, OFF)
     const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);
-    // ⛓ hammer-phase RE — the best-ETA cut (`REFUGE_ETA_CUT`, OFF): a later candidate's preview stops once it cannot win
+    // ⛓ hammer-phase RE — the best-ETA cut (`REFUGE_ETA_CUT`, ON by default): a later candidate's preview stops once it cannot win
     const cut = REFUGE_ETA_CUT.enabled;
     for (const c of clear.slice(0, REFUGE_CANDIDATES)) {
         const walk = cut && best !== null

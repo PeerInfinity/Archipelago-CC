@@ -21989,3 +21989,8 @@ off-by-one, half the ETA, the cut never taken, the cut before a best — each re
 `r9-campaign --check` and the ENEMY census are byte-equal to OFF. Timed, 3 interleaved rounds (load 1.01–1.18):
 staging A 196.0 → 138.7 s (sword) and 188.8 → 124.3 s (ghost), legs 397 / 414 180.6 → 166.8 / 193.8 → 169.8 s
 (medians). The flip is the user's.
+
+**Flip (2026-10-14).** The user turned `REFUGE_ETA_CUT` ON by default (*"Turn it ON"*). `SEEDLING_REFUGE_ETA_CUT=0`
+or `withRefugeEtaCut(false, …)` opts out. RE's D3 measured ON byte-equal to OFF on every workload, on the identity block
+and on `r9-campaign --check`, so no committed row moves. What moves is only the instruments named in the switch's
+comment (`progressPreview`'s `previewStates`, BW's refuge counts). The page worker now runs the cut too.

@@ -1,6 +1,6 @@
 /**
  * seedlingDemo/hammerRefugeCut.test — ⛓⛓⛓ SEEDLING HAMMER-PHASE RE: THE REFUGE'S BEST-ETA CUT (`REFUGE_ETA_CUT`,
- * `pressKillCost.js`, OFF).
+ * `pressKillCost.js`, ON by default since the user's flip).
  *
  * ON, `deriveRefuge` stops a later candidate's preview at its `best.eta + 1`-th sample: such a walk cannot win. The rows
  * ask the derivation OFF against ON on two committed walks:
@@ -48,9 +48,9 @@ const both = (run) => {
 };
 
 describe('REFUGE_ETA_CUT — the switch and the cut', () => {
-    it.skipIf(globalThis.process?.env?.SEEDLING_REFUGE_ETA_CUT !== undefined)('ships OFF', () => {
-        expect(REFUGE_ETA_CUT_DEFAULT).toBe(false);
-        expect(REFUGE_ETA_CUT.enabled).toBe(false);
+    it.skipIf(globalThis.process?.env?.SEEDLING_REFUGE_ETA_CUT !== undefined)('ships ON (the user\'s flip, 2026-10-14)', () => {
+        expect(REFUGE_ETA_CUT_DEFAULT).toBe(true);
+        expect(REFUGE_ETA_CUT.enabled).toBe(true);
     });
 
     it('withRefugeEtaCut sets and restores it, also on a throw', () => {
