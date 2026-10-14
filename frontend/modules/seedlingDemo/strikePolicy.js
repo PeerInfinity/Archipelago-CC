@@ -239,7 +239,15 @@ export function strikeCandidates(player, bodies, {
      * tick), 0 for a press taken on this tick (the planned press). Read only by `CONTACT_FIDELITY.strikeIframeLapse`.
      */
     pressAhead = 1,
+    /**
+     * ⛓ seedling-fidelity LAPSECOST D1 — the WALK's permission to admit a body inside its i-frame (`true`: the
+     * switch decides, as before). `false` asks the pre-lapse question even with `CONTACT_FIDELITY.strikeIframeLapse`
+     * ON: the narrow policy `solverBot`'s walk falls back to when its lapse-admitting corridor probes dangerous
+     * (`LAPSE_NARROW_RETRY`). OFF the switch, inert.
+     */
+    iframeLapse: lapseAllowed = true,
 }) {
+    const lapseOn = CONTACT_FIDELITY.strikeIframeLapse && lapseAllowed !== false;
     /**
      * ⛓⛓⛓ R9 SLICE 12c — **THE SCAN ASKS WITH THE RECT THE PRESS WILL SWING.**
      *
@@ -284,12 +292,12 @@ export function strikeCandidates(player, bodies, {
         // reaches the lapse is admitted; OFF, the press tick's reading refuses it, as before. ON, a body in its death
         // (`spent`, `Enemy.hit`'s `hits < hitsMax`) is refused first: no test of any window lands on it, and the
         // forecast drains its frozen i-frame where the drive's body has left `strikeBodies` (leg 624, t114).
-        if (b.spent && CONTACT_FIDELITY.strikeIframeLapse) {
+        if (b.spent && lapseOn) {
             rejected.push({ id: b.id, why: '`hits` has reached `hitsMax` (the body is in its death) — `Enemy.hit` '
                 + 'refuses every test' });
             continue;
         }
-        const lapse = (b.hitsTimer > 0 && CONTACT_FIDELITY.strikeIframeLapse)
+        const lapse = (b.hitsTimer > 0 && lapseOn)
             ? iframeLapse(b.hitsTimer, tick, pressAhead) : null;
         if (b.hitsTimer > 0 && !lapse) {
             rejected.push({ id: b.id, why: `hitsTimer ${b.hitsTimer} — \`Enemy.hit\` `
@@ -310,7 +318,7 @@ export function strikeCandidates(player, bodies, {
             continue;
         }
         if (vetoBody) {
-            const v = vetoedInRect(player, bodies, facing, scale, vetoBody, { pressAhead });
+            const v = vetoedInRect(player, bodies, facing, scale, vetoBody, { pressAhead, iframeLapse: lapseAllowed });
             if (v) {
                 rejected.push({ id: b.id, why: `the swing facing ${facing} would kill ${v.id}: ${v.why}`, veto: v });
                 continue;
@@ -330,7 +338,7 @@ export function strikeCandidates(player, bodies, {
  * veto's reason; null when none. `Player.slash`'s own two gates (the rect, then the reach), and `Enemy.hit`'s
  * i-frame gate (a body inside its i-frame takes nothing, so its death is not this press's).
  */
-export function vetoedInRect(player, bodies, direction, scale, vetoBody, { pressAhead = 1 } = {}) {
+export function vetoedInRect(player, bodies, direction, scale, vetoBody, { pressAhead = 1, iframeLapse: lapseAllowed = true } = {}) {
     if (!vetoBody) return null;
     const r = slashRect(player.x, player.y, direction, scale);
     const reachLimit = slashReachFor(scale);
@@ -340,7 +348,8 @@ export function vetoedInRect(player, bodies, direction, scale, vetoBody, { press
         // ⛓ fidelity L74LEG624 D3: ON, a body whose i-frame lapses anywhere inside the window may take the hit, so it
         // is asked — with no spare test: the veto is the conservative reading, the opposite end of the admission's.
         if ((o.hitsTimer ?? 0) > 0
-            && !(CONTACT_FIDELITY.strikeIframeLapse && iframeLapse(o.hitsTimer, 0, pressAhead, 0))) continue;
+            && !(CONTACT_FIDELITY.strikeIframeLapse && lapseAllowed !== false
+                && iframeLapse(o.hitsTimer, 0, pressAhead, 0))) continue;
         const v = vetoBody(o, player);
         if (v) return { id: o.id, ...v };
     }
@@ -791,6 +800,8 @@ export function createStrikePolicy({
     talkCircles = [],
     /** ⛓ seedling-fidelity-bulb D3 — see `strikeCandidates`' `vetoBody`. `null`: nothing is asked. */
     vetoBody = null,
+    /** ⛓ seedling-fidelity LAPSECOST D1 — see `strikeCandidates`' `iframeLapse`. `true`: the switch decides. */
+    iframeLapse: lapseAllowed = true,
 } = {}) {
     if (typeof facingToward !== 'function') fail('createStrikePolicy: facingToward is required');
     if (!facingKeys) fail('createStrikePolicy: facingKeys is required');
@@ -928,7 +939,8 @@ export function createStrikePolicy({
                  * Dropped like the talk refusal (`owed` untouched).
                  */
                 const vetoed = vetoBody
-                    ? vetoedInRect(state, bodies, aimed.direction, SLASH_SCALE_NORMAL, vetoBody, { pressAhead: 0 })
+                    ? vetoedInRect(state, bodies, aimed.direction, SLASH_SCALE_NORMAL, vetoBody,
+                        { pressAhead: 0, iframeLapse: lapseAllowed })
                     : null;
                 if (vetoed) {
                     aimed = null;
@@ -1003,7 +1015,8 @@ export function createStrikePolicy({
                     : { certified: true, why: null, worst: null };
                 // ⛓ seedling-fidelity-bulb D3: a scheduled press swings too, and kills what its rect covers.
                 const plannedVeto = (opens && vetoBody)
-                    ? vetoedInRect(state, bodies, state.direction ?? 0, now.scale, vetoBody, { pressAhead: 0 }) : null;
+                    ? vetoedInRect(state, bodies, state.direction ?? 0, now.scale, vetoBody,
+                        { pressAhead: 0, iframeLapse: lapseAllowed }) : null;
                 const verdict = plannedVeto
                     ? { certified: false, why: `the press would kill ${plannedVeto.id}: ${plannedVeto.why}`, worst: null }
                     : certified;
@@ -1019,7 +1032,7 @@ export function createStrikePolicy({
                      */
                     const { chosen } = strikeCandidates(state, bodies, {
                         facingToward, owed, tick, scale: now.scale,
-                        direction: state.direction ?? 0, pressAhead: 0,
+                        direction: state.direction ?? 0, pressAhead: 0, iframeLapse: lapseAllowed,
                     });
                     const targets = chosen.map((c) => c.id);
                     for (const id of targets) owed.set(id, tick);
@@ -1122,7 +1135,8 @@ export function createStrikePolicy({
                 return { held: walkHeld, decision: STRIKE_NONE };
             }
             const { chosen, rejected } = strikeCandidates(state, bodies,
-                { facingToward, owed, tick, scale: forecast?.scale ?? SLASH_SCALE_NORMAL, vetoBody });
+                { facingToward, owed, tick, scale: forecast?.scale ?? SLASH_SCALE_NORMAL, vetoBody,
+                    iframeLapse: lapseAllowed });
             /**
              * ⛔⛔⛔ R9 SLICE 12c′ — **THE OPPORTUNISTIC DASH IS RETIRED, AND
              * THE REFUSAL IS NOW THE SAME UNDER BOTH FLAG STATES.**
