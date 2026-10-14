@@ -104,10 +104,12 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             arrivalButtonArm: false,
             // ⛓ fidelity UNBILLEDGATE D2: `unbilledDamageGate` (`solverBot.UNBILLED_DAMAGE`) ships OFF.
             unbilledDamageGate: false,
-            // ⛓ fidelity SMALLGAPS: `buttonFallReleaseStep` (D1), `waypointSlide` (D2), `lavaChainPlayerHit` (D3) ship OFF.
-            buttonFallReleaseStep: false, waypointSlide: false, lavaChainPlayerHit: false,
-            // ⛓ fidelity CEREMONYSHOVE D2: `ceremonyShove` (a pickup ceremony's dead frames stepped) ships OFF.
-            ceremonyShove: false,
+            // ⛓ fidelity SMALLGAPS: `buttonFallReleaseStep` (D1), `waypointSlide` (D2), `lavaChainPlayerHit` (D3) shipped OFF —
+            // ⚖ (user, 2026-10-14, "Flip all three") ON since the wave-16 harvest.
+            buttonFallReleaseStep: true, waypointSlide: true, lavaChainPlayerHit: true,
+            // ⛓ fidelity CEREMONYSHOVE D2: `ceremonyShove` (a pickup ceremony's dead frames stepped) shipped OFF —
+            // ⚖ (user, 2026-10-14, "Flip now") ON since the wave-16 harvest.
+            ceremonyShove: true,
             // ⛓ fidelity LAPSECOST D2: `flyerLive` (the Flyer stepped: its chase, its "fall" and its drop) ships OFF.
             flyerLive: false });
     });
