@@ -112,7 +112,10 @@ export const SEEDLING_BOT = seedling({
                     actions: [{ click: botButton('play') }, { activate: { panel: 'flashPanel' } }],
                     done: (ctx) => (ctx.snapshot()?.checkedLocations ?? []).length > 0,
                     failed: botCannotFinish,
-                    doneTimeoutMs: 180000,
+                    // Measured on CI 2026-10-14 (the walk row's [tutorial-walk-timing] line): 104.3 s in the
+                    // batch, 130.4–133.2 s solo ×4; an earlier ×4 put it near 163–169 s (walk total less the
+                    // other steps). 360 s = ≥2.1× the highest. A stalled bot still ends it early (`failed`).
+                    doneTimeoutMs: 360000,
                 },
             },
             {
