@@ -15,7 +15,8 @@ name: Seedling divergence sweep (manual)
 #   merge  concatenates the shards' rows and fails BY NAME (`scripts/procgen/seedlingDivergenceMerge.js`) when the
 #          distinct leg ids != the plan's leg count, a leg's page never booted, a leg's page HUNG in a harness step
 #          (`end: 'harness-hang'`, H1), or a shard never reported ids of its plan — those are listed per shard, and
-#          their union printed as `REDISPATCH ids=…` (the `ids` input of the re-run, as is).
+#          their union printed as `REDISPATCH ids=…` (the `ids` input of the re-run, as is) — and a MIXED-BUDGET
+#          merge (rows whose `legBudgetMs` stamp differs from the plan's: S5-1's `leg_budget_ms`).
 #
 # ⛓ H1 (sweep-4 shard 9, run 38110831520, sat ~5 h after page 18 and named nothing): every harness step between
 # legs runs under a MEASURED wall-clock bound in the probe (`HANG_BOUNDS_MS`); one that expires prints `HANG:`,
@@ -89,6 +90,30 @@ on:
           AXE_DODGE line, and stamped on each plan the worker solved under an off-default value.
         type: string
         default: ''
+      leg_budget_ms:
+        description: >-
+          Empty = the harness's 90000 ms per leg (today's run). Otherwise the leg budget in ms (S5-1: a LONG search
+          reads `timeout` exactly like an impossible one at 90 s). Off the default every row is stamped legBudgetMs,
+          a timeout row names its bound (`cut`), the leg hang bound and the shard timeout grow with it, and the merge
+          refuses a mixed-budget merge by name. ⛔ The harness's clock only: the solver's work-unit budgets and its own
+          300 s backstop (a named failure) are untouched.
+        type: string
+        default: ''
+      capture_requests:
+        description: >-
+          Off = today's run. On = each shard also writes requests-<i>.jsonl (in its artifact): every solve request a
+          leg made, in order, as the worker received it, with its pass rows and work units — the input
+          replay-seedling-solve-request.mjs replays in node. The rows are unchanged.
+        type: boolean
+        default: false
+      seam_census:
+        description: >-
+          Empty = off. Otherwise '<from>..<to>' (ticks): after the shards, each leg's FIRST captured request is
+          re-solved in node at every arrival game clock captured+d (only staging.seam.time moves;
+          replay-seedling-solve-request.mjs --seam-time-sweep), 4 offsets per job, and a census summary says per leg
+          whether the answer VARIES WITH seam.time. Needs capture_requests on.
+        type: string
+        default: ''
       test_fault:
         description: >-
           TEST-ONLY, empty for every real sweep. The probe's fault injection SWEEP_INJECT_HANG=<page>:<step>[,…]
@@ -108,6 +133,7 @@ jobs:
       matrix: ${{ steps.plan.outputs.matrix }}
       timeout: ${{ steps.plan.outputs.timeout }}
       legs: ${{ steps.plan.outputs.legs }}
+      census: ${{ steps.plan.outputs.census }}
     steps:
       # ⛓ NOT the wasm: the leg list reads the committed rules and the map document. ⛔ But it DOES import
       # `frontend/modules/shared/` (the sphere log's forward simulator), a SUBMODULE — the first dispatch's plan
@@ -135,8 +161,12 @@ jobs:
           KEYS: ${{ inputs.keys }}
           PAGE_LEGS: ${{ inputs.page_legs }}
           STAGE_FLAGS: ${{ inputs.stage_flags }}
+          LEG_BUDGET: ${{ inputs.leg_budget_ms }}
+          CENSUS: ${{ inputs.seam_census }}
+          CAPTURE: ${{ inputs.capture_requests && 'on' || '' }}
         run: |
           set -o pipefail
+          if [ -n "$CENSUS" ] && [ -z "$CAPTURE" ]; then echo "::error::seam_census needs capture_requests on"; exit 1; fi
           mkdir -p test-results/divergence-sweep
           L=test-results/divergence-sweep/legs.jsonl
           node scripts/procgen/seedling-divergence-legs.mjs --out="$L" --presets=seedling_playthrough --blocks | tee plan.txt
@@ -146,13 +176,19 @@ jobs:
             node --input-type=module -e "import fs from 'node:fs';import {pickLegs} from './scripts/procgen/seedling-divergence-legs.mjs';const legs=fs.readFileSync('$L','utf8').split('\n').filter(Boolean).map((l)=>JSON.parse(l));const pick=pickLegs(legs,{ids:(process.env.IDS||'').split(',').filter(Boolean).map(Number),keys:(process.env.KEYS||'').split('|').filter(Boolean)});console.log('SELECTED: '+pick.length+' leg(s)');fs.writeFileSync('$L.sub',pick.map((l)=>JSON.stringify(l)).join('\n')+'\n')"
             mv "$L.sub" "$L"
           fi
-          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" | tee -a plan.txt
-          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" --json > plan.json
+          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} | tee -a plan.txt
+          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} --json > plan.json
           # ⛓ the partition travels with the leg list: the merge compares each shard's ids against its rows
           cp plan.json test-results/divergence-sweep/plan.json
           echo "matrix=$(node -p "JSON.stringify(require('./plan.json').matrix)")" >> "$GITHUB_OUTPUT"
           echo "timeout=$(node -p "require('./plan.json').timeoutMinutes")" >> "$GITHUB_OUTPUT"
           echo "legs=$(node -p "require('./plan.json').legs")" >> "$GITHUB_OUTPUT"
+          # ⛓ SEAM TIME CENSUS — (leg, 4-offset chunk) per job; `parseSeamSweep` refuses a bad range by name
+          if [ -n "$CENSUS" ]; then
+            echo "census=$(node --input-type=module -e "import {parseSeamSweep} from './scripts/procgen/replay-seedling-solve-request.mjs';import fs from 'node:fs';const d=parseSeamSweep(process.env.CENSUS);const ids=JSON.parse(fs.readFileSync('plan.json','utf8')).shards.flatMap((s)=>s.ids);const out=[];for(const id of ids)for(let k=0;k<d.length;k+=4)out.push({id,from:d[k],to:d[Math.min(d.length,k+4)-1]});console.log(JSON.stringify(out))")" >> "$GITHUB_OUTPUT"
+          else
+            echo "census=[]" >> "$GITHUB_OUTPUT"
+          fi
           echo "MEASURED: legs sha256 $(sha256sum "$L" | cut -c1-16) at ${GITHUB_SHA}"
           { echo '```'; cat plan.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
@@ -226,6 +262,8 @@ jobs:
           CONTACT: ${{ inputs.contact_fidelity }}
           STAGE_FLAGS: ${{ inputs.stage_flags }}
           AXE_DODGE: ${{ inputs.axe_dodge }}
+          LEG_BUDGET: ${{ inputs.leg_budget_ms }}
+          CAPTURE: ${{ inputs.capture_requests && 'on' || '' }}
           TEST_FAULT: ${{ inputs.test_fault }}
         run: |
           set -o pipefail
@@ -250,7 +288,8 @@ jobs:
           set +e
           node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=$D/legs.jsonl --shard="$SHARD" --mode="$MODE" \
             --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP $STAGE ${CONTACT:+--contact-fidelity="$CONTACT"} \
-            --stage-flags="$STAGE_FLAGS" ${AXE_DODGE:+--axe-dodge="$AXE_DODGE"} 2>&1 | tee "$L"
+            --stage-flags="$STAGE_FLAGS" ${AXE_DODGE:+--axe-dodge="$AXE_DODGE"} ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} \
+            ${CAPTURE:+--capture-requests=$D/requests-$I.jsonl} 2>&1 | tee "$L"
           RC=$?
           set -e
           echo "MEASURED: shard $SHARD rc=$RC wall $(( $(date +%s) - S ))s load $(cut -d' ' -f1-3 /proc/loadavg) nproc $(nproc) at ${GITHUB_SHA}"
@@ -272,7 +311,7 @@ jobs:
           {
             echo "## Divergence sweep — shard ${SHARD} — \`${{ steps.sweep.outcome }}\`"
             echo '```'
-            grep -aE '^SHARD |^CHANNEL:|^INFO: page|^FAIL|^HANG:' "$D/shard.log" 2>/dev/null | cut -c1-300 || true
+            grep -aE '^SHARD |^CHANNEL:|^LEG-BUDGET:|^INFO: page|^FAIL|^HANG:' "$D/shard.log" 2>/dev/null | cut -c1-300 || true
             echo "rows $(wc -l < "$D/rows-$I.jsonl" 2>/dev/null || echo 0)"
             node -e "const fs=require('fs');const m={};for(const l of fs.readFileSync('$D/rows-$I.jsonl','utf8').split('\n').filter(Boolean)){const e=JSON.parse(l).end;m[e]=(m[e]||0)+1}console.log(JSON.stringify(m))" 2>/dev/null || true
             echo '```'
@@ -294,11 +333,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      # ⛓ the verdict module only (pure node, no npm)
+      # ⛓ the verdict module and the hit-tick census it imports (both pure node, no npm)
       - name: Checkout the merge verdict
         uses: actions/checkout@v6.0.2
         with:
-          sparse-checkout: scripts/procgen/seedlingDivergenceMerge.js
+          sparse-checkout: |
+            scripts/procgen/seedlingDivergenceMerge.js
+            scripts/procgen/seedlingHitTicks.js
           sparse-checkout-cone-mode: false
 
       - name: Download the partition
@@ -351,4 +392,91 @@ jobs:
           path: |
             merged/
             shards/*/shard.log
+          retention-days: 90
+
+  # ⛓ SEAM TIME CENSUS (input `seam_census`, off by default) — a leg's first captured request re-solved in node at each
+  # arrival game clock (leg 397: six first requests differed ONLY in staging.seam.time, and each replays to one answer).
+  # A 640-unit cut costs ~10 min of one core, so the offsets fan out, 4 replays per job at once.
+  census:
+    name: Divergence sweep — seam-time census leg ${{ matrix.c.id }} ${{ matrix.c.from }}..${{ matrix.c.to }}
+    needs: [plan, shard]
+    if: always() && inputs.seam_census != '' && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        c: ${{ fromJSON(needs.plan.outputs.census) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Initialise the shared submodule
+        run: git submodule update --init frontend/modules/shared
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download the captured requests
+        uses: actions/download-artifact@v8.0.1
+        with:
+          pattern: divergence-shard-*
+          path: captured
+
+      - name: Replay at each seam time
+        env:
+          ID: ${{ matrix.c.id }}
+          FROM: ${{ matrix.c.from }}
+          TO: ${{ matrix.c.to }}
+        run: |
+          set -o pipefail
+          F=$(grep -l "\"id\":$ID," $(find captured -name 'requests-*.jsonl') | head -1)
+          [ -n "$F" ] || { echo "::error::no captured request for leg $ID"; exit 1; }
+          mkdir -p census
+          node scripts/procgen/replay-seedling-solve-request.mjs --requests="$F" --id="$ID" --i=0 --seam-time-sweep="$FROM..$TO" \
+            --jobs=4 --out="census/census-$ID-$FROM.jsonl" | grep -v '^ROW '
+
+      - name: Upload the census rows
+        if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: divergence-census-${{ matrix.c.id }}-${{ matrix.c.from }}
+          path: census/
+          retention-days: 90
+
+  census-summary:
+    name: Divergence sweep — seam-time census summary
+    needs: census
+    if: always() && inputs.seam_census != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          sparse-checkout: scripts/procgen
+
+      - name: Download the census rows
+        uses: actions/download-artifact@v8.0.1
+        with:
+          pattern: divergence-census-*
+          path: census
+          merge-multiple: true
+
+      - name: Summarize
+        run: |
+          node scripts/procgen/replay-seedling-solve-request.mjs --summarize=census | tee census/summary.txt
+          { echo '```'; cat census/summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the summary
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: divergence-census-summary
+          path: census/
           retention-days: 90

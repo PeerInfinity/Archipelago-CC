@@ -1,0 +1,423 @@
+{
+ "game": "seedling",
+ "name": "c4b-624-on-probe",
+ "boot": {
+  "level": 74,
+  "x": 288,
+  "y": 128
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "dead_frames",
+  "sound"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 0,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 987286273
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasDarkSword": false,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasDarkShield": false,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasFeather": true,
+   "hasSpear": true,
+   "hasDarkSuit": false,
+   "hasTorch": true
+  },
+  "time": 4800,
+  "primary": 0
+ },
+ "tick_count": 481,
+ "inputs": [
+  {
+   "key": "up",
+   "from": 0,
+   "to": 11
+  },
+  {
+   "key": "down",
+   "from": 11,
+   "to": 12
+  },
+  {
+   "key": "up",
+   "from": 12,
+   "to": 14
+  },
+  {
+   "key": "down",
+   "from": 16,
+   "to": 19
+  },
+  {
+   "key": "up",
+   "from": 20,
+   "to": 22
+  },
+  {
+   "key": "left",
+   "from": 26,
+   "to": 55
+  },
+  {
+   "key": "primary",
+   "from": 55,
+   "to": 56
+  },
+  {
+   "key": "left",
+   "from": 56,
+   "to": 66
+  },
+  {
+   "key": "right",
+   "from": 66,
+   "to": 67
+  },
+  {
+   "key": "left",
+   "from": 67,
+   "to": 68
+  },
+  {
+   "key": "up",
+   "from": 81,
+   "to": 82
+  },
+  {
+   "key": "primary",
+   "from": 82,
+   "to": 83
+  },
+  {
+   "key": "down",
+   "from": 106,
+   "to": 107
+  },
+  {
+   "key": "up",
+   "from": 107,
+   "to": 108
+  },
+  {
+   "key": "down",
+   "from": 108,
+   "to": 109
+  },
+  {
+   "key": "up",
+   "from": 115,
+   "to": 116
+  },
+  {
+   "key": "left",
+   "from": 106,
+   "to": 118
+  },
+  {
+   "key": "right",
+   "from": 118,
+   "to": 119
+  },
+  {
+   "key": "left",
+   "from": 119,
+   "to": 120
+  },
+  {
+   "key": "down",
+   "from": 120,
+   "to": 121
+  },
+  {
+   "key": "right",
+   "from": 122,
+   "to": 124
+  },
+  {
+   "key": "left",
+   "from": 126,
+   "to": 127
+  },
+  {
+   "key": "up",
+   "from": 129,
+   "to": 143
+  },
+  {
+   "key": "down",
+   "from": 145,
+   "to": 148
+  },
+  {
+   "key": "up",
+   "from": 149,
+   "to": 151
+  },
+  {
+   "key": "left",
+   "from": 155,
+   "to": 182
+  },
+  {
+   "key": "right",
+   "from": 184,
+   "to": 186
+  },
+  {
+   "key": "up",
+   "from": 190,
+   "to": 201
+  },
+  {
+   "key": "down",
+   "from": 201,
+   "to": 202
+  },
+  {
+   "key": "up",
+   "from": 202,
+   "to": 203
+  },
+  {
+   "key": "down",
+   "from": 203,
+   "to": 204
+  },
+  {
+   "key": "up",
+   "from": 204,
+   "to": 205
+  },
+  {
+   "key": "left",
+   "from": 209,
+   "to": 220
+  },
+  {
+   "key": "right",
+   "from": 220,
+   "to": 221
+  },
+  {
+   "key": "left",
+   "from": 221,
+   "to": 222
+  },
+  {
+   "key": "right",
+   "from": 222,
+   "to": 223
+  },
+  {
+   "key": "left",
+   "from": 223,
+   "to": 224
+  },
+  {
+   "key": "right",
+   "from": 224,
+   "to": 225
+  },
+  {
+   "key": "left",
+   "from": 225,
+   "to": 226
+  },
+  {
+   "key": "right",
+   "from": 229,
+   "to": 230
+  },
+  {
+   "key": "up",
+   "from": 209,
+   "to": 234
+  },
+  {
+   "key": "down",
+   "from": 234,
+   "to": 235
+  },
+  {
+   "key": "up",
+   "from": 235,
+   "to": 236
+  },
+  {
+   "key": "down",
+   "from": 236,
+   "to": 237
+  },
+  {
+   "key": "up",
+   "from": 237,
+   "to": 238
+  },
+  {
+   "key": "up",
+   "from": 242,
+   "to": 253
+  },
+  {
+   "key": "down",
+   "from": 253,
+   "to": 254
+  },
+  {
+   "key": "up",
+   "from": 254,
+   "to": 255
+  },
+  {
+   "key": "down",
+   "from": 255,
+   "to": 256
+  },
+  {
+   "key": "left",
+   "from": 242,
+   "to": 321
+  },
+  {
+   "key": "right",
+   "from": 321,
+   "to": 322
+  },
+  {
+   "key": "left",
+   "from": 322,
+   "to": 324
+  },
+  {
+   "key": "right",
+   "from": 325,
+   "to": 327
+  },
+  {
+   "key": "down",
+   "from": 331,
+   "to": 342
+  },
+  {
+   "key": "left",
+   "from": 342,
+   "to": 343
+  },
+  {
+   "key": "primary",
+   "from": 343,
+   "to": 344
+  },
+  {
+   "key": "right",
+   "from": 344,
+   "to": 345
+  },
+  {
+   "key": "up",
+   "from": 347,
+   "to": 348
+  },
+  {
+   "key": "left",
+   "from": 351,
+   "to": 362
+  },
+  {
+   "key": "right",
+   "from": 362,
+   "to": 363
+  },
+  {
+   "key": "left",
+   "from": 363,
+   "to": 364
+  },
+  {
+   "key": "right",
+   "from": 364,
+   "to": 365
+  },
+  {
+   "key": "left",
+   "from": 365,
+   "to": 366
+  },
+  {
+   "key": "down",
+   "from": 351,
+   "to": 369
+  },
+  {
+   "key": "right",
+   "from": 368,
+   "to": 369
+  },
+  {
+   "key": "up",
+   "from": 369,
+   "to": 370
+  },
+  {
+   "key": "primary",
+   "from": 370,
+   "to": 371
+  },
+  {
+   "key": "down",
+   "from": 371,
+   "to": 405
+  },
+  {
+   "key": "up",
+   "from": 405,
+   "to": 406
+  },
+  {
+   "key": "down",
+   "from": 406,
+   "to": 407
+  },
+  {
+   "key": "up",
+   "from": 409,
+   "to": 410
+  },
+  {
+   "key": "left",
+   "from": 413,
+   "to": 453
+  },
+  {
+   "key": "right",
+   "from": 455,
+   "to": 457
+  },
+  {
+   "key": "down",
+   "from": 461,
+   "to": 481
+  }
+ ],
+ "tape_version": 8
+}

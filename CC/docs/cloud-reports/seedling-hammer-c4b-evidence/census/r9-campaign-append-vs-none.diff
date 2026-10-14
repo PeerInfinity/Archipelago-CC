@@ -1,0 +1,42 @@
+45c45
+< PASS: r9-solve-16: ends at the L18 ARRIVAL (§3.5) — ["688:L18"]
+---
+> PASS: r9-solve-16: ends at the L18 ARRIVAL (§3.5) — ["687:L18"]
+86,87c86,87
+< PASS: ⛓ sum(segment ticks) === the COMMITTED tapes' own sum — 183 + 47 + 245 + 255 + 403 + 294 + 146 + 827 + 122 + 83 + 97 + 152 + 23 + 145 + 36 + 98 + 456 + 688 + 518 + 746 + 560 + 48 + 299 + 2364 + 26 + 89 + 379 + 336 + 210 + 1056 = 10931; recorded 10931 against committed 10931
+< PASS: ⛓ every RECORDED segment's solved length is its committed tape's own — 183,47,245,255,403,294,146,827,122,83,97,152,23,145,36,98,456,688,518,746,560,48,299,2364,26,89,379,336,210,1056 against 183,47,245,255,403,294,146,827,122,83,97,152,23,145,36,98,456,688,518,746,560,48,299,2364,26,89,379,336,210,1056
+---
+> FAIL: ⛓ sum(segment ticks) === the COMMITTED tapes' own sum — 183 + 47 + 245 + 255 + 403 + 294 + 146 + 827 + 122 + 83 + 97 + 152 + 23 + 145 + 36 + 98 + 456 + 687 + 518 + 746 + 560 + 48 + 299 + 2364 + 26 + 89 + 379 + 336 + 210 + 1056 = 10930; recorded 10930 against committed 10931
+> FAIL: ⛓ every RECORDED segment's solved length is its committed tape's own — 183,47,245,255,403,294,146,827,122,83,97,152,23,145,36,98,456,687,518,746,560,48,299,2364,26,89,379,336,210,1056 against 183,47,245,255,403,294,146,827,122,83,97,152,23,145,36,98,456,688,518,746,560,48,299,2364,26,89,379,336,210,1056
+89c89
+< ## the chain: 10931 ticks over 30 rooms
+---
+> ## the chain: 10930 ticks over 30 rooms
+107c107
+<    18 r9-solve-16   L16  -> L18    688 t
+---
+>    18 r9-solve-16   L16  -> L18    687 t
+120c120
+< ## PLAYTHROUGH_CHAINS.r9-campaign: cuts [183, 230, 475, 730, 1133, 1427, 1573, 2400, 2522, 2605, 2702, 2854, 2877, 3022, 3058, 3156, 3612, 4300, 4818, 5564, 6124, 6172, 6471, 8835, 8861, 8950, 9329, 9665, 9875], endsAt 10931
+---
+> ## PLAYTHROUGH_CHAINS.r9-campaign: cuts [183, 230, 475, 730, 1133, 1427, 1573, 2400, 2522, 2605, 2702, 2854, 2877, 3022, 3058, 3156, 3612, 4299, 4817, 5563, 6123, 6171, 6470, 8834, 8860, 8949, 9328, 9664, 9874], endsAt 10930
+137c137
+< PASS: ⛓ the free oracle: r9-solve-18 declares seam.time 9940 — 9232 + 40 − LOAD_FADE_FRAMES + 688 = 9940
+---
+> FAIL: ⛓ the free oracle: r9-solve-18 declares seam.time 9940 — 9232 + 40 − LOAD_FADE_FRAMES + 687 = 9939
+195,197c195,197
+< ## r9-solve-16 budget: 181 span(s), 14 KB, 688 ticks
+< PASS: r9-solve-16 is byte-identical to what this solver derives — 20967 bytes
+< PASS: r9-solve-16 trace is byte-identical to what this solver derives — 16495 bytes
+---
+> ## r9-solve-16 budget: 202 span(s), 15 KB, 687 ticks
+> FAIL: r9-solve-16 is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+> FAIL: r9-solve-16 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+235c235
+< ## r9-campaign: 10931t = r8-solve-1 183t + r8-solve-2 47t + r8-solve-3 245t + r8-solve-4 255t + r8-solve-5 403t + r8-solve-6 294t + r8-solve-7 146t + r8-solve-8 827t + r8-solve-9 122t + r8-solve-10 83t + r9-solve-11 97t + r9-solve-3 152t + r9-solve-2 23t + r9-solve-0 145t + r9-solve-13 36t + r9-solve-14 98t + r9-solve-15 456t + r9-solve-16 688t + r9-solve-18 518t + r9-solve-19 746t + r9-solve-20 560t + r9-solve-13-v2 48t + r9-solve-0-v3 299t + r9-solve-12 2364t + r9-solve-21 26t + r9-solve-22 89t + r9-solve-29 379t + r9-solve-31 336t + r9-solve-30 210t + r9-solve-32 1056t, 29 internal seam(s)
+---
+> ## r9-campaign: 10930t = r8-solve-1 183t + r8-solve-2 47t + r8-solve-3 245t + r8-solve-4 255t + r8-solve-5 403t + r8-solve-6 294t + r8-solve-7 146t + r8-solve-8 827t + r8-solve-9 122t + r8-solve-10 83t + r9-solve-11 97t + r9-solve-3 152t + r9-solve-2 23t + r9-solve-0 145t + r9-solve-13 36t + r9-solve-14 98t + r9-solve-15 456t + r9-solve-16 687t + r9-solve-18 518t + r9-solve-19 746t + r9-solve-20 560t + r9-solve-13-v2 48t + r9-solve-0-v3 299t + r9-solve-12 2364t + r9-solve-21 26t + r9-solve-22 89t + r9-solve-29 379t + r9-solve-31 336t + r9-solve-30 210t + r9-solve-32 1056t, 29 internal seam(s)
+239c239
+< all checks green
+---
+> 5 FAILURE(S)

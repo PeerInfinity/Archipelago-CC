@@ -110,8 +110,8 @@ export function searchPressFor(press) {
 }
 
 /**
- * ⛓⛓⛓ SEEDLING HAMMER-PHASE G1 — **THE KILL RUNG ASKS THE PRESS KILL FOR THE GHOST TOO** (`GHOST_KILL_RUNG`, OFF by
- * default: `SEEDLING_GHOST_KILL_RUNG=1` for a process, or `withGhostKillRung(true, fn)`).
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE G1 — **THE KILL RUNG ASKS THE PRESS KILL FOR THE GHOST TOO** (`GHOST_KILL_RUNG`, ON by
+ * default since the user's flip; `SEEDLING_GHOST_KILL_RUNG=0` opts a process out, or `withGhostKillRung(false, fn)`).
  *
  * C2 admitted a `ghostsword` primary inside `derivePressKill` (the kill-lock order), but the combat ladder's KILL rung,
  * in its lock-less spinner arm, asked `derivePressKill` only for `weapon === 'sword'` and refused every other primary by
@@ -124,9 +124,9 @@ export function searchPressFor(press) {
  * then refused inside `derivePressKill` by `ghostSwingRefusal`'s words; every other primary keeps the rung's refusal.
  */
 export const GHOST_KILL_RUNG = {
-    enabled: globalThis.process?.env?.SEEDLING_GHOST_KILL_RUNG === '1',
+    enabled: globalThis.process?.env?.SEEDLING_GHOST_KILL_RUNG !== '0',
 };
-export const GHOST_KILL_RUNG_DEFAULT = false;
+export const GHOST_KILL_RUNG_DEFAULT = true;
 
 /** Run `fn` with `GHOST_KILL_RUNG` set to `enabled`, restoring the previous value (`withGhostSpinnerPress`'s shape). */
 export function withGhostKillRung(enabled, fn) {

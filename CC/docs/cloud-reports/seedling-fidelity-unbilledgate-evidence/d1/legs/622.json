@@ -1,0 +1,1 @@
+{"id":622,"key":"level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0","level":73,"goal":"level_73__r0c4 -> level_74","ms":4030,"ok":true,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":4,"ms":2316},{"pass":"full","ok":true,"kind":null,"ticks":4,"ms":1713}],"ticks":4,"verbs":["forced-hit"],"end":{"level":74,"x":296,"y":136,"deaths":0}}

@@ -1,0 +1,76 @@
+{
+ "levels": 116,
+ "built": 116,
+ "errs": [],
+ "doors": 280,
+ "pressers": 34,
+ "rocks": 10,
+ "arrivalsOnPresser": [
+  {
+   "from": 37,
+   "to": 38,
+   "door": "288,0",
+   "tag": -1,
+   "deactivated": false,
+   "stairs": false,
+   "arrival": {
+    "x": 152,
+    "y": 296
+   },
+   "pressers": [
+    "buttonroom@144,288 t4"
+   ],
+   "rocks": []
+  },
+  {
+   "from": 73,
+   "to": 74,
+   "door": "64,0",
+   "tag": -1,
+   "deactivated": false,
+   "stairs": false,
+   "arrival": {
+    "x": 296,
+    "y": 136
+   },
+   "pressers": [
+    "button@288,128 t0"
+   ],
+   "rocks": [
+    "fallrock@288,144 t0 tag2"
+   ]
+  },
+  {
+   "from": 108,
+   "to": 107,
+   "door": "0,32",
+   "tag": -1,
+   "deactivated": false,
+   "stairs": false,
+   "arrival": {
+    "x": 296,
+    "y": 184
+   },
+   "pressers": [
+    "buttonroom@288,176 t0"
+   ],
+   "rocks": []
+  }
+ ],
+ "pressersThatDropARock": [
+  {
+   "L": 29,
+   "p": "button@112,128",
+   "rocks": [
+    "fallrock@112,112"
+   ]
+  },
+  {
+   "L": 74,
+   "p": "button@288,128",
+   "rocks": [
+    "fallrock@288,144"
+   ]
+  }
+ ]
+}

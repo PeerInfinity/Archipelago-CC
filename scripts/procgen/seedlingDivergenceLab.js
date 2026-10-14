@@ -11,11 +11,15 @@
  *   - `botLoadTape`: every tape the engine ships (ticks, equips);
  *   - `botDrain`: every raw drained row (all its fields), in order.
  *
- *   serveLeg({goal, budgetMs})   the engine serves ONE goal from where the player stands (the probe jumped first);
+ *   serveLeg({goal, budgetMs, nameCut})   the engine serves ONE goal from where the player stands (the probe jumped first);
  *                                returns the engine's history rows, the plans, the tapes, the raw rows, and
  *                                `roomHits`: the GAME's damage taken in the leg's room (`botStatus.hits`, sampled every
  *                                25 ms while the player is in it — a drained row carries no hits, and `Player.hits`
- *                                is per instance, so the status after an exit crossing reads the NEXT room's player)
+ *                                is per instance, so the status after an exit crossing reads the NEXT room's player);
+ *                                `roomHits.hits` (S5-2): one entry per rise of `hits`, `{t, hits, d, hits_timer, x, y,
+ *                                clock, tick, exact, tape}` — `t` the first drained row carrying the hit, on the
+ *                                drained rows' clock (`seedlingHitTicks.js` derives it); `tape` the leg's tape index
+ *                                it fell in, which each diverged play's `divs[].tape` carries too
  *   divergenceDetail(...)        for each play that left its plan: the model rows and the game rows around the
  *                                tick, and the FIRST DIFFERING FIELD among the fields both sides carry
  *   heldCompare({...})           re-arrive, ship the SAME plan's first k keys HELD, and read the whole held game
@@ -30,6 +34,9 @@ import { createWorkerSolveService } from '/frontend/modules/seedlingDemo/jsRunti
 import { resolveSeedlingAtlasGoal } from '/frontend/modules/flashPanel/seedlingPlaybackController.js';
 import { parsePendingCheck } from '/frontend/modules/flashPanel/seedlingCheckBinding.js';
 import { mountedRecordsOf } from '/frontend/modules/seedlingDemo/wasmWalkTape.js';
+import { createHitRecorder } from '/scripts/procgen/seedlingHitTicks.js';
+// ⛓ REQUEST CAPTURE (`--capture-requests`, off-default only) — the request as the worker got it, as tagged JSON
+import { captureRequest } from '/scripts/procgen/seedlingSolveRequestCodec.js';
 
 const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
 const sleep = (ms) => new Promise((r) => { setTimeout(r, ms); });
@@ -159,7 +166,7 @@ export async function createLab() {
         return diff;
     }
 
-    async function serveLeg({ leg, budgetMs = 90000, producer = 'solver' }) {
+    async function serveLeg({ leg, budgetMs = 90000, producer = 'solver', nameCut = false, captureRequests = false }) {
         const eng = producer === 'walker' ? walkerEngine() : engine;
         st.failed = null;
         st.notes = [];
@@ -168,6 +175,7 @@ export async function createLab() {
         const t0n = tap.tapes.length;
         const h0 = eng.stats.history.length;
         const done0 = eng.stats.done;
+        const backstops0 = eng.stats.backstops ?? 0;
         // ⛓ SERVED LOCATION — the delivery gate's own record for this leg (what a key at contact did)
         const g0 = { served: (eng.stats.deliveryServed ?? []).length, deliveries: (eng.stats.deliveries ?? []).length,
             released: eng.stats.releasedForSwap ?? 0 };
@@ -176,11 +184,18 @@ export async function createLab() {
         const goal = resolved.goal;
         // ⛓ the game's hits in the leg's room (see the head): the arrival's, the max, the samples behind it
         const roomHits = { atArrival: status()?.hits ?? null, max: null, samples: 0 };
+        // ⛓ HIT TICKS (S5-2) — each rise of `hits` at its drained-row tick, tagged with the tape it fell in; the same
+        // read notes which tape each new history entry (a diverged play) closed on, so a hit and a divergence pair
+        const hitRec = createHitRecorder({ atArrival: roomHits.atArrival });
+        const tapeOf = () => tap.tapes.length - t0n - 1;
+        const historyTape = [];
         const hitSampler = setInterval(() => {
+            while (h0 + historyTape.length < eng.stats.history.length) historyTape.push(tapeOf());
             const s = status();
             if (s?.level !== goal.level || typeof s.hits !== 'number') return;
             roomHits.samples += 1;
             roomHits.max = Math.max(roomHits.max ?? 0, s.hits);
+            hitRec.observe(s, { tape: tapeOf() });
         }, 25);
         const answer = eng.walkTo(goal);
         const t0 = performance.now();
@@ -199,8 +214,14 @@ export async function createLab() {
                 if ((es.drained ?? 0) >= (es.ticks ?? Infinity) || performance.now() - leftAt > 500) { eng.stop(); end = 'crossed'; break; }
             }
         }
+        // ⛓ THE LEG BUDGET (S5-1, `nameCut`: an off-default budget) — a timeout names the bound that ended it, read
+        // BEFORE the stop: the engine's phase (`solving` = a solve still in flight) and the solver's own backstop
+        const cut = nameCut && end === 'timeout' ? { bound: 'leg-budget', budgetMs, phase: eng.status().phase,
+            solverBackstopMs: eng.backstopMs ?? null, backstops: (eng.stats.backstops ?? 0) - backstops0 } : null;
         if (end !== 'crossed') eng.stop();
         clearInterval(hitSampler);
+        while (h0 + historyTape.length < eng.stats.history.length) historyTape.push(tapeOf());
+        roomHits.hits = hitRec.hits;
         const after = status();
         const history = plain(eng.stats.history.slice(h0)).map((h) => ({ ...h, goal: undefined }));
         // the plans: settled results of the solves this leg made
@@ -218,12 +239,14 @@ export async function createLab() {
             ...(typeof s.res?.axeDodgeAskPerPreview === 'boolean' ? { axeDodgeAskPerPreview: s.res.axeDodgeAskPerPreview } : {}),
             // ⛓ FORCED-HIT CONSUMER — the crossings the plan BILLED and the damage it ends on (absent = none billed):
             // a forced-hit leg's `roomHits.max` is measured against them
-            ...(s.res?.plan?.forcedHits ? { forcedHits: plain(s.res.plan.forcedHits), damage: plain(s.res.plan.damage) } : {}) }));
+            ...(s.res?.plan?.forcedHits ? { forcedHits: plain(s.res.plan.forcedHits), damage: plain(s.res.plan.damage) } : {}),
+            // ⛓ a refusal's obstacle (UNBILLEDGATE's `unbilled-damage` among them), as the worker carried it
+            ...(s.res?.ok === false && s.res?.obstacle ? { obstacle: plain(s.res.obstacle) } : {}) }));
         const rows = tap.rows.slice(r0);
         // Divergence detail per diverged play: match it to its plan by order (one ok plan per play)
         const okSolves = solves.filter((s) => s.res?.ok && s.res.plan?.expected);
         const divs = [];
-        const plays = history.filter((h) => h.divergence);
+        const plays = history.map((h, at) => ({ ...h, at })).filter((h) => h.divergence);
         plays.forEach((h, i) => {
             const s = okSolves[i] ?? okSolves.at(-1);
             if (!s) return;
@@ -244,7 +267,7 @@ export async function createLab() {
                 const d = firstField(g, m);
                 if (d.length) { first = { t: g.t, diff: d }; break; }
             }
-            divs.push({ play: i, t, expected: h.divergence.expected, got: h.divergence.got,
+            divs.push({ play: i, tape: historyTape[h.at] ?? null, t, expected: h.divergence.expected, got: h.divergence.got,
                 dx: h.divergence.got.x - h.divergence.expected.x, dy: h.divergence.got.y - h.divergence.expected.y,
                 expectedRowsAround: exp.slice(Math.max(0, t - 4), t + 3), modelRows: model, gameRows: game,
                 atT: gAt && mAt ? firstField(gAt, mAt) : null, firstFieldDiff: first, gameRowFields: gAt ? Object.keys(gAt) : null });
@@ -256,7 +279,16 @@ export async function createLab() {
             ...(goal.event ? { eventFlag: { ...goal.event.tag,
                 set: (after?.persistence_cleared ?? []).some((c) => c.level === goal.event.tag.level && c.tag === goal.event.tag.tag),
                 collected: glue?.eventCollector ? glue.eventCollector.collected.has(goal.name) : null } } : {}),
-            ms: Math.round(performance.now() - t0), roomHits,
+            ms: Math.round(performance.now() - t0), roomHits, ...(cut ? { cut } : {}),
+            // ⛓ SEAM TIME — the game clock the leg's first solve was STAGED at (`staging.seam.time`). The harness's
+            // jump lands at whatever play time the page has reached, and the solver's answer can move with it
+            // (leg 397: 5135/5137 → the 640-unit cut, 5140 → the press refusal, 5141 → a swing refusal).
+            seamTime: solves[0]?.req?.staging?.seam?.time ?? null,
+            // ⛓ REQUEST CAPTURE — every solve request of this leg, in order, as the worker got it (the probe moves them
+            // off the row into their own file, so the row is the same with the switch on or off)
+            ...(captureRequests ? { requests: solves.map((s, i) => ({ i, request: captureRequest(s.req), passes: s.passes ?? null,
+                result: s.res ? { ok: s.res.ok ?? null, kind: s.res.kind ?? null, work: s.res.work ?? s.res.plan?.work ?? null,
+                    passes: s.res.passes ?? s.res.plan?.passes ?? null } : null })) } : {}),
             gate: { served: plain((eng.stats.deliveryServed ?? []).slice(g0.served)),
                 deliveries: plain((eng.stats.deliveries ?? []).slice(g0.deliveries)).map((d) => ({ phase: d.phase, tick: d.tick, outcome: d.outcome, save: d.save })),
                 releasedForSwap: (eng.stats.releasedForSwap ?? 0) - g0.released } };

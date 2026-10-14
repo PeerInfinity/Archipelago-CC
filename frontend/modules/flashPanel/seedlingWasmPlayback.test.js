@@ -18,12 +18,13 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { ADOPT_WAIT_MS, createWasmPlayback, loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
-import { forcedHitContinuationRefusal, SHIPPED_RNG, SOLVE_RETRY_BUDGET_FACTOR, STAGED_PLAYER_HITS_FIELD, TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
+import { SHIPPED_RNG, SOLVE_RETRY_BUDGET_FACTOR, TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
 import { ANYTIME_PASSES, solveAnytime, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK } from '../seedlingDemo/jsRuntimeSolver.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService, mountedRecordsOf } from '../seedlingDemo/wasmWalkTape.js';
 import { assembleGeneratedSeedlingSet } from '../seedlingDemo/seedlingGeneratedSet.js';
 import { AXE_DODGE_ASK_PER_PREVIEW } from '../seedlingDemo/solverBot.js';
+import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
 import { AXE_DODGE_ASK_PER_PREVIEW_DEFAULT, applyAxeDodgeAsk, formatAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskHook.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -84,6 +85,8 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
                 ...(g.midSpan ? g.midSpan : {}),
                 // ⛓ W7 — where the last drained row left the player (a held end is read against the shadow)
                 ...(g.pos ? { level: g.pos.level, x: g.pos.x, y: g.pos.y } : {}),
+                // ⛓ STAGEDHITS CONSUMER — the game's own `{hits, hits_timer}` when a row sets them (the recording's are 0/0)
+                ...(g.damage ?? {}),
                 held: g.held, armed: g.armed, finished: g.finished, error: '' });
         },
         // ⛓ W8c — `freezeObjects` (games/seedling.json): false unless the unwatched room says otherwise
@@ -1335,6 +1338,29 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
     it('clause PLAYER-STATE — i-frames still running → not adopted', () => {
         refusedBy(adoptOver({ patch: { hits_timer: 12 } }), 'player-state');
     });
+    it('clause PLAYER-STATE — …and i-frames running with a hit too: the timer still refuses (the shadow would depend on N)', () => {
+        refusedBy(adoptOver({ patch: { hits: 1, hits_timer: 12 } }), 'player-state');
+    });
+    it('⛓ STAGEDHITS CONSUMER — the player carries a HIT (i-frame over): ADOPTED, its `player_damage` staged from botStatus, the held check equal', () => {
+        // ⛔ the mutant (the adoption still refuses `hits`) fails HERE: refused `player-state`, the cold-start re-arrival
+        const e = adoptOver({ patch: { hits: 2, hits_timer: 0 } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, continuations: 1, adoptRefused: [], fallbacks: [] });
+        expect(e.engine.room.staging.player_damage).toEqual({ hits: 2, hits_timer: 0 });
+        expect(e.service.seen[0].request.staging.player_damage).toEqual({ hits: 2, hits_timer: 0 });
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true })]);
+        // the shipped tape never carries it (the game keeps its own `Player`)
+        for (const t of e.game.tapes) expect(t).not.toHaveProperty('player_damage');
+    });
+    it('⛓ STAGEDHITS CONSUMER — a room with NO hits stages no `player_damage` (the staging is the one before)', () => {
+        const e = adoptOver();
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.engine.room.staging).not.toHaveProperty('player_damage');
+        expect(e.service.seen[0].request.staging).not.toHaveProperty('player_damage');
+    });
     it('clause MOBILES — a Mobile besides the player → not adopted', () => {
         refusedBy(adoptOver({ mobiles: [PLAYER, { cls: 'Enemies::Bob', x: 10, y: 10, vx: 0, vy: 0, anim: 'stand' }] }), 'mobiles');
     });
@@ -1444,6 +1470,8 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         expect(e.engine.stats.dismissed).toEqual([expect.objectContaining({ level: HOUSE, key: 'right' })]);
         expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ level: HOUSE, began: 'cutscene', adopted: true })]);
         expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['adopt', 'continuation']);
+        // ⛓ WIND CUTSCENE — the −1 record's scene is the arm's own ceremony, not a leak.
+        expect(e.engine.stats.sceneLeaks).toEqual([]);
         expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true, held: true })]);
         // The adoption waited for the Help's fade: more than TUTORIAL_FADE_FRAMES game frames after the press.
         expect(e.engine.arrivalReads.at(-1).status.game_time - e.engine.stats.dismissed[0].gameTime).toBeGreaterThan(TUTORIAL_FADE_FRAMES);
@@ -1459,6 +1487,9 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         expect(e.teleports).toEqual([]);
         expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, adoptRefused: [] });
         expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ level: HOUSE, began: 'cutscene', adopted: true })]);
+        // ⛓ WIND CUTSCENE — and it is COUNTED, by name, once: a resolved record never owns the scene (a leak).
+        expect(e.engine.stats.sceneLeaks).toEqual([expect.objectContaining({ level: HOUSE, begin: HOUSE })]);
+        expect(e.engine.stats.timeline.filter((r) => r.e === 'scene-leak')).toHaveLength(1);
         expect(e.dones).toHaveLength(1);
     });
     it('⛓ CUTSCENE UNDER ANY RECORD — a long scene re-says how far into its bounded wait it is (a same-words stall reader sees it move)', () => {
@@ -1740,31 +1771,24 @@ describe('⛓ RNG-SPLIT STAGING — the arrival, hold, adoption and continuation
 
 /**
  * ⛓ FORCED-HIT CONSUMER — a plan that billed a forced crossing (`solveSegment`'s optional `forcedHits` / `damage`)
- * carries both into the engine's history and notes; a CONTINUATION in the same world after it is refused BY NAME
- * (interim, until fidelity's wave-14 STAGED PLAYER HITS) and served from a forced re-arrival. A door replaces the room,
- * and with it the record. The plans are the real solver's, edited to bill a hit (the house has no forced crossing).
+ * carries both into the engine's history and notes. ⛓ STAGEDHITS CONSUMER — a CONTINUATION in the same world after
+ * it is SERVED (the §5.66 interim guard retired): its shadow RE-BILLS the prefix's hits, and the held check asks the
+ * game's `{hits, hits_timer}` against it (`stagedHitsMismatch`) — a game that differs is the `shadow-mismatch` STOP,
+ * named with both. The plans are the real solver's, edited to bill a hit (the house has no forced crossing, so the
+ * shadow's damage is 0/0 and the game's is set per row).
  *
  * MUTANTS (run during development, each red by name here):
- *   g1 the guard off (`forcedHitContinuationRefusal` → null)          → 'the refusal…' and '…REFUSED by name…' red
- *   g2 the guard fires after a door (the damage kept on the ENGINE, not the room) → '…a DOOR replaces the room…' reds
+ *   s1 the §5.66 guard restored (a continuation after a billed hit refused → the forced re-arrival)
+ *        → '…SERVED (no re-arrival)…' and '…the game\'s hits differ…' red (the guard answers before the held check)
+ *   s2 the held damage check removed (`stagedHitsMismatch` not asked)  → '…the game\'s hits differ…' red
  *   g3 the fields dropped from the history rows (`solvedBy`)           → the three engine rows that read a done row red
  */
-describe('⛓ FORCED-HIT CONSUMER — the plan\'s forced crossings, and the continuation guard', () => {
+describe('⛓ FORCED-HIT CONSUMER — the plan\'s forced crossings, and the continuation after them', () => {
     const ROW = { tick: 0, what: 'chaser:lavarunner@72,24', proof: { proven: true, depth: 2, nodes: 1332, minHits: 1 },
         billed: [{ t: 2, level: HOUSE, source: 'chaser', id: 'lavarunner@72,24', hits: 1 }], candidate: 'corridor-unarmed', ticks: 4,
         damage: { hits: 1, lastHitAt: 2, id: 'lavarunner@72,24' } };
     const billing = (hits) => (plan) => ({ ...plan, verbs: [...new Set([...plan.verbs, 'forced-hit'])].sort(),
         forcedHits: [{ ...ROW, damage: { ...ROW.damage, hits } }], damage: hits ? { ...ROW.damage, hits } : { hits: 0, lastHitAt: null, id: null } });
-
-    it('the refusal: none at no damage / 0 hits; at ≥ 1 hit it names the hits, the hitter and the wave-14 field', () => {
-        expect(forcedHitContinuationRefusal(null)).toBe(null);
-        expect(forcedHitContinuationRefusal(undefined)).toBe(null);
-        expect(forcedHitContinuationRefusal({ hits: 0, lastHitAt: null, id: null })).toBe(null);
-        const why = forcedHitContinuationRefusal({ hits: 2, lastHitAt: 7, id: 'lavarunner@72,24' });
-        expect(why).toMatch(/^a continuation after a FORCED HIT: the player carries 2 hit\(s\) in this world \(lavarunner@72,24 at t7\)/);
-        expect(why).toContain(`fidelity's wave-14 candidate ${STAGED_PLAYER_HITS_FIELD}`);
-        expect(STAGED_PLAYER_HITS_FIELD).toBe('STAGED PLAYER HITS');
-    });
 
     it('a plan with NO forced crossing carries neither field — its history rows are today\'s', () => {
         const e = engineOver(A);
@@ -1779,7 +1803,7 @@ describe('⛓ FORCED-HIT CONSUMER — the plan\'s forced crossings, and the cont
         expect(e.notes.some((n) => /forced hit/.test(n ?? ''))).toBe(false);
     });
 
-    it('a forced hit in the held room, then a goal in the SAME world → the continuation is REFUSED by name and served from a forced re-arrival', () => {
+    it('a forced hit in the held room, then a goal in the SAME world, the game\'s hits = the shadow\'s → the continuation is SERVED (no re-arrival)', () => {
         const e = engineOver(A, { editPlan: (plan) => (e.service.seen.length === 0 ? billing(1)(plan) : plan) });
         e.engine.walkTo(CHEST);
         runUntil(e, () => e.engine.status().phase === 'held');
@@ -1790,14 +1814,39 @@ describe('⛓ FORCED-HIT CONSUMER — the plan\'s forced crossings, and the cont
         e.engine.walkTo(DOOR);
         runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
         expect(e.failures).toEqual([]);
-        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['forced-hit-continuation']);
-        expect(e.engine.stats.fallbacks[0].why).toMatch(/FORCED HIT.*1 hit\(s\).*STAGED PLAYER HITS/);
-        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1, 'forced-hit-continuation': 1 });
+        expect(e.engine.stats.fallbacks).toEqual([]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.engine.stats.continuations).toBe(1);
+        // solved ON from the held room: freeze, the forced plan, the door as a continuation over its shipped prefix
+        expect(e.service.seen[1].request.perTick.length).toBe(e.dones[0].ticks);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'continuation']);
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ equal: true })]);
+        expect(e.dones[1]).toMatchObject({ continuation: true });
+        // the continuation stages no `player_damage`: the replay re-bills (staging the live hits would bill twice)
+        expect(e.service.seen[1].request.staging).not.toHaveProperty('player_damage');
+    });
+
+    it('…the game\'s hits differ from the shadow\'s → the held check STOPS (`shadow-mismatch`), named with both `{hits, hits_timer}`', () => {
+        const e = engineOver(A, { editPlan: (plan) => (e.service.seen.length === 0 ? billing(1)(plan) : plan) });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.game.damage = { hits: 1, hits_timer: 0 }; // the game took a hit the shadow's replay never billed
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['shadow-mismatch']);
+        expect(e.engine.stats.fallbacks[0].why).toBe('the held game is not the shadow (shadow {"hits":0,"hits_timer":0}, game {"hits":1,"hits_timer":0})');
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ equal: false })]);
         expect(e.engine.stats.continuations).toBe(0);
-        // never solved as a continuation: freeze, the forced plan, (re-arrival) freeze, the door from its arrival
-        expect(e.service.seen.map((s) => s.request.perTick?.length ?? 0)).toEqual([0, 0]);
-        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'freeze', 'plan']);
-        expect(e.dones[1]).toMatchObject({ continuation: false });
+        // the same i-frame row: a hits_timer the shadow does not hold is a mismatch too
+        const f = engineOver(A);
+        f.engine.walkTo(CHEST);
+        runUntil(f, () => f.engine.status().phase === 'held');
+        f.game.damage = { hits: 0, hits_timer: 7 };
+        f.engine.walkTo(DOOR);
+        runUntil(f, () => f.dones.length === 2 || f.failures.length > 0);
+        expect(f.engine.stats.fallbacks.map((x) => x.kind)).toEqual(['shadow-mismatch']);
+        expect(f.engine.stats.fallbacks[0].why).toMatch(/game \{"hits":0,"hits_timer":7\}/);
     });
 
     it('…but NOT when the forced crossing left 0 hits in this world: the continuation is served', () => {
@@ -1852,7 +1901,9 @@ describe('⛓ L74 SILENT STALL — a throw the room build makes is a NAMED failu
         return records;
     };
 
-    it('the held arrival\'s room build throws → onFailed carries the MODEL\'s refusal text; the engine is idle, no timer left', () => {
+    // ⛓ fidelity FLIP14: the room build's fallrock refusal is `fallRockPostFall`'s OFF arm (⚖ ON since the wave-14
+    // flip, user 2026-10-12: ON the rock is built fallen and nothing throws), so this control runs OFF, whole.
+    it('the held arrival\'s room build throws → onFailed carries the MODEL\'s refusal text; the engine is idle, no timer left', () => withContactFidelity({ fallRockPostFall: false }, () => {
         const e = engineOver(A, { records: withRock() });
         e.game.cleared = [{ level: HOUSE, tag: ROCK_TAG }];
         expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
@@ -1864,7 +1915,7 @@ describe('⛓ L74 SILENT STALL — a throw the room build makes is a NAMED failu
         expect(e.engine.status().phase).toBe('idle');
         expect(e.engine.stats.history.at(-1)).toMatchObject({ outcome: 'failed' });
         expect(e.timers.pending).toBe(0);
-    });
+    }));
 
     it('any OTHER throw inside an engine timer callback is a named failure too (the safety net under every scheduler)', () => {
         const e = engineOver(A);

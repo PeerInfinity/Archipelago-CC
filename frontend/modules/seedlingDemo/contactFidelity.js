@@ -291,9 +291,10 @@ export const CONTACT_FIDELITY = {
      *
      * OFF: the blast at the Number point with r 15.6, as before. ON: the truncated point with r 15. Measured over all
      * 277 committed tapes the runner plays: four shot blasts (`r6-totem-kill`/`-control` t387, at (122|182, 379.05)),
-     * the player 58–77 px away; no verdict differs.
+     * the player 58–77 px away; no verdict differs. ⚖ ON since the wave-14 flip, user 2026-10-12 ("Both ON";
+     * byte-inert on tapes and sweeps, CI 38284542195).
      */
-    totemShotBlastInt: false,
+    totemShotBlastInt: true,
     /**
      * fidelity MOVINGWAIT D4 — A DEATH REBOOT SETTLES THE CAMERA THROUGH THE SHAKE (`levelRun.settleCameraForLoad`).
      *
@@ -303,9 +304,9 @@ export const CONTACT_FIDELITY = {
      * OFF: every load drains the shake before its settle frames and the camera is exact. ON: a death reboot carries
      * the killing hit's shake into its settle frames as the shake band (⚖ the jiggle's VALUE is never modelled).
      * Measured on the game: BOMBPUSHER's L42 damage walk respawns at t1221 with `shake` 4 and settles at (777, 0)
-     * where the drained settle says (776, 0).
+     * where the drained settle says (776, 0). ⚖ ON since the wave-14 flip, user 2026-10-12 ("Both ON").
      */
-    rebootShake: false,
+    rebootShake: true,
     /**
      * fidelity L74LEG624 D3 — STRIKE_IFRAME_LAPSE: A PRESS IS GATED ON ITS HIT TESTS, NOT ON ITS PRESS TICK.
      *
@@ -319,7 +320,9 @@ export const CONTACT_FIDELITY = {
      * at t88 and the body hits the player at t87. ON: a body is admitted when `projectedHitsTimer` at the press's
      * LAST test tick is ≤ 0 (`strikePolicy.iframeLapsesInWindow`); the `owed` rule and `ORDINARY_SWING_PERIOD`'s dash
      * refusal are untouched. OFF: the `hitsTimer > 0` refusal, byte-identical. ⛔ OFF by default: it moves strikes
-     * roster-wide, and the flip is the user's licence (`SEEDLING_STRIKE_IFRAME_LAPSE=0|1` for a node measurement).
+     * roster-wide, and the route survey loses steps 50 (L30→L32) and 62 (L45→L46) with it ON (fidelity FLIP14, CI
+     * survey 38307482259 vs 38307485234) — ⚖ (user, 2026-10-12, "Four now, strike later") it waits for a fix slice
+     * (`SEEDLING_STRIKE_IFRAME_LAPSE=0|1` for a node measurement).
      */
     strikeIframeLapse: false,
     /**
@@ -333,9 +336,9 @@ export const CONTACT_FIDELITY = {
      * rock is built fallen — a 16x16 Solid at its cell, `_active` (a publication cannot drop it again), on the run's
      * `fallenRocks` arm (`levelWorld` marks the roster row `postFall`, `levelRun.fallRockStateFor` builds it landed).
      * `FallRockLarge` stays refused outside the arena (L82's `bossrock`). OFF: the refusal, byte-identical.
-     * ⛔ OFF by default (`SEEDLING_FALLROCK_POSTFALL=0|1` for a node measurement).
+     * ⚖ ON since the wave-14 flip, user 2026-10-12 ("All three ON"); `SEEDLING_FALLROCK_POSTFALL=0` opts out.
      */
-    fallRockPostFall: false,
+    fallRockPostFall: true,
     /**
      * fidelity L74LEG624 D4 — THE CHASER FORECAST RE-CHOOSES A LAVARUNNER'S SPEED BY TERRAIN, as the live run does.
      *
@@ -344,9 +347,35 @@ export const CONTACT_FIDELITY = {
      * K2 put the tail in `levelRun.stepChasersNow` and not in `chaserForecastNow`, so a preview's lavarunner kept the
      * speed it was seeded with across lava and water. Measured on L74 leg 624: the detour's certified preview and its
      * drive part at t53 (`lavarunner@208,96`, 243.26 vs 242.2 px); the drive is the game's (0 px). ON: the clone runs
-     * the same tail. OFF: as before (`SEEDLING_FORECAST_SPEED_BY_TERRAIN=0|1` for a node measurement).
+     * the same tail. OFF: as before. ⚖ ON since the wave-14 flip, user 2026-10-12 ("All three ON");
+     * `SEEDLING_FORECAST_SPEED_BY_TERRAIN=0` opts out.
      */
-    forecastSpeedByTerrain: false,
+    forecastSpeedByTerrain: true,
+    /**
+     * fidelity L74ARRIVAL — A BUTTON UNDER A ROOM ARRIVAL PRESSES ON THE WORLD'S FIRST LIVE FRAME (`levelRun.advance`).
+     *
+     *     Button.as:27-39     update(): collideTypesInto(["Player","Enemy","Solid"], x, y, v) … activate = tempCheck
+     *     FallRock.as:103-109 fall(): … Game.freezeObjects = true
+     *     Game.loadlevel      the Player is added before the buttons and `World.addUpdate` prepends, so on the first
+     *                         live frame `Button.update` reads the cell the player was BUILT in, before `Player.update`
+     *
+     * The model armed a button only from a POST-MOVE box (the end of a tick), so a world's first live frame never
+     * pressed one: L74 from the L73 door lands on `button@288,128`, the game freezes on t1 and the model moved on t1
+     * and froze on t2 (every leg-624 witness: Δy +0.8/−1.35 at t1–t2). ON: `firstTickInWorld` arms from the arrival
+     * box before the pending-fall resolve (a boot, a door arrival, a death or ending reboot). OFF: byte-identical.
+     * ⛔ OFF by default (no licence yet); `SEEDLING_ARRIVAL_BUTTON_ARM=0|1` for a node measurement.
+     */
+    arrivalButtonArm: false,
+    /**
+     * fidelity UNBILLEDGATE D2 — A SOLVE WHOSE DRIVE TOOK DAMAGE NO PLAN BILLED IS REFUSED (`solverBot.UNBILLED_DAMAGE`
+     * reads this key, so the page, its solve worker and the divergence sweep's `contact_fidelity=` set it like every
+     * switch here). OFF: `solveSegment` returns success on reaching its goals, whatever the drive took. ON: at success,
+     * a `playerHits` row of the segment's own ticks that `forcedHits` did not bill, or any `playerDeaths` row, refuses it
+     * with `obstacle.kind: 'unbilled-damage'` (tick, source, hit and death counts). ⛔ OFF by default: ON refuses steps
+     * the route survey solves today (the slice report lists them); the flip is the user's licence.
+     * `SEEDLING_UNBILLED_DAMAGE_GATE=0|1` for a node measurement.
+     */
+    unbilledDamageGate: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -426,6 +455,12 @@ if (globalThis.process?.env?.SEEDLING_FALLROCK_POSTFALL === '1') CONTACT_FIDELIT
 if (globalThis.process?.env?.SEEDLING_FALLROCK_POSTFALL === '0') CONTACT_FIDELITY.fallRockPostFall = false;
 if (globalThis.process?.env?.SEEDLING_FORECAST_SPEED_BY_TERRAIN === '1') CONTACT_FIDELITY.forecastSpeedByTerrain = true;
 if (globalThis.process?.env?.SEEDLING_FORECAST_SPEED_BY_TERRAIN === '0') CONTACT_FIDELITY.forecastSpeedByTerrain = false;
+// ⛓ fidelity L74ARRIVAL: `SEEDLING_ARRIVAL_BUTTON_ARM=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ARRIVAL_BUTTON_ARM === '1') CONTACT_FIDELITY.arrivalButtonArm = true;
+if (globalThis.process?.env?.SEEDLING_ARRIVAL_BUTTON_ARM === '0') CONTACT_FIDELITY.arrivalButtonArm = false;
+// ⛓ fidelity UNBILLEDGATE: `SEEDLING_UNBILLED_DAMAGE_GATE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_UNBILLED_DAMAGE_GATE === '1') CONTACT_FIDELITY.unbilledDamageGate = true;
+if (globalThis.process?.env?.SEEDLING_UNBILLED_DAMAGE_GATE === '0') CONTACT_FIDELITY.unbilledDamageGate = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

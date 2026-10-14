@@ -8148,6 +8148,16 @@ export function createLevelRun({
                         // ⛓ fidelity-bulb: a killed Bulb (armed, dropping, dying) — harmless; and its lava tile.
                         ...(c.bulbPhase ? { dying: true, bulbPhase: c.bulbPhase, dropTile: c.dropTile ?? null,
                             ...(c.lavaTile ? { lavaTile: c.lavaTile, lavaAt: c.lavaAt } : {}) } : {}),
+                        /**
+                         * ⛓ fidelity STRIKELAPSE D2 (`CONTACT_FIDELITY.strikeIframeLapse` ON only): a body in its
+                         * "die" (a forecast kill's `dyingAt`, or a clone of a live `dying` body) is projected `dying`,
+                         * so `plannerContactFree` reads `Enemy.hitPlayer`'s `currentAnim != "die"` gate as the live
+                         * stepper does (`chaserContactNow`'s `dieAnim`). MEASURED on survey step 62 (L45): the walk's
+                         * own lapse-admitted press kills `jellyfish@224,176` at t204, and the transit probe priced the
+                         * dying body as a live contact from t238 (d=7.1), refusing the corridor the drive walks clean.
+                         */
+                        ...(CONTACT_FIDELITY.strikeIframeLapse && !c.bulbPhase && (c.dyingAt !== undefined || c.dying)
+                            ? { dying: true } : {}),
                     }));
                 // ⛓ fidelity-bobsoldier D3: a property of the ARRAY, present only when a corpse swings — so every
                 // other projection is the array it was.
@@ -17829,6 +17839,17 @@ export function createLevelRun({
             if (pendingSnapY !== null) {
                 state = { ...state, y: pendingSnapY };
                 pendingSnapY = null;
+            }
+            // ── ⛓ fidelity L74ARRIVAL (`CONTACT_FIDELITY.arrivalButtonArm`): THE ARRIVAL FRAME'S PRESS ──
+            // On a world's first live frame no previous tick left a post-move
+            // box: the game's `Button.update` (`Button.as:29-39`) runs BEFORE
+            // `Player.update` and collides the cell the player was BUILT in,
+            // so a button under the arrival drops its rock on this very frame
+            // (`FallRock.fall`, `Game.freezeObjects = true`). Armed here and
+            // resolved by the branch below, as frame A. OFF: armed only from
+            // a post-move box, one tick late.
+            if (CONTACT_FIDELITY.arrivalButtonArm && firstTickInWorld && !noclip) {
+                armButtonFallRocks(playerBoxAt(state.x, state.y));
             }
             // ── ⛓⛓⛓ SWIM T3: THE BUTTON'S `fall()`, ONE TICK AFTER THE PRESS ──
             // Frame A of `pendingButtonFalls`' docblock: live to the tape,

@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 86,
+            "count": 87,
             "id": "plan"
         },
         {
@@ -169,7 +169,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "replay"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 418,
+        "blockStyle": 420,
         "browser": 142,
-        "cited": 215,
-        "files": 430,
+        "cited": 216,
+        "files": 432,
         "lineStyle": 12,
-        "withDocblock": 430,
-        "withFlags": 346
+        "withDocblock": 432,
+        "withFlags": 348
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7728,6 +7728,42 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/plan-seedling-hammer-b2-fight.mjs"
         },
         {
+            "argvHelpers": [
+                "check"
+            ],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "plan-seedling-hammer-bw-bombstand.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "samples"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-bw-bombstand — ⛓⛓⛓ SEEDLING HAMMER-PHASE BW, D2: THE PRESS KILL'S STAND, PRICED AGAINST THE LOBBER, ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
@@ -10695,11 +10731,13 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "axe-dodge",
+                "capture-requests",
                 "contact-fidelity",
                 "from",
                 "host",
                 "ids",
                 "keys",
+                "leg-budget-ms",
                 "legs",
                 "limit",
                 "mode",
@@ -10719,6 +10757,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "axe-dodge"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "capture-requests"
                 },
                 {
                     "how": [
@@ -10749,6 +10793,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "leg-budget-ms"
                 },
                 {
                     "how": [
@@ -15582,6 +15632,103 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only (slice `seedling-fidelity-terrain` D1/D3) — REPLAY A CAPTURED GAME WITNESS ON THE MODEL, in node, no browser, no box.",
             "path": "scripts/procgen/replay-seedling-contact-capture.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "replay",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "every",
+                "i",
+                "id",
+                "jobs",
+                "n",
+                "out",
+                "requests",
+                "seam-time-sweep",
+                "summarize"
+            ],
+            "file": "replay-seedling-solve-request.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "at"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "every"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "i"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "id"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "jobs"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "live"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "one"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "requests"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "seam-time-sweep"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "summarize"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Measure-only — REPLAY A CAPTURED SOLVE REQUEST in node, N times, each in a FRESH process: is the solver's answer a function of the request?",
+            "path": "scripts/procgen/replay-seedling-solve-request.mjs"
         },
         {
             "argvHelpers": [

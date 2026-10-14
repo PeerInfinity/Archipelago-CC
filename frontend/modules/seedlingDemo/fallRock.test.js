@@ -22,6 +22,7 @@ import {
 } from './fallRock.js';
 import { ROLES, buildLevelWorld, rect } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
+import { withContactFidelity } from './contactFidelity.js';
 
 const source = atlasLevelSource();
 
@@ -336,9 +337,18 @@ describe('⛔⛔ the R2 refusal this finding turns into a CONSTRAINT ON WINDOWS'
         // `levelRun` and a pair with a positive control, and until then the
         // refusal is in the SAFE direction (it blocks a window rather than
         // walking one under a solid nobody modelled).
-        expect(() => buildLevelWorld(source(39), {
-            roles: ROLES, inventory: {}, cleared: [8, 10],
-        })).toThrow(/A clear list must never name it/);
+        //
+        // ⛓ fidelity FLIP14: RETIRED AT THE DEFAULT. L74LEG624 D2 built the snap's precondition (`fallRockPostFall`,
+        // ⚖ ON since the wave-14 flip, user 2026-10-12): a cleared non-arena rock is built FALLEN. The refusal is
+        // that switch's OFF arm, kept here as the control.
+        withContactFidelity({ fallRockPostFall: false }, () => {
+            expect(() => buildLevelWorld(source(39), {
+                roles: ROLES, inventory: {}, cleared: [8, 10],
+            })).toThrow(/A clear list must never name it/);
+        });
+        expect(buildLevelWorld(source(39), { roles: ROLES, inventory: {}, cleared: [8, 10] })
+            .fallRocks.filter((r) => r.postFall))
+            .toEqual([expect.objectContaining({ id: 'fallrock@144,624', persistTag: 10 })]);
     });
 
     it('⚠ the pull\'s own write is an EARNED clear, which is a different path', () => {

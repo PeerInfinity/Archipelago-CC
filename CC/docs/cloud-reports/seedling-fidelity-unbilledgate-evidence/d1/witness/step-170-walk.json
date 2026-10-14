@@ -1,0 +1,268 @@
+{
+    "game": "seedling",
+    "name": "survey-step-170",
+    "boot": {
+        "level": 77,
+        "x": 96,
+        "y": 288
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 0,
+            "tag": 1
+        },
+        {
+            "level": 19,
+            "tag": 1
+        },
+        {
+            "level": 31,
+            "tag": 0
+        },
+        {
+            "level": 30,
+            "tag": 2
+        },
+        {
+            "level": 30,
+            "tag": 0
+        },
+        {
+            "level": 12,
+            "tag": 3
+        },
+        {
+            "level": 39,
+            "tag": 8
+        },
+        {
+            "level": 40,
+            "tag": 8
+        },
+        {
+            "level": 68,
+            "tag": 0
+        },
+        {
+            "level": 71,
+            "tag": 2
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": true,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasSpear": true,
+            "hasDarkShield": true,
+            "hasDarkSuit": true,
+            "hasDarkSword": true,
+            "hasFeather": true,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 480,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 1,
+            "to": 2
+        },
+        {
+            "key": "right",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "right",
+            "from": 17,
+            "to": 43
+        },
+        {
+            "key": "left",
+            "from": 43,
+            "to": 44
+        },
+        {
+            "key": "right",
+            "from": 44,
+            "to": 45
+        },
+        {
+            "key": "left",
+            "from": 45,
+            "to": 46
+        },
+        {
+            "key": "up",
+            "from": 2,
+            "to": 47
+        },
+        {
+            "key": "right",
+            "from": 47,
+            "to": 48
+        },
+        {
+            "key": "primary",
+            "from": 48,
+            "to": 49
+        },
+        {
+            "key": "left",
+            "from": 49,
+            "to": 50
+        },
+        {
+            "key": "up",
+            "from": 49,
+            "to": 64
+        },
+        {
+            "key": "down",
+            "from": 64,
+            "to": 65
+        },
+        {
+            "key": "up",
+            "from": 65,
+            "to": 67
+        },
+        {
+            "key": "down",
+            "from": 69,
+            "to": 71
+        },
+        {
+            "key": "left",
+            "from": 75,
+            "to": 132
+        },
+        {
+            "key": "right",
+            "from": 132,
+            "to": 133
+        },
+        {
+            "key": "left",
+            "from": 133,
+            "to": 135
+        },
+        {
+            "key": "right",
+            "from": 135,
+            "to": 136
+        },
+        {
+            "key": "left",
+            "from": 136,
+            "to": 137
+        },
+        {
+            "key": "up",
+            "from": 75,
+            "to": 286
+        },
+        {
+            "key": "left",
+            "from": 287,
+            "to": 350
+        },
+        {
+            "key": "left",
+            "from": 351,
+            "to": 370
+        },
+        {
+            "key": "right",
+            "from": 370,
+            "to": 371
+        },
+        {
+            "key": "left",
+            "from": 371,
+            "to": 374
+        },
+        {
+            "key": "up",
+            "from": 351,
+            "to": 480
+        }
+    ],
+    "tape_version": 8
+}

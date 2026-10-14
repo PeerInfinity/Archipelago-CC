@@ -58,7 +58,7 @@ export {
 // camera.js — encounters · physics 2
 export { SCREEN_H, SCREEN_W } from './camera.js';
 // chasers.js — dangerMap, solverBot · seedling 4
-export { bridgedChaserTags, chaserBoxAt, chaserHasSword, isBridgedChaser, killWindowTicks, CHASERS } from './chasers.js';
+export { bridgedChaserTags, chaserBoxAt, chaserHasSword, deathTicks, isBridgedChaser, killWindowTicks, CHASERS } from './chasers.js';
 
 // ⛓ seedling-fidelity-bulb D3: the Bulb's drop death — which classes have one, and the tile under a centre.
 export { hasDropDeath, tileUnder } from './bulb.js';
@@ -84,7 +84,8 @@ export { collideLineSolid, CRUSHER, crusherRect, DIRECTIONS, scanCrusher } from 
 // endingChain.js — strikePolicy · seedling 1
 export { TALK_RANGE } from './endingChain.js';
 // enemyDamage.js — solverBot, strikePolicy · seedling 3
-export { DARKTRAP_LIGHT_DEATH, KILL_ARM_POLICY, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH, killArmModelled } from './enemyDamage.js';
+export { DARKTRAP_LIGHT_DEATH, KILL_ARM_POLICY, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH, killArmModelled,
+    removalTicksAfterHit } from './enemyDamage.js';
 // ⛓ hammer-phase C1: the static sword arm's switch and death table
 export { STATIC_SWORD_ARM, STATIC_SWORD_DEATH } from './enemyDamage.js';
 // killLockBodies.js — solverBot · seedling 1
@@ -104,15 +105,17 @@ export {
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
     // ⛓⛓⛓ hammer-phase D: the approach's and the fight's per-weapon row (behind `GHOST_SEARCH_BUCKETS`, OFF).
     searchPressFor,
-    // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, OFF).
+    // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, ON since the user's flip).
     killRungPresses,
 } from './ghostSpinnerPress.js';
-// pressKillCost.js — solverBot · seedling 4
+// pressKillCost.js — solverBot · seedling 6
 // ⛓⛓⛓ hammer-phase P1: the press kill's cost switch and the by-value key it compares (copy, compare, refuse).
 export {
     PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
     // ⛓⛓⛓ hammer-phase P2: the strike scan's sibling switch, its instrument and the scan's row index.
     STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
+    // ⛓⛓⛓ hammer-phase BW: the press kill's waits see the lobber's bombs (its switch and instrument, OFF).
+    PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
 } from './pressKillCost.js';
 // iceTurret.js — botDriverV2 · seedling 2
 export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';

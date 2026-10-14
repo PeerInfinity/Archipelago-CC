@@ -51,6 +51,15 @@
  *                        settings (`seedlingContact<Key>`, the ON keys; every other OFF) before the panel boots. The
  *                        panel's instance is read back and printed as a `CONTACT:` line (a mismatch fails the boot);
  *                        each plan the worker solved under an off-default set carries its `contactFidelity` stamp.
+ *   --leg-budget-ms=<ms> ⛓ THE LEG BUDGET (S5-1): the harness's wall clock per leg's serve (default 90000 — today's). Off
+ *                        the default, each row is stamped `legBudgetMs` (the merge refuses a mixed-budget merge by name),
+ *                        a `timeout` row carries `cut` (the bound that ended it, the engine's phase, the solver's own
+ *                        backstop), and the `leg` hang bound and the shard timeout grow with it. ⛔ The solver's work-unit
+ *                        budgets and its 300 s backstop are not this: a budget above the backstop lets that NAME surface.
+ *   --capture-requests=<jsonl>  ⛓ REQUEST CAPTURE (default OFF): append every solve request each leg made, in order, AS THE
+ *                        WORKER RECEIVED IT (`seedlingSolveRequestCodec.captureRequest`: no `levelSource`; Map/Set tagged), with
+ *                        its pass rows and work units — one line per leg `{id, key, requests}`. The rows are unchanged
+ *                        (the requests never go on a row). Replay one in node: `replay-seedling-solve-request.mjs`.
  *   --axe-dodge=on|off   ⛓ AXE_DODGE HOOK: set fidelity's `AXE_DODGE_ASK_PER_PREVIEW` through the flashPanel setting
  *                        `seedlingAxeDodgeAskPerPreview` before the panel boots (absent = `default`, today's run). The
  *                        panel's value and the model's own default are printed as an `AXE_DODGE:` line (a mismatch
@@ -72,7 +81,7 @@
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--leg-budget-ms=<ms>] [--capture-requests=<jsonl>] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -166,6 +175,58 @@ export function roomAreas(repo) {
 export const HANG_BOUNDS_MS = Object.freeze({
     pageClose: 30000, browserClose: 30000, launch: 30000, newPage: 30000, boot: 340000, leg: 1200000,
 });
+
+/**
+ * ⛓ THE LEG BUDGET (S5-1) — the harness's wall clock for one leg's serve (`serveLeg`'s loop: walkTo → done / crossed /
+ * failed / refused, else `timeout`). ⛔ The harness's clock only: the solver's work-unit budgets and its own 300 s
+ * backstop (`SOLVE_BACKSTOP_MS`, a NAMED failure per solve) are untouched. Off-default (`--leg-budget-ms`), every row is
+ * STAMPED `legBudgetMs` (the merge refuses a mixed-budget merge by name) and a `timeout` row names its bound (`cut`);
+ * at the default every row is byte-identical to today's.
+ */
+export const LEG_BUDGET_MS_DEFAULT = 90000;
+
+/** `--leg-budget-ms` → ms (empty = the default). Not a whole number of ms ≥ 1000 → throws by name. */
+export function parseLegBudgetMs(spec) {
+    const s = String(spec ?? '').trim();
+    if (!s) return LEG_BUDGET_MS_DEFAULT;
+    if (!/^\d+$/.test(s) || Number(s) < 1000) throw new Error(`--leg-budget-ms: ${JSON.stringify(s)} is not a whole number of ms ≥ 1000`);
+    return Number(s);
+}
+
+/** A row stamped with its leg budget: the row itself at the default (byte-identical), `legBudgetMs` appended off it. */
+export function stampBudget(row, legBudgetMs) {
+    return legBudgetMs === LEG_BUDGET_MS_DEFAULT ? row : { ...row, legBudgetMs };
+}
+
+/**
+ * The `leg` hang bound under a leg budget: the measured bound plus whatever the budget adds over the default, so a
+ * long budget keeps the bound's measured margin (≥ 1080 s over the serve) and the HANG never fires inside the serve.
+ */
+export function legHangBoundMs(legBudgetMs) {
+    return HANG_BOUNDS_MS.leg + Math.max(0, legBudgetMs - LEG_BUDGET_MS_DEFAULT);
+}
+
+/** ⛓ GitHub's ceiling on a hosted job's `timeout-minutes`. */
+export const JOB_TIMEOUT_CEILING_MIN = 360;
+
+/**
+ * The shard job's `timeout-minutes`. At the default: today's estimate (the priciest shard ×4 + 20 min), unchanged.
+ * Off-default the WORST case is added as a floor — every leg of the biggest shard spends its whole budget, plus 60 s
+ * of grants/jump/teardown per leg (the measured leg was ≤ 119.3 s at a 90 s budget) and 60 s per page boot (≤ 34 s
+ * measured) — so a long budget is never cut by the job instead of by its own clock. Over GitHub's 360-min ceiling it
+ * THROWS by name (fewer legs per shard, or more shards).
+ */
+export function shardTimeoutMinutes({ maxPrice, shards = [], legBudgetMs = LEG_BUDGET_MS_DEFAULT }) {
+    const base = Math.ceil((maxPrice * 4) / 60) + 20;
+    if (legBudgetMs === LEG_BUDGET_MS_DEFAULT) return base;
+    const worstS = Math.max(0, ...shards.map((x) => x.ids.length * (legBudgetMs / 1000 + 60) + (x.pages ?? x.ids.length) * 60));
+    const m = Math.max(base, Math.ceil(worstS / 60) + 20);
+    if (m > JOB_TIMEOUT_CEILING_MIN) {
+        throw new Error(`--leg-budget-ms=${legBudgetMs}: the worst shard needs ${m} min, over the job's ${JOB_TIMEOUT_CEILING_MIN}-min `
+            + 'ceiling — more shards or fewer legs');
+    }
+    return m;
+}
 
 /** A harness step that outlived its bound (`bounded`). */
 export class SweepHang extends Error {
@@ -269,18 +330,24 @@ async function main() {
         const shards = partitionLegs(legs0, Number(PLAN), roomAreas(REPO));
         // ⛓ a page boot is paid once per `--page-legs` legs (CI measured 18–21 s; priced 30 s)
         const perPage = Number(arg('page-legs', '60'));
+        const legBudgetMs = parseLegBudgetMs(arg('leg-budget-ms', ''));
         const staging = new Set(legs0.filter((l) => l.stagedEvents?.length).map((l) => l.id));
+        const pagesOf = new Map();
         for (const x of shards) {
             const own = x.ids.filter((id) => staging.has(id)).length;
-            x.price += (Math.ceil((x.ids.length - own) / perPage) + own) * 30;
+            pagesOf.set(x.shard, Math.ceil((x.ids.length - own) / perPage) + own);
+            x.price += pagesOf.get(x.shard) * 30;
         }
         const maxPrice = Math.max(...shards.map((x) => x.price));
+        // ⛓ the shard timeout: the priciest shard's estimate ×4 (a 2-CPU runner vs the estimate's box) + the page boots
+        // and the setup (20 min); off-default, floored by the leg budget's worst case (`shardTimeoutMinutes`)
+        const timeoutMinutes = shardTimeoutMinutes({ maxPrice, legBudgetMs,
+            shards: shards.map((x) => ({ ids: x.ids, pages: pagesOf.get(x.shard) })) });
         if (process.argv.includes('--json')) {
             console.log(JSON.stringify({ legs: legs0.length, matrix: shards.map((x) => x.shard),
-                // ⛓ the shard timeout: the priciest shard's estimate ×4 (a 2-CPU runner vs the estimate's box)
-                // + the page boots and the setup (20 min)
-                timeoutMinutes: Math.ceil((maxPrice * 4) / 60) + 20, shards }));
+                timeoutMinutes, shards, ...(legBudgetMs === LEG_BUDGET_MS_DEFAULT ? {} : { legBudgetMs }) }));
         } else {
+            if (legBudgetMs !== LEG_BUDGET_MS_DEFAULT) console.log(`LEG-BUDGET: ${legBudgetMs} ms per leg (--leg-budget-ms); shard timeout ${timeoutMinutes} min`);
             console.log(`SHARD PLAN: ${legs0.length} legs into ${shards.length} shards (price = legPrice, seconds)`);
             for (const x of shards) console.log(`  shard ${x.shard}: ${x.ids.length} legs, ~${Math.round(x.price / 60)} min`);
         }
@@ -289,10 +356,15 @@ async function main() {
     // ⛓ TEST-ONLY (see the head): parsed before the box, so a bad spec fails first
     const INJECT = parseInjectHang(process.env.SWEEP_INJECT_HANG);
     const BOUND_ON = process.env.SWEEP_HANG_BOUND !== 'off';
+    // ⛓ THE LEG BUDGET — parsed before the box, so a bad value fails first
+    const LEG_BUDGET = parseLegBudgetMs(arg('leg-budget-ms', ''));
+    const BOUNDS = { ...HANG_BOUNDS_MS, leg: legHangBoundMs(LEG_BUDGET) };
     takeBoxLockOrExit({ name: 'probe-seedling-divergence-sweep.mjs', kind: 'browser' });
     const HOST = arg('host', 'http://localhost:8000').replace(/\/+$/, '');
     const MODE = arg('mode', 'bare');
     const OUT = arg('out', '');
+    // ⛓ REQUEST CAPTURE — empty = off (today's run: no request is serialized)
+    const CAPTURE = arg('capture-requests', '');
     const FROM = Number(arg('from', '0'));
     const LIMIT = Number(arg('limit', '100000'));
     const PAGE_LEGS = Number(arg('page-legs', '60'));
@@ -338,13 +410,20 @@ async function main() {
     if (STAGE_FLAGS.size) console.log(`STAGE-FLAGS: ${[...STAGE_FLAGS].map(([k, f]) => `${k} => ${f.map((x) => x.eventId).join(',')}`).join(' | ')} (measurement only)`);
     if (STAGE_MUTANT) console.log(`TEST-ONLY: SWEEP_STAGE_MUTANT=${STAGE_MUTANT} (the staging is requested, never written)`);
     if (INJECT.length || !BOUND_ON) console.log(`TEST-ONLY: SWEEP_INJECT_HANG=${JSON.stringify(INJECT)} SWEEP_HANG_BOUND=${BOUND_ON ? 'on' : 'off'}`);
+    if (LEG_BUDGET !== LEG_BUDGET_MS_DEFAULT) {
+        const { SOLVE_BACKSTOP_MS } = await import('../../frontend/modules/seedlingDemo/jsRuntimeSolver.js');
+        console.log(`LEG-BUDGET: ${LEG_BUDGET} ms per leg (--leg-budget-ms; default ${LEG_BUDGET_MS_DEFAULT}); the leg hang bound `
+            + `${BOUNDS.leg / 1000} s; the solver's own backstop ${SOLVE_BACKSTOP_MS / 1000} s per solve (a named failure)`
+            + `${LEG_BUDGET > SOLVE_BACKSTOP_MS ? '' : ' — NOT reachable by one solve inside this budget'}`);
+    }
     console.log(`INFO: mode ${MODE}: ${windowed.reduce((a, p) => a + p.length, 0)} legs in ${windowed.length} page(s) (of ${all.length} legs)`);
     // ⛔ a FRESH BROWSER per page: a second page in the same browser never reached 'ready' (measured, the trial)
     let browser = null;
     let reported = new Set();
     const emit = (row) => {
         reported.add(row.id);
-        const line = JSON.stringify(row);
+        // ⛓ THE LEG BUDGET'S STAMP — every row, whatever its end (byte-identical at the default)
+        const line = JSON.stringify(stampBudget(row, LEG_BUDGET));
         console.log(`ROW ${line.length > 600 ? `${line.slice(0, 600)}…` : line}`);
         if (OUT) appendFileSync(OUT, `${line}\n`);
     };
@@ -355,7 +434,7 @@ async function main() {
     const step = async (name, work) => {
         const t0 = Date.now();
         const injected = INJECT.some((x) => x.page === pageNo && x.step === name);
-        const v = await bounded(name, HANG_BOUNDS_MS[name], injected ? () => new Promise(() => {}) : work, { enabled: BOUND_ON });
+        const v = await bounded(name, BOUNDS[name], injected ? () => new Promise(() => {}) : work, { enabled: BOUND_ON });
         times[name] = (times[name] ?? 0) + (Date.now() - t0);
         return v;
     };
@@ -581,8 +660,12 @@ async function main() {
                 row.rngSplitAtArrival = await page.evaluate(() => window.__div.rngSplit());
                 // eslint-disable-next-line no-await-in-loop
                 const r = await page.evaluate((a) => window.__div.serveLeg(a).then((x) => JSON.parse(JSON.stringify(x))),
-                    { leg, budgetMs: 90000, producer: PRODUCER });
-                Object.assign(row, r);
+                    { leg, budgetMs: LEG_BUDGET, producer: PRODUCER, nameCut: LEG_BUDGET !== LEG_BUDGET_MS_DEFAULT,
+                        ...(CAPTURE ? { captureRequests: true } : {}) });
+                // ⛓ REQUEST CAPTURE — off the row, into their own file
+                const { requests, ...served } = r;
+                if (CAPTURE) appendFileSync(CAPTURE, `${JSON.stringify({ id: leg.id, key: leg.key ?? null, requests: requests ?? [] })}\n`);
+                Object.assign(row, served);
                 swaps += (r.history ?? []).length;
             }); } catch (e) {
                 if (e instanceof SweepHang) throw e;

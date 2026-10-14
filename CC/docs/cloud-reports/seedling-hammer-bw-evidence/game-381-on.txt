@@ -1,0 +1,31 @@
+# box lock: TAKEN by probe-seedling-bombpusher.mjs (browser, pid 5955) — head c8ec7be3a, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+game: 1290 sampled tick(s) of 1294; unsampled spans: 22..22 544..544 553..553 562..562
+game hits at []; model playerHits []
+PASS: every Bomb's position and velocity, the lobber's anim and the player's hits are the model's at every sampled tick
+wrote /tmp/claude-0/-home-user-Archipelago-CC/b5b1f0ed-6a24-5130-a3b0-645912f108c0/scratchpad/game-381-on.json
+  t1003 shoot {}
+  t1018 bomb- {"last":[{"x":291.4844377113409,"y":203.13004370052153,"vx":5.182814590378028,"vy":1.7043347900173955,"angle":450}],"player":{"x":268.8884584648301,"y":215.296841709541,"vx":-0.7000000000000002,"vy":0}}
+  t1033 sit {}
+  t1033 bomb+ {"bombs":[{"x":136,"y":152,"vx":4.802948615494335,"vy":2.109894723651367,"angle":0}]}
+  t1049 shoot {}
+  t1064 bomb- {"last":[{"x":280.08845846483007,"y":215.29684170954096,"vx":4.802948615494335,"vy":2.109894723651367,"angle":450}],"player":{"x":268.8884584648301,"y":215.296841709541,"vx":-0.7000000000000002,"vy":0}}
+  t1079 sit {}
+  t1079 bomb+ {"bombs":[{"x":136,"y":152,"vx":4.802948615494335,"vy":2.109894723651367,"angle":0}]}
+  t1095 shoot {}
+  t1110 bomb- {"last":[{"x":280.08845846483007,"y":215.29684170954096,"vx":4.802948615494335,"vy":2.109894723651367,"angle":450}],"player":{"x":268.06117670614503,"y":202.6195599508561,"vx":-1.432233047033631,"vy":-1.432233047033631}}
+  t1125 sit {}
+  t1125 bomb+ {"bombs":[{"x":136,"y":152,"vx":3.8457155684607054,"vy":1.130995009951069,"angle":0}]}
+  t1141 shoot {}
+  t1156 bomb- {"last":[{"x":251.37146705382156,"y":185.92985029853236,"vx":3.8457155684607054,"vy":1.130995009951069,"angle":450}],"player":{"x":231.62487576228415,"y":183.95991847916687,"vx":-0.4825267356959113,"vy":1.1316331461479576}}
+  t1171 sit {}
+  t1171 bomb+ {"bombs":[{"x":136,"y":152,"vx":3.002158347074636,"vy":0.7941056987685423,"angle":0}]}
+  t1187 shoot {}
+  t1202 bomb- {"last":[{"x":226.06475041223922,"y":175.823170963056,"vx":3.002158347074636,"vy":0.7941056987685423,"angle":450}],"player":{"x":226.13140490397996,"y":157.865675952264,"vx":0.9857864376269048,"vy":-0.9857864376269048}}
+  t1217 sit {}
+  t1217 bomb+ {"bombs":[{"x":136,"y":152,"vx":3.5390287341536606,"vy":-0.3391260389455283,"angle":0}]}
+  t1233 shoot {}
+  t1248 bomb- {"last":[{"x":242.1708620246094,"y":141.82621883163432,"vx":3.5390287341536606,"vy":-0.3391260389455283,"angle":450}],"player":{"x":264.06601008179575,"y":119.9310707744482,"vx":0,"vy":0}}
+  t1263 sit {}
+  t1263 bomb+ {"bombs":[{"x":136,"y":152,"vx":4.268867002726525,"vy":-1.0689643075183932,"angle":0}]}
+  t1279 shoot {}

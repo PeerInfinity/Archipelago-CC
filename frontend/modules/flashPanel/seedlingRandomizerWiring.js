@@ -512,6 +512,49 @@ const defaultWaitFrame = () => new Promise((r) => {
  * never called, and `hostOwnedLocations()` therefore never stands the adapter
  * down.
  */
+/**
+ * ⛓⛓ **WIND CUTSCENE — A PUSHED TELEPORT'S WORLD BEGINS BEFORE THE SET IS SENT.**
+ *
+ * `Game.level` is not a field: it is `Main.level`, a getter on the SAVE (`Game.as:526-532`,
+ * `Main.as:218`). `new Game(N, …)` writes N into the save in its constructor, but `begin()` runs only
+ * when the world swaps in (`Engine.checkWorld`, a frame or more later). A delivery that mounts a new set
+ * in that gap throws the save away (`Main.freshSaveForLevelSet`, "LEVEL SET RESET"), so `begin()` reads
+ * **−1** and takes the new-game arm (`Game.as:832-840`): the wind scene, under the world the glue pushed.
+ * `cutscene` is a static, so the reset that follows (and every re-arrival) plays on inside it.
+ * MEASURED (CI, the `tutorial-walk-procgen-seedling` row, 1 of 14 runs): the glue's arrival teleport
+ * pushed at 7129 ms, the delivery at 7458 ms, then a begin record `level −1` at 7662 ms before the
+ * reset's own `level 0`. The 13 green runs did not lose that race.
+ *
+ * ⇒ The question is the adapter's stamp (`swapState().pushedOn`, the begin record live when the last
+ * teleport went): while it still IS the live begin record, that teleport's world has not begun. A teleport
+ * still QUEUED is harmless (its constructor runs after the mount and writes its level into the new save).
+ * Polled, never slept; bounded by the load's own swap timeout, and a timeout delivers anyway, by name.
+ * @returns {string|null} why the delivery must wait, or null
+ */
+export function pushedSwapPending(swap, beginEntry) {
+    if (!swap?.pushedOn || !beginEntry) return null;
+    if (JSON.stringify(swap.pushedOn) !== JSON.stringify(beginEntry)) return null;
+    return `teleport #${swap.pushes ?? '?'} was pushed on the live begin record and its world has not begun`;
+}
+
+/** Wait out `pushedSwapPending`: `{waited, landed, waitedMs, why}` (`why` = the last blocker). */
+export async function settlePushedSwap({ glue, bot, now = () => Date.now(), sleep, timeoutMs = 30000, pollMs = 100 }) {
+    const t0 = now();
+    let waited = false;
+    for (;;) {
+        let begin = null;
+        try { begin = JSON.parse(bot?.('botSeam') ?? 'null')?.beginEntry ?? null; } catch { begin = null; }
+        let swap = null;
+        try { swap = glue?.swapState?.() ?? null; } catch { swap = null; }
+        const why = pushedSwapPending(swap, begin);
+        if (!why) return { waited, landed: true, waitedMs: now() - t0, why: null };
+        if (now() - t0 > timeoutMs) return { waited: true, landed: false, waitedMs: now() - t0, why };
+        waited = true;
+        // eslint-disable-next-line no-await-in-loop
+        await sleep(pollMs);
+    }
+}
+
 export async function runSeedlingRandomizerLoad(args = {}) {
     /**
      * ⛓ §5.19 — THE MOUNT + RESET WINDOW HOLDS THE GLUE'S POSITION WATCH: the player's positions in it are
@@ -569,6 +612,19 @@ async function runSeedlingRandomizerLoadSteps({
     step('deliver-begin', { rooms });
     await waitFrame();
 
+    // ⛓ WIND CUTSCENE — a teleport already pushed lands its world BEFORE the set is sent (`settlePushedSwap`).
+    const settle = await settlePushedSwap({ glue, bot, now, sleep, timeoutMs: swapTimeoutMs, pollMs: swapPollMs });
+    if (settle.waited) {
+        step('swap-settle', settle);
+        // ⛓ On the console too, so a CI log counts it (the panel log is the panel's).
+        console.info(`[ap placement] swap-settle: waited ${Math.round(settle.waitedMs)} ms for a pushed `
+            + `teleport's world before the delivery (landed: ${settle.landed})`);
+        if (!settle.landed) {
+            log(`[ap placement] a pushed teleport's world did not begin within ${swapTimeoutMs} ms — delivering `
+                + `anyway (${settle.why})`, 'warn');
+        }
+    }
+    // ⛔ NO `await` FROM HERE TO `deliver()`: the settle's answer holds only in the turn it was read.
     const result = loaded.delivery.deliver();
     step('deliver-end', { ok: result.ok, chunks: result.chunks, why: result.why });
     if (!result.ok) {

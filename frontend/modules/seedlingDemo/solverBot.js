@@ -101,6 +101,8 @@ import {
     WAIT_AFTER_PRESS_TICKS, assertWaitCovers, rockBreaksUnder,
     ARROW, arrowLaneForPlacement, arrowLaneRect, arrowTrapFires,
     bridgedChaserTags, chaserBoxAt, chaserHasSword, killWindowTicks,
+    // ⛓ STRIKELAPSE D1: a corpse's removal clock (`createCorpseClock`).
+    deathTicks, removalTicksAfterHit,
     DESTROYING_TILE_TYPES,
     rect, rectsOverlap, TILE_SIZE,
     ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET, contactPricing, contactRect,
@@ -114,12 +116,14 @@ import {
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
     // ⛓⛓⛓ hammer-phase D: the approach's and the fight's per-weapon row (behind `GHOST_SEARCH_BUCKETS`, OFF).
     searchPressFor,
-    // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, OFF).
+    // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, ON since the user's flip).
     killRungPresses,
     // ⛓⛓⛓ hammer-phase P1: the press kill's exact caches (behind `PRESS_KILL_COST`, ON; OFF bypasses every one).
     PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
     // ⛓⛓⛓ hammer-phase P2: the strike scan's two exact levers (behind `STRIKE_SCAN_COST`, ON; OFF bypasses both).
     STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
+    // ⛓⛓⛓ hammer-phase BW: the press kill's waits see the lobber's bombs (behind `PRESS_KILL_BOMBS`, OFF).
+    PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
@@ -146,7 +150,7 @@ import {
     createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
 } from './solverView.js';
 import {
-    bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
+    bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseHazardCanReach, phaseHazardHit,
 } from './dangerMap.js';
 import { axeCanReach, axeHitsPlayer, SPINNING_AXE } from './hazards.js';
@@ -5317,6 +5321,16 @@ export function previewWalk(run, wps, tolerance = 0,
             if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
             samples.push(sample);
             let held = st.fall ? new Set() : (tailHeld ? tailHeld(st) : NO_HELD_PREVIEW);
+            /**
+             * ⛓ STRIKELAPSE D1 — a tail whose keys answer `null` ENDS HERE: the executor's ceremony starts on this
+             * sample (`collectStandWalk`), `Game.freezeObjects` holds every body where this sample has it, and the
+             * probe asks this sample the ceremony's own question (`probeSamples`' `ceremony` arm). Only that tail
+             * answers `null`; every other tail is unchanged.
+             */
+            if (held === null) {
+                sample.ceremony = true;
+                break;
+            }
             const combat = combatBefore(st, tick - 1, held, chaserBodies);
             held = combat.held;
             sample.held = held;
@@ -9370,7 +9384,8 @@ export function discClearanceAt(box, forecast, i) {
  * strike. That interval is derived — it is the strike schedule's own — and a
  * refuge that cannot cover it is a REFUSAL rather than a shorter window.
  */
-function deriveRefuge(run, contacts, untilIndex) {
+/** ⛓ hammer-phase BW: exported for `hammerPressBombs.test.js` (the refuge, OFF against ON). */
+export function deriveRefuge(run, contacts, untilIndex) {
     const forecast = run.spinnerForecast(Math.max(1, untilIndex));
     const clear = [];
     for (const c of walkableCells(run, contacts)) {
@@ -9407,10 +9422,19 @@ function deriveRefuge(run, contacts, untilIndex) {
      */
     clear.sort((a, b) => a.d - b.d || b.clearance - a.clearance);
     let best = null;
+    // ⛓ hammer-phase BW — the lobber's forecast, asked of each previewed refuge (`PRESS_KILL_BOMBS`, OFF)
+    const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);
     for (const c of clear.slice(0, REFUGE_CANDIDATES)) {
         const walk = previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
         if (walk.truncated) continue;
         const eta = walk.samples.length;
+        if (bombs) {
+            PRESS_KILL_BOMBS_COUNTS.refugeAsked += 1;
+            if (refugeBlast(run, walk, c, untilIndex) !== null) {
+                PRESS_KILL_BOMBS_COUNTS.refugeRefused += 1;
+                continue;
+            }
+        }
         if (!best || eta < best.eta
             || (eta === best.eta && c.clearance > best.clearance)) {
             best = { x: c.x, y: c.y, clearance: c.clearance, eta };
@@ -9421,6 +9445,62 @@ function deriveRefuge(run, contacts, untilIndex) {
 
 /** How many clear cells a refuge derivation previews. Named, not generous. */
 const REFUGE_CANDIDATES = 12;
+
+/** ⛓ hammer-phase BW (`PRESS_KILL_BOMBS`) — does the run's room hold a lobber or a bomb in flight (the only rooms the forecast below can say anything in)? */
+function bombsInPlay(run) {
+    return (run.entities('bombPushers') ?? []).length > 0
+        || (run.entities('bombs') ?? []).some((b) => !b.removed);
+}
+
+/**
+ * ⛓ hammer-phase BW — THE FIRST BLAST ON A WALK THEN A STAND — the run's lobber forecast stepped once per tick: step `k` is handed
+ * `path[k]` (a previewed walk's samples, each the PRE-move point of its tick, the pairing `previewWalk` steps its own
+ * `spitForecast` with) and, past the path, `stance`. A bomb's Explosion is returned by the step after the one that
+ * removed its bomb, tested against the point that step was handed — the end-of-tick player the game's
+ * `Explosion.added()` meets (`levelRun.bombForecastNow`). So `{step: k}` is the k-th tick from now.
+ *
+ * @param {object} run
+ * @param {Array<{x: number, y: number}>} path   the walk's points, tick by tick (empty for a stand from now)
+ * @param {{x: number, y: number}} stance        where the player stands once the path ends
+ * @param {number} until                         steps to forecast (exclusive)
+ * @returns {?{step: number, id: string, x: number, y: number, onWalk: boolean}} the first blast on the player, or null
+ *   (also null when the room steps no lobber: the forecast is `null`, or holds no bomb)
+ */
+function firstBlastOn(run, path, stance, until) {
+    const f = run.spitForecast?.() ?? null;
+    if (f === null) return null;
+    for (let k = 0; k < until; k += 1) {
+        const p = k < path.length ? path[k] : stance;
+        for (const b of f.step({ x: p.x, y: p.y })) {
+            if (b.kind === 'bomb' && b.hitsPlayer) {
+                return { step: k, id: b.id, x: b.x, y: b.y, onWalk: k < path.length };
+            }
+        }
+    }
+    return null;
+}
+
+/**
+ * ⛓⛓ hammer-phase BW — A REFUGE'S WALK AND WAIT, AGAINST THE LOBBER (`PRESS_KILL_BOMBS`). The refuge is a wait over
+ * `untilIndex` ticks from now (the window `deriveRefuge` prices the hammers over), reached by the previewed `walk`:
+ * the lobber's forecast is stepped along the walk and then with the player standing on the cell, through the window
+ * (or the walk's own end, when the walk is the longer). A blast on the player anywhere in that span is this refuge's.
+ */
+function refugeBlast(run, walk, cell, untilIndex) {
+    return firstBlastOn(run, walk.samples, cell, Math.max(untilIndex, walk.samples.length + 1));
+}
+
+/**
+ * ⛓⛓ hammer-phase BW — A STRIKE'S DWELL AND TRAIN, AGAINST THE LOBBER (`PRESS_KILL_BOMBS`). The walk to `cell` was
+ * already asked of the bombs (`dangerDuringTransit` reads its samples' own `spits`); what stood unpriced is the stand
+ * that follows it — from the arrival until the press's hit tests end, `+i + hitTicks + 1`, the wider end the hammer
+ * train is checked to (`opportunityAt`). A bomb launched while the walk arrives is aimed at the arriving player and
+ * lands one step past the aim (`lobberWaitDanger`'s sentence), so this is where leg 381's t1156 blast fell.
+ */
+function strikeStandBlast(run, walk, cell, until) {
+    const blast = firstBlastOn(run, walk.samples, cell, until);
+    return blast !== null && !blast.onWalk ? blast : null;
+}
 
 /**
  * ⛓⛓⛓ ONE STRIKE, DERIVED FROM WHERE THE PLAYER IS **NOW**.
@@ -9763,6 +9843,22 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         }
         return null;
     };
+    /**
+     * ⛓ hammer-phase BW — THE STAND'S BOMB (`PRESS_KILL_BOMBS`, OFF ⇒ never asked). Once per cell per derivation (the
+     * walk does not depend on the tick, U4b's note on `walkTo`): the first blast the lobber's forecast lands on a
+     * player who walks there and stands, to the horizon's train end. A window whose train ends at or after it is the
+     * hit 381 took.
+     */
+    const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);
+    let bombed = 0;
+    const standBlastAt = (c, walk, i) => {
+        const known = walks.get(c);
+        if (known.stand === undefined) {
+            PRESS_KILL_BOMBS_COUNTS.strikeAsked += 1;
+            known.stand = strikeStandBlast(run, walk, c, horizon + press.hitTicks + 2);
+        }
+        return known.stand !== null && known.stand.step <= i + press.hitTicks + 1 ? known.stand : null;
+    };
     for (let i = Math.max(1, notBefore); i < horizon - press.hitTicks - 1; i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
@@ -9841,6 +9937,17 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
                     + `body's 7x7 rect or ${hammerTestAt(run)}` });
             continue;
         }
+        // ⛓ hammer-phase BW — the stand against the lobber (`PRESS_KILL_BOMBS`; off ⇒ not reached)
+        const blast = bombs ? standBlastAt(o.cell, walk, o.i) : null;
+        if (blast !== null) {
+            bombed += 1;
+            PRESS_KILL_BOMBS_COUNTS.strikeRefused += 1;
+            rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
+                why: `the STAND meets a bomb: the walk arrives at +${eta} and stands until the train ends at `
+                    + `+${o.i + press.hitTicks + 1}, and at +${blast.step} ${blast.id}'s Explosion at `
+                    + `(${blast.x},${blast.y}) lands on the stance (the lobber's forecast, aimed at the previewed player)` });
+            continue;
+        }
         // ⛓ hammer-phase A — the ESCAPE admission (`HAMMER_ESCAPE`; off ⇒ not reached).
         if (HAMMER_ESCAPE.enabled) {
             const esc = strikeEscape(run, { cell: o.cell, i: o.i, eta, walk, mine: forecast[o.i + 1][index], bodyId,
@@ -9864,6 +9971,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
             sighted,
             dwelt,
             ...(HAMMER_ESCAPE.enabled ? { escaped } : {}),
+            ...(bombs ? { bombed } : {}),
         };
     }
     /**
@@ -9906,6 +10014,12 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
             const { walk, eta, unsafe } = walkTo(c);
             if (walk.truncated || unsafe || eta > i - 1) continue;
             if (dwellUnsafeAt(c, eta, i) !== null) { dwelt += 1; continue; }
+            // ⛓ hammer-phase BW — the stand against the lobber, as in the bounded pass
+            if (bombs && standBlastAt(c, walk, i) !== null) {
+                bombed += 1;
+                PRESS_KILL_BOMBS_COUNTS.strikeRefused += 1;
+                continue;
+            }
             if (HAMMER_ESCAPE.enabled) {
                 const esc = strikeEscape(run, { cell: c, i, eta, walk, mine, bodyId, caller: 'continuation' });
                 if (!esc.ok && esc.claim) {
@@ -9928,11 +10042,12 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
                 continued,
                 fromContinuation: true,
                 ...(HAMMER_ESCAPE.enabled ? { escaped } : {}),
+                ...(bombs ? { bombed } : {}),
             };
         }
     }
     // ⛓ hammer-phase A3 — no certified strike anywhere in the bounds: the pre-escape strike, as the switch OFF.
-    if (fallback !== null) return { ...fallback, escaped };
+    if (fallback !== null) return { ...fallback, escaped, ...(bombs ? { bombed } : {}) };
     return {
         cell: null,
         rejected,
@@ -9948,6 +10063,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         truncated: opportunities.length >= STRIKE_CANDIDATES,
         horizon,
         ...(HAMMER_ESCAPE.enabled ? { escaped } : {}),
+        ...(bombs ? { bombed } : {}),
     };
 }
 
@@ -13853,7 +13969,11 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                                 + 'clear of every live body\'s 7x7 rect and of '
                                 + `${hammerTestAt(run)} for the next ${window} tick(s), `
                                 + `and no strike on ${plan.id} is derivable. The room has `
-                                + 'nowhere to be.', { code: HAMMER_SAFETY });
+                                + 'nowhere to be.'
+                                // ⛓ hammer-phase BW — and under `PRESS_KILL_BOMBS` a refuge a forecast blast lands on is none
+                                + (PRESS_KILL_BOMBS.enabled && bombsInPlay(run)
+                                    ? ' (PRESS_KILL_BOMBS: a refuge whose walk or wait a forecast Bomb\'s Explosion '
+                                        + 'lands on is not counted.)' : ''), { code: HAMMER_SAFETY });
                         }
                     }
                 }
@@ -14812,6 +14932,116 @@ function keylockStandWalk(run, resolved) {
         };
     };
     return { stand: { ticks: resolved.hold.ticks, keys } };
+}
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY STRIKELAPSE D1 (`CONTACT_FIDELITY.strikeIframeLapse` ON only) — **A COLLECT'S APPROACH IS
+ * PRICED AS ITS STANCE WALK'S TAIL**, by `KEYLOCK_WAIT_PRICED`'s instrument (`stand`): the walk's probe, the
+ * ladder's AVOID/DETOUR and every dash candidate are previewed with the approach `execCollect` will walk after the
+ * stance (lean onto the pickup at the drive's tolerance), on the same chaser forecast, and the tail ENDS on the
+ * sample where the player's box meets the pickup's — the ceremony's start, which `probeSamples` asks
+ * `ceremonyBesideLiveBody`'s question of.
+ *
+ * MEASURED on survey step 50 (L30 Torchpickup, `bobsoldier@48,80`): with the lapse ON the transit probe of the walk
+ * to the collect stance (72,56) is clean — the walk's own presses now land on the lapsing i-frame — so the kill arm
+ * is never asked. The walk then driven is the DASHED one (106 t, certified on its transit only), which leaves the
+ * body ALIVE on one hit 22 px off the stance; the 8-tick approach walks into it, the torch ceremony freezes it
+ * adjacent, and the exit walk's gate refuses at (71.04,67.07). OFF the same probe met the blade at the stance and
+ * the kill arm ran (460 t). A stance safe to pass is not safe to approach from (trap 154). With the tail and the
+ * ceremony arm the solve keeps the walk whose own presses kill the body and whose corpse is gone (`createCorpseClock`)
+ * when the ceremony starts: 413 t, game-witnessed (the strikelapse report, D1).
+ *
+ * The tail's length is a BOUND, not a measurement: the straight line to the pickup at `WALK_SPEED` (slower than any
+ * diagonal the walker takes) plus `HOLD_SLACK`, so a tail that never meets the pickup stands — the side to err on.
+ * `{}` (the walk unchanged) for a resolution with no target.
+ */
+export function collectStandWalk(run, resolved, stance) {
+    const t = resolved?.target;
+    if (!t || !stance) return {};
+    const aim = t.rect
+        ? { x: (t.rect.x + t.rect.right) / 2, y: (t.rect.y + t.rect.bottom) / 2 }
+        : { x: t.x, y: t.y };
+    const NO_KEYS = new Set();
+    // `null` = the ceremony starts on this sample (`previewWalk` ends the tail there): the player's box meets the
+    // pickup's, where the drive's own collection begins.
+    const keys = () => (st) => {
+        if (t.rect && rectsOverlap(playerBoxAt(st.x, st.y), t.rect)) return null;
+        return hasArrived(st, aim, DEFAULT_TOLERANCE) ? NO_KEYS : chooseHeld(st, aim, DEFAULT_TOLERANCE);
+    };
+    const ticks = Math.ceil(Math.hypot(aim.x - stance.x, aim.y - stance.y) / WALK_SPEED) + HOLD_SLACK;
+    return { stand: { ticks, keys } };
+}
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY STRIKELAPSE D1 — **A CEREMONY DOES NOT START BESIDE A LIVE BODY** (the tail sample
+ * `collectStandWalk` ends on, `ceremony: true`). `Game.freezeObjects` holds every body for the ceremony, and its
+ * phase A is a LUMP of frames this model does not step (`frozenFramesOwed`; `levelRun`'s
+ * `assertNoCeremonyBesideLiveChaser` refuses the i-framed and dying cases). Two things run through those frames
+ * that nothing here can price: `Player.shieldBump` (no freeze gate, `Player.as:1697`, and the player's `v` is frozen
+ * non-zero) knocks a touching body back once per frame, and the next walk begins against a body the freeze parked
+ * where it stood. MEASURED on the game (p4f, survey step 50's ON plan before this arm): the BobSoldier beside the
+ * Torchpickup reads v (358.8, 663.4) one tick into the ceremony where the model's steps read (4.2, 8.2), and leaves
+ * the freeze at (91.8, 282.0), not the model's (91.8, 197.7).
+ *
+ * ⇒ the sample asks the WAIT question, untimed (`chaserDanger` at horizon 0: each body's box grown by its
+ * `threatPad`), of the LIVE bodies the forecast carries — a corpse (`destroy`, a staged `dyingAt`) fades out through
+ * the freeze (`Mobile.death` runs outside it) and is not asked.
+ *
+ * ⚖ INTERIM (user, 2026-10-12: "it would have been better to model the freeze interaction than to try to avoid it").
+ * This arm AVOIDS a game behaviour the model does not step; the queued CEREMONY SHOVE slice models the per-frame
+ * `shieldBump` through the lump (from the measurement above) and then retires this refusal. Keep `collectStandWalk`.
+ */
+export function ceremonyBesideLiveBody(run, sample, corpses = []) {
+    const present = [...(sample.chasers ?? []).filter((b) => !b.removed), ...corpses];
+    const dead = (b) => b.destroy || b.dying || b.dyingAt !== undefined;
+    // ⛔ `assertNoCeremonyBesideLiveChaser`'s own set, room-wide as it is: the run THROWS on these.
+    const sources = present.filter((b) => dead(b) || (b.hitsTimer ?? 0) > 0).map((b) => ({
+        kind: 'chaser', id: b.id,
+        why: `the collect's ceremony would start while ${b.id} is `
+            + `${dead(b) ? 'DYING' : `inside ${b.hitsTimer} ticks of i-frames`} — `
+            + '`Enemy.hitUpdate` and `Mobile.death` run through the freeze\'s unstepped frames, '
+            + 'and the run refuses that ceremony (`assertNoCeremonyBesideLiveChaser`)' }));
+    const live = present.filter((b) => !dead(b));
+    if (live.length > 0) {
+        sources.push(...chaserDanger(run, playerBoxAt(sample.x, sample.y), 0, live)
+            .map((x) => ({ ...x, why: `the collect's ceremony would start here beside a LIVE body (${x.why}) — the `
+                + 'freeze\'s unstepped frames shove it (`Player.shieldBump`) and park it for the next walk' })));
+    }
+    return { danger: sources.length > 0, sources };
+}
+
+/**
+ * ⛓ STRIKELAPSE D1 — **THE CORPSES A FORECAST NO LONGER CARRIES.** A forecast sample drops a killed body at the
+ * blow (`!c.destroy`, `dyingAt`), and the run keeps it — `dying`, fading — until `removalTicksAfterHit` later. So a
+ * clock over the samples, in order: a body the run holds that a sample no longer carries was killed at the last tick
+ * it was carried, and is a corpse in the room until that tick + its class's removal; a body the run already holds as
+ * a corpse is one for its whole removal from the probe's first tick (the side to err on). `at(tick)` lists those
+ * still in the room, flagged `dying`.
+ */
+export function createCorpseClock(run) {
+    const start = run.ticksCompleted;
+    const lastSeen = new Map();
+    const removal = (tag) => removalTicksAfterHit(ENEMY_CLASSES[tag]?.as3 ?? null, deathTicks(tag));
+    const roster = (run.entities('chasers') ?? []).filter((c) => !c.removed);
+    for (const c of roster) lastSeen.set(c.id, { tag: c.tag, x: c.x, y: c.y, t: start, dead: c.destroy || c.dying });
+    return {
+        see(sample) {
+            for (const b of sample.chasers ?? []) {
+                const row = lastSeen.get(b.id);
+                if (row && !row.dead) Object.assign(row, { x: b.x, y: b.y, t: sample.tick });
+            }
+        },
+        at(tick) {
+            const out = [];
+            for (const [id, row] of lastSeen) {
+                if (!row.dead && row.t >= tick) continue;
+                // ⚠ `<=`, MEASURED (step 50): killed on sample t140, removal 11 — the run's ceremony at t151 still
+                // meets the corpse (`FP.world.remove` is deferred to the end of the frame its fade ends on).
+                if (tick - row.t <= removal(row.tag)) out.push({ id, tag: row.tag, x: row.x, y: row.y, dying: true });
+            }
+            return out;
+        },
+    };
 }
 
 /** The held key set that leans from `state` toward `aim` on ONE axis. */
@@ -17204,6 +17434,46 @@ export function replayOntoFork(r, perTick, equips, { stop = null, to = perTick.l
     return r;
 }
 
+/**
+ * ⛓ seedling-fidelity-unbilledgate D2 — UNBILLED_DAMAGE: A SEGMENT WHOSE DRIVE TOOK DAMAGE NOTHING BILLED IS NOT A SOLVE.
+ *
+ * `solveSegment` returned success on reaching its goals. The forced-hit rung (`FORCED_HITS`) BILLS the hits it proved
+ * unavoidable (`forcedHits[].billed`); the walk, kill and detour executors drive on through a hit or a death their own
+ * preview did not see — L74LEG624's leg-624 drafts (a game-confirmed bulb hit at t362; 4–5 lava deaths) and the JS
+ * arc's sweep-5 (17 legs with game hits no plan billed) came back as successes.
+ * ON: at success, any `playerHits` row of THIS segment that `forcedHits` did not bill, or any `playerDeaths` row,
+ * refuses the segment by name (`obstacle.kind: 'unbilled-damage'`). "This segment" is the run clock after the caller's
+ * handover (`run.ticksCompleted` at entry): a replayed `prefix`'s hits are the prefix's (STAGEDHITS), not this one's.
+ * OFF: byte-identical — the check is not asked (the census window below is read-only and null by default).
+ * `CONTACT_FIDELITY.unbilledDamageGate`; `SEEDLING_UNBILLED_DAMAGE_GATE=0|1` for a node measurement.
+ */
+export const UNBILLED_DAMAGE = {
+    get enabled() { return CONTACT_FIDELITY.unbilledDamageGate === true; },
+    set enabled(v) { CONTACT_FIDELITY.unbilledDamageGate = v === true; },
+};
+
+/**
+ * The census window (D1): `sink({name, boot, prefix, ticks, unbilled, deaths, billed, gate})`, called at every segment
+ * that reached its goals, before the gate is asked; `null` (the default) asks nothing. Read-only: it never decides.
+ */
+export const UNBILLED_DAMAGE_TRACE = { sink: null };
+
+/**
+ * The damage a segment took that no plan billed: its `playerHits` rows after run clock `since` not in
+ * `forcedHits[].billed` (matched on `t:source:id`), and its `playerDeaths` rows after `since`. `tapeOf(t)` maps a run
+ * clock to the tape tick (`perTick` index) of the advance that reached it (dead frames make them differ).
+ */
+export function unbilledDamageOf(run, since, forcedHits = [], tapeOf = () => null) {
+    const key = (h) => `${h.t}:${h.source}:${h.id}`;
+    const billed = new Set(forcedHits.flatMap((f) => f.billed ?? []).map(key));
+    const unbilled = (run.ledger('playerHits') ?? []).filter((h) => h.t > since && !billed.has(key(h)))
+        .map((h) => ({ t: h.t, tick: tapeOf(h.t), level: h.level, source: h.source, id: h.id ?? null, hits: h.hits,
+            died: h.died === true }));
+    const deaths = (run.ledger('playerDeaths') ?? []).filter((d) => d.t > since)
+        .map((d) => ({ t: d.t, tick: tapeOf(d.t), level: d.level, source: d.source, id: d.id ?? null }));
+    return { unbilled, deaths, billed: billed.size };
+}
+
 /** The deadline the segment being solved runs under — `null` is "none". */
 let activeDeadline = null;
 
@@ -17515,6 +17785,12 @@ function solveSegmentUnder({
     /** ⛓ hammer-phase B3 — the tape tick of every dash `dashesPressed` counted, so a rewind can un-count the tail. */
     const dashTicks = [];
     /**
+     * ⛓ UNBILLEDGATE D2 — run clock → tape tick, kept only when the gate or its census asks (`UNBILLED_DAMAGE`): each
+     * advance records the clock it ended on; a later advance to the same clock (after a rewind) overwrites it.
+     */
+    const watchDamage = UNBILLED_DAMAGE.enabled || UNBILLED_DAMAGE_TRACE.sink !== null;
+    const tapeAtClock = watchDamage ? new Map() : null;
+    /**
      * ⛓ hammer-phase B3 — the run as the segment drives it is a VIEW over an inner run, and a rewind builds the same
      * view over a fresh one (`tapeTick` resumes at the rewind's tick). One function, so the two cannot differ.
      */
@@ -17562,6 +17838,7 @@ function solveSegmentUnder({
                     inner.takeApItem({ level: pre.level, id: a.id, tag: a.tag });
                 }
             }
+            if (tapeAtClock !== null) tapeAtClock.set(inner.ticksCompleted, tapeTick);
             tapeTick += 1;
             return out;
         };
@@ -18265,6 +18542,8 @@ function solveSegmentUnder({
      * informed (or worse) than the walk, which is trap 567 from either side.
      */
     const probeSamples = (samples, except = null, { walkCheck = false } = {}) => {
+        // ⛓ STRIKELAPSE D1 — a ceremony sample's corpses (`ceremonyBesideLiveBody`), read only when one is present.
+        const corpses = samples.some((sm) => sm.ceremony) ? createCorpseClock(run) : null;
         for (let i = 0; i < samples.length; i += 1) {
             const s = samples[i];
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site, every `WALK_CHECK_TICKS`
@@ -18278,6 +18557,11 @@ function solveSegmentUnder({
                     s.spits ?? null, s.grenades ?? null),
                 except);
             if (d.danger) return { x: s.x, y: s.y, tick: s.tick, ...d };
+            corpses?.see(s);
+            if (s.ceremony) {
+                const c = withoutSources(ceremonyBesideLiveBody(run, s, corpses.at(s.tick)), except);
+                if (c.danger) return { x: s.x, y: s.y, tick: s.tick, ...c };
+            }
         }
         return null;
     };
@@ -19557,7 +19841,7 @@ function solveSegmentUnder({
              * weapon is a SUB-ORDER the macro layer owes.
              *
              * ⛓⛓⛓ HAMMER-PHASE G1 — the weapon is asked by `killRungPresses`
-             * (`GHOST_KILL_RUNG`, OFF): OFF it is `weapon === 'sword'`; ON it
+             * (`GHOST_KILL_RUNG`, ON by default): OFF it is `weapon === 'sword'`; ON it
              * also admits the ghost's press, where `derivePressKill` does.
              */
             const weapon = run.progress('primaryWeapon');
@@ -21630,9 +21914,15 @@ function solveSegmentUnder({
             what: stance.corridor === false
                 ? `${what} stance (ladder-routed: ${stance.why})`
                 : `${what} stance`,
+            // ⛓ STRIKELAPSE D1: the collect's approach is the walk's priced tail (`collectStandWalk`; lapse ON only).
+            ...(CONTACT_FIDELITY.strikeIframeLapse && resolved.strategy === 'collect'
+                ? collectStandWalk(run, resolved, stance) : {}),
         });
         if (collectedInPassing('on the walk to its stance')) continue;
-        refuseDanger(run.state.x, run.state.y, goal, what);
+        // ⛓ STRIKELAPSE D1: the approach that follows was PROBED as the walk's tail (`collectStandWalk`), so the gate
+        // asks the probe's timed question (`SWORD_GATE_TIMED`'s walk-gate reading) rather than the untimed pad.
+        refuseDanger(run.state.x, run.state.y, goal, what, null,
+            CONTACT_FIDELITY.strikeIframeLapse && resolved.strategy === 'collect' ? { timedSword: true } : {});
         const verbTick = perTick.length;
         const exec = STRATEGY_EXECUTORS[resolved.strategy];
         if (!exec) {
@@ -21726,6 +22016,38 @@ function solveSegmentUnder({
         builder.record({ ...row, keys: [...perTick[row.tick]].sort() });
     }
     const trace = builder.finish(perTick.length);
+
+    /**
+     * ⛓ UNBILLEDGATE D2 — THE ACCEPTANCE CHECK (`UNBILLED_DAMAGE`, above): the goals are met; was the drive hit where
+     * no plan billed it, or did it die? Counted from the handover (`ticked`), so a replayed prefix's hits stay out.
+     */
+    if (watchDamage) {
+        const tapeOf = (t) => {
+            let best = null;
+            for (const [clock, tick] of tapeAtClock) if (clock >= t && (best === null || clock < best[0])) best = [clock, tick];
+            return best === null ? null : best[1];
+        };
+        const dmg = unbilledDamageOf(run, ticked, forcedHits, tapeOf);
+        const gate = UNBILLED_DAMAGE.enabled;
+        UNBILLED_DAMAGE_TRACE.sink?.({ name, boot: { level: boot.level, x: boot.x, y: boot.y }, prefix: prefix.length,
+            ticks: perTick.length, ...dmg, gate });
+        if (gate && (dmg.unbilled.length > 0 || dmg.deaths.length > 0)) {
+            const first = dmg.unbilled[0] ?? dmg.deaths[0];
+            const during = rows.filter((r) => first.tick !== null && r.tick <= first.tick).at(-1) ?? null;
+            const said = (h) => `t${h.tick ?? '?'} (run t${h.t}, L${h.level}) ${h.source}:${h.id ?? '?'}`;
+            refuse(`solverBot(${name}): UNBILLED DAMAGE — the segment reached its ${goals.length} goal(s), but its drive `
+                + `took ${dmg.unbilled.length} hit(s) no plan billed [${dmg.unbilled.map(said).join(', ')}]`
+                + (dmg.deaths.length ? ` and died ${dmg.deaths.length} time(s) [${dmg.deaths.map(said).join(', ')}]` : '')
+                + ` (the forced-hit rung billed ${dmg.billed}). A walk, kill or detour certified clean by its preview and `
+                + 'hit on its drive is not the plan the preview certified: the segment is refused rather than returned '
+                + 'as a solve (`UNBILLED_DAMAGE`).', {
+                goal: during?.goal ?? null,
+                obstacle: { kind: 'unbilled-damage', id: first.id, tick: first.tick, t: first.t, level: first.level,
+                    source: first.source, hits: dmg.unbilled.length, deaths: dmg.deaths.length, billed: dmg.billed,
+                    damage: [...dmg.unbilled], died: [...dmg.deaths] },
+            });
+        }
+    }
 
     const result = {
         perTick,

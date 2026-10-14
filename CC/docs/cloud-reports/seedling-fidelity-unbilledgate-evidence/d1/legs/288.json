@@ -1,0 +1,1 @@
+{"id":288,"key":"level_25 <- in_L26_144_32 -> exit:out_teleporter_96_128","level":25,"goal":"level_25 -> level_28__r0c6","ms":1040,"ok":true,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":148,"ms":174},{"pass":"full","ok":true,"kind":null,"ticks":106,"ms":865}],"ticks":106,"verbs":["walk"],"end":{"level":28,"x":104,"y":24,"deaths":0}}

@@ -34,10 +34,13 @@ const SWITCHES = ['strikeIframeLapse', 'fallRockPostFall', 'forecastSpeedByTerra
 describe('L74LEG624 — the switches', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_STRIKE_IFRAME_LAPSE
         || !!process.env.SEEDLING_FALLROCK_POSTFALL || !!process.env.SEEDLING_FORECAST_SPEED_BY_TERRAIN)(
-        'all three ship OFF', () => {
+        // ⛓ fidelity FLIP14: shipped OFF; ⚖ (user, 2026-10-12, "Four now, strike later") `fallRockPostFall` and
+        // `forecastSpeedByTerrain` ON since the wave-14 flip, `strikeIframeLapse` still OFF (it costs survey steps 50, 62).
+        'two ship ON, the lapse gate OFF (the wave-14 flip)', () => {
             for (const k of SWITCHES) {
-                expect(CONTACT_FIDELITY_DEFAULTS[k]).toBe(false);
-                expect(CONTACT_FIDELITY[k]).toBe(false);
+                const on = k !== 'strikeIframeLapse';
+                expect(CONTACT_FIDELITY_DEFAULTS[k]).toBe(on);
+                expect(CONTACT_FIDELITY[k]).toBe(on);
             }
         });
 });

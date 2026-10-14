@@ -425,7 +425,8 @@ export const standAnimFor = (direction) => (direction === 1 ? 'up' : direction =
  * @param {object} o.status   one `botStatus()`
  * @param {object} o.mobiles  `botMobiles()` parsed (`{mobiles: [...]}`)
  * @param {object|null} o.record  the room's map record (its `entities`)
- * @param {{x:number, y:number, direction:number}} o.shadow  the shadow's player after ONE idle tick
+ * @param {{x:number, y:number, direction:number, hits?:number}} o.shadow  the shadow's player after ONE idle tick
+ *   (⛓ STAGEDHITS CONSUMER — `hits`: the damage it was staged with; absent = none staged)
  * @param {object} o.state    the bridge's `readState()` (⛓ W8c: `freezeObjects`)
  */
 export function adoptionRefusal({ beginEntry, status, mobiles, record, shadow, state, waitingOutFade = false }) {
@@ -442,7 +443,10 @@ export function adoptionRefusal({ beginEntry, status, mobiles, record, shadow, s
     if ((status.inventory_slots ?? []).length > 0) {
         return no('inventory', `the player can use ${JSON.stringify(status.inventory_slots)} — a slash/spear/wand leaves state no readout carries`);
     }
-    if (status.hits || status.hits_timer || status.drown_timer || status.frozen_timer || status.receive_input === false
+    // ⛓ STAGEDHITS CONSUMER — `hits` the shadow STAGED (`shadow.hits`, from the adoption's `player_damage`) are the
+    // room's state, not a refusal; `hits_timer` still refuses: the i-frame runs with the frames, so the shadow
+    // `arrival + 1 idle tick` would not be the room `arrival + N`.
+    if ((status.hits && status.hits !== shadow?.hits) || status.hits_timer || status.drown_timer || status.frozen_timer || status.receive_input === false
         || status.menu || (status.cutscene ?? []).some(Boolean)) {
         return no('player-state', `hits ${status.hits}, hits_timer ${status.hits_timer}, drown ${status.drown_timer}, frozen ${status.frozen_timer}, `
             + `receive_input ${status.receive_input}, menu ${status.menu}`);
@@ -640,31 +644,6 @@ export function liveDeclarations(staging, status, { granted = null } = {}) {
             totem_parts: grantedUnion(indicesOf(status.save?.totem_parts), granted?.totem_parts),
             seal_parts: sealValues(status.save?.seal_parts) },
     };
-}
-
-/** ⛓ FORCED-HIT CONSUMER — the wave-14 staging field that retires `forcedHitContinuationRefusal` (fidelity's queue). */
-export const STAGED_PLAYER_HITS_FIELD = 'STAGED PLAYER HITS';
-
-/**
- * ⛓ FORCED-HIT CONSUMER (interim) — a CONTINUATION in a world where a forced crossing billed a hit. `damage` is the
- * last plan's `damage` shipped in the held room (`{hits, lastHitAt, id}`, the solver's `worldHitsOf` at the segment's
- * end), kept on the room until a door or a re-arrival replaces it (a new `Player`: the game's hits start at 0).
- *
- * No staging field carries the player's hits: an arrival staging is taken at 0, and a continuation's hits are only
- * what the replay of the shipped prefix re-bills. A room re-staged in this world (a delivery's items, from tick 0)
- * or any replay that misses the hit would plan from 0 hits while the game holds ≥ 1 — so it is refused, by name,
- * and served from a forced re-arrival. ⚖ State comes from the GAME: when STAGED PLAYER HITS lands, the
- * (re)staging reads `botStatus.hits` and this refusal retires (the model's `damage` is never carried).
- *
- * @param {{hits:number, lastHitAt:number|null, id:string|null}|null} damage
- * @returns {string|null}
- */
-export function forcedHitContinuationRefusal(damage) {
-    if (!(Number(damage?.hits) > 0)) return null;
-    return `a continuation after a FORCED HIT: the player carries ${damage.hits} hit(s) in this world`
-        + `${damage.id ? ` (${damage.id} at t${damage.lastHitAt})` : ''}, and no staging field carries the player's hits `
-        + `(fidelity's wave-14 candidate ${STAGED_PLAYER_HITS_FIELD}) — a plan from this room could start from 0 hits `
-        + 'while the game holds them';
 }
 
 /**

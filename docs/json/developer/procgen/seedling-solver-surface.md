@@ -260,7 +260,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `staticBodies` | `stationary`, `hp` | `solverBot` |
 | `darkTraps` | `stationary`, `light` | `dangerMap`, `solverBot` |
 | `bombPushers` | `stationary`, `emitter`, `proximity` | `dangerMap`, `solverBot` |
-| `bombs` | `explode` | `dangerMap` |
+| `bombs` | `explode` | `dangerMap`, `solverBot` |
 | `volume:crusher` | `lane-charge`, `contact` | `encounters` |
 | `volume:spinningaxe` | `stationary`, `sweep` | `dangerMap`, `encounters` |
 | `volume:pulser` | `stationary`, `pulse` | `dangerMap`, `encounters` |
