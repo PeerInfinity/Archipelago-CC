@@ -1,0 +1,223 @@
+[
+ {
+  "tick": 0,
+  "saw": {
+   "level": 75,
+   "x": 72,
+   "y": 24,
+   "vx": 0,
+   "vy": 0,
+   "danger": []
+  },
+  "goal": {
+   "kind": "reach-exit",
+   "aim": {
+    "x": 72,
+    "y": 232
+   }
+  },
+  "obstacle": {
+   "kind": "danger",
+   "id": "lavachain@96,48",
+   "sources": [
+    "hazard:lavachain@96,48"
+   ]
+  },
+  "strategy": {
+   "verb": "dodge",
+   "rung": "dodge",
+   "climb": 1,
+   "stall": {
+    "at": 19,
+    "ticks": 34
+   },
+   "phase": "lavachain@96,48",
+   "previews": 83,
+   "partial": [
+    "spinningaxe@80,144"
+   ]
+  },
+  "rejected": [
+   {
+    "option": "avoid",
+    "why": "no admissible corridor with the danger map's 9 volume(s) forbidden — no walkable tile path in level 75 from tile (4,1) to (4,14). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water,"
+   }
+  ],
+  "keys": [
+   "down"
+  ],
+  "note": "merged: walk decided on the same tick"
+ },
+ {
+  "tick": 53,
+  "saw": {
+   "level": 75,
+   "x": 72,
+   "y": 49.64999999999999,
+   "vx": 0,
+   "vy": 0,
+   "danger": [
+    "hazard:lavachain@96,32",
+    "hazard:lavachain@96,48"
+   ]
+  },
+  "goal": {
+   "kind": "reach-exit",
+   "aim": {
+    "x": 72,
+    "y": 232
+   }
+  },
+  "strategy": {
+   "verb": "walk",
+   "waypoints": 11,
+   "swordDash": {
+    "planned": true,
+    "ticks": 263,
+    "baseline": 325,
+    "saved": 62,
+    "windows": [
+     {
+      "at": 108,
+      "prefix": [
+       0,
+       2,
+       8,
+       14
+      ]
+     },
+     {
+      "at": 128,
+      "prefix": [
+       0,
+       2,
+       8
+      ]
+     },
+     {
+      "at": 153,
+      "prefix": [
+       0,
+       2,
+       8,
+       14
+      ]
+     },
+     {
+      "at": 175,
+      "prefix": [
+       0,
+       2,
+       8
+      ]
+     },
+     {
+      "at": 195,
+      "prefix": [
+       0,
+       2,
+       8
+      ]
+     },
+     {
+      "at": 215,
+      "prefix": [
+       0,
+       2,
+       8
+      ]
+     },
+     {
+      "at": 236,
+      "prefix": [
+       0,
+       2,
+       8
+      ]
+     },
+     {
+      "at": 257,
+      "prefix": [
+       0,
+       2
+      ]
+     }
+    ],
+    "legs": [
+     13,
+     24,
+     71,
+     22,
+     26,
+     22,
+     20,
+     16,
+     25,
+     20,
+     4
+    ],
+    "scanned": 500,
+    "why": null
+   }
+  },
+  "path": [
+   {
+    "x": 72,
+    "y": 56
+   },
+   {
+    "x": 56,
+    "y": 56
+   },
+   {
+    "x": 56,
+    "y": 136
+   },
+   {
+    "x": 104,
+    "y": 136
+   },
+   {
+    "x": 104,
+    "y": 168
+   },
+   {
+    "x": 72,
+    "y": 168
+   },
+   {
+    "x": 72,
+    "y": 184
+   },
+   {
+    "x": 56,
+    "y": 184
+   },
+   {
+    "x": 56,
+    "y": 216
+   },
+   {
+    "x": 72,
+    "y": 216
+   },
+   {
+    "x": 72,
+    "y": 232
+   }
+  ],
+  "rejected": [
+   {
+    "option": "sword-dash window: not-faster",
+    "why": "401 of 500 scanned preview(s) — first at walk-offset 0: 332 tick(s) against 325 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 1 of them dashes, and 0 were YIELDED"
+   },
+   {
+    "option": "sword-dash window: danger",
+    "why": "85 of 500 scanned preview(s) — first at walk-offset 24: the dashed corridor probes DANGEROUS at (73.4,135.5) at tick 157"
+   }
+  ],
+  "keys": [
+   "down"
+  ]
+ }
+]
