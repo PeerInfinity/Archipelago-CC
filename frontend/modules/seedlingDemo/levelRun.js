@@ -12024,9 +12024,35 @@ export function createLevelRun({
         const lump = pendingCeremonyLump;
         if (lump === null || lump.due !== ticksCompleted) return;
         pendingCeremonyLump = null;
-        if (lump.level !== level || ceremony === null) return;
-        for (let k = 0; k < lump.frames; k += 1) stepCeremonyDeadFrameNow();
-        ceremonyLumps.push({ t: ticksCompleted, level, what: lump.what, frames: lump.frames });
+        if (lump.level !== level || (!lump.seal && ceremony === null)) return;
+        // A seal piece's frames have no `ceremony` of their own (the run plays its contact tick live): the freeze is
+        // held for them here, so every reader of `ceremony !== null` in the chasers' step sees `Game.freezeObjects`.
+        const held = ceremony;
+        if (lump.seal) ceremony = held ?? SEAL_LUMP_FREEZE;
+        try {
+            for (let k = 0; k < lump.frames; k += 1) stepCeremonyDeadFrameNow();
+        } finally {
+            ceremony = held;
+        }
+        ceremonyLumps.push({ t: ticksCompleted, level, what: lump.what, frames: lump.frames,
+            ...(lump.seal ? { seal: true } : {}) });
+    }
+    const SEAL_LUMP_FREEZE = Object.freeze({ sealLump: true });
+    /**
+     * ⛓ CEREMONYSHOVE D3 (ON) — A CHEST'S SEAL PIECE: 150 phase-A frames and the `SealController`'s 181, ALL dead (no
+     * text, so no frozen observation between them). MEASURED on p4f (`ceremonyshove-l17-chest-19`, survey step 19's
+     * plan): at the collecting tick the game's first poll has the bobs UNMOVED with one i-frame drained (the contact
+     * frame, frozen after the piece's update) and its last poll has them MOVED with the i-frames at 0 — so the dead
+     * frames run INSIDE that tick, between the piece and the bodies' live step. Stepped here, at the contact: 330
+     * frames, the contact tick's own live step of the chasers being the 331st. MEASURED cost of refusing it instead:
+     * step 19 (`bob@96,32` inside 21 i-frame ticks under the lapse's walk) REFUSED. ⚠ The shove's count on this path
+     * (331 or 330) is UNWITNESSED: no committed tape or survey plan collects a seal piece beside a body in the box.
+     */
+    function stepSealLumpNow() {
+        if (!CONTACT_FIDELITY.ceremonyShove || noclip) return;
+        pendingCeremonyLump = { level, what: 'sealpiece', due: ticksCompleted, frames: CEREMONY_DEAD_FRAMES.total - 1,
+            seal: true };
+        stepCeremonyLumpNow();
     }
     /**
      * ⛓ AND THE 150TH DEAD FRAME, AT THE RELEASE. MEASURED on `ceremonyshove-l30-touch`: with the lump stepped the body
@@ -12042,7 +12068,7 @@ export function createLevelRun({
     const ceremonyLumps = [];
     /**
      * ⛓ CEREMONYSHOVE D2 (ON) — THE CEREMONIES WHOSE DEAD FRAMES ARE STILL A LUMP: a text-less pickup (it finishes on
-     * its start tick) and a chest's seal piece (`stepSealPieceNow`: 150 + the controller's 181, all dead). Their frames
+     * its start tick; a chest's seal piece is stepped instead, `armSealLumpNow`). Their frames
      * run `Player.shieldBump` exactly as a stepped ceremony's do, so a body the moving shield box touches would be
      * shoved on every one of them; that is refused here by name rather than spent unshoved. (A still player shoves
      * nothing: `shieldBump`'s `v.length > 0`.) Unwitnessed on the game: no committed tape or survey plan reaches it.
@@ -12386,8 +12412,8 @@ export function createLevelRun({
         });
         sealPiece = r.piece;
         if (!r.contact) return;
-        // ⛓ CEREMONYSHOVE D2 (ON): its 331 dead frames stay a lump, so a hot or touched chaser is refused by name.
-        if (CONTACT_FIDELITY.ceremonyShove) assertNoCeremonyBesideLiveChaser('sealpiece');
+        // ⛓ CEREMONYSHOVE D3 (ON): its dead frames are stepped here, inside the collecting tick (`stepSealLumpNow`).
+        stepSealLumpNow();
         // ⛓ THE CEREMONY IS ALL DEAD FRAMES. Phase A is 150 and the
         // `SealController` behind it is 181 more, and the observation
         // stream sees neither — so this costs the tape NO ticks and the
@@ -17567,6 +17593,14 @@ export function createLevelRun({
         get ceremonyStarts() { return ceremonyStarts.map((r) => ({ ...r })); },
         /** ⛓ CEREMONYSHOVE D2: the dead frames `stepCeremonyLumpNow` stepped (ON only; empty OFF). */
         get ceremonyLumps() { return ceremonyLumps.map((r) => ({ ...r })); },
+        /**
+         * ⛓ CEREMONYSHOVE D3: does this run STEP the dead frames of `p`'s ceremony (`ceremonyShove` ON and a ceremony
+         * with text — `armCeremonyLumpNow`'s own condition)? The planner's `ceremonyBesideLiveBody` asks it instead of
+         * re-reading the ceremony tables.
+         */
+        ceremonyStepsDeadFrames(p) {
+            return CONTACT_FIDELITY.ceremonyShove && !noclip && ceremonyFor(p).text !== '';
+        },
         /**
          * ⛓⛓⛓ `{t, arm, id, fromLevel, toLevel, cutscene, respawn}` per
          * GAME-INITIATED ending reboot — the window's terminal, and the
