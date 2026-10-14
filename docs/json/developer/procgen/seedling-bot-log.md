@@ -21910,3 +21910,65 @@ Identity block ON (MOVING_WAIT OFF and ON) = W0 on every value row (r9-campaign 
 ENEMY `afdc6d1a`); L18 sweep 45/45 and C2's L18 ghost staging 45/45 equal (timing stripped); staging A equal (keys
 `af47d35d`) and no slower. Nothing committed moves; nothing re-recorded. The page cannot see the switch (env-only).
 The flip is the user's.
+
+### Seedling fidelity CEREMONYSHOVE — a ceremony's dead frames, stepped instead of avoided
+
+⚖ The user (2026-10-12, on STRIKELAPSE): *"it would have been better to model the freeze interaction than to try to
+avoid it."* One switch, **OFF**, OFF byte-inert: `CONTACT_FIDELITY.ceremonyShove` (`SEEDLING_CEREMONY_SHOVE=0|1`).
+The report is `CC/docs/cloud-reports/seedling-fidelity-ceremonyshove.md`.
+
+**D1 — read and witnessed.** `Pickup.pick_up` raises `Game.freezeObjects` for 150 `specialTimer` frames. `Player.update`
+runs `addShield(); shieldBump();` and `hitUpdate()` outside the gated move, and an `Enemy`'s `knockback`
+(`v += 5·unit`), `hitUpdate` and `Mobile.death` fade have no freeze gate. `Enemy.hit` and `Player.hit` are gated, so
+nothing is damaged. The player's `v` stays frozen non-zero, so a body in the moving shield box is shoved on every
+frame. Four p4f witnesses were derived from `strikelapse-l30-torch` by dropping or moving presses and inserting idle
+ticks: a touched live BobSoldier, an i-framed one, a dying one, and the player inside its own i-frames. The dead
+frames fall **between the observations one and two ticks after the ceremony starts** (the i-framed body reads
+21 → 20 → 0, the fade 0.6 → 0.5 → gone). They shove **149** times (745.0 px/tick on two witnesses), and the 150th
+dead frame lands before the release (one more shove, Δv 5.0). Census: 277 committed tapes, 67 ceremonies; none starts
+with a body in contact, i-framed or dying.
+
+**D2 — stepped** (`levelRun`): `stepCeremonyLumpNow` (149 frames at the top of the advance after the first frozen
+tick), `stepCeremonyReleaseFrameNow` (the 150th, on the finishing tick), and the chasers' frozen step on every
+ceremony tick. Each frame is `stepChasersNow` (frozen), then `shieldBumpNow`, then `stepPlayerDamage`.
+`assertNoCeremonyBesideLiveChaser` stands down for a stepped (texted) ceremony; a text-less pickup keeps it, now also
+for a body in the moving shield box. All four witnesses are at 0 on every tick ON; OFF they are the controls. Five
+mutants, each red where predicted. The test's lump-row pin reddened two mutants' extra rows too, separated in the
+report.
+
+**D3 — the planner's question.** With `ceremonyShove` ON and a ceremony the run steps (`run.ceremonyStepsDeadFrames`),
+`ceremonyBesideLiveBody` (lapse ON) asks `ceremonyAftermathDanger`:
+
+- a corpse fades inside the lump;
+- a body in the moving shield box leaves at ~750 px/tick (the tail's ceremony sample now carries `player`);
+- any other body is parked beside the player and asked the untimed WAIT question.
+
+A chest's seal piece (331 dead frames, no text) is stepped inside the collecting tick: 330 frames, plus that tick's
+live step. Its witness, survey step 19's lapse-ON plan (`ceremonyshove-l17-chest-19`, three Bobs, one i-framed), is at
+0. Refusing it instead had cost step 19.
+
+**Survey (local, `--through=end --route=full`), by (level, goals, boot):**
+
+| configuration | SOLVED | what moved |
+|---|---|---|
+| CI base 38332251781 (both OFF) | 169 | — |
+| shove ON | 169 | nothing |
+| lapse ON | 170 | STRIKELAPSE's table, unchanged |
+| both ON | 169 | step 50, 413 → REFUSED |
+
+Steps 156 and 187 TIMEOUT under load. Solo at `--timeout=300` they refuse with CI's text, byte for byte.
+
+**Step 50 with both ON is a STOP, handed to the hammer arc.** The solver now collects beside the live BobSoldier
+(ceremony t138). The exit walk's own presses kill the body (removed by t192). The exit's kill arm (`execKillByPress`)
+then reaches `botDriverV2.runDwell` and refuses: "the dwell's condition (bobsoldier@48,80 has left the world) is
+ALREADY TRUE". At the defaults (lapse OFF) the switch costs nothing.
+
+**Trap candidates:**
+
+1. *A frozen tick is not a dead frame.* The Bot's tick stands still through dead frames. So the first poll at the tick
+   after a ceremony starts is pre-lump and the last poll is post-lump, and a probe that takes the first poll per tick
+   reads every ceremony's release tick as a 1-tick divergence. Compare against the closer of the first and last poll.
+2. *A lump has a place, not only a size.* 149 frames at the start tick would be wrong at cer+1, and 150 would be wrong
+   by one shove after the release. Only the witnesses' per-tick readings place them.
+3. *An avoidance's retirement can surface a different planner bug.* Step 50's loss is not the shove: it is a kill arm
+   entered for a body the walk already killed.
