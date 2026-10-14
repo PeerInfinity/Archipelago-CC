@@ -1,0 +1,106 @@
+{
+    "game": "seedling",
+    "name": "survey-step-50-boot",
+    "boot": {
+        "level": 30,
+        "x": 176,
+        "y": 48
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 0,
+            "tag": 1
+        },
+        {
+            "level": 19,
+            "tag": 1
+        },
+        {
+            "level": 31,
+            "tag": 0
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 0,
+    "inputs": [],
+    "tape_version": 8
+}
