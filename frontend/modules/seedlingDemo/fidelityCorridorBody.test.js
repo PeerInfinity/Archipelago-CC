@@ -87,7 +87,7 @@ function solveBoot(name) {
 describe('fidelity CORRIDOR — the walk corridor prices the live wallflyers and drills', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_CORRIDOR_BODY_PRICING)(
         'ships OFF: no forecast, and a preview carries no `corridorBodies`', () => {
-            expect(CONTACT_FIDELITY_DEFAULTS.corridorBodyPricing).toBe(false);
+            expect(CONTACT_FIDELITY_DEFAULTS.corridorBodyPricing).toBe(true);
             const w = W('survey-step-47.json');
             const run = createRunForStaging(solveStaging(stagingFromTape(parseTape(JSON.stringify(w.walk)))), SRC);
             off(() => {

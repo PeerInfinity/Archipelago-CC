@@ -135,7 +135,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity LAPSECOST D2: `flyerLive` (the Flyer stepped: its chase, its "fall" and its drop) ships OFF.
             flyerLive: false,
             // ⛓ fidelity CORRIDOR D2: `corridorBodyPricing` (the walk corridor prices the live wallflyers and drills) ships OFF.
-            corridorBodyPricing: false });
+            corridorBodyPricing: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

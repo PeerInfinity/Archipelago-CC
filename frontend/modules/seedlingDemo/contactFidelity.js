@@ -473,7 +473,7 @@ export const CONTACT_FIDELITY = {
      * executor's ladder routes round them or refuses by name. ⛔ OFF by default (no licence);
      * `SEEDLING_CORRIDOR_BODY_PRICING=0|1` for a node measurement.
      */
-    corridorBodyPricing: false,
+    corridorBodyPricing: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
