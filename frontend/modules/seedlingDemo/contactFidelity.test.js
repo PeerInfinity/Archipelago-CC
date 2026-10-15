@@ -114,10 +114,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // "Both ON") ON since the wave-14 flip.
             totemShotBlastInt: true,
             rebootShake: true,
-            // ⛓ fidelity L74LEG624: `fallRockPostFall` (D2), `forecastSpeedByTerrain` (D4) shipped OFF — ⚖ (user,
-            // 2026-10-12) ON since the wave-14 flip; `strikeIframeLapse` (D3) stays OFF ("Four now, strike later":
-            // ON it costs survey steps 50 and 62).
-            strikeIframeLapse: false, fallRockPostFall: true, forecastSpeedByTerrain: true,
+            // ⛓ fidelity L74LEG624: `strikeIframeLapse` (D3), `fallRockPostFall` (D2), `forecastSpeedByTerrain` (D4)
+            // shipped OFF — ⚖ (user, 2026-10-12, "All three ON") ON since the wave-14 flip (fidelity FLIP14); the lapse
+            // waited for STRIKELAPSE + LAPSECOST (its flip, licensed ⚖ 2026-10-14, "Flip after DD lands").
+            strikeIframeLapse: true, fallRockPostFall: true, forecastSpeedByTerrain: true,
             // ⛓ fidelity L74ARRIVAL: `arrivalButtonArm` (a button under a room arrival presses on the first live
             // frame) ships OFF.
             arrivalButtonArm: false,

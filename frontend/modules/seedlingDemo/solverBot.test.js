@@ -37,6 +37,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -1888,7 +1889,9 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
         // traced: a dash now ends one tick sooner, the game's four tests, so the
         // opportunistic arm is offered on more ticks). Every offer is still
         // refused, and the zero hits above did not move.
-        expect(r.policy.dashRefusals).toHaveLength(22);
+        // ⛓ fidelity FLIP14: 22 -> 27 with `strikeIframeLapse` ON (⚖ the wave-14 flip, user 2026-10-12): a press is now
+        // admitted while a body's i-frame lapses inside its window, so the walk differs and the arm is offered more ticks.
+        expect(r.policy.dashRefusals).toHaveLength(27);
         for (const row of r.policy.dashRefusals) {
             expect(row.dashRefused.opportunistic).toBe(true);
         }
@@ -1918,24 +1921,38 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
      */
     it('⛓ …and at §23b.3\'s stance the certification still TAKES dashes — it is not a blanket '
         + 'no, and the stand is HIT ONCE in 400 ticks', () => {
-        const run = stance();
-        expect({ x: run.state.x, y: run.state.y }).toEqual({ x: 88, y: 72 });
-        const policy = policyFor(true, dashChainPlan(430));
-        for (let t = 0; t < 400; t += 1) {
-            const d = policy.decide(run.state, run.strikeBodies, run.ticksCompleted,
-                new Set(), { slash: run.slashInfo });
-            run.advance(d.held);
-        }
+        const stand400 = () => {
+            const run = stance();
+            expect({ x: run.state.x, y: run.state.y }).toEqual({ x: 88, y: 72 });
+            const policy = policyFor(true, dashChainPlan(430));
+            for (let t = 0; t < 400; t += 1) {
+                const d = policy.decide(run.state, run.strikeBodies, run.ticksCompleted,
+                    new Set(), { slash: run.slashInfo });
+                run.advance(d.held);
+            }
+            return { run, policy };
+        };
         // ⛓ R9 slice 12e″ — RE-DERIVED under the deferred impulse: 44 -> 45
         // dashes, 62 -> 63 planned presses, 15 -> 14 yields. ⛔ THE HIT IS
         // STILL THERE, and that is what keeps this row non-vacuous: the
         // certification is not a blanket refusal wearing a `why`, and it is
         // not a blanket permission either.
-        expect(policy.dashes).toBe(45);
-        expect(run.dashes.length).toBe(45);
-        expect(policy.plannedPresses).toHaveLength(63);
-        expect(policy.plannedSkipped).toHaveLength(14);
-        expect(run.playerHits).toHaveLength(1);
+        // ⛓ fidelity FLIP14 — that measurement is the pre-flip strike gate's, kept as the control (`strikeIframeLapse` OFF).
+        const off = withContactFidelity({ strikeIframeLapse: false }, stand400);
+        expect(off.policy.dashes).toBe(45);
+        expect(off.run.dashes.length).toBe(45);
+        expect(off.policy.plannedPresses).toHaveLength(63);
+        expect(off.policy.plannedSkipped).toHaveLength(14);
+        expect(off.run.playerHits).toHaveLength(1);
+        // ⛓ fidelity FLIP14 — ON (⚖ the wave-14 flip, user 2026-10-12) a press lands while a body's i-frame lapses, the
+        // bodies die sooner and the stand is NOT hit: 55 dashes, 69 planned presses, 5 yields. The yields keep the
+        // "not a blanket permission" half; the dashes keep the "not a blanket refusal" half.
+        const { run, policy } = stand400();
+        expect(policy.dashes).toBe(55);
+        expect(run.dashes.length).toBe(55);
+        expect(policy.plannedPresses).toHaveLength(69);
+        expect(policy.plannedSkipped).toHaveLength(5);
+        expect(run.playerHits).toHaveLength(0);
     });
 
     /**
@@ -2521,7 +2538,9 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
         // SCORE picks a different cell; the claim below — out of leash from
         // the walk, inside it from the stance — is what the row is about and
         // is untouched.
-        expect(stance).toEqual({ x: 40, y: 56 });
+        // ⛓ fidelity FLIP14 — (40,56)/115/193 before the wave-14 flip (⚖ user 2026-10-12): with `strikeIframeLapse` ON the
+        // forecast's presses land while i-frames lapse, the kill ticks move, and the score picks (40,24). The claim is untouched.
+        expect(stance).toEqual({ x: 40, y: 24 });
         expect(stance).not.toEqual({ x: run.state.x, y: run.state.y });
 
         const body = run.strikeBodies.find((b) => b.id === 'bob@32,32');
@@ -2536,8 +2555,8 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
         expect(dist(stance, centre)).toBeLessThanOrEqual(leash);
         // ⛓ R9 slice 12c‴ — 109/202 at 12c″'s head; the cured preview re-scored
         // the scan and the stance moved with it (see the note above).
-        expect(ticks).toBe(115);
-        expect(why).toMatch(/dies at tick 193/);
+        expect(ticks).toBe(106);
+        expect(why).toMatch(/dies at tick 234/);
     });
 
     /**
@@ -2567,10 +2586,12 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
         const { run, stance, why, ticks } = derive('bob@64,64');
         // ⛓ R9 slice 12c‴ — (56,88)/115/182 at 12c″'s head. The cured preview
         // re-scored the scan; the CLAIM is the shape below, not the cell.
-        expect(stance).toEqual({ x: 72, y: 88 });
-        expect(ticks).toBe(109);
-        expect(why).toMatch(/16.0 px away, inside its 80 px leash, so it CHASES/);
-        expect(why).toMatch(/dies at tick 170/);
+        // ⛓ fidelity FLIP14 — (72,88)/109/16.0 px/170 before the wave-14 flip (⚖ user 2026-10-12, `strikeIframeLapse` ON):
+        // the lapse-admitted presses re-score the scan; the stance now also clears `bob@96,48` with it.
+        expect(stance).toEqual({ x: 88, y: 40 });
+        expect(ticks).toBe(190);
+        expect(why).toMatch(/35.8 px away, inside its 80 px leash, so it CHASES/);
+        expect(why).toMatch(/dies at tick 241/);
         expect(why).toMatch(/NO body reaches the player at any tick of either half/);
         // ⛓ AND IT IS THE SAME BODY THAT REFUSED: out of press reach from the
         // walk, which is why a stance was needed at all.
@@ -2600,12 +2621,16 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
      */
     it('⛓ takes the BEST stance, not the first viable one — and carries the runners-up', () => {
         const { run, stance, runnersUp, clears, ticks } = derive('bob@176,112');
-        expect(stance).toEqual({ x: 168, y: 120 });
+        // ⛓ fidelity FLIP14 — (168,120), all three runners-up nearer, before the wave-14 flip (⚖ user 2026-10-12,
+        // `strikeIframeLapse` ON). The winner is now (184,104), 35.8 px away, and ONE runner-up, (168,104) at 32.0 px,
+        // is nearer: the scan's nearest qualifying cell is still not the winner, which is the claim — "every" was
+        // the sharpness the old measurement allowed, not the claim.
+        expect(stance).toEqual({ x: 184, y: 104 });
         expect(runnersUp.length).toBeGreaterThan(0);
         const nearer = runnersUp.filter((r) => dist(run.state, r) < dist(run.state, stance));
-        // ⛔ EVERY runner-up is nearer, so a first-viable pick could not have
-        // produced this winner under any tie-break.
-        expect(nearer.length).toBe(runnersUp.length);
+        // ⛔ A runner-up is nearer, so a first-viable pick (the nearest qualifying
+        // cell) could not have produced this winner under any tie-break.
+        expect(nearer.map((r) => ({ x: r.x, y: r.y }))).toEqual([{ x: 168, y: 104 }]);
         // …and every runner-up's kill is LATER than the winner's whole dwell,
         // which is what the score says and what a distance order cannot.
         for (const r of runnersUp) expect(r.deathAt).toBeGreaterThan(ticks);
@@ -2634,8 +2659,10 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
         // re-scored every one of them. THREE are above the formula and one is
         // below, so the difference is still not a margin anybody could have
         // added — which is the row's actual claim.
+        // ⛓ fidelity FLIP14 — 115/126/105/120 before the wave-14 flip (⚖ user 2026-10-12, `strikeIframeLapse` ON):
+        // two above the formula and two below now; the claim (the bound is the forecast's) is unchanged.
         const bounds = {
-            'bob@32,32': 115, 'bob@128,64': 126, 'bob@96,48': 105, 'bob@176,112': 120,
+            'bob@32,32': 106, 'bob@128,64': 125, 'bob@96,48': 101, 'bob@176,112': 116,
         };
         for (const [id, want] of Object.entries(bounds)) {
             expect(derive(id).ticks).toBe(want);
