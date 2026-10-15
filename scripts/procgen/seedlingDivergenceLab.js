@@ -179,6 +179,7 @@ export async function createLab() {
         const done0 = eng.stats.done;
         const backstops0 = eng.stats.backstops ?? 0;
         const ship0 = (eng.stats.shipClock ?? []).length;
+        const arrive0 = (eng.stats.arrivalClock ?? []).length;
         // ⛓ SERVED LOCATION — the delivery gate's own record for this leg (what a key at contact did)
         const g0 = { served: (eng.stats.deliveryServed ?? []).length, deliveries: (eng.stats.deliveries ?? []).length,
             released: eng.stats.releasedForSwap ?? 0 };
@@ -295,6 +296,8 @@ export async function createLab() {
             // `game_time` at the ship (the room held: the clock the plan's tick 0 sees), and `gap` = game − staged −
             // prefix (the model's is `BOOT_PRESWAP_FRAMES + LOAD_FADE_FRAMES` = 21 from a held arrival)
             shipClock: plain((eng.stats.shipClock ?? []).slice(ship0)),
+            // ⛓ SEAM OFFSET (§5.82) — each held arrival put on the live clock before its first solve (`shift` = game − shadow)
+            arrivalClock: plain((eng.stats.arrivalClock ?? []).slice(arrive0)),
             // ⛓ REQUEST CAPTURE — every solve request of this leg, in order, as the worker got it (the probe moves them
             // off the row into their own file, so the row is the same with the switch on or off)
             ...(captureRequests ? { requests: solves.map((s, i) => ({ i, request: captureRequest(s.req), passes: s.passes ?? null,

@@ -104,7 +104,7 @@ import {
     arrivalSolveRequest, arrivalSolverGoal, continuationSolveRequest, isArrival, stagingFromWasmArrival,
 } from '../seedlingDemo/wasmArrival.js';
 import {
-    adoptedClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
+    adoptedClockStaging, heldArrivalClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, locationGoalServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
@@ -245,7 +245,8 @@ export function createWasmPlayback({
 
     /**
      * idle | await-arrival | ⛓ W8 adopting (the adoption's freeze latching) | ⛓ W8c ceremony (the new-game arm's
-     * cutscene / tutorial, waited out before the adoption) | solving | playing | held (⛓ W7: our tape holds a room, no goal)
+     * cutscene / tutorial, waited out before the adoption) | ⛓ §5.82 latching (a held arrival's freeze latching, before
+     * its first solve reads the live clock) | solving | playing | held (⛓ W7: our tape holds a room, no goal)
      */
     let phase = 'idle';
     let goal = null;
@@ -325,6 +326,9 @@ export function createWasmPlayback({
         timerThrows: [],
         // ⛓ WALK IDENTITY (a) — each adoption put on the live clock: begin-staged, shadow and held clocks, the shift (or why not)
         adoptClock: [],
+        // ⛓ SEAM OFFSET (§5.82) — every held arrival put on the live clock before its first solve: `{level, begin, model, live, shift,
+        // refusal}` (shift = the game's tick-0 clock − the shadow's; ≠ 0 = the fade ran unpinned for `−shift` render(s))
+        arrivalClock: [],
         // ⛓ WALK IDENTITY — arrivals the glue told the engine to expect (a Restart's start hop)
         expectedArrivals: 0,
         // ⛓ W8c — the new-game arm's ceremonies waited out, and the tutorial Helps dismissed (one arrow pair each)
@@ -533,7 +537,7 @@ export function createWasmPlayback({
             return { ok: true, action: 'queue' };
         }
         // ⛓ W7 — a goal replacing one mid-solve in the HELD room keeps the hold (the room is still the shadow).
-        if (holds && phase === 'solving' && room) {
+        if (holds && (phase === 'solving' || phase === 'latching') && room) {
             token += 1;
             cancelTimer();
             if (handle && !handle.settled) handle.cancel();
@@ -1135,6 +1139,8 @@ export function createWasmPlayback({
         const record = records.get(goal.level) ?? null;
         spawn = r.spawn;
         if (r.shipped.length === 0) {
+            // ⛓ SEAM OFFSET (§5.82) — the arrival's first solve waits for its freeze to latch, and is put on the live clock
+            if (!r.adopted && !r.clock && !arrivalOnLiveClock(r)) return;
             // ⛓ L74 SILENT STALL — the model may REFUSE the room the game is in (a `LevelWorldError`: e.g. a clear list
             // naming a non-arena fallrock, "A clear list must never name it"). That refusal is the goal's, by name.
             let mapped;
@@ -1195,6 +1201,43 @@ export function createWasmPlayback({
         if (c.refusal) { contFallback(c.refusal, 'continuation-refused'); return; }
         stats.continuations += 1;
         startSolve(c.request, { staging: r.staging, continuation: true, prefix: r.shipped.length, lead, heldRow });
+    }
+
+    /**
+     * ⛓ SEAM OFFSET (§5.82) — a HELD ARRIVAL'S CLOCK, read (`wasmPlayback.heldArrivalClockStaging`): the freeze
+     * holds the room at its first live frame, so `game_time` then is the clock the plan's tick 0 sees, whatever the
+     * fade cost (an unpinned fade loses a dead frame per render that ran before our freeze loaded the pin). Until the
+     * freeze latches the solve waits (`latching`, rescheduled); once held, the staging is shifted onto the live clock
+     * and kept (`room.clock`), so the room's continuations replay from the same clock. A clock that cannot be read
+     * (a refusal) leaves the staging as it was, recorded. Returns true when the solve may go on now.
+     */
+    function arrivalOnLiveClock(r) {
+        const st = status();
+        if (!st?.held) {
+            if (st?.error) { fail(`the arrival's freeze tape errored: ${st.error}`); return false; }
+            if (phase !== 'latching') {
+                token += 1;
+                cancelTimer();
+                phase = 'latching';
+                deadline = now() + ARRIVAL_WAIT_MS;
+            } else if (now() > deadline) {
+                fail(`the arrival's freeze never latched in level ${r.level} within ${ARRIVAL_WAIT_MS / 1000} s`);
+                return false;
+            }
+            schedule(solveInRoom, SOLVE_POLL_MS);
+            return false;
+        }
+        let modelTime = null;
+        try {
+            modelTime = replayTape({ staging: r.staging, perTick: [], levelSource, scratchPersistence: true }).gameTime;
+        } catch { modelTime = null; }
+        const clock = heldArrivalClockStaging({ staging: r.staging, modelTime, liveTime: st.game_time });
+        stats.arrivalClock.push({ level: r.level, begin: r.staging?.seam?.time ?? null, model: modelTime, live: st.game_time ?? null,
+            shift: clock.shift ?? null, refusal: clock.refusal ?? null });
+        if (!clock.refusal) r.staging = clock.staging;
+        r.clock = { shift: clock.shift ?? null };
+        if (phase === 'latching') phase = 'held';
+        return true;
     }
 
     /**
@@ -2125,7 +2168,7 @@ export function createWasmPlayback({
                 sceneLeaks: stats.sceneLeaks.map((r) => ({ ...r })),
                 deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred],
                 swapPushes: stats.swapPushes.map((r) => ({ ...r })), shipClock: stats.shipClock.map((r) => ({ ...r })),
-                adoptClock: stats.adoptClock.map((r) => ({ ...r })), selfChecks: stats.selfChecks.map((r) => ({ ...r })),
+                adoptClock: stats.adoptClock.map((r) => ({ ...r })), arrivalClock: stats.arrivalClock.map((r) => ({ ...r })), selfChecks: stats.selfChecks.map((r) => ({ ...r })),
                 timeline: stats.timeline.map((r) => ({ ...r })), staleGoals: stats.staleGoals.map((r) => ({ ...r })),
                 crossLevelEnds: stats.crossLevelEnds.map((r) => ({ ...r })) };
         },
