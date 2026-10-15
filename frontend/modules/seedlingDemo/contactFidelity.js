@@ -473,7 +473,7 @@ export const CONTACT_FIDELITY = {
      * the spinners beside the chasers (the press's hits on a spinner are not forecast). ⛔ OFF by default (no
      * licence); `SEEDLING_CHASER_SPINNER_WALLS=0|1` for a node measurement.
      */
-    chaserSpinnerWalls: false,
+    chaserSpinnerWalls: true, // MEASUREMENT ONLY (planning-8, NEVER MERGE)
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
