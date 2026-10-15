@@ -504,7 +504,7 @@
             "id": "seedling-js-runtime-solve-progress-view",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "SOLVE PROGRESS (JS half). flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView ON, on seedling_atlas: the view subscribes to the page's worker service before the L6 enemy-room solve, holds its FINAL snapshot (solved) and draws the tree, the tile canvas and the work meter; its 'last update N s ago' advances; closing the view unsubscribes. seedling-js batch."
+            "_comment": "SOLVE PROGRESS (JS half). flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView = always, on seedling_atlas: the view subscribes to the page's worker service before the L6 enemy-room solve, holds its FINAL snapshot (solved) and draws the tree, the tile canvas and the work meter; its 'last update N s ago' advances; always does not auto-hide; setting it off unsubscribes. seedling-js batch."
         },
         {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
@@ -1532,6 +1532,12 @@
             "enabled": true,
             "category": "Feature checks",
             "_comment": "FEATURE CHECKS (2026-10-15, \u2696 the user: a category in the Tutorials panel for scripted walks that test a feature, not tutorials). The walk row of feature check storage-panel-mode-key (one row per check, feature-check-<id>; tutorials.test.js checks each has one). Graded by the same ratchet as a tutorial walk. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-seedling-solve-progress-auto-show",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "SOLVE PROGRESS AUTO-SHOW (slice solve-progress-auto, 2026-10-15). The walk row of feature check seedling-solve-progress-auto-show: runtime js + the solver on + the view on auto (session-only, restored), seedling_atlas loaded, the panel stages the L6 enemy-room solve (flashPanel:stageSolveDemo); the view is hidden but listening, shown on the solve's first running note, hidden after its final (solved) note and still listening. Lifecycle only, never elapsed seconds. Manual batch feature-checks."
         },
         {
             "id": "tutorial-walk-guided-tour",

@@ -7,6 +7,7 @@ import {
 } from './index.js';
 // ⛓ SOLVE PROGRESS — DOM + model only (it imports no solver: the stream arrives as plain snapshots).
 import { SolveProgressView } from './seedlingSolveProgressView.js';
+import { nextSolveProgressMode, SOLVE_PROGRESS_DEFAULT_MODE, solveProgressMode } from './seedlingSolveProgress.js';
 import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
 import { RANDOMIZER_ARMS, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
@@ -20,6 +21,7 @@ import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 import { createHeldKeyRelease, focusGameCanvas } from './gameInput.js';
 import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
+import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, solveDemoStage } from './seedlingSolveDemo.js';
 import { SUB_REGION_PARTITION_PATH, buildSubRegionMap } from './seedlingSubRegions.js';
 import { KILLLOCK_SETTING_KEYS, killLockPageQuery } from './seedlingKillLockSettings.js';
 import { KILLLOCK_BODIES_DEFAULTS, applyKillLockBodies, formatKillLockBodies } from '../seedlingDemo/killLockBodies.js';
@@ -285,6 +287,10 @@ export class FlashPanelUI {
     };
     this.eventBus.subscribe(AP_ITEM_FOUND_EVENT, this._apItemFoundHandler);
 
+    // ⛓ AUTO-SHOW — stage a solve the progress view can be watched on (`seedlingSolveDemo.js`).
+    this._solveDemoHandler = (payload) => { this.stageSolveDemo(payload?.demo); };
+    this.eventBus.subscribe(SOLVE_DEMO_EVENT, this._solveDemoHandler);
+
     // Fast path: if rules were already loaded before this panel
     // was constructed (e.g. created by a layout change after
     // startup), skip the event wait and initialize immediately.
@@ -405,19 +411,78 @@ export class FlashPanelUI {
   }
 
   /**
-   * ⛓ SOLVE PROGRESS — open or close the progress view from `flashPanel.seedlingSolveProgressView`. Closing it
-   * UNSUBSCRIBES from every solve service, so no later solve installs the solver's hook.
+   * ⛓ SOLVE PROGRESS — apply `flashPanel.seedlingSolveProgressView` (`off | auto | always`, ⛓ AUTO-SHOW) to the view.
+   * `off` UNSUBSCRIBES from every solve service, so no later solve installs the solver's hook; `auto` listens while
+   * hidden and shows the view for the length of each solve; `always` keeps it open.
    */
   async _refreshSolveProgressView(value) {
     let next = value;
     if (next === undefined) {
-      try { next = await settingsManager.getSetting(SOLVE_PROGRESS_SETTING_KEY, false); } catch { return; }
+      try { next = await settingsManager.getSetting(SOLVE_PROGRESS_SETTING_KEY, SOLVE_PROGRESS_DEFAULT_MODE); } catch { return; }
     }
     const view = this._solveProgressView;
     if (!view) return;
-    if (next === true && !view.isOpen) view.open();
-    else if (next !== true && view.isOpen) view.close();
-    if (this._solveProgressButton) this._solveProgressButton.style.opacity = next === true ? '1' : '0.6';
+    const mode = solveProgressMode(next);
+    view.setMode(mode);
+    if (this._solveProgressButton) {
+      this._solveProgressButton.textContent = `Solve Progress: ${mode}`;
+      this._solveProgressButton.style.opacity = mode === 'off' ? '0.6' : '1';
+    }
+  }
+
+  /**
+   * ⛓ AUTO-SHOW — stage a solve demo (`SOLVE_DEMOS`, `seedlingSolveDemo.js`) on the JS runtime page: teleport into
+   * its room at the game's own return spawn and walk its goal (the solver mode decides who plans it). The result is
+   * on the root element (`data-solve-demo` = staging | staged | refused, `data-solve-demo-why`) and in the log.
+   * Needs a Seedling preset on runtime `js` whose page runs the vanilla map (seedling_atlas).
+   */
+  async stageSolveDemo(id) {
+    const d = this.rootElement.dataset;
+    const refuse = (why) => {
+      d.solveDemo = 'refused';
+      d.solveDemoWhy = why;
+      this._panelLog(`[solve demo] ${id}: refused — ${why}`, 'error');
+      return { ok: false, why };
+    };
+    d.solveDemo = 'staging';
+    d.solveDemoWhy = '';
+    if (!SOLVE_DEMOS[id]) return refuse(`no solve demo '${id}'`);
+    // A preset load re-mounts the page: wait (bounded) for the atlas arm to bind and the page to run the vanilla map.
+    const pageUp = () => {
+      const surface = this.seedlingPlaybackSurface?.();
+      const page = surface?.jsRuntime ?? null;
+      return surface?.atlas && page?.run && page.vanilla ? page : null;
+    };
+    let rt = pageUp();
+    for (const t0 = Date.now(); !rt && Date.now() - t0 < 30000; rt = pageUp()) {
+      await new Promise((r) => { setTimeout(r, 250); });
+    }
+    if (!rt) return refuse('the JS runtime page is not running the vanilla map (runtime js, seedling_atlas)');
+    let mapDoc;
+    const path = this._atlasMapPath ?? 'modules/flashPanel/atlases/seedling-map.json';
+    try {
+      const res = await fetch(new URL(path, document.baseURI).href);
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      mapDoc = await res.json();
+    } catch (err) {
+      return refuse(`the map ${path} did not load: ${err.message}`);
+    }
+    const stage = solveDemoStage(mapDoc, id);
+    if (!stage.ok) return refuse(stage.why);
+    // The view's feed re-resolves the page's solve service each second: resolve it NOW, so the solve below asks.
+    this._solveProgressView?.feed.refresh();
+    rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [stage.level, stage.spawn.x, stage.spawn.y] }]);
+    const t0 = Date.now();
+    while (rt.run?.level !== stage.level) {
+      if (Date.now() - t0 > 10000) return refuse(`the page did not reach level ${stage.level}`);
+      await new Promise((r) => { setTimeout(r, 100); });
+    }
+    const answer = rt.playback.walkTo(stage.goal);
+    if (!answer?.ok) return refuse(`the page refused the goal: ${answer?.reason ?? JSON.stringify(answer)}`);
+    rt.playback.play();
+    d.solveDemo = 'staged';
+    this._panelLog(`[solve demo] ${id}: ${SOLVE_DEMOS[id].title} — staged`);
+    return { ok: true };
   }
 
   /** ⛓ SOLVE PROGRESS — the solve services the view listens to: the JS page's worker service, the wasm engines'. */
@@ -549,7 +614,7 @@ export class FlashPanelUI {
         <button class="flash-panel-wirecheck" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Wire Check</button>
         <button class="flash-panel-readstate" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Read State</button>
         <button class="flash-panel-configure" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Configure Bridge</button>
-        <button class="flash-panel-solve-progress-toggle" title="Show or hide the solver's progress (setting flashPanel.seedlingSolveProgressView)" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;opacity:0.6;">Solve Progress</button>
+        <button class="flash-panel-solve-progress-toggle" title="The solver's progress view: off, auto (shown while a solve runs) or always (setting flashPanel.seedlingSolveProgressView); click to cycle" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;opacity:0.6;">Solve Progress</button>
       </div>
       <div class="flash-panel-teleport" style="flex-shrink: 0; margin-top: 6px; font-size: 12px; display: none;">
         <span style="color:#aaa;margin-right:4px;">Teleport:</span>
@@ -571,12 +636,12 @@ export class FlashPanelUI {
       <div class="flash-panel-log" style="flex-grow: 1; margin-top: 6px; background: #111; border: 1px solid #333; border-radius: 4px; padding: 6px; font-size: 11px; overflow-y: auto; min-height: 60px; white-space: pre-wrap;"></div>
     `;
 
-    // ⛓ SOLVE PROGRESS — the view sits above the log; the button flips the SETTING (the one source of truth).
+    // ⛓ SOLVE PROGRESS — the view sits above the log; the button cycles the SETTING (the one source of truth).
     this._solveProgressView = new SolveProgressView({ getServices: () => this._solveServices() });
     this.rootElement.insertBefore(this._solveProgressView.element, this.rootElement.querySelector('.flash-panel-log'));
     this._solveProgressButton = this.rootElement.querySelector('.flash-panel-solve-progress-toggle');
     this._solveProgressButton.addEventListener('click', () => {
-      const next = !this._solveProgressView.isOpen;
+      const next = nextSolveProgressMode(this._solveProgressView.mode);
       settingsManager.updateSetting(SOLVE_PROGRESS_SETTING_KEY, next)
         .catch(() => this._refreshSolveProgressView(next));
     });
@@ -1415,6 +1480,10 @@ export class FlashPanelUI {
     if (this._settingsChangedHandler) {
       this.eventBus.unsubscribe('settings:changed', this._settingsChangedHandler);
       this._settingsChangedHandler = null;
+    }
+    if (this._solveDemoHandler) {
+      this.eventBus.unsubscribe(SOLVE_DEMO_EVENT, this._solveDemoHandler);
+      this._solveDemoHandler = null;
     }
     if (this._apItemFoundHandler) {
       this.eventBus.unsubscribe(AP_ITEM_FOUND_EVENT, this._apItemFoundHandler);

@@ -85,6 +85,9 @@ export function register(registrationApi) {
     // a publish from a module that did not declare it.
     registrationApi.registerEventBusPublisher('files:jsonLoaded');
     registrationApi.registerEventBusPublisher('ui:activatePanel');
+    // The feature check seedling-solve-progress-auto-show has the flash panel stage a solve
+    // (flashPanel/seedlingSolveDemo.js SOLVE_DEMO_EVENT).
+    registrationApi.registerEventBusPublisher('flashPanel:stageSolveDemo');
 }
 
 /**

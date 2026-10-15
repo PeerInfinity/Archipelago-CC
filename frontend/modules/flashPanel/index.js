@@ -2,6 +2,8 @@ import { FlashPanelUI } from './flashPanelUI.js';
 import { killLockSchemaProps } from './seedlingKillLockSettings.js';
 import { contactSchemaProps } from './seedlingContactSettings.js';
 import { axeDodgeSchemaProps } from './seedlingAxeDodgeSettings.js';
+import { SOLVE_PROGRESS_DEFAULT_MODE, SOLVE_PROGRESS_MODES } from './seedlingSolveProgress.js';
+import { SOLVE_DEMO_EVENT } from './seedlingSolveDemo.js';
 import eventBus from '../../app/core/eventBus.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 // Import side effect registers `flash_seedling` (region-atlas Phase 4).
@@ -213,16 +215,20 @@ export function register(registrationApi) {
           + "machine. 0 gives it the whole solver budget. Read at the start of each solve.",
       },
       // ⛓ SOLVE PROGRESS — the panel's live view of the solver's progress stream (the tree, the tile map and the
-      // work meter, `seedlingSolveProgressView.js`). Off by default: while it is off no solve asks its worker for
-      // the stream (the hook is not installed). The panel's "Solve Progress" button flips it.
+      // work meter, `seedlingSolveProgressView.js`). ⛓ AUTO-SHOW: `off | auto | always`, default `auto` — the view
+      // listens while hidden and is shown for the length of each solve. Only `off` leaves no solve asking its worker
+      // for the stream. A value stored while this was a boolean reads `true` → always, `false` → off
+      // (`solveProgressMode`). The panel's "Solve Progress" button cycles it.
       seedlingSolveProgressView: {
-        type: 'boolean',
-        default: false,
+        type: 'string',
+        enum: [...SOLVE_PROGRESS_MODES],
+        default: SOLVE_PROGRESS_DEFAULT_MODE,
         label: 'Seedling: show the solver\'s progress',
         description: "Both runtimes, solver rooms. Shows what the Playback Bot's solver is doing while it solves: "
           + "the goals, rungs and searches it tried (with how often each succeeded or was rejected, and why), the "
           + "tiles its previews reached, and the work it has spent against its budget. Updated about once a "
-          + "second, and only at the solver's own checkpoints. It starts reporting from the next solve. Watching "
+          + "second, and only at the solver's own checkpoints. `auto` shows it while a solve runs and hides it "
+          + "when the solve ends; `always` keeps it open; `off` hides it and stops the solver reporting. Watching "
           + "never changes the plan the solver finds.",
       },
       // ⛓ KILLLOCK HOOK — the model's kill-lock body switches K1–K5, one boolean each, defaulted to
@@ -249,6 +255,8 @@ export function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent(LOOP_RESET_EVENT);
   // ⛓ PLAY CLOCK — a region change and Loop mode turning on read the game's clock at once (`seedlingPlayClock.js`).
   for (const event of PLAY_CLOCK_SAMPLE_EVENTS) registrationApi.registerEventBusSubscriberIntent(event);
+  // ⛓ AUTO-SHOW — stage a solve the Solve Progress view can be watched on (`seedlingSolveDemo.js`).
+  registrationApi.registerEventBusSubscriberIntent(SOLVE_DEMO_EVENT);
 
   /**
    * ⛔⛔ **THE READOUT EVENT NEEDS A REGISTERED PUBLISHER, AND WITHOUT ONE THE

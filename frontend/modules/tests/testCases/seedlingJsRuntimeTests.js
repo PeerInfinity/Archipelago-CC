@@ -762,15 +762,16 @@ const SOLVE_PROGRESS_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressView'
 export async function seedlingJsRuntimeSolveProgressView(tc) {
     let previousRuntime = 'auto';
     let previousSolver = true;
-    let previousView = false;
+    let previousView = 'auto';
     try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
     try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
-    try { previousView = await settingsManager.getSetting(SOLVE_PROGRESS_KEY, false); } catch { /* keep the default (off) */ }
+    try { previousView = await settingsManager.getSetting(SOLVE_PROGRESS_KEY, 'auto'); } catch { /* keep the default (auto) */ }
     let svc = null;
     try {
-        // ⚖ This row SETS its own state: solver mode on, the view open (session-only overrides, restored below).
+        // ⚖ This row SETS its own state: solver mode on, the view pinned open — `always`, so it never auto-hides
+        // (session-only overrides, restored below).
         await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
-        await settingsManager.updateSetting(SOLVE_PROGRESS_KEY, true, { persist: false });
+        await settingsManager.updateSetting(SOLVE_PROGRESS_KEY, 'always', { persist: false });
         const staleAdapter = getActivePanelInstance()?.adapter ?? null;
         const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
         if (!ready) return tc.getOverallResult();
@@ -829,16 +830,18 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
         const aged = await tc.pollForCondition(() => /last update [1-9]\d* s ago/.test(view.header.textContent),
             'the header\'s "last update N s ago" advanced', 5000, 100);
         tc.reportCondition('the age indicator advances while nothing arrives', !!aged);
+        tc.assertEqual('`always` never auto-hid the view after the final note', true, view.isOpen);
+
+        // ⛔ `off` closes the view and UNSUBSCRIBES: the next solve installs no hook (set here, so the check does
+        // not depend on the mode this row restores — the default `auto` keeps listening while hidden)
+        await settingsManager.updateSetting(SOLVE_PROGRESS_KEY, 'off', { persist: false });
+        const off = await tc.pollForCondition(() => svc.progressSubscribed === false && !view.isOpen,
+            'the view set off left no listener on the service', 3000, 100);
+        tc.reportCondition('setting the view off unsubscribed it', !!off);
     } finally {
         try { await settingsManager.updateSetting(SOLVE_PROGRESS_KEY, previousView, { persist: false }); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
-    }
-    // ⛔ closing the view UNSUBSCRIBES: the next solve installs no hook
-    if (svc && previousView !== true) {
-        const off = await tc.pollForCondition(() => svc.progressSubscribed === false,
-            'the closed view left no listener on the service', 3000, 100);
-        tc.reportCondition('closing the view unsubscribed it', !!off);
     }
     return tc.getOverallResult();
 }
@@ -846,10 +849,10 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
 registerTest({
     id: 'seedling-js-runtime-solve-progress-view',
     name: 'Seedling JS runtime: the panel\'s SOLVE PROGRESS view on a real solve (L6, past the bobs)',
-    description: 'With flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView ON, on '
+    description: 'With flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView = always, on '
         + 'seedling_atlas: the view subscribes to the page\'s worker service before the solve, the L6 enemy-room solve '
         + 'streams its progress, and the view holds the FINAL snapshot (solved), draws its tree, its tile canvas and '
-        + 'its work meter, and its "last update N s ago" advances; closing the view unsubscribes.',
+        + 'its work meter, and its "last update N s ago" advances; `always` does not auto-hide; setting it off unsubscribes.',
     testFunction: seedlingJsRuntimeSolveProgressView,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode

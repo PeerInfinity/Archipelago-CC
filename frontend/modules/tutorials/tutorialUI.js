@@ -306,6 +306,8 @@ export class TutorialUI {
     /** Back to the list. Merges the layout back and stops anything running. */
     exit() {
         this._stop();
+        // Settings a step set for this session (ctx.setSetting) go back as they were.
+        this.ctx.restoreSettings().catch(() => {});
         // Back on the list, the tutorial just left is in view: its sections open.
         if (this.tutorial) for (const key of sectionPath(this.tutorial)) this.openSections.add(key);
         this.tutorial = null;
