@@ -2,7 +2,7 @@
  * Procgen: Journey to Ascension in Loop mode (catalogue P5): a JtA-only world
  * with loop mode on — the Loops panel, Loop Stats, Discovery, Game State and
  * Menu — played by the bot. ⚖ The user, 2026-10-10: the pool + the pipeline's
- * loop-mode parameter. In progress: its walk row measures `firstFailingStep`.
+ * loop-mode parameter. Ready (⚖ the user, 2026-10-14).
  * Shape: ../../tutorialShape.js; shared steps: ../steps/procgen.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -19,9 +19,8 @@ export const PROCGEN_LOOP_MODE_JTA = Object.freeze({
     title: 'Procgen: Journey to Ascension in Loop mode',
     summary: 'Generate a world of Journey to Ascension zones with loop mode on, see the loop panels, and watch the bot finish it.',
     track: 'procgen',
-    status: 'in-progress',
-    firstFailingStep: null,
-    doc: null,
+    status: 'ready', // ⚖ the user, 2026-10-14
+    doc: 'docs/json/user/tutorials/procgen-loop-mode-jta.md',
     intro: [
         { prose: '*Loop mode* turns a world into an incremental game: every action costs mana, and when the mana runs out the loop restarts — keeping what you have learned. *Journey to Ascension* (JtA) is an idle game whose zones make natural regions; this tutorial builds a world of them with loop mode on.' },
     ],

@@ -16806,6 +16806,51 @@ arc's `fidelityF1c` residue 40 → 12, re-pinned in the candidate. `seedling-fid
 - **A refusal's text names where it was caught, not why.** Step 50's "the danger map forbids … its sword is timed" and
   step 62's "waypoint (120,72) not reached" were both two decisions downstream of the cause.
 
+### Seedling fidelity LAPSECOST — the lapse's L40 cost was a wider walk and an expensive rung, and leg 773 was a Flyer's drop
+
+Wave 16 (model coverage), from STRIKELAPSE's flip measurement: lapse ON lost 11 L40 pit sweep legs (budget) and leg 773
+(t103 divergence), both confirmed ×2 on CI. Base `3a53894a9a`. Everything is behind switches; OFF is byte-identical
+(identity block, six `--check`s, bounded set). The report is `CC/docs/cloud-reports/seedling-fidelity-lapsecost.md`.
+
+**D1 — the L40 pit cost.** Reproduced in node from the page's own captured request (leg 403, budget 640): OFF 48 units,
+776 t; ON 2,562 units refused at `detour` (2,542 of them DETOUR's via-lattice asks). The lapse multiplies no site's cost:
+it widens the walk's strike admissions, and the wider walk is a different walk. Its press at t247 on `puncher@128,624`
+lands nothing (the walker leaves the swing before the lapse test); its press at t507 on `bob@208,448` kills at t512,
+one tick after the body's i-frame lapsed against the player (enemies step above the player). The probe flags the
+contact, AVOID / TIME / BAIT / KILL refuse cheaply, and DETOUR spends the budget. Fix (`solverBot`, ON only): a
+conditional **NARROW** rung between KILL and DETOUR (`R8_STRATEGY_EXECUTORS.ladder`, `KNOWN_STRATEGY_VERBS`), the same
+corridor walked with the pre-lapse admissions (`strikePolicyFor`'s `iframeLapse: false`), certified only if its preview
+arrives and only where the walk strikes at all; the dash planner and the drive take the same permission
+(`LAPSE_NARROW_RETRY`). All 10 captured pit legs solve ON in ≤ 91 units with OFF's plan key for key (CI's OFF sweep plays
+those to `done`). The first cut (before the ladder) shadowed leg 265 (the narrow walk is OFF's failing one: wallflyer
+hits the preview never priced); as a rung the 8 lapse-gained legs keep their answers. The ON route survey is unchanged
+(170 SOLVED, 0 movers against ON at base).
+
+**D2 — leg 773.** Not the lapse. Game witness (p4f, the ON plan as a tape): the player takes hits 0 → 2 at t103 from
+`flyer@104,8`, which hovers over the walk from t96: `Flyer.update` plays "fall" when the player's box holds (x, y+10),
+stands, and on frame 10 drops `p.hit(null, 1, (x,y), 2)`. The model never stepped a Flyer (a static body at its
+placement). `contactFidelity.flyerLive` (OFF) steps it (`CHASERS.flyer`: Bob's chase to the player + (0,−10) through no
+solids, the fall and the drop, an empty `hitPlayer`; the forecast reports the drop and the danger map prices it; the
+press arm reaches it). Game witness `lapsecost-l105-773-on-flyer`: the model reproduces the player at 1e-9 on 382 ticks
+and both Flyers at Δ 0 (614 comparisons); OFF parts at t103. The solver's own leg-773 plan under `flyerLive` meets a
+second gap the game shows at t205: `beamtower@48,40`'s Solid drifts in y (`BeamTower.update`'s `y += 0.3·sin(…)`), not
+modelled. Route survey on the Flyer levels: none lost, step 208 264 → 240 t.
+
+**D3 — the flip, re-measured (held).** STRIKELAPSE's `flip-candidate.patch` applied 3-way at this head (one conflict:
+`contactFidelity.test.js`'s defaults pin) plus the `procgenRoam` mover the list missed ([127,69] → [101,69]):
+`r9-campaign --check` `6b1bf15c` exit 0 (STRIKELAPSE's candidate digest); the 150-file bounded set green (the report
+has the counts). The refreshed patch is `seedling-fidelity-lapsecost-evidence/flip-candidate.patch`.
+
+**Trap candidates.**
+- **A wider option set is a different walk, not a superset of walks.** The lapse admits more presses; each costs
+  movement ticks and can land a tick after the body's own contact re-arms. "ON can only add solutions" was false.
+- **A fallback placed before the ladder shadows the ladder.** The narrow walk was OFF's walk, including OFF's failures.
+  A candidate earns its place by cost: it sits where it is cheaper than the rung it replaces, after the rungs that
+  already answer.
+- **A static body at its placement prices the wrong room for a mover.** The Flyer chased the walk; the map priced the
+  cell it left at t1.
+- **One fix's plan walks into the next gap.** The Flyer-aware plan met the BeamTower's drifting Solid at t205.
+
 ### Slice 0 — FORM CONTROLS (`b89448ad8`)
 
 Six URL-only parameters gained controls on the Seedling generate page, the
@@ -21946,3 +21991,405 @@ exact. **Staging A's sword prefix is NOT:** at t1801 the game stops `bob@736,752
 (`chaserStaticEnemyBoxesNow`) carries no live Spinner, though a Spinner's type is "Enemy" and Bob's solids include it. A
 scratch wall freezes the bob on the game's tick; the next parting moves to t1989. (d),
 fidelity's; the hand-over tape is in the report's evidence folder.
+
+### Seedling hammer-phase RE — the refuge's best-ETA cut
+
+⚖ The user (2026-10-14): *"Both, in parallel"* — this slice beside CW (the L40 chaser wall). One behaviour lever behind
+one new switch, **OFF**, measured before it was built: `pressKillCost.REFUGE_ETA_CUT` (`SEEDLING_REFUGE_ETA_CUT=1`,
+`withRefugeEtaCut`). The report is `CC/docs/cloud-reports/seedling-hammer-re.md`.
+
+**W0** at `3a53894a9a`: identity block `77080c2e` (six producers exit 0 at `405d9c4b b76f6483 465a8b46 35456fbc
+6cd35fe1 712f0ead`, ENEMY `afdc6d1a`, reference ALL MATCH); surface GREEN 288, constants 5,846, entities 558, profile
+138; roster 277; tapeRunner 611 `75a3c41f`; bounded vitest 1078/1078 (20 files). Staging A (sword) profiled at the
+base: `deriveRefuge` 33.9 % inclusive, its `previewWalk` 26.4 %.
+
+**D1 — the census.** A scratch copy of `deriveRefuge` ran every candidate's FULL preview and recorded where the cut
+(stop once the walk passes the best ETA held) would have stopped it, beside the cut's own simulated choice:
+
+| workload | derivations | previews | threw | hidden by the cut | cell changes | states, full → cut |
+|---|---|---|---|---|---|---|
+| staging A, sword | 1,315 | 15,780 | 0 | 0 | 0 | 2,145,515 → 26,721 |
+| staging A, ghost | 1,071 | 12,852 | 0 | 0 | 0 | 1,991,430 → 18,132 |
+| leg 397, ghost | 1,144 | 13,728 | 0 | 0 | 0 | 523,658 → 58,796 |
+| leg 414, ghost | 1,244 | 14,928 | 0 | 0 | 0 | 582,938 → 72,348 |
+| leg 381, MOVING_WAIT + BOMBS | 2 | 24 | 0 | 0 | 0 | 648 → 496 |
+| L18 sweep (45), C2's ghost staging (45), `r9-campaign --check`, legs 378 / 381 / 384 / 396 / 400 | 0 | 0 | — | — | — | — |
+
+No refuge preview ended on a lethal pit or a drowning (arrived, stalled or crossed only). The chosen cell's preview is
+never cut (a winner arrives at or before the bound), so a guard that re-ran it in full would never run. Two pre-filters
+were measured and refused: `minTicksBetween` (the strike's "admissible" ETA floor) is not a lower bound for a refuge
+walk — it divides by `WALK_SPEED` 0.8 and the walk runs faster (7,932 of 13,728 previews on 397 arrive sooner than it allows, even with the tolerance taken off) — and as
+a pre-filter it moves 6 + 4 chosen cells on 397 / 414; dropping a cell whose straight line from the player is blocked
+is not exact (461–3,318 such cells arrive per large workload, none chosen) and saved nothing over the cut alone.
+
+**D2 — the switch** in `pressKillCost.js` (`REFUGE_ETA_CUT`, `refugeEtaCut`, `REFUGE_ETA_CUT_COUNTS`), wired through
+`solverView.js`; `deriveRefuge` passes `stopWhen: refugeEtaCut(best.eta)` once a best is held. OFF calls `previewWalk`
+with the arguments it had. Named in the switch: a throw past the cut in a losing candidate is not raised;
+`progressPreview`'s `previewStates` and BW's refuge counts drop. Gate `hammerRefugeCut.test.js` (6 rows: the switch,
+the predicate's edge, OFF writes nothing, G1's ghost witness at 7 refuge ticks, leg 381's MOVINGWAIT witness at t1150
+with BOMBS both ways — (216,168), BW's refused count 11 → 9). Mutants: the bound taken from a bomb-refused candidate,
+off-by-one, half the ETA, the cut never taken, the cut before a best — each red.
+
+**D3 — ON:** no mover. The 13 workloads (BW OFF and ON), the identity block (BW OFF and ON: every value row W0's),
+`r9-campaign --check` and the ENEMY census are byte-equal to OFF. Timed, 3 interleaved rounds (load 1.01–1.18):
+staging A 196.0 → 138.7 s (sword) and 188.8 → 124.3 s (ghost), legs 397 / 414 180.6 → 166.8 / 193.8 → 169.8 s
+(medians). The flip is the user's.
+
+**Flip (2026-10-14).** The user turned `REFUGE_ETA_CUT` ON by default (*"Turn it ON"*). `SEEDLING_REFUGE_ETA_CUT=0`
+or `withRefugeEtaCut(false, …)` opts out. RE's D3 measured ON byte-equal to OFF on every workload, on the identity block
+and on `r9-campaign --check`, so no committed row moves. What moves is only the instruments named in the switch's
+comment (`progressPreview`'s `previewStates`, BW's refuge counts). The page worker now runs the cut too.
+
+### Seedling hammer-phase SC — the strike scan's ETA floor
+
+⚖ The user (2026-10-14): *"DWELL-DONE + strike census"* — this slice is the census, MEASURE ONLY (no switch, no code
+change). The question was RE's residue 1: is `solverBot.minTicksBetween` (`ceil(max(|dx|,|dy|) / WALK_SPEED)`, the floor
+`deriveStrike` applies to every (cell, tick) pair before the `STRIKE_CANDIDATES` truncation, and P2's `strikeScanBox`
+reads) admissible? The report is `CC/docs/cloud-reports/seedling-hammer-sc.md`.
+
+**W0** at `c137aef8a9` (RE's harvest; `REFUGE_ETA_CUT` still OFF by default there): identity block `77080c2e`, the six
+producers exit 0 at `405d9c4b b76f6483 465a8b46 35456fbc 6cd35fe1 712f0ead`, reference ALL 7 + 5 MATCH; surface GREEN
+291, constants 5,851, entities 558, profile 138; roster 277.
+
+**D1 — the true speed.** `applyInput` is a threshold test followed by a full-magnitude add (`if (v.x < moveSpeed) v.x +=
+moveSpeed`), after a friction that shortens the velocity VECTOR by 0.25. So a walking axis runs at up to `2·moveSpeed`:
+under 1.6 px/tick on ground and under 2.0 on ice, and a diagonal loses less of each axis to friction than an axis-aligned
+run does. An exact search over key sequences from rest gives up to 77.2 px in 60 ticks (1.29 px/tick sustained); holding
+RIGHT gives 70.3 px. The game (p4f, a scratch tape: RIGHT 20, RIGHT+UP 20, RIGHT with UP/DOWN zig-zag 24) is the model
+tick for tick, with a peak of 1.58–1.60 px/tick per axis and 1.15–1.20 px/tick sustained. `WALK_SPEED` 0.8 is the add,
+not the cap. The docblock's other claim is wrong too: the arrival TOLERANCE (`hasArrived`, 1 px) makes the walk SHORTER,
+not longer. An admissible floor is `ceil(max(0, cheb − tolerance) / max(2·moveSpeed, |v0x|, |v0y|))`. Above the cap
+nothing adds and friction only lowers the speed, so a knocked-back start is honoured. Every per-tick step over 1.6
+measured below started from such a velocity.
+
+**D2 — the census** (a scratch copy of `deriveStrike` running the base floor and that admissible one, ground cap 1.6,
+side by side in every derivation; the run follows the base, every census answer = RE's and the identity block's):
+
+| workload | derivations | arrived previews | ETA under the base floor | worst floor − ETA | under the admissible floor | chosen strike differs (earlier · base found, admissible refused · other) | dropped pairs: reachable / a full plan | scan ms, base → admissible |
+|---|---|---|---|---|---|---|---|---|
+| staging A, sword | 1,329 | 6,611 | 4,083 | 72 | **0** | 7 (2 · 5 · 0) | 24,748 / 92 | 76.5 → 73.1 s |
+| staging A, ghost | 1,085 | 5,801 | 2,962 | 66 | **0** | 3 (0 · 3 · 0) | 25,240 / 29 | 56.8 → 55.8 s |
+| leg 397, ghost | 1,154 | 8,578 | 3,514 | 62 | **0** | 2 (0 · 2 · 0) | 23,204 / 12 | 53.7 → 50.9 s |
+| leg 414, ghost | 1,256 | 9,106 | 3,420 | 100 | **0** | 4 (0 · 4 · 0) | 22,140 / 30 | 58.5 → 56.5 s |
+| L18 sweep (45) | 10,086 | 70,899 | 65,862 | 39 | **0** | 1,707 (1,395 · 261 · 51) | 285,813 / 37,719 | 84.2 → 61.9 s |
+| C2's L18 ghost staging (45) | 4,596 | 25,998 | 17,193 | 44 | **0** | 561 (402 · 159 · 0) | 45,246 / 22,023 | 80.0 → 55.1 s |
+| `r9-campaign --check` | 315 | 2,367 | 2,178 | 29 | **0** | 27 (21 · 6 · 0) | 7,659 / 537 | 2.6 → 2.4 s |
+| `r8-l18 --check`, `r8-d2-chain --check` (each) | 135 | 828 | 774 | 29 | **0** | 27 (21 · 6 · 0) | 3,705 / 630 | 1.0 → 0.6 s |
+| killgate s2 / s5 / s9 | 180 / 180 / 189 | 396 / 405 / 675 | 225 / 279 / 432 | 34 / 40 / 41 | **0** | 18 / 9 / 36 | 756 / 468 · 1,179 / 585 · 1,404 / 441 | 0.8 / 4.4 / 4.7 → 0.5 / 0.4 / 0.6 s |
+| legs 378 / 381 / 384 / 396 / 400 (sword), `r8-battery`, `r9-l3`, `r8-tail` (its parent process) | 0 | — | — | — | — | — | — | — |
+
+The admissible floor is tight: the least `ETA − floor` is 0 on every workload. A "dropped pair" is one the base floor
+skipped inside the base's own bounded tick range that the admissible floor admits and that is an opportunity. It is
+"reachable" when the full preview arrives by its aim tick, and "a full plan" when the walk is also transit- and
+dwell-safe (bombs and the escape not asked). ⚠ The second column of differences is R8 slice 8's trap one level up. A
+looser floor lets the forty fill with early pairs at cells whose real walk is too slow, so the bounded pass stops sooner
+and refuses where the base found a strike (staging A t1119: base (744,776) pressed at 1337; admissible, 40 kept by +114,
+none reachable).
+
+**D3 — the admissible floor end to end** (the lab with only the floor swapped; answers with the wall clock stripped):
+
+| workload | base | admissible floor |
+|---|---|---|
+| staging A, sword | REFUSED t3113 on `bob@736,752`; `spinner@880,848` killed t3100; 6 hits | REFUSED **t1329** on `bobsoldier@880,832`; spinner killed **t1316**; 2 hits |
+| staging A, ghost | REFUSED t2195 on `bob@736,752`; spinners killed t2114 and t2182 | REFUSED **t1267** on `bob@736,752`; `spinner@880,848` killed **t1254** |
+| legs 397 / 414, ghost | refused on `bob@736,752` / `bob@736,800` | refused on `bob@736,752` / `bob@736,752` (messages move; 177 → 463 s, 186 → 580 s) |
+| L18 sweep (45) | 45 SOLVE, Σ 19,545 t | 45 SOLVE, every residue moves (25 shorter, 20 longer), Σ 19,802 t |
+| C2's ghost staging (45) | 45 SOLVE, 336 t (r5 390, r6 340) | 45 SOLVE, **431 t each** |
+| `r8-l18` / `r8-d2-chain` / `r9-campaign --check` | exit 0 | **exit 1**: `r8-solve-18` and `r8-d2` drift (the headline 1,740 → 1,669 t), `r9-solve-18` 518 → 434 t |
+| killgate s2 / s5 / s9 | — | the visible table unchanged; `md5(rows)` moves |
+| `r8-battery`, `r8-tail`, `r9-l3` | — | byte-equal |
+
+**Verdict (b).** The floor is inadmissible and chosen strikes change on every workload that derives one; three
+committed tapes and the staging A answers move. A floor swap alone is not a pure improvement: it lengthens C2's ghost
+staging by 28 % and half of L18's residues. The shape for the planner: an admissible floor behind a switch, OFF, with the
+bounded pass using each previewed cell's measured ETA in place of the floor once it is known (the continuation already
+skips `known.eta > i − 1`), so the forty are not spent on cells the walk cannot make. Its flip is a tape move. The
+docblock's two claims (the clamp, and the tolerance "can only make the real walk LONGER") are wrong today whatever is
+decided.
+
+### Seedling hammer-phase DD — a press kill whose target died on the walk
+
+⚖ The user (2026-10-14): *"DWELL-DONE + strike census"*, two slices in parallel. This one is a caller-side fix behind
+one new switch, **OFF**: `solverBot.PRESS_KILL_DONE_ON_WALK` (`SEEDLING_PRESS_KILL_DONE_ON_WALK=1`,
+`withPressKillDoneOnWalk`). The flip is the user's. The report is `CC/docs/cloud-reports/seedling-hammer-dd.md`.
+
+**W0** at `c137aef8a9` (RE's harvest): identity block `77080c2e` (six producers exit 0 at `405d9c4b b76f6483 465a8b46
+35456fbc 6cd35fe1 712f0ead`, ENEMY `afdc6d1a`, reference ALL MATCH); surface GREEN 291, constants 5,851, entities
+558, profile 138; roster 277; tapeRunner 611 `75a3c41f`; bounded vitest 1546/1546 (34 files). All of these equal
+RE's banks.
+
+**The defect, reproduced.** The kill rung's chaser arm in `solveSegmentUnder` (`-> kill (<id>) by press`) walks to
+its stance and then `runDwell`s until the body has left `strikeBodies`. The walk carries the strike policy, so its
+presses can kill the body first, and `runDwell` then refuses an `until` that is already true. Survey step 50 under
+fidelity's `strikeIframeLapse` + `ceremonyShove` (`ceremonyShove` is not on main yet, so this ran on a scratch merge
+of its branch):
+
+- the exit's keylock-stance walk (begun t168) kills `bobsoldier@48,80` with a sword press (pressed t169, fired t170,
+  `killed: true`);
+- the body leaves `strikeBodies` at t171 and the run at t182;
+- the arm's dwell refuses at t192.
+
+CW's 414 page leg under its scratch chooser is the SAME seam, not the kill-lock's `execKillByChaser` (which already
+skips such a body, `killedOnApproach`): a ghost-sword press (t1431) kills `bob@736,800` on the walk, and the dwell
+throws at t1469. At the defaults the shape also occurs: step 50's staging booted at (32,112) or (96,176) refuses the
+same way at t174 / t165.
+
+**Census** (a read-only hook at the seam and in `runDwell`'s already-true branch, scratch only). Arm dwells that start
+with the target gone, at the defaults, with the switch ON (the path is OFF's up to the first such start):
+
+| workload | arm dwells | gone at start |
+|---|---|---|
+| the identity block (incl. `r9-campaign`) | 2 (ENEMY census `lavarunner@64,64`; `r9-solve-12` `puncher@416,256`) | 0 |
+| L18 sweep (45) / C2's ghost staging (45) | 0 / 0 | 0 |
+| L40 table, 40 legs × sword/ghost | 4 (legs 378/381, `puncher@816,128`) | 0 |
+| survey step 50 (defaults / lapse ON) | 1 / 0 | 0 |
+
+**D1 — the switch.** ON, the arm skips the dwell when the target has left `strikeBodies` at the dwell's start AND the
+press ledger holds a press that KILLED it (`killedOnWalk`). That press must be appended during this walk (the
+ledger's index at the walk's start) and be on the run's level. The arm records `{kind: 'dwell', ticks: 0,
+killedOnWalk: {pressedAt, firedAt, weapon, direction}}` and returns to the ladder. Any other "already true" still
+reaches `runDwell`, which is untouched. The window was first a tick (`fired > walk start`). The L40 table measured
+why it must not be one: on legs 378/381 an arm whose walk began at t0 saw a `killed` ghost-sword press on
+`puncher@816,128` (fired t104), yet the body was still in `strikeBodies` at t133.
+
+- Gate `hammerPressKillDoneOnWalk.test.js`, 7 rows: OFF ships; `with…` restores; the ledger window (index, level,
+  `killed` not `landed`); OFF refuses at (32,112) t174; ON reaches L32 in 381 t as the witness tape; ON at step 50's
+  own staging keeps the dwell and is OFF's byte for byte (460 t); the game witness.
+- Six mutants, each red: skip-when-alive (the solve re-enters the arm without a tick; the solve helper caps the arm's
+  entries at 16, so it fails in ~3 min instead of hanging), never-skip, gone-without-ledger, landed-not-killed, tick
+  window, any level.
+- Game witness `hammer-dd-l30-walkkill` (`plan-seedling-hammer-dd-walkkill.mjs`, author + `--check` + `--samples`;
+  `fixtures/hammer-dd-walkkill-witness/`, not the roster): the game equals the model at the last frame of every tick
+  (377), 0 hits, and finishes at t381 on L32.
+- Repro 1's ON plan (395 t), replayed on the game against the scratch merge's model: the same, 388 ticks, 0 hits,
+  t395 on L32.
+- ⚠ A pickup ceremony's frozen frames share one tick number. `probe-seedling-chaser-mobiles.mjs` keeps the FIRST
+  frame per tick, which still holds the previous tick's player (5 frames carry t135; the first 2 sit at t134's
+  position). Its new `--frames` flag keeps every frame.
+
+**D2 — ON, no mover.** The identity block, every value row W0's; `r9-campaign --check` `712f0ead` (`r9-solve-16` 688
+t, byte-identical); L18 `864ab175`; C2's staging `1ca7eed5`; the L40 table 80/80 (58 solved, 18 refused, 4 threw; the
+rows BW banked are equal); step 50 460 t `1e6a1eaf`. With the lapse ON as well, DD adds nothing: ENEMY `36b59445` and
+campaign `dce96321` are the lapse's own movers, equal with DD OFF. Step 50 under the lapse: 413 t `09fe6280` either
+way.
+
+- The two movers are the cases DD is for: step 50 under lapse + shove goes REFUSED t192 → SOLVED 395, and CW's 414
+  override goes THREW t1469 → REFUSED t1469 by name at the chest's guard `bobsoldier@880,832` (CW's (c)), 0 hits.
+- The shape fits fidelity's case as is. No chaser-arm edit is needed, because CW's dwell IS this arm.
+
+**Flip (2026-10-14).** The user turned `PRESS_KILL_DONE_ON_WALK` ON by default (*"Turn it ON"*).
+`SEEDLING_PRESS_KILL_DONE_ON_WALK=0` or `withPressKillDoneOnWalk(false, …)` opts out. DD's census found 0 press-kill
+dwells starting with the target gone at the defaults on every workload, and ON equal to OFF on the identity block,
+`r9-campaign --check`, the L18 sweep, C2's ghost staging and the L40 table, so no committed row moves. The page worker
+now runs it too. It is the hammer side of fidelity's held `strikeIframeLapse` flip (survey step 50).
+
+**`REFUGE_ETA_CUT` flip, the divergence A/B (js-6's sweep, 843 legs).** No leg that crossed or completed OFF fails
+ON. Leg 768 goes failed → done and leg 414 goes failed → timeout (both seam-sensitive). Only leg 311 plans
+differently at an identical seamTime (done both ways, a different plan).
+
+### Seedling fidelity SMALLGAPS — a freeze frame is not a tick, an icy waypoint is passed, and a lava chain hits the player
+
+Wave 16 (planner `seedling-fidelity-planning-7`), three small gaps, each behind its own switch, **all OFF** and OFF
+byte-inert. The report is `CC/docs/cloud-reports/seedling-fidelity-smallgaps.md`.
+
+**D1 — the two instruments disagreed because one of them polled inside the freeze.** On one p4f run of leg 624's tape
+the `Bot`'s own observations (`botDrain`) read 136, 135.2, 133.85 (no stall); `probe-seedling-chaser-mobiles`'s FIRST
+poll at tick 1 stood 20 frames into the 175-frame freeze (y 136), and its LAST poll at tick 1 equals the `Bot`'s. Over
+the 13 committed chaser witnesses only the two `l74arrival-*` part (t1, t5); the probe now samples at the `Bot`'s point
+and those two were re-recorded (one sample each). In tape ticks a button freeze costs the player nothing: frame A is
+frozen and the release frame (the rock clears the flag above the Player) takes the step. `levelRun` banked that step
+in `pendingFreeSteps`, landing a tick late; `CONTACT_FIDELITY.buttonFallReleaseStep` takes it inside the frozen tick
+(the BobBoss rock's form). ON: 0 px on the `Bot`'s ticks for both witnesses and `l74leg624-postfall-reentry`, with the
+arm ON or OFF; `arrivalButtonArm` still decides which tick is frozen. A MID-ROOM press is the same rule: L29
+`button@112,128` walked north (`fallRockButton`'s `walkNorth(120, 60)`) does not stand on the game (witness
+`smallgaps-l29-button-walk`, 0 px ON; OFF stands t11, the stall that test pins — a flip mover). The 589 contact capture samples like the old
+probe (its t1 is 136) — the JS arc's to move. Not this switch: the wand's drop (the pickup ceremony's lump) and the
+rope's `dropRock` (no release step; exact only from a dead stop).
+
+**D2 — `botDriverV2.waypointReached`** (`waypointSlide`): `drive` and `previewWalk` ask one predicate; ON, a waypoint
+that is not the walk's last is reached within tolerance at any velocity while the player is on ice (friction 0.025,
+where a ±1 px stop is luck). Survey (local, `--through=end --route=full`): steps 62 (386 → 249; lapse ON 748 → 239),
+63 (298 → 208), 65 (368 → 330), 84 (1528 → 1352), 86 (1060 → 681), 89 (459 → 378); no verdict moves, lapse OFF or ON.
+Sweep legs in the ten ice rooms (34, node at each row's `seamTime`): 448, 451, 452, 455, 459 shorten. Every mover is
+game-witnessed at 0 px with no hit. `synthesizeTapeV2` and `jsRuntimeWalker` still ask `hasArrived`.
+
+**D3 — leg 633's attacker is `lavachain@80,80`.** `LavaChain.reach` walks `["Player", "Enemy"]`; K2PREP transcribed
+only the Enemy arm. `lavaChainPlayerHit` bills the Player arm (pre-move box, force 5 from the chain's point). The leg's
+own plan (449 t) on the game: 0 px ON (t162 and t447 billed), OFF parts at t162; ON the leg refuses by name. Survey
+step 163 (L75) moves SOLVED 434 → 476: the 434-t plan takes four chain hits and dies in lava on the game (reproduced
+at 0 px ON). With `unbilledDamageGate` also ON the step refuses — the only verdict the game agrees with. Residue: the
+476-t plan meets `spinningaxe@80,144` at t357 on the game, which the live run never bills (the axe's player arm, like
+the chain's, is only priced by the danger map).
+
+### Seedling fidelity CEREMONYSHOVE — a ceremony's dead frames, stepped instead of avoided
+
+⚖ The user (2026-10-12, on STRIKELAPSE): *"it would have been better to model the freeze interaction than to try to
+avoid it."* One switch, **OFF**, OFF byte-inert: `CONTACT_FIDELITY.ceremonyShove` (`SEEDLING_CEREMONY_SHOVE=0|1`).
+The report is `CC/docs/cloud-reports/seedling-fidelity-ceremonyshove.md`.
+
+**D1 — read and witnessed.** `Pickup.pick_up` raises `Game.freezeObjects` for 150 `specialTimer` frames. `Player.update`
+runs `addShield(); shieldBump();` and `hitUpdate()` outside the gated move, and an `Enemy`'s `knockback`
+(`v += 5·unit`), `hitUpdate` and `Mobile.death` fade have no freeze gate. `Enemy.hit` and `Player.hit` are gated, so
+nothing is damaged. The player's `v` stays frozen non-zero, so a body in the moving shield box is shoved on every
+frame. Four p4f witnesses were derived from `strikelapse-l30-torch` by dropping or moving presses and inserting idle
+ticks: a touched live BobSoldier, an i-framed one, a dying one, and the player inside its own i-frames. The dead
+frames fall **between the observations one and two ticks after the ceremony starts** (the i-framed body reads
+21 → 20 → 0, the fade 0.6 → 0.5 → gone). They shove **149** times (745.0 px/tick on two witnesses), and the 150th
+dead frame lands before the release (one more shove, Δv 5.0). Census: 277 committed tapes, 67 ceremonies; none starts
+with a body in contact, i-framed or dying.
+
+**D2 — stepped** (`levelRun`): `stepCeremonyLumpNow` (149 frames at the top of the advance after the first frozen
+tick), `stepCeremonyReleaseFrameNow` (the 150th, on the finishing tick), and the chasers' frozen step on every
+ceremony tick. Each frame is `stepChasersNow` (frozen), then `shieldBumpNow`, then `stepPlayerDamage`.
+`assertNoCeremonyBesideLiveChaser` stands down for a stepped (texted) ceremony; a text-less pickup keeps it, now also
+for a body in the moving shield box. All four witnesses are at 0 on every tick ON; OFF they are the controls. Five
+mutants, each red where predicted. The test's lump-row pin reddened two mutants' extra rows too, separated in the
+report.
+
+**D3 — the planner's question.** With `ceremonyShove` ON and a ceremony the run steps (`run.ceremonyStepsDeadFrames`),
+`ceremonyBesideLiveBody` (lapse ON) asks `ceremonyAftermathDanger`:
+
+- a corpse fades inside the lump;
+- a body in the moving shield box leaves at ~750 px/tick (the tail's ceremony sample now carries `player`);
+- any other body is parked beside the player and asked the untimed WAIT question.
+
+A chest's seal piece (331 dead frames, no text) is stepped inside the collecting tick: 330 frames, plus that tick's
+live step. Its witness, survey step 19's lapse-ON plan (`ceremonyshove-l17-chest-19`, three Bobs, one i-framed), is at
+0. Refusing it instead had cost step 19.
+
+**Survey (local, `--through=end --route=full`), by (level, goals, boot):**
+
+| configuration | SOLVED | what moved |
+|---|---|---|
+| CI base 38332251781 (both OFF) | 169 | — |
+| shove ON | 169 | nothing |
+| lapse ON | 170 | STRIKELAPSE's table, unchanged |
+| both ON | 169 | step 50, 413 → REFUSED |
+
+Steps 156 and 187 TIMEOUT under load. Solo at `--timeout=300` they refuse with CI's text, byte for byte.
+
+**Step 50 with both ON is a STOP, handed to the hammer arc.** The solver now collects beside the live BobSoldier
+(ceremony t138). The exit walk's own presses kill the body (removed by t192). The exit's kill arm (`execKillByPress`)
+then reaches `botDriverV2.runDwell` and refuses: "the dwell's condition (bobsoldier@48,80 has left the world) is
+ALREADY TRUE". At the defaults (lapse OFF) the switch costs nothing.
+
+**Trap candidates:**
+
+1. *A frozen tick is not a dead frame.* The Bot's tick stands still through dead frames. So the first poll at the tick
+   after a ceremony starts is pre-lump and the last poll is post-lump, and a probe that takes the first poll per tick
+   reads every ceremony's release tick as a 1-tick divergence. Compare against the closer of the first and last poll.
+2. *A lump has a place, not only a size.* 149 frames at the start tick would be wrong at cer+1, and 150 would be wrong
+   by one shove after the release. Only the witnesses' per-tick readings place them.
+3. *An avoidance's retirement can surface a different planner bug.* Step 50's loss is not the shove: it is a kill arm
+   entered for a body the walk already killed.
+
+### Seedling fidelity wave-16 harvest — four switches ON, the lapse and the Flyer held
+
+⚖ The user's rulings (2026-10-14), at the harvest of SMALLGAPS, CEREMONYSHOVE and LAPSECOST:
+
+- **ON by default:** `buttonFallReleaseStep`, `waypointSlide`, `lavaChainPlayerHit` ("Flip all three") and
+  `ceremonyShove` ("Flip now").
+- **Held OFF:** `strikeIframeLapse` ("Flip after DD lands": with `ceremonyShove` ON, the lapse's survey step 50
+  refuses in `execKillByPress`'s dwell, which the hammer arc's DWELL-DONE slice owns), and `flyerLive` ("Hold; model
+  BeamTower drift": ON it gains legs 754 and 773 but loses 776 to a drifting BeamTower Solid the model holds still).
+
+What the measurements said before the flip (CI, by key):
+
+- `ceremonyShove` ON, lapse OFF: the route survey and the full sweep moved nothing.
+- `waypointSlide` ON: six survey steps shorter, no verdict moved. Five ice legs were played shorter on the game, still
+  `done` (448 509→310, 451 792→258, 452 665→403, 455 934→366, 459 423→308).
+- `lavaChainPlayerHit` ON: leg 633 refuses by name; survey step 163 434→476.
+- `buttonFallReleaseStep` ON: leg 626 is `done` with no t1 parting.
+
+Re-pins the flip owed, each with its reason in the row:
+
+- the four "ships OFF" rows, plus `contactFidelity`'s defaults pin;
+- `fallRockButton`'s press-tick stall becomes the game's step;
+- `fidelityStance`'s two chest rows and the L48 keylock-OPEN row pin `waypointSlide` OFF: their committed tapes walk
+  the ice parked;
+- `fidelityStrikeLapse`'s interim and step-50 rows pin `ceremonyShove` OFF.
+
+### Seedling hammer-phase SF — an admissible strike floor plus the measured ETA
+
+⚖ The user (2026-10-14): *"Build STRIKE_ETA_FLOOR"*. One new switch, **OFF**: `solverBot.STRIKE_ETA_FLOOR`
+(`SEEDLING_STRIKE_ETA_FLOOR=1`, `withStrikeEtaFloor`). Its flip is a tape move and the user's call; this slice measured
+and re-recorded nothing. The report is `CC/docs/cloud-reports/seedling-hammer-sf.md`.
+
+**W0** at `aba341d358` (the wave-16 harvest r4; `REFUGE_ETA_CUT` and `PRESS_KILL_DONE_ON_WALK` both ON by default):
+the identity block's six producers exit 0 at SC's `405d9c4b b76f6483 465a8b46 35456fbc 6cd35fe1 712f0ead`, killgate
+`006b0639 / 7d4cb820 / 49e23d85`, ENEMY `afdc6d1a`; surface GREEN 294, constants 5,882, entities 566, profile 138;
+roster 277; bounded vitest 400 / 400 (20 files). SC's census answers reproduce at this base unchanged (staging A
+`7c279226` / `b3b38f55`, 397 `4720caab`, 414 `489a9482`, L18 `864ab175`, the ghost staging `1ca7eed5`): wave 16's
+`waypointSlide` moved none of them.
+
+**D1 — the switch.** ON, `deriveStrike`'s floor is `strikeEtaFloorOf`:
+`ceil(max(0, cheb − DEFAULT_TOLERANCE) / max(cap, |vx|, |vy|))`, the cap 2·`WALK_SPEED` (1.6) or 2·`SLIDING_SPEED`
+(2.0) where the room's walkable tiles hold ice or the sticky `onIce` flag is set (the terrain is read through
+`hazardFlagsFor`, not inferred), and a waterfall room bounds the horizontal axis only (its push adds to `v.y` past any
+cap). The bounded pass then reads each cell's MEASURED ETA: a cell is previewed at its first opportunity (`walkTo`,
+the continuation's cache), and a pair whose cell's walk is truncated, transit-unsafe or later than its aim tick never
+takes one of the forty. `strikeScanBox` reads the same floor map, so `unreachable` keeps meaning "the floor's skips";
+the measured skips are `etaSkipped`. OFF is byte-inert (the base tree and the switch's tree OFF agree on every census
+answer, every timing round and the whole identity block). The docblocks of `minTicksBetween`, `STRIKE_CANDIDATES` and
+`STEP_LOOKAHEAD` are corrected regardless of the switch. Gate `hammerStrikeEtaFloor.test.js` (13 rows: the switch,
+the floor's edges, two derivations on G1's committed walk, and the witness); the mutants M1 floor-only, M2
+`WALK_SPEED` for 1.6, M3 the tolerance dropped and M4 `v0` ignored are each caught.
+
+**D2 — the census** (SC's lab re-cut: every derivation runs OFF, the admissible floor alone, and the two
+measured-ETA shapes SC named; the run follows OFF and every answer equals the base):
+
+| workload | derivations (OFF refuses) | floor alone: earlier · lost | shape a (40 kept pairs): earlier · lost · found | shape b (40 distinct cells): earlier · lost · found | scan s: OFF / a / b |
+|---|---|---|---|---|---|
+| staging A, sword | 1,329 (1,315) | 2 · 5 | 3 · **0** · 1,138 | 3 · **0** · 1,222 | 75 / 285 / 538 |
+| staging A, ghost | 1,085 (1,071) | 0 · 3 | 1 · **0** · 945 | 1 · **0** · 1,067 | 65 / 242 / 452 |
+| leg 397, ghost | 1,154 (1,144) | 0 · 2 | 0 · **0** · 622 | 0 · **0** · 894 | 56 / 250 / 321 |
+| leg 414, ghost | 1,256 (1,244) | 0 · 4 | 2 · **0** · 632 | 2 · **0** · 884 | 57 / 290 / 368 |
+| L18 sweep (45) | 10,086 (6,783) | 1,395 · 261 | 1,521 · **0** · 2,826 | 1,485 · **0** · 4,263 | 69 / 169 / 2,064 |
+| C2's ghost staging (45) | 4,596 (1,680) | 402 · 159 | 561 · **0** · 60 | 561 · **0** · 60 | 58 / 71 / 3,310 |
+| `r9-campaign --check` | 315 (231) | 21 · 6 | 21 · **0** · 96 | 21 · **0** · 171 | 1.9 / 4.2 / 46 |
+| `r8-l18`, `r8-d2-chain --check` (each) | 135 (81) | 21 · 6 | 24 · **0** · 18 | 24 · **0** · 30 | 1.0 / 3.3 / 33 |
+| killgate s2 / s5 / s9 | 180 / 180 / 189 | 9 / 9 / 27 · 9 / 0 / 9 | 18 / 9 / 27 · **0** · 0 / 18 / 0 | 9 / 9 / 27 · **0** · 0 / 18 / 0 | ≤ 4 / ≤ 1.1 / ≤ 8.3 |
+
+0 of 565,364 arrived previews beat the admissible floor, and it is tight (least `ETA − floor` 0); 83 % beat OFF's, by
+up to 141 ticks. The floor alone loses 470 strikes (SC's count again); both shapes recover all 470. Neither shape loses
+a strike OFF finds. The only "later" choices (42 in a, 318 in b) replace OFF's UNCERTIFIED escape fallback with a later CERTIFIED
+strike. Shape a is built: shape b scans to the horizon whenever fewer
+than forty cells are opportunities, 30× / 57× OFF inside the L18 / ghost-staging derivations.
+
+**D3 — end to end, ON** (nothing re-recorded):
+
+| workload | OFF | ON |
+|---|---|---|
+| staging A, sword | REFUSED t3113 on `bob@736,752`; spinner killed t3100; 6 hits | REFUSED **t1695** on `bob@736,752`; killed **t1682**; 3 hits |
+| staging A, ghost | REFUSED t2195; spinners killed t2114 / t2182 | REFUSED **t1629**; `spinner@880,848` killed **t1616**; `@816,848` not fought |
+| leg 397 / 414, ghost | refused on `bob@736,752` / `bob@736,800` | refused on **`bobsoldier@880,832`** / **`bob@736,752`** |
+| L18 sweep (45) | 45 SOLVE, Σ 19,545 t | 45 SOLVE, 24 shorter, 21 longer, Σ 19,558 t |
+| C2's ghost staging (45) | 45 SOLVE at 336 t (r5 390, r6 340) | 45 SOLVE at **328 t** each |
+| `r8-l18 --check` | exit 0 | exit 1: `r8-solve-18` 363 → **467** t (`{18,0}` at 305 → 419) |
+| `r8-d2-chain --check` | exit 0 | exit 1: `r8-d2` headline 1,669 → 1,773 t |
+| `r9-campaign --check` | exit 0 | exit 1: `r9-solve-18` 518 → **476** t; Σ 10,931 → 10,889; `r9-solve-19`'s free oracle misses |
+| identity block | — | acceptance batch, empty pairs c3 / c6, carved pairs c4, killgate s2 / s5 / s9 (`md5(rows)`; the printed table is unchanged) move; maze, ENEMY, guard, AREA, levels, generated set, `r8-battery`, `r8-tail`, `r9-l3` do not |
+
+A flip also moves six witness producers (`plan-seedling-f1c-l18-phase`, `-hammer-a-escape`, `-hammer-b1-approach`,
+`-hammer-b2-fight`, `-hammer-g1-ghostkill`, `-hammer-bw-bombstand`, the six of the 89 `plan-seedling-*` that reach
+`deriveStrike`). Their `--check`s fail ON on a PREMISE, not only on the artifact's bytes: each asserts something about
+its own switch's OFF run that the strike floor changes, e.g. *"with the switch OFF this staging REFUSES HAMMER_SAFETY —
+it solved"*. So a flip re-derives what those witnesses witness, not just their tapes. 23 gate rows in 12 files move too. Timings (3 interleaved rounds per mode, medians): staging A 124 → 59 s (sword) and 101 → 58 s (ghost), legs
+397 / 414 0.83× / 0.82×, the ghost staging 1.05×, the L18 sweep **1.53×** (107 → 164 s).
+
+**The game witness** `hammer-sf-l40-strikefloor` (`plan-seedling-hammer-sf-strikefloor.mjs`; not a roster tape,
+`fixtures/hammer-sf-strikefloor-witness/`): staging A with the ghost sword, ON. The walk is G1's OFF walk for 602
+ticks (the kill's first landing, t501, is shared), then the strikes move: landings t1583 and t1616 (the kill), against
+OFF's t2078 and t2114. The game (p4f, headless) plays it tick for tick: 1,630 / 1,630 observations, `Bot.slashTests`
+at every sampled tick; the Spinner rows give 8,124 comparisons, worst |Δ| 0. The one disagreement is the known removal
+fencepost. The SWORD's ON plan parts from the game at t658, before its strikes move: the model lands a `bob@736,752`
+contact there (knockback dy −3) that the game does not make. That is the chaser's contact, fidelity's to look at.
+
+Lessons:
+1. *An admissible floor is half a fix.* The bound has to be true, AND the truncation it feeds has to spend its budget
+   on what the walk can make. Measured ETA did more than the floor: the four floor mutants are invisible to the witness
+   solve, while the floor-only mutant breaks it.
+2. *Budget in kept PAIRS, not in distinct cells, when the pass is asked every tick.* The distinct-cell budget is the
+   continuation's, and it is right there (asked once, at the admission). On every refuge tick it scanned to the horizon.
+3. *Never mutate a file other processes are loading.* A timing round's ON run started inside the mutant window, loaded
+   the floor-only mutant and reproduced SC's floor-only answer. The four contaminated runs were moved aside and re-run.

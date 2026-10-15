@@ -1,0 +1,85 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [31m❯[39m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js [2m([22m[2m13 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 191855[2mms[22m[39m
+     [32m✓[39m ships OFF[32m 1[2mms[22m[39m
+     [32m✓[39m withStrikeEtaFloor sets and restores it, also on a throw[32m 1[2mms[22m[39m
+     [32m✓[39m ground: (reach − 1) / 1.6, rounded up — 2·WALK_SPEED, never WALK_SPEED[32m 0[2mms[22m[39m
+     [32m✓[39m the tolerance: a cell within 1 px on both axes is 0 ticks away, and 2.6 px is one[32m 0[2mms[22m[39m
+     [32m✓[39m a knocked-back start: an axis faster than the cap bounds the walk at its own speed[32m 0[2mms[22m[39m
+     [32m✓[39m ice: a walkable ice tile in the room, or the sticky `onIce` flag, caps an axis at 2·SLIDING_SPEED[32m 0[2mms[22m[39m
+     [32m✓[39m a waterfall: its push adds to v.y past any cap, so only the horizontal axis bounds the walk[32m 0[2mms[22m[39m
+[31m     [31m×[31m t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick[39m[33m 1277[2mms[22m[39m
+[31m     [31m×[31m t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA)[39m[33m 932[2mms[22m[39m
+     [32m✓[39m ⛓⛓⛓ the walk: three ghost landings on spinner@880,848, the kill at t1616 (OFF's walk, G1's witness, kills at t2114), and the chaser's three hits[32m 1[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts [33m 412[2mms[22m[39m
+     [32m✓[39m ⛓⛓⛓ THE GAME AGREES: its rows of the killed Spinner (position, hits, hits_timer) are the model's at every sampled tick, and it reaches hits 4[32m 7[2mms[22m[39m
+[31m     [31m×[31m ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key[39m[33m 189221[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js[2m > [22mSTRIKE_ETA_FLOOR — derivations on G1's witness walk (staging A, the ghost sword)[2m > [22mt190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick
+[31m[1mAssertionError[22m: expected null to deeply equal [ 744, 728, 432, 241 ][39m
+
+[32m- Expected:[39m 
+[
+  744,
+  728,
+  432,
+  241,
+]
+
+[31m+ Received:[39m 
+null
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m124:31[22m[39m
+    [90m122| [39m            [35mconst[39m on [33m=[39m [34mderive[39m(run[33m,[39m [35mtrue[39m)[33m;[39m
+    [90m123| [39m            [34mexpect[39m([34mshort[39m(off))[33m.[39m[34mtoEqual[39m([[34m728[39m[33m,[39m [34m680[39m[33m,[39m [34m497[39m[33m,[39m [34m201[39m])[33m;[39m
+    [90m124| [39m            [34mexpect[39m([34mshort[39m(on))[33m.[39m[34mtoEqual[39m([[34m744[39m[33m,[39m [34m728[39m[33m,[39m [34m432[39m[33m,[39m [34m241[39m])[33m;[39m
+    [90m   | [39m                              [31m^[39m
+    [90m125| [39m            [35mconst[39m i [33m=[39m on[33m.[39mpressAt [33m-[39m run[33m.[39mticksCompleted[33m;[39m
+    [90m126| [39m            // the walk arrives by the aim tick, and OFF's floor dropp…
+[90m [2m❯[22m replayTo frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m102:43[22m[39m
+[90m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m120:9[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js[2m > [22mSTRIKE_ETA_FLOOR — derivations on G1's witness walk (staging A, the ghost sword)[2m > [22mt160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA)
+[31m[1mAssertionError[22m: t160: expected null not to be null[39m
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m140:42[22m[39m
+    [90m138| [39m            [35mconst[39m on [33m=[39m [34mderive[39m(run[33m,[39m [35mtrue[39m)[33m;[39m
+    [90m139| [39m            seen[33m.[39m[34mpush[39m([t[33m,[39m [34mshort[39m(off)[33m,[39m [34mshort[39m(on)[33m,[39m on[33m.[39mscanned [33m??[39m [35mnull[39m])[33m;[39m
+    [90m140| [39m            [34mexpect[39m(on[33m.[39mcell[33m,[39m [32m`t[39m[36m${[39mt[36m}[39m[32m`[39m)[33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m                                         [31m^[39m
+    [90m141| [39m            expect(on.pressAt, `t${t}`).toBeLessThanOrEqual(off.pressA…
+    [90m142| [39m        })[33m;[39m
+[90m [2m❯[22m replayTo frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m102:43[22m[39m
+[90m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m136:9[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js[2m > [22mhammer-sf-l40-strikefloor — the strike the admissible floor lets the scan see, on the game (hammer-phase SF, D1)[2m > [22m⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key
+[31m[1mAssertionError[22m: expected 1267 to be 1629 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1629[39m
+[31m+ 1267[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m231:32[22m[39m
+    [90m229| [39m            }
+    [90m230| [39m        })[33m;[39m
+    [90m231| [39m        [34mexpect[39m(perTick[33m.[39mlength)[33m.[39m[34mtoBe[39m([34m1629[39m)[33m;[39m
+    [90m   | [39m                               [31m^[39m
+    [90m232| [39m        expect(perTick.map((k) => [...k].sort())).toEqual(w.keys.slice…
+    [90m233| [39m    }[33m,[39m [34m900_000[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m10 passed[39m[22m[90m (13)[39m
+[2m   Start at [22m 06:50:07
+[2m   Duration [22m 196.62s[2m (transform 2.30s, setup 0ms, import 4.57s, tests 191.86s, environment 0ms)[22m
+

@@ -1,0 +1,14 @@
+PASS: ⛓ the clock is at residue 21, moved by -19 from the committed 40 — seam.time 9940 → 9921
+FAIL: ⛓⛓ with the switch OFF this staging REFUSES HAMMER_SAFETY — it solved
+PASS: ⛓⛓ with it ON the press kill took an escape at every landing — 6 escape(s)
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":367,"from_level":18,"to_level":19}]
+FAIL: ⛓ the committed hammer-a-l18-escape21 is what this script produces today — ⛔ DRIFT — re-run without --check
+## hammer-a-l18-escape21: 367 ticks, residue 21, 6 escape(s) (moving 0/0/0/0/0/2), {18,0}@321
+PASS: ⛓ the clock is at residue 15, moved by -25 from the committed 40 — seam.time 9940 → 9915
+FAIL: ⛓⛓ with the switch OFF this staging REFUSES HAMMER_SAFETY — it solved
+PASS: ⛓⛓ with it ON the press kill took an escape at every landing — 6 escape(s)
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":367,"from_level":18,"to_level":19}]
+FAIL: ⛓ the committed hammer-a-l18-escape15 is what this script produces today — ⛔ DRIFT — re-run without --check
+## hammer-a-l18-escape15: 367 ticks, residue 15, 6 escape(s) (moving 1/0/0/0/0/0), {18,0}@321
+
+4 CHECK(S) FAILED

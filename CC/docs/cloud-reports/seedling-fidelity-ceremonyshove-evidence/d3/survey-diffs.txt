@@ -1,0 +1,44 @@
+== A (ceremonyShove ON) vs CI 38332251781
+survey-ci-38332251781.json {'SOLVED': 169, 'REFUSED': 51, 'NO-EDGE': 1, 'NO-ARRIVAL': 1, 'TIMEOUT': 0}
+survey-A.json {'SOLVED': 169, 'REFUSED': 49, 'NO-EDGE': 1, 'NO-ARRIVAL': 1, 'TIMEOUT': 2}
+step 156 L12: ('REFUSED', None) -> ('TIMEOUT', None) | solverBot(survey-step-156) reach-exit (32,848)->L83: applied 4 strategies for one goal [ch || 
+step 187 L12: ('REFUSED', None) -> ('TIMEOUT', None) | solverBot(survey-step-187) reach-exit (32,848)->L83: applied 4 strategies for one goal [ch || 
+
+== C (strikeIframeLapse ON) vs CI
+survey-ci-38332251781.json {'SOLVED': 169, 'REFUSED': 51, 'NO-EDGE': 1, 'NO-ARRIVAL': 1, 'TIMEOUT': 0}
+survey-C.json {'SOLVED': 170, 'REFUSED': 48, 'NO-EDGE': 1, 'NO-ARRIVAL': 1, 'TIMEOUT': 2}
+step 16 L14: ('SOLVED', 98) -> ('SOLVED', 103) |  || 
+step 18 L16: ('SOLVED', 117) -> ('SOLVED', 124) |  || 
+step 19 L17: ('SOLVED', 122) -> ('SOLVED', 132) |  || 
+step 24 L14: ('SOLVED', 98) -> ('SOLVED', 103) |  || 
+step 26 L16: ('SOLVED', 688) -> ('SOLVED', 655) |  || 
+step 35 L14: ('SOLVED', 98) -> ('SOLVED', 103) |  || 
+step 37 L16: ('SOLVED', 688) -> ('SOLVED', 655) |  || 
+step 50 L30: ('SOLVED', 460) -> ('SOLVED', 413) |  || 
+step 52 L30: ('SOLVED', 347) -> ('SOLVED', 320) |  || 
+step 62 L45: ('SOLVED', 386) -> ('SOLVED', 748) |  || 
+step 69 L14: ('SOLVED', 103) -> ('SOLVED', 117) |  || 
+step 71 L14: ('SOLVED', 66) -> ('SOLVED', 55) |  || 
+step 74 L12: ('SOLVED', 921) -> ('SOLVED', 953) |  || 
+step 80 L12: ('SOLVED', 921) -> ('SOLVED', 953) |  || 
+step 104 L60: ('SOLVED', 483) -> ('SOLVED', 530) |  || 
+step 110 L60: ('REFUSED', None) -> ('REFUSED', None) | solverBot(survey-step-110) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) || solverBot(survey-step-110) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64)
+step 135 L12: ('SOLVED', 925) -> ('SOLVED', 957) |  || 
+step 145 L60: ('SOLVED', 523) -> ('SOLVED', 497) |  || 
+step 147 L63: ('REFUSED', None) -> ('SOLVED', 504) | solverBot(survey-step-147) reach-exit (128,304)->L65: the combat ladder is EXHAUSTED. The  || 
+step 148 L65: ('SOLVED', 539) -> ('SOLVED', 546) |  || 
+step 153 L60: ('REFUSED', None) -> ('REFUSED', None) | solverBot(survey-step-153) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) || solverBot(survey-step-153) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64)
+step 156 L12: ('REFUSED', None) -> ('TIMEOUT', None) | solverBot(survey-step-156) reach-exit (32,848)->L83: applied 4 strategies for one goal [ch || 
+step 163 L75: ('SOLVED', 434) -> ('SOLVED', 366) |  || 
+step 170 L77: ('SOLVED', 480) -> ('SOLVED', 475) |  || 
+step 180 L60: ('SOLVED', 523) -> ('SOLVED', 497) |  || 
+step 184 L60: ('REFUSED', None) -> ('REFUSED', None) | solverBot(survey-step-184) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) || solverBot(survey-step-184) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64)
+step 187 L12: ('REFUSED', None) -> ('TIMEOUT', None) | solverBot(survey-step-187) reach-exit (32,848)->L83: applied 4 strategies for one goal [ch || 
+step 192 L80: ('SOLVED', 672) -> ('SOLVED', 633) |  || 
+step 207 L104: ('SOLVED', 268) -> ('SOLVED', 261) |  || 
+step 208 L105: ('SOLVED', 264) -> ('SOLVED', 300) |  || 
+
+== B (both ON) vs C
+survey-C.json {'SOLVED': 170, 'REFUSED': 48, 'NO-EDGE': 1, 'NO-ARRIVAL': 1, 'TIMEOUT': 2}
+survey-B.json {'SOLVED': 169, 'REFUSED': 49, 'NO-EDGE': 1, 'NO-ARRIVAL': 1, 'TIMEOUT': 2}
+step 50 L30: ('SOLVED', 413) -> ('REFUSED', None) |  || solverBot(survey-step-50) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208) -

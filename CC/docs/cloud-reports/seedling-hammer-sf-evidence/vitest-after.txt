@@ -1,0 +1,34 @@
+ ✓ frontend/modules/procgenDocs/docsRender.test.js (46 tests) 1974ms
+ ✓ frontend/modules/procgenDocs/docLinks.test.js (15 tests) 229ms
+ ✓ frontend/modules/procgenDocs/generated.test.js (55 tests) 32926ms
+ ✓ frontend/modules/seedlingDemo/pressKillCost.test.js (18 tests) 64751ms
+ ✓ scripts/procgen/seedlingSolverSurface.test.js (36 tests) 90505ms
+ ✓ frontend/modules/seedlingDemo/solverBot.test.js (102 tests) 24517ms
+ ✓ frontend/modules/quickLaunch/generated.test.js (34 tests) 302ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSpinner.test.js (11 tests) 12431ms
+ ✓ frontend/modules/seedlingDemo/hammerPressBombs.test.js (8 tests) 7788ms
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (13 tests) 56500ms
+ ✓ frontend/modules/seedlingDemo/solverSpinnerKill.test.js (8 tests) 11031ms
+ ✓ frontend/modules/seedlingDemo/procgenScratchPersistence.test.js (15 tests) 4281ms
+ ✓ frontend/modules/seedlingDemo/hammerFightFallback.test.js (12 tests) 115230ms
+ ✓ frontend/modules/seedlingDemo/levelRun.test.js (129 tests) 11537ms
+ ✓ frontend/modules/seedlingDemo/hammerEscape.test.js (18 tests) 15915ms
+ ✓ frontend/modules/seedlingDemo/entityBlocks.test.js (30 tests) 2298ms
+ ✓ scripts/procgen/seedlingConstantsCensus.test.js (24 tests) 7748ms
+ ✓ scripts/procgen/checkProcgenHelp.test.js (8 tests) 39602ms
+ ✓ frontend/modules/seedlingDemo/hammerFight.test.js (9 tests) 24881ms
+ ✓ frontend/modules/seedlingDemo/hammerApproach.test.js (8 tests) 10557ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSearch.test.js (5 tests) 10071ms
+ ✓ frontend/modules/seedlingDemo/hammerRefugeCut.test.js (6 tests) 13314ms
+ ✓ frontend/modules/seedlingDemo/hammerPressKillDoneOnWalk.test.js (7 tests) 5560ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js (5 tests) 3890ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostWall.test.js (6 tests) 268ms
+ ✓ frontend/modules/seedlingDemo/solverBotLethalPit.test.js (4 tests) 48ms
+ ✓ frontend/modules/seedlingDemo/solveProgressTap.test.js (10 tests) 15ms
+ ✓ frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js (13 tests) 134820ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostKillRung.test.js (6 tests) 277697ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  scripts/procgen/boxLock.test.js > the box lock > lets a QUEUED taker die on SIGTERM — it never takes the box later
+ Test Files  1 failed | 29 passed (30)
+rc=1
+--- boxLock.test.js re-run alone (its SIGTERM row failed under load above): 26 / 26 passed

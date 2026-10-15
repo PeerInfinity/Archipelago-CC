@@ -1,0 +1,3 @@
+counts {'onBASE': {'SOLVED': 170, 'REFUSED': 48, 'NO-EDGE': 1, 'NO-ARRIVAL': 1, 'TIMEOUT': 2}, 'onFIX': {'SOLVED': 170, 'REFUSED': 48, 'NO-EDGE': 1, 'NO-ARRIVAL': 1, 'TIMEOUT': 2}}
+
+0 movers

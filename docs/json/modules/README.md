@@ -70,6 +70,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - [Window Panel](./windowPanel.md)
 - [Window Manager Panel](./windowManagerPanel.md)
 - **Flash Panel** (`flashPanel`) — embeds a Flash game with an injected Archipelago bridge.
+- **SWF Recompiler** (`swfRecompilerPanel`) — recompiles a SWF to WebAssembly in the browser and runs it, driving SWFRecomp-CC's in-browser recompiler (the `swfRecompilerPanel/browser/` submodule) over its walk API. [User guide](../user/modules/swfRecompilerPanel.md).
 
 ## Procgen Substrate Panels
 
@@ -137,5 +138,6 @@ These live under `frontend/modules/` but are not frontend modules in the registr
 
 - **`shared/`** — git submodule of cross-module utilities and the procgen primitives ([Shared](./shared.md)); `git log`/`blame`/commits happen inside the submodule.
 - **`textAdventureEngine/`** — git submodule holding the Archipelago-naive text-adventure engine. See [Text Adventure Substrate](../developer/procgen/text-adventure.md).
+- **`swfRecompilerPanel/browser/`** — git submodule `PeerInfinity/swfrecomp-browser`: the built in-browser recompiler page (one release, from one SWFRecomp-CC commit, named in its `release.json`), which the SWF Recompiler panel drives. `scripts/procgen/check-seedling-source-pin.mjs` row (iv) holds its commit equal to the default Seedling build's recompiler.
 - **`journey-to-ascension/`**, **`jta-randomizer/`** — bundled game builds/forks consumed by their wrapper modules, not modules themselves.
 - **`testModule/`** — a minimal dynamically-loaded panel used as a test fixture.

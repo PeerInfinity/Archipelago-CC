@@ -1,0 +1,9 @@
+PASS: the switch ships OFF (`STRIKE_ETA_FLOOR`; this script turns it on for its ON solve only) — enabled false
+PASS: OFF: the solve refuses on the chaser bob@736,752, past the press kill — REFUSED at t2195 on bob@736,752
+PASS: ON: the solve refuses on the chaser bob@736,752, past the press kill — REFUSED at t1629 on bob@736,752
+PASS: ⛓⛓ ON's press kill moved: its landings on spinner@880,848 are not OFF's (the first, at the kill's start, is shared) — ON t501, t1583, t1616 · OFF t501, t2078, t2114
+PASS: ⛓⛓⛓ ON kills spinner@880,848 sooner than OFF, and the body leaves `spinnerBodies` — ON killed t1616 (removed t1629), OFF t2114
+PASS: ⛓ the committed hammer-sf-l40-strikefloor is what this script produces today — byte-identical
+## hammer-sf-l40-strikefloor: 1629 ticks; ⛓⛓⛓ SEEDLING HAMMER-PHASE SF — THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA (`STRIKE_ETA_FLOOR` ON). C1's staging A (P1's boot view: L40's south door (480,896), goal the chest (880,816)) with the ghost sword granted, the sword kept; `solveSegment`'s executed prefix with the switch ON (the solve then refuses on the chaser bob@736,752, as OFF does). Landings t501 spinner@880,848 hits 2 · t1583 spinner@880,848 hits 2 · t1616 spinner@880,848 hits 4 (kill); spinner@880,848 killed at t1616 and removed at t1629 (OFF: killed at t2114). Player hits t658 bob@736,752 · t747 bob@736,752 · t778 bob@736,752 (death). 1629 t. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs.
+
+all checks green

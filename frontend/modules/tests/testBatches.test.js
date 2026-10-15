@@ -110,6 +110,13 @@ describe('testBatches', () => {
         expect(batchNeedsWebgpu('tutorials-seedling')).toBe(true);
     });
 
+    it('tutorials-seedling-whole-game claims the whole-game walk row alone and asks for WebGPU (2026-10-15)', () => {
+        expect(categoryInBatch('Tutorial walks: seedling whole game', 'tutorials-seedling-whole-game')).toBe(true);
+        expect(categoryInBatch('Tutorial walks: seedling whole game', 'tutorials-seedling')).toBe(false);
+        expect(categoryInBatch('Tutorial walks: seedling', 'tutorials-seedling-whole-game')).toBe(false);
+        expect(batchNeedsWebgpu('tutorials-seedling-whole-game')).toBe(true);
+    });
+
     it('tutorials-tracker claims the tracker walk rows (split from tutorials, 2026-10-10)', () => {
         expect(categoryInBatch('Tutorial walks: tracker', 'tutorials-tracker')).toBe(true);
         expect(categoryInBatch('Tutorial walks: tracker', 'tutorials')).toBe(false);
@@ -125,7 +132,7 @@ describe('testBatches', () => {
 
     describe('manual vs on push', () => {
         it('the user\'s manual batches are manual (rulings 2026-09-27, 2026-10-09, 2026-10-10)', () => {
-            expect(listManualBatches()).toEqual(expect.arrayContaining(['bot-walks', 'noiz2sa', 'runner', 'tutorials', 'tutorials-procgen', 'tutorials-procgen-loops', 'tutorials-tracker', 'tutorials-seedling']));
+            expect(listManualBatches()).toEqual(expect.arrayContaining(['bot-walks', 'noiz2sa', 'runner', 'tutorials', 'tutorials-procgen', 'tutorials-procgen-loops', 'tutorials-tracker', 'tutorials-seedling', 'tutorials-seedling-whole-game']));
         });
 
         it('on push = every batch not marked manual, the default among them', () => {

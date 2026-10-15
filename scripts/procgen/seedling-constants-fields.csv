@@ -1266,6 +1266,11 @@ frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|9,rule,count,,LavaRunn
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|15,rule,magnitude,,LavaRunner die anim rate (KILLLOCK K2)
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|1,physics,magnitude,Enemies/LavaRunner.as:swimSpeed,LavaRunner swimSpeed on water/lava (KILLLOCK K2)
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|1.5,physics,magnitude,Enemies/LavaRunner.as:normalSpeed,LavaRunner normalSpeed (KILLLOCK K2)
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|-10,physics,magnitude,Enemies/Flyer.as:targetOffset,Flyer targetOffset.y: it hovers 10 px above the player and drops on (x; y+10) (LAPSECOST D2)
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|10,rule,magnitude,,Flyer die anim rate (LAPSECOST D2)
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|19,rule,count,,Flyer fall anim frames [4..22] (LAPSECOST D2)
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|30,rule,magnitude,,Flyer fall anim rate 2*animSpeed (LAPSECOST D2)
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|6,rule,count,Enemies/Flyer.as:droppedFrame,Flyer droppedFrame 10 as the fall anim's index 6 (LAPSECOST D2)
 frontend/modules/seedlingDemo/chasers.js|puncherPunchRect|puncherPunchRect,structural,,,Puncher.as direction codes (0 east 1 north 2 west 3 south) indexing the four punch boxes
 frontend/modules/seedlingDemo/chasers.js|applyFriction|applyFriction,structural,,,zero floor / zeroed components
 frontend/modules/seedlingDemo/chasers.js|sign|sign,physics,sign,,FP.sign

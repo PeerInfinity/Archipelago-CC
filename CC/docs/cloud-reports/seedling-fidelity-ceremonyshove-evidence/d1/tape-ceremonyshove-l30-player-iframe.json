@@ -1,0 +1,526 @@
+{
+ "game": "seedling",
+ "name": "ceremonyshove-l30-player-iframe",
+ "boot": {
+  "level": 30,
+  "x": 176,
+  "y": 48
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [
+  {
+   "level": 5,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 1,
+   "note": ""
+  },
+  {
+   "level": 10,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 0,
+   "tag": 1
+  },
+  {
+   "level": 19,
+   "tag": 1
+  },
+  {
+   "level": 12,
+   "tag": 4
+  },
+  {
+   "level": 12,
+   "tag": 5
+  },
+  {
+   "level": 31,
+   "tag": 0
+  }
+ ],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [
+   0,
+   1
+  ],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": false,
+   "hasWand": false,
+   "hasFireWand": false,
+   "canSwim": false,
+   "hasSpear": false,
+   "hasDarkShield": false,
+   "hasDarkSuit": false,
+   "hasDarkSword": false,
+   "hasFeather": false,
+   "hasTorch": false
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 3,
+  "first_use": false,
+  "extended": false,
+  "time": 8586,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick_count": 260,
+ "inputs": [
+  {
+   "key": "primary",
+   "from": 7,
+   "to": 8
+  },
+  {
+   "key": "primary",
+   "from": 9,
+   "to": 10
+  },
+  {
+   "key": "primary",
+   "from": 15,
+   "to": 16
+  },
+  {
+   "key": "down",
+   "from": 0,
+   "to": 22
+  },
+  {
+   "key": "primary",
+   "from": 21,
+   "to": 22
+  },
+  {
+   "key": "up",
+   "from": 22,
+   "to": 24
+  },
+  {
+   "key": "down",
+   "from": 24,
+   "to": 27
+  },
+  {
+   "key": "up",
+   "from": 27,
+   "to": 28
+  },
+  {
+   "key": "down",
+   "from": 28,
+   "to": 29
+  },
+  {
+   "key": "up",
+   "from": 29,
+   "to": 30
+  },
+  {
+   "key": "down",
+   "from": 30,
+   "to": 31
+  },
+  {
+   "key": "up",
+   "from": 31,
+   "to": 32
+  },
+  {
+   "key": "down",
+   "from": 32,
+   "to": 33
+  },
+  {
+   "key": "up",
+   "from": 36,
+   "to": 37
+  },
+  {
+   "key": "left",
+   "from": 0,
+   "to": 65
+  },
+  {
+   "key": "right",
+   "from": 65,
+   "to": 66
+  },
+  {
+   "key": "up",
+   "from": 68,
+   "to": 91
+  },
+  {
+   "key": "left",
+   "from": 91,
+   "to": 92
+  },
+  {
+   "key": "primary",
+   "from": 92,
+   "to": 93
+  },
+  {
+   "key": "right",
+   "from": 94,
+   "to": 95
+  },
+  {
+   "key": "up",
+   "from": 93,
+   "to": 102
+  },
+  {
+   "key": "primary",
+   "from": 101,
+   "to": 102
+  },
+  {
+   "key": "down",
+   "from": 102,
+   "to": 103
+  },
+  {
+   "key": "up",
+   "from": 103,
+   "to": 105
+  },
+  {
+   "key": "left",
+   "from": 104,
+   "to": 105
+  },
+  {
+   "key": "down",
+   "from": 105,
+   "to": 106
+  },
+  {
+   "key": "up",
+   "from": 106,
+   "to": 108
+  },
+  {
+   "key": "right",
+   "from": 108,
+   "to": 109
+  },
+  {
+   "key": "down",
+   "from": 110,
+   "to": 113
+  },
+  {
+   "key": "up",
+   "from": 114,
+   "to": 116
+  },
+  {
+   "key": "left",
+   "from": 120,
+   "to": 134
+  },
+  {
+   "key": "right",
+   "from": 143,
+   "to": 145
+  },
+  {
+   "key": "down",
+   "from": 148,
+   "to": 149
+  },
+  {
+   "key": "up",
+   "from": 151,
+   "to": 152
+  },
+  {
+   "key": "left",
+   "from": 155,
+   "to": 156
+  },
+  {
+   "key": "right",
+   "from": 156,
+   "to": 157
+  },
+  {
+   "key": "left",
+   "from": 157,
+   "to": 158
+  },
+  {
+   "key": "right",
+   "from": 158,
+   "to": 160
+  },
+  {
+   "key": "left",
+   "from": 160,
+   "to": 162
+  },
+  {
+   "key": "right",
+   "from": 162,
+   "to": 163
+  },
+  {
+   "key": "left",
+   "from": 163,
+   "to": 164
+  },
+  {
+   "key": "down",
+   "from": 155,
+   "to": 165
+  },
+  {
+   "key": "right",
+   "from": 164,
+   "to": 165
+  },
+  {
+   "key": "primary",
+   "from": 165,
+   "to": 166
+  },
+  {
+   "key": "primary",
+   "from": 174,
+   "to": 175
+  },
+  {
+   "key": "primary",
+   "from": 183,
+   "to": 184
+  },
+  {
+   "key": "primary",
+   "from": 192,
+   "to": 193
+  },
+  {
+   "key": "primary",
+   "from": 194,
+   "to": 195
+  },
+  {
+   "key": "right",
+   "from": 194,
+   "to": 197
+  },
+  {
+   "key": "primary",
+   "from": 196,
+   "to": 197
+  },
+  {
+   "key": "left",
+   "from": 197,
+   "to": 198
+  },
+  {
+   "key": "down",
+   "from": 194,
+   "to": 203
+  },
+  {
+   "key": "right",
+   "from": 198,
+   "to": 203
+  },
+  {
+   "key": "primary",
+   "from": 202,
+   "to": 203
+  },
+  {
+   "key": "up",
+   "from": 203,
+   "to": 204
+  },
+  {
+   "key": "left",
+   "from": 203,
+   "to": 205
+  },
+  {
+   "key": "right",
+   "from": 205,
+   "to": 206
+  },
+  {
+   "key": "left",
+   "from": 206,
+   "to": 208
+  },
+  {
+   "key": "right",
+   "from": 208,
+   "to": 210
+  },
+  {
+   "key": "down",
+   "from": 204,
+   "to": 211
+  },
+  {
+   "key": "up",
+   "from": 211,
+   "to": 212
+  },
+  {
+   "key": "left",
+   "from": 211,
+   "to": 213
+  },
+  {
+   "key": "down",
+   "from": 212,
+   "to": 215
+  },
+  {
+   "key": "right",
+   "from": 216,
+   "to": 217
+  },
+  {
+   "key": "up",
+   "from": 217,
+   "to": 219
+  },
+  {
+   "key": "primary",
+   "from": 220,
+   "to": 221
+  },
+  {
+   "key": "primary",
+   "from": 222,
+   "to": 223
+  },
+  {
+   "key": "primary",
+   "from": 228,
+   "to": 229
+  },
+  {
+   "key": "primary",
+   "from": 234,
+   "to": 235
+  },
+  {
+   "key": "primary",
+   "from": 240,
+   "to": 241
+  },
+  {
+   "key": "primary",
+   "from": 242,
+   "to": 243
+  },
+  {
+   "key": "right",
+   "from": 223,
+   "to": 249
+  },
+  {
+   "key": "primary",
+   "from": 248,
+   "to": 249
+  },
+  {
+   "key": "left",
+   "from": 249,
+   "to": 251
+  },
+  {
+   "key": "right",
+   "from": 251,
+   "to": 255
+  },
+  {
+   "key": "primary",
+   "from": 254,
+   "to": 255
+  },
+  {
+   "key": "left",
+   "from": 255,
+   "to": 256
+  },
+  {
+   "key": "right",
+   "from": 256,
+   "to": 257
+  },
+  {
+   "key": "left",
+   "from": 257,
+   "to": 258
+  },
+  {
+   "key": "right",
+   "from": 258,
+   "to": 259
+  },
+  {
+   "key": "left",
+   "from": 259,
+   "to": 260
+  },
+  {
+   "key": "down",
+   "from": 223,
+   "to": 260
+  }
+ ],
+ "tape_version": 8,
+ "description": "SEEDLING FIDELITY CEREMONYSHOVE D1 game witness, derived from strikelapse-l30-torch (413 t): the t61 and t141 presses removed and 8 ticks inserted at t134: the torch ceremony starts (t153) with the PLAYER inside its own i-frames (hitsTimer 18). Truncated to 260 t. A measurement, not a roster tape."
+}

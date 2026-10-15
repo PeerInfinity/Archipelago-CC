@@ -64,7 +64,7 @@
  * door exit never on a fall.
  */
 
-import { planWaypoints, livePerVisitOpts, driveStepHeld, BotDriverV2Error, isWalkableTile } from './botDriverV2.js';
+import { planWaypoints, livePerVisitOpts, driveStepHeld, waypointReached, BotDriverV2Error, isWalkableTile } from './botDriverV2.js';
 import { hasArrived } from './botDriverV1.js';
 import { TILE_SIZE } from './levelWorld.js';
 import { SOLVER_RETRY_AFTER_TICKS, SOLVER_RETRY_MAX } from './jsRuntimeSolver.js';
@@ -178,6 +178,32 @@ export function nearestPitAt(world, tiles, from) {
     return best;
 }
 
+/**
+ * The waypoint this tick drives toward: the first one not yet reached, else the last.
+ *
+ * ⛓ fidelity wave 16 (`CONTACT_FIDELITY.waypointSlide`) — "reached" is `botDriverV2.waypointReached`, the predicate
+ * `drive` and `solverBot.previewWalk` ask, with every waypoint but the plan's last `intermediate` (`drive`'s own
+ * `intermediate: !last`).
+ *
+ * ⚠ A SLIDE-REACH IS MOMENTARY, so it is REMEMBERED. On ice the player crosses an intermediate waypoint's ±tolerance
+ * box at speed and is outside it a tick later; a "first not reached" scan from index 0 would then hand that waypoint
+ * back and the walk would turn round to it — where `drive`, walking the plan in order, has gone on to the next. So a
+ * waypoint passed by the slide clause (reached, but not `hasArrived`) moves `floor` past it, and the scan starts at
+ * `floor` until the walk re-plans. A `hasArrived` reach does not move it — that scan is the one this walk always made.
+ * Switch OFF the slide clause never holds, so `floor` stays 0 and the choice is today's, unchanged.
+ *
+ * @returns {{wp: {x:number, y:number}, floor: number}}
+ */
+export function nextWaypoint(state, waypoints, floor = 0) {
+    const last = waypoints.length - 1;
+    for (let i = floor; i < last; i += 1) {
+        if (hasArrived(state, waypoints[i], WALK_TOLERANCE)) continue;
+        if (!waypointReached(state, waypoints[i], WALK_TOLERANCE, true)) return { wp: waypoints[i], floor };
+        floor = i + 1;
+    }
+    return { wp: waypoints[last], floor };
+}
+
 const centreOf = (rect) => ({ x: (rect.x + rect.right) / 2, y: (rect.y + rect.bottom) / 2 });
 const tileCentrePoint = ([tx, ty]) => ({ x: tx * TILE_SIZE + TILE_SIZE / 2, y: ty * TILE_SIZE + TILE_SIZE / 2 });
 
@@ -211,6 +237,9 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
     let playing = false;
     let stepBudget = 0;
     let waypoints = null;
+    /** ⛓ wave 16 — `nextWaypoint`'s slide floor, and the plan it belongs to (a new plan starts it at 0). */
+    let floor = 0;
+    let floorOf = null;
     let sincePlan = Infinity;
     let driven = 0;
     let plans = 0;
@@ -439,7 +468,9 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                 sincePlan = 0;
             }
             sincePlan += 1;
-            const wp = waypoints.find((w) => !hasArrived(run.state, w, WALK_TOLERANCE)) ?? waypoints[waypoints.length - 1];
+            if (waypoints !== floorOf) { floorOf = waypoints; floor = 0; }
+            let wp;
+            ({ wp, floor } = nextWaypoint(run.state, waypoints, floor));
             return driveStepHeld(run, wp, WALK_TOLERANCE);
         },
         /** What the tick did — a crossing completes an exit goal, a check a location one. */

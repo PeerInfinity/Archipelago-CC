@@ -65,7 +65,7 @@ import {
     DEFAULT_TOLERANCE, DEFAULT_MAX_TICKS_PER_TARGET, chooseHeld, hasArrived,
 } from './botDriverV1.js';
 import {
-    BotDriverV2Error, DEFAULT_LATTICE, coastThroughTransport, contactsAt, drive, findExit,
+    BotDriverV2Error, DEFAULT_LATTICE, coastThroughTransport, contactsAt, drive, findExit, waypointReached,
     holdOneAxis, isWalkableTile, nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, plansReach, runChest, runCollect,
     runHold,
     runShove, runDwell, SHOVE_STEP,
@@ -103,6 +103,8 @@ import {
     bridgedChaserTags, chaserBoxAt, chaserHasSword, killWindowTicks,
     // ⛓ STRIKELAPSE D1: a corpse's removal clock (`createCorpseClock`).
     deathTicks, removalTicksAfterHit,
+    // ⛓ CEREMONYSHOVE D3: the classes a shield's bump moves (`ceremonyBesideLiveBody`).
+    chaserKnocksBack,
     DESTROYING_TILE_TYPES,
     rect, rectsOverlap, TILE_SIZE,
     ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET, contactPricing, contactRect,
@@ -124,9 +126,13 @@ import {
     STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
     // ⛓⛓⛓ hammer-phase BW: the press kill's waits see the lobber's bombs (behind `PRESS_KILL_BOMBS`, OFF).
     PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
+    // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (behind `REFUGE_ETA_CUT`, ON by default since the user's flip; a behaviour switch, see its file).
+    REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
+    // ⛓⛓⛓ hammer-phase SF: the admissible strike floor's terrain read (`strikeEtaFloorOf`, behind `STRIKE_ETA_FLOOR`, OFF).
+    SLIDING_SPEED, hazardFlagsFor,
     applyFriction, applyInput, DEFAULT_FRICTION, sweepAxis,
     chestStanceBand,
     fireRect, INVENTORY_ITEM_IDS, auditFire,
@@ -4699,7 +4705,9 @@ export const ECONOMIES_ROSTER_WIDE = false;
  * slashing`'s outer gate refuses every press anyway.
  */
 export function strikePolicyFor(run, { dashPlan = null,
-    dashMode = DEFAULT_DASH_MODE } = {}) {
+    dashMode = DEFAULT_DASH_MODE,
+    // ⛓ LAPSECOST D1 — the walk's i-frame-lapse permission (`createStrikePolicy`); `true`: the switch decides.
+    iframeLapse = true } = {}) {
     assertDashMode(dashMode, 'strikePolicyFor');
     const hasSword = run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword || false;
     if (!hasSword) return null;
@@ -4737,8 +4745,20 @@ export function strikePolicyFor(run, { dashPlan = null,
          * byte-identical — on a run with no needs (no `solveSegment`, or `contactFidelity.bulbLive` OFF).
          */
         vetoBody: dropKillVetoFor(run),
+        ...(iframeLapse === false ? { iframeLapse: false } : {}),
     });
 }
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY LAPSECOST D1 — **THE WALK'S NARROW-POLICY CANDIDATE** (`CONTACT_FIDELITY.strikeIframeLapse`
+ * ON only; `walkTo`'s probe has the measurement). When the lapse-admitting walk probes dangerous, the same corridor
+ * is probed once with the pre-lapse admissions (`strikePolicyFor`'s `iframeLapse: false`) before the ladder climbs,
+ * and a clean answer is walked with that policy. ON by default UNDER the switch (the switch itself is OFF, so the
+ * roster is byte-identical); `SEEDLING_LAPSE_NARROW_RETRY=0` turns it off for a node A/B.
+ */
+export const LAPSE_NARROW_RETRY = {
+    enabled: globalThis.process?.env?.SEEDLING_LAPSE_NARROW_RETRY !== '0',
+};
 
 /**
  * ⛓ EXPORTED FOR ONE REASON, and it is the same reason `facingToward` and
@@ -5154,11 +5174,13 @@ export function previewWalk(run, wps, tolerance = 0,
     for (const wp of wps) {
         wpIndex += 1;
         let spent = 0;
-        while (!hasArrived(st, wp, tolerance)) {
+        // ⛓ fidelity SMALLGAPS D2: `drive`'s own predicate (`waypointReached`), the walk's last waypoint excepted.
+        const intermediate = wpIndex < wps.length - 1;
+        while (!waypointReached(st, wp, tolerance, intermediate)) {
             if (!stalled && tick - startTick === stall.at) {
                 stallHere();
                 if (truncated) break;
-                if (hasArrived(st, wp, tolerance)) break;
+                if (waypointReached(st, wp, tolerance, intermediate)) break;
             }
             if (spent >= DEFAULT_MAX_TICKS_PER_TARGET) {
                 truncated = {
@@ -5329,6 +5351,12 @@ export function previewWalk(run, wps, tolerance = 0,
              */
             if (held === null) {
                 sample.ceremony = true;
+                // ⛓ CEREMONYSHOVE D3: the player the freeze holds — its `v` and facing place the shield box whose bump
+                // the ceremony's dead frames deal (`ceremonyBesideLiveBody`, `ceremonyShove` ON).
+                if (CONTACT_FIDELITY.ceremonyShove) {
+                    sample.player = { x: st.x, y: st.y, vx: st.vx, vy: st.vy, direction: st.direction,
+                        slashing: slashState?.slashing === true };
+                }
                 break;
             }
             const combat = combatBefore(st, tick - 1, held, chaserBodies);
@@ -5556,7 +5584,9 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
      * tail's samples after the walk's, so a dash that arrives early is priced on the wait it arrives into; every
      * other number here (ticks, legs, the comparisons) reads the walk's own samples. `null` changes nothing.
      */
-    stand = null } = {}) {
+    stand = null,
+    /** ⛓ LAPSECOST D1 — the walk's i-frame-lapse permission, handed to every candidate's policy (`strikePolicyFor`). */
+    iframeLapse = true } = {}) {
     /**
      * ⛓⛓⛓ R9 SLICE 12i — **THE PASS READS ITS CANDIDATE SET, NEVER THE
      * CONSTANT**, and the set is the mode's own derivation.
@@ -5616,7 +5646,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
         return [...legs].map((n) => n ?? 0);
     };
     const previewFor = (dashPlan) => {
-        const strike = strikePolicyFor(run, { dashPlan, dashMode });
+        const strike = strikePolicyFor(run, { dashPlan, dashMode, iframeLapse });
         if (!stand) return { walk: previewWalk(run, wps, tolerance, { strike }), strike };
         const whole = previewWalk(run, wps, tolerance, { strike, standFor: stand.ticks, standKeys: stand.keys });
         const walk = { ...whole, samples: whole.samples.filter((sm) => sm.phase !== 'dwell'),
@@ -9424,8 +9454,16 @@ export function deriveRefuge(run, contacts, untilIndex) {
     let best = null;
     // ⛓ hammer-phase BW — the lobber's forecast, asked of each previewed refuge (`PRESS_KILL_BOMBS`, OFF)
     const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);
+    // ⛓ hammer-phase RE — the best-ETA cut (`REFUGE_ETA_CUT`, ON by default): a later candidate's preview stops once it cannot win
+    const cut = REFUGE_ETA_CUT.enabled;
     for (const c of clear.slice(0, REFUGE_CANDIDATES)) {
-        const walk = previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
+        const walk = cut && best !== null
+            ? previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE, { stopWhen: refugeEtaCut(best.eta) })
+            : previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
+        if (cut) {
+            REFUGE_ETA_CUT_COUNTS.previews += 1;
+            if (walk.truncated?.kind === 'stopped') REFUGE_ETA_CUT_COUNTS.cut += 1;
+        }
         if (walk.truncated) continue;
         const eta = walk.samples.length;
         if (bombs) {
@@ -9542,27 +9580,125 @@ function strikeStandBlast(run, walk, cell, until) {
  * ([[feedback_bounded_sweep_must_name_what_it_bounded]] — the truncation was
  * named, and what it truncated was not).
  *
- * ⇒ the candidates are pre-filtered by an ADMISSIBLE lower bound on the ETA
- * before the truncation runs. `applyInput` clamps EACH AXIS at `WALK_SPEED`,
- * so no walk can cover `max(|dx|, |dy|)` pixels in fewer than
- * `ceil(that / WALK_SPEED)` ticks — a bound the movement model cannot beat,
- * so a candidate it drops was never reachable and the truncation now spends
- * its forty previews on candidates that can be plans.
+ * ⇒ the candidates are pre-filtered by a lower bound on the ETA before the
+ * truncation runs (`minTicksBetween`), so that the forty previews go to
+ * candidates that can be plans.
+ *
+ * ⛔ HAMMER-PHASE SC/SF — THAT BOUND WAS MEANT TO BE ADMISSIBLE AND IS NOT.
+ * `applyInput` does not clamp an axis at `WALK_SPEED`: it ADDS `moveSpeed`
+ * while the axis is under it, so a walking axis runs at up to 2·`moveSpeed`
+ * (1.6 px/tick on ground, 2.0 on ice; the game's peak, measured, 1.584 /
+ * 1.595), and `hasArrived`'s tolerance makes a walk SHORTER. Measured (SC):
+ * 77 % of the arrived strike previews beat `ceil(cheb / WALK_SPEED)`, by up to
+ * 100 ticks, so the floor skips reachable strikes. The admissible floor and
+ * the measured ETA are `STRIKE_ETA_FLOOR` (OFF), below.
  */
 const STRIKE_CANDIDATES = 40;
 
 /**
- * ⛓ The fewest ticks the controller could possibly need to get from `from` to
- * `to` — `max(|dx|, |dy|) / WALK_SPEED`, because both axes accelerate
- * independently and each is clamped at `moveSpeed` (`applyInput`).
+ * ⛓ The strike scan's ETA floor with `STRIKE_ETA_FLOOR` OFF:
+ * `ceil(max(|dx|, |dy|) / WALK_SPEED)`.
  *
- * ⚠ ADMISSIBLE, NOT ACCURATE. It ignores the acceleration ramp, the geometry
- * and the tolerance, all of which can only make the real walk LONGER — which
- * is the direction a pre-filter has to err in. `previewWalk` is still what
- * decides; this only stops the scan spending its budget on the impossible.
+ * ⛔ NOT A LOWER BOUND (hammer-phase SC, measured). It was written as one, on
+ * two claims that are both false: that `applyInput` clamps each axis at
+ * `moveSpeed` (it adds `moveSpeed` under that threshold, so an axis reaches
+ * nearly 2·`moveSpeed`), and that the tolerance can only make the real walk
+ * longer (`hasArrived` accepts within it on both axes, so it makes the walk
+ * SHORTER). A walk can arrive up to ~half this many ticks. It stays the OFF
+ * floor, byte for byte; `strikeEtaFloorOf` is the admissible one.
+ * `previewWalk` is still what decides.
  */
 function minTicksBetween(from, to) {
     return Math.ceil(Math.max(Math.abs(to.x - from.x), Math.abs(to.y - from.y)) / WALK_SPEED);
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE SF — **AN ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA** (`STRIKE_ETA_FLOOR`, OFF).
+ *
+ * SC measured `minTicksBetween` inadmissible (its docblock), and measured that swapping in an admissible floor ALONE
+ * is not the fix: the looser floor lets the bounded pass's forty fill with pairs at cells whose real walk is too slow
+ * (R8 slice 8's trap, one level up), and 470 derivations refused where the base found a strike. ON, two changes:
+ *   1. THE FLOOR is `strikeEtaFloorOf`: `ceil(max(0, cheb − DEFAULT_TOLERANCE) / V)`, `V` the per-axis speed cap;
+ *   2. THE MEASURED ETA, INTERLEAVED WITH THE COLLECTION. The bounded pass previews a cell the first time one of its
+ *      pairs is an opportunity (`walkTo`, the cache the continuation already uses), and a pair whose cell's walk is
+ *      truncated, transit-unsafe or later than its aim tick (`known.eta > i − 1`, the continuation's test) is
+ *      skipped: it never takes one of the forty. The forty are still forty PAIRS (`STRIKE_CANDIDATES`); the previews
+ *      are not capped, and each cell is previewed at most once per derivation.
+ * Both shapes SC named were built and measured over SC's census (the SF report, D1/D2): neither loses a strike OFF
+ * finds. The other one, the forty counted in DISTINCT CELLS PREVIEWED (the continuation's budget), finds more strikes
+ * where OFF refuses, but it scans to the horizon whenever fewer than forty cells are ever opportunities: inside the
+ * derivations it cost 30× OFF on the L18 sweep (2,064 s against 69 s; this shape 169 s). This shape is the one built.
+ *
+ * `strikeScanBox` reads the same `floor` map, so its `unreachableAt` counts the floor's skips under whichever floor is
+ * live; the measured-ETA skips are NOT floor skips and are counted apart (`etaSkipped` on a refusal), so `unreachable`
+ * keeps its meaning — the pairs the floor dropped — ON and OFF.
+ *
+ * ⛓ THE SWITCH — `STRIKE_ETA_FLOOR`, OFF (`SEEDLING_STRIKE_ETA_FLOOR=1` opts a process in, or
+ * `withStrikeEtaFloor(true, fn)`). OFF, `deriveStrike` computes exactly what it computed before: the same floor, the
+ * same calls in the same order. Its flip is a TAPE MOVE (it changes chosen strikes) and the user's call.
+ * It lives here, beside the strike's other switches, and not in `pressKillCost.js`: nothing in `levelRun.js`'s import
+ * closure reads it (the two readers, `deriveStrike` and `strikeScanBox`'s floor, are this file's), so the door
+ * (`solverView.js`) does not need it.
+ */
+export const STRIKE_ETA_FLOOR = {
+    enabled: globalThis.process?.env?.SEEDLING_STRIKE_ETA_FLOOR === '1',
+};
+export const STRIKE_ETA_FLOOR_DEFAULT = false;
+
+/** Run `fn` with `STRIKE_ETA_FLOOR` set to `enabled`, restoring the previous value (also on a throw). */
+export function withStrikeEtaFloor(enabled, fn) {
+    return withSwitch(STRIKE_ETA_FLOOR, enabled, fn);
+}
+
+/**
+ * ⛓ hammer-phase SF — what the room's terrain lets a walk do faster than ground walking, read off the world's
+ * walkable tiles (tile writes included) through `hazardFlagsFor`, the one transcription of the state setter's flags:
+ *   · `ice` — a walkable ice tile anywhere in the room. On ice `moveSpeed` is `SLIDING_SPEED` (1), so the axis cap
+ *     is 2·`SLIDING_SPEED`. A tile ANYWHERE, not only on the walk's corridor: a superset of "the walk can reach ice"
+ *     is admissible, and the corridor is not known before the preview;
+ *   · `waterfall` — a walkable waterfall tile. Its push (`WATERFALL_ACCELERATION`, `postInput`) adds to `v.y` on top
+ *     of the threshold add, past any cap, so the vertical axis bounds nothing there.
+ * Memoised per world object (a tile write re-wraps the world).
+ */
+const STRIKE_TERRAIN = new WeakMap();
+
+function strikeTerrainOf(world) {
+    let out = world ? STRIKE_TERRAIN.get(world) : undefined;
+    if (out !== undefined) return out;
+    out = { ice: false, waterfall: false };
+    for (const t of world?.walkableTiles ?? []) {
+        const f = hazardFlagsFor(t.t);
+        if (f.onIce) out.ice = true;
+        if (f.onWaterfall) out.waterfall = true;
+    }
+    if (world) STRIKE_TERRAIN.set(world, out);
+    return out;
+}
+
+/**
+ * ⛓ hammer-phase SF — THE ADMISSIBLE ETA FLOOR from the run's state now, as `(cell) => ticks`:
+ *
+ *     ceil( max(0, reach − DEFAULT_TOLERANCE) / V ),   reach = max(|dx|, |dy|),   V = max(cap, |vx|, |vy|)
+ *
+ *   · `cap` = 2·`WALK_SPEED` (1.6), or 2·`SLIDING_SPEED` (2.0) in a room with ice, or with the sticky `onIce` flag
+ *     set now. `applyInput` adds `moveSpeed` only while the axis is under `moveSpeed`, and friction only shortens
+ *     the vector, so an axis that starts at or under the cap stays under it (water's 0.45 + 0.25 burst and the
+ *     stairs' 0.4 are under ground's 0.8);
+ *   · `|vx|`, `|vy|` — a knocked-back start: above the cap nothing adds and friction only lowers the speed;
+ *   · `DEFAULT_TOLERANCE` — `hasArrived` accepts within it on BOTH axes, so a walk need only cover `reach − 1`;
+ *   · a room with a waterfall bounds the horizontal axis only (`reach = |dx|`).
+ * MEASURED (SC, and this slice's census): no arrived preview beats it, and it is tight (least `ETA − floor` = 0).
+ */
+export function strikeEtaFloorOf(run) {
+    const from = run.state;
+    const { ice, waterfall } = strikeTerrainOf(run.world);
+    const cap = 2 * (ice || from.hazard?.onIce ? SLIDING_SPEED : WALK_SPEED);
+    const v = Math.max(cap, Math.abs(from.vx ?? 0), Math.abs(from.vy ?? 0));
+    return (to) => {
+        const dx = Math.abs(to.x - from.x);
+        const reach = waterfall ? dx : Math.max(dx, Math.abs(to.y - from.y));
+        return Math.ceil(Math.max(0, reach - DEFAULT_TOLERANCE) / v);
+    };
 }
 
 /**
@@ -9771,8 +9907,11 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
     const lines = PRESS_KILL_COST.enabled ? new Map() : null;
     // ⛓ hammer-phase P2: the lines earlier derivations asked (`carriedLineBook`, resolved at the first line), or none OFF
     const carried = STRIKE_SCAN_COST.enabled ? { run, book: undefined } : null;
-    // ⛓ The admissible ETA floor, once per cell — see `minTicksBetween`.
-    const floor = new Map(cells.map((c) => [c, minTicksBetween(run.state, c)]));
+    // ⛓ hammer-phase SF: the admissible floor and the measured ETA (`STRIKE_ETA_FLOOR`, OFF ⇒ neither)
+    const measured = STRIKE_ETA_FLOOR.enabled;
+    // ⛓ The ETA floor, once per cell — `minTicksBetween` OFF, `strikeEtaFloorOf` ON (see both).
+    const floorOf = measured ? strikeEtaFloorOf(run) : null;
+    const floor = new Map(cells.map((c) => [c, floorOf === null ? minTicksBetween(run.state, c) : floorOf(c)]));
     // ⛓ hammer-phase P2: the cells in reach of a body's rect, in the list's order (`strikeScanBox`), or none OFF
     const near = STRIKE_SCAN_COST.enabled ? strikeScanBox(cells, floor, press.reach) : null;
     const opportunities = [];
@@ -9844,6 +9983,55 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         return null;
     };
     /**
+     * ⛓ U4b D3 — WHAT A CELL'S WALK SAYS DOES NOT DEPEND ON THE TICK. The walk
+     * is `previewWalk` from where the player is NOW to the cell, and its
+     * transit verdict is asked at each sample's own ETA — neither reads `i`.
+     * So one walk per cell answers every opportunity at that cell, and the
+     * continuation below spends its budget on CELLS rather than on the same
+     * cell at forty consecutive ticks. (Declared above the bounded pass, which
+     * reads it with `STRIKE_ETA_FLOOR` ON; OFF that pass never calls it.)
+     */
+    const walks = new Map();
+    const walkTo = (cell) => {
+        if (walks.has(cell)) return walks.get(cell);
+        const walk = previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE);
+        let unsafe = null;
+        if (!walk.truncated) {
+            for (const sm of walk.samples) {
+                const d = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
+                    sm.arrows, sm.chasers, sm.spits ?? null, sm.grenades ?? null);
+                if (d.danger) { unsafe = { sm, d }; break; }
+            }
+        }
+        const out = { walk, eta: walk.samples.length, unsafe };
+        walks.set(cell, out);
+        return out;
+    };
+    /**
+     * ⛓ hammer-phase SF — THE MEASURED ETA (`STRIKE_ETA_FLOOR` ON only): a cell's walk, once previewed, says whether
+     * a pair at tick `i` there can be a plan — the continuation's own test, read for the bounded pass too.
+     */
+    const walkRefuses = (known, i) => known.walk.truncated || known.unsafe !== null || known.eta > i - 1;
+    /** ⛓ hammer-phase SF — the distinct cells the bounded pass previewed, and the pairs the measured ETA skipped. */
+    let scanned = 0;
+    let etaSkipped = 0;
+    /**
+     * ⛓ hammer-phase SF — ONE (cell, tick) PAIR OF THE BOUNDED PASS WITH THE MEASURED ETA: `true` keeps it as one of
+     * the forty, `false` skips it. The floor has already admitted the pair; a cell whose walk is known is asked
+     * nothing more (its walk refuses the pair or it does not); an unknown cell is asked `opportunityAt` first and
+     * previewed only if the pair is an opportunity, so a cell is previewed at most once per derivation.
+     */
+    const measuredPair = (i, c, mine) => {
+        const known = walks.get(c);
+        if (known !== undefined && walkRefuses(known, i)) { etaSkipped += 1; return false; }
+        if (!opportunityAt(i, c, mine)) return false;
+        if (known === undefined) {
+            scanned += 1;
+            if (walkRefuses(walkTo(c), i)) { etaSkipped += 1; return false; }
+        }
+        return true;
+    };
+    /**
      * ⛓ hammer-phase BW — THE STAND'S BOMB (`PRESS_KILL_BOMBS`, OFF ⇒ never asked). Once per cell per derivation (the
      * walk does not depend on the tick, U4b's note on `walkTo`): the first blast the lobber's forecast lands on a
      * player who walks there and stands, to the horizon's train end. A window whose train ends at or after it is the
@@ -9863,48 +10051,26 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
         const inReach = near === null ? null : near.cellsFor(mine);
+        // ⛓ hammer-phase SF: ON, a pair the measured ETA refuses never takes one of the forty (`measuredPair`)
+        const keep = measured ? measuredPair : opportunityAt;
         if (inReach === null) {
             for (const c of cells) {
                 // ⛔ BEFORE the truncation, never after: a candidate the movement
                 // model provably cannot reach must not consume one of the forty.
                 if (i - 1 < floor.get(c)) { unreachable += 1; continue; }
-                if (opportunityAt(i, c, mine)) opportunities.push({ i, cell: c });
+                if (keep(i, c, mine)) opportunities.push({ i, cell: c });
             }
         } else {
             // ⛓ hammer-phase P2: the floor's skips are every cell's, counted whole; only the box is asked
             unreachable += near.unreachableAt(i);
             for (const c of inReach) {
                 if (i - 1 < floor.get(c)) continue;
-                if (opportunityAt(i, c, mine)) opportunities.push({ i, cell: c });
+                if (keep(i, c, mine)) opportunities.push({ i, cell: c });
             }
         }
         if (opportunities.length >= STRIKE_CANDIDATES) { stoppedAt = i; break; }
     }
     const rejected = [];
-    /**
-     * ⛓ U4b D3 — WHAT A CELL'S WALK SAYS DOES NOT DEPEND ON THE TICK. The walk
-     * is `previewWalk` from where the player is NOW to the cell, and its
-     * transit verdict is asked at each sample's own ETA — neither reads `i`.
-     * So one walk per cell answers every opportunity at that cell, and the
-     * continuation below spends its budget on CELLS rather than on the same
-     * cell at forty consecutive ticks.
-     */
-    const walks = new Map();
-    const walkTo = (cell) => {
-        if (walks.has(cell)) return walks.get(cell);
-        const walk = previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE);
-        let unsafe = null;
-        if (!walk.truncated) {
-            for (const sm of walk.samples) {
-                const d = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
-                    sm.arrows, sm.chasers, sm.spits ?? null, sm.grenades ?? null);
-                if (d.danger) { unsafe = { sm, d }; break; }
-            }
-        }
-        const out = { walk, eta: walk.samples.length, unsafe };
-        walks.set(cell, out);
-        return out;
-    };
     for (const o of opportunities) {
         // `previewWalk` returns the samples `drive` would spend getting there.
         const { walk, unsafe } = walkTo(o.cell);
@@ -10061,6 +10227,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         // room has no strike" from "the scan ran out of budget".
         unreachable,
         truncated: opportunities.length >= STRIKE_CANDIDATES,
+        ...(measured ? { scanned, etaSkipped } : {}),
         horizon,
         ...(HAMMER_ESCAPE.enabled ? { escaped } : {}),
         ...(bombs ? { bombed } : {}),
@@ -10243,7 +10410,10 @@ function stepToward(run, aim, intended) {
 
 /**
  * ⛔ THE LOOKAHEAD, NAMED RATHER THAN GENEROUS. A `Spinner` moves one pixel a
- * tick and the player's own top speed is a little over two, so four ticks is
+ * tick and the player's own top speed is a little over two along a diagonal
+ * (each axis under 2·`WALK_SPEED` = 1.6 on ground, so the vector under
+ * 1.6·√2 ≈ 2.26; hammer-phase SC measured the game's per-axis peak at 1.595 —
+ * per axis it is NOT over two), so four ticks is
  * the span over which a step can still change which side of a body the player
  * ends up on — deeper buys a better dodge at 5x the previews per tick, and
  * shallower is what walked into the corner.
@@ -14992,6 +15162,17 @@ export function collectStandWalk(run, resolved, stance) {
  * `shieldBump` through the lump (from the measurement above) and then retires this refusal. Keep `collectStandWalk`.
  */
 export function ceremonyBesideLiveBody(run, sample, corpses = []) {
+    // ⛓ CEREMONYSHOVE D3 (`CONTACT_FIDELITY.ceremonyShove` ON): the run STEPS this ceremony's dead frames — the shove
+    // on every frame, the bodies' i-frames and fades, the player's own i-frame (`levelRun.stepCeremonyLumpNow`,
+    // game-witnessed at 0 on four p4f witnesses) — so the drive carries their outcome, and the walk after the
+    // ceremony is planned and probed from the state the shove left (a touched body leaves the freeze at ~750 px/tick
+    // and pins against the first wall). Nothing is left to refuse at the ceremony's start. A ceremony the run does
+    // NOT step (no text: it finishes on its start tick) keeps the refusal below.
+    if (CONTACT_FIDELITY.ceremonyShove) {
+        const box = playerBoxAt(sample.x, sample.y);
+        const p = (run.world?.pickups ?? []).find((q) => q.rect && rectsOverlap(box, q.rect));
+        if (p && run.ceremonyStepsDeadFrames?.(p)) return ceremonyAftermathDanger(run, sample);
+    }
     const present = [...(sample.chasers ?? []).filter((b) => !b.removed), ...corpses];
     const dead = (b) => b.destroy || b.dying || b.dyingAt !== undefined;
     // ⛔ `assertNoCeremonyBesideLiveChaser`'s own set, room-wide as it is: the run THROWS on these.
@@ -15007,6 +15188,39 @@ export function ceremonyBesideLiveBody(run, sample, corpses = []) {
             .map((x) => ({ ...x, why: `the collect's ceremony would start here beside a LIVE body (${x.why}) — the `
                 + 'freeze\'s unstepped frames shove it (`Player.shieldBump`) and park it for the next walk' })));
     }
+    return { danger: sources.length > 0, sources };
+}
+
+/**
+ * ⛓⛓ CEREMONYSHOVE D3 (`ceremonyShove` ON, a ceremony the run steps) — **THE PRICED QUESTION: WHERE THE CEREMONY
+ * LEAVES EACH BODY.** The dead frames run in the drive (`levelRun.stepCeremonyLumpNow`, game-witnessed at 0), so what
+ * the walk after the ceremony meets is decided by them, body by body, and the next walk starts from that:
+ *
+ *   · a corpse (`destroy`, `dying`, a staged `dyingAt`) finishes its fade inside the 149-frame lump (`Mobile.death`:
+ *     ten 0.1 steps) — gone, not asked;
+ *   · a live body the moving shield box touches (`Player.shieldBump`; a class whose `knockback` moves it) takes
+ *     `shieldForce` on every dead frame and leaves the freeze at ~750 px/tick, pinned on its first wall (measured,
+ *     `ceremonyshove-l30-touch`: (77.8, 72.6) → (91.8, 281.6)) — not beside the player, not asked;
+ *   · every other body — live, or i-framed (its i-frames drain to 0 in the lump) — stays where the freeze holds it,
+ *     and the walk after the ceremony begins beside it: the untimed WAIT question (`chaserDanger` at horizon 0) of
+ *     it as a live, un-i-framed body.
+ *
+ * The sample's `player` (the tail's ceremony sample) places the shield box; without one, no body counts as shoved —
+ * the side to err on.
+ */
+function ceremonyAftermathDanger(run, sample) {
+    const pl = sample.player ?? null;
+    const shield = run.progress?.('inventory')?.hasShield === true;
+    const dead = (b) => b.destroy || b.dying || b.dyingAt !== undefined;
+    const shoved = (b) => pl !== null && shield && chaserKnocksBack(b.tag)
+        && shieldBumpTouches(pl, pl.slashing, chaserBoxAt(b.tag, b.x, b.y), pl);
+    const parked = (sample.chasers ?? []).filter((b) => !b.removed && !dead(b) && !shoved(b))
+        .map((b) => ({ ...b, hitsTimer: 0 }));
+    if (parked.length === 0) return { danger: false, sources: [] };
+    const sources = chaserDanger(run, playerBoxAt(sample.x, sample.y), 0, parked)
+        .map((x) => ({ ...x, why: `the collect's ceremony would leave ${x.id ?? 'a body'} parked beside the player `
+            + `(${x.why}) — the freeze holds it there and the shield box does not reach it, so the walk after the `
+            + 'ceremony begins inside its reach' }));
     return { danger: sources.length > 0, sources };
 }
 
@@ -16333,6 +16547,52 @@ export const KEYLOCK_WAIT_PRICED = {
 /** Run `fn` with `KEYLOCK_WAIT_PRICED` set to `enabled`, restoring the previous value. */
 export function withKeylockWaitPriced(enabled, fn) {
     return withSwitch(KEYLOCK_WAIT_PRICED, enabled, fn);
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE DD — **A PRESS KILL WHOSE TARGET DIED ON THE WALK IS A KILL DONE**
+ * (`PRESS_KILL_DONE_ON_WALK`, ON by default since the user's flip).
+ *
+ * The kill rung's chaser arm in `solveSegmentUnder` (`what` `-> kill (<id>) by press`) walks to the stance
+ * `deriveKillByChaser` priced and then dwells (`runDwell`) until the body has left `strikeBodies`. The walk carries
+ * the one strike policy, so its own presses can kill the body before the stance is reached; the dwell's `until` is
+ * then true before a tick is spent, and `runDwell` refuses by design (*"waiting for it proves nothing"*). MEASURED:
+ * survey step 50 (L30 Torchpickup → L32) under `strikeIframeLapse` + `ceremonyShove`: the walk's sword press (pressed
+ * t169, fired t170, `killed: true`) kills `bobsoldier@48,80`, and the dwell refuses at t192.
+ *
+ * ON: when the target has left `strikeBodies` at the dwell's start AND the run's press ledger
+ * (`run.ledger('presses')`) holds a press appended during this arm's walk, on this level, that KILLED it
+ * (`killedOnWalk`), the arm records the kill as done (the record carries `killedOnWalk`: the killing press's tick,
+ * fire tick, weapon and direction; `ticks: 0`) and returns to the ladder exactly as a finished dwell does. Any other
+ * "already true" (gone, but no press of this walk killed it) still reaches `runDwell` and is still its refusal.
+ * `runDwell` itself is untouched: its guard is real for every other caller. OFF the arm is byte-for-byte the BEFORE
+ * one (nothing is read: the ledger index is taken only ON). ON by default since the user's flip (2026-10-14: *"Turn it
+ * ON"*): `SEEDLING_PRESS_KILL_DONE_ON_WALK=0` opts a process out; `withPressKillDoneOnWalk` for a test.
+ */
+export const PRESS_KILL_DONE_ON_WALK = {
+    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_DONE_ON_WALK !== '0',
+};
+export const PRESS_KILL_DONE_ON_WALK_DEFAULT = true;
+
+/** Run `fn` with `PRESS_KILL_DONE_ON_WALK` set to `enabled`, restoring the previous value (also on a throw). */
+export function withPressKillDoneOnWalk(enabled, fn) {
+    return withSwitch(PRESS_KILL_DONE_ON_WALK, enabled, fn);
+}
+
+/**
+ * The press of THIS walk that killed `id`: among the `run.ledger('presses')` rows appended since index `from` (the
+ * ledger's length when the walk began) and pressed on the run's current level, the last whose hit on `id` says
+ * `killed`, as `{pressedAt, firedAt, weapon, direction}`; `null` when no press of the walk killed it.
+ *
+ * ⛔ THE WINDOW IS THE LEDGER'S INDEX, NOT A TICK. MEASURED on the L40 table (legs 378 / 381, `apitem (64,144)`): an
+ * arm whose walk began at t0 saw a `killed` ghost-sword press on `puncher@816,128` fired at t104 while that body was
+ * still in `strikeBodies` at t133 — so a tick window can hold a kill that is not this body's death on this walk. The
+ * level is matched too: a body id is per level, and a ledger spans the run's levels.
+ */
+export function killedOnWalk(run, id, from) {
+    const kill = (run.ledger('presses') ?? []).slice(from).filter((p) => p.level === run.level
+        && p.hits.some((h) => h.id === id && h.killed === true)).at(-1);
+    return kill ? { pressedAt: kill.t, firedAt: kill.fired, weapon: kill.weapon, direction: kill.direction } : null;
 }
 
 export function deriveKillByChaser(run, body, contacts,
@@ -17780,6 +18040,8 @@ function solveSegmentUnder({
     const dashWalks = [];
     /** ⛓ FRONTIER3 — the walks planned on `FINE_LATTICE` after the frontier refused. */
     const fineLatticeWalks = [];
+    /** ⛓ LAPSECOST D1 — the walks the narrow strike policy certified (`LAPSE_NARROW_RETRY`; empty with the lapse OFF). */
+    const lapseNarrowWalks = [];
     /** ⛓ FORCEDHIT D2 — one row per crossing the forced-hit rung billed (`FORCED_HITS`; empty with it OFF). */
     const forcedHits = [];
     /** ⛓ hammer-phase B3 — the tape tick of every dash `dashesPressed` counted, so a rewind can un-count the tail. */
@@ -18566,7 +18828,8 @@ function solveSegmentUnder({
         return null;
     };
 
-    const probeCorridor = (wps, except = null, { axisAligned = false, walkCheck = false, stand = null } = {}) => {
+    const probeCorridor = (wps, except = null, { axisAligned = false, walkCheck = false, stand = null,
+        iframeLapse = true, requireArrival = false } = {}) => {
         // ⛔ THE SAME TOLERANCE `drive` WILL USE. A preview that arrived on a
         // different criterion would spend different ticks, and the ETAs are
         // the whole product.
@@ -18591,12 +18854,18 @@ function solveSegmentUnder({
         const tail = stand ? { standFor: stand.ticks, standKeys: stand.keys } : {};
         const walk = previewWalk(run, wps, tolerance, axisAligned
             ? { strike: null, axisAligned, ...tail }
-            : { strike: strikePolicyFor(run, { dashMode }), ...tail });
+            : { strike: strikePolicyFor(run, { dashMode, iframeLapse }), ...tail });
         const hit = probeSamples(walk.samples, except, { walkCheck });
         if (hit) {
             return { ...hit, eta: hit.tick - walk.startTick,
                 ...(stand && walk.samples.find((sm) => sm.tick === hit.tick)?.phase === 'dwell'
                     ? { waiting: true } : {}) };
+        }
+        // ⛓ LAPSECOST D1 — a CANDIDATE corridor (`requireArrival`, the narrow policy's) is clean only if its preview
+        // ARRIVES: a stall or a wall is a walk the drive would refute (leg 265: the narrow walk stalls 400 t on L22's
+        // rocks and the re-plan refuses, where the ladder's corridor crosses). A crossing is an arrival.
+        if (requireArrival && walk.truncated && walk.truncated.kind !== 'crossed') {
+            return { danger: false, truncated: walk.truncated, sources: [] };
         }
         /**
          * ⛔ THE NON-VACUITY CHECK RUNS ON THE CLEAN PATH, not only on the
@@ -20129,12 +20398,29 @@ function solveSegmentUnder({
                      * names, and spending a re-plan on it would put an
                      * ARRIVED row in the trace for a walk nobody took.
                      */
+                    // ⛓ DD: the press ledger's length as the walk begins (read only when the switch is ON)
+                    const walkFrom = PRESS_KILL_DONE_ON_WALK.enabled ? (run.ledger('presses') ?? []).length : 0;
                     if (hunt.stance.x !== run.state.x || hunt.stance.y !== run.state.y) {
                         walkTo(goal, hunt.stance, {
                             what: `${what} -> kill (${hunted.id}) stance`,
                             // ⛓ BOBSOLDIER2 D2a: the walk `deriveKillByChaser` previewed (no dash plan).
                             ...(KILL_STANCE_AS_FORECAST.enabled ? { undashed: true } : {}),
                         });
+                    }
+                    /**
+                     * ⛓⛓⛓ HAMMER-PHASE DD (`PRESS_KILL_DONE_ON_WALK`, ON by default) — the walk's own presses killed the
+                     * body: the kill is done, said by the press ledger, and the ladder re-plans as after a dwell.
+                     */
+                    const walkKill = PRESS_KILL_DONE_ON_WALK.enabled
+                        && !(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)
+                        ? killedOnWalk(run, hunted.id, walkFrom) : null;
+                    if (walkKill) {
+                        records.push({
+                            goal: goal.kind, strategy: 'kill', arm: 'chaser',
+                            target: hunted.id, stance: hunt.stance, clears: hunt.clears,
+                            kind: 'dwell', ticks: 0, bound: hunt.ticks, why: hunt.why, killedOnWalk: walkKill,
+                        });
+                        return { escalations };
                     }
                     /**
                      * ⛔ THE BOUND IS THE FORECAST'S OWN MEASUREMENT, plus the
@@ -20214,6 +20500,52 @@ function solveSegmentUnder({
         let lastWhy = killWhy;
         let lastOption = 'kill';
         let lastBound;
+        /**
+         * ⛓⛓ SEEDLING FIDELITY LAPSECOST D1 — rung 4½: NARROW, the same corridor walked with the PRE-LAPSE strike
+         * admissions (`strikePolicyFor`'s `iframeLapse: false`). CONDITIONAL: present only with
+         * `CONTACT_FIDELITY.strikeIframeLapse` ON (and `LAPSE_NARROW_RETRY`) on a corridor the walk planned and not
+         * axis-aligned; OFF it is absent — no row, the refusal word for word the BEFORE one.
+         *
+         * The lapse WIDENS the walk's admissions, and the wider walk is a different walk: every admitted press costs
+         * an aim tick and a press tick of movement, and a press landing one tick after the body's own contact re-arms
+         * (`Enemy.update` steps above the player) defends nothing. MEASURED on L40 (sweep legs `level_40__r23c29 <- …
+         * -> exit:out_pit_*`, 11 keys, CI ON failed ×12 twice): the walk's lapse presses at t247 (`puncher@128,624`,
+         * lands nothing) and t507 (`bob@208,448`, kills at t512, its timer lapsed against the player at t511) leave the
+         * player beside a re-armed bob; AVOID / TIME / BAIT / KILL refuse cheaply and DETOUR's L40 via lattice spends
+         * the whole page budget (2,542 of 2,562 asks at 2,560). The same corridor walked narrow probes clean: OFF's
+         * plan, key for key.
+         *
+         * ⛔ ABOVE DETOUR AND BELOW KILL, and that is measured too: as a pre-ladder candidate it shadowed the cheap
+         * rungs (leg 265, L22: ON's KILL/AVOID corridor crosses; the narrow walk is OFF's, whose drive takes three
+         * wallflyer hits the preview never priced and stalls). Certified as `probeCorridor` certifies, and only if
+         * its preview ARRIVES (`requireArrival`). The caller walks it with that permission — dash candidates and
+         * drive alike (⚖ ruling 30(c)).
+         */
+        // ⛔ AND ONLY WHERE THE WALK STRIKES AT ALL: with no strike policy (no sword, no strike body —
+        // `strikePolicyFor` is null) the narrow walk IS the walk, and asking it again only renames the rung DETOUR
+        // escalates from (measured under the flip: fidelity L14's swordless arrival).
+        if (Array.isArray(corridor) && corridor.length > 0 && !axisAligned
+            && CONTACT_FIDELITY.strikeIframeLapse && LAPSE_NARROW_RETRY.enabled
+            && strikePolicyFor(run, { dashMode }) !== null) {
+            if (activeProgress !== null) progressRung('narrow');
+            const killRefused = { rung: 'kill', why: killWhy };
+            const again = probeCorridor(corridor, dangerExcept, { axisAligned, walkCheck: true,
+                ...(stand ? { stand } : {}), iframeLapse: false, requireArrival: true });
+            if (!again) {
+                rowFor('narrow', killRefused, { waypoints: corridor.length });
+                lapseNarrowWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
+                    hit: { tick: hit.tick, x: hit.x, y: hit.y, sources: (hit.sources ?? []).map((x) => x.id ?? x.kind) } });
+                return { wps: corridor, escalations, narrow: true };
+            }
+            const narrowWhy = again.truncated
+                ? `the corridor walked with the pre-lapse strike admissions does not ARRIVE (${again.truncated.kind}: `
+                    + `${again.truncated.why ?? '-'})`
+                : `the corridor walked with the pre-lapse strike admissions is dangerous too — ${reasonsOf(again)} at `
+                    + `(${again.x.toFixed(1)},${again.y.toFixed(1)})`;
+            rowFor('narrow', killRefused);
+            lastWhy = narrowWhy;
+            lastOption = 'narrow';
+        }
         if (hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser')) {
             if (activeProgress !== null) progressRung('detour');
             const detour = deriveChaserDetour(run, {
@@ -20236,7 +20568,8 @@ function solveSegmentUnder({
                         truncated: hit ? null : (walk.truncated ?? null), ticks: walk.samples.length };
                 },
             });
-            const killRefused = { rung: 'kill', why: killWhy };
+            // ⛓ LAPSECOST D1: the rung below DETOUR that ran — NARROW when it was asked and refused, else KILL.
+            const killRefused = { rung: lastOption, why: lastWhy };
             if (detour.wps) {
                 rowFor('detour', killRefused, { vias: detour.vias, previews: detour.previews,
                     planned: detour.planned, waypoints: detour.wps.length, ticks: detour.ticks });
@@ -20719,8 +21052,10 @@ function solveSegmentUnder({
              */
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site between the plan and its probe.
             if (fineDeadlineReached('walk')) refuseWalkDeadline(`after ${what}'s corridor was planned (attempt ${attempt + 1})`);
-            const hit = probeCorridor(wps, except,
+            let hit = probeCorridor(wps, except,
                 { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
+            // ⛓ LAPSECOST D1: set when the ladder's NARROW rung certified this corridor (`climbed.narrow`).
+            let narrow = false;
             if (hit) {
                 /**
                  * ⛓⛓⛓ ⚖ §11.8a RULING 2 — THE LADDER REPLACES SLICE 2's
@@ -20739,7 +21074,7 @@ function solveSegmentUnder({
                 });
                 // ⛓ FORCEDHIT D2 — the forced-hit rung WALKED the crossing (its hit billed): the walk is done.
                 if (climbed.forced) return climbed.forced.transition;
-                if (climbed.wps) { wps = climbed.wps; } else { continue; }
+                if (climbed.wps) { wps = climbed.wps; narrow = climbed.narrow === true; } else { continue; }
             }
             /**
              * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 35 — **THE PLANNER IS ASKED ONCE
@@ -20769,7 +21104,7 @@ function solveSegmentUnder({
                 ? null
                 : planSwordDash(run, wps, { tolerance, dashMode,
                     certify: (samples) => probeSamples(samples, except),
-                    ...(stand ? { stand } : {}) });
+                    ...(stand ? { stand } : {}), ...(narrow ? { iframeLapse: false } : {}) });
             seeRow({
                 tick: perTick.length,
                 saw: saw(),
@@ -20779,6 +21114,8 @@ function solveSegmentUnder({
                     waypoints: wps.length,
                     // ⛓ FRONTIER3 — present only on a fine-lattice walk.
                     ...(fine ? { lattice: FINE_LATTICE } : {}),
+                    // ⛓ LAPSECOST D1 — present only on a walk the narrow policy certified (the lapse ON).
+                    ...(narrow ? { strikeLapse: 'withheld' } : {}),
                     /**
                      * ⛓⛓ R9 SLICE 12i — **THE MODE IS ON THE ROW, AND ONLY
                      * WHEN IT IS NOT THE ROSTER'S.** A trace that did not say
@@ -20832,7 +21169,8 @@ function solveSegmentUnder({
              */
             const strike = axisAligned
                 ? null
-                : strikePolicyFor(run, { dashPlan: dash?.plan ?? null, dashMode });
+                : strikePolicyFor(run, { dashPlan: dash?.plan ?? null, dashMode,
+                    ...(narrow ? { iframeLapse: false } : {}) });
             // ⛓ D3: the walk's dash record — see `dashWalks`. `pressed` is filled
             // as the walk's ticks run, so a refuted attempt keeps what it pressed.
             const dashWalk = dash ? {
@@ -20862,6 +21200,7 @@ function solveSegmentUnder({
                         grazes,
                         strike,
                         axisAligned,
+                        intermediate: !last,
                         what: `${what} waypoint ${wi} (${wps[wi].x},${wps[wi].y})`,
                     });
                     if (t && crossTo) return t;
@@ -22093,6 +22432,7 @@ function solveSegmentUnder({
          * replaced, cut to 200 characters).
          */
         ...(fineLatticeWalks.length ? { fineLatticeWalks } : {}),
+        ...(lapseNarrowWalks.length ? { lapseNarrowWalks } : {}),
         /**
          * ⛓ hammer-phase B3 — an optional result field, present only when a press kill's fight fallback ran
          * (`HAMMER_FIGHT_FALLBACK`): one row per fallback (`execKillByPress`'s `fightFallback` record).

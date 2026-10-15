@@ -15,6 +15,8 @@
  *     leave at their named tick.
  *   - ⛓ fidelity BOBSOLDIER: W4 (`bobSoldierLive`) moves legs 308/309 from residue to fixed — eleven reproduce, two
  *     residue rows (576 AXE, 589 ARRIVAL) remain.
+ *   - ⛓ JS wave-16 wiring: 589 re-captured at the `Bot`'s observation point (`seedlingContactLab`'s LAST poll per tick);
+ *     its rule is `buttonFallReleaseStep` (fidelity SMALLGAPS D1), and twelve reproduce — 576 is the one residue row.
  */
 import { describe, expect, it } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -40,10 +42,25 @@ const ROWS = {
     308: [67, 'bobSoldierLive'], // L30 BobSoldier@48,80 — its sword (fidelity BOBSOLDIER W4)
     309: [66, 'bobSoldierLive'], // L30 BobSoldier — its sword
     576: [141, null], // L71 — no Mobile near the player (the spinning axe: the AXE slice's region)
-    589: [1, 'arrivalButtonArm'], // L74 — the arrival's frozen tick a tick early (fidelity L74ARRIVAL; its switch ships OFF)
+    // L74 — the arrival button's release step a tick late in the model (fidelity SMALLGAPS D1). ⛓ JS wave-16 wiring: the
+    // 10-05 capture took each tick's FIRST poll, 20 frames into the 175-frame freeze (t1 y 136, vy 0), which read as
+    // L74ARRIVAL's frozen t1 (`arrivalButtonArm`); at the `Bot`'s own observation point t1 is the release step (135.2,
+    // vy −0.8), every other common sample unchanged (re-captured with switches none, `--poll=last`).
+    589: [2, 'buttonFallReleaseStep'],
 };
-/** ⛓ fidelity L74ARRIVAL: a capture shorter than the usual window (589 holds the game's t0–t2 only). */
-const SHORT = { 589: 3 };
+/** ⛓ fidelity L74ARRIVAL: a capture shorter than the usual window (589 holds the game's t0–t4 only). */
+const SHORT = { 589: 5 };
+/**
+ * A row the model leaves on something other than a contact knockback — no `hits` moves at its tick.
+ * 589: the arrival button's freeze.
+ */
+const NOT_A_CONTACT = { 589: 'the arrival button freeze' };
+/**
+ * ⛓ JS wave-16 wiring — a row whose mutant (every switch but its own) leaves it at ANOTHER tick. 589: `arrivalButtonArm`
+ * without `buttonFallReleaseStep` freezes the arrival's t1, where the `Bot` reads the release step — it parts a tick
+ * earlier than the all-OFF model, which moves on t1 and stalls on t2.
+ */
+const MUTANT_TICK = { 589: 1 };
 const ALL_OFF = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, false]));
 
 describe('contact witnesses (fixtures/contact-witness)', () => {
@@ -57,7 +74,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_STRIKE_IFRAME_LAPSE
         || !!process.env.SEEDLING_FALLROCK_POSTFALL || !!process.env.SEEDLING_FORECAST_SPEED_BY_TERRAIN
         || !!process.env.SEEDLING_ARRIVAL_BUTTON_ARM
-        || !!process.env.SEEDLING_UNBILLED_DAMAGE_GATE)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_UNBILLED_DAMAGE_GATE || !!process.env.SEEDLING_BUTTON_FALL_RELEASE_STEP
+        || !!process.env.SEEDLING_WAYPOINT_SLIDE || !!process.env.SEEDLING_LAVA_CHAIN_PLAYER_HIT
+        || !!process.env.SEEDLING_CEREMONY_SHOVE
+        || !!process.env.SEEDLING_FLYER_LIVE)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -93,11 +113,19 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // frame) ships OFF.
             arrivalButtonArm: false,
             // ⛓ fidelity UNBILLEDGATE D2: `unbilledDamageGate` (`solverBot.UNBILLED_DAMAGE`) ships OFF.
-            unbilledDamageGate: false });
+            unbilledDamageGate: false,
+            // ⛓ fidelity SMALLGAPS: `buttonFallReleaseStep` (D1), `waypointSlide` (D2), `lavaChainPlayerHit` (D3) shipped OFF —
+            // ⚖ (user, 2026-10-14, "Flip all three") ON since the wave-16 harvest.
+            buttonFallReleaseStep: true, waypointSlide: true, lavaChainPlayerHit: true,
+            // ⛓ fidelity CEREMONYSHOVE D2: `ceremonyShove` (a pickup ceremony's dead frames stepped) shipped OFF —
+            // ⚖ (user, 2026-10-14, "Flip now") ON since the wave-16 harvest.
+            ceremonyShove: true,
+            // ⛓ fidelity LAPSECOST D2: `flyerLive` (the Flyer stepped: its chase, its "fall" and its drop) ships OFF.
+            flyerLive: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
-    // ⛓ fidelity L74ARRIVAL: a row whose switch is OFF in this process (589's ships OFF) is still at its tick
+    // ⛓ fidelity L74ARRIVAL: a row whose switch is OFF in this process is still at its tick
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY).each(Object.entries(ROWS))('leg %s — the shipped defaults: fixed rows at 0 px, residue at its tick', async (id, [t, sw]) => {
         const r = await replayCapture(load(id));
         expect(r.error).toBeNull();
@@ -110,7 +138,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         const r = await withContactFidelity(ALL_OFF, () => replayCapture(cap));
         expect(r.error).toBeNull();
         expect(r.firstDiff?.t).toBe(t);
-        if (t > 1) {
+        if (!NOT_A_CONTACT[id]) {
             // a knockback: one side's hits moved at that tick
             const hits = r.firstDiff.fields.find((f) => f.field === 'hits');
             expect(hits).toBeTruthy();
@@ -134,7 +162,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     it.each(Object.entries(ROWS).filter(([, [, sw]]) => sw))('leg %s — every switch EXCEPT its own leaves it at the named tick (the mutant)', async (id, [t, sw]) => {
         const on = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, k !== sw]));
         const r = await withContactFidelity(on, () => replayCapture(load(id)));
-        expect(r.firstDiff?.t).toBe(t);
+        expect(r.firstDiff?.t).toBe(MUTANT_TICK[id] ?? t);
     });
 
     it.each(Object.entries(ROWS))('leg %s — all switches ON: fixed rows at 0 px, residue at its tick', async (id, [t, sw]) => {

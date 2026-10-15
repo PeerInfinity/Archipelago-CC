@@ -1,0 +1,293 @@
+{
+ "game": "seedling",
+ "name": "smallgaps-l75-633-plan",
+ "boot": {
+  "level": 75,
+  "x": 64,
+  "y": 16
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "dead_frames",
+  "sound"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 0,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 987286273
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasDarkSword": false,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasDarkShield": false,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasFeather": true,
+   "hasSpear": true,
+   "hasDarkSuit": false,
+   "hasTorch": true
+  },
+  "time": 5412,
+  "primary": 0
+ },
+ "tick_count": 449,
+ "inputs": [
+  {
+   "key": "down",
+   "from": 0,
+   "to": 19
+  },
+  {
+   "key": "down",
+   "from": 42,
+   "to": 43
+  },
+  {
+   "key": "primary",
+   "from": 43,
+   "to": 44
+  },
+  {
+   "key": "down",
+   "from": 75,
+   "to": 76
+  },
+  {
+   "key": "primary",
+   "from": 76,
+   "to": 77
+  },
+  {
+   "key": "left",
+   "from": 79,
+   "to": 100
+  },
+  {
+   "key": "right",
+   "from": 100,
+   "to": 101
+  },
+  {
+   "key": "left",
+   "from": 101,
+   "to": 102
+  },
+  {
+   "key": "right",
+   "from": 104,
+   "to": 106
+  },
+  {
+   "key": "down",
+   "from": 79,
+   "to": 108
+  },
+  {
+   "key": "up",
+   "from": 108,
+   "to": 109
+  },
+  {
+   "key": "left",
+   "from": 109,
+   "to": 110
+  },
+  {
+   "key": "down",
+   "from": 109,
+   "to": 110
+  },
+  {
+   "key": "up",
+   "from": 110,
+   "to": 111
+  },
+  {
+   "key": "down",
+   "from": 111,
+   "to": 112
+  },
+  {
+   "key": "left",
+   "from": 116,
+   "to": 127
+  },
+  {
+   "key": "right",
+   "from": 127,
+   "to": 128
+  },
+  {
+   "key": "left",
+   "from": 128,
+   "to": 130
+  },
+  {
+   "key": "right",
+   "from": 131,
+   "to": 133
+  },
+  {
+   "key": "down",
+   "from": 137,
+   "to": 163
+  },
+  {
+   "key": "left",
+   "from": 163,
+   "to": 164
+  },
+  {
+   "key": "primary",
+   "from": 164,
+   "to": 165
+  },
+  {
+   "key": "right",
+   "from": 165,
+   "to": 166
+  },
+  {
+   "key": "down",
+   "from": 165,
+   "to": 196
+  },
+  {
+   "key": "up",
+   "from": 196,
+   "to": 197
+  },
+  {
+   "key": "primary",
+   "from": 197,
+   "to": 198
+  },
+  {
+   "key": "up",
+   "from": 198,
+   "to": 204
+  },
+  {
+   "key": "up",
+   "from": 206,
+   "to": 218
+  },
+  {
+   "key": "right",
+   "from": 222,
+   "to": 262
+  },
+  {
+   "key": "left",
+   "from": 264,
+   "to": 266
+  },
+  {
+   "key": "down",
+   "from": 270,
+   "to": 297
+  },
+  {
+   "key": "up",
+   "from": 299,
+   "to": 301
+  },
+  {
+   "key": "left",
+   "from": 305,
+   "to": 332
+  },
+  {
+   "key": "right",
+   "from": 333,
+   "to": 335
+  },
+  {
+   "key": "down",
+   "from": 339,
+   "to": 353
+  },
+  {
+   "key": "up",
+   "from": 354,
+   "to": 356
+  },
+  {
+   "key": "left",
+   "from": 360,
+   "to": 371
+  },
+  {
+   "key": "right",
+   "from": 371,
+   "to": 372
+  },
+  {
+   "key": "left",
+   "from": 372,
+   "to": 374
+  },
+  {
+   "key": "right",
+   "from": 376,
+   "to": 378
+  },
+  {
+   "key": "down",
+   "from": 382,
+   "to": 409
+  },
+  {
+   "key": "up",
+   "from": 411,
+   "to": 413
+  },
+  {
+   "key": "right",
+   "from": 417,
+   "to": 428
+  },
+  {
+   "key": "left",
+   "from": 428,
+   "to": 429
+  },
+  {
+   "key": "right",
+   "from": 429,
+   "to": 431
+  },
+  {
+   "key": "left",
+   "from": 433,
+   "to": 436
+  },
+  {
+   "key": "right",
+   "from": 437,
+   "to": 439
+  },
+  {
+   "key": "down",
+   "from": 443,
+   "to": 449
+  }
+ ],
+ "tape_version": 8
+}

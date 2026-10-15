@@ -55,6 +55,13 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 - **Procgen: editing a bounce region** ([guide](../tutorials/procgen-bounce-region-editor.md)) — Open a generated world's bounce zone in the Bounce Region Editor, change a platform, save it back to the pipeline, and play the result. `?tutorial=procgen-bounce-region-editor`
 - **Procgen: Seedling rooms** ([guide](../tutorials/procgen-seedling.md)) — Put generated Seedling rooms into a procgen world, play them in the original game, look at a room in the Procgen Lab, and watch the bot. `?tutorial=procgen-seedling`
 - **Procgen: a mixed world** ([guide](../tutorials/procgen-mixed-world.md)) — Build one world from a maze, a text adventure, a bounce zone, a Noiz2sa stage and a generated Seedling room, and watch the Playback Bot play every kind. `?tutorial=procgen-mixed-world`
+- **Procgen: Journey to Ascension in Loop mode** ([guide](../tutorials/procgen-loop-mode-jta.md)) — Generate a world of Journey to Ascension zones with loop mode on, see the loop panels, and watch the bot finish it. `?tutorial=procgen-loop-mode-jta`
+- **Procgen: everything, in Loop mode** ([guide](../tutorials/procgen-loop-mode-everything.md)) — Mix every substrate — Idle Loops included — into one loop-mode world sharing one mana pool, and watch the bot finish it. `?tutorial=procgen-loop-mode-everything`
+
+### Seedling
+
+- **Seedling: recompile the original game in your browser** ([guide](../tutorials/seedling-recompile.md)) — Turn a Flash file into a WebAssembly program in the browser and run it — then, if you like, all of Seedling. `?tutorial=seedling-recompile`
+- **Seedling: watch the bot play** ([guide](../tutorials/seedling-bot.md)) — Load the whole of Seedling as an Archipelago world and watch the Playback Bot take its first checks in the original game. `?tutorial=seedling-bot`
 
 ### MetaMath, DepGraph and APCalc
 
@@ -78,11 +85,7 @@ Written, but not working all the way through yet. The panel lists these in a col
 
 - **Your workbench** — Find any panel with Quick Launch, arrange the tabs, follow a tutorial beside your work, and switch modules on and off. `?tutorial=start-workbench`
 - **Saving your setup** — Change the options and settings, save the layout and settings as a mode of your own, and clear what the app keeps in your browser. `?tutorial=start-saving-your-setup`
-- **Procgen: Journey to Ascension in Loop mode** — Generate a world of Journey to Ascension zones with loop mode on, see the loop panels, and watch the bot finish it. `?tutorial=procgen-loop-mode-jta`
-- **Procgen: everything, in Loop mode** — Mix every substrate — Idle Loops included — into one loop-mode world sharing one mana pool, and watch the bot finish it. `?tutorial=procgen-loop-mode-everything`
 - **Procgen: a runner world** — Play a generated world of auto-running platformer strips, where the jumps you can make are the items you hold. `?tutorial=procgen-runner-demo`
-- **Seedling: recompile the original game in your browser** — Turn Seedling's Flash file into a WebAssembly game, in the browser, and play it. `?tutorial=seedling-recompile`
-- **Seedling: watch the bot play** — Load the whole of Seedling as an Archipelago world and watch the Playback Bot take its first checks in the original game. `?tutorial=seedling-bot`
 - **Seedling: the bot through the whole game** — Watch the Playback Bot play the original Seedling from the first chest to the end. `?tutorial=seedling-whole-game`
 - **MetaMath: prove 2 + 2 = 4** — Play a MetaMath proof as an Archipelago game: each proof step is a location, unlocked when the steps it depends on are proved. `?tutorial=metamath-demo`
 - **DepGraph: a coding adventure** — Play a dependency graph as an Archipelago game: each task is a location, unlocked when the tasks it depends on are done. `?tutorial=depgraph-demo`

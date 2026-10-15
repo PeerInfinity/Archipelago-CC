@@ -1,0 +1,27 @@
+A-sword census 7c279226 base 7c279226
+A-ghost census b3b38f55 base b3b38f55
+l18 census 864ab175 base 864ab175
+ghost-sweep census 1ca7eed5 base 1ca7eed5
+leg-397-ghost census 4720caab base 4720caab
+leg-414-ghost census 489a9482 base 489a9482
+killgate-2 census 006b0639
+killgate-5 census 7d4cb820
+killgate-9 census 49e23d85
+{"mode":"census","wl":"A-ghost","rc":0,"load":4.27,"wall":879.9}
+{"mode":"census","wl":"A-sword","rc":0,"load":4.27,"wall":1042.1}
+{"mode":"census","wl":"campaign","rc":0,"load":4.01,"wall":103.8}
+{"mode":"census","wl":"ghost-sweep","rc":0,"load":3.92,"wall":3503.1}
+{"mode":"census","wl":"killgate-2","rc":0,"load":4.83,"wall":10.6}
+{"mode":"census","wl":"killgate-5","rc":0,"load":4.63,"wall":8.9}
+{"mode":"census","wl":"killgate-9","rc":0,"load":4.74,"wall":16.8}
+{"mode":"census","wl":"l18","rc":0,"load":4.27,"wall":2398.7}
+{"mode":"census","wl":"leg-397-ghost","rc":0,"load":4.18,"wall":782.2}
+{"mode":"census","wl":"leg-414-ghost","rc":0,"load":3.50,"wall":866.7}
+{"mode":"census","wl":"prod-solve-seedling-r8-d2-chain","rc":0,"load":5.18,"wall":37.0}
+{"mode":"census","wl":"prod-solve-seedling-r8-l18","rc":0,"load":5.22,"wall":39.1}
+{"mode":"base","wl":"A-ghost","rc":0,"load":3.90,"wall":89.4}
+{"mode":"base","wl":"A-sword","rc":0,"load":4.65,"wall":118.4}
+{"mode":"base","wl":"ghost-sweep","rc":0,"load":3.48,"wall":73.3}
+{"mode":"base","wl":"l18","rc":0,"load":3.69,"wall":102.7}
+{"mode":"base","wl":"leg-397-ghost","rc":0,"load":3.63,"wall":138.9}
+{"mode":"base","wl":"leg-414-ghost","rc":0,"load":3.47,"wall":155.2}

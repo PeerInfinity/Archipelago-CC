@@ -753,7 +753,8 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
     it('a transcribed class with no roster row is NOT bridged — the control exists', () => {
         // ⛓ KILLLOCK K2: `lavarunner` is transcribed too, and bridged only under its switch (OFF by default).
         // ⛓ fidelity-bulb: `bulb` is transcribed and bridged only under `contactFidelity.bulbLive` (OFF by default).
-        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'bobsoldier', 'bulb', 'jellyfish', 'lavarunner', 'puncher']);
+        // ⛓ fidelity LAPSECOST D2: `flyer` is transcribed and bridged only under `contactFidelity.flyerLive` (OFF by default).
+        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'bobsoldier', 'bulb', 'flyer', 'jellyfish', 'lavarunner', 'puncher']);
         expect(MODELLED_ENEMY_CLASSES.Jellyfish).toBeUndefined();
         expect(MODELLED_ENEMY_CLASSES.LavaRunner).toBeUndefined();
         // ⛓ KILLLOCK K1 (ON since the wave-8 harvest): `jellyfish` is bridged by its switch, so the control is
@@ -1595,10 +1596,11 @@ describe('R8_STRATEGY_EXECUTORS — ⚖ §11.8a as data, and the checks that kee
         // ⛓ R9 slice L16: PULL is the one CONDITIONAL rung (§59.4 D2).
         // ⛓ U15-swim D2: DODGE is the second (a spit-only danger, a stall on the walk).
         // ⛓ Fidelity L14: DETOUR is the last (a longer corridor, asked after KILL refused).
+        // ⛓ Fidelity LAPSECOST D1: NARROW sits between KILL and DETOUR (conditional: `strikeIframeLapse` ON only).
         expect(R8_STRATEGY_EXECUTORS.ladder.map((r) => r.rung))
-            .toEqual(['avoid', 'dodge', 'pull', 'time', 'bait', 'kill', 'detour']);
+            .toEqual(['avoid', 'dodge', 'pull', 'time', 'bait', 'kill', 'narrow', 'detour']);
         expect(R8_STRATEGY_EXECUTORS.ladder.filter((r) => r.conditional).map((r) => r.rung))
-            .toEqual(['dodge', 'pull', 'detour']);
+            .toEqual(['dodge', 'pull', 'narrow', 'detour']);
         for (const r of R8_STRATEGY_EXECUTORS.ladder) {
             expect(r.tool.length).toBeGreaterThan(20);
             expect(r.refusesWith.length).toBeGreaterThan(20);

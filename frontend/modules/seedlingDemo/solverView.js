@@ -59,6 +59,10 @@ export {
 export { SCREEN_H, SCREEN_W } from './camera.js';
 // chasers.js — dangerMap, solverBot · seedling 4
 export { bridgedChaserTags, chaserBoxAt, chaserHasSword, deathTicks, isBridgedChaser, killWindowTicks, CHASERS } from './chasers.js';
+// ⛓ CEREMONYSHOVE D3: which class a shield's bump moves (`ceremonyBesideLiveBody`'s priced question).
+export { chaserKnocksBack } from './chasers.js';
+// ⛓ fidelity LAPSECOST D2: the Flyer's drop, for `dangerMap.chaserDanger`.
+export { chaserDropOf } from './chasers.js';
 
 // ⛓ seedling-fidelity-bulb D3: the Bulb's drop death — which classes have one, and the tile under a centre.
 export { hasDropDeath, tileUnder } from './bulb.js';
@@ -116,6 +120,8 @@ export {
     STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
     // ⛓⛓⛓ hammer-phase BW: the press kill's waits see the lobber's bombs (its switch and instrument, OFF).
     PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
+    // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (its switch, the cut and its instrument; ON by default since the user's flip).
+    REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
 } from './pressKillCost.js';
 // iceTurret.js — botDriverV2 · seedling 2
 export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
@@ -137,13 +143,13 @@ export {
     assertRect, isNormalizedLiveOpts, LIVE_GEOMETRY_KEYS, normalizeLiveOpts, PRE_R5_ROLES, rect, rectsOverlap,
     RELAXED_ROLES, TILE_SIZE, withTileWrites,
 } from './levelWorld.js';
-// playerPhysicsV1.js — botDriverV1, botDriverV2, mover, solverBot, strikePolicy · physics 11
+// playerPhysicsV1.js — botDriverV1, botDriverV2, mover, solverBot, strikePolicy · physics 12
 export {
     applyFriction, applyInput, DEFAULT_FRICTION, groundTerrain, HITBOX, knockbackImpulse, MOVE_SPEEDS,
-    spawnFromBoot, step, sweepAxis, WALK_SPEED,
+    SLIDING_SPEED, spawnFromBoot, step, sweepAxis, WALK_SPEED,
 } from './playerPhysicsV1.js';
-// playerPhysicsV2.js — botDriverV2, encounters, solverBot · seedling 1, physics 3
-export { fallDestination, PhysicsV2Error, playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
+// playerPhysicsV2.js — botDriverV2, encounters, solverBot · seedling 2, physics 3
+export { fallDestination, hazardFlagsFor, PhysicsV2Error, playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 // presses.js — botDriverV2, solverBot, strikePolicy · seedling 10, physics 5
 export {
     auditFire, DARK_SWORD_DAMAGE, distanceRectPoint, DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH,

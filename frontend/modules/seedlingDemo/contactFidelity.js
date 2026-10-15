@@ -376,6 +376,87 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_UNBILLED_DAMAGE_GATE=0|1` for a node measurement.
      */
     unbilledDamageGate: false,
+    /**
+     * fidelity SMALLGAPS D1 — A BUTTON-DROPPED FALLROCK'S RELEASE STEP LANDS IN THE FROZEN TICK, NOT THE NEXT ONE
+     * (`levelRun.advance`'s `pendingButtonFalls` branch).
+     *
+     *     Bot.as:3201         if (game.blackCover > 0 || Game.freezeObjects) { deadFrames++; return; }   — at the TOP
+     *     FallRock.as:91-96   cameraTimer == 0 → Game.freezeObjects = false   — the rock updates BEFORE the Player
+     *
+     * The press frame is a live tape tick on which the player does not move; every freeze frame after it is DEAD to
+     * the tape, and on the last one (the release) the player takes one step under the held keys — before the next
+     * observation. So to the tape a button freeze costs the player NOTHING: one step per tick, no stall. The model
+     * banked that step in `pendingFreeSteps`, which lands one tick late (the BobBoss rock's measured lesson), so it
+     * stood one tick (t1 ON with `arrivalButtonArm`, t2 OFF) where the page's `Bot` reads no stall (leg 624: 136,
+     * 135.2, 133.85). ⚠ The p4f chaser witnesses that read "frozen at t1" took their FIRST poll at each tick, 20 dead
+     * frames into the 175-frame freeze; the `Bot`'s own observation (`botDrain`) at the same tick is 135.2. ON: the
+     * step is taken inside the frozen tick under its held keys (the BobBoss rock's form). OFF: byte-identical.
+     * ⚖ ON since the wave-16 harvest (user, 2026-10-14); `SEEDLING_BUTTON_FALL_RELEASE_STEP=0|1` for a node measurement.
+     */
+    buttonFallReleaseStep: true,
+    /**
+     * fidelity SMALLGAPS D2 — AN INTERMEDIATE WAYPOINT ON ICE IS PASSED, NOT PARKED ON (the walker:
+     * `botDriverV2.waypointReached`, read by `drive` and `solverBot.previewWalk` alike).
+     *
+     *     Player.as:516-537   onIce → friction = slidingFriction (0.025), moveSpeed = slidingSpeed
+     *
+     * `hasArrived` asks "within tolerance AND stopped" of every waypoint. On ice a one-tick tap from rest coasts tens
+     * of px, so a ±1 px STOP is reachable only by luck: L45 (120,72) limit-cycles x 117.3–122.9 for ~300 t (route
+     * step 62 with the strike lapse ON, 748 t vs 386 OFF). ON: a waypoint that is not the walk's last, reached while
+     * the player stands on ice, is reached at "within tolerance" whatever the velocity; the walk's final target still
+     * needs the stop. OFF: byte-identical. ⚖ ON since the wave-16 harvest (user, 2026-10-14); `SEEDLING_WAYPOINT_SLIDE=0|1` for a node measurement.
+     */
+    waypointSlide: true,
+    /**
+     * fidelity SMALLGAPS D3 — A LAVA CHAIN'S ARM HITS THE PLAYER (`levelRun.stepLavaChainsNow`, the `"Player"` arm).
+     *
+     *     LavaChain.as:21,76-93   hitables = ["Player", "Enemy"]; reach(): … else if (hit is Player)
+     *                             (hit as Player).hit(null, force 5, getHitPos → the chain's own point, damage 1)
+     *
+     * K2PREP transcribed the `"Enemy"` arm and left the player to `dangerMap`'s pricing, so the live run never billed
+     * a chain: on L75 (sweep leg 633, `level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224`) the game takes a hit at
+     * t162 from `lavachain@80,80` (its west arm, 32–80 × 86–90) and is thrown 4.72 px west where the model walks on.
+     * ON: every chain in the room steps its anim (with or without bodies), and an arm that touches the PRE-move player
+     * box on an update `reach()` runs bills `applyPlayerHit` from the chain's point; an arm whose anim is unknown (a
+     * skipped `Game.time`) touching the player is refused by name. OFF: byte-identical.
+     * ⚖ ON since the wave-16 harvest (user, 2026-10-14); `SEEDLING_LAVA_CHAIN_PLAYER_HIT=0|1` for a node measurement.
+     */
+    lavaChainPlayerHit: true,
+    /**
+     * fidelity CEREMONYSHOVE D2 — A PICKUP CEREMONY'S PHASE A IS STEPPED FOR THE CHASERS AND THE PLAYER'S OWN LINES
+     * (`levelRun.stepCeremonyLumpNow`), not spent as a lump.
+     *
+     *     Pickup.as:91-108   pick_up(): Game.freezeObjects = true; specialTimer-- … (150 frames, then the text)
+     *     Player.as:529-532  addShield(); shieldBump(); checkDrowning(); freezeStep();   ← ABOVE the gated move
+     *     Player.as:1697     shieldBump(): if (shieldObj && v.length > 0) … o.knockback(shieldForce, (x, y))
+     *     Enemy.as:247       knockback(): v += 5·unit(body − player)            ← no freeze gate
+     *     Enemy.update       terrain switch, Mobile.death()'s fade, hitUpdate()  ← no freeze gate (the move is gated)
+     *
+     * The player's `v` is frozen non-zero, so a body inside the moving shield box is shoved on EVERY dead frame; the
+     * game's chasers drain their i-frames and finish a death fade through the same frames, and so does the player's
+     * own `hitUpdate`. MEASURED on p4f (`ceremonyshove-l30-*`): the dead frames fall between the observations one and
+     * two ticks after the ceremony starts, and they shove 149 times (745.0 px/tick = 149 × 5 on two witnesses).
+     * ON: those frames are stepped there (chasers, the shove, the player's i-frame), the dialogue's frozen ticks step
+     * the chasers too, and `assertNoCeremonyBesideLiveChaser` stands down for what is now stepped. OFF: byte-identical.
+     * ⚖ ON since the wave-16 harvest (user, 2026-10-14); `SEEDLING_CEREMONY_SHOVE=0|1` for a node measurement.
+     */
+    ceremonyShove: true,
+    /**
+     * fidelity LAPSECOST D2 — THE FLYER IS STEPPED (`chasers.CHASERS.flyer`, bridged under this key).
+     *
+     *     Flyer.as:58-69   p = collidePoint("Player", x, y + 10); if (p) play("fall");
+     *                      if (fall) { v = 0; if (p && frame == droppedFrame) p.hit(null, dropForce, (x,y), damage); hitUpdate(); }
+     *                      else super.update()          — Bob's chase to the player + targetOffset (0,-10), moveSpeed 1
+     *     Flyer.as:45,83   solids = new Array(); hitPlayer() {}   — it flies through everything, and contact is harmless
+     *
+     * OFF the model never stepped a Flyer: the danger map priced it as a static body at its PLACEMENT, so a plan could
+     * walk under a flyer that had chased it. MEASURED (sweep leg 773, L105, the lapse ON): `flyer@104,8` hovers above
+     * the walk from t96, its "fall" reaches frame 10 at t103 and drops on the player (game `hits` 0 → 2, Δy +0.82), where
+     * the model billed nothing. ON: the flyer chases, falls and drops as above (run and forecast), and the danger map
+     * prices its drop (timed) instead of a placement. ⛔ OFF by default (no licence); `SEEDLING_FLYER_LIVE=0|1` for a
+     * node measurement.
+     */
+    flyerLive: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -461,6 +542,19 @@ if (globalThis.process?.env?.SEEDLING_ARRIVAL_BUTTON_ARM === '0') CONTACT_FIDELI
 // ⛓ fidelity UNBILLEDGATE: `SEEDLING_UNBILLED_DAMAGE_GATE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_UNBILLED_DAMAGE_GATE === '1') CONTACT_FIDELITY.unbilledDamageGate = true;
 if (globalThis.process?.env?.SEEDLING_UNBILLED_DAMAGE_GATE === '0') CONTACT_FIDELITY.unbilledDamageGate = false;
+// ⛓ fidelity SMALLGAPS: `SEEDLING_BUTTON_FALL_RELEASE_STEP`, `SEEDLING_WAYPOINT_SLIDE`, `SEEDLING_LAVA_CHAIN_PLAYER_HIT` (0|1), likewise.
+if (globalThis.process?.env?.SEEDLING_BUTTON_FALL_RELEASE_STEP === '1') CONTACT_FIDELITY.buttonFallReleaseStep = true;
+if (globalThis.process?.env?.SEEDLING_BUTTON_FALL_RELEASE_STEP === '0') CONTACT_FIDELITY.buttonFallReleaseStep = false;
+if (globalThis.process?.env?.SEEDLING_WAYPOINT_SLIDE === '1') CONTACT_FIDELITY.waypointSlide = true;
+if (globalThis.process?.env?.SEEDLING_WAYPOINT_SLIDE === '0') CONTACT_FIDELITY.waypointSlide = false;
+if (globalThis.process?.env?.SEEDLING_LAVA_CHAIN_PLAYER_HIT === '1') CONTACT_FIDELITY.lavaChainPlayerHit = true;
+if (globalThis.process?.env?.SEEDLING_LAVA_CHAIN_PLAYER_HIT === '0') CONTACT_FIDELITY.lavaChainPlayerHit = false;
+// ⛓ fidelity CEREMONYSHOVE: `SEEDLING_CEREMONY_SHOVE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CEREMONY_SHOVE === '1') CONTACT_FIDELITY.ceremonyShove = true;
+if (globalThis.process?.env?.SEEDLING_CEREMONY_SHOVE === '0') CONTACT_FIDELITY.ceremonyShove = false;
+// ⛓ fidelity LAPSECOST D2: `SEEDLING_FLYER_LIVE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '1') CONTACT_FIDELITY.flyerLive = true;
+if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '0') CONTACT_FIDELITY.flyerLive = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

@@ -309,6 +309,7 @@ export class LoopModeRunner {
                 this._status(`stepped one loop (${plan.reason})`);
                 this._active = false;
                 this.stop();
+                d.onFinished?.();
                 return;
             }
             if (why) this._status(`loop ${this._loops} ended early (${why}): ${plan.reason}`);

@@ -1,0 +1,11 @@
+--- solverBot.final.bak	2026-10-15 00:15:09.463327202 +0000
++++ mutants/M5-tick-window.js	2026-10-15 00:15:09.503099913 +0000
+@@ -16385,7 +16385,7 @@
+  * level is matched too: a body id is per level, and a ledger spans the run's levels.
+  */
+ export function killedOnWalk(run, id, from) {
+-    const kill = (run.ledger('presses') ?? []).slice(from).filter((p) => p.level === run.level
++    const kill = (run.ledger('presses') ?? []).filter((p) => p.fired > from && p.level === run.level
+         && p.hits.some((h) => h.id === id && h.killed === true)).at(-1);
+     return kill ? { pressedAt: kill.t, firedAt: kill.fired, weapon: kill.weapon, direction: kill.direction } : null;
+ }

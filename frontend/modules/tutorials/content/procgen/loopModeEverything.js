@@ -2,8 +2,8 @@
  * Procgen: everything, in Loop mode (catalogue P6): JtA, a generated Seedling
  * room, Maze, Text adventure, Bounce, Noiz2sa and Idle Loops (omsi) in one
  * loop-mode world, played by the bot. ⚖ The user, 2026-10-10: the pool + the
- * loop-mode parameter; Seedling on wasm. In progress: its walk row measures
- * `firstFailingStep`. Shape: ../../tutorialShape.js; shared steps: ../steps/.
+ * loop-mode parameter; Seedling on wasm. Ready (⚖ the user, 2026-10-14).
+ * Shape: ../../tutorialShape.js; shared steps: ../steps/.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
  */
@@ -19,9 +19,8 @@ export const PROCGEN_LOOP_MODE_EVERYTHING = Object.freeze({
     title: 'Procgen: everything, in Loop mode',
     summary: 'Mix every substrate — Idle Loops included — into one loop-mode world sharing one mana pool, and watch the bot finish it.',
     track: 'procgen',
-    status: 'in-progress',
-    firstFailingStep: null,
-    doc: null,
+    status: 'ready', // ⚖ the user, 2026-10-14
+    doc: 'docs/json/user/tutorials/procgen-loop-mode-everything.md',
     intro: [
         { prose: 'The last procgen tutorial puts it all together: JtA zones, a generated Seedling room, mazes, a text adventure, a bounce zone, a Noiz2sa stage and *Idle Loops* — another idle game, which only runs in loop mode — in one world, every action spending the same mana.' },
         { prose: SEEDLING_RUNTIME_NOTE },

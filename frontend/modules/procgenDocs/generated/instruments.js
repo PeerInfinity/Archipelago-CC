@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 87,
+            "count": 89,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 420,
+        "blockStyle": 422,
         "browser": 142,
-        "cited": 216,
-        "files": 432,
+        "cited": 218,
+        "files": 434,
         "lineStyle": 12,
-        "withDocblock": 432,
-        "withFlags": 348
+        "withDocblock": 434,
+        "withFlags": 350
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7833,6 +7833,40 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
+            "file": "plan-seedling-hammer-dd-walkkill.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "samples"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-dd-walkkill — ⛓⛓⛓ SEEDLING HAMMER-PHASE DD: A PRESS KILL WHOSE TARGET DIED ON THE WALK, ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-hammer-dd-walkkill.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
             "file": "plan-seedling-hammer-g1-ghostkill.mjs",
             "flags": [
                 {
@@ -7850,6 +7884,34 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-hammer-g1-ghostkill — ⛓⛓⛓ SEEDLING HAMMER-PHASE G1, D2: THE KILL RUNG'S GHOST PRESS KILL, ON THE GAME.",
             "path": "scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "plan-seedling-hammer-sf-strikefloor.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-hammer-sf-strikefloor — ⛓⛓⛓ SEEDLING HAMMER-PHASE SF: THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA (`solverBot.STRIKE_ETA_FLOOR`, OFF), ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs"
         },
         {
             "argvHelpers": [],
@@ -10231,6 +10293,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "frames"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "out"
                 },
                 {
@@ -10339,11 +10407,13 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "around",
+                "contact-fidelity",
                 "host",
                 "ids",
                 "legs",
                 "out",
                 "page",
+                "poll",
                 "wait-for-box"
             ],
             "file": "probe-seedling-contact-divergence.mjs",
@@ -10359,6 +10429,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "capture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "contact-fidelity"
                 },
                 {
                     "how": [
@@ -10389,6 +10465,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "page"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "poll"
                 }
             ],
             "inheritedFlags": [

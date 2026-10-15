@@ -1,0 +1,11 @@
+--- solverBot.final.bak	2026-10-15 00:15:09.463327202 +0000
++++ mutants/M3-gone-without-ledger.js	2026-10-15 00:15:09.495099913 +0000
+@@ -20199,7 +20199,7 @@
+                      */
+                     const walkKill = PRESS_KILL_DONE_ON_WALK.enabled
+                         && !(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)
+-                        ? killedOnWalk(run, hunted.id, walkFrom) : null;
++                        ? { mutant: true } : null;
+                     if (walkKill) {
+                         records.push({
+                             goal: goal.kind, strategy: 'kill', arm: 'chaser',

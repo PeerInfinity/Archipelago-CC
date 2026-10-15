@@ -1527,6 +1527,16 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             switch: 'bulbLive',
             exposedAdded: Object.freeze([]),
         }),
+        /**
+         * ⛓ fidelity LAPSECOST D2 — `flyer` joins under `contactFidelity.flyerLive` (OFF): skipped by name in
+         * `stepContactsNow` like the Bulb (its contact is empty; `dropNow` bills its drop). Its rows are the committed
+         * tapes that retire `noDamage` and enter a Flyer room (L100/101/103/105) — none at this head.
+         */
+        flyer: Object.freeze({
+            table: 'contactFidelity',
+            switch: 'flyerLive',
+            exposedAdded: Object.freeze([]),
+        }),
     }),
 
     /** The roster tally the exposure was derived from, at `153f5100b`. */
@@ -2282,6 +2292,20 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
                 + 'question and stays refused unless a room actually needs one.',
             refusesWith: 'no presser in the room arms a lane over the body, or the class '
                 + 'has no modelled kill arm and no ceiling covers it',
+        }),
+        /**
+         * ⛓⛓ SEEDLING FIDELITY LAPSECOST D1 — asked only when KILL refused, before DETOUR: the same corridor walked
+         * with the PRE-LAPSE strike admissions (`solverBot.LAPSE_NARROW_RETRY`). CONDITIONAL: present only with
+         * `CONTACT_FIDELITY.strikeIframeLapse` ON.
+         */
+        Object.freeze({
+            rung: 'narrow',
+            conditional: true,
+            tool: 'the corridor the walk planned, previewed with the strike policy\'s i-frame-lapse admissions '
+                + 'withheld (`strikePolicyFor`\'s `iframeLapse: false`) and certified by the corridor probe\'s own '
+                + 'predicate, only if its preview arrives; walked with that policy, dash candidates and drive alike',
+            refusesWith: 'the narrow walk is dangerous too, or its preview does not arrive (the rung is ABSENT, not '
+                + 'refused, with the lapse OFF)',
         }),
         /**
          * ⛓⛓ SEEDLING FIDELITY L14 — THE LAST RUNG, asked only when KILL refused:

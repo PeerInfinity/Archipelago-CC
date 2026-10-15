@@ -1,7 +1,7 @@
 {
  "name": "l74arrival-624-on-plan",
  "class": "LavaRunner",
- "source": "/tmp/claude-0/-home-user-Archipelago-CC/84150dfc-8a1f-5429-bb3f-6de83eb3af04/scratchpad/tape-624-on-plan.json",
+ "source": "/home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/chaser-witness/l74arrival-624-on-plan.json",
  "page": "seedling_bot_ap_p4f",
  "recordedBy": "scripts/procgen/probe-seedling-chaser-mobiles.mjs --record",
  "switches": {
@@ -42,7 +42,7 @@
    "level": 74,
    "player": {
     "x": 296,
-    "y": 136,
+    "y": 135.2,
     "hits": 0,
     "hits_timer": 0
    },
