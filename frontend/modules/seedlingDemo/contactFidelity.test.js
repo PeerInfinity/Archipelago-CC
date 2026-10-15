@@ -141,7 +141,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity SPINNINGAXE D1: `spinningAxePlayerHit` (a spinning axe bills the player) ships OFF.
             spinningAxePlayerHit: false,
             // ⛓ fidelity SPINNINGAXE D2: `partialDodgeReprobe` (a phase dodge's partial stall re-probed) ships OFF.
-            partialDodgeReprobe: false });
+            partialDodgeReprobe: false,
+
+            // ⛓ fidelity L40CONTACT D1: `chaserSpinnerWalls` (a live spinner walls a chaser whose list holds "Enemy") ships OFF.
+            chaserSpinnerWalls: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

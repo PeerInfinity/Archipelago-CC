@@ -7910,6 +7910,19 @@ export function createLevelRun({
         // ⛓ R4-swim D2: the drive's own list, so a forecast meets the turret
         // where the drive does.
         const staticEnemyBoxes = chaserStaticEnemyBoxesNow();
+        /**
+         * ⛓ fidelity L40CONTACT D1 (`chaserSpinnerWalls`): the spinners MOVE, so the forecast steps its own copy, one
+         * step per forecast tick and BEFORE the chasers (the game's update order, `chaserSpinnerWallsNow`), under
+         * `spinnerForecast`'s ctx split (this tick's ctx for the first step, `beforeTypeFlip: false` after). A press's hits
+         * on a spinner are not forecast. `null` while the key is OFF or the room holds no live spinner.
+         */
+        const spinnerLive = CONTACT_FIDELITY.chaserSpinnerWalls ? spinnerStateFor(level) : null;
+        const fspin = spinnerLive && spinnerRects(spinnerLive).length > 0 ? {
+            st: { byId: new Map([...spinnerLive.byId].map(([k, v]) => [k, { ...v }])), level },
+            ctx: spinnerCtx(),
+            ctxAfter: firstTickInWorld ? spinnerCtx({ beforeTypeFlip: false }) : null,
+            walls: [],
+        } : null;
         // The camera, seeded from the live one and stepped by this forecast
         // alone. `cam`/`camBand` are exclusive in `stepCameraNow` and are
         // mirrored here as such.
@@ -7982,6 +7995,11 @@ export function createLevelRun({
             step(playerPos, opts = {}) {
                 if (!first) advanceCamera(playerPos);
                 first = false;
+                if (fspin !== null) {
+                    stepSpinners(fspin.st, fspin.ctx);
+                    fspin.ctx = fspin.ctxAfter ?? fspin.ctx;
+                    fspin.walls = chaserSpinnerWallsNow(spinnerRects(fspin.st));
+                }
                 // ⛓ fidelity-bobsoldier D3: this tick's CORPSE swords (absent unless one swings).
                 let corpseSwords = null;
                 for (const id of ids) {
@@ -8020,6 +8038,11 @@ export function createLevelRun({
                             if (world.collidesSolid(r, solidOpts)) return true;
                             if (playerWall && rectsOverlap(r, playerWall)) return true;
                             for (const b of staticEnemyBoxes) {
+                                if (!enemyBoxStopsChaser(c.tag, b)) continue;
+                                if (rectsOverlap(r, b.rect)) return true;
+                            }
+                            // ⛓ fidelity L40CONTACT D1: the forecast's own spinners, this forecast tick.
+                            for (const b of fspin?.walls ?? []) {
                                 if (!enemyBoxStopsChaser(c.tag, b)) continue;
                                 if (rectsOverlap(r, b.rect)) return true;
                             }
@@ -11501,6 +11524,24 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ fidelity L40CONTACT D1 (`CONTACT_FIDELITY.chaserSpinnerWalls`) — THE LIVE SPINNERS, AS "Enemy" WALLS TO A
+     * CHASER'S SWEEP. A Spinner is `type = "Enemy"` (`Enemy.as:58`), so a chaser whose list holds "Enemy" (Bob,
+     * Puncher) stops against it; `enemyBoxStopsChaser` asks that per mover, as for a static box (no `solidLatch`).
+     *
+     * ⛔ READ PER TICK, AFTER THE SPINNERS STEPPED: `Game.as` adds `bob` (:2276) before `spinner` (:2416) and
+     * `World.addUpdate` prepends, so a spinner has already moved when a bob sweeps — `advance` steps the spinners
+     * above `stepChasersNow`, which is why `spinnerRectsNow()` at the top of that loop is the game's reading. The
+     * forecast passes its own stepped copy (`chaserForecastNow`). `[]` while the key is OFF (byte-identical).
+     *
+     * @param {?Array<{id: string, rect: object}>} spinners the spinner boxes to wall with (default: the live ones)
+     */
+    function chaserSpinnerWallsNow(spinners = undefined) {
+        if (!CONTACT_FIDELITY.chaserSpinnerWalls) return [];
+        const rects = spinners === undefined ? spinnerRectsNow() : spinners;
+        return (rects ?? []).map((s) => ({ id: s.id, rect: s.rect }));
+    }
+
+    /**
      * ⛓⛓⛓ seedling-fidelity-bobsoldier D1 — DOES THIS "Enemy"-ROSTER BOX STOP THIS CHASER?
      *
      * Every chaser bridged before the BobSoldier pushed "Enemy" onto its `solids` (`Bob.as:39`, `Puncher.as:48`), so
@@ -11571,7 +11612,8 @@ export function createLevelRun({
         // R8 slice 0's brand is what makes the normalise cost per TICK.
         const solidOpts = normalizeLiveOpts(liveSolidOpts());
         // ⛓ THE NON-CHASER "Enemy" BODIES, read once per tick (see the helper).
-        const staticEnemyBoxes = chaserStaticEnemyBoxesNow();
+        // ⛓ fidelity L40CONTACT D1: and the live spinners, where this tick's spinner step left them (OFF: none).
+        const staticEnemyBoxes = [...chaserStaticEnemyBoxesNow(), ...chaserSpinnerWallsNow()];
         // ⚠ THE UPDATE ORDER WITHIN THE FAMILY IS THE ADD ORDER, and the add
         // order is the `.oel`'s — `for each (o in xml.objects[0].bob)` walks
         // the placements in file order and PREPENDS each, so the LAST
