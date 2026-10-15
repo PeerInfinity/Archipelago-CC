@@ -48,6 +48,9 @@ const WALK_CATEGORY_BY_TRACK = Object.freeze({
 const WALK_CATEGORY_BY_TUTORIAL = Object.freeze({
     'procgen-loop-mode-jta': 'Tutorial walks: procgen loops',
     'procgen-loop-mode-everything': 'Tutorial walks: procgen loops',
+    // ⚖ The user, 2026-10-15: S4 plays to its 180 s bot-plays timeout every run, and
+    // beside seedling-bot's 420 s first-checks worst case it overran tutorials-seedling's budget.
+    'seedling-whole-game': 'Tutorial walks: seedling whole game',
 });
 const walkCategory = (tutorial) => WALK_CATEGORY_BY_TUTORIAL[tutorial.id] ?? WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
 const walkId = (id) => `tutorial-walk-${id}`;

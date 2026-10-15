@@ -1782,8 +1782,8 @@
         {
             "id": "tutorial-walk-seedling-whole-game",
             "enabled": true,
-            "category": "Tutorial walks: seedling",
-            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-whole-game; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
+            "category": "Tutorial walks: seedling whole game",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-whole-game; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling-whole-game (WebGPU), split from tutorials-seedling on 2026-10-15 (⚖ the user)."
         },
         {
             "id": "playback-bot-direct-play-adventure",
