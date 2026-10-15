@@ -1528,6 +1528,12 @@
             "_comment": "TUTORIAL PANEL T1 (2026-10-10): the panel's Play over the whole Guided Tour (the walk rows use Do it). Manual batch tutorials. Restores the panel (list, merged), its settings, the active tabs and the world loaded before."
         },
         {
+            "id": "feature-check-storage-panel-mode-key",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "FEATURE CHECKS (2026-10-15, \u2696 the user: a category in the Tutorials panel for scripted walks that test a feature, not tutorials). The walk row of feature check storage-panel-mode-key (one row per check, feature-check-<id>; tutorials.test.js checks each has one). Graded by the same ratchet as a tutorial walk. Manual batch feature-checks."
+        },
+        {
             "id": "tutorial-walk-guided-tour",
             "enabled": true,
             "category": "Tutorial walks",

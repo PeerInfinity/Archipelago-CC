@@ -16,6 +16,7 @@ import { startAppBotTestSpeed } from '../botTestSpeed.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import eventBus from '../../../app/core/eventBus.js';
 import { TUTORIALS } from '../../tutorials/content/index.js';
+import { FEATURE_CHECKS } from '../../tutorials/content/checks/index.js';
 import { DEFAULT_DONE_TIMEOUT_MS, TRACKS, panelSteps, terminalStep, validateTutorial } from '../../tutorials/tutorialShape.js';
 import { ratchetVerdict, walkTutorial } from '../../tutorials/tutorialWalk.js';
 import {
@@ -56,6 +57,9 @@ const WALK_CATEGORY_BY_TUTORIAL = Object.freeze({
 });
 const walkCategory = (tutorial) => WALK_CATEGORY_BY_TUTORIAL[tutorial.id] ?? WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
 const walkId = (id) => `tutorial-walk-${id}`;
+/** ⚖ 2026-10-15: feature checks (content/checks/index.js) walk in a manual batch of their own, feature-checks. */
+const CHECK_CATEGORY = 'Feature checks';
+const checkId = (id) => `feature-check-${id}`;
 const MOUNT_TIMEOUT_MS = 10000;
 const POLL_MS = 100;
 const TOUR_ID = 'guided-tour';
@@ -126,6 +130,11 @@ async function tutorialPanelListsEveryTutorial(tc) {
             try { validateTutorial(tutorial); } catch (e) { valid = false; tc.log?.(e.message); }
             tc.reportCondition(`tutorial ${tutorial.id} has the tutorial shape`, valid);
         }
+        for (const { tutorial } of FEATURE_CHECKS) {
+            let valid = true;
+            try { validateTutorial(tutorial, { check: true }); } catch (e) { valid = false; tc.log?.(e.message); }
+            tc.reportCondition(`feature check ${tutorial.id} has the feature-check shape`, valid);
+        }
         // Where each card belongs (⚖ 2026-10-10, 2026-10-14, 2026-10-15): ready
         // ones in a section per track, then Needs a terminal and In progress
         // (each a subsection per track), and the developer track — in that
@@ -135,17 +144,18 @@ async function tutorialPanelListsEveryTutorial(tc) {
         const order = Object.keys(TRACKS);
         const byTrack = (list) => order.flatMap((k) => list.filter((t) => t.track === k));
         const where = (t) => (TRACKS[t.track].collapsed ? 'developer' : t.status);
-        const expected = ['ready', 'terminal', 'in-progress', 'developer']
-            .flatMap((w) => byTrack(all.filter((t) => where(t) === w))).map((t) => t.id);
+        const checks = FEATURE_CHECKS.map((e) => e.tutorial);
+        const expected = [...['ready', 'terminal', 'in-progress', 'developer']
+            .flatMap((w) => byTrack(all.filter((t) => where(t) === w))), ...checks].map((t) => t.id);
         const cards = [...ui.root.querySelectorAll('.tut-card')].map((c) => c.dataset.tutorialId);
-        tc.reportCondition(`the list shows one card per tutorial, grouped by track (${cards.join(', ')})`,
+        tc.reportCondition(`the list shows one card per tutorial, grouped by track, then the feature checks (${cards.join(', ')})`,
             JSON.stringify(cards) === JSON.stringify(expected));
-        for (const t of all) {
+        for (const t of [...all, ...checks]) {
             const card = ui.root.querySelector(`.tut-card[data-tutorial-id="${t.id}"]`);
             const chain = [];
             for (let d = card?.closest('details'); d; d = d.parentElement?.closest('details')) chain.unshift(d);
             const want = sectionPath(t);
-            tc.reportCondition(`${t.id} (${t.status}, track ${t.track}) sits in ${want.join(' › ')}, collapsed`,
+            tc.reportCondition(`${t.id} (${t.status}, track ${t.track ?? 'none: a feature check'}) sits in ${want.join(' › ')}, collapsed`,
                 JSON.stringify(chain.map((d) => d.dataset.section)) === JSON.stringify(want) && chain.every((d) => !d.open));
         }
         tc.reportCondition('a status section holds subsections, not cards',
@@ -531,18 +541,23 @@ for (const [id, name, description, testFunction] of TESTS) {
     });
 }
 
-// One walk row per tutorial (tutorials.test.js checks the roster enrols each).
-for (const { tutorial } of TUTORIALS) {
+// One walk row per tutorial, and per feature check (tutorials.test.js checks the roster enrols each).
+const walkRows = [
+    ...TUTORIALS.map(({ tutorial }) => ({ tutorial, id: walkId(tutorial.id), kind: 'Tutorial walk', category: walkCategory(tutorial) })),
+    ...FEATURE_CHECKS.map(({ tutorial }) => ({ tutorial, id: checkId(tutorial.id), kind: 'Feature check', category: CHECK_CATEGORY })),
+];
+for (const { tutorial, id, kind, category } of walkRows) {
+    const fn = `walk_${tutorial.id.replace(/-/g, '_')}`;
     registerTest({
-        id: walkId(tutorial.id),
-        name: `Tutorial walk: ${tutorial.title}`,
+        id,
+        name: `${kind}: ${tutorial.title}`,
         description: `Performs every step of "${tutorial.title}" with Do it (outside steps: their stand-in) and grades `
             + `the result by its record (${tutorial.status === 'ready' ? 'ready: every step must work'
                 : tutorial.status === 'terminal' ? `needs a terminal: it must stop at ${terminalStep(tutorial)?.step.id}`
                     : `in progress: firstFailingStep ${tutorial.firstFailingStep ?? 'null'}`}). Reloads the world loaded before.`,
         // Named per row: the registry tells test functions apart by name.
-        testFunction: { [`walk_${tutorial.id.replace(/-/g, '_')}`]: (tc) => tutorialWalkRow(tc, tutorial) }[`walk_${tutorial.id.replace(/-/g, '_')}`],
-        category: walkCategory(tutorial),
+        testFunction: { [fn]: (tc) => tutorialWalkRow(tc, tutorial) }[fn],
+        category,
         enabled: false,
     });
 }

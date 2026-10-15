@@ -14,6 +14,7 @@
  *   summary   one plain sentence: what the tutorial teaches (the list's card,
  *             the docs' list)
  *   track     which heading of the list it sits under: a key of TRACKS
+ *             (a feature check, content/checks/index.js, has none)
  *   status    'ready', 'terminal' or 'in-progress' (⚖ the user, 2026-10-10:
  *             every tutorial is written now, finished feature or not; the panel
  *             lists in-progress ones in a collapsed section).
@@ -179,8 +180,13 @@ function checkBlock(b, where, stepIds, { stepsAllowed }) {
     }
 }
 
-/** Throws, naming the place, on any departure from the shape above; returns the tutorial. */
-export function validateTutorial(t) {
+/**
+ * Throws, naming the place, on any departure from the shape above; returns the
+ * tutorial. `check`: it is a FEATURE CHECK (content/checks/index.js, ⚖ the
+ * user, 2026-10-15) — a scripted walk that tests a feature. It has no `track`
+ * and no guide (`doc: null`); everything else is the tutorial shape.
+ */
+export function validateTutorial(t, { check = false } = {}) {
     if (!t || typeof t !== 'object') fail('?', 'not an object');
     if (typeof t.id !== 'string' || !SLUG.test(t.id)) fail('?', `id ${JSON.stringify(t.id)} is not a slug`);
     const where = t.id;
@@ -204,7 +210,10 @@ export function validateTutorial(t) {
         sec.blocks.forEach((b, j) => checkBlock(b, `${w} block ${j}`, stepIds, { stepsAllowed: true }));
     });
     if (stepIds.size === 0) fail(where, 'has no steps');
-    if (!Object.prototype.hasOwnProperty.call(TRACKS, t.track)) fail(where, `track ${JSON.stringify(t.track)} is not one of ${Object.keys(TRACKS).join(', ')}`);
+    if (check) {
+        if (t.track !== undefined) fail(where, 'a feature check has no track');
+        if (t.doc !== null) fail(where, 'a feature check has no guide (`doc: null`)');
+    } else if (!Object.prototype.hasOwnProperty.call(TRACKS, t.track)) fail(where, `track ${JSON.stringify(t.track)} is not one of ${Object.keys(TRACKS).join(', ')}`);
     if (!STATUSES.includes(t.status)) fail(where, `status is one of ${STATUSES.join(', ')}`);
     if (t.status === 'ready' && t.firstFailingStep !== undefined) fail(where, 'a ready tutorial has no firstFailingStep');
     if (t.status === 'terminal') {

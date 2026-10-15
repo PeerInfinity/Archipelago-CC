@@ -9,6 +9,7 @@ import { describe, expect, it } from 'vitest';
 import { REPO, hasGuide, renderAll, renderGuides } from '../../../scripts/tutorials/generate-tutorial-docs.mjs';
 import { FEATURES, NOT_COVERED_YET, NO_TUTORIAL, PLANNED_PANELS } from './content/coverage.js';
 import { TUTORIALS } from './content/index.js';
+import { FEATURE_CHECKS } from './content/checks/index.js';
 import { generatedMarker, tutorialMarkdown } from './tutorialMarkdown.js';
 import { blocksFor, panelSteps, panelsCovered, terminalStep, validateTutorial } from './tutorialShape.js';
 import { ratchetVerdict, walkTutorial } from './tutorialWalk.js';
@@ -223,6 +224,56 @@ describe('tutorialMarkdown', () => {
             '# Tiny', '', 'Hello.', '', '## One', '', 'Before.', '', '1. Do **a**.', '2. Do b.', '',
             'Only in the guide.', '', '## Next', '', '- one', '- two', '', generatedMarker('src.js'), '',
         ].join('\n'));
+    });
+});
+
+describe('feature checks (⚖ 2026-10-15)', () => {
+    const check = (over = {}) => tiny({ track: undefined, intro: [], outro: null, ...over });
+    it('a feature check has no track and no guide; teaching prose is optional', () => {
+        expect(() => validateTutorial(check(), { check: true })).not.toThrow();
+        expect(() => validateTutorial(check({ track: 'start' }), { check: true })).toThrow(/no track/);
+        expect(() => validateTutorial(check({ doc: 'docs/json/user/x.md' }), { check: true })).toThrow(/no guide/);
+        expect(() => validateTutorial(check())).toThrow(/track/);
+    });
+
+    it('the ratchet grades one like a tutorial', async () => {
+        const t = check({ status: 'in-progress', firstFailingStep: 'b' });
+        const out = await walkTutorial(t, {
+            perform: async ({ step }) => { if (step.id === 'b') throw new Error('no'); },
+            standIn: async () => {},
+            waitDone: async () => true,
+        });
+        expect(ratchetVerdict(t, out).ok).toBe(true);
+    });
+
+    it('every check has the shape; ids are unique across tutorials AND checks', () => {
+        for (const { tutorial } of FEATURE_CHECKS) expect(() => validateTutorial(tutorial, { check: true })).not.toThrow();
+        const ids = [...TUTORIALS, ...FEATURE_CHECKS].map((e) => e.tutorial.id);
+        expect(new Set(ids).size).toBe(ids.length);
+    });
+
+    it('each check\'s `source` is the file that exports it', async () => {
+        for (const { source, tutorial } of FEATURE_CHECKS) {
+            const mod = await import(join(REPO, source));
+            expect(Object.values(mod)).toContain(tutorial);
+        }
+    });
+
+    it('no check is in TUTORIALS, so no guide, list or coverage reads one', () => {
+        const tutorials = new Set(TUTORIALS.map((e) => e.tutorial));
+        for (const { tutorial } of FEATURE_CHECKS) expect(tutorials.has(tutorial), tutorial.id).toBe(false);
+        const docs = renderAll().map(({ text }) => text).join('\n');
+        for (const { tutorial } of FEATURE_CHECKS) expect(docs.includes(tutorial.id), tutorial.id).toBe(false);
+    });
+
+    it('every check has a walk row in the substrates roster (its id is feature-check-<id>)', () => {
+        const config = JSON.parse(readFileSync(join(REPO, 'frontend/test-configs/playwright_tests_config-substrates.json'), 'utf8'));
+        const rows = new Map((config.testOrder ?? config.tests ?? []).map((r) => (typeof r === 'string' ? [r, {}] : [r.id, r])));
+        for (const { tutorial } of FEATURE_CHECKS) {
+            const row = rows.get(`feature-check-${tutorial.id}`);
+            expect(row, tutorial.id).toBeTruthy();
+            expect(row.category, tutorial.id).toBe('Feature checks');
+        }
     });
 });
 

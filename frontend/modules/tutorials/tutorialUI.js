@@ -23,7 +23,8 @@
  *     collapsed each time the panel loads (not remembered across reloads):
  *     ready tutorials in a section per track; Needs a terminal and In
  *     progress each hold a subsection per track (even a track of one); the
- *     developer track. Saved progress shows Resume in the toolbar, and leaving
+ *     developer track; then the FEATURE CHECKS (content/checks/index.js).
+ *     Saved progress shows Resume in the toolbar, and leaving
  *     a tutorial opens the sections that hold it (sectionPath).
  *   - an OUTSIDE step (a terminal command, e.g. a local MultiServer) shows its
  *     command with a Copy button; Do it is off for it, and Play waits for its
@@ -38,6 +39,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { DOCS_LINK_TARGETS, docsHref } from '../../app/config/docsBase.js';
 import { inline } from '../procgenDocs/markdownLite.js';
 import { TUTORIALS } from './content/index.js';
+import { FEATURE_CHECKS } from './content/checks/index.js';
 import { TRACKS, blocksFor, panelSteps, terminalStep } from './tutorialShape.js';
 import { buildContext } from './tutorialContext.js';
 import {
@@ -86,6 +88,7 @@ export const CONTROLS = Object.freeze({
     blocked: 'tut-blocked',
     banner: 'tut-banner',
     resume: 'tut-resume',
+    checks: 'tut-checks',
 });
 export const TEXT = Object.freeze({
     prev: '◀ Back',
@@ -105,6 +108,8 @@ export const TEXT = Object.freeze({
     terminalIntro: 'Each of these runs a command in a terminal partway through. The panel can do every step '
         + 'before that one, and the test checks those steps. At the terminal step, copy the command and run it yourself. '
         + 'The test cannot run a terminal, so it does not check the steps after that one.',
+    checks: 'Feature checks',
+    checksIntro: 'Not tutorials: scripted walks that test a feature. Start one to watch it, or run it as a test.',
     copy: 'Copy',
     copied: 'Copied',
     outsideWaiting: 'Do this step yourself, outside the app — Play carries on once it is done.',
@@ -117,16 +122,26 @@ const SECTION_OF_STATUS = Object.freeze({ terminal: 'terminal', 'in-progress': '
 /**
  * The keys (`data-section`) of the list sections that hold `t`'s card, outer
  * first: `ready:<track>`; `terminal` then `terminal:<track>`; `drafts` then
- * `drafts:<track>`; a collapsed track's `track:<track>`.
+ * `drafts:<track>`; a collapsed track's `track:<track>`; a feature check's
+ * `checks`.
  */
 export function sectionPath(t) {
+    if (isFeatureCheck(t)) return ['checks'];
     if (TRACKS[t.track]?.collapsed) return [`track:${t.track}`];
     const status = SECTION_OF_STATUS[t.status];
     return status ? [status, `${status}:${t.track}`] : [`ready:${t.track}`];
 }
 
+/** Every walk the panel can start: the tutorials, then the feature checks. */
+const ALL_WALKS = Object.freeze([...TUTORIALS, ...FEATURE_CHECKS]);
+
 function findTutorial(id) {
-    return TUTORIALS.find((e) => e.tutorial.id === id)?.tutorial ?? null;
+    return ALL_WALKS.find((e) => e.tutorial.id === id)?.tutorial ?? null;
+}
+
+/** Is `t` a feature check (content/checks/index.js), not a tutorial? */
+export function isFeatureCheck(t) {
+    return FEATURE_CHECKS.some((e) => e.tutorial === t);
 }
 
 /** "Works up to step 3 of 9; step 4 does not work yet." */
@@ -224,7 +239,7 @@ export class TutorialUI {
     async _init() {
         await this._loadSettings();
         const saved = await settingsManager.getSetting(SETTING(PROGRESS_KEY), null);
-        this.saved = saved && TUTORIALS.some((e) => e.tutorial.id === saved.id) ? saved : null;
+        this.saved = saved && findTutorial(saved.id) ? saved : null;
         this.render();
         await this._startFromUrl();
     }
@@ -247,7 +262,7 @@ export class TutorialUI {
         const item = this.item();
         if (item) item.parentItem?.setActiveComponentItem?.(item, true);
         else eventBus.publish('ui:activatePanel', { panelId: COMPONENT_TYPE }, MODULE_ID);
-        if (!TUTORIALS.some((e) => e.tutorial.id === request.id)) {
+        if (!findTutorial(request.id)) {
             this.notice = `No tutorial named "${request.id}" (from the page's ?${TUTORIAL_PARAM}= parameter).`;
             this.render();
             return false;
@@ -278,9 +293,9 @@ export class TutorialUI {
 
     /** Start (or resume at `index`) a tutorial by id; splits the layout. */
     start(id, index = 0) {
-        const entry = TUTORIALS.find((e) => e.tutorial.id === id);
-        if (!entry) throw new Error(`no tutorial ${id}`);
-        this.tutorial = entry.tutorial;
+        const tutorial = findTutorial(id);
+        if (!tutorial) throw new Error(`no tutorial ${id}`);
+        this.tutorial = tutorial;
         this.steps = panelSteps(this.tutorial);
         this.doneSteps = new Set();
         this.index = Math.max(0, Math.min(index, this.steps.length - 1));
@@ -596,6 +611,13 @@ export class TutorialUI {
             if (!list.length) continue;
             const box = this._section(key === 'developer' ? CONTROLS.developer : `tut-track-${key}`, `${track.title} (${list.length})`, `track:${key}`);
             cards(box, list);
+            wrap.append(box);
+        }
+        // ⚖ 2026-10-15: feature checks — scripted walks that test a feature, not tutorials.
+        if (FEATURE_CHECKS.length) {
+            const box = this._section(CONTROLS.checks, `${TEXT.checks} (${FEATURE_CHECKS.length})`, 'checks');
+            box.append(el('div', 'tut-collapsed-intro', TEXT.checksIntro));
+            cards(box, FEATURE_CHECKS.map((e) => e.tutorial));
             wrap.append(box);
         }
         return wrap;
