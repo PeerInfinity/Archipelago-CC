@@ -99,7 +99,6 @@ Playthrough:
   Blue Key: Totem Shard
   Chest (Bosiniad Lava): Progressive Sword
   Chest (Bosiniad Main Room): Progressive Shield
-  Chest (Ghethis): Light
   Chest (Lacste Main Room): Red Key
   Chest (Trohn Inside): Seal
   Conch: Seal
