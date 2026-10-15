@@ -8122,6 +8122,16 @@ export function createLevelRun({
                     c.y = r.y;
                     c.v = r.v;
                     /**
+                     * ⛓ fidelity CORRIDOR D1/D2 (`corridorBodyPricing` ON only) — THE CONTACT GATE'S OWN I-FRAME:
+                     * `Enemy.update` runs `hitUpdate(); hitPlayer();` at the BODY's update, above the Player, so the
+                     * gate reads this tick's decremented timer BEFORE the Player's own update can write one (the
+                     * dark shield's bump below, `darkShieldHitChaser`). The projection's `hitsTimer` is read after
+                     * both, so a contact the shield then answers was priced free. MEASURED (survey step 170, L77):
+                     * `lavarunner@112,256` hits the player at t17 at 0 px from this forecast, and the sample read its
+                     * `hitsTimer` 29 — the dark shield's, set after the contact. Projected as `contactHitsTimer`.
+                     */
+                    if (CONTACT_FIDELITY.corridorBodyPricing) c.gateTimer = c.hitsTimer > 0 ? c.hitsTimer - 1 : 0;
+                    /**
                      * ⛓ fidelity L74LEG624 D4 (`CONTACT_FIDELITY.forecastSpeedByTerrain`) — K2's `LavaRunner` tail on
                      * the clone: `stepChasersNow` re-chooses `moveSpeed` by the tile under the body after the chase
                      * (swim 1 on water or lava, walk 1.5 elsewhere) and this forecast did not, so a previewed
@@ -8253,6 +8263,8 @@ export function createLevelRun({
                         enemyClass: ENEMY_CLASSES[c.tag]?.as3 ?? null,
                         hits: c.hits,
                         hitsTimer: c.hitsTimer,
+                        // ⛓ fidelity CORRIDOR: the timer the body's own contact gate read this tick (switch ON only).
+                        ...(c.gateTimer !== undefined ? { contactHitsTimer: c.gateTimer } : {}),
                         // ⛓ U10-swim D2: this tick's punch, for a class that has one.
                         ...(c.punch !== undefined ? { punch: c.punch } : {}),
                         // ⛓ fidelity-bobsoldier D3: this tick's sword lines, for a class that has one.
@@ -11465,6 +11477,153 @@ export function createLevelRun({
             if (out.hopped) drillEvents.push({ t, level, id, kind: 'hop', x: d.x, y: d.y });
             if (pendingDeath) return;
         }
+    }
+
+    /**
+     * ⛓⛓ fidelity CORRIDOR D2 (`CONTACT_FIDELITY.corridorBodyPricing`) — THE WALLFLYERS AND DRILLS, FORECAST ALONG A
+     * CANDIDATE WALK: `stepWallFlyersNow` and `stepDrillsNow` on clones, against the PREVIEWED player, one update per
+     * `step(playerPos, opts)` — `chaserForecastNow`'s shape one family over, and for its reason: both classes are
+     * PLAYER-COUPLED (a flyer launches when the player crosses its trigger ray, a drill hops toward a player in
+     * range), so where they will be is a function of the walk being considered.
+     *
+     * Each step returns one row per body still in the room: `{kind, id, x, y, rect, contact, hitsPlayer}`, where
+     * `contact` is the class's own `hitPlayer` gate firing against the player's START-of-tick box (the box the live
+     * step reads — the bodies update above the Player) and `hitsPlayer` is that contact landing through the player's
+     * own i-frame (`playerHit`'s `hitsTimer` gate, run down one a tick as `Player.update` runs it). An on-screen verdict
+     * the shake band leaves `uncertain` is stepped as ON and the row says `uncertain` (the live step would refuse
+     * there, so the probe prices it rather than guessing it).
+     *
+     * ⚠ What the clone does NOT carry, named: the player's knockback after a contact (the probe stops at the first
+     * danger, so no later sample is read), a sword press landing on a flyer (the preview's strike policy steps the
+     * chaser forecast only), and the drill's dark-suit retaliation. The plain shield's flyer reversal and the dark
+     * shield's hit are stepped (`shieldBumpNow`'s W7 arm) under `wallFlyerShieldBump`.
+     *
+     * `null` while the switch is OFF, under `noclip`/`noDamage` (nothing is stepped), or in a room with neither class.
+     */
+    function corridorBodyForecastNow() {
+        if (noclip || noDamage || !CONTACT_FIDELITY.corridorBodyPricing) return null;
+        // The live order: the LAST wallflyer placement updates first; the drills in placement order.
+        const flyers = [...wallFlyerStateFor(level)].reverse().filter(([, w]) => !w.removed)
+            .map(([id, w]) => [id, { ...w, dieAnim: w.dieAnim ? { ...w.dieAnim } : null }]);
+        const drills = [...drillStateFor(level)].filter(([, d]) => !d.removed).map(([id, d]) => [id, { ...d }]);
+        if (flyers.length === 0 && drills.length === 0) return null;
+        const fl = new Map(flyers);
+        const dr = new Map(drills);
+        // ⚠ ONCE: the previewed world is frozen at this tick's geometry (`chaserForecastNow`'s note).
+        const sctx = spinnerCtx();
+        const shieldOn = CONTACT_FIDELITY.wallFlyerShieldBump && inventory?.hasShield === true;
+        const dark = inventory?.hasDarkShield === true;
+        let iframe = damage?.hitsTimer ?? 0;
+        // The camera, seeded from the live one and stepped by this forecast alone (`chaserForecastNow`'s).
+        let fcam = cam ? { ...cam } : null;
+        let fband = camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null;
+        let fshake = shake;
+        const worldRec = world.world;
+        const target = bossCameraTarget;
+        let first = true;
+        const advanceCamera = (player) => {
+            if (fband === null && fshake === 0) {
+                fcam = stepCamera(fcam, player, worldRec, { cameraTarget: target });
+                return;
+            }
+            if (fband === null) fband = cameraBand(fcam);
+            const r = stepCameraBand(fband, player, worldRec, { shake: fshake, cameraTarget: target });
+            fband = r.band;
+            fshake = r.shake;
+            if (bandIsExact(fband)) {
+                fcam = { x: fband.x.lo, y: fband.y.lo };
+                fband = null;
+            } else {
+                fcam = null;
+            }
+        };
+        return {
+            step(playerPos, opts = {}) {
+                if (!first) advanceCamera(playerPos);
+                first = false;
+                const playerBox = playerBoxAt(playerPos.x, playerPos.y);
+                const rows = [];
+                const seen = new Map();
+                const onScreen = (id) => (rect) => {
+                    if (fband === null) return camOnScreen(rect, fcam);
+                    const verdict = onScreenUnderShake(rect, fband);
+                    if (verdict === 'uncertain') seen.set(id, true);
+                    return verdict !== 'off';
+                };
+                for (const [id, before] of fl) {
+                    if (before.removed) continue;
+                    let contact = false;
+                    const out = stepWallFlyer(before, {
+                        collides: sctx.collides, probe: sctx.collides, tileTypeAt: sctx.tileTypeAt,
+                        onScreen: onScreen(id), frozen: false, playerBox,
+                        hitPlayer: (w) => { contact = true; return w; },
+                    });
+                    fl.set(id, stepWallFlyerGraphic(out.w));
+                    seen.set(`${id}#contact`, contact);
+                }
+                for (const [id, before] of dr) {
+                    if (before.removed) continue;
+                    let contact = false;
+                    const out = stepDrill(before, {
+                        frozen: false, onScreen: onScreen(id), playerBox,
+                        player: { x: playerPos.x, y: playerPos.y },
+                        lineBlocked: (x0, y0, x1, y1) => !!collideLineSolid(x0, y0, x1, y1),
+                        collides: (rect) => sctx.collides(rect),
+                        hitPlayer: (d) => { contact = true; return d; },
+                    });
+                    dr.set(id, stepDrillGraphic(out.d));
+                    seen.set(`${id}#contact`, contact);
+                }
+                // `shieldBumpNow`'s W7 arm — the Player updates last, at its start-of-tick point.
+                if (shieldOn && Number.isFinite(playerPos.vx) && Number.isFinite(playerPos.vy)) {
+                    const slashing = opts.slashing === true;
+                    for (const [id, w] of fl) {
+                        if (w.removed) continue;
+                        if (!shieldBumpTouches(playerPos, slashing, wallFlyerRect(w))) continue;
+                        if (dark && w.hitsTimer <= 0) {
+                            fl.set(id, hitWallFlyer(w, { damage: DARK_SHIELD_DAMAGE, t: 'Shield' }).w);
+                            continue;
+                        }
+                        fl.set(id, { ...w, vx: -w.vx, vy: -w.vy });
+                    }
+                }
+                const lands = iframe <= 0;
+                for (const [kind, map, rectOf] of [['wallflyer', fl, wallFlyerRect], ['drill', dr, drillRect]]) {
+                    for (const [id, b] of map) {
+                        if (b.removed) continue;
+                        const contact = seen.get(`${id}#contact`) === true;
+                        rows.push({ kind, id, x: b.x, y: b.y, rect: rectOf(b), contact, hitsPlayer: contact && lands,
+                            ...(seen.get(id) ? { uncertain: true } : {}) });
+                    }
+                }
+                if (iframe > 0) iframe -= 1;
+                return rows;
+            },
+            /**
+             * One sword test of the preview's own window against the clones — the live press arms' `family:
+             * 'wallflyer'` / `'drill'` (TERRAIN W2/W3): `inSwing(rect)` is the caller's rect-and-reach gate (the
+             * preview's `slashRect` and `slashReachFor`, as its chaser arm asks them), then `collideLine("Solid")`
+             * from the player's start-of-tick point, then `hitWallFlyer` / `hitDrill` (the receiver decides: an
+             * i-framed or dying body takes nothing). The kill is a clone's "die" anim; it leaves the rows when the
+             * graphic half removes it. Returns the ids that took a landed hit.
+             */
+            swing(playerPos, inSwing) {
+                const landed = [];
+                for (const [map, rectOf, hitOf, field] of [[fl, wallFlyerRect, hitWallFlyer, 'w'],
+                    [dr, drillRect, hitDrill, 'd']]) {
+                    if (map === dr && !CONTACT_FIDELITY.drillLive) continue;
+                    if (map === fl && !CONTACT_FIDELITY.wallFlyerSwordHits) continue;
+                    for (const [id, b] of map) {
+                        if (b.removed || !inSwing(rectOf(b), id)) continue;
+                        if (collideLineSolid(playerPos.x, playerPos.y, b.x, b.y)) continue;
+                        const v = hitOf(b, { damage: pressHitDamage('sword'), t: pressHitType('sword') });
+                        map.set(id, v[field]);
+                        if (v.landed) landed.push(id);
+                    }
+                }
+                return landed;
+            },
+        };
     }
 
     /**
@@ -17541,6 +17700,13 @@ export function createLevelRun({
          */
         chaserForecast() {
             return chaserForecastNow();
+        },
+        /**
+         * ⛓ fidelity CORRIDOR D2: THE WALLFLYERS AND DRILLS, FORECAST — see `corridorBodyForecastNow`. `null` while
+         * `CONTACT_FIDELITY.corridorBodyPricing` is OFF, so every preview is byte-identical then.
+         */
+        corridorBodyForecast() {
+            return corridorBodyForecastNow();
         },
         /**
          * ⛓ U15-swim D2: THE TURRET SUBSYSTEM, FORECAST — see `spitForecastNow`.

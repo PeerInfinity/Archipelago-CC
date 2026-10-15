@@ -4761,6 +4761,18 @@ export const LAPSE_NARROW_RETRY = {
 };
 
 /**
+ * ⛓ fidelity CORRIDOR D2 — one fired sword test of `previewWalk`'s window against the forecast wallflyers and drills
+ * (`run.corridorBodyForecast().swing`), through the preview chaser arm's own two gates: `getSlashRect()` at the
+ * thrust's scale, then `distanceRectPoint` against `slashReachFor`. Only reached with `corridorBodyPricing` ON.
+ */
+function corridorSwing(forecast, state, thrust) {
+    const rectNow = slashRect(state.x, state.y, thrust.direction, thrust.scale);
+    const reachLimit = slashReachFor(thrust.scale);
+    return forecast.swing(state, (rect) => rectsOverlapLocal(rectNow, rect)
+        && distanceRectPoint(state.x, state.y, rect) <= reachLimit);
+}
+
+/**
  * ⛓ EXPORTED FOR ONE REASON, and it is the same reason `facingToward` and
  * `FACING_KEYS` are: the claim that repairs this slice is an EQUALITY between
  * this function and `botDriverV2.drive`, and an equality asserted against a
@@ -4832,6 +4844,12 @@ export function previewWalk(run, wps, tolerance = 0,
      * blasted is a function of the walk. `null` in a room with no grenade.
      */
     const grenadeForecast = run.grenadeForecast?.() ?? null;
+    /**
+     * ⛓⛓ fidelity CORRIDOR D2 — **AND THE WALLFLYERS AND DRILLS ADVANCE ON IT TOO** (`corridorBodyPricing`): both are
+     * player-coupled, so each sample carries them as of its own tick (`run.corridorBodyForecast`). `null` with the
+     * switch OFF, so every preview is byte-identical then.
+     */
+    const corridorForecast = run.corridorBodyForecast?.() ?? null;
     /**
      * ⛔⛔⛔ R9 SLICE 12b — **THE STRIKE POLICY SEES THE PREVIOUS TICK'S
      * BODIES, ON BOTH SIDES, AND THAT IS THE ONLY READING A DRIVER CAN HAVE.**
@@ -4995,6 +5013,9 @@ export function previewWalk(run, wps, tolerance = 0,
         const fired = swordWindowStep(swordWindow, at);
         swordWindow = fired.window;
         for (const thrust of fired.fires) {
+            // ⛓ fidelity CORRIDOR D2: the same test against the forecast wallflyers and drills (`swing`), whose
+            // `inSwing` is this arm's two gates below; `null` (the switch OFF) asks nothing.
+            if (corridorForecast && thrust.weapon === 'sword') corridorSwing(corridorForecast, state, thrust);
             if (thrust.weapon !== 'sword' || !chasers) continue;
             /**
              * ⛓ `slash()`'s TWO GATES, in the game's order: `collideRectInto`
@@ -5151,6 +5172,9 @@ export function previewWalk(run, wps, tolerance = 0,
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
             }
             if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
+            if (corridorForecast) {
+                sample.corridorBodies = corridorForecast.step(st, { slashing: slashState?.slashing === true });
+            }
             samples.push(sample);
             let held = st.fall ? new Set() : NO_HELD_PREVIEW;
             const combat = combatBefore(st, tick - 1, held, chaserBodies);
@@ -5230,6 +5254,9 @@ export function previewWalk(run, wps, tolerance = 0,
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
             }
             if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
+            if (corridorForecast) {
+                sample.corridorBodies = corridorForecast.step(st, { slashing: slashState?.slashing === true });
+            }
             samples.push(sample);
             if (stopWhen && stopWhen(sample)) {
                 truncated = { kind: 'stopped', at: { x: st.x, y: st.y },
@@ -5341,6 +5368,9 @@ export function previewWalk(run, wps, tolerance = 0,
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
             }
             if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
+            if (corridorForecast) {
+                sample.corridorBodies = corridorForecast.step(st, { slashing: slashState?.slashing === true });
+            }
             samples.push(sample);
             let held = st.fall ? new Set() : (tailHeld ? tailHeld(st) : NO_HELD_PREVIEW);
             /**
@@ -18850,7 +18880,7 @@ function solveSegmentUnder({
             }
             const d = withoutSources(
                 dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows, s.chasers,
-                    s.spits ?? null, s.grenades ?? null),
+                    s.spits ?? null, s.grenades ?? null, s.corridorBodies ?? null),
                 except);
             if (d.danger) return { x: s.x, y: s.y, tick: s.tick, ...d };
             corpses?.see(s);
@@ -18919,6 +18949,22 @@ function solveSegmentUnder({
                 `solverBot(${name}): the corridor probe`);
         }
         return null;
+    };
+
+    /**
+     * ⛓ fidelity CORRIDOR D2 (`corridorBodyPricing` ON only) — THE DASHED WALK, ASKED WHEN THE UNDASHED PROBE'S EVERY
+     * REASON IS A FORECAST WALLFLYER'S OR DRILL'S CONTACT. `walkTo` walks the dash `planSwordDash` certifies on the
+     * corridor it is handed, and a dash's presses strike the flyers the undashed preview lets fly (survey step 47: the
+     * planned swing at t10 turns `wallflyer@48,112` back; the undashed preview meets it at t64). The same call, with
+     * the same predicate (`probeSamples`), that `walkTo` makes once the corridor is chosen — so a plan here is the plan
+     * the drive walks. `null` when not asked (the switch OFF, a mixed or other hit, no dash, an undashed walk).
+     */
+    const corridorDashRescue = (wps, hit, except, { stand = null, axisAligned = false, undashed = false } = {}) => {
+        if (!hit || !CONTACT_FIDELITY.corridorBodyPricing || dashMode === 'none' || axisAligned || undashed) return null;
+        if (!(hit.sources?.length > 0) || !hit.sources.every((sx) => sx.body !== undefined)) return null;
+        const d = planSwordDash(run, wps, { tolerance, dashMode,
+            certify: (samples) => probeSamples(samples, except), ...(stand ? { stand } : {}) });
+        return d.plan ? d : null;
     };
 
     /**
@@ -19041,6 +19087,8 @@ function solveSegmentUnder({
     let dodgesSpent = 0;
     const climbLadderUnder = ({ goal, aim, contacts, allowTeleporter, what, hit,
         dangerExcept = null, corridor = null, axisAligned = false,
+        // ⛓ fidelity CORRIDOR D2 — the walk will not dash (`walkTo`'s `undashed`): no dashed rescue is asked.
+        undashed = false,
         // ⛓ FRONTIER3 — the AVOID rung re-plans on the lattice the walk was
         // planned on (`FINE_LATTICE` only after a frontier refusal).
         lattice = DEFAULT_LATTICE,
@@ -19204,6 +19252,14 @@ function solveSegmentUnder({
          * route round the hub), and DODGE below gets the axe's own bounds.
          */
         const axeOnly = hit.sources.length > 0 && hit.sources.every((s) => s.kind === 'hazard' && s.axe);
+        /**
+         * ⛓ fidelity CORRIDOR D2 (`corridorBodyPricing` ON only) — every reason is a wallflyer's or a drill's contact
+         * forecast along the walk (`dangerMap.corridorBodyDanger` sets `body`). A flyer flies its lane and stops at
+         * the far wall, so the same corridor walked a few ticks later meets it elsewhere: DODGE's spit search (below
+         * AVOID, which is still asked) is the right question. OFF: always false, the ladder unchanged.
+         */
+        const corridorBodyOnly = CONTACT_FIDELITY.corridorBodyPricing && hit.sources.length > 0
+            && hit.sources.every((s) => s.kind === 'chaser' && s.body !== undefined);
         if (spitOnly && corridor) {
             refused = { rung: 'avoid', why: 'every reason the probe gave is a TurretSpit '
                 + `(${reasonsOf(hit).slice(0, 160)}); a spit is the walk's own timing, not a `
@@ -19221,7 +19277,9 @@ function solveSegmentUnder({
             }
         }
         if (avoid) {
-            const still = probeCorridor(avoid, dangerExcept, stand ? { stand } : {});
+            let still = probeCorridor(avoid, dangerExcept, stand ? { stand } : {});
+            // ⛓ fidelity CORRIDOR D2: the dashed walk `walkTo` would take on this corridor (`corridorDashRescue`).
+            if (corridorDashRescue(avoid, still, dangerExcept, { stand, axisAligned, undashed })) still = null;
             if (!still) {
                 rowFor('avoid', null, { waypoints: avoid.length });
                 return { wps: avoid, escalations };
@@ -19252,8 +19310,9 @@ function solveSegmentUnder({
          * re-plans from where it stands, with the turrets as THEY stand, and
          * the ordinary probe certifies the rest. A corridor that still probes
          * a spit climbs again; `DODGE_RUNG.maxPerSegment` bounds the stalls.
+         * ⛓ fidelity CORRIDOR D2: a wallflyer's or a drill's forecast contact asks it too (`corridorBodyOnly`).
          */
-        if (spitOnly && corridor) {
+        if ((spitOnly || corridorBodyOnly) && corridor) {
             if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
@@ -21101,6 +21160,15 @@ function solveSegmentUnder({
              * remaining corridor is probed from the stall's end and, on a hit, the ladder is climbed again (the
              * AXE arm's question). OFF: one climb, byte-identical.
              */
+            /**
+             * ⛓ fidelity CORRIDOR D2 (`corridorBodyPricing` ON only) — THE DASHED WALK IS ASKED BEFORE THE LADDER when
+             * every reason the undashed probe gave is a forecast wallflyer's or drill's contact. The drive walks the
+             * DASH (below) whenever one certifies, and a dash's presses strike the flyers the undashed preview lets fly
+             * (survey step 47: the planned swing at t10 turns `wallflyer@48,112` back; the undashed preview meets it at
+             * t64). Certified by the same predicate (`probeSamples`), so a plan returned here is a clean dashed walk.
+             */
+            const dashFirst = corridorDashRescue(wps, hit, except, { stand, axisAligned, undashed });
+            if (dashFirst) hit = null;
             climbs: while (hit) {
                 /**
                  * ⛓⛓⛓ ⚖ §11.8a RULING 2 — THE LADDER REPLACES SLICE 2's
@@ -21113,6 +21181,7 @@ function solveSegmentUnder({
                 const climbed = climbLadder({
                     goal, aim, contacts, allowTeleporter, what, hit,
                     dangerExcept: except, corridor: wps, axisAligned,
+                    ...(undashed ? { undashed } : {}),
                     ...(fine ? { lattice: FINE_LATTICE } : {}),
                     ...(stand ? { stand } : {}),
                     ...(crossTo ? { crossTo } : {}),
@@ -21149,7 +21218,7 @@ function solveSegmentUnder({
              */
             const dash = (dashMode === 'none' || axisAligned || undashed)
                 ? null
-                : planSwordDash(run, wps, { tolerance, dashMode,
+                : (dashFirst && !narrow) ? dashFirst : planSwordDash(run, wps, { tolerance, dashMode,
                     certify: (samples) => probeSamples(samples, except),
                     ...(stand ? { stand } : {}), ...(narrow ? { iframeLapse: false } : {}) });
             seeRow({
