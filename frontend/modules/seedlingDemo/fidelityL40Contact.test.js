@@ -151,3 +151,46 @@ describe('L40CONTACT D3 — the t658 contact on the floor plan is the spinner wa
         expect(at658(true)).toEqual({ player: [744.2596783699775, 742.494712313261], hits: [] });
     }, 120_000);
 });
+
+/**
+ * D2 — hammer DD's "killed at t104, still in `strikeBodies` at t133" (legs 378/381, `puncher@816,128`) is the "die"
+ * animation, and the game agrees with the model's membership. A ghost-sword press (pressed t97, fired t101 on this
+ * atlas boot of leg 378) kills the puncher; the game plays "die" t102–t132 at hits 4 = `hitsMax` (`Puncher.as:44`,
+ * 10 frames at 10), `endAnim` sets `destroy` at t133 (anim ""), `Mobile.death` fades it to t143 and it is gone at t144.
+ * The model: `dying` t102, a `strikeBodies` member (`spent`, under the lapse) through t132, `destroy` and out at t133,
+ * removed at t144. No respawn, and the killed flag does not disagree with membership: a dying body is in the world
+ * and refuses a hit (`Enemy.hit`'s `hits < hitsMax`), which is what `spent` says. Witness: the first 160 executed
+ * ticks (`l40contact-378-ghost-puncher`), on the game at the model's clock (Puncher 305 comparisons, worst |Δ| 0).
+ */
+describe('L40CONTACT D2 — a killed puncher stays in `strikeBodies` exactly while the game plays "die"', () => {
+    const P = parseTape(readFileSync(join(WIT, 'l40contact-378-ghost-puncher.tape.json'), 'utf8'));
+    const G = JSON.parse(readFileSync(join(WIT, 'l40contact-378-ghost-puncher.game.json'), 'utf8')).rows;
+    const ID = 'puncher@816,128';
+
+    it('the model\'s death fenceposts are the game\'s: die t102–t132, destroy t133, gone t144', () => {
+        const run = createRunForStaging(stagingFromTape(P), atlasLevelSource());
+        const model = new Map();
+        for (let t = 0; t < P.tick_count; t += 1) {
+            run.advance(new Set(heldKeysAt(P, t)));
+            const c = run.entities('chasers').find((x) => x.id === ID);
+            const sb = run.entities('strikeBodies').find((x) => x.id === ID);
+            model.set(run.ticksCompleted, c ? { dying: c.dying, destroy: c.destroy, hits: c.hits, ht: c.hitsTimer,
+                member: !!sb, spent: sb?.spent === true } : null);
+        }
+        const kill = (run.presses ?? []).filter((q) => q.hits.some((h) => h.id === ID && h.killed));
+        expect(kill.map((q) => [q.t, q.fired, q.weapon])).toEqual([[97, 101, 'ghostsword']]);
+        for (const [t, anim, hits, ht] of G) {
+            const m = model.get(t);
+            expect(m, `t${t}`).not.toBeNull();
+            expect([m.hits, m.ht], `t${t}`).toEqual([hits, ht]);
+            // the game's "die" window IS the model's membership window of a dying body
+            expect(anim === 'die', `t${t}`).toBe(m.dying && !m.destroy);
+            expect(m.member, `t${t}`).toBe(!m.destroy);
+            if (m.member && m.dying) expect(m.spent, `t${t}`).toBe(CONTACT_FIDELITY.strikeIframeLapse === true);
+        }
+        expect(G.find((r) => r[0] === 102)[1]).toBe('die');
+        expect(G.find((r) => r[0] === 133)[1]).toBe('');
+        expect(G.at(-1)[0]).toBe(143);
+        expect(model.get(144)).toBeNull();
+    }, 120_000);
+});

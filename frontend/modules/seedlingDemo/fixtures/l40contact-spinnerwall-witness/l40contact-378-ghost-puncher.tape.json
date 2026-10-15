@@ -1,0 +1,184 @@
+{
+ "game": "seedling",
+ "name": "l40contact-378-ghost-puncher",
+ "boot": {
+  "level": 40,
+  "x": 928,
+  "y": 96
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 0,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 987286273
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": true,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": false,
+   "hasFireWand": false,
+   "canSwim": false,
+   "hasSpear": false,
+   "hasDarkShield": false,
+   "hasDarkSuit": false,
+   "hasDarkSword": false,
+   "hasFeather": false,
+   "hasTorch": true
+  },
+  "hits_max": 3,
+  "time": 4800,
+  "primary": 0
+ },
+ "tick_count": 160,
+ "inputs": [
+  {
+   "key": "left",
+   "from": 0,
+   "to": 66
+  },
+  {
+   "key": "right",
+   "from": 66,
+   "to": 67
+  },
+  {
+   "key": "left",
+   "from": 67,
+   "to": 69
+  },
+  {
+   "key": "down",
+   "from": 69,
+   "to": 70
+  },
+  {
+   "key": "primary",
+   "from": 70,
+   "to": 71
+  },
+  {
+   "key": "right",
+   "from": 71,
+   "to": 73
+  },
+  {
+   "key": "up",
+   "from": 71,
+   "to": 73
+  },
+  {
+   "key": "left",
+   "from": 73,
+   "to": 74
+  },
+  {
+   "key": "right",
+   "from": 74,
+   "to": 75
+  },
+  {
+   "key": "down",
+   "from": 77,
+   "to": 78
+  },
+  {
+   "key": "down",
+   "from": 82,
+   "to": 96
+  },
+  {
+   "key": "left",
+   "from": 96,
+   "to": 97
+  },
+  {
+   "key": "primary",
+   "from": 97,
+   "to": 98
+  },
+  {
+   "key": "right",
+   "from": 98,
+   "to": 100
+  },
+  {
+   "key": "left",
+   "from": 102,
+   "to": 104
+  },
+  {
+   "key": "right",
+   "from": 106,
+   "to": 107
+  },
+  {
+   "key": "down",
+   "from": 98,
+   "to": 120
+  },
+  {
+   "key": "up",
+   "from": 120,
+   "to": 121
+  },
+  {
+   "key": "down",
+   "from": 121,
+   "to": 122
+  },
+  {
+   "key": "up",
+   "from": 122,
+   "to": 123
+  },
+  {
+   "key": "down",
+   "from": 123,
+   "to": 124
+  },
+  {
+   "key": "left",
+   "from": 133,
+   "to": 144
+  },
+  {
+   "key": "right",
+   "from": 144,
+   "to": 145
+  },
+  {
+   "key": "left",
+   "from": 145,
+   "to": 147
+  },
+  {
+   "key": "right",
+   "from": 148,
+   "to": 150
+  },
+  {
+   "key": "down",
+   "from": 154,
+   "to": 160
+  }
+ ],
+ "tape_version": 8
+}
