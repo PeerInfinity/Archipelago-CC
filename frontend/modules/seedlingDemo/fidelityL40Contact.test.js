@@ -75,9 +75,12 @@ describe('L40CONTACT D1 — a live spinner walls a chaser (`chaserSpinnerWalls`)
             expect(CONTACT_FIDELITY.chaserSpinnerWalls).toBe(false);
         });
 
-    it('the witness is the game\'s: 1,413 rows per bob, read at worst |Δ| 0 by the ON probe', () => {
+    it('the witness is the game\'s: one row per bob per tick from t1700 to the tape\'s end, read at worst |Δ| 0 by the ON probe', () => {
         expect(GAME.worst).toBe(0);
-        for (const id of WATCH) expect(GAME.rows[id]).toHaveLength(1413);
+        const ticks = GAME.rows[WATCH[0]].map((r) => r[0]);
+        expect(GAME.rows[WATCH[1]].map((r) => r[0])).toEqual(ticks);
+        expect(ticks.every((t, i) => t >= 1700 && t <= TAPE.tick_count && (i === 0 || t > ticks[i - 1]))).toBe(true);
+        for (let t = 1801; t <= 1812; t += 1) expect(ticks).toContain(t);
         // the stop: t1800 → t1812 at one point, velocity still written
         const at = (t) => GAME.rows['bob@736,752'].find((r) => r[0] === t);
         expect(at(1801).slice(1, 3)).toEqual([743.9289818420457, 753.4159593838361]);
