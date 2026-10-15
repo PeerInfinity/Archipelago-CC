@@ -173,6 +173,10 @@ import {
 } from './turret.js';
 // ⛓⛓⛓ seedling-fidelity-bombpusher D2: `BombPusher` + `Bomb` + its `Explosion` (`CONTACT_FIDELITY.bombPusherLive`).
 import { BOMB, createBombPusher, stepBomb, stepBombPusher } from './bombPusher.js';
+// ⛓ fidelity BEAMTOWER: `BeamTower` — its drifting Solid (`CONTACT_FIDELITY.beamTowerDrift`).
+import {
+    BEAM_TOWER, beamTowerReachRects, beamTowerSolidRect, createBeamTower, stepBeamTowerFrame,
+} from './beamTower.js';
 // ⛓⛓⛓ R6 SLICE 2: the THIRTEENTH family — the first projectile the PLAYER
 // makes, so the first per-visit body a tape is responsible for.
 import { WAND_PRESS_CADENCE, WAND_VERB, WAND_WINDOW, wandPress } from './wandVerb.js';
@@ -473,6 +477,8 @@ export const LEDGER_KIND_NAMES = Object.freeze([
     'witchEvents',
     'unreadRoomWrites',
     'bombEvents',
+    // ⛓ fidelity BEAMTOWER D1: the towers' stepped `y` (ON only).
+    'beamTowerTrace',
 ]);
 
 /**
@@ -2220,6 +2226,39 @@ export function createLevelRun({
     };
     /** One row per bomb spawned / exploded / dropped — `{t, level, what, id, …}`. */
     const bombEvents = [];
+    /**
+     * ⛓ fidelity BEAMTOWER D1: the room's beam towers (`Game.as:2297`, `.oel` order), each `beamTower.createBeamTower`'s
+     * state keyed by `solid.beamTowerId`. A new `Game` rebuilds each at its ctor `y` (`freshVisitState`). Only built
+     * under `CONTACT_FIDELITY.beamTowerDrift`; OFF nothing here is ever read.
+     */
+    const beamTowerStates = new Map();
+    /** `{t, level, id, y, frozen, gameTime}` per tower per stepped tick (fidelity BEAMTOWER D1, ON only). */
+    const beamTowerTrace = [];
+    /** `hazards.BEAM_BOB_SPAN` — the drift's whole excursion over one 90-update period. */
+    const BEAM_BOB_SPAN_PX = 8.606;
+    const beamTowerStateFor = (n) => {
+        if (!beamTowerStates.has(n)) {
+            const byId = new Map();
+            for (const e of levelSource(n).entities ?? []) {
+                if (e.type !== 'beamtower') continue;
+                const id = `${e.type}@${e.x},${e.y}`;
+                const t = createBeamTower({ tag: e.type, x: e.x, y: e.y, cx: e.x + 8, cy: e.y + 16,
+                    attrs: e.attrs ?? {} }, worldFor(n).world);
+                byId.set(id, Object.assign(t, { id, yKnown: true, animKnown: true, lastClock: null }));
+            }
+            beamTowerStates.set(n, byId);
+        }
+        return beamTowerStates.get(n);
+    };
+    /** The towers' live Solids for `collidesSolid`'s `beamTowers` arm, or null (switch OFF, or no tower here). */
+    const beamTowerRectsNow = () => {
+        if (!CONTACT_FIDELITY.beamTowerDrift || noclip) return null;
+        const st = beamTowerStateFor(level);
+        if (st.size === 0) return null;
+        const out = new Map();
+        for (const [id, t] of st) out.set(id, { id, rect: beamTowerSolidRect(t), y: t.y });
+        return out;
+    };
     /** The bombs' `Explosion.added()` calls waiting for this tick's `updateLists()` (see `drainBombBlastsNow`). */
     const pendingBombBlasts = [];
     /** One row per spit spawned or removed — `{t, level, what, id, x, y, …}`. */
@@ -2438,6 +2477,7 @@ export function createLevelRun({
         bosses: bossRectsNow(),
         shieldBosses: shieldBossRectsNow(),
         finalDoors: finalDoorRectsNow(),
+        beamTowers: beamTowerRectsNow(),
         ...extra,
     });
     /** The boxes of every rock this visit has DROPPED — `collidesSolid`'s arm. */
@@ -4318,6 +4358,8 @@ export function createLevelRun({
         // ⛓ seedling-fidelity-bombpusher: and every lobber (`shotTime` 0, no anim) and no bomb.
         bombPusherStates.delete(n);
         bombStates.delete(n);
+        // ⛓ fidelity BEAMTOWER: and every tower, at its ctor `y` with its anim at `play("right")`.
+        beamTowerStates.delete(n);
         bridgeStates.set(n, new Map());
         pushableStates.set(n, createPushableState(worldFor(n)));
         // R5 slice 13: a re-entered room rebuilds every spinner at its cell,
@@ -12379,6 +12421,69 @@ export function createLevelRun({
         }
     }
 
+    /** The towers are stepped when either BEAMTOWER switch is ON. */
+    const beamTowersStepped = () => CONTACT_FIDELITY.beamTowerDrift || CONTACT_FIDELITY.beamTowerBeamHit;
+    /**
+     * ⛓ fidelity BEAMTOWER: ONE `World.update` OF EVERY TOWER (`beamTower.stepBeamTowerFrame`).
+     *
+     * D1 (`beamTowerDrift`): on a live, unfrozen frame `y += 0.3·sin(worldFrame(100, 2)…)` at THIS frame's `Game.time`
+     * (`clock.now()`), which moves the tower's 16x32 Solid (`beamTowerRectsNow`).
+     * D3 (`beamTowerBeamHit`): on the same frame, BEFORE the drift, a beaming tower's `getRect(direction)` tests the
+     * player's PRE-move box inclusively (the tower updates before the player) and lands `p.hit(null, 5, (x, y), 1)`,
+     * then `Game.shake = 15` (`camera.SHAKE_WRITERS.beamTowerBeam`).
+     *
+     * ⛔ UNKNOWN IS A REFUSAL, NEVER A GUESS. No `Game.time` makes the `y` unknown for the rest of the visit; a
+     * `Game.time` that jumps between two stepped frames (frames this run did not step — a lump of frozen frames still
+     * runs the tower's GRAPHIC, a dead room-fade does not) makes the anim unknown too. A player box inside the
+     * tower's drift band (D1) or any rect its beam could test (D3) is then refused by name.
+     * One row per tower per stepped tick in `beamTowerTrace` (`{t, level, id, y, frozen, gameTime}`), for the witness.
+     */
+    function stepBeamTowersNow({ frozen }) {
+        const st = beamTowerStateFor(level);
+        if (st.size === 0) return;
+        const clockNow = clock.now();
+        const now = frozen ? null : clockNow;
+        for (const t of st.values()) {
+            if (t.lastClock !== null && (clockNow === null || clockNow !== t.lastClock + 1)) {
+                t.animKnown = false;
+                t.yKnown = false;
+            }
+            t.lastClock = clockNow;
+            const known = t.animKnown;
+            const rect = stepBeamTowerFrame(t, { time: now, frozen });
+            beamTowerTrace.push({ t: ticksCompleted + 1, level, id: t.id, y: t.y, frozen, gameTime: now,
+                ...(rect ? { beam: { x: rect.x, y: rect.y, w: rect.w, h: rect.h } } : {}) });
+            const box = playerBoxAt(state.x, state.y);
+            const why = () => (clockNow === null ? `no \`Game.time\`: ${gameTimeRefusalText()}`
+                : 'a `Game.time` that jumped between two stepped frames (frames this run did not step)');
+            if (CONTACT_FIDELITY.beamTowerDrift && !t.yKnown) {
+                const r = beamTowerSolidRect(t);
+                const band = { x: r.x, y: r.y - BEAM_BOB_SPAN_PX, right: r.right, bottom: r.bottom + BEAM_BOB_SPAN_PX };
+                if (rectsOverlap(box, band)) {
+                    throw new Error(`levelRun: the player at (${state.x}, ${state.y}) is inside ${t.id}'s drift band at `
+                        + `tick ${ticksCompleted + 1} in level ${level}, and the tower's \`y\` is unknown (${why()}) — `
+                        + '`BeamTower.update` drifts its Solid by `0.3·sin(worldFrame(100, 2)…)` per unfrozen update. '
+                        + 'Refused by name, never guessed (fidelity BEAMTOWER).');
+                }
+            }
+            if (!CONTACT_FIDELITY.beamTowerBeamHit || frozen) continue;
+            if (!known || !t.yKnown) {
+                if (beamTowerReachRects(t, BEAM_BOB_SPAN_PX).some((r) => rectTouchesBox(r, box))) {
+                    throw new Error(`levelRun: the player at (${state.x}, ${state.y}) is where ${t.id}'s beam can `
+                        + `reach at tick ${ticksCompleted + 1} in level ${level}, and the tower's anim or \`y\` is `
+                        + `unknown (${why()}) — whether \`BeamTower.update\` fires on the player this update is not `
+                        + 'derivable. Refused by name, never guessed (fidelity BEAMTOWER).');
+                }
+                continue;
+            }
+            if (!rect || !rectTouchesBox(rect, box)) continue;
+            // `BeamTower.as:89-94` — `p.hit(null, force, new Point(x, y), damage); Game.shake = 15;`
+            applyPlayerHit({ source: 'beamtower', id: t.id, force: BEAM_TOWER.force, damage: BEAM_TOWER.damage,
+                from: { x: t.cx, y: t.testedY }, retaliate: null });
+            shake = applyShakeWriter(shake, 'beamTowerBeam');
+        }
+    }
+
     function stepIceTurretsNow() {
         const st = turretStateFor(level);
         if (st.size === 0) return;
@@ -13305,6 +13410,8 @@ export function createLevelRun({
                 + '`Game.freezeObjects` — so the press would do nothing at '
                 + 'all. Press outside the freeze.');
         }
+        // ⛓ fidelity BEAMTOWER D1: a tower's own update returns on the freeze, its graphic still updates.
+        if (!noclip && beamTowersStepped()) stepBeamTowersNow({ frozen: true });
         // ⛓ SLOTS: `Game.update`'s tail runs on a frozen frame too.
         flushPendingRemoved();
         syncSlotsAtTail();
@@ -13319,6 +13426,7 @@ export function createLevelRun({
         // presser — but transcribed rather than assumed, because "no route
         // does that yet" is how the statue got its offset wrong for two
         // slices.
+        // ⛓ fidelity BEAMTOWER D1: a tower's own update returns on the freeze, its graphic still updates.
         if (!noclip) {
             applyLockEvents(stepActivators(activators, world,
                 playerBoxAt(state.x, state.y),
@@ -15378,6 +15486,8 @@ export function createLevelRun({
         witchEvents: witchEventsNow,
         unreadRoomWrites: unreadRoomWritesNow,
         bombEvents: bombEventsNow,
+        // ⛓ fidelity BEAMTOWER D1: the towers' stepped `y`, ON only (empty OFF).
+        beamTowerTrace: () => beamTowerTrace.map((r) => ({ ...r })),
     });
 
     return {
@@ -16924,6 +17034,8 @@ export function createLevelRun({
         get bombs() { return bombsNow(); },
         /** ⛓ seedling-fidelity-bombpusher: the bomb ledger — see `stepBombsNow` / `drainBombBlastsNow`. */
         get bombEvents() { return bombEventsNow(); },
+        /** ⛓ fidelity BEAMTOWER D1: the towers' stepped `y` per tick (`LEDGER_KINDS.beamTowerTrace`; empty OFF). */
+        get beamTowerTrace() { return LEDGER_KINDS.beamTowerTrace(); },
         /** ⛓ U15-swim D1: the spit ledger — see `stepSpitsNow`. */
         get spitEvents() { return spitEventsNow(); },
         /** ⛓ F4: the static bodies this run killed (see `staticBodyDeaths`). */
@@ -18225,6 +18337,10 @@ export function createLevelRun({
             // ⛓ seedling-fidelity-bombpusher D2: the lobber (`Game.as:2299`, added after the turrets and before the
             // crushers) — its only reader is the player's previous point, so its slot among them is unobservable.
             if (!noclip && CONTACT_FIDELITY.bombPusherLive) stepBombPushersNow();
+            // ⛓ fidelity BEAMTOWER D1: the towers (`Game.as:2297`, added after the ice turrets and before the
+            // lobbers), so they update before every chaser and the player — both sweep against where THIS call
+            // left the tower. A ceremony's `Game.freezeObjects` skips the drift (the anim still runs).
+            if (!noclip && beamTowersStepped()) stepBeamTowersNow({ frozen: ceremony !== null });
             if (!noclip) stepIceTurretsNow();
             // ── ⛓⛓⛓ U15-swim D1: THE TURRETS, BELOW THE ICE TURRETS ──────
             // `Game.as:2272` adds them just before the `iceturret`

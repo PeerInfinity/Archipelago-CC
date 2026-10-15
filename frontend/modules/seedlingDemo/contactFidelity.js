@@ -458,6 +458,35 @@ export const CONTACT_FIDELITY = {
      * node measurement.
      */
     flyerLive: false,
+    /**
+     * fidelity BEAMTOWER D1 — THE BEAM TOWER'S SOLID DRIFTS WITH ITS `y` (`beamTower.stepBeamTowerFrame`).
+     *
+     *     BeamTower.as:53-56    if (Game.freezeObjects) return;          — the drift is skipped on a frozen frame
+     *     BeamTower.as:100-103  y += 0.3 * Math.sin(Game.worldFrame(100, 2) / 100 * 2 * Math.PI);
+     *     BeamTower.as:43-44    setHitbox(16, 32, 8, 24); type = "Solid"; — the box rides on `y`
+     *
+     * OFF the model held the tower's 16x32 Solid at its placement. Over a 90-update `Game.time` period the drift
+     * spans 8.6 px, and where it sits depends on the `Game.time` at the visit's first live update (the staging's seam
+     * time). MEASURED (LAPSECOST D2, leg 773 `flyerLive` plan, L105): the game's player holding `left` is blocked at
+     * x 66.04 from t205 by `beamtower@48,40`, risen ~4.7 px, where the model walked through. ON: the run steps every
+     * tower once per tick in its update slot (`Game.time` = `clock.now()`, no drift on a frozen tick), and the
+     * tower's Solid is `liveRectOf`'s `beamTowers` arm. ⛔ OFF by default (no licence); `SEEDLING_BEAMTOWER_DRIFT=0|1`.
+     */
+    beamTowerDrift: false,
+    /**
+     * fidelity BEAMTOWER D3 — THE BEAM TOWER'S BEAM HITS THE PLAYER IN THE RUN (`levelRun.stepBeamTowersNow`).
+     *
+     *     BeamTower.as:57-95   if ((frame - 1) % 2 == 1) { rect = getRect(direction);
+     *                            p = collideRect("Player", rect…); if (p) { p.hit(null, 5, (x, y), 1); Game.shake = 15; } }
+     *
+     * OFF the run never billed a beam: only the danger map priced it (`phaseHazardHit`, LADDER2), so a walk the
+     * solver did not plan through a beam (an arrival) took the game's hit unmodelled. MEASURED (LAPSECOST residue 3,
+     * leg 773's witness): on the first L104 tick after the crossing, `beamtower@16,56`'s UP beam (x 22..26, y 0..53)
+     * takes the player at (24, 39.2): `hits` 1, Δy −4.275. ON: the run steps the tower's anim and fires the beam on
+     * the player's PRE-move box, inclusively (`Entity.collideRect`), from the tower's pre-drift point; the shake is the
+     * `beamTowerBeam` writer. ⛔ OFF by default (no licence); `SEEDLING_BEAMTOWER_BEAM_HIT=0|1`.
+     */
+    beamTowerBeamHit: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -556,6 +585,12 @@ if (globalThis.process?.env?.SEEDLING_CEREMONY_SHOVE === '0') CONTACT_FIDELITY.c
 // ⛓ fidelity LAPSECOST D2: `SEEDLING_FLYER_LIVE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '1') CONTACT_FIDELITY.flyerLive = true;
 if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '0') CONTACT_FIDELITY.flyerLive = false;
+// ⛓ fidelity BEAMTOWER D1: `SEEDLING_BEAMTOWER_DRIFT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BEAMTOWER_DRIFT === '1') CONTACT_FIDELITY.beamTowerDrift = true;
+if (globalThis.process?.env?.SEEDLING_BEAMTOWER_DRIFT === '0') CONTACT_FIDELITY.beamTowerDrift = false;
+// ⛓ fidelity BEAMTOWER D3: `SEEDLING_BEAMTOWER_BEAM_HIT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BEAMTOWER_BEAM_HIT === '1') CONTACT_FIDELITY.beamTowerBeamHit = true;
+if (globalThis.process?.env?.SEEDLING_BEAMTOWER_BEAM_HIT === '0') CONTACT_FIDELITY.beamTowerBeamHit = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
