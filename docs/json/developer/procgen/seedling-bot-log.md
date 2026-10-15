@@ -22501,3 +22501,14 @@ Lessons:
 2. *A walk that repeats is not an answer that repeats.* The trajectories of consecutive derivations repeat (40–95 % of
    samples), but the walk's verdict is asked at absolute ticks, and the hammer's phase moves every tick. An exact
    cache can keep the stepping, not the verdict.
+
+### Seedling hammer-phase BW — the bomb-stand producer pinned lapse OFF (an INTERIM)
+
+`plan-seedling-hammer-bw-bombstand.mjs --check` had been red on `main` since fidelity's lapse flip (`7a20beb2fd`), at its
+defaults: with `strikeIframeLapse` ON the OFF stand no longer takes `#7` at t1157, and the ON solve stops at t1339 on
+`#11`'s Explosion reaching `spinner@192,160`. The producer is not in CI, so the flip's re-pin list (the DD witness)
+missed it; WC's W0 caught it. The producer now runs its solves and its account with the lapse pinned OFF (DD's
+`walkKillSolve` shape), and `--check` gains a lapse-ON row that records the t1339 stop. ⚖ The pin is an INTERIM, not an
+avoidance: a bomb blast on a body is a game interaction, and fidelity's held wave-18 row BOMB BLAST ON BODIES (leg 381)
+retires the pin, with the lapse-ON row as the witness it flips. `--check`: all checks green, and the committed tape is
+byte-identical.
