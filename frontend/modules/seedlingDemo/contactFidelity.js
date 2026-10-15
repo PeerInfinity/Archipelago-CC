@@ -474,7 +474,7 @@ export const CONTACT_FIDELITY = {
      * within the axe's reach is refused by name. OFF: byte-identical. ⛔ OFF by default (no licence);
      * `SEEDLING_SPINNING_AXE_PLAYER_HIT=0|1` for a node measurement.
      */
-    spinningAxePlayerHit: false,
+    spinningAxePlayerHit: true, // MEASUREMENT ONLY (planning-8, NEVER MERGE)
     /**
      * fidelity SPINNINGAXE D2 — A PHASE DODGE'S PARTIAL STALL IS RE-PROBED (`solverBot.walkToUnder`).
      *
@@ -485,7 +485,7 @@ export const CONTACT_FIDELITY = {
      * rest is probed from the stall's end and a hit climbs the ladder again. OFF: byte-identical. ⛔ OFF by default
      * (no licence); `SEEDLING_PARTIAL_DODGE_REPROBE=0|1` for a node measurement.
      */
-    partialDodgeReprobe: false,
+    partialDodgeReprobe: true, // MEASUREMENT ONLY (planning-8, NEVER MERGE)
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
