@@ -90,7 +90,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_CEREMONY_SHOVE
         || !!process.env.SEEDLING_FLYER_LIVE
         || !!process.env.SEEDLING_BEAMTOWER_DRIFT || !!process.env.SEEDLING_BEAMTOWER_BEAM_HIT
-        || !!process.env.SEEDLING_SPINNING_AXE_PLAYER_HIT)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_SPINNING_AXE_PLAYER_HIT || !!process.env.SEEDLING_PARTIAL_DODGE_REPROBE)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -139,7 +139,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // (D3, the run bills the beam on the player) ship OFF.
             beamTowerDrift: false, beamTowerBeamHit: false,
             // ⛓ fidelity SPINNINGAXE D1: `spinningAxePlayerHit` (a spinning axe bills the player) ships OFF.
-            spinningAxePlayerHit: false });
+            spinningAxePlayerHit: false,
+            // ⛓ fidelity SPINNINGAXE D2: `partialDodgeReprobe` (a phase dodge's partial stall re-probed) ships OFF.
+            partialDodgeReprobe: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
