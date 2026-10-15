@@ -963,7 +963,7 @@ function codeOnly(text) {
  * code — this gate is excluded from its own sweep for the reason the
  * REFERENCED scan excludes it, and the other three are the `windows` gates
  * that drive the build directly. The panel's preset default
- * (`procgenPipeline/regionAtlasCompiler.js`, `wasm: '<name>/game.html'`) is
+  * (`procgenPipeline/flashPanelWiring.json`, `"wasm": "<name>/game.html"`) is
  * NOT a subject either, in the other direction: the panel is DATA-driven and
  * capability-gated at run time by `seedlingRandomizerEligibility.js`, so its
  * wiring default is a preset's datum, not a claim about the lab.

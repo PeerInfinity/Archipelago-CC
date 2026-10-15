@@ -231,7 +231,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 422,
         "browser": 142,
-        "cited": 218,
+        "cited": 219,
         "files": 434,
         "lineStyle": 12,
         "withDocblock": 434,
@@ -5146,7 +5146,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/architecture.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-worldgen-package-sidecars.mjs",
