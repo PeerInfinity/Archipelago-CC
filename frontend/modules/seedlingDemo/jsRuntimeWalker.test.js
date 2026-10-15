@@ -11,8 +11,12 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createJsRuntime } from './jsRuntimeCore.js';
-import { createRuntimeWalker, teleporterAtTile, WALK_STATES, ARRIVAL_INSIDE_SOLID } from './jsRuntimeWalker.js';
-import { drive, driveStepHeld, planTilePath, planWaypoints } from './botDriverV2.js';
+import { createRuntimeWalker, teleporterAtTile, WALK_STATES, ARRIVAL_INSIDE_SOLID, WALK_TOLERANCE, nextWaypoint } from './jsRuntimeWalker.js';
+import { drive, driveStepHeld, livePerVisitOpts, planTilePath, planWaypoints } from './botDriverV2.js';
+import { withContactFidelity } from './contactFidelity.js';
+import { atlasLevelSource } from './levelSource.js';
+import { parseTape } from './tapeFormat.js';
+import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { hasArrived } from './botDriverV1.js';
 import { assembleGeneratedSeedlingSet } from './seedlingGeneratedSet.js';
 import { planLevelSetChunks } from './levelSetValidator.js';
@@ -293,4 +297,92 @@ describe('botDriverV2 — the two J2 lifts are inert for every existing caller',
         const from = { x: 24, y: 24 };
         expect(planTilePath(world, from, goal, null, { snapStart: true })).toEqual(planTilePath(world, from, goal));
     });
+});
+
+/**
+ * ⛓ fidelity wave 16 (`CONTACT_FIDELITY.waypointSlide`) — THE WALKER PASSES AN ICE WAYPOINT THE WAY THE SOLVER'S WALK
+ * DOES. L45 from the SMALLGAPS D2 witness's own staging (`fidelityWaypointSlide.test.js`), rebooted on the ice east of
+ * (120,72); the plan is the walker's own `planWaypoints` call — [(120,72), (120,40)] — held for the whole walk
+ * (`replanEvery` = ∞) so the comparison is waypoint choice against waypoint choice, not two re-plan cadences.
+ */
+describe('jsRuntimeWalker — an intermediate waypoint on ice (wave 16 waypointSlide)', () => {
+    const W = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/seedlingDemo/fixtures/chaser-witness/smallgaps-l45-62-slide.json'), 'utf8'));
+    const SRC = atlasLevelSource();
+    const l45 = (x, y) => createRunForStaging({ ...stagingFromTape(parseTape(JSON.stringify(W.tape))),
+        boot: { level: 45, x, y } }, SRC);
+    const TILE = [7, 2];
+    const key = (h) => [...h].sort().join('+') || '-';
+    /** The walker over a bare run, as `jsRuntimeCore.tick` asks it: `heldFor`, advance, `observe`. */
+    const walk = (x, y) => {
+        const run = l45(x, y);
+        const w = createRuntimeWalker({ apItemOf: () => null, isCollected: () => false }, { replanEvery: Infinity });
+        w.setGoal({ kind: 'tile', level: 45, tile: TILE });
+        w.play();
+        const seq = [];
+        for (let h = w.heldFor(run); h; h = w.heldFor(run)) {
+            seq.push(key(h));
+            run.advance(h);
+            w.observe({});
+        }
+        return { seq, state: w.state, end: run.state };
+    };
+    /** The solver's walk (`drive`, `intermediate: !last`) over the same plan from the same boot. */
+    const solverWalk = (x, y) => {
+        const run = l45(x, y);
+        const wps = planWaypoints(run.world, run.state, { x: TILE[0] * 16 + 8, y: TILE[1] * 16 + 8 }, null,
+            { ...livePerVisitOpts(run), snapStart: true });
+        const perTick = [];
+        let err = null;
+        try {
+            wps.forEach((wp, i) => drive(run, wp, perTick, { until: 'arrival', tolerance: WALK_TOLERANCE, maxTicks: 400,
+                what: 'the slide row', avoidVolumes: false, intermediate: i < wps.length - 1 }));
+        } catch (e) {
+            err = e.message;
+        }
+        return { wps, seq: perTick.map(key), err };
+    };
+    /** Today's choice (the scan before wave 16), driven tick by tick for `n` ticks. */
+    const legacy = (x, y, n) => {
+        const run = l45(x, y);
+        const wps = planWaypoints(run.world, run.state, { x: TILE[0] * 16 + 8, y: TILE[1] * 16 + 8 }, null,
+            { ...livePerVisitOpts(run), snapStart: true });
+        const seq = [];
+        for (let t = 0; t < n && !hasArrived(run.state, wps[wps.length - 1], WALK_TOLERANCE); t += 1) {
+            const h = driveStepHeld(run, wps.find((w) => !hasArrived(run.state, w, WALK_TOLERANCE)) ?? wps[wps.length - 1],
+                WALK_TOLERANCE);
+            seq.push(key(h));
+            run.advance(h);
+        }
+        return seq;
+    };
+
+    it.each([[152, 80, 54], [168, 88, 65]])('ON from (%i,%i): the walker holds the solver walk\'s keys, tick for tick (%i t), and arrives',
+        (x, y, n) => withContactFidelity({ waypointSlide: true }, () => {
+            const s = solverWalk(x, y);
+            expect(s.wps).toEqual([{ x: 120, y: 72 }, { x: 120, y: 40 }]);
+            expect(s.err).toBeNull();
+            const r = walk(x, y);
+            expect(r.state).toBe(WALK_STATES.DONE);
+            expect(r.seq.length).toBe(n);
+            expect(r.seq).toEqual(s.seq);
+        }));
+
+    it('ON: the scan without the slide floor turns back to (120,72) at tick 26 — the floor is what keeps step', () => withContactFidelity({ waypointSlide: true }, () => {
+        const s = solverWalk(152, 80);
+        const run = l45(152, 80);
+        const seq = [];
+        for (let t = 0; t < s.seq.length; t += 1) {
+            const h = driveStepHeld(run, nextWaypoint(run.state, s.wps).wp, WALK_TOLERANCE);
+            seq.push(key(h));
+            run.advance(h);
+        }
+        const parted = seq.findIndex((k, i) => k !== s.seq[i]);
+        expect(parted).toBe(26);
+    }));
+
+    it.each([[152, 80], [168, 88]])('OFF from (%i,%i): the walker\'s keys are today\'s scan, byte for byte, to the give-up', (x, y) => withContactFidelity({ waypointSlide: false }, () => {
+        const r = walk(x, y);
+        expect(r.state).toBe(WALK_STATES.FAILED);
+        expect(r.seq).toEqual(legacy(x, y, r.seq.length));
+    }));
 });

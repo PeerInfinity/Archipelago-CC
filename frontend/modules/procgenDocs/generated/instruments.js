@@ -10407,11 +10407,13 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "around",
+                "contact-fidelity",
                 "host",
                 "ids",
                 "legs",
                 "out",
                 "page",
+                "poll",
                 "wait-for-box"
             ],
             "file": "probe-seedling-contact-divergence.mjs",
@@ -10427,6 +10429,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "capture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "contact-fidelity"
                 },
                 {
                     "how": [
@@ -10457,6 +10465,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "page"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "poll"
                 }
             ],
             "inheritedFlags": [

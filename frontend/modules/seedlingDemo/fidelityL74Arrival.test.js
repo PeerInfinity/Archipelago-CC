@@ -12,7 +12,7 @@
  *   - `l74arrival-624-on-plan`: leg 624's solved plan BOOTED on the button (L74LEG624's `game-l74-624-on-plan`), 332 t;
  *   - `l74arrival-door-l73`: L73 booted at leg 622's staging, `up` through `teleporter@64,0` — a DOOR arrival at t4,
  *     the game frozen at t5;
- *   - `fixtures/contact-witness/589.json`: the sweep's capture of the same arrival (t0–t2).
+ *   - `fixtures/contact-witness/589.json`: the sweep's capture of the same arrival (t0–t4).
  *
  * ⛓ fidelity SMALLGAPS D1 — THE TAPE TICK IS THE `Bot`'S, AND A FREEZE FRAME IS NOT ONE (`buttonFallReleaseStep`).
  * `Bot.update` counts every `Game.freezeObjects` frame DEAD and observes at the top of the first live frame after it,
@@ -21,7 +21,8 @@
  * witnesses above were first recorded from the probe's FIRST poll at each tick, 20 frames into the 175-frame freeze
  * (y 136 at t1 / t5); re-recorded at the `Bot`'s observation point, exactly that one sample each moved to 135.2.
  * Release ON reads 0 px with either arm; `arrivalButtonArm` still decides WHICH tick is the frozen one (a press there
- * is lost: `useItem` is inside the gated `mobileUpdate`). The 589 capture samples like the old probe (t1 at 136).
+ * is lost: `useItem` is inside the gated `mobileUpdate`). ⛓ JS wave-16 wiring: the 589 capture was re-taken at the
+ * `Bot`'s observation point too (`seedlingContactLab`'s last poll per tick: t1 at 135.2), and now reads as W624 does.
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -85,23 +86,24 @@ describe('L74ARRIVAL D1 — a boot on button@288,128 freezes on its first live f
         expect(parted(W624, true)).toEqual([1]);
         expect(parted(W624, false)).toEqual([2]);
     });
-    it('the sweep\'s capture of leg 589 (the same arrival): ON 0 px, OFF parts at t1 on y/vy', async () => {
-        const on = await withContactFidelity({ arrivalButtonArm: true, buttonFallReleaseStep: false }, () => replayCapture(CAP589));
-        expect(on.error).toBeNull();
-        expect(on.compared).toBe(3);
-        expect(on.firstDiff).toBeNull();
-        const off = await withContactFidelity({ arrivalButtonArm: false, buttonFallReleaseStep: false }, () => replayCapture(CAP589));
-        expect(off.firstDiff?.t).toBe(1);
-        expect(off.firstDiff.fields).toEqual(expect.arrayContaining([
-            expect.objectContaining({ field: 'y', game: 136, model: 135.2 })]));
+    it('the sweep\'s capture of leg 589 (the same arrival): the release step ON reads 0 px, with the arm ON or OFF', async () => {
+        for (const arm of [true, false]) {
+            const r = await withContactFidelity({ arrivalButtonArm: arm, buttonFallReleaseStep: true }, () => replayCapture(CAP589));
+            expect(r.error).toBeNull();
+            expect(r.compared).toBe(5);
+            expect(r.firstDiff).toBeNull();
+        }
     });
-    it('SMALLGAPS D1: the capture samples INSIDE the freeze — release ON parts it at t1 (136 vs the `Bot`\'s 135.2)', async () => {
-        const r = await withContactFidelity({ arrivalButtonArm: true, buttonFallReleaseStep: true }, () => replayCapture(CAP589));
-        expect(r.error).toBeNull();
-        expect(r.firstDiff?.t).toBe(1);
-        expect(r.firstDiff.fields).toEqual(expect.arrayContaining([
-            expect.objectContaining({ field: 'y', game: 136, model: 135.2 })]));
-        expect(W624.samples.find((s) => s.t === 1).player.y).toBe(135.2);
+    it('589, the release step OFF: the arm alone parts it at t1, the defaults at t2 — as W624', async () => {
+        const arm = await withContactFidelity({ arrivalButtonArm: true, buttonFallReleaseStep: false }, () => replayCapture(CAP589));
+        expect(arm.firstDiff?.t).toBe(1);
+        expect(arm.firstDiff.fields).toEqual(expect.arrayContaining([
+            expect.objectContaining({ field: 'y', game: 135.2, model: 136 })]));
+        const off = await withContactFidelity({ arrivalButtonArm: false, buttonFallReleaseStep: false }, () => replayCapture(CAP589));
+        expect(off.firstDiff?.t).toBe(2);
+        expect(off.firstDiff.fields).toEqual(expect.arrayContaining([
+            expect.objectContaining({ field: 'y', game: 133.85, model: 135.2 })]));
+        expect(W624.samples.find((s) => s.t === 1).player.y).toBe(CAP589.game.find((g) => g.t === 1).player.y);
     });
     it('a boot onto the FALLEN rock\'s room ({74,2} staged) has nothing to drop: 0 px either way', () => {
         expect(parted(WPOST, true)).toEqual([]);
