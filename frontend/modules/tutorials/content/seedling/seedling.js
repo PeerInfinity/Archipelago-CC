@@ -8,8 +8,8 @@
  *     the whole map) on wasm, mentioning the JS switch;
  *   - S3's multiworld uses the **Seedling Playthrough** world;
  *   - S5 (entrance shuffle) is not written yet — Seedling has none.
- * S1 is ready; S3 needs a terminal (its walk stops at its first terminal
- * step); S2 and S4 are in progress (each walk row measures `firstFailingStep`). The walks need a
+ * S1 and S2 are ready; S3 needs a terminal (its walk stops at its first
+ * terminal step); S4 is in progress (its walk row measures `firstFailingStep`). The walks need a
  * WebGPU browser (their batch's flag). Shape: ../../tutorialShape.js.
  *
  * ⛔ Imports only content (the guide generator imports it in node).
@@ -139,10 +139,12 @@ export const SEEDLING_BOT = seedling({
     id: 'seedling-bot',
     title: 'Seedling: watch the bot play',
     summary: 'Load the whole of Seedling as an Archipelago world and watch the Playback Bot take its first checks in the original game.',
-    // Measured 2026-10-14 on CI: every step works (Stop since the Playback Bot's
-    // control bar follows the bot, 36992b4dfb). A slow software-WebGPU box does
-    // not reach a check inside first-checks' timeout; grade this row on CI.
-    firstFailingStep: null,
+    // ⚖ READY (the user, 2026-10-14): every step measured working on CI (slice TR;
+    // Stop since the Playback Bot's control bar follows the bot, 36992b4dfb). A slow
+    // software-WebGPU box does not reach a check inside first-checks' timeout;
+    // grade this row on CI.
+    status: 'ready',
+    doc: 'docs/json/user/tutorials/seedling-bot.md',
     intro: [
         { prose: '*Seedling Playthrough* is the whole map of the original game as an Archipelago world: its 113 levels are the regions, its chests and bosses the locations. The Playback Bot plays it from the world\'s solution, sphere by sphere, by driving the real game.' },
         { prose: SEEDLING_RUNTIME_NOTE },

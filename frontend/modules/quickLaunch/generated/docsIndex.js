@@ -1038,6 +1038,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Top-down starts from a world that already exists — any game's rules.json — and *realises* it: every region becomes a generated room, and the source's access rules stay on the exits. This tutorial…"
     },
     {
+        "path": "docs/json/user/tutorials/seedling-bot.md",
+        "title": "Seedling: watch the bot play",
+        "section": "user/tutorials",
+        "summary": "*Seedling Playthrough* is the whole map of the original game as an Archipelago world: its 113 levels are the regions, its chests and bosses the locations. The Playback Bot plays it from the world's…"
+    },
+    {
         "path": "docs/json/user/tutorials/seedling-multiworld.md",
         "title": "Seedling: in a multiworld",
         "section": "user/tutorials",
@@ -1139,6 +1145,7 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/procgen-sphere-growth.md",
                     "docs/json/user/tutorials/procgen-to-multiworld.md",
                     "docs/json/user/tutorials/procgen-top-down.md",
+                    "docs/json/user/tutorials/seedling-bot.md",
                     "docs/json/user/tutorials/seedling-multiworld.md",
                     "docs/json/user/tutorials/seedling-recompile.md",
                     "docs/json/user/tutorials/tracker-track-a-game.md"
