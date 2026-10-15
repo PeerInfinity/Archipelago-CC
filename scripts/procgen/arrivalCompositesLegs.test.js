@@ -176,7 +176,10 @@ describe('composites probe X — wave 8: L30 crosses past the live BobSoldier (B
         expect(String(fire.message)).toMatch(/reach-exit \(112,0\)->L46 -> bait \(jellyfish@224,176\) stance -> burn: /);
         expect(String(fire.message)).toContain('burnabletree@48,64 cannot be burned by this run — this run does not hold FIRE');
         // the control: the jellyfish not a live body (the BEFORE of K1) — the walk the game left at t119
-        const off = withKillLockBodies({ jellyfishLive: false }, () => serve(l45).result);
+        // ⛓ fidelity wave-16 harvest: that walk parked on every ice waypoint, so the control pins `waypointSlide` OFF
+        // (⚖ ON by default since 2026-10-14; ON the same control walks 307 t)
+        const off = withContactFidelity({ waypointSlide: false },
+            () => withKillLockBodies({ jellyfishLive: false }, () => serve(l45).result));
         expect(off.ok, off.message).toBe(true);
         expect(off.plan.solution.length).toBe(720);
         expect(off.plan.expected.at(-1).level).toBe(46);
