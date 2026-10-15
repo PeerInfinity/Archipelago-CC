@@ -17,6 +17,9 @@
  *     residue rows (576 AXE, 589 ARRIVAL) remain.
  *   - ⛓ JS wave-16 wiring: 589 re-captured at the `Bot`'s observation point (`seedlingContactLab`'s LAST poll per tick);
  *     its rule is `buttonFallReleaseStep` (fidelity SMALLGAPS D1), and twelve reproduce — 576 is the one residue row.
+ *   - ⚖ (user, 2026-10-15, fidelity planning-8): 576's 10-05 capture is DELETED — today's plan for that leg plays to
+ *     `done` even with every switch OFF (JS witness refresh), so the parted capture witnessed a plan no one walks. Twelve
+ *     witnesses, all of which reproduce at the defaults; no residue row remains.
  */
 import { describe, expect, it } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -50,7 +53,6 @@ const ROWS = {
     666: [98, 'drillLive'], // L88, the drill@136,136 (10-05: t53)
     308: [95, 'bobSoldierLive'], // L30 BobSoldier — its sword (fidelity BOBSOLDIER W4; 10-05: t67)
     309: [131, 'bobSoldierLive'], // L30 BobSoldier — its sword (10-05: t66)
-    576: [141, null], // L71 — no Mobile near the player (the spinning axe: the AXE slice's region)
     // L74 — the arrival button's release step a tick late in the model (fidelity SMALLGAPS D1). ⛓ JS wave-16 wiring: the
     // 10-05 capture took each tick's FIRST poll, 20 frames into the 175-frame freeze (t1 y 136, vy 0), which read as
     // L74ARRIVAL's frozen t1 (`arrivalButtonArm`); at the `Bot`'s own observation point t1 is the release step (135.2,
@@ -73,7 +75,7 @@ const MUTANT_TICK = { 589: 1 };
 const ALL_OFF = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, false]));
 
 describe('contact witnesses (fixtures/contact-witness)', () => {
-    it('holds exactly the thirteen measured legs', () => {
+    it('holds exactly the twelve measured legs', () => {
         const ids = readdirSync(DIR).filter((f) => f.endsWith('.json')).map((f) => Number.parseInt(f, 10)).sort((a, b) => a - b);
         expect(ids).toEqual(Object.keys(ROWS).map(Number).sort((a, b) => a - b));
     });
