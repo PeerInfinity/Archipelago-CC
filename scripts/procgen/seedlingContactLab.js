@@ -6,7 +6,12 @@
  * It wraps the JS arc's divergence lab (`seedlingDivergenceLab.js`, read-only here) and adds the one reading that
  * lab's drained rows cannot give: the GAME'S BODIES, tick by tick, next to the MODEL'S.
  *   - game: a sampler (a MessageChannel loop, so it runs between the game's frames) reads `botMobiles()` and
- *     `botStatus()` in ONE synchronous turn and keeps the FIRST sample of every game tick (`botMobiles().tick`).
+ *     `botStatus()` in ONE synchronous turn and keeps the LAST sample of every game tick (`botMobiles().tick`) —
+ *     the state the `Bot` observes at its next tick. ⛓ JS wave-16 wiring: a frozen span (a button's 175-frame
+ *     freeze) holds the tick while dead frames run, and on its last one the player takes the release step; the
+ *     first poll of that tick stood 20 frames into the freeze (leg 589 t1: y 136), the `Bot` reads 135.2 (`botDrain`).
+ *     A play's FINAL tick keeps its first poll (the polls after the play ended are frames its tape never observed) —
+ *     fidelity SMALLGAPS D1's rule in `probe-seedling-chaser-mobiles.mjs`. `poll: 'first'` keeps the old clock, for a control.
  *     The player row carries x, y, vx, vy; `botStatus` the player's `hits` / `hits_timer`. The samples are split
  *     into plays where the tick restarts (a forced re-arrival ships the same plan again).
  *   - model: the settled plan's request is replayed on `createRunForStaging` (the lab's own `modelRows` recipe:
@@ -34,10 +39,15 @@ export async function createContactLab() {
     const lab = await createLab();
     const game = () => lab.surface().wasm.getGame();
 
-    /** The sampler: first sample per game tick, split into plays when the tick goes backwards. */
-    function startSampler() {
+    /**
+     * The sampler: the last (or `poll: 'first'`, the first) sample per game tick — a play's final tick its first —
+     * split into plays when the tick goes backwards.
+     */
+    function startSampler({ poll = 'last' } = {}) {
         const plays = [];
         let cur = null;
+        /** Per play, each tick's first sample (a play's final tick keeps it). */
+        const firsts = [];
         let last = -1;
         let on = true;
         const ch = new MessageChannel();
@@ -49,14 +59,15 @@ export async function createContactLab() {
                 const s = J(g.botStatus());
                 const t = m?.tick ?? s?.tick;
                 if (Number.isInteger(t) && s?.armed !== false) {
-                    if (!cur || t < last) { cur = new Map(); plays.push(cur); }
-                    if (!cur.has(t)) {
+                    if (!cur || t < last) { cur = new Map(); plays.push(cur); firsts.push(new Map()); }
+                    if (poll === 'last' || !cur.has(t)) {
                         const rows = (m?.mobiles ?? []).map((r) => ({ cls: short(r.cls), x: r.x, y: r.y, vx: r.vx, vy: r.vy,
                             type: r.type, anim: r.anim, destroy: r.destroy,
                             enemy: r.enemy ? { hits: r.enemy.hits, hits_timer: r.enemy.hits_timer } : null }));
                         cur.set(t, { t, level: s?.level, hits: s?.hits, hits_timer: s?.hits_timer, x: s?.x, y: s?.y,
                             player: rows.find((r) => r.cls === 'Player') ?? null,
                             bodies: rows.filter((r) => r.cls !== 'Player') });
+                        if (!firsts.at(-1).has(t)) firsts.at(-1).set(t, cur.get(t));
                     }
                     last = t;
                 }
@@ -64,7 +75,15 @@ export async function createContactLab() {
             ch.port2.postMessage(0);
         };
         ch.port2.postMessage(0);
-        return { stop() { on = false; ch.port1.close(); return plays.map((p) => [...p.values()]); } };
+        return { stop() {
+            on = false;
+            ch.port1.close();
+            return plays.map((p, i) => {
+                const rows = [...p.values()];
+                if (rows.length) rows[rows.length - 1] = firsts[i].get(rows.at(-1).t);
+                return rows;
+            });
+        } };
     }
 
     /** The model's rows (player + bodies) for one settled plan, tick 0..to. */
@@ -100,9 +119,9 @@ export async function createContactLab() {
     }
 
     const PLAYER_FIELDS = ['x', 'y', 'vx', 'vy', 'hits', 'hits_timer'];
-    async function contactCompare({ leg, budgetMs = 90000, around = 6, capture = false }) {
+    async function contactCompare({ leg, budgetMs = 90000, around = 6, capture = false, poll = 'last' }) {
         const s0 = lab.tap.solves.length;
-        const sampler = startSampler();
+        const sampler = startSampler({ poll });
         const r = await lab.serveLeg({ leg, budgetMs });
         const gamePlays = sampler.stop();
         const solves = lab.tap.solves.slice(s0).filter((s) => s.handle.result?.ok && s.handle.result.plan?.expected);

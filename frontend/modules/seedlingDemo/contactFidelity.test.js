@@ -15,6 +15,8 @@
  *     leave at their named tick.
  *   - ⛓ fidelity BOBSOLDIER: W4 (`bobSoldierLive`) moves legs 308/309 from residue to fixed — eleven reproduce, two
  *     residue rows (576 AXE, 589 ARRIVAL) remain.
+ *   - ⛓ JS wave-16 wiring: 589 re-captured at the `Bot`'s observation point (`seedlingContactLab`'s LAST poll per tick);
+ *     its rule is `buttonFallReleaseStep` (fidelity SMALLGAPS D1), and twelve reproduce — 576 is the one residue row.
  */
 import { describe, expect, it } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -40,17 +42,25 @@ const ROWS = {
     308: [67, 'bobSoldierLive'], // L30 BobSoldier@48,80 — its sword (fidelity BOBSOLDIER W4)
     309: [66, 'bobSoldierLive'], // L30 BobSoldier — its sword
     576: [141, null], // L71 — no Mobile near the player (the spinning axe: the AXE slice's region)
-    589: [1, 'arrivalButtonArm'], // L74 — the arrival's frozen tick a tick early (fidelity L74ARRIVAL; its switch ships OFF)
+    // L74 — the arrival button's release step a tick late in the model (fidelity SMALLGAPS D1). ⛓ JS wave-16 wiring: the
+    // 10-05 capture took each tick's FIRST poll, 20 frames into the 175-frame freeze (t1 y 136, vy 0), which read as
+    // L74ARRIVAL's frozen t1 (`arrivalButtonArm`); at the `Bot`'s own observation point t1 is the release step (135.2,
+    // vy −0.8), every other common sample unchanged (re-captured with switches none, `--poll=last`).
+    589: [2, 'buttonFallReleaseStep'],
 };
-/** ⛓ fidelity L74ARRIVAL: a capture shorter than the usual window (589 holds the game's t0–t2 only). */
-const SHORT = { 589: 3 };
+/** ⛓ fidelity L74ARRIVAL: a capture shorter than the usual window (589 holds the game's t0–t4 only). */
+const SHORT = { 589: 5 };
 /**
- * ⛓ fidelity SMALLGAPS D1: a capture that samples INSIDE a dead span. 589's game rows are polled at the frame each tick's
- * own update left, so its t1 stands 20 frames into the arrival button's 175-frame freeze (y 136, vy 0); the `Bot`'s own
- * observation at that tick is 135.2 (the freeze's release step, `botDrain` on the same p4f run). With the named switch
- * ON the model is the `Bot`'s, and the capture parts at t1 — the capture's clock, not the model (the JS arc's to move).
+ * A row the model leaves on something other than a contact knockback — no `hits` moves at its tick.
+ * 589: the arrival button's freeze.
  */
-const CAPTURE_INSIDE_FREEZE = { 589: 'buttonFallReleaseStep' };
+const NOT_A_CONTACT = { 589: 'the arrival button freeze' };
+/**
+ * ⛓ JS wave-16 wiring — a row whose mutant (every switch but its own) leaves it at ANOTHER tick. 589: `arrivalButtonArm`
+ * without `buttonFallReleaseStep` freezes the arrival's t1, where the `Bot` reads the release step — it parts a tick
+ * earlier than the all-OFF model, which moves on t1 and stalls on t2.
+ */
+const MUTANT_TICK = { 589: 1 };
 const ALL_OFF = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, false]));
 
 describe('contact witnesses (fixtures/contact-witness)', () => {
@@ -115,7 +125,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
-    // ⛓ fidelity L74ARRIVAL: a row whose switch is OFF in this process (589's ships OFF) is still at its tick
+    // ⛓ fidelity L74ARRIVAL: a row whose switch is OFF in this process is still at its tick
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY).each(Object.entries(ROWS))('leg %s — the shipped defaults: fixed rows at 0 px, residue at its tick', async (id, [t, sw]) => {
         const r = await replayCapture(load(id));
         expect(r.error).toBeNull();
@@ -128,7 +138,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         const r = await withContactFidelity(ALL_OFF, () => replayCapture(cap));
         expect(r.error).toBeNull();
         expect(r.firstDiff?.t).toBe(t);
-        if (t > 1) {
+        if (!NOT_A_CONTACT[id]) {
             // a knockback: one side's hits moved at that tick
             const hits = r.firstDiff.fields.find((f) => f.field === 'hits');
             expect(hits).toBeTruthy();
@@ -152,15 +162,14 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
     it.each(Object.entries(ROWS).filter(([, [, sw]]) => sw))('leg %s — every switch EXCEPT its own leaves it at the named tick (the mutant)', async (id, [t, sw]) => {
         const on = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, k !== sw]));
         const r = await withContactFidelity(on, () => replayCapture(load(id)));
-        expect(r.firstDiff?.t).toBe(t);
+        expect(r.firstDiff?.t).toBe(MUTANT_TICK[id] ?? t);
     });
 
     it.each(Object.entries(ROWS))('leg %s — all switches ON: fixed rows at 0 px, residue at its tick', async (id, [t, sw]) => {
         const all = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, true]));
         const r = await withContactFidelity(all, () => replayCapture(load(id)));
         expect(r.error).toBeNull();
-        if (CAPTURE_INSIDE_FREEZE[id]) expect(r.firstDiff?.t).toBe(1);
-        else if (sw) expect(r.worst).toBe(0);
+        if (sw) expect(r.worst).toBe(0);
         else expect(r.firstDiff?.t).toBe(t);
     });
 });

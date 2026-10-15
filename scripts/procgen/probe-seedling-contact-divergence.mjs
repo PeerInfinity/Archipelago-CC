@@ -18,10 +18,17 @@
  *   --capture=<dir>      also write <dir>/<leg id>.json per leg: the first diverged play's solve request (the
  *                        staging, Maps/Sets tagged), the room records, the plan, and EVERY sampled game tick —
  *                        the game witness `replay-seedling-contact-capture.mjs` reproduces in node
+ *   --contact-fidelity=<keys>|all|none  set the model's contact switches through the flashPanel settings before the
+ *                        panel boots, as `probe-seedling-divergence-sweep.mjs --contact-fidelity` does; the set the
+ *                        page holds is read back and printed as a `CONTACT:` line (a mismatch fails the page). Re-capturing
+ *                        a witness needs the set it was captured under: a leg the model now plays to the game's tick
+ *                        leaves no diverged play, and the probe captures only a diverged one.
+ *   --poll=last|first    which sample of a game tick is kept (default last: what the `Bot` observes; first is
+ *                        the clock before the JS wave-16 wiring, for a control — see `seedlingContactLab.js`)
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-contact-divergence.mjs --legs=<jsonl> --ids=… [--host=…] [--page=<build>] [--out=…] [--around=N] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-contact-divergence.mjs --legs=<jsonl> --ids=… [--host=…] [--page=<build>] [--out=…] [--around=N] [--contact-fidelity=<keys>|all|none] [--poll=last|first] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -66,6 +73,12 @@ async function main() {
     const OUT = arg('out', '');
     const AROUND = Number(arg('around', '6'));
     const CAPTURE = arg('capture', '');
+    const POLL = arg('poll', 'last');
+    const CONTACT_ARG = arg('contact-fidelity', '');
+    const { parseContactFidelity, formatContactFidelity } = await import('../../frontend/modules/seedlingDemo/contactFidelity.js');
+    const CONTACT = CONTACT_ARG ? parseContactFidelity(CONTACT_ARG, '--contact-fidelity') : null;
+    const { CONTACT_SETTING_KEYS } = await import('../../frontend/modules/flashPanel/seedlingContactSettings.js');
+    if (POLL !== 'last' && POLL !== 'first') throw new Error(`--poll=${POLL}: last or first`);
     const IDS = arg('ids', '').split(',').filter(Boolean).map(Number);
     const GAME = 'seedling_playthrough';
     const PRESET = JSON.parse(readFileSync(join(REPO, `frontend/presets/${GAME}/AP_1/AP_1_rules.json`), 'utf8'));
@@ -105,6 +118,12 @@ async function main() {
         }
         await page.goto(`${HOST}/frontend/?rules=./presets/${GAME}/AP_1/AP_1_rules.json`, { waitUntil: 'domcontentloaded' });
         await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
+        if (CONTACT) {
+            await page.evaluate(async (writes) => {
+                const { default: settingsManager } = await import('./app/core/settingsManager.js');
+                for (const [key, value] of writes) await settingsManager.updateSetting(key, value);
+            }, Object.entries(CONTACT_SETTING_KEYS).map(([k, key]) => [key, CONTACT[k]]));
+        }
         await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
         await rp.waitFor('wasm iframe mounted', async () => page.frames().some((fr) => fr.url().includes(WASM_PAGE)), 180000);
         await rp.waitFor('start button enabled', () => rp.gameFrame().evaluate(() => {
@@ -121,6 +140,14 @@ async function main() {
             return !!(p?._apLoadResult && s?.atlas && s?.wasm?.deliveredSet);
         }), 120000);
         await page.waitForTimeout(1500);
+        const contactNow = await page.evaluate(async () => {
+            const { CONTACT_FIDELITY } = await import('./modules/seedlingDemo/contactFidelity.js');
+            return { ...CONTACT_FIDELITY };
+        });
+        console.log(`CONTACT: page ${pageNo}: ${formatContactFidelity(contactNow)}${CONTACT ? ' (--contact-fidelity)' : ''}`);
+        if (CONTACT && formatContactFidelity(contactNow) !== formatContactFidelity(CONTACT)) {
+            throw new Error(`--contact-fidelity asked ${formatContactFidelity(CONTACT)}; the page holds ${formatContactFidelity(contactNow)}`);
+        }
         await page.evaluate(async () => {
             const { createContactLab } = await import('/scripts/procgen/seedlingContactLab.js');
             window.__contact = await createContactLab();
@@ -152,11 +179,12 @@ async function main() {
                 row.landed = await rp.jumpSettled(leg.level, leg.arrive.x, leg.arrive.y);
                 // eslint-disable-next-line no-await-in-loop
                 const r = await page.evaluate((a) => window.__contact.contactCompare(a).then((x) => JSON.parse(JSON.stringify(x))),
-                    { leg, budgetMs: 90000, around: AROUND, capture: !!CAPTURE });
+                    { leg, budgetMs: 90000, around: AROUND, capture: !!CAPTURE, poll: POLL });
                 const cap = r.contact?.find((c) => c.capture)?.capture ?? null;
                 if (CAPTURE && cap) {
                     mkdirSync(CAPTURE, { recursive: true });
-                    writeFileSync(join(CAPTURE, `${leg.id}.json`), JSON.stringify({ leg, page: WASM_PAGE, ...cap }));
+                    writeFileSync(join(CAPTURE, `${leg.id}.json`), JSON.stringify({ leg, page: WASM_PAGE, ...(POLL === 'first' ? {} : { poll: POLL }),
+                        ...(CONTACT ? { contactFidelity: formatContactFidelity(CONTACT) } : {}), ...cap }));
                 }
                 for (const c of r.contact ?? []) delete c.capture;
                 Object.assign(row, { end: r.end, failed: r.failed ? String(r.failed).slice(0, 300) : null,
