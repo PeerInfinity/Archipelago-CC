@@ -458,6 +458,22 @@ export const CONTACT_FIDELITY = {
      * node measurement.
      */
     flyerLive: false,
+    /**
+     * fidelity CORRIDOR D2 — THE WALK'S CORRIDOR PRICES THE LIVE WALLFLYERS AND DRILLS AT THE TICKS IT PASSES THEM.
+     *
+     *     WallFlyer.as   launches along `decideMotion`'s vector when the player crosses its 48 px trigger ray
+     *     Drill.as       hops a tile toward a player within `runRange` 48 whose line of sight is clear
+     *
+     * Both are PLAYER-COUPLED and the run steps both live, but the danger map had no arm for either: it priced their
+     * `.oel` PLACEMENTS (`staticEnemyDanger`), so a walk the corridor probe called clean was hit by a flyer that had
+     * launched across it or a drill that had hopped onto it. MEASURED at e967758748 (survey steps 47, 53, 114; sweep
+     * legs 262, 265, 283, 302, 696, 698, 703; the game takes each hit at the model's tick). ON: `previewWalk` steps the
+     * room's wallflyers and drills against the previewed player (`run.corridorBodyForecast`, the live steppers on
+     * clones) and the corridor probe prices each sample's contact (`dangerMap.corridorBodyDanger`), so the walk
+     * executor's ladder routes round them or refuses by name. ⛔ OFF by default (no licence);
+     * `SEEDLING_CORRIDOR_BODY_PRICING=0|1` for a node measurement.
+     */
+    corridorBodyPricing: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -556,6 +572,9 @@ if (globalThis.process?.env?.SEEDLING_CEREMONY_SHOVE === '0') CONTACT_FIDELITY.c
 // ⛓ fidelity LAPSECOST D2: `SEEDLING_FLYER_LIVE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '1') CONTACT_FIDELITY.flyerLive = true;
 if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '0') CONTACT_FIDELITY.flyerLive = false;
+// ⛓ fidelity CORRIDOR D2: `SEEDLING_CORRIDOR_BODY_PRICING=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CORRIDOR_BODY_PRICING === '1') CONTACT_FIDELITY.corridorBodyPricing = true;
+if (globalThis.process?.env?.SEEDLING_CORRIDOR_BODY_PRICING === '0') CONTACT_FIDELITY.corridorBodyPricing = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
