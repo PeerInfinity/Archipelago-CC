@@ -19,6 +19,12 @@
  *   - (⚖ 2026-10-14) tutorials that need a terminal (status 'terminal') sit
  *     in a collapsed section of their own, before the in-progress one, and
  *     mark the first step that happens outside the app.
+ *   - (⚖ 2026-10-15) every section of the list is COLLAPSIBLE and starts
+ *     collapsed each time the panel loads (not remembered across reloads):
+ *     ready tutorials in a section per track; Needs a terminal and In
+ *     progress each hold a subsection per track (even a track of one); the
+ *     developer track. Saved progress shows Resume in the toolbar, and leaving
+ *     a tutorial opens the sections that hold it (sectionPath).
  *   - an OUTSIDE step (a terminal command, e.g. a local MultiServer) shows its
  *     command with a Copy button; Do it is off for it, and Play waits for its
  *     done check (or stops, when it has none).
@@ -79,6 +85,7 @@ export const CONTROLS = Object.freeze({
     copy: 'tut-copy',
     blocked: 'tut-blocked',
     banner: 'tut-banner',
+    resume: 'tut-resume',
 });
 export const TEXT = Object.freeze({
     prev: '◀ Back',
@@ -103,6 +110,24 @@ export const TEXT = Object.freeze({
     outsideWaiting: 'Do this step yourself, outside the app — Play carries on once it is done.',
     outsideStopped: 'This step happens outside the app: do it yourself, then press Next ▶.',
 });
+
+/** The key of the list section each non-ready status gets (its track subsections append `:<track>`). */
+const SECTION_OF_STATUS = Object.freeze({ terminal: 'terminal', 'in-progress': 'drafts' });
+
+/**
+ * The keys (`data-section`) of the list sections that hold `t`'s card, outer
+ * first: `ready:<track>`; `terminal` then `terminal:<track>`; `drafts` then
+ * `drafts:<track>`; a collapsed track's `track:<track>`.
+ */
+export function sectionPath(t) {
+    if (TRACKS[t.track]?.collapsed) return [`track:${t.track}`];
+    const status = SECTION_OF_STATUS[t.status];
+    return status ? [status, `${status}:${t.track}`] : [`ready:${t.track}`];
+}
+
+function findTutorial(id) {
+    return TUTORIALS.find((e) => e.tutorial.id === id)?.tutorial ?? null;
+}
 
 /** "Works up to step 3 of 9; step 4 does not work yet." */
 function blockedText(blocked, n) {
@@ -186,7 +211,7 @@ export class TutorialUI {
         this._token = 0;
         this._pollTimer = null;
         this._advanceTimer = null;
-        // Which collapsed sections of the list are open (render() rebuilds them).
+        // Which sections of the list are open (render() rebuilds them); none on load.
         this.openSections = new Set();
         this._unsubs = [
             eventBus.subscribe('settings:changed', () => this._loadSettings().then(() => this.render()), MODULE_ID),
@@ -266,6 +291,8 @@ export class TutorialUI {
     /** Back to the list. Merges the layout back and stops anything running. */
     exit() {
         this._stop();
+        // Back on the list, the tutorial just left is in view: its sections open.
+        if (this.tutorial) for (const key of sectionPath(this.tutorial)) this.openSections.add(key);
         this.tutorial = null;
         this.steps = [];
         setOutline(null);
@@ -523,64 +550,78 @@ export class TutorialUI {
         const ql = button(CONTROLS.quickLaunch, TEXT.quickLaunch, 'Open the Quick Launch panel', () => this.openQuickLaunch());
         const bar = el('div', 'tut-toolbar');
         bar.append(ql);
+        // ⚖ 2026-10-15: every section starts collapsed, so Resume sits up here, not in its card.
+        const saved = this.saved && findTutorial(this.saved.id);
+        if (saved) {
+            bar.append(button(CONTROLS.resume, `${TEXT.resume}: ${saved.title} (step ${this.saved.index + 1})`,
+                'Carry on where you left off', () => this.start(saved.id, this.saved.index)));
+        }
         wrap.append(bar);
         const all = TUTORIALS.map((e) => e.tutorial);
         const tracks = Object.entries(TRACKS);
-        // Ready tutorials, under their track's heading (collapsed tracks aside).
+        const cards = (box, list) => { for (const t of list) box.append(this._card(t)); };
+        // Ready tutorials: a collapsed section per track (collapsed tracks aside).
         for (const [key, track] of tracks) {
             if (track.collapsed) continue;
             const list = all.filter((t) => t.track === key && t.status === 'ready');
             if (!list.length) continue;
-            wrap.append(el('h4', 'tut-track', track.title));
-            for (const t of list) wrap.append(this._card(t));
-        }
-        // ⚖ 2026-10-14: tutorials that need a terminal in a collapsed section …
-        const terminal = all.filter((t) => t.status === 'terminal' && !TRACKS[t.track].collapsed);
-        if (terminal.length) {
-            const box = this._section(CONTROLS.terminal, `${TEXT.terminal} (${terminal.length})`);
-            box.append(el('div', 'tut-collapsed-intro', TEXT.terminalIntro));
-            for (const [key, track] of tracks) {
-                const list = terminal.filter((t) => t.track === key);
-                if (!list.length) continue;
-                box.append(el('h4', 'tut-track', track.title));
-                for (const t of list) box.append(this._card(t));
-            }
+            const box = this._section(`tut-ready tut-ready-${key}`, `${track.title} (${list.length})`, `ready:${key}`);
+            cards(box, list);
             wrap.append(box);
         }
-        // … so are the in-progress ones (⚖ 2026-10-10) …
-        const drafts = all.filter((t) => t.status === 'in-progress' && !TRACKS[t.track].collapsed);
-        if (drafts.length) {
-            const box = this._section(CONTROLS.drafts, `${TEXT.drafts} (${drafts.length})`);
+        // A status section, holding a collapsed subsection per track (⚖ 2026-10-15: even a track of one).
+        const byStatus = (status, cls, title, intro) => {
+            const list = all.filter((t) => t.status === status && !TRACKS[t.track].collapsed);
+            if (!list.length) return;
+            const box = this._section(cls, `${title} (${list.length})`, SECTION_OF_STATUS[status]);
+            if (intro) box.append(el('div', 'tut-collapsed-intro', intro));
             for (const [key, track] of tracks) {
-                const list = drafts.filter((t) => t.track === key);
-                if (!list.length) continue;
-                box.append(el('h4', 'tut-track', track.title));
-                for (const t of list) box.append(this._card(t));
+                const inTrack = list.filter((t) => t.track === key);
+                if (!inTrack.length) continue;
+                const sub = this._section(`tut-subsection tut-sub-${key}`, `${track.title} (${inTrack.length})`,
+                    `${SECTION_OF_STATUS[status]}:${key}`);
+                cards(sub, inTrack);
+                box.append(sub);
             }
             wrap.append(box);
-        }
-        // … and so are the developer ones (ready or not).
+        };
+        // ⚖ 2026-10-14: tutorials that need a terminal …
+        byStatus('terminal', CONTROLS.terminal, TEXT.terminal, TEXT.terminalIntro);
+        // … the in-progress ones (⚖ 2026-10-10) …
+        byStatus('in-progress', CONTROLS.drafts, TEXT.drafts);
+        // … and the developer ones (ready or not).
         for (const [key, track] of tracks) {
             if (!track.collapsed) continue;
             const list = all.filter((t) => t.track === key);
             if (!list.length) continue;
-            const box = this._section(key === 'developer' ? CONTROLS.developer : `tut-track-${key}`, `${track.title} (${list.length})`);
-            for (const t of list) box.append(this._card(t));
+            const box = this._section(key === 'developer' ? CONTROLS.developer : `tut-track-${key}`, `${track.title} (${list.length})`, `track:${key}`);
+            cards(box, list);
             wrap.append(box);
         }
         return wrap;
     }
 
-    /** A collapsed section of the list that remembers being opened across re-renders. */
-    _section(cls, title) {
+    /**
+     * A collapsed section of the list (⚖ 2026-10-15: every one starts closed
+     * when the panel loads). `key` (its `data-section`, sectionPath's names)
+     * is remembered open across re-renders while the panel lives.
+     */
+    _section(cls, title, key) {
         const d = el('details', `tut-collapsed ${cls}`);
-        d.open = this.openSections.has(cls);
+        d.dataset.section = key;
+        d.open = this.openSections.has(key);
         d.append(el('summary', 'tut-collapsed-title', title));
         d.addEventListener('toggle', () => {
-            if (d.open) this.openSections.add(cls);
-            else this.openSections.delete(cls);
+            if (d.open) this.openSections.add(key);
+            else this.openSections.delete(key);
         });
         return d;
+    }
+
+    /** Close every section (the state a freshly loaded panel shows). */
+    collapseAll() {
+        this.openSections.clear();
+        if (!this.tutorial) this.render();
     }
 
     _card(tutorial) {
@@ -600,10 +641,6 @@ export class TutorialUI {
         const resume = this.saved?.id === tutorial.id;
         const row = el('div', 'tut-card-row');
         row.append(el('span', 'tut-card-count', `${steps.length} steps`));
-        if (resume) {
-            row.append(button(`${CONTROLS.start} tut-resume`, `${TEXT.resume} (step ${this.saved.index + 1})`,
-                'Carry on where you left off', () => this.start(tutorial.id, this.saved.index)));
-        }
         row.append(button(CONTROLS.start, resume ? 'Restart' : TEXT.start, 'Start this tutorial', () => this.start(tutorial.id)));
         card.append(row);
         return card;

@@ -18,7 +18,9 @@ import eventBus from '../../../app/core/eventBus.js';
 import { TUTORIALS } from '../../tutorials/content/index.js';
 import { DEFAULT_DONE_TIMEOUT_MS, TRACKS, panelSteps, terminalStep, validateTutorial } from '../../tutorials/tutorialShape.js';
 import { ratchetVerdict, walkTutorial } from '../../tutorials/tutorialWalk.js';
-import { COMPONENT_TYPE, CONTROLS, DEFAULTS, MODULE_ID, TutorialUI } from '../../tutorials/tutorialUI.js';
+import {
+    COMPONENT_TYPE, CONTROLS, DEFAULTS, MODULE_ID, TutorialUI, sectionPath,
+} from '../../tutorials/tutorialUI.js';
 import { TUTORIAL_STACK_ID, componentItems, isSplit, mergeBack } from '../../tutorials/tutorialLayout.js';
 import {
     CURSOR_CLASS, OUTLINE_CLASS, hideCursor, performAction, setOutline, waitFor,
@@ -124,37 +126,104 @@ async function tutorialPanelListsEveryTutorial(tc) {
             try { validateTutorial(tutorial); } catch (e) { valid = false; tc.log?.(e.message); }
             tc.reportCondition(`tutorial ${tutorial.id} has the tutorial shape`, valid);
         }
-        // Where each card belongs (⚖ 2026-10-10, 2026-10-14): ready ones under
-        // their track, then the collapsed Needs a terminal section, the
-        // collapsed In progress section, and the developer track in a collapsed
-        // section of its own — in that order.
+        // Where each card belongs (⚖ 2026-10-10, 2026-10-14, 2026-10-15): ready
+        // ones in a section per track, then Needs a terminal and In progress
+        // (each a subsection per track), and the developer track — in that
+        // order, every section collapsed as the panel loads.
+        ui.collapseAll();
         const all = TUTORIALS.map((e) => e.tutorial);
         const order = Object.keys(TRACKS);
         const byTrack = (list) => order.flatMap((k) => list.filter((t) => t.track === k));
-        const where = (t) => (TRACKS[t.track].collapsed ? `.${CONTROLS.developer}`
-            : t.status === 'terminal' ? `.${CONTROLS.terminal}`
-                : t.status === 'in-progress' ? `.${CONTROLS.drafts}` : null);
-        const expected = [
-            ...byTrack(all.filter((t) => !where(t))),
-            ...byTrack(all.filter((t) => where(t) === `.${CONTROLS.terminal}`)),
-            ...byTrack(all.filter((t) => where(t) === `.${CONTROLS.drafts}`)),
-            ...byTrack(all.filter((t) => where(t) === `.${CONTROLS.developer}`)),
-        ].map((t) => t.id);
+        const where = (t) => (TRACKS[t.track].collapsed ? 'developer' : t.status);
+        const expected = ['ready', 'terminal', 'in-progress', 'developer']
+            .flatMap((w) => byTrack(all.filter((t) => where(t) === w))).map((t) => t.id);
         const cards = [...ui.root.querySelectorAll('.tut-card')].map((c) => c.dataset.tutorialId);
         tc.reportCondition(`the list shows one card per tutorial, grouped by track (${cards.join(', ')})`,
             JSON.stringify(cards) === JSON.stringify(expected));
         for (const t of all) {
             const card = ui.root.querySelector(`.tut-card[data-tutorial-id="${t.id}"]`);
-            const box = card?.closest('details');
-            const want = where(t);
-            tc.reportCondition(`${t.id} (${t.status}, track ${t.track}) sits ${want ? `in the collapsed ${want}` : 'in the open list'}`,
-                want ? Boolean(box?.matches(want) && !box.open) : Boolean(card && !box));
+            const chain = [];
+            for (let d = card?.closest('details'); d; d = d.parentElement?.closest('details')) chain.unshift(d);
+            const want = sectionPath(t);
+            tc.reportCondition(`${t.id} (${t.status}, track ${t.track}) sits in ${want.join(' › ')}, collapsed`,
+                JSON.stringify(chain.map((d) => d.dataset.section)) === JSON.stringify(want) && chain.every((d) => !d.open));
         }
+        tc.reportCondition('a status section holds subsections, not cards',
+            [`.${CONTROLS.terminal}`, `.${CONTROLS.drafts}`].every((sel) => {
+                const box = ui.root.querySelector(sel);
+                return !box || ![...box.children].some((c) => c.matches('.tut-card'));
+            }));
         tc.reportCondition('every card has a Start button',
             [...ui.root.querySelectorAll('.tut-card')].every((c) => c.querySelector(`.${CONTROLS.start}`)));
         tc.reportCondition('the list links to Quick Launch', Boolean(ui.root.querySelector(`.${CONTROLS.quickLaunch}`)));
     } finally {
         await restore(ui, settings);
+    }
+    return tc.getOverallResult();
+}
+
+/**
+ * ⚖ 2026-10-15: every section is collapsible and starts collapsed; one opened
+ * stays open across re-renders; leaving a tutorial opens the sections that
+ * hold it; saved progress shows Resume in the toolbar.
+ */
+async function tutorialSectionsCollapse(tc) {
+    const settings = await savedSettings();
+    const tabs = activeTabs();
+    const ui = await freshPanel(tc, { autoAdvance: false, showOutline: false, progress: null });
+    if (!ui) return tc.getOverallResult();
+    try {
+        ui.collapseAll();
+        const sections = () => [...ui.root.querySelectorAll('details[data-section]')];
+        tc.reportCondition(`every section is collapsed (${sections().length} sections)`,
+            sections().length > 0 && sections().every((d) => !d.open));
+        const tour = TUTORIALS.find((e) => e.tutorial.id === TOUR_ID).tutorial;
+        const [outer] = sectionPath(tour);
+        const summary = () => ui.root.querySelector(`details[data-section="${outer}"] > summary`);
+        summary()?.click();
+        // `toggle` is dispatched as a task: wait for the panel to have heard it, not just for `open`.
+        const isOpen = () => ui.root.querySelector(`details[data-section="${outer}"]`)?.open === true;
+        tc.reportCondition(`clicking ${outer}'s heading opens it`,
+            Boolean(await waitFor(() => isOpen() && ui.openSections.has(outer), 2000)));
+        ui.render();
+        tc.reportCondition('… and it stays open when the list redraws', isOpen());
+        summary()?.click();
+        tc.reportCondition('clicking it again closes it',
+            Boolean(await waitFor(() => !isOpen() && !ui.openSections.has(outer), 2000)));
+
+        // A subsection: the first status section that has one.
+        const sub = ui.root.querySelector('details[data-section] details[data-section]');
+        tc.reportCondition('a status section has track subsections', Boolean(sub));
+        if (sub) {
+            const key = sub.dataset.section;
+            sub.parentElement.closest('details').querySelector(':scope > summary').click();
+            sub.querySelector(':scope > summary').click();
+            const subOpen = () => ui.root.querySelector(`details[data-section="${key}"]`)?.open === true;
+            tc.reportCondition(`its subsection ${key} opens`,
+                Boolean(await waitFor(() => subOpen() && ui.openSections.has(key), 2000)));
+            ui.render();
+            tc.reportCondition('… and stays open when the list redraws', subOpen());
+            ui.collapseAll();
+            tc.reportCondition('collapseAll closes every section', sections().every((d) => !d.open));
+        }
+
+        ui.start(TOUR_ID, 1);
+        ui.exit();
+        const path = sectionPath(tour);
+        tc.reportCondition(`leaving ${TOUR_ID} opens ${path.join(' › ')}, and only that`, sections()
+            .every((d) => d.open === path.includes(d.dataset.section)));
+        ui.collapseAll();
+        ui.saved = { id: TOUR_ID, index: 2 };
+        ui.render();
+        const resume = ui.root.querySelector(`.tut-toolbar .${CONTROLS.resume}`);
+        tc.reportCondition(`saved progress shows Resume in the toolbar ("${resume?.textContent}")`,
+            Boolean(resume?.textContent.includes(tour.title) && resume.textContent.includes('step 3')));
+        resume?.click();
+        tc.reportCondition('Resume starts the tutorial at its saved step', ui.tutorial?.id === TOUR_ID && ui.index === 2);
+    } finally {
+        await restore(ui, settings);
+        ui?.collapseAll();
+        restoreActiveTabs(tabs);
     }
     return tc.getOverallResult();
 }
@@ -425,9 +494,14 @@ function restorePipelineSetup(saved, tc) {
 
 const TESTS = [
     ['tutorial-panel-lists-every-tutorial', 'Tutorial: the list shows every tutorial',
-        'Every tutorial in content/index.js passes the shape validator and has a card, in order, with a Start button; '
-        + 'the list links to Quick Launch.',
+        'Every tutorial in content/index.js passes the shape validator and has a card, in order, inside the collapsed '
+        + 'sections sectionPath names, with a Start button; the list links to Quick Launch.',
         tutorialPanelListsEveryTutorial],
+    ['tutorial-sections-collapse', 'Tutorial: every list section is collapsible and starts collapsed',
+        'Every section and subsection is closed; a heading click opens one and it stays open across a redraw (a track '
+        + 'subsection too); leaving a tutorial opens just the sections that hold it; saved progress shows Resume in the '
+        + 'toolbar, and it resumes at the saved step.',
+        tutorialSectionsCollapse],
     ['tutorial-start-splits-and-merge-restores', 'Tutorial: Start splits the column, Merge restores it',
         'The panel shares its stack until a tutorial starts; Start moves it into tutorial-stack under the stack it came '
         + 'from; Merge puts it back and the column collapses; Split splits again; All tutorials merges and shows the list.',

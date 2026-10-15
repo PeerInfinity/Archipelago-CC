@@ -1497,6 +1497,12 @@
             "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials belongs to the MANUAL batch tutorials (\u2696 the user, 2026-10-10: tutorial tests manual for now). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
         },
         {
+            "id": "tutorial-sections-collapse",
+            "enabled": true,
+            "category": "Tutorials",
+            "_comment": "TUTORIAL SECTIONS (2026-10-15, \u2696 the user: every section and subsection collapsible, collapsed on load). Manual batch tutorials. Restores the panel (list, merged, collapsed), its settings and the active tabs."
+        },
+        {
             "id": "tutorial-start-splits-and-merge-restores",
             "enabled": true,
             "category": "Tutorials",
