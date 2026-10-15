@@ -1,0 +1,8 @@
+PASS: OFF (MOVING_WAIT ON): the press kill's stand takes bombpusher@112,128#7 on t1157's ledger row — [{"t":1157,"source":"bomb","id":"bombpusher@112,128#7"}]
+PASS: ⛓ ON: the solve runs past the press kill's first landing (it stops on #10's blast on bob@272,112, the unstaged "Enemy" arm) — 1294 executed; levelRun: the Explosion of bombpusher@112,128#10 at (268, 118) on tick 1294 in level 40 reaches the chaser bob@272,112 — `Enemy.hit(4, …, 1)` (`Explosion.as:62-
+PASS: ⛓⛓ ON: the prefix takes no hit — []
+PASS: ⛓⛓ ON: the first press lands on spinner@192,128 — [{"t":1154,"id":"spinner@192,128","hits":1}]
+PASS: ⛓ the committed hammer-bw-l42-381-bombstand is what this script produces today — byte-identical
+## hammer-bw-l42-381-bombstand: 1293 ticks; ⛓⛓⛓ SEEDLING HAMMER-PHASE BW, D2 — THE PRESS KILL'S STAND SEES THE LOBBER'S BOMBS (`PRESS_KILL_BOMBS` ON, `MOVING_WAIT` ON). Leg 381's atlas staging (fidelity's `l40buttonStaging`, the L42 arrival (848,16)); `solveSegment`'s executed prefix cut at t1293, one tick before #10 explodes on bob@272,112 (the unstaged "Enemy" arm). OFF the strike stood on (248,184) and #7 hit it at t1156; ON landings t1154 spinner@192,128 hits 1; blasts t880 1 (355,86) · t926 2 (317,98) · t972 3 (317,152) · t1018 4 (296,204) · t1064 5 (284,217) · t1110 6 (284,217) · t1156 7 (255,187) · t1202 8 (229,176) · t1248 9 (245,141); player hits 0. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs.
+
+all checks green
