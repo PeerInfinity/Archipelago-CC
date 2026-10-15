@@ -133,10 +133,10 @@ describe('the measured spans (NOIZ2SA-OPTIMISM-REPORT.md)', () => {
             expect(skills.at(-1)).toBe(100);
         }
     });
-    it('the default final span is one, measured at the whole skills 90–100 with hundreds of attempts a cell', () => {
+    it('the default final span is one, measured at every whole skill 90–100 with hundreds of attempts a cell', () => {
         expect(MEASURED_SPANS).toContain(FINAL);
         const { skills, cells } = NOIZ2SA_MEASURED_SPANS.spans[FINAL];
-        for (const k of [90, 92, 93, 94, 95, 96, 97, 98, 99, 100]) expect(skills).toContain(k);
+        for (let k = 90; k <= 100; k++) expect(skills).toContain(k);
         for (const [n] of cells) expect(n).toBeGreaterThanOrEqual(200);
     });
     it('MEASURED: it is read on its own skills — at a measured skill the model is the cell (p and E = L + F(1 − p)/p, own F)', () => {

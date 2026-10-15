@@ -382,15 +382,15 @@
           ],
           "manaEnabled": true,
           "fogEnabled": true,
-          "timeDrainPerSecond": 0.2213,
+          "timeDrainPerSecond": 0.1238,
           "pricing": {
             "pointsPerMana": 81.52,
             "mana": 124.24,
             "pricedAt": "victory",
             "target": 4,
             "skill": 95,
-            "p": 0.27,
-            "seconds": 140.05,
+            "p": 0.1401,
+            "seconds": 250.44,
             "cost": 31,
             "final": true,
             "reached": true,
@@ -398,13 +398,13 @@
               "check2": {
                 "skill": 100,
                 "p": 1,
-                "seconds": 58.69,
+                "seconds": 59.73,
                 "cost": 64
               },
               "check1": {
                 "skill": 100,
                 "p": 1,
-                "seconds": 58.69,
+                "seconds": 59.73,
                 "cost": 62
               }
             }
@@ -485,7 +485,7 @@
           "xpEffect": "cost"
         },
         "region_1_1": {
-          "timeDrainPerSecond": 0.2213,
+          "timeDrainPerSecond": 0.1238,
           "xpEffect": "cost"
         }
       },

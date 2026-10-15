@@ -1,14 +1,19 @@
 # Noiz2sa difficulty model: is it optimistic at high skill?
 
 Measurement run of 2026-10-14/15, branch `claude/noiz2sa-difficulty-optimism-92lgz8` (from `origin/main` at
-`0b77b2f`, game submodule `bulletml-dodge` at `7423ee8`). Nothing in pricing, the difficulty table or any preset was
-changed. Raw per-cell data: [`noiz2sa-optimism-raw.json`](noiz2sa-optimism-raw.json) (every attempt's frames and hit
-scene, plus each cell's summary).
+`0b77b2f`, game submodule `bulletml-dodge` at `7423ee8`). Sections 1–4 are the measurement as first reported (no
+code changed). **Section 5 is the follow-up the user asked for on 2026-10-15 ("please continue with the plan you would
+recommend"): option 1 applied, with a calibration run behind it.** Raw per-cell data:
+[`noiz2sa-optimism-raw.json`](noiz2sa-optimism-raw.json) (every attempt's frames and hit scene, plus each cell's
+summary, for every cell in this report).
 
-**Answer: yes, at skills 95–97 on the default final span, by about 2× on the per-attempt rate (1.6–1.8× on mana). The
-error is mostly in the BOSS scene, partly in 10:9, and comes from reading a 16-seed table between sparse skill points.
-At skills ≤ 93 and on the early regions the model is close (within ~10%).** Below skill ~90 the final span is
-effectively unwinnable, and the model's `P_FLOOR` hides that (the skill-80 world drains ≥ 3.5× its plan).
+**Answer: yes, at skills 92–97 on the default final span, by about 2× on the per-attempt rate (1.6–1.8× on mana at
+95–97). The table's single scenes are right there; the error is in treating the span as a product of independent
+scenes (the boss is harder when reached from 10:9 than from a fresh start), compounded by a step-shaped skill curve
+read linearly between table points two skills apart. At skill 93 and on the early regions the model is close (within
+~10%).** Below skill ~90 the final span is effectively unwinnable, and the model's `P_FLOOR` hides that (the skill-80
+world drains ≥ 3.5× its plan). **Fixed for the default final span (section 5):** the span is now measured as a whole
+at every whole skill 90–100, and the committed priced world's Victory region now drains its planned mana at skill 95.
 
 ## How it was measured
 
@@ -26,9 +31,10 @@ here is the bot the table was built from.
   are marked by visits < 200.
 - 4 CPUs; the simulator runs ≈ 7 game seconds per CPU second, so a hard cell is ~30 min.
 
-**Not run** (stopped at the user's call on 2026-10-15 — "accept the current results, and document the inaccuracy"):
-the spans `pickSpan` would choose at each skill (`pick:1/2/4`), the 9-scene `1:1–1:9`, the mid-game `5:4–5:6`, the
-fresh-start single scenes at 90–97 and the measured triple `10:7–10:9`. The single scenes at skill 85 did run. Note: the
+**Not run** (the first grid was stopped on 2026-10-15 when the user said they'd likely accept the current results):
+the spans `pickSpan` would choose at each skill (`pick:1/2/4`), the 9-scene `1:1–1:9`, the mid-game `5:4–5:6` and the
+measured triple `10:7–10:9`. The single scenes ran at skill 85 (first grid) and, for 10:9 and the boss, at 94 and 96
+(section 5). Note: the
 brief's "9-scene span (1:9)" is one scene, stage 1 scene 9; `1:9` is what `noiz2sa_priced_test`'s first region plays.
 
 ## 1. Per-attempt deathless rate: model vs measured
@@ -80,10 +86,12 @@ reached it), against the model's `sceneChance` (the smoothed, interpolated table
 - **Not uniform.** 10:7 and 10:8 match the table at every skill. The error sits in **10:9** (0.26–0.6× the model at 80–90,
   0.85× at 95) and in **the boss** (0.68× at 95, 0.65× at 97). At 95 the four scene ratios multiply to 0.52, which
   is the whole span error (0.140 / 0.270).
-- **The boss is a skill-curve (interpolation) problem.** The table's boss row is 5/16 at 94, 11/16 at 96 and 16/16
-  at 98. Linear reading gives 0.52 at 95 and 0.84 at 97, but the measured boss rate is 0.35 at both 93 and 95 and
-  0.55 at 97. The real curve is flat and then steep, between 97 and 98. The 16-seed points (±0.12 each) plus linear
-  interpolation across the 96→98 jump put most of the error exactly where the default Victory skill sits.
+- **The boss is a carry-over problem, not a table problem** (corrected in the follow-up; this bullet first blamed the
+  interpolation). The boss played ALONE from a fresh start matches the table: 0.407 measured vs 0.344 at 94, 0.662 vs
+  0.688 at 96 (200 visits each, section 5). Inside the span, reached from 10:9, it passes only 0.338 at 93, 0.352 at
+  95 and 0.551 at 97. So the boss is harder when the span arrives at it than when a game starts at it, and the product
+  model, which multiplies fresh-start rates, cannot see that. The step-shaped skill curve (the whole span is flat
+  from 93 to 95 and from 96 to 97, then jumps at 98) adds to it where the table's points are two skills apart.
 - **10:9 is mostly table noise, with some carry-over.** Fresh-start 10:9 at 85 measures 0.289 against the table's
   0.438 (its 16-seed row is 0/2/2/0/1/5/9/9/14/12/16 of 16 at skills 30–98, noisy and non-monotone). Inside the span it is
   0.256, about the same, so carry-over from 10:8 is small there.
@@ -121,7 +129,7 @@ to the committed preset.
 
 Ordered by cost.
 
-1. **Add the measured final span to the table (recommended; data-only, easy).** Put this run's 10:7–10:boss curve
+1. **Add the measured final span to the table (recommended; data-only, easy). — APPLIED, section 5.** Put this run's 10:7–10:boss curve
    (skills 0, 50, 80, 85, 90, 93, 95, 97, 100; ~200–3000 attempts each, L and F from the attempts) into
    `noiz2saDifficultyData.js` as a measured span, so `spanDifficulty` uses its own cell for it, as it already does
    for the aligned triples. It needs a small extractor change (or a second data block) and a re-pin of the
@@ -133,8 +141,10 @@ Ordered by cost.
    *Cost:* the data is already in `noiz2sa-optimism-raw.json`; roughly an hour of code plus test re-pins.
 
 2. **Re-sweep the table densely at high skill.** Rerun the game repo's `segment-sweep.mjs` for every scene at skills
-   91–99 step 1 with 64+ bot seeds (it shards on GitHub Actions). This fixes the boss/10:9-style interpolation error
-   for every span and every final setting, not just the default. *Changes:* every region priced at skill ≥ 90 (the
+   91–99 step 1 with 64+ bot seeds (it shards on GitHub Actions). ⚠ The follow-up found the single scenes are already
+   right at 94–96, so this would fix only the interpolation part; the carry-over into the boss would remain for any
+   span the product model prices. A sweep of measured MULTI-scene spans (every span ending on a boss, say) would be
+   the version of this that helps. *Changes:* every region priced at skill ≥ 90 (the
    final, and late ramp regions) moves; low-skill regions are untouched. *Cost:* CI hours (100 scenes × 9 skills × 64
    seeds ≈ 58k single attempts; the boss cells are the long ones), plus a regenerate of the data file and preset.
 
@@ -147,11 +157,73 @@ A blanket per-span correction factor (e.g. ×0.55 on p at skills 94–97) would 
 by the other cells: 1:9, 1:1–1:2, 5:1 and the 93 cell are all within ~10%. Changing the 50% rule's target would not
 help the final, which is priced at its fixed span, not by the 50% rule.
 
-**If no fix is taken**, the documentation line to carry is: *the difficulty model is within ~10% on per-attempt rate
+**Before the fix**, the documentation line would have been: *the difficulty model is within ~10% on per-attempt rate
 for early/mid regions and at skill 93, but on the default final span 10:7–10:boss it is ≈ 2× optimistic at skills
 95–97 (measured p 0.14 at 95 vs 0.27 modelled; the final costs ≈ 1.8× its planned mana) because the boss's 16-seed
 table is read linearly across a flat-then-steep curve; below skill ~90 that span is effectively unwinnable and its
 priced E is a floor, not an estimate.*
+
+## 5. Follow-up: option 1 applied
+
+The user asked to continue with the recommended plan. Two things changed it from the first draft above. (1) To be
+read like a measured triple, the span needs cells at the table's skills, but the table's skills alone would still miss:
+the whole span's curve is step-shaped, so the model now reads a measured span on ITS OWN skills. (2) The single-scene
+cells at 94/96 showed the table's scenes are right and the boss's error is carry-over (section 2, corrected).
+
+**The calibration** (`measure-noiz2sa-grid.mjs`, same method as section 1; "old model p" is the product of scenes,
+which is what the driver printed while those cells ran):
+
+| skill | old model p | measured p (95% CI) | attempts | visits | censored | E measured (s) |
+|---:|---:|---|---:|---:|---:|---:|
+| 0–70 (8 cells) | 0.000 | 0 in 1300–2500 each | | 13–25 | all | ≥ 530–922 |
+| 80 | 0.001 | 0.000 (1/2960) | 2960 | 30 | 29 | ≥ 1176 |
+| 85 | 0.009 | 0.004 (0.002–0.007) | 2601 | 30 | 20 | ≥ 1607 |
+| 90 | 0.032 | 0.013 (0.009–0.018) | 2320 | 40 | 11 | ≥ 1323 |
+| 91 | 0.049 | 0.023 (0.016–0.033) | 1236 | 32 | 3 | ≥ 904 |
+| 92 | 0.069 | 0.016 (0.010–0.024) | 1279 | 26 | 6 | ≥ 1069 |
+| 93 | 0.116 | 0.134 (0.115–0.155) | 1121 | 150 | 0 | 268.7 |
+| 94 | 0.180 | 0.092 (0.076–0.111) | 1045 | 96 | 0 | 375.4 |
+| 95 | 0.270 | 0.140 (0.121–0.161) | 1142 | 160 | 0 | 250.4 |
+| 96 | 0.360 | 0.354 (0.316–0.394) | 565 | 200 | 0 | 127.0 |
+| 97 | 0.625 | 0.366 (0.327–0.408) | 546 | 200 | 0 | 126.1 |
+| 98 | 1.000 | 0.995 (0.972–0.999) | 201 | 200 | 0 | 60.6 |
+| 99 | 1.000 | 0.971 (0.938–0.987) | 206 | 200 | 0 | 60.1 |
+| 100 | 1.000 | 1.000 (0.981–1.000) | 200 | 200 | 0 | 59.7 |
+
+(The 91 cell ran after the data landed without it, so its printed model p, 0.014, was already the measured curve's;
+0.049 above is the old product at 91.) The 93/94 and 98/99 pairs are not monotone; the model's isotonic
+smoothing pools them (0.114 at 93–94, 0.983 at 98–99).
+
+Single scenes from a fresh start (the carry-over check): 10:9 0.758 at 94 / 0.870 at 96 (table 0.813 / 0.813); boss
+0.407 / 0.662 (table 0.344 / 0.688).
+
+**What changed** (branch commits after the report):
+- `scripts/data/noiz2sa-measured-spans.json` — per-cell aggregates `{n, deathless, L, F, visits, censored}` at 21
+  skills, with provenance; `scripts/test/extract-noiz2sa-measured-spans.mjs --from <grid json…>` writes it and
+  generates `frontend/modules/noiz2saSubstrate/noiz2saMeasuredSpansData.js` (`--check` verifies the module).
+- `noiz2saDifficulty.js` — a measured span is read like a triple but between its own skills, and a cell with ≥ 30
+  failures keeps its own failed-attempt length F (the span's failures last 5 s at skill 0 and 36 s at 96, when they
+  reach the boss; a pooled F would put E at 95 far too low). A 16-attempt cell never has 30 failures, so the table
+  reads exactly as before: compared with `origin/main` over every span of 1–4 scenes at 19 skills (7486 readings),
+  only 10:7–10:boss differs.
+- `noiz2sa_priced_test` regenerated: the Victory region's rate 0.2213 → **0.1238** (p 0.27 → 0.140, E 140.05 →
+  250.44 s at skill 95); its two locations (priced at skill 100) 58.69 → 59.73 s. Nothing else in the file moved, and
+  no other committed preset carries Noiz2sa pricing.
+- Unit tests (`noiz2saDifficulty.test.js`): the module matches the json, the span covers every whole skill 90–100
+  with ≥ 200 attempts a cell, at skill 95 the model IS the cell (p 0.140, E 240–260 s), the curve is non-decreasing,
+  0 below 80 and 1 at 100, and other spans still read as the product or the triple. The five noiz2sa unit-test files
+  pass (98 tests); not the unfiltered suite (ruling 52).
+- Docs: `docs/json/developer/procgen/noiz2sa.md` § Pricing (the model, the settings line, the test preset), and the
+  `DEFAULT_FINAL_SPAN` comment in `noiz2saPricing.js`.
+
+**Expected effect:** with the new rate a Victory visit at skill 95 drains 0.1238 × 250.4 s ≈ 31 mana, the plan (it
+drained 55.3 at the old rate). Not re-measured on the page: the in-app row `noiz2sa-priced-world` plays only the
+first region, which did not change.
+
+**What it does not fix:** a non-default `noiz2saFinalSpan` is still the product of its scenes (≈ 2× optimistic if it
+ends on a boss, by this run); a `noiz2saVictorySkill` below ~90 still prices an effectively unwinnable final at the
+`P_FLOOR` bound (option 3). One side effect: the 50% rule considers 10:7–10:boss among the 4-scene spans, so a
+NON-final 4-scene region priced at skills ~96–98 may now pick a different span (more accurately).
 
 ## Reproduce
 
@@ -162,5 +234,11 @@ node scripts/test/measure-noiz2sa-grid.mjs --skills 0,50,80,85,90,93,95,97,100 -
      --visits 200 --max-attempts 100 --attempt-cap 1000 --jobs 4 --chunk 5 --out A.json
 node scripts/test/measure-noiz2sa-grid.mjs --rules <rules.json> --skip-final --visits 200 --attempt-cap 1000 --out E.json
 node scripts/test/measure-noiz2sa-grid.mjs --skills 85 --spans "10:7,10:8,10:9,10:boss" --visits 200 --chunk 1 --out B.json
-node scripts/test/summarize-noiz2sa-grid.mjs A.json E.json B.json --merged noiz2sa-optimism-raw.json
+# the follow-up: the table's other skills and 91 (F, H), and the fresh-start scenes at 94/96 (G)
+node scripts/test/measure-noiz2sa-grid.mjs --skills 10,20,30,40,60,70,91,92,94,96,98,99 --spans "10:7–10:boss" \
+     --visits 200 --max-attempts 100 --attempt-cap 1000 --jobs 4 --chunk 1 --out F.json
+node scripts/test/measure-noiz2sa-grid.mjs --skills 94,96 --spans "10:9,10:boss" --visits 200 --chunk 1 --out G.json
+node scripts/test/summarize-noiz2sa-grid.mjs A.json E.json B.json F.json G.json --merged noiz2sa-optimism-raw.json
+node scripts/test/extract-noiz2sa-measured-spans.mjs --from A.json F.json        # → the json + the data module
+node scripts/test/generate-noiz2sa-priced-test-preset.mjs                       # → the priced preset
 ```
