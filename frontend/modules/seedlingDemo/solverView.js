@@ -138,6 +138,9 @@ export {
     LAVA_CHAIN, TIME_PER_FRAME, createLavaChainState, lavaChainRect, rectTouchesBox, spritemapPlay, spritemapUpdate,
     stepLavaChain, worldFrame,
 } from './lavaChain.js';
+// ⛓ fidelity SPINNINGAXE: the spinning axe's geometry — simulation since `levelRun` steps the axe's player arm
+// (`spinningAxe.js`); `hazards.js` imports it here and re-exports it (the danger map, the solver, the axe probes).
+export { axeCanReach, axeHitsPlayer, axeLine, collideLinePlayer, SPINNING_AXE } from './spinningAxe.js';
 // levelWorld.js — botDriverV2, dangerMap, hazards, solverBot, strikePolicy · seedling 3, physics 6
 export {
     assertRect, isNormalizedLiveOpts, LIVE_GEOMETRY_KEYS, normalizeLiveOpts, PRE_R5_ROLES, rect, rectsOverlap,

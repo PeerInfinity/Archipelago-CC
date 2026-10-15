@@ -458,6 +458,23 @@ export const CONTACT_FIDELITY = {
      * node measurement.
      */
     flyerLive: false,
+    /**
+     * fidelity SPINNINGAXE D1 — A SPINNING AXE HITS THE PLAYER (`levelRun.stepSpinningAxesNow`).
+     *
+     *     SpinningAxe.as:48-63   update(): angle += spinRate; p = collideLine("Player", hub → hub + 32·(cos a, sin a))
+     *                            || collideRect("Player", hub ± 6, 12×12); hitPlayer(p, a)
+     *     SpinningAxe.as:65-76   hitPlayer(): p.hit(null, force 5, the foot of p on the blade 2 updates back, damage 1)
+     *
+     * Only `dangerMap` priced the axe (`hazards.axeHitsPlayer`, at the visit's update count in transit); the live run
+     * never billed it. MEASURED (survey step 163, L75, at `e967758748`): the 366-t plan is hit on the game at t160 at
+     * (86.05,132.60) by `spinningaxe@80,144` (rate −6, its blade at update 160 on the pre-move box) and the model walks
+     * on. ON: every axe in the room keeps a per-world update counter (restarted at every rebuild: a door, a death, an
+     * ending reboot) and bills `applyPlayerHit` from `hitPlayer`'s point when its blade or hub touches the PRE-move
+     * box; a count it cannot vouch for (a frozen tick or a non-load dead-frame span in the visit) with the player
+     * within the axe's reach is refused by name. OFF: byte-identical. ⛔ OFF by default (no licence);
+     * `SEEDLING_SPINNING_AXE_PLAYER_HIT=0|1` for a node measurement.
+     */
+    spinningAxePlayerHit: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -556,6 +573,9 @@ if (globalThis.process?.env?.SEEDLING_CEREMONY_SHOVE === '0') CONTACT_FIDELITY.c
 // ⛓ fidelity LAPSECOST D2: `SEEDLING_FLYER_LIVE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '1') CONTACT_FIDELITY.flyerLive = true;
 if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '0') CONTACT_FIDELITY.flyerLive = false;
+// ⛓ fidelity SPINNINGAXE D1: `SEEDLING_SPINNING_AXE_PLAYER_HIT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_SPINNING_AXE_PLAYER_HIT === '1') CONTACT_FIDELITY.spinningAxePlayerHit = true;
+if (globalThis.process?.env?.SEEDLING_SPINNING_AXE_PLAYER_HIT === '0') CONTACT_FIDELITY.spinningAxePlayerHit = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
