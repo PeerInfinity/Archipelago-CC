@@ -1,0 +1,58 @@
+##### lab2-on
+## A-sword  (99 derivations)
+  samples 304293  repeat 279779  suffix 21  join 0 (0 previews, entity-free 0, invalid 0)  exact-reusable (repeat+suffix, entity-free) 0
+  stepper inputs between consecutive derivations (97 pairs): (none): 97
+  escape (pid 6310): 10 calls 0.0s · same (body, cell, pressAt) asked earlier in the kill: 1 (0.0s), same answer 1 (0.0s) · + same player state: 0 (0.0s), same answer 0
+
+## ghost-sweep  (4860 derivations)
+  samples 1932213  repeat 927399  suffix 0  join 109398 (1683 previews, entity-free 109398, invalid 0)  exact-reusable (repeat+suffix, entity-free) 927399
+  stepper inputs between consecutive derivations (3104 pairs): (none): 2970, w: 134
+  escape (pid 6545): 86793 calls 71.3s · same (body, cell, pressAt) asked earlier in the kill: 53937 (43.6s), same answer 53937 (43.6s) · + same player state: 39591 (31.6s), same answer 39591
+
+## l18  (5322 derivations)
+  samples 2487105  repeat 987693  suffix 3018  join 134037 (1983 previews, entity-free 134037, invalid 0)  exact-reusable (repeat+suffix, entity-free) 990711
+  stepper inputs between consecutive derivations (3566 pairs): (none): 3432, w: 134
+  escape (pid 6308): 80436 calls 138.5s · same (body, cell, pressAt) asked earlier in the kill: 45114 (62.2s), same answer 44961 (62.1s) · + same player state: 30885 (41.0s), same answer 30885
+
+##### lab2-off
+## A-sword  (1329 derivations)
+  samples 1562613  repeat 1429336  suffix 10581  join 5356 (20 previews, entity-free 0, invalid 0)  exact-reusable (repeat+suffix, entity-free) 0
+  stepper inputs between consecutive derivations (1319 pairs): (none): 1294, d: 21, d+r.steerBlocked: 4
+  escape (pid 6502): 13 calls 0.0s · same (body, cell, pressAt) asked earlier in the kill: 0 (0.0s), same answer 0 (0.0s) · + same player state: 0 (0.0s), same answer 0
+
+## ghost-sweep  (4596 derivations)
+  samples 306765  repeat 156768  suffix 0  join 16155 (912 previews, entity-free 16155, invalid 0)  exact-reusable (repeat+suffix, entity-free) 156768
+  stepper inputs between consecutive derivations (2840 pairs): (none): 2706, w: 134
+  escape (pid 6588): 72762 calls 58.1s · same (body, cell, pressAt) asked earlier in the kill: 46971 (29.0s), same answer 46710 (28.8s) · + same player state: 38016 (23.0s), same answer 38016
+
+## l18  (10086 derivations)
+  samples 2078895  repeat 1459014  suffix 3324  join 104109 (1575 previews, entity-free 104109, invalid 0)  exact-reusable (repeat+suffix, entity-free) 1462338
+  stepper inputs between consecutive derivations (8330 pairs): (none): 8196, w: 134
+  escape (pid 6311): 55656 calls 69.8s · same (body, cell, pressAt) asked earlier in the kill: 32928 (34.5s), same answer 32589 (34.1s) · + same player state: 28224 (29.1s), same answer 28224
+
+##### lab3b-on
+## A-sword  (99 derivations)
+  samples 304293  repeat 279779  suffix 21  join 0 (0 previews, entity-free 0, invalid 0)  exact-reusable (repeat+suffix, entity-free) 0
+  repeats: danger verdict equal 105, differs 1465 (of which full-equal samples but a different verdict: 1465)
+  stepper inputs between consecutive derivations (97 pairs): (none): 97
+  escape (pid 6853): 10 calls 0.0s · same (body, cell, pressAt) asked earlier in the kill: 1 (0.0s), same answer 1 (0.0s) · + same player state: 0 (0.0s), same answer 0
+
+## l18  (5322 derivations)
+  samples 2487105  repeat 987693  suffix 3018  join 134037 (1983 previews, entity-free 134037, invalid 0)  exact-reusable (repeat+suffix, entity-free) 990711
+  repeats: danger verdict equal 4365, differs 8850 (of which full-equal samples but a different verdict: 8850)
+  stepper inputs between consecutive derivations (3566 pairs): (none): 3432, w: 134
+  escape (pid 6852): 80436 calls 94.9s · same (body, cell, pressAt) asked earlier in the kill: 45114 (42.6s), same answer 44961 (42.5s) · + same player state: 30885 (27.8s), same answer 30885
+
+## leg-414-ghost  (266 derivations)
+  samples 884992  repeat 837332  suffix 0  join 0 (0 previews, entity-free 0, invalid 0)  exact-reusable (repeat+suffix, entity-free) 0
+  repeats: danger verdict equal 428, differs 3842 (of which full-equal samples but a different verdict: 3842)
+  stepper inputs between consecutive derivations (259 pairs): (none): 258, w: 1
+  escape (pid 6906): 20 calls 0.0s · same (body, cell, pressAt) asked earlier in the kill: 0 (0.0s), same answer 0 (0.0s) · + same player state: 0 (0.0s), same answer 0
+
+##### lab3b-off
+## A-sword  (1329 derivations)
+  samples 1562613  repeat 1429336  suffix 10581  join 5356 (20 previews, entity-free 0, invalid 0)  exact-reusable (repeat+suffix, entity-free) 0
+  repeats: danger verdict equal 2926, differs 1930 (of which full-equal samples but a different verdict: 777)
+  stepper inputs between consecutive derivations (1319 pairs): (none): 1294, d: 21, d+r.steerBlocked: 4
+  escape (pid 6854): 13 calls 0.0s · same (body, cell, pressAt) asked earlier in the kill: 0 (0.0s), same answer 0 (0.0s) · + same player state: 0 (0.0s), same answer 0
+
