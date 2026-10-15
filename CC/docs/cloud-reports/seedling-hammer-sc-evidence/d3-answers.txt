@@ -1,0 +1,15 @@
+A-sword base 7c279226 floorB 79805b67 MOVED
+A-ghost base b3b38f55 floorB e9ac652b MOVED
+leg-397-ghost base 4720caab floorB 18c23417 MOVED
+leg-414-ghost base 489a9482 floorB c1bf0091 MOVED
+l18 base 864ab175 floorB 6167055a MOVED
+ghost-sweep base 1ca7eed5 floorB 198fd658 MOVED
+campaign base 4199d181 floorB c1dab44f MOVED
+prod-solve-seedling-r8-d2-chain base 8afbe7e2 floorB 65e20124 MOVED
+prod-solve-seedling-r8-l18 base dfda7600 floorB c3569d6e MOVED
+killgate-2 base 8e12a2ac floorB 24b10b66 MOVED
+killgate-5 base 5f08a6a2 floorB a4e9b9a8 MOVED
+killgate-9 base 99a34f19 floorB 40b5e59e MOVED
+prod-solve-seedling-r8-battery base d9d96146 floorB d9d96146 SAME
+prod-solve-seedling-r8-tail base e7c3601a floorB e7c3601a SAME
+prod-solve-seedling-r9-l3 base 2db4cd01 floorB 2db4cd01 SAME

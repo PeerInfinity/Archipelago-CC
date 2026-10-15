@@ -1,0 +1,99 @@
+{
+ "tape_version": 3,
+ "game": "seedling",
+ "name": "sc-speed",
+ "description": "SCRATCH (seedling-hammer-sc D1): RIGHT 20 ticks, RIGHT+UP 20, RIGHT with UP/DOWN zig-zag in 2-tick blocks 24, then 16 standing: the player's top speed per axis on level-0 ground, asked of the game.",
+ "boot": {
+  "level": 0,
+  "x": 80,
+  "y": 128
+ },
+ "noclip": true,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "tick_count": 80,
+ "inputs": [
+  {
+   "key": "right",
+   "from": 0,
+   "to": 20
+  },
+  {
+   "key": "right",
+   "from": 20,
+   "to": 40
+  },
+  {
+   "key": "up",
+   "from": 20,
+   "to": 40
+  },
+  {
+   "key": "right",
+   "from": 40,
+   "to": 64
+  },
+  {
+   "key": "up",
+   "from": 40,
+   "to": 42
+  },
+  {
+   "key": "down",
+   "from": 42,
+   "to": 44
+  },
+  {
+   "key": "up",
+   "from": 44,
+   "to": 46
+  },
+  {
+   "key": "down",
+   "from": 46,
+   "to": 48
+  },
+  {
+   "key": "up",
+   "from": 48,
+   "to": 50
+  },
+  {
+   "key": "down",
+   "from": 50,
+   "to": 52
+  },
+  {
+   "key": "up",
+   "from": 52,
+   "to": 54
+  },
+  {
+   "key": "down",
+   "from": 54,
+   "to": 56
+  },
+  {
+   "key": "up",
+   "from": 56,
+   "to": 58
+  },
+  {
+   "key": "down",
+   "from": 58,
+   "to": 60
+  },
+  {
+   "key": "up",
+   "from": 60,
+   "to": 62
+  },
+  {
+   "key": "down",
+   "from": 62,
+   "to": 64
+  }
+ ]
+}
