@@ -1,0 +1,91 @@
+{
+  "_comment": [
+    "Each committed world_generator package (worlds/<pkg>, archipelago.json author \"World Generator\") and the",
+    "recipe that regenerates it: scripts/lib/worldgen_recipe.py world_generator_command(source, worlds/<pkg>, game_name,",
+    "canonical_seed). The freshness check (scripts/test/check-worldgen-package-freshness.py, pinned by",
+    "test/test_worldgen_package_freshness.py) regenerates each into a temp dir and fails on any byte difference.",
+    "procgen_maze_worldgen is the one package built WITHOUT --canonical-seed (measured 2026-10-15: with it, __init__.py differs)."
+  ],
+  "packages": {
+    "alttp_vanilla_worldgen": {
+      "source": "frontend/presets/alttp_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "A Link to the Past Vanilla WorldGen",
+      "canonical_seed": 1
+    },
+    "alttp_worldgen": {
+      "source": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "A Link to the Past WorldGen",
+      "canonical_seed": 1
+    },
+    "apcalc_worldgen": {
+      "source": "frontend/presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "APCalc WorldGen",
+      "canonical_seed": 1
+    },
+    "bakingadventure_vanilla_worldgen": {
+      "source": "frontend/presets/bakingadventure_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Baking Adventure Vanilla WorldGen",
+      "canonical_seed": 1
+    },
+    "bakingadventure_worldgen": {
+      "source": "frontend/presets/bakingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Baking Adventure WorldGen",
+      "canonical_seed": 1
+    },
+    "bounce_worldgen": {
+      "source": "frontend/presets/bounce_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Bounce Demo WorldGen",
+      "canonical_seed": 1
+    },
+    "codingadventure_vanilla_worldgen": {
+      "source": "frontend/presets/codingadventure_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Coding Adventure Vanilla WorldGen",
+      "canonical_seed": 1
+    },
+    "codingadventure_worldgen": {
+      "source": "frontend/presets/codingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Coding Adventure WorldGen",
+      "canonical_seed": 1
+    },
+    "depgraph_worldgen": {
+      "source": "frontend/presets/depgraph/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "DepGraph WorldGen",
+      "canonical_seed": 1
+    },
+    "metamath_worldgen": {
+      "source": "frontend/presets/metamath/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Metamath WorldGen",
+      "canonical_seed": 1
+    },
+    "procgen_maze_worldgen": {
+      "source": "frontend/presets/procgen_maze/AP_1/AP_1_rules.json",
+      "game_name": "Procgen Maze WorldGen",
+      "canonical_seed": null
+    },
+    "runner_sphere_worldgen": {
+      "source": "frontend/presets/runner_sphere_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Runner Sphere WorldGen",
+      "canonical_seed": 1
+    },
+    "runner_worldgen": {
+      "source": "frontend/presets/runner_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Runner WorldGen",
+      "canonical_seed": 1
+    },
+    "seedling_playthrough": {
+      "source": "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json",
+      "game_name": "Seedling Playthrough",
+      "canonical_seed": 1
+    },
+    "toem_original_worldgen": {
+      "source": "frontend/presets/toem_original/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "TOEM original WorldGen",
+      "canonical_seed": 1
+    },
+    "toem_rule_builder_worldgen": {
+      "source": "frontend/presets/toem_rule_builder/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "TOEM rule builder WorldGen",
+      "canonical_seed": 1
+    }
+  }
+}
