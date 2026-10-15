@@ -28,19 +28,28 @@ import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
 const DIR = join(dirname(fileURLToPath(import.meta.url)), 'fixtures', 'contact-witness');
 const load = (id) => JSON.parse(readFileSync(join(DIR, `${id}.json`), 'utf8'));
 
-/** leg id → [the tick the sweep named, the switch that fixes it, or null for residue] */
+/**
+ * leg id → [the tick the sweep named, the switch that fixes it, or null for residue]
+ *
+ * ⛓ JS witness refresh: the solver's plans for 264, 269, 308, 309, 659, 661 and 666 had drifted since the 10-05
+ * captures (fidelity's model changes), so those seven were re-captured under today's plans (switches none,
+ * `--poll=last`) and their ticks re-pinned from the replay. The other five are the 10-05 captures, byte-untouched
+ * (their plans are unchanged). 269's closing rule moved: the 10-05 plan was struck by a wallflyer
+ * (`wallFlyerSwordHits`); on today's plan the model takes a hit the game does not take (a WallFlyer and two Bobs in
+ * reach), and `collideLinePointsExact` alone closes it.
+ */
 const ROWS = {
     243: [52, 'wallFlyerSwordHits'], // L22, wallflyer@64,80 struck at t46 in the game
     251: [60, 'wallFlyerSwordHits'], // L22
-    269: [55, 'wallFlyerSwordHits'], // L25, wallflyer@48,48 struck at t51
-    264: [80, 'collideLinePointsExact'], // L25, the launch a tick late in the model
+    269: [70, 'collideLinePointsExact'], // L25, the model takes a hit the game does not (10-05: t55, wallFlyerSwordHits)
+    264: [116, 'collideLinePointsExact'], // L25, a knockback in the game the model lacks; WallFlyer@72,79 and two Bobs in reach (10-05: t80)
     283: [19, 'collideLinePointsExact'], // L27, the launch a tick early in the model
-    659: [48, 'drillLive'], // L88, drill@128,160 hops onto the player
-    661: [48, 'drillLive'],
+    659: [96, 'drillLive'], // L88, the drill@104,184 hops onto the player (10-05: t48)
+    661: [96, 'drillLive'], // (10-05: t48)
     663: [104, 'drillLive'],
-    666: [53, 'drillLive'],
-    308: [67, 'bobSoldierLive'], // L30 BobSoldier@48,80 — its sword (fidelity BOBSOLDIER W4)
-    309: [66, 'bobSoldierLive'], // L30 BobSoldier — its sword
+    666: [98, 'drillLive'], // L88, the drill@136,136 (10-05: t53)
+    308: [95, 'bobSoldierLive'], // L30 BobSoldier — its sword (fidelity BOBSOLDIER W4; 10-05: t67)
+    309: [131, 'bobSoldierLive'], // L30 BobSoldier — its sword (10-05: t66)
     576: [141, null], // L71 — no Mobile near the player (the spinning axe: the AXE slice's region)
     // L74 — the arrival button's release step a tick late in the model (fidelity SMALLGAPS D1). ⛓ JS wave-16 wiring: the
     // 10-05 capture took each tick's FIRST poll, 20 frames into the 175-frame freeze (t1 y 136, vy 0), which read as
