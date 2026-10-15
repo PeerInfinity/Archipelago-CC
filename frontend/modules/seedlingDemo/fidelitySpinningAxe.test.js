@@ -118,3 +118,21 @@ describe('SPINNINGAXE D1 — the counter restarts at a death\'s rebuild (SMALLGA
         expect(replay(REBOOT, false).parted[0]).toBe(357);
     });
 });
+
+describe('SPINNINGAXE D1 — sweep leg 633 (`level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224`) meets the axe at t159', () => {
+    // The leg's own node plan at the baseline row's `seamTime` 5411 (354 t); the baseline sweep's row (38778270309)
+    // failed with a game hit at t159 at (82.49,131.97) — this one.
+    const W = witness('spinningaxe-l75-633-plan');
+    const at = (t) => W.samples.find((s) => s.t === t);
+    it('the witness: 355 samples, the game\'s hits rise at t159 at (82.49,131.97)', () => {
+        expect(W.samples.length).toBe(355);
+        expect([at(158).player.hits, at(159).player.hits]).toEqual([0, 1]);
+        expect(at(159).player.x).toBeCloseTo(82.4929, 3);
+    });
+    it('ON: every sample at 0 px; the axe bills t159. OFF parts at t159', () => {
+        const on = replay(W, true);
+        expect(on.parted).toEqual([]);
+        expect(on.hits).toContain('t159 spinningaxe spinningaxe@80,144');
+        expect(replay(W, false).parted[0]).toBe(159);
+    });
+});
