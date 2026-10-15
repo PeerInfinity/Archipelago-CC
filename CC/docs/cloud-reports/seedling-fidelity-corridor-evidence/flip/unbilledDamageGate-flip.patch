@@ -1,0 +1,26 @@
+diff --git a/frontend/modules/seedlingDemo/contactFidelity.js b/frontend/modules/seedlingDemo/contactFidelity.js
+index 189fb8b..5162cc9 100644
+--- a/frontend/modules/seedlingDemo/contactFidelity.js
++++ b/frontend/modules/seedlingDemo/contactFidelity.js
+@@ -376,7 +376,7 @@ export const CONTACT_FIDELITY = {
+      * the route survey solves today (the slice report lists them); the flip is the user's licence.
+      * `SEEDLING_UNBILLED_DAMAGE_GATE=0|1` for a node measurement.
+      */
+-    unbilledDamageGate: false,
++    unbilledDamageGate: true,
+     /**
+      * fidelity SMALLGAPS D1 — A BUTTON-DROPPED FALLROCK'S RELEASE STEP LANDS IN THE FROZEN TICK, NOT THE NEXT ONE
+      * (`levelRun.advance`'s `pendingButtonFalls` branch).
+diff --git a/frontend/modules/seedlingDemo/contactFidelity.test.js b/frontend/modules/seedlingDemo/contactFidelity.test.js
+index 6ffe41a..31ef491 100644
+--- a/frontend/modules/seedlingDemo/contactFidelity.test.js
++++ b/frontend/modules/seedlingDemo/contactFidelity.test.js
+@@ -125,7 +125,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
+             // frame) ships OFF.
+             arrivalButtonArm: false,
+             // ⛓ fidelity UNBILLEDGATE D2: `unbilledDamageGate` (`solverBot.UNBILLED_DAMAGE`) ships OFF.
+-            unbilledDamageGate: false,
++            unbilledDamageGate: true,
+             // ⛓ fidelity SMALLGAPS: `buttonFallReleaseStep` (D1), `waypointSlide` (D2), `lavaChainPlayerHit` (D3) shipped OFF —
+             // ⚖ (user, 2026-10-14, "Flip all three") ON since the wave-16 harvest.
+             buttonFallReleaseStep: true, waypointSlide: true, lavaChainPlayerHit: true,

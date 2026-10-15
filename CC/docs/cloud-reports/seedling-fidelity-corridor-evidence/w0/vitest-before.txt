@@ -1,0 +1,4 @@
+total 5312 passed 5299 failed 3 skipped 10 files 154
+FAIL scripts/procgen/boxLock.test.js > the box lock lets exactly ONE of eight simultaneous takers hold the box; the rest refuse
+FAIL frontend/modules/loops/loopBlockBuilder.test.js > LoopBlockBuilder — loopSupport capability gating real substrate entries declare the agreed capability matrix
+FAIL frontend/modules/procgenDocs/generated.test.js > the generated modules ARE what the code says ⛓⛓ `--check` exits 0 — regenerating produces byte-identical files

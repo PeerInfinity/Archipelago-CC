@@ -8,7 +8,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**28 documents · 4 pages · 392,789 words.**
+**28 documents · 4 pages · 393,230 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — the reading order. A document missing from that list fails the generator, so every document is indexed.
 
@@ -37,7 +37,7 @@ Descriptions: the document's own first paragraph, collapsed onto one line; past 
 | [The Seedling Real-Game Bot](./seedling-bot.md) | How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md). | 31217 |
 | [The Seedling Solver's Surface](./seedling-solver-surface.md) | The Seedling solver reaches the simulation through a single run object and a set of imported helpers. | 4543 |
 | [The Seedling Solver's Progress Stream](./seedling-solve-progress.md) | What the Seedling solver reports while it solves: one hook, called at fixed points in the search, and a snapshot that holds a tree of the solver's goals and rungs, a tile map of the states it previewed, and its work counts. | 3565 |
-| [Seedling Bot and Procgen Arcs: the Build Log](./seedling-bot-log.md) | This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts. | 241052 |
+| [Seedling Bot and Procgen Arcs: the Build Log](./seedling-bot-log.md) | This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts. | 241493 |
 | [Seedling Constants Census](./seedling-constants.md) | Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`. | 10194 |
 | [The Tape Envelope and the Observation Core](./tape-envelope.md) | The contract two bots share: what every input tape says whatever game it drives (the envelope), how Seedling's tape and Robot Wants Kitty's two tape forms map onto it, the core every observation stream reports, and why the gates compare exactly. `frontend/modules/seedlingDemo/tapeEnvelope.js` reads the envelope and `observationTolerance.js` is the diagnostic comparator; neither is a gate. | 2075 |
 | [Flash Substrate](./flash.md) | The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room). | 29273 |
