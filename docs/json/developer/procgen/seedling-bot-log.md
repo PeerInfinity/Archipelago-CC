@@ -22549,3 +22549,36 @@ missed it; WC's W0 caught it. The producer now runs its solves and its account w
 avoidance: a bomb blast on a body is a game interaction, and fidelity's held wave-18 row BOMB BLAST ON BODIES (leg 381)
 retires the pin, with the lapse-ON row as the witness it flips. `--check`: all checks green, and the committed tape is
 byte-identical.
+
+### Seedling fidelity SPINNINGAXE — a spinning axe hits the player, and a partial phase dodge is re-probed
+
+Wave 17 (planner `seedling-fidelity-planning-8`), base `e967758748`. Two switches, **both OFF** and OFF byte-inert. The
+report is `CC/docs/cloud-reports/seedling-fidelity-spinningaxe.md`.
+
+**D1 — the axe's player arm** (`spinningAxePlayerHit`). The geometry (`SPINNING_AXE`, `collideLinePlayer`, `axeLine`,
+`axeHitsPlayer`, `axeCanReach`) moved verbatim to the simulation module `spinningAxe.js`; `hazards.js` re-exports the
+same function objects (a vitest pins the identity), and no importer's line moved. `levelRun.stepSpinningAxesNow` keeps
+a per-world update counter, restarted at every rebuild, steps right after the chains, and bills `SpinningAxe.hitPlayer`
+(force 5 from `axeHitPoint`, the foot of the player's point on the blade two updates BACK — `a + 2·spinRate` with
+`a = −angle`). A count it cannot vouch for (a frozen tick, a non-load dead span) with the player in reach is refused by
+name. At the base, survey step 163 solves in 366 t (not 476) and that plan meets the axe on the game at **t160**
+(update 160, the blade on the pre-move box). Three p4f witnesses, 0 px ON: `spinningaxe-l75-163-plan` (t160),
+`spinningaxe-l75-163-reboot` (SMALLGAPS's 476-t plan, t357 = update 197 of the world the t160 death rebuilt — the
+counter's restart), `spinningaxe-l75-633-plan` (sweep leg 633's node plan, t159 — the baseline row's own hit). Movers:
+survey step 163 only (SOLVED 366 → REFUSED by name; 221 steps byte-equal, OFF = CI 38778265493); sweep legs 633 and 765
+(both `failed` in 38778270309) refuse by name in node.
+
+**D2 — the walk executor never re-probed a partial phase dodge** (`partialDodgeReprobe`). Measured: step 163's whole
+solve calls `probeCorridor` once, at t0. The phase arm stalls for `lavachain@96,48` and keeps the stall as
+`partial: [spinningaxe@80,144]` ("the next probe meets the other danger alone"), and `walkToUnder` walks the rest of the
+corridor with no next probe. A preview rebuilt from the t52 walk row EQUALS the drive and the danger map flags the axe on
+it at t160–169 — so SMALLGAPS's "preview ≠ drive" was a missing probe. ON: the phase arm's return carries its
+`partial`, and the walk re-probes the rest and climbs again; step 163 refuses naming the axe's update 160. Same movers as
+D1 (survey 163; legs 633, 765).
+
+**D3 — leg 768's flip is `beamtower@208,248`, not the axe.** The axe switch moves none of 21 seam times (5497–5517). The
+sweep's 577-t plan is the `dashless` pass; booted from its tape on the game it plays clean at seam 5507 and is hit at
+t389 at (194.87037443454506, 245.60447982765967) — the sweep row's divergence to every digit — at seam **5506**. The
+danger map agrees with the game at both clocks (the beam on its update 389 at 5506, clear at 5507). So the row's game ran
+one `Game.time` behind the `seamTime` it recorded, and the plan grazes the beam's phase edge; the live run does not bill
+the beam either (BEAMTOWER's).

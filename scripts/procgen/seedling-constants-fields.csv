@@ -1859,6 +1859,12 @@ frontend/modules/seedlingDemo/beamTower.js|stepBeamTower|stepBeamTower,rule,sent
 frontend/modules/seedlingDemo/beamTower.js|stepBeamTowerFrame|stepBeamTowerFrame,rule,sentinel,Puzzlements/BeamTower.as:animEnd,animEnd: direction = (direction + rate + 4) % 4 after each sit (fidelity BEAMTOWER's simulation step)
 frontend/modules/seedlingDemo/beamTower.js|beamTowerReachRects|beamTowerReachRects,rule,sentinel,Puzzlements/BeamTower.as:animEnd,the sides rate visits: (d + rate + 4) % 4 over four sits; the span doubles for both ways
 frontend/modules/seedlingDemo/beamTower.js|beamTowerSolidRect|beamTowerSolidRect,physics,magnitude,Puzzlements/BeamTower.as:setHitbox,setHitbox(16 32 8 24) about the entity point — the drifting Solid
+frontend/modules/seedlingDemo/spinningAxe.js|SPINNING_AXE|(module),rule,magnitude,,SpinningAxe: blade length 32 / hub rect side 12 / force 5 / damage 1 (SpinningAxe.as:19-24; SPINNINGAXE: simulation since levelRun bills the axe on the player)
+frontend/modules/seedlingDemo/spinningAxe.js|collideLinePlayer|collideLinePlayer,physics,magnitude,,World.collideLine precision 1: the short-sweep test FP.distance < 1 and the one-sample steps of ±1 along the major axis (World.as:411-500)
+frontend/modules/seedlingDemo/spinningAxe.js|axeLine|axeLine,physics,magnitude,,degrees to radians: -angle / 180 * Math.PI (SpinningAxe.as:54)
+frontend/modules/seedlingDemo/spinningAxe.js|axeHitsPlayer|axeHitsPlayer,physics,magnitude,,the hub rect is endRectSide / 2 either side of the hub (SpinningAxe.as:58)
+frontend/modules/seedlingDemo/spinningAxe.js|axeCanReach|axeCanReach,rule,magnitude,,+1 px for the blade line's integer endpoints — a conservative doorstep reach and not a danger verdict
+frontend/modules/seedlingDemo/spinningAxe.js|axeHitPoint|axeHitPoint,physics,magnitude,,SpinningAxe.hitPlayer: the slope at a + 2·spinRate / 180·π and the perpendicular foot's m·m + 1 (SpinningAxe.as:69-73)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,
@@ -1997,9 +2003,3 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2478e7e0|60|0,rule,ma
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9065cb5b|0|0,rule,sentinel,,Ground state 0 (Player.as:297)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb348a44c|116|0,rule,count,,Game.levels.length
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h4254a394|3|0,physics,magnitude,Player.as:wandSpeed,
-frontend/modules/seedlingDemo/spinningAxe.js|SPINNING_AXE|(module),rule,magnitude,,SpinningAxe: blade length 32 / hub rect side 12 / force 5 / damage 1 (SpinningAxe.as:19-24; SPINNINGAXE: simulation since levelRun bills the axe on the player)
-frontend/modules/seedlingDemo/spinningAxe.js|collideLinePlayer|collideLinePlayer,physics,magnitude,,World.collideLine precision 1: the short-sweep test FP.distance < 1 and the one-sample steps of ±1 along the major axis (World.as:411-500)
-frontend/modules/seedlingDemo/spinningAxe.js|axeLine|axeLine,physics,magnitude,,degrees to radians: -angle / 180 * Math.PI (SpinningAxe.as:54)
-frontend/modules/seedlingDemo/spinningAxe.js|axeHitsPlayer|axeHitsPlayer,physics,magnitude,,the hub rect is endRectSide / 2 either side of the hub (SpinningAxe.as:58)
-frontend/modules/seedlingDemo/spinningAxe.js|axeCanReach|axeCanReach,rule,magnitude,,+1 px for the blade line's integer endpoints — a conservative doorstep reach, not a danger verdict
-frontend/modules/seedlingDemo/spinningAxe.js|axeHitPoint|axeHitPoint,physics,magnitude,,SpinningAxe.hitPlayer: the slope at a + 2·spinRate / 180·π and the perpendicular foot's m·m + 1 (SpinningAxe.as:69-73)
