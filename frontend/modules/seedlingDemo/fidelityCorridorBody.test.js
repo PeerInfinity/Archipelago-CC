@@ -90,10 +90,12 @@ describe('fidelity CORRIDOR — the walk corridor prices the live wallflyers and
             expect(CONTACT_FIDELITY_DEFAULTS.corridorBodyPricing).toBe(false);
             const w = W('survey-step-47.json');
             const run = createRunForStaging(solveStaging(stagingFromTape(parseTape(JSON.stringify(w.walk)))), SRC);
-            expect(run.corridorBodyForecast()).toBeNull();
-            const walk = previewWalk(run, [{ x: 72, y: 136 }]);
-            expect(walk.samples.length).toBeGreaterThan(0);
-            expect(walk.samples.some((s) => 'corridorBodies' in s)).toBe(false);
+            off(() => {
+                expect(run.corridorBodyForecast()).toBeNull();
+                const walk = previewWalk(run, [{ x: 72, y: 136 }]);
+                expect(walk.samples.length).toBeGreaterThan(0);
+                expect(walk.samples.some((s) => 'corridorBodies' in s)).toBe(false);
+            });
             on(() => {
                 expect(run.corridorBodyForecast()).not.toBeNull();
                 expect(previewWalk(run, [{ x: 72, y: 136 }]).samples.every((s) => Array.isArray(s.corridorBodies)))
