@@ -22308,3 +22308,88 @@ Re-pins the flip owed, each with its reason in the row:
 - `fidelityStance`'s two chest rows and the L48 keylock-OPEN row pin `waypointSlide` OFF: their committed tapes walk
   the ice parked;
 - `fidelityStrikeLapse`'s interim and step-50 rows pin `ceremonyShove` OFF.
+
+### Seedling hammer-phase SF — an admissible strike floor plus the measured ETA
+
+⚖ The user (2026-10-14): *"Build STRIKE_ETA_FLOOR"*. One new switch, **OFF**: `solverBot.STRIKE_ETA_FLOOR`
+(`SEEDLING_STRIKE_ETA_FLOOR=1`, `withStrikeEtaFloor`). Its flip is a tape move and the user's call; this slice measured
+and re-recorded nothing. The report is `CC/docs/cloud-reports/seedling-hammer-sf.md`.
+
+**W0** at `aba341d358` (the wave-16 harvest r4; `REFUGE_ETA_CUT` and `PRESS_KILL_DONE_ON_WALK` both ON by default):
+the identity block's six producers exit 0 at SC's `405d9c4b b76f6483 465a8b46 35456fbc 6cd35fe1 712f0ead`, killgate
+`006b0639 / 7d4cb820 / 49e23d85`, ENEMY `afdc6d1a`; surface GREEN 294, constants 5,882, entities 566, profile 138;
+roster 277; bounded vitest 400 / 400 (20 files). SC's census answers reproduce at this base unchanged (staging A
+`7c279226` / `b3b38f55`, 397 `4720caab`, 414 `489a9482`, L18 `864ab175`, the ghost staging `1ca7eed5`): wave 16's
+`waypointSlide` moved none of them.
+
+**D1 — the switch.** ON, `deriveStrike`'s floor is `strikeEtaFloorOf`:
+`ceil(max(0, cheb − DEFAULT_TOLERANCE) / max(cap, |vx|, |vy|))`, the cap 2·`WALK_SPEED` (1.6) or 2·`SLIDING_SPEED`
+(2.0) where the room's walkable tiles hold ice or the sticky `onIce` flag is set (the terrain is read through
+`hazardFlagsFor`, not inferred), and a waterfall room bounds the horizontal axis only (its push adds to `v.y` past any
+cap). The bounded pass then reads each cell's MEASURED ETA: a cell is previewed at its first opportunity (`walkTo`,
+the continuation's cache), and a pair whose cell's walk is truncated, transit-unsafe or later than its aim tick never
+takes one of the forty. `strikeScanBox` reads the same floor map, so `unreachable` keeps meaning "the floor's skips";
+the measured skips are `etaSkipped`. OFF is byte-inert (the base tree and the switch's tree OFF agree on every census
+answer, every timing round and the whole identity block). The docblocks of `minTicksBetween`, `STRIKE_CANDIDATES` and
+`STEP_LOOKAHEAD` are corrected regardless of the switch. Gate `hammerStrikeEtaFloor.test.js` (13 rows: the switch,
+the floor's edges, two derivations on G1's committed walk, and the witness); the mutants M1 floor-only, M2
+`WALK_SPEED` for 1.6, M3 the tolerance dropped and M4 `v0` ignored are each caught.
+
+**D2 — the census** (SC's lab re-cut: every derivation runs OFF, the admissible floor alone, and the two
+measured-ETA shapes SC named; the run follows OFF and every answer equals the base):
+
+| workload | derivations (OFF refuses) | floor alone: earlier · lost | shape a (40 kept pairs): earlier · lost · found | shape b (40 distinct cells): earlier · lost · found | scan s: OFF / a / b |
+|---|---|---|---|---|---|
+| staging A, sword | 1,329 (1,315) | 2 · 5 | 3 · **0** · 1,138 | 3 · **0** · 1,222 | 75 / 285 / 538 |
+| staging A, ghost | 1,085 (1,071) | 0 · 3 | 1 · **0** · 945 | 1 · **0** · 1,067 | 65 / 242 / 452 |
+| leg 397, ghost | 1,154 (1,144) | 0 · 2 | 0 · **0** · 622 | 0 · **0** · 894 | 56 / 250 / 321 |
+| leg 414, ghost | 1,256 (1,244) | 0 · 4 | 2 · **0** · 632 | 2 · **0** · 884 | 57 / 290 / 368 |
+| L18 sweep (45) | 10,086 (6,783) | 1,395 · 261 | 1,521 · **0** · 2,826 | 1,485 · **0** · 4,263 | 69 / 169 / 2,064 |
+| C2's ghost staging (45) | 4,596 (1,680) | 402 · 159 | 561 · **0** · 60 | 561 · **0** · 60 | 58 / 71 / 3,310 |
+| `r9-campaign --check` | 315 (231) | 21 · 6 | 21 · **0** · 96 | 21 · **0** · 171 | 1.9 / 4.2 / 46 |
+| `r8-l18`, `r8-d2-chain --check` (each) | 135 (81) | 21 · 6 | 24 · **0** · 18 | 24 · **0** · 30 | 1.0 / 3.3 / 33 |
+| killgate s2 / s5 / s9 | 180 / 180 / 189 | 9 / 9 / 27 · 9 / 0 / 9 | 18 / 9 / 27 · **0** · 0 / 18 / 0 | 9 / 9 / 27 · **0** · 0 / 18 / 0 | ≤ 4 / ≤ 1.1 / ≤ 8.3 |
+
+0 of 565,364 arrived previews beat the admissible floor, and it is tight (least `ETA − floor` 0); 83 % beat OFF's, by
+up to 141 ticks. The floor alone loses 470 strikes (SC's count again); both shapes recover all 470. Neither shape loses
+a strike OFF finds. The only "later" choices (33 in a, 144 in b, all on L18 / the campaign / killgate) replace OFF's
+UNCERTIFIED escape fallback with a later CERTIFIED strike. Shape a is built: shape b scans to the horizon whenever fewer
+than forty cells are opportunities, 30× / 57× OFF inside the L18 / ghost-staging derivations.
+
+**D3 — end to end, ON** (nothing re-recorded):
+
+| workload | OFF | ON |
+|---|---|---|
+| staging A, sword | REFUSED t3113 on `bob@736,752`; spinner killed t3100; 6 hits | REFUSED **t1695** on `bob@736,752`; killed **t1682**; 3 hits |
+| staging A, ghost | REFUSED t2195; spinners killed t2114 / t2182 | REFUSED **t1629**; `spinner@880,848` killed **t1616**; `@816,848` not fought |
+| leg 397 / 414, ghost | refused on `bob@736,752` / `bob@736,800` | refused on **`bobsoldier@880,832`** / **`bob@736,752`** |
+| L18 sweep (45) | 45 SOLVE, Σ 19,545 t | 45 SOLVE, 24 shorter, 21 longer, Σ 19,558 t |
+| C2's ghost staging (45) | 45 SOLVE at 336 t (r5 390, r6 340) | 45 SOLVE at **328 t** each |
+| `r8-l18 --check` | exit 0 | exit 1: `r8-solve-18` 363 → **467** t (`{18,0}` at 305 → 419) |
+| `r8-d2-chain --check` | exit 0 | exit 1: `r8-d2` headline 1,669 → 1,773 t |
+| `r9-campaign --check` | exit 0 | exit 1: `r9-solve-18` 518 → **476** t; Σ 10,931 → 10,889; `r9-solve-19`'s free oracle misses |
+| identity block | — | acceptance batch, empty pairs c3 / c6, carved pairs c4, killgate s2 / s5 / s9 (`md5(rows)`; the printed table is unchanged) move; maze, ENEMY, guard, AREA, levels, generated set, `r8-battery`, `r8-tail`, `r9-l3` do not |
+
+A flip also moves six witness producers (`plan-seedling-f1c-l18-phase`, `-hammer-a-escape`, `-hammer-b1-approach`,
+`-hammer-b2-fight`, `-hammer-g1-ghostkill`, `-hammer-bw-bombstand`, the six of the 89 `plan-seedling-*` that reach
+`deriveStrike`). Their `--check`s fail ON on a PREMISE, not only on the artifact's bytes: each asserts something about
+its own switch's OFF run that the strike floor changes, e.g. *"with the switch OFF this staging REFUSES HAMMER_SAFETY —
+it solved"*. So a flip re-derives what those witnesses witness, not just their tapes. 23 gate rows in 12 files move too. Timings (3 interleaved rounds per mode, medians): staging A 124 → 59 s (sword) and 101 → 58 s (ghost), legs
+397 / 414 0.83× / 0.82×, the ghost staging 1.05×, the L18 sweep **1.53×** (107 → 164 s).
+
+**The game witness** `hammer-sf-l40-strikefloor` (`plan-seedling-hammer-sf-strikefloor.mjs`; not a roster tape,
+`fixtures/hammer-sf-strikefloor-witness/`): staging A with the ghost sword, ON. The walk is G1's OFF walk for 602
+ticks (the kill's first landing, t501, is shared), then the strikes move: landings t1583 and t1616 (the kill), against
+OFF's t2078 and t2114. The game (p4f, headless) plays it tick for tick: 1,630 / 1,630 observations, `Bot.slashTests`
+at every sampled tick; the Spinner rows give 8,124 comparisons, worst |Δ| 0. The one disagreement is the known removal
+fencepost. The SWORD's ON plan parts from the game at t658, before its strikes move: the model lands a `bob@736,752`
+contact there (knockback dy −3) that the game does not make. That is the chaser's contact, fidelity's to look at.
+
+Lessons:
+1. *An admissible floor is half a fix.* The bound has to be true, AND the truncation it feeds has to spend its budget
+   on what the walk can make. Measured ETA did more than the floor: the four floor mutants are invisible to the witness
+   solve, while the floor-only mutant breaks it.
+2. *Budget in kept PAIRS, not in distinct cells, when the pass is asked every tick.* The distinct-cell budget is the
+   continuation's, and it is right there (asked once, at the admission). On every refuge tick it scanned to the horizon.
+3. *Never mutate a file other processes are loading.* A timing round's ON run started inside the mutant window, loaded
+   the floor-only mutant and reproduced SC's floor-only answer. The four contaminated runs were moved aside and re-run.

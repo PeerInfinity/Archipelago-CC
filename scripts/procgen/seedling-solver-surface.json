@@ -1088,9 +1088,9 @@
         "arrivalSolid.js": 5,
         "botDriverV2.js": 115,
         "crusherBait.js": 6,
-        "solverBot.js": 425
+        "solverBot.js": 426
       },
-      "sites": 551,
+      "sites": 552,
       "seen": "both",
       "via": [
         "direct",
@@ -1268,9 +1268,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 223
+        "solverBot.js": 224
       },
-      "sites": 287,
+      "sites": 288,
       "seen": "both",
       "via": [
         "direct",
@@ -2112,12 +2112,13 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 2
+        "solverBot.js": 3
       },
-      "sites": 2,
+      "sites": 3,
       "seen": "static",
       "via": [
-        "direct"
+        "direct",
+        "param"
       ],
       "dynamic": null,
       "why": "The tiles the player box may stand on (Tile.t walkable kinds) — the light arm enumerates its stance candidates over them."
@@ -2289,11 +2290,13 @@
       "class": "seedling",
       "form": "live-state",
       "files": {
-        "botDriverV2.js": 1
+        "botDriverV2.js": 1,
+        "solverBot.js": 1
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "both",
       "via": [
+        "const-alias",
         "param"
       ],
       "dynamic": {
@@ -2441,9 +2444,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 9,
-        "solverBot.js": 16
+        "solverBot.js": 17
       },
-      "sites": 27,
+      "sites": 28,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2472,9 +2475,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 9,
-        "solverBot.js": 12
+        "solverBot.js": 13
       },
-      "sites": 23,
+      "sites": 24,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2505,9 +2508,9 @@
         "botDriverV1.js": 2,
         "botDriverV2.js": 60,
         "crusherBait.js": 2,
-        "solverBot.js": 162
+        "solverBot.js": 163
       },
-      "sites": 228,
+      "sites": 229,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2538,9 +2541,9 @@
         "botDriverV1.js": 2,
         "botDriverV2.js": 63,
         "crusherBait.js": 2,
-        "solverBot.js": 166
+        "solverBot.js": 167
       },
-      "sites": 235,
+      "sites": 236,
       "seen": "both",
       "via": [
         "const-alias",
@@ -4839,6 +4842,24 @@
     },
     {
       "surface": "import",
+      "name": "SLIDING_SPEED",
+      "module": "frontend/modules/seedlingDemo/playerPhysicsV1.js",
+      "line": 54,
+      "class": "physics",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "Player.as:slidingSpeed, the moveSpeed on ice (1): the per-axis cap of the strike scan's admissible ETA floor is 2\u00b7SLIDING_SPEED in a room with ice (hammer-phase SF, strikeEtaFloorOf)."
+    },
+    {
+      "surface": "import",
       "name": "spawnFromBoot",
       "module": "frontend/modules/seedlingDemo/playerPhysicsV1.js",
       "line": 128,
@@ -4900,10 +4921,10 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 5,
+        "solverBot.js": 6,
         "strikePolicy.js": 2
       },
-      "sites": 7,
+      "sites": 8,
       "seen": "static",
       "via": [
         "import"
@@ -4928,6 +4949,24 @@
       ],
       "dynamic": null,
       "why": "Returns {to_level, ctor} for a pit fall: the level's control-block fallthrough level and the tile-snapped ctor position checkFallingInPit hands new Game(), throwing when the level has no control block (a lethal pit), a Seedling pit-transport rule."
+    },
+    {
+      "surface": "import",
+      "name": "hazardFlagsFor",
+      "module": "frontend/modules/seedlingDemo/playerPhysicsV2.js",
+      "line": 429,
+      "class": "seedling",
+      "form": "function",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The state setter's flag assignment (Player.as:701-724) for one terrain state: onIce / onWaterfall / inWater / inLava. Read by the strike scan's admissible floor to ask whether a room's walkable tiles hold ice or a waterfall (hammer-phase SF, strikeTerrainOf)."
     },
     {
       "surface": "import",

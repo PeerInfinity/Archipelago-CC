@@ -143,12 +143,12 @@ export {
     assertRect, isNormalizedLiveOpts, LIVE_GEOMETRY_KEYS, normalizeLiveOpts, PRE_R5_ROLES, rect, rectsOverlap,
     RELAXED_ROLES, TILE_SIZE, withTileWrites,
 } from './levelWorld.js';
-// playerPhysicsV1.js — botDriverV1, botDriverV2, mover, solverBot, strikePolicy · physics 11
+// playerPhysicsV1.js — botDriverV1, botDriverV2, mover, solverBot, strikePolicy · physics 12
 export {
     applyFriction, applyInput, DEFAULT_FRICTION, groundTerrain, HITBOX, knockbackImpulse, MOVE_SPEEDS,
     SLIDING_SPEED, spawnFromBoot, step, sweepAxis, WALK_SPEED,
 } from './playerPhysicsV1.js';
-// playerPhysicsV2.js — botDriverV2, encounters, solverBot · seedling 1, physics 3
+// playerPhysicsV2.js — botDriverV2, encounters, solverBot · seedling 2, physics 3
 export { fallDestination, hazardFlagsFor, PhysicsV2Error, playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 // presses.js — botDriverV2, solverBot, strikePolicy · seedling 10, physics 5
 export {
