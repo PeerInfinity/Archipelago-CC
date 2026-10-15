@@ -22462,3 +22462,40 @@ One re-pin outside our own rows: the hammer DD witness (`plan-seedling-hammer-dd
 the lapse OFF (hammer's OK). A new lapse-ON block pins the post-flip shape: at (32,112) DD OFF and ON solve alike in
 509, and at step 50's own (176,48) DD OFF refuses the dwell as already true while DD ON solves. Under the lapse, DD is
 load-bearing.
+
+### Seedling fidelity BEAMTOWER — the tower's drifting Solid, its beam on the player, and `flyerLive`'s companion
+
+Wave 17 (planner `seedling-fidelity-planning-8`). Two switches, both **OFF**, OFF byte-inert:
+`CONTACT_FIDELITY.beamTowerDrift` (`SEEDLING_BEAMTOWER_DRIFT=0|1`) and `CONTACT_FIDELITY.beamTowerBeamHit`
+(`SEEDLING_BEAMTOWER_BEAM_HIT=0|1`). The report is `CC/docs/cloud-reports/seedling-fidelity-beamtower.md`.
+
+**D1 — the drift.** `BeamTower.update` returns on `Game.freezeObjects`, then drifts `y += 0.3·sin(worldFrame(100, 2)/100·2π)`
+at that frame's `Game.time`, and `setHitbox(16, 32, 8, 24)` rides on `y`. `World.update` still steps the GRAPHIC on a
+frozen frame. The run now steps every tower in its update slot (after the lobbers, before every chaser and the player),
+at `clock.now()`, and `liveRectOf` reads the drifted Solid (`beamTowers`, the 15th `LIVE_GEOMETRY_KEYS` family). The
+transcription moved verbatim to `beamTower.js` (the K2PREP shape). Game witness (p4f,
+`chaser-witness/beamtower-l105-773-flyer-plan`): LAPSECOST's `flyerLive` plan for leg 773 is the game at 0 px on all
+382 ticks with `flyerLive` and both switches; drift OFF parts at t205 (`beamtower@48,40` risen 5.08 px, its bottom
+above the player's box bottom from t204).
+
+**D3 — G3 was ours.** The L104 arrival hit at t381/382 is `beamtower@16,56`'s UP beam (x 22..26, y 0..53) on the player
+at (24, 39.2): `p.hit(null, 5, (x, y), 1)` then `Game.shake = 15` (`camera.SHAKE_WRITERS.beamTowerBeam`). The run never
+billed a beam (only the danger map priced it). With `beamTowerBeamHit` the witness's t381 is at 0 px.
+
+**D2 — `flyerLive` needs the drift.** Survey step 208 decided on the game: `flyerLive` alone plans 395 t and the plan is
+blocked on p4f at t198 by the risen tower (FAIL); with the drift its 416-t plan is the game at 0 px on 417 ticks.
+Step 204 gains (REFUSED → 287 t, the Flyer). The local 22-leg sweep (ON set + the three) has 754/773/776 `done`; by node
+seam census (±10 ticks) 776's plan follows the tower's phase (5 answers, all solving) where drift OFF is one plan at
+every seam. The flip candidate (all three ON) is green on the bounded set after 8 re-pins, and is held for the user.
+
+**Trap candidates:**
+
+1. *A position bob is a solid that moves.* LADDER2 transcribed `y += 0.3·sin(…)` for the BEAM and the danger map drifted
+   the beam's rect, while the Solid stayed at its placement: the same field, read by one consumer and not the other.
+2. *A switch's survey cost can be another switch's plan.* Step 208 lengthened 300 → 393 with the drift alone, because
+   with the Flyer inert the model walks a corridor the game never walks (the real Flyer's drop moves the player first;
+   both plans are at 0 px on the game with `flyerLive`). Decide a length mover by playing the plan, not by the count.
+3. *A capture is made under its switches.* A request captured with `flyerLive` OFF cannot be replayed with it ON: the
+   page's live digest has no Flyer bodies and the shadow replay diverges at tick 0. Re-capture under the set you measure.
+4. *A one-tick clock error can hide from a stop witness.* The mutant that read `Game.time − 1` kept the 773 witness at
+   0 px (the stop's threshold crossing did not move by a tick); only the trace row's `gameTime` caught it.
