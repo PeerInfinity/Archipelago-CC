@@ -1,0 +1,13 @@
+--- solverBot.final.bak	2026-10-15 00:15:09.463327202 +0000
++++ mutants/M2-never-skip.js	2026-10-15 00:15:09.491099913 +0000
+@@ -20197,9 +20197,7 @@
+                      * ⛓⛓⛓ HAMMER-PHASE DD (`PRESS_KILL_DONE_ON_WALK`, OFF) — the walk's own presses killed the
+                      * body: the kill is done, said by the press ledger, and the ladder re-plans as after a dwell.
+                      */
+-                    const walkKill = PRESS_KILL_DONE_ON_WALK.enabled
+-                        && !(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)
+-                        ? killedOnWalk(run, hunted.id, walkFrom) : null;
++                    const walkKill = null;
+                     if (walkKill) {
+                         records.push({
+                             goal: goal.kind, strategy: 'kill', arm: 'chaser',

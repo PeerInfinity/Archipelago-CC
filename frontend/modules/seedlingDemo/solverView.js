@@ -116,7 +116,7 @@ export {
     STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
     // ⛓⛓⛓ hammer-phase BW: the press kill's waits see the lobber's bombs (its switch and instrument, OFF).
     PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
-    // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (its switch, the cut and its instrument, OFF).
+    // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (its switch, the cut and its instrument; ON by default since the user's flip).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
 } from './pressKillCost.js';
 // iceTurret.js — botDriverV2 · seedling 2

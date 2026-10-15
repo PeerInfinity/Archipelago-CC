@@ -1,0 +1,32 @@
+stanceAsForecast=0 gateTimed=0 targetRescan=0 keylockWait=0 lapse=0 bx=176 :: REFUSED t145 solverBot(combo) collect (64,64) stance -> kill (bobsoldier@48,80) by press: the dwell's condition (bobsoldier@48,80 has :: press-arm-dwell-start(gone=false t92)
+stanceAsForecast=1 gateTimed=0 targetRescan=0 keylockWait=0 lapse=0 bx=176 :: REFUSED t167 solverBot(combo) collect (64,64) stance: the danger map forbids (87.8624001222396,58.053140652997676) — chaser:bobsoldie :: press-arm-dwell-start(gone=false t145)
+stanceAsForecast=0 gateTimed=1 targetRescan=0 keylockWait=0 lapse=0 bx=176 :: REFUSED t145 solverBot(combo) collect (64,64) stance -> kill (bobsoldier@48,80) by press: the dwell's condition (bobsoldier@48,80 has :: press-arm-dwell-start(gone=false t92)
+stanceAsForecast=1 gateTimed=1 targetRescan=0 keylockWait=0 lapse=0 bx=176 :: SOLVED 460 :: press-arm-dwell-start(gone=false t145)
+stanceAsForecast=0 gateTimed=0 targetRescan=1 keylockWait=0 lapse=0 bx=176 :: REFUSED t145 solverBot(combo) collect (64,64) stance -> kill (bobsoldier@48,80) by press: the dwell's condition (bobsoldier@48,80 has :: press-arm-dwell-start(gone=false t92)
+stanceAsForecast=1 gateTimed=0 targetRescan=1 keylockWait=0 lapse=0 bx=176 :: REFUSED t167 solverBot(combo) collect (64,64) stance: the danger map forbids (87.8624001222396,58.053140652997676) — chaser:bobsoldie :: press-arm-dwell-start(gone=false t145)
+stanceAsForecast=0 gateTimed=1 targetRescan=1 keylockWait=0 lapse=0 bx=176 :: REFUSED t145 solverBot(combo) collect (64,64) stance -> kill (bobsoldier@48,80) by press: the dwell's condition (bobsoldier@48,80 has :: press-arm-dwell-start(gone=false t92)
+stanceAsForecast=1 gateTimed=1 targetRescan=1 keylockWait=0 lapse=0 bx=176 :: SOLVED 460 :: press-arm-dwell-start(gone=false t145)
+stanceAsForecast=0 gateTimed=0 targetRescan=0 keylockWait=1 lapse=0 bx=176 :: REFUSED t145 solverBot(combo) collect (64,64) stance -> kill (bobsoldier@48,80) by press: the dwell's condition (bobsoldier@48,80 has :: press-arm-dwell-start(gone=false t92)
+stanceAsForecast=1 gateTimed=0 targetRescan=0 keylockWait=1 lapse=0 bx=176 :: REFUSED t167 solverBot(combo) collect (64,64) stance: the danger map forbids (87.8624001222396,58.053140652997676) — chaser:bobsoldie :: press-arm-dwell-start(gone=false t145)
+stanceAsForecast=0 gateTimed=1 targetRescan=0 keylockWait=1 lapse=0 bx=176 :: REFUSED t145 solverBot(combo) collect (64,64) stance -> kill (bobsoldier@48,80) by press: the dwell's condition (bobsoldier@48,80 has :: press-arm-dwell-start(gone=false t92)
+stanceAsForecast=1 gateTimed=1 targetRescan=0 keylockWait=1 lapse=0 bx=176 :: SOLVED 460 :: press-arm-dwell-start(gone=false t145)
+stanceAsForecast=0 gateTimed=0 targetRescan=1 keylockWait=1 lapse=0 bx=176 :: REFUSED t145 solverBot(combo) collect (64,64) stance -> kill (bobsoldier@48,80) by press: the dwell's condition (bobsoldier@48,80 has :: press-arm-dwell-start(gone=false t92)
+stanceAsForecast=1 gateTimed=0 targetRescan=1 keylockWait=1 lapse=0 bx=176 :: REFUSED t167 solverBot(combo) collect (64,64) stance: the danger map forbids (87.8624001222396,58.053140652997676) — chaser:bobsoldie :: press-arm-dwell-start(gone=false t145)
+stanceAsForecast=0 gateTimed=1 targetRescan=1 keylockWait=1 lapse=0 bx=176 :: REFUSED t145 solverBot(combo) collect (64,64) stance -> kill (bobsoldier@48,80) by press: the dwell's condition (bobsoldier@48,80 has :: press-arm-dwell-start(gone=false t92)
+stanceAsForecast=1 gateTimed=1 targetRescan=1 keylockWait=1 lapse=0 bx=176 :: SOLVED 460 :: press-arm-dwell-start(gone=false t145)
+stanceAsForecast=0 gateTimed=0 targetRescan=0 keylockWait=0 lapse=1 bx=176 :: REFUSED t147 solverBot(combo) collect (64,64): the danger map forbids (72.3206326822824,55.75618482522984) — chaser:bobsoldier@48,80  :: 
+stanceAsForecast=1 gateTimed=0 targetRescan=0 keylockWait=0 lapse=1 bx=176 :: REFUSED t147 solverBot(combo) collect (64,64): the danger map forbids (72.3206326822824,55.75618482522984) — chaser:bobsoldier@48,80  :: 
+stanceAsForecast=0 gateTimed=1 targetRescan=0 keylockWait=0 lapse=1 bx=176 :: SOLVED 413 :: 
+stanceAsForecast=1 gateTimed=1 targetRescan=0 keylockWait=0 lapse=1 bx=176 :: SOLVED 413 :: 
+stanceAsForecast=0 gateTimed=0 targetRescan=1 keylockWait=0 lapse=1 bx=176 :: REFUSED t147 solverBot(combo) collect (64,64): the danger map forbids (72.3206326822824,55.75618482522984) — chaser:bobsoldier@48,80  :: 
+stanceAsForecast=1 gateTimed=0 targetRescan=1 keylockWait=0 lapse=1 bx=176 :: REFUSED t147 solverBot(combo) collect (64,64): the danger map forbids (72.3206326822824,55.75618482522984) — chaser:bobsoldier@48,80  :: 
+stanceAsForecast=0 gateTimed=1 targetRescan=1 keylockWait=0 lapse=1 bx=176 :: SOLVED 413 :: 
+stanceAsForecast=1 gateTimed=1 targetRescan=1 keylockWait=0 lapse=1 bx=176 :: SOLVED 413 :: 
+stanceAsForecast=0 gateTimed=0 targetRescan=0 keylockWait=1 lapse=1 bx=176 :: REFUSED t147 solverBot(combo) collect (64,64): the danger map forbids (72.3206326822824,55.75618482522984) — chaser:bobsoldier@48,80  :: 
+stanceAsForecast=1 gateTimed=0 targetRescan=0 keylockWait=1 lapse=1 bx=176 :: REFUSED t147 solverBot(combo) collect (64,64): the danger map forbids (72.3206326822824,55.75618482522984) — chaser:bobsoldier@48,80  :: 
+stanceAsForecast=0 gateTimed=1 targetRescan=0 keylockWait=1 lapse=1 bx=176 :: SOLVED 413 :: 
+stanceAsForecast=1 gateTimed=1 targetRescan=0 keylockWait=1 lapse=1 bx=176 :: SOLVED 413 :: 
+stanceAsForecast=0 gateTimed=0 targetRescan=1 keylockWait=1 lapse=1 bx=176 :: REFUSED t147 solverBot(combo) collect (64,64): the danger map forbids (72.3206326822824,55.75618482522984) — chaser:bobsoldier@48,80  :: 
+stanceAsForecast=1 gateTimed=0 targetRescan=1 keylockWait=1 lapse=1 bx=176 :: REFUSED t147 solverBot(combo) collect (64,64): the danger map forbids (72.3206326822824,55.75618482522984) — chaser:bobsoldier@48,80  :: 
+stanceAsForecast=0 gateTimed=1 targetRescan=1 keylockWait=1 lapse=1 bx=176 :: SOLVED 413 :: 
+stanceAsForecast=1 gateTimed=1 targetRescan=1 keylockWait=1 lapse=1 bx=176 :: SOLVED 413 :: 

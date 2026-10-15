@@ -337,7 +337,7 @@ export function resetPressKillBombsCounts() {
 }
 
 /**
- * ⛓⛓⛓ SEEDLING HAMMER-PHASE RE — THE REFUGE'S BEST-ETA CUT (`REFUGE_ETA_CUT`, OFF).
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE RE — THE REFUGE'S BEST-ETA CUT (`REFUGE_ETA_CUT`, ON by default since the user's flip).
  *
  * `deriveRefuge` previews its `REFUGE_CANDIDATES` (12) nearest clear cells on every tick the press kill has nowhere to
  * stand, and keeps the one whose walk ARRIVES soonest (ties to the larger clearance). A candidate is previewed to its
@@ -365,13 +365,14 @@ export function resetPressKillBombsCounts() {
  *     skipped before it). No reader decides on either.
  * The chosen refuge is the full preview's on every one of the 4,776 measured derivations.
  *
- * ⛓ THE SWITCH — `REFUGE_ETA_CUT`, OFF (`SEEDLING_REFUGE_ETA_CUT=1` opts a process in, or `withRefugeEtaCut(true, fn)`).
- * OFF, every candidate is previewed with exactly the arguments it was before. The flip is the user's.
+ * ⛓ THE SWITCH — `REFUGE_ETA_CUT`, ON by default since the user's flip (2026-10-14: *"Turn it ON"*);
+ * `SEEDLING_REFUGE_ETA_CUT=0` opts a process out, or `withRefugeEtaCut(false, fn)`. OFF, every candidate is previewed
+ * with exactly the arguments it was before. ON was byte-equal to OFF on every measured workload (RE's D3).
  */
 export const REFUGE_ETA_CUT = {
-    enabled: globalThis.process?.env?.SEEDLING_REFUGE_ETA_CUT === '1',
+    enabled: globalThis.process?.env?.SEEDLING_REFUGE_ETA_CUT !== '0',
 };
-export const REFUGE_ETA_CUT_DEFAULT = false;
+export const REFUGE_ETA_CUT_DEFAULT = true;
 
 /** Run `fn` with `REFUGE_ETA_CUT` set to `enabled`, restoring the previous value (`withPressKillCost`'s shape). */
 export function withRefugeEtaCut(enabled, fn) {
@@ -402,7 +403,7 @@ export function refugeEtaCut(eta) {
     };
 }
 
-/** The cut's instrument (`PRESS_KILL_COST_COUNTS`' shape): written only with the switch ON, read by nothing that decides. */
+/** The cut's instrument (`PRESS_KILL_COST_COUNTS`' shape): written only with the switch ON (the default), read by nothing that decides. */
 export const REFUGE_ETA_CUT_COUNTS = {
     previews: 0, cut: 0,
 };
