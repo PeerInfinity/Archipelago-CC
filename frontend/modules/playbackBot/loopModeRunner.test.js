@@ -193,6 +193,8 @@ describe('LoopModeRunner', () => {
         vi.advanceTimersByTime(5000);
         expect(game.paths).toHaveLength(1);
         expect(runner.isActive()).toBe(false);
+        // The bot's panel re-reads its control bar on onFinished: a stepped loop ends with it too.
+        expect(runner._d.onFinished).toHaveBeenCalledTimes(1);
     });
 
     it('stop pauses the queue and restores the settings', () => {

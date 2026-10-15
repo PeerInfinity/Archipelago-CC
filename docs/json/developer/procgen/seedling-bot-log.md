@@ -21994,3 +21994,70 @@ staging A 196.0 → 138.7 s (sword) and 188.8 → 124.3 s (ghost), legs 397 / 41
 or `withRefugeEtaCut(false, …)` opts out. RE's D3 measured ON byte-equal to OFF on every workload, on the identity block
 and on `r9-campaign --check`, so no committed row moves. What moves is only the instruments named in the switch's
 comment (`progressPreview`'s `previewStates`, BW's refuge counts). The page worker now runs the cut too.
+
+### Seedling hammer-phase SC — the strike scan's ETA floor
+
+⚖ The user (2026-10-14): *"DWELL-DONE + strike census"* — this slice is the census, MEASURE ONLY (no switch, no code
+change). The question was RE's residue 1: is `solverBot.minTicksBetween` (`ceil(max(|dx|,|dy|) / WALK_SPEED)`, the floor
+`deriveStrike` applies to every (cell, tick) pair before the `STRIKE_CANDIDATES` truncation, and P2's `strikeScanBox`
+reads) admissible? The report is `CC/docs/cloud-reports/seedling-hammer-sc.md`.
+
+**W0** at `c137aef8a9` (RE's harvest; `REFUGE_ETA_CUT` still OFF by default there): identity block `77080c2e`, the six
+producers exit 0 at `405d9c4b b76f6483 465a8b46 35456fbc 6cd35fe1 712f0ead`, reference ALL 7 + 5 MATCH; surface GREEN
+291, constants 5,851, entities 558, profile 138; roster 277.
+
+**D1 — the true speed.** `applyInput` is a threshold test followed by a full-magnitude add (`if (v.x < moveSpeed) v.x +=
+moveSpeed`), after a friction that shortens the velocity VECTOR by 0.25. So a walking axis runs at up to `2·moveSpeed`:
+under 1.6 px/tick on ground and under 2.0 on ice, and a diagonal loses less of each axis to friction than an axis-aligned
+run does. An exact search over key sequences from rest gives up to 77.2 px in 60 ticks (1.29 px/tick sustained); holding
+RIGHT gives 70.3 px. The game (p4f, a scratch tape: RIGHT 20, RIGHT+UP 20, RIGHT with UP/DOWN zig-zag 24) is the model
+tick for tick, with a peak of 1.58–1.60 px/tick per axis and 1.15–1.20 px/tick sustained. `WALK_SPEED` 0.8 is the add,
+not the cap. The docblock's other claim is wrong too: the arrival TOLERANCE (`hasArrived`, 1 px) makes the walk SHORTER,
+not longer. An admissible floor is `ceil(max(0, cheb − tolerance) / max(2·moveSpeed, |v0x|, |v0y|))`. Above the cap
+nothing adds and friction only lowers the speed, so a knocked-back start is honoured. Every per-tick step over 1.6
+measured below started from such a velocity.
+
+**D2 — the census** (a scratch copy of `deriveStrike` running the base floor and that admissible one, ground cap 1.6,
+side by side in every derivation; the run follows the base, every census answer = RE's and the identity block's):
+
+| workload | derivations | arrived previews | ETA under the base floor | worst floor − ETA | under the admissible floor | chosen strike differs (earlier · base found, admissible refused · other) | dropped pairs: reachable / a full plan | scan ms, base → admissible |
+|---|---|---|---|---|---|---|---|---|
+| staging A, sword | 1,329 | 6,611 | 4,083 | 72 | **0** | 7 (2 · 5 · 0) | 24,748 / 92 | 76.5 → 73.1 s |
+| staging A, ghost | 1,085 | 5,801 | 2,962 | 66 | **0** | 3 (0 · 3 · 0) | 25,240 / 29 | 56.8 → 55.8 s |
+| leg 397, ghost | 1,154 | 8,578 | 3,514 | 62 | **0** | 2 (0 · 2 · 0) | 23,204 / 12 | 53.7 → 50.9 s |
+| leg 414, ghost | 1,256 | 9,106 | 3,420 | 100 | **0** | 4 (0 · 4 · 0) | 22,140 / 30 | 58.5 → 56.5 s |
+| L18 sweep (45) | 10,086 | 70,899 | 65,862 | 39 | **0** | 1,707 (1,395 · 261 · 51) | 285,813 / 37,719 | 84.2 → 61.9 s |
+| C2's L18 ghost staging (45) | 4,596 | 25,998 | 17,193 | 44 | **0** | 561 (402 · 159 · 0) | 45,246 / 22,023 | 80.0 → 55.1 s |
+| `r9-campaign --check` | 315 | 2,367 | 2,178 | 29 | **0** | 27 (21 · 6 · 0) | 7,659 / 537 | 2.6 → 2.4 s |
+| `r8-l18 --check`, `r8-d2-chain --check` (each) | 135 | 828 | 774 | 29 | **0** | 27 (21 · 6 · 0) | 3,705 / 630 | 1.0 → 0.6 s |
+| killgate s2 / s5 / s9 | 180 / 180 / 189 | 396 / 405 / 675 | 225 / 279 / 432 | 34 / 40 / 41 | **0** | 18 / 9 / 36 | 756 / 468 · 1,179 / 585 · 1,404 / 441 | 0.8 / 4.4 / 4.7 → 0.5 / 0.4 / 0.6 s |
+| legs 378 / 381 / 384 / 396 / 400 (sword), `r8-battery`, `r9-l3`, `r8-tail` (its parent process) | 0 | — | — | — | — | — | — | — |
+
+The admissible floor is tight: the least `ETA − floor` is 0 on every workload. A "dropped pair" is one the base floor
+skipped inside the base's own bounded tick range that the admissible floor admits and that is an opportunity. It is
+"reachable" when the full preview arrives by its aim tick, and "a full plan" when the walk is also transit- and
+dwell-safe (bombs and the escape not asked). ⚠ The second column of differences is R8 slice 8's trap one level up. A
+looser floor lets the forty fill with early pairs at cells whose real walk is too slow, so the bounded pass stops sooner
+and refuses where the base found a strike (staging A t1119: base (744,776) pressed at 1337; admissible, 40 kept by +114,
+none reachable).
+
+**D3 — the admissible floor end to end** (the lab with only the floor swapped; answers with the wall clock stripped):
+
+| workload | base | admissible floor |
+|---|---|---|
+| staging A, sword | REFUSED t3113 on `bob@736,752`; `spinner@880,848` killed t3100; 6 hits | REFUSED **t1329** on `bobsoldier@880,832`; spinner killed **t1316**; 2 hits |
+| staging A, ghost | REFUSED t2195 on `bob@736,752`; spinners killed t2114 and t2182 | REFUSED **t1267** on `bob@736,752`; `spinner@880,848` killed **t1254** |
+| legs 397 / 414, ghost | refused on `bob@736,752` / `bob@736,800` | refused on `bob@736,752` / `bob@736,752` (messages move; 177 → 463 s, 186 → 580 s) |
+| L18 sweep (45) | 45 SOLVE, Σ 19,545 t | 45 SOLVE, every residue moves (25 shorter, 20 longer), Σ 19,802 t |
+| C2's ghost staging (45) | 45 SOLVE, 336 t (r5 390, r6 340) | 45 SOLVE, **431 t each** |
+| `r8-l18` / `r8-d2-chain` / `r9-campaign --check` | exit 0 | **exit 1**: `r8-solve-18` and `r8-d2` drift (the headline 1,740 → 1,669 t), `r9-solve-18` 518 → 434 t |
+| killgate s2 / s5 / s9 | — | the visible table unchanged; `md5(rows)` moves |
+| `r8-battery`, `r8-tail`, `r9-l3` | — | byte-equal |
+
+**Verdict (b).** The floor is inadmissible and chosen strikes change on every workload that derives one; three
+committed tapes and the staging A answers move. A floor swap alone is not a pure improvement: it lengthens C2's ghost
+staging by 28 % and half of L18's residues. The shape for the planner: an admissible floor behind a switch, OFF, with the
+bounded pass using each previewed cell's measured ETA in place of the floor once it is known (the continuation already
+skips `known.eta > i − 1`), so the forty are not spent on cells the walk cannot make. Its flip is a tape move. The
+docblock's two claims (the clamp, and the tolerance "can only make the real walk LONGER") are wrong today whatever is
+decided.

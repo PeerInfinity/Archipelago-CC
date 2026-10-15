@@ -358,6 +358,7 @@ export class PlaybackBotUI {
         this._directOnce = false;
         this._loopRunner?.stop();
         this._dispatch('stop');
+        this._syncControlBar();
     }
 
     async step() {
@@ -443,6 +444,19 @@ export class PlaybackBotUI {
     getQueueLength() { return this._queue?.length ?? 0; }
     getCurrentRegion() { return this._currentRegion; }
     isActive() { return this._isActive; }
+
+    // Every write of the active flag reaches the control bar, so ⏹ Stop is enabled
+    // (and ▶ Play disabled) exactly while the bot plays, whichever path ended the walk.
+    get _isActive() { return this._active; }
+    set _isActive(value) {
+        this._active = !!value;
+        this._syncControlBar();
+    }
+
+    /** True while the sphere queue walks or a Loops run (a stepped loop included) is in flight. */
+    _syncControlBar() {
+        this._controlBar?.setRunning(this._active || !!this._loopRunner?.isActive());
+    }
     getLog() { return this._log.slice(); }
     isInterceptEnabled() { return this._interceptEnabled; }
     getDispatcherLog() { return this._dispatcherLog.slice(); }
@@ -845,6 +859,7 @@ export class PlaybackBotUI {
         if (runner.isActive()) return;
         this._isActive = !once;
         runner.start({ once });
+        this._syncControlBar();
         this._render();
     }
 

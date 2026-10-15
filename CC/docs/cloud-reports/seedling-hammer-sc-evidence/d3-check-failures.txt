@@ -1,0 +1,18 @@
+== campaign (floorB)
+FAIL: ⛓ sum(segment ticks) === the COMMITTED tapes' own sum — 183 + 47 + 245 + 255 + 403 + 294 + 146 + 827 + 122 + 83 + 97 + 152 + 23 + 145 + 36 + 98 + 456 + 688 + 434 + 746 + 560 + 48 + 299 + 2364 + 26 + 89 + 379 + 336 + 210 + 1056 = 10847; recorded 10847 against committed 10931
+FAIL: ⛓ every RECORDED segment's solved length is its committed tape's own — 183,47,245,255,403,294,146,827,122,83,97,152,23,145,36,98,456,688,434,746,560,48,299,2364,26,89,379,336,210,1056 against 183,47,245,255,403,294,146,827,122,83,97,152,23,145,36,98,456,688,518,746,560,48,299,2364,26,89,379,336,210,1056
+FAIL: ⛓ the free oracle: r9-solve-19 declares seam.time 10478 — 9940 + 40 − LOAD_FADE_FRAMES + 434 = 10394
+FAIL: r9-solve-18 is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-18 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+5 FAILURE(S)
+== prod-solve-seedling-r8-d2-chain (floorB)
+FAIL: ⛓⛓⛓ the headline's first 363 ticks ARE r8-solve-18's walk, key for key — first difference at tick 11: r8-solve-18 holds [right], the headline holds [down, right]
+FAIL: ⛓⛓ the headline declares {18,0} at the SAME tick r8-solve-18 does — headline 397 vs r8-solve-18 305
+FAIL: r8-d2 is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r8-d2 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: ⛓ sum(segment ticks) === the headline's own tick count — 363 + 746 + 560 = 1669 against 1740
+5 FAILURE(S)
+== prod-solve-seedling-r8-l18 (floorB)
+FAIL: r8-solve-18 is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r8-solve-18 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+2 FAILURE(S)
