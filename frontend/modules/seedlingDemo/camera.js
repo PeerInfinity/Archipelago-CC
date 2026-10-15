@@ -275,6 +275,16 @@ export const SHAKE_WRITERS = Object.freeze({
         op: '=', value: 60, src: 'Scenery/Moonrock.as:115',
         who: 'the moonrock\'s landing, once per game — inside its own freeze',
     }),
+    /**
+     * ⛓ fidelity BEAMTOWER D3 — the tower's beam on the player (`levelRun.stepBeamTowersNow`, under
+     * `CONTACT_FIDELITY.beamTowerBeamHit`): `if (p) { p.hit(null, force, (x, y), damage); Game.shake = 15; }` — an
+     * ASSIGNMENT, written whether or not the hit lands (i-frames), on every update the beam touches the player.
+     * Only a player in the beam opens it, so no room reaches it on its own schedule (`shakeWritersHere` never names it).
+     */
+    beamTowerBeam: Object.freeze({
+        op: '=', value: 15, src: 'Puzzlements/BeamTower.as:89-94',
+        who: 'every update a BeamTower\'s beam touches the player',
+    }),
 });
 
 /**

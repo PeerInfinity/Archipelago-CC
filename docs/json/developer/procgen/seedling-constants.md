@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**72 files, 5882 literals.** Class × position:
+**73 files, 5960 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 5 | 1572 | 399 | 1976 |
-| rule | 7 | 1002 | 478 | 1487 |
+| physics | 5 | 1572 | 430 | 2007 |
+| rule | 7 | 1018 | 494 | 1519 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 14 | 377 | 1952 | 2343 |
+| structural | 14 | 377 | 1967 | 2358 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 26 | 3013 | 2843 | 5882 |
+| total | 26 | 3029 | 2905 | 5960 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1700 | 0 | 92 | 123 | 4 | 57 | 1976 |
-| rule | 478 | 139 | 239 | 22 | 517 | 92 | 1487 |
+| physics | 1731 | 0 | 92 | 123 | 4 | 57 | 2007 |
+| rule | 495 | 139 | 239 | 22 | 532 | 92 | 1519 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -512,7 +512,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**12 named scalars** are `physics` or `rule` (12 with an AS3 anchor), and **145 small tables** (at most 16 literals) hold at least one (94 with an AS3 reference).
+**12 named scalars** are `physics` or `rule` (12 with an AS3 anchor), and **146 small tables** (at most 16 literals) hold at least one (95 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -613,6 +613,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `TURRET_SPIT` | seedlingDemo/turret.js | 9 | 9 | physics/rule | bound/magnitude | Projectiles/TurretSpit.as:setHitbox Projectiles/TurretSpit.as:f Mobile.as:friction Enemies/Turret.as:shotSpeed Projectiles/TurretSpit.as:onScreen Player.as:hit |
 | `BOMB_PUSHER` | seedlingDemo/bombPusher.js | 12 | 10 | physics/rule | bound/magnitude | Enemies/BombPusher.as:super Enemies/BombPusher.as:setHitbox Enemies/BombPusher.as:maxDistance Enemies/BombPusher.as:shotTimeMax Enemies/BombPusher.as:shoot |
 | `BOMB` | seedlingDemo/bombPusher.js | 12 | 12 | physics/rule | derivation/magnitude | Projectiles/Bomb.as:setHitbox Projectiles/Bomb.as:tMax Mobile.as:friction Projectiles/Bomb.as:removed Projectiles/Explosion.as:radiusCoeff Projectiles/Explosion.as:radius Projectiles/Explosion.as:force Projectiles/Explosion.as:Explosion |
+| `BEAM_TOWER` | seedlingDemo/beamTower.js | 15 | 15 | rule | magnitude | Puzzlements/BeamTower.as:force |
 | `WAND_SPRITE` | seedlingDemo/wandVerb.js | 11 | 3 | physics/rule | count/magnitude | Player.as:48-51 |
 | `FIRE_WAND_SPRITE` | seedlingDemo/wandVerb.js | 11 | 2 | rule | count/magnitude |  |
 | `WAND_PRESS_CADENCE` | seedlingDemo/wandVerb.js | 1 | 1 | rule | derivation |  |
@@ -630,7 +631,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `MAGICAL_LOCK_CALLBACK_TICK_OFFSET` | seedlingDemo/magicalLock.js | 1 | 1 | rule | derivation |  |
 | `MAGICAL_LOCK_MATRIX` | seedlingDemo/magicalLock.js | 8 | 8 | rule | sentinel |  |
 | `INVENTORY_TERM` | seedlingDemo/camera.js | 2 | 2 | rule | derivation |  |
-| `SHAKE_WRITERS` | seedlingDemo/camera.js | 4 | 4 | rule | magnitude |  |
+| `SHAKE_WRITERS` | seedlingDemo/camera.js | 5 | 5 | rule | magnitude |  |
 | `RANDOM_RANGE` | seedlingDemo/camera.js | 2 | 2 | rule | bound |  |
 | `CAMERA_DEAD_ZONE_RESIDUE` | seedlingDemo/camera.js | 2 | 2 | rule | bound |  |
 | `PLAYER_DAMAGE` | seedlingDemo/playerDamage.js | 5 | 4 | rule | count/magnitude | Player.as:hitsTimerMax Player.as:hitsTimerInt |
