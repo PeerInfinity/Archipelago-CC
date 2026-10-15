@@ -1088,9 +1088,9 @@
         "arrivalSolid.js": 5,
         "botDriverV2.js": 115,
         "crusherBait.js": 6,
-        "solverBot.js": 426
+        "solverBot.js": 427
       },
-      "sites": 552,
+      "sites": 553,
       "seen": "both",
       "via": [
         "direct",
@@ -4856,7 +4856,7 @@
         "import"
       ],
       "dynamic": null,
-      "why": "Player.as:slidingSpeed, the moveSpeed on ice (1): the per-axis cap of the strike scan's admissible ETA floor is 2\u00b7SLIDING_SPEED in a room with ice (hammer-phase SF, strikeEtaFloorOf)."
+      "why": "Player.as:slidingSpeed, the moveSpeed on ice (1): the per-axis cap of the strike scan's admissible ETA floor is 2·SLIDING_SPEED in a room with ice (hammer-phase SF, strikeEtaFloorOf)."
     },
     {
       "surface": "import",

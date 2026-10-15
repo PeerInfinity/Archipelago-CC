@@ -22393,3 +22393,50 @@ Lessons:
    continuation's, and it is right there (asked once, at the admission). On every refuge tick it scanned to the horizon.
 3. *Never mutate a file other processes are loading.* A timing round's ON run started inside the mutant window, loaded
    the floor-only mutant and reproduced SC's floor-only answer. The four contaminated runs were moved aside and re-run.
+
+### Seedling hammer-phase SF2 — a cheaper STRIKE_ETA_FLOOR
+
+⚖ The user (2026-10-15): *"Cheaper first, then flip"*, *"Only the SF follow-up"*. `STRIKE_ETA_FLOOR` stays **OFF**;
+this slice re-recorded nothing. The report is `CC/docs/cloud-reports/seedling-hammer-sf2.md`.
+
+**W0** at `f32ec04189` (SF merged; `REFUGE_ETA_CUT` ON, `PRESS_KILL_DONE_ON_WALK` ON, `STRIKE_ETA_FLOOR` OFF,
+`strikeIframeLapse` OFF): the identity block equals SF's W0 row for row, tapeRunner 611 `75a3c41f`, surface 296,
+constants 5,882, entities 566, profile 138, roster 277. SF's census rows reproduce OFF and ON (shape a) at this base.
+
+**D1 — the census of the cheaper shapes** (SF's lab re-cut: 20,640 derivations, every variant per derivation, the
+run following OFF; the totals of OFF, the floor alone and shape a equal SF's exactly):
+
+| variant | earlier · lost · found · other (vs OFF) | shape a's finds it loses | L18 scan × OFF | staging A sword × OFF |
+|---|---|---|---|---|
+| shape a (SF) | 2,211 · **0** · 6,373 · 90 | 0 | 2.39× | 3.78× |
+| (c) admissible floor past K = 4 / 8 / 16 | lost **101 / 8 / 0** | 6,446 / 4,419 / 713 | 1.19 / 1.69 / 1.98× | 1.64 / 2.50 / 3.54× |
+| (c) stop the pass at K = 4 / 8 / 16 | lost **1,801 / 67 / 1** | 8,171 / 6,324 / 1,908 | 0.50 / 1.31 / 1.95× | 0.91 / 1.84 / 3.53× |
+| (c′) OFF's floor past K = 2 / 4 / 8 / 16 | lost **0 / 0 / 0 / 0**; found 100 / 274 / 2,378 / 5,694 | 6,273 / 6,099 / 3,995 / 679 | 1.28 / 1.42 / 1.72 / 1.99× | 1.38 / 1.81 / 2.54 / 3.65× |
+| (d) shape b at the admission, a / the floor elsewhere | lost **0 / 470** | 0 / 6,834 | 2.49 / 0.79× | 3.78 / 0.97× |
+
+(c′) is the shape added: past the budget a cell the pass has not measured is asked OFF's question, so K = 0 is OFF
+pair for pair (measured: equal on all 10,086 L18 derivations and end to end). A fifth shape, bounded previews
+(`stopWhen` at the aim tick), equals shape a field for field and costs more (L18 159 s against 153: the deepenings
+re-walk the prefix). No K ≥ 1 reaches 1.15× OFF on the L18 scan (co1 1.21×).
+
+**D2 — the cap** (`STRIKE_PREVIEW_CAP` = 16, `STRIKE_ETA_FLOOR.previewCap`). End to end the census misleads: caps 2,
+4 and 8 are cheaper inside a derivation and slower outside it (staging A ~159 s against OFF's 128 and shape a's 65;
+leg 414 742 s at 8), because the strikes the pass no longer sees leave the kill on longer trajectories. 16 is the
+smallest cap that keeps shape a's trajectories. Gate rows and mutants in `hammerStrikeEtaFloor.test.js`; the witness
+`hammer-sf-l40-strikefloor` is unchanged under the cap (its `--check` byte-identical).
+
+**D3 — end to end, ON at the cap** (3 interleaved rounds; every answer stable; OFF at the head equals the base):
+11 of 12 workloads end on shape a's answers. Staging A with the sword differs: the kill moves t1682 → t1740 and the
+solve refuses at t1753 on `bobsoldier@880,832` (shape a: t1695 on `bob@736,752`). Medians × OFF, shape a / the cap: L18
+1.52 / **1.44**, staging A sword 0.56 / 0.49, ghost 0.64 / 0.57, legs 397 0.80 / 0.74 and 414 0.84 / 0.81, ghost
+staging 1.03 / 1.08. The flip's table is SF's with two changes: carved pairs c4 moves to `1c5127cd` (SF `1efcc4b9`),
+and the b1 / b2 witness tapes stay byte-identical ON (their OFF-length premise still fails), so 22 gate rows move, not
+23.
+
+Lessons:
+1. *A per-derivation census does not price a trajectory.* The census follows OFF's run; a shape that finds fewer
+   strikes is cheaper per derivation and can be slower per solve, because the executor re-derives on every refuge
+   tick of a longer kill.
+2. *Past a budget, fall back to the base's question, not to the looser one.* Past the cap, OFF's question keeps the
+   forty free of the floor-only trap (0 lost in 20,640 derivations at every cap); the admissible floor alone reopens
+   it (101 lost at 4). It is not a proof: a measured pair can still displace one of OFF's, as in shape a.
