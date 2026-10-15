@@ -5,7 +5,7 @@
  *   frontend/modules/noiz2saSubstrate/noiz2saMeasuredSpansData.js   (generated from it)
  *
  * A measured span is one the sweeps' 16-seed table reads badly: the default final span 10:7–10:boss was ≈ 2×
- * optimistic at skills 95–97 as a product of its four scenes (NOIZ2SA-OPTIMISM-REPORT.md). Its cells come from
+ * optimistic at skills 95–97 as a product of its four scenes (CC/docs/cloud-reports/noiz2sa-difficulty-optimism.md). Its cells come from
  * `measure-noiz2sa-grid.mjs` (the page's visit: restart on a hit, equal tracks at the skill, observed perception,
  * centered hitbox, game seed 1), at every skill it was measured at (at least the table's ends, 0 and 100): the bot's
  * curve there is step-shaped (flat 93–95, a jump 97 → 98), so the model reads a measured span on ITS OWN skills.
@@ -46,7 +46,7 @@ if (args.includes('--from')) {
         if (!by[0] || !by[100]) throw new Error(`${span}: needs cells at skills 0 and 100 (the model reads between its measured skills)`);
     }
     const doc = {
-        about: 'Aggregated by scripts/test/extract-noiz2sa-measured-spans.mjs from measure-noiz2sa-grid.mjs runs; see NOIZ2SA-OPTIMISM-REPORT.md',
+        about: 'Aggregated by scripts/test/extract-noiz2sa-measured-spans.mjs from measure-noiz2sa-grid.mjs runs; see CC/docs/cloud-reports/noiz2sa-difficulty-optimism.md',
         method: { tool: 'scripts/test/measure-noiz2sa-grid.mjs', bot: 'equal tracks at the skill, observed perception', hitbox: 'centered', gameSeed: 1,
             visit: 'restart on a hit; attempt a of visit v on attemptBotSeed(v, a)', gameCommit: NOIZ2SA_DIFFICULTY.source.commit },
         spans: Object.fromEntries(Object.entries(spans).map(([s, by]) => {
@@ -69,7 +69,7 @@ const text = `/**
  * Spans measured as a whole (the page's visit, restart on a hit, hundreds to thousands of attempts a cell), each at
  * its own measured skills (0 and 100 among them), per cell [n, deathless, L, F] as in \`noiz2saDifficultyData.js\`.
  * The difficulty model reads each like a measured triple, on its own skills, instead of the product of its scenes.
- * See NOIZ2SA-OPTIMISM-REPORT.md.
+ * See CC/docs/cloud-reports/noiz2sa-difficulty-optimism.md.
  */
 export const NOIZ2SA_MEASURED_SPANS = Object.freeze({
     cell: ['n', 'deathless', 'L', 'F'],

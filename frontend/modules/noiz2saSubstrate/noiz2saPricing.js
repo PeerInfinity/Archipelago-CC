@@ -68,7 +68,7 @@ export const DEFAULT_FINAL_SPAN = '10:7–10:boss';
 /**
  * ⚖ (the user, 2026-10-15: "Please implement the fallback") the least deathless chance the final span may have at the
  * final region's skill. Below it the bot practically never clears the span (10:7–10:boss: 1 attempt in 2960 at skill
- * 80, 0.019 at 92 — NOIZ2SA-OPTIMISM-REPORT.md) and its E is the `P_FLOOR` bound, far under a real visit; so the final
+ * 80, 0.019 at 92 — CC/docs/cloud-reports/noiz2sa-difficulty-optimism.md) and its E is the `P_FLOOR` bound, far under a real visit; so the final
  * region falls back to the 50% rule up to the setting's length, as when no pace can reach Victory
  * (`pricing.finalTooHard`). With the measured 10:7–10:boss, a Victory skill of 92 or less falls back, 93 and up play it.
  */

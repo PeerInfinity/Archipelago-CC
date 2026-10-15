@@ -4,7 +4,7 @@ Measurement run of 2026-10-14/15, branch `claude/noiz2sa-difficulty-optimism-92l
 `0b77b2f`, game submodule `bulletml-dodge` at `7423ee8`). Sections 1–4 are the measurement as first reported (no
 code changed). **Section 5 is the follow-up the user asked for on 2026-10-15 ("please continue with the plan you would
 recommend"): option 1 applied, with a calibration run behind it.** Raw per-cell data:
-[`noiz2sa-optimism-raw.json`](noiz2sa-optimism-raw.json) (every attempt's frames and hit scene, plus each cell's
+`noiz2sa-optimism-raw.json` (not on main: 1 MB; it is on branch `claude/noiz2sa-difficulty-optimism-92lgz8` at `6aab982eb4`) (every attempt's frames and hit scene, plus each cell's
 summary, for every cell in this report).
 
 **Answer: yes, at skills 92–97 on the default final span, by about 2× on the per-attempt rate (1.6–1.8× on mana at

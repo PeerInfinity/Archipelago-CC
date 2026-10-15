@@ -5,7 +5,7 @@
  * Spans measured as a whole (the page's visit, restart on a hit, hundreds to thousands of attempts a cell), each at
  * its own measured skills (0 and 100 among them), per cell [n, deathless, L, F] as in `noiz2saDifficultyData.js`.
  * The difficulty model reads each like a measured triple, on its own skills, instead of the product of its scenes.
- * See NOIZ2SA-OPTIMISM-REPORT.md.
+ * See CC/docs/cloud-reports/noiz2sa-difficulty-optimism.md.
  */
 export const NOIZ2SA_MEASURED_SPANS = Object.freeze({
     cell: ['n', 'deathless', 'L', 'F'],

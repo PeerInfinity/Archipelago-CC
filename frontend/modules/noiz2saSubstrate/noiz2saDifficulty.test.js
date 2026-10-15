@@ -121,7 +121,7 @@ describe('the product model against the measured three-scene spans', () => {
     });
 });
 
-describe('the measured spans (NOIZ2SA-OPTIMISM-REPORT.md)', () => {
+describe('the measured spans (CC/docs/cloud-reports/noiz2sa-difficulty-optimism.md)', () => {
     const FINAL = '10:7–10:boss';
     const src = JSON.parse(fs.readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../scripts/data/noiz2sa-measured-spans.json'), 'utf8'));
     it('the generated module is the committed aggregates (extract-noiz2sa-measured-spans.mjs)', () => {

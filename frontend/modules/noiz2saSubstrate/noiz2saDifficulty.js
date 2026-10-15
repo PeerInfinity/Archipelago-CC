@@ -25,7 +25,7 @@
  *    `F_OWN_MIN` failures keeps its own F (only the measured spans below have such cells; a 16-attempt cell never does).
  *  - MEASURED SPANS (`noiz2saMeasuredSpansData.js`): spans played as a whole, hundreds to thousands of attempts a cell,
  *    each at its OWN measured skills — the default final span 10:7–10:boss, which the product of its 16-attempt
- *    scenes put ≈ 2× too easy at skills 95–97 (NOIZ2SA-OPTIMISM-REPORT.md; its curve is step-shaped, flat 93–95 and a
+ *    scenes put ≈ 2× too easy at skills 95–97 (CC/docs/cloud-reports/noiz2sa-difficulty-optimism.md; its curve is step-shaped, flat 93–95 and a
  *    jump 97 → 98, so the table's skills alone would still miss). Read like a measured triple, between its own
  *    skills. Their failed attempts last longer as the skill rises (they reach the boss), hence the per-skill F.
  */
@@ -175,7 +175,7 @@ export function parseSpan(text) {
 
 /**
  * The product model against the measured three-scene spans (the table's triples; the measured spans have their own
- * check in NOIZ2SA-OPTIMISM-REPORT.md): one row per triple × measured skill —
+ * check in CC/docs/cloud-reports/noiz2sa-difficulty-optimism.md): one row per triple × measured skill —
  * {span, skill, n, measured (the raw deathless share), model (the product of the scenes' smoothed chances),
  * modelRaw (the product of their raw shares)}.
  */

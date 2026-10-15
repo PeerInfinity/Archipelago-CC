@@ -1,5 +1,5 @@
 {
-  "about": "Aggregated by scripts/test/extract-noiz2sa-measured-spans.mjs from measure-noiz2sa-grid.mjs runs; see NOIZ2SA-OPTIMISM-REPORT.md",
+  "about": "Aggregated by scripts/test/extract-noiz2sa-measured-spans.mjs from measure-noiz2sa-grid.mjs runs; see CC/docs/cloud-reports/noiz2sa-difficulty-optimism.md",
   "method": {
     "tool": "scripts/test/measure-noiz2sa-grid.mjs",
     "bot": "equal tracks at the skill, observed perception",
