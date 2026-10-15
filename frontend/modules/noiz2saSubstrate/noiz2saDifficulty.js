@@ -21,15 +21,23 @@
  *    has a large, finite E instead of an infinite one.
  *  - L of a scene is measured per skill (a boss dies faster at a higher skill), read between skills like p, a skill
  *    with no clean clear taking the nearest one that had one. F is pooled over every skill (weighted by the failed
- *    attempts): it moves little with skill, and many cells have too few failures to say.
+ *    attempts): it moves little with skill, and many cells have too few failures to say. A cell with at least
+ *    `F_OWN_MIN` failures keeps its own F (only the measured spans below have such cells; a 16-attempt cell never does).
+ *  - MEASURED SPANS (`noiz2saMeasuredSpansData.js`): spans played as a whole, hundreds to thousands of attempts a cell,
+ *    at every skill of the table — the default final span 10:7–10:boss, which the product of its 16-attempt scenes
+ *    put ≈ 2× too easy at skills 95–97 (NOIZ2SA-OPTIMISM-REPORT.md). Read like a measured triple. Their failed
+ *    attempts last longer as the skill rises (they reach the boss), hence the per-skill F.
  */
 import { NOIZ2SA_DIFFICULTY } from './noiz2saDifficultyData.js';
+import { NOIZ2SA_MEASURED_SPANS } from './noiz2saMeasuredSpansData.js';
 import { showSpan, parsePosition, BOSS_SCENE, STAGE_NUM } from './noiz2saRegion.js';
 
 /** the measured skills, ascending */
 export const SKILLS = Object.freeze([...NOIZ2SA_DIFFICULTY.skills]);
 /** the chance a span's expected seconds are computed with at least: half a success in the sweeps' 16 attempts */
 export const P_FLOOR = 1 / 32;
+/** a cell with at least this many failed attempts keeps its own F instead of the pooled one */
+export const F_OWN_MIN = 30;
 /** scenes per stage (0–8 ordinary, 9 the boss) and the scenes the table covers: stages 1–10 */
 const PER_STAGE = BOSS_SCENE + 1;
 export const SCENE_TOTAL = STAGE_NUM * PER_STAGE;
@@ -80,7 +88,9 @@ function seriesOf(rows) {
     let fw = 0; let fs = 0;
     for (const [n, d, , f] of rows) if (f !== null && n - d > 0) { fw += n - d; fs += f * (n - d); }
     const meanL = Lfull.reduce((a, b) => a + b, 0) / Lfull.length;
-    return { p, raw, L: Lfull, F: fw > 0 ? fs / fw : meanL / 2, n: rows.map(([n]) => n) };
+    const F = fw > 0 ? fs / fw : meanL / 2;
+    const Fs = rows.map(([n, d, , f]) => (f !== null && n - d >= F_OWN_MIN ? f : F));
+    return { p, raw, L: Lfull, F, Fs, n: rows.map(([n]) => n) };
 }
 
 const SCENES = Array.from({ length: SCENE_TOTAL }, (_, i) => {
@@ -89,7 +99,11 @@ const SCENES = Array.from({ length: SCENE_TOTAL }, (_, i) => {
     if (!rows) throw new Error(`noiz2saDifficulty: no measurement for scene ${key}`);
     return seriesOf(rows);
 });
-const MEASURED = new Map(Object.entries(NOIZ2SA_DIFFICULTY.triples).map(([k, rows]) => [k, seriesOf(rows)]));
+if (JSON.stringify(NOIZ2SA_MEASURED_SPANS.skills) !== JSON.stringify(SKILLS)) throw new Error('noiz2saDifficulty: the measured spans are at other skills than the table');
+const MEASURED = new Map([...Object.entries(NOIZ2SA_DIFFICULTY.triples), ...Object.entries(NOIZ2SA_MEASURED_SPANS.spans)]
+    .map(([k, rows]) => [k, seriesOf(rows)]));
+/** the spans measured as a whole beside the table (`noiz2saMeasuredSpansData.js`) */
+export const MEASURED_SPANS = Object.freeze(Object.keys(NOIZ2SA_MEASURED_SPANS.spans));
 
 /** a span → [first, last] scene index; throws outside stages 1–10 (the sweeps measured nothing else) */
 function bounds(span) {
@@ -109,7 +123,7 @@ export function spanDifficulty(span, skill) {
         const p = atSkill(own.p, skill);
         const pf = Math.max(P_FLOOR, p);
         const L = atSkill(own.L, skill);
-        return { p, seconds: L + own.F * (1 - pf) / pf, measured: true };
+        return { p, seconds: L + atSkill(own.Fs, skill) * (1 - pf) / pf, measured: true };
     }
     let reach = 1; let attempt = 0;
     for (let i = a; i <= b; i++) {
@@ -158,13 +172,15 @@ export function parseSpan(text) {
 }
 
 /**
- * The product model against the measured three-scene spans: one row per triple × measured skill —
+ * The product model against the measured three-scene spans (the table's triples; the measured spans have their own
+ * check in NOIZ2SA-OPTIMISM-REPORT.md): one row per triple × measured skill —
  * {span, skill, n, measured (the raw deathless share), model (the product of the scenes' smoothed chances),
  * modelRaw (the product of their raw shares)}.
  */
 export function modelVersusMeasured() {
     const out = [];
-    for (const [key, own] of MEASURED) {
+    for (const key of Object.keys(NOIZ2SA_DIFFICULTY.triples)) {
+        const own = MEASURED.get(key);
         const span = parseSpan(key);
         const [a, b] = bounds(span);
         SKILLS.forEach((skill, k) => {
