@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 import {
     DEFAULT_FINAL_SPAN, TARGET_FINAL_SKILL, DEFAULT_POINTS_PER_MANA, FINAL_SPAN_PARAM, VICTORY_SKILL_PARAM, victorySkillOf,
     skillForPoints, predictedSkill, pointsForSkill, pointsPerManaFor, noiz2saWalkEvents, checkSpanFor, pickShrinking,
-    finalRegionOf, victoryLocationOf, VICTORY_ITEM, manaBeforeVictory,
+    finalRegionOf, victoryLocationOf, VICTORY_ITEM, manaBeforeVictory, FINAL_MIN_CHANCE,
     planNoiz2saWorld, applyNoiz2saPricing, priceNoiz2saRegions,
 } from './noiz2saPricing.js';
 import { spanDifficulty, parseSpan, spanLength, spanAt, sceneIndex, SCENE_TOTAL, pickSpan } from './noiz2saDifficulty.js';
@@ -301,7 +301,7 @@ describe('⚖ option 3 (2026-10-14): only a Noiz2sa region holding Victory is fi
         expect(showSpan(rules.preset_sidecars[1].R0.playable_payload.move)).not.toBe(DEFAULT_FINAL_SPAN);
     });
     it('Victory ON a Noiz2sa region: that region is final, plays the final span at the Victory skill setting', () => {
-        for (const victorySkill of [TARGET_FINAL_SKILL, 80]) {
+        for (const victorySkill of [TARGET_FINAL_SKILL, 93]) {
             const rules = world();
             rules.sphere_log = sphereLog();
             const plan = priceNoiz2saRegions({ rulesJson: rules, sphereLog: rules.sphere_log, playerId: '1',
@@ -315,6 +315,39 @@ describe('⚖ option 3 (2026-10-14): only a Noiz2sa region holding Victory is fi
             expect(showSpan(fin.span)).toBe(DEFAULT_FINAL_SPAN);
             expect(fin.p).toBeCloseTo(spanDifficulty(fin.span, fin.skill).p, 10);
         }
+    });
+    // ⚖ (2026-10-15) "Please implement the fallback": a Victory skill at which the setting's span is ~unwinnable
+    const finalAt = (victorySkill) => {
+        const rules = world();
+        rules.sphere_log = sphereLog();
+        const plan = priceNoiz2saRegions({ rulesJson: rules, sphereLog: rules.sphere_log, playerId: '1',
+            params: { [VICTORY_SKILL_PARAM]: victorySkill } });
+        return { rules, plan, fin: plan.regions.find((r) => r.final) };
+    };
+    it('the final span below FINAL_MIN_CHANCE at the Victory skill: the final region falls back to the 50% rule (finalTooHard)', () => {
+        for (const victorySkill of [80, 92]) {
+            const { rules, plan, fin } = finalAt(victorySkill);
+            expect(fin.region).toBe('R5');
+            expect(spanDifficulty(parseSpan(DEFAULT_FINAL_SPAN), fin.skill).p).toBeLessThan(FINAL_MIN_CHANCE);
+            expect(fin.finalTooHard).toBe(true);
+            expect(fin.pricedAt).toBe('victory');
+            expect(fin.target).toBe(finalScenesOf());
+            expect(fin.span).toEqual(pickShrinking(finalScenesOf(), fin.skill).span);
+            expect(showSpan(fin.span)).not.toBe(DEFAULT_FINAL_SPAN);
+            expect(fin.p).toBeGreaterThanOrEqual(0.5);
+            expect(fin.rate).toBeCloseTo(fin.cost / fin.seconds, 3);
+            // the pace still targets the Victory skill: only the span changed
+            expect(plan.pointsPerMana).toBe(pointsPerManaFor(plan.paceMana, { target: victorySkill }));
+            expect(rules.preset_sidecars[1].R5.playable_payload.pricing).toMatchObject({ final: true, finalTooHard: true });
+        }
+    });
+    it('at or above FINAL_MIN_CHANCE the final plays the setting\'s span, with no finalTooHard', () => {
+        // the measured 10:7–10:boss: 0.019 at 92, 0.114 at 93 — 93 is the lowest Victory skill that keeps it
+        const { rules, fin } = finalAt(93);
+        expect(fin.finalTooHard).toBe(false);
+        expect(showSpan(fin.span)).toBe(DEFAULT_FINAL_SPAN);
+        expect(fin.p).toBeGreaterThanOrEqual(FINAL_MIN_CHANCE);
+        expect(rules.preset_sidecars[1].R5.playable_payload.pricing.finalTooHard).toBeUndefined();
     });
     it('victorySkillOf: an integer 1–100 from the bag, else the default', () => {
         expect(victorySkillOf(null)).toBe(TARGET_FINAL_SKILL);

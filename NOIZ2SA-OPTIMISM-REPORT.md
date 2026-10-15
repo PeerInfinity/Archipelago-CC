@@ -148,7 +148,7 @@ Ordered by cost.
    final, and late ramp regions) moves; low-skill regions are untouched. *Cost:* CI hours (100 scenes × 9 skills × 64
    seeds ≈ 58k single attempts; the boss cells are the long ones), plus a regenerate of the data file and preset.
 
-3. **Guard the Victory-skill setting / `P_FLOOR` (independent of 1–2).** When the final span's model p at the Victory
+3. **Guard the Victory-skill setting / `P_FLOOR` (independent of 1–2). — APPLIED (the fallback), section 6.** When the final span's model p at the Victory
    skill is under ~0.05, price E without the floor (or with a much lower floor) and warn in the generation form that the
    final is ~unwinnable at that skill, or move the final span down by the 50% rule as the fallback path already does.
    *Changes:* only worlds with a low `noiz2saVictorySkill`. The default 95 is unaffected. *Cost:* small code plus a test.
@@ -222,8 +222,28 @@ first region, which did not change.
 
 **What it does not fix:** a non-default `noiz2saFinalSpan` is still the product of its scenes (≈ 2× optimistic if it
 ends on a boss, by this run); a `noiz2saVictorySkill` below ~90 still prices an effectively unwinnable final at the
-`P_FLOOR` bound (option 3). One side effect: the 50% rule considers 10:7–10:boss among the 4-scene spans, so a
+`P_FLOOR` bound (option 3 — applied afterwards, section 6). One side effect: the 50% rule considers 10:7–10:boss among the 4-scene spans, so a
 NON-final 4-scene region priced at skills ~96–98 may now pick a different span (more accurately).
+
+## 6. Follow-up: the low-Victory-skill fallback (option 3)
+
+The user chose the fallback (2026-10-15, "Please implement the fallback"). `noiz2saPricing.js` `FINAL_MIN_CHANCE`
+= 0.05: when the setting's final span has a deathless chance under it at the final region's skill, the final region
+is priced by the 50% rule up to the setting's length (`pickShrinking`, the path the no-pace fallback already used)
+and its payload records `pricing.finalTooHard: true`; the pace is untouched (it still trains to the Victory skill).
+With the measured 10:7–10:boss (0.019 at 92, 0.114 at 93) every Victory skill of 92 or less falls back; 93 and up
+play the span. The committed preset (skill 95) does not change.
+
+Measured on the priced test world at Victory skill 80 (scratch, 200 visits a region):
+
+| region | before: span, rate, mana / planned | after: span, rate, mana / planned |
+|---|---|---|
+| region_1_1 (Victory) | 10:7–10:boss, 0.0917/s, ≥ 107.8 / 31 (29/30 visits censored) | 2:1–2:2 (p 0.508 modelled, 0.365 measured), 0.6215/s, **34.5 / 31 (1.11)** |
+
+The other two regions are unchanged (17.7 / 16 and 22.9 / 21). Tests: `noiz2saPricing.test.js` — Victory skills 80
+and 92 fall back (`finalTooHard`, the 50% rule's span, p ≥ 0.5, the pace still at the setting), 93 keeps the span with
+no flag; the five noiz2sa unit-test files pass (100 tests). Docs: `noiz2sa.md` § Pricing step 3, the payload, the
+settings line.
 
 ## Reproduce
 
