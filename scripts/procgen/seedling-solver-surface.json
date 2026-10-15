@@ -587,9 +587,9 @@
         "dangerMap.js": 2,
         "director.js": 4,
         "forcedHit.js": 2,
-        "solverBot.js": 52
+        "solverBot.js": 53
       },
-      "sites": 114,
+      "sites": 115,
       "seen": "both",
       "via": [
         "direct",
@@ -663,7 +663,7 @@
         },
         "presses": {
           "botDriverV2.js": 1,
-          "solverBot.js": 1
+          "solverBot.js": 2
         },
         "pulserHits": {
           "botDriverV2.js": 1
@@ -726,9 +726,9 @@
         "dangerMap.js": 12,
         "director.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 100
+        "solverBot.js": 101
       },
-      "sites": 146,
+      "sites": 147,
       "seen": "both",
       "via": [
         "direct",
@@ -1116,9 +1116,9 @@
       "files": {
         "botDriverV2.js": 3,
         "dangerMap.js": 3,
-        "solverBot.js": 94
+        "solverBot.js": 93
       },
-      "sites": 100,
+      "sites": 99,
       "seen": "both",
       "via": [
         "direct",

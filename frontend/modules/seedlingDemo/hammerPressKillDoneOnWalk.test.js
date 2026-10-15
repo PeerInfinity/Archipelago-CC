@@ -49,22 +49,30 @@ describe('DD — the switch\'s contract', () => {
 
     it('`killedOnWalk` names the press of THIS walk that KILLED the body, and nothing else', () => {
         const hit = (id, killed) => ({ as3: 'Enemy', id, landed: true, killed });
-        const ledgerOf = (presses) => ({ ledger: (kind) => (kind === 'presses' ? presses : []) });
+        const ledgerOf = (presses, level = 30) => ({ level, ledger: (kind) => (kind === 'presses' ? presses : []) });
         const P = [
-            { t: 9, fired: 10, weapon: 'sword', direction: 1, hits: [hit('a', true)] }, // before the walk
-            { t: 20, fired: 21, weapon: 'sword', direction: 2, hits: [hit('a', false)] }, // landed, not a kill
-            { t: 30, fired: 31, weapon: 'sword', direction: 3, hits: [hit('b', true)] }, // another body
-            { t: 40, fired: 41, weapon: 'ghostsword', direction: 0, hits: [hit('a', true)] },
+            { t: 9, fired: 10, level: 30, weapon: 'sword', direction: 1, hits: [hit('a', true)] }, // before the walk
+            // landed, not a kill
+            { t: 20, fired: 21, level: 30, weapon: 'sword', direction: 2, hits: [hit('a', false)] },
+            { t: 30, fired: 31, level: 30, weapon: 'sword', direction: 3, hits: [hit('b', true)] }, // another body
+            { t: 40, fired: 41, level: 30, weapon: 'ghostsword', direction: 0, hits: [hit('a', true)] },
         ];
         const run = ledgerOf(P);
-        expect(killedOnWalk(run, 'a', 15)).toEqual({ pressedAt: 40, firedAt: 41, weapon: 'ghostsword', direction: 0 });
-        expect(killedOnWalk(run, 'a', 41)).toBe(null);
+        // the window is the ledger's index at the walk's start
+        expect(killedOnWalk(run, 'a', 1)).toEqual({ pressedAt: 40, firedAt: 41, weapon: 'ghostsword', direction: 0 });
+        expect(killedOnWalk(run, 'a', 4)).toBe(null);
         expect(killedOnWalk(run, 'c', 0)).toBe(null);
-        expect(killedOnWalk(run, 'a', 5)?.firedAt).toBe(41);
-        expect(killedOnWalk(ledgerOf([P[0]]), 'a', 5)?.firedAt).toBe(10);
+        expect(killedOnWalk(ledgerOf([P[0]]), 'a', 0)?.firedAt).toBe(10);
+        expect(killedOnWalk(ledgerOf([P[0]]), 'a', 1)).toBe(null);
         expect(killedOnWalk(ledgerOf([]), 'a', 0)).toBe(null);
+        // ⛔ a kill fired at a LATER tick but appended BEFORE the walk is not this walk's (the L40 table's measurement)
+        const earlier = ledgerOf([{ ...P[3], t: 103, fired: 104 }, P[1]]);
+        expect(killedOnWalk(earlier, 'a', 1)).toBe(null);
+        // ⛔ the same id on another level is another body
+        expect(killedOnWalk(ledgerOf([P[3]], 31), 'a', 0)).toBe(null);
         // a press that lands on the body without killing it is not its kill, before or after the kill
-        const after = ledgerOf([P[3], { t: 50, fired: 51, weapon: 'sword', direction: 1, hits: [hit('a', false)] }]);
+        const after = ledgerOf([P[3],
+            { t: 50, fired: 51, level: 30, weapon: 'sword', direction: 1, hits: [hit('a', false)] }]);
         expect(killedOnWalk(after, 'a', 0)?.firedAt).toBe(41);
         expect(killedOnWalk(ledgerOf([P[1]]), 'a', 0)).toBe(null);
     });

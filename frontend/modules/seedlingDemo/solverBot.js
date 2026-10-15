@@ -16356,13 +16356,14 @@ export function withKeylockWaitPriced(enabled, fn) {
  * survey step 50 (L30 Torchpickup → L32) under `strikeIframeLapse` + `ceremonyShove`: the walk's sword press (pressed
  * t169, fired t170, `killed: true`) kills `bobsoldier@48,80`, and the dwell refuses at t192.
  *
- * ON: when the target has left `strikeBodies` at the dwell's start AND the run's press ledger (`run.ledger('presses')`) holds a
- * press fired during this arm's walk that KILLED it (`killedOnWalk`), the arm records the kill as done (the record
- * carries `killedOnWalk`: the killing press's tick, fire tick, weapon and direction; `ticks: 0`) and returns to the
- * ladder exactly as a finished dwell does. Any other "already true" (gone, but no press of this walk killed it)
- * still reaches `runDwell` and is still its refusal. `runDwell` itself is untouched: its guard is real for every
- * other caller. OFF the arm is byte-for-byte the BEFORE one (the walk-start tick is read, nothing is decided by it).
- * `SEEDLING_PRESS_KILL_DONE_ON_WALK=1` opts a process in; `withPressKillDoneOnWalk` for a test.
+ * ON: when the target has left `strikeBodies` at the dwell's start AND the run's press ledger
+ * (`run.ledger('presses')`) holds a press appended during this arm's walk, on this level, that KILLED it
+ * (`killedOnWalk`), the arm records the kill as done (the record carries `killedOnWalk`: the killing press's tick,
+ * fire tick, weapon and direction; `ticks: 0`) and returns to the ladder exactly as a finished dwell does. Any other
+ * "already true" (gone, but no press of this walk killed it) still reaches `runDwell` and is still its refusal.
+ * `runDwell` itself is untouched: its guard is real for every other caller. OFF the arm is byte-for-byte the BEFORE
+ * one (nothing is read: the ledger index is taken only ON). `SEEDLING_PRESS_KILL_DONE_ON_WALK=1` opts a process in;
+ * `withPressKillDoneOnWalk` for a test.
  */
 export const PRESS_KILL_DONE_ON_WALK = {
     enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_DONE_ON_WALK === '1',
@@ -16375,11 +16376,17 @@ export function withPressKillDoneOnWalk(enabled, fn) {
 }
 
 /**
- * The press of THIS walk that killed `id`: the last `run.ledger('presses')` row fired after `since` whose hit on `id` says
+ * The press of THIS walk that killed `id`: among the `run.ledger('presses')` rows appended since index `from` (the
+ * ledger's length when the walk began) and pressed on the run's current level, the last whose hit on `id` says
  * `killed`, as `{pressedAt, firedAt, weapon, direction}`; `null` when no press of the walk killed it.
+ *
+ * ⛔ THE WINDOW IS THE LEDGER'S INDEX, NOT A TICK. MEASURED on the L40 table (legs 378 / 381, `apitem (64,144)`): an
+ * arm whose walk began at t0 saw a `killed` ghost-sword press on `puncher@816,128` fired at t104 while that body was
+ * still in `strikeBodies` at t133 — so a tick window can hold a kill that is not this body's death on this walk. The
+ * level is matched too: a body id is per level, and a ledger spans the run's levels.
  */
-export function killedOnWalk(run, id, since) {
-    const kill = (run.ledger('presses') ?? []).filter((p) => p.fired > since
+export function killedOnWalk(run, id, from) {
+    const kill = (run.ledger('presses') ?? []).slice(from).filter((p) => p.level === run.level
         && p.hits.some((h) => h.id === id && h.killed === true)).at(-1);
     return kill ? { pressedAt: kill.t, firedAt: kill.fired, weapon: kill.weapon, direction: kill.direction } : null;
 }
@@ -20178,7 +20185,8 @@ function solveSegmentUnder({
                      * names, and spending a re-plan on it would put an
                      * ARRIVED row in the trace for a walk nobody took.
                      */
-                    const walkFrom = run.ticksCompleted;
+                    // ⛓ DD: the press ledger's length as the walk begins (read only when the switch is ON)
+                    const walkFrom = PRESS_KILL_DONE_ON_WALK.enabled ? (run.ledger('presses') ?? []).length : 0;
                     if (hunt.stance.x !== run.state.x || hunt.stance.y !== run.state.y) {
                         walkTo(goal, hunt.stance, {
                             what: `${what} -> kill (${hunted.id}) stance`,
