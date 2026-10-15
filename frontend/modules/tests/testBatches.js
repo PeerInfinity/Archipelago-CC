@@ -127,6 +127,18 @@ export const TEST_BATCHES = Object.freeze({
         categories: Object.freeze(['Tutorial walks: seedling']),
         webgpu: true,
     }),
+    'tutorials-seedling-whole-game': Object.freeze({
+        description:
+            'The Seedling whole-game tutorial walk row alone (the bot through the '
+            + 'whole of seedling_playthrough; it plays to its step timeout every '
+            + 'run). Split from tutorials-seedling on 2026-10-15, whose worst case '
+            + '(seedling-bot at its 420 s first-checks timeout) no longer fit the '
+            + 'budget beside it. Manual, like tutorials; WebGPU, like '
+            + 'tutorials-seedling.',
+        manual: true,
+        categories: Object.freeze(['Tutorial walks: seedling whole game']),
+        webgpu: true,
+    }),
     'tutorials-procgen-loops': Object.freeze({
         description:
             'The Procgen track\'s loop-mode tutorial walk rows (JtA, and every '
