@@ -22061,3 +22061,73 @@ bounded pass using each previewed cell's measured ETA in place of the floor once
 skips `known.eta > i − 1`), so the forty are not spent on cells the walk cannot make. Its flip is a tape move. The
 docblock's two claims (the clamp, and the tolerance "can only make the real walk LONGER") are wrong today whatever is
 decided.
+
+### Seedling hammer-phase DD — a press kill whose target died on the walk
+
+⚖ The user (2026-10-14): *"DWELL-DONE + strike census"*, two slices in parallel. This one is a caller-side fix behind
+one new switch, **OFF**: `solverBot.PRESS_KILL_DONE_ON_WALK` (`SEEDLING_PRESS_KILL_DONE_ON_WALK=1`,
+`withPressKillDoneOnWalk`). The flip is the user's. The report is `CC/docs/cloud-reports/seedling-hammer-dd.md`.
+
+**W0** at `c137aef8a9` (RE's harvest): identity block `77080c2e` (six producers exit 0 at `405d9c4b b76f6483 465a8b46
+35456fbc 6cd35fe1 712f0ead`, ENEMY `afdc6d1a`, reference ALL MATCH); surface GREEN 291, constants 5,851, entities
+558, profile 138; roster 277; tapeRunner 611 `75a3c41f`; bounded vitest 1546/1546 (34 files). All of these equal
+RE's banks.
+
+**The defect, reproduced.** The kill rung's chaser arm in `solveSegmentUnder` (`-> kill (<id>) by press`) walks to
+its stance and then `runDwell`s until the body has left `strikeBodies`. The walk carries the strike policy, so its
+presses can kill the body first, and `runDwell` then refuses an `until` that is already true. Survey step 50 under
+fidelity's `strikeIframeLapse` + `ceremonyShove` (`ceremonyShove` is not on main yet, so this ran on a scratch merge
+of its branch):
+
+- the exit's keylock-stance walk (begun t168) kills `bobsoldier@48,80` with a sword press (pressed t169, fired t170,
+  `killed: true`);
+- the body leaves `strikeBodies` at t171 and the run at t182;
+- the arm's dwell refuses at t192.
+
+CW's 414 page leg under its scratch chooser is the SAME seam, not the kill-lock's `execKillByChaser` (which already
+skips such a body, `killedOnApproach`): a ghost-sword press (t1431) kills `bob@736,800` on the walk, and the dwell
+throws at t1469. At the defaults the shape also occurs: step 50's staging booted at (32,112) or (96,176) refuses the
+same way at t174 / t165.
+
+**Census** (a read-only hook at the seam and in `runDwell`'s already-true branch, scratch only). Arm dwells that start
+with the target gone, at the defaults, with the switch ON (the path is OFF's up to the first such start):
+
+| workload | arm dwells | gone at start |
+|---|---|---|
+| the identity block (incl. `r9-campaign`) | 2 (ENEMY census `lavarunner@64,64`; `r9-solve-12` `puncher@416,256`) | 0 |
+| L18 sweep (45) / C2's ghost staging (45) | 0 / 0 | 0 |
+| L40 table, 40 legs × sword/ghost | 4 (legs 378/381, `puncher@816,128`) | 0 |
+| survey step 50 (defaults / lapse ON) | 1 / 0 | 0 |
+
+**D1 — the switch.** ON, the arm skips the dwell when the target has left `strikeBodies` at the dwell's start AND the
+press ledger holds a press that KILLED it (`killedOnWalk`). That press must be appended during this walk (the
+ledger's index at the walk's start) and be on the run's level. The arm records `{kind: 'dwell', ticks: 0,
+killedOnWalk: {pressedAt, firedAt, weapon, direction}}` and returns to the ladder. Any other "already true" still
+reaches `runDwell`, which is untouched. The window was first a tick (`fired > walk start`). The L40 table measured
+why it must not be one: on legs 378/381 an arm whose walk began at t0 saw a `killed` ghost-sword press on
+`puncher@816,128` (fired t104), yet the body was still in `strikeBodies` at t133.
+
+- Gate `hammerPressKillDoneOnWalk.test.js`, 7 rows: OFF ships; `with…` restores; the ledger window (index, level,
+  `killed` not `landed`); OFF refuses at (32,112) t174; ON reaches L32 in 381 t as the witness tape; ON at step 50's
+  own staging keeps the dwell and is OFF's byte for byte (460 t); the game witness.
+- Six mutants, each red: skip-when-alive (the solve re-enters the arm without a tick; the solve helper caps the arm's
+  entries at 16, so it fails in ~3 min instead of hanging), never-skip, gone-without-ledger, landed-not-killed, tick
+  window, any level.
+- Game witness `hammer-dd-l30-walkkill` (`plan-seedling-hammer-dd-walkkill.mjs`, author + `--check` + `--samples`;
+  `fixtures/hammer-dd-walkkill-witness/`, not the roster): the game equals the model at the last frame of every tick
+  (377), 0 hits, and finishes at t381 on L32.
+- Repro 1's ON plan (395 t), replayed on the game against the scratch merge's model: the same, 388 ticks, 0 hits,
+  t395 on L32.
+- ⚠ A pickup ceremony's frozen frames share one tick number. `probe-seedling-chaser-mobiles.mjs` keeps the FIRST
+  frame per tick, which still holds the previous tick's player (5 frames carry t135; the first 2 sit at t134's
+  position). Its new `--frames` flag keeps every frame.
+
+**D2 — ON, no mover.** The identity block, every value row W0's; `r9-campaign --check` `712f0ead` (`r9-solve-16` 688
+t, byte-identical); L18 `864ab175`; C2's staging `1ca7eed5`; the L40 table 80/80 (58 solved, 18 refused, 4 threw; the
+rows BW banked are equal); step 50 460 t `1e6a1eaf`. With the lapse ON as well, DD adds nothing: ENEMY `36b59445` and
+campaign `dce96321` are the lapse's own movers, equal with DD OFF. Step 50 under the lapse: 413 t `09fe6280` either
+way.
+
+- The two movers are the cases DD is for: step 50 under lapse + shove goes REFUSED t192 → SOLVED 395, and CW's 414
+  override goes THREW t1469 → REFUSED t1469 by name at the chest's guard `bobsoldier@880,832` (CW's (c)), 0 hits.
+- The shape fits fidelity's case as is. No chaser-arm edit is needed, because CW's dwell IS this arm.

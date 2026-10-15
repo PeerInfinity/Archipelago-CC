@@ -1,0 +1,1 @@
+compared 377 ticks (last frame), 0 differ; game end {"tick":381,"level":32,"hits":0}; model 381 t, final level 32, hits 0

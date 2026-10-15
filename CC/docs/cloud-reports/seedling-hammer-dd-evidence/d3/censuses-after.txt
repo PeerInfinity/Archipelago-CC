@@ -1,0 +1,12 @@
+== scripts/procgen/census-seedling-solver-surface.mjs --check
+GREEN: 291 rows match a fresh census
+== scripts/procgen/census-seedling-constants.mjs --check
+census-seedling-constants --check — 5851 literals; green drift: 0 new + 0 vanished cosmetic/structural, 0 moved
+PASS
+== scripts/procgen/witness-seedling-entities.mjs --check
+PASS — scripts/procgen/seedling-entity-witnesses.json names all 558 number leaves
+== scripts/procgen/witness-seedling-profile.mjs --check
+PASS — scripts/procgen/seedling-profile-witnesses.json names all 138 keys
+PASS — scripts/procgen/seedling-profile-witnesses-full.json names all 138 keys
+== roster
+277

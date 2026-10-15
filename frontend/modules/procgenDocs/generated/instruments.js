@@ -231,7 +231,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 421,
         "browser": 142,
-        "cited": 216,
+        "cited": 217,
         "files": 433,
         "lineStyle": 12,
         "withDocblock": 433,
@@ -7827,7 +7827,10 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "plan-seedling-hammer-dd-walkkill.mjs",

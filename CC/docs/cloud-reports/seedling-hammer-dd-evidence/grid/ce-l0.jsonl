@@ -1,0 +1,266 @@
+{"x":16,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":48,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":64,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":80,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":96,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":112,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":128,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":144,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":160,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":176,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":192,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":208,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":224,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":240,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":256,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":272,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":288,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":48,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":64,"y":32,"verdict":"REFUSED 0","already":false,"msg":"grid: arrival-inside-solid — the run's box at (72,40) in level 30 is INSIDE boss"}
+{"x":80,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":96,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":112,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":128,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":144,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":160,"y":32,"verdict":"SOLVED 420","already":false,"msg":""}
+{"x":176,"y":32,"verdict":"SOLVED 393","already":false,"msg":""}
+{"x":192,"y":32,"verdict":"REFUSED 149","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.2513344254885,56.459"}
+{"x":208,"y":32,"verdict":"SOLVED 421","already":false,"msg":""}
+{"x":224,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":240,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":256,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":272,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":288,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":48,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":64,"y":48,"verdict":"SOLVED 264","already":false,"msg":""}
+{"x":80,"y":48,"verdict":"SOLVED 315","already":false,"msg":""}
+{"x":96,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":112,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":128,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":144,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":160,"y":48,"verdict":"REFUSED 100","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.17667105686526,56.33"}
+{"x":176,"y":48,"verdict":"SOLVED 460","already":false,"msg":""}
+{"x":192,"y":48,"verdict":"REFUSED 106","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.74865564569588,55.92"}
+{"x":208,"y":48,"verdict":"REFUSED 140","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":224,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":240,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":256,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":272,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":288,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid) collect (64,64) stance: the combat ladder is EXHAUSTED. The corr"}
+{"x":48,"y":64,"verdict":"REFUSED 70","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.50920889785387,56.09"}
+{"x":64,"y":64,"verdict":"SOLVED 662","already":false,"msg":""}
+{"x":80,"y":64,"verdict":"REFUSED 57","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":96,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":112,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":128,"y":64,"verdict":"REFUSED 108","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.10209103357585,55.58"}
+{"x":144,"y":64,"verdict":"REFUSED 115","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.22216529706417,56.15"}
+{"x":160,"y":64,"verdict":"REFUSED 101","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.5529198595181,56.664"}
+{"x":176,"y":64,"verdict":"REFUSED 109","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.15686861953945,56.46"}
+{"x":192,"y":64,"verdict":"SOLVED 466","already":false,"msg":""}
+{"x":208,"y":64,"verdict":"REFUSED 133","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.32659066000868,55.99"}
+{"x":224,"y":64,"verdict":"REFUSED 116","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.38015504075967,56.36"}
+{"x":240,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":256,"y":64,"verdict":"REFUSED 142","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.14696742615307,55.98"}
+{"x":272,"y":64,"verdict":"SOLVED 549","already":false,"msg":""}
+{"x":288,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":80,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":80,"verdict":"SOLVED 363","already":false,"msg":""}
+{"x":48,"y":80,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid) collect (64,64) stance: the danger map forbids (56,88) — chaser:"}
+{"x":64,"y":80,"verdict":"REFUSED 45","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.73323842830143,55.47"}
+{"x":80,"y":80,"verdict":"REFUSED 53","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":96,"y":80,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":112,"y":80,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":128,"y":80,"verdict":"SOLVED 395","already":false,"msg":""}
+{"x":144,"y":80,"verdict":"SOLVED 406","already":false,"msg":""}
+{"x":160,"y":80,"verdict":"REFUSED 96","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.19619965760408,55.54"}
+{"x":176,"y":80,"verdict":"REFUSED 111","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":192,"y":80,"verdict":"REFUSED 109","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.81485542753518,56.22"}
+{"x":208,"y":80,"verdict":"REFUSED 111","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.4835231502681,55.915"}
+{"x":224,"y":80,"verdict":"SOLVED 518","already":false,"msg":""}
+{"x":240,"y":80,"verdict":"REFUSED 118","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.24838479961116,55.79"}
+{"x":256,"y":80,"verdict":"REFUSED 142","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.7213854019762,55.692"}
+{"x":272,"y":80,"verdict":"REFUSED 184","already":false,"msg":"solverBot(grid) collect (64,64): approaching torchpickup@64,64, the sweep was bl"}
+{"x":288,"y":80,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":80,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":96,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":96,"verdict":"SOLVED 399","already":false,"msg":""}
+{"x":48,"y":96,"verdict":"REFUSED 64","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":64,"y":96,"verdict":"REFUSED 74","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":80,"y":96,"verdict":"REFUSED 62","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":96,"y":96,"verdict":"REFUSED 78","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.25000000000003,56.29"}
+{"x":112,"y":96,"verdict":"REFUSED 72","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.20000000000002,56.60"}
+{"x":128,"y":96,"verdict":"REFUSED 122","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32: the danger map forbids (73.2074248514"}
+{"x":144,"y":96,"verdict":"REFUSED 124","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":160,"y":96,"verdict":"REFUSED 94","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.40000000000012,56.04"}
+{"x":176,"y":96,"verdict":"REFUSED 104","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.09999999999998,56.60"}
+{"x":192,"y":96,"verdict":"REFUSED 137","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":208,"y":96,"verdict":"REFUSED 93","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.4500000000002,56.599"}
+{"x":224,"y":96,"verdict":"REFUSED 100","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.20000000000017,56.59"}
+{"x":240,"y":96,"verdict":"REFUSED 147","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32: the danger map forbids (73.3163637914"}
+{"x":256,"y":96,"verdict":"SOLVED 442","already":false,"msg":""}
+{"x":272,"y":96,"verdict":"REFUSED 144","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":288,"y":96,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":96,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":112,"verdict":"REFUSED 174","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208) -"}
+{"x":48,"y":112,"verdict":"SOLVED 354","already":false,"msg":""}
+{"x":64,"y":112,"verdict":"REFUSED 87","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":80,"y":112,"verdict":"REFUSED 56","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.10000000000005,55.70"}
+{"x":96,"y":112,"verdict":"REFUSED 54","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.4467378951852,56.367"}
+{"x":112,"y":112,"verdict":"SOLVED 339","already":false,"msg":""}
+{"x":128,"y":112,"verdict":"REFUSED 103","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":144,"y":112,"verdict":"REFUSED 86","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.06760281038616,55.09"}
+{"x":160,"y":112,"verdict":"REFUSED 94","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.73432770578958,56.16"}
+{"x":176,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":192,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":208,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":224,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":240,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":256,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":272,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":288,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":128,"verdict":"SOLVED 534","already":false,"msg":""}
+{"x":32,"y":128,"verdict":"SOLVED 524","already":false,"msg":""}
+{"x":48,"y":128,"verdict":"REFUSED 77","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.46816305040305,56.29"}
+{"x":64,"y":128,"verdict":"SOLVED 447","already":false,"msg":""}
+{"x":80,"y":128,"verdict":"REFUSED 82","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":96,"y":128,"verdict":"REFUSED 107","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":112,"y":128,"verdict":"REFUSED 106","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32: the danger map forbids (72.0481369942"}
+{"x":128,"y":128,"verdict":"REFUSED 104","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":144,"y":128,"verdict":"REFUSED 103","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":160,"y":128,"verdict":"REFUSED 105","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.92208690582268,55.62"}
+{"x":176,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":192,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":208,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":224,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":240,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":256,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":272,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":288,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":144,"verdict":"SOLVED 374","already":false,"msg":""}
+{"x":32,"y":144,"verdict":"SOLVED 370","already":false,"msg":""}
+{"x":48,"y":144,"verdict":"REFUSED 116","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":64,"y":144,"verdict":"SOLVED 482","already":false,"msg":""}
+{"x":80,"y":144,"verdict":"REFUSED 72","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.25000000000003,55.35"}
+{"x":96,"y":144,"verdict":"REFUSED 111","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32: the danger map forbids (73.2419225914"}
+{"x":112,"y":144,"verdict":"REFUSED 74","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.36516126442456,56.55"}
+{"x":128,"y":144,"verdict":"REFUSED 96","already":false,"msg":"solverBot(grid) collect (64,64): approaching torchpickup@64,64, the sweep was bl"}
+{"x":144,"y":144,"verdict":"REFUSED 88","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.84299036171294,56.24"}
+{"x":160,"y":144,"verdict":"REFUSED 137","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":176,"y":144,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":192,"y":144,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":208,"y":144,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":224,"y":144,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":240,"y":144,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":256,"y":144,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":272,"y":144,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":288,"y":144,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":304,"y":144,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":160,"verdict":"REFUSED 131","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":48,"y":160,"verdict":"SOLVED 387","already":false,"msg":""}
+{"x":64,"y":160,"verdict":"SOLVED 368","already":false,"msg":""}
+{"x":80,"y":160,"verdict":"SOLVED 367","already":false,"msg":""}
+{"x":96,"y":160,"verdict":"SOLVED 368","already":false,"msg":""}
+{"x":112,"y":160,"verdict":"SOLVED 369","already":false,"msg":""}
+{"x":128,"y":160,"verdict":"REFUSED 75","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.24601804359179,55.57"}
+{"x":144,"y":160,"verdict":"REFUSED 78","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.05259961039992,55.85"}
+{"x":160,"y":160,"verdict":"REFUSED 101","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.52481886974327,55.51"}
+{"x":176,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":192,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":208,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":224,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":240,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":256,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":272,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":288,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":176,"verdict":"SOLVED 372","already":false,"msg":""}
+{"x":48,"y":176,"verdict":"REFUSED 122","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":64,"y":176,"verdict":"REFUSED 122","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":80,"y":176,"verdict":"REFUSED 95","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":96,"y":176,"verdict":"REFUSED 165","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208) -"}
+{"x":112,"y":176,"verdict":"SOLVED 373","already":false,"msg":""}
+{"x":128,"y":176,"verdict":"REFUSED 117","already":false,"msg":"solverBot(grid) collect (64,64): approaching torchpickup@64,64, the sweep was bl"}
+{"x":144,"y":176,"verdict":"REFUSED 82","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.33711618795978,55.09"}
+{"x":160,"y":176,"verdict":"REFUSED 78","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.50830777714094,56.36"}
+{"x":176,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":192,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":208,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":224,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":240,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":256,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":272,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":288,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":192,"verdict":"REFUSED 109","already":false,"msg":"solverBot(grid) collect (64,64): approaching torchpickup@64,64, the sweep was bl"}
+{"x":48,"y":192,"verdict":"REFUSED 134","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":64,"y":192,"verdict":"REFUSED 127","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32: the danger map forbids (73.3045858226"}
+{"x":80,"y":192,"verdict":"REFUSED 90","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":96,"y":192,"verdict":"REFUSED 118","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":112,"y":192,"verdict":"SOLVED 385","already":false,"msg":""}
+{"x":128,"y":192,"verdict":"SOLVED 364","already":false,"msg":""}
+{"x":144,"y":192,"verdict":"REFUSED 84","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.37439367997305,56.06"}
+{"x":160,"y":192,"verdict":"REFUSED 117","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32: the danger map forbids (73.3558510561"}
+{"x":176,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":192,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":208,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":224,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":240,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":256,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":272,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":288,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":208,"verdict":"REFUSED 104","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.44953621186536,55.98"}
+{"x":48,"y":208,"verdict":"REFUSED 136","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32: the danger map forbids (73.3077764156"}
+{"x":64,"y":208,"verdict":"REFUSED 84","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.9926713322931,55.748"}
+{"x":80,"y":208,"verdict":"REFUSED 81","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.10000000000005,55.75"}
+{"x":96,"y":208,"verdict":"REFUSED 90","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.44990101198044,55.77"}
+{"x":112,"y":208,"verdict":"REFUSED 94","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.00331879547649,56.58"}
+{"x":128,"y":208,"verdict":"REFUSED 131","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":144,"y":208,"verdict":"REFUSED 108","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":160,"y":208,"verdict":"REFUSED 134","already":false,"msg":"solverBot(grid) collect (64,64): approaching torchpickup@64,64, the sweep was bl"}
+{"x":176,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":192,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":208,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":224,"y":208,"verdict":"REFUSED 0","already":false,"msg":"grid: arrival-inside-solid — the run's box at (232,216) in level 30 is INSIDE bo"}
+{"x":240,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":256,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":272,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":288,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":224,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":224,"verdict":"SOLVED 375","already":false,"msg":""}
+{"x":48,"y":224,"verdict":"REFUSED 0","already":false,"msg":"grid: arrival-inside-solid — the run's box at (56,232) in level 30 is INSIDE bre"}
+{"x":64,"y":224,"verdict":"REFUSED 90","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.37587849890917,55.02"}
+{"x":80,"y":224,"verdict":"REFUSED 106","already":false,"msg":"levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@4"}
+{"x":96,"y":224,"verdict":"REFUSED 108","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.24527340566769,55.99"}
+{"x":112,"y":224,"verdict":"REFUSED 103","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.05293435965928,55.25"}
+{"x":128,"y":224,"verdict":"SOLVED 381","already":false,"msg":""}
+{"x":144,"y":224,"verdict":"REFUSED 88","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.40253945208809,55.51"}
+{"x":160,"y":224,"verdict":"REFUSED 110","already":false,"msg":"solverBot(grid) collect (64,64): approaching torchpickup@64,64, the sweep was bl"}
+{"x":176,"y":224,"verdict":"REFUSED 143","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":192,"y":224,"verdict":"SOLVED 378","already":false,"msg":""}
+{"x":208,"y":224,"verdict":"REFUSED 144","already":false,"msg":"solverBot(grid) collect (64,64): approaching torchpickup@64,64, the sweep was bl"}
+{"x":224,"y":224,"verdict":"REFUSED 139","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (72.41915264535595,56.07"}
+{"x":240,"y":224,"verdict":"REFUSED 143","already":false,"msg":"solverBot(grid) collect (64,64): the danger map forbids (71.0814734834122,56.459"}
+{"x":256,"y":224,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":272,"y":224,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":288,"y":224,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":224,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
