@@ -475,6 +475,17 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_SPINNING_AXE_PLAYER_HIT=0|1` for a node measurement.
      */
     spinningAxePlayerHit: false,
+    /**
+     * fidelity SPINNINGAXE D2 — A PHASE DODGE'S PARTIAL STALL IS RE-PROBED (`solverBot.walkToUnder`).
+     *
+     * The ladder's phase arm (a lava chain or a beam tower dodged by its clock) keeps a stall whose walk then meets a
+     * NON-phase danger as `partial`, drives the stall, and returns the rest of the corridor. The walk executor walked
+     * that rest without probing it: survey step 163 (L75, `e967758748`) stalls for `lavachain@96,48` at t0 with
+     * `partial: [spinningaxe@80,144]` and is certified into the axe's blade at t160 (the game takes the hit). ON: the
+     * rest is probed from the stall's end and a hit climbs the ladder again. OFF: byte-identical. ⛔ OFF by default
+     * (no licence); `SEEDLING_PARTIAL_DODGE_REPROBE=0|1` for a node measurement.
+     */
+    partialDodgeReprobe: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -576,6 +587,9 @@ if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '0') CONTACT_FIDELITY.flyer
 // ⛓ fidelity SPINNINGAXE D1: `SEEDLING_SPINNING_AXE_PLAYER_HIT=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_SPINNING_AXE_PLAYER_HIT === '1') CONTACT_FIDELITY.spinningAxePlayerHit = true;
 if (globalThis.process?.env?.SEEDLING_SPINNING_AXE_PLAYER_HIT === '0') CONTACT_FIDELITY.spinningAxePlayerHit = false;
+// ⛓ fidelity SPINNINGAXE D2: `SEEDLING_PARTIAL_DODGE_REPROBE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PARTIAL_DODGE_REPROBE === '1') CONTACT_FIDELITY.partialDodgeReprobe = true;
+if (globalThis.process?.env?.SEEDLING_PARTIAL_DODGE_REPROBE === '0') CONTACT_FIDELITY.partialDodgeReprobe = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

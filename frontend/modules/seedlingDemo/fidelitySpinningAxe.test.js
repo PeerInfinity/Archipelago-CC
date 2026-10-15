@@ -27,7 +27,8 @@ import * as spinningAxe from './spinningAxe.js';
 import { atlasLevelSource } from './levelSource.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { parseTape } from './tapeFormat.js';
-import { createTapeStepper } from './tapeRunner.js';
+import { createRunForStaging, createTapeStepper, stagingFromTape } from './tapeRunner.js';
+import { twoPassSolve } from './twoPassSolve.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = atlasLevelSource();
@@ -135,4 +136,28 @@ describe('SPINNINGAXE D1 — sweep leg 633 (`level_75 <- in_L74_16_144 -> exit:o
         expect(on.hits).toContain('t159 spinningaxe spinningaxe@80,144');
         expect(replay(W, false).parted[0]).toBe(159);
     });
+});
+
+/**
+ * ⛓ fidelity SPINNINGAXE D2 — `CONTACT_FIDELITY.partialDodgeReprobe` (OFF). Step 163's decision at t0 is the PHASE arm's
+ * stall for `lavachain@96,48`, kept as `partial: [spinningaxe@80,144]`; the walk executor then walked the rest of the
+ * corridor without probing it (one `probeCorridor` call in the whole solve, at t0 — measured), into the blade at t160.
+ */
+describe('SPINNINGAXE D2 — a phase dodge\'s partial stall is re-probed', () => {
+    const staging = stagingFromTape(parseTape(JSON.stringify(PLAN.tape)));
+    const solve = (on) => withContactFidelity({ partialDodgeReprobe: on }, () => twoPassSolve({
+        makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, SRC),
+        goals: [{ kind: 'reach-exit', exit: { x: 64, y: 224 } }], name: 'spinningaxe-d2',
+        boot: staging.boot, persistence: staging.persistence, log: () => {},
+    }).then((s) => ({ ticks: s.out.perTick.length }), (e) => ({ refusal: e.message })));
+    it('ships OFF', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.partialDodgeReprobe).toBe(false);
+    });
+    it('OFF: step 163 solves in 366 t — the plan the game hits at t160', async () => {
+        expect(await solve(false)).toEqual({ ticks: 366 });
+    }, 60000);
+    it('ON: the re-probe meets the axe at its update 160 and the ladder refuses BY NAME', async () => {
+        const r = await solve(true);
+        expect(r.refusal).toMatch(/spinningaxe@80,144 \(a SpinningAxe's 32 px blade on its update 160 of this visit/);
+    }, 60000);
 });
