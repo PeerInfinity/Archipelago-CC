@@ -82,14 +82,10 @@ Playthrough:
 }
 2: {
   Computer - (I,14): Barrier Removal - (E,3)
-  Computer - (J,12): Blaster Upgrade
   Computer - (J,9): Barrier Removal - (H,11)
-  Computer - (L,2): Computer
   Computer - (O,4): Blade Upgrade
   Destroy Generator - (B,9): Blade Upgrade
-  Destroy Generator - (D,11): Computer
   Destroy Generator - (E,3): Barrier Removal - (G,9)
-  Destroy Generator - (G,9): Computer
   Destroy Generator - (I,4): Suit Upgrade
   Destroy Generator - (K,4): Suit Upgrade
   Destroy Generator - (M,6): Blade Upgrade
@@ -101,25 +97,17 @@ Playthrough:
   Level Up from Silencer - (L,5): Level Up
   Level Up from Star Splitter - (G,10): Level Up
   Powerup from Elites - (F,14): Barrier Removal - (D,11)
-  Powerup from Guardian - (B,7): Computer
-  Powerup from Plasma Hydra - (L,1): Computer
-  Powerup from Reaper Drone - (J,7): Computer
   Powerup from Rock Smasher - (J,10): Barrier Removal - (I,4)
-  Powerup from Silencer - (L,5): Computer
   Powerup from Star Splitter - (G,10): Barrier Removal - (B,9)
 }
 3: {
   Computer - (B,12): Barrier Removal - (C,6)
   Computer - (D,13): Barrier Removal - (K,4)
-  Computer - (D,3): Computer
-  Computer - (D,9): Computer
   Computer - (I,6): Barrier Removal - (M,11)
   Defeat Cruiser Tetron: Victory!
-  Destroy Generator - (H,11): Computer
   Level Up from Grand Mother - (I,2): Level Up
   Level Up from Liquid Metal Processor - (A,4): Level Up
   Powerup from Grand Mother - (I,2): Barrier Removal - (M,6)
-  Powerup from Liquid Metal Processor - (A,4): Blaster Upgrade
 }
 4: {
   Destroy Generator - (C,6): Suit Upgrade
