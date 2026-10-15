@@ -240,8 +240,10 @@ function contentSource() {
 
 /**
  * ⛓ SEEDLING GENERATED LEVELS G1 — **THE `flash_panel` BLOCK, READ OFF THE
- * INSTALLED SOURCE** (a copy). `FLASH_PANEL_WIRING` (`regionAtlasCompiler.js`) is
- * the ONLY code source of a preset's `flash_panel` block, and the compile of the
+ * INSTALLED SOURCE** (a copy). `FLASH_PANEL_WIRING` (`regionAtlasCompiler.js`, its
+ * data in `procgenPipeline/flashPanelWiring.json`, which the Python exporter's
+ * Seedling handler also reads) is the ONLY JS source of a preset's `flash_panel`
+ * block, and the compile of the
  * installed atlas is where it is written; `flash_seedling_gen`'s
  * `rulesJsonBlocks` reads it here rather than typing the wiring a second time.
  */

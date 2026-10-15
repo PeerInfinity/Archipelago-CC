@@ -57,22 +57,18 @@ Playback Bot solver mode: `moduleSettings.flashPanel.seedlingSolverWalk`
 asks the real solver for the room's plan first (the solve pauses the page while
 it plans). See `docs/json/developer/procgen/flash.md` § The solver mode.
 
-Note: preset rules.json files are generated artifacts — the `flash_panel`
-section is a hand-added block (on the seed-1 seedling preset and
-robotkitty_tilemap) that a regeneration would drop; re-add it after
-regenerating. The `seedling_atlas` preset is the exception: its block is
-**compiled** by `regionAtlasCompiler`, so regenerating it preserves the wiring.
+Note: preset rules.json files are generated artifacts. Every Seedling
+`flash_panel` block is now PRODUCED; only `robotkitty_tilemap`'s is still typed
+by hand. No Robot Wants Kitty world exists in this repo (nor in flash-ap-api), so
+nothing regenerates that preset and its block cannot be produced. Keep it as is.
 
-⚠⚠ **AND THE SEED-1 `seedling` PRESET'S BLOCK IS PROVISIONAL, NOT SETTLED**
-(⚖ user, 2026-08-30, via R9 session 12). Nothing on the PYTHON side emits it:
-`Generate.py` and the world writers know nothing about `flash_panel`, so the
-block survives only because nobody has regenerated that preset since it was
-typed in — and the next regeneration silently drops it, taking the panel's
-whole wiring with it. ⇒ treat it as a placeholder for a producer that does not
-exist yet: **when the randomizer becomes official, the PRODUCING side declares
-this block**, the way `regionAtlasCompiler` already does for `seedling_atlas`.
-Until then a preset regeneration is a two-step, and the second step is manual.
-⛔ Do not build anything that assumes the block is durable.
+✅ **THE SEED-1 `seedling` PRESET'S BLOCK IS PRODUCED (2026-10-15,
+rules-produced-blocks).** It used to be PROVISIONAL (⚖ user, 2026-08-30: "the
+PRODUCING side declares this block"), because `Generate.py` dropped it. Now a
+fork-owned exporter handler (`exporter/games/unofficial/seedling.py`) writes it
+for the unmodified upstream world `worlds/seedling`, and a plain regeneration
+reproduces the preset. The block sits after `starting_items`, the exporter's
+key slot, not where it was once typed.
 
 ✅ **`seedling_playthrough` HAS A PRODUCER (2026-10-14, rules-playthrough-blocks).**
 Its seed-1 export is no longer hand-kept. `make-seedling-playthrough-rules` compiles
@@ -80,16 +76,17 @@ Its seed-1 export is no longer hand-kept. `make-seedling-playthrough-rules` comp
 `region_atlas` into the package (`worlds/seedling_playthrough/_worldgen_flash_panel.json`,
 `_worldgen_region_atlas.json`), and the export handler re-injects them. So every
 `Generate.py` seed of that world carries the wiring, and a regeneration keeps it.
-`seedlingPlaythroughExportLoad.test.js` fails if the export loses a block. The
-ruling above still applies to the seed-1 **`seedling`** preset (the upstream
-world): its block is still hand-kept.
+`seedlingPlaythroughExportLoad.test.js` fails if the export loses a block. Its
+package copy is checked like every other copy (below).
 
-⛓ The ONE code path that emits a `flash_panel` block today is
-`procgenPipeline/regionAtlasCompiler.js:161` — `FLASH_PANEL_WIRING.seedling`,
-the compiler's own wiring table. It is the only CODE source of the presets'
-wiring. `world_generator` only CARRIES a source's block through the Python round
-trip, as described above. Every other block in `frontend/presets/` was written by
-hand.
+⛓ **ONE SOURCE: `procgenPipeline/flashPanelWiring.json`.** Two producers read it:
+`regionAtlasCompiler.js` (`FLASH_PANEL_WIRING`, every JS-compiled Seedling preset)
+and the exporter's Seedling handler (the seed-1 `seedling` preset).
+`world_generator` only CARRIES a source's block through the Python round trip. A
+build bump edits the JSON file and regenerates through the producers.
+`scripts/procgen/check-worldgen-package-sidecars.mjs` fails, naming each copy, on
+any committed copy that was not moved: a preset block or a package's
+`_worldgen_flash_panel.json` whose `config` is `seedling.json`.
 
 The module is enabled in the default module config (as of the region-atlas
 Phase-4 work) as well as in `modules-flash.json`. It stays idle — status "no

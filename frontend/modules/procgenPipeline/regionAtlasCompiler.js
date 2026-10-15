@@ -924,8 +924,9 @@ export function compileRegionAtlas(atlas, options = {}) {
     const sidecarRegions = Object.keys(sidecars);
     if (sidecarRegions.length > 0) {
         // The flashPanel wiring boots the real game for this preset. It is the
-        // same hand-added block the seed-1 seedling preset carries — except
-        // here it is COMPILED, so a regeneration no longer drops it (the
+        // same block the seed-1 seedling preset carries (once typed by hand, now
+        // written by the exporter's Seedling handler from the same JSON file) —
+        // COMPILED here, so a regeneration never drops it (the
         // rulesExporter precedent, and the trap the plan's decision 2 names).
         // A region compiled to the MAZE deliberately carries none of it:
         // nothing boots the original engine there, and a stray flash_panel
