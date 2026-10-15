@@ -24,9 +24,10 @@
  *    attempts): it moves little with skill, and many cells have too few failures to say. A cell with at least
  *    `F_OWN_MIN` failures keeps its own F (only the measured spans below have such cells; a 16-attempt cell never does).
  *  - MEASURED SPANS (`noiz2saMeasuredSpansData.js`): spans played as a whole, hundreds to thousands of attempts a cell,
- *    at every skill of the table — the default final span 10:7–10:boss, which the product of its 16-attempt scenes
- *    put ≈ 2× too easy at skills 95–97 (NOIZ2SA-OPTIMISM-REPORT.md). Read like a measured triple. Their failed
- *    attempts last longer as the skill rises (they reach the boss), hence the per-skill F.
+ *    each at its OWN measured skills — the default final span 10:7–10:boss, which the product of its 16-attempt
+ *    scenes put ≈ 2× too easy at skills 95–97 (NOIZ2SA-OPTIMISM-REPORT.md; its curve is step-shaped, flat 93–95 and a
+ *    jump 97 → 98, so the table's skills alone would still miss). Read like a measured triple, between its own
+ *    skills. Their failed attempts last longer as the skill rises (they reach the boss), hence the per-skill F.
  */
 import { NOIZ2SA_DIFFICULTY } from './noiz2saDifficultyData.js';
 import { NOIZ2SA_MEASURED_SPANS } from './noiz2saMeasuredSpansData.js';
@@ -63,18 +64,18 @@ export function isotonic(values, weights) {
     return blocks.flatMap((b) => Array(b.n).fill(b.v));
 }
 
-/** linear interpolation of `ys` (at SKILLS) at `skill`, clamped to the measured range */
-function atSkill(ys, skill) {
-    const s = Math.min(SKILLS[SKILLS.length - 1], Math.max(SKILLS[0], Number(skill) || 0));
+/** linear interpolation of `ys` (at the skills `xs`, SKILLS by default) at `skill`, clamped to the measured range */
+function atSkill(ys, skill, xs = SKILLS) {
+    const s = Math.min(xs[xs.length - 1], Math.max(xs[0], Number(skill) || 0));
     let i = 0;
-    while (i < SKILLS.length - 2 && SKILLS[i + 1] < s) i++;
-    const [x0, x1] = [SKILLS[i], SKILLS[i + 1]];
+    while (i < xs.length - 2 && xs[i + 1] < s) i++;
+    const [x0, x1] = [xs[i], xs[i + 1]];
     const t = x1 > x0 ? (s - x0) / (x1 - x0) : 0;
     return ys[i] + (ys[i + 1] - ys[i]) * Math.max(0, Math.min(1, t));
 }
 
-/** one measured series (rows [n, deathless, L, F] per skill) → {p (smoothed), raw, L per skill, F, n} */
-function seriesOf(rows) {
+/** one measured series (rows [n, deathless, L, F] per skill of `skills`) → {p (smoothed), raw, L per skill, F, Fs, n, skills} */
+function seriesOf(rows, skills = SKILLS) {
     const raw = rows.map(([n, d]) => (n > 0 ? d / n : 0));
     const p = isotonic(raw, rows.map(([n]) => n));
     const L = rows.map((r) => r[2]);
@@ -82,7 +83,7 @@ function seriesOf(rows) {
     const Lfull = L.map((v, i) => {
         if (v !== null) return v;
         let best = known[0];
-        for (const k of known) if (Math.abs(SKILLS[k] - SKILLS[i]) < Math.abs(SKILLS[best] - SKILLS[i])) best = k;
+        for (const k of known) if (Math.abs(skills[k] - skills[i]) < Math.abs(skills[best] - skills[i])) best = k;
         return L[best];
     });
     let fw = 0; let fs = 0;
@@ -90,7 +91,7 @@ function seriesOf(rows) {
     const meanL = Lfull.reduce((a, b) => a + b, 0) / Lfull.length;
     const F = fw > 0 ? fs / fw : meanL / 2;
     const Fs = rows.map(([n, d, , f]) => (f !== null && n - d >= F_OWN_MIN ? f : F));
-    return { p, raw, L: Lfull, F, Fs, n: rows.map(([n]) => n) };
+    return { p, raw, L: Lfull, F, Fs, n: rows.map(([n]) => n), skills };
 }
 
 const SCENES = Array.from({ length: SCENE_TOTAL }, (_, i) => {
@@ -99,9 +100,10 @@ const SCENES = Array.from({ length: SCENE_TOTAL }, (_, i) => {
     if (!rows) throw new Error(`noiz2saDifficulty: no measurement for scene ${key}`);
     return seriesOf(rows);
 });
-if (JSON.stringify(NOIZ2SA_MEASURED_SPANS.skills) !== JSON.stringify(SKILLS)) throw new Error('noiz2saDifficulty: the measured spans are at other skills than the table');
-const MEASURED = new Map([...Object.entries(NOIZ2SA_DIFFICULTY.triples), ...Object.entries(NOIZ2SA_MEASURED_SPANS.spans)]
-    .map(([k, rows]) => [k, seriesOf(rows)]));
+const MEASURED = new Map([
+    ...Object.entries(NOIZ2SA_DIFFICULTY.triples).map(([k, rows]) => [k, seriesOf(rows)]),
+    ...Object.entries(NOIZ2SA_MEASURED_SPANS.spans).map(([k, m]) => [k, seriesOf(m.cells, m.skills)]),
+]);
 /** the spans measured as a whole beside the table (`noiz2saMeasuredSpansData.js`) */
 export const MEASURED_SPANS = Object.freeze(Object.keys(NOIZ2SA_MEASURED_SPANS.spans));
 
@@ -120,10 +122,10 @@ export function spanDifficulty(span, skill) {
     const [a, b] = bounds(span);
     const own = a === b ? SCENES[a] : MEASURED.get(showSpan(span));
     if (own) {
-        const p = atSkill(own.p, skill);
+        const p = atSkill(own.p, skill, own.skills);
         const pf = Math.max(P_FLOOR, p);
-        const L = atSkill(own.L, skill);
-        return { p, seconds: L + atSkill(own.Fs, skill) * (1 - pf) / pf, measured: true };
+        const L = atSkill(own.L, skill, own.skills);
+        return { p, seconds: L + atSkill(own.Fs, skill, own.skills) * (1 - pf) / pf, measured: true };
     }
     let reach = 1; let attempt = 0;
     for (let i = a; i <= b; i++) {

@@ -60,8 +60,9 @@ import { showSpan } from './noiz2saRegion.js';
 
 /**
  * ⚖ The final region's scenes, by default: the last four scenes of the game, 10:7–10:boss, ending on its last boss. The
- * measured bot clears it deathless with chance about 0.27 at skill 95, 0.6 at 97 and 1 from 98 on, so it asks for the
- * ~95+ skill the default training pace (`TARGET_FINAL_SKILL`) reaches, and four scenes leave the ramp room to grow.
+ * bot, measured on the whole span (`noiz2saMeasuredSpansData.js`), clears it deathless with chance about 0.01 at skill
+ * 90, 0.14 at 93–95, 0.36 at 96–97 and ≈ 1 from 98 on, so it asks for the ~95+ skill the default training pace
+ * (`TARGET_FINAL_SKILL`) reaches, and four scenes leave the ramp room to grow.
  */
 export const DEFAULT_FINAL_SPAN = '10:7–10:boss';
 /** the item whose location makes a region the FINAL one (the substrate's `victoryItem`, `NOIZ2SA_VICTORY_ITEM_NAME`) */
