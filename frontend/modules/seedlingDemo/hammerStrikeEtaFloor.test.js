@@ -22,7 +22,8 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    STRIKE_ETA_FLOOR, STRIKE_ETA_FLOOR_DEFAULT, deriveStrike, solveSegment, strikeEtaFloorOf, withStrikeEtaFloor,
+    STRIKE_ETA_FLOOR, STRIKE_ETA_FLOOR_DEFAULT, STRIKE_PREVIEW_CAP, deriveStrike, solveSegment, strikeEtaFloorOf,
+    withStrikeEtaFloor,
 } from './solverBot.js';
 import { SPINNER } from './spinner.js';
 import { PROFILE } from './seedlingProfile.js';
@@ -145,6 +146,64 @@ describe('STRIKE_ETA_FLOOR — derivations on G1\'s witness walk (staging A, the
             [240, [744, 696, 474, 167], [744, 728, 431, 190]],
             [330, [744, 728, 428, 97], [744, 728, 428, 97]],
         ]);
+    }, 120_000);
+});
+
+/** One ON derivation with the bounded pass's preview budget set to `cap` (restored after). */
+const deriveCapped = (run, cap) => {
+    const was = STRIKE_ETA_FLOOR.previewCap;
+    STRIKE_ETA_FLOOR.previewCap = cap;
+    try {
+        return derive(run, true);
+    } finally {
+        STRIKE_ETA_FLOOR.previewCap = was;
+    }
+};
+
+describe('STRIKE_PREVIEW_CAP — the bounded pass\'s preview budget (hammer-phase SF2), on G1\'s witness walk', () => {
+    it('ships at 16, and the switch reads it', () => {
+        expect(STRIKE_PREVIEW_CAP).toBe(16);
+        expect(STRIKE_ETA_FLOOR.previewCap).toBe(STRIKE_PREVIEW_CAP);
+    });
+
+    it('K = 0 is OFF\'s pass: past the budget a cell is asked OFF\'s floor, so ON with no previews returns OFF\'s strike',
+        () => {
+            const seen = [];
+            replayTo(G1, [10, 190, 1450, 1900], (t, run) => {
+                const off = derive(run, false);
+                const k0 = deriveCapped(run, 0);
+                seen.push([t, short(off), short(k0), k0.scanned ?? null]);
+            });
+            expect(seen).toEqual([
+                [10, null, null, 0],
+                [190, [728, 680, 497, 201], [728, 680, 497, 201], null],
+                [1450, null, null, 0],
+                [1900, [664, 680, 2114, 155], [664, 680, 2114, 155], null],
+            ]);
+        }, 120_000);
+
+    it('the budget is taken: t190 needs eight previews for ON\'s earlier strike, t1450 more than sixteen', () => {
+        const seen = [];
+        replayTo(G1, [190, 1450], (t, run) => {
+            seen.push([t, ...[4, 8, 16, Infinity].map((k) => {
+                const r = deriveCapped(run, k);
+                return [short(r), r.scanned ?? null, r.capSkipped ?? null];
+            })]);
+        });
+        const [t190, t1450] = seen;
+        // t190: four previews keep OFF's strike; eight find SF's earlier one (row "t190" above), as does every larger cap
+        expect(t190[1][0]).toEqual([728, 680, 497, 201]);
+        expect(t190[2][0]).toEqual([744, 728, 432, 241]);
+        expect(t190[3][0]).toEqual([744, 728, 432, 241]);
+        expect(t190[4][0]).toEqual([744, 728, 432, 241]);
+        // t1450: the uncapped pass (SF's shape a) finds a strike past the sixteenth preview; at 16 the pass spends its
+        // budget, asks the rest OFF's question, and refuses as OFF does (the refusal carries `capSkipped`, the pairs
+        // OFF's floor dropped past the budget, apart from `unreachable`)
+        expect(t1450[4][0]).toEqual([712, 680, 1913, 332]);
+        expect(t1450[4][1]).toBeNull();
+        expect(t1450[3][0]).toBeNull();
+        expect(t1450[3][1]).toBe(16);
+        expect(typeof t1450[3][2]).toBe('number');
     }, 120_000);
 });
 

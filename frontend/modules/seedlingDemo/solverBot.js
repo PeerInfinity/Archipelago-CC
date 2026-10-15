@@ -9613,6 +9613,27 @@ function minTicksBetween(from, to) {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SF2 — **THE BOUNDED PASS'S PREVIEW BUDGET** (`STRIKE_ETA_FLOOR` ON only; OFF never reads
+ * it). ON, the bounded pass previews a cell at its first opportunity (SF's measured ETA); once it has previewed this
+ * many cells, a cell it has not measured is asked OFF's question instead — OFF's floor (`minTicksBetween`), then
+ * `opportunityAt`, no preview (the walk loop previews it, as OFF's does). So the cap interpolates: 0 is OFF's pass
+ * pair for pair, ∞ is SF's uncapped pass.
+ *
+ * WHY 16 (SF2's census, 20,640 derivations over SF's workloads, and the same workloads end to end):
+ *   · this fallback (OFF's floor past the cap) loses NO strike OFF finds at any cap measured (2 … 32). The two the
+ *     brief named do: past the cap, the admissible floor alone loses 101 at 4 and 8 at 8 (the floor-only trap,
+ *     reopened), and stopping the pass loses 1,801 at 4 and 1 at 16;
+ *   · a smaller cap is not cheaper END TO END. At 2, 4 and 8 the scan inside a derivation is cheaper, but the
+ *     strikes the pass no longer sees leave the kill on slower trajectories: staging A took ~159 s against OFF's
+ *     128 and SF's 65, and leg 414 took 742 s at 8;
+ *   · 16 is the smallest cap that keeps SF's trajectories: five of six solve workloads end on SF's answers byte for
+ *     byte (L18's 45 residues, staging A with the ghost, C2's ghost staging, legs 397 / 414), it keeps 5,694 of SF's
+ *     6,373 strikes found where OFF refuses, and the L18 sweep's scan inside its derivations is 1.99× OFF where SF's
+ *     is 2.39×. 24 and 32 cost more and buy nothing more measured (32 is SF's pass on every derivation).
+ */
+export const STRIKE_PREVIEW_CAP = 16;
+
+/**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE SF — **AN ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA** (`STRIKE_ETA_FLOOR`, OFF).
  *
  * SC measured `minTicksBetween` inadmissible (its docblock), and measured that swapping in an admissible floor ALONE
@@ -9622,8 +9643,9 @@ function minTicksBetween(from, to) {
  *   2. THE MEASURED ETA, INTERLEAVED WITH THE COLLECTION. The bounded pass previews a cell the first time one of its
  *      pairs is an opportunity (`walkTo`, the cache the continuation already uses), and a pair whose cell's walk is
  *      truncated, transit-unsafe or later than its aim tick (`known.eta > i − 1`, the continuation's test) is
- *      skipped: it never takes one of the forty. The forty are still forty PAIRS (`STRIKE_CANDIDATES`); the previews
- *      are not capped, and each cell is previewed at most once per derivation.
+ *      skipped: it never takes one of the forty. The forty are still forty PAIRS (`STRIKE_CANDIDATES`), and each cell
+ *      is previewed at most once per derivation. ⛓ SF2: at most `STRIKE_PREVIEW_CAP` (16) cells are previewed by the
+ *      pass; past that, a cell it has not measured is asked OFF's floor and no preview (`previewCap` below).
  * Both shapes SC named were built and measured over SC's census (the SF report, D1/D2): neither loses a strike OFF
  * finds. The other one, the forty counted in DISTINCT CELLS PREVIEWED (the continuation's budget), finds more strikes
  * where OFF refuses, but it scans to the horizon whenever fewer than forty cells are ever opportunities: inside the
@@ -9631,7 +9653,8 @@ function minTicksBetween(from, to) {
  *
  * `strikeScanBox` reads the same `floor` map, so its `unreachableAt` counts the floor's skips under whichever floor is
  * live; the measured-ETA skips are NOT floor skips and are counted apart (`etaSkipped` on a refusal), so `unreachable`
- * keeps its meaning — the pairs the floor dropped — ON and OFF.
+ * keeps its meaning — the pairs the floor dropped — ON and OFF. ⛓ SF2: so are the pairs OFF's floor skips past the
+ * preview budget (`capSkipped`): `unreachable` stays the live (admissible) floor's count.
  *
  * ⛓ THE SWITCH — `STRIKE_ETA_FLOOR`, OFF (`SEEDLING_STRIKE_ETA_FLOOR=1` opts a process in, or
  * `withStrikeEtaFloor(true, fn)`). OFF, `deriveStrike` computes exactly what it computed before: the same floor, the
@@ -9642,6 +9665,8 @@ function minTicksBetween(from, to) {
  */
 export const STRIKE_ETA_FLOOR = {
     enabled: globalThis.process?.env?.SEEDLING_STRIKE_ETA_FLOOR === '1',
+    /** ⛓ SF2: the bounded pass's preview budget, `STRIKE_PREVIEW_CAP` (a test may set 0 = OFF's pass, ∞ = SF's) */
+    previewCap: STRIKE_PREVIEW_CAP,
 };
 export const STRIKE_ETA_FLOOR_DEFAULT = false;
 
@@ -10015,15 +10040,24 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
     /** ⛓ hammer-phase SF — the distinct cells the bounded pass previewed, and the pairs the measured ETA skipped. */
     let scanned = 0;
     let etaSkipped = 0;
+    /** ⛓ hammer-phase SF2 — the pass's preview budget (`STRIKE_PREVIEW_CAP`), and the pairs OFF's floor skipped past it. */
+    const previewCap = measured ? STRIKE_ETA_FLOOR.previewCap : 0;
+    let capSkipped = 0;
     /**
      * ⛓ hammer-phase SF — ONE (cell, tick) PAIR OF THE BOUNDED PASS WITH THE MEASURED ETA: `true` keeps it as one of
      * the forty, `false` skips it. The floor has already admitted the pair; a cell whose walk is known is asked
      * nothing more (its walk refuses the pair or it does not); an unknown cell is asked `opportunityAt` first and
      * previewed only if the pair is an opportunity, so a cell is previewed at most once per derivation.
+     * ⛓ hammer-phase SF2 — once `previewCap` cells are previewed, an unknown cell's pair is asked OFF's question
+     * instead: OFF's floor (`minTicksBetween`), then `opportunityAt`, no preview (the walk loop previews it, as OFF).
      */
     const measuredPair = (i, c, mine) => {
         const known = walks.get(c);
         if (known !== undefined && walkRefuses(known, i)) { etaSkipped += 1; return false; }
+        if (known === undefined && scanned >= previewCap) {
+            if (i - 1 < minTicksBetween(run.state, c)) { capSkipped += 1; return false; }
+            return opportunityAt(i, c, mine);
+        }
         if (!opportunityAt(i, c, mine)) return false;
         if (known === undefined) {
             scanned += 1;
@@ -10227,7 +10261,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         // room has no strike" from "the scan ran out of budget".
         unreachable,
         truncated: opportunities.length >= STRIKE_CANDIDATES,
-        ...(measured ? { scanned, etaSkipped } : {}),
+        ...(measured ? { scanned, etaSkipped, capSkipped } : {}),
         horizon,
         ...(HAMMER_ESCAPE.enabled ? { escaped } : {}),
         ...(bombs ? { bombed } : {}),

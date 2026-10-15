@@ -1,0 +1,91 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ❯ frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js (16 tests | 2 failed) 106149ms
+     ✓ ships OFF 1ms
+     ✓ withStrikeEtaFloor sets and restores it, also on a throw 1ms
+     ✓ ground: (reach − 1) / 1.6, rounded up — 2·WALK_SPEED, never WALK_SPEED 1ms
+     ✓ the tolerance: a cell within 1 px on both axes is 0 ticks away, and 2.6 px is one 0ms
+     ✓ a knocked-back start: an axis faster than the cap bounds the walk at its own speed 0ms
+     ✓ ice: a walkable ice tile in the room, or the sticky `onIce` flag, caps an axis at 2·SLIDING_SPEED 0ms
+     ✓ a waterfall: its push adds to v.y past any cap, so only the horizontal axis bounds the walk 0ms
+     ✓ t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick  974ms
+     ✓ t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA)  1653ms
+     ✓ ships at 16, and the switch reads it 0ms
+     × K = 0 is OFF's pass: past the budget a cell is asked OFF's floor, so ON with no previews returns OFF's strike 1749ms
+     × the budget is taken: t190 needs eight previews for ON's earlier strike, t1450 more than sixteen 2428ms
+     ✓ ⛓⛓⛓ the walk: three ghost landings on spinner@880,848, the kill at t1616 (OFF's walk, G1's witness, kills at t2114), and the chaser's three hits 1ms
+     ✓ ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts 277ms
+     ✓ ⛓⛓⛓ THE GAME AGREES: its rows of the killed Spinner (position, hits, hits_timer) are the model's at every sampled tick, and it reaches hits 4 3ms
+     ✓ ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key  99057ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js > STRIKE_PREVIEW_CAP — the bounded pass's preview budget (hammer-phase SF2), on G1's witness walk > K = 0 is OFF's pass: past the budget a cell is asked OFF's floor, so ON with no previews returns OFF's strike
+AssertionError: expected [ [ 10, null, null, 1 ], …(3) ] to deeply equal [ [ 10, null, null, +0 ], …(3) ]
+
+- Expected
++ Received
+
+@@ -1,11 +1,11 @@
+  [
+    [
+      10,
+      null,
+      null,
+-     0,
++     1,
+    ],
+    [
+      190,
+      [
+        728,
+@@ -23,11 +23,11 @@
+    ],
+    [
+      1450,
+      null,
+      null,
+-     0,
++     1,
+    ],
+    [
+      1900,
+      [
+        664,
+
+ ❯ frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:177:26
+    175|                 seen.push([t, short(off), short(k0), k0.scanned ?? nul…
+    176|             });
+    177|             expect(seen).toEqual([
+       |                          ^
+    178|                 [10, null, null, 0],
+    179|                 [190, [728, 680, 497, 201], [728, 680, 497, 201], null…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js > STRIKE_PREVIEW_CAP — the bounded pass's preview budget (hammer-phase SF2), on G1's witness walk > the budget is taken: t190 needs eight previews for ON's earlier strike, t1450 more than sixteen
+AssertionError: expected 17 to be 16 // Object.is equality
+
+- Expected
++ Received
+
+- 16
++ 17
+
+ ❯ frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:205:29
+    203|         expect(t1450[4][1]).toBeNull();
+    204|         expect(t1450[3][0]).toBeNull();
+    205|         expect(t1450[3][1]).toBe(16);
+       |                             ^
+    206|         expect(typeof t1450[3][2]).toBe('number');
+    207|     }, 120_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 14 passed (16)
+   Start at  18:09:33
+   Duration  109.92s (transform 1.68s, setup 0ms, import 3.63s, tests 106.15s, environment 0ms)
+
