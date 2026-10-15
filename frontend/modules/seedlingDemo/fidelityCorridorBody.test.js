@@ -149,6 +149,14 @@ describe('fidelity CORRIDOR — the walk corridor prices the live wallflyers and
         expect(b.ticks).toBe(126);
     }, 120_000);
 
+    it('step 45 (L22): ON keeps the base\'s clean 6-window dash chain — certified WHOLE (no 1-window prefix is clean)',
+        () => {
+            const a = off(() => solveBoot('survey-step-45-boot.json'));
+            expect(a).toEqual({ ticks: 113, hits: [] });
+            const b = on(() => solveBoot('survey-step-45-boot.json'));
+            expect(b).toEqual({ ticks: 113, hits: [] });
+        }, 120_000);
+
     it('step 170 (L77): the lavarunner\'s contact gate reads its own i-frame, not the dark shield\'s — ON walks clean',
         () => {
             const a = off(() => solveBoot('survey-step-170-boot.json'));
