@@ -1,5 +1,5 @@
 /**
- * ⛓⛓⛓ SEEDLING HAMMER-PHASE DD — a press kill whose target died on the walk (`PRESS_KILL_DONE_ON_WALK`, OFF).
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE DD — a press kill whose target died on the walk (`PRESS_KILL_DONE_ON_WALK`, ON by default since the user's flip).
  *
  * The kill rung's chaser arm in `solveSegmentUnder` (`-> kill (<id>) by press`) walks to its stance and then dwells
  * until the body has left `strikeBodies`. When the walk's own presses killed the body, `runDwell` refuses an `until`
@@ -35,16 +35,17 @@ const committed = () => JSON.parse(readFileSync(join(WITNESS_DIR, `${NAME}.tape.
 const game = () => JSON.parse(readFileSync(join(WITNESS_DIR, `${NAME}.game.json`), 'utf8'));
 
 describe('DD — the switch\'s contract', () => {
-    it('ships OFF', () => {
-        expect(PRESS_KILL_DONE_ON_WALK_DEFAULT).toBe(false);
-        expect(PRESS_KILL_DONE_ON_WALK.enabled).toBe(false);
+    it.skipIf(globalThis.process?.env?.SEEDLING_PRESS_KILL_DONE_ON_WALK !== undefined)('ships ON (the user\'s flip, 2026-10-14)', () => {
+        expect(PRESS_KILL_DONE_ON_WALK_DEFAULT).toBe(true);
+        expect(PRESS_KILL_DONE_ON_WALK.enabled).toBe(true);
     });
 
     it('`withPressKillDoneOnWalk` restores the previous value, on a throw too', () => {
-        expect(withPressKillDoneOnWalk(true, () => PRESS_KILL_DONE_ON_WALK.enabled)).toBe(true);
-        expect(PRESS_KILL_DONE_ON_WALK.enabled).toBe(false);
-        expect(() => withPressKillDoneOnWalk(true, () => { throw new Error('x'); })).toThrow('x');
-        expect(PRESS_KILL_DONE_ON_WALK.enabled).toBe(false);
+        const was = PRESS_KILL_DONE_ON_WALK.enabled;
+        expect(withPressKillDoneOnWalk(!was, () => PRESS_KILL_DONE_ON_WALK.enabled)).toBe(!was);
+        expect(PRESS_KILL_DONE_ON_WALK.enabled).toBe(was);
+        expect(() => withPressKillDoneOnWalk(!was, () => { throw new Error('x'); })).toThrow('x');
+        expect(PRESS_KILL_DONE_ON_WALK.enabled).toBe(was);
     });
 
     it('`killedOnWalk` names the press of THIS walk that KILLED the body, and nothing else', () => {
