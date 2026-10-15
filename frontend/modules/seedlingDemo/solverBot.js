@@ -131,6 +131,8 @@ import {
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
+    // ⛓⛓⛓ hammer-phase SF: the admissible strike floor's terrain read (`strikeEtaFloorOf`, behind `STRIKE_ETA_FLOOR`, OFF).
+    SLIDING_SPEED, hazardFlagsFor,
     applyFriction, applyInput, DEFAULT_FRICTION, sweepAxis,
     chestStanceBand,
     fireRect, INVENTORY_ITEM_IDS, auditFire,
@@ -9578,27 +9580,125 @@ function strikeStandBlast(run, walk, cell, until) {
  * ([[feedback_bounded_sweep_must_name_what_it_bounded]] — the truncation was
  * named, and what it truncated was not).
  *
- * ⇒ the candidates are pre-filtered by an ADMISSIBLE lower bound on the ETA
- * before the truncation runs. `applyInput` clamps EACH AXIS at `WALK_SPEED`,
- * so no walk can cover `max(|dx|, |dy|)` pixels in fewer than
- * `ceil(that / WALK_SPEED)` ticks — a bound the movement model cannot beat,
- * so a candidate it drops was never reachable and the truncation now spends
- * its forty previews on candidates that can be plans.
+ * ⇒ the candidates are pre-filtered by a lower bound on the ETA before the
+ * truncation runs (`minTicksBetween`), so that the forty previews go to
+ * candidates that can be plans.
+ *
+ * ⛔ HAMMER-PHASE SC/SF — THAT BOUND WAS MEANT TO BE ADMISSIBLE AND IS NOT.
+ * `applyInput` does not clamp an axis at `WALK_SPEED`: it ADDS `moveSpeed`
+ * while the axis is under it, so a walking axis runs at up to 2·`moveSpeed`
+ * (1.6 px/tick on ground, 2.0 on ice; the game's peak, measured, 1.584 /
+ * 1.595), and `hasArrived`'s tolerance makes a walk SHORTER. Measured (SC):
+ * 77 % of the arrived strike previews beat `ceil(cheb / WALK_SPEED)`, by up to
+ * 100 ticks, so the floor skips reachable strikes. The admissible floor and
+ * the measured ETA are `STRIKE_ETA_FLOOR` (OFF), below.
  */
 const STRIKE_CANDIDATES = 40;
 
 /**
- * ⛓ The fewest ticks the controller could possibly need to get from `from` to
- * `to` — `max(|dx|, |dy|) / WALK_SPEED`, because both axes accelerate
- * independently and each is clamped at `moveSpeed` (`applyInput`).
+ * ⛓ The strike scan's ETA floor with `STRIKE_ETA_FLOOR` OFF:
+ * `ceil(max(|dx|, |dy|) / WALK_SPEED)`.
  *
- * ⚠ ADMISSIBLE, NOT ACCURATE. It ignores the acceleration ramp, the geometry
- * and the tolerance, all of which can only make the real walk LONGER — which
- * is the direction a pre-filter has to err in. `previewWalk` is still what
- * decides; this only stops the scan spending its budget on the impossible.
+ * ⛔ NOT A LOWER BOUND (hammer-phase SC, measured). It was written as one, on
+ * two claims that are both false: that `applyInput` clamps each axis at
+ * `moveSpeed` (it adds `moveSpeed` under that threshold, so an axis reaches
+ * nearly 2·`moveSpeed`), and that the tolerance can only make the real walk
+ * longer (`hasArrived` accepts within it on both axes, so it makes the walk
+ * SHORTER). A walk can arrive up to ~half this many ticks. It stays the OFF
+ * floor, byte for byte; `strikeEtaFloorOf` is the admissible one.
+ * `previewWalk` is still what decides.
  */
 function minTicksBetween(from, to) {
     return Math.ceil(Math.max(Math.abs(to.x - from.x), Math.abs(to.y - from.y)) / WALK_SPEED);
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE SF — **AN ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA** (`STRIKE_ETA_FLOOR`, OFF).
+ *
+ * SC measured `minTicksBetween` inadmissible (its docblock), and measured that swapping in an admissible floor ALONE
+ * is not the fix: the looser floor lets the bounded pass's forty fill with pairs at cells whose real walk is too slow
+ * (R8 slice 8's trap, one level up), and 470 derivations refused where the base found a strike. ON, two changes:
+ *   1. THE FLOOR is `strikeEtaFloorOf`: `ceil(max(0, cheb − DEFAULT_TOLERANCE) / V)`, `V` the per-axis speed cap;
+ *   2. THE MEASURED ETA, INTERLEAVED WITH THE COLLECTION. The bounded pass previews a cell the first time one of its
+ *      pairs is an opportunity (`walkTo`, the cache the continuation already uses), and a pair whose cell's walk is
+ *      truncated, transit-unsafe or later than its aim tick (`known.eta > i − 1`, the continuation's test) is
+ *      skipped: it never takes one of the forty. The forty are still forty PAIRS (`STRIKE_CANDIDATES`); the previews
+ *      are not capped, and each cell is previewed at most once per derivation.
+ * Both shapes SC named were built and measured over SC's census (the SF report, D1/D2): neither loses a strike OFF
+ * finds. The other one, the forty counted in DISTINCT CELLS PREVIEWED (the continuation's budget), finds more strikes
+ * where OFF refuses, but it scans to the horizon whenever fewer than forty cells are ever opportunities: inside the
+ * derivations it cost 30× OFF on the L18 sweep (2,064 s against 69 s; this shape 169 s). This shape is the one built.
+ *
+ * `strikeScanBox` reads the same `floor` map, so its `unreachableAt` counts the floor's skips under whichever floor is
+ * live; the measured-ETA skips are NOT floor skips and are counted apart (`etaSkipped` on a refusal), so `unreachable`
+ * keeps its meaning — the pairs the floor dropped — ON and OFF.
+ *
+ * ⛓ THE SWITCH — `STRIKE_ETA_FLOOR`, OFF (`SEEDLING_STRIKE_ETA_FLOOR=1` opts a process in, or
+ * `withStrikeEtaFloor(true, fn)`). OFF, `deriveStrike` computes exactly what it computed before: the same floor, the
+ * same calls in the same order. Its flip is a TAPE MOVE (it changes chosen strikes) and the user's call.
+ * It lives here, beside the strike's other switches, and not in `pressKillCost.js`: nothing in `levelRun.js`'s import
+ * closure reads it (the two readers, `deriveStrike` and `strikeScanBox`'s floor, are this file's), so the door
+ * (`solverView.js`) does not need it.
+ */
+export const STRIKE_ETA_FLOOR = {
+    enabled: globalThis.process?.env?.SEEDLING_STRIKE_ETA_FLOOR === '1',
+};
+export const STRIKE_ETA_FLOOR_DEFAULT = false;
+
+/** Run `fn` with `STRIKE_ETA_FLOOR` set to `enabled`, restoring the previous value (also on a throw). */
+export function withStrikeEtaFloor(enabled, fn) {
+    return withSwitch(STRIKE_ETA_FLOOR, enabled, fn);
+}
+
+/**
+ * ⛓ hammer-phase SF — what the room's terrain lets a walk do faster than ground walking, read off the world's
+ * walkable tiles (tile writes included) through `hazardFlagsFor`, the one transcription of the state setter's flags:
+ *   · `ice` — a walkable ice tile anywhere in the room. On ice `moveSpeed` is `SLIDING_SPEED` (1), so the axis cap
+ *     is 2·`SLIDING_SPEED`. A tile ANYWHERE, not only on the walk's corridor: a superset of "the walk can reach ice"
+ *     is admissible, and the corridor is not known before the preview;
+ *   · `waterfall` — a walkable waterfall tile. Its push (`WATERFALL_ACCELERATION`, `postInput`) adds to `v.y` on top
+ *     of the threshold add, past any cap, so the vertical axis bounds nothing there.
+ * Memoised per world object (a tile write re-wraps the world).
+ */
+const STRIKE_TERRAIN = new WeakMap();
+
+function strikeTerrainOf(world) {
+    let out = world ? STRIKE_TERRAIN.get(world) : undefined;
+    if (out !== undefined) return out;
+    out = { ice: false, waterfall: false };
+    for (const t of world?.walkableTiles ?? []) {
+        const f = hazardFlagsFor(t.t);
+        if (f.onIce) out.ice = true;
+        if (f.onWaterfall) out.waterfall = true;
+    }
+    if (world) STRIKE_TERRAIN.set(world, out);
+    return out;
+}
+
+/**
+ * ⛓ hammer-phase SF — THE ADMISSIBLE ETA FLOOR from the run's state now, as `(cell) => ticks`:
+ *
+ *     ceil( max(0, reach − DEFAULT_TOLERANCE) / V ),   reach = max(|dx|, |dy|),   V = max(cap, |vx|, |vy|)
+ *
+ *   · `cap` = 2·`WALK_SPEED` (1.6), or 2·`SLIDING_SPEED` (2.0) in a room with ice, or with the sticky `onIce` flag
+ *     set now. `applyInput` adds `moveSpeed` only while the axis is under `moveSpeed`, and friction only shortens
+ *     the vector, so an axis that starts at or under the cap stays under it (water's 0.45 + 0.25 burst and the
+ *     stairs' 0.4 are under ground's 0.8);
+ *   · `|vx|`, `|vy|` — a knocked-back start: above the cap nothing adds and friction only lowers the speed;
+ *   · `DEFAULT_TOLERANCE` — `hasArrived` accepts within it on BOTH axes, so a walk need only cover `reach − 1`;
+ *   · a room with a waterfall bounds the horizontal axis only (`reach = |dx|`).
+ * MEASURED (SC, and this slice's census): no arrived preview beats it, and it is tight (least `ETA − floor` = 0).
+ */
+export function strikeEtaFloorOf(run) {
+    const from = run.state;
+    const { ice, waterfall } = strikeTerrainOf(run.world);
+    const cap = 2 * (ice || from.hazard?.onIce ? SLIDING_SPEED : WALK_SPEED);
+    const v = Math.max(cap, Math.abs(from.vx ?? 0), Math.abs(from.vy ?? 0));
+    return (to) => {
+        const dx = Math.abs(to.x - from.x);
+        const reach = waterfall ? dx : Math.max(dx, Math.abs(to.y - from.y));
+        return Math.ceil(Math.max(0, reach - DEFAULT_TOLERANCE) / v);
+    };
 }
 
 /**
@@ -9807,8 +9907,11 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
     const lines = PRESS_KILL_COST.enabled ? new Map() : null;
     // ⛓ hammer-phase P2: the lines earlier derivations asked (`carriedLineBook`, resolved at the first line), or none OFF
     const carried = STRIKE_SCAN_COST.enabled ? { run, book: undefined } : null;
-    // ⛓ The admissible ETA floor, once per cell — see `minTicksBetween`.
-    const floor = new Map(cells.map((c) => [c, minTicksBetween(run.state, c)]));
+    // ⛓ hammer-phase SF: the admissible floor and the measured ETA (`STRIKE_ETA_FLOOR`, OFF ⇒ neither)
+    const measured = STRIKE_ETA_FLOOR.enabled;
+    // ⛓ The ETA floor, once per cell — `minTicksBetween` OFF, `strikeEtaFloorOf` ON (see both).
+    const floorOf = measured ? strikeEtaFloorOf(run) : null;
+    const floor = new Map(cells.map((c) => [c, floorOf === null ? minTicksBetween(run.state, c) : floorOf(c)]));
     // ⛓ hammer-phase P2: the cells in reach of a body's rect, in the list's order (`strikeScanBox`), or none OFF
     const near = STRIKE_SCAN_COST.enabled ? strikeScanBox(cells, floor, press.reach) : null;
     const opportunities = [];
@@ -9880,6 +9983,55 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         return null;
     };
     /**
+     * ⛓ U4b D3 — WHAT A CELL'S WALK SAYS DOES NOT DEPEND ON THE TICK. The walk
+     * is `previewWalk` from where the player is NOW to the cell, and its
+     * transit verdict is asked at each sample's own ETA — neither reads `i`.
+     * So one walk per cell answers every opportunity at that cell, and the
+     * continuation below spends its budget on CELLS rather than on the same
+     * cell at forty consecutive ticks. (Declared above the bounded pass, which
+     * reads it with `STRIKE_ETA_FLOOR` ON; OFF that pass never calls it.)
+     */
+    const walks = new Map();
+    const walkTo = (cell) => {
+        if (walks.has(cell)) return walks.get(cell);
+        const walk = previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE);
+        let unsafe = null;
+        if (!walk.truncated) {
+            for (const sm of walk.samples) {
+                const d = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
+                    sm.arrows, sm.chasers, sm.spits ?? null, sm.grenades ?? null);
+                if (d.danger) { unsafe = { sm, d }; break; }
+            }
+        }
+        const out = { walk, eta: walk.samples.length, unsafe };
+        walks.set(cell, out);
+        return out;
+    };
+    /**
+     * ⛓ hammer-phase SF — THE MEASURED ETA (`STRIKE_ETA_FLOOR` ON only): a cell's walk, once previewed, says whether
+     * a pair at tick `i` there can be a plan — the continuation's own test, read for the bounded pass too.
+     */
+    const walkRefuses = (known, i) => known.walk.truncated || known.unsafe !== null || known.eta > i - 1;
+    /** ⛓ hammer-phase SF — the distinct cells the bounded pass previewed, and the pairs the measured ETA skipped. */
+    let scanned = 0;
+    let etaSkipped = 0;
+    /**
+     * ⛓ hammer-phase SF — ONE (cell, tick) PAIR OF THE BOUNDED PASS WITH THE MEASURED ETA: `true` keeps it as one of
+     * the forty, `false` skips it. The floor has already admitted the pair; a cell whose walk is known is asked
+     * nothing more (its walk refuses the pair or it does not); an unknown cell is asked `opportunityAt` first and
+     * previewed only if the pair is an opportunity, so a cell is previewed at most once per derivation.
+     */
+    const measuredPair = (i, c, mine) => {
+        const known = walks.get(c);
+        if (known !== undefined && walkRefuses(known, i)) { etaSkipped += 1; return false; }
+        if (!opportunityAt(i, c, mine)) return false;
+        if (known === undefined) {
+            scanned += 1;
+            if (walkRefuses(walkTo(c), i)) { etaSkipped += 1; return false; }
+        }
+        return true;
+    };
+    /**
      * ⛓ hammer-phase BW — THE STAND'S BOMB (`PRESS_KILL_BOMBS`, OFF ⇒ never asked). Once per cell per derivation (the
      * walk does not depend on the tick, U4b's note on `walkTo`): the first blast the lobber's forecast lands on a
      * player who walks there and stands, to the horizon's train end. A window whose train ends at or after it is the
@@ -9899,48 +10051,26 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
         const inReach = near === null ? null : near.cellsFor(mine);
+        // ⛓ hammer-phase SF: ON, a pair the measured ETA refuses never takes one of the forty (`measuredPair`)
+        const keep = measured ? measuredPair : opportunityAt;
         if (inReach === null) {
             for (const c of cells) {
                 // ⛔ BEFORE the truncation, never after: a candidate the movement
                 // model provably cannot reach must not consume one of the forty.
                 if (i - 1 < floor.get(c)) { unreachable += 1; continue; }
-                if (opportunityAt(i, c, mine)) opportunities.push({ i, cell: c });
+                if (keep(i, c, mine)) opportunities.push({ i, cell: c });
             }
         } else {
             // ⛓ hammer-phase P2: the floor's skips are every cell's, counted whole; only the box is asked
             unreachable += near.unreachableAt(i);
             for (const c of inReach) {
                 if (i - 1 < floor.get(c)) continue;
-                if (opportunityAt(i, c, mine)) opportunities.push({ i, cell: c });
+                if (keep(i, c, mine)) opportunities.push({ i, cell: c });
             }
         }
         if (opportunities.length >= STRIKE_CANDIDATES) { stoppedAt = i; break; }
     }
     const rejected = [];
-    /**
-     * ⛓ U4b D3 — WHAT A CELL'S WALK SAYS DOES NOT DEPEND ON THE TICK. The walk
-     * is `previewWalk` from where the player is NOW to the cell, and its
-     * transit verdict is asked at each sample's own ETA — neither reads `i`.
-     * So one walk per cell answers every opportunity at that cell, and the
-     * continuation below spends its budget on CELLS rather than on the same
-     * cell at forty consecutive ticks.
-     */
-    const walks = new Map();
-    const walkTo = (cell) => {
-        if (walks.has(cell)) return walks.get(cell);
-        const walk = previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE);
-        let unsafe = null;
-        if (!walk.truncated) {
-            for (const sm of walk.samples) {
-                const d = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
-                    sm.arrows, sm.chasers, sm.spits ?? null, sm.grenades ?? null);
-                if (d.danger) { unsafe = { sm, d }; break; }
-            }
-        }
-        const out = { walk, eta: walk.samples.length, unsafe };
-        walks.set(cell, out);
-        return out;
-    };
     for (const o of opportunities) {
         // `previewWalk` returns the samples `drive` would spend getting there.
         const { walk, unsafe } = walkTo(o.cell);
@@ -10097,6 +10227,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         // room has no strike" from "the scan ran out of budget".
         unreachable,
         truncated: opportunities.length >= STRIKE_CANDIDATES,
+        ...(measured ? { scanned, etaSkipped } : {}),
         horizon,
         ...(HAMMER_ESCAPE.enabled ? { escaped } : {}),
         ...(bombs ? { bombed } : {}),
@@ -10279,7 +10410,10 @@ function stepToward(run, aim, intended) {
 
 /**
  * ⛔ THE LOOKAHEAD, NAMED RATHER THAN GENEROUS. A `Spinner` moves one pixel a
- * tick and the player's own top speed is a little over two, so four ticks is
+ * tick and the player's own top speed is a little over two along a diagonal
+ * (each axis under 2·`WALK_SPEED` = 1.6 on ground, so the vector under
+ * 1.6·√2 ≈ 2.26; hammer-phase SC measured the game's per-axis peak at 1.595 —
+ * per axis it is NOT over two), so four ticks is
  * the span over which a step can still change which side of a body the player
  * ends up on — deeper buys a better dodge at 5x the previews per tick, and
  * shallower is what walked into the corner.

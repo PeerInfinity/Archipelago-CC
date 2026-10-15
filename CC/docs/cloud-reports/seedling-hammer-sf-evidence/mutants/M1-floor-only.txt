@@ -1,0 +1,62 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [31m❯[39m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js [2m([22m[2m9 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 3201[2mms[22m[39m
+     [32m✓[39m ships OFF[32m 1[2mms[22m[39m
+     [32m✓[39m withStrikeEtaFloor sets and restores it, also on a throw[32m 2[2mms[22m[39m
+     [32m✓[39m ground: (reach − 1) / 1.6, rounded up — 2·WALK_SPEED, never WALK_SPEED[32m 1[2mms[22m[39m
+     [32m✓[39m the tolerance: a cell within 1 px on both axes is 0 ticks away, and 2.6 px is one[32m 0[2mms[22m[39m
+     [32m✓[39m a knocked-back start: an axis faster than the cap bounds the walk at its own speed[32m 0[2mms[22m[39m
+     [32m✓[39m ice: a walkable ice tile in the room, or the sticky `onIce` flag, caps an axis at 2·SLIDING_SPEED[32m 0[2mms[22m[39m
+     [32m✓[39m a waterfall: its push adds to v.y past any cap, so only the horizontal axis bounds the walk[32m 0[2mms[22m[39m
+[31m     [31m×[31m t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick[39m[33m 1998[2mms[22m[39m
+[31m     [31m×[31m t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA)[39m[33m 1195[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js[2m > [22mSTRIKE_ETA_FLOOR — derivations on G1's witness walk (staging A, the ghost sword)[2m > [22mt190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick
+[31m[1mAssertionError[22m: expected null to deeply equal [ 744, 728, 432, 241 ][39m
+
+[32m- Expected:[39m 
+[
+  744,
+  728,
+  432,
+  241,
+]
+
+[31m+ Received:[39m 
+null
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m118:31[22m[39m
+    [90m116| [39m            [35mconst[39m on [33m=[39m [34mderive[39m(run[33m,[39m [35mtrue[39m)[33m;[39m
+    [90m117| [39m            [34mexpect[39m([34mshort[39m(off))[33m.[39m[34mtoEqual[39m([[34m728[39m[33m,[39m [34m680[39m[33m,[39m [34m497[39m[33m,[39m [34m201[39m])[33m;[39m
+    [90m118| [39m            [34mexpect[39m([34mshort[39m(on))[33m.[39m[34mtoEqual[39m([[34m744[39m[33m,[39m [34m728[39m[33m,[39m [34m432[39m[33m,[39m [34m241[39m])[33m;[39m
+    [90m   | [39m                              [31m^[39m
+    [90m119| [39m            [35mconst[39m i [33m=[39m on[33m.[39mpressAt [33m-[39m run[33m.[39mticksCompleted[33m;[39m
+    [90m120| [39m            // the walk arrives by the aim tick, and OFF's floor dropp…
+[90m [2m❯[22m replayTo frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m96:43[22m[39m
+[90m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m114:9[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js[2m > [22mSTRIKE_ETA_FLOOR — derivations on G1's witness walk (staging A, the ghost sword)[2m > [22mt160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA)
+[31m[1mAssertionError[22m: t160: expected null not to be null[39m
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m134:42[22m[39m
+    [90m132| [39m            [35mconst[39m on [33m=[39m [34mderive[39m(run[33m,[39m [35mtrue[39m)[33m;[39m
+    [90m133| [39m            seen[33m.[39m[34mpush[39m([t[33m,[39m [34mshort[39m(off)[33m,[39m [34mshort[39m(on)[33m,[39m on[33m.[39mscanned [33m??[39m [35mnull[39m])[33m;[39m
+    [90m134| [39m            [34mexpect[39m(on[33m.[39mcell[33m,[39m [32m`t[39m[36m${[39mt[36m}[39m[32m`[39m)[33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m                                         [31m^[39m
+    [90m135| [39m            expect(on.pressAt, `t${t}`).toBeLessThanOrEqual(off.pressA…
+    [90m136| [39m        })[33m;[39m
+[90m [2m❯[22m replayTo frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m96:43[22m[39m
+[90m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m130:9[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m7 passed[39m[22m[90m (9)[39m
+[2m   Start at [22m 05:24:20
+[2m   Duration [22m 6.37s[2m (transform 2.31s, setup 0ms, import 3.00s, tests 3.20s, environment 0ms)[22m
+
