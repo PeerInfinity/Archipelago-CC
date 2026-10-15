@@ -133,10 +133,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⚖ (user, 2026-10-14, "Flip now") ON since the wave-16 harvest.
             ceremonyShove: true,
             // ⛓ fidelity LAPSECOST D2: `flyerLive` (the Flyer stepped: its chase, its "fall" and its drop) ships OFF.
-            flyerLive: false,
-            // ⛓ fidelity BEAMTOWER: `beamTowerDrift` (D1, the tower's Solid drifts with its `y`) and `beamTowerBeamHit`
-            // (D3, the run bills the beam on the player) ship OFF.
-            beamTowerDrift: false, beamTowerBeamHit: false });
+            // ⛓ fidelity BEAMTOWER: `flyerLive` with `beamTowerDrift` (D1, the tower's Solid drifts with its `y`) and
+            // `beamTowerBeamHit` (D3, the run bills the beam on the player) shipped OFF — ⚖ ON since MEASUREMENT ONLY (planning-8, NEVER MERGE).
+            flyerLive: true, beamTowerDrift: true, beamTowerBeamHit: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

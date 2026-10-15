@@ -457,7 +457,8 @@ export const CONTACT_FIDELITY = {
      * prices its drop (timed) instead of a placement. ⛔ OFF by default (no licence); `SEEDLING_FLYER_LIVE=0|1` for a
      * node measurement.
      */
-    flyerLive: false,
+    // ⚖ FLIP CANDIDATE (fidelity BEAMTOWER D2): ON with `beamTowerDrift` and `beamTowerBeamHit` — MEASUREMENT ONLY (planning-8, NEVER MERGE).
+    flyerLive: true,
     /**
      * fidelity BEAMTOWER D1 — THE BEAM TOWER'S SOLID DRIFTS WITH ITS `y` (`beamTower.stepBeamTowerFrame`).
      *
@@ -472,7 +473,7 @@ export const CONTACT_FIDELITY = {
      * tower once per tick in its update slot (`Game.time` = `clock.now()`, no drift on a frozen tick), and the
      * tower's Solid is `liveRectOf`'s `beamTowers` arm. ⛔ OFF by default (no licence); `SEEDLING_BEAMTOWER_DRIFT=0|1`.
      */
-    beamTowerDrift: false,
+    beamTowerDrift: true,
     /**
      * fidelity BEAMTOWER D3 — THE BEAM TOWER'S BEAM HITS THE PLAYER IN THE RUN (`levelRun.stepBeamTowersNow`).
      *
@@ -486,7 +487,7 @@ export const CONTACT_FIDELITY = {
      * the player's PRE-move box, inclusively (`Entity.collideRect`), from the tower's pre-drift point; the shake is the
      * `beamTowerBeam` writer. ⛔ OFF by default (no licence); `SEEDLING_BEAMTOWER_BEAM_HIT=0|1`.
      */
-    beamTowerBeamHit: false,
+    beamTowerBeamHit: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

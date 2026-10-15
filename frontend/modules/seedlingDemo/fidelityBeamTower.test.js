@@ -56,9 +56,9 @@ function replay(w, over) {
 }
 
 describe('BEAMTOWER — the switches', () => {
-    it('ship OFF, and `hazards.js` re-exports the moved transcription unchanged', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.beamTowerDrift).toBe(false);
-        expect(CONTACT_FIDELITY_DEFAULTS.beamTowerBeamHit).toBe(false);
+    it('ship ON (⚖ MEASUREMENT ONLY (planning-8, NEVER MERGE)), and `hazards.js` re-exports the moved transcription unchanged', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.beamTowerDrift).toBe(true);
+        expect(CONTACT_FIDELITY_DEFAULTS.beamTowerBeamHit).toBe(true);
         for (const k of ['BEAM_TOWER', 'beamAnimSpeed', 'beamIsBeaming', 'beamRect', 'createBeamTower', 'stepBeamTower']) {
             expect(typeof hazards[k], k).not.toBe('undefined');
         }
@@ -210,6 +210,5 @@ describe('BEAMTOWER — the census (the vacuities this slice measured)', () => {
         const { run } = replay(W773, { flyerLive: true, beamTowerDrift: false, beamTowerBeamHit: false });
         expect(run.ledger('beamTowerTrace')).toEqual([]);
         expect(run.ledger('playerHits').filter((h) => h.source === 'beamtower')).toEqual([]);
-        expect(CONTACT_FIDELITY.beamTowerDrift).toBe(false);
     });
 });
