@@ -458,6 +458,22 @@ export const CONTACT_FIDELITY = {
      * node measurement.
      */
     flyerLive: false,
+    /**
+     * fidelity L40CONTACT D1 — A LIVE SPINNER IS A WALL TO A CHASER WHOSE `solids` HOLD "Enemy".
+     *
+     *     Enemy.as:58     type = "Enemy"                        — a Spinner is one, alive, for its whole visit
+     *     Bob.as:39       solids.push("Enemy")                  — Bob / Puncher sweep against it (BobSoldier: no)
+     *     Game.as:2276,2416  bob added before spinner; World.addUpdate PREPENDS — the spinner moves FIRST each tick
+     *
+     * OFF the chaser's "Enemy" walls were the static census bodies and the ice turrets only
+     * (`levelRun.chaserStaticEnemyBoxesNow`), so a bob walked through a live spinner. MEASURED (hammer CW, staging A's
+     * sword prefix, p4f): at t1801 the game stops `bob@736,752` dead at (743.929, 753.416) while `spinner@880,848`
+     * crosses it heading south; the model walked it on. ON: the live sweep (`stepChasersNow`) meets every live
+     * spinner where this tick's spinner step left it, and the forecast (`chaserForecastNow`) steps its own copy of
+     * the spinners beside the chasers (the press's hits on a spinner are not forecast). ⛔ OFF by default (no
+     * licence); `SEEDLING_CHASER_SPINNER_WALLS=0|1` for a node measurement.
+     */
+    chaserSpinnerWalls: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -556,6 +572,9 @@ if (globalThis.process?.env?.SEEDLING_CEREMONY_SHOVE === '0') CONTACT_FIDELITY.c
 // ⛓ fidelity LAPSECOST D2: `SEEDLING_FLYER_LIVE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '1') CONTACT_FIDELITY.flyerLive = true;
 if (globalThis.process?.env?.SEEDLING_FLYER_LIVE === '0') CONTACT_FIDELITY.flyerLive = false;
+// ⛓ fidelity L40CONTACT D1: `SEEDLING_CHASER_SPINNER_WALLS=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CHASER_SPINNER_WALLS === '1') CONTACT_FIDELITY.chaserSpinnerWalls = true;
+if (globalThis.process?.env?.SEEDLING_CHASER_SPINNER_WALLS === '0') CONTACT_FIDELITY.chaserSpinnerWalls = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

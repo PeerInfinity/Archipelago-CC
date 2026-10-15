@@ -132,7 +132,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⚖ (user, 2026-10-14, "Flip now") ON since the wave-16 harvest.
             ceremonyShove: true,
             // ⛓ fidelity LAPSECOST D2: `flyerLive` (the Flyer stepped: its chase, its "fall" and its drop) ships OFF.
-            flyerLive: false });
+            flyerLive: false,
+            // ⛓ fidelity L40CONTACT D1: `chaserSpinnerWalls` (a live spinner walls a chaser whose list holds "Enemy") ships OFF.
+            chaserSpinnerWalls: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
