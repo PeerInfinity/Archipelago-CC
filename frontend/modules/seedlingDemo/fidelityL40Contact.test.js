@@ -120,3 +120,34 @@ describe('L40CONTACT D1 — a live spinner walls a chaser (`chaserSpinnerWalls`)
         expect(cmp(false).worst).toBe(0);
     }, 120_000);
 });
+
+/**
+ * D3 — hammer SF's "approach-geometry hit" at t658 IS D1. SF's sword plan with `STRIKE_ETA_FLOOR` ON (made by its env,
+ * the walls OFF: `l40contact-a-sword-floorplan`, 1,695 t, refused on `bob@736,752`) has the model's `bob@736,752` hit the
+ * player at t658 (dy −3); the game walks on unhit to (744.2596783699775, 742.494712313261) (SF
+ * `d1-game/sword-plan-dash-window.txt`). The bob is not nearer by any contact rule: OFF it left its home at t606 through
+ * `spinner@880,848`, which the game's bob meets and stops against until t631, so at t658 the game's bob is 5.7 px further
+ * south. ON, the probe reads the WHOLE tape on the game at the model's clock (Bob 20,292 comparisons, worst |Δ| 0).
+ * The tape is replayed, not solved, so the floor's switch does not reach it.
+ */
+describe('L40CONTACT D3 — the t658 contact on the floor plan is the spinner wall', () => {
+    const FLOOR = parseTape(readFileSync(join(WIT, 'l40contact-a-sword-floorplan.tape.json'), 'utf8'));
+    const at658 = (on) => withContactFidelity({ chaserSpinnerWalls: on }, () => {
+        const run = createRunForStaging(stagingFromTape(FLOOR), atlasLevelSource());
+        for (let t = 0; t < 658; t += 1) run.advance(new Set(heldKeysAt(FLOOR, t)));
+        return { player: [run.state.x, run.state.y],
+            hits: run.ledger('playerHits').map((h) => [h.t, h.id, h.knockback?.dy ?? null]) };
+    });
+
+    it('OFF: `bob@736,752` hits the player at t658 (dy −3), which the game does not', () => {
+        const off = at658(false);
+        expect(off.hits).toHaveLength(1);
+        expect(off.hits[0].slice(0, 2)).toEqual([658, 'bob@736,752']);
+        expect(off.hits[0][2]).toBeCloseTo(-3, 2);
+        expect(off.player).not.toEqual([744.2596783699775, 742.494712313261]);
+    }, 120_000);
+
+    it('ON: no hit, and the player is at the game\'s point to the bit', () => {
+        expect(at658(true)).toEqual({ player: [744.2596783699775, 742.494712313261], hits: [] });
+    }, 120_000);
+});
