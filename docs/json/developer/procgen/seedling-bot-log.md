@@ -22131,3 +22131,13 @@ way.
 - The two movers are the cases DD is for: step 50 under lapse + shove goes REFUSED t192 → SOLVED 395, and CW's 414
   override goes THREW t1469 → REFUSED t1469 by name at the chest's guard `bobsoldier@880,832` (CW's (c)), 0 hits.
 - The shape fits fidelity's case as is. No chaser-arm edit is needed, because CW's dwell IS this arm.
+
+**Flip (2026-10-14).** The user turned `PRESS_KILL_DONE_ON_WALK` ON by default (*"Turn it ON"*).
+`SEEDLING_PRESS_KILL_DONE_ON_WALK=0` or `withPressKillDoneOnWalk(false, …)` opts out. DD's census found 0 press-kill
+dwells starting with the target gone at the defaults on every workload, and ON equal to OFF on the identity block,
+`r9-campaign --check`, the L18 sweep, C2's ghost staging and the L40 table, so no committed row moves. The page worker
+now runs it too. It is the hammer side of fidelity's held `strikeIframeLapse` flip (survey step 50).
+
+**`REFUGE_ETA_CUT` flip, the divergence A/B (js-6's sweep, 843 legs).** No leg that crossed or completed OFF fails
+ON. Leg 768 goes failed → done and leg 414 goes failed → timeout (both seam-sensitive). Only leg 311 plans
+differently at an identical seamTime (done both ways, a different plan).

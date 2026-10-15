@@ -16347,7 +16347,7 @@ export function withKeylockWaitPriced(enabled, fn) {
 
 /**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE DD — **A PRESS KILL WHOSE TARGET DIED ON THE WALK IS A KILL DONE**
- * (`PRESS_KILL_DONE_ON_WALK`, OFF).
+ * (`PRESS_KILL_DONE_ON_WALK`, ON by default since the user's flip).
  *
  * The kill rung's chaser arm in `solveSegmentUnder` (`what` `-> kill (<id>) by press`) walks to the stance
  * `deriveKillByChaser` priced and then dwells (`runDwell`) until the body has left `strikeBodies`. The walk carries
@@ -16362,13 +16362,13 @@ export function withKeylockWaitPriced(enabled, fn) {
  * fire tick, weapon and direction; `ticks: 0`) and returns to the ladder exactly as a finished dwell does. Any other
  * "already true" (gone, but no press of this walk killed it) still reaches `runDwell` and is still its refusal.
  * `runDwell` itself is untouched: its guard is real for every other caller. OFF the arm is byte-for-byte the BEFORE
- * one (nothing is read: the ledger index is taken only ON). `SEEDLING_PRESS_KILL_DONE_ON_WALK=1` opts a process in;
- * `withPressKillDoneOnWalk` for a test.
+ * one (nothing is read: the ledger index is taken only ON). ON by default since the user's flip (2026-10-14: *"Turn it
+ * ON"*): `SEEDLING_PRESS_KILL_DONE_ON_WALK=0` opts a process out; `withPressKillDoneOnWalk` for a test.
  */
 export const PRESS_KILL_DONE_ON_WALK = {
-    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_DONE_ON_WALK === '1',
+    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_DONE_ON_WALK !== '0',
 };
-export const PRESS_KILL_DONE_ON_WALK_DEFAULT = false;
+export const PRESS_KILL_DONE_ON_WALK_DEFAULT = true;
 
 /** Run `fn` with `PRESS_KILL_DONE_ON_WALK` set to `enabled`, restoring the previous value (also on a throw). */
 export function withPressKillDoneOnWalk(enabled, fn) {
@@ -20195,7 +20195,7 @@ function solveSegmentUnder({
                         });
                     }
                     /**
-                     * ⛓⛓⛓ HAMMER-PHASE DD (`PRESS_KILL_DONE_ON_WALK`, OFF) — the walk's own presses killed the
+                     * ⛓⛓⛓ HAMMER-PHASE DD (`PRESS_KILL_DONE_ON_WALK`, ON by default) — the walk's own presses killed the
                      * body: the kill is done, said by the press ledger, and the ladder re-plans as after a dwell.
                      */
                     const walkKill = PRESS_KILL_DONE_ON_WALK.enabled
