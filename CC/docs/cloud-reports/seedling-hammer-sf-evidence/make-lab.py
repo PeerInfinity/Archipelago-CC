@@ -40,6 +40,8 @@ const sfRes = (r) => (r === null ? null : r.cell === null ? { cell: null, consid
     truncated: r.truncated } : { cell: [r.cell.x, r.cell.y], pressAt: r.pressAt, eta: r.eta, cont: r.fromContinuation ? 1 : 0,
     considered: r.considered, uncert: r.escape === 'uncertified' ? 1 : 0 });
 export function deriveStrike(run, bodyId, contacts, notBefore = 0, opts = {}) {
+    // SF_LAB=count: only count the derivations (which producers reach `deriveStrike` at all)
+    if (SF_LAB === 'count') { globalThis.__SF_LAB_SINK?.({ n: SF_N++, t: run.ticksCompleted, body: bodyId }); }
     if (SF_LAB !== 'census') return deriveStrikeCore(run, bodyId, contacts, notBefore, opts);
     const n = SF_N++;
     const k = n % SF_VARIANTS.length;
