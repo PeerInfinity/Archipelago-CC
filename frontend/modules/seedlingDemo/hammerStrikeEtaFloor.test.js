@@ -11,16 +11,22 @@
  *   · the floor's edges: the 1.6 cap, the tolerance, a knocked-back `v0`, ice (a tile, the sticky flag) and a
  *     waterfall — each one a mutant's row (`WALK_SPEED` for 1.6, the tolerance dropped, `v0` ignored);
  *   · two derivations on committed walks: one where ON presses EARLIER at a cell OFF's floor skipped at that tick,
- *     and one where ON keeps a strike the floor alone refuses (the floor-only mutant's row).
+ *     and one where ON keeps a strike the floor alone refuses (the floor-only mutant's row);
+ *   · the game witness `hammer-sf-l40-strikefloor` (`plan-seedling-hammer-sf-strikefloor.mjs`): staging A with the
+ *     ghost sword, the solve's executed prefix ON — the walk's landings, the game's rows of the killed body, and the
+ *     ON solve reproducing it key for key.
  */
 import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    STRIKE_ETA_FLOOR, STRIKE_ETA_FLOOR_DEFAULT, deriveStrike, strikeEtaFloorOf, withStrikeEtaFloor,
+    STRIKE_ETA_FLOOR, STRIKE_ETA_FLOOR_DEFAULT, deriveStrike, solveSegment, strikeEtaFloorOf, withStrikeEtaFloor,
 } from './solverBot.js';
+import { SPINNER } from './spinner.js';
 import { PROFILE } from './seedlingProfile.js';
-import { createRunForStaging, createTapeStepper, stagingFromTape } from './tapeRunner.js';
+import { createRunForStaging, createTapeStepper, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { parseTape } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
 
@@ -140,4 +146,89 @@ describe('STRIKE_ETA_FLOOR — derivations on G1\'s witness walk (staging A, the
             [330, [744, 728, 428, 97], [744, 728, 428, 97]],
         ]);
     }, 120_000);
+});
+
+/**
+ * The game witness (D1): `hammer-sf-l40-strikefloor`, C1's staging A with the ghost sword (G1's witness staging),
+ * `solveSegment`'s executed prefix with the switch ON (`scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs`). The
+ * game played it tick for tick (the drained player stream 1630 / 1630, `Bot.slashTests` at every sampled tick) and its
+ * rows of the killed Spinner are the model's (the committed samples beside the tape). Not a roster tape.
+ */
+const HERE = dirname(fileURLToPath(import.meta.url));
+const WDIR = join(HERE, 'fixtures', 'hammer-sf-strikefloor-witness');
+const WNAME = 'hammer-sf-l40-strikefloor';
+const wtape = parseTape(readFileSync(join(WDIR, `${WNAME}.tape.json`), 'utf8'));
+const wgame = JSON.parse(readFileSync(join(WDIR, `${WNAME}.game-bodies.json`), 'utf8'));
+
+function witnessWalk() {
+    const held = [];
+    const st = createTapeStepper(wtape, { levelSource: atlasLevelSource(), onTick: (t, s, h) => { held[t] = h; } });
+    for (let r = st.next(); !r.done; r = st.next());
+    const keys = held.filter(Boolean);
+    const run = createRunForStaging({ ...stagingFromTape(wtape), equips: [] }, atlasLevelSource());
+    const row = () => (run.entities('spinnerBodies') ?? []).map((b) => [b.id, b.hits, b.hitsTimer, b.rect]);
+    const rows = [row()];
+    for (const k of keys) {
+        run.advance(k);
+        rows.push(row());
+    }
+    return { keys, run, rows };
+}
+
+describe(`${WNAME} — the strike the admissible floor lets the scan see, on the game (hammer-phase SF, D1)`, () => {
+    const w = witnessWalk();
+    const landed = w.run.spinnerPressHits.filter((h) => h.landed);
+
+    it('⛓⛓⛓ the walk: three ghost landings on spinner@880,848, the kill at t1616 (OFF\'s walk, G1\'s witness, kills at '
+        + 't2114), and the chaser\'s three hits', () => {
+        expect(w.keys.length).toBe(1630);
+        expect(landed.map((h) => [h.t, h.id, h.weapon, h.hits, h.killed])).toEqual([
+            [501, BODY, 'ghostsword', 2, false], [1583, BODY, 'ghostsword', 2, false],
+            [1616, BODY, 'ghostsword', 4, true]]);
+        expect(w.run.entities('spinnerBodies').map((b) => b.id)).not.toContain(BODY);
+        expect(w.run.playerHits.map((h) => [h.t, h.id, h.died])).toEqual([[658, 'bob@736,752', false],
+            [747, 'bob@736,752', false], [778, 'bob@736,752', true]]);
+    });
+
+    it('⛓⛓ it is G1\'s OFF walk for 602 ticks (the kill\'s first landing at t501 is shared), then it parts', () => {
+        const held = [];
+        const st = createTapeStepper(parseTape(readFileSync(G1, 'utf8')), { levelSource: atlasLevelSource(),
+            onTick: (t, s2, h) => { held[t] = h; } });
+        for (let r = st.next(); !r.done; r = st.next());
+        const g1 = held.filter(Boolean).map((k) => [...k].sort().join('+'));
+        const sf = w.keys.map((k) => [...k].sort().join('+'));
+        let i = 0;
+        while (i < sf.length && sf[i] === g1[i]) i += 1;
+        expect(i).toBe(602);
+    });
+
+    it('⛓⛓⛓ THE GAME AGREES: its rows of the killed Spinner (position, hits, hits_timer) are the model\'s at every '
+        + 'sampled tick, and it reaches hits 4', () => {
+        const bad = [];
+        for (const [t, x, y, hits, hitsTimer] of wgame.rows) {
+            const m = w.rows[t]?.find((b) => Math.abs(b[3].x + SPINNER.originX - x) < 1e-9
+                && Math.abs(b[3].y + SPINNER.originY - y) < 1e-9);
+            if (!m || m[0] !== BODY || m[1] !== hits || m[2] !== hitsTimer) bad.push(t);
+        }
+        expect(bad).toEqual([]);
+        expect(wgame.rows.length).toBe(1624);
+        expect(Math.max(...wgame.rows.map((r) => r[3]))).toBe(4);
+    });
+
+    it('⛓⛓⛓ ON: the solve\'s executed prefix IS the witness, key for key', () => {
+        const staging = solveStaging(stagingFromTape(parseTape(readFileSync(join(HERE, 'fixtures',
+            'hammer-p1-l40-south-boot.json'), 'utf8'))));
+        staging.seam = { ...staging.seam, items: { ...staging.seam.items, hasSword: true, hasGhostSword: true } };
+        const run = createRunForStaging(staging, atlasLevelSource());
+        const perTick = withStrikeEtaFloor(true, () => {
+            try {
+                return solveSegment({ run, goals: [{ kind: 'collect-placement', placement: { x: 880, y: 816 } }],
+                    name: WNAME, boot: staging.boot, dashMode: 'all' }).perTick;
+            } catch (e) {
+                return e.perTick ?? [];
+            }
+        });
+        expect(perTick.length).toBe(1629);
+        expect(perTick.map((k) => [...k].sort())).toEqual(w.keys.slice(0, 1629).map((k) => [...k].sort()));
+    }, 900_000);
 });
