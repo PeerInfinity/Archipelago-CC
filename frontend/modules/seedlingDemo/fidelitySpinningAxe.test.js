@@ -145,7 +145,9 @@ describe('SPINNINGAXE D1 — sweep leg 633 (`level_75 <- in_L74_16_144 -> exit:o
  */
 describe('SPINNINGAXE D2 — a phase dodge\'s partial stall is re-probed', () => {
     const staging = stagingFromTape(parseTape(JSON.stringify(PLAN.tape)));
-    const solve = (on) => withContactFidelity({ partialDodgeReprobe: on }, () => twoPassSolve({
+    // The axe's player arm pinned OFF: these rows isolate the probe (with `spinningAxePlayerHit` ON the 366-t drive is
+    // hit and refuses on its own — a D1 mover).
+    const solve = (on) => withContactFidelity({ partialDodgeReprobe: on, spinningAxePlayerHit: false }, () => twoPassSolve({
         makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, SRC),
         goals: [{ kind: 'reach-exit', exit: { x: 64, y: 224 } }], name: 'spinningaxe-d2',
         boot: staging.boot, persistence: staging.persistence, log: () => {},
