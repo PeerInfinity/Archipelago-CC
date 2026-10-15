@@ -22415,3 +22415,43 @@ One re-pin outside our own rows: the hammer DD witness (`plan-seedling-hammer-dd
 the lapse OFF (hammer's OK). A new lapse-ON block pins the post-flip shape: at (32,112) DD OFF and ON solve alike in
 509, and at step 50's own (176,48) DD OFF refuses the dwell as already true while DD ON solves. Under the lapse, DD is
 load-bearing.
+
+### Seedling fidelity L40CONTACT — a live spinner walls a chaser
+
+Slice `seedling-fidelity-l40contact` (wave 17, planner `seedling-fidelity-planning-8`), from main `e967758748`. One
+switch, `CONTACT_FIDELITY.chaserSpinnerWalls`, **OFF**; its flip is the user's.
+
+- **D1 (G1, CW item 3).** A Spinner is `type = "Enemy"` (`Enemy.as:58`), a Bob's `solids` hold "Enemy" (`Bob.as:39`),
+  and the spinner updates first (`Game.as` adds `bob` before `spinner`; `World.addUpdate` prepends). The model's chaser
+  walls were the static census bodies and the ice turrets only, so `bob@736,752` walked through `spinner@880,848` at
+  t1801 on CW's staging A sword prefix. ON, `stepChasersNow` walls every live spinner where this tick's spinner step
+  left it, and `chaserForecastNow` steps its own copy beside the chasers. The game (p4f, the probe's model ON) reads the
+  whole 3,113-tick prefix at the model's clock: Bob 37,308 and Spinner 15,555 comparisons, worst |Δ| 0. **CW's "second
+  parting at t1989" was the probe's join**: `probe-seedling-u9-shield-mobiles` labels each game row with the nearest
+  body of its OWN (OFF) model run, so once that model had parted, both game bobs carried the label `bob@736,752`.
+- **D2 (G2, DD's legs 378/381).** Not a respawn and not a disagreement: a killed body is a `strikeBodies` member while
+  it plays "die" (`spent` under the lapse), and the game keeps it in the world exactly that long. `puncher@816,128`:
+  the ghost press fires t101, "die" t102–t132 at hits 4/4, `destroy` at t133, gone at t144, on the game and in the
+  model (Puncher 305 comparisons, worst 0). No switch.
+- **D3 (G3, SF's t658).** It is D1. On SF's floor-ON sword plan the OFF bob leaves home at t606 through
+  `spinner@880,848`; the game's bob stops there until t631, so at t658 it is 5.7 px further south and never reaches the
+  player. ON the model's player is at the game's (744.2596783699775, 742.494712313261), and both floor plans read on
+  the game at worst |Δ| 0.
+- **D4 (G4, 414's throw).** It still throws. `git bisect` (G1's own instrument on 414's atlas boot, the ghost rung on)
+  names **`926cc2a8`, the wave-14 flip**; with `rebootShake` alone OFF at the base, 414 is G1's REFUSED 5672 again.
+  The death at t2395 reboots with the hit's shake carried into the settle frames (the camera band), and 44 ticks later
+  the press kill's strike preview (`deriveStrike` → `walkTo` → `previewWalk`) asks the chaser forecast whether a bob is
+  on screen; inside the band that is the cosmetic RNG's question, and `onScreenAt` throws by design. The band stays
+  (⚖); who catches the throw is `deriveStrike` / `previewWalk`, the hammer arc's. Handed over.
+
+Movers ON (the licence's list): no committed tape, producer, identity row or tapeRunner pair (611 `75a3c41f`); the four
+L40 survey steps (78, 124, 126, 139) byte-identical; the bounded set (72 files) reds only `contactFidelity`'s
+shipped-defaults pin. Only L40 (bob, puncher) and L92 (bob, jellyfish) hold both a spinner and such a chaser. Of the
+42 sweep legs there, by captured request ×2, only 414 moves: OFF it throws in the shake band (127 work), ON it runs
+to the page deadline. Report: `CC/docs/cloud-reports/seedling-fidelity-l40contact.md`.
+
+Trap candidates:
+1. *A probe that joins by its own model labels the game with the model's error.* Re-read a parting with the
+   suspected fix in the probe's model, or join label-free; a second parting after a partial fix may be the join.
+2. *A "contact geometry" parting can be a wall upstream.* SF's t658 hit was decided 50 ticks earlier, where the bob
+   failed to stop. Trace the body's trail back to its first difference before modelling the contact.
