@@ -13,6 +13,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -95,6 +96,9 @@ describe('L30KEYLOCK D1 — the game witnesses', () => {
     }
 });
 
+// ⛓ fidelity FLIP14: the switch-by-switch rows are CONTROLS measured (and the both-ON plans game-witnessed) under the
+// pre-flip strike gate, so they run `strikeIframeLapse` OFF. ON (⚖ the wave-14 flip, user 2026-10-12) both landings still
+// solve hitless, shorter and unwitnessed: (224,80) 320 t, (240,80) 341 t, the chaser stance (88,88) (FLIP14 report, D1).
 describe('L30KEYLOCK D2 — the solver, switch by switch, from both pit landings', () => {
     const verdict = ({ solved, refusal, run }) => ({
         solved: solved ? solved.out.perTick.length : null,
@@ -102,51 +106,52 @@ describe('L30KEYLOCK D2 — the solver, switch by switch, from both pit landings
         refusal: refusal ? refusal.message : null,
     });
 
-    it('both OFF, (224,80): the survey\'s refusal, the keys driven are the BEFORE witness, and they were hit twice', async () => {
+    it('both OFF, (224,80): the survey\'s refusal, the keys driven are the BEFORE witness, and they were hit twice', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
         const p = await l30keylockPlan(224, { rescan: false, waitPriced: false });
         const v = verdict(p);
         expect(v.solved).toBeNull();
         expect(v.refusal).toMatch(/the danger map forbids \(71\.77\d*,50\.11\d*\) — chaser:bobsoldier@48,80 \(the BobSoldier's 8x8 body, bare, one forecast tick on/);
         expect(v.hits).toBe(2);
         expect(p.driven).toHaveLength(tape('l30keylock-pit224-before').tick_count);
-    }, 120_000);
+    }), 120_000);
 
-    it('both OFF, (240,80): the wait on the key line takes three hits — the walk DIES — before the lock opens', async () => {
+    it('both OFF, (240,80): the wait on the key line takes three hits — the walk DIES — before the lock opens', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
         const v = verdict(await l30keylockPlan(240, { rescan: false, waitPriced: false }));
         expect(v.solved).toBeNull();
         expect(v.hits).toBe(3);
         expect(v.refusal).toMatch(/bosslock@64,32 did not open inside its own derived bound of 110 ticks/);
-    }, 120_000);
+    }), 120_000);
 
-    it('RESCAN alone: (224,80) solves (its corridor probe already climbs); (240,80) still dies on the unpriced wait', async () => {
+    it('RESCAN alone: (224,80) solves (its corridor probe already climbs); (240,80) still dies on the unpriced wait', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
         expect(verdict(await l30keylockPlan(224, { rescan: true, waitPriced: false })))
             .toMatchObject({ solved: 347, hits: 0 });
         expect(verdict(await l30keylockPlan(240, { rescan: true, waitPriced: false })))
             .toMatchObject({ solved: null, hits: 3 });
-    }, 120_000);
+    }), 120_000);
 
-    it('WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick', async () => {
+    it('WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
         expect(verdict(await l30keylockPlan(224, { rescan: false, waitPriced: true })))
             .toMatchObject({ solved: 309, hits: 0 });
         const v = verdict(await l30keylockPlan(240, { rescan: false, waitPriced: true }));
         expect(v).toMatchObject({ solved: null, hits: 0 });
         expect(v.refusal).toMatch(/keylock stance \(bosslock@64,32\): the combat ladder is EXHAUSTED/);
-    }, 120_000);
+    }), 120_000);
 
     for (const [x, kill] of [[224, { ticks: 26, bound: 57 }], [240, { ticks: 31, bound: 62 }]]) {
-        it(`both ON, (${x},80): the solver's own plan IS the witness \`l30keylock-pit${x}\` (kill, lock, crossing)`, async () => {
+        it(`both ON, (${x},80): the solver's own plan IS the witness \`l30keylock-pit${x}\` (kill, lock, crossing)`, () => withContactFidelity({ strikeIframeLapse: false }, async () => {
             const p = await l30keylockPlan(x, { rescan: true, waitPriced: true });
             expect(verdict(p)).toMatchObject({ solved: tape(`l30keylock-pit${x}`).tick_count, hits: 0 });
             const rec = p.solved.out.records;
             const k = rec.find((r) => r.strategy === 'kill' && r.arm === 'chaser');
             expect(k).toMatchObject({ target: BODY, stance: { x: 88, y: 120 }, ...kill });
             expect(rec.findIndex((r) => r.strategy === 'keylock')).toBeGreaterThan(rec.indexOf(k));
-        }, 120_000);
+        }), 120_000);
     }
 });
 
 describe('L30KEYLOCK D2 — the two mechanisms, asked directly', () => {
-    it('the chaser arm at the pit landing: the player\'s box prices nothing; the body\'s box finds (88,120)', async () => {
+    // ⛓ fidelity FLIP14: the witnesses' stance, under the pre-flip strike gate; ON the body's box finds (88,88).
+    it('the chaser arm at the pit landing: the player\'s box prices nothing; the body\'s box finds (88,120)', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
         const staging = await l30keylockStaging(224);
         const run = createRunForStaging(staging, SRC);
         const body = run.entities('strikeBodies').find((b) => b.id === BODY);
@@ -157,7 +162,7 @@ describe('L30KEYLOCK D2 — the two mechanisms, asked directly', () => {
         expect(off.why).toMatch(/14 cell\(s\) inside its 80 px leash, 7 of those reachable/);
         const on = withKillStanceTargetRescan(true, () => deriveKillByChaser(run, body, new Set(), opts));
         expect(on.stance).toEqual({ x: 88, y: 120 });
-    });
+    }));
 
     it('`previewWalk`\'s `standKeys` tail presses the stand\'s keys and no strike; without it the tail is unchanged', async () => {
         const staging = await l30keylockStaging(224);

@@ -364,7 +364,8 @@ describe('fidelity CHECKPOINTS — the FINE sites are opt-in, inert until they t
  * ⛓ FIDELITY CHECKPOINTS, the kill-chaser stance scan (asked for by the JS arc's
  * recalibration: L12's sphere-2.2 leg ran 663 s ask-free inside ONE derivation's
  * per-cell `corridorPlans`). Driven one layer in, as slice 12b′'s rows drive it:
- * L14's boot, six real bobs, `bob@32,32` (its derived stance (40,56), 115 t).
+ * L14's boot, six real bobs, `bob@32,32` (its derived stance (40,24), 106 t; (40,56)/115 before the wave-14 flip of
+ * `strikeIframeLapse`, ⚖ user 2026-10-12 — fidelity FLIP14).
  */
 describe('the kill-chaser stance scan asks once per cell (opt-in)', () => {
     const l14 = () => createLevelRun({
@@ -386,7 +387,7 @@ describe('the kill-chaser stance scan asks once per cell (opt-in)', () => {
 
     it('untripped, opted out: one ask (the entry), the stance unchanged; opted in: one ask per cell and per candidate, the stance unchanged', () => {
         const bare = derive();
-        expect(bare.stance).toEqual({ x: 40, y: 56 });
+        expect(bare.stance).toEqual({ x: 40, y: 24 });
         const coarse = counter();
         const outCoarse = withSolveDeadline({ shouldStop: coarse.shouldStop }, derive);
         expect(coarse.asks).toEqual(['kill-chaser']);

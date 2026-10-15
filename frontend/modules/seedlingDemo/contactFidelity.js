@@ -319,12 +319,13 @@ export const CONTACT_FIDELITY = {
      * a press at t84/t85 kills it at t87 with no player hit, game and model at 0 px; the policy's own press goes in
      * at t88 and the body hits the player at t87. ON: a body is admitted when `projectedHitsTimer` at the press's
      * LAST test tick is ≤ 0 (`strikePolicy.iframeLapsesInWindow`); the `owed` rule and `ORDINARY_SWING_PERIOD`'s dash
-     * refusal are untouched. OFF: the `hitsTimer > 0` refusal, byte-identical. ⛔ OFF by default: it moves strikes
-     * roster-wide, and the route survey loses steps 50 (L30→L32) and 62 (L45→L46) with it ON (fidelity FLIP14, CI
-     * survey 38307482259 vs 38307485234) — ⚖ (user, 2026-10-12, "Four now, strike later") it waits for a fix slice
-     * (`SEEDLING_STRIKE_IFRAME_LAPSE=0|1` for a node measurement).
+     * refusal are untouched. OFF: the `hitsTimer > 0` refusal, byte-identical. ⚖ ON since 2026-10-14 (⚖ user, "Flip after DD lands"; fidelity
+     * STRIKELAPSE's flip candidate): the two survey steps FLIP14 measured it costing (50, 62) are repaired behind it
+     * (`solverBot.collectStandWalk` and its ceremony arm; `levelRun`'s forecast projects a dying body `dying`); it
+     * moves strikes roster-wide (FLIP14's re-pins) and the campaign windows 16–30 (FLIP14's re-record).
+     * `SEEDLING_STRIKE_IFRAME_LAPSE=0` opts out.
      */
-    strikeIframeLapse: false,
+    strikeIframeLapse: true,
     /**
      * fidelity L74LEG624 D2 — FALLROCK_POSTFALL: A CLEARED NON-ARENA `FallRock` IS BUILT AS THE GAME LEAVES IT.
      *

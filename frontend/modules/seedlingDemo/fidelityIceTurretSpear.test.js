@@ -9,6 +9,7 @@
  * solver's own plan from sweep leg 745's arrival crosses to L99 on the game (C3 D2).
  */
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -102,11 +103,14 @@ describe('C3 D2 — `ICE_TURRET_SPEAR_ARM` (ON by default): the solver\'s ON pla
         expect(run.level).toBe(99);
     });
 
-    it('OFF the staging refuses with the sweep\'s words; ON it re-derives the committed tape byte for byte', { timeout: 600000 }, async () => {
+    // ⛓ fidelity FLIP14: the committed tape was solved and game-witnessed under the pre-flip strike gate, so this byte
+    // comparison runs `strikeIframeLapse` OFF; ON (⚖ the wave-14 flip, user 2026-10-12) the arm re-derives a 724 t plan
+    // (the witness: 693 t), the sword back at t533 — unwitnessed (FLIP14 report, D1).
+    it('OFF the staging refuses with the sweep\'s words; ON it re-derives the committed tape byte for byte', { timeout: 600000 }, () => withContactFidelity({ strikeIframeLapse: false }, async () => {
         const arm = ICETURRET_SPEAR_ARMS.find((a) => a.name === 'c3-l98-spear-l93');
         const off = await armPlan(arm, false);
         expect(off.solved).toBe(null);
         expect(off.refusal.message).toMatch(arm.offRefusal);
         expect(JSON.stringify(await armTape(arm))).toBe(JSON.stringify(w.tape));
-    });
+    }));
 });
