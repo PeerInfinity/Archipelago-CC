@@ -28,8 +28,9 @@ const json = (...p) => JSON.parse(readFileSync(join(HERE, ...p), 'utf8'));
 const W = (n) => json('fixtures', 'corridor-witness', n);
 const MAP = json('..', 'flashPanel', 'atlases', 'seedling-map.json');
 const SRC = levelSourceFromAtlas(patchedMapDocument(MAP));
-const on = (fn) => withContactFidelity({ corridorBodyPricing: true }, fn);
-const off = (fn) => withContactFidelity({ corridorBodyPricing: false }, fn);
+// ⚠ The gate is pinned OFF in both, so an OFF row's unbilled hits are measured rather than refused under any env.
+const on = (fn) => withContactFidelity({ corridorBodyPricing: true, unbilledDamageGate: false }, fn);
+const off = (fn) => withContactFidelity({ corridorBodyPricing: false, unbilledDamageGate: false }, fn);
 
 /** The game's `hits` rises, `[t]`, within one level. */
 function gameRises(rows) {
