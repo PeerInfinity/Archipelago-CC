@@ -16126,6 +16126,10 @@ export const ESCALATION_LADDER = Object.freeze(['avoid', 'dodge', 'pull', 'time'
  * `maxPerSegment` stalls in one segment.
  */
 const DODGE_RUNG = Object.freeze({ step: 4, maxTicks: 30, maxPerSegment: 12 });
+/** ⛓ fidelity CORRIDOR D2 — the corridor-body DODGE arm's walk-offset window before the hit (see the rung). */
+const CORRIDOR_DODGE = Object.freeze({ window: 32 });
+/** ⛓ fidelity CORRIDOR D2 — the climb nesting at which a corridor-body hit is refused by name (see `walkTo`). */
+const CORRIDOR_LADDER_NEST = 2;
 
 /**
  * ⛓ SEEDLING FIDELITY AXE — THE DODGE RUNG's AXE ARM's bounds. The stall runs
@@ -18925,12 +18929,35 @@ function solveSegmentUnder({
      * the same predicate (`probeSamples`), that `walkTo` makes once the corridor is chosen — so a plan here is the plan
      * the drive walks. `null` when not asked (the switch OFF, a mixed or other hit, no dash, an undashed walk).
      */
+    /** ⛓ fidelity CORRIDOR D2 — how many `climbLadder` calls are on the stack (counted with the switch ON only). */
+    let corridorClimbDepth = 0;
+    /** ⛓ fidelity CORRIDOR D2 — the last dash `corridorDashRescue` certified, and the corridor (by identity) it is for. */
+    let corridorDashCertified = null;
     const corridorDashRescue = (wps, hit, except, { stand = null, axisAligned = false, undashed = false } = {}) => {
         if (!hit || !CONTACT_FIDELITY.corridorBodyPricing || dashMode === 'none' || axisAligned || undashed) return null;
         if (!(hit.sources?.length > 0) || !hit.sources.every((sx) => sx.body !== undefined)) return null;
-        const d = planSwordDash(run, wps, { tolerance, dashMode,
-            certify: (samples) => probeSamples(samples, except), ...(stand ? { stand } : {}) });
-        return d.plan ? d : null;
+        const opts = { tolerance, dashMode, ...(stand ? { stand } : {}) };
+        let d = planSwordDash(run, wps, { ...opts, certify: (samples) => probeSamples(samples, except) });
+        /**
+         * ⚠ A CHAIN IS CERTIFIED WHOLE, NOT WINDOW BY WINDOW. `planSwordDash` admits a window only if the corridor with
+         * that window alone probes clean, so a chain whose LATER windows turn the flyers back is never reached (survey
+         * step 45: the drive's 6-window chain walks clean; every 1-window prefix meets `wallflyer@64,80`). So the chain
+         * is planned as before the forecast (its bodies' rows set aside) and the WHOLE dashed walk is then certified
+         * with the full predicate — the walk the drive takes with that plan (⚖ ruling 30(c)).
+         */
+        if (!d.plan && !stand) {
+            const sansBodies = (samples) => probeSamples(samples.map((sm) => (sm.corridorBodies
+                ? { ...sm, corridorBodies: null } : sm)), except);
+            const c = planSwordDash(run, wps, { ...opts, certify: sansBodies });
+            if (c.plan) {
+                const walk = previewWalk(run, wps, tolerance, { strike: strikePolicyFor(run, { dashPlan: c.plan, dashMode }) });
+                const arrived = !walk.truncated || walk.truncated.kind === 'crossed';
+                if (arrived && !probeSamples(walk.samples, except)) d = { ...c, why: 'certified whole (fidelity CORRIDOR)' };
+            }
+        }
+        if (!d.plan) return null;
+        corridorDashCertified = { wps, d };
+        return d;
     };
 
     /**
@@ -19288,11 +19315,19 @@ function solveSegmentUnder({
                     + 'keeps meeting one is not converging';
             } else {
                 const lastAt = Math.max(0, hit.tick - run.ticksCompleted - 1);
-                search: for (let at = lastAt; at >= 0; at -= DODGE_RUNG.step) {
+                /**
+                 * ⛓ fidelity CORRIDOR D2 — the corridor-body arm is BOUNDED: stalls within
+                 * `CORRIDOR_DODGE.window` ticks before the hit, each preview stopped at its first danger (DETOUR's
+                 * `stopWhen`). MEASURED unbounded: survey step 45 (L22) spent > 20 min in this search. The spit arm is
+                 * unchanged.
+                 */
+                const firstAt = spitOnly ? 0 : Math.max(0, lastAt - CORRIDOR_DODGE.window);
+                const stopEarly = spitOnly ? {} : { stopWhen: (sm) => probeSamples([sm], dangerExcept) !== null };
+                search: for (let at = lastAt; at >= firstAt; at -= DODGE_RUNG.step) {
                     for (let ticks = 1; ticks <= DODGE_RUNG.maxTicks; ticks += 1) {
                         const walk = previewWalk(run, corridor, tolerance, axisAligned
-                            ? { strike: null, axisAligned, stall: { at, ticks } }
-                            : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks } });
+                            ? { strike: null, axisAligned, stall: { at, ticks }, ...stopEarly }
+                            : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks }, ...stopEarly });
                         if (walk.truncated && walk.truncated.kind !== 'crossed') continue;
                         if (walk.samples.length < at + ticks) continue;
                         if (probeSamples(walk.samples, dangerExcept)) continue;
@@ -21124,6 +21159,20 @@ function solveSegmentUnder({
              */
             const dashFirst = corridorDashRescue(wps, hit, except, { stand, axisAligned, undashed });
             if (dashFirst) hit = null;
+            /**
+             * ⛓ fidelity CORRIDOR D2 (`corridorBodyPricing` ON only) — THE CLIMB IS NOT RE-ENTERED WITHOUT BOUND.
+             * The KILL rung's chaser arm walks to its stance through this same `walkTo`, and a stance corridor a
+             * forecast flyer crosses climbs again, picks the same kill, walks to the same stance… MEASURED: survey
+             * step 45 (L22) nested > 30 climbs deep in 75 s and never answered. A corridor-body hit met at nesting
+             * depth `CORRIDOR_LADDER_NEST` is refused by name instead. OFF: no climb is counted.
+             */
+            if (hit && CONTACT_FIDELITY.corridorBodyPricing && corridorClimbDepth >= CORRIDOR_LADDER_NEST
+                && hit.sources.some((sx) => sx.body !== undefined)) {
+                refuse(`${what}: CORRIDOR — the corridor meets ${reasonsOf(hit)} inside a climb already `
+                    + `${corridorClimbDepth} deep (CORRIDOR_LADDER_NEST ${CORRIDOR_LADDER_NEST}): a stance walk whose own `
+                    + 'corridor needs the ladder again is not converging', { goal,
+                    obstacle: { kind: 'danger', id: hit.sources[0]?.id ?? null } });
+            }
             if (hit) {
                 /**
                  * ⛓⛓⛓ ⚖ §11.8a RULING 2 — THE LADDER REPLACES SLICE 2's
@@ -21133,14 +21182,20 @@ function solveSegmentUnder({
                  * first, every escalation a trace row carrying the refused
                  * cheaper rung's reason.
                  */
-                const climbed = climbLadder({
-                    goal, aim, contacts, allowTeleporter, what, hit,
-                    dangerExcept: except, corridor: wps, axisAligned,
-                    ...(undashed ? { undashed } : {}),
-                    ...(fine ? { lattice: FINE_LATTICE } : {}),
-                    ...(stand ? { stand } : {}),
-                    ...(crossTo ? { crossTo } : {}),
-                });
+                if (CONTACT_FIDELITY.corridorBodyPricing) corridorClimbDepth += 1;
+                let climbed;
+                try {
+                    climbed = climbLadder({
+                        goal, aim, contacts, allowTeleporter, what, hit,
+                        dangerExcept: except, corridor: wps, axisAligned,
+                        ...(undashed ? { undashed } : {}),
+                        ...(fine ? { lattice: FINE_LATTICE } : {}),
+                        ...(stand ? { stand } : {}),
+                        ...(crossTo ? { crossTo } : {}),
+                    });
+                } finally {
+                    if (CONTACT_FIDELITY.corridorBodyPricing) corridorClimbDepth -= 1;
+                }
                 // ⛓ FORCEDHIT D2 — the forced-hit rung WALKED the crossing (its hit billed): the walk is done.
                 if (climbed.forced) return climbed.forced.transition;
                 if (climbed.wps) { wps = climbed.wps; narrow = climbed.narrow === true; } else { continue; }
@@ -21171,9 +21226,11 @@ function solveSegmentUnder({
              */
             const dash = (dashMode === 'none' || axisAligned || undashed)
                 ? null
-                : (dashFirst && !narrow) ? dashFirst : planSwordDash(run, wps, { tolerance, dashMode,
-                    certify: (samples) => probeSamples(samples, except),
-                    ...(stand ? { stand } : {}), ...(narrow ? { iframeLapse: false } : {}) });
+                : (dashFirst && !narrow) ? dashFirst
+                    : (!narrow && corridorDashCertified?.wps === wps) ? corridorDashCertified.d
+                        : planSwordDash(run, wps, { tolerance, dashMode,
+                            certify: (samples) => probeSamples(samples, except),
+                            ...(stand ? { stand } : {}), ...(narrow ? { iframeLapse: false } : {}) });
             seeRow({
                 tick: perTick.length,
                 saw: saw(),
