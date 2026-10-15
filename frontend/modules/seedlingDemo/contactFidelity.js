@@ -376,7 +376,7 @@ export const CONTACT_FIDELITY = {
      * the route survey solves today (the slice report lists them); the flip is the user's licence.
      * `SEEDLING_UNBILLED_DAMAGE_GATE=0|1` for a node measurement.
      */
-    unbilledDamageGate: false,
+    unbilledDamageGate: true,
     /**
      * fidelity SMALLGAPS D1 — A BUTTON-DROPPED FALLROCK'S RELEASE STEP LANDS IN THE FROZEN TICK, NOT THE NEXT ONE
      * (`levelRun.advance`'s `pendingButtonFalls` branch).

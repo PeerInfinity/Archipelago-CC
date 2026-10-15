@@ -125,7 +125,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // frame) ships OFF.
             arrivalButtonArm: false,
             // ⛓ fidelity UNBILLEDGATE D2: `unbilledDamageGate` (`solverBot.UNBILLED_DAMAGE`) ships OFF.
-            unbilledDamageGate: false,
+            unbilledDamageGate: true,
             // ⛓ fidelity SMALLGAPS: `buttonFallReleaseStep` (D1), `waypointSlide` (D2), `lavaChainPlayerHit` (D3) shipped OFF —
             // ⚖ (user, 2026-10-14, "Flip all three") ON since the wave-16 harvest.
             buttonFallReleaseStep: true, waypointSlide: true, lavaChainPlayerHit: true,
