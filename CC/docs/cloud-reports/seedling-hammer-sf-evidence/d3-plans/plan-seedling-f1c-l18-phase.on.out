@@ -1,0 +1,7 @@
+PASS: ⛓ the clock is at residue 42, moved by -20 from the committed 17 — seam.time 10052 → 10032
+FAIL: ⛓⛓ the solve STALLED for the hammer's phase at least once — []
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":569,"from_level":18,"to_level":19}]
+FAIL: ⛓ the committed f1c-l18-phase42 is what this script produces today — ⛔ DRIFT — re-run without --check
+## f1c-l18-phase42: 569 ticks, residue 42, 0 stall(s), {18,0}@535
+
+2 CHECK(S) FAILED

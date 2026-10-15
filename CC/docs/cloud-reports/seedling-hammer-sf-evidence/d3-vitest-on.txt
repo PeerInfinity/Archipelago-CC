@@ -1,0 +1,27 @@
+      Tests  23 failed | 385 passed | 1 skipped (409)
+ FAIL  frontend/modules/seedlingDemo/hammerApproach.test.js > hammer-phase B1 — HAMMER_APPROACH (OFF by default) > ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the same residue shorter, with no hit, every press planned in space-time
+ FAIL  frontend/modules/seedlingDemo/hammerApproach.test.js > hammer-phase B1 — the game witness hammer-b1-l18-approach40 > ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, every press planned in space-time
+ FAIL  frontend/modules/seedlingDemo/hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill > ⛓⛓ hammer-a-l18-escape15 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing
+ FAIL  frontend/modules/seedlingDemo/hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill > ⛓⛓ hammer-a-l18-escape21 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing
+ FAIL  frontend/modules/seedlingDemo/hammerFight.test.js > hammer-phase B2 — HAMMER_FIGHT (OFF by default) > ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the residue with no hit, the fight followed to its end
+ FAIL  frontend/modules/seedlingDemo/hammerFightFallback.test.js > hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default) > ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's
+ FAIL  frontend/modules/seedlingDemo/hammerFightFallback.test.js > hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default) > ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence
+ FAIL  frontend/modules/seedlingDemo/hammerGhostKillRung.test.js > hammer-g1-l40-ghostkill — the kill rung's ghost press kill, on the game (hammer-phase G1, D2) > ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key
+ FAIL  frontend/modules/seedlingDemo/hammerGhostSpinner.test.js > D3 — the spinner press kill with the ghost sword (`r9-solve-18`'s staging + `hasGhostSword`) > ON leaves the SWORD's solve byte-identical (the committed staging, 518 ticks)
+ FAIL  frontend/modules/seedlingDemo/hammerGhostSpinner.test.js > D3 — the spinner press kill with the ghost sword (`r9-solve-18`'s staging + `hasGhostSword`) > ⛓⛓⛓ ON: SOLVED with no hit, crossing to L19; every landing a ghost press, two per body (2 damage each), from beyond the sword's reach
+ FAIL  frontend/modules/seedlingDemo/hammerPressBombs.test.js > PRESS_KILL_BOMBS — leg 381 (the MOVINGWAIT witness walk) > t1099, the kill's first tick: OFF stands on (248,184) to press at t1153; ON names #7's blast on that stance and strikes from (232,184)
+ FAIL  frontend/modules/seedlingDemo/pressKillCost.test.js > strikeScanCost (P2) — derivations on L40 (C1's staging A), P2 ON against OFF > the kill-start derivation, then two refused ones on the same run (lines carried): the same answers
+ FAIL  frontend/modules/seedlingDemo/procgenScratchPersistence.test.js > the layer — the model self-declares the clear its own refusal named > WITH the flag it writes instead, on that same tick, and says what it wrote
+ FAIL  frontend/modules/seedlingDemo/procgenScratchPersistence.test.js > the layer — the model self-declares the clear its own refusal named > WITHOUT the flag the run still refuses, and names the tick the clear lands on
+ FAIL  frontend/modules/seedlingDemo/procgenScratchPersistence.test.js > the narrowed dialogue guard — LIVE bodies only > a room whose spinner is already REMOVED is no longer asked
+ FAIL  frontend/modules/seedlingDemo/solveProgress.test.js > hammer-phase D1 — the progress hook is observation only (byte-identity) > ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count
+ FAIL  frontend/modules/seedlingDemo/solveProgress.test.js > hammer-phase D1 — the progress hook is observation only (byte-identity) > ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes
+ FAIL  frontend/modules/seedlingDemo/solveProgress.test.js > hammer-phase D1 — the snapshot's structure > ⛓⛓ the hammer room: the press arm's escape searches are leaves with their bounds, and the map holds both units
+ FAIL  frontend/modules/seedlingDemo/solverBot.test.js > R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is arithmetic > ⛓ L18 spends the fade WALKING, and the wait is the subtraction
+ FAIL  frontend/modules/seedlingDemo/solverSpinnerKill.test.js > F2 — a lock-less spinner on the walk, post-sword > (2,2): was the run's line-of-sight refusal; now SOLVES in 515 t, the swing planned on a clear line
+ FAIL  frontend/modules/seedlingDemo/solverSpinnerKill.test.js > F2 — a lock-less spinner on the walk, post-sword > (2,7): was "no step out"; now SOLVES in 264 t, the wait before the train priced
+ FAIL  frontend/modules/seedlingDemo/solverSpinnerKill.test.js > F2 — a lock-less spinner on the walk, post-sword > (5,5): was EXHAUSTED; now SOLVES in 269 t by a press kill whose end is OBSERVED
+ FAIL  frontend/modules/seedlingDemo/solverSpinnerKill.test.js > F2 — a lock-less spinner on the walk, post-sword > (7,6): was "nowhere to be"; now SOLVES in 210 t, the train priced at its own tick's phase
+ Test Files  12 failed | 9 passed (21)
+rc=1
+⎯⎯⎯⎯⎯⎯ Failed Tests 23 ⎯⎯⎯⎯⎯⎯⎯
