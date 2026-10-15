@@ -265,6 +265,12 @@ the presets but not the packages). Pairs are derived: the package's game from it
 `frontend/presets/preset_files.json` (every slot of that game); key order is ignored. A package no committed document carries
 sidecars for is named, not passed. No `Generate.py` run — milliseconds.
 
+Since 2026-10-15 (rules-produced-blocks) the same pairing also holds `_worldgen_flash_panel.json` and
+`_worldgen_region_atlas.json` against the `flash_panel` / `region_atlas` slot blocks. A last section holds every committed
+copy of the Seedling wiring equal to its one source, `frontend/modules/procgenPipeline/flashPanelWiring.json`. A copy is a
+`flash_panel` block in any preset, or a package's `_worldgen_flash_panel.json`, whose `config` is the wired game's. A build
+bump that misses a copy is red by name. A block no wiring entry names is listed as hand-kept: today only `robotkitty_tilemap`'s.
+
 ```bash
 node scripts/procgen/check-worldgen-package-sidecars.mjs
 ```

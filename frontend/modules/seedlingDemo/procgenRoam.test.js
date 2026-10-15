@@ -381,11 +381,13 @@ describe('roam — the BODY ABLATION (D5)', () => {
         });
 
     /** ⛓ F1b — the SAME through-room one boot later: the route crosses the blob
-     *  and the bodies cost it 58 ticks (measured, 127 vs 69). */
-    it('rooms s10 post-sword: COSTS — the route crosses the bodies (127 vs 69 ticks)', () => {
+     *  and the bodies cost it 58 ticks (measured, 127 vs 69).
+     *  ⛓ fidelity STRIKELAPSE flip (LAPSECOST D3): with `strikeIframeLapse` ON the walk's presses land on the lapsing
+     *  i-frames and the bodies cost 32 ticks (101 vs 69) — the CI-only mover STRIKELAPSE's flip list missed. */
+    it('rooms s10 post-sword: COSTS — the route crosses the bodies (101 vs 69 ticks)', () => {
         const a = level('rooms', 10, POST_SWORD_PALETTE).summary.bodyAblation;
         expect(a.verdict).toBe('COSTS');
-        expect([a.withBodies.ticks, a.withoutBodies.ticks]).toEqual([127, 69]);
+        expect([a.withBodies.ticks, a.withoutBodies.ticks]).toEqual([101, 69]);
         expect(a.withBodies.ticks).toBeGreaterThan(a.withoutBodies.ticks);
         expect(a.deltaTicks).toBe(a.withBodies.ticks - a.withoutBodies.ticks);
     });

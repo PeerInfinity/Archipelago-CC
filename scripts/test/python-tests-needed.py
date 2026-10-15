@@ -12,7 +12,9 @@ test, conftest, or world loaded under pytest reads it. Measured 2026-10-10
 (`test_schema_validation`), `scripts/utils|test|build|data/**`, `.gitmodules`
 and every `worlds/**` file (the packed-apworld freshness test). Everything
 else under `frontend/`, plus `scripts/procgen/` (non-Python) and
-`test_json/`, is read only by the JavaScript suites.
+`test_json/`, is read only by the JavaScript suites. One file under
+`frontend/modules/` is the exception: the flashPanel wiring JSON, which the
+Seedling export handler reads (2026-10-15).
 
 ⛔ The list is an ALLOW-TO-SKIP list: anything not matched runs the matrix, an
 empty list runs it, and the caller runs it whenever it cannot get the list.
@@ -31,6 +33,10 @@ SKIP_PREFIXES = (
 KEEP_PREFIXES = (
     'frontend/presets/',
     'frontend/schema/',
+    # The Seedling export handler (exporter/games/unofficial/seedling.py) reads
+    # the shared flashPanel wiring, and test_seedling_flash_panel_export.py
+    # compares it with the committed seed-1 preset (rules-produced-blocks).
+    'frontend/modules/procgenPipeline/flashPanelWiring.json',
 )
 
 

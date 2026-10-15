@@ -27,6 +27,7 @@ class TestPythonTestsNeeded(unittest.TestCase):
         for path in (
             'frontend/presets/seedling/AP_1/AP_1_rules.json',
             'frontend/schema/rules.schema.json',
+            'frontend/modules/procgenPipeline/flashPanelWiring.json',
             'scripts/utils/generate-procgen-rules.js',
             'scripts/test/generate-jta-mixed-test-preset.py',
             'scripts/data/template-exclude-list.json',

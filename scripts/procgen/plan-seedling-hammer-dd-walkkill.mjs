@@ -14,6 +14,12 @@
  * keylock-stance walk climbs to `kill (bobsoldier@48,80) by press`, the walk to the stance kills the body, and OFF the
  * dwell refuses at t174. ON the solve reaches L32.
  *
+ * ⚖ PINNED `strikeIframeLapse` OFF (fidelity planning-8, the lapse flip, 2026-10-15; hammer's OK): this staging
+ * witnesses DD's seam under the PRE-LAPSE walk, so `walkKillSolve` runs it with the lapse OFF whatever the default.
+ * With the lapse ON the walk changes: (32,112) solves at 509 with DD OFF as well, and step 50's own (176,48) staging
+ * REFUSES "already true" with DD OFF — there DD is load-bearing (`walkKillSolve(…, { lapse: true })`, the test's
+ * lapse-ON rows).
+ *
  * `--check` asserts, in the model: OFF refuses with `runDwell`'s already-true sentence at t174 on that arm; ON solves,
  * its chaser record carries `killedOnWalk` (a sword press of the walk, `killed: true`), no player hit, and the
  * committed tape is byte-identical. The GAME is asked with `probe-seedling-chaser-mobiles.mjs --class=BobSoldier
@@ -62,8 +68,9 @@ function armCap() {
 }
 
 /** One `solveSegment` with `PRESS_KILL_DONE_ON_WALK` = `enabled`: the executed keys, the outcome and the records. */
-export async function walkKillSolve(staging, enabled) {
+export async function walkKillSolve(staging, enabled, { lapse = false } = {}) {
     const { solveSegment, withPressKillDoneOnWalk } = await import(join(MODULE, 'solverBot.js'));
+    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { BOBSOLDIER2_STEP50 } = await import(join(HERE, 'plan-seedling-bobsoldier2.mjs'));
@@ -74,14 +81,14 @@ export async function walkKillSolve(staging, enabled) {
     run.advance = (held) => { keys.push(new Set(held)); return advance.call(run, held); };
     let message = null;
     let records = null;
-    withPressKillDoneOnWalk(enabled, () => {
+    withContactFidelity({ strikeIframeLapse: lapse }, () => withPressKillDoneOnWalk(enabled, () => {
         try {
             records = solveSegment({ run, goals: JSON.parse(JSON.stringify(BOBSOLDIER2_STEP50.goals)), name: NAME,
                 boot: staging.boot, dashMode: 'all', shouldStop: armCap() }).records ?? [];
         } catch (e) {
             message = String(e?.message ?? e);
         }
-    });
+    }));
     return { keys, message, records, ticks: run.ticksCompleted, level: run.level,
         hits: run.ledger('playerHits').map((h) => ({ t: h.t, source: h.source, id: h.id })) };
 }

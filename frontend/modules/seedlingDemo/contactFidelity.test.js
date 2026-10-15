@@ -17,6 +17,9 @@
  *     residue rows (576 AXE, 589 ARRIVAL) remain.
  *   - ⛓ JS wave-16 wiring: 589 re-captured at the `Bot`'s observation point (`seedlingContactLab`'s LAST poll per tick);
  *     its rule is `buttonFallReleaseStep` (fidelity SMALLGAPS D1), and twelve reproduce — 576 is the one residue row.
+ *   - ⚖ (user, 2026-10-15, fidelity planning-8): 576's 10-05 capture is DELETED — today's plan for that leg plays to
+ *     `done` even with every switch OFF (JS witness refresh), so the parted capture witnessed a plan no one walks. Twelve
+ *     witnesses, all of which reproduce at the defaults; no residue row remains.
  */
 import { describe, expect, it } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -28,20 +31,28 @@ import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
 const DIR = join(dirname(fileURLToPath(import.meta.url)), 'fixtures', 'contact-witness');
 const load = (id) => JSON.parse(readFileSync(join(DIR, `${id}.json`), 'utf8'));
 
-/** leg id → [the tick the sweep named, the switch that fixes it, or null for residue] */
+/**
+ * leg id → [the tick the sweep named, the switch that fixes it, or null for residue]
+ *
+ * ⛓ JS witness refresh: the solver's plans for 264, 269, 308, 309, 659, 661 and 666 had drifted since the 10-05
+ * captures (fidelity's model changes), so those seven were re-captured under today's plans (switches none,
+ * `--poll=last`) and their ticks re-pinned from the replay. The other five are the 10-05 captures, byte-untouched
+ * (their plans are unchanged). 269's closing rule moved: the 10-05 plan was struck by a wallflyer
+ * (`wallFlyerSwordHits`); on today's plan the model takes a hit the game does not take (a WallFlyer and two Bobs in
+ * reach), and `collideLinePointsExact` alone closes it.
+ */
 const ROWS = {
     243: [52, 'wallFlyerSwordHits'], // L22, wallflyer@64,80 struck at t46 in the game
     251: [60, 'wallFlyerSwordHits'], // L22
-    269: [55, 'wallFlyerSwordHits'], // L25, wallflyer@48,48 struck at t51
-    264: [80, 'collideLinePointsExact'], // L25, the launch a tick late in the model
+    269: [70, 'collideLinePointsExact'], // L25, the model takes a hit the game does not (10-05: t55, wallFlyerSwordHits)
+    264: [116, 'collideLinePointsExact'], // L25, a knockback in the game the model lacks; WallFlyer@72,79 and two Bobs in reach (10-05: t80)
     283: [19, 'collideLinePointsExact'], // L27, the launch a tick early in the model
-    659: [48, 'drillLive'], // L88, drill@128,160 hops onto the player
-    661: [48, 'drillLive'],
+    659: [96, 'drillLive'], // L88, the drill@104,184 hops onto the player (10-05: t48)
+    661: [96, 'drillLive'], // (10-05: t48)
     663: [104, 'drillLive'],
-    666: [53, 'drillLive'],
-    308: [67, 'bobSoldierLive'], // L30 BobSoldier@48,80 — its sword (fidelity BOBSOLDIER W4)
-    309: [66, 'bobSoldierLive'], // L30 BobSoldier — its sword
-    576: [141, null], // L71 — no Mobile near the player (the spinning axe: the AXE slice's region)
+    666: [98, 'drillLive'], // L88, the drill@136,136 (10-05: t53)
+    308: [95, 'bobSoldierLive'], // L30 BobSoldier — its sword (fidelity BOBSOLDIER W4; 10-05: t67)
+    309: [131, 'bobSoldierLive'], // L30 BobSoldier — its sword (10-05: t66)
     // L74 — the arrival button's release step a tick late in the model (fidelity SMALLGAPS D1). ⛓ JS wave-16 wiring: the
     // 10-05 capture took each tick's FIRST poll, 20 frames into the 175-frame freeze (t1 y 136, vy 0), which read as
     // L74ARRIVAL's frozen t1 (`arrivalButtonArm`); at the `Bot`'s own observation point t1 is the release step (135.2,
@@ -64,7 +75,7 @@ const MUTANT_TICK = { 589: 1 };
 const ALL_OFF = Object.fromEntries(Object.keys(CONTACT_FIDELITY).map((k) => [k, false]));
 
 describe('contact witnesses (fixtures/contact-witness)', () => {
-    it('holds exactly the thirteen measured legs', () => {
+    it('holds exactly the twelve measured legs', () => {
         const ids = readdirSync(DIR).filter((f) => f.endsWith('.json')).map((f) => Number.parseInt(f, 10)).sort((a, b) => a - b);
         expect(ids).toEqual(Object.keys(ROWS).map(Number).sort((a, b) => a - b));
     });
@@ -105,10 +116,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // "Both ON") ON since the wave-14 flip.
             totemShotBlastInt: true,
             rebootShake: true,
-            // ⛓ fidelity L74LEG624: `fallRockPostFall` (D2), `forecastSpeedByTerrain` (D4) shipped OFF — ⚖ (user,
-            // 2026-10-12) ON since the wave-14 flip; `strikeIframeLapse` (D3) stays OFF ("Four now, strike later":
-            // ON it costs survey steps 50 and 62).
-            strikeIframeLapse: false, fallRockPostFall: true, forecastSpeedByTerrain: true,
+            // ⛓ fidelity L74LEG624: `strikeIframeLapse` (D3), `fallRockPostFall` (D2), `forecastSpeedByTerrain` (D4)
+            // shipped OFF — ⚖ (user, 2026-10-12, "All three ON") ON since the wave-14 flip (fidelity FLIP14); the lapse
+            // waited for STRIKELAPSE + LAPSECOST (its flip, licensed ⚖ 2026-10-14, "Flip after DD lands").
+            strikeIframeLapse: true, fallRockPostFall: true, forecastSpeedByTerrain: true,
             // ⛓ fidelity L74ARRIVAL: `arrivalButtonArm` (a button under a room arrival presses on the first live
             // frame) ships OFF.
             arrivalButtonArm: false,

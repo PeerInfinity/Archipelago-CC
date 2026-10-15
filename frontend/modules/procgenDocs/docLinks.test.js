@@ -285,15 +285,17 @@ describe('the corpus census — printed, then pinned', () => {
          *   360 → 362  spiral victory (2026-10-11): architecture.md's goal paragraph and
          *              substrate-registry.md's content-source paragraph → stepped-pipeline.md
          *              § The item layer (`doc` 278 → 280).
+         *   362 → 364  Noiz2sa measured final span (2026-10-15): noiz2sa.md's § Pricing → the cloud
+         *              measurement report under CC/docs/cloud-reports/, twice (`repo` 38 → 40).
          */
         expect(by).toEqual({
             'same-doc': 22,
             doc: 280,
             external: 22,
-            repo: 38,
+            repo: 40,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(362);
+        expect(CORPUS.length).toBe(364);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
@@ -307,7 +309,7 @@ describe('the corpus census — printed, then pinned', () => {
 
     it('sends every other repo path to GitHub, fragment kept', () => {
         const repo = RESOLVED.filter((r) => r.kind === 'repo');
-        expect(repo).toHaveLength(38);
+        expect(repo).toHaveLength(40);
         for (const r of repo) expect(r.href.startsWith(`${REPO_URL}/`), r.href).toBe(true);
         /** ⛓ The four families the corpus actually names. */
         const tops = [...new Set(repo.map((r) => r.repoPath.split('/')[0]))].sort();

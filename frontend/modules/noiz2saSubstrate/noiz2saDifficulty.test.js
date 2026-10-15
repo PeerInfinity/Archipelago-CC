@@ -3,13 +3,18 @@
  * the smoothing, a span's chance and expected seconds, the span picker, and the product model against the measured
  * three-scene spans.
  */
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it } from 'vitest';
 
 import {
     SKILLS, P_FLOOR, SCENE_TOTAL, isotonic, sceneChance, spanDifficulty, pickSpan, parseSpan, spanAt, spanLength,
-    modelVersusMeasured, sceneIndex,
+    modelVersusMeasured, sceneIndex, MEASURED_SPANS, F_OWN_MIN,
 } from './noiz2saDifficulty.js';
 import { NOIZ2SA_DIFFICULTY } from './noiz2saDifficultyData.js';
+import { NOIZ2SA_MEASURED_SPANS } from './noiz2saMeasuredSpansData.js';
 import { showSpan } from './noiz2saRegion.js';
 
 describe('the data', () => {
@@ -113,5 +118,55 @@ describe('the product model against the measured three-scene spans', () => {
             expect(e).toBeLessThanOrEqual(skill >= 90 && skill <= 96 ? 0.13 : 0.05);
         }
         expect(mae(rows)).toBeLessThan(0.05);
+    });
+});
+
+describe('the measured spans (CC/docs/cloud-reports/noiz2sa-difficulty-optimism.md)', () => {
+    const FINAL = '10:7–10:boss';
+    const src = JSON.parse(fs.readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../scripts/data/noiz2sa-measured-spans.json'), 'utf8'));
+    it('the generated module is the committed aggregates (extract-noiz2sa-measured-spans.mjs)', () => {
+        expect(Object.keys(NOIZ2SA_MEASURED_SPANS.spans)).toEqual(Object.keys(src.spans));
+        for (const [span, { skills, cells }] of Object.entries(src.spans)) {
+            expect(NOIZ2SA_MEASURED_SPANS.spans[span].skills).toEqual(skills);
+            expect(NOIZ2SA_MEASURED_SPANS.spans[span].cells).toEqual(cells.map((c) => [c.n, c.deathless, c.L, c.F]));
+            expect(skills[0]).toBe(0);
+            expect(skills.at(-1)).toBe(100);
+        }
+    });
+    it('the default final span is one, measured at every whole skill 90–100 with hundreds of attempts a cell', () => {
+        expect(MEASURED_SPANS).toContain(FINAL);
+        const { skills, cells } = NOIZ2SA_MEASURED_SPANS.spans[FINAL];
+        for (let k = 90; k <= 100; k++) expect(skills).toContain(k);
+        for (const [n] of cells) expect(n).toBeGreaterThanOrEqual(200);
+    });
+    it('MEASURED: it is read on its own skills — at a measured skill the model is the cell (p and E = L + F(1 − p)/p, own F)', () => {
+        const { skills, cells } = NOIZ2SA_MEASURED_SPANS.spans[FINAL];
+        // skill 95: 160 of 1142 attempts deathless (0.140; the product of its scenes said 0.270), E 250.4 s measured
+        const k = skills.indexOf(95);
+        const [n, d, L, F] = cells[k];
+        expect(n - d).toBeGreaterThanOrEqual(F_OWN_MIN);
+        const m = spanDifficulty(parseSpan(FINAL), 95);
+        expect(m.measured).toBe(true);
+        expect(m.p).toBeCloseTo(d / n, 12);
+        expect(m.p).toBeCloseTo(0.140, 3);
+        expect(m.seconds).toBeCloseTo(L + F * (1 - d / n) / (d / n), 9);
+        expect(m.seconds).toBeGreaterThan(240);
+        expect(m.seconds).toBeLessThan(260);
+    });
+    it('non-decreasing in skill; 0 below 80 and 1 at 100', () => {
+        let last = -1;
+        for (let k = 0; k <= 100; k += 0.5) {
+            const p = spanDifficulty(parseSpan(FINAL), k).p;
+            expect(p).toBeGreaterThanOrEqual(last - 1e-12);
+            last = p;
+        }
+        expect(spanDifficulty(parseSpan(FINAL), 70).p).toBe(0);
+        expect(spanDifficulty(parseSpan(FINAL), 100).p).toBe(1);
+    });
+    it('every other span reads as before: the product of its scenes, or the table\'s triple', () => {
+        const s = parseSpan('10:6–10:9');
+        expect(spanDifficulty(s, 95).measured).toBe(false);
+        expect(spanDifficulty(s, 95).p).toBeCloseTo([5, 6, 7, 8].reduce((a, i) => a * sceneChance(90 + i, 95), 1), 12);
+        expect(spanDifficulty(parseSpan('10:7–10:9'), 95).measured).toBe(true);
     });
 });

@@ -17634,7 +17634,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10931 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10825 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -17653,10 +17653,10 @@ its byte-frozen free oracle is compared against.
 | 13 | `r9-solve-2` | L2 → L0 | 23 | — |
 | 14 | `r9-solve-0` | L0 → L13 | 145 | — |
 | 15 | `r9-solve-13` | L13 → L14 | 36 | — |
-| 16 | `r9-solve-14` | L14 → L15 | 98 | — |
+| 16 | `r9-solve-14` | L14 → L15 | 103 | — |
 | 17 | `r9-solve-15` | L15 → L16 | 456 | — |
-| 18 | `r9-solve-16` | L16 → L18 | 688 | — |
-| 19 | `r9-solve-18` | L18 → L19 | 518 | — |
+| 18 | `r9-solve-16` | L16 → L18 | 655 | — |
+| 19 | `r9-solve-18` | L18 → L19 | 440 | — |
 | 20 | `r9-solve-19` | L19 → L20 | 746 | `bosskey@L19` |
 | 21 | `r9-solve-20` | L20 → L13 | 560 | `shield@L20` |
 | 22 | `r9-solve-13-v2` | L13 → L0 | 48 | — |
@@ -22440,3 +22440,25 @@ Lessons:
 2. *Past a budget, fall back to the base's question, not to the looser one.* Past the cap, OFF's question keeps the
    forty free of the floor-only trap (0 lost in 20,640 derivations at every cap); the admissible floor alone reopens
    it (101 lost at 4). It is not a proof: a measured pair can still displace one of OFF's, as in shape a.
+
+### Seedling fidelity lapse flip — `strikeIframeLapse` ON, with LAPSECOST's NARROW rung
+
+⚖ The user (2026-10-14, "Flip after DD lands"; re-measured and landed 2026-10-15, "Land it now"): with the hammer
+arc's DWELL-DONE and its flip on main, `strikeIframeLapse` goes ON by default. The flip is STRIKELAPSE's candidate as
+LAPSECOST refreshed it: the lapse, its NARROW rung (`solverBot.LAPSE_NARROW_RETRY`, live only under the lapse), the
+roster re-pins, and the campaign windows 16–30 re-recorded (`r9-campaign` 10,931 → 10,825 ticks).
+
+Measured on main before the flip (CI, by key; the flip branch vs main at the same model):
+
+- Route survey (through end, full route): 170 SOLVED / 50 REFUSED vs 169 / 51. Step 147 REFUSED → SOLVED 504, no
+  step lost. Step 50 is SOLVED at 395 (DWELL-DONE's answer), step 163 476 → 366, and 22 other steps move length only.
+- Full divergence sweep: legs 110, 111, 624, 750 and 772 go failed → `done`, and 265 failed → `crossed`. Leg 773 goes
+  `done` → failed. That is the FLYER's drop, modelled behind `flyerLive` (still OFF until the BeamTower's drift is
+  modelled). L40's 397 moves timeout → refusal. Everything else is `crossed`↔`done` noise.
+- The full tier and the standard probe battery are green.
+
+One re-pin outside our own rows: the hammer DD witness (`plan-seedling-hammer-dd-walkkill.mjs`,
+`hammerPressKillDoneOnWalk.test.js`). Its stagings witness DD's seam under the PRE-LAPSE walk, so `walkKillSolve` pins
+the lapse OFF (hammer's OK). A new lapse-ON block pins the post-flip shape: at (32,112) DD OFF and ON solve alike in
+509, and at step 50's own (176,48) DD OFF refuses the dwell as already true while DD ON solves. Under the lapse, DD is
+load-bearing.

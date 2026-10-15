@@ -8,6 +8,10 @@
  * The staging is survey step 50's (`bobsoldier2Staging`) booted at (32,112) (`plan-seedling-hammer-dd-walkkill.mjs`):
  * at the defaults it is the shape fidelity CEREMONYSHOVE measured on step 50 under `strikeIframeLapse` +
  * `ceremonyShove`. The witness `fixtures/hammer-dd-walkkill-witness/` is the ON plan replayed on the game (p4f).
+ *
+ * ⚖ The rows below run with `strikeIframeLapse` PINNED OFF (`walkKillSolve`'s default; see
+ * `plan-seedling-hammer-dd-walkkill.mjs`): the staging witnesses DD's seam under the pre-lapse walk. The last block
+ * runs both stagings with the lapse ON (the default since the fidelity lapse flip), where DD is load-bearing.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -116,6 +120,31 @@ describe('DD — the body is alive at the stance (step 50\'s own staging, (176,4
         expect(rec.kind).toBe('dwell');
         expect(rec.ticks).toBeGreaterThan(0);
         expect(rec.killedOnWalk).toBeUndefined();
+    }, SOLVE_MS);
+});
+
+describe('DD under `strikeIframeLapse` ON (the default since the fidelity lapse flip) — DD is load-bearing', () => {
+    it('(32,112): the lapse-admitting walk solves to L32 in 509 with DD OFF and ON alike', async () => {
+        const staging = await walkKillStaging();
+        const off = await walkKillSolve(staging, false, { lapse: true });
+        const on = await walkKillSolve(staging, true, { lapse: true });
+        expect(off.message).toBe(null);
+        expect(on.message).toBe(null);
+        expect(on.level).toBe(32);
+        expect(on.keys).toHaveLength(509);
+        expect(keysMd5(on.keys)).toBe(keysMd5(off.keys));
+    }, SOLVE_MS);
+
+    it('(176,48), step 50\'s own staging: DD OFF refuses the dwell ALREADY TRUE at the body; DD ON solves', async () => {
+        const staging = await bobsoldier2Staging();
+        const off = await walkKillSolve(staging, false, { lapse: true });
+        const on = await walkKillSolve(staging, true, { lapse: true });
+        expect(off.message).toMatch(/-> kill \(bobsoldier@48,80\) by press: the dwell's condition .* is ALREADY TRUE before a tick is spent/s);
+        expect(on.message).toBe(null);
+        expect(on.level).toBe(32);
+        expect(on.hits).toEqual([]);
+        const rec = on.records.find((r) => r.strategy === 'kill' && r.target === BODY);
+        expect(rec.killedOnWalk).toBeTruthy();
     }, SOLVE_MS);
 });
 

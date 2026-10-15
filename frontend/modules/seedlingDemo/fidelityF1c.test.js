@@ -59,8 +59,11 @@ const RESIDUE = ((STAGING.seam.time % PERIOD) + PERIOD) % PERIOD;
  * window key for key (510 t, the same keys the window had at 42), stalls and all.
  * ⛓ LINEFLIP (W1 ON) kept the residue at 40 (window 19's own clock is upstream of the move) and re-solved the window
  * 510 → 519 t with no stall; the 510 t walk is now the solve at 42 only.
+ * ⛓ FLIP CANDIDATE (strikelapse D4; the hammer arc's pin, HELD): `strikeIframeLapse` ON re-records windows 16–30
+ * (fidelity FLIP14's campaign patch) — `r9-solve-18` re-solves 518 → 440 t from `-16`'s new latch and its
+ * `seam.time` is 9940 → 9912, so the chain's residue moves 40 → 12.
  */
-const CHAIN_RESIDUE = 40;
+const CHAIN_RESIDUE = 12;
 /** The residue `f1c-l18-phase42` was cut and game-recorded at: the chain's, F1c to DASH. */
 const WITNESS_RESIDUE = 42;
 /** The committed residue BEFORE F1c re-recorded the window (`seam.time` 10052): no corner forms. */

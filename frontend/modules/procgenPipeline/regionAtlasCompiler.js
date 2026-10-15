@@ -83,6 +83,7 @@ import {
 } from './regionAtlasMazeProjection.js';
 import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 import { declareReturnToMenu } from '../procgenCore/restartWarp.js';
+import FLASH_PANEL_WIRING_DATA from './flashPanelWiring.json' with { type: 'json' };
 
 // AP id namespaces for compiled atlases. Deliberately clear of the per-game
 // engine-binding namespace — frontend/modules/flashPanel/games/seedling.json
@@ -147,8 +148,20 @@ export const regionSubstrateOf = (region, atlas, options = {}) => (
 // per-game config it points at (`games/<id>.json`) holds the teleport recipe,
 // the item/location maps, and now the position signals the crossing detector
 // reads. Games with no wiring here compile graph-only.
-export const FLASH_PANEL_WIRING = Object.freeze({
-    /**
+//
+// ⛓ THE DATA LIVES IN `flashPanelWiring.json` (rules-produced-blocks,
+// 2026-10-15), not here: the Python exporter's Seedling handler
+// (`exporter/games/unofficial/seedling.py`) reads the same file, so the
+// seed-1 `seedling` preset's block is PRODUCED from it rather than typed.
+// `scripts/procgen/check-worldgen-package-sidecars.mjs` holds every committed
+// copy (preset blocks and `_worldgen_flash_panel.json` files) equal to it.
+// The history below describes moves of that file's `seedling` entry.
+export const FLASH_PANEL_WIRING = Object.freeze(Object.fromEntries(
+    Object.entries(FLASH_PANEL_WIRING_DATA).map(([game, wiring]) => [game, Object.freeze({ ...wiring })]),
+));
+/**
+ * `FLASH_PANEL_WIRING.seedling` — the history of the JSON file's entry.
+ *
      * ⛓⛓ p4e SINCE R9 SLICE DEF (⚖ user, 2026-09-27 — the p4d → p4e default
      * move; licence: the CI full tier on p4e, run 36350758799, 154 tapes
      * 3745/0/46). p4e declares `hold` and `tag` beside p4d's `arm` and
@@ -174,13 +187,13 @@ export const FLASH_PANEL_WIRING = Object.freeze({
      * SEEDLING HEADLESS WEBGPU slice R2 retired p4c, the control and the row
      * (⚖ user, 2026-09-12).
      *
-     * ⛔ THIS TABLE IS THE ONLY CODE SOURCE OF A PRESET'S `flash_panel` BLOCK.
-     * Every other block in `frontend/presets/` was typed by hand and a
-     * regeneration drops it (`flashPanel/README.md` — the seed-1 `seedling`
-     * preset's block is PROVISIONAL until the producing side declares it).
+     * ⛔ THE JSON FILE IS THE ONLY SOURCE OF A PRESET'S SEEDLING `flash_panel`
+     * BLOCK. This compiler and the exporter's Seedling handler both produce
+     * from it; `world_generator` only carries a source slot's block through
+     * its package. The one block still typed by hand is `robotkitty_tilemap`'s
+     * (no Robot Wants Kitty world exists here to regenerate it —
+     * `flashPanel/README.md`).
      */
-    seedling: Object.freeze({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4f/game.html' }),
-});
 
 const endpointKey = (regionId, exitId) => `${regionId}/${exitId}`;
 
@@ -911,8 +924,9 @@ export function compileRegionAtlas(atlas, options = {}) {
     const sidecarRegions = Object.keys(sidecars);
     if (sidecarRegions.length > 0) {
         // The flashPanel wiring boots the real game for this preset. It is the
-        // same hand-added block the seed-1 seedling preset carries — except
-        // here it is COMPILED, so a regeneration no longer drops it (the
+        // same block the seed-1 seedling preset carries (once typed by hand, now
+        // written by the exporter's Seedling handler from the same JSON file) —
+        // COMPILED here, so a regeneration never drops it (the
         // rulesExporter precedent, and the trap the plan's decision 2 names).
         // A region compiled to the MAZE deliberately carries none of it:
         // nothing boots the original engine there, and a stray flash_panel

@@ -281,7 +281,8 @@ describe('⛓ the links the render emits', () => {
         //   358 → 359: SOLVE PROGRESS (JS half) — flash.md's "Solve progress" bullet → seedling-solve-progress.md §7
         //   359 → 360: JtA zone locations — substrate-registry.md → jta.md.
         //   360 → 362: spiral victory — architecture.md and substrate-registry.md → stepped-pipeline.md § The item layer.
-        expect(checked).toBe(362);
+        //   362 → 364: Noiz2sa measured final span — noiz2sa.md § Pricing → the cloud measurement report, twice.
+        expect(checked).toBe(364);
     });
 
     it('tags each link with the kind that produced it', () => {

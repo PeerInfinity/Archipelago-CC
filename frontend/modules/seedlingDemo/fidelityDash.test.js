@@ -22,6 +22,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 
 import {
     DASH_WINDOW_ROSTER_WIDE, SLASH_ANIM_TICKS, SLASH_ANIM_TICKS_GAME,
@@ -128,7 +129,10 @@ describe('fidelity DASH D2 — a dash buys FOUR hit tests in the game', () => {
      * 111 t one (why `canCross` defaulted to `none` until DASHFLIP); at the game's arm it is the committed witness
      * `dash-l16-sword-all` (117 t), which the game reproduced (`--record`, 118 observations).
      */
-    it('canCross L16 → L17, dashMode all: the refuted plan behind the gate, the witnessed one past it', () => {
+    // ⛓ fidelity FLIP14: pins the game-witnessed L16 plans, solved under the pre-flip strike gate — `strikeIframeLapse`
+    // OFF. ON (⚖ the wave-14 flip, user 2026-10-12) the `all` plan is 124 t (14 dashes, walks [[5,12],[1,2]]) and the
+    // dashless one 222 t, both 0 hits and unwitnessed (FLIP14 report, D1).
+    it('canCross L16 → L17, dashMode all: the refuted plan behind the gate, the witnessed one past it', () => withContactFidelity({ strikeIframeLapse: false }, () => {
         const r = canCross({ level: 16, exit: 17, arrival: { from: 15 }, inventory: ['sword'], dashMode: 'all' });
         expect(r.verdict).toBe('can');
         const planned = parseTape(JSON.stringify(r.witness.tape));
@@ -143,7 +147,7 @@ describe('fidelity DASH D2 — a dash buys FOUR hit tests in the game', () => {
             expect(r.plan.hash).toBe('5b1f924b52');
             expect(planned.inputs).toEqual(refutedTape().inputs);
         }
-    }, 60_000);
+    }), 60_000);
 });
 
 /**
@@ -166,7 +170,8 @@ describe('fidelity DASH D3 — out.dashes', () => {
         return { out, run, staging };
     };
 
-    it('L16 all: the count is the run\'s own dashes, and the inner PULL walk\'s windows are in it', () => {
+    // ⛓ fidelity FLIP14: the witnessed plan's gate — `strikeIframeLapse` OFF (see the DASH D2 row's note).
+    it('L16 all: the count is the run\'s own dashes, and the inner PULL walk\'s windows are in it', () => withContactFidelity({ strikeIframeLapse: false }, () => {
         const { out, run } = solveL16('all');
         expect(out.perTick.length).toBe(DASH_WINDOW_ROSTER_WIDE ? 117 : 111);
         expect(out.dashes.count).toBe(run.dashes.length);
@@ -178,9 +183,10 @@ describe('fidelity DASH D3 — out.dashes', () => {
         // ⛔ the under-count the field exists for: the trace's rows carry ONE window
         const rowWindows = out.trace.rows.reduce((n, r) => n + (r.strategy?.swordDash?.windows?.length ?? 0), 0);
         expect(rowWindows).toBe(1);
-    }, 60_000);
+    }), 60_000);
 
-    it('the committed plan replays with the same dashes (the count is the tape\'s, not the planner\'s)', () => {
+    // ⛓ fidelity FLIP14: the witnessed plan's gate — `strikeIframeLapse` OFF (see the DASH D2 row's note).
+    it('the committed plan replays with the same dashes (the count is the tape\'s, not the planner\'s)', () => withContactFidelity({ strikeIframeLapse: false }, () => {
         const { out, staging } = solveL16('all');
         const tape = DASH_WINDOW_ROSTER_WIDE ? loadTape('dash-l16-sword-all') : refutedTape();
         let run = null;
@@ -188,12 +194,13 @@ describe('fidelity DASH D3 — out.dashes', () => {
         for (let r = st.next(); !r.done; r = st.next()) { /* to the end */ }
         expect(run.dashes.length).toBe(out.dashes.count);
         expect(staging.boot).toEqual({ level: 16, x: 32, y: 64 });
-    }, 60_000);
+    }), 60_000);
 
-    it('a dashless solve is zero: {count: 0, windows: 0, walks: []}', () => {
+    // ⛓ fidelity FLIP14: the witnessed plan's gate — `strikeIframeLapse` OFF (see the DASH D2 row's note).
+    it('a dashless solve is zero: {count: 0, windows: 0, walks: []}', () => withContactFidelity({ strikeIframeLapse: false }, () => {
         const { out } = solveL16('none');
         expect(out.perTick.length).toBe(206);
         expect(out.dashes).toEqual({ count: 0, windows: 0, walks: [] });
-    }, 60_000);
+    }), 60_000);
 });
 

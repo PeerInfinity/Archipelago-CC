@@ -60,10 +60,19 @@ import { showSpan } from './noiz2saRegion.js';
 
 /**
  * ⚖ The final region's scenes, by default: the last four scenes of the game, 10:7–10:boss, ending on its last boss. The
- * measured bot clears it deathless with chance about 0.27 at skill 95, 0.6 at 97 and 1 from 98 on, so it asks for the
- * ~95+ skill the default training pace (`TARGET_FINAL_SKILL`) reaches, and four scenes leave the ramp room to grow.
+ * bot, measured on the whole span (`noiz2saMeasuredSpansData.js`), clears it deathless with chance about 0.01 at skill
+ * 90, 0.14 at 93–95, 0.36 at 96–97 and ≈ 1 from 98 on, so it asks for the ~95+ skill the default training pace
+ * (`TARGET_FINAL_SKILL`) reaches, and four scenes leave the ramp room to grow.
  */
 export const DEFAULT_FINAL_SPAN = '10:7–10:boss';
+/**
+ * ⚖ (the user, 2026-10-15: "Please implement the fallback") the least deathless chance the final span may have at the
+ * final region's skill. Below it the bot practically never clears the span (10:7–10:boss: 1 attempt in 2960 at skill
+ * 80, 0.019 at 92 — CC/docs/cloud-reports/noiz2sa-difficulty-optimism.md) and its E is the `P_FLOOR` bound, far under a real visit; so the final
+ * region falls back to the 50% rule up to the setting's length, as when no pace can reach Victory
+ * (`pricing.finalTooHard`). With the measured 10:7–10:boss, a Victory skill of 92 or less falls back, 93 and up play it.
+ */
+export const FINAL_MIN_CHANCE = 0.05;
 /** the item whose location makes a region the FINAL one (the substrate's `victoryItem`, `NOIZ2SA_VICTORY_ITEM_NAME`) */
 export const VICTORY_ITEM = 'Victory';
 /** the generation-form setting's key (the procgen params bag) */
@@ -209,9 +218,15 @@ export function planNoiz2saPricing({
         const order = reachedOrder.indexOf(name);
         let pick;
         let target;
+        let tooHard = false;
         if (name === finalRegion && !finalFallback) {
             target = finalScenes;
             pick = { span: final, ...spanDifficulty(final, skill) };
+            // ⚖ the setting's span at the Victory skill is one the bot practically never clears: the 50% rule instead
+            if (pick.p < FINAL_MIN_CHANCE) {
+                tooHard = true;
+                pick = pickShrinking(finalScenes, skill);
+            }
         } else if (name === finalRegion) {
             // ⚖ third follow-up: Victory needed before any Noiz2sa mana — the 50% rule, up to the setting's length
             target = finalScenes;
@@ -224,7 +239,7 @@ export function planNoiz2saPricing({
         }
         const rate = isStart || !(cost > 0) ? null : Math.max(0.0001, round(cost / pick.seconds, 4));
         regions.set(name, {
-            region: name, order, unreached: !!unreached, start: isStart, final: name === finalRegion, mana: pricedMana,
+            region: name, order, unreached: !!unreached, start: isStart, final: name === finalRegion, finalTooHard: tooHard, mana: pricedMana,
             pricedAt: atNeed ? 'victory' : 'first-reach', skill,
             target, scenes: spanLength(pick.span), span: pick.span, p: pick.p, seconds: pick.seconds, cost, rate,
             expected: rate === null ? null : rate * pick.seconds,
@@ -366,6 +381,7 @@ export function applyNoiz2saPricing(rulesJson, playerId, plan, { substrateId = '
             final: r.final,
             // ⚖ third follow-up: Victory needed before any Noiz2sa mana — the final region played the 50% rule
             ...(r.final && plan.finalFallback ? { finalFallback: true } : {}),
+            ...(r.finalTooHard ? { finalTooHard: true } : {}),
             reached: !r.unreached,
             locations: Object.fromEntries([...priced].filter(([id]) => id).map(([id, l]) => [id, {
                 skill: round(l.skill, 2), p: round(l.p, 4), seconds: round(l.seconds, 2), cost: l.cost,
@@ -392,7 +408,7 @@ export function describePricing(plan) {
         + `${plan.finalFallback ? 'the end of the walk: Victory is needed before any Noiz2sa mana, the final region plays the 50% rule' : 'when Victory is needed'}; `
         + `the walk spends ${round(plan.manaEnd, 2)})`];
     for (const r of plan.regions) {
-        lines.push(`${r.region}${r.final ? ' (final)' : ''}${r.unreached ? ' (unreached)' : ''}: mana ${round(r.mana, 1)} → skill ${round(r.skill, 1)}; `
+        lines.push(`${r.region}${r.final ? ' (final)' : ''}${r.finalTooHard ? ` (the final span is under p ${FINAL_MIN_CHANCE} at this skill: the 50% rule)` : ''}${r.unreached ? ' (unreached)' : ''}: mana ${round(r.mana, 1)} → skill ${round(r.skill, 1)}; `
             + `move ${showSpan(r.span)} (${r.scenes}) p ${round(r.p, 3)} E ${round(r.seconds, 1)} s; cost ${r.cost} → rate `
             + `${r.rate ?? '—'}/s, expected ${r.expected === null ? '—' : round(r.expected, 2)}`);
     }
