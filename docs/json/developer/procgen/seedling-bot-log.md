@@ -22352,8 +22352,8 @@ measured-ETA shapes SC named; the run follows OFF and every answer equals the ba
 
 0 of 565,364 arrived previews beat the admissible floor, and it is tight (least `ETA − floor` 0); 83 % beat OFF's, by
 up to 141 ticks. The floor alone loses 470 strikes (SC's count again); both shapes recover all 470. Neither shape loses
-a strike OFF finds. The only "later" choices (33 in a, 144 in b, all on L18 / the campaign / killgate) replace OFF's
-UNCERTIFIED escape fallback with a later CERTIFIED strike. Shape a is built: shape b scans to the horizon whenever fewer
+a strike OFF finds. The only "later" choices (42 in a, 318 in b) replace OFF's UNCERTIFIED escape fallback with a later CERTIFIED
+strike. Shape a is built: shape b scans to the horizon whenever fewer
 than forty cells are opportunities, 30× / 57× OFF inside the L18 / ghost-staging derivations.
 
 **D3 — end to end, ON** (nothing re-recorded):
