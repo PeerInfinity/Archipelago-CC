@@ -11597,6 +11597,10 @@ export function createLevelRun({
                     }
                 }
                 if (iframe > 0) iframe -= 1;
+                // A contact that LANDS arms the player's own i-frame (`playerHit`'s `hitsTimer`, less the Player's own
+                // decrement later that tick), so the forecast does not price the same window twice (step 114's drill: t48
+                // lands, t49/t50 do not; step 53: t40 then t67 — the model's and the game's).
+                if (rows.some((r) => r.hitsPlayer)) iframe = PLAYER_DAMAGE.hitsTimerMax - 1;
                 return rows;
             },
             /**
