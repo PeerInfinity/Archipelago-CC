@@ -224,8 +224,9 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['botDriverV2', 'solverBot'], strategies: ['shove'],
         why: 'the pushed blocks\' live rects (`levelRun.js:10579`).' },
     { family: 'armedArrowTraps', kind: RUN_ENTITIES, blocks: ['stationary', 'emitter', 'channel'],
-        solverReads: ['botDriverV2', 'dangerMap', 'solverBot'], strategies: [],
-        why: 'the traps whose group is pressed or latched (`levelRun.js:10704`); `dangerMap.arrowDanger` prices their lanes.' },
+        solverReads: ['arrowLaneCrossing', 'botDriverV2', 'dangerMap', 'solverBot'], strategies: [],
+        why: 'the traps whose group is pressed or latched (`levelRun.js:10704`); `dangerMap.arrowDanger` prices their lanes, '
+            + 'and `arrowLaneCrossing.armedLanesOf` reads them for the crossing arm (fidelity ARROWLANE).' },
     { family: 'crushers', kind: RUN_ENTITIES, blocks: ['lane-charge', 'contact'],
         solverReads: ['botDriverV2', 'crusherBait', 'dangerMap', 'solverBot'], strategies: [],
         why: 'the crushers\' LIVE bodies (`levelRun.js:10583`); `dangerMap.crusherDanger` re-derives the lanes at the live centre '
