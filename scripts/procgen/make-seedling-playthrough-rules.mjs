@@ -85,6 +85,7 @@ const { arrivalSolidCensus, gameLandings } = await imp('frontend/modules/seedlin
 const { levelSourceFromAtlas } = await imp('frontend/modules/seedlingDemo/atlasSource.js');
 const {
     deriveObstacleEvents, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
+    deriveTalkEvents, crossRoomPrerequisitesOf,
 } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
 const { FLAG_ACTIONS } = await imp('frontend/modules/seedlingDemo/arrivalSolid.js');
 const { apRegionName } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
@@ -1260,6 +1261,58 @@ export function playthroughButtonEvents(doc, { existing = [] } = {}) {
     });
 }
 
+/**
+ * ⛓⛓ RULES watcher-event — **THE CROSS-ROOM PREREQUISITES AS AP EVENTS** (`flashPanel/seedlingObstacleEvents.js`
+ * `deriveTalkEvents` holds the schema and the why). The rows are the overlay's `CROSS_ROOM_PREREQUISITES` read
+ * against the delivered map and the vanilla set's named rooms (`crossRoomPrerequisitesOf`), so the writer, its room
+ * and the gated solids are derived; this answers the atlas-side questions:
+ *   - PLACE: the writer's sub-region (the component its tile is in; none = a refusal by name);
+ *   - REACH: True_ — a speaking Watcher opens its dialogue on entering its circle, with nothing held
+ *     (`keyNeeded = !checkPersistence(tag)`, false until the talk);
+ *   - GATES: every departure of the gated solid's region whose entrance tile lies ON the solid's sealed footprint
+ *     (the FinalDoor's two teleporters to L115 stand on its cells) — a crossing there passes through the solid.
+ * The atlas carries NO event or gate (a rules-layer projection, as for the other events).
+ */
+export function playthroughTalkEvents(doc, { existing = [] } = {}) {
+    const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
+    const tileOf = ({ x, y }) => [Math.floor(x / TILE), Math.floor(y / TILE)];
+    return deriveTalkEvents(crossRoomPrerequisitesOf(MAP, OV.CROSS_ROOM_PREREQUISITES, VANILLA_NAMED_ROOMS), {
+        existing,
+        place: (w) => {
+            const regionId = regionIdFor(w.level);
+            const region = regionOf(regionId);
+            if (!region) throw new Error(`talk events: ${regionId} is not in the atlas`);
+            const subs = region.subgraph?.sub_regions;
+            if (!subs) return { region_id: regionId, side: apRegionName(regionId) };
+            const grid = gridFor(levelOf(w.level));
+            const { indexOf, components } = regionAnalyses.get(regionId).componentsResult;
+            const [x, y] = tileOf(w);
+            const gx = x - (grid.origin?.x ?? 0);
+            const gy = y - (grid.origin?.y ?? 0);
+            const i = gx >= 0 && gy >= 0 && gx < grid.width && gy < grid.height ? indexOf[gy * grid.width + gx] : -1;
+            const c = i >= 0 ? components[i].id : null;
+            if (!c || !subs.includes(c)) {
+                throw new Error(`talk events: L${w.level} ${w.type}@${w.x},${w.y} stands in no sub-region of ${regionId} `
+                    + `(tile [${x},${y}]) — where the event sits cannot be said`);
+            }
+            return { region_id: regionId, sub_region: c, side: apRegionName(regionId, c) };
+        },
+        reach: () => null,
+        gates: (g) => {
+            const level = levelOf(g.level);
+            const entity = (level?.entities ?? []).find((e) => e.type === g.type && e.x === g.x && e.y === g.y);
+            if (!entity) throw new Error(`talk events: L${g.level} has no ${g.type}@${g.x},${g.y}`);
+            const base = SEM.entitySemantics(entity);
+            const footprint = new Set(SEM.entitySealedTiles(entity, entityOverride(entity, base, level) ?? base)
+                .map(([x, y]) => `${x},${y}`));
+            const regionId = regionIdFor(g.level);
+            return (regionOf(regionId)?.exits ?? [])
+                .filter((e) => e.exit_id.startsWith('out_') && e.entrance_tile && footprint.has(`${e.entrance_tile[0]},${e.entrance_tile[1]}`))
+                .map((e) => ({ region_id: regionId, exit_id: e.exit_id }));
+        },
+    });
+}
+
 /** Every exit whose arrival spawn is NOT its entrance tile, and why — derived, printed, never typed. */
 export const movedArrivalSpawns = [];
 
@@ -1434,6 +1487,15 @@ function main() {
     const obstacle = playthroughObstacleEvents(doc);
     const locks = playthroughLockEvents(doc, { existing: obstacle.events });
     const buttons = playthroughButtonEvents(doc, { existing: [...obstacle.events, ...locks.events] });
+    // ⛓ RULES watcher-event: the gated solid's OWN event needs the prerequisite too (its flag cannot clear first).
+    const talks = playthroughTalkEvents(doc, { existing: [...obstacle.events, ...locks.events, ...buttons.events] });
+    const priorEvents = [...obstacle.events, ...locks.events, ...buttons.events].map((e) => {
+        const has = talks.eventGates.filter((g) => g.event_id === e.fields.event_id)
+            .map((g) => ({ rule: 'Has', args: { item_name: g.item_name } }));
+        if (has.length === 0) return e;
+        const children = [...(e.access_rule ? [e.access_rule] : []), ...has];
+        return { ...e, access_rule: children.length === 1 ? children[0] : { rule: 'And', children } };
+    });
     const landingGates = playthroughLandingGates(doc);
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
@@ -1452,11 +1514,12 @@ function main() {
         returnToMenu: Boolean(SEEDLING_ENTRY.restartWarp),
         // ⛓ RULES obstacle-events: the saved obstacles' events and the landing edges they gate.
         // ⛓ RULES l38-button-event: and the cross-room button presses (obstacle = the target, side = the button).
-        events: [...obstacle.events, ...locks.events, ...buttons.events],
+        // ⛓ RULES watcher-event: and the cross-room prerequisites (the Watcher's talk, read by the FinalDoor).
+        events: [...priorEvents, ...talks.events],
         // ⛓ RULES lock-events: a latched lock's far-side return costs its event, not the reach of its open side.
         internalExitRules: locks.internalExitRules,
         // ⛓ RULES game-truth-gaps (R2): and the landings on lethal terrain.
-        exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...landingGates],
+        exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...talks.exitGates, ...landingGates],
     });
     const rulesText = stringifyRulesJson(rules);
 
@@ -1506,6 +1569,12 @@ function main() {
             + `(pressed at L${e.fields.action.presser.level} buttonroom@${e.fields.action.presser.x},${e.fields.action.presser.y})`).join('')}`
         + `${quiet ? '' : buttons.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}`
         + `${buttons.skipped.length ? `; ${buttons.skipped.length} skipped: ${buttons.skipped.join('; ')}` : ''}`);
+    console.log(`${talks.events.length} cross-room prerequisite event(s), ${talks.exitGates.length} crossing(s) and `
+        + `${talks.eventGates.length} event(s) gated on them`
+        + `${quiet ? '' : talks.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side} (${e.fields.action.verb}; gates `
+            + `${e.fields.action.gates.map((g) => `L${g.level} ${g.class}@${g.x},${g.y}`).join(', ')})`).join('')}`
+        + `${quiet ? '' : talks.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}`
+        + `${quiet ? '' : talks.eventGates.map((g) => `\n  gated event ${g.event_id}`).join('')}`);
     console.log(`${landingGates.length} landing edge(s) gated on the lethal terrain they land on; `
         + `${lethalLandings.filter((l) => !l.gated).length} lethal-terrain landing(s) not gated`
         + `${quiet ? '' : lethalLandings.map((l) => `\n  ${l.gated ? 'GATED' : 'not gated'} ${l.where}: ${l.why}`).join('')}`);

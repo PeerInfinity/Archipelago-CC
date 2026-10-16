@@ -381,3 +381,108 @@ export function persistenceEffect(target, response) {
     if (response === 'arm') return { effect: 'closes', why: 'arm: built FALLEN, Solid' };
     return { effect: null, why: response ? `response '${response}'` : 'no declared persistence response' };
 }
+
+/**
+ * ⛓⛓ RULES watcher-event — **A FLAG ONE ROOM READS FROM ANOTHER AS AN AP EVENT.** The FinalDoor (L113) opens on
+ * all sixteen seals AND `!checkPersistence(0, namedLevel("watcher_text"))` (`FinalDoor.as:50`); the speaking
+ * Watcher in that room clears its tag when its dialogue ends (`Watcher.as:126-135`). The rules priced the seals and
+ * named the talk "implied", which never asked whether it HAPPENED — the game shows "Face the Watcher and return" and
+ * keeps the door shut (`r6-final-door-control`).
+ *
+ * The rows are `crossRoomPrerequisitesOf` (the overlay's `CROSS_ROOM_PREREQUISITES` read against the map and the
+ * level set's named rooms), never a list. Per row:
+ *   - ONE event: `obstacle` = the WRITER `{level, tag, class, x, y}` (the flag the game writes, so the collector
+ *     keys off it; here the obstacle's level IS the side's), `side` = the writer's AP region, `across` = [] (talking
+ *     is not crossing), `action {verb, item: null, gates: [{level, class, x, y}]}` (the solids the flag opens),
+ *     `access_rule` = reaching the writer within `side` (`ctx.reach`; null = True_);
+ *   - every departure `ctx.gates(gated, name)` returns gets `Has(<event>)`, and so does every event already
+ *     minted for a gated solid (`ctx.existing` whose `obstacle` is it: its own flag cannot clear before it opens);
+ *   - refused by name: no writer or several (the flag is never written, or the event cannot say which), no gated
+ *     solid, a gated solid with no departure on it, or an `event_id` already minted under another name or side.
+ *
+ * @param {object[]} rows `crossRoomPrerequisitesOf(...)`
+ * @param {object} ctx
+ * @param {(writer:object) => {region_id, sub_region?, side}} ctx.place the writer's AP region
+ * @param {(writer:object) => object|null} ctx.reach standing in the writer's reach within `side` (null = True_)
+ * @param {(gated:object, eventName:string) => {region_id:string, exit_id:string}[]} ctx.gates the crossings
+ *   standing on the gated solid, as departures
+ * @param {object[]} [ctx.existing] events already minted
+ * @returns {{events:object[], exitGates:object[], eventGates:{event_id:string, item_name:string}[]}}
+ */
+export function deriveTalkEvents(rows, ctx) {
+    const existing = new Map((ctx.existing ?? []).map((e) => [e.fields?.event_id, e]));
+    const events = [];
+    const exitGates = [];
+    const eventGates = [];
+    const refused = [];
+    for (const { flag, writers, gated, verb } of rows) {
+        const who = `{${flag.level},${flag.tag}}`;
+        if (writers.length !== 1) {
+            refused.push(`${who}: ${writers.length} writer(s) [${writers.map((w) => `${w.type}@${w.x},${w.y}`).join(', ')}] — `
+                + 'exactly one entity must clear it');
+            continue;
+        }
+        if (gated.length === 0) { refused.push(`${who}: no solid reads it`); continue; }
+        const w = writers[0];
+        const id = obstacleEventId(flag);
+        const name = obstacleEventName({ ...flag, cls: w.type, x: w.x, y: w.y });
+        const place = ctx.place(w);
+        const prior = existing.get(id);
+        if (prior) {
+            refused.push(`${who}: ${id} is already the event "${prior.name}" @ ${prior.fields.side}; `
+                + `the ${verb} would make "${name}" @ ${place.side}`);
+            continue;
+        }
+        events.push({
+            region_id: place.region_id,
+            ...(place.sub_region === undefined ? {} : { sub_region: place.sub_region }),
+            name,
+            access_rule: ctx.reach(w) ?? null,
+            fields: {
+                event_id: id,
+                event_kind: OBSTACLE_EVENT_KIND,
+                obstacle: { level: flag.level, tag: flag.tag, class: w.type, x: w.x, y: w.y },
+                action: { verb, item: null, gates: gated.map((g) => ({ level: g.level, class: g.type, x: g.x, y: g.y })) },
+                side: place.side,
+                across: [],
+            },
+        });
+        for (const g of gated) {
+            const deps = ctx.gates(g, name);
+            if (deps.length === 0) { refused.push(`${who}: L${g.level} ${g.type}@${g.x},${g.y} has no crossing on it`); continue; }
+            for (const dep of deps) exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: name } } });
+            for (const e of ctx.existing ?? []) {
+                const o = e.fields?.obstacle;
+                if (o && o.level === g.level && o.class === g.type && o.x === g.x && o.y === g.y) {
+                    eventGates.push({ event_id: e.fields.event_id, item_name: name });
+                }
+            }
+        }
+    }
+    if (refused.length > 0) {
+        throw new Error(`talk events: ${refused.length} prerequisite(s) refused —\n  ${refused.join('\n  ')}`);
+    }
+    exitGates.sort((a, b) => a.region_id.localeCompare(b.region_id, 'en', { numeric: true })
+        || a.exit_id.localeCompare(b.exit_id, 'en', { numeric: true }));
+    return { events, exitGates, eventGates };
+}
+
+/**
+ * Every `CROSS_ROOM_PREREQUISITES` row against a map extract: the flag's level is the level set's named room
+ * (`namedRooms[flag.namedRoom].level`), the writers are the `writer`-class entities of that level carrying the tag
+ * AND a non-empty `text` (`NPC.as:188`: a silent NPC never talks, so never writes), and the gated solids are every
+ * `gated`-class entity of the map. Returns `{flag: {level, tag}, writers, gated, verb, cite}` per row.
+ */
+export function crossRoomPrerequisitesOf(map, declarations, namedRooms) {
+    return declarations.map((d) => {
+        const room = namedRooms?.[d.flag.namedRoom];
+        if (!Number.isInteger(room?.level)) throw new Error(`talk events: the level set names no room "${d.flag.namedRoom}"`);
+        const level = room.level;
+        const writers = (map.levels.find((l) => l.level === level)?.entities ?? [])
+            .filter((e) => e.type === d.writer && Number(e.attrs?.tag) === d.flag.tag && String(e.attrs?.text ?? '').length > 0)
+            .map((e) => ({ level, type: e.type, x: e.x, y: e.y }));
+        const gated = map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === d.gated)
+            .map((e) => ({ level: l.level, type: e.type, x: e.x, y: e.y })));
+        return { flag: { level, tag: d.flag.tag }, writers, gated, verb: d.verb, cite: d.cite };
+    });
+}
