@@ -6,7 +6,7 @@ Wave 18 (model coverage), planner `seedling-fidelity-planning-8`. Session `seedl
 |---|---|
 | start | **`d1fbfeffc2`** (= main, wave 17 harvested OFF), as briefed |
 | harness branch | `claude/darktrap-crossing-l62-djqlsm` |
-| commits | `60db92ad` D1 evidence · D2 (this report + the evidence's last rows) |
+| commits | `60db92ad` D1 evidence · `D2` draft · this report (final) |
 | verdicts | **D1 PASS · D2 PASS — verdict (b) with a twist: crossable WITHOUT the Spear, but not in the room as staged.** The crossing needs a press made in ANOTHER room first. That is a RULES gap of the EVENT kind (no item is owed), exactly like the existing `flag:L39:8`. The solver already executes both presses. |
 | tracked change | **none** (`git diff d1fbfeffc2 --stat -- . ':!CC/docs/cloud-reports'` is empty) |
 
@@ -28,7 +28,16 @@ rules give `level_62` one region and `True_` exits, so the route never presses t
 
 ## W0 — bank (`d1fbfeffc2`, this tree, port 9687)
 
-W0_TABLE
+| row | command | result |
+|---|---|---|
+| bootstrap | `bash scripts/cloud/session_bootstrap.sh --seedling` | `READY`, node v22.22.0 |
+| identity block | `SEEDLING_PORT=9687 bash scripts/procgen/identity-block.sh .` | rc 0, log md5 `67ed99656376118c1d6a83eff866627f`. Rows: maze `57e07d21…`, acceptance `933c14f7…`, pairs c3 `4937da80…`, c6 `430573e9…`, c4 `b9d2185d…`, ENEMY `36b59445…`, guard `a6d18d49…`, AREA `02b22525…`, killgate s2 `006b0639…`, s5 `7d4cb820…`, s9 `49e23d85…`, pre-sword `e28c1e5d…`, post-sword `fb1a59e5…`, generated set `OK` |
+| six `--check`s | in the block | battery `405d9c4b`, d2-chain `b76f6483`, l18 `465a8b46`, tail `35456fbc`, r9-l3 `6cd35fe1`, campaign `6b1bf15c`, all exit 0 |
+| reference | in the block | **4 generated modules/regions differ AT BASE**: the container artifact DARKTRAP2 recorded (the omsi-loops/cavernous submodules are not initialised here), not the tree |
+| surface / constants | `census-seedling-solver-surface.mjs --check` · `census-seedling-constants.mjs --check` | **GREEN 308** · **PASS 6,000** (0 drift) |
+| roster | `fixtures/tapes/index.json` `.tapes` | **277** |
+| bounded vitest | `npx vitest run` over 57 files: the brief's standing set (`r8Acceptance`, the four roster pins, every named `fidelity*`, `ghostSword`, `bobSoldier`, `solverReachPit`, `arrowTrap`, `oneSpelling`, `enemyDamage`, `dangerMap`, `contactFidelity`, `decisionTrace`, `entityBlocks`, `solverDeadline`, `seedlingCanCross`, `campaignChain`, `jsRuntimeDeclarations`, `boxLock`, `lintGateLabels`, surface/constants) + this slice's region (`fidelityCrossRoom`, `fidelityDarkTrap2`) | **57 files / 1,596 tests, all green**; sorted per-file lines md5 `bc5b376da82f7326e3e7d66d527cea47` |
+| branch CI | `ci-vitest-summary.mjs 60db92ad` | no `JavaScript Unit Tests` run: docs-only commits do not pass its path filter. The same holds for every head of this branch |
 
 Because nothing tracked changes, every row above is also the AFTER. Byte-inertia is the empty tracked diff.
 
@@ -75,7 +84,7 @@ with zero gap ((80,80) for `@80,64`, (80,112) for `@64,96`).
   contact hit where the game walks through the dead trap. *Measured:* the first divergence is a model `hits 1` at the trap.
   W3 diverges at t209, W2 at t308, W4 at t215, step 106 at t90, leg 560 at t167. W5 and leg 576 then refuse on the shake band at
   t54/t39. The defaults: 0 px. (`mutant.mjs.txt`)
-- **M2** M2_ROW
+- **M2** (code, copy + restore): `levelRun.js`'s cross-room `roomWrites` banking skips any write whose level is not the current one (`if (at !== level) continue`). *Predicted:* W2 and W4 diverge at the first trap contact, and the `ev62` solve refuses `not-written`. *Measured:* W2 diverges at **t308** and W4 at **t215** (a model `hits 1`). **The `ev62` half was WRONG**: the solve still SOLVES and records the press (ledger t21). The clear-tag ledger (`earnedClears`) is fed from the press's own row, not from `pendingEarnedClears`, which only reaches the NEXT build. So a solve that "cleared" a cross-room flag says nothing about whether the next room is built with it; the witnesses (W2/W4) are what prove the build. Restored: `cmp` against `HEAD` clean.
 
 ---
 
