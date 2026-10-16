@@ -108,3 +108,14 @@ The sweep's request comes from CI run 38841057409 on main `506581c32e` (wasm).
 - `feature-checks` locally and on CI.
 - No pytest, no unfiltered vitest, no sweep (defaults untouched).
 - The other gates js-6 named (probes, JSUT, test-templates) are left to the harvest.
+
+## After the first report (2026-10-16)
+
+- ⚖ The user: *"for this demo, let's set Solve Progress to Always."* The check now sets the view to `always`. It
+  stays open between the two solves, and each staging waits for that solve's running note instead of the view's
+  show/hide. Local walk PASSED in 88.4 s (load 3.1).
+- **Defect the user found by running it:** the JS runtime page drew the room 16× too large: a few gray blocks with
+  the status line under them. `jsRuntimePage.js` scaled by `world.width` (TILES) instead of `world.world.width`
+  (PIXELS). Fixed, display only, in a JS-arc file; latent since J1 (7f7a98083b). Screenshots: `render-before.png`,
+  `render-after.png`.
+

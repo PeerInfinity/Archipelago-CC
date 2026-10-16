@@ -22646,3 +22646,7 @@ Residues, named and not fixed (in addition to the three above):
   7-tick solve from (432, 368).
 - The JS runtime has no budget setting (as above). It does not matter here: 202 < 640.
 
+After a first run by the user: the check keeps Solve Progress on **always** (⚖ "for this demo, let's set Solve Progress
+to Always"). The run also exposed a display defect, now fixed: the JS runtime page scaled the room by its size in TILES
+(`world.width`) instead of its size in pixels (`world.world.width`), so it drew a few gray blocks.
+
