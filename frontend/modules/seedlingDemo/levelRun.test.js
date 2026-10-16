@@ -2827,7 +2827,8 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
         // ⛓ fidelity ENCOUNTERS D3: 34 — `witchEvents`, L12's Witch.
         // ⛓ fidelity CROSSROOM D2: 35 — `unreadRoomWrites`, a cross-room write no entity of its level reads.
         // ⛓ fidelity BOMBPUSHER D2: 36 — `bombEvents`, the lobber's bombs spawned and their Explosions.
-        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 36, noun: 'ledger kind', plural: 'kinds' },
+        // ⛓ fidelity BEAMTOWER D1: 37 — `beamTowerTrace`, the towers' stepped `y` (the switch ON).
+        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 37, noun: 'ledger kind', plural: 'kinds' },
     ];
     const ALL = [...PROGRESS_FIELD_NAMES, ...LEDGER_KIND_NAMES];
     const queryOf = new Map(FOLDS.flatMap((f) => f.names.map((n) => [n, f.query])));
@@ -2965,6 +2966,17 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
             expect(bad).toEqual([]);
             expect(run.ledger('bombEvents').map((e) => e.what)).toEqual(['spawn', 'explode', 'blast']);
             expect(seen.has('bombEvents')).toBe(true);
+            for (const m of seen) witnessed.add(m);
+        });
+    });
+
+    it('L105\'s beam tower (BEAMTOWER D1, the switch ON): a beamTowerTrace entry, through the query', () => {
+        withContactFidelity({ beamTowerDrift: true }, () => {
+            const run = createLevelRun({ levelSource, boot: { level: 105, x: 208, y: 64 }, noDamage: true });
+            const { bad, seen } = compareEveryTick(run, 20, () => new Set());
+            expect(bad).toEqual([]);
+            expect(run.ledger('beamTowerTrace').map((e) => e.id)).toContain('beamtower@48,40');
+            expect(seen.has('beamTowerTrace')).toBe(true);
             for (const m of seen) witnessed.add(m);
         });
     });

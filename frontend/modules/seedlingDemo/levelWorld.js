@@ -3676,6 +3676,10 @@ export const LIVE_GEOMETRY_KEYS = Object.freeze([
     // now carries it too, because a normalised bag is handed BACK to the
     // query as its whole options object — see the brand note below.
     'fallenRocks',
+    // ⛓ fidelity BEAMTOWER D1 (`CONTACT_FIDELITY.beamTowerDrift`): a `BeamTower`'s drifting Solid, by
+    // `solid.beamTowerId` — `{rect}` where the run's drift left it. `null` (switch OFF, or no tower) is the
+    // placement rect, which is what every query read before the key existed.
+    'beamTowers',
 ]);
 
 /**
@@ -3770,6 +3774,7 @@ export function normalizeLiveOpts(o) {
         pulledRopes: o.pulledRopes ?? null,
         pushables: o.pushables ?? null,
         fallenRocks: o.fallenRocks ?? null,
+        beamTowers: o.beamTowers ?? null,
         beforeTypeFlip: o.beforeTypeFlip ?? false,
     };
 }
@@ -3982,7 +3987,8 @@ function solidGridFor(list) {
     for (let i = 0; i < list.length; i += 1) {
         const s = list[i];
         // the four families whose live rect is not `s.rect` (see `liveRectOf`'s crusher, turret, rope and pushable arms)
-        if (s.crusherId || s.turretId || s.ropeId || s.pushableId) { dynamic.push(i); continue; }
+        // ⛓ fidelity BEAMTOWER D1: and a drifting tower (its live rect is within ~9 px of `s.rect`, not inside it).
+        if (s.crusherId || s.turretId || s.ropeId || s.pushableId || s.beamTowerId) { dynamic.push(i); continue; }
         const r = s.rect;
         const x0 = Math.floor(r.x / SOLID_CELL);
         const x1 = Math.floor(r.right / SOLID_CELL);
@@ -4449,6 +4455,12 @@ export function buildLevelWorld(levelRecord, {
         if (o.pushables && s.pushableId && o.pushables.has(s.pushableId)) {
             const now = o.pushables.get(s.pushableId);
             return now.removed ? null : now.rect;
+        }
+        // ⛓ fidelity BEAMTOWER D1: a `BeamTower` drifts its own `y` by `0.3·sin(worldFrame(100, 2)…)` on every
+        // unfrozen update (`BeamTower.as:100-103`) and its Solid moves with it. A missing entry is the placement.
+        if (o.beamTowers && s.beamTowerId) {
+            const now = o.beamTowers.get(s.beamTowerId);
+            if (now) return now.rect;
         }
         return s.rect;
     };
@@ -5534,6 +5546,10 @@ export function buildLevelWorld(levelRecord, {
                     t: tSetOf(e.type, e.attrs),
                 });
             }
+            // ⛓ fidelity BEAMTOWER D1 (`CONTACT_FIDELITY.beamTowerDrift`): the tower's 16x32 Solid drifts with its
+            // `y` (`BeamTower.as:100-103`); the run holds the drift and `liveRectOf`'s `beamTowers` arm reads it.
+            // The join only — with the switch OFF the run passes no `beamTowers` and the arm is never taken.
+            if (cls.as3 === 'BeamTower') solid.beamTowerId = `${e.type}@${x},${y}`;
             // ⛓⛓⛓ R5 SLICE 15: THE CRUSHER, on the same `<id>` join as every
             // family since R4. `tset` is read through `tSetOf` rather than
             // hard-coded to -1 because the sentinel is the CLASS's meaning of

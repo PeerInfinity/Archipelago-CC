@@ -413,6 +413,9 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
         dropped: Object.freeze([
             'openMagicalLocks', 'turrets', 'bosses', 'shieldBosses',
             'finalDoors', 'fallenRocks',
+            // ⛓ fidelity BEAMTOWER D1: the drifting tower — the planner reads its PLACEMENT (null OFF anyway); the
+            // run's own sweep (and so every preview) reads the drift.
+            'beamTowers',
         ]),
         suppliedAndDropped: Object.freeze(['turrets', 'bosses']),
         why: 'PRESERVED EXACTLY — forwarding the six would re-route the planner and no '

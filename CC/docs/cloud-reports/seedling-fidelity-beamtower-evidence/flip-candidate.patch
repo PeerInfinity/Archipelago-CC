@@ -1,0 +1,167 @@
+diff --git a/frontend/modules/seedlingDemo/contactFidelity.js b/frontend/modules/seedlingDemo/contactFidelity.js
+index ee6ede2..5bf8d70 100644
+--- a/frontend/modules/seedlingDemo/contactFidelity.js
++++ b/frontend/modules/seedlingDemo/contactFidelity.js
+@@ -457,7 +457,8 @@ export const CONTACT_FIDELITY = {
+      * prices its drop (timed) instead of a placement. ⛔ OFF by default (no licence); `SEEDLING_FLYER_LIVE=0|1` for a
+      * node measurement.
+      */
+-    flyerLive: false,
++    // ⚖ FLIP CANDIDATE (fidelity BEAMTOWER D2): ON with `beamTowerDrift` and `beamTowerBeamHit` — <the licence>.
++    flyerLive: true,
+     /**
+      * fidelity BEAMTOWER D1 — THE BEAM TOWER'S SOLID DRIFTS WITH ITS `y` (`beamTower.stepBeamTowerFrame`).
+      *
+@@ -472,7 +473,7 @@ export const CONTACT_FIDELITY = {
+      * tower once per tick in its update slot (`Game.time` = `clock.now()`, no drift on a frozen tick), and the
+      * tower's Solid is `liveRectOf`'s `beamTowers` arm. ⛔ OFF by default (no licence); `SEEDLING_BEAMTOWER_DRIFT=0|1`.
+      */
+-    beamTowerDrift: false,
++    beamTowerDrift: true,
+     /**
+      * fidelity BEAMTOWER D3 — THE BEAM TOWER'S BEAM HITS THE PLAYER IN THE RUN (`levelRun.stepBeamTowersNow`).
+      *
+@@ -486,7 +487,7 @@ export const CONTACT_FIDELITY = {
+      * the player's PRE-move box, inclusively (`Entity.collideRect`), from the tower's pre-drift point; the shake is the
+      * `beamTowerBeam` writer. ⛔ OFF by default (no licence); `SEEDLING_BEAMTOWER_BEAM_HIT=0|1`.
+      */
+-    beamTowerBeamHit: false,
++    beamTowerBeamHit: true,
+ };
+ /** The defaults this slice shipped, for a reader that asks what "default" was. */
+ export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
+diff --git a/frontend/modules/seedlingDemo/contactFidelity.test.js b/frontend/modules/seedlingDemo/contactFidelity.test.js
+index 2828dc4..7fa997d 100644
+--- a/frontend/modules/seedlingDemo/contactFidelity.test.js
++++ b/frontend/modules/seedlingDemo/contactFidelity.test.js
+@@ -133,10 +133,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
+             // ⚖ (user, 2026-10-14, "Flip now") ON since the wave-16 harvest.
+             ceremonyShove: true,
+             // ⛓ fidelity LAPSECOST D2: `flyerLive` (the Flyer stepped: its chase, its "fall" and its drop) ships OFF.
+-            flyerLive: false,
+-            // ⛓ fidelity BEAMTOWER: `beamTowerDrift` (D1, the tower's Solid drifts with its `y`) and `beamTowerBeamHit`
+-            // (D3, the run bills the beam on the player) ship OFF.
+-            beamTowerDrift: false, beamTowerBeamHit: false });
++            // ⛓ fidelity BEAMTOWER: `flyerLive` with `beamTowerDrift` (D1, the tower's Solid drifts with its `y`) and
++            // `beamTowerBeamHit` (D3, the run bills the beam on the player) shipped OFF — ⚖ ON since <the licence>.
++            flyerLive: true, beamTowerDrift: true, beamTowerBeamHit: true });
+     });
+ 
+     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
+diff --git a/frontend/modules/seedlingDemo/fidelityBeamTower.test.js b/frontend/modules/seedlingDemo/fidelityBeamTower.test.js
+index 58c7a03..206be6d 100644
+--- a/frontend/modules/seedlingDemo/fidelityBeamTower.test.js
++++ b/frontend/modules/seedlingDemo/fidelityBeamTower.test.js
+@@ -56,9 +56,9 @@ function replay(w, over) {
+ }
+ 
+ describe('BEAMTOWER — the switches', () => {
+-    it('ship OFF, and `hazards.js` re-exports the moved transcription unchanged', () => {
+-        expect(CONTACT_FIDELITY_DEFAULTS.beamTowerDrift).toBe(false);
+-        expect(CONTACT_FIDELITY_DEFAULTS.beamTowerBeamHit).toBe(false);
++    it('ship ON (⚖ <the licence>), and `hazards.js` re-exports the moved transcription unchanged', () => {
++        expect(CONTACT_FIDELITY_DEFAULTS.beamTowerDrift).toBe(true);
++        expect(CONTACT_FIDELITY_DEFAULTS.beamTowerBeamHit).toBe(true);
+         for (const k of ['BEAM_TOWER', 'beamAnimSpeed', 'beamIsBeaming', 'beamRect', 'createBeamTower', 'stepBeamTower']) {
+             expect(typeof hazards[k], k).not.toBe('undefined');
+         }
+@@ -210,6 +210,5 @@ describe('BEAMTOWER — the census (the vacuities this slice measured)', () => {
+         const { run } = replay(W773, { flyerLive: true, beamTowerDrift: false, beamTowerBeamHit: false });
+         expect(run.ledger('beamTowerTrace')).toEqual([]);
+         expect(run.ledger('playerHits').filter((h) => h.source === 'beamtower')).toEqual([]);
+-        expect(CONTACT_FIDELITY.beamTowerDrift).toBe(false);
+     });
+ });
+diff --git a/frontend/modules/seedlingDemo/fidelityLapseCost.test.js b/frontend/modules/seedlingDemo/fidelityLapseCost.test.js
+index 8daec9d..6055a04 100644
+--- a/frontend/modules/seedlingDemo/fidelityLapseCost.test.js
++++ b/frontend/modules/seedlingDemo/fidelityLapseCost.test.js
+@@ -157,8 +157,8 @@ const parted = (w, on) => withContactFidelity({ flyerLive: on, strikeIframeLapse
+ });
+ 
+ describe('LAPSECOST D2 — the Flyer, stepped (`flyerLive`)', () => {
+-    it('ships OFF; bridged only ON', () => {
+-        expect(CONTACT_FIDELITY_DEFAULTS.flyerLive).toBe(false);
++    it('ships ON (⚖ <the licence>, with BEAMTOWER\'s drift); bridged only ON', () => {
++        expect(CONTACT_FIDELITY_DEFAULTS.flyerLive).toBe(true);
+         withContactFidelity({ flyerLive: false }, () => expect(isBridgedChaser('flyer')).toBe(false));
+         withContactFidelity({ flyerLive: true }, () => expect(isBridgedChaser('flyer')).toBe(true));
+     });
+@@ -249,7 +249,9 @@ describe('LAPSECOST D2 — the Flyer, stepped (`flyerLive`)', () => {
+ 
+     // ⚠ A MODEL row, not a game one: played on p4f this plan parts at t205 (the game's player is blocked at x 66.04 by
+     // `beamtower@48,40`, whose Solid drifts in y — `BeamTower.update`'s `y += 0.3 sin(…)`, not modelled; the report's D2).
+-    it('ON: leg 773\'s request (its live digest re-derived ON, as a page with the switch sends it) solves in 381 t with no hit', () => {
++    // ⛓ fidelity BEAMTOWER D2: with the defaults flipped the drift is ON too, and the 381-t plan is the one the risen
++    // tower blocks at t205 on the game — the solve now takes 426 t (the model row; the game check is the keyed sweep).
++    it('ON: leg 773\'s request (its live digest re-derived ON, as a page with the switch sends it) solves in 426 t with no hit', () => {
+         const req = leg773();
+         const out = withContactFidelity({ flyerLive: true, strikeIframeLapse: true }, () => {
+             const { passes = ANYTIME_PASSES, source, ...tape } = req;
+@@ -258,6 +260,6 @@ describe('LAPSECOST D2 — the Flyer, stepped (`flyerLive`)', () => {
+             return solveAnytime({ ...tape, live, source, levelSource }, { passes });
+         });
+         expect(out.ok).toBe(true);
+-        expect(out.plan.solution.length).toBe(381);
++        expect(out.plan.solution.length).toBe(426);
+     }, 60000);
+ });
+diff --git a/frontend/modules/seedlingDemo/r8Acceptance.test.js b/frontend/modules/seedlingDemo/r8Acceptance.test.js
+index bba2dc3..170248a 100644
+--- a/frontend/modules/seedlingDemo/r8Acceptance.test.js
++++ b/frontend/modules/seedlingDemo/r8Acceptance.test.js
+@@ -727,14 +727,15 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
+         // ⛓ KILLLOCK K1: the jellyfish joins (`jellyfishLive`, ON since the wave-8 harvest).
+         // ⛓ K2PREP D1: and the lavarunner under K2 — the declaration follows the switch (`pendingSwitchScope`).
+         // ⛓ wave-11 harvest: and the Bulb under `contactFidelity.bulbLive` (ON by default) — asked both ways.
+-        expect(withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: false },
++        expect(withContactFidelity({ bulbLive: false, flyerLive: false }, () => withKillLockBodies({ lavaRunnerLive: false },
+             () => assertBridgeRosterMatchesScope(bridgedChaserTags))))
+             .toEqual({ classes: ['bob', 'bobsoldier', 'jellyfish', 'puncher'] });
+-        expect(withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: true },
++        expect(withContactFidelity({ bulbLive: false, flyerLive: false }, () => withKillLockBodies({ lavaRunnerLive: true },
+             () => assertBridgeRosterMatchesScope(bridgedChaserTags))))
+             .toEqual({ classes: ['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher'] });
++        // ⛓ fidelity BEAMTOWER D2 flip: `flyerLive` ON by default bridges the Flyer (`pendingSwitchScope.flyer`).
+         expect(assertBridgeRosterMatchesScope(bridgedChaserTags))
+-            .toEqual({ classes: ['bob', 'bobsoldier', 'bulb', 'jellyfish', 'lavarunner', 'puncher'] });
++            .toEqual({ classes: ['bob', 'bobsoldier', 'bulb', 'flyer', 'jellyfish', 'lavarunner', 'puncher'] });
+     });
+ 
+     it('⛔ MUTATION: a roster that drifts from the declaration reds by name', () => {
+@@ -762,7 +763,7 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
+         // `lavarunner` — transcribed, no roster row — with its switch K2 asked OFF.
+         // ⛓ K2PREP D3: once K2 is ON every transcribed chaser is bridged, so the control is the SWITCH itself, asked
+         // both ways: the roster row a switch-bridged chaser lacks is the switch, and turning it off un-bridges it.
+-        withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: false }, () => {
++        withContactFidelity({ bulbLive: false, flyerLive: false }, () => withKillLockBodies({ lavaRunnerLive: false }, () => {
+             expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
+             expect(bridgedChaserTags()).not.toContain('lavarunner');
+         }));
+@@ -796,14 +797,14 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
+             // its blast billed) and has no contact, so it joins with that pricer.
+             // ⛓ K2PREP D1: asked with K2 OFF here; the K2-ON roster is asked below (a switch-bridged tag skips
+             // the partition — `KILLLOCK_SWITCHED_CHASERS`).
+-            bridged: [...withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: false }, () => bridgedChaserTags())), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
++            bridged: [...withContactFidelity({ bulbLive: false, flyerLive: false }, () => withKillLockBodies({ lavaRunnerLive: false }, () => bridgedChaserTags())), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+         })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'jellyfish', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+             refused: [] });
+         expect(assertSteppedContactPartition({
+             families: CONTACT_STEPPED_FAMILIES,
+             pricedBy: CONTACT_STEPPED_PRICED_BY,
+             why: CONTACT_STEPPED_WHY,
+-            bridged: [...withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: true }, () => bridgedChaserTags())), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
++            bridged: [...withContactFidelity({ bulbLive: false, flyerLive: false }, () => withKillLockBodies({ lavaRunnerLive: true }, () => bridgedChaserTags())), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+         })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+             refused: [] });
+         // ⛓ wave-11 harvest: the defaults (K2 and `bulbLive` ON) — the switch-bridged Bulb skips the partition too.
+@@ -812,7 +813,8 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
+             pricedBy: CONTACT_STEPPED_PRICED_BY,
+             why: CONTACT_STEPPED_WHY,
+             bridged: [...bridgedChaserTags(), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+-        })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'bulb', 'jellyfish', 'lavarunner', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
++        // ⛓ fidelity BEAMTOWER D2 flip: and the switch-bridged Flyer (`flyerLive` ON by default) skips it the same way.
++        })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'bulb', 'flyer', 'jellyfish', 'lavarunner', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+             refused: [] });
+     });
+ 

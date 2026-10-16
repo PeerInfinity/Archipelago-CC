@@ -1,0 +1,17 @@
+# box lock: TAKEN by probe-seedling-chaser-mobiles.mjs (browser, pid 17518) — head e7e16b96d, 1 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+FAIL: the sample clock is the model's — 301 sampled tick(s) inside the tape; shifts that fit every player x: [] (must be exactly [0])
+FAIL: every Jellyfish's position, velocity, hits and hits_timer are the model's at every sampled tick, and they exist exactly when the model's do — 174 comparison(s), worst |Δ| 51.3218496606987
+      t 194: game has 1 Jellyfish row(s), the model 0
+      t 195: game has 1 Jellyfish row(s), the model 0
+      t 196: game has 1 Jellyfish row(s), the model 0
+      t 197: game has 1 Jellyfish row(s), the model 0
+      t 198: game has 1 Jellyfish row(s), the model 0
+      t 199: game has 1 Jellyfish row(s), the model 0
+      t 200: game has 1 Jellyfish row(s), the model 0
+      t 201: game has 1 Jellyfish row(s), the model 0
+      t 202: game has 1 Jellyfish row(s), the model 0
+      t 203: game has 1 Jellyfish row(s), the model 0
+      t 204: game has 1 Jellyfish row(s), the model 0
+      t 205: game has 1 Jellyfish row(s), the model 0
+      … 122 more

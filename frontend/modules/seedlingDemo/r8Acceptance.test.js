@@ -113,7 +113,8 @@ describe('R8_NORMALIZE_LIVE_BATCH — the prediction, stated first', () => {
         const r = assertPlannerLivePartition();
         expect(r.total).toBe(LIVE_GEOMETRY_KEYS.length);
         expect(r.forwarded).toBe(8);
-        expect(r.dropped).toBe(6);
+        // ⛓ fidelity BEAMTOWER D1: 6 → 7, `beamTowers` (the planner reads a tower's placement; the run's sweep the drift).
+        expect(r.dropped).toBe(7);
     });
 
     /**
