@@ -1,0 +1,23 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+const REPO = '/home/user/Archipelago-CC';
+const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
+const { withContactFidelity } = await M('contactFidelity.js');
+const sb = await M('solverBot.js');
+const { parseTape } = await M('tapeFormat.js');
+const { createRunForStaging, solveStaging, stagingFromTape } = await M('tapeRunner.js');
+const { patchedMapDocument } = await M('seedlingSetPatches.js');
+const { levelSourceFromAtlas } = await M('atlasSource.js');
+const W = JSON.parse(readFileSync(process.argv[2], 'utf8'));
+const wps = JSON.parse(process.argv[3]);
+const MAP = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
+const staging = solveStaging(stagingFromTape(parseTape(JSON.stringify(W.tape))));
+const src = levelSourceFromAtlas(patchedMapDocument(MAP));
+const firstBody = (samples) => { for (const s of samples) { const b = (s.corridorBodies ?? []).find((x) => x.hitsPlayer); if (b) return { tick: s.tick, id: b.id }; } return null; };
+withContactFidelity({ corridorBodyPricing: true }, () => {
+  const run = createRunForStaging(staging, src);
+  const seen = [];
+  const d = sb.planSwordDash(run, wps, { tolerance: 0, certify: (samples) => { const h = firstBody(samples); seen.push(h ? h.tick : 'clean'); return h ? { ...h, danger: true, sources: [] } : null; } });
+  console.log('plan', !!d.plan, d.ticks, d.baseline, 'why', String(d.why).slice(0, 300));
+  console.log('certify verdicts', seen.length, JSON.stringify(seen.slice(0, 60)));
+});

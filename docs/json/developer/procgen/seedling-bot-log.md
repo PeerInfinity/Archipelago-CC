@@ -22792,3 +22792,32 @@ Trap candidates:
    suspected fix in the probe's model, or join label-free; a second parting after a partial fix may be the join.
 2. *A "contact geometry" parting can be a wall upstream.* SF's t658 hit was decided 50 ticks earlier, where the bob
    failed to stop. Trace the body's trail back to its first difference before modelling the contact.
+
+### Seedling fidelity CORRIDOR — the walk corridor prices the live wallflyers and drills
+
+⚖ Wave 17 (planner `seedling-fidelity-planning-8`). One new switch, **OFF**: `CONTACT_FIDELITY.corridorBodyPricing`
+(`SEEDLING_CORRIDOR_BODY_PRICING=0|1`). Report: `CC/docs/cloud-reports/seedling-fidelity-corridor.md`.
+
+**D1 — the census at `e967758748`** (`UNBILLED_DAMAGE_TRACE`): the route survey (= CI 38778265493 on all 222 rows) carries
+unbilled hits on steps 47, 53, 114 and 170 (19's is gone since the lapse flip). The sweep's returned plans carry them on
+legs 703, 262, 696, 698, 283, 290 and 302. Every wallflyer and drill hit is a **forecast** failure: the danger map had no
+arm for either class and priced only their `.oel` placements. Step 170's lavarunner is **timing inside the tick**: the
+chaser forecast holds the body at 0 px and its contact lands at t17, but the danger map read the body's `hitsTimer`
+after the dark shield's bump (Player update, later that tick), so the gate looked closed.
+
+**D2 — the pricing.** ON: `run.corridorBodyForecast()` steps clones of the wallflyers and drills along each
+`previewWalk` (the live steppers, the camera, the shield bump, the preview's own sword window via `swing`, the player's
+i-frame), and the corridor probe prices each sample's landing contact (`dangerMap.corridorBodyDanger`, kind `chaser` with
+`body`). The chaser forecast projects `contactHitsTimer` (the gate's own timer). The ladder: a bounded DODGE arm, the
+dashed walk asked before climbing (`corridorDashRescue`, which certifies a dash chain whole), and a corridor-body hit met
+two climbs deep refuses by name (the KILL rung's stance walk otherwise recursed for ever: survey step 45). Witness:
+`fidelityCorridorBody.test.js` (8 rows; survey 47 and 114 walks played on the game: the forecast holds every body at 0 px
+and lands on t84 / t48, t110, the game's ticks). Mutants M1 to M5 are caught; M6 (the nesting guard) is blind.
+
+**Movers ON** (survey `--through=end --route=full`, 170 → 169 SOLVED): 53 SOLVED 406 t, two deaths → 126 t, clean; 170
+SOLVED 475 t (1 hit) → 491 t, clean; **100 REFUSED → SOLVED 192 t**; 47 and 114 SOLVED (with real hits) → REFUSED by name
+(the wallflyer / the drill). The survey ON carries **no unbilled hit**, so the gate ON as well moves nothing more (ON+gate
+= ON on all 222). Sweep legs in node: 703, 262, 283, 290, 288, 265, 257 answer clean; 696, 698, 302 refuse by name. The
+hammer workloads (staging A sword and ghost, 397, 414, the L18 sweep, C2's ghost staging) do not move. Identity: OFF =
+base on every row; ON moves the ENEMY census (the drill chamber row, 155 → 171 t); ON+gate also moves c3 / c6 / c4 (the
+gate's own spinner movers). OFF is byte-identical (survey, identity block, bounded vitest).

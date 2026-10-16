@@ -897,7 +897,10 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
             }
             continue;
         }
-        const bodyFree = perTick && plannerContactFree(c, 'on').contactFree;
+        // ⛓ fidelity CORRIDOR: a forecast body that carries its contact gate's own timer is asked with it
+        // (`contactHitsTimer`, `corridorBodyPricing` ON only) — the Player's later write in the tick is not the gate's.
+        const bodyFree = perTick && plannerContactFree(c.contactHitsTimer !== undefined
+            ? { ...c, hitsTimer: c.contactHitsTimer } : c, 'on').contactFree;
         if (bodyFree && !sworded) continue;
         /**
          * ⛓⛓⛓ SEEDLING SWIM U10, D3 — **A DESTROYED BODY IS A CORPSE, NOT A
@@ -1610,6 +1613,39 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
 });
 
 /**
+ * ⛓⛓ fidelity CORRIDOR D2 (`CONTACT_FIDELITY.corridorBodyPricing`) — THE LIVE WALLFLYERS AND DRILLS, PRICED ALONG THE
+ * WALK AT THE TICKS IT PASSES THEM.
+ *
+ * Neither class had an arm here: `staticEnemyDanger` priced both at their `.oel` PLACEMENTS, so a corridor was clean
+ * where a flyer that had launched across it, or a drill that had hopped onto it, hit the drive (the forecast was in
+ * the wrong PLACE). Both are player-coupled, so `previewWalk` steps them against the candidate path
+ * (`run.corridorBodyForecast`) and hands each sample its own rows. This prices a row's `hitsPlayer` — the class's own
+ * `hitPlayer` gate firing against this sample's START-of-tick box and landing through the player's i-frame — and
+ * an `uncertain` on-screen verdict (the live step refuses there; a walk planned through it is planned through a
+ * refusal). Kind `chaser`: a player-coupled body priced per tick, which is what admits the ladder's DETOUR rung.
+ *
+ * ⚠ ADDITIVE: the placement arm is untouched, so the switch only ever forbids more (the trap-157 cost of the
+ * placement — a cell a launched flyer has left — is kept, and named as residue).
+ *
+ * @param {object[]} bodies one sample's `corridorBodies` (`{kind, id, hitsPlayer, uncertain?}`)
+ */
+export function corridorBodyDanger(bodies) {
+    const out = [];
+    for (const b of bodies ?? []) {
+        if (b.hitsPlayer) {
+            out.push({ kind: 'chaser', id: b.id, body: b.kind,
+                why: `the ${b.kind}'s contact: its \`hitPlayer\` gate fires against the player's start-of-tick box `
+                    + `THIS tick (body at (${b.x.toFixed(1)},${b.y.toFixed(1)}), forecast along the walk)` });
+        } else if (b.uncertain) {
+            out.push({ kind: 'chaser', id: b.id, body: b.kind,
+                why: `the ${b.kind}'s on-screen verdict is UNCERTAIN under the shake band this tick — the live step `
+                    + 'refuses there, so the walk is not planned through it' });
+        }
+    }
+    return out;
+}
+
+/**
  * The union, over one box at one absolute tick.
  *
  * @param {object} run  a live `createLevelRun` view
@@ -1623,6 +1659,7 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
  */
 export function dangerAt(run, tick, box, {
     mode = 'wait', arrows = null, chasers = null, spits = null, grenades = null, swordTick = null,
+    corridorBodies = null,
 } = {}) {
     if (!run || typeof run.level !== 'number') {
         fail('dangerAt: needs a live run — the whole point is that the positions are the '
@@ -1664,6 +1701,8 @@ export function dangerAt(run, tick, box, {
         ...crusherDanger(run, box),
         // ⛓ U15-swim D2: the spits — the walk's own forecast in TRANSIT.
         ...spitDanger(run, box, horizon, mode === 'transit' ? spits : null, mode),
+        // ⛓ fidelity CORRIDOR D2: the walk's own wallflyer/drill forecast — TRANSIT only, and only when handed.
+        ...(mode === 'transit' && corridorBodies ? corridorBodyDanger(corridorBodies) : []),
     ];
     return { danger: sources.length > 0, horizon, mode, sources };
 }
@@ -1679,8 +1718,9 @@ export function dangerAt(run, tick, box, {
  * schedule nobody drives is a probe of nothing.
  */
 export function dangerDuringTransit(run, tick, box, arrows = null, chasers = null,
-    spits = null, grenades = null) {
-    return dangerAt(run, tick, box, { mode: 'transit', arrows, chasers, spits, grenades });
+    spits = null, grenades = null, corridorBodies = null) {
+    return dangerAt(run, tick, box, { mode: 'transit', arrows, chasers, spits, grenades,
+        ...(corridorBodies ? { corridorBodies } : {}) });
 }
 
 /**
