@@ -185,6 +185,17 @@ async function replayRun(tape, levelSource, each = null) {
     return run;
 }
 
+/**
+ * ⚖ PINNED `waypointSlide` OFF — an INTERIM (seedling-fidelity-producers, 2026-10-16).
+ * The four stance tapes were recorded on the game under the PRE-SLIDE walk (the ice walked parked). The wave-16
+ * flip (`41b0bc6389`, ⚖ user 2026-10-14) turned `waypointSlide` ON and pinned `fidelityStance`'s chest and
+ * keylock-open rows OFF for exactly that reason ("their tapes walk the ice parked"); its re-pin list missed this
+ * producer (no CI job runs it). ON, the solver walks L46/L48's ice shorter and all four plans move.
+ * ⛔ RETIRE THIS PIN with a re-record ON: the plan re-derived under the flipped default, recorded on the game
+ * (p4f, 0 px), and its roster rows re-pinned — a roster move, so the user's licence.
+ */
+const PINNED_FIDELITY = Object.freeze({ waypointSlide: false });
+
 // ⚠ A bare import does nothing (`check-procgen-help`'s import door): the work is `main()`'s.
 async function main() {
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
@@ -281,4 +292,7 @@ async function main() {
     console.log('\nall checks green');
 }
 
-if (isEntryPoint(import.meta.url)) await main();
+if (isEntryPoint(import.meta.url)) {
+    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
+    await withContactFidelity(PINNED_FIDELITY, main);
+}
