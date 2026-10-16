@@ -19653,9 +19653,19 @@ function solveSegmentUnder({
                 while (door > 0 && inReach(base.samples[door])) door -= 1;
                 // a player already in reach cannot stall where it stands: the crossing starts now
                 const stalls = inReach(base.samples[door]) ? 1 : period;
-                // the walk past the hit, undashed, bounds how far the dash windows need to run
-                let span = base.samples.length - door;
-                for (let i = hitAt; i < base.samples.length; i += 1) if (!inReach(base.samples[i])) { span = i - door; break; }
+                /**
+                 * ⛓ WHERE THE CROSSING ENDS: past the corridor's LAST sample in any hit axe's reach — the waypoint the
+                 * undashed walk is heading for once it has left for good. ⛔ Not the first sample out of reach: a
+                 * corridor that bends round the hub leaves and re-enters it (measured on L75's U, step 163: a crossing
+                 * stopped at a brief exit mid-U and the next climb met the blade again 87 t later). A corridor whose
+                 * goal is inside the reach must be walked to its end.
+                 */
+                let lastIn = -1;
+                base.samples.forEach((sm, i) => { if (inReach(sm)) lastIn = i; });
+                const exitWp = lastIn + 1 < base.samples.length ? base.samples[lastIn + 1].wp : Infinity;
+                const leftFor = (sm) => !inReach(sm) && sm.wp >= exitWp;
+                // the undashed walk to there bounds how far the dash windows need to run
+                const span = Math.max(1, (lastIn >= 0 ? lastIn + 1 : base.samples.length) - door);
                 const { rest, offsetStep, maxPreviews } = AXE_TIMING_RUNG;
                 const scheduleAt = (resume, o) => {
                     const ticks = new Set();
@@ -19665,13 +19675,13 @@ function solveSegmentUnder({
                     return { ticks, starts: [], windows: [], why: `⛓ AXETIMING: the chain every ${ORDINARY_SWING_PERIOD} t `
                         + `from ${o} t after the walk resumes` };
                 };
-                /** The walk stopped at the first sample out of reach after reach — or, `clean`, also at a danger. */
+                /** The walk stopped once it has been in reach and left it for good — or, `clean`, also at a danger. */
                 const stopFor = (clean) => {
                     let seen = false;
                     return (sm) => {
                         if (clean && probeSamples([sm], dangerExcept) !== null) return true;
                         if (inReach(sm)) { seen = true; return false; }
-                        return seen;
+                        return seen && leftFor(sm);
                     };
                 };
                 const optsFor = (stall, o, clean) => ({
@@ -19692,7 +19702,8 @@ function solveSegmentUnder({
                     const walk = previewWalk(run, corridor, tolerance, optsFor(stall, o, true));
                     if (walk.samples.length < door + s + 1) return null;
                     const last = walk.samples.at(-1);
-                    const crossed = walk.truncated?.kind === 'stopped' ? !inReach(last) : !walk.truncated;
+                    const crossed = walk.truncated?.kind === 'stopped' ? leftFor(last) && walk.samples.some(inReach)
+                        : !walk.truncated;
                     if (!crossed) return null;
                     if (probeSamples(walk.samples, dangerExcept)) return null;
                     return { stall: s, offset: o, walk, door };
