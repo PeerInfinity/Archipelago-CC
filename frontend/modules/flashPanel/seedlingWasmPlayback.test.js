@@ -26,6 +26,7 @@ import { assembleGeneratedSeedlingSet } from '../seedlingDemo/seedlingGeneratedS
 import { AXE_DODGE_ASK_PER_PREVIEW } from '../seedlingDemo/solverBot.js';
 import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
 import { AXE_DODGE_ASK_PER_PREVIEW_DEFAULT, applyAxeDodgeAsk, formatAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskHook.js';
+import { DASH_ONLY_WINDOW, applyDashOnlyWindow } from '../seedlingDemo/dashOnlyWindowHook.js';
 import { LOAD_FADE_FRAMES } from '../seedlingDemo/gameClock.js';
 import { replayTape } from '../seedlingDemo/jsRuntimeSolver.js';
 
@@ -181,6 +182,7 @@ function engineOver(arrival, opts = {}) {
         ...(opts.getBudgetWork ? { getBudgetWork: opts.getBudgetWork } : {}),
         ...(opts.getUpgradeWindowWork ? { getUpgradeWindowWork: opts.getUpgradeWindowWork } : {}),
         ...(opts.getAxeDodgeAskPerPreview ? { getAxeDodgeAskPerPreview: opts.getAxeDodgeAskPerPreview } : {}),
+        ...(opts.getDashOnlyWindow ? { getDashOnlyWindow: opts.getDashOnlyWindow } : {}),
         ...(opts.backstopMs ? { backstopMs: opts.backstopMs } : {}),
         onNote: (n) => notes.push(n), onFailed: (r, x) => { failures.push(r); failExtras.push(x ?? null); }, onDone: (d) => dones.push(d),
     });
@@ -691,6 +693,22 @@ describe('⛓ ANYTIME / O2 / O3 → DETERMINISTIC BUDGET — a solve cut at its 
             expect(d.service.seen[0].result.axeDodgeAskPerPreview).toBeUndefined();
             expect(AXE_DODGE_ASK_PER_PREVIEW.enabled).toBe(AXE_DODGE_ASK_PER_PREVIEW_DEFAULT);
         } finally { applyAxeDodgeAsk(null); }
+    });
+
+    it('⛓ DASH-ONLY WINDOW — the knob (`getDashOnlyWindow`, the setting) reaches the solve: `on` is applied to the engine\'s own instance at the solve\'s start and stamped on its answer; `default` stamps nothing', () => {
+        let knob = 'on';
+        try {
+            const e = engineOver(A, { getDashOnlyWindow: () => knob });
+            e.engine.walkTo(CHEST);
+            runUntil(e, () => e.service.seen.length > 0, 20000);
+            expect(e.service.seen[0].result.dashOnlyWindow).toBe(true);
+            knob = 'default';
+            const d = engineOver(A, { getDashOnlyWindow: () => knob });
+            d.engine.walkTo(CHEST);
+            runUntil(d, () => d.service.seen.length > 0, 20000);
+            expect(d.service.seen[0].result.dashOnlyWindow).toBeUndefined();
+            expect(DASH_ONLY_WINDOW.enabled).toBe(false);
+        } finally { applyDashOnlyWindow(null); }
     });
 
     it('⛓ O3 — the knob (`getBudgetWork`, the setting) is the budget: read at each solve, shown, and what is cut', () => {

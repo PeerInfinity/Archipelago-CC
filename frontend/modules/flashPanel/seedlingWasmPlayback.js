@@ -116,6 +116,8 @@ import {
 import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.js';
 import { applyAxeDodgeAsk, parseAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskHook.js';
 import { axeDodgeOverride } from './seedlingAxeDodgeSettings.js';
+import { applyDashOnlyWindow, parseDashOnlyWindow } from '../seedlingDemo/dashOnlyWindowHook.js';
+import { dashOnlyWindowOverride } from './seedlingDashOnlyWindowSettings.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
@@ -191,6 +193,9 @@ const roomEquips = (r) => equipsMap(r?.equips);
  * @param {() => string|null} [deps.getAxeDodgeAskPerPreview]  ⛓ AXE_DODGE HOOK — the panel's setting
  *   (`flashPanel.seedlingAxeDodgeAskPerPreview`: `on` / `off` / `default`), applied to THIS instance's
  *   `AXE_DODGE_ASK_PER_PREVIEW` at each solve's start (its worker gets the request's stamp); absent = untouched
+ * @param {() => string|null} [deps.getDashOnlyWindow]  ⛓ DASH-ONLY WINDOW — the panel's setting
+ *   (`flashPanel.seedlingDashOnlyWindow`: `on` / `off` / `default`), applied to THIS instance's `DASH_ONLY_WINDOW`
+ *   at each solve's start (its worker gets the request's stamp); absent = untouched
  * @param {number} [deps.backstopMs]  the wall-clock backstop (`SOLVE_BACKSTOP_MS`): a named failure, never an answer
  * @param {() => object|null} [deps.getDelivery]  ⛓ MID-ROOM REPLAN — the panel adapter's delivery gate
  *   (`{setItemGate, writesOf, inventory, push}`); absent = items reach the game as they arrive (no gate).
@@ -203,7 +208,7 @@ export function createWasmPlayback({
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetWork = SOLVER_BUDGET_WORK,
     getBudgetWork = null, getUpgradeWindowWork = null, getDelivery = null, backstopMs = SOLVE_BACKSTOP_MS,
-    getAxeDodgeAskPerPreview = null,
+    getAxeDodgeAskPerPreview = null, getDashOnlyWindow = null,
 }) {
     /** ⛓ O3 — the budget (work units) a solve starts with: the knob's live value, else the engine's own. */
     let ownBudget = budgetWork;
@@ -228,6 +233,14 @@ export function createWasmPlayback({
         try { v = getAxeDodgeAskPerPreview() ?? null; } catch { v = null; }
         const o = axeDodgeOverride(v);
         applyAxeDodgeAsk(o ? parseAxeDodgeAsk(o) : null);
+    };
+    /** ⛓ DASH-ONLY WINDOW — the same, for the solver's `DASH_ONLY_WINDOW` (`default` = the switch's own). */
+    const applyDashOnly = () => {
+        if (!getDashOnlyWindow) return;
+        let v = null;
+        try { v = getDashOnlyWindow() ?? null; } catch { v = null; }
+        const o = dashOnlyWindowOverride(v);
+        applyDashOnlyWindow(o ? parseDashOnlyWindow(o) : null);
     };
     const levelSource = levelSourceFromAtlas(records);
     let service = solveService;
@@ -1263,6 +1276,7 @@ export function createWasmPlayback({
             : { ...request, passes: request.passes ?? ANYTIME_PASSES, budgetWork: budget, upgradeWindowWork: upgradeWindow() };
         play = { ...playInit, t0: now(), request: req, budget, budgets: [budget], retries: 0, best: null };
         applyAxeDodge();
+        applyDashOnly();
         handle = svc().start(req);
         phase = 'solving';
         tl('solve', { name: req.name ?? null });
@@ -1291,6 +1305,7 @@ export function createWasmPlayback({
         play.budgets.push(play.budget);
         play.t0 = now();
         applyAxeDodge();
+        applyDashOnly();
         handle = svc().start(req);
         log(`[wasm playback] ${goal.name ?? goal.kind}: the solver ran out of ${play.budgets.at(-2)} work units in level ${goal.level} `
             + `— asking again with ${play.budget}, the room held (retry ${play.retries})`, 'warn');

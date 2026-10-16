@@ -655,6 +655,8 @@ export class SeedlingPlaybackController {
             getUpgradeWindowWork: () => this._getSurface?.()?.solverUpgradeWindowWork ?? null,
             // ⛓ AXE_DODGE HOOK — `on` / `off` / `default`, applied to the engine's own model at each solve.
             getAxeDodgeAskPerPreview: () => this._getSurface?.()?.wasm?.axeDodgeAskPerPreview ?? null,
+            // ⛓ DASH-ONLY WINDOW — `on` / `off` / `default`, applied to the engine's own solver at each solve.
+            getDashOnlyWindow: () => this._getSurface?.()?.wasm?.dashOnlyWindow ?? null,
             // ⛓ MID-ROOM REPLAN — the delivery gate's handle (re-read per call: a remount is a new adapter).
             getDelivery: () => this._getSurface?.()?.wasm?.delivery ?? null,
             log: this._log,

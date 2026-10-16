@@ -28,6 +28,7 @@ import { KILLLOCK_BODIES_DEFAULTS, applyKillLockBodies, formatKillLockBodies } f
 import { CONTACT_SETTING_KEYS, contactPageParam } from './seedlingContactSettings.js';
 import { CONTACT_FIDELITY_DEFAULTS, applyContactFidelity, formatContactFidelity } from '../seedlingDemo/contactFidelity.js';
 import { AXE_DODGE_SETTING_KEY, axeDodgeOverride, axeDodgePageParam } from './seedlingAxeDodgeSettings.js';
+import { DASH_ONLY_WINDOW_SETTING_KEY, dashOnlyWindowOverride, dashOnlyWindowPageParam } from './seedlingDashOnlyWindowSettings.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -243,6 +244,17 @@ export class FlashPanelUI {
           return;
         }
       }
+      if (data?.key === DASH_ONLY_WINDOW_SETTING_KEY || data?.key === '*') {
+        // ⛓ DASH-ONLY WINDOW — the AXE_DODGE arm above, for the solver's `DASH_ONLY_WINDOW`.
+        const value = await this._refreshDashOnlyWindow(data.key === '*' ? undefined : data.value);
+        if (value !== undefined && this.isInitialized && this.transport === 'js' && this._jsPageDashOnly !== undefined
+          && value !== this._jsPageDashOnly) {
+          this._panelLog(`dash-only-window switch changed (${this._jsPageDashOnly} → ${value}) — re-mounting the JS runtime page`);
+          this._teardownForReinit();
+          this._initializeAdapter();
+          return;
+        }
+      }
       if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
       if (!this.isInitialized) return;
       if (this.componentState.configPath || this.componentState.swfPath
@@ -376,6 +388,8 @@ export class FlashPanelUI {
         solverBudgetWork: this._wasmSolverBudgetWork ?? null,
         // ⛓ AXE_DODGE HOOK — `on` / `off` / `default` (null until the setting is read: the model's own value then).
         axeDodgeAskPerPreview: this._axeDodgeAsk ?? null,
+        // ⛓ DASH-ONLY WINDOW — `on` / `off` / `default` (null until the setting is read: the switch's own value then).
+        dashOnlyWindow: this._dashOnlyWindow ?? null,
         // ⛓ MID-ROOM REPLAN — the delivery gate (`FlashBridgeAdapter.itemGate`): the engine holds an item that
         // arrives while it drives, and lets it through where it can replan around it.
         delivery: {
@@ -577,6 +591,20 @@ export class FlashPanelUI {
     }
     this._axeDodgeAsk = axeDodgeOverride(next) ?? 'default';
     return this._axeDodgeAsk;
+  }
+
+  /**
+   * ⛓ DASH-ONLY WINDOW — cache `flashPanel.seedlingDashOnlyWindow` as `on` / `off` / `default`
+   * (`seedlingDashOnlyWindowSettings.js`), as `_refreshAxeDodgeAsk` does: the wasm engine applies it to its own
+   * instance at each solve (`wasm.dashOnlyWindow`), the JS page reads it on its URL. undefined = not read.
+   */
+  async _refreshDashOnlyWindow(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(DASH_ONLY_WINDOW_SETTING_KEY, 'default'); } catch { return undefined; }
+    }
+    this._dashOnlyWindow = dashOnlyWindowOverride(next) ?? 'default';
+    return this._dashOnlyWindow;
   }
 
   _teardownForReinit() {
@@ -1183,6 +1211,7 @@ export class FlashPanelUI {
       await this._refreshKillLockBodies();
       await this._refreshContactFidelity();
       await this._refreshAxeDodgeAsk();
+      await this._refreshDashOnlyWindow();
       this.transport = 'wasm';
       if (runtime === 'js') {
         // ⛓ Seedling JS J1: the JavaScript model's page, through the SAME
@@ -1197,8 +1226,10 @@ export class FlashPanelUI {
           this._jsPageContact = formatContactFidelity(contact);
           // ⛓ AXE_DODGE HOOK — and an off-`default` axe-dodge setting.
           this._jsPageAxeDodge = this._axeDodgeAsk ?? 'default';
+          // ⛓ DASH-ONLY WINDOW — and an off-`default` dash-only-window setting.
+          this._jsPageDashOnly = this._dashOnlyWindow ?? 'default';
           const query = [killLockPageQuery(killLock).replace(/^\?/, ''), contactPageParam(contact),
-            axeDodgePageParam(this._jsPageAxeDodge)].filter(Boolean);
+            axeDodgePageParam(this._jsPageAxeDodge), dashOnlyWindowPageParam(this._jsPageDashOnly)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
           await this._initializeWasm();

@@ -67,6 +67,7 @@ import { TILE_SIZE } from './levelWorld.js';
 import { KILLLOCK_BODIES, killLockBodiesStamp, normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js';
 import { CONTACT_FIDELITY, contactFidelityStamp, normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
 import { axeDodgeAskStamp, withAxeDodgeAsk } from './axeDodgeAskHook.js';
+import { DASH_ONLY_WINDOW, dashOnlyWindowStamp, withDashOnlyWindow } from './dashOnlyWindowHook.js';
 
 /** Refutations of one goal's plans before the goal FAILS, by name (§2.2 step 5). */
 export const MAX_REFUTATIONS = 3;
@@ -257,12 +258,28 @@ export function createWorkClock() {
  *                     an upgrade the pass would have found after the window.
  *                     With NO plan in hand the full pass is the only search:
  *                     no window, the whole budget (as before).
+ *   `dashOnly`        ⛓ DASH-ONLY WINDOW (`dashOnlyWindowHook.js`, default
+ *                     OFF; DS's shape (c)) — the window counts ONLY the pass's
+ *                     `sword-dash` asks (one dash preview = one unit) and trips
+ *                     only there; every other site runs on the whole budget.
+ *                     The budget still counts every ask. OFF = the rule above.
  * `limit` records which bound tripped first ('window' / 'budget'), for the
  * pass row. No budget (the in-place service) → no deadline at all.
  */
-export function passShouldStop(p, { budgetWork = null, windowWork = null, planInHand = false, work, limit = {} }) {
+export function passShouldStop(p, { budgetWork = null, windowWork = null, planInHand = false, work, limit = {}, dashOnly = false }) {
     if (!(Number.isFinite(budgetWork) && budgetWork > 0)) return null;
     const windowAt = p.stop === 'window' && planInHand ? upgradeWindowWork(budgetWork, windowWork) : null;
+    if (dashOnly && windowAt !== null) {
+        let dashAsks = 0;
+        return (site) => {
+            const n = work.tick();
+            if (n > budgetWork) { limit.first ??= 'budget'; return true; }
+            if (site !== 'sword-dash') return false;
+            dashAsks += 1;
+            if (dashAsks > windowAt) { limit.first ??= 'window'; return true; }
+            return false;
+        };
+    }
     return (site) => {
         const n = work.tick();
         if (n > budgetWork) { limit.first ??= 'budget'; return true; }
@@ -303,6 +320,24 @@ export function betterAnswer(best, next) {
  * `passes`: one `{pass, ok, kind, ticks, ms}` row per pass that ran.
  */
 export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => {}, clock = request.clock ?? (() => Date.now()) } = {}) {
+    // ⛓ DASH-ONLY WINDOW — the AXE_DODGE arm below, for `DASH_ONLY_WINDOW` (`dashOnlyWindow`, a boolean, off-default
+    // only): solved under it in whichever module instance runs it, and every answer says so.
+    if (typeof request.dashOnlyWindow === 'boolean') {
+        const { dashOnlyWindow, ...rest } = request;
+        // The stamp is the value this instance's switch READ while it solved, not the request's echo.
+        let ran = null;
+        const stamp = (a) => {
+            if (!a || ran === null) return a;
+            a.dashOnlyWindow = ran;
+            if (a.ok && a.plan) a.plan.dashOnlyWindow = ran;
+            return a;
+        };
+        const out = withDashOnlyWindow(dashOnlyWindow, () => {
+            ran = DASH_ONLY_WINDOW.enabled;
+            return solveAnytime(rest, { passes, clock, onPass: (one, best, index) => onPass(stamp(one), stamp(best), index) });
+        });
+        return stamp(out);
+    }
     // ⛓ AXE_DODGE HOOK — the CONTACT arm below, for fidelity's `AXE_DODGE_ASK_PER_PREVIEW` (`axeDodgeAskPerPreview`,
     // a boolean, off-default only): solved under it in whichever module instance runs it, and every answer says so.
     if (typeof request.axeDodgeAskPerPreview === 'boolean') {
@@ -369,7 +404,8 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
         const t0 = clock();
         const w0 = work.units;
         const limit = {};
-        const shouldStop = passShouldStop(p, { budgetWork, windowWork, planInHand: best?.ok === true, work, limit });
+        const shouldStop = passShouldStop(p, { budgetWork, windowWork, planInHand: best?.ok === true, work, limit,
+            ...(DASH_ONLY_WINDOW.enabled ? { dashOnly: true } : {}) });
         // ⛓ RECALIBRATE — a budgeted pass always asks the FINE checkpoints (`FINE_CHECKPOINTS`): the constants
         // above are counted in fine units, so every production path (JS page, wasm arrival, continuation,
         // held retry — all of them requests to this function) spends the unit they were calibrated in.
@@ -773,8 +809,11 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
             const contact = rest.contactFidelity ?? contactFidelityStamp();
             // ⛓ AXE_DODGE HOOK — and an off-default `AXE_DODGE_ASK_PER_PREVIEW`, the same way.
             const axe = rest.axeDodgeAskPerPreview ?? axeDodgeAskStamp();
+            // ⛓ DASH-ONLY WINDOW — and an off-default `DASH_ONLY_WINDOW` (inert here: no budget, no window).
+            const dashOnly = rest.dashOnlyWindow ?? dashOnlyWindowStamp();
             const result = solveAnytime({ ...rest, ...(killLock ? { killLockBodies: killLock } : {}),
                 ...(contact ? { contactFidelity: contact } : {}), ...(axe !== null ? { axeDodgeAskPerPreview: axe } : {}),
+                ...(dashOnly !== null ? { dashOnlyWindow: dashOnly } : {}),
                 levelSource, clock }, { passes, clock });
             return { settled: true, started: true, result, cancel() {} };
         },

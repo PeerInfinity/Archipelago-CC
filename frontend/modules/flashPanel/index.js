@@ -2,6 +2,7 @@ import { FlashPanelUI } from './flashPanelUI.js';
 import { killLockSchemaProps } from './seedlingKillLockSettings.js';
 import { contactSchemaProps } from './seedlingContactSettings.js';
 import { axeDodgeSchemaProps } from './seedlingAxeDodgeSettings.js';
+import { dashOnlyWindowSchemaProps } from './seedlingDashOnlyWindowSettings.js';
 import { SOLVE_PROGRESS_DEFAULT_MODE, SOLVE_PROGRESS_MODES } from './seedlingSolveProgress.js';
 import { SOLVE_DEMO_EVENT } from './seedlingSolveDemo.js';
 import eventBus from '../../app/core/eventBus.js';
@@ -240,6 +241,8 @@ export function register(registrationApi) {
       // ⛓ AXE_DODGE HOOK — fidelity's `solverBot.AXE_DODGE_ASK_PER_PREVIEW`: default | on | off, `default` = the
       // model's own value (`seedlingAxeDodgeSettings.js` says why it is not a boolean).
       ...axeDodgeSchemaProps(),
+      // ⛓ DASH-ONLY WINDOW — the JS arc's `dashOnlyWindowHook.DASH_ONLY_WINDOW`: default | on | off, the same way.
+      ...dashOnlyWindowSchemaProps(),
     },
   });
 
