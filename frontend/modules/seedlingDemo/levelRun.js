@@ -265,6 +265,8 @@ import {
 import {
     LAVA_CHAIN, createLavaChainState, lavaChainRect, rectTouchesBox, stepLavaChain, worldFrame,
 } from './lavaChain.js';
+// ⛓⛓⛓ SEEDLING FIDELITY SPINNINGAXE: a `SpinningAxe` hits the player (`stepSpinningAxesNow`).
+import { axeCanReach, axeHitPoint, axeHitsPlayer, SPINNING_AXE } from './spinningAxe.js';
 import {
     CEREMONY_FREEZE_FRAMES, LOAD_DEAD_FRAMES, stepChannel,
 } from './swimSoundClock.js';
@@ -1217,6 +1219,8 @@ export function createLevelRun({
         placedGrenadeStates.delete(n);
         // ⛓ K2PREP: and `new LavaChain(…)` — its anim back to null (the ctor plays nothing).
         lavaChainStates.delete(n);
+        // ⛓ fidelity SPINNINGAXE: and `new SpinningAxe(…)` — `Image.angle` 0, its update counter restarts.
+        spinningAxeStates.delete(n);
         // ⛓ R6 slice 6c: and the watcher, whose rebuild re-arms `talked` —
         // see `watcherStateFor`. Nothing an item grants adds or removes one;
         // dropped anyway, for the reason the spinner's is.
@@ -1992,6 +1996,12 @@ export function createLevelRun({
      */
     const lavaChainStates = new Map();
     const lavaChainEnemyHits = [];
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY SPINNINGAXE — THE SPINNING AXES' UPDATE COUNTER, per level and per visit
+     * (`stepSpinningAxesNow`): `{updates, lastTc, spans, unknown}`, dropped on every rebuild (a new `SpinningAxe`'s
+     * `Image.angle` is 0 again).
+     */
+    const spinningAxeStates = new Map();
     /** The rocks and grenades this visit has spawned — RUNTIME bodies. */
     let owlRocks = [];
     let owlGrenades = [];
@@ -4426,6 +4436,8 @@ export function createLevelRun({
         placedGrenadeStates.delete(n);
         // ⛓ K2PREP: and `new LavaChain(…)` — its anim back to null (the ctor plays nothing).
         lavaChainStates.delete(n);
+        // ⛓ fidelity SPINNINGAXE: and `new SpinningAxe(…)` — `Image.angle` 0, its update counter restarts.
+        spinningAxeStates.delete(n);
         // ⛓ R6 slice 6c. `new Game` rebuilds the NPC with `talked` false, and
         // the CLEARED tag is what keeps `talk()` from running again — the
         // flag, not the roster, is the memory. See `watcherStateFor`.
@@ -7898,6 +7910,19 @@ export function createLevelRun({
         // ⛓ R4-swim D2: the drive's own list, so a forecast meets the turret
         // where the drive does.
         const staticEnemyBoxes = chaserStaticEnemyBoxesNow();
+        /**
+         * ⛓ fidelity L40CONTACT D1 (`chaserSpinnerWalls`): the spinners MOVE, so the forecast steps its own copy, one
+         * step per forecast tick and BEFORE the chasers (the game's update order, `chaserSpinnerWallsNow`), under
+         * `spinnerForecast`'s ctx split (this tick's ctx for the first step, `beforeTypeFlip: false` after). A press's hits
+         * on a spinner are not forecast. `null` while the key is OFF or the room holds no live spinner.
+         */
+        const spinnerLive = CONTACT_FIDELITY.chaserSpinnerWalls ? spinnerStateFor(level) : null;
+        const fspin = spinnerLive && spinnerRects(spinnerLive).length > 0 ? {
+            st: { byId: new Map([...spinnerLive.byId].map(([k, v]) => [k, { ...v }])), level },
+            ctx: spinnerCtx(),
+            ctxAfter: firstTickInWorld ? spinnerCtx({ beforeTypeFlip: false }) : null,
+            walls: [],
+        } : null;
         // The camera, seeded from the live one and stepped by this forecast
         // alone. `cam`/`camBand` are exclusive in `stepCameraNow` and are
         // mirrored here as such.
@@ -7970,6 +7995,11 @@ export function createLevelRun({
             step(playerPos, opts = {}) {
                 if (!first) advanceCamera(playerPos);
                 first = false;
+                if (fspin !== null) {
+                    stepSpinners(fspin.st, fspin.ctx);
+                    fspin.ctx = fspin.ctxAfter ?? fspin.ctx;
+                    fspin.walls = chaserSpinnerWallsNow(spinnerRects(fspin.st));
+                }
                 // ⛓ fidelity-bobsoldier D3: this tick's CORPSE swords (absent unless one swings).
                 let corpseSwords = null;
                 for (const id of ids) {
@@ -8008,6 +8038,11 @@ export function createLevelRun({
                             if (world.collidesSolid(r, solidOpts)) return true;
                             if (playerWall && rectsOverlap(r, playerWall)) return true;
                             for (const b of staticEnemyBoxes) {
+                                if (!enemyBoxStopsChaser(c.tag, b)) continue;
+                                if (rectsOverlap(r, b.rect)) return true;
+                            }
+                            // ⛓ fidelity L40CONTACT D1: the forecast's own spinners, this forecast tick.
+                            for (const b of fspin?.walls ?? []) {
                                 if (!enemyBoxStopsChaser(c.tag, b)) continue;
                                 if (rectsOverlap(r, b.rect)) return true;
                             }
@@ -10655,6 +10690,78 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ SEEDLING FIDELITY SPINNINGAXE — `SpinningAxe.update()`'s PLAYER ARM, behind
+     * `CONTACT_FIDELITY.spinningAxePlayerHit` (OFF: returns at its first test, byte-identical).
+     *
+     * `SpinningAxe.update` (`SpinningAxe.as:48-63`) turns `Image.angle` by `spinRate` and tests the blade line, then
+     * the 12x12 hub rect, against `"Player"` — `spinningAxe.axeHitsPlayer` at the axe's OWN update count. A hit is
+     * `p.hit(null, force 5, axeHitPoint, damage 1)` (`:65-76`). The axe is added after the Player (`Game.as:2358` vs
+     * `:2250`) and `addUpdate` prepends, so it tests the PRE-move box; it is one line above the chains (`:2359`), so
+     * it updates right after them.
+     *
+     * THE COUNTER. `angle` starts at 0 in the ctor and gains `spinRate` per `World.update`, which runs on every
+     * `Game.update` with `blackCover <= 0` (`Game.as:880`) — so a load's fade (`kind: 'load'`) does not turn it, and
+     * every tape tick does. The count restarts at every rebuild (`freshVisitState`: a door, a death, an ending
+     * reboot) and is the number of ticks this function has stepped in the visit — the same `tick − V` the danger
+     * map's `axeVisitClock` reads, and one further: a death's rebuild restarts it here, where the danger map keeps
+     * the disc. ⛔ What it cannot vouch for: a tick the axe updated through and this did not step (a frozen tick —
+     * `World.update` still runs under `freezeObjects`, but no witness has measured the axe there), a non-load dead
+     * span in the visit (a freeze, a ceremony, a help dialog: per-kind, unwitnessed), or a counter that began after
+     * the visit's first tick. Then the count is UNKNOWN for the rest of the visit, and a player box within the axe's
+     * reach (`axeCanReach`) is refused by name — never guessed.
+     */
+    function stepSpinningAxesNow() {
+        if (!CONTACT_FIDELITY.spinningAxePlayerHit) return;
+        if (noclip || noDamage) return;
+        const axes = (world.combat?.hazards ?? []).filter((h) => h.tag === 'spinningaxe');
+        if (axes.length === 0) return;
+        const spans = clock.spans;
+        let st = spinningAxeStates.get(level);
+        if (!st) {
+            st = { updates: 0, lastTc: ticksCompleted - 1, spans: spans.length,
+                unknown: firstTickInWorld ? null : `its counter began at tick ${ticksCompleted + 1}, after the visit's first` };
+            spinningAxeStates.set(level, st);
+        }
+        if (st.unknown === null && ticksCompleted !== st.lastTc + 1) {
+            st.unknown = `tick ${st.lastTc + 2} was not stepped here (a frozen tick the axe turned through, unwitnessed)`;
+        }
+        if (st.unknown === null) {
+            const dead = spans.slice(st.spans).find((sp) => sp.kind !== 'load');
+            if (dead) st.unknown = `${dead.frames} dead frame(s) (${dead.kind}) at t${dead.t}, inside the visit`;
+        }
+        st.spans = spans.length;
+        st.lastTc = ticksCompleted;
+        st.updates += 1;
+        const box = playerBoxAt(state.x, state.y);
+        for (const h of axes) {
+            const axe = { cx: h.cx, cy: h.cy, rate: Number(h.attrs?.rate ?? 0) };
+            const id = `${h.tag}@${h.x},${h.y}`;
+            if (st.unknown !== null) {
+                if (!axeCanReach(axe, box)) continue;
+                throw new Error(`levelRun: the player is within ${id}'s reach at tick ${ticksCompleted + 1} in level `
+                    + `${level}, and the axe's update count is unknown (${st.unknown}) — whether \`SpinningAxe.update\` `
+                    + 'hits the player this update is not derivable. Refused by name, never guessed.');
+            }
+            const hit = axeHitsPlayer(axe, st.updates, box);
+            if (!hit) continue;
+            const at = axeHitPoint(axe, st.updates, state.x, state.y);
+            if (!Number.isFinite(at.x) || !Number.isFinite(at.y)) {
+                throw new Error(`levelRun: ${id}'s ${hit.arm} hits the player at tick ${ticksCompleted + 1} in level `
+                    + `${level} (update ${st.updates}), and \`hitPlayer\`'s point is (${at.x}, ${at.y}) — the blade two `
+                    + 'updates ahead is horizontal, so the game\'s knockback is NaN. Refused by name, never guessed.');
+            }
+            applyPlayerHit({
+                source: 'spinningaxe',
+                id,
+                force: SPINNING_AXE.force,
+                damage: SPINNING_AXE.damage,
+                from: { x: at.x, y: at.y },
+                retaliate: null, // `SpinningAxe.as:75` — `hit(null, …)`
+            });
+        }
+    }
+
+    /**
      * ⛓⛓⛓ SEEDLING FIDELITY LADDER2 — `Grenade.update()` FOR EVERY PLACED
      * GRENADE IN THE ROOM, and its ONE damage arm: the `"explode"` callback's
      * `FP.distance(x, endY, p.x, p.y) <= 20` → `p.hit(null, 2, (x, endY), 1)`.
@@ -11417,6 +11524,24 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ fidelity L40CONTACT D1 (`CONTACT_FIDELITY.chaserSpinnerWalls`) — THE LIVE SPINNERS, AS "Enemy" WALLS TO A
+     * CHASER'S SWEEP. A Spinner is `type = "Enemy"` (`Enemy.as:58`), so a chaser whose list holds "Enemy" (Bob,
+     * Puncher) stops against it; `enemyBoxStopsChaser` asks that per mover, as for a static box (no `solidLatch`).
+     *
+     * ⛔ READ PER TICK, AFTER THE SPINNERS STEPPED: `Game.as` adds `bob` (:2276) before `spinner` (:2416) and
+     * `World.addUpdate` prepends, so a spinner has already moved when a bob sweeps — `advance` steps the spinners
+     * above `stepChasersNow`, which is why `spinnerRectsNow()` at the top of that loop is the game's reading. The
+     * forecast passes its own stepped copy (`chaserForecastNow`). `[]` while the key is OFF (byte-identical).
+     *
+     * @param {?Array<{id: string, rect: object}>} spinners the spinner boxes to wall with (default: the live ones)
+     */
+    function chaserSpinnerWallsNow(spinners = undefined) {
+        if (!CONTACT_FIDELITY.chaserSpinnerWalls) return [];
+        const rects = spinners === undefined ? spinnerRectsNow() : spinners;
+        return (rects ?? []).map((s) => ({ id: s.id, rect: s.rect }));
+    }
+
+    /**
      * ⛓⛓⛓ seedling-fidelity-bobsoldier D1 — DOES THIS "Enemy"-ROSTER BOX STOP THIS CHASER?
      *
      * Every chaser bridged before the BobSoldier pushed "Enemy" onto its `solids` (`Bob.as:39`, `Puncher.as:48`), so
@@ -11487,7 +11612,8 @@ export function createLevelRun({
         // R8 slice 0's brand is what makes the normalise cost per TICK.
         const solidOpts = normalizeLiveOpts(liveSolidOpts());
         // ⛓ THE NON-CHASER "Enemy" BODIES, read once per tick (see the helper).
-        const staticEnemyBoxes = chaserStaticEnemyBoxesNow();
+        // ⛓ fidelity L40CONTACT D1: and the live spinners, where this tick's spinner step left them (OFF: none).
+        const staticEnemyBoxes = [...chaserStaticEnemyBoxesNow(), ...chaserSpinnerWallsNow()];
         // ⚠ THE UPDATE ORDER WITHIN THE FAMILY IS THE ADD ORDER, and the add
         // order is the `.oel`'s — `for each (o in xml.objects[0].bob)` walks
         // the placements in file order and PREPENDS each, so the LAST
@@ -19384,6 +19510,8 @@ export function createLevelRun({
             // ⛓⛓⛓ LADDER2: the placed grenades — added after the Player
             // ⛓⛓⛓ K2PREP: the lava chains (`Game.as:2359`, after every enemy) update before them all.
             stepLavaChainsNow();
+            // ⛓ fidelity SPINNINGAXE: the axes (`Game.as:2358`, one line above the chains) update right after them.
+            stepSpinningAxesNow();
             // (`Game.as:2298`), so updated before it, reading the pre-move point.
             stepPlacedGrenadesNow();
             stepContactsNow();

@@ -10,10 +10,12 @@
  */
 import { CHECK_STORAGE_PANEL_MODE_KEY } from './storagePanel.js';
 import { CHECK_SEEDLING_SOLVE_PROGRESS_AUTO_SHOW } from './seedlingSolveProgress.js';
+import { CHECK_SEEDLING_DASH_WINDOW } from './seedlingSlowSolve.js';
 
 const entry = (source, tutorial) => Object.freeze({ source: `frontend/modules/tutorials/content/checks/${source}`, tutorial });
 
 export const FEATURE_CHECKS = Object.freeze([
     entry('storagePanel.js', CHECK_STORAGE_PANEL_MODE_KEY),
     entry('seedlingSolveProgress.js', CHECK_SEEDLING_SOLVE_PROGRESS_AUTO_SHOW),
+    entry('seedlingSlowSolve.js', CHECK_SEEDLING_DASH_WINDOW),
 ]);

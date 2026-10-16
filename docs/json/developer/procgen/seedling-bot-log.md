@@ -22618,3 +22618,177 @@ each replayed through the worker's own dispatch at window 85 and at window 0, on
   78 % of window 0's tick savings for 30 % of its extra solve time, and no request is worse than today.
 - The window re-scope reverses part of ⚖ WINDOW WHOLE PASS (2026-10-06). The prefix drop moves tapes (the committed
   tapes are recorded under `all`). Both are user decisions; the report lists each one's flip surface.
+
+### SLOWSOLVE — the slowest page solve, and why the reports say minutes (slice `seedling-slowsolve-check`, 2026-10-16)
+
+⚖ The user (2026-10-16): *"These sessions have been reporting solves that take over a minute to complete, but when
+I tested in the frontend page, I didn't encounter any solves that took more than a few seconds."* Measured both
+sides. Evidence: `CC/docs/cloud-reports/seedling-slowsolve-check-evidence/`.
+
+**The page side.** The divergence sweep (CI run 38343649914, wasm, head `9790b4f97d`, before the lapse flip): 843
+legs, 730 completed solves. `solvedMs` median **143 ms**, max **5.9 s** (L32 Bob Boss); 119 over 1 s, 2 over 5 s.
+The page's long legs never complete. L40 Chest (legs 397 / 414) hits the 90 s leg timeout after the 640 → 2560 work
+retry, and the L12 bosslock / L40 totem refusals take 62–72 s. Timed in a worktree page (JS runtime, headless, box
+load 2–6):
+
+| workload | start | items | budget / cut | outcome | solve | walk wall |
+|---|---|---|---|---|---|---|
+| L6 → stairs (the L6 demo) | entry from L5 | — | 15 / 640 | SOLVED | 1.2 s | 12 s |
+| L18 → teleporter (176,112) | entry from L16 | none | 1 unit | REFUSED (no weapon) | <0.2 s | 61 s of walker wander |
+| L18 → teleporter (176,112) | entry from L16 | sword (AP grant) | 56 / 640 (22 + 34) | SOLVED | 4.4 s | 20 s |
+| L12 → teleporter (432,352) (leg 108) | entry from L0 (16,80) | sword (AP grant) | 36 + 51: full pass CUT at `sword-dash` by the 85 window | SOLVED, 561 t dashless | 2.4 s | 21 s |
+| the same, window 0 | | | 36 + 202, no cut | SOLVED, 328 t with dashes | 4.5 s | 15 s |
+| the same, window 0, budget 2560 | | | 36 + 202 | SOLVED, 328 t | 5.2 s | 16 s |
+| L40 Chest (staging A's room) | arrival from L39 (480,896) | torch, fire, shield, sword | 641 / 640 per attempt, 4 attempts | REFUSED (spinner@880,848) | ~14 s per attempt | 77 s |
+| L40 Chest | arrival from L43 (320,592) | the same | the same | REFUSED | ~13 s per attempt | 97 s |
+
+**The node side** (quoted from the hammer reports, 4-core box, load 2–5). The producers call `solveSegment` IN PLACE,
+with no work budget (the evidence tools `CC/docs/cloud-reports/seedling-hammer-d-evidence/view-solve.mjs` and `CC/docs/cloud-reports/seedling-hammer-d-evidence/d1-leg.mjs`: an optional tick STOP only). Staging A (L40 at (480,896), the
+chest) runs 60–130 s and is REFUSED near t1.7–3k. Legs 397 / 414 (the same chest from L39 / L43) run 123–155 s and
+in one variant 742 s. The L18 sweep, ~110–175 s, is the SUM of 45 residues of a few seconds each. `r9-campaign
+--check` (~50 s) is a chain of committed solves.
+
+**Why the gap.** The minute-long numbers are node runs with no work budget, of stagings and legs at the hardest spot
+in the game (L40's chest behind the spinners), and they are often summed over many residues. The page caps every solve
+attempt at 640 work units (the 85-unit window for the dash pass; at most 3 retries; a 300 s backstop). An attempt
+that would run for minutes is therefore cut, about 14 s on this box, and the walk declines instead. Every page solve
+that completes does so in under 6 s, and the route a person plays rarely reaches L40's chest.
+
+Residues, named and not fixed:
+- The JS runtime has no budget SETTING. `flashPanel.seedlingWasmSolverBudgetWork` is wasm-only, and the JS page
+  reads only `?solverBudgetWork=`.
+- A sword given to the JS page as the `Main.hasSword` flag alone (seedling_atlas, which holds no items) gets no
+  inventory slot. Sword-dash is then unavailable and the full pass is SKIPPED, where the same leg with an AP-granted
+  sword (seedling_playthrough) runs it and has it cut by the window.
+- `seedlingSolveDemo.js`'s comment "L18's hammer solve (20–45 s)" is not a solve time: armed L18 solves in 4.4 s, and
+  its whole walk takes 20 s.
+
+**The check: `seedling-dash-window`** (`tutorials/content/checks/seedlingSlowSolve.js`, walk row
+`feature-check-seedling-dash-window`, manual batch `feature-checks`). ⚖ The user, via the hammer planner: *"I want to
+see the longest solve that actually completes. And then I want to see a version with the time limits extended, for
+the optional parts of the solve that are cut to save solve time, like dashing"*, and then *"I want an example that
+isn't a boss fight."*
+
+The five longest completed non-boss solves in the sweep all have their full (dash) pass cut:
+
+| leg | solve | wasm `solvedMs` | the cut | stageable? |
+|---|---|---|---|---|
+| 418 | L42 Totem Part 184,152 from L40 | 5.2 s | full refused at `walk` | no: the totem's tag is allocated by the rewriter, and the leg holds 5 items |
+| 385 | L40 → pit (5,20) from L39 | 4.5 s | `sword-dash` | no: a pit exit resolves through the region binding, not the demo's exit tiles |
+| 408 | L40 → pit (14,21) from L43 | 4.5 s | `sword-dash` | no (as 385) |
+| 168 | L12 → teleporter (432,352) from L95's lower door | 4.2 s | `sword-dash` | no: on seedling_playthrough the region glue moves the arrival to (16,80) |
+| 404 | L40 → pit (14,20) from L43 | 4.2 s | `sword-dash` | no (as 385) |
+
+The target is **leg 108**: the same goal, from L0's door at (16,80); wasm 2.9 s, 561 t, full pass cut at `sword-dash`. The
+panel stages it as the solve demo `l12-dash-cut` (`flashPanel/seedlingSolveDemo.js`). The sword must be held AND
+slotted, so it comes through the AP item path on seedling_playthrough (the Inventory panel), never as a flag.
+
+| | window 85 (default) | window 0 (the whole budget) |
+|---|---|---|
+| dashless pass | 561 t, 36 units | 561 t, 36 units |
+| full pass (may dash) | REFUSED at `sword-dash`, limit `window`, 51 units | SOLVED, 328 t, 202 units |
+| ships | 561 t | **328 t** (−42%) |
+| solve (this box) | ~1.6 s | ~3.5 s |
+| the walk in the row | 18.7 s | 11.2 s |
+
+New panel behaviour (js-6's OK): a demo walk honours `flashPanel.seedlingSolverUpgradeWindowWork`, as the playback
+controller's walks do. A demo whose `needs` are missing, or whose arrival the region glue moved, is refused by name.
+
+Leg 108's request, page vs sweep (CI run 38841057409, main `506581c32e`, wasm): **equal** in `staging.boot`
+(12, 16, 80), `seam.items`, `inventory_slots` [0], `primary` 0, `save`, `persistence`, `grants`, `solverGoal`
+(reach-exit (432,352)), `budgetWork` 640 and `upgradeWindowWork` 85. The sweep's plan is the page's: 561 t, with
+the full pass cut at `sword-dash`. **Different**, and structural (JS page vs wasm game):
+- `name` (`js-runtime-L12-exit` / `wasm-exit-12`);
+- `passes` (omitted on JS, where the worker uses its default; listed on wasm);
+- `staging.rng` (JS seed 0, split false, with an `fp`; wasm the game's seed, split true);
+- the seam's shape: JS `items.hitsMax` vs wasm `hits_max`, and `beam` / `cutscene` / `menu_state` / `rock_set` /
+  `secondary` absent on JS;
+- `seam.time` (4800 / 4899);
+- `pins` order;
+- `source`: JS sends the mounted set by id, wasm inlines its 116 records;
+- the `live` digest shape.
+
+Residues, named and not fixed (in addition to the three above):
+- On seedling_playthrough the region glue places an arrival by the region the player LEFT. A demo can therefore stage
+  only the entry from the world's start side (leg 168's L95-lower entry cannot be held there), and a second staging
+  after a walk needs a reload. The panel refuses a moved arrival by name, after the check once passed falsely on a
+  7-tick solve from (432, 368).
+- The JS runtime has no budget setting (as above). It does not matter here: 202 < 640.
+
+After a first run by the user: the check keeps Solve Progress on **always** (⚖ "for this demo, let's set Solve Progress
+to Always"). The run also exposed a display defect, now fixed: the JS runtime page scaled the room by its size in TILES
+(`world.width`) instead of its size in pixels (`world.world.width`), so it drew a few gray blocks.
+
+
+### Seedling fidelity SPINNINGAXE — a spinning axe hits the player, and a partial phase dodge is re-probed
+
+Wave 17 (planner `seedling-fidelity-planning-8`), base `e967758748`. Two switches, **both OFF** and OFF byte-inert. The
+report is `CC/docs/cloud-reports/seedling-fidelity-spinningaxe.md`.
+
+**D1 — the axe's player arm** (`spinningAxePlayerHit`). The geometry (`SPINNING_AXE`, `collideLinePlayer`, `axeLine`,
+`axeHitsPlayer`, `axeCanReach`) moved verbatim to the simulation module `spinningAxe.js`; `hazards.js` re-exports the
+same function objects (a vitest pins the identity), and no importer's line moved. `levelRun.stepSpinningAxesNow` keeps
+a per-world update counter, restarted at every rebuild, steps right after the chains, and bills `SpinningAxe.hitPlayer`
+(force 5 from `axeHitPoint`, the foot of the player's point on the blade two updates BACK — `a + 2·spinRate` with
+`a = −angle`). A count it cannot vouch for (a frozen tick, a non-load dead span) with the player in reach is refused by
+name. At the base, survey step 163 solves in 366 t (not 476) and that plan meets the axe on the game at **t160**
+(update 160, the blade on the pre-move box). Three p4f witnesses, 0 px ON: `spinningaxe-l75-163-plan` (t160),
+`spinningaxe-l75-163-reboot` (SMALLGAPS's 476-t plan, t357 = update 197 of the world the t160 death rebuilt — the
+counter's restart), `spinningaxe-l75-633-plan` (sweep leg 633's node plan, t159 — the baseline row's own hit). Movers:
+survey step 163 only (SOLVED 366 → REFUSED by name; 221 steps byte-equal, OFF = CI 38778265493); sweep legs 633 and 765
+(both `failed` in 38778270309) refuse by name in node.
+
+**D2 — the walk executor never re-probed a partial phase dodge** (`partialDodgeReprobe`). Measured: step 163's whole
+solve calls `probeCorridor` once, at t0. The phase arm stalls for `lavachain@96,48` and keeps the stall as
+`partial: [spinningaxe@80,144]` ("the next probe meets the other danger alone"), and `walkToUnder` walks the rest of the
+corridor with no next probe. A preview rebuilt from the t52 walk row EQUALS the drive and the danger map flags the axe on
+it at t160–169 — so SMALLGAPS's "preview ≠ drive" was a missing probe. ON: the phase arm's return carries its
+`partial`, and the walk re-probes the rest and climbs again; step 163 refuses naming the axe's update 160. Same movers as
+D1 (survey 163; legs 633, 765).
+
+**D3 — leg 768's flip is `beamtower@208,248`, not the axe.** The axe switch moves none of 21 seam times (5497–5517). The
+sweep's 577-t plan is the `dashless` pass; booted from its tape on the game it plays clean at seam 5507 and is hit at
+t389 at (194.87037443454506, 245.60447982765967) — the sweep row's divergence to every digit — at seam **5506**. The
+danger map agrees with the game at both clocks (the beam on its update 389 at 5506, clear at 5507). So the row's game ran
+one `Game.time` behind the `seamTime` it recorded, and the plan grazes the beam's phase edge; the live run does not bill
+the beam either (BEAMTOWER's).
+
+### Seedling fidelity L40CONTACT — a live spinner walls a chaser
+
+Slice `seedling-fidelity-l40contact` (wave 17, planner `seedling-fidelity-planning-8`), from main `e967758748`. One
+switch, `CONTACT_FIDELITY.chaserSpinnerWalls`, **OFF**; its flip is the user's.
+
+- **D1 (G1, CW item 3).** A Spinner is `type = "Enemy"` (`Enemy.as:58`), a Bob's `solids` hold "Enemy" (`Bob.as:39`),
+  and the spinner updates first (`Game.as` adds `bob` before `spinner`; `World.addUpdate` prepends). The model's chaser
+  walls were the static census bodies and the ice turrets only, so `bob@736,752` walked through `spinner@880,848` at
+  t1801 on CW's staging A sword prefix. ON, `stepChasersNow` walls every live spinner where this tick's spinner step
+  left it, and `chaserForecastNow` steps its own copy beside the chasers. The game (p4f, the probe's model ON) reads the
+  whole 3,113-tick prefix at the model's clock: Bob 37,308 and Spinner 15,555 comparisons, worst |Δ| 0. **CW's "second
+  parting at t1989" was the probe's join**: `probe-seedling-u9-shield-mobiles` labels each game row with the nearest
+  body of its OWN (OFF) model run, so once that model had parted, both game bobs carried the label `bob@736,752`.
+- **D2 (G2, DD's legs 378/381).** Not a respawn and not a disagreement: a killed body is a `strikeBodies` member while
+  it plays "die" (`spent` under the lapse), and the game keeps it in the world exactly that long. `puncher@816,128`:
+  the ghost press fires t101, "die" t102–t132 at hits 4/4, `destroy` at t133, gone at t144, on the game and in the
+  model (Puncher 305 comparisons, worst 0). No switch.
+- **D3 (G3, SF's t658).** It is D1. On SF's floor-ON sword plan the OFF bob leaves home at t606 through
+  `spinner@880,848`; the game's bob stops there until t631, so at t658 it is 5.7 px further south and never reaches the
+  player. ON the model's player is at the game's (744.2596783699775, 742.494712313261), and both floor plans read on
+  the game at worst |Δ| 0.
+- **D4 (G4, 414's throw).** It still throws. `git bisect` (G1's own instrument on 414's atlas boot, the ghost rung on)
+  names **`926cc2a8`, the wave-14 flip**; with `rebootShake` alone OFF at the base, 414 is G1's REFUSED 5672 again.
+  The death at t2395 reboots with the hit's shake carried into the settle frames (the camera band), and 44 ticks later
+  the press kill's strike preview (`deriveStrike` → `walkTo` → `previewWalk`) asks the chaser forecast whether a bob is
+  on screen; inside the band that is the cosmetic RNG's question, and `onScreenAt` throws by design. The band stays
+  (⚖); who catches the throw is `deriveStrike` / `previewWalk`, the hammer arc's. Handed over.
+
+Movers ON (the licence's list): no committed tape, producer, identity row or tapeRunner pair (611 `75a3c41f`); the four
+L40 survey steps (78, 124, 126, 139) byte-identical; the bounded set (72 files) reds only `contactFidelity`'s
+shipped-defaults pin. Only L40 (bob, puncher) and L92 (bob, jellyfish) hold both a spinner and such a chaser. Of the
+42 sweep legs there, by captured request ×2, only 414 moves: OFF it throws in the shake band (127 work), ON it runs
+to the page deadline. Report: `CC/docs/cloud-reports/seedling-fidelity-l40contact.md`.
+
+Trap candidates:
+1. *A probe that joins by its own model labels the game with the model's error.* Re-read a parting with the
+   suspected fix in the probe's model, or join label-free; a second parting after a partial fix may be the join.
+2. *A "contact geometry" parting can be a wall upstream.* SF's t658 hit was decided 50 ticks earlier, where the bob
+   failed to stop. Trace the body's trail back to its first difference before modelling the contact.

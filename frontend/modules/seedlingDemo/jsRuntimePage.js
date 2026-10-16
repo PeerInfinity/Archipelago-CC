@@ -202,7 +202,9 @@ export function mountJsRuntimePage(win = window) {
             return;
         }
         const { world, state, apItems, level } = view;
-        const scale = Math.min(canvas.width / world.width, canvas.height / world.height);
+        // The room's size in PIXELS (`world.world`); `world.width` / `world.height` count TILES, and dividing by
+        // them drew the room 16× too large: only its top-left corner, as a few big grey blocks.
+        const scale = Math.min(canvas.width / world.world.width, canvas.height / world.world.height);
         const r = (rect, colour, alpha = 1) => {
             ctx.globalAlpha = alpha;
             ctx.fillStyle = colour;

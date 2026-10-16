@@ -1,0 +1,66 @@
+CI run 38841057409 (main 506581c32e, wasm seedling_bot_ap_p4f) leg 108 level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_432_352
+CI leg end done plans [(561, [{'pass': 'dashless', 'ok': True, 'kind': None}, {'pass': 'full', 'ok': False, 'kind': 'refusal', 'deadline': 'sword-dash'}])]
+page: worktree seedling-slowsolve-check, JS runtime, seedling_playthrough, demo l12-dash-cut, window 85 (default)
+
+| field | page (JS) | sweep (wasm) |
+|---|---|---|
+| `budgetWork` | 640 | 640 |
+| `equips` | null | null |
+| `name` **≠** | "js-runtime-L12-exit" | "wasm-exit-12" |
+| `passes` **≠** | "<absent>" | [{"pass": "dashless", "dashMode": "none", "stop": "all"}, {"pass": "full", "dashMode": "al |
+| `scratchPersistence` | true | true |
+| `solverGoal.exit.x` | 432 | 432 |
+| `solverGoal.exit.y` | 352 | 352 |
+| `solverGoal.kind` | "reach-exit" | "reach-exit" |
+| `staging.boot.level` | 12 | 12 |
+| `staging.boot.x` | 16 | 16 |
+| `staging.boot.y` | 80 | 80 |
+| `staging.despawn` | [] | [] |
+| `staging.equips` | [] | [] |
+| `staging.grants` | [] | [] |
+| `staging.inventory_slots` | [0] | [0] |
+| `staging.noDamage` | false | false |
+| `staging.noHazards` | [] | [] |
+| `staging.noclip` | false | false |
+| `staging.persistence` | [] | [] |
+| `staging.pins` **≠** | ["dead_frames", "sound"] | ["sound", "dead_frames"] |
+| `staging.rng.cosmetic` | 0 | 0 |
+| `staging.rng.fp` **≠** | 987286273 | "<absent>" |
+| `staging.rng.seed` **≠** | 0 | 404717770 |
+| `staging.rng.split` **≠** | false | true |
+| `staging.save.keys` | [] | [] |
+| `staging.save.seal_parts` | [] | [] |
+| `staging.save.totem_parts` | [] | [] |
+| `staging.seam.beam` **≠** | "<absent>" | false |
+| `staging.seam.cutscene` **≠** | "<absent>" | [false, false, false, false] |
+| `staging.seam.hits_max` **≠** | "<absent>" | 3 |
+| `staging.seam.items.canSwim` | false | false |
+| `staging.seam.items.hasDarkShield` | false | false |
+| `staging.seam.items.hasDarkSuit` | false | false |
+| `staging.seam.items.hasDarkSword` | false | false |
+| `staging.seam.items.hasFeather` | false | false |
+| `staging.seam.items.hasFire` | false | false |
+| `staging.seam.items.hasFireWand` | false | false |
+| `staging.seam.items.hasGhostSword` | false | false |
+| `staging.seam.items.hasShield` | false | false |
+| `staging.seam.items.hasSpear` | false | false |
+| `staging.seam.items.hasSword` | true | true |
+| `staging.seam.items.hasTorch` | false | false |
+| `staging.seam.items.hasWand` | false | false |
+| `staging.seam.items.hitsMax` **≠** | 3 | "<absent>" |
+| `staging.seam.menu_state` **≠** | "<absent>" | 0 |
+| `staging.seam.primary` | 0 | 0 |
+| `staging.seam.rock_set` **≠** | "<absent>" | false |
+| `staging.seam.secondary` **≠** | "<absent>" | 0 |
+| `staging.seam.time` **≠** | 4800 | 4899 |
+| `upgradeWindowWork` | 85 | 85 |
+
+source (the room set) equal: False
+source top keys page ['id', 'records'] sweep ['records']
+perTick lens 3 0
+live page {"digest": "{\"L\":12,\"s\":{\"x\":24,\"y\":88,\"vx\":0,\"vy\":0,\"hitX\":null,\"hitY\":null,\"terrain\":5,\"hazard\":{\"onIce\":false,\"onWaterfall\":false,\"inWater\":false,\"inLava\":false},\"drown\":{\"timer\":0,\"drowning\":false},\"swim\":null,\"latched\
+live sweep {"digest": "{\"L\":12,\"s\":{\"x\":24,\"y\":88,\"vx\":0,\"vy\":0,\"terrain\":0,\"hazard\":{\"onIce\":false,\"onWaterfall\":false,\"inWater\":false,\"inLava\":false},\"drown\":{\"timer\":0,\"drowning\":false},\"direction\":3,\"latched\":{},\"hitX\":null,\"hitY\
+records page 0 sweep 116
+L12 record equal: False
+other source keys page ['id'] sweep []
+records differing: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19] 116

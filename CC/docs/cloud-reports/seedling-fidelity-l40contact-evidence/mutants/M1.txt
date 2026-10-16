@@ -1,0 +1,8 @@
+     ✓ ships OFF 2ms
+     ✓ the witness is the game's: 1,413 rows per bob, read at worst |Δ| 0 by the ON probe 2ms
+     ✓ OFF: the model walks `bob@736,752` through `spinner@880,848` and parts from the game at t1801  2196ms
+     ✓ ON: every watched row from t1700 to the prefix's end is the game's, to the bit  1733ms
+     × ON: the chaser FORECAST meets the spinner where the drive does (t1790 + 40, both bobs, 0 px) 525ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 4 passed (5)
+restored
