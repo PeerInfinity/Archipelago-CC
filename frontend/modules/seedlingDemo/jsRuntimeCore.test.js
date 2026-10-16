@@ -325,3 +325,59 @@ describe('⛓ KEY DELIVERY — the JS page keeps the session\'s KEYS and SLOT OR
         expect(rt.run.inventorySlots).toEqual([1, 2]);
     });
 });
+
+describe('⛓ SEAL DELIVERY — the JS page models the FILL setters, carries the seal log / totem parts, answers the path reads', () => {
+    const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
+    const FULL_CONFIG = JSON.stringify({ classes: GAME_CONFIG.classes, state_properties: GAME_CONFIG.state_properties, path_reads: GAME_CONFIG.path_reads });
+    const sealCall = (slot, id) => ({ invocation: 'method_call', path: [{ class: 'Main' }], method: 'hasSealPartSet', args: [slot, id] });
+    const totemCall = (i) => ({ invocation: 'method_call', path: [{ class: 'Main' }], method: 'hasTotemPartSet', args: [i, true] });
+    const teleportTo = (level, x, y) => ({ invocation: 'new_instance', className: 'Game', args: [level, x, y] });
+    function vanillaAt(level, x, y, { log = () => {}, config = FULL_CONFIG } = {}) {
+        const rt = createJsRuntime({ log });
+        expect(rt.game.configure(config)).toBe('ok');
+        rt.setVanilla(MAP);
+        rt.queueItems([{ class: 'game', property: 'menu', value: false }, teleportTo(level, x, y)]);
+        rt.tick();
+        return rt;
+    }
+    const slots = (rt) => { const s = JSON.parse(rt.game.readState()); return Array.from({ length: 16 }, (_, i) => s[`sealSlot${i}`]); };
+
+    it('`Main.hasSealPartSet(slot, identity)` is MODELLED: the readouts report the slot, the next boot stages the log, the model reads it', () => {
+        const notes = [];
+        const rt = vanillaAt(86, 56, 56, { log: (m) => notes.push(m) });
+        expect(slots(rt)).toEqual(Array(16).fill(-1));
+        rt.queueItems([sealCall(0, 0), sealCall(1, 1)]);
+        rt.tick();
+        expect(slots(rt).slice(0, 3)).toEqual([0, 1, -1]);
+        expect(rt.session.staging.save.seal_parts).toEqual([0, 1]);           // the reboot in place staged it
+        expect(rt.run.saveState.bootSealParts).toEqual([0, 1]);
+        expect(notes.filter((m) => /not modelled/.test(m))).toEqual([]);
+        rt.queueItems([teleportTo(19, 16, 144)]);                             // a host teleport keeps it
+        rt.tick();
+        expect(rt.run.saveState.bootSealParts).toEqual([0, 1]);
+    });
+
+    it('sixteen seals fill the LAST slot — the FinalDoor\'s predicate, in the run the page booted', () => {
+        const rt = vanillaAt(86, 56, 56);
+        rt.queueItems(Array.from({ length: 16 }, (_, i) => sealCall(i, i)));
+        rt.tick();
+        expect(slots(rt)[15]).toBe(15);
+        expect(rt.run.saveState.bootSealParts).toHaveLength(16);
+    });
+
+    it('`Main.hasTotemPartSet(i, true)` is MODELLED: totemCount and the totemPart readouts report it; staged at the next boot', () => {
+        const rt = vanillaAt(86, 56, 56);
+        rt.queueItems([totemCall(0), totemCall(2)]);
+        rt.tick();
+        const s = JSON.parse(rt.game.readState());
+        expect([s.totemPart0, s.totemPart1, s.totemPart2, s.totemCount]).toEqual([true, false, true, 2]);
+        expect(rt.session.staging.save.totem_parts).toEqual([0, 2]);
+        expect(rt.run.saveState.totem_parts).toEqual([true, false, true, false, false]);
+    });
+
+    it('a run with no seal and no totem stages exactly the save it staged before (byte-identical defaults)', () => {
+        const rt = vanillaAt(86, 56, 56);
+        expect(rt.session.staging.save).toEqual({ totem_parts: [], keys: [], seal_parts: [] });
+    });
+
+});

@@ -507,7 +507,7 @@ describe('who takes the box', () => {
             'probe-seedling-obstacle-events.mjs', 'probe-seedling-lethal-landings.mjs', 'probe-seedling-tentacle-mouth.mjs', 'probe-seedling-loop-restart.mjs', 'probe-seedling-bosslock-latch.mjs', 'probe-seedling-persistence-rebuild.mjs', 'probe-seedling-killlock.mjs', 'probe-seedling-iceturret-spear.mjs', 'probe-seedling-cleartag.mjs', 'probe-seedling-ladder2-phase.mjs', 'probe-seedling-bobsoldier-mobiles.mjs', 'probe-seedling-wallflyer-mobiles.mjs', 'probe-seedling-darktrap-mobiles.mjs', 'probe-seedling-chaser-mobiles.mjs', 'probe-seedling-static-sword-mobiles.mjs', 'probe-seedling-cross-room-button.mjs',
             'probe-seedling-encounter-ticks.mjs',
             'probe-seedling-wand-mobiles.mjs', 'probe-seedling-l37-fallrock.mjs',
-            'probe-seedling-bombpusher.mjs', 'probe-seedling-staged-hits.mjs'];
+            'probe-seedling-bombpusher.mjs', 'probe-seedling-staged-hits.mjs', 'probe-seedling-seal-delivery.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

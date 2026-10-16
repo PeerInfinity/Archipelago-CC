@@ -636,10 +636,15 @@ export class FlashBridgeAdapter {
     const writes = [];
     const addAccum = {}; // property -> { def, total }
 
+    const fillCounts = {};
     for (const flashName of flashItems) {
       const def = this.flashItemDefs[flashName];
       if (!def) continue;
 
+      if (def.fill) {
+        fillCounts[flashName] = (fillCounts[flashName] || 0) + 1;
+        continue;
+      }
       if (def.method) {
         writes.push(this._methodWriteFor(def));
         continue;
@@ -655,6 +660,10 @@ export class FlashBridgeAdapter {
           value: def.value,
         });
       }
+    }
+
+    for (const flashName in fillCounts) {
+      writes.push(...this._fillWritesFor(this.flashItemDefs[flashName], fillCounts[flashName]));
     }
 
     for (const key in addAccum) {
@@ -724,6 +733,75 @@ export class FlashBridgeAdapter {
   }
 
   /**
+   * ⛓ SEAL DELIVERY — A FILL ITEM: a FUNGIBLE item the game holds as N slots of a save array behind a setter
+   * (Seedling's Seal: `Main.hasSealPartSet(slot, identity)` into the ordered log `hasSealPart`; its Totem
+   * Shard: `Main.hasTotemPartSet(index, true)`). The def's `fill` names the rule (`log`: slot = ordinal, the
+   * value an identity; `set`: the value is `fill.value`), the slot count, and the per-slot READOUT
+   * (`observed` + the slot number: a declared `path_reads` name) whose `empty` value means "not held".
+   * `count` copies declare slots 0..count-1 here, with the slot as the identity / index; `_setIfMissing`
+   * re-resolves each against the game's readouts (the missing ones only, the smallest unheld value).
+   */
+  _fillWritesFor(def, count) {
+    const f = def.fill;
+    const n = Math.min(count, f.slots);
+    const out = [];
+    for (let k = 0; k < n; k++) {
+      const w = this._methodWriteFor({ ...def, args: [k, f.rule === 'log' ? k : f.value] });
+      w.fill = { rule: f.rule, slot: k, of: n, slots: f.slots, observed: f.observed, empty: f.empty, value: f.value };
+      if (def.save_array) { w.save_array = def.save_array; w.index = k; }
+      out.push(w);
+    }
+    return out;
+  }
+
+  /**
+   * ⛓ SEAL DELIVERY — `_setIfMissing` for one fill def's writes (all of one `method`): the game's per-slot
+   * readouts say what it holds; ONLY the missing ones are written, each with the SMALLEST value not held
+   * (a log never repeats an identity; a set's missing index). ⛔ NEVER BLIND: a slot with no readout yet
+   * (`gameState` lacks it) writes nothing. ⛔ NEVER A CLEAR: a held slot — AP's or the game's own pickup — is
+   * never written. A set holds `of` when its true count reaches it, a log when its first `of` slots are filled.
+   */
+  _resolveFill(group) {
+    const f = group[0].fill;
+    const want = f.of;
+    const read = [];
+    for (let i = 0; i < f.slots; i++) {
+      const v = this.gameState[`${f.observed}${i}`];
+      if (v === undefined || v === null) {
+        if (!this._fillBlindLogged?.[f.observed]) {
+          (this._fillBlindLogged ??= {})[f.observed] = true;
+          this.log(`fill item ${group[0].method}: no game readout ${f.observed}${i} — nothing written (never blind)`);
+        }
+        return [];
+      }
+      read.push(v);
+    }
+    const held = (v) => v !== f.empty && v !== false && !(f.rule === 'log' && v === -1);
+    const out = [];
+    const taken = new Set();
+    if (f.rule === 'log') {
+      let filled = 0;
+      while (filled < read.length && held(read[filled])) filled++;
+      for (let i = 0; i < filled; i++) taken.add(read[i]);
+      for (let slot = filled; slot < want; slot++) {
+        let id = 0;
+        while (taken.has(id)) id++;
+        taken.add(id);
+        out.push({ ...group[0], args: [slot, id], fill: { ...f, slot } });
+      }
+    } else {
+      read.forEach((v, i) => { if (held(v)) taken.add(i); });
+      for (let have = taken.size; have < want; have++) {
+        let idx = 0;
+        while (taken.has(idx)) idx++;
+        taken.add(idx);
+        out.push({ ...group[0], args: [idx, f.value], fill: { ...f, slot: idx } });
+      }
+    }
+    return out;
+  }
+
+  /**
    * ⛓ THE MERGE RULE FOR METHOD-CALL ITEMS — `SET_IF_MISSING`: a call is queued
    * only while the game's `observed` readout lacks it (a key the game holds,
    * from AP or picked up in play, is never written again), and never more than
@@ -733,10 +811,24 @@ export class FlashBridgeAdapter {
    */
   _setIfMissing(writes) {
     this._methodSentAt = this._methodSentAt || {};
-    const out = [];
+    // ⛓ SEAL DELIVERY — fill writes are resolved per def against the game's readouts first (`_resolveFill`).
+    const fills = new Map();
+    const plain = [];
     for (const w of writes) {
+      if (w.invocation === 'method_call' && w.fill) {
+        const k = `${w.path?.[0]?.['class']}.${w.method}`;
+        if (!fills.has(k)) fills.set(k, []);
+        fills.get(k).push(w);
+      } else plain.push(w);
+    }
+    const resolved = [];
+    for (const group of fills.values()) resolved.push(...this._resolveFill(group));
+    const out = [];
+    for (const w of [...plain, ...resolved]) {
       if (w.invocation !== 'method_call') { out.push(w); continue; }
-      const id = `${w.path?.[0]?.['class']}.${w.method}(${(w.args || []).join(',')})`;
+      // A fill write retries per SLOT (its value is re-chosen from the readouts each tick).
+      const id = w.fill ? `${w.path?.[0]?.['class']}.${w.method}[${w.fill.slot}]`
+        : `${w.path?.[0]?.['class']}.${w.method}(${(w.args || []).join(',')})`;
       const obs = w.observed;
       if (obs) {
         const v = Number(this.gameState[obs.property]);
@@ -781,7 +873,9 @@ export class FlashBridgeAdapter {
       if (!flashName) continue;
 
       for (let i = 0; i < count; i++) {
-        if (flashName[0] !== '!') {
+        if (flashName[0] !== '!' || this.flashItemDefs[flashName]?.fill) {
+          // ⛓ SEAL DELIVERY — a FILL item (`fill` def: Seedling's Seal, Totem Shard) is counted copy by copy;
+          // `_itemWritesFor` turns the count into slot writes.
           result.push(flashName);
         } else {
           const progChain = this.config.progressive_items?.[flashName];

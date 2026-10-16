@@ -53,6 +53,29 @@
     { "class": "main", "property": "level",           "type": "int" }
   ],
 
+  "path_reads": [
+    { "name": "sealSlot0", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 0 }] },
+    { "name": "sealSlot1", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 1 }] },
+    { "name": "sealSlot2", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 2 }] },
+    { "name": "sealSlot3", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 3 }] },
+    { "name": "sealSlot4", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 4 }] },
+    { "name": "sealSlot5", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 5 }] },
+    { "name": "sealSlot6", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 6 }] },
+    { "name": "sealSlot7", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 7 }] },
+    { "name": "sealSlot8", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 8 }] },
+    { "name": "sealSlot9", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 9 }] },
+    { "name": "sealSlot10", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 10 }] },
+    { "name": "sealSlot11", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 11 }] },
+    { "name": "sealSlot12", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 12 }] },
+    { "name": "sealSlot13", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 13 }] },
+    { "name": "sealSlot14", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 14 }] },
+    { "name": "sealSlot15", "type": "int", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasSealPart" }, { "index": 15 }] },
+    { "name": "totemPart0", "type": "boolean", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasTotemPart" }, { "index": 0 }] },
+    { "name": "totemPart1", "type": "boolean", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasTotemPart" }, { "index": 1 }] },
+    { "name": "totemPart2", "type": "boolean", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasTotemPart" }, { "index": 2 }] },
+    { "name": "totemPart3", "type": "boolean", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasTotemPart" }, { "index": 3 }] },
+    { "name": "totemPart4", "type": "boolean", "path": [{ "class": "Main" }, { "property": "SAVE_FILE" }, { "property": "data" }, { "property": "hasTotemPart" }, { "index": 4 }] }
+  ],
   "ap_items": [
     { "id": 0,  "ap_name": "Progressive Sword",  "flash_name": "!sword" },
     { "id": 1,  "ap_name": "Progressive Shield", "flash_name": "!shield" },
@@ -145,6 +168,7 @@
   ],
 
   "$comment_keys": "⛓ KEY DELIVERY (solver-walk, 2026-10-06): the five keys are METHOD-CALL items. `Main.hasKey` is a function and `keyMask` a getter, so a property write reaches nothing; the def names the game's own setter, `Main.hasKeySet(i, true)`, which BridgeGeneric's `method_call` invokes (measured on p4f: botStatus.save.keys went [F,F,F,F,F] → [T,F,F,F,F]). `observed` is the readout that says the game already holds it (keyMask bit i): the adapter writes a key only while that bit is clear and NEVER clears one (SET_IF_MISSING), so a key the game picked up in play stays. `save_array`/`index` name the staging channel (`save.keys`) the wasm engine mirrors the AP-held keys into, because every host tape boot resets the game's keys to the tape's `save.keys` (Bot.as). Keys are never consumed (BossLock only reads hasKey). ⛔ A TOP-LEVEL KEY, like the notes above.",
+  "$comment_fill": "⛓ SEAL DELIVERY (solver-walk, 2026-10-16): the Seal and the Totem Shard are FILL items — one fungible AP item the game holds as N slots of a save array behind its own setter, so the N-th copy is a slot, not a flag. `!seal` → `Main.hasSealPartSet(slot, identity)` into the ordered LOG `hasSealPart` (slot = ordinal, value = identity, -1 = empty; `SealController.hasAllSealParts()` = the LAST slot filled, which the FinalDoor reads). `!totem` → `Main.hasTotemPartSet(index, true)` (`Player.hasAllTotemParts()`, which `Wand.update` reads). `observed` + the slot number is a `path_reads` name (below): the game's per-slot readout. The adapter writes ONLY the missing slots, each with the smallest identity / index the game does not hold, NEVER a held one and never blind (SET_IF_MISSING; measured on p4f: hasSealPartSet(0,7) → botStatus.save.seal_parts [7,-1,…], path read sealSlot0 -1 → 7). `save_array` names the staging channel; its merge rule is `seedlingDemo/saveArrayRules.js` (seal_parts log-append, totem_parts count-fill). `!totem`'s `progressive_items` chain stays for the readers that name rungs; the adapter counts a fill def's copies instead. ⛔ A TOP-LEVEL KEY, like the notes above.",
   "items": [
     { "flash_name": "sword",       "class": "main", "property": "hasSword",      "value": true },
     { "flash_name": "darksword",   "class": "main", "property": "hasDarkSword",  "value": true },
@@ -164,7 +188,9 @@
     { "flash_name": "key1",        "class": "main", "method": "hasKeySet", "args": [1, true], "observed": { "property": "keyMask", "bit": 1 }, "save_array": "keys", "index": 1 },
     { "flash_name": "key2",        "class": "main", "method": "hasKeySet", "args": [2, true], "observed": { "property": "keyMask", "bit": 2 }, "save_array": "keys", "index": 2 },
     { "flash_name": "key3",        "class": "main", "method": "hasKeySet", "args": [3, true], "observed": { "property": "keyMask", "bit": 3 }, "save_array": "keys", "index": 3 },
-    { "flash_name": "key4",        "class": "main", "method": "hasKeySet", "args": [4, true], "observed": { "property": "keyMask", "bit": 4 }, "save_array": "keys", "index": 4 }
+    { "flash_name": "key4",        "class": "main", "method": "hasKeySet", "args": [4, true], "observed": { "property": "keyMask", "bit": 4 }, "save_array": "keys", "index": 4 },
+    { "flash_name": "!seal",       "class": "main", "method": "hasSealPartSet", "fill": { "rule": "log", "slots": 16, "empty": -1, "observed": "sealSlot" }, "save_array": "seal_parts" },
+    { "flash_name": "!totem",      "class": "main", "method": "hasTotemPartSet", "fill": { "rule": "set", "slots": 5, "empty": false, "value": true, "observed": "totemPart" }, "save_array": "totem_parts" }
   ],
 
   "progressive_items": {
