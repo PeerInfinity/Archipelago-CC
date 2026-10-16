@@ -63,7 +63,11 @@
  *    method:'hasKeySet', args:[i, true]}` → the session's key. Every boot
  *    stages the session's keys (`save.keys`) and the last run's slot order
  *    (`inventory_slots`, `primary`), so a teleport, a Restart or an item
- *    reboot keeps both, as the game's statics do.
+ *    reboot keeps both, as the game's statics do. ⛓ SEAL DELIVERY: and the
+ *    fill setters `hasSealPartSet(slot, identity)` / `hasTotemPartSet(i, true)`
+ *    → the session's seal log / totem parts, staged into every boot's
+ *    `save.seal_parts` / `save.totem_parts` and read back by the declared
+ *    `path_reads` (`sealSlot<i>`, `totemPart<i>`).
  *  · `botLoadLevels` answers `'pending'` per chunk and `'ok'` on the last;
  *    `botLevelSet` reads back `{active, table_levels, start_level}`
  *    (`levelSetDisagreement.READBACK_FIELDS`).
@@ -128,7 +132,7 @@ import { buildLevelWorld, ENTITY_CLASSES, entityRect, STAIRS_TAGS, tagOf } from 
 import { chestStanceBand } from './chest.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
-import { BUILD_SPAWN, INVENTORY_ITEM_IDS, ITEM_PROPERTIES } from './tapeFormat.js';
+import { BUILD_SPAWN, INVENTORY_ITEM_IDS, ITEM_PROPERTIES, SAVE_SLOTS } from './tapeFormat.js';
 import { createRuntimeWalker, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
 import { createRuntimeSolver } from './jsRuntimeSolver.js';
 import { VANILLA_RECORD_SET_ID_BASE } from './levelSetExporter.js';
@@ -306,6 +310,16 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
      * never takes a key back), and staged into every boot's `save.keys`. A new mounted set is a new save.
      */
     const heldKeys = new Set();
+    /**
+     * ⛓ SEAL DELIVERY — the session's SEAL LOG (`Main.SAVE_FILE.data.hasSealPart`: slot → identity, -1 empty) and
+     * TOTEM PARTS (`hasTotemPart`): the host's `Main.hasSealPartSet(slot, identity)` / `hasTotemPartSet(i, true)`
+     * calls (an AP Seal / Totem Shard) ∪ what a run collected itself (a chest's seal slot, a `BossTotemPart`).
+     * Never cleared but by a new mounted set; staged into every boot's `save.seal_parts` / `save.totem_parts`.
+     */
+    const sealSlots = Array.from({ length: SAVE_SLOTS.seal_parts }, () => -1);
+    const heldTotems = new Set();
+    /** The run whose opened chests were last folded into `sealSlots`, and how many. */
+    let sealsFolded = { run: null, earned: 0 };
     let menu = true;
     let queue = [];
 
@@ -437,6 +451,36 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     /** ⛓ KEY DELIVERY — fold the keys the run holds (picked up in play included) into the session's. */
     function foldGainedKeys() {
         for (const k of session?.run?.keys ?? []) if (Number.isInteger(k)) heldKeys.add(k);
+        foldGainedSaves();
+    }
+
+    /** ⛓ SEAL DELIVERY — the seal log's filled prefix (the save-array spelling). */
+    function sealLog() {
+        const firstEmpty = sealSlots.indexOf(-1);
+        return firstEmpty === -1 ? [...sealSlots] : sealSlots.slice(0, firstEmpty);
+    }
+
+    /**
+     * ⛓ SEAL DELIVERY — fold what the run collected itself into the session's arrays: its totem parts, and one
+     * seal slot per chest it OPENED (`saveState.sealSlotsEarned`). The model cannot know which identity the game's
+     * sampler drew (`levelRun.saveState`), so this page draws the smallest the log does not hold — the same rule
+     * as an AP seal (`saveArrayRules`, log-append). Idempotent.
+     */
+    function foldGainedSaves() {
+        const ss = session?.run?.saveState ?? null;
+        if (!ss) return;
+        (ss.totem_parts ?? []).forEach((v, i) => { if (v) heldTotems.add(i); });
+        // Only the chests opened since the last fold of THIS run: a host seal written meanwhile is not one of them.
+        const earned = ss.sealSlotsEarned ?? 0;
+        const before = sealsFolded.run === session.run ? sealsFolded.earned : 0;
+        sealsFolded = { run: session.run, earned };
+        for (let n = before; n < earned; n += 1) {
+            const log = sealLog();
+            if (log.length >= SAVE_SLOTS.seal_parts) break;
+            let id = 0;
+            while (log.includes(id)) id += 1;
+            sealSlots[log.length] = id;
+        }
     }
 
     /**
@@ -473,6 +517,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         staging.persistence = [...carried.values()].map((c) => ({ ...c }));
         // ⛓ KEY DELIVERY — the session's keys and slot order survive every boot (teleport, Restart, item reboot).
         staging.save = { ...staging.save, keys: [...heldKeys].sort((a, b) => a - b) };
+        // ⛓ SEAL DELIVERY — and its seal log and totem parts (only when it holds any: a run without stays byte-identical).
+        if (heldTotems.size) staging.save.totem_parts = [...heldTotems].sort((a, b) => a - b);
+        if (sealLog().length) staging.save.seal_parts = sealLog();
         if (slots) {
             staging.inventory_slots = slots.slots;
             staging.seam = { ...(staging.seam ?? {}), primary: slots.primary };
@@ -709,6 +756,29 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             } else heldKeys.add(k);
             return;
         }
+        // ⛓ SEAL DELIVERY — `Main.hasSealPartSet(slot, identity)` / `Main.hasTotemPartSet(i, true)` (games/seedling.json's
+        // FILL items): the setter's own write (a slot / an index), then a reboot in place, as for a key (a chest reads
+        // `hasAllSealParts` at BUILD — `Chest.checkBySeal`; a `BossTotemPart` its index). A clear is never sent.
+        if (item?.invocation === 'method_call' && aliasClass(item.path?.[0]?.class) === MAIN
+            && item.method === 'hasSealPartSet' && Number.isInteger(item.args?.[0]) && Number.isInteger(item.args?.[1])
+            && item.args[0] >= 0 && item.args[0] < SAVE_SLOTS.seal_parts && item.args[1] >= 0) {
+            foldGainedSaves();
+            if (sealSlots[item.args[0]] !== item.args[1]) {
+                sealSlots[item.args[0]] = item.args[1];
+                if (session) deferredReboot = true;
+            }
+            return;
+        }
+        if (item?.invocation === 'method_call' && aliasClass(item.path?.[0]?.class) === MAIN
+            && item.method === 'hasTotemPartSet' && Number.isInteger(item.args?.[0]) && item.args?.[1] === true
+            && item.args[0] >= 0 && item.args[0] < SAVE_SLOTS.totem_parts) {
+            foldGainedSaves();
+            if (!heldTotems.has(item.args[0])) {
+                heldTotems.add(item.args[0]);
+                if (session) deferredReboot = true;
+            }
+            return;
+        }
         if (item?.invocation === 'new_instance') {
             if (item.className === GAME) teleport(item.args);
             else note({ type: 'ignored', message: `[js runtime] new_instance ${item.className} is not modelled` });
@@ -757,7 +827,10 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
                 for (const k of [...heldKeys, ...(run?.keys ?? [])]) mask |= (1 << k);
                 return mask;
             }
-            if (property === 'totemCount') return (run?.saveState?.totem_parts ?? []).filter(Boolean).length;
+            if (property === 'totemCount') {
+                foldGainedSaves();
+                return heldTotems.size;
+            }
             if (property === 'menu') return menu;
         }
         return undefined;
@@ -774,7 +847,27 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             const v = valueOf(aliasClass(p.class), p.property);
             if (v !== undefined) out[p.property] = v;
         }
+        for (const p of config?.path_reads ?? []) {
+            const v = valueOfPath(p.path);
+            if (v !== undefined) out[p.name] = v;
+        }
         return out;
+    }
+
+    /**
+     * ⛓ SEAL DELIVERY — a declared `path_reads` row this page models: `Main.SAVE_FILE.data.<array>[i]` for the
+     * seal log and the totem parts (games/seedling.json's per-slot readouts). Anything else is undefined (SKIPPED, as
+     * BridgeGeneric skips a path it cannot resolve).
+     */
+    function valueOfPath(path) {
+        if (!Array.isArray(path) || path.length !== 5) return undefined;
+        const [c, so, d, arr, ix] = path;
+        if (aliasClass(c?.class) !== MAIN || so?.property !== 'SAVE_FILE' || d?.property !== 'data' || !Number.isInteger(ix?.index)) return undefined;
+        const i = ix.index;
+        foldGainedSaves();
+        if (arr?.property === 'hasSealPart') return i >= 0 && i < SAVE_SLOTS.seal_parts ? sealSlots[i] : undefined;
+        if (arr?.property === 'hasTotemPart') return i >= 0 && i < SAVE_SLOTS.totem_parts ? heldTotems.has(i) : undefined;
+        return undefined;
     }
 
     /** Report every declared property that changed, in declaration order. */
@@ -787,6 +880,15 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             if (!baselineOwed && reported.has(p.property) && reported.get(p.property) === v) continue;
             reported.set(p.property, v);
             out.push([p.property, v]);
+        }
+        // ⛓ SEAL DELIVERY — the declared path reads, after the properties (BridgeGeneric polls them first in a
+        // frame; nothing here reads the order across the two lists).
+        for (const p of config.path_reads ?? []) {
+            const v = valueOfPath(p.path);
+            if (v === undefined) continue;
+            if (!baselineOwed && reported.has(p.name) && reported.get(p.name) === v) continue;
+            reported.set(p.name, v);
+            out.push([p.name, v]);
         }
         baselineOwed = false;
         for (const [prop, v] of out) {
@@ -851,6 +953,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // A new set is a new save: what the old one cleared means nothing here (its keys included).
         carried.clear();
         heldKeys.clear();
+        sealSlots.fill(-1);
+        heldTotems.clear();
         collected.clear();
         reportedClears.clear();
         session = null;
