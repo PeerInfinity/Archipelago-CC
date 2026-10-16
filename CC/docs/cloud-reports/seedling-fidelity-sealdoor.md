@@ -193,6 +193,13 @@ sweep legs, and every one of them stays a refusal **while the state lacks the pr
 - `solveSegment`, `twoPassSolve`, `PendingDeclaration` and `createRunForStaging`: no signature or contract change. No new
   `SolverRefusal.obstacle.kind`: the refusals are `solid` (frontier) or `clear-tag` / `unresolved`.
 
+## CI at the last code head
+
+`node scripts/procgen/ci-vitest-summary.mjs 0f7797c5` (run 38945197696; the report commit `a4bb41fd07` is
+path-filtered and runs no vitest): **20,590 passed, 1 failed**. The red is `scripts/procgen/rosterCategories.test.js`
+"the LIVE row carries one part per derived category", the standing-values `mechanic` part (217 → 220) owed to the
+planner. The slow battery has no summary (that step was cancelled after the failure).
+
 ## Handed to the hammer arc
 
 Nothing. No edit is in its region.
