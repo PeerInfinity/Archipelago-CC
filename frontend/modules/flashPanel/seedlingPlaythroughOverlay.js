@@ -888,11 +888,12 @@ export const CHARGED_DOORS = Object.freeze([
  *   1. `SealController.hasAllSealParts()` — all sixteen seals. Carried, as the
  *      `CHARGED_DOORS` rows above.
  *   2. `talkedToWatcher = !Game.checkPersistence(0, 114)` — the Watcher's speech
- *      in L114 must have been heard. NOT carried as an item, and it does not
- *      need to be: L113's teleporters to L114 are free and on the near side of
- *      the door, so anyone who can stand at the door can already have talked to
- *      him. Named here rather than modelled, because "topologically implied" is
- *      a claim a later map change could quietly break.
+ *      in L114 must have been heard. ⛓ RULES watcher-event: CARRIED as a
+ *      game_state event (`CROSS_ROOM_PREREQUISITES` below). It was once named
+ *      "implied" (L114 is free from L113), but the game keeps the door shut
+ *      without the talk ("Face the Watcher and return", game-witnessed by
+ *      `r6-final-door-control`), and no route visited the Watcher before the
+ *      door — implied is not the same as done.
  *
  * ⛔ THE BLOODY BRANCH IS A NAMED NON-GOAL. `NPCs/Watcher.as:97-103` adds a
  * SECOND Seed — *"covered in the blood of the Watcher"* — when the Watcher is
@@ -905,12 +906,41 @@ export const CHARGED_DOORS = Object.freeze([
 export const COMPLETION = Object.freeze({
     goal: 'the bloodless Seed, L115 seed@(4,4)',
     witness: 'the credits — menu_state 2',
-    carried: ['all sixteen seals, via CHARGED_DOORS on L113\'s two exits to L115'],
-    implied: ['the Watcher\'s speech in L114 — free and on the near side of the FinalDoor'],
+    carried: ['all sixteen seals, via CHARGED_DOORS on L113\'s two exits to L115',
+        'the Watcher\'s speech in L114, via CROSS_ROOM_PREREQUISITES (the event flag:L114:0)'],
+    implied: [],
     excludedBranch: 'the BLOODY seed (NPCs/Watcher.as:97-103) — a second ending reachable with no '
         + 'seals, which would make every seal optional. A named non-goal.',
     cite: 'Scenery/FinalDoor.as:52-64 + NPCs/Watcher.as:97-103 + End/4.oel:131',
 });
+
+/**
+ * ⛓⛓ RULES watcher-event — **A FLAG ONE ROOM READS FROM ANOTHER, AND THE ENTITY THAT WRITES IT.** A gated solid
+ * whose opening reads a persistence flag of ANOTHER room carries that flag as a `game_state` event: the solid's
+ * own event and every crossing standing on its footprint need it, and the event sits where the WRITER stands
+ * (`seedlingObstacleEvents.deriveTalkEvents` holds the schema).
+ *
+ * One row today, read at source:
+ *   - `Scenery/FinalDoor.as:50`: `talkedToWatcher = !Game.checkPersistence(0,
+ *     LevelSet.active().namedLevel("watcher_text"))`. The tag 0 is the class's constant; the ROOM is the level
+ *     set's `watcher_text` named room (vanilla 114), so it is read off the set's manifest, never typed here.
+ *   - `NPCs/Watcher.as:126-135`: `doneTalking()` clears the Watcher's own tag in its own room. `NPC.talk()` runs
+ *     only for a non-empty text (`NPCs/NPC.as:188`), so of the game's eleven Watchers only the speaking one can
+ *     write it. Its `keyNeeded = !checkPersistence(tag)` is false before the talk, so the dialogue opens on
+ *     entering the 24 px circle; it needs nothing held. Game-witnessed: `watcher-l114-talk` (the talk writes
+ *     {114,0}), `r6-final-door` (16 seals + {114,0} open the door), `r6-final-door-control` (no talk: shut).
+ */
+export const CROSS_ROOM_PREREQUISITES = Object.freeze([
+    Object.freeze({
+        gated: 'finaldoor',
+        flag: Object.freeze({ namedRoom: 'watcher_text', tag: 0 }),
+        writer: 'watcher',
+        verb: 'talk',
+        cite: 'Scenery/FinalDoor.as:50 + NPCs/Watcher.as:126-135 + NPCs/NPC.as:188',
+        why: 'the FinalDoor opens on all sixteen seals AND the Watcher\'s talk; without the talk the ceremony says '
+            + '"Face the Watcher and return" and the door stays shut.',
+    }),
+]);
 
 /**
  * ⛔⛔ LOCATION GUARDS — the gate that is not a door (R7 slice 5).

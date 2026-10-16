@@ -12,7 +12,8 @@ import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    buildPlaythroughAtlas, playthroughButtonEvents, playthroughLockEvents, playthroughObstacleEvents, pocketDoorsCharged,
+    buildPlaythroughAtlas, playthroughButtonEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughTalkEvents, pocketDoorsCharged,
+    withEventGates,
 } from './make-seedling-playthrough-rules.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -36,6 +37,7 @@ let atlas;
 let derived;
 let locks;
 let buttons;
+let talks;
 beforeAll(() => {
     atlas = buildPlaythroughAtlas();
     derived = playthroughObstacleEvents(atlas);
@@ -43,6 +45,8 @@ beforeAll(() => {
     locks = playthroughLockEvents(atlas, { existing: derived.events });
     // ⛓ RULES l38-button-event: and the cross-room button presses
     buttons = playthroughButtonEvents(atlas, { existing: [...derived.events, ...locks.events] });
+    // ⛓ RULES watcher-event: and the cross-room prerequisites (the Watcher's talk)
+    talks = playthroughTalkEvents(atlas, { existing: [...derived.events, ...locks.events, ...buttons.events] });
 }, 180_000);
 
 describe('the playthrough\'s obstacle events', () => {
@@ -55,7 +59,7 @@ describe('the playthrough\'s obstacle events', () => {
 
     it('the committed rules carry exactly the fresh derivation\'s events, each an AP event in the open side', () => {
         const committed = eventsOf(RULES);
-        const all = [...derived.events, ...locks.events, ...buttons.events];
+        const all = [...withEventGates([...derived.events, ...locks.events, ...buttons.events], talks.eventGates), ...talks.events];
         expect(committed.map((e) => e.name).sort()).toEqual(all.map((e) => e.name).sort());
         for (const ev of all) {
             const c = committed.find((x) => x.name === ev.name);
@@ -115,6 +119,25 @@ describe('the playthrough\'s obstacle events', () => {
         expect(buttons.skipped.map((x) => x.split(':')[0]).sort()).toEqual([
             'L38 buttonroom@144,288 -> {37,4}', 'L61 buttonroom@176,40 -> {63,1} lightpole@64,88',
             'L63 buttonroom@32,64 -> {62,0} lightpole@120,200']);
+    });
+
+    it('rules watcher-event: the Watcher\'s talk is ONE event in L114\'s flag, gating the FinalDoor\'s event and its two crossings', () => {
+        expect(talks.events.map((e) => e.fields.event_id)).toEqual(['flag:L114:0']);
+        const [e] = talks.events;
+        expect(e.name).toBe('L114 flag 0: watcher@72,72 cleared');
+        expect(e.fields).toMatchObject({ side: 'level_114', across: [],
+            obstacle: { level: 114, tag: 0, class: 'watcher', x: 72, y: 72 },
+            action: { verb: 'talk', item: null, gates: [{ level: 113, class: 'finaldoor', x: 112, y: 0 }] } });
+        expect(e.access_rule).toBe(null);
+        // the departures standing ON the door's footprint: its two teleporters to L115, nothing else
+        expect(talks.exitGates.map((g) => `${g.region_id}/${g.exit_id}`)).toEqual(['level_113/out_teleporter_112_0', 'level_113/out_teleporter_128_0']);
+        expect(gatesOf(RULES, new Set([e.name])).map((g) => `${g.from}->${g.to}`))
+            .toEqual(['level_113->level_115__r9c4', 'level_113->level_115__r9c4']);
+        // the door's own event needs the talk as well as the seals
+        expect(talks.eventGates).toEqual([{ event_id: 'flag:L113:0', item_name: e.name }]);
+        const door = eventsOf(RULES).find((x) => x.event_id === 'flag:L113:0');
+        expect(door.access_rule).toEqual({ rule: 'And', children: [
+            { rule: 'Has', args: { item_name: 'Seal', count: 16 } }, { rule: 'Has', args: { item_name: e.name } }] });
     });
 
     it('the L0↔L1 binding: the door in the house\'s doorway is charged the rock under it', () => {

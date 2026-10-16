@@ -11218,6 +11218,12 @@
                 {
                   "rule": "Has",
                   "args": {
+                    "item_name": "L114 flag 0: watcher@72,72 cleared"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
                     "item_name": "Progressive Swim"
                   }
                 }
@@ -11240,6 +11246,12 @@
                 {
                   "rule": "Has",
                   "args": {
+                    "item_name": "L114 flag 0: watcher@72,72 cleared"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
                     "item_name": "Progressive Swim"
                   }
                 }
@@ -11252,11 +11264,22 @@
             "name": "L113 flag 0: finaldoor@112,0 cleared",
             "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Seal",
-                "count": 16
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Seal",
+                    "count": 16
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L114 flag 0: watcher@72,72 cleared"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "L113 flag 0: finaldoor@112,0 cleared",
@@ -11302,7 +11325,46 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L114 flag 0: watcher@72,72 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L114 flag 0: watcher@72,72 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L114:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 114,
+              "tag": 0,
+              "class": "watcher",
+              "x": 72,
+              "y": 72
+            },
+            "action": {
+              "verb": "talk",
+              "item": null,
+              "gates": [
+                {
+                  "level": 113,
+                  "class": "finaldoor",
+                  "x": 112,
+                  "y": 0
+                }
+              ]
+            },
+            "side": "level_114",
+            "across": []
+          }
+        ]
       },
       "level_115__r2c2": {
         "name": "level_115__r2c2",
@@ -12208,6 +12270,17 @@
         "event": true,
         "type": "Event",
         "max_count": 1
+      },
+      "L114 flag 0: watcher@72,72 cleared": {
+        "name": "L114 flag 0: watcher@72,72 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       }
     }
   },
@@ -12254,7 +12327,8 @@
       "L40 flag 8: bosslock@480,352 cleared": 1,
       "L48 flag 1: bosslock@48,144 cleared": 1,
       "L68 flag 0: bosslock@16,32 cleared": 1,
-      "L39 flag 8: wandlock@144,592 cleared": 1
+      "L39 flag 8: wandlock@144,592 cleared": 1,
+      "L114 flag 0: watcher@72,72 cleared": 1
     }
   },
   "world": {

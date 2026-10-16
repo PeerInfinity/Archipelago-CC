@@ -10267,6 +10267,7 @@
               "args": {
                 "item_counts": {
                   "Seal": 16,
+                  "L114 flag 0: watcher@72,72 cleared": 1,
                   "Progressive Swim": 1
                 }
               }
@@ -10280,6 +10281,7 @@
               "args": {
                 "item_counts": {
                   "Seal": 16,
+                  "L114 flag 0: watcher@72,72 cleared": 1,
                   "Progressive Swim": 1
                 }
               }
@@ -10291,10 +10293,12 @@
             "name": "L113 flag 0: finaldoor@112,0 cleared",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAllCounts",
               "args": {
-                "item_name": "Seal",
-                "count": 16
+                "item_counts": {
+                  "Seal": 16,
+                  "L114 flag 0: watcher@72,72 cleared": 1
+                }
               }
             },
             "item": {
@@ -10341,7 +10345,46 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L114 flag 0: watcher@72,72 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L114 flag 0: watcher@72,72 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L114:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 114,
+              "tag": 0,
+              "class": "watcher",
+              "x": 72,
+              "y": 72
+            },
+            "action": {
+              "verb": "talk",
+              "item": null,
+              "gates": [
+                {
+                  "level": 113,
+                  "class": "finaldoor",
+                  "x": 112,
+                  "y": 0
+                }
+              ]
+            },
+            "side": "level_114",
+            "across": []
+          }
+        ]
       },
       "level_115__r2c2": {
         "name": "level_115__r2c2",
@@ -11286,6 +11329,17 @@
         "event": true,
         "type": "Event",
         "max_count": 1
+      },
+      "L114 flag 0: watcher@72,72 cleared": {
+        "name": "L114 flag 0: watcher@72,72 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       }
     }
   },
@@ -11308,6 +11362,7 @@
       "L0 flag 4: breakablerock@80,112 cleared": 1,
       "L112 flag 1: rocklock@112,16 cleared": 1,
       "L113 flag 0: finaldoor@112,0 cleared": 1,
+      "L114 flag 0: watcher@72,72 cleared": 1,
       "L12 flag 11: bosslock@112,192 cleared": 1,
       "L12 flag 12: bosslock@32,864 cleared": 1,
       "L12 flag 3: bosslock@80,656 cleared": 1,
@@ -11399,6 +11454,7 @@
       "Level 109 - Firewand": "Fire Wand Fusion",
       "L112 flag 1: rocklock@112,16 cleared": "L112 flag 1: rocklock@112,16 cleared",
       "L113 flag 0: finaldoor@112,0 cleared": "L113 flag 0: finaldoor@112,0 cleared",
+      "L114 flag 0: watcher@72,72 cleared": "L114 flag 0: watcher@72,72 cleared",
       "Level 115 - The Seed": "The Seed"
     }
   },

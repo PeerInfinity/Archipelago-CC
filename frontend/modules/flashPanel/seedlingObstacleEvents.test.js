@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import {
-    crossRoomButtonsOf, deriveButtonEvents, deriveLockEvents, deriveObstacleEvents, persistenceEffect, OBSTACLE_EVENT_KIND, obstacleEventId, obstacleEventName, parseObstacleEventId,
+    crossRoomButtonsOf, crossRoomPrerequisitesOf, deriveButtonEvents, deriveLockEvents, deriveTalkEvents, deriveObstacleEvents, persistenceEffect, OBSTACLE_EVENT_KIND, obstacleEventId, obstacleEventName, parseObstacleEventId,
     parseSolidId, rowVerdict, ruleItemNames,
 } from './seedlingObstacleEvents.js';
 
@@ -242,5 +242,65 @@ describe('cross-room button events (deriveButtonEvents) — RULES l38-button-eve
         const l38 = rows.find((r) => r.presser.level === 38 && r.presser.x === 32 && r.presser.y === 48);
         expect(l38.write).toEqual({ level: 39, tag: 8, value: false });
         expect(l38.targets).toEqual([plug]);
+    });
+});
+
+describe('cross-room prerequisites (deriveTalkEvents) — RULES watcher-event', () => {
+    const MAP = JSON.parse(readFileSync(new URL('./atlases/seedling-map.json', import.meta.url), 'utf8'));
+    const NAMED = JSON.parse(readFileSync(
+        new URL('../seedlingDemo/fixtures/seedling-vanilla-set.json', import.meta.url), 'utf8')).named_rooms;
+    const DECL = [{ gated: 'finaldoor', flag: { namedRoom: 'watcher_text', tag: 0 }, writer: 'watcher', verb: 'talk', cite: 'FinalDoor.as:50' }];
+    const watcher = { level: 114, type: 'watcher', x: 72, y: 72 };
+    const door = { level: 113, type: 'finaldoor', x: 112, y: 0 };
+    const prereq = (over = {}) => ({ flag: { level: 114, tag: 0 }, writers: [watcher], gated: [door], verb: 'talk', ...over });
+    const NAME = 'L114 flag 0: watcher@72,72 cleared';
+    const DOOR_EVENT = { name: 'L113 flag 0: finaldoor@112,0 cleared',
+        fields: { event_id: 'flag:L113:0', side: 'level_113', obstacle: { level: 113, tag: 0, class: 'finaldoor', x: 112, y: 0 } } };
+    const tctx = (over = {}) => ({
+        place: (w) => ({ region_id: `level_${w.level}`, side: `level_${w.level}` }),
+        reach: () => null,
+        gates: () => [{ region_id: 'level_113', exit_id: 'out_teleporter_128_0' }, { region_id: 'level_113', exit_id: 'out_teleporter_112_0' }],
+        existing: [DOOR_EVENT],
+        ...over,
+    });
+
+    it('the census reads the room off the level set and keeps only the SPEAKING writer of the tag', () => {
+        const [row] = crossRoomPrerequisitesOf(MAP, DECL, NAMED);
+        expect(row.flag).toEqual({ level: NAMED.watcher_text.level, tag: 0 });
+        expect(row.writers).toEqual([watcher]);
+        expect(row.gated).toEqual([door]);
+        // other Watchers carry tag 0 in other rooms, and every other Watcher is silent: none is a writer
+        const silent = MAP.levels.flatMap((l) => l.entities.filter((e) => e.type === 'watcher' && !e.attrs.text));
+        expect(silent.length).toBeGreaterThan(0);
+        // the room is the SET's: another set's named room moves the event with it
+        const moved = crossRoomPrerequisitesOf(MAP, DECL, { watcher_text: { level: 103 } })[0];
+        expect(moved.flag.level).toBe(103);
+        expect(moved.writers).toEqual([]);
+        expect(() => crossRoomPrerequisitesOf(MAP, DECL, {})).toThrow(/names no room "watcher_text"/);
+    });
+
+    it('one event at the WRITER, in its own flag; the crossings on the gated solid and the solid\'s own event need it', () => {
+        const out = deriveTalkEvents([prereq()], tctx());
+        expect(out.events).toHaveLength(1);
+        const [e] = out.events;
+        expect(e).toMatchObject({ region_id: 'level_114', name: NAME, access_rule: null });
+        expect(e.fields).toEqual({
+            event_id: 'flag:L114:0', event_kind: OBSTACLE_EVENT_KIND,
+            obstacle: { level: 114, tag: 0, class: 'watcher', x: 72, y: 72 },
+            action: { verb: 'talk', item: null, gates: [{ level: 113, class: 'finaldoor', x: 112, y: 0 }] },
+            side: 'level_114', across: [],
+        });
+        expect(out.exitGates.map((g) => g.exit_id)).toEqual(['out_teleporter_112_0', 'out_teleporter_128_0']);
+        for (const g of out.exitGates) expect(g.rule).toEqual({ rule: 'Has', args: { item_name: NAME } });
+        expect(out.eventGates).toEqual([{ event_id: 'flag:L113:0', item_name: NAME }]);
+    });
+
+    it('refused by name: no writer, several writers, no gated solid, no crossing on it, an id already minted', () => {
+        expect(() => deriveTalkEvents([prereq({ writers: [] })], tctx())).toThrow(/0 writer\(s\)/);
+        expect(() => deriveTalkEvents([prereq({ writers: [watcher, { ...watcher, x: 8 }] })], tctx())).toThrow(/2 writer\(s\)/);
+        expect(() => deriveTalkEvents([prereq({ gated: [] })], tctx())).toThrow(/no solid reads it/);
+        expect(() => deriveTalkEvents([prereq()], tctx({ gates: () => [] }))).toThrow(/finaldoor@112,0 has no crossing on it/);
+        expect(() => deriveTalkEvents([prereq()], tctx({ existing: [{ name: NAME, fields: { event_id: 'flag:L114:0', side: 'level_114' } }] })))
+            .toThrow(/flag:L114:0 is already the event/);
     });
 });

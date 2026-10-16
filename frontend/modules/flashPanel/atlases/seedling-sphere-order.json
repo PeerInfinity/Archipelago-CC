@@ -4,7 +4,7 @@
   "seed": 1,
   "seed_name": "14089154938208861744",
   "locations": 41,
-  "spheres": 12,
+  "spheres": 13,
   "order": [
     {
       "sphere": "0.1",
@@ -247,7 +247,7 @@
       "level": 109
     },
     {
-      "sphere": "11.2",
+      "sphere": "12.1",
       "location": "Level 115 - The Seed",
       "item": "The Seed",
       "level": 115

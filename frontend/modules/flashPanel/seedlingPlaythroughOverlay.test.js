@@ -34,6 +34,7 @@ import {
     WANDLOCK_IS_A_LOCK,
     CHARGED_DOORS,
     COMPLETION,
+    CROSS_ROOM_PREREQUISITES,
     IGNEOUS_IS_FREE,
     LAVATRAP_PULL,
     LAVABOSS_ARENA,
@@ -435,6 +436,10 @@ describe('the charged doors and the completion condition', () => {
         expect(COMPLETION.goal).toMatch(/bloodless/);
         expect(COMPLETION.witness).toMatch(/menu_state 2/);
         expect(COMPLETION.excludedBranch).toMatch(/Watcher\.as/);
-        expect(COMPLETION.implied.join(' ')).toMatch(/Watcher/);
+        // ⛓ RULES watcher-event: the Watcher's talk is CARRIED (an event), no longer implied
+        expect(COMPLETION.implied).toEqual([]);
+        expect(COMPLETION.carried.join(' ')).toMatch(/Watcher.*flag:L114:0/);
+        expect(CROSS_ROOM_PREREQUISITES.map((p) => `${p.gated} <- ${p.writer} ${p.verb} {${p.flag.namedRoom},${p.flag.tag}}`))
+            .toEqual(['finaldoor <- watcher talk {watcher_text,0}']);
     });
 });
