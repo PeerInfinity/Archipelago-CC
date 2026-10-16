@@ -1313,6 +1313,17 @@ export function playthroughTalkEvents(doc, { existing = [] } = {}) {
     });
 }
 
+/** `events` with each `eventGates` row's `Has(<item_name>)` ANDed onto its event's access rule (a new object; none = as is). */
+export function withEventGates(events, eventGates) {
+    return events.map((e) => {
+        const has = eventGates.filter((g) => g.event_id === e.fields.event_id)
+            .map((g) => ({ rule: 'Has', args: { item_name: g.item_name } }));
+        if (has.length === 0) return e;
+        const children = [...(e.access_rule ? [e.access_rule] : []), ...has];
+        return { ...e, access_rule: children.length === 1 ? children[0] : { rule: 'And', children } };
+    });
+}
+
 /** Every exit whose arrival spawn is NOT its entrance tile, and why — derived, printed, never typed. */
 export const movedArrivalSpawns = [];
 
@@ -1489,13 +1500,7 @@ function main() {
     const buttons = playthroughButtonEvents(doc, { existing: [...obstacle.events, ...locks.events] });
     // ⛓ RULES watcher-event: the gated solid's OWN event needs the prerequisite too (its flag cannot clear first).
     const talks = playthroughTalkEvents(doc, { existing: [...obstacle.events, ...locks.events, ...buttons.events] });
-    const priorEvents = [...obstacle.events, ...locks.events, ...buttons.events].map((e) => {
-        const has = talks.eventGates.filter((g) => g.event_id === e.fields.event_id)
-            .map((g) => ({ rule: 'Has', args: { item_name: g.item_name } }));
-        if (has.length === 0) return e;
-        const children = [...(e.access_rule ? [e.access_rule] : []), ...has];
-        return { ...e, access_rule: children.length === 1 ? children[0] : { rule: 'And', children } };
-    });
+    const priorEvents = withEventGates([...obstacle.events, ...locks.events, ...buttons.events], talks.eventGates);
     const landingGates = playthroughLandingGates(doc);
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
