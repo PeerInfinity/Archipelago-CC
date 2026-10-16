@@ -59,8 +59,9 @@ All in `flashPanel/seedlingSolveDemo.js` and `FlashPanelUI.stageSolveDemo`:
 - `l12-dash-cut` with `needs` (held AND slotted, never written by the panel).
 - **New behaviour:** a demo walk honours `flashPanel.seedlingSolverUpgradeWindowWork`, as the playback controller's
   walks do.
-- A demo whose arrival the region glue moved is refused by name. Without this, the check once passed falsely on a
-  7-tick solve from (432, 368).
+- A demo whose arrival the region glue moved is refused by name (`solveDemoMoved`). Without this, the check once
+  passed falsely on a 7-tick solve from (432, 368). **This goes beyond the approved design (a + b).** It was added
+  after the false pass, and js-6 accepted it in review as in the spirit of b)(1).
 - The stale L18 "20–45 s" comment now carries the page's measurement.
 
 Pins in `seedlingSolveDemo.test.js`:
