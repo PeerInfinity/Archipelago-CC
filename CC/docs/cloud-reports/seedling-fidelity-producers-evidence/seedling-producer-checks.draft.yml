@@ -1,0 +1,72 @@
+# DRAFT (seedling-fidelity-producers D4) — NOT WIRED. To adopt: copy to .github/workflows/seedling-producer-checks.yml.
+#
+# Runs EVERY `scripts/procgen/plan-seedling-*.mjs` that carries `--check`, sharded, at the dispatched SHA. The set is
+# ENUMERATED at run time (`grep -l -- --check`), so a new producer joins without an edit here. Shards (wall times
+# measured at d1fbfeffc2 on a 4-core cloud box, 4 at a time):
+#   bombstand   plan-seedling-hammer-bw-bombstand          ~775 s (three 3–4 min solves)
+#   l40button   plan-seedling-l40button-witness            ~250–460 s
+#   browser     plan-seedling-r7-ends-meet                 ~15 s + setup (wasm submodule, Chromium, a server on :8000:
+#                                                          its PAGE_URL hardcodes the port)
+#   rest        every other producer, 2 at a time          ~720 s of CPU → ~6–8 min
+# Wall ≈ the bombstand shard plus setup, ~15 min. A red names the producer and its first FAIL row in the summary.
+
+name: Seedling producer --check set (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: Comma-separated producer basenames (plan-seedling-*.mjs) to run instead of the whole set.
+        type: string
+        default: ''
+
+jobs:
+  check:
+    name: producers — ${{ matrix.shard }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [bombstand, l40button, browser, rest]
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          submodules: ${{ matrix.shard == 'browser' && 'recursive' || 'false' }}
+      - uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Chromium + a server on :8000 (browser shard only)
+        if: matrix.shard == 'browser'
+        run: |
+          node node_modules/playwright/cli.js install chromium
+          python3 scripts/serve-nocache.py 8000 > /tmp/srv.log 2>&1 &
+      - name: Run the shard
+        env:
+          SHARD: ${{ matrix.shard }}
+          ONLY: ${{ inputs.only }}
+        run: |
+          set -uo pipefail
+          ALL=$(grep -l -- '--check' scripts/procgen/plan-seedling-*.mjs | xargs -n1 basename | sed 's/\.mjs$//' | sort)
+          case "$SHARD" in
+            bombstand) SET=plan-seedling-hammer-bw-bombstand ;;
+            l40button) SET=plan-seedling-l40button-witness ;;
+            browser)   SET=plan-seedling-r7-ends-meet ;;
+            rest)      SET=$(echo "$ALL" | grep -vxE 'plan-seedling-(hammer-bw-bombstand|l40button-witness|r7-ends-meet)') ;;
+          esac
+          if [ -n "$ONLY" ]; then SET=$(echo "$SET" | grep -xF -f <(echo "$ONLY" | tr ',' '\n' | sed 's/\.mjs$//')); fi
+          mkdir -p logs; : > summary.tsv
+          echo "$SET" | grep . | xargs -P 2 -I{} sh -c 's=$(date +%s); node scripts/procgen/{}.mjs --check > logs/{}.log 2>&1; \
+            printf "%s\t%s\t%s\n" {} $? $(( $(date +%s) - s )) >> summary.tsv' || true
+          sort summary.tsv | while IFS="$(printf '\t')" read n rc w; do
+            first=$(grep -a -m1 -E '^FAIL|Error' "logs/$n.log" | cut -c1-200)
+            echo "| $n | $([ "$rc" = 0 ] && echo GREEN || echo RED) | ${w}s | ${first} |" >> "$GITHUB_STEP_SUMMARY"
+          done
+          ! awk -F'\t' '$2 != 0' summary.tsv | grep -q .
+      - if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: producer-logs-${{ matrix.shard }}
+          path: logs/
