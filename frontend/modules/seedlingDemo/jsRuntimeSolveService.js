@@ -46,7 +46,30 @@
 import { killLockBodiesStamp } from './killLockBodies.js';
 import { contactFidelityStamp } from './contactFidelity.js';
 import { axeDodgeAskStamp } from './axeDodgeAskHook.js';
+import { dashOnlyWindowStamp } from './dashOnlyWindowHook.js';
 import { SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
+
+/**
+ * The hook stamps THIS module instance adds to a request before it is posted (in place, on `tape`; returned). Each is
+ * added only off-default, so at the defaults the request is today's exactly. ⛓ DASH-ONLY WINDOW slice — exported so a
+ * request CAPTURE (`seedlingDivergenceLab.js`) records what the worker received, stamps included.
+ */
+export function stampHooks(tape) {
+    // ⛓ KILLLOCK HOOK — the worker imports its own `killLockBodies`: an off-default switch set of THIS
+    // instance travels with the request (at the defaults nothing is added — the request is today's).
+    const killLock = tape.killLockBodies ?? killLockBodiesStamp();
+    if (killLock) tape.killLockBodies = killLock;
+    // ⛓ CONTACT HOOK — the same, for the model's contact switches (`contactFidelity.js`).
+    const contact = tape.contactFidelity ?? contactFidelityStamp();
+    if (contact) tape.contactFidelity = contact;
+    // ⛓ AXE_DODGE HOOK — and an off-default `AXE_DODGE_ASK_PER_PREVIEW` (`axeDodgeAskHook.js`).
+    const axe = tape.axeDodgeAskPerPreview ?? axeDodgeAskStamp();
+    if (axe !== null) tape.axeDodgeAskPerPreview = axe;
+    // ⛓ DASH-ONLY WINDOW — and an off-default `DASH_ONLY_WINDOW` (`dashOnlyWindowHook.js`).
+    const dashOnly = tape.dashOnlyWindow ?? dashOnlyWindowStamp();
+    if (dashOnly !== null) tape.dashOnlyWindow = dashOnly;
+    return tape;
+}
 
 export const SOLVE_WORKER_URL = new URL('./jsRuntimeSolveWorker.js', import.meta.url);
 
@@ -163,16 +186,7 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             const w = ensure();
             current = handle;
             const { levelSource, source, ...tape } = request;
-            // ⛓ KILLLOCK HOOK — the worker imports its own `killLockBodies`: an off-default switch set of THIS
-            // instance travels with the request (at the defaults nothing is added — the request is today's).
-            const killLock = tape.killLockBodies ?? killLockBodiesStamp();
-            if (killLock) tape.killLockBodies = killLock;
-            // ⛓ CONTACT HOOK — the same, for the model's contact switches (`contactFidelity.js`).
-            const contact = tape.contactFidelity ?? contactFidelityStamp();
-            if (contact) tape.contactFidelity = contact;
-            // ⛓ AXE_DODGE HOOK — and an off-default `AXE_DODGE_ASK_PER_PREVIEW` (`axeDodgeAskHook.js`).
-            const axe = tape.axeDodgeAskPerPreview ?? axeDodgeAskStamp();
-            if (axe !== null) tape.axeDodgeAskPerPreview = axe;
+            stampHooks(tape);
             const id = sourceIdOf(source?.records);
             const msg = { type: 'solve', id: handle.id, request: { ...tape, source: { id, ...(sent.has(id) ? {} : { records: source?.records ?? null }) } } };
             // ⛓ SOLVE PROGRESS — on the ENVELOPE, and only while someone listens (absent = today's message exactly).

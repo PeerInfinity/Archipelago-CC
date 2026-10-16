@@ -72,6 +72,7 @@ import { createWorkerSolveService } from './jsRuntimeSolveService.js';
 import { applyKillLockBodies, parseKillLockBodies } from './killLockBodies.js';
 import { applyContactFidelity, parseContactFidelity } from './contactFidelity.js';
 import { applyAxeDodgeAsk, parseAxeDodgeAsk } from './axeDodgeAskHook.js';
+import { applyDashOnlyWindow, parseDashOnlyWindow } from './dashOnlyWindowHook.js';
 import { heldFromCodes, KEYBOARD_BINDINGS } from './watchManual.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { createLifetime } from './watchLifetime.js';
@@ -154,6 +155,9 @@ export function mountJsRuntimePage(win = window) {
     // ⛓ AXE_DODGE HOOK — and fidelity's `AXE_DODGE_ASK_PER_PREVIEW` (`axeDodgeAskHook.js`): `on` / `off`.
     const axeParam = params.get('axeDodgeAskPerPreview');
     if (axeParam !== null) applyAxeDodgeAsk(parseAxeDodgeAsk(axeParam, '?axeDodgeAskPerPreview='));
+    // ⛓ DASH-ONLY WINDOW — and the solver's `DASH_ONLY_WINDOW` (`dashOnlyWindowHook.js`): `on` / `off`.
+    const dashOnlyParam = params.get('dashOnlyWindow');
+    if (dashOnlyParam !== null) applyDashOnlyWindow(parseDashOnlyWindow(dashOnlyParam, '?dashOnlyWindow='));
     // ⛓ GRAPHICS G1 — the renderer's own state; nothing here reaches the runtime.
     const graphics = {
         stack: null, camera: 'room', status: 'off', error: null, failedSheets: [],

@@ -64,6 +64,15 @@
  *                        `seedlingAxeDodgeAskPerPreview` before the panel boots (absent = `default`, today's run). The
  *                        panel's value and the model's own default are printed as an `AXE_DODGE:` line (a mismatch
  *                        fails the boot); each plan the worker solved off-default carries its `axeDodgeAskPerPreview` stamp.
+ *   --upgrade-window-work=<units>  ⛓ THE UPGRADE WINDOW (slice `seedling-js-dash-window`; DS named it): set the flashPanel
+ *                        setting `seedlingSolverUpgradeWindowWork` before the panel boots (absent = the engine's own 85 —
+ *                        today's run; 0 = the whole budget). Read back as an `UPGRADE-WINDOW:` line (a mismatch fails the
+ *                        boot), so every solve request the engine makes carries it as its `upgradeWindowWork`. Every row
+ *                        and the plan are stamped `upgradeWindowWork`; the merge refuses a mixed-window merge by name.
+ *   --dash-only-window=on|off  ⛓ DASH-ONLY WINDOW: set the solver's `DASH_ONLY_WINDOW` through the flashPanel setting
+ *                        `seedlingDashOnlyWindow` (absent = `default`, today's run), read back as a `DASH_ONLY_WINDOW:` line;
+ *                        each plan the worker solved off-default carries its `dashOnlyWindow` stamp, every row and the plan
+ *                        `dashOnlyWindow` ('on' / 'off'), and the merge refuses a mixed merge by name.
  *
  * ⛓ THE HANG BOUND (H1: sweep-4 shard 9, CI run 38110831520, sat ~5 h after its 18th page and named nothing). Every
  * harness step between legs — a page's teardown, the browser's close, the launch, the new page, a boot attempt and a
@@ -81,7 +90,7 @@
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--leg-budget-ms=<ms>] [--capture-requests=<jsonl>] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--upgrade-window-work=<units>] [--dash-only-window=on|off] [--leg-budget-ms=<ms>] [--capture-requests=<jsonl>] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -196,6 +205,35 @@ export function parseLegBudgetMs(spec) {
 /** A row stamped with its leg budget: the row itself at the default (byte-identical), `legBudgetMs` appended off it. */
 export function stampBudget(row, legBudgetMs) {
     return legBudgetMs === LEG_BUDGET_MS_DEFAULT ? row : { ...row, legBudgetMs };
+}
+
+/**
+ * ⛓ THE SOLVER KNOBS (slice `seedling-js-dash-window`) — `--upgrade-window-work` and `--dash-only-window`, the solver
+ * settings a sweep may move. Empty = absent (today's run: nothing is set, nothing is stamped). Unlike the leg budget
+ * these reach the SOLVE: the panel setting is written before the boot, so the engine's every request carries it.
+ */
+export const SOLVER_KNOB_KEYS = Object.freeze(['upgradeWindowWork', 'dashOnlyWindow']);
+
+/** `--upgrade-window-work` → units (empty = null, the engine's own). Not a whole number ≥ 0 → throws by name. */
+export function parseUpgradeWindowWorkArg(spec) {
+    const s = String(spec ?? '').trim();
+    if (!s) return null;
+    if (!/^\d+$/.test(s)) throw new Error(`--upgrade-window-work: ${JSON.stringify(s)} is not a whole number of work units ≥ 0 (0 = the whole budget)`);
+    return Number(s);
+}
+
+/** `--dash-only-window` → 'on' / 'off' (empty = null, the switch's own default). Anything else throws by name. */
+export function parseDashOnlyWindowArg(spec) {
+    const s = String(spec ?? '').trim();
+    if (!s) return null;
+    if (s !== 'on' && s !== 'off') throw new Error(`--dash-only-window is "${s}"; the values are on, off`);
+    return s;
+}
+
+/** A row (or the plan) stamped with the knobs that were set: the row itself when none was (byte-identical). */
+export function stampSolverKnobs(row, knobs = {}) {
+    const set = Object.fromEntries(SOLVER_KNOB_KEYS.filter((k) => knobs[k] !== null && knobs[k] !== undefined).map((k) => [k, knobs[k]]));
+    return Object.keys(set).length ? { ...row, ...set } : row;
 }
 
 /**
@@ -331,6 +369,9 @@ async function main() {
         // ⛓ a page boot is paid once per `--page-legs` legs (CI measured 18–21 s; priced 30 s)
         const perPage = Number(arg('page-legs', '60'));
         const legBudgetMs = parseLegBudgetMs(arg('leg-budget-ms', ''));
+        // ⛓ THE SOLVER KNOBS — on the plan too, so the merge holds every row to the plan's
+        const knobs = { upgradeWindowWork: parseUpgradeWindowWorkArg(arg('upgrade-window-work', '')),
+            dashOnlyWindow: parseDashOnlyWindowArg(arg('dash-only-window', '')) };
         const staging = new Set(legs0.filter((l) => l.stagedEvents?.length).map((l) => l.id));
         const pagesOf = new Map();
         for (const x of shards) {
@@ -344,10 +385,11 @@ async function main() {
         const timeoutMinutes = shardTimeoutMinutes({ maxPrice, legBudgetMs,
             shards: shards.map((x) => ({ ids: x.ids, pages: pagesOf.get(x.shard) })) });
         if (process.argv.includes('--json')) {
-            console.log(JSON.stringify({ legs: legs0.length, matrix: shards.map((x) => x.shard),
-                timeoutMinutes, shards, ...(legBudgetMs === LEG_BUDGET_MS_DEFAULT ? {} : { legBudgetMs }) }));
+            console.log(JSON.stringify(stampSolverKnobs({ legs: legs0.length, matrix: shards.map((x) => x.shard),
+                timeoutMinutes, shards, ...(legBudgetMs === LEG_BUDGET_MS_DEFAULT ? {} : { legBudgetMs }) }, knobs)));
         } else {
             if (legBudgetMs !== LEG_BUDGET_MS_DEFAULT) console.log(`LEG-BUDGET: ${legBudgetMs} ms per leg (--leg-budget-ms); shard timeout ${timeoutMinutes} min`);
+            for (const k of SOLVER_KNOB_KEYS) if (knobs[k] !== null) console.log(`SOLVER-KNOB: ${k} ${knobs[k]}`);
             console.log(`SHARD PLAN: ${legs0.length} legs into ${shards.length} shards (price = legPrice, seconds)`);
             for (const x of shards) console.log(`  shard ${x.shard}: ${x.ids.length} legs, ~${Math.round(x.price / 60)} min`);
         }
@@ -385,6 +427,11 @@ async function main() {
     const AXE_DODGE = arg('axe-dodge', '') || null;
     if (AXE_DODGE !== null && AXE_DODGE !== 'on' && AXE_DODGE !== 'off') throw new Error(`--axe-dodge is "${AXE_DODGE}"; the values are on, off`);
     const { AXE_DODGE_SETTING_KEY } = await import('../../frontend/modules/flashPanel/seedlingAxeDodgeSettings.js');
+    // ⛓ THE SOLVER KNOBS — checked here so a bad value fails before a browser starts
+    const KNOBS = { upgradeWindowWork: parseUpgradeWindowWorkArg(arg('upgrade-window-work', '')),
+        dashOnlyWindow: parseDashOnlyWindowArg(arg('dash-only-window', '')) };
+    const { DASH_ONLY_WINDOW_SETTING_KEY } = await import('../../frontend/modules/flashPanel/seedlingDashOnlyWindowSettings.js');
+    const UPGRADE_WINDOW_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork';
     const GAME = 'seedling_playthrough';
     const RULES = `frontend/presets/${GAME}/AP_1/AP_1_rules.json`;
     const PRESET = JSON.parse(readFileSync(join(REPO, RULES), 'utf8'));
@@ -423,7 +470,7 @@ async function main() {
     const emit = (row) => {
         reported.add(row.id);
         // ⛓ THE LEG BUDGET'S STAMP — every row, whatever its end (byte-identical at the default)
-        const line = JSON.stringify(stampBudget(row, LEG_BUDGET));
+        const line = JSON.stringify(stampSolverKnobs(stampBudget(row, LEG_BUDGET), KNOBS));
         console.log(`ROW ${line.length > 600 ? `${line.slice(0, 600)}…` : line}`);
         if (OUT) appendFileSync(OUT, `${line}\n`);
     };
@@ -514,6 +561,15 @@ async function main() {
                     await settingsManager.updateSetting(key, value);
                 }, [AXE_DODGE_SETTING_KEY, AXE_DODGE]);
             }
+            // ⛓ THE SOLVER KNOBS — the panel settings, written before the panel boots (absent = untouched)
+            const knobWrites = [...(KNOBS.upgradeWindowWork !== null ? [[UPGRADE_WINDOW_SETTING_KEY, KNOBS.upgradeWindowWork]] : []),
+                ...(KNOBS.dashOnlyWindow !== null ? [[DASH_ONLY_WINDOW_SETTING_KEY, KNOBS.dashOnlyWindow]] : [])];
+            if (knobWrites.length) {
+                await page.evaluate(async (writes) => {
+                    const { default: settingsManager } = await import('./app/core/settingsManager.js');
+                    for (const [key, value] of writes) await settingsManager.updateSetting(key, value);
+                }, knobWrites);
+            }
             await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
             await rp.waitFor('wasm iframe mounted', async () => page.frames().some((fr) => fr.url().includes(WASM_PAGE)), 180000);
             await rp.waitFor('start button enabled', () => rp.gameFrame().evaluate(() => {
@@ -551,6 +607,21 @@ async function main() {
                 + `${AXE_DODGE ? ' (--axe-dodge)' : ''}`);
             if ((AXE_DODGE ?? 'default') !== axeNow.setting) {
                 throw new Error(`--axe-dodge asked ${AXE_DODGE ?? 'default'}; the panel holds ${axeNow.setting}`);
+            }
+            // ⛓ THE SOLVER KNOBS — the values the panel hands its wasm engine (read at each solve), read back
+            const knobNow = await page.evaluate(async () => {
+                const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
+                const s = p?.seedlingPlaybackSurface?.();
+                return { window: s?.solverUpgradeWindowWork ?? null, dashOnly: s?.wasm?.dashOnlyWindow ?? null };
+            });
+            console.log(`UPGRADE-WINDOW: page ${pageNo}: setting ${knobNow.window ?? 'unset (the engine\'s own)'}`
+                + `${KNOBS.upgradeWindowWork !== null ? ' (--upgrade-window-work)' : ''}`);
+            if (KNOBS.upgradeWindowWork !== null && knobNow.window !== KNOBS.upgradeWindowWork) {
+                throw new Error(`--upgrade-window-work asked ${KNOBS.upgradeWindowWork}; the panel holds ${knobNow.window}`);
+            }
+            console.log(`DASH_ONLY_WINDOW: page ${pageNo}: setting ${knobNow.dashOnly}${KNOBS.dashOnlyWindow ? ' (--dash-only-window)' : ''}`);
+            if ((KNOBS.dashOnlyWindow ?? 'default') !== knobNow.dashOnly) {
+                throw new Error(`--dash-only-window asked ${KNOBS.dashOnlyWindow ?? 'default'}; the panel holds ${knobNow.dashOnly}`);
             }
             await page.evaluate(async () => {
                 const { createLab } = await import('/scripts/procgen/seedlingDivergenceLab.js');
