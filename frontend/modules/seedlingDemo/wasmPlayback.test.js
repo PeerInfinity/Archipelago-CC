@@ -478,6 +478,28 @@ describe('⛓ KEY DELIVERY — a tape declares the game\'s keys ∪ the AP-grant
     });
 });
 
+describe('⛓ SEAL DELIVERY — a tape declares the game\'s seal LOG extended by AP\'s (positional), and its totems filled to a count', () => {
+    const log = (ids) => Array.from({ length: 16 }, (_, i) => (i < ids.length ? ids[i] : -1));
+    const bools = (idx) => Array.from({ length: 5 }, (_, i) => idx.includes(i));
+    const withSave = (a, save) => ({ ...structuredClone(a.status), save: { ...a.status.save, ...save } });
+
+    it('liveDeclarations: the game holds seal 5 (its own chest), AP granted two → [5, 0]; nothing granted → the game\'s, as before', () => {
+        const st = withSave(A, { seal_parts: log([5]), totem_parts: bools([3]) });
+        expect(liveDeclarations(stage(A), st, { granted: { seal_parts: [0, 1] } }).save.seal_parts).toEqual([5, 0]);
+        expect(liveDeclarations(stage(A), st).save.seal_parts).toEqual([5]);
+        expect(liveDeclarations(stage(A), st, { granted: { totem_parts: [0] } }).save.totem_parts).toEqual([3]);
+        expect(liveDeclarations(stage(A), st, { granted: { totem_parts: [0, 1] } }).save.totem_parts).toEqual([0, 3]);
+    });
+
+    it('exactDeclarationRefusal: the extended log passes WITH the grant; a reordered or shortened log is refused', () => {
+        const st = withSave(A, { seal_parts: log([5]) });
+        const tape = (seal_parts) => ({ ...shippedTape({ staging: stage(A), keys: [], hold: true }), save: { ...stage(A).save, seal_parts } });
+        expect(exactDeclarationRefusal(tape([5, 0]), st, { granted: { seal_parts: [0, 1] } })).toBeNull();
+        expect(exactDeclarationRefusal(tape([0, 5]), st, { granted: { seal_parts: [0, 1] } })).toMatch(/save\.seal_parts \[0,5\] is not the game's \[5,0\]/);
+        expect(exactDeclarationRefusal(tape([5, 0]), st)).toMatch(/save\.seal_parts/);
+    });
+});
+
 describe('⛓ WALK IDENTITY (a) — adoptedClockStaging: the adopted shadow put on the HELD clock (a read, never a write)', () => {
     const staging = { boot: { level: 0, x: 1, y: 2 }, seam: { time: 4801, primary: 0 }, save: { keys: [] } };
     it('shifts seam.time by live − model, and nothing else', () => {
