@@ -60,7 +60,8 @@ describe('the STAMP', () => {
     });
 
     it('the probe emits EVERY row through the stamp (the one door: run, skipped, boot-failed, hang rows)', () => {
-        expect(SRC).toMatch(/const line = JSON\.stringify\(stampBudget\(row, LEG_BUDGET\)\);/);
+        // ⛓ DASH-ONLY WINDOW — the solver knobs' stamp wraps the same door (`seedlingDivergenceWindow.test.js`)
+        expect(SRC).toMatch(/const line = JSON\.stringify\(stampSolverKnobs\(stampBudget\(row, LEG_BUDGET\), KNOBS\)\);/);
         // emit's one write: no row reaches the file another way (the other write is the REQUEST CAPTURE's own file)
         expect(SRC.match(/appendFileSync\(OUT,/g)).toHaveLength(1);
         expect(SRC.match(/appendFileSync\(/g)).toHaveLength(2);

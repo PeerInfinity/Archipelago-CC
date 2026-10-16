@@ -112,6 +112,8 @@ export async function createLab() {
         getUpgradeWindowWork: () => surface()?.solverUpgradeWindowWork ?? null,
         // ⛓ AXE_DODGE HOOK — the panel's setting, applied to this engine's model at each solve (the production wiring's)
         getAxeDodgeAskPerPreview: () => surface()?.wasm?.axeDodgeAskPerPreview ?? null,
+        // ⛓ DASH-ONLY WINDOW — the panel's setting, the same way
+        getDashOnlyWindow: () => surface()?.wasm?.dashOnlyWindow ?? null,
         getDelivery: () => surface()?.wasm?.delivery ?? null,
         solveService: service,
         log: (m, level) => { if (level === 'warn') st.notes.push(String(m).slice(0, 400)); },
@@ -241,6 +243,8 @@ export async function createLab() {
             ...(s.res?.contactFidelity ? { contactFidelity: plain(s.res.contactFidelity) } : {}),
             // ⛓ AXE_DODGE HOOK — the `AXE_DODGE_ASK_PER_PREVIEW` the WORKER solved under, when off-default (its stamp)
             ...(typeof s.res?.axeDodgeAskPerPreview === 'boolean' ? { axeDodgeAskPerPreview: s.res.axeDodgeAskPerPreview } : {}),
+            // ⛓ DASH-ONLY WINDOW — the `DASH_ONLY_WINDOW` the WORKER solved under, when off-default (its stamp)
+            ...(typeof s.res?.dashOnlyWindow === 'boolean' ? { dashOnlyWindow: s.res.dashOnlyWindow } : {}),
             // ⛓ FORCED-HIT CONSUMER — the crossings the plan BILLED and the damage it ends on (absent = none billed):
             // a forced-hit leg's `roomHits.max` is measured against them
             ...(s.res?.plan?.forcedHits ? { forcedHits: plain(s.res.plan.forcedHits), damage: plain(s.res.plan.damage) } : {}),

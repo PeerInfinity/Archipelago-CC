@@ -12,6 +12,9 @@
  *   · `stage-failed`, `dirty-start`, `page-boot-failed`, and a distinct-leg count short of the plan (as before);
  *   · a MIXED-BUDGET merge (S5-1): rows whose `legBudgetMs` stamp (absent = the default) differs from another row's or
  *                      from the plan's — a 90 s timeout and a 300 s one are not the same row, so they never merge silently.
+ *   · a MIXED-WINDOW merge (slice `seedling-js-dash-window`): rows whose solver-knob stamp (`upgradeWindowWork`,
+ *                      `dashOnlyWindow`; absent = today's) differs from the plan's — a plan cut at another window is
+ *                      another plan.
  * Informational, never a fail (S5-2, `seedlingHitTicks.js`): one `UNBILLED-HIT:` line per leg whose game took more
  * hits than its plans billed (hit ticks vs billed ticks vs the first divergence, and whether the hit IS it), a count
  * of rows with no hit ticks (`UNBILLED-HIT-UNKNOWN`, rows from before S5-2 — unknown, never 0), and the
@@ -30,6 +33,9 @@ import { unbilledHitCensus } from './seedlingHitTicks.js';
 /** ⛓ The probe's `LEG_BUDGET_MS_DEFAULT` (this module imports only the pure `seedlingHitTicks.js`: the merge job runs
  *  both off a sparse checkout). */
 export const LEG_BUDGET_MS_DEFAULT = 90000;
+
+/** ⛓ The probe's `SOLVER_KNOB_KEYS` (restated for the sparse checkout; a unit test holds the two equal). */
+export const SOLVER_KNOB_KEYS = Object.freeze(['upgradeWindowWork', 'dashOnlyWindow']);
 
 /** A row's / the plan's leg budget: its `legBudgetMs` stamp, the default when absent. */
 export const legBudgetOf = (x) => x?.legBudgetMs ?? LEG_BUDGET_MS_DEFAULT;
@@ -65,6 +71,23 @@ export function mergeVerdict({ rows, plan, hangLines = [] }) {
     if (off.length) {
         fail(`a MIXED-BUDGET merge: the plan's leg budget is ${planBudget} ms, and ${off.map((b) => `${budgets.get(b).length} row(s) `
             + `ran at ${b} ms (ids ${budgets.get(b).join(',')})`).join('; ')}`);
+    }
+    // ⛓ THE SOLVER KNOBS — one value per knob per merge, and it is the plan's (absent = today's, on both sides)
+    for (const k of SOLVER_KNOB_KEYS) {
+        const show = (v) => (v === null ? 'unset' : String(v));
+        const want = plan?.[k] ?? null;
+        const offRows = new Map();
+        for (const r of rows) {
+            const v = r?.[k] ?? null;
+            if (v === want) continue;
+            if (!offRows.has(v)) offRows.set(v, []);
+            offRows.get(v).push(r.id);
+        }
+        if (offRows.size) {
+            fail(`a MIXED-WINDOW merge: the plan's ${k} is ${show(want)}, and ${[...offRows].map(([v, idsOff]) => `${idsOff.length} row(s) `
+                + `ran at ${show(v)} (ids ${idsOff.join(',')})`).join('; ')}`);
+        }
+        if (want !== null) lines.push(`SOLVER-KNOB: ${k} ${want} (off today's)`);
     }
     if (planBudget !== LEG_BUDGET_MS_DEFAULT) lines.push(`LEG-BUDGET: ${planBudget} ms per leg (off the ${LEG_BUDGET_MS_DEFAULT} ms default)`);
     lines.push(`MERGE: ${rows.length} rows, ${ids.size} distinct legs of ${plan.legs}; ends ${JSON.stringify(ends)}`);
