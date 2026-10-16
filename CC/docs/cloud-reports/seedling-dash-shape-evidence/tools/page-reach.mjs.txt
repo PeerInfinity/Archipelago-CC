@@ -1,0 +1,11 @@
+import pw from '/home/user/Archipelago-CC/node_modules/playwright/index.js'; const { chromium } = pw;
+const b = await chromium.launch();
+const p = await b.newPage();
+await p.goto('http://localhost:9590/frontend/index.html?dashLegPrecheck=on&SEEDLING_DASH_LEG_PRECHECK=1', { waitUntil: 'domcontentloaded' }).catch((e) => console.log('goto', e.message));
+const out = await p.evaluate(async () => {
+  const sb = await import('/frontend/modules/seedlingDemo/solverBot.js');
+  return { process: typeof globalThis.process, legPre: sb.DASH_LEG_PRECHECK.enabled, noSwing: sb.DASH_NO_SWING_PREFIX.enabled,
+    keep: sb.DASH_KEEP_PARTIAL.enabled, all: JSON.stringify(sb.dashPrefixesFor('all')) };
+});
+console.log(JSON.stringify(out));
+await b.close();

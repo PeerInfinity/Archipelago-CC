@@ -1,0 +1,13 @@
+// scratch: extract {staging, records[L]} of a captured request as a test fixture; probe the corridor's legs
+import { readFileSync, writeFileSync } from 'node:fs';
+const [LAB, FILE, one, L, OUT] = process.argv.slice(2);
+const [id, i] = one.split(':').map(Number);
+const { restoreRequest } = await import(`${LAB}/scripts/procgen/seedlingSolveRequestCodec.js`);
+let line = null;
+for (const l of readFileSync(FILE, 'utf8').split('\n')) { if (l.startsWith(`{"id":${id},`)) { line = JSON.parse(l); break; } }
+const req = restoreRequest(line.requests.find((r) => r.i === i).request);
+const levels = L.split(',').map(Number);
+writeFileSync(OUT, JSON.stringify({ from: { run: 38845773709, request: `${id}:${i}`, name: req.name, levels },
+  staging: req.staging, live: req.live, solverGoal: req.solverGoal, scratchPersistence: req.scratchPersistence ?? false, budgetWork: req.budgetWork,
+  records: levels.map((l) => req.source.records.get(l)) }));
+console.log('wrote', OUT, readFileSync(OUT).length, 'perTick', req.perTick.length, 'equips', JSON.stringify(req.equips));

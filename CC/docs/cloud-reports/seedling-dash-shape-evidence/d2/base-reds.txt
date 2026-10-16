@@ -1,0 +1,12 @@
+axe-witness base rc=1 md5=896cf3f5 ip-off=md5=896cf3f5
+bobsoldier2 base rc=1 md5=8418aaa1 ip-off=md5=8418aaa1
+f1-l5-open-lock base rc=1 md5=ca1c5259 ip-off=md5=ca1c5259
+l30keylock base rc=1 md5=b77ffe25 ip-off=md5=b77ffe25
+l40button-witness base rc=1 md5=671b0c53 ip-off=md5=35100b80
+ladder2-witness base rc=1 md5=830d78cd ip-off=md5=830d78cd
+pushblock-witness base rc=1 md5=0d859de9 ip-off=md5=0d859de9
+r7-ends-meet base rc=1 md5=b650ea18 ip-off=md5=6d25f877
+r9-l0-sword-dash base rc=1 md5=e06b988e ip-off=md5=e06b988e
+r9-l6-sword-dash-hit base rc=1 md5=57fbc418 ip-off=md5=57fbc418
+stance-witness base rc=1 md5=92e2eff8 ip-off=md5=92e2eff8
+u10-puncher-dwell base rc=1 md5=bd679e77 ip-off=md5=bd679e77

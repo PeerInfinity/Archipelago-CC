@@ -1,0 +1,15 @@
+PASS: the clock RUNS at this boot — the hammer's phase is computable — Game.time 8607 at the first live tick (refusal: none)
+PASS: r8-solve-18: ZERO hits and ZERO deaths (the standing zero-hit policy) — hits 0, deaths 0
+PASS: ⛓⛓⛓ ZERO SPINNER CONTACTS — neither the body nor the hammer, on an HONEST tape — []
+PASS: ⛔ and `noDamage` is NOT declared — the flag `r8-l18-spinner-press` needs — noDamage false
+PASS: both spinners died to a PRESS — [{"id":"spinner@48,96","t":111,"removed":122},{"id":"spinner@112,48","t":193,"removed":204}]
+PASS: ⛓ each body takes `hitsMax` LANDED hits, and the refused tests are recorded beside them (traps 85/93) — 6 landed of 20 test(s)
+PASS: ⛓⛓ the kill-lock scan RAN at the REMOVAL and is NOT nil — [{"t":123,"nil":true},{"t":205,"nil":false}]
+PASS: ⛓⛓⛓ {18,0} is DECLARED at the tick the model computed — the removal plus the `Lock`'s own fade, in the v9 `at` spelling — declared at 305 = removal 205 + 100, the v9 spelling (model-sourced by twoPassSolve: `spinnerKillLockOpens` computed the removal at 205 and `activators.opensOnTick(0.01)` is 101, which a declared v9 row spells 100)
+PASS: ⛔ and the loop CONVERGED — a discover pass, a measure pass, a solve pass — [{"pass":1,"kind":"discover","level":18,"flags":[0]},{"pass":2,"kind":"measure","level":18,"tag":0,"source":"model","at":305,"ticks":338},{"pass":3,"kind":"solve","ticks":363}]
+PASS: ⛓ the measuring pass and the solving pass AGREE below the declared tick — [{"ticks":305,"at":305}]
+PASS: the segment ends at a LEVEL ARRIVAL (§3.5), in L19 — [{"t":363,"from_level":18,"to_level":19}]
+PASS: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r8-solve-18 is byte-identical to what this solver derives — 9021 bytes
+FAIL: r8-solve-18 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+1 FAILURE(S)

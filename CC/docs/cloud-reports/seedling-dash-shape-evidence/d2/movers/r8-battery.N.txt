@@ -1,0 +1,24 @@
+PASS: every battery room is classified EXACTLY once — leg-only or choreographed — classified [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] vs rooms [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] — a room in both lists or in neither is a split that stopped covering its own subject
+PASS: segment 4 is declared choreographed, not leg-only (the hand walk's choreography is a fact about the hand walk, not a label) — the solver replaces the CHOREOGRAPHY, and this row is what makes that a claim rather than a relabelling
+PASS: segment 6 is declared choreographed, not leg-only (the hand walk's choreography is a fact about the hand walk, not a label) — the solver replaces the CHOREOGRAPHY, and this row is what makes that a claim rather than a relabelling
+PASS: the handover names 4 row(s) this script still SOLVES and no longer EMITS — [r8-solve-7, r8-solve-9, r8-solve-10, r8-solve-6] — one producer per tape (trap 169)
+PASS: r8-solve-1: ZERO hits and ZERO deaths (the standing zero-hit policy) — hits 0, deaths 0
+PASS: r8-solve-1 is byte-identical to what this solver derives — 3149 bytes
+PASS: r8-solve-1 trace is byte-identical to what this solver derives — 1810 bytes
+PASS: r8-solve-2: ZERO hits and ZERO deaths (the standing zero-hit policy) — hits 0, deaths 0
+PASS: r8-solve-2 is byte-identical to what this solver derives — 2360 bytes
+PASS: r8-solve-2 trace is byte-identical to what this solver derives — 1588 bytes
+PASS: r8-solve-3: ZERO hits and ZERO deaths (the standing zero-hit policy) — hits 0, deaths 0
+PASS: r8-solve-3 is byte-identical to what this solver derives — 3865 bytes
+PASS: r8-solve-3 trace is byte-identical to what this solver derives — 2063 bytes
+PASS: r8-solve-7: ZERO hits and ZERO deaths (the standing zero-hit policy) — hits 0, deaths 0
+PASS: r8-solve-9: ZERO hits and ZERO deaths (the standing zero-hit policy) — hits 0, deaths 0
+PASS: r8-solve-10: ZERO hits and ZERO deaths (the standing zero-hit policy) — hits 0, deaths 0
+PASS: r8-solve-11: ZERO hits and ZERO deaths (the standing zero-hit policy) — hits 0, deaths 0
+PASS: r8-solve-11 is byte-identical to what this solver derives — 3063 bytes
+FAIL: r8-solve-11 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+PASS: r8-solve-4: ZERO hits and ZERO deaths (the standing zero-hit policy) — hits 0, deaths 0
+PASS: r8-solve-4 is byte-identical to what this solver derives — 3030 bytes
+PASS: r8-solve-4 trace is byte-identical to what this solver derives — 5918 bytes
+PASS: r8-solve-6: ZERO hits and ZERO deaths (the standing zero-hit policy) — hits 0, deaths 0
+1 FAILURE(S)
