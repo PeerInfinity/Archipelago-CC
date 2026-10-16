@@ -22821,3 +22821,38 @@ SOLVED 475 t (1 hit) → 491 t, clean; **100 REFUSED → SOLVED 192 t**; 47 and 
 hammer workloads (staging A sword and ghost, 397, 414, the L18 sweep, C2's ghost staging) do not move. Identity: OFF =
 base on every row; ON moves the ENEMY census (the drill chamber row, 155 → 171 t); ON+gate also moves c3 / c6 / c4 (the
 gate's own spinner movers). OFF is byte-identical (survey, identity block, bounded vitest).
+
+### Seedling fidelity PRODUCERS — the red `--check` producers, attributed and pinned
+
+Housekeeping slice (planner-8, wave 18): no model, solver or `CONTACT_FIDELITY` change. Base `d1fbfeffc2`. The report
+is `CC/docs/cloud-reports/seedling-fidelity-producers.md`; the census is in `seedling-fidelity-producers-evidence/`.
+
+**D1 — the census.** 61 `plan-seedling-*.mjs` carry `--check`. At the base: 49 GREEN; RED (DRIFT) `axe-witness`,
+`bobsoldier2`, `f1-l5-open-lock`, `l30keylock`, `ladder2-witness`, `pushblock-witness`, `stance-witness`,
+`u10-puncher-dwell`; THROWS `l40button-witness` (`lobberHoldRefusal`); the hammer arc's `r9-l0-sword-dash` and
+`r9-l6-sword-dash-hit` RED (each tape one tick shorter); `r7-ends-meet` GREEN once a server listens on **:8000** (its
+`PAGE_URL` hardcodes the port, so a :9688-only box reads it as a throw). Wall times: 1,729 s summed; the long poles are
+`hammer-bw-bombstand` 775 s and `l40button-witness` 250–550 s.
+
+**D2 — every red is class (a), a flip whose re-pin list missed the producer** (no CI job runs any of them). Each
+attribution is a bisect on the producer's own row and the reverse at the base (the one switch turned back OFF →
+green): `waypointSlide` (wave-16 flip `41b0bc6389`): stance, axe; `strikeIframeLapse` (lapse flip `19aaa5cce4`):
+bobsoldier2, l30keylock, pushblock, u10; `baitForecast` (wave-12 `a60db8638c`, whose message says no producer moves):
+f1-l5-open-lock; KILLLOCK `jellyfishLive` (wave-8 harvest `d9f182f71d`, red since 2026-10-06): ladder2;
+`bombPusherLive` (wave-13 `3e6f048cd3`) **and** the lapse: l40button. ⚠ ladder2's range runs through seven BOBSOLDIER
+commits that CRASH on an `r8Acceptance.js` syntax error, so a plain `git bisect run` on the exit code names a crash
+commit; bisect on the DRIFT row, with a crash read as a skip.
+
+**D3 — pinned, not re-recorded.** Every moved tape is a roster game witness (index, envelope, `r8Acceptance`,
+the entity/profile witnesses), and each flip pinned its own vitest rows OFF for that reason ("game-witnessed under the
+pre-flip …"). A `--write` would move the roster beyond the producer's output with unwitnessed plans: a licence. So each
+producer pins the flipped switch(es) OFF as a named INTERIM around its `main()` (`withContactFidelity` /
+`withKillLockBodies`; u10 has no `main()` and pins for its process), ⛔ to retire with a re-record on the game. Byte-inert:
+no committed tape moves. Mutants: each pin set true reproduces the base's red rows exactly (stance 4, u10 4, f1 3,
+ladder2 1, l40button with the lapse ON: the l41 DRIFT and the l42 `BotDriverV2Error`).
+
+**D4 — a guard, proposed.** A manual workflow with four shards (bombstand ~13 min; l40button ~4–9 min; r7 with the wasm
+submodule, Chromium and :8000; the rest 2 at a time, ~6–8 min), enumerating the set at run time:
+`seedling-fidelity-producers-evidence/seedling-producer-checks.draft.yml`, not wired.
+
+**Final gate at the head:** 59 GREEN; the two r9 rows (the hammer arc's) RED as at the base.
