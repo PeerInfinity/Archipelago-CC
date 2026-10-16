@@ -1,0 +1,16 @@
+D1 — how the population was replayed (seedling-dash-economics)
+
+captures   CI run 38845773709 (seedling-divergence-sweep.yml, main af12970374, capture_requests=true, shards=10)
+           all 10 shard artifacts downloaded from the cloud (gh run download works here): 834 legs carry captures
+           (the 9 without are the sweep's 9 `skipped` legs: 8 182 183 278 372 611 799 827 834), 870 requests
+replay     the lab runner (lab/ds-run.mjs.txt) = replay-seedling-solve-request.mjs's replayOnce, i.e. the worker's own
+           dispatch: levelSourceFromAtlas(source.records) then solveAnytime({...tape, levelSource}, {passes}), with the
+           request's own budgetWork; upgradeWindowWork set to 85 (as captured) or null (= 0, the whole budget).
+           One fresh node process per (request, window). Scratch copy only; the instrument's diff is lab/lab.diff.
+box        4 cores, 15 GB, node v22.22.0; --jobs=3 (load 3–5 during the run); 1,740 runs in ~21 min
+faithful   at window 85: 868 / 870 requests equal the page's own answer on every pass (ok, kind, ticks, work,
+           deadline, limit) and the total work. The two that differ are 378:1 and 381:1, whose page answer is
+           ABSENT (the sweep ended both legs `timeout`: the backstop terminated the worker); the replay cuts the
+           full pass at budget 2562.
+walls      node walls. Page solvedMs / node ms (726 single-solve legs): median 0.91 (p25 0.69, p75 1.23); 0.60 over
+           the 88 solves > 1 s in node. So the node walls quoted are an UPPER estimate of the CI page's.

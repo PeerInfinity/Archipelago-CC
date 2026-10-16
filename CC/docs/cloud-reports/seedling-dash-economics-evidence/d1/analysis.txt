@@ -1,0 +1,202 @@
+FAITHFUL@85: 868 requests equal the page answer (passes: ok/kind/ticks/work/deadline/limit, and total work); 2 differ; 0 without a live answer; 0 errors
+  DIFF (378, 1, [{'pass': 'full', 'ok': False, 'kind': 'refusal', 'ticks': None, 'work': 2562, 'deadline': 'sword-dash', 'limit': 'budget'}], [], 2562, None)
+  DIFF (381, 1, [{'pass': 'full', 'ok': False, 'kind': 'refusal', 'ticks': None, 'work': 2562, 'deadline': 'sword-dash', 'limit': 'budget'}], [], 2562, None)
+ERRORS@0: 0
+
+PAIRS: 870 requests with both windows
+full pass @85: {'skipped': 137, 'solved': 416, 'cut-window': 211, 'cut-budget': 51, 'refused': 55}
+full pass @0 : {'skipped': 137, 'solved': 591, 'cut-budget': 82, 'refused': 60}
+transitions  : {('skipped', 'skipped'): 137, ('solved', 'solved'): 416, ('cut-window', 'solved'): 175, ('cut-window', 'cut-budget'): 31, ('cut-budget', 'cut-budget'): 51, ('refused', 'refused'): 55, ('cut-window', 'refused'): 5}
+ticks: gain 170 · lose/regress 0 · unchanged 700 · other 0
+TOTAL: ticks saved 22512 (750.4 s at 30 fps) · extra units 42844 · extra node wall 467.2 s (all 870 requests); over the gainers only: extra units 23720, extra wall 210.0 s
+
+GAINERS (id:i  t85→t0  saved  units 85→0  dash units@0  wall ms 85→0  net s at 30fps (saved/30 − extra wall))
+  172:0  691→370  321  87→227  149  1192→2152  +9.74  [cut-window] level_12__r0c37 <- in_L34_128_0 -> exit:out_teleporter_592_0
+  403:0  776→455  321  86→349  233  4405→13202  +1.90  [cut-window] level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20
+  368:0  619→333  286  87→292  211  424→845  +9.11  [cut-window] level_38__r0c9 <- in_L37_288_0 -> location:L39 flag 8: wandl
+  365:0  549→265  284  87→174  103  479→769  +9.18  [cut-window] level_38__r0c9 <- in_L37_288_0 -> exit:out_teleporter_144_0
+  175:0  709→431  278  87→258  181  1254→2589  +7.93  [cut-window] level_12__r0c37 <- in_L37_32_304 -> exit:out_pit_5_5
+  695:0  682→411  271  87→328  249  985→2640  +7.38  [cut-window] level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_464_
+  418:0  1567→1298  269  170→446  100  6350→12886  +2.43  [cut-window] level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 
+  694:0  682→418  264  87→253  173  976→2074  +7.70  [cut-window] level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_432_
+  690:0  505→250  255  87→153  97  785→919  +8.37  [cut-window] level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_464_
+  171:0  716→464  252  87→379  301  1749→4103  +6.05  [cut-window] level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bos
+  137:0  533→286  247  87→185  125  974→1733  +7.47  [cut-window] level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_304_
+  409:0  585→340  245  87→147  85  4287→4839  +7.61  [cut-window] level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22
+  689:0  512→269  243  87→162  105  694→1085  +7.71  [cut-window] level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_432_
+  401:0  611→368  243  87→203  137  4020→6133  +5.99  [cut-window] level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20
+  345:0  577→336  241  87→277  209  549→1438  +7.14  [cut-window] level_31__r5c24 <- in_pit_L30_3_34 -> exit:out_stairsup_384_
+  410:0  658→418  240  86→344  245  3397→9854  +1.54  [cut-window] level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22
+  170:0  713→474  239  87→447  369  1875→4718  +5.12  [cut-window] level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bos
+  682:0  683→445  238  87→341  261  1287→2863  +6.36  [cut-window] level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_16_32
+  108:0  561→328  233  87→238  173  1539→2102  +7.20  [cut-window] level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_432_
+  408:0  841→609  232  86→430  305  3790→17733  -6.21  [cut-window] level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21
+  405:0  595→367  228  87→328  265  4155→10306  +1.45  [cut-window] level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21
+  672:0  671→443  228  87→350  273  1300→3297  +5.60  [cut-window] level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_16_32
+  402:0  655→427  228  86→334  233  3329→10008  +0.92  [cut-window] level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20
+  412:0  621→397  224  87→260  165  3193→8674  +1.99  [cut-window] level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23
+  411:0  549→330  219  87→260  201  3097→9274  +1.12  [cut-window] level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23
+  146:0  464→247  217  87→138  85  1181→1614  +6.80  [cut-window] level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_168_
+  161:0  696→481  215  87→367  289  1709→4056  +4.82  [cut-window] level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bos
+  671:0  454→243  211  87→138  85  650→960  +6.72  [cut-window] level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_0_144
+  681:0  483→272  211  87→186  129  641→1130  +6.54  [cut-window] level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_0_144
+  367:0  462→254  208  87→184  123  405→580  +6.76  [cut-window] level_38__r0c9 <- in_L37_288_0 -> location:Level 038 - Chest
+  167:0  452→245  207  87→186  133  1074→1669  +6.31  [cut-window] level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_304_
+  160:0  680→478  202  87→312  237  1697→3444  +4.99  [cut-window] level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bos
+  114:0  493→292  201  87→227  169  776→1721  +5.75  [cut-window] level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_368
+  404:0  841→640  201  86→488  361  4029→22899  -12.17  [cut-window] level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20
+  148:0  497→296  201  87→331  273  1166→2352  +5.51  [cut-window] level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_432_
+  117:0  492→292  200  87→283  225  1064→2550  +5.18  [cut-window] level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_304_0
+  693:0  499→300  199  87→219  161  923→1579  +5.98  [cut-window] level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_272_
+  109:0  620→423  197  87→253  185  1135→2590  +5.11  [cut-window] level_12__r0c19 <- in_L0_304_176 -> location:Level 012 - Wit
+  135:0  447→252  195  87→147  97  1003→1349  +6.15  [cut-window] level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_112_
+  452:0  403→208  195  87→147  101  806→1112  +6.19  [cut-window] level_46__r0c11 <- in_L45_112_0 -> exit:out_teleporter_176_0
+  158:0  465→270  195  87→299  245  1099→2122  +5.48  [cut-window] level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_432_
+  406:0  674→479  195  86→276  173  2330→8988  -0.16  [cut-window] level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+  157:0  443→249  194  87→255  205  942→2139  +5.27  [cut-window] level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_304_
+  149:0  570→376  194  87→209  149  1369→2215  +5.62  [cut-window] level_12__r0c19 <- in_L88_96_304 -> location:Level 012 - Wit
+  407:0  796→603  193  86→369  249  3025→15029  -5.57  [cut-window] level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21
+  106:0  521→328  193  87→251  189  1360→2212  +5.58  [cut-window] level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_168_
+  143:0  400→208  192  87→119  73  1017→1261  +6.16  [cut-window] level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_35
+  144:0  400→209  191  87→123  77  1163→1633  +5.90  [cut-window] level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_36
+  344:0  448→264  184  86→88  41  622→541  +6.21  [cut-window] level_31__r5c24 <- in_L29_112_32 -> location:L31 flag 0: bos
+  169:0  535→352  183  87→189  133  917→1567  +5.45  [cut-window] level_12__r0c19 <- in_L95_624_80 -> location:Level 012 - Wit
+  113:0  483→305  178  87→291  233  871→2530  +4.27  [cut-window] level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_352
+  103:0  449→274  175  87→179  125  1567→2192  +5.21  [cut-window] level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_35
+  104:0  449→274  175  87→179  125  963→1470  +5.33  [cut-window] level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_36
+  115:0  418→246  172  87→275  225  948→2552  +4.13  [cut-window] level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_112_9
+  130:0  565→393  172  87→230  169  1501→2538  +4.70  [cut-window] level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: boss
+  168:0  475→304  171  87→284  229  1219→2113  +4.81  [cut-window] level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_432_
+  677:0  504→333  171  87→328  269  902→2212  +4.39  [cut-window] level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_16_32
+  129:0  489→320  169  87→205  153  1168→1641  +5.16  [cut-window] level_12__r0c19 <- in_L35_32_64 -> location:Level 012 - Witc
+  506:0  317→150  167  87→104  69  575→644  +5.50  [cut-window] level_59 <- in_L60_0_80 -> exit:out_teleporter_144_304
+  525:1  462→296  166  750→1854  361  1387→3420  +3.50  [cut-window] level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_224_9
+  128:0  435→270  165  87→296  245  1089→2338  +4.25  [cut-window] level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_432_3
+  131:0  571→406  165  87→284  221  1390→3135  +3.75  [cut-window] level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: boss
+  126:0  407→242  165  87→144  97  1065→1477  +5.09  [cut-window] level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_168_3
+  159:0  535→377  158  87→286  229  1078→2169  +4.18  [cut-window] level_12__r0c19 <- in_L95_624_64 -> location:Level 012 - Wit
+  165:0  371→217  154  87→160  117  997→1382  +4.75  [cut-window] level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_112_
+  295:0  286→134  152  87→281  249  717→1629  +4.15  [cut-window] level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_64_304
+  298:0  295→143  152  87→108  73  751→890  +4.93  [cut-window] level_26__r2c4 <- in_L27_32_0 -> exit:out_teleporter_144_32
+  516:0  301→150  151  87→92  57  466→502  +5.00  [cut-window] level_59 <- in_L95_32_0 -> exit:out_teleporter_304_128
+  517:0  300→151  149  87→108  73  541→652  +4.86  [cut-window] level_59 <- in_L95_48_0 -> exit:out_teleporter_0_128
+  512:0  298→151  147  87→96  61  481→624  +4.76  [cut-window] level_59 <- in_L67_224_112 -> exit:out_teleporter_304_128
+  123:0  357→210  147  87→136  93  1169→1238  +4.83  [cut-window] level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_352
+  455:0  366→221  145  87→244  201  820→1744  +3.91  [cut-window] level_46__r0c11 <- in_L47_240_464 -> exit:out_teleporter_240
+  47:0  377→233  144  87→257  213  652→947  +4.50  [cut-window] level_0__r8c0 <- in_L94_304_176 -> location:L0 flag 1: break
+  124:0  357→213  144  87→136  93  1044→1204  +4.64  [cut-window] level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_368
+  605:0  475→333  142  87→325  269  1434→5213  +0.95  [cut-window] level_71__r0c6 <- in_L75_64_224 -> location:Level 071 - Ches
+  511:0  317→176  141  87→105  69  671→701  +4.67  [cut-window] level_59 <- in_L67_224_112 -> exit:out_teleporter_160_304
+  603:0  415→274  141  87→217  169  1360→2875  +3.19  [cut-window] level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_224_3
+  606:0  457→319  138  87→140  93  1456→1954  +4.10  [cut-window] level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shie
+  552:0  347→209  138  86→88  46  570→518  +4.65  [cut-window] level_62 <- in_L63_64_0 -> exit:out_teleporter_48_304
+  155:0  362→225  137  87→185  141  918→1575  +3.91  [cut-window] level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_112_
+  39:0  380→244  136  87→261  217  723→1054  +4.20  [cut-window] level_0__r8c0 <- in_L94_304_160 -> location:L0 flag 1: break
+  181:0  366→230  136  87→129  85  1102→1279  +4.36  [cut-window] level_12__r42c29 <- in_L83_32_64 -> location:Level 012 - Che
+  107:0  367→232  135  87→125  81  1482→1666  +4.32  [cut-window] level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_304_
+  456:0  337→204  133  87→153  113  895→1141  +4.19  [cut-window] level_47__r2c9 <- in_L46_176_0 -> exit:out_teleporter_216_11
+  116:0  380→248  132  87→241  197  967→1890  +3.48  [cut-window] level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_168_3
+  494:0  266→138  128  87→93  61  893→922  +4.24  [cut-window] level_53__r2c2 <- in_L51_176_144 -> exit:out_teleporter_208_
+  459:0  308→182  126  87→185  149  764→1141  +3.82  [cut-window] level_47__r2c9 <- in_L48_112_304 -> exit:out_teleporter_240_
+  635:0  702→576  126  152→571  273  410→1585  +3.03  [cut-window] level_76 <- in_L71_304_256 -> exit:out_teleporter_304_112
+  32:0  305→181  124  87→119  85  542→643  +4.03  [cut-window] level_0__r8c0 <- in_L86_48_64 -> location:L0 flag 4: breakab
+  28:0  330→207  123  87→132  90  561→644  +4.02  [cut-window] level_0__r8c0 <- in_L86_48_64 -> exit:out_teleporter_80_96
+  145:0  248→125  123  87→121  93  919→1018  +4.00  [cut-window] level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_112_
+  23:0  320→198  122  87→222  185  569→785  +3.85  [cut-window] level_0__r8c0 <- in_L13_64_144 -> location:L0 flag 1: breaka
+  341:0  334→217  117  87→107  73  712→723  +3.89  [cut-window] level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: b
+  443:0  226→110  116  87→89  61  335→410  +3.79  [cut-window] level_43__r13c7 <- in_pit_L40_5_23 -> exit:out_stairsup_176_
+  257:0  234→120  114  86→87  65  879→941  +3.74  [cut-window] level_22 <- in_L21_80_160 -> exit:out_teleporter_96_192
+  773:0  380→267  113  87→254  209  708→1282  +3.19  [cut-window] level_105 <- in_L104_0_16 -> exit:out_teleporter_80_144
+  265:0  215→103  112  87→130  109  671→917  +3.49  [cut-window] level_22 <- in_L29_0_224 -> exit:out_teleporter_96_192
+  429:0  203→92  111  87→89  65  349→396  +3.65  [cut-window] level_43__r13c7 <- in_pit_L40_4_21 -> exit:out_stairsup_176_
+  139:0  365→254  111  87→155  117  723→929  +3.49  [cut-window] level_12__r0c19 <- in_L36_32_128 -> location:Level 012 - Wit
+  7:0  313→203  110  87→318  281  525→1112  +3.08  [cut-window] level_0__r8c0 <- in_L1_64_112 -> location:L0 flag 1: breakab
+  555:0  361→252  109  87→124  78  524→669  +3.49  [cut-window] level_62 <- in_L63_64_0 -> exit:out_teleporter_192_304
+  127:0  248→141  107  87→106  77  766→801  +3.53  [cut-window] level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_304_0
+  553:0  326→220  106  87→98  58  509→499  +3.54  [cut-window] level_62 <- in_L63_64_0 -> exit:out_teleporter_96_304
+  12:0  253→147  106  86→95  62  789→764  +3.56  [cut-window] level_0__r8c0 <- in_L2_48_16 -> exit:out_teleporter_80_96
+  421:0  203→97  106  87→94  69  362→430  +3.47  [cut-window] level_43__r13c7 <- in_pit_L40_4_20 -> exit:out_stairsup_176_
+  441:0  221→115  106  87→90  65  396→361  +3.57  [cut-window] level_43__r13c7 <- in_pit_L40_4_23 -> exit:out_stairsup_176_
+  680:0  254→150  104  87→98  69  645→567  +3.54  [cut-window] level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_464_272
+  676:0  266→163  103  87→106  73  506→574  +3.37  [cut-window] level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_0_144
+  612:0  414→311  103  87→158  113  1671→2190  +2.91  [cut-window] level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_96_0
+  437:0  202→99  103  87→94  69  349→415  +3.37  [cut-window] level_43__r13c7 <- in_pit_L40_4_22 -> exit:out_stairsup_176_
+  546:0  335→233  102  87→125  74  649→730  +3.32  [cut-window] level_62 <- in_L61_160_0 -> exit:out_teleporter_240_304
+  138:0  340→238  102  87→234  193  829→1554  +2.67  [cut-window] level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_432_
+  691:0  287→187  100  87→226  193  601→1068  +2.87  [cut-window] level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_0_14
+  673:0  247→148  99  87→106  77  575→579  +3.30  [cut-window] level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_272_304
+  679:0  261→164  97  87→98  65  502→637  +3.10  [cut-window] level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_432_304
+  607:0  399→303  96  87→134  93  1404→1772  +2.83  [cut-window] level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0
+  683:0  276→181  95  87→126  93  599→770  +3.00  [cut-window] level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_272_30
+  776:0  387→293  94  87→148  89  763→1293  +2.60  [cut-window] level_105 <- in_L106_256_0 -> exit:out_teleporter_224_64
+  776:1  387→293  94  87→148  89  961→1061  +3.03  [cut-window] level_105 <- in_L106_256_0 -> exit:out_teleporter_224_64
+  547:0  243→153  90  87→98  69  564→601  +2.96  [cut-window] level_62 <- in_L63_16_0 -> exit:out_teleporter_48_304
+  687:0  304→215  89  87→214  177  700→979  +2.69  [cut-window] level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_16_3
+  626:0  368→284  84  124→372  129  988→2610  +1.18  [cut-window] level_74 <- in_L73_64_0 -> location:Level 074 - Darkshield
+  745:1  808→724  84  670→1582  250  1345→2606  +1.54  [cut-window] level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112
+  540:0  257→176  81  87→130  97  523→654  +2.57  [cut-window] level_62 <- in_L61_112_0 -> exit:out_teleporter_192_304
+  166:0  194→116  78  87→98  73  589→651  +2.54  [cut-window] level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_168_
+  769:0  337→259  78  120→329  93  334→1001  +1.93  [cut-window] level_104 <- in_L103_0_64 -> exit:out_teleporter_0_16
+  346:0  331→255  76  87→184  149  510→604  +2.44  [cut-window] level_31__r5c24 <- in_pit_L30_3_34 -> location:L31 flag 0: b
+  772:0  365→291  74  87→439  305  516→1203  +1.78  [cut-window] level_104 <- in_L105_224_64 -> exit:out_teleporter_144_128
+  156:0  193→122  71  87→122  97  637→688  +2.32  [cut-window] level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_168_
+  773:1  396→327  69  87→137  73  789→777  +2.31  [cut-window] level_105 <- in_L104_0_16 -> exit:out_teleporter_80_144
+  448:0  307→239  68  87→363  325  999→2174  +1.09  [cut-window] level_45__r0c7 <- in_L44_64_0 -> exit:out_teleporter_112_0
+  31:0  242→175  67  87→121  93  527→592  +2.17  [cut-window] level_0__r8c0 <- in_L86_48_64 -> location:L0 flag 1: breakab
+  709:0  204→140  64  87→359  333  300→842  +1.59  [cut-window] level_89__r11c12 <- in_L87_0_144 -> exit:out_teleporter_160_
+  354:0  251→188  63  87→144  110  482→623  +1.96  [cut-window] level_34 <- in_L12_336_688 -> exit:out_teleporter_128_0
+  747:0  236→177  59  87→309  277  1120→2149  +0.94  [cut-window] level_98 <- in_L93_112_80 -> location:Level 098 - Chest
+  173:0  309→252  57  87→333  301  552→1270  +1.18  [cut-window] level_12__r0c37 <- in_L34_128_0 -> exit:out_pit_5_5
+  20:0  146→94  52  86→140  118  362→390  +1.71  [cut-window] level_0__r8c0 <- in_L13_64_144 -> exit:out_teleporter_80_96
+  580:0  139→89  50  87→92  62  589→598  +1.66  [cut-window] level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_
+  610:0  180→134  46  87→104  81  870→996  +1.41  [cut-window] level_71__r0c6 <- in_L76_0_80 -> location:Level 071 - Chest
+  288:0  150→106  44  87→96  77  687→628  +1.53  [cut-window] level_25 <- in_L26_144_32 -> exit:out_teleporter_96_128
+  800:0  132→88  44  86→87  69  368→298  +1.54  [cut-window] level_113 <- in_L112_112_0 -> exit:out_teleporter_16_0
+  451:0  258→215  43  87→383  349  851→1988  +0.30  [cut-window] level_45__r0c7 <- in_L46_240_464 -> exit:out_teleporter_112_
+  788:0  142→101  41  87→120  101  320→362  +1.32  [cut-window] level_109 <- in_L108_224_224 -> location:Level 109 - Firewan
+  311:0  381→342  39  87→140  85  1016→1164  +1.15  [cut-window] level_29__r2c2 <- in_L22_192_64 -> exit:out_stairsdown_112_3
+  604:0  390→352  38  87→97  25  1829→1850  +1.25  [cut-window] level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_304_9
+  374:0  112→75  37  87→88  73  358→433  +1.16  [cut-window] level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Tot
+  471:0  136→101  35  87→204  185  382→584  +0.96  [cut-window] level_51__r3c10 <- in_L50_48_304 -> exit:out_stairsup_176_14
+  58:0  199→166  33  87→385  354  248→557  +0.79  [cut-window] level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_0_64
+  239:0  529→496  33  87→177  130  384→384  +1.10  [cut-window] level_19__r5c5 <- in_L18_176_112 -> location:Level 019 - Bos
+  482:0  243→213  30  87→580  549  396→1449  -0.05  [cut-window] level_52 <- in_L54_128_464 -> exit:out_teleporter_224_112
+  111:0  802→777  25  161→380  61  4177→7229  -2.22  [cut-window] level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bos
+  141:0  897→872  25  171→384  45  4028→8092  -3.23  [cut-window] level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bos
+  472:0  167→142  25  87→516  493  290→928  +0.20  [cut-window] level_51__r3c10 <- in_L53_32_144 -> exit:out_teleporter_144_
+  151:0  472→447  25  130→306  49  1417→2847  -0.60  [cut-window] level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bos
+  121:0  867→842  25  144→346  61  4766→9892  -4.29  [cut-window] level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: boss
+  140:0  886→864  22  169→352  17  4290→7355  -2.33  [cut-window] level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bos
+  629:0  276→255  21  130→291  34  977→1637  +0.04  [cut-window] level_74 <- in_L75_64_0 -> location:Level 074 - Darkshield
+  150:0  464→444  20  130→294  37  1554→2284  -0.06  [cut-window] level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bos
+  312:0  296→278  18  86→86  41  998→926  +0.67  [cut-window] level_29__r2c2 <- in_L22_192_64 -> location:Level 029 - Boss
+  501:0  280→262  18  87→302  262  419→846  +0.17  [cut-window] level_56 <- in_L52_224_112 -> exit:out_pit_6_10
+  750:0  194→177  17  88→274  125  1165→1571  +0.16  [cut-window] level_98 <- in_L99_112_112 -> location:Level 098 - Chest
+  110:0  787→771  16  159→353  37  4137→7744  -3.07  [cut-window] level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bos
+  120:0  852→836  16  142→319  37  5241→9173  -3.40  [cut-window] level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: boss
+  484:0  190→175  15  87→573  549  397→1090  -0.19  [cut-window] level_52 <- in_L55_80_48 -> exit:out_teleporter_0_112
+  283:0  197→182  15  86→90  65  885→836  +0.55  [cut-window] level_25 <- in_L22_0_128 -> exit:out_teleporter_0_96
+  499:0  51→45  6  87→113  105  195→285  +0.11  [cut-window] level_55 <- in_L52_0_48 -> location:Level 055 - Boss Key 3
+  327:0  165→160  5  91→184  5  688→990  -0.14  [cut-window] level_30__r2c10 <- in_L31_160_384 -> location:Level 030 - To
+  334:0  301→298  3  153→345  41  887→1615  -0.63  [cut-window] level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: b
+  339:0  216→213  3  143→297  13  688→1135  -0.35  [cut-window] level_30__r2c10 <- in_pit_L32_15_5 -> location:Level 030 - T
+  333:0  203→202  1  150→315  17  901→1279  -0.34  [cut-window] level_30__r2c10 <- in_pit_L32_14_5 -> location:Level 030 - T
+
+LOSERS / REGRESSIONS
+
+NO-GAIN requests: 700; their extra units 19124, extra wall 257.2 s
+   {'id': 387, 'i': 0, 't85': 1087, 't0': 1087, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 91, 'w0': 642, 'ms85': 3794, 'ms0': 37390, 'dash0': 494} level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20
+   {'id': 386, 'i': 0, 't85': 1025, 't0': 1025, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 88, 'w0': 642, 'ms85': 4670, 'ms0': 34776, 'dash0': 499} level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20
+   {'id': 388, 'i': 0, 't85': 844, 't0': 844, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 87, 'w0': 642, 'ms85': 3561, 'ms0': 32806, 'dash0': 565} level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21
+   {'id': 394, 'i': 0, 't85': 809, 't0': 809, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 87, 'w0': 642, 'ms85': 4574, 'ms0': 32901, 'dash0': 568} level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23
+   {'id': 392, 'i': 0, 't85': 828, 't0': 828, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 87, 'w0': 642, 'ms85': 3123, 'ms0': 30989, 'dash0': 566} level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22
+   {'id': 384, 'i': 0, 't85': 861, 't0': 861, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 87, 'w0': 642, 'ms85': 4462, 'ms0': 27639, 'dash0': 563} level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20
+   {'id': 385, 'i': 0, 't85': 913, 't0': 913, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 86, 'w0': 642, 'ms85': 3782, 'ms0': 25396, 'dash0': 513} level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20
+   {'id': 396, 'i': 0, 't85': 494, 't0': 494, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 87, 'w0': 642, 'ms85': 2632, 'ms0': 15915, 'dash0': 592} level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Tot
+   {'id': 400, 'i': 0, 't85': 417, 't0': 417, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 87, 'w0': 642, 'ms85': 3165, 'ms0': 14566, 'dash0': 598} level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_48
+   {'id': 633, 'i': 1, 't85': 346, 't0': 346, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 877, 'w0': 2562, 'ms85': 1715, 'ms0': 5878, 'dash0': 817} level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224
+   {'id': 524, 'i': 1, 't85': 448, 't0': 448, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 1570, 'w0': 2562, 'ms85': 2319, 'ms0': 5491, 'dash0': 0} level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_112_0
+   {'id': 636, 'i': 0, 't85': 669, 't0': 669, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 87, 'w0': 642, 'ms85': 602, 'ms0': 3728, 'dash0': 577} level_76 <- in_L77_0_32 -> exit:out_teleporter_0_80
+   {'id': 468, 'i': 0, 't85': 702, 't0': 702, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 87, 'w0': 642, 'ms85': 616, 'ms0': 3731, 'dash0': 574} level_50 <- in_L51_144_0 -> exit:out_teleporter_32_0
+   {'id': 739, 'i': 0, 't85': 598, 't0': 598, 's85': 'cut-window', 's0': 'cut-budget', 'w85': 87, 'w0': 642, 'ms85': 702, 'ms0': 3541, 'dash0': 583} level_95 <- in_L59_160_304 -> exit:out_teleporter_624_64
+   {'id': 414, 'i': 1, 't85': None, 't0': None, 's85': 'cut-budget', 's0': 'cut-budget', 'w85': 2563, 'w0': 2563, 'ms85': 57858, 'ms0': 60622, 'dash0': 0} level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - C
