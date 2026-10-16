@@ -15,6 +15,11 @@
  *          exactly the flags PRESS read back from the game staged as persistence, once BARE (no flag). A lock is
  *          built gone with the flag (the player passes) and standing without it (stopped); a fall rock the other
  *          way round.
+ *   LIT    (rules `rules-darktrap-events`) for a target solid in neither state whose clear REMOVES other bodies
+ *          (`seedlingObstacleEvents.poleKillsOf` over the model: a `LightPole` whose light reaches the level's
+ *          `DarkTrap`s) — booted at a door landing into the target's level, idle: with the game-written flags each
+ *          reached body dies, and its removal writes its OWN tag (`SandTrap.removed()`) to `persistence_cleared`;
+ *          BARE no body's tag is written.
  *
  * Every tape runs on a FRESH page (a reused page keeps the previous build's entities: `botStart`'s reuse path,
  * seedling-bot.md "Consecutive boots on one page").
@@ -35,8 +40,10 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { crossRoomButtonsOf, persistenceEffect } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
-import { PERSISTENCE_RESPONSE } from '../../frontend/modules/seedlingDemo/levelWorld.js';
+import { crossRoomButtonsOf, persistenceEffect, poleKillsOf } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
+import { PERSISTENCE_RESPONSE, buildLevelWorld, combatCensusOf } from '../../frontend/modules/seedlingDemo/levelWorld.js';
+import { contactRect } from '../../frontend/modules/seedlingDemo/combat.js';
+import { DARKTRAP_LIGHT_DEATH } from '../../frontend/modules/seedlingDemo/enemyDamage.js';
 
 argvHelp(import.meta.url);
 
@@ -52,6 +59,12 @@ export function landingsToward(map, target) {
         from: l.level, door: `${e.type}@${e.x},${e.y}`, x: Number(e.attrs.playerx), y: Number(e.attrs.playery),
     }))).filter((d) => d.x === target.x && d.y !== target.y && Math.abs(d.y - target.y) <= 2 * TILE)
         .map((d) => ({ ...d, dir: d.y > target.y ? 'up' : 'down' }));
+}
+
+/** Every door landing into `level`: `{from, door, x, y}`. */
+export function landingsInto(map, level) {
+    return map.levels.flatMap((l) => (l.entities ?? []).filter((e) => DOOR_TYPES.has(e.type) && Number(e.attrs?.to) === level)
+        .map((e) => ({ from: l.level, door: `${e.type}@${e.x},${e.y}`, x: Number(e.attrs.playerx), y: Number(e.attrs.playery) })));
 }
 
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
@@ -131,6 +144,25 @@ async function main() {
                 JSON.stringify(press.cleared));
             for (const t of b.targets) {
                 const { effect } = persistenceEffect(t, PERSISTENCE_RESPONSE[t.type]);
+                const level = MAP.levels.find((l) => l.level === t.level);
+                const kills = effect || b.write.value ? null
+                    : poleKillsOf(level, t, { buildLevelWorld, combatCensusOf, contactRect, DARKTRAP_LIGHT_DEATH });
+                if (kills) {
+                    // the bodies' own tags: what their removal writes (`SandTrap.removed()`)
+                    const own = kills.map((k) => ({ id: k.id, level: t.level, tag: Number(level.entities
+                        .find((e) => e.type === k.type && e.x === k.x && e.y === k.y)?.attrs?.tag) }));
+                    const L = landingsInto(MAP, t.level)[0];
+                    const flagged = await run(tapeOf(`l${t.level}-${t.type}-lit`, t.level, { x: L.x, y: L.y }, null, written));
+                    const bare = await run(tapeOf(`l${t.level}-${t.type}-unlit`, t.level, { x: L.x, y: L.y }, null, []));
+                    const died = (r) => own.filter((o) => r.cleared.some((c) => same(c, o))).map((o) => o.id);
+                    const arm = { target: `${t.type}@${t.x},${t.y}`, landing: L, kills: own,
+                        flagged: { died: died(flagged), cleared: flagged.cleared }, bare: { died: died(bare), cleared: bare.cleared } };
+                    row.built.push(arm);
+                    check(`${id}: LIT ${t.type}@${t.x},${t.y} from L${L.from} ${L.door}'s landing (${L.x},${L.y}), idle — with the `
+                        + `game-written flag [${own.map((o) => o.id).join(', ')}] die (their own tags written); BARE none does`,
+                    died(flagged).length === own.length && died(bare).length === 0, JSON.stringify(arm));
+                    continue;
+                }
                 if (!effect || b.write.value) continue;
                 for (const L of landingsToward(MAP, t)) {
                     const ys = (r) => r.ticks.filter((o) => o.level === t.level).map((o) => o.y);
