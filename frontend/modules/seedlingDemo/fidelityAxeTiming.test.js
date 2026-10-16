@@ -67,10 +67,10 @@ describe('AXETIMING D2 — the switch', () => {
 });
 
 describe('AXETIMING D3 — the rung\'s plans on the game: 0 px, no hit', () => {
-    for (const [name, W, n, level] of [['axetiming-l61-152-plan', S152, 228, 61], ['axetiming-l61-529-plan', L529, 228, 61],
-        ['axetiming-l71-598-plan', L598, 123, 71], ['axetiming-l71-600-plan', L600, 182, 71]]) {
-        it(`${name}: ${n} game rows, every hits reading the game gave is 0`, () => {
-            expect(W.rows).toHaveLength(n);
+    for (const [name, W, level] of [['axetiming-l61-152-plan', S152, 61], ['axetiming-l61-529-plan', L529, 61],
+        ['axetiming-l71-598-plan', L598, 71], ['axetiming-l71-600-plan', L600, 71]]) {
+        it(`${name}: a game row for every one of the tape's ${W.tape.tick_count} ticks and t0, every hits reading is 0`, () => {
+            expect(W.rows).toHaveLength(W.tape.tick_count + 1);
             expect(new Set(W.rows.filter((g) => 'hits' in g).map((g) => g.hits))).toEqual(new Set([0]));
             expect(W.rows[0]).toMatchObject({ t: 0, level });
         });
@@ -141,10 +141,10 @@ describe('AXETIMING D2 — step 152 at the held retry\'s budget (2,560 work unit
  * axe's WAIT disc before a corridor was planned. Witness `axetiming-l54-497-plan`: the 7-t plan on the game.
  */
 describe('AXETIMING D2b — the walk\'s gate times the blade (sweep leg 497, L54)', () => {
-    it('the witness: 8 game rows, the game\'s hits stay 0, L52 at t7', () => {
-        expect(L497.rows).toHaveLength(8);
+    it(`the witness: a game row for every one of the tape's ${L497.tape.tick_count} ticks and t0, the game's hits stay 0, L52 at the end`, () => {
+        expect(L497.rows).toHaveLength(L497.tape.tick_count + 1);
         expect(new Set(L497.rows.map((g) => g.hits))).toEqual(new Set([0]));
-        expect(L497.rows.at(-1)).toMatchObject({ t: 7, level: 52 });
+        expect(L497.rows.at(-1)).toMatchObject({ t: L497.tape.tick_count, level: 52 });
     });
     for (const axeHit of [false, true]) {
         it(`the model replays it at 0 px and bills no hit (spinningAxePlayerHit ${axeHit ? 'ON' : 'OFF'})`, () => {
