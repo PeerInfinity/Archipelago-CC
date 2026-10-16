@@ -657,6 +657,8 @@ export class SeedlingPlaybackController {
             getAxeDodgeAskPerPreview: () => this._getSurface?.()?.wasm?.axeDodgeAskPerPreview ?? null,
             // ⛓ DASH-ONLY WINDOW — `on` / `off` / `default`, applied to the engine's own solver at each solve.
             getDashOnlyWindow: () => this._getSurface?.()?.wasm?.dashOnlyWindow ?? null,
+            // ⛓ DASH-SHAPE STAMP — `{key: on/off/default}`, applied to the engine's own dash shape at each solve.
+            getDashShape: () => this._getSurface?.()?.wasm?.dashShape ?? null,
             // ⛓ MID-ROOM REPLAN — the delivery gate's handle (re-read per call: a remount is a new adapter).
             getDelivery: () => this._getSurface?.()?.wasm?.delivery ?? null,
             log: this._log,

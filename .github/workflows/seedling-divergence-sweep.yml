@@ -17,8 +17,8 @@ name: Seedling divergence sweep (manual)
 #          (`end: 'harness-hang'`, H1), or a shard never reported ids of its plan — those are listed per shard, and
 #          their union printed as `REDISPATCH ids=…` (the `ids` input of the re-run, as is) — and a MIXED-BUDGET
 #          merge (rows whose `legBudgetMs` stamp differs from the plan's: S5-1's `leg_budget_ms`), and a MIXED-WINDOW merge
-#          (rows whose `upgradeWindowWork` / `dashOnlyWindow` stamp differs from the plan's: `upgrade_window_work`,
-#          `dash_only_window`).
+#          (rows whose `upgradeWindowWork` / `dashOnlyWindow` / `dashShape` stamp differs from the plan's:
+#          `upgrade_window_work`, `dash_only_window`, `dash_shape`).
 #
 # ⛓ H1 (sweep-4 shard 9, run 38110831520, sat ~5 h after page 18 and named nothing): every harness step between
 # legs runs under a MEASURED wall-clock bound in the probe (`HANG_BOUNDS_MS`); one that expires prints `HANG:`,
@@ -109,6 +109,15 @@ on:
           on every row and on the plan; the merge refuses a mixed merge by name.
         type: string
         default: ''
+      dash_shape:
+        description: >-
+          Empty = solverBot's three SEEDLING DB dash switches at their own defaults, OFF (today's run). Otherwise a spec:
+          a comma list of <key>:on|off over legPrecheck, noSwingPrefix, keepPartial (a bare key = on), or all — set
+          through the flashPanel settings seedlingDash{LegPrecheck,NoSwingPrefix,KeepPartial}, read back as a DASH_SHAPE
+          line, stamped dashShape on each request the engine makes off-default (capture_requests reads it back), on
+          every row and on the plan; the merge refuses a mixed merge by name.
+        type: string
+        default: ''
       leg_budget_ms:
         description: >-
           Empty = the harness's 90000 ms per leg (today's run). Otherwise the leg budget in ms (S5-1: a LONG search
@@ -183,6 +192,7 @@ jobs:
           LEG_BUDGET: ${{ inputs.leg_budget_ms }}
           UPGRADE_WINDOW: ${{ inputs.upgrade_window_work }}
           DASH_ONLY: ${{ inputs.dash_only_window }}
+          DASH_SHAPE: ${{ inputs.dash_shape }}
           CENSUS: ${{ inputs.seam_census }}
           CAPTURE: ${{ inputs.capture_requests && 'on' || '' }}
         run: |
@@ -198,9 +208,11 @@ jobs:
             mv "$L.sub" "$L"
           fi
           node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} \
-            ${UPGRADE_WINDOW:+--upgrade-window-work="$UPGRADE_WINDOW"} ${DASH_ONLY:+--dash-only-window="$DASH_ONLY"} | tee -a plan.txt
+            ${UPGRADE_WINDOW:+--upgrade-window-work="$UPGRADE_WINDOW"} ${DASH_ONLY:+--dash-only-window="$DASH_ONLY"} \
+            ${DASH_SHAPE:+--dash-shape="$DASH_SHAPE"} | tee -a plan.txt
           node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} \
-            ${UPGRADE_WINDOW:+--upgrade-window-work="$UPGRADE_WINDOW"} ${DASH_ONLY:+--dash-only-window="$DASH_ONLY"} --json > plan.json
+            ${UPGRADE_WINDOW:+--upgrade-window-work="$UPGRADE_WINDOW"} ${DASH_ONLY:+--dash-only-window="$DASH_ONLY"} \
+            ${DASH_SHAPE:+--dash-shape="$DASH_SHAPE"} --json > plan.json
           # ⛓ the partition travels with the leg list: the merge compares each shard's ids against its rows
           cp plan.json test-results/divergence-sweep/plan.json
           echo "matrix=$(node -p "JSON.stringify(require('./plan.json').matrix)")" >> "$GITHUB_OUTPUT"
@@ -290,6 +302,7 @@ jobs:
           AXE_DODGE: ${{ inputs.axe_dodge }}
           UPGRADE_WINDOW: ${{ inputs.upgrade_window_work }}
           DASH_ONLY: ${{ inputs.dash_only_window }}
+          DASH_SHAPE: ${{ inputs.dash_shape }}
           LEG_BUDGET: ${{ inputs.leg_budget_ms }}
           CAPTURE: ${{ inputs.capture_requests && 'on' || '' }}
           TEST_FAULT: ${{ inputs.test_fault }}
@@ -318,7 +331,7 @@ jobs:
             --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP $STAGE ${CONTACT:+--contact-fidelity="$CONTACT"} \
             --stage-flags="$STAGE_FLAGS" ${AXE_DODGE:+--axe-dodge="$AXE_DODGE"} ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} \
             ${UPGRADE_WINDOW:+--upgrade-window-work="$UPGRADE_WINDOW"} ${DASH_ONLY:+--dash-only-window="$DASH_ONLY"} \
-            ${CAPTURE:+--capture-requests=$D/requests-$I.jsonl} 2>&1 | tee "$L"
+            ${DASH_SHAPE:+--dash-shape="$DASH_SHAPE"} ${CAPTURE:+--capture-requests=$D/requests-$I.jsonl} 2>&1 | tee "$L"
           RC=$?
           set -e
           echo "MEASURED: shard $SHARD rc=$RC wall $(( $(date +%s) - S ))s load $(cut -d' ' -f1-3 /proc/loadavg) nproc $(nproc) at ${GITHUB_SHA}"

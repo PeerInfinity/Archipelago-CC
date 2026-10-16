@@ -13,7 +13,8 @@
  *   · a MIXED-BUDGET merge (S5-1): rows whose `legBudgetMs` stamp (absent = the default) differs from another row's or
  *                      from the plan's — a 90 s timeout and a 300 s one are not the same row, so they never merge silently.
  *   · a MIXED-WINDOW merge (slice `seedling-js-dash-window`): rows whose solver-knob stamp (`upgradeWindowWork`,
- *                      `dashOnlyWindow`; absent = today's) differs from the plan's — a plan cut at another window is
+ *                      `dashOnlyWindow`, `dashShape`; absent = today's) differs from the plan's — a plan cut at
+ *                      another window, or solved under another dash shape (slice `seedling-js-dash-shape-stamp`), is
  *                      another plan.
  * Informational, never a fail (S5-2, `seedlingHitTicks.js`): one `UNBILLED-HIT:` line per leg whose game took more
  * hits than its plans billed (hit ticks vs billed ticks vs the first divergence, and whether the hit IS it), a count
@@ -35,7 +36,7 @@ import { unbilledHitCensus } from './seedlingHitTicks.js';
 export const LEG_BUDGET_MS_DEFAULT = 90000;
 
 /** ⛓ The probe's `SOLVER_KNOB_KEYS` (restated for the sparse checkout; a unit test holds the two equal). */
-export const SOLVER_KNOB_KEYS = Object.freeze(['upgradeWindowWork', 'dashOnlyWindow']);
+export const SOLVER_KNOB_KEYS = Object.freeze(['upgradeWindowWork', 'dashOnlyWindow', 'dashShape']);
 
 /** A row's / the plan's leg budget: its `legBudgetMs` stamp, the default when absent. */
 export const legBudgetOf = (x) => x?.legBudgetMs ?? LEG_BUDGET_MS_DEFAULT;

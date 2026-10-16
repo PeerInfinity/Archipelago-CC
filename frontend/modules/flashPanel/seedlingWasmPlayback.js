@@ -118,6 +118,8 @@ import { applyAxeDodgeAsk, parseAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskH
 import { axeDodgeOverride } from './seedlingAxeDodgeSettings.js';
 import { applyDashOnlyWindow, parseDashOnlyWindow } from '../seedlingDemo/dashOnlyWindowHook.js';
 import { dashOnlyWindowOverride } from './seedlingDashOnlyWindowSettings.js';
+import { applyDashShape } from '../seedlingDemo/dashShapeHook.js';
+import { dashShapeOverride } from './seedlingDashShapeSettings.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
@@ -196,6 +198,9 @@ const roomEquips = (r) => equipsMap(r?.equips);
  * @param {() => string|null} [deps.getDashOnlyWindow]  ⛓ DASH-ONLY WINDOW — the panel's setting
  *   (`flashPanel.seedlingDashOnlyWindow`: `on` / `off` / `default`), applied to THIS instance's `DASH_ONLY_WINDOW`
  *   at each solve's start (its worker gets the request's stamp); absent = untouched
+ * @param {() => object|null} [deps.getDashShape]  ⛓ DASH-SHAPE STAMP — the panel's three dash settings
+ *   (`{legPrecheck, noSwingPrefix, keepPartial}`, each `on` / `off` / `default`), applied to THIS instance's dash
+ *   shape (`dashShapeHook.applyDashShape`) at each solve's start (its worker gets the request's stamp); absent = untouched
  * @param {number} [deps.backstopMs]  the wall-clock backstop (`SOLVE_BACKSTOP_MS`): a named failure, never an answer
  * @param {() => object|null} [deps.getDelivery]  ⛓ MID-ROOM REPLAN — the panel adapter's delivery gate
  *   (`{setItemGate, writesOf, inventory, push}`); absent = items reach the game as they arrive (no gate).
@@ -208,7 +213,7 @@ export function createWasmPlayback({
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetWork = SOLVER_BUDGET_WORK,
     getBudgetWork = null, getUpgradeWindowWork = null, getDelivery = null, backstopMs = SOLVE_BACKSTOP_MS,
-    getAxeDodgeAskPerPreview = null, getDashOnlyWindow = null,
+    getAxeDodgeAskPerPreview = null, getDashOnlyWindow = null, getDashShape = null,
 }) {
     /** ⛓ O3 — the budget (work units) a solve starts with: the knob's live value, else the engine's own. */
     let ownBudget = budgetWork;
@@ -241,6 +246,13 @@ export function createWasmPlayback({
         try { v = getDashOnlyWindow() ?? null; } catch { v = null; }
         const o = dashOnlyWindowOverride(v);
         applyDashOnlyWindow(o ? parseDashOnlyWindow(o) : null);
+    };
+    /** ⛓ DASH-SHAPE STAMP — the same, for solverBot's three dash switches (`default` = each switch's own). */
+    const applyDashShapeDep = () => {
+        if (!getDashShape) return;
+        let v = null;
+        try { v = getDashShape() ?? null; } catch { v = null; }
+        applyDashShape(Object.fromEntries(Object.entries(v ?? {}).map(([k, x]) => [k, dashShapeOverride(x) ? x === 'on' : null])));
     };
     const levelSource = levelSourceFromAtlas(records);
     let service = solveService;
@@ -1277,6 +1289,7 @@ export function createWasmPlayback({
         play = { ...playInit, t0: now(), request: req, budget, budgets: [budget], retries: 0, best: null };
         applyAxeDodge();
         applyDashOnly();
+        applyDashShapeDep();
         handle = svc().start(req);
         phase = 'solving';
         tl('solve', { name: req.name ?? null });
@@ -1306,6 +1319,7 @@ export function createWasmPlayback({
         play.t0 = now();
         applyAxeDodge();
         applyDashOnly();
+        applyDashShapeDep();
         handle = svc().start(req);
         log(`[wasm playback] ${goal.name ?? goal.kind}: the solver ran out of ${play.budgets.at(-2)} work units in level ${goal.level} `
             + `— asking again with ${play.budget}, the room held (retry ${play.retries})`, 'warn');

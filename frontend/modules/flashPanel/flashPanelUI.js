@@ -29,6 +29,7 @@ import { CONTACT_SETTING_KEYS, contactPageParam } from './seedlingContactSetting
 import { CONTACT_FIDELITY_DEFAULTS, applyContactFidelity, formatContactFidelity } from '../seedlingDemo/contactFidelity.js';
 import { AXE_DODGE_SETTING_KEY, axeDodgeOverride, axeDodgePageParam } from './seedlingAxeDodgeSettings.js';
 import { DASH_ONLY_WINDOW_SETTING_KEY, dashOnlyWindowOverride, dashOnlyWindowPageParam } from './seedlingDashOnlyWindowSettings.js';
+import { DASH_SHAPE_SETTING_KEYS, dashShapeSettingValues, dashShapeSpec, dashShapePageParam } from './seedlingDashShapeSettings.js';
 import { CAMERA_SETTING_KEY, GRAPHICS_SETTING_KEY, cameraMode, graphicsPageParams, graphicsStack } from './seedlingGraphicsSettings.js';
 
 function log(level, message, ...data) {
@@ -256,6 +257,20 @@ export class FlashPanelUI {
           return;
         }
       }
+      const dashShapeKey = Object.entries(DASH_SHAPE_SETTING_KEYS).find(([, key]) => key === data?.key)?.[0];
+      if (dashShapeKey || data?.key === '*') {
+        // ⛓ DASH-SHAPE STAMP — the DASH-ONLY WINDOW arm above, for solverBot's three dash switches (one re-mount check:
+        // the page carries them as one `dashShape` spec).
+        const value = await this._refreshDashShape(dashShapeKey ? { [dashShapeKey]: data.value } : undefined);
+        if (value !== undefined && this.isInitialized && this.transport === 'js' && this._jsPageDashShape !== undefined
+          && dashShapeSpec(value) !== dashShapeSpec(this._jsPageDashShape)) {
+          this._panelLog(`dash-shape switches changed (${dashShapeSpec(this._jsPageDashShape) || 'default'} → `
+            + `${dashShapeSpec(value) || 'default'}) — re-mounting the JS runtime page`);
+          this._teardownForReinit();
+          this._initializeAdapter();
+          return;
+        }
+      }
       if (data?.key === GRAPHICS_SETTING_KEY || data?.key === CAMERA_SETTING_KEY || data?.key === '*') {
         // ⛓ GRAPHICS G1 — cosmetic: applied to a mounted JS page LIVE, never a re-mount.
         await this._refreshJsGraphics(data.key === GRAPHICS_SETTING_KEY ? data.value : undefined,
@@ -397,6 +412,8 @@ export class FlashPanelUI {
         axeDodgeAskPerPreview: this._axeDodgeAsk ?? null,
         // ⛓ DASH-ONLY WINDOW — `on` / `off` / `default` (null until the setting is read: the switch's own value then).
         dashOnlyWindow: this._dashOnlyWindow ?? null,
+        // ⛓ DASH-SHAPE STAMP — `{legPrecheck, noSwingPrefix, keepPartial}`, each `on` / `off` / `default` (null until read).
+        dashShape: this._dashShape ?? null,
         // ⛓ MID-ROOM REPLAN — the delivery gate (`FlashBridgeAdapter.itemGate`): the engine holds an item that
         // arrives while it drives, and lets it through where it can replan around it.
         delivery: {
@@ -605,6 +622,23 @@ export class FlashPanelUI {
    * (`seedlingDashOnlyWindowSettings.js`), as `_refreshAxeDodgeAsk` does: the wasm engine applies it to its own
    * instance at each solve (`wasm.dashOnlyWindow`), the JS page reads it on its URL. undefined = not read.
    */
+  /**
+   * ⛓ DASH-SHAPE STAMP — cache the three `flashPanel.seedlingDash*` settings as `{key: 'on'|'off'|'default'}`
+   * (`seedlingDashShapeSettings.js`), as `_refreshDashOnlyWindow` does. `changed` = the one key a settings event moved
+   * (the others are kept); undefined = read all three. Returns undefined when they cannot be read.
+   */
+  async _refreshDashShape(changed) {
+    const next = { ...(this._dashShape ?? {}) };
+    if (changed === undefined || this._dashShape === undefined) {
+      try {
+        for (const [k, key] of Object.entries(DASH_SHAPE_SETTING_KEYS)) next[k] = await settingsManager.getSetting(key, 'default');
+      } catch { return undefined; }
+    }
+    Object.assign(next, changed ?? {});
+    this._dashShape = dashShapeSettingValues(next);
+    return this._dashShape;
+  }
+
   async _refreshDashOnlyWindow(value) {
     let next = value;
     if (next === undefined) {
@@ -1245,6 +1279,7 @@ export class FlashPanelUI {
       await this._refreshContactFidelity();
       await this._refreshAxeDodgeAsk();
       await this._refreshDashOnlyWindow();
+      await this._refreshDashShape();
       await this._refreshJsGraphics();
       this.transport = 'wasm';
       if (runtime === 'js') {
@@ -1262,9 +1297,12 @@ export class FlashPanelUI {
           this._jsPageAxeDodge = this._axeDodgeAsk ?? 'default';
           // ⛓ DASH-ONLY WINDOW — and an off-`default` dash-only-window setting.
           this._jsPageDashOnly = this._dashOnlyWindow ?? 'default';
+          // ⛓ DASH-SHAPE STAMP — and the off-`default` dash switches, as one `dashShape` spec.
+          this._jsPageDashShape = dashShapeSettingValues(this._dashShape);
           // ⛓ GRAPHICS G1 — and the off-default cosmetic switches (graphics stack, camera).
           const query = [killLockPageQuery(killLock).replace(/^\?/, ''), contactPageParam(contact),
             axeDodgePageParam(this._jsPageAxeDodge), dashOnlyWindowPageParam(this._jsPageDashOnly),
+            dashShapePageParam(this._jsPageDashShape),
             graphicsPageParams(this._jsGraphics, this._jsCamera)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);

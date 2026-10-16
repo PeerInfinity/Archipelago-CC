@@ -47,6 +47,7 @@ import { killLockBodiesStamp } from './killLockBodies.js';
 import { contactFidelityStamp } from './contactFidelity.js';
 import { axeDodgeAskStamp } from './axeDodgeAskHook.js';
 import { dashOnlyWindowStamp } from './dashOnlyWindowHook.js';
+import { dashShapeStamp } from './dashShapeHook.js';
 import { SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
 
 /**
@@ -68,6 +69,9 @@ export function stampHooks(tape) {
     // ⛓ DASH-ONLY WINDOW — and an off-default `DASH_ONLY_WINDOW` (`dashOnlyWindowHook.js`).
     const dashOnly = tape.dashOnlyWindow ?? dashOnlyWindowStamp();
     if (dashOnly !== null) tape.dashOnlyWindow = dashOnly;
+    // ⛓ DASH-SHAPE STAMP — and solverBot's off-default dash switches, as one `dashShape` (`dashShapeHook.js`).
+    const dashShape = tape.dashShape ?? dashShapeStamp();
+    if (dashShape) tape.dashShape = dashShape;
     return tape;
 }
 
