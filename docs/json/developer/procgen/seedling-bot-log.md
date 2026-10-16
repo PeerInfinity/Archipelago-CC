@@ -22890,3 +22890,45 @@ submodule, Chromium and :8000; the rest 2 at a time, ~6–8 min), enumerating th
 `seedling-fidelity-producers-evidence/seedling-producer-checks.draft.yml`, not wired.
 
 **Final gate at the head:** 59 GREEN; the two r9 rows (the hammer arc's) RED as at the base.
+
+### Seedling fidelity SEALDOOR — the solver steps the FinalDoor, and says which predicate keeps it shut
+
+⚖ Wave 18 (planner `seedling-fidelity-planning-8`), from main `d1fbfeffc2`. One new switch, **OFF**:
+`CONTACT_FIDELITY.sealDoorApproach` (`SEEDLING_SEAL_DOOR_APPROACH=0|1`). Report:
+`CC/docs/cloud-reports/seedling-fidelity-sealdoor.md`.
+
+**D1 — the game, and the sweep's state.** The door's rule was already game-witnessed (R6 slice 6c, `r6-final-door` and
+its unspoken-Watcher control); re-played on p4f at this base: 51 PASS / 0 FAIL. What the brief got wrong is the STATE of
+the nine L113 legs (804–806, 811–813, 818–820). They hold sixteen AP `Seal` items, but **the game holds no seal slot**:
+`flashBridgeAdapter`'s inventory classifier drops `!seal` (neither progressive nor a fusion, `flashBridgeAdapter.js:784`),
+so `Main.hasSealPart` stays all -1. And no leg has talked to the Watcher: each leg is a fresh page, and the rules carry
+the talk as *implied* (`seedlingPlaythroughOverlay.COMPLETION`), not as an item. Measured on the game (leg 804's captured
+worker request): `save.seal_parts = []`, `persistence = []`. The route survey's step 221 stages the same (its sixteen
+Seals are `unpresentable`). **So all nine refusals are honest: the game would play the ceremony and keep the door shut.**
+
+**D2 — the verb.** ON, `refineStrategy` selects `approach` for `solid:finaldoor` (the shared table keeps no row). The
+resolver reads both predicates from the run (`run.finalDoorGate`, new and read-only: the save's last seal slot and the
+{114,0} clear) and refuses BY NAME, saying which fails, when the door cannot open. Otherwise it picks a stance outside the
+32 px circle, holds toward the entity point until "open" plays (the 181 dead frames land on the trigger tick), releases,
+and waits for the removed row's `wallOpensAt`. With both predicates staged, all nine goals solve (three arrivals × two
+exits and the clear-tag). Witnesses (game-recorded, `plan-seedling-sealdoor-witness.mjs`): `sealdoor-l113-clear`
+(ceremony t89, open t90, removed t146), `sealdoor-l113-exit` (to L115) and `sealdoor-l113-noseal-control` (the sweep's
+own state: the ceremony fires, the door stays shut, `{113,0}` stays set). Mutants M1 and M3 are caught. M2 (keep the
+hold through the wait) at first SURVIVED, so the release is a choice, not a requirement; the plan is now pinned to the
+recorded tape.
+
+**D3 — what is next behind it.** The frontier solids (`ruinedpillar@64,32`, `dungeonspire@112,96`, `@32,96`) block
+nothing: with the predicates held, every goal solves past them. What blocks next is the STATE: AP seals never reach the
+save (the bridge), and the Watcher's {114,0} is a cross-room prerequisite (the `talk` verb exists, `watcher-l114-talk`).
+The location legs' goal-mapper `jsRuntimeSolver.clearTagVerbOf` (the JS arc's) still answers `no-verb` ON: a hand-over.
+
+Movers ON: survey step 221 REFUSED → REFUSED (the ITEM-gate text → the named predicates). Sweep legs 804, 805, 811, 812,
+818, 819: failed → failed (same change of text). 806, 813, 820 do not move until `clearTagVerbOf` is wired. No committed
+tape moves.
+
+Trap candidates:
+1. *An AP inventory is not the game's save.* "Holding all 16 Seal parts" was read from the sweep's `granted` list; the
+   bridge never writes a seal slot. Read the captured request's `staging.save` before calling a refusal a model gap.
+2. *A second spelling of a selector drifts behind a switch.* `clearTagVerbOf` mirrors `refineStrategy` +
+   `clearTagExecutor`; a verb added behind a switch must be added to both, or the location goal refuses before the
+   solver is asked.

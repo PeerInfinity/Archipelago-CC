@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 89,
+            "count": 90,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 422,
+        "blockStyle": 423,
         "browser": 142,
-        "cited": 219,
-        "files": 435,
+        "cited": 220,
+        "files": 436,
         "lineStyle": 13,
-        "withDocblock": 435,
-        "withFlags": 351
+        "withDocblock": 436,
+        "withFlags": 352
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9418,6 +9418,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-return-l15 — ⛓⛓⛓ SEEDLING FIDELITY RETURN (D1): L15 RE-ENTERED FROM L16 ON THE WAY BACK, WITH AND WITHOUT THE FORWARD TRIP'S CLEARS.",
             "path": "scripts/procgen/plan-seedling-return-l15.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-sealdoor-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-sealdoor-witness — ⛓⛓⛓ SEEDLING FIDELITY SEALDOOR: THE FINAL DOOR IS OPENED BY THE SOLVER'S `approach` VERB, AND STAYS SHUT WHEN THE RUN DOES NOT HOLD ITS PREDICATES.",
+            "path": "scripts/procgen/plan-seedling-sealdoor-witness.mjs"
         },
         {
             "argvHelpers": [],
