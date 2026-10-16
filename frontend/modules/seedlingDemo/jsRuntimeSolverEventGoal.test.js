@@ -90,11 +90,24 @@ describe('⛓ EVENT GOALS — the census: every playthrough event is a clear-tag
         expect(clearTagVerbOf('proximity-hazard:buttonroom')).toEqual({ verb: 'hold', registered: true });
     });
 
+    it('L62 flag 0 / L63 flag 1 (rules darktrap-events) → the presser case: the pole\'s flag, pressed in L63 / L61 (fidelity DARKTRAPQ\'s ev62/ev63 goals)', () => {
+        const l62 = goalOf('flag:L62:0');
+        expect(l62.level).toBe(63);
+        expect(mapIn(l62)).toEqual({ goal: {
+            kind: 'clear-tag', tag: { level: 62, tag: 0 }, at: { x: 120, y: 200 }, obstacle: 'lightpole@120,200',
+            presser: { level: 63, class: 'buttonroom', x: 32, y: 64 } } });
+        const l63 = goalOf('flag:L63:1');
+        expect(l63.level).toBe(61);
+        expect(mapIn(l63)).toEqual({ goal: {
+            kind: 'clear-tag', tag: { level: 63, tag: 1 }, at: { x: 64, y: 88 }, obstacle: 'lightpole@64,88',
+            presser: { level: 61, class: 'buttonroom', x: 176, y: 40 } } });
+    });
+
     it('a same-room event names NO presser (only a flag in another level than the arrival\'s carries one)', () => {
         for (const e of EVENTS.filter((x) => sideLevel(x) === x.level)) {
             expect(atlasEventGoal(e, sideLevel(e)).event.presser).toBeUndefined();
         }
-        expect(EVENTS.filter((x) => sideLevel(x) !== x.level).map((x) => x.eventId)).toEqual(['flag:L39:8']);
+        expect(EVENTS.filter((x) => sideLevel(x) !== x.level).map((x) => x.eventId)).toEqual(['flag:L39:8', 'flag:L63:1', 'flag:L62:0']);
     });
 });
 

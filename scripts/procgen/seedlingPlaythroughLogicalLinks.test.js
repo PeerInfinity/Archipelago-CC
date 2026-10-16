@@ -92,6 +92,19 @@ describe('a link the physics model cannot walk is NOT emitted as True_', () => {
         expect(hits(() => true)).toBe(true);
         expect(hits((x, y) => grid.cells[y * grid.width + x].kind !== 'sink')).toBe(false);
     });
+
+    it('rules darktrap-events: `avoid` keeps the box off a live contact body — L62\'s darktrap cuts the room in two; no avoid = as before', () => {
+        const level = MAP.levels.find((l) => l.level === 62);
+        const grid = playthroughGridFor(level);
+        const free = (x, y) => ['open', 'manual'].includes(grid.cells[y * grid.width + x].kind);
+        const bottom = [[3, 18]];  // L61 teleporter@112,0's landing (48,288)
+        const top = '7,5';         // L64's landing (112,80)
+        const trap = { x: 112, y: 208, right: 128, bottom: 224 };  // darktrap@112,208's contact rect
+        const reached = (opts) => modelFloodTiles(level, bottom, free, opts).map((t) => t.join(','));
+        expect(reached().includes(top)).toBe(true);
+        expect(reached({ avoid: [trap] }).includes(top)).toBe(false);
+        expect(reached({ avoid: [] })).toEqual(reached());
+    });
 });
 
 describe('an exit no component reaches binds to the component the model reaches — or is refused by name', () => {
