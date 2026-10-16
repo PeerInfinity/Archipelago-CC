@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "archipelago",
+  "title": "Archipelago — the fork's AP item pickup",
+  "licence": "MIT",
+  "credit": "The Archipelago application icon (data/icon.png), downscaled to 16x16 by the Seedling fork; MIT per the Archipelago repository's root LICENSE (vendor/seedling/src/Pickups/APItem.as:67-73).",
+  "source": "vendor/seedling/assets/graphics (PeerInfinity/Seedling), copied byte for byte",
+  "layers": {
+    "art": "art/manifest.json"
+  }
+}

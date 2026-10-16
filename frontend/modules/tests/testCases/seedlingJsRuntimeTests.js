@@ -35,6 +35,7 @@ import loopStateSingleton from '../../loops/loopStateSingleton.js';
 import { resolveQueueBlocks } from '../../loops/blockIdentity.js';
 import { restoresSavedQueues } from '../savedQueueIsolation.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import { CAMERA_SETTING_KEY, GRAPHICS_SETTING_KEY } from '../../flashPanel/seedlingGraphicsSettings.js';
 
 /**
  * ⛔ The walk helper imports `levelWorld.js`; a static import here would put
@@ -542,6 +543,79 @@ registerTest({
         + 'user:locationCheck for "Starting House - Chest", key_blue arrives) and take its door into the maze child '
         + '(a real user:regionMove; pendingExit field for field with the wasm game). No wasm artifact needed.',
     testFunction: seedlingJsRuntimePlaysAtlasRoom,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓ GRAPHICS G1 — the smoke row: the JS page boots with the `seedling` pack stack and the follow camera (both
+ * flash panel settings, session overrides, so the panel puts `?graphics=seedling&camera=follow` on the page's URL),
+ * decodes every sheet, draws sprites, and logs no console error; switching the camera back to `room` is applied
+ * LIVE (the same runtime object — no re-mount). Sets its own state and restores all three settings however it ends.
+ */
+export async function seedlingJsRuntimeGraphicsPackBoots(tc) {
+    const saved = {};
+    for (const [key, fallback] of [[RUNTIME_KEY, 'auto'], [GRAPHICS_SETTING_KEY, 'rects'], [CAMERA_SETTING_KEY, 'room']]) {
+        try { saved[key] = await settingsManager.getSetting(key, fallback); } catch { saved[key] = fallback; }
+    }
+    const errors = [];
+    try {
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        await settingsManager.updateSetting(GRAPHICS_SETTING_KEY, 'seedling', { persist: false });
+        await settingsManager.updateSetting(CAMERA_SETTING_KEY, 'follow', { persist: false });
+        await settingsManager.updateSetting(RUNTIME_KEY, 'js', { persist: false });
+        tc.log('runtime = js, graphics = seedling, camera = follow (session overrides); loading seedling_atlas_location…');
+        const rulesJson = await (await fetch(ATLAS_LOCATION_PATH)).json();
+        const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+        tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: ATLAS_LOCATION_PATH });
+        await loaded;
+        await tc.stateManager.pingWorker('after-rules-load', 5000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+        const up = await atlasPanelOnJs(tc, staleAdapter);
+        if (!up) return tc.getOverallResult();
+        const { rt, win } = up;
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+        tc.assertEqual('the panel put the off-default switches on the page URL', true,
+            /[?&]graphics=seedling\b/.test(win.location.search) && /[?&]camera=follow\b/.test(win.location.search));
+        const g = win.__seedlingJsGraphics;
+        const ready = await tc.pollForValue(() => (g.status === 'ready' && (g.counts?.sprites ?? 0) > 0 ? g.counts : null),
+            'the page loaded the seedling pack stack and painted sprites', 20000, 200);
+        tc.log(`graphics: status ${g.status}, error ${g.error}, counts ${JSON.stringify(g.counts)}, paint ${JSON.stringify(g.paintMs)}`);
+        tc.assertEqual('the pack stack is ready (no load error)', 'ready/null', `${g.status}/${g.error}`);
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        tc.assertEqual('the page drew sprites under the follow camera', true, !!ready && ready.sprites > 0);
+        tc.assertEqual('the camera is the 160×160 follow view', 'follow', g.camera);
+        const packs = g.packsOfKeys ?? {};
+        tc.assertEqual('the stack resolved keys from BOTH packs (a ground tile from seedling, the AP item from archipelago)',
+            'seedling/archipelago', `${packs['seedling:tile/ground']}/${packs['archipelago:pickup/item']}`);
+        // ── live switch: camera back to room — applied to THIS page, no re-mount ──
+        const framesBefore = g.frames;
+        await settingsManager.updateSetting(CAMERA_SETTING_KEY, 'room', { persist: false });
+        const live = await tc.pollForValue(() => (g.camera === 'room' && g.frames > framesBefore + 2 ? g.camera : null),
+            'the camera switch reached the mounted page live', 10000, 100);
+        tc.assertEqual('camera = room, applied live', 'room', live);
+        tc.assertEqual('the same runtime is still mounted (a cosmetic switch never re-mounts)', true,
+            frameOf(getActivePanelInstance())?.__seedlingJsRuntime === rt);
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('no death and no halt', '0/null', `${rt.deaths.length}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        for (const key of [GRAPHICS_SETTING_KEY, CAMERA_SETTING_KEY, RUNTIME_KEY]) {
+            try { await settingsManager.updateSetting(key, saved[key], { persist: false }); } catch { /* best effort */ }
+        }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-pack-boots',
+    name: 'Seedling JS runtime: the original graphics (?graphics=seedling) boot and draw',
+    description: 'With flashPanel.runtime = js, seedlingJsGraphics = seedling and seedlingJsCamera = follow, loads '
+        + 'seedling_atlas_location: the page boots with the seedling + archipelago pack stack, decodes every sheet, '
+        + 'draws sprites in the 160×160 follow view with no console error; switching the camera to room is applied live '
+        + '(no re-mount).',
+    testFunction: seedlingJsRuntimeGraphicsPackBoots,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

@@ -1,0 +1,17 @@
+# frontend/packs: content packs
+
+These are data directories loaded by `frontend/modules/contentPacks/`. They live under `frontend/` because
+GitHub Pages serves only `frontend/`.
+
+- `packs.json` is the hand-kept registry. It lists the packs and the named **stacks** a consumer loads, in
+  override order (a later pack wins per key). For example, `graphics.seedling = ["seedling", "archipelago"]`
+  is what the Seedling JS runtime page's `?graphics=seedling` loads.
+- `seedling/` holds the original Seedling graphics: tiles, cliffsides and static scenery. The art is by Connor
+  Ullmann, under the Unlicense (`vendor/seedling/LICENSE`).
+- `archipelago/` holds the fork's AP-item pickup (`ArchipelagoLogo.png`), under MIT (see `pack.json`).
+
+⛔ **Both packs are GENERATED. Do not edit them.** Regenerate with
+`node scripts/procgen/extract-seedling-art-packs.mjs`, and check with the same command plus `--check`. The sheets
+are the `vendor/seedling` PNGs copied byte for byte.
+
+Left out by ruling: the 04B_03 font, the promotional, Newgrounds and tank images, and all music and sound.

@@ -97,6 +97,7 @@ describe('the tools, run from a fixture repository', () => {
     describe('⛔ an instrument with the submodule uninitialised REFUSES by name, exit 2', () => {
         const NODE_TOOLS = [
             ['extract-seedling-masks.mjs', ['--check']],
+            ['extract-seedling-art-packs.mjs', ['--check']],
             ['extract-seedling-damage-sites.mjs', ['--check']],
             ['recon-seedling-r5.mjs', ['--kill-locks']],
         ];
@@ -181,6 +182,12 @@ describe('the committed extracts are what the PINNED submodule extracts (V1)', (
 
     it.skipIf(!INITIALISED)('extract-seedling-masks.mjs --check', () => {
         const r = check(process.execPath, 'extract-seedling-masks.mjs');
+        expect(`${r.stdout}${r.stderr}`).toContain('--check OK');
+        expect(r.status).toBe(0);
+    }, 120000);
+
+    it.skipIf(!INITIALISED)('extract-seedling-art-packs.mjs --check (⛓ GRAPHICS G0: the content packs under frontend/packs)', () => {
+        const r = check(process.execPath, 'extract-seedling-art-packs.mjs');
         expect(`${r.stdout}${r.stderr}`).toContain('--check OK');
         expect(r.status).toBe(0);
     }, 120000);
