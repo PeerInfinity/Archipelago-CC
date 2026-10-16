@@ -1,0 +1,17 @@
+D2 residue — L16's arrival from L17 at (120,56), every pre-hit input variant, MODEL (drivers/walk.mjs --at=16,112,48):
+the volley is billed at t5-t6 in every variant that stays in the room, and 1-3 ticks later levelRun refuses an
+on-screen verdict for a Bob at the screen edge inside Game.shake's band:
+
+  keys                    hit         first refusal
+  left*80                 t6 #0.0     t7  bob@192,80
+  up*80                   t5 #0.1     t7  bob@192,80
+  -*5,right*80            t6 #0.1     t8  bob@192,80
+  right*3,-*3,right*80    t6 #0.2     t9  bob@208,32
+  up+right*80             t5 #0.2     t8  bob@208,32
+  -*12,right*80           t6 #0.1     t8  bob@192,80
+  right*60                t6 #0.2     t8  bob@208,32
+  down*80 / down+right*80 none        (stairs to L17 at t6)
+
+So from this arrival no crossing that stays in L16 avoids the band: the arrow hit is forced (D1: the game bills it at
+t6) and the shake it starts leaves bob@192,80 / bob@208,32 inside the band (⚖ the jiggle's value is cosmetic RNG and
+is not modelled).

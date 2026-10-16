@@ -1,0 +1,2 @@
+files 209 passed 6763 failed 1 skipped 10 total 6774
+RED frontend/modules/procgenDocs/generated.test.js > the generated modules ARE what the code says ⛓⛓ `--check` exits 0 — regenerating produces byte-identical files
