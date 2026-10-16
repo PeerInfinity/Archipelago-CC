@@ -14,6 +14,8 @@
  * `drivers/game.mjs`), recorded from the rung's plans:
  *   - `axetiming-l61-152-plan` — survey step 152's 227-t plan: 228 game rows, `hits` 0 throughout.
  *   - `axetiming-l61-529-plan` — sweep leg 529's 227-t plan at its row's `seamTime` 5172: likewise.
+ *   - `axetiming-l71-598-plan`, `axetiming-l71-600-plan` — sweep legs 598 (122 t) and 600 (181 t), L71's
+ *     `spinningaxe@256,144` crossed southward: 0 px, every `hits` the poller read is 0.
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -34,6 +36,8 @@ const witness = (name) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'chaser
 const S152 = witness('axetiming-l61-152-plan');
 const L529 = witness('axetiming-l61-529-plan');
 const L497 = witness('axetiming-l54-497-plan');
+const L598 = witness('axetiming-l71-598-plan');
+const L600 = witness('axetiming-l71-600-plan');
 
 /** The model's replay of a witness against its game rows: the ticks it parts at, and the hits it billed. */
 const replay = (W, axeHit) => withContactFidelity({ spinningAxePlayerHit: axeHit }, () => {
@@ -63,11 +67,12 @@ describe('AXETIMING D2 — the switch', () => {
 });
 
 describe('AXETIMING D3 — the rung\'s plans on the game: 0 px, no hit', () => {
-    for (const [name, W] of [['axetiming-l61-152-plan', S152], ['axetiming-l61-529-plan', L529]]) {
-        it(`${name}: 228 game rows, the game's hits stay 0`, () => {
-            expect(W.rows).toHaveLength(228);
-            expect(new Set(W.rows.map((g) => g.hits))).toEqual(new Set([0]));
-            expect(W.rows[0]).toMatchObject({ t: 0, level: 61 });
+    for (const [name, W, n, level] of [['axetiming-l61-152-plan', S152, 228, 61], ['axetiming-l61-529-plan', L529, 228, 61],
+        ['axetiming-l71-598-plan', L598, 123, 71], ['axetiming-l71-600-plan', L600, 182, 71]]) {
+        it(`${name}: ${n} game rows, every hits reading the game gave is 0`, () => {
+            expect(W.rows).toHaveLength(n);
+            expect(new Set(W.rows.filter((g) => 'hits' in g).map((g) => g.hits))).toEqual(new Set([0]));
+            expect(W.rows[0]).toMatchObject({ t: 0, level });
         });
         for (const axeHit of [false, true]) {
             it(`${name}: the model replays it at 0 px on every tick and bills no hit (spinningAxePlayerHit ${axeHit ? 'ON' : 'OFF'})`, () => {
