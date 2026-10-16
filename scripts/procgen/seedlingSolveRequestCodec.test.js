@@ -114,4 +114,21 @@ describe('⛓ SEAM TIME CENSUS — the report and the workflow wiring', async ()
         expect(WF).toMatch(/if: always\(\) && inputs\.seam_census != '' && needs\.plan\.result == 'success'/);
         expect(WF).toMatch(/--i=0 --seam-time-sweep="\$FROM\.\.\$TO"/);
     });
+    it('a seam_census that is not a range FAILS the plan (assigned, then echoed — never swallowed in an echo)', () => {
+        expect(WF).toMatch(/\n\s+C=\$\(node --input-type=module -e "import \{parseSeamSweep\}/);
+        expect(WF).toMatch(/\n\s+echo "census=\$C" >> "\$GITHUB_OUTPUT"/);
+        expect(WF).not.toMatch(/echo "census=\$\(node/);
+    });
+    it('the summary REFUSES by name when the census jobs wrote no rows (was a bare ENOENT scandir)', async () => {
+        const { censusRowsFromDir } = await import('./replay-seedling-solve-request.mjs');
+        const { mkdtempSync, writeFileSync, rmSync } = await import('node:fs');
+        const { tmpdir } = await import('node:os');
+        const dir = mkdtempSync(join(tmpdir(), 'census-'));
+        try {
+            expect(() => censusRowsFromDir(join(dir, 'census'))).toThrow(/^--summarize: no census rows in .*census" — the census jobs wrote none/);
+            expect(() => censusRowsFromDir(dir)).toThrow(/^--summarize: no census rows in /);
+            writeFileSync(join(dir, 'census-1-0.jsonl'), `${JSON.stringify(row(1, 5, 'refusal', 'a', 1))}\n`);
+            expect(censusRowsFromDir(dir).map((r) => r.seamTime)).toEqual([5]);
+        } finally { rmSync(dir, { recursive: true, force: true }); }
+    });
 });

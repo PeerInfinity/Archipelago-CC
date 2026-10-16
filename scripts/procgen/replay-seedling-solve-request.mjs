@@ -24,7 +24,7 @@
  *
  * Run: node scripts/procgen/replay-seedling-solve-request.mjs --summarize=<dir> | --requests=<jsonl> [--id=N] [--i=K] [--n=3] [--seam-time-sweep=<from>..<to>] [--jobs=N] [--every=5000] [--out=<jsonl>] [--live]
  */
-import { readFileSync, readdirSync, appendFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, appendFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
@@ -126,14 +126,26 @@ async function pool(tasks, jobs) {
     return out;
 }
 
+/**
+ * The census rows under <dir> (every `.jsonl`). ⛔ A missing dir or no rows REFUSES by name: the census jobs wrote
+ * nothing, and a bare ENOENT/empty report hid why (runs 38809315570, 38817934836, 38817938055 — `seam_census: true`, not a
+ * range, so the plan's census matrix came out empty and no census job ran).
+ */
+export function censusRowsFromDir(dir) {
+    const none = `--summarize: no census rows in ${JSON.stringify(dir)} — the census jobs wrote none (is seam_census a <from>..<to> range? the plan refuses one that is not)`;
+    if (!existsSync(dir)) throw new Error(none);
+    const rows = readdirSync(dir).filter((f) => f.endsWith('.jsonl'))
+        .flatMap((f) => readFileSync(join(dir, f), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)));
+    if (!rows.length) throw new Error(none);
+    return rows;
+}
+
 async function main() {
     const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3) ?? fallback);
     // ⛓ SEAM TIME CENSUS — `--summarize=<dir>`: every census jsonl in <dir> (a CI census's shards) → the report
     const SUM = arg('summarize', '');
     if (SUM) {
-        const rows = readdirSync(SUM).filter((f) => f.endsWith('.jsonl'))
-            .flatMap((f) => readFileSync(join(SUM, f), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)));
-        for (const l of summarizeCensus(rows)) console.log(l);
+        for (const l of summarizeCensus(censusRowsFromDir(SUM))) console.log(l);
         return;
     }
     const FILE = arg('requests', '');
