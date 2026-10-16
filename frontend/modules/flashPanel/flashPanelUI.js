@@ -28,6 +28,7 @@ import { KILLLOCK_BODIES_DEFAULTS, applyKillLockBodies, formatKillLockBodies } f
 import { CONTACT_SETTING_KEYS, contactPageParam } from './seedlingContactSettings.js';
 import { CONTACT_FIDELITY_DEFAULTS, applyContactFidelity, formatContactFidelity } from '../seedlingDemo/contactFidelity.js';
 import { AXE_DODGE_SETTING_KEY, axeDodgeOverride, axeDodgePageParam } from './seedlingAxeDodgeSettings.js';
+import { CAMERA_SETTING_KEY, GRAPHICS_SETTING_KEY, cameraMode, graphicsPageParams, graphicsStack } from './seedlingGraphicsSettings.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -242,6 +243,12 @@ export class FlashPanelUI {
           this._initializeAdapter();
           return;
         }
+      }
+      if (data?.key === GRAPHICS_SETTING_KEY || data?.key === CAMERA_SETTING_KEY || data?.key === '*') {
+        // ⛓ GRAPHICS G1 — cosmetic: applied to a mounted JS page LIVE, never a re-mount.
+        await this._refreshJsGraphics(data.key === GRAPHICS_SETTING_KEY ? data.value : undefined,
+          data.key === CAMERA_SETTING_KEY ? data.value : undefined);
+        this._applyJsGraphics();
       }
       if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
       if (!this.isInitialized) return;
@@ -577,6 +584,32 @@ export class FlashPanelUI {
     }
     this._axeDodgeAsk = axeDodgeOverride(next) ?? 'default';
     return this._axeDodgeAsk;
+  }
+
+  /**
+   * ⛓ GRAPHICS G1 — cache `flashPanel.seedlingJsGraphics` / `seedlingJsCamera` (`seedlingGraphicsSettings.js`).
+   * An argument is a value just heard on `settings:changed`; undefined = read it.
+   */
+  async _refreshJsGraphics(graphics, camera) {
+    let g = graphics;
+    let c = camera;
+    try {
+      if (g === undefined) g = await settingsManager.getSetting(GRAPHICS_SETTING_KEY, 'rects');
+      if (c === undefined) c = await settingsManager.getSetting(CAMERA_SETTING_KEY, 'room');
+    } catch { /* keep the cached values */ }
+    if (g !== undefined) this._jsGraphics = graphicsStack(g);
+    if (c !== undefined) this._jsCamera = cameraMode(c);
+  }
+
+  /** ⛓ GRAPHICS G1 — hand the cached switches to a mounted JS page (a no-op on any other transport). */
+  _applyJsGraphics() {
+    if (this.transport !== 'js') return;
+    let handle = null;
+    try { handle = this.adapter?._getWin?.()?.__seedlingJsGraphics ?? null; } catch { handle = null; }
+    if (!handle?.set) return;
+    Promise.resolve(handle.set({ graphics: this._jsGraphics ?? null, camera: this._jsCamera ?? 'room' }))
+      .then((status) => this._panelLog(`JS page graphics: ${this._jsGraphics ?? 'rects'} (${status}), camera ${this._jsCamera ?? 'room'}`))
+      .catch((err) => this._panelLog(`JS page graphics could not be applied: ${err.message}`));
   }
 
   _teardownForReinit() {
@@ -1183,6 +1216,7 @@ export class FlashPanelUI {
       await this._refreshKillLockBodies();
       await this._refreshContactFidelity();
       await this._refreshAxeDodgeAsk();
+      await this._refreshJsGraphics();
       this.transport = 'wasm';
       if (runtime === 'js') {
         // ⛓ Seedling JS J1: the JavaScript model's page, through the SAME
@@ -1197,8 +1231,9 @@ export class FlashPanelUI {
           this._jsPageContact = formatContactFidelity(contact);
           // ⛓ AXE_DODGE HOOK — and an off-`default` axe-dodge setting.
           this._jsPageAxeDodge = this._axeDodgeAsk ?? 'default';
+          // ⛓ GRAPHICS G1 — and the off-default cosmetic switches (graphics stack, camera).
           const query = [killLockPageQuery(killLock).replace(/^\?/, ''), contactPageParam(contact),
-            axeDodgePageParam(this._jsPageAxeDodge)].filter(Boolean);
+            axeDodgePageParam(this._jsPageAxeDodge), graphicsPageParams(this._jsGraphics, this._jsCamera)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
           await this._initializeWasm();

@@ -507,6 +507,12 @@
             "_comment": "SOLVE PROGRESS (JS half). flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView = always, on seedling_atlas: the view subscribes to the page's worker service before the L6 enemy-room solve, holds its FINAL snapshot (solved) and draws the tree, the tile canvas and the work meter; its 'last update N s ago' advances; always does not auto-hide; setting it off unsubscribes. seedling-js batch."
         },
         {
+            "id": "seedling-js-runtime-graphics-pack-boots",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G1. flashPanel.runtime = js + seedlingJsGraphics = seedling + seedlingJsCamera = follow on seedling_atlas_location: the page boots with the seedling + archipelago content packs (frontend/packs), every sheet decodes, sprites are drawn in the follow view, zero console errors; the camera switch back to room is applied live (no re-mount). seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
             "enabled": true,
             "category": "Seedling JS runtime",
