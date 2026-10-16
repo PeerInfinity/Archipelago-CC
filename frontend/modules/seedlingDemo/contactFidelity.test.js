@@ -92,7 +92,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_BEAMTOWER_DRIFT || !!process.env.SEEDLING_BEAMTOWER_BEAM_HIT
         || !!process.env.SEEDLING_SPINNING_AXE_PLAYER_HIT || !!process.env.SEEDLING_PARTIAL_DODGE_REPROBE
         || !!process.env.SEEDLING_CORRIDOR_BODY_PRICING
-        || !!process.env.SEEDLING_ARROW_LANE_CROSSING)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_ARROW_LANE_CROSSING
+        || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -154,7 +155,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity SEALDOOR D2: `sealDoorApproach` (the solver steps the FinalDoor's open-on-approach) ships OFF.
             sealDoorApproach: false,
             // ⛓ fidelity ARROWLANE D2: `arrowLaneCrossing` (an ARMED lane crossed, its arrows billed) ships OFF.
-            arrowLaneCrossing: false });
+            arrowLaneCrossing: false,
+            // ⛓ fidelity AXETIMING D2: `axeTimingRung` (a spinning axe's gap crossed on its clock at dash speed) ships OFF.
+            axeTimingRung: false,
+            // ⛓ fidelity AXETIMING D2b: `axeGateTransit` (the walk's gate times a spinning axe's blade) ships OFF.
+            axeGateTransit: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
