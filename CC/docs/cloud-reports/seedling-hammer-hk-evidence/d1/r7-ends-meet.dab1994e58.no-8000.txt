@@ -1,0 +1,20 @@
+# box lock: TAKEN by plan-seedling-r7-ends-meet.mjs (browser, pid 3375) — head dab1994e5, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+
+## chain toy-west-pair
+
+PASS: r7-ends-meet-full is byte-identical to what this planner derives — 1668 bytes
+PASS: r7-ends-meet-1 is byte-identical to what this planner derives — 1422 bytes
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8000/frontend/modules/flashPanel/wasm/seedling_bot_ap_p4f/game.html
+Call log:
+[2m  - navigating to "http://localhost:8000/frontend/modules/flashPanel/wasm/seedling_bot_ap_p4f/game.html", waiting until "domcontentloaded"[22m
+
+    at latchOf (/home/user/hk-bisect/scripts/procgen/plan-seedling-r7-ends-meet.mjs:233:20)
+    at async file:///home/user/hk-bisect/scripts/procgen/plan-seedling-r7-ends-meet.mjs:348:28 {
+  name: 'Error'
+}
+
+Node.js v22.22.0
