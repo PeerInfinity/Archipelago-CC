@@ -37,6 +37,8 @@ const SWEEP = JSON.parse(readFileSync(new URL('./fixtures/dash-shape/sweep-478-l
 const sweepSource = levelSourceFromAtlas({ levels: SWEEP.records });
 const sweepRun = () => createRunForStaging(SWEEP.staging, sweepSource, { scratchPersistence: SWEEP.scratchPersistence });
 /** The two corridors at the pre-check's boundary (measured: the first row asserts their legs). */
+/** The pre-check's edge: the longest undashed leg it still scans (195 + 40, read from the module). */
+const EDGE = PREVIEW_AGREEMENT_BOUND + DASH_LEG_PRECHECK_MARGIN;
 const LEG_235 = [{ x: 148, y: 116 }];
 const LEG_236 = [{ x: 148, y: 115 }];
 
@@ -73,7 +75,7 @@ const SWITCHES = [
     ['DASH_KEEP_PARTIAL', DASH_KEEP_PARTIAL, withDashKeepPartial],
 ];
 
-describe('seedling DB — the three switches ship OFF, and `with…` restores them', () => {
+describe(`seedling DB — the ${SWITCHES.length} switches ship OFF, and \`with…\` restores them`, () => {
     for (const [name, sw, withIt] of SWITCHES) {
         it.skipIf(globalThis.process?.env?.[`SEEDLING_${name}`] !== undefined)(`${name} ships OFF`, () => {
             expect(sw.enabled).toBe(false);
@@ -106,7 +108,7 @@ describe('seedling DB (i) — DASH_LEG_PRECHECK: a corridor past the bound by mo
         expect(undashedLegs(sweepRun(), LEG_236, DEFAULT_TOLERANCE)).toEqual([236]);
     });
 
-    it('ON, the 235-tick corridor still scans, exactly as OFF; the 236-tick one refuses by name with nothing scanned', () => {
+    it(`ON, the ${EDGE}-tick corridor still scans, exactly as OFF; the ${EDGE + 1}-tick one refuses by name with nothing scanned`, () => {
         // A deadline after two previews bounds each scan: "scans" is "previews a candidate", and OFF/ON must agree.
         const plan = (wps) => withSolveDeadline(counter(3), () => planSwordDash(sweepRun(), wps, { tolerance: DEFAULT_TOLERANCE }));
         const off235 = withDashLegPrecheck(false, () => plan(LEG_235));
