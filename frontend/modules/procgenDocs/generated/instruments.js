@@ -10817,6 +10817,7 @@ export const INSTRUMENTS = frz({
                 "axe-dodge",
                 "capture-requests",
                 "contact-fidelity",
+                "dash-only-window",
                 "from",
                 "host",
                 "ids",
@@ -10832,6 +10833,7 @@ export const INSTRUMENTS = frz({
                 "shard",
                 "shard-plan",
                 "stage-flags",
+                "upgrade-window-work",
                 "wait-for-box"
             ],
             "file": "probe-seedling-divergence-sweep.mjs",
@@ -10853,6 +10855,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "contact-fidelity"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dash-only-window"
                 },
                 {
                     "how": [
@@ -10949,6 +10957,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "stage-flags"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "upgrade-window-work"
                 }
             ],
             "inheritedFlags": [
