@@ -17,14 +17,14 @@ base.boot = { level, x: row.arrive[0], y: row.arrive[1] };
 base.seam = row.seam; base.persistence = [...flags, ...extra]; base.name = `darktrapq-leg-${id}`;
 const staging = parseTape(JSON.stringify(base));
 const levelSource = atlasLevelSource();
-const goals = [{ kind: 'reach-exit', exit: { x: +ex, y: +ey }, why: row.key }];
+const goals = process.env.GOALS ? JSON.parse(process.env.GOALS) : [{ kind: 'reach-exit', exit: { x: +ex, y: +ey }, why: row.key }];
 const t0 = Date.now();
 const tag = `leg ${id} ${row.key} +[${extra.map((e) => `{${e.level},${e.tag}}`).join(' ')}]`;
 try {
     const solved = await twoPassSolve({ makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, levelSource), goals,
         name: `darktrapq-leg-${id}`, boot: staging.boot, persistence: staging.persistence, log: () => {} });
     const perTick = solved.out.perTick;
-    console.log(`${tag} SOLVED ${perTick.length} t (${Date.now() - t0} ms)`);
+    console.log(`${tag} SOLVED ${perTick.length} t (${Date.now() - t0} ms)`); for (const r of (solved.out.records ?? solved.records ?? [])) if (r.goal === 'clear-tag') console.log('   record', JSON.stringify(r));
     if (process.argv[4]) {
         const inputs = []; const open = {};
         for (let i = 0; i <= perTick.length; i++) {

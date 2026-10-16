@@ -783,5 +783,79 @@
     []
    ]
   ]
+ },
+ {
+  "witness": "ev62",
+  "what": "event {62,0}: solver clear-tag goal (presser L63 buttonroom@32,64, cross-room-press) + reach-exit (16,0), from L63 (16,48) (leg 568 staging)",
+  "ticks": 84,
+  "sampled": 85,
+  "divergence": "0 px",
+  "end": {
+   "tick": 84,
+   "level": 62,
+   "x": 200,
+   "y": 296,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    84,
+    62
+   ]
+  ],
+  "writes": [
+   [
+    22,
+    [
+     [
+      62,
+      0
+     ],
+     [
+      63,
+      0
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "ev63",
+  "what": "event {63,1}: solver clear-tag goal (presser L61 buttonroom@176,40, cross-room-press) + reach-exit (224,48), from L61 (208,48) (leg 535 staging)",
+  "ticks": 42,
+  "sampled": 43,
+  "divergence": "0 px",
+  "end": {
+   "tick": 42,
+   "level": 63,
+   "x": 24,
+   "y": 56,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    42,
+    63
+   ]
+  ],
+  "writes": [
+   [
+    19,
+    [
+     [
+      61,
+      1
+     ],
+     [
+      63,
+      1
+     ]
+    ],
+    []
+   ]
+  ]
  }
 ]

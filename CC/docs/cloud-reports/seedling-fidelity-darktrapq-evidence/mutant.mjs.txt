@@ -1,0 +1,25 @@
+// scratch: replay a recorded witness's tape in the MODEL under a switch set; compare with its recorded GAME rows.
+// node mutant.mjs <name> '{"darkTrapLight":false}'
+import { readFileSync } from 'node:fs';
+const M = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo';
+const { parseTape } = await import(`${M}/tapeFormat.js`);
+const { createTapeStepper } = await import(`${M}/tapeRunner.js`);
+const { atlasLevelSource } = await import(`${M}/levelSource.js`);
+const { withContactFidelity } = await import(`${M}/contactFidelity.js`);
+const name = process.argv[2];
+const sw = JSON.parse(process.argv[3] ?? '{}');
+const g = JSON.parse(readFileSync(`${name}.game.json`, 'utf8'));
+const tape = parseTape(readFileSync(`tapes/${name}.tape.json`, 'utf8'));
+const col = [];
+let err = null;
+withContactFidelity(sw, () => {
+    try {
+        let run = null;
+        const st = createTapeStepper(tape, { levelSource: atlasLevelSource(), onTick: (t, s, h, rn) => { run = rn; } });
+        let r = st.next();
+        while (!r.done) { const o = r.value.observation; col[o.t] = { x: o.x, y: o.y, level: run?.level, hits: run?.damage?.hits }; r = st.next(); }
+    } catch (e) { err = String(e.message).slice(0, 300); }
+});
+let first = null;
+for (const r of g.rows) { const m = col[r.t]; if (!m) continue; if (Math.hypot(m.x - r.x, m.y - r.y) > 1e-9 || m.level !== r.level) { first = { t: r.t, game: [r.x, r.y, r.level, r.hits], model: [m.x, m.y, m.level, m.hits] }; break; } }
+console.log(`${name} under ${JSON.stringify(sw)}: model ticks ${col.length - 1}${err ? ` ERR ${err}` : ''}; first divergence vs game: ${first ? JSON.stringify(first) : 'NONE (0 px)'}`);
