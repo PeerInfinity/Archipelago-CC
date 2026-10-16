@@ -196,6 +196,14 @@ No pin of theirs moves; nothing to wire.
 `git diff d1fbfeffc2..HEAD --stat`: nine `scripts/procgen/plan-seedling-*.mjs`, the bot-log entry, this report and its
 evidence directory. No tape, fixture, module, test, workflow or gitlink changed.
 
+## CI (`JavaScript Unit Tests`)
+
+- At `174427ef` (run 38956633847): 20,558 / 3 failed — `docsRender` ×2 and `generated.test.js`, all the docs index
+  not regenerated after the bot-log entry (headings 1094 → 1095). Base `d1fbfeffc2` (run 38939519530): 20,561 / 0.
+- Fixed in the next commit: `generate-procgen-reference.mjs`, keeping ONLY `docsIndex.js` and the README's
+  docs-index region (the registry / capabilities churn it also writes on this box is the box's; CI regenerates those
+  byte-identical). `docsRender.test.js` green locally. The verdict at the final head is in the final chat line.
+
 ## Rows to BANK
 
 - `--check` census at `d1fbfeffc2`: 49 GREEN / 9 ours red / 2 hammer red / r7 env (the TSV).
