@@ -1,0 +1,41 @@
+  pass 1: DISCOVERED kill-lock clear(s) [{18,0}] at tick 420
+  pass 2: MODEL-sourced {18,0} at 419 — `spinnerKillLockOpens` computed the removal at 319 and `activators.opensOnTick(0.01)` is 101, which a declared v9 row spells 100
+  prefix agrees for the first 419 tick(s) below the declared 419 — {18,0}
+  pass 3: SOLVED in 1773 ticks
+PASS: r8-d2: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-d2: ends at a LEVEL ARRIVAL (§3.5) — [{"t":467,"from_level":18,"to_level":19},{"t":1213,"from_level":19,"to_level":20},{"t":1773,"from_level":20,"to_level":13}]
+PASS: r8-d2: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+FAIL: ⛓⛓⛓ the headline's first 363 ticks ARE r8-solve-18's walk, key for key — first difference at tick 11: r8-solve-18 holds [right], the headline holds [down, right]
+FAIL: ⛓⛓ the headline declares {18,0} at the SAME tick r8-solve-18 does — headline 419 vs r8-solve-18 305
+PASS: r8-d2-19: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-d2-19: ends at a LEVEL ARRIVAL (§3.5) — [{"t":746,"from_level":19,"to_level":20}]
+PASS: r8-d2-19: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r8-d2-20: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-d2-20: ends at a LEVEL ARRIVAL (§3.5) — [{"t":560,"from_level":20,"to_level":13}]
+PASS: r8-d2-20: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: ⛓ segment 0 is r8-solve-18's committed length, not a number typed here — 363 against the tape's 363
+PASS: ⛓ the ShieldBoss dies to THREE derived presses, each inside its window — [{"t":198,"hits":1},{"t":322,"hits":2},{"t":446,"hits":3}]
+PASS: ⛓ the boss key is HELD after segment 19 — [0]
+PASS: ⛓ `hasShield` flips NOT-HELD -> HELD inside segment 20 — false -> true
+PASS: ⛓ the chain ENDS in L13, through the westward gates — to L13
+PASS: ⛓ {20,2} is EARNED during the run (shield) — [{"level":20,"tag":0,"by":"shieldlocknorm@176,16","t":300},{"level":20,"tag":4,"by":"buttonroom@192,16","t":309},{"level":20,"tag":2,"by":"shield@112,48","t":161}]
+PASS: ⛓ {20,0} is EARNED during the run (shieldlocknorm) — [{"level":20,"tag":0,"by":"shieldlocknorm@176,16","t":300},{"level":20,"tag":4,"by":"buttonroom@192,16","t":309},{"level":20,"tag":2,"by":"shield@112,48","t":161}]
+PASS: ⛓ {20,4} is EARNED during the run (buttonroom) — [{"level":20,"tag":0,"by":"shieldlocknorm@176,16","t":300},{"level":20,"tag":4,"by":"buttonroom@192,16","t":309},{"level":20,"tag":2,"by":"shield@112,48","t":161}]
+PASS: ⛓ {20,1} is BANKED, not earned — `Lock.turnOff()`'s write is the NEXT build's — earnedClears [{"level":20,"tag":0,"by":"shieldlocknorm@176,16","t":300},{"level":20,"tag":4,"by":"buttonroom@192,16","t":309},{"level":20,"tag":2,"by":"shield@112,48","t":161}]; the run left L20 at the alcove
+## r8-d2 budget: 340 span(s), 25 KB, 1773 ticks
+FAIL: r8-d2 is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r8-d2 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+## r8-solve-18: PROMOTED, not re-authored — 363 ticks read from the committed tape (solve-seedling-r8-l18.mjs owns it)
+## r8-d2-19 budget: 116 span(s), 9 KB, 746 ticks
+PASS: r8-d2-19 is byte-identical to what this solver derives — 15415 bytes
+PASS: r8-d2-19 trace is byte-identical to what this solver derives — 10222 bytes
+## r8-d2-20 budget: 144 span(s), 11 KB, 560 ticks
+PASS: r8-d2-20 is byte-identical to what this solver derives — 17828 bytes
+PASS: r8-d2-20 trace is byte-identical to what this solver derives — 13493 bytes
+FAIL: ⛓ sum(segment ticks) === the headline's own tick count — 363 + 746 + 560 = 1669 against 1773
+
+## PLAYTHROUGH_CHAINS.r8-d2: cuts [363, 1109], endsAt 1669
+## r8-d2: headline 1773t = r8-solve-18 363t + r8-d2-19 746t + r8-d2-20 560t, 2 internal seam(s)
+## there is NO hand answer for L18, L19 or L20 westward — the differential is the gate.
+
+5 FAILURE(S)

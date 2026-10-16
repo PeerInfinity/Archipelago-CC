@@ -22462,3 +22462,90 @@ One re-pin outside our own rows: the hammer DD witness (`plan-seedling-hammer-dd
 the lapse OFF (hammer's OK). A new lapse-ON block pins the post-flip shape: at (32,112) DD OFF and ON solve alike in
 509, and at step 50's own (176,48) DD OFF refuses the dwell as already true while DD ON solves. Under the lapse, DD is
 load-bearing.
+
+### Seedling fidelity BEAMTOWER — the tower's drifting Solid, its beam on the player, and `flyerLive`'s companion
+
+Wave 17 (planner `seedling-fidelity-planning-8`). Two switches, both **OFF**, OFF byte-inert:
+`CONTACT_FIDELITY.beamTowerDrift` (`SEEDLING_BEAMTOWER_DRIFT=0|1`) and `CONTACT_FIDELITY.beamTowerBeamHit`
+(`SEEDLING_BEAMTOWER_BEAM_HIT=0|1`). The report is `CC/docs/cloud-reports/seedling-fidelity-beamtower.md`.
+
+**D1 — the drift.** `BeamTower.update` returns on `Game.freezeObjects`, then drifts `y += 0.3·sin(worldFrame(100, 2)/100·2π)`
+at that frame's `Game.time`, and `setHitbox(16, 32, 8, 24)` rides on `y`. `World.update` still steps the GRAPHIC on a
+frozen frame. The run now steps every tower in its update slot (after the lobbers, before every chaser and the player),
+at `clock.now()`, and `liveRectOf` reads the drifted Solid (`beamTowers`, the 15th `LIVE_GEOMETRY_KEYS` family). The
+transcription moved verbatim to `beamTower.js` (the K2PREP shape). Game witness (p4f,
+`chaser-witness/beamtower-l105-773-flyer-plan`): LAPSECOST's `flyerLive` plan for leg 773 is the game at 0 px on all
+382 ticks with `flyerLive` and both switches; drift OFF parts at t205 (`beamtower@48,40` risen 5.08 px, its bottom
+above the player's box bottom from t204).
+
+**D3 — G3 was ours.** The L104 arrival hit at t381/382 is `beamtower@16,56`'s UP beam (x 22..26, y 0..53) on the player
+at (24, 39.2): `p.hit(null, 5, (x, y), 1)` then `Game.shake = 15` (`camera.SHAKE_WRITERS.beamTowerBeam`). The run never
+billed a beam (only the danger map priced it). With `beamTowerBeamHit` the witness's t381 is at 0 px.
+
+**D2 — `flyerLive` needs the drift.** Survey step 208 decided on the game: `flyerLive` alone plans 395 t and the plan is
+blocked on p4f at t198 by the risen tower (FAIL); with the drift its 416-t plan is the game at 0 px on 417 ticks.
+Step 204 gains (REFUSED → 287 t, the Flyer). The local 22-leg sweep (ON set + the three) has 754/773/776 `done`; by node
+seam census (±10 ticks) 776's plan follows the tower's phase (5 answers, all solving) where drift OFF is one plan at
+every seam. The flip candidate (all three ON) is green on the bounded set after 8 re-pins, and is held for the user.
+
+**Trap candidates:**
+
+1. *A position bob is a solid that moves.* LADDER2 transcribed `y += 0.3·sin(…)` for the BEAM and the danger map drifted
+   the beam's rect, while the Solid stayed at its placement: the same field, read by one consumer and not the other.
+2. *A switch's survey cost can be another switch's plan.* Step 208 lengthened 300 → 393 with the drift alone, because
+   with the Flyer inert the model walks a corridor the game never walks (the real Flyer's drop moves the player first;
+   both plans are at 0 px on the game with `flyerLive`). Decide a length mover by playing the plan, not by the count.
+3. *A capture is made under its switches.* A request captured with `flyerLive` OFF cannot be replayed with it ON: the
+   page's live digest has no Flyer bodies and the shadow replay diverges at tick 0. Re-capture under the set you measure.
+4. *A one-tick clock error can hide from a stop witness.* The mutant that read `Game.time − 1` kept the 773 witness at
+   0 px (the stop's threshold crossing did not move by a tick); only the trace row's `gameTime` caught it.
+
+### Seedling hammer-phase WC — the strike's walk cache
+
+⚖ The user (2026-10-15): *"Walk-cache lever first"*: make `STRIKE_ETA_FLOOR` ON cheap by reusing the strike's walk
+previews across the executor's re-derivations, answer-identically, behind one new switch, OFF. **The slice stopped at
+D1 (measured):** no walk cache, exact or approximate, brings the L18 sweep ON under 1.15× OFF, so none was built. No
+code moved and nothing was re-recorded. The report is `CC/docs/cloud-reports/seedling-hammer-wc.md`.
+
+**W0** at `11e8b7473f` (`REFUGE_ETA_CUT`, `PRESS_KILL_DONE_ON_WALK` and `strikeIframeLapse` ON, `STRIKE_ETA_FLOOR` OFF,
+wave 17 not landed). The identity block equals SF2's except two rows the lapse flip moved: ENEMY `36b59445` and
+`r9-campaign --check` `6b1bf15c`. tapeRunner is 611 `a970aa03`. L18's 45 lengths are SF2's in both modes; staging A,
+the L40 legs and the campaign moved in both (`r9-solve-18` OFF → ON is now 440 → 390 t).
+
+**D1 — where the cost is.** A scratch lab recorded every strike walk preview over SF2's 12 workloads, OFF and ON. Its
+answers were byte-equal to the base's. For each preview it recorded the source and the reuse bound (an earlier walk in
+the same kill from the same player state, to the same cell, under the same stepper inputs); the base was also
+CPU-profiled.
+- On the L18 sweep, ON's whole extra cost is the escape admission inside `deriveStrike`: `strikeEscape` 56.5 → 106.8
+  s, against a process delta of +47.7 s. ON makes 15.1 escape calls a derivation, OFF 5.5.
+- The walk previews (`walkTo`) are 9.6 % of ON. Removing them outright would still leave ~1.28× OFF.
+- The exact rules cover 45 % of ON's previewed samples, and each is validated with 0 invalid:
+  - a repeat (the same full player state and stepper inputs, in a room with no entity forecast);
+  - a suffix (the same, and the earlier walk not cut `stalled` — the 400-tick budget is per walk, and the 18 invalid
+    suffix matches measured were every one that case);
+  - a join.
+- A hit must still re-ask the danger map at its own ticks: the verdict differs in 67 % of L18's repeated walks and 93 %
+  of staging A's. So a hit saves only `previewWalk`'s 5.0 µs a sample, and the estimate is ~1.38× OFF.
+- On staging A and the L40 legs the previews are ~40 % of the kill OFF, but their cost is the chaser forecast, whose
+  inputs live in `levelRun` and cannot be keyed from outside it.
+- The lever that reaches the target is the escape: 56 % of L18 ON's `strikeEscape` calls repeat a (body, cell, absolute
+  press tick) the kill already asked, 99.7 % with the same answer. That key is not proven exact, and it is
+  `pressEscape`'s region, so it is the user's decision.
+
+Lessons:
+1. *Profile end to end before choosing a lever.* SF2's census priced the scan inside derivations, and its residue named
+   the previews. End to end at this base, the walk previews were 10 % of ON and the escape admission 52 %.
+2. *A walk that repeats is not an answer that repeats.* The trajectories of consecutive derivations repeat (40–95 % of
+   samples), but the walk's verdict is asked at absolute ticks, and the hammer's phase moves every tick. An exact
+   cache can keep the stepping, not the verdict.
+
+### Seedling hammer-phase BW — the bomb-stand producer pinned lapse OFF (an INTERIM)
+
+`plan-seedling-hammer-bw-bombstand.mjs --check` had been red on `main` since fidelity's lapse flip (`7a20beb2fd`), at its
+defaults: with `strikeIframeLapse` ON the OFF stand no longer takes `#7` at t1157, and the ON solve stops at t1339 on
+`#11`'s Explosion reaching `spinner@192,160`. The producer is not in CI, so the flip's re-pin list (the DD witness)
+missed it; WC's W0 caught it. The producer now runs its solves and its account with the lapse pinned OFF (DD's
+`walkKillSolve` shape), and `--check` gains a lapse-ON row that records the t1339 stop. ⚖ The pin is an INTERIM, not an
+avoidance: a bomb blast on a body is a game interaction, and fidelity's held wave-18 row BOMB BLAST ON BODIES (leg 381)
+retires the pin, with the lapse-ON row as the witness it flips. `--check`: all checks green, and the committed tape is
+byte-identical.

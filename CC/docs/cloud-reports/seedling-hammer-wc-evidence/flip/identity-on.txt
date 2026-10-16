@@ -1,0 +1,24 @@
+maze byte-identity                             57e07d213c90523b1b38d792c55a6a15
+acceptance batch                               9fbd93044c0e730dc15b338f9cd3ed17
+empty pairs c3                                 c4a58671c5fda36deb7873992cd26c35
+empty pairs c6                                 5d06a8b019d4ce444b9f30ce32b07aba
+carved pairs c4                                1c5127cdca26bfa8539d9839b208889e
+ENEMY census default                           36b594458e2a84633289adc7873d7a89
+guard census (elements)                        a6d18d49ae256c321d175f45ec76dccc
+AREA census default    [*]                     02b22525a2f36abf8657d996f89b79db
+killgate s2            [*]                     7c15ed5742a458fa73fb6f4684755c48
+killgate s5            [*]                     471164051f1a7d267e8cb6bedfc1b240
+killgate s9            [*]                     4d3bbf17fec9039367f49df031d38b54
+level pre-sword s1     [*]                     e28c1e5d6522dcca4682c44e7333a32f
+level post-sword s1    [*]                     fb1a59e5433e71fea436db1ea4b2ae57
+generated set                                     install `<python> -m pip install -r scripts/procgen/requirements-headless.txt` into it; or activate the primary tree's venv (`source /home/user/Archipelago-CC/.venv/bin/activate` — a worktree has no .venv of its own), or set SEEDLING_PYTHON to one that carries it. (`--win` drives real-GPU Windows Chrome instead.)
+--- every producer's own --check (⚖ ruling 8's 2026-08-21 extension) ---
+solve-seedling-r8-battery --check              405d9c4bb37a0ab00fb0ef9a99194783 [exit 0]
+solve-seedling-r8-d2-chain --check             f5490519866f9b52137208f3776f5fb5 [exit 1]
+solve-seedling-r8-l18 --check                  3c81acbe33162fcf907bd4fd663af290 [exit 1]
+solve-seedling-r8-tail --check                 35456fbc07e7151ddbc4c2a1fd00c789 [exit 0]
+solve-seedling-r9-l3 --check                   6cd35fe1414af6bf5beb7605f235cb8e [exit 0]
+solve-seedling-r9-campaign --check             a38549e5c70a8bd35514ce08e16aef0c [exit 1]
+--- reference ---
+4 GENERATED MODULE(S)/REGION(S) DIFFER — run the generator with no --check
+[*] = command chosen by this script; NOT ruling 8's original — see the header.

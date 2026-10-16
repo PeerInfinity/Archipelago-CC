@@ -1,0 +1,23 @@
+id	level	key
+753	100	level_100__r2c3 <- in_L99_48_96 -> exit:out_stairsdown_48_96
+754	101	level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96
+755	101	level_101__r4c2 <- in_L102_64_96 -> exit:out_stairsup_48_96
+756	101	level_101__r4c9 <- in_L102_160_96 -> exit:out_stairsup_144_96
+765	103	level_103 <- in_L102_0_96 -> exit:out_teleporter_0_64
+766	103	level_103 <- in_L102_0_96 -> exit:out_teleporter_304_144
+767	103	level_103 <- in_L104_144_128 -> exit:out_teleporter_0_64
+768	103	level_103 <- in_L104_144_128 -> exit:out_teleporter_304_144
+769	104	level_104 <- in_L103_0_64 -> exit:out_teleporter_0_16
+770	104	level_104 <- in_L103_0_64 -> exit:out_teleporter_144_128
+771	104	level_104 <- in_L105_224_64 -> exit:out_teleporter_0_16
+772	104	level_104 <- in_L105_224_64 -> exit:out_teleporter_144_128
+773	105	level_105 <- in_L104_0_16 -> exit:out_teleporter_80_144
+774	105	level_105 <- in_L104_0_16 -> exit:out_teleporter_224_64
+775	105	level_105 <- in_L106_256_0 -> exit:out_teleporter_80_144
+776	105	level_105 <- in_L106_256_0 -> exit:out_teleporter_224_64
+780	107	level_107__r0c2 <- in_L102_224_96 -> exit:out_teleporter_0_48
+781	107	level_107__r0c2 <- in_L102_224_96 -> exit:out_teleporter_304_176
+782	107	level_107__r0c2 <- in_L108_0_32 -> exit:out_teleporter_0_48
+783	107	level_107__r0c2 <- in_L108_0_32 -> exit:out_teleporter_304_176
+784	108	level_108__r2c0 <- in_L107_304_176 -> exit:out_teleporter_0_32
+785	108	level_108__r11c8 <- in_L109_0_112 -> exit:out_teleporter_224_224

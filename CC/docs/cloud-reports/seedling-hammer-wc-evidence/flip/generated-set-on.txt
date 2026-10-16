@@ -1,0 +1,64 @@
+# box lock: TAKEN by check-seedling-generated-set.mjs (browser, pid 8840) — head e83169aea, 4 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+# a GENERATED level set, round-tripped through seedling_bot_ap_p4f on real-GPU Windows Chrome
+  load at generate time: 1.60 2.44 2.76 2/126 8877
+  seeds 1, 2, 3, 4, 5, 6 (biome pre-sword) -> procgen-roundtrip-6-c75feb6f
+  6 rooms, 1 chunk(s), plan 352.7 KB
+
+  WEBGPU_ADAPTER: google / swiftshader
+  ARM 1/9: control: nothing delivered
+  ARM 2/9: the generated set, mounted
+  ARM 3/9: a generated room BUILDS: room 1
+  ARM 4/9: a generated room BUILDS: room 3
+  ARM 5/9: one room past the end is refused by the SET-AWARE bound
+  ARM 6/9: a REGION-CROSSING exit transitions the game
+  ARM 7/9: and standing still at the same spot does NOT transition
+  ARM 8/9: booting ON a portal does not warp — the check() latch
+  ARM 9/9: a within-region exit transitions and announces NOTHING
+  WROTE /tmp/seedling-driver-xYMrpk/generated-set-results.json
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+
+PASS: the exported set validates on the sender — 6 rooms, 1 warning(s)
+PASS: no room exceeds the proven chunk envelope on its own — none
+PASS: the §6.1 companion carries this set's stamp and all 24 references — procgen-roundtrip-6-c75feb6f / 24
+PASS: the control arm answered botLevelSet at all — set seedling-vanilla-02408e1d
+PASS: the control is the BUILT-IN vanilla set, so a mount is attributable — active seedling-vanilla-02408e1d, mounted null
+PASS: the mount arm answered botLevelSet at all — set procgen-roundtrip-6-c75feb6f
+PASS: IDENTITY: the artifact reports the set_id the exporter stamped — procgen-roundtrip-6-c75feb6f vs procgen-roundtrip-6-c75feb6f
+PASS: SIZE: the level table is the set's length — 6 vs 6
+PASS: PERSISTENCE: the table was rebuilt at this set's size — 180 vs 180
+PASS: no level-set refusal happened on the way to here — ""
+PASS: MUSICS: what the artifact reports equals what was emitted — [0,0,0,0,0,0] vs [0,0,0,0,0,0]
+PASS: MUSICS: Game.levelMusics was SEEDED from it — manifest vs the live array the bosses write
+PASS: MENU ROOMS: menuRoom(0..n-1) equals what was emitted — [0] vs [0]
+PASS: START: startLevel equals what was emitted — 0 vs 0
+PASS: NAMED ROOMS: the artifact reports exactly the names the set carries — [] vs []
+PASS: NAMED ROOMS: and no refusal was recorded for a missing name — ""
+PASS: FLAGS: no generated room claims the snow gradient or a music exemption — snow [], exempt []
+PASS: the game is alive and in room 1 after mounting a GENERATED set — level 1, tick 0
+PASS: room 1 actually BUILT — its goal pickup exists in the world — TorchPickup at (104, 88)
+PASS: the game is alive and in room 3 after mounting a GENERATED set — level 3, tick 0
+PASS: room 3 actually BUILT — its goal pickup exists in the world — TorchPickup at (40, 56)
+PASS: the goal pickups of two different rooms are in DIFFERENT places — room 1 (104, 88) vs room 3 (40, 56)
+PASS: each room's goal sits at ITS OWN record's goal, under one constant offset — room 1 +(8, 8) vs room 3 +(8, 8) — a delivery shifted by one room would disagree here
+PASS: boot.level 6 is REFUSED under a 6-room set — "error:boot.level 6 is not a level (0..5)"
+PASS: and the refusal names THIS SET's range, so the bound is set-aware — expected "(0..5)" in "error:boot.level 6 is not a level (0..5)"
+PASS: boot.level 5 — the last real room — is ACCEPTED — "ok"
+PASS: the exported set is REACHABLE from its start — the blocking item — 6/6, unreachable []
+PASS: exactly the region-crossing exits carry a sign — 2 announced of 10
+PASS: walking into room 2's door at (8, 6) reaches room 3 — level 3, tick 29
+PASS: CONTROL: the same boot with no input stays put — level 2
+PASS: LATCH: booting ON the portal does not warp (check() runs before update()) — level 2 — if this is 3, every two-way link in every generated set is an infinite warp
+PASS: CONTROL: a within-region door (room 0 -> 1) also transitions — level 1 (region 1)
+
+## the walk sampled 2 of 10 doors — one page per arm, so this is not a sweep
+
+## NOT DRIVEN: the sign
+  the announcement is a `Message` entity; botMobiles walks Vector.<Mobile> and
+  Message extends Entity, so no readout in this artifact can see it. The rule is
+  asserted in levelSetExits.test.js; driving it would need an AS3 change.
+
+## the export, for the record
+  invented: menu_rooms, rooms[].music
+  reachability: 6/6 from room 0
+
+OK

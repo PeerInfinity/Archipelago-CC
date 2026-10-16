@@ -1527,7 +1527,7 @@ frontend/modules/seedlingDemo/levelRun.js|shieldBumpNow|h71955e33|0|1,structural
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|0,rule,bound,,U10 forecast punch: hitsTimer > 0 i-frame gate (attackPlayer)
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|1,rule,magnitude,,U10 forecast punch: the hitUpdate decrement this tick applies before the graphic half
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|2,rule,bound,,U10 forecast punch: attackPlayer returns if hitsTimer > 0
-frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h79d32ac4|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
+frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h8f93e98b|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
 frontend/modules/seedlingDemo/levelRun.js|stepOptsFor|h14b15328|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: stepOptsFor's default; the drive passes damage.directionFace)
 frontend/modules/seedlingDemo/bobBossFight.js|bobBossShieldBump|h7d55bf85|0|0,rule,bound,Player.as:shieldBump,the dark arm fires only when o.hitsTimer <= 0 (R1-swim D3: BobBoss.hit there; inside the i-frame it is the plain shove)
 frontend/modules/seedlingDemo/levelRun.js|previewStepper|h2e35f0c8|0|0,structural,,,U12-swim D1: a room with no pull gets the same closure (empty test)
@@ -1849,6 +1849,16 @@ frontend/modules/seedlingDemo/bombPusher.js|stepBomb|hdaa05290|0|0,rule,bound,Pr
 frontend/modules/seedlingDemo/bombPusher.js|stepBomb|h36506d2a|1|0,structural,,,t-- per update
 frontend/modules/seedlingDemo/bombPusher.js|bombPusherCadence|bombPusherCadence,structural,,,the cadence simulator: counters
 frontend/modules/seedlingDemo/levelRun.js|step|h98281141|0|2,structural,,,the lobber forecast's backward splice loop
+frontend/modules/seedlingDemo/beamTower.js|BEAM_TOWER|(module),rule,magnitude,Puzzlements/BeamTower.as:force,"BeamTower: force 5 / damage 1 / the drift's radius 0.3 over worldFrame(100 phases, 2 loops) and the side anims' frames — moved verbatim from hazards.js (fidelity BEAMTOWER: simulation since levelRun steps the tower)"
+frontend/modules/seedlingDemo/beamTower.js|beamAnimSpeed|beamAnimSpeed,rule,magnitude,Puzzlements/BeamTower.as:animSpeed,const animSpeed:int = 10 * speed — the anim rate
+frontend/modules/seedlingDemo/beamTower.js|beamIsBeaming|beamIsBeaming,rule,sentinel,Puzzlements/BeamTower.as:frame,(frame - 1) % 2 == 1 is the beam's firing gate
+frontend/modules/seedlingDemo/beamTower.js|beamRect|beamRect,physics,magnitude,Puzzlements/BeamTower.as:getLine,getRect/getLine: from (x y-8) the five lines' offsets (6 / 11-n / 2-n / 5) to the level edge
+frontend/modules/seedlingDemo/beamTower.js|*|line,physics,magnitude,Puzzlements/BeamTower.as:getLine,getLine's per-side offsets (6 / 11-n / 2-n / 5) from (x y-8)
+frontend/modules/seedlingDemo/beamTower.js|createBeamTower|createBeamTower,structural,,,the ctor's state: index/timer/frame zeroes and the attrs' defaults (direction 0 / rate 1 / speed 1)
+frontend/modules/seedlingDemo/beamTower.js|stepBeamTower|stepBeamTower,rule,sentinel,Puzzlements/BeamTower.as:animEnd,animEnd: direction = (direction + rate + 4) % 4 after each sit
+frontend/modules/seedlingDemo/beamTower.js|stepBeamTowerFrame|stepBeamTowerFrame,rule,sentinel,Puzzlements/BeamTower.as:animEnd,animEnd: direction = (direction + rate + 4) % 4 after each sit (fidelity BEAMTOWER's simulation step)
+frontend/modules/seedlingDemo/beamTower.js|beamTowerReachRects|beamTowerReachRects,rule,sentinel,Puzzlements/BeamTower.as:animEnd,the sides rate visits: (d + rate + 4) % 4 over four sits; the span doubles for both ways
+frontend/modules/seedlingDemo/beamTower.js|beamTowerSolidRect|beamTowerSolidRect,physics,magnitude,Puzzlements/BeamTower.as:setHitbox,setHitbox(16 32 8 24) about the entity point — the drifting Solid
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

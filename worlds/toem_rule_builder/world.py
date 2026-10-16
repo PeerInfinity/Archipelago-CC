@@ -92,7 +92,7 @@ class ToemWorld(RuleWorldMixin, World):  # pyright: ignore[reportUnsafeMultipleI
             if group not in logic_groups:
                 continue
 
-            for location_name in location_names:
+            for location_name in sorted(location_names):
                 self.create_location(location_name)
 
         if self.options.include_basto:
