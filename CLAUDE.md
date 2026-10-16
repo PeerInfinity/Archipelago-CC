@@ -214,6 +214,7 @@ npm test -- --mode=test-substrates --batch=tutorials-procgen-loops  # MANUAL: th
 npm test -- --mode=test-substrates --batch=tutorials-tracker  # MANUAL: the tracker tutorials' walk rows
 npm test -- --mode=test-substrates --batch=tutorials-seedling  # MANUAL: the Seedling tutorials' walk rows (WebGPU)
 npm test -- --mode=test-substrates --batch=tutorials-seedling-whole-game  # MANUAL: the Seedling whole-game tutorial's walk row alone (WebGPU)
+npm test -- --mode=test-substrates --batch=feature-checks  # MANUAL: the feature checks' walk rows (Tutorial panel walks that test a feature, not tutorials)
 ```
 ⛔ **No roster counts or durations are quoted here on purpose** — they go stale
 silently and then get trusted. To derive today's numbers, read
