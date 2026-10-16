@@ -1,0 +1,63 @@
+{
+ "source": "divergence sweep run 38811924099 (branch seedling-js-seam-offset @ df39012ae9, page seedling_bot_ap_p4f), leg 768: the row fields a seam is read from, verbatim",
+ "id": 768,
+ "key": "level_103 <- in_L104_144_128 -> exit:out_teleporter_304_144",
+ "end": "done",
+ "seamTime": 5514,
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasSpear": true,
+   "hasDarkShield": true,
+   "hasDarkSuit": true,
+   "hasDarkSword": true,
+   "hasFeather": true,
+   "hasTorch": true
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 4,
+  "time": 5514,
+  "primary": 0,
+  "secondary": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0
+ },
+ "items": {
+  "hitsMax": 4,
+  "hasTorch": true,
+  "hasDarkSuit": true,
+  "hasSpear": true,
+  "hasFeather": true,
+  "canSwim": true,
+  "hasFireWand": false,
+  "hasWand": true,
+  "hasFire": true,
+  "hasDarkShield": true,
+  "hasShield": true,
+  "hasGhostSword": false,
+  "hasDarkSword": true,
+  "hasSword": true
+ },
+ "shipClock": [
+  {
+   "name": "wasm-exit-103",
+   "level": 103,
+   "staged": 5514,
+   "prefix": 0,
+   "game": 5534,
+   "gap": 20
+  }
+ ]
+}

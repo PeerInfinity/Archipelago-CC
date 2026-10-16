@@ -26,6 +26,8 @@ import { assembleGeneratedSeedlingSet } from '../seedlingDemo/seedlingGeneratedS
 import { AXE_DODGE_ASK_PER_PREVIEW } from '../seedlingDemo/solverBot.js';
 import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
 import { AXE_DODGE_ASK_PER_PREVIEW_DEFAULT, applyAxeDodgeAsk, formatAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskHook.js';
+import { LOAD_FADE_FRAMES } from '../seedlingDemo/gameClock.js';
+import { replayTape } from '../seedlingDemo/jsRuntimeSolver.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -57,7 +59,7 @@ function manualTimers() {
 
 /** A game whose reads are a recorded arrival's. */
 function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrains = 0, clearedAfterDrain = null,
-    midSpanOnFirstPlan = null, unwatched = null, realSeam = false } = {}) {
+    midSpanOnFirstPlan = null, unwatched = null, realSeam = false, arrivalFade = LOAD_FADE_FRAMES } = {}) {
     const baseline = { ...arrival.seam.beginEntry, 'save.time': arrival.seam.beginEntry['save.time'] - 100, 'rng.gameplay': 1 };
     const g = {
         // ⛓ W8 — `unwatched`: the room ran since ITS begin record before the bot drove (the cold start),
@@ -67,6 +69,10 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
         get be0() { return { ...arrival.seam.beginEntry, ...(unwatched?.begin ?? {}) }; },
         botMobiles() { g.calls.push('botMobiles'); return unwatched ? JSON.stringify({ tick: 0, mobiles: unwatched.mobiles, pods: [] }) : undefined; },
         held: false, armed: false, finished: false, seq: 0, tape: null, drainRows: null, freezePolls: 0,
+        // ⛓ SEAM OFFSET (§5.82) — the clock a FREEZE holds the arrival at: its begin record + the fade's dead frames
+        // (`arrivalFade`: LOAD_FADE_FRAMES pinned, one fewer per render an unpinned fade ran before the freeze loaded)
+        heldClock: null,
+        latchFreeze() { g.held = !!g.tape.hold; g.heldClock = g.held && !g.unwatched ? arrival.seam.beginEntry['save.time'] + arrivalFade : null; },
         calls: [], tapes: [], stalls: stallDrains, cleared: null,
         land() { g.be = arrival.seam.beginEntry; },
         botSeam() { g.calls.push('botSeam'); return JSON.stringify({ beginEntry: g.be, latched: false, ...(g.sinceBegin ? { sinceBegin: g.sinceBegin } : {}) }); },
@@ -75,11 +81,12 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
             // ⛓ W8c — an unwatched room may script itself read by read (the new game's ceremony)
             if (g.unwatched?.tick) g.unwatched.tick(g.unwatched);
             if (g.armed && g.tape?.tick_count === 0 && ++g.freezePolls > freezeLatchesAfter) {
-                g.armed = false; g.finished = true; g.held = !!g.tape.hold;
+                g.armed = false; g.finished = true; g.latchFreeze();
             }
             return JSON.stringify({ ...arrival.status,
                 // ⛓ W7 — `gameTimeFromBegin`: the read is in the begin record's own frame (a staged arrival), whichever lands
-                game_time: (g.unwatched ? (g.be ?? g.be0)['save.time'] + g.unwatched.elapsed : g.gameTimeFromBegin ? g.be['save.time'] : arrival.status.game_time) + gameTimeSkew,
+                game_time: (g.unwatched ? (g.be ?? g.be0)['save.time'] + g.unwatched.elapsed : g.held && g.heldClock !== null ? g.heldClock
+                    : g.gameTimeFromBegin ? g.be['save.time'] : arrival.status.game_time) + gameTimeSkew,
                 ...(g.unwatched?.patch ?? {}),
                 ...(g.cleared ? { persistence_cleared: g.cleared } : {}),
                 ...(g.midSpan ? g.midSpan : {}),
@@ -99,14 +106,15 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
             g.calls.push('botStart');
             g.seq += g.tape.persistence.length;
             g.held = false;
+            g.heldClock = null;
             if (g.tape.tick_count === 0) {
-                if (freezeLatchesAfter > 0) { g.armed = true; g.finished = false; } else { g.armed = false; g.finished = true; g.held = !!g.tape.hold; }
+                if (freezeLatchesAfter > 0) { g.armed = true; g.finished = false; } else { g.armed = false; g.finished = true; g.latchFreeze(); }
             } else { g.armed = true; g.finished = false; }
             return 'ok';
         },
         // A reset forgets the tape; the room the recovery re-enters is a NEW begin record (the fake
         // un-lands to the pre-arrival one, so the forced re-arrival's landing is a change again).
-        botReset() { g.calls.push('botReset'); g.held = false; g.armed = false; g.midSpan = null; if (!realSeam) g.be = baseline; g.pos = null; return 'ok'; },
+        botReset() { g.calls.push('botReset'); g.held = false; g.heldClock = null; g.armed = false; g.midSpan = null; if (!realSeam) g.be = baseline; g.pos = null; return 'ok'; },
         botDrain() {
             g.calls.push('botDrain');
             if (!g.armed || !g.drainRows) return JSON.stringify({ ticks: [] });
@@ -223,6 +231,63 @@ describe('the engine serves a goal at an arrival (fake game over the recorded re
         expect(e.game.calls.filter((c) => c === 'botStart')).toHaveLength(2);
         expect(e.game.freezePolls).toBeGreaterThan(3);
         expect(e.dones).toHaveLength(1);
+    });
+});
+
+describe('⛓ SEAM OFFSET (§5.82) — a held arrival\'s first solve is staged on the clock its plan\'s tick 0 sees', () => {
+    const BEGIN = A.seam.beginEntry['save.time'];
+    /** The request's tick-0 clock (the shadow's) and the GAME's, at the plan's ship (the room held). */
+    const clocks = (e) => ({
+        request: e.service.seen[0].request.staging.seam.time,
+        model: replayTape({ staging: e.service.seen[0].request.staging, perTick: [], levelSource: e.service.seen[0].request.levelSource,
+            scratchPersistence: true }).gameTime,
+        game: e.engine.stats.shipClock[0].game,
+    });
+
+    it('a PINNED fade (20 dead frames): the request is the arrival\'s staging unchanged (shift 0), and its tick 0 IS the game\'s', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(clocks(e)).toEqual({ request: BEGIN - 1, model: BEGIN + LOAD_FADE_FRAMES, game: BEGIN + LOAD_FADE_FRAMES });
+        expect(e.engine.stats.arrivalClock).toEqual([{ level: HOUSE, begin: BEGIN - 1, model: BEGIN + LOAD_FADE_FRAMES,
+            live: BEGIN + LOAD_FADE_FRAMES, shift: 0, refusal: null }]);
+        expect(e.engine.stats.shipClock[0].gap).toBe(1 + LOAD_FADE_FRAMES);
+    });
+
+    it.each([19, 18, 22])('a fade of %i dead frames (an unpinned render band): the request\'s tick-0 clock is moved ONTO the game\'s', (fade) => {
+        const e = engineOver(A, { game: { arrivalFade: fade } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(clocks(e)).toEqual({ request: BEGIN - 1 + fade - LOAD_FADE_FRAMES, model: BEGIN + fade, game: BEGIN + fade });
+        expect(e.engine.stats.arrivalClock.map((r) => r.shift)).toEqual([fade - LOAD_FADE_FRAMES]);
+        // the gap the ship clock reads is the model's own again, whatever the fade cost
+        expect(e.engine.stats.shipClock[0].gap).toBe(1 + LOAD_FADE_FRAMES);
+        // the freeze (the game's tape) declares no seam: the clock is never written
+        expect(e.game.tapes.every((t) => t.seam === null)).toBe(true);
+    });
+
+    it('the solve WAITS for the freeze to latch (no request until the room is held), then reads the clock once', () => {
+        const e = engineOver(A, { game: { freezeLatchesAfter: 4, arrivalFade: 19 } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.game.freezePolls).toBeGreaterThan(4);
+        expect(e.engine.stats.arrivalClock).toHaveLength(1);
+        expect(clocks(e)).toEqual({ request: BEGIN - 2, model: BEGIN + 19, game: BEGIN + 19 });
+    });
+
+    it('a continuation in the held room replays from the SAME corrected clock (the room keeps it; no second read)', () => {
+        const e = engineOver(A, { game: { arrivalFade: 19 } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        e.engine.walkTo(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.service.seen).toHaveLength(2);
+        expect(e.service.seen[1].request.staging.seam.time).toBe(BEGIN - 2);
+        expect(e.engine.stats.arrivalClock).toHaveLength(1);
     });
 });
 
