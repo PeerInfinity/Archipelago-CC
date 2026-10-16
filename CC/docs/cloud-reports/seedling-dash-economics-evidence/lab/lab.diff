@@ -1,0 +1,141 @@
+diff --git a/frontend/modules/seedlingDemo/jsRuntimeSolver.js b/frontend/modules/seedlingDemo/jsRuntimeSolver.js
+index a39d65b..5384771 100644
+--- a/frontend/modules/seedlingDemo/jsRuntimeSolver.js
++++ b/frontend/modules/seedlingDemo/jsRuntimeSolver.js
+@@ -263,9 +263,20 @@ export function createWorkClock() {
+ export function passShouldStop(p, { budgetWork = null, windowWork = null, planInHand = false, work, limit = {} }) {
+     if (!(Number.isFinite(budgetWork) && budgetWork > 0)) return null;
+     const windowAt = p.stop === 'window' && planInHand ? upgradeWindowWork(budgetWork, windowWork) : null;
++    const DSX = globalThis.__DSX ?? {};
++    let dashUnits = 0;
+     return (site) => {
+         const n = work.tick();
++        globalThis.__DS?.unit?.(site, n);
+         if (n > budgetWork) { limit.first ??= 'budget'; return true; }
++        // DS LAB (c): the window counts only the dash scan's own asks, and trips only the dash site (the rest of the
++        // pass runs on the budget). DSX.dashWindow = the dash units allowed.
++        if (windowAt !== null && DSX.dashWindow !== undefined) {
++            if (site !== 'sword-dash') return false;
++            dashUnits += 1;
++            if (dashUnits > DSX.dashWindow) { limit.first ??= 'window'; return true; }
++            return false;
++        }
+         if (windowAt !== null && n > windowAt) { limit.first ??= 'window'; return true; }
+         return false;
+     };
+@@ -366,6 +377,7 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () =>
+     const work = createWorkClock();
+     for (let i = 0; i < passes.length; i += 1) {
+         const p = passes[i];
++        globalThis.__DS?.pass?.(p.pass);
+         const t0 = clock();
+         const w0 = work.units;
+         const limit = {};
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 5e2e476..4fef8d2 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -5576,7 +5576,16 @@ export function dashPrefixesFor(mode, { weapon = 'sword' } = {}) {
+  * @returns {{plan: ?object, ticks: ?number, saved: ?number, baseline: number,
+  *   legs: ?number[], candidates: object[], why: ?string}}
+  */
+-export function planSwordDash(run, wps, { tolerance = 0, certify = null,
++// DS LAB — the dash economics instrument (scratch only)
++export function planSwordDash(run, wps, opts = {}) {
++    const ds = globalThis.__DS;
++    if (!ds?.dashStart) return planSwordDashInner(run, wps, opts);
++    const rec = ds.dashStart(run, wps, opts);
++    let out;
++    try { out = planSwordDashInner(run, wps, opts); } finally { ds.dashEnd(rec, out); }
++    return out;
++}
++function planSwordDashInner(run, wps, { tolerance = 0, certify = null,
+     dashMode = DEFAULT_DASH_MODE,
+     /**
+      * ⛓ SEEDLING FIDELITY L30KEYLOCK — OPT-IN: `{ticks, keys}`, the wait the caller will stand at the corridor's end
+@@ -5605,8 +5614,11 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
+             + 'not an empty candidate set.');
+     }
+     // ⛓ GHOSTMOTION: `getSword()` reads the FLAG, so every press in a ghost-sword room swings the ghost's chain.
+-    const prefixes = dashPrefixesFor(dashMode,
++    const DSX = globalThis.__DSX ?? {};
++    const prefixesAll = dashPrefixesFor(dashMode,
+         { weapon: run.progress('inventory')?.hasGhostSword ? 'ghostsword' : 'sword' });
++    // DS LAB (c'): a prefix subset by length, e.g. [2,3,4]
++    const prefixes = DSX.prefixLens ? prefixesAll.filter((pp) => DSX.prefixLens.includes(pp.length)) : prefixesAll;
+     const startTick = run.ticksCompleted;
+     const candidates = [];
+     const refuse = (why) => ({ plan: null, ticks: null, saved: null, baseline: null,
+@@ -5679,6 +5691,18 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
+      */
+     const base = previewFor(null).walk;
+     const baseline = base.samples.length;
++    globalThis.__DS?.base?.(legsOf(base));
++    // DS LAB (f): the leg pre-check — an undashed walk with a leg past the bound by more than K ticks
++    if (DSX.legPre !== undefined && Math.max(0, ...legsOf(base)) > PREVIEW_AGREEMENT_BOUND + DSX.legPre) {
++        return { ...refuse(`DS legPre: the undashed walk's longest leg is past ${PREVIEW_AGREEMENT_BOUND} + ${DSX.legPre}`), baseline };
++    }
++    // DS LAB (f): the leg gate — while the best walk so far has a leg past the agreement bound, a start tick whose
++    // window cannot reach that leg's span cannot certify (a candidate is refused \`leg-bound\` on its longest leg)
++    const dsLegSpan = (walk) => {
++        const legs = legsOf(walk); let lo = 0; const spans = [];
++        for (let k = 0; k < legs.length; k += 1) { if (legs[k] > PREVIEW_AGREEMENT_BOUND) spans.push([lo, lo + legs[k]]); lo += legs[k]; }
++        return spans;
++    };
+     /**
+      * ⛔⛔ A CROSSING IS NOT A TRUNCATION IN THE SENSE THAT MATTERS. Every
+      * `reach-exit` corridor ends by crossing and `previewWalk` stops there,
+@@ -5850,7 +5874,30 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
+         }
+         return { row, walk };
+     };
++    let dsPreviews = 0;
++    const dsKeep = () => {
++        // DS LAB: keep the windows already accepted (instead of dropping the schedule)
++        if (!windows.length) return { ...refuse('deadline'), baseline };
++        return { plan: scheduleFor(windows), ticks: current, saved: baseline - current, baseline, legs: legsOf(bestWalk),
++            windows: windows.map((w) => ({ at: w.at - startTick, prefix: [...w.pattern] })), scanned: candidates.length,
++            candidates, why: null, mode: dashMode, prefixes: prefixes.length, dsCut: true };
++    };
+     while (at < startTick + current) {
++        // DS LAB (d): the tail cut — stop when fewer than R ticks of the walk remain after this start
++        if (DSX.tail !== undefined && startTick + current - at < DSX.tail) break;
++        // DS LAB (b): a cap per opportunity (previews), keeping or dropping what was accepted
++        if (DSX.cap !== undefined && dsPreviews >= DSX.cap) return DSX.capKeep ? dsKeep() : { ...refuse('deadline'), baseline };
++        if (DSX.legGate) {
++            const spans = dsLegSpan(bestWalk);
++            if (spans.length) {
++                const off = at - startTick; const reach = DSX.legGate;
++                // the window's presses land at off..off+14; it can only shorten a leg it overlaps (plus a slack)
++                if (!spans.some(([a0, b0]) => off + reach >= a0 && off <= b0)) {
++                    if (DSX.legGateExit && spans.every(([, b0]) => off > b0)) break;
++                    at += 1; continue;
++                }
++            }
++        }
+         let best = null;
+         for (const pattern of prefixes) {
+             /**
+@@ -5860,8 +5907,11 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
+              * corridor was certified before this function was asked, the dash
+              * is only its upgrade.
+              */
+-            if (deadlineReached('sword-dash')) return { ...refuse('deadline'), baseline };
++            if (deadlineReached('sword-dash')) return DSX.keepOnDeadline ? dsKeep() : { ...refuse('deadline'), baseline };
++            dsPreviews += 1;
++            const dsT0 = globalThis.__DS?.now?.();
+             const got = evaluateAt(at, pattern);
++            if (dsT0 !== undefined) globalThis.__DS.preview(got.row, globalThis.__DS.now() - dsT0, got.walk);
+             candidates.push(got.row);
+             if (!got.row.certified) continue;
+             const better = best === null
+@@ -5875,7 +5925,8 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
+             bestWalk = best.walk;
+             at += ORDINARY_SWING_PERIOD;
+         } else {
+-            at += 1;
++            // DS LAB (e): the stride when nothing certified here
++            at += DSX.stride ?? 1;
+         }
+     }
+     if (!windows.length) {

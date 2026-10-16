@@ -1,0 +1,25 @@
+#!/bin/bash
+S=/tmp/claude-0/-home-user-Archipelago-CC/984fb131-ba2d-5233-9fe6-a133c4516a5c/scratchpad
+cd $S
+run() { # tag windows dsx
+  node tools/ds-batch.mjs --lab=$S/lab --dir=/tmp/claude-0/caps2 --out=$S/d3.jsonl --windows=$2 --tag=$1 --only=$(cat d3pop.txt) --jobs=3 --extra="--dsx=$3" 2>&1 | tail -1 | sed "s/^/$1: /"
+}
+run noswing 85,0 '{"prefixLens":[2,3,4]}'
+run legpre40 85,0 '{"legPre":40}'
+run stride2 85,0 '{"stride":2}'
+run tail10 0 '{"tail":10}'
+run cheap 85,0 '{"prefixLens":[2,3,4],"legPre":40,"stride":2}'
+run dw85keep 85 '{"dashWindow":85,"keepOnDeadline":true}'
+run dw40keep 85 '{"dashWindow":40,"keepOnDeadline":true}'
+run cheapdw85keep 85 '{"prefixLens":[2,3,4],"legPre":40,"stride":2,"dashWindow":85,"keepOnDeadline":true}'
+run cheapdw40keep 85 '{"prefixLens":[2,3,4],"legPre":40,"stride":2,"dashWindow":40,"keepOnDeadline":true}'
+echo ALLDONE
+#!/bin/bash
+S=/tmp/claude-0/-home-user-Archipelago-CC/984fb131-ba2d-5233-9fe6-a133c4516a5c/scratchpad
+cd $S
+run() { node tools/ds-batch.mjs --lab=$S/lab --dir=/tmp/claude-0/caps2 --out=$S/d3.jsonl --windows=$2 --tag=$1 --only=$(cat d3pop.txt) --jobs=3 --extra="--dsx=$3" 2>&1 | tail -1 | sed "s/^/$1: /"; }
+run cheap2 85,0 '{"prefixLens":[2,3,4],"legPre":40}'
+run cheap2dw85keep 85 '{"prefixLens":[2,3,4],"legPre":40,"dashWindow":85,"keepOnDeadline":true}'
+run cheap2dw40keep 85 '{"prefixLens":[2,3,4],"legPre":40,"dashWindow":40,"keepOnDeadline":true}'
+run cheap2dw130keep 85 '{"prefixLens":[2,3,4],"legPre":40,"dashWindow":130,"keepOnDeadline":true}'
+echo ALLDONE
