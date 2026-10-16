@@ -183,9 +183,12 @@ jobs:
           echo "matrix=$(node -p "JSON.stringify(require('./plan.json').matrix)")" >> "$GITHUB_OUTPUT"
           echo "timeout=$(node -p "require('./plan.json').timeoutMinutes")" >> "$GITHUB_OUTPUT"
           echo "legs=$(node -p "require('./plan.json').legs")" >> "$GITHUB_OUTPUT"
-          # ⛓ SEAM TIME CENSUS — (leg, 4-offset chunk) per job; `parseSeamSweep` refuses a bad range by name
+          # ⛓ SEAM TIME CENSUS — (leg, 4-offset chunk) per job; `parseSeamSweep` refuses a bad range by name.
+          # ⛔ ASSIGNED first, then echoed: inside `echo "census=$(…)"` the refusal was swallowed (`-e` ignores a failed
+          # substitution in an argument), the matrix came out empty, and no census job ran (run 38809315570, `true`).
           if [ -n "$CENSUS" ]; then
-            echo "census=$(node --input-type=module -e "import {parseSeamSweep} from './scripts/procgen/replay-seedling-solve-request.mjs';import fs from 'node:fs';const d=parseSeamSweep(process.env.CENSUS);const ids=JSON.parse(fs.readFileSync('plan.json','utf8')).shards.flatMap((s)=>s.ids);const out=[];for(const id of ids)for(let k=0;k<d.length;k+=4)out.push({id,from:d[k],to:d[Math.min(d.length,k+4)-1]});console.log(JSON.stringify(out))")" >> "$GITHUB_OUTPUT"
+            C=$(node --input-type=module -e "import {parseSeamSweep} from './scripts/procgen/replay-seedling-solve-request.mjs';import fs from 'node:fs';const d=parseSeamSweep(process.env.CENSUS);const ids=JSON.parse(fs.readFileSync('plan.json','utf8')).shards.flatMap((s)=>s.ids);const out=[];for(const id of ids)for(let k=0;k<d.length;k+=4)out.push({id,from:d[k],to:d[Math.min(d.length,k+4)-1]});console.log(JSON.stringify(out))")
+            echo "census=$C" >> "$GITHUB_OUTPUT"
           else
             echo "census=[]" >> "$GITHUB_OUTPUT"
           fi

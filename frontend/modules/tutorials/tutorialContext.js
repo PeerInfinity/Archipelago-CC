@@ -4,6 +4,7 @@
  * them in node), so everything a step reads or does goes through here.
  */
 import { findRulesFileFromGameSeed } from '../../app/mode/modeDataLoader.js';
+import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import { findControl, isPanelShowing, waitFor } from './tutorialExecutor.js';
 
@@ -69,9 +70,36 @@ export function buildContext({ eventBus }) {
         if (!(name in counts)) throw new Error(`tutorial ctx: ${name} is not one of WATCHED_EVENTS`);
         return counts[name] > mark.counts[name];
     };
+    // ⛓ SESSION SETTINGS — the values a step overrode (`setSetting`), as they were before its FIRST override.
+    const overridden = new Map();
     const ctx = {
         eventBus,
         waitFor,
+        /**
+         * Set a setting (`moduleSettings.<module>.<key>`) for this session only — never saved — remembering the
+         * value it had before, so `restoreSettings()` can put it back. A feature check sets its own state this way;
+         * its walk row restores it however the walk ends (and so does leaving a tutorial in the panel).
+         */
+        async setSetting(key, value) {
+            if (!overridden.has(key)) {
+                // An override already in place is put back as one; otherwise the override is cleared, so the
+                // saved value (or the schema default) applies again exactly as before.
+                const had = settingsManager._overrides?.has?.(key) === true;
+                overridden.set(key, { had, value: had ? await settingsManager.getSetting(key, undefined) : undefined });
+            }
+            await settingsManager.updateSetting(key, value, { persist: false });
+        },
+        getSetting: (key, fallback) => settingsManager.getSetting(key, fallback),
+        /** Put back every setting `setSetting` changed (session-only, as they were set). */
+        async restoreSettings() {
+            for (const [key, { had, value }] of overridden) {
+                if (had) await settingsManager.updateSetting(key, value, { persist: false });
+                else await settingsManager.clearOverride(key);
+            }
+            overridden.clear();
+        },
+        /** Is every setting `setSetting` changed back to its value from before (none still overridden)? */
+        settingsRestored: () => overridden.size === 0,
         /** The panel calls this as it enters a step: "since the step began" starts now. */
         markStep() {
             mark = { at: Date.now(), counts: { ...counts }, seen: new Set() };

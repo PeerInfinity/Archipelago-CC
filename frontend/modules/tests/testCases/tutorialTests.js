@@ -438,6 +438,8 @@ async function tutorialWalkRow(tc, tutorial) {
         tc.reportCondition(`${tutorial.id} — ${verdict.message}`, verdict.ok);
     } finally {
         await restoreSpeed();
+        // A walk that ended early never reached its own restore step (a feature check's ctx.setSetting).
+        try { await ui.ctx.restoreSettings(); } catch (e) { tc.log?.(`could not restore the step settings: ${e.message}`); }
         await restore(ui, settings);
         restoreActiveTabs(tabs);
         restorePipelineSetup(pipelineSetup, tc);

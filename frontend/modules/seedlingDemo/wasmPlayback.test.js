@@ -12,7 +12,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    adoptedClockStaging,
+    adoptedClockStaging, heldArrivalClockStaging,
     FALLBACK_POLICY, MAX_RECOVERIES, MID_ROOM_POLICY, SHIPPED_RNG, TAPE_KEY_RELEASES, WasmPlaybackError, divergenceAction, divergenceFailure, divergenceRepeatFailure, isExactRepeat,
     exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, keysHeldAtReset, shippedTape, wasmGoalRefusal,
     arrivalHoldBlocker, queuedSwapPush, endsHeld, liveDeclarations, primarySplitRefusal, shadowMismatch,
@@ -496,5 +496,31 @@ describe('⛓ WALK IDENTITY (a) — adoptedClockStaging: the adopted shadow put 
         [{ staging, modelTime: 4823, liveTime: 4822 }, /BEHIND the adopted shadow/],
     ])('refuses by name: %#', (o, why) => {
         expect(adoptedClockStaging(o).refusal).toMatch(why);
+    });
+});
+
+describe('⛓ SEAM OFFSET (§5.82) — heldArrivalClockStaging: a held arrival put on the clock its tick 0 sees (a read, never a write)', () => {
+    // leg 768's numbers: staged at 5507 (begin save.time 5508), the model's tick 0 at 5528; the game faded one render short
+    const staging = { boot: { level: 103, x: 16, y: 64 }, seam: { time: 5507, items: { hasSword: true }, hits_max: 4 }, save: { keys: [] } };
+    it('a game BEHIND the shadow (an unpinned fade) moves seam.time back by the difference, and nothing else', () => {
+        const out = heldArrivalClockStaging({ staging, modelTime: 5528, liveTime: 5527 });
+        expect(out.shift).toBe(-1);
+        expect(out.staging).toEqual({ ...staging, seam: { ...staging.seam, time: 5506 } });
+        expect(staging.seam.time).toBe(5507); // the input is not mutated
+    });
+    it('a game ahead moves it forward', () => {
+        expect(heldArrivalClockStaging({ staging, modelTime: 5528, liveTime: 5530 })).toMatchObject({ shift: 2, staging: { seam: { time: 5509 } } });
+    });
+    it('on the clock already: the SAME staging object (the request is byte-identical to before)', () => {
+        const out = heldArrivalClockStaging({ staging, modelTime: 5528, liveTime: 5528 });
+        expect(out.shift).toBe(0);
+        expect(out.staging).toBe(staging);
+    });
+    it.each([
+        [{ staging: { ...staging, seam: null }, modelTime: 1, liveTime: 2 }, /declares no seam.time/],
+        [{ staging, modelTime: null, liveTime: 2 }, /answers no Game.time/],
+        [{ staging, modelTime: 5528, liveTime: undefined }, /no game_time/],
+    ])('refuses by name: %#', (o, why) => {
+        expect(heldArrivalClockStaging(o).refusal).toMatch(why);
     });
 });

@@ -10,13 +10,24 @@
  *    tick);
  *  - the tree, finished subtrees collapsed (click a ▸ to open one), capped at `SOLVE_PROGRESS_TREE_CAP` rows.
  *
+ *
+ * ⛓ AUTO-SHOW — `setMode(off | auto | always)` (the panel's setting). `isOpen` is whether the view is SHOWN,
+ * `isListening` whether its feed is subscribed: in `auto` the feed listens while the view is hidden, the first note
+ * of a solve shows it and the final note hides it (the feed keeps listening). `lifecycle` keeps the last
+ * `LIFECYCLE_CAP` show/hide transitions `{event, mode, solveId, seq, final, at}`. The element mirrors them as
+ * `data-*` attributes (`mode`, `visible`, `listening`, `shows`, `hides`, `shown-at`, `hidden-at`, `shown-final`,
+ * `final`, `outcome`) — what the feature check `seedling-solve-progress-auto-show` reads.
+ *
  * The panel's own idiom: inline styles on its dark monospace palette, no stylesheet.
  */
 
 import {
-    applyProgress, createSolveProgressFeed, emptyProgress, meterOf, SOLVE_PROGRESS_TREE_CAP, tileIndex, tileShade,
-    treeRows,
+    applyProgress, autoVisibility, createSolveProgressFeed, emptyProgress, meterOf, SOLVE_PROGRESS_TREE_CAP, tileIndex,
+    tileShade, treeRows,
 } from './seedlingSolveProgress.js';
+
+/** The show/hide transitions `lifecycle` keeps. */
+const LIFECYCLE_CAP = 64;
 
 const ACCENT = '#e94560';
 const MAP_WIDTH = 288;
@@ -38,6 +49,9 @@ export class SolveProgressView {
         this.now = now;
         this.state = emptyProgress();
         this.expanded = new Set();
+        this.mode = 'off';
+        this.visible = false;
+        this.lifecycle = [];
         this.element = el('div', 'flex-shrink:0;margin-top:6px;font-size:11px;background:#111;border:1px solid #333;'
             + 'border-radius:4px;padding:6px;display:none;');
         this.element.className = 'flash-panel-solve-progress';
@@ -77,23 +91,66 @@ export class SolveProgressView {
             onNote: (note) => this.receive(note),
             tick: () => this._renderHeader(),
         });
+        this._mirror();
     }
 
-    get isOpen() { return this.feed.isOpen; }
+    /** Whether the view is SHOWN. */
+    get isOpen() { return this.visible; }
+    /** Whether the feed is subscribed (`auto` listens while hidden). */
+    get isListening() { return this.feed.isOpen; }
 
-    /** Show the view and subscribe (a solve already in flight reports from the next solve on). */
-    open() {
-        this.state = emptyProgress();
-        this.expanded = new Set();
-        this.element.style.display = 'block';
+    /**
+     * ⛓ AUTO-SHOW — apply the setting. `off` closes (UNSUBSCRIBES every service); `auto` subscribes and stays hidden
+     * until a solve reports; `always` shows and subscribes (a solve already in flight reports from the next solve on).
+     */
+    setMode(mode) {
+        if (mode === this.mode) return;
+        const was = this.mode;
+        this.mode = mode;
+        if (mode === 'off') {
+            this.feed.close();
+            this._setVisible(false, null);
+            this._mirror();
+            return;
+        }
+        if (was === 'off') {
+            this.state = emptyProgress();
+            this.expanded = new Set();
+        }
         this.feed.open();
+        this._setVisible(mode === 'always' || (mode === 'auto' && this.visible && !this.state.final), null);
+        this._mirror();
         this.render();
     }
 
-    /** Hide the view and UNSUBSCRIBE from every service. */
-    close() {
-        this.feed.close();
-        this.element.style.display = 'none';
+    /** Show the view pinned open (`always`). */
+    open() { this.setMode('always'); }
+
+    /** Hide the view and UNSUBSCRIBE from every service (`off`). */
+    close() { this.setMode('off'); }
+
+    _setVisible(visible, note) {
+        if (visible === this.visible) return;
+        this.visible = visible;
+        this.element.style.display = visible ? 'block' : 'none';
+        this.lifecycle.push({ event: visible ? 'show' : 'hide', mode: this.mode, solveId: note?.solveId ?? null,
+            seq: note?.snapshot?.seq ?? null, final: note ? note.final === true : null, at: this.now() });
+        if (this.lifecycle.length > LIFECYCLE_CAP) this.lifecycle.shift();
+        const d = this.element.dataset;
+        const key = visible ? 'shows' : 'hides';
+        d[key] = String(Number(d[key] ?? 0) + 1);
+        d[visible ? 'shownAt' : 'hiddenAt'] = String(this.lifecycle.at(-1).at);
+        if (visible) d.shownFinal = String(note ? note.final === true : false);
+    }
+
+    /** The `data-*` mirror of the mode and the stream (the show/hide counts are written by `_setVisible`). */
+    _mirror() {
+        const d = this.element.dataset;
+        d.mode = this.mode;
+        d.visible = String(this.visible);
+        d.listening = String(this.feed.isOpen);
+        d.final = String(this.state.final === true);
+        d.outcome = this.state.snapshot?.segment?.outcome ?? '';
     }
 
     receive(note) {
@@ -101,6 +158,8 @@ export class SolveProgressView {
         if (next === this.state) return;
         if (next.segmentChanged) this.expanded = new Set();
         this.state = next;
+        this._setVisible(autoVisibility(this.mode, this.visible, note), note);
+        this._mirror();
         this.render();
     }
 

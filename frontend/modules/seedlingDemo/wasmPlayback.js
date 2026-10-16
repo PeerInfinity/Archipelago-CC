@@ -327,6 +327,38 @@ export function adoptedClockStaging({ staging, modelTime, liveTime }) {
 }
 
 /**
+ * ⛓ SEAM OFFSET (§5.82) — A HELD ARRIVAL'S CLOCK, staged LIVE. The arrival's staging is read at its begin record
+ * (`seam.time` = begin `save.time` − `BOOT_PRESWAP_FRAMES`), and the model then spends `LOAD_FADE_FRAMES` dead
+ * frames before tick 0 — the fade as the PINNED game runs it. But a room entered after `botReset` (every forced
+ * re-arrival: the sweep's legs, a recovery, a cold start) fades UNPINNED until our freeze tape loads the pin, and
+ * an unpinned fade decays per RENDER (`Game.cover()`), not per update: each render that runs between the begin
+ * record and the freeze load takes one dead frame off the fade (20 − r). So the plan's tick 0 can see a clock one
+ * (or more) BEHIND the request's, and a phase-edge plan flips run to run (leg 768: the beam of
+ * `beamtower@208,248`, clear at 5507, hit at 5506).
+ *
+ * The cure is the adoption's: a READ, never a write. Once the freeze holds the room (the clock stops at the first
+ * live frame), `game_time` is the clock the plan's tick 0 will see, and the staging is shifted so the shadow's own
+ * tick-0 clock (`modelTime` = `replayTape(staging, []).gameTime`) EQUALS it. Unlike an adoption, the shift may be
+ * NEGATIVE (a shorter fade); nothing but `seam.time` moves. ⛔ A shift of 0 returns the SAME staging object, so a
+ * request whose arrival faded at the pinned count is byte-identical to before.
+ *
+ * @param {object} o
+ * @param {object} o.staging    the arrival's staging (its `seam.time` = the begin record's convention)
+ * @param {number|null} o.modelTime  the shadow's `Game.time` at the top of the plan's first frame
+ * @param {number|null} o.liveTime   `botStatus().game_time`, read while the arrival's freeze HOLDS the room
+ * @returns {{staging: object, shift: number}|{refusal: string}}
+ */
+export function heldArrivalClockStaging({ staging, modelTime, liveTime }) {
+    const staged = staging?.seam?.time;
+    if (!Number.isFinite(staged)) return { refusal: 'the arrival staging declares no seam.time (the shadow has no clock to set)' };
+    if (!Number.isFinite(modelTime)) return { refusal: 'the arrival shadow answers no Game.time (a clock-less run cannot be put on the live clock)' };
+    if (!Number.isFinite(liveTime)) return { refusal: 'botStatus answered no game_time for the held room' };
+    const shift = liveTime - modelTime;
+    if (shift === 0) return { staging, shift };
+    return { staging: { ...staging, seam: { ...staging.seam, time: staged + shift } }, shift };
+}
+
+/**
  * ⛓ W8c — THE NEW-GAME ARM'S BEGIN RECORD (plan §5.15). The host's level-set
  * reset (`seedlingRandomizerWiring.resetTargetFor`, mode `new-game-arm`: a set
  * whose start names a level and no position, WITH the intro asked for —
