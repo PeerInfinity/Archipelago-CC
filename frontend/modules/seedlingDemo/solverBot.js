@@ -176,6 +176,9 @@ import { activeProgress, progressAsked, progressEnter, progressGoal, progressLea
     progressStatesFor, progressTick, withSolveProgress } from './solveProgress.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
 import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
+// ⛓ seedling-fidelity-arrowlane D2 — the armed-lane crossing arm (`ARROW_LANE_CROSSING`, OFF).
+import { ARROW_LANE_CROSSING, ARROW_LANE_TRACE, LaneCrossingExcept, admitLaneCrossing, laneCrossingExcept,
+    laneCrossingFor } from './arrowLaneCrossing.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
@@ -20794,6 +20797,75 @@ function solveSegmentUnder({
             lastOption = 'forced-hit';
             lastBound = undefined;
         }
+        /**
+         * ── rung 7: ARROW-LANE (seedling-fidelity-arrowlane D2; ⚖ the user, 2026-10-16, "arrows aren't supposed to
+         * be dodgeable") ── Asked ONLY here, after every rung above refused (PULL among them: a sworded walk silences
+         * L16's lanes with no hit), only behind `ARROW_LANE_CROSSING` (OFF: absent, no row, the refusal word for word
+         * the BEFORE one), and only where the geometry forces a crossing (`laneCrossingFor`: the aim is in an armed
+         * lane, or the lanes separate it from the player). Not asked inside a walk that already crossed by its start
+         * (`LaneCrossingExcept`), so it never recurses.
+         *   1. The corridor is re-planned and re-probed with the lanes AND their arrows set aside; another danger it
+         *      meets climbs ONE inner ladder (the same rungs, the same exclusion).
+         *   2. THE CERTIFICATE (`certifyLaneWalk`): that corridor driven on a fork; every hit must be an engaged
+         *      trap's arrow, under the forced-hit budget — else it refuses by name.
+         *   3. THE BILL: the fork's keys replayed on the live run (`settleLaneWalk`: its hits must be the fork's);
+         *      the segment's `forcedHits` carries an `arrow-lane` row.
+         */
+        if (ARROW_LANE_CROSSING.enabled && !(dangerExcept instanceof LaneCrossingExcept)) {
+            const lane = laneCrossingFor(run, aim, { boxAt: playerBoxAt,
+                separates: (vols) => laneSeparates(aim, allowTeleporter, contacts, goalPlanExtra, vols) });
+            if (lane) {
+                if (activeProgress !== null) progressRung('arrow-lane');
+                const laneRefused = { rung: lastOption, why: lastWhy };
+                const ex = laneCrossingExcept(dangerExcept, lane.ids);
+                let wps = null;
+                let laneWhy = null;
+                try {
+                    wps = planWaypoints(run.world, run.state, aim, allowTeleporter, axisAligned
+                        ? { ...solverPlanOpts(run, contacts, goalPlanExtra), manhattan: true }
+                        : solverPlanOpts(run, contacts, goalPlanExtra));
+                } catch (e) {
+                    if (!(e instanceof BotDriverV2Error)) throw e;
+                    laneWhy = `with the lanes set aside the walk's planner plans no corridor: ${e.message.slice(0, 200)}`;
+                }
+                if (wps) {
+                    const again = probeCorridor(wps, ex, { axisAligned, ...(stand ? { stand } : {}) });
+                    if (again) {
+                        const inner = climbLadder({ goal, aim, contacts, allowTeleporter, what, hit: again,
+                            dangerExcept: ex, corridor: wps, axisAligned, undashed: true, lattice,
+                            ...(stand ? { stand } : {}), ...(crossTo ? { crossTo } : {}) });
+                        if (inner.forced) {
+                            rowFor('arrow-lane', laneRefused, { lane: lane.why, lanes: lane.lanes, inner: 'forced' });
+                            return { forced: inner.forced, escalations };
+                        }
+                        wps = inner.wps ?? null;
+                        if (!wps) laneWhy = 'the inner climb with the lanes set aside left no corridor';
+                    }
+                }
+                if (wps) {
+                    const cert = certifyLaneWalk(wps, lane, { what, goal, crossTo, contacts, axisAligned,
+                        narrow: false });
+                    rowFor('arrow-lane', laneRefused, { lane: lane.why, lanes: lane.lanes, billed: cert.billed,
+                        ticks: cert.ticks });
+                    let transition = null;
+                    for (let i = 0; i < cert.keys.length; i += 1) {
+                        perTick.push(cert.keys[i]);
+                        const o = run.advance(cert.keys[i]);
+                        if (o.transition) transition = o.transition;
+                    }
+                    if ((transition === null) !== (cert.transition === null)) {
+                        fail(`${what} -> arrow-lane: the replay ${transition ? 'crossed' : 'did not cross'} where `
+                            + 'the fork did not — the fork is not this run.');
+                    }
+                    settleLaneWalk(cert, transition);
+                    return { forced: { transition }, escalations };
+                }
+                rowFor('arrow-lane', laneRefused, { lane: lane.why, lanes: lane.lanes });
+                lastWhy = laneWhy;
+                lastOption = 'arrow-lane';
+                lastBound = undefined;
+            }
+        }
         refuse(`${what}: the combat ladder is EXHAUSTED. The corridor passes through `
             + `danger at (${hit.x.toFixed(1)},${hit.y.toFixed(1)}) — ${reasonsOf(hit)} — `
             + `and every rung of ⚖ §11.8a's order refused:\n`
@@ -20826,6 +20898,95 @@ function solveSegmentUnder({
      * silent re-plan hides a model divergence; a TRACED one is a decision a
      * reader can audit).
      */
+    /**
+     * ⛓⛓ SEEDLING FIDELITY ARROWLANE D2 — AN ARMED LANE IS CROSSED AND BILLED (`arrowLaneCrossing.js`; asked only with
+     * `ARROW_LANE_CROSSING` ON). ⚖ The user, 2026-10-16: "arrows aren't supposed to be dodgeable" — so no dodge, no
+     * volley gap, no timing: the walk's own corridor, its arrows billed as forced hits.
+     *
+     * `laneSeparates`: the walk's planner plans the aim without the lanes and none with them forbidden.
+     */
+    const laneSeparates = (aim, allowTeleporter, contacts, goalPlanExtra, vols) => {
+        const plans = (extra) => {
+            try {
+                planWaypoints(run.world, run.state, aim, allowTeleporter, solverPlanOpts(run, contacts, extra));
+                return true;
+            } catch (e) {
+                if (!(e instanceof BotDriverV2Error)) throw e;
+                return false;
+            }
+        };
+        return !plans({ ...goalPlanExtra, extraVolumes: vols }) && plans(goalPlanExtra);
+    };
+    /**
+     * THE CERTIFICATE: the corridor `wps` driven on a fork exactly as the live drive below drives it (undashed, the
+     * walk's strike policy built on the fork, the same tolerance, bound, contacts and crossing). Every hit it bills
+     * must be an engaged trap's arrow, nothing may die, and the hits must fit `FORCED_HITS`' budget — else the walk
+     * REFUSES by name (`obstacle: {kind: 'danger', id: <the lane>}`). Returns `{billed, ticks, laneWalk, at, from}`.
+     */
+    const certifyLaneWalk = (wps, laneWalk, { what, goal, crossTo, contacts, axisAligned, narrow }) => {
+        const at = { level: run.level, x: run.state.x, y: run.state.y, tick: perTick.length };
+        const no = (why) => {
+            ARROW_LANE_TRACE.sink?.({ what, at, why: laneWalk.why, ids: laneWalk.ids, lanes: laneWalk.lanes,
+                outcome: 'refused', reason: why });
+            refuse(`${what}: ARROWLANE — the corridor crosses an ARMED lane (${laneWalk.why}: `
+                + `${laneWalk.lanes.join(', ')}; arrows are not dodged, they are billed) and the crossing is not `
+                + `admitted: ${why}`, { goal, obstacle: { kind: 'danger', id: laneWalk.lanes[0] ?? null } });
+        };
+        if (fork === null) no('the segment has no fork to certify the crossing on');
+        const f = fork();
+        if (f === null) no('the caller\'s deadline tripped inside the crossing\'s fork');
+        const h0 = (f.ledger('playerHits') ?? []).length;
+        const d0 = (f.ledger('playerDeaths') ?? []).length;
+        const keys = [];
+        let transition = null;
+        try {
+            const strike = axisAligned ? null
+                : strikePolicyFor(f, { dashPlan: null, dashMode, ...(narrow ? { iframeLapse: false } : {}) });
+            for (let wi = 0; wi < wps.length; wi += 1) {
+                const last = wi === wps.length - 1;
+                const t = drive(f, wps[wi], keys, {
+                    until: (last && crossTo) ? 'transition' : 'arrival', tolerance, maxTicks: maxTicksPerTarget,
+                    avoidVolumes: true, contacts, crossTo, grazes: [], strike, axisAligned, intermediate: !last,
+                    what: `${what} (arrow-lane certificate) waypoint ${wi} (${wps[wi].x},${wps[wi].y})`,
+                });
+                if (t && crossTo) { transition = t; break; }
+            }
+        } catch (e) {
+            const m = String(e?.message ?? e).split('\n')[0];
+            no(`${e instanceof BotDriverV2Error ? 'the fork\'s drive is refuted' : 'the model refuses to step it'} — `
+                + (m.startsWith(what) ? `…${m.slice(what.length)}` : m).slice(0, 320));
+        }
+        if (crossTo && transition === null) no('the fork reached the exit aim without a transition');
+        const billed = (f.ledger('playerHits') ?? []).slice(h0).map((h) => ({ t: h.t, level: h.level,
+            source: h.source, id: h.id, hits: h.hits }));
+        const died = (f.ledger('playerDeaths') ?? []).length - d0;
+        const spent = forcedHits.reduce((n, r) => n + r.billed.length, 0);
+        const adm = admitLaneCrossing({ billed, died, laneIds: laneWalk.ids,
+            hitsMax: run.progress('inventory')?.hitsMax ?? 3, hitsNow: worldHitsOf(run).hits,
+            budgetLeft: FORCED_HITS.maxPerSegment - spent, maxHitsPerCrossing: FORCED_HITS.maxHitsPerCrossing,
+            margin: FORCED_HITS.margin });
+        if (!adm.ok) no(adm.why);
+        return { billed, ticks: keys.length, keys, transition, laneWalk, at, what, from: perTick.length,
+            hitsBefore: (run.ledger('playerHits') ?? []).length };
+    };
+    /** THE BILL: the live drive billed the fork's rows, key for key, and the segment's `forcedHits` carries them. */
+    const settleLaneWalk = (cert, transition) => {
+        const got = (run.ledger('playerHits') ?? []).slice(cert.hitsBefore)
+            .map((h) => `${h.t}:${h.source}:${h.id}`).join(',');
+        const want = cert.billed.map((h) => `${h.t}:${h.source}:${h.id}`).join(',');
+        if (got !== want || perTick.length - cert.from !== cert.ticks) {
+            fail(`${cert.what} -> arrow-lane: the live drive billed [${got}] in ${perTick.length - cert.from} tick(s) `
+                + `where the fork billed [${want}] in ${cert.ticks} — the fork is not this run.`);
+        }
+        const proof = { lane: cert.laneWalk.why, lanes: cert.laneWalk.lanes, ids: cert.laneWalk.ids };
+        if (cert.billed.length > 0) {
+            forcedHits.push({ tick: cert.from, what: cert.what, proof, candidate: 'arrow-lane', billed: cert.billed,
+                ticks: cert.ticks, damage: worldHitsOf(run) });
+        }
+        ARROW_LANE_TRACE.sink?.({ what: cert.what, at: cert.at, why: cert.laneWalk.why, ids: cert.laneWalk.ids,
+            lanes: cert.laneWalk.lanes, outcome: cert.billed.length > 0 ? 'billed' : 'clean', billed: cert.billed,
+            ticks: cert.ticks, transition: transition ? transition.to_level : null });
+    };
     const walkToUnder = (goal, aim, {
         allowTeleporter = null, crossTo = null, what, contactsOverride = null,
         dangerExcept = null,
@@ -20881,9 +21042,16 @@ function solveSegmentUnder({
              * is true there.
              */
             const leaving = lanesUnpublishedByLeaving(run);
-            const except = (dangerExcept || leaving)
+            let except = (dangerExcept || leaving)
                 ? new Set([...(dangerExcept ?? []), ...(leaving ?? [])])
                 : null;
+            // ⛓ ARROWLANE D2 (`ARROW_LANE_CROSSING`, OFF: null) — a walk that STARTS in an armed lane (the gate below
+            // refuses it OFF) leaves the lanes and their arrows out of its danger questions; the fork certificate
+            // below bills what they cost. An aim in a lane, or lanes that separate, is the ladder's LAST rung.
+            const laneWalk = ARROW_LANE_CROSSING.enabled
+                ? laneCrossingFor(run, aim, { boxAt: playerBoxAt, startOnly: true, separates: null })
+                : null;
+            if (laneWalk) except = laneCrossingExcept(except, laneWalk.ids);
             // ⛓ BOBSOLDIER2 D2b: a WALK's gate — the transit probe follows it (`SWORD_GATE_TIMED`).
             refuseDanger(run.state.x, run.state.y, goal, what, except, { timedSword: true });
             let wps;
@@ -21271,7 +21439,8 @@ function solveSegmentUnder({
              * walk row's `verb` and `path`. Measured: the first cut did
              * exactly that and every campaign trace lost its waypoint list.
              */
-            const dash = (dashMode === 'none' || axisAligned || undashed)
+            // ⛓ ARROWLANE D2: an engaged lane walk is driven undashed (the certificate is that walk).
+            const dash = (dashMode === 'none' || axisAligned || undashed || laneWalk)
                 ? null
                 : (dashFirst && !narrow) ? dashFirst
                     : (!narrow && corridorDashCertified?.wps === wps) ? corridorDashCertified.d
@@ -21359,6 +21528,10 @@ function solveSegmentUnder({
             } : null;
             const pressedAtWalk = dashesPressed;
             if (dashWalk) dashWalks.push(dashWalk);
+            // ⛓ ARROWLANE D2: the corridor driven first on a fork, its arrow hits admitted (or refused by name).
+            const laneCert = laneWalk
+                ? certifyLaneWalk(wps, laneWalk, { what, goal, crossTo, contacts, axisAligned, narrow })
+                : null;
             try {
                 for (let wi = 0; wi < wps.length; wi += 1) {
                     const last = wi === wps.length - 1;
@@ -21376,12 +21549,16 @@ function solveSegmentUnder({
                         intermediate: !last,
                         what: `${what} waypoint ${wi} (${wps[wi].x},${wps[wi].y})`,
                     });
-                    if (t && crossTo) return t;
+                    if (t && crossTo) {
+                        if (laneCert) settleLaneWalk(laneCert, t);
+                        return t;
+                    }
                 }
                 if (crossTo) {
                     refuse(`${what}: reached the exit aim without a transition — the `
                         + 'trigger did not fire from the certified corridor.', { goal });
                 }
+                if (laneCert) settleLaneWalk(laneCert, null);
                 return null;
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;

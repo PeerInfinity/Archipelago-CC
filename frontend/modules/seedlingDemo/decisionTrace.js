@@ -142,6 +142,9 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // corridor walked with the pre-lapse strike admissions, listed in the slice that first drives it. (Above `pace`,
     // which MOVINGWAIT pins as the list's last row.)
     'narrow',
+    // ⛓ Seedling fidelity ARROWLANE D2: the `arrow-lane` rung (`solverBot`'s ladder, behind `arrowLaneCrossing`) — an
+    // ARMED lane crossed with its arrows billed (⚖ "arrows aren't supposed to be dodgeable"). (Above `pace`.)
+    'arrow-lane',
     // ⛓ Seedling fidelity MOVINGWAIT: the `pace` row (`solverBot.planPacedWait`, behind `MOVING_WAIT`) — a LATCHED
     // wait inside a lobber's reach that paces an out-and-back cycle instead of standing still.
     'pace',
