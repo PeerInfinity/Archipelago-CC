@@ -99,7 +99,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ fidelity L30KEYLOCK: +3 (274) — `l30keylock-pit224-before`, `l30keylock-pit224`, `l30keylock-pit240`.
         // ⛓ hammer-phase C2: +1 (275) — `hammer-c2-l18-ghostspinner`.
         // ⛓ fidelity L40BUTTON: +2 (277) — `l40button-l41-part0`, `l40button-l42-part0`.
-        expect(names.length).toBe(277);
+        // ⛓ fidelity SEALDOOR: +3 (280) — `sealdoor-l113-clear`, `sealdoor-l113-exit`, `sealdoor-l113-noseal-control`.
+        expect(names.length).toBe(280);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);
