@@ -35,7 +35,7 @@
  * that declaration rather than of the page. Without it `--check` could
  * never pass and the chain could never be committed.
  *
- * Run (dev server on :8000, wasm staged):
+ * Run (dev server on `SEEDLING_PORT`, default 8000, wasm staged):
  *   node scripts/procgen/plan-seedling-r7-ends-meet.mjs            # write
  *   node scripts/procgen/plan-seedling-r7-ends-meet.mjs --check    # verify
  */
@@ -80,7 +80,16 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
-const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
+/**
+ * ⛓ SEEDLING HAMMER HK — the page on `SEEDLING_PORT`, as `derive-seedling-tick0`
+ * spells it. This producer spelled `:8000` inline, so on a box whose server sat on
+ * another port `latchOf`'s `page.goto` threw ERR_CONNECTION_REFUSED before any
+ * game check — read as "throws in `latchOf`" in the dash-shape D2 census. Measured
+ * at that census's base `dab1994e58`: green with a server on :8000, the throw
+ * without one. No model or solver moved.
+ */
+const PAGE_PORT = process.env.SEEDLING_PORT || '8000';
+const PAGE_URL = `http://localhost:${PAGE_PORT}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 const TAPES = join(REPO, 'frontend', 'modules', 'seedlingDemo', 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
