@@ -22855,3 +22855,28 @@ SOLVED 475 t (1 hit) → 491 t, clean; **100 REFUSED → SOLVED 192 t**; 47 and 
 hammer workloads (staging A sword and ghost, 397, 414, the L18 sweep, C2's ghost staging) do not move. Identity: OFF =
 base on every row; ON moves the ENEMY census (the drill chamber row, 155 → 171 t); ON+gate also moves c3 / c6 / c4 (the
 gate's own spinner movers). OFF is byte-identical (survey, identity block, bounded vitest).
+
+### Seedling hammer-phase HK — three red producers
+
+⚖ The user (2026-10-16): *"Prepare the flip"*. js-6's rule: no flip without the full `plan-seedling-*.mjs --check` set
+green, or each red one named. This slice cleared the hammer arc's three of DB's twelve base reds. Report:
+`CC/docs/cloud-reports/seedling-hammer-hk.md`.
+
+**D1 — bisected** (good `55eea9ac39`, the 2026-10-04 `hold: false` fix; bad `5c4b07628a`):
+- `r9-l0-sword-dash` and `r9-l6-sword-dash-hit` both go red at fidelity DASHFLIP `99fd021509`
+  (`DASH_WINDOW_ROSTER_WIDE = true`). Each producer derives its tail as decay + `SLASH_ANIM_TICKS[dash]` (+ hit
+  ticks), and the flip moved the dash anim from 5 to the game's 4. Every tape re-derives one tick shorter and nothing
+  else moves: the lapse flip, RE/DD, the seam offset and `waypointSlide` are not involved.
+- `r7-ends-meet` has no red commit. Its "throw in `latchOf`" is `page.goto` ERR_CONNECTION_REFUSED on a hardcoded
+  `:8000`. At `dab1994e58` it is green with a server there, and throws without one.
+
+**D2 — fixed.** The sword-dash pair is (a), re-derived: the tail is padding, not a claim, and the new tapes are prefixes of
+the old ones. Re-recorded on p4f, each expectation is the old one minus its last tick (md5s in the report), and
+the dash-rect `--mobiles` probe is green on both tapes (hits `[1]`). `r7-ends-meet` reads `SEEDLING_PORT` now. All three are
+green at the head, and byte-identical with each of DB's dash switches ON. None of them reaches js-6's `dashOnlyWindow`.
+
+Lessons:
+1. *A tail derived from a model constant re-derives when the constant flips.* That is padding, not a witness: re-derive
+   it when the shortened tape is a prefix and the game agrees.
+2. *"Throws before any check" can be the box.* A producer that spells its port inline reads as red on any box whose
+   server sits elsewhere. Run it at the census base, with and without the server, before handing it to fidelity.
