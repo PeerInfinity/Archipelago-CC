@@ -72,6 +72,8 @@ location_table: Dict[str, LocationData] = {
     "Level 048 - Chest": LocationData("level_48__r11c9", "Level 048 - Chest", 30000023, False),
     "Level 049 - Conch": LocationData("level_49", "Level 049 - Conch", 30000024, False),
     "Level 055 - Boss Key 3": LocationData("level_55", "Level 055 - Boss Key 3", 30000025, False),
+    "L63 flag 1: lightpole@64,88 cleared": LocationData("level_61__r0c10", "L63 flag 1: lightpole@64,88 cleared", None, True, extra_attributes={"event_id": "flag:L63:1", "event_kind": "game_state", "obstacle": {"level": 63, "tag": 1, "class": "lightpole", "x": 64, "y": 88}, "action": {"verb": "press", "item": None, "presser": {"level": 61, "class": "buttonroom", "x": 176, "y": 40}}, "side": "level_61__r0c10", "across": []}),
+    "L62 flag 0: lightpole@120,200 cleared": LocationData("level_63__r0c1", "L62 flag 0: lightpole@120,200 cleared", None, True, extra_attributes={"event_id": "flag:L62:0", "event_kind": "game_state", "obstacle": {"level": 62, "tag": 0, "class": "lightpole", "x": 120, "y": 200}, "action": {"verb": "press", "item": None, "presser": {"level": 63, "class": "buttonroom", "x": 32, "y": 64}}, "side": "level_63__r0c1", "across": []}),
     "Level 063 - Chest": LocationData("level_63__r5c14", "Level 063 - Chest", 30000026, False),
     "Level 064 - Ghostspear": LocationData("level_64", "Level 064 - Ghostspear", 30000027, False),
     "Level 067 - Boss Key 4": LocationData("level_67__r3c2", "Level 067 - Boss Key 4", 30000028, False),
