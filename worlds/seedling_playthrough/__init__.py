@@ -66,6 +66,7 @@ LOCKED_PLACEMENTS: Dict[str, str] = {
     "L71 flag 2: shieldlock@288,256 cleared": "L71 flag 2: shieldlock@288,256 cleared",
     "L112 flag 1: rocklock@112,16 cleared": "L112 flag 1: rocklock@112,16 cleared",
     "L113 flag 0: finaldoor@112,0 cleared": "L113 flag 0: finaldoor@112,0 cleared",
+    "L114 flag 0: watcher@72,72 cleared": "L114 flag 0: watcher@72,72 cleared",
 }
 
 # Starting items - items the player begins with (precollected)
@@ -193,6 +194,7 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 109 - Firewand": "Fire Wand Fusion",
         "L112 flag 1: rocklock@112,16 cleared": "L112 flag 1: rocklock@112,16 cleared",
         "L113 flag 0: finaldoor@112,0 cleared": "L113 flag 0: finaldoor@112,0 cleared",
+        "L114 flag 0: watcher@72,72 cleared": "L114 flag 0: watcher@72,72 cleared",
         "Level 115 - The Seed": "The Seed",
     }
 
@@ -259,6 +261,7 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 109 - Firewand": "Fire Wand Fusion",
         "L112 flag 1: rocklock@112,16 cleared": "L112 flag 1: rocklock@112,16 cleared",
         "L113 flag 0: finaldoor@112,0 cleared": "L113 flag 0: finaldoor@112,0 cleared",
+        "L114 flag 0: watcher@72,72 cleared": "L114 flag 0: watcher@72,72 cleared",
         "Level 115 - The Seed": "The Seed",
     }
 
@@ -325,6 +328,7 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 109 - Firewand": True,
         "L112 flag 1: rocklock@112,16 cleared": True,
         "L113 flag 0: finaldoor@112,0 cleared": True,
+        "L114 flag 0: watcher@72,72 cleared": True,
         "Level 115 - The Seed": True,
     }
 

@@ -82,6 +82,7 @@ Level 106 - Ghostsword: Ghost Sword Fusion
 Level 109 - Firewand: Fire Wand Fusion
 L112 flag 1: rocklock@112,16 cleared: L112 flag 1: rocklock@112,16 cleared
 L113 flag 0: finaldoor@112,0 cleared: L113 flag 0: finaldoor@112,0 cleared
+L114 flag 0: watcher@72,72 cleared: L114 flag 0: watcher@72,72 cleared
 Level 115 - The Seed: The Seed
 
 Playthrough:
@@ -170,7 +171,10 @@ Playthrough:
 }
 12: {
   L112 flag 1: rocklock@112,16 cleared: L112 flag 1: rocklock@112,16 cleared
-  L113 flag 0: finaldoor@112,0 cleared: L113 flag 0: finaldoor@112,0 cleared
+  L114 flag 0: watcher@72,72 cleared: L114 flag 0: watcher@72,72 cleared
   Level 109 - Firewand: Fire Wand Fusion
+}
+13: {
+  L113 flag 0: finaldoor@112,0 cleared: L113 flag 0: finaldoor@112,0 cleared
   Level 115 - The Seed: The Seed
 }

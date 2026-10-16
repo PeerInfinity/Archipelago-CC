@@ -2412,12 +2412,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_113 -> level_115__r9c4", player),
-        And(Has('Seal', 16), Has('Progressive Swim'))
+        And(Has('Seal', 16), HasAll('L114 flag 0: watcher@72,72 cleared', 'Progressive Swim'))
     )
 
     world.set_rule(
         multiworld.get_entrance("level_113 -> level_115__r9c4 #2", player),
-        And(Has('Seal', 16), Has('Progressive Swim'))
+        And(Has('Seal', 16), HasAll('L114 flag 0: watcher@72,72 cleared', 'Progressive Swim'))
     )
 
     world.set_rule(
@@ -2742,5 +2742,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("L113 flag 0: finaldoor@112,0 cleared", player),
-        Has('Seal', 16)
+        And(Has('Seal', 16), Has('L114 flag 0: watcher@72,72 cleared'))
     )
