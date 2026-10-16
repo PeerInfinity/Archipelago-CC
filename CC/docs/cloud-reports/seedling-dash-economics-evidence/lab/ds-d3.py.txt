@@ -23,7 +23,7 @@ M85 = {k: base[(k[0], k[1], 85)]['ms'] for k in pop}
 avail = sum(T85[k] - T0[k] for k in pop if T85[k] and T0[k])
 print(f'POPULATION {len(pop)} requests (dashless plan in hand, full pass runs). Window 0 saves {avail} t over today.')
 print('shape            win  n    ticks Σ   saved vs today  % of w0  better/worse vs today  worse vs w0  units Σ (Δ today)   wall s (Δ today)  attempt ≤85u  errors  net s @30fps')
-order = ['cheap2', 'cheap2dw40keep', 'cheap2dw85keep', 'cheap2dw130keep', 'today', 'window0', 'noswing', 'legpre40', 'stride2', 'tail10', 'cheap', 'dw85keep', 'dw40keep', 'cheapdw85keep', 'cheapdw40keep']
+order = ['firstcert', 'cap60keep', 'cap150keep', 'cheap3dw85keep', 'cheap2', 'cheap2dw40keep', 'cheap2dw85keep', 'cheap2dw130keep', 'today', 'window0', 'noswing', 'legpre40', 'stride2', 'tail10', 'cheap', 'dw85keep', 'dw40keep', 'cheapdw85keep', 'cheapdw40keep']
 for tag in order:
     for w in (85, 0):
         rows = shapes.get((tag, w))

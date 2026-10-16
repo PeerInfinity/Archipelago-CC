@@ -16,4 +16,5 @@ Shape switches (lab names):
                        full pass runs on the budget
   keepOnDeadline       a `sword-dash` trip keeps the windows already accepted (today: the schedule is dropped)
   legGate              (built, not run in the battery: legPre dominated it)
+  firstCert            (a) cheap first: the whole chain first, stop at the first certified prefix
 To re-run: copy frontend/ + scripts/ to a scratch dir, `git apply lab.diff` there, rename *.txt back.

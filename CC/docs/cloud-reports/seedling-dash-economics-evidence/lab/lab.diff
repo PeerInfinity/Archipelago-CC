@@ -32,7 +32,7 @@ index a39d65b..5384771 100644
          const w0 = work.units;
          const limit = {};
 diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
-index 5e2e476..4fef8d2 100644
+index 5e2e476..32a3930 100644
 --- a/frontend/modules/seedlingDemo/solverBot.js
 +++ b/frontend/modules/seedlingDemo/solverBot.js
 @@ -5576,7 +5576,16 @@ export function dashPrefixesFor(mode, { weapon = 'sword' } = {}) {
@@ -85,7 +85,7 @@ index 5e2e476..4fef8d2 100644
      /**
       * ⛔⛔ A CROSSING IS NOT A TRUNCATION IN THE SENSE THAT MATTERS. Every
       * `reach-exit` corridor ends by crossing and `previewWalk` stops there,
-@@ -5850,7 +5874,30 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
+@@ -5850,9 +5874,34 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
          }
          return { row, walk };
      };
@@ -114,9 +114,14 @@ index 5e2e476..4fef8d2 100644
 +            }
 +        }
          let best = null;
-         for (const pattern of prefixes) {
+-        for (const pattern of prefixes) {
++        // DS LAB (a): cheap first — the most-accepted prefix first (D2: the whole chain), stop at the first certified
++        for (const pattern of (DSX.firstCert ? [...prefixes].reverse() : prefixes)) {
++            if (DSX.firstCert && best) break;
              /**
-@@ -5860,8 +5907,11 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
+              * ⛓ SF2 — THE DEADLINE IS ASKED BETWEEN PREVIEWS. On a trip the whole
+              * schedule is dropped (`plan: null`, even windows already accepted)
+@@ -5860,8 +5909,11 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
               * corridor was certified before this function was asked, the dash
               * is only its upgrade.
               */
@@ -129,7 +134,7 @@ index 5e2e476..4fef8d2 100644
              candidates.push(got.row);
              if (!got.row.certified) continue;
              const better = best === null
-@@ -5875,7 +5925,8 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
+@@ -5875,7 +5927,8 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
              bestWalk = best.walk;
              at += ORDINARY_SWING_PERIOD;
          } else {

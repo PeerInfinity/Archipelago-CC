@@ -22600,6 +22600,11 @@ each replayed through the worker's own dispatch at window 85 and at window 0, on
 | `cheap2` + dash-only window 85, keep partial | 85 | 77.6 | 0 | +12,345 | +146 s | +437 |
 | `cheap2` + dash-only window 130, keep partial | 85 | 90.6 | 0 | +16,086 | +201 s | +479 |
 
+- **The brief's (a) and (b) lose to these:**
+  - (a) cheap first (the whole chain first, stop at the first certified prefix) makes **91** requests worse than today;
+    the scan's shortest-walk tie-break is what buys the ticks.
+  - (b) a per-corridor cap that keeps the accepted windows reaches 58 % (cap 60) / 88.6 % (cap 150) of window 0's ticks
+    for +161 / +294 s.
 - **No shape fits today's 85 window by itself:** under WINDOW WHOLE PASS the full pass's re-plan and drive use it up
   first.
 - Re-scoping the window to count only the `sword-dash` asks, and keeping the windows a `sword-dash` trip had already
