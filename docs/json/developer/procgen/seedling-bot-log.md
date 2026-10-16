@@ -22550,6 +22550,107 @@ avoidance: a bomb blast on a body is a game interaction, and fidelity's held wav
 retires the pin, with the lapse-ON row as the witness it flips. `--check`: all checks green, and the committed tape is
 byte-identical.
 
+### SLOWSOLVE — the slowest page solve, and why the reports say minutes (slice `seedling-slowsolve-check`, 2026-10-16)
+
+⚖ The user (2026-10-16): *"These sessions have been reporting solves that take over a minute to complete, but when
+I tested in the frontend page, I didn't encounter any solves that took more than a few seconds."* Measured both
+sides. Evidence: `CC/docs/cloud-reports/seedling-slowsolve-check-evidence/`.
+
+**The page side.** The divergence sweep (CI run 38343649914, wasm, head `9790b4f97d`, before the lapse flip): 843
+legs, 730 completed solves. `solvedMs` median **143 ms**, max **5.9 s** (L32 Bob Boss); 119 over 1 s, 2 over 5 s.
+The page's long legs never complete. L40 Chest (legs 397 / 414) hits the 90 s leg timeout after the 640 → 2560 work
+retry, and the L12 bosslock / L40 totem refusals take 62–72 s. Timed in a worktree page (JS runtime, headless, box
+load 2–6):
+
+| workload | start | items | budget / cut | outcome | solve | walk wall |
+|---|---|---|---|---|---|---|
+| L6 → stairs (the L6 demo) | entry from L5 | — | 15 / 640 | SOLVED | 1.2 s | 12 s |
+| L18 → teleporter (176,112) | entry from L16 | none | 1 unit | REFUSED (no weapon) | <0.2 s | 61 s of walker wander |
+| L18 → teleporter (176,112) | entry from L16 | sword (AP grant) | 56 / 640 (22 + 34) | SOLVED | 4.4 s | 20 s |
+| L12 → teleporter (432,352) (leg 108) | entry from L0 (16,80) | sword (AP grant) | 36 + 51: full pass CUT at `sword-dash` by the 85 window | SOLVED, 561 t dashless | 2.4 s | 21 s |
+| the same, window 0 | | | 36 + 202, no cut | SOLVED, 328 t with dashes | 4.5 s | 15 s |
+| the same, window 0, budget 2560 | | | 36 + 202 | SOLVED, 328 t | 5.2 s | 16 s |
+| L40 Chest (staging A's room) | arrival from L39 (480,896) | torch, fire, shield, sword | 641 / 640 per attempt, 4 attempts | REFUSED (spinner@880,848) | ~14 s per attempt | 77 s |
+| L40 Chest | arrival from L43 (320,592) | the same | the same | REFUSED | ~13 s per attempt | 97 s |
+
+**The node side** (quoted from the hammer reports, 4-core box, load 2–5). The producers call `solveSegment` IN PLACE,
+with no work budget (the evidence tools `CC/docs/cloud-reports/seedling-hammer-d-evidence/view-solve.mjs` and `CC/docs/cloud-reports/seedling-hammer-d-evidence/d1-leg.mjs`: an optional tick STOP only). Staging A (L40 at (480,896), the
+chest) runs 60–130 s and is REFUSED near t1.7–3k. Legs 397 / 414 (the same chest from L39 / L43) run 123–155 s and
+in one variant 742 s. The L18 sweep, ~110–175 s, is the SUM of 45 residues of a few seconds each. `r9-campaign
+--check` (~50 s) is a chain of committed solves.
+
+**Why the gap.** The minute-long numbers are node runs with no work budget, of stagings and legs at the hardest spot
+in the game (L40's chest behind the spinners), and they are often summed over many residues. The page caps every solve
+attempt at 640 work units (the 85-unit window for the dash pass; at most 3 retries; a 300 s backstop). An attempt
+that would run for minutes is therefore cut, about 14 s on this box, and the walk declines instead. Every page solve
+that completes does so in under 6 s, and the route a person plays rarely reaches L40's chest.
+
+Residues, named and not fixed:
+- The JS runtime has no budget SETTING. `flashPanel.seedlingWasmSolverBudgetWork` is wasm-only, and the JS page
+  reads only `?solverBudgetWork=`.
+- A sword given to the JS page as the `Main.hasSword` flag alone (seedling_atlas, which holds no items) gets no
+  inventory slot. Sword-dash is then unavailable and the full pass is SKIPPED, where the same leg with an AP-granted
+  sword (seedling_playthrough) runs it and has it cut by the window.
+- `seedlingSolveDemo.js`'s comment "L18's hammer solve (20–45 s)" is not a solve time: armed L18 solves in 4.4 s, and
+  its whole walk takes 20 s.
+
+**The check: `seedling-dash-window`** (`tutorials/content/checks/seedlingSlowSolve.js`, walk row
+`feature-check-seedling-dash-window`, manual batch `feature-checks`). ⚖ The user, via the hammer planner: *"I want to
+see the longest solve that actually completes. And then I want to see a version with the time limits extended, for
+the optional parts of the solve that are cut to save solve time, like dashing"*, and then *"I want an example that
+isn't a boss fight."*
+
+The five longest completed non-boss solves in the sweep all have their full (dash) pass cut:
+
+| leg | solve | wasm `solvedMs` | the cut | stageable? |
+|---|---|---|---|---|
+| 418 | L42 Totem Part 184,152 from L40 | 5.2 s | full refused at `walk` | no: the totem's tag is allocated by the rewriter, and the leg holds 5 items |
+| 385 | L40 → pit (5,20) from L39 | 4.5 s | `sword-dash` | no: a pit exit resolves through the region binding, not the demo's exit tiles |
+| 408 | L40 → pit (14,21) from L43 | 4.5 s | `sword-dash` | no (as 385) |
+| 168 | L12 → teleporter (432,352) from L95's lower door | 4.2 s | `sword-dash` | no: on seedling_playthrough the region glue moves the arrival to (16,80) |
+| 404 | L40 → pit (14,20) from L43 | 4.2 s | `sword-dash` | no (as 385) |
+
+The target is **leg 108**: the same goal, from L0's door at (16,80); wasm 2.9 s, 561 t, full pass cut at `sword-dash`. The
+panel stages it as the solve demo `l12-dash-cut` (`flashPanel/seedlingSolveDemo.js`). The sword must be held AND
+slotted, so it comes through the AP item path on seedling_playthrough (the Inventory panel), never as a flag.
+
+| | window 85 (default) | window 0 (the whole budget) |
+|---|---|---|
+| dashless pass | 561 t, 36 units | 561 t, 36 units |
+| full pass (may dash) | REFUSED at `sword-dash`, limit `window`, 51 units | SOLVED, 328 t, 202 units |
+| ships | 561 t | **328 t** (−42%) |
+| solve (this box) | ~1.6 s | ~3.5 s |
+| the walk in the row | 18.7 s | 11.2 s |
+
+New panel behaviour (js-6's OK): a demo walk honours `flashPanel.seedlingSolverUpgradeWindowWork`, as the playback
+controller's walks do. A demo whose `needs` are missing, or whose arrival the region glue moved, is refused by name.
+
+Leg 108's request, page vs sweep (CI run 38841057409, main `506581c32e`, wasm): **equal** in `staging.boot`
+(12, 16, 80), `seam.items`, `inventory_slots` [0], `primary` 0, `save`, `persistence`, `grants`, `solverGoal`
+(reach-exit (432,352)), `budgetWork` 640 and `upgradeWindowWork` 85. The sweep's plan is the page's: 561 t, with
+the full pass cut at `sword-dash`. **Different**, and structural (JS page vs wasm game):
+- `name` (`js-runtime-L12-exit` / `wasm-exit-12`);
+- `passes` (omitted on JS, where the worker uses its default; listed on wasm);
+- `staging.rng` (JS seed 0, split false, with an `fp`; wasm the game's seed, split true);
+- the seam's shape: JS `items.hitsMax` vs wasm `hits_max`, and `beam` / `cutscene` / `menu_state` / `rock_set` /
+  `secondary` absent on JS;
+- `seam.time` (4800 / 4899);
+- `pins` order;
+- `source`: JS sends the mounted set by id, wasm inlines its 116 records;
+- the `live` digest shape.
+
+Residues, named and not fixed (in addition to the three above):
+- On seedling_playthrough the region glue places an arrival by the region the player LEFT. A demo can therefore stage
+  only the entry from the world's start side (leg 168's L95-lower entry cannot be held there), and a second staging
+  after a walk needs a reload. The panel refuses a moved arrival by name, after the check once passed falsely on a
+  7-tick solve from (432, 368).
+- The JS runtime has no budget setting (as above). It does not matter here: 202 < 640.
+
+After a first run by the user: the check keeps Solve Progress on **always** (⚖ "for this demo, let's set Solve Progress
+to Always"). The run also exposed a display defect, now fixed: the JS runtime page scaled the room by its size in TILES
+(`world.width`) instead of its size in pixels (`world.world.width`), so it drew a few gray blocks.
+
+
 ### Seedling fidelity SPINNINGAXE — a spinning axe hits the player, and a partial phase dodge is re-probed
 
 Wave 17 (planner `seedling-fidelity-planning-8`), base `e967758748`. Two switches, **both OFF** and OFF byte-inert. The

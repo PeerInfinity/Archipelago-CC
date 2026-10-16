@@ -21,7 +21,7 @@ import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 import { createHeldKeyRelease, focusGameCanvas } from './gameInput.js';
 import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
-import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, solveDemoStage } from './seedlingSolveDemo.js';
+import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, pushDemoWindow, solveDemoMissing, solveDemoMoved, solveDemoStage } from './seedlingSolveDemo.js';
 import { SUB_REGION_PARTITION_PATH, buildSubRegionMap } from './seedlingSubRegions.js';
 import { KILLLOCK_SETTING_KEYS, killLockPageQuery } from './seedlingKillLockSettings.js';
 import { KILLLOCK_BODIES_DEFAULTS, applyKillLockBodies, formatKillLockBodies } from '../seedlingDemo/killLockBodies.js';
@@ -434,7 +434,8 @@ export class FlashPanelUI {
    * ⛓ AUTO-SHOW — stage a solve demo (`SOLVE_DEMOS`, `seedlingSolveDemo.js`) on the JS runtime page: teleport into
    * its room at the game's own return spawn and walk its goal (the solver mode decides who plans it). The result is
    * on the root element (`data-solve-demo` = staging | staged | refused, `data-solve-demo-why`) and in the log.
-   * Needs a Seedling preset on runtime `js` whose page runs the vanilla map (seedling_atlas).
+   * Needs a Seedling preset on runtime `js` whose page runs the vanilla map (seedling_atlas, or seedling_playthrough
+   * for a demo that `needs` an item). ⛓ SLOWSOLVE: the walk gets the upgrade window setting first.
    */
   async stageSolveDemo(id) {
     const d = this.rootElement.dataset;
@@ -477,6 +478,21 @@ export class FlashPanelUI {
       if (Date.now() - t0 > 10000) return refuse(`the page did not reach level ${stage.level}`);
       await new Promise((r) => { setTimeout(r, 100); });
     }
+    // ⛓ SLOWSOLVE — a region glue may move the arrival (seedling_playthrough): let it settle, refuse if it moved.
+    for (const t1 = Date.now(); Date.now() - t1 < 1000;) {
+      const moved = rt.run?.level === stage.level ? solveDemoMoved(stage, rt.run) : null;
+      if (moved || rt.run?.level !== stage.level) {
+        return refuse(`the arrival was moved from (${stage.spawn.x}, ${stage.spawn.y}) to `
+          + `${moved ? `(${moved.x}, ${moved.y})` : `level ${rt.run?.level}`} — the world's region glue places an arrival `
+          + `by the region the player came from; reload the world and stage again`);
+      }
+      await new Promise((r) => { setTimeout(r, 100); });
+    }
+    // ⛓ SLOWSOLVE — an item the demo needs must be held AND slotted (the AP item path); the panel writes none.
+    const missing = solveDemoMissing(id, rt);
+    if (missing.length) return refuse(`the page does not hold ${missing.join(', ')} in a slot — grant it first (the Inventory panel)`);
+    // ⛓ SLOWSOLVE — a demo walk honours the upgrade window setting, as the playback controller's walks do.
+    pushDemoWindow(rt.playback, this._solverUpgradeWindowWork);
     const answer = rt.playback.walkTo(stage.goal);
     if (!answer?.ok) return refuse(`the page refused the goal: ${answer?.reason ?? JSON.stringify(answer)}`);
     rt.playback.play();
