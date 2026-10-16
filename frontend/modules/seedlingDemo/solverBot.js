@@ -19682,7 +19682,9 @@ function solveSegmentUnder({
                     if (transition) return { escalations };
                 }
                 const wpAt = dodge.walk.samples[upto - 1]?.wp ?? 0;
-                return { wps: dodge.wps.slice(Math.max(0, wpAt)), escalations };
+                // ⛓ fidelity SPINNINGAXE D2: a PARTIAL stall says so, so the walk re-probes (`partialDodgeReprobe`).
+                return { wps: dodge.wps.slice(Math.max(0, wpAt)), escalations,
+                    ...(dodge.partial ? { partial: dodge.partial } : {}) };
             }
             rowFor('dodge', refused);
             refused = { rung: 'dodge', why: dodgeWhy };
@@ -20768,7 +20770,7 @@ function solveSegmentUnder({
          * (re-asked per attempt below). No other walk is touched.
          */
         let axisAligned = axisAlignedAsked;
-        for (let attempt = 0; ; attempt += 1) {
+        attempts: for (let attempt = 0; ; attempt += 1) {
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site, before each attempt plans.
             if (fineDeadlineReached('walk')) refuseWalkDeadline(`before ${what}'s corridor (attempt ${attempt + 1})`);
             // Re-asked per attempt: a skirt applied by THIS walk's own ladder
@@ -21090,7 +21092,16 @@ function solveSegmentUnder({
                 { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
             // ⛓ LAPSECOST D1: set when the ladder's NARROW rung certified this corridor (`climbed.narrow`).
             let narrow = false;
-            if (hit) {
+            /**
+             * ⛓ fidelity SPINNINGAXE D2 (`CONTACT_FIDELITY.partialDodgeReprobe`) — A PARTIAL STALL IS RE-PROBED.
+             * The phase arm keeps a stall whose walk's first danger is not a phase source as `partial` ("the next
+             * probe meets the other danger alone"), drives it, and hands back the rest of the corridor — which this
+             * loop then walked UNPROBED: survey step 163 (L75) stalls for the chains at t0, names
+             * `spinningaxe@80,144` as the partial, and walks into its blade at t160 (game-witnessed). ON: the
+             * remaining corridor is probed from the stall's end and, on a hit, the ladder is climbed again (the
+             * AXE arm's question). OFF: one climb, byte-identical.
+             */
+            climbs: while (hit) {
                 /**
                  * ⛓⛓⛓ ⚖ §11.8a RULING 2 — THE LADDER REPLACES SLICE 2's
                  * REFUSAL. Slice 2 sensed the danger and refused, naming
@@ -21108,7 +21119,9 @@ function solveSegmentUnder({
                 });
                 // ⛓ FORCEDHIT D2 — the forced-hit rung WALKED the crossing (its hit billed): the walk is done.
                 if (climbed.forced) return climbed.forced.transition;
-                if (climbed.wps) { wps = climbed.wps; narrow = climbed.narrow === true; } else { continue; }
+                if (climbed.wps) { wps = climbed.wps; narrow = climbed.narrow === true; } else { continue attempts; }
+                if (!(CONTACT_FIDELITY.partialDodgeReprobe && climbed.partial)) break climbs;
+                hit = probeCorridor(wps, except, { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
             }
             /**
              * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 35 — **THE PLANNER IS ASKED ONCE

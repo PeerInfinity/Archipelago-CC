@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**73 files, 5960 literals.** Class × position:
+**74 files, 5987 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 5 | 1572 | 430 | 2007 |
-| rule | 7 | 1018 | 494 | 1519 |
+| physics | 5 | 1572 | 442 | 2019 |
+| rule | 7 | 1022 | 495 | 1524 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 14 | 377 | 1967 | 2358 |
+| structural | 14 | 377 | 1977 | 2368 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 26 | 3029 | 2905 | 5960 |
+| total | 26 | 3033 | 2928 | 5987 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1731 | 0 | 92 | 123 | 4 | 57 | 2007 |
-| rule | 495 | 139 | 239 | 22 | 532 | 92 | 1519 |
+| physics | 1743 | 0 | 92 | 123 | 4 | 57 | 2019 |
+| rule | 500 | 139 | 239 | 22 | 532 | 92 | 1524 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -512,7 +512,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**12 named scalars** are `physics` or `rule` (12 with an AS3 anchor), and **146 small tables** (at most 16 literals) hold at least one (95 with an AS3 reference).
+**12 named scalars** are `physics` or `rule` (12 with an AS3 anchor), and **147 small tables** (at most 16 literals) hold at least one (96 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -667,6 +667,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `INVENTORY_ITEM_IDS` | seedlingDemo/tapeFormat.js | 6 | 6 | rule | sentinel | Inventory.as:277-318 |
 | `SAVE_SLOTS` | seedlingDemo/tapeFormat.js | 3 | 3 | rule | count | Player.as:totemParts Player.as:totalKeys SealController.as:SEALS |
 | `PLACED_GRENADE` | seedlingDemo/placedGrenade.js | 4 | 3 | physics/rule | count/magnitude | Enemies/Grenade.as:fallTriggerDistance Enemies/Grenade.as:g Enemies/Grenade.as:_exTime |
+| `SPINNING_AXE` | seedlingDemo/spinningAxe.js | 4 | 4 | rule | magnitude | Puzzlements/SpinningAxe.as Puzzlements/SpinningAxe.as:49-63 Entity.as:263-264 |
 | `BLACK_COVER` | seedlingDemo/gameClock.js | 2 | 2 | rule | magnitude | Game.as:blackCover Game.as:blackCoverRate |
 | `LOAD_FADE_FRAMES` | seedlingDemo/gameClock.js | 7 | 1 | rule | bound | Game.as:blackCover |
 | `PICKUP_HELP_DEAD_FRAMES` | seedlingDemo/gameClock.js | 1 | 1 | rule | magnitude | Pickups/Sword.as:42-49 Inventory.as:174 Game.as:961 |
