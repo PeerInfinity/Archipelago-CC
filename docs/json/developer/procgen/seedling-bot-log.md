@@ -22462,3 +22462,53 @@ One re-pin outside our own rows: the hammer DD witness (`plan-seedling-hammer-dd
 the lapse OFF (hammer's OK). A new lapse-ON block pins the post-flip shape: at (32,112) DD OFF and ON solve alike in
 509, and at step 50's own (176,48) DD OFF refuses the dwell as already true while DD ON solves. Under the lapse, DD is
 load-bearing.
+
+### Seedling hammer-phase WC — the strike's walk cache
+
+⚖ The user (2026-10-15): *"Walk-cache lever first"*: make `STRIKE_ETA_FLOOR` ON cheap by reusing the strike's walk
+previews across the executor's re-derivations, answer-identically, behind one new switch, OFF. **The slice stopped at
+D1 (measured):** no walk cache, exact or approximate, brings the L18 sweep ON under 1.15× OFF, so none was built. No
+code moved and nothing was re-recorded. The report is `CC/docs/cloud-reports/seedling-hammer-wc.md`.
+
+**W0** at `11e8b7473f` (`REFUGE_ETA_CUT`, `PRESS_KILL_DONE_ON_WALK` and `strikeIframeLapse` ON, `STRIKE_ETA_FLOOR` OFF,
+wave 17 not landed). The identity block equals SF2's except two rows the lapse flip moved: ENEMY `36b59445` and
+`r9-campaign --check` `6b1bf15c`. tapeRunner is 611 `a970aa03`. L18's 45 lengths are SF2's in both modes; staging A,
+the L40 legs and the campaign moved in both (`r9-solve-18` OFF → ON is now 440 → 390 t).
+
+**D1 — where the cost is.** A scratch lab recorded every strike walk preview over SF2's 12 workloads, OFF and ON. Its
+answers were byte-equal to the base's. For each preview it recorded the source and the reuse bound (an earlier walk in
+the same kill from the same player state, to the same cell, under the same stepper inputs); the base was also
+CPU-profiled.
+- On the L18 sweep, ON's whole extra cost is the escape admission inside `deriveStrike`: `strikeEscape` 56.5 → 106.8
+  s, against a process delta of +47.7 s. ON makes 15.1 escape calls a derivation, OFF 5.5.
+- The walk previews (`walkTo`) are 9.6 % of ON. Removing them outright would still leave ~1.28× OFF.
+- The exact rules cover 45 % of ON's previewed samples, and each is validated with 0 invalid:
+  - a repeat (the same full player state and stepper inputs, in a room with no entity forecast);
+  - a suffix (the same, and the earlier walk not cut `stalled` — the 400-tick budget is per walk, and the 18 invalid
+    suffix matches measured were every one that case);
+  - a join.
+- A hit must still re-ask the danger map at its own ticks: the verdict differs in 67 % of L18's repeated walks and 93 %
+  of staging A's. So a hit saves only `previewWalk`'s 5.0 µs a sample, and the estimate is ~1.38× OFF.
+- On staging A and the L40 legs the previews are ~40 % of the kill OFF, but their cost is the chaser forecast, whose
+  inputs live in `levelRun` and cannot be keyed from outside it.
+- The lever that reaches the target is the escape: 56 % of L18 ON's `strikeEscape` calls repeat a (body, cell, absolute
+  press tick) the kill already asked, 99.7 % with the same answer. That key is not proven exact, and it is
+  `pressEscape`'s region, so it is the user's decision.
+
+Lessons:
+1. *Profile end to end before choosing a lever.* SF2's census priced the scan inside derivations, and its residue named
+   the previews. End to end at this base, the walk previews were 10 % of ON and the escape admission 52 %.
+2. *A walk that repeats is not an answer that repeats.* The trajectories of consecutive derivations repeat (40–95 % of
+   samples), but the walk's verdict is asked at absolute ticks, and the hammer's phase moves every tick. An exact
+   cache can keep the stepping, not the verdict.
+
+### Seedling hammer-phase BW — the bomb-stand producer pinned lapse OFF (an INTERIM)
+
+`plan-seedling-hammer-bw-bombstand.mjs --check` had been red on `main` since fidelity's lapse flip (`7a20beb2fd`), at its
+defaults: with `strikeIframeLapse` ON the OFF stand no longer takes `#7` at t1157, and the ON solve stops at t1339 on
+`#11`'s Explosion reaching `spinner@192,160`. The producer is not in CI, so the flip's re-pin list (the DD witness)
+missed it; WC's W0 caught it. The producer now runs its solves and its account with the lapse pinned OFF (DD's
+`walkKillSolve` shape), and `--check` gains a lapse-ON row that records the t1339 stop. ⚖ The pin is an INTERIM, not an
+avoidance: a bomb blast on a body is a game interaction, and fidelity's held wave-18 row BOMB BLAST ON BODIES (leg 381)
+retires the pin, with the lapse-ON row as the witness it flips. `--check`: all checks green, and the committed tape is
+byte-identical.

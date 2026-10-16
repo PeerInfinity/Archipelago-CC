@@ -1,0 +1,25 @@
+## r8-solve-18 — boot L18 (16,32), goals reach-exit
+PASS: the clock RUNS at this boot — the hammer's phase is computable — Game.time 8607 at the first live tick (refusal: none)
+  pass 1: DISCOVERED kill-lock clear(s) [{18,0}] at tick 420
+  pass 2: MODEL-sourced {18,0} at 419 — `spinnerKillLockOpens` computed the removal at 319 and `activators.opensOnTick(0.01)` is 101, which a declared v9 row spells 100
+  prefix agrees for the first 419 tick(s) below the declared 419 — {18,0}
+  pass 3: SOLVED in 467 ticks
+PASS: r8-solve-18: ZERO hits and ZERO deaths (the standing zero-hit policy) — hits 0, deaths 0
+PASS: ⛓⛓⛓ ZERO SPINNER CONTACTS — neither the body nor the hammer, on an HONEST tape — []
+PASS: ⛔ and `noDamage` is NOT declared — the flag `r8-l18-spinner-press` needs — noDamage false
+PASS: both spinners died to a PRESS — [{"id":"spinner@48,96","t":161,"removed":172},{"id":"spinner@112,48","t":307,"removed":318}]
+PASS: ⛓ each body takes `hitsMax` LANDED hits, and the refused tests are recorded beside them (traps 85/93) — 6 landed of 22 test(s)
+PASS: ⛓⛓ the kill-lock scan RAN at the REMOVAL and is NOT nil — [{"t":173,"nil":true},{"t":319,"nil":false}]
+PASS: ⛓⛓⛓ {18,0} is DECLARED at the tick the model computed — the removal plus the `Lock`'s own fade, in the v9 `at` spelling — declared at 419 = removal 319 + 100, the v9 spelling (model-sourced by twoPassSolve: `spinnerKillLockOpens` computed the removal at 319 and `activators.opensOnTick(0.01)` is 101, which a declared v9 row spells 100)
+PASS: ⛔ and the loop CONVERGED — a discover pass, a measure pass, a solve pass — [{"pass":1,"kind":"discover","level":18,"flags":[0]},{"pass":2,"kind":"measure","level":18,"tag":0,"source":"model","at":419,"ticks":452},{"pass":3,"kind":"solve","ticks":467}]
+PASS: ⛓ the measuring pass and the solving pass AGREE below the declared tick — [{"ticks":419,"at":419}]
+PASS: the segment ends at a LEVEL ARRIVAL (§3.5), in L19 — [{"t":467,"from_level":18,"to_level":19}]
+PASS: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+## budget: 81 span(s), 7 KB
+FAIL: r8-solve-18 is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r8-solve-18 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+
+## r8-solve-18: 467 ticks, 0 hit(s), 0 death(s), 0 spinner contact(s); {18,0} at 419
+## there is NO hand answer for L18 — the differential is the entire gate.
+
+2 FAILURE(S)

@@ -1,0 +1,14 @@
+PASS: ⛓ the clock is at residue 21, moved by -19 from the committed 40 — seam.time 9940 → 9921
+PASS: ⛓⛓ with the switch OFF this staging REFUSES HAMMER_SAFETY — The corner formed 4 tick(s) after the press on spinner@112,48 LANDED at t262: a landing's knockback is player-coupled, so no forecast taken before it carries the rebound (HAMMER_PHASE_RUNG).
+PASS: ⛓⛓ with it ON the press kill took an escape at every landing — 6 escape(s)
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":445,"from_level":18,"to_level":19}]
+PASS: ⛓ the committed hammer-a-l18-escape21 is what this script produces today — byte-identical
+## hammer-a-l18-escape21: 445 ticks, residue 21, 6 escape(s) (moving 0/0/0/0/38/0), {18,0}@408
+PASS: ⛓ the clock is at residue 15, moved by -25 from the committed 40 — seam.time 9940 → 9915
+PASS: ⛓⛓ with the switch OFF this staging REFUSES HAMMER_SAFETY — There is no step out.
+PASS: ⛓⛓ with it ON the press kill took an escape at every landing — 6 escape(s)
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":449,"from_level":18,"to_level":19}]
+PASS: ⛓ the committed hammer-a-l18-escape15 is what this script produces today — byte-identical
+## hammer-a-l18-escape15: 449 ticks, residue 15, 6 escape(s) (moving 0/1/0/0/0/0), {18,0}@412
+
+all checks green

@@ -1,0 +1,20 @@
+18 invalid suffix matches on staging A sword, floor OFF (lab 3):
+Counter({(True, 'stalled', 'stalled', 400): 18})
+{'t': 710, 'cell': '888,840', 'k': 1, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 399, 'oldAt': None, 'newAt': '749.7373654538039,839.1598157248548,S[right],0'}
+{'t': 711, 'cell': '888,840', 'k': 2, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 398, 'oldAt': None, 'newAt': '749.7373654538039,839.1598157248548,S[right],0'}
+{'t': 712, 'cell': '888,840', 'k': 3, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 397, 'oldAt': None, 'newAt': '749.7373654538039,839.1598157248548,S[right],0'}
+{'t': 713, 'cell': '888,840', 'k': 4, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 396, 'oldAt': None, 'newAt': '749.7373654538039,839.1598157248548,S[right],0'}
+{'t': 714, 'cell': '888,840', 'k': 5, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 395, 'oldAt': None, 'newAt': '749.7373654538039,839.1598157248548,S[right],0'}
+{'t': 1346, 'cell': '744,776', 'k': 1, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 399, 'oldAt': None, 'newAt': '493.9384833234253,776.1293867074716,S[right],0'}
+{'t': 1346, 'cell': '744,744', 'k': 1, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 399, 'oldAt': None, 'newAt': '493.9384833234253,743.3788472759762,S[right],0'}
+{'t': 1346, 'cell': '744,760', 'k': 1, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 399, 'oldAt': None, 'newAt': '493.9384833234253,759.4936204251011,S[right],0'}
+{'t': 1346, 'cell': '744,728', 'k': 1, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 399, 'oldAt': None, 'newAt': '493.9384833234253,727.2692479151789,S[right],0'}
+{'t': 2092, 'cell': '744,840', 'k': 1, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 399, 'oldAt': None, 'newAt': '493.97157287525386,839.1955340366976,S[right],0'}
+{'t': 2092, 'cell': '744,824', 'k': 1, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 399, 'oldAt': None, 'newAt': '493.97157287525386,823.1295359869438,S[right],0'}
+{'t': 2092, 'cell': '744,792', 'k': 1, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 399, 'oldAt': None, 'newAt': '493.97157287525386,791.2340685892931,S[right],0'}
+{'t': 2092, 'cell': '744,808', 'k': 1, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 399, 'oldAt': None, 'newAt': '493.97157287525386,807.3753671548916,S[right],0'}
+{'t': 2093, 'cell': '744,840', 'k': 2, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 398, 'oldAt': None, 'newAt': '493.97157287525386,839.1955340366976,S[right],0'}
+{'t': 2093, 'cell': '744,824', 'k': 2, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 398, 'oldAt': None, 'newAt': '493.97157287525386,823.1295359869438,S[right],0'}
+{'t': 2093, 'cell': '744,792', 'k': 2, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 398, 'oldAt': None, 'newAt': '493.97157287525386,791.2340685892931,S[right],0'}
+{'t': 2093, 'cell': '744,808', 'k': 2, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 398, 'oldAt': None, 'newAt': '493.97157287525386,807.3753671548916,S[right],0'}
+{'t': 2093, 'cell': '744,776', 'k': 1, 'oldLen': 400, 'newLen': 400, 'oldTrunc': 'stalled', 'newTrunc': 'stalled', 'firstDiff': 399, 'oldAt': None, 'newAt': '493.97157287525386,775.4925119730943,S[right],0'}
