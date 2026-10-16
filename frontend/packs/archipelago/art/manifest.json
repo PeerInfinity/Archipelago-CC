@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "generated_by": "scripts/procgen/extract-seedling-art-packs.mjs — do not edit; regenerate and --check",
+  "clocks": {
+    "world": {
+      "ticksPerFrame": 45,
+      "as3": "Game.as:488 timePerFrame; Game.as:1962 worldFrame(n, loops)"
+    }
+  },
+  "sheets": {
+    "ArchipelagoLogo": {
+      "file": "sheets/ArchipelagoLogo.png",
+      "w": 16,
+      "h": 16
+    }
+  },
+  "sprites": {
+    "archipelago:pickup/item": {
+      "sheet": "ArchipelagoLogo",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Pickups/APItem.as:74 imgAP; APItem(x+8, y+8) with a centred Image"
+    }
+  }
+}

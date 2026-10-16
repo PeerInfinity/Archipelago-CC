@@ -1,0 +1,49 @@
+FULL PASS (window 0, base): units 80168 = dash previews 57778 (72.1 %) + the rest (re-plan + drive) 22390; full-pass node wall 1035.9 s
+PREVIEWS: 57066; accepted 2523; accepted AND shipped 2434
+by kind: [('not-faster', 31537), ('leg-bound', 17496), ('certified', 5757), ('danger', 2235), ('stalled', 33), ('crossing', 8)]
+by presses (prefix length): n / certified / accepted
+  1: 14277 / 78 / 43
+  2: 14270 / 1708 / 754
+  3: 14263 / 1953 / 513
+  4: 14256 / 2018 / 1213
+by remaining ticks after the start (rem = current − at): n / accepted / mean ms
+  [0,10): 4616 / 231 / 3.48
+  [10,20): 1916 / 107 / 3.86
+  [20,30): 1468 / 98 / 4.59
+  [30,40): 1314 / 107 / 3.81
+  [40,60): 2926 / 199 / 3.79
+  [60,80): 2447 / 189 / 5.23
+  [80,120): 5564 / 315 / 4.91
+  [120,200): 5792 / 461 / 7.21
+  [200,400): 10312 / 582 / 11.42
+  [400,1000000000): 20711 / 234 / 27.10
+accepted windows: smallest rem [5, 5, 5, 5, 5, 5, 5, 5, 5, 6]
+calls (corridors asked): 680 planned 603 paid (planned and the pass shipped) 586
+units in corridors that planned NOTHING: 24599 of 57778 (42.6 %)
+units in corridors whose plan did not ship: 25900 (44.8 %)
+previews never accepted: 54543 of 57066 (95.6 %)
+nothing-planned corridors by why: [('no dash window certified faster than the', 36), ('deadline', 32), ('the UNDASHED corridor STALLS (the previe', 9)]
+corridors by baseline: n / planned / units / saved ticks / units per saved tick
+  [0,40): 277 / 244 / 2433 / 944 / 2.58
+  [120,200): 95 / 94 / 5647 / 5703 / 0.99
+  [200,400): 105 / 99 / 13929 / 11442 / 1.22
+  [40,80): 63 / 61 / 2307 / 1339 / 1.72
+  [400,1000000000): 99 / 65 / 31869 / 13955 / 2.28
+  [80,120): 41 / 40 / 1593 / 1566 / 1.02
+corridors by turns: n / planned / units / saved ticks / units per saved tick
+  [0,1): 319 / 281 / 6829 / 3055 / 2.24
+  [1,2): 124 / 118 / 4680 / 5623 / 0.83
+  [2,4): 101 / 96 / 9692 / 8544 / 1.13
+  [4,8): 116 / 95 / 28755 / 14636 / 1.96
+  [8,100): 20 / 13 / 7822 / 3091 / 2.53
+corridors by bodies: n / planned / units / saved ticks / units per saved tick
+  [0,1): 413 / 359 / 27620 / 16243 / 1.70
+  [1,2): 140 / 139 / 11552 / 12690 / 0.91
+  [2,4): 67 / 59 / 3914 / 1250 / 3.13
+  [4,100): 60 / 46 / 14692 / 4766 / 3.08
+corridors by px: n / planned / units / saved ticks / units per saved tick
+  [0,100): 362 / 321 / 5890 / 2873 / 2.05
+  [100,200): 110 / 107 / 7540 / 5718 / 1.32
+  [200,400): 106 / 97 / 12351 / 10488 / 1.18
+  [400,800): 90 / 77 / 22113 / 15563 / 1.42
+  [800,1000000000): 12 / 1 / 9884 / 307 / 32.20

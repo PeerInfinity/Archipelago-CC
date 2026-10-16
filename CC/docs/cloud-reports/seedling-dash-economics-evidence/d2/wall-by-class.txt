@@ -1,0 +1,16 @@
+preview wall total s 807.2 n 57066
+  not-faster: n 31537, wall 198.1 s (24.5 %), mean 6.28 ms
+  leg-bound: n 17496, wall 526.5 s (65.2 %), mean 30.09 ms
+  certified: n 5757, wall 59.5 s (7.4 %), mean 10.34 ms
+  danger: n 2235, wall 23.0 s (2.8 %), mean 10.28 ms
+  stalled: n 33, wall 0.1 s (0.0 %), mean 3.31 ms
+  crossing: n 8, wall 0.0 s (0.0 %), mean 4.76 ms
+prefix [0] (swing only): wall 198.2 s (24.6%), accepted 43
+tail rem<10: n 4616 wall 16.1 s accepted 231
+tail rem<20: n 6532 wall 23.4 s accepted 338
+tail rem<30: n 8000 wall 30.2 s accepted 436
+tail rem<40: n 9314 wall 35.2 s accepted 543
+tail rem<60: n 12240 wall 46.3 s accepted 742
+corridors that planned nothing: previews 24490 wall 552.9 s (68.5 %)
+leg-bound by rem: Counter({'>=400': 14395, '<400': 3101}) by baseline>=400: 16017
+leg-bound by leg id top: [(381, 3047), (378, 2756), (478, 602), (488, 602), (400, 596), (486, 596), (396, 590), (725, 584), (740, 584), (726, 584), (736, 583), (730, 581)]

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "seedling",
+  "title": "Seedling — the original graphics",
+  "licence": "Unlicense",
+  "credit": "Seedling art by Connor Ullmann; vendor/seedling/LICENSE (the Unlicense) covers the whole repository.",
+  "source": "vendor/seedling/assets/graphics (PeerInfinity/Seedling), copied byte for byte",
+  "layers": {
+    "art": "art/manifest.json"
+  }
+}

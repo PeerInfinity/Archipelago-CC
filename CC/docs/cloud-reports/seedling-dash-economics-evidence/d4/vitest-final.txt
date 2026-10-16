@@ -1,0 +1,49 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+[90mstdout[2m | frontend/modules/procgenDocs/docLinks.test.js[2m > [22m[2mthe corpus census — printed, then pinned[2m > [22m[2mresolves all 364 links into five kinds and no others
+[22m[39mthe procgen corpus: 29 documents, 364 links — 280 doc, 22 external, 40 repo, 22 same-doc
+
+ [32m✓[39m frontend/modules/procgenDocs/docLinks.test.js [2m([22m[2m15 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m frontend/modules/quickLaunch/generated.test.js [2m([22m[2m34 tests[22m[2m)[22m[32m 233[2mms[22m[39m
+[90mstdout[2m | frontend/modules/procgenDocs/docsRender.test.js[2m > [22m[2m⛓ the biggest document — the one the budget is about[2m > [22m[2mprints what it costs to render, so a page budget is not a guess
+[22m[39mseedling-bot-log.md: 1455815 bytes, 22621 lines → 167ms in node
+
+ [32m✓[39m frontend/modules/procgenDocs/docsRender.test.js [2m([22m[2m46 tests[22m[2m)[22m[33m 332[2mms[22m[39m
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:244:25)
+    at new StateManagerProxy (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:112:10)
+    at file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async loadRegistry (file:///home/user/Archipelago-CC/scripts/procgen/reference/registry.mjs:109:17)
+    at async buildRegistry (file:///home/user/Archipelago-CC/scripts/procgen/reference/registry.mjs:224:36)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/generate-procgen-reference.mjs:104:18
+[90mstdout[2m | frontend/modules/procgenDocs/generated.test.js[2m > [22m[2mthe registry matrix is one column per ENTRY and one row per FIELD
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/procgenDocs/generated.test.js[2m > [22m[2mthe registry matrix is one column per ENTRY and one row per FIELD
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:244:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:112:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/mazeRoom/mazeRoomUI.js:20:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstdout[2m | frontend/modules/procgenDocs/generated.test.js[2m > [22m[2mthe registry matrix is one column per ENTRY and one row per FIELD
+[22m[39m[discoveryState] [DiscoveryState] Constructed
+
+⚠ trackedFilesIn(d): git ls-files failed (Command failed: git -C /tmp/tracked-files-g9G2da ls-files -z -- d) — DEGRADED to the directory listing, untracked files included
+ [32m✓[39m frontend/modules/procgenDocs/generated.test.js [2m([22m[2m55 tests[22m[2m)[22m[33m 7781[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ `--check` exits 0 — regenerating produces byte-identical files [33m 5195[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m150 passed[39m[22m[90m (150)[39m
+[2m   Start at [22m 06:47:13
+[2m   Duration [22m 12.45s[2m (transform 5.25s, setup 0ms, import 5.75s, tests 8.38s, environment 1ms)[22m
+

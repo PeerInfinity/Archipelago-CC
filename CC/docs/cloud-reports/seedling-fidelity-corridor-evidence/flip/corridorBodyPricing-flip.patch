@@ -1,0 +1,39 @@
+diff --git a/frontend/modules/seedlingDemo/contactFidelity.js b/frontend/modules/seedlingDemo/contactFidelity.js
+index 189fb8b..4501d77 100644
+--- a/frontend/modules/seedlingDemo/contactFidelity.js
++++ b/frontend/modules/seedlingDemo/contactFidelity.js
+@@ -473,7 +473,7 @@ export const CONTACT_FIDELITY = {
+      * executor's ladder routes round them or refuses by name. ⛔ OFF by default (no licence);
+      * `SEEDLING_CORRIDOR_BODY_PRICING=0|1` for a node measurement.
+      */
+-    corridorBodyPricing: false,
++    corridorBodyPricing: true,
+ };
+ /** The defaults this slice shipped, for a reader that asks what "default" was. */
+ export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
+diff --git a/frontend/modules/seedlingDemo/contactFidelity.test.js b/frontend/modules/seedlingDemo/contactFidelity.test.js
+index 6ffe41a..7e51d6f 100644
+--- a/frontend/modules/seedlingDemo/contactFidelity.test.js
++++ b/frontend/modules/seedlingDemo/contactFidelity.test.js
+@@ -135,7 +135,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
+             // ⛓ fidelity LAPSECOST D2: `flyerLive` (the Flyer stepped: its chase, its "fall" and its drop) ships OFF.
+             flyerLive: false,
+             // ⛓ fidelity CORRIDOR D2: `corridorBodyPricing` (the walk corridor prices the live wallflyers and drills) ships OFF.
+-            corridorBodyPricing: false });
++            corridorBodyPricing: true });
+     });
+ 
+     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
+diff --git a/frontend/modules/seedlingDemo/fidelityCorridorBody.test.js b/frontend/modules/seedlingDemo/fidelityCorridorBody.test.js
+index ebd18f5..5b4d8c7 100644
+--- a/frontend/modules/seedlingDemo/fidelityCorridorBody.test.js
++++ b/frontend/modules/seedlingDemo/fidelityCorridorBody.test.js
+@@ -87,7 +87,7 @@ function solveBoot(name) {
+ describe('fidelity CORRIDOR — the walk corridor prices the live wallflyers and drills', () => {
+     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_CORRIDOR_BODY_PRICING)(
+         'ships OFF: no forecast, and a preview carries no `corridorBodies`', () => {
+-            expect(CONTACT_FIDELITY_DEFAULTS.corridorBodyPricing).toBe(false);
++            expect(CONTACT_FIDELITY_DEFAULTS.corridorBodyPricing).toBe(true);
+             const w = W('survey-step-47.json');
+             const run = createRunForStaging(solveStaging(stagingFromTape(parseTape(JSON.stringify(w.walk)))), SRC);
+             off(() => {
