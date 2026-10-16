@@ -22723,3 +22723,37 @@ Trap candidates:
    suspected fix in the probe's model, or join label-free; a second parting after a partial fix may be the join.
 2. *A "contact geometry" parting can be a wall upstream.* SF's t658 hit was decided 50 ticks earlier, where the bob
    failed to stop. Trace the body's trail back to its first difference before modelling the contact.
+
+### Seedling DB — the cheaper dash search, OFF
+
+⚖ The user (2026-10-16): *"Build the best shape, OFF"*: DS's verdict, `cheap2` plus a dash-only window that keeps
+partial schedules. This slice built the three SOLVER pieces in `solverBot.js`, every one OFF; the window itself is the
+JS arc's (js-6, `jsRuntimeSolver.passShouldStop`). The report is `CC/docs/cloud-reports/seedling-dash-shape.md`.
+
+**W0** at `dab1994e58` (SPINNINGAXE and L40CONTACT on main, both OFF; CORRIDOR and js-6's window not). The identity
+block equals DS's row for row, tapeRunner is 611 `75a3c41f`, and DS's lab re-run at this base reproduces DS's today /
+window 0 / `cheap2` rows exactly in ticks and units (sweep `38845773709`'s 617 requests).
+
+**D1 — the switches.** `DASH_LEG_PRECHECK` (margin `DASH_LEG_PRECHECK_MARGIN` = 40 over `PREVIEW_AGREEMENT_BOUND`),
+`DASH_NO_SWING_PREFIX`, `DASH_KEEP_PARTIAL`, each `SEEDLING_<NAME>=1` / `with<Name>`. OFF is byte-inert (identity
+block, six `--check`s, tapeRunner pairs). None reaches the page: the browser has no `process`, and the worker reads
+only `killLockBodies`, `contactFidelity` and `axeDodgeAskPerPreview` off a request. Gate `hammerDashShape.test.js`
+(17 rows; nine mutants caught), on a committed corridor from the sweep whose undashed leg is exactly 235 or 236 ticks.
+
+**D2 — measured.** The built switches equal DS's lab on every row in ticks and units:
+- the pre-check: identical ticks on all 617, −10,457 units at window 0 (−228 at 85);
+- no `[0]`: 101.2 % of window 0's ticks at window 0, 25 requests better at 85, none worse than today;
+- the keep alone: nothing, at either window (today's window trips every site, so the segment refuses anyway);
+- all three with the lab's dash-only window at 85: **77.6 %** of window 0's ticks, 166 better / 0 worse than today,
+  +12,345 units; leg 108 ships 561 → 328 t.
+In place: the pre-check moves one trace (`r9-solve-12`), no tape. No `[0]` re-plans ONE committed tape, `r9-solve-16`
+655 → 646 t (and `r9-solve-18`'s seam time follows), and moves the dash traces of all four solve producers, the ENEMY
+census and `pushblock-witness` (already red at the base). The keep moves nothing. 12 of the 61 `plan-seedling-*
+--check`s are red at the base itself, identically ON and OFF.
+
+Lessons:
+1. *A corridor's legs depend on the run the solve hands it.* DS's 234-tick leg on L26 measured 224 on a run built
+   from the request's staging alone; a boundary fixture must measure its own legs, so the row asserts them first.
+2. *A per-site latch keeps a trip where it happened.* Only `sword-dash` is asked inside the dash scan (`certify` asks no
+   `walk`), so "keep on another site's trip" is reachable only through a site latched before the scan, and the gate
+   row builds exactly that (`kill-chaser` first).
