@@ -151,6 +151,15 @@ export const TEST_BATCHES = Object.freeze({
         // tutorials-procgen.
         webgpu: true,
     }),
+    'feature-checks': Object.freeze({
+        description:
+            'The feature checks\' walk rows (feature-check-<id>): scripted walks '
+            + 'in the Tutorial panel that test a feature, not tutorials (⚖ the '
+            + 'user, 2026-10-15). A batch of their own, so they never eat a '
+            + 'tutorials batch\'s budget. Manual, like tutorials.',
+        manual: true,
+        categories: Object.freeze(['Feature checks']),
+    }),
     'tutorials-tracker': Object.freeze({
         description:
             'The Tracking track\'s tutorial walk rows (ALTTP seed 1, loaded fresh '

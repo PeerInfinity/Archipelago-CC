@@ -123,6 +123,11 @@ describe('testBatches', () => {
         expect(categoryInBatch('Tutorial walks: tracker', 'fast')).toBe(false);
     });
 
+    it('feature-checks claims the feature checks\' walk rows (⚖ 2026-10-15), and no tutorials batch does', () => {
+        expect(categoryInBatch('Feature checks', 'feature-checks')).toBe(true);
+        for (const b of ['tutorials', 'fast']) expect(categoryInBatch('Feature checks', b), b).toBe(false);
+    });
+
     it('tutorials claims the Tutorial panel rows and the walk rows, and fast no longer does', () => {
         for (const c of ['Tutorials', 'Tutorial walks']) {
             expect(categoryInBatch(c, 'tutorials'), c).toBe(true);
@@ -132,7 +137,7 @@ describe('testBatches', () => {
 
     describe('manual vs on push', () => {
         it('the user\'s manual batches are manual (rulings 2026-09-27, 2026-10-09, 2026-10-10)', () => {
-            expect(listManualBatches()).toEqual(expect.arrayContaining(['bot-walks', 'noiz2sa', 'runner', 'tutorials', 'tutorials-procgen', 'tutorials-procgen-loops', 'tutorials-tracker', 'tutorials-seedling', 'tutorials-seedling-whole-game']));
+            expect(listManualBatches()).toEqual(expect.arrayContaining(['bot-walks', 'noiz2sa', 'runner', 'tutorials', 'tutorials-procgen', 'tutorials-procgen-loops', 'tutorials-tracker', 'tutorials-seedling', 'tutorials-seedling-whole-game', 'feature-checks']));
         });
 
         it('on push = every batch not marked manual, the default among them', () => {
