@@ -1939,6 +1939,27 @@
       "noHazards": []
     },
     {
+      "file": "sealdoor-l113-clear.json",
+      "tickCount": 148,
+      "bootLevel": 113,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "sealdoor-l113-exit.json",
+      "tickCount": 205,
+      "bootLevel": 113,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "sealdoor-l113-noseal-control.json",
+      "tickCount": 148,
+      "bootLevel": 113,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "shuffle-stop.json",
       "tickCount": 60,
       "bootLevel": 0,

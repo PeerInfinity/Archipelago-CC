@@ -547,6 +547,24 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_CORRIDOR_BODY_PRICING=0|1` for a node measurement.
      */
     corridorBodyPricing: false,
+    /**
+     * fidelity SEALDOOR D2 — THE FINAL DOOR OPENS ON APPROACH, AND THE SOLVER STEPS IT (`solverBot`'s `approach` verb).
+     *
+     *     FinalDoor.as:47-68   talkedToWatcher = !Game.checkPersistence(0, 114); within `seeDistance` 32 the first
+     *                          frame adds a SealController (181 dead frames); the next, with
+     *                          `SealController.hasAllSealParts() && talkedToWatcher`, plays "open"
+     *     FinalDoor.as:79-88   `animEnd` removes the door; `removed()` clears its tag {113,0}
+     *
+     * The RUN has stepped the door since R6 slice 6c (`levelRun.stepFinalDoorsNow`, game-recorded as `r6-final-door`
+     * and its unspoken-Watcher control), but the solver had no row for `solid:finaldoor`, so a corridor through it
+     * refused as an ITEM gate and its clear-tag as `no-verb` (sweep 38926058850: L113 legs 804-806, 811-813, 818-820).
+     * ON: `refineStrategy` selects `approach` for the door; the resolver reads both predicates from the run's OWN
+     * state (`run.finalDoorGate`: the save's last seal slot, the {114,0} clear) and refuses by name, saying which one
+     * fails, when the door cannot open; otherwise it walks into the 32 px circle, holds toward the door through the
+     * ceremony and the open, and waits out the 56-tick animation and the one-tick `updateLists` fencepost. ⛔ OFF by
+     * default (no licence); `SEEDLING_SEAL_DOOR_APPROACH=0|1` for a node measurement.
+     */
+    sealDoorApproach: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -663,6 +681,9 @@ if (globalThis.process?.env?.SEEDLING_CHASER_SPINNER_WALLS === '0') CONTACT_FIDE
 // ⛓ fidelity CORRIDOR D2: `SEEDLING_CORRIDOR_BODY_PRICING=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_CORRIDOR_BODY_PRICING === '1') CONTACT_FIDELITY.corridorBodyPricing = true;
 if (globalThis.process?.env?.SEEDLING_CORRIDOR_BODY_PRICING === '0') CONTACT_FIDELITY.corridorBodyPricing = false;
+// ⛓ fidelity SEALDOOR D2: `SEEDLING_SEAL_DOOR_APPROACH=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_SEAL_DOOR_APPROACH === '1') CONTACT_FIDELITY.sealDoorApproach = true;
+if (globalThis.process?.env?.SEEDLING_SEAL_DOOR_APPROACH === '0') CONTACT_FIDELITY.sealDoorApproach = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

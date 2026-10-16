@@ -1,0 +1,173 @@
+{
+    "game": "seedling",
+    "name": "sealdoor-l113-exit",
+    "boot": {
+        "level": 113,
+        "x": 16,
+        "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 114,
+            "tag": 0,
+            "note": "the Watcher's dialogue — what `r6-watcher-talk` earns, declared here"
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+        ]
+    },
+    "rng": {
+        "seed": 0,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "canSwim": true
+        }
+    },
+    "tick_count": 205,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 24
+        },
+        {
+            "key": "left",
+            "from": 24,
+            "to": 25
+        },
+        {
+            "key": "right",
+            "from": 25,
+            "to": 26
+        },
+        {
+            "key": "left",
+            "from": 26,
+            "to": 27
+        },
+        {
+            "key": "right",
+            "from": 27,
+            "to": 28
+        },
+        {
+            "key": "left",
+            "from": 31,
+            "to": 32
+        },
+        {
+            "key": "down",
+            "from": 0,
+            "to": 39
+        },
+        {
+            "key": "up",
+            "from": 39,
+            "to": 40
+        },
+        {
+            "key": "down",
+            "from": 40,
+            "to": 41
+        },
+        {
+            "key": "right",
+            "from": 45,
+            "to": 85
+        },
+        {
+            "key": "left",
+            "from": 85,
+            "to": 86
+        },
+        {
+            "key": "right",
+            "from": 86,
+            "to": 87
+        },
+        {
+            "key": "left",
+            "from": 90,
+            "to": 91
+        },
+        {
+            "key": "up",
+            "from": 95,
+            "to": 106
+        },
+        {
+            "key": "down",
+            "from": 106,
+            "to": 107
+        },
+        {
+            "key": "up",
+            "from": 107,
+            "to": 109
+        },
+        {
+            "key": "down",
+            "from": 111,
+            "to": 113
+        },
+        {
+            "key": "right",
+            "from": 117,
+            "to": 129
+        },
+        {
+            "key": "up",
+            "from": 117,
+            "to": 129
+        },
+        {
+            "key": "left",
+            "from": 186,
+            "to": 187
+        },
+        {
+            "key": "right",
+            "from": 190,
+            "to": 191
+        },
+        {
+            "key": "up",
+            "from": 186,
+            "to": 205
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY SEALDOOR — sweep leg 811's goal (`out_teleporter_112_0`, to L115) from the L114 arrival (16,16): the same `approach`, then the walk through the open doorway onto `teleporter@112,0` (canSwim held: L115's arrival tiles are water). Staged from `r6-final-door`'s game-recorded block re-pointed at (16,16), items [canSwim]. The solver's own plan (`sealDoorApproach` ON): 205 t. Authored by scripts/procgen/plan-seedling-sealdoor-witness.mjs."
+}
