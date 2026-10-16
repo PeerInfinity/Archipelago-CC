@@ -5,7 +5,7 @@ Session `seedling-fidelity-corridor` (Opus build, cloud), planner `seedling-fide
 | | |
 |---|---|
 | Start SHA | `e967758748` (main: wave 16 + the lapse flip + hammer DD / RE / SF) |
-| Head | the commit that adds this report (docs only), on `f5c2267` (the last code head) |
+| Head | the commit that adds this CI row (docs only), on `0a492bb` (CI 38825812541 green); last code head `f5c2267` |
 | Harness branch | `claude/seedling-corridor-pricing-6h3swc` |
 | Verdicts | **W0 PASS · D1 PASS · D2 PASS (switch built, OFF; STOP for the flip) · D3 PASS (contact geometry, not pricing; already closed at the defaults) · gate flip STOP** |
 
@@ -281,5 +281,9 @@ OFF:
   ON 5 named reds; ON + gate the same 5.
 - `fidelityCorridorBody.test.js` 8 / 8; mutants M1–M5 caught, M6 blind.
 - roster unchanged (no tape added); hammer answers unchanged.
+
+- CI (`JavaScript Unit Tests`) at `e94b863`: run 38820570851, **3 red**, all this slice's own: the log entry landed after
+  the reference was regenerated (`generated --check`, two `docsRender` heading rows). Regenerated at `0a492bb`: run
+  **38825812541 success**, vitest (unfiltered) **20,415 / 20,415**, slow battery **253 / 253**.
 
 Not run: `standing-values --write`, `pytest`, the unfiltered local vitest (⚖ 52). No `git stash`, rebase or force-push.
