@@ -1,0 +1,10 @@
+PASS: the per-weapon press is ON (`GHOST_SPINNER_PRESS`, its default) — enabled true
+PASS: OFF: the kill rung refuses the ghost primary at t0, by name — REFUSED at 0
+PASS: ⛓ ON: the solve gets past the gate (its prefix is the walk; the rung's refusal is not in its message) — REFUSED at 2195
+PASS: ⛓⛓ every landing is a ghost press, and every press the walk made is the ghost sword's — 5 landing(s), weapons ["ghostsword"]
+PASS: ⛓⛓⛓ the ghost press kills spinner@880,848, and the body leaves `spinnerBodies` — killed at t2114 (hits 4, 23.786 px), removed at t2127
+PASS: ⛓⛓⛓ the ghost press kills spinner@816,848, and the body leaves `spinnerBodies` — killed at t2182 (hits 4, 11.579 px), removed at t2195
+PASS: ⛓ the committed hammer-g1-l40-ghostkill is what this script produces today — byte-identical
+## hammer-g1-l40-ghostkill: 2195 ticks; ⛓⛓⛓ SEEDLING HAMMER-PHASE G1, D2 — THE KILL RUNG'S GHOST PRESS KILL (`GHOST_KILL_RUNG` ON). C1's staging A (P1's boot view: L40's south door (480,896), goal the chest (880,816)) with the ghost sword granted, the sword kept; `solveSegment`'s executed prefix with the switch ON (the solve then refuses on the chaser bob@736,752). Landings t501 spinner@880,848 hits 2 · t2078 spinner@880,848 hits 2 · t2114 spinner@880,848 hits 4 (kill) · t2149 spinner@816,848 hits 2 · t2182 spinner@816,848 hits 4 (kill), all ghost presses; spinner@880,848 killed at t2114 and removed at t2127, spinner@816,848 at t2182 / t2195. Player hits t972 bob@736,752 · t1184 bob@736,752 · t1216 bob@736,752 (death). 2195 t. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs.
+
+all checks green

@@ -1,0 +1,22 @@
+ FAIL  frontend/modules/seedlingDemo/hammerApproach.test.js > hammer-phase B1 — HAMMER_APPROACH (OFF by default) > ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the same residue shor
+ FAIL  frontend/modules/seedlingDemo/hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill > ⛓⛓ hammer-a-l18-escape15 IS the solve: off, the staging refuses HAMMER_SAFETY; o
+ FAIL  frontend/modules/seedlingDemo/hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill > ⛓⛓ hammer-a-l18-escape21 IS the solve: off, the staging refuses HAMMER_SAFETY; o
+ FAIL  frontend/modules/seedlingDemo/hammerFight.test.js > hammer-phase B2 — HAMMER_FIGHT (OFF by default) > ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the residue with no hit, th
+ FAIL  frontend/modules/seedlingDemo/hammerFightFallback.test.js > hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default) > ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carrie
+ FAIL  frontend/modules/seedlingDemo/hammerFightFallback.test.js > hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default) > ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal st
+ FAIL  frontend/modules/seedlingDemo/hammerGhostKillRung.test.js > hammer-g1-l40-ghostkill — the kill rung's ghost press kill, on the game (hammer-phase G1, D2) > ⛓⛓⛓ ON: the rung asks the pre
+ FAIL  frontend/modules/seedlingDemo/hammerGhostSpinner.test.js > D3 — the spinner press kill with the ghost sword (`r9-solve-18`'s staging + `hasGhostSword`) > ON leaves the SWORD's solve byte-iden
+ FAIL  frontend/modules/seedlingDemo/hammerGhostSpinner.test.js > D3 — the spinner press kill with the ghost sword (`r9-solve-18`'s staging + `hasGhostSword`) > ⛓⛓⛓ ON: SOLVED with no hit, cro
+ FAIL  frontend/modules/seedlingDemo/hammerPressBombs.test.js > PRESS_KILL_BOMBS — leg 381 (the MOVINGWAIT witness walk) > t1099, the kill's first tick: OFF stands on (248,184) to press at t1153; ON
+ FAIL  frontend/modules/seedlingDemo/pressKillCost.test.js > strikeScanCost (P2) — derivations on L40 (C1's staging A), P2 ON against OFF > the kill-start derivation, then two refused ones on the sa
+ FAIL  frontend/modules/seedlingDemo/procgenScratchPersistence.test.js > the layer — the model self-declares the clear its own refusal named > WITH the flag it writes instead, on that same tick, and
+ FAIL  frontend/modules/seedlingDemo/procgenScratchPersistence.test.js > the layer — the model self-declares the clear its own refusal named > WITHOUT the flag the run still refuses, and names the t
+ FAIL  frontend/modules/seedlingDemo/procgenScratchPersistence.test.js > the narrowed dialogue guard — LIVE bodies only > a room whose spinner is already REMOVED is no longer asked
+ FAIL  frontend/modules/seedlingDemo/solveProgress.test.js > hammer-phase D1 — the progress hook is observation only (byte-identity) > ⛓⛓ under a deadline that never trips (the page's budgeted p
+ FAIL  frontend/modules/seedlingDemo/solveProgress.test.js > hammer-phase D1 — the progress hook is observation only (byte-identity) > ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook
+ FAIL  frontend/modules/seedlingDemo/solveProgress.test.js > hammer-phase D1 — the snapshot's structure > ⛓⛓ the hammer room: the press arm's escape searches are leaves with their bounds, and th
+ FAIL  frontend/modules/seedlingDemo/solverBot.test.js > R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is arithmetic > ⛓ L18 spends the fade WALKING, and the wait is the subtra
+ FAIL  frontend/modules/seedlingDemo/solverSpinnerKill.test.js > F2 — a lock-less spinner on the walk, post-sword > (2,2): was the run's line-of-sight refusal; now SOLVES in 515 t, the swing planned
+ FAIL  frontend/modules/seedlingDemo/solverSpinnerKill.test.js > F2 — a lock-less spinner on the walk, post-sword > (2,7): was "no step out"; now SOLVES in 264 t, the wait before the train priced
+ FAIL  frontend/modules/seedlingDemo/solverSpinnerKill.test.js > F2 — a lock-less spinner on the walk, post-sword > (5,5): was EXHAUSTED; now SOLVES in 269 t by a press kill whose end is OBSERVED
+ FAIL  frontend/modules/seedlingDemo/solverSpinnerKill.test.js > F2 — a lock-less spinner on the walk, post-sword > (7,6): was "nowhere to be"; now SOLVES in 210 t, the train priced at its own tick'
