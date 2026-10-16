@@ -156,10 +156,11 @@ describe('the committed playthrough\'s leg list', () => {
 
     it('every event-gated leg stages OR is skipped by name; non-gated legs carry neither (unchanged)', () => {
         const gated = legs.filter((l) => l.arrive.events);
-        // ⛓ RULES l38-button-event added 5 (flag:L39:8: 4 staged, 1 skipped — the event's own goal)
-        expect(gated.length).toBe(44);
+        // ⛓ RULES l38-button-event added 5 (flag:L39:8: 4 staged, 1 skipped — the event's own goal);
+        //   RULES watcher-event 4 (flag:L114:0, staged `otherLevel` on L115's four return legs through the FinalDoor)
+        expect(gated.length).toBe(48);
         expect(gated.every((l) => (l.stagedEvents?.length > 0) !== Boolean(l.skip))).toBe(true);
-        expect(gated.filter((l) => l.stagedEvents).length).toBe(35);
+        expect(gated.filter((l) => l.stagedEvents).length).toBe(39);
         expect(gated.filter((l) => l.skip).every((l) => /^goal-is-a-staged-event: /.test(l.skip))).toBe(true);
         const plain = legs.filter((l) => !l.arrive.events);
         expect(plain.every((l) => !('stagedEvents' in l) && !('skip' in l))).toBe(true);
@@ -176,12 +177,15 @@ describe('the committed playthrough\'s leg list', () => {
             boot: { level: l.level, x: l.arrive.x, y: l.arrive.y } }, SRC));
         // ⛓ RULES l38-button-event — a cross-room PRESS event (`action.presser`) seals a POCKET, not the landing: its
         //   arrivals land BESIDE the target (L39's plug) or in another level (L38, `otherLevel`), never inside it.
+        //   RULES watcher-event — so does a TALK (`action.gates`): the Watcher is no solid, and the arrivals it is staged
+        //   for are L115's (`otherLevel`), the FinalDoor's far side.
         const RULES = JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8'));
         const PRESS = new Set(Object.values(RULES.regions['1']).flatMap((r) => r.locations)
-            .filter((x) => x.action?.presser).map((x) => x.event_id));
-        expect([...PRESS]).toEqual(['flag:L39:8']);
+            .filter((x) => x.action?.presser || x.action?.gates).map((x) => x.event_id));
+        expect([...PRESS].sort()).toEqual(['flag:L114:0', 'flag:L39:8']);
         const pressed = legs.filter((l) => l.stagedEvents?.some((e) => PRESS.has(e.eventId)));
-        expect([...new Set(pressed.map((l) => `${l.level},${l.arrive.x},${l.arrive.y}`))].sort()).toEqual(['38,144,16', '39,144,608']);
+        expect([...new Set(pressed.map((l) => `${l.level},${l.arrive.x},${l.arrive.y}`))].sort())
+            .toEqual(['115,64,128', '115,80,128', '38,144,16', '39,144,608']);
         for (const l of pressed) expect(inside(l, []), l.key).toBeNull();
         const byArrival = new Map(legs.filter((l) => l.stagedEvents && !pressed.includes(l))
             .map((l) => [`${l.level},${l.arrive.x},${l.arrive.y}`, l]));
