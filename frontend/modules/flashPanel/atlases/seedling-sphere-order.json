@@ -140,18 +140,12 @@
     },
     {
       "sphere": "5.9",
-      "location": "Level 064 - Ghostspear",
-      "item": "Ghost Spear",
-      "level": 64
-    },
-    {
-      "sphere": "5.10",
       "location": "Level 089 - Feather",
       "item": "Progressive Swim",
       "level": 89
     },
     {
-      "sphere": "5.11",
+      "sphere": "5.10",
       "location": "Level 090 - Chest",
       "item": "Seal",
       "level": 90
@@ -176,15 +170,21 @@
     },
     {
       "sphere": "6.4",
-      "location": "Level 067 - Boss Key 4",
-      "item": "Yellow Key",
-      "level": 67
+      "location": "Level 064 - Ghostspear",
+      "item": "Ghost Spear",
+      "level": 64
     },
     {
       "sphere": "7.1",
       "location": "Level 043 - Wand",
       "item": "Wand",
       "level": 43
+    },
+    {
+      "sphere": "7.2",
+      "location": "Level 067 - Boss Key 4",
+      "item": "Yellow Key",
+      "level": 67
     },
     {
       "sphere": "8.1",
@@ -260,8 +260,8 @@
       "Light",
       "Fire",
       "Progressive Swim",
-      "Ghost Spear",
       "Progressive Swim",
+      "Ghost Spear",
       "Wand",
       "Progressive Sword",
       "Health",
@@ -285,7 +285,7 @@
       {
         "position": 5,
         "intended": "Wand",
-        "ap": "Ghost Spear",
+        "ap": "Progressive Swim",
         "reading": "positions diverge from here — see `divergences` for the ruling on each"
       }
     ]
