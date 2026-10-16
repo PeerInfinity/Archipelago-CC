@@ -109,6 +109,19 @@ export async function l40buttonPlan(boot, name) {
     return { staging, solved };
 }
 
+/**
+ * ⚖ PINNED `bombPusherLive` and `strikeIframeLapse` OFF — an INTERIM (seedling-fidelity-producers, 2026-10-16). Both
+ * tapes were recorded on the game under the pre-flip model. Two flips moved this producer and neither re-pin list named
+ * it (no CI job runs it): the wave-13 flip (`3e6f048cd3`, ⚖ user 2026-10-11 "ON at harvest") turned `bombPusherLive`
+ * ON, and with the lobber live the cluster's hold inside its reach is refused by name (`lobberHoldRefusal` THROWS from
+ * `l40button-l41-part0`'s solve) — `fidelityL40Button` pinned its solve rows OFF for exactly that; the lapse flip
+ * (`19aaa5cce4`) then moved both plans again (with only the lobber pinned, `l41-part0` drifts and `l42-part0` throws a
+ * `BotDriverV2Error` on its collect stance). With both OFF at d1fbfeffc2 `--check` is green. ⛔ RETIRE THIS PIN with
+ * the modelling the ON refusal names (a moving wait, or a priced bomb hit: `movingWait` / `forcedHits`) and a re-record
+ * on the game — a roster move, so the user's licence.
+ */
+const PINNED_FIDELITY = Object.freeze({ bombPusherLive: false, strikeIframeLapse: false });
+
 async function main() {
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
     const { runTape } = await import(join(MODULE, 'tapeRunner.js'));
@@ -174,4 +187,7 @@ async function main() {
     console.log('all checks green');
 }
 
-if (isEntryPoint(import.meta.url)) await main();
+if (isEntryPoint(import.meta.url)) {
+    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
+    await withContactFidelity(PINNED_FIDELITY, main);
+}
