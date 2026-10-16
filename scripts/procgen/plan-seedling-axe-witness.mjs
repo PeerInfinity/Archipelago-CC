@@ -168,6 +168,16 @@ export async function axeVisit(ticks, w, V = 0) {
     });
 }
 
+/**
+ * ⚖ PINNED `waypointSlide` OFF — an INTERIM (seedling-fidelity-producers, 2026-10-16).
+ * The four axe tapes were recorded on the game under the PRE-SLIDE walk. The wave-16 flip (`41b0bc6389`, ⚖ user
+ * 2026-10-14) turned `waypointSlide` ON; its re-pin list missed this producer (no CI job runs it; `fidelityAxe`
+ * replays the tapes and never re-derives them). ON, `axe-l48-reach-l49`'s plan moves (the other three do not).
+ * ⛔ RETIRE THIS PIN with a re-record ON: the plan re-derived under the flipped default, recorded on the game
+ * (p4f, 0 px), and its roster rows re-pinned — a roster move, so the user's licence.
+ */
+const PINNED_FIDELITY = Object.freeze({ waypointSlide: false });
+
 // ⚠ A bare import does nothing (`check-procgen-help`'s import door): the work is `main()`'s.
 async function main() {
     const CHECK = process.argv.includes('--check');
@@ -233,4 +243,7 @@ async function main() {
     console.log('\nall checks green');
 }
 
-if (isEntryPoint(import.meta.url)) await main();
+if (isEntryPoint(import.meta.url)) {
+    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
+    await withContactFidelity(PINNED_FIDELITY, main);
+}

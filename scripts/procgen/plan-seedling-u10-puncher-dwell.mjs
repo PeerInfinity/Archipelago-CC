@@ -44,6 +44,20 @@ const TAPES = join(MODULE, 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
 
+/**
+ * ⚖ PINNED `strikeIframeLapse` OFF — an INTERIM (seedling-fidelity-producers, 2026-10-16).
+ * Both tapes were recorded on the game under the PRE-LAPSE strike gate. The lapse flip (`19aaa5cce4`, ⚖ user
+ * "Flip after DD lands") turned `strikeIframeLapse` ON; its re-pin list missed this producer (no CI job runs it,
+ * and no vitest row re-derives these previews). ON, both previews move and the refused control's punch row
+ * ("the FORECAST refuses the stance BY THE PUNCH at a named tick") loses its tick.
+ * ⛔ RETIRE THIS PIN with a re-record ON: the plan re-derived under the flipped default, recorded on the game
+ * (p4f, 0 px), and its roster rows re-pinned — a roster move, so the user's licence.
+ */
+const PINNED_FIDELITY = Object.freeze({ strikeIframeLapse: false });
+
+// the script is its own derivation (no `main()`): pin the switch for this process before anything is staged
+Object.assign((await import(join(MODULE, 'contactFidelity.js'))).CONTACT_FIDELITY, PINNED_FIDELITY);
+
 const { parseTape, PIN_NAMES } = await import(join(MODULE, 'tapeFormat.js'));
 const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));

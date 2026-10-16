@@ -40,6 +40,18 @@ const TAPES = join(MODULE, 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
 
+/**
+ * ⚖ PINNED `baitForecast` OFF — an INTERIM (seedling-fidelity-producers, 2026-10-16).
+ * The tape was recorded on the game with `baitForecast` OFF (its arrival DECLINES by BODY_OUT_OF_LANE). The wave-12
+ * flip (`a60db8638c`, ⚖ user 2026-10-11 "ON at harvest", whose commit says no producer `--check` moves) turned
+ * `baitForecast` ON and kept `fidelityF1`'s decline as the `baitForecast: false` control; its re-pin list missed
+ * this producer (no CI job runs it). ON, the arrival DETOURS round bob@48,80 (fidelityF1's ON row), so this
+ * producer's "DECLINES" rows fail and its plan moves. Pinned OFF, this producer IS that control's witness.
+ * ⛔ RETIRE THIS PIN with a re-record ON: the plan re-derived under the flipped default, recorded on the game
+ * (p4f, 0 px), and its roster rows re-pinned — a roster move, so the user's licence.
+ */
+const PINNED_FIDELITY = Object.freeze({ baitForecast: false });
+
 // ⚠ A bare import does nothing (`check-procgen-help`'s import door): the work is `main()`'s.
 async function main() {
 
@@ -173,4 +185,7 @@ async function main() {
     console.log('\nall checks green');
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) await main();
+if (import.meta.url === `file://${process.argv[1]}`) {
+    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
+    await withContactFidelity(PINNED_FIDELITY, main);
+}
