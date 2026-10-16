@@ -1,0 +1,20 @@
+1356 / 1356 passed, 19 files
+12/12 scripts/procgen/producerSegments.test.js
+37/37 scripts/procgen/rerecordCampaign.test.js
+5/5 frontend/modules/flashPanel/seedlingSolveDemo.test.js
+130/130 frontend/modules/flashPanel/seedlingWasmPlayback.test.js
+9/9 frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js
+8/8 frontend/modules/seedlingDemo/fidelityDash.test.js
+10/10 frontend/modules/seedlingDemo/ghostMotion.test.js
+44/44 frontend/modules/seedlingDemo/iceTurret.test.js
+18/18 frontend/modules/seedlingDemo/jsRuntimeSolveService.test.js
+8/8 frontend/modules/seedlingDemo/jsRuntimeSolverAnytime.test.js
+18/18 frontend/modules/seedlingDemo/jsRuntimeSolverShouldStop.test.js
+130/130 frontend/modules/seedlingDemo/levelRun.test.js
+13/13 frontend/modules/seedlingDemo/procgenPostSword.test.js
+94/94 frontend/modules/seedlingDemo/r8Acceptance.test.js
+102/102 frontend/modules/seedlingDemo/solverBot.test.js
+4/4 frontend/modules/seedlingDemo/solverBotLethalPit.test.js
+16/16 frontend/modules/seedlingDemo/solverDeadline.test.js
+611/611 frontend/modules/seedlingDemo/tapeRunner.test.js
+87/87 frontend/modules/seedlingDemo/watchOverlays.test.js
