@@ -1,0 +1,615 @@
+{
+ "name": "arrowlane-l16-arrival-right",
+ "class": "Bob",
+ "source": "/tmp/claude-0/w/tape-right.json",
+ "page": "seedling_bot_ap_p4f",
+ "recordedBy": "scripts/procgen/probe-seedling-chaser-mobiles.mjs --record",
+ "switches": {
+  "SEEDLING_KILLLOCK_BODIES": null
+ },
+ "note": "the GAME's Bob rows (`botMobiles()`) and the player at each sampled tick",
+ "samples": [
+  {
+   "t": 0,
+   "level": 16,
+   "player": {
+    "x": 120,
+    "y": 56,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 232,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 200,
+     "y": 88,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 216,
+     "y": 40,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 184,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 168,
+     "y": 120,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 56,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 24,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 1,
+   "level": 16,
+   "player": {
+    "x": 120.8,
+    "y": 56,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 232,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 200,
+     "y": 88,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 216,
+     "y": 40,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 184,
+     "y": 24,
+     "vx": -0.35355339059327373,
+     "vy": 0.35355339059327373,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 168,
+     "y": 120,
+     "vx": -0.35355339059327373,
+     "vy": -0.35355339059327373,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 56,
+     "y": 104,
+     "vx": 0.35355339059327373,
+     "vy": -0.35355339059327373,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 24,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 2,
+   "level": 16,
+   "player": {
+    "x": 122.14999999999999,
+    "y": 56,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 232,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 200,
+     "y": 88,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 216,
+     "y": 40,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 183.82322330470336,
+     "y": 24.17677669529664,
+     "vx": -0.3535533905932738,
+     "vy": 0.3535533905932738,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 167.82322330470336,
+     "y": 119.82322330470336,
+     "vx": -0.3535533905932738,
+     "vy": -0.3535533905932738,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 56.17677669529664,
+     "y": 103.82322330470336,
+     "vx": 0.17677669529663684,
+     "vy": -0.17677669529663684,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 24,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 3,
+   "level": 16,
+   "player": {
+    "x": 123.24999999999999,
+    "y": 56,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 232,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 200,
+     "y": 88,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 216,
+     "y": 40,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 183.64644660940672,
+     "y": 24.353553390593277,
+     "vx": -0.3535533905932738,
+     "vy": 0.3535533905932738,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 167.64644660940672,
+     "y": 119.64644660940672,
+     "vx": -0.3535533905932738,
+     "vy": -0.3535533905932738,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 56.17677669529664,
+     "y": 103.82322330470336,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 24,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 4,
+   "level": 16,
+   "player": {
+    "x": 124.09999999999998,
+    "y": 56,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 232,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 200,
+     "y": 88,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 216,
+     "y": 40,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 183.46966991411009,
+     "y": 24.530330085889915,
+     "vx": -0.3535533905932738,
+     "vy": 0.3535533905932738,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 167.46966991411009,
+     "y": 119.46966991411009,
+     "vx": -0.3535533905932738,
+     "vy": -0.3535533905932738,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 56.17677669529664,
+     "y": 103.82322330470336,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 24,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 5,
+   "level": 16,
+   "player": {
+    "x": 125.49999999999999,
+    "y": 56,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 232,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 200,
+     "y": 88,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 216,
+     "y": 40,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 183.29289321881345,
+     "y": 24.707106781186553,
+     "vx": -0.3535533905932738,
+     "vy": 0.3535533905932738,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 167.29289321881345,
+     "y": 119.29289321881345,
+     "vx": -0.3535533905932738,
+     "vy": -0.3535533905932738,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 56.17677669529664,
+     "y": 103.82322330470336,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 24,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 6,
+   "level": 16,
+   "player": {
+    "x": 130.83653815843095,
+    "y": 53.33808913255339,
+    "hits": 1,
+    "hits_timer": 19
+   },
+   "bodies": [
+    {
+     "x": 232,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 200,
+     "y": 88,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 216,
+     "y": 40,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 183.1161165235168,
+     "y": 24.88388347648319,
+     "vx": -0.3535533905932738,
+     "vy": 0.3535533905932738,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 167.1161165235168,
+     "y": 119.11611652351681,
+     "vx": -0.3535533905932738,
+     "vy": -0.3535533905932738,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 56.17677669529664,
+     "y": 103.82322330470336,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 24,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 7,
+   "level": 16,
+   "player": {
+    "x": 135.94936300360365,
+    "y": 50.787768378786346,
+    "hits": 1,
+    "hits_timer": 18
+   },
+   "bodies": [
+    {
+     "x": 232,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 200,
+     "y": 88,
+     "vx": -0.35355339059327373,
+     "vy": -0.35355339059327373,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 216,
+     "y": 40,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 182.93933982822017,
+     "y": 25.06066017177983,
+     "vx": -0.3535533905932738,
+     "vy": 0.3535533905932738,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 166.93933982822017,
+     "y": 118.93933982822017,
+     "vx": -0.3535533905932738,
+     "vy": -0.3535533905932738,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 56.17677669529664,
+     "y": 103.82322330470336,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 24,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  }
+ ],
+ "tape": {
+  "game": "seedling",
+  "name": "arrowlane-l16-arrival-right",
+  "boot": {
+   "level": 16,
+   "x": 112,
+   "y": 48
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+   "dead_frames",
+   "sound"
+  ],
+  "save": {
+   "totem_parts": [],
+   "keys": [],
+   "seal_parts": []
+  },
+  "rng": {
+   "seed": 0,
+   "split": false,
+   "cosmetic": 0,
+   "fp": 987286273
+  },
+  "seam": {
+   "items": {
+    "hasSword": false,
+    "hasDarkSword": false,
+    "hasGhostSword": false,
+    "hasShield": false,
+    "hasDarkShield": false,
+    "hasFire": false,
+    "hasWand": false,
+    "hasFireWand": false,
+    "canSwim": false,
+    "hasFeather": false,
+    "hasSpear": false,
+    "hasDarkSuit": false,
+    "hasTorch": false
+   },
+   "time": 4800,
+   "primary": 0
+  },
+  "tick_count": 7,
+  "inputs": [
+   {
+    "key": "right",
+    "from": 0,
+    "to": 7
+   }
+  ],
+  "tape_version": 8
+ }
+}
