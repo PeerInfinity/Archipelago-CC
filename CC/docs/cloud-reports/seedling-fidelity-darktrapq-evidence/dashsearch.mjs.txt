@@ -1,0 +1,34 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+const M = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo';
+const { parseTape } = await import(`${M}/tapeFormat.js`);
+const { createRunForStaging } = await import(`${M}/tapeRunner.js`);
+const { atlasLevelSource } = await import(`${M}/levelSource.js`);
+const { heldKeysAt } = await import(`${M}/tapeFormat.js`);
+const base = JSON.parse(readFileSync('tapes/a2.tape.json', 'utf8'));
+const P = 200; // prefix ticks (at (119.98,196.47))
+let best = null;
+for (const a of [0, 1, 2, 3, 4, 5, 6, 7, 8]) for (const gap of [2, 3, 4, 5, 6, 8, 10, 12]) {
+    const t = JSON.parse(JSON.stringify(base));
+    t.inputs = t.inputs.filter((s) => s.from < P).map((s) => ({ ...s, to: Math.min(s.to, P) }));
+    t.inputs.push({ key: 'down', from: P, to: P + 80 });
+    t.inputs.push({ key: 'primary', from: P + a, to: P + a + 1 });
+    t.inputs.push({ key: 'primary', from: P + a + gap, to: P + a + gap + 1 });
+    t.tick_count = P + 80;
+    const tp = parseTape(JSON.stringify(t));
+    const run = createRunForStaging(tp, atlasLevelSource());
+    let maxY = 0, firstHitY = null, hitsAt = [];
+    try {
+        for (let k = 0; k < tp.tick_count; k++) {
+            run.advance(heldKeysAt(tp, k));
+            if (run.level !== 62) break;
+            if (k < P) continue;
+            if (run.state.y < 150) break;
+            maxY = Math.max(maxY, run.state.y);
+            if (run.damage.hits > hitsAt.length) { if (run.damage.hits >= 3) { hitsAt.push(k); break; } hitsAt.push(k); if (firstHitY === null) firstHitY = run.state.y; }
+        }
+    } catch (e) { console.log(a, gap, 'ERR', String(e.message).slice(0, 120)); continue; }
+    const row = { a, gap, maxY: +maxY.toFixed(2), hitsAt, firstHitY: firstHitY && +firstHitY.toFixed(2) };
+    if (!best || row.maxY > best.maxY) best = row;
+    if (gap === 3) console.log(JSON.stringify(row));
+}
+console.log('BEST', JSON.stringify(best));

@@ -1,0 +1,40 @@
+// scratch: re-solve a survey step's staging (its boot view + goals) with extra persistence. node solvestep.mjs <step> [L:T,...]
+import { readFileSync, writeFileSync } from 'node:fs';
+import { globSync } from 'node:fs';
+const M = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo';
+const { parseTape } = await import(`${M}/tapeFormat.js`);
+const { createRunForStaging } = await import(`${M}/tapeRunner.js`);
+const { atlasLevelSource } = await import(`${M}/levelSource.js`);
+const { twoPassSolve } = await import(`${M}/twoPassSolve.js`);
+const S = '/tmp/claude-0/-home-user-Archipelago-CC/8a852119-8f22-5e70-b788-fad728347f0c/scratchpad/survey';
+const step = +process.argv[2];
+const extra = (process.argv[3] ?? '').split(',').filter(Boolean).map((s) => { const [level, tag] = s.split(':').map(Number); return { level, tag }; });
+const bootFile = globSync(`${S}/*/views/step-${step}-boot.json`)[0];
+let row = null;
+for (const f of globSync(`${S}/*/shard-*.json`)) { const d = JSON.parse(readFileSync(f, 'utf8')); for (const r of d.steps ?? d.rows ?? []) if (r.step === step) row = r; }
+const staging = parseTape(readFileSync(bootFile, 'utf8'));
+const levelSource = atlasLevelSource();
+const persistence = [...staging.persistence, ...extra];
+const t0 = Date.now();
+try {
+    const solved = await twoPassSolve({ makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, levelSource), goals: row.goals,
+        name: `darktrapq-step-${step}`, boot: staging.boot, dashMode: undefined, persistence, log: () => {} });
+    const perTick = solved.out.perTick;
+    console.log(`step ${step} +[${extra.map((e) => `{${e.level},${e.tag}}`).join(' ')}] SOLVED ${perTick.length} t, passes ${solved.passes.length}, ${Date.now() - t0} ms`);
+    if (process.argv[4]) {
+        // a tape: staging + perTick
+        const inputs = []; const open = {};
+        for (let i = 0; i <= perTick.length; i++) {
+            const cur = new Set(perTick[i] ?? []);
+            for (const k of Object.keys(open)) if (!cur.has(k)) { inputs.push({ key: k, from: open[k], to: i }); delete open[k]; }
+            for (const k of cur) if (open[k] === undefined) open[k] = i;
+        }
+        const tape = JSON.parse(readFileSync(bootFile, 'utf8'));
+        tape.persistence = [...(typeof tape.persistence === 'string' ? JSON.parse(tape.persistence) : tape.persistence), ...extra];
+        tape.inputs = inputs.sort((a, b) => a.from - b.from); tape.tick_count = perTick.length; tape.name = `darktrapq-step-${step}-resolved`;
+        writeFileSync(process.argv[4], JSON.stringify(tape, null, 1));
+        console.log('wrote', process.argv[4]);
+    }
+} catch (e) {
+    console.log(`step ${step} +[${extra.map((e) => `{${e.level},${e.tag}}`).join(' ')}] REFUSED ${Date.now() - t0} ms: ${String(e.message).slice(0, 700)}`);
+}

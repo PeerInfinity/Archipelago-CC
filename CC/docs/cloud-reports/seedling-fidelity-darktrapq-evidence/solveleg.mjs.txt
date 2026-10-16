@@ -1,0 +1,40 @@
+// scratch: re-solve a sweep leg's staging in node (twoPassSolve, defaults). node solveleg.mjs <legId> [L:T,...] [out.tape.json]
+import { readFileSync, writeFileSync, globSync } from 'node:fs';
+const M = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo';
+const { parseTape } = await import(`${M}/tapeFormat.js`);
+const { createRunForStaging } = await import(`${M}/tapeRunner.js`);
+const { atlasLevelSource } = await import(`${M}/levelSource.js`);
+const { twoPassSolve } = await import(`${M}/twoPassSolve.js`);
+const SC = '/tmp/claude-0/-home-user-Archipelago-CC/8a852119-8f22-5e70-b788-fad728347f0c/scratchpad';
+const id = +process.argv[2];
+const extra = (process.argv[3] ?? '').split(',').filter(Boolean).map((s) => { const [level, tag] = s.split(':').map(Number); return { level, tag }; });
+const row = readFileSync(`${SC}/sweep/merged/rows.jsonl`, 'utf8').split('\n').filter(Boolean).map(JSON.parse).find((r) => r.id === id);
+const level = Number(String(row.key).match(/^level_(\d+)/)[1]);
+const [, ex, ey] = row.key.match(/out_teleporter_(\d+)_(\d+)/);
+const base = JSON.parse(readFileSync(globSync(`${SC}/survey/*/views/step-106-boot.json`)[0], 'utf8'));
+const flags = row.granted.map((g) => g.match(/^L(\d+) flag (\d+):/)).filter(Boolean).map((m) => ({ level: +m[1], tag: +m[2] }));
+base.boot = { level, x: row.arrive[0], y: row.arrive[1] };
+base.seam = row.seam; base.persistence = [...flags, ...extra]; base.name = `darktrapq-leg-${id}`;
+const staging = parseTape(JSON.stringify(base));
+const levelSource = atlasLevelSource();
+const goals = [{ kind: 'reach-exit', exit: { x: +ex, y: +ey }, why: row.key }];
+const t0 = Date.now();
+const tag = `leg ${id} ${row.key} +[${extra.map((e) => `{${e.level},${e.tag}}`).join(' ')}]`;
+try {
+    const solved = await twoPassSolve({ makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, levelSource), goals,
+        name: `darktrapq-leg-${id}`, boot: staging.boot, persistence: staging.persistence, log: () => {} });
+    const perTick = solved.out.perTick;
+    console.log(`${tag} SOLVED ${perTick.length} t (${Date.now() - t0} ms)`);
+    if (process.argv[4]) {
+        const inputs = []; const open = {};
+        for (let i = 0; i <= perTick.length; i++) {
+            const cur = new Set(perTick[i] ?? []);
+            for (const k of Object.keys(open)) if (!cur.has(k)) { inputs.push({ key: k, from: open[k], to: i }); delete open[k]; }
+            for (const k of cur) if (open[k] === undefined) open[k] = i;
+        }
+        base.inputs = inputs.sort((a, b) => a.from - b.from); base.tick_count = perTick.length;
+        writeFileSync(process.argv[4], JSON.stringify(base, null, 1));
+    }
+} catch (e) {
+    console.log(`${tag} REFUSED (${Date.now() - t0} ms): ${String(e.message).replace(/\s+/g, ' ').slice(0, 260)}`);
+}

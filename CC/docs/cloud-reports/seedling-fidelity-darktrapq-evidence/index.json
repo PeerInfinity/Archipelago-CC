@@ -1,0 +1,787 @@
+[
+ {
+  "witness": "a2",
+  "what": "W1 L62 unlit contact from above",
+  "ticks": 320,
+  "sampled": 321,
+  "divergence": "0 px",
+  "end": {
+   "tick": 320,
+   "level": 62,
+   "x": 120,
+   "y": 124.40000000000006,
+   "hits": 0
+  },
+  "hits": [
+   [
+    209,
+    1
+   ],
+   [
+    232,
+    2
+   ],
+   [
+    257,
+    0
+   ]
+  ],
+  "levels": [],
+  "writes": []
+ },
+ {
+  "witness": "w1b",
+  "what": "W1b L63 unlit contact at darktrap@80,64 (game-only past t53: the shake band)",
+  "ticks": 197,
+  "sampled": 198,
+  "divergence": "0 px",
+  "end": {
+   "tick": 197,
+   "level": 63,
+   "x": 82.78,
+   "y": 24,
+   "hits": 0
+  },
+  "hits": [
+   [
+    54,
+    1
+   ],
+   [
+    78,
+    2
+   ],
+   [
+    105,
+    0
+   ]
+  ],
+  "levels": [],
+  "writes": []
+ },
+ {
+  "witness": "w1c",
+  "what": "W1c L62 unlit, best dash timing into the trap",
+  "ticks": 300,
+  "sampled": 301,
+  "divergence": "0 px",
+  "end": {
+   "tick": 300,
+   "level": 62,
+   "x": 120,
+   "y": 111.40000000000005,
+   "hits": 0
+  },
+  "hits": [
+   [
+    209,
+    1
+   ],
+   [
+    229,
+    2
+   ],
+   [
+    260,
+    0
+   ]
+  ],
+  "levels": [],
+  "writes": []
+ },
+ {
+  "witness": "w2",
+  "what": "W2 L63 buttonroom@32,64 press -> L62 (trap dies) -> L64",
+  "ticks": 582,
+  "sampled": 583,
+  "divergence": "0 px",
+  "end": {
+   "tick": 582,
+   "level": 64,
+   "x": 40,
+   "y": 88,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    144,
+    62
+   ],
+   [
+    562,
+    64
+   ]
+  ],
+  "writes": [
+   [
+    55,
+    [
+     [
+      62,
+      0
+     ],
+     [
+      63,
+      0
+     ]
+    ],
+    []
+   ],
+   [
+    217,
+    [
+     [
+      62,
+      1
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "w3",
+  "what": "W3 L62 booted {62,0}: top -> (192,304) -> L63",
+  "ticks": 426,
+  "sampled": 427,
+  "divergence": "0 px",
+  "end": {
+   "tick": 426,
+   "level": 63,
+   "x": 24,
+   "y": 24,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    396,
+    63
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      62,
+      1
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "w4",
+  "what": "W4 L61 buttonroom@176,40 press -> L63 (both traps die) -> col 4 -> L62",
+  "ticks": 363,
+  "sampled": 364,
+  "divergence": "0 px",
+  "end": {
+   "tick": 363,
+   "level": 62,
+   "x": 248,
+   "y": 296,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    102,
+    63
+   ],
+   [
+    343,
+    62
+   ]
+  ],
+  "writes": [
+   [
+    35,
+    [
+     [
+      61,
+      1
+     ],
+     [
+      63,
+      1
+     ]
+    ],
+    []
+   ],
+   [
+    130,
+    [
+     [
+      62,
+      0
+     ],
+     [
+      63,
+      0
+     ]
+    ],
+    []
+   ],
+   [
+    175,
+    [
+     [
+      63,
+      2
+     ],
+     [
+      63,
+      8
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "w5",
+  "what": "W5 L63 booted {63,1}: col 4 -> left -> (16,0) -> L62",
+  "ticks": 295,
+  "sampled": 296,
+  "divergence": "0 px",
+  "end": {
+   "tick": 295,
+   "level": 62,
+   "x": 200,
+   "y": 296,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    275,
+    62
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      63,
+      2
+     ],
+     [
+      63,
+      8
+     ]
+    ],
+    []
+   ],
+   [
+    202,
+    [
+     [
+      62,
+      0
+     ],
+     [
+      63,
+      0
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "s106-lit",
+  "what": "survey step 106 re-solved with {62,0} (solver, defaults)",
+  "ticks": 269,
+  "sampled": 270,
+  "divergence": "0 px",
+  "end": {
+   "tick": 269,
+   "level": 64,
+   "x": 40,
+   "y": 88,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    269,
+    64
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      62,
+      1
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "leg539-62_0",
+  "what": "sweep leg 539 re-solved with {62,0}",
+  "ticks": 269,
+  "sampled": 270,
+  "divergence": "0 px",
+  "end": {
+   "tick": 269,
+   "level": 64,
+   "x": 40,
+   "y": 88,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    269,
+    64
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      62,
+      1
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "leg544-62_0",
+  "what": "sweep leg 544 re-solved with {62,0}",
+  "ticks": 222,
+  "sampled": 223,
+  "divergence": "0 px",
+  "end": {
+   "tick": 222,
+   "level": 64,
+   "x": 40,
+   "y": 88,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    222,
+    64
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      62,
+      1
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "leg549-62_0",
+  "what": "sweep leg 549 re-solved with {62,0}",
+  "ticks": 266,
+  "sampled": 267,
+  "divergence": "0 px",
+  "end": {
+   "tick": 266,
+   "level": 64,
+   "x": 40,
+   "y": 88,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    266,
+    64
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      62,
+      1
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "leg557-62_0",
+  "what": "sweep leg 557 re-solved with {62,0}",
+  "ticks": 263,
+  "sampled": 264,
+  "divergence": "0 px",
+  "end": {
+   "tick": 263,
+   "level": 61,
+   "x": 120,
+   "y": 24,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    263,
+    61
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      62,
+      1
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "leg558-62_0",
+  "what": "sweep leg 558 re-solved with {62,0}",
+  "ticks": 237,
+  "sampled": 238,
+  "divergence": "0 px",
+  "end": {
+   "tick": 237,
+   "level": 61,
+   "x": 168,
+   "y": 24,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    237,
+    61
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      62,
+      1
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "leg560-62_0",
+  "what": "sweep leg 560 re-solved with {62,0}",
+  "ticks": 258,
+  "sampled": 259,
+  "divergence": "0 px",
+  "end": {
+   "tick": 258,
+   "level": 63,
+   "x": 24,
+   "y": 24,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    258,
+    63
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      62,
+      1
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "leg561-62_0",
+  "what": "sweep leg 561 re-solved with {62,0}",
+  "ticks": 282,
+  "sampled": 283,
+  "divergence": "0 px",
+  "end": {
+   "tick": 282,
+   "level": 63,
+   "x": 72,
+   "y": 24,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    282,
+    63
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      62,
+      1
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "leg565-63_1",
+  "what": "sweep leg 565 re-solved with {63,1}",
+  "ticks": 162,
+  "sampled": 163,
+  "divergence": "0 px",
+  "end": {
+   "tick": 162,
+   "level": 62,
+   "x": 248,
+   "y": 296,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    162,
+    62
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      63,
+      2
+     ],
+     [
+      63,
+      8
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "leg569-63_1",
+  "what": "sweep leg 569 re-solved with {63,1}",
+  "ticks": 198,
+  "sampled": 199,
+  "divergence": "0 px",
+  "end": {
+   "tick": 198,
+   "level": 62,
+   "x": 248,
+   "y": 296,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    198,
+    62
+   ]
+  ],
+  "writes": [
+   [
+    22,
+    [
+     [
+      62,
+      0
+     ],
+     [
+      63,
+      0
+     ]
+    ],
+    []
+   ],
+   [
+    73,
+    [
+     [
+      63,
+      2
+     ],
+     [
+      63,
+      8
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "leg574-63_1",
+  "what": "sweep leg 574 re-solved with {63,1}",
+  "ticks": 219,
+  "sampled": 220,
+  "divergence": "0 px",
+  "end": {
+   "tick": 219,
+   "level": 61,
+   "x": 216,
+   "y": 56,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    219,
+    61
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      63,
+      2
+     ],
+     [
+      63,
+      8
+     ]
+    ],
+    []
+   ],
+   [
+    167,
+    [
+     [
+      62,
+      0
+     ],
+     [
+      63,
+      0
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "leg575-63_1",
+  "what": "sweep leg 575 re-solved with {63,1}",
+  "ticks": 163,
+  "sampled": 164,
+  "divergence": "0 px",
+  "end": {
+   "tick": 163,
+   "level": 61,
+   "x": 216,
+   "y": 104,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    163,
+    61
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      63,
+      2
+     ],
+     [
+      63,
+      8
+     ]
+    ],
+    []
+   ]
+  ]
+ },
+ {
+  "witness": "leg576-63_1",
+  "what": "sweep leg 576 re-solved with {63,1}",
+  "ticks": 235,
+  "sampled": 236,
+  "divergence": "0 px",
+  "end": {
+   "tick": 235,
+   "level": 62,
+   "x": 200,
+   "y": 296,
+   "hits": 0
+  },
+  "hits": [],
+  "levels": [
+   [
+    235,
+    62
+   ]
+  ],
+  "writes": [
+   [
+    73,
+    [
+     [
+      63,
+      2
+     ],
+     [
+      63,
+      8
+     ]
+    ],
+    []
+   ],
+   [
+    167,
+    [
+     [
+      62,
+      0
+     ],
+     [
+      63,
+      0
+     ]
+    ],
+    []
+   ]
+  ]
+ }
+]

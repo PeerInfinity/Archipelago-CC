@@ -1,0 +1,16 @@
+# build a tape from a leg's staging + key ranges
+import json, sys
+def tape(name, level, x, y, inputs, ticks, persistence=(), time=5169, items=None, hits_max=3, primary=0):
+    it = {"hasSword": True, "hasGhostSword": False, "hasShield": True, "hasFire": True, "hasWand": False, "hasFireWand": False, "canSwim": True, "hasSpear": False, "hasDarkShield": False, "hasDarkSuit": False, "hasDarkSword": False, "hasFeather": False, "hasTorch": True}
+    if items: it.update(items)
+    seam = {"items": it, "beam": False, "rock_set": False, "hits_max": hits_max, "time": time, "primary": primary, "secondary": 0, "cutscene": [False]*4, "menu_state": 0}
+    base = [(0,1),(19,1),(12,4),(12,5),(31,0),(30,2),(30,0),(12,3),(24,0),(39,8),(0,4)]
+    pers = [{"level": l, "tag": t} for (l,t) in base] + [{"level": l, "tag": t} for (l,t) in persistence]
+    return {"game": "seedling", "name": name, "boot": {"level": level, "x": x, "y": y}, "noclip": False, "noDamage": False, "noHazards": [], "grants": [],
+            "persistence": pers, "equips": [], "pins": ["sound", "dead_frames"], "save": {"totem_parts": [], "keys": [0,1,2,3], "seal_parts": []},
+            "rng": {"seed": 418414780, "split": False, "cosmetic": 0, "fp": 1763053598}, "seam": seam, "tick_count": ticks,
+            "inputs": [{"key": k, "from": a, "to": b} for (k,a,b) in inputs], "tape_version": 8}
+if __name__ == '__main__':
+    spec = json.loads(open(sys.argv[1]).read())
+    out = tape(**spec)
+    open(sys.argv[2], 'w').write(json.dumps(out, indent=1))

@@ -1,0 +1,60 @@
+// scratch: author a tape closed-loop against the MODEL (defaults). Spec JSON:
+// { base: <tape-spec for mk.py-like header>, segs: [ {to:[x,y], tol, axis?:'x'|'y'} | {hold:[keys], ticks} | {until:'level', ...} ], tail }
+// usage: node author.mjs <spec.json> <out.tape.json>
+import { readFileSync, writeFileSync } from 'node:fs';
+const REPO = '/home/user/Archipelago-CC';
+const M = `${REPO}/frontend/modules/seedlingDemo`;
+const { parseTape } = await import(`${M}/tapeFormat.js`);
+const { createRunForStaging } = await import(`${M}/tapeRunner.js`);
+const { atlasLevelSource } = await import(`${M}/levelSource.js`);
+
+const spec = JSON.parse(readFileSync(process.argv[2], 'utf8'));
+const header = JSON.parse(readFileSync(spec.header, 'utf8'));
+header.inputs = []; header.tick_count = 1;
+const t = parseTape(JSON.stringify(header));
+const run = createRunForStaging(t, atlasLevelSource());
+const perTick = [];
+const log = [];
+const dmg = () => (run.damage ? `${run.damage.hits}/${run.damage.hitsTimer}` : '?');
+const step = (held) => { perTick.push([...held]); run.advance(new Set(held)); };
+for (const seg of spec.segs) {
+    const t0 = perTick.length;
+    if (seg.hold) {
+        for (let i = 0; i < seg.ticks; i++) { step(seg.hold); if (process.env.DBG) console.log(`   t${perTick.length} (${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) v(${(run.state.vx??0).toFixed(2)},${(run.state.vy??0).toFixed(2)}) ${seg.hold} hits ${dmg()} fall ${!!run.state.fall}`); }
+    } else if (seg.to) {
+        const [tx, ty] = seg.to; const tol = seg.tol ?? 0.6; let n = 0;
+        while (n++ < (seg.max ?? 400)) {
+            const s = run.state;
+            if (s.fall) { step([]); continue; }
+            const dx = tx - s.x, dy = ty - s.y;
+            if ((seg.axis === 'y' || Math.abs(dx) <= tol) && (seg.axis === 'x' || Math.abs(dy) <= tol)) break;
+            const h = [];
+            const K = seg.brake ?? 8;
+            const vx = s.vx ?? 0, vy = s.vy ?? 0;
+            const coastX = Math.sign(vx) === Math.sign(dx) && Math.abs(dx) < Math.abs(vx) * K;
+            const coastY = Math.sign(vy) === Math.sign(dy) && Math.abs(dy) < Math.abs(vy) * K;
+            if (seg.axis !== 'y' && Math.abs(dx) > tol && !coastX) h.push(dx > 0 ? 'right' : 'left');
+            if (seg.axis !== 'x' && Math.abs(dy) > tol && !coastY) h.push(dy > 0 ? 'down' : 'up');
+            step(h);
+            if (process.env.DBG && n % 10 === 0) console.log(`   t${perTick.length} (${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) v(${(run.state.vx??0).toFixed(2)},${(run.state.vy??0).toFixed(2)}) ${h} hits ${dmg()} fall ${!!run.state.fall}`);
+        }
+        // settle
+        for (let i = 0; i < (seg.settle ?? 0); i++) step([]);
+    } else if (seg.untilLevel !== undefined) {
+        let n = 0; while (run.level !== seg.untilLevel && n++ < (seg.max ?? 200)) step(seg.keys ?? []);
+    }
+    log.push(`seg ${JSON.stringify(seg)} t${t0}->${perTick.length} L${run.level} (${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) hits ${dmg()} fall ${!!run.state.fall}`);
+}
+for (const l of log) console.log(l);
+// compress
+const inputs = []; const open = {};
+for (let i = 0; i <= perTick.length; i++) {
+    const cur = new Set(perTick[i] ?? []);
+    for (const k of Object.keys(open)) if (!cur.has(k)) { inputs.push({ key: k, from: open[k], to: i }); delete open[k]; }
+    for (const k of cur) if (open[k] === undefined) open[k] = i;
+}
+inputs.sort((a, b) => a.from - b.from || a.key.localeCompare(b.key));
+const out = JSON.parse(readFileSync(spec.header, 'utf8'));
+out.inputs = inputs; out.tick_count = perTick.length; out.name = spec.name ?? out.name;
+writeFileSync(process.argv[3], JSON.stringify(out, null, 1));
+console.log(`wrote ${process.argv[3]}: ${perTick.length} ticks, ${inputs.length} spans`);

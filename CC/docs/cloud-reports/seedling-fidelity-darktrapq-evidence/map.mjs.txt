@@ -1,0 +1,16 @@
+const {loadAtlas}=await import("/home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelSource.js");
+const {buildLevelWorld}=await import("/home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelWorld.js");
+const n=+process.argv[2];
+const rec=loadAtlas().levels.find(x=>x.level===n); const w=buildLevelWorld(rec);
+const names={}; const g=Array.from({length:rec.height},()=>Array(rec.width).fill('?'));
+const leg={};
+for (const t of w.tiles){ let c=leg[t.name]; if(!c){c=String.fromCharCode(97+Object.keys(leg).length); leg[t.name]=c;} g[t.ty][t.tx]=c; }
+const pit=new Set((w.pitTiles??[]).map(t=>t.tx+','+t.ty)); const leth=new Set((w.lethalTerrainTiles??[]).map(t=>t.tx+','+t.ty));
+const walk=new Set(w.walkableTiles.map(t=>t.tx+','+t.ty));
+for (const t of w.tiles){ if(pit.has(t.tx+','+t.ty)) g[t.ty][t.tx]='P'; else if(leth.has(t.tx+','+t.ty)) g[t.ty][t.tx]='L'; else if(!walk.has(t.tx+','+t.ty)) g[t.ty][t.tx]=g[t.ty][t.tx].toUpperCase(); }
+for (const s of w.solids){ const r=s.rect; for(let y=r.y;y<r.bottom;y+=16)for(let x=r.x;x<r.right;x+=16){const ty=Math.floor(y/16),tx=Math.floor(x/16); if(g[ty]&&g[ty][tx]!==undefined) g[ty][tx]='#';}}
+console.log(leg, 'pits',pit.size,'lethal',leth.size);
+console.log('    '+[...Array(rec.width).keys()].map(i=>i%10).join(' '));
+g.forEach((r,i)=>console.log(String(i).padStart(3)+' '+r.join(' ')));
+for (const s of w.solids) console.log('solid', s.tag, JSON.stringify(s.rect));
+for (const e of rec.entities) console.log(e.type, e.x, e.y, 'tile', Math.floor(e.x/16), Math.floor(e.y/16));
