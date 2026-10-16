@@ -63,6 +63,9 @@ const l0Run = () => createLevelRun({
 /** `r9-solve-0`'s first walk corridor, off its committed trace (tick 0). */
 const L0_WPS = [{ x: 136, y: 200 }, { x: 136, y: 184 }, { x: 72, y: 184 }, { x: 72, y: 200 }, { x: 40, y: 200 }];
 const planL0 = () => planSwordDash(l0Run(), L0_WPS, { tolerance: DEFAULT_TOLERANCE });
+// The (iii) rows read the corridor's COMMITTED trace (every prefix, no pre-check), so they pin (i) and (ii) OFF: an
+// env-ON run of this file (`SEEDLING_DASH_NO_SWING_PREFIX=1 …`) would otherwise drop `[0]` and re-count the scan.
+const planL0Committed = () => withDashLegPrecheck(false, () => withDashNoSwingPrefix(false, planL0));
 
 const SWITCHES = [
     ['DASH_LEG_PRECHECK', DASH_LEG_PRECHECK, withDashLegPrecheck],
@@ -163,7 +166,7 @@ describe('seedling DB (ii) — DASH_NO_SWING_PREFIX: `all` without the swing-onl
 });
 
 describe('seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the windows already accepted', () => {
-    const full = planL0();
+    const full = planL0Committed();
 
     it('the corridor: 7 windows over 64 previews, 237 → 145 t (its committed trace)', () => {
         expect(full).toMatchObject({ baseline: 237, ticks: 145, scanned: 64 });
@@ -189,7 +192,7 @@ describe('seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the
         expect(full.candidates.slice(0, evaluated).some((c) => c.certified && c.at === full.windows[2].at)).toBe(true);
         const kept = full.windows.filter((w) => lastOfWindow(w) < evaluated);
         expect(kept).toEqual(full.windows.slice(0, 2));
-        const trip = () => withSolveDeadline(counter(evaluated + 1), planL0);
+        const trip = () => withSolveDeadline(counter(evaluated + 1), planL0Committed);
 
         const on = withDashKeepPartial(true, trip);
         expect(on.plan).not.toBeNull();
@@ -211,13 +214,13 @@ describe('seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the
 
     it('ON, a trip before any window is accepted still refuses `deadline` (at the entry, and at the first preview)', () => {
         for (const n of [0, 1]) {
-            const on = withDashKeepPartial(true, () => withSolveDeadline(counter(n), planL0));
+            const on = withDashKeepPartial(true, () => withSolveDeadline(counter(n), planL0Committed));
             expect(on).toMatchObject({ plan: null, why: 'deadline' });
         }
     }, 60_000);
 
     it('ON, an untripped scan is the scan OFF, byte for byte (no `kept` key)', () => {
-        const on = withDashKeepPartial(true, planL0);
+        const on = withDashKeepPartial(true, planL0Committed);
         expect(JSON.stringify(on)).toBe(JSON.stringify(full));
     }, 60_000);
 
@@ -238,7 +241,7 @@ describe('seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the
             const kill = deriveKillByChaser(run, { ...body }, new Set(),
                 { aim: null, allowTeleporter: null, tolerance: DEFAULT_TOLERANCE });
             expect(kill.stance).toBeNull();
-            return planL0();
+            return planL0Committed();
         }));
         expect(asked[0]).toBe('kill-chaser');
         expect(out.deadline).toMatchObject({ first: 'kill-chaser' });
