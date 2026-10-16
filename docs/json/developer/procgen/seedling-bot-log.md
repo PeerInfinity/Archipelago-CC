@@ -22550,6 +22550,75 @@ avoidance: a bomb blast on a body is a game interaction, and fidelity's held wav
 retires the pin, with the lapse-ON row as the witness it flips. `--check`: all checks green, and the committed tape is
 byte-identical.
 
+### Seedling DS — does the dash search pay for itself?
+
+⚖ The user (2026-10-16): *"the time saved by dashing makes up for the time it takes to find a solution with dashes. We
+might want to run some more tests to confirm that, and maybe find ways to optimize the dash search algorithm, or maybe
+there's a way to change the algorithm to search for just the less computationally expensive dash opportunities."* Then
+*"Measure first, cloud."* **Measure only:** the cheaper searches were built in a scratch lab, never as code. No default
+moved, nothing was re-recorded, and no tracked `.js` changed. The report is `CC/docs/cloud-reports/seedling-dash-economics.md`.
+
+**W0** at `af12970374` (`strikeIframeLapse`, `REFUGE_ETA_CUT`, `PRESS_KILL_DONE_ON_WALK` ON, `STRIKE_ETA_FLOOR` OFF,
+`HAMMER_ESCAPE` ON, budget 640, window 85). The identity block and the six `--check`s equal WC's. Fidelity's SPINNINGAXE
+(`b0aeccdc8a`) and CORRIDOR are not on `main`, so CORRIDOR's optional arm was skipped.
+
+**D1 — the population.** CI capture sweep 38845773709 (its artifacts download in the cloud): 870 requests over 834 legs,
+each replayed through the worker's own dispatch at window 85 and at window 0, one process each.
+- **Faithful:** 868 / 870 equal the page's answer on every pass. The two that differ (378:1 and 381:1) have no page answer:
+  the backstop ended both legs.
+- **Window 0 changes only the 211 requests whose full pass the window cut:**
+  - 170 gain, 0 lose. Σ **22,512 t (750 s at 30 fps)** for **+42,844 units and +467 s of node wall**.
+  - Median gain 132 t for +0.47 s, net +3.5 s. 152 gainers repay their solve; 18 do not (the L40 pits 404–408, and
+    small 15–30 t gains on L12 / L31 / L52).
+  - 41 cut requests gain nothing yet pay +270 s: 31 new 640 cuts (L40 from L39 alone, +11–34 s each; L50 / L52 / L95 /
+    L74–76, +1–4 s) and 5 new refusals (L12, ≤ 1.4 s). The dashless plan still ships on all 41.
+- **Walls:** page `solvedMs` / node = 0.91 (median of 726 legs), and 0.60 above 1 s. Node walls are an upper estimate.
+
+**D2 — where the work goes** (window 0, the 617 requests where the full pass runs with a plan in hand):
+- **Dash previews are 72 % of the full pass's units.** The other 28 % re-plans and drives work the dashless pass already
+  did. On leg 108 that is 19 + 29 units, plus the dashless pass's 36 = **84 of the 85 window before one preview**.
+- **95.6 % of previews are never accepted.** Corridors that plan nothing take 43 % of the dash units but 68.5 % of the
+  preview wall.
+- **`leg-bound` is the costly class:** 31 % of previews and **65 % of the preview wall** (30 ms each, against 6 ms for
+  `not-faster`). It is predictable before a preview: all 24 corridors whose UNDASHED walk has a leg ≥ 240 t
+  (`PREVIEW_AGREEMENT_BOUND` is 195) plan nothing, and they cost 242 s. Corridors at 198–234 t still plan. The largest
+  single-window saving is 98 t (p99 50).
+- **The swing-only prefix `[0]`** is a quarter of the previews and of the preview wall, and was accepted 43 times in
+  14,277.
+- **The tail is not free to cut.** 436 windows were accepted with < 30 t of walk left: `tail10` keeps 98 % of the ticks,
+  but 207 requests come out worse than today.
+
+**D3 — the shapes** (617 requests, against today and window 0):
+
+| shape | window | % of window 0's ticks | worse than today | Δ units | Δ node wall | net s at 30 fps |
+|---|---|---|---|---|---|---|
+| window 0 | 0 | 100 | 0 | +42,844 | +479 s | +271 |
+| leg pre-check K = 40 | 0 | 100 (identical) | 0 | +32,387 | +277 s | +473 |
+| no `[0]` + pre-check (`cheap2`) | 0 | 101.2 | 0 | +24,079 | +264 s | **+496** |
+| any of these | 85 | ≤ 10 | 0 | ≈ 0 | ≈ 0 | ≤ +68 |
+| stride 2 | 0 / 85 | 103 / 11 | **23 / 24** | | | |
+| `cheap2` + dash-only window 85, keep partial | 85 | 77.6 | 0 | +12,345 | +146 s | +437 |
+| `cheap2` + dash-only window 130, keep partial | 85 | 90.6 | 0 | +16,086 | +201 s | +479 |
+
+- **The brief's (a) and (b) lose to these:**
+  - (a) cheap first (the whole chain first, stop at the first certified prefix) makes **91** requests worse than today;
+    the scan's shortest-walk tie-break is what buys the ticks.
+  - (b) a per-corridor cap that keeps the accepted windows reaches 58 % (cap 60) / 88.6 % (cap 150) of window 0's ticks
+    for +161 / +294 s.
+- **No shape fits today's 85 window by itself:** under WINDOW WHOLE PASS the full pass's re-plan and drive use it up
+  first.
+- Re-scoping the window to count only the `sword-dash` asks, and keeping the windows a `sword-dash` trip had already
+  accepted, captures most of window 0's ticks. The worst extra wall is 7.9 s at 85 (window 0: 33.6 s).
+
+**Verdict (the user's call; nothing built):**
+- `cheap2` is two lab switches:
+  - the leg pre-check, lossless on this population;
+  - dropping the swing-only prefix, which changes plans.
+- Paired with a window that counts only dash previews (85, so no number moves) and keeps the partial schedule, it ships
+  78 % of window 0's tick savings for 30 % of its extra solve time, and no request is worse than today.
+- The window re-scope reverses part of ⚖ WINDOW WHOLE PASS (2026-10-06). The prefix drop moves tapes (the committed
+  tapes are recorded under `all`). Both are user decisions; the report lists each one's flip surface.
+
 ### SLOWSOLVE — the slowest page solve, and why the reports say minutes (slice `seedling-slowsolve-check`, 2026-10-16)
 
 ⚖ The user (2026-10-16): *"These sessions have been reporting solves that take over a minute to complete, but when

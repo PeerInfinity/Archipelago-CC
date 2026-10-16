@@ -1,0 +1,1190 @@
+{
+  "schema_version": 1,
+  "generated_by": "scripts/procgen/extract-seedling-art-packs.mjs — do not edit; regenerate and --check",
+  "clocks": {
+    "world": {
+      "ticksPerFrame": 45,
+      "as3": "Game.as:488 timePerFrame; Game.as:1962 worldFrame(n, loops)"
+    }
+  },
+  "sheets": {
+    "Shore": {
+      "file": "sheets/Shore.png",
+      "w": 256,
+      "h": 16
+    },
+    "Water": {
+      "file": "sheets/Water.png",
+      "w": 32,
+      "h": 16
+    },
+    "Stone": {
+      "file": "sheets/Stone.png",
+      "w": 256,
+      "h": 16
+    },
+    "Brick": {
+      "file": "sheets/Brick.png",
+      "w": 16,
+      "h": 16
+    },
+    "Dirt": {
+      "file": "sheets/Dirt.png",
+      "w": 256,
+      "h": 16
+    },
+    "DungeonTile": {
+      "file": "sheets/DungeonTile.png",
+      "w": 16,
+      "h": 16
+    },
+    "Pit": {
+      "file": "sheets/Pit.png",
+      "w": 16,
+      "h": 16
+    },
+    "ShieldTile": {
+      "file": "sheets/ShieldTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "ForestTile": {
+      "file": "sheets/ForestTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "Cliff": {
+      "file": "sheets/Cliff.png",
+      "w": 16,
+      "h": 16
+    },
+    "CliffStairs": {
+      "file": "sheets/CliffStairs.png",
+      "w": 16,
+      "h": 16
+    },
+    "Wood": {
+      "file": "sheets/Wood.png",
+      "w": 256,
+      "h": 16
+    },
+    "WoodWalk": {
+      "file": "sheets/WoodWalk.png",
+      "w": 256,
+      "h": 16
+    },
+    "Cave": {
+      "file": "sheets/Cave.png",
+      "w": 16,
+      "h": 16
+    },
+    "WoodTree": {
+      "file": "sheets/WoodTree.png",
+      "w": 256,
+      "h": 16
+    },
+    "DarkTile": {
+      "file": "sheets/DarkTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "IgneousTile": {
+      "file": "sheets/IgneousTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "Lava2": {
+      "file": "sheets/Lava2.png",
+      "w": 64,
+      "h": 16
+    },
+    "BlueStone": {
+      "file": "sheets/BlueStone.png",
+      "w": 368,
+      "h": 16
+    },
+    "BlueStoneWall": {
+      "file": "sheets/BlueStoneWall.png",
+      "w": 256,
+      "h": 16
+    },
+    "BlueStoneWallDark": {
+      "file": "sheets/BlueStoneWallDark.png",
+      "w": 256,
+      "h": 16
+    },
+    "Snow": {
+      "file": "sheets/Snow.png",
+      "w": 256,
+      "h": 16
+    },
+    "Ice": {
+      "file": "sheets/Ice.png",
+      "w": 64,
+      "h": 16
+    },
+    "IceWall": {
+      "file": "sheets/IceWall.png",
+      "w": 128,
+      "h": 16
+    },
+    "IceWallLit": {
+      "file": "sheets/IceWallLit.png",
+      "w": 128,
+      "h": 16
+    },
+    "Waterfall": {
+      "file": "sheets/Waterfall.png",
+      "w": 128,
+      "h": 16
+    },
+    "Body": {
+      "file": "sheets/Body.png",
+      "w": 64,
+      "h": 16
+    },
+    "BodyWall": {
+      "file": "sheets/BodyWall.png",
+      "w": 64,
+      "h": 16
+    },
+    "GhostTile": {
+      "file": "sheets/GhostTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "OpenBridge": {
+      "file": "sheets/OpenBridge.png",
+      "w": 304,
+      "h": 16
+    },
+    "GhostTileStep": {
+      "file": "sheets/GhostTileStep.png",
+      "w": 16,
+      "h": 16
+    },
+    "IgneousLava": {
+      "file": "sheets/IgneousLava.png",
+      "w": 48,
+      "h": 16
+    },
+    "OddTile": {
+      "file": "sheets/OddTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "FuchTile": {
+      "file": "sheets/FuchTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "OddTileWall": {
+      "file": "sheets/OddTileWall.png",
+      "w": 256,
+      "h": 16
+    },
+    "RockTile": {
+      "file": "sheets/RockTile.png",
+      "w": 64,
+      "h": 16
+    },
+    "RockyTile": {
+      "file": "sheets/RockyTile.png",
+      "w": 64,
+      "h": 16
+    },
+    "PitShadow": {
+      "file": "sheets/PitShadow.png",
+      "w": 16,
+      "h": 16
+    },
+    "CliffSide": {
+      "file": "sheets/CliffSide.png",
+      "w": 80,
+      "h": 16
+    },
+    "Tree2": {
+      "file": "sheets/Tree2.png",
+      "w": 512,
+      "h": 32
+    },
+    "TreeBare": {
+      "file": "sheets/TreeBare.png",
+      "w": 32,
+      "h": 32
+    },
+    "OpenTree": {
+      "file": "sheets/OpenTree.png",
+      "w": 512,
+      "h": 32
+    },
+    "TreeLarge": {
+      "file": "sheets/TreeLarge.png",
+      "w": 640,
+      "h": 192
+    },
+    "Pole": {
+      "file": "sheets/Pole.png",
+      "w": 128,
+      "h": 16
+    },
+    "Rock": {
+      "file": "sheets/Rock.png",
+      "w": 16,
+      "h": 16
+    },
+    "Rock2": {
+      "file": "sheets/Rock2.png",
+      "w": 16,
+      "h": 16
+    },
+    "Rock3": {
+      "file": "sheets/Rock3.png",
+      "w": 16,
+      "h": 16
+    },
+    "Rock4": {
+      "file": "sheets/Rock4.png",
+      "w": 16,
+      "h": 16
+    },
+    "Building": {
+      "file": "sheets/Building.png",
+      "w": 64,
+      "h": 56
+    },
+    "Building1": {
+      "file": "sheets/Building1.png",
+      "w": 48,
+      "h": 40
+    },
+    "Building2": {
+      "file": "sheets/Building2.png",
+      "w": 64,
+      "h": 56
+    },
+    "Building3": {
+      "file": "sheets/Building3.png",
+      "w": 48,
+      "h": 104
+    },
+    "Building4": {
+      "file": "sheets/Building4.png",
+      "w": 144,
+      "h": 136
+    },
+    "Building5": {
+      "file": "sheets/Building5.png",
+      "w": 64,
+      "h": 56
+    },
+    "Building6": {
+      "file": "sheets/Building6.png",
+      "w": 80,
+      "h": 128
+    },
+    "Building7": {
+      "file": "sheets/Building7.png",
+      "w": 80,
+      "h": 96
+    },
+    "Building8": {
+      "file": "sheets/Building8.png",
+      "w": 192,
+      "h": 64
+    },
+    "Statues": {
+      "file": "sheets/Statues.png",
+      "w": 96,
+      "h": 40
+    },
+    "BrickPole": {
+      "file": "sheets/BrickPole.png",
+      "w": 16,
+      "h": 20
+    },
+    "BrickWell": {
+      "file": "sheets/BrickWell.png",
+      "w": 18,
+      "h": 20
+    },
+    "DungeonSpire": {
+      "file": "sheets/DungeonSpire.png",
+      "w": 16,
+      "h": 24
+    },
+    "RuinedPillar": {
+      "file": "sheets/RuinedPillar.png",
+      "w": 32,
+      "h": 48
+    },
+    "Bed": {
+      "file": "sheets/Bed.png",
+      "w": 16,
+      "h": 32
+    },
+    "Bar": {
+      "file": "sheets/Bar.png",
+      "w": 64,
+      "h": 20
+    },
+    "Barstool": {
+      "file": "sheets/Barstool.png",
+      "w": 8,
+      "h": 12
+    },
+    "Dresser": {
+      "file": "sheets/Dresser.png",
+      "w": 32,
+      "h": 24
+    },
+    "ShieldStatue": {
+      "file": "sheets/ShieldStatue.png",
+      "w": 32,
+      "h": 43
+    },
+    "OracleStatue": {
+      "file": "sheets/OracleStatue.png",
+      "w": 64,
+      "h": 48
+    },
+    "PlantTorch": {
+      "file": "sheets/PlantTorch.png",
+      "w": 48,
+      "h": 16
+    },
+    "BoneTorch": {
+      "file": "sheets/BoneTorch.png",
+      "w": 48,
+      "h": 24
+    },
+    "BoneTorch2": {
+      "file": "sheets/BoneTorch2.png",
+      "w": 48,
+      "h": 24
+    },
+    "SnowHill": {
+      "file": "sheets/SnowHill.png",
+      "w": 96,
+      "h": 64
+    }
+  },
+  "sprites": {
+    "seedling:tile/ground": {
+      "sheet": "Shore",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:219 sprGround"
+    },
+    "seedling:tile/water": {
+      "sheet": "Water",
+      "fw": 16,
+      "fh": 16,
+      "frames": 2,
+      "anims": {
+        "flow": {
+          "clock": "world",
+          "frames": [
+            0,
+            1
+          ],
+          "loops": 1
+        }
+      },
+      "as3": "Game.as:221 sprWater; Tile.as:138 worldFrame(2) + random phase"
+    },
+    "seedling:tile/stone": {
+      "sheet": "Stone",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:223 sprStone"
+    },
+    "seedling:tile/brick": {
+      "sheet": "Brick",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:225 sprBrick"
+    },
+    "seedling:tile/dirt": {
+      "sheet": "Dirt",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:227 sprDirt"
+    },
+    "seedling:tile/dungeonTile": {
+      "sheet": "DungeonTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:229 sprDungeonTile; Tile.as:151 random 90° rotation"
+    },
+    "seedling:tile/pit": {
+      "sheet": "Pit",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:231 sprPit"
+    },
+    "seedling:tile/shieldTile": {
+      "sheet": "ShieldTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:233 sprShieldTile"
+    },
+    "seedling:tile/forest": {
+      "sheet": "ForestTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:235 sprForest"
+    },
+    "seedling:tile/cliff": {
+      "sheet": "Cliff",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:237 sprCliff"
+    },
+    "seedling:tile/cliffStairs": {
+      "sheet": "CliffStairs",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:302 sprCliffStairs"
+    },
+    "seedling:tile/wood": {
+      "sheet": "Wood",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:239 sprWood"
+    },
+    "seedling:tile/walkableWood": {
+      "sheet": "WoodWalk",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:241 sprWoodWalk"
+    },
+    "seedling:tile/cave": {
+      "sheet": "Cave",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:243 sprCave"
+    },
+    "seedling:tile/woodNatural": {
+      "sheet": "WoodTree",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:245 sprWoodTree"
+    },
+    "seedling:tile/darkStone": {
+      "sheet": "DarkTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:247 sprDarkTile"
+    },
+    "seedling:tile/igneousStone": {
+      "sheet": "IgneousTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:249 sprIgneousTile"
+    },
+    "seedling:tile/lava": {
+      "sheet": "Lava2",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "anims": {
+        "flow": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "loops": 1
+        }
+      },
+      "as3": "Game.as:251 sprLava; Tile.as:205 worldFrame(4) + random phase"
+    },
+    "seedling:tile/blueTile": {
+      "sheet": "BlueStone",
+      "fw": 16,
+      "fh": 16,
+      "frames": 23,
+      "as3": "Game.as:253 sprBlueTile (23 frames; 15..22 are the img-15 variants)"
+    },
+    "seedling:tile/blueWall": {
+      "sheet": "BlueStoneWall",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:255 sprBlueTileWall"
+    },
+    "seedling:tile/blueWallDark": {
+      "sheet": "BlueStoneWallDark",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:257 sprBlueTileWallDark"
+    },
+    "seedling:tile/snow": {
+      "sheet": "Snow",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:259 sprSnow"
+    },
+    "seedling:tile/ice": {
+      "sheet": "Ice",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "as3": "Game.as:261 sprIce; Tile.as:267 random frame"
+    },
+    "seedling:tile/iceWall": {
+      "sheet": "IceWall",
+      "fw": 16,
+      "fh": 16,
+      "frames": 8,
+      "anims": {
+        "shimmer": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "loops": 2
+        }
+      },
+      "as3": "Game.as:263 sprIceWall; Tile.as:271 worldFrame(8, 2)"
+    },
+    "seedling:tile/iceWallGlowing": {
+      "sheet": "IceWallLit",
+      "fw": 16,
+      "fh": 16,
+      "frames": 8,
+      "anims": {
+        "shimmer": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "loops": 2
+        }
+      },
+      "as3": "Game.as:265 sprIceWallLit; Tile.as:286 worldFrame(8, 2)"
+    },
+    "seedling:tile/waterfall": {
+      "sheet": "Waterfall",
+      "fw": 16,
+      "fh": 16,
+      "frames": 8,
+      "anims": {
+        "fall": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "loops": 0.8
+        },
+        "fallContinuous": {
+          "clock": "world",
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "loops": 0.8
+        }
+      },
+      "as3": "Game.as:267 sprWaterfall; Tile.as:301 worldFrame(4, 0.8) + random phase, +4 if continuous"
+    },
+    "seedling:tile/bodyFloor": {
+      "sheet": "Body",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "anims": {
+        "pulse": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            2,
+            1
+          ],
+          "loops": 1
+        }
+      },
+      "as3": "Game.as:269 sprBody; Tile.as:317 bodyFrames on the world clock"
+    },
+    "seedling:tile/bodyWall": {
+      "sheet": "BodyWall",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "anims": {
+        "pulse": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            2,
+            1
+          ],
+          "loops": 2
+        }
+      },
+      "as3": "Game.as:271 sprBodyWall; Tile.as:326 bodyFrames, 2 loops"
+    },
+    "seedling:tile/ghostTile": {
+      "sheet": "GhostTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:273 sprGhostTile"
+    },
+    "seedling:tile/bridge": {
+      "sheet": "OpenBridge",
+      "fw": 16,
+      "fh": 16,
+      "frames": 19,
+      "anims": {
+        "closed": {
+          "clock": "world",
+          "frames": [
+            0,
+            1
+          ],
+          "loops": 2
+        },
+        "open": {
+          "clock": "world",
+          "frames": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "loops": 2
+        }
+      },
+      "as3": "Game.as:275 sprBridge; Tile.as:75-77,347 closedBridge/openBridge, 2 loops"
+    },
+    "seedling:tile/ghostTileStep": {
+      "sheet": "GhostTileStep",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:277 sprGhostTileStep"
+    },
+    "seedling:tile/igneousToLava": {
+      "sheet": "IgneousLava",
+      "fw": 16,
+      "fh": 16,
+      "frames": 3,
+      "as3": "Game.as:279 sprIgneousLava (frame 0 until the player breaks it)"
+    },
+    "seedling:tile/oddTile": {
+      "sheet": "OddTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:281 sprOddTile"
+    },
+    "seedling:tile/fuchsiaTile": {
+      "sheet": "FuchTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:283 sprFuchTile"
+    },
+    "seedling:tile/oddTileWall": {
+      "sheet": "OddTileWall",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:285 sprOddTileWall"
+    },
+    "seedling:tile/rockWallDark": {
+      "sheet": "RockTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "as3": "Game.as:287 sprRockTile; Tile.as:468 round(randVal), random 180°"
+    },
+    "seedling:tile/rockWall": {
+      "sheet": "RockTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "as3": "Game.as:287 sprRockTile; Tile.as:473 round(randVal) + 2, random 180°"
+    },
+    "seedling:tile/rockWallFloor": {
+      "sheet": "RockyTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "as3": "Game.as:289 sprRockyTile; Tile.as:479 round(randVal) * 4, random flips"
+    },
+    "seedling:tile/pitShadow": {
+      "sheet": "PitShadow",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:391 sprPitShadow; Tile.as:305 drawn over a pit waterfall"
+    },
+    "seedling:scenery/cliffside": {
+      "sheet": "CliffSide",
+      "fw": 16,
+      "fh": 16,
+      "frames": 5,
+      "as3": "Game.as:294 sprCliffSides; CliffSide.as:39 frame = the cliffsides layer column"
+    },
+    "seedling:scenery/tree": {
+      "sheet": "Tree2",
+      "fw": 32,
+      "fh": 32,
+      "frames": 16,
+      "as3": "Game.as:372 sprTree (centerOO) at Tree(x+16, y+16); Tree.as:59-66 neighbour frame"
+    },
+    "seedling:scenery/treebare": {
+      "sheet": "TreeBare",
+      "fw": 32,
+      "fh": 32,
+      "frames": 1,
+      "as3": "Game.as:374 sprTreeBare (centerOO); one frame, so every neighbour mask wraps to 0"
+    },
+    "seedling:scenery/opentree": {
+      "sheet": "OpenTree",
+      "fw": 32,
+      "fh": 32,
+      "frames": 16,
+      "as3": "Game.as:376 sprOpenTree (centerOO); OpenTree.as render, the Tree frame"
+    },
+    "seedling:scenery/treelarge": {
+      "sheet": "TreeLarge",
+      "fw": 160,
+      "fh": 192,
+      "frames": 4,
+      "anims": {
+        "shine": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            2,
+            1
+          ],
+          "loops": 3
+        }
+      },
+      "as3": "TreeLarge.as: Spritemap(160, 192) centerOO at (x+80, y+96); shine [0,1,2,3,2,1] on worldFrame(100, 3) (the cross-fade between frames is not drawn)"
+    },
+    "seedling:scenery/pole": {
+      "sheet": "Pole",
+      "fw": 16,
+      "fh": 16,
+      "frames": 8,
+      "as3": "Game.as:367 sprPole (centerOO) at Pole(x+8, y+8); Pole.as check(): +1 right, +2 left, +4 below"
+    },
+    "seedling:scenery/rock": {
+      "sheet": "Rock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:352-363 rocks[0] (an Image at the OEL position); Rock.as"
+    },
+    "seedling:scenery/rock2": {
+      "sheet": "Rock2",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:352-363 rocks[1] (an Image at the OEL position); Rock.as"
+    },
+    "seedling:scenery/rock3": {
+      "sheet": "Rock3",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:352-363 rocks[2] (an Image at the OEL position); Rock.as"
+    },
+    "seedling:scenery/rock4": {
+      "sheet": "Rock4",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:352-363 rocks[3] (an Image at the OEL position); Rock.as"
+    },
+    "seedling:scenery/building": {
+      "sheet": "Building",
+      "fw": 64,
+      "fh": 56,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[0]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building1": {
+      "sheet": "Building1",
+      "fw": 48,
+      "fh": 40,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[1]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building2": {
+      "sheet": "Building2",
+      "fw": 64,
+      "fh": 56,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[2]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building3": {
+      "sheet": "Building3",
+      "fw": 48,
+      "fh": 104,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[3]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building4": {
+      "sheet": "Building4",
+      "fw": 144,
+      "fh": 136,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[4]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building5": {
+      "sheet": "Building5",
+      "fw": 64,
+      "fh": 56,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[5]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building6": {
+      "sheet": "Building6",
+      "fw": 80,
+      "fh": 128,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[6]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building7": {
+      "sheet": "Building7",
+      "fw": 80,
+      "fh": 96,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[7]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building8": {
+      "sheet": "Building8",
+      "fw": 64,
+      "fh": 64,
+      "frames": 3,
+      "anims": {
+        "mound": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "loops": 1
+        }
+      },
+      "as3": "Game.as:338 sprBuilding8 Spritemap(64, 64); Building.as:39 y = 0; Building.as:51 moundFrames [0,1,2,1] on the world clock"
+    },
+    "seedling:scenery/statue1": {
+      "sheet": "Statues",
+      "fw": 48,
+      "fh": 40,
+      "frames": 2,
+      "only": [
+        0
+      ],
+      "origin": [
+        8,
+        16
+      ],
+      "as3": "Game.as:348 sprStatues; Statue.as:20 at (x+16, y+8), NPC centerOO (x -24), render y = -24"
+    },
+    "seedling:scenery/statue2": {
+      "sheet": "Statues",
+      "fw": 48,
+      "fh": 40,
+      "frames": 2,
+      "only": [
+        1
+      ],
+      "origin": [
+        8,
+        24
+      ],
+      "as3": "Game.as:348 sprStatues; Statue.as:20 at (x+16, y-8), NPC centerOO (x -24), render y = -16"
+    },
+    "seedling:scenery/brickpole": {
+      "sheet": "BrickPole",
+      "fw": 16,
+      "fh": 20,
+      "frames": 1,
+      "origin": [
+        0,
+        4
+      ],
+      "as3": "BrickPole.as: y = -4"
+    },
+    "seedling:scenery/brickwell": {
+      "sheet": "BrickWell",
+      "fw": 18,
+      "fh": 20,
+      "frames": 1,
+      "origin": [
+        1,
+        4
+      ],
+      "as3": "BrickWell.as: x = -1, y = -4"
+    },
+    "seedling:scenery/dungeonspire": {
+      "sheet": "DungeonSpire",
+      "fw": 16,
+      "fh": 24,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "DungeonSpire.as: y = -8"
+    },
+    "seedling:scenery/ruinedpillar": {
+      "sheet": "RuinedPillar",
+      "fw": 32,
+      "fh": 48,
+      "frames": 1,
+      "origin": [
+        0,
+        16
+      ],
+      "as3": "RuinedPillar.as: y = -16"
+    },
+    "seedling:scenery/bed": {
+      "sheet": "Bed",
+      "fw": 16,
+      "fh": 32,
+      "frames": 1,
+      "as3": "Bed.as: at the OEL position"
+    },
+    "seedling:scenery/bar": {
+      "sheet": "Bar",
+      "fw": 64,
+      "fh": 20,
+      "frames": 1,
+      "origin": [
+        0,
+        4
+      ],
+      "as3": "Bar.as: y = -4"
+    },
+    "seedling:scenery/barstool": {
+      "sheet": "Barstool",
+      "fw": 8,
+      "fh": 12,
+      "frames": 1,
+      "origin": [
+        -4,
+        0
+      ],
+      "as3": "Barstool.as: at (x+4, y+4), y = -4"
+    },
+    "seedling:scenery/dresser": {
+      "sheet": "Dresser",
+      "fw": 32,
+      "fh": 24,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Dresser.as: y = -8"
+    },
+    "seedling:scenery/shieldstatue": {
+      "sheet": "ShieldStatue",
+      "fw": 32,
+      "fh": 43,
+      "frames": 1,
+      "origin": [
+        -8,
+        11
+      ],
+      "as3": "ShieldStatue.as: at (x+8, y), y = -11"
+    },
+    "seedling:scenery/oraclestatue": {
+      "sheet": "OracleStatue",
+      "fw": 32,
+      "fh": 48,
+      "frames": 2,
+      "origin": [
+        0,
+        16
+      ],
+      "anims": {
+        "idle": {
+          "clock": "world",
+          "frames": [
+            0,
+            1
+          ],
+          "loops": 1
+        }
+      },
+      "as3": "OracleStatue.as: y = -16; render worldFrame(2)"
+    },
+    "seedling:scenery/planttorch": {
+      "sheet": "PlantTorch",
+      "fw": 16,
+      "fh": 16,
+      "frames": 3,
+      "anims": {
+        "burn": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "loops": 1
+        }
+      },
+      "as3": "PlantTorch.as: at (x+8, y+8), x/y = -8; frames [0,1,2,1] worldFrame(4, 1)"
+    },
+    "seedling:scenery/bonetorch": {
+      "sheet": "BoneTorch",
+      "fw": 16,
+      "fh": 24,
+      "frames": 3,
+      "origin": [
+        0,
+        8
+      ],
+      "anims": {
+        "burn": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "loops": 2
+        }
+      },
+      "as3": "BoneTorch.as type 0: at (x+8, y+8), x = -8, y = -16; frames [0,1,2,1] worldFrame(4, 2)"
+    },
+    "seedling:scenery/bonetorch2": {
+      "sheet": "BoneTorch2",
+      "fw": 16,
+      "fh": 24,
+      "frames": 3,
+      "origin": [
+        0,
+        8
+      ],
+      "anims": {
+        "burn": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "loops": 2
+        }
+      },
+      "as3": "BoneTorch.as type 1: as type 0"
+    },
+    "seedling:scenery/snowhill": {
+      "sheet": "SnowHill",
+      "fw": 96,
+      "fh": 64,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "SnowHill.as: Game.sprSnowHill y = -8"
+    }
+  }
+}

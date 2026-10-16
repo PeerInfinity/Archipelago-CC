@@ -79,7 +79,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 3,
+            "count": 4,
             "id": "extract"
         },
         {
@@ -232,10 +232,10 @@ export const INSTRUMENTS = frz({
         "blockStyle": 422,
         "browser": 142,
         "cited": 219,
-        "files": 434,
-        "lineStyle": 12,
-        "withDocblock": 434,
-        "withFlags": 350
+        "files": 435,
+        "lineStyle": 13,
+        "withDocblock": 435,
+        "withFlags": 351
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -5735,6 +5735,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "export-seedling-view — THE EDITOR ARC'S CLI: any view of `watch.html`, as a PNG, from a terminal, with no browser and no dev server of your own.",
             "path": "scripts/procgen/export-seedling-view.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "extract",
+            "citedBy": [],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "check",
+                "source"
+            ],
+            "file": "extract-seedling-art-packs.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "source"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling art-pack extractor — copies the Seedling sheets the JS runtime's graphics renderer draws out of a Seedling source checkout into the two committed CONTENT PACKS, and writes their manifests:",
+            "path": "scripts/procgen/extract-seedling-art-packs.mjs"
         },
         {
             "argvHelpers": [
