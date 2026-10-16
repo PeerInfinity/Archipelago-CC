@@ -565,6 +565,22 @@ export const CONTACT_FIDELITY = {
      * default (no licence); `SEEDLING_SEAL_DOOR_APPROACH=0|1` for a node measurement.
      */
     sealDoorApproach: false,
+    /**
+     * fidelity ARROWLANE D2 — AN ARMED LANE IS CROSSED, AND THE ARROWS THAT REACH THE WALK ARE BILLED
+     * (`arrowLaneCrossing.js`, `solverBot.walkToUnder`).
+     *
+     *     ArrowTrap.as:31-62   armed: three arrows (x−4, x, x+4), v (0, 5), every 11 updates
+     *     Arrow.as:42-58       a Player takes `hit(null, 5, (x, y))`; any hitable stops the arrow
+     *
+     * ⚖ The user (2026-10-16): "arrows aren't supposed to be dodgeable" — no dodge, gap or timing policy. OFF the
+     * danger map priced an ARMED lane at every horizon to the floor, so a walk that started in one (L16's arrival from
+     * L17) was refused by the gate and one that ended in one (L16's `stairsdown@112,64`) by AVOID's A*. MEASURED
+     * (sweep 38926058850): 17 failing L16 legs. ON: where the crossing is forced (start or aim in a lane, or the lanes
+     * separate them), the lanes and their arrows leave the walk's danger questions, the corridor is driven on a fork
+     * with the run's own arrows, and the hits are billed as forced hits (`forcedHits` row `arrow-lane`, the forced-hit
+     * budget). ⛔ OFF by default (no licence); `SEEDLING_ARROW_LANE_CROSSING=0|1` for a node measurement.
+     */
+    arrowLaneCrossing: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -684,6 +700,9 @@ if (globalThis.process?.env?.SEEDLING_CORRIDOR_BODY_PRICING === '0') CONTACT_FID
 // ⛓ fidelity SEALDOOR D2: `SEEDLING_SEAL_DOOR_APPROACH=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_SEAL_DOOR_APPROACH === '1') CONTACT_FIDELITY.sealDoorApproach = true;
 if (globalThis.process?.env?.SEEDLING_SEAL_DOOR_APPROACH === '0') CONTACT_FIDELITY.sealDoorApproach = false;
+// ⛓ fidelity ARROWLANE D2: the armed-lane crossing arm, for a node measurement.
+if (globalThis.process?.env?.SEEDLING_ARROW_LANE_CROSSING === '1') CONTACT_FIDELITY.arrowLaneCrossing = true;
+if (globalThis.process?.env?.SEEDLING_ARROW_LANE_CROSSING === '0') CONTACT_FIDELITY.arrowLaneCrossing = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
