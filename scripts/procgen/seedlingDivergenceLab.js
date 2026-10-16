@@ -30,7 +30,7 @@ import { firstDivergence, shippedTape, exactDeclarationRefusal, liveDeclarations
     from '/frontend/modules/seedlingDemo/wasmPlayback.js';
 import { isArrival, stagingFromWasmArrival } from '/frontend/modules/seedlingDemo/wasmArrival.js';
 import { createRunForStaging } from '/frontend/modules/seedlingDemo/tapeRunner.js';
-import { createWorkerSolveService } from '/frontend/modules/seedlingDemo/jsRuntimeSolveService.js';
+import { createWorkerSolveService, stampHooks } from '/frontend/modules/seedlingDemo/jsRuntimeSolveService.js';
 import { resolveSeedlingAtlasGoal } from '/frontend/modules/flashPanel/seedlingPlaybackController.js';
 import { parsePendingCheck } from '/frontend/modules/flashPanel/seedlingCheckBinding.js';
 import { mountedRecordsOf } from '/frontend/modules/seedlingDemo/wasmWalkTape.js';
@@ -72,8 +72,11 @@ export async function createLab() {
         get stats() { return inner.stats; },
         warm() { inner.warm(); },
         start(request) {
+            // ⛓ the request AS POSTED: the hook stamps the service adds (off-default only) are on the capture too, so a
+            // replay of an off-default request runs under the same switches (before, they were dropped)
+            const posted = stampHooks({ ...request });
             const h = inner.start(request);
-            tap.solves.push({ request, handle: h, at: performance.now() });
+            tap.solves.push({ request: posted, handle: h, at: performance.now() });
             return h;
         },
         dispose() { inner.dispose(); },

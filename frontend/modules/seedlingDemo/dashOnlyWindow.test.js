@@ -31,7 +31,7 @@ import {
     ANYTIME_PASSES, createInPlaceSolveService, createWorkClock, liveOf, passShouldStop, solveAnytime, SOLVER_BUDGET_WORK,
     SOLVER_UPGRADE_WINDOW_WORK,
 } from './jsRuntimeSolver.js';
-import { createWorkerSolveService } from './jsRuntimeSolveService.js';
+import { createWorkerSolveService, stampHooks } from './jsRuntimeSolveService.js';
 import { DEADLINE_SITES } from './solverBot.js';
 import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 import { register } from '../flashPanel/index.js';
@@ -204,6 +204,19 @@ describe('the request: byte-identical at the default, stamped only off-default',
         const [msg] = postedBy((s) => s.start({ ...REQUEST }));
         expect('dashOnlyWindow' in msg.request).toBe(false);
         expect(JSON.stringify(Object.keys(msg.request))).toBe(JSON.stringify(Object.keys({ ...REQUEST })));
+    });
+
+    it('`stampHooks` is the service\'s one stamping door, exported for the sweep\'s request CAPTURE: it adds exactly what the service posts', () => {
+        expect(stampHooks({ ...REQUEST })).toEqual({ ...REQUEST });
+        const [msg] = withDashOnlyWindow(true, () => postedBy((s) => s.start({ ...REQUEST })));
+        const { source, ...posted } = msg.request;
+        const { source: _s, ...stamped } = withDashOnlyWindow(true, () => stampHooks({ ...REQUEST }));
+        expect(stamped).toEqual(posted);
+        expect(stamped.dashOnlyWindow).toBe(true);
+        // the lab captures the stamped copy, not the engine's pre-stamp request
+        const lab = readFileSync(join(ROOT, 'scripts/procgen/seedlingDivergenceLab.js'), 'utf8');
+        expect(lab).toMatch(/const posted = stampHooks\(\{ \.\.\.request \}\);/);
+        expect(lab).toMatch(/tap\.solves\.push\(\{ request: posted,/);
     });
 
     it('an off-default value of the posting instance rides on the request', () => {
