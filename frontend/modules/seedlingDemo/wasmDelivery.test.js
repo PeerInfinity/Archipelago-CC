@@ -13,8 +13,9 @@ import { fileURLToPath } from 'node:url';
 
 import {
     DELIVERY_CLAUSES, deliveredItems, deliveredSaveArrays, deliveryRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites, liveSaveArrays, mergeSaveArrays,
-    SAVE_ARRAY_MERGE, saveArraysOfWrites, saveDelta, slotItemAt, slotsAfterDelivery, stageItems, stageSaveArrays, UNION_SAVE_ARRAYS,
+    SAVE_ARRAY_MERGE, SAVE_ARRAYS, saveArraysOfWrites, saveDelta, slotItemAt, slotsAfterDelivery, stageItems, stageSaveArrays, UNION_SAVE_ARRAYS,
 } from './wasmDelivery.js';
+import { SAVE_ARRAY_RULES } from './saveArrayRules.js';
 import { stagingFromWasmArrival } from './wasmArrival.js';
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { liveOf, solveFromTape } from './jsRuntimeSolver.js';
@@ -165,10 +166,12 @@ describe('⛓ KEY DELIVERY — the save-array channel (`save.keys`) and its merg
         observed: { property: 'keyMask', bit: i }, save_array: 'keys', index: i });
     const bools = (idx) => Array.from({ length: 5 }, (_, i) => idx.includes(i));
 
-    it('⚖ the rule is named: UNION, never an overwrite, over the index sets only', () => {
-        expect(SAVE_ARRAY_MERGE).toBe('union');
-        expect(UNION_SAVE_ARRAYS).toEqual(['keys', 'totem_parts']);
-        expect(() => saveArraysOfWrites([{ save_array: 'seal_parts', index: 0 }])).toThrow(/positional/);
+    it('⚖ the rule is named PER ARRAY: keys UNION (never an overwrite); ⛓ SEAL DELIVERY: totems count-fill, seals log-append', () => {
+        expect(SAVE_ARRAY_MERGE).toBe('per-array');
+        expect(UNION_SAVE_ARRAYS).toEqual(['keys']);
+        expect(SAVE_ARRAYS).toEqual(['keys', 'totem_parts', 'seal_parts']);
+        expect(SAVE_ARRAY_RULES).toEqual({ keys: 'union', totem_parts: 'count-fill', seal_parts: 'log-append' });
+        expect(() => saveArraysOfWrites([{ save_array: 'hasCoins', index: 0 }])).toThrow(/merge rule/);
     });
 
     it('the writes declare what they reach; property writes declare nothing', () => {
@@ -209,5 +212,63 @@ describe('⛓ KEY DELIVERY — the save-array channel (`save.keys`) and its merg
         expect(deliveryRefusal({ staging: l19, shipped: [], items: at.items, save: { keys: [0] }, status: at, levelSource: SRC })).toBeNull();
         expect([...createRunForStaging(stageItems(l19, at.items, { save: { keys: [0] } }), SRC, { scratchPersistence: true }).keys]).toEqual([0]);
         expect([...createRunForStaging(l19, SRC, { scratchPersistence: true }).keys]).toEqual([]);
+    });
+});
+
+describe('⛓ SEAL DELIVERY — the seal LOG and the totem COUNT through the save-array channel', () => {
+    const sealWrite = (slot, id = slot) => ({ invocation: 'method_call', path: [{ class: 'Main' }], method: 'hasSealPartSet', args: [slot, id],
+        save_array: 'seal_parts', index: slot, fill: { rule: 'log', slot } });
+    const totemWrite = (i) => ({ invocation: 'method_call', path: [{ class: 'Main' }], method: 'hasTotemPartSet', args: [i, true],
+        save_array: 'totem_parts', index: i, fill: { rule: 'set', slot: i } });
+    const log = (ids) => Array.from({ length: 16 }, (_, i) => (i < ids.length ? ids[i] : -1));
+    const bools = (idx) => Array.from({ length: 5 }, (_, i) => idx.includes(i));
+    const sixteen = Array.from({ length: 16 }, (_, i) => i);
+
+    it('the writes declare the LOG in slot order; the game\'s log is its filled prefix', () => {
+        expect(saveArraysOfWrites([sealWrite(1), sealWrite(0)])).toEqual({ seal_parts: [0, 1] });
+        expect(saveArraysOfWrites([totemWrite(1), totemWrite(0)])).toEqual({ totem_parts: [0, 1] });
+        expect(liveSaveArrays({ save: { seal_parts: log([7, 3]) } })).toEqual({ seal_parts: [7, 3] });
+    });
+
+    it('⚖ POSITIONAL, never a union: the game\'s log is the prefix; AP extends it to N slots with identities it does not hold', () => {
+        expect(mergeSaveArrays({ seal_parts: [5] }, { seal_parts: [0, 1] })).toEqual({ seal_parts: [5, 0] });
+        expect(mergeSaveArrays({ seal_parts: [5, 0] }, { seal_parts: [0] })).toEqual({ seal_parts: [5, 0] });   // never shortened
+        expect(mergeSaveArrays({ seal_parts: [] }, { seal_parts: [0, 1, 2] })).toEqual({ seal_parts: [0, 1, 2] });
+        // a union would have been [0, 1, 5] — three seals where AP and the game agree on two
+        expect(mergeSaveArrays({ seal_parts: [5] }, { seal_parts: [0, 1] }).seal_parts).toHaveLength(2);
+        // totems: a COUNT — the game's own index 3 and AP's one shard are ONE shard
+        expect(mergeSaveArrays({ totem_parts: [3] }, { totem_parts: [0] })).toEqual({ totem_parts: [3] });
+        expect(mergeSaveArrays({ totem_parts: [3] }, { totem_parts: [0, 1] })).toEqual({ totem_parts: [0, 3] });
+    });
+
+    it('stagings carry the seals: the arrival staging is EXTENDED (withApSave\'s stageSaveArrays), and the model reads them', () => {
+        const s = { ...houseStaging(), save: { ...houseStaging().save, seal_parts: [9] } };
+        expect(stageSaveArrays(s, { seal_parts: sixteen }).save.seal_parts).toEqual([9, ...sixteen.filter((i) => i !== 9)]);
+        expect(stageSaveArrays(s, { seal_parts: [0] }).save.seal_parts).toEqual([9]);
+        const run = createRunForStaging(stageSaveArrays(houseStaging(), { seal_parts: sixteen }), SRC, { scratchPersistence: true });
+        expect(run.saveState.bootSealParts).toEqual(sixteen);
+        // a staging with no seal granted is the staging unchanged (byte-identical defaults)
+        const h = houseStaging();
+        expect(stageSaveArrays(h, {})).toBe(h);
+        expect(JSON.stringify(stageSaveArrays(h, { seal_parts: [] }).save)).toBe(JSON.stringify(h.save));
+    });
+
+    it('deliveredSaveArrays / stageItems: the DELTA is added at the arrival (a 2nd seal over a staged 1st is 2, not a fill to 1)', () => {
+        const staging = { ...houseStaging(), save: { ...houseStaging().save, seal_parts: [0] } };
+        const added = deliveredSaveArrays({ staging, status: { save: { seal_parts: log([0]) } }, save: { seal_parts: [0, 1] } });
+        expect(added).toEqual({ seal_parts: [1] });
+        expect(stageItems(staging, HOUSE.status.items, { save: added }).save.seal_parts).toEqual([0, 1]);
+        expect(deliveredSaveArrays({ staging, status: { save: { seal_parts: log([0, 1]) } }, save: { seal_parts: [0, 1] } })).toEqual({});
+        expect(saveDelta({ seal_parts: [4] }, { seal_parts: [4, 0] })).toEqual([{ array: 'seal_parts', index: 1, value: 0 }]);
+        const t = { ...houseStaging(), save: { ...houseStaging().save, totem_parts: [3] } };
+        const tAdded = deliveredSaveArrays({ staging: t, status: { save: { totem_parts: bools([3]) } }, save: { totem_parts: [0, 3] } });
+        expect(tAdded).toEqual({ totem_parts: [0] });
+        expect(stageItems(t, HOUSE.status.items, { save: tAdded }).save.totem_parts).toEqual([0, 3]);
+    });
+
+    it('deliveryRefusal: the 16th seal into the house at its arrival is taken (null), and named by its slot', () => {
+        const st = status({}, { save: { seal_parts: log(sixteen.slice(0, 15)) } });
+        const staging = { ...houseStaging(), save: { ...houseStaging().save, seal_parts: sixteen.slice(0, 15) } };
+        expect(deliveryRefusal({ staging, shipped: [], items: st.items, save: { seal_parts: sixteen }, status: st, levelSource: SRC })).toBeNull();
     });
 });

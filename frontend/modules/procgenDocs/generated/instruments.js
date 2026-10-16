@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 77,
-            "count": 124,
+            "browser": 78,
+            "count": 125,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 422,
-        "browser": 142,
-        "cited": 219,
-        "files": 435,
+        "blockStyle": 423,
+        "browser": 143,
+        "cited": 220,
+        "files": 436,
         "lineStyle": 13,
-        "withDocblock": 435,
-        "withFlags": 351
+        "withDocblock": 436,
+        "withFlags": 352
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13142,6 +13142,55 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-rng — take the generator's own stream FROM THE GAME.",
             "path": "scripts/procgen/probe-seedling-rng.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-seal-delivery.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "control"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling SEAL DELIVERY — an AP Seal reaches the game's seal slots, and every other AP item is asked of the game too (the census). `seedling_playthrough` loaded by `?rules=`, headless logic-only, under the box lock; every session on a FRESH page.",
+            "path": "scripts/procgen/probe-seedling-seal-delivery.mjs"
         },
         {
             "argvHelpers": [],

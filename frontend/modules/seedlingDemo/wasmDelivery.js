@@ -37,6 +37,9 @@
 import { ITEM_PROPERTIES, appendInventorySlots } from './tapeFormat.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { runDigest } from './jsRuntimeSolver.js';
+import {
+    POSITIONAL_SAVE_ARRAYS, SAVE_ARRAY_RULES, addToSaveArray, liveSaveArray, mergeSaveArray, saveArrayDelta,
+} from './saveArrayRules.js';
 
 /** The engine's policy for an item that arrives while it drives: hold the room, write it, replan in place. */
 export const DELIVERY_POLICY = 'hold-and-replan';
@@ -98,56 +101,72 @@ export function deliveredItems(before, after) {
 // engine mirrors those into every staging and every shipped tape's declaration, so a
 // tape boot never takes back a key AP granted and the model sees what the game holds.
 
-/** The save arrays a delivery may reach: INDEX SETS (`keys`, `totem_parts`). `seal_parts` is positional and never merged. */
-export const UNION_SAVE_ARRAYS = Object.freeze(['keys', 'totem_parts']);
+/**
+ * The save arrays a delivery may reach, each with its own merge rule (`saveArrayRules.SAVE_ARRAY_RULES`):
+ * `keys` union, `totem_parts` count-fill, `seal_parts` log-append (⛓ SEAL DELIVERY: positional).
+ */
+export const SAVE_ARRAYS = Object.freeze(Object.keys(SAVE_ARRAY_RULES));
+/** The arrays merged as plain index-set UNIONS (§5.31's rule; the others fill to a count). */
+export const UNION_SAVE_ARRAYS = Object.freeze(SAVE_ARRAYS.filter((n) => SAVE_ARRAY_RULES[n] === 'union'));
 
 /**
- * ⚖ THE MERGE RULE: a save array AP reaches is the UNION of what the game holds and
- * what AP granted — never an overwrite. A key the game picked up in play (a vanilla
- * room's `BossKey`) and AP does not hold stays; a key AP holds and the game lost (a
- * tape boot that declared too few) is restored. Nothing is ever cleared.
+ * ⚖ THE MERGE RULE: a save array AP reaches is what the game holds EXTENDED by what AP granted — never an
+ * overwrite, never a clear (SET_IF_MISSING). Per array: `saveArrayRules.SAVE_ARRAY_RULES` (keys: the union —
+ * a key the game picked up in play and AP does not hold stays; totems: at least N indices; seals: at least N
+ * log slots, appended with identities the log does not hold).
  */
-export const SAVE_ARRAY_MERGE = 'union';
+export const SAVE_ARRAY_MERGE = 'per-array';
 
-const sortedUnion = (...lists) => [...new Set(lists.flat().filter((i) => Number.isInteger(i)))].sort((a, b) => a - b);
-
-/** The save arrays `writes` declare (`[{save_array, index}]`, the adapter's method-call items): `{keys: [0, 2]}`. */
+/**
+ * The save arrays `writes` declare (`[{save_array, index}]`, the adapter's method-call items): `{keys: [0, 2]}`;
+ * a LOG write (⛓ SEAL DELIVERY) declares its slot (`index`) and identity (`args[1]`): `{seal_parts: [0, 1]}`.
+ */
 export function saveArraysOfWrites(writes) {
     const out = {};
+    const logs = {};
     for (const w of writes ?? []) {
         if (!w?.save_array) continue;
-        if (!UNION_SAVE_ARRAYS.includes(w.save_array)) {
-            throw new Error(`wasmDelivery: a write declares save array ${JSON.stringify(w.save_array)} — only the index sets `
-                + `${UNION_SAVE_ARRAYS.join(', ')} merge (seal_parts is positional)`);
+        if (!SAVE_ARRAYS.includes(w.save_array)) {
+            throw new Error(`wasmDelivery: a write declares save array ${JSON.stringify(w.save_array)} — only `
+                + `${SAVE_ARRAYS.join(', ')} have a merge rule`);
         }
-        out[w.save_array] = sortedUnion(out[w.save_array] ?? [], [w.index]);
+        if (POSITIONAL_SAVE_ARRAYS.includes(w.save_array)) {
+            (logs[w.save_array] ??= []).push([w.index, Number.isInteger(w.args?.[1]) ? w.args[1] : w.index]);
+        } else {
+            out[w.save_array] = mergeSaveArray('keys', out[w.save_array] ?? [], [w.index]);
+        }
     }
+    for (const [name, rows] of Object.entries(logs)) out[name] = rows.sort((a, b) => a[0] - b[0]).map(([, v]) => v);
     return out;
 }
 
-/** The game's index sets off `botStatus.save` (booleans → true indices). */
+/** The game's arrays off `botStatus.save` (booleans → true indices; the seal log's filled prefix). */
 export function liveSaveArrays(status) {
     const out = {};
-    for (const name of UNION_SAVE_ARRAYS) {
-        const arr = status?.save?.[name];
-        if (Array.isArray(arr)) out[name] = arr.flatMap((v, i) => (v ? [i] : []));
+    for (const name of SAVE_ARRAYS) {
+        const arr = liveSaveArray(name, status?.save?.[name]);
+        if (arr) out[name] = arr;
     }
     return out;
 }
 
-/** `SAVE_ARRAY_MERGE` over any number of `{name: indices}` maps. */
+/** `SAVE_ARRAY_MERGE` folded left over any number of `{name: array}` maps (the first is the authority). */
 export function mergeSaveArrays(...maps) {
     const out = {};
-    for (const m of maps) for (const [name, idx] of Object.entries(m ?? {})) out[name] = sortedUnion(out[name] ?? [], idx ?? []);
+    for (const m of maps) {
+        for (const [name, arr] of Object.entries(m ?? {})) {
+            out[name] = name in out ? mergeSaveArray(name, out[name], arr ?? []) : mergeSaveArray(name, arr ?? [], []);
+        }
+    }
     return out;
 }
 
-/** What `after` holds that `before` does not, `[{array, index}]` (a merge never removes, so this is the whole delta). */
+/** What `after` holds that `before` does not, `[{array, index[, value]}]` (a merge never removes, so this is the whole delta). */
 export function saveDelta(before, after) {
     const rows = [];
-    for (const name of UNION_SAVE_ARRAYS) {
-        const had = new Set(before?.[name] ?? []);
-        for (const i of after?.[name] ?? []) if (!had.has(i)) rows.push({ array: name, index: i });
+    for (const name of SAVE_ARRAYS) {
+        if (!after?.[name]) continue;
+        rows.push(...saveArrayDelta(name, before?.[name] ?? [], after[name]));
     }
     return rows;
 }
@@ -157,22 +176,19 @@ export function stageSaveArrays(staging, arrays) {
     if (!arrays || Object.keys(arrays).length === 0) return staging;
     const s = structuredClone(staging);
     s.save = { ...(s.save ?? {}) };
-    for (const [name, idx] of Object.entries(arrays)) {
-        if (!UNION_SAVE_ARRAYS.includes(name)) throw new Error(`wasmDelivery: no union rule for save.${name}`);
-        s.save[name] = sortedUnion(s.save[name] ?? [], idx ?? []);
-    }
+    for (const [name, arr] of Object.entries(arrays)) s.save[name] = mergeSaveArray(name, s.save[name] ?? [], arr ?? []);
     return s;
 }
 
 /**
- * The save arrays a delivery ADDS — in `save` (the predicted arrays) and in neither
- * the staging's `save` nor the game's live arrays: `{keys: [i, …]}` (empty arrays
- * dropped). What `deliveryRefusal` replays and what the engine re-stages.
+ * The save-array ELEMENTS a delivery ADDS — in `save` (the predicted arrays) and in neither the staging's
+ * `save` nor the game's live arrays: `{keys: [i, …], seal_parts: [identity, …]}` (empty arrays dropped). What
+ * `deliveryRefusal` replays and what the engine re-stages (`stageItems` ADDS them: `addToSaveArray`).
  */
 export function deliveredSaveArrays({ staging, status, save }) {
     const had = mergeSaveArrays(staging?.save ?? {}, liveSaveArrays(status));
     const out = {};
-    for (const { array, index } of saveDelta(had, save ?? {})) out[array] = sortedUnion(out[array] ?? [], [index]);
+    for (const row of saveDelta(had, save ?? {})) (out[row.array] ??= []).push(row.value ?? row.index);
     return out;
 }
 
@@ -187,11 +203,16 @@ export function deliveredSaveArrays({ staging, status, save }) {
  * slot items to it at construction (`appendInventorySlots`), which is the array
  * the game will hold (`slotsAfterDelivery`). Omitted = the staging's own array.
  *
- * ⛓ KEY DELIVERY — `save` (`{keys: [...]}`) is merged into the staging's save
- * arrays (`SAVE_ARRAY_MERGE`): a key delivered mid-room is staged at the arrival.
+ * ⛓ KEY DELIVERY — `save` (`{keys: [...]}`, `deliveredSaveArrays`' delta) is added to the staging's save
+ * arrays: a key (⛓ SEAL DELIVERY: a seal, a totem part) delivered mid-room is staged at the arrival.
  */
 export function stageItems(staging, items, { slots, save } = {}) {
-    const s = structuredClone(stageSaveArrays(staging, save));
+    const s = structuredClone(staging);
+    // ⛓ SEAL DELIVERY — `save` is a DELTA (`deliveredSaveArrays`): ADDED, never filled to a count.
+    if (save && Object.keys(save).length) {
+        s.save = { ...(s.save ?? {}) };
+        for (const [name, add] of Object.entries(save)) s.save[name] = addToSaveArray(name, s.save[name] ?? [], add ?? []);
+    }
     if (Array.isArray(slots)) s.inventory_slots = [...slots];
     s.seam = s.seam ?? {};
     s.seam.items = { ...(s.seam.items ?? {}) };
@@ -270,9 +291,10 @@ export function deliveryRefusal({ staging, shipped, items, save = null, status, 
     // Only what is NEW to both the staging and the game: a key the run picked up itself mid-room is in the
     // model's run already, and staging it at the arrival would despawn its pickup there.
     const added = deliveredSaveArrays({ staging, status, save });
-    const keyRows = saveDelta({}, added);
+    const keyRows = Object.entries(added).flatMap(([array, elems]) => elems.map((e) => ({ array, e })));
     if (delta.length === 0 && keyRows.length === 0) return null;
-    const names = [...delta.map((d) => d.property), ...keyRows.map((k) => `save.${k.array}[${k.index}]`)].join(', ');
+    const names = [...delta.map((d) => d.property), ...keyRows.map((k) => (POSITIONAL_SAVE_ARRAYS.includes(k.array)
+        ? `save.${k.array} += ${k.e}` : `save.${k.array}[${k.e}]`))].join(', ');
     let withItem;
     let without;
     try {
