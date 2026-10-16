@@ -134,6 +134,16 @@ export async function pushblockPlan(w) {
     return { staging, solved };
 }
 
+/**
+ * ⚖ PINNED `strikeIframeLapse` OFF — an INTERIM (seedling-fidelity-producers, 2026-10-16).
+ * These tapes were recorded on the game under the PRE-LAPSE strike gate. The lapse flip (`19aaa5cce4`, ⚖ user
+ * "Flip after DD lands") turned `strikeIframeLapse` ON and pinned `spearPush`'s L65 row OFF ("unwitnessed" ON);
+ * its re-pin list missed this producer (no CI job runs it). ON, `pushblock-l65-reach-l68`'s plan moves.
+ * ⛔ RETIRE THIS PIN with a re-record ON: the plan re-derived under the flipped default, recorded on the game
+ * (p4f, 0 px), and its roster rows re-pinned — a roster move, so the user's licence.
+ */
+const PINNED_FIDELITY = Object.freeze({ strikeIframeLapse: false });
+
 // ⚠ A bare import does nothing (`check-procgen-help`'s import door): the work is `main()`'s.
 async function main() {
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
@@ -232,4 +242,7 @@ async function main() {
     console.log('\nall checks green');
 }
 
-if (isEntryPoint(import.meta.url)) await main();
+if (isEntryPoint(import.meta.url)) {
+    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
+    await withContactFidelity(PINNED_FIDELITY, main);
+}
