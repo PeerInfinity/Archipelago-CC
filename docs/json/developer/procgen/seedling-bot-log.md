@@ -22993,3 +22993,46 @@ Lessons:
 2. *A producer that is red at the base hides its movers.* DB measured every producer with each switch ON, but
    `axe-witness` was drift-red at DB's base (fixed since by fidelity PRODUCERS), so its (i) move was invisible. The
    first measurement after a red is fixed is a new measurement.
+
+### Seedling DK — the leg pre-check's cutoff, by the chain
+
+⚖ The user (2026-10-17): *"Fix the skip's cutoff first"*: re-derive `DASH_LEG_PRECHECK`'s cutoff so it never refuses a
+corridor that can plan, then land the three switches together with nothing slower. Built on DF's branch; it lands
+through js-6's gate. Report: `CC/docs/cloud-reports/seedling-dash-cutoff.md`.
+
+**D1 — what bounds a leg's saving (measured).** The premise was wrong in a useful way. Windows do NOT compound on the way
+in: `evaluateAt` certifies a candidate only when ITS walk's longest leg is ≤ 195, and the first candidate accepted
+carries no other window. So a corridor plans only if ONE window brings every leg under the bound. On
+`axe-l48-reach-l49` that window is `[0,2]` at walk-offset 100, 305 → 184. The 305-tick leg is not long because of
+ground: it is a 192 px climb walked in 154 ticks, then ~150 ticks of the walk dithering at its waypoint (`hasArrived`
+needs a full stop inside the tolerance), and a dash knocks the dither out. Candidates, over sweep `38845773709`'s 617
+requests (window 0 and the flip at 85, pre-check OFF) and every committed producer's corridors in place:
+- (a) a physics bound on ground: stepping `applyFriction` / `applyInput` gives the steady stride 1.200 px/t per axis
+  and one window's added ground 48.8 px. But the axe climb's own undashed walk averages 1.248 px/t (the steering's key
+  toggles bleed less friction off the axis), so only the per-axis cap 1.6 bounds a walk, and at 1.6 no L40 pit leg
+  (303 px) is refused: 0 % of the pit saving;
+- (b) a larger K: the smallest K that keeps every planning corridor is 110 (the axe's 305). It refuses no L40 pit
+  (261 t);
+- (c) **a clean run's floor**: a leg the undashed walk covered straight (path ≤ 1.05 × line) and without standing
+  (≤ 2 still ticks) walks at its own rate `v = span / n`, so one window saves at most 48.8 / v ticks there. Refused
+  when `ceil(n − 48.8 / v)` > 195. 0 planning corridors refused; every L40 pit refused (leg 1 floor 220 over 303 px).
+With no budget at all, each of the 19 corridors K40 refuses in the 617 previews to exhaustion and certifies nothing
+(the L40 pits' best candidate keeps a 221-tick leg: the floor, 220, is one tick under it).
+
+**D2 — built (c), in place.** `DASH_LEG_PRECHECK` stays ON; `DASH_LEG_PRECHECK_MARGIN` is gone; `dashLegGain` derives
+48.8 px once (51 ms). A room with ice or a waterfall refuses nothing, nor does a crossed walk's last leg. In place
+**`axe-witness --check` is green at `ae029113`** (DF's pre-flip md5, no re-record) and **`r9-campaign --check` is green
+at `6b1bf15c`** (the `r9-solve-12` trace no longer moves). Every other identity row and producer equals W0 (l40button
+only by printed wall seconds). The 617 at the flip: 94,359 t, the same 165 shorter, 0 longer; 51,029 units (K40
+50,094; without (i) 51,709): the 935 units K40 saved and DK does not are 11 corridors in waterfall rooms. DF's 9
+heaviest (3 rounds, jobs 1): Σ median OFF 17.4 s, K40 20.4 s, **DK 20.5 s**, without (i) 44.4 s.
+Gate rows (`hammerDashShape.test.js`): the floor on a real L40 corridor (new fixture `sweep-392-l40.json`, leg 1 at
+floor 195 scans and 196 refuses), the axe corridor scans and its producer plans 368 t, a waterfall room refuses
+nothing. Mutants K = 40, `<` for `<=`, and the pre-check on the dashed walk: all caught.
+
+Lessons:
+1. *Read the acceptance rule before modelling the chain.* DF's "eight windows compound" was a natural reading of a
+   finished schedule. The scan's own gate makes the first window carry the whole burden, and that is what made a
+   per-leg bound derivable at all.
+2. *A leg's ticks are not its ground.* A walk can spend ticks it does not travel (a dither at a full-stop waypoint, a
+   wait), and a dash removes those whole. A bound that reads ticks has to know which ticks were travel.

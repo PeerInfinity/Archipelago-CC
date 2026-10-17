@@ -1,0 +1,18 @@
+== mutant k40
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/hammerDashShape.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned > ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one ref
+ FAIL  frontend/modules/seedlingDemo/hammerDashShape.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned > the D2 counter-example: the axe corridor's 305-tick leg is not a clean run, s
+ FAIL  frontend/modules/seedlingDemo/hammerDashShape.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned > the D2 counter-example whole: ON, `plan-seedling-axe-witness` plans axe-l48-r
+ FAIL  frontend/modules/seedlingDemo/hammerDashShape.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned > a room with a waterfall refuses nothing: DB's L52 corridor, a clean run of 28
+      Tests  4 failed | 3 passed | 14 skipped (21)
+== mutant offbyone
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/hammerDashShape.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned > ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one ref
+      Tests  1 failed | 6 passed | 14 skipped (21)
+== mutant dashed
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/hammerDashShape.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned > ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one ref
+ FAIL  frontend/modules/seedlingDemo/hammerDashShape.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned > ON, sweep request 392:0 solved whole ships the same ticks for less work
+      Tests  2 failed | 5 passed | 14 skipped (21)
+== unmutated
+      Tests  21 passed (21)

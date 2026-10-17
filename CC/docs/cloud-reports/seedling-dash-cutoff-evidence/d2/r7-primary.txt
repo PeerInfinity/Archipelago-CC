@@ -1,0 +1,2 @@
+CHECK CLEAN — the committed chain is what the game produces today
+plan-seedling-r7-ends-meet --check in the primary tree at 734418fc (port 9593): rc=0 md5=f1675cfc (W0: f1675cfc). generated set (primary, SEEDLING_PORT=9593): OK
