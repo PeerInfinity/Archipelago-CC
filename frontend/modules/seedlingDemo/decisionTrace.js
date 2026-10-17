@@ -142,6 +142,9 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // corridor walked with the pre-lapse strike admissions, listed in the slice that first drives it. (Above `pace`,
     // which MOVINGWAIT pins as the list's last row.)
     'narrow',
+    // ⛓ Seedling fidelity SEALDOOR D2: the `approach` verb (`solverBot.execApproach`, behind `sealDoorApproach`) — the
+    // FinalDoor opened by walking into its circle. (Above `pace`, which MOVINGWAIT pins as the list's last row.)
+    'approach',
     // ⛓ Seedling fidelity MOVINGWAIT: the `pace` row (`solverBot.planPacedWait`, behind `MOVING_WAIT`) — a LATCHED
     // wait inside a lobber's reach that paces an out-and-back cycle instead of standing still.
     'pace',

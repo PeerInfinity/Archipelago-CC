@@ -148,7 +148,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             chaserSpinnerWalls: false,
 
             // ⛓ fidelity CORRIDOR D2: `corridorBodyPricing` (the walk corridor prices the live wallflyers and drills) ships OFF.
-            corridorBodyPricing: false });
+            corridorBodyPricing: false,
+
+            // ⛓ fidelity SEALDOOR D2: `sealDoorApproach` (the solver steps the FinalDoor's open-on-approach) ships OFF.
+            sealDoorApproach: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

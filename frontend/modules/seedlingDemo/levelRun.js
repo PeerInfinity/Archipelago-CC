@@ -14273,23 +14273,33 @@ export function createLevelRun({
      *
      * @returns {{frozen: boolean}} `frozen` means the player must not move
      */
-    const stepFinalDoorsNow = () => {
-        const st = finalDoorStateFor(level);
-        if (st.size === 0) return { frozen: false };
-        let frozen = false;
+    /**
+     * The door's two predicates, read from the run's own state — what
+     * `stepFinalDoorsNow` asks every tick, and (⛓ fidelity SEALDOOR) what the
+     * solver's `approach` resolver asks before it walks into the circle.
+     */
+    const finalDoorGateNow = () => ({
         // `!Game.checkPersistence(0, 114)` — a CROSS-LEVEL read, and the
         // only one in the game. `FinalDoor.as:50`'s own comment names it:
         // "0 is the tag for the Watcher's text, while 114 is the room that
         // it refers to."
-        const talkedToWatcher = (clearedByLevel.get(WATCHER_FLAG.level) ?? [])
+        talkedToWatcher: (clearedByLevel.get(WATCHER_FLAG.level) ?? [])
             .includes(WATCHER_FLAG.tag)
             || [...watcherFlags.values()].some((f) => f.level === WATCHER_FLAG.level
-                && f.tag === WATCHER_FLAG.tag);
+                && f.tag === WATCHER_FLAG.tag),
         // `SealController.hasAllSealParts()` is `Main.hasSealPart(SEALS - 1)
         // != -1` — the LAST SLOT, not a count. A save with fifteen
         // identities in slots 0..14 leaves slot 15 at -1 and the door stays
         // shut, which is exactly what the control declares.
-        const hasAllSealParts = sealParts[SAVE_SLOTS.seal_parts - 1] !== -1;
+        hasAllSealParts: sealParts[SAVE_SLOTS.seal_parts - 1] !== -1,
+        sealSlotsFilled: sealParts.filter((v) => v !== -1).length,
+        sealSlots: SAVE_SLOTS.seal_parts,
+    });
+    const stepFinalDoorsNow = () => {
+        const st = finalDoorStateFor(level);
+        if (st.size === 0) return { frozen: false };
+        let frozen = false;
+        const { talkedToWatcher, hasAllSealParts } = finalDoorGateNow();
         for (const d of st.values()) {
             // ⛔⛔⛔ `updateLists()` RUNS AFTER `world.update()`, AND THE
             // PLAYER UPDATES INSIDE IT.
@@ -18163,6 +18173,11 @@ export function createLevelRun({
         get doorEvents() { return doorEvents.map((r) => ({ ...r })); },
         /** The `{113,0}` write `removed()` makes, keyed like `bossFlags`. */
         get finalDoorFlags() { return [...finalDoorFlags.values()].map((f) => ({ ...f })); },
+        /**
+         * ⛓ fidelity SEALDOOR — `{talkedToWatcher, hasAllSealParts, sealSlotsFilled, sealSlots}`: the door's two
+         * predicates as the run holds them now (`finalDoorGateNow`). Read-only; nothing steps.
+         */
+        get finalDoorGate() { return finalDoorGateNow(); },
         /** The live door(s), for a stance that has to plan around the wall. */
         get finalDoors() {
             const st = finalDoorStateFor(level);

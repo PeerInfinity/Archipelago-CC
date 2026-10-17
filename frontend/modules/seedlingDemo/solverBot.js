@@ -731,6 +731,8 @@ export function frontierExecutor(strategy) {
     const row = STRATEGY_EXECUTORS[strategy];
     if (row) return row;
     if (strategy === 'bait' && CRUSHER_BAIT.enabled) return execBait;
+    // ⛓ fidelity SEALDOOR D2 — registered only while `CONTACT_FIDELITY.sealDoorApproach` is on.
+    if (strategy === 'approach' && CONTACT_FIDELITY.sealDoorApproach) return execApproach;
     // ⛓ SEEDLING FIDELITY WAND — registered only while `WAND_VERB` is on.
     return strategy === 'wand' && WAND_VERB.enabled ? execWand : undefined;
 }
@@ -741,6 +743,8 @@ export function frontierExecutor(strategy) {
  * and this lookup answers the table byte for byte with the flag off.
  */
 function clearTagExecutor(strategy) {
+    // ⛓ fidelity SEALDOOR D2 — `approach` (the FinalDoor's {113,0}) only while `sealDoorApproach` is on.
+    if (strategy === 'approach' && CONTACT_FIDELITY.sealDoorApproach) return execApproach;
     return STRATEGY_EXECUTORS[strategy] ?? (strategy === 'wand' && WAND_VERB.enabled ? execWand : undefined);
 }
 
@@ -2158,6 +2162,156 @@ function execTalk(run, perTick, resolved, ctx) {
 }
 
 /**
+ * ⛓⛓⛓ fidelity SEALDOOR D2 (behind `CONTACT_FIDELITY.sealDoorApproach`) — the `approach` verb's bounds. A stance is a
+ * walkable cell centre `APPROACH_STANCE_MARGIN` px or more outside the door's `seeDistance` circle (so the walk to it
+ * cannot fire the ceremony mid-drive) and no more than `APPROACH_STANCE_REACH` px from its entity point. The approach
+ * from it is bounded by `APPROACH_MAX` ticks; the open's wait by `APPROACH_OPEN_MAX` (the 56-tick animation, the
+ * one-tick `updateLists` fencepost and the settle, with room to spare).
+ */
+const APPROACH_STANCE_MARGIN = 4;
+const APPROACH_STANCE_REACH = 48;
+const APPROACH_MAX = 60;
+const APPROACH_OPEN_MAX = 120;
+
+/**
+ * ⛓⛓⛓ fidelity SEALDOOR D2 — RESOLVE the `approach` work order: L113's `finaldoor` on the frontier (or a clear-tag
+ * goal naming its {113,0}).
+ *
+ * ⛔ **THE GAME'S RULE** (`Scenery/FinalDoor.as:47-68`, witnessed as `r6-final-door` and its control): within
+ * `seeDistance` 32 of the door's entity point the first update adds a `SealController` (181 DEAD frames, a lump on
+ * the trigger tick), and the NEXT update of the same approach plays "open" iff `SealController.hasAllSealParts()` (the
+ * save's LAST seal slot filled) AND `talkedToWatcher` (`!Game.checkPersistence(0, 114)`). `animEnd` removes the door
+ * 56 ticks later, and the wall leaves one tick after that (`updateLists`).
+ *
+ * ⇒ the two predicates are read from the RUN's own state (`run.finalDoorGate`), never assumed from the route's
+ * `Seal@16` rule: a door whose predicates fail is refused BY NAME, saying which one and what the run holds, because
+ * the game would play the ceremony ("Face the Watcher and return") and stay shut. That is the state the divergence
+ * sweep stages today (no seal slot written by an AP `Seal`, the Watcher never talked to); the order it names is the
+ * Watcher's `talk` in L114 and/or the seals, both outside this room.
+ */
+function resolveApproachStrategy(run, obstacle, contacts, blocked = []) {
+    const door = (run.finalDoors ?? []).find((d) => d.id === obstacle.id);
+    if (!door) return null;
+    const exempt = [...contacts];
+    if (door.removed) {
+        return { strategy: 'approach', door: door.id, already: 'open', stance: null, exempt,
+            rejected: [{ option: `approach ${door.id}`, why: `${door.id} is already removed this visit` }] };
+    }
+    if (door.opening) {
+        return { strategy: 'approach', door: door.id, already: 'opening', stance: null, exempt,
+            rejected: [{ option: `approach ${door.id}`, why: `${door.id} is already playing "open"; the verb waits it out` }] };
+    }
+    const gate = run.finalDoorGate;
+    if (!gate.hasAllSealParts || !gate.talkedToWatcher) {
+        const why = [];
+        if (!gate.hasAllSealParts) {
+            why.push(`the save holds ${gate.sealSlotsFilled} of ${gate.sealSlots} seal slot(s) and its LAST slot is `
+                + 'empty (`SealController.hasAllSealParts()` is `Main.hasSealPart(SEALS - 1) != -1`)');
+        }
+        if (!gate.talkedToWatcher) {
+            why.push('{114,0} is SET — the Watcher in L114 has not been talked to this run '
+                + '(`talkedToWatcher = !Game.checkPersistence(0, 114)`)');
+        }
+        throw new SolverRefusal(`solverBot: approach ${door.id} in level ${run.level} — the door cannot open in this `
+            + `state: ${why.join('; and ')}. The game plays the SealController's ceremony on approach `
+            + `(${gate.talkedToWatcher ? '"Your path to redemption lies here"' : '"Face the Watcher and return"'}) `
+            + 'and the door stays shut (`FinalDoor.as:52-64`, the `r6-final-door-control` witness). The work order is '
+            + `${[!gate.talkedToWatcher ? 'the Watcher\'s `talk` in L114' : null,
+                !gate.hasAllSealParts ? 'the missing seal(s)' : null].filter(Boolean).join(' and ')}, not this room.`,
+        { obstacle: { kind: 'solid', id: door.id, tag: 'finaldoor' } });
+    }
+    const rejected = [{ option: `walk through ${door.id}`, why: 'a 32x32 "Solid" until its "open" animation ends; '
+        + 'it opens only on approach (`FinalDoor.update`), and this run holds both of its predicates' }];
+    if (door.distance <= door.seeDistance) {
+        // Already inside the circle (a seenSeal approach the door has not yet answered): the verb holds from here.
+        return { strategy: 'approach', door: door.id, stance: null, at: { x: run.state.x, y: run.state.y },
+            exempt, rejected };
+    }
+    const here = door.distance;
+    if (here <= APPROACH_STANCE_REACH) {
+        return { strategy: 'approach', door: door.id, stance: null, at: { x: run.state.x, y: run.state.y },
+            exempt, rejected };
+    }
+    const tx0 = Math.max(0, Math.floor((door.x - APPROACH_STANCE_REACH) / TILE_SIZE));
+    const ty0 = Math.max(0, Math.floor((door.y - APPROACH_STANCE_REACH) / TILE_SIZE));
+    const tx1 = Math.floor((door.x + APPROACH_STANCE_REACH) / TILE_SIZE);
+    const ty1 = Math.floor((door.y + APPROACH_STANCE_REACH) / TILE_SIZE);
+    const candidates = [];
+    for (let ty = ty0; ty <= ty1; ty += 1) {
+        for (let tx = tx0; tx <= tx1; tx += 1) {
+            const cx = tx * TILE_SIZE + TILE_SIZE / 2;
+            const cy = ty * TILE_SIZE + TILE_SIZE / 2;
+            const d = Math.hypot(cx - door.x, cy - door.y);
+            if (d < door.seeDistance + APPROACH_STANCE_MARGIN || d > APPROACH_STANCE_REACH) continue;
+            if (plannerObstacleAt(run.world, cx, cy, null, solverPlanOpts(run, new Set(), {})) !== null) continue;
+            candidates.push({ x: cx, y: cy, d: Math.hypot(cx - run.state.x, cy - run.state.y) });
+        }
+    }
+    candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
+    for (const c of candidates) {
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        if (!reached) continue;
+        return { strategy: 'approach', door: door.id, stance: { x: c.x, y: c.y }, at: { x: c.x, y: c.y },
+            exempt, discharged: reached.discharged, rejected: [...rejected, ...hypothesisRejection(reached.discharged)] };
+    }
+    throw new SolverRefusal(`solverBot: no stance to approach ${door.id} from in level ${run.level} — `
+        + `${candidates.length} walkable cell(s) lie ${door.seeDistance + APPROACH_STANCE_MARGIN}..${APPROACH_STANCE_REACH} `
+        + `px from it and none plans a corridor from (${run.state.x},${run.state.y}).`,
+    { obstacle: { kind: 'solid', id: door.id, tag: 'finaldoor' } });
+}
+
+/**
+ * Executor: the `approach` verb — HOLD toward the door's entity point until the ceremony fires and the next update
+ * plays "open" (the witness held `up` through both: `r6-final-door`, ticks 36 and 37), then RELEASE and wait until
+ * the wall is gone (`doorEvents`' `removed` row's `wallOpensAt`). The hold ends at the open: the animation runs
+ * whatever the player does (`stepFinalDoor`'s `opening` arm reads no radius), and a released walk settles against
+ * the body instead of pressing it for 56 ticks. ⚠ A CHOICE, NOT A REQUIREMENT — measured (mutant M2, the hold kept
+ * through the wait): every L113 goal still solves, because the wait ends at `wallOpensAt` and one held tick into the
+ * doorway does not reach the teleporters. `fidelitySealDoor.test.js` pins the plan to the game-recorded tape.
+ */
+function execApproach(run, perTick, resolved, ctx) {
+    const from = perTick.length;
+    const refuse = (why) => {
+        throw new SolverRefusal(`${ctx.what}: ${why}`, { obstacle: { kind: 'solid', id: resolved.door, tag: 'finaldoor' } });
+    };
+    const door = () => (run.finalDoors ?? []).find((d) => d.id === resolved.door);
+    const tick = (held, what) => {
+        perTick.push(held);
+        const { transition } = run.advance(held);
+        if (transition) refuse(`the run crossed to level ${transition.to_level} ${what}.`);
+    };
+    if (resolved.already === 'open' || door()?.removed) {
+        return { verb: 'approach', target: resolved.door, from, ticks: 0, already: 'open' };
+    }
+    const ceremoniesBefore = run.doorCeremonies.filter((c) => c.id === resolved.door).length;
+    // ── the approach: toward the entity point until "open" plays ─────────
+    const d0 = door();
+    for (let i = 0; !door().opening && !door().removed; i += 1) {
+        if (i >= APPROACH_MAX) {
+            refuse(`held toward ${resolved.door} for ${APPROACH_MAX} tick(s) and it never played "open" (closest `
+                + `${door().distance.toFixed(2)} px; the circle is ${d0.seeDistance}; ceremonies `
+                + `${run.doorCeremonies.filter((c) => c.id === resolved.door).length - ceremoniesBefore}).`);
+        }
+        tick(new Set(chooseHeld(run.state, { x: d0.x, y: d0.y }, 0)), `approaching ${resolved.door}`);
+    }
+    const ceremony = run.doorCeremonies.filter((c) => c.id === resolved.door).at(-1) ?? null;
+    const openedAt = perTick.length;
+    // ── the open: released, until the wall is gone ────────────────────────
+    const NO_KEYS = new Set();
+    const removedRow = () => run.doorEvents.filter((e) => e.id === resolved.door && e.what === 'removed').at(-1);
+    while (!(removedRow() && run.ticksCompleted >= removedRow().wallOpensAt && door()?.removed)) {
+        if (perTick.length - openedAt > APPROACH_OPEN_MAX) {
+            refuse(`${resolved.door} was still standing ${APPROACH_OPEN_MAX} tick(s) after "open" played.`);
+        }
+        tick(NO_KEYS, `waiting out ${resolved.door}'s "open"`);
+    }
+    return { verb: 'approach', target: resolved.door, from, ticks: perTick.length - from, openedAt,
+        ceremonyAt: ceremony?.t ?? null, deadFrames: ceremony?.frames ?? null,
+        removedAt: removedRow().t, wallOpensAt: removedRow().wallOpensAt, stance: resolved.stance };
+}
+
+/**
  * ⛓⛓ SEEDLING SWIM U5 — THE `encounter` EXECUTORS, keyed by the item the
  * encounter DROPS (the location is the drop, not a placement).
  *
@@ -2264,6 +2418,9 @@ export const NESTED_OPENER_DEPTH = 2;
  * are which, and it is asked rather than copied (trap 89).
  */
 function refineStrategy(run, strategy, obstacle) {
+    // ⛓ fidelity SEALDOOR D2 (behind `CONTACT_FIDELITY.sealDoorApproach`): the FinalDoor is opened by APPROACH. The
+    // shared table keeps no row for it, so OFF the answer is the table's (none) byte for byte.
+    if (CONTACT_FIDELITY.sealDoorApproach && obstacle?.kind === 'solid' && obstacle?.tag === 'finaldoor') return 'approach';
     /**
      * ⛓⛓⛓ SEEDLING FIDELITY WAND (behind `WAND_VERB`) — the two rows the game contradicts, asked here so the
      * shared table keeps its words: a `wandlock` is a `Lock` (its group's verb, then the kill-lock arm below), and a
@@ -2370,6 +2527,8 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'bait') return resolveBaitStrategy(run, obstacle, aim, allowTeleporter);
     // ⛓ WAND — reached only while `WAND_VERB` registers the verb (`frontierExecutor`).
     if (strategy === 'wand') return resolveWandStrategy(run, obstacle, contacts, blocked);
+    // ⛓ fidelity SEALDOOR D2 — reached only while `sealDoorApproach` registers the verb (`frontierExecutor`).
+    if (strategy === 'approach') return resolveApproachStrategy(run, obstacle, contacts, blocked);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
