@@ -233,4 +233,4 @@ last head: below.
 
 ## CI
 
-`JavaScript Unit Tests` at `8f6dc34` (D3; the last code head): run 39051225635, in progress when this report was committed — read by `node scripts/procgen/ci-vitest-summary.mjs <head>`. The report commit changes docs only.
+`JavaScript Unit Tests` at `ab11b8c` (the report's first commit; same code as D3 `8f6dc34`, whose run the push cancelled): run 39052145150 **success** — vitest (unfiltered) 20,730 passed, 0 skipped, 0 failed; slow battery 253 / 253. This line's own commit is docs-only.
