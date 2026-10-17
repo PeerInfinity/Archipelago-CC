@@ -130,7 +130,11 @@ import {
     liveSaveArrays, mergeSaveArrays, saveArraysOfWrites, saveDelta, slotsAfterDelivery, stageItems, stageSaveArrays,
 } from '../seedlingDemo/wasmDelivery.js';
 
-/** How long a goal waits for its arrival (a crossing, or the forced re-arrival) before it fails by name. */
+/**
+ * How long a goal waits for its arrival (a crossing, or the forced re-arrival) before it fails by name. ⛓ FREEZE
+ * LATCH (§5.89) — a hold's latch wait reads it as a STILL span: it fails only after the polls saw the game's clock
+ * stand still this long (`wasmPlayback.latchExpired`), never on a wall clock a slow page spent running frames.
+ */
 export const ARRIVAL_WAIT_MS = 15000;
 /** ⛓ CROSS-LEVEL END — `stats.timeline` (an instrument, never acted on) keeps this many rows. */
 export const TIMELINE_ROWS = 200;
@@ -851,7 +855,7 @@ export function createWasmPlayback({
         observeLatch(latch, { at, status: st });
         if (st?.held) { latch.outcome = 'held'; latch = null; return null; }
         if (st?.error) { latch.outcome = 'error'; latch = null; return null; }
-        const over = latchExpired(latch, { at, waitMs: ARRIVAL_WAIT_MS });
+        const over = latchExpired(latch, { at, stillMs: ARRIVAL_WAIT_MS });
         if (over) { latch.outcome = 'timeout'; latch = null; }
         return over;
     }
