@@ -1,0 +1,12 @@
+t  keys  game.x  game.vx  anim  (statue2 entity at 208,160; dist)
+95 right 169.40326 0.8 side-walk 39.43
+96 right 170.75326 1.35 side-walk 38.11
+97 right 171.85326 1.1 side-walk 37.04
+98 right 172.70326 0.85 side-walk 36.21
+99 right,primary 174.10326 1.4 side-walk 34.84
+100 right 177.25326 3.15 side-walk 31.79
+101 right 180.15326 2.9 side-walk 28.99
+102 right 180.15326 2.9 side-stand 28.99
+103 right 180.15326 2.9 side-stand 28.99
+104 right 180.15326 2.9 side-stand 28.99
+105 right 180.15326 2.9 side-stand 28.99
