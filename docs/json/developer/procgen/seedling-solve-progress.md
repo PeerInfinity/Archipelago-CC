@@ -125,10 +125,11 @@ Under C2 and the fidelity waves, no count point sits inside `spinnerFightForecas
 
 The sites above are where the solver's work changes shape, and some of its loops run long between two of them. On L40's kill rung (`r5-l40-part5` toward the totem part at (160,640)) the investigation measured 211 hook calls and 86 % of the solve in gaps over 100 ms, so a tap that posts at most once per interval had nothing to post on. The heartbeat is a count point inside those loops: `progressHeartbeat(at)` counts one pass of loop `at`, and every `HEARTBEAT_EVERY[at]`-th pass calls the hook with site `heartbeat`. The tap reads its own clock on that call and posts if its interval is due. A hook that ignores the site (or posts only at its interval) needs no change.
 
-| `at` | Where (`solverBot.js`) | `HEARTBEAT_EVERY` | Why that N |
+| `at` | Where | `HEARTBEAT_EVERY` | Why that N |
 |---|---|---|---|
-| `preview-sample` | `previewWalk`'s `combatBefore`: its transit, stall and dwell loops each call it once a sample | 512 | a sample is ~45 µs on the 4-core cloud box (L40: 15,970 samples in ~0.7 s of preview) and ~3.5× that on the box the investigation measured: 512 samples are ~23 ms here and ~80 ms there, ~10 Hz |
-| `kill-stance` | `deriveKillByChaser`'s `scoreAll`, after each candidate's `planWaypointsOrNull` | 1 | one candidate's plan is ~130 ms here and ~450 ms there (L40 plans 20) |
+| `preview-sample` | `solverBot.js`: `previewWalk`'s `combatBefore`: its transit, stall and dwell loops each call it once a sample | 512 | a sample is ~45 µs on the 4-core cloud box (L40: 15,970 samples in ~0.7 s of preview) and ~3.5× that on the box the investigation measured: 512 samples are ~23 ms here and ~80 ms there, ~10 Hz |
+| `kill-stance` | `solverBot.js`: `deriveKillByChaser`'s `scoreAll`, after each candidate's `planWaypointsOrNull` | 1 | one candidate's plan is ~130 ms here and ~450 ms there (L40 plans 20) |
+| `plan-pull` | `botDriverV2.js`: `planWaypoints`' string-pull, before each `controllerPathClear` ask | 8 | an ask is ~3.3 ms here (881 over the L40 solve, ~73 % of each kill-rung gap): every 8th is ~26 ms here and ~90 ms on the investigation's box |
 
 What it is not:
 - ⛔ not a deadline site. It asks no `shouldStop`, is never counted in `budget.asks` or `budget.work`, and the solver reads nothing it writes. The JS arc's work units (the 640 / 85 budgets, the 300 s backstop) are the same with it as without.
@@ -137,7 +138,7 @@ What it is not:
 
 `snapshot.heartbeat` is `{at, count}`: the loop that beat last, and how many beats this install has emitted.
 
-⚠ **Where it does not reach.** On L40, ~70 % of each kill-rung gap is one call to `botDriverV2.planWaypoints`, in its string-pull (`controllerPathClear`, 881 calls over the solve). One call cannot be split from the solver's side, so the gap share falls only from ~80 % to ~63 % on the cloud box. A heartbeat inside that loop (`botDriverV2.js`, outside the solver's region) would take it to ~10 %. That line waits on its owner's OK. The report is `CC/docs/cloud-reports/seedling-hammer-heartbeat.md`.
+⚠ **The planner's string-pull.** On L40, ~70 % of each kill-rung gap is one call to `botDriverV2.planWaypoints`, in its string-pull (`controllerPathClear`, 881 calls over the solve). One call cannot be split from the solver's side, so the two solver sites alone take the gap share only from ~80 % to ~63 % on the cloud box. The `plan-pull` beat inside that loop (added at HB's harvest; `planWaypoints` is shared, and the page's walker calls it with no hook, so it is one null check there) takes it to ~4–15 %. `solveProgressHeartbeat.test.js` pins `planWaypoints`' plan byte-identical hooked and unhooked. The report is `CC/docs/cloud-reports/seedling-hammer-heartbeat.md`.
 
 ## 4. A worked example
 
