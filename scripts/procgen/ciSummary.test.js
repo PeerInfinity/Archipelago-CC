@@ -19,8 +19,8 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    GUARD_JOB, gateVerdicts, parseGateLines, parseGateMsLines, pickSuiteRun, pickVitestJob,
-    shardNoteIn, VITEST_JOB,
+    GATE_JOB, GUARD_JOB, gateVerdicts, parseGateLines, parseGateMsLines, pickGateRuns,
+    pickSuiteRun, pickVitestJob, shardNoteIn, VITEST_JOB,
 } from './ciSummary.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -338,11 +338,55 @@ describe('pickSuiteRun — the newest run whose suite did NOT skip', () => {
         expect(pickSuiteRun([], () => []).run).toBe(null);
     });
 
+    /**
+     * ⛔ MEASURED on the rule-1 probe (run 39056958592): GitHub SKIPS a job whose
+     * ancestor skipped unless its `if:` calls a status function, and the guard
+     * skips on every branch push — so the browser shards never ran. Every job
+     * with `needs:` must say `!cancelled()` (or `always()`).
+     */
+    it('every job with `needs:` in unittests_frontend.yml carries a status function', () => {
+        const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+        const blocks = wf.slice(wf.indexOf('\njobs:\n')).split(/\n(?= {2}[a-z][\w-]*:\n)/).slice(1);
+        const needing = blocks.filter((b) => /^ {4}needs:/m.test(b));
+        expect(needing.length).toBeGreaterThanOrEqual(4);
+        for (const b of needing) {
+            expect(/^ {4}if: .*(?:!cancelled\(\)|always\(\))/m.test(b), b.split('\n')[0]).toBe(true);
+        }
+    });
+
     /** ⛓ Read off the workflow: the guard's name is GUARD_JOB's, and it is not the suite's. */
     it('in unittests_frontend.yml the guard job carries the name GUARD_JOB matches', () => {
         const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
         const names = [...wf.matchAll(/^ {4}name: (.+)$/gm)].map((m) => m[1]);
         expect(names.filter((n) => GUARD_JOB.test(n))).toEqual([GUARD]);
         expect(VITEST_JOB.test(GUARD)).toBe(false);
+    });
+});
+
+/**
+ * ⛔ RULE 1's second consumer: `--write-costs` and the bank's shard audit price
+ * off the newest SUCCESSFUL runs, and a skipped main run is successful with no
+ * gate job run. Priced from it, the cost table would be empty.
+ */
+describe('pickGateRuns — only runs whose gate jobs RAN are a cost population', () => {
+    const job = (name, conclusion) => ({ name, status: 'completed', conclusion });
+    const SKIPPED = [job('Same SHA already green?', 'success'),
+        job('JavaScript Unit Tests (Vitest)', 'skipped'), job('Headless procgen gates', 'skipped'),
+        job('Browser gates (shard plan)', 'skipped')];
+    const RAN = [job('JavaScript Unit Tests (Vitest)', 'success'), job('Headless procgen gates', 'success'),
+        job('Browser gate shard — identity', 'success')];
+
+    it('passes over a skipped run and keeps the newest `limit` that ran', () => {
+        const runs = [{ id: 3 }, { id: 2 }, { id: 1 }];
+        const jobs = { 3: SKIPPED, 2: RAN, 1: RAN };
+        expect(pickGateRuns(runs, (r) => jobs[r.id], 1).map((r) => r.id)).toEqual([2]);
+        expect(pickGateRuns(runs, (r) => jobs[r.id], 3).map((r) => r.id)).toEqual([2, 1]);
+    });
+
+    it('GATE_JOB names the gate jobs of unittests_frontend.yml, and not the suite or the plan', () => {
+        const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+        const names = [...wf.matchAll(/^ {4}name: (.+)$/gm)].map((m) => m[1]);
+        expect(names.filter((n) => GATE_JOB.test(n))).toEqual(
+            ['Headless procgen gates', 'Browser gate shard — ${{ matrix.shard.name }}']);
     });
 });
