@@ -23036,3 +23036,34 @@ Lessons:
    per-leg bound derivable at all.
 2. *A leg's ticks are not its ground.* A walk can spend ticks it does not travel (a dither at a full-stop waypoint, a
    wait), and a dash removes those whole. A bound that reads ticks has to know which ticks were travel.
+
+### Seedling fidelity ARROWLANE — an armed arrow lane, crossed and billed
+
+⚖ Wave 18 (planner `seedling-fidelity-planning-8`; the user, 2026-10-16: "arrows aren't supposed to be dodgeable"). One
+new switch, **OFF**: `CONTACT_FIDELITY.arrowLaneCrossing` (`SEEDLING_ARROW_LANE_CROSSING=0|1`). Report:
+`CC/docs/cloud-reports/seedling-fidelity-arrowlane.md`.
+
+**D1 — the game witness.** L16's arrival from L17 stands IN `arrowtrap@112,32`'s lane at (120,56). On p4f the volley
+already falling bills the player at t6 standing (`hits` 1, `hits_timer` 19, (120,51.25)) and walking right ((130.84,
+53.34)); walking down takes the stairs to L17 at t6 with no hit. The model reproduces all three at 0 px, Bobs included
+(`fixtures/chaser-witness/arrowlane-l16-arrival-{stand,right,down}.json`). With sphere 0's items there is no shield and
+no weapon for the rope that silences the lanes (the model's PULL rung already uses it when a sword is held).
+
+**D2 — the arm** (`arrowLaneCrossing.js`). A crossing the geometry forces (the walk STARTS in an armed lane, or its aim
+is in one, or the lanes separate it) sets the lanes and their arrows aside (`LaneCrossingExcept`) and certifies the
+corridor on a fork with the run's own arrows: every hit must be an engaged trap's arrow, under the forced-hit budget, and
+is billed as a `forcedHits` row `arrow-lane`. A start in a lane engages at the walk's gate (OFF refuses there before any
+rung); every other case is the ladder's LAST rung, below PULL and FORCED-HIT. ⚠ The first cut engaged an aim in a lane
+up front and pre-empted PULL on survey steps 18 / 26 / 37 (SOLVED → REFUSED); the local survey caught it.
+
+**Movers ON.** Sweep legs (node, by key): 16 of L16's 19 move. Leg 210 (L17 → back down the stairs) **failed → solved,
+6 t, no hit**. 209 / 211–214 / 216 / 217 refuse by name: after the forced t6 hit the shake band leaves `bob@192,80` or
+`bob@208,32` at the screen edge (⚖ cosmetic RNG, not modelled). 215 meets the pushable block (206's wall). 201 meets the
+band at t160. The L15 → pit legs meet the Bobs that ring the pits. L4 / L5 / L8 / L67 legs and the survey's steps 4, 5,
+8, 18, 26, 37 do not move; step 132 (L67) stays REFUSED with a new reason (the lane-free drive stalls). Identity ON: the
+ENEMY census's `arrowtrap@corridor` row changes its refusal reason (`36b59445 → 626fa69a`); the six `--check`s, the
+hammer workloads and every other row equal base. OFF is byte-identical.
+
+**D3.** With the forced-hit budget lifted to 60,000, the whole depth-3 tree from L15's arrival is hitless (46,656
+prefixes): the depth is not the wall. The wall is a missing rung (no weapon in sphere 0): a priced body crossing, or
+baiting a Bob into the room's own lanes (L5's mechanism). Queued, not built.

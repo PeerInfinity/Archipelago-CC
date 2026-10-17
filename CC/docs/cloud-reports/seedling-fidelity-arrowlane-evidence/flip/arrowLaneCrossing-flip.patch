@@ -1,0 +1,57 @@
+diff -ru a/frontend/modules/seedlingDemo/contactFidelity.js b/frontend/modules/seedlingDemo/contactFidelity.js
+--- a/frontend/modules/seedlingDemo/contactFidelity.js	2026-10-16 18:36:11.351724310 +0000
++++ b/frontend/modules/seedlingDemo/contactFidelity.js	2026-10-16 18:36:11.374675821 +0000
+@@ -562,7 +562,7 @@
+      * with the run's own arrows, and the hits are billed as forced hits (`forcedHits` row `arrow-lane`, the forced-hit
+      * budget). ⛔ OFF by default (no licence); `SEEDLING_ARROW_LANE_CROSSING=0|1` for a node measurement.
+      */
+-    arrowLaneCrossing: false,
++    arrowLaneCrossing: true,
+ };
+ /** The defaults this slice shipped, for a reader that asks what "default" was. */
+ export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
+diff -ru a/frontend/modules/seedlingDemo/contactFidelity.test.js b/frontend/modules/seedlingDemo/contactFidelity.test.js
+--- a/frontend/modules/seedlingDemo/contactFidelity.test.js	2026-10-16 18:36:11.355314487 +0000
++++ b/frontend/modules/seedlingDemo/contactFidelity.test.js	2026-10-16 18:36:11.374867914 +0000
+@@ -151,8 +151,8 @@
+             // ⛓ fidelity CORRIDOR D2: `corridorBodyPricing` (the walk corridor prices the live wallflyers and drills) ships OFF.
+             corridorBodyPricing: false,
+ 
+-            // ⛓ fidelity ARROWLANE D2: `arrowLaneCrossing` (an ARMED lane crossed, its arrows billed) ships OFF.
+-            arrowLaneCrossing: false });
++            // ⛓ fidelity ARROWLANE D2: `arrowLaneCrossing` (an ARMED lane crossed, its arrows billed) ships OFF; ⚖ ON since the flip.
++            arrowLaneCrossing: true });
+     });
+ 
+     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
+diff -ru a/frontend/modules/seedlingDemo/fidelityArrowLane.test.js b/frontend/modules/seedlingDemo/fidelityArrowLane.test.js
+--- a/frontend/modules/seedlingDemo/fidelityArrowLane.test.js	2026-10-16 18:36:11.358646297 +0000
++++ b/frontend/modules/seedlingDemo/fidelityArrowLane.test.js	2026-10-16 18:36:11.374969180 +0000
+@@ -58,11 +58,11 @@
+ }
+ 
+ describe('ARROWLANE — the switch and its pieces', () => {
+-    it.skipIf(ENV_SET)('ships OFF, and `withArrowLaneCrossing` restores it', () => {
+-        expect(CONTACT_FIDELITY_DEFAULTS.arrowLaneCrossing).toBe(false);
+-        expect(ARROW_LANE_CROSSING.enabled).toBe(false);
+-        expect(withArrowLaneCrossing(true, () => ARROW_LANE_CROSSING.enabled)).toBe(true);
+-        expect(ARROW_LANE_CROSSING.enabled).toBe(false);
++    it.skipIf(ENV_SET)('ships ON, and `withArrowLaneCrossing` restores it', () => {
++        expect(CONTACT_FIDELITY_DEFAULTS.arrowLaneCrossing).toBe(true);
++        expect(ARROW_LANE_CROSSING.enabled).toBe(true);
++        expect(withArrowLaneCrossing(false, () => ARROW_LANE_CROSSING.enabled)).toBe(false);
++        expect(ARROW_LANE_CROSSING.enabled).toBe(true);
+     });
+     it('is the LAST contact switch (a row added, none reordered) and `arrow-lane` is a known verb', () => {
+         expect(CONTACT_FIDELITY_KEYS.at(-1)).toBe('arrowLaneCrossing');
+@@ -154,8 +154,8 @@
+ });
+ 
+ describe('ARROWLANE D2 — a walk that starts in an armed lane (sweep legs at L16 from L17)', () => {
+-    it.skipIf(ENV_SET)('OFF: leg 210 (back down the stairs) is refused at the gate, before any rung', () => {
+-        const res = solveL16FromL17([7, 4], 'level_16__r1c1 -> level_17');
++    it('OFF: leg 210 (back down the stairs) is refused at the gate, before any rung', () => {
++        const res = withArrowLaneCrossing(false, () => solveL16FromL17([7, 4], 'level_16__r1c1 -> level_17'));
+         expect(res.ok).toBe(false);
+         expect(String(res.message)).toMatch(/the danger map forbids \(120,56\) — arrowLane:arrowtrap@112,32/);
+     });
