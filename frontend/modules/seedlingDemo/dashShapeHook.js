@@ -34,8 +34,9 @@ const SWITCHES = Object.freeze({
 export const DASH_SHAPE_KEYS = Object.freeze(Object.keys(SWITCHES));
 
 /**
- * The switches' OWN defaults, read once at import (never restated): OFF in the browser and its worker; under node,
- * whatever `SEEDLING_<NAME>=1` made them (the workers inherit the env, so both sides share one default).
+ * The switches' OWN defaults, read once at import (never restated). Since the dash flip (2026-10-16): legPrecheck and
+ * keepPartial ON, noSwingPrefix OFF, in the browser and its worker; under node, whatever `SEEDLING_<NAME>=0|1` made
+ * them (the workers inherit the env, so both sides share one default).
  */
 export const DASH_SHAPE_DEFAULTS = Object.freeze(Object.fromEntries(DASH_SHAPE_KEYS.map((k) => [k, SWITCHES[k].sw.enabled])));
 

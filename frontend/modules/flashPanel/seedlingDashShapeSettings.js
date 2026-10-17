@@ -7,7 +7,7 @@
  * Three settings, not one grouped one: the switches are independent (each has its own env var and scope, and a flip
  * may take them one at a time), and an enum per switch is what the settings UI renders as a choice. The STAMP and the
  * page's query are grouped (`dashShape`, one field / one `?dashShape=` spec), because the solve takes them together.
- * `default` is the switch's own value where the solver runs (OFF in the browser), so no default is restated here
+ * `default` is the switch's own value where the solver runs (legPrecheck and keepPartial ON, noSwingPrefix OFF, since the dash flip, 2026-10-16), so no default is restated here
  * (this panel's static closure stays model-free: `seedlingDemo/dashShapeHook.js` reads the switches).
  *
  * Where the value goes: the JS runtime page (`?dashShape=<key>:on|off,…`, see `jsRuntimePage.js`), the wasm engine
@@ -46,7 +46,7 @@ export function dashShapeSchemaProps() {
             default: 'default',
             label: `Seedling solver: ${label}`,
             description: `The solver switch \`${name}\` (seedlingDemo/solverBot.js has what it changes). ${what} `
-                + '`default` is the switch\'s own value (off). Both runtimes, the Playback Bot\'s solver. A value other '
+                + '`default` is the switch\'s own value (legPrecheck and keepPartial on, noSwingPrefix off, since the dash flip). Both runtimes, the Playback Bot\'s solver. A value other '
                 + 'than the default is stamped on every solve request and plan (`dashShape`), so a plan made with it is '
                 + 'labelled; changing it re-mounts the JS runtime page. Leave `default` unless you are measuring the solver.',
         }];
