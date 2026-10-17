@@ -19,7 +19,13 @@
  *   · and what the fingerprint does NOT read: the differential's import
  *     closure outside `seedlingDemo/` (the headless channel, the shard
  *     partition, `flashPanel/` helpers — DERIVED by walking the imports, never
- *     listed), the workflow file and `package-lock.json` (the browser build).
+ *     listed), the workflow file and `package-lock.json` (the browser build);
+ *   · ⛓ AND `check-seedling-full-tier-owed`'s populations that the above
+ *     misses: the wasm GITLINK (i) and the dead-frame accounting files (iv),
+ *     derived the way that gate derives them. A harvest QUOTES the reused run
+ *     into the bank's roster row, and that gate then judges the row against
+ *     the reused run's SHA — so a key that matched while one of its
+ *     populations moved would leave the gate red with no drive allowed.
  *
  * ⛔ IT IS DELIBERATELY WIDER than `check-seedling-full-tier-owed`'s four
  * populations, which the review proposed: that gate prices the BOX row and
@@ -29,6 +35,7 @@
  * wide costs a re-drive; one that is too narrow quotes a run about another tree.
  */
 
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
@@ -98,9 +105,31 @@ export function tierKey({ tier, fingerprint, tapes, files }) {
     return h.digest('hex').slice(0, 16);
 }
 
-/** The key at this tree: the closure from `entry` plus `KEY_EXTRA_FILES`. */
+const git = (repo, ...a) => execFileSync('git', a, { cwd: repo, encoding: 'utf8' }).trim();
+
+/** ⛓ The owed gate's token, spelt in two halves so this file is not itself in (iv). */
+const DEAD_FRAME_TOKEN = ['BOOT_PRESWAP', 'FRAMES'].join('_');
+export const WASM_SUBMODULE = 'frontend/modules/flashPanel/wasm';
+
+/**
+ * (iv) — the dead-frame accounting population, by `check-seedling-full-tier-
+ * owed`'s own rule: code files naming the token, minus tests, the bank and
+ * that gate. `fullTierKey.test.js` compares this with the list the gate prints.
+ */
+export function deadFrameFiles(repo) {
+    return git(repo, 'grep', '-l', '--', DEAD_FRAME_TOKEN).split('\n').filter(Boolean)
+        .filter((f) => /\.(?:js|mjs|py|json)$/.test(f))
+        .filter((f) => !f.endsWith('.test.js') && f !== 'scripts/procgen/standing-values.json'
+            && f !== 'scripts/procgen/check-seedling-full-tier-owed.mjs')
+        .sort();
+}
+
+/** The key at this tree: the closure from `entry`, (iv), `KEY_EXTRA_FILES`, the gitlink. */
 export function tierKeyAt({ repo, entry, tier, fingerprint, tapes }) {
-    const paths = [...new Set([...importClosure(entry, { repo }), ...KEY_EXTRA_FILES])];
+    const paths = [...new Set([...importClosure(entry, { repo }), ...deadFrameFiles(repo),
+        ...KEY_EXTRA_FILES])];
     const files = paths.map((path) => ({ path, bytes: readFileSync(resolve(repo, path)) }));
-    return { key: tierKey({ tier, fingerprint, tapes, files }), files: paths.length };
+    /** (i) — the gitlink the TREE records, not what is checked out under it. */
+    files.push({ path: `gitlink:${WASM_SUBMODULE}`, bytes: git(repo, 'rev-parse', `HEAD:${WASM_SUBMODULE}`) });
+    return { key: tierKey({ tier, fingerprint, tapes, files }), files: files.length };
 }

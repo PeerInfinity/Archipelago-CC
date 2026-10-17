@@ -3,6 +3,7 @@
  * GREEN run's is quoted instead of re-driven. A key that misses an input would
  * quote a run about another tree, so its edges are pinned here.
  */
+import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    KEY_ARTIFACT_PREFIX, KEY_EXTRA_FILES, importClosure, keyArtifactName, tierKey,
+    KEY_ARTIFACT_PREFIX, KEY_EXTRA_FILES, deadFrameFiles, importClosure, keyArtifactName, tierKey,
 } from './fullTierKey.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -59,6 +60,31 @@ describe('importClosure — the differential\'s own imports, derived', () => {
     it('the extra files exist, and the workflow is one of them', () => {
         expect(KEY_EXTRA_FILES).toContain('.github/workflows/seedling-full-tier.yml');
         for (const f of KEY_EXTRA_FILES) expect(() => readFileSync(join(REPO, f))).not.toThrow();
+    });
+});
+
+/**
+ * ⛔ The key must cover `check-seedling-full-tier-owed`'s (iv), or a reused run
+ * quoted into the bank leaves that gate red with no drive allowed. The gate
+ * prints the population it derived; this asks for the same list.
+ */
+describe('the key\'s dead-frame population is the owed gate\'s', () => {
+    it('deadFrameFiles equals the list check-seedling-full-tier-owed prints', () => {
+        /** ⛓ The gate exits 1 whenever a tier is OWED; its stdout is what is read. */
+        const out = spawnSync('node', [join(REPO, 'scripts/procgen/check-seedling-full-tier-owed.mjs')],
+            { cwd: REPO, encoding: 'utf8' }).stdout;
+        const line = out.split('\n').find((l) => l.includes('the dead-frame line filter'));
+        /**
+         * ⚠ In CI's depth-1 clone the gate REFUSES before it prints the list
+         * (its baseline commit is absent), so this pin is a LOCAL one; the
+         * refusal is asserted so that nothing else can hide behind it.
+         */
+        if (!line) {
+            expect(out).toMatch(/REFUSED: this tree cannot be asked/);
+            return;
+        }
+        const printed = line.slice(line.lastIndexOf('`: ') + 3).split(', ').map((f) => f.trim()).sort();
+        expect(deadFrameFiles(REPO)).toEqual(printed);
     });
 });
 
