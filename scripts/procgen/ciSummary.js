@@ -47,8 +47,29 @@ export function runById(id) {
 export function recentRuns({ limit = 3 } = {}) {
     const rows = JSON.parse(gh('run', 'list', `--workflow=${WORKFLOW}`, '--limit', '30',
         '--json', 'databaseId,headSha,status,conclusion,createdAt'));
-    return rows.filter((r) => r.status === 'completed' && r.conclusion === 'success')
-        .slice(0, limit);
+    return pickGateRuns(rows.filter((r) => r.status === 'completed' && r.conclusion === 'success'),
+        runJobs, limit);
+}
+
+/**
+ * ⛓⛓ ci-skip-rules RULE 1 — **A SUCCESSFUL RUN IS NOT NECESSARILY ONE THAT RAN
+ * THE GATES.** A main push of an already-green SHA concludes `success` with its
+ * gate jobs SKIPPED, so it carries no `##   ms |` line at all. Priced from it,
+ * `--write-costs` would bank an EMPTY cost table and `planCiShards` would price
+ * every arm at the whole budget (trap 1068's collapse, from the other side).
+ */
+export const GATE_JOB = /^(?:Headless procgen gates|Browser gate shard — )/;
+export const ranGates = (jobs) =>
+    (jobs ?? []).some((j) => GATE_JOB.test(j.name ?? '') && j.conclusion !== 'skipped');
+
+/** ⛓ Pure: the first `limit` runs, newest first, whose gate jobs RAN. */
+export function pickGateRuns(runs, jobsOf, limit) {
+    const out = [];
+    for (const r of runs) {
+        if (out.length >= limit) break;
+        if (ranGates(jobsOf(r))) out.push(r);
+    }
+    return out;
 }
 
 /**
