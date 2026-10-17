@@ -25,8 +25,13 @@
  *
  *   A  (wasm, `seedling_atlas` — the ATLAS arm, whose rooms stand UNREWRITTEN, so `Starting House - Chest` is a
  *      real `Chest`): the game's sixteen slots are written directly (the setter, as the adapter would), and the
- *      player enters L86: does `Chest.checkBySeal` remove the unopened chest, and is its AP location checked?
- *      Recorded (`ROW A checkBySeal`), not asserted: what to do with it is §5.87's (⚖ the user's ruling).
+ *      player enters L86: `Chest.checkBySeal` removes the unopened chest, and its AP location is CHECKED. ⚖ The
+ *      user (2026-10-16): *"for now let's have deleting the chests automatically award the location checks for
+ *      them"* — this row is that ruling's PIN. CONTROL first: before the jump the location is NOT checked (the
+ *      16 seals alone check nothing). Then, after the jump (`ROW A checkBySeal`): the chest's flag `{86,0}` is
+ *      cleared, the game reported `pendingCheck "<seq>|86|0|0"`, and the check binding marked
+ *      `Starting House - Chest` checked. A binding that stops firing on the removal is RED here.
+ *      (`--control` does not touch A: the auto-check held on the base tree too.)
  *
  * `--control`: the base tree's expectation — no Seal / Totem Shard reaches the game, and the door stays shut
  * WITH the Watcher staged. Without it, the delivery rows are asserted.
@@ -328,7 +333,7 @@ async function main() {
         return rp.failures();
     }
 
-    /** A — the atlas arm's real Chest under 16 seals (`Chest.checkBySeal`): measured for §5.87. */
+    /** A — the atlas arm's real Chest under 16 seals (`Chest.checkBySeal`): the removal AWARDS its check (⚖ the pin). */
     async function runAtlas() {
         let rp;
         let logs = [];
@@ -343,17 +348,33 @@ async function main() {
             const before = await snap();
             const CHEST = 'Starting House - Chest';
             out('before', { level: before.level, checked: before.checked, seals: before.save?.seal_parts });
+            rp.check(`A: CONTROL — before the jump "${CHEST}" is NOT checked`, !before.checked.includes(CHEST), JSON.stringify(before.checked));
             // The game's sixteen slots, written as the adapter writes a seal (no AP grant: the atlas preset holds one Seal).
             await rp.gameFrame().evaluate(() => window.__swfBridge.queueItems(Array.from({ length: 16 }, (_, i) => ({
                 invocation: 'method_call', path: [{ class: 'Main' }], method: 'hasSealPartSet', args: [i, i] }))));
             await rp.waitFor('the game holds 16 seals', async () => ((await snap()).save?.has_all_seal_parts === true ? 'yes' : null), 10000);
+            const mid = await snap();
+            rp.check(`A: CONTROL — 16 seals in the game, still outside L86: "${CHEST}" is NOT checked`, !mid.checked.includes(CHEST),
+                JSON.stringify({ level: mid.level, checked: mid.checked }));
             const jumped = await rp.jumpSettled(86, 48, 64);
-            await page.waitForTimeout(4000);
-            const after = await snap();
+            let after = null;
+            const until = Date.now() + 15000;
+            for (;;) {
+                // eslint-disable-next-line no-await-in-loop
+                after = await snap();
+                if (after.checked.includes(CHEST) || Date.now() > until) break;
+                // eslint-disable-next-line no-await-in-loop
+                await page.waitForTimeout(500);
+            }
             const chestCleared = (after.cleared ?? []).some((c) => c.level === 86 && c.tag === 0);
+            const pending = String(after.state.pendingCheck ?? '');
             out('checkBySeal', { jumped, level: after.level, chestFlagCleared: chestCleared, locationChecked: after.checked.includes(CHEST),
                 pendingCheck: after.state.pendingCheck ?? null, checked: after.checked });
-            rp.check('A: measured — 16 seals in the game, the player in L86 (the row above records checkBySeal\'s effect)', after.level === 86);
+            rp.check('A: 16 seals in the game, the player in L86', after.level === 86, JSON.stringify(jumped));
+            rp.check('A: Chest.checkBySeal REMOVED the unopened chest — its flag {86,0} is cleared', chestCleared, JSON.stringify(after.cleared));
+            rp.check('A: the game REPORTED the removal — pendingCheck "<seq>|86|0|0"', /^\d+\|86\|0\|0$/.test(pending), JSON.stringify(pending));
+            rp.check(`A: ⚖ the removal AWARDS the check — the binding marked "${CHEST}" checked`, after.checked.includes(CHEST),
+                JSON.stringify(after.checked));
             await page.close();
         } catch (e) {
             (rp?.check ?? ((l, ok) => console.log(`${ok ? 'PASS' : 'FAIL'}: ${l}`)))(`A: fatal: ${e.message}`, false, e.stack?.split('\n').slice(0, 4).join(' / '));
