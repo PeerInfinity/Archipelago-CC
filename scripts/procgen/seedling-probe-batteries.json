@@ -11,7 +11,8 @@
       { "probe": "probe-seedling-wasm-adopt.mjs", "args": "" },
       { "probe": "probe-seedling-obstacle-events.mjs", "args": "--only=W,J" },
       { "probe": "probe-seedling-wasm-generated-playback.mjs", "args": "" },
-      { "probe": "probe-seedling-loop-restart.mjs", "args": "" }
+      { "probe": "probe-seedling-loop-restart.mjs", "args": "" },
+      { "probe": "probe-seedling-seal-delivery.mjs", "args": "--only=A" }
     ]
   }
 }
