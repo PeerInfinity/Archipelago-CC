@@ -153,6 +153,8 @@ export class FlashPanelUI {
     this.adapter = null;
     this.unsubscribeHandles = [];
     this.isInitialized = false;
+    /** ⛓ The init EPOCH — bumped by every teardown; see `_initStale`. */
+    this._initEpoch = 0;
 
     /**
      * ⛓ T2b F3 — the keys the GAME is holding, released into it when its
@@ -693,7 +695,22 @@ export class FlashPanelUI {
       .catch((err) => this._panelLog(`JS page graphics could not be applied: ${err.message}`));
   }
 
+  /**
+   * ⛔⛔ A TORN-DOWN INIT FLOW GOES QUIET (§5.91 finding (a)). A flow captures
+   * the epoch it started under; once a teardown has bumped it — or, after the
+   * flow built its adapter, once that adapter is no longer the panel's (the
+   * §5.91 guard) — it touches nothing: no DOM, no glue, no status, no log.
+   * Measured: a js → auto → wasm switch ran TWO flows into `_initializeWasm`,
+   * and the first, still in its settings reads, had no adapter for the
+   * identity guard to compare — it embedded an iframe and attached the region
+   * glue to an adapter nobody detaches. Asked after EVERY await of an init.
+   */
+  _initStale(epoch, adapter) {
+    return epoch !== this._initEpoch || (adapter !== undefined && this.adapter !== adapter);
+  }
+
   _teardownForReinit() {
+    this._initEpoch = (this._initEpoch ?? 0) + 1;
     this._initRuntime = undefined;
     this._seedlingGenReport = null;
     this._seedlingGenSet = null;
@@ -942,9 +959,11 @@ export class FlashPanelUI {
    * workarounds (Ruffle load, Clean Flash configure delay, host-shim
    * poll counters) apply here.
    */
-  async _initializeWasm() {
+  async _initializeWasm(epoch = this._initEpoch) {
     this._setStatus('loading config…');
-    this.gameConfig = await this._loadConfig(this.configPath);
+    const gameConfig = await this._loadConfig(this.configPath);
+    if (this._initStale(epoch)) return;
+    this.gameConfig = gameConfig;
     this._panelLog(`config loaded: ${this.gameConfig.game} (${this.transport} transport)`);
     this._setupTeleportUI();
 
@@ -968,7 +987,7 @@ export class FlashPanelUI {
     try {
       this._setStatus('loading wasm page…');
       await adapter.waitForRuntime(30000);
-      if (this.adapter !== adapter) return;
+      if (this._initStale(epoch, adapter)) return;
       this._heldKeys.install();
       if (this.transport === 'js') {
         // ⛓ The JS page has no ▶ Start: no GPU or audio context to unlock.
@@ -976,6 +995,7 @@ export class FlashPanelUI {
         this._panelLog('JS runtime page loaded (seedlingDemo model, rectangles)');
         // ⛓ S1 — the page is up: hand it the solver mode now (the init read raced the iframe).
         await this._refreshSolverWalk(this._solverWalk);
+        if (this._initStale(epoch, adapter)) return;
       } else {
         this._setStatus('click ▶ Start in the game');
         this._panelLog('wasm page loaded — click ▶ Start in the game to boot it');
@@ -983,14 +1003,14 @@ export class FlashPanelUI {
       // Callbacks appear only after the user starts the game; wait
       // generously rather than timing out under them.
       await adapter.waitForBridge(10 * 60 * 1000);
-      if (this.adapter !== adapter) return;
+      if (this._initStale(epoch, adapter)) return;
       this._heldKeys.install();
       this._panelLog('bridge callbacks ready');
       // ⛓ U2a: ▶ Start leaves the frame's focus on its BODY (measured); the
       // game hears nothing until its canvas has it.
       this.focusGame('the game started');
     } catch (err) {
-      if (this.adapter !== adapter) return;
+      if (this._initStale(epoch, adapter)) return;
       this._panelLog(`bridge not ready: ${err.message}`, 'error');
       this._setStatus('bridge timeout');
       return;
@@ -1259,6 +1279,7 @@ export class FlashPanelUI {
   async _initializeAdapter() {
     if (this.isInitialized) return;
     this.isInitialized = true;
+    const epoch = this._initEpoch;
 
     try {
       // Resolve config/SWF paths from the active preset's
@@ -1290,16 +1311,14 @@ export class FlashPanelUI {
       try {
         runtime = await settingsManager.getSetting(RUNTIME_SETTING_KEY, 'auto');
       } catch { /* keep 'auto' */ }
+      if (this._initStale(epoch)) return;
       this._initRuntime = runtime;
-      await this._refreshSolverWalk();
-      await this._refreshWasmSolverBudget();
-      await this._refreshSolverUpgradeWindow();
-      await this._refreshKillLockBodies();
-      await this._refreshContactFidelity();
-      await this._refreshAxeDodgeAsk();
-      await this._refreshDashOnlyWindow();
-      await this._refreshDashShape();
-      await this._refreshJsGraphics();
+      for (const refresh of [this._refreshSolverWalk, this._refreshWasmSolverBudget,
+        this._refreshSolverUpgradeWindow, this._refreshKillLockBodies, this._refreshContactFidelity,
+        this._refreshAxeDodgeAsk, this._refreshDashOnlyWindow, this._refreshDashShape, this._refreshJsGraphics]) {
+        await refresh.call(this);
+        if (this._initStale(epoch)) return;
+      }
       this.transport = 'wasm';
       if (runtime === 'js') {
         // ⛓ Seedling JS J1: the JavaScript model's page, through the SAME
@@ -1325,13 +1344,13 @@ export class FlashPanelUI {
             graphicsPageParams(this._jsGraphics, this._jsCamera)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
-          await this._initializeWasm();
+          await this._initializeWasm(epoch);
           return;
         }
         this._panelLog(`runtime 'js' plays ${JS_RUNTIME_CONFIG} only — this game uses 'auto'`);
       }
       if (this.configPath && this.wasmPath && runtime !== 'flash') {
-        await this._initializeWasm();
+        await this._initializeWasm(epoch);
         return;
       }
 
@@ -1341,8 +1360,9 @@ export class FlashPanelUI {
         return;
       }
 
-      await this._initializeFlash();
+      await this._initializeFlash(epoch);
     } catch (err) {
+      if (this._initStale(epoch)) return;
       log('error', '[FlashPanelUI] Init failed', err);
       this._panelLog(`init failed: ${err.message}`, 'error');
       this._setStatus('error');
@@ -1354,15 +1374,17 @@ export class FlashPanelUI {
    *
    * ⛔⛔ A TORN-DOWN FLOW GOES QUIET. `_teardownForReinit` drops the adapter but
    * cannot abort this flow's 15 s bridge wait (the Flash adapter has no
-   * cancellation), so the flow holds ITS adapter and, once it is no longer the
-   * panel's, touches nothing. Measured (§5.91, CI 4/8 at 429ba55d1e): the
+   * cancellation), so the flow holds its epoch and ITS adapter and, once
+   * either is stale (`_initStale`), touches nothing. Measured (§5.91, CI 4/8 at 429ba55d1e): the
    * Flash-runtime row's wait outlived its own cleanup by ~14 s and its timeout
    * wrote `bridge timeout` over the NEXT row's wasm *click ▶ Start in the game*,
    * so that row waited 120 s for a status that had come and gone.
    */
-  async _initializeFlash() {
+  async _initializeFlash(epoch = this._initEpoch) {
     this._setStatus('loading config…');
-    this.gameConfig = await this._loadConfig(this.configPath);
+    const gameConfig = await this._loadConfig(this.configPath);
+    if (this._initStale(epoch)) return;
+    this.gameConfig = gameConfig;
     this._panelLog(`config loaded: ${this.gameConfig.game}`);
     this._setupTeleportUI();
 
@@ -1371,8 +1393,10 @@ export class FlashPanelUI {
     try {
       await ensureRuffleLoaded();
     } catch (err) {
+      if (this._initStale(epoch)) return;
       this._panelLog(`ruffle load failed: ${err.message} (native Flash may still work)`);
     }
+    if (this._initStale(epoch)) return;
 
     this._embedSwf(w, h);
     this._setStatus('waiting for bridge…');
@@ -1394,7 +1418,7 @@ export class FlashPanelUI {
 
     try {
       await adapter.waitForBridge(15000);
-      if (this.adapter !== adapter) return;
+      if (this._initStale(epoch, adapter)) return;
       this._panelLog('bridge ready');
       this._setStatus('bridge ready');
 
@@ -1408,12 +1432,12 @@ export class FlashPanelUI {
       // the retry path on Chrome + Clean Flash, while the retry
       // below handles the rare case where it isn't.
       await new Promise((r) => setTimeout(r, 1500));
-      if (this.adapter !== adapter) return;
+      if (this._initStale(epoch, adapter)) return;
 
       this._configureRetries = 0;
       this._configureBridge();
     } catch (err) {
-      if (this.adapter !== adapter) return;
+      if (this._initStale(epoch, adapter)) return;
       this._panelLog(`bridge not ready: ${err.message}`, 'error');
       this._setStatus('bridge timeout');
     }
@@ -1629,6 +1653,7 @@ export class FlashPanelUI {
 
   destroy() {
     log('info', '[FlashPanelUI] Destroying');
+    this._initEpoch = (this._initEpoch ?? 0) + 1;
     this._heldKeys?.uninstall();
     this._solveProgressView?.close();
     if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
