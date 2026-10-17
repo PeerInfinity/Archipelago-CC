@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**74 files, 6001 literals.** Class × position:
+**74 files, 6002 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1572 | 447 | 2024 |
-| rule | 7 | 1022 | 496 | 1525 |
+| rule | 8 | 1022 | 496 | 1526 |
 | cosmetic | 0 | 62 | 14 | 76 |
 | structural | 14 | 377 | 1985 | 2376 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 26 | 3033 | 2942 | 6001 |
+| total | 27 | 3033 | 2942 | 6002 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1743 | 0 | 97 | 123 | 4 | 57 | 2024 |
-| rule | 500 | 139 | 239 | 22 | 533 | 92 | 1525 |
+| rule | 500 | 139 | 240 | 22 | 533 | 92 | 1526 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -512,7 +512,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**12 named scalars** are `physics` or `rule` (12 with an AS3 anchor), and **147 small tables** (at most 16 literals) hold at least one (96 with an AS3 reference).
+**13 named scalars** are `physics` or `rule` (13 with an AS3 anchor), and **147 small tables** (at most 16 literals) hold at least one (96 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -526,6 +526,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `WEAPON_LENGTH` | seedlingDemo/bobBossFight.js | 24 | physics | magnitude | Enemies/BobBoss.as:weaponLength |
 | `DEATH_LIFT` | seedlingDemo/bobBossFight.js | 1.2 | physics | magnitude | Enemies/BobBoss.as:death |
 | `SHIELD_FORCE` | seedlingDemo/bobBossFight.js | 5 | physics | magnitude | Player.as:shieldForce |
+| `STATUE_TALK_RANGE` | seedlingDemo/endingChain.js | 32 | rule | bound | NPCs/Statue.as:talkRange |
 | `NO_FORCE_CAP` | seedlingDemo/enemyDamage.js | -1 | physics | sentinel | Enemies/Enemy.as:maxForce |
 | `TIME_PER_FRAME` | seedlingDemo/lavaChain.js | 45 | rule | magnitude | Game.as:timePerFrame |
 

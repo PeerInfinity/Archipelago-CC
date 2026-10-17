@@ -768,18 +768,22 @@ export function oneTickTravelBound(vx = 0, vy = 0) {
  * radius) or `null`.
  *
  * @param {object} state       the player, `{x, y, vx, vy}`
- * @param {object[]} circles   `[{id, tag, ex, ey}]` — `run.talkCircles`
+ * @param {object[]} circles   `[{id, tag, ex, ey, talkRange?}]` — `run.talkCircles`
  * @param {number} aheadTicks  how many ticks until the RELEASE (1 for a press
  *   decided now, 2 for an aim whose press lands next tick)
  */
 export function talkGuard(state, circles, aheadTicks = 1) {
     if (!circles || circles.length === 0) return null;
-    const reach = TALK_RANGE + aheadTicks * oneTickTravelBound(state.vx ?? 0, state.vy ?? 0);
+    const travel = aheadTicks * oneTickTravelBound(state.vx ?? 0, state.vy ?? 0);
     let worst = null;
     for (const c of circles) {
+        // ⛓ fidelity DASHSTEP: a circle's own radius (`run.talkCircles`' `talkRange`, set only under
+        // `CONTACT_FIDELITY.statueTalkRange`), else the NPC default.
+        const reach = (c.talkRange ?? TALK_RANGE) + travel;
         const d = Math.hypot(c.ex - state.x, c.ey - state.y);
         if (d <= reach && (worst === null || d < worst.distance)) {
-            worst = { id: c.id, tag: c.tag, distance: d, guardRadius: reach, aheadTicks };
+            worst = { id: c.id, tag: c.tag, distance: d, guardRadius: reach, aheadTicks,
+                ...(c.talkRange !== undefined ? { talkRange: c.talkRange } : {}) };
         }
     }
     return worst;
@@ -789,7 +793,7 @@ export function talkGuard(state, circles, aheadTicks = 1) {
 function talkWhy(g, pressTick) {
     return `a \`primary\` press at tick ${pressTick} would be RELEASED inside `
         + `\`${g.id}\`'s talk range — ${g.distance.toFixed(2)} px from it, guard radius `
-        + `${g.guardRadius.toFixed(2)} (talkRange ${TALK_RANGE} + ${g.aheadTicks} tick(s) of `
+        + `${g.guardRadius.toFixed(2)} (talkRange ${g.talkRange ?? TALK_RANGE} + ${g.aheadTicks} tick(s) of `
         + 'travel). `NPCs/NPC.as:191` reads the SWORD key as the talk key, so the release '
         + 'would open the dialogue and freeze the player until its pages run out (⚖ ruling '
         + '53). The press is refused, not priced — re-time it or route around the circle.';
