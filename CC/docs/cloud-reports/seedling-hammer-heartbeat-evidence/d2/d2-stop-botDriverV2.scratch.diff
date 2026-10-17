@@ -1,0 +1,20 @@
+diff --git a/frontend/modules/seedlingDemo/botDriverV2.js b/frontend/modules/seedlingDemo/botDriverV2.js
+index 71b75e4..ec028b6 100644
+--- a/frontend/modules/seedlingDemo/botDriverV2.js
++++ b/frontend/modules/seedlingDemo/botDriverV2.js
+@@ -64,6 +64,7 @@
+  * scope then, not now.
+  */
+ 
++import { activeProgress, progressHeartbeat } from './solveProgress.js';
+ import {
+     KEY_CODES, assertTapeWithinRuntimeBudget, coerceTerrainState, serializeTape,
+     createLevelRun,
+@@ -1342,6 +1343,7 @@ export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}
+     while (anchor < points.length - 1) {
+         let next = anchor + 1;
+         for (let j = points.length - 1; j > anchor; j--) {
++            if (activeProgress !== null) progressHeartbeat('plan-pull'); // SCRATCH (HB D1/D2 STOP evidence)
+             if (controllerPathClear(level, points[anchor], points[j], allowTeleporter, opts)) {
+                 next = j;
+                 break;
