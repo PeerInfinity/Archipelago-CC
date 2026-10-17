@@ -19,7 +19,8 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    gateVerdicts, parseGateLines, parseGateMsLines, pickVitestJob, shardNoteIn, VITEST_JOB,
+    GATE_JOB, GUARD_JOB, gateVerdicts, parseGateLines, parseGateMsLines, pickGateRuns,
+    pickSuiteRun, pickVitestJob, shardNoteIn, VITEST_JOB,
 } from './ciSummary.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -280,5 +281,96 @@ describe('pickVitestJob — the split workflow (the gates are their own job)', (
         expect(matching[0].block).not.toContain('ci-gates.mjs');
         const gates = jobs.find((j) => /node scripts\/procgen\/ci-gates\.mjs\s*$/m.test(j.block));
         expect(gates?.name).toBe('Headless procgen gates');
+    });
+});
+
+/**
+ * ⛓⛓ ci-skip-rules RULE 1 — a main push of an already-green SHA SKIPS its
+ * suite, and that skipped run is the newest at the SHA. The reader must answer
+ * with the run that did run the suite (the branch's), or the planners' "JSUT
+ * at the merged SHA before the ff" reads a skip.
+ */
+describe('pickSuiteRun — the newest run whose suite did NOT skip', () => {
+    const run = (id, o = {}) => ({ databaseId: id, event: 'push', headBranch: 'main',
+        status: 'completed', conclusion: 'success', ...o });
+    const job = (name, status, conclusion) => ({ name, status, conclusion });
+    const SUITE = 'JavaScript Unit Tests (Vitest)';
+    const GUARD = 'Same SHA already green?';
+
+    it('passes over the skipped main run and answers with the branch run', () => {
+        const runs = [run(2), run(1, { headBranch: 'fidelity-harvest/x' })];
+        const jobs = { 2: [job(GUARD, 'completed', 'success'), job(SUITE, 'completed', 'skipped')],
+            1: [job(SUITE, 'completed', 'success')] };
+        const { run: r, passedOver } = pickSuiteRun(runs, (x) => jobs[x.databaseId]);
+        expect(r.databaseId).toBe(1);
+        expect(passedOver.map((p) => p.run.databaseId)).toEqual([2]);
+    });
+
+    it('a main run whose guard has not decided defers to an older SUCCESSFUL run', () => {
+        const runs = [run(2, { status: 'in_progress', conclusion: null }),
+            run(1, { headBranch: 'b' })];
+        const jobs = { 2: [job(GUARD, 'in_progress', null), job(SUITE, 'queued', null)],
+            1: [job(SUITE, 'completed', 'success')] };
+        expect(pickSuiteRun(runs, (x) => jobs[x.databaseId]).run.databaseId).toBe(1);
+        /** …and a run with no jobs listed yet is undecided too. */
+        expect(pickSuiteRun(runs, (x) => (x.databaseId === 2 ? [] : jobs[1])).run.databaseId)
+            .toBe(1);
+    });
+
+    /** ⛔ The guard finds only a SUCCESS, so with none the main run is the answer. */
+    it('with no older success the undecided main run IS the answer', () => {
+        const runs = [run(2, { status: 'in_progress', conclusion: null }),
+            run(1, { headBranch: 'b', conclusion: 'cancelled' })];
+        const jobs = { 2: [job(GUARD, 'in_progress', null)], 1: [job(SUITE, 'completed', 'cancelled')] };
+        expect(pickSuiteRun(runs, (x) => jobs[x.databaseId]).run.databaseId).toBe(2);
+    });
+
+    /** ⛔ The guard is a main-PUSH job: a dispatch or a branch push is never predicted. */
+    it('an in-progress dispatch or branch run is the answer, never passed over', () => {
+        for (const o of [{ event: 'workflow_dispatch' }, { headBranch: 'b' }]) {
+            const runs = [run(2, { status: 'in_progress', conclusion: null, ...o }), run(1)];
+            const jobs = { 2: [job(SUITE, 'in_progress', null)], 1: [job(SUITE, 'completed', 'success')] };
+            expect(pickSuiteRun(runs, (x) => jobs[x.databaseId]).run.databaseId).toBe(2);
+        }
+    });
+
+    it('no run at all is null', () => {
+        expect(pickSuiteRun([], () => []).run).toBe(null);
+    });
+
+    /** ⛓ Read off the workflow: the guard's name is GUARD_JOB's, and it is not the suite's. */
+    it('in unittests_frontend.yml the guard job carries the name GUARD_JOB matches', () => {
+        const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+        const names = [...wf.matchAll(/^ {4}name: (.+)$/gm)].map((m) => m[1]);
+        expect(names.filter((n) => GUARD_JOB.test(n))).toEqual([GUARD]);
+        expect(VITEST_JOB.test(GUARD)).toBe(false);
+    });
+});
+
+/**
+ * ⛔ RULE 1's second consumer: `--write-costs` and the bank's shard audit price
+ * off the newest SUCCESSFUL runs, and a skipped main run is successful with no
+ * gate job run. Priced from it, the cost table would be empty.
+ */
+describe('pickGateRuns — only runs whose gate jobs RAN are a cost population', () => {
+    const job = (name, conclusion) => ({ name, status: 'completed', conclusion });
+    const SKIPPED = [job('Same SHA already green?', 'success'),
+        job('JavaScript Unit Tests (Vitest)', 'skipped'), job('Headless procgen gates', 'skipped'),
+        job('Browser gates (shard plan)', 'skipped')];
+    const RAN = [job('JavaScript Unit Tests (Vitest)', 'success'), job('Headless procgen gates', 'success'),
+        job('Browser gate shard — identity', 'success')];
+
+    it('passes over a skipped run and keeps the newest `limit` that ran', () => {
+        const runs = [{ id: 3 }, { id: 2 }, { id: 1 }];
+        const jobs = { 3: SKIPPED, 2: RAN, 1: RAN };
+        expect(pickGateRuns(runs, (r) => jobs[r.id], 1).map((r) => r.id)).toEqual([2]);
+        expect(pickGateRuns(runs, (r) => jobs[r.id], 3).map((r) => r.id)).toEqual([2, 1]);
+    });
+
+    it('GATE_JOB names the gate jobs of unittests_frontend.yml, and not the suite or the plan', () => {
+        const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+        const names = [...wf.matchAll(/^ {4}name: (.+)$/gm)].map((m) => m[1]);
+        expect(names.filter((n) => GATE_JOB.test(n))).toEqual(
+            ['Headless procgen gates', 'Browser gate shard — ${{ matrix.shard.name }}']);
     });
 });
