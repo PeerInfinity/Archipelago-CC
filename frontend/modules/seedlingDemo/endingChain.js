@@ -60,6 +60,7 @@ import {
 // live run needs this module in a browser (editor arc slice 1).
 import { animCallbackUpdate } from './r6AnimClock.js';
 import { PROFILE } from './seedlingProfile.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 export class EndingError extends Error {
     constructor(message) { super(message); this.name = 'EndingError'; }
@@ -165,6 +166,22 @@ export function inTalkRange(npcEntity, player, range = TALK_RANGE) {
     const dx = npcEntity.x - player.x;
     const dy = npcEntity.y - player.y;
     return Math.sqrt(dx * dx + dy * dy) <= range;
+}
+
+/**
+ * ⛓ fidelity DASHSTEP — THE TALK RADIUS IS THE CLASS'S FIELD. `NPC.as:27` declares `talkRange = 24` and
+ * `NPCs/Statue.as:25` assigns 32 in its constructor; no other class assigns it. `statue1` and `statue2` are that one
+ * class (`dialogue.PLACED_NPC_TALK`). `wasmPlayback.INERT_MOBILES` reads the same 32 on the game side.
+ */
+export const STATUE_TALK_RANGE = 32;
+export const CLASS_TALK_RANGE = Object.freeze({ statue1: STATUE_TALK_RANGE, statue2: STATUE_TALK_RANGE });
+
+/**
+ * A placed talker's radius, by its `.oel` type: the class's own under `CONTACT_FIDELITY.statueTalkRange`, else the
+ * default every talker was tested at before (`TALK_RANGE`, byte-identical OFF).
+ */
+export function talkRangeOf(tag) {
+    return CONTACT_FIDELITY.statueTalkRange ? (CLASS_TALK_RANGE[tag] ?? TALK_RANGE) : TALK_RANGE;
 }
 
 /**

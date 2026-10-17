@@ -1,0 +1,2 @@
+FAIL: leg 7 L0 L0 flag 1: breakablerock@288,176 cleared — 106 game tick(s) compared, worst |Δ| 9.100 px; first differs at t102: x game 180.153 model 182.803, vx game 2.9 model 2.65
+PASS: leg 7 L0 L0 flag 1: breakablerock@288,176 cleared — 106 game tick(s) compared, worst |Δ| 0.000 px
