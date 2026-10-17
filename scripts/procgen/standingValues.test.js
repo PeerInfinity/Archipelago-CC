@@ -401,3 +401,19 @@ describe('F2 task 2 — the MOVED-row clause', () => {
         expect(at).toBeLessThan(src.indexOf('out.rows[row.key] = {\n            value: r.value,'));
     });
 });
+
+/**
+ * ⛔ Measured 2026-10-17: `ci-summary --json` printed valid JSON on stdout and
+ * one `gh: HTTP 404` on stderr (a skipped job's log), and the merged stream
+ * failed to parse. Every CI-sourced row then KEPT its old value under "exited 0".
+ */
+describe('a CI-sourced row reads its JSON from stdout, whatever stderr says', () => {
+    const command = `echo '{"value":"abc","total":"t","standingRow":"1/2","conclusion":"success"}'; `
+        + "echo 'gh: HTTP 404' >&2; echo '⛓ rule 1: passed over run 1' >&2";
+    for (const deadlineMs of [null, 5000]) {
+        it(`ci-gate and ci-suite (${deadlineMs ? 'deadline' : 'plain'} path)`, async () => {
+            expect((await runRow({ kind: 'ci-gate', command }, { deadlineMs })).value).toBe('abc');
+            expect((await runRow({ kind: 'ci-suite', command }, { deadlineMs })).value).toBe('1/2');
+        });
+    }
+});

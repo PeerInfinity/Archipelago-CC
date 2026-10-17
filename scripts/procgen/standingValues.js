@@ -640,8 +640,14 @@ const plain = (s) => s.replace(/\[[0-9;]*m/g, '');
  *             which is the form every standing value is already quoted in
  *             ("ship 254/0", "demos 204/0", "export 27/2").
  *   suite     `files/tests` off vitest's own summary block.
+ *
+ * ⛔ `ci-gate` / `ci-suite` read `stdout` ALONE when the caller passes it: the
+ * reader's JSON is on stdout, and its stderr carries diagnostics (`⛓ rule 1:
+ * passed over run …`, a `gh` line). Measured 2026-10-17: one stray `gh: HTTP
+ * 404` on stderr made `JSON.parse(stdout + stderr)` throw, and every CI-sourced
+ * row KEPT its old value under an "exited 0" reading.
  */
-export function headlineOf(kind, out) {
+export function headlineOf(kind, out, { stdout = null } = {}) {
     const lines = plain(out).split('\n').map((l) => l.replace(/\r$/, ''));
     if (kind === 'gate') {
         const body = lines.join('\n');
@@ -664,7 +670,7 @@ export function headlineOf(kind, out) {
      */
     if (kind === 'ci-gate') {
         try {
-            const j = JSON.parse(plain(out));
+            const j = JSON.parse(plain(stdout ?? out));
             return { value: j.value ?? null, total: j.total ?? null };
         } catch { return { value: null, total: null }; }
     }
@@ -680,7 +686,7 @@ export function headlineOf(kind, out) {
          * pushed yet.
          */
         try {
-            const j = JSON.parse(plain(out));
+            const j = JSON.parse(plain(stdout ?? out));
             return { value: j.standingRow ?? null, total: j.conclusion ?? null };
         } catch { return { value: null, total: null }; }
     }
@@ -702,6 +708,7 @@ export function headlineOf(kind, out) {
 export async function runRow(row, { repo = REPO, deadlineMs = null } = {}) {
     const t0 = process.hrtime.bigint();
     let out = '';
+    let stdout = '';
     let code = 0;
     const script = row.shell
         ? `${identityShellHelpers({ repo })}\n${row.command}\nexit "\${PIPESTATUS[0]}"`
@@ -710,12 +717,14 @@ export async function runRow(row, { repo = REPO, deadlineMs = null } = {}) {
     try {
         const r = await run('bash', ['-c', script], { cwd: repo, maxBuffer: 1 << 27 });
         out = `${r.stdout}${r.stderr}`;
+        stdout = r.stdout;
     } catch (e) {
         code = typeof e.code === 'number' ? e.code : 1;
         out = `${e.stdout ?? ''}${e.stderr ?? ''}` || String(e.message ?? e);
+        stdout = e.stdout ?? '';
     }
     const ms = Number((process.hrtime.bigint() - t0) / 1000000n);
-    const { value, total } = headlineOf(row.kind, out);
+    const { value, total } = headlineOf(row.kind, out, { stdout });
     /**
      * ⛓ S4c — **`out` IS RETURNED BESIDE THE HEADLINE, and the caller that
      * needed it is `ci-gates.mjs`.** A red arm whose line carries no evidence
@@ -740,8 +749,9 @@ function runUnderDeadline(row, script, { repo, deadlineMs, t0 }) {
         const child = spawn('bash', ['-c', script], { cwd: repo, detached: true,
             stdio: ['ignore', 'pipe', 'pipe'] });
         let out = '';
+        let stdout = '';
         let killed = false;
-        child.stdout.on('data', (d) => { out += d; });
+        child.stdout.on('data', (d) => { out += d; stdout += d; });
         child.stderr.on('data', (d) => { out += d; });
         const timer = setTimeout(() => {
             killed = true;
@@ -750,7 +760,7 @@ function runUnderDeadline(row, script, { repo, deadlineMs, t0 }) {
         child.on('close', (code, signal) => {
             clearTimeout(timer);
             const ms = Number((process.hrtime.bigint() - t0) / 1000000n);
-            const { value, total } = headlineOf(row.kind, out);
+            const { value, total } = headlineOf(row.kind, out, { stdout });
             resolve({ value, total, exit: code ?? (signal ? 137 : 1), ms, out, pid: child.pid, killed });
         });
     });
