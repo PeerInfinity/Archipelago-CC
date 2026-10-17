@@ -136,9 +136,62 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # ══════════════════════════════════════════════════════════════════════
+  # ⛓ ci-skip-rules RULE 1 (⚖ user, 2026-10-17) — A MAIN PUSH OF A SHA THAT
+  # ALREADY HAS A GREEN RUN RUNS NO SUITE AND NO GATES.
+  #
+  # The harvests push a branch, read JSUT at that SHA, then `git push
+  # <sha>:main`. That re-ran the same SHA (`ci-skip-review` §3 R1: ≈ 7,700
+  # job-min in 7 days). In 100 such pairs the main copy caught 0 real defects;
+  # both of its reds were known flakes.
+  #
+  # ⛔ The skipped main run is the NEWEST run for its SHA. `ciSummary.findRun`
+  # passes over a run whose suite job skipped, so `ci-vitest-summary.mjs
+  # <main sha>` still answers with the branch run.
+  # ⛔ A job-level `if:`, never a `paths:` filter: a skipped job counts as passed
+  # for a required check, and a path-filtered workflow never reports at all.
+  # ⛓ FAIL-OPEN: an API error, a dispatch, a branch push and a run with no
+  # earlier green run all run the suite.
+  # ══════════════════════════════════════════════════════════════════════
+  already-green:
+    name: Same SHA already green?
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    timeout-minutes: 5
+    permissions:
+      actions: read
+    outputs:
+      green: ${{ steps.q.outputs.green }}
+    steps:
+      - name: Look for an earlier successful run at this SHA
+        id: q
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          if ! R=$(gh api "repos/$REPO/actions/workflows/unittests_frontend.yml/runs?head_sha=$SHA&status=success&per_page=20" \
+              --jq "[.workflow_runs[] | select(.id != $RUN_ID)] | map(\"\\(.id) \\(.event) \\(.head_branch)\") | .[]"); then
+            echo "MEASURED: could not list the runs at $SHA — the suite runs (fail-open)"
+            echo "green=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if [ -n "$R" ]; then
+            echo "MEASURED: $SHA already has a successful run — the suite and gates are SKIPPED here:"
+            printf '%s\n' "$R" | sed 's/^/  run /'
+            echo "green=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "MEASURED: no earlier successful run at $SHA — the suite runs"
+            echo "green=false" >> "$GITHUB_OUTPUT"
+          fi
+
   javascript-tests:
     name: JavaScript Unit Tests (Vitest)
     runs-on: ubuntu-latest
+    # ⛓ RULE 1. `!cancelled()`, not `always()`: the guard is SKIPPED off main,
+    # and a cancelled run (F3's supersede) must not start the suite.
+    needs: already-green
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
 
     steps:
       - name: Checkout repository
@@ -204,6 +257,9 @@ jobs:
   headless-gates:
     name: Headless procgen gates
     runs-on: ubuntu-latest
+    # ⛓ RULE 1 — the same guard as the suite's.
+    needs: already-green
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
     # The step's own 20-minute deadline below, plus the ~30 s of setup.
     timeout-minutes: 25
 
@@ -328,6 +384,9 @@ jobs:
   browser-gate-plan:
     name: Browser gates (shard plan)
     runs-on: ubuntu-latest
+    # ⛓ RULE 1 — the same guard; the shard matrix `needs` this job, so it skips too.
+    needs: already-green
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
     timeout-minutes: 10
     outputs:
       shards: ${{ steps.plan.outputs.shards }}
