@@ -59,7 +59,9 @@ describe('AXETIMING D2 — the switch', () => {
     it('ships OFF (both switches), appended after every older key', () => {
         expect(CONTACT_FIDELITY_DEFAULTS.axeTimingRung).toBe(false);
         expect(CONTACT_FIDELITY_DEFAULTS.axeGateTransit).toBe(false);
-        expect(CONTACT_FIDELITY_KEYS.slice(-2)).toEqual(['axeTimingRung', 'axeGateTransit']);
+        // ⛓ fidelity DASHSTEP: `statueTalkRange` lands after them, so "the last two" became "right after arrowLaneCrossing".
+        const at = CONTACT_FIDELITY_KEYS.indexOf('arrowLaneCrossing') + 1;
+        expect(CONTACT_FIDELITY_KEYS.slice(at, at + 2)).toEqual(['axeTimingRung', 'axeGateTransit']);
     });
     it('its bounds: the AXE arm\'s rest screen, 10 dash-chain phases, a preview bound, a one-radian order margin', () => {
         expect(AXE_TIMING_RUNG).toEqual({ rest: AXE_DODGE_RUNG.rest, offsetStep: 2, maxPreviews: 240, turnMargin: 1 });

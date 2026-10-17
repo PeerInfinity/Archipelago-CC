@@ -997,6 +997,7 @@ frontend/modules/seedlingDemo/endingChain.js|CUTSCENE_1_WALK|(module)|64,physics
 frontend/modules/seedlingDemo/endingChain.js|ORACLE|(module),physics,magnitude,,NPC ctor Tile.w/2 offset
 frontend/modules/seedlingDemo/endingChain.js|CREDITS|(module)|2,rule,sentinel,,menuState credits
 frontend/modules/seedlingDemo/endingChain.js|CREDITS|(module)|14,rule,sentinel,,badge index
+frontend/modules/seedlingDemo/endingChain.js|STATUE_TALK_RANGE|(module),rule,bound,NPCs/Statue.as:talkRange,Statue's own talk circle (Statue.as:25 talkRange = 32; contactFidelity.statueTalkRange)
 frontend/modules/seedlingDemo/playerPhysicsV2.js|*|*,structural,,,indices / lengths / zero inits / centre halves
 frontend/modules/seedlingDemo/playerPhysicsV2.js|terrainEffectClass|terrainEffectClass,rule,sentinel,,Tile.t state ids
 frontend/modules/seedlingDemo/playerPhysicsV2.js|nextDirection|nextDirection,rule,sign,,velocity sign picks direction
