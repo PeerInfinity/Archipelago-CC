@@ -9,8 +9,11 @@ import { describe, expect, it } from 'vitest';
 
 import {
     crossRoomButtonsOf, crossRoomPrerequisitesOf, deriveButtonEvents, deriveLockEvents, deriveTalkEvents, deriveObstacleEvents, persistenceEffect, OBSTACLE_EVENT_KIND, obstacleEventId, obstacleEventName, parseObstacleEventId,
-    parseSolidId, rowVerdict, ruleItemNames,
+    parseSolidId, poleKillsOf, poleLightReaches, POLE_LIGHT_ARM, rowVerdict, ruleItemNames,
 } from './seedlingObstacleEvents.js';
+import { buildLevelWorld, combatCensusOf } from '../seedlingDemo/levelWorld.js';
+import { contactRect } from '../seedlingDemo/combat.js';
+import { DARKTRAP_LIGHT_DEATH } from '../seedlingDemo/enemyDamage.js';
 
 const FIXTURE = JSON.parse(readFileSync(
     new URL('../seedlingDemo/fixtures/arrival-solid-edges.json', import.meta.url), 'utf8'));
@@ -302,5 +305,86 @@ describe('cross-room prerequisites (deriveTalkEvents) — RULES watcher-event', 
         expect(() => deriveTalkEvents([prereq()], tctx({ gates: () => [] }))).toThrow(/finaldoor@112,0 has no crossing on it/);
         expect(() => deriveTalkEvents([prereq()], tctx({ existing: [{ name: NAME, fields: { event_id: 'flag:L114:0', side: 'level_114' } }] })))
             .toThrow(/flag:L114:0 is already the event/);
+    });
+});
+
+describe('a cross-room press that LIGHTS a pole (deriveButtonEvents ctx.kills / ctx.inRoom) — RULES darktrap-events', () => {
+    const MAP = JSON.parse(readFileSync(new URL('./atlases/seedling-map.json', import.meta.url), 'utf8'));
+    const MODEL = { buildLevelWorld, combatCensusOf, contactRect, DARKTRAP_LIGHT_DEATH };
+    const levelOf = (n) => MAP.levels.find((l) => l.level === n);
+    const presser = { level: 63, x: 32, y: 64, t: 0, tag: 0, flip: true, room: 62 };
+    const pole = { level: 62, type: 'lightpole', x: 120, y: 200, tset: -1, tag: 0 };
+    const button = (over = {}) => ({ presser, write: { level: 62, tag: 0, value: false }, targets: [pole], ...over });
+    const NAME = 'L62 flag 0: lightpole@120,200 cleared';
+    const SPEAR = { rule: 'Has', args: { item_name: 'Ghost Spear' } };
+    const GATES = [{ region_id: 'level_62', exit_id: 'out_teleporter_112_64' }, { region_id: 'level_64', exit_id: 'out_teleporter_32_96' }];
+    const bctx = (over = {}) => ({
+        effect: (t) => persistenceEffect(t, { lightpole: 'cosmetic' }[t.type]),
+        kills: () => ({ bodies: ['darktrap@112,208'], why: 'lit, its light reaches darktrap@112,208' }),
+        inRoom: () => SPEAR,
+        pricedByButton: () => ({ free: true, why: 'the killed bodies are ruled [open]' }),
+        place: () => ({ region_id: 'level_63', sub_region: 'r0c1', side: 'level_63__r0c1' }),
+        reach: () => null,
+        gates: () => GATES,
+        ...over,
+    });
+
+    it('a pole whose clear KILLS bodies opens like a solid: ONE event in the POLE\'s flag at the button, each gate Or(event, the in-room arm)', () => {
+        const out = deriveButtonEvents([button()], bctx());
+        expect(out.events.map((e) => [e.name, e.region_id, e.sub_region])).toEqual([[NAME, 'level_63', 'r0c1']]);
+        expect(out.events[0].fields).toMatchObject({
+            event_id: 'flag:L62:0', obstacle: { level: 62, tag: 0, class: 'lightpole', x: 120, y: 200 },
+            action: { verb: 'press', item: null, presser: { level: 63, class: 'buttonroom', x: 32, y: 64 } }, side: 'level_63__r0c1',
+        });
+        const rule = { rule: 'Or', children: [{ rule: 'Has', args: { item_name: NAME } }, SPEAR] };
+        expect(out.exitGates).toEqual(GATES.map((g) => ({ ...g, rule })));
+        // no in-room arm → the event alone
+        expect(deriveButtonEvents([button()], bctx({ inRoom: () => null })).exitGates.map((g) => g.rule))
+            .toEqual([{ rule: 'Has', args: { item_name: NAME } }, { rule: 'Has', args: { item_name: NAME } }]);
+    });
+
+    it('a pole that kills nothing (or no ctx.kills at all) stays skipped as cosmetic; a SET that would light it is refused', () => {
+        for (const kills of [() => null, () => ({ bodies: [], why: '' }), undefined]) {
+            const out = deriveButtonEvents([button()], bctx({ kills }));
+            expect(out.events).toEqual([]);
+            expect(out.skipped[0]).toMatch(/lightpole@120,200: solid in neither state \(response 'cosmetic'\)/);
+        }
+        expect(() => deriveButtonEvents([button({ write: { level: 62, tag: 0, value: true } })], bctx()))
+            .toThrow(/the press SETS the flag that opens it/);
+        // the rules already price the bodies (not open) → skipped, never doubled
+        expect(deriveButtonEvents([button()], bctx({ pricedByButton: () => ({ free: false, why: 'gated' }) })).skipped[0])
+            .toMatch(/do not price it free/);
+    });
+
+    it('poleLightReaches is levelRun.darkTrapsNow\'s band: MIN within radiusMin reaches (the bob sweeps it), else not', () => {
+        const D = DARKTRAP_LIGHT_DEATH;
+        // L62: light (128, 198..202), body centre (120, 216) → 15.6–19.4 px: reached
+        const [l62] = poleLightReaches({ x: 120, y: 200 }, [{ id: 'a', cx: 120, cy: 216 }], D);
+        expect(l62.min).toBeCloseTo(Math.hypot(8, 14), 6);
+        expect(l62.max).toBeCloseTo(Math.hypot(8, 18), 6);
+        // L101's pole@144,64 and darktrap@160,80 (centre 168,88): 27.2–30.5 px — straddles 28 with the bob, and the
+        // MIN decides (the first tick inside starts the death)
+        const [l101] = poleLightReaches({ x: 144, y: 64 }, [{ id: 'b', cx: 168, cy: 88 }], D);
+        expect(l101.min).toBeCloseTo(Math.hypot(16, 22), 6);
+        expect(l101.min).toBeLessThan(D.pole.radiusMin);
+        expect(l101.max).toBeGreaterThan(D.pole.radiusMin);
+        // L63 @80,64 (centre 88,72) from pole@64,88: 21.3–24.1 px
+        expect(poleLightReaches({ x: 64, y: 88 }, [{ id: 'e', cx: 88, cy: 72 }], D)[0].max).toBeCloseTo(Math.hypot(16, 18), 6);
+        // a body inside the bob's span: the min is the horizontal distance
+        expect(poleLightReaches({ x: 0, y: 100 }, [{ id: 'c', cx: 28, cy: 101 }], D)[0].min).toBe(20);
+        expect(poleLightReaches({ x: 0, y: 100 }, [{ id: 'd', cx: 40, cy: 130 }], D)).toEqual([]);
+    });
+
+    it('poleKillsOf over the map: the two Dungeon 6 poles and what they kill; an inverted pole or a non-pole kills nothing', () => {
+        const ids = (n, t) => poleKillsOf(levelOf(n), t, MODEL)?.map((k) => k.id) ?? null;
+        expect(ids(62, { x: 120, y: 200 })).toEqual(['darktrap@112,208']);
+        expect(ids(63, { x: 64, y: 88 })).toEqual(['darktrap@64,96', 'darktrap@80,64']);
+        const k = poleKillsOf(levelOf(62), { x: 120, y: 200 }, MODEL)[0];
+        expect(k.rect).toEqual({ x: 112, y: 208, right: 128, bottom: 224, w: 16, h: 16 });
+        expect(ids(62, { x: 112, y: 208 })).toBeNull();
+        const L = levelOf(62);
+        const inverted = { ...L, entities: L.entities.map((e) => (e.type === 'lightpole' ? { ...e, attrs: { ...e.attrs, invert: '1' } } : e)) };
+        expect(poleKillsOf(inverted, { x: 120, y: 200 }, MODEL)).toBeNull();
+        expect(POLE_LIGHT_ARM.item).toBe('hasSpear');
     });
 });

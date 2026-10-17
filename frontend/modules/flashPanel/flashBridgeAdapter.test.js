@@ -352,7 +352,10 @@ describe('⛓ KEY DELIVERY — a key is a METHOD-CALL item: `Main.hasKeySet(i, t
     };
     const calls = (queue) => queue.filter((w) => w.invocation === 'method_call');
     /** The key items, derived from the shipped config: every `ap_items` row whose flash name has a method def. */
-    const KEY_ITEMS = CONFIG.ap_items.filter((i) => CONFIG.items.find((d) => d.flash_name === i.flash_name)?.method);
+    const KEY_ITEMS = CONFIG.ap_items.filter((i) => {
+        const d = CONFIG.items.find((x) => x.flash_name === i.flash_name);
+        return d?.method && !d.fill;   // (⛓ SEAL DELIVERY: a FILL item is a method call too — its own block below)
+    });
 
     it('every key AP item maps to its own index, through the game\'s setter, declaring save.keys and the keyMask bit', () => {
         expect(KEY_ITEMS.length).toBeGreaterThan(0);
@@ -404,5 +407,101 @@ describe('⛓ KEY DELIVERY — a key is a METHOD-CALL item: `Main.hasKeySet(i, t
         expect(calls(a._buildQueue()).map((w) => w.args[0])).toEqual([0]);
         const ids = (inv) => calls(a._itemWritesFor(inv, { quiet: true })).map((w) => `${w.method}(${w.args})`);
         expect(ids({ 'Red Key': 1 })).not.toEqual(ids({ 'Green Key': 1 }));
+    });
+});
+
+describe('⛓ SEAL DELIVERY — a FILL item (Seal, Totem Shard): N copies = N slots, only the MISSING ones written', () => {
+    const adapterWith = (inventory) => {
+        const a = new FlashBridgeAdapter({
+            config: CONFIG, flashObjectId: `test-${Math.random()}`,
+            stateManager: { getLatestStateSnapshot: () => ({ inventory }) },
+            dispatcher: { publish: () => {} }, eventBus: { subscribe: () => () => {} }, log: () => {},
+        });
+        a.gameReady = true;
+        return a;
+    };
+    const calls = (queue) => queue.filter((w) => w.invocation === 'method_call');
+    const SEAL = CONFIG.ap_items.find((i) => i.flash_name === '!seal').ap_name;
+    const TOTEM = CONFIG.ap_items.find((i) => i.flash_name === '!totem').ap_name;
+    const sealDef = CONFIG.items.find((d) => d.flash_name === '!seal');
+    const totemDef = CONFIG.items.find((d) => d.flash_name === '!totem');
+    /** The game's seal log as the bridge reports it (`sealSlot0..15`; -1 = empty). */
+    const seals = (a, log) => { for (let i = 0; i < 16; i += 1) a._onStateChanged(`sealSlot${i}`, log[i] ?? -1); };
+    const totems = (a, held) => { for (let i = 0; i < 5; i += 1) a._onStateChanged(`totemPart${i}`, held.includes(i)); };
+
+    it('the defs and their readouts are declared: one path read per slot, through the game\'s own setters', () => {
+        expect(sealDef).toMatchObject({ method: 'hasSealPartSet', save_array: 'seal_parts', fill: { rule: 'log', slots: 16, empty: -1 } });
+        expect(totemDef).toMatchObject({ method: 'hasTotemPartSet', save_array: 'totem_parts', fill: { rule: 'set', slots: 5, value: true } });
+        const reads = CONFIG.path_reads.map((r) => r.name);
+        for (let i = 0; i < 16; i += 1) expect(reads).toContain(`sealSlot${i}`);
+        for (let i = 0; i < 5; i += 1) expect(reads).toContain(`totemPart${i}`);
+        const r3 = CONFIG.path_reads.find((r) => r.name === 'sealSlot3');
+        expect(r3.path).toEqual([{ class: 'Main' }, { property: 'SAVE_FILE' }, { property: 'data' }, { property: 'hasSealPart' }, { index: 3 }]);
+    });
+
+    it('a Seal reaches the game: N seals → slots 0..N-1 of the LOG, each with an identity the log does not hold', () => {
+        const a = adapterWith({ [SEAL]: 3 });
+        seals(a, []);
+        expect(calls(a._buildQueue())).toEqual([0, 1, 2].map((k) => ({ invocation: 'method_call', path: [{ class: 'Main' }], method: 'hasSealPartSet', args: [k, k] })));
+        // what the writes DECLARE (the staging's channel): the log, in slot order
+        expect(calls(a._itemWritesFor({ [SEAL]: 2 }, { quiet: true })).map((w) => [w.save_array, w.index, w.args])).toEqual([
+            ['seal_parts', 0, [0, 0]], ['seal_parts', 1, [1, 1]]]);
+        // capped at the game's 16 slots
+        expect(calls(a._itemWritesFor({ [SEAL]: 20 }, { quiet: true }))).toHaveLength(16);
+    });
+
+    it('⚖ SET_IF_MISSING: a seal the game holds (its own chest, a staged one) is never written; missing slots take UNHELD identities', () => {
+        const a = adapterWith({ [SEAL]: 3 });
+        seals(a, [0, 5]);                                     // the game holds two: identities 0 and 5
+        expect(calls(a._buildQueue()).map((w) => w.args)).toEqual([[2, 1]]);
+        const b = adapterWith({ [SEAL]: 1 });
+        seals(b, [9, 4]);                                     // the game holds MORE than AP: nothing, and nothing cleared
+        expect(calls(b._buildQueue())).toEqual([]);
+        const none = adapterWith({});
+        seals(none, [3]);
+        expect(calls(none._buildQueue())).toEqual([]);
+    });
+
+    it('never blind: no readout of the game\'s slots, no write', () => {
+        const a = adapterWith({ [SEAL]: 2 });
+        expect(calls(a._buildQueue())).toEqual([]);
+        for (let i = 0; i < 15; i += 1) a._onStateChanged(`sealSlot${i}`, -1);   // one slot still unread
+        expect(calls(a._buildQueue())).toEqual([]);
+    });
+
+    it('one call per slot per METHOD_RETRY_TICKS while its echo is outstanding; never again once the slot shows', () => {
+        const a = adapterWith({ [SEAL]: 1 });
+        seals(a, []);
+        expect(calls(a._buildQueue())).toHaveLength(1);
+        for (let i = 1; i < METHOD_RETRY_TICKS; i += 1) expect(calls(a._buildQueue())).toHaveLength(0);
+        expect(calls(a._buildQueue())).toHaveLength(1);
+        a._onStateChanged('sealSlot0', 0);
+        for (let i = 0; i < 2 * METHOD_RETRY_TICKS; i += 1) expect(calls(a._buildQueue())).toHaveLength(0);
+    });
+
+    it('a Totem Shard reaches the game: N shards → the game holds N indices, the missing ones the SMALLEST unheld', () => {
+        const a = adapterWith({ [TOTEM]: 2 });
+        totems(a, []);
+        expect(calls(a._buildQueue()).map((w) => [w.method, w.args])).toEqual([['hasTotemPartSet', [0, true]], ['hasTotemPartSet', [1, true]]]);
+        const b = adapterWith({ [TOTEM]: 2 });
+        totems(b, [3]);                                       // a vanilla BossTotemPart set its own index 3: one more, index 0
+        expect(calls(b._buildQueue()).map((w) => w.args)).toEqual([[0, true]]);
+        const c = adapterWith({ [TOTEM]: 1 });
+        totems(c, [3]);                                       // held count ≥ AP's: nothing (a union would have over-counted)
+        expect(calls(c._buildQueue())).toEqual([]);
+    });
+
+    it('the delivery gate sees a seal: N and N-1 seals write different lists', () => {
+        const a = adapterWith({});
+        const n = (k) => calls(a._itemWritesFor({ [SEAL]: k }, { quiet: true })).length;
+        expect(n(4)).not.toBe(n(3));
+    });
+
+    it('a run with no Seal and no Totem Shard writes exactly what it wrote before (no fill call)', () => {
+        const a = adapterWith({ 'Red Key': 1, 'Progressive Sword': 1 });
+        seals(a, []);
+        totems(a, []);
+        a._onStateChanged('keyMask', 0);
+        expect(calls(a._buildQueue()).map((w) => w.method)).toEqual(['hasKeySet']);
     });
 });

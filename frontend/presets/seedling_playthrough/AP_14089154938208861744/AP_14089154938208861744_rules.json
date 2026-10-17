@@ -7140,7 +7140,44 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L63 flag 1: lightpole@64,88 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L63 flag 1: lightpole@64,88 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L63:1",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 63,
+              "tag": 1,
+              "class": "lightpole",
+              "x": 64,
+              "y": 88
+            },
+            "action": {
+              "verb": "press",
+              "item": null,
+              "presser": {
+                "level": 61,
+                "class": "buttonroom",
+                "x": 176,
+                "y": 40
+              }
+            },
+            "side": "level_61__r0c10",
+            "across": []
+          }
+        ]
       },
       "level_61__r13c12": {
         "name": "level_61__r13c12",
@@ -7186,7 +7223,13 @@
             "name": "level_62 -> level_64",
             "connected_region": "level_64",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Ghost Spear",
+                  "L62 flag 0: lightpole@120,200 cleared"
+                ]
+              }
             }
           },
           {
@@ -7200,7 +7243,13 @@
             "name": "level_62 -> level_63__r0c1 #2",
             "connected_region": "level_63__r0c1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Ghost Spear",
+                  "L63 flag 1: lightpole@64,88 cleared"
+                ]
+              }
             }
           }
         ],
@@ -7254,11 +7303,54 @@
             "name": "level_63__r0c1 -> level_62 #2",
             "connected_region": "level_62",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Ghost Spear",
+                  "L63 flag 1: lightpole@64,88 cleared"
+                ]
+              }
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L62 flag 0: lightpole@120,200 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L62 flag 0: lightpole@120,200 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L62:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 62,
+              "tag": 0,
+              "class": "lightpole",
+              "x": 120,
+              "y": 200
+            },
+            "action": {
+              "verb": "press",
+              "item": null,
+              "presser": {
+                "level": 63,
+                "class": "buttonroom",
+                "x": 32,
+                "y": 64
+              }
+            },
+            "side": "level_63__r0c1",
+            "across": []
+          }
+        ]
       },
       "level_63__r5c14": {
         "name": "level_63__r5c14",
@@ -7407,7 +7499,13 @@
             "name": "level_64 -> level_62",
             "connected_region": "level_62",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Ghost Spear",
+                  "L62 flag 0: lightpole@120,200 cleared"
+                ]
+              }
             }
           }
         ],
@@ -11286,6 +11384,28 @@
         "type": "Event",
         "max_count": 1
       },
+      "L63 flag 1: lightpole@64,88 cleared": {
+        "name": "L63 flag 1: lightpole@64,88 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L62 flag 0: lightpole@120,200 cleared": {
+        "name": "L62 flag 0: lightpole@120,200 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "L68 flag 0: bosslock@16,32 cleared": {
         "name": "L68 flag 0: bosslock@16,32 cleared",
         "id": null,
@@ -11377,6 +11497,8 @@
       "L39 flag 8: wandlock@144,592 cleared": 1,
       "L40 flag 8: bosslock@480,352 cleared": 1,
       "L48 flag 1: bosslock@48,144 cleared": 1,
+      "L62 flag 0: lightpole@120,200 cleared": 1,
+      "L63 flag 1: lightpole@64,88 cleared": 1,
       "L68 flag 0: bosslock@16,32 cleared": 1,
       "L71 flag 2: shieldlock@288,256 cleared": 1,
       "Light": 1,
@@ -11444,6 +11566,8 @@
       "Level 049 - Conch": "Progressive Swim",
       "Level 089 - Feather": "Progressive Swim",
       "Level 055 - Boss Key 3": "Blue Key",
+      "L63 flag 1: lightpole@64,88 cleared": "L63 flag 1: lightpole@64,88 cleared",
+      "L62 flag 0: lightpole@120,200 cleared": "L62 flag 0: lightpole@120,200 cleared",
       "Level 064 - Ghostspear": "Ghost Spear",
       "Level 067 - Boss Key 4": "Yellow Key",
       "Level 068 - Health": "Health",

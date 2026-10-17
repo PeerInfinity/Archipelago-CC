@@ -182,7 +182,9 @@ describe('the committed playthrough\'s leg list', () => {
         const RULES = JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8'));
         const PRESS = new Set(Object.values(RULES.regions['1']).flatMap((r) => r.locations)
             .filter((x) => x.action?.presser || x.action?.gates).map((x) => x.event_id));
-        expect([...PRESS].sort()).toEqual(['flag:L114:0', 'flag:L39:8']);
+        // ⛓ RULES darktrap-events: + the two presses that light Dungeon 6's poles (their barrier is a darktrap's
+        //   contact, never a solid, so their arrivals are never inside one either)
+        expect([...PRESS].sort()).toEqual(['flag:L114:0', 'flag:L39:8', 'flag:L62:0', 'flag:L63:1']);
         const pressed = legs.filter((l) => l.stagedEvents?.some((e) => PRESS.has(e.eventId)));
         expect([...new Set(pressed.map((l) => `${l.level},${l.arrive.x},${l.arrive.y}`))].sort())
             .toEqual(['115,64,128', '115,80,128', '38,144,16', '39,144,608']);

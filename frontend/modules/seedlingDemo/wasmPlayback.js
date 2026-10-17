@@ -74,6 +74,7 @@ import { PUZZLEMENT_HAZARDS } from './combat.js';
 import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
 import { ENTITY_CLASSES } from './levelWorld.js';
 import { TALK_RANGE } from './endingChain.js';
+import { mergeSaveArray } from './saveArrayRules.js';
 
 /** Thrown for a tape that must not ship — by name. */
 export class WasmPlaybackError extends Error {
@@ -557,9 +558,12 @@ export function shippedTape({ staging, keys = [], hold = false, name = 'wasm-pla
     return gameVisibleTape(hold ? holdingWindowTape(parsed) : parsed);
 }
 
-/** The game's index set ∪ the AP-granted one, sorted (⛓ KEY DELIVERY: `wasmDelivery.SAVE_ARRAY_MERGE`). */
-const grantedUnion = (live, granted) => (granted?.length
-    ? [...new Set([...live, ...granted])].sort((a, b) => a - b) : live);
+/**
+ * The game's array extended by the AP-granted one under its rule (⛓ KEY DELIVERY: keys ∪; ⛓ SEAL DELIVERY:
+ * totems filled to a count, the seal log appended — `saveArrayRules.SAVE_ARRAY_RULES`). Nothing granted = the
+ * game's own, untouched.
+ */
+const grantedMerge = (name, live, granted) => (granted?.length ? mergeSaveArray(name, live, granted) : live);
 
 /**
  * null when `tape` declares EXACTLY the live state `status` reports, else the
@@ -584,13 +588,13 @@ export function exactDeclarationRefusal(tape, status, { granted = null } = {}) {
             ? `omits ${JSON.stringify(lost)} (botStart would RESTORE them)` : ''}`;
     }
     const save = tape.save ?? {};
-    // ⛓ KEY DELIVERY — `granted` (`{keys: [...]}`, what AP holds) is DECLARED on top of the game's own
-    // (`wasmDelivery.SAVE_ARRAY_MERGE`): the tape boot is the host channel that hands the game an AP key.
-    // Never fewer than the game holds.
+    // ⛓ KEY DELIVERY — `granted` (`{keys: [...]}`, what AP holds; ⛓ SEAL DELIVERY: `totem_parts`, `seal_parts`)
+    // is DECLARED on top of the game's own (`saveArrayRules`): the tape boot is the host channel that hands the
+    // game an AP key, shard or seal. Never fewer than the game holds.
     const rows = [
-        ['keys', grantedUnion(indicesOf(status.save?.keys), granted?.keys)],
-        ['totem_parts', grantedUnion(indicesOf(status.save?.totem_parts), granted?.totem_parts)],
-        ['seal_parts', sealValues(status.save?.seal_parts)],
+        ['keys', grantedMerge('keys', indicesOf(status.save?.keys), granted?.keys)],
+        ['totem_parts', grantedMerge('totem_parts', indicesOf(status.save?.totem_parts), granted?.totem_parts)],
+        ['seal_parts', grantedMerge('seal_parts', sealValues(status.save?.seal_parts), granted?.seal_parts)],
     ];
     for (const [k, want] of rows) {
         if (!Array.isArray(save[k])) return `the tape omits save.${k} — botStart WIPES an omitted array (W0 ii.5)`;
@@ -672,9 +676,9 @@ export function liveDeclarations(staging, status, { granted = null } = {}) {
         ...staging,
         persistence: sortClears(status.persistence_cleared),
         // ⛓ KEY DELIVERY — the game's arrays ∪ what AP granted (`exactDeclarationRefusal`'s rule).
-        save: { ...(staging.save ?? {}), keys: grantedUnion(indicesOf(status.save?.keys), granted?.keys),
-            totem_parts: grantedUnion(indicesOf(status.save?.totem_parts), granted?.totem_parts),
-            seal_parts: sealValues(status.save?.seal_parts) },
+        save: { ...(staging.save ?? {}), keys: grantedMerge('keys', indicesOf(status.save?.keys), granted?.keys),
+            totem_parts: grantedMerge('totem_parts', indicesOf(status.save?.totem_parts), granted?.totem_parts),
+            seal_parts: grantedMerge('seal_parts', sealValues(status.save?.seal_parts), granted?.seal_parts) },
     };
 }
 

@@ -265,8 +265,14 @@ export function deriveLockEvents(projection, ctx) {
  *     `side`'s), `across` = [] (pressing is not crossing: no hop credits it; a route meets it goal-first),
  *     `action {verb: 'press', item: null, presser: {level, class, x, y}}`, `access_rule` = standing on the
  *     button within `side` (`ctx.reach`); and the caller's `gates(target)` departures get `Has(<event>)`;
- *   - a clear that ADDS the target's solid (a FallRock's `arm`), a target solid in neither state, or one the rules
- *     already price without the button → `skipped`, by name;
+ *   - ⛓⛓ RULES darktrap-events: a target solid in neither state whose clear REMOVES other bodies (`ctx.kills`: a
+ *     `LightPole` whose light then kills the `DarkTrap`s it reaches, `poleLightReaches`) opens the same way — the
+ *     barrier is those bodies, and the event is still the TARGET's flag (the flag the press writes; the solver's
+ *     `execCrossRoomPress` checks `presser.room === flag.level && presser.t === flag.tag`). When the target's own
+ *     level has a second way to clear it (`ctx.inRoom`: a pole is also lit by a Spear thrust), every gate is
+ *     `Or(Has(<event>), <that way>)`;
+ *   - a clear that ADDS the target's solid (a FallRock's `arm`), a target that is solid in neither state and kills
+ *     nothing, or one the rules already price without the button → `skipped`, by name;
  *   - a SET (`flip` 0) of a target the clear would open → REFUSED by name (it would need `Not(event)`).
  * An event already minted with the same `event_id` is reused (refused by name if its name or side differs).
  *
@@ -279,6 +285,10 @@ export function deriveLockEvents(projection, ctx) {
  * @param {(presser:object) => object|null} ctx.reach standing on the presser within `side` (null = True_)
  * @param {(target:object, eventName:string) => {region_id:string, exit_id:string}[]} ctx.gates the crossings
  *   through the target, as departures (throws by name when it cannot say)
+ * @param {(target:object) => {bodies:string[], why:string}|null} [ctx.kills] the bodies a clear of a target that is
+ *   solid in neither state removes (none = the target is cosmetic)
+ * @param {(target:object) => object|null} [ctx.inRoom] another way, in the target's own level, to clear it (a
+ *   rules.json rule), or null
  * @param {object[]} [ctx.existing] events already minted
  * @returns {{events:object[], exitGates:object[], skipped:string[], reused:string[]}}
  */
@@ -294,7 +304,9 @@ export function deriveButtonEvents(rows, ctx) {
         if (targets.length === 0) { skipped.push(`${who}: no entity of L${write.level} carries tag ${write.tag}`); continue; }
         for (const t of targets) {
             const what = `${who} ${t.type}@${t.x},${t.y}`;
-            const { effect, why } = ctx.effect(t);
+            let { effect, why } = ctx.effect(t);
+            const kills = effect === null && ctx.kills ? ctx.kills(t) : null;
+            if (kills?.bodies?.length) ({ effect, why } = { effect: 'opens', why: kills.why });
             if (write.value) {
                 if (effect === 'opens') refused.push(`${what}: the press SETS the flag that opens it (${why}) — the gate would need NOT(event)`);
                 else skipped.push(`${what}: the press sets the flag (flip 0)`);
@@ -332,7 +344,10 @@ export function deriveButtonEvents(rows, ctx) {
                     },
                 });
             }
-            for (const dep of ctx.gates(t, name)) exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: name } } });
+            const has = { rule: 'Has', args: { item_name: name } };
+            const other = ctx.inRoom?.(t) ?? null;
+            const rule = other ? { rule: 'Or', children: [has, other] } : has;
+            for (const dep of ctx.gates(t, name)) exitGates.push({ ...dep, rule });
         }
     }
     if (refused.length > 0) {
@@ -343,6 +358,71 @@ export function deriveButtonEvents(rows, ctx) {
         || a.exit_id.localeCompare(b.exit_id, 'en', { numeric: true }));
     return { events: [...events.values()].sort(byId), exitGates, skipped, reused: [...reused].sort() };
 }
+
+/**
+ * ⛓⛓ RULES darktrap-events — **THE BODIES A LIT POLE KILLS.** A `LightPole` is solid in neither state, so a
+ * cross-room clear of its tag looked cosmetic to `persistenceEffect` (the model's `PERSISTENCE_RESPONSE` says
+ * `'cosmetic'`: nothing the model's GEOMETRY consults reads `activate`). It is not: `activate =
+ * !checkPersistence(tag)` drives a `Light` with `radiusMin` 28, and `DarkTrap.update` starts dying the first tick a
+ * non-player light comes within `radiusMin` of it (`enemyDamage.DARKTRAP_LIGHT_DEATH`; fidelity STATICLADDER D2).
+ * A darktrap's contact is a barrier (fidelity DARKTRAPQ W1/W1c: frozen, then killed, at any walk or dash timing),
+ * so the bodies a lit pole reaches are what a clear of its tag REMOVES.
+ *
+ * The band is `levelRun.darkTrapsNow`'s `poles[]` (the light at `(x + originY, y ± bob)`, the body at its
+ * census centre), and a body is reached when the band's MIN is within `radiusMin` — `solverBot.deriveLightPole`'s
+ * test: the bob sweeps the whole band every `period` ticks and the first tick inside starts the death.
+ *
+ * @param {{x:number, y:number}} pole the pole's placement (`.oel` x, y)
+ * @param {{id:string, cx:number, cy:number}[]} bodies the level's `DarkTrap` census rows
+ * @param {object} D `enemyDamage.DARKTRAP_LIGHT_DEATH`
+ * @returns {{id:string, min:number, max:number}[]} the bodies reached, nearest first
+ */
+export function poleLightReaches(pole, bodies, D) {
+    const P = D.pole;
+    const lx = pole.x + P.originY;
+    const ys = [pole.y - P.bob, pole.y + P.bob];
+    return bodies.map((b) => {
+        const dx2 = (lx - b.cx) ** 2;
+        const ends = ys.map((ly) => Math.sqrt(dx2 + (ly - b.cy) ** 2));
+        const min = (b.cy >= ys[0] && b.cy <= ys[1]) ? Math.sqrt(dx2) : Math.min(...ends);
+        return { id: b.id, min, max: Math.max(...ends) };
+    }).filter((r) => r.min <= P.radiusMin).sort((a, b) => a.min - b.min);
+}
+
+/**
+ * The bodies a cleared `target` removes besides itself, read off the MODEL (injected, so this module stays pure):
+ * the target must be one of the level's `LightPole` press responders and not `invert`ed (a clear then LIGHTS it:
+ * `activate = !checkPersistence(tag)`, lit = `activate` XOR `invert` — an inverted pole would go OUT), and the
+ * bodies are the level's census `DarkTrap`s its light reaches (`poleLightReaches`). null = it removes nothing.
+ *
+ * @param {object} level the level record (`seedling-map.json` shape)
+ * @param {{x:number, y:number}} target
+ * @param {{buildLevelWorld:Function, combatCensusOf:Function, contactRect:Function, DARKTRAP_LIGHT_DEATH:object}} model
+ * @returns {{id, type, x, y, cx, cy, rect, min, max}[]|null}
+ */
+export function poleKillsOf(level, target, model) {
+    const pole = model.buildLevelWorld(level).pressResponders
+        .find((r) => r.as3 === 'LightPole' && r.x === target.x && r.y === target.y);
+    if (!pole) return null;
+    const placed = (level.entities ?? []).find((e) => e.type === 'lightpole' && e.x === target.x && e.y === target.y);
+    if (Number.parseInt(placed?.attrs?.invert ?? '0', 10) !== 0) return null;
+    const bodies = model.combatCensusOf(level).enemies.filter((e) => e.as3 === 'DarkTrap')
+        .map((e) => ({ id: `${e.tag}@${e.x},${e.y}`, type: e.tag, x: e.x, y: e.y, cx: e.cx, cy: e.cy, rect: model.contactRect(e) }));
+    const reached = poleLightReaches(pole, bodies, model.DARKTRAP_LIGHT_DEATH);
+    return reached.length === 0 ? null : reached.map((r) => ({ ...bodies.find((b) => b.id === r.id), min: r.min, max: r.max }));
+}
+
+/**
+ * ⛓⛓ RULES darktrap-events — the IN-ROOM way to light a pole: `Player.genericHit` calls `(e as LightPole).hit()`
+ * only under `t == "Spear"` (`Player.as:1083-1088`, the model's `pressResponders` arm for `LightPole`), and
+ * `LightPole.hit()` toggles `activate`, whose setter writes the tag. So the Spear's thrust clears the same flag the
+ * cross-room press does, from the pole's own room. Nothing derives the inventory flag: the model states the arm in
+ * prose (`levelWorld`'s press-responder `arm`) and `solverBot.deriveLightPole` tests `hasSpear` by name. Witnessed
+ * on the game (rules-darktrap-events W0): the Spear alone crosses L62's and L63's darktraps both ways.
+ * ⚠ The ghost sword's swing also passes `"Spear"`; it is NOT an arm here (no stance is authored for it, nothing
+ * witnessed it), which only makes the rule stricter than the game.
+ */
+export const POLE_LIGHT_ARM = Object.freeze({ item: 'hasSpear', cite: 'Player.as:1083-1088 + Scenery/LightPole.as:45' });
 
 /**
  * Every cross-room `ButtonRoom` of a map extract (`room >= 0`) and what its write reaches: `{presser: {level, x, y,

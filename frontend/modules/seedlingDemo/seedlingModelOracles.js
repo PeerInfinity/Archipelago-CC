@@ -35,13 +35,24 @@ const modelWorldOf = (level) => {
  * The tiles the player's box can reach from `seeds` (atlas tiles), entering a
  * tile only when `enterable(tx, ty)`, in first-reach order (pixel distance).
  * Every free pixel position of a seed tile is a start.
+ *
+ * `avoid` (RULES darktrap-events): rects the box must not overlap either — a
+ * live CONTACT body the game does not let the player through (a `DarkTrap`:
+ * contact freezes the input for `hitsTimer` and the third contact kills,
+ * witnessed by fidelity DARKTRAPQ W1/W1c). Empty by default, so every other
+ * caller floods exactly as before.
  */
-export function modelFloodTiles(level, seeds, enterable, { tileSize = TILE_SIZE } = {}) {
+export function modelFloodTiles(level, seeds, enterable, { tileSize = TILE_SIZE, avoid = [] } = {}) {
     const TILE = tileSize;
     const world = modelWorldOf(level);
     const W = level.width * TILE;
     const H = level.height * TILE;
-    const freeAt = (x, y) => world.collidesSolid(playerBoxAt(x, y), {}) === null;
+    const freeAt = avoid.length === 0
+        ? (x, y) => world.collidesSolid(playerBoxAt(x, y), {}) === null
+        : (x, y) => {
+            const box = playerBoxAt(x, y);
+            return world.collidesSolid(box, {}) === null && !avoid.some((r) => rectsOverlap(box, r));
+        };
     const seen = new Uint8Array(W * H);
     const queue = [];
     for (const [tx, ty] of seeds) {
