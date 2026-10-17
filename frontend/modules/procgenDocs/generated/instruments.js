@@ -10926,6 +10926,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "cpu-throttle"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "dash-only-window"
                 },
                 {
