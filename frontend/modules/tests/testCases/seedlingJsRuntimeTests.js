@@ -1840,6 +1840,8 @@ async function atlasPresetOn(tc, runtime, presetPath, startRegion) {
         return at ? up : null;
     }
     const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+    // ⛓ §5.91 — the panel log's lines from here on are this row's: an earlier row's init flow writes none of them.
+    const logLinesBefore = getActivePanelInstance()?.logElement?.childElementCount ?? 0;
     await settingsManager.updateSetting(RUNTIME_KEY, 'wasm', { persist: false });
     const rulesJson = await (await fetch(presetPath)).json();
     const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
@@ -1858,6 +1860,16 @@ async function atlasPresetOn(tc, runtime, presetPath, startRegion) {
         if (panel.statusElement?.textContent !== 'click ▶ Start in the game') return null;
         try { return frameOf(panel)?.document?.querySelector('#btn-start') ?? null; } catch { return null; }
     }, '[wasm] the panel asks for ▶ Start (the game runtime is fetched)', 120000, 250);
+    if (!startButton) {
+        const frames = [...document.querySelectorAll(`[id="${panel.flashObjectId}"]`)];
+        const win = frameOf(panel);
+        let page = '?';
+        try { page = `${win?.location?.href ?? null} bridge ${!!win?.__swfBridge} ready ${win?.__runtimeReady ?? null}`; } catch { /* cross-origin */ }
+        tc.log(`[wasm] DIAG status "${panel.statusElement?.textContent ?? '?'}"; ${frames.length} element(s) #${panel.flashObjectId}; `
+            + `active panel ${getActivePanelInstance() === panel ? 'same' : 'CHANGED'}; init ${panel._initRuntime}/${panel.transport}; `
+            + `adapter cancelled ${panel.adapter?._cancelled ?? null}; page ${page}; log: `
+            + `${(panel.rootElement?.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-25).join(' | ')}`, 'error');
+    }
     tc.reportCondition('[wasm] the game page is up (▶ Start)', !!startButton);
     if (!startButton) return null;
     startButton.click();
@@ -1877,6 +1889,12 @@ async function atlasPresetOn(tc, runtime, presetPath, startRegion) {
         tc.log(`[wasm] panel log: ${(document.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-15).join(' | ')}`, 'error');
     }
     tc.reportCondition(`[wasm] the game runs and gameState is in ${startRegion}`, !!running);
+    // ⛔ A TORN-DOWN FLOW STAYS QUIET: the Flash-runtime row's 15 s bridge wait outlived its cleanup and its timeout
+    // wrote `bridge timeout` over this page's ▶ Start prompt (CI 4/8 at 429ba55d1e). A timeout line in this row's
+    // log names the leak even on a run whose timing let the prompt survive.
+    const strays = [...(panel.logElement?.children ?? [])].slice(logLinesBefore)
+        .map((el) => el.textContent.trim()).filter((line) => /^bridge not ready/.test(line));
+    tc.assertEqual('[wasm] no earlier init flow wrote into this row\'s panel (no "bridge not ready" line)', '[]', JSON.stringify(strays));
     return running ? { panel, win: frameOf(panel), rt: null } : null;
 }
 
