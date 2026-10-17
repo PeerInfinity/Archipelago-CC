@@ -50,8 +50,11 @@ export const PROGRESS_POINTS = Object.freeze(['segment', 'goal', 'walk', 'verb',
  *    so 512 are ~23 ms here and ~80 ms on the box the investigation measured (3.5× slower): ~10 Hz there.
  *  - `kill-stance` — one stance candidate planned (`deriveKillByChaser`'s `scoreAll`, after its `planWaypointsOrNull`):
  *    every one, since one candidate's plan is ~130 ms here and ~450 ms there (20 candidates on L40).
+ *  - `plan-pull` — one `controllerPathClear` ask of `botDriverV2.planWaypoints`' string-pull (the L40 gaps' ~73 %:
+ *    881 asks over the solve at ~3.3 ms each): every 8th, ~26 ms here and ~90 ms on the investigation's box. Added at
+ *    HB's harvest with js-6's and fidelity's OK (planWaypoints is shared; the page's walker calls it unhooked).
  */
-export const HEARTBEAT_EVERY = Object.freeze({ 'preview-sample': 512, 'kill-stance': 1 });
+export const HEARTBEAT_EVERY = Object.freeze({ 'preview-sample': 512, 'kill-stance': 1, 'plan-pull': 8 });
 
 /** The install the solve in progress reports to — `null` is "none", and every count point checks exactly this. */
 export let activeProgress = null;

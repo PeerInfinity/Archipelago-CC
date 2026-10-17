@@ -23,6 +23,9 @@
  *        -> the `previewWalk` byte-identity row, the L40 row (its digest) and the call-site row red; L18's digest
  *           does not move for it (its previews' decisions survive a one-tick shift), which is why the preview row
  *           exists
+ *   h4 the plan-pull heartbeat (`botDriverV2.planWaypoints`, added at HB's harvest) also charges an ask
+ *        (`progressSite('kill-chaser')`) -> the L40 row red (Σ asks no longer the `shouldStop` count) and the call-site
+ *        row (measured at the harvest)
  */
 import { describe, expect, it } from 'vitest';
 import { createHash } from 'node:crypto';
@@ -39,6 +42,7 @@ import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
+import { planWaypoints } from './botDriverV2.js';
 import { DEADLINE_SITES, previewWalk, strikePolicyFor, withSolveDeadline } from './solverBot.js';
 import { HEARTBEAT_EVERY, PROGRESS_POINTS, activeProgress, heartbeatEntered, progressSegment,
     withSolveProgress } from './solveProgress.js';
@@ -171,8 +175,30 @@ describe('hammer-phase HB — the heartbeat is emit-only', () => {
         }, 600_000);
     }
 
+    it('⛓⛓⛓ planWaypoints: the string-pull plan is byte-identical with a hook installed and without; unhooked, no heartbeat path runs', () => {
+        // ⛓ r5-l40-part5's L40 staging: the kill rung's room, planned from its boot to the totem part (the HB gap's call)
+        const staging = stagingOf('r5-l40-part5');
+        const plan = () => {
+            const run = createRunForStaging(staging, SOURCE);
+            return JSON.stringify(planWaypoints(run.world, run.state, { x: 160, y: 640 }));
+        };
+        const entered = heartbeatEntered();
+        const off = plan();
+        // ⛓ the page's walker calls planWaypoints with no hook: one null check, nothing entered
+        expect(heartbeatEntered()).toBe(entered);
+        const run = createRunForStaging(staging, SOURCE);
+        const sites = [];
+        let on = null;
+        withSolveProgress((site) => sites.push(site), () => progressSegment('hb-plan', run, () => {
+            on = JSON.stringify(planWaypoints(run.world, run.state, { x: 160, y: 640 }));
+        }));
+        expect(on).toBe(off);
+        expect(sites.filter((x) => x === 'heartbeat').length).toBeGreaterThan(0);
+        expect(activeProgress).toBe(null);
+    }, 120_000);
+
     it('⛓⛓ every call site is one null check with a literal key of HEARTBEAT_EVERY (unhooked: no allocation, no call)', () => {
-        const src = readFileSync(join(HERE, 'solverBot.js'), 'utf8');
+        const src = ['solverBot.js', 'botDriverV2.js'].map((f) => readFileSync(join(HERE, f), 'utf8')).join('\n');
         const calls = src.match(/progressHeartbeat\(/g) ?? [];
         const sites = [...src.matchAll(/ if \(activeProgress !== null\) progressHeartbeat\('([a-z-]+)'\);/g)];
         // the import names it once; every other mention is a guarded call with a literal key
