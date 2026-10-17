@@ -17634,7 +17634,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10825 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10839 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -17660,7 +17660,7 @@ its byte-frozen free oracle is compared against.
 | 20 | `r9-solve-19` | L19 → L20 | 746 | `bosskey@L19` |
 | 21 | `r9-solve-20` | L20 → L13 | 560 | `shield@L20` |
 | 22 | `r9-solve-13-v2` | L13 → L0 | 48 | — |
-| 23 | `r9-solve-0-v3` | L0 → L12 | 299 | — |
+| 23 | `r9-solve-0-v3` | L0 → L12 | 313 | — |
 | 24 | `r9-solve-12` | L12 → L21 | 2364 | — |
 | 25 | `r9-solve-21` | L21 → L22 | 26 | — |
 | 26 | `r9-solve-22` | L22 → L29 | 89 | — |
