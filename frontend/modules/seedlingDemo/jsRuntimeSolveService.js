@@ -37,6 +37,12 @@
  * the FASTEST asked as `progressIntervalMs` beside `progress: true`, clamped
  * to `SOLVE_PROGRESS_INTERVALS_MS` (`progressIntervalMs`). Never the request:
  * a rate change moves no plan. It applies from the next solve.
+ * ⛓ SOLVE-PROGRESS S3 — and `progressAttempt: {retry, budgets}`: the HELD
+ * RETRY's label (`640 → 2560`). The service is not told a start is a retry;
+ * it RECOGNISES one: the same `staging` and `solverGoal` objects, the same
+ * `perTick` length, asked again at a LARGER `budgetWork` than the start before
+ * (`seedlingWasmPlayback.retrySolve` spreads the request it asked before).
+ * Anything else is attempt 0. Envelope only, so the request is unchanged.
  *
  * One solve is in flight at a time (the solver keeps one). The room records
  * are posted once per worker, by id. A worker that errors (a module that
@@ -106,6 +112,21 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
      * for the stream only while this is non-empty.
      */
     const progressListeners = new Map();
+    /** ⛓ S3 — the last start's identity and its attempt (`{staging, solverGoal, ticks, retry, budgets}`), or null. */
+    let lastAsk = null;
+
+    /** ⛓ S3 — this start's attempt: a held retry of the last start (see the header), else attempt 0. */
+    function attemptOf(request) {
+        const budget = request.budgetWork;
+        const ticks = request.perTick?.length ?? null;
+        const again = lastAsk !== null && request.staging !== undefined && request.staging === lastAsk.staging
+            && request.solverGoal === lastAsk.solverGoal && ticks === lastAsk.ticks
+            && Number.isFinite(budget) && Number.isFinite(lastAsk.budgets.at(-1)) && budget > lastAsk.budgets.at(-1);
+        const attempt = again ? { retry: lastAsk.retry + 1, budgets: [...lastAsk.budgets, budget] }
+            : { retry: 0, budgets: Number.isFinite(budget) ? [budget] : [] };
+        lastAsk = { staging: request.staging, solverGoal: request.solverGoal, ticks, ...attempt };
+        return attempt;
+    }
 
     /** The envelope's `progressIntervalMs`: the fastest interval a listener asked, clamped to the list. */
     function askedInterval() {
@@ -211,6 +232,7 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             current = handle;
             const { levelSource, source, ...tape } = request;
             stampHooks(tape);
+            const attempt = attemptOf(request);
             const id = sourceIdOf(source?.records);
             const msg = { type: 'solve', id: handle.id, request: { ...tape, source: { id, ...(sent.has(id) ? {} : { records: source?.records ?? null }) } } };
             // ⛓ SOLVE PROGRESS — on the ENVELOPE, and only while someone listens (absent = today's message exactly);
@@ -218,6 +240,7 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             if (progressListeners.size > 0) {
                 msg.progress = true;
                 msg.progressIntervalMs = askedInterval();
+                msg.progressAttempt = attempt;
             }
             sent.add(id);
             stats.solves += 1;
@@ -240,6 +263,6 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
         },
         get progressSubscribed() { return progressListeners.size > 0; },
         get currentSolveId() { return current && !current.settled ? current.id : null; },
-        dispose() { if (current) current.cancel(); drop(); progressListeners.clear(); },
+        dispose() { if (current) current.cancel(); drop(); progressListeners.clear(); lastAsk = null; },
     };
 }

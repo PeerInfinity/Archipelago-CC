@@ -26,6 +26,13 @@
  *        -> '… at 100 ms and at 1000 ms …' reds (the 1000 ms run's posts exceed its span / 1000 + 1)
  *   p6 ⛓ S1: the service sends the SLOWEST listener's rate (or the first's), not the fastest
  *        -> 'the envelope carries the FASTEST rate any listener asked …' reds
+ *   ⛓ S3 (Tier B stamps):
+ *   p7 the service's attempt put into the REQUEST (not the envelope)
+ *        -> '… the REQUEST is byte-identical with and without a subscriber …' and the retry rows red
+ *   p8 a re-ask at the SAME budget recognised as a held retry
+ *        -> 'the service RECOGNISES a held retry …' reds
+ *   w2 the worker drops the envelope's attempt (no `request.attempt` on the first post)
+ *        -> '… the Tier B stamps ride the posts …' reds
  *
  * ⛓ S1 (⚖ the user 2026-10-17) — the rate is a setting (`flashPanel.seedlingSolveProgressIntervalMs`), carried on
  * the ENVELOPE as `progressIntervalMs`. A defaults A/B is not needed: the request is byte-identical at every rate and
@@ -158,6 +165,31 @@ describe('solve progress — observation only, off unless subscribed', () => {
             expect(off.service.stats).toMatchObject({ progress: 0, progressDropped: 0 });
             expect(on.progress.length).toBeGreaterThan(0);
             expect(on.notes.length).toBe(on.progress.length);
+            // ⛓ S3 — with and without the Tier B stamps: each attempt's shouldStop total is identical too
+            expect(on.results.map((g) => g.msg.work)).toEqual(off.results.map((g) => g.msg.work));
+            for (let i = 0; i < on.solves.length; i += 1) {
+                expect(JSON.stringify(on.solves[i].request)).not.toMatch(/progressAttempt|wallBySite|"attempt"/);
+                expect(on.solves[i].progressAttempt).toEqual({ retry: 0, budgets: [SOLVER_BUDGET_WORK] });
+            }
+            // ⛓ S3 — the stamps ride the posts: the request identity on each solve's FIRST post only, read from its
+            // request; the wall by site sums to (at most) the solve's span; the plan in hand on the final
+            for (const solve of on.solves) {
+                const posts = on.log.got.filter((g) => g.msg.id === solve.id && g.msg.type === SOLVE_PROGRESS_MESSAGE).map((g) => g.msg);
+                expect(posts[0].snapshot.request).toMatchObject({ name: solve.request.name, level: solve.request.staging.boot.level,
+                    budgetWork: SOLVER_BUDGET_WORK, switches: {}, attempt: { retry: 0, budgets: [SOLVER_BUDGET_WORK], label: `${SOLVER_BUDGET_WORK}` } });
+                expect(posts[0].snapshot.request.seamTime).toBe(solve.request.staging.seam?.time ?? null);
+                expect(posts.slice(1).every((m) => m.snapshot.request === undefined)).toBe(true);
+                const fin = posts.at(-1).snapshot;
+                const wall = Object.values(fin.budget.wallBySite).reduce((a, b) => a + b, 0);
+                expect(Object.keys(fin.budget.wallBySite).some((k) => k.endsWith('→end'))).toBe(true);
+                expect(wall).toBeGreaterThanOrEqual(0);
+                const mine = on.log.got.filter((g) => g.msg.id === solve.id);
+                const span = mine.find((g) => g.msg.type === 'result').at - mine.find((g) => g.msg.type === 'started').at;
+                expect(wall).toBeLessThanOrEqual(span + 50);
+                const result = mine.find((g) => g.msg.type === 'result').msg;
+                expect(fin.best).toMatchObject({ ok: result.ok === true, ...(result.ok ? { ticks: result.plan.solution.length } : {}) });
+                expect(fin.budget.rate.unitsPerSec).toBeGreaterThanOrEqual(0);
+            }
         }, 180000);
     }
 
@@ -270,6 +302,44 @@ describe('solve progress — the stale drop (scripted worker)', () => {
         service.start({ source: { records: {} } });
         expect(workers.at(-1).sent.at(-1).progressIntervalMs).toBe(SOLVE_PROGRESS_INTERVAL_MS);
         for (const w of workers) for (const m of w.sent) expect(Object.keys(m.request)).not.toContain('progressIntervalMs');
+    });
+
+    it('⛓ S3 — the service RECOGNISES a held retry (the same staging and goal, the same ticks, a LARGER budget) and labels it on the ENVELOPE only', () => {
+        const { service, workers } = scripted();
+        service.subscribeProgress(() => {});
+        const staging = { boot: { level: 16 } };
+        const solverGoal = { kind: 'exit' };
+        const perTick = [[], []];
+        const first = { staging, solverGoal, perTick, budgetWork: 640, source: { records: {} } };
+        service.start(first);
+        expect(workers.at(-1).sent.at(-1).progressAttempt).toEqual({ retry: 0, budgets: [640] });
+        // the held retry: the request asked before, spread, at 4× the budget
+        service.start({ ...first, passes: [{ pass: 'full' }], budgetWork: 2560 });
+        expect(workers.at(-1).sent.at(-1).progressAttempt).toEqual({ retry: 1, budgets: [640, 2560] });
+        // the same budget again is a new solve, not a retry; so is another staging, another goal, or a ticked session
+        service.start({ ...first, budgetWork: 2560 });
+        expect(workers.at(-1).sent.at(-1).progressAttempt).toEqual({ retry: 0, budgets: [2560] });
+        service.start({ ...first, staging: { ...staging }, budgetWork: 10240 });
+        expect(workers.at(-1).sent.at(-1).progressAttempt.retry).toBe(0);
+        service.start({ ...first, staging, budgetWork: 640 });
+        service.start({ ...first, solverGoal: { kind: 'exit' }, budgetWork: 2560 });
+        expect(workers.at(-1).sent.at(-1).progressAttempt.retry).toBe(0);
+        service.start({ ...first, budgetWork: 640 });
+        service.start({ ...first, perTick: [[], [], []], budgetWork: 2560 });
+        expect(workers.at(-1).sent.at(-1).progressAttempt.retry).toBe(0);
+        for (const w of workers) for (const m of w.sent) expect(Object.keys(m.request)).not.toContain('progressAttempt');
+    });
+
+    it('⛓ S3 — no subscriber: no attempt on the envelope (today\'s message exactly), but a retry is still recognised for the next one', () => {
+        const { service, workers } = scripted();
+        const staging = {};
+        const first = { staging, budgetWork: 640, source: { records: {} } };
+        service.start(first);
+        expect(workers.at(-1).sent.at(-1)).not.toHaveProperty('progressAttempt');
+        const off = service.subscribeProgress(() => {});
+        service.start({ ...first, budgetWork: 2560 });
+        expect(workers.at(-1).sent.at(-1).progressAttempt).toEqual({ retry: 1, budgets: [640, 2560] });
+        off();
     });
 
     it('unsubscribed: the next solve does not ask (no flag on its envelope), and a late note is dropped', () => {
