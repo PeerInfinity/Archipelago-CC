@@ -17,8 +17,8 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { ADOPT_WAIT_MS, createWasmPlayback, loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
-import { SHIPPED_RNG, SOLVE_RETRY_BUDGET_FACTOR, TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
+import { ADOPT_WAIT_MS, ARRIVAL_WAIT_MS, createWasmPlayback, loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
+import { LATCH_FRAME_BOUND, SHIPPED_RNG, SOLVE_RETRY_BUDGET_FACTOR, TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
 import { ANYTIME_PASSES, solveAnytime, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK } from '../seedlingDemo/jsRuntimeSolver.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService, mountedRecordsOf } from '../seedlingDemo/wasmWalkTape.js';
@@ -61,7 +61,7 @@ function manualTimers() {
 
 /** A game whose reads are a recorded arrival's. */
 function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrains = 0, clearedAfterDrain = null,
-    midSpanOnFirstPlan = null, unwatched = null, realSeam = false, arrivalFade = LOAD_FADE_FRAMES } = {}) {
+    midSpanOnFirstPlan = null, unwatched = null, realSeam = false, arrivalFade = LOAD_FADE_FRAMES, freezeDeadPerPoll = 0 } = {}) {
     const baseline = { ...arrival.seam.beginEntry, 'save.time': arrival.seam.beginEntry['save.time'] - 100, 'rng.gameplay': 1 };
     const g = {
         // ⛓ W8 — `unwatched`: the room ran since ITS begin record before the bot drove (the cold start),
@@ -71,6 +71,9 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
         get be0() { return { ...arrival.seam.beginEntry, ...(unwatched?.begin ?? {}) }; },
         botMobiles() { g.calls.push('botMobiles'); return unwatched ? JSON.stringify({ tick: 0, mobiles: unwatched.mobiles, pods: [] }) : undefined; },
         held: false, armed: false, finished: false, seq: 0, tape: null, drainRows: null, freezePolls: 0,
+        // ⛓ FREEZE LATCH (§5.89) — `freezeDeadPerPoll`: the dead frames the game runs between two reads of a freeze
+        // not yet latched (0 = a game whose clock stands still); reported as `dead_frames` when set
+        dead: 0,
         // ⛓ SEAM OFFSET (§5.82) — the clock a FREEZE holds the arrival at: its begin record + the fade's dead frames
         // (`arrivalFade`: LOAD_FADE_FRAMES pinned, one fewer per render an unpinned fade ran before the freeze loaded)
         heldClock: null,
@@ -84,7 +87,7 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
             if (g.unwatched?.tick) g.unwatched.tick(g.unwatched);
             if (g.armed && g.tape?.tick_count === 0 && ++g.freezePolls > freezeLatchesAfter) {
                 g.armed = false; g.finished = true; g.latchFreeze();
-            }
+            } else if (g.armed && g.tape?.tick_count === 0) g.dead += freezeDeadPerPoll;
             return JSON.stringify({ ...arrival.status,
                 // ⛓ W7 — `gameTimeFromBegin`: the read is in the begin record's own frame (a staged arrival), whichever lands
                 game_time: (g.unwatched ? (g.be ?? g.be0)['save.time'] + g.unwatched.elapsed : g.held && g.heldClock !== null ? g.heldClock
@@ -96,6 +99,7 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
                 ...(g.pos ? { level: g.pos.level, x: g.pos.x, y: g.pos.y } : {}),
                 // ⛓ STAGEDHITS CONSUMER — the game's own `{hits, hits_timer}` when a row sets them (the recording's are 0/0)
                 ...(g.damage ?? {}),
+                ...(freezeDeadPerPoll ? { dead_frames: g.dead } : {}),
                 held: g.held, armed: g.armed, finished: g.finished, error: '' });
         },
         // ⛓ W8c — `freezeObjects` (games/seedling.json): false unless the unwatched room says otherwise
@@ -235,6 +239,74 @@ describe('the engine serves a goal at an arrival (fake game over the recorded re
         expect(e.game.calls.filter((c) => c === 'botStart')).toHaveLength(2);
         expect(e.game.freezePolls).toBeGreaterThan(3);
         expect(e.dones).toHaveLength(1);
+    });
+});
+
+/**
+ * ⛓ FREEZE LATCH (§5.89) — the latch wait is PROGRESS-AWARE. CI run 38994029714, shard 9 (a ~5× slow runner):
+ * six legs failed "the arrival's freeze never latched … within 15 s", and the 5×-throttled repro shows why — two
+ * polls in 60–98 s, the game ONE frame on between them: the page spent the wall clock running the room's first
+ * frame, the poll ran after the deadline, and the latch was a frame away. A wall clock (`wall`, advanced per read
+ * of a freeze not yet latched) stands in for the slow page here; ⛔ the GAME's clock is never faked — the fake game
+ * reports the frames it ran (`freezeDeadPerPoll`).
+ */
+describe('⛓ FREEZE LATCH (§5.89) — the latch wait fails on a STILL game, never on a slow page', () => {
+    // ⛓ W8's untouched house (its describe's own reads): the adoption arm
+    const PLAYER = { cls: 'Player', x: 56, y: 56, vx: 0, vy: 0, anim: 'down-stand' };
+    const unwatched = () => ({ elapsed: 200, mobiles: [PLAYER], patch: {} });
+    const CLEAR = { marks: [], queued: 0, pushedOn: null, pushes: 0 };
+    /** An engine whose wall clock moves `msPerRead` on each read of a freeze still pending. */
+    function slowPage(msPerRead, game, opts = {}) {
+        let wall = 0;
+        const e = engineOver(A, { ...opts, now: () => wall, game });
+        const read = e.game.botStatus;
+        e.game.botStatus = () => {
+            if (e.game.armed && e.game.tape?.tick_count === 0 && !e.game.held) wall += msPerRead;
+            return read();
+        };
+        return e;
+    }
+    it('a slow page: 20 s of wall between reads, the game a frame on each time → WAITED, latched, solved, done', () => {
+        const e = slowPage(20000, { freezeLatchesAfter: 4, freezeDeadPerPoll: 1 });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        const [w] = e.engine.stats.latchWaits;
+        expect(w).toMatchObject({ kind: 'arrival', outcome: 'held', stillMs: 0 });
+        expect(w.waitedMs).toBeGreaterThan(ARRIVAL_WAIT_MS);
+        expect(w.moves).toBeGreaterThan(0);
+    });
+    it('a STILL game (the clock never moves) fails by name once the polls saw it still for ARRIVAL_WAIT_MS', () => {
+        const e = slowPage(1000, { freezeLatchesAfter: 1e6, freezeDeadPerPoll: 0 });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([`the arrival's freeze never latched in level ${HOUSE} — the game's clock stood still for ${ARRIVAL_WAIT_MS / 1000} s`]);
+        const [w] = e.engine.stats.latchWaits;
+        expect(w).toMatchObject({ kind: 'arrival', outcome: 'timeout', moves: 0, frames: 0 });
+        expect(w.stillMs).toBeGreaterThan(ARRIVAL_WAIT_MS);
+        expect(w.waitedMs).toBeLessThan(ARRIVAL_WAIT_MS + 2000);
+    });
+    it('a game that RUNS but never latches fails by name past LATCH_FRAME_BOUND frames (the wall clock not the bound)', () => {
+        const e = slowPage(10, { freezeLatchesAfter: 1e6, freezeDeadPerPoll: 1 });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([`the arrival's freeze never latched in level ${HOUSE} after ${LATCH_FRAME_BOUND + 1} game frames (the bound is ${LATCH_FRAME_BOUND})`]);
+        expect(e.engine.stats.latchWaits[0]).toMatchObject({ outcome: 'timeout', frames: LATCH_FRAME_BOUND + 1 });
+    });
+    it('the ADOPTION\'s latch waits the same way: a slow page whose game runs is adopted, never failed by the wall', () => {
+        const e = slowPage(20000, { unwatched: unwatched(), freezeLatchesAfter: 3, freezeDeadPerPoll: 1 }, { swap: CLEAR });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.engine.stats.latchWaits[0]).toMatchObject({ kind: 'adoption', outcome: 'held' });
+    });
+    it('the ADOPTION\'s latch on a still game fails by name', () => {
+        const e = slowPage(1000, { unwatched: unwatched(), freezeLatchesAfter: 1e6 }, { swap: CLEAR });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([`the adoption's freeze never latched in level ${HOUSE} — the game's clock stood still for ${ARRIVAL_WAIT_MS / 1000} s`]);
     });
 });
 

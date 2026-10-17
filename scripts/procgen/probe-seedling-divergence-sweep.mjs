@@ -41,6 +41,9 @@
  *                        the read-back must end the leg `stage-failed` by name. ⛔ Never in a real sweep.
  * A leg the list marks `skip` (a gate that maps to no flag, or a goal that IS its gating event) is emitted as
  * `end: 'skipped'` with its reason, and never run.
+ *   --cpu-throttle=<x>   ⚖ MEASUREMENT ONLY (§5.89): emulate a slow runner — CDP CPU throttling at x (≥ 1) on each page
+ *                        after its boot; every row is stamped `cpuThrottle`. The game runs its own frames, only slower:
+ *                        its clock is never touched. ⛔ Never in a real sweep.
  *   --shard=i/n          only shard i of n (`partitionLegs`: price-balanced, longest first — CI's matrix)
  *   --shard-plan=n [--json]  print the partition (no browser, no box) — the CI plan job
  *   --page=<build>       drive another staged build (also SEEDLING_PAGE), e.g. seedling_bot_ap_p4f
@@ -436,6 +439,9 @@ async function main() {
     // ⛓ parsed before the box, so a bad spec fails first. TEST-ONLY mutant: requested, never written
     const STAGE_FLAGS = parseStageFlags(arg('stage-flags', ''));
     const STAGE_MUTANT = process.env.SWEEP_STAGE_MUTANT ?? '';
+    // ⛓ FREEZE LATCH (§5.89) — MEASUREMENT ONLY: a slow runner, emulated (CDP CPU throttling after the boot); rows stamped
+    const CPU_THROTTLE = Number(arg('cpu-throttle', '0')) || 0;
+    if (CPU_THROTTLE && !(CPU_THROTTLE >= 1)) throw new Error(`--cpu-throttle=${CPU_THROTTLE}: the rate is a slowdown factor >= 1`);
     if (STAGE_MUTANT && STAGE_MUTANT !== 'skip-write') throw new Error(`SWEEP_STAGE_MUTANT: ${JSON.stringify(STAGE_MUTANT)} is not skip-write`);
     const SHARD = arg('shard', '');
     // ⛓ CONTACT HOOK — the set, parsed here so a bad key fails before a browser starts
@@ -496,6 +502,8 @@ async function main() {
     const emit = (row) => {
         reported.add(row.id);
         // ⛓ THE LEG BUDGET'S STAMP — every row, whatever its end (byte-identical at the default)
+        // ⛓ FREEZE LATCH (§5.89) — a throttled (measurement-only) run says so on every row
+        if (CPU_THROTTLE) row = { ...row, cpuThrottle: CPU_THROTTLE };
         const line = JSON.stringify(stampSolverKnobs(stampBudget(row, LEG_BUDGET), KNOBS));
         console.log(`ROW ${line.length > 600 ? `${line.slice(0, 600)}…` : line}`);
         if (OUT) appendFileSync(OUT, `${line}\n`);
@@ -690,6 +698,10 @@ async function main() {
         return page.evaluate(() => JSON.parse(JSON.stringify(window.__div.peek())));
         });
         console.log(`INFO: page ${pageNo} booted in ${Math.round((Date.now() - tb) / 1000)} s; botStatus fields: ${Object.keys(peek.status ?? {}).join(',')}`);
+        if (CPU_THROTTLE) {
+            await (await page.context().newCDPSession(page)).send('Emulation.setCPUThrottlingRate', { rate: CPU_THROTTLE });
+            console.log(`CPU-THROTTLE: page ${pageNo}: ${CPU_THROTTLE}x from here (measurement only; every row stamped cpuThrottle)`);
+        }
         const granted = [];
         let swaps = 0;
         for (const [i, leg] of legs.entries()) {
