@@ -10,6 +10,15 @@
  *    tick);
  *  - the tree, finished subtrees collapsed (click a ▸ to open one), capped at `SOLVE_PROGRESS_TREE_CAP` rows.
  *
+ * ⛓ INCREMENTAL (slice S1, ⚖ the user 2026-10-17 — the rate setting `flashPanel.seedlingSolveProgressIntervalMs`
+ * depends on it): a note updates the STATE (and the show/hide lifecycle) at once, but the DOM at most once per
+ * animation frame (`frame`, default `requestAnimationFrame`) — the notes of one frame coalesce into one render of the
+ * newest state. A HIDDEN view renders nothing (the state is kept; showing it renders the newest at the next frame).
+ * The canvas is resized only when the room's size changes (a resize clears it), and only the cells whose colour
+ * changed are painted (a cell gone since the last paint is painted back to the background). The tree's rows are
+ * kept and DIFFED: a row element is written only where its text, colour, tooltip or key changed. `flush()` renders
+ * a pending frame now; `stats` counts notes, renders, coalesced and hidden-skipped notes, resizes, cells painted
+ * and rows written — what the pins read.
  *
  * ⛓ AUTO-SHOW — `setMode(off | auto | always)` (the panel's setting). `isOpen` is whether the view is SHOWN,
  * `isListening` whether its feed is subscribed: in `auto` the feed listens while the view is hidden, the first note
@@ -25,12 +34,15 @@ import {
     applyProgress, autoVisibility, createSolveProgressFeed, emptyProgress, meterOf, SOLVE_PROGRESS_TREE_CAP, tileIndex,
     tileShade, treeRows,
 } from './seedlingSolveProgress.js';
+import { progressIntervalMs, SOLVE_PROGRESS_INTERVAL_MS } from '../seedlingDemo/solveProgressTap.js';
 
 /** The show/hide transitions `lifecycle` keeps. */
 const LIFECYCLE_CAP = 64;
 
 const ACCENT = '#e94560';
 const MAP_WIDTH = 288;
+const MAP_BACKGROUND = '#0a0a0a';
+const EMPTY_TILES = 'empty';
 
 const el = (tag, css = '', text = null) => {
     const e = document.createElement(tag);
@@ -39,14 +51,56 @@ const el = (tag, css = '', text = null) => {
     return e;
 };
 
+/** The shade levels a cell is painted in (a shade in [0, 1] is quantized to one of them). */
+const SHADE_LEVELS = 256;
+
+/**
+ * A reached cell's colour: the accent at alpha `0.15 + 0.85·shade`, composited over the map's background into an
+ * OPAQUE colour — so a changed cell is repainted with one `fillRect`, without the old colour bleeding through.
+ */
+export function cellColour(shade) {
+    const a = 0.15 + 0.85 * shade;
+    const mix = (fg, bg) => Math.round(bg + a * (fg - bg));
+    return `rgb(${mix(233, 10)},${mix(69, 10)},${mix(96, 10)})`;
+}
+
+/** `cellColour` at each of the `SHADE_LEVELS` levels, built once: a render indexes it, never builds a string. */
+const PALETTE = Array.from({ length: SHADE_LEVELS }, (_, i) => cellColour(i / (SHADE_LEVELS - 1)));
+
+/** A shade's palette level. */
+export const shadeLevel = (shade) => Math.round(shade * (SHADE_LEVELS - 1));
+
+/** The palette colour of a level (`shadeLevel`). */
+export const levelColour = (level) => PALETTE[level];
+
+/** "Nothing painted here" in the cell buffers (the background). */
+const UNPAINTED = -1;
+
+/** The next animation frame, or a 16 ms timer where there is none (node). */
+const nextFrame = (fn) => (typeof globalThis.requestAnimationFrame === 'function'
+    ? globalThis.requestAnimationFrame(fn) : setTimeout(fn, 16));
+
 /**
  * @param {object} o
  * @param {() => object[]} o.getServices  the solve services the panel can reach now
  * @param {() => number} [o.now]
+ * @param {(fn: () => void) => void} [o.frame]  schedules a render (default: the next animation frame)
  */
 export class SolveProgressView {
-    constructor({ getServices, now = () => Date.now() }) {
+    constructor({ getServices, now = () => Date.now(), frame = nextFrame }) {
         this.now = now;
+        this.frame = frame;
+        /** ⚖ `flashPanel.seedlingSolveProgressIntervalMs`: the rate this view asks its services for (`setIntervalMs`). */
+        this.intervalMs = SOLVE_PROGRESS_INTERVAL_MS;
+        this.stats = { notes: 0, renders: 0, coalesced: 0, hiddenSkipped: 0, resizes: 0, cellsPainted: 0, rowsWritten: 0 };
+        this._dirty = true;
+        this._pending = false;
+        this._tilesKey = null;
+        /** per cell (row·cols + col): the palette level painted there, or UNPAINTED — and the buffer a render fills. */
+        this._painted = new Int16Array(0);
+        this._next = new Int16Array(0);
+        /** the tree's row elements, in order; each remembers what it shows (`_shown`). */
+        this._lines = [];
         this.state = emptyProgress();
         this.expanded = new Set();
         this.mode = 'off';
@@ -66,7 +120,7 @@ export class SolveProgressView {
         this.meter.append(this.meterBar, this.meterText);
         const body = el('div', 'display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;');
         const mapBox = el('div', 'flex-shrink:0;');
-        this.canvas = el('canvas', 'background:#0a0a0a;border:1px solid #333;image-rendering:pixelated;display:block;');
+        this.canvas = el('canvas', `background:${MAP_BACKGROUND};border:1px solid #333;image-rendering:pixelated;display:block;`);
         this.canvas.className = 'flash-panel-solve-progress-tiles';
         this.canvas.width = MAP_WIDTH;
         this.canvas.height = 1;
@@ -74,6 +128,7 @@ export class SolveProgressView {
         mapBox.append(this.canvas, this.tileText);
         this.tree = el('div', 'flex:1 1 220px;min-width:200px;max-height:320px;overflow:auto;white-space:pre;');
         this.tree.className = 'flash-panel-solve-progress-tree';
+        this._moreLine = el('div', 'color:#777;');
         body.append(mapBox, this.tree);
         this.element.append(title, this.header, this.meter, body);
 
@@ -89,7 +144,8 @@ export class SolveProgressView {
         this.feed = createSolveProgressFeed({
             getServices,
             onNote: (note) => this.receive(note),
-            tick: () => this._renderHeader(),
+            tick: () => { if (this.visible) this._renderHeader(); },
+            intervalMs: () => this.intervalMs,
         });
         this._mirror();
     }
@@ -120,8 +176,15 @@ export class SolveProgressView {
         this.feed.open();
         this._setVisible(mode === 'always' || (mode === 'auto' && this.visible && !this.state.final), null);
         this._mirror();
-        this.render();
+        // ⛓ INCREMENTAL — the catch-up: a view shown here draws the newest state (kept while it was hidden)
+        this._invalidate();
     }
+
+    /**
+     * ⚖ `flashPanel.seedlingSolveProgressIntervalMs` — the progress rate to ask for (clamped to the list). It rides
+     * the next solve's envelope: a solve already running keeps the rate it started with.
+     */
+    setIntervalMs(ms) { this.intervalMs = progressIntervalMs(ms); }
 
     /** Show the view pinned open (`always`). */
     open() { this.setMode('always'); }
@@ -158,12 +221,35 @@ export class SolveProgressView {
         if (next === this.state) return;
         if (next.segmentChanged) this.expanded = new Set();
         this.state = next;
+        this.stats.notes += 1;
         this._setVisible(autoVisibility(this.mode, this.visible, note), note);
         this._mirror();
+        this._invalidate();
+    }
+
+    /** ⛓ INCREMENTAL — the state changed: render it at the next frame (once, however many notes arrive first). */
+    _invalidate() {
+        this._dirty = true;
+        if (!this.visible) { this.stats.hiddenSkipped += 1; return; }
+        if (this._pending) { this.stats.coalesced += 1; return; }
+        this._schedule();
+    }
+
+    _schedule() {
+        if (this._pending) return;
+        this._pending = true;
+        this.frame(() => { this._pending = false; this.flush(); });
+    }
+
+    /** Render the newest state now, if it changed since the last render and the view is shown. */
+    flush() {
+        if (!this._dirty || !this.visible) return;
+        this._dirty = false;
         this.render();
     }
 
     render() {
+        this.stats.renders += 1;
         this._renderHeader();
         this._renderMeter();
         this._renderTiles();
@@ -207,32 +293,87 @@ export class SolveProgressView {
         return Math.max(2, Math.min(16, Math.floor(MAP_WIDTH / Math.max(1, tiles.cols ?? 1))));
     }
 
+    /**
+     * ⛓ INCREMENTAL — size the canvas for `key` (the room's size), only when it changed: assigning `width`/`height`
+     * reallocates and CLEARS the canvas, even to the same value. A resize forgets every painted cell.
+     */
+    _sizeCanvas(key, width, height, cells, ctx) {
+        if (key === this._tilesKey) return;
+        this._tilesKey = key;
+        this.canvas.width = width;
+        this.canvas.height = height;
+        this.stats.resizes += 1;
+        this._painted = new Int16Array(cells).fill(UNPAINTED);
+        this._next = new Int16Array(cells);
+        if (ctx) { ctx.fillStyle = MAP_BACKGROUND; ctx.fillRect(0, 0, width, height); }
+    }
+
     _renderTiles() {
         const tiles = this.state.snapshot?.tiles ?? null;
         const ctx = this.canvas.getContext?.('2d') ?? null;
         if (!tiles || !tiles.cols || !tiles.rows) {
-            this.canvas.width = MAP_WIDTH;
-            this.canvas.height = 24;
-            if (ctx) { ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, MAP_WIDTH, 24); }
+            this._sizeCanvas(EMPTY_TILES, MAP_WIDTH, 24, 0, ctx);
             this.tileText.textContent = 'no previewed states yet';
             this._index = null;
             return;
         }
         const px = this._cellPx(tiles);
-        this.canvas.width = tiles.cols * px;
-        this.canvas.height = tiles.rows * px;
+        const { cols, rows } = tiles;
+        this._sizeCanvas(`${cols}x${rows}@${px}`, cols * px, rows * px, cols * rows, ctx);
         this._index = tileIndex(tiles);
         this._px = px;
-        if (ctx) {
-            ctx.fillStyle = '#0a0a0a';
-            ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            for (const [col, row, reached] of tiles.cells) {
-                const t = tileShade(reached, this._index.max);
-                ctx.fillStyle = `rgba(233,69,96,${(0.15 + 0.85 * t).toFixed(3)})`;
-                ctx.fillRect(col * px, row * px, px, px);
+        if (ctx) this._paintCells(ctx, tiles, px);
+        this.tileText.textContent = this._tileSummary();
+    }
+
+    /**
+     * ⛓ INCREMENTAL — paint only the cells whose palette level changed (a cell no longer reached — a new segment in
+     * the same room — goes back to the background), GROUPED by colour: one `fillStyle` per colour, not per cell.
+     */
+    _paintCells(ctx, tiles, px) {
+        const { cols, rows } = tiles;
+        const painted = this._painted;
+        const next = this._next;
+        next.fill(UNPAINTED);
+        const max = this._index.max;
+        for (const [col, row, reached] of tiles.cells) {
+            if (col < 0 || row < 0 || col >= cols || row >= rows) continue;
+            next[row * cols + col] = shadeLevel(tileShade(reached, max));
+        }
+        // a counting sort of the changed cells by level, into buffers kept across renders (no allocation per
+        // render): level L counts in slot L + 2 (UNPAINTED = -1 in slot 1), so after the prefix sum slot L + 1 holds
+        // where level L's run STARTS — the scatter's cursor
+        const counts = this._levelCounts ?? (this._levelCounts = new Int32Array(SHADE_LEVELS + 2));
+        counts.fill(0);
+        let changed = 0;
+        for (let i = 0; i < next.length; i += 1) {
+            if (next[i] === painted[i]) continue;
+            counts[next[i] + 2] += 1;
+            changed += 1;
+        }
+        if (changed === 0) { this._painted = next; this._next = painted; return; }
+        for (let k = 1; k < counts.length; k += 1) counts[k] += counts[k - 1];
+        if (!this._order || this._order.length < next.length) this._order = new Int32Array(next.length);
+        const order = this._order;
+        for (let i = 0; i < next.length; i += 1) {
+            if (next[i] === painted[i]) continue;
+            order[counts[next[i] + 1]] = i;
+            counts[next[i] + 1] += 1;
+        }
+        // after the scatter, counts[k + 1] ends level k's run (k = -1 … SHADE_LEVELS - 1)
+        let at = 0;
+        for (let level = UNPAINTED; level < SHADE_LEVELS; level += 1) {
+            const end = counts[level + 1];
+            if (end === at) continue;
+            ctx.fillStyle = level === UNPAINTED ? MAP_BACKGROUND : PALETTE[level];
+            for (; at < end; at += 1) {
+                const i = order[at];
+                ctx.fillRect((i % cols) * px, Math.floor(i / cols) * px, px, px);
             }
         }
-        this.tileText.textContent = this._tileSummary();
+        this.stats.cellsPainted += changed;
+        this._painted = next;
+        this._next = painted;
     }
 
     _tileSummary() {
@@ -253,24 +394,53 @@ export class SolveProgressView {
             : `tile (${col},${row}): not reached`;
     }
 
+    /**
+     * ⛓ INCREMENTAL — the tree's rows are DIFFED, not rebuilt: row i reuses the i-th element and writes only what
+     * changed (each element remembers what it shows); surplus elements are removed; "… N more" stays last.
+     */
     _renderTree() {
         const tree = this.state.snapshot?.tree ?? null;
-        this.tree.textContent = '';
-        if (!tree) return;
-        const { rows, more } = treeRows(tree, { expanded: this.expanded, cap: SOLVE_PROGRESS_TREE_CAP });
-        const frag = document.createDocumentFragment();
-        for (const row of rows) {
+        const { rows, more } = tree ? treeRows(tree, { expanded: this.expanded, cap: SOLVE_PROGRESS_TREE_CAP })
+            : { rows: [], more: 0 };
+        let added = false;
+        rows.forEach((row, i) => {
             const n = row.node;
-            const line = el('div', `color:${n.active ? '#fff' : '#bbb'};${n.active ? `background:#3a1520;` : ''}`);
             const mark = row.collapsible ? (row.open ? '▾ ' : '▸ ') : (n.children?.length ? '▾ ' : '  ');
-            const reasons = Object.entries(n.rejections ?? {});
-            line.textContent = `${'  '.repeat(row.depth)}${mark}${n.role}: ${n.label}  ${n.attempts}a ${n.successes}✓`
-                + (row.rejected ? ` ${row.rejected}✗` : '') + (row.hidden ? `  (+${row.hidden})` : '');
-            if (reasons.length) line.title = reasons.map(([k, v]) => `${v}× ${k}`).join('\n');
-            if (row.collapsible) { line.dataset.key = n.key; line.style.cursor = 'pointer'; }
-            frag.append(line);
-        }
-        if (more) frag.append(el('div', 'color:#777;', `… ${more} more node(s) not listed`));
-        this.tree.append(frag);
+            const want = {
+                text: `${'  '.repeat(row.depth)}${mark}${n.role}: ${n.label}  ${n.attempts}a ${n.successes}✓`
+                    + (row.rejected ? ` ${row.rejected}✗` : '') + (row.hidden ? `  (+${row.hidden})` : ''),
+                css: `color:${n.active ? '#fff' : '#bbb'};${n.active ? 'background:#3a1520;' : ''}`
+                    + (row.collapsible ? 'cursor:pointer;' : ''),
+                title: Object.entries(n.rejections ?? {}).map(([k, v]) => `${v}× ${k}`).join('\n'),
+                key: row.collapsible ? n.key : null,
+            };
+            let line = this._lines[i];
+            if (!line) {
+                line = el('div');
+                // the row's text is ONE text node, updated in place (`data`), never replaced
+                line._text = document.createTextNode('');
+                line.append(line._text);
+                line._shown = {};
+                this._lines.push(line);
+                this.tree.append(line);
+                added = true;
+            }
+            const shown = line._shown;
+            if (shown.text === want.text && shown.css === want.css && shown.title === want.title
+                && shown.key === want.key) return;
+            if (shown.text !== want.text) line._text.data = want.text;
+            if (shown.css !== want.css) line.style.cssText = want.css;
+            if (shown.title !== want.title) line.title = want.title;
+            if (shown.key !== want.key) {
+                if (want.key === null) delete line.dataset.key; else line.dataset.key = want.key;
+            }
+            line._shown = want;
+            this.stats.rowsWritten += 1;
+        });
+        while (this._lines.length > rows.length) this._lines.pop().remove();
+        const moreText = more ? `… ${more} more node(s) not listed` : '';
+        if (this._moreLine.textContent !== moreText) this._moreLine.textContent = moreText;
+        if (more && (added || this._moreLine.parentNode !== this.tree)) this.tree.append(this._moreLine);
+        else if (!more && this._moreLine.parentNode === this.tree) this._moreLine.remove();
     }
 }

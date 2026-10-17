@@ -225,10 +225,10 @@ function stubDocument() {
     const node = (tag) => {
         const n = { tagName: tag, style: {}, dataset: {}, children: [], textContent: '', className: '', title: '',
             width: 0, height: 0,
-            append(...c) { n.children.push(...c); }, addEventListener() {}, querySelectorAll: () => [] };
+            append(...c) { n.children.push(...c); }, remove() {}, addEventListener() {}, querySelectorAll: () => [] };
         return n;
     };
-    return { createElement: node, createDocumentFragment: () => node('#fragment') };
+    return { createElement: node, createDocumentFragment: () => node('#fragment'), createTextNode: (data) => ({ data }) };
 }
 
 describe('⛓ AUTO-SHOW — the view\'s lifecycle (SolveProgressView over a fake service)', () => {
