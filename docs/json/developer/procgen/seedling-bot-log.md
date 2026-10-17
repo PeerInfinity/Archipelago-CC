@@ -23135,3 +23135,28 @@ Lessons:
    was the planner's string-pull, which none of them call.
 2. *A threshold metric depends on the box.* On a box 3.5× faster, half of L40's 100 ms gaps fall under the line.
    Report the gap's cause and its per-unit cost, not only its share.
+
+### Seedling fidelity statueTalkRange flip — a statue's 32 px talk circle, ON by default
+
+⚖ The user (2026-10-17), after DASHSTEP's harvest: *"Harvest, then flip it ON"*. `CONTACT_FIDELITY.statueTalkRange`
+(DASHSTEP above) now ships ON. It goes first because hammer's dash flip (`hammer-flip-m`) needs it for leg 7
+(→ `done` 243 t under that flip). Once this lands, hammer merges it and re-runs its A/B.
+
+**What moved.**
+- `solve-seedling-r9-campaign --check` ON: `r9-solve-0-v3` re-derives **299 → 313 t**. That's `talkGuard`'s travel
+  margin now added to 32. The committed walk released at 36.82 / 34.60 px, outside both circles.
+- `r9-solve-12`'s declared clock follows (12856 → 12870).
+- Re-recorded with `rerecord-seedling-campaign.mjs --license-walks=user-2026-10-17-statueTalkRange-flip`. S0 sealed ONE
+  walk move plus seven boot-only successors (`r9-solve-12`, `-21`, `-22`, `-29`, `-30`, `-31`, `-32`); S3 recorded
+  exactly those 8 tapes.
+- S4: the wasm ship gate passed 415/0/0 and the solver-roster differential 1143/0/68. Every seam is green through
+  `r9-solve-32`, and `r9-solve-0-v3` ends at a calm arrival at t313.
+- `r9-campaign` is now **10,839 ticks** (was 10,825). The tape manifest is regenerated.
+
+**The producers.** No `plan-seedling-*.mjs` producer names the switch, `talkRangeOf` or `talkGuard`. All 62
+`--check` producers are green at the flip tip (on the flip's own server).
+
+**Owed by the flip and measured in CI:**
+- route survey step 79 SOLVED **199 → 204 t** (DASHSTEP D3: the OFF plan walks into the dialogue on the game);
+- the JS arc's 851-leg A/B, tip vs main.
+Pins: `contactFidelity.test` defaults and `fidelityStatueTalk` "ships ON".
