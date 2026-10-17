@@ -22915,3 +22915,39 @@ submodule, Chromium and :8000; the rest 2 at a time, ~6–8 min), enumerating th
 `seedling-fidelity-producers-evidence/seedling-producer-checks.draft.yml`, not wired.
 
 **Final gate at the head:** 59 GREEN; the two r9 rows (the hammer arc's) RED as at the base.
+
+### Seedling DF — the cheaper dash search, flipped ON
+
+⚖ The user (2026-10-16): *"Prepare the flip"*: DB's `DASH_LEG_PRECHECK` (i) and `DASH_KEEP_PARTIAL` (iii) and js-6's
+`dashOnlyWindow`, ON together; `DASH_NO_SWING_PREFIX` (ii) stays OFF (⚖ 45(b), every prefix). The flip partly reverses
+⚖ WINDOW WHOLE PASS, knowingly. Built on a branch and measured; it lands only on the user's word. Report:
+`CC/docs/cloud-reports/seedling-dash-flip.md`.
+
+**Flip note.** (i) and (iii) ship ON in G1's shape (`SEEDLING_<NAME>=0` opts a process out, `DASH_<NAME>_DEFAULT =
+true`); `DASH_ONLY_WINDOW` ships ON (`SEEDLING_DASH_ONLY_WINDOW=0` opts out). The browser and its worker take the new
+defaults, so a default request stays unstamped, and an off-default stamp is now `legPrecheck: false` /
+`keepPartial: false` / `dashOnlyWindow: false` (or `noSwingPrefix: true`).
+
+**D1 — measured before the flip** (sweep `38845773709`'s 617 replayed requests, stamped in copies, window 85): today
+110,216 t; window 0 87,704 t; **ON 94,359 t = 70.4 % of window 0's tick savings, 165 better / 0 worse, +15,158
+units**. The same combination without (i) gives the SAME ticks on every key, for 1,615 more units.
+
+**D2 — STOP on (i).** In place, two producers move, both under (i) alone:
+- `solve-seedling-r9-campaign --check` → `e900dde2` (DB's): the `r9-solve-12` trace sidecar only;
+- **`plan-seedling-axe-witness`: tape `axe-l48-reach-l49` re-plans 368 → 585 t (+217).** Its corridor's UNDASHED
+  longest leg is 305 t; with the pre-check OFF, EIGHT dash windows bring it under 195 and save 218 t. The pre-check
+  refuses it unscanned. DB's premise ("the largest saving one window made was 98 t") bounds ONE window, but windows
+  COMPOUND on the same leg. (iii) and the window move nothing in place.
+Neither is re-recorded on the branch: a re-record would bake a slower committed tape in. The user decides between the
+flip without (i) (identical ticks, byte-inert in place) and the flip as asked plus that re-record. (i) is not free to
+drop: on DB's heaviest requests (3 interleaved rounds, jobs 1, load 1.3–2.5) the sums of median solve times are OFF
+19.7 s, ON 24.4 s, ON without (i) **54.5 s** — the L40 pits (384–394) spend ~85 more units each on corridors that
+never plan (e.g. 387:0 2.4 → 4.5 s ON, 10.1 s without (i)), for the same ticks.
+
+Lessons:
+1. *A per-window bound is not a per-leg bound.* The margin K = 40 was read off the largest single-window saving, but a
+   corridor's leg can be cut by several windows in a row. A pre-check that refuses on the undashed leg needs the
+   bound on the CHAIN's saving.
+2. *A producer that is red at the base hides its movers.* DB measured every producer with each switch ON, but
+   `axe-witness` was drift-red at DB's base (fixed since by fidelity PRODUCERS), so its (i) move was invisible. The
+   first measurement after a red is fixed is a new measurement.
