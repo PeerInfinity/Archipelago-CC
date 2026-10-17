@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+// DF runner (scratch). One captured request, one window, one fresh process, against the tree at --lab. The stamps go
+// on a COPY of the restored request (`--stamp='{"dashShape":{...},"dashOnlyWindow":true}'`); the solve is the
+// worker's own dispatch (`replay-seedling-solve-request.mjs`'s replayOnce: levelSourceFromAtlas → solveAnytime).
+// node df-run.mjs --lab=<tree> --requests=<jsonl> --one=<id>:<i> --window=<n|0> [--stamp=<json>]
+import { readFileSync } from 'node:fs';
+import { performance } from 'node:perf_hooks';
+const arg = (n, f) => process.argv.find((a) => a.startsWith(`--${n}=`))?.slice(n.length + 3) ?? f;
+const LAB = arg('lab'); const FILE = arg('requests');
+const [id, i] = arg('one').split(':').map(Number);
+const WINDOW = Number(arg('window', '85'));
+const STAMP = JSON.parse(arg('stamp', '{}'));
+const { restoreRequest } = await import(`${LAB}/scripts/procgen/seedlingSolveRequestCodec.js`);
+const { levelSourceFromAtlas } = await import(`${LAB}/frontend/modules/seedlingDemo/atlasSource.js`);
+const { solveAnytime, ANYTIME_PASSES } = await import(`${LAB}/frontend/modules/seedlingDemo/jsRuntimeSolver.js`);
+const sb = await import(`${LAB}/frontend/modules/seedlingDemo/solverBot.js`);
+const dow = await import(`${LAB}/frontend/modules/seedlingDemo/dashOnlyWindowHook.js`);
+let line = null;
+for (const l of readFileSync(FILE, 'utf8').split('\n')) { if (l.startsWith(`{"id":${id},`)) { line = JSON.parse(l); break; } }
+const cap = line.requests.find((r) => r.i === i);
+const req = { ...restoreRequest(cap.request), ...STAMP };
+const capturedWindow = req.upgradeWindowWork ?? null;
+req.upgradeWindowWork = WINDOW > 0 ? WINDOW : null;
+const { passes = ANYTIME_PASSES, source, ...tape } = req;
+const levelSource = levelSourceFromAtlas(source.records);
+const t0 = performance.now();
+const answer = solveAnytime({ ...tape, source, levelSource }, { passes });
+const ms = performance.now() - t0;
+console.log(`RESULT ${JSON.stringify({ id, i, window: WINDOW, capturedWindow, budget: req.budgetWork, ok: answer.ok, kind: answer.kind ?? null,
+    work: answer.work ?? null, ms: Math.round(ms), shipped: answer.ok ? { pass: answer.plan.pass, ticks: answer.plan.solution.length } : null,
+    passes: answer.passes ?? [], stamp: STAMP, read: { dashShape: answer.dashShape ?? null, dashOnlyWindow: answer.dashOnlyWindow ?? null },
+    defaults: { legPre: sb.DASH_LEG_PRECHECK.enabled, noSwing: sb.DASH_NO_SWING_PREFIX.enabled, keep: sb.DASH_KEEP_PARTIAL.enabled,
+        dashOnly: dow.DASH_ONLY_WINDOW.enabled } })}`);

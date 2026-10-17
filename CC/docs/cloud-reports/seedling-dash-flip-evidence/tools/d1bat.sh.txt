@@ -1,0 +1,7 @@
+#!/bin/bash
+S=$1; cd $S
+run() { local tag=$1 win=$2 stamp=$3
+  node tools/ds-batch.mjs --lab=$S/base --runner=$S/tools/df-run.mjs --dir=/tmp/claude-0/caps --out=$S/d1/battery.jsonl --windows=$win --tag=$tag --only=$(cat pop617.txt) --jobs=3 --extra="--stamp=$stamp" 2>&1 | tail -1 | sed "s/^/$tag: /"; }
+run off 85,0 '{}'
+run on 85 '{"dashShape":{"legPrecheck":true,"keepPartial":true},"dashOnlyWindow":true}'
+echo ALLDONE

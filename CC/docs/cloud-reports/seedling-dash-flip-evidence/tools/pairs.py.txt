@@ -1,0 +1,6 @@
+import json,sys,hashlib
+j=json.load(open(sys.argv[1]))
+for f in j['testResults']:
+    if f['name'].endswith('/tapeRunner.test.js'):
+        p=sorted(f"{a['status']}\t{a['fullName']}" for a in f['assertionResults'])
+        s='\n'.join(p); print(len(p), hashlib.md5(s.encode()).hexdigest())
