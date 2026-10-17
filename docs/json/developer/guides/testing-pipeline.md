@@ -628,3 +628,4 @@ if (rule.count !== undefined) {
 2. **Count support in rule engine** - fixes item quantity checks universally
 
 This systematic approach ensures the JavaScript client faithfully replicates the authoritative Python game logic for accurate progression tracking.
+<!-- ci-skip-rules rule 2 scratch probe: a docs-only push. Not for main. -->
