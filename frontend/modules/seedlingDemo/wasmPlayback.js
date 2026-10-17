@@ -1018,3 +1018,33 @@ export function keysHeldAtReset({ status, solution }) {
     const echo = new Set(status.input?.held ?? []);
     return TAPE_KEY_RELEASES.map((k) => k.name).filter((n) => echo.has(n) && plan.has(n));
 }
+
+/**
+ * ⛓ FREEZE LATCH (§5.89) — a hold tape's LATCH WAIT, watched: the arrival's (`latching`) and the adoption's
+ * (`adopting`). One row per wait, `{kind, level, waitedMs, polls, moves, stillMs, first, last, outcome}`: `first` /
+ * `last` are the game's readout at the first and the last poll (`game_time`, `dead_frames`, `tick`, `level`), `moves`
+ * the polls on which the game's clock (`game_time` or `dead_frames`) had moved since the poll before, and `stillMs`
+ * the longest wall span with no move. An INSTRUMENT: the bound reads it (`latchExpired`), nothing else does.
+ */
+const latchClock = (st) => ({ gt: st?.game_time ?? null, dead: st?.dead_frames ?? null, tick: st?.tick ?? null, level: st?.level ?? null });
+
+export function latchWatch({ kind, level, at, status }) {
+    const c = latchClock(status);
+    return { kind, level, since: at, movedAt: at, waitedMs: 0, polls: 1, moves: 0, stillMs: 0, first: c, last: c, outcome: null };
+}
+
+/** One poll of a latch wait (mutates `w`): the game's clock moved iff `game_time` or `dead_frames` changed. */
+export function observeLatch(w, { at, status }) {
+    const c = latchClock(status);
+    w.polls += 1;
+    if (c.gt !== w.last.gt || c.dead !== w.last.dead) { w.moves += 1; w.movedAt = at; }
+    w.last = c;
+    w.waitedMs = Math.round(at - w.since);
+    w.stillMs = Math.max(w.stillMs, Math.round(at - w.movedAt));
+    return w;
+}
+
+/** The latch wait's bound: null while it may wait on, else the failure's reason. */
+export function latchExpired(w, { at, waitMs }) {
+    return at - w.since > waitMs ? `within ${waitMs / 1000} s` : null;
+}

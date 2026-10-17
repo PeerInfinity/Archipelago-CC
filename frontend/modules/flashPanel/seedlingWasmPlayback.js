@@ -105,7 +105,8 @@ import {
 } from '../seedlingDemo/wasmArrival.js';
 import {
     adoptedClockStaging, heldArrivalClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
-    firstDivergence, foldDrain, goalAction, keysHeldAtReset, locationGoalServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
+    firstDivergence, foldDrain, goalAction, keysHeldAtReset, latchExpired, latchWatch, locationGoalServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
+    observeLatch,
     primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
 } from '../seedlingDemo/wasmPlayback.js';
@@ -135,6 +136,8 @@ export const ARRIVAL_WAIT_MS = 15000;
 export const TIMELINE_ROWS = 200;
 /** ⛓ RESTART HOLD — `stats.arrivalWatch` keeps this many rows (≤ ~6 per expected arrival: ~10 Restarts whole). */
 export const ARRIVAL_WATCH_ROWS = 64;
+/** ⛓ FREEZE LATCH (§5.89) — `stats.latchWaits` keeps this many rows (one per hold that had to wait for its latch). */
+export const LATCH_WAIT_ROWS = 64;
 /** How long a QUEUED goal waits for the playing tape (a seal reveal is ~16 s, W0 i.13). */
 export const QUEUE_WAIT_MS = 60000;
 /** ⛓ WALK IDENTITY (b) — how long the bot's Restart waits for a playing tape to reach its end (a seal reveal is ~16 s). */
@@ -280,6 +283,9 @@ export function createWasmPlayback({
     let token = 0;
     let baseline = null;
     let deadline = 0;
+    /** ⛓ FREEZE LATCH (§5.89) — the latch wait in flight (`wasmPlayback.latchWatch`), or null. */
+    let latch = null;
+    let latchSeq = 0;
     let handle = null;
     let ours = false; // a tape WE started may be armed or holding
     let play = null;
@@ -354,6 +360,8 @@ export function createWasmPlayback({
         // ⛓ SEAM OFFSET (§5.82) — every held arrival put on the live clock before its first solve: `{level, begin, model, live, shift,
         // refusal}` (shift = the game's tick-0 clock − the shadow's; ≠ 0 = the fade ran unpinned for `−shift` render(s))
         arrivalClock: [],
+        // ⛓ FREEZE LATCH (§5.89) — each hold's latch wait, watched (`wasmPlayback.latchWatch`): what the game's clock did meanwhile
+        latchWaits: [],
         // ⛓ WALK IDENTITY — arrivals the glue told the engine to expect (a Restart's start hop)
         expectedArrivals: 0,
         // ⛓ W8c — the new-game arm's ceremonies waited out, and the tutorial Helps dismissed (one arrow pair each)
@@ -722,7 +730,7 @@ export function createWasmPlayback({
         note(`adopted level ${g.level} as it stands (no re-arrival)`);
         // The held check reads a HELD game (W7's invariant): wait for the freeze to latch (one frame), then solve.
         phase = 'adopting';
-        deadline = now() + ARRIVAL_WAIT_MS;
+        startLatch('adoption', g.level, st);
         schedule(adoptLatched, SOLVE_POLL_MS);
         return true;
     }
@@ -830,10 +838,29 @@ export function createWasmPlayback({
         schedule(step, ADOPT_POLL_MS);
     }
 
+    /** ⛓ FREEZE LATCH (§5.89) — a hold's latch wait begins (its row is kept in `stats.latchWaits`). */
+    function startLatch(kind, level, st) {
+        latch = { n: latchSeq++, ...latchWatch({ kind, level, at: now(), status: st }) };
+        stats.latchWaits.push(latch);
+        if (stats.latchWaits.length > LATCH_WAIT_ROWS) stats.latchWaits.shift();
+    }
+    /** One poll of the latch wait in flight: its row's outcome once held, else the bound's reason (null = wait on). */
+    function observeLatchWait(st) {
+        if (!latch) return null;
+        const at = now();
+        observeLatch(latch, { at, status: st });
+        if (st?.held) { latch.outcome = 'held'; latch = null; return null; }
+        if (st?.error) { latch.outcome = 'error'; latch = null; return null; }
+        const over = latchExpired(latch, { at, waitMs: ARRIVAL_WAIT_MS });
+        if (over) { latch.outcome = 'timeout'; latch = null; }
+        return over;
+    }
+
     /** ⛓ W8 — the adoption's freeze latched → the held check + the continuation solve; never latched → failed by name. */
     function adoptLatched() {
         if (phase !== 'adopting') return;
         const st = status();
+        const over = observeLatchWait(st);
         if (st?.held) {
             // ⛓ WALK IDENTITY (a) — the held clock is the one the plan's first tick sees: the shadow is put on it.
             let modelTime = null;
@@ -855,7 +882,7 @@ export function createWasmPlayback({
             return;
         }
         if (st?.error) { fail(`the adoption's freeze tape errored: ${st.error}`); return; }
-        if (now() > deadline) { fail(`the adoption's freeze never latched in level ${goal.level} within ${ARRIVAL_WAIT_MS / 1000} s`); return; }
+        if (over) { fail(`the adoption's freeze never latched in level ${goal.level} ${over}`); return; }
         schedule(adoptLatched, SOLVE_POLL_MS);
     }
 
@@ -1238,15 +1265,16 @@ export function createWasmPlayback({
      */
     function arrivalOnLiveClock(r) {
         const st = status();
+        const over = phase === 'latching' ? observeLatchWait(st) : null;
         if (!st?.held) {
             if (st?.error) { fail(`the arrival's freeze tape errored: ${st.error}`); return false; }
             if (phase !== 'latching') {
                 token += 1;
                 cancelTimer();
                 phase = 'latching';
-                deadline = now() + ARRIVAL_WAIT_MS;
-            } else if (now() > deadline) {
-                fail(`the arrival's freeze never latched in level ${r.level} within ${ARRIVAL_WAIT_MS / 1000} s`);
+                startLatch('arrival', r.level, st);
+            } else if (over) {
+                fail(`the arrival's freeze never latched in level ${r.level} ${over}`);
                 return false;
             }
             schedule(solveInRoom, SOLVE_POLL_MS);
@@ -2197,7 +2225,8 @@ export function createWasmPlayback({
                 sceneLeaks: stats.sceneLeaks.map((r) => ({ ...r })),
                 deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred],
                 swapPushes: stats.swapPushes.map((r) => ({ ...r })), shipClock: stats.shipClock.map((r) => ({ ...r })),
-                adoptClock: stats.adoptClock.map((r) => ({ ...r })), arrivalClock: stats.arrivalClock.map((r) => ({ ...r })), selfChecks: stats.selfChecks.map((r) => ({ ...r })),
+                adoptClock: stats.adoptClock.map((r) => ({ ...r })), arrivalClock: stats.arrivalClock.map((r) => ({ ...r })),
+                latchWaits: stats.latchWaits.map((r) => ({ ...r, first: { ...r.first }, last: { ...r.last } })), selfChecks: stats.selfChecks.map((r) => ({ ...r })),
                 timeline: stats.timeline.map((r) => ({ ...r })), staleGoals: stats.staleGoals.map((r) => ({ ...r })),
                 crossLevelEnds: stats.crossLevelEnds.map((r) => ({ ...r })) };
         },
