@@ -22,7 +22,7 @@
  *                        across SHAs, where an id shifts)
  *
  * A leg the list marks `stagedEvents` (an arrival whose every door needs a `game_state` event: unstaged, the jump
- * lands inside the unbroken obstacle) has each flag written into the GAME's persistence table before its jump, by the
+ * lands inside the unbroken obstacle; or a GOAL rule needing one the AP route holds there, `goalEvents`) has each flag written into the GAME's persistence table before its jump, by the
  * game's own setter (`Game.setPersistence(tag, false, level)`, a bridge `method_call`, the channel key delivery
  * uses), and read back from `botStatus.persistence_cleared` (a flag that never lands = `end: 'stage-failed'`, by
  * name). The jump's `new Game` then builds the room from that table, and the engine declares it as the live table.
