@@ -581,6 +581,34 @@ export const CONTACT_FIDELITY = {
      * budget). ⛔ OFF by default (no licence); `SEEDLING_ARROW_LANE_CROSSING=0|1` for a node measurement.
      */
     arrowLaneCrossing: false,
+    /**
+     * fidelity AXETIMING D2 — THE AXE TIMING RUNG: A SPINNING AXE'S GAP, CROSSED ON ITS CLOCK AT DASH SPEED
+     * (`solverBot`'s AXE arm, `axeTimingCrossing`).
+     *
+     *     SpinningAxe.as:49-63   angle += spinRate each update; collideLine hub→hub+32·(cos a, sin a), the 12×12 hub
+     *
+     * A point in the blade's reach is swept once a revolution, so a walk is hitless at some phase only if its angle
+     * round the hub, relative to the blade's, turns by less than a revolution while it is in reach. MEASURED (sweep
+     * 38926058850, legs 529/530; survey 152/183; L61 `spinningaxe@160,80`, rate 7, period 52): the walking corridor
+     * turns 8.77 rad in 55 in-reach ticks, so the AXE arm's stalls are hit at every phase; walked with the sword's
+     * dash chain it is in reach 19–25 ticks and 17–21 stalls are clean. ON: after the AXE arm's stall search and bent
+     * corridors refuse, the rung searches stall × dash-chain phase, certifies the crossing with the probe's own
+     * predicate (the danger map's transit blade on the PRE-move box, the question `spinningAxePlayerHit` bills),
+     * drives it, and refuses by name if the run billed a hit. OFF: never asked, byte-identical. ⛔ OFF by default (no
+     * licence); `SEEDLING_AXE_TIMING_RUNG=0|1` for a node measurement.
+     */
+    axeTimingRung: false,
+    /**
+     * fidelity AXETIMING D2b — THE WALK'S DECISION GATE TIMES A SPINNING AXE'S BLADE (`solverBot.axeGateTimed`).
+     *
+     * The gate a walk opens with asks the WAIT question, where an axe is its whole 32 px disc. MEASURED (sweep
+     * 38926058850, leg 497, L54): the player arrives 16 px under `spinningaxe@128,432` (rate −2) and the gate refuses
+     * before any corridor is planned, though the blade is far from the player and the goal is the door 8 px below. ON:
+     * that gate prices each axe by its exact blade and hub at the walk's first transit sample (the probe's own
+     * question); a count the visit clock cannot vouch for keeps the disc. OFF: byte-identical. ⛔ OFF by default (no
+     * licence); `SEEDLING_AXE_GATE_TRANSIT=0|1` for a node measurement.
+     */
+    axeGateTransit: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -703,6 +731,12 @@ if (globalThis.process?.env?.SEEDLING_SEAL_DOOR_APPROACH === '0') CONTACT_FIDELI
 // ⛓ fidelity ARROWLANE D2: the armed-lane crossing arm, for a node measurement.
 if (globalThis.process?.env?.SEEDLING_ARROW_LANE_CROSSING === '1') CONTACT_FIDELITY.arrowLaneCrossing = true;
 if (globalThis.process?.env?.SEEDLING_ARROW_LANE_CROSSING === '0') CONTACT_FIDELITY.arrowLaneCrossing = false;
+// ⛓ fidelity AXETIMING D2: `SEEDLING_AXE_TIMING_RUNG=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_AXE_TIMING_RUNG === '1') CONTACT_FIDELITY.axeTimingRung = true;
+if (globalThis.process?.env?.SEEDLING_AXE_TIMING_RUNG === '0') CONTACT_FIDELITY.axeTimingRung = false;
+// ⛓ fidelity AXETIMING D2b: `SEEDLING_AXE_GATE_TRANSIT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_AXE_GATE_TRANSIT === '1') CONTACT_FIDELITY.axeGateTransit = true;
+if (globalThis.process?.env?.SEEDLING_AXE_GATE_TRANSIT === '0') CONTACT_FIDELITY.axeGateTransit = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

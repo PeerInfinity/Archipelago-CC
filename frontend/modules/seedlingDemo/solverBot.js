@@ -6385,10 +6385,48 @@ const NO_HELD_PREVIEW = new Set();
  * 3's charge); the probe is wired now so the seam exists and the trace can
  * carry what was seen.
  */
-function dangerNow(run, x, y, except = null, { timedSword = false } = {}) {
+function dangerNow(run, x, y, except = null, { timedSword = false, timedAxe = false } = {}) {
     const swordTick = timedSword && SWORD_GATE_TIMED.enabled ? swordTickAt(run, x, y) : null;
-    return withoutSources(dangerAt(run, run.ticksCompleted, playerBoxAt(x, y),
+    const d = withoutSources(dangerAt(run, run.ticksCompleted, playerBoxAt(x, y),
         swordTick ? { swordTick } : {}), except);
+    return timedAxe && CONTACT_FIDELITY.axeGateTransit ? axeGateTimed(run, x, y, d) : d;
+}
+
+/**
+ * ⛓⛓ fidelity AXETIMING D2b (`CONTACT_FIDELITY.axeGateTransit`, OFF by default) — **THE WALK'S DECISION GATE TIMES A
+ * SPINNING AXE'S BLADE**, as BOBSOLDIER2 D2b timed a BobSoldier's (`SWORD_GATE_TIMED`).
+ *
+ * The gate asks the WAIT question at horizon 0, and a spinning axe's WAIT arm is its whole 32 px disc (`hazardDanger`:
+ * the count is not asked in WAIT mode), "a reach without a clock". MEASURED (sweep 38926058850, leg 497,
+ * `level_54__r27c8 <- in_L52_112_0 -> exit:out_teleporter_128_464`): the player ARRIVES at (136,456), 16 px under
+ * `spinningaxe@128,432`'s hub (rate −2, a revolution in 180 updates), and the walk's gate refuses before any corridor
+ * is planned — "the danger map forbids (136,456) — hazard:spinningaxe@128,432 (… disc …)" — although the blade is
+ * nowhere near the player at the next update and the goal is the door 8 px below. ON, the gate a WALK opens with
+ * replaces each axe's disc by the exact blade and hub at the walk's FIRST transit sample (update `ticksCompleted + 1
+ * − V`, the PRE-move box — the probe's own question, `dangerMap.hazardDanger`'s transit arm), so the gate and the
+ * probe that follows it ask one question. A visit clock that cannot vouch for the count keeps the disc. ⛔ The gate
+ * before an EXECUTOR keeps the disc: what follows it is a multi-tick verb, not a probed walk.
+ */
+function axeGateTimed(run, x, y, d) {
+    if (!d.danger || !d.sources.some((s) => s.kind === 'hazard' && /^spinningaxe@/.test(s.id ?? '') && !s.axe)) return d;
+    const clock = axeVisitClock(run);
+    if (clock.v === null) return d;
+    const box = playerBoxAt(x, y);
+    const u = run.ticksCompleted + 1 - clock.v + AXE_UPDATE_OFFSET;
+    const hazards = run.world.combat?.hazards ?? [];
+    const sources = [];
+    for (const s of d.sources) {
+        if (!(s.kind === 'hazard' && /^spinningaxe@/.test(s.id ?? '') && !s.axe)) { sources.push(s); continue; }
+        const h = hazards.find((z) => z.tag === 'spinningaxe' && `${z.tag}@${z.x},${z.y}` === s.id);
+        if (!h) { sources.push(s); continue; }
+        const axe = { cx: h.cx, cy: h.cy, rate: Number(h.attrs?.rate ?? 0) };
+        const hit = u >= 1 ? axeHitsPlayer(axe, u, box) : null;
+        if (hit) {
+            sources.push({ ...s, arm: hit.arm, why: `a SpinningAxe's ${hit.arm} on its update ${u} of this visit — the `
+                + 'walk\'s first transit sample (AXETIMING D2b: the gate asks the probe\'s question)' });
+        }
+    }
+    return { ...d, danger: sources.length > 0, sources };
 }
 
 /**
@@ -16566,6 +16604,14 @@ export const AXE_DODGE_RUNG = Object.freeze({ step: 4, offsets: 8, detourOffsets
     rest: 12, maxPerSegment: DODGE_RUNG.maxPerSegment });
 
 /**
+ * ⛓ fidelity AXETIMING D2 — THE AXE TIMING RUNG's bounds (`axeTimingCrossing`, `CONTACT_FIDELITY.axeTimingRung`): the
+ * AXE arm's `rest` screen; the dash chain's phase searched in steps of `offsetStep` over one `ORDINARY_SWING_PERIOD`
+ * window (10 phases); at most `maxPreviews` previews per climb, and the `axe-dodge` deadline site asked per preview;
+ * `turnMargin` (rad) past one revolution of relative turn asks the rung BEFORE the stall search (`axeTimingFirst`).
+ */
+export const AXE_TIMING_RUNG = Object.freeze({ rest: AXE_DODGE_RUNG.rest, offsetStep: 2, maxPreviews: 240, turnMargin: 1 });
+
+/**
  * ⛓ SEEDLING FIDELITY LADDER2 — the DODGE rung's PHASE arm (a lava chain, a beam
  * tower): AXE's shape and bounds, with the stall's length bounded by the
  * longest period in the family, `period` = 90 — `Game.time % 90` is the chain's
@@ -18812,8 +18858,8 @@ function solveSegmentUnder({
      * Dodge is slice 3's policy; a policy that walked on past a named
      * danger would be worse than one that stops and says why.
      */
-    const refuseDanger = (x, y, goal, what, except = null, { timedSword = false } = {}) => {
-        const d = dangerNow(run, x, y, except, { timedSword });
+    const refuseDanger = (x, y, goal, what, except = null, { timedSword = false, timedAxe = false } = {}) => {
+        const d = dangerNow(run, x, y, except, { timedSword, timedAxe });
         // ⛓ Recorded whichever way it answers: a gate that CLEARED is as much
         // of the walk's record as one that refused, and a layer that only
         // showed refusals would draw a bot that was never told it was safe.
@@ -19885,14 +19931,222 @@ function solveSegmentUnder({
                 }
                 return null;
             };
+            /**
+             * ⛓⛓⛓ fidelity AXETIMING D2 — **THE AXE TIMING RUNG: THE BLADE'S GAP, CROSSED ON ITS OWN CLOCK.**
+             * (`CONTACT_FIDELITY.axeTimingRung`; asked by the AXE arm only after its stall search and its bent corridors
+             * both came back empty. OFF: never asked, byte-identical.)
+             *
+             * ⛔ WHY A STALL CANNOT FIND IT. A point within the blade's reach is swept once per revolution, so a walk
+             * that stays in reach is hitless at some phase only if the player's angle round the hub, RELATIVE to the
+             * blade's, turns by less than one revolution (less the box's own width) while it is in reach. MEASURED on
+             * the corridor previews of the wave-18 legs (`seedling-fidelity-axetiming` report, D1): L61's straight
+             * walk under `spinningaxe@160,80` turns 8.77 rad against the blade in its 55 in-reach ticks, so no stall
+             * of the AXE arm's 51 clears it (min hits 1 at every phase). The same corridor walked with the sword's
+             * dash chain is in reach for 19–25 ticks and turns 4.3–5.1 rad: 17–21 of the 52 stalls are clean.
+             *
+             * ⇒ the rung searches the stall at the arm's doorstep (0 … period − 1) × the phase of a repeating sword
+             * dash chain (`DASH_CHAIN_PATTERN`, windows `ORDINARY_SWING_PERIOD` apart, starting `0, offsetStep, …`
+             * ticks after the walk resumes), previewing each candidate with the walk's own strike policy carrying that
+             * schedule (`strikePolicyFor({dashPlan})`: the presses are the walk's, and a press the game would gate buys
+             * nothing in the preview either). A candidate is the walk from here to the first sample OUT of every hit
+             * axe's reach after it was in reach, and it is CERTIFIED by the probe's own predicate (`probeSamples`) over
+             * that whole prefix — the danger map's transit arm, which asks `axeHitsPlayer` at the visit's update count
+             * against each sample's PRE-move box, the exact question `levelRun.stepSpinningAxesNow` bills
+             * (`spinningAxePlayerHit`). Stalls longer than the arm's `rest` are screened by arithmetic first (the
+             * stalled walk is the rest-length one shifted, dash schedule and all) and only a clean screen is previewed.
+             *
+             * ⛔ IT DRIVES ONLY THE CROSSING, then hands back `{}` — the spit DODGE's contract: the walk re-plans from
+             * the far side and the ordinary probe certifies the rest (a second axe there gets its own climb). After
+             * the drive it reads the run's own `playerHits`: a hit the drive took (the axe billed with
+             * `spinningAxePlayerHit` ON) refuses by name, so a certificate the run disagrees with is never walked on.
+             *
+             * ⛓ It does NOT call `planSwordDash` (hammer DB's): the schedule is built here from the pattern, and the
+             * dash's own model is the preview's (`previewWalk` → `levelRun.previewStepper`, the impulse the run spends).
+             * Gated on what a dash needs: a pass that may dash (`dashMode !== 'none'`), the sword in the room and in
+             * the `primary` slot, and a visit clock (`axeVisitClock`) that vouches for the axe's count.
+             */
+            let timingBaseWalk = null;
+            /** The corridor walked as it stands, undashed and unstalled (one preview, kept). */
+            const timingBase = () => (timingBaseWalk ??= previewWalk(run, corridor, tolerance, axisAligned
+                ? { strike: null, axisAligned } : { strike: strikePolicyFor(run, { dashMode }) }));
+            /**
+             * ⛓ AXETIMING — **WHEN THE STALLS CANNOT HELP, THE RUNG IS ASKED FIRST.** The walk's angle round each
+             * hit axe's hub, relative to the blade's, over the samples whose box centre is inside the blade's length
+             * (the unwrapped turn, `θ − a` with `a` the blade at that sample's update): a stall shifts every sample's
+             * blade by the same angle, so a walk that turns by more than a revolution plus `AXE_TIMING_RUNG.turnMargin`
+             * meets the blade's direction at every phase — and the AXE arm's search (measured: 286–1,711 previews on
+             * the wave-18 legs) spends the page's budget before this rung is reached. ⚠ A HEURISTIC FOR THE ORDER,
+             * not a proof: the blade may step over a 4 px box between two updates, which is why the stall search
+             * still runs when this rung finds nothing.
+             */
+            const axeTimingFirst = () => {
+                const clockF = axeVisitClock(run);
+                if (clockF.v === null || dashMode === 'none') return false;
+                const sm = timingBase().samples;
+                const t0 = run.ticksCompleted;
+                return hit.sources.some(({ axe }) => {
+                    let prev = null;
+                    let lo = Infinity;
+                    let hi = -Infinity;
+                    for (let i = 0; i < sm.length; i += 1) {
+                        const b = playerBoxAt(sm[i].x, sm[i].y);
+                        const cx = (b.x + b.right) / 2 - axe.cx;
+                        const cy = (b.y + b.bottom) / 2 - axe.cy;
+                        if (Math.hypot(cx, cy) >= SPINNING_AXE.length) continue;
+                        let psi = Math.atan2(cy, cx) + (axe.rate * (t0 + i + 1 - clockF.v + AXE_UPDATE_OFFSET)) / 180 * Math.PI;
+                        if (prev !== null) {
+                            while (psi - prev > Math.PI) psi -= 2 * Math.PI;
+                            while (psi - prev < -Math.PI) psi += 2 * Math.PI;
+                        }
+                        prev = psi;
+                        lo = Math.min(lo, psi);
+                        hi = Math.max(hi, psi);
+                    }
+                    return hi - lo > 2 * Math.PI + AXE_TIMING_RUNG.turnMargin;
+                });
+            };
+            const axeTimingCrossing = () => {
+                const out = (why, extra = {}) => ({ crossing: null, why, previews: 0, ...extra });
+                const hitAxes = hit.sources.map((s) => s.axe);
+                const clockT = axeVisitClock(run);
+                if (clockT.v === null) return out(`the axe's update count is not known here (${clockT.why})`);
+                if (dashMode === 'none') return out('this pass may not dash (`dashMode: none`), and the gap is a dash\'s');
+                const inv = run.progress('inventory');
+                const weapon = run.progress('primaryWeapon');
+                if (!(inv?.hasSword || inv?.hasGhostSword) || !['sword', 'ghostsword'].includes(weapon)) {
+                    return out(`the \`primary\` slot ${weapon === null ? 'holds nothing' : `fires \`${weapon}\``}, and the `
+                        + 'crossing is a sword dash chain');
+                }
+                const pattern = inv?.hasGhostSword ? GHOST_DASH_CHAIN_PATTERN : DASH_CHAIN_PATTERN;
+                const period = Math.max(...hitAxes.map((a) => a.period));
+                const t0 = run.ticksCompleted;
+                const inReach = (sm) => hitAxes.some((a) => axeCanReach(a, playerBoxAt(sm.x, sm.y)));
+                const hitAt = Math.max(0, hit.tick - t0 - 1);
+                const base = timingBase();
+                let door = Math.min(hitAt, base.samples.length - 1);
+                while (door > 0 && inReach(base.samples[door])) door -= 1;
+                // a player already in reach cannot stall where it stands: the crossing starts now
+                const stalls = inReach(base.samples[door]) ? 1 : period;
+                /**
+                 * ⛓ WHERE THE CROSSING ENDS: past the corridor's LAST sample in any hit axe's reach — the waypoint the
+                 * undashed walk is heading for once it has left for good. ⛔ Not the first sample out of reach: a
+                 * corridor that bends round the hub leaves and re-enters it (measured on L75's U, step 163: a crossing
+                 * stopped at a brief exit mid-U and the next climb met the blade again 87 t later). A corridor whose
+                 * goal is inside the reach must be walked to its end.
+                 */
+                let lastIn = -1;
+                base.samples.forEach((sm, i) => { if (inReach(sm)) lastIn = i; });
+                const exitWp = lastIn + 1 < base.samples.length ? base.samples[lastIn + 1].wp : Infinity;
+                const leftFor = (sm) => !inReach(sm) && sm.wp >= exitWp;
+                // the undashed walk to there bounds how far the dash windows need to run
+                const span = Math.max(1, (lastIn >= 0 ? lastIn + 1 : base.samples.length) - door);
+                const { rest, offsetStep, maxPreviews } = AXE_TIMING_RUNG;
+                const scheduleAt = (resume, o) => {
+                    const ticks = new Set();
+                    for (let w = resume + o; w < resume + span + ORDINARY_SWING_PERIOD; w += ORDINARY_SWING_PERIOD) {
+                        for (const d of pattern) ticks.add(w + d);
+                    }
+                    return { ticks, starts: [], windows: [], why: `⛓ AXETIMING: the chain every ${ORDINARY_SWING_PERIOD} t `
+                        + `from ${o} t after the walk resumes` };
+                };
+                /** The walk stopped once it has been in reach and left it for good — or, `clean`, also at a danger. */
+                const stopFor = (clean) => {
+                    let seen = false;
+                    return (sm) => {
+                        if (clean && probeSamples([sm], dangerExcept) !== null) return true;
+                        if (inReach(sm)) { seen = true; return false; }
+                        return seen && leftFor(sm);
+                    };
+                };
+                const optsFor = (stall, o, clean) => ({
+                    strike: strikePolicyFor(run, { dashPlan: scheduleAt(t0 + door + (stall?.ticks ?? 0), o), dashMode }),
+                    ...(stall ? { stall } : {}), stopWhen: stopFor(clean),
+                });
+                let previews = 0;
+                let tripped = false;
+                const ask = () => {
+                    if (previews >= maxPreviews) return false;
+                    if (deadlineReached('axe-dodge')) { tripped = true; return false; }
+                    previews += 1;
+                    return true;
+                };
+                const certified = (s, o) => {
+                    if (!ask()) return null;
+                    const stall = s > 0 ? { at: door, ticks: s } : null;
+                    const walk = previewWalk(run, corridor, tolerance, optsFor(stall, o, true));
+                    if (walk.samples.length < door + s + 1) return null;
+                    const last = walk.samples.at(-1);
+                    const crossed = walk.truncated?.kind === 'stopped' ? leftFor(last) && walk.samples.some(inReach)
+                        : !walk.truncated;
+                    if (!crossed) return null;
+                    if (probeSamples(walk.samples, dangerExcept)) return null;
+                    return { stall: s, offset: o, walk, door };
+                };
+                const offsets = [];
+                for (let o = 0; o < ORDINARY_SWING_PERIOD; o += offsetStep) offsets.push(o);
+                // stalls 0 … rest, every chain phase, previewed for real
+                for (let s = 0; s <= Math.min(rest, stalls - 1); s += 1) {
+                    for (const o of offsets) {
+                        const got = certified(s, o);
+                        if (got) return { crossing: got, why: null, previews };
+                        if (tripped || previews >= maxPreviews) {
+                            return out(tripped ? 'deadline' : `the preview bound (${maxPreviews})`, { previews, tripped });
+                        }
+                    }
+                }
+                // ⛓ THE SCREEN: one rest-length stall per chain phase, every longer stall priced by shifting it
+                const roomAxes = (run.world.combat?.hazards ?? []).filter((x) => x.tag === 'spinningaxe')
+                    .map((x) => ({ cx: x.cx, cy: x.cy, rate: Number(x.attrs?.rate ?? 0) }));
+                const screens = new Map();
+                for (const o of offsets) {
+                    if (stalls <= rest + 1) break;
+                    if (!ask()) break;
+                    const sm = previewWalk(run, corridor, tolerance, optsFor({ at: door, ticks: rest }, o, false)).samples;
+                    const still = sm.length > door + rest && sm[door + rest - 1].x === sm[door + rest - 2]?.x
+                        && sm[door + rest - 1].y === sm[door + rest - 2]?.y;
+                    screens.set(o, still ? sm : false);
+                }
+                for (let s = rest + 1; s < stalls; s += 1) {
+                    for (const o of offsets) {
+                        const screen = screens.get(o);
+                        if (screen === undefined) break;
+                        if (screen) {
+                            const shift = s - rest;
+                            const still = screen[door + rest - 1];
+                            let clear = true;
+                            for (let i = door; i < screen.length + shift && clear; i += 1) {
+                                const p = i < door + rest ? screen[i] : (i < door + s ? still : screen[i - shift]);
+                                const u = t0 + i + 1 - clockT.v + AXE_UPDATE_OFFSET;
+                                if (u >= 1 && roomAxes.some((axe) => axeHitsPlayer(axe, u, playerBoxAt(p.x, p.y)))) clear = false;
+                            }
+                            if (!clear) continue;
+                        }
+                        const got = certified(s, o);
+                        if (got) return { crossing: got, why: null, previews };
+                        if (tripped || previews >= maxPreviews) {
+                            return out(tripped ? 'deadline' : `the preview bound (${maxPreviews})`, { previews, tripped });
+                        }
+                    }
+                }
+                return out(`no stall of 0..${stalls - 1} at the doorstep (sample ${door}) × ${offsets.length} phase(s) `
+                    + `of the dash chain [${pattern.join(',')}] every ${ORDINARY_SWING_PERIOD} t crosses `
+                    + `${hit.sources.map((s) => s.id).join(', ')}'s reach clean`, { previews });
+            };
             const axes = hit.sources.map((s) => s.id).join(', ');
             let viaWhy = null;
+            let timing = null;
             if (dodgesSpent >= AXE_DODGE_RUNG.maxPerSegment) {
                 dodgeWhy = `this segment has already stalled ${dodgesSpent} time(s) for a `
                     + `clocked danger (AXE_DODGE_RUNG.maxPerSegment ${AXE_DODGE_RUNG.maxPerSegment}) — `
                     + 'a walk that keeps meeting one is not converging';
             } else {
-                dodge = axeStall(corridor, hit, AXE_DODGE_RUNG.offsets);
+                // ⛓ fidelity AXETIMING D2 (`axeTimingRung` ON only): a corridor no stall can clear asks the rung first
+                const timingFirst = CONTACT_FIDELITY.axeTimingRung && axeTimingFirst();
+                if (timingFirst) {
+                    timing = axeTimingCrossing();
+                    if (timing.tripped) tripped = true;
+                }
+                if (!timing?.crossing && !tripped) dodge = axeStall(corridor, hit, AXE_DODGE_RUNG.offsets);
                 /**
                  * ⛓ AND WHEN THE PLANNER'S CORRIDOR HAS NO STALL, A BENT ONE MAY.
                  * Measured on L61: the shortest corridor from the L60 door climbs
@@ -19905,7 +20159,7 @@ function solveSegmentUnder({
                  * asked with a certifier that admits a corridor clean as it is or
                  * clean after an axe stall (`AXE_DODGE_RUNG.detourOffsets`).
                  */
-                if (!dodge && !tripped) {
+                if (!dodge && !tripped && !timing?.crossing) {
                     const stalls = new Map();
                     const detour = deriveChaserDetour(run, {
                         aim, allowTeleporter,
@@ -19934,15 +20188,55 @@ function solveSegmentUnder({
                         viaWhy = detour.why;
                     }
                 }
-                if (!dodge) {
+                /**
+                 * ⛓⛓ fidelity AXETIMING D2 (`CONTACT_FIDELITY.axeTimingRung`, OFF by default) — **THE BLADE'S GAP,
+                 * CROSSED ON THE AXE'S OWN CLOCK AT DASH SPEED.** See `axeTimingCrossing` below; asked only when the
+                 * stall search and the bent corridors above both came back empty. OFF: never asked.
+                 */
+                if (!dodge && !tripped && CONTACT_FIDELITY.axeTimingRung && !timingFirst) {
+                    timing = axeTimingCrossing();
+                    if (timing.tripped) tripped = true;
+                }
+                if (!dodge && !timing?.crossing) {
                     dodgeWhy = tripped
                         ? `the AXE arm's search stopped at the deadline after ${previews} preview(s) `
                             + `(\`axe-dodge\`) without a stall that clears ${axes}`
                         : `no stall of one revolution or less at the doorstep or ${AXE_DODGE_RUNG.offsets - 1} `
                             + `earlier walk-offset(s) (step ${AXE_DODGE_RUNG.step}) clears the corridor of `
                             + `${reasonsOf(hit)} (${previews} preview(s))`
-                            + `${viaWhy ? `; and bent through via cells: ${viaWhy}` : ''}`;
+                            + `${viaWhy ? `; and bent through via cells: ${viaWhy}` : ''}`
+                            + `${timing && !timing.crossing ? `; and on the axe's clock at dash speed (AXETIMING, `
+                                + `${timing.previews} preview(s)): ${timing.why}` : ''}`;
                 }
+            }
+            /**
+             * ⛓ fidelity AXETIMING D2 — THE CROSSING IS DRIVEN, THEN THE WALK RE-PLANS from the far side (`{}`, the
+             * spit DODGE's contract). The run's own `playerHits` are read after: with `spinningAxePlayerHit` ON the
+             * run bills the blade on the PRE-move box, and a hit the certified crossing took refuses by name.
+             */
+            if (timing?.crossing) {
+                const c = timing.crossing;
+                dodgesSpent += 1;
+                const upto = c.walk.truncated ? c.walk.samples.length - 1 : c.walk.samples.length;
+                rowFor('dodge', refused, { axeTiming: { stall: c.stall, offset: c.offset, door: c.door, ticks: upto },
+                    axe: hit.sources[0].id, previews: previews + timing.previews });
+                const hitsBefore = run.ledger('playerHits').length;
+                const from = run.ticksCompleted;
+                for (const s of c.walk.samples.slice(0, upto)) {
+                    const held = new Set(s.held);
+                    perTick.push(held);
+                    const { transition } = run.advance(held);
+                    if (transition) break;
+                }
+                const took = run.ledger('playerHits').slice(hitsBefore);
+                if (took.length > 0) {
+                    refuse(`${what}: AXETIMING — the crossing of ${axes} certified clean (stall ${c.stall} at sample `
+                        + `${c.door}, the dash chain ${c.offset} t after the resume) was HIT on the run at `
+                        + `t${took[0].t ?? '?'} by ${took[0].id ?? took[0].source ?? '?'} — the run bills what the `
+                        + `certificate priced clean, so it is not walked on (driven t${from}..t${run.ticksCompleted}).`,
+                    { goal, obstacle: { kind: 'danger', id: hit.sources[0]?.id ?? null } });
+                }
+                return { escalations };
             }
             if (dodge) {
                 dodgesSpent += 1;
@@ -21424,7 +21718,8 @@ function solveSegmentUnder({
                 : null;
             if (laneWalk) except = laneCrossingExcept(except, laneWalk.ids);
             // ⛓ BOBSOLDIER2 D2b: a WALK's gate — the transit probe follows it (`SWORD_GATE_TIMED`).
-            refuseDanger(run.state.x, run.state.y, goal, what, except, { timedSword: true });
+            // ⛓ AXETIMING D2b: and a spinning axe's blade at the walk's first sample (`axeGateTransit`).
+            refuseDanger(run.state.x, run.state.y, goal, what, except, { timedSword: true, timedAxe: true });
             let wps;
             let fine = false;
             try {

@@ -1,0 +1,7 @@
+497 level_54__r27c8 <- in_L52_112_0 -> exit:out_teleporter_128_464 | baseline failed seam 5176 | REFUSED -> SOLVED 7
+529 level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_0_160 | baseline failed seam 5172 | REFUSED -> SOLVED 227
+530 level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_112_0 | baseline failed seam 5178 | REFUSED -> SOLVED 91
+598 level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304 | baseline failed seam 5414 | REFUSED -> SOLVED 122
+600 level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest | baseline failed seam 5406 | REFUSED -> SOLVED 181
+601 level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared | baseline failed seam 5483 | REFUSED -> SOLVED 176
+movers 6 of 77

@@ -23067,3 +23067,63 @@ hammer workloads and every other row equal base. OFF is byte-identical.
 **D3.** With the forced-hit budget lifted to 60,000, the whole depth-3 tree from L15's arrival is hitless (46,656
 prefixes): the depth is not the wall. The wall is a missing rung (no weapon in sphere 0): a priced body crossing, or
 baiting a Bob into the room's own lanes (L5's mechanism). Queued, not built.
+
+### Seedling fidelity AXETIMING — a spinning axe's gap crossed on its clock at dash speed, and the walk's gate times the blade
+
+Slice `seedling-fidelity-axetiming` (wave 18, planner `seedling-fidelity-planning-8`), base `d1fbfeffc2` (main: wave 17
+harvested OFF). Two switches, **both OFF** and OFF byte-inert. The report is
+`CC/docs/cloud-reports/seedling-fidelity-axetiming.md`.
+
+**D1 — why the axe legs refuse, per leg** (sweep 38926058850, survey 38926053841, reproduced in node at each row's
+`seamTime`, and under the page's own budget flow: 640 work units, then the held retry's 2,560 over one work clock).
+A point inside the blade's reach is swept once a revolution, so a walk is hitless at some phase only if its angle round
+the hub, relative to the blade's, turns by less than a revolution while it is in reach. The corridor previews give
+three causes:
+- **A gap at dash speed** (L61 legs 529/530, survey 152/183; and — found by the A/B, not by D1's sample — L71 legs
+  598/600/601, which leave `spinningaxe@256,144` southward). L61's walk turns 8.77 rad against `spinningaxe@160,80` in
+  55 in-reach ticks, so every stall of the AXE arm is hit (min 1 hit over 52 phases); dashed, it is in reach 19–25
+  ticks and 17–21 stalls are clean. The TIME rung cannot help: its bound is 48 px and its `forbiddenByDanger` asks the
+  WAIT question, where an axe is its whole disc.
+- **A forced U round the hub, against the blade** (L71 597, L75 630, L101 754; survey 161, 204). Turns of 11–20 rad
+  walking and more dashed: no timing exists. At the best stall the walk would be billed 1 (597, 754) or 2 (630) hits
+  with the player's 20-tick i-frames (approximate: the knockback ignored). The model question is a PRICED crossing.
+- **The arrival inside the disc** (L54 497): the walk's gate refuses on the axe's WAIT disc before any corridor, though
+  the blade is far off and the door is 8 px below.
+And the budget: the AXE arm's stall search spends the page's budget (the dashless pass 1,976 of the retry's 2,560; the
+full pass is cut at `axe-dodge`), so a rung asked after it is never reached on the page.
+
+**D2 — `axeTimingRung`** (`SEEDLING_AXE_TIMING_RUNG`). `axeTimingCrossing`, inside the AXE arm: the doorstep stall
+(0 … period − 1) × 10 phases of a repeating sword dash chain (`DASH_CHAIN_PATTERN` every `ORDINARY_SWING_PERIOD`,
+carried by the walk's own `strikePolicyFor({dashPlan})`), each previewed to the first sample out of every hit axe's reach
+and certified by `probeSamples` — the transit blade on the PRE-move box, the question `spinningAxePlayerHit` bills.
+Longer stalls are screened by shifting the rest-length one. The crossing is driven, the run's `playerHits` read (a
+billed hit refuses by name), and `{}` handed back: the walk re-plans from the far side. It is asked FIRST when the
+corridor turns more than a revolution + 1 rad (`axeTimingFirst`, a heuristic for the order, not a proof — the blade can
+step over a 4 px box between updates, so the stall search still runs when it finds nothing), after the search otherwise.
+It does not call `planSwordDash`. The crossing ends only once the walk has been in reach and is past the waypoint the
+undashed corridor heads for after its LAST in-reach sample (the flip battery measured why: on L75's U a crossing that
+stopped at the first out-of-reach sample left mid-U, and the next climb met the blade 87 t later). Step 152: stall 3 at
+sample 13, the chain 8 t after the resume, 35 previews, a 42-t crossing, 227 t in all.
+**D2b — `axeGateTransit`** (`SEEDLING_AXE_GATE_TRANSIT`): the gate a walk opens with prices an axe by its blade and hub
+at the walk's first transit sample (`axeGateTimed`, BOBSOLDIER2 D2b's shape); a visit clock that cannot vouch keeps the
+disc; an executor's gate keeps the disc.
+
+**D3 — game witnesses** (p4f headless, 0 px, the game's `hits` 0): `axetiming-l61-152-plan` (228 rows),
+`axetiming-l61-529-plan` (228), `axetiming-l71-598-plan` (123), `axetiming-l71-600-plan` (182), `axetiming-l54-497-plan`
+(8). Rows: `fidelityAxeTiming.test.js` (24).
+
+**Movers.** Survey (local, 222 steps; OFF = CI on every step): both ON → 152, 183 REFUSED → SOLVED 227; with
+`spinningAxePlayerHit` also ON, + 163 (SPINNINGAXE's own mover). Sweep (node, the 77 axe-room legs, the page budget):
+497 → 7 t, 529 → 227, 530 → 91, 598 → 122, 600 → 181, 601 → 176 (all `failed` in the baseline); +`spinningAxePlayerHit`
+moves none more. Leg 768's seam census (5500–5514): identical ON and OFF (≤ 5506 refuses on the axe; the rung finds no
+clean crossing there).
+
+Trap candidates:
+1. *A stall cannot buy what the walk's speed cannot.* Every point in a rotating blade's reach is swept once a
+   revolution, so a walk's relative turn round the hub, not its phase, decides whether any stall clears it. Measure the
+   turn on the corridor (`d1/turn-and-stalls.txt`) before widening a stall search.
+2. *A rung asked after an expensive one may never be reached on the page.* Node unbudgeted said SOLVED; the page's
+   one work clock (640, then 2,560, the dashless pass first) said refused. Measure a new rung under `solveAnytime`'s
+   budget, not only in place.
+3. *"Out of reach" is not "past".* A corridor that bends round a hub leaves and re-enters its reach; a crossing has
+   ended only past the corridor's last in-reach waypoint.
