@@ -64,8 +64,10 @@ describe('ARROWLANE — the switch and its pieces', () => {
         expect(withArrowLaneCrossing(true, () => ARROW_LANE_CROSSING.enabled)).toBe(true);
         expect(ARROW_LANE_CROSSING.enabled).toBe(false);
     });
-    it('is the LAST contact switch (a row added, none reordered) and `arrow-lane` is a known verb', () => {
-        expect(CONTACT_FIDELITY_KEYS.at(-1)).toBe('arrowLaneCrossing');
+    it('is a contact switch added right after SEALDOOR\'s (a row added, none reordered) and `arrow-lane` is a known verb', () => {
+        // ⛓ wave-18 harvest: AXETIMING's two switches land after it, so "the LAST" became "right after sealDoorApproach".
+        expect(CONTACT_FIDELITY_KEYS.indexOf('arrowLaneCrossing'))
+            .toBe(CONTACT_FIDELITY_KEYS.indexOf('sealDoorApproach') + 1);
         expect(KNOWN_STRATEGY_VERBS).toContain('arrow-lane');
         expect(KNOWN_STRATEGY_VERBS.at(-1)).toBe('pace');
     });
