@@ -51,7 +51,7 @@ describe('unittests_frontend.yml wires rule 2 to this module', () => {
         expect(wf).toContain("import { docsOnly } from './scripts/procgen/ciDocsOnly.js'");
         const gated = [...wf.matchAll(/needs\.browser-gate-plan\.outputs\.needed == 'true'/g)];
         expect(gated).toHaveLength(1);
-        expect(wf).toMatch(/ {2}browser-gates:\n[\s\S]*?if: needs\.browser-gate-plan\.outputs\.needed == 'true'/);
+        expect(wf).toMatch(/ {2}browser-gates:\n[\s\S]*?if: \$\{\{ !cancelled\(\) && needs\.browser-gate-plan\.result == 'success' && needs\.browser-gate-plan\.outputs\.needed == 'true' \}\}/);
     });
 
     it('BROWSER_SHARD_JOB names the shard job, and browserShardsRan reads a skip as not run', () => {

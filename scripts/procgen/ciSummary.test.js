@@ -338,6 +338,22 @@ describe('pickSuiteRun — the newest run whose suite did NOT skip', () => {
         expect(pickSuiteRun([], () => []).run).toBe(null);
     });
 
+    /**
+     * ⛔ MEASURED on the rule-1 probe (run 39056958592): GitHub SKIPS a job whose
+     * ancestor skipped unless its `if:` calls a status function, and the guard
+     * skips on every branch push — so the browser shards never ran. Every job
+     * with `needs:` must say `!cancelled()` (or `always()`).
+     */
+    it('every job with `needs:` in unittests_frontend.yml carries a status function', () => {
+        const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+        const blocks = wf.slice(wf.indexOf('\njobs:\n')).split(/\n(?= {2}[a-z][\w-]*:\n)/).slice(1);
+        const needing = blocks.filter((b) => /^ {4}needs:/m.test(b));
+        expect(needing.length).toBeGreaterThanOrEqual(4);
+        for (const b of needing) {
+            expect(/^ {4}if: .*(?:!cancelled\(\)|always\(\))/m.test(b), b.split('\n')[0]).toBe(true);
+        }
+    });
+
     /** ⛓ Read off the workflow: the guard's name is GUARD_JOB's, and it is not the suite's. */
     it('in unittests_frontend.yml the guard job carries the name GUARD_JOB matches', () => {
         const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');

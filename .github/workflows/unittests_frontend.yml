@@ -457,8 +457,11 @@ jobs:
   browser-gates:
     name: Browser gate shard — ${{ matrix.shard.name }}
     needs: browser-gate-plan
-    # ⛓ RULE 2 — a docs-only branch push skips the shards (see the plan job).
-    if: needs.browser-gate-plan.outputs.needed == 'true'
+    # ⛓ RULE 1 — an explicit status check: without one, GitHub skips this job
+    # whenever ANY ancestor skipped, and `already-green` skips on every branch
+    # push (measured on the probe run 39056958592: the shards never ran).
+    # ⛓ RULE 2 — and a docs-only branch push skips the shards (see the plan job).
+    if: ${{ !cancelled() && needs.browser-gate-plan.result == 'success' && needs.browser-gate-plan.outputs.needed == 'true' }}
     runs-on: ubuntu-latest
     # ⛔ WITHOUT THIS LINE THE GITHUB DEFAULT IS 360 MINUTES, and this job
     # holds the one row whose runner cost is genuinely unknown:
