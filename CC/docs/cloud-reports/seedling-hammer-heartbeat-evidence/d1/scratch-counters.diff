@@ -1,0 +1,36 @@
+diff --git a/frontend/modules/seedlingDemo/botDriverV2.js b/frontend/modules/seedlingDemo/botDriverV2.js
+index 71b75e4..4a68dd7 100644
+--- a/frontend/modules/seedlingDemo/botDriverV2.js
++++ b/frontend/modules/seedlingDemo/botDriverV2.js
+@@ -928,6 +928,7 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
+         const ck = key(cur.tx, cur.ty);
+         if (closed.has(ck)) continue;
+         closed.add(ck);
++        if (globalThis.__hb) globalThis.__hb.exp += 1;
+ 
+         if (cur.tx === goal.tx && cur.ty === goal.ty) {
+             const path = [{ tx: cur.tx, ty: cur.ty }];
+@@ -1267,6 +1268,7 @@ export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}
+     // first finds no path at all, routes without it. Where the map is roomy
+     // the route keeps its distance; where it is genuinely one lattice column
+     // wide the route still exists and the executor's throw is the net.
++    if (globalThis.__hb) globalThis.__hb.pw += 1;
+     const pitch = opts.lattice ?? DEFAULT_LATTICE;
+     const goal = nearestGoalNode(level, to, allowTeleporter, opts);
+     let path = null;
+@@ -1280,6 +1282,7 @@ export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}
+     // cell on the route.
+     for (let m = opts.nodeMargin ?? 0; m >= 0 && path === null; m--) {
+         try {
++            if (globalThis.__hb) globalThis.__hb.tp += 1;
+             path = planTilePath(level, from, goal, allowTeleporter,
+                 { ...opts, nodeMargin: m });
+         } catch (e) {
+@@ -1342,6 +1345,7 @@ export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}
+     while (anchor < points.length - 1) {
+         let next = anchor + 1;
+         for (let j = points.length - 1; j > anchor; j--) {
++            if (globalThis.__hb) globalThis.__hb.cpc += 1;
+             if (controllerPathClear(level, points[anchor], points[j], allowTeleporter, opts)) {
+                 next = j;
+                 break;
