@@ -27,6 +27,7 @@ import { AXE_DODGE_ASK_PER_PREVIEW } from '../seedlingDemo/solverBot.js';
 import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
 import { AXE_DODGE_ASK_PER_PREVIEW_DEFAULT, applyAxeDodgeAsk, formatAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskHook.js';
 import { DASH_ONLY_WINDOW, applyDashOnlyWindow } from '../seedlingDemo/dashOnlyWindowHook.js';
+import { DASH_SHAPE_DEFAULTS, applyDashShape, dashShapeRead } from '../seedlingDemo/dashShapeHook.js';
 import { LOAD_FADE_FRAMES } from '../seedlingDemo/gameClock.js';
 import { replayTape } from '../seedlingDemo/jsRuntimeSolver.js';
 
@@ -183,6 +184,7 @@ function engineOver(arrival, opts = {}) {
         ...(opts.getUpgradeWindowWork ? { getUpgradeWindowWork: opts.getUpgradeWindowWork } : {}),
         ...(opts.getAxeDodgeAskPerPreview ? { getAxeDodgeAskPerPreview: opts.getAxeDodgeAskPerPreview } : {}),
         ...(opts.getDashOnlyWindow ? { getDashOnlyWindow: opts.getDashOnlyWindow } : {}),
+        ...(opts.getDashShape ? { getDashShape: opts.getDashShape } : {}),
         ...(opts.backstopMs ? { backstopMs: opts.backstopMs } : {}),
         onNote: (n) => notes.push(n), onFailed: (r, x) => { failures.push(r); failExtras.push(x ?? null); }, onDone: (d) => dones.push(d),
     });
@@ -709,6 +711,27 @@ describe('⛓ ANYTIME / O2 / O3 → DETERMINISTIC BUDGET — a solve cut at its 
             expect(d.service.seen[0].result.dashOnlyWindow).toBeUndefined();
             expect(DASH_ONLY_WINDOW.enabled).toBe(false);
         } finally { applyDashOnlyWindow(null); }
+    });
+
+    it('⛓ DASH-SHAPE STAMP — the knob (`getDashShape`, the three settings) reaches the solve: each `on` / `off` is applied to the engine\'s own instance at the solve\'s start, the solve runs inside solverBot\'s scopes, and its answer carries the shape READ; all `default` stamps nothing', () => {
+        let knob = { legPrecheck: 'on', noSwingPrefix: 'default', keepPartial: 'on' };
+        try {
+            const e = engineOver(A, { getDashShape: () => knob });
+            e.engine.walkTo(CHEST);
+            runUntil(e, () => e.service.seen.length > 0, 20000);
+            expect(e.service.seen[0].result.dashShape).toEqual({ legPrecheck: true, noSwingPrefix: false, keepPartial: true });
+            knob = { legPrecheck: 'default', noSwingPrefix: 'on', keepPartial: 'default' };
+            const n = engineOver(A, { getDashShape: () => knob });
+            n.engine.walkTo(CHEST);
+            runUntil(n, () => n.service.seen.length > 0, 20000);
+            expect(n.service.seen[0].result.dashShape).toEqual({ legPrecheck: false, noSwingPrefix: true, keepPartial: false });
+            knob = { legPrecheck: 'default', noSwingPrefix: 'default', keepPartial: 'default' };
+            const d = engineOver(A, { getDashShape: () => knob });
+            d.engine.walkTo(CHEST);
+            runUntil(d, () => d.service.seen.length > 0, 20000);
+            expect(d.service.seen[0].result.dashShape).toBeUndefined();
+            expect(dashShapeRead()).toEqual(DASH_SHAPE_DEFAULTS);
+        } finally { applyDashShape({}); }
     });
 
     it('⛓ O3 — the knob (`getBudgetWork`, the setting) is the budget: read at each solve, shown, and what is cut', () => {

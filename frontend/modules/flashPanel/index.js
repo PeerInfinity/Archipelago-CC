@@ -3,6 +3,7 @@ import { killLockSchemaProps } from './seedlingKillLockSettings.js';
 import { contactSchemaProps } from './seedlingContactSettings.js';
 import { axeDodgeSchemaProps } from './seedlingAxeDodgeSettings.js';
 import { dashOnlyWindowSchemaProps } from './seedlingDashOnlyWindowSettings.js';
+import { dashShapeSchemaProps } from './seedlingDashShapeSettings.js';
 import { graphicsSchemaProps } from './seedlingGraphicsSettings.js';
 import { SOLVE_PROGRESS_DEFAULT_MODE, SOLVE_PROGRESS_MODES } from './seedlingSolveProgress.js';
 import { SOLVE_DEMO_EVENT } from './seedlingSolveDemo.js';
@@ -244,6 +245,8 @@ export function register(registrationApi) {
       ...axeDodgeSchemaProps(),
       // ⛓ DASH-ONLY WINDOW — the JS arc's `dashOnlyWindowHook.DASH_ONLY_WINDOW`: default | on | off, the same way.
       ...dashOnlyWindowSchemaProps(),
+      // ⛓ DASH-SHAPE STAMP — solverBot's three SEEDLING DB dash switches: default | on | off each, the same way.
+      ...dashShapeSchemaProps(),
       // ⛓ GRAPHICS G1 — the JS page's cosmetic switches: graphics (rects | a pack stack) and camera (room | follow).
       // Applied live, never a re-mount (`seedlingGraphicsSettings.js`).
       ...graphicsSchemaProps(),

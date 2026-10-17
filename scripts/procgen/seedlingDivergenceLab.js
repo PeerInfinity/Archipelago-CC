@@ -117,6 +117,8 @@ export async function createLab() {
         getAxeDodgeAskPerPreview: () => surface()?.wasm?.axeDodgeAskPerPreview ?? null,
         // ⛓ DASH-ONLY WINDOW — the panel's setting, the same way
         getDashOnlyWindow: () => surface()?.wasm?.dashOnlyWindow ?? null,
+        // ⛓ DASH-SHAPE STAMP — the panel's three dash settings, the same way
+        getDashShape: () => surface()?.wasm?.dashShape ?? null,
         getDelivery: () => surface()?.wasm?.delivery ?? null,
         solveService: service,
         log: (m, level) => { if (level === 'warn') st.notes.push(String(m).slice(0, 400)); },
@@ -248,6 +250,8 @@ export async function createLab() {
             ...(typeof s.res?.axeDodgeAskPerPreview === 'boolean' ? { axeDodgeAskPerPreview: s.res.axeDodgeAskPerPreview } : {}),
             // ⛓ DASH-ONLY WINDOW — the `DASH_ONLY_WINDOW` the WORKER solved under, when off-default (its stamp)
             ...(typeof s.res?.dashOnlyWindow === 'boolean' ? { dashOnlyWindow: s.res.dashOnlyWindow } : {}),
+            // ⛓ DASH-SHAPE STAMP — the dash shape the WORKER's switches read (all three keys), when it was stamped
+            ...(s.res?.dashShape ? { dashShapeRead: plain(s.res.dashShape) } : {}),
             // ⛓ FORCED-HIT CONSUMER — the crossings the plan BILLED and the damage it ends on (absent = none billed):
             // a forced-hit leg's `roomHits.max` is measured against them
             ...(s.res?.plan?.forcedHits ? { forcedHits: plain(s.res.plan.forcedHits), damage: plain(s.res.plan.damage) } : {}),

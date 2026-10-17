@@ -68,6 +68,7 @@ import { KILLLOCK_BODIES, killLockBodiesStamp, normalizeKillLockBodies, withKill
 import { CONTACT_FIDELITY, contactFidelityStamp, normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
 import { axeDodgeAskStamp, withAxeDodgeAsk } from './axeDodgeAskHook.js';
 import { DASH_ONLY_WINDOW, dashOnlyWindowStamp, withDashOnlyWindow } from './dashOnlyWindowHook.js';
+import { dashShapeRead, dashShapeStamp, withDashShape } from './dashShapeHook.js';
 
 /** Refutations of one goal's plans before the goal FAILS, by name (§2.2 step 5). */
 export const MAX_REFUTATIONS = 3;
@@ -320,6 +321,24 @@ export function betterAnswer(best, next) {
  * `passes`: one `{pass, ok, kind, ticks, ms}` row per pass that ran.
  */
 export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => {}, clock = request.clock ?? (() => Date.now()) } = {}) {
+    // ⛓ DASH-SHAPE STAMP — the DASH-ONLY WINDOW arm below, for solverBot's three SEEDLING DB switches (`dashShape`,
+    // the off-default keys only, `dashShapeHook.js`): solved inside their `with…` scopes in whichever module instance
+    // runs it, and every answer carries the shape (all three keys) the switches READ.
+    if (request.dashShape && typeof request.dashShape === 'object') {
+        const { dashShape, ...rest } = request;
+        let ran = null;
+        const stamp = (a) => {
+            if (!a || ran === null) return a;
+            a.dashShape = { ...ran };
+            if (a.ok && a.plan) a.plan.dashShape = { ...ran };
+            return a;
+        };
+        const out = withDashShape(dashShape, () => {
+            ran = dashShapeRead();
+            return solveAnytime(rest, { passes, clock, onPass: (one, best, index) => onPass(stamp(one), stamp(best), index) });
+        });
+        return stamp(out);
+    }
     // ⛓ DASH-ONLY WINDOW — the AXE_DODGE arm below, for `DASH_ONLY_WINDOW` (`dashOnlyWindow`, a boolean, off-default
     // only): solved under it in whichever module instance runs it, and every answer says so.
     if (typeof request.dashOnlyWindow === 'boolean') {
@@ -811,9 +830,12 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
             const axe = rest.axeDodgeAskPerPreview ?? axeDodgeAskStamp();
             // ⛓ DASH-ONLY WINDOW — and an off-default `DASH_ONLY_WINDOW` (inert here: no budget, no window).
             const dashOnly = rest.dashOnlyWindow ?? dashOnlyWindowStamp();
+            // ⛓ DASH-SHAPE STAMP — and an off-default dash shape (inert here unless a deadline trips `sword-dash`).
+            const dashShape = rest.dashShape ?? dashShapeStamp();
             const result = solveAnytime({ ...rest, ...(killLock ? { killLockBodies: killLock } : {}),
                 ...(contact ? { contactFidelity: contact } : {}), ...(axe !== null ? { axeDodgeAskPerPreview: axe } : {}),
                 ...(dashOnly !== null ? { dashOnlyWindow: dashOnly } : {}),
+                ...(dashShape ? { dashShape } : {}),
                 levelSource, clock }, { passes, clock });
             return { settled: true, started: true, result, cancel() {} };
         },

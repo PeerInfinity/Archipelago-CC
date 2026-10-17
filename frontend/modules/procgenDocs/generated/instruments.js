@@ -10883,6 +10883,7 @@ export const INSTRUMENTS = frz({
                 "capture-requests",
                 "contact-fidelity",
                 "dash-only-window",
+                "dash-shape",
                 "from",
                 "host",
                 "ids",
@@ -10926,6 +10927,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "dash-only-window"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dash-shape"
                 },
                 {
                     "how": [

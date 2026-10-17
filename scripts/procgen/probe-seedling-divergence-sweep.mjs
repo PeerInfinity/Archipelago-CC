@@ -73,6 +73,13 @@
  *                        `seedlingDashOnlyWindow` (absent = `default`, today's run), read back as a `DASH_ONLY_WINDOW:` line;
  *                        each plan the worker solved off-default carries its `dashOnlyWindow` stamp, every row and the plan
  *                        `dashOnlyWindow` ('on' / 'off'), and the merge refuses a mixed merge by name.
+ *   --dash-shape=<spec>  ⛓ DASH-SHAPE STAMP: set solverBot's three SEEDLING DB dash switches through the flashPanel
+ *                        settings `seedlingDash{LegPrecheck,NoSwingPrefix,KeepPartial}` (absent = `default`, today's run).
+ *                        The spec is a comma list of `<key>:on|off` (keys legPrecheck, noSwingPrefix, keepPartial; a bare
+ *                        key = on), or `all`. Read back as a `DASH_SHAPE:` line (a mismatch fails the boot); each request
+ *                        the engine makes off-default carries the `dashShape` stamp, each plan the shape its worker READ
+ *                        (`dashShapeRead`), every row and the plan `dashShape` (the canonical spec), and the merge refuses
+ *                        a mixed merge by name.
  *
  * ⛓ THE HANG BOUND (H1: sweep-4 shard 9, CI run 38110831520, sat ~5 h after its 18th page and named nothing). Every
  * harness step between legs — a page's teardown, the browser's close, the launch, the new page, a boot attempt and a
@@ -90,7 +97,7 @@
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--upgrade-window-work=<units>] [--dash-only-window=on|off] [--leg-budget-ms=<ms>] [--capture-requests=<jsonl>] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--upgrade-window-work=<units>] [--dash-only-window=on|off] [--dash-shape=<spec>] [--leg-budget-ms=<ms>] [--capture-requests=<jsonl>] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -208,11 +215,12 @@ export function stampBudget(row, legBudgetMs) {
 }
 
 /**
- * ⛓ THE SOLVER KNOBS (slice `seedling-js-dash-window`) — `--upgrade-window-work` and `--dash-only-window`, the solver
+ * ⛓ THE SOLVER KNOBS (slice `seedling-js-dash-window`; `--dash-shape`, slice `seedling-js-dash-shape-stamp`) —
+ * `--upgrade-window-work`, `--dash-only-window` and `--dash-shape`, the solver
  * settings a sweep may move. Empty = absent (today's run: nothing is set, nothing is stamped). Unlike the leg budget
  * these reach the SOLVE: the panel setting is written before the boot, so the engine's every request carries it.
  */
-export const SOLVER_KNOB_KEYS = Object.freeze(['upgradeWindowWork', 'dashOnlyWindow']);
+export const SOLVER_KNOB_KEYS = Object.freeze(['upgradeWindowWork', 'dashOnlyWindow', 'dashShape']);
 
 /** `--upgrade-window-work` → units (empty = null, the engine's own). Not a whole number ≥ 0 → throws by name. */
 export function parseUpgradeWindowWorkArg(spec) {
@@ -228,6 +236,17 @@ export function parseDashOnlyWindowArg(spec) {
     if (!s) return null;
     if (s !== 'on' && s !== 'off') throw new Error(`--dash-only-window is "${s}"; the values are on, off`);
     return s;
+}
+
+/**
+ * `--dash-shape` → the canonical spec (`dashShapeHook.formatDashShape`, keys in their one order; empty = null, the
+ * switches' own defaults). A bad spec throws by name. Async: the hook is loaded on demand (it imports the solver).
+ */
+export async function parseDashShapeArg(spec) {
+    const s = String(spec ?? '').trim();
+    if (!s) return null;
+    const { parseDashShape, formatDashShape } = await import('../../frontend/modules/seedlingDemo/dashShapeHook.js');
+    return formatDashShape(parseDashShape(s, '--dash-shape')) || null;
 }
 
 /** A row (or the plan) stamped with the knobs that were set: the row itself when none was (byte-identical). */
@@ -371,7 +390,8 @@ async function main() {
         const legBudgetMs = parseLegBudgetMs(arg('leg-budget-ms', ''));
         // ⛓ THE SOLVER KNOBS — on the plan too, so the merge holds every row to the plan's
         const knobs = { upgradeWindowWork: parseUpgradeWindowWorkArg(arg('upgrade-window-work', '')),
-            dashOnlyWindow: parseDashOnlyWindowArg(arg('dash-only-window', '')) };
+            dashOnlyWindow: parseDashOnlyWindowArg(arg('dash-only-window', '')),
+            dashShape: await parseDashShapeArg(arg('dash-shape', '')) };
         const staging = new Set(legs0.filter((l) => l.stagedEvents?.length).map((l) => l.id));
         const pagesOf = new Map();
         for (const x of shards) {
@@ -429,8 +449,14 @@ async function main() {
     const { AXE_DODGE_SETTING_KEY } = await import('../../frontend/modules/flashPanel/seedlingAxeDodgeSettings.js');
     // ⛓ THE SOLVER KNOBS — checked here so a bad value fails before a browser starts
     const KNOBS = { upgradeWindowWork: parseUpgradeWindowWorkArg(arg('upgrade-window-work', '')),
-        dashOnlyWindow: parseDashOnlyWindowArg(arg('dash-only-window', '')) };
+        dashOnlyWindow: parseDashOnlyWindowArg(arg('dash-only-window', '')),
+        dashShape: await parseDashShapeArg(arg('dash-shape', '')) };
     const { DASH_ONLY_WINDOW_SETTING_KEY } = await import('../../frontend/modules/flashPanel/seedlingDashOnlyWindowSettings.js');
+    // ⛓ DASH-SHAPE STAMP — the spec's keys as the three panel settings (`on` / `off`; a key the spec omits stays untouched)
+    const { DASH_SHAPE_SETTING_KEYS, dashShapeSpec } = await import('../../frontend/modules/flashPanel/seedlingDashShapeSettings.js');
+    const { parseDashShape } = await import('../../frontend/modules/seedlingDemo/dashShapeHook.js');
+    const DASH_SHAPE_WRITES = Object.entries(parseDashShape(KNOBS.dashShape ?? '', '--dash-shape'))
+        .map(([k, on]) => [DASH_SHAPE_SETTING_KEYS[k], on ? 'on' : 'off']);
     const UPGRADE_WINDOW_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork';
     const GAME = 'seedling_playthrough';
     const RULES = `frontend/presets/${GAME}/AP_1/AP_1_rules.json`;
@@ -563,7 +589,8 @@ async function main() {
             }
             // ⛓ THE SOLVER KNOBS — the panel settings, written before the panel boots (absent = untouched)
             const knobWrites = [...(KNOBS.upgradeWindowWork !== null ? [[UPGRADE_WINDOW_SETTING_KEY, KNOBS.upgradeWindowWork]] : []),
-                ...(KNOBS.dashOnlyWindow !== null ? [[DASH_ONLY_WINDOW_SETTING_KEY, KNOBS.dashOnlyWindow]] : [])];
+                ...(KNOBS.dashOnlyWindow !== null ? [[DASH_ONLY_WINDOW_SETTING_KEY, KNOBS.dashOnlyWindow]] : []),
+                ...DASH_SHAPE_WRITES];
             if (knobWrites.length) {
                 await page.evaluate(async (writes) => {
                     const { default: settingsManager } = await import('./app/core/settingsManager.js');
@@ -612,7 +639,8 @@ async function main() {
             const knobNow = await page.evaluate(async () => {
                 const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
                 const s = p?.seedlingPlaybackSurface?.();
-                return { window: s?.solverUpgradeWindowWork ?? null, dashOnly: s?.wasm?.dashOnlyWindow ?? null };
+                return { window: s?.solverUpgradeWindowWork ?? null, dashOnly: s?.wasm?.dashOnlyWindow ?? null,
+                    dashShape: s?.wasm?.dashShape ?? null };
             });
             console.log(`UPGRADE-WINDOW: page ${pageNo}: setting ${knobNow.window ?? 'unset (the engine\'s own)'}`
                 + `${KNOBS.upgradeWindowWork !== null ? ' (--upgrade-window-work)' : ''}`);
@@ -622,6 +650,13 @@ async function main() {
             console.log(`DASH_ONLY_WINDOW: page ${pageNo}: setting ${knobNow.dashOnly}${KNOBS.dashOnlyWindow ? ' (--dash-only-window)' : ''}`);
             if ((KNOBS.dashOnlyWindow ?? 'default') !== knobNow.dashOnly) {
                 throw new Error(`--dash-only-window asked ${KNOBS.dashOnlyWindow ?? 'default'}; the panel holds ${knobNow.dashOnly}`);
+            }
+            // ⛓ DASH-SHAPE STAMP — the three dash settings the panel hands its wasm engine, read back as one spec
+            const shapeNow = knobNow.dashShape ? dashShapeSpec(knobNow.dashShape) : null;
+            console.log(`DASH_SHAPE: page ${pageNo}: setting ${shapeNow === null ? 'unread' : shapeNow || 'default'}`
+                + `${KNOBS.dashShape ? ' (--dash-shape)' : ''}`);
+            if ((KNOBS.dashShape ?? '') !== (shapeNow ?? '') || shapeNow === null) {
+                throw new Error(`--dash-shape asked ${KNOBS.dashShape ?? 'default'}; the panel holds ${shapeNow ?? 'nothing (unread)'}`);
             }
             await page.evaluate(async () => {
                 const { createLab } = await import('/scripts/procgen/seedlingDivergenceLab.js');

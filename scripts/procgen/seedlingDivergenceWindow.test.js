@@ -42,7 +42,7 @@ describe('the flags', () => {
 
     it('the merge module (a sparse checkout) restates the same knob keys', () => {
         expect(MERGE_KEYS).toEqual(SOLVER_KNOB_KEYS);
-        expect(SOLVER_KNOB_KEYS).toEqual(['upgradeWindowWork', 'dashOnlyWindow']);
+        expect(SOLVER_KNOB_KEYS).toEqual(['upgradeWindowWork', 'dashOnlyWindow', 'dashShape']);
     });
 });
 
