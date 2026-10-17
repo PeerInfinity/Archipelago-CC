@@ -22,6 +22,10 @@
  *                  `request`: the request, and so the plan, is the same with or
  *                  without a subscriber) installs the solver's progress hook
  *                  around this solve (`solveProgressTap.js`); absent = no hook.
+ *                  `progressIntervalMs` beside it (⚖ the panel's setting
+ *                  `flashPanel.seedlingSolveProgressIntervalMs`) is the post
+ *                  ceiling, clamped to `SOLVE_PROGRESS_INTERVALS_MS`; absent =
+ *                  `SOLVE_PROGRESS_INTERVAL_MS`.
  *   worker → page  `{type: 'started', id}` the moment the solve begins (the
  *                  budget runs from here, not from a cold module load);
  *                  ⛓ ANYTIME `{type: 'pass', id, index, pass, answer, best}`
@@ -30,8 +34,9 @@
  *                  `{type: 'result', id, ok, plan | kind, message}` —
  *                  `jsRuntimeSolver.settleSolve`'s answer;
  *                  ⛓ SOLVE PROGRESS `{type: 'solve-progress', id, snapshot,
- *                  final}` — at most one a second while the solve runs, and the
- *                  final one just before `result` (only when asked).
+ *                  final}` — at most one per `progressIntervalMs` while the
+ *                  solve runs (only at the solver's own sites, so often fewer),
+ *                  and the final one just before `result` (only when asked).
  *
  * ⛔ NO BUNDLE ENTRY. The JS runtime page (`jsRuntime.html`) is an unbundled
  * module page in BOTH flavours — the bundled build bundles the host
@@ -49,7 +54,7 @@ import { normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js
 import { normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
 import { withAxeDodgeAsk } from './axeDodgeAskHook.js';
 import { withSolveProgress } from './solveProgress.js';
-import { createProgressTap, SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
+import { createProgressTap, progressIntervalMs, SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
 
 /** source id -> `{levelSource, records}`: the room records this worker has been sent. */
 const sources = new Map();
@@ -85,9 +90,11 @@ self.onmessage = (event) => {
         // so far as its PROVISIONAL plan when a later pass is terminated at the budget.
         const { passes = ANYTIME_PASSES, ...tape } = request;
         // ⛓ SOLVE PROGRESS — ⛔ the hook is installed ONLY when the page asked (`progress` on the envelope); the
-        // tap's clock decides only when to post, and nothing it computes reaches the solve.
+        // tap's clock decides only when to post, and nothing it computes reaches the solve. Its interval rides the
+        // envelope too (`progressIntervalMs`), so a rate change never touches the request.
         const budgetWork = tape.budgetWork ?? null;
         const tap = progress ? createProgressTap({ passes, clock, budgetWork,
+            minIntervalMs: progressIntervalMs(msg.progressIntervalMs),
             windowAt: budgetWork !== null ? upgradeWindowWork(budgetWork, tape.upgradeWindowWork ?? null) : null,
             post: (snapshot, final) => self.postMessage({ type: SOLVE_PROGRESS_MESSAGE, id, snapshot, final }) }) : null;
         const solve = () => solveAnytime({ ...tape, levelSource: held.levelSource, clock }, {

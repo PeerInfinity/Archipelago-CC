@@ -20,7 +20,9 @@
  *
  * Exit codes: 0 green · 1 red · 2 no run for this SHA · 3 not concluded
  * (`--wait` polls) · 4 the log carries no such answer · 5 REFUSED BY NAME —
- * CI cannot answer this key at all.
+ * CI cannot answer this key at all · 6 a BROWSER key at a SHA whose browser
+ * shards were SKIPPED (ci-skip-rules rule 2: a docs-only push) — read the last
+ * code head, whose line still holds.
  *
  * ── ⛓⛓⛓ `--gates`: **THE WHOLE VERDICT SET, AGAINST THE BANK** ───────
  *
@@ -78,9 +80,10 @@ import { execFileSync } from 'node:child_process';
 
 import { ciGateArms, ciRunnable, ciUnrunnableIdentityRows } from './ciGatePlan.js';
 import { REPO, gateRoster } from './gateRoster.js';
+import { browserShardsRan } from './ciDocsOnly.js';
 import {
     findRun, gateLogs, gateVerdicts, jobLogById, parseGateLines, parseSummaries, runById,
-    vitestJob,
+    runJobs, vitestJob,
 } from './ciSummary.js';
 import { readStandingValues } from './standingValues.js';
 
@@ -278,6 +281,11 @@ if (ALL_GATES) {
             if (r.verdict === 'shallow') console.log(`             ⛔ @ci-shallow: ${r.shallow}`);
         }
         for (const k of missing) console.log(`  MISSING    ${k}`);
+        /** ⛓ RULE 2 — a docs-only push ran no browser shard; say so beside the MISSING rows. */
+        if (missing.length && !browserShardsRan(runJobs(run))) {
+            console.log('  ⛓ rule 2: this run SKIPPED its browser shards (a docs-only push), so '
+                + 'every browser row reads MISSING here by design — read the last code head.');
+        }
         if (gathered.unreadable.length) {
             console.log(`  ⚠ ${gathered.unreadable.length} job log(s) unreadable: `
                 + gathered.unreadable.join('; '));
@@ -313,6 +321,21 @@ if (ALL_GATES) {
 if (GATE) {
     const rows = parseGateLines(log);
     const row = rows.get(GATE);
+    /**
+     * ⛓⛓ ci-skip-rules RULE 2 — A BROWSER KEY AT A DOCS-ONLY HEAD IS A NAMED
+     * REFUSAL, not "no such line": the shards were skipped on purpose, and
+     * `ciDocsOnly.test.js` holds that no CI-sourced browser row reads what such
+     * a push can change — so the last code head's line is still this head's.
+     */
+    const armIsBrowser = ciGateArms({ repo: REPO, set: 'browser' })
+        .some((a) => a.key === GATE || a.bankKey === GATE);
+    if (!row && armIsBrowser && !browserShardsRan(runJobs(run))) {
+        console.error(`run ${run.databaseId} at ${sha} SKIPPED its browser gate shards — a `
+            + 'docs-only push (ci-skip-rules rule 2) — so it carries no line for '
+            + `${JSON.stringify(GATE)}. Read the last CODE head (or dispatch the workflow on this `
+            + 'branch to force the shards). ⛔ This is a refusal, not a 0/0.');
+        process.exit(6);
+    }
     if (!row) {
         console.error(`run ${run.databaseId} (${run.conclusion}) carries no `
             + `\`## CI-GATE | ${GATE} |\` line across its ${gathered.jobs} job(s). `
