@@ -19,6 +19,17 @@
  *        -> 'a progress message of a cancelled / superseded / answered solve never reaches a listener' reds
  *   p4 the snapshot (or the flag) stamped into the request
  *        -> '… the REQUEST is byte-identical …' reds
+ *   p5 ⛓ S1: the rate stamped into the REQUEST (not the envelope)
+ *        -> '… at 100 ms and at 1000 ms: the REQUEST, the plan, the digest and the shouldStop total are identical' reds
+ *   w1 ⛓ S1: the worker ignores the envelope's rate (the tap's default always; measured 10 live posts at 100 ms vs
+ *        2 at 1000 ms on the L4 solve)
+ *        -> '… at 100 ms and at 1000 ms …' reds (the 1000 ms run's posts exceed its span / 1000 + 1)
+ *   p6 ⛓ S1: the service sends the SLOWEST listener's rate (or the first's), not the fastest
+ *        -> 'the envelope carries the FASTEST rate any listener asked …' reds
+ *
+ * ⛓ S1 (⚖ the user 2026-10-17) — the rate is a setting (`flashPanel.seedlingSolveProgressIntervalMs`), carried on
+ * the ENVELOPE as `progressIntervalMs`. A defaults A/B is not needed: the request is byte-identical at every rate and
+ * with no subscriber at all (pinned here), so the plan cannot move.
  */
 import { afterEach, describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -105,10 +116,10 @@ const WITNESSES = [
 ];
 
 /** One witness solved through the worker, with or without a progress subscriber. */
-async function solveWitness(w, { subscribe }) {
+async function solveWitness(w, { subscribe, intervalMs }) {
     const { service, log } = workerService();
     const notes = [];
-    const off = subscribe ? service.subscribeProgress((n) => notes.push(n)) : null;
+    const off = subscribe ? service.subscribeProgress((n) => notes.push(n), { intervalMs }) : null;
     const rt = midRoom({ ...w, solveService: service });
     rt.playback.setSolverWalk(true);
     const t0 = Date.now();
@@ -150,7 +161,35 @@ describe('solve progress — observation only, off unless subscribed', () => {
         }, 180000);
     }
 
-    it(`at most one post a second of the solve (${SOLVE_PROGRESS_INTERVAL_MS} ms) plus the FINAL, which comes just before the result and meters the attempt's whole work`, async () => {
+    it(`${WITNESSES[1].name}: at 100 ms and at 1000 ms: the REQUEST, the plan, the digest and the shouldStop total are identical; only the envelope's rate differs`, async () => {
+        const fast = await solveWitness(WITNESSES[1], { subscribe: true, intervalMs: 100 });
+        const slow = await solveWitness(WITNESSES[1], { subscribe: true, intervalMs: 1000 });
+        expect(fast.solves.length).toBeGreaterThan(0);
+        expect(slow.solves.length).toBe(fast.solves.length);
+        for (let i = 0; i < fast.solves.length; i += 1) {
+            expect(JSON.stringify(fast.solves[i].request)).toBe(JSON.stringify(slow.solves[i].request));
+            expect(JSON.stringify(fast.solves[i].request)).not.toMatch(/progress|Interval/);
+            expect([fast.solves[i].progress, fast.solves[i].progressIntervalMs]).toEqual([true, 100]);
+            expect([slow.solves[i].progress, slow.solves[i].progressIntervalMs]).toEqual([true, 1000]);
+        }
+        expect(fast.results.map(planOf)).toEqual(slow.results.map(planOf));
+        // the shouldStop total: each attempt's work units (the meter's `spent`, `passShouldStop`'s count)
+        expect(fast.results.map((g) => g.msg.work)).toEqual(slow.results.map((g) => g.msg.work));
+        expect(fast.results.every((g) => Number.isFinite(g.msg.work))).toBe(true);
+        expect(runDigest(fast.rt.run)).toBe(runDigest(slow.rt.run));
+        expect(fast.rt.session.perTick.map((h) => [...h].sort())).toEqual(slow.rt.session.perTick.map((h) => [...h].sort()));
+        // and the worker THROTTLED at the envelope's rate: each solve's live posts ≤ its span / interval + 1
+        for (const run of [fast, slow]) {
+            for (const solve of run.solves) {
+                const mine = run.log.got.filter((g) => g.msg.id === solve.id);
+                const span = mine.find((g) => g.msg.type === 'result').at - mine.find((g) => g.msg.type === 'started').at;
+                const live = mine.filter((g) => g.msg.type === SOLVE_PROGRESS_MESSAGE && !g.msg.final);
+                expect(live.length).toBeLessThanOrEqual(Math.floor(span / solve.progressIntervalMs) + 1);
+            }
+        }
+    }, 180000);
+
+    it(`at most one post per the envelope's interval (default ${SOLVE_PROGRESS_INTERVAL_MS} ms) plus the FINAL, which comes just before the result and meters the attempt's whole work`, async () => {
         const on = await solveWitness(WITNESSES[1], { subscribe: true });
         for (const solve of on.solves) {
             const id = solve.id;
@@ -160,7 +199,8 @@ describe('solve progress — observation only, off unless subscribed', () => {
             const posts = mine.filter((g) => g.msg.type === SOLVE_PROGRESS_MESSAGE);
             const span = mine[resultAt].at - started.at;
             const live = posts.filter((g) => !g.msg.final);
-            expect(live.length).toBeLessThanOrEqual(Math.floor(span / SOLVE_PROGRESS_INTERVAL_MS) + 1);
+            expect(solve.progressIntervalMs).toBe(SOLVE_PROGRESS_INTERVAL_MS);
+            expect(live.length).toBeLessThanOrEqual(Math.floor(span / solve.progressIntervalMs) + 1);
             expect(posts.filter((g) => g.msg.final)).toHaveLength(1);
             expect(mine[resultAt - 1].msg).toMatchObject({ type: SOLVE_PROGRESS_MESSAGE, final: true });
             const fin = mine[resultAt - 1].msg.snapshot;
@@ -212,6 +252,26 @@ describe('solve progress — the stale drop (scripted worker)', () => {
         expect(service.stats.progressDropped).toBe(2);
     });
 
+    it('the envelope carries the FASTEST rate any listener asked, clamped to the list, read at each start (a function is re-read)', () => {
+        const { service, workers } = scripted();
+        let asked = 1000;
+        const offA = service.subscribeProgress(() => {}, { intervalMs: () => asked });
+        service.start({ source: { records: {} } });
+        expect(workers.at(-1).sent.at(-1)).toMatchObject({ progress: true, progressIntervalMs: 1000 });
+        const offB = service.subscribeProgress(() => {}, { intervalMs: 250 });
+        service.start({ source: { records: {} } });
+        expect(workers.at(-1).sent.at(-1).progressIntervalMs).toBe(250);
+        asked = 60;   // between 100 and 50: clamped to the slower, 100
+        service.start({ source: { records: {} } });
+        expect(workers.at(-1).sent.at(-1).progressIntervalMs).toBe(100);
+        offA();
+        offB();
+        service.subscribeProgress(() => {});   // no rate asked: the default
+        service.start({ source: { records: {} } });
+        expect(workers.at(-1).sent.at(-1).progressIntervalMs).toBe(SOLVE_PROGRESS_INTERVAL_MS);
+        for (const w of workers) for (const m of w.sent) expect(Object.keys(m.request)).not.toContain('progressIntervalMs');
+    });
+
     it('unsubscribed: the next solve does not ask (no flag on its envelope), and a late note is dropped', () => {
         const { service, workers } = scripted();
         const heard = [];
@@ -223,6 +283,7 @@ describe('solve progress — the stale drop (scripted worker)', () => {
         workers[0].emit({ type: 'result', id: h.id, ok: false, kind: 'refusal', message: 'x' });
         service.start({ source: { records: {} } });
         expect(workers[0].sent.at(-1)).not.toHaveProperty('progress');
+        expect(workers[0].sent.at(-1)).not.toHaveProperty('progressIntervalMs');
         expect(service.progressSubscribed).toBe(false);
     });
 });

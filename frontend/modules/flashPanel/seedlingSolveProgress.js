@@ -128,9 +128,11 @@ export function tileShade(reached, max) {
  * The feed. `getServices()` → the solve services the panel can reach now (`subscribeProgress`-capable; others
  * are skipped). `onNote(note)` hears every note tagged `{service}`. `open()` subscribes and starts the re-resolve
  * timer; `close()` unsubscribes from every service and stops it. `tick` is called each poll (the view's
- * "N s ago" refresh).
+ * "N s ago" refresh). `intervalMs` (ms, or a function read at each solve's start — ⚖ the panel's setting
+ * `flashPanel.seedlingSolveProgressIntervalMs`) is the progress rate the feed asks each service for.
  */
 export function createSolveProgressFeed({ getServices, onNote, tick = () => {}, pollMs = SOLVE_PROGRESS_POLL_MS,
+    intervalMs,
     timers = { setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: (h) => clearInterval(h) } }) {
     /** service -> its unsubscribe */
     const subs = new Map();
@@ -149,7 +151,7 @@ export function createSolveProgressFeed({ getServices, onNote, tick = () => {}, 
         for (const svc of want) {
             if (subs.has(svc)) continue;
             const tag = tagOf(svc);
-            subs.set(svc, svc.subscribeProgress((note) => onNote({ ...note, service: tag })));
+            subs.set(svc, svc.subscribeProgress((note) => onNote({ ...note, service: tag }), { intervalMs }));
         }
     }
 
