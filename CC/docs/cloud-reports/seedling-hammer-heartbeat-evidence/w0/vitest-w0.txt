@@ -1,0 +1,92 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/solverBot.test.js (102 tests) 19776ms
+     ✓ ⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared  334ms
+     ✓ ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more  357ms
+     ✓ ⛔ derives a stance for the body that CANNOT reach where the walk stands  1263ms
+     ✓ ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why  2262ms
+     ✓ ⛓ takes the BEST stance, not the first viable one — and carries the runners-up  1572ms
+     ✓ ⛔ the dwell bound is the forecast's own death tick, not a per-class constant  4026ms
+     ✓ ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned  630ms
+     ✓ ⛓ L18 spends the fade WALKING, and the wait is the subtraction  661ms
+     ✓ ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin  1420ms
+     ✓ ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room  675ms
+     ✓ ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell  804ms
+     ✓ ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it  1583ms
+     ✓ ⛓ `economies` DEFAULTS TO the roster-wide flag — the same walk either way  516ms
+ ✓ frontend/modules/seedlingDemo/hammerEscape.test.js (18 tests) 10833ms
+     ✓ ⛓⛓ hammer-a-l18-escape21 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing  6914ms
+     ✓ ⛓⛓ hammer-a-l18-escape15 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing  3082ms
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (13 tests) 36953ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  20830ms
+     ✓ ⛓⛓⛓ L6 ladder climb: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  487ms
+     ✓ ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count  9523ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall  5154ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises  502ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.test.js (17 tests) 2395ms
+     ✓ ON, sweep request 478:0 solved whole ships the same ticks for less work  1812ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js (5 tests) 5766ms
+     ✓ L6 bare (bait — ENEMIES), 150 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress  2738ms
+     ✓ L4 kit (hold + shove), 40 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress  2034ms
+     ✓ at most one post a second of the solve (1000 ms) plus the FINAL, which comes just before the result and meters the attempt's whole work  989ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSpinner.test.js (11 tests) 9630ms
+     ✓ ON leaves a SWORD press's forecast byte-identical (`r9-solve-18`, every press)  598ms
+     ✓ ⛓⛓⛓ ON: SOLVED with no hit, crossing to L19; every landing a ghost press, two per body (2 damage each), from beyond the sword's reach  2147ms
+     ✓ ON leaves the SWORD's solve byte-identical (the committed staging, 518 ticks)  6332ms
+ ✓ scripts/procgen/lintGateLabels.test.js (14 tests) 171ms
+ ✓ frontend/modules/seedlingDemo/hammerFightFallback.test.js (12 tests) 64117ms
+     ✓ ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte  5201ms
+     ✓ ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's  26834ms
+     ✓ ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence  721ms
+     ✓ ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing  6029ms
+     ✓ ⛓⛓ inert while the fight itself is on (the retry would be the same path)  17670ms
+     ✓ ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged  1679ms
+     ✓ ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged  5915ms
+ ✓ frontend/modules/seedlingDemo/hammerApproach.test.js (8 tests) 8855ms
+     ✓ ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states with no hit, and the press it aims lands  326ms
+     ✓ ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the same residue shorter, with no hit, every press planned in space-time  6084ms
+     ✓ ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, every press planned in space-time  2389ms
+ ✓ frontend/modules/seedlingDemo/hammerFight.test.js (9 tests) 16955ms
+     ✓ ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states and landings, every body of the order dies, no hit through the tail  1965ms
+     ✓ ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the residue with no hit, the fight followed to its end  9339ms
+     ✓ ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, ONE certificate held to its end  5553ms
+ ✓ frontend/modules/seedlingDemo/hammerPressBombs.test.js (8 tests) 4029ms
+     ✓ t1099, the kill's first tick: OFF stands on (248,184) to press at t1153; ON names #7's blast on that stance and strikes from (232,184)  1257ms
+     ✓ t1150, #7 in the air: OFF still stands on (248,184); ON has no stance #7 does not reach, and its refuge leaves the blast  1041ms
+     ✓ OFF asks nothing (the instrument stays at zero)  718ms
+     ✓ staging A (L40 south door, 380+ px from bombpusher@112,128): the strike and the refuge are OFF's  749ms
+ ✓ frontend/modules/seedlingDemo/hammerPressKillDoneOnWalk.test.js (9 tests) 8787ms
+     ✓ OFF: `runDwell` refuses the arm's dwell, already true, at t174 (the BEFORE)  1309ms
+     ✓ ON: past the dwell — the kill is recorded as the walk's, and the solve reaches L32 as the witness tape  1073ms
+     ✓ ON keeps the dwell: the record is the dwell's own, and the solve is OFF's byte for byte  1446ms
+     ✓ (32,112): the lapse-admitting walk solves to L32 in 509 with DD OFF and ON alike  3174ms
+     ✓ (176,48), step 50's own staging: DD OFF refuses the dwell ALREADY TRUE at the body; DD ON solves  1698ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostWall.test.js (6 tests) 358ms
+ ✓ frontend/modules/seedlingDemo/solveProgressTap.test.js (10 tests) 11ms
+ ✓ frontend/modules/seedlingDemo/hammerRefugeCut.test.js (6 tests) 6354ms
+     ✓ OFF writes nothing to the instrument  1894ms
+     ✓ at the press kill's refuge ticks ON chooses the refuge OFF chooses, and the cut is exercised  3302ms
+     ✓ t1150: the bombs refuse the nearest refuge, and the cut keeps BW's answer (216,168)  1152ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSearch.test.js (5 tests) 6362ms
+     ✓ the SWORD's certificate is the same ON and OFF  4030ms
+     ✓ ⛓⛓⛓ the GHOST OFF is offered only presses from ≤ 16 px; ON it presses from the 16–24 px band and kills sooner  1998ms
+     ✓ reads the row only for its probe and row margins: the ghost's approach at t0 is the same ON and OFF  329ms
+ ✓ frontend/modules/seedlingDemo/solverBotLethalPit.test.js (4 tests) 63ms
+ ✓ frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js (16 tests) 111983ms
+     ✓ t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick  1174ms
+     ✓ t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA)  1460ms
+     ✓ K = 0 is OFF's pass: past the budget a cell is asked OFF's floor, so ON with no previews returns OFF's strike  1725ms
+     ✓ the budget is taken: t190 needs eight previews for ON's earlier strike, t1450 more than sixteen  3220ms
+     ✓ ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts  574ms
+     ✓ ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key  103797ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostKillRung.test.js (6 tests) 234568ms
+     ✓ OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE)  910ms
+     ✓ ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key  233648ms
+
+ Test Files  19 passed (19)
+      Tests  279 passed (279)
+   Start at  16:28:26
+   Duration  324.37s (transform 7.24s, setup 0ms, import 27.20s, tests 547.97s, environment 2ms)
+
+rc=0

@@ -67,6 +67,8 @@ const WASM_SOLVER_BUDGET_SETTING_KEY = 'moduleSettings.flashPanel.seedlingWasmSo
 const SOLVER_UPGRADE_WINDOW_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork';
 /** ⛓ SOLVE PROGRESS — the progress view's on/off (both runtimes); the panel's "Solve Progress" button flips it. */
 const SOLVE_PROGRESS_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressView';
+/** ⛓ SOLVE PROGRESS S1 — the progress refresh rate (ms; on the solve's envelope, never the request). */
+const SOLVE_PROGRESS_INTERVAL_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressIntervalMs';
 /** ⛓ KILLLOCK HOOK — the model's kill-lock body switches, one setting each (`seedlingKillLockSettings.js`). */
 const KILLLOCK_SETTING_KEY_SET = new Set(Object.values(KILLLOCK_SETTING_KEYS));
 /** ⛓ CONTACT HOOK — the model's contact switches, one setting each (`seedlingContactSettings.js`). */
@@ -164,6 +166,7 @@ export class FlashPanelUI {
 
     this._createBaseUI();
     this._refreshSolveProgressView();
+    this._refreshSolveProgressInterval();
 
     // Make this instance available to the dispatcher receivers
     // registered at module scope (index.js). Only one flash panel
@@ -205,6 +208,9 @@ export class FlashPanelUI {
       }
       if (data?.key === SOLVE_PROGRESS_SETTING_KEY || data?.key === '*') {
         this._refreshSolveProgressView(data.key === '*' ? undefined : data.value);
+      }
+      if (data?.key === SOLVE_PROGRESS_INTERVAL_SETTING_KEY || data?.key === '*') {
+        this._refreshSolveProgressInterval(data.key === '*' ? undefined : data.value);
       }
       if (data?.key === SOLVER_UPGRADE_WINDOW_SETTING_KEY || data?.key === '*') {
         this._refreshSolverUpgradeWindow(data.key === '*' ? undefined : data.value);
@@ -466,6 +472,19 @@ export class FlashPanelUI {
       this._solveProgressButton.textContent = `Solve Progress: ${mode}`;
       this._solveProgressButton.style.opacity = mode === 'off' ? '0.6' : '1';
     }
+  }
+
+  /**
+   * ⛓ SOLVE PROGRESS S1 — apply `flashPanel.seedlingSolveProgressIntervalMs` to the view, which asks its services
+   * for that rate at each solve's start (a solve already running keeps its rate). The schema is the default source.
+   */
+  async _refreshSolveProgressInterval(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(SOLVE_PROGRESS_INTERVAL_SETTING_KEY); } catch { return; }
+    }
+    // an absent value (no schema yet) is the default; an option list's string is its number
+    this._solveProgressView?.setIntervalMs(next === null || next === undefined ? undefined : Number(next));
   }
 
   /**

@@ -225,6 +225,8 @@ const CI_READ_REASON = {
     4: 'the run carries no answer under this key',
     5: '⛔ REFUSED BY NAME — CI cannot answer this key at all, and the helper\'s stderr '
         + 'says why. A row that KEEPs on a 5 is FROZEN, not merely unpushed',
+    6: 'the run for this SHA skipped its browser shards (a docs-only push, ci-skip-rules '
+        + 'rule 2) — write at the last code head',
 };
 
 /* ══════════════════════════════════════════════════════════════════════

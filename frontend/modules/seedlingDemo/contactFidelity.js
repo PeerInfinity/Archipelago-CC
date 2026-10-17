@@ -609,6 +609,23 @@ export const CONTACT_FIDELITY = {
      * licence); `SEEDLING_AXE_GATE_TRANSIT=0|1` for a node measurement.
      */
     axeGateTransit: false,
+    /**
+     * fidelity DASHSTEP D2 — A STATUE'S TALK CIRCLE IS 32 PX, NOT THE NPC DEFAULT 24 (`endingChain.talkRangeOf`).
+     *
+     *     NPC.as:27        talkRange = 24 (the field's default)
+     *     Statue.as:25     talkRange = 32 (the one class that overrides it; `statue1`, `statue2`)
+     *     NPC.as:190-226   inRange = FP.distance(x, y, p.x, p.y) <= talkRange; an X release (keys[6], the SWORD key)
+     *                      in range opens the dialogue, and `Game.freezeObjects` holds the player from the next update
+     *
+     * OFF the run's talker arm (`levelRun.stepTalkersNow`) and the strike policy's release guard (`talkGuard`, ⚖
+     * ruling 53) tested every placed talker at 24, so a sword press released 24–32 px from a statue froze the player in
+     * the game and not in the model. MEASURED (hammer's dash flip, sweep 39005482173 leg 7, L0 `statue2@184,160`): the
+     * t99 dash press releases at t100 31.79 px from the statue; the game freezes the player at t102 (x 180.153, vx 2.90
+     * unchanged), the model walks on (182.803). ON: the run opens the statue's dialogue there (the capture replays at
+     * 0 px), and the guard keeps a planned release outside 32 px. Two statues exist (L0, L87). ⛔ OFF by default (no
+     * licence); `SEEDLING_STATUE_TALK_RANGE=0|1` for a node measurement.
+     */
+    statueTalkRange: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -737,6 +754,9 @@ if (globalThis.process?.env?.SEEDLING_AXE_TIMING_RUNG === '0') CONTACT_FIDELITY.
 // ⛓ fidelity AXETIMING D2b: `SEEDLING_AXE_GATE_TRANSIT=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_AXE_GATE_TRANSIT === '1') CONTACT_FIDELITY.axeGateTransit = true;
 if (globalThis.process?.env?.SEEDLING_AXE_GATE_TRANSIT === '0') CONTACT_FIDELITY.axeGateTransit = false;
+// ⛓ fidelity DASHSTEP D2: `SEEDLING_STATUE_TALK_RANGE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_STATUE_TALK_RANGE === '1') CONTACT_FIDELITY.statueTalkRange = true;
+if (globalThis.process?.env?.SEEDLING_STATUE_TALK_RANGE === '0') CONTACT_FIDELITY.statueTalkRange = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

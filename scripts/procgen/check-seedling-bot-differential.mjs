@@ -21,6 +21,9 @@
  *   --shard=i/n    replay shard i (1-based) of the tier's n-way partition (H3)
  *   --shard-plan=n print the tier's n-way partition and exit (no browser, no
  *                  lock); add --json for the CI plan job
+ *   --tier-key     print the tier's input key and exit (no browser, no lock):
+ *                  `fullTierKey.js` — the CI plan job quotes a green run that
+ *                  already measured the same key (ci-skip-rules rule 3)
  *
  * `--record` is the only thing in the repo allowed to write a
  * non-provisional expectation. `fixtures/regenerate.mjs` writes only
@@ -318,8 +321,12 @@ if (SHARD_ARG !== undefined || SHARD_PLAN_ARG !== undefined) {
 
 // ⛓ H2: the lock kind follows the channel — `--win` drives Windows Chrome, the
 // default is this machine's headless Chromium.
-takeBoxLockOrExit({ name: 'check-seedling-bot-differential.mjs',
-    kind: process.argv.includes('--win') ? 'windows' : 'browser' });
+/** ⛓ RULE 3 — `--tier-key` reads files and drives nothing, so it takes no lock. */
+const TIER_KEY = process.argv.includes('--tier-key');
+if (!TIER_KEY) {
+    takeBoxLockOrExit({ name: 'check-seedling-bot-differential.mjs',
+        kind: process.argv.includes('--win') ? 'windows' : 'browser' });
+}
 
 // ⛓ OVERRIDABLE SINCE PHASE 3b of the external-level-sets plan, on the
 // precedent `probe-seedling-level-set-transport.mjs` set: a slice that changes
@@ -560,6 +567,20 @@ function tapeFingerprint(name) {
     // tape fails by name), so it is hashed as such rather than skipped.
     h.update(existsSync(exp) ? readFileSync(exp) : 'NO-EXPECTATION');
     return h.digest('hex').slice(0, 16);
+}
+
+/**
+ * ⛓⛓ ci-skip-rules RULE 3 — THE TIER'S INPUT KEY, built from the SAME two
+ * fingerprints `--resume` trusts (see `fullTierKey.js` for what it adds).
+ */
+if (TIER_KEY) {
+    const { tierKeyAt } = await import(join(HERE, 'fullTierKey.js'));
+    const tapes = tierRoster(fixtureNames()).map((name) => ({ name, fp: tapeFingerprint(name) }));
+    const { key, files } = tierKeyAt({ repo: REPO, entry: fileURLToPath(import.meta.url),
+        tier: TIER, fingerprint: FINGERPRINT, tapes });
+    console.log(`TIER-KEY: ${key} (tier ${TIER}, ${tapes.length} tape(s), page ${PAGE_NAME}, `
+        + `channel ${CHANNEL}, fingerprint ${FINGERPRINT}, ${files} file(s) outside it)`);
+    process.exit(0);
 }
 
 /**

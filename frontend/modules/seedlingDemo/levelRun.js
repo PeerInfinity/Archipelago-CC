@@ -49,7 +49,7 @@ import {
 import {
     BLOODY_SEED_TEXT, CREDITS, CUTSCENE_1_WALK, CUTSCENE_2_HOLD, FINAL_DOOR, ORACLE,
     SEED_ARMS, TALK_RANGE, WATCHER, WATCHER_FLAG, beginNpcDialogue, bloodySeedDue,
-    bloodySeedEntity, boxHitsWatcherSeed, coverFadeFrames, freshFinalDoor, inTalkRange,
+    bloodySeedEntity, boxHitsWatcherSeed, coverFadeFrames, freshFinalDoor, inTalkRange, talkRangeOf,
     seedBoxAt, stepFinalDoor, stepNpcDialogue, treeSchedule, watcherSeedBox,
     watcherTakesHit,
 } from './endingChain.js';
@@ -14116,7 +14116,7 @@ export function createLevelRun({
         let open = false;
         for (const w of st.values()) {
             const canTalk = !w.cleared && !!w.text;
-            const inRange = inTalkRange({ x: w.ex, y: w.ey }, { x: state.x, y: state.y });
+            const inRange = inTalkRange({ x: w.ex, y: w.ey }, { x: state.x, y: state.y }, talkRangeOf(w.tag));
             if (!canTalk) continue;
             if (w.talking) {
                 // `NPC.as:195` — `Game.freezeObjects = true`, every frame,
@@ -14173,7 +14173,7 @@ export function createLevelRun({
                 throw new Error(`levelRun: the walk opens \`${w.tag}\`'s dialogue at tick `
                     + `${ticksCompleted} in level ${w.level} (an X release `
                     + `${Math.hypot(w.ex - state.x, w.ey - state.y).toFixed(2)} px from `
-                    + `it, inside \`talkRange\` ${TALK_RANGE}), and that class's `
+                    + `it, inside \`talkRange\` ${talkRangeOf(w.tag)}), and that class's `
                     + `\`doneTalking()\` is NOT transcribed: ${row?.why ?? '(no reason '
                     + 'recorded)'}. Finishing the dialogue AND walking out of the circle `
                     + 'both run it, so there is no safe half to model. Transcribe the '
@@ -15176,7 +15176,9 @@ export function createLevelRun({
         const out = [];
         for (const w of talkerStateFor(level).values()) {
             if (w.cleared || !w.text) continue;
-            out.push({ id: w.id, tag: w.tag, ex: w.ex, ey: w.ey, level: w.level });
+            // ⛓ fidelity DASHSTEP: the circle carries its class's radius for `strikePolicy.talkGuard` (ON only).
+            out.push({ id: w.id, tag: w.tag, ex: w.ex, ey: w.ey, level: w.level,
+                ...(CONTACT_FIDELITY.statueTalkRange ? { talkRange: talkRangeOf(w.tag) } : {}) });
         }
         return out;
     };
