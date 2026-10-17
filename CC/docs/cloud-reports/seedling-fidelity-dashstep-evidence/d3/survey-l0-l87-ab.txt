@@ -1,0 +1,28 @@
+## base f77dbd6bb9  (survey --through=end --route=full --only=<the L0/L87 steps>; statueTalkRange OFF -> ON)
+step   1 L0   stairsdown@256,272 → L2                  SOLVED 183 -> SOLVED 183
+step  14 L0   stairsdown@32,192 → L13                  SOLVED 145 -> SOLVED 145
+step  20 L0   teleporter@160,272 → L86                 SOLVED 196 -> SOLVED 196
+step  22 L0   stairsdown@32,192 → L13                  SOLVED 203 -> SOLVED 203
+step  29 L0   teleporter@304,176 → L12                 SOLVED 275 -> SOLVED 275
+step  33 L0   stairsdown@32,192 → L13                  SOLVED 198 -> SOLVED 198
+step  42 L0   teleporter@304,176 → L12                 SOLVED 201 -> SOLVED 201
+step  67 L0   stairsdown@32,192 → L13                  SOLVED 74 -> SOLVED 74
+step  73 L0   teleporter@304,176 → L12                 SOLVED 169 -> SOLVED 169
+step  79 L0   teleporter@304,176 → L12                 SOLVED 199 -> SOLVED 204  MOVED
+step  99 L87  teleporter@0,144 → L89                   SOLVED 222 -> SOLVED 222
+step 103 L87  teleporter@464,272 → L44                 SOLVED 250 -> SOLVED 250
+step 187 L87  teleporter@368,0 → L93                   SOLVED 223 -> SOLVED 223
+## hammer-flip-m d3099b0603 (flip ON)  (survey --through=end --route=full --only=<the L0/L87 steps>; statueTalkRange OFF -> ON)
+step   1 L0   stairsdown@256,272 → L2                  SOLVED 183 -> SOLVED 183
+step  14 L0   stairsdown@32,192 → L13                  SOLVED 145 -> SOLVED 145
+step  20 L0   teleporter@160,272 → L86                 SOLVED 196 -> SOLVED 196
+step  22 L0   stairsdown@32,192 → L13                  SOLVED 203 -> SOLVED 203
+step  29 L0   teleporter@304,176 → L12                 SOLVED 275 -> SOLVED 275
+step  33 L0   stairsdown@32,192 → L13                  SOLVED 198 -> SOLVED 198
+step  42 L0   teleporter@304,176 → L12                 SOLVED 201 -> SOLVED 201
+step  67 L0   stairsdown@32,192 → L13                  SOLVED 74 -> SOLVED 74
+step  73 L0   teleporter@304,176 → L12                 SOLVED 169 -> SOLVED 169
+step  79 L0   teleporter@304,176 → L12                 SOLVED 199 -> SOLVED 204  MOVED
+step  99 L87  teleporter@0,144 → L89                   SOLVED 222 -> SOLVED 222
+step 103 L87  teleporter@464,272 → L44                 SOLVED 250 -> SOLVED 250
+step 187 L87  teleporter@368,0 → L93                   SOLVED 223 -> SOLVED 223

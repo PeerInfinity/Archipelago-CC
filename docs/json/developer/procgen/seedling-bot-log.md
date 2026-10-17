@@ -23048,3 +23048,43 @@ Trap candidates:
    budget, not only in place.
 3. *"Out of reach" is not "past".* A corridor that bends round a hub leaves and re-enters its reach; a crossing has
    ended only past the corridor's last in-reach waypoint.
+
+### Seedling fidelity DASHSTEP — hammer's leg 7 is a statue's dialogue: its talk circle is 32 px, not 24
+
+Hammer's dash flip (`hammer-flip-m` @ `d3099b0603`) turned sweep leg 7
+(`level_0__r8c0 <- in_L1_64_112 -> location:L0 flag 1: breakablerock@288,176 cleared`) from done to FAILED: the game
+left the 247-t plan at t102 by −2.65 px. The brief read it as dash timing (DASHFLIP's family). It is not. The report
+is `CC/docs/cloud-reports/seedling-fidelity-dashstep.md`.
+
+**The game (D1).** Re-recorded on p4f headless (the flip's page + the contact sampler, with the leg's `flag:L0:4`
+staged): the t99 dash press releases X at t100, **31.79 px** from `statue2@184,160` (entity at 208,160). `NPC.talk()`
+(`NPC.as:186-239`) reads `Input.released(p.keys[6])` — `Player.as:59`'s keys[6] is X, the sword key — and
+`Statue.as:25` sets `talkRange = 32` over `NPC.as:27`'s 24. The dialogue opens, `Game.freezeObjects` holds the player
+from t102: x 180.153 and vx 2.90 kept, anim `side-stand`. The dash itself is the model's to the bit (t100 3.15, t101
+2.90).
+
+**The rule (D2).** `CONTACT_FIDELITY.statueTalkRange` (`SEEDLING_STATUE_TALK_RANGE=0|1`), OFF and byte-identical OFF.
+ON, `endingChain.talkRangeOf(tag)` gives `statue1`/`statue2` their 32 in `levelRun.stepTalkersNow` and in
+`run.talkCircles`; `strikePolicy.talkGuard` (⚖ ruling 53: a release in a circle is refused, not priced) adds its travel
+bound to the circle's own radius. Two statues exist in the game (L0, L87). `wasmPlayback.INERT_MOBILES` already read 32
+on the game side and named the model's 24 as an open defect.
+
+**Witnesses.** `fixtures/statue-talk/leg7-l0-statue2.json`: ON the model replays the game's 106 ticks at 0.000 px, the
+freeze included; OFF it parts at t102, the sweep's own row. `survey-step-79-off.json`: route survey step 79's OFF walk
+releases X at t141, 29.45 px from the same statue; the game holds x 237.699 from t143; the model ON matches all 200
+ticks at clock shift [0], OFF fails the fit. Rows: `fidelityStatueTalk.test.js` (6); mutants M1–M4 each red exactly
+where predicted.
+
+**Reach (D3), measured.** tapeRunner ON: 617 pairs, md5 = W0 (no committed tape moves). Survey (local, every L0/L87
+step: L0 visits 1–10, L87 visits 1–3), base and flip alike: one mover, **step 79 SOLVED 199 → 204 t** (the OFF plan is
+the game-refuted one above). Sweep, node over the captured requests of every L0/L87 leg: main 39005483635, 43 requests,
+**0 move**; flip 39005482173, 45 requests, **5 move on legs 7, 23, 39, 47** (all `breakablerock@288,176`). ON, all four
+play `done` on the game under the flip (7: 247 → 243 t, 23: 233 → 237, 39: 283 → 282, 47: 273 → 281). The switch stays
+OFF: the flip is the user's.
+
+Trap candidates:
+1. *A one-tick loss after a press is not necessarily the press's own timing.* The sword key is also the talk key; a
+   stop right after a swing near a placed NPC is a dialogue first. Read the game's `anim` (`side-stand` while `right`
+   is held) and the NPC's radius before touching the dash constants.
+2. *A per-class field the AS3 overrides in a constructor is not the base class's default.* `NPC.talkRange` is 24 and
+   one subclass assigns 32; a model that reads the declaration misses it. `wasmPlayback.js` had named this defect.
