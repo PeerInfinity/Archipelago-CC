@@ -1,0 +1,39 @@
+# box lock: TAKEN by plan-seedling-r7-ends-meet.mjs (browser, pid 4147) — head 5c4b07628, 9 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+
+## chain toy-west-pair
+
+PASS: r7-ends-meet-full is byte-identical to what this planner derives — 1668 bytes
+PASS: r7-ends-meet-1 is byte-identical to what this planner derives — 1422 bytes
+    drove r7-ends-meet-1: 62 observations, 38 dead
+PASS: r7-ends-meet-1 ends at a CALM ARRIVAL — 46 signature rows latched at tick 61
+PASS: r7-ends-meet-2 is byte-identical to what this planner derives — 2523 bytes
+
+## chain r8-battery-1 — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r8-battery-2 — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r8-battery-3 — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r8-battery-4 — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r8-battery-5 — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r8-battery-6 — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r8-battery-8 — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r8-battery-7 — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r8-battery-9 — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r8-battery-10 — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r8-battery-11 — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r8-d2-shield — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r8-d2 — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+## chain r9-campaign — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+CHECK CLEAN — the committed chain is what the game produces today

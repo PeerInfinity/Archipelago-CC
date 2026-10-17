@@ -1716,14 +1716,14 @@
     },
     {
       "file": "r9-l0-sword-dash-rest.json",
-      "tickCount": 28,
+      "tickCount": 27,
       "bootLevel": 0,
       "tapeVersion": 8,
       "noHazards": []
     },
     {
       "file": "r9-l0-sword-dash.json",
-      "tickCount": 37,
+      "tickCount": 36,
       "bootLevel": 0,
       "tapeVersion": 8,
       "noHazards": []
@@ -1751,7 +1751,7 @@
     },
     {
       "file": "r9-l6-sword-dash-hit.json",
-      "tickCount": 22,
+      "tickCount": 21,
       "bootLevel": 6,
       "tapeVersion": 8,
       "noHazards": []

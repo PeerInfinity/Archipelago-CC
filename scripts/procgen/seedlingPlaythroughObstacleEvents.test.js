@@ -99,7 +99,8 @@ describe('the playthrough\'s obstacle events', () => {
     });
 
     it('rules l38-button-event: the L38 press is ONE event in L39\'s flag at the button, gating exactly the plug\'s two crossings', () => {
-        expect(buttons.events.map((e) => e.fields.event_id)).toEqual(['flag:L39:8']);
+        // (+ RULES darktrap-events' two pole presses, the next row)
+        expect(buttons.events.map((e) => e.fields.event_id)).toEqual(['flag:L39:8', 'flag:L62:0', 'flag:L63:1']);
         expect(buttons.reused).toEqual([]);
         const [e] = buttons.events;
         expect(e.fields.side).toBe('level_38__r0c9');
@@ -109,16 +110,46 @@ describe('the playthrough\'s obstacle events', () => {
         const gates = gatesOf(RULES, new Set([e.name]));
         expect(gates.map((g) => `${g.from}->${g.to}`).sort()).toEqual(['level_38__r0c9->level_39__r2c11', 'level_39__r2c11->level_38__r0c9']);
         // the fresh derivation gates exactly the departures the committed rules ask it on
-        expect(buttons.exitGates.map((g) => `${g.region_id}/${g.exit_id}`))
+        expect(buttons.exitGates.filter((g) => JSON.stringify(g.rule).includes(e.name)).map((g) => `${g.region_id}/${g.exit_id}`))
             .toEqual(['level_38/out_teleporter_144_0', 'level_39/out_teleporter_144_624']);
+        // a solid target has no in-room arm: the event alone (darktrap-events' Or is the pole's)
+        expect(buttons.exitGates.filter((g) => JSON.stringify(g.rule).includes(e.name)).map((g) => g.rule))
+            .toEqual([{ rule: 'Has', args: { item_name: e.name } }, { rule: 'Has', args: { item_name: e.name } }]);
         // the lock's own region is NOT split: the atlas carries no event and no gate
         expect(RULES.regions['1'].level_39__r2c11.exits.find((x) => x.connected_region === 'level_39__r0c9').access_rule)
             .toEqual({ rule: 'True_' });
         // ⚖ rules l37-fallrock-patch: the delivered set drops L37's fallrock, so the L38 arrival button's write
         // reaches NO target on the playthrough's map (it was `-> {37,4} fallrock@288,32`, an arm).
-        expect(buttons.skipped.map((x) => x.split(':')[0]).sort()).toEqual([
-            'L38 buttonroom@144,288 -> {37,4}', 'L61 buttonroom@176,40 -> {63,1} lightpole@64,88',
-            'L63 buttonroom@32,64 -> {62,0} lightpole@120,200']);
+        // ⛓ RULES darktrap-events: L61's and L63's presses are no longer skipped as cosmetic (next row).
+        expect(buttons.skipped.map((x) => x.split(':')[0]).sort()).toEqual(['L38 buttonroom@144,288 -> {37,4}']);
+    });
+
+    it('rules darktrap-events: the L61/L63 presses light L63\'s/L62\'s poles — events in the POLE\'s flag at the button, gating exactly the darktrap pockets\' doors on Or(event, Ghost Spear)', () => {
+        const ev = Object.fromEntries(buttons.events.map((x) => [x.fields.event_id, x]));
+        expect(ev['flag:L62:0'].fields).toMatchObject({ side: 'level_63__r0c1', across: [],
+            obstacle: { level: 62, tag: 0, class: 'lightpole', x: 120, y: 200 },
+            action: { verb: 'press', item: null, presser: { level: 63, class: 'buttonroom', x: 32, y: 64 } } });
+        expect(ev['flag:L63:1'].fields).toMatchObject({ side: 'level_61__r0c10', across: [],
+            obstacle: { level: 63, tag: 1, class: 'lightpole', x: 64, y: 88 },
+            action: { verb: 'press', item: null, presser: { level: 61, class: 'buttonroom', x: 176, y: 40 } } });
+        const orOf = (name) => ({ rule: 'Or', children: [{ rule: 'Has', args: { item_name: name } },
+            { rule: 'Has', args: { item_name: 'Ghost Spear' } }] });
+        // the fresh derivation: the L62 TOP pocket (L64's landing + the teleporter back) and L63's COLUMN 4 (L62's
+        // second landing + the teleporter back) — the bottom of L62 and L63's left column stay ungated
+        const fresh = (x) => buttons.exitGates.filter((g) => JSON.stringify(g.rule) === JSON.stringify(orOf(x.name)))
+            .map((g) => `${g.region_id}/${g.exit_id}`);
+        expect(fresh(ev['flag:L62:0'])).toEqual(['level_62/out_teleporter_112_64', 'level_64/out_teleporter_32_96']);
+        expect(fresh(ev['flag:L63:1'])).toEqual(['level_62/out_teleporter_240_304', 'level_63/out_teleporter_64_0']);
+        // the committed rules ask the same, as AP exits
+        for (const [id, want] of [['flag:L62:0', ['level_62->level_64', 'level_64->level_62']],
+            ['flag:L63:1', ['level_62->level_63__r0c1', 'level_63__r0c1->level_62']]]) {
+            const gates = gatesOf(RULES, new Set([ev[id].name]));
+            expect(gates.map((g) => `${g.from}->${g.to}`).sort(), id).toEqual(want);
+        }
+        const exit = (from, to) => RULES.regions['1'][from].exits.filter((x) => x.connected_region === to).map((x) => x.access_rule);
+        expect(exit('level_62', 'level_64')).toEqual([orOf(ev['flag:L62:0'].name)]);
+        expect(exit('level_62', 'level_63__r0c1')).toEqual([{ rule: 'True_' }, orOf(ev['flag:L63:1'].name)]);
+        expect(exit('level_62', 'level_61__r0c7')).toEqual([{ rule: 'True_' }]);
     });
 
     it('rules watcher-event: the Watcher\'s talk is ONE event in L114\'s flag, gating the FinalDoor\'s event and its two crossings', () => {

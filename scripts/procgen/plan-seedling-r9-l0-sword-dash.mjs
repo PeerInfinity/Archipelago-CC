@@ -179,8 +179,13 @@ const pressTicks = new Set(PRESS_OFFSETS.map((k) => opening + k));
 /**
  * ⛓ A TAIL LONG ENOUGH TO SPEND THE LAST SWING AND WATCH THE DECAY LAND. The
  * −0.25/tick decay from a +2 impulse takes eight ticks to be reabsorbed, and
- * the last press's own animation is five; the tape must outlive both or the
- * arithmetic is only half observed.
+ * the last press's own animation is `SLASH_ANIM_TICKS[SLASH_ANIM_DASH]`; the
+ * tape must outlive both or the arithmetic is only half observed.
+ * ⛓ SEEDLING HAMMER HK: that animation was five (`SLASH_ANIM_TICKS_LEGACY`)
+ * when both tapes here were sealed, and is the game's four since fidelity
+ * DASHFLIP (`99fd021509`, `DASH_WINDOW_ROSTER_WIDE = true`). The tail is padding,
+ * not a claim, so both tapes were RE-DERIVED one tick shorter (37 -> 36, 28 -> 27)
+ * and re-recorded on p4f: each new expectation is the old one minus its last tick.
  */
 const TAIL = Math.ceil(SLASH_DASH_FORCE / 0.25) + SLASH_ANIM_TICKS[SLASH_ANIM_DASH];
 const LAST = opening + DISCRIMINATOR_AT + TAIL;

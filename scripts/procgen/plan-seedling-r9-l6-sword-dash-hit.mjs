@@ -155,6 +155,11 @@ const CHAIN = [0, DASH_CHAIN.at[0]];
  * dash's surplus decays over `DASH_DISPLACEMENT.ticks`, its own animation is
  * `SLASH_ANIM_TICKS[SLASH_ANIM_DASH]`, and the knocked body needs a few ticks
  * to show which way it went.
+ * ⛓ SEEDLING HAMMER HK: that animation was five when this tape was sealed and is
+ * the game's four since fidelity DASHFLIP (`99fd021509`). The tail is padding, so
+ * the tape was RE-DERIVED one tick shorter (22 -> 21) and re-recorded on p4f (the
+ * new expectation is the old one minus its last tick), and the dash-rect
+ * `--mobiles` probe's claims hold on both tapes (hits [1], one body, alive).
  */
 const TAIL = DASH_DISPLACEMENT.ticks + SLASH_ANIM_TICKS[SLASH_ANIM_DASH] + SLASH_HIT_TICKS;
 

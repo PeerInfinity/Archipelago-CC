@@ -34,12 +34,12 @@
         }
     },
     "tick0": null,
-    "tick_count": 37,
+    "tick_count": 36,
     "inputs": [
         {
             "key": "right",
             "from": 0,
-            "to": 37
+            "to": 36
         },
         {
             "key": "primary",
