@@ -390,6 +390,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       shards: ${{ steps.plan.outputs.shards }}
+      needed: ${{ steps.needed.outputs.needed }}
     steps:
       # ⛓ NO submodules and NO `npm ci`: the plan reads `gateRoster()` (a
       # directory of `check-*.mjs`) and `ci-arm-costs.json`, and imports
@@ -402,6 +403,46 @@ jobs:
         uses: actions/setup-node@v6.4.0
         with:
           node-version: '22'
+
+      # ════════════════════════════════════════════════════════════════
+      # ⛓ ci-skip-rules RULE 2 (⚖ user, 2026-10-17) — A DOCS-ONLY PUSH RUNS
+      # NO BROWSER SHARD. A non-main push whose changes all lie under
+      # `ciDocsOnly.SKIPPABLE_PREFIXES` (docs/, CC/, NewDocs/) skips the
+      # matrix below. Vitest and the headless gates still run: docs are pinned
+      # (10 of 65 docs pushes went red in Vitest), and the CI-sourced
+      # `procgen-help` row reads docs/. `ciDocsOnly.test.js` holds the premise:
+      # no CI-sourced browser arm has a derived input under those prefixes.
+      # ⛓ FAIL-OPEN, F1's shape: main, a PR, a dispatch, an unreadable
+      # compare or ≥ 300 files all run the shards.
+      # ════════════════════════════════════════════════════════════════
+      - name: Browser gates needed? (rule 2 — a docs-only push skips them)
+        id: needed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          BEFORE: ${{ github.event.before }}
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          decide() {
+            if [ "$EVENT" != "push" ] || [ "$REF" = "refs/heads/main" ]; then
+              echo "run: $EVENT on $REF always runs" >&2; echo true; return
+            fi
+            base="$BEFORE"
+            case "$base" in ''|0000000000000000000000000000000000000000) base=main ;; esac
+            if ! files=$(gh api "repos/$REPO/compare/$base...$SHA" --jq '.files[].filename'); then
+              echo "run: could not list the changes ($base...$SHA)" >&2; echo true; return
+            fi
+            n=$(printf '%s\n' "$files" | grep -c . || true)
+            if [ "$n" -ge 300 ]; then echo "run: $n changed files (list may be truncated)" >&2; echo true; return; fi
+            echo "$n changed file(s) in $base...$SHA:" >&2; printf '%s\n' "$files" | sed 's/^/  /' >&2
+            printf '%s\n' "$files" | node --input-type=module -e "import { docsOnly } from './scripts/procgen/ciDocsOnly.js'; let d = ''; process.stdin.on('data', (c) => { d += c; }).on('end', () => console.log(docsOnly(d.split('\\n')) ? 'false' : 'true'));"
+          }
+          needed=$(decide | tail -1)
+          [ "$needed" = false ] || needed=true
+          echo "MEASURED: browser gates needed: $needed"
+          echo "needed=$needed" >> "$GITHUB_OUTPUT"
 
       - name: Derive the shard partition from the runner's own measured cost
         id: plan
@@ -416,6 +457,8 @@ jobs:
   browser-gates:
     name: Browser gate shard — ${{ matrix.shard.name }}
     needs: browser-gate-plan
+    # ⛓ RULE 2 — a docs-only branch push skips the shards (see the plan job).
+    if: needs.browser-gate-plan.outputs.needed == 'true'
     runs-on: ubuntu-latest
     # ⛔ WITHOUT THIS LINE THE GITHUB DEFAULT IS 360 MINUTES, and this job
     # holds the one row whose runner cost is genuinely unknown:
