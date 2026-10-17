@@ -171,9 +171,9 @@ import { dropKillVetoFor, setDropKillNeeds } from './bulbPlacement.js';
 import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestFirstQueue, coarseKey,
     spaceTimeReach } from './spaceTimeReach.js';
 // ⛓ hammer-phase D1 — the progress emitter: every count point below is `activeProgress !== null` first.
-import { activeProgress, progressAsked, progressEnter, progressGoal, progressLeave, progressPreview,
-    progressReaders, progressRow, progressRun, progressRung, progressSearch, progressSegment, progressSite,
-    progressStatesFor, progressTick, withSolveProgress } from './solveProgress.js';
+import { activeProgress, progressAsked, progressEnter, progressGoal, progressHeartbeat, progressLeave,
+    progressPreview, progressReaders, progressRow, progressRun, progressRung, progressSearch, progressSegment,
+    progressSite, progressStatesFor, progressTick, withSolveProgress } from './solveProgress.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
 import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
 // ⛓ seedling-fidelity-arrowlane D2 — the armed-lane crossing arm (`ARROW_LANE_CROSSING`, OFF).
@@ -5109,6 +5109,7 @@ export function previewWalk(run, wps, tolerance = 0,
      * convention `drive` passes and the policy's `owed` window is measured in.
      */
     const combatBefore = (state, at, walkHeld, bodiesNow) => {
+        if (activeProgress !== null) progressHeartbeat('preview-sample'); // ⛓ HB: emit-only, once a sample
         if (!strike) return { held: walkHeld, dashImpulse: null };
         const gate = gateAt(at);
         let held = walkHeld;
@@ -17201,6 +17202,7 @@ export function deriveKillByChaser(run, body, contacts,
         }
         const wps = (c.x === run.state.x && c.y === run.state.y)
             ? [] : planWaypointsOrNull(run.world, run.state, c, allowTeleporter, planOpts);
+        if (activeProgress !== null) progressHeartbeat('kill-stance'); // ⛓ HB: emit-only, once a candidate planned
         if (wps === null) continue;
         /**
          * ⛔⛔ A CANDIDATE THAT CANNOT BE PRICED IS REJECTED, NOT RAISED — and

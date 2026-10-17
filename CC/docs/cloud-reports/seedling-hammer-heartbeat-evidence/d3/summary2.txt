@@ -1,0 +1,49 @@
+1 base-none  2.07 r5-l40-part5  6508 3addc379 167 0 None None None
+1 after-none 2.07 r5-l40-part5  5926 3addc379 167 0 None None None
+1 stop-none  2.06 r5-l40-part5  6894 3addc379 167 0 None None None
+1 base-100   2.05 r5-l40-part5  5977 3addc379 167 211 81.2 184 0
+1 after-100  2.29 r5-l40-part5  6182 3addc379 167 262 67.2 181 51
+1 stop-100   2.26 r5-l40-part5  6948 3addc379 167 372 14.5 114 161
+1 base-none  2.44 r9-solve-18   4309 230dc0ff 165 0 None None None
+1 after-none 2.49 r9-solve-18   3787 230dc0ff 165 0 None None None
+1 stop-none  2.45 r9-solve-18   3504 230dc0ff 165 0 None None None
+1 base-100   2.45 r9-solve-18   3907 230dc0ff 165 1441 0 103 0
+1 after-100  2.41 r9-solve-18   3929 230dc0ff 165 1593 0 102 152
+1 stop-100   2.46 r9-solve-18   3981 230dc0ff 165 1593 0 103 152
+2 base-none  2.42 r5-l40-part5  6046 3addc379 167 0 None None None
+2 after-none 2.39 r5-l40-part5  6078 3addc379 167 0 None None None
+2 stop-none  2.36 r5-l40-part5  5278 3addc379 167 0 None None None
+2 base-100   2.7 r5-l40-part5  5491 3addc379 167 211 80.8 169 0
+2 after-100  2.65 r5-l40-part5  5337 3addc379 167 262 56.5 163 51
+2 stop-100   2.6 r5-l40-part5  5493 3addc379 167 372 4 112 161
+2 base-none  2.55 r9-solve-18   4288 230dc0ff 165 0 None None None
+2 after-none 2.82 r9-solve-18   4482 230dc0ff 165 0 None None None
+2 stop-none  2.84 r9-solve-18   4629 230dc0ff 165 0 None None None
+2 base-100   2.85 r9-solve-18   4251 230dc0ff 165 1441 0 103 0
+2 after-100  2.78 r9-solve-18   4465 230dc0ff 165 1593 0 104 152
+2 stop-100   2.72 r9-solve-18   3741 230dc0ff 165 1593 0 103 152
+3 base-none  2.72 r5-l40-part5  6229 3addc379 167 0 None None None
+3 after-none 2.69 r5-l40-part5  5831 3addc379 167 0 None None None
+3 stop-none  2.63 r5-l40-part5  5747 3addc379 167 0 None None None
+3 base-100   2.58 r5-l40-part5  6105 3addc379 167 211 79.7 176 0
+3 after-100  2.62 r5-l40-part5  7271 3addc379 167 262 69 229 51
+3 stop-100   2.45 r5-l40-part5  6444 3addc379 167 372 14.3 117 161
+3 base-none  2.41 r9-solve-18   3970 230dc0ff 165 0 None None None
+3 after-none 2.38 r9-solve-18   4343 230dc0ff 165 0 None None None
+3 stop-none  2.35 r9-solve-18   3899 230dc0ff 165 0 None None None
+3 base-100   2.32 r9-solve-18   4533 230dc0ff 165 1441 0 104 0
+3 after-100  2.29 r9-solve-18   4485 230dc0ff 165 1593 0 103 152
+3 stop-100   2.59 r9-solve-18   4468 230dc0ff 165 1593 0 102 152
+--- medians
+r5-l40-part5 base-none  wall 6229 gap% [None, None, None] postgap [None, None, None] digests 1 ss {167}
+r5-l40-part5 after-none wall 5926 gap% [None, None, None] postgap [None, None, None] digests 1 ss {167}
+r5-l40-part5 stop-none  wall 5747 gap% [None, None, None] postgap [None, None, None] digests 1 ss {167}
+r5-l40-part5 base-100   wall 5977 gap% [81.2, 80.8, 79.7] postgap [184, 169, 176] digests 1 ss {167}
+r5-l40-part5 after-100  wall 6182 gap% [67.2, 56.5, 69] postgap [181, 163, 229] digests 1 ss {167}
+r5-l40-part5 stop-100   wall 6444 gap% [14.5, 4, 14.3] postgap [114, 112, 117] digests 1 ss {167}
+r9-solve-18 base-none  wall 4288 gap% [None, None, None] postgap [None, None, None] digests 1 ss {165}
+r9-solve-18 after-none wall 4343 gap% [None, None, None] postgap [None, None, None] digests 1 ss {165}
+r9-solve-18 stop-none  wall 3899 gap% [None, None, None] postgap [None, None, None] digests 1 ss {165}
+r9-solve-18 base-100   wall 4251 gap% [0, 0, 0] postgap [103, 103, 104] digests 1 ss {165}
+r9-solve-18 after-100  wall 4465 gap% [0, 0, 0] postgap [102, 104, 103] digests 1 ss {165}
+r9-solve-18 stop-100   wall 3981 gap% [0, 0, 0] postgap [103, 103, 102] digests 1 ss {165}

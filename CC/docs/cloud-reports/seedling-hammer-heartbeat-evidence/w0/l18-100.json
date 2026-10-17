@@ -1,0 +1,1 @@
+{"tape":"r9-solve-18","interval":"100","wall":4614,"digest":"230dc0ff7300b9741e5559abc26ef70f","shouldStops":165,"ok":true,"ticks":445,"hookCalls":1441,"gapShareOver100":3.6,"gapsOver100":1,"postGapMedian":106,"posts":43,"gapPairs":{"walk→preview":1},"heartbeats":0,"finalAsks":{"walk":18,"hammer-escape":37,"sword-dash":9},"gaps":[{"ms":167,"from":"walk","to":"preview"}]}
