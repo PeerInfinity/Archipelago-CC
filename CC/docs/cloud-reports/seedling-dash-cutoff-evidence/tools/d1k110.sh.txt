@@ -1,0 +1,5 @@
+#!/bin/bash
+S=$1; cd $S
+while kill -0 16701 2>/dev/null; do sleep 20; done
+DK_RULE=k:110 node tools/ds-batch.mjs --lab=$S/lab2 --runner=$S/tools/dk-run.mjs --dir=/tmp/claude-0/caps --out=$S/d1/battery.jsonl --windows=85 --tag=f85k110 --only=$(cat pop617.txt) --jobs=3 --extra="--stamp={}" 2>&1 | tail -1
+echo ALLDONE

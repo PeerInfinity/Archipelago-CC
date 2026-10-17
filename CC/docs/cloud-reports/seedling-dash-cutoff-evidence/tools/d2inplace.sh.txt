@@ -1,0 +1,10 @@
+#!/bin/bash
+# D2 in place: identity block, censuses, 62 producers --check, in the frozen D2 snapshot (d2lab, port 9595). $1=scratch
+S=$1; O=$S/d2; mkdir -p $O/plans; cd $S/d2lab
+s=$(date +%s); SEEDLING_PORT=9595 bash scripts/procgen/identity-block.sh . > $O/identity.txt 2>&1; echo "identity rc=$? s=$(( $(date +%s)-s ))" > $O/runs.txt
+{ for c in census-seedling-solver-surface census-seedling-constants witness-seedling-entities witness-seedling-profile; do echo "== $c --check"; node scripts/procgen/$c.mjs --check 2>&1 | grep -av '^# box lock' | tail -3; echo rc=$?; done; } > $O/censuses.txt 2>&1
+for p in $(cat $S/plans61.txt); do n=$(basename $p .mjs); s=$(date +%s)
+  SEEDLING_PORT=9595 timeout 2400 node $p --check > $O/plans/$n.out 2>&1; rc=$?
+  echo "$n rc=$rc s=$(( $(date +%s)-s )) md5=$(grep -av '^# box lock:' $O/plans/$n.out | md5sum | cut -c1-8)" >> $O/plans.txt
+done
+echo D2RUN DONE >> $O/runs.txt

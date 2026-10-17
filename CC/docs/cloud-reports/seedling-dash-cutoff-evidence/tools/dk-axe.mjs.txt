@@ -1,0 +1,25 @@
+// DK: the axe corridor's chain, window by window (lab tree, pre-check OFF)
+const ROOT = process.argv[2];
+const { AXE_WITNESSES, axePlan } = await import(`${ROOT}/scripts/procgen/plan-seedling-axe-witness.mjs`);
+const { withContactFidelity } = await import(`${ROOT}/frontend/modules/seedlingDemo/contactFidelity.js`);
+const sb = await import(`${ROOT}/frontend/modules/seedlingDemo/solverBot.js`);
+const recs = [];
+globalThis.__DK = { xy: true, cur: null, done: (rec, out) => recs.push({ ...rec, out }) };
+const w = AXE_WITNESSES.find((x) => x.name === (process.argv[3] ?? 'axe-l48-reach-l49'));
+const { solved } = await withContactFidelity({ waypointSlide: false }, () => sb.withDashLegPrecheck(false, () => axePlan(w)));
+console.log('ticks', solved.out.perTick.length);
+for (const r of recs) {
+    const o = r.out ?? {};
+    console.log(`corridor wps=${r.wps} baseline=${r.baseline} baseLegs=${JSON.stringify(r.baseLegs)} L=${Math.max(0, ...(r.baseLegs ?? [0]))} planned=${!!o.plan} ticks=${o.ticks} windows=${JSON.stringify(o.windows)} finalLegs=${JSON.stringify(o.legs)} scanned=${o.scanned} why=${(o.why ?? '').slice(0, 80)}`);
+    let k = 0;
+    for (const c of o.candidates ?? []) {
+        if (c.certified || (k < 12 && c.kind !== 'leg-bound')) { console.log(`   at=${c.at} prefix=${c.prefix} ticks=${c.ticks} kind=${c.kind ?? 'CERT'} longest=${c.longest} legs=${JSON.stringify(c.legsAll)}`); k++; }
+    }
+    const lb = (o.candidates ?? []).filter((c) => c.kind === 'leg-bound');
+    if (lb.length) console.log(`   leg-bound n=${lb.length} min longest=${Math.min(...lb.map((c) => c.longest))} first at=${lb[0].at} legs=${JSON.stringify(lb[0].legsAll)}`);
+}
+for (const r of recs) { console.log('legStats', JSON.stringify(r.legStats)); console.log('wps', JSON.stringify(r.wpsXY)); }
+const xy = recs[0].baseXY.filter((p) => p[0] === 5);
+console.log('leg5', xy.length, JSON.stringify(xy.filter((_, k) => k % 5 === 0).map((p) => [p[1], p[2]])));
+{ const l = recs[0].baseXY.filter((p) => p[0] === 5); const k = l.findIndex((p) => p[2] <= 56); console.log('reach y<=56 after', k + 1, 'ticks; dy', l[0][2] - l[k][2], 'px; mean', ((l[0][2] - l[k][2]) / k).toFixed(3));
+  const d = []; for (let i = 1; i < 40; i++) d.push(l[i - 1][2] - l[i][2]); console.log('first deltas', d.join(' ')); }

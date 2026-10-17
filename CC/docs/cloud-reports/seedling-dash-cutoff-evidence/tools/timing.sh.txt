@@ -1,0 +1,17 @@
+#!/bin/bash
+# DK D2 timing: interleaved rounds, jobs 1, window 85. off = today (all OFF, stamped) and nolp = the flip without (i),
+# both on the DK tree; k40 = the flip as DF built it (the W0 tree, K = 40); dk = the flip with DK's rule (the DK tree).
+S=$1; OUT=$S/d2t/timing.jsonl
+declare -A ST=([off]='{"dashShape":{"legPrecheck":false,"keepPartial":false},"dashOnlyWindow":false}' [k40]='{}' [dk]='{}' [nolp]='{"dashShape":{"legPrecheck":false}}')
+declare -A TREE=([off]=$S/d2lab [k40]=$S/w0lab [dk]=$S/d2lab [nolp]=$S/d2lab)
+for round in 1 2 3; do
+  for k in $(cat $S/d2t/keys.txt); do
+    id=${k%%:*}; F=$(grep -al "^{\"id\":$id," /tmp/claude-0/caps/divergence-shard-*/requests-*.jsonl | head -1)
+    for c in off k40 dk nolp; do
+      load=$(cut -d' ' -f1 /proc/loadavg)
+      line=$(node $S/tools/df-run.mjs --lab=${TREE[$c]} --requests=$F --one=$k --window=85 --stamp="${ST[$c]}" | grep -a '^RESULT ' | cut -c8-)
+      echo "{\"round\":$round,\"config\":\"$c\",\"load\":$load,\"r\":$line}" >> $OUT
+    done
+  done
+done
+echo TIMING DONE

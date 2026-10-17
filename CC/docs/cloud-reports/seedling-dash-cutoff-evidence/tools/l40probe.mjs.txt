@@ -1,0 +1,17 @@
+import { readFileSync } from 'node:fs';
+const R = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo';
+const { levelSourceFromAtlas } = await import(`${R}/atlasSource.js`);
+const { DEFAULT_TOLERANCE } = await import(`${R}/botDriverV1.js`);
+const sb = await import(`${R}/solverBot.js`);
+const { createRunForStaging } = await import(`${R}/tapeRunner.js`);
+const F = JSON.parse(readFileSync(process.argv[2], 'utf8'));
+const src = levelSourceFromAtlas({ levels: F.records });
+const mk = () => createRunForStaging(F.staging, src, { scratchPersistence: F.scratchPersistence });
+const [a, b, st] = process.argv.slice(3).map(Number);
+for (let x = a; x >= b; x -= st) {
+    const run = mk(); const wps = [{ x: 488, y: 680 }, { x, y: 680 }];
+    const strike = sb.strikePolicyFor(run, { dashPlan: null, dashMode: 'all', iframeLapse: true });
+    const w = sb.previewWalk(run, wps, DEFAULT_TOLERANCE, { strike });
+    const legs = sb.dashLegRuns(w.samples, run.state); const l = legs[1];
+    console.log(x, 'trunc', w.truncated?.kind ?? null, legs.map((q) => q.n).join('/'), 'span', l?.span.toFixed(1), 'path', l?.path.toFixed(1), 'still', l?.still, 'floor', l && sb.dashLegFloor(l), (sb.withDashLegPrecheck(true, () => sb.dashLegPrecheck(run, w)) ?? 'scan').slice(0, 40));
+}

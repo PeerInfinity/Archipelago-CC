@@ -1,0 +1,23 @@
+# DK D1: per-corridor table from battery rows (tag) + producer corridors.
+import json, sys, collections
+S = sys.argv[1]; tag = sys.argv[2] if len(sys.argv) > 2 else 'w0off'
+rows = [json.loads(l) for l in open(f'{S}/d1/battery.jsonl') if l.strip()]
+rows = [r for r in rows if r.get('tag') == tag]
+cors = []
+for r in rows:
+    for k, c in enumerate(r.get('corridors') or []):
+        c['key'] = f"{r['id']}:{r['i']}#{k}"; cors.append(c)
+print(f'{tag}: {len(rows)} requests, {len(cors)} corridors scanned (planSwordDash calls)')
+scanned = [c for c in cors if c['baseLegs'] is not None]
+print('with a baseline:', len(scanned), ' planned:', sum(c['planned'] for c in scanned))
+B = collections.defaultdict(lambda: [0, 0, 0])
+for c in scanned:
+    b = (c['L'] // 20) * 20
+    B[b][0] += 1; B[b][1] += c['planned']; B[b][2] += c['scanned']
+for b in sorted(B): print(f'  L [{b},{b+20}): n {B[b][0]} planned {B[b][1]} previews {B[b][2]}')
+big = sorted([c for c in scanned if c['L'] > 195], key=lambda c: -c['L'])
+print('L > 195:')
+for c in big:
+    ls = c['legStats'][c['li']] if c['legStats'] else {}
+    net = round(((ls.get('x1',0)-ls.get('x0',0))**2 + (ls.get('y1',0)-ls.get('y0',0))**2) ** 0.5)
+    print(f"  {c['key']:>10} {c.get('pass','')} L={c['L']} li={c['li']}/{len(c['baseLegs'])} planned={c['planned']} saved={c['saved']} fc={json.dumps(c['firstCert'] and {k: c['firstCert'][k] for k in ('at','prefix','longest')})} prev={c['scanned']} minLongest={c.get('minCandLongest')} leg: n={ls.get('n')} still={ls.get('still')} px={ls.get('px')} net={net} d=({ls.get('x1',0)-ls.get('x0',0)},{ls.get('y1',0)-ls.get('y0',0)}) why={c['why'][:40]}")

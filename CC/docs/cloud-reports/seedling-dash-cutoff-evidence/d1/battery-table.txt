@@ -1,0 +1,15 @@
+     tag    n    ticks better worse   units  wall s errors
+   today  617   110216      0     0   34936    1332 0  []
+   w0off  617    87704    170     0   77780    1406 0  []
+  f85off  617    94359    165     0   51709    1471 0  []
+  f85k40  617    94359    165     0   50094     997 0  []
+   f85dk  617    94359    165     0   51029     663 0  []
+ f85k110  617    94359    165     0   50859     652 0  []
+f85k40 vs f85dk: 0 keys differ in ticks []
+f85k40 vs f85dk: units differ on 11 keys, sum 935
+f85off vs f85dk: 0 keys differ in ticks []
+f85off vs f85dk: units differ on 8 keys, sum -680
+f85off vs f85k110: 0 keys differ in ticks []
+f85off vs f85k110: units differ on 10 keys, sum -850
+f85k40 vs f85off: 0 keys differ in ticks []
+f85k40 vs f85off: units differ on 19 keys, sum 1615

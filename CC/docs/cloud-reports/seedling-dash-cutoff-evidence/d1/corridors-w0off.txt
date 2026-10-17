@@ -1,0 +1,49 @@
+w0off: 617 requests, 650 corridors scanned (planSwordDash calls)
+with a baseline: 650  planned: 589
+  L [0,20): n 232 planned 200 previews 1856
+  L [20,40): n 64 planned 64 previews 700
+  L [40,60): n 61 planned 60 previews 3319
+  L [60,80): n 76 planned 74 previews 8484
+  L [80,100): n 31 planned 30 previews 2420
+  L [100,120): n 60 planned 60 previews 5652
+  L [120,140): n 23 planned 23 previews 4774
+  L [140,160): n 44 planned 44 previews 4636
+  L [160,180): n 22 planned 22 previews 4436
+  L [180,200): n 11 planned 10 previews 1540
+  L [220,240): n 2 planned 2 previews 320
+  L [260,280): n 8 planned 0 previews 4344
+  L [280,300): n 1 planned 0 previews 596
+  L [340,360): n 1 planned 0 previews 581
+  L [360,380): n 1 planned 0 previews 581
+  L [380,400): n 8 planned 0 previews 4702
+  L [400,420): n 5 planned 0 previews 0
+L > 195:
+     132:0#1 full L=400 li=1/2 planned=False saved=None fc=null prev=0 minLongest=None leg: n=400 still=395 px=7 net=8 d=(-6,5) why=the UNDASHED corridor STALLS (the previe
+     162:0#1 full L=400 li=1/2 planned=False saved=None fc=null prev=0 minLongest=None leg: n=400 still=395 px=7 net=8 d=(-6,5) why=the UNDASHED corridor STALLS (the previe
+     152:0#1 full L=400 li=1/2 planned=False saved=None fc=null prev=0 minLongest=None leg: n=400 still=395 px=7 net=8 d=(-6,5) why=the UNDASHED corridor STALLS (the previe
+     112:0#1 full L=400 li=1/2 planned=False saved=None fc=null prev=0 minLongest=None leg: n=400 still=395 px=7 net=8 d=(-6,5) why=the UNDASHED corridor STALLS (the previe
+     142:0#1 full L=400 li=1/2 planned=False saved=None fc=null prev=0 minLongest=None leg: n=400 still=395 px=7 net=8 d=(-6,5) why=the UNDASHED corridor STALLS (the previe
+     730:0#0 full L=392 li=0/6 planned=False saved=None fc=null prev=581 minLongest=338 leg: n=392 still=0 px=458 net=452 d=(-452,5) why=deadline
+     729:0#0 full L=392 li=0/6 planned=False saved=None fc=null prev=581 minLongest=338 leg: n=392 still=0 px=458 net=452 d=(-452,5) why=deadline
+     740:0#0 full L=386 li=5/6 planned=False saved=None fc=null prev=584 minLongest=377 leg: n=386 still=1 px=462 net=459 d=(459,-5) why=deadline
+     725:0#0 full L=384 li=0/6 planned=False saved=None fc=null prev=584 minLongest=335 leg: n=384 still=0 px=468 net=452 d=(-452,21) why=deadline
+     726:0#0 full L=384 li=0/6 planned=False saved=None fc=null prev=584 minLongest=335 leg: n=384 still=0 px=468 net=452 d=(-452,21) why=deadline
+     736:0#0 full L=382 li=5/6 planned=False saved=None fc=null prev=584 minLongest=76 leg: n=382 still=1 px=462 net=460 d=(460,-4) why=deadline
+     478:0#0 full L=381 li=0/1 planned=False saved=None fc=null prev=602 minLongest=381 leg: n=381 still=0 px=199 net=199 d=(199,0) why=deadline
+     488:0#0 full L=381 li=0/1 planned=False saved=None fc=null prev=602 minLongest=381 leg: n=381 still=0 px=199 net=199 d=(-199,0) why=deadline
+     739:0#0 full L=362 li=5/7 planned=False saved=None fc=null prev=581 minLongest=357 leg: n=362 still=2 px=420 net=416 d=(416,0) why=deadline
+     735:0#0 full L=358 li=5/7 planned=False saved=None fc=null prev=581 minLongest=76 leg: n=358 still=1 px=418 net=418 d=(418,0) why=deadline
+     486:0#0 full L=289 li=2/3 planned=False saved=None fc=null prev=596 minLongest=284 leg: n=289 still=1 px=151 net=151 d=(151,0) why=deadline
+     392:0#0 full L=261 li=1/6 planned=False saved=None fc=null prev=564 minLongest=261 leg: n=261 still=1 px=303 net=303 d=(-303,0) why=deadline
+     384:0#0 full L=261 li=1/6 planned=False saved=None fc=null prev=561 minLongest=261 leg: n=261 still=1 px=303 net=303 d=(-303,0) why=deadline
+     394:0#0 full L=261 li=1/4 planned=False saved=None fc=null prev=566 minLongest=261 leg: n=261 still=1 px=303 net=303 d=(-303,0) why=deadline
+     396:0#0 full L=261 li=1/3 planned=False saved=None fc=null prev=590 minLongest=261 leg: n=261 still=1 px=303 net=303 d=(-303,0) why=deadline
+     385:0#0 full L=261 li=1/7 planned=False saved=None fc=null prev=511 minLongest=261 leg: n=261 still=1 px=303 net=303 d=(-303,0) why=deadline
+     386:0#0 full L=261 li=1/8 planned=False saved=None fc=null prev=497 minLongest=261 leg: n=261 still=1 px=303 net=303 d=(-303,0) why=deadline
+     387:0#0 full L=261 li=1/11 planned=False saved=None fc=null prev=492 minLongest=261 leg: n=261 still=1 px=303 net=303 d=(-303,0) why=deadline
+     388:0#0 full L=261 li=1/6 planned=False saved=None fc=null prev=563 minLongest=261 leg: n=261 still=1 px=303 net=303 d=(-303,0) why=deadline
+     298:0#0 full L=234 li=0/2 planned=True saved=152 fc={"at": 11, "prefix": [0, 2, 8, 14], "longest": 187} prev=72 minLongest=114 leg: n=234 still=6 px=267 net=256 d=(0,-256) why=
+     295:0#0 full L=227 li=1/2 planned=True saved=152 fc={"at": 58, "prefix": [0, 2, 8, 14], "longest": 192} prev=248 minLongest=75 leg: n=227 still=2 px=263 net=261 d=(0,261) why=
+     382:0#0 full L=198 li=0/3 planned=True saved=245 fc={"at": 0, "prefix": [0, 2], "longest": 189} prev=36 minLongest=71 leg: n=198 still=2 px=227 net=224 d=(0,-224) why=
+     420:0#0 full L=198 li=0/2 planned=True saved=137 fc={"at": 0, "prefix": [0, 2], "longest": 189} prev=20 minLongest=71 leg: n=198 still=1 px=227 net=224 d=(0,-224) why=
+     400:0#0 full L=197 li=2/3 planned=False saved=None fc=null prev=596 minLongest=196 leg: n=197 still=1 px=230 net=230 d=(0,230) why=deadline
