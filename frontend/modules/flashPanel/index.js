@@ -6,6 +6,7 @@ import { dashOnlyWindowSchemaProps } from './seedlingDashOnlyWindowSettings.js';
 import { dashShapeSchemaProps } from './seedlingDashShapeSettings.js';
 import { graphicsSchemaProps } from './seedlingGraphicsSettings.js';
 import { SOLVE_PROGRESS_DEFAULT_MODE, SOLVE_PROGRESS_MODES } from './seedlingSolveProgress.js';
+import { SOLVE_PROGRESS_INTERVAL_MS, SOLVE_PROGRESS_INTERVALS_MS } from '../seedlingDemo/solveProgressTap.js';
 import { SOLVE_DEMO_EVENT } from './seedlingSolveDemo.js';
 import eventBus from '../../app/core/eventBus.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -229,10 +230,25 @@ export function register(registrationApi) {
         label: 'Seedling: show the solver\'s progress',
         description: "Both runtimes, solver rooms. Shows what the Playback Bot's solver is doing while it solves: "
           + "the goals, rungs and searches it tried (with how often each succeeded or was rejected, and why), the "
-          + "tiles its previews reached, and the work it has spent against its budget. Updated about once a "
-          + "second, and only at the solver's own checkpoints. `auto` shows it while a solve runs and hides it "
+          + "tiles its previews reached, and the work it has spent against its budget. Updated at most as often as "
+          + "the solve progress refresh rate allows, and only at the solver's own checkpoints. `auto` shows it while "
+          + "a solve runs and hides it "
           + "when the solve ends; `always` keeps it open; `off` hides it and stops the solver reporting. Watching "
           + "never changes the plan the solver finds.",
+      },
+      // ⛓ SOLVE PROGRESS S1 — ⚖ the user 2026-10-17: the refresh rate is a SETTING (1000 / 250 / 100 / 50 ms, default
+      // 100 "for now"). It rides the solve's ENVELOPE as `progressIntervalMs` beside `progress: true`, never the
+      // request (plans stay byte-identical), and the worker's tap clamps it to the list (`progressIntervalMs`). One
+      // setting for both runtimes (the wasm engines use the same worker service). Read at each solve's start.
+      seedlingSolveProgressIntervalMs: {
+        type: 'number',
+        enum: [...SOLVE_PROGRESS_INTERVALS_MS],
+        default: SOLVE_PROGRESS_INTERVAL_MS,
+        label: 'Seedling: solve progress refresh rate (ms between updates, at most)',
+        description: "Both runtimes, solver rooms. How often, at most, the solver's progress view is updated while a "
+          + "solve runs: once per this many milliseconds. It is a ceiling, not a rate: the solver reports only at its "
+          + "own checkpoints, so a long stretch of work between two checkpoints shows no update however fast this "
+          + "is set. Applies from the next solve. Watching never changes the plan the solver finds.",
       },
       // ⛓ KILLLOCK HOOK — the model's kill-lock body switches K1–K5, one boolean each, defaulted to
       // `KILLLOCK_BODIES_DEFAULTS` (`seedlingKillLockSettings.js`).

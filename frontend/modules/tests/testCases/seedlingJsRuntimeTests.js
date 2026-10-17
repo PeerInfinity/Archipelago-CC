@@ -832,20 +832,26 @@ registerTest({
 // ── ⛓ SOLVE PROGRESS (JS half): the panel's progress view on a real solve ──
 
 const SOLVE_PROGRESS_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressView';
+/** ⛓ SOLVE PROGRESS S1 — the progress refresh rate (ms); this row pins it to the default it was written against. */
+const SOLVE_PROGRESS_INTERVAL_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressIntervalMs';
+const SOLVE_PROGRESS_ROW_INTERVAL_MS = 100;
 
 export async function seedlingJsRuntimeSolveProgressView(tc) {
     let previousRuntime = 'auto';
     let previousSolver = true;
     let previousView = 'auto';
+    let previousInterval = SOLVE_PROGRESS_ROW_INTERVAL_MS;
     try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
     try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
     try { previousView = await settingsManager.getSetting(SOLVE_PROGRESS_KEY, 'auto'); } catch { /* keep the default (auto) */ }
+    try { previousInterval = await settingsManager.getSetting(SOLVE_PROGRESS_INTERVAL_KEY, SOLVE_PROGRESS_ROW_INTERVAL_MS); } catch { /* keep the default */ }
     let svc = null;
     try {
         // ⚖ This row SETS its own state: solver mode on, the view pinned open — `always`, so it never auto-hides
         // (session-only overrides, restored below).
         await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
         await settingsManager.updateSetting(SOLVE_PROGRESS_KEY, 'always', { persist: false });
+        await settingsManager.updateSetting(SOLVE_PROGRESS_INTERVAL_KEY, SOLVE_PROGRESS_ROW_INTERVAL_MS, { persist: false });
         const staleAdapter = getActivePanelInstance()?.adapter ?? null;
         const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
         if (!ready) return tc.getOverallResult();
@@ -890,8 +896,11 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
         tc.log(`view: ${st.received} update(s), seq ${st.seq}, final ${st.final}; service ${JSON.stringify(svc.stats)}`);
         tc.assertEqual('the view received the FINAL snapshot of the solve', true, st.final === true);
         tc.assertEqual('the final snapshot\'s segment finished solved', 'solved', st.snapshot?.segment?.outcome ?? null);
-        tc.assertEqual('the progress messages came at most ~1/s: updates ≤ the solve\'s wait in seconds + 2', true,
-            st.received <= Math.ceil((s.lastSolve?.waitMs ?? 0) / 1000) + 2);
+        // ⛓ S1 — the ceiling is the rate setting's, which the view carried onto the solve's envelope
+        tc.assertEqual('the view asks for the row\'s rate', SOLVE_PROGRESS_ROW_INTERVAL_MS, view.intervalMs);
+        tc.assertEqual(`the progress messages came at most one per ${SOLVE_PROGRESS_ROW_INTERVAL_MS} ms: updates ≤ the `
+            + 'solve\'s wait / the interval + 2', true,
+            st.received <= Math.ceil((s.lastSolve?.waitMs ?? 0) / SOLVE_PROGRESS_ROW_INTERVAL_MS) + 2);
         const rows = view.tree.querySelectorAll('div').length;
         tc.assertEqual('the tree is drawn (≥ 1 row)', true, rows >= 1);
         tc.assertEqual('the meter reads the attempt against the budget', true,
@@ -914,6 +923,7 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
         tc.reportCondition('setting the view off unsubscribed it', !!off);
     } finally {
         try { await settingsManager.updateSetting(SOLVE_PROGRESS_KEY, previousView, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(SOLVE_PROGRESS_INTERVAL_KEY, previousInterval, { persist: false }); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
     }

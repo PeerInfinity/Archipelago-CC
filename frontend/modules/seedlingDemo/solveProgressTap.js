@@ -5,7 +5,9 @@
  * points; this is the hook the solve worker installs around `solveAnytime` (`jsRuntimeSolveWorker.js`) when the page
  * asked for progress, and what it posts. The schema is `docs/json/developer/procgen/seedling-solve-progress.md`.
  *
- *  - THROTTLED BY THE WORKER'S WALL CLOCK: at most one post per `minIntervalMs` (1 s), and `peek()` is called only
+ *  - THROTTLED BY THE WORKER'S WALL CLOCK: at most one post per `minIntervalMs` — ⚖ the panel's setting
+ *    `flashPanel.seedlingSolveProgressIntervalMs` (`SOLVE_PROGRESS_INTERVALS_MS`, default 100 ms), carried on the
+ *    solve's ENVELOPE as `progressIntervalMs` and clamped to the list by `progressIntervalMs()` — and `peek()` is called only
  *    for a post — plus once at each segment's `done` (to bank its work, below) and once after the solve
  *    (`finish()`, the FINAL snapshot, so the view shows the finished state). The hook calls come only at solver
  *    sites, so the interval is a CEILING, never a rate.
@@ -25,8 +27,26 @@
 // ⛔ IMPORT-FREE: the page side (`jsRuntimeSolveService.js`) imports this module's message name, and must not pull
 // the solver's module graph in with it.
 
-/** The worker's post ceiling: one progress post per this many ms of its own clock. */
-export const SOLVE_PROGRESS_INTERVAL_MS = 1000;
+/**
+ * ⚖ The refresh rates the user allowed (2026-10-17): one progress post per this many ms of the worker's own clock, at
+ * most. The solver reports only at its own sites, so these are CEILINGS: a stretch with no site posts nothing.
+ */
+export const SOLVE_PROGRESS_INTERVALS_MS = Object.freeze([1000, 250, 100, 50]);
+
+/** The default post ceiling (⚖ the user 2026-10-17: 100 ms, "for now"); the schema's default is this constant. */
+export const SOLVE_PROGRESS_INTERVAL_MS = 100;
+
+/**
+ * An asked interval CLAMPED TO THE LIST: the fastest listed rate that is no faster than asked (an ask between two
+ * values gets the slower one; past either end, the end). Not a finite number → the default.
+ */
+export function progressIntervalMs(value) {
+    if (typeof value !== 'number' || !Number.isFinite(value)) return SOLVE_PROGRESS_INTERVAL_MS;
+    const slowestFirst = [...SOLVE_PROGRESS_INTERVALS_MS].sort((a, b) => b - a);
+    let out = slowestFirst[0];
+    for (const ms of slowestFirst) if (ms >= value) out = ms;
+    return out;
+}
 
 /** The message type the worker posts (`{type, id, snapshot, final?}`). */
 export const SOLVE_PROGRESS_MESSAGE = 'solve-progress';

@@ -24,6 +24,7 @@ describe('the committed batteries', () => {
             'probe-seedling-obstacle-events.mjs --only=W,J',
             'probe-seedling-wasm-generated-playback.mjs',
             'probe-seedling-loop-restart.mjs',
+            'probe-seedling-seal-delivery.mjs --only=A',
         ]);
     });
 });
