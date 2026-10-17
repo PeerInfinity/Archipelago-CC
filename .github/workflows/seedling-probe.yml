@@ -16,7 +16,10 @@ name: Seedling wasm probe (manual)
 #
 # Each probe prints PASS:/FAIL: rows and `ALL CHECKS PASSED` / `N CHECK(S) FAILED` and exits non-zero on a fail;
 # the job also requires its `CHANNEL: headless logic-only` line (a run that silently rasterised is not a
-# measurement — scripts/procgen/seedlingChannel.js). A probe that re-booted a page on a KNOWN boot fault says so
+# measurement — scripts/procgen/seedlingChannel.js). ⛔ A probe with NO `PASS:` row is RED by name (the PASS FLOOR):
+# a probe SKIPs a session whose input is missing (`SKIP: W — seedling wasm artifact not staged`) and still prints
+# `ALL CHECKS PASSED`, so an all-SKIP log measured nothing and used to read green. No standard-battery probe
+# skips by design (every one passes ≥ 6 rows on main, 2026-10-17), so there is no skip-allowed escape. A probe that re-booted a page on a KNOWN boot fault says so
 # (`BOOT-RETRY:` / `BOOT-RETRIES: n` — scripts/procgen/seedlingProbeBoot.js); the summary carries the count.
 
 on:
@@ -144,12 +147,17 @@ jobs:
             echo "::error::$PROBE printed no 'CHANNEL: headless logic-only' line"
             RC=1
           fi
+          NPASS=$(grep -ac '^PASS:' "$L" || true)
+          if [ "$NPASS" -eq 0 ]; then
+            echo "::error::$PROBE printed no PASS: row ($(grep -ac '^SKIP' "$L" || true) SKIP) — a run that checked nothing is not green"
+            RC=1
+          fi
           # The summary job's one line for this probe (it reads these files, never the job's status).
           printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$ID" "$RC" \
             "$(grep -aE '^(ALL CHECKS PASSED|[0-9]+ CHECK\(S\) FAILED)' "$L" | tail -1)" \
-            "$(grep -ac '^PASS:' "$L")" "$(grep -ac '^FAIL:' "$L")" \
+            "$NPASS" "$(grep -ac '^FAIL:' "$L")" \
             "$(grep -aoE '^BOOT-RETRIES: [0-9]+' "$L" | tail -1 | grep -oE '[0-9]+$' || echo '?')" \
-            "$W" "$PROBE $ARGS" > "test-results/seedling-probe/${ID}.verdict"
+            "$W" "$PROBE $ARGS" "$(grep -ac '^SKIP' "$L" || true)" > "test-results/seedling-probe/${ID}.verdict"
           exit $RC
 
       - name: Summary
@@ -200,11 +208,13 @@ jobs:
             const lines = rows.map((e) => {
               const f = `verdicts/${e.id}.verdict`;
               if (!fs.existsSync(f)) { red += 1; return `RED   ${e.id} — NO VERDICT (the job died before its run step finished) — ${e.probe} ${e.args}`.trim(); }
-              const [id, rc, verdict, pass, fail, boot, wall, cmd] = fs.readFileSync(f, "utf8").replace(/\n$/, "").split("\t");
-              const ok = rc === "0" && verdict === "ALL CHECKS PASSED";
+              const [id, rc, verdict, pass, fail, boot, wall, cmd, skip] = fs.readFileSync(f, "utf8").replace(/\n$/, "").split("\t");
+              // The PASS FLOOR: an all-SKIP probe prints ALL CHECKS PASSED and exits 0, yet measured nothing.
+              const noPass = !(Number(pass) > 0);
+              const ok = rc === "0" && verdict === "ALL CHECKS PASSED" && !noPass;
               if (!ok) red += 1;
               if (/^[0-9]+$/.test(boot)) retries += Number(boot);
-              return `${ok ? "GREEN" : "RED  "} ${id} rc=${rc} ${verdict || "(no verdict line)"} pass=${pass} fail=${fail} boot-retries=${boot} wall=${wall}s — ${cmd}`;
+              return `${ok ? "GREEN" : "RED  "} ${id} rc=${rc} ${verdict || "(no verdict line)"}${noPass ? " — NO PASS ROWS" : ""} pass=${pass} fail=${fail} skip=${skip ?? "?"} boot-retries=${boot} wall=${wall}s — ${cmd}`;
             });
             const head = `SEEDLING PROBES @ ${process.env.GITHUB_SHA}: ${rows.length - red}/${rows.length} green, boot retries ${retries}`;
             console.log([head, ...lines].join("\n"));
