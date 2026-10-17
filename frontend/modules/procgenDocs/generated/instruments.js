@@ -3253,6 +3253,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "includes"
                     ],
+                    "name": "tier-key"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
                     "name": "win"
                 }
             ],
