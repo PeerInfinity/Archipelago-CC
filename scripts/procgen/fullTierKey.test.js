@@ -157,6 +157,15 @@ describe('seedling-full-tier.yml banks and looks up the key under one name', () 
         expect(upload).toMatch(/if: success\(\) && needs\.shard\.result == 'success'/);
     });
 
+    /** ⛔ One shard's artifact downloads without its directory and the merge reds. */
+    it('the plan refuses fewer than 2 shards before anything is driven', () => {
+        const plan = wf.slice(wf.indexOf('  plan:'), wf.indexOf('  shard:\n'));
+        const refuse = plan.indexOf('- name: Refuse fewer than 2 shards');
+        expect(refuse).toBeGreaterThan(-1);
+        expect(refuse).toBeLessThan(plan.indexOf('- name: Checkout repository'));
+        expect(plan.slice(refuse)).toMatch(/if \[ "\$SHARDS" -lt 2 \]; then[\s\S]*?exit 1/);
+    });
+
     it('a reuse skips the shards and the merge, and `force` re-drives', () => {
         expect(wf).toMatch(/ {2}shard:\n[\s\S]*?if: needs\.plan\.outputs\.reuse == ''/);
         expect(wf).toMatch(/if: always\(\) && needs\.plan\.result == 'success' && needs\.plan\.outputs\.reuse == ''/);
