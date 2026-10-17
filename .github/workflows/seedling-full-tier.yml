@@ -29,6 +29,10 @@ name: Seedling full tier (manual)
 # this run's id, SHA and shard count, `channel: headless`, `measuredAt` = that
 # SHA. The row write stays a box-side act (no CI commit to main); the merged
 # checkpoint is kept 90 days as the evidence it quotes.
+# ⛓⛓ A run that says REUSED (rule 3) measured nothing, but the GREEN run it
+# names may be stamped AT THE HEAD whose key matched (⚖ user 2026-10-17):
+# `record-standing-value.mjs --category=<c> --quote=<v> --reused-run=<that id>`
+# recomputes the key at a clean HEAD and refuses by name if it moved.
 #
 # ⛓ HEADLESS LOGIC-ONLY. The differential launches on HEADLESS_LOGIC_ONLY_ARGS
 # and REFUSES by name unless the page's `__swfGpu.lost >= 1` — the runner has

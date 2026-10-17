@@ -25,7 +25,15 @@
  *     derived the way that gate derives them. A harvest QUOTES the reused run
  *     into the bank's roster row, and that gate then judges the row against
  *     the reused run's SHA — so a key that matched while one of its
- *     populations moved would leave the gate red with no drive allowed.
+ *     populations moved would leave the gate red with no drive allowed;
+ *   · ⛓⛓ and, for the RE-STAMP (⚖ user 2026-10-17, *"Yes, if possible."*),
+ *     the two things that gate reads which the above still missed: EVERY
+ *     tape NAME, not just the tier's (a deleted tape is charged to every
+ *     category, its own or not), and that gate's OWN source (the populations
+ *     it asks about). With both in, a key match at a head means no
+ *     population the owed gate reads moved since the reused run, so
+ *     `record-standing-value --reused-run=` may stamp the part AT THE HEAD
+ *     (`reuseVerdict` below is that decision).
  *
  * ⛔ IT IS DELIBERATELY WIDER than `check-seedling-full-tier-owed`'s four
  * populations, which the review proposed: that gate prices the BOX row and
@@ -50,6 +58,8 @@ export const keyArtifactName = (key) => `${KEY_ARTIFACT_PREFIX}${key}`;
 export const KEY_EXTRA_FILES = Object.freeze([
     '.github/workflows/seedling-full-tier.yml',
     'package-lock.json',
+    /** ⛓ The asker: a population added there must move the key (the re-stamp). */
+    'scripts/procgen/check-seedling-full-tier-owed.mjs',
 ]);
 
 const STATIC_RE = /(?:^|[\s;])(?:import|export)\s[^'"]*?from\s*['"](\.[^'"]+)['"]|import\s*\(\s*['"](\.[^'"]+)['"]\s*\)|^\s*import\s*['"](\.[^'"]+)['"]/gm;
@@ -89,11 +99,13 @@ export function importClosure(entry, { repo }) {
  * be asked without a tree.
  *
  * @param {{tier: string, fingerprint: string, tapes: {name: string, fp: string}[],
- *          files: {path: string, bytes: Buffer|string}[]}} o
+ *          roster: string[], files: {path: string, bytes: Buffer|string}[]}} o
+ *   `roster` is EVERY tape name in the tree, the tier's or not.
  */
-export function tierKey({ tier, fingerprint, tapes, files }) {
+export function tierKey({ tier, fingerprint, tapes, roster, files }) {
     const h = createHash('sha256');
     h.update(`tier:${tier}\0fingerprint:${fingerprint}\0`);
+    h.update(`roster:${[...roster].sort().join(',')}\0`);
     for (const t of [...tapes].sort((a, b) => a.name.localeCompare(b.name))) {
         h.update(`tape:${t.name}@${t.fp}\0`);
     }
@@ -125,11 +137,50 @@ export function deadFrameFiles(repo) {
 }
 
 /** The key at this tree: the closure from `entry`, (iv), `KEY_EXTRA_FILES`, the gitlink. */
-export function tierKeyAt({ repo, entry, tier, fingerprint, tapes }) {
+export function tierKeyAt({ repo, entry, tier, fingerprint, tapes, roster }) {
     const paths = [...new Set([...importClosure(entry, { repo }), ...deadFrameFiles(repo),
         ...KEY_EXTRA_FILES])];
     const files = paths.map((path) => ({ path, bytes: readFileSync(resolve(repo, path)) }));
     /** (i) — the gitlink the TREE records, not what is checked out under it. */
     files.push({ path: `gitlink:${WASM_SUBMODULE}`, bytes: git(repo, 'rev-parse', `HEAD:${WASM_SUBMODULE}`) });
-    return { key: tierKey({ tier, fingerprint, tapes, files }), files: files.length };
+    return { key: tierKey({ tier, fingerprint, tapes, roster, files }), files: files.length };
+}
+
+/**
+ * ⛓⛓ THE RE-STAMP'S DECISION (⚖ user 2026-10-17) — may a part of the
+ * checkpoint row be stamped AT `head` from `run`, which measured nothing new
+ * there? Pure: the caller fetches the run and its artifacts and computes the
+ * keys at the head, one per tier that holds `category` (the category's own
+ * tier and `full`).
+ *
+ * ⛔ Every "no" is a refusal BY NAME, and none of them falls back to stamping
+ * the run's own SHA: that is the plain `--quote` path, and a caller who wants
+ * it can say so.
+ *
+ * @param {{run: {id: number, path?: string, conclusion?: string, head_sha?: string},
+ *          artifacts: {name: string, expired?: boolean}[],
+ *          keysAtHead: Record<string, string|null>}} o
+ * @returns {{ok: true, tier: string, key: string} | {ok: false, problem: string}}
+ */
+export function reuseVerdict({ run, artifacts, keysAtHead }) {
+    if (run.path && !run.path.endsWith('seedling-full-tier.yml')) {
+        return { ok: false, problem: `run ${run.id} is ${run.path}, not a full-tier run` };
+    }
+    if (run.conclusion !== 'success') {
+        return { ok: false, problem: `run ${run.id} concluded ${run.conclusion ?? 'nothing'} — `
+            + 'only a GREEN tier is quotable' };
+    }
+    const keys = artifacts.filter((a) => !a.expired && a.name.startsWith(KEY_ARTIFACT_PREFIX))
+        .map((a) => a.name.slice(KEY_ARTIFACT_PREFIX.length));
+    if (!keys.length) {
+        return { ok: false, problem: `run ${run.id} carries no unexpired ${KEY_ARTIFACT_PREFIX}* `
+            + 'artifact. ⛓ A run that said REUSED measured nothing — pass the run it NAMED' };
+    }
+    const hit = Object.entries(keysAtHead).find(([, k]) => k && keys.includes(k));
+    if (!hit) {
+        return { ok: false, problem: `the inputs MOVED since run ${run.id}: it measured key `
+            + `${keys.join('/')}, and this head's keys are ${Object.entries(keysAtHead)
+                .map(([t, k]) => `${t}=${k ?? '(none)'}`).join(', ')} — drive the tier` };
+    }
+    return { ok: true, tier: hit[0], key: hit[1] };
 }
