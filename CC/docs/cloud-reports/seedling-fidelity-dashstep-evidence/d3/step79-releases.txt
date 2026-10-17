@@ -1,0 +1,5 @@
+release at t141 L0 d=29.45
+release at t143 L0 d=34.03
+release at t161 L0 d=39.42
+ticks off 200 on 200 first ON/OFF diff 143 {"off":[240.9492255837917,151.50664594775003],"on":[237.6992255837917,151.50664594775003]}
+ticks off 205 on 205 first ON/OFF diff null 
