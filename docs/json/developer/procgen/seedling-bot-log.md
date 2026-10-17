@@ -23079,7 +23079,12 @@ where predicted.
 step: L0 visits 1–10, L87 visits 1–3), base and flip alike: one mover, **step 79 SOLVED 199 → 204 t** (the OFF plan is
 the game-refuted one above). Sweep, node over the captured requests of every L0/L87 leg: main 39005483635, 43 requests,
 **0 move**; flip 39005482173, 45 requests, **5 move on legs 7, 23, 39, 47** (all `breakablerock@288,176`). ON, all four
-play `done` on the game under the flip (7: 247 → 243 t, 23: 233 → 237, 39: 283 → 282, 47: 273 → 281). The switch stays
+play `done` on the game under the flip (7: 247 → 243 t, 23: 233 → 237, 39: 283 → 282, 47: 273 → 281). Identity ON:
+every row = OFF but `solve-seedling-r9-campaign --check` (exit 1): `r9-solve-0-v3` re-derives 299 → **313 t** and
+`r9-solve-12`'s declared clock follows. Its committed walk releases at 36.82 and 34.60 px — outside 32, so neither
+the game nor the model ON opens the dialogue; the +14 t is `talkGuard`'s travel margin, now added to 32. A run-only
+variant (the guard left at 24) keeps the campaign and flip legs 23/39/47 unmoved and fixes leg 7 (back to main's
+313-t dashless plan), but turns survey step 79 SOLVED → REFUSED (the walk stalls in the dialogue). The switch stays
 OFF: the flip is the user's.
 
 Trap candidates:
