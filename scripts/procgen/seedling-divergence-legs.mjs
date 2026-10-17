@@ -36,6 +36,15 @@
  *              NAME (the sweep emits a skipped row and never runs them): a gate that maps to no flag (an event that
  *              is not `game_state`, or one without an integer `{level, tag}`), and a leg whose GOAL is one of its own
  *              gating events (staged, there is nothing left to clear).
+ *   goal events ⛓ a leg whose GOAL rule (a location's rule, or the rule of the exit it crosses) needs a `game_state`
+ *              event STAGES it too, through the same `stagedEvents` channel (after the arrival's, deduplicated), and names
+ *              it in `goalEvents` (event ids). The AP route held that event at the goal's sphere, so the game would hold
+ *              its flag: `L113 -> L114`'s FinalDoor = And(Seal×16, Has(flag:L114:0)) stages the Watcher's talk; Dungeon 6's
+ *              darktrap exits = Or(Has(flag:L62:0), Has(Ghost Spear)) stage the lit pole. WHICH events (`goalEvents`): the
+ *              cheapest way the AP inventory AT THAT SPHERE satisfies the rule — `And` = every child's; `Or` = the branch
+ *              that holds and needs the FEWEST events (a tie: the first in rule order), so a held Ghost Spear stages
+ *              nothing; a goal the route never satisfies (no sphere) stages nothing. An unmappable goal event (no flag)
+ *              skips the leg by name (`goal-needs-unmappable-event`). A leg whose goal needs no event is byte-identical.
  *   key        `legKey` — (region, the arrival's door, goal): the leg's identity ACROSS SHAs. The numeric `id` is
  *              the list position (display only: it shifts when an earlier leg is added or removed).
  *
@@ -66,6 +75,33 @@ export function requiredEvents(rule, byItem) {
             return branches.some((b) => b.length === 0) ? [] : uniq(branches.flat());
         }
         default: return [];
+    }
+}
+
+/**
+ * The `game_state` events the cheapest satisfied branch of `rule` needs, given what the AP route holds (`holds(rule)` →
+ * true when the inventory satisfies that rule); `null` when the inventory does not satisfy it. `Has` / `HasAll` = its
+ * event items (when held); `And` = the union (null if any child is); `Or` = the held branch with the FEWEST events, the
+ * first in rule order on a tie (null when none holds); anything else = none when it holds. `byItem` as `requiredEvents`.
+ */
+export function goalEventsHeld(rule, byItem, holds) {
+    if (!rule || typeof rule !== 'object') return [];
+    const uniq = (list) => [...new Map(list.map((e) => [e.item, e])).values()];
+    switch (rule.rule) {
+        case 'And': {
+            const parts = (rule.children ?? []).map((c) => goalEventsHeld(c, byItem, holds));
+            return parts.some((p) => p === null) ? null : uniq(parts.flat());
+        }
+        case 'Or': {
+            let best = null;
+            for (const c of rule.children ?? []) {
+                const got = goalEventsHeld(c, byItem, holds);
+                if (got !== null && (best === null || got.length < best.length)) best = got;
+            }
+            return best;
+        }
+        case 'Has': case 'HasAll': return holds(rule) ? requiredEvents(rule, byItem) : null;
+        default: return holds(rule) ? [] : null;
     }
 }
 
@@ -112,8 +148,9 @@ export function eventStaging(events, arrivalLevel) {
  * `{skip}` BY NAME — an unmappable gate (`arrival-needs-unmappable-event`), or a location goal that IS one of the
  * gating events (`goal-is-a-staged-event`: staged, there is nothing left to clear).
  */
-export function eventGate({ arrive, level, goal }) {
-    if (!arrive?.events?.length) return {};
+export function eventGate({ arrive, level, goal, goalEvents = [] }) {
+    const goalStage = goalEventStaging(goalEvents, arrive, level);
+    if (!arrive?.events?.length) return goalStage;
     const need = arrive.events.map((e) => e.eventId ?? e.name).join(' / ');
     const { staged, unmappable } = eventStaging(arrive.events, level);
     if (unmappable.length) {
@@ -124,7 +161,24 @@ export function eventGate({ arrive, level, goal }) {
         return { skip: `goal-is-a-staged-event: every door into (${arrive.x},${arrive.y}) needs ${goal.name}, `
             + 'the goal itself — staging its flag leaves nothing to clear' };
     }
-    return { stagedEvents: staged };
+    if (goalStage.skip) return goalStage;
+    return { stagedEvents: [...staged, ...(goalStage.stagedEvents ?? [])], ...(goalStage.goalEvents ? { goalEvents: goalStage.goalEvents } : {}) };
+}
+
+/**
+ * A leg's GOAL-rule staging (`goalEventsHeld`'s events): `{}` when none; `{stagedEvents, goalEvents}` for the events
+ * the arrival does not already stage (`goalEvents` = their ids); `{skip}` BY NAME when one maps to no flag.
+ */
+export function goalEventStaging(events, arrive, level) {
+    const have = new Set((arrive?.events ?? []).map((e) => e.eventId));
+    const add = (events ?? []).filter((e) => !have.has(e.eventId));
+    if (!add.length) return {};
+    const { staged, unmappable } = eventStaging(add, level);
+    if (unmappable.length) {
+        return { skip: `goal-needs-unmappable-event: the goal's rule needs ${add.map((e) => e.eventId ?? e.name).join(' / ')} — `
+            + `${unmappable.join('; ')} (no persistence flag to stage)` };
+    }
+    return { stagedEvents: staged, goalEvents: staged.map((e) => e.eventId) };
 }
 
 /** The leg's identity across SHAs: (region, the arrival's door — `start` for the no-"came from" one, goal). */
@@ -202,6 +256,12 @@ async function main() {
                 doors.get(e.targetExitId).push(edge ? requiredEvents(edge.access_rule, byItem) : []);
             }
         }
+        // the goal rule's events the AP route holds at sphere `i` (the cheapest satisfied branch: `goalEventsHeld`)
+        const heldGoalEvents = (rule, i) => {
+            const row = spheres.rows[i];
+            const holds = (r) => evaluateRuleWithInventory(r, row.counts, '1', (x) => row.reached.has(x), pm) === true;
+            return (goalEventsHeld(rule, byItem, holds) ?? []).map((e) => ({ eventId: e.eventId, level: e.level, tag: e.tag, name: e.name, kind: e.kind }));
+        };
         const starts = new Set(startTargets(rules));
         const totalLocs = spheres.allLocations.size;
         const blocksCache = new Map();
@@ -237,15 +297,17 @@ async function main() {
                 if (/^in_/.test(e.exit_id)) continue;
                 const re = (rr?.exits ?? []).find((x) => x.name === e.exitName) ?? null;
                 const sphere = re ? exitSphere(spheres, region, re.access_rule, pm, evaluateRuleWithInventory) : null;
+                const goalEvents = sphere?.index != null ? heldGoalEvents(re.access_rule, sphere.index) : [];
                 goals.push({ goal: { kind: 'exit', level: pl.level, tiles: e.exit_tiles, name: e.exitName, exit_id: e.exit_id },
                     target_level: e.target_level, targetRegion: e.targetRegion, rule: re?.access_rule ?? null, sphere,
-                    geo: `x|${JSON.stringify(e.exit_tiles)}`, edge: re ? { region, exit: re.name } : null });
+                    geo: `x|${JSON.stringify(e.exit_tiles)}`, edge: re ? { region, exit: re.name } : null, goalEvents });
             }
             for (const l of rr?.locations ?? []) {
                 const s = spheres.locationSphere.get(l.name) ?? null;
                 goals.push({ goal: { kind: 'location', level: pl.level, name: l.name }, rule: l.access_rule ?? null,
                     sphere: s === null ? null : { index: s, ...spheres.at(s) }, item: l.item?.name ?? null,
-                    geo: `l|${l.name.replace(/^.*? - /, '')}`, edge: { region, location: l.name } });
+                    geo: `l|${l.name.replace(/^.*? - /, '')}`, edge: { region, location: l.name },
+                    goalEvents: s === null ? [] : heldGoalEvents(l.access_rule, s) });
             }
             for (const a of arrivals) {
                 for (const g of goals) {
@@ -268,8 +330,9 @@ async function main() {
                         regionSphere: spheres.regionSphere.get(region) ?? null };
                     delete leg.geo;
                     delete leg.edge;
-                    // ⚖ TEST-HARNESS STAGING ONLY (see `events` above): production never stages a flag
-                    Object.assign(leg, eventGate({ arrive: a, level: pl.level, goal: g.goal }));
+                    delete leg.goalEvents;
+                    // ⚖ TEST-HARNESS STAGING ONLY (see `events` / `goal events` above): production never stages a flag
+                    Object.assign(leg, eventGate({ arrive: a, level: pl.level, goal: g.goal, goalEvents: g.goalEvents }));
                     seen.set(k, leg);
                     legs.push(leg);
                 }
@@ -283,9 +346,12 @@ async function main() {
     const staged = legs.filter((l) => l.stagedEvents);
     console.log(`INFO: ${staged.length} leg(s) STAGE their arrival's gating flag(s) (an event-gated arrival; test-harness staging): `
         + JSON.stringify(by((l) => (l.stagedEvents ? l.stagedEvents.map((e) => e.eventId + (e.otherLevel ? '(other level)' : '')).join('+') : 'ungated'))));
+    const goalStaged = legs.filter((l) => l.goalEvents);
+    console.log(`INFO: ${goalStaged.length} leg(s) STAGE their GOAL rule's event flag(s) (the cheapest branch the AP route holds): `
+        + JSON.stringify(by((l) => (l.goalEvents ? l.goalEvents.join('+') : 'none'))));
     const skipped = legs.filter((l) => l.skip);
     console.log(`INFO: ${skipped.length} leg(s) SKIPPED by name (an event gate that maps to no flag, or the goal IS the gating event)`
-        + (skipped.length ? `: ${JSON.stringify(by((l) => (l.skip ? `${l.skip.split(':')[0]} ${l.arrive.events.map((e) => e.eventId ?? e.name).join('+')}` : 'run')))}` : ''));
+        + (skipped.length ? `: ${JSON.stringify(by((l) => (l.skip ? `${l.skip.split(':')[0]} ${(l.arrive.events ?? []).map((e) => e.eventId ?? e.name).join('+')}` : 'run')))}` : ''));
     const keys = new Set(legs.map((l) => l.key));
     if (keys.size !== legs.length) { console.log(`FAIL: ${legs.length - keys.size} duplicate leg key(s)`); process.exit(1); }
 }
