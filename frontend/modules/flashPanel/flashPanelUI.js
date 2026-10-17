@@ -1322,62 +1322,81 @@ export class FlashPanelUI {
         return;
       }
 
-      this._setStatus('loading config…');
-      this.gameConfig = await this._loadConfig(this.configPath);
-      this._panelLog(`config loaded: ${this.gameConfig.game}`);
-      this._setupTeleportUI();
-
-      const [w, h] = this.gameConfig.stage_size || [480, 480];
-
-      try {
-        await ensureRuffleLoaded();
-      } catch (err) {
-        this._panelLog(`ruffle load failed: ${err.message} (native Flash may still work)`);
-      }
-
-      this._embedSwf(w, h);
-      this._setStatus('waiting for bridge…');
-
-      // ⛓ SEEDLING LOOP MODE — the Flash (Ruffle / native) path says so. Left at the 'wasm' default, the
-      // playback surface told the atlas controller (built with `wasm: true`) that this was the wasm game, and a
-      // Bot block's walkTo went to the wasm engine against a Ruffle player instead of being refused by name.
-      this.transport = 'flash';
-      this.adapter = new FlashBridgeAdapter({
-        config: this.gameConfig,
-        flashObjectId: this.flashObjectId,
-        stateManager,
-        dispatcher: getDispatcher(),
-        eventBus: this.eventBus,
-        log: (msg, cls) => this._panelLog(msg, cls),
-      });
-      this._attachRegionGlue(this.adapter);
-
-      try {
-        await this.adapter.waitForBridge(15000);
-        this._panelLog('bridge ready');
-        this._setStatus('bridge ready');
-
-        // Give Clean Flash / native-messaging extensions time to
-        // finish wiring the round-trip for ExternalInterface.addCallback
-        // stubs. Without this delay, the first flash.configure(json)
-        // call is silently dropped — the JS-side stub exists (which
-        // is why waitForBridge already resolved) but the Flash side
-        // of the channel for inbound calls with arguments isn't
-        // reliably ready yet. Empirically 1500ms is enough to skip
-        // the retry path on Chrome + Clean Flash, while the retry
-        // below handles the rare case where it isn't.
-        await new Promise((r) => setTimeout(r, 1500));
-
-        this._configureRetries = 0;
-        this._configureBridge();
-      } catch (err) {
-        this._panelLog(`bridge not ready: ${err.message}`, 'error');
-        this._setStatus('bridge timeout');
-      }
+      await this._initializeFlash();
     } catch (err) {
       log('error', '[FlashPanelUI] Init failed', err);
       this._panelLog(`init failed: ${err.message}`, 'error');
       this._setStatus('error');
+    }
+  }
+
+  /**
+   * Init flow for the real-Flash transport (Ruffle or a native plugin).
+   *
+   * ⛔⛔ A TORN-DOWN FLOW GOES QUIET. `_teardownForReinit` drops the adapter but
+   * cannot abort this flow's 15 s bridge wait (the Flash adapter has no
+   * cancellation), so the flow holds ITS adapter and, once it is no longer the
+   * panel's, touches nothing. Measured (§5.91, CI 4/8 at 429ba55d1e): the
+   * Flash-runtime row's wait outlived its own cleanup by ~14 s and its timeout
+   * wrote `bridge timeout` over the NEXT row's wasm *click ▶ Start in the game*,
+   * so that row waited 120 s for a status that had come and gone.
+   */
+  async _initializeFlash() {
+    this._setStatus('loading config…');
+    this.gameConfig = await this._loadConfig(this.configPath);
+    this._panelLog(`config loaded: ${this.gameConfig.game}`);
+    this._setupTeleportUI();
+
+    const [w, h] = this.gameConfig.stage_size || [480, 480];
+
+    try {
+      await ensureRuffleLoaded();
+    } catch (err) {
+      this._panelLog(`ruffle load failed: ${err.message} (native Flash may still work)`);
+    }
+
+    this._embedSwf(w, h);
+    this._setStatus('waiting for bridge…');
+
+    // ⛓ SEEDLING LOOP MODE — the Flash (Ruffle / native) path says so. Left at the 'wasm' default, the
+    // playback surface told the atlas controller (built with `wasm: true`) that this was the wasm game, and a
+    // Bot block's walkTo went to the wasm engine against a Ruffle player instead of being refused by name.
+    this.transport = 'flash';
+    const adapter = new FlashBridgeAdapter({
+      config: this.gameConfig,
+      flashObjectId: this.flashObjectId,
+      stateManager,
+      dispatcher: getDispatcher(),
+      eventBus: this.eventBus,
+      log: (msg, cls) => this._panelLog(msg, cls),
+    });
+    this.adapter = adapter;
+    this._attachRegionGlue(adapter);
+
+    try {
+      await adapter.waitForBridge(15000);
+      if (this.adapter !== adapter) return;
+      this._panelLog('bridge ready');
+      this._setStatus('bridge ready');
+
+      // Give Clean Flash / native-messaging extensions time to
+      // finish wiring the round-trip for ExternalInterface.addCallback
+      // stubs. Without this delay, the first flash.configure(json)
+      // call is silently dropped — the JS-side stub exists (which
+      // is why waitForBridge already resolved) but the Flash side
+      // of the channel for inbound calls with arguments isn't
+      // reliably ready yet. Empirically 1500ms is enough to skip
+      // the retry path on Chrome + Clean Flash, while the retry
+      // below handles the rare case where it isn't.
+      await new Promise((r) => setTimeout(r, 1500));
+      if (this.adapter !== adapter) return;
+
+      this._configureRetries = 0;
+      this._configureBridge();
+    } catch (err) {
+      if (this.adapter !== adapter) return;
+      this._panelLog(`bridge not ready: ${err.message}`, 'error');
+      this._setStatus('bridge timeout');
     }
   }
 
