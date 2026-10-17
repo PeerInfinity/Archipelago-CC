@@ -181,10 +181,14 @@ function l4StairsSword() {
     return { staging: s.staging, perTick: s.perTick, live: liveOf(rt.run), levelSource: SRC, name: 'dash-shape-L4',
         solverGoal: { kind: 'reach-exit', exit: { x: tp.x, y: tp.y } }, scratchPersistence: rt.run.scratchPersistence === true };
 }
-/** hammer's DB fixture (`hammerDashShape.test.js`): sweep request 478:0, a corridor with a 381-tick undashed leg. */
-const SWEEP = JSON.parse(readFileSync(new URL('./fixtures/dash-shape/sweep-478-l52.json', import.meta.url), 'utf8'));
+/**
+ * hammer's DK fixture (`hammerDashShape.test.js`): sweep request 392:0, an L40 pit whose corridor has a clean
+ * 261-tick undashed leg over 303 px (floor 220). ⛓ Seedling DK: DB's 478:0 was the witness under the tick margin; its
+ * L52 room holds a waterfall, and the leg pre-check refuses nothing in such a room.
+ */
+const SWEEP = JSON.parse(readFileSync(new URL('./fixtures/dash-shape/sweep-392-l40.json', import.meta.url), 'utf8'));
 const SWEEP_RECORDS = { levels: SWEEP.records };
-const sweep478 = () => ({ staging: SWEEP.staging, perTick: [], live: SWEEP.live, solverGoal: SWEEP.solverGoal, name: SWEEP.from.name,
+const sweep392 = () => ({ staging: SWEEP.staging, perTick: [], live: SWEEP.live, solverGoal: SWEEP.solverGoal, name: SWEEP.from.name,
     scratchPersistence: SWEEP.scratchPersistence, equips: null, budgetWork: SWEEP.budgetWork, upgradeWindowWork: null });
 const counter = () => { let n = 0; return () => n++; };
 const full = (r) => r.passes.find((p) => p.pass === 'full');
@@ -192,7 +196,7 @@ const full = (r) => r.passes.find((p) => p.pass === 'full');
 describe('the solver runs inside the scopes the stamp names, and every answer carries the shape READ', () => {
     // ⛓ dash flip (the user, 2026-10-16): each witness now moves its key OFF the shipped shape (keepPartial and
     // legPrecheck OFF, noSwingPrefix ON) against the unstamped default solve.
-    it('in process: each key has its own witness — noSwingPrefix L4 full pass 57 → 48 units; keepPartial (dash-only window 20) 255 → 235 t; legPrecheck 478:0 the same ticks for less work', () => {
+    it('in process: each key has its own witness — noSwingPrefix L4 full pass 57 → 48 units; keepPartial (dash-only window 20) 255 → 235 t; legPrecheck 392:0 the same ticks for less work', () => {
         const l4 = (extra) => solveAnytime({ ...l4StairsSword(), budgetWork: SOLVER_BUDGET_WORK, ...extra }, { clock: counter() });
         const base = l4({ upgradeWindowWork: 85 });
         const noSwing = l4({ upgradeWindowWork: 85, dashShape: { noSwingPrefix: true } });
@@ -207,7 +211,7 @@ describe('the solver runs inside the scopes the stamp names, and every answer ca
         expect(off.dashShape).toEqual({ ...SHIPPED, keepPartial: false });
         expect('dashShape' in keep).toBe(false);
 
-        const solve = (extra) => solveAnytime({ ...sweep478(), levelSource: levelSourceFromAtlas(SWEEP_RECORDS), ...extra });
+        const solve = (extra) => solveAnytime({ ...sweep392(), levelSource: levelSourceFromAtlas(SWEEP_RECORDS), ...extra });
         const plain = solve({ dashShape: { legPrecheck: false } });
         const pre = solve({});
         expect(pre.plan.solution).toEqual(plain.plan.solution);
@@ -278,11 +282,11 @@ describe('the WORKER (its own module copy) solves inside the scopes its request 
             const read = { legPrecheck: true, noSwingPrefix: true, keepPartial: false };
             expect([cut.dashShape, cut.plan.dashShape, noSwing.dashShape]).toEqual([read, read, read]);
             expect([plain.dashShape, plain85.dashShape]).toEqual([undefined, undefined]);
-            // the worker's leg pre-check: 478:0 ships the same ticks for less work (OFF stamped, ON the default)
+            // the worker's leg pre-check: 392:0 ships the same ticks for less work (OFF stamped, ON the default)
             applyDashShape({ legPrecheck: false });
-            const base = await ask({ ...sweep478(), source: { records: SWEEP_RECORDS } });
+            const base = await ask({ ...sweep392(), source: { records: SWEEP_RECORDS } });
             applyDashShape({});
-            const pre = await ask({ ...sweep478(), source: { records: SWEEP_RECORDS } });
+            const pre = await ask({ ...sweep392(), source: { records: SWEEP_RECORDS } });
             expect(pre.plan.solution).toEqual(base.plan.solution);
             expect(pre.work).toBeLessThan(base.work);
             expect(base.dashShape).toEqual({ ...SHIPPED, legPrecheck: false });

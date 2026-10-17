@@ -1179,9 +1179,9 @@
         "arrivalSolid.js": 5,
         "botDriverV2.js": 115,
         "crusherBait.js": 6,
-        "solverBot.js": 436
+        "solverBot.js": 437
       },
-      "sites": 562,
+      "sites": 563,
       "seen": "both",
       "via": [
         "direct",
@@ -1359,9 +1359,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 225
+        "solverBot.js": 226
       },
-      "sites": 289,
+      "sites": 290,
       "seen": "both",
       "via": [
         "direct",
@@ -2599,9 +2599,9 @@
         "botDriverV1.js": 2,
         "botDriverV2.js": 60,
         "crusherBait.js": 2,
-        "solverBot.js": 167
+        "solverBot.js": 168
       },
-      "sites": 233,
+      "sites": 234,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2632,9 +2632,9 @@
         "botDriverV1.js": 2,
         "botDriverV2.js": 63,
         "crusherBait.js": 2,
-        "solverBot.js": 171
+        "solverBot.js": 172
       },
-      "sites": 240,
+      "sites": 241,
       "seen": "both",
       "via": [
         "const-alias",
@@ -3705,9 +3705,9 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 1
+        "solverBot.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "import"
@@ -3761,10 +3761,10 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 2,
+        "solverBot.js": 4,
         "strikePolicy.js": 2
       },
-      "sites": 4,
+      "sites": 6,
       "seen": "static",
       "via": [
         "import"
@@ -3798,9 +3798,10 @@
       "class": "seedling",
       "form": "constant",
       "files": {
+        "solverBot.js": 2,
         "strikePolicy.js": 3
       },
-      "sites": 3,
+      "sites": 5,
       "seen": "static",
       "via": [
         "import"
@@ -4309,9 +4310,9 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 1
+        "solverBot.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "import"
@@ -4913,10 +4914,10 @@
       "form": "function",
       "files": {
         "botDriverV1.js": 1,
-        "solverBot.js": 1,
+        "solverBot.js": 2,
         "strikePolicy.js": 1
       },
-      "sites": 3,
+      "sites": 4,
       "seen": "static",
       "via": [
         "import"
@@ -4932,10 +4933,10 @@
       "class": "physics",
       "form": "function",
       "files": {
-        "solverBot.js": 1,
+        "solverBot.js": 2,
         "strikePolicy.js": 1
       },
-      "sites": 2,
+      "sites": 3,
       "seen": "static",
       "via": [
         "import"
@@ -4953,10 +4954,10 @@
       "files": {
         "botDriverV1.js": 1,
         "mover.js": 1,
-        "solverBot.js": 1,
+        "solverBot.js": 2,
         "strikePolicy.js": 1
       },
-      "sites": 4,
+      "sites": 5,
       "seen": "static",
       "via": [
         "import"
@@ -5029,9 +5030,10 @@
       "form": "constant",
       "files": {
         "mover.js": 1,
+        "solverBot.js": 1,
         "strikePolicy.js": 2
       },
-      "sites": 3,
+      "sites": 4,
       "seen": "static",
       "via": [
         "import"

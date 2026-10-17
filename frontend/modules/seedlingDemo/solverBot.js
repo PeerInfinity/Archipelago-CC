@@ -134,6 +134,8 @@ import {
     // ⛓⛓⛓ hammer-phase SF: the admissible strike floor's terrain read (`strikeEtaFloorOf`, behind `STRIKE_ETA_FLOOR`, OFF).
     SLIDING_SPEED, hazardFlagsFor,
     applyFriction, applyInput, DEFAULT_FRICTION, sweepAxis,
+    // ⛓ Seedling DK: the leg pre-check's gain (`dashLegGain`) steps one window over every terrain speed.
+    MOVE_SPEEDS, SLASH_DASH_FORCE,
     chestStanceBand,
     fireRect, INVENTORY_ITEM_IDS, auditFire,
     pullModelled, pullsDrainingInto,
@@ -5687,8 +5689,9 @@ export const DASH_CHAIN_PREFIXES = Object.freeze(
  * (`SEEDLING_<NAME>=0` opts a process out), together with js-6's dash-only window (`dashOnlyWindowHook.js`).
  * `DASH_NO_SWING_PREFIX` stays OFF: ON it reverses ⚖ ruling 45(b), every prefix.
  *
- *  - `DASH_LEG_PRECHECK`: `planSwordDash` refuses a corridor whose UNDASHED walk has a leg longer than
- *    `PREVIEW_AGREEMENT_BOUND + DASH_LEG_PRECHECK_MARGIN`, before it previews a single candidate.
+ *  - `DASH_LEG_PRECHECK`: `planSwordDash` refuses a corridor whose UNDASHED walk has a clean-run leg that no single
+ *    dash window can bring under `PREVIEW_AGREEMENT_BOUND` (`dashLegFloor`; ⛓ Seedling DK replaced DB's tick margin of
+ *    40), before it previews a single candidate.
  *  - `DASH_NO_SWING_PREFIX`: `dashPrefixesFor('all')` drops the swing-only prefix `[0]`.
  *  - `DASH_KEEP_PARTIAL`: a `sword-dash` deadline trip keeps the windows the scan had already accepted, instead of
  *    dropping the whole schedule.
@@ -5697,22 +5700,84 @@ export const DASH_LEG_PRECHECK = { enabled: globalThis.process?.env?.SEEDLING_DA
 export const DASH_LEG_PRECHECK_DEFAULT = true;
 
 /**
- * ⛓ SEEDLING DB — **HOW FAR PAST `PREVIEW_AGREEMENT_BOUND` AN UNDASHED LEG MAY RUN AND STILL BE SCANNED** (ticks).
+ * ⛓⛓ SEEDLING DK — **WHICH UNDASHED LEG NO DASH WINDOW CAN BRING UNDER `PREVIEW_AGREEMENT_BOUND`**: a leg the walk
+ * ran straight and without pause, by the ground one window adds (⚖ the user, 2026-10-17: *"Fix the skip's cutoff
+ * first"*). It replaces DB's tick margin (`PREVIEW_AGREEMENT_BOUND + 40`).
  *
- * A candidate is refused `leg-bound` when ITS OWN longest leg is past the bound, so a corridor plans only if some
- * window brings its longest leg to ≤ 195. DS measured, over the 617 replayed page requests of sweep `38845773709`
- * (`seedling-dash-economics.md` § D2):
- *  - the 24 corridors whose undashed walk has a leg ≥ 240 t planned NOTHING, for 10,847 units and 242 s;
- *  - corridors at 198–234 t still planned (4 of 5);
- *  - the largest saving one window made was 98 t (p99 50).
- * ⇒ 195 + 40 = 235 is the longest undashed leg the scan still opens; 236 and up are refused by name. Ticks were
- * identical on all 617 requests, at −10,457 units and −202 s against window 0.
- * ⚠ Calibrated on ONE population, not proved. A proof would bound the largest saving one window can make on one leg.
- * ⛔ Seedling DF (the dash flip, measured in place): windows COMPOUND. `axe-l48-reach-l49`'s corridor has an undashed
- * leg of 305 t, and eight chained windows bring it under 195 (368 t vs 585 t with the pre-check ON), so a per-window
- * margin is not a per-leg bound (`seedling-dash-flip.md` § D2).
+ * ⛓ WHY ONE WINDOW. `evaluateAt` certifies a candidate only when ITS walk's longest leg is ≤ the bound, and the first
+ * candidate it can accept carries no other window. So a corridor plans only if some SINGLE window brings every leg
+ * under the bound; the windows after it only shorten a walk that already certifies. (DF read the axe corridor's eight
+ * windows as compounding; DK D1 measured its FIRST accepted window alone, `[0,2]` at walk-offset 100, taking the
+ * 305-tick leg to 184.)
+ *
+ * ⛔ WHY NOT A TICK MARGIN. A leg's ticks are not its travel. That 305-tick leg is a 192 px climb walked in 154 ticks,
+ * then ~150 ticks of the walk dithering at its waypoint (`hasArrived` needs a full stop inside the tolerance). A dash
+ * knocks the dither out, so the window's saving on that leg is not bounded by anything the dash carries.
+ *
+ * ⛓ THE BOUND, ON A CLEAN RUN. A leg is a clean run when the undashed walk covered it straight (its path at most
+ * `DASH_LEG_CLEAN_PATH` × the straight line between its ends) and without standing (at most `DASH_LEG_CLEAN_STILL`
+ * ticks without moving). On a clean run the walk already travels at its own rate `v = span / n` (`span`, the
+ * Chebyshev ground from where the leg before it ended to where it ends), and a dashed walk steers by the same keys
+ * over the same tiles; what one window adds is ground, at most `dashLegGain()` px ahead of the same walk without it
+ * (`SLASH_DASH_FORCE` along the velocity, run down by `applyFriction` under `applyInput`'s threshold add; stepped at
+ * every `MOVE_SPEEDS` entry, axis and diagonal, every prefix of either weapon's chain at every phase of a swing
+ * period: **48.8 px**, the plain sword's full chain on a ground axis, 27 ticks after the swing). So
+ *     floor(leg) = ceil( n − gain / v )
+ * is the fewest ticks one window can walk that leg in, and a corridor with a clean leg whose floor is past the bound
+ * is refused before a candidate is previewed. A leg that is NOT a clean run is never refused: what it spent beyond
+ * travel (a wait, a dither, a slide) a dash can remove whole.
+ *   · a room with ICE or a WATERFALL refuses nothing (`strikeTerrainOf`, the read `strikeEtaFloorOf` makes): on ice
+ *     `SLIDING_FRICTION` is a tenth of ground's and one window carries hundreds of px; a waterfall's push adds to
+ *     `v.y` past any cap;
+ *   · the LAST leg of a walk that CROSSED is not refused: it ends where the walk met the transition, which a dashed
+ *     walk can meet elsewhere.
+ * ⚠ Not a proof: "the dashed walk's own rate is the undashed walk's" is the steering's, measured rather than derived.
+ * The axe climb shows why the rate cannot come from the physics alone: its undashed walk averages 1.248 px a tick
+ * on one axis, past the 1.200 limit cycle of any fixed key set (the steering's key toggles bleed less friction off
+ * the axis), so a physics-only stride is the per-axis cap 1.6, which refuses no leg under ~360 px. DK D1 measured
+ * this rule on the 617 sweep requests and every committed producer's corridors: no corridor that planned is refused
+ * (`seedling-dash-cutoff.md`).
  */
-export const DASH_LEG_PRECHECK_MARGIN = 40;
+export const DASH_LEG_CLEAN_PATH = 1.05;
+export const DASH_LEG_CLEAN_STILL = 2;
+
+/** ⛓ SEEDLING DK — the most ground one dash window adds to the same walk (px), derived once (see above). */
+export function dashLegGain() {
+    if (DASH_LEG_GAIN !== null) return DASH_LEG_GAIN;
+    const T = 4 * ORDINARY_SWING_PERIOD + 100;
+    const walk = (held, moveSpeed, dashAt) => {
+        let v = { x: 0, y: 0 };
+        let x = 0;
+        const xs = [];
+        for (let t = 0; t < T; t += 1) {
+            v = applyInput(applyFriction(v, DEFAULT_FRICTION), held, moveSpeed);
+            if (dashAt.has(t)) {
+                const len = Math.hypot(v.x, v.y);
+                if (len > 0) v = { x: v.x + SLASH_DASH_FORCE * v.x / len, y: v.y + SLASH_DASH_FORCE * v.y / len };
+            }
+            x += v.x;
+            xs.push(x);
+        }
+        return xs;
+    };
+    const prefixes = [DASH_CHAIN.at, GHOST_DASH_CHAIN.at].flatMap((at) => at.map((_, k) => at.slice(0, k + 1)));
+    const settle = 100;
+    let gain = 0;
+    for (const moveSpeed of new Set(MOVE_SPEEDS)) {
+        for (const held of [new Set(['right']), new Set(['right', 'down'])]) {
+            const base = walk(held, moveSpeed, new Set());
+            for (const pre of prefixes) {
+                for (let s = settle; s < settle + ORDINARY_SWING_PERIOD; s += 1) {
+                    const xs = walk(held, moveSpeed, new Set(pre.map((c) => s + c)));
+                    for (let t = s; t < T; t += 1) gain = Math.max(gain, xs[t] - base[t]);
+                }
+            }
+        }
+    }
+    DASH_LEG_GAIN = gain;
+    return gain;
+}
+let DASH_LEG_GAIN = null;
 
 /** Run `fn` with `DASH_LEG_PRECHECK` set to `enabled`, restoring the previous value (also on a throw). */
 export function withDashLegPrecheck(enabled, fn) {
@@ -5720,18 +5785,61 @@ export function withDashLegPrecheck(enabled, fn) {
 }
 
 /**
- * ⛓ SEEDLING DB — the leg pre-check's verdict on the UNDASHED walk's `legs`: `null` (scan it), or the refusal's `why`.
- * It reads the switch: OFF it is always `null`. Exported so the boundary (235 scans, 236 refuses) is a row of its own.
+ * ⛓ SEEDLING DK — the UNDASHED walk's legs as the pre-check reads them: per leg (in walk order) its waypoint `wp`,
+ * ticks `n`, `span` (Chebyshev px, from where the previous leg ended, or `from`, to its last sample), `path` (px
+ * stepped), `line` (the straight line's length) and `still` (ticks it did not move).
  */
-export function dashLegPrecheck(legs) {
+export function dashLegRuns(samples, from) {
+    const legs = [];
+    let prev = { x: from.x, y: from.y };
+    let leg = null;
+    for (const sm of samples) {
+        if (!leg || sm.wp !== leg.wp) {
+            if (leg) legs.push(leg);
+            const start = leg ? leg.to : prev;
+            leg = { wp: sm.wp, n: 0, from: start, to: start, path: 0, still: 0 };
+        }
+        const step = Math.hypot(sm.x - leg.to.x, sm.y - leg.to.y);
+        leg.n += 1;
+        leg.path += step;
+        if (step === 0) leg.still += 1;
+        leg.to = { x: sm.x, y: sm.y };
+        prev = leg.to;
+    }
+    if (leg) legs.push(leg);
+    return legs.map((l) => ({ wp: l.wp, n: l.n, path: l.path, still: l.still,
+        line: Math.hypot(l.to.x - l.from.x, l.to.y - l.from.y),
+        span: Math.max(Math.abs(l.to.x - l.from.x), Math.abs(l.to.y - l.from.y)) }));
+}
+
+/** ⛓ SEEDLING DK — a leg's floor: the fewest ticks one window can walk it in, or `null` when it is not a clean run. */
+export function dashLegFloor(leg) {
+    if (leg.still > DASH_LEG_CLEAN_STILL || leg.path > DASH_LEG_CLEAN_PATH * leg.line || leg.span <= 0) return null;
+    return Math.ceil(leg.n - dashLegGain() / (leg.span / leg.n));
+}
+
+/**
+ * ⛓ SEEDLING DK — the leg pre-check's verdict on the UNDASHED walk `walk` from `run` (its position and world): `null`
+ * (scan it), or the refusal's `why`. It reads the switch: OFF it is always `null`.
+ */
+export function dashLegPrecheck(run, walk) {
     if (!DASH_LEG_PRECHECK.enabled) return null;
-    const longest = Math.max(0, ...legs);
-    const cut = PREVIEW_AGREEMENT_BOUND + DASH_LEG_PRECHECK_MARGIN;
-    if (longest <= cut) return null;
-    return `DASH_LEG_PRECHECK: the UNDASHED walk's longest leg is ${longest} tick(s), past `
-        + `PREVIEW_AGREEMENT_BOUND ${PREVIEW_AGREEMENT_BOUND} + DASH_LEG_PRECHECK_MARGIN ${DASH_LEG_PRECHECK_MARGIN} `
-        + `= ${cut}. A candidate certifies only with its own longest leg ≤ ${PREVIEW_AGREEMENT_BOUND}, and no measured `
-        + 'window saved that much on one leg, so no candidate was previewed';
+    const { ice, waterfall } = strikeTerrainOf(run.world);
+    if (ice || waterfall) return null;
+    const legs = dashLegRuns(walk.samples, run.state);
+    const crossed = walk.truncated?.kind === 'crossed';
+    for (const [i, leg] of legs.entries()) {
+        if (leg.n <= PREVIEW_AGREEMENT_BOUND) continue;
+        if (crossed && i === legs.length - 1) continue;
+        const floor = dashLegFloor(leg);
+        if (floor === null || floor <= PREVIEW_AGREEMENT_BOUND) continue;
+        return `DASH_LEG_PRECHECK: the UNDASHED walk's leg ${leg.wp} is a clean run of ${leg.n} tick(s) over `
+            + `${leg.span.toFixed(1)} px; one dash window adds at most ${dashLegGain().toFixed(1)} px, so it walks that leg `
+            + `in no fewer than ${floor} tick(s), past PREVIEW_AGREEMENT_BOUND ${PREVIEW_AGREEMENT_BOUND}. A candidate `
+            + `certifies only with its own longest leg ≤ ${PREVIEW_AGREEMENT_BOUND}, and the first one accepted carries `
+            + 'no other window, so no candidate was previewed';
+    }
+    return null;
 }
 
 /** ⛓ SEEDLING DB — `dashPrefixesFor('all')` without the swing-only prefix `[0]`. OFF: every prefix (⚖ ruling 45(b)). */
@@ -5975,7 +6083,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
      * UNDASHED walk this scan already previewed, so it costs no preview and no deadline ask. It sits after the stall refusal, so a corridor
      * that stalls keeps the reason it has always had (DS's lab asked it first; the ticks and units are the same).
      */
-    const legCut = dashLegPrecheck(legsOf(base));
+    const legCut = dashLegPrecheck(run, base);
     if (legCut !== null) return { ...refuse(legCut), baseline };
     /**
      * ⛓⛓⛓ **"DASH WHEREVER THERE IS NO REASON NOT TO", AS AN ALGORITHM**
