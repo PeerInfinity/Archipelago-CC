@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1100,
         "indexHeadings": 2,
-        "lines": 29659,
+        "lines": 29662,
         "pages": 4,
-        "words": 398600
+        "words": 398977
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -362,10 +362,10 @@ export const DOCS_INDEX = frz({
             "file": "seedling-solve-progress.md",
             "h1": "The Seedling Solver's Progress Stream",
             "headings": 13,
-            "lines": 215,
+            "lines": 218,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-solve-progress.md",
-            "words": 3565
+            "words": 3908
         },
         {
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
@@ -419,7 +419,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 29979
+            "words": 30013
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool.",
