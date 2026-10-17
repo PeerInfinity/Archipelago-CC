@@ -1758,7 +1758,7 @@
     },
     {
       "file": "r9-solve-0-v3.json",
-      "tickCount": 299,
+      "tickCount": 313,
       "bootLevel": 0,
       "tapeVersion": 11,
       "noHazards": []

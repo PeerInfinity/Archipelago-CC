@@ -161,8 +161,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             axeTimingRung: false,
             // ⛓ fidelity AXETIMING D2b: `axeGateTransit` (the walk's gate times a spinning axe's blade) ships OFF.
             axeGateTransit: false,
-            // ⛓ fidelity DASHSTEP D2: `statueTalkRange` (a statue's talk circle is its class's 32 px) ships OFF.
-            statueTalkRange: false });
+            // ⛓ fidelity DASHSTEP D2: `statueTalkRange` (a statue's talk circle is its class's 32 px) shipped OFF;
+            // ⛓ planning-9's flip (⚖ user "Harvest, then flip it ON", 2026-10-17) turns it ON.
+            statueTalkRange: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
