@@ -54,7 +54,7 @@ import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf } from './seedlingRoomPlay.js';
-import { startWasmGame } from './seedlingProbeBoot.js';
+import { bootRetriesLine, isBootFault, startWasmGame, withBootRetry } from './seedlingProbeBoot.js';
 
 argvHelp(import.meta.url);
 
@@ -138,9 +138,10 @@ async function main() {
         if ((S === 'W' || S === 'A') && !haveWasm) { console.log(`SKIP: ${S} — seedling wasm artifact not staged (${JSON.stringify(WASM_PAGE)})`); continue; }
         console.log(`INFO: ── session ${S} (a fresh page)${CONTROL ? ' — CONTROL' : ''} ──`);
         // eslint-disable-next-line no-await-in-loop
-        failed += S === 'A' ? await runAtlas() : await runSession(S);
+        failed += await withBootRetry(S, () => (S === 'A' ? runAtlas() : runSession(S)));
     }
     await browser.close();
+    console.log(bootRetriesLine());
     console.log(failed === 0 ? 'ALL CHECKS PASSED' : `${failed} CHECK(S) FAILED`);
     process.exit(failed === 0 ? 0 : 1);
 
@@ -150,6 +151,17 @@ async function main() {
         page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
         page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
         const rp = createRoomPlay({ page, wasmPage: S === 'J' ? JS_PAGE : WASM_PAGE, logs, name: `seal-${S}` });
+        // ⛓ A known boot fault closes this page and re-boots the session once (seedlingProbeBoot.js); anything else is the session's.
+        try {
+            await bootPage(S, page, rp, logs, rulesPath);
+        } catch (e) {
+            if (isBootFault(e)) { await page.close(); throw e; }
+            throw e;
+        }
+        return { page, logs, rp };
+    }
+
+    async function bootPage(S, page, rp, logs, rulesPath) {
         await page.goto(`${HOST}/frontend/?rules=${rulesPath}`, { waitUntil: 'domcontentloaded' });
         await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
         await rp.installWatchers();
@@ -170,7 +182,6 @@ async function main() {
             const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
             return !!p?._apLoadResult;
         }), 180000);
-        return { page, logs, rp };
     }
 
     /** Every readout a row compares, in one page round trip (either runtime). */
@@ -326,6 +337,7 @@ async function main() {
             console.log(`INFO: ${errs.length} page error(s)${errs.length ? `: ${errs.map((l) => l.slice(0, 160)).join(' | ')}` : ''}`);
             await page.close();
         } catch (e) {
+            if (isBootFault(e)) throw e;
             (rp?.check ?? ((l, ok) => console.log(`${ok ? 'PASS' : 'FAIL'}: ${l}`)))(`${S}: fatal: ${e.message}`, false, e.stack?.split('\n').slice(0, 4).join(' / '));
             console.log(`PAGE LOGS (last 30):\n${logs.slice(-30).join('\n')}`);
             if (!rp) return 1;
@@ -377,6 +389,7 @@ async function main() {
                 JSON.stringify(after.checked));
             await page.close();
         } catch (e) {
+            if (isBootFault(e)) throw e;
             (rp?.check ?? ((l, ok) => console.log(`${ok ? 'PASS' : 'FAIL'}: ${l}`)))(`A: fatal: ${e.message}`, false, e.stack?.split('\n').slice(0, 4).join(' / '));
             console.log(`PAGE LOGS (last 30):\n${logs.slice(-30).join('\n')}`);
             if (!rp) return 1;
