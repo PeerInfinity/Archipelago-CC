@@ -1848,6 +1848,16 @@ async function atlasPresetOn(tc, runtime, presetPath, startRegion) {
         if (panel.statusElement?.textContent !== 'click ▶ Start in the game') return null;
         try { return frameOf(panel)?.document?.querySelector('#btn-start') ?? null; } catch { return null; }
     }, '[wasm] the panel asks for ▶ Start (the game runtime is fetched)', 120000, 250);
+    if (!startButton) {
+        const frames = [...document.querySelectorAll(`[id="${panel.flashObjectId}"]`)];
+        const win = frameOf(panel);
+        let page = '?';
+        try { page = `${win?.location?.href ?? null} bridge ${!!win?.__swfBridge} ready ${win?.__runtimeReady ?? null}`; } catch { /* cross-origin */ }
+        tc.log(`[wasm] DIAG status "${panel.statusElement?.textContent ?? '?'}"; ${frames.length} element(s) #${panel.flashObjectId}; `
+            + `active panel ${getActivePanelInstance() === panel ? 'same' : 'CHANGED'}; init ${panel._initRuntime}/${panel.transport}; `
+            + `adapter cancelled ${panel.adapter?._cancelled ?? null}; page ${page}; log: `
+            + `${(panel.rootElement?.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-25).join(' | ')}`, 'error');
+    }
     tc.reportCondition('[wasm] the game page is up (▶ Start)', !!startButton);
     if (!startButton) return null;
     startButton.click();
