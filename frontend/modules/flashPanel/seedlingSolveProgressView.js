@@ -42,6 +42,11 @@ const LIFECYCLE_CAP = 64;
 const ACCENT = '#e94560';
 const MAP_WIDTH = 288;
 const MAP_BACKGROUND = '#0a0a0a';
+/**
+ * Every tree row: the tree scrolls in a 320 px box, so most of its 160 rows are off screen — `content-visibility`
+ * lets the browser skip their layout and paint (an off-screen row keeps its last height).
+ */
+const TREE_ROW_CSS = 'content-visibility:auto;contain-intrinsic-size:auto 14px;';
 const EMPTY_TILES = 'empty';
 
 const el = (tag, css = '', text = null) => {
@@ -409,7 +414,7 @@ export class SolveProgressView {
             const want = {
                 text: `${'  '.repeat(row.depth)}${mark}${n.role}: ${n.label}  ${n.attempts}a ${n.successes}✓`
                     + (row.rejected ? ` ${row.rejected}✗` : '') + (row.hidden ? `  (+${row.hidden})` : ''),
-                css: `color:${n.active ? '#fff' : '#bbb'};${n.active ? 'background:#3a1520;' : ''}`
+                css: `${TREE_ROW_CSS}color:${n.active ? '#fff' : '#bbb'};${n.active ? 'background:#3a1520;' : ''}`
                     + (row.collapsible ? 'cursor:pointer;' : ''),
                 title: Object.entries(n.rejections ?? {}).map(([k, v]) => `${v}× ${k}`).join('\n'),
                 key: row.collapsible ? n.key : null,
