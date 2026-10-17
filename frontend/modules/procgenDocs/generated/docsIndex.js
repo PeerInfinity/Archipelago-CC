@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1101,
+        "headings": 1103,
         "indexHeadings": 2,
-        "lines": 29707,
+        "lines": 29774,
         "pages": 4,
-        "words": 399377
+        "words": 400507
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -361,18 +361,18 @@ export const DOCS_INDEX = frz({
             "description": "What the Seedling solver reports while it solves: one hook, called at fixed points in the search, and a snapshot that holds a tree of the solver's goals and rungs, a tile map of the states it previewed, and its work counts.",
             "file": "seedling-solve-progress.md",
             "h1": "The Seedling Solver's Progress Stream",
-            "headings": 13,
-            "lines": 215,
+            "headings": 14,
+            "lines": 240,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-solve-progress.md",
-            "words": 3565
+            "words": 4212
         },
         {
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
-            "headings": 624,
-            "lines": 23052,
+            "headings": 625,
+            "lines": 23094,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -380,7 +380,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 246094
+            "words": 246577
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",

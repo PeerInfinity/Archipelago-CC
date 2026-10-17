@@ -23093,3 +23093,45 @@ Trap candidates:
    is held) and the NPC's radius before touching the dash constants.
 2. *A per-class field the AS3 overrides in a constructor is not the base class's default.* `NPC.talkRange` is 24 and
    one subclass assigns 32; a model that reads the declaration misses it. `wasmPlayback.js` had named this defect.
+
+### Seedling hammer-phase HB — the solver heartbeat
+
+⚖ The user (2026-10-17), on the solve-progress reports: *"I want to implement all of these features, if possible"*.
+This is the plan's R2: emit-only heartbeat count points inside the solver's long loops, so the worker's tap (which posts
+at most once per interval, and only when the solver calls it) has something to post on. The report is
+`CC/docs/cloud-reports/seedling-hammer-heartbeat.md`.
+
+**W0** at `f77dbd6bb9`. The investigation's rows reproduce on the 4-core cloud box (3.5× faster than its box): L40
+(`r5-l40-part5` → the totem part at (160,640)) 211 hook calls, 80–82 % of the solve in gaps over 100 ms at 100 ms,
+digest `3addc379`, `shouldStop` 167; L18 1,441 calls, `230dc0ff`, 165. The tap's default interval on `main` is still
+1,000 ms (the JS arc's 100 ms default has not landed).
+
+**D1 — the gap, named** (`node:inspector` CPU profile at 200 µs, attributed to the gaps over 100 ms):
+- Kill rung (`kill-chaser` ask → next `preview`): **~73 % `botDriverV2.planWaypoints`' string-pull**
+  (`controllerPathClear`), ~14 % `previewWalk`, ~1.5 % `planTilePath` (the A\* itself), ~1.5 % the chaser forecast
+  (`chaserStep`). Each gap is one stance candidate: `planWaypointsOrNull`, then its preview.
+- `walk → walk` and `goal → walk`: one `planWaypoints` call each, 80–90 % the same string-pull.
+- `planSwordDash`: 0 % of the gaps, 0.5 % of the whole solve.
+
+**D2 — the heartbeat.** `solveProgress.progressHeartbeat(at)`: every `HEARTBEAT_EVERY[at]`-th pass calls the hook with
+site `heartbeat` (added to `PROGRESS_POINTS`). It asks no `shouldStop`, writes no `budget.asks` or `budget.work`, and
+the solver reads nothing back. `snapshot.heartbeat = {at, count}` is additive under `v: 1`. There are two sites in
+`solverBot.js`, each one null check with a literal key:
+- `previewWalk`'s `combatBefore`, once a sample of the transit, stall and dwell loops, N = 512;
+- `deriveKillByChaser`'s `scoreAll`, after each candidate's plan, N = 1.
+
+The tap needed no change. Gate rows: `solveProgressHeartbeat.test.js`. Its mutants h1 (a heartbeat that calls
+`shouldStop`), h2 (one at a deadline site) and h3 (one that moves the preview's tick) are all caught.
+
+**STOP, named.** A heartbeat inside `planWaypoints`' string-pull (`botDriverV2.js:1345`, N = 8) is what closes the gap,
+and that file is outside this slice's region. In a scratch tree it takes L40's gap share to 4–15 %. It waits on its
+owner's OK.
+
+**D3** (three interleaved rounds, load 2.0–2.9): L40 gap share 80–81 % → **54–74 %** with the heartbeat; L18 0 % →
+0 %. Digests and `shouldStop` are identical in every arm. No wall overhead is resolvable above the box's ±15 % noise.
+
+Lessons:
+1. *Profile the gap before naming it.* The brief named `previewWalk`, the chaser forecast and `planSwordDash`. The gap
+   was the planner's string-pull, which none of them call.
+2. *A threshold metric depends on the box.* On a box 3.5× faster, half of L40's 100 ms gaps fall under the line.
+   Report the gap's cause and its per-unit cost, not only its share.

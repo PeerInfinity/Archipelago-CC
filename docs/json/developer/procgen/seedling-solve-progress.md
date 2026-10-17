@@ -10,7 +10,7 @@ What the Seedling solver reports while it solves: one hook, called at fixed poin
 |---|---|
 | Install | `withSolveProgress(onProgress, fn, {pass?})` runs `fn` with the hook active. Nested installs restore the outer one, the same way `withSolveDeadline` works. `solveSegment({…, onProgress})` installs it for one segment. |
 | Signature | `onProgress(site, peek)`. `site` is the name of the point that called. `peek()` builds a snapshot and returns it (or `null` before the first segment starts). |
-| When it is called | Only at fixed points in the search: every deadline site (`DEADLINE_SITES`, coarse and fine, whether or not a deadline is installed) and the count points in §3. It is never called on a timer, and the solver never reads a clock. |
+| When it is called | Only at fixed points in the search: every deadline site (`DEADLINE_SITES`, coarse and fine, whether or not a deadline is installed) and the count points in §3, the heartbeat among them (§3.1). It is never called on a timer, and the solver never reads a clock. |
 | Throttling | The caller throttles. The JS worker reads its own clock in the hook, and at most once a second it calls `peek()` and posts `{type: 'solve-progress', id, snapshot, final}` (§7). |
 | Cost | With no hook installed, each count point is one null check (`activeProgress !== null`). With a hook installed, the counts are kept, and `peek()` does the materialising. |
 | Observation only | Every count is read from a value the solver had already computed. Nothing is read back. A hook that throws is ignored. With and without the hook, every plan, trace, record and verdict is byte-identical (§6). |
@@ -28,8 +28,11 @@ Where the JS arc installs it: `solveAnytime` runs one `solveSegment` per pass, s
   segment: { name, index, level, pass?, outcome },
   tree:    { key, role, label, attempts, successes, rejections: { <reason>: n }, active, children: [ … ] },
   tiles:   { level, tile: 16, cols, rows, cells: [ [col, row, reached, firstTick], … ] } | null,
-  budget:  { asks: { <site>: n }, work: { <unit>: n } } }
+  budget:  { asks: { <site>: n }, work: { <unit>: n } },
+  heartbeat?: { at, count } }
 ```
+
+`heartbeat` is present once the install has beaten at least once (§3.1). It is an optional field added under `v: 1`: a reader that does not know it loses nothing, so it does not take `v: 2` (which is reserved for the plan's Tier C fields).
 
 ### `seq`
 
@@ -112,10 +115,30 @@ The map holds the **previewed player states** of the level the solver previewed 
 | `arm` | `rowFor`'s `extra.arm` (`light`, `static-sword`, `press`, `chaser`); `execKill` (the frontier kill's `press` and `chaser` arms, counted at the caller) | one arm tried |
 | `search` | `pressEscapeOnce`'s `traced` (`escape-<phase>`); `deriveApproach` (`approach`); `deriveFight`'s `done` (`fight`) | one space-time search. Its `bound` is the rejection |
 | `preview` | `previewWalk`'s return | one walk preview (the tiles) |
+| `heartbeat` | `previewWalk`'s `combatBefore`; `deriveKillByChaser`'s `scoreAll` (§3.1) | every `HEARTBEAT_EVERY[at]`-th pass of a long loop. Emit-only: not an ask, not a work unit |
 | a deadline site | `deadlineReached`, `fineDeadlineReached`, and the `walk` check every `WALK_CHECK_TICKS` driven ticks | one ask point reached |
 | `done` | `progressSegment` | the segment's last call, after its outcome is known |
 
 Under C2 and the fidelity waves, no count point sits inside `spinnerFightForecast`, `spinnerForecastWithPress`, `deriveStrike`, `execKillByPress`, `execClearTag`, `pendingEarnedClears` or `planSwordDash`. Their callers count them.
+
+### 3.1 The heartbeat (hammer-phase HB)
+
+The sites above are where the solver's work changes shape, and some of its loops run long between two of them. On L40's kill rung (`r5-l40-part5` toward the totem part at (160,640)) the investigation measured 211 hook calls and 86 % of the solve in gaps over 100 ms, so a tap that posts at most once per interval had nothing to post on. The heartbeat is a count point inside those loops: `progressHeartbeat(at)` counts one pass of loop `at`, and every `HEARTBEAT_EVERY[at]`-th pass calls the hook with site `heartbeat`. The tap reads its own clock on that call and posts if its interval is due. A hook that ignores the site (or posts only at its interval) needs no change.
+
+| `at` | Where | `HEARTBEAT_EVERY` | Why that N |
+|---|---|---|---|
+| `preview-sample` | `solverBot.js`: `previewWalk`'s `combatBefore`: its transit, stall and dwell loops each call it once a sample | 512 | a sample is ~45 µs on the 4-core cloud box (L40: 15,970 samples in ~0.7 s of preview) and ~3.5× that on the box the investigation measured: 512 samples are ~23 ms here and ~80 ms there, ~10 Hz |
+| `kill-stance` | `solverBot.js`: `deriveKillByChaser`'s `scoreAll`, after each candidate's `planWaypointsOrNull` | 1 | one candidate's plan is ~130 ms here and ~450 ms there (L40 plans 20) |
+| `plan-pull` | `botDriverV2.js`: `planWaypoints`' string-pull, before each `controllerPathClear` ask | 8 | an ask is ~3.3 ms here (881 over the L40 solve, ~73 % of each kill-rung gap): every 8th is ~26 ms here and ~90 ms on the investigation's box |
+
+What it is not:
+- ⛔ not a deadline site. It asks no `shouldStop`, is never counted in `budget.asks` or `budget.work`, and the solver reads nothing it writes. The JS arc's work units (the 640 / 85 budgets, the 300 s backstop) are the same with it as without.
+- ⛔ not a clock. The count decides when it calls; only the hook reads a clock.
+- With no hook installed, each site is one null check (`activeProgress !== null`) with a literal key.
+
+`snapshot.heartbeat` is `{at, count}`: the loop that beat last, and how many beats this install has emitted.
+
+⚠ **The planner's string-pull.** On L40, ~70 % of each kill-rung gap is one call to `botDriverV2.planWaypoints`, in its string-pull (`controllerPathClear`, 881 calls over the solve). One call cannot be split from the solver's side, so the two solver sites alone take the gap share only from ~80 % to ~63 % on the cloud box. The `plan-pull` beat inside that loop (added at HB's harvest; `planWaypoints` is shared, and the page's walker calls it with no hook, so it is one null check there) takes it to ~4–15 %. `solveProgressHeartbeat.test.js` pins `planWaypoints`' plan byte-identical hooked and unhooked. The report is `CC/docs/cloud-reports/seedling-hammer-heartbeat.md`.
 
 ## 4. A worked example
 
@@ -178,6 +201,8 @@ A longer climb, for the tree's ladder shape: `r5-l40-part5`'s staging toward the
 | `budget.work` | named units, plus `shouldStop` | `shouldStop` is the JS arc's work unit, measured where it is spent |
 
 ## 6. Pins
+
+`frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js` covers the heartbeat (§3.1): `previewWalk`'s output is byte-identical with a hook and without, on solverBot.test.js's L6 room; on L18 and L40 the answer digest and the `shouldStop` count are equal with no hook and under the real tap at 1000, 100, 50 and 0 ms; `budget.asks` holds deadline sites only and sums to the unhooked `shouldStop` count; L40 beats at least 40 times; with no hook the heartbeat never runs; and every call site is one null check with a literal key. Its three mutants are named in its header.
 
 `frontend/modules/seedlingDemo/solveProgress.test.js` covers:
 - byte-identity with and without a hook (a peeking hook and a silent one) on the L18 hammer room, an L40 climb and a plain walk;
