@@ -1,7 +1,7 @@
 /**
- * seedlingDemo/hammerDashShape.test — ⛓⛓⛓ SEEDLING DB: THE CHEAPER DASH SEARCH, BEHIND THREE OFF SWITCHES
+ * seedlingDemo/hammerDashShape.test — ⛓⛓⛓ SEEDLING DB: THE CHEAPER DASH SEARCH, BEHIND THREE SWITCHES
  * (`solverBot.js`: `DASH_LEG_PRECHECK`, `DASH_NO_SWING_PREFIX`, `DASH_KEEP_PARTIAL`; ⚖ the user 2026-10-16, *"Build
- * the best shape, OFF"*). Named `hammer*` because it is a hammer-phase slice, so the arc's bounded vitest set
+ * the best shape, OFF"*; ⛓ dash flip, the user 2026-10-16, *"Prepare the flip"*: (i) and (iii) ship ON, (ii) OFF). Named `hammer*` because it is a hammer-phase slice, so the arc's bounded vitest set
  * (`hammer*`) picks it up beside the other hammer-phase switches.
  *
  * The rows, and the corridors they stand on:
@@ -26,7 +26,8 @@ import { createLevelRun } from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
 import { ROLES } from './levelWorld.js';
 import {
-    DASH_CHAIN_PREFIXES, DASH_KEEP_PARTIAL, DASH_LEG_PRECHECK, DASH_LEG_PRECHECK_MARGIN, DASH_NO_SWING_PREFIX,
+    DASH_CHAIN_PREFIXES, DASH_KEEP_PARTIAL, DASH_KEEP_PARTIAL_DEFAULT, DASH_LEG_PRECHECK, DASH_LEG_PRECHECK_DEFAULT,
+    DASH_LEG_PRECHECK_MARGIN, DASH_NO_SWING_PREFIX,
     PREVIEW_AGREEMENT_BOUND, dashLegPrecheck, dashPrefixesFor, deriveKillByChaser, planSwordDash, previewWalk,
     strikePolicyFor, withDashKeepPartial, withDashLegPrecheck, withDashNoSwingPrefix, withSolveDeadline,
 } from './solverBot.js';
@@ -75,10 +76,13 @@ const SWITCHES = [
     ['DASH_KEEP_PARTIAL', DASH_KEEP_PARTIAL, withDashKeepPartial],
 ];
 
-describe(`seedling DB — the ${SWITCHES.length} switches ship OFF, and \`with…\` restores them`, () => {
+// ⛓ dash flip (the user, 2026-10-16: *"Prepare the flip"*): (i) and (iii) ship ON; (ii) stays OFF (⚖ 45(b), every prefix).
+const SHIPS = { DASH_LEG_PRECHECK: true, DASH_NO_SWING_PREFIX: false, DASH_KEEP_PARTIAL: true };
+
+describe(`seedling DB — the ${SWITCHES.length} switches ship at their flip defaults, and \`with…\` restores them`, () => {
     for (const [name, sw, withIt] of SWITCHES) {
-        it.skipIf(globalThis.process?.env?.[`SEEDLING_${name}`] !== undefined)(`${name} ships OFF`, () => {
-            expect(sw.enabled).toBe(false);
+        it.skipIf(globalThis.process?.env?.[`SEEDLING_${name}`] !== undefined)(`${name} ships ${SHIPS[name] ? 'ON' : 'OFF'}`, () => {
+            expect(sw.enabled).toBe(SHIPS[name]);
         });
 
         it(`with${name} sets and restores it, also on a throw`, () => {
@@ -90,6 +94,11 @@ describe(`seedling DB — the ${SWITCHES.length} switches ship OFF, and \`with�
             expect(sw.enabled).toBe(was);
         });
     }
+
+    it('the flipped switches name their default (G1\'s flip shape: `SEEDLING_<NAME>=0` opts a process out)', () => {
+        expect(DASH_LEG_PRECHECK_DEFAULT).toBe(true);
+        expect(DASH_KEEP_PARTIAL_DEFAULT).toBe(true);
+    });
 
     it('the margin is 40 over the agreement bound 195: 235 is the longest undashed leg scanned', () => {
         expect(DASH_LEG_PRECHECK_MARGIN).toBe(40);

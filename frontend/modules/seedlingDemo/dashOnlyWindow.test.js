@@ -1,6 +1,7 @@
 /**
  * ⛓ DASH-ONLY WINDOW (slice `seedling-js-dash-window`, ⚖ the user 2026-10-16: hammer's DS → *"Build the best shape,
- * OFF"*) — the switch `DASH_ONLY_WINDOW` (`dashOnlyWindowHook.js`, default OFF) makes the full pass's upgrade window
+ * OFF"*) — the switch `DASH_ONLY_WINDOW` (`dashOnlyWindowHook.js`; default ON since ⛓ the dash flip, the user
+ * 2026-10-16: *"Prepare the flip"*, so off-default is now OFF) makes the full pass's upgrade window
  * count only `sword-dash` asks and trip only there; every other site runs on the whole budget. The AXE_DODGE hook's
  * pattern (`axeDodgeAskHook.test.js`): a flashPanel setting `default | on | off`, the JS page and the wasm engine
  * apply it, a solve WORKER (its own module copy) runs the value the request carries, and ⚖ "identical plans on every
@@ -52,9 +53,10 @@ function settingsSchema() {
 describe('the switch, the setting and the page query', () => {
     afterEach(() => applyDashOnlyWindow(null));
 
-    it('the default is OFF (no env opt-in here), read once at import; the setting is default | on | off, schema default `default`', () => {
-        expect(DASH_ONLY_WINDOW_DEFAULT).toBe(false);
-        expect(DASH_ONLY_WINDOW.enabled).toBe(false);
+    // ⛓ dash flip (the user, 2026-10-16): the default is ON.
+    it('the default is ON (no env opt-out here), read once at import; the setting is default | on | off, schema default `default`', () => {
+        expect(DASH_ONLY_WINDOW_DEFAULT).toBe(true);
+        expect(DASH_ONLY_WINDOW.enabled).toBe(true);
         const props = settingsSchema()?.properties ?? {};
         expect(props[DASH_ONLY_WINDOW_SETTING_PROP]).toMatchObject({ type: 'string', enum: ['default', 'on', 'off'], default: 'default' });
         expect(DASH_ONLY_WINDOW_SETTING_KEY).toBe(`moduleSettings.flashPanel.${DASH_ONLY_WINDOW_SETTING_PROP}`);
@@ -75,14 +77,14 @@ describe('the switch, the setting and the page query', () => {
 
     it('at the default nothing is stamped (forcing the default\'s own value is still the default); off-default the stamp is the value', () => {
         expect(dashOnlyWindowStamp()).toBeNull();
-        applyDashOnlyWindow(false);
-        expect(dashOnlyWindowStamp()).toBeNull();
         applyDashOnlyWindow(true);
-        expect(dashOnlyWindowStamp()).toBe(true);
+        expect(dashOnlyWindowStamp()).toBeNull();
+        applyDashOnlyWindow(false);
+        expect(dashOnlyWindowStamp()).toBe(false);
         applyDashOnlyWindow(null);
-        expect(DASH_ONLY_WINDOW.enabled).toBe(false);
-        expect(withDashOnlyWindow(true, () => DASH_ONLY_WINDOW.enabled)).toBe(true);
-        expect(DASH_ONLY_WINDOW.enabled).toBe(false);
+        expect(DASH_ONLY_WINDOW.enabled).toBe(true);
+        expect(withDashOnlyWindow(false, () => DASH_ONLY_WINDOW.enabled)).toBe(false);
+        expect(DASH_ONLY_WINDOW.enabled).toBe(true);
     });
 });
 
@@ -158,19 +160,20 @@ const counter = () => { let n = 0; return () => n++; };
 const rows = (r) => r.passes.map(({ ms, ...row }) => row);
 
 describe('the solver honours it — L4 stairs with the sword (the full pass: 57 units; today it needs a window of 76)', () => {
-    it('window 75: OFF cuts the WHOLE full pass and ships the dashless 255 t; ON lets its non-dash work run on the budget and upgrades to 219 t — stamped', () => {
+    // ⛓ dash flip (the user, 2026-10-16): ON is the default (unstamped), OFF the off-default value (stamped).
+    it('window 75: OFF cuts the WHOLE full pass and ships the dashless 255 t — stamped; ON (the default) lets its non-dash work run on the budget and upgrades to 219 t', () => {
         const at = (dashOnlyWindow) => solveAnytime({ ...l4StairsSword(), budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: 75,
             ...(dashOnlyWindow === undefined ? {} : { dashOnlyWindow }) }, { clock: counter() });
-        const off = at(undefined);
+        const off = at(false);
         expect(off.plan.pass).toBe('dashless');
         expect(rows(off)[1]).toMatchObject({ pass: 'full', ok: false, kind: 'refusal', limit: 'window' });
-        expect('dashOnlyWindow' in off).toBe(false);
-        const on = at(true);
+        expect([off.dashOnlyWindow, off.plan.dashOnlyWindow]).toEqual([false, false]);
+        const on = at(undefined);
         expect(rows(on)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 255, work: 19 },
             { pass: 'full', ok: true, kind: null, ticks: 219, work: 57 }]);
         expect(on.plan.pass).toBe('full');
-        expect([on.dashOnlyWindow, on.plan.dashOnlyWindow]).toEqual([true, true]);
-        expect(DASH_ONLY_WINDOW.enabled).toBe(false);
+        expect('dashOnlyWindow' in on).toBe(false);
+        expect(DASH_ONLY_WINDOW.enabled).toBe(true);
     }, 120000);
 
     it('ON: the smallest window that holds the full pass\'s dash asks is 39 (219 t); at 38 the full pass trips at `sword-dash` (never `walk`), keeping the partial schedule that dash scan returns', () => {
@@ -208,11 +211,11 @@ describe('the request: byte-identical at the default, stamped only off-default',
 
     it('`stampHooks` is the service\'s one stamping door, exported for the sweep\'s request CAPTURE: it adds exactly what the service posts', () => {
         expect(stampHooks({ ...REQUEST })).toEqual({ ...REQUEST });
-        const [msg] = withDashOnlyWindow(true, () => postedBy((s) => s.start({ ...REQUEST })));
+        const [msg] = withDashOnlyWindow(false, () => postedBy((s) => s.start({ ...REQUEST })));
         const { source, ...posted } = msg.request;
-        const { source: _s, ...stamped } = withDashOnlyWindow(true, () => stampHooks({ ...REQUEST }));
+        const { source: _s, ...stamped } = withDashOnlyWindow(false, () => stampHooks({ ...REQUEST }));
         expect(stamped).toEqual(posted);
-        expect(stamped.dashOnlyWindow).toBe(true);
+        expect(stamped.dashOnlyWindow).toBe(false);
         // the lab captures the stamped copy, not the engine's pre-stamp request
         const lab = readFileSync(join(ROOT, 'scripts/procgen/seedlingDivergenceLab.js'), 'utf8');
         expect(lab).toMatch(/const posted = stampHooks\(\{ \.\.\.request \}\);/);
@@ -220,9 +223,9 @@ describe('the request: byte-identical at the default, stamped only off-default',
     });
 
     it('an off-default value of the posting instance rides on the request', () => {
-        const [msg] = withDashOnlyWindow(true, () => postedBy((s) => s.start({ ...REQUEST })));
-        expect(msg.request.dashOnlyWindow).toBe(true);
-        expect(DASH_ONLY_WINDOW.enabled).toBe(false);
+        const [msg] = withDashOnlyWindow(false, () => postedBy((s) => s.start({ ...REQUEST })));
+        expect(msg.request.dashOnlyWindow).toBe(false);
+        expect(DASH_ONLY_WINDOW.enabled).toBe(true);
     });
 });
 
@@ -243,7 +246,7 @@ function nodeWorker() {
 }
 
 describe('the WORKER (its own module copy) solves under the request\'s value, and says so', () => {
-    it('L4 at window 75 through a real worker: the posting instance ON → the worker upgrades to 219 t and stamps `dashOnlyWindow: true`; at the default it ships 255 t, unstamped', async () => {
+    it('L4 at window 75 through a real worker: the posting instance OFF → the worker ships the dashless 255 t and stamps `dashOnlyWindow: false`; at the default (ON) it upgrades to 219 t, unstamped', async () => {
         const service = createWorkerSolveService({ createWorker: nodeWorker });
         const ask = async (request) => {
             const h = service.start(request);
@@ -254,11 +257,11 @@ describe('the WORKER (its own module copy) solves under the request\'s value, an
         try {
             const { levelSource, ...tape } = l4StairsSword();
             const req = () => ({ ...tape, budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: 75, source: { records: indexLevels(MAP) } });
-            const on = await withDashOnlyWindow(true, () => ask(req()));
-            expect(on.ok).toBe(true);
-            expect([on.plan.pass, on.plan.solution.length, on.dashOnlyWindow, on.plan.dashOnlyWindow]).toEqual(['full', 219, true, true]);
+            const off = await withDashOnlyWindow(false, () => ask(req()));
+            expect(off.ok).toBe(true);
+            expect([off.plan.pass, off.plan.solution.length, off.dashOnlyWindow, off.plan.dashOnlyWindow]).toEqual(['dashless', 255, false, false]);
             const plain = await ask(req());
-            expect([plain.plan.pass, plain.plan.solution.length]).toEqual(['dashless', 255]);
+            expect([plain.plan.pass, plain.plan.solution.length]).toEqual(['full', 219]);
             expect(plain.dashOnlyWindow).toBeUndefined();
         } finally { service.dispose(); }
     }, 240000);
@@ -266,8 +269,8 @@ describe('the WORKER (its own module copy) solves under the request\'s value, an
     it('in place (no budget, so the switch is inert) the stamp still names the value an off-default instance solved under', () => {
         const svc = createInPlaceSolveService();
         const req = { ...REQUEST, staging: { boot: { level: 999, x: 0, y: 0 } } };
-        expect(withDashOnlyWindow(true, () => svc.start({ ...req }).result).dashOnlyWindow).toBe(true);
+        expect(withDashOnlyWindow(false, () => svc.start({ ...req }).result).dashOnlyWindow).toBe(false);
         expect(svc.start({ ...req }).result.dashOnlyWindow).toBeUndefined();
-        expect(DASH_ONLY_WINDOW.enabled).toBe(false);
+        expect(DASH_ONLY_WINDOW.enabled).toBe(true);
     });
 });

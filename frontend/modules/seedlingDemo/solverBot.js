@@ -5519,12 +5519,14 @@ export const DASH_CHAIN_PREFIXES = Object.freeze(
 );
 
 /**
- * ⛓⛓⛓ SEEDLING DB — **THE CHEAPER DASH SEARCH: THREE SWITCHES, ALL OFF** (⚖ the user, 2026-10-16: *"Build the best
- * shape, OFF"*; the shape is DS's verdict, `seedling-dash-economics.md` § D3). Each is a `{enabled}` object read where
- * the scan reads it, with `SEEDLING_<NAME>=1` for a node measurement and `with<Name>(enabled, fn)` for a test. The
- * browser has no `process` and takes the default. A page reaches them only through a request stamp, and the solver
- * switches have none yet (the JS arc's to build; `seedling-dash-shape.md` § D1). OFF, each is today's scan, byte for
- * byte. Every flip is the user's.
+ * ⛓⛓⛓ SEEDLING DB — **THE CHEAPER DASH SEARCH: THREE SWITCHES** (⚖ the user, 2026-10-16: *"Build the best shape,
+ * OFF"*; the shape is DS's verdict, `seedling-dash-economics.md` § D3). Each is a `{enabled}` object read where the scan
+ * reads it, with `SEEDLING_<NAME>=1|0` for a node measurement and `with<Name>(enabled, fn)` for a test. The browser has
+ * no `process` and takes the default. A page reaches them through js-6's `dashShape` request stamp (`dashShapeHook.js`).
+ * OFF, each is the BEFORE scan, byte for byte. Every flip is the user's.
+ * ⛓ dash flip (the user, 2026-10-16: *"Prepare the flip"*): `DASH_LEG_PRECHECK` and `DASH_KEEP_PARTIAL` ship ON
+ * (`SEEDLING_<NAME>=0` opts a process out), together with js-6's dash-only window (`dashOnlyWindowHook.js`).
+ * `DASH_NO_SWING_PREFIX` stays OFF: ON it reverses ⚖ ruling 45(b), every prefix.
  *
  *  - `DASH_LEG_PRECHECK`: `planSwordDash` refuses a corridor whose UNDASHED walk has a leg longer than
  *    `PREVIEW_AGREEMENT_BOUND + DASH_LEG_PRECHECK_MARGIN`, before it previews a single candidate.
@@ -5532,7 +5534,8 @@ export const DASH_CHAIN_PREFIXES = Object.freeze(
  *  - `DASH_KEEP_PARTIAL`: a `sword-dash` deadline trip keeps the windows the scan had already accepted, instead of
  *    dropping the whole schedule.
  */
-export const DASH_LEG_PRECHECK = { enabled: globalThis.process?.env?.SEEDLING_DASH_LEG_PRECHECK === '1' };
+export const DASH_LEG_PRECHECK = { enabled: globalThis.process?.env?.SEEDLING_DASH_LEG_PRECHECK !== '0' };
+export const DASH_LEG_PRECHECK_DEFAULT = true;
 
 /**
  * ⛓ SEEDLING DB — **HOW FAR PAST `PREVIEW_AGREEMENT_BOUND` AN UNDASHED LEG MAY RUN AND STILL BE SCANNED** (ticks).
@@ -5546,6 +5549,9 @@ export const DASH_LEG_PRECHECK = { enabled: globalThis.process?.env?.SEEDLING_DA
  * ⇒ 195 + 40 = 235 is the longest undashed leg the scan still opens; 236 and up are refused by name. Ticks were
  * identical on all 617 requests, at −10,457 units and −202 s against window 0.
  * ⚠ Calibrated on ONE population, not proved. A proof would bound the largest saving one window can make on one leg.
+ * ⛔ Seedling DF (the dash flip, measured in place): windows COMPOUND. `axe-l48-reach-l49`'s corridor has an undashed
+ * leg of 305 t, and eight chained windows bring it under 195 (368 t vs 585 t with the pre-check ON), so a per-window
+ * margin is not a per-leg bound (`seedling-dash-flip.md` § D2).
  */
 export const DASH_LEG_PRECHECK_MARGIN = 40;
 
@@ -5579,15 +5585,16 @@ export function withDashNoSwingPrefix(enabled, fn) {
 
 /**
  * ⛓ SEEDLING DB — **A `sword-dash` TRIP KEEPS THE WINDOWS ALREADY ACCEPTED.**
- *  - OFF (today, SF2): a trip drops the whole schedule, and `walkTo` drives the undashed corridor.
- *  - ON: `planSwordDash` returns the schedule of the windows it had accepted before the trip. Each was certified
+ *  - OFF (the BEFORE scan, SF2): a trip drops the whole schedule, and `walkTo` drives the undashed corridor.
+ *  - ON (the default since the dash flip): `planSwordDash` returns the schedule of the windows it had accepted before the trip. Each was certified
  *    against the walk the ones before it produced. The in-flight start tick's candidates are NOT kept, so the plan is
  *    the scan's state between two acceptances. With none accepted it refuses `deadline`, as before.
  * A trip at any other site never reaches here. In place there is no deadline, so ON cannot move a committed solve. It
  * acts only under a deadline that trips `sword-dash` while the rest of the pass runs on: the JS arc's dash-only window
  * (`jsRuntimeSolver.passShouldStop`).
  */
-export const DASH_KEEP_PARTIAL = { enabled: globalThis.process?.env?.SEEDLING_DASH_KEEP_PARTIAL === '1' };
+export const DASH_KEEP_PARTIAL = { enabled: globalThis.process?.env?.SEEDLING_DASH_KEEP_PARTIAL !== '0' };
+export const DASH_KEEP_PARTIAL_DEFAULT = true;
 
 /** Run `fn` with `DASH_KEEP_PARTIAL` set to `enabled`, restoring the previous value (also on a throw). */
 export function withDashKeepPartial(enabled, fn) {
@@ -5805,8 +5812,8 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
             + 'is no length for a schedule to beat'), baseline };
     }
     /**
-     * ⛓ SEEDLING DB — the leg pre-check (`DASH_LEG_PRECHECK`, OFF by default), read off the UNDASHED walk this scan
-     * already previewed, so it costs no preview and no deadline ask. It sits after the stall refusal, so a corridor
+     * ⛓ SEEDLING DB — the leg pre-check (`DASH_LEG_PRECHECK`, ON by default since the dash flip), read off the
+     * UNDASHED walk this scan already previewed, so it costs no preview and no deadline ask. It sits after the stall refusal, so a corridor
      * that stalls keeps the reason it has always had (DS's lab asked it first; the ticks and units are the same).
      */
     const legCut = dashLegPrecheck(legsOf(base));
@@ -6004,7 +6011,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
              * is only its upgrade.
              */
             if (deadlineReached('sword-dash')) {
-                // ⛓ SEEDLING DB: keep the windows already accepted (`DASH_KEEP_PARTIAL`, OFF by default).
+                // ⛓ SEEDLING DB: keep the windows already accepted (`DASH_KEEP_PARTIAL`, ON by default since the dash flip).
                 return DASH_KEEP_PARTIAL.enabled && windows.length ? planOf(true) : { ...refuse('deadline'), baseline };
             }
             const got = evaluateAt(at, pattern);

@@ -6,7 +6,9 @@
  * page's `?dashShape=` and the wasm engine apply them, a solve WORKER (its own module copy) runs inside solverBot's own
  * `with…` scopes from the stamp, and ⚖ "identical plans on every machine": at the defaults the request is
  * byte-identical to today's, off-default it is STAMPED, and every answer carries the shape its switches READ.
- * Nothing flips: every default stays OFF.
+ * ⛓ dash flip (the user, 2026-10-16: *"Prepare the flip"*): `legPrecheck` and `keepPartial` ship ON, `noSwingPrefix`
+ * OFF (`SHIPPED`), so "off-default" is OFF for the two and ON for the third. The witnesses compare against the shipped
+ * shape; each moved key is still its own witness.
  *
  * ── THE MUTATION LIST (run during development, each row's catcher named) ──
  *   m1 stamp at the defaults (`dashShapeStamp` returns the effective shape always)
@@ -43,6 +45,9 @@ import { mergeVerdict } from '../../../scripts/procgen/seedlingDivergenceMerge.j
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
 const ALL_OFF = { legPrecheck: false, noSwingPrefix: false, keepPartial: false };
+// ⛓ dash flip (the user, 2026-10-16): the shipped defaults; `OFF_DEFAULT` is each key moved off them.
+const SHIPPED = { legPrecheck: true, noSwingPrefix: false, keepPartial: true };
+const OFF_DEFAULT = Object.fromEntries(Object.entries(SHIPPED).map(([k, v]) => [k, !v]));
 
 function settingsSchema() {
     let schema = null;
@@ -54,11 +59,11 @@ function settingsSchema() {
 describe('the hook, the settings and the page query', () => {
     afterEach(() => applyDashShape({}));
 
-    it('the three switches default OFF (no env opt-in here), read once at import; three settings, each default | on | off, schema default `default`', () => {
+    it('the switches default to the dash flip\'s shape (legPrecheck ON, noSwingPrefix OFF, keepPartial ON; no env here), read once at import; three settings, each default | on | off, schema default `default`', () => {
         expect(DASH_SHAPE_KEYS).toEqual(['legPrecheck', 'noSwingPrefix', 'keepPartial']);
-        expect(DASH_SHAPE_DEFAULTS).toEqual(ALL_OFF);
-        expect(dashShapeRead()).toEqual(ALL_OFF);
-        expect([DASH_LEG_PRECHECK.enabled, DASH_NO_SWING_PREFIX.enabled, DASH_KEEP_PARTIAL.enabled]).toEqual([false, false, false]);
+        expect(DASH_SHAPE_DEFAULTS).toEqual(SHIPPED);
+        expect(dashShapeRead()).toEqual(SHIPPED);
+        expect([DASH_LEG_PRECHECK.enabled, DASH_NO_SWING_PREFIX.enabled, DASH_KEEP_PARTIAL.enabled]).toEqual([true, false, true]);
         // the model-free settings module names the same keys in the same order (it cannot import the hook)
         expect(Object.keys(DASH_SHAPE_SETTING_PROPS)).toEqual(DASH_SHAPE_KEYS);
         const props = settingsSchema()?.properties ?? {};
@@ -96,31 +101,31 @@ describe('the hook, the settings and the page query', () => {
 
     it('at the defaults nothing is stamped (forcing a default\'s own value is still the default); off-default the stamp is ONLY the moved keys', () => {
         expect(dashShapeStamp()).toBeNull();
-        applyDashShape({ legPrecheck: false, noSwingPrefix: false, keepPartial: false });
+        applyDashShape({ ...SHIPPED });
         expect(dashShapeStamp()).toBeNull();
         for (const k of DASH_SHAPE_KEYS) {
-            applyDashShape({ [k]: true });
-            expect(dashShapeStamp()).toEqual({ [k]: true });
+            applyDashShape({ [k]: OFF_DEFAULT[k] });
+            expect(dashShapeStamp()).toEqual({ [k]: OFF_DEFAULT[k] });
         }
-        applyDashShape({ keepPartial: true, legPrecheck: true });
-        expect(dashShapeStamp()).toEqual({ legPrecheck: true, keepPartial: true });
-        expect(dashShapeEffective()).toEqual({ legPrecheck: true, noSwingPrefix: false, keepPartial: true });
+        applyDashShape({ keepPartial: false, legPrecheck: false });
+        expect(dashShapeStamp()).toEqual({ legPrecheck: false, keepPartial: false });
+        expect(dashShapeEffective()).toEqual(ALL_OFF);
         // choosing never touches solverBot's switches: only a scope does
-        expect(dashShapeRead()).toEqual(ALL_OFF);
+        expect(dashShapeRead()).toEqual(SHIPPED);
         applyDashShape({});
         expect(dashShapeStamp()).toBeNull();
     });
 
     it('`withDashShape` runs inside solverBot\'s three scopes (an absent key = its default) and restores them, also on a throw and after a rejected promise', async () => {
-        expect(withDashShape({ keepPartial: true }, dashShapeRead)).toEqual({ ...ALL_OFF, keepPartial: true });
-        expect(withDashShape({ legPrecheck: true, noSwingPrefix: true }, dashShapeRead)).toEqual({ legPrecheck: true, noSwingPrefix: true, keepPartial: false });
+        expect(withDashShape({ keepPartial: false }, dashShapeRead)).toEqual({ ...SHIPPED, keepPartial: false });
+        expect(withDashShape({ legPrecheck: false, noSwingPrefix: true }, dashShapeRead)).toEqual({ legPrecheck: false, noSwingPrefix: true, keepPartial: true });
         // an absent key is the DEFAULT, not whatever an outer scope held
-        expect(withDashShape({ keepPartial: true }, () => withDashShape({}, dashShapeRead))).toEqual(ALL_OFF);
-        expect(dashShapeRead()).toEqual(ALL_OFF);
+        expect(withDashShape({ keepPartial: false }, () => withDashShape({}, dashShapeRead))).toEqual(SHIPPED);
+        expect(dashShapeRead()).toEqual(SHIPPED);
         expect(() => withDashShape(parseDashShape('all'), () => { throw new Error('boom'); })).toThrow('boom');
-        expect(dashShapeRead()).toEqual(ALL_OFF);
+        expect(dashShapeRead()).toEqual(SHIPPED);
         await expect(withDashShape(parseDashShape('all'), () => Promise.reject(new Error('late')))).rejects.toThrow('late');
-        expect(dashShapeRead()).toEqual(ALL_OFF);
+        expect(dashShapeRead()).toEqual(SHIPPED);
         expect(() => withDashShape({ swing: true }, () => 1)).toThrow(/unknown key "swing"/);
     });
 });
@@ -149,16 +154,16 @@ describe('the request: byte-identical at the defaults, stamped only off-default 
 
     it('each key off-default rides alone on the request; the posted request is exactly `stampHooks`\'s copy (the sweep capture\'s)', () => {
         for (const k of DASH_SHAPE_KEYS) {
-            applyDashShape({ [k]: true });
+            applyDashShape({ [k]: OFF_DEFAULT[k] });
             const [msg] = postedBy((s) => s.start({ ...REQUEST }));
-            expect(msg.request.dashShape).toEqual({ [k]: true });
+            expect(msg.request.dashShape).toEqual({ [k]: OFF_DEFAULT[k] });
             const { source, ...posted } = msg.request;
             const { source: _s, ...stamped } = stampHooks({ ...REQUEST });
             expect(stamped).toEqual(posted);
         }
         // a request that already carries a shape keeps it (the in-place service and a replayed capture)
         expect(stampHooks({ ...REQUEST, dashShape: { legPrecheck: true } }).dashShape).toEqual({ legPrecheck: true });
-        expect(dashShapeRead()).toEqual(ALL_OFF);
+        expect(dashShapeRead()).toEqual(SHIPPED);
     });
 });
 
@@ -185,6 +190,8 @@ const counter = () => { let n = 0; return () => n++; };
 const full = (r) => r.passes.find((p) => p.pass === 'full');
 
 describe('the solver runs inside the scopes the stamp names, and every answer carries the shape READ', () => {
+    // ⛓ dash flip (the user, 2026-10-16): each witness now moves its key OFF the shipped shape (keepPartial and
+    // legPrecheck OFF, noSwingPrefix ON) against the unstamped default solve.
     it('in process: each key has its own witness — noSwingPrefix L4 full pass 57 → 48 units; keepPartial (dash-only window 20) 255 → 235 t; legPrecheck 478:0 the same ticks for less work', () => {
         const l4 = (extra) => solveAnytime({ ...l4StairsSword(), budgetWork: SOLVER_BUDGET_WORK, ...extra }, { clock: counter() });
         const base = l4({ upgradeWindowWork: 85 });
@@ -192,20 +199,22 @@ describe('the solver runs inside the scopes the stamp names, and every answer ca
         expect([full(base).work, full(noSwing).work]).toEqual([57, 48]);
         expect(noSwing.plan.solution.length).toBe(219);
         expect('dashShape' in base).toBe(false);
-        expect([noSwing.dashShape, noSwing.plan.dashShape]).toEqual([{ ...ALL_OFF, noSwingPrefix: true }, { ...ALL_OFF, noSwingPrefix: true }]);
+        expect([noSwing.dashShape, noSwing.plan.dashShape]).toEqual([{ ...SHIPPED, noSwingPrefix: true }, { ...SHIPPED, noSwingPrefix: true }]);
 
-        const off = l4({ upgradeWindowWork: 20, dashOnlyWindow: true });
-        const keep = l4({ upgradeWindowWork: 20, dashOnlyWindow: true, dashShape: { keepPartial: true } });
+        const off = l4({ upgradeWindowWork: 20, dashOnlyWindow: true, dashShape: { keepPartial: false } });
+        const keep = l4({ upgradeWindowWork: 20, dashOnlyWindow: true });
         expect([off.plan.solution.length, keep.plan.solution.length]).toEqual([255, 235]);
-        expect(keep.dashShape).toEqual({ ...ALL_OFF, keepPartial: true });
+        expect(off.dashShape).toEqual({ ...SHIPPED, keepPartial: false });
+        expect('dashShape' in keep).toBe(false);
 
         const solve = (extra) => solveAnytime({ ...sweep478(), levelSource: levelSourceFromAtlas(SWEEP_RECORDS), ...extra });
-        const plain = solve({});
-        const pre = solve({ dashShape: { legPrecheck: true } });
+        const plain = solve({ dashShape: { legPrecheck: false } });
+        const pre = solve({});
         expect(pre.plan.solution).toEqual(plain.plan.solution);
         expect(pre.work).toBeLessThan(plain.work);
-        expect(pre.dashShape).toEqual({ ...ALL_OFF, legPrecheck: true });
-        expect(dashShapeRead()).toEqual(ALL_OFF);
+        expect(plain.dashShape).toEqual({ ...SHIPPED, legPrecheck: false });
+        expect('dashShape' in pre).toBe(false);
+        expect(dashShapeRead()).toEqual(SHIPPED);
     }, 240000);
 
     it('a solve that THROWS inside the scopes (its clock) leaves every switch at its default', () => {
@@ -213,19 +222,19 @@ describe('the solver runs inside the scopes the stamp names, and every answer ca
         expect(() => solveAnytime({ ...l4StairsSword(), budgetWork: SOLVER_BUDGET_WORK, dashShape: parseDashShape('all') },
             { clock: () => { inside = dashShapeRead(); throw new Error('clock threw'); } })).toThrow('clock threw');
         expect(inside).toEqual({ legPrecheck: true, noSwingPrefix: true, keepPartial: true });
-        expect(dashShapeRead()).toEqual(ALL_OFF);
+        expect(dashShapeRead()).toEqual(SHIPPED);
     }, 120000);
 
     it('in place (the shape of an off-default instance is stamped and solved under; at the defaults nothing)', () => {
         const svc = createInPlaceSolveService();
         const req = { ...REQUEST, staging: { boot: { level: 999, x: 0, y: 0 } } };
         try {
-            applyDashShape({ keepPartial: true });
-            expect(svc.start({ ...req }).result.dashShape).toEqual({ ...ALL_OFF, keepPartial: true });
+            applyDashShape({ keepPartial: false });
+            expect(svc.start({ ...req }).result.dashShape).toEqual({ ...SHIPPED, keepPartial: false });
             applyDashShape({});
             expect(svc.start({ ...req }).result.dashShape).toBeUndefined();
         } finally { applyDashShape({}); }
-        expect(dashShapeRead()).toEqual(ALL_OFF);
+        expect(dashShapeRead()).toEqual(SHIPPED);
     });
 });
 
@@ -257,25 +266,27 @@ describe('the WORKER (its own module copy) solves inside the scopes its request 
         try {
             const { levelSource, ...tape } = l4StairsSword();
             const req = (extra) => ({ ...tape, budgetWork: SOLVER_BUDGET_WORK, source: { records: indexLevels(MAP) }, ...extra });
-            applyDashShape({ noSwingPrefix: true, keepPartial: true });
-            const on = await ask(req({ upgradeWindowWork: 20, dashOnlyWindow: true }));
+            // ⛓ dash flip (the user, 2026-10-16): the posting instance moves keepPartial OFF and noSwingPrefix ON.
+            applyDashShape({ noSwingPrefix: true, keepPartial: false });
+            const cut = await ask(req({ upgradeWindowWork: 20, dashOnlyWindow: true }));
             const noSwing = await ask(req({ upgradeWindowWork: 85 }));
             applyDashShape({});
             const plain = await ask(req({ upgradeWindowWork: 20, dashOnlyWindow: true }));
             const plain85 = await ask(req({ upgradeWindowWork: 85 }));
-            expect([on.plan.solution.length, plain.plan.solution.length]).toEqual([235, 255]);
+            expect([cut.plan.solution.length, plain.plan.solution.length]).toEqual([255, 235]);
             expect([full(noSwing).work, full(plain85).work]).toEqual([48, 57]);
-            const read = { legPrecheck: false, noSwingPrefix: true, keepPartial: true };
-            expect([on.dashShape, on.plan.dashShape, noSwing.dashShape]).toEqual([read, read, read]);
+            const read = { legPrecheck: true, noSwingPrefix: true, keepPartial: false };
+            expect([cut.dashShape, cut.plan.dashShape, noSwing.dashShape]).toEqual([read, read, read]);
             expect([plain.dashShape, plain85.dashShape]).toEqual([undefined, undefined]);
-            // the worker's leg pre-check: 478:0 ships the same ticks for less work
-            applyDashShape({ legPrecheck: true });
-            const pre = await ask({ ...sweep478(), source: { records: SWEEP_RECORDS } });
-            applyDashShape({});
+            // the worker's leg pre-check: 478:0 ships the same ticks for less work (OFF stamped, ON the default)
+            applyDashShape({ legPrecheck: false });
             const base = await ask({ ...sweep478(), source: { records: SWEEP_RECORDS } });
+            applyDashShape({});
+            const pre = await ask({ ...sweep478(), source: { records: SWEEP_RECORDS } });
             expect(pre.plan.solution).toEqual(base.plan.solution);
             expect(pre.work).toBeLessThan(base.work);
-            expect(pre.dashShape).toEqual({ ...ALL_OFF, legPrecheck: true });
+            expect(base.dashShape).toEqual({ ...SHIPPED, legPrecheck: false });
+            expect(pre.dashShape).toBeUndefined();
         } finally { applyDashShape({}); service.dispose(); }
     }, 480000);
 });

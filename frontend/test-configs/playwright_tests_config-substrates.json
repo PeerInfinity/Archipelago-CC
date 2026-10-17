@@ -1549,7 +1549,7 @@
             "id": "feature-check-seedling-dash-window",
             "enabled": true,
             "category": "Feature checks",
-            "_comment": "SLOWSOLVE (slice seedling-slowsolve-check, 2026-10-16). The walk row of feature check seedling-dash-window: runtime js + the solver on + the view on always (the user, 2026-10-16) + the upgrade window 85 (session-only, restored), seedling_playthrough loaded, the sword granted through the Inventory panel (slotted), the panel stages the l12-dash-cut demo (divergence leg 108): the full (dash) pass ends refused at the window and the bot crosses to L33; then window 0: the full pass ends solved and the bot crosses again; the world is reloaded. Manual batch feature-checks."
+            "_comment": "SLOWSOLVE (slice seedling-slowsolve-check, 2026-10-16). The walk row of feature check seedling-dash-window: runtime js + the solver on + the view on always (the user, 2026-10-16) + the upgrade window 85 (session-only, restored), seedling_playthrough loaded, the sword granted through the Inventory panel (slotted), the panel stages the l12-dash-cut demo (divergence leg 108): with the dash-only window OFF (session-only) the full (dash) pass ends refused at the window and the bot crosses to L33; then the dash-only window at its default (ON since the dash flip, the user 2026-10-16), still window 85: the full pass ends solved (328 t, its kept dashes) and the bot crosses again; the world is reloaded. Manual batch feature-checks."
         },
         {
             "id": "tutorial-walk-guided-tour",

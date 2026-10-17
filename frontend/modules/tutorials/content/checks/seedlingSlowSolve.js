@@ -6,17 +6,23 @@
  *
  * The solve is the flash panel's `l12-dash-cut` demo (`flashPanel/seedlingSolveDemo.js`): divergence leg 108, level
  * 12 from level 0's door to the teleporter at (432, 352), sword in hand. The solver plans in two passes: a dashless
- * one, then a full one that may dash, which only gets the first 85 work units of the solve (the upgrade window,
- * `flashPanel.seedlingSolverUpgradeWindowWork`). The Solve Progress view is set to ALWAYS (⚖ the user, 2026-10-16:
- * "for this demo, let's set Solve Progress to Always"), so it stays open between the two solves. Section 1 runs it at that default: the full pass is cut and the
- * dashless walk ships. Section 2 sets the window to 0 (the whole 640-unit budget) for the session: the full pass
- * finishes and its shorter, dashing walk ships. The sword comes through the AP item path (the Inventory panel), so it
+ * one, then a full one that may dash, bounded by the upgrade window of 85 work units
+ * (`flashPanel.seedlingSolverUpgradeWindowWork`). The Solve Progress view is set to ALWAYS (⚖ the user, 2026-10-16:
+ * "for this demo, let's set Solve Progress to Always"), so it stays open between the two solves.
+ *
+ * ⛓ dash flip (the user, 2026-10-16: *"Prepare the flip"*): what the window COUNTS moved. Before the flip it counted
+ * every unit of the solve and stopped the whole full pass (⚖ WINDOW WHOLE PASS); since, it counts only the dash
+ * scan's own asks (`flashPanel.seedlingDashOnlyWindow`, default ON) and the scan keeps the dash windows it had already
+ * found when it trips (`seedlingDashKeepPartial`, default ON). Section 1 sets the dash-only window OFF for the session,
+ * which is the old rule: the full pass is cut at 85 and the dashless walk ships. Section 2 puts the setting back to
+ * its default: at the same window of 85 the full pass runs on, its dash scan stops at its 85th dash unit with every
+ * window it needed already found, and its shorter, dashing walk ships. The sword comes through the AP item path (the Inventory panel), so it
  * has an inventory slot; that is why the world is seedling_playthrough. Settings are session-only and restored, and
  * the world is reloaded before section 2 and at the end, which drops the sword. Why the reload before section 2: the
  * world's region glue places an arrival by the region the player left, so after the first walk (to level 33) a second
  * staging would land beside the goal; the panel refuses that by name (`solveDemoMoved`).
  *
- * The numbers in the text were measured on one box (`seedling-bot-log.md`, SLOWSOLVE): the work units and ticks are
+ * The numbers in the text were measured (`seedling-bot-log.md`, SLOWSOLVE, re-measured by Seedling DF): the work units and ticks are
  * the same on every machine, the seconds are not. The steps assert the view's lifecycle and its outcome only.
  */
 const FLASH = { panel: 'flashPanel' };
@@ -31,6 +37,7 @@ const KEYS = Object.freeze({
     solver: 'moduleSettings.flashPanel.seedlingSolverWalk',
     view: 'moduleSettings.flashPanel.seedlingSolveProgressView',
     window: 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork',
+    dashOnly: 'moduleSettings.flashPanel.seedlingDashOnlyWindow',
 });
 // The window's default (`SOLVER_UPGRADE_WINDOW_WORK` in seedlingDemo/jsRuntimeSolver.js; content imports no app code).
 const DEFAULT_WINDOW = 85;
@@ -135,61 +142,64 @@ const swordStep = (id, text) => ({
 
 export const CHECK_SEEDLING_DASH_WINDOW = Object.freeze({
     id: 'seedling-dash-window',
-    title: 'Seedling: the solver\'s dash pass, cut by its window and then given the time',
-    summary: 'A level 12 solve whose dashing pass is cut by the 85-unit upgrade window, then the same solve with the window opened to the whole budget.',
+    title: 'Seedling: the solver\'s dash pass, cut by the whole-pass window and then by the dash-only window',
+    summary: 'A level 12 solve whose dashing pass is cut by the old whole-pass 85-unit upgrade window, then the same solve under today\'s dash-only window, which keeps the dashes.',
     status: 'ready',
     doc: null,
     intro: [],
     sections: [
         {
             id: 'cut',
-            title: 'The dash pass, cut at the default window',
+            title: 'The dash pass, cut by the whole-pass window (the rule before the dash flip)',
             blocks: [
                 {
                     step: {
                         id: 'settings',
-                        text: 'Set the flash panel to the **JS** runtime with the **solver** on, **Solve Progress** on **always**, and the upgrade window at its default **85** work units (for this session only).',
+                        text: 'Set the flash panel to the **JS** runtime with the **solver** on, **Solve Progress** on **always**, the upgrade window at its default **85** work units, and the **dash-only window** **off**: the window then counts every unit of the solve and stops the whole full pass, the rule before the dash flip (all for this session only).',
                         run: async (ctx) => {
                             await ctx.setSetting(KEYS.runtime, 'js');
                             await ctx.setSetting(KEYS.solver, true);
                             await ctx.setSetting(KEYS.view, 'always');
                             await ctx.setSetting(KEYS.window, DEFAULT_WINDOW);
+                            await ctx.setSetting(KEYS.dashOnly, 'off');
                         },
                         done: async (ctx) => (await ctx.getSetting(KEYS.view)) === 'always'
                             && (await ctx.getSetting(KEYS.runtime)) === 'js'
-                            && Number(await ctx.getSetting(KEYS.window)) === DEFAULT_WINDOW,
+                            && Number(await ctx.getSetting(KEYS.window)) === DEFAULT_WINDOW
+                            && (await ctx.getSetting(KEYS.dashOnly)) === 'off',
                     },
                 },
                 loadStep('load', 'Load **Seedling Playthrough** (seed 1): the whole game as an Archipelago world, whose items reach the game through the item path.'),
                 listeningStep('listening', 'Open the **Flash Panel** tab. The Solve Progress view is open below the game, waiting for a solve.'),
                 swordStep('sword', 'In the **Inventory** panel, tick **Show unowned** if it is off, then click **Progressive Sword**. The sword reaches the game in a slot of its own, which the solver needs to plan a sword-dash.'),
                 stageStep('stage-cut', 'Stage the solve: the player enters level 12 from level 0, holding the sword, and the solver plans a way to the teleporter at (432, 352). The view starts reporting: the tree of goals, the tiles the search has reached, and the work meter against the 640-unit budget.'),
-                finalStep('cut', 'Watch the two passes. The **dashless** pass finds a 561-tick walk at about 36 units. The **full** pass, which may dash, gets only the first **85** units of the solve, so it is **cut** (the view\'s last note: the full segment, *refused*, "upgrade window 85"). The view keeps that note on screen while the bot plays the dashless walk.', { outcome: 'refused', window: DEFAULT_WINDOW }),
+                finalStep('cut', 'Watch the two passes. The **dashless** pass finds a 561-tick walk at 36 units. The **full** pass, which may dash, gets only the first **85** units of the whole solve, so it is **cut** (the view\'s last note: the full segment, *refused*, "upgrade window 85"). The view keeps that note on screen while the bot plays the dashless walk.', { outcome: 'refused', window: DEFAULT_WINDOW }),
                 walkStep('walk-cut', 'The bot walks the 561-tick plan to the teleporter and crosses to level 33.'),
             ],
         },
         {
             id: 'extended',
-            title: 'The same solve with the window opened',
+            title: 'The same solve under the dash-only window (the default)',
             blocks: [
                 {
                     step: {
-                        id: 'window-0',
-                        text: 'Set the upgrade window to **0**, which means the whole budget (for this session only). This is the time limit on the optional part of the solve, the dashing pass.',
-                        run: (ctx) => ctx.setSetting(KEYS.window, 0),
-                        done: async (ctx) => Number(await ctx.getSetting(KEYS.window)) === 0,
+                        id: 'dash-only',
+                        text: 'Put the **dash-only window** back to its **default** (on). The upgrade window stays at **85**, but now it counts only the dash scan\'s own work: the rest of the full pass runs on the whole 640-unit budget, and a dash scan that reaches the window keeps the dashes it has already found.',
+                        run: (ctx) => ctx.setSetting(KEYS.dashOnly, 'default'),
+                        done: async (ctx) => (await ctx.getSetting(KEYS.dashOnly)) === 'default'
+                            && Number(await ctx.getSetting(KEYS.window)) === DEFAULT_WINDOW,
                     },
                 },
                 loadStep('reload', 'Reload the world. This world places an arrival by the region the player came from: from level 33\'s side the player would land beside the teleporter. A fresh world starts on level 0\'s side again.'),
                 listeningStep('listening-full', 'Back on the **Flash Panel** tab, the view is open and waiting again.'),
                 swordStep('sword-full', 'The reload dropped the sword: click **Progressive Sword** in the **Inventory** panel again.'),
-                stageStep('stage-full', 'Stage the same solve again. The dashless pass runs exactly as before; this time the full pass may spend the whole budget, and the work meter climbs past 85.'),
-                finalStep('full', 'The **full** pass finishes, at about 202 units: the view\'s last note is the full segment, *solved*, "upgrade window 640". It found a **328-tick** walk with dashes, 233 ticks shorter, for a few seconds more of solving (measured on one box: about 1.6 s at the default, 3.5 s here).', { outcome: 'solved', window: 640 }),
+                stageStep('stage-full', 'Stage the same solve again. The dashless pass runs exactly as before; this time the full pass runs past 85 units of the solve, and the work meter climbs past 85.'),
+                finalStep('full', 'The **full** pass finishes, at 115 units (151 for the whole solve): the view\'s last note is the full segment, *solved*, "upgrade window 85". Its dash scan reached the window, and kept the dashes it had found, which were all it needed: a **328-tick** walk with dashes, 233 ticks shorter, the same walk the whole budget finds (window 0: 238 units).', { outcome: 'solved', window: DEFAULT_WINDOW }),
                 walkStep('walk-full', 'The bot walks the 328-tick plan to the teleporter and crosses to level 33.'),
                 {
                     step: {
                         id: 'restore',
-                        text: 'Reload the world (dropping the sword), then put the four settings back as they were.',
+                        text: 'Reload the world (dropping the sword), then put the five settings back as they were.',
                         run: async (ctx) => {
                             await ctx.loadPreset(WORLD.game, WORLD.seed);
                             await ctx.restoreSettings();
