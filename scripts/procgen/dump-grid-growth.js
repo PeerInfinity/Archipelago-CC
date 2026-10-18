@@ -29,6 +29,10 @@
  *   --asymmetric add|remove  cross-branch one-way exit reconciliation
  *                            (default add)
  *   -o, --out PATH           output JSON path (default ./grid-growth-dump.json)
+ *   --config PATH            read flags from a JSON object (the keys a dump
+ *                            echoes as `config`; flags given here win; exit 3
+ *                            if it fails the schema); see cliFlags.js
+ *   --config-schema          print that JSON Schema and exit
  *   --json-status PATH       write the run's status object (`-` = stdout); see cliRun.js
  *   -h, --help               print this and exit
  *
@@ -44,13 +48,13 @@
 
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import { argvHelp, helpText } from './argvHelp.js';
+import { argvHelp } from './argvHelp.js';
+import { KIND, W, flag, oneOf, parseFlags } from './cliFlags.js';
 import { runCli, parseOrUsage } from './cliRun.js';
 
-// Substrate libraries register their adapters on import — one shared list.
-import './registerPipelineSubstrates.js';
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { checkSubstrateIds, loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 
 import { growMaze, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
@@ -59,8 +63,32 @@ argvHelp(import.meta.url);
 
 // --- CLI parser ---
 
+/** ⛓ The flags this driver takes (cliFlags.js parses them). */
+const FLAGS = {
+    '--seed': W.seed,
+    '--grid': W.grid,
+    '--region': W.region,
+    '--quota': W.quota,
+    '--mix': W.mixCounts,
+    '--start': W.start,
+    '--stop-on-pool-empty': flag('stopOnPoolEmpty', KIND.on),
+    '--max-regions': flag('maxRegions', KIND.int),
+    '--items': W.items,
+    '--obstacles': W.obstacles,
+    '--branch': flag('branch', KIND.float),
+    '--no-bidirectional': W.noBidirectional,
+    '--asymmetric': flag('asymmetric', oneOf('add', 'remove')),
+    '-o': W.out,
+    '--out': W.out,
+    // the value is read by cliRun.js; not echoed into the dump's config
+    '--config': W.config,
+    '--config-schema': W.configSchema,
+    '--json-status': W.jsonStatus,
+    '-h': W.help,
+};
+
 function parseArgs(argv) {
-    const out = {
+    const out = parseFlags(argv, FLAGS, {
         seed: 1,
         grid: { width: 3, height: 3 },
         region: { width: 8, height: 6 },
@@ -75,71 +103,7 @@ function parseArgs(argv) {
         bidirectional: true,
         asymmetric: 'add',
         out: './grid-growth-dump.json',
-    };
-    const parseWxH = (s) => {
-        const [w, h] = s.split('x').map((n) => parseInt(n, 10));
-        if (!Number.isFinite(w) || !Number.isFinite(h)) {
-            throw new Error(`expected WxH, got '${s}'`);
-        }
-        return { width: w, height: h };
-    };
-    const parseKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected id=N, got '${s}'`);
-        return [s.slice(0, i), parseInt(s.slice(i + 1), 10)];
-    };
-    for (let i = 0; i < argv.length; i++) {
-        const a = argv[i];
-        const next = () => argv[++i];
-        switch (a) {
-            case '--seed': out.seed = parseInt(next(), 10); break;
-            case '--grid': out.grid = parseWxH(next()); break;
-            case '--region': out.region = parseWxH(next()); break;
-            case '--quota': {
-                const [id, n] = parseKv(next());
-                out.quotas[id] = n;
-                break;
-            }
-            case '--mix': {
-                const [id, n] = parseKv(next());
-                out.mix[id] = n;
-                break;
-            }
-            case '--start': out.start = next(); break;
-            case '--stop-on-pool-empty': out.stopOnPoolEmpty = true; break;
-            case '--max-regions': out.maxRegions = parseInt(next(), 10); break;
-            case '--items': {
-                const [id, n] = parseKv(next());
-                out.items[id] = n;
-                break;
-            }
-            case '--obstacles': {
-                const [id, n] = parseKv(next());
-                out.obstacles[id] = n;
-                break;
-            }
-            case '--branch': out.branch = parseFloat(next()); break;
-            case '--no-bidirectional': out.bidirectional = false; break;
-            case '--asymmetric': {
-                const v = next();
-                if (v !== 'add' && v !== 'remove') {
-                    throw new Error(`--asymmetric expects 'add' or 'remove', got '${v}'`);
-                }
-                out.asymmetric = v;
-                break;
-            }
-            case '-o':
-            case '--out': out.out = next(); break;
-            // the value is read by cliRun.js; not echoed into the dump's config
-            case '--json-status': next(); break;
-            case '-h':
-                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
-                process.exit(0);
-                break;
-            default:
-                throw new Error(`unknown flag: ${a}`);
-        }
-    }
+    }, { metaUrl: import.meta.url });
     if (Object.keys(out.quotas).length > 0 && Object.keys(out.mix).length > 0) {
         throw new Error('--quota and --mix are mutually exclusive');
     }
@@ -182,6 +146,11 @@ function shapeRegions(grid) {
 
 async function main(status) {
     const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = config;
+    await loadPipelineSubstrates();
+    checkSubstrateIds(config, {
+        layout: 'grid', tool: 'dump-grid-growth', counts: { quotas: '--quota', mix: '--mix' }, start: 'start',
+    });
 
     const growthParams = {
         branchProbability: config.branch,

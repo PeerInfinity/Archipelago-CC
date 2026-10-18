@@ -37,6 +37,11 @@ export const FLAG_PATTERNS = Object.freeze([
      *  drivers (`sphere-step.js`, `dump-sphere-growth.js`, …) are written in —
      *  without it their `--help` reported "reads no argv" (§5au item 2). */
     Object.freeze({ id: 'case', re: /\bcase\s+'--([a-zA-Z][a-zA-Z0-9-]*)'\s*:/g }),
+    /* ⛓ a flag TABLE keyed by the flag — `'--seed': W.seed,` — the form the
+     *  pipeline drivers declare for `cliFlags.js` `parseFlags` (§5au item 6).
+     *  A key at the start of its line only, so a flag quoted mid-line in an
+     *  object of spawn arguments is not read as accepted. */
+    Object.freeze({ id: 'table', re: /^\s*'--([a-zA-Z][a-zA-Z0-9-]*)'\s*:/gm }),
 ]);
 
 /**
