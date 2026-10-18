@@ -29,10 +29,19 @@ name: Seedling full tier (manual)
 # this run's id, SHA and shard count, `channel: headless`, `measuredAt` = that
 # SHA. The row write stays a box-side act (no CI commit to main); the merged
 # checkpoint is kept 90 days as the evidence it quotes.
+# ⛓⛓ A run that says REUSED (rule 3) measured nothing, but the GREEN run it
+# names may be stamped AT THE HEAD whose key matched (⚖ user 2026-10-17):
+# `record-standing-value.mjs --category=<c> --quote=<v> --reused-run=<that id>`
+# recomputes the key at a clean HEAD and refuses by name if it moved.
 #
 # ⛓ HEADLESS LOGIC-ONLY. The differential launches on HEADLESS_LOGIC_ONLY_ARGS
 # and REFUSES by name unless the page's `__swfGpu.lost >= 1` — the runner has
 # the box's two channels (run 34724984639). Each shard asserts the CHANNEL line.
+
+# ⛓ ci-skip-rules RULE 3 — the inputs, stamped on the run, so a run list says
+# what each run measured without opening its logs.
+run-name: >-
+  Seedling tier ${{ inputs.tier }} (${{ inputs.shards }} shards, page=${{ inputs.page || 'default' }}${{ inputs.force && ', force' || '' }})
 
 on:
   workflow_dispatch:
@@ -44,7 +53,7 @@ on:
         type: string
         default: full
       shards:
-        description: The number of shard jobs the tier is split across.
+        description: The number of shard jobs the tier is split across (2 or more; 1 is refused).
         type: number
         default: 10
       page:
@@ -53,6 +62,12 @@ on:
           candidate. Empty = the differential's own default (the lab's build).
         type: string
         default: ''
+      force:
+        description: >-
+          Run the shards even when a green run already measured this tier's input
+          key (rule 3). For a deliberate replicate; off = quote that run.
+        type: boolean
+        default: false
 
 jobs:
   plan:
@@ -63,11 +78,35 @@ jobs:
       matrix: ${{ steps.plan.outputs.matrix }}
       timeout: ${{ steps.plan.outputs.timeout }}
       tapes: ${{ steps.plan.outputs.tapes }}
+      key: ${{ steps.reuse.outputs.key }}
+      reuse: ${{ steps.reuse.outputs.reuse }}
+    permissions:
+      contents: read
+      actions: read
     steps:
-      # ⛓ NO submodules: the partition reads the committed tapes, not the wasm.
-      # `npm ci` because the differential imports `playwright` at its top.
+      # ⛔ ONE SHARD IS REFUSED (⚖ user 2026-10-17: "making 1 shard not a valid
+      # option"). Measured: with a single `tier-shard-*` artifact,
+      # download-artifact extracts it into `shards/` itself, not into
+      # `shards/tier-shard-1/`, so the merge finds no checkpoint and goes red
+      # after the whole tier has been driven. Refused here, in seconds, by name.
+      - name: Refuse fewer than 2 shards
+        env:
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          if [ "$SHARDS" -lt 2 ]; then
+            echo "::error::shards=$SHARDS is refused — the merge needs 2 or more shard artifacts (one is extracted without its directory, and the merge then finds no checkpoint). Dispatch with shards>=2."
+            exit 1
+          fi
+          echo "shards=$SHARDS — ok"
+
+      # ⛓ RECURSIVE since rule 3: the tier key hashes the wasm page's BYTES
+      # (the differential's own fingerprint), so the plan needs the build the
+      # shards will drive. `npm ci` because the differential imports
+      # `playwright` at its top.
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
 
       - name: Set up Node.js
         uses: actions/setup-node@v6.4.0
@@ -96,9 +135,54 @@ jobs:
           echo "tapes=$(node -p "require('./plan.json').tapes")" >> "$GITHUB_OUTPUT"
           { echo '```'; cat plan.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
+      # ══════════════════════════════════════════════════════════════════
+      # ⛓⛓ ci-skip-rules RULE 3 (⚖ user, 2026-10-17) — A TIER WHOSE INPUTS DID
+      # NOT MOVE IS QUOTED, NOT RE-DRIVEN. `ci-skip-review` §3 R3: 27 of 53 green
+      # runs in 7 days (3,604 job-min) re-drove a tier whose inputs had not moved.
+      #
+      # The key is `--tier-key` (`fullTierKey.js`): the differential's own resume
+      # fingerprint + every tape's + its import closure + this file + the lock.
+      # A GREEN merge uploads an artifact named for it; this step looks the name
+      # up. A hit SKIPS the shards and the merge, and this run measured NOTHING:
+      # quote the run it names (its id, SHA, checkpoint). `force` re-drives.
+      # ⛓ FAIL-OPEN: no key, an API error or `force` all run the tier.
+      # ══════════════════════════════════════════════════════════════════
+      - name: Has a green run already measured this tier's inputs? (rule 3)
+        id: reuse
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          TIER: ${{ inputs.tier }}
+          SEEDLING_PAGE: ${{ inputs.page }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          LINE=$(node scripts/procgen/check-seedling-bot-differential.mjs --tier="$TIER" --tier-key || true)
+          echo "$LINE"
+          KEY=$(printf '%s\n' "$LINE" | sed -n 's/^TIER-KEY: \([0-9a-f]\{16\}\) .*/\1/p')
+          REUSE=""
+          if [ -z "$KEY" ]; then
+            MSG="no tier key (the differential printed none) — the tier runs"
+          elif [ "$FORCE" = "true" ]; then
+            MSG="force — the tier runs (key $KEY)"
+          elif ! R=$(gh api "repos/$REPO/actions/artifacts?name=seedling-full-tier-key-$KEY&per_page=20" \
+              --jq '[.artifacts[] | select(.expired | not) | "\(.workflow_run.id) \(.workflow_run.head_sha)"] | first // empty'); then
+            MSG="could not look up key $KEY — the tier runs (fail-open)"
+          elif [ -n "$R" ]; then
+            REUSE=${R%% *}
+            MSG="REUSED — run $REUSE at ${R#* } is a GREEN tier with key $KEY; the shards and merge are SKIPPED and this run measured nothing. Quote run $REUSE."
+          else
+            MSG="no green run has measured key $KEY — the tier runs"
+          fi
+          echo "MEASURED: $MSG"
+          echo "key=$KEY" >> "$GITHUB_OUTPUT"
+          echo "reuse=$REUSE" >> "$GITHUB_OUTPUT"
+          { echo "### Rule 3: $MSG"; echo '```'; echo "$LINE"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
   shard:
     name: Seedling tier ${{ inputs.tier }} — shard ${{ matrix.shard }}/${{ inputs.shards }}
     needs: plan
+    # ⛓ RULE 3 — skipped when the plan found a green run with the same key.
+    if: needs.plan.outputs.reuse == ''
     runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(needs.plan.outputs.timeout) }}
     strategy:
@@ -205,7 +289,7 @@ jobs:
     needs: [plan, shard]
     # ⛓ ALWAYS, so a failed or missing shard is NAMED here rather than the run
     # ending with a skipped merge that says nothing.
-    if: always() && needs.plan.result == 'success'
+    if: always() && needs.plan.result == 'success' && needs.plan.outputs.reuse == ''
     runs-on: ubuntu-latest
     # ⛓ Derived like a shard's: a merge that must replay a failed shard's tapes
     # is bounded by one shard's price.
@@ -331,4 +415,24 @@ jobs:
           path: |
             test-results/seedling-differential/
             shards/*/shard.log
+          retention-days: 90
+
+      # ⛓ RULE 3 — ONLY A GREEN TIER IS QUOTABLE: every shard and this merge
+      # succeeded. The artifact's NAME is the lookup; its body is for a reader.
+      - name: Bank this tier's input key (rule 3)
+        if: success() && needs.shard.result == 'success' && needs.plan.outputs.key != ''
+        env:
+          KEY: ${{ needs.plan.outputs.key }}
+          TIER: ${{ inputs.tier }}
+        run: |
+          mkdir -p tier-key
+          printf '{"key":"%s","tier":"%s","sha":"%s","run":%s}\n' "$KEY" "$TIER" "$GITHUB_SHA" "$GITHUB_RUN_ID" > tier-key/key.json
+          cat tier-key/key.json
+
+      - name: Upload the tier key (rule 3)
+        if: success() && needs.shard.result == 'success' && needs.plan.outputs.key != ''
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: seedling-full-tier-key-${{ needs.plan.outputs.key }}
+          path: tier-key/key.json
           retention-days: 90

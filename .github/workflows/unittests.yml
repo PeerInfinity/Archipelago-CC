@@ -47,11 +47,15 @@ jobs:
   # is scripts/test/python-tests-needed.py (pinned by
   # test/test_python_tests_needed.py); every failure to get the changed-file
   # list runs the matrix.
+  # ci-skip-rules RULE 1 (2026-10-17): a main push of a SHA that already has a
+  # successful run of this workflow (its branch's) skips the matrix too.
+  # FAIL-OPEN: an API error runs it.
   changes:
     runs-on: ubuntu-latest
     name: Python tests needed?
     permissions:
       contents: read
+      actions: read
     outputs:
       run: ${{ steps.decide.outputs.run }}
     steps:
@@ -68,8 +72,26 @@ jobs:
         BEFORE: ${{ github.event.before }}
         SHA: ${{ github.sha }}
         REPO: ${{ github.repository }}
+        RUN_ID: ${{ github.run_id }}
       run: |
         decide() {
+          if [ "$EVENT" = "push" ] && [ "$REF" = "refs/heads/main" ]; then
+            # Only a run whose MATRIX ran counts: a branch run that F1 skipped
+            # is green without testing anything, and main stays its backstop.
+            if ids=$(gh api "repos/$REPO/actions/workflows/unittests.yml/runs?head_sha=$SHA&status=success&per_page=20" \
+                --jq "[.workflow_runs[] | select(.id != $RUN_ID) | .id] | map(tostring) | join(\" \")"); then
+              for id in $ids; do
+                ran=$(gh api "repos/$REPO/actions/runs/$id/jobs?per_page=50" \
+                  --jq '[.jobs[] | select(.name | startswith("Test Python")) | .conclusion] | (length > 0 and all(. == "success"))' || echo false)
+                if [ "$ran" = true ]; then
+                  echo "skip: $SHA already passed the matrix in run $id — rule 1" >&2; echo false; return
+                fi
+              done
+              echo "run: no earlier run at $SHA passed the matrix" >&2
+            else
+              echo "run: could not list the runs at $SHA" >&2
+            fi
+          fi
           if [ "$EVENT" != "push" ] || [ "$REF" = "refs/heads/main" ]; then
             echo "run: $EVENT on $REF always runs"; echo true; return
           fi

@@ -184,7 +184,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 5,
+            "count": 6,
             "id": "seedling"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 424,
+        "blockStyle": 425,
         "browser": 143,
         "cited": 221,
-        "files": 437,
+        "files": 438,
         "lineStyle": 13,
-        "withDocblock": 437,
-        "withFlags": 353
+        "withDocblock": 438,
+        "withFlags": 354
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3248,6 +3248,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "tier"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "tier-key"
                 },
                 {
                     "how": [
@@ -10926,6 +10932,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "cpu-throttle"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "dash-only-window"
                 },
                 {
@@ -15577,6 +15589,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "reused-run"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "tapes"
                 },
                 {
@@ -16216,6 +16234,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "seedling-atlas-goals — THE ONE PLACE A SEEDLING GOAL COORDINATE COMES FROM.",
             "path": "scripts/procgen/seedling-atlas-goals.mjs"
+        },
+        {
+            "argvHelpers": [
+                "fail"
+            ],
+            "browser": false,
+            "category": "seedling",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "seedling-control-for.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "seedling-control-for — **IS THERE ALREADY A GREEN DIVERGENCE SWEEP AT THIS SHA WITH THESE INPUTS?** (ci-skip-rules rule 3, ⚖ user 2026-10-17)",
+            "path": "scripts/procgen/seedling-control-for.mjs"
         },
         {
             "argvHelpers": [

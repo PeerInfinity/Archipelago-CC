@@ -101,7 +101,7 @@ describe('pollUntil — the loop itself', () => {
         expect(probes).toBe(probesAtRefusal); // and it stopped probing
     });
 
-    it('without a `cancelled` it simply cannot be aborted — the Flash transport never could', async () => {
+    it('without a `cancelled` it simply cannot be aborted — the Flash transport\'s wait cannot be', async () => {
         expect(await settle(pollUntil(() => null, { maxMs: 5, intervalMs: 1 })))
             .toEqual({ message: 'poll did not succeed within 5ms' });
     });
@@ -131,8 +131,19 @@ describe('the three call sites keep their own wording and their own cancellation
             .toEqual({ message: 'bridge did not become ready within 5ms' });
     });
 
-    /** ⛓ The Flash transport has no `_cancelled`, and detaching does not invent one. */
-    it('…and detach() does NOT abort it — that is the transport difference, asserted', async () => {
+    /**
+     * ⛓ The Flash transport has no `_cancelled`, and detaching does not invent one.
+     *
+     * ⛔ NOT because the `<object>` is never replaced under the wait — a runtime
+     * switch replaces it (§5.91: the Flash-runtime row's cleanup re-inits the
+     * panel inside the 15 s). What holds instead is that the orphan wait is
+     * HARMLESS: the flow awaiting it is inert once torn down (the init epoch and
+     * the adapter-identity guard, `flashPanelUI.js` `_initStale`; rows in
+     * `flashPanelInitEpoch.test.js` and `flashPanelFlashTeardown.test.js`), so all
+     * it can still do is poll `getElementById` until its timeout and be ignored.
+     * A real cancel would only shorten that; it is not what keeps the panel safe.
+     */
+    it('…and detach() does NOT abort it — the stale flow, not the wait, is what goes quiet', async () => {
         const a = new FlashBridgeAdapter(adapterOpts());
         a._getFlash = () => null;
         const p = a.waitForBridge(60);

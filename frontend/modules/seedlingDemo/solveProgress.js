@@ -13,6 +13,11 @@
  *    restore the outer. `solverBot.solveSegment` also takes `onProgress` and installs it itself.
  *  - CALLED AT DETERMINISTIC POINTS ONLY: the deadline sites (`solverBot.DEADLINE_SITES`, coarse and fine, whether or
  *    not a deadline is installed) and the count points below. Never on a timer: this module reads no clock.
+ *  - ⛓ HAMMER-PHASE HB — THE HEARTBEAT (`progressHeartbeat`): emit-only count points inside the solver's long loops,
+ *    so a caller that posts on its own clock (the worker's tap) gets a chance to post where the solver is otherwise
+ *    silent. Every `HEARTBEAT_EVERY[at]`-th pass of a loop calls the hook with site `heartbeat`. ⛔ It is not a
+ *    deadline site: it asks no `shouldStop`, counts in no `budget.asks` and no `budget.work`, and the solver reads
+ *    nothing it writes. Its own count is `snapshot.heartbeat`.
  *  - `onProgress(site, peek)` — `site` names the point that called (a deadline site, or one of `PROGRESS_POINTS`), and
  *    `peek()` materialises the snapshot only when the caller decides to post one. Throttling is the caller's.
  *  - OBSERVATION ONLY. Every count is read from a value the solver had already computed; nothing here is read back
@@ -34,7 +39,22 @@ export const PROGRESS_TILE = 16;
  * segment, after its outcome is known.
  */
 export const PROGRESS_POINTS = Object.freeze(['segment', 'goal', 'walk', 'verb', 'climb', 'rung', 'arm', 'search',
-    'preview', 'done']);
+    'preview', 'heartbeat', 'done']);
+
+/**
+ * ⛓ HAMMER-PHASE HB — the heartbeat's loops, and every how many passes of each one calls the hook. A COUNT, never the
+ * clock: the hook (the tap) reads the clock and decides whether to post. Sized on L40's kill rung (`r5-l40-part5` →
+ * the totem part at (160,640), where 86 % of the solve sat in hook gaps over 100 ms):
+ *  - `preview-sample` — one previewed tick (`previewWalk`'s `combatBefore`, which its transit, stall and dwell loops
+ *    each call once a sample). A sample is ~45 µs on the 4-core cloud box (L40: 15,970 samples, ~0.7 s of preview),
+ *    so 512 are ~23 ms here and ~80 ms on the box the investigation measured (3.5× slower): ~10 Hz there.
+ *  - `kill-stance` — one stance candidate planned (`deriveKillByChaser`'s `scoreAll`, after its `planWaypointsOrNull`):
+ *    every one, since one candidate's plan is ~130 ms here and ~450 ms there (20 candidates on L40).
+ *  - `plan-pull` — one `controllerPathClear` ask of `botDriverV2.planWaypoints`' string-pull (the L40 gaps' ~73 %:
+ *    881 asks over the solve at ~3.3 ms each): every 8th, ~26 ms here and ~90 ms on the investigation's box. Added at
+ *    HB's harvest with js-6's and fidelity's OK (planWaypoints is shared; the page's walker calls it unhooked).
+ */
+export const HEARTBEAT_EVERY = Object.freeze({ 'preview-sample': 512, 'kill-stance': 1, 'plan-pull': 8 });
 
 /** The install the solve in progress reports to — `null` is "none", and every count point checks exactly this. */
 export let activeProgress = null;
@@ -78,7 +98,8 @@ function installOf(onProgress, pass, who) {
     if (typeof onProgress !== 'function') {
         throw new Error(`${who}: onProgress must be a function (site, peek) => void, got ${typeof onProgress}`);
     }
-    const p = { hook: onProgress, pass, segments: 0, depth: 0, seg: null, peek: null, calls: 0 };
+    const p = { hook: onProgress, pass, segments: 0, depth: 0, seg: null, peek: null, calls: 0,
+        beats: Object.fromEntries(Object.keys(HEARTBEAT_EVERY).map((at) => [at, 0])), beat: { at: null, count: 0 } };
     p.peek = () => (p.seg === null ? null : snapshotOf(p));
     return p;
 }
@@ -298,6 +319,29 @@ export function progressTick(level) {
     seg.level = level;
 }
 
+// ── the heartbeat ──────────────────────────────────────────────────────
+
+/** How many times `progressHeartbeat` was entered in this process — the gate's "unhooked, it never runs" counter. */
+let heartbeatEntries = 0;
+export const heartbeatEntered = () => heartbeatEntries;
+
+/**
+ * One pass of the long loop `at` (a key of `HEARTBEAT_EVERY`): every `HEARTBEAT_EVERY[at]`-th pass calls the hook
+ * with site `heartbeat`. ⛔ EMIT-ONLY — no ask (`progressSite`), no `shouldStop`, no work unit; `snapshot.heartbeat`
+ * names the loop and counts the beats. Outside a segment it counts nothing (the other count points' rule).
+ */
+export function progressHeartbeat(at) {
+    heartbeatEntries += 1;
+    const p = activeProgress;
+    if (p.seg === null) return;
+    const n = p.beats[at] + 1;
+    p.beats[at] = n;
+    if (n % HEARTBEAT_EVERY[at] !== 0) return;
+    p.beat.at = at;
+    p.beat.count += 1;
+    emit(p, 'heartbeat');
+}
+
 // ── the tiles ──────────────────────────────────────────────────────────
 
 function tilesOf(seg, run) {
@@ -432,5 +476,6 @@ function snapshotOf(p) {
         tree: nodeJson(seg.root, active),
         tiles: t === null ? null : { level: t.level, tile: PROGRESS_TILE, cols: t.cols, rows: t.rows, cells },
         budget: { asks: { ...seg.asks }, work: { ...seg.work, ...counted } },
+        ...(p.beat.count > 0 ? { heartbeat: { at: p.beat.at, count: p.beat.count } } : {}),
     };
 }

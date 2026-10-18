@@ -29,6 +29,19 @@ name: Seedling divergence sweep (manual)
 # ⚠ The solver's budget is WALL-CLOCK: a runner's 2 shared CPUs can cut a solve the box would finish. The report
 # tags those legs BUDGET-BOUND and re-runs them before calling any a model gap.
 
+# ⛓ ci-skip-rules RULE 3 (⚖ user, 2026-10-17) — EVERY INPUT BUT `shards` IS STAMPED ON THE RUN, so a planner
+# finds an existing green sweep at a SHA with the same inputs (a main control, or a branch sweep of the same SHA)
+# instead of dispatching another: `node scripts/procgen/seedling-control-for.mjs <sha> [--<input>=<value> …]`
+# renders this template from this file and compares it with each green run's title. ⛔ Only plain
+# `${{ inputs.x }}` here (the finder refuses anything else), and a NEW INPUT MUST BE STAMPED —
+# `sweepControl.test.js` reds otherwise, because an unstamped input would let a subset run pass as a control.
+run-name: >-
+  Divergence sweep ${{ inputs.mode }}/${{ inputs.producer }}/${{ inputs.page }}
+  legs=${{ inputs.page_legs }} stage=${{ inputs.stage_events }} capture=${{ inputs.capture_requests }}
+  ids=${{ inputs.ids }} keys=${{ inputs.keys }} flags=${{ inputs.stage_flags }}
+  contact=${{ inputs.contact_fidelity }} axe=${{ inputs.axe_dodge }} window=${{ inputs.upgrade_window_work }}
+  dashonly=${{ inputs.dash_only_window }} dash=${{ inputs.dash_shape }} budget=${{ inputs.leg_budget_ms }}
+  census=${{ inputs.seam_census }} fault=${{ inputs.test_fault }}
 on:
   workflow_dispatch:
     inputs:

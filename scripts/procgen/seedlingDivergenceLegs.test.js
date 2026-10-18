@@ -4,6 +4,7 @@
  * player using that arrival broke it earlier in the run). Unstaged, the jump lands inside the obstacle (the model's
  * `arrivalInsideSolid`, by name — the MUTANT rows below). A gate that maps to no flag, or a goal that IS its gating
  * event, stays SKIPPED by name. A leg's identity across SHAs is its KEY (region, arrival door, goal), never its id.
+ * A leg whose GOAL rule needs a `game_state` event stages it too (`goalEvents`): the cheapest branch the AP route holds.
  */
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
@@ -13,7 +14,8 @@ import { fileURLToPath } from 'node:url';
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { arrivalEventNeeds, eventGate, eventStaging, legKey, otherEventsOf, pickLegs, requiredEvents, stagedFlagOf }
+import { arrivalEventNeeds, eventGate, eventStaging, goalEventsHeld, goalEventStaging, legKey, otherEventsOf, pickLegs, requiredEvents,
+    stagedFlagOf }
     from './seedling-divergence-legs.mjs';
 import { stagingFromWasmArrival } from '../../frontend/modules/seedlingDemo/wasmArrival.js';
 import { createRunForStaging } from '../../frontend/modules/seedlingDemo/tapeRunner.js';
@@ -97,6 +99,46 @@ describe('stagedFlagOf / eventStaging / eventGate — which gates STAGE, which s
     });
 });
 
+describe('goalEventsHeld / goalEventStaging — the GOAL rule\'s events, by the cheapest branch the AP inventory holds', () => {
+    const SPEAR = has('Ghost Spear');
+    const holding = (...items) => (r) => (r.rule === 'Has' ? items.includes(r.args.item_name)
+        : r.rule === 'HasAll' ? r.args.item_names.every((n) => items.includes(n)) : r.rule === 'True_');
+    const darktrap = { rule: 'Or', children: [has(E1.item), SPEAR] };
+    it('Or: the held branch — the event when only it is held, NONE when the Ghost Spear is', () => {
+        expect(ids(goalEventsHeld(darktrap, byItem, holding(E1.item)))).toEqual(['flag:L9:1']);
+        expect(goalEventsHeld(darktrap, byItem, holding('Ghost Spear'))).toEqual([]);
+    });
+    it('⛓ Or: BOTH held → the branch with the FEWEST events, wherever it sits (the wrong-branch mutant)', () => {
+        expect(goalEventsHeld(darktrap, byItem, holding(E1.item, 'Ghost Spear'))).toEqual([]);
+        const two = { rule: 'Or', children: [{ rule: 'And', children: [has(E1.item), has(E2.item)] }, has(E2.item)] };
+        expect(ids(goalEventsHeld(two, byItem, holding(E1.item, E2.item)))).toEqual(['flag:L9:2']);
+        const tie = { rule: 'Or', children: [has(E2.item), has(E1.item)] };
+        expect(ids(goalEventsHeld(tie, byItem, holding(E1.item, E2.item)))).toEqual(['flag:L9:2']); // a tie: rule order
+    });
+    it('And = every child\'s; an unheld child (or no held Or branch) → null; ordinary items stage nothing', () => {
+        const door = { rule: 'And', children: [{ rule: 'Has', args: { item_name: 'Seal', count: 16 } }, has(E1.item), has('Swim')] };
+        expect(ids(goalEventsHeld(door, byItem, holding('Seal', E1.item, 'Swim')))).toEqual(['flag:L9:1']);
+        expect(goalEventsHeld(door, byItem, holding('Seal', 'Swim'))).toBeNull();
+        expect(goalEventsHeld(darktrap, byItem, holding())).toBeNull();
+        expect(goalEventsHeld({ rule: 'True_' }, byItem, holding())).toEqual([]);
+        expect(goalEventsHeld(null, byItem, holding())).toEqual([]);
+    });
+    it('goalEventStaging / eventGate: goal events stage AFTER the arrival\'s (deduplicated), named in goalEvents; none = {}', () => {
+        const arrive = { x: 64, y: 128, events: [GS(113, 0)] };
+        expect(goalEventStaging([], arrive, 113)).toEqual({});
+        expect(goalEventStaging([GS(113, 0)], arrive, 113)).toEqual({});
+        const goal = { kind: 'exit', exit_id: 'out_teleporter_112_0' };
+        expect(eventGate({ arrive: { x: 0, y: 0 }, level: 113, goal, goalEvents: [GS(114, 0)] })).toEqual({
+            stagedEvents: [{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }], goalEvents: ['flag:L114:0'] });
+        expect(eventGate({ arrive, level: 113, goal, goalEvents: [GS(113, 0), GS(114, 0)] })).toEqual({
+            stagedEvents: [{ eventId: 'flag:L113:0', level: 113, tag: 0, otherLevel: false },
+                { eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }], goalEvents: ['flag:L114:0'] });
+        expect(eventGate({ arrive: { x: 0, y: 0 }, level: 113, goal })).toEqual({});
+        expect(eventGate({ arrive: { x: 0, y: 0 }, level: 113, goal, goalEvents: [{ name: 'Victory', item: 'Victory', kind: 'victory' }] }).skip)
+            .toMatch(/^goal-needs-unmappable-event: .*Victory: not a game_state event/);
+    });
+});
+
 describe('legKey / pickLegs', () => {
     const exitLeg = { id: 7, region: 'level_71__r0c6', arrive: { via: 'in_L76_0_80' }, goal: { kind: 'exit', exit_id: 'out_teleporter_96_0' } };
     const locLeg = { id: 8, region: 'level_71__r0c6', arrive: { via: 'start' }, goal: { kind: 'location', name: 'L71 flag 2: shieldlock@288,256 cleared' } };
@@ -162,9 +204,32 @@ describe('the committed playthrough\'s leg list', () => {
         expect(gated.every((l) => (l.stagedEvents?.length > 0) !== Boolean(l.skip))).toBe(true);
         expect(gated.filter((l) => l.stagedEvents).length).toBe(39);
         expect(gated.filter((l) => l.skip).every((l) => /^goal-is-a-staged-event: /.test(l.skip))).toBe(true);
-        const plain = legs.filter((l) => !l.arrive.events);
+        const plain = legs.filter((l) => !l.arrive.events && !l.goalEvents);
         expect(plain.every((l) => !('stagedEvents' in l) && !('skip' in l))).toBe(true);
         expect(legs.filter((l) => l.arrive.via === 'start').every((l) => !l.arrive.events)).toBe(true);
+    });
+
+    it('⛓ GOAL EVENTS: exactly these legs stage their goal rule\'s events (the Watcher, the darktraps, …); every other leg as before', () => {
+        const goal = legs.filter((l) => l.goalEvents);
+        const by = {};
+        for (const l of goal) (by[l.goalEvents.join('+')] ??= []).push(l.id);
+        expect(by).toEqual({
+            'flag:L0:4': [50], 'flag:L0:1': [102, 112, 122, 132, 142, 152, 162], 'flag:L24:0': [178], 'flag:L39:8': [365],
+            'flag:L62:0': [541, 546, 551, 556, 561, 589], 'flag:L63:1': [543, 548, 553, 558, 563, 567, 572, 577, 582],
+            'flag:L71:2': [640, 642], 'flag:L12:7+flag:L12:12': [658],
+            'flag:L112:1': [808, 809, 815, 816, 822, 823, 829, 830, 836, 837],
+            'flag:L114:0': [810, 811, 812, 817, 818, 819, 824, 825, 826, 831, 832, 838, 839],
+            'flag:L113:0': [847, 848, 849, 850],
+        });
+        // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
+        for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
+        // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
+        expect(legs[811].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
+        expect(legs[541].sphere.inventory).not.toContain('Ghost Spear');
+        expect(legs[543].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
+        // a goal that needs no event keeps no goalEvents key at all (its row is byte-identical)
+        expect(legs.filter((l) => !l.goalEvents).every((l) => !('goalEvents' in l))).toBe(true);
     });
 
     it('⛓ the MUTANT, in the model: every staged arrival lands CLEAR with its flags, and INSIDE its obstacle (named) without', () => {
@@ -185,11 +250,14 @@ describe('the committed playthrough\'s leg list', () => {
         // ⛓ RULES darktrap-events: + the two presses that light Dungeon 6's poles (their barrier is a darktrap's
         //   contact, never a solid, so their arrivals are never inside one either)
         expect([...PRESS].sort()).toEqual(['flag:L114:0', 'flag:L39:8', 'flag:L62:0', 'flag:L63:1']);
-        const pressed = legs.filter((l) => l.stagedEvents?.some((e) => PRESS.has(e.eventId)));
+        // the ARRIVAL's staging only (a goal event stages for the goal, never for the landing)
+        const arrivalStaged = legs.filter((l) => l.arrive.events && l.stagedEvents)
+            .map((l) => ({ ...l, stagedEvents: l.stagedEvents.filter((e) => !l.goalEvents?.includes(e.eventId)) }));
+        const pressed = arrivalStaged.filter((l) => l.stagedEvents.some((e) => PRESS.has(e.eventId)));
         expect([...new Set(pressed.map((l) => `${l.level},${l.arrive.x},${l.arrive.y}`))].sort())
             .toEqual(['115,64,128', '115,80,128', '38,144,16', '39,144,608']);
         for (const l of pressed) expect(inside(l, []), l.key).toBeNull();
-        const byArrival = new Map(legs.filter((l) => l.stagedEvents && !pressed.includes(l))
+        const byArrival = new Map(arrivalStaged.filter((l) => !pressed.includes(l))
             .map((l) => [`${l.level},${l.arrive.x},${l.arrive.y}`, l]));
         expect(byArrival.size).toBe(8);
         const dropped = {};

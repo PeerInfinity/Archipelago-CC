@@ -1,0 +1,43 @@
+{"id":102,"key":"level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_80","i":0,"ok":true,"kind":null,"ticks":5,"answer":"f9a7ec30e744","msg":null}
+{"id":122,"key":"level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_80","i":0,"ok":true,"kind":null,"ticks":55,"answer":"80bcd4079bb2","msg":null}
+{"id":31,"key":"level_0__r8c0 <- in_L86_48_64 -> location:L0 flag 1: breakablerock@288,176 cleared","i":0,"ok":true,"kind":null,"ticks":242,"answer":"cf84dc37c817","msg":null}
+{"id":728,"key":"level_94__r2c16 <- in_L0_0_128 -> exit:out_teleporter_304_176","i":0,"ok":true,"kind":null,"ticks":33,"answer":"39cd1096db0d","msg":null}
+{"id":704,"key":"level_88 <- in_L12_304_0 -> exit:out_teleporter_192_0","i":0,"ok":true,"kind":null,"ticks":379,"answer":"2de69d05711a","msg":null}
+{"id":112,"key":"level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_80","i":0,"ok":true,"kind":null,"ticks":515,"answer":"5ac481874343","msg":null}
+{"id":730,"key":"level_94__r2c16 <- in_L0_0_144 -> exit:out_teleporter_304_176","i":0,"ok":true,"kind":null,"ticks":7,"answer":"16dad74c65d1","msg":null}
+{"id":708,"key":"level_88 <- in_L87_432_304 -> exit:out_teleporter_32_0","i":0,"ok":true,"kind":null,"ticks":76,"answer":"a3b7247c4a06","msg":null}
+{"id":24,"key":"level_0__r8c0 <- in_L13_64_144 -> location:L0 flag 4: breakablerock@80,112 cleared","i":0,"ok":true,"kind":null,"ticks":75,"answer":"34f33203136f","msg":null}
+{"id":38,"key":"level_0__r8c0 <- in_L94_304_160 -> exit:out_stairsdown_256_272","i":0,"ok":true,"kind":null,"ticks":247,"answer":"f5adc74dca5c","msg":null}
+{"id":51,"key":"level_2 <- in_L0_256_272 -> exit:out_stairsup_48_16","i":0,"ok":true,"kind":null,"ticks":7,"answer":"2bb8280968fc","msg":null}
+{"id":727,"key":"level_94__r2c16 <- in_L0_0_128 -> exit:out_teleporter_304_160","i":0,"ok":true,"kind":null,"ticks":7,"answer":"16dad74c65d1","msg":null}
+{"id":132,"key":"level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_80","i":0,"ok":true,"kind":null,"ticks":544,"answer":"1c7486fc678b","msg":null}
+{"id":795,"key":"level_110 <- in_L101_104_24 -> exit:out_pit_3_2","i":0,"ok":true,"kind":null,"ticks":173,"answer":"73d72d9d292e","msg":null}
+{"id":15,"key":"level_0__r8c0 <- in_L2_48_16 -> location:L0 flag 1: breakablerock@288,176 cleared","i":0,"ok":true,"kind":null,"ticks":54,"answer":"c8d68e41550f","msg":null}
+{"id":48,"key":"level_0__r8c0 <- in_L94_304_176 -> location:L0 flag 4: breakablerock@80,112 cleared","i":0,"ok":true,"kind":null,"ticks":59,"answer":"b1260e59d222","msg":null}
+{"id":192,"key":"level_13 <- in_L20_16_48 -> exit:out_stairsup_64_144","i":0,"ok":true,"kind":null,"ticks":77,"answer":"5b52dae9898e","msg":null}
+{"id":702,"key":"level_88 <- in_L12_304_0 -> exit:out_teleporter_32_0","i":0,"ok":true,"kind":null,"ticks":476,"answer":"a4c28394befd","msg":null}
+{"id":724,"key":"level_92__r7c17 <- in_L87_16_32 -> exit:out_teleporter_272_144","i":0,"ok":true,"kind":null,"ticks":11,"answer":"a757444567dd","msg":null}
+{"id":162,"key":"level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_80","i":0,"ok":true,"kind":null,"ticks":460,"answer":"0397ee691997","msg":null}
+{"id":715,"key":"level_89__r11c12 <- in_L87_0_144 -> exit:out_teleporter_160_304","i":0,"ok":true,"kind":null,"ticks":204,"answer":"cd1947769f03","msg":null}
+{"id":726,"key":"level_93__r14c7 <- in_L87_368_0 -> exit:out_teleporter_112_272","i":0,"ok":true,"kind":null,"ticks":4,"answer":"497c1673b306","msg":null}
+{"id":16,"key":"level_0__r8c0 <- in_L2_48_16 -> location:L0 flag 4: breakablerock@80,112 cleared","i":0,"ok":true,"kind":null,"ticks":121,"answer":"c3a28b402cce","msg":null}
+{"id":53,"key":"level_2 <- in_L3_64_0 -> exit:out_stairsup_48_16","i":0,"ok":true,"kind":null,"ticks":47,"answer":"47163bf7c6a5","msg":null}
+{"id":446,"key":"level_44__r4c2 <- in_L87_464_272 -> exit:out_teleporter_0_80","i":0,"ok":true,"kind":null,"ticks":5,"answer":"f9a7ec30e744","msg":null}
+{"id":716,"key":"level_89__r11c12 <- in_L87_0_144 -> exit:out_teleporter_288_240","i":0,"ok":true,"kind":null,"ticks":5,"answer":"089066b99bc6","msg":null}
+{"id":23,"key":"level_0__r8c0 <- in_L13_64_144 -> location:L0 flag 1: breakablerock@288,176 cleared","i":0,"ok":true,"kind":null,"ticks":320,"answer":"a5200b1f5d0d","msg":null}
+{"id":705,"key":"level_88 <- in_L87_272_304 -> exit:out_teleporter_32_0","i":0,"ok":true,"kind":null,"ticks":5,"answer":"856d0b65ada0","msg":null}
+{"id":142,"key":"level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_80","i":0,"ok":true,"kind":null,"ticks":338,"answer":"6c70c5272ce4","msg":null}
+{"id":40,"key":"level_0__r8c0 <- in_L94_304_160 -> location:L0 flag 4: breakablerock@80,112 cleared","i":0,"ok":true,"kind":null,"ticks":54,"answer":"3c8fb1260763","msg":null}
+{"id":7,"key":"level_0__r8c0 <- in_L1_64_112 -> location:L0 flag 1: breakablerock@288,176 cleared","i":0,"ok":true,"kind":null,"ticks":313,"answer":"ef5f9a640f0e","msg":null}
+{"id":189,"key":"level_13 <- in_L14_176_64 -> exit:out_stairsup_64_144","i":0,"ok":true,"kind":null,"ticks":77,"answer":"b749eff59b24","msg":null}
+{"id":710,"key":"level_88 <- in_L87_432_304 -> exit:out_teleporter_192_0","i":0,"ok":true,"kind":null,"ticks":5,"answer":"856d0b65ada0","msg":null}
+{"id":713,"key":"level_89__r11c12 <- in_L0_240_0 -> exit:out_teleporter_160_304","i":0,"ok":true,"kind":null,"ticks":7,"answer":"8fbec73f0f26","msg":null}
+{"id":39,"key":"level_0__r8c0 <- in_L94_304_160 -> location:L0 flag 1: breakablerock@288,176 cleared","i":0,"ok":true,"kind":null,"ticks":380,"answer":"67680be4d644","msg":null}
+{"id":186,"key":"level_13 <- in_L0_32_192 -> exit:out_stairsup_64_144","i":0,"ok":true,"kind":null,"ticks":6,"answer":"98acb3a037fd","msg":null}
+{"id":674,"key":"level_86 <- in_L0_160_272 -> exit:out_teleporter_48_64","i":0,"ok":true,"kind":null,"ticks":6,"answer":"98acb3a037fd","msg":null}
+{"id":729,"key":"level_94__r2c16 <- in_L0_0_144 -> exit:out_teleporter_304_160","i":0,"ok":true,"kind":null,"ticks":33,"answer":"de89b6c26b03","msg":null}
+{"id":707,"key":"level_88 <- in_L87_272_304 -> exit:out_teleporter_192_0","i":0,"ok":true,"kind":null,"ticks":86,"answer":"1b21769f433d","msg":null}
+{"id":152,"key":"level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_80","i":0,"ok":true,"kind":null,"ticks":451,"answer":"498f68f0d49e","msg":null}
+{"id":32,"key":"level_0__r8c0 <- in_L86_48_64 -> location:L0 flag 4: breakablerock@80,112 cleared","i":0,"ok":true,"kind":null,"ticks":305,"answer":"60d3391fb051","msg":null}
+{"id":50,"key":"level_1 <- in_L0_80_96 -> exit:out_teleporter_64_112","i":0,"ok":true,"kind":null,"ticks":4,"answer":"497c1673b306","msg":null}
+{"id":47,"key":"level_0__r8c0 <- in_L94_304_176 -> location:L0 flag 1: breakablerock@288,176 cleared","i":0,"ok":true,"kind":null,"ticks":377,"answer":"b28dc930cc51","msg":null}

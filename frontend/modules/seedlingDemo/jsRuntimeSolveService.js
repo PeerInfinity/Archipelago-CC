@@ -31,6 +31,18 @@
  * solve in flight cannot be told to start or stop (its worker is busy until it
  * answers), so a subscription opened mid-solve takes effect at the next solve,
  * and one closed mid-solve drops the rest of that solve's stream here.
+ * `subscribeProgress(listener, {intervalMs})` — the rate the listener wants
+ * (ms, or a function read at each `start`; ⚖ the panel's setting
+ * `flashPanel.seedlingSolveProgressIntervalMs`): the solve's envelope carries
+ * the FASTEST asked as `progressIntervalMs` beside `progress: true`, clamped
+ * to `SOLVE_PROGRESS_INTERVALS_MS` (`progressIntervalMs`). Never the request:
+ * a rate change moves no plan. It applies from the next solve.
+ * ⛓ SOLVE-PROGRESS S3 — and `progressAttempt: {retry, budgets}`: the HELD
+ * RETRY's label (`640 → 2560`). The service is not told a start is a retry;
+ * it RECOGNISES one: the same `staging` and `solverGoal` objects, the same
+ * `perTick` length, asked again at a LARGER `budgetWork` than the start before
+ * (`seedlingWasmPlayback.retrySolve` spreads the request it asked before).
+ * Anything else is attempt 0. Envelope only, so the request is unchanged.
  *
  * One solve is in flight at a time (the solver keeps one). The room records
  * are posted once per worker, by id. A worker that errors (a module that
@@ -48,7 +60,7 @@ import { contactFidelityStamp } from './contactFidelity.js';
 import { axeDodgeAskStamp } from './axeDodgeAskHook.js';
 import { dashOnlyWindowStamp } from './dashOnlyWindowHook.js';
 import { dashShapeStamp } from './dashShapeHook.js';
-import { SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
+import { progressIntervalMs, SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
 
 /**
  * The hook stamps THIS module instance adds to a request before it is posted (in place, on `tape`; returned). Each is
@@ -95,8 +107,37 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
     /** source ids the CURRENT worker holds. */
     let sent = new Set();
     const stats = { workers: 0, solves: 0, terminated: 0, errors: 0, progress: 0, progressDropped: 0 };
-    /** ⛓ SOLVE PROGRESS — the listeners; a solve asks for the stream only while this is non-empty. */
-    const progressListeners = new Set();
+    /**
+     * ⛓ SOLVE PROGRESS — listener -> the interval it asked (ms, a function, or undefined = the default); a solve asks
+     * for the stream only while this is non-empty.
+     */
+    const progressListeners = new Map();
+    /** ⛓ S3 — the last start's identity and its attempt (`{staging, solverGoal, ticks, retry, budgets}`), or null. */
+    let lastAsk = null;
+
+    /** ⛓ S3 — this start's attempt: a held retry of the last start (see the header), else attempt 0. */
+    function attemptOf(request) {
+        const budget = request.budgetWork;
+        const ticks = request.perTick?.length ?? null;
+        const again = lastAsk !== null && request.staging !== undefined && request.staging === lastAsk.staging
+            && request.solverGoal === lastAsk.solverGoal && ticks === lastAsk.ticks
+            && Number.isFinite(budget) && Number.isFinite(lastAsk.budgets.at(-1)) && budget > lastAsk.budgets.at(-1);
+        const attempt = again ? { retry: lastAsk.retry + 1, budgets: [...lastAsk.budgets, budget] }
+            : { retry: 0, budgets: Number.isFinite(budget) ? [budget] : [] };
+        lastAsk = { staging: request.staging, solverGoal: request.solverGoal, ticks, ...attempt };
+        return attempt;
+    }
+
+    /** The envelope's `progressIntervalMs`: the fastest interval a listener asked, clamped to the list. */
+    function askedInterval() {
+        let out = Infinity;
+        for (const asked of progressListeners.values()) {
+            let ms;
+            try { ms = typeof asked === 'function' ? asked() : asked; } catch { ms = undefined; }
+            out = Math.min(out, progressIntervalMs(ms));
+        }
+        return out;
+    }
 
     function drop() {
         if (!worker) return;
@@ -128,7 +169,7 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
                 if (progressListeners.size === 0) { stats.progressDropped += 1; return; }
                 stats.progress += 1;
                 const note = { solveId: msg.id, snapshot: msg.snapshot, final: msg.final === true };
-                for (const fn of [...progressListeners]) {
+                for (const fn of [...progressListeners.keys()]) {
                     try { fn(note); } catch { /* a view's bug is not the solve's */ }
                 }
                 return;
@@ -191,10 +232,16 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             current = handle;
             const { levelSource, source, ...tape } = request;
             stampHooks(tape);
+            const attempt = attemptOf(request);
             const id = sourceIdOf(source?.records);
             const msg = { type: 'solve', id: handle.id, request: { ...tape, source: { id, ...(sent.has(id) ? {} : { records: source?.records ?? null }) } } };
-            // ⛓ SOLVE PROGRESS — on the ENVELOPE, and only while someone listens (absent = today's message exactly).
-            if (progressListeners.size > 0) msg.progress = true;
+            // ⛓ SOLVE PROGRESS — on the ENVELOPE, and only while someone listens (absent = today's message exactly);
+            // the interval beside it is the fastest any listener asked.
+            if (progressListeners.size > 0) {
+                msg.progress = true;
+                msg.progressIntervalMs = askedInterval();
+                msg.progressAttempt = attempt;
+            }
             sent.add(id);
             stats.solves += 1;
             try {
@@ -207,15 +254,15 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
         },
         /**
          * ⛓ SOLVE PROGRESS — listen to the solver's progress stream (`{solveId, snapshot, final}`); returns the
-         * unsubscribe. The id of the solve in flight is `currentSolveId` (null when none).
+         * unsubscribe. `intervalMs` (ms, or a function read at each solve's start) is the rate this listener wants. The id of the solve in flight is `currentSolveId` (null when none).
          */
-        subscribeProgress(listener) {
+        subscribeProgress(listener, { intervalMs } = {}) {
             if (typeof listener !== 'function') throw new Error('subscribeProgress: listener must be a function');
-            progressListeners.add(listener);
+            progressListeners.set(listener, intervalMs);
             return () => { progressListeners.delete(listener); };
         },
         get progressSubscribed() { return progressListeners.size > 0; },
         get currentSolveId() { return current && !current.settled ? current.id : null; },
-        dispose() { if (current) current.cancel(); drop(); progressListeners.clear(); },
+        dispose() { if (current) current.cancel(); drop(); progressListeners.clear(); lastAsk = null; },
     };
 }

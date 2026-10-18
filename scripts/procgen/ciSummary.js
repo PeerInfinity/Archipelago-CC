@@ -17,11 +17,16 @@ export const WORKFLOW = 'unittests_frontend.yml';
 /** ⛓ ONE spelling of the marker `ci-gates.mjs` prints and this file reads. */
 export const CI_GATE_MARK = '## CI-GATE |';
 
-const gh = (...a) => execFileSync('gh', ['--repo', CI_REPO, ...a],
-    { encoding: 'utf8', maxBuffer: 1 << 28 });
+/**
+ * ⛓ `gh`'s stderr is PIPED, never inherited: a caught 404 must not leak a
+ * `gh: HTTP 404` line into the reader's own output (a `--json` consumer that
+ * merged the streams KEPT every CI-sourced row on it, 2026-10-17). A failure
+ * still throws, and its message carries what gh said.
+ */
+const GH_OPTS = { encoding: 'utf8', maxBuffer: 1 << 28, stdio: ['ignore', 'pipe', 'pipe'] };
+const gh = (...a) => execFileSync('gh', ['--repo', CI_REPO, ...a], GH_OPTS);
 /** `gh api` takes the repo in the endpoint, not as `--repo` (it rejects the flag). */
-const ghApi = (endpoint) => execFileSync('gh', ['api', endpoint],
-    { encoding: 'utf8', maxBuffer: 1 << 28 });
+const ghApi = (endpoint) => execFileSync('gh', ['api', endpoint], GH_OPTS);
 
 export const strip = (s) => s.replace(/\x1b\[[0-9;]*m/g, '');
 
@@ -47,14 +52,120 @@ export function runById(id) {
 export function recentRuns({ limit = 3 } = {}) {
     const rows = JSON.parse(gh('run', 'list', `--workflow=${WORKFLOW}`, '--limit', '30',
         '--json', 'databaseId,headSha,status,conclusion,createdAt'));
-    return rows.filter((r) => r.status === 'completed' && r.conclusion === 'success')
-        .slice(0, limit);
+    return pickGateRuns(rows.filter((r) => r.status === 'completed' && r.conclusion === 'success'),
+        runJobs, limit);
 }
 
+/**
+ * ⛓⛓ ci-skip-rules RULE 1 — **A SUCCESSFUL RUN IS NOT NECESSARILY ONE THAT RAN
+ * THE GATES.** A main push of an already-green SHA concludes `success` with its
+ * gate jobs SKIPPED, so it carries no `##   ms |` line at all. Priced from it,
+ * `--write-costs` would bank an EMPTY cost table and `planCiShards` would price
+ * every arm at the whole budget (trap 1068's collapse, from the other side).
+ */
+export const GATE_JOB = /^(?:Headless procgen gates|Browser gate shard — )/;
+export const ranGates = (jobs) =>
+    (jobs ?? []).some((j) => GATE_JOB.test(j.name ?? '') && j.conclusion !== 'skipped');
+
+/** ⛓ Pure: the first `limit` runs, newest first, whose gate jobs RAN. */
+export function pickGateRuns(runs, jobsOf, limit) {
+    const out = [];
+    for (const r of runs) {
+        if (out.length >= limit) break;
+        if (ranGates(jobsOf(r))) out.push(r);
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ **ci-skip-rules RULE 1 (⚖ user, 2026-10-17) — A MAIN PUSH OF A SHA ITS
+ * BRANCH ALREADY PASSED RUNS NO SUITE.** `unittests_frontend.yml`'s first job
+ * (`Same SHA already green?`) finds a successful run at the pushed SHA and the
+ * Vitest job is then SKIPPED. ⛔ That skipped main run is the NEWEST run for the
+ * SHA, and until this rule `findRun` returned the newest — so the planners'
+ * *"read JSUT at the merged SHA before the ff"* would have read a skip.
+ *
+ * ⇒ the newest run whose suite job did NOT skip. And a main push whose guard
+ * has not decided yet is passed over when an older run at the same SHA already
+ * succeeded, because that run is exactly what the guard will find — so a
+ * reader asking in the guard's first twenty seconds gets the same answer as
+ * one asking a minute later, instead of an `in_progress` it has to wait out.
+ *
+ * ⛓ F7 (`ci-skip-review` §3 R1): the runs come from `?head_sha=`, not from the
+ * workflow's newest 50 (≈ one day of pushes). A SHA older than a day used to
+ * read `no run` while its run sat on page two.
+ */
+export const GUARD_JOB = /^Same SHA already green\?/;
+
+/** The guard runs on a main PUSH only — the workflow's own `if:`. */
+const guardedPush = (r) => r.event === 'push' && r.headBranch === 'main';
+
+/**
+ * ⛓ Pure, so the pick can be asked without the network.
+ * @param {object[]} runs  newest first, as `findRun` maps them
+ * @param {(run: object) => object[]} jobsOf
+ * @returns {{run: object|null, passedOver: {run: object, why: string}[]}}
+ */
+export function pickSuiteRun(runs, jobsOf) {
+    const passedOver = [];
+    for (const [i, run] of runs.entries()) {
+        const jobs = jobsOf(run);
+        const vitest = pickVitestJob(jobs);
+        if (vitest?.conclusion === 'skipped') {
+            passedOver.push({ run, why: 'its suite job was SKIPPED (the SHA was already green)' });
+            continue;
+        }
+        const guard = jobs.find((j) => GUARD_JOB.test(j.name ?? ''));
+        const undecided = guardedPush(run) && (!vitest || vitest.status !== 'completed')
+            && guard?.status !== 'completed';
+        if (undecided && runs.slice(i + 1).some((r) => r.conclusion === 'success')) {
+            passedOver.push({ run, why: 'its guard has not decided, and an older run at this '
+                + 'SHA already succeeded — which is what the guard will find' });
+            continue;
+        }
+        return { run, passedOver };
+    }
+    return { run: null, passedOver };
+}
+
+const FULL_SHA = /^[0-9a-f]{40}$/;
+/** A short SHA → the full one (`?head_sha=` matches only a full SHA). */
+function fullSha(sha) {
+    if (FULL_SHA.test(sha)) return sha;
+    try {
+        return execFileSync('git', ['rev-parse', '--verify', '--quiet', `${sha}^{commit}`],
+            { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() || null;
+    } catch { return null; }
+}
+
+/** Every run of the workflow at one SHA, newest first. */
+export function runsAtSha(sha) {
+    const full = fullSha(sha);
+    if (full) {
+        return JSON.parse(ghApi(`repos/${CI_REPO}/actions/workflows/${WORKFLOW}/runs`
+            + `?head_sha=${full}&per_page=50`)).workflow_runs
+            .map((r) => ({ databaseId: r.id, headSha: r.head_sha, status: r.status,
+                conclusion: r.conclusion, createdAt: r.created_at, event: r.event,
+                headBranch: r.head_branch }));
+    }
+    // ⛓ A short SHA this clone cannot resolve — the old listing, wider.
+    return JSON.parse(gh('run', 'list', `--workflow=${WORKFLOW}`, '--limit', '200',
+        '--json', 'databaseId,headSha,status,conclusion,createdAt,event,headBranch'))
+        .filter((r) => r.headSha.startsWith(sha));
+}
+
+/**
+ * The run whose suite answers for `sha` — see `pickSuiteRun`. Each run passed
+ * over is named on stderr, so a reader sees WHICH run answered and why the
+ * newest did not.
+ */
 export function findRun(sha) {
-    const rows = JSON.parse(gh('run', 'list', `--workflow=${WORKFLOW}`, '--limit', '50',
-        '--json', 'databaseId,headSha,status,conclusion,createdAt'));
-    return rows.find((r) => r.headSha.startsWith(sha)) || null;
+    const { run, passedOver } = pickSuiteRun(runsAtSha(sha), runJobs);
+    for (const p of passedOver) {
+        console.error(`⛓ rule 1: passed over run ${p.run.databaseId} (${p.run.event} on `
+            + `${p.run.headBranch}) — ${p.why}`);
+    }
+    return run;
 }
 
 /** ⛓ Every job of one run — `per_page` because a matrix run has more than the
@@ -145,6 +256,14 @@ export function gateLogParts(run) {
     const parts = [];
     const unreadable = [];
     for (const job of jobs) {
+        /**
+         * ⛓ A SKIPPED job has no log (the endpoint 404s), so it is named
+         * without asking. Rule 1's guard is skipped on every branch push.
+         */
+        if (job.conclusion === 'skipped') {
+            unreadable.push(`${job.name} (${job.status}/skipped)`);
+            continue;
+        }
         try {
             parts.push({ job: job.name,
                 log: ghApi(`repos/${CI_REPO}/actions/jobs/${job.id}/logs`) });

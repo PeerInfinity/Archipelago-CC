@@ -198,9 +198,10 @@ export const ADOPT_CLAUSES = Object.freeze([
  *   - a class without one is refused (`inert-talk`): an open dialogue would
  *     be invisible.
  * ⚠ `talkRange` is the CLASS's own: `Statue.as:25` sets 32 (`NPC.as:27`'s
- * default is 24). The MODEL still tests 24 for a statue (`levelRun`'s talker
- * arm): a fidelity defect, measured live at 25.3 px (plan §5.14), routed to
- * the fidelity planner and not changed here.
+ * default is 24). The MODEL reads the class's own circle too
+ * (`endingChain.talkRangeOf`, fidelity DASHSTEP's `statueTalkRange`, ON by
+ * default since 2026-10-17); before it the talker arm tested 24 for a statue,
+ * the defect measured live at 25.3 px (plan §5.14).
  *
  * `idleAnims`: the `anim` a row may read while idle. `IntroCharacter.render()`
  * otherwise sets `frame`, which clears the animation; `Statue.render()` only
@@ -1017,4 +1018,61 @@ export function keysHeldAtReset({ status, solution }) {
     const plan = new Set(solution[t - 1] ?? []);
     const echo = new Set(status.input?.held ?? []);
     return TAPE_KEY_RELEASES.map((k) => k.name).filter((n) => echo.has(n) && plan.has(n));
+}
+
+/**
+ * ⛓ FREEZE LATCH (§5.89) — a hold tape's LATCH WAIT, watched: the arrival's (`latching`) and the adoption's
+ * (`adopting`). One row per wait, `{kind, level, waitedMs, polls, moves, stillMs, frames, first, last, outcome}`:
+ * `first` / `last` are the game's readout at the first and the last poll (`game_time`, `dead_frames`, `tick`,
+ * `level`), `moves` the polls on which the game's clock (`game_time` or `dead_frames`) had moved since the poll
+ * before, `stillMs` the longest wall span the polls SAW the clock stand still, and `frames` the game frames run
+ * since the first poll.
+ */
+const latchClock = (st) => ({ gt: st?.game_time ?? null, dead: st?.dead_frames ?? null, tick: st?.tick ?? null, level: st?.level ?? null });
+const framesBetween = (a, b) => Math.max(0, ...[[a.gt, b.gt], [a.dead, b.dead]]
+    .filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y)).map(([x, y]) => y - x));
+
+export function latchWatch({ kind, level, at, status }) {
+    const c = latchClock(status);
+    return { kind, level, since: at, movedAt: at, waitedMs: 0, polls: 1, moves: 0, stillMs: 0, frames: 0, first: c, last: c, outcome: null };
+}
+
+/**
+ * One poll of a latch wait (mutates `w`): the game's clock moved iff `game_time` or `dead_frames` changed. A poll
+ * that saw it move restarts the still span — however long the wall gap since the poll before (that gap is the page
+ * running the game's frames, not the game standing still).
+ */
+export function observeLatch(w, { at, status }) {
+    const c = latchClock(status);
+    w.polls += 1;
+    const moved = c.gt !== w.last.gt || c.dead !== w.last.dead;
+    if (moved) { w.moves += 1; w.movedAt = at; }
+    w.last = c;
+    w.moved = moved;
+    w.frames = framesBetween(w.first, c);
+    w.waitedMs = Math.round(at - w.since);
+    w.stillMs = Math.max(w.stillMs, Math.round(at - w.movedAt));
+    return w;
+}
+
+/**
+ * ⛓ FREEZE LATCH (§5.89) — the game frames a latch may take: the hold latches on the room's first live frame, so
+ * a running game reaches it within the load fade (`LOAD_FADE_FRAMES` = 20 dead frames; an adoption's room is past
+ * its fade and latches on the next frame). MEASURED on CI (sweep 39046158999, 845 waits): every arrival latched 19
+ * frames after its first poll (2 of 792 at 21), every adoption at 0; the polls' longest still span was 302 ms. The
+ * bound is ~3× the worst measured.
+ */
+export const LATCH_FRAME_BOUND = 60;
+
+/**
+ * The latch wait's bound: null while it may wait on, else the failure's reason. ⛓ PROGRESS-AWARE — the wall clock
+ * fails a wait only when the polls SAW the game's clock stand still for `stillMs` (a stalled game); a game still
+ * running its frames is waited for, however slowly the page runs them (CI run 38994029714: a ~5× slow runner, a
+ * first frame in a big room longer than the 15 s the old wall bound gave the whole wait). A game that RUNS but
+ * never latches is bounded in its own frames (`LATCH_FRAME_BOUND`): e.g. a freeze that keeps every frame dead.
+ */
+export function latchExpired(w, { at, stillMs, frameBound = LATCH_FRAME_BOUND }) {
+    if (w.frames > frameBound) return `after ${w.frames} game frames (the bound is ${frameBound})`;
+    if (!w.moved && at - w.movedAt > stillMs) return `— the game's clock stood still for ${stillMs / 1000} s`;
+    return null;
 }
