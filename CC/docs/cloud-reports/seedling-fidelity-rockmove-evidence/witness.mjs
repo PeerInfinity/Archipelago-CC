@@ -47,6 +47,13 @@ const tapeRaw = spec.tapeFile ? readJson(spec.tapeFile)
     : { tape_version: 8, game: 'seedling', name: spec.name, description: 'rockmove witness', noclip: false,
         noDamage: true, noHazards: [], grants: [], persistence: [], equips: [], pins: [...PIN_NAMES],
         save: { totem_parts: [], keys: [], seal_parts: [] }, rng: { seed: 1, split: false }, seam: {}, ...spec.tape };
+if (spec.tapePatch) {
+    const tp = spec.tapePatch;
+    tapeRaw.inputs = tapeRaw.inputs.filter((i) => i.from < tp.inputsUntil).map((i) => ({ ...i, to: Math.min(i.to, tp.inputsUntil) }))
+        .concat(tp.append ?? []);
+    tapeRaw.tick_count = tp.tick_count;
+    tapeRaw.name = spec.name;
+}
 const tape = parseTape(tapeRaw);
 
 function applyOps(map, ops) {
