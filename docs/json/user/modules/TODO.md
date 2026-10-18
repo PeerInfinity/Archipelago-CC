@@ -37,6 +37,7 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [APWorld Editor](./apworldEditor.md) — Editing a world's rules and building a .apworld
 - [Maze Room](./mazeRoom.md) — Playing a generated world's maze regions
 - [Loops](./loops.md) — Running a world in Loop mode: the queue, mana and experience
+- [Loop Stats](./loopStats.md) — Each queued action's cost and the mana left, this loop and the last
 
 ## Core Service Modules
 

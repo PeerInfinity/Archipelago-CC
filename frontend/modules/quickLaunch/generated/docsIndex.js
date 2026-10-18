@@ -804,6 +804,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Locations panel shows a grid of all item locations in the game, providing a real-time view of which locations you can reach based on your current items."
     },
     {
+        "path": "docs/json/user/modules/loopStats.md",
+        "title": "Loop Stats Panel",
+        "section": "user/modules",
+        "summary": "The Loop Stats panel is a ledger for the Loops queue: for each queued action, what it costs and how much mana will be left after it — in this loop, and as it was at the start of the last one, so you…"
+    },
+    {
         "path": "docs/json/user/modules/loops.md",
         "title": "Loops Panel",
         "section": "user/modules",
@@ -1119,6 +1125,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/inventory.md",
             "docs/json/user/modules/json.md",
             "docs/json/user/modules/locations.md",
+            "docs/json/user/modules/loopStats.md",
             "docs/json/user/modules/loops.md",
             "docs/json/user/modules/mazeRoom.md",
             "docs/json/user/modules/metaGamePanel.md",

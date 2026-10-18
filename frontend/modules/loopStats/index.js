@@ -25,6 +25,7 @@ export const moduleInfo = {
   name: 'loopStats',
   title: 'Loop Stats',
   componentType: 'loopStatsPanel',
+  docs: 'docs/json/user/modules/loopStats.md',
   icon: '📊',
   column: 1, // Left column (narrow width design)
   category: 'Loop Mode Modules',
