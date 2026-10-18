@@ -172,7 +172,7 @@ min:
 
 **CI unit tests** (`ci-vitest-summary.mjs`):
 - at `a4ec6710` (run `38995989389`): unfiltered vitest **20,655 passed, 2 failed** of 20,657. The two are `fidelityLapseCost.test.js`'s leg 403 / leg 265 rows, which pin plan lengths that the flip shortens. They are re-pinned in the report's commit. The slow battery did not run because that step failed first. Locally its one budgeted-solve file (`jsRuntimeSolverCalibration.slow`) is 5 / 5.
-- at the report's head: CI_HEAD_PLACEHOLDER
+- at `86b978c5` (run `38997869020`, the lapse re-pin and this report's first commit): unfiltered vitest **20,657 / 20,657 passed**, slow battery **253 / 253**. This last commit only fills this line in.
 
 ## The table for the user
 
