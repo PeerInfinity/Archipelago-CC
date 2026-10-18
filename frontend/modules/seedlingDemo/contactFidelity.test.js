@@ -154,7 +154,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             corridorBodyPricing: false,
 
             // ⛓ fidelity SEALDOOR D2: `sealDoorApproach` (the solver steps the FinalDoor's open-on-approach) ships OFF.
-            sealDoorApproach: false,
+            // ⛓ planning-9's flip (⚖ user "Build the flip", 2026-10-17) turns it ON.
+            sealDoorApproach: true,
             // ⛓ fidelity ARROWLANE D2: `arrowLaneCrossing` (an ARMED lane crossed, its arrows billed) ships OFF.
             arrowLaneCrossing: false,
             // ⛓ fidelity AXETIMING D2: `axeTimingRung` (a spinning axe's gap crossed on its clock at dash speed) ships OFF.

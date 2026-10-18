@@ -25,6 +25,7 @@ import { playerBoxAt } from './playerPhysicsV2.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, runTape } from './tapeRunner.js';
 import { plannerObstacleAt } from './botDriverV2.js';
+import { withContactFidelity } from './contactFidelity.js';
 import { withCrusherBait } from './crusherBait.js';
 import {
     FINE_LATTICE, FINE_LATTICE_ROSTER_WIDE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, SolverRefusal, exitAimFor, obstacleGateFor,
@@ -168,8 +169,15 @@ describe('fidelity FRONTIER3 D3 — the rows, and the gates whose opener is not 
         expect(e.considered.at(-1).option).toBe('encounter-gate');
     });
 
-    it('L113 (route step 235): the seal door is an ITEM gate', async () => {
+    // ⛓ sealDoorApproach ON (planning-9's flip): the door is no longer an ITEM gate at the frontier — the `approach`
+    // verb names the predicates that keep it shut (the ITEM-GATE sentence below is the switch-OFF answer).
+    it('L113 (route step 235): the seal door refuses by its predicates (no seal slot, the Watcher unspoken)', async () => {
         const e = await refusalOf({ level: 113, x: 72, y: 128 }, { kind: 'reach-exit', exit: { x: 112, y: 0 } });
+        expect(e.message).toMatch(/approach finaldoor@112,0 in level 113 — the door cannot open in this state: the save holds 0 of 16 seal slot\(s\)[^]*\{114,0\} is SET/);
+    });
+    it('L113, switch OFF: the seal door is an ITEM gate', async () => {
+        const e = await withContactFidelity({ sealDoorApproach: false },
+            () => refusalOf({ level: 113, x: 72, y: 128 }, { kind: 'reach-exit', exit: { x: 112, y: 0 } }));
         expect(e.message).toMatch(/Obstacle: solid:finaldoor \(finaldoor@112,0\)[^.]*\. ITEM-GATE \(finaldoor@112,0\): the seal door opens only on approach for a player holding all 16 Seal parts/);
     });
 

@@ -59,8 +59,9 @@ const refusalOf = (fn) => {
 const tape = (name) => parseTape(readFileSync(join(HERE, 'fixtures', 'tapes', `${name}.json`), 'utf8'));
 
 describe('fidelity SEALDOOR — the switch and its vocabulary', () => {
-    it('ships OFF, and `approach` is a known verb', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.sealDoorApproach).toBe(false);
+    // ⛓ shipped OFF (SEALDOOR D2); ON by default since planning-9's flip (⚖ user "Build the flip", 2026-10-17).
+    it('ships ON, and `approach` is a known verb', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.sealDoorApproach).toBe(true);
         expect(KNOWN_STRATEGY_VERBS).toContain('approach');
         expect(KNOWN_STRATEGY_VERBS.at(-1)).toBe('pace');
     });

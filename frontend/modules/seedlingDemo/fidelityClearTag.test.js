@@ -193,7 +193,9 @@ const CENSUS = [
         [], null, 'REFUSES no-verb'],
     ['{113,0} finaldoor from L112', { level: 113, x: 72, y: 128 },
         { kind: 'clear-tag', tag: { level: 113, tag: 0 }, at: { x: 112, y: 0 }, obstacle: 'finaldoor@112,0' },
-        [], null, 'REFUSES no-verb'],
+        // ⛓ sealDoorApproach ON (planning-9's flip): the `approach` verb resolves, and refuses by name on this 0-seal,
+        // unspoken-Watcher state (was `no-verb` while the switch shipped OFF).
+        [], null, 'REFUSES unresolved'],
 ];
 
 describe('fidelity CLEARTAG — D3: the eight events, each solves or refuses by name', () => {

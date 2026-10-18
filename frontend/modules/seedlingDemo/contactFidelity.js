@@ -561,10 +561,11 @@ export const CONTACT_FIDELITY = {
      * ON: `refineStrategy` selects `approach` for the door; the resolver reads both predicates from the run's OWN
      * state (`run.finalDoorGate`: the save's last seal slot, the {114,0} clear) and refuses by name, saying which one
      * fails, when the door cannot open; otherwise it walks into the 32 px circle, holds toward the door through the
-     * ceremony and the open, and waits out the 56-tick animation and the one-tick `updateLists` fencepost. ⛔ OFF by
-     * default (no licence); `SEEDLING_SEAL_DOOR_APPROACH=0|1` for a node measurement.
+     * ceremony and the open, and waits out the 56-tick animation and the one-tick `updateLists` fencepost. ✅ ON by
+     * default since the user's flip (2026-10-17: measured under real seal delivery, js §5.86, L113 legs
+     * 810/811/817/818/824/825 failed → done on the game); `SEEDLING_SEAL_DOOR_APPROACH=0|1` for a node measurement.
      */
-    sealDoorApproach: false,
+    sealDoorApproach: true,
     /**
      * fidelity ARROWLANE D2 — AN ARMED LANE IS CROSSED, AND THE ARROWS THAT REACH THE WALK ARE BILLED
      * (`arrowLaneCrossing.js`, `solverBot.walkToUnder`).

@@ -534,8 +534,11 @@ export function clearTagVerbOf(key) {
         if (WAND_TARGET_TAGS.includes(tag)) verb = 'wand';
         else if (verb === 'wand' && tag === 'wandlock') verb = 'hold';
     }
+    // ⛓ fidelity SEALDOOR (`CONTACT_FIDELITY.sealDoorApproach`): the FinalDoor's verb is `approach`, the same answer as
+    // `solverBot.refineStrategy` and its `clearTagExecutor`; OFF the table's (none). Carried in fidelity's flip (js-7 OK).
+    if (CONTACT_FIDELITY.sealDoorApproach && key === 'solid:finaldoor') verb = 'approach';
     const registered = verb !== null && (Object.prototype.hasOwnProperty.call(STRATEGY_EXECUTORS, verb)
-        || (verb === 'wand' && WAND_VERB.enabled));
+        || (verb === 'wand' && WAND_VERB.enabled) || (verb === 'approach' && CONTACT_FIDELITY.sealDoorApproach));
     return { verb, registered };
 }
 

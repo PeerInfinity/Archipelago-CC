@@ -7,7 +7,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-import { deriveStagedGrant, tapeCoversVisit } from './surveyGrants.js';
+import { deriveStagedGrant, stageGrantSave, tapeCoversVisit } from './surveyGrants.js';
 
 const GAME = JSON.parse(readFileSync(
     new URL('../../frontend/modules/flashPanel/games/seedling.json', import.meta.url), 'utf8'));
@@ -90,11 +90,13 @@ describe('deriveStagedGrant — the route\'s own pickups', () => {
         const earlier = [at(1, 40, 'Level 040 - Chest'), at(2, 68, 'Level 068 - Health'),
             at(3, 40, 'Level 040 - Boss Key 2')];
         expect(() => deriveStagedGrant({ earlier, pickups: ROWS, game: GAME, latchItems: {} }))
-            .toThrow(/'!seal' copy 1 has no rung/);
+            .toThrow(/hitsMax is not a boolean grant/);
         const g = deriveStagedGrant({ earlier, pickups: ROWS, game: GAME, latchItems: {},
             unpresentable: 'report' });
         expect(g.keys).toEqual([2]);
-        expect(g.unpresentable.map((u) => [u.step, u.item])).toEqual([[1, 'Seal'], [2, 'Health']]);
+        // ⛓ RULES survey-save-arrays: the Seal is a save-array COUNT now, so only Health is unpresentable
+        expect(g.unpresentable.map((u) => [u.step, u.item])).toEqual([[2, 'Health']]);
+        expect(g.saveCounts).toEqual({ seal_parts: 1 });
     });
 
     // ⛓ RULES survey-staging: a FUSION is the recipe's result, read off `fusion_items` — never a ladder.
@@ -142,4 +144,65 @@ describe('deriveStagedGrant — the route\'s own pickups', () => {
         expect(tapeCoversVisit({ keys: [0], items: [], latched: ['hasSword'], from: [] }, []))
             .toEqual({ covers: false, beyond: ['save.keys[0]'] });
     });
+});
+
+// ⛓ RULES survey-save-arrays — the delivered Seals / Totem Shards are COUNTED off `items[].save_array` and staged
+// into `save` through `saveArrayRules.mergeSaveArray` (keys union, totems count-fill, seals log-append).
+describe('save arrays — counted by the grant, staged by saveArrayRules', () => {
+    const SEALS = Array.from({ length: 16 }, (_, i) => ({ level: 100 + i, item: 'Seal', location: `seal ${i}` }));
+    const TOTEMS = Array.from({ length: 5 }, (_, i) => ({ level: 200 + i, item: 'Totem Shard', location: `totem ${i}` }));
+    const KEYS = [{ level: 40, item: 'Purple Key', location: 'Level 040 - Boss Key 2' }];
+    const pickups = [...SEALS, ...TOTEMS, ...KEYS];
+    const walkOf = (locations) => locations.map((location, i) => ({ step: i + 1, level: 0,
+        goals: [{ kind: 'collect-placement', location }] }));
+    const grantOf = (locations) => deriveStagedGrant({ earlier: walkOf(locations), pickups, game: GAME,
+        latchItems: {}, unpresentable: 'report' });
+
+    it('counts per copy, never unpresentable; a Totem Shard is counted BEFORE its progressive ladder', () => {
+        const g = grantOf(['seal 0', 'seal 1', 'seal 2', 'totem 0', 'totem 1', 'Level 040 - Boss Key 2']);
+        expect(g.saveCounts).toEqual({ seal_parts: 3, totem_parts: 2 });
+        expect(g.unpresentable).toEqual([]);
+        expect(g.keys).toEqual([2]);
+        expect(g.items).toEqual([]);
+        expect(g.from.filter((f) => f.item === 'Seal').map((f) => f.grants))
+            .toEqual(['save.seal_parts ×1', 'save.seal_parts ×2', 'save.seal_parts ×3']);
+    });
+
+    it('seals LOG-APPEND: N seals → N filled slots, the missing ones the smallest identities not held', () => {
+        const g = grantOf(SEALS.slice(0, 3).map((p) => p.location));
+        expect(stageGrantSave(null, g).seal_parts).toEqual([0, 1, 2]);
+        // a held log is the authority: its order is kept, slots appended with identities it does not hold
+        expect(stageGrantSave({ seal_parts: [7, 1] }, g).seal_parts).toEqual([7, 1, 0]);
+        // all sixteen: step 211's FinalDoor (hasAllSealParts = the last slot filled)
+        expect(stageGrantSave(null, grantOf(SEALS.map((p) => p.location))).seal_parts)
+            .toEqual(Array.from({ length: 16 }, (_, i) => i));
+    });
+
+    it('totems COUNT-FILL: at least N indices, the smallest not held, sorted', () => {
+        const g = grantOf(['totem 0', 'totem 1', 'totem 2']);
+        expect(stageGrantSave(null, g).totem_parts).toEqual([0, 1, 2]);
+        expect(stageGrantSave({ totem_parts: [3] }, g).totem_parts).toEqual([0, 1, 3]);
+    });
+
+    it('keys stay a UNION, unchanged; `keys: false` leaves them as the save holds them', () => {
+        const g = grantOf(['Level 040 - Boss Key 2', 'seal 0']);
+        expect(stageGrantSave({ keys: [0] }, g).keys).toEqual([0, 2]);
+        expect(stageGrantSave({ keys: [0] }, g, { keys: false }).keys).toEqual([0]);
+        expect(stageGrantSave({ keys: [0] }, g, { keys: false }).seal_parts).toEqual([0]);
+    });
+
+    it('a committed tape\'s own arrays are NEVER shortened (SET_IF_MISSING), and no grant changes nothing', () => {
+        const tape = { totem_parts: [1, 4], keys: [0, 3], seal_parts: [9, 5, 2, 11] };
+        const g = grantOf(['seal 0', 'seal 1', 'totem 0']);
+        expect(stageGrantSave(tape, g, { keys: false })).toEqual(tape);
+        expect(stageGrantSave(tape, null)).toEqual(tape);
+        expect(stageGrantSave(null, null)).toEqual({ totem_parts: [], keys: [], seal_parts: [] });
+    });
+});
+
+// ⛓ the merge is the JS arc's module, IMPORTED — never a re-spelling (js-7 owns `saveArrayRules.js`)
+it('surveyGrants stages through saveArrayRules.mergeSaveArray (an import, not a fork)', () => {
+    const src = readFileSync(new URL('./surveyGrants.js', import.meta.url), 'utf8');
+    expect(src).toMatch(/import \{ mergeSaveArray \} from '\.\.\/\.\.\/frontend\/modules\/seedlingDemo\/saveArrayRules\.js';/);
+    expect(src.match(/mergeSaveArray\(/g)?.length).toBeGreaterThanOrEqual(2);
 });
