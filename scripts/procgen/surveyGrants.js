@@ -42,7 +42,18 @@
  * flash bridge's own reading (`flashBridgeAdapter._inventoryToFlashItems`). They were read as a progressive name,
  * found no rung and dropped as `unpresentable`, so L101's staged boots lacked `hasGhostSword`. A flag whose recipe
  * does not hold yet grants nothing and is named on the grant (`pendingFusions`).
+ *
+ * ⛓ RULES survey-save-arrays — **A SEAL AND A TOTEM SHARD ARE SAVE-ARRAY COUNTS, NOT UNPRESENTABLE.** An AP item
+ * whose flash row FILLS a `save_array` (`fill` + `save_array`: `!seal` → `seal_parts`, `!totem` → `totem_parts`; a
+ * `key<N>` row names its own `index` and keeps the Boss Key path) is counted per copy into
+ * `saveCounts` (before any progressive ladder: `!totem`'s `totem<N>` rungs name the vanilla frames, not a grant), and
+ * `stageGrantSave` merges the counts into a staging's `save` through `saveArrayRules.mergeSaveArray` — the JS arc's
+ * one statement of each array's rule (seals `log-append`, totems `count-fill`, keys `union`; all SET_IF_MISSING).
+ * They were read as a ladder with no rung and dropped as `unpresentable`, so every staged step booted with 0 seals
+ * whatever the route delivered: step 211 (L113, FinalDoor, 16 Seals) could never solve.
  */
+
+import { mergeSaveArray } from '../../frontend/modules/seedlingDemo/saveArrayRules.js';
 
 /**
  * @param {object} a
@@ -54,7 +65,7 @@
  * @param {object} a.latchItems  the staging's `seam.items` (what the latch holds)
  * @param {'throw'|'report'} [a.unpresentable='throw']  `report` lists what a boot
  *        presentation cannot honour on the grant (`unpresentable`) instead of throwing
- * @returns {{keys:number[], items:string[], latched:string[],
+ * @returns {{keys:number[], items:string[], latched:string[], saveCounts?:Object<string, number>,
  *            from:Array<{step:number, item:string, grants:string}>}|null}
  *          `null` when no earlier step collected anything
  */
@@ -65,6 +76,8 @@ export function deriveStagedGrant({ earlier, pickups, game, latchItems, unpresen
     const from = [];
     const cannot = [];
     const copies = new Map();
+    /** save array → the copies the walk delivered (`items[].save_array`) */
+    const saveCounts = {};
     /** flash names the walk holds (granted or latched), for a fusion's `requires_items` */
     const heldFlash = new Set(game.items.filter((r) => latchItems?.[r.property] === true).map((r) => r.flash_name));
     /** fusion flag → the step and AP item that delivered it */
@@ -98,6 +111,13 @@ export function deriveStagedGrant({ earlier, pickups, game, latchItems, unpresen
             const ap = game.ap_items.find((r) => r.ap_name === pick.item);
             if (!ap) throw new Error(`surveyGrants: AP item '${pick.item}' is not in ap_items`);
             let flash = ap.flash_name;
+            const counted = game.items.find((r) => r.flash_name === flash && r.save_array && r.fill);
+            if (counted) {
+                const n = (saveCounts[counted.save_array] ?? 0) + 1;
+                saveCounts[counted.save_array] = n;
+                from.push({ step: s.step, item: pick.item, grants: `save.${counted.save_array} ×${n}` });
+                continue;
+            }
             if (isFusionFlag(flash)) {
                 if (!fusionFlags.has(flash)) fusionFlags.set(flash, { step: s.step, item: pick.item });
                 continue;
@@ -163,9 +183,27 @@ export function deriveStagedGrant({ earlier, pickups, game, latchItems, unpresen
         items: [...items].sort(),
         latched: [...latched].sort(),
         from,
+        ...(Object.keys(saveCounts).length > 0 ? { saveCounts } : {}),
         ...(unpresentable === 'report' ? { unpresentable: cannot } : {}),
         ...(pending.length > 0 ? { pendingFusions: pending } : {}),
     };
+}
+
+/**
+ * ⛓ RULES survey-save-arrays — `save` (a staging's v6 block; null = the empty block) with `grant`'s save arrays merged
+ * in: `keys` the grant's Boss Keys, each counted array the AP adapter's writes for N copies (indices / identities
+ * 0..N-1), every one through `saveArrayRules.mergeSaveArray`. `save` is the authority — a committed tape's own
+ * arrays are never shortened or reordered, only extended. `keys: false` leaves the keys as `save` holds them (a
+ * committed tape's visit: `tapeCoversVisit` already holds its keys to the walk's).
+ */
+export function stageGrantSave(save, grant, { keys = true } = {}) {
+    const out = { totem_parts: [], keys: [], seal_parts: [], ...(save ?? {}) };
+    if (!grant) return out;
+    if (keys) out.keys = mergeSaveArray('keys', out.keys, grant.keys);
+    for (const [name, n] of Object.entries(grant.saveCounts ?? {})) {
+        out[name] = mergeSaveArray(name, out[name], Array.from({ length: n }, (_, i) => i));
+    }
+    return out;
 }
 
 /**
