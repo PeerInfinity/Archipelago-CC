@@ -23309,3 +23309,25 @@ Lessons:
    window rows, which never reach a tree node. The deadline's `window` and `budget` are the JS arc's `limit.first`.
 2. *A sentence can grow after the tree has seen it.* `withSolveDeadline` appends its clause on the way out, so
    `lastWhy` re-reads its words at each frame and keeps the deepest key.
+
+### Seedling fidelity axe flip — the AXE TIMING rung, the gate's timed blade and the axe's hit, ON together
+
+⚖ The user (2026-10-18): *"Axe flip"*. Three switches now ship ON together, as AXETIMING recommended:
+- `CONTACT_FIDELITY.axeTimingRung`: a spinning axe's gap is crossed on its clock at dash speed.
+- `axeGateTransit`: the walk's gate times the blade instead of the WAIT disc.
+- `spinningAxePlayerHit` (SPINNINGAXE D1): the run bills the blade's hit.
+
+The pair is the stronger state, because only then can the run's own billing veto a wrong certificate. The flip waited
+on hammer's dash flip (the rung rides `planSwordDash`). That landed at `b6b908405e`, so this was measured on top of it.
+
+**Measured** (keyed sweep on main `e37e9188a5`, AXETIMING's 10 axe-room keys; A 39141647827 defaults with capture,
+B 39141650170 + the three switches):
+- Legs 497 (L54), 529 and 530 (L61), and 604, 606 and 607 (L71) go **failed → done**. These are AXETIMING's six, under
+  today's leg ids.
+- The four forced-U legs (603, 636, 760, 774) still refuse "combat ladder EXHAUSTED" at the blade. They need a PRICED
+  crossing, a wave-19 candidate.
+
+**Pins moved:**
+- `contactFidelity.test` defaults (×3);
+- `fidelitySpinningAxe` and `fidelityAxeTiming` "ships ON".
+No `plan-seedling-*` producer names any of the three switches.
