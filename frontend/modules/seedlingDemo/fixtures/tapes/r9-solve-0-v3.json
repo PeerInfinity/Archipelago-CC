@@ -2,7 +2,7 @@
     "tape_version": 11,
     "game": "seedling",
     "name": "r9-solve-0-v3",
-    "description": "⛓⛓⛓ R9 SLICE 6 — SEGMENT 23 of `r9-campaign`, THE TRUE-START SOLVER CHAIN (⚖ ruling 11, user 2026-08-20: \"a sequence of tapes to play back our solutions from the beginning of the game … recorded from the solver, not constructed manually\"). L0 — grown by swim U13 at route step 23 (visit 3): teleporter@304,176 → L12. The survey's own solve is 229 tick(s), 2 decision(s), 0 re-plan(s), passes [solve]. Solver: 299 ticks, 2 decision(s), 0 re-plan(s), ZERO hits. ⛔ ITS BOOT IS r9-solve-13-v2's MEASURED LATCH — every field read out of the running game by `botSeam()` and turned into blocks by `segmentBootFromLatch`, not a staged declaration: the save arrays, the persistence set, the three RNG streams and `seam.time`. Two of those rows are `modelled: false` by `SEAM_BOOT_SPEC` on purpose, which is exactly why a Windows-driver run and not a model line produces them. GOALS come from the atlas (`placement` / `exitTo`); no stance, waypoint or hold tick was handed to the solver. Authored by scripts/procgen/solve-seedling-r9-campaign.mjs; trace sidecar in fixtures/traces/.",
+    "description": "⛓⛓⛓ R9 SLICE 6 — SEGMENT 23 of `r9-campaign`, THE TRUE-START SOLVER CHAIN (⚖ ruling 11, user 2026-08-20: \"a sequence of tapes to play back our solutions from the beginning of the game … recorded from the solver, not constructed manually\"). L0 — grown by swim U13 at route step 23 (visit 3): teleporter@304,176 → L12. The survey's own solve is 229 tick(s), 2 decision(s), 0 re-plan(s), passes [solve]. Solver: 313 ticks, 2 decision(s), 0 re-plan(s), ZERO hits. ⛔ ITS BOOT IS r9-solve-13-v2's MEASURED LATCH — every field read out of the running game by `botSeam()` and turned into blocks by `segmentBootFromLatch`, not a staged declaration: the save arrays, the persistence set, the three RNG streams and `seam.time`. Two of those rows are `modelled: false` by `SEAM_BOOT_SPEC` on purpose, which is exactly why a Windows-driver run and not a model line produces them. GOALS come from the atlas (`placement` / `exitTo`); no stance, waypoint or hold tick was handed to the solver. Authored by scripts/procgen/solve-seedling-r9-campaign.mjs; trace sidecar in fixtures/traces/.",
     "boot": {
         "level": 0,
         "x": 48,
@@ -193,7 +193,7 @@
             "time": 12107
         }
     },
-    "tick_count": 299,
+    "tick_count": 313,
     "inputs": [
         {
             "key": "primary",
@@ -323,142 +323,117 @@
         {
             "key": "right",
             "from": 76,
-            "to": 83
+            "to": 84
         },
         {
             "key": "primary",
-            "from": 82,
-            "to": 83
+            "from": 83,
+            "to": 84
         },
         {
             "key": "left",
-            "from": 83,
+            "from": 84,
             "to": 85
         },
         {
             "key": "left",
-            "from": 87,
-            "to": 89
+            "from": 86,
+            "to": 90
         },
         {
-            "key": "primary",
-            "from": 90,
-            "to": 91
+            "key": "right",
+            "from": 91,
+            "to": 93
         },
         {
             "key": "up",
-            "from": 93,
-            "to": 120
-        },
-        {
-            "key": "down",
-            "from": 122,
+            "from": 97,
             "to": 124
         },
         {
-            "key": "primary",
-            "from": 127,
+            "key": "down",
+            "from": 126,
             "to": 128
         },
         {
             "key": "right",
-            "from": 128,
-            "to": 186
-        },
-        {
-            "key": "primary",
-            "from": 129,
-            "to": 130
-        },
-        {
-            "key": "primary",
-            "from": 181,
-            "to": 182
+            "from": 132,
+            "to": 198
         },
         {
             "key": "left",
-            "from": 186,
-            "to": 187
-        },
-        {
-            "key": "primary",
-            "from": 187,
-            "to": 188
+            "from": 198,
+            "to": 199
         },
         {
             "key": "right",
-            "from": 187,
-            "to": 188
+            "from": 199,
+            "to": 201
         },
         {
             "key": "left",
-            "from": 188,
-            "to": 193
-        },
-        {
-            "key": "right",
-            "from": 193,
-            "to": 194
-        },
-        {
-            "key": "left",
-            "from": 194,
-            "to": 195
+            "from": 202,
+            "to": 204
         },
         {
             "key": "down",
-            "from": 199,
-            "to": 226
+            "from": 208,
+            "to": 235
         },
         {
             "key": "up",
-            "from": 228,
-            "to": 231
+            "from": 237,
+            "to": 240
         },
         {
             "key": "down",
-            "from": 232,
-            "to": 234
+            "from": 241,
+            "to": 243
         },
         {
             "key": "right",
-            "from": 238,
-            "to": 265
+            "from": 247,
+            "to": 274
         },
         {
             "key": "left",
-            "from": 265,
-            "to": 266
-        },
-        {
-            "key": "primary",
-            "from": 268,
-            "to": 269
-        },
-        {
-            "key": "primary",
-            "from": 288,
-            "to": 289
+            "from": 276,
+            "to": 278
         },
         {
             "key": "right",
-            "from": 288,
-            "to": 297
+            "from": 282,
+            "to": 283
         },
         {
             "key": "primary",
-            "from": 290,
-            "to": 291
+            "from": 283,
+            "to": 284
         },
         {
             "key": "primary",
-            "from": 296,
-            "to": 297
+            "from": 303,
+            "to": 304
+        },
+        {
+            "key": "right",
+            "from": 303,
+            "to": 312
+        },
+        {
+            "key": "primary",
+            "from": 305,
+            "to": 306
+        },
+        {
+            "key": "primary",
+            "from": 311,
+            "to": 312
         },
         {
             "key": "left",
-            "from": 297,
-            "to": 299
+            "from": 312,
+            "to": 313
         }
     ]
 }

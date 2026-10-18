@@ -28,8 +28,9 @@ const CAP = JSON.parse(readFileSync(join(HERE, 'fixtures', 'statue-talk', 'leg7-
 const W79 = JSON.parse(readFileSync(join(HERE, 'fixtures', 'statue-talk', 'survey-step-79-off.json'), 'utf8'));
 
 describe('fidelity DASHSTEP — the statue talk circle', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.statueTalkRange).toBe(false);
+    // ⛓ shipped OFF (DASHSTEP D2); ON by default since planning-9's flip (⚖ user "Harvest, then flip it ON").
+    it('ships ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.statueTalkRange).toBe(true);
     });
 
     it('reads the class field: 32 for both statue types ON, 24 OFF and for every other talker', () => {

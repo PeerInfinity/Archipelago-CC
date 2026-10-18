@@ -198,9 +198,10 @@ export const ADOPT_CLAUSES = Object.freeze([
  *   - a class without one is refused (`inert-talk`): an open dialogue would
  *     be invisible.
  * ⚠ `talkRange` is the CLASS's own: `Statue.as:25` sets 32 (`NPC.as:27`'s
- * default is 24). The MODEL still tests 24 for a statue (`levelRun`'s talker
- * arm): a fidelity defect, measured live at 25.3 px (plan §5.14), routed to
- * the fidelity planner and not changed here.
+ * default is 24). The MODEL reads the class's own circle too
+ * (`endingChain.talkRangeOf`, fidelity DASHSTEP's `statueTalkRange`, ON by
+ * default since 2026-10-17); before it the talker arm tested 24 for a statue,
+ * the defect measured live at 25.3 px (plan §5.14).
  *
  * `idleAnims`: the `anim` a row may read while idle. `IntroCharacter.render()`
  * otherwise sets `frame`, which clears the animation; `Statue.render()` only

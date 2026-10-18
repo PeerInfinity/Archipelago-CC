@@ -622,10 +622,11 @@ export const CONTACT_FIDELITY = {
      * the game and not in the model. MEASURED (hammer's dash flip, sweep 39005482173 leg 7, L0 `statue2@184,160`): the
      * t99 dash press releases at t100 31.79 px from the statue; the game freezes the player at t102 (x 180.153, vx 2.90
      * unchanged), the model walks on (182.803). ON: the run opens the statue's dialogue there (the capture replays at
-     * 0 px), and the guard keeps a planned release outside 32 px. Two statues exist (L0, L87). ⛔ OFF by default (no
-     * licence); `SEEDLING_STATUE_TALK_RANGE=0|1` for a node measurement.
+     * 0 px), and the guard keeps a planned release outside 32 px. Two statues exist (L0, L87). ✅ ON by default since
+     * the user's flip (⚖ "Harvest, then flip it ON", 2026-10-17); `SEEDLING_STATUE_TALK_RANGE=0|1` for a node
+     * measurement.
      */
-    statueTalkRange: false,
+    statueTalkRange: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
