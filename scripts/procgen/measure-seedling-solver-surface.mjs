@@ -31,6 +31,10 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { argvHelp, isEntryPoint } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '../..');
 const OUT = path.join(HERE, 'seedling-solver-surface-dynamic.json');
@@ -157,4 +161,5 @@ function main() {
     }
 }
 
-main();
+/** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
+if (isEntryPoint(import.meta.url)) main();

@@ -65,267 +65,273 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { argvHelp } from './argvHelp.js';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
-const HERE = dirname(fileURLToPath(import.meta.url));
-const REPO = join(HERE, '..', '..');
-const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
-const TAPES = join(MODULE, 'fixtures', 'tapes');
 
-const CHECK = process.argv.includes('--check');
+/** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
+if (isEntryPoint(import.meta.url)) await main();
 
-const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
-const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
-const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
-const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
+async function main() {
+    const HERE = dirname(fileURLToPath(import.meta.url));
+    const REPO = join(HERE, '..', '..');
+    const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
+    const TAPES = join(MODULE, 'fixtures', 'tapes');
 
-let failures = 0;
-const check = (name, ok, detail) => {
-    if (!ok) failures += 1;
-    console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
-};
+    const CHECK = process.argv.includes('--check');
 
-const levelSource = atlasLevelSource();
+    const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
+    const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
+    const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
+    const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
 
-/**
- * Route step 23's staging, VERBATIM from the producer's derivation of
- * `r9-solve-13-v2`'s measured latch (`latch-r9-solve-13-v2-390e3d2d5658`, the
- * game's own `save.*`, `rng.*` and `fp.seed` at that segment's L0 arrival).
- * Only `beam`/`rock_set` and the boot position differ between the two arms.
- */
-const PERSISTENCE = Object.freeze([
-    [3, 0], [5, 0], [8, 0], [8, 1], [10, 0], [11, 0], [15, 0], [15, 2], [15, 3],
-    [16, 0], [16, 3], [16, 4], [16, 6], [16, 7], [17, 29], [18, 0], [19, 0], [19, 1],
-    [20, 0], [20, 1], [20, 2], [20, 4],
-].map(([level, tag]) => Object.freeze({ level, tag, note: '' })));
-const ITEMS = Object.freeze({
-    hasSword: true, hasGhostSword: false, hasShield: true, hasFire: false,
-    hasWand: false, hasFireWand: false, canSwim: false, hasSpear: false,
-    hasDarkShield: false, hasDarkSuit: false, hasDarkSword: false, hasFeather: false,
-    hasTorch: false,
-});
-const seamFor = ({ beam, rockSet }) => ({
-    items: { ...ITEMS },
-    beam,
-    rock_set: rockSet,
-    hits_max: 3,
-    first_use: false,
-    extended: false,
-    time: 12241,
-    primary: 0,
-    secondary: 0,
-    grass_cut: 192,
-    cutscene: [false, false, false, false],
-    menu_state: 0,
-    music: { set: 'Room', index: 1 },
-});
-const SAVE = Object.freeze({ totem_parts: [], keys: [0], seal_parts: [0] });
-const RNG = Object.freeze({ seed: 85136665, split: true, cosmetic: 1995363572, fp: 1341168923 });
-const PINS = Object.freeze(['sound', 'dead_frames']);
+    let failures = 0;
+    const check = (name, ok, detail) => {
+        if (!ok) failures += 1;
+        console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
+    };
 
-function stage(boot, flags) {
-    return createLevelRun({
-        levelSource,
-        boot,
-        noclip: false,
-        noHazards: [],
-        noDamage: false,
-        grants: [],
-        persistence: PERSISTENCE.map((p) => ({ ...p })),
-        despawn: [],
-        equips: [],
-        pins: [...PINS],
-        save: { ...SAVE, keys: [...SAVE.keys], seal_parts: [...SAVE.seal_parts] },
-        rng: { ...RNG },
-        seam: seamFor(flags),
+    const levelSource = atlasLevelSource();
+
+    /**
+     * Route step 23's staging, VERBATIM from the producer's derivation of
+     * `r9-solve-13-v2`'s measured latch (`latch-r9-solve-13-v2-390e3d2d5658`, the
+     * game's own `save.*`, `rng.*` and `fp.seed` at that segment's L0 arrival).
+     * Only `beam`/`rock_set` and the boot position differ between the two arms.
+     */
+    const PERSISTENCE = Object.freeze([
+        [3, 0], [5, 0], [8, 0], [8, 1], [10, 0], [11, 0], [15, 0], [15, 2], [15, 3],
+        [16, 0], [16, 3], [16, 4], [16, 6], [16, 7], [17, 29], [18, 0], [19, 0], [19, 1],
+        [20, 0], [20, 1], [20, 2], [20, 4],
+    ].map(([level, tag]) => Object.freeze({ level, tag, note: '' })));
+    const ITEMS = Object.freeze({
+        hasSword: true, hasGhostSword: false, hasShield: true, hasFire: false,
+        hasWand: false, hasFireWand: false, canSwim: false, hasSpear: false,
+        hasDarkShield: false, hasDarkSuit: false, hasDarkSword: false, hasFeather: false,
+        hasTorch: false,
     });
-}
+    const seamFor = ({ beam, rockSet }) => ({
+        items: { ...ITEMS },
+        beam,
+        rock_set: rockSet,
+        hits_max: 3,
+        first_use: false,
+        extended: false,
+        time: 12241,
+        primary: 0,
+        secondary: 0,
+        grass_cut: 192,
+        cutscene: [false, false, false, false],
+        menu_state: 0,
+        music: { set: 'Room', index: 1 },
+    });
+    const SAVE = Object.freeze({ totem_parts: [], keys: [0], seal_parts: [0] });
+    const RNG = Object.freeze({ seed: 85136665, split: true, cosmetic: 1995363572, fp: 1341168923 });
+    const PINS = Object.freeze(['sound', 'dead_frames']);
 
-function tapeJson(name, boot, flags, perTick, description) {
-    const folded = buildTape(perTick, boot, name,
-        { noclip: false, noDamage: false, noHazards: [], grants: [] });
-    const tape = {
-        game: 'seedling',
-        name,
-        boot,
-        noclip: false,
-        noDamage: false,
-        noHazards: [],
-        grants: [],
-        persistence: PERSISTENCE.map((p) => ({ ...p })),
-        equips: [],
-        pins: [...PINS],
-        save: { ...SAVE, keys: [...SAVE.keys], seal_parts: [...SAVE.seal_parts] },
-        rng: { ...RNG },
-        seam: seamFor(flags),
-        tick_count: perTick.length,
-        inputs: folded.inputs,
-        tape_version: 8,
-    };
-    const parsed = parseTape({ ...tape, description });
-    return `${JSON.stringify({ ...parsed, description, note: '' }, null, 4)}\n`;
-}
-
-function emit(name, json) {
-    const path = join(TAPES, `${name}.json`);
-    if (CHECK) {
-        const same = existsSync(path) && readFileSync(path, 'utf8') === json;
-        check(`⛓ the committed ${name} is what this script produces today`, same,
-            same ? 'byte-identical' : '⛔ DRIFT — re-run without --check');
-    } else {
-        writeFileSync(path, json);
-        console.log(`wrote ${path.slice(REPO.length + 1)}`);
+    function stage(boot, flags) {
+        return createLevelRun({
+            levelSource,
+            boot,
+            noclip: false,
+            noHazards: [],
+            noDamage: false,
+            grants: [],
+            persistence: PERSISTENCE.map((p) => ({ ...p })),
+            despawn: [],
+            equips: [],
+            pins: [...PINS],
+            save: { ...SAVE, keys: [...SAVE.keys], seal_parts: [...SAVE.seal_parts] },
+            rng: { ...RNG },
+            seam: seamFor(flags),
+        });
     }
-}
 
-/** Drive the MODEL with the fixed keys; a refusal is returned, not thrown. */
-function driveModel(boot, flags, perTick) {
-    const run = stage(boot, flags);
-    const at = [{ t: 0, x: run.state.x, y: run.state.y, level: run.level }];
-    try {
-        for (const held of perTick) {
-            run.advance(held);
-            at.push({ t: run.ticksCompleted, x: run.state.x, y: run.state.y, level: run.level });
-        }
-    } catch (e) {
-        return { run, at, refused: e.message.split('\n')[0] };
+    function tapeJson(name, boot, flags, perTick, description) {
+        const folded = buildTape(perTick, boot, name,
+            { noclip: false, noDamage: false, noHazards: [], grants: [] });
+        const tape = {
+            game: 'seedling',
+            name,
+            boot,
+            noclip: false,
+            noDamage: false,
+            noHazards: [],
+            grants: [],
+            persistence: PERSISTENCE.map((p) => ({ ...p })),
+            equips: [],
+            pins: [...PINS],
+            save: { ...SAVE, keys: [...SAVE.keys], seal_parts: [...SAVE.seal_parts] },
+            rng: { ...RNG },
+            seam: seamFor(flags),
+            tick_count: perTick.length,
+            inputs: folded.inputs,
+            tape_version: 8,
+        };
+        const parsed = parseTape({ ...tape, description });
+        return `${JSON.stringify({ ...parsed, description, note: '' }, null, 4)}\n`;
     }
-    return { run, at, refused: null };
-}
 
-/**
- * ⛓ THE AS3 PREDICTION, from `Moonrock.as` alone — no model import. Frames are
- * numbered from F1, the first frame the world updates (tape tick 0). Returns the
- * frame each phase ends on and the dead-frame count the tape owes.
- */
-function predictBeam({ rockX, fallTo, playerX }) {
-    const BEAM = 60 * 5;          // `Main.FPS * 5` — `Main.as:27` is 60, not 30
-    const FALL_RATE = 20;
-    const HOLD = 90;
-    let y = -1000;
-    let beamTime = BEAM;
-    let beamEnds = null;
-    let landsAt = null;
-    const rockY = [];
-    for (let f = 1; landsAt === null; f += 1) {
-        let trigger = beamEnds !== null;
-        if (beamEnds === null) {
-            beamTime -= 1;
-            if (beamTime <= 0) { beamEnds = f; trigger = true; }
+    function emit(name, json) {
+        const path = join(TAPES, `${name}.json`);
+        if (CHECK) {
+            const same = existsSync(path) && readFileSync(path, 'utf8') === json;
+            check(`⛓ the committed ${name} is what this script produces today`, same,
+                same ? 'byte-identical' : '⛔ DRIFT — re-run without --check');
+        } else {
+            writeFileSync(path, json);
+            console.log(`wrote ${path.slice(REPO.length + 1)}`);
         }
-        if (trigger) {
-            y += FALL_RATE;
-            if (y >= fallTo) { y = fallTo; landsAt = f; }
-        }
-        rockY.push(y);
     }
-    const releaseAt = landsAt + HOLD + 1;
-    return {
-        beamFrames: BEAM,
-        beamEnds,
-        fallFrames: landsAt - beamEnds + 1,
-        landsAt,
-        releaseAt,
-        // F2 is the live frozen tick; F3 … release are dead.
-        dead: releaseAt - 2,
-        facing: (playerX > rockX + 26 ? 1 : 0) * 2,
-        rockY,
-    };
-}
 
-const NO_KEYS = new Set();
-const keysAt = (spans, t) => new Set(spans.filter(([, a, b]) => t >= a && t < b).map(([k]) => k));
+    /** Drive the MODEL with the fixed keys; a refusal is returned, not thrown. */
+    function driveModel(boot, flags, perTick) {
+        const run = stage(boot, flags);
+        const at = [{ t: 0, x: run.state.x, y: run.state.y, level: run.level }];
+        try {
+            for (const held of perTick) {
+                run.advance(held);
+                at.push({ t: run.ticksCompleted, x: run.state.x, y: run.state.y, level: run.level });
+            }
+        } catch (e) {
+            return { run, at, refused: e.message.split('\n')[0] };
+        }
+        return { run, at, refused: null };
+    }
 
-let beamResult = null;
-{
-    const NAME = 'u14-moonrock-beam';
-    const BOOT = Object.freeze({ level: 0, x: 48, y: 192 });
-    const FLAGS = Object.freeze({ beam: true, rockSet: false });
-    const TICKS = 20;
-    const SPANS = [['primary', 0, 1], ['right', 0, 10], ['primary', 2, 3]];
-    const perTick = Array.from({ length: TICKS }, (_, t) => keysAt(SPANS, t));
-    const description = '⛓⛓⛓ U14-swim D1 — THE MOONROCK BEAM, WITNESSED. L0 booted exactly as route '
-        + 'step 23 boots (r9-solve-13-v2\'s measured latch: `beam: true`, `rock_set: false`, the '
-        + 'shield, the Red Key), at (56,200). Sword pressed t0, released t1, pressed again t2; '
-        + '`right` held t0–t9; nothing to t20. `Moonrock.update` (`Scenery/Moonrock.as:66-153`) '
-        + 'updates before the Player: F1 (t0) is live and starts the 300-frame beam (`Main.FPS` 60 '
-        + '* 5); F2 (t1) is a live tape tick with a frozen player; then 451 DEAD frames — the rest '
-        + 'of the beam, the 63-frame fall from y −1000 to 256, the 90-frame camera hold — and a '
-        + 'release frame on which the player steps once, unobserved, under `right`. `slash()`\'s '
-        + '20-frame double-tap window drains through the freeze, so t2\'s press is a fresh swing, '
-        + 'not a dash. The landing sets `rockSet`, `Game.shake = 60`, and replaces '
-        + '`stairsdown@256,272` with a teleporter to `moonrock_target`, clearing {2,0}. Fixed keys. '
-        + 'Authored by scripts/procgen/plan-seedling-u14-moonrock.mjs.';
-    emit(NAME, tapeJson(NAME, BOOT, FLAGS, perTick, description));
-    const p = predictBeam({ rockX: 240, fallTo: 256, playerX: 56 });
-    console.log(`  predicted: beam ends F${p.beamEnds}; fall ${p.fallFrames} frames, lands F${p.landsAt}; `
-        + `release F${p.releaseAt}; ${p.dead} dead frames after the live frozen tick t1; `
-        + `facing ${p.facing} through the span`);
-    check('⛓ the AS3 arithmetic: 300 beam + 63 fall + 90 hold, minus the two LIVE frames F1 and F2',
-        p.dead === 451 && p.fallFrames === 63 && p.landsAt === 362 && p.releaseAt === 453,
-        `dead ${p.dead}, fall ${p.fallFrames}, lands F${p.landsAt}, release F${p.releaseAt}`);
-    beamResult = { NAME, BOOT, FLAGS, perTick, predicted: p, ...driveModel(BOOT, FLAGS, perTick) };
-    const { run, at, refused } = beamResult;
-    console.log(`  model: ${refused ? `REFUSED — ${refused.slice(0, 200)}` : 'walks it'}; `
-        + `x t0..t5 ${at.slice(0, 6).map((a) => a.x).join(' ')}`);
-    check('the model walks the tape (no refusal)', refused === null, refused ?? '');
-    const mr = run.moonrock ?? { events: [] };
-    const ev = (what) => mr.events.filter((e) => e.what === what);
-    const rel = ev('released')[0];
-    check('⛓⛓ the model\'s span is the AS3 reading: beam starts on t0\'s frame, the freeze on t1 '
-        + '(a live tape tick), and the release after the predicted dead frames',
-    ev('beam-started')[0]?.t === 0 && ev('frozen')[0]?.t === 1 && rel?.deadFrames === p.dead,
-    `beam-started t${ev('beam-started')[0]?.t}, frozen t${ev('frozen')[0]?.t}, `
-        + `released after ${rel?.deadFrames} dead frames (predicted ${p.dead})`);
-    check('⛓ the facing the beam writes is the predicted one (the player is LEFT of the rock: 0)',
-        ev('beam-started')[0]?.facing === p.facing, `${ev('beam-started')[0]?.facing}`);
-    check('⛓ the swing pressed at t0 is BURNED by the freeze, and t2\'s press is a fresh swing: '
-        + 'no dash (t3 is the game\'s 59.25, not 61.25)',
-    ev('swing-burned').length === 1 && at[3]?.x === 59.25, `x t3 ${at[3]?.x}`);
-    check('⛓ the rock lands at its placement and the run ends with beam false, rockSet true',
-        ev('landed')[0]?.y === 256 && mr.beam === false && mr.rockSet === true,
-        `landed y ${ev('landed')[0]?.y}; beam ${mr.beam}, rockSet ${mr.rockSet}`);
-    check('⛓ the stairs under the set rock are replaced and {2,0} is cleared (the game\'s latch '
-        + 'carries it)', (run.earnedClears ?? []).some((c) => c.level === 2 && c.tag === 0),
-    JSON.stringify((run.earnedClears ?? []).filter((c) => c.level === 2)));
-    check('⛓ the model\'s clock owes the span: frozenFramesOwed is the dead count',
-        run.frozenFramesOwed === p.dead, `${run.frozenFramesOwed}`);
-}
+    /**
+     * ⛓ THE AS3 PREDICTION, from `Moonrock.as` alone — no model import. Frames are
+     * numbered from F1, the first frame the world updates (tape tick 0). Returns the
+     * frame each phase ends on and the dead-frame count the tape owes.
+     */
+    function predictBeam({ rockX, fallTo, playerX }) {
+        const BEAM = 60 * 5;          // `Main.FPS * 5` — `Main.as:27` is 60, not 30
+        const FALL_RATE = 20;
+        const HOLD = 90;
+        let y = -1000;
+        let beamTime = BEAM;
+        let beamEnds = null;
+        let landsAt = null;
+        const rockY = [];
+        for (let f = 1; landsAt === null; f += 1) {
+            let trigger = beamEnds !== null;
+            if (beamEnds === null) {
+                beamTime -= 1;
+                if (beamTime <= 0) { beamEnds = f; trigger = true; }
+            }
+            if (trigger) {
+                y += FALL_RATE;
+                if (y >= fallTo) { y = fallTo; landsAt = f; }
+            }
+            rockY.push(y);
+        }
+        const releaseAt = landsAt + HOLD + 1;
+        return {
+            beamFrames: BEAM,
+            beamEnds,
+            fallFrames: landsAt - beamEnds + 1,
+            landsAt,
+            releaseAt,
+            // F2 is the live frozen tick; F3 … release are dead.
+            dead: releaseAt - 2,
+            facing: (playerX > rockX + 26 ? 1 : 0) * 2,
+            rockY,
+        };
+    }
 
-{
-    const NAME = 'u14-moonrock-set';
-    const BOOT = Object.freeze({ level: 0, x: 200, y: 272 });
-    const FLAGS = Object.freeze({ beam: false, rockSet: true });
-    const TICKS = 40;
-    const perTick = Array.from({ length: TICKS }, () => new Set(['right']));
-    const description = '⛓⛓⛓ U14-swim D1 — THE SET MOONROCK IS A SOLID. L0 booted with route step '
-        + '23\'s staging but `beam: false, rock_set: true` — a visit after the landing — at '
-        + '(208,280), holding `right` for 40 ticks. `Moonrock`\'s ctor places a set rock AT `fallTo` '
-        + 'with `type = "Solid"` (`Scenery/Moonrock.as:50-54`): a 48x48 box at [240,288)×[256,304), '
-        + 'so the walk stops at x 238 (the player\'s 4x5 box ends at x + 2). Its first update finds '
-        + '`cameraTimer` 0 and lowers the freeze nobody raised; it also replaces the stairs under it '
-        + 'and clears {2,0}. No beam: `beam` is false. Fixed keys. Authored by '
-        + 'scripts/procgen/plan-seedling-u14-moonrock.mjs.';
-    emit(NAME, tapeJson(NAME, BOOT, FLAGS, perTick, description));
-    const { run, at, refused } = driveModel(BOOT, FLAGS, perTick);
-    const maxX = Math.max(...at.map((a) => a.x));
-    console.log(`  model: ${refused ? `REFUSED — ${refused.slice(0, 200)}` : 'walks it'}; max x ${maxX}; `
-        + `last ${JSON.stringify(at.at(-1))}`);
-    check('the model walks the tape (no refusal)', refused === null, refused ?? '');
-    // The AS3 bound is the box's right edge, x + 2 <= 240; the game stops at
-    // 237.95, one sub-pixel step short of it (`moveX` refuses the whole step).
-    check('⛓ the walk is BLOCKED by the set rock — the box never enters x 240', maxX + 2 <= 240,
-        `model max x ${maxX}`);
-    const mr = run.moonrock ?? { events: [] };
-    check('⛓ no beam, no freeze: a set rock\'s first update only runs the release arm',
-        !mr.events.some((e) => e.what === 'frozen') && run.frozenFramesOwed === 0
-            && mr.rockSet === true && mr.beam === false,
-        `events ${mr.events.map((e) => e.what).join(',')}; frozen ${run.frozenFramesOwed}`);
-    check('⛓ and the stairs under it are replaced on that update, clearing {2,0}',
-        (run.earnedClears ?? []).some((c) => c.level === 2 && c.tag === 0),
+    const NO_KEYS = new Set();
+    const keysAt = (spans, t) => new Set(spans.filter(([, a, b]) => t >= a && t < b).map(([k]) => k));
+
+    let beamResult = null;
+    {
+        const NAME = 'u14-moonrock-beam';
+        const BOOT = Object.freeze({ level: 0, x: 48, y: 192 });
+        const FLAGS = Object.freeze({ beam: true, rockSet: false });
+        const TICKS = 20;
+        const SPANS = [['primary', 0, 1], ['right', 0, 10], ['primary', 2, 3]];
+        const perTick = Array.from({ length: TICKS }, (_, t) => keysAt(SPANS, t));
+        const description = '⛓⛓⛓ U14-swim D1 — THE MOONROCK BEAM, WITNESSED. L0 booted exactly as route '
+            + 'step 23 boots (r9-solve-13-v2\'s measured latch: `beam: true`, `rock_set: false`, the '
+            + 'shield, the Red Key), at (56,200). Sword pressed t0, released t1, pressed again t2; '
+            + '`right` held t0–t9; nothing to t20. `Moonrock.update` (`Scenery/Moonrock.as:66-153`) '
+            + 'updates before the Player: F1 (t0) is live and starts the 300-frame beam (`Main.FPS` 60 '
+            + '* 5); F2 (t1) is a live tape tick with a frozen player; then 451 DEAD frames — the rest '
+            + 'of the beam, the 63-frame fall from y −1000 to 256, the 90-frame camera hold — and a '
+            + 'release frame on which the player steps once, unobserved, under `right`. `slash()`\'s '
+            + '20-frame double-tap window drains through the freeze, so t2\'s press is a fresh swing, '
+            + 'not a dash. The landing sets `rockSet`, `Game.shake = 60`, and replaces '
+            + '`stairsdown@256,272` with a teleporter to `moonrock_target`, clearing {2,0}. Fixed keys. '
+            + 'Authored by scripts/procgen/plan-seedling-u14-moonrock.mjs.';
+        emit(NAME, tapeJson(NAME, BOOT, FLAGS, perTick, description));
+        const p = predictBeam({ rockX: 240, fallTo: 256, playerX: 56 });
+        console.log(`  predicted: beam ends F${p.beamEnds}; fall ${p.fallFrames} frames, lands F${p.landsAt}; `
+            + `release F${p.releaseAt}; ${p.dead} dead frames after the live frozen tick t1; `
+            + `facing ${p.facing} through the span`);
+        check('⛓ the AS3 arithmetic: 300 beam + 63 fall + 90 hold, minus the two LIVE frames F1 and F2',
+            p.dead === 451 && p.fallFrames === 63 && p.landsAt === 362 && p.releaseAt === 453,
+            `dead ${p.dead}, fall ${p.fallFrames}, lands F${p.landsAt}, release F${p.releaseAt}`);
+        beamResult = { NAME, BOOT, FLAGS, perTick, predicted: p, ...driveModel(BOOT, FLAGS, perTick) };
+        const { run, at, refused } = beamResult;
+        console.log(`  model: ${refused ? `REFUSED — ${refused.slice(0, 200)}` : 'walks it'}; `
+            + `x t0..t5 ${at.slice(0, 6).map((a) => a.x).join(' ')}`);
+        check('the model walks the tape (no refusal)', refused === null, refused ?? '');
+        const mr = run.moonrock ?? { events: [] };
+        const ev = (what) => mr.events.filter((e) => e.what === what);
+        const rel = ev('released')[0];
+        check('⛓⛓ the model\'s span is the AS3 reading: beam starts on t0\'s frame, the freeze on t1 '
+            + '(a live tape tick), and the release after the predicted dead frames',
+        ev('beam-started')[0]?.t === 0 && ev('frozen')[0]?.t === 1 && rel?.deadFrames === p.dead,
+        `beam-started t${ev('beam-started')[0]?.t}, frozen t${ev('frozen')[0]?.t}, `
+            + `released after ${rel?.deadFrames} dead frames (predicted ${p.dead})`);
+        check('⛓ the facing the beam writes is the predicted one (the player is LEFT of the rock: 0)',
+            ev('beam-started')[0]?.facing === p.facing, `${ev('beam-started')[0]?.facing}`);
+        check('⛓ the swing pressed at t0 is BURNED by the freeze, and t2\'s press is a fresh swing: '
+            + 'no dash (t3 is the game\'s 59.25, not 61.25)',
+        ev('swing-burned').length === 1 && at[3]?.x === 59.25, `x t3 ${at[3]?.x}`);
+        check('⛓ the rock lands at its placement and the run ends with beam false, rockSet true',
+            ev('landed')[0]?.y === 256 && mr.beam === false && mr.rockSet === true,
+            `landed y ${ev('landed')[0]?.y}; beam ${mr.beam}, rockSet ${mr.rockSet}`);
+        check('⛓ the stairs under the set rock are replaced and {2,0} is cleared (the game\'s latch '
+            + 'carries it)', (run.earnedClears ?? []).some((c) => c.level === 2 && c.tag === 0),
         JSON.stringify((run.earnedClears ?? []).filter((c) => c.level === 2)));
-}
+        check('⛓ the model\'s clock owes the span: frozenFramesOwed is the dead count',
+            run.frozenFramesOwed === p.dead, `${run.frozenFramesOwed}`);
+    }
 
-console.log(failures ? `\n${failures} CHECK(S) FAILED` : '\nALL CHECKS PASSED');
-process.exit(failures ? 1 : 0);
+    {
+        const NAME = 'u14-moonrock-set';
+        const BOOT = Object.freeze({ level: 0, x: 200, y: 272 });
+        const FLAGS = Object.freeze({ beam: false, rockSet: true });
+        const TICKS = 40;
+        const perTick = Array.from({ length: TICKS }, () => new Set(['right']));
+        const description = '⛓⛓⛓ U14-swim D1 — THE SET MOONROCK IS A SOLID. L0 booted with route step '
+            + '23\'s staging but `beam: false, rock_set: true` — a visit after the landing — at '
+            + '(208,280), holding `right` for 40 ticks. `Moonrock`\'s ctor places a set rock AT `fallTo` '
+            + 'with `type = "Solid"` (`Scenery/Moonrock.as:50-54`): a 48x48 box at [240,288)×[256,304), '
+            + 'so the walk stops at x 238 (the player\'s 4x5 box ends at x + 2). Its first update finds '
+            + '`cameraTimer` 0 and lowers the freeze nobody raised; it also replaces the stairs under it '
+            + 'and clears {2,0}. No beam: `beam` is false. Fixed keys. Authored by '
+            + 'scripts/procgen/plan-seedling-u14-moonrock.mjs.';
+        emit(NAME, tapeJson(NAME, BOOT, FLAGS, perTick, description));
+        const { run, at, refused } = driveModel(BOOT, FLAGS, perTick);
+        const maxX = Math.max(...at.map((a) => a.x));
+        console.log(`  model: ${refused ? `REFUSED — ${refused.slice(0, 200)}` : 'walks it'}; max x ${maxX}; `
+            + `last ${JSON.stringify(at.at(-1))}`);
+        check('the model walks the tape (no refusal)', refused === null, refused ?? '');
+        // The AS3 bound is the box's right edge, x + 2 <= 240; the game stops at
+        // 237.95, one sub-pixel step short of it (`moveX` refuses the whole step).
+        check('⛓ the walk is BLOCKED by the set rock — the box never enters x 240', maxX + 2 <= 240,
+            `model max x ${maxX}`);
+        const mr = run.moonrock ?? { events: [] };
+        check('⛓ no beam, no freeze: a set rock\'s first update only runs the release arm',
+            !mr.events.some((e) => e.what === 'frozen') && run.frozenFramesOwed === 0
+                && mr.rockSet === true && mr.beam === false,
+            `events ${mr.events.map((e) => e.what).join(',')}; frozen ${run.frozenFramesOwed}`);
+        check('⛓ and the stairs under it are replaced on that update, clearing {2,0}',
+            (run.earnedClears ?? []).some((c) => c.level === 2 && c.tag === 0),
+            JSON.stringify((run.earnedClears ?? []).filter((c) => c.level === 2)));
+    }
+
+    console.log(failures ? `\n${failures} CHECK(S) FAILED` : '\nALL CHECKS PASSED');
+    process.exit(failures ? 1 : 0);
+}
