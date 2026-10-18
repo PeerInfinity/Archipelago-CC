@@ -1144,7 +1144,7 @@ function stringPull(level, points, allowTeleporter, opts, fast, beat) {
     while (anchor < points.length - 1) {
         let next = anchor + 1;
         for (let j = points.length - 1; j > anchor; j--) {
-            if (beat && activeProgress !== null) progressHeartbeat('plan-pull'); // ⛓ HB: emit-only, once a string-pull ask
+            if (beat) { if (activeProgress !== null) progressHeartbeat('plan-pull'); } // ⛓ HB: emit-only, once a string-pull ask
             if (clear(points[anchor], points[j])) {
                 next = j;
                 break;
