@@ -726,6 +726,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "This page is for readers who have never heard of Archipelago or randomizers. The rest of this project's documentation assumes you know the basics covered here."
     },
     {
+        "path": "docs/json/user/modules/apworldEditor.md",
+        "title": "APWorld Editor Panel",
+        "section": "user/modules",
+        "summary": "The APWorld Editor opens a world's rules — its regions, exits, locations, access rules and items — and lets you change them, with undo, a map, and a check that flags anything broken. When you are…"
+    },
+    {
         "path": "docs/json/user/modules/discoveryPanel.md",
         "title": "Discovery Panel",
         "section": "user/modules",
@@ -1088,6 +1094,7 @@ export const HELP_SECTIONS = Object.freeze([
         "order": 0,
         "audience": "panel",
         "docs": [
+            "docs/json/user/modules/apworldEditor.md",
             "docs/json/user/modules/discoveryPanel.md",
             "docs/json/user/modules/dungeons.md",
             "docs/json/user/modules/editor.md",
